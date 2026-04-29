@@ -1,0 +1,32 @@
+{
+  "name": "@reading-advantage/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "tsconfig",
+    "eslint",
+    "tailwind",
+    "__tests__"
+  ],
+  "exports": {
+    "./tsconfig": "./tsconfig/base.json",
+    "./eslint": "./eslint/index.js",
+    "./tailwind": "./tailwind/tailwind.config.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "eslint": "^9.25.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^16.0.0",
+    "tailwindcss": "^4.1.4",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.1",
+    "vitest": "^3.1.2"
+  },
+  "scripts": {
+    "test": "vitest run"
+  }
+}
