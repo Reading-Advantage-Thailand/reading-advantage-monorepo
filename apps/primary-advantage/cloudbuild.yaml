@@ -1,0 +1,84 @@
+steps:
+  # Step 1: Build Docker image
+  - name: "gcr.io/cloud-builders/docker"
+    id: "build-image"
+    args:
+      - "build"
+      - "-t"
+      - "asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
+      - "."
+      - "--build-arg=DATABASE_URL=${_DATABASE_URL}"
+    secretEnv: ["DATABASE_URL"]
+
+  # Step 2: Push Docker image
+  - name: "gcr.io/cloud-builders/docker"
+    id: "push-image"
+    args:
+      - "push"
+      - "asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
+
+  # Step 3: Run database migrations
+  # - name: "asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
+  #   id: "migrate-database"
+  #   entrypoint: "npx"
+  #   args: ["prisma", "migrate", "deploy"]
+  #   secretEnv: ["DATABASE_URL"]
+
+  # Step 4: Deploy to Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-cloudrun"
+    args:
+      - "run"
+      - "deploy"
+      - "primary-advantage-app"
+      - "--image=asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
+      - "--region=asia-southeast1"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--set-secrets=DATABASE_URL=${_DATABASE_URL}:latest"
+      - "--set-secrets=RESEND_API_KEY=${_RESEND_API_KEY}:latest"
+      - "--set-secrets=AUTH_SECRET=${_AUTH_SECRET}:latest"
+      - "--set-secrets=AUTH_URL=${_AUTH_URL}:latest"
+      - "--set-secrets=AUTH_GOOGLE_ID=${_AUTH_GOOGLE_ID}:latest"
+      - "--set-secrets=AUTH_GOOGLE_SECRET=${_AUTH_GOOGLE_SECRET}:latest"
+      - "--set-secrets=OPENAI_API_KEY=${_OPENAI_API_KEY}:latest"
+      - "--set-secrets=VERTEX_CLIENT_EMAIL=${_VERTEX_CLIENT_EMAIL}:latest"
+      - "--set-secrets=VERTEX_PRIVATE_KEY=${_VERTEX_PRIVATE_KEY}:latest"
+      - "--set-secrets=GOOGLE_API_KEY=${_GOOGLE_API_KEY}:latest"
+      - "--set-secrets=AUDIO_API_KEY=${_AUDIO_API_KEY}:latest"
+      - "--set-secrets=STORAGE_BUCKET_NAME=${_STORAGE_BUCKET_NAME}:latest"
+      - "--set-secrets=STORAGE_CLIENT_EMAIL=${_STORAGE_CLIENT_EMAIL}:latest"
+      - "--set-secrets=STORAGE_PRIVATE_KEY=${_STORAGE_PRIVATE_KEY}:latest"
+      - "--set-env-vars=PROJECT_ID=${_PROJECT_ID}"
+      - "--set-env-vars=NODE_ENV=${_NODE_ENV}"
+      - "--set-env-vars=AUTH_TRUST_HOST=true"
+      - "--set-env-vars=ACCESS_KEY=${_ACCESS_KEY}"
+
+# Substitutions
+substitutions:
+  _NODE_ENV: "production"
+  _PROJECT_ID: "primary-advantage"
+  _DATABASE_URL: "DATABASE_URL"
+  _RESEND_API_KEY: "RESEND_API_KEY"
+  _AUTH_SECRET: "AUTH_SECRET"
+  _AUTH_URL: "AUTH_URL"
+  _AUTH_GOOGLE_ID: "AUTH_GOOGLE_ID"
+  _AUTH_GOOGLE_SECRET: "AUTH_GOOGLE_SECRET"
+  _OPENAI_API_KEY: "OPENAI_API_KEY"
+  _VERTEX_CLIENT_EMAIL: "VERTEX_CLIENT_EMAIL"
+  _VERTEX_PRIVATE_KEY: "VERTEX_PRIVATE_KEY"
+  _GOOGLE_API_KEY: "GOOGLE_API_KEY"
+  _AUDIO_API_KEY: "AUDIO_API_KEY"
+  _STORAGE_BUCKET_NAME: "STORAGE_BUCKET_NAME"
+  _STORAGE_CLIENT_EMAIL: "STORAGE_CLIENT_EMAIL"
+  _STORAGE_PRIVATE_KEY: "STORAGE_PRIVATE_KEY"
+  _ACCESS_KEY: "ACCESS_KEY"
+
+# Secrets
+availableSecrets:
+  secretManager:
+    - versionName: projects/${_PROJECT_ID}/secrets/${_DATABASE_URL}/versions/latest
+      env: "DATABASE_URL"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

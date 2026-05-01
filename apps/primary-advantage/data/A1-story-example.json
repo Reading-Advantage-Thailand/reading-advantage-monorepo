@@ -1,0 +1,699 @@
+{
+  "blueprint": {
+    "topic": "The Lonely Robot",
+    "genre": "Children's Sci-Fi",
+    "cefrLevel": "A1",
+    "targetAudience": "Aged 7-9, likes space and robots",
+    "globalVocabularyList": [
+      "robot", "moon", "star", "rocket", "space", "fly", "jump", "walk", "fix", "help",
+      "happy", "sad", "cold", "dark", "fast", "slow", "friend", "home", "button", "light",
+      "battery", "metal", "sleep", "wake", "sky"
+    ],
+    "globalGrammarStructures": [
+      "Past Simple (regular/irregular)",
+      "Connectors (and, but, because)",
+      "Comparative adjectives (faster, bigger)",
+      "Simple modals (can, must, should)",
+      "There was / There were"
+    ],
+    "harmonOutline": [
+      {
+        "stage": "You",
+        "chapterNumber": 1,
+        "summary": "Leo lives on a space station and loves looking at the stars.",
+        "plotBeat": "Establish Leo's normal life in space.",
+        "engagementStrategy": "Describe the cool space station view."
+      },
+      {
+        "stage": "Need",
+        "chapterNumber": 2,
+        "summary": "Leo sees a flashing red light on the moon and knows someone needs help.",
+        "plotBeat": "Leo spots the distress signal.",
+        "engagementStrategy": "Create a mystery about the red light."
+      },
+      {
+        "stage": "Go",
+        "chapterNumber": 3,
+        "summary": "Leo gets his spacesuit and flies his small rocket to the moon.",
+        "plotBeat": "Leo leaves the safety of the station.",
+        "engagementStrategy": "Exciting launch sequence."
+      },
+      {
+        "stage": "Search",
+        "chapterNumber": 4,
+        "summary": "Leo walks on the moon looking for the light. It is difficult to walk.",
+        "plotBeat": "Leo struggles with the moon's environment.",
+        "engagementStrategy": "Describe the funny way he jumps on the moon."
+      },
+      {
+        "stage": "Find",
+        "chapterNumber": 5,
+        "summary": "Leo finds a small, sad robot trapped under a rock.",
+        "plotBeat": "Leo meets the character he needs to save.",
+        "engagementStrategy": "Emphasize the robot's sadness to build empathy."
+      },
+      {
+        "stage": "Take",
+        "chapterNumber": 6,
+        "summary": "Leo moves the rock and fixes the robot, but he gets very tired.",
+        "plotBeat": "Leo solves the problem but pays a price (energy/time).",
+        "engagementStrategy": "Tension about Leo's air or energy."
+      },
+      {
+        "stage": "Return",
+        "chapterNumber": 7,
+        "summary": "The robot helps Leo fly back to the rocket. They go home together.",
+        "plotBeat": "The journey back with the new companion.",
+        "engagementStrategy": "Teamwork between Leo and the robot."
+      },
+      {
+        "stage": "Change",
+        "chapterNumber": 8,
+        "summary": "The robot lives with Leo now. They are best friends.",
+        "plotBeat": "The new normal with the friend.",
+        "engagementStrategy": "Heartwarming conclusion."
+      }
+    ],
+    "characters": [
+      {
+        "name": "Leo",
+        "description": "A brave young boy who lives in space. He is kind and curious.",
+        "visualDescription": "A young boy, 8 years old, wearing a blue space suit with a star logo. He has short brown hair and big goggles."
+      },
+      {
+        "name": "Beep",
+        "description": "A small, round robot who got lost on the moon.",
+        "visualDescription": "A small silver robot with one wheel, two long arms, and a glowing screen for a face."
+      }
+    ]
+  },
+  "chapters": [
+    {
+      "chapterNumber": 1,
+      "stage": "You",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["space", "star", "home", "window", "look"],
+        "grammarFocus": "Past Simple (lived, looked)",
+        "pacing": "Slow and descriptive",
+        "cliffhangerOrHook": "One day, he saw something new."
+      },
+      "title": "Leo's Space Home",
+      "passage": "Leo was a young boy. He did not live in a house on Earth. He lived in a big space station. It was high above the world. Leo loved his home. It was quiet and very cool. Every morning, Leo woke up and looked out of his round window. He saw the big, blue Earth. He saw the moon. It was white and grey. He saw millions of bright stars. They were very beautiful.\n\nLeo had no brothers or sisters on the station. Sometimes he was lonely. He wanted a friend to play with. He played with his toy cars, but it was not the same. He read books about planets. He ate his space food. But he always went back to the window.\n\nOne night, Leo looked at the dark sky. The stars shined like small lights. He counted them. 'One, two, three,' he said. Everything was the same as always. The moon was quiet. The Earth was blue. But then, Leo saw something strange. He looked harder. It was not a star. It was not a planet. It was something different on the moon.",
+      "summary": "Leo lives on a space station and looks at the stars, but he feels a bit lonely.",
+      "translatedSummary": {
+        "th": "ลีโออาศัยอยู่บนสถานีอวกาศและมองดูดวงดาว แต่เขารู้สึกเหงาเล็กน้อย",
+        "cn": "利奥住在空间站里，看着星星，但他感到有点孤独。",
+        "tw": "利奧住在空間站裡，看著星星，但他感到有點孤獨。",
+        "vi": "Leo sống trên trạm vũ trụ và ngắm nhìn các vì sao, nhưng cậu cảm thấy hơi cô đơn."
+      },
+      "imageDesc": "Leo, a young boy in a blue jumpsuit, looking out of a round spaceship window at the Earth and stars.",
+      "wordlist": [
+        {
+          "vocabulary": "space",
+          "definition": "The area outside the Earth where stars and planets are.",
+          "translation": { "th": "อวกาศ", "cn": "太空", "tw": "太空", "vi": "không gian" }
+        },
+        {
+          "vocabulary": "star",
+          "definition": "A bright point of light in the night sky.",
+          "translation": { "th": "ดาว", "cn": "星星", "tw": "星星", "vi": "ngôi sao" }
+        },
+        {
+          "vocabulary": "window",
+          "definition": "An opening in a wall to see outside.",
+          "translation": { "th": "หน้าต่าง", "cn": "窗户", "tw": "窗戶", "vi": "cửa sổ" }
+        }
+      ],
+      "sentences": [
+        "He lived in a big space station.",
+        "Leo looked at the dark sky.",
+        "He saw millions of bright stars."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "He lived in a big space station.",
+          "translation": { "th": "เขาอาศัยอยู่ในสถานีอวกาศขนาดใหญ่", "cn": "他住在一个大空间站里。", "tw": "他住在一個大空間站裡。", "vi": "Cậu ấy sống trong một trạm vũ trụ lớn." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "Where did Leo live?",
+          "options": ["On Earth", "In a house", "In a space station", "On the moon"],
+          "answer": "In a space station"
+        },
+        {
+          "question": "What did Leo look at through the window?",
+          "options": ["Birds", "Cars", "Trees", "Stars"],
+          "answer": "Stars"
+        },
+        {
+          "question": "How did Leo feel sometimes?",
+          "options": ["Happy", "Lonely", "Angry", "Scared"],
+          "answer": "Lonely"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What color was the Earth?",
+          "answer": "The Earth was blue."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Do you want to live in space? Why or why not?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 2,
+      "stage": "Need",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["light", "red", "flash", "help", "telescope"],
+        "grammarFocus": "Past Simple (saw, flashed) & Modals (must)",
+        "pacing": "Curious and urgent",
+        "cliffhangerOrHook": "Leo knew he must go there."
+      },
+      "title": "The Red Light",
+      "passage": "Leo ran to get his big telescope. He wanted to see the moon better. He looked through the glass. He saw grey rocks. He saw deep holes. And then, he saw the red light again. Flash. Flash. Flash.\n\nIt was not a rock. Rocks do not flash. It was not a star. Stars are white or yellow. This light was red. It went on and off. Leo watched it for a long time. 'What is that?' he asked.\n\nHe looked at his book about space codes. He found a page about lights. A flashing red light meant 'Help!' Someone was on the moon. Someone was in trouble. Maybe it was an astronaut. Maybe it was a ship. Leo felt worried. He was only a boy, but he was brave. He looked at the red light. It flashed fast now. 'I must help,' said Leo. 'I must go to the moon.'",
+      "summary": "Leo sees a flashing red light on the moon and realizes it is a call for help.",
+      "translatedSummary": {
+        "th": "ลีโอเห็นไฟสีแดงกระพริบบนดวงจันทร์และรู้ว่ามันคือสัญญาณขอความช่วยเหลือ",
+        "cn": "利奥看到月球上有闪烁的红灯，意识到这是求救信号。",
+        "tw": "利奧看到月球上有閃爍的紅燈，意識到這是求救信號。", "vi": "Leo nhìn thấy đèn đỏ nhấp nháy trên mặt trăng và nhận ra đó là tín hiệu cầu cứu."
+      },
+      "imageDesc": "A close up of a red flashing light on the grey surface of the moon, seen through a telescope lens.",
+      "wordlist": [
+        {
+          "vocabulary": "telescope",
+          "definition": "A tube with glass to look at things far away.",
+          "translation": { "th": "กล้องโทรทรรศน์", "cn": "望远镜", "tw": "望遠鏡", "vi": "kính thiên văn" }
+        },
+        {
+          "vocabulary": "flash",
+          "definition": "To shine a bright light very quickly on and off.",
+          "translation": { "th": "กะพริบ", "cn": "闪光", "tw": "閃光", "vi": "lóe sáng" }
+        },
+        {
+          "vocabulary": "brave",
+          "definition": "Not afraid to do difficult things.",
+          "translation": { "th": "กล้าหาญ", "cn": "勇敢", "tw": "勇敢", "vi": "dũng cảm" }
+        }
+      ],
+      "sentences": [
+        "He saw the red light again.",
+        "A flashing red light meant Help.",
+        "I must go to the moon."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "I must go to the moon.",
+          "translation": { "th": "ฉันต้องไปดวงจันทร์", "cn": "我必须去月球。", "tw": "我必須去月球。", "vi": "Tôi phải lên mặt trăng." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What did Leo use to see better?",
+          "options": ["Glasses", "A telescope", "A camera", "A phone"],
+          "answer": "A telescope"
+        },
+        {
+          "question": "What color was the light?",
+          "options": ["Blue", "Green", "Yellow", "Red"],
+          "answer": "Red"
+        },
+        {
+          "question": "What did the red light mean?",
+          "options": ["Hello", "Good night", "Help", "Stop"],
+          "answer": "Help"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Why was Leo worried?",
+          "answer": "Because someone was in trouble."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Imagine you see a red light on the moon. What would you do?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 3,
+      "stage": "Go",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["suit", "helmet", "rocket", "fly", "door"],
+        "grammarFocus": "Past Simple (put on, opened) & Sequencing (First, Then)",
+        "pacing": "Fast and active",
+        "cliffhangerOrHook": "Whoosh! The rocket flew into the dark sky."
+      },
+      "title": "Into the Rocket",
+      "passage": "Leo went to his room. He opened a big cupboard. First, he took out his space suit. It was white and blue. He put on the suit. Zip! Then, he put on his big boots. Stomp! Stomp! Last, he put on his helmet. Click! Now he was ready.\n\nHe ran to the garage. His small rocket was there. It was shiny and fast. Leo climbed inside the rocket. He sat in the pilot's seat. There were many buttons. Red buttons, blue buttons, and green buttons. Leo pushed the big green button. The engine started. Vroom! Vroom!\n\n'Computer, ready?' asked Leo.\n'Ready,' said the computer.\n\nLeo pulled the handle. The garage door opened. He saw the black space. He saw the moon. It looked very big now. The rocket went up. Whoosh! It flew out of the station. It flew very fast towards the moon.",
+      "summary": "Leo puts on his spacesuit and flies his rocket towards the moon.",
+      "translatedSummary": {
+        "th": "ลีโอสวมชุดอวกาศและขับจรวดมุ่งหน้าไปยังดวงจันทร์",
+        "cn": "利奥穿上宇航服，驾驶火箭飞向月球。",
+        "tw": "利奧穿上宇航服，駕駛火箭飛向月球。",
+        "vi": "Leo mặc bộ đồ vũ trụ và lái tên lửa về phía mặt trăng."
+      },
+      "imageDesc": "Leo sitting in the cockpit of a small rocket, pressing a green button. Outside the window is space.",
+      "wordlist": [
+        {
+          "vocabulary": "helmet",
+          "definition": "A hard hat that protects your head.",
+          "translation": { "th": "หมวกกันน็อค", "cn": "头盔", "tw": "頭盔", "vi": "mũ bảo hiểm" }
+        },
+        {
+          "vocabulary": "rocket",
+          "definition": "A vehicle that flies in space.",
+          "translation": { "th": "จรวด", "cn": "火箭", "tw": "火箭", "vi": "tên lửa" }
+        },
+        {
+          "vocabulary": "button",
+          "definition": "Something you push to make a machine work.",
+          "translation": { "th": "ปุ่ม", "cn": "按钮", "tw": "按鈕", "vi": "nút bấm" }
+        }
+      ],
+      "sentences": [
+        "First, he took out his space suit.",
+        "He put on his big boots.",
+        "The rocket flew very fast."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "The rocket flew very fast.",
+          "translation": { "th": "จรวดบินไปเร็วมาก", "cn": "火箭飞得很快。", "tw": "火箭飛很得快。", "vi": "Tên lửa bay rất nhanh." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What did Leo put on first?",
+          "options": ["Boots", "Helmet", "Space suit", "Gloves"],
+          "answer": "Space suit"
+        },
+        {
+          "question": "What color was the button to start the engine?",
+          "options": ["Red", "Blue", "Green", "Yellow"],
+          "answer": "Green"
+        },
+        {
+          "question": "Where did the rocket fly?",
+          "options": ["To the sun", "To the moon", "To Earth", "To Mars"],
+          "answer": "To the moon"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What sound did the engine make?",
+          "answer": "Vroom! Vroom!"
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Draw a picture of Leo's rocket. Describe it."
+        }
+      ]
+    },
+    {
+      "chapterNumber": 4,
+      "stage": "Search",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["walk", "jump", "dust", "high", "float"],
+        "grammarFocus": "Comparative (lighter, higher) & Adverbs (slowly)",
+        "pacing": "Exploratory",
+        "cliffhangerOrHook": "He heard a sound behind a rock."
+      },
+      "title": "Walking on the Moon",
+      "passage": "The rocket landed on the moon. Bump! Leo opened the door. He walked down the steps. The moon was different from the space station. It was very quiet. There was no wind. There was only grey dust and grey rocks.\n\nLeo tried to walk. But he did not walk like on Earth. He jumped! On the moon, he was lighter. One small step was a big jump. 'Whee!' cried Leo. He jumped high into the air. He floated down slowly. It was fun. He jumped over small rocks. He jumped over big holes.\n\nBut Leo remembered the red light. He had to find it. He looked left. He looked right. He saw many rocks. He walked for a long time. It was cold on the moon. Then, he saw a weak red glow. It was behind a big, black rock. Leo walked carefully. He heard a strange sound. 'Beep... Beep...'",
+      "summary": "Leo walks on the moon, jumping high because he is light, and looks for the source of the red light.",
+      "translatedSummary": {
+        "th": "ลีโอเดินบนดวงจันทร์ กระโดดสูงเพราะตัวเบา และมองหาต้นตอของแสงสีแดง",
+        "cn": "利奥在月球上行走，因为身体很轻所以跳得很高，他在寻找红光的来源。",
+        "tw": "利奧在月球上行走，因為身體很輕所以跳得很高，他在尋找紅光的來源。",
+        "vi": "Leo đi bộ trên mặt trăng, nhảy cao vì cậu ấy nhẹ, và tìm kiếm nguồn sáng màu đỏ."
+      },
+      "imageDesc": "Leo in his space suit jumping very high over a grey rock on the moon surface.",
+      "wordlist": [
+        {
+          "vocabulary": "dust",
+          "definition": "Fine powder like dry dirt.",
+          "translation": { "th": "ฝุ่น", "cn": "灰尘", "tw": "灰塵", "vi": "bụi" }
+        },
+        {
+          "vocabulary": "float",
+          "definition": "To move slowly in the air.",
+          "translation": { "th": "ลอย", "cn": "漂浮", "tw": "漂浮", "vi": "trôi nổi" }
+        },
+        {
+          "vocabulary": "jump",
+          "definition": "To push yourself up into the air using your legs.",
+          "translation": { "th": "กระโดด", "cn": "跳", "tw": "跳", "vi": "nhảy" }
+        }
+      ],
+      "sentences": [
+        "On the moon, he was lighter.",
+        "He jumped high into the air.",
+        "He floated down slowly."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "He jumped high into the air.",
+          "translation": { "th": "เขากระโดดสูงขึ้นไปในอากาศ", "cn": "他跳到了高空中。", "tw": "他跳到了高空中。", "vi": "Cậu ấy nhảy cao lên không trung." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "How did Leo move on the moon?",
+          "options": ["He ran fast", "He swam", "He jumped high", "He crawled"],
+          "answer": "He jumped high"
+        },
+        {
+          "question": "What color was the dust on the moon?",
+          "options": ["Red", "Blue", "Grey", "Green"],
+          "answer": "Grey"
+        },
+        {
+          "question": "What sound did Leo hear?",
+          "options": ["Moo Moo", "Beep Beep", "Woof Woof", "Meow Meow"],
+          "answer": "Beep Beep"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Why did Leo jump high?",
+          "answer": "Because he was lighter on the moon."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Would you like to jump on the moon? Why?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 5,
+      "stage": "Find",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["robot", "sad", "stuck", "leg", "heavy"],
+        "grammarFocus": "Past Simple (found, was) & Because",
+        "pacing": "Emotional",
+        "cliffhangerOrHook": "The robot looked at Leo with sad eyes."
+      },
+      "title": "The Sad Robot",
+      "passage": "Leo looked behind the big rock. He found the red light. It was on a robot! But it was not a big robot. It was a very small robot. It had a round body and one wheel. It had two long metal arms. On its chest, the red light flashed.\n\n'Hello?' said Leo.\n\nThe robot made a sad sound. 'Beep... ooh.'\n\nLeo saw the problem. The robot was stuck. A heavy rock was on its leg. The robot could not move. The robot tried to pull its leg, but the rock was too heavy. The robot was scared. Its battery was low. The red light meant 'Low Battery'.\n\n'Do not worry,' said Leo kindly. 'I am Leo. I can help you.'\n\nThe robot looked at Leo. Its eyes were blue screens. They blinked. The robot stopped crying. It knew Leo was a friend.",
+      "summary": "Leo finds a small robot trapped under a heavy rock and promises to help.",
+      "translatedSummary": {
+        "th": "ลีโอพบหุ่นยนต์ตัวเล็กติดอยู่ใต้ก้อนหินหนักและสัญญาว่าจะช่วยเหลือ",
+        "cn": "利奥发现一个小机器人被困在一块沉重的岩石下，并承诺会帮助它。",
+        "tw": "利奧發現一個小機器人被困在一塊沉重的岩石下，並承諾會幫助它。",
+        "vi": "Leo tìm thấy một robot nhỏ bị kẹt dưới tảng đá nặng và hứa sẽ giúp đỡ."
+      },
+      "imageDesc": "A small round robot with one wheel trapped under a rock on the moon. It looks sad.",
+      "wordlist": [
+        {
+          "vocabulary": "stuck",
+          "definition": "Not able to move.",
+          "translation": { "th": "ติดอยู่", "cn": "卡住", "tw": "卡住", "vi": "bị kẹt" }
+        },
+        {
+          "vocabulary": "heavy",
+          "definition": "Hard to lift; having a lot of weight.",
+          "translation": { "th": "หนัก", "cn": "重", "tw": "重", "vi": "nặng" }
+        },
+        {
+          "vocabulary": "battery",
+          "definition": "An object that gives power to machines.",
+          "translation": { "th": "แบตเตอรี่", "cn": "电池", "tw": "電池", "vi": "pin" }
+        }
+      ],
+      "sentences": [
+        "A heavy rock was on its leg.",
+        "The robot could not move.",
+        "I can help you."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "The robot could not move.",
+          "translation": { "th": "หุ่นยนต์ขยับไม่ได้", "cn": "机器人动弹不得。", "tw": "機器人動彈不得。", "vi": "Robot không thể di chuyển." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What was the robot stuck under?",
+          "options": ["A tree", "A car", "A rock", "A box"],
+          "answer": "A rock"
+        },
+        {
+          "question": "What color were the robot's eyes?",
+          "options": ["Red", "Green", "Blue", "Yellow"],
+          "answer": "Blue"
+        },
+        {
+          "question": "Why was the red light flashing?",
+          "options": ["Low Battery", "It was happy", "It was dancing", "It was hot"],
+          "answer": "Low Battery"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What was the robot's name?",
+          "answer": "The text does not say yet (or just 'The robot')."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "How do you think the robot felt when it saw Leo?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 6,
+      "stage": "Take",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["push", "pull", "strong", "tired", "cable"],
+        "grammarFocus": "Past Simple (pushed, connected) & Adjectives (hard, tired)",
+        "pacing": "Tense and physical",
+        "cliffhangerOrHook": "They had to go back fast."
+      },
+      "title": "Leo the Strong",
+      "passage": "Leo looked at the heavy rock. He was a small boy, but he was strong in his space suit. And on the moon, things were lighter. 'One, two, three... push!' said Leo. He pushed the rock with his hands. It moved a little bit. He pushed again. 'Ughhh!' The rock rolled away.\n\nThe robot was free! It waved its arms. 'Beep! Beep!' it said happily. But the robot could not move fast. Its battery was very low. The red light flashed slowly now.\n\nLeo opened a pocket on his suit. He took out a cable. He connected the cable to the robot. He gave the robot some power from his suit. The robot's eyes got brighter. But now Leo felt tired. His suit had less power. He walked slower. 'We must go to the rocket,' said Leo. 'I am tired and hungry.'",
+      "summary": "Leo moves the rock to free the robot and shares his power, but he gets tired.",
+      "translatedSummary": {
+        "th": "ลีโอขยับก้อนหินเพื่อช่วยหุ่นยนต์และแบ่งปันพลังงานให้ แต่เขาเริ่มเหนื่อย",
+        "cn": "利奥搬开岩石救出了机器人，并分给它一些能量，但他自己累了。",
+        "tw": "利奧搬開岩石救出了機器人，並分給它一些能量，但他自己累了。",
+        "vi": "Leo di chuyển tảng đá để giải thoát robot và chia sẻ năng lượng của mình, nhưng cậu ấy bắt đầu thấy mệt."
+      },
+      "imageDesc": "Leo pushing a large grey rock while the small robot watches. A cable connects Leo's suit to the robot.",
+      "wordlist": [
+        {
+          "vocabulary": "push",
+          "definition": "To use force to move something away.",
+          "translation": { "th": "ผลัก", "cn": "推", "tw": "推", "vi": "đẩy" }
+        },
+        {
+          "vocabulary": "strong",
+          "definition": "Having a lot of power to lift or move things.",
+          "translation": { "th": "แข็งแรง", "cn": "强壮", "tw": "強壯", "vi": "mạnh mẽ" }
+        },
+        {
+          "vocabulary": "cable",
+          "definition": "A thick wire to carry electricity.",
+          "translation": { "th": "สายเคเบิล", "cn": "电缆", "tw": "電纜", "vi": "cáp" }
+        }
+      ],
+      "sentences": [
+        "He pushed the rock with his hands.",
+        "The robot was free.",
+        "He gave the robot some power."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "He pushed the rock with his hands.",
+          "translation": { "th": "เขาใช้มือผลักก้อนหิน", "cn": "他用手推石头。", "tw": "他用手推石頭。", "vi": "Cậu ấy dùng tay đẩy tảng đá." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "Why could Leo move the big rock?",
+          "options": ["It was made of paper", "He had a machine", "Things are lighter on the moon", "The robot helped"],
+          "answer": "Things are lighter on the moon"
+        },
+        {
+          "question": "What did Leo give the robot?",
+          "options": ["Food", "Water", "Power", "A book"],
+          "answer": "Power"
+        },
+        {
+          "question": "How did Leo feel after giving power?",
+          "options": ["Strong", "Tired", "Angry", "Fast"],
+          "answer": "Tired"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What did Leo use to connect to the robot?",
+          "answer": "A cable."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Have you ever helped a friend? What did you do?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 7,
+      "stage": "Return",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["carry", "together", "seat", "safe", "pilot"],
+        "grammarFocus": "Past Simple (carried, sat) & Adverbs (carefully)",
+        "pacing": "Relieved",
+        "cliffhangerOrHook": "The space station was waiting for them."
+      },
+      "title": "Flying Home",
+      "passage": "Leo and the robot walked back to the rocket. Leo walked slowly because he was tired. The robot rolled next to him. 'Beep beep,' said the robot. It wanted to say 'Thank you'.\n\nThey found the rocket. Leo picked up the small robot. He carried it up the steps. Inside, Leo put the robot on a spare seat. He put a seatbelt on the robot. Click! 'Now you are safe,' said Leo.\n\nLeo sat in the pilot's seat. He pushed the green button again. Vroom! The rocket went up. It left the moon. They flew through the dark space. They saw the big space station. It looked like a shining star. Leo smiled. He was happy to go home. He was happy he had a friend.",
+      "summary": "Leo and the robot fly back to the space station together.",
+      "translatedSummary": {
+        "th": "ลีโอและหุ่นยนต์บินกลับไปที่สถานีอวกาศด้วยกัน",
+        "cn": "利奥和机器人一起飞回空间站。",
+        "tw": "利奧和機器人一起飛回空間站。",
+        "vi": "Leo và robot cùng nhau bay trở lại trạm vũ trụ."
+      },
+      "imageDesc": "Leo and the robot sitting side-by-side in the rocket cockpit. The robot has a seatbelt on.",
+      "wordlist": [
+        {
+          "vocabulary": "carry",
+          "definition": "To hold something and move it.",
+          "translation": { "th": "ถือ, แบก", "cn": "携带", "tw": "攜帶", "vi": "mang" }
+        },
+        {
+          "vocabulary": "seatbelt",
+          "definition": "A strap to keep you safe in a seat.",
+          "translation": { "th": "เข็มขัดนิรภัย", "cn": "安全带", "tw": "安全帶", "vi": "dây an toàn" }
+        },
+        {
+          "vocabulary": "safe",
+          "definition": "Not in danger.",
+          "translation": { "th": "ปลอดภัย", "cn": "安全", "tw": "安全", "vi": "an toàn" }
+        }
+      ],
+      "sentences": [
+        "Leo carried it up the steps.",
+        "He put a seatbelt on the robot.",
+        "They flew through the dark space."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "He put a seatbelt on the robot.",
+          "translation": { "th": "เขาคาดเข็มขัดนิรภัยให้หุ่นยนต์", "cn": "他给机器人系上了安全带。", "tw": "他給機器人繫上了安全帶。", "vi": "Cậu ấy thắt dây an toàn cho robot." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "Who sat in the spare seat?",
+          "options": ["Leo", "The robot", "A dog", "An alien"],
+          "answer": "The robot"
+        },
+        {
+          "question": "What did Leo put on the robot?",
+          "options": ["A hat", "A shoe", "A seatbelt", "A coat"],
+          "answer": "A seatbelt"
+        },
+        {
+          "question": "Where were they going?",
+          "options": ["To the moon", "To the sun", "Home (Space Station)", "To school"],
+          "answer": "Home (Space Station)"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Why did Leo smile?",
+          "answer": "He was happy to go home and had a friend."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Why is it important to wear a seatbelt?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 8,
+      "stage": "Change",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["name", "best", "charge", "play", "lonely"],
+        "grammarFocus": "Present Simple (is, plays) & Now",
+        "pacing": "Happy and calm",
+        "cliffhangerOrHook": "The end."
+      },
+      "title": "A New Best Friend",
+      "passage": "They arrived at the space station. Leo gave the robot a lot of power. The robot was full of energy now! It rolled around the room very fast. 'Zoom! Zoom!'\n\n'What is your name?' asked Leo.\nThe robot pointed to the sound it made. 'Beep.'\n'I will call you Beep,' said Leo. 'I am Leo.'\n'Beep!' said the robot happily.\n\nNow, Leo is not lonely. He has a best friend. Beep helps Leo. Beep cleans the room. Beep plays games with Leo. They look at the stars together. The space station is not quiet anymore. It is full of fun noises. Leo loves his home, and he loves his robot friend, Beep.",
+      "summary": "Leo names the robot Beep and they become best friends, so Leo is not lonely anymore.",
+      "translatedSummary": {
+        "th": "ลีโอตั้งชื่อหุ่นยนต์ว่าบี๊บและพวกเขากลายเป็นเพื่อนสนิทกัน ลีโอจึงไม่เหงาอีกต่อไป",
+        "cn": "利奥给机器人取名为Beep，他们成了最好的朋友，利奥不再孤单了。",
+        "tw": "利奧給機器人取名為Beep，他們成了最好的朋友，利奧不再孤單了。",
+        "vi": "Leo đặt tên cho robot là Beep và họ trở thành bạn thân, vì vậy Leo không còn cô đơn nữa."
+      },
+      "imageDesc": "Leo and the robot playing with toy cars in the space station room. Both look happy.",
+      "wordlist": [
+        {
+          "vocabulary": "energy",
+          "definition": "Power to move and do things.",
+          "translation": { "th": "พลังงาน", "cn": "能量", "tw": "能量", "vi": "năng lượng" }
+        },
+        {
+          "vocabulary": "best friend",
+          "definition": "The friend you like the most.",
+          "translation": { "th": "เพื่อนสนิท", "cn": "最好的朋友", "tw": "最好的朋友", "vi": "bạn thân nhất" }
+        },
+        {
+          "vocabulary": "noise",
+          "definition": "A sound, especially a loud one.",
+          "translation": { "th": "เสียงรบกวน", "cn": "噪音", "tw": "噪音", "vi": "tiếng ồn" }
+        }
+      ],
+      "sentences": [
+        "The robot was full of energy now.",
+        "Now, Leo is not lonely.",
+        "They look at the stars together."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "They look at the stars together.",
+          "translation": { "th": "พวกเขามองดูดวงดาวด้วยกัน", "cn": "他们一起看星星。", "tw": "他們一起看星星。", "vi": "Họ cùng nhau ngắm sao." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What is the robot's name?",
+          "options": ["Boop", "Beep", "Zoom", "Robot"],
+          "answer": "Beep"
+        },
+        {
+          "question": "Does Leo feel lonely now?",
+          "options": ["Yes, very lonely", "No, he has a friend", "Sometimes", "He is sad"],
+          "answer": "No, he has a friend"
+        },
+        {
+          "question": "What do they do together?",
+          "options": ["Fight", "Sleep", "Look at stars", "Cry"],
+          "answer": "Look at stars"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What does Beep help Leo do?",
+          "answer": "Beep helps clean the room."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "What would you name a robot friend?"
+        }
+      ]
+    }
+  ]
+}

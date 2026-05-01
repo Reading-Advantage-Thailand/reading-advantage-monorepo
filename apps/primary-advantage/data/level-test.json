@@ -1,0 +1,382 @@
+{
+    "language_placement_test": [
+        {
+            "level": "A0",
+            "points": 3000,
+            "questions": [
+                {
+                    "prompt": "Is this a book?",
+                    "options": {
+                        "A": "Yes, it is a book.",
+                        "B": "No, it is a book.",
+                        "C": "Yes, it is a pen."
+                    }
+                },
+                {
+                    "prompt": "Good morning!",
+                    "options": {
+                        "A": "Good morning!",
+                        "B": "Good night.",
+                        "C": "Thank you."
+                    }
+                },
+                {
+                    "prompt": "Do you have a pet?",
+                    "options": {
+                        "A": "No, I have a dog.",
+                        "B": "Yes, I have a cat.",
+                        "C": "I like dogs."
+                    }
+                },
+                {
+                    "prompt": "What is your name?",
+                    "options": {
+                        "A": "My name is Sam.",
+                        "B": "I am ten years old.",
+                        "C": "Hello."
+                    }
+                },
+                {
+                    "prompt": "How are you?",
+                    "options": {
+                        "A": "I am good, thank you.",
+                        "B": "I am Emma.",
+                        "C": "Yes, I am here."
+                    }
+                },
+                {
+                    "prompt": "Is this your pencil?",
+                    "options": {
+                        "A": "Yes, it's mine.",
+                        "B": "No, it's not a pencil.",
+                        "C": "That is a book."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "A1",
+            "points": 6000,
+            "questions": [
+                {
+                    "prompt": "What color is your backpack?",
+                    "options": {
+                        "A": "My backpack is blue.",
+                        "B": "My backpack is big.",
+                        "C": "I have a backpack."
+                    }
+                },
+                {
+                    "prompt": "Where are you from?",
+                    "options": {
+                        "A": "I am from Japan.",
+                        "B": "Japan is beautiful.",
+                        "C": "I like traveling."
+                    }
+                },
+                {
+                    "prompt": "What's your favorite food?",
+                    "options": {
+                        "A": "I like pizza.",
+                        "B": "Pizza is round.",
+                        "C": "I eat breakfast."
+                    }
+                },
+                {
+                    "prompt": "What time is it?",
+                    "options": {
+                        "A": "It's three o'clock.",
+                        "B": "It's time for recess.",
+                        "C": "I have a watch."
+                    }
+                },
+                {
+                    "prompt": "Do you like ice cream?",
+                    "options": {
+                        "A": "Yes, I love ice cream.",
+                        "B": "Ice cream is cold.",
+                        "C": "I don't like vegetables."
+                    }
+                },
+                {
+                    "prompt": "Where is the playground?",
+                    "options": {
+                        "A": "It's behind the school.",
+                        "B": "I play at the playground.",
+                        "C": "The playground is fun."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "A2",
+            "points": 9000,
+            "questions": [
+                {
+                    "prompt": "Did you enjoy the movie last night?",
+                    "options": {
+                        "A": "Yes, it was very funny.",
+                        "B": "No, I doesn't like it.",
+                        "C": "Movies is too long for me."
+                    }
+                },
+                {
+                    "prompt": "Are you going to the birthday party on Friday?",
+                    "options": {
+                        "A": "I don't know yet.",
+                        "B": "Parties was fun.",
+                        "C": "Friday I to work."
+                    }
+                },
+                {
+                    "prompt": "Should we take the bus or walk to school?",
+                    "options": {
+                        "A": "Let's take the bus, it's faster.",
+                        "B": "Walking is health.",
+                        "C": "Bus are crowded."
+                    }
+                },
+                {
+                    "prompt": "Have you finished your homework?",
+                    "options": {
+                        "A": "Not yet, I'm still working on it.",
+                        "B": "I finishes it tomorrow.",
+                        "C": "Homeworks are hard."
+                    }
+                },
+                {
+                    "prompt": "What did you do last weekend?",
+                    "options": {
+                        "A": "I went to the zoo.",
+                        "B": "I goes to the park.",
+                        "C": "Zoos is fun."
+                    }
+                },
+                {
+                    "prompt": "Can you help me with this math problem?",
+                    "options": {
+                        "A": "Of course, what do you need?",
+                        "B": "I am helping later.",
+                        "C": "Math is easy."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "B1",
+            "points": 12000,
+            "questions": [
+                {
+                    "prompt": "I can't find my science book anywhere.",
+                    "options": {
+                        "A": "Did you look in your backpack?",
+                        "B": "It might be where you left.",
+                        "C": "Books are somewhere around."
+                    }
+                },
+                {
+                    "prompt": "I think I failed my spelling test.",
+                    "options": {
+                        "A": "Don't worry, you can try again next week.",
+                        "B": "Spelling is always hard.",
+                        "C": "You will passed next time."
+                    }
+                },
+                {
+                    "prompt": "I'm feeling really cold in this classroom.",
+                    "options": {
+                        "A": "Should I close the window?",
+                        "B": "You should to wear more.",
+                        "C": "Is cold in here, indeed."
+                    }
+                },
+                {
+                    "prompt": "What do you think about the new school recycling program?",
+                    "options": {
+                        "A": "I think it's a great idea for our environment.",
+                        "B": "It's quite complicated program.",
+                        "C": "I haven't reading about it yet."
+                    }
+                },
+                {
+                    "prompt": "How often do you play sports?",
+                    "options": {
+                        "A": "I play soccer every Tuesday and Thursday.",
+                        "B": "Exercise is healthful.",
+                        "C": "I'm not liking soccer."
+                    }
+                },
+                {
+                    "prompt": "Why are you learning English?",
+                    "options": {
+                        "A": "To make friends and to watch movies without subtitles.",
+                        "B": "English is use worldwide.",
+                        "C": "I like learning language."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "B2",
+            "points": 15000,
+            "questions": [
+                {
+                    "prompt": "Do you think we should plant more trees in our schoolyard?",
+                    "options": {
+                        "A": "Yes, it would provide shade and help the environment.",
+                        "B": "It's too costing much.",
+                        "C": "Trees are green."
+                    }
+                },
+                {
+                    "prompt": "I'm planning a trip to the science museum next weekend.",
+                    "options": {
+                        "A": "Which exhibits are you most excited to see?",
+                        "B": "It's a very long trip.",
+                        "C": "Museums are very expenses."
+                    }
+                },
+                {
+                    "prompt": "This book about dinosaurs is quite interesting.",
+                    "options": {
+                        "A": "Paleontology has always fascinated me too.",
+                        "B": "You could to try a simpler book.",
+                        "C": "Reading books are challenging."
+                    }
+                },
+                {
+                    "prompt": "What do you think about how much time kids spend on video games?",
+                    "options": {
+                        "A": "It depends on the games and if it affects their schoolwork.",
+                        "B": "Video games are popular.",
+                        "C": "I play games often."
+                    }
+                },
+                {
+                    "prompt": "Do you believe that space exploration is important for kids to learn about?",
+                    "options": {
+                        "A": "Absolutely, it inspires scientific curiosity and innovation.",
+                        "B": "Space is fascinates.",
+                        "C": "It seems much expensive."
+                    }
+                },
+                {
+                    "prompt": "How do you handle stress before a big test?",
+                    "options": {
+                        "A": "I study a little each day and take deep breaths before starting.",
+                        "B": "Tests is hard to handling.",
+                        "C": "I getting stressed easily."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "C1",
+            "points": 18000,
+            "questions": [
+                {
+                    "prompt": "What do you think about digital art compared to traditional painting?",
+                    "options": {
+                        "A": "Both have unique qualities and require different skills to master.",
+                        "B": "Digital art isn't same as painting.",
+                        "C": "I'm preferring traditional art forms."
+                    }
+                },
+                {
+                    "prompt": "The novel explores themes of friendship and belonging.",
+                    "options": {
+                        "A": "Those are important themes that many kids can relate to.",
+                        "B": "It's quite an interesting story.",
+                        "C": "Themes are too abstract for me."
+                    }
+                },
+                {
+                    "prompt": "What's your opinion on having longer school days but shorter school weeks?",
+                    "options": {
+                        "A": "It might help some students focus better, but others need more frequent breaks.",
+                        "B": "Such policy could be beneficial.",
+                        "C": "It's a complex topic, indeed."
+                    }
+                },
+                {
+                    "prompt": "How do you think technology influences how kids learn today?",
+                    "options": {
+                        "A": "It offers amazing resources but can sometimes be distracting.",
+                        "B": "Technology is transforming schools.",
+                        "C": "I prefer more traditional learning methods."
+                    }
+                },
+                {
+                    "prompt": "What do you think about cultural exchange programs between schools in different countries?",
+                    "options": {
+                        "A": "They help students understand different perspectives and make global friendships.",
+                        "B": "Global connections are important.",
+                        "C": "Students should learn their own culture first."
+                    }
+                },
+                {
+                    "prompt": "How might artificial intelligence help students in the future?",
+                    "options": {
+                        "A": "It could provide personalized learning experiences and help with difficult concepts.",
+                        "B": "AI is becoming important in education.",
+                        "C": "Technology must be used carefully."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "C2",
+            "points": 21000,
+            "questions": [
+                {
+                    "prompt": "Advanced coding classes could transform how we teach problem-solving.",
+                    "options": {
+                        "A": "They develop computational thinking skills applicable across subjects.",
+                        "B": "Computer programming isn't widely taught yet.",
+                        "C": "Such educational trends are futuristic."
+                    }
+                },
+                {
+                    "prompt": "The author challenges traditional ideas about childhood development.",
+                    "options": {
+                        "A": "Her research offers valuable new perspectives on how children learn.",
+                        "B": "She questions common assumptions about education.",
+                        "C": "Such theories are often complicated."
+                    }
+                },
+                {
+                    "prompt": "The connection between arts education and scientific thinking is fascinating.",
+                    "options": {
+                        "A": "Creative expression and analytical reasoning strengthen each other.",
+                        "B": "Art and science are traditionally separate subjects.",
+                        "C": "It's an interesting educational approach."
+                    }
+                },
+                {
+                    "prompt": "Virtual reality field trips could revolutionize how students experience history.",
+                    "options": {
+                        "A": "Immersive experiences create deeper emotional connections to historical events.",
+                        "B": "Technology makes learning more engaging.",
+                        "C": "Such innovations should be carefully implemented."
+                    }
+                },
+                {
+                    "prompt": "In children's literature today, authors are creating more diverse characters.",
+                    "options": {
+                        "A": "This representation helps all children see themselves in stories.",
+                        "B": "It reflects changing social awareness.",
+                        "C": "Modern books are different from classics."
+                    }
+                },
+                {
+                    "prompt": "The research on multilingual education shows significant cognitive benefits.",
+                    "options": {
+                        "A": "Learning multiple languages enhances brain flexibility and cultural understanding.",
+                        "B": "Language learning is valuable for students.",
+                        "C": "The data presents compelling arguments."
+                    }
+                }
+            ]
+        }
+    ]
+}

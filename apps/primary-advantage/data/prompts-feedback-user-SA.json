@@ -1,0 +1,3 @@
+{
+  "user_prompt": "Evaluate this short answer response according to CEFR guidelines and article content. \nCEFR LEVEL: {targetCEFRLevel} \nARTICLE: {article} \nQUESTION: {question} \nSUGGESTED RESPONSE: {suggestedResponse} \nSTUDENT RESPONSE: {studentResponse} \nSTUDENT'S L1: {preferredLanguage}"
+}

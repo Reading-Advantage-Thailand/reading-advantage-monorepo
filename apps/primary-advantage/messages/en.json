@@ -1,0 +1,2657 @@
+{
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, th {🇹🇭 ไทย} en {🇺🇸 English} tw {🇹🇼 中文} cn {🇨🇳 台灣} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
+  },
+  "common": {
+    "tryAgain": "Try Again"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "Sorry, we couldn't find the page you're looking for.",
+    "goBack": "Go Back",
+    "returnToWebsite": "Return to website"
+  },
+  "MainNav": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "authors": "Authors",
+    "login": "Login",
+    "menu": "Menu",
+    "usernav": {
+      "settings": "Settings",
+      "logout": "Logout",
+      "contactUs": "Contact Us",
+      "account": "Account",
+      "navigation": "Navigation",
+      "studentDashboard": "Student Dashboard",
+      "teacherDashboard": "Teacher Dashboard",
+      "adminDashboard": "Admin Dashboard",
+      "systemDashboard": "System Dashboard"
+    }
+  },
+  "Sidebar": {
+    "read": "Read",
+    "stories": "Stories",
+    "assignments": "Assignments",
+    "sentences": "Sentences",
+    "vocabulary": "Vocabulary",
+    "testing": "Testing",
+    "systemdashboard": "System Dashboard",
+    "licenses": "Licenses Dashboard",
+    "schools": "Schools Dashboard",
+    "teacherdashboard": "Teacher Dashboard",
+    "reports": "Reports",
+    "history": "History",
+    "myClasses": "My Classes",
+    "myStudents": "My Students",
+    "classRoster": "Class Roster",
+    "adminDashboard": "Admin Dashboard",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "teachers": "Teachers",
+    "importdata": "Import Data",
+    "userProfile": "User Profile",
+    "schoolProfile": "School Profile",
+    "studentsandclasses": "Students and Classes",
+    "articlecreation": "Article Creation",
+    "back": "Back",
+    "subItem": {
+      "admin": "Admin",
+      "teachers": "Teachers",
+      "students": "Students",
+      "allTeachers": "All Teachers",
+      "addTeacher": "Add Teacher",
+      "allStudents": "All Students",
+      "addStudent": "Add Student",
+      "classrooms": "Classrooms",
+      "classRoster": "Class Roster",
+      "studentProgress": "Student Progress",
+      "overviewReports": "Overview Reports",
+      "performanceAnalytics": "Performance Analytics",
+      "progressTracking": "Progress Tracking"
+    }
+  },
+  "Leaderboard": {
+    "title": "Leaderboard",
+    "rank": "Rank",
+    "name": "Name",
+    "xp": "XP",
+    "room": "Room",
+    "you": "You",
+    "noDataAvailable": "No data available for this month"
+  },
+  "Question": {
+    "SAQuestion": {
+      "title": "Short Answer Question",
+      "description": "Answer the question in a few words",
+      "question": "Question",
+      "suggestedAnswer": "Suggested Answer",
+      "feedback": "Feedback",
+      "yourAnswer": "Your Answer",
+      "feedbackAndYourScore": "Feedback and your score",
+      "score": "Score is {score}",
+      "anwserError": "Please enter your answer"
+    },
+    "LAQuestion": {
+      "title": "Long Answer Question",
+      "description": "Answer the question in a few paragraphs",
+      "feedbackModal": {
+        "feedbackwritting": "Writing Feedback",
+        "finalfeedback": "Final Feedback",
+        "vocabulary": "Vocabulary Use",
+        "grammar": "Grammar Accuracy",
+        "clarityandcoherence": "Clarity and Coherence",
+        "complexityandstructure": "Complexity and Structure",
+        "contentanddevelopment": "Content and Development",
+        "areaforimpovement": "Area for improvement",
+        "examples": "Examples",
+        "strength": "Strength",
+        "suggestions": "Suggestions",
+        "feedbackoverall": "Overall Feedback",
+        "examplerevisions": "Example Revisions",
+        "nextStep": "Next Step",
+        "reviseResponse": "Revise Your Response",
+        "getXP": "Get your XP!",
+        "score": "Score is"
+      }
+    },
+    "MCQuestion": {
+      "title": "Multiple Choice Question",
+      "questionOf": "Question {index} of {total}",
+      "description": "Take the quiz to check your understanding"
+    },
+    "descriptionSuccess": "You have completed the quiz",
+    "descriptionSuccess2": "You have completed the quiz {score} questions correct out of {total} questions",
+    "descriptionError": "There was an error getting the question",
+    "descriptionLoading": "Getting questions for this article. Please wait a moment."
+  },
+  "Student": {
+    "history": {
+      "titleOfHistory": "History of {name}",
+      "reminderToReread": {
+        "title": "Reminder to read",
+        "description": "You might want to try reading one of these articles again to see if you've improved."
+      },
+      "articleRecords": {
+        "title": "Article Records",
+        "description": "Your reading records will be displayed here."
+      },
+      "title": "title",
+      "score": "score",
+      "date": "date",
+      "rated": "rated",
+      "status": "status",
+      "searchPlaceholder": "Search articles...",
+      "loading": "Loading...",
+      "noArticles": "No articles found",
+      "noArticlesToRead": "No articles need to be read again"
+    }
+  },
+  "Admin": {
+    "Classrooms": {
+      "classrooms": "Classrooms",
+      "classroomsDescription": "Manage classrooms in your school",
+      "searchPlaceholder": "Search classrooms...",
+      "createClassroom": "Create Classroom",
+      "createClassroomDescription": "Create a new classroom for students",
+      "editClassroom": "Edit Classroom",
+      "editClassroomDescription": "Update classroom information",
+      "deleteClassroom": "Delete Classroom",
+      "deleteClassroomDescription": "Are you sure you want to delete this classroom?",
+      "deleteClassroomWarning": "This action cannot be undone. All students and teachers will be removed from this classroom.",
+      "name": "Name",
+      "namePlaceholder": "Enter classroom name",
+      "grade": "Grade",
+      "gradePlaceholder": "Enter grade level",
+      "selectGrade": "Select grade",
+      "classCode": "Class Code",
+      "studentPassword": "Student Password",
+      "studentPasswordPlaceholder": "Enter password for students",
+      "students": "Students",
+      "teachers": "Teachers",
+      "createdAt": "Created",
+      "expires": "Expires",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "create": "Create",
+      "update": "Update",
+      "creating": "Creating...",
+      "updating": "Updating...",
+      "deleting": "Deleting...",
+      "noClassrooms": "No classrooms found",
+      "loading": "Loading classrooms...",
+      "toast": {
+        "createSuccess": "Classroom created successfully",
+        "invalidData": "Invalid data format received",
+        "loadFailed": "Failed to load classrooms",
+        "createFailed": "Failed to create classroom",
+        "updateFailed": "Failed to update classroom",
+        "updateSuccess": "Classroom updated successfully",
+        "deleteSuccess": "Classroom deleted successfully",
+        "deleteFailed": "Failed to delete classroom"
+      }
+    },
+    "Students": {
+      "Add": {
+        "heading": "Add Student",
+        "subtext": "Add a new student to your school",
+        "cardTitle": "Student Information",
+        "nameLabel": "Full Name",
+        "namePlaceholder": "Enter student's full name",
+        "emailLabel": "Email Address",
+        "emailPlaceholder": "Enter email address",
+        "submit": "Create Student",
+        "submitting": "Creating Student...",
+        "reset": "Reset Form",
+        "toastSuccess": "Student created successfully!",
+        "errorGeneric": "Failed to create student",
+        "errors": {
+          "nameMin": "Name must be at least 2 characters",
+          "nameMax": "Name must be less than 100 characters",
+          "emailInvalid": "Please enter a valid email address"
+        }
+      }
+    }
+  },
+  "ImportData": {
+    "header": {
+      "heading": "Import Data",
+      "text": "Import CSV files to bulk add students, teachers, and classes to your system"
+    },
+    "errors": {
+      "onlyCsv": "Only CSV files are allowed",
+      "sizeExceeded": "File size exceeds 5MB limit. Current size: {size}MB",
+      "parseError": "Failed to parse CSV file. Please check the file format.",
+      "readError": "Failed to read the file",
+      "uploadFailed": "Upload failed"
+    },
+    "upload": {
+      "cardTitle": "Upload CSV File",
+      "selectFile": "Select CSV File",
+      "maxSize": "Max size: 5MB",
+      "browse": "Browse",
+      "supportedFormat": "Supported format: CSV files only, maximum size 5MB",
+      "fileSelected": {
+        "title": "File Selected",
+        "name": "Name",
+        "size": "Size",
+        "type": "Type"
+      },
+      "failedTitle": "Upload Failed",
+      "successTitle": "Upload Successful",
+      "success": {
+        "file": "File",
+        "size": "Size",
+        "savedAs": "Saved as",
+        "nextSteps": "File is now ready for processing. You can proceed with the next steps."
+      },
+      "progressLabel": "Upload Progress",
+      "progressPercent": "{percent}% complete",
+      "uploading": "Uploading...",
+      "importButton": "Import Data",
+      "clear": "Clear"
+    },
+    "preview": {
+      "button": "Preview",
+      "title": "Data Preview",
+      "columns": { "name": "Name", "email": "Email", "role": "Role" }
+    },
+    "formatGuide": {
+      "title": "CSV Format Guide",
+      "tabs": {
+        "students": "Students",
+        "teachers": "Teachers & Admins",
+        "classes": "Classes"
+      },
+      "requiredHeaders": "Required Headers (in this exact order):",
+      "exampleData": "Example Data:",
+      "requirements": "Requirements:",
+      "downloadTemplate": "Download {type, select, students {Students} teachers {Teachers} classes {Classes} other {Data}} Template"
+    },
+    "format": {
+      "headers": {
+        "name": "name",
+        "email": "email",
+        "classroomName": "classroom_name",
+        "role": "role"
+      },
+      "students": {
+        "title": "Students Data Format",
+        "description": "Import student information including personal details and class assignments",
+        "req1": "File name must be students.csv",
+        "req2": "Email must be unique and valid format",
+        "req3": "Role should be Student"
+      },
+      "teachers": {
+        "title": "Teachers & Admins Data Format",
+        "description": "Import teacher information and their assigned subjects",
+        "req1": "File name must be teachers.csv",
+        "req2": "Email must be unique and valid format",
+        "req3": "Role should be Teacher or Admin"
+      },
+      "classes": {
+        "title": "Classes Data Format",
+        "description": "Import class schedules and room assignments",
+        "req1": "File name must be classes.csv",
+        "req2": "Classroom name must be unique"
+      }
+    },
+    "tips": {
+      "title": "Import Tips",
+      "fileSize": {
+        "title": "File Size Limit",
+        "desc": "Maximum file size is 5MB. Larger files should be split into smaller chunks"
+      },
+      "encoding": {
+        "title": "Use UTF-8 Encoding",
+        "desc": "Save your CSV with UTF-8 encoding to support special characters"
+      },
+      "duplicates": {
+        "title": "Check for Duplicates",
+        "desc": "Ensure emails and IDs are unique before importing"
+      },
+      "validate": {
+        "title": "Validate Data First",
+        "desc": "Use the preview feature to check your data before importing"
+      },
+      "backup": {
+        "title": "Backup First",
+        "desc": "Always backup your existing data before large imports"
+      }
+    },
+    "issues": {
+      "title": "Common Issues",
+      "wrongFormat": {
+        "title": "Wrong File Format",
+        "desc": "Only CSV files are accepted. Convert Excel files to CSV first"
+      },
+      "missingHeaders": {
+        "title": "Missing Headers",
+        "desc": "First row must contain exact header names as shown"
+      },
+      "invalidEmail": {
+        "title": "Invalid Email Format",
+        "desc": "Check all email addresses are properly formatted"
+      }
+    }
+  },
+  "AdminDashboard": {
+    "title": "Admin Dashboard",
+    "subtitle": "Manage your school's educational platform",
+    "actions": {
+      "importData": "Import Data",
+      "addTeacher": "Add Teacher"
+    },
+    "stats": {
+      "teachers": "Teachers",
+      "teachersDesc": "Active teachers in your school",
+      "students": "Students",
+      "studentsDesc": "Enrolled students",
+      "articles": "Articles",
+      "articlesDesc": "Available reading materials",
+      "growth": "Monthly Growth",
+      "growthDesc": "Student enrollment growth"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "addTeacher": "Add Teacher",
+      "addTeacherDesc": "Register a new teacher account",
+      "addStudent": "Add Student",
+      "addStudentDesc": "Create a new student profile",
+      "createArticle": "Create Article",
+      "createArticleDesc": "Generate new reading content",
+      "importData": "Import Data",
+      "importDataDesc": "Bulk import users and content",
+      "viewReports": "View Reports",
+      "viewReportsDesc": "Access analytics and insights",
+      "manageClassrooms": "Manage Classrooms",
+      "manageClassroomsDesc": "Organize classes and assignments"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "empty": "No recent activity to display",
+      "viewAll": "View all activity"
+    },
+    "systemStatus": {
+      "title": "System Status",
+      "serverHealth": "Server Health",
+      "database": "Database",
+      "aiServices": "AI Services",
+      "healthy": "Healthy",
+      "connected": "Connected",
+      "operational": "Operational"
+    },
+    "alerts": {
+      "title": "System Alerts",
+      "lowStorage": {
+        "title": "Storage Space Low",
+        "description": "Consider upgrading your storage plan"
+      },
+      "newRegistrations": {
+        "title": "New Teacher Registrations",
+        "description": "5 teachers pending approval"
+      }
+    },
+    "charts": {
+      "title": "Analytics Overview",
+      "userGrowth": "User Growth",
+      "topArticles": "Most Popular Articles",
+      "activityByLevel": "Activity by CEFR Level",
+      "performance": "Performance Metrics"
+    }
+  },
+  "AdminArticleCreationPage": {
+    "header": {
+      "heading": "Article Creation & Management",
+      "text": "Create, generate, and approve articles for Primary Advantage"
+    }
+  },
+  "Components": {
+    "submitButton": "Submit",
+    "closeButton": "Close",
+    "cancelButton": "Cancel",
+    "previousButton": "Previous",
+    "retakeButton": "Retake",
+    "nextButton": "Next",
+    "finishButton": "Finish",
+    "waitingButton": "Wait a moment...",
+    "startQuiz": "Start Quiz",
+    "getFeedback": "Get Feedback",
+    "audioButton": "Listen and read along",
+    "saveToFlashcard": "Save to flashcard",
+    "translate": "Translate",
+    "timer": "{elapsed} seconds elapsed",
+    "resetFilter": "Reset Filter",
+    "assignments": "Assignments",
+    "sentences": "Sentences",
+    "confirmRetake": "Confirm Retake",
+    "areYouSureYouWantToRetakeThisQuiz": "Are you sure you want to retake this quiz? Your previous answers will be cleared.",
+    "AdminArticleCreation": {
+      "tabs": {
+        "createArticle": "Create Article",
+        "previewEdit": "Preview & Edit",
+        "manageArticles": "Manage Articles"
+      },
+      "aiArticleGenerator": "AI Article Generator",
+      "aiArticleGeneratorDesc": "Use AI to generate high-quality articles with your chosen settings.",
+      "articleType": "Article Type",
+      "fiction": "Fiction",
+      "nonFiction": "Nonfiction",
+      "genre": "Genre",
+      "subgenre": "Subgenre",
+      "cefrLevel": "CEFR Level",
+      "articleTopic": "Article Topic",
+      "placeholder": {
+        "genre": "Select a genre",
+        "subgenre": "Select a subgenre",
+        "cefr": "Select CEFR level",
+        "topic": "Describe the topic, theme, or key points"
+      },
+      "cefrLevels": {
+        "A1": "A1",
+        "A2": "A2",
+        "B1": "B1",
+        "B2": "B2",
+        "C1": "C1",
+        "C2": "C2"
+      },
+      "error": "Error",
+      "generateWithAI": "Generate with AI",
+      "dialog": {
+        "approval": {
+          "title": "Confirm Approval",
+          "description": "Are you sure you want to approve and publish this article? This action will publish the article to the platform."
+        },
+        "backToCreate": {
+          "title": "Back to Create?",
+          "description": "If you go back to Create, your changes will be lost.",
+          "warning": "This action will reset the article to the initial state."
+        },
+        "common": {
+          "cancel": "Cancel",
+          "confirm": "Confirm",
+          "ok": "OK"
+        }
+      },
+      "loading": {
+        "titles": {
+          "generate": "Generating Your Article",
+          "save": "Saving Article Draft",
+          "approve": "Approving & Publishing Article"
+        },
+        "descriptions": {
+          "generate": "Please wait while AI creates your amazing content...",
+          "save": "Saving your changes as a draft...",
+          "approve": "Publishing your article to the platform..."
+        }
+      },
+      "preview": {
+        "title": "Article Preview",
+        "description": "Review the article content (read-only)"
+      },
+      "editor": {
+        "title": "Article Editor",
+        "description": "Review and edit the generated content before approval"
+      },
+      "modified": "Modified",
+      "badges": {
+        "type": "Type",
+        "genre": "Genre",
+        "subgenre": "Subgenre",
+        "cefrLevel": "CEFR Level"
+      },
+      "fields": {
+        "title": "Article Title",
+        "content": "Article Content",
+        "summary": "Article Summary"
+      },
+      "placeholders": {
+        "title": "Enter article title...",
+        "content": "Enter the main article content...",
+        "summary": "Enter article summary..."
+      },
+      "buttons": {
+        "backToCreate": "Back to Create",
+        "approveAndPublish": "Approve and Publish",
+        "saveAsDraft": "Save as Draft",
+        "backToManage": "Back to Manage",
+        "switchToEdit": "Switch to Edit",
+        "refresh": "Refresh",
+        "preview": "Preview",
+        "edit": "Edit",
+        "delete": "Delete",
+        "deleting": "Deleting..."
+      },
+      "manage": {
+        "title": "Article Management",
+        "description": "Manage your articles",
+        "loading": "Loading articles...",
+        "empty": "No articles found"
+      },
+      "status": {
+        "draft": "Draft",
+        "published": "Published"
+      },
+      "list": {
+        "topic": "Topic",
+        "cefr": "CEFR",
+        "rating": "Rating",
+        "created": "Created"
+      },
+      "toasts": {
+        "fetchFailed": "Failed to fetch articles",
+        "generateSuccess": "Article generated successfully!",
+        "saveSuccess": "Article saved as draft successfully!",
+        "saveFailed": "Failed to save article",
+        "approveSuccess": "Article approved and published successfully!",
+        "approveFailed": "Failed to approve article",
+        "deleteSuccess": "Article deleted successfully",
+        "deleteFailed": "Failed to delete article",
+        "deleteError": "An error occurred while deleting the article"
+      }
+    }
+  },
+  "WordList": {
+    "title": "Word List",
+    "description": "Select words to save to your flashcards",
+    "selectedWords": "{count} words selected"
+  },
+  "Article": {
+    "title": "Article",
+    "description": "Article",
+    "fiction": "Fiction",
+    "nonfiction": "Nonfiction",
+    "type": "Type",
+    "genre": "Genre",
+    "subGenre": "Subgenre",
+    "cefrLevel": "CEFR Level : {level}",
+    "raLevel": "RA Level : {level}",
+    "rating": "Rating",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "saveToFlashcard": "Flashcard: Saved",
+    "notSaved": "Flashcard: Not Saved",
+    "studyAsLesson": "Study as 45-min Lesson",
+    "selection": {
+      "title": "Article Selection",
+      "description": "Please choose the {selection} you want to read",
+      "description2": "Your level is {level} and here are the {selection} that you can choose."
+    },
+    "types": {
+      "fiction": "Fiction",
+      "nonfiction": "Nonfiction"
+    },
+    "genres": {
+      "realistic_fiction": "Realistic Fiction",
+      "animal_stories": "Animal Stories",
+      "fantasy_magic": "Fantasy & Magic",
+      "mystery": "Mystery",
+      "adventure": "Adventure",
+      "humor": "Humor",
+      "folktales_fables_myths": "Folktales, Fables & Myths",
+      "historical_fiction": "Historical Fiction",
+      "science_fiction": "Science Fiction",
+      "animals": "Animals",
+      "science_nature": "Science & Nature",
+      "history_social_studies": "History & Social Studies",
+      "biography": "Biography",
+      "howto_procedural": "How-To & Procedural",
+      "geography_cultures": "Geography & Cultures",
+      "health_safety": "Health & Safety",
+      "arts_music": "Arts & Music"
+    },
+    "subgenres": {
+      "school_stories": "School Stories",
+      "friendship_stories": "Friendship Stories",
+      "family_life": "Family Life",
+      "neighborhood_adventures": "Neighborhood Adventures",
+      "stories_about_hobbies": "Stories about Hobbies",
+      "dealing_with_challenges": "Dealing with Challenges",
+      "realistic_animal_tales": "Realistic Animal Tales",
+      "talking_animal_adventures": "Talking Animal Adventures",
+      "pet_stories": "Pet Stories",
+      "wild_animal_encounters": "Wild Animal Encounters",
+      "animal_rescue_stories": "Animal Rescue Stories",
+      "magical_creatures": "Magical Creatures",
+      "enchanted_objects": "Enchanted Objects",
+      "simple_quests": "Simple Quests",
+      "worlds_of_imagination": "Worlds of Imagination",
+      "everyday_magic": "Everyday Magic",
+      "missing_object_mysteries": "Missing Object Mysteries",
+      "secret_code_puzzles": "Secret Code Puzzles",
+      "simple_whodunits": "Simple Whodunits",
+      "clubhouse_mysteries": "Clubhouse Mysteries",
+      "finding_clues": "Finding Clues",
+      "exploration_stories": "Exploration Stories",
+      "rescue_missions": "Rescue Missions",
+      "outdoor_adventures": "Outdoor Adventures",
+      "treasure_hunts": "Treasure Hunts",
+      "overcoming_obstacles": "Overcoming Obstacles",
+      "silly_situations": "Silly Situations",
+      "funny_characters": "Funny Characters",
+      "everyday_humor": "Everyday Humor",
+      "mischief_and_mayhem": "Mischief and Mayhem",
+      "exaggerated_stories": "Exaggerated Stories",
+      "fables": "Fables",
+      "fairy_tales": "Fairy Tales",
+      "legends": "Legends",
+      "myths": "Myths",
+      "pourquoi_stories": "Pourquoi Stories",
+      "life_in_the_past": "Life in the Past",
+      "stories_about_historical_events": "Stories about Historical Events",
+      "pioneer_life": "Pioneer Life",
+      "children_in_history": "Children in History",
+      "simple_space_adventures": "Simple Space Adventures",
+      "kid_inventors": "Kid Inventors",
+      "friendly_robots": "Friendly Robots",
+      "future_worlds_for_kids": "Future Worlds for Kids",
+      "specific_animal_facts": "Specific Animal Facts",
+      "animal_habitats": "Animal Habitats",
+      "pet_care_basics": "Pet Care Basics",
+      "insects_and_spiders": "Insects and Spiders",
+      "endangered_animals": "Endangered Animals",
+      "animal_behavior": "Animal Behavior",
+      "weather_explained": "Weather Explained",
+      "simple_science_experiments": "Simple Science Experiments",
+      "plants_and_trees": "Plants and Trees",
+      "the_human_body": "The Human Body",
+      "earth_science": "Earth Science",
+      "space_and_planets": "Space and Planets",
+      "simple_machines": "Simple Machines",
+      "important_historical_events": "Important Historical Events",
+      "famous_people_in_history": "Famous People in History",
+      "life_in_different_cultures": "Life in Different Cultures",
+      "community_helpers": "Community Helpers",
+      "us_symbols_landmarks": "U.S. Symbols & Landmarks",
+      "ancient_civilizations": "Ancient Civilizations",
+      "inventors_and_scientists": "Inventors and Scientists",
+      "explorers": "Explorers",
+      "artists_and_musicians": "Artists and Musicians",
+      "leaders_and_activists": "Leaders and Activists",
+      "athletes": "Athletes",
+      "childhood_of_famous_people": "Childhood of Famous People",
+      "simple_craft_steps": "Simple Craft Steps",
+      "basic_recipe_steps": "Basic Recipe Steps",
+      "how_to_play_a_game": "How to Play a Game",
+      "safety_procedures": "Safety Procedures",
+      "stepbystep_explanations": "Step-by-Step Explanations",
+      "exploring_different_countries": "Exploring Different Countries",
+      "world_landmarks": "World Landmarks",
+      "maps_and_globes": "Maps and Globes",
+      "different_holidays_celebrations": "Different Holidays & Celebrations",
+      "landforms_and_environments": "Landforms and Environments",
+      "healthy_habits": "Healthy Habits",
+      "nutrition_basics": "Nutrition Basics",
+      "staying_safe": "Staying Safe",
+      "understanding_feelings": "Understanding Feelings",
+      "germs_and_staying_clean": "Germs and Staying Clean",
+      "famous_artists_and_their_work": "Famous Artists and Their Work",
+      "types_of_musical_instruments": "Types of Musical Instruments",
+      "elements_of_art": "Elements of Art",
+      "music_around_the_world": "Music Around the World",
+      "craft_techniques_explained": "Craft Techniques Explained"
+    }
+  },
+  "Reports": {
+    "title": "Reports",
+    "description": "View student progress and classroom analytics",
+    "activityprogress": "Activity Progress",
+    "recentactivity": "Recent Activity",
+    "activityheatmap": "Activity Heatmap",
+    "xpoverall": "XP Overall",
+    "readingstatschart": "Reading Stats Chart",
+    "xpearned": "XP Earned",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "dateRange": "Date Range",
+    "activityType": {
+      "MC_QUESTION": "Multiple Choice Question",
+      "SA_QUESTION": "Short Answer Question",
+      "LA_QUESTION": "Long Answer Question",
+      "ARTICLE_READ": "Article Read"
+    },
+    "level": {
+      "title": "CEFR Level",
+      "yourlevel": "Your Level",
+      "description": {
+        "A0": "You can recognize words and names you've seen before, especially when there are pictures to help. You can understand the really simple signs around you and basic information like where and when something is happening.",
+        "A1-": "You're beginning to recognize more words and simple phrases beyond the very basics. You can follow short, simple directions and understand basic phrases and sentences about things you need.",
+        "A1": "You can understand really short and simple texts. You recognize enough words to spot them in notices and simple guides. You can talk about simple, everyday things using the words you know.",
+        "A1+": "You're starting to understand sentences and expressions that are important to you. Reading is not just about recognizing familiar words anymore; you're beginning to understand whole messages in simple texts.",
+        "A2-": "You're getting better at understanding simple texts and can find specific information in everyday materials like ads or schedules, though you might still struggle with unfamiliar topics.",
+        "A2": "You can understand short, simple texts, find what you need in everyday materials like ads or menus, and follow basic instructions. You know enough words to communicate in daily situations.",
+        "A2+": "You can understand regular writing and the main points in short news stories or descriptions. Your vocabulary is growing so you can talk about things that matter to you and handle everyday situations.",
+        "B1-": "You can grasp the main ideas of straightforward texts on familiar topics. You're developing the ability to deal with texts that introduce new topics or slightly more complex language, although you may still need some help.",
+        "B1": "You can read texts on topics you like and understand the main points. Stories and personal messages are easy for you to follow. You know enough words for everyday topics and can talk about what you read without too much trouble.",
+        "B1+": "You can understand clear writing about familiar subjects and are getting better at handling slightly more complicated language. You're comfortable finding information you need and can enjoy a book if it's not too difficult.",
+        "B2-": "You can understand detailed texts about familiar topics. You're starting to recognize the subtle parts of language and can discuss topics you're interested in pretty easily, although very complex ideas might still be challenging.",
+        "B2": "You can read independently and tell whether a text is formal or casual. You can adjust your reading speed depending on what you're reading. You enjoy good books and articles about current events. You know many words, and even if you get confused sometimes, you can usually figure it out.",
+        "B2+": "You can understand the main ideas of more challenging texts, like science articles or more complex stories. You're starting to read more on your own and can handle topics that are a bit abstract or technical, especially subjects you know well.",
+        "C1-": "You can understand complex texts with some effort. Your vocabulary lets you read about many different topics, and you can figure out less obvious details, although sometimes you might need to reread certain parts.",
+        "C1": "You can read long and challenging texts and understand most of what's happening. You enjoy stories and articles that make you think, and you can talk about them using good vocabulary without having to search too hard for the right words.",
+        "C1+": "You're a super reader who can handle challenging texts and understand different writing styles. You're really good at figuring out the less obvious parts of stories and articles, and you usually know what words mean without having to look them up.",
+        "C2": "You can read and understand almost anything. You can understand the main ideas of complex texts and enjoy reading more challenging books and articles. You can talk about almost anything and use the language with confidence."
+      }
+    },
+    "progress": {
+      "selectClassroom": "Select Classroom",
+      "allClassrooms": "All Classrooms",
+      "searchStudentsPlaceholder": "Search students...",
+      "backToOverview": "Back to Overview",
+      "loadingStudentData": "Loading student data...",
+      "totalStudents": "Total Students",
+      "allClassroomsLabel": "All classrooms",
+      "selectedClassroomLabel": "Selected classroom",
+      "averageXp": "Average XP",
+      "averageXpDescription": "Experience points per student",
+      "mostCommonLevel": "Most Common Level",
+      "mostCommonLevelDescription": "CEFR proficiency level",
+      "activeThisWeek": "Active This Week",
+      "activeThisWeekDescription": "{count} of {total} students",
+      "studentList": "Student List",
+      "xpLabel": "{xp} XP"
+    }
+  },
+  "Overall": {
+    "roles": {
+      "user": "User",
+      "student": "Student",
+      "teacher": "Teacher",
+      "admin": "Admin",
+      "system": "System"
+    },
+    "status": {
+      "READ": "Read",
+      "COMPLETED_MCQ": "Completed MCQ",
+      "COMPLETED_SAQ": "Completed SAQ",
+      "COMPLETED_LAQ": "Completed LAQ",
+      "UNRATED": "Unrated"
+    },
+    "time": {
+      "justNow": "Just now",
+      "minutesAgo": "{minutes}m ago",
+      "hoursAgo": "{hours}h ago",
+      "yesterday": "Yesterday",
+      "daysAgo": "{days} days ago",
+      "weeksAgo": "{weeks} weeks ago",
+      "monthsAgo": "{months} months ago",
+      "today": "Today",
+      "lastweek": "Last week",
+      "last30days": "Last 30 days",
+      "thismonth": "This month",
+      "lastmonth": "Last month",
+      "selectPeriod": "Select period"
+    },
+    "days": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
+  },
+  "Assignment": {
+    "title": "Create Assignment",
+    "description": "Create an assignment for your students",
+    "assignForm": {
+      "classroom": "Classroom",
+      "selectedClassroom": "Selected Classroom",
+      "name": "Assignment Name",
+      "description": "Assignment Description",
+      "students": "Students",
+      "article": "Article",
+      "dueDate": "Due Date",
+      "noStudents": "No students in this classroom",
+      "pleaseSelectClassroom": "Please select a classroom first",
+      "selectAllStudents": "Select All Students",
+      "selectedDueDate": "Selected Due Date : "
+    },
+    "studentAssignmentTable": {
+      "title": "Assignments",
+      "name": "Assignment Name",
+      "description": "Assignment Description",
+      "createAt": "Created At",
+      "dueDate": "Due Date",
+      "status": "Status",
+      "assignedBy": "Assigned By",
+      "linkToAssignment": "Link To Assignment",
+      "goToLesson": "Go To Lesson",
+      "searchPlaceholder": "Search Assignments...",
+      "searching": "Searching...",
+      "loadingAssignments": "Loading assignments...",
+      "noAssignmentsFound": "No assignments found",
+      "allDueDates": "All Due Dates",
+      "overdue": "Overdue",
+      "dueToday": "Due Today",
+      "upcoming": "Upcoming",
+      "allStatus": "All Status",
+      "notFinished": "Not Finished",
+      "inProgress": "In Progress",
+      "done": "Done"
+    }
+  },
+  "SentencesPage": {
+    "sentences": "Sentences Card",
+    "orderSentence": "Order Sentence",
+    "clozeTest": "Cloze Test",
+    "orderWord": "Order Word",
+    "matching": "Matching",
+
+    "matchingGame": {
+      "title": "Translation Matching Game",
+      "description": "Practice matching words with their meanings from your flashcard collection!",
+      "descriptionShort": "Match sentences with their translations in your selected language",
+      "descriptionLong": "Match English sentences with their translations",
+      "noDeck": {
+        "error": "No flashcard deck available",
+        "message": "Start reading articles and saving sentences as flashcards to unlock this game!"
+      },
+      "loading": {
+        "title": "Loading your matching pairs...",
+        "description": "Generating matches from your flashcard deck",
+        "nextSet": "Loading next matching set..."
+      },
+      "startScreen": {
+        "title": "Ready to Match?",
+        "subtitle": "Match English sentences with their translations",
+        "howToPlay": "How to Play",
+        "instructions": {
+          "step1": "Click on a sentence from the left column to select it",
+          "step2": "Then click on its translation from the right column",
+          "step3": "Match all sentence-translation pairs correctly to complete each set"
+        },
+        "language": {
+          "title": "Choose Translation Language",
+          "thai": "Thai",
+          "vietnamese": "Vietnamese",
+          "chineseSimplified": "Chinese (Simplified)",
+          "chineseTraditional": "Chinese (Traditional)",
+          "selected": "Translation"
+        },
+        "stats": {
+          "matchingSets": "Matching Sets",
+          "readyToPlay": "Ready to play",
+          "translation": "Translation",
+          "estimatedTime": "~{time} min",
+          "estimatedTimeLabel": "Estimated time"
+        },
+        "startButton": "Start Translation Game",
+        "loadingButton": "Loading translation pairs...",
+        "noSentences": "No sentences available"
+      },
+      "gameplay": {
+        "title": "Match Sentences with Translations",
+        "instruction": "Click a sentence on the left, then click its translation on the right",
+        "englishSentences": "English Sentences",
+        "translations": "{language} Translations",
+        "progress": "{current} of {total}",
+        "score": "{score}/{total} perfect",
+        "pairsProgress": "Progress: {matched}/{total} pairs matched",
+        "correctCount": "Correct: {correct}/{total}",
+        "articleFrom": "From: {title}"
+      },
+      "hints": {
+        "title": "Hints:",
+        "audio": "Audio",
+        "playAudio": "Play Audio",
+        "playing": "Playing...",
+        "enabled": "Hints enabled! 💡\n• Incorrect matches will be highlighted\n• Select an item to hear audio",
+        "disabled": "Hints disabled",
+        "audioCompleted": "Audio completed! 🎵",
+        "audioFailed": "Failed to play audio",
+        "playingAudio": "Playing audio hint 🔊"
+      },
+      "results": {
+        "perfect": "Perfect! All pairs matched correctly! 🎉",
+        "tryAgain": "{correct}/{total} correct. Try again! 💪",
+        "allCorrect": "Perfect! All pairs matched correctly! 🎉",
+        "partialCorrect": "{correct}/{total} correct 💪",
+        "correctMatches": "Correct Matches:",
+        "showAnswers": "Correct matches revealed! 📖",
+        "correctMatch": "Correct match! ✅",
+        "incorrectMatch": "Incorrect match. Try again! ❌"
+      },
+      "buttons": {
+        "resetMatches": "Reset Matches",
+        "checkMatches": "Check Matches",
+        "showAnswers": "Show Answers",
+        "nextSet": "Next Set",
+        "finishGame": "Finish Game",
+        "tryAgain": "Try Again"
+      },
+      "complete": {
+        "title": "🎉 Excellent Work!",
+        "subtitle": "You completed {count} matching challenges",
+        "stats": {
+          "perfectScores": "Perfect Scores",
+          "accuracy": "Accuracy",
+          "totalTime": "Total Time"
+        },
+        "backToMenu": "Back to Menu",
+        "playAgain": "Play Again"
+      },
+      "toast": {
+        "failedToLoad": "Failed to load matching data from flashcard deck",
+        "failedToLoadData": "Failed to load matching data"
+      },
+      "itemTypes": {
+        "word": "Word",
+        "phrase": "Phrase",
+        "sentence": "Sentence",
+        "definition": "Definition",
+        "translation": "Translation",
+        "meaning": "Meaning"
+      }
+    },
+    "clozeTestGame": {
+      "title": "Cloze Test Game",
+      "description": "Practice filling in missing words from your flashcard sentences!",
+      "descriptionShort": "Fill in the missing words in each sentence",
+      "descriptionLong": "Test your vocabulary and comprehension by filling in the missing words",
+      "noDeck": {
+        "error": "No flashcard deck available",
+        "message": "Start reading articles and saving sentences as flashcards to unlock this game!"
+      },
+      "loading": {
+        "title": "Loading your sentences...",
+        "description": "Fetching sentences from your flashcard deck",
+        "nextChallenge": "Loading next challenge..."
+      },
+      "startScreen": {
+        "title": "Ready to Start?",
+        "subtitle": "Fill in the blanks in sentences from your flashcard deck",
+        "howToPlay": "How to Play",
+        "instructions": {
+          "step1": "Each sentence has missing words that you need to fill in",
+          "step2": "Select the correct option from the dropdown menus",
+          "step3": "Complete all blanks to finish each sentence"
+        },
+        "difficulty": {
+          "title": "Choose Difficulty Level",
+          "easy": "Easy",
+          "medium": "Medium",
+          "hard": "Hard",
+          "easyDescription": "Perfect for beginners. One word will be missing from each sentence.",
+          "mediumDescription": "Moderate challenge. Two words will be missing from each sentence.",
+          "hardDescription": "Maximum challenge. Three words will be missing from each sentence."
+        },
+        "stats": {
+          "clozeTests": "Cloze Tests",
+          "readyToPlay": "Ready to play",
+          "fillBlanks": "Fill Blanks",
+          "blanksEach": "{count} blank each",
+          "estimatedTime": "~{time} min",
+          "estimatedTimeLabel": "Estimated time"
+        },
+        "startButton": "Start {difficulty} Game",
+        "loadingButton": "Loading {difficulty} sentences...",
+        "noSentences": "No sentences available"
+      },
+      "gameplay": {
+        "articleTitle": "📖 {title}",
+        "instruction": "Fill in the missing words by selecting from the dropdown menus",
+        "completeSentence": "Complete the sentence by filling in the blanks:",
+        "progress": "{current} of {total}",
+        "score": "{score}/{total} perfect",
+        "blanksProgress": "Progress: {filled}/{total} blanks filled",
+        "correctCount": "Correct: {correct}/{total}",
+        "placeholder": "___"
+      },
+      "hints": {
+        "title": "Hints:",
+        "audio": "Audio",
+        "playOrder": "Play Order",
+        "playing": "Playing...",
+        "enabled": "Hints enabled! 💡\n• Incorrect answers will be highlighted\n• Use audio button to hear pronunciation",
+        "disabled": "Hints disabled"
+      },
+      "results": {
+        "perfect": "Perfect! All blanks correct! 🎉",
+        "tryAgain": "{correct}/{total} correct. Try again! 💪",
+        "allCorrect": "Perfect! All blanks filled correctly! 🎉",
+        "partialCorrect": "{correct}/{total} correct 💪",
+        "correctAnswers": "Correct Answers:",
+        "showAnswers": "Correct answers revealed! 📖"
+      },
+      "buttons": {
+        "resetAnswers": "Reset Answers",
+        "checkAnswers": "Check Answers",
+        "showAnswers": "Show Answers",
+        "nextSentence": "Next Sentence",
+        "finishGame": "Finish Game"
+      },
+      "complete": {
+        "title": "🎉 Fantastic Work!",
+        "subtitle": "You completed {count} cloze test challenges",
+        "stats": {
+          "perfectScores": "Perfect Scores",
+          "accuracy": "Accuracy",
+          "totalTime": "Total Time"
+        },
+        "backToMenu": "Back to Menu",
+        "playAgain": "Play Again"
+      },
+      "toast": {
+        "failedToLoad": "Failed to load sentences from flashcard deck",
+        "failedToLoadSentences": "Failed to load sentences",
+        "audioCompleted": "Audio completed! 🎵",
+        "audioFailed": "Failed to play audio",
+        "playingAudio": "Playing sentence audio 🔊"
+      }
+    },
+    "sentencesCard": {
+      "title": "Flashcard Dashboard",
+      "description": "Practice sentence comprehension and translation skills",
+      "needMoreCards": "Need more cards to start studying",
+      "addMoreCards": "Add {count} more cards from articles to unlock studying.",
+      "allCaughtUp": "All caught up!",
+      "allCardsUpToDate": "All cards are up to date. Come back later for more reviews.",
+      "readyToStudy": "Ready to study!",
+      "cardsReadyForReview": "{count} cards are ready for review.",
+      "learningProgress": "Learning Progress",
+      "complete": "Complete",
+      "mastered": "{count} mastered",
+      "toReview": "{count} to review",
+      "back": "Back",
+      "current": "Current",
+      "completed": "Completed",
+      "remaining": "Remaining",
+      "studySessionProgress": "Study Session Progress",
+      "showAnswer": "Show Answer",
+      "question": "Question",
+      "answers": "Answers",
+      "flipCard": "Click to reveal",
+      "definition": "Definition",
+      "translation": "Translation",
+      "definitionNotAvailable": "Definition not available",
+      "translationNotAvailable": "Translation not available",
+      "again": "Again",
+      "hard": "Hard",
+      "good": "Good",
+      "easy": "Easy",
+      "sentences": "Sentences",
+      "vocabulary": "Vocabulary",
+      "studySessionComplete": "Study Session Complete!",
+      "youCompleted": "You completed {count} flashcards",
+      "cardsReviewed": "Cards Reviewed",
+      "xpEarned": "XP Earned",
+      "greatWork": "Great work! You've successfully completed this study session. Your progress has been saved!",
+      "backToDashboard": "Back to Dashboard",
+      "studyAgain": "Study Again",
+      "cardStatusBreakdown": {
+        "title": "Card Status Breakdown",
+        "new": "New",
+        "newDescription": "Fresh cards to learn",
+        "learning": "Learning",
+        "learningDescription": "In progress",
+        "review": "Review",
+        "reviewDescription": "Time for review"
+      },
+      "translationLanguage": "Translation Language",
+      "translationLanguageDescription": "Translations will be shown in this language",
+      "startStudying": "Start Studying ({count} cards)",
+      "loadingCards": "Loading cards...",
+      "noCardsDueForReview": "No cards are due for review right now! ⏰",
+      "failedToLoadCards": "Failed to load cards",
+      "refreshData": "Refresh Data",
+      "addMoreCardsButton": "Add More Cards"
+    },
+    "manage": {
+      "heading": "Manage",
+      "description": "Manage your flashcard articles and sentences",
+      "searchPlaceholder": "Search...",
+      "noResults": "No results.",
+      "tableHeaders": {
+        "sentence": "Sentence",
+        "createdAt": "Created At",
+        "due": "Due",
+        "action": "Action"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "deleteDialog": {
+        "title": "Delete Flashcard",
+        "description": "Are you sure you want to delete this flashcard?",
+        "warning": "This action cannot be undone.",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
+      "dueStatus": {
+        "oneDayLate": "1 day late",
+        "daysLate": "{count} days late",
+        "dueToday": "Due today",
+        "dueTomorrow": "Due tomorrow",
+        "dueInDays": "Due in {count} days",
+        "dueInWeeks": "Due in {count} weeks"
+      }
+    },
+    "sentenceOrder": {
+      "title": "Order Sentences Game",
+      "descriptionNodeck": "Practice arranging sentences from your flashcard articles!",
+      "descriptionPlaying": "Arrange the sentences in chronological order.",
+      "descriptionPlaying2": "Arrange these 5 sentences in chronological order.",
+      "description": "Test your reading comprehension by arranging sentences in chronological order.",
+      "contentNoDeck": "Start reading articles and saving sentences as flashcards to unlock this game!",
+      "loading": "Loading your sentences...",
+      "fetchingSentences": "Fetching sentences from your flashcard deck",
+      "readyToStart": "Ready to Start?",
+      "arrangeSentences": "Arrange 5 sentences in the correct order for each of your flashcard sentences",
+      "startGame": "Start Game",
+      "noSentencesAvailable": "No sentences available",
+      "howToPlay": "How to Play",
+      "eachGameShows": "Each game shows 5 sentences around your flashcard sentence",
+      "dragSentences": "Drag sentences to reorder them chronologically",
+      "completeAll": "Complete all your due flashcard sentences",
+      "sentences": "Sentences",
+      "readyToPlay": "Ready to Play",
+      "dragAndDrop": "Drag & Drop",
+      "playtime": "~{time} min",
+      "estimatedTime": "Estimated Time",
+      "easyInteraction": "Easy Interaction",
+      "completedTitle": "Fantastic Work!",
+      "completedDescription": " You completed {count} sentence ordering challenges",
+      "correct": "Correct Answers",
+      "accuracy": "Accuracy",
+      "totalTime": "Total Time",
+      "backToMenu": "Back to Menu",
+      "playAgain": "Play Again",
+      "loadingNextChallenge": "Loading next challenge...",
+      "correctAnswer": "Correct",
+      "checkAnswer": "Check Answer",
+      "shuffleAgain": "Shuffle Again",
+      "showAnswer": "Show Answer",
+      "nextSentence": "Next Sentence",
+      "finishGame": "Finish Game",
+      "perfectCorrectOrder": "Perfect! Correct order! 🎉",
+      "notQuiteRight": "Not quite right 💪",
+      "correctOrder": "Correct Order",
+      "hints": {
+        "title": "Hints",
+        "description": "Use hints to help you complete the challenge",
+        "highlight": "Highlight",
+        "audio": "Audio",
+        "playOrder": "Play Order",
+        "playing": "Playing...",
+        "dragToReorder": "Drag to reorder sentences",
+        "startByMovingASentence": "Start by moving a sentence!",
+        "sentencesWillAppearHere": "Sentences will appear here..."
+      }
+    },
+    "orderWordGame": {
+      "title": "Order Words Game",
+      "description": "Practice arranging words to form correct sentences from your flashcard articles!",
+      "descriptionShort": "Click words in the correct order to form meaningful sentences",
+      "noDeck": {
+        "error": "No flashcard deck available",
+        "message": "Start reading articles and saving sentences as flashcards to unlock this game!"
+      },
+      "loading": {
+        "title": "Loading your sentences...",
+        "description": "Fetching sentences from your flashcard deck"
+      },
+      "startScreen": {
+        "title": "Ready to Start?",
+        "subtitle": "Click words in the correct order to form meaningful sentences",
+        "howToPlay": "How to Play",
+        "instructions": {
+          "step1": "Click words from the bottom to add them to your sentence",
+          "step2": "Click words in your sentence to remove them",
+          "step3": "Translations will be shown below each word",
+          "step4": "Form grammatically correct and meaningful sentences",
+          "step5": "Use hints if you get stuck"
+        },
+        "stats": {
+          "sentences": "Sentences",
+          "readyToPlay": "Ready to solve",
+          "clickToOrder": "Click to Order",
+          "withTranslations": "With translations",
+          "estimatedTime": "~{time} min",
+          "estimatedTimeLabel": "Estimated time"
+        },
+        "language": {
+          "title": "Choose Translation Language",
+          "thai": "🇹🇭 Thai",
+          "vietnamese": "🇻🇳 Vietnamese",
+          "chineseSimplified": "🇨🇳 Chinese (Simplified)",
+          "chineseTraditional": "🇹🇼 Chinese (Traditional)",
+          "selected": "Translation language",
+          "description": "Word translations will be shown in {language} throughout the game"
+        },
+        "startButton": "Start Game with {language} Translations",
+        "noSentences": "No sentences available"
+      },
+      "gameplay": {
+        "title": "Order Words Game",
+        "instruction": "Click words to form the correct sentence • {language} translations",
+        "progress": "{current} of {total}",
+        "score": "{score}/{total} correct",
+        "articleFrom": "📖 {title}",
+        "subtitle": "Click words below to form the correct sentence",
+        "targetTranslation": "Target translation:",
+        "yourSentence": "Your sentence:",
+        "buildingSentence": "Building sentence...",
+        "startByClicking": "Click words below to start forming your sentence...",
+        "translationLabel": "{language} Translation:",
+        "allWordsUsed": "All words used!",
+        "checkSentence": "Check your sentence above.",
+        "clickWordsToAdd": "Click words to add them to your sentence",
+        "startByClickingWord": "(Start by clicking a word!)"
+      },
+      "hints": {
+        "title": "Hints:",
+        "highlight": "Highlight",
+        "audio": "Audio",
+        "playOrder": "Play Order",
+        "playing": "Playing..."
+      },
+      "buttons": {
+        "shuffleWords": "Shuffle Words",
+        "tryAgain": "Try Again",
+        "checkAnswer": "Check Answer",
+        "showAnswer": "Show Answer",
+        "nextSentence": "Next Sentence",
+        "finishGame": "Finish Game"
+      },
+      "results": {
+        "perfect": "Perfect! Correct word order! 🎉",
+        "notQuiteRight": "Not quite right. Try again! 💪",
+        "correctOrder": "Correct sentence:",
+        "correctOrderRevealed": "Correct order revealed! 📖"
+      },
+      "complete": {
+        "title": "🎉 Amazing Work!",
+        "subtitle": "You completed {count} word ordering challenges",
+        "usingTranslations": "Using {language} translations",
+        "stats": {
+          "correctAnswers": "Correct Answers",
+          "accuracy": "Accuracy",
+          "totalTime": "Total Time"
+        },
+        "backToMenu": "Back to Menu",
+        "playAgain": "Play Again"
+      },
+      "toast": {
+        "gameStarted": "Game started with {language} translations! 🎮",
+        "languageSet": "Translation language set to {language}",
+        "failedToLoad": "Failed to load sentences from flashcard deck",
+        "failedToLoadSentences": "Failed to load sentences"
+      },
+      "loadingNextChallenge": "Loading next challenge..."
+    }
+  },
+  "VocabularyPage": {
+    "vocabularyCard": "Vocabulary Card",
+    "description": "Review vocabulary words and expand your language skills with spaced repetition",
+    "translationLanguageDescription": "Definitions will be shown in this language"
+  },
+  "HomePage": {
+    "hero": {
+      "title": "Help Young Students Become Amazing Readers with AI-Powered Fun!",
+      "subtitle": "Reading adventures tailored for ages 8-12 (Grades 3-6).",
+      "getStarted": "Get Started Now!"
+    },
+    "features": {
+      "title": "Cool Features",
+      "description": "Discover how Primary Advantage makes reading fun and helps you learn!",
+      "funStory": {
+        "title": "Fun Story Adventures",
+        "description": "Discover exciting stories and articles just for kids your age, always something new to read!"
+      },
+      "understand": {
+        "title": "Understand the Story",
+        "description": "Answer fun questions about what you read to help you remember and understand better."
+      },
+      "readingLevels": {
+        "title": "Just Right Reading Levels",
+        "description": "Read stories that are perfect for how you read, making it easy and enjoyable."
+      },
+      "learnWords": {
+        "title": "Learn New Words",
+        "description": "Find new and interesting words in the stories and learn what they mean with fun tools."
+      },
+      "listenAlong": {
+        "title": "Listen Along",
+        "description": "Hear the stories read aloud to you, great for listening and following along."
+      },
+      "seeProgress": {
+        "title": "See How You're Growing",
+        "description": "Check out your reading progress and see all the cool things you're learning!"
+      },
+      "makeYours": {
+        "title": "Make It Yours",
+        "description": "Pick stories you like and set goals for reading, creating your own reading adventure."
+      },
+      "helpTeachers": {
+        "title": "Help for Teachers",
+        "description": "Tools for teachers to see how the class is doing and help everyone learn."
+      }
+    },
+    "benefits": {
+      "title": "Why Schools Love Primary Advantage",
+      "description": "See how Primary Advantage can help teachers and students in schools!",
+      "superReader": {
+        "title": "Become a Super Reader",
+        "description": "Read lots of exciting stories and play games to boost your reading skills!"
+      },
+      "ownPath": {
+        "title": "Your Own Reading Path",
+        "description": "Read stories that match your reading level and interests, made just for you."
+      },
+      "storiesLove": {
+        "title": "Stories You'll Love",
+        "description": "Enjoy different kinds of stories with pictures and sounds that make reading fun."
+      },
+      "watchGrow": {
+        "title": "Watch Your Reading Power Grow",
+        "description": "See your progress and how you're becoming a better reader every day."
+      },
+      "learnWords": {
+        "title": "Learn Lots of New Words",
+        "description": "Discover fun words in stories and remember them with cool activities."
+      },
+      "easyUse": {
+        "title": "Easy to Use Anywhere",
+        "description": "Read and learn at school or at home, whenever you want!"
+      },
+      "greatSchools": {
+        "title": "Great for Schools",
+        "description": "A smart way for schools to help all students become great readers."
+      },
+      "moreTime": {
+        "title": "More Time for Teaching Fun",
+        "description": "Our tools help teachers find great stories and see student progress easily."
+      }
+    },
+    "contact": {
+      "title": "Let's Get in Touch",
+      "description": "Have a question or need more information? Contact us today to learn more about our platform.",
+      "formTitle": "Contact Us",
+      "formDescription": "Get in touch with us to learn more about our platform",
+      "name": "Name",
+      "namePlaceholder": "John Doe",
+      "institution": "Institution",
+      "institutionPlaceholder": "University of Example",
+      "email": "Email",
+      "emailPlaceholder": "m@example.com",
+      "inquiry": "Inquiry",
+      "inquiryPlaceholder": "Select an option",
+      "inquiryOptions": {
+        "sales": "Sales",
+        "support": "Support",
+        "partnerships": "Partnerships"
+      },
+      "message": "Message",
+      "messagePlaceholder": "Type your message here.",
+      "sendMessage": "Send Message"
+    },
+    "cta": {
+      "title": "Ready for a Primary Adventure?",
+      "description": "Start your free trial and see how fun reading can be with Primary Advantage! It's perfect for students aged 8-12."
+    }
+  },
+  "AboutPage": {
+    "title": "About Us",
+    "description": "Learn more about Primary Advantage and our mission"
+  },
+  "AuthPage": {
+    "signin": {
+      "title": "Sign In",
+      "student": "Student",
+      "teacher": "Teacher",
+      "welcome": "Welcome to Primary Advantage",
+      "enterClassroomCode": "Enter your Classroom Code",
+      "classroomCode": "Classroom Code",
+      "next": "Next",
+      "selectYourNameLabel": "Select Your Name",
+      "selectYourName": "Select Your Name below to login to your account",
+      "selectYourNamePlaceholder": "Select a student",
+      "login": "Login",
+      "classroomCodeRequired": "Please enter your classroom code"
+    },
+    "signup": {
+      "title": "Sign Up"
+    }
+  },
+  "Settings": {
+    "userProfile": {
+      "title": "Personal information",
+      "subtitle": "Information about your personal profile",
+      "backToReading": "Back to Reading Page",
+      "username": "Username",
+      "usernameDescription": "The username is used to represent themselves on the platform.",
+      "email": "Email",
+      "level": "Primary advantage level",
+      "xp": "Primary advantage XP",
+      "xpDescription": "The XP is used to level up.",
+      "verified": "Verified",
+      "notVerified": "Not verified",
+      "resetPassword": "Reset Password",
+      "resendVerification": "Resend verification email",
+      "unknown": "unknown",
+      "update": "Update",
+      "activate": "Activate",
+      "license": "License",
+      "licenseDescription": "Enter the new license for the user"
+    },
+    "schoolProfile": {
+      "title": "School Profile",
+      "subtitle": "Manage your school information",
+      "loading": "Loading...",
+      "noSchool": "No school information available",
+      "createSchool": "Create School Profile",
+      "createSchoolDescription": "Set up your school information to get started. Creating a school will automatically grant you Admin access to manage school features.",
+      "editSchool": "Edit School information",
+      "editSchoolDescription": "Update your school details below.",
+      "schoolName": "School Name",
+      "contactName": "Contact Name",
+      "contactEmail": "Contact Email",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "totalUsers": "Total Users",
+      "totalAdmins": "Total Admins",
+      "owner": "Owner",
+      "license": "License Information",
+      "licensedescription": "Details about your school's license and subscription",
+      "licenseStatus": "License Status",
+      "maxUsers": "Maximum Users",
+      "expiryDate": "Expiry Date",
+      "save": "Save",
+      "cancel": "Cancel",
+      "updateSchoolButton": "Update School",
+      "delete": "Delete",
+      "creating": "Creating...",
+      "updating": "Updating...",
+      "success": "School profile updated successfully",
+      "error": "Failed to update school profile",
+      "loadError": "Failed to load school information",
+      "tryAgainLater": "Please try again later.",
+      "schoolNameDescription": "The official name of the school or institution.",
+      "contactNameDescription": "The name of the primary contact person for this school.",
+      "contactEmailDescription": "The email of the primary contact person for this school.",
+      "schoolNamePlaceholder": "Enter school name",
+      "contactNamePlaceholder": "Enter contact name (optional)",
+      "contactEmailPlaceholder": "Enter contact email (optional)",
+      "createSchoolButton": "Create School",
+      "editSchoolButton": "Edit School",
+      "schoolInformation": "School Information",
+      "schoolInformationDescription": "View and manage your school details.",
+      "deleteSchool": "Delete School",
+      "deleting": "Deleting...",
+      "deleteSchoolDescription": "Are you sure you want to delete this school? This action cannot be undone. All associated data including users, admins, and classrooms will be removed.",
+      "deleteSchoolButton": "Delete School",
+      "schoolAdmin": "School Administrators",
+      "schoolAdminDescription": "Users with administrative privileges for this school",
+      "addsAdmins": "Add Admins",
+      "addAdminHeader": "Add School Administrator",
+      "addsAdminsDescription": "Search for users and add them as school administrators.",
+      "searchUsers": "Search Users",
+      "searchUsersPlaceholder": "Enter name or email...",
+      "createSchoolcard": {
+        "title": "No School Associated",
+        "description": "You don't have a school associated with your account yet. Create one to get started and gain Admin access to manage school features.",
+        "createSchool": "Create School"
+      }
+    }
+  },
+  "Lesson": {
+    "Reading": {
+      "firstTitle": "First Reading",
+      "deepTitle": "Deep Reading",
+      "subtitle": "Read the article and highlight the important words and sentences",
+      "controls": {
+        "speed": "Speed",
+        "play": "Start Reading",
+        "pause": "Pause Reading",
+        "loading": "Loading Audio"
+      },
+      "translation": {
+        "button": "Translation",
+        "on": "Translation On",
+        "off": "Translation Off",
+        "title": "Translation:"
+      },
+      "tips": {
+        "firstTitle": "First Reading Tips",
+        "deepTitle": "Deep Reading Tips",
+        "readEntire": "Read the entire article",
+        "clickStart": "Click start reading",
+        "sentenceJump": "Click sentence jump",
+        "useHighlight": "Use highlight mode",
+        "listenComplete": "Listen to the complete audio"
+      }
+    },
+    "title": "Lesson",
+    "description": "Interactive Reading Lesson",
+    "loading": "Loading lesson...",
+    "error": "Failed to load lesson",
+    "header": {
+      "title": "Lesson",
+      "subtitle": "Interactive Reading Experience",
+      "mode": "Learning Mode",
+      "cta": "Begin your interactive reading journey with this article"
+    },
+    "actions": {
+      "starting": "Starting...",
+      "startLesson": "Start Lesson",
+      "processing": "Processing...",
+      "previousTask": "Previous Task",
+      "nextTask": "Next Task"
+    },
+    "progress": {
+      "title": "Progress",
+      "taskOfTotal": "Task {task} of {total}",
+      "currentTask": "Current: Task {task}"
+    },
+    "tasks": {
+      "introduction": "Introduction",
+      "previewVocabulary": "Preview Vocabulary",
+      "firstReading": "First Reading",
+      "vocabularyCollection": "Vocabulary Collection",
+      "deepReading": "Deep Reading",
+      "sentenceCollection": "Sentence Collection",
+      "multipleChoice": "Multiple Choice",
+      "shortAnswer": "Short Answer",
+      "vocabularyFlashcards": "Vocabulary Flashcards",
+      "vocabularyMatching": "Vocabulary Matching",
+      "sentenceFlashcards": "Sentence Flashcards",
+      "sentenceActivities": "Sentence Activities",
+      "languageQuestions": "Language Questions",
+      "lessonSummary": "Lesson Summary",
+      "shortAnswerTitle": "Task Short Answer",
+      "shortAnswerDescription": "Task Description Topic : {title}",
+      "multipleChoiceTitle": "Task Multiple Choice",
+      "multipleChoiceDescription": "Task Description Topic : {title}",
+      "vocabularyFlashcardsTitle": "Task Vocabulary Flashcards",
+      "vocabularyFlashcardsDescription": "Review key vocabulary using interactive flashcards.",
+      "vocabularyMatchingTitle": "Task Vocabulary Matching",
+      "vocabularyMatchingDescription": "Match words with their meanings to build understanding.",
+      "sentenceFlashcardsTitle": "Task Sentence Flashcards",
+      "sentenceFlashcardsDescription": "Practice sentences and reinforce context with flashcards."
+    },
+    "VocabularyFlashcards": {
+      "loading": {
+        "title": "Loading Flashcards",
+        "description": "Preparing your vocabulary practice..."
+      },
+      "error": {
+        "title": "Something went wrong",
+        "description": "Failed to load flashcards. Please try again."
+      },
+      "empty": {
+        "title": "No Card Available",
+        "description": "There are no cards to study at this time."
+      },
+      "start": {
+        "title": "Starting Vocabulary Practice",
+        "description": "Preparing your vocabulary practice session...",
+        "translationLanguage": "Translation Language",
+        "translationHint": "Definitions will be shown in this language",
+        "startButton": "Start Game"
+      },
+      "playing": {
+        "header": "Vocabulary Flashcards",
+        "cardOf": "Card {current} of {total}",
+        "progress": "Progress",
+        "percentComplete": "{percent}% Complete",
+        "badgeVocabulary": "VOCABULARY",
+        "state": {
+          "new": "NEW",
+          "learning": "LEARNING",
+          "review": "REVIEW",
+          "relearning": "RELEARNING"
+        },
+        "thinkPrompt": "Think about the meaning of this word, then reveal the answer.",
+        "showAnswer": "Show Answer",
+        "rating": {
+          "prompt": "How well did you know this word?",
+          "again": "Again",
+          "hard": "Hard",
+          "good": "Good",
+          "easy": "Easy"
+        }
+      },
+      "stats": {
+        "completed": "Completed: {count}",
+        "remaining": "Remaining: {count}",
+        "total": "Total Cards: {count}"
+      },
+      "completion": {
+        "title": "Vocabulary Practice Complete!",
+        "subtitle": "Excellent work on your vocabulary practice session",
+        "xpEarned": "XP Earned",
+        "timeTaken": "Time Taken",
+        "completed": "Completed"
+      }
+    },
+    "VocabularyMatching": {
+      "loading": {
+        "title": "Loading Flashcards",
+        "description": "Preparing your vocabulary practice..."
+      },
+      "noCards": {
+        "title": "No Vocabulary Available",
+        "description": "There are no vocabulary flashcards available for this article yet."
+      },
+      "error": {
+        "title": "Failed to Load",
+        "description": "There was an error loading the vocabulary. Please try again."
+      },
+      "buttons": {
+        "tryAgain": "Try Again",
+        "showAnswers": "Show Answers",
+        "completeActivity": "Complete Activity"
+      },
+      "start": {
+        "title": "Starting Vocabulary Matching",
+        "subtitle": "Choose your preferred language for definitions",
+        "languageLabel": "Definition Language",
+        "languageHint": "Word definitions will be shown in this language",
+        "startButton": "Start Matching Game"
+      },
+      "completed": {
+        "title": "Vocabulary Practice Complete!",
+        "subtitle": "Excellent work on your vocabulary practice session",
+        "xpEarned": "XP Earned",
+        "completed": "Completed"
+      },
+      "game": {
+        "title": "📚 Match Words with Definitions",
+        "instruction": "Click a word on the left, then click its definition on the right",
+        "columns": {
+          "words": "Words",
+          "definitions": "Definitions"
+        }
+      },
+      "progress": {
+        "matched": "{matched}/{total} matched",
+        "correct": "{correct}/{total} correct"
+      },
+      "results": {
+        "perfect": "Perfect! All pairs matched correctly! 🎉",
+        "partialCorrect": "{correct}/{total} correct 💪",
+        "correctMatches": "Correct Matches:",
+        "showAnswers": "Correct matches revealed! 📖",
+        "correctMatch": "Correct match! ✅",
+        "incorrectMatch": "Incorrect match. Try again! ❌",
+        "tryAgain": "{correct}/{total} correct. Try again! 💪"
+      },
+      "toast": {
+        "failedToLoad": "Failed to load vocabulary"
+      }
+    },
+    "Introduction": {
+      "phase1Title": "Introduction",
+      "phase1Description": "In this lesson, you will read an article about: {title}",
+      "cefrLevel": "CEFR Level : {level}",
+      "raLevel": "RA Level : {level}",
+      "estimatedReadTime": "Estimated Read Time : {time}",
+      "articleSummary": "Article Summary",
+      "learningObjectives": "Learning Objectives",
+      "understandMainIdeas": "Understand Main Ideas :",
+      "learnVocabulary": "Learn Vocabulary :",
+      "improveComprehension": "Improve Comprehension :"
+    },
+    "PreviewVocabulary": {
+      "title": "Preview Vocabulary",
+      "subtitle": "Preview the vocabulary of the article",
+      "definition": "Definition",
+      "audioNotAvailable": "Audio not available",
+      "empty": "No vocabulary words found",
+      "progress": "Vocabulary Progress",
+      "wordsToLearn": "{count} words to learn"
+    },
+    "SentenceCollection": {
+      "title": "Sentence Collection",
+      "subtitle": "Preview the sentences of the article",
+      "definition": "Translation",
+      "audioNotAvailable": "Audio not available",
+      "empty": "No sentences found",
+      "progress": "Sentence Progress",
+      "wordsToLearn": "{count} sentences to learn"
+    },
+    "SentenceActivities": {
+      "title": "Sentence Activities",
+      "description": "Practice sentence activities to improve your skills.",
+      "loading": "Loading activities...",
+      "completed": "Completed",
+      "review": "Review",
+      "orderSentences": {
+        "title": "Order Sentences",
+        "description": "Practice ordering sentences to improve your skills.",
+        "button": "Order Sentences"
+      },
+      "clozeTest": {
+        "title": "Cloze Test",
+        "description": "Practice cloze test to improve your skills.",
+        "button": "Cloze Test"
+      },
+      "orderWords": {
+        "title": "Order Words",
+        "description": "Practice ordering words to improve your skills.",
+        "button": "Order Words"
+      },
+      "matching": {
+        "title": "Matching",
+        "description": "Practice matching to improve your skills.",
+        "button": "Matching"
+      }
+    },
+    "Summary": {
+      "title": "Lesson Summary",
+      "completed": "Fantastic work! You have completed the lesson.",
+      "xpEarned": "+{xp} XP Earned!",
+      "stats": {
+        "timeSpent": "Time Spent",
+        "wordsSaved": "Words Saved",
+        "sentences": "Sentences",
+        "totalXp": "Total XP"
+      },
+      "quiz": {
+        "title": "Quiz Performance",
+        "mcq": "Multiple Choice Questions",
+        "saq": "Short Answer Questions",
+        "score": "Score: {score}/5",
+        "percent": "{percent}%"
+      },
+      "feedback": {
+        "mcq": {
+          "1": "You need to review the material and try again. Don’t give up!",
+          "2": "A small improvement, but more work is needed",
+          "3": "Getting there! Keep practicing",
+          "4": "Great job! Almost full score",
+          "5": "Excellent! You fully understand the content"
+        },
+        "saq": {
+          "1": "Excellent! You fully understand the content",
+          "2": "Good start, but missing key details",
+          "3": "Decent answer. Try to elaborate more",
+          "4": "Strong answer. Just a little refinement needed",
+          "5": "Excellent! Clear, complete, and well-reasoned answer"
+        }
+      },
+      "vocabulary": {
+        "title": "Vocabulary Learned : {count} {count, plural, one {word} other {words}}",
+        "more": "+{count} more {count, plural, one {word} other {words}} learned"
+      },
+      "sentences": {
+        "title": "Key Sentences : {count} {count, plural, one {sentence} other {sentences}}",
+        "more": "+{count} more {count, plural, one {sentence} other {sentences}} saved"
+      },
+      "actions": { "backToRead": "Back to Read Page" },
+      "toast": { "failed": "Failed to load lesson summary" }
+    }
+  },
+  "LessonLanguageQuestion": {
+    "title": "AI Reading Assistant",
+    "loading": { "conversation": "Loading conversation..." },
+    "status": { "online": "Online" },
+    "header": {
+      "readyWithName": "Ready to help {name} with questions",
+      "ready": "Ready to help with your questions"
+    },
+    "empty": {
+      "helloName": "Hello {name}!",
+      "start": "Start the conversation!",
+      "ask": "Ask me anything about the article."
+    },
+    "thinking": "Thinking...",
+    "input": {
+      "placeholderWithName": "{name}, ask about the article...",
+      "placeholder": "Type your question about the article..."
+    },
+    "buttons": { "send": "Send", "skip": "Skip" },
+    "tips": {
+      "askVocabulary": "Ask about vocabulary",
+      "discussTheme": "Discuss the main theme",
+      "clarifyParts": "Clarify confusing parts"
+    },
+    "error": {
+      "fetchResponse": "Error fetching response",
+      "fetchInitial": "Error fetching initial question"
+    }
+  },
+  "LessonMCQ": {
+    "header": {
+      "title": "Multiple Choice Quiz",
+      "questionOf": "Question {current} of {total}",
+      "completePercent": "{percent}% Complete"
+    },
+    "timer": { "seconds": "{seconds}s" },
+    "completed": {
+      "title": "Quiz Completed",
+      "description": "Great job finishing the quiz!",
+      "correctAnswers": "Correct Answers",
+      "accuracy": "Accuracy",
+      "xpEarned": "MCQ XP Earned",
+      "totalTime": "Total Time"
+    },
+    "actions": {
+      "retake": "Retake",
+      "nextQuestion": "Next Question",
+      "finishQuiz": "Finish Quiz"
+    }
+  },
+  "LessonSAQ": {
+    "completed": { "title": "Quiz Completed" },
+    "labels": {
+      "question": "Question:",
+      "yourAnswer": "Your Answer:",
+      "suggestedAnswer": "Suggested Answer:",
+      "feedback": "Feedback:",
+      "score": "Score:"
+    },
+    "timer": { "elapsed": "Elapsed Time: {time}" },
+    "form": {
+      "placeholder": { "answer": "Type your answer here..." },
+      "help": {
+        "detailedResponse": "Write a detailed response to demonstrate your understanding"
+      },
+      "validation": { "answerRequired": "Please enter your answer" }
+    },
+    "actions": { "submit": "Submit" }
+  },
+  "LessonCloze": {
+    "loading": {
+      "title": "Loading your sentences...",
+      "subtitle": "Fetching sentences from your flashcard deck",
+      "nextChallenge": "Loading next challenge..."
+    },
+    "common": {
+      "ready": "Ready to play",
+      "min": "min"
+    },
+    "start": {
+      "title": "Ready to Start?",
+      "subtitle": "Fill in the blanks in sentences from your flashcard deck",
+      "stats": {
+        "tests": "Cloze Tests",
+        "fillBlanks": "Fill Blanks",
+        "oneBlank": "1 blank each",
+        "twoBlanks": "2 blanks each",
+        "threeBlanks": "3 blanks each",
+        "estimated": "Estimated time"
+      }
+    },
+    "instructions": {
+      "title": "How to Play",
+      "item1": "Each sentence has missing words that you need to fill in",
+      "item2": "Select the correct option from the dropdown menus",
+      "item3": "Complete all blanks to finish each sentence"
+    },
+    "difficulty": {
+      "choose": "Choose Difficulty Level",
+      "select": "Select difficulty",
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard",
+      "desc": {
+        "easy": "Perfect for beginners. One word will be missing from each sentence.",
+        "medium": "Moderate challenge. Two words will be missing from each sentence.",
+        "hard": "Maximum challenge. Three words will be missing from each sentence."
+      }
+    },
+    "buttons": {
+      "loading": "Loading {difficulty} sentences...",
+      "startGame": "Start Game",
+      "back": "Back to Menu",
+      "playAgain": "Play Again",
+      "reset": "Reset Answers",
+      "check": "Check Answers",
+      "showAnswers": "Show Answers",
+      "next": "Next Sentence",
+      "finish": "Finish Game"
+    },
+    "complete": {
+      "title": "🎉 Fantastic Work!",
+      "subtitle": "You completed {count} cloze test challenges",
+      "stats": {
+        "perfect": "Perfect Scores",
+        "accuracy": "Accuracy",
+        "time": "Total Time"
+      }
+    },
+    "game": {
+      "subtitle": "Fill in the missing words by selecting from the dropdown menus"
+    },
+    "hints": {
+      "label": "Hints:",
+      "audio": "Audio",
+      "play": "Play Order"
+    },
+    "sentence": {
+      "instructions": "Complete the sentence by filling in the blanks:"
+    },
+    "progress": {
+      "perfect": "{score}/{total} perfect",
+      "sentence": "Progress: {answered}/{total} blanks filled",
+      "correct": "Correct: {correct}/{answered}"
+    },
+    "result": {
+      "perfect": "Perfect! All blanks correct! 🎉",
+      "tryAgain": "{correct}/{total} correct 💪",
+      "correctAnswers": "Correct Answers:"
+    }
+  },
+  "SentenceFlashcards": {
+    "loading": {
+      "title": "Loading Flashcards",
+      "subtitle": "Preparing your sentence practice..."
+    },
+    "error": {
+      "title": "Something went wrong",
+      "description": "Failed to load flashcards. Please try again.",
+      "retry": "Try Again"
+    },
+    "empty": {
+      "title": "No Card Available",
+      "description": "There are no cards to study at this time."
+    },
+    "start": {
+      "title": "Starting Sentence Practice",
+      "subtitle": "Preparing your Sentence practice session...",
+      "language": "Translation Language",
+      "languageNote": "Definitions will be shown in this language",
+      "startButton": "Start Game"
+    },
+    "header": {
+      "title": "Sentence Flashcards",
+      "progress": "Card {current} of {total}",
+      "progressLabel": "Progress",
+      "percentComplete": "{percent}% Complete"
+    },
+    "badge": {
+      "typeSentence": "SENTENCE",
+      "new": "NEW",
+      "learning": "LEARNING",
+      "review": "REVIEW",
+      "relearning": "RELEARNING"
+    },
+    "prompt": {
+      "thinkAndReveal": "Think about the meaning of this word, then reveal the answer."
+    },
+    "buttons": { "showAnswer": "Show Answer" },
+    "rating": {
+      "prompt": "How well did you know this word?",
+      "again": "Again",
+      "hard": "Hard",
+      "good": "Good",
+      "easy": "Easy"
+    },
+    "stats": {
+      "completed": "Completed: {count}",
+      "remaining": "Remaining: {count}",
+      "total": "Total Cards: {count}"
+    },
+    "complete": {
+      "title": "Sentence Practice Complete!",
+      "subtitle": "Excellent work on your Sentence practice session",
+      "xpEarned": "XP Earned",
+      "timeTaken": "Time Taken",
+      "completedLabel": "Completed"
+    }
+  },
+  "TaskLanguageQuestions": {
+    "title": "Language Questions",
+    "subtitle": "Practice your language skills by answering questions about the article",
+    "badges": {
+      "aiPowered": "AI Powered",
+      "interactive": "Interactive",
+      "askQuestions": "Ask Questions"
+    }
+  },
+  "TeacherMyClasses": {
+    "page": {
+      "title": "My Classes",
+      "description": "Manage and view your classrooms"
+    },
+    "table": {
+      "headers": {
+        "className": "Class Name",
+        "classCode": "Class Code",
+        "studentCount": "Student Count",
+        "grade": "Grade",
+        "actions": "Actions"
+      },
+      "empty": "Empty"
+    },
+    "actions": {
+      "roster": "Roster",
+      "reports": "Reports",
+      "edit": "Edit",
+      "archive": "Archive",
+      "delete": "Delete"
+    },
+    "search": { "placeholder": "Search" },
+    "import": {
+      "fromLabel": "Import a new class from",
+      "googleClassroom": "Google Classroom",
+      "dialog": {
+        "title": "Import Your Google Classroom",
+        "selectClass": "Select a Google Classroom Class",
+        "description": "Choose a class to sync. All students will be imported and added to your account.",
+        "yourClasses": "Your Google Classroom Classes",
+        "refresh": "Refresh",
+        "continue": "Continue",
+        "syncing": "Syncing Class...",
+        "syncingDescription": "Importing students from Google Classroom. This may take a moment.",
+        "syncCompleted": "Sync Completed!",
+        "syncAnother": "Sync Another Class",
+        "goToClass": "Go to Class",
+        "aboutTitle": "About Google Classroom Sync",
+        "aboutDescription": "This feature allows teachers to import Google Classroom students. Students will be automatically enrolled in your class."
+      }
+    },
+    "pagination": { "previous": "Previous", "next": "Next" },
+    "edit": {
+      "title": "Edit Class",
+      "description": "Are you sure you want to edit the class?",
+      "className": "Class Name",
+      "classNamePlaceholder": "Class Name",
+      "grade": "Grade",
+      "gradePlaceholder": "Grade",
+      "gradeItem": "Grade {grade}",
+      "submit": "Edit"
+    },
+    "delete": {
+      "title": "Delete Class",
+      "description": "Are you sure you want to delete the class?",
+      "submit": "Delete",
+      "cancel": "Cancel"
+    },
+    "toast": {
+      "attention": "Attention",
+      "fillAllFields": "Please fill in all fields",
+      "success": "Success",
+      "classUpdated": "Class updated successfully",
+      "error": "Error",
+      "failedUpdate": "Failed to update class",
+      "classDeleted": "Class deleted successfully",
+      "failedDelete": "Failed to delete class"
+    }
+  },
+  "TeacherCreateClass": {
+    "button": { "newClassroom": "New Classroom" },
+    "dialog": { "title": "Create Class", "description": "Create a new class" },
+    "fields": {
+      "className": "Class Name",
+      "classNamePlaceholder": "Class Name",
+      "classCode": "Class Code",
+      "grade": "Grade",
+      "gradePlaceholder": "Grade",
+      "gradeItem": "Grade {grade}"
+    },
+    "actions": { "create": "Create", "cancel": "Cancel" },
+    "toast": {
+      "attention": "Attention",
+      "fillAllFields": "Please fill in all fields",
+      "success": "Success",
+      "classCreated": "Class created successfully",
+      "error": "Error",
+      "failedCreate": "Failed to create class"
+    }
+  },
+  "teacher": {
+    "myStudents": {
+      "title": "My Students",
+      "description": "View and manage your students",
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "classrooms": "Classrooms",
+        "actions": "Actions",
+        "empty": "Empty"
+      },
+      "actions": {
+        "progress": "Progress",
+        "resetProgress": "Reset Progress",
+        "cancel": "Cancel",
+        "reset": "Reset"
+      },
+      "search": {
+        "placeholder": "Search Name"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "unknown": {
+        "student": "Anonymous",
+        "email": "Unknown"
+      },
+      "classrooms": {
+        "none": "No classes",
+        "more": "+{count} more"
+      },
+      "dialog": {
+        "reset": {
+          "title": "Reset Progress",
+          "description": "Are you sure you want to reset the progress of this student?"
+        }
+      },
+      "toast": {
+        "reset": {
+          "success": "XP reset successfully.",
+          "error": "XP reset failed."
+        }
+      }
+    },
+    "cefrSetter": {
+      "button": { "setLevel": "Set Level" },
+      "dialog": {
+        "title": "Set CEFR Level for {name}",
+        "description": "Choose the appropriate CEFR level for this student. This will also update their reading level (RA level)."
+      },
+      "labels": {
+        "currentLevel": "Current Level",
+        "newLevel": "New Level"
+      },
+      "select": { "placeholder": "Select CEFR Level" },
+      "preview": {
+        "title": "Preview:",
+        "cefr": "CEFR Level:",
+        "ra": "RA Level:"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "update": "Update Level",
+        "updating": "Updating..."
+      },
+      "toast": {
+        "noChanges": "No changes to save",
+        "success": "{name}'s CEFR level updated to {level}",
+        "error": "Failed to update CEFR level"
+      }
+    }
+  },
+  "Teacher": {
+    "Assignments": {
+      "heading": "Assignments",
+      "selectors": {
+        "selectClassroom": "Select a Classroom"
+      },
+      "search": {
+        "placeholder": "Search assignments...",
+        "searching": "Searching..."
+      },
+      "table": {
+        "headers": {
+          "assignment": "Assignment",
+          "createdOn": "Created On",
+          "dueDate": "Due Date",
+          "students": "Students",
+          "actions": "Actions"
+        },
+        "actions": {
+          "actions": "Actions",
+          "details": "Details"
+        }
+      },
+      "empty": {
+        "noAssignments": "No assignments found",
+        "selectClassroom": "Please select a classroom to view assignments"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "pageOf": "Page {page} of {totalPages}",
+        "showing": "Showing {from} to {to} of {total} assignments"
+      },
+      "toast": {
+        "fetchError": "Failed to fetch assignments"
+      }
+    },
+    "ClassroomNavigation": {
+      "nav": {
+        "classRoster": "Class Roster",
+        "reports": "Reports",
+        "settings": "Settings"
+      },
+      "info": {
+        "students": "{count, plural, one {# student} other {# students}}",
+        "grade": "Grade {grade}",
+        "classCode": "Class Code:"
+      },
+      "password": {
+        "label": "Password:",
+        "noPassword": "No password",
+        "show": "Show password",
+        "hide": "Hide password",
+        "copy": "Copy password"
+      },
+      "actions": {
+        "back": "Back",
+        "backToClassrooms": "Back to Classrooms"
+      },
+      "toast": {
+        "copyClassCodeSuccess": "Class code copied to clipboard!",
+        "copyClassCodeError": "Failed to copy class code",
+        "copyPasswordSuccess": "Password copied to clipboard!",
+        "copyPasswordError": "Failed to copy password"
+      }
+    },
+    "ClassCodeGenerator": {
+      "title": "Password for {classroomName}",
+      "description": {
+        "line1": "Generate a code that students can use to join this classroom.",
+        "line2": "Students will use this code to login and access class materials."
+      },
+      "fields": {
+        "password": {
+          "label": "Password",
+          "copyTitle": "Copy code"
+        }
+      },
+      "expires": {
+        "label": "Expires:",
+        "never": "Never",
+        "status": {
+          "expired": "Expired",
+          "hoursLeft": "{count}h left",
+          "daysLeft": "{count}d left"
+        }
+      },
+      "instructions": {
+        "title": "Instructions for Students:",
+        "step1": "Go to the student login page",
+        "step2": "Enter the password:",
+        "step3": "Select their name from the student list",
+        "step4": "Start learning!",
+        "copy": "Copy Instructions"
+      },
+      "actions": {
+        "open": "Generate Password",
+        "generate": "Generate Password",
+        "generateNew": "Generate New Code",
+        "generating": "Generating...",
+        "close": "Close"
+      },
+      "toast": {
+        "generateSuccess": "Class code generated successfully!",
+        "generateError": "Failed to generate class code",
+        "copyCodeSuccess": "Class code copied to clipboard!",
+        "copyCodeError": "Failed to copy class code",
+        "copyInstructionsSuccess": "Instructions copied to clipboard!",
+        "copyInstructionsError": "Failed to copy instructions"
+      },
+      "clipboard": {
+        "instructions": "🎓 Join {classroomName}\n\nUse this password to join: {classCode}\n\nInstructions:\n1. Go to the student login page\n2. Enter the password: {classCode}\n3. Select your name from the list\n4. Start learning!\n\n⏰ This code expires: {expiresAt}"
+      }
+    },
+    "StudentEnrollmentButton": {
+      "title": "Enroll Students",
+      "description": "Select students to enroll in {classroomName}",
+      "search": {
+        "placeholder": "Search students by name or email..."
+      },
+      "empty": {
+        "title": "No students available",
+        "description": "All students are already enrolled in this classroom",
+        "searchTitle": "No students found",
+        "searchDescription": "Try adjusting your search terms"
+      },
+      "labels": {
+        "noName": "No name",
+        "level": "Lvl {level}"
+      },
+      "actions": {
+        "open": "Enroll Student",
+        "enroll": "Enroll",
+        "close": "Close"
+      },
+      "toast": {
+        "loadAvailableError": "Failed to load available students",
+        "enrollSuccess": "{name} has been enrolled successfully",
+        "enrollError": "Failed to enroll student"
+      }
+    },
+    "ClassRoster": {
+      "title": "Class Roster",
+      "description": "Manage your students, view their progress, and organize your classroom."
+    },
+    "ClassroomSelector": {
+      "title": "Select a Classroom",
+      "actions": {
+        "newClassroom": "New Classroom",
+        "viewRoster": "View Class Roster"
+      },
+      "empty": {
+        "title": "No classrooms found",
+        "description": "Get started by creating your first classroom to manage students and track their progress.",
+        "createFirst": "Create Your First Classroom"
+      },
+      "grade": "Grade {grade}",
+      "studentsCount": "{count, plural, one {# student} other {# students}}",
+      "createdAt": "Created {date}",
+      "toast": {
+        "loadError": "Failed to load classrooms"
+      }
+    },
+    "EnhancedClassRoster": {
+      "toast": {
+        "loadClassroomError": "Failed to load classroom data",
+        "resetSuccess": "Student progress reset successfully",
+        "resetError": "Failed to reset student progress"
+      },
+      "notFound": {
+        "title": "Classroom not found",
+        "description": "The requested classroom could not be found or you don't have access to it."
+      },
+      "actions": {
+        "backToRoster": "Back to Class Roster",
+        "cancel": "Cancel",
+        "resetProgress": "Reset Progress",
+        "viewProgress": "View Progress"
+      },
+      "labels": {
+        "noName": "No name",
+        "level": "Lvl {level}",
+        "studentDefault": "Student"
+      },
+      "students": {
+        "title": "Students List",
+        "enrollButton": "Enroll Student",
+        "searchPlaceholder": "Search students...",
+        "empty": {
+          "title": "No students enrolled",
+          "description": "Get started by enrolling students in this classroom",
+          "enrollFirst": "Enroll Your First Student",
+          "searchTitle": "No students found",
+          "searchDescription": "Try adjusting your search terms"
+        }
+      },
+      "activity": {
+        "none": "No activity",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "daysAgo": "{count} days ago",
+        "weeksAgo": "{count} weeks ago"
+      },
+      "resetDialog": {
+        "title": "Reset Student Progress",
+        "description": "Are you sure you want to reset this student's progress? This action will set their XP to 0, level to 0, and clear their CEFR level. This action cannot be undone."
+      }
+    },
+    "Enrollment": {
+      "toast": {
+        "loadError": "Failed to load classroom information"
+      },
+      "notFound": {
+        "title": "Classroom not found",
+        "description": "The requested classroom could not be found or you don't have access to it."
+      },
+      "actions": {
+        "back": "Go Back",
+        "backToRoster": "Back to Class Roster"
+      },
+      "header": {
+        "title": "Student Enrollment",
+        "subtitle": "Manage student enrollment for"
+      }
+    },
+    "AssignmentDashboard": {
+      "notStarted": "Not Started",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "unknownStatus": "Unknown Status",
+      "createdOn": "Created On",
+      "dueDate": "Due Date",
+      "overdue": "Overdue",
+      "dueToday": "Due Today",
+      "daysRemaining": "Days Remaining: {daysRemaining}",
+      "allStudents": "All Students",
+      "overallProgress": "Overall Progress",
+      "studentList": "Student List",
+      "all": "All",
+      "deleting": "Deleting...",
+      "deleteCount": "Delete ({count})",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "noStudentsInSelectedStatus": "No Students In Selected Status"
+    }
+  },
+  "AdminTeachers": {
+    "page": {
+      "title": "Teacher Management",
+      "description": "Manage teachers and their access to the system"
+    },
+    "Add": {
+      "title": "Add Teacher",
+      "subtitle": "Add a new teacher to your school",
+      "cardTitle": "Teacher Information",
+      "form": {
+        "name": "Full Name",
+        "email": "Email Address",
+        "role": "Role",
+        "password": "Password",
+        "confirmPassword": "Confirm Password"
+      },
+      "placeholders": {
+        "name": "Enter teacher's full name",
+        "email": "Enter email address",
+        "role": "Select a role",
+        "password": "Create password",
+        "confirmPassword": "Confirm password"
+      },
+      "buttons": {
+        "create": "Create Teacher",
+        "creating": "Creating Teacher...",
+        "reset": "Reset Form"
+      },
+      "toasts": {
+        "createdSuccess": "Teacher created successfully!",
+        "createError": "Failed to create teacher"
+      },
+      "schema": {
+        "nameMin": "Name must be at least 2 characters",
+        "nameMax": "Name must be less than 100 characters",
+        "emailInvalid": "Please enter a valid email address",
+        "roleRequired": "Please select a role",
+        "passwordMin": "Password must be at least 6 characters",
+        "passwordMax": "Password must be less than 100 characters",
+        "passwordsDontMatch": "Passwords don't match"
+      }
+    },
+    "Table": {
+      "title": "Teachers List",
+      "searchPlaceholder": "Search teachers...",
+      "stats": {
+        "totalTeachers": "Total Teachers",
+        "totalTeachersDesc": "Active in the system",
+        "totalStudents": "Total Students",
+        "totalStudentsDesc": "Across all teachers",
+        "totalClasses": "Total Classes",
+        "totalClassesDesc": "Active classes"
+      },
+      "actions": {
+        "addTeacher": "Add Teacher",
+        "add": "Add Teacher",
+        "update": "Update Teacher",
+        "delete": "Delete Teacher",
+        "cancel": "Cancel"
+      },
+      "addDialog": {
+        "title": "Add New Teacher",
+        "description": "Create a new teacher account. They will receive login credentials via email."
+      },
+      "editDialog": {
+        "title": "Edit Teacher",
+        "description": "Update teacher information and permissions."
+      },
+      "deleteDialog": {
+        "title": "Delete Teacher",
+        "description": "Are you sure you want to delete {name}? This action cannot be undone. All associated classes and student data will be affected."
+      },
+      "moveDialog": {
+        "title": "Move Teacher to Your School",
+        "description": "The teacher with email {email} already belongs to school {schoolName}. Do you want to move this teacher to your school?",
+        "confirmButton": "Move Teacher"
+      },
+      "form": {
+        "name": "Full Name",
+        "namePlaceholder": "Enter full name",
+        "email": "Email Address",
+        "emailPlaceholder": "Enter email address",
+        "role": "Role",
+        "rolePlaceholder": "Select role",
+        "cefr": "CEFR Level",
+        "cefrPlaceholder": "Select CEFR level",
+        "passwordOptional": "Password (Optional)",
+        "passwordPlaceholder": "Leave empty for auto-generated password",
+        "assignClassrooms": "Assign Classrooms",
+        "resetPassword": "Reset Password",
+        "setNewPassword": "Set New Password",
+        "newPasswordPlaceholder": "Enter new password"
+      },
+      "roles": {
+        "teacher": "Teacher",
+        "admin": "Admin"
+      },
+      "cefrLevels": {
+        "A1": "Beginner",
+        "A2": "Elementary",
+        "B1": "Intermediate",
+        "B2": "Upper Intermediate",
+        "C1": "Advanced",
+        "C2": "Proficient"
+      },
+      "classrooms": {
+        "loading": "Loading classrooms...",
+        "empty": "No classrooms available",
+        "studentsCount": "({count} students)",
+        "noClassroomsAssigned": "No classrooms assigned"
+      },
+      "tableHeaders": {
+        "teacher": "Teacher",
+        "email": "Email",
+        "role": "Role",
+        "cefr": "CEFR Level",
+        "assignedClassrooms": "Assigned Classrooms",
+        "students": "Students",
+        "classes": "Classes",
+        "joined": "Joined",
+        "actions": "Actions"
+      },
+      "loading": "Loading teachers...",
+      "empty": {
+        "search": "No teachers found matching your search",
+        "default": "No teachers found"
+      },
+      "toasts": {
+        "createSuccess": "Teacher created successfully",
+        "updateSuccess": "Teacher updated successfully",
+        "deleteSuccess": "Teacher deleted successfully",
+        "loadError": "Failed to load teachers data",
+        "createError": "Failed to create teacher",
+        "updateError": "Failed to update teacher",
+        "deleteError": "Failed to delete teacher"
+      }
+    }
+  },
+  "AdminStudents": {
+    "header": {
+      "title": "Student Management",
+      "subtitle": "Manage students and their progress"
+    },
+    "page": { "title": "Students Management" },
+    "stats": {
+      "totalStudents": "Total Students",
+      "allClassrooms": "All classrooms",
+      "averageXp": "Average XP",
+      "averageXpDesc": "Experience points per student",
+      "mostCommonLevel": "Most Common Level",
+      "mostCommonLevelDesc": "CEFR proficiency level",
+      "activeThisWeek": "Active This Week",
+      "activeThisWeekDetail": "{count} of {total} students"
+    },
+    "actions": {
+      "addStudent": "Add Student",
+      "saveStudent": "Save Student",
+      "saveChanges": "Save Changes",
+      "clearFilters": "Clear Filters",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "dialogs": {
+      "add": {
+        "title": "Add New Student",
+        "description": "Create a new student account. Click save when you're done."
+      },
+      "edit": {
+        "title": "Edit Student",
+        "description": "Make changes to the student account. Click save when you're done."
+      },
+      "delete": {
+        "title": "Are you sure?",
+        "description": "This action cannot be undone. This will permanently delete {name}'s account and remove their data from our servers."
+      }
+    },
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "cefrLevel": "CEFR Level",
+      "role": "Role",
+      "namePlaceholder": "Enter student name",
+      "emailPlaceholder": "Enter email address",
+      "cefrPlaceholder": "Select CEFR level",
+      "rolePlaceholder": "Select role"
+    },
+    "roles": {
+      "student": "Student",
+      "teacher": "Teacher",
+      "admin": "Admin"
+    },
+    "filters": {
+      "searchPlaceholder": "Search students by name or email...",
+      "classroomPlaceholder": "Filter by classroom",
+      "cefrPlaceholder": "CEFR Level",
+      "activeFiltersLabel": "Active filters:",
+      "searchLabel": "Search:",
+      "classroomLabel": "Classroom:",
+      "levelLabel": "Level:"
+    },
+    "tableHeaders": {
+      "name": "Name",
+      "email": "Email",
+      "className": "Class Name",
+      "cefr": "CEFR Level",
+      "xp": "XP",
+      "role": "Role",
+      "actions": "Actions"
+    },
+    "table": {
+      "loading": "Loading students...",
+      "empty": "No students found matching your criteria."
+    },
+    "badges": { "noClass": "No Class" },
+    "pagination": {
+      "showing": "Showing {from} to {to} of {total} students",
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {page} of {totalPages}"
+    }
+  }
+}

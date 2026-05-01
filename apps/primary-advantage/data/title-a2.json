@@ -1,0 +1,609 @@
+{
+  "storyCollection": {
+    "title": "Primary Advantage A2 Flyers Story Library",
+    "targetAudience": "Grades 3-6 (A2 Flyers Level)",
+    "totalStories": 100,
+    "stories": [
+      {
+        "id": 1,
+        "genre": "Family & Friends",
+        "title": "My New Baby Brother",
+        "description": "A child learns to help with their new baby brother and becomes a great big sister."
+      },
+      {
+        "id": 2,
+        "genre": "Family & Friends",
+        "title": "Grandpa's Garden",
+        "description": "A girl helps her grandfather plant flowers and vegetables in his beautiful garden."
+      },
+      {
+        "id": 3,
+        "genre": "Animals",
+        "title": "The Lost Kitten",
+        "description": "A boy finds a small kitten in the park and helps it find its way home to its mother."
+      },
+      {
+        "id": 4,
+        "genre": "School",
+        "title": "My First Day at School",
+        "description": "A nervous child starts a new school and makes friends with classmates in the playground."
+      },
+      {
+        "id": 5,
+        "genre": "Food & Drink",
+        "title": "The Best Picnic Ever",
+        "description": "A family packs sandwiches and fruit for a fun picnic in the park on a sunny day."
+      },
+      {
+        "id": 6,
+        "genre": "Toys",
+        "title": "The Robot and the Teddy Bear",
+        "description": "A robot toy and teddy bear become best friends and go on adventures together."
+      },
+      {
+        "id": 7,
+        "genre": "Transport",
+        "title": "The Red Bus Adventure",
+        "description": "Children ride the bus to town and see many interesting places along the way."
+      },
+      {
+        "id": 8,
+        "genre": "Animals",
+        "title": "The Elephant's Birthday Party",
+        "description": "All the zoo animals celebrate the elephant's birthday with a special cake and games."
+      },
+      {
+        "id": 9,
+        "genre": "Weather",
+        "title": "The Rainbow After Rain",
+        "description": "After a storm, children go outside and see a beautiful rainbow in the cloudy sky."
+      },
+      {
+        "id": 10,
+        "genre": "Home",
+        "title": "Moving to a New House",
+        "description": "A family moves to a new house and explores all the rooms and the garden."
+      },
+      {
+        "id": 11,
+        "genre": "Sports & Leisure",
+        "title": "The Football Match",
+        "description": "A boy joins his school football team and scores his first goal in an important match."
+      },
+      {
+        "id": 12,
+        "genre": "Animals",
+        "title": "The Duck Family's Swim",
+        "description": "A mother duck teaches her baby ducks how to swim in the pond at the park."
+      },
+      {
+        "id": 13,
+        "genre": "Food & Drink",
+        "title": "Baking Cookies with Mum",
+        "description": "A child helps mother bake chocolate cookies and learns to measure flour and sugar."
+      },
+      {
+        "id": 14,
+        "genre": "Time",
+        "title": "Saturday Morning Fun",
+        "description": "A family enjoys their weekend morning with games, breakfast, and time together."
+      },
+      {
+        "id": 15,
+        "genre": "Clothes",
+        "title": "The Magic Hat",
+        "description": "A girl finds a special hat that changes colors and takes her on magical adventures."
+      },
+      {
+        "id": 16,
+        "genre": "Work",
+        "title": "Visit to the Fire Station",
+        "description": "Children visit the fire station and meet the fire fighters and see the big red fire truck."
+      },
+      {
+        "id": 17,
+        "genre": "Animals",
+        "title": "The Monkey's Banana Tree",
+        "description": "A clever monkey learns to share bananas with all his animal friends in the forest."
+      },
+      {
+        "id": 18,
+        "genre": "School",
+        "title": "The Art Competition",
+        "description": "Students use crayons and paper to draw pictures for the school art competition."
+      },
+      {
+        "id": 19,
+        "genre": "Transport",
+        "title": "The Little Blue Train",
+        "description": "A small train carries children through the countryside to visit their grandmother."
+      },
+      {
+        "id": 20,
+        "genre": "Health",
+        "title": "Visit to the Dentist",
+        "description": "A boy visits the dentist to check his teeth and learns how to brush them properly."
+      },
+      {
+        "id": 21,
+        "genre": "World Around Us",
+        "title": "Beach Day Adventure",
+        "description": "A family spends the day at the beach collecting shells and playing in the sand."
+      },
+      {
+        "id": 22,
+        "genre": "Animals",
+        "title": "The Penguin's Cold Home",
+        "description": "A penguin family lives happily in the snow and ice of their cold, white world."
+      },
+      {
+        "id": 23,
+        "genre": "Food & Drink",
+        "title": "The Ice Cream Shop",
+        "description": "Children visit an ice cream shop and choose their favorite flavors on a hot summer day."
+      },
+      {
+        "id": 24,
+        "genre": "Sports & Leisure",
+        "title": "Learning to Ride a Bike",
+        "description": "A girl learns to ride her new red bike with help from her father in the park."
+      },
+      {
+        "id": 25,
+        "genre": "Family & Friends",
+        "title": "Sister's Birthday Surprise",
+        "description": "A boy and his parents plan a surprise birthday party for his little sister."
+      },
+      {
+        "id": 26,
+        "genre": "Animals",
+        "title": "The Butterfly Garden",
+        "description": "Children watch colorful butterflies fly around the flowers in the school garden."
+      },
+      {
+        "id": 27,
+        "genre": "Toys",
+        "title": "The Doll's Tea Party",
+        "description": "A girl has a tea party with her dolls and teddy bears in the garden."
+      },
+      {
+        "id": 28,
+        "genre": "Weather",
+        "title": "The Big Snowman",
+        "description": "Children build a tall snowman with a hat and scarf when it snows in winter."
+      },
+      {
+        "id": 29,
+        "genre": "Places & Directions",
+        "title": "Lost in the Supermarket",
+        "description": "A boy gets lost in the big supermarket but finds his mother near the fruit."
+      },
+      {
+        "id": 30,
+        "genre": "Animals",
+        "title": "The Horse's New Friend",
+        "description": "A lonely horse on the farm makes friends with a small brown rabbit."
+      },
+      {
+        "id": 31,
+        "genre": "School",
+        "title": "The Library Adventure",
+        "description": "Children discover exciting story books and learn about animals in the school library."
+      },
+      {
+        "id": 32,
+        "genre": "Home",
+        "title": "Helping in the Kitchen",
+        "description": "A child helps wash dishes and set the table for the family dinner."
+      },
+      {
+        "id": 33,
+        "genre": "Transport",
+        "title": "The Airplane Trip",
+        "description": "A family flies in an airplane to visit their cousins in another city."
+      },
+      {
+        "id": 34,
+        "genre": "Animals",
+        "title": "The Frog's Pond",
+        "description": "A green frog lives happily in a pond with fish and enjoys jumping on lily pads."
+      },
+      {
+        "id": 35,
+        "genre": "Sports & Leisure",
+        "title": "The Swimming Lesson",
+        "description": "A girl learns to swim in the swimming pool with her teacher and friends."
+      },
+      {
+        "id": 36,
+        "genre": "Food & Drink",
+        "title": "The Vegetable Garden",
+        "description": "A family grows carrots, tomatoes, and peas in their backyard vegetable garden."
+      },
+      {
+        "id": 37,
+        "genre": "Work",
+        "title": "The Farmer's Day",
+        "description": "A farmer feeds the chickens, cows, and horses on his farm every morning."
+      },
+      {
+        "id": 38,
+        "genre": "Animals",
+        "title": "The Spider's Web",
+        "description": "A small spider builds a beautiful web and catches flies for her dinner."
+      },
+      {
+        "id": 39,
+        "genre": "Time",
+        "title": "Christmas Morning",
+        "description": "Children wake up early on Christmas morning to open their presents under the tree."
+      },
+      {
+        "id": 40,
+        "genre": "World Around Us",
+        "title": "The Mountain Hike",
+        "description": "A family walks up a mountain and sees trees, rocks, and a beautiful view."
+      },
+      {
+        "id": 41,
+        "genre": "Animals",
+        "title": "The Cat's Nine Lives",
+        "description": "A clever cat gets into trouble but always finds a way to be safe and happy."
+      },
+      {
+        "id": 42,
+        "genre": "Sports & Leisure",
+        "title": "The Basketball Game",
+        "description": "Children play basketball in the school gym and learn to pass the ball to teammates."
+      },
+      {
+        "id": 43,
+        "genre": "Health",
+        "title": "Feeling Better",
+        "description": "A sick child stays in bed, drinks warm tea, and gets better with help from the doctor."
+      },
+      {
+        "id": 44,
+        "genre": "Food & Drink",
+        "title": "The Sandwich Shop",
+        "description": "A family stops at a sandwich shop and chooses bread, cheese, and vegetables for lunch."
+      },
+      {
+        "id": 45,
+        "genre": "Animals",
+        "title": "The Tiger's Stripes",
+        "description": "A young tiger learns why his orange and black stripes help him in the forest."
+      },
+      {
+        "id": 46,
+        "genre": "Places & Directions",
+        "title": "The New Shopping Centre",
+        "description": "A family visits the new shopping centre and finds toys, clothes, and books."
+      },
+      {
+        "id": 47,
+        "genre": "Toys",
+        "title": "The Toy Car Race",
+        "description": "Boys and girls race their toy cars down a hill to see which one goes fastest."
+      },
+      {
+        "id": 48,
+        "genre": "Weather",
+        "title": "The Windy Day",
+        "description": "Children fly colorful kites in the park on a very windy spring afternoon."
+      },
+      {
+        "id": 49,
+        "genre": "Family & Friends",
+        "title": "The Sleepover Party",
+        "description": "Friends have a sleepover party with games, stories, and breakfast together in the morning."
+      },
+      {
+        "id": 50,
+        "genre": "Animals",
+        "title": "The Whale's Big Ocean",
+        "description": "A large whale swims in the deep blue ocean and makes friends with dolphins and fish."
+      },
+      {
+        "id": 51,
+        "genre": "Work",
+        "title": "The Pop Star's Concert",
+        "description": "A famous pop star performs music on stage while children sing and dance to their favorite songs."
+      },
+      {
+        "id": 52,
+        "genre": "Animals",
+        "title": "The Dinosaur Museum",
+        "description": "Children visit a museum to learn about extinct dinosaurs and see huge dinosaur bones."
+      },
+      {
+        "id": 53,
+        "genre": "Sports & Leisure",
+        "title": "The Tennis Tournament",
+        "description": "A girl practices with her tennis racket every day to win the school tennis tournament."
+      },
+      {
+        "id": 54,
+        "genre": "Transport",
+        "title": "The Rocket to Space",
+        "description": "An astronaut travels in a rocket to visit different planets and see the stars."
+      },
+      {
+        "id": 55,
+        "genre": "World Around Us",
+        "title": "The Desert Adventure",
+        "description": "A family explores the hot desert and learns about camels and life without water."
+      },
+      {
+        "id": 56,
+        "genre": "Food & Drink",
+        "title": "The Pizza Competition",
+        "description": "Children make their own pizzas with cheese, tomatoes, and vegetables for a cooking competition."
+      },
+      {
+        "id": 57,
+        "genre": "Animals",
+        "title": "The Dolphin's Ocean Show",
+        "description": "Smart dolphins jump and play in the water while visitors watch their amazing show."
+      },
+      {
+        "id": 58,
+        "genre": "School",
+        "title": "The Science Project",
+        "description": "Students work together on a science project about plants and win first prize."
+      },
+      {
+        "id": 59,
+        "genre": "Time",
+        "title": "The Century Time Machine",
+        "description": "Children travel back one hundred years in a time machine to see how people lived."
+      },
+      {
+        "id": 60,
+        "genre": "Clothes",
+        "title": "The Fashion Show",
+        "description": "Students design colorful costumes with stripes and spots for the school fashion show."
+      },
+      {
+        "id": 61,
+        "genre": "Animals",
+        "title": "The Octopus's Eight Arms",
+        "description": "A clever octopus uses all eight arms to help sea creatures solve problems underwater."
+      },
+      {
+        "id": 62,
+        "genre": "Sports & Leisure",
+        "title": "The Skateboard Championship",
+        "description": "A boy practices skateboarding every afternoon to compete in the city championship."
+      },
+      {
+        "id": 63,
+        "genre": "Work",
+        "title": "The Photographer's Wildlife Trip",
+        "description": "A photographer travels to take pictures of wild animals in their natural environment."
+      },
+      {
+        "id": 64,
+        "genre": "Health",
+        "title": "The X-ray Adventure",
+        "description": "A girl breaks her arm and learns about x-rays when the doctor examines her bones."
+      },
+      {
+        "id": 65,
+        "genre": "Home",
+        "title": "The Apartment Building Mystery",
+        "description": "Children living in an apartment building solve a mystery using clues from different floors."
+      },
+      {
+        "id": 66,
+        "genre": "Animals",
+        "title": "The Eagle's Mountain Home",
+        "description": "A magnificent eagle builds its nest high on a mountain and teaches its babies to fly."
+      },
+      {
+        "id": 67,
+        "genre": "Food & Drink",
+        "title": "The International Food Festival",
+        "description": "Families share food from different countries including noodles, pasta, and exotic fruits."
+      },
+      {
+        "id": 68,
+        "genre": "Transport",
+        "title": "The Underground Railway",
+        "description": "Children take their first trip on the underground railway through tunnels beneath the city."
+      },
+      {
+        "id": 69,
+        "genre": "Sports & Leisure",
+        "title": "The Volleyball Team",
+        "description": "Students form a volleyball team and practice hitting the ball over the net together."
+      },
+      {
+        "id": 70,
+        "genre": "Animals",
+        "title": "The Polar Bear's Ice Home",
+        "description": "A polar bear family lives on floating ice and hunts for fish in the freezing ocean."
+      },
+      {
+        "id": 71,
+        "genre": "Work",
+        "title": "The Businesswoman's Important Meeting",
+        "description": "A successful businesswoman prepares for an important meeting at her office building."
+      },
+      {
+        "id": 72,
+        "genre": "World Around Us",
+        "title": "The Waterfall Discovery",
+        "description": "Hikers discover a beautiful waterfall hidden deep in the forest during their adventure."
+      },
+      {
+        "id": 73,
+        "genre": "School",
+        "title": "The Geography Quiz",
+        "description": "Students study maps and learn about different countries for their geography quiz competition."
+      },
+      {
+        "id": 74,
+        "genre": "Animals",
+        "title": "The Kangaroo's Jumping Contest",
+        "description": "A young kangaroo practices jumping to win the animal kingdom's jumping contest."
+      },
+      {
+        "id": 75,
+        "genre": "Sports & Leisure",
+        "title": "The Ice Skating Adventure",
+        "description": "Children learn to ice skate on the frozen pond during their winter holiday."
+      },
+      {
+        "id": 76,
+        "genre": "Food & Drink",
+        "title": "The Honey Harvest",
+        "description": "A beekeeper shows children how bees make sweet honey in their busy hive."
+      },
+      {
+        "id": 77,
+        "genre": "Transport",
+        "title": "The Ambulance Emergency",
+        "description": "Paramedics use their ambulance to help people and drive quickly to the hospital."
+      },
+      {
+        "id": 78,
+        "genre": "Animals",
+        "title": "The Crocodile's River Home",
+        "description": "A large crocodile lives peacefully in the river with fish and other water animals."
+      },
+      {
+        "id": 79,
+        "genre": "Work",
+        "title": "The Mechanic's Garage",
+        "description": "A friendly mechanic fixes cars and trucks in his busy garage every day."
+      },
+      {
+        "id": 80,
+        "genre": "Time",
+        "title": "The Midnight Adventure",
+        "description": "Children discover magical creatures that only come out at midnight under the full moon."
+      },
+      {
+        "id": 81,
+        "genre": "Animals",
+        "title": "The Tortoise and the Race",
+        "description": "A slow tortoise surprises everyone by winning a race against faster animals."
+      },
+      {
+        "id": 82,
+        "genre": "Sports & Leisure",
+        "title": "The Chess Competition",
+        "description": "A clever student learns chess strategies and competes in the school chess tournament."
+      },
+      {
+        "id": 83,
+        "genre": "Places & Directions",
+        "title": "The Skyscraper Adventure",
+        "description": "Children visit the tallest skyscraper in the city and see the view from the top floor."
+      },
+      {
+        "id": 84,
+        "genre": "Animals",
+        "title": "The Jellyfish's Ocean Dance",
+        "description": "Colorful jellyfish float gracefully through the ocean like underwater dancers."
+      },
+      {
+        "id": 85,
+        "genre": "Food & Drink",
+        "title": "The Pancake Sunday",
+        "description": "A family makes delicious pancakes with butter and jam for their special Sunday breakfast."
+      },
+      {
+        "id": 86,
+        "genre": "Work",
+        "title": "The Journalist's Big Story",
+        "description": "A journalist writes an important newspaper story about helping animals at the zoo."
+      },
+      {
+        "id": 87,
+        "genre": "Sports & Leisure",
+        "title": "The Rock Climbing Challenge",
+        "description": "Brave children learn to climb rocks safely with ropes and helmets in the mountains."
+      },
+      {
+        "id": 88,
+        "genre": "Animals",
+        "title": "The Swan's Lake",
+        "description": "Beautiful white swans swim elegantly on the lake while children watch from the shore."
+      },
+      {
+        "id": 89,
+        "genre": "Transport",
+        "title": "The Tractor on the Farm",
+        "description": "A farmer uses his big red tractor to plant seeds and harvest vegetables."
+      },
+      {
+        "id": 90,
+        "genre": "World Around Us",
+        "title": "The Cave Exploration",
+        "description": "Adventurous children explore a mysterious cave and discover interesting rock formations inside."
+      },
+      {
+        "id": 91,
+        "genre": "Animals",
+        "title": "The Panda's Bamboo Forest",
+        "description": "A gentle panda family lives happily in their bamboo forest home in China."
+      },
+      {
+        "id": 92,
+        "genre": "Sports & Leisure",
+        "title": "The Drum Band Practice",
+        "description": "Students practice playing drums together to perform at the school music festival."
+      },
+      {
+        "id": 93,
+        "genre": "Work",
+        "title": "The Designer's Creative Studio",
+        "description": "A talented designer creates beautiful clothes and furniture in her colorful studio."
+      },
+      {
+        "id": 94,
+        "genre": "Food & Drink",
+        "title": "The Milkshake Café",
+        "description": "Children visit a special café that makes the most delicious fruit milkshakes in town."
+      },
+      {
+        "id": 95,
+        "genre": "Animals",
+        "title": "The Shark's Deep Ocean",
+        "description": "A powerful shark swims in the deep ocean and keeps other sea creatures safe."
+      },
+      {
+        "id": 96,
+        "genre": "Sports & Leisure",
+        "title": "The Pyramid Puzzle",
+        "description": "Children work together to solve a difficult puzzle shaped like an ancient pyramid."
+      },
+      {
+        "id": 97,
+        "genre": "Transport",
+        "title": "The Helicopter Rescue",
+        "description": "A rescue helicopter flies over mountains to help people who are lost hiking."
+      },
+      {
+        "id": 98,
+        "genre": "World Around Us",
+        "title": "The Island Paradise",
+        "description": "A family discovers a beautiful island with palm trees, beaches, and colorful fish."
+      },
+      {
+        "id": 99,
+        "genre": "Animals",
+        "title": "The Beetle's Garden Home",
+        "description": "A tiny beetle lives among the flowers and helps plants grow in the garden."
+      },
+      {
+        "id": 100,
+        "genre": "Sports & Leisure",
+        "title": "The Winter Sledge Race",
+        "description": "Children build fast sledges and race down snowy hills during their winter vacation."
+      }
+    ]
+  }
+}

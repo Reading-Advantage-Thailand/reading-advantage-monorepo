@@ -1,0 +1,2655 @@
+{
+  "LocaleSwitcher": {
+    "label": "改變語言",
+    "locale": "{locale, select, th {🇹🇭 ไทย} en {🇺🇸 English} tw {🇹🇼 中文} cn {🇨🇳 台灣} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
+  },
+  "NotFound": {
+    "title": "頁面未找到",
+    "description": "抱歉，我們找不到您要查找的頁面。",
+    "goBack": "返回",
+    "returnToWebsite": "返回網站"
+  },
+  "common": {
+    "tryAgain": "再試一次"
+  },
+  "MainNav": {
+    "home": "主頁",
+    "about": "關於",
+    "contact": "聯繫",
+    "authors": "作者",
+    "login": "登錄",
+    "menu": "菜單",
+    "usernav": {
+      "settings": "設置",
+      "logout": "退出",
+      "contactUs": "聯繫我們",
+      "account": "帳戶",
+      "navigation": "導航",
+      "studentDashboard": "學生儀表板",
+      "teacherDashboard": "教師儀表板",
+      "adminDashboard": "管理員儀表板",
+      "systemDashboard": "系統儀表板"
+    }
+  },
+  "Sidebar": {
+    "read": "閱讀",
+    "stories": "故事",
+    "assignments": "作業",
+    "history": "歷史",
+    "sentences": "句子",
+    "vocabulary": "單字",
+    "testing": "測試",
+    "systemdashboard": "系統儀表板",
+    "licenses": "許可證儀表板",
+    "schools": "學校儀表板",
+    "teacherdashboard": "教師儀表板",
+    "reports": "報告",
+    "myClasses": "我的班級",
+    "myStudents": "我的學生",
+    "classRoster": "班級名冊",
+    "adminDashboard": "管理員儀表板",
+    "dashboard": "儀表板",
+    "admin": "管理員",
+    "teachers": "教師",
+    "importdata": "匯入資料",
+    "userProfile": "用戶資料",
+    "schoolProfile": "學校資料",
+    "studentsandclasses": "學生和班級",
+    "articlecreation": "文章創建",
+    "back": "返回",
+    "subItem": {
+      "admin": "管理員",
+      "teachers": "教師",
+      "students": "學生",
+      "allTeachers": "所有教師",
+      "addTeacher": "新增教師",
+      "allStudents": "所有學生",
+      "addStudent": "新增學生",
+      "classrooms": "教室",
+      "classRoster": "班級名冊",
+      "studentProgress": "學生進度",
+      "overviewReports": "概覽報告",
+      "performanceAnalytics": "效能分析",
+      "progressTracking": "進度追蹤"
+    }
+  },
+  "Leaderboard": {
+    "title": "排行榜",
+    "rank": "排名",
+    "name": "姓名",
+    "xp": "XP",
+    "room": "房間",
+    "you": "你",
+    "noDataAvailable": "本月沒有可用數據"
+  },
+  "Question": {
+    "SAQuestion": {
+      "title": "短答題",
+      "description": "用幾個字回答問題",
+      "question": "問題",
+      "suggestedAnswer": "建議答案",
+      "feedback": "反饋",
+      "yourAnswer": "您的答案",
+      "feedbackAndYourScore": "反饋和您的分數",
+      "score": "分數是 {score}",
+      "anwserError": "請輸入您的答案"
+    },
+    "LAQuestion": {
+      "title": "長答題",
+      "description": "用幾段話回答問題",
+      "feedbackModal": {
+        "feedbackwritting": "寫作反饋",
+        "finalfeedback": "最終反饋",
+        "vocabulary": "詞彙使用",
+        "grammar": "語法準確性",
+        "clarityandcoherence": "清晰度和連貫性",
+        "complexityandstructure": "複雜性和結構",
+        "contentanddevelopment": "內容和開發",
+        "areaforimpovement": "改進領域",
+        "examples": "例子",
+        "strength": "優點",
+        "suggestions": "建議",
+        "feedbackoverall": "總體反饋",
+        "examplerevisions": "示例修訂",
+        "nextStep": "下一步",
+        "reviseResponse": "修訂響應",
+        "getXP": "獲取XP",
+        "score": "分數"
+      }
+    },
+    "MCQuestion": {
+      "title": "多選題",
+      "questionOf": "問題 {index} 共 {total}",
+      "description": "完成測試以檢查您的理解"
+    },
+    "descriptionSuccess": "您已完成測試",
+    "descriptionSuccess2": "您已完成測試 {score} 題正確，共 {total} 題",
+    "descriptionError": "取得問題時發生錯誤",
+    "descriptionLoading": "正在取得問題，請稍候"
+  },
+  "Student": {
+    "history": {
+      "titleOfHistory": "閱讀記錄 - {name}",
+      "reminderToReread": {
+        "title": "提醒重新閱讀",
+        "description": "您可能想要嘗試重新閱讀這些文章之一，看看您是否有所進步。"
+      },
+      "articleRecords": {
+        "title": "閱讀記錄",
+        "description": "您的閱讀記錄將顯示在這裡。"
+      },
+      "title": "文章標題",
+      "score": "分數",
+      "date": "日期",
+      "rated": "評分",
+      "status": "狀態",
+      "searchPlaceholder": "搜尋文章...",
+      "loading": "載入中...",
+      "noArticles": "未找到文章",
+      "noArticlesToRead": "沒有需要重新閱讀的文章"
+    }
+  },
+  "Admin": {
+    "Classrooms": {
+      "classrooms": "教室",
+      "classroomsDescription": "管理您學校的教室",
+      "searchPlaceholder": "搜尋教室...",
+      "createClassroom": "建立教室",
+      "createClassroomDescription": "為學生建立新教室",
+      "editClassroom": "編輯教室",
+      "editClassroomDescription": "更新教室資訊",
+      "deleteClassroom": "刪除教室",
+      "deleteClassroomDescription": "您確定要刪除這個教室嗎？",
+      "deleteClassroomWarning": "此操作無法復原。所有學生和教師都將從此教室中移除。",
+      "name": "名稱",
+      "namePlaceholder": "輸入教室名稱",
+      "grade": "年級",
+      "gradePlaceholder": "輸入年級",
+      "selectGrade": "選擇年級",
+      "classCode": "班級代碼",
+      "studentPassword": "學生密碼",
+      "studentPasswordPlaceholder": "輸入學生密碼",
+      "students": "學生",
+      "teachers": "教師",
+      "createdAt": "建立時間",
+      "expires": "過期時間",
+      "actions": "操作",
+      "edit": "編輯",
+      "delete": "刪除",
+      "cancel": "取消",
+      "create": "建立",
+      "update": "更新",
+      "creating": "建立中...",
+      "updating": "更新中...",
+      "deleting": "刪除中...",
+      "noClassrooms": "未找到教室",
+      "loading": "正在載入教室...",
+      "toast": {
+        "createSuccess": "教室建立成功",
+        "invalidData": "收到無效的資料格式",
+        "loadFailed": "載入教室失敗",
+        "createFailed": "建立教室失敗",
+        "updateFailed": "更新教室失敗",
+        "updateSuccess": "更新教室成功",
+        "deleteSuccess": "教室刪除成功",
+        "deleteFailed": "刪除教室失敗"
+      }
+    },
+    "Students": {
+      "Add": {
+        "heading": "新增學生",
+        "subtext": "為您的學校新增一位學生",
+        "cardTitle": "學生資料",
+        "nameLabel": "姓名",
+        "namePlaceholder": "輸入學生的姓名",
+        "emailLabel": "電子郵件",
+        "emailPlaceholder": "輸入電子郵件地址",
+        "submit": "建立學生",
+        "submitting": "正在建立學生...",
+        "reset": "重設表單",
+        "toastSuccess": "學生建立成功！",
+        "errorGeneric": "建立學生失敗",
+        "errors": {
+          "nameMin": "姓名至少需要 2 個字元",
+          "nameMax": "姓名不得超過 100 個字元",
+          "emailInvalid": "請輸入有效的電子郵件地址"
+        }
+      }
+    }
+  },
+  "ImportData": {
+    "header": {
+      "heading": "匯入資料",
+      "text": "匯入 CSV 檔以批次將學生、老師與班級新增至系統"
+    },
+    "errors": {
+      "onlyCsv": "只允許 CSV 檔案",
+      "sizeExceeded": "檔案大小超過 5MB 上限。當前大小：{size}MB",
+      "parseError": "無法解析 CSV 檔，請檢查檔案格式",
+      "readError": "無法讀取檔案",
+      "uploadFailed": "上傳失敗"
+    },
+    "upload": {
+      "cardTitle": "上傳 CSV 檔",
+      "selectFile": "選擇 CSV 檔",
+      "maxSize": "最大大小：5MB",
+      "browse": "瀏覽",
+      "supportedFormat": "支援格式：僅 CSV 檔，最大 5MB",
+      "fileSelected": {
+        "title": "已選擇檔案",
+        "name": "名稱",
+        "size": "大小",
+        "type": "類型"
+      },
+      "failedTitle": "上傳失敗",
+      "successTitle": "上傳成功",
+      "success": {
+        "file": "檔案",
+        "size": "大小",
+        "savedAs": "另存為",
+        "nextSteps": "檔案已可處理，您可以繼續下一步。"
+      },
+      "progressLabel": "上傳進度",
+      "progressPercent": "已完成 {percent}%",
+      "uploading": "上傳中...",
+      "importButton": "匯入資料",
+      "clear": "清除"
+    },
+    "preview": {
+      "button": "預覽",
+      "title": "資料預覽",
+      "columns": { "name": "姓名", "email": "電子郵件", "role": "角色" }
+    },
+    "formatGuide": {
+      "title": "CSV 格式指南",
+      "tabs": {
+        "students": "學生",
+        "teachers": "老師與管理員",
+        "classes": "班級"
+      },
+      "requiredHeaders": "必要欄位（需依此順序）：",
+      "exampleData": "範例資料：",
+      "requirements": "要求：",
+      "downloadTemplate": "下載{type, select, students {學生} teachers {老師} classes {班級} other {資料}}範本"
+    },
+    "format": {
+      "headers": {
+        "name": "name",
+        "email": "email",
+        "classroomName": "classroom_name",
+        "role": "role"
+      },
+      "students": {
+        "title": "學生資料格式",
+        "description": "匯入學生資訊（個人資料與班級分配）",
+        "req1": "檔名必須為 students.csv",
+        "req2": "電子郵件需唯一且格式正確",
+        "req3": "角色須為 Student"
+      },
+      "teachers": {
+        "title": "老師與管理員資料格式",
+        "description": "匯入老師資訊及其指派之科目/班級",
+        "req1": "檔名必須為 teachers.csv",
+        "req2": "電子郵件需唯一且格式正確",
+        "req3": "角色須為 Teacher 或 Admin"
+      },
+      "classes": {
+        "title": "班級資料格式",
+        "description": "匯入班級與教室資訊",
+        "req1": "檔名必須為 classes.csv",
+        "req2": "班級名稱需唯一"
+      }
+    },
+    "tips": {
+      "title": "匯入小撇步",
+      "fileSize": {
+        "title": "檔案大小限制",
+        "desc": "最大 5MB。較大的檔案請拆分後匯入"
+      },
+      "encoding": {
+        "title": "使用 UTF-8 編碼",
+        "desc": "以 UTF-8 儲存 CSV 以支援特殊字元"
+      },
+      "duplicates": {
+        "title": "檢查重複",
+        "desc": "匯入前請確保電子郵件與識別碼不重複"
+      },
+      "validate": {
+        "title": "先驗證資料",
+        "desc": "匯入前使用預覽功能檢查資料"
+      },
+      "backup": {
+        "title": "先備份",
+        "desc": "大量匯入前請先備份現有資料"
+      }
+    },
+    "issues": {
+      "title": "常見問題",
+      "wrongFormat": {
+        "title": "檔案格式錯誤",
+        "desc": "僅接受 CSV 檔。請先將 Excel 轉為 CSV"
+      },
+      "missingHeaders": {
+        "title": "缺少欄位標題",
+        "desc": "第一列必須包含與範例一致的欄位名稱"
+      },
+      "invalidEmail": {
+        "title": "電子郵件格式無效",
+        "desc": "請檢查所有電子郵件格式是否正確"
+      }
+    }
+  },
+  "AdminDashboard": {
+    "title": "管理員儀表板",
+    "subtitle": "管理您的學校教育平台",
+    "actions": {
+      "importData": "匯入資料",
+      "addTeacher": "新增教師"
+    },
+    "stats": {
+      "teachers": "教師",
+      "teachersDesc": "您的學校中的活躍教師",
+      "students": "學生",
+      "studentsDesc": "註冊學生",
+      "articles": "文章",
+      "articlesDesc": "可用的閱讀材料",
+      "growth": "每月增長",
+      "growthDesc": "學生入學增長"
+    },
+    "quickActions": {
+      "title": "快速操作",
+      "addTeacher": "新增教師",
+      "addTeacherDesc": "註冊新的教師帳戶",
+      "addStudent": "新增學生",
+      "addStudentDesc": "建立新的學生資料",
+      "createArticle": "建立文章",
+      "createArticleDesc": "生成新的閱讀內容",
+      "importData": "匯入資料",
+      "importDataDesc": "批量導入用戶和內容",
+      "viewReports": "查看報告",
+      "viewReportsDesc": "訪問分析和洞察",
+      "manageClassrooms": "管理教室",
+      "manageClassroomsDesc": "組織班級和作業"
+    },
+    "recentActivity": {
+      "title": "最近活動",
+      "empty": "沒有最近的活动要显示",
+      "viewAll": "查看所有活动"
+    },
+    "systemStatus": {
+      "title": "系統狀態",
+      "serverHealth": "伺服器健康",
+      "database": "資料庫",
+      "aiServices": "AI 服務",
+      "healthy": "健康",
+      "connected": "連接",
+      "operational": "運行中"
+    },
+    "alerts": {
+      "title": "系統警報",
+      "lowStorage": {
+        "title": "儲存空間低",
+        "description": "考慮升級您的存儲計劃"
+      },
+      "newRegistrations": {
+        "title": "新教師註冊",
+        "description": "5 教師等待批准"
+      }
+    },
+    "charts": {
+      "title": "分析概览",
+      "userGrowth": "用戶增長",
+      "topArticles": "最受歡迎的文章",
+      "activityByLevel": "CEFR 等級活動",
+      "performance": "性能指標"
+    }
+  },
+  "AdminArticleCreationPage": {
+    "header": {
+      "heading": "文章建立與管理",
+      "text": "為 Primary Advantage 建立、以 AI 生成並審核文章"
+    }
+  },
+  "Components": {
+    "submitButton": "送出",
+    "closeButton": "關閉",
+    "cancelButton": "取消",
+    "previousButton": "上一題",
+    "retakeButton": "重新測試",
+    "nextButton": "下一題",
+    "finishButton": "完成",
+    "waitingButton": "請稍候...",
+    "startQuiz": "開始測試",
+    "getFeedback": "獲取反饋",
+    "audioButton": "聽和讀",
+    "saveToFlashcard": "儲存到閃卡",
+    "translate": "翻譯",
+    "timer": "已用時 {elapsed} 秒",
+    "resetFilter": "重置過濾器",
+    "assignments": "作業",
+    "sentences": "句子",
+    "confirmRetake": "確認重新測試",
+    "areYouSureYouWantToRetakeThisQuiz": "您確定要重新測試嗎？您的答案將被清除。",
+    "AdminArticleCreation": {
+      "tabs": {
+        "createArticle": "建立文章",
+        "previewEdit": "預覽與編輯",
+        "manageArticles": "管理文章"
+      },
+      "aiArticleGenerator": "AI 文章產生器",
+      "aiArticleGeneratorDesc": "使用 AI 根據您的設定產生高品質文章",
+      "articleType": "文章類型",
+      "fiction": "小說",
+      "nonFiction": "非小說",
+      "genre": "類型",
+      "subgenre": "子類型",
+      "cefrLevel": "CEFR 等級",
+      "articleTopic": "文章主題",
+      "placeholder": {
+        "genre": "選擇類型",
+        "subgenre": "選擇子類型",
+        "cefr": "選擇 CEFR 等級",
+        "topic": "描述主題、主旨或重點"
+      },
+      "cefrLevels": {
+        "A1": "A1",
+        "A2": "A2",
+        "B1": "B1",
+        "B2": "B2",
+        "C1": "C1",
+        "C2": "C2"
+      },
+      "error": "錯誤",
+      "generateWithAI": "以 AI 生成",
+      "dialog": {
+        "approval": {
+          "title": "確認核准",
+          "description": "你確定要核准並發布此文章嗎？此動作將會把文章發布到平台。"
+        },
+        "backToCreate": {
+          "title": "返回建立?",
+          "description": "如果返回建立，變更將會遺失。",
+          "warning": "此動作會將文章重設為初始狀態。"
+        },
+        "common": {
+          "cancel": "取消",
+          "confirm": "確認",
+          "ok": "確定"
+        }
+      },
+      "loading": {
+        "titles": {
+          "generate": "正在產生文章",
+          "save": "正在儲存草稿",
+          "approve": "正在核准並發布"
+        },
+        "descriptions": {
+          "generate": "請稍候，AI 正在建立內容...",
+          "save": "正在將變更儲存為草稿...",
+          "approve": "正在將文章發布到平台..."
+        }
+      },
+      "preview": {
+        "title": "文章預覽",
+        "description": "查看文章內容（唯讀）"
+      },
+      "editor": {
+        "title": "文章編輯器",
+        "description": "在核准前檢視並編輯內容"
+      },
+      "modified": "已修改",
+      "badges": {
+        "type": "類型",
+        "genre": "類型",
+        "subgenre": "子類型",
+        "cefrLevel": "CEFR 等級"
+      },
+      "fields": {
+        "title": "文章標題",
+        "content": "文章內容",
+        "summary": "文章摘要"
+      },
+      "placeholders": {
+        "title": "輸入文章標題...",
+        "content": "輸入文章主要內容...",
+        "summary": "輸入文章摘要..."
+      },
+      "buttons": {
+        "backToCreate": "返回建立",
+        "approveAndPublish": "核准並發布",
+        "saveAsDraft": "儲存為草稿",
+        "backToManage": "返回管理",
+        "switchToEdit": "切換到編輯",
+        "refresh": "重新整理",
+        "preview": "預覽",
+        "edit": "編輯",
+        "delete": "刪除",
+        "deleting": "刪除中..."
+      },
+      "manage": {
+        "title": "文章管理",
+        "description": "管理你的文章",
+        "loading": "載入文章中...",
+        "empty": "沒有找到文章"
+      },
+      "status": {
+        "draft": "草稿",
+        "published": "已發布"
+      },
+      "list": {
+        "topic": "主題",
+        "cefr": "CEFR",
+        "rating": "評分",
+        "created": "建立時間"
+      },
+      "toasts": {
+        "fetchFailed": "取得文章失敗",
+        "generateSuccess": "產生文章成功！",
+        "saveSuccess": "已成功儲存為草稿！",
+        "saveFailed": "儲存文章失敗",
+        "approveSuccess": "核准並發布成功！",
+        "approveFailed": "核准文章失敗",
+        "deleteSuccess": "刪除文章成功",
+        "deleteFailed": "刪除文章失敗",
+        "deleteError": "刪除文章時發生錯誤"
+      }
+    }
+  },
+  "WordList": {
+    "title": "單字列表",
+    "description": "選擇單字儲存到閃卡",
+    "selectedWords": "{count} 個單字已選擇"
+  },
+  "Article": {
+    "title": "文章",
+    "description": "文章",
+    "fiction": "小說",
+    "nonfiction": "非小說",
+    "type": "類型",
+    "genre": "類型",
+    "subGenre": "子類型",
+    "cefrLevel": "CEFR 等級 : {level}",
+    "raLevel": "RA 等級 : {level}",
+    "rating": "評分",
+    "createdAt": "建立時間",
+    "updatedAt": "更新時間",
+    "saveToFlashcard": "閃卡: 已保存",
+    "notSaved": "閃卡: 未保存",
+    "studyAsLesson": "學習為 45 分鐘課程",
+    "selection": {
+      "title": "文章選擇",
+      "description": "請選擇您想要閱讀的 {selection}",
+      "description2": "您的等級是 {level} ，以下是您可以選擇的 {selection}"
+    },
+    "types": {
+      "fiction": "小說",
+      "nonfiction": "非小說"
+    },
+    "genres": {
+      "realistic_fiction": "寫實小說",
+      "animal_stories": "動物故事",
+      "fantasy_magic": "奇幻與魔法",
+      "mystery": "神秘故事",
+      "adventure": "冒險",
+      "humor": "幽默",
+      "folktales_fables_myths": "民間故事、寓言與神話",
+      "historical_fiction": "歷史小說",
+      "science_fiction": "科幻小說",
+      "animals": "動物",
+      "science_nature": "科學與自然",
+      "history_social_studies": "歷史與社會研究",
+      "biography": "傳記",
+      "howto_procedural": "操作指南與程序",
+      "geography_cultures": "地理與文化",
+      "health_safety": "健康與安全",
+      "arts_music": "藝術與音樂"
+    },
+    "subgenres": {
+      "school_stories": "校園故事",
+      "friendship_stories": "友情故事",
+      "family_life": "家庭生活",
+      "neighborhood_adventures": "社區冒險",
+      "stories_about_hobbies": "興趣愛好故事",
+      "dealing_with_challenges": "應對挑戰",
+      "realistic_animal_tales": "寫實動物故事",
+      "talking_animal_adventures": "會說話的動物冒險",
+      "pet_stories": "寵物故事",
+      "wild_animal_encounters": "野生動物遭遇",
+      "animal_rescue_stories": "動物救援故事",
+      "magical_creatures": "神奇生物",
+      "enchanted_objects": "魔法物品",
+      "simple_quests": "簡單任務",
+      "worlds_of_imagination": "想像世界",
+      "everyday_magic": "日常魔法",
+      "missing_object_mysteries": "物品失蹤之謎",
+      "secret_code_puzzles": "密碼謎題",
+      "simple_whodunits": "簡單偵探故事",
+      "clubhouse_mysteries": "俱樂部神秘事件",
+      "finding_clues": "尋找線索",
+      "exploration_stories": "探索故事",
+      "rescue_missions": "救援任務",
+      "outdoor_adventures": "戶外冒險",
+      "treasure_hunts": "尋寶",
+      "overcoming_obstacles": "克服障礙",
+      "silly_situations": "滑稽情境",
+      "funny_characters": "有趣的角色",
+      "everyday_humor": "日常幽默",
+      "mischief_and_mayhem": "惡作劇與混亂",
+      "exaggerated_stories": "誇張故事",
+      "fables": "寓言",
+      "fairy_tales": "童話",
+      "legends": "傳說",
+      "myths": "神話",
+      "pourquoi_stories": "緣由故事",
+      "life_in_the_past": "過去的生活",
+      "stories_about_historical_events": "歷史事件故事",
+      "pioneer_life": "拓荒者生活",
+      "children_in_history": "歷史上的兒童",
+      "simple_space_adventures": "簡單太空冒險",
+      "kid_inventors": "兒童發明家",
+      "friendly_robots": "友善的機器人",
+      "future_worlds_for_kids": "兒童未來世界",
+      "specific_animal_facts": "特定動物事實",
+      "animal_habitats": "動物棲息地",
+      "pet_care_basics": "寵物護理基礎",
+      "insects_and_spiders": "昆蟲和蜘蛛",
+      "endangered_animals": "瀕危動物",
+      "animal_behavior": "動物行為",
+      "weather_explained": "天氣解說",
+      "simple_science_experiments": "簡單科學實驗",
+      "plants_and_trees": "植物和樹木",
+      "the_human_body": "人體",
+      "earth_science": "地球科學",
+      "space_and_planets": "太空和行星",
+      "simple_machines": "簡單機械",
+      "important_historical_events": "重要歷史事件",
+      "famous_people_in_history": "歷史名人",
+      "life_in_different_cultures": "不同文化中的生活",
+      "community_helpers": "社區幫助者",
+      "us_symbols_landmarks": "美國標誌與地標",
+      "ancient_civilizations": "古代文明",
+      "inventors_and_scientists": "發明家和科學家",
+      "explorers": "探險家",
+      "artists_and_musicians": "藝術家和音樂家",
+      "leaders_and_activists": "領導者和活動家",
+      "athletes": "運動員",
+      "childhood_of_famous_people": "名人的童年",
+      "simple_craft_steps": "簡單工藝步驟",
+      "basic_recipe_steps": "基本食譜步驟",
+      "how_to_play_a_game": "如何玩遊戲",
+      "safety_procedures": "安全程序",
+      "stepbystep_explanations": "分步說明",
+      "exploring_different_countries": "探索不同國家",
+      "world_landmarks": "世界地標",
+      "maps_and_globes": "地圖和地球儀",
+      "different_holidays_celebrations": "不同的節日與慶祝活動",
+      "landforms_and_environments": "地貌和環境",
+      "healthy_habits": "健康習慣",
+      "nutrition_basics": "營養基礎",
+      "staying_safe": "保持安全",
+      "understanding_feelings": "理解感受",
+      "germs_and_staying_clean": "細菌與保持清潔",
+      "famous_artists_and_their_work": "著名藝術家及其作品",
+      "types_of_musical_instruments": "樂器種類",
+      "elements_of_art": "藝術元素",
+      "music_around_the_world": "世界各地的音樂",
+      "craft_techniques_explained": "工藝技術解說"
+    }
+  },
+  "Reports": {
+    "title": "報告",
+    "description": "查看學生進度和教室分析",
+    "activityprogress": "活動進度",
+    "recentactivity": "最近活動",
+    "activityheatmap": "活動熱圖",
+    "xpoverall": "XP 總體",
+    "readingstatschart": "閱讀統計圖",
+    "xpearned": "XP 獲得",
+    "completed": "已完成",
+    "inProgress": "進行中",
+    "dateRange": "日期範圍",
+    "activityType": {
+      "MC_QUESTION": "多選問題",
+      "SA_QUESTION": "短答問題",
+      "LA_QUESTION": "長答問題",
+      "ARTICLE_READ": "文章閱讀"
+    },
+    "level": {
+      "title": "CEFR 等級",
+      "yourlevel": "您的等級",
+      "description": {
+        "A0": "您可以识别您以前见过的单词和名称，尤其是在有图片帮助的情况下。您可以理解您周围的真实简单的标志和基本信息，如在哪里和什么时候发生什么事情。",
+        "A1-": "您开始识别更多的单词和简单的短语，超越了最基本的词汇。您可以遵循短、简单的方向，并理解基本的短语和句子，关于您需要的事情。",
+        "A1": "您可以理解非常短和简单的文本。您可以识别足够的单词来发现它们在通知和简单指南中的位置。您可以使用您知道的单词谈论简单、日常的事情。",
+        "A1+": "您开始理解对您重要的句子表达。阅读不仅仅是识别熟悉的单词；您开始理解简单的文本中的整个信息。",
+        "A2-": "您在理解简单文本方面做得更好，可以在日常材料中找到特定信息，如广告或时间表，尽管您可能仍然对不熟悉的主题感到困惑。",
+        "A2": "您可以理解短、简单的文本，在日常材料中找到您需要的信息，如广告或菜单，并遵循基本指令。您知道足够的单词来在日常情况下沟通。",
+        "A2+": "您可以理解常规写作和短新闻故事或描述的主要观点。您的词汇量在增长，因此您可以谈论对您重要的事情，并处理日常情况。",
+        "B1-": "您可以理解熟悉主题的直接文本的主要观点。您正在发展处理介绍新主题或稍微更复杂语言的文本的能力，尽管您可能仍然需要一些帮助。",
+        "B1": "您可以阅读您喜欢的主题的文本，并理解主要观点。故事和个人信息对您来说很容易理解。您知道足够的单词用于日常主题，并且可以谈论您阅读的内容，不会遇到太多困难。",
+        "B1+": "您可以理解关于熟悉主题的清晰写作，并且处理稍微更复杂的语言的能力有所提高。您可以轻松找到您需要的信息，并且可以享受一本不太困难的书籍。",
+        "B2-": "您可以理解关于熟悉主题的详细文本。您开始识别语言的微妙部分，并且可以轻松讨论您感兴趣的主题，尽管非常复杂的想法可能仍然具有挑战性。",
+        "B2": "您可以独立阅读并判断文本是正式还是非正式。您可以根据您正在阅读的内容调整阅读速度。您喜欢关于当前事件的好书和文章。您知道很多单词，即使有时您会感到困惑，您通常也能弄清楚。",
+        "B2+": "您可以理解更具挑战性文本的主要观点，如科学文章或更复杂的故事。您开始更多地独立阅读，并且可以处理抽象或技术性主题，特别是您熟悉的主题。",
+        "C1-": "您可以通过一些努力理解复杂文本。您的词汇量使您可以阅读许多不同的主题，并且您可以弄清楚不太明显的细节，尽管有时您可能需要重新阅读某些部分。",
+        "C1": "您可以阅读长而具有挑战性的文本并理解大部分发生的事情。您喜欢让您思考的故事和文章，并且可以使用良好的词汇谈论它们，而无需太费力地查找正确的单词。",
+        "C1+": "您是一个超级读者，可以处理具有挑战性的文本并理解不同的写作风格。您非常擅长弄清楚故事和文章中不太明显的部分，并且通常知道单词的意思，而无需查找它们。",
+        "C2": "您可以阅读和理解几乎任何事情。您可以理解复杂文本的主要观点，并且喜欢阅读更具挑战性的书籍和文章。您可以谈论几乎任何事情，并且使用语言充满信心。"
+      }
+    },
+    "progress": {
+      "selectClassroom": "選擇班級",
+      "allClassrooms": "所有班級",
+      "searchStudentsPlaceholder": "搜尋學生...",
+      "backToOverview": "返回總覽",
+      "loadingStudentData": "正在載入學生資料...",
+      "totalStudents": "學生總數",
+      "allClassroomsLabel": "所有班級",
+      "selectedClassroomLabel": "已選班級",
+      "averageXp": "平均 XP",
+      "averageXpDescription": "每位學生的經驗值",
+      "mostCommonLevel": "最常見等級",
+      "mostCommonLevelDescription": "CEFR 能力等級",
+      "activeThisWeek": "本週活躍",
+      "activeThisWeekDescription": "{count} / {total} 位學生",
+      "studentList": "學生列表",
+      "xpLabel": "{xp} XP"
+    }
+  },
+  "Overall": {
+    "roles": {
+      "user": "用戶",
+      "student": "學生",
+      "teacher": "教師",
+      "admin": "管理員",
+      "system": "系統"
+    },
+    "status": {
+      "READ": "已讀",
+      "COMPLETED_MCQ": "完成 MCQ",
+      "COMPLETED_SAQ": "完成 SAQ",
+      "COMPLETED_LAQ": "完成 LAQ",
+      "UNRATED": "未評分"
+    },
+    "time": {
+      "justNow": "剛剛",
+      "minutesAgo": "{minutes} 分鐘前",
+      "hoursAgo": "{hours} 小時前",
+      "yesterday": "昨天",
+      "daysAgo": "{days} 天前",
+      "weeksAgo": "{weeks} 周前",
+      "monthsAgo": "{months} 月前",
+      "today": "今天",
+      "lastweek": "上周",
+      "last30days": "最近30天",
+      "thismonth": "本月",
+      "lastmonth": "上个月",
+      "selectPeriod": "选择时间段"
+    },
+    "days": {
+      "sunday": "星期日",
+      "monday": "星期一",
+      "tuesday": "星期二",
+      "wednesday": "星期三",
+      "thursday": "星期四",
+      "friday": "星期五",
+      "saturday": "星期六"
+    },
+    "months": {
+      "january": "一月",
+      "february": "二月",
+      "march": "三月",
+      "april": "四月",
+      "may": "五月",
+      "june": "六月",
+      "july": "七月",
+      "august": "八月",
+      "september": "九月",
+      "october": "十月",
+      "november": "十一月",
+      "december": "十二月"
+    }
+  },
+  "Assignment": {
+    "title": "建立作業",
+    "description": "建立作業給您的學生",
+    "assignForm": {
+      "classroom": "教室",
+      "selectedClassroom": "選擇的教室",
+      "name": "作業名稱",
+      "description": "作業描述",
+      "students": "學生",
+      "article": "文章",
+      "dueDate": "截止日期",
+      "noStudents": "沒有學生在這個教室",
+      "pleaseSelectClassroom": "請先選擇一個教室",
+      "selectAllStudents": "選擇所有學生",
+      "selectedDueDate": "選擇截止日期 : "
+    },
+    "studentAssignmentTable": {
+      "title": "作業",
+      "name": "作業名稱",
+      "description": "作業描述",
+      "createAt": "建立時間",
+      "dueDate": "截止日期",
+      "status": "狀態",
+      "assignedBy": "分配者",
+      "linkToAssignment": "作業連結",
+      "goToLesson": "前往課程",
+      "searchPlaceholder": "搜尋作業...",
+      "searching": "搜尋中...",
+      "loadingAssignments": "正在載入作業...",
+      "noAssignmentsFound": "未找到作業",
+      "allDueDates": "所有截止日期",
+      "overdue": "逾期",
+      "dueToday": "今日截止",
+      "upcoming": "即將到來",
+      "allStatus": "所有狀態",
+      "notFinished": "未完成",
+      "inProgress": "進行中",
+      "done": "已完成"
+    }
+  },
+  "SentencesPage": {
+    "sentences": "句子卡片",
+    "orderSentence": "排列句子",
+    "clozeTest": "填空測試",
+    "orderWord": "排列單字",
+    "matching": "配對",
+
+    "matchingGame": {
+      "title": "翻譯配對遊戲",
+      "description": "練習將單字與其含義從您的抽認卡集合中配對！",
+      "descriptionShort": "將句子與您選擇的語言翻譯配對",
+      "descriptionLong": "將英語句子與翻譯配對",
+      "noDeck": {
+        "error": "沒有可用的抽認卡組",
+        "message": "開始閱讀文章並將句子保存為抽認卡以解鎖此遊戲！"
+      },
+      "loading": {
+        "title": "正在載入您的配對...",
+        "description": "正在從您的抽認卡組生成配對",
+        "nextSet": "正在載入下一組配對..."
+      },
+      "startScreen": {
+        "title": "準備好配對了嗎？",
+        "subtitle": "將英語句子與翻譯配對",
+        "howToPlay": "遊戲玩法",
+        "instructions": {
+          "step1": "點擊左欄中的句子進行選擇",
+          "step2": "然後點擊右欄中的翻譯",
+          "step3": "正確配對所有句子-翻譯對以完成每組"
+        },
+        "language": {
+          "title": "選擇翻譯語言",
+          "thai": "泰語",
+          "vietnamese": "越南語",
+          "chineseSimplified": "中文（簡體）",
+          "chineseTraditional": "中文（繁體）",
+          "selected": "翻譯"
+        },
+        "stats": {
+          "matchingSets": "配對組",
+          "readyToPlay": "準備遊戲",
+          "translation": "翻譯",
+          "estimatedTime": "約{time}分鐘",
+          "estimatedTimeLabel": "預計時間"
+        },
+        "startButton": "開始翻譯遊戲",
+        "loadingButton": "正在載入翻譯對...",
+        "noSentences": "沒有可用的句子"
+      },
+      "gameplay": {
+        "title": "將句子與翻譯配對",
+        "instruction": "點擊左側的句子，然後點擊右側的翻譯",
+        "englishSentences": "英語句子",
+        "translations": "{language}翻譯",
+        "progress": "{current} / {total}",
+        "score": "{score}/{total}完美",
+        "pairsProgress": "進度：{matched}/{total}對已配對",
+        "correctCount": "正確：{correct}/{total}",
+        "articleFrom": "來自：{title}"
+      },
+      "hints": {
+        "title": "提示：",
+        "audio": "音訊",
+        "playAudio": "播放音訊",
+        "playing": "播放中...",
+        "enabled": "提示已啟用！💡\n• 不正確的配對將被突顯\n• 選擇項目以聽音訊",
+        "disabled": "提示已停用",
+        "audioCompleted": "音訊播放完成！🎵",
+        "audioFailed": "無法播放音訊",
+        "playingAudio": "正在播放音訊提示 🔊"
+      },
+      "results": {
+        "perfect": "完美！所有配對都正確！🎉",
+        "tryAgain": "{correct}/{total}正確。再試一次！💪",
+        "allCorrect": "完美！所有配對都正確！🎉",
+        "partialCorrect": "{correct}/{total}正確 💪",
+        "correctMatches": "正確的配對：",
+        "showAnswers": "已顯示正確配對！📖",
+        "correctMatch": "配對正確！✅",
+        "incorrectMatch": "配對不正確。再試一次！❌"
+      },
+      "buttons": {
+        "resetMatches": "重設配對",
+        "checkMatches": "檢查配對",
+        "showAnswers": "顯示答案",
+        "nextSet": "下一組",
+        "finishGame": "完成遊戲",
+        "tryAgain": "重試"
+      },
+      "complete": {
+        "title": "🎉 太棒了！",
+        "subtitle": "您完成了{count}個配對挑戰",
+        "stats": {
+          "perfectScores": "完美分數",
+          "accuracy": "準確率",
+          "totalTime": "總時間"
+        },
+        "backToMenu": "返回選單",
+        "playAgain": "再玩一次"
+      },
+      "toast": {
+        "failedToLoad": "無法從抽認卡組載入配對資料",
+        "failedToLoadData": "無法載入配對資料"
+      },
+      "itemTypes": {
+        "word": "單字",
+        "phrase": "短語",
+        "sentence": "句子",
+        "definition": "定義",
+        "translation": "翻譯",
+        "meaning": "含義"
+      }
+    },
+    "clozeTestGame": {
+      "title": "填空測試遊戲",
+      "description": "練習填寫您的抽認卡句子中缺失的單詞！",
+      "descriptionShort": "填寫每個句子中缺失的單詞",
+      "descriptionLong": "通過填寫缺失的單詞來測試您的詞彙和理解能力",
+      "noDeck": {
+        "error": "沒有抽認卡組",
+        "message": "開始閱讀文章並將句子保存為抽認卡以解鎖此遊戲！"
+      },
+      "loading": {
+        "title": "正在載入您的句子...",
+        "description": "正在從您的抽認卡組中獲取句子",
+        "nextChallenge": "正在載入下一個挑戰..."
+      },
+      "startScreen": {
+        "title": "準備開始了嗎？",
+        "subtitle": "填寫您抽認卡組中句子的空白處",
+        "howToPlay": "遊戲玩法",
+        "instructions": {
+          "step1": "每個句子都有需要填寫的缺失單詞",
+          "step2": "從下拉選單中選擇正確的選項",
+          "step3": "完成所有空白以完成每個句子"
+        },
+        "difficulty": {
+          "title": "選擇難度等級",
+          "easy": "簡單",
+          "medium": "中等",
+          "hard": "困難",
+          "easyDescription": "非常適合初學者。每個句子將缺少一個單詞。",
+          "mediumDescription": "中等挑戰。每個句子將缺少兩個單詞。",
+          "hardDescription": "最大挑戰。每個句子將缺少三個單詞。"
+        },
+        "stats": {
+          "clozeTests": "填空測試",
+          "readyToPlay": "準備開始",
+          "fillBlanks": "填空",
+          "blanksEach": "每個{count}個空白",
+          "estimatedTime": "約{time}分鐘",
+          "estimatedTimeLabel": "預計時間"
+        },
+        "startButton": "開始{difficulty}遊戲",
+        "loadingButton": "正在載入{difficulty}句子...",
+        "noSentences": "沒有可用的句子"
+      },
+      "gameplay": {
+        "articleTitle": "📖 {title}",
+        "instruction": "通過從下拉選單中選擇來填寫缺失的單詞",
+        "completeSentence": "通過填空來完成句子：",
+        "progress": "{current}/{total}",
+        "score": "{score}/{total}完美",
+        "blanksProgress": "進度：{filled}/{total}個空白已填寫",
+        "correctCount": "正確：{correct}/{total}",
+        "placeholder": "___"
+      },
+      "hints": {
+        "title": "提示：",
+        "audio": "音訊",
+        "playOrder": "播放音訊",
+        "playing": "正在播放...",
+        "enabled": "提示已啟用！💡\n• 錯誤答案將被突出顯示\n• 使用音訊按鈕聽發音",
+        "disabled": "提示已禁用"
+      },
+      "results": {
+        "perfect": "完美！所有空白都正確！🎉",
+        "tryAgain": "{correct}/{total}正確。再試一次！💪",
+        "allCorrect": "完美！所有空白都填寫正確！🎉",
+        "partialCorrect": "{correct}/{total}正確 💪",
+        "correctAnswers": "正確答案：",
+        "showAnswers": "已顯示正確答案！📖"
+      },
+      "buttons": {
+        "resetAnswers": "重置答案",
+        "checkAnswers": "檢查答案",
+        "showAnswers": "顯示答案",
+        "nextSentence": "下一個句子",
+        "finishGame": "完成遊戲"
+      },
+      "complete": {
+        "title": "🎉 太棒了！",
+        "subtitle": "您完成了{count}個填空挑戰",
+        "stats": {
+          "perfectScores": "完美分數",
+          "accuracy": "準確率",
+          "totalTime": "總時間"
+        },
+        "backToMenu": "返回選單",
+        "playAgain": "再玩一次"
+      },
+      "toast": {
+        "failedToLoad": "無法從抽認卡組載入句子",
+        "failedToLoadSentences": "無法載入句子",
+        "audioCompleted": "音訊完成！🎵",
+        "audioFailed": "無法播放音訊",
+        "playingAudio": "正在播放句子音訊 🔊"
+      }
+    },
+    "sentencesCard": {
+      "title": "閃卡儀表板",
+      "description": "練習句子理解和翻譯技能",
+      "needMoreCards": "需要更多卡片才能開始學習",
+      "addMoreCards": "從文章添加 {count} 張卡片以解鎖學習。",
+      "allCaughtUp": "全部完成！",
+      "allCardsUpToDate": "所有卡片都是最新的。稍後再來查看更多複習內容。",
+      "readyToStudy": "準備學習！",
+      "cardsReadyForReview": "{count} 張卡片可供複習。",
+      "learningProgress": "學習進度",
+      "complete": "完成",
+      "mastered": "{count} 已掌握",
+      "toReview": "{count} 待複習",
+      "back": "返回",
+      "current": "当前",
+      "completed": "完成",
+      "remaining": "剩余",
+      "studySessionProgress": "学习会话进度",
+      "showAnswer": "显示答案",
+      "question": "问题",
+      "answers": "答案",
+      "flipCard": "点击显示",
+      "definition": "定义",
+      "translation": "翻译",
+      "definitionNotAvailable": "定义不可用",
+      "translationNotAvailable": "翻译不可用",
+      "again": "再次",
+      "hard": "困难",
+      "good": "好",
+      "easy": "容易",
+      "sentences": "句子",
+      "vocabulary": "词汇",
+      "studySessionComplete": "学习会话完成！",
+      "youCompleted": "你完成了 {count} 张卡片",
+      "cardsReviewed": "卡片复习",
+      "xpEarned": "XP 获得",
+      "greatWork": "做得很好！你已经成功完成了这个学习会话。你的进度已经保存！",
+      "backToDashboard": "返回仪表盘",
+      "studyAgain": "再次学习",
+      "cardStatusBreakdown": {
+        "title": "卡片狀態細分",
+        "new": "新卡片",
+        "newDescription": "新學習的卡片",
+        "learning": "學習中",
+        "learningDescription": "進行中",
+        "review": "複習",
+        "reviewDescription": "複習時間"
+      },
+      "translationLanguage": "翻譯語言",
+      "translationLanguageDescription": "翻譯將以此語言顯示",
+      "startStudying": "開始學習 ({count} 張卡片)",
+      "loadingCards": "正在載入卡片...",
+      "noCardsDueForReview": "現在沒有卡片需要複習！⏰",
+      "failedToLoadCards": "無法載入卡片",
+      "refreshData": "重新整理資料",
+      "addMoreCardsButton": "新增更多卡片"
+    },
+    "manage": {
+      "heading": "管理",
+      "description": "管理您的閃卡文章和句子",
+      "searchPlaceholder": "搜尋...",
+      "noResults": "沒有結果。",
+      "tableHeaders": {
+        "sentence": "句子",
+        "createdAt": "建立時間",
+        "due": "到期",
+        "action": "操作"
+      },
+      "pagination": {
+        "previous": "上一頁",
+        "next": "下一頁"
+      },
+      "deleteDialog": {
+        "title": "刪除閃卡",
+        "description": "您確定要刪除此閃卡嗎？",
+        "warning": "此操作無法復原。",
+        "cancel": "取消",
+        "delete": "刪除"
+      },
+      "dueStatus": {
+        "oneDayLate": "逾期 1 天",
+        "daysLate": "逾期 {count} 天",
+        "dueToday": "今天到期",
+        "dueTomorrow": "明天到期",
+        "dueInDays": "{count} 天後到期",
+        "dueInWeeks": "{count} 週後到期"
+      }
+    },
+    "sentenceOrder": {
+      "title": "排列句子遊戲",
+      "descriptionNodeck": "練習從你的閃卡文章中排列句子！",
+      "descriptionPlaying": "按時間順序排列句子。",
+      "descriptionPlaying2": "將這5個句子按時間順序排列。",
+      "description": "通過按時間順序排列句子來測試你的閱讀理解能力。",
+      "contentNoDeck": "開始閱讀文章並保存句子作為閃卡以解鎖這個遊戲！",
+      "loading": "載入你的句子...",
+      "fetchingSentences": "從你的閃卡文章中獲取句子",
+      "readyToStart": "準備開始？",
+      "arrangeSentences": "將5個句子按正確的順序排列，每個閃卡句子",
+      "startGame": "開始遊戲",
+      "noSentencesAvailable": "沒有句子可用",
+      "howToPlay": "如何玩",
+      "eachGameShows": "每個遊戲顯示5個句子，圍繞你的閃卡句子",
+      "dragSentences": "拖動句子按時間順序排列",
+      "completeAll": "完成你所有的閃卡句子",
+      "sentences": "句子",
+      "readyToPlay": "準備玩",
+      "dragAndDrop": "拖動 & 排列",
+      "playtime": "~{time} 分鐘",
+      "estimatedTime": "估計時間",
+      "easyInteraction": "簡單互動",
+      "completedTitle": "很棒的工作！",
+      "completedDescription": "你完成了 {count} 句子排列挑戰",
+      "correct": "正確答案",
+      "accuracy": "準確性",
+      "totalTime": "總時間",
+      "backToMenu": "返回菜單",
+      "playAgain": "再玩一次",
+      "loadingNextChallenge": "加載下一個挑戰...",
+      "correctAnswer": "正確",
+      "checkAnswer": "檢查答案",
+      "shuffleAgain": "打亂順序",
+      "showAnswer": "顯示答案",
+      "nextSentence": "下一個句子",
+      "finishGame": "完成遊戲",
+      "perfectCorrectOrder": "完美！正確順序！🎉",
+      "notQuiteRight": "不正確！💪",
+      "correctOrder": "正確順序",
+      "hints": {
+        "title": "提示",
+        "description": "使用提示幫助你完成挑戰",
+        "highlight": "高亮",
+        "audio": "音频",
+        "playOrder": "播放顺序",
+        "playing": "播放中...",
+        "dragToReorder": "拖動重新排列句子",
+        "startByMovingASentence": "開始移動句子！",
+        "sentencesWillAppearHere": "句子將在這裡出現..."
+      }
+    },
+    "orderWordGame": {
+      "title": "排列單字遊戲",
+      "description": "練習排列單字以從你的閃卡文章中組成正確的句子！",
+      "descriptionShort": "按正確順序點擊單字以組成有意義的句子",
+      "noDeck": {
+        "error": "沒有閃卡牌組",
+        "message": "開始閱讀文章並將句子保存為閃卡以解鎖此遊戲！"
+      },
+      "loading": {
+        "title": "正在載入你的句子...",
+        "description": "正在從你的閃卡牌組獲取句子"
+      },
+      "startScreen": {
+        "title": "準備開始了嗎？",
+        "subtitle": "按正確順序點擊單字以組成有意義的句子",
+        "howToPlay": "如何遊戲",
+        "instructions": {
+          "step1": "點擊底部的單字將它們添加到你的句子中",
+          "step2": "點擊句子中的單字以刪除它們",
+          "step3": "翻譯將顯示在每個單字下方",
+          "step4": "組成語法正確且有意義的句子",
+          "step5": "如果遇到困難，使用提示"
+        },
+        "stats": {
+          "sentences": "句子",
+          "readyToPlay": "準備解決",
+          "clickToOrder": "點擊排序",
+          "withTranslations": "帶翻譯",
+          "estimatedTime": "約{time}分鐘",
+          "estimatedTimeLabel": "預計時間"
+        },
+        "language": {
+          "title": "選擇翻譯語言",
+          "thai": "🇹🇭 泰語",
+          "vietnamese": "🇻🇳 越南語",
+          "chineseSimplified": "🇨🇳 中文（簡體）",
+          "chineseTraditional": "🇹🇼 中文（繁體）",
+          "selected": "翻譯語言",
+          "description": "單字翻譯將在整個遊戲中顯示為{language}"
+        },
+        "startButton": "開始遊戲，使用{language}翻譯",
+        "noSentences": "沒有可用句子"
+      },
+      "gameplay": {
+        "title": "排列單字遊戲",
+        "instruction": "點擊單字以組成正確的句子 • {language}翻譯",
+        "progress": "{current}/{total}",
+        "score": "{score}/{total}正確",
+        "articleFrom": "📖 {title}",
+        "subtitle": "點擊下面的單字以組成正確的句子",
+        "targetTranslation": "目標翻譯：",
+        "yourSentence": "你的句子：",
+        "buildingSentence": "正在構建句子...",
+        "startByClicking": "點擊下面的單字開始構建你的句子...",
+        "translationLabel": "{language}翻譯：",
+        "allWordsUsed": "所有單字已使用！",
+        "checkSentence": "檢查你上面的句子。",
+        "clickWordsToAdd": "點擊單字將它們添加到你的句子中",
+        "startByClickingWord": "（通過點擊單字開始！）"
+      },
+      "hints": {
+        "title": "提示：",
+        "highlight": "高亮",
+        "audio": "音頻",
+        "playOrder": "播放順序",
+        "playing": "播放中..."
+      },
+      "buttons": {
+        "shuffleWords": "打亂單字",
+        "tryAgain": "重試",
+        "checkAnswer": "檢查答案",
+        "showAnswer": "顯示答案",
+        "nextSentence": "下一句",
+        "finishGame": "完成遊戲"
+      },
+      "results": {
+        "perfect": "完美！單字順序正確！🎉",
+        "notQuiteRight": "不太對。再試一次！💪",
+        "correctOrder": "正確句子：",
+        "correctOrderRevealed": "已顯示正確順序！📖"
+      },
+      "complete": {
+        "title": "🎉 太棒了！",
+        "subtitle": "你完成了{count}個單字排序挑戰",
+        "usingTranslations": "使用{language}翻譯",
+        "stats": {
+          "correctAnswers": "正確答案",
+          "accuracy": "準確率",
+          "totalTime": "總時間"
+        },
+        "backToMenu": "返回菜單",
+        "playAgain": "再玩一次"
+      },
+      "toast": {
+        "gameStarted": "遊戲已開始，使用{language}翻譯！🎮",
+        "languageSet": "翻譯語言已設置為{language}",
+        "failedToLoad": "從閃卡牌組載入句子失敗",
+        "failedToLoadSentences": "載入句子失敗"
+      },
+      "loadingNextChallenge": "正在載入下一個挑戰..."
+    }
+  },
+  "VocabularyPage": {
+    "vocabularyCard": "詞彙卡",
+    "description": "使用間隔重複法複習詞彙並擴展語言技能",
+    "translationLanguageDescription": "定義將以此語言顯示"
+  },
+  "HomePage": {
+    "hero": {
+      "title": "透過AI驅動的樂趣幫助年輕學生成為出色的讀者！",
+      "subtitle": "專為8-12歲（3-6年級）量身定製的閱讀冒險。",
+      "getStarted": "立即開始！"
+    },
+    "features": {
+      "title": "酷炫功能",
+      "description": "探索Primary Advantage如何讓閱讀變得有趣並幫助您學習！",
+      "funStory": {
+        "title": "有趣的故事冒險",
+        "description": "發現專為您年齡段的孩子準備的精彩故事和文章，總有新內容可讀！"
+      },
+      "understand": {
+        "title": "理解故事",
+        "description": "回答有關您所讀內容的有趣問題，幫助您記憶和更好地理解。"
+      },
+      "readingLevels": {
+        "title": "恰到好處的閱讀水平",
+        "description": "閱讀適合您閱讀方式的故事，使其既簡單又愉快。"
+      },
+      "learnWords": {
+        "title": "學習新詞",
+        "description": "在故事中找到新的有趣詞彙，並透過有趣的工具學習它們的意思。"
+      },
+      "listenAlong": {
+        "title": "一起聽",
+        "description": "聆聽為您朗讀的故事，非常適合聽和跟隨。"
+      },
+      "seeProgress": {
+        "title": "看看你的成長",
+        "description": "查看您的閱讀進度，看看您正在學習的所有酷炫內容！"
+      },
+      "makeYours": {
+        "title": "讓它成為您的",
+        "description": "選擇您喜歡的故事並設定閱讀目標，創建您自己的閱讀冒險。"
+      },
+      "helpTeachers": {
+        "title": "幫助教師",
+        "description": "教師工具，用於查看課堂表現並幫助每個人學習。"
+      }
+    },
+    "benefits": {
+      "title": "為什麼學校喜歡Primary Advantage",
+      "description": "看看Primary Advantage如何幫助學校的教師和學生！",
+      "superReader": {
+        "title": "成為超級讀者",
+        "description": "閱讀大量精彩故事並玩遊戲來提升您的閱讀技能！"
+      },
+      "ownPath": {
+        "title": "您自己的閱讀路徑",
+        "description": "閱讀與您的閱讀水平和興趣相匹配的故事，專為您量身定製。"
+      },
+      "storiesLove": {
+        "title": "你會喜歡的故事",
+        "description": "享受不同類型的故事，配有圖片和聲音，讓閱讀變得有趣。"
+      },
+      "watchGrow": {
+        "title": "觀察您的閱讀能力增長",
+        "description": "看看您的進步以及您每天如何成為更好的讀者。"
+      },
+      "learnWords": {
+        "title": "學習大量新詞",
+        "description": "在故事中發現有趣的詞彙，並透過酷炫的活動記住它們。"
+      },
+      "easyUse": {
+        "title": "隨時隨地輕鬆使用",
+        "description": "在學校或家裡閱讀和學習，隨時隨地！"
+      },
+      "greatSchools": {
+        "title": "非常適合學校",
+        "description": "學校幫助所有學生成為出色讀者的明智方式。"
+      },
+      "moreTime": {
+        "title": "更多教學樂趣的時間",
+        "description": "我們的工具幫助教師輕鬆找到優秀的故事並查看學生進度。"
+      }
+    },
+    "contact": {
+      "title": "讓我們保持聯繫",
+      "description": "有問題或需要更多資訊？今天聯繫我們以了解更多關於我們平台的資訊。",
+      "formTitle": "聯繫我們",
+      "formDescription": "與我們聯繫以了解更多關於我們平台的資訊",
+      "name": "姓名",
+      "namePlaceholder": "張三",
+      "institution": "機構",
+      "institutionPlaceholder": "示例大學",
+      "email": "電子郵件",
+      "emailPlaceholder": "m@example.com",
+      "inquiry": "諮詢",
+      "inquiryPlaceholder": "選擇一個選項",
+      "inquiryOptions": {
+        "sales": "銷售",
+        "support": "支援",
+        "partnerships": "合作夥伴關係"
+      },
+      "message": "訊息",
+      "messagePlaceholder": "在此輸入您的訊息。",
+      "sendMessage": "發送訊息"
+    },
+    "cta": {
+      "title": "準備好開始主要冒險了嗎？",
+      "description": "開始免費試用，看看使用Primary Advantage閱讀有多有趣！非常適合8-12歲的學生。"
+    }
+  },
+  "AboutPage": {
+    "title": "關於我們",
+    "description": "了解更多關於Primary Advantage和我們的使命"
+  },
+  "AuthPage": {
+    "signin": {
+      "title": "登錄",
+      "student": "學生",
+      "teacher": "教師",
+      "welcome": "歡迎來到 Primary Advantage",
+      "enterClassroomCode": "輸入您的班級代碼",
+      "classroomCode": "班級代碼",
+      "next": "下一步",
+      "selectYourNameLabel": "選擇您的名字",
+      "selectYourName": "選擇您的名字下方以登錄您的帳戶",
+      "selectYourNamePlaceholder": "選擇一個學生",
+      "login": "登錄",
+      "classroomCodeRequired": "請輸入您的班級代碼"
+    },
+    "signup": {
+      "title": "註冊"
+    }
+  },
+  "Settings": {
+    "userProfile": {
+      "title": "個人資訊",
+      "subtitle": "關於您個人資料的資訊",
+      "backToReading": "返回閱讀頁面",
+      "username": "用戶名",
+      "usernameDescription": "用戶名用於代表自己在平台上的身份。",
+      "email": "電子郵件",
+      "level": "Primary Advantage 等級",
+      "xp": "Primary Advantage 經驗值",
+      "xpDescription": "經驗值用於升級。",
+      "verified": "已驗證",
+      "notVerified": "未驗證",
+      "resetPassword": "重置密碼",
+      "resendVerification": "重新發送驗證郵件",
+      "unknown": "未知",
+      "update": "更新",
+      "activate": "激活",
+      "license": "许可证",
+      "licenseDescription": "输入新的许可证用户"
+    },
+    "schoolProfile": {
+      "title": "學校資料",
+      "subtitle": "管理您的學校資訊",
+      "loading": "載入中...",
+      "noSchool": "沒有學校資訊",
+      "createSchool": "建立學校資料",
+      "createSchoolDescription": "設置您的學校信息以開始。創建學校將自動授予您管理學校功能的管理員訪問權限。",
+      "editSchool": "編輯學校信息",
+      "editSchoolDescription": "更新您的學校詳情如下。",
+      "schoolName": "學校名稱",
+      "contactName": "聯絡人姓名",
+      "contactEmail": "聯絡人郵箱",
+      "createdAt": "建立於",
+      "updatedAt": "更新於",
+      "totalUsers": "總用戶數",
+      "totalAdmins": "總管理員數",
+      "owner": "所有者",
+      "license": "學校許可證信息",
+      "licensedescription": "關於您的學校許可證和訂閱的詳細信息",
+      "licenseStatus": "許可證狀態",
+      "maxUsers": "最大用戶數",
+      "expiryDate": "到期日期",
+      "save": "儲存",
+      "cancel": "取消",
+      "updateSchoolButton": "更新學校",
+      "delete": "刪除",
+      "creating": "建立中...",
+      "updating": "更新中...",
+      "success": "成功更新學校資料",
+      "error": "無法更新學校資料",
+      "loadError": "無法載入學校資訊",
+      "tryAgainLater": "請稍後再試。",
+      "schoolNameDescription": "學校的官方名稱或機構名稱",
+      "contactNameDescription": "聯絡人名稱",
+      "contactEmailDescription": "聯絡人郵箱",
+      "schoolNamePlaceholder": "輸入學校名稱",
+      "contactNamePlaceholder": "輸入聯絡人名稱 (可選)",
+      "contactEmailPlaceholder": "輸入聯絡人郵箱 (可選)",
+      "createSchoolButton": "建立學校",
+      "editSchoolButton": "編輯學校",
+      "schoolInformation": "學校信息",
+      "schoolInformationDescription": "查看和管理您的學校詳情。",
+      "deleteSchool": "刪除學校",
+      "deleting": "刪除中...",
+      "deleteSchoolDescription": "您確定要刪除這個學校嗎？此操作無法撤銷。所有關聯數據包括用戶、管理員和班級將被刪除。",
+      "deleteSchoolButton": "刪除學校",
+      "schoolAdmin": "學校管理員",
+      "schoolAdminDescription": "具有管理員權限的用戶",
+      "addsAdmins": "添加管理员",
+      "addAdminHeader": "添加学校管理员",
+      "addsAdminsDescription": "搜索用户并添加为学校管理员。",
+      "searchUsers": "搜索用户",
+      "searchUsersPlaceholder": "输入名称或电子邮件...",
+      "createSchoolcard": {
+        "title": "沒有學校關聯",
+        "description": "您還沒有與您的帳戶關聯的學校。創建一個以開始並獲得管理學校功能的管理員訪問權限。",
+        "createSchool": "創建學校"
+      }
+    }
+  },
+  "Lesson": {
+    "Reading": {
+      "firstTitle": "首次閱讀",
+      "deepTitle": "深度閱讀",
+      "subtitle": "閱讀文章並標記重要的單字與句子",
+      "controls": {
+        "speed": "速度",
+        "play": "開始閱讀",
+        "pause": "暫停閱讀",
+        "loading": "載入音訊"
+      },
+      "translation": {
+        "button": "翻譯",
+        "on": "翻譯開啟",
+        "off": "翻譯關閉",
+        "title": "翻譯："
+      },
+      "tips": {
+        "firstTitle": "首次閱讀小技巧",
+        "deepTitle": "深度閱讀小技巧",
+        "readEntire": "完整讀完文章",
+        "clickStart": "點擊開始閱讀",
+        "sentenceJump": "點擊跳轉到句子",
+        "useHighlight": "使用反白模式",
+        "listenComplete": "將音訊聽完"
+      }
+    },
+    "title": "課程",
+    "description": "互動閱讀課程",
+    "loading": "載入課程中...",
+    "error": "無法載入課程",
+    "header": {
+      "title": "課程",
+      "subtitle": "互動閱讀體驗",
+      "mode": "學習模式",
+      "cta": "從這篇文章開始你的互動閱讀旅程"
+    },
+    "actions": {
+      "starting": "正在開始...",
+      "startLesson": "開始課程",
+      "processing": "處理中...",
+      "previousTask": "上一個任務",
+      "nextTask": "下一個任務"
+    },
+    "progress": {
+      "title": "進度",
+      "taskOfTotal": "第 {task} 項，共 {total} 項",
+      "currentTask": "目前：第 {task} 項"
+    },
+    "tasks": {
+      "introduction": "課程介紹",
+      "previewVocabulary": "預覽詞彙",
+      "firstReading": "首次閱讀",
+      "vocabularyCollection": "詞彙收集",
+      "deepReading": "深度閱讀",
+      "sentenceCollection": "句子收集",
+      "multipleChoice": "選擇題",
+      "shortAnswer": "簡答題",
+      "vocabularyFlashcards": "詞彙閃卡",
+      "vocabularyMatching": "詞彙配對",
+      "sentenceFlashcards": "句子閃卡",
+      "sentenceActivities": "句子活動",
+      "languageQuestions": "語言問題",
+      "lessonSummary": "課程總結",
+      "shortAnswerTitle": "任務簡答題",
+      "shortAnswerDescription": "任務描述主題 : {title}",
+      "multipleChoiceTitle": "任務選擇題",
+      "multipleChoiceDescription": "任務描述主題 : {title}",
+      "vocabularyFlashcardsTitle": "任務詞彙閃卡",
+      "vocabularyFlashcardsDescription": "使用互動閃卡複習關鍵詞彙。",
+      "vocabularyMatchingTitle": "任務詞彙配對",
+      "vocabularyMatchingDescription": "將單字與其含義配對以建立理解。",
+      "sentenceFlashcardsTitle": "任務句子閃卡",
+      "sentenceFlashcardsDescription": "練習句子並透過閃卡加強上下文理解。"
+    },
+    "PreviewVocabulary": {
+      "title": "預覽詞彙",
+      "subtitle": "預覽本文章的詞彙",
+      "definition": "定義",
+      "audioNotAvailable": "無可用音訊",
+      "empty": "未找到詞彙",
+      "progress": "詞彙進度",
+      "wordsToLearn": "還有 {count} 個詞需要學習"
+    },
+    "SentenceCollection": {
+      "title": "句子收集",
+      "subtitle": "預覽本文的句子",
+      "definition": "翻譯",
+      "audioNotAvailable": "無可用音訊",
+      "empty": "未找到句子",
+      "progress": "句子進度",
+      "wordsToLearn": "還有 {count} 個句子需要學習"
+    },
+    "SentenceActivities": {
+      "title": "句子活動",
+      "description": "練習句子活動以提升你的能力。",
+      "loading": "正在載入活動...",
+      "completed": "已完成",
+      "review": "複習",
+      "orderSentences": {
+        "title": "句子排序",
+        "description": "練習句子排序以提升你的能力。",
+        "button": "句子排序"
+      },
+      "clozeTest": {
+        "title": "完形填空",
+        "description": "練習完形填空以提升你的能力。",
+        "button": "完形填空"
+      },
+      "orderWords": {
+        "title": "詞語排序",
+        "description": "練習詞語排序以提升你的能力。",
+        "button": "詞語排序"
+      },
+      "matching": {
+        "title": "配對",
+        "description": "練習配對以提升你的能力。",
+        "button": "配對"
+      }
+    },
+    "Summary": {
+      "title": "課程總結",
+      "completed": "太棒了！你已完成本課程。",
+      "xpEarned": "+{xp} XP 獲得！",
+      "stats": {
+        "timeSpent": "用時",
+        "wordsSaved": "已保存單字",
+        "sentences": "句子",
+        "totalXp": "總 XP"
+      },
+      "quiz": {
+        "title": "測驗表現",
+        "mcq": "多選題",
+        "saq": "短答題",
+        "score": "分數：{score}/5",
+        "percent": "{percent}%"
+      },
+      "feedback": {
+        "mcq": {
+          "1": "需要複習內容並再試一次。不要放棄！",
+          "2": "有一點進步，但仍需努力",
+          "3": "正在進步！持續練習",
+          "4": "很好！接近滿分",
+          "5": "優秀！你完全理解了內容"
+        },
+        "saq": {
+          "1": "優秀！你完全理解了內容",
+          "2": "開始不錯，但缺少關鍵細節",
+          "3": "尚可。試著多闡述一些",
+          "4": "很不錯。稍作潤飾即可",
+          "5": "優秀！清晰、完整且有理有據"
+        }
+      },
+      "vocabulary": {
+        "title": "學到的單字：{count} 個",
+        "more": "+{count} 個單字已學到"
+      },
+      "sentences": {
+        "title": "關鍵句子：{count} 句",
+        "more": "+{count} 句已保存"
+      },
+      "actions": { "backToRead": "返回閱讀頁面" },
+      "toast": { "failed": "無法載入課程總結" }
+    },
+    "VocabularyFlashcards": {
+      "loading": {
+        "title": "正在載入閃卡",
+        "description": "正在準備您的詞彙練習..."
+      },
+      "error": {
+        "title": "發生錯誤",
+        "description": "無法載入閃卡，請再試一次"
+      },
+      "empty": {
+        "title": "無可用卡片",
+        "description": "目前沒有可以學習的卡片"
+      },
+      "start": {
+        "title": "開始詞彙練習",
+        "description": "正在準備您的詞彙練習階段...",
+        "translationLanguage": "翻譯語言",
+        "translationHint": "定義將以此語言顯示",
+        "startButton": "開始遊戲"
+      },
+      "playing": {
+        "header": "詞彙閃卡",
+        "cardOf": "卡片 {current} / {total}",
+        "progress": "進度",
+        "percentComplete": "完成 {percent}%",
+        "badgeVocabulary": "詞彙",
+        "state": {
+          "new": "新的",
+          "learning": "學習中",
+          "review": "複習",
+          "relearning": "重新學習"
+        },
+        "thinkPrompt": "思考這個詞的意思，然後顯示答案",
+        "showAnswer": "顯示答案",
+        "rating": {
+          "prompt": "您對這個詞的記憶程度如何？",
+          "again": "再來一次",
+          "hard": "困難",
+          "good": "好",
+          "easy": "容易"
+        }
+      },
+      "stats": {
+        "completed": "已完成：{count}",
+        "remaining": "剩餘：{count}",
+        "total": "總卡片數：{count}"
+      },
+      "completion": {
+        "title": "詞彙練習完成！",
+        "subtitle": "您的詞彙練習做得很好",
+        "xpEarned": "獲得 XP",
+        "timeTaken": "花費時間",
+        "completed": "已完成"
+      }
+    }
+  },
+  "LessonLanguageQuestion": {
+    "title": "AI 閱讀助理",
+    "loading": { "conversation": "正在載入對話..." },
+    "status": { "online": "線上" },
+    "header": {
+      "readyWithName": "準備好幫助 {name} 解答問題",
+      "ready": "準備好幫助你解答問題"
+    },
+    "empty": {
+      "helloName": "你好，{name}！",
+      "start": "開始對話吧！",
+      "ask": "關於這篇文章，盡管問我。"
+    },
+    "thinking": "思考中...",
+    "input": {
+      "placeholderWithName": "{name}，問問關於這篇文章的問題...",
+      "placeholder": "輸入你關於這篇文章的問題..."
+    },
+    "buttons": { "send": "送出", "skip": "略過" },
+    "tips": {
+      "askVocabulary": "詢問詞彙",
+      "discussTheme": "討論主題思想",
+      "clarifyParts": "釐清不清楚的部分"
+    },
+    "error": {
+      "fetchResponse": "取得回覆時發生錯誤",
+      "fetchInitial": "取得初始問題時發生錯誤"
+    }
+  },
+  "LessonMCQ": {
+    "header": {
+      "title": "多項選擇測驗",
+      "questionOf": "第 {current} 題 / 共 {total} 題",
+      "completePercent": "完成 {percent}%"
+    },
+    "timer": { "seconds": "{seconds}秒" },
+    "completed": {
+      "title": "測驗完成",
+      "description": "做得好！你已完成測驗",
+      "correctAnswers": "答對題數",
+      "accuracy": "準確率",
+      "xpEarned": "MCQ XP 獲得",
+      "totalTime": "總時間"
+    },
+    "actions": {
+      "retake": "重新測試",
+      "nextQuestion": "下一題",
+      "finishQuiz": "完成測驗"
+    }
+  },
+  "LessonSAQ": {
+    "completed": { "title": "測驗完成" },
+    "labels": {
+      "question": "問題：",
+      "yourAnswer": "你的答案：",
+      "suggestedAnswer": "建議答案：",
+      "feedback": "反饋：",
+      "score": "分數："
+    },
+    "timer": { "elapsed": "用時：{time}" },
+    "form": {
+      "placeholder": { "answer": "在此輸入你的答案..." },
+      "help": { "detailedResponse": "寫下詳細回答以展示你的理解" },
+      "validation": { "answerRequired": "請輸入您的答案" }
+    },
+    "actions": { "submit": "送出" }
+  },
+  "LessonCloze": {
+    "loading": {
+      "title": "正在載入您的句子...",
+      "subtitle": "正在從您的閃卡組中獲取句子",
+      "nextChallenge": "正在載入下一個挑戰..."
+    },
+    "common": {
+      "ready": "準備開始",
+      "min": "分鐘"
+    },
+    "start": {
+      "title": "準備開始了嗎？",
+      "subtitle": "填寫您閃卡組中句子的空白處",
+      "stats": {
+        "tests": "填空測試",
+        "fillBlanks": "填空",
+        "oneBlank": "每個1個空白",
+        "twoBlanks": "每個2個空白",
+        "threeBlanks": "每個3個空白",
+        "estimated": "預計時間"
+      }
+    },
+    "instructions": {
+      "title": "遊戲玩法",
+      "item1": "每個句子都有需要填寫的缺失單詞",
+      "item2": "從下拉選單中選擇正確的選項",
+      "item3": "完成所有空白以完成每個句子"
+    },
+    "difficulty": {
+      "choose": "選擇難度等級",
+      "select": "選擇難度",
+      "easy": "簡單",
+      "medium": "中等",
+      "hard": "困難",
+      "desc": {
+        "easy": "非常適合初學者。每個句子將缺少一個單詞。",
+        "medium": "中等挑戰。每個句子將缺少兩個單詞。",
+        "hard": "最大挑戰。每個句子將缺少三個單詞。"
+      }
+    },
+    "buttons": {
+      "loading": "正在載入{difficulty}句子...",
+      "startGame": "開始遊戲",
+      "back": "返回選單",
+      "playAgain": "再玩一次",
+      "reset": "重置答案",
+      "check": "檢查答案",
+      "showAnswers": "顯示答案",
+      "next": "下一個句子",
+      "finish": "完成遊戲"
+    },
+    "complete": {
+      "title": "🎉 太棒了！",
+      "subtitle": "您完成了{count}個填空挑戰",
+      "stats": {
+        "perfect": "完美分數",
+        "accuracy": "準確率",
+        "time": "總時間"
+      }
+    },
+    "game": {
+      "subtitle": "通過從下拉選單中選擇來填寫缺失的單詞"
+    },
+    "hints": {
+      "label": "提示：",
+      "audio": "音訊",
+      "play": "播放順序"
+    },
+    "sentence": {
+      "instructions": "通過填空來完成句子："
+    },
+    "progress": {
+      "perfect": "{score}/{total}完美",
+      "sentence": "進度：{answered}/{total}個空白已填寫",
+      "correct": "正確：{correct}/{answered}"
+    },
+    "result": {
+      "perfect": "完美！所有空白都正確！🎉",
+      "tryAgain": "{correct}/{total}正確 💪",
+      "correctAnswers": "正確答案："
+    }
+  },
+  "SentenceFlashcards": {
+    "loading": {
+      "title": "正在載入閃卡",
+      "subtitle": "正在準備您的句子練習..."
+    },
+    "error": {
+      "title": "發生錯誤",
+      "description": "無法載入閃卡，請再試一次",
+      "retry": "再試一次"
+    },
+    "empty": {
+      "title": "無可用卡片",
+      "description": "目前沒有可以學習的卡片"
+    },
+    "start": {
+      "title": "開始句子練習",
+      "subtitle": "正在準備您的句子練習階段...",
+      "language": "翻譯語言",
+      "languageNote": "定義將以此語言顯示",
+      "startButton": "開始遊戲"
+    },
+    "header": {
+      "title": "句子閃卡",
+      "progress": "卡片 {current} / {total}",
+      "progressLabel": "進度",
+      "percentComplete": "完成 {percent}%"
+    },
+    "badge": {
+      "typeSentence": "句子",
+      "new": "新的",
+      "learning": "學習中",
+      "review": "複習",
+      "relearning": "重新學習"
+    },
+    "prompt": {
+      "thinkAndReveal": "思考這個詞的意思，然後顯示答案"
+    },
+    "buttons": { "showAnswer": "顯示答案" },
+    "rating": {
+      "prompt": "您對這個詞的記憶程度如何？",
+      "again": "再來一次",
+      "hard": "困難",
+      "good": "好",
+      "easy": "容易"
+    },
+    "stats": {
+      "completed": "已完成：{count}",
+      "remaining": "剩餘：{count}",
+      "total": "總卡片數：{count}"
+    },
+    "complete": {
+      "title": "句子練習完成！",
+      "subtitle": "您的句子練習做得很好",
+      "xpEarned": "獲得 XP",
+      "timeTaken": "花費時間",
+      "completedLabel": "已完成"
+    }
+  },
+  "VocabularyMatching": {
+    "loading": {
+      "title": "正在載入閃卡",
+      "description": "正在準備您的詞彙練習..."
+    },
+    "noCards": {
+      "title": "無可用詞彙",
+      "description": "此文章尚無可用的詞彙閃卡"
+    },
+    "error": {
+      "title": "載入失敗",
+      "description": "載入詞彙時發生錯誤，請再試一次"
+    },
+    "buttons": {
+      "tryAgain": "再試一次",
+      "showAnswers": "顯示答案",
+      "completeActivity": "完成活動"
+    },
+    "start": {
+      "title": "開始詞彙配對",
+      "subtitle": "選擇您喜歡的定義語言",
+      "languageLabel": "定義語言",
+      "languageHint": "單詞定義將以此語言顯示",
+      "startButton": "開始配對遊戲"
+    },
+    "completed": {
+      "title": "詞彙練習完成！",
+      "subtitle": "您的詞彙練習做得很好",
+      "xpEarned": "獲得 XP",
+      "completed": "已完成"
+    },
+    "game": {
+      "title": "📚 將單詞與定義配對",
+      "instruction": "點擊左側的單詞，然後點擊右側的定義",
+      "columns": {
+        "words": "單詞",
+        "definitions": "定義"
+      }
+    },
+    "progress": {
+      "matched": "{matched}/{total}已配對",
+      "correct": "{correct}/{total}正確"
+    },
+    "results": {
+      "perfect": "完美！所有配對都正確！🎉",
+      "partialCorrect": "{correct}/{total}正確 💪",
+      "correctMatches": "正確配對：",
+      "showAnswers": "已顯示正確配對！📖",
+      "correctMatch": "配對正確！✅",
+      "incorrectMatch": "配對不正確，再試一次！❌",
+      "tryAgain": "{correct}/{total}正確，再試一次！💪"
+    },
+    "toast": {
+      "failedToLoad": "無法載入詞彙"
+    }
+  },
+  "Introduction": {
+    "phase1Title": "導言",
+    "phase1Description": "在本課程中，你將閱讀一篇關於「{title}」的文章",
+    "cefrLevel": "CEFR 等級：{level}",
+    "raLevel": "RA 等級：{level}",
+    "estimatedReadTime": "預估閱讀時間：{time}",
+    "articleSummary": "文章摘要",
+    "learningObjectives": "學習目標",
+    "understandMainIdeas": "理解重點：",
+    "learnVocabulary": "學習詞彙：",
+    "improveComprehension": "提升閱讀理解："
+  },
+  "TaskLanguageQuestions": {
+    "title": "語言問題",
+    "subtitle": "透過回答關於文章的問題來練習您的語言技能",
+    "badges": {
+      "aiPowered": "AI 驅動",
+      "interactive": "互動",
+      "askQuestions": "提問"
+    }
+  },
+  "TeacherMyClasses": {
+    "page": {
+      "title": "我的班級",
+      "description": "管理並查看您的班級"
+    },
+    "table": {
+      "headers": {
+        "className": "班級名稱",
+        "classCode": "班級代碼",
+        "studentCount": "學生人數",
+        "grade": "年級",
+        "actions": "操作"
+      },
+      "empty": "空"
+    },
+    "actions": {
+      "roster": "名冊",
+      "reports": "報告",
+      "edit": "編輯",
+      "archive": "封存",
+      "delete": "刪除"
+    },
+    "search": { "placeholder": "搜尋" },
+    "import": {
+      "fromLabel": "從以下匯入新班級",
+      "googleClassroom": "Google Classroom",
+      "dialog": {
+        "title": "匯入您的 Google Classroom",
+        "selectClass": "選擇一個 Google Classroom 班級",
+        "description": "選擇要同步的班級。所有學生將被匯入並加入您的帳戶。",
+        "yourClasses": "您的 Google Classroom 班級",
+        "refresh": "重新整理",
+        "continue": "繼續",
+        "syncing": "正在同步班級...",
+        "syncingDescription": "正在從 Google Classroom 匯入學生，可能需要一點時間。",
+        "syncCompleted": "同步完成！",
+        "syncAnother": "同步另一個班級",
+        "goToClass": "前往班級",
+        "aboutTitle": "關於 Google Classroom 同步",
+        "aboutDescription": "此功能可匯入 Google Classroom 學生。學生將自動加入您的班級。"
+      }
+    },
+    "pagination": { "previous": "上一頁", "next": "下一頁" },
+    "edit": {
+      "title": "編輯班級",
+      "description": "您確定要編輯此班級嗎？",
+      "className": "班級名稱",
+      "classNamePlaceholder": "班級名稱",
+      "grade": "年級",
+      "gradePlaceholder": "年級",
+      "gradeItem": "年級 {grade}",
+      "submit": "編輯"
+    },
+    "delete": {
+      "title": "刪除班級",
+      "description": "您確定要刪除此班級嗎？",
+      "submit": "刪除",
+      "cancel": "取消"
+    },
+    "toast": {
+      "attention": "提醒",
+      "fillAllFields": "請填寫所有欄位",
+      "success": "成功",
+      "classUpdated": "班級更新成功",
+      "error": "錯誤",
+      "failedUpdate": "更新班級失敗",
+      "classDeleted": "班級刪除成功",
+      "failedDelete": "刪除班級失敗"
+    }
+  },
+  "TeacherCreateClass": {
+    "button": { "newClassroom": "新增班級" },
+    "dialog": { "title": "建立班級", "description": "建立一個新班級" },
+    "fields": {
+      "className": "班級名稱",
+      "classNamePlaceholder": "班級名稱",
+      "classCode": "班級代碼",
+      "grade": "年級",
+      "gradePlaceholder": "年級",
+      "gradeItem": "年級 {grade}"
+    },
+    "actions": { "create": "建立", "cancel": "取消" },
+    "toast": {
+      "attention": "提醒",
+      "fillAllFields": "請填寫所有欄位",
+      "success": "成功",
+      "classCreated": "建立班級成功",
+      "error": "錯誤",
+      "failedCreate": "建立班級失敗"
+    }
+  },
+  "teacher": {
+    "myStudents": {
+      "title": "我的學生",
+      "description": "查看並管理您的學生",
+      "table": {
+        "name": "姓名",
+        "email": "電子郵件",
+        "classrooms": "班級",
+        "actions": "操作",
+        "empty": "空"
+      },
+      "actions": {
+        "progress": "進度",
+        "resetProgress": "重設進度",
+        "cancel": "取消",
+        "reset": "重設"
+      },
+      "search": {
+        "placeholder": "按姓名搜尋"
+      },
+      "pagination": {
+        "previous": "上一頁",
+        "next": "下一頁"
+      },
+      "unknown": {
+        "student": "匿名",
+        "email": "未知"
+      },
+      "classrooms": {
+        "none": "無班級",
+        "more": "+{count} 更多"
+      },
+      "dialog": {
+        "reset": {
+          "title": "重設進度",
+          "description": "您確定要重設該學生的學習進度嗎？"
+        }
+      },
+      "toast": {
+        "reset": {
+          "success": "XP 重設成功。",
+          "error": "XP 重設失敗。"
+        }
+      }
+    },
+    "cefrSetter": {
+      "button": { "setLevel": "設定等級" },
+      "dialog": {
+        "title": "為 {name} 設定 CEFR 等級",
+        "description": "為此學生選擇合適的 CEFR 等級，同時也會更新其閱讀等級（RA）。"
+      },
+      "labels": {
+        "currentLevel": "目前等級",
+        "newLevel": "新等級"
+      },
+      "select": { "placeholder": "選擇 CEFR 等級" },
+      "preview": {
+        "title": "預覽：",
+        "cefr": "CEFR 等級：",
+        "ra": "RA 等級："
+      },
+      "actions": {
+        "cancel": "取消",
+        "update": "更新等級",
+        "updating": "更新中..."
+      },
+      "toast": {
+        "noChanges": "沒有可儲存的變更",
+        "success": "已將 {name} 的 CEFR 等級更新為 {level}",
+        "error": "更新 CEFR 等級失敗"
+      }
+    }
+  },
+  "Teacher": {
+    "Assignments": {
+      "heading": "作業",
+      "selectors": {
+        "selectClassroom": "選擇班級"
+      },
+      "search": {
+        "placeholder": "搜尋作業...",
+        "searching": "搜尋中..."
+      },
+      "table": {
+        "headers": {
+          "assignment": "作業",
+          "createdOn": "建立時間",
+          "dueDate": "截止日期",
+          "students": "學生",
+          "actions": "操作"
+        },
+        "actions": {
+          "actions": "操作",
+          "details": "詳細"
+        }
+      },
+      "empty": {
+        "noAssignments": "未找到作業",
+        "selectClassroom": "請選擇班級以查看作業"
+      },
+      "pagination": {
+        "previous": "上一頁",
+        "next": "下一頁",
+        "pageOf": "第 {page} 頁，共 {totalPages} 頁",
+        "showing": "顯示第 {from} 到第 {to} 筆，共 {total} 個作業"
+      },
+      "toast": {
+        "fetchError": "取得作業失敗"
+      }
+    },
+    "ClassCodeGenerator": {
+      "title": "{classroomName} 的密碼",
+      "description": {
+        "line1": "產生一組讓學生加入此課堂的密碼。",
+        "line2": "學生將使用此密碼登入並存取課程資料。"
+      },
+      "fields": {
+        "password": {
+          "label": "密碼",
+          "copyTitle": "複製密碼"
+        }
+      },
+      "expires": {
+        "label": "到期時間：",
+        "never": "永不過期",
+        "status": {
+          "expired": "已到期",
+          "hoursLeft": "剩餘 {count} 小時",
+          "daysLeft": "剩餘 {count} 天"
+        }
+      },
+      "instructions": {
+        "title": "學生使用說明：",
+        "step1": "前往學生登入頁面",
+        "step2": "輸入密碼：",
+        "step3": "在學生名單中選擇自己的名字",
+        "step4": "開始學習！",
+        "copy": "複製說明"
+      },
+      "actions": {
+        "open": "產生密碼",
+        "generate": "產生密碼",
+        "generateNew": "產生新密碼",
+        "generating": "正在產生...",
+        "close": "關閉"
+      },
+      "toast": {
+        "generateSuccess": "課堂密碼產生成功",
+        "generateError": "無法產生課堂密碼",
+        "copyCodeSuccess": "已複製課堂密碼",
+        "copyCodeError": "複製課堂密碼失敗",
+        "copyInstructionsSuccess": "已複製說明",
+        "copyInstructionsError": "複製說明失敗"
+      },
+      "clipboard": {
+        "instructions": "🎓 加入 {classroomName}\n\n使用此密碼加入：{classCode}\n\n說明：\n1. 前往學生登入頁面\n2. 輸入密碼：{classCode}\n3. 在名單中選擇你的名字\n4. 開始學習！\n\n⏰ 此密碼到期時間：{expiresAt}"
+      }
+    },
+    "StudentEnrollmentButton": {
+      "title": "註冊學生",
+      "description": "選擇學生註冊到 {classroomName}",
+      "search": {
+        "placeholder": "以姓名或電子郵件搜尋學生..."
+      },
+      "empty": {
+        "title": "沒有可註冊的學生",
+        "description": "所有學生都已註冊到此課堂",
+        "searchTitle": "找不到學生",
+        "searchDescription": "請嘗試調整搜尋關鍵字"
+      },
+      "labels": {
+        "noName": "無姓名",
+        "level": "等級 {level}"
+      },
+      "actions": {
+        "open": "註冊學生",
+        "enroll": "註冊",
+        "close": "關閉"
+      },
+      "toast": {
+        "loadAvailableError": "無法載入可註冊學生",
+        "enrollSuccess": "{name} 註冊成功",
+        "enrollError": "註冊學生失敗"
+      }
+    },
+    "ClassroomNavigation": {
+      "nav": {
+        "classRoster": "班級名冊",
+        "reports": "報告",
+        "settings": "設定"
+      },
+      "info": {
+        "students": "{count, plural, one {# 名學生} other {# 名學生}}",
+        "grade": "年級 {grade}",
+        "classCode": "班級代碼:"
+      },
+      "password": {
+        "label": "密碼:",
+        "noPassword": "無密碼",
+        "show": "顯示密碼",
+        "hide": "隱藏密碼",
+        "copy": "複製密碼"
+      },
+      "actions": {
+        "back": "返回",
+        "backToClassrooms": "返回班級名冊"
+      },
+      "toast": {
+        "copyClassCodeSuccess": "班級代碼已複製！",
+        "copyClassCodeError": "複製班級代碼失敗",
+        "copyPasswordSuccess": "密碼已複製！",
+        "copyPasswordError": "複製密碼失敗"
+      }
+    },
+    "ClassRoster": {
+      "title": "班級名冊",
+      "description": "管理學生、查看進度並組織你的班級。"
+    },
+    "ClassroomSelector": {
+      "title": "選擇班級",
+      "actions": {
+        "newClassroom": "新增班級",
+        "viewRoster": "查看名冊"
+      },
+      "empty": {
+        "title": "找不到班級",
+        "description": "建立你的第一個班級，以管理學生並追蹤他們的學習進度。",
+        "createFirst": "建立第一個班級"
+      },
+      "grade": "年級 {grade}",
+      "studentsCount": "{count, plural, one {# 名學生} other {# 名學生}}",
+      "createdAt": "建立於 {date}",
+      "toast": {
+        "loadError": "載入班級失敗"
+      }
+    },
+    "EnhancedClassRoster": {
+      "toast": {
+        "loadClassroomError": "無法載入班級資料",
+        "resetSuccess": "學生進度已成功重設",
+        "resetError": "重設學生進度失敗"
+      },
+      "notFound": {
+        "title": "找不到班級",
+        "description": "找不到所請求的班級，或你沒有存取權限。"
+      },
+      "actions": {
+        "backToRoster": "返回班級名冊",
+        "cancel": "取消",
+        "resetProgress": "重設進度",
+        "viewProgress": "查看進度"
+      },
+      "labels": {
+        "noName": "無姓名",
+        "level": "等級 {level}",
+        "studentDefault": "學生"
+      },
+      "students": {
+        "title": "學生列表",
+        "enrollButton": "新增學生",
+        "searchPlaceholder": "搜尋學生...",
+        "empty": {
+          "title": "尚無學生註冊",
+          "description": "先在此班級中註冊學生以開始",
+          "enrollFirst": "註冊第一位學生",
+          "searchTitle": "找不到學生",
+          "searchDescription": "請嘗試調整搜尋關鍵字"
+        }
+      },
+      "activity": {
+        "none": "尚無活動",
+        "today": "今天",
+        "yesterday": "昨天",
+        "daysAgo": "{count} 天前",
+        "weeksAgo": "{count} 週前"
+      },
+      "resetDialog": {
+        "title": "重設學生進度",
+        "description": "確定要重設此學生的進度嗎？此操作會將 XP 設為 0、等級設為 0，並清除 CEFR 等級。此操作無法復原。"
+      }
+    },
+    "Enrollment": {
+      "toast": {
+        "loadError": "無法載入班級資訊"
+      },
+      "notFound": {
+        "title": "找不到班級",
+        "description": "找不到所請求的班級，或你沒有存取權限。"
+      },
+      "actions": {
+        "back": "返回",
+        "backToRoster": "返回班級名冊"
+      },
+      "header": {
+        "title": "學生註冊",
+        "subtitle": "管理學生在此班級的註冊："
+      }
+    },
+    "AssignmentDashboard": {
+      "notStarted": "未開始",
+      "inProgress": "進行中",
+      "completed": "已完成",
+      "unknownStatus": "未知狀態",
+      "createdOn": "建立時間",
+      "dueDate": "截止日期",
+      "overdue": "逾期",
+      "dueToday": "今日截止",
+      "daysRemaining": "剩餘天數：{daysRemaining}",
+      "allStudents": "全部學生",
+      "overallProgress": "整體進度",
+      "studentList": "學生列表",
+      "all": "全部",
+      "deleting": "正在刪除...",
+      "deleteCount": "刪除（{count}）",
+      "cancel": "取消",
+      "edit": "編輯",
+      "noStudentsInSelectedStatus": "所選狀態下沒有學生"
+    }
+  },
+  "AdminTeachers": {
+    "page": {
+      "title": "教師管理",
+      "description": "管理教師及其系統存取權限"
+    },
+    "Add": {
+      "title": "新增教師",
+      "subtitle": "為您的學校新增教師",
+      "cardTitle": "教師資訊",
+      "form": {
+        "name": "姓名",
+        "email": "電子郵件",
+        "role": "角色",
+        "password": "密碼",
+        "confirmPassword": "確認密碼"
+      },
+      "placeholders": {
+        "name": "請輸入教師姓名",
+        "email": "請輸入電子郵件",
+        "role": "選擇角色",
+        "password": "建立密碼",
+        "confirmPassword": "確認密碼"
+      },
+      "buttons": {
+        "create": "建立教師",
+        "creating": "正在建立教師...",
+        "reset": "重設表單"
+      },
+      "toasts": {
+        "createdSuccess": "建立教師成功！",
+        "createError": "無法建立教師"
+      },
+      "schema": {
+        "nameMin": "姓名至少需要 2 個字元",
+        "nameMax": "姓名不能超過 100 個字元",
+        "emailInvalid": "請輸入有效的電子郵件地址",
+        "roleRequired": "請選擇角色",
+        "passwordMin": "密碼至少需要 6 個字元",
+        "passwordMax": "密碼不能超過 100 個字元",
+        "passwordsDontMatch": "兩次輸入的密碼不一致"
+      }
+    },
+    "Table": {
+      "title": "教師列表",
+      "searchPlaceholder": "搜尋教師...",
+      "stats": {
+        "totalTeachers": "教師總數",
+        "totalTeachersDesc": "系統內活躍",
+        "totalStudents": "學生總數",
+        "totalStudentsDesc": "所有教師合計",
+        "totalClasses": "班級總數",
+        "totalClassesDesc": "活躍班級"
+      },
+      "actions": {
+        "addTeacher": "新增教師",
+        "add": "新增教師",
+        "update": "更新教師",
+        "delete": "刪除教師",
+        "cancel": "取消"
+      },
+      "addDialog": {
+        "title": "新增教師",
+        "description": "建立新的教師帳號。教師將透過電子郵件收到登入資訊。"
+      },
+      "editDialog": {
+        "title": "編輯教師",
+        "description": "更新教師資訊與存取權限。"
+      },
+      "deleteDialog": {
+        "title": "刪除教師",
+        "description": "確定要刪除 {name} 嗎？此操作無法復原，所有相關班級與學生資料將受到影響。"
+      },
+      "moveDialog": {
+        "title": "將教師轉移到您的學校",
+        "description": "電子郵件為 {email} 的教師已經屬於學校 {schoolName}。您要將此教師轉移到您的學校嗎？",
+        "confirmButton": "轉移教師"
+      },
+      "form": {
+        "name": "姓名",
+        "namePlaceholder": "請輸入姓名",
+        "email": "電子郵件",
+        "emailPlaceholder": "請輸入電子郵件",
+        "role": "角色",
+        "rolePlaceholder": "選擇角色",
+        "cefr": "CEFR 等級",
+        "cefrPlaceholder": "選擇 CEFR 等級",
+        "passwordOptional": "密碼（選填）",
+        "passwordPlaceholder": "留空以自動產生密碼",
+        "assignClassrooms": "分配班級",
+        "resetPassword": "重設密碼",
+        "setNewPassword": "設定新密碼",
+        "newPasswordPlaceholder": "請輸入新密碼"
+      },
+      "roles": {
+        "teacher": "教師",
+        "admin": "管理員"
+      },
+      "cefrLevels": {
+        "A1": "初級",
+        "A2": "基礎",
+        "B1": "中級",
+        "B2": "中高級",
+        "C1": "高級",
+        "C2": "精通"
+      },
+      "classrooms": {
+        "loading": "正在載入班級...",
+        "empty": "沒有班級",
+        "studentsCount": "（{count} 位學生）",
+        "noClassroomsAssigned": "未分配班級"
+      },
+      "tableHeaders": {
+        "teacher": "教師",
+        "email": "電子郵件",
+        "role": "角色",
+        "cefr": "CEFR 等級",
+        "assignedClassrooms": "已分配班級",
+        "students": "學生",
+        "classes": "班級",
+        "joined": "加入日期",
+        "actions": "操作"
+      },
+      "loading": "正在載入教師...",
+      "empty": {
+        "search": "沒有符合搜尋條件的教師",
+        "default": "沒有教師資料"
+      },
+      "toasts": {
+        "createSuccess": "建立教師成功",
+        "updateSuccess": "更新教師成功",
+        "deleteSuccess": "刪除教師成功",
+        "loadError": "載入教師資料失敗",
+        "createError": "無法建立教師",
+        "updateError": "無法更新教師",
+        "deleteError": "無法刪除教師"
+      }
+    }
+  },
+  "AdminStudents": {
+    "header": {
+      "title": "學生管理",
+      "subtitle": "管理學生及其學習進度"
+    },
+    "page": { "title": "學生管理" },
+    "stats": {
+      "totalStudents": "學生總數",
+      "allClassrooms": "所有班級",
+      "averageXp": "平均 XP",
+      "averageXpDesc": "每位學生的經驗值",
+      "mostCommonLevel": "最常見等級",
+      "mostCommonLevelDesc": "CEFR 能力等級",
+      "activeThisWeek": "本週活躍",
+      "activeThisWeekDetail": "{count} / {total} 位學生"
+    },
+    "actions": {
+      "addStudent": "新增學生",
+      "saveStudent": "儲存學生",
+      "saveChanges": "儲存變更",
+      "clearFilters": "清除篩選",
+      "cancel": "取消",
+      "delete": "刪除",
+      "previous": "上一頁",
+      "next": "下一頁"
+    },
+    "dialogs": {
+      "add": {
+        "title": "新增學生",
+        "description": "建立新的學生帳號。完成後點擊儲存。"
+      },
+      "edit": {
+        "title": "編輯學生",
+        "description": "修改學生帳號資訊。完成後點擊儲存。"
+      },
+      "delete": {
+        "title": "確定要刪除嗎？",
+        "description": "此操作無法復原。這將永久刪除 {name} 的帳號並移除其在我們伺服器上的資料。"
+      }
+    },
+    "form": {
+      "name": "姓名",
+      "email": "電子郵件",
+      "cefrLevel": "CEFR 等級",
+      "role": "角色",
+      "namePlaceholder": "輸入學生姓名",
+      "emailPlaceholder": "輸入電子郵件",
+      "cefrPlaceholder": "選擇 CEFR 等級",
+      "rolePlaceholder": "選擇角色"
+    },
+    "roles": {
+      "student": "學生",
+      "teacher": "教師",
+      "admin": "管理員"
+    },
+    "filters": {
+      "searchPlaceholder": "以姓名或電子郵件搜尋學生...",
+      "classroomPlaceholder": "依班級篩選",
+      "cefrPlaceholder": "CEFR 等級",
+      "activeFiltersLabel": "啟用的篩選:",
+      "searchLabel": "搜尋:",
+      "classroomLabel": "班級:",
+      "levelLabel": "等級:"
+    },
+    "tableHeaders": {
+      "name": "姓名",
+      "email": "電子郵件",
+      "className": "班級名稱",
+      "cefr": "CEFR 等級",
+      "xp": "XP",
+      "role": "角色",
+      "actions": "操作"
+    },
+    "table": {
+      "loading": "正在載入學生...",
+      "empty": "沒有符合條件的學生。"
+    },
+    "badges": { "noClass": "無班級" },
+    "pagination": {
+      "showing": "顯示第 {from} 到第 {to} 位，共 {total} 位學生",
+      "previous": "上一頁",
+      "next": "下一頁",
+      "pageOf": "第 {page} 頁，共 {totalPages} 頁"
+    }
+  }
+}

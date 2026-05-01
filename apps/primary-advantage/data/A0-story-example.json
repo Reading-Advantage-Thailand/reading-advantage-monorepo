@@ -1,0 +1,949 @@
+{
+  "blueprint": {
+    "topic": "Pip Finds a Friend",
+    "genre": "Children's Relationship",
+    "cefrLevel": "A0",
+    "targetAudience": "Aged 5-7, likes animals",
+    "globalVocabularyList": [
+      "puppy",
+      "friend",
+      "play",
+      "happy",
+      "sad",
+      "park",
+      "ball",
+      "run",
+      "jump",
+      "tree",
+      "bird",
+      "dog",
+      "home",
+      "garden",
+      "sun",
+      "red",
+      "blue",
+      "big",
+      "small",
+      "good"
+    ],
+    "globalGrammarStructures": [
+      "Present Simple 'to be' (is, am, are)",
+      "Present Simple 'have' (has, have)",
+      "Can for ability (can run, can jump)",
+      "Simple verbs (likes, wants, goes)",
+      "Basic prepositions (in, on)"
+    ],
+    "harmonOutline": [
+      {
+        "stage": "You",
+        "chapterNumber": 1,
+        "summary": "Pip is a small puppy. He is at home.",
+        "plotBeat": "Introduction of Pip and his environment.",
+        "engagementStrategy": "Introduce a cute, relatable character."
+      },
+      {
+        "stage": "Need",
+        "chapterNumber": 2,
+        "summary": "Pip has a ball but no friend. He is sad.",
+        "plotBeat": "Pip feels a lack of companionship.",
+        "engagementStrategy": "Create empathy for Pip's loneliness."
+      },
+      {
+        "stage": "Go",
+        "chapterNumber": 3,
+        "summary": "Pip goes to the park to find a friend.",
+        "plotBeat": "Pip leaves his comfort zone.",
+        "engagementStrategy": "Change of scenery to the park."
+      },
+      {
+        "stage": "Search",
+        "chapterNumber": 4,
+        "summary": "Pip sees a bird. The bird flies away.",
+        "plotBeat": "Pip tries to make friends but fails.",
+        "engagementStrategy": "A small obstacle/failure."
+      },
+      {
+        "stage": "Find",
+        "chapterNumber": 5,
+        "summary": "Pip finds a brown dog. Her name is Bella.",
+        "plotBeat": "Pip meets a potential friend.",
+        "engagementStrategy": "Meeting the goal."
+      },
+      {
+        "stage": "Take",
+        "chapterNumber": 6,
+        "summary": "Pip and Bella play with the ball. They run.",
+        "plotBeat": "They enjoy playing together.",
+        "engagementStrategy": "Action and fun interaction."
+      },
+      {
+        "stage": "Return",
+        "chapterNumber": 7,
+        "summary": "Pip and Bella go to Pip's garden.",
+        "plotBeat": "Bringing the new friend home.",
+        "engagementStrategy": "Connecting the two worlds."
+      },
+      {
+        "stage": "Change",
+        "chapterNumber": 8,
+        "summary": "Pip is happy. He has a best friend.",
+        "plotBeat": "Resolution of the loneliness.",
+        "engagementStrategy": "Happy, heartwarming ending."
+      }
+    ],
+    "characters": [
+      {
+        "name": "Pip",
+        "description": "A small, energetic puppy who wants to play.",
+        "visualDescription": "A small white puppy with black spots and a red collar."
+      },
+      {
+        "name": "Bella",
+        "description": "A friendly brown dog.",
+        "visualDescription": "A fluffy brown dog with floppy ears."
+      }
+    ]
+  },
+  "chapters": [
+    {
+      "chapterNumber": 1,
+      "stage": "You",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["puppy", "home", "garden", "happy", "small"],
+        "grammarFocus": "Present Simple 'to be' (is)",
+        "pacing": "Slow and calm",
+        "cliffhangerOrHook": "Pip looks at his red ball."
+      },
+      "title": "Pip the Puppy",
+      "passage": "This is Pip. Pip is a puppy. He is small. He is white and black. Pip is at home. He is in the garden. The garden is big. The sun is hot. Pip likes the garden. He has a house. It is a small dog house. Pip is a good puppy. He sits in the grass. He is happy. But it is quiet. Very quiet.",
+      "summary": "Pip is a small puppy in his garden.",
+      "translatedSummary": {
+        "th": "พิพเป็นลูกสุนัขตัวเล็ก ๆ ในสวนของเขา",
+        "cn": "皮普是一只在他花园里的小狗。",
+        "tw": "皮普是一隻在他花園裡的小狗。",
+        "vi": "Pip là một chú chó con nhỏ trong khu vườn của mình."
+      },
+      "imageDesc": "A cute small white puppy with black spots sitting in a sunny green garden. Blue sky, bright sun. The puppy looks happy but solitary.",
+      "wordlist": [
+        {
+          "vocabulary": "puppy",
+          "definition": "A young dog.",
+          "translation": {
+            "th": "ลูกสุนัข",
+            "cn": "小狗",
+            "tw": "小狗",
+            "vi": "chó con"
+          }
+        },
+        {
+          "vocabulary": "garden",
+          "definition": "A place with grass and flowers.",
+          "translation": {
+            "th": "สวน",
+            "cn": "花园",
+            "tw": "花園",
+            "vi": "khu vườn"
+          }
+        },
+        {
+          "vocabulary": "home",
+          "definition": "The place where you live.",
+          "translation": {
+            "th": "บ้าน",
+            "cn": "家",
+            "tw": "家",
+            "vi": "nhà"
+          }
+        }
+      ],
+      "sentences": [
+        "Pip is a puppy.",
+        "He is small.",
+        "Pip is at home."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "Pip is a puppy.",
+          "translation": {
+            "th": "พิพเป็นลูกสุนัข",
+            "cn": "皮普是一只小狗。",
+            "tw": "皮普是一隻小狗。",
+            "vi": "Pip là một chú chó con."
+          }
+        },
+        {
+          "sentence": "He is small.",
+          "translation": {
+            "th": "เขาตัวเล็ก",
+            "cn": "他很小。",
+            "tw": "他很小。",
+            "vi": "Cậu ấy nhỏ bé."
+          }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "Who is Pip?",
+          "options": ["A cat", "A puppy", "A bird", "A boy"],
+          "answer": "A puppy"
+        },
+        {
+          "question": "Where is Pip?",
+          "options": ["In the park", "In the school", "In the garden", "In the car"],
+          "answer": "In the garden"
+        },
+        {
+          "question": "Is Pip big or small?",
+          "options": ["Big", "Small", "Tall", "Long"],
+          "answer": "Small"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What color is Pip?",
+          "answer": "He is white and black."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Do you have a pet? What is it?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 2,
+      "stage": "Need",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["ball", "play", "sad", "friend", "wants"],
+        "grammarFocus": "Present Simple 'wants', 'has'",
+        "pacing": "Slow",
+        "cliffhangerOrHook": "Pip goes to the gate."
+      },
+      "title": "Pip Wants to Play",
+      "passage": "Pip has a ball. It is a red ball. He likes the ball. Pip runs with the ball. He jumps. It is fun. But Pip stops. He looks around. No one is here. He wants a friend. He wants to play with a friend. Pip is sad. Ideally, dogs play together. Pip puts the ball down. He walks to the gate.",
+      "summary": "Pip plays with a ball but feels sad because he wants a friend.",
+      "translatedSummary": {
+        "th": "พิพเล่นลูกบอลแต่รู้สึกเศร้าเพราะเขาต้องการเพื่อน",
+        "cn": "皮普玩球，但他感到很难过，因为他想要一个朋友。",
+        "tw": "皮普玩球，但他感到很難過，因為他想要一個朋友。",
+        "vi": "Pip chơi với quả bóng nhưng cảm thấy buồn vì cậu ấy muốn có một người bạn."
+      },
+      "imageDesc": "The puppy Pip looking sad with a red ball on the grass. He is looking at a closed garden gate.",
+      "wordlist": [
+        {
+          "vocabulary": "ball",
+          "definition": "A round toy you throw.",
+          "translation": {
+            "th": "ลูกบอล",
+            "cn": "球",
+            "tw": "球",
+            "vi": "quả bóng"
+          }
+        },
+        {
+          "vocabulary": "sad",
+          "definition": "Not happy.",
+          "translation": {
+            "th": "เศร้า",
+            "cn": "悲伤",
+            "tw": "悲傷",
+            "vi": "buồn"
+          }
+        },
+        {
+          "vocabulary": "friend",
+          "definition": "Someone you like and play with.",
+          "translation": {
+            "th": "เพื่อน",
+            "cn": "朋友",
+            "tw": "朋友",
+            "vi": "bạn bè"
+          }
+        }
+      ],
+      "sentences": [
+        "Pip has a ball.",
+        "He wants a friend.",
+        "Pip is sad."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "Pip has a ball.",
+          "translation": {
+            "th": "พิพมีลูกบอล",
+            "cn": "皮普有一个球。",
+            "tw": "皮普有一個球。",
+            "vi": "Pip có một quả bóng."
+          }
+        },
+        {
+          "sentence": "He wants a friend.",
+          "translation": {
+            "th": "เขาต้องการเพื่อน",
+            "cn": "他想要一个朋友。",
+            "tw": "他想要一個朋友。",
+            "vi": "Cậu ấy muốn một người bạn."
+          }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What does Pip have?",
+          "options": ["A car", "A cat", "A ball", "A hat"],
+          "answer": "A ball"
+        },
+        {
+          "question": "What color is the ball?",
+          "options": ["Blue", "Red", "Green", "Yellow"],
+          "answer": "Red"
+        },
+        {
+          "question": "Why is Pip sad?",
+          "options": ["He is hungry", "He is cold", "He wants a friend", "He is tired"],
+          "answer": "He wants a friend"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Where does Pip walk?",
+          "answer": "He walks to the gate."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "What games do you play with your friends?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 3,
+      "stage": "Go",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["park", "goes", "walks", "big", "tree"],
+        "grammarFocus": "Present Simple 'goes', 'sees'",
+        "pacing": "Active",
+        "cliffhangerOrHook": "Pip sees the big park."
+      },
+      "title": "To the Park",
+      "passage": "The gate is open. Pip goes out. He walks on the path. He walks to the park. The park is near. Pip sees the park. It is big. It has green grass. It has tall trees. Many people are there. Pip is happy. He runs to the park. He looks for a friend.",
+      "summary": "Pip walks to the park to find a friend.",
+      "translatedSummary": {
+        "th": "พิพเดินไปที่สวนสาธารณะเพื่อหาเพื่อน",
+        "cn": "皮普走到公园去找朋友。",
+        "tw": "皮普走到公園去找朋友。",
+        "vi": "Pip đi bộ đến công viên để tìm bạn."
+      },
+      "imageDesc": "Pip walking on a sidewalk path towards a park entrance. Green trees and grass visible in the distance.",
+      "wordlist": [
+        {
+          "vocabulary": "park",
+          "definition": "A public place to play.",
+          "translation": {
+            "th": "สวนสาธารณะ",
+            "cn": "公园",
+            "tw": "公園",
+            "vi": "công viên"
+          }
+        },
+        {
+          "vocabulary": "tree",
+          "definition": "A tall plant with wood.",
+          "translation": {
+            "th": "ต้นไม้",
+            "cn": "树",
+            "tw": "樹",
+            "vi": "cây"
+          }
+        },
+        {
+          "vocabulary": "walks",
+          "definition": "To move on feet.",
+          "translation": {
+            "th": "เดิน",
+            "cn": "走",
+            "tw": "走",
+            "vi": "đi bộ"
+          }
+        }
+      ],
+      "sentences": [
+        "Pip goes out.",
+        "The park is near.",
+        "It has tall trees."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "Pip goes out.",
+          "translation": {
+            "th": "พิพออกไปข้างนอก",
+            "cn": "皮普出去了。",
+            "tw": "皮普出去了。",
+            "vi": "Pip đi ra ngoài."
+          }
+        },
+        {
+          "sentence": "The park is near.",
+          "translation": {
+            "th": "สวนสาธารณะอยู่ใกล้",
+            "cn": "公园很近。",
+            "tw": "公園很近。",
+            "vi": "Công viên ở gần."
+          }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "Where does Pip go?",
+          "options": ["To school", "To the park", "To the shop", "To the zoo"],
+          "answer": "To the park"
+        },
+        {
+          "question": "Is the park big or small?",
+          "options": ["Small", "Big", "Little", "Tiny"],
+          "answer": "Big"
+        },
+        {
+          "question": "What is in the park?",
+          "options": ["Cars", "Beds", "Tall trees", "Desks"],
+          "answer": "Tall trees"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Is the gate open or closed?",
+          "answer": "The gate is open."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Do you like the park? Why?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 4,
+      "stage": "Search",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["bird", "blue", "fly", "up", "looks"],
+        "grammarFocus": "Present Simple 'looks', 'says', 'cannot'",
+        "pacing": "Hopeful then disappointed",
+        "cliffhangerOrHook": "Pip sees something else."
+      },
+      "title": "Looking for a Friend",
+      "passage": "Pip looks for a friend. He sees a bird. The bird is blue. It sits in a tree. Pip barks. \"Woof!\" he says. \"Play with me!\" The bird looks at Pip. The bird flies up. It flies away. Pip cannot fly. He is sad. The bird is not his friend. Pip walks on.",
+      "summary": "Pip asks a bird to play, but the bird flies away.",
+      "translatedSummary": {
+        "th": "พิพชวนนกมาเล่น แต่นกบินหนีไป",
+        "cn": "皮普叫鸟儿一起玩，但鸟儿飞走了。",
+        "tw": "皮普叫鳥兒一起玩，但鳥兒飛走了。",
+        "vi": "Pip rủ chim chơi cùng, nhưng chim bay đi mất."
+      },
+      "imageDesc": "Pip standing under a tree looking up at a blue bird. The bird is flying away into the sky.",
+      "wordlist": [
+        {
+          "vocabulary": "bird",
+          "definition": "An animal that can fly.",
+          "translation": {
+            "th": "นก",
+            "cn": "鸟",
+            "tw": "鳥",
+            "vi": "con chim"
+          }
+        },
+        {
+          "vocabulary": "blue",
+          "definition": "The color of the sky.",
+          "translation": {
+            "th": "สีน้ำเงิน",
+            "cn": "蓝色",
+            "tw": "藍色",
+            "vi": "màu xanh da trời"
+          }
+        },
+        {
+          "vocabulary": "fly",
+          "definition": "To move through the air.",
+          "translation": {
+            "th": "บิน",
+            "cn": "飞",
+            "tw": "飛",
+            "vi": "bay"
+          }
+        }
+      ],
+      "sentences": [
+        "He sees a bird.",
+        "The bird flies away.",
+        "Pip cannot fly."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "He sees a bird.",
+          "translation": {
+            "th": "เขาเห็นนก",
+            "cn": "他看见一只鸟。",
+            "tw": "他看見一隻鳥。",
+            "vi": "Cậu ấy nhìn thấy một con chim."
+          }
+        },
+        {
+          "sentence": "Pip cannot fly.",
+          "translation": {
+            "th": "พิพบินไม่ได้",
+            "cn": "皮普不会飞。",
+            "tw": "皮普不會飛。",
+            "vi": "Pip không thể bay."
+          }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What animal does Pip see?",
+          "options": ["A cat", "A mouse", "A bird", "A fish"],
+          "answer": "A bird"
+        },
+        {
+          "question": "What color is the bird?",
+          "options": ["Red", "Green", "Blue", "Yellow"],
+          "answer": "Blue"
+        },
+        {
+          "question": "Does the bird play with Pip?",
+          "options": ["Yes", "No", "Maybe", "Sometimes"],
+          "answer": "No"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What does the bird do?",
+          "answer": "It flies away."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Can dogs fly? What animals can fly?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 5,
+      "stage": "Find",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["dog", "brown", "tail", "wags", "hello"],
+        "grammarFocus": "Present Simple 'sees', 'is'",
+        "pacing": "Happy and Excited",
+        "cliffhangerOrHook": "They look at the ball."
+      },
+      "title": "A New Friend",
+      "passage": "Pip sees a dog. It is a brown dog. She has floppy ears. She has a long tail. She looks at Pip. Pip looks at her. He wags his tail. She wags her tail. \"Woof!\" says Pip. \"Woof!\" says the dog. Her name is Bella. Bella is friendly. Pip is happy. He likes Bella.",
+      "summary": "Pip meets a brown dog named Bella. They are happy.",
+      "translatedSummary": {
+        "th": "พิพเจอกับสุนัขสีน้ำตาลชื่อเบลล่า พวกเขามีความสุข",
+        "cn": "皮普遇到了一只叫贝拉的棕色狗。他们很高兴。",
+        "tw": "皮普遇到了一隻叫貝拉的棕色狗。他們很高興。",
+        "vi": "Pip gặp một chú chó màu nâu tên là Bella. Họ rất vui vẻ."
+      },
+      "imageDesc": "Pip (white and black) facing Bella (a fluffy brown dog). Both are wagging their tails in the park.",
+      "wordlist": [
+        {
+          "vocabulary": "dog",
+          "definition": "An animal that barks.",
+          "translation": {
+            "th": "สุนัข",
+            "cn": "狗",
+            "tw": "狗",
+            "vi": "con chó"
+          }
+        },
+        {
+          "vocabulary": "tail",
+          "definition": "The part at the back of an animal.",
+          "translation": {
+            "th": "หาง",
+            "cn": "尾巴",
+            "tw": "尾巴",
+            "vi": "cái đuôi"
+          }
+        },
+        {
+          "vocabulary": "brown",
+          "definition": "The color of chocolate.",
+          "translation": {
+            "th": "สีน้ำตาล",
+            "cn": "棕色",
+            "tw": "棕色",
+            "vi": "màu nâu"
+          }
+        }
+      ],
+      "sentences": [
+        "Pip sees a dog.",
+        "She has a long tail.",
+        "Bella is friendly."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "Pip sees a dog.",
+          "translation": {
+            "th": "พิพเห็นสุนัข",
+            "cn": "皮普看见一只狗。",
+            "tw": "皮普看見一隻狗。",
+            "vi": "Pip nhìn thấy một con chó."
+          }
+        },
+        {
+          "sentence": "Bella is friendly.",
+          "translation": {
+            "th": "เบลล่าเป็นมิตร",
+            "cn": "贝拉很友好。",
+            "tw": "貝拉很友好。",
+            "vi": "Bella rất thân thiện."
+          }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What color is Bella?",
+          "options": ["Black", "White", "Brown", "Grey"],
+          "answer": "Brown"
+        },
+        {
+          "question": "What does Pip wag?",
+          "options": ["His head", "His tail", "His foot", "His hand"],
+          "answer": "His tail"
+        },
+        {
+          "question": "Is Bella friendly?",
+          "options": ["No", "Yes", "Sad", "Angry"],
+          "answer": "Yes"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What is the brown dog's name?",
+          "answer": "Her name is Bella."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Do you have a friend? What is their name?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 6,
+      "stage": "Take",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["run", "jump", "catch", "fast", "together"],
+        "grammarFocus": "Present Simple 'play', 'run', 'is'",
+        "pacing": "Fast and energetic",
+        "cliffhangerOrHook": "It is time to go."
+      },
+      "title": "Let's Play!",
+      "passage": "Pip has his ball. He gives the ball to Bella. Bella runs. Pip runs too. They run fast. Bella catches the ball. She gives it to Pip. They jump in the grass. It is fun. They play and play. They are good friends. The sun is warm. They are tired but happy.",
+      "summary": "Pip and Bella play together with the ball.",
+      "translatedSummary": {
+        "th": "พิพและเบลล่าเล่นลูกบอลด้วยกัน",
+        "cn": "皮普和贝拉一起玩球。",
+        "tw": "皮普和貝拉一起玩球。",
+        "vi": "Pip và Bella cùng nhau chơi bóng."
+      },
+      "imageDesc": "Pip and Bella running side by side in the grass chasing a red ball. Action shot, blurry background.",
+      "wordlist": [
+        {
+          "vocabulary": "run",
+          "definition": "To move very fast.",
+          "translation": {
+            "th": "วิ่ง",
+            "cn": "跑",
+            "tw": "跑",
+            "vi": "chạy"
+          }
+        },
+        {
+          "vocabulary": "catch",
+          "definition": "To get something in your hands or mouth.",
+          "translation": {
+            "th": "จับ",
+            "cn": "接住",
+            "tw": "接住",
+            "vi": "bắt"
+          }
+        },
+        {
+          "vocabulary": "fast",
+          "definition": "Quick, not slow.",
+          "translation": {
+            "th": "เร็ว",
+            "cn": "快",
+            "tw": "快",
+            "vi": "nhanh"
+          }
+        }
+      ],
+      "sentences": [
+        "They run fast.",
+        "Bella catches the ball.",
+        "They are good friends."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "They run fast.",
+          "translation": {
+            "th": "พวกเขาวิ่งเร็ว",
+            "cn": "他们跑得很快。",
+            "tw": "他們跑得很快。",
+            "vi": "Họ chạy nhanh."
+          }
+        },
+        {
+          "sentence": "They are good friends.",
+          "translation": {
+            "th": "พวกเขาเป็นเพื่อนที่ดี",
+            "cn": "他们是好朋友。",
+            "tw": "他們是好朋友。",
+            "vi": "Họ là những người bạn tốt."
+          }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What do they play with?",
+          "options": ["A doll", "A ball", "A stick", "A car"],
+          "answer": "A ball"
+        },
+        {
+          "question": "Who catches the ball?",
+          "options": ["The bird", "Bella", "The cat", "A boy"],
+          "answer": "Bella"
+        },
+        {
+          "question": "Are they slow?",
+          "options": ["Yes", "No", "Maybe", "Very slow"],
+          "answer": "No"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Are Pip and Bella tired?",
+          "answer": "Yes, they are tired but happy."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "What do you like to play outside?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 7,
+      "stage": "Return",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["go", "walk", "garden", "home", "come"],
+        "grammarFocus": "Present Simple 'come', 'go'",
+        "pacing": "Calm",
+        "cliffhangerOrHook": "They are in the garden."
+      },
+      "title": "Going Home",
+      "passage": "It is late. Pip goes home. Bella comes too. They walk on the path. They walk to Pip's house. They go into the garden. The garden is nice. Pip shows Bella his house. \"This is my home,\" says Pip. Bella likes the garden. She sits with Pip. They are safe.",
+      "summary": "Pip and Bella walk back to Pip's house.",
+      "translatedSummary": {
+        "th": "พิพและเบลล่าเดินกลับไปที่บ้านของพิพ",
+        "cn": "皮普和贝拉走回皮普的家。",
+        "tw": "皮普和貝拉走回皮普的家。",
+        "vi": "Pip và Bella đi bộ về nhà của Pip."
+      },
+      "imageDesc": "Pip and Bella walking together on the path towards Pip's house. The sun is lower in the sky.",
+      "wordlist": [
+        {
+          "vocabulary": "late",
+          "definition": "Not early.",
+          "translation": {
+            "th": "สาย/ดึก",
+            "cn": "晚",
+            "tw": "晚",
+            "vi": "muộn"
+          }
+        },
+        {
+          "vocabulary": "safe",
+          "definition": "Not in danger.",
+          "translation": {
+            "th": "ปลอดภัย",
+            "cn": "安全",
+            "tw": "安全",
+            "vi": "an toàn"
+          }
+        },
+        {
+          "vocabulary": "show",
+          "definition": "To let someone see.",
+          "translation": {
+            "th": "แสดง/ให้ดู",
+            "cn": "展示",
+            "tw": "展示",
+            "vi": "chỉ dẫn"
+          }
+        }
+      ],
+      "sentences": [
+        "Pip goes home.",
+        "Bella comes too.",
+        "They are safe."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "Pip goes home.",
+          "translation": {
+            "th": "พิพกลับบ้าน",
+            "cn": "皮普回家。",
+            "tw": "皮普回家。",
+            "vi": "Pip đi về nhà."
+          }
+        },
+        {
+          "sentence": "Bella comes too.",
+          "translation": {
+            "th": "เบลล่าก็มาด้วย",
+            "cn": "贝拉也来了。",
+            "tw": "貝拉也來了。",
+            "vi": "Bella cũng đến."
+          }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "Where do they go?",
+          "options": ["To the shop", "To the park", "To Pip's house", "To school"],
+          "answer": "To Pip's house"
+        },
+        {
+          "question": "Does Bella come with Pip?",
+          "options": ["Yes", "No", "Maybe", "Never"],
+          "answer": "Yes"
+        },
+        {
+          "question": "What does Pip show Bella?",
+          "options": ["His car", "His house", "His hat", "His shoe"],
+          "answer": "His house"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Is the garden nice?",
+          "answer": "Yes, the garden is nice."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Who comes to your house?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 8,
+      "stage": "Change",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["best", "friend", "happy", "sleep", "together"],
+        "grammarFocus": "Present Simple 'is', 'has'",
+        "pacing": "Peaceful",
+        "cliffhangerOrHook": "The end."
+      },
+      "title": "Best Friends",
+      "passage": "Pip is in his bed. Bella is on the rug. They are tired. Pip is not alone. He has a friend. He has a best friend. Bella is his best friend. Pip closes his eyes. He is very happy. He sleeps. Goodnight, Pip. Goodnight, Bella.",
+      "summary": "Pip is happy because he has a best friend.",
+      "translatedSummary": {
+        "th": "พิพมีความสุขเพราะเขามีเพื่อนรัก",
+        "cn": "皮普很高兴，因为他有一个最好的朋友。",
+        "tw": "皮普很高興，因為他有一個最好的朋友。",
+        "vi": "Pip rất vui vì cậu ấy có một người bạn thân nhất."
+      },
+      "imageDesc": "Pip sleeping in his dog bed, and Bella sleeping on a rug nearby. Peaceful and cozy scene.",
+      "wordlist": [
+        {
+          "vocabulary": "sleep",
+          "definition": "To rest with eyes closed.",
+          "translation": {
+            "th": "นอนหลับ",
+            "cn": "睡觉",
+            "tw": "睡覺",
+            "vi": "ngủ"
+          }
+        },
+        {
+          "vocabulary": "best",
+          "definition": "Very good. Number one.",
+          "translation": {
+            "th": "ดีที่สุด",
+            "cn": "最好的",
+            "tw": "最好的",
+            "vi": "tốt nhất"
+          }
+        },
+        {
+          "vocabulary": "rug",
+          "definition": "A small carpet.",
+          "translation": {
+            "th": "พรม",
+            "cn": "地毯",
+            "tw": "地毯",
+            "vi": "tấm thảm"
+          }
+        }
+      ],
+      "sentences": [
+        "Pip is not alone.",
+        "He has a best friend.",
+        "He is very happy."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "He has a best friend.",
+          "translation": {
+            "th": "เขามีเพื่อนรัก",
+            "cn": "他有一个最好的朋友。",
+            "tw": "他有一個最好的朋友。",
+            "vi": "Cậu ấy có một người bạn thân nhất."
+          }
+        },
+        {
+          "sentence": "He is very happy.",
+          "translation": {
+            "th": "เขามีความสุขมาก",
+            "cn": "他非常高兴。",
+            "tw": "他非常高興。",
+            "vi": "Cậu ấy rất hạnh phúc."
+          }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "Where is Pip?",
+          "options": ["In his bed", "In the car", "In the park", "On the chair"],
+          "answer": "In his bed"
+        },
+        {
+          "question": "Is Pip alone?",
+          "options": ["Yes", "No", "Maybe", "Sometimes"],
+          "answer": "No"
+        },
+        {
+          "question": "Who is Bella?",
+          "options": ["His mom", "His sister", "His best friend", "His teacher"],
+          "answer": "His best friend"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What does Pip do?",
+          "answer": "He sleeps."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "How do you feel when you are with your friends?"
+        }
+      ]
+    }
+  ]
+}

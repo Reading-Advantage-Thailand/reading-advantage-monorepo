@@ -1,0 +1,65 @@
+# skaffold.yaml
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: primary-advantage-app
+build:
+  artifacts:
+    - image: primary-advantage-app-image # Placeholder for the image name, Cloud Deploy will replace it
+      context: .
+deploy:
+  cloudrun: {} # Use Cloud Run deployer
+
+profiles:
+  - name: dev
+    # Define environment variables specific to the development Cloud Run service
+    manifests:
+      rawYaml:
+        - |
+          apiVersion: serving.knative.dev/v1
+          kind: Service
+          metadata:
+            name: my-nextjs-app-dev-service # Cloud Run service name for dev
+            annotations:
+              run.googleapis.com/ingress: all # Public access for dev
+          spec:
+            template:
+              spec:
+                containers:
+                  - image: my-nextjs-app-image # Skaffold will inject the actual image
+                    ports:
+                      - containerPort: 8080
+                    env:
+                      - name: NODE_ENV
+                        value: "development"
+                      - name: DATABASE_URL # Inject DATABASE_URL from Secret Manager
+                        valueFrom:
+                          secretKeyRef:
+                            secret: DATABASE_URL_DEV # Secret name in Secret Manager
+                            key: latest
+  - name: prod
+    # Define environment variables specific to the production Cloud Run service
+    manifests:
+      rawYaml:
+        - |
+          apiVersion: serving.knative.dev/v1
+          kind: Service
+          metadata:
+            name: my-nextjs-app-prod-service # Cloud Run service name for prod
+            annotations:
+              run.googleapis.com/ingress: all # Or internal for private services
+          spec:
+            template:
+              spec:
+                containers:
+                  - image: my-nextjs-app-image # Skaffold will inject the actual image
+                    ports:
+                      - containerPort: 8080
+                    env:
+                      - name: NODE_ENV
+                        value: "production"
+                      - name: DATABASE_URL # Inject DATABASE_URL from Secret Manager
+                        valueFrom:
+                          secretKeyRef:
+                            secret: DATABASE_URL_PROD # Secret name in Secret Manager
+                            key: latest

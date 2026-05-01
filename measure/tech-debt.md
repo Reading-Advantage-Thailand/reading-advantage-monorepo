@@ -21,3 +21,9 @@
 | 2026-05-01 | migrate-reading-advantage | reading-advantage: zustand v4 vs v5 in monorepo | Medium | Open | App uses zustand v4, advantage-games uses v5. Align when reading-advantage is ready for v5 migration. |
 | 2026-05-01 | migrate-reading-advantage | reading-advantage: ESLint v8 vs v9 in monorepo | Medium | Open | App uses `.eslintrc.json` (legacy v8). Monorepo shared config uses flat config v9. Keep local config until ESLint migration. |
 | 2026-05-01 | migrate-reading-advantage | reading-advantage: two i18n libraries (next-intl + next-international) | Low | Open | Both imported; likely one is dead. Audit and remove one. |
+| 2026-05-01 | migrate-primary-advantage | primary-advantage: `ignoreBuildErrors: true` / `ignoreDuringBuilds: true` | Medium | Open | Temporarily enabled. Pre-existing TS errors and 49 lint errors. Fix incrementally. |
+| 2026-05-01 | migrate-primary-advantage | primary-advantage: 49 lint errors, 74 warnings (pre-existing) | Medium | Open | Errors: `react/no-unescaped-entities`, `react-hooks/rules-of-hooks`. Warnings: missing deps in useEffect. |
+| 2026-05-01 | migrate-primary-advantage | primary-advantage: no test suite | Medium | Open | Zero tests. Consider adding Vitest for new code. |
+| 2026-05-01 | migrate-primary-advantage | primary-advantage: NextAuth v5 beta | Medium | Open | Uses `next-auth ^5.0.0-beta.29`. Upgrade to stable when available. |
+| 2026-05-01 | migrate-primary-advantage | primary-advantage: Prisma schema separate from reading-advantage | Medium | Open | Two separate Prisma schemas. Future: unify or document boundary. |
+| 2026-05-01 | migrate-primary-advantage | primary-advantage: missing `base64-js` dependency | Low | Open | Was missing from package.json; added during migration. |

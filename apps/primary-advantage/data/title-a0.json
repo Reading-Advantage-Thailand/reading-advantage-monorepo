@@ -1,0 +1,609 @@
+{
+  "storyCollection": {
+    "title": "Primary Advantage YLE Starters Story Library",
+    "targetAudience": "Grades 3-6 (YLE Starters Level)",
+    "totalStories": 100,
+    "stories": [
+      {
+        "id": 1,
+        "genre": "Family & Friends",
+        "title": "My New Baby Brother",
+        "description": "A child adjusts to having a new sibling and learns about being a helpful big brother or sister."
+      },
+      {
+        "id": 2,
+        "genre": "Family & Friends",
+        "title": "Grandpa's Special Day",
+        "description": "Visiting grandparents and discovering family traditions that bring everyone together."
+      },
+      {
+        "id": 3,
+        "genre": "Family & Friends",
+        "title": "The Best Friend Move",
+        "description": "When a best friend moves to a new house, learning how friendships can stay strong even far away."
+      },
+      {
+        "id": 4,
+        "genre": "Family & Friends",
+        "title": "Family Picnic Adventure",
+        "description": "A fun day out with the whole family, playing games and eating together in the park."
+      },
+      {
+        "id": 5,
+        "genre": "Family & Friends",
+        "title": "My Cousin's Visit",
+        "description": "Exciting activities and new games when visiting relatives come to stay."
+      },
+      {
+        "id": 6,
+        "genre": "Animal Adventures",
+        "title": "The Lost Puppy",
+        "description": "Helping a lost dog find its way home and learning about caring for animals."
+      },
+      {
+        "id": 7,
+        "genre": "Animal Adventures",
+        "title": "Zoo Day Discovery",
+        "description": "Meeting different animals at the zoo and learning amazing facts about each one."
+      },
+      {
+        "id": 8,
+        "genre": "Animal Adventures",
+        "title": "The Brave Little Mouse",
+        "description": "A small mouse overcomes big challenges and discovers that being small can be special."
+      },
+      {
+        "id": 9,
+        "genre": "Animal Adventures",
+        "title": "My Pet Fish's Big Day",
+        "description": "Taking care of a special pet and learning about responsibility and friendship."
+      },
+      {
+        "id": 10,
+        "genre": "Animal Adventures",
+        "title": "The Friendly Cat Next Door",
+        "description": "Making friends with a neighborhood cat and learning about different personalities."
+      },
+      {
+        "id": 11,
+        "genre": "School Life",
+        "title": "My First Day at School",
+        "description": "Starting at a new school adventure, meeting new friends and learning classroom rules."
+      },
+      {
+        "id": 12,
+        "genre": "School Life",
+        "title": "The Missing Pencil Case",
+        "description": "Solving a classroom mystery by working together and asking for help."
+      },
+      {
+        "id": 13,
+        "genre": "School Life",
+        "title": "Show and Tell Surprise",
+        "description": "Sharing something special with the class and learning to speak confidently."
+      },
+      {
+        "id": 14,
+        "genre": "School Life",
+        "title": "The School Pet Rabbit",
+        "description": "Caring for the classroom animal and learning about taking turns and responsibility."
+      },
+      {
+        "id": 15,
+        "genre": "School Life",
+        "title": "Art Class Fun",
+        "description": "Creating something amazing in art time and discovering hidden talents."
+      },
+      {
+        "id": 16,
+        "genre": "Home & Daily Life",
+        "title": "Moving to a New House",
+        "description": "Exploring a new home and neighborhood, making new discoveries every day."
+      },
+      {
+        "id": 17,
+        "genre": "Home & Daily Life",
+        "title": "Cooking with Mom",
+        "description": "Learning to make a favorite meal and discovering the joy of cooking together."
+      },
+      {
+        "id": 18,
+        "genre": "Home & Daily Life",
+        "title": "The Magic Garden",
+        "description": "Growing plants and vegetables and watching them change with care and time."
+      },
+      {
+        "id": 19,
+        "genre": "Home & Daily Life",
+        "title": "Rainy Day Indoor Fun",
+        "description": "Creative activities on a stormy day, turning boredom into adventure."
+      },
+      {
+        "id": 20,
+        "genre": "Home & Daily Life",
+        "title": "Cleaning My Bedroom",
+        "description": "Making tidying up an adventure and finding lost treasures along the way."
+      },
+      {
+        "id": 21,
+        "genre": "Food & Cooking",
+        "title": "The Birthday Cake Surprise",
+        "description": "Making a special birthday treat and learning about measuring and mixing."
+      },
+      {
+        "id": 22,
+        "genre": "Food & Cooking",
+        "title": "Market Day Shopping",
+        "description": "Buying fresh fruits and vegetables and learning where our food comes from."
+      },
+      {
+        "id": 23,
+        "genre": "Food & Cooking",
+        "title": "The Sandwich Contest",
+        "description": "Creating the most creative lunch and discovering new favorite combinations."
+      },
+      {
+        "id": 24,
+        "genre": "Food & Cooking",
+        "title": "Ice Cream Truck Day",
+        "description": "A special summer treat adventure and learning about making choices."
+      },
+      {
+        "id": 25,
+        "genre": "Food & Cooking",
+        "title": "Pizza Making Party",
+        "description": "Cooking with friends and family, sharing tasks and enjoying results together."
+      },
+      {
+        "id": 26,
+        "genre": "Seasonal & Weather",
+        "title": "The First Snow Day",
+        "description": "Playing in fresh winter snow and discovering the magic of changing seasons."
+      },
+      {
+        "id": 27,
+        "genre": "Seasonal & Weather",
+        "title": "Summer Beach Adventure",
+        "description": "Building sandcastles and swimming, enjoying warm weather activities safely."
+      },
+      {
+        "id": 28,
+        "genre": "Seasonal & Weather",
+        "title": "Autumn Leaf Collection",
+        "description": "Gathering colorful fall leaves and learning about nature's changes."
+      },
+      {
+        "id": 29,
+        "genre": "Seasonal & Weather",
+        "title": "Spring Garden Planting",
+        "description": "Growing flowers and watching them bloom, understanding life cycles."
+      },
+      {
+        "id": 30,
+        "genre": "Seasonal & Weather",
+        "title": "The Big Storm",
+        "description": "Staying safe and cozy during bad weather, finding comfort in family."
+      },
+      {
+        "id": 31,
+        "genre": "Sports & Games",
+        "title": "My First Football Match",
+        "description": "Learning to play and have fun, discovering teamwork and sportsmanship."
+      },
+      {
+        "id": 32,
+        "genre": "Sports & Games",
+        "title": "The Swimming Lesson",
+        "description": "Overcoming fear of water and learning new skills with patience and practice."
+      },
+      {
+        "id": 33,
+        "genre": "Sports & Games",
+        "title": "Bike Riding Success",
+        "description": "Learning to ride without training wheels and celebrating personal achievements."
+      },
+      {
+        "id": 34,
+        "genre": "Sports & Games",
+        "title": "The School Sports Day",
+        "description": "Participating in fun competitions and learning that trying your best matters most."
+      },
+      {
+        "id": 35,
+        "genre": "Sports & Games",
+        "title": "Table Tennis Tournament",
+        "description": "Playing games with friends and learning about fair play and good sportsmanship."
+      },
+      {
+        "id": 36,
+        "genre": "Transportation",
+        "title": "The Bus Stop Adventure",
+        "description": "Waiting for and riding the school bus, learning about patience and making friends."
+      },
+      {
+        "id": 37,
+        "genre": "Transportation",
+        "title": "Train Journey Fun",
+        "description": "Traveling to visit family by train and watching the world go by through windows."
+      },
+      {
+        "id": 38,
+        "genre": "Transportation",
+        "title": "The Fire Truck Visit",
+        "description": "Meeting firefighters and their truck, learning about community helpers who keep us safe."
+      },
+      {
+        "id": 39,
+        "genre": "Transportation",
+        "title": "Airplane Trip",
+        "description": "First time flying to a new place and experiencing the excitement of travel."
+      },
+      {
+        "id": 40,
+        "genre": "Transportation",
+        "title": "The Helpful Taxi Driver",
+        "description": "A kind driver helps on a rainy day, showing how strangers can be helpful and caring."
+      },
+      {
+        "id": 41,
+        "genre": "Magical Objects",
+        "title": "The Talking Teddy Bear",
+        "description": "A special toy becomes a friend and helps solve everyday problems with imagination."
+      },
+      {
+        "id": 42,
+        "genre": "Magical Objects",
+        "title": "The Magic Backpack",
+        "description": "A school bag with surprising contents that always has just what you need."
+      },
+      {
+        "id": 43,
+        "genre": "Magical Objects",
+        "title": "The Dancing Shoes",
+        "description": "Shoes that love to move and play, bringing joy and music wherever they go."
+      },
+      {
+        "id": 44,
+        "genre": "Magical Objects",
+        "title": "The Friendly Robot Toy",
+        "description": "A toy that helps with daily tasks and teaches about friendship and cooperation."
+      },
+      {
+        "id": 45,
+        "genre": "Magical Objects",
+        "title": "The Musical Clock",
+        "description": "A timepiece that plays happy songs and helps learn about telling time."
+      },
+      {
+        "id": 46,
+        "genre": "Problem Solving",
+        "title": "The Lost Lunch Money",
+        "description": "Finding a solution to buy school lunch and learning about asking for help."
+      },
+      {
+        "id": 47,
+        "genre": "Problem Solving",
+        "title": "The Broken Toy Fix",
+        "description": "Working together to repair something special and discovering the value of teamwork."
+      },
+      {
+        "id": 48,
+        "genre": "Problem Solving",
+        "title": "The Muddy Clothes Mishap",
+        "description": "Dealing with getting dirty while playing and learning that accidents happen."
+      },
+      {
+        "id": 49,
+        "genre": "Problem Solving",
+        "title": "The Forgotten Homework",
+        "description": "Learning responsibility and asking for help when you make a mistake."
+      },
+      {
+        "id": 50,
+        "genre": "Problem Solving",
+        "title": "The Sick Day Recovery",
+        "description": "Getting better with help from family and learning about taking care of yourself."
+      },
+      {
+        "id": 51,
+        "genre": "Community Helpers",
+        "title": "The Kind Doctor's Day",
+        "description": "Visiting the doctor for a check-up and learning that medical visits help keep us healthy."
+      },
+      {
+        "id": 52,
+        "genre": "Community Helpers",
+        "title": "Baker's Morning Routine",
+        "description": "Watching how bread and cakes are made and appreciating the hard work behind our food."
+      },
+      {
+        "id": 53,
+        "genre": "Community Helpers",
+        "title": "The Police Officer's Help",
+        "description": "Getting assistance when lost and learning that community helpers are here to keep us safe."
+      },
+      {
+        "id": 54,
+        "genre": "Community Helpers",
+        "title": "Nurse Sarah's Hospital Tour",
+        "description": "Learning about staying healthy and meeting the people who help us feel better."
+      },
+      {
+        "id": 55,
+        "genre": "Community Helpers",
+        "title": "The Farmer's Market Day",
+        "description": "Meeting the person who grows our food and learning about where vegetables come from."
+      },
+      {
+        "id": 56,
+        "genre": "Colors & Art",
+        "title": "The Rainbow Hunt",
+        "description": "Finding all the colors after rain and learning about the beauty in nature around us."
+      },
+      {
+        "id": 57,
+        "genre": "Colors & Art",
+        "title": "My Blue Bedroom",
+        "description": "Decorating a room with favorite colors and expressing personal style and preferences."
+      },
+      {
+        "id": 58,
+        "genre": "Colors & Art",
+        "title": "The Purple Flower Garden",
+        "description": "Planting colorful blooms and watching how colors change and grow in nature."
+      },
+      {
+        "id": 59,
+        "genre": "Colors & Art",
+        "title": "Green Day at School",
+        "description": "Everything green for a special theme day, celebrating colors and creativity together."
+      },
+      {
+        "id": 60,
+        "genre": "Colors & Art",
+        "title": "The Red Fire Truck Parade",
+        "description": "Watching colorful vehicles march by and learning about different colors and their meanings."
+      },
+      {
+        "id": 61,
+        "genre": "Health & Body",
+        "title": "Brushing Teeth Adventure",
+        "description": "Making dental care fun and easy while learning about taking care of our bodies."
+      },
+      {
+        "id": 62,
+        "genre": "Health & Body",
+        "title": "The Wiggly Tooth",
+        "description": "Losing a first tooth excitement and learning about growing up and body changes."
+      },
+      {
+        "id": 63,
+        "genre": "Health & Body",
+        "title": "Doctor Check-up Fun",
+        "description": "Learning about staying healthy and discovering that doctor visits can be positive experiences."
+      },
+      {
+        "id": 64,
+        "genre": "Health & Body",
+        "title": "Exercise Dance Party",
+        "description": "Moving our bodies to stay strong and learning that exercise can be fun and social."
+      },
+      {
+        "id": 65,
+        "genre": "Health & Body",
+        "title": "Sleepy Time Routine",
+        "description": "Getting ready for a good night's rest and establishing healthy bedtime habits."
+      },
+      {
+        "id": 66,
+        "genre": "Clothing & Fashion",
+        "title": "The Backwards Day",
+        "description": "Wearing clothes in silly ways and learning about creativity and having fun with rules."
+      },
+      {
+        "id": 67,
+        "genre": "Clothing & Fashion",
+        "title": "Lost Sock Mystery",
+        "description": "Finding the missing laundry and learning about organization and problem-solving skills."
+      },
+      {
+        "id": 68,
+        "genre": "Clothing & Fashion",
+        "title": "Rainy Day Boots",
+        "description": "Choosing the right clothes for weather and learning about preparation and planning."
+      },
+      {
+        "id": 69,
+        "genre": "Clothing & Fashion",
+        "title": "Dress-up Box Fun",
+        "description": "Playing with different costumes and exploring imagination and role-playing."
+      },
+      {
+        "id": 70,
+        "genre": "Clothing & Fashion",
+        "title": "New School Uniform",
+        "description": "Getting ready for the first day and learning about belonging and school community."
+      },
+      {
+        "id": 71,
+        "genre": "Numbers & Math",
+        "title": "Ten Little Ducks",
+        "description": "Counting adventure with pond animals and practicing basic number skills through story."
+      },
+      {
+        "id": 72,
+        "genre": "Numbers & Math",
+        "title": "Birthday Age Counting",
+        "description": "Celebrating getting one year older and understanding numbers in personal context."
+      },
+      {
+        "id": 73,
+        "genre": "Numbers & Math",
+        "title": "Toy Collection Count",
+        "description": "Organizing and counting favorite things while learning about sorting and classification."
+      },
+      {
+        "id": 74,
+        "genre": "Numbers & Math",
+        "title": "Steps to School",
+        "description": "Counting while walking to class and finding math in everyday activities."
+      },
+      {
+        "id": 75,
+        "genre": "Numbers & Math",
+        "title": "Five Friends Adventure",
+        "description": "Group activities with numbered characters and learning about teamwork and counting."
+      },
+      {
+        "id": 76,
+        "genre": "Places & Community",
+        "title": "Library Discovery Day",
+        "description": "Exploring books and quiet spaces while learning about community resources and reading."
+      },
+      {
+        "id": 77,
+        "genre": "Places & Community",
+        "title": "Supermarket Shopping Trip",
+        "description": "Finding items on the family list and learning about planning and organization."
+      },
+      {
+        "id": 78,
+        "genre": "Places & Community",
+        "title": "Park Playground Fun",
+        "description": "Playing on swings and slides safely while learning about outdoor activities and safety."
+      },
+      {
+        "id": 79,
+        "genre": "Places & Community",
+        "title": "Cinema First Time",
+        "description": "Watching a movie on the big screen and experiencing new environments and social situations."
+      },
+      {
+        "id": 80,
+        "genre": "Places & Community",
+        "title": "Swimming Pool Lesson",
+        "description": "Learning to swim with an instructor and building confidence in new skills."
+      },
+      {
+        "id": 81,
+        "genre": "Time & Routines",
+        "title": "Morning Wake-up Song",
+        "description": "Starting the day with happiness and establishing positive morning routines."
+      },
+      {
+        "id": 82,
+        "genre": "Time & Routines",
+        "title": "Afternoon Snack Time",
+        "description": "Enjoying healthy treats and learning about timing and healthy eating habits."
+      },
+      {
+        "id": 83,
+        "genre": "Time & Routines",
+        "title": "Evening Dinner Together",
+        "description": "Family meal and conversation time, appreciating togetherness and communication."
+      },
+      {
+        "id": 84,
+        "genre": "Time & Routines",
+        "title": "Weekend Sleep-in Day",
+        "description": "Enjoying a lazy Saturday morning and understanding different types of days."
+      },
+      {
+        "id": 85,
+        "genre": "Time & Routines",
+        "title": "Clock Watching Game",
+        "description": "Learning to tell time through fun activities and understanding daily schedules."
+      },
+      {
+        "id": 86,
+        "genre": "Materials & Science",
+        "title": "The Soft Wool Sweater",
+        "description": "Feeling different textures and fabrics while learning about materials and sensory exploration."
+      },
+      {
+        "id": 87,
+        "genre": "Materials & Science",
+        "title": "Paper Airplane Contest",
+        "description": "Creating and flying folded planes while learning about basic physics and creativity."
+      },
+      {
+        "id": 88,
+        "genre": "Materials & Science",
+        "title": "Glass Window Drawing",
+        "description": "Making art on foggy windows and exploring temporary art and weather phenomena."
+      },
+      {
+        "id": 89,
+        "genre": "Materials & Science",
+        "title": "Wooden Toy Workshop",
+        "description": "Crafting with natural materials and learning about different types of materials."
+      },
+      {
+        "id": 90,
+        "genre": "Materials & Science",
+        "title": "Plastic Building Blocks",
+        "description": "Constructing towers and castles while learning about shapes and engineering basics."
+      },
+      {
+        "id": 91,
+        "genre": "Emotions & Feelings",
+        "title": "Happy Birthday Surprise",
+        "description": "Celebrating special moments and learning about joy and sharing happiness with others."
+      },
+      {
+        "id": 92,
+        "genre": "Emotions & Feelings",
+        "title": "Sad Day Comfort",
+        "description": "Finding ways to feel better and learning healthy coping strategies for difficult emotions."
+      },
+      {
+        "id": 93,
+        "genre": "Emotions & Feelings",
+        "title": "Excited Fair Day",
+        "description": "Managing big feelings at fun events and learning about anticipation and excitement."
+      },
+      {
+        "id": 94,
+        "genre": "Emotions & Feelings",
+        "title": "Scared of Thunder",
+        "description": "Overcoming fears with family support and learning about courage and comfort."
+      },
+      {
+        "id": 95,
+        "genre": "Emotions & Feelings",
+        "title": "Proud Achievement",
+        "description": "Feeling good about accomplishments and learning about self-confidence and perseverance."
+      },
+      {
+        "id": 96,
+        "genre": "Special Occasions",
+        "title": "Christmas Morning Magic",
+        "description": "Holiday traditions and sharing while learning about giving and family celebrations."
+      },
+      {
+        "id": 97,
+        "genre": "Special Occasions",
+        "title": "First Day of Summer",
+        "description": "Celebrating warm weather arrival and understanding seasonal changes and traditions."
+      },
+      {
+        "id": 98,
+        "genre": "Special Occasions",
+        "title": "Mother's Day Card",
+        "description": "Making something special for family and expressing love and appreciation creatively."
+      },
+      {
+        "id": 99,
+        "genre": "Special Occasions",
+        "title": "New Year Resolution",
+        "description": "Setting simple, positive goals and learning about self-improvement and planning."
+      },
+      {
+        "id": 100,
+        "genre": "Special Occasions",
+        "title": "Graduation Day",
+        "description": "Moving up to the next grade level and celebrating growth and achievement milestones."
+      }
+    ]
+  }
+}

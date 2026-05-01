@@ -1,0 +1,2657 @@
+{
+  "LocaleSwitcher": {
+    "label": "Đổi ngôn ngữ",
+    "locale": "{locale, select, th {🇹🇭 ไทย} en {🇺🇸 English} tw {🇹🇼 中文} cn {🇨🇳 台灣} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
+  },
+  "NotFound": {
+    "title": "Không tìm thấy trang",
+    "description": "Xin lỗi, chúng tôi không thể tìm thấy trang bạn đang tìm kiếm.",
+    "goBack": "Quay lại",
+    "returnToWebsite": "Quay lại trang web"
+  },
+  "common": {
+    "tryAgain": "Thử lại"
+  },
+  "MainNav": {
+    "home": "Trang chủ",
+    "about": "Về chúng tôi",
+    "contact": "Liên hệ",
+    "authors": "tác giả",
+    "login": "Đăng nhập",
+    "menu": "Mục lục",
+    "usernav": {
+      "settings": "Cài đặt",
+      "logout": "Đăng xuất",
+      "contactUs": "Liên hệ chúng tôi",
+      "account": "Tài khoản",
+      "navigation": "Điều hướng",
+      "studentDashboard": "Bảng điều khiển học sinh",
+      "teacherDashboard": "Bảng điều khiển giáo viên",
+      "adminDashboard": "Bảng điều khiển quản trị",
+      "systemDashboard": "Bảng điều khiển hệ thống"
+    }
+  },
+  "Sidebar": {
+    "read": "Đọc",
+    "stories": "Câu chuyện",
+    "assignments": "Bài tập",
+    "history": "Lịch sử",
+    "sentences": "Câu",
+    "vocabulary": "Từ vựng",
+    "testing": "Kiểm tra",
+    "systemdashboard": "Bảng điều khiển hệ thống",
+    "licenses": "Bảng điều khiển giấy phép",
+    "schools": "Bảng điều khiển trường học",
+    "teacherdashboard": "Bảng điều khiển giáo viên",
+    "reports": "Báo cáo",
+    "myClasses": "Lớp học của tôi",
+    "myStudents": "Học sinh của tôi",
+    "classRoster": "Danh sách lớp học",
+    "adminDashboard": "Bảng điều khiển quản trị",
+    "dashboard": "Bảng điều khiển",
+    "admin": "Quản trị viên",
+    "teachers": "Giáo viên",
+    "importdata": "Nhập dữ liệu",
+    "userProfile": "Hồ sơ người dùng",
+    "schoolProfile": "Hồ sơ trường học",
+    "studentsandclasses": "Học sinh và lớp học",
+    "articlecreation": "Tạo bài viết",
+    "back": "Quay lại",
+    "subItem": {
+      "admin": "Quản trị viên",
+      "teachers": "Giáo viên",
+      "students": "Học sinh",
+      "allTeachers": "Tất cả giáo viên",
+      "addTeacher": "Thêm giáo viên",
+      "allStudents": "Tất cả học sinh",
+      "addStudent": "Thêm học sinh",
+      "classrooms": "Lớp học",
+      "classRoster": "Danh sách lớp học",
+      "studentProgress": "Tiến độ học sinh",
+      "overviewReports": "Báo cáo tổng quan",
+      "performanceAnalytics": "Phân tích hiệu suất",
+      "progressTracking": "Theo dõi tiến độ"
+    }
+  },
+  "Leaderboard": {
+    "title": "Bảng xếp hạng",
+    "rank": "Hạng",
+    "name": "Tên",
+    "xp": "XP",
+    "room": "Phòng",
+    "you": "Bạn",
+    "noDataAvailable": "Không có dữ liệu cho tháng này"
+  },
+  "Question": {
+    "SAQuestion": {
+      "title": "Câu hỏi ngắn",
+      "description": "Trả lời câu hỏi bằng một vài từ",
+      "question": "Câu hỏi",
+      "suggestedAnswer": "Câu trả lời đề xuất",
+      "feedback": "Phản hồi",
+      "yourAnswer": "Câu trả lời của bạn",
+      "feedbackAndYourScore": "Phản hồi và điểm của bạn",
+      "score": "Điểm là {score}",
+      "anwserError": "Vui lòng nhập câu trả lời"
+    },
+    "LAQuestion": {
+      "title": "Câu hỏi dài",
+      "description": "Trả lời câu hỏi bằng một vài đoạn",
+      "feedbackModal": {
+        "feedbackwritting": "Phản hồi viết",
+        "finalfeedback": "Phản hồi cuối cùng",
+        "vocabulary": "Từ vựng",
+        "grammar": "Ngữ pháp",
+        "clarityandcoherence": "Sự rõ ràng và tương thích",
+        "complexityandstructure": "Độ phức tạp và cấu trúc",
+        "contentanddevelopment": "Nội dung và phát triển",
+        "areaforimpovement": "Lĩnh vực cần cải thiện",
+        "examples": "Ví dụ",
+        "strength": "Điểm mạnh",
+        "suggestions": "Gợi ý",
+        "feedbackoverall": "Phản hồi tổng thể",
+        "examplerevisions": "Ví dụ sửa đổi",
+        "nextStep": "Bước tiếp theo",
+        "reviseResponse": "Sửa đổi phản hồi",
+        "getXP": "Nhận XP",
+        "score": "Điểm"
+      }
+    },
+    "MCQuestion": {
+      "title": "Câu hỏi đa lựa chọn",
+      "questionOf": "Câu hỏi {index} trên {total}",
+      "description": "Làm bài kiểm tra để kiểm tra khả năng hiểu"
+    },
+    "descriptionSuccess": "Bạn đã hoàn thành bài kiểm tra",
+    "descriptionSuccess2": "Bạn đã hoàn thành bài kiểm tra {score} câu đúng trên {total} câu",
+    "descriptionError": "Có lỗi xảy ra khi lấy câu hỏi",
+    "descriptionLoading": "Đang lấy câu hỏi cho bài viết này. Vui lòng đợi trong giây lát"
+  },
+  "Student": {
+    "history": {
+      "titleOfHistory": "Lịch sử đọc - {name}",
+      "reminderToReread": {
+        "title": "Nhắc nhở đọc lại",
+        "description": "Bạn có thể muốn thử đọc lại một trong các bài viết này để xem liệu bạn đã có tiến bộ chưa."
+      },
+      "articleRecords": {
+        "title": "Lịch sử đọc",
+        "description": "Lịch sử đọc của bạn sẽ được hiển thị ở đây."
+      },
+      "title": "Tiêu đề bài viết",
+      "score": "Điểm",
+      "date": "Ngày",
+      "rated": "Đánh giá",
+      "status": "Trạng thái",
+      "searchPlaceholder": "Tìm kiếm bài viết...",
+      "loading": "Đang tải...",
+      "noArticles": "Không tìm thấy bài viết",
+      "noArticlesToRead": "Không có bài viết cần đọc lại"
+    }
+  },
+  "Admin": {
+    "Classrooms": {
+      "classrooms": "Lớp học",
+      "classroomsDescription": "Quản lý lớp học trong trường của bạn",
+      "searchPlaceholder": "Tìm kiếm lớp học...",
+      "createClassroom": "Tạo lớp học",
+      "createClassroomDescription": "Tạo lớp học mới cho học sinh",
+      "editClassroom": "Chỉnh sửa lớp học",
+      "editClassroomDescription": "Cập nhật thông tin lớp học",
+      "deleteClassroom": "Xóa lớp học",
+      "deleteClassroomDescription": "Bạn có chắc chắn muốn xóa lớp học này?",
+      "deleteClassroomWarning": "Hành động này không thể hoàn tác. Tất cả học sinh và giáo viên sẽ bị xóa khỏi lớp học này.",
+      "name": "Tên",
+      "namePlaceholder": "Nhập tên lớp học",
+      "grade": "Lớp",
+      "gradePlaceholder": "Nhập cấp lớp",
+      "selectGrade": "Chọn cấp lớp",
+      "classCode": "Mã lớp học",
+      "studentPassword": "Mật khẩu học sinh",
+      "studentPasswordPlaceholder": "Nhập mật khẩu cho học sinh",
+      "students": "Học sinh",
+      "teachers": "Giáo viên",
+      "createdAt": "Tạo lúc",
+      "expires": "Hết hạn",
+      "actions": "Hành động",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "cancel": "Hủy",
+      "create": "Tạo",
+      "update": "Cập nhật",
+      "creating": "Đang tạo...",
+      "updating": "Đang cập nhật...",
+      "deleting": "Đang xóa...",
+      "noClassrooms": "Không tìm thấy lớp học",
+      "loading": "Đang tải lớp học...",
+      "toast": {
+        "createSuccess": "Tạo lớp học thành công",
+        "invalidData": "Định dạng dữ liệu không hợp lệ",
+        "loadFailed": "Tải danh sách lớp học thất bại",
+        "createFailed": "Tạo lớp học thất bại",
+        "updateFailed": "Cập nhật lớp học thất bại",
+        "updateSuccess": "Cập nhật lớp học thành công",
+        "deleteSuccess": "Xóa lớp học thành công",
+        "deleteFailed": "Xóa lớp học thất bại"
+      }
+    },
+    "Students": {
+      "Add": {
+        "heading": "Thêm Học Sinh",
+        "subtext": "Thêm học sinh mới cho trường của bạn",
+        "cardTitle": "Thông Tin Học Sinh",
+        "nameLabel": "Họ và Tên",
+        "namePlaceholder": "Nhập họ và tên của học sinh",
+        "emailLabel": "Địa Chỉ Email",
+        "emailPlaceholder": "Nhập địa chỉ email",
+        "submit": "Tạo Học Sinh",
+        "submitting": "Đang tạo học sinh...",
+        "reset": "Đặt Lại Biểu Mẫu",
+        "toastSuccess": "Tạo học sinh thành công!",
+        "errorGeneric": "Tạo học sinh thất bại",
+        "errors": {
+          "nameMin": "Tên phải có ít nhất 2 ký tự",
+          "nameMax": "Tên phải ít hơn 100 ký tự",
+          "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ"
+        }
+      }
+    }
+  },
+  "ImportData": {
+    "header": {
+      "heading": "Nhập dữ liệu",
+      "text": "Nhập tệp CSV để thêm hàng loạt học sinh, giáo viên và lớp học vào hệ thống"
+    },
+    "errors": {
+      "onlyCsv": "Chỉ cho phép tệp CSV",
+      "sizeExceeded": "Kích thước tệp vượt quá giới hạn 5MB. Kích thước hiện tại: {size}MB",
+      "parseError": "Không thể phân tích tệp CSV. Vui lòng kiểm tra định dạng tệp.",
+      "readError": "Không thể đọc tệp",
+      "uploadFailed": "Tải lên thất bại"
+    },
+    "upload": {
+      "cardTitle": "Tải lên tệp CSV",
+      "selectFile": "Chọn tệp CSV",
+      "maxSize": "Kích thước tối đa: 5MB",
+      "browse": "Duyệt",
+      "supportedFormat": "Định dạng hỗ trợ: chỉ tệp CSV, kích thước tối đa 5MB",
+      "fileSelected": {
+        "title": "Đã chọn tệp",
+        "name": "Tên",
+        "size": "Kích thước",
+        "type": "Loại"
+      },
+      "failedTitle": "Tải lên thất bại",
+      "successTitle": "Tải lên thành công",
+      "success": {
+        "file": "Tệp",
+        "size": "Kích thước",
+        "savedAs": "Lưu dưới tên",
+        "nextSteps": "Tệp đã sẵn sàng để xử lý. Bạn có thể tiếp tục các bước tiếp theo."
+      },
+      "progressLabel": "Tiến trình tải lên",
+      "progressPercent": "Hoàn thành {percent}%",
+      "uploading": "Đang tải lên...",
+      "importButton": "Nhập dữ liệu",
+      "clear": "Xóa"
+    },
+    "preview": {
+      "button": "Xem trước",
+      "title": "Xem trước dữ liệu",
+      "columns": { "name": "Tên", "email": "Email", "role": "Vai trò" }
+    },
+    "formatGuide": {
+      "title": "Hướng dẫn định dạng CSV",
+      "tabs": {
+        "students": "Học sinh",
+        "teachers": "Giáo viên & Quản trị",
+        "classes": "Lớp học"
+      },
+      "requiredHeaders": "Tiêu đề bắt buộc (đúng thứ tự):",
+      "exampleData": "Dữ liệu ví dụ:",
+      "requirements": "Yêu cầu:",
+      "downloadTemplate": "Tải mẫu {type, select, students {Học sinh} teachers {Giáo viên} classes {Lớp học} other {Dữ liệu}}"
+    },
+    "format": {
+      "headers": {
+        "name": "name",
+        "email": "email",
+        "classroomName": "classroom_name",
+        "role": "role"
+      },
+      "students": {
+        "title": "Định dạng dữ liệu Học sinh",
+        "description": "Nhập thông tin học sinh bao gồm chi tiết cá nhân và phân lớp",
+        "req1": "Tên tệp phải là students.csv",
+        "req2": "Email phải duy nhất và đúng định dạng",
+        "req3": "Vai trò phải là Học sinh"
+      },
+      "teachers": {
+        "title": "Định dạng dữ liệu Giáo viên & Quản trị",
+        "description": "Nhập thông tin giáo viên và môn/phân công liên quan",
+        "req1": "Tên tệp phải là teachers.csv",
+        "req2": "Email phải duy nhất và đúng định dạng",
+        "req3": "Vai trò phải là Giáo viên hoặc Quản trị"
+      },
+      "classes": {
+        "title": "Định dạng dữ liệu Lớp học",
+        "description": "Nhập danh sách lớp/khối và thông tin phòng học",
+        "req1": "Tên tệp phải là classes.csv",
+        "req2": "Tên lớp phải là duy nhất"
+      }
+    },
+    "tips": {
+      "title": "Mẹo nhập dữ liệu",
+      "fileSize": {
+        "title": "Giới hạn kích thước tệp",
+        "desc": "Kích thước tối đa 5MB. Hãy chia nhỏ tệp lớn thành nhiều phần"
+      },
+      "encoding": {
+        "title": "Dùng mã hóa UTF-8",
+        "desc": "Lưu tệp CSV bằng UTF-8 để hỗ trợ ký tự đặc biệt"
+      },
+      "duplicates": {
+        "title": "Kiểm tra trùng lặp",
+        "desc": "Đảm bảo email và mã là duy nhất trước khi nhập"
+      },
+      "validate": {
+        "title": "Xác thực dữ liệu trước",
+        "desc": "Dùng tính năng xem trước để kiểm tra dữ liệu trước khi nhập"
+      },
+      "backup": {
+        "title": "Sao lưu trước",
+        "desc": "Luôn sao lưu dữ liệu hiện có trước khi nhập lớn"
+      }
+    },
+    "issues": {
+      "title": "Vấn đề thường gặp",
+      "wrongFormat": {
+        "title": "Sai định dạng tệp",
+        "desc": "Chỉ chấp nhận tệp CSV. Hãy chuyển đổi Excel sang CSV trước"
+      },
+      "missingHeaders": {
+        "title": "Thiếu tiêu đề",
+        "desc": "Hàng đầu tiên phải chứa đúng tên tiêu đề như hiển thị"
+      },
+      "invalidEmail": {
+        "title": "Email không hợp lệ",
+        "desc": "Hãy kiểm tra tất cả địa chỉ email đúng định dạng"
+      }
+    }
+  },
+  "AdminDashboard": {
+    "title": "Bảng điều khiển quản trị",
+    "subtitle": "Quản lý nền tảng giáo dục của trường bạn",
+    "actions": {
+      "importData": "Nhập dữ liệu",
+      "addTeacher": "Thêm giáo viên"
+    },
+    "stats": {
+      "teachers": "Giáo viên",
+      "teachersDesc": "Giáo viên hoạt động trong trường bạn",
+      "students": "Học sinh",
+      "studentsDesc": "Học sinh đã đăng ký",
+      "articles": "Bài viết",
+      "articlesDesc": "Tài liệu đọc có sẵn",
+      "growth": "Tăng trưởng hàng tháng",
+      "growthDesc": "Tăng trưởng học sinh đăng ký"
+    },
+    "quickActions": {
+      "title": "Hành động nhanh",
+      "addTeacher": "Thêm giáo viên",
+      "addTeacherDesc": "Đăng ký tài khoản giáo viên mới",
+      "addStudent": "Thêm học sinh",
+      "addStudentDesc": "Tạo hồ sơ học sinh mới",
+      "createArticle": "Tạo bài viết",
+      "createArticleDesc": "Tạo nội dung đọc mới",
+      "importData": "Nhập dữ liệu",
+      "importDataDesc": "Nhập dữ liệu người dùng và nội dung",
+      "viewReports": "Xem báo cáo",
+      "viewReportsDesc": "Truy cập phân tích và thông tin",
+      "manageClassrooms": "Quản lý lớp học",
+      "manageClassroomsDesc": "Sắp xếp lớp học và bài tập"
+    },
+    "recentActivity": {
+      "title": "Hoạt động gần đây",
+      "empty": "Không có hoạt động gần đây để hiển thị",
+      "viewAll": "Xem tất cả hoạt động"
+    },
+    "systemStatus": {
+      "title": "Trạng thái hệ thống",
+      "serverHealth": "Trạng thái máy chủ",
+      "database": "Cơ sở dữ liệu",
+      "aiServices": "Dịch vụ AI",
+      "healthy": "Khỏe mạnh",
+      "connected": "Kết nối",
+      "operational": "Hoạt động"
+    },
+    "alerts": {
+      "title": "Cảnh báo hệ thống",
+      "lowStorage": {
+        "title": "Không gian lưu trữ thấp",
+        "description": "Xem xét nâng cấp kế hoạch lưu trữ của bạn"
+      },
+      "newRegistrations": {
+        "title": "Đăng ký giáo viên mới",
+        "description": "5 giáo viên đang chờ phê duyệt"
+      }
+    },
+    "charts": {
+      "title": "Tổng quan phân tích",
+      "userGrowth": "Tăng trưởng người dùng",
+      "topArticles": "Bài viết phổ biến nhất",
+      "activityByLevel": "Hoạt động theo cấp độ CEFR",
+      "performance": "Chỉ số hiệu suất"
+    }
+  },
+  "AdminArticleCreationPage": {
+    "header": {
+      "heading": "Tạo và Quản lý Bài viết",
+      "text": "Tạo, sinh bằng AI và phê duyệt bài viết cho Primary Advantage"
+    }
+  },
+  "Components": {
+    "submitButton": "Gửi",
+    "closeButton": "Đóng",
+    "cancelButton": "Hủy",
+    "previousButton": "Trước",
+    "retakeButton": "Làm lại",
+    "nextButton": "Tiếp theo",
+    "finishButton": "Hoàn thành",
+    "waitingButton": "Vui lòng chờ...",
+    "startQuiz": "Bắt đầu làm bài",
+    "getFeedback": "Nhận phản hồi",
+    "audioButton": "Nghe và đọc cùng",
+    "saveToFlashcard": "Lưu vào flashcard",
+    "translate": "Dịch",
+    "timer": "Đã sử dụng {elapsed} giây",
+    "resetFilter": "Đặt lại bộ lọc",
+    "assignments": "Bài tập",
+    "sentences": "Câu",
+    "confirmRetake": "Xác nhận làm lại",
+    "areYouSureYouWantToRetakeThisQuiz": "Bạn có chắc chắn muốn làm lại bài kiểm tra này? Các câu trả lời của bạn sẽ bị xóa.",
+    "AdminArticleCreation": {
+      "tabs": {
+        "createArticle": "Tạo Bài Viết",
+        "previewEdit": "Xem Trước & Chỉnh Sửa",
+        "manageArticles": "Quản Lý Bài Viết"
+      },
+      "aiArticleGenerator": "Tạo Bài Viết bằng AI",
+      "aiArticleGeneratorDesc": "Sử dụng AI để tạo bài viết chất lượng cao theo cài đặt của bạn.",
+      "articleType": "Loại Bài Viết",
+      "fiction": "Hư cấu",
+      "nonFiction": "Phi hư cấu",
+      "genre": "Thể loại",
+      "subgenre": "Phân loại",
+      "cefrLevel": "Mức CEFR",
+      "articleTopic": "Chủ đề Bài Viết",
+      "placeholder": {
+        "genre": "Chọn thể loại",
+        "subgenre": "Chọn phân loại",
+        "cefr": "Chọn mức CEFR",
+        "topic": "Mô tả chủ đề, chủ điểm hoặc ý chính"
+      },
+      "cefrLevels": {
+        "A1": "A1",
+        "A2": "A2",
+        "B1": "B1",
+        "B2": "B2",
+        "C1": "C1",
+        "C2": "C2"
+      },
+      "error": "Lỗi",
+      "generateWithAI": "Tạo bằng AI",
+      "dialog": {
+        "approval": {
+          "title": "Xác nhận phê duyệt",
+          "description": "Bạn có chắc muốn phê duyệt và xuất bản bài viết này? Hành động này sẽ xuất bản bài viết lên hệ thống."
+        },
+        "backToCreate": {
+          "title": "Quay lại tạo bài?",
+          "description": "Nếu quay lại tạo bài, các thay đổi sẽ bị mất.",
+          "warning": "Hành động này sẽ đặt lại bài viết về trạng thái ban đầu."
+        },
+        "common": {
+          "cancel": "Hủy",
+          "confirm": "Xác nhận",
+          "ok": "OK"
+        }
+      },
+      "loading": {
+        "titles": {
+          "generate": "Đang tạo bài viết",
+          "save": "Đang lưu bản nháp",
+          "approve": "Đang phê duyệt & xuất bản"
+        },
+        "descriptions": {
+          "generate": "Vui lòng đợi trong khi AI tạo nội dung...",
+          "save": "Đang lưu thay đổi thành bản nháp...",
+          "approve": "Đang xuất bản bài viết lên hệ thống..."
+        }
+      },
+      "preview": {
+        "title": "Xem trước bài viết",
+        "description": "Xem nội dung bài viết (chỉ đọc)"
+      },
+      "editor": {
+        "title": "Trình chỉnh sửa bài viết",
+        "description": "Xem và chỉnh sửa nội dung trước khi phê duyệt"
+      },
+      "modified": "Đã chỉnh sửa",
+      "badges": {
+        "type": "Loại",
+        "genre": "Thể loại",
+        "subgenre": "Phân loại",
+        "cefrLevel": "Mức CEFR"
+      },
+      "fields": {
+        "title": "Tiêu đề bài viết",
+        "content": "Nội dung bài viết",
+        "summary": "Tóm tắt bài viết"
+      },
+      "placeholders": {
+        "title": "Nhập tiêu đề bài viết...",
+        "content": "Nhập nội dung chính của bài viết...",
+        "summary": "Nhập tóm tắt bài viết..."
+      },
+      "buttons": {
+        "backToCreate": "Quay lại tạo",
+        "approveAndPublish": "Phê duyệt và xuất bản",
+        "saveAsDraft": "Lưu bản nháp",
+        "backToManage": "Quay lại quản lý",
+        "switchToEdit": "Chuyển sang chỉnh sửa",
+        "refresh": "Làm mới",
+        "preview": "Xem trước",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "deleting": "Đang xóa..."
+      },
+      "manage": {
+        "title": "Quản lý bài viết",
+        "description": "Quản lý các bài viết của bạn",
+        "loading": "Đang tải bài viết...",
+        "empty": "Không tìm thấy bài viết nào"
+      },
+      "status": {
+        "draft": "Bản nháp",
+        "published": "Đã xuất bản"
+      },
+      "list": {
+        "topic": "Chủ đề",
+        "cefr": "CEFR",
+        "rating": "Đánh giá",
+        "created": "Tạo lúc"
+      },
+      "toasts": {
+        "fetchFailed": "Không thể tải bài viết",
+        "generateSuccess": "Tạo bài viết thành công!",
+        "saveSuccess": "Lưu bản nháp thành công!",
+        "saveFailed": "Lưu bài viết thất bại",
+        "approveSuccess": "Phê duyệt và xuất bản thành công!",
+        "approveFailed": "Phê duyệt thất bại",
+        "deleteSuccess": "Xóa bài viết thành công",
+        "deleteFailed": "Xóa bài viết thất bại",
+        "deleteError": "Đã xảy ra lỗi khi xóa bài viết"
+      }
+    }
+  },
+  "WordList": {
+    "title": "Danh sách từ",
+    "description": "Chọn từ để lưu vào flashcard",
+    "selectedWords": "{count} từ đã chọn"
+  },
+  "Article": {
+    "title": "Bài viết",
+    "description": "Bài viết",
+    "fiction": "Tiểu thuyết",
+    "nonfiction": "Bài viết khoa học",
+    "type": "Loại",
+    "genre": "Thể loại",
+    "subGenre": "Thể loại con",
+    "cefrLevel": "Cấp độ CEFR : {level}",
+    "raLevel": "Cấp độ RA : {level}",
+    "rating": "Đánh giá",
+    "createdAt": "Ngày tạo",
+    "updatedAt": "Ngày cập nhật",
+    "saveToFlashcard": "Flashcard: Đã lưu",
+    "notSaved": "Flashcard: Chưa lưu",
+    "studyAsLesson": "Học thành bài viết 45 phút",
+    "selection": {
+      "title": "Lựa chọn bài viết",
+      "description": "Vui lòng chọn {selection} bạn muốn đọc",
+      "description2": "Mức độ của bạn là {level} và đây là {selection} mà bạn có thể chọn"
+    },
+    "types": {
+      "fiction": "Tiểu thuyết",
+      "nonfiction": "Phi hư cấu"
+    },
+    "genres": {
+      "realistic_fiction": "Truyện hư cấu thực tế",
+      "animal_stories": "Chuyện về động vật",
+      "fantasy_magic": "Thần thoại & Phép thuật",
+      "mystery": "Bí ẩn",
+      "adventure": "Phiêu lưu",
+      "humor": "Hài hước",
+      "folktales_fables_myths": "Truyện dân gian, Ngụ ngôn & Thần thoại",
+      "historical_fiction": "Lịch sử hư cấu",
+      "science_fiction": "Khoa học viễn tưởng",
+      "animals": "Động vật",
+      "science_nature": "Khoa học & Tự nhiên",
+      "history_social_studies": "Lịch sử & Khoa học xã hội",
+      "biography": "Tiểu sử",
+      "howto_procedural": "Hướng dẫn & Thủ tục",
+      "geography_cultures": "Địa lý & Văn hóa",
+      "health_safety": "Sức khỏe & An toàn",
+      "arts_music": "Nghệ thuật & Âm nhạc"
+    },
+    "subgenres": {
+      "school_stories": "Chuyện ở trường",
+      "friendship_stories": "Chuyện về tình bạn",
+      "family_life": "Cuộc sống gia đình",
+      "neighborhood_adventures": "Những cuộc phiêu lưu ở khu phố",
+      "stories_about_hobbies": "Chuyện về sở thích",
+      "dealing_with_challenges": "Đối mặt với thử thách",
+      "realistic_animal_tales": "Chuyện động vật thực tế",
+      "talking_animal_adventures": "Phiêu lưu của động vật biết nói",
+      "pet_stories": "Chuyện về thú cưng",
+      "wild_animal_encounters": "Gặp gỡ động vật hoang dã",
+      "animal_rescue_stories": "Chuyện giải cứu động vật",
+      "magical_creatures": "Sinh vật ma thuật",
+      "enchanted_objects": "Vật thể bị yểm bùa",
+      "simple_quests": "Nhiệm vụ đơn giản",
+      "worlds_of_imagination": "Thế giới tưởng tượng",
+      "everyday_magic": "Phép thuật đời thường",
+      "missing_object_mysteries": "Bí ẩn vật thể mất tích",
+      "secret_code_puzzles": "Câu đố mật mã",
+      "simple_whodunits": "Truyện trinh thám đơn giản",
+      "clubhouse_mysteries": "Bí ẩn nhà câu lạc bộ",
+      "finding_clues": "Tìm kiếm manh mối",
+      "exploration_stories": "Chuyện khám phá",
+      "rescue_missions": "Nhiệm vụ giải cứu",
+      "outdoor_adventures": "Phiêu lưu ngoài trời",
+      "treasure_hunts": "Săn tìm kho báu",
+      "overcoming_obstacles": "Vượt qua chướng ngại vật",
+      "silly_situations": "Tình huống ngớ ngẩn",
+      "funny_characters": "Nhân vật hài hước",
+      "everyday_humor": "Hài hước đời thường",
+      "mischief_and_mayhem": "Nghịch ngợm và hỗn loạn",
+      "exaggerated_stories": "Chuyện phóng đại",
+      "fables": "Ngụ ngôn",
+      "fairy_tales": "Truyện cổ tích",
+      "legends": "Truyền thuyết",
+      "myths": "Thần thoại",
+      "pourquoi_stories": "Truyện giải thích nguồn gốc",
+      "life_in_the_past": "Cuộc sống trong quá khứ",
+      "stories_about_historical_events": "Chuyện về các sự kiện lịch sử",
+      "pioneer_life": "Cuộc sống của những người tiên phong",
+      "children_in_history": "Trẻ em trong lịch sử",
+      "simple_space_adventures": "Phiêu lưu không gian đơn giản",
+      "kid_inventors": "Nhà phát minh nhí",
+      "friendly_robots": "Robot thân thiện",
+      "future_worlds_for_kids": "Thế giới tương lai cho trẻ em",
+      "specific_animal_facts": "Sự thật cụ thể về động vật",
+      "animal_habitats": "Môi trường sống của động vật",
+      "pet_care_basics": "Kiến thức cơ bản về chăm sóc thú cưng",
+      "insects_and_spiders": "Côn trùng và nhện",
+      "endangered_animals": "Động vật nguy cấp",
+      "animal_behavior": "Hành vi động vật",
+      "weather_explained": "Giải thích về thời tiết",
+      "simple_science_experiments": "Thí nghiệm khoa học đơn giản",
+      "plants_and_trees": "Thực vật và cây cối",
+      "the_human_body": "Cơ thể người",
+      "earth_science": "Khoa học Trái Đất",
+      "space_and_planets": "Không gian và các hành tinh",
+      "simple_machines": "Máy móc đơn giản",
+      "important_historical_events": "Các sự kiện lịch sử quan trọng",
+      "famous_people_in_history": "Người nổi tiếng trong lịch sử",
+      "life_in_different_cultures": "Cuộc sống ở các nền văn hóa khác nhau",
+      "community_helpers": "Những người giúp đỡ cộng đồng",
+      "us_symbols_landmarks": "Biểu tượng & Địa danh Hoa Kỳ",
+      "ancient_civilizations": "Các nền văn minh cổ đại",
+      "inventors_and_scientists": "Nhà phát minh và nhà khoa học",
+      "explorers": "Nhà thám hiểm",
+      "artists_and_musicians": "Nghệ sĩ và nhạc sĩ",
+      "leaders_and_activists": "Lãnh đạo và nhà hoạt động",
+      "athletes": "Vận động viên",
+      "childhood_of_famous_people": "Tuổi thơ của những người nổi tiếng",
+      "simple_craft_steps": "Các bước làm thủ công đơn giản",
+      "basic_recipe_steps": "Các bước công thức cơ bản",
+      "how_to_play_a_game": "Cách chơi một trò chơi",
+      "safety_procedures": "Quy trình an toàn",
+      "stepbystep_explanations": "Giải thích từng bước",
+      "exploring_different_countries": "Khám phá các quốc gia khác nhau",
+      "world_landmarks": "Các địa danh thế giới",
+      "maps_and_globes": "Bản đồ và quả địa cầu",
+      "different_holidays_celebrations": "Các ngày lễ & Lễ kỷ niệm khác nhau",
+      "landforms_and_environments": "Địa hình và môi trường",
+      "healthy_habits": "Thói quen lành mạnh",
+      "nutrition_basics": "Kiến thức cơ bản về dinh dưỡng",
+      "staying_safe": "Giữ an toàn",
+      "understanding_feelings": "Hiểu về cảm xúc",
+      "germs_and_staying_clean": "Vi trùng và giữ vệ sinh",
+      "famous_artists_and_their_work": "Các nghệ sĩ nổi tiếng và tác phẩm của họ",
+      "types_of_musical_instruments": "Các loại nhạc cụ",
+      "elements_of_art": "Các yếu tố của nghệ thuật",
+      "music_around_the_world": "Âm nhạc khắp thế giới",
+      "craft_techniques_explained": "Giải thích kỹ thuật thủ công"
+    }
+  },
+  "Reports": {
+    "title": "Báo cáo",
+    "description": "Xem tiến độ học sinh và phân tích lớp học",
+    "activityprogress": "Tiến độ hoạt động",
+    "recentactivity": "Hoạt động gần đây",
+    "activityheatmap": "Bản đồ hoạt động",
+    "xpoverall": "XP Tổng",
+    "readingstatschart": "Biểu đồ thống kê đọc",
+    "xpearned": "XP Đã kiếm được",
+    "completed": "Đã hoàn thành",
+    "inProgress": "Đang tiến hành",
+    "dateRange": "Khoảng thời gian",
+    "activityType": {
+      "MC_QUESTION": "Câu hỏi đa lựa chọn",
+      "SA_QUESTION": "Câu hỏi trả lời ngắn",
+      "LA_QUESTION": "Câu hỏi trả lời dài",
+      "ARTICLE_READ": "Đã đọc bài viết"
+    },
+    "level": {
+      "title": "Cấp độ CEFR",
+      "yourlevel": "Cấp độ của bạn",
+      "description": {
+        "A0": "Bạn có thể nhận ra từ và tên mà bạn đã thấy trước đó, đặc biệt khi có hình ảnh để giúp đỡ. Bạn có thể hiểu các dấu hiệu đơn giản xung quanh bạn và thông tin cơ bản như nơi và khi nào một sự kiện xảy ra.",
+        "A1-": "Bạn đang bắt đầu nhận ra nhiều từ và cụm từ đơn giản hơn ngoài các cơ bản. Bạn có thể theo dõi các hướng dẫn đơn giản và hiểu các cụm từ và câu về những thứ mà bạn cần.",
+        "A1": "Bạn có thể hiểu văn bản đơn giản và ngắn gọn. Bạn nhận ra đủ từ để tìm chúng trong các thông báo và hướng dẫn đơn giản. Bạn có thể nói về những điều đơn giản, hằng ngày bằng cách sử dụng các từ mà bạn biết.",
+        "A1+": "Bạn đang bắt đầu hiểu các câu và biểu thức quan trọng đối với bạn. Đọc không chỉ là nhận ra các từ quen thuộc nữa; bạn đang bắt đầu hiểu toàn bộ tin nhắn trong các văn bản đơn giản.",
+        "A2-": "Bạn đang cải thiện khả năng hiểu văn bản đơn giản và có thể tìm thông tin cụ thể trong các vật liệu hằng ngày như quảng cáo hoặc lịch, mặc dù bạn có thể vẫn gặp khó khăn với các chủ đề không quen thuộc.",
+        "A2": "Bạn có thể hiểu văn bản đơn giản, ngắn gọn, tìm những thứ mà bạn cần trong các vật liệu hằng ngày như quảng cáo hoặc menu, và theo các hướng dẫn cơ bản. Bạn biết đủ từ để giao tiếp trong các tình huống hằng ngày.",
+        "A2+": "Bạn có thể hiểu viết thường xuyên và các ý chính trong các bài báo tin tức ngắn hoặc mô tả. Từ vựng của bạn đang phát triển nên bạn có thể nói về những điều quan trọng đối với bạn và xử lý các tình huống hằng ngày.",
+        "B1-": "Bạn có thể nắm bắt ý chính của văn bản đơn giản trên chủ đề quen thuộc. Bạn đang phát triển khả năng xử lý văn bản mà giới thiệu các chủ đề mới hoặc ngôn ngữ phức tạp một chút, mặc dù bạn có thể vẫn cần sự giúp đỡ.",
+        "B1": "Bạn có thể đọc văn bản trên chủ đề mà bạn thích và hiểu ý chính. Các câu chuyện và tin nhắn cá nhân dễ theo dõi cho bạn. Bạn biết đủ từ cho các chủ đề hằng ngày và có thể nói về những gì bạn đọc mà không gặp nhiều khó khăn.",
+        "B1+": "Bạn có thể hiểu viết rõ ràng về chủ đề quen thuộc và đang cải thiện khả năng xử lý ngôn ngữ phức tạp một chút. Bạn thoải mái tìm thông tin mà bạn cần và có thể thưởng thức một cuốn sách nếu nó không quá khó.",
+        "B2-": "Bạn có thể hiểu văn bản chi tiết trên chủ đề quen thuộc. Bạn đang bắt đầu nhận ra các phần mềm của ngôn ngữ và có thể thảo luận về các chủ đề mà bạn quan tâm khá dễ dàng, mặc dù các ý tưởng phức tạp có thể vẫn khó.",
+        "B2": "Bạn có thể đọc độc lập và nói rõ một văn bản là tựa hồng hay không. Bạn có thể điều chỉnh tốc độ đọc của bạn tùy thuộc vào những gì bạn đang đọc. Bạn thích những cuốn sách và bài viết tốt về các sự kiện hiện tại. Bạn biết nhiều từ, và ngay cả khi bạn có thể bị nhầm lẫn đôi khi, bạn thường có thể tìm ra nó.",
+        "B2+": "Bạn có thể hiểu ý chính của các văn bản khó hơn, như bài viết khoa học hoặc các câu chuyện phức tạp hơn. Bạn đang bắt đầu đọc nhiều hơn trên chính mình và có thể xử lý các chủ đề mà là một chút trừu tượng hoặc kỹ thuật, đặc biệt là các chủ đề mà bạn biết rõ.",
+        "C1-": "Bạn có thể hiểu văn bản phức tạp với một số nỗ lực. Từ vựng của bạn cho phép bạn đọc về nhiều chủ đề khác nhau, và bạn có thể tìm ra các chi tiết ít rõ ràng hơn, mặc dù đôi khi bạn có thể cần đọc lại một số phần.",
+        "C1": "Bạn có thể đọc văn bản dài và khó khăn và hiểu hầu hết những gì đang xảy ra. Bạn thích các câu chuyện và bài viết khiến bạn suy nghĩ, và bạn có thể nói về chúng bằng cách sử dụng từ vựng tốt mà không cần phải tìm kiếm quá nhiều từ.",
+        "C1+": "Bạn là một độc giả siêu năng năng xử lý văn bản khó khăn và hiểu các kiểu viết khác nhau. Bạn thực sự rất giỏi trong việc tìm ra các phần ít rõ ràng của các câu chuyện và bài viết, và bạn thường biết những từ nghĩa là gì mà không cần phải tìm kiếm chúng.",
+        "C2": "Bạn có thể đọc và hiểu gần như tất cả mọi thứ. Bạn có thể hiểu ý chính của văn bản phức tạp và thích đọc các cuốn sách và bài viết khó khăn hơn. Bạn có thể nói về gần như tất cả mọi thứ và sử dụng ngôn ngữ với tự tin."
+      }
+    },
+    "progress": {
+      "selectClassroom": "Chọn Lớp",
+      "allClassrooms": "Tất cả các lớp",
+      "searchStudentsPlaceholder": "Tìm kiếm học sinh...",
+      "backToOverview": "Quay lại Tổng quan",
+      "loadingStudentData": "Đang tải dữ liệu học sinh...",
+      "totalStudents": "Tổng số học sinh",
+      "allClassroomsLabel": "Tất cả các lớp",
+      "selectedClassroomLabel": "Lớp đã chọn",
+      "averageXp": "XP Trung bình",
+      "averageXpDescription": "Điểm kinh nghiệm mỗi học sinh",
+      "mostCommonLevel": "Cấp độ phổ biến nhất",
+      "mostCommonLevelDescription": "Trình độ CEFR",
+      "activeThisWeek": "Hoạt động tuần này",
+      "activeThisWeekDescription": "{count} trong tổng {total} học sinh",
+      "studentList": "Danh sách học sinh",
+      "xpLabel": "{xp} XP"
+    }
+  },
+  "Overall": {
+    "roles": {
+      "user": "Người dùng",
+      "student": "Học sinh",
+      "teacher": "Giáo viên",
+      "admin": "Quản trị viên",
+      "system": "Hệ thống"
+    },
+    "status": {
+      "READ": "Đã đọc",
+      "COMPLETED_MCQ": "Đã hoàn thành MCQ",
+      "COMPLETED_SAQ": "Đã hoàn thành SAQ",
+      "COMPLETED_LAQ": "Đã hoàn thành LAQ",
+      "UNRATED": "Chưa đánh giá"
+    },
+    "time": {
+      "justNow": "Vừa xong",
+      "minutesAgo": "{minutes} phút trước",
+      "hoursAgo": "{hours} giờ trước",
+      "yesterday": "Hôm qua",
+      "daysAgo": "{days} ngày trước",
+      "weeksAgo": "{weeks} tuần trước",
+      "monthsAgo": "{months} tháng trước",
+      "today": "Hôm nay",
+      "lastweek": "Tuần trước",
+      "last30days": "30 ngày trước",
+      "thismonth": "Tháng này",
+      "lastmonth": "Tháng trước",
+      "selectPeriod": "Chọn khoảng thời gian"
+    },
+    "days": {
+      "sunday": "Chủ nhật",
+      "monday": "Thứ hai",
+      "tuesday": "Thứ ba",
+      "wednesday": "Thứ tư",
+      "thursday": "Thứ năm",
+      "friday": "Thứ sáu",
+      "saturday": "Thứ bảy"
+    },
+    "months": {
+      "january": "Tháng một",
+      "february": "Tháng hai",
+      "march": "Tháng ba",
+      "april": "Tháng tư",
+      "may": "Tháng năm",
+      "june": "Tháng sáu",
+      "july": "Tháng bảy",
+      "august": "Tháng tám",
+      "september": "Tháng chín",
+      "october": "Tháng mười",
+      "november": "Tháng mười một",
+      "december": "Tháng mười hai"
+    }
+  },
+  "Assignment": {
+    "title": "Tạo bài tập",
+    "description": "Tạo bài tập cho học sinh của bạn",
+    "assignForm": {
+      "classroom": "Lớp học",
+      "selectedClassroom": "Lớp học đã chọn",
+      "name": "Tên bài tập",
+      "description": "Mô tả bài tập",
+      "students": "Học sinh",
+      "article": "Bài viết",
+      "dueDate": "Ngày đến hạn",
+      "noStudents": "Không có học sinh trong lớp học này",
+      "pleaseSelectClassroom": "Vui lòng chọn một lớp học trước",
+      "selectAllStudents": "Chọn tất cả học sinh",
+      "selectedDueDate": "Chọn ngày kết thúc : "
+    },
+    "studentAssignmentTable": {
+      "title": "Bài tập",
+      "name": "Tên bài tập",
+      "description": "Mô tả bài tập",
+      "createAt": "Ngày tạo",
+      "dueDate": "Ngày đến hạn",
+      "status": "Trạng thái",
+      "assignedBy": "Được giao bởi",
+      "linkToAssignment": "Liên kết đến bài tập",
+      "goToLesson": "Đi đến bài học",
+      "searchPlaceholder": "Tìm kiếm bài tập...",
+      "searching": "Đang tìm kiếm...",
+      "loadingAssignments": "Đang tải bài tập...",
+      "noAssignmentsFound": "Không tìm thấy bài tập",
+      "allDueDates": "Tất cả ngày đến hạn",
+      "overdue": "Quá hạn",
+      "dueToday": "Đến hạn hôm nay",
+      "upcoming": "Sắp tới",
+      "allStatus": "Tất cả trạng thái",
+      "notFinished": "Chưa hoàn thành",
+      "inProgress": "Đang tiến hành",
+      "done": "Hoàn thành"
+    }
+  },
+  "SentencesPage": {
+    "sentences": "Thẻ câu",
+    "orderSentence": "Sắp xếp câu",
+    "clozeTest": "Bài kiểm tra điền từ",
+    "orderWord": "Sắp xếp từ",
+    "matching": "Ghép cặp",
+
+    "matchingGame": {
+      "title": "Trò chơi ghép cặp dịch thuật",
+      "description": "Luyện tập ghép cặp từ với nghĩa của chúng từ bộ sưu tập thẻ ghi nhớ!",
+      "descriptionShort": "Ghép cặp câu với bản dịch bằng ngôn ngữ bạn chọn",
+      "descriptionLong": "Ghép cặp câu tiếng Anh với bản dịch",
+      "noDeck": {
+        "error": "Không có bộ thẻ ghi nhớ nào",
+        "message": "Bắt đầu đọc bài viết và lưu câu thành thẻ ghi nhớ để mở khóa trò chơi này!"
+      },
+      "loading": {
+        "title": "Đang tải các cặp ghép của bạn...",
+        "description": "Đang tạo các cặp ghép từ bộ thẻ ghi nhớ của bạn",
+        "nextSet": "Đang tải bộ ghép cặp tiếp theo..."
+      },
+      "startScreen": {
+        "title": "Sẵn sàng ghép cặp?",
+        "subtitle": "Ghép cặp câu tiếng Anh với bản dịch",
+        "howToPlay": "Cách chơi",
+        "instructions": {
+          "step1": "Nhấp vào câu từ cột bên trái để chọn",
+          "step2": "Sau đó nhấp vào bản dịch từ cột bên phải",
+          "step3": "Ghép đúng tất cả các cặp câu-bản dịch để hoàn thành mỗi bộ"
+        },
+        "language": {
+          "title": "Chọn ngôn ngữ dịch",
+          "thai": "Tiếng Thái",
+          "vietnamese": "Tiếng Việt",
+          "chineseSimplified": "Tiếng Trung (Giản thể)",
+          "chineseTraditional": "Tiếng Trung (Phồn thể)",
+          "selected": "Dịch thuật"
+        },
+        "stats": {
+          "matchingSets": "Bộ ghép cặp",
+          "readyToPlay": "Sẵn sàng chơi",
+          "translation": "Dịch thuật",
+          "estimatedTime": "~{time} phút",
+          "estimatedTimeLabel": "Thời gian ước tính"
+        },
+        "startButton": "Bắt đầu trò chơi dịch",
+        "loadingButton": "Đang tải các cặp dịch...",
+        "noSentences": "Không có câu nào"
+      },
+      "gameplay": {
+        "title": "Ghép cặp câu với bản dịch",
+        "instruction": "Nhấp vào câu bên trái, sau đó nhấp vào bản dịch bên phải",
+        "englishSentences": "Câu tiếng Anh",
+        "translations": "Bản dịch {language}",
+        "progress": "{current} trên {total}",
+        "score": "{score}/{total} hoàn hảo",
+        "pairsProgress": "Tiến độ: {matched}/{total} cặp đã ghép",
+        "correctCount": "Đúng: {correct}/{total}",
+        "articleFrom": "Từ: {title}"
+      },
+      "hints": {
+        "title": "Gợi ý:",
+        "audio": "Âm thanh",
+        "playAudio": "Phát âm thanh",
+        "playing": "Đang phát...",
+        "enabled": "Đã bật gợi ý! 💡\n• Các cặp không đúng sẽ được đánh dấu\n• Chọn mục để nghe âm thanh",
+        "disabled": "Đã tắt gợi ý",
+        "audioCompleted": "Đã phát xong âm thanh! 🎵",
+        "audioFailed": "Không thể phát âm thanh",
+        "playingAudio": "Đang phát gợi ý âm thanh 🔊"
+      },
+      "results": {
+        "perfect": "Hoàn hảo! Tất cả các cặp đều đúng! 🎉",
+        "tryAgain": "{correct}/{total} đúng. Thử lại! 💪",
+        "allCorrect": "Hoàn hảo! Tất cả các cặp đều đúng! 🎉",
+        "partialCorrect": "{correct}/{total} đúng 💪",
+        "correctMatches": "Các cặp đúng:",
+        "showAnswers": "Đã hiển thị đáp án đúng! 📖",
+        "correctMatch": "Ghép đúng! ✅",
+        "incorrectMatch": "Ghép sai. Thử lại! ❌"
+      },
+      "buttons": {
+        "resetMatches": "Đặt lại các cặp",
+        "checkMatches": "Kiểm tra các cặp",
+        "showAnswers": "Hiện đáp án",
+        "nextSet": "Bộ tiếp theo",
+        "finishGame": "Kết thúc trò chơi",
+        "tryAgain": "Thử lại"
+      },
+      "complete": {
+        "title": "🎉 Xuất sắc!",
+        "subtitle": "Bạn đã hoàn thành {count} thử thách ghép cặp",
+        "stats": {
+          "perfectScores": "Điểm hoàn hảo",
+          "accuracy": "Độ chính xác",
+          "totalTime": "Tổng thời gian"
+        },
+        "backToMenu": "Quay lại menu",
+        "playAgain": "Chơi lại"
+      },
+      "toast": {
+        "failedToLoad": "Không thể tải dữ liệu ghép cặp từ bộ thẻ ghi nhớ",
+        "failedToLoadData": "Không thể tải dữ liệu ghép cặp"
+      },
+      "itemTypes": {
+        "word": "Từ",
+        "phrase": "Cụm từ",
+        "sentence": "Câu",
+        "definition": "Định nghĩa",
+        "translation": "Bản dịch",
+        "meaning": "Nghĩa"
+      }
+    },
+    "clozeTestGame": {
+      "title": "Trò chơi điền từ vào chỗ trống",
+      "description": "Luyện tập điền các từ còn thiếu từ các câu thẻ ghi nhớ của bạn!",
+      "descriptionShort": "Điền các từ còn thiếu vào mỗi câu",
+      "descriptionLong": "Kiểm tra từ vựng và khả năng hiểu của bạn bằng cách điền các từ còn thiếu",
+      "noDeck": {
+        "error": "Không có bộ thẻ ghi nhớ",
+        "message": "Bắt đầu đọc bài viết và lưu câu dưới dạng thẻ ghi nhớ để mở khóa trò chơi này!"
+      },
+      "loading": {
+        "title": "Đang tải câu của bạn...",
+        "description": "Đang lấy câu từ bộ thẻ ghi nhớ của bạn",
+        "nextChallenge": "Đang tải thử thách tiếp theo..."
+      },
+      "startScreen": {
+        "title": "Sẵn sàng bắt đầu?",
+        "subtitle": "Điền vào chỗ trống trong các câu từ bộ thẻ ghi nhớ của bạn",
+        "howToPlay": "Cách chơi",
+        "instructions": {
+          "step1": "Mỗi câu có các từ còn thiếu mà bạn cần điền vào",
+          "step2": "Chọn tùy chọn đúng từ menu thả xuống",
+          "step3": "Hoàn thành tất cả chỗ trống để hoàn thành mỗi câu"
+        },
+        "difficulty": {
+          "title": "Chọn mức độ khó",
+          "easy": "Dễ",
+          "medium": "Trung bình",
+          "hard": "Khó",
+          "easyDescription": "Hoàn hảo cho người mới bắt đầu. Một từ sẽ bị thiếu trong mỗi câu.",
+          "mediumDescription": "Thử thách vừa phải. Hai từ sẽ bị thiếu trong mỗi câu.",
+          "hardDescription": "Thử thách tối đa. Ba từ sẽ bị thiếu trong mỗi câu."
+        },
+        "stats": {
+          "clozeTests": "Bài kiểm tra điền từ",
+          "readyToPlay": "Sẵn sàng chơi",
+          "fillBlanks": "Điền chỗ trống",
+          "blanksEach": "{count} chỗ trống mỗi câu",
+          "estimatedTime": "~{time} phút",
+          "estimatedTimeLabel": "Thời gian ước tính"
+        },
+        "startButton": "Bắt đầu trò chơi {difficulty}",
+        "loadingButton": "Đang tải câu {difficulty}...",
+        "noSentences": "Không có câu nào"
+      },
+      "gameplay": {
+        "articleTitle": "📖 {title}",
+        "instruction": "Điền các từ còn thiếu bằng cách chọn từ menu thả xuống",
+        "completeSentence": "Hoàn thành câu bằng cách điền vào chỗ trống:",
+        "progress": "{current} trong số {total}",
+        "score": "{score}/{total} hoàn hảo",
+        "blanksProgress": "Tiến trình: {filled}/{total} chỗ trống đã điền",
+        "correctCount": "Đúng: {correct}/{total}",
+        "placeholder": "___"
+      },
+      "hints": {
+        "title": "Gợi ý:",
+        "audio": "Âm thanh",
+        "playOrder": "Phát âm thanh",
+        "playing": "Đang phát...",
+        "enabled": "Đã bật gợi ý! 💡\n• Câu trả lời sai sẽ được làm nổi bật\n• Sử dụng nút âm thanh để nghe phát âm",
+        "disabled": "Đã tắt gợi ý"
+      },
+      "results": {
+        "perfect": "Hoàn hảo! Tất cả chỗ trống đều đúng! 🎉",
+        "tryAgain": "{correct}/{total} đúng. Thử lại! 💪",
+        "allCorrect": "Hoàn hảo! Đã điền đúng tất cả chỗ trống! 🎉",
+        "partialCorrect": "{correct}/{total} đúng 💪",
+        "correctAnswers": "Câu trả lời đúng:",
+        "showAnswers": "Đã hiển thị câu trả lời đúng! 📖"
+      },
+      "buttons": {
+        "resetAnswers": "Đặt lại câu trả lời",
+        "checkAnswers": "Kiểm tra câu trả lời",
+        "showAnswers": "Hiển thị câu trả lời",
+        "nextSentence": "Câu tiếp theo",
+        "finishGame": "Kết thúc trò chơi"
+      },
+      "complete": {
+        "title": "🎉 Tuyệt vời!",
+        "subtitle": "Bạn đã hoàn thành {count} thử thách điền từ",
+        "stats": {
+          "perfectScores": "Điểm hoàn hảo",
+          "accuracy": "Độ chính xác",
+          "totalTime": "Tổng thời gian"
+        },
+        "backToMenu": "Quay lại menu",
+        "playAgain": "Chơi lại"
+      },
+      "toast": {
+        "failedToLoad": "Không thể tải câu từ bộ thẻ ghi nhớ",
+        "failedToLoadSentences": "Không thể tải câu",
+        "audioCompleted": "Hoàn thành âm thanh! 🎵",
+        "audioFailed": "Không thể phát âm thanh",
+        "playingAudio": "Đang phát âm thanh câu 🔊"
+      }
+    },
+    "sentencesCard": {
+      "title": "Bảng điều khiển flashcard",
+      "description": "Luyện tập hiểu câu và kỹ năng dịch",
+      "needMoreCards": "Cần thêm thẻ để bắt đầu học",
+      "addMoreCards": "Thêm {count} thẻ từ bài viết để mở khóa việc học.",
+      "allCaughtUp": "Đã cập nhật tất cả!",
+      "allCardsUpToDate": "Tất cả thẻ đã được cập nhật. Quay lại sau để xem thêm.",
+      "readyToStudy": "Sẵn sàng học!",
+      "cardsReadyForReview": "{count} thẻ sẵn sàng để ôn tập.",
+      "learningProgress": "Tiến độ học tập",
+      "complete": "Hoàn thành",
+      "mastered": "{count} đã thành thạo",
+      "toReview": "{count} cần ôn tập",
+      "back": "Trở về",
+      "current": "Hiện tại",
+      "completed": "Hoàn thành",
+      "remaining": "Còn lại",
+      "studySessionProgress": "Tiến độ học tập",
+      "showAnswer": "Hiển thị câu trả lời",
+      "question": "Câu hỏi",
+      "answers": "Câu trả lời",
+      "flipCard": "Nhấp để hiển thị",
+      "definition": "Định nghĩa",
+      "translation": "Dịch",
+      "definitionNotAvailable": "Định nghĩa không khả dụng",
+      "translationNotAvailable": "Dịch không khả dụng",
+      "again": "Lại",
+      "hard": "Khó",
+      "good": "Tốt",
+      "easy": "Dễ",
+      "sentences": "Câu",
+      "vocabulary": "Từ vựng",
+      "studySessionComplete": "Học tập đã hoàn thành!",
+      "youCompleted": "Bạn đã hoàn thành {count} thẻ",
+      "cardsReviewed": "Thẻ đã ôn tập",
+      "xpEarned": "XP đã nhận",
+      "greatWork": "Làm tốt! Bạn đã hoàn thành học tập này thành công. Tiến độ của bạn đã được lưu!",
+      "backToDashboard": "Quay lại Bảng điều khiển",
+      "studyAgain": "Học lại",
+      "cardStatusBreakdown": {
+        "title": "Phân tích trạng thái thẻ",
+        "new": "Mới",
+        "newDescription": "Thẻ mới để học",
+        "learning": "Đang học",
+        "learningDescription": "Đang tiến hành",
+        "review": "Ôn tập",
+        "reviewDescription": "Thời gian ôn tập"
+      },
+      "translationLanguage": "Ngôn ngữ dịch",
+      "translationLanguageDescription": "Bản dịch sẽ được hiển thị bằng ngôn ngữ này",
+      "startStudying": "Bắt đầu học ({count} thẻ)",
+      "loadingCards": "Đang tải thẻ...",
+      "noCardsDueForReview": "Không có thẻ nào cần ôn tập ngay bây giờ! ⏰",
+      "failedToLoadCards": "Không thể tải thẻ",
+      "refreshData": "Làm mới dữ liệu",
+      "addMoreCardsButton": "Thêm thẻ"
+    },
+    "manage": {
+      "heading": "Quản lý",
+      "description": "Quản lý bài viết và câu thẻ ghi nhớ của bạn",
+      "searchPlaceholder": "Tìm kiếm...",
+      "noResults": "Không có kết quả.",
+      "tableHeaders": {
+        "sentence": "Câu",
+        "createdAt": "Ngày tạo",
+        "due": "Đến hạn",
+        "action": "Thao tác"
+      },
+      "pagination": {
+        "previous": "Trước",
+        "next": "Tiếp"
+      },
+      "deleteDialog": {
+        "title": "Xóa thẻ ghi nhớ",
+        "description": "Bạn có chắc chắn muốn xóa thẻ ghi nhớ này không?",
+        "warning": "Hành động này không thể hoàn tác.",
+        "cancel": "Hủy",
+        "delete": "Xóa"
+      },
+      "dueStatus": {
+        "oneDayLate": "Trễ 1 ngày",
+        "daysLate": "Trễ {count} ngày",
+        "dueToday": "Đến hạn hôm nay",
+        "dueTomorrow": "Đến hạn ngày mai",
+        "dueInDays": "Đến hạn sau {count} ngày",
+        "dueInWeeks": "Đến hạn sau {count} tuần"
+      }
+    },
+    "sentenceOrder": {
+      "title": "Trò chơi sắp xếp câu",
+      "descriptionNodeck": "Luyện tập sắp xếp câu từ bài viết của bạn!",
+      "descriptionPlaying": "Sắp xếp câu theo thứ tự thời gian.",
+      "descriptionPlaying2": "Sắp xếp 5 câu theo thứ tự thời gian.",
+      "description": "Kiểm tra khả năng đọc hiểu của bạn bằng cách sắp xếp câu theo thứ tự thời gian.",
+      "contentNoDeck": "Bắt đầu đọc bài viết và lưu câu thành thẻ để mở khóa trò chơi này!",
+      "loading": "Đang tải câu của bạn...",
+      "fetchingSentences": "Đang tải câu từ bài viết của bạn",
+      "readyToStart": "Sẵn sàng bắt đầu?",
+      "arrangeSentences": "Sắp xếp 5 câu theo thứ tự đúng cho mỗi câu thẻ của bạn",
+      "startGame": "Bắt đầu trò chơi",
+      "noSentencesAvailable": "Không có câu nào có sẵn",
+      "howToPlay": "Cách chơi",
+      "eachGameShows": "Mỗi trò chơi hiển thị 5 câu xung quanh câu thẻ của bạn",
+      "dragSentences": "Kéo câu để sắp xếp chúng theo thứ tự thời gian",
+      "completeAll": "Hoàn thành tất cả câu thẻ của bạn",
+      "sentences": "Câu",
+      "readyToPlay": "Sẵn sàng chơi",
+      "dragAndDrop": "Kéo & Thả",
+      "playtime": "~{time} min",
+      "estimatedTime": "Thời gian ước tính",
+      "easyInteraction": "Tương tác dễ dàng",
+      "completedTitle": "Làm tốt!",
+      "completedDescription": " Bạn đã hoàn thành {count} thử thách sắp xếp câu",
+      "correct": "Câu trả lời đúng",
+      "accuracy": "Độ chính xác",
+      "totalTime": "Tổng thời gian",
+      "backToMenu": "Quay lại menu",
+      "playAgain": "Chơi lại",
+      "loadingNextChallenge": "Đang tải thử thách tiếp theo...",
+      "correctAnswer": "Câu trả lời đúng",
+      "checkAnswer": "Kiểm tra câu trả lời",
+      "shuffleAgain": "Xáo trộn lại",
+      "showAnswer": "Hiển thị câu trả lời",
+      "nextSentence": "Câu tiếp theo",
+      "finishGame": "Hoàn thành trò chơi",
+      "perfectCorrectOrder": "Hoàn hảo! Thứ tự đúng! 🎉",
+      "notQuiteRight": "Không chính xác!",
+      "correctOrder": "Thứ tự đúng",
+      "hints": {
+        "title": "Gợi ý",
+        "description": "Sử dụng gợi ý để giúp bạn hoàn thành thử thách",
+        "highlight": "Nhấn màu",
+        "audio": "Âm thanh",
+        "playOrder": "Thứ tự phát",
+        "playing": "Đang chơi...",
+        "dragToReorder": "Kéo để sắp xếp câu",
+        "startByMovingASentence": "Bắt đầu bằng cách di chuyển câu!",
+        "sentencesWillAppearHere": "Câu sẽ xuất hiện ở đây..."
+      }
+    },
+    "orderWordGame": {
+      "title": "Trò chơi Sắp xếp Từ",
+      "description": "Luyện tập sắp xếp từ để tạo thành câu đúng từ các bài viết trong bộ thẻ ghi nhớ của bạn!",
+      "descriptionShort": "Nhấp từ theo đúng thứ tự để tạo thành câu có nghĩa",
+      "noDeck": {
+        "error": "Không có bộ thẻ ghi nhớ",
+        "message": "Bắt đầu đọc bài viết và lưu câu thành thẻ ghi nhớ để mở khóa trò chơi này!"
+      },
+      "loading": {
+        "title": "Đang tải câu của bạn...",
+        "description": "Đang lấy câu từ bộ thẻ ghi nhớ của bạn"
+      },
+      "startScreen": {
+        "title": "Sẵn sàng bắt đầu?",
+        "subtitle": "Nhấp từ theo đúng thứ tự để tạo thành câu có nghĩa",
+        "howToPlay": "Cách chơi",
+        "instructions": {
+          "step1": "Nhấp từ ở phía dưới để thêm vào câu của bạn",
+          "step2": "Nhấp từ trong câu của bạn để xóa chúng",
+          "step3": "Bản dịch sẽ hiển thị bên dưới mỗi từ",
+          "step4": "Tạo câu đúng ngữ pháp và có nghĩa",
+          "step5": "Sử dụng gợi ý nếu bạn gặp khó khăn"
+        },
+        "stats": {
+          "sentences": "Câu",
+          "readyToPlay": "Sẵn sàng giải",
+          "clickToOrder": "Nhấp để Sắp xếp",
+          "withTranslations": "Có bản dịch",
+          "estimatedTime": "~{time} phút",
+          "estimatedTimeLabel": "Thời gian ước tính"
+        },
+        "language": {
+          "title": "Chọn Ngôn ngữ Dịch",
+          "thai": "🇹🇭 Tiếng Thái",
+          "vietnamese": "🇻🇳 Tiếng Việt",
+          "chineseSimplified": "🇨🇳 Tiếng Trung (Giản thể)",
+          "chineseTraditional": "🇹🇼 Tiếng Trung (Phồn thể)",
+          "selected": "Ngôn ngữ dịch",
+          "description": "Bản dịch từ sẽ hiển thị bằng {language} trong suốt trò chơi"
+        },
+        "startButton": "Bắt đầu Trò chơi với Bản dịch {language}",
+        "noSentences": "Không có câu"
+      },
+      "gameplay": {
+        "title": "Trò chơi Sắp xếp Từ",
+        "instruction": "Nhấp từ để tạo thành câu đúng • bản dịch {language}",
+        "progress": "{current} trong {total}",
+        "score": "{score}/{total} đúng",
+        "articleFrom": "📖 {title}",
+        "subtitle": "Nhấp từ bên dưới để tạo thành câu đúng",
+        "targetTranslation": "Bản dịch mục tiêu:",
+        "yourSentence": "Câu của bạn:",
+        "buildingSentence": "Đang xây dựng câu...",
+        "startByClicking": "Nhấp từ bên dưới để bắt đầu tạo câu của bạn...",
+        "translationLabel": "Bản dịch {language}:",
+        "allWordsUsed": "Đã dùng hết từ!",
+        "checkSentence": "Kiểm tra câu của bạn ở trên.",
+        "clickWordsToAdd": "Nhấp từ để thêm vào câu của bạn",
+        "startByClickingWord": "(Bắt đầu bằng cách nhấp một từ!)"
+      },
+      "hints": {
+        "title": "Gợi ý:",
+        "highlight": "Nhấn màu",
+        "audio": "Âm thanh",
+        "playOrder": "Phát theo thứ tự",
+        "playing": "Đang chơi..."
+      },
+      "buttons": {
+        "shuffleWords": "Xáo trộn Từ",
+        "tryAgain": "Thử lại",
+        "checkAnswer": "Kiểm tra Câu trả lời",
+        "showAnswer": "Hiển thị Câu trả lời",
+        "nextSentence": "Câu tiếp theo",
+        "finishGame": "Hoàn thành Trò chơi"
+      },
+      "results": {
+        "perfect": "Hoàn hảo! Thứ tự từ đúng! 🎉",
+        "notQuiteRight": "Chưa đúng lắm. Thử lại! 💪",
+        "correctOrder": "Câu đúng:",
+        "correctOrderRevealed": "Đã tiết lộ thứ tự đúng! 📖"
+      },
+      "complete": {
+        "title": "🎉 Công việc Tuyệt vời!",
+        "subtitle": "Bạn đã hoàn thành {count} thử thách sắp xếp từ",
+        "usingTranslations": "Sử dụng bản dịch {language}",
+        "stats": {
+          "correctAnswers": "Câu trả lời Đúng",
+          "accuracy": "Độ chính xác",
+          "totalTime": "Tổng thời gian"
+        },
+        "backToMenu": "Quay lại Menu",
+        "playAgain": "Chơi lại"
+      },
+      "toast": {
+        "gameStarted": "Trò chơi đã bắt đầu với bản dịch {language}! 🎮",
+        "languageSet": "Đã đặt ngôn ngữ dịch thành {language}",
+        "failedToLoad": "Không tải được câu từ bộ thẻ ghi nhớ",
+        "failedToLoadSentences": "Không tải được câu"
+      },
+      "loadingNextChallenge": "Đang tải thử thách tiếp theo..."
+    }
+  },
+  "VocabularyPage": {
+    "vocabularyCard": "Thẻ từ vựng",
+    "description": "Ôn tập từ vựng và mở rộng kỹ năng ngôn ngữ với phương pháp lặp lại ngắt quãng",
+    "translationLanguageDescription": "Định nghĩa sẽ được hiển thị bằng ngôn ngữ này"
+  },
+  "HomePage": {
+    "hero": {
+      "title": "Giúp học sinh trở thành độc giả tuyệt vời với niềm vui được hỗ trợ bởi AI!",
+      "subtitle": "Cuộc phiêu lưu đọc sách được thiết kế cho độ tuổi 8-12 (Lớp 3-6).",
+      "getStarted": "Bắt đầu ngay!"
+    },
+    "features": {
+      "title": "Tính năng thú vị",
+      "description": "Khám phá cách Primary Advantage làm cho việc đọc trở nên thú vị và giúp bạn học!",
+      "funStory": {
+        "title": "Cuộc phiêu lưu câu chuyện thú vị",
+        "description": "Khám phá những câu chuyện và bài viết thú vị dành cho trẻ em cùng tuổi bạn, luôn có điều mới để đọc!"
+      },
+      "understand": {
+        "title": "Hiểu câu chuyện",
+        "description": "Trả lời các câu hỏi thú vị về những gì bạn đọc để giúp bạn nhớ và hiểu rõ hơn."
+      },
+      "readingLevels": {
+        "title": "Cấp độ đọc phù hợp",
+        "description": "Đọc những câu chuyện phù hợp với cách bạn đọc, làm cho nó dễ dàng và thú vị."
+      },
+      "learnWords": {
+        "title": "Học từ mới",
+        "description": "Tìm các từ mới và thú vị trong câu chuyện và học ý nghĩa của chúng bằng các công cụ thú vị."
+      },
+      "listenAlong": {
+        "title": "Nghe cùng",
+        "description": "Nghe câu chuyện được đọc to cho bạn, tuyệt vời để nghe và theo dõi."
+      },
+      "seeProgress": {
+        "title": "Xem bạn đang phát triển như thế nào",
+        "description": "Kiểm tra tiến độ đọc của bạn và xem tất cả những điều thú vị mà bạn đang học!"
+      },
+      "makeYours": {
+        "title": "Làm cho nó của bạn",
+        "description": "Chọn những câu chuyện bạn thích và đặt mục tiêu đọc, tạo cuộc phiêu lưu đọc của riêng bạn."
+      },
+      "helpTeachers": {
+        "title": "Giúp đỡ cho giáo viên",
+        "description": "Công cụ cho giáo viên để xem lớp học đang làm như thế nào và giúp mọi người học."
+      }
+    },
+    "benefits": {
+      "title": "Tại sao các trường học yêu thích Primary Advantage",
+      "description": "Xem cách Primary Advantage có thể giúp giáo viên và học sinh trong các trường học!",
+      "superReader": {
+        "title": "Trở thành độc giả siêu đẳng",
+        "description": "Đọc nhiều câu chuyện thú vị và chơi trò chơi để nâng cao kỹ năng đọc của bạn!"
+      },
+      "ownPath": {
+        "title": "Con đường đọc của riêng bạn",
+        "description": "Đọc những câu chuyện phù hợp với cấp độ đọc và sở thích của bạn, được tạo ra cho bạn."
+      },
+      "storiesLove": {
+        "title": "Câu chuyện bạn sẽ yêu thích",
+        "description": "Thưởng thức các loại câu chuyện khác nhau với hình ảnh và âm thanh làm cho việc đọc trở nên thú vị."
+      },
+      "watchGrow": {
+        "title": "Xem sức mạnh đọc của bạn phát triển",
+        "description": "Xem tiến độ của bạn và cách bạn đang trở thành một độc giả tốt hơn mỗi ngày."
+      },
+      "learnWords": {
+        "title": "Học nhiều từ mới",
+        "description": "Khám phá các từ thú vị trong câu chuyện và nhớ chúng với các hoạt động thú vị."
+      },
+      "easyUse": {
+        "title": "Dễ sử dụng ở mọi nơi",
+        "description": "Đọc và học ở trường hoặc ở nhà, bất cứ khi nào bạn muốn!"
+      },
+      "greatSchools": {
+        "title": "Tuyệt vời cho các trường học",
+        "description": "Một cách thông minh để các trường học giúp tất cả học sinh trở thành độc giả tuyệt vời."
+      },
+      "moreTime": {
+        "title": "Nhiều thời gian hơn cho việc dạy thú vị",
+        "description": "Công cụ của chúng tôi giúp giáo viên tìm các câu chuyện tuyệt vời và xem tiến độ của học sinh một cách dễ dàng."
+      }
+    },
+    "contact": {
+      "title": "Hãy liên lạc",
+      "description": "Có câu hỏi hoặc cần thêm thông tin? Liên hệ với chúng tôi hôm nay để tìm hiểu thêm về nền tảng của chúng tôi.",
+      "formTitle": "Liên hệ với chúng tôi",
+      "formDescription": "Liên lạc với chúng tôi để tìm hiểu thêm về nền tảng của chúng tôi",
+      "name": "Tên",
+      "namePlaceholder": "Nguyễn Văn A",
+      "institution": "Tổ chức",
+      "institutionPlaceholder": "Trường Đại học Ví dụ",
+      "email": "Email",
+      "emailPlaceholder": "m@example.com",
+      "inquiry": "Yêu cầu",
+      "inquiryPlaceholder": "Chọn một tùy chọn",
+      "inquiryOptions": {
+        "sales": "Bán hàng",
+        "support": "Hỗ trợ",
+        "partnerships": "Hợp tác"
+      },
+      "message": "Tin nhắn",
+      "messagePlaceholder": "Nhập tin nhắn của bạn ở đây.",
+      "sendMessage": "Gửi tin nhắn"
+    },
+    "cta": {
+      "title": "Sẵn sàng cho một cuộc phiêu lưu chính?",
+      "description": "Bắt đầu dùng thử miễn phí và xem việc đọc thú vị như thế nào với Primary Advantage! Hoàn hảo cho học sinh từ 8-12 tuổi."
+    }
+  },
+  "AboutPage": {
+    "title": "Về chúng tôi",
+    "description": "Tìm hiểu thêm về Primary Advantage và sứ mệnh của chúng tôi"
+  },
+  "AuthPage": {
+    "signin": {
+      "title": "Đăng nhập",
+      "student": "Học sinh",
+      "teacher": "Giáo viên",
+      "welcome": "Chào mừng đến với Primary Advantage",
+      "enterClassroomCode": "Nhập mã lớp học của bạn",
+      "classroomCode": "Mã lớp học",
+      "next": "Tiếp theo",
+      "selectYourNameLabel": "Chọn tên của bạn",
+      "selectYourName": "Chọn tên của bạn dưới đây để đăng nhập vào tài khoản của bạn",
+      "selectYourNamePlaceholder": "Chọn một học sinh",
+      "login": "Đăng nhập",
+      "classroomCodeRequired": "Vui lòng nhập mã lớp học của bạn"
+    },
+    "signup": {
+      "title": "Đăng ký"
+    }
+  },
+  "Settings": {
+    "userProfile": {
+      "title": "Thông tin cá nhân",
+      "subtitle": "Thông tin về hồ sơ cá nhân của bạn",
+      "backToReading": "Quay lại trang đọc",
+      "username": "Tên người dùng",
+      "usernameDescription": "Tên người dùng được sử dụng để biểu thị chính mình trên nền tảng.",
+      "email": "Email",
+      "level": "Cấp độ Primary Advantage",
+      "xp": "XP Primary Advantage",
+      "xpDescription": "XP được sử dụng để nâng cấp.",
+      "verified": "Đã xác minh",
+      "notVerified": "Chưa xác minh",
+      "resetPassword": "Đặt lại mật khẩu",
+      "resendVerification": "Gửi lại email xác minh",
+      "unknown": "không rõ",
+      "update": "Cập nhật",
+      "activate": "Kích hoạt",
+      "license": "Giấy phép",
+      "licenseDescription": "Nhập giấy phép mới cho người dùng"
+    },
+    "schoolProfile": {
+      "title": "Hồ sơ trường học",
+      "subtitle": "Quản lý thông tin trường học của bạn",
+      "loading": "Đang tải...",
+      "noSchool": "Không có thông tin trường học",
+      "createSchool": "Tạo hồ sơ trường học",
+      "createSchoolDescription": "Thiết lập thông tin trường học của bạn để bắt đầu. Tạo trường học sẽ tự động cấp quyền quản trị viên để quản lý các tính năng của trường học.",
+      "editSchool": "Chỉnh sửa thông tin trường học",
+      "editSchoolDescription": "Cập nhật thông tin trường học của bạn dưới đây.",
+      "schoolName": "Tên trường học",
+      "contactName": "Tên người liên hệ",
+      "contactEmail": "Email liên hệ",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày cập nhật",
+      "totalUsers": "Tổng số người dùng",
+      "totalAdmins": "Tổng số quản trị viên",
+      "owner": "Chủ sở hữu",
+      "license": "Thông tin giấy phép",
+      "licensedescription": "Thông tin về giấy phép và đăng ký của trường học của bạn",
+      "licenseStatus": "Trạng thái giấy phép",
+      "maxUsers": "Số người dùng tối đa",
+      "expiryDate": "Ngày hết hạn",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "updateSchoolButton": "Cập nhật trường học",
+      "delete": "Xóa",
+      "creating": "Đang tạo...",
+      "updating": "Đang cập nhật...",
+      "success": "Cập nhật hồ sơ trường học thành công",
+      "error": "Không thể cập nhật hồ sơ trường học",
+      "loadError": "Không thể tải thông tin trường học",
+      "tryAgainLater": "Vui lòng thử lại sau.",
+      "schoolNameDescription": "Trường học hoặc tổ chức chính thức",
+      "contactNameDescription": "Tên người liên hệ",
+      "contactEmailDescription": "Email liên hệ",
+      "schoolNamePlaceholder": "Nhập tên trường học",
+      "contactNamePlaceholder": "Nhập tên liên hệ (tùy chọn)",
+      "contactEmailPlaceholder": "Nhập email liên hệ (tùy chọn)",
+      "createSchoolButton": "Tạo trường học",
+      "editSchoolButton": "Chỉnh sửa trường học",
+      "schoolInformation": "Thông tin trường học",
+      "schoolInformationDescription": "Xem và quản lý thông tin trường học của bạn.",
+      "deleteSchool": "Xóa trường học",
+      "deleting": "Đang xóa...",
+      "deleteSchoolDescription": "Bạn có chắc chắn muốn xóa trường học này? Hành động này không thể hoàn tác. Tất cả dữ liệu liên quan bao gồm người dùng, quản trị viên và lớp học sẽ bị xóa.",
+      "deleteSchoolButton": "Xóa trường học",
+      "schoolAdmin": "Quản trị viên trường học",
+      "schoolAdminDescription": "Người dùng có quyền quản trị trường học",
+      "addsAdmins": "Thêm quản trị viên",
+      "addAdminHeader": "Thêm quản trị viên trường học",
+      "addsAdminsDescription": "Tìm kiếm người dùng và thêm họ làm quản trị viên trường học.",
+      "searchUsers": "Tìm kiếu người dùng",
+      "searchUsersPlaceholder": "Nhập tên hoặc email...",
+      "createSchoolcard": {
+        "title": "Không có trường học được liên kết",
+        "description": "Bạn chưa có trường học được liên kết với tài khoản của bạn. Tạo một để bắt đầu và nhận quyền quản trị viên để quản lý các tính năng của trường học.",
+        "createSchool": "Tạo trường học"
+      }
+    }
+  },
+  "Lesson": {
+    "Reading": {
+      "firstTitle": "Đọc lần đầu",
+      "deepTitle": "Đọc chuyên sâu",
+      "subtitle": "Đọc bài viết và làm nổi bật các từ và câu quan trọng",
+      "controls": {
+        "speed": "Tốc độ",
+        "play": "Bắt đầu đọc",
+        "pause": "Tạm dừng đọc",
+        "loading": "Đang tải âm thanh"
+      },
+      "translation": {
+        "button": "Dịch",
+        "on": "Bật dịch",
+        "off": "Tắt dịch",
+        "title": "Bản dịch:"
+      },
+      "tips": {
+        "firstTitle": "Mẹo đọc lần đầu",
+        "deepTitle": "Mẹo đọc chuyên sâu",
+        "readEntire": "Đọc toàn bộ bài viết",
+        "clickStart": "Nhấp bắt đầu đọc",
+        "sentenceJump": "Nhấp để nhảy đến câu",
+        "useHighlight": "Sử dụng chế độ tô sáng",
+        "listenComplete": "Nghe âm thanh đến hết"
+      }
+    },
+    "title": "Bài học",
+    "description": "Bài học đọc tương tác",
+    "loading": "Đang tải bài học...",
+    "error": "Không thể tải bài học",
+    "header": {
+      "title": "Bài học",
+      "subtitle": "Trải nghiệm đọc tương tác",
+      "mode": "Chế độ học",
+      "cta": "Bắt đầu hành trình đọc tương tác với bài viết này"
+    },
+    "actions": {
+      "starting": "Đang bắt đầu...",
+      "startLesson": "Bắt đầu bài học",
+      "processing": "Đang xử lý...",
+      "previousTask": "Nhiệm vụ trước",
+      "nextTask": "Nhiệm vụ tiếp theo"
+    },
+    "progress": {
+      "title": "Tiến độ",
+      "taskOfTotal": "Nhiệm vụ {task} trên {total}",
+      "currentTask": "Hiện tại: Nhiệm vụ {task}"
+    },
+    "tasks": {
+      "introduction": "Giới thiệu",
+      "previewVocabulary": "Xem trước từ vựng",
+      "firstReading": "Đọc lần đầu",
+      "vocabularyCollection": "Thu thập từ vựng",
+      "deepReading": "Đọc chuyên sâu",
+      "sentenceCollection": "Thu thập câu",
+      "multipleChoice": "Trắc nghiệm",
+      "shortAnswer": "Trả lời ngắn",
+      "vocabularyFlashcards": "Flashcard từ vựng",
+      "vocabularyMatching": "Ghép từ vựng",
+      "sentenceFlashcards": "Flashcard câu",
+      "sentenceActivities": "Hoạt động câu",
+      "languageQuestions": "Câu hỏi ngôn ngữ",
+      "lessonSummary": "Tổng kết bài học",
+      "shortAnswerTitle": "Nhiệm vụ Trả lời Ngắn",
+      "shortAnswerDescription": "Mô tả Nhiệm vụ Chủ đề : {title}",
+      "multipleChoiceTitle": "Nhiệm vụ Trắc nghiệm",
+      "multipleChoiceDescription": "Mô tả Nhiệm vụ Chủ đề : {title}",
+      "vocabularyFlashcardsTitle": "Nhiệm vụ Flashcard Từ vựng",
+      "vocabularyFlashcardsDescription": "Ôn tập từ vựng chính sử dụng flashcard tương tác.",
+      "vocabularyMatchingTitle": "Nhiệm vụ Ghép Từ vựng",
+      "vocabularyMatchingDescription": "Ghép các từ với ý nghĩa của chúng để xây dựng sự hiểu biết.",
+      "sentenceFlashcardsTitle": "Nhiệm vụ Flashcard Câu",
+      "sentenceFlashcardsDescription": "Luyện tập câu và củng cố ngữ cảnh với flashcard."
+    },
+    "VocabularyFlashcards": {
+      "loading": {
+        "title": "Đang tải Flashcard",
+        "description": "Đang chuẩn bị bài tập từ vựng của bạn..."
+      },
+      "error": {
+        "title": "Đã xảy ra lỗi",
+        "description": "Không thể tải flashcard. Vui lòng thử lại."
+      },
+      "empty": {
+        "title": "Không có thẻ nào",
+        "description": "Hiện không có thẻ nào để học."
+      },
+      "start": {
+        "title": "Bắt đầu Luyện tập Từ vựng",
+        "description": "Đang chuẩn bị phiên luyện tập từ vựng của bạn...",
+        "translationLanguage": "Ngôn ngữ dịch",
+        "translationHint": "Định nghĩa sẽ được hiển thị bằng ngôn ngữ này",
+        "startButton": "Bắt đầu trò chơi"
+      },
+      "playing": {
+        "header": "Flashcard Từ vựng",
+        "cardOf": "Thẻ {current} trên {total}",
+        "progress": "Tiến độ",
+        "percentComplete": "Hoàn thành {percent}%",
+        "badgeVocabulary": "TỪ VỰNG",
+        "state": {
+          "new": "MỚI",
+          "learning": "ĐANG HỌC",
+          "review": "ÔN TẬP",
+          "relearning": "HỌC LẠI"
+        },
+        "thinkPrompt": "Nghĩ về ý nghĩa của từ này, sau đó hiển thị câu trả lời.",
+        "showAnswer": "Hiển thị câu trả lời",
+        "rating": {
+          "prompt": "Bạn biết từ này tốt như thế nào?",
+          "again": "Lại",
+          "hard": "Khó",
+          "good": "Tốt",
+          "easy": "Dễ"
+        }
+      },
+      "stats": {
+        "completed": "Đã hoàn thành: {count}",
+        "remaining": "Còn lại: {count}",
+        "total": "Tổng số thẻ: {count}"
+      },
+      "completion": {
+        "title": "Hoàn thành Luyện tập Từ vựng!",
+        "subtitle": "Làm tốt lắm với phiên luyện tập từ vựng của bạn",
+        "xpEarned": "XP đã nhận",
+        "timeTaken": "Thời gian đã dùng",
+        "completed": "Đã hoàn thành"
+      }
+    },
+    "VocabularyMatching": {
+      "loading": {
+        "title": "Đang tải Flashcard",
+        "description": "Đang chuẩn bị bài tập từ vựng của bạn..."
+      },
+      "noCards": {
+        "title": "Không có Từ vựng",
+        "description": "Chưa có flashcard từ vựng cho bài viết này."
+      },
+      "error": {
+        "title": "Không thể tải",
+        "description": "Đã xảy ra lỗi khi tải từ vựng. Vui lòng thử lại."
+      },
+      "buttons": {
+        "tryAgain": "Thử lại",
+        "showAnswers": "Hiển thị đáp án",
+        "completeActivity": "Hoàn thành hoạt động"
+      },
+      "start": {
+        "title": "Bắt đầu Ghép Từ vựng",
+        "subtitle": "Chọn ngôn ngữ bạn muốn cho định nghĩa",
+        "languageLabel": "Ngôn ngữ định nghĩa",
+        "languageHint": "Định nghĩa từ sẽ được hiển thị bằng ngôn ngữ này",
+        "startButton": "Bắt đầu trò chơi ghép"
+      },
+      "completed": {
+        "title": "Hoàn thành Luyện tập Từ vựng!",
+        "subtitle": "Làm tốt lắm với phiên luyện tập từ vựng của bạn",
+        "xpEarned": "XP đã nhận",
+        "completed": "Đã hoàn thành"
+      },
+      "game": {
+        "title": "📚 Ghép từ với định nghĩa",
+        "instruction": "Nhấp vào một từ bên trái, sau đó nhấp vào định nghĩa của nó bên phải",
+        "columns": {
+          "words": "Từ",
+          "definitions": "Định nghĩa"
+        }
+      },
+      "progress": {
+        "matched": "{matched}/{total} đã ghép",
+        "correct": "{correct}/{total} đúng"
+      },
+      "results": {
+        "perfect": "Hoàn hảo! Tất cả các cặp đều ghép đúng! 🎉",
+        "partialCorrect": "{correct}/{total} đúng 💪",
+        "correctMatches": "Các cặp đúng:",
+        "showAnswers": "Đã hiển thị các cặp đúng! 📖",
+        "correctMatch": "Ghép đúng! ✅",
+        "incorrectMatch": "Ghép sai. Thử lại! ❌",
+        "tryAgain": "{correct}/{total} đúng. Thử lại! 💪"
+      },
+      "toast": {
+        "failedToLoad": "Không thể tải từ vựng"
+      }
+    },
+    "Introduction": {
+      "phase1Title": "Giới thiệu",
+      "phase1Description": "Trong bài học này, bạn sẽ đọc một bài viết về: {title}",
+      "cefrLevel": "Cấp độ CEFR: {level}",
+      "raLevel": "Cấp độ RA: {level}",
+      "estimatedReadTime": "Thời gian đọc ước tính: {time}",
+      "articleSummary": "Tóm tắt bài viết",
+      "learningObjectives": "Mục tiêu học tập",
+      "understandMainIdeas": "Hiểu ý chính:",
+      "learnVocabulary": "Học từ vựng:",
+      "improveComprehension": "Cải thiện khả năng đọc hiểu:"
+    },
+    "PreviewVocabulary": {
+      "title": "Xem trước từ vựng",
+      "subtitle": "Xem trước các từ vựng của bài viết",
+      "definition": "Định nghĩa",
+      "audioNotAvailable": "Không có âm thanh",
+      "empty": "Không tìm thấy từ vựng",
+      "progress": "Tiến độ từ vựng",
+      "wordsToLearn": "{count} từ cần học"
+    },
+    "SentenceCollection": {
+      "title": "Thu thập câu",
+      "subtitle": "Xem trước các câu của bài viết",
+      "definition": "Bản dịch",
+      "audioNotAvailable": "Không có âm thanh",
+      "empty": "Không có câu nào",
+      "progress": "Tiến độ câu",
+      "wordsToLearn": "{count} câu cần học"
+    },
+    "SentenceActivities": {
+      "title": "Hoạt động câu",
+      "description": "Luyện tập các hoạt động về câu để cải thiện kỹ năng.",
+      "loading": "Đang tải hoạt động...",
+      "completed": "Hoàn thành",
+      "review": "Xem lại",
+      "orderSentences": {
+        "title": "Sắp xếp câu",
+        "description": "Luyện tập sắp xếp câu để cải thiện kỹ năng.",
+        "button": "Sắp xếp câu"
+      },
+      "clozeTest": {
+        "title": "Bài tập điền từ",
+        "description": "Luyện tập bài tập điền từ để cải thiện kỹ năng.",
+        "button": "Bài tập điền từ"
+      },
+      "orderWords": {
+        "title": "Sắp xếp từ",
+        "description": "Luyện tập sắp xếp từ để cải thiện kỹ năng.",
+        "button": "Sắp xếp từ"
+      },
+      "matching": {
+        "title": "Ghép đôi",
+        "description": "Luyện tập ghép đôi để cải thiện kỹ năng.",
+        "button": "Ghép đôi"
+      }
+    },
+    "Summary": {
+      "title": "Tổng kết bài học",
+      "completed": "Làm rất tốt! Bạn đã hoàn thành bài học.",
+      "xpEarned": "+{xp} XP đã nhận!",
+      "stats": {
+        "timeSpent": "Thời gian",
+        "wordsSaved": "Từ đã lưu",
+        "sentences": "Câu",
+        "totalXp": "Tổng XP"
+      },
+      "quiz": {
+        "title": "Kết quả bài kiểm tra",
+        "mcq": "Câu hỏi trắc nghiệm",
+        "saq": "Câu trả lời ngắn",
+        "score": "Điểm: {score}/5",
+        "percent": "{percent}%"
+      },
+      "feedback": {
+        "mcq": {
+          "1": "Bạn cần ôn lại tài liệu và thử lại. Đừng bỏ cuộc!",
+          "2": "Có tiến bộ nhỏ, nhưng cần cố gắng thêm",
+          "3": "Đang tiến bộ! Hãy tiếp tục luyện tập",
+          "4": "Rất tốt! Gần đạt điểm tối đa",
+          "5": "Xuất sắc! Bạn hiểu nội dung rất tốt"
+        },
+        "saq": {
+          "1": "Xuất sắc! Bạn hiểu nội dung rất tốt",
+          "2": "Khởi đầu tốt, nhưng thiếu chi tiết quan trọng",
+          "3": "Tạm ổn. Hãy giải thích chi tiết hơn",
+          "4": "Câu trả lời tốt. Cần chỉnh sửa đôi chút",
+          "5": "Xuất sắc! Rõ ràng, đầy đủ và có lý lẽ"
+        }
+      },
+      "vocabulary": {
+        "title": "Từ vựng đã học : {count} từ",
+        "more": "+{count} từ đã học thêm"
+      },
+      "sentences": {
+        "title": "Câu quan trọng : {count} câu",
+        "more": "+{count} câu được lưu thêm"
+      },
+      "actions": { "backToRead": "Quay lại trang đọc" },
+      "toast": { "failed": "Không thể tải tổng kết bài học" }
+    }
+  },
+  "LessonLanguageQuestion": {
+    "title": "Trợ lý Đọc AI",
+    "loading": { "conversation": "Đang tải cuộc trò chuyện..." },
+    "status": { "online": "Trực tuyến" },
+    "header": {
+      "readyWithName": "Sẵn sàng giúp {name} với các câu hỏi",
+      "ready": "Sẵn sàng giúp bạn với câu hỏi của bạn"
+    },
+    "empty": {
+      "helloName": "Xin chào {name}!",
+      "start": "Bắt đầu cuộc trò chuyện!",
+      "ask": "Hỏi tôi bất cứ điều gì về bài đọc."
+    },
+    "thinking": "Đang suy nghĩ...",
+    "input": {
+      "placeholderWithName": "{name}, hãy hỏi về bài đọc...",
+      "placeholder": "Nhập câu hỏi về bài đọc..."
+    },
+    "buttons": { "send": "Gửi", "skip": "Bỏ qua" },
+    "tips": {
+      "askVocabulary": "Hỏi về từ vựng",
+      "discussTheme": "Thảo luận về chủ đề chính",
+      "clarifyParts": "Làm rõ phần gây khó hiểu"
+    },
+    "error": {
+      "fetchResponse": "Lỗi khi lấy phản hồi",
+      "fetchInitial": "Lỗi khi lấy câu hỏi ban đầu"
+    }
+  },
+  "LessonMCQ": {
+    "header": {
+      "title": "Bài trắc nghiệm",
+      "questionOf": "Câu {current} trên {total}",
+      "completePercent": "Hoàn thành {percent}%"
+    },
+    "timer": { "seconds": "{seconds}s" },
+    "completed": {
+      "title": "Hoàn thành bài kiểm tra",
+      "description": "Tuyệt vời! Bạn đã hoàn thành bài kiểm tra",
+      "correctAnswers": "Câu đúng",
+      "accuracy": "Độ chính xác",
+      "xpEarned": "XP từ MCQ",
+      "totalTime": "Tổng thời gian"
+    },
+    "actions": {
+      "retake": "Làm lại",
+      "nextQuestion": "Câu tiếp theo",
+      "finishQuiz": "Kết thúc"
+    }
+  },
+  "LessonSAQ": {
+    "completed": { "title": "Hoàn thành bài kiểm tra" },
+    "labels": {
+      "question": "Câu hỏi:",
+      "yourAnswer": "Câu trả lời của bạn:",
+      "suggestedAnswer": "Câu trả lời gợi ý:",
+      "feedback": "Phản hồi:",
+      "score": "Điểm:"
+    },
+    "timer": { "elapsed": "Thời gian: {time}" },
+    "form": {
+      "placeholder": { "answer": "Nhập câu trả lời của bạn..." },
+      "help": {
+        "detailedResponse": "Viết câu trả lời chi tiết để thể hiện sự hiểu biết"
+      },
+      "validation": { "answerRequired": "Vui lòng nhập câu trả lời" }
+    },
+    "actions": { "submit": "Gửi" }
+  },
+  "LessonCloze": {
+    "loading": {
+      "title": "Đang tải câu của bạn...",
+      "subtitle": "Đang lấy câu từ bộ flashcard của bạn",
+      "nextChallenge": "Đang tải thử thách tiếp theo..."
+    },
+    "common": {
+      "ready": "Sẵn sàng chơi",
+      "min": "phút"
+    },
+    "start": {
+      "title": "Sẵn sàng bắt đầu?",
+      "subtitle": "Điền vào chỗ trống trong các câu từ bộ flashcard của bạn",
+      "stats": {
+        "tests": "Bài kiểm tra điền từ",
+        "fillBlanks": "Điền chỗ trống",
+        "oneBlank": "1 chỗ trống mỗi câu",
+        "twoBlanks": "2 chỗ trống mỗi câu",
+        "threeBlanks": "3 chỗ trống mỗi câu",
+        "estimated": "Thời gian ước tính"
+      }
+    },
+    "instructions": {
+      "title": "Cách chơi",
+      "item1": "Mỗi câu có các từ còn thiếu mà bạn cần điền vào",
+      "item2": "Chọn tùy chọn đúng từ menu thả xuống",
+      "item3": "Hoàn thành tất cả chỗ trống để hoàn thành mỗi câu"
+    },
+    "difficulty": {
+      "choose": "Chọn mức độ khó",
+      "select": "Chọn độ khó",
+      "easy": "Dễ",
+      "medium": "Trung bình",
+      "hard": "Khó",
+      "desc": {
+        "easy": "Hoàn hảo cho người mới bắt đầu. Một từ sẽ bị thiếu trong mỗi câu.",
+        "medium": "Thử thách vừa phải. Hai từ sẽ bị thiếu trong mỗi câu.",
+        "hard": "Thử thách tối đa. Ba từ sẽ bị thiếu trong mỗi câu."
+      }
+    },
+    "buttons": {
+      "loading": "Đang tải câu {difficulty}...",
+      "startGame": "Bắt đầu trò chơi",
+      "back": "Quay lại menu",
+      "playAgain": "Chơi lại",
+      "reset": "Đặt lại câu trả lời",
+      "check": "Kiểm tra câu trả lời",
+      "showAnswers": "Hiển thị đáp án",
+      "next": "Câu tiếp theo",
+      "finish": "Kết thúc trò chơi"
+    },
+    "complete": {
+      "title": "🎉 Tuyệt vời!",
+      "subtitle": "Bạn đã hoàn thành {count} thử thách điền từ",
+      "stats": {
+        "perfect": "Điểm hoàn hảo",
+        "accuracy": "Độ chính xác",
+        "time": "Tổng thời gian"
+      }
+    },
+    "game": {
+      "subtitle": "Điền các từ còn thiếu bằng cách chọn từ menu thả xuống"
+    },
+    "hints": {
+      "label": "Gợi ý:",
+      "audio": "Âm thanh",
+      "play": "Phát theo thứ tự"
+    },
+    "sentence": {
+      "instructions": "Hoàn thành câu bằng cách điền vào chỗ trống:"
+    },
+    "progress": {
+      "perfect": "{score}/{total} hoàn hảo",
+      "sentence": "Tiến độ: {answered}/{total} chỗ trống đã điền",
+      "correct": "Đúng: {correct}/{answered}"
+    },
+    "result": {
+      "perfect": "Hoàn hảo! Tất cả chỗ trống đều đúng! 🎉",
+      "tryAgain": "{correct}/{total} đúng 💪",
+      "correctAnswers": "Câu trả lời đúng:"
+    }
+  },
+  "SentenceFlashcards": {
+    "loading": {
+      "title": "Đang tải Flashcard",
+      "subtitle": "Đang chuẩn bị bài tập câu của bạn..."
+    },
+    "error": {
+      "title": "Đã xảy ra lỗi",
+      "description": "Không thể tải flashcard. Vui lòng thử lại.",
+      "retry": "Thử lại"
+    },
+    "empty": {
+      "title": "Không có thẻ nào",
+      "description": "Hiện không có thẻ nào để học."
+    },
+    "start": {
+      "title": "Bắt đầu Luyện tập Câu",
+      "subtitle": "Đang chuẩn bị phiên luyện tập câu của bạn...",
+      "language": "Ngôn ngữ dịch",
+      "languageNote": "Định nghĩa sẽ được hiển thị bằng ngôn ngữ này",
+      "startButton": "Bắt đầu trò chơi"
+    },
+    "header": {
+      "title": "Flashcard Câu",
+      "progress": "Thẻ {current} trên {total}",
+      "progressLabel": "Tiến độ",
+      "percentComplete": "Hoàn thành {percent}%"
+    },
+    "badge": {
+      "typeSentence": "CÂU",
+      "new": "MỚI",
+      "learning": "ĐANG HỌC",
+      "review": "ÔN TẬP",
+      "relearning": "HỌC LẠI"
+    },
+    "prompt": {
+      "thinkAndReveal": "Nghĩ về ý nghĩa của câu này, sau đó hiển thị câu trả lời."
+    },
+    "buttons": { "showAnswer": "Hiển thị câu trả lời" },
+    "rating": {
+      "prompt": "Bạn biết câu này tốt như thế nào?",
+      "again": "Lại",
+      "hard": "Khó",
+      "good": "Tốt",
+      "easy": "Dễ"
+    },
+    "stats": {
+      "completed": "Đã hoàn thành: {count}",
+      "remaining": "Còn lại: {count}",
+      "total": "Tổng số thẻ: {count}"
+    },
+    "complete": {
+      "title": "Hoàn thành Luyện tập Câu!",
+      "subtitle": "Làm tốt lắm với phiên luyện tập câu của bạn",
+      "xpEarned": "XP đã nhận",
+      "timeTaken": "Thời gian đã dùng",
+      "completedLabel": "Đã hoàn thành"
+    }
+  },
+  "TaskLanguageQuestions": {
+    "title": "Câu hỏi ngôn ngữ",
+    "subtitle": "Luyện kỹ năng ngôn ngữ bằng cách trả lời câu hỏi về bài viết",
+    "badges": {
+      "aiPowered": "Hỗ trợ bởi AI",
+      "interactive": "Tương tác",
+      "askQuestions": "Đặt câu hỏi"
+    }
+  },
+  "TeacherMyClasses": {
+    "page": {
+      "title": "Lớp học của tôi",
+      "description": "Quản lý và xem lớp học của bạn"
+    },
+    "table": {
+      "headers": {
+        "className": "Tên lớp",
+        "classCode": "Mã lớp",
+        "studentCount": "Số học sinh",
+        "grade": "Khối",
+        "actions": "Thao tác"
+      },
+      "empty": "Trống"
+    },
+    "actions": {
+      "roster": "Danh sách",
+      "reports": "Báo cáo",
+      "edit": "Chỉnh sửa",
+      "archive": "Lưu trữ",
+      "delete": "Xóa"
+    },
+    "search": { "placeholder": "Tìm kiếm" },
+    "import": {
+      "fromLabel": "Nhập một lớp mới từ",
+      "googleClassroom": "Google Classroom",
+      "dialog": {
+        "title": "Nhập Google Classroom của bạn",
+        "selectClass": "Chọn lớp Google Classroom",
+        "description": "Chọn lớp để đồng bộ. Tất cả học sinh sẽ được nhập và thêm vào tài khoản của bạn.",
+        "yourClasses": "Lớp Google Classroom của bạn",
+        "refresh": "Làm mới",
+        "continue": "Tiếp tục",
+        "syncing": "Đang đồng bộ lớp...",
+        "syncingDescription": "Đang nhập học sinh từ Google Classroom. Có thể mất một lát.",
+        "syncCompleted": "Đồng bộ hoàn tất!",
+        "syncAnother": "Đồng bộ lớp khác",
+        "goToClass": "Đi tới lớp",
+        "aboutTitle": "Về đồng bộ Google Classroom",
+        "aboutDescription": "Tính năng này giúp nhập học sinh từ Google Classroom. Học sinh sẽ được ghi danh vào lớp của bạn tự động."
+      }
+    },
+    "pagination": { "previous": "Trước", "next": "Tiếp" },
+    "edit": {
+      "title": "Chỉnh sửa lớp",
+      "description": "Bạn có chắc muốn chỉnh sửa lớp này?",
+      "className": "Tên lớp",
+      "classNamePlaceholder": "Tên lớp",
+      "grade": "Khối",
+      "gradePlaceholder": "Khối",
+      "gradeItem": "Khối {grade}",
+      "submit": "Chỉnh sửa"
+    },
+    "delete": {
+      "title": "Xóa lớp",
+      "description": "Bạn có chắc muốn xóa lớp này?",
+      "submit": "Xóa",
+      "cancel": "Hủy"
+    },
+    "toast": {
+      "attention": "Chú ý",
+      "fillAllFields": "Vui lòng điền đầy đủ các trường",
+      "success": "Thành công",
+      "classUpdated": "Cập nhật lớp thành công",
+      "error": "Lỗi",
+      "failedUpdate": "Cập nhật lớp thất bại",
+      "classDeleted": "Xóa lớp thành công",
+      "failedDelete": "Xóa lớp thất bại"
+    }
+  },
+  "TeacherCreateClass": {
+    "button": { "newClassroom": "Lớp học mới" },
+    "dialog": { "title": "Tạo lớp", "description": "Tạo lớp học mới" },
+    "fields": {
+      "className": "Tên lớp",
+      "classNamePlaceholder": "Tên lớp",
+      "classCode": "Mã lớp",
+      "grade": "Khối",
+      "gradePlaceholder": "Khối",
+      "gradeItem": "Khối {grade}"
+    },
+    "actions": { "create": "Tạo", "cancel": "Hủy" },
+    "toast": {
+      "attention": "Chú ý",
+      "fillAllFields": "Vui lòng điền đầy đủ các trường",
+      "success": "Thành công",
+      "classCreated": "Tạo lớp thành công",
+      "error": "Lỗi",
+      "failedCreate": "Tạo lớp thất bại"
+    }
+  },
+  "teacher": {
+    "myStudents": {
+      "title": "Học sinh của tôi",
+      "description": "Xem và quản lý học sinh của bạn",
+      "table": {
+        "name": "Tên",
+        "email": "Email",
+        "classrooms": "Lớp học",
+        "actions": "Thao tác",
+        "empty": "Trống"
+      },
+      "actions": {
+        "progress": "Tiến độ",
+        "resetProgress": "Đặt lại tiến độ",
+        "cancel": "Hủy",
+        "reset": "Đặt lại"
+      },
+      "search": {
+        "placeholder": "Tìm theo tên"
+      },
+      "pagination": {
+        "previous": "Trước",
+        "next": "Tiếp"
+      },
+      "unknown": {
+        "student": "Không tên",
+        "email": "Không rõ"
+      },
+      "classrooms": {
+        "none": "Không có lớp",
+        "more": "+{count} thêm"
+      },
+      "dialog": {
+        "reset": {
+          "title": "Đặt lại tiến độ",
+          "description": "Bạn có chắc muốn đặt lại tiến độ của học sinh này không?"
+        }
+      },
+      "toast": {
+        "reset": {
+          "success": "Đặt lại XP thành công.",
+          "error": "Đặt lại XP thất bại."
+        }
+      }
+    },
+    "cefrSetter": {
+      "button": { "setLevel": "Đặt cấp độ" },
+      "dialog": {
+        "title": "Đặt cấp độ CEFR cho {name}",
+        "description": "Chọn cấp độ CEFR phù hợp cho học sinh này. Hệ thống cũng sẽ cập nhật cấp độ đọc (RA)."
+      },
+      "labels": {
+        "currentLevel": "Cấp độ hiện tại",
+        "newLevel": "Cấp độ mới"
+      },
+      "select": { "placeholder": "Chọn cấp độ CEFR" },
+      "preview": {
+        "title": "Xem trước:",
+        "cefr": "Cấp độ CEFR:",
+        "ra": "Cấp độ RA:"
+      },
+      "actions": {
+        "cancel": "Hủy",
+        "update": "Cập nhật cấp độ",
+        "updating": "Đang cập nhật..."
+      },
+      "toast": {
+        "noChanges": "Không có thay đổi để lưu",
+        "success": "Đã cập nhật CEFR của {name} thành {level}",
+        "error": "Không thể cập nhật cấp độ CEFR"
+      }
+    }
+  },
+  "Teacher": {
+    "Assignments": {
+      "heading": "Bài giao",
+      "selectors": {
+        "selectClassroom": "Chọn lớp học"
+      },
+      "search": {
+        "placeholder": "Tìm kiếm bài giao...",
+        "searching": "Đang tìm..."
+      },
+      "table": {
+        "headers": {
+          "assignment": "Bài giao",
+          "createdOn": "Tạo lúc",
+          "dueDate": "Hạn nộp",
+          "students": "Học sinh",
+          "actions": "Thao tác"
+        },
+        "actions": {
+          "actions": "Thao tác",
+          "details": "Chi tiết"
+        }
+      },
+      "empty": {
+        "noAssignments": "Không tìm thấy bài giao",
+        "selectClassroom": "Vui lòng chọn lớp để xem bài giao"
+      },
+      "pagination": {
+        "previous": "Trước",
+        "next": "Sau",
+        "pageOf": "Trang {page} trên {totalPages}",
+        "showing": "Hiển thị {from} đến {to} trong tổng {total} bài giao"
+      },
+      "toast": {
+        "fetchError": "Không thể tải bài giao"
+      }
+    },
+    "ClassCodeGenerator": {
+      "title": "Mật khẩu cho {classroomName}",
+      "description": {
+        "line1": "Tạo mã để học sinh có thể tham gia lớp này.",
+        "line2": "Học sinh sẽ dùng mã này để đăng nhập và truy cập tài liệu."
+      },
+      "fields": {
+        "password": {
+          "label": "Mật khẩu",
+          "copyTitle": "Sao chép mã"
+        }
+      },
+      "expires": {
+        "label": "Hết hạn:",
+        "never": "Không bao giờ",
+        "status": {
+          "expired": "Đã hết hạn",
+          "hoursLeft": "Còn {count} giờ",
+          "daysLeft": "Còn {count} ngày"
+        }
+      },
+      "instructions": {
+        "title": "Hướng dẫn cho học sinh:",
+        "step1": "Truy cập trang đăng nhập học sinh",
+        "step2": "Nhập mật khẩu:",
+        "step3": "Chọn tên của mình trong danh sách",
+        "step4": "Bắt đầu học!",
+        "copy": "Sao chép hướng dẫn"
+      },
+      "actions": {
+        "open": "Tạo mật khẩu",
+        "generate": "Tạo mật khẩu",
+        "generateNew": "Tạo mã mới",
+        "generating": "Đang tạo...",
+        "close": "Đóng"
+      },
+      "toast": {
+        "generateSuccess": "Tạo mã lớp thành công",
+        "generateError": "Không thể tạo mã lớp",
+        "copyCodeSuccess": "Đã sao chép mã lớp",
+        "copyCodeError": "Không thể sao chép mã lớp",
+        "copyInstructionsSuccess": "Đã sao chép hướng dẫn",
+        "copyInstructionsError": "Không thể sao chép hướng dẫn"
+      },
+      "clipboard": {
+        "instructions": "🎓 Tham gia {classroomName}\n\nDùng mật khẩu này để tham gia: {classCode}\n\nHướng dẫn:\n1. Truy cập trang đăng nhập học sinh\n2. Nhập mật khẩu: {classCode}\n3. Chọn tên của bạn trong danh sách\n4. Bắt đầu học!\n\n⏰ Mã này sẽ hết hạn: {expiresAt}"
+      }
+    },
+    "StudentEnrollmentButton": {
+      "title": "Ghi danh học sinh",
+      "description": "Chọn học sinh để ghi danh vào {classroomName}",
+      "search": {
+        "placeholder": "Tìm học sinh theo tên hoặc email..."
+      },
+      "empty": {
+        "title": "Không có học sinh để ghi danh",
+        "description": "Tất cả học sinh đã được ghi danh vào lớp này",
+        "searchTitle": "Không tìm thấy học sinh",
+        "searchDescription": "Hãy thử điều chỉnh từ khóa tìm kiếm"
+      },
+      "labels": {
+        "noName": "Không tên",
+        "level": "Cấp {level}"
+      },
+      "actions": {
+        "open": "Ghi danh học sinh",
+        "enroll": "Ghi danh",
+        "close": "Đóng"
+      },
+      "toast": {
+        "loadAvailableError": "Không thể tải danh sách học sinh khả dụng",
+        "enrollSuccess": "Đã ghi danh {name} thành công",
+        "enrollError": "Không thể ghi danh học sinh"
+      }
+    },
+    "ClassroomNavigation": {
+      "nav": {
+        "classRoster": "Danh sách lớp",
+        "reports": "Báo cáo",
+        "settings": "Cài đặt"
+      },
+      "info": {
+        "students": "{count, plural, one {# học sinh} other {# học sinh}}",
+        "grade": "Lớp {grade}",
+        "classCode": "Mã lớp:"
+      },
+      "password": {
+        "label": "Mật khẩu:",
+        "noPassword": "Không có mật khẩu",
+        "show": "Hiện mật khẩu",
+        "hide": "Ẩn mật khẩu",
+        "copy": "Sao chép mật khẩu"
+      },
+      "actions": {
+        "back": "Quay lại",
+        "backToClassrooms": "Quay lại danh sách lớp"
+      },
+      "toast": {
+        "copyClassCodeSuccess": "Đã sao chép mã lớp!",
+        "copyClassCodeError": "Không thể sao chép mã lớp",
+        "copyPasswordSuccess": "Đã sao chép mật khẩu!",
+        "copyPasswordError": "Không thể sao chép mật khẩu"
+      }
+    },
+    "ClassRoster": {
+      "title": "Danh sách lớp",
+      "description": "Quản lý học sinh, xem tiến độ và tổ chức lớp học."
+    },
+    "ClassroomSelector": {
+      "title": "Chọn lớp học",
+      "actions": {
+        "newClassroom": "Lớp học mới",
+        "viewRoster": "Xem danh sách lớp"
+      },
+      "empty": {
+        "title": "Không tìm thấy lớp học",
+        "description": "Hãy bắt đầu bằng cách tạo lớp học đầu tiên để quản lý học sinh và theo dõi tiến độ.",
+        "createFirst": "Tạo lớp học đầu tiên"
+      },
+      "grade": "Lớp {grade}",
+      "studentsCount": "{count, plural, one {# học sinh} other {# học sinh}}",
+      "createdAt": "Đã tạo {date}",
+      "toast": {
+        "loadError": "Không thể tải danh sách lớp"
+      }
+    },
+    "EnhancedClassRoster": {
+      "toast": {
+        "loadClassroomError": "Không thể tải dữ liệu lớp học",
+        "resetSuccess": "Đặt lại tiến độ học sinh thành công",
+        "resetError": "Không thể đặt lại tiến độ học sinh"
+      },
+      "notFound": {
+        "title": "Không tìm thấy lớp học",
+        "description": "Không tìm thấy lớp học được yêu cầu hoặc bạn không có quyền truy cập."
+      },
+      "actions": {
+        "backToRoster": "Quay lại danh sách lớp",
+        "cancel": "Hủy",
+        "resetProgress": "Đặt lại tiến độ",
+        "viewProgress": "Xem tiến độ"
+      },
+      "labels": {
+        "noName": "Không tên",
+        "level": "Cấp {level}",
+        "studentDefault": "Học sinh"
+      },
+      "students": {
+        "title": "Danh sách học sinh",
+        "enrollButton": "Ghi danh học sinh",
+        "searchPlaceholder": "Tìm kiếm học sinh...",
+        "empty": {
+          "title": "Chưa có học sinh được ghi danh",
+          "description": "Bắt đầu bằng cách ghi danh học sinh vào lớp này",
+          "enrollFirst": "Ghi danh học sinh đầu tiên",
+          "searchTitle": "Không tìm thấy học sinh",
+          "searchDescription": "Hãy thử điều chỉnh từ khóa tìm kiếm"
+        }
+      },
+      "activity": {
+        "none": "Chưa có hoạt động",
+        "today": "Hôm nay",
+        "yesterday": "Hôm qua",
+        "daysAgo": "{count} ngày trước",
+        "weeksAgo": "{count} tuần trước"
+      },
+      "resetDialog": {
+        "title": "Đặt lại tiến độ học sinh",
+        "description": "Bạn có chắc muốn đặt lại tiến độ của học sinh này không? Hành động này sẽ đặt XP về 0, cấp độ về 0 và xóa cấp CEFR. Hành động này không thể hoàn tác."
+      }
+    },
+    "Enrollment": {
+      "toast": {
+        "loadError": "Không thể tải thông tin lớp học"
+      },
+      "notFound": {
+        "title": "Không tìm thấy lớp học",
+        "description": "Không tìm thấy lớp học được yêu cầu hoặc bạn không có quyền truy cập."
+      },
+      "actions": {
+        "back": "Quay lại",
+        "backToRoster": "Quay lại danh sách lớp"
+      },
+      "header": {
+        "title": "Ghi danh học sinh",
+        "subtitle": "Quản lý việc ghi danh học sinh cho"
+      }
+    },
+    "AssignmentDashboard": {
+      "notStarted": "Chưa bắt đầu",
+      "inProgress": "Đang tiến hành",
+      "completed": "Hoàn thành",
+      "unknownStatus": "Trạng thái không xác định",
+      "createdOn": "Tạo lúc",
+      "dueDate": "Hạn nộp",
+      "overdue": "Quá hạn",
+      "dueToday": "Hạn hôm nay",
+      "daysRemaining": "Số ngày còn lại: {daysRemaining}",
+      "allStudents": "Tất cả học sinh",
+      "overallProgress": "Tiến độ tổng thể",
+      "studentList": "Danh sách học sinh",
+      "all": "Tất cả",
+      "deleting": "Đang xóa...",
+      "deleteCount": "Xóa ({count})",
+      "cancel": "Hủy",
+      "edit": "Chỉnh sửa",
+      "noStudentsInSelectedStatus": "Không có học sinh trong trạng thái đã chọn"
+    }
+  },
+  "AdminTeachers": {
+    "page": {
+      "title": "Quản lý giáo viên",
+      "description": "Quản lý giáo viên và quyền truy cập hệ thống"
+    },
+    "Add": {
+      "title": "Thêm giáo viên",
+      "subtitle": "Thêm giáo viên mới cho trường của bạn",
+      "cardTitle": "Thông tin giáo viên",
+      "form": {
+        "name": "Họ và tên",
+        "email": "Email",
+        "role": "Vai trò",
+        "password": "Mật khẩu",
+        "confirmPassword": "Xác nhận mật khẩu"
+      },
+      "placeholders": {
+        "name": "Nhập họ và tên giáo viên",
+        "email": "Nhập email",
+        "role": "Chọn vai trò",
+        "password": "Tạo mật khẩu",
+        "confirmPassword": "Xác nhận mật khẩu"
+      },
+      "buttons": {
+        "create": "Tạo giáo viên",
+        "creating": "Đang tạo giáo viên...",
+        "reset": "Làm mới biểu mẫu"
+      },
+      "toasts": {
+        "createdSuccess": "Tạo giáo viên thành công!",
+        "createError": "Không thể tạo giáo viên"
+      },
+      "schema": {
+        "nameMin": "Tên phải có ít nhất 2 ký tự",
+        "nameMax": "Tên phải ít hơn 100 ký tự",
+        "emailInvalid": "Vui lòng nhập email hợp lệ",
+        "roleRequired": "Vui lòng chọn vai trò",
+        "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+        "passwordMax": "Mật khẩu phải ít hơn 100 ký tự",
+        "passwordsDontMatch": "Mật khẩu không khớp"
+      }
+    },
+    "Table": {
+      "title": "Danh sách giáo viên",
+      "searchPlaceholder": "Tìm kiếm giáo viên...",
+      "stats": {
+        "totalTeachers": "Tổng số giáo viên",
+        "totalTeachersDesc": "Đang hoạt động trong hệ thống",
+        "totalStudents": "Tổng số học sinh",
+        "totalStudentsDesc": "Tổng trên tất cả giáo viên",
+        "totalClasses": "Tổng số lớp",
+        "totalClassesDesc": "Lớp đang hoạt động"
+      },
+      "actions": {
+        "addTeacher": "Thêm giáo viên",
+        "add": "Thêm giáo viên",
+        "update": "Cập nhật giáo viên",
+        "delete": "Xóa giáo viên",
+        "cancel": "Hủy"
+      },
+      "addDialog": {
+        "title": "Thêm giáo viên mới",
+        "description": "Tạo tài khoản giáo viên mới. Giáo viên sẽ nhận thông tin đăng nhập qua email."
+      },
+      "editDialog": {
+        "title": "Chỉnh sửa giáo viên",
+        "description": "Cập nhật thông tin và quyền truy cập của giáo viên."
+      },
+      "deleteDialog": {
+        "title": "Xóa giáo viên",
+        "description": "Bạn có chắc muốn xóa {name}? Hành động này không thể hoàn tác. Tất cả lớp học và dữ liệu học sinh liên quan sẽ bị ảnh hưởng."
+      },
+      "moveDialog": {
+        "title": "Chuyển giáo viên đến trường của bạn",
+        "description": "Giáo viên có email {email} đã thuộc trường {schoolName}. Bạn có muốn chuyển giáo viên này đến trường của bạn không?",
+        "confirmButton": "Chuyển giáo viên"
+      },
+      "form": {
+        "name": "Họ và tên",
+        "namePlaceholder": "Nhập họ và tên",
+        "email": "Email",
+        "emailPlaceholder": "Nhập email",
+        "role": "Vai trò",
+        "rolePlaceholder": "Chọn vai trò",
+        "cefr": "Cấp độ CEFR",
+        "cefrPlaceholder": "Chọn cấp độ CEFR",
+        "passwordOptional": "Mật khẩu (Không bắt buộc)",
+        "passwordPlaceholder": "Để trống để tạo mật khẩu tự động",
+        "assignClassrooms": "Gán lớp học",
+        "resetPassword": "Đặt lại mật khẩu",
+        "setNewPassword": "Đặt mật khẩu mới",
+        "newPasswordPlaceholder": "Nhập mật khẩu mới"
+      },
+      "roles": {
+        "teacher": "Giáo viên",
+        "admin": "Quản trị"
+      },
+      "cefrLevels": {
+        "A1": "Sơ cấp",
+        "A2": "Cơ bản",
+        "B1": "Trung cấp",
+        "B2": "Trung cấp cao",
+        "C1": "Nâng cao",
+        "C2": "Thành thạo"
+      },
+      "classrooms": {
+        "loading": "Đang tải lớp học...",
+        "empty": "Không có lớp học",
+        "studentsCount": "({count} học sinh)",
+        "noClassroomsAssigned": "Không có lớp học được gán"
+      },
+      "tableHeaders": {
+        "teacher": "Giáo viên",
+        "email": "Email",
+        "role": "Vai trò",
+        "cefr": "Cấp độ CEFR",
+        "assignedClassrooms": "Lớp được gán",
+        "students": "Học sinh",
+        "classes": "Lớp",
+        "joined": "Tham gia",
+        "actions": "Thao tác"
+      },
+      "loading": "Đang tải danh sách giáo viên...",
+      "empty": {
+        "search": "Không tìm thấy giáo viên phù hợp với tìm kiếm",
+        "default": "Không có giáo viên nào"
+      },
+      "toasts": {
+        "createSuccess": "Tạo giáo viên thành công",
+        "updateSuccess": "Cập nhật giáo viên thành công",
+        "deleteSuccess": "Xóa giáo viên thành công",
+        "loadError": "Không thể tải dữ liệu giáo viên",
+        "createError": "Không thể tạo giáo viên",
+        "updateError": "Không thể cập nhật giáo viên",
+        "deleteError": "Không thể xóa giáo viên"
+      }
+    }
+  },
+  "AdminStudents": {
+    "header": {
+      "title": "Quản lý học sinh",
+      "subtitle": "Quản lý học sinh và tiến độ của họ"
+    },
+    "page": { "title": "Quản lý học sinh" },
+    "stats": {
+      "totalStudents": "Tổng số học sinh",
+      "allClassrooms": "Tất cả lớp học",
+      "averageXp": "XP trung bình",
+      "averageXpDesc": "Điểm kinh nghiệm mỗi học sinh",
+      "mostCommonLevel": "Cấp độ phổ biến nhất",
+      "mostCommonLevelDesc": "Trình độ CEFR",
+      "activeThisWeek": "Hoạt động tuần này",
+      "activeThisWeekDetail": "{count} trong tổng {total} học sinh"
+    },
+    "actions": {
+      "addStudent": "Thêm học sinh",
+      "saveStudent": "Lưu học sinh",
+      "saveChanges": "Lưu thay đổi",
+      "clearFilters": "Xóa bộ lọc",
+      "cancel": "Hủy",
+      "delete": "Xóa",
+      "previous": "Trước",
+      "next": "Tiếp"
+    },
+    "dialogs": {
+      "add": {
+        "title": "Thêm học sinh mới",
+        "description": "Tạo tài khoản học sinh mới. Nhấn lưu khi hoàn tất."
+      },
+      "edit": {
+        "title": "Chỉnh sửa học sinh",
+        "description": "Chỉnh sửa thông tin học sinh. Nhấn lưu khi hoàn tất."
+      },
+      "delete": {
+        "title": "Bạn có chắc không?",
+        "description": "Hành động này không thể hoàn tác. Hệ thống sẽ xóa vĩnh viễn tài khoản của {name} và dữ liệu liên quan."
+      }
+    },
+    "form": {
+      "name": "Họ và tên",
+      "email": "Email",
+      "cefrLevel": "Cấp độ CEFR",
+      "role": "Vai trò",
+      "namePlaceholder": "Nhập tên học sinh",
+      "emailPlaceholder": "Nhập địa chỉ email",
+      "cefrPlaceholder": "Chọn cấp độ CEFR",
+      "rolePlaceholder": "Chọn vai trò"
+    },
+    "roles": {
+      "student": "Học sinh",
+      "teacher": "Giáo viên",
+      "admin": "Quản trị"
+    },
+    "filters": {
+      "searchPlaceholder": "Tìm học sinh theo tên hoặc email...",
+      "classroomPlaceholder": "Lọc theo lớp học",
+      "cefrPlaceholder": "Cấp độ CEFR",
+      "activeFiltersLabel": "Bộ lọc đang áp dụng:",
+      "searchLabel": "Tìm kiếm:",
+      "classroomLabel": "Lớp học:",
+      "levelLabel": "Cấp độ:"
+    },
+    "tableHeaders": {
+      "name": "Tên",
+      "email": "Email",
+      "className": "Tên lớp",
+      "cefr": "Cấp độ CEFR",
+      "xp": "XP",
+      "role": "Vai trò",
+      "actions": "Thao tác"
+    },
+    "table": {
+      "loading": "Đang tải danh sách học sinh...",
+      "empty": "Không tìm thấy học sinh phù hợp với tiêu chí của bạn."
+    },
+    "badges": { "noClass": "Không có lớp" },
+    "pagination": {
+      "showing": "Hiển thị {from} đến {to} trong tổng {total} học sinh",
+      "previous": "Trước",
+      "next": "Tiếp",
+      "pageOf": "Trang {page} trên {totalPages}"
+    }
+  }
+}

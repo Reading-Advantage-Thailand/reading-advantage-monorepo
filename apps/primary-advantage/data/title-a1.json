@@ -1,0 +1,609 @@
+{
+  "storyCollection": {
+    "title": "Primary Advantage YLE Movers Story Library",
+    "targetAudience": "Grades 3-6 (YLE Movers Level)",
+    "totalStories": 100,
+    "stories": [
+      {
+        "id": 1,
+        "genre": "Adventure",
+        "title": "Sam's New Puppy",
+        "description": "A boy gets a puppy and learns to take care of it"
+      },
+      {
+        "id": 2,
+        "genre": "Adventure",
+        "title": "The Lost Kitten",
+        "description": "Children help find a lost kitten in the park"
+      },
+      {
+        "id": 3,
+        "genre": "Friendship",
+        "title": "Emma's Birthday Party",
+        "description": "A girl plans her birthday party with friends"
+      },
+      {
+        "id": 4,
+        "genre": "Educational",
+        "title": "The School Trip to the Farm",
+        "description": "Students visit a farm and meet animals"
+      },
+      {
+        "id": 5,
+        "genre": "Sports",
+        "title": "Charlie's Football Match",
+        "description": "A boy plays in an important football game"
+      },
+      {
+        "id": 6,
+        "genre": "Fantasy",
+        "title": "The Magic Garden",
+        "description": "Children discover flowers that grow very fast"
+      },
+      {
+        "id": 7,
+        "genre": "School",
+        "title": "Lucy's First Day at School",
+        "description": "A girl starts at a new school"
+      },
+      {
+        "id": 8,
+        "genre": "Adventure",
+        "title": "The Swimming Pool Adventure",
+        "description": "Friends have fun at the swimming pool"
+      },
+      {
+        "id": 9,
+        "genre": "Problem Solving",
+        "title": "Ben's Broken Bicycle",
+        "description": "A boy fixes his broken bike with dad's help"
+      },
+      {
+        "id": 10,
+        "genre": "Entertainment",
+        "title": "The Circus Comes to Town",
+        "description": "A family visits the circus together"
+      },
+      {
+        "id": 11,
+        "genre": "Arts",
+        "title": "Lily's Art Competition",
+        "description": "A girl enters a painting competition at school"
+      },
+      {
+        "id": 12,
+        "genre": "Indoor Activities",
+        "title": "The Rainy Day Game",
+        "description": "Children play inside games when it rains"
+      },
+      {
+        "id": 13,
+        "genre": "Pets",
+        "title": "Tom's Pet Rabbit",
+        "description": "A boy takes care of his pet rabbit"
+      },
+      {
+        "id": 14,
+        "genre": "Mystery",
+        "title": "The School Library Mystery",
+        "description": "Students solve a mystery at the library"
+      },
+      {
+        "id": 15,
+        "genre": "Life Skills",
+        "title": "Grace's Cooking Class",
+        "description": "A girl learns to make pancakes"
+      },
+      {
+        "id": 16,
+        "genre": "Adventure",
+        "title": "The Lost Toy Train",
+        "description": "A boy searches for his favourite toy train"
+      },
+      {
+        "id": 17,
+        "genre": "Performance",
+        "title": "Anna's Dance Show",
+        "description": "A girl performs in a dance show"
+      },
+      {
+        "id": 18,
+        "genre": "Family",
+        "title": "The Camping Trip",
+        "description": "A family goes camping in the forest"
+      },
+      {
+        "id": 19,
+        "genre": "Sports",
+        "title": "Max's Sports Day",
+        "description": "A boy competes in different sports at school"
+      },
+      {
+        "id": 20,
+        "genre": "Community",
+        "title": "The Ice Cream Shop",
+        "description": "Children visit a new ice cream shop"
+      },
+      {
+        "id": 21,
+        "genre": "Music",
+        "title": "Zoe's Music Lesson",
+        "description": "A girl learns to play the piano"
+      },
+      {
+        "id": 22,
+        "genre": "Animals",
+        "title": "The Sick Elephant",
+        "description": "Zoo animals help a sick elephant feel better"
+      },
+      {
+        "id": 23,
+        "genre": "School",
+        "title": "Jack's Homework Helper",
+        "description": "A boy gets help with his difficult homework"
+      },
+      {
+        "id": 24,
+        "genre": "Adventure",
+        "title": "The Beach Treasure Hunt",
+        "description": "Friends look for treasure on the beach"
+      },
+      {
+        "id": 25,
+        "genre": "Family",
+        "title": "Mary's Shopping Trip",
+        "description": "A girl goes shopping with her grandmother"
+      },
+      {
+        "id": 26,
+        "genre": "Science Fiction",
+        "title": "The Friendly Robot",
+        "description": "Children meet a helpful robot"
+      },
+      {
+        "id": 27,
+        "genre": "Sports",
+        "title": "Paul's Tennis Game",
+        "description": "A boy learns to play tennis"
+      },
+      {
+        "id": 28,
+        "genre": "Seasonal",
+        "title": "The Winter Snowman",
+        "description": "Children build a snowman in winter"
+      },
+      {
+        "id": 29,
+        "genre": "Music",
+        "title": "Sue's Piano Concert",
+        "description": "A girl plays piano at a school concert"
+      },
+      {
+        "id": 30,
+        "genre": "Animals",
+        "title": "The Hungry Bear",
+        "description": "Forest animals help feed a hungry bear"
+      },
+      {
+        "id": 31,
+        "genre": "Technology",
+        "title": "Nick's Computer Game",
+        "description": "A boy creates his own computer game"
+      },
+      {
+        "id": 32,
+        "genre": "Outdoor Activities",
+        "title": "The Flying Kite",
+        "description": "Children fly kites on a windy day"
+      },
+      {
+        "id": 33,
+        "genre": "Animals",
+        "title": "Kate's Horse Riding",
+        "description": "A girl learns to ride a horse"
+      },
+      {
+        "id": 34,
+        "genre": "Adventure",
+        "title": "The School Bus Adventure",
+        "description": "Students have an adventure on the school bus"
+      },
+      {
+        "id": 35,
+        "genre": "Entertainment",
+        "title": "David's Magic Show",
+        "description": "A boy performs magic tricks for his class"
+      },
+      {
+        "id": 36,
+        "genre": "Family",
+        "title": "The Picnic in the Park",
+        "description": "A family enjoys a picnic together"
+      },
+      {
+        "id": 37,
+        "genre": "Sports",
+        "title": "Rose's Roller Skating",
+        "description": "A girl learns to roller skate"
+      },
+      {
+        "id": 38,
+        "genre": "Animals",
+        "title": "The Sleepy Owl",
+        "description": "Forest animals help a tired owl find sleep"
+      },
+      {
+        "id": 39,
+        "genre": "Sports",
+        "title": "Jim's Football Team",
+        "description": "A boy joins the school football team"
+      },
+      {
+        "id": 40,
+        "genre": "Nature",
+        "title": "The Butterfly Garden",
+        "description": "Children plant flowers for butterflies"
+      },
+      {
+        "id": 41,
+        "genre": "Sports",
+        "title": "Sally's Swimming Lesson",
+        "description": "A girl learns to swim at the pool"
+      },
+      {
+        "id": 42,
+        "genre": "Entertainment",
+        "title": "The Funny Clown",
+        "description": "A clown makes children laugh at a party"
+      },
+      {
+        "id": 43,
+        "genre": "Music",
+        "title": "Alex's Guitar Band",
+        "description": "A boy starts a music band with friends"
+      },
+      {
+        "id": 44,
+        "genre": "Gardening",
+        "title": "The Vegetable Garden",
+        "description": "Children grow vegetables at school"
+      },
+      {
+        "id": 45,
+        "genre": "Sports",
+        "title": "Clare's Basketball Game",
+        "description": "A girl plays in a basketball match"
+      },
+      {
+        "id": 46,
+        "genre": "Nature",
+        "title": "The Singing Birds",
+        "description": "A boy helps injured birds in his garden"
+      },
+      {
+        "id": 47,
+        "genre": "Hobbies",
+        "title": "Fred's Model Plane",
+        "description": "A boy builds and flies a model plane"
+      },
+      {
+        "id": 48,
+        "genre": "Animals",
+        "title": "The Happy Dolphins",
+        "description": "Children watch dolphins at the sea"
+      },
+      {
+        "id": 49,
+        "genre": "Sports",
+        "title": "Holly's Ice Skating",
+        "description": "A girl goes ice skating for the first time"
+      },
+      {
+        "id": 50,
+        "genre": "Performance",
+        "title": "The School Play",
+        "description": "Students perform in a school play together"
+      },
+      {
+        "id": 51,
+        "genre": "Health",
+        "title": "The Doctor's Visit",
+        "description": "A boy visits the doctor for a check-up"
+      },
+      {
+        "id": 52,
+        "genre": "Mystery",
+        "title": "Emma's Lost Necklace",
+        "description": "A girl searches for her missing necklace"
+      },
+      {
+        "id": 53,
+        "genre": "Educational",
+        "title": "The Football Stadium Tour",
+        "description": "Children visit a big football stadium"
+      },
+      {
+        "id": 54,
+        "genre": "Community",
+        "title": "Ben's Sandwich Shop",
+        "description": "A boy helps his mum in her sandwich shop"
+      },
+      {
+        "id": 55,
+        "genre": "Performance",
+        "title": "The Dancing Competition",
+        "description": "Friends enter a dancing competition"
+      },
+      {
+        "id": 56,
+        "genre": "Health",
+        "title": "Lucy's New Glasses",
+        "description": "A girl gets her first pair of glasses"
+      },
+      {
+        "id": 57,
+        "genre": "Community Helpers",
+        "title": "The Helpful Firefighter",
+        "description": "A firefighter visits the school"
+      },
+      {
+        "id": 58,
+        "genre": "Family",
+        "title": "Tom's Fishing Trip",
+        "description": "A boy goes fishing with his grandfather"
+      },
+      {
+        "id": 59,
+        "genre": "Fantasy",
+        "title": "The Magic Castle",
+        "description": "Children explore an old castle"
+      },
+      {
+        "id": 60,
+        "genre": "Life Skills",
+        "title": "Grace's Cooking Mistake",
+        "description": "A girl learns from a cooking mistake"
+      },
+      {
+        "id": 61,
+        "genre": "Community Helpers",
+        "title": "The Postman's Day",
+        "description": "Children follow the postman on his route"
+      },
+      {
+        "id": 62,
+        "genre": "Health",
+        "title": "Anna's Tooth Problem",
+        "description": "A girl visits the dentist"
+      },
+      {
+        "id": 63,
+        "genre": "Community",
+        "title": "The Noisy Neighbours",
+        "description": "A family deals with loud neighbours"
+      },
+      {
+        "id": 64,
+        "genre": "Competition",
+        "title": "Max's Photo Competition",
+        "description": "A boy enters a photography competition"
+      },
+      {
+        "id": 65,
+        "genre": "Animals",
+        "title": "The Sleepy Cat",
+        "description": "A family finds a sleepy cat in their garden"
+      },
+      {
+        "id": 66,
+        "genre": "Music",
+        "title": "Zoe's First Concert",
+        "description": "A girl attends her first music concert"
+      },
+      {
+        "id": 67,
+        "genre": "Problem Solving",
+        "title": "The Broken Bridge",
+        "description": "Animals work together to cross a river"
+      },
+      {
+        "id": 68,
+        "genre": "Family",
+        "title": "Jack's Pancake Breakfast",
+        "description": "A boy makes breakfast for his family"
+      },
+      {
+        "id": 69,
+        "genre": "Educational",
+        "title": "The Museum Adventure",
+        "description": "Children explore interesting things at a museum"
+      },
+      {
+        "id": 70,
+        "genre": "Fashion",
+        "title": "Mary's New Shoes",
+        "description": "A girl gets special shoes for dancing"
+      },
+      {
+        "id": 71,
+        "genre": "Weather",
+        "title": "The Midnight Storm",
+        "description": "A family stays safe during a big storm"
+      },
+      {
+        "id": 72,
+        "genre": "Sports",
+        "title": "Paul's Marathon Race",
+        "description": "A boy trains for a running race"
+      },
+      {
+        "id": 73,
+        "genre": "Community Helpers",
+        "title": "The Clever Mechanic",
+        "description": "A mechanic helps fix the school bus"
+      },
+      {
+        "id": 74,
+        "genre": "Writing",
+        "title": "Sue's Diary Secret",
+        "description": "A girl writes special stories in her diary"
+      },
+      {
+        "id": 75,
+        "genre": "Nature",
+        "title": "The Butterfly Hunt",
+        "description": "Children look for different butterflies"
+      },
+      {
+        "id": 76,
+        "genre": "Games",
+        "title": "Nick's Chess Game",
+        "description": "A boy learns to play chess"
+      },
+      {
+        "id": 77,
+        "genre": "Community",
+        "title": "The Summer Festival",
+        "description": "A town celebrates with music and dancing"
+      },
+      {
+        "id": 78,
+        "genre": "Family",
+        "title": "Kate's Swimming Pool",
+        "description": "A girl gets a new swimming pool"
+      },
+      {
+        "id": 79,
+        "genre": "Community Helpers",
+        "title": "The Friendly Postman",
+        "description": "A postman helps find lost letters"
+      },
+      {
+        "id": 80,
+        "genre": "Science",
+        "title": "David's Science Project",
+        "description": "A boy creates a volcano for science class"
+      },
+      {
+        "id": 81,
+        "genre": "Nature",
+        "title": "The Early Morning Walk",
+        "description": "A family walks in the forest at sunrise"
+      },
+      {
+        "id": 82,
+        "genre": "Performance",
+        "title": "Rose's Ballet Class",
+        "description": "A girl starts learning ballet dancing"
+      },
+      {
+        "id": 83,
+        "genre": "Animals",
+        "title": "The Talking Parrot",
+        "description": "Children meet a parrot that says funny things"
+      },
+      {
+        "id": 84,
+        "genre": "Life Skills",
+        "title": "Jim's Vegetable Soup",
+        "description": "A boy makes soup with garden vegetables"
+      },
+      {
+        "id": 85,
+        "genre": "Fantasy",
+        "title": "The Magic Paintbrush",
+        "description": "A girl's paintbrush creates amazing pictures"
+      },
+      {
+        "id": 86,
+        "genre": "Animals",
+        "title": "Sally's Horse Show",
+        "description": "A girl watches horses perform tricks"
+      },
+      {
+        "id": 87,
+        "genre": "Science",
+        "title": "The Night Sky Stars",
+        "description": "Children learn about stars and planets"
+      },
+      {
+        "id": 88,
+        "genre": "Music",
+        "title": "Alex's Drumming Band",
+        "description": "A boy plays drums in a school band"
+      },
+      {
+        "id": 89,
+        "genre": "Technology",
+        "title": "The Helpful Robot",
+        "description": "A robot helps clean the classroom"
+      },
+      {
+        "id": 90,
+        "genre": "Sports",
+        "title": "Clare's Tennis Tournament",
+        "description": "A girl plays in a tennis competition"
+      },
+      {
+        "id": 91,
+        "genre": "Animals",
+        "title": "The Singing Whale",
+        "description": "Children hear whales singing at the sea"
+      },
+      {
+        "id": 92,
+        "genre": "Crafts",
+        "title": "Fred's Paper Plane",
+        "description": "A boy makes the best paper plane"
+      },
+      {
+        "id": 93,
+        "genre": "Gardening",
+        "title": "The School Garden",
+        "description": "Students grow flowers and vegetables together"
+      },
+      {
+        "id": 94,
+        "genre": "Community",
+        "title": "Holly's Ice Cream Cart",
+        "description": "A girl helps sell ice cream in summer"
+      },
+      {
+        "id": 95,
+        "genre": "Seasonal",
+        "title": "The Dancing Snowflakes",
+        "description": "Children watch beautiful snow falling"
+      },
+      {
+        "id": 96,
+        "genre": "Competition",
+        "title": "Charlie's Quiz Show",
+        "description": "A boy answers questions on a TV quiz"
+      },
+      {
+        "id": 97,
+        "genre": "Toys",
+        "title": "The Sleepy Teddy Bear",
+        "description": "A girl helps her teddy bear sleep"
+      },
+      {
+        "id": 98,
+        "genre": "Sports",
+        "title": "Ben's Football Goal",
+        "description": "A boy scores his first football goal"
+      },
+      {
+        "id": 99,
+        "genre": "Adventure",
+        "title": "The Flying Balloon",
+        "description": "Children follow a balloon across the sky"
+      },
+      {
+        "id": 100,
+        "genre": "Writing",
+        "title": "Emma's Happy Ending",
+        "description": "A girl finishes writing her first story"
+      }
+    ]
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "fiction": [
+    {
+      "name": "Realistic Fiction",
+      "subgenres": [
+        "School Stories",
+        "Friendship Stories",
+        "Family Life",
+        "Neighborhood Adventures",
+        "Stories about Hobbies",
+        "Dealing with Challenges"
+      ]
+    },
+    {
+      "name": "Animal Stories",
+      "subgenres": [
+        "Realistic Animal Tales",
+        "Talking Animal Adventures",
+        "Pet Stories",
+        "Wild Animal Encounters",
+        "Animal Rescue Stories"
+      ]
+    },
+    {
+      "name": "Fantasy & Magic",
+      "subgenres": [
+        "Magical Creatures",
+        "Enchanted Objects",
+        "Simple Quests",
+        "Worlds of Imagination",
+        "Everyday Magic"
+      ]
+    },
+    {
+      "name": "Mystery",
+      "subgenres": [
+        "Missing Object Mysteries",
+        "Secret Code Puzzles",
+        "Simple Whodunits",
+        "Clubhouse Mysteries",
+        "Finding Clues"
+      ]
+    },
+    {
+      "name": "Adventure",
+      "subgenres": [
+        "Exploration Stories",
+        "Rescue Missions",
+        "Outdoor Adventures",
+        "Treasure Hunts",
+        "Overcoming Obstacles"
+      ]
+    },
+    {
+      "name": "Humor",
+      "subgenres": [
+        "Silly Situations",
+        "Funny Characters",
+        "Everyday Humor",
+        "Mischief and Mayhem",
+        "Exaggerated Stories (Tall Tales Lite)"
+      ]
+    },
+    {
+      "name": "Folktales, Fables & Myths",
+      "subgenres": [
+        "Fables (with morals)",
+        "Fairy Tales (simplified)",
+        "Legends",
+        "Myths (creation, heroes - simplified)",
+        "Pourquoi Stories (Why things are)"
+      ]
+    },
+    {
+      "name": "Historical Fiction (Simplified)",
+      "subgenres": [
+        "Life in the Past",
+        "Stories about Historical Events",
+        "Pioneer Life",
+        "Children in History"
+      ]
+    },
+    {
+      "name": "Science Fiction (Simplified)",
+      "subgenres": [
+        "Simple Space Adventures",
+        "Kid Inventors",
+        "Friendly Robots",
+        "Future Worlds for Kids"
+      ]
+    }
+  ],
+  "nonfiction": [
+    {
+      "name": "Animals",
+      "subgenres": [
+        "Specific Animal Facts (e.g., Dinosaurs, Ocean Life)",
+        "Animal Habitats",
+        "Pet Care Basics",
+        "Insects and Spiders",
+        "Endangered Animals",
+        "Animal Behavior"
+      ]
+    },
+    {
+      "name": "Science & Nature",
+      "subgenres": [
+        "Weather Explained",
+        "Simple Science Experiments (Descriptions)",
+        "Plants and Trees",
+        "The Human Body (Basics)",
+        "Earth Science (Rocks, Volcanoes, Water Cycle)",
+        "Space and Planets (Basics)",
+        "Simple Machines"
+      ]
+    },
+    {
+      "name": "History & Social Studies",
+      "subgenres": [
+        "Important Historical Events (Simplified)",
+        "Famous People in History (Key Facts)",
+        "Life in Different Cultures",
+        "Community Helpers",
+        "U.S. Symbols & Landmarks (or Local)",
+        "Ancient Civilizations (Basics)"
+      ]
+    },
+    {
+      "name": "Biography",
+      "subgenres": [
+        "Inventors and Scientists",
+        "Explorers",
+        "Artists and Musicians",
+        "Leaders and Activists",
+        "Athletes",
+        "Childhood of Famous People"
+      ]
+    },
+    {
+      "name": "How-To & Procedural",
+      "subgenres": [
+        "Simple Craft Steps",
+        "Basic Recipe Steps",
+        "How to Play a Game",
+        "Safety Procedures",
+        "Step-by-Step Explanations"
+      ]
+    },
+    {
+      "name": "Geography & Cultures",
+      "subgenres": [
+        "Exploring Different Countries",
+        "World Landmarks",
+        "Maps and Globes (Basics)",
+        "Different Holidays & Celebrations",
+        "Landforms and Environments"
+      ]
+    },
+    {
+      "name": "Health & Safety",
+      "subgenres": [
+        "Healthy Habits",
+        "Nutrition Basics",
+        "Staying Safe (e.g., bike safety, fire safety)",
+        "Understanding Feelings",
+        "Germs and Staying Clean"
+      ]
+    },
+    {
+      "name": "Arts & Music",
+      "subgenres": [
+        "Famous Artists and Their Work",
+        "Types of Musical Instruments",
+        "Elements of Art (Color, Shape)",
+        "Music Around the World",
+        "Craft Techniques Explained"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+export { default as TaskIntroduction } from "./task-introduction";
+export { default as TaskPreviewVocabulary } from "./task-preview-vocabulary";
+export { default as TaskFirstReading } from "./task-first-reading";
+export { default as TaskVocabularyCollection } from "./task-vocabulary-collection";
+export { default as TaskDeepReading } from "./task-deep-reading";
+export { default as TaskSentenceCollection } from "./task-sentence-collection";
+export { default as TaskMultipleChoice } from "./task-multiple-choice";
+export { default as TaskShortAnswer } from "./task-short-answer";
+export { default as TaskVocabularyFlashcards } from "./task-vocabulary-flashcards";
+export { default as TaskVocabularyMatching } from "./task-vocabulary-matching";
+export { default as TaskSentenceFlashcards } from "./task-sentence-flashcards";
+export { default as TaskSentenceActivities } from "./task-sentence-activities";
+export { default as TaskLanguageQuestions } from "./task-language-questions";
+export { default as TaskLessonSummary } from "./task-lesson-summary";

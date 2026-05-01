@@ -1,0 +1,858 @@
+{
+  "blueprint": {
+    "topic": "The Mystery of the Silver Key",
+    "genre": "Children's Mystery",
+    "cefrLevel": "A2",
+    "targetAudience": "Aged 8-10, likes puzzles and school adventures",
+    "globalVocabularyList": [
+      "adventure", "mystery", "suddenly", "whisper", "library", "ancient", "wooden", "metal", 
+      "silver", "key", "curious", "decide", "heavy", "flashlight", "shadow", "believe", 
+      "examine", "carefully", "footprints", "clue", "solve", "secret", " dusty", "brave", 
+      "during", "while", "tomorrow", "guess", "explain", "finally"
+    ],
+    "globalGrammarStructures": [
+      "Past Continuous (was/were + -ing)",
+      "Future with 'going to' and 'will'",
+      "First Conditional (If + present, will + verb)",
+      "Relative clauses with 'who' and 'which'",
+      "Adverbs of manner (carefully, quietly)",
+      "Comparatives and Superlatives"
+    ],
+    "harmonOutline": [
+      {
+        "stage": "You",
+        "chapterNumber": 1,
+        "summary": "Max and Lily are bored in the school library on a rainy afternoon until they find a strange book.",
+        "plotBeat": "Establish the normal setting (library) and the characters' boredom before the discovery.",
+        "engagementStrategy": "Relatable boredom turning into unexpected curiosity."
+      },
+      {
+        "stage": "Need",
+        "chapterNumber": 2,
+        "summary": "They discover a hollow space inside the book containing a locked wooden box, and they want to open it.",
+        "plotBeat": "The inciting incident: finding the locked box creates the 'need' for a key.",
+        "engagementStrategy": "The mystery of the locked box creates immediate intrigue."
+      },
+      {
+        "stage": "Go",
+        "chapterNumber": 3,
+        "summary": "They find a riddle that leads them out of the library and into the dark school hallway.",
+        "plotBeat": "Crossing the threshold: leaving the safety of the library to follow the clues.",
+        "engagementStrategy": "A riddle that the reader can try to solve along with the characters."
+      },
+      {
+        "stage": "Search",
+        "chapterNumber": 4,
+        "summary": "They search for the janitor's room but face obstacles like a locked gate and a scary noise.",
+        "plotBeat": "The road of trials: obstacles prevent them from easily finding the location.",
+        "engagementStrategy": "Building tension with spooky atmosphere and minor setbacks."
+      },
+      {
+        "stage": "Find",
+        "chapterNumber": 5,
+        "summary": "They meet Mr. Hoot, the janitor, who helps them find the silver key in a pot of flowers.",
+        "plotBeat": "Meeting the goal: they successfully locate the object of their search.",
+        "engagementStrategy": "A friendly helper character provides a twist to the scary build-up."
+      },
+      {
+        "stage": "Take",
+        "chapterNumber": 6,
+        "summary": "They take the key, but the school bell rings, and they realize they are late for class.",
+        "plotBeat": "Paying the price: getting the key costs them time, creating urgency.",
+        "engagementStrategy": "Time pressure adds excitement to the success."
+      },
+      {
+        "stage": "Return",
+        "chapterNumber": 7,
+        "summary": "They rush back to the library during their lunch break to finally open the box.",
+        "plotBeat": "The road back: returning to the starting point to complete the journey.",
+        "engagementStrategy": "Anticipation of finally seeing what is inside."
+      },
+      {
+        "stage": "Change",
+        "chapterNumber": 8,
+        "summary": "They open the box to find a photo of the first students of the school. They appreciate their school's history.",
+        "plotBeat": "Master of two worlds: they have changed from bored students to historians/detectives.",
+        "engagementStrategy": "A heartwarming and meaningful conclusion."
+      }
+    ],
+    "characters": [
+      {
+        "name": "Max",
+        "description": "A 10-year-old boy who loves sports but gets bored easily. He is brave but sometimes acts without thinking.",
+        "visualDescription": "Messy brown hair, wears a green hoodie and sneakers, always has a backpack."
+      },
+      {
+        "name": "Lily",
+        "description": "Max's best friend. She is smart, loves reading, and is very observant. She wears glasses.",
+        "visualDescription": "Long black hair tied in a ponytail, red glasses, wears a denim jacket."
+      }
+    ]
+  },
+  "chapters": [
+    {
+      "chapterNumber": 1,
+      "stage": "You",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["library", "ancient", "bored", "rainy", "shelf"],
+        "grammarFocus": "Past Continuous (was reading, was raining)",
+        "pacing": "Slow and atmospheric",
+        "cliffhangerOrHook": "Max pulled a blue book from the shelf, but it felt unusually heavy."
+      },
+      "title": "The Rainy Afternoon",
+      "passage": "It was a grey and rainy Tuesday. The rain was hitting the windows of the school library with a soft tapping sound. Inside, it was quiet and warm. Max was sitting at a large wooden table, looking at the ceiling. He was feeling very bored. He did not want to do his homework.\n\n\"I hate rainy days,\" Max whispered to his friend, Lily. \n\nLily was reading a book about dinosaurs. She looked up and smiled. \"I like them,\" she said. \"It is a perfect time to read a good mystery story.\"\n\nMax sighed. \"But nothing exciting ever happens here. It is just books and dust.\"\n\nHe stood up and walked to the back of the library. This was the oldest part of the room. The shelves were tall and dark. While he was walking between the shelves, he saw something strange. There was a blue book that looked different from the others. It was dusty and looked ancient. Max reached out his hand. He was wondering who put it there. \n\nWhen he touched the book, he felt cold air. He pulled the blue book from the shelf, but it felt unusually heavy.",
+      "summary": "Max and Lily are in the library on a rainy day when Max finds a strange, heavy book.",
+      "translatedSummary": {
+        "th": "แม็กซ์และลิลลี่อยู่ในห้องสมุดในวันที่ฝนตก เมื่อแม็กซ์พบหนังสือแปลกๆ ที่มีน้ำหนักมาก",
+        "cn": "在一个下雨天，麦克斯和莉莉在图书馆里，麦克斯发现了一本奇怪且沉重的书。",
+        "tw": "在一個下雨天，麥克斯和莉莉在圖書館裡，麥克斯發現了一本奇怪且沉重的書。",
+        "vi": "Max và Lily đang ở trong thư viện vào một ngày mưa thì Max tìm thấy một cuốn sách lạ và nặng."
+      },
+      "imageDesc": "A cozy school library with tall wooden shelves. Rain is visible through the window. A young boy with messy brown hair holds an old, dusty blue book. A girl with glasses sits in the background reading.",
+      "wordlist": [
+        {
+          "vocabulary": "ancient",
+          "definition": "Very old; from a long time ago.",
+          "translation": { "th": "โบราณ", "cn": "古老的", "tw": "古老的", "vi": "cổ xưa" }
+        },
+        {
+          "vocabulary": "whisper",
+          "definition": "To speak very softly or quietly.",
+          "translation": { "th": "กระซิบ", "cn": "低语", "tw": "低語", "vi": "thì thầm" }
+        },
+        {
+          "vocabulary": "dusty",
+          "definition": "Covered with fine powder or dirt.",
+          "translation": { "th": "เต็มไปด้วยฝุ่น", "cn": "布满灰尘的", "tw": "佈滿灰塵的", "vi": "bụi bặm" }
+        }
+      ],
+      "sentences": [
+        "The rain was hitting the windows of the school library.",
+        "Lily was reading a book about dinosaurs.",
+        "While he was walking between the shelves, he saw something strange."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "The rain was hitting the windows.",
+          "translation": { "th": "ฝนกำลังตกกระทบหน้าต่าง", "cn": "雨正打在窗户上。", "tw": "雨正打在窗戶上。", "vi": "Mưa đang đập vào cửa sổ." }
+        },
+        {
+          "sentence": "Lily was reading a book.",
+          "translation": { "th": "ลิลลี่กำลังอ่านหนังสือ", "cn": "莉莉正在读书。", "tw": "莉莉正在讀書。", "vi": "Lily đang đọc sách." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What was Lily doing in the library?",
+          "options": ["She was sleeping.", "She was reading about dinosaurs.", "She was eating lunch.", "She was doing math homework."],
+          "answer": "She was reading about dinosaurs."
+        },
+        {
+          "question": "How did Max feel at the beginning of the story?",
+          "options": ["Excited", "Scared", "Bored", "Hungry"],
+          "answer": "Bored"
+        },
+        {
+          "question": "What did Max find on the shelf?",
+          "options": ["A red ball", "A blue book", "A silver key", "A map"],
+          "answer": "A blue book"
+        },
+        {
+          "question": "What was the weather like?",
+          "options": ["Sunny and hot", "Snowy and cold", "Rainy and grey", "Windy"],
+          "answer": "Rainy and grey"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Why did Max whisper to Lily?",
+          "answer": "Because they were in the library where it was quiet."
+        },
+        {
+          "question": "Describe the blue book that Max found.",
+          "answer": "It was dusty, ancient, and unusually heavy."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Do you like rainy days? Why or why not?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 2,
+      "stage": "Need",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["hollow", "wooden", "box", "shake", "lock"],
+        "grammarFocus": "Relative clauses (which, that)",
+        "pacing": "Exciting and curious",
+        "cliffhangerOrHook": "On the bottom of the box, there was a message: 'To find the key, look where time stands tall.'"
+      },
+      "title": "The Hidden Box",
+      "passage": "Max carried the heavy book to the table. \"Look at this, Lily,\" he said. He put the book down. It made a loud sound.\n\nLily closed her dinosaur book. \"That book looks very old,\" she said. She touched the cover. \"It feels like leather.\"\n
+Max tried to open the book, but the pages were stuck together. He shook the book. Suddenly, something moved inside it. It did not sound like paper. It sounded like wood hitting wood.\n\n\"It is not a real book,\" Lily said. \"It is a box!\"\n
+She was right. The book was actually a secret container. Max found a small latch on the side. He opened it carefully. Inside the hollow book, there was a beautiful wooden box. The box had strange carvings which looked like trees and birds.\n
+Max tried to open the wooden box, but it was locked. There was a small silver keyhole on the front.\n
+\"We need a key,\" Max said. He looked at the box closely. \"How can we open it?\"\n
+Lily picked up the box and turned it over. \"Look!\" she pointed. On the bottom of the box, there was a message: \"To find the key, look where time stands tall.\"",
+      "summary": "Max and Lily realize the book is a secret box, but it is locked and they need to find the key.",
+      "translatedSummary": {
+        "th": "แม็กซ์และลิลลี่ตระหนักว่าหนังสือเล่มนั้นคือกล่องลับ แต่มันล็อคอยู่และพวกเขาต้องหากุญแจ",
+        "cn": "麦克斯和莉莉意识到这本书是一个秘密盒子，但它是锁着的，他们需要找到钥匙。",
+        "tw": "麥克斯和莉莉意識到這本書是一個秘密盒子，但它是鎖著的，他們需要找到鑰匙。",
+        "vi": "Max và Lily nhận ra cuốn sách là một chiếc hộp bí mật, nhưng nó đã bị khóa và họ cần tìm chìa khóa."
+      },
+      "imageDesc": "Close up of a hollow book opened to reveal a carved wooden box inside. Two children are looking at it with surprise. The wooden box has a silver keyhole.",
+      "wordlist": [
+        {
+          "vocabulary": "hollow",
+          "definition": "Having empty space inside.",
+          "translation": { "th": "กลวง", "cn": "空的", "tw": "空的", "vi": "rỗng" }
+        },
+        {
+          "vocabulary": "latch",
+          "definition": "A metal bar used to fasten a door or gate.",
+          "translation": { "th": "กลอน", "cn": "门闩", "tw": "門閂", "vi": "chốt" }
+        },
+        {
+          "vocabulary": "carving",
+          "definition": "A shape or design cut into wood or stone.",
+          "translation": { "th": "งานแกะสลัก", "cn": "雕刻", "tw": "雕刻", "vi": "chạm khắc" }
+        }
+      ],
+      "sentences": [
+        "The box had strange carvings which looked like trees.",
+        "It was a box which was hidden inside a book.",
+        "Max found a latch that opened the cover."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "The box had carvings which looked like trees.",
+          "translation": { "th": "กล่องมีงานแกะสลักที่ดูเหมือนต้นไม้", "cn": "盒子上刻着像树一样的花纹。", "tw": "盒子上刻著像樹一樣的花紋。", "vi": "Chiếc hộp có những hình chạm khắc trông giống như cây cối." }
+        },
+        {
+          "sentence": "We need a key.",
+          "translation": { "th": "เราต้องการกุญแจ", "cn": "我们需要一把钥匙。", "tw": "我們需要一把鑰匙。", "vi": "Chúng ta cần một chiếc chìa khóa." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What was inside the blue book?",
+          "options": ["Pages of paper", "A wooden box", "A dinosaur toy", "A sandwich"],
+          "answer": "A wooden box"
+        },
+        {
+          "question": "What did the carvings on the box look like?",
+          "options": ["Cars and trucks", "Trees and birds", "Stars and moons", "Fish and water"],
+          "answer": "Trees and birds"
+        },
+        {
+          "question": "Why couldn't Max open the wooden box?",
+          "options": ["It was glued shut.", "It was too heavy.", "It was locked.", "It was hot."],
+          "answer": "It was locked."
+        },
+        {
+          "question": "Where did the message say the key was?",
+          "options": ["Under the table", "In the garden", "Where time stands tall", "Behind the door"],
+          "answer": "Where time stands tall"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What sound did the book make when Max shook it?",
+          "answer": "It sounded like wood hitting wood."
+        },
+        {
+          "question": "What is the clue on the bottom of the box?",
+          "answer": "To find the key, look where time stands tall."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "What do you think 'where time stands tall' means?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 3,
+      "stage": "Go",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["riddle", "clock tower", "solve", "hallway", "quietly"],
+        "grammarFocus": "Future with 'going to' (We are going to find...)",
+        "pacing": "Active and moving",
+        "cliffhangerOrHook": "They opened the heavy library doors and stepped into the dark hallway."
+      },
+      "title": "Solving the Riddle",
+      "passage": "\"Where time stands tall?\" Max repeated the words. He scratched his head. \"That is a strange riddle.\"\n
+Lily stood up and walked to the window. She looked out at the school grounds. The rain was still falling. In the middle of the playground, there was a tall building made of red bricks. At the top, there was a large white face with black numbers.\n
+\"The clock tower!\" Lily shouted. \"It is tall, and it shows the time!\"\n
+Max grinned. \"You are brilliant, Lily! The key must be there.\"\n
+\"But we are in the library,\" Lily said. \"And the clock tower is outside. We are not allowed to go there during the break.\"\n
+Max looked at the mysterious wooden box. \"We have to know what is inside. Are we going to stay here, or are we going to find the key?\"\n
+Lily bit her lip. She was a good student who always followed the rules. But she was also very curious. \"Okay,\" she said. \"We are going to solve this mystery. But we must be careful.\"\n
+They put the wooden box in Max's backpack. They opened the heavy library doors and stepped into the dark hallway.",
+      "summary": "Max and Lily solve the riddle, realizing it points to the clock tower, and decide to sneak out to find the key.",
+      "translatedSummary": {
+        "th": "แม็กซ์และลิลลี่ไขปริศนาได้ว่ามันหมายถึงหอนาฬิกา และตัดสินใจแอบออกไปหากุญแจ",
+        "cn": "麦克斯和莉莉解开了谜题，意识到它指的是钟楼，并决定溜出去找钥匙。",
+        "tw": "麥克斯和莉莉解開了謎題，意識到它指的是鐘樓，並決定溜出去找鑰匙。",
+        "vi": "Max và Lily giải được câu đố, nhận ra nó chỉ tháp đồng hồ, và quyết định lẻn ra ngoài để tìm chìa khóa."
+      },
+      "imageDesc": "A view from a window looking out at a school clock tower in the rain. Two children are standing by the window. One is pointing at the tower.",
+      "wordlist": [
+        {
+          "vocabulary": "riddle",
+          "definition": "A difficult question that has a surprising answer.",
+          "translation": { "th": "ปริศนาคำทาย", "cn": "谜语", "tw": "謎語", "vi": "câu đố" }
+        },
+        {
+          "vocabulary": "brilliant",
+          "definition": "Very clever or smart.",
+          "translation": { "th": "ฉลาดหลักแหลม", "cn": "聪明的", "tw": "聰明的", "vi": "thông minh" }
+        },
+        {
+          "vocabulary": "curious",
+          "definition": "Wanting to know or learn about something.",
+          "translation": { "th": "อยากรู้อยากเห็น", "cn": "好奇的", "tw": "好奇的", "vi": "tò mò" }
+        }
+      ],
+      "sentences": [
+        "We are going to find the key.",
+        "Are we going to stay here?",
+        "We are going to solve this mystery."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "We are going to find the key.",
+          "translation": { "th": "เราจะไปหากุญแจ", "cn": "我们要去找到钥匙。", "tw": "我們要去找到鑰匙。", "vi": "Chúng ta sẽ đi tìm chìa khóa." }
+        },
+        {
+          "sentence": "We are going to solve this mystery.",
+          "translation": { "th": "เราจะไขปริศนานี้", "cn": "我们要解开这个谜团。", "tw": "我們要解開這個謎團。", "vi": "Chúng ta sẽ giải quyết bí ẩn này." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What did the riddle 'where time stands tall' mean?",
+          "options": ["The library", "The playground", "The clock tower", "The gym"],
+          "answer": "The clock tower"
+        },
+        {
+          "question": "Why was Lily worried about going to the clock tower?",
+          "options": ["She was scared of clocks.", "She did not want to get wet.", "They were not allowed to go there.", "She wanted to eat lunch."],
+          "answer": "They were not allowed to go there."
+        },
+        {
+          "question": "What did Max put in his backpack?",
+          "options": ["The wooden box", "His lunch", "A football", "The blue book"],
+          "answer": "The wooden box"
+        },
+        {
+          "question": "How did Max describe Lily when she solved the riddle?",
+          "options": ["Funny", "Brilliant", "Fast", "Quiet"],
+          "answer": "Brilliant"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What was the weather like outside?",
+          "answer": "The rain was falling."
+        },
+        {
+          "question": "Where was the clock tower located?",
+          "answer": "In the middle of the playground."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Max and Lily break a rule to solve the mystery. Do you think this was the right thing to do? Why?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 4,
+      "stage": "Search",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["shadow", "thunder", "scared", "gate", "path"],
+        "grammarFocus": "Adverbs (suddenly, loudly, quickly)",
+        "pacing": "Tense and suspenseful",
+        "cliffhangerOrHook": "A large shadow appeared on the wall, and a deep voice asked, 'Who is there?'"
+      },
+      "title": "The Dark Hallway",
+      "passage": "The hallway was very long and empty. Everyone else was in the cafeteria for lunch. Max and Lily walked quickly but quietly. Their shoes squeaked on the floor.\n\n\"We must go to the back door,\" Max whispered. \"That is the fastest way to the tower.\"\n
+They walked past the art room and the gym. Suddenly, there was a loud crash of thunder. BOOM! The lights in the hallway flickered and went out. Now, it was quite dark.\n
+\"I am scared,\" Lily said softly. She held Max's arm.\n
+\"Do not worry,\" Max said, trying to be brave. \"I have a flashlight.\" He pulled a small yellow torch from his bag and turned it on. The beam of light cut through the darkness.\n
+They reached the back door, but there was a problem. A metal gate blocked the way. It was usually open, but today it was closed.\n
+\"We can't get out,\" Lily said. \"We have to go back.\"\n
+\"Wait,\" Max said. \"Look!\"\n
+He pointed his flashlight down the hall. A large shadow appeared on the wall. It was growing bigger and bigger. Then, a deep voice asked loudly, \"Who is there?\"",
+      "summary": "Max and Lily face obstacles in the dark hallway, including thunder, a power cut, a locked gate, and a mysterious figure.",
+      "translatedSummary": {
+        "th": "แม็กซ์และลิลลี่เผชิญอุปสรรคในโถงทางเดินมืด รวมถึงเสียงฟ้าร้อง ไฟดับ ประตูล็อค และร่างลึกลับ",
+        "cn": "麦克斯和莉莉在黑暗的走廊里遇到了障碍，包括雷声、停电、锁着的门和一个神秘的身影。",
+        "tw": "麥克斯和莉莉在黑暗的走廊裡遇到了障礙，包括雷聲、停電、鎖著的門和一個神秘的身影。",
+        "vi": "Max và Lily gặp trở ngại trong hành lang tối, bao gồm sấm sét, mất điện, cổng bị khóa và một bóng người bí ẩn."
+      },
+      "imageDesc": "A dark school hallway with a beam of flashlight cutting through. Two children look frightened. A large shadow is cast on the wall in front of them.",
+      "wordlist": [
+        {
+          "vocabulary": "thunder",
+          "definition": "The loud noise that comes after lightning during a storm.",
+          "translation": { "th": "ฟ้าร้อง", "cn": "雷声", "tw": "雷聲", "vi": "sấm" }
+        },
+        {
+          "vocabulary": "flicker",
+          "definition": "To shine with a light that is not steady.",
+          "translation": { "th": "กะพริบ", "cn": "闪烁", "tw": "閃爍", "vi": "nhấp nháy" }
+        },
+        {
+          "vocabulary": "squeak",
+          "definition": "To make a short, high sound.",
+          "translation": { "th": "ส่งเสียงเอี๊ยด", "cn": "吱吱作响", "tw": "吱吱作響", "vi": "kêu cọt kẹt" }
+        }
+      ],
+      "sentences": [
+        "Suddenly, there was a loud crash of thunder.",
+        "Max and Lily walked quickly.",
+        "A deep voice asked loudly, 'Who is there?'"
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "Max walked quickly.",
+          "translation": { "th": "แม็กซ์เดินอย่างรวดเร็ว", "cn": "麦克斯走得很快。", "tw": "麥克斯走得很快。", "vi": "Max đi nhanh." }
+        },
+        {
+          "sentence": "She spoke softly.",
+          "translation": { "th": "เธอพูดเบาๆ", "cn": "她轻声说话。", "tw": "她輕聲說話。", "vi": "Cô ấy nói nhẹ nhàng." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "Where was everyone else in the school?",
+          "options": ["In the library", "In the cafeteria", "In the gym", "Outside"],
+          "answer": "In the cafeteria"
+        },
+        {
+          "question": "What happened after the thunder crashed?",
+          "options": ["The rain stopped.", "The door opened.", "The lights went out.", "The bell rang."],
+          "answer": "The lights went out."
+        },
+        {
+          "question": "What did Max use to see in the dark?",
+          "options": ["A candle", "His phone", "A flashlight", "Matches"],
+          "answer": "A flashlight"
+        },
+        {
+          "question": "What blocked their way to the back door?",
+          "options": ["A large dog", "A metal gate", "A pile of books", "A teacher"],
+          "answer": "A metal gate"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What sound did their shoes make?",
+          "answer": "Their shoes squeaked on the floor."
+        },
+        {
+          "question": "What did the deep voice ask?",
+          "answer": "Who is there?"
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "How would you feel if you were in a dark hallway and heard a strange voice?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 5,
+      "stage": "Find",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["janitor", "explain", "flowerpot", "dig", "soil"],
+        "grammarFocus": "Conditionals (If you want..., you must...)",
+        "pacing": "Relieved and helpful",
+        "cliffhangerOrHook": "Max wiped the dirt off the key. It shone brightly. 'We have it!' he cried."
+      },
+      "title": "Mr. Hoot's Secret",
+      "passage": "Max and Lily froze. The shadow moved closer. It was Mr. Hoot, the school janitor. He was holding a mop and looking grumpy.\n
+\"What are you two doing here?\" he asked. \"You should be at lunch.\"\n
+Max decided to tell the truth. He showed Mr. Hoot the wooden box and the riddle. \"We are looking for the key,\" Max explained. \"The riddle says it is near the clock tower.\"\n
+Mr. Hoot looked at the box. His face changed. He smiled kindly. \"Ah, that box,\" he said. \"I remember that box. The old librarian hid it twenty years ago.\"\n
+Mr. Hoot opened the metal gate for them. \"If you want to find the key,\" he said, \"you must look under the purple flowers at the bottom of the tower.\"\n
+\"Thank you!\" shouted Lily.\n
+They ran out into the rain. They did not care about getting wet. They ran to the clock tower. There was a large pot of purple flowers. Max started to dig in the wet soil with his hands. \n
+\"I feel something hard!\" he said. He pulled out a small object covered in mud. Max wiped the dirt off the key. It shone brightly. \"We have it!\" he cried.",
+      "summary": "The janitor helps them instead of punishing them, and they find the key buried under flowers near the tower.",
+      "translatedSummary": {
+        "th": "ภารโรงช่วยพวกเขาแทนที่จะลงโทษ และพวกเขาพบกุญแจฝังอยู่ใต้ดอกไม้ใกล้หอคอย",
+        "cn": "看门人不但没有惩罚他们，反而帮助了他们，他们在塔附近的鲜花下找到了钥匙。",
+        "tw": "看門人不但沒有懲罰他們，反而幫助了他們，他們在塔附近的鮮花下找到了鑰匙。",
+        "vi": "Người lao công giúp đỡ họ thay vì trừng phạt, và họ tìm thấy chìa khóa được chôn dưới những bông hoa gần tháp."
+      },
+      "imageDesc": "An old janitor with a mop smiling at two children. Then, a scene of the boy digging in a flower pot in the rain, holding up a shiny key.",
+      "wordlist": [
+        {
+          "vocabulary": "janitor",
+          "definition": "A person employed to take care of a large building.",
+          "translation": { "th": "ภารโรง", "cn": "看门人", "tw": "看門人", "vi": "người lao công" }
+        },
+        {
+          "vocabulary": "grumpy",
+          "definition": "Bad-tempered and irritable.",
+          "translation": { "th": "อารมณ์เสีย", "cn": "脾气暴躁的", "tw": "脾氣暴躁的", "vi": "câu có" }
+        },
+        {
+          "vocabulary": "soil",
+          "definition": "The top layer of earth in which plants grow.",
+          "translation": { "th": "ดิน", "cn": "土壤", "tw": "土壤", "vi": "đất trồng" }
+        }
+      ],
+      "sentences": [
+        "If you want to find the key, you must look under the flowers.",
+        "If we run, we will get wet.",
+        "Max decided to tell the truth."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "If you want the key, look under the flowers.",
+          "translation": { "th": "ถ้าคุณต้องการกุญแจ ให้ดูใต้ดอกไม้", "cn": "如果你想要钥匙，看看花下面。", "tw": "如果你想要鑰匙，看看花下面。", "vi": "Nếu bạn muốn chìa khóa, hãy nhìn dưới những bông hoa." }
+        },
+        {
+          "sentence": "He pulled out a small object.",
+          "translation": { "th": "เขาดึงวัตถุชิ้นเล็กๆ ออกมา", "cn": "他拿出了一个小物体。", "tw": "他拿出了一個小物體。", "vi": "Anh ấy lôi ra một vật nhỏ." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "Who was the shadow in the hallway?",
+          "options": ["The principal", "A ghost", "Mr. Hoot the janitor", "A teacher"],
+          "answer": "Mr. Hoot the janitor"
+        },
+        {
+          "question": "Who hid the box twenty years ago?",
+          "options": ["Mr. Hoot", "The old librarian", "Max's father", "The school cook"],
+          "answer": "The old librarian"
+        },
+        {
+          "question": "Where did Mr. Hoot say the key was?",
+          "options": ["In the library", "Under the purple flowers", "On top of the tower", "In his pocket"],
+          "answer": "Under the purple flowers"
+        },
+        {
+          "question": "What did Max do to find the key?",
+          "options": ["He climbed the tower.", "He used a magnet.", "He dug in the soil.", "He asked Lily."],
+          "answer": "He dug in the soil."
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What was Mr. Hoot holding?",
+          "answer": "He was holding a mop."
+        },
+        {
+          "question": "What did Max find in the soil?",
+          "answer": "A key covered in mud."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Why do you think the old librarian hid the key in a flower pot?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 6,
+      "stage": "Take",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["bell", "ring", "wet", "shiver", "hide"],
+        "grammarFocus": "Past Continuous vs Past Simple (The bell rang while they were running)",
+        "pacing": "Fast and urgent",
+        "cliffhangerOrHook": "The lunch lady was standing at the library door, and she looked angry."
+      },
+      "title": "The Loud Bell",
+      "passage": "Max held the silver key tightly. It was cold and wet in his hand. Lily was shivering. Her denim jacket was soaked with rain. 
+
+\"We did it!\" Lily said, her teeth chattering. \"Now let's go open the box.\"\n
+Just then, a loud sound filled the air. RIIING! 
+
+It was the school bell. The bell rang while they were standing in the rain. This meant that lunch break was over. Classes were starting in two minutes.\n
+\"Oh no!\" Max cried. \"We are going to be late for Mr. Green's class. He is very strict.\"\n
+\"We can't go to class like this,\" Lily said, looking at her wet clothes. \"And we have to return the key to the box first.\"\n
+They ran back towards the building. They slipped on the wet grass but they did not stop. They ran through the back door and down the hallway. They needed to get to the library before the second bell rang.\n
+They reached the library door, out of breath. But someone was blocking their way. The lunch lady was standing at the library door, and she looked angry.",
+      "summary": "Max and Lily have the key, but the school bell rings, and they risk being late and getting in trouble.",
+      "translatedSummary": {
+        "th": "แม็กซ์และลิลลี่ได้กุญแจแล้ว แต่ระฆังโรงเรียนดังขึ้น และพวกเขาเสี่ยงที่จะไปสายและเดือดร้อน",
+        "cn": "麦克斯和莉莉拿到了钥匙，但学校的铃声响了，他们冒着迟到和惹麻烦的风险。",
+        "tw": "麥克斯和莉莉拿到了鑰匙，但學校的鈴聲響了，他們冒著遲到和惹麻煩的風險。",
+        "vi": "Max và Lily đã có chìa khóa, nhưng chuông trường vang lên, và họ có nguy cơ bị muộn học và gặp rắc rối."
+      },
+      "imageDesc": "Two wet children running across the school playground in the rain. The school building is in the background. They look worried.",
+      "wordlist": [
+        {
+          "vocabulary": "shiver",
+          "definition": "To shake slightly because you are cold or frightened.",
+          "translation": { "th": "ตัวสั่น", "cn": "发抖", "tw": "發抖", "vi": "rùng mình" }
+        },
+        {
+          "vocabulary": "soaked",
+          "definition": "Extremely wet.",
+          "translation": { "th": "เปียกโชก", "cn": "湿透的", "tw": "濕透的", "vi": "ướt sũng" }
+        },
+        {
+          "vocabulary": "strict",
+          "definition": "Expecting people to obey rules exactly.",
+          "translation": { "th": "เข้มงวด", "cn": "严格的", "tw": "嚴格的", "vi": "nghiêm khắc" }
+        }
+      ],
+      "sentences": [
+        "The bell rang while they were standing in the rain.",
+        "They were running when the bell rang.",
+        "We are going to be late."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "The bell rang while they were running.",
+          "translation": { "th": "ระฆังดังขึ้นขณะที่พวกเขากำลังวิ่ง", "cn": "当他们跑的时候铃声响了。", "tw": "當他們跑的時候鈴聲響了。", "vi": "Chuông reo khi họ đang chạy." }
+        },
+        {
+          "sentence": "He is very strict.",
+          "translation": { "th": "เขาเข้มงวดมาก", "cn": "他非常严格。", "tw": "他非常嚴格。", "vi": "Ông ấy rất nghiêm khắc." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What happened while they were standing in the rain?",
+          "options": ["The sun came out.", "The bell rang.", "Max lost the key.", "Mr. Hoot laughed."],
+          "answer": "The bell rang."
+        },
+        {
+          "question": "Why was Lily shivering?",
+          "options": ["She was sick.", "She was cold and wet.", "She was laughing.", "She was dancing."],
+          "answer": "She was cold and wet."
+        },
+        {
+          "question": "Who is Mr. Green?",
+          "options": ["The janitor", "The librarian", "Their teacher", "Max's dad"],
+          "answer": "Their teacher"
+        },
+        {
+          "question": "Who was standing at the library door?",
+          "options": ["The lunch lady", "The principal", "Mr. Hoot", "A dog"],
+          "answer": "The lunch lady"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Why did they need to hurry?",
+          "answer": "Because lunch break was over and classes were starting."
+        },
+        {
+          "question": "What did they do when they slipped on the grass?",
+          "answer": "They did not stop."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Have you ever been late for something important? How did you feel?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 7,
+      "stage": "Return",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["pocket", "excuse", "dry", "towel", "luckily"],
+        "grammarFocus": "Superlatives (the fastest, the best)",
+        "pacing": "Relieved but hurried",
+        "cliffhangerOrHook": "Max put the key into the lock and turned it. 'Click' went the sound."
+      },
+      "title": "Back to Safety",
+      "passage": "The lunch lady looked at them. \"Why are you wet?\" she asked. \"And why are you not in class?\"\n
+Max thought quickly. \"We... we dropped a book in a puddle,\" he said. \"We tried to save it.\"\n
+It was not a very good excuse, but the lunch lady sighed. \"Go and dry off,\" she said. \"But hurry!\"\n
+\"Thank you!\" said Lily. 
+
+They rushed into the library. Luckily, Mr. Hoot had left some clean towels on a chair. They dried their hair and faces as fast as they could. Max was the fastest drier in the world.\n
+\"We have one minute left,\" Max whispered. He took the wooden box out of his bag. He took the silver key out of his pocket. His hands were shaking a little bit because he was so excited. 
+
+\"This is the most exciting day ever,\" Lily said. \"Open it, Max!\"\n
+Max put the key into the silver keyhole. It fit perfectly. He took a deep breath. He turned the key. *Click* went the sound. The lid of the box popped open.",
+      "summary": "They get past the lunch lady, dry off quickly in the library, and finally unlock the box.",
+      "translatedSummary": {
+        "th": "พวกเขาผ่านแม่ครัวมาได้ รีบเช็ดตัวให้แห้งในห้องสมุด และไขกล่องได้ในที่สุด",
+        "cn": "他们躲过了午餐阿姨，在图书馆迅速擦干，终于打开了盒子。",
+        "tw": "他們躲過了午餐阿姨，在圖書館迅速擦乾， 終於打開了盒子。",
+        "vi": "Họ vượt qua cô phục vụ bữa trưa, lau khô người nhanh chóng trong thư viện và cuối cùng mở khóa chiếc hộp."
+      },
+      "imageDesc": "Inside the library, two children are drying their hair with towels. The boy has the wooden box on the table and is putting the key in the lock.",
+      "wordlist": [
+        {
+          "vocabulary": "excuse",
+          "definition": "A reason you give to explain why you did something wrong.",
+          "translation": { "th": "ข้อแก้ตัว", "cn": "借口", "tw": "藉口", "vi": "lời bào chữa" }
+        },
+        {
+          "vocabulary": "puddle",
+          "definition": "A small pool of liquid on the ground.",
+          "translation": { "th": "แอ่งน้ำ", "cn": "水坑", "tw": "水坑", "vi": "vũng nước" }
+        },
+        {
+          "vocabulary": "perfectly",
+          "definition": "In a way that is completely correct.",
+          "translation": { "th": "อย่างสมบูรณ์แบบ", "cn": "完美地", "tw": "完美地", "vi": "một cách hoàn hảo" }
+        }
+      ],
+      "sentences": [
+        "Max was the fastest drier in the world.",
+        "This is the most exciting day ever.",
+        "He dried his hair as fast as he could."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "This is the most exciting day.",
+          "translation": { "th": "นี่คือวันที่น่าตื่นเต้นที่สุด", "cn": "这是最激动人心的一天。", "tw": "這是最激動人心的一天。", "vi": "Đây là ngày thú vị nhất." }
+        },
+        {
+          "sentence": "It fit perfectly.",
+          "translation": { "th": "มันพอดีเป๊ะ", "cn": "它非常合适。", "tw": "它非常合適。", "vi": "Nó vừa vặn hoàn hảo." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What excuse did Max give the lunch lady?",
+          "options": ["They were swimming.", "They dropped a book in a puddle.", "They were chasing a cat.", "They fell in the mud."],
+          "answer": "They dropped a book in a puddle."
+        },
+        {
+          "question": "What did they use to dry themselves?",
+          "options": ["Paper", "Towels", "Their coats", "The curtains"],
+          "answer": "Towels"
+        },
+        {
+          "question": "How did Max feel when he opened the box?",
+          "options": ["Sad", "Bored", "Excited", "Sleepy"],
+          "answer": "Excited"
+        },
+        {
+          "question": "What sound did the lock make?",
+          "options": ["Bang", "Click", "Pop", "Squeak"],
+          "answer": "Click"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "Who left the towels on the chair?",
+          "answer": "Mr. Hoot left the towels."
+        },
+        {
+          "question": "How much time did they have left?",
+          "answer": "They had one minute left."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "Why is it important to tell the truth, even if you might get in trouble?"
+        }
+      ]
+    },
+    {
+      "chapterNumber": 8,
+      "stage": "Change",
+      "chapterBlueprint": {
+        "selectedVocabulary": ["photo", "black and white", "history", "proud", "adventure"],
+        "grammarFocus": "Past Simple (They felt, they saw)",
+        "pacing": "Happy and reflective",
+        "cliffhangerOrHook": "The End."
+      },
+      "title": "History in a Box",
+      "passage": "Max and Lily looked inside the box. There was no gold. There were no diamonds. Instead, there was an old black and white photograph and a small notebook.\n
+Max picked up the photo. It showed a group of children standing in front of the school. But the school looked different. It was much smaller. 
+
+\"Look at the date,\" Lily said. \"1920! That is more than one hundred years ago.\"\n
+They opened the notebook. It was a diary written by the first students of the school. It talked about their games, their lessons, and their dreams.\n
+\"This is the history of our school,\" Max said quietly. He didn't feel disappointed that there was no gold. He felt proud. He and Lily had found a real treasure.\n
+Just then, the second bell rang. They quickly put the box back inside the blue hollow book and placed it on the shelf.\n
+\"We can read more tomorrow,\" Lily said with a smile.\n
+Max nodded. He was not bored anymore. He knew that even a rainy day could turn into a great adventure. They walked to class, feeling like the best detectives in the world.",
+      "summary": "They find an old photo and diary, realizing the true treasure is the school's history, and feel proud of their adventure.",
+      "translatedSummary": {
+        "th": "พวกเขาพบรูปถ่ายเก่าและสมุดบันทึก ตระหนักว่าสมบัติที่แท้จริงคือประวัติศาสตร์ของโรงเรียน และรู้สึกภูมิใจกับการผจญภัยของพวกเขา",
+        "cn": "他们发现了一张旧照片和日记，意识到真正的财富是学校的历史，并为他们的冒险感到自豪。",
+        "tw": "他們發現了一張舊照片和日記，意識到真正的財富是學校的歷史，並為他們的冒險感到自豪。",
+        "vi": "Họ tìm thấy một bức ảnh cũ và cuốn nhật ký, nhận ra kho báu thực sự là lịch sử của ngôi trường và cảm thấy tự hào về cuộc phiêu lưu của mình."
+      },
+      "imageDesc": "Close up of an old black and white photo of school children from 1920. Max and Lily are smiling and looking at it together. They look happy and proud.",
+      "wordlist": [
+        {
+          "vocabulary": "treasure",
+          "definition": "A quantity of precious metals, gems, or other valuable objects.",
+          "translation": { "th": "สมบัติ", "cn": "宝藏", "tw": "寶藏", "vi": "kho báu" }
+        },
+        {
+          "vocabulary": "disappointed",
+          "definition": "Sad or displeased because someone or something has failed to fulfill one's hopes or expectations.",
+          "translation": { "th": "ผิดหวัง", "cn": "失望的", "tw": "失望的", "vi": "thất vọng" }
+        },
+        {
+          "vocabulary": "diary",
+          "definition": "A book in which one keeps a daily record of events and experiences.",
+          "translation": { "th": "สมุดบันทึกประจำวัน", "cn": "日记", "tw": "日記", "vi": "nhật ký" }
+        }
+      ],
+      "sentences": [
+        "There was an old black and white photograph.",
+        "They walked to class feeling like detectives.",
+        "He did not feel disappointed."
+      ],
+      "sentencesFlashcard": [
+        {
+          "sentence": "This is the history of our school.",
+          "translation": { "th": "นี่คือประวัติศาสตร์ของโรงเรียนเรา", "cn": "这是我们学校的历史。", "tw": "這是我們學校的歷史。", "vi": "Đây là lịch sử của trường chúng tôi." }
+        },
+        {
+          "sentence": "He knew it was a great adventure.",
+          "translation": { "th": "เขารู้ว่ามันเป็นการผจญภัยที่ยอดเยี่ยม", "cn": "他知道这是一次伟大的冒险。", "tw": "他知道這是一次偉大的冒險。", "vi": "Anh biết đó là một cuộc phiêu lưu tuyệt vời." }
+        }
+      ],
+      "multipleChoiceQuestions": [
+        {
+          "question": "What was inside the box?",
+          "options": ["Gold coins", "A map", "A photo and a notebook", "Candy"],
+          "answer": "A photo and a notebook"
+        },
+        {
+          "question": "When was the photo taken?",
+          "options": ["Last year", "1920", "2000", "Yesterday"],
+          "answer": "1920"
+        },
+        {
+          "question": "How did Max feel about the treasure?",
+          "options": ["Angry", "Disappointed", "Proud", "Sad"],
+          "answer": "Proud"
+        },
+        {
+          "question": "What did they decide to do with the box?",
+          "options": ["Take it home", "Give it to the teacher", "Put it back on the shelf", "Throw it away"],
+          "answer": "Put it back on the shelf"
+        }
+      ],
+      "shortAnswerQuestions": [
+        {
+          "question": "What was written in the notebook?",
+          "answer": "It was a diary written by the first students."
+        },
+        {
+          "question": "What did Max realize at the end?",
+          "answer": "He realized that a rainy day could turn into a great adventure."
+        }
+      ],
+      "longAnswerQuestions": [
+        {
+          "question": "If you found a time capsule from 100 years ago, what would you want to see inside?"
+        }
+      ]
+    }
+  ]
+}
