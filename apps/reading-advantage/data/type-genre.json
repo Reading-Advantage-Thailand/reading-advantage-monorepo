@@ -1,0 +1,434 @@
+{
+  "fiction": [
+    {
+      "subgenres": [
+        "Early Readers",
+        "Middle Grade Fiction",
+        "Adventure Stories",
+        "Fantasy for Kids",
+        "Mystery for Kids",
+        "Animal Adventures"
+      ],
+      "name": "Children's Fiction"
+    },
+    {
+      "subgenres": [
+        "Contemporary YA",
+        "Fantasy YA",
+        "Dystopian YA",
+        "Romance YA",
+        "Science Fiction YA",
+        "Historical YA"
+      ],
+      "name": "Young Adult Fiction"
+    },
+    {
+      "subgenres": [
+        "Hard Science Fiction",
+        "Space Opera",
+        "Cyberpunk",
+        "Dystopian Fiction",
+        "Alien Encounters",
+        "Time Travel"
+      ],
+      "name": "Science Fiction"
+    },
+    {
+      "subgenres": [
+        "Supernatural Horror",
+        "Psychological Horror",
+        "Gothic Horror",
+        "Lovecraftian Horror",
+        "Haunted House",
+        "Body Horror"
+      ],
+      "name": "Horror"
+    },
+    {
+      "subgenres": [
+        "Character-driven",
+        "Experimental",
+        "Metafiction",
+        "Cultural Commentary",
+        "Stream of Consciousness",
+        "Postmodern Fiction"
+      ],
+      "name": "Literary Fiction"
+    },
+    {
+      "subgenres": [
+        "Crime Thriller",
+        "Cozy Mystery",
+        "Detective Noir",
+        "Legal Thriller",
+        "Spy Thriller",
+        "Political Thriller"
+      ],
+      "name": "Mystery/Thriller"
+    },
+    {
+      "subgenres": [
+        "Realistic Contemporary",
+        "Domestic Fiction",
+        "Urban Fiction",
+        "Social Commentary",
+        "Relationship Drama",
+        "Coming-of-Age"
+      ],
+      "name": "Contemporary Fiction"
+    },
+    {
+      "subgenres": [
+        "Historical War Fiction",
+        "Military Thriller",
+        "Post-Apocalyptic War",
+        "Espionage",
+        "War Romance",
+        "Alternate History War"
+      ],
+      "name": "War"
+    },
+    {
+      "subgenres": [
+        "Classic Western",
+        "Western Romance",
+        "Weird West",
+        "Frontier Adventure",
+        "Bounty Hunter",
+        "Gold Rush"
+      ],
+      "name": "Westerns"
+    },
+    {
+      "subgenres": [
+        "Literary Fiction",
+        "Mystery/Thriller",
+        "Romance",
+        "Science Fiction",
+        "Historical Fiction",
+        "Psychological Fiction"
+      ],
+      "name": "Adult Fiction"
+    },
+    {
+      "subgenres": [
+        "High Fantasy",
+        "Low Fantasy",
+        "Urban Fantasy",
+        "Epic Fantasy",
+        "Sword and Sorcery",
+        "Portal Fantasy"
+      ],
+      "name": "Fantasy"
+    },
+    {
+      "subgenres": [
+        "Ancient History",
+        "Medieval Era",
+        "19th Century",
+        "World War I and II",
+        "Historical Romance",
+        "Regency Era"
+      ],
+      "name": "Historical Fiction"
+    },
+    {
+      "subgenres": [
+        "Contemporary Romance",
+        "Historical Romance",
+        "Paranormal Romance",
+        "Romantic Suspense",
+        "Regency Romance",
+        "Second Chance Romance"
+      ],
+      "name": "Romance"
+    }
+  ],
+  "nonfiction": [
+    {
+      "subgenres": [
+        "Ancient History",
+        "Medieval History",
+        "Modern History",
+        "World History",
+        "Historical Biographies"
+      ],
+      "name": "History"
+    },
+    {
+      "subgenres": [
+        "Celebrity Memoirs",
+        "Personal Life Stories",
+        "Historical Memoirs",
+        "Travel Memoirs",
+        "Survival Stories",
+        "Medical Memoirs",
+        "Creative Journey",
+        "Family Memoirs",
+        "Political Memoirs",
+        "Cultural Memoirs"
+      ],
+      "name": "Memoirs and Autobiographies"
+    },
+    {
+      "subgenres": [
+        "Instruction Manuals",
+        "DIY Projects",
+        "Cooking Techniques",
+        "Home Improvement",
+        "Craft Tutorials"
+      ],
+      "name": "How-to"
+    },
+    {
+      "subgenres": [
+        "Personal Essays",
+        "Critical Essays",
+        "Literary Analysis",
+        "Philosophical Essays",
+        "Historical Commentary"
+      ],
+      "name": "Essays"
+    },
+    {
+      "subgenres": [
+        "Ethics",
+        "Epistemology",
+        "Metaphysics",
+        "Political Philosophy",
+        "Moral Philosophy",
+        "Existentialism",
+        "Aesthetics",
+        "Logic",
+        "Philosophy of Mind",
+        "Philosophy of Science"
+      ],
+      "name": "Philosophy"
+    },
+    {
+      "subgenres": [
+        "Religious History",
+        "Spiritual Guides",
+        "Interfaith Dialogue",
+        "Religious Memoirs",
+        "Comparative Religion"
+      ],
+      "name": "Religion and Spirituality"
+    },
+    {
+      "subgenres": [
+        "Investment Strategies",
+        "Financial Planning",
+        "Entrepreneurship",
+        "Leadership",
+        "Marketing"
+      ],
+      "name": "Business and Economics"
+    },
+    {
+      "subgenres": [
+        "Historical Biographies",
+        "Political Biographies",
+        "Celebrity Biographies",
+        "Scientific Biographies",
+        "Literary Biographies"
+      ],
+      "name": "Biographies"
+    },
+    {
+      "subgenres": [
+        "Stress Management",
+        "Nutrition and Diet",
+        "Mental Health",
+        "Fitness and Exercise",
+        "Holistic Healing",
+        "Yoga and Meditation",
+        "Alternative Medicine",
+        "Weight Loss",
+        "Wellness Coaching",
+        "Healthy Aging"
+      ],
+      "name": "Health and Wellness"
+    },
+    {
+      "subgenres": [
+        "Career Planning",
+        "Job Search Strategies",
+        "Interview Tips",
+        "Professional Development",
+        "Entrepreneurial Guides",
+        "Resume Writing",
+        "Networking",
+        "Career Change",
+        "Leadership Development",
+        "Work-Life Balance"
+      ],
+      "name": "Career Guides"
+    },
+    {
+      "subgenres": [
+        "Travel Guides",
+        "Travel Literature",
+        "Adventure Travel",
+        "Cultural Exploration",
+        "Historical Travel",
+        "Food and Culinary Travel",
+        "Solo Travel",
+        "Budget Travel",
+        "Family Travel",
+        "Wildlife and Nature Travel"
+      ],
+      "name": "Travel"
+    },
+    {
+      "subgenres": [
+        "Popular Science",
+        "Physics",
+        "Biology",
+        "Chemistry",
+        "Astronomy"
+      ],
+      "name": "Science"
+    },
+    {
+      "subgenres": [
+        "News Reporting",
+        "Feature Writing",
+        "Investigative Journalism",
+        "Opinion Pieces",
+        "Sports Journalism"
+      ],
+      "name": "Journalism"
+    },
+    {
+      "subgenres": [
+        "Educational Picture Books",
+        "Biographical Stories",
+        "Science for Kids",
+        "Historical Tales",
+        "Nature Exploration",
+        "Art and Creativity",
+        "Social Issues for Kids",
+        "Cultural Diversity",
+        "Animal Kingdom",
+        "Adventure and Exploration"
+      ],
+      "name": "Children's Nonfiction"
+    },
+    {
+      "subgenres": [
+        "Parenting Techniques",
+        "Child Psychology",
+        "Parenting Strategies",
+        "Teen Parenting",
+        "Single Parenting"
+      ],
+      "name": "Parenting"
+    },
+    {
+      "subgenres": [
+        "Academic Textbooks",
+        "Educational Manuals",
+        "Study Guides",
+        "Curriculum Development",
+        "Subject-specific Textbooks"
+      ],
+      "name": "Textbooks"
+    },
+    {
+      "subgenres": [
+        "Micro-Essays",
+        "Narrative Shorts",
+        "Flash Memoirs",
+        "Personal Reflections",
+        "Brief Insights"
+      ],
+      "name": "Flash Nonfiction"
+    },
+    {
+      "subgenres": [
+        "Anthropology",
+        "Psychology",
+        "Archaeology",
+        "Communication Studies",
+        "Sociology"
+      ],
+      "name": "Political and Social Sciences"
+    },
+    {
+      "subgenres": [
+        "Social Trends",
+        "Political Analysis",
+        "Product Critique",
+        "Media Criticism",
+        "Cultural Change"
+      ],
+      "name": "Cultural Criticism"
+    },
+    {
+      "subgenres": [
+        "Personal Development",
+        "Relationship Advice",
+        "Financial Management",
+        "Health and Wellness",
+        "Motivational",
+        "Productivity",
+        "Self-esteem",
+        "Stress Reduction",
+        "Time Management",
+        "Mindfulness"
+      ],
+      "name": "Self-help"
+    },
+    {
+      "subgenres": [
+        "Cookbooks",
+        "Cuisine Studies",
+        "Food History",
+        "Restaurant Reviews",
+        "Dietary Guides",
+        "Gastronomy",
+        "Food Memoirs",
+        "Baking and Desserts",
+        "Wine and Beverage",
+        "Regional Cuisine"
+      ],
+      "name": "Food Writing"
+    },
+    {
+      "subgenres": [
+        "Comedic Memoirs",
+        "Satirical Essays",
+        "Humorous Anecdotes",
+        "Stand-up Comedy",
+        "Parody"
+      ],
+      "name": "Humor"
+    },
+    {
+      "subgenres": [
+        "Calligraphy",
+        "Gardening",
+        "Crocheting",
+        "Woodworking",
+        "Model Building",
+        "Painting and Drawing",
+        "Knitting",
+        "Sculpture",
+        "Pottery",
+        "Photography"
+      ],
+      "name": "Crafts and Hobbies"
+    },
+    {
+      "subgenres": [
+        "Language History",
+        "Language Learning",
+        "Linguistics",
+        "Language Evolution",
+        "Bilingualism"
+      ],
+      "name": "Language"
+    }
+  ]
+}

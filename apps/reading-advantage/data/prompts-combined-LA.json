@@ -1,0 +1,66 @@
+{
+  "fiction": {
+    "A1": {
+      "level": "A1",
+      "user_prompt": "Based on the story text provided, create a very simple writing question for CEFR A1 level students. The question should prompt students to write basic sentences about a character or event in the story, using familiar, everyday language. Encourage students to relate it to their personal experiences like family, likes, and dislikes. Responses should be brief, about 25 words, focusing on describing simple, everyday aspects of the story.",
+      "system_prompt": "Create questions that help A1 level learners to focus on and recall the most basic and clear-cut details of the story.\nGuidelines:\n1. The question should be relevant to the provided text.\n2. Encourage detailed, structured responses appropriate to the CEFR level.\n3. Focus on deeper analysis, personal reflection, or narrative skills.\n4. Ensure the prompt is clear and unambiguous."
+    },
+    "A2": {
+      "level": "A2",
+      "user_prompt": "Formulate a basic writing question for CEFR A2 learners using the provided story text. The question should encourage students to describe a specific part or character of the story, using simple connectors like 'and', 'but', and 'because'. Ask for short responses, between 25 to 35 words, that are clear and directly related to the story’s content, encouraging basic storytelling or description.",
+      "system_prompt": "Construct questions that help A2 level learners to practice understanding of simple storylines, character motivations, and settings, while beginning to develop inferential thinking skills.\nGuidelines:\n1. The question should be relevant to the provided text.\n2. Encourage detailed, structured responses appropriate to the CEFR level.\n3. Focus on deeper analysis, personal reflection, or narrative skills.\n4. Ensure the prompt is clear and unambiguous."
+    },
+    "B1": {
+      "level": "B1",
+      "user_prompt": "Create a straightforward writing question for CEFR B1 level students, drawing directly from the story text below. The question should guide students to write connected texts (about 100 words) on the theme, plot, or characters. They should link ideas in a linear sequence and could include personal reflections or comparisons to their own experiences.",
+      "system_prompt": "Create questions that help B1 (lower-intermediate) level learners to engage more critically with the story, understanding its deeper meanings and nuances, and recognizing character development and thematic elements.\nGuidelines:\n1. The question should be relevant to the provided text.\n2. Encourage detailed, structured responses appropriate to the CEFR level.\n3. Focus on deeper analysis, personal reflection, or narrative skills.\n4. Ensure the prompt is clear and unambiguous."
+    },
+    "B2": {
+      "level": "B2",
+      "user_prompt": "Develop an interpretive writing question for CEFR B2 (upper-intermediate) students using the story text provided. The responses should clearly outline an argument or narrative related to the story, incorporating descriptions and personal insights.",
+      "system_prompt": "Design questions that challenge B2 level learners to delve into more sophisticated analysis of the story, considering aspects such as symbolism, tone, and complex character dynamics.\nGuidelines:\n1. Encourage detailed responses (120-180 words) that synthesize information from the story, such as themes, character development, or narrative style.\n2. Design questions that challenge B2 level learners to delve into more sophisticated analysis of the story, considering aspects such as symbolism, tone, and complex character dynamics."
+    },
+    "C1": {
+      "level": "C1",
+      "user_prompt": "Develop a complex writing prompt for CEFR C1 students based on the story text below. The response should demonstrate a well-structured text with expanded viewpoints, supported by examples from the story.",
+      "system_prompt": "Construct questions that engage C1 level learners in sophisticated analysis and interpretation of the story, challenging them to explore and appreciate complex literary elements and deeper meanings.\nGuidelines:\n1. Ask for a detailed essay or personal reflection (200-400 words) on the story’s deeper themes, literary techniques, or character dynamics."
+    },
+    "C2": {
+      "level": "C2",
+      "user_prompt": "Create an advanced and critical writing question for CEFR C2 students, focused on the provided story text. The prompt should lead to comprehensive responses (300-500 words), analyzing the story's literary structure, thematic richness, and stylistic nuances. Encourage a critical appreciation and multiple perspectives on the story’s content, characters, or underlying messages.",
+      "system_prompt": "Create questions that require C2 level learners to engage deeply with the story, utilizing their full range of linguistic skills and critical thinking abilities to interpret and evaluate complex ideas and arguments.\nGuidelines:\n1. The question should be relevant to the provided text.\n2. Encourage detailed, structured responses appropriate to the CEFR level.\n3. Focus on deeper analysis, personal reflection, or narrative skills.\n4. Ensure the prompt is clear and unambiguous."
+    }
+  },
+  "nonfiction": {
+    "A1": {
+      "level": "A1",
+      "user_prompt": "Based on the article text provided, create a very simple writing question for CEFR A1 level students. The question should prompt students to write basic sentences about an element, character, or event in the story, using familiar, everyday language. Encourage students to relate it to their personal experiences like family, likes, and dislikes. Responses should be brief, about 25 words, focusing on describing simple, everyday aspects of the story.",
+      "system_prompt": "Create questions designed to evaluate a CEFR A1 learner's very basic comprehension of the article, focusing on their ability to recall straightforward and simple facts or details.\nGuidelines:\n1. Prompt students to write basic sentences about personal topics such as family, likes, and dislikes, linking them specifically to themes or elements present in the article.\n2. Encourage descriptions of simple everyday objects or scenarios featured or suggested by the article.\n3. Expect responses to be under 25 words, using basic words and phrases."
+    },
+    "A2": {
+      "level": "A2",
+      "user_prompt": "Generate basic writing questions for CEFR A2 learners, keeping them related to the article's familiar, everyday subjects. Questions should:",
+      "system_prompt": "Develop questions that not only assess the direct recall of facts from the text but also basic comprehension, including simple cause and effect or understanding of motives, suitable for A2 level learners.\nGuidelines:\n1. Ask for simple descriptions or stories that connect directly to the content or theme of the article.\n2. Elicit basic opinions or impressions about the topics discussed in the article, using connectors like 'and', 'but', and 'because'.\n3. Response expectations: 25-35 words, composed of simple sentences and connectors."
+    },
+    "B1": {
+      "level": "B1",
+      "user_prompt": "Compose a straightforward writing question for CEFR B1 (lower-intermediate) students based on the article's topic. Responses should be about 100 words, focusing on clear progression and connection to the article.",
+      "system_prompt": "Create questions that challenge B1 level learners to demonstrate a deeper understanding of the text, going beyond mere recall of information. These should:\nGuidelines:\n1. Ask for explanations or narratives about the subject matter directly drawn from or related to the article.\n2. Invite students to create connected texts on subjects tied to the article, linking ideas in a logical sequence.\n3. Response expectations: 100 words, focusing on clear progression and connection to the article."
+    },
+    "B2": {
+      "level": "B2",
+      "user_prompt": "Develop an interpretive and detailed writing response question for CEFR B2 (upper-intermediate) learners that are closely linked to the article.",
+      "system_prompt": "Develop questions that encourage B2 level learners to engage with the text at a deeper level, understanding not only what is directly stated but also what is implied or suggested.\nGuidelines:\n1. Encourage essays or reports with systematic arguments based on details and evidence from the article.\n2. Ask for detailed narratives or descriptions, synthesizing information from the article.\n3. Expected response length: 120-180 words, with a focus on clear argument or narrative development connected to the article."
+    },
+    "C1": {
+      "level": "C1",
+      "user_prompt": "Create complex and detailed writing prompts for CEFR C1 level, related to the article's content.",
+      "system_prompt": "Develop prompts that require C1 level learners to compose clear, structured expositions or arguments, addressing in-depth issues derived from the article.\nGuidelines:\n1. Composing clear, structured expositions or arguments, addressing in-depth issues derived from the article.\n2. Generating detailed, imaginative texts, incorporating themes or styles relevant to the article, including idioms or humor.\n3. Responses should range between 200-400 words, demonstrating an expanded viewpoint and logical conclusions tied to the article's content."
+    },
+    "C2": {
+      "level": "C2",
+      "user_prompt": "Formulate a sophisticated writing question for CEFR C2 students, directly based on the article.",
+      "system_prompt": "Compose questions that stimulate C1 level learners to apply advanced critical thinking skills and comprehensive language understanding to grasp the full depth and breadth of the article's content.\nGuidelines:\n1. Encourage nuanced reports or essays, presenting multiple perspectives and critical analysis of the article's topic.\n2. Request complex stories or descriptions, using styles, idioms, and humor relevant to the article's genre and content.\n3. Anticipate answers to be 300-500 words, demonstrating advanced textual analysis and connection to the article."
+    }
+  }
+}

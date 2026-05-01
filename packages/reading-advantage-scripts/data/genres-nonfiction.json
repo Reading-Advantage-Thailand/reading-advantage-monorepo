@@ -1,0 +1,289 @@
+{
+   "Genres": [
+     {
+       "name": "History",
+       "subgenres": [
+         "Ancient History",
+         "Medieval History",
+         "Modern History",
+         "World History",
+         "Historical Biographies"
+       ]
+     },
+     {
+       "name": "Memoirs and Autobiographies",
+       "subgenres": [
+         "Celebrity Memoirs",
+         "Personal Life Stories",
+         "Historical Memoirs",
+         "Travel Memoirs",
+         "Survival Stories",
+         "Medical Memoirs",
+         "Creative Journey",
+         "Family Memoirs",
+         "Political Memoirs",
+         "Cultural Memoirs"
+       ]
+     },
+     {
+       "name": "How-to",
+       "subgenres": [
+         "Instruction Manuals",
+         "DIY Projects",
+         "Cooking Techniques",
+         "Home Improvement",
+         "Craft Tutorials"
+       ]
+     },
+     {
+       "name": "Essays",
+       "subgenres": [
+         "Personal Essays",
+         "Critical Essays",
+         "Literary Analysis",
+         "Philosophical Essays",
+         "Historical Commentary"
+       ]
+     },
+     {
+       "name": "Philosophy",
+       "subgenres": [
+         "Ethics",
+         "Epistemology",
+         "Metaphysics",
+         "Political Philosophy",
+         "Moral Philosophy",
+         "Existentialism",
+         "Aesthetics",
+         "Logic",
+         "Philosophy of Mind",
+         "Philosophy of Science"
+       ]
+     },
+     {
+       "name": "Religion and Spirituality",
+       "subgenres": [
+         "Religious History",
+         "Spiritual Guides",
+         "Interfaith Dialogue",
+         "Religious Memoirs",
+         "Comparative Religion"
+       ]
+     },
+     {
+       "name": "Business and Economics",
+       "subgenres": [
+         "Investment Strategies",
+         "Financial Planning",
+         "Entrepreneurship",
+         "Leadership",
+         "Marketing"
+       ]
+     },
+     {
+       "name": "Biographies",
+       "subgenres": [
+         "Historical Biographies",
+         "Political Biographies",
+         "Celebrity Biographies",
+         "Scientific Biographies",
+         "Literary Biographies"
+       ]
+     },
+     {
+       "name": "Health and Wellness",
+       "subgenres": [
+         "Stress Management",
+         "Nutrition and Diet",
+         "Mental Health",
+         "Fitness and Exercise",
+         "Holistic Healing",
+         "Yoga and Meditation",
+         "Alternative Medicine",
+         "Weight Loss",
+         "Wellness Coaching",
+         "Healthy Aging"
+       ]
+     },
+     {
+       "name": "Career Guides",
+       "subgenres": [
+         "Career Planning",
+         "Job Search Strategies",
+         "Interview Tips",
+         "Professional Development",
+         "Entrepreneurial Guides",
+         "Resume Writing",
+         "Networking",
+         "Career Change",
+         "Leadership Development",
+         "Work-Life Balance"
+       ]
+     },
+     {
+       "name": "Travel",
+       "subgenres": [
+         "Travel Guides",
+         "Travel Literature",
+         "Adventure Travel",
+         "Cultural Exploration",
+         "Historical Travel",
+         "Food and Culinary Travel",
+         "Solo Travel",
+         "Budget Travel",
+         "Family Travel",
+         "Wildlife and Nature Travel"
+       ]
+     },
+     {
+       "name": "Science",
+       "subgenres": [
+         "Popular Science",
+         "Physics",
+         "Biology",
+         "Chemistry",
+         "Astronomy"
+       ]
+     },
+     {
+       "name": "Journalism",
+       "subgenres": [
+         "News Reporting",
+         "Feature Writing",
+         "Investigative Journalism",
+         "Opinion Pieces",
+         "Sports Journalism"
+       ]
+     },
+     {
+       "name": "Children's Nonfiction",
+       "subgenres": [
+         "Educational Picture Books",
+         "Biographical Stories",
+         "Science for Kids",
+         "Historical Tales",
+         "Nature Exploration",
+         "Art and Creativity",
+         "Social Issues for Kids",
+         "Cultural Diversity",
+         "Animal Kingdom",
+         "Adventure and Exploration"
+       ]
+     },
+     {
+       "name": "Parenting",
+       "subgenres": [
+         "Parenting Techniques",
+         "Child Psychology",
+         "Parenting Strategies",
+         "Teen Parenting",
+         "Single Parenting"
+       ]
+     },
+     {
+       "name": "Textbooks",
+       "subgenres": [
+         "Academic Textbooks",
+         "Educational Manuals",
+         "Study Guides",
+         "Curriculum Development",
+         "Subject-specific Textbooks"
+       ]
+     },
+     {
+       "name": "Flash Nonfiction",
+       "subgenres": [
+         "Micro-Essays",
+         "Narrative Shorts",
+         "Flash Memoirs",
+         "Personal Reflections",
+         "Brief Insights"
+       ]
+     },
+     {
+       "name": "Political and Social Sciences",
+       "subgenres": [
+         "Anthropology",
+         "Psychology",
+         "Archaeology",
+         "Communication Studies",
+         "Sociology"
+       ]
+     },
+     {
+       "name": "Cultural Criticism",
+       "subgenres": [
+         "Social Trends",
+         "Political Analysis",
+         "Product Critique",
+         "Media Criticism",
+         "Cultural Change"
+       ]
+     },
+     {
+       "name": "Self-help",
+       "subgenres": [
+         "Personal Development",
+         "Relationship Advice",
+         "Financial Management",
+         "Health and Wellness",
+         "Motivational",
+         "Productivity",
+         "Self-esteem",
+         "Stress Reduction",
+         "Time Management",
+         "Mindfulness"
+       ]
+     },
+     {
+       "name": "Food Writing",
+       "subgenres": [
+         "Cookbooks",
+         "Cuisine Studies",
+         "Food History",
+         "Restaurant Reviews",
+         "Dietary Guides",
+         "Gastronomy",
+         "Food Memoirs",
+         "Baking and Desserts",
+         "Wine and Beverage",
+         "Regional Cuisine"
+       ]
+     },
+     {
+       "name": "Humor",
+       "subgenres": [
+         "Comedic Memoirs",
+         "Satirical Essays",
+         "Humorous Anecdotes",
+         "Stand-up Comedy",
+         "Parody"
+       ]
+     },
+     {
+       "name": "Crafts and Hobbies",
+       "subgenres": [
+         "Calligraphy",
+         "Gardening",
+         "Crocheting",
+         "Woodworking",
+         "Model Building",
+         "Painting and Drawing",
+         "Knitting",
+         "Sculpture",
+         "Pottery",
+         "Photography"
+       ]
+     },
+     {
+       "name": "Language",
+       "subgenres": [
+         "Language History",
+         "Language Learning",
+         "Linguistics",
+         "Language Evolution",
+         "Bilingualism"
+       ]
+     }
+   ]
+ }

@@ -1,0 +1,11 @@
+{
+  "track_id": "migrate-reading-advantage_20260501",
+  "type": "feature",
+  "status": "complete",
+  "created_at": "2026-05-01T00:00:00Z",
+  "updated_at": "2026-05-01T00:00:00Z",
+  "description": "Migrate reading-advantage web app into the monorepo as apps/reading-advantage, deconflict deps, audit Firebase usage, and adopt shared packages",
+  "estimated_tasks": 22,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

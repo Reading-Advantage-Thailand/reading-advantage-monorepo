@@ -1,0 +1,382 @@
+{
+    "language_placement_test": [
+        {
+            "level": "A0",
+            "points": 3000,
+            "questions": [
+                {
+                    "prompt": "Is this a book?",
+                    "options": {
+                        "A": "Yes, it is a book.",
+                        "B": "No, it is a book.",
+                        "C": "Yes, it is a pen."
+                    }
+                },
+                {
+                    "prompt": "Good morning!",
+                    "options": {
+                        "A": "Good morning!",
+                        "B": "Good night.",
+                        "C": "Thank you."
+                    }
+                },
+                {
+                    "prompt": "Do you have a cat?",
+                    "options": {
+                        "A": "No, I have a dog.",
+                        "B": "Yes, I have a cat.",
+                        "C": "I like dogs."
+                    }
+                },
+                {
+                    "prompt": "What is your name?",
+                    "options": {
+                        "A": "My name is Anna.",
+                        "B": "I am twelve years old.",
+                        "C": "Hello."
+                    }
+                },
+                {
+                    "prompt": "How are you?",
+                    "options": {
+                        "A": "I am good, thank you.",
+                        "B": "I am Anna.",
+                        "C": "Yes, I am here."
+                    }
+                },
+                {
+                    "prompt": "Is this your pen?",
+                    "options": {
+                        "A": "Yes, it's mine.",
+                        "B": "No, it's not a pen.",
+                        "C": "That is a book."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "A1",
+            "points": 6000,
+            "questions": [
+                {
+                    "prompt": "What color is your car?",
+                    "options": {
+                        "A": "My car is blue.",
+                        "B": "My car is big.",
+                        "C": "I have a car."
+                    }
+                },
+                {
+                    "prompt": "Where are you from?",
+                    "options": {
+                        "A": "I am from Italy.",
+                        "B": "Italy is beautiful.",
+                        "C": "I like traveling."
+                    }
+                },
+                {
+                    "prompt": "What's your favorite food?",
+                    "options": {
+                        "A": "I like apples.",
+                        "B": "Apples are red.",
+                        "C": "I eat breakfast."
+                    }
+                },
+                {
+                    "prompt": "What time is it?",
+                    "options": {
+                        "A": "It's three o'clock.",
+                        "B": "It’s time to eat.",
+                        "C": "I have a watch."
+                    }
+                },
+                {
+                    "prompt": "Do you like coffee?",
+                    "options": {
+                        "A": "Yes, I love coffee.",
+                        "B": "Coffee is bitter.",
+                        "C": "I don't drink tea."
+                    }
+                },
+                {
+                    "prompt": "Where is the bus station?",
+                    "options": {
+                        "A": "It's near the park.",
+                        "B": "I take the bus.",
+                        "C": "The bus is late."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "A2",
+            "points": 9000,
+            "questions": [
+                {
+                    "prompt": "Did you enjoy the movie last night?",
+                    "options": {
+                        "A": "Yes, it was very interesting.",
+                        "B": "No, I doesn't like it.",
+                        "C": "Movies is too long for me."
+                    }
+                },
+                {
+                    "prompt": "Are you going to the party on Friday?",
+                    "options": {
+                        "A": "I don’t know yet.",
+                        "B": "Parties was fun.",
+                        "C": "Friday I to work."
+                    }
+                },
+                {
+                    "prompt": "Should we take a taxi or walk?",
+                    "options": {
+                        "A": "Let’s take a taxi, it's faster.",
+                        "B": "Walking is health.",
+                        "C": "Taxi are expensive."
+                    }
+                },
+                {
+                    "prompt": "Have you finished your homework?",
+                    "options": {
+                        "A": "Not yet, I'm still working on it.",
+                        "B": "I finishes it tomorrow.",
+                        "C": "Homeworks are hard."
+                    }
+                },
+                {
+                    "prompt": "What did you do last weekend?",
+                    "options": {
+                        "A": "I went to the beach.",
+                        "B": "I goes to the park.",
+                        "C": "Beaches is nice."
+                    }
+                },
+                {
+                    "prompt": "Can you help me with this?",
+                    "options": {
+                        "A": "Of course, what do you need?",
+                        "B": "I am helping later.",
+                        "C": "This is easy."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "B1",
+            "points": 12000,
+            "questions": [
+                {
+                    "prompt": "I can’t find my glasses anywhere.",
+                    "options": {
+                        "A": "Did you look in your bag?",
+                        "B": "They might be where you left.",
+                        "C": "Glasses are somewhere around."
+                    }
+                },
+                {
+                    "prompt": "I think I failed my math test.",
+                    "options": {
+                        "A": "Don't worry, you can try again.",
+                        "B": "Maths is always hard.",
+                        "C": "You will passed next time."
+                    }
+                },
+                {
+                    "prompt": "I’m feeling really cold.",
+                    "options": {
+                        "A": "Close the window, then.",
+                        "B": "You should to wear more.",
+                        "C": "Is cold in here, indeed."
+                    }
+                },
+                {
+                    "prompt": "What do you think about the new environmental policies?",
+                    "options": {
+                        "A": "They're a step in the right direction.",
+                        "B": "It's quite complicated policies.",
+                        "C": "I haven't reading them yet."
+                    }
+                },
+                {
+                    "prompt": "How often do you exercise?",
+                    "options": {
+                        "A": "I go jogging every morning.",
+                        "B": "Exercise is healthful.",
+                        "C": "I'm not liking jogging."
+                    }
+                },
+                {
+                    "prompt": "Why are you learning English?",
+                    "options": {
+                        "A": "For my job and to travel.",
+                        "B": "English is use worldwide.",
+                        "C": "I like learning language."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "B2",
+            "points": 15000,
+            "questions": [
+                {
+                    "prompt": "Do you think we should invest in renewable energy?",
+                    "options": {
+                        "A": "Yes, it's crucial for sustainability.",
+                        "B": "It’s too costing much.",
+                        "C": "Investments are risky."
+                    }
+                },
+                {
+                    "prompt": "I'm planning a trip to South America next year.",
+                    "options": {
+                        "A": "What countries will you visit?",
+                        "B": "It's a very long trip.",
+                        "C": "Traveling is very expenses."
+                    }
+                },
+                {
+                    "prompt": "This book on psychology is quite complex.",
+                    "options": {
+                        "A": "Psychology is an interesting field.",
+                        "B": "You could to try a simpler book.",
+                        "C": "Reading books are challenging."
+                    }
+                },
+                {
+                    "prompt": "What are your thoughts on the impact of social media on youth?",
+                    "options": {
+                        "A": "It has both positive and negative aspects.",
+                        "B": "Social media are popular.",
+                        "C": "I use social media often."
+                    }
+                },
+                {
+                    "prompt": "Do you believe that space exploration is important?",
+                    "options": {
+                        "A": "Absolutely, it's vital for scientific advancement.",
+                        "B": "Space is fascinates.",
+                        "C": "It seems much expensive."
+                    }
+                },
+                {
+                    "prompt": "How do you manage stress in your daily life?",
+                    "options": {
+                        "A": "I practice yoga and meditation.",
+                        "B": "Stress is hard to handling.",
+                        "C": "I getting stressed easily."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "C1",
+            "points": 18000,
+            "questions": [
+                {
+                    "prompt": "How do you interpret the rise in digital art sales?",
+                    "options": {
+                        "A": "It reflects new art appreciation.",
+                        "B": "Digital art isn't seen as traditional.",
+                        "C": "I'm preferring classic art forms."
+                    }
+                },
+                {
+                    "prompt": "The novel explores themes of identity and memory.",
+                    "options": {
+                        "A": "That sounds profound.",
+                        "B": "It's quite an interesting novel.",
+                        "C": "Themes are too abstract for me."
+                    }
+                },
+                {
+                    "prompt": "What's your stance on universal basic income?",
+                    "options": {
+                        "A": "It could reduce inequality.",
+                        "B": "Such policy could be beneficial.",
+                        "C": "It's a complex topic, indeed."
+                    }
+                },
+                {
+                    "prompt": "In what ways can technology influence art?",
+                    "options": {
+                        "A": "It opens up new forms and methods.",
+                        "B": "Technology is transforming art.",
+                        "C": "I tend to prefer more traditional techniques."
+                    }
+                },
+                {
+                    "prompt": "What are your views on the impact of globalization on local cultures?",
+                    "options": {
+                        "A": "It can be both enriching and damaging.",
+                        "B": "Globalization is unavoidable.",
+                        "C": "Local cultures must adapt or perish."
+                    }
+                },
+                {
+                    "prompt": "Discuss the role of AI in modern healthcare.",
+                    "options": {
+                        "A": "It improves efficiency and diagnostic accuracy.",
+                        "B": "AI is becoming indispensable in healthcare.",
+                        "C": "AI must be used cautiously."
+                    }
+                }
+            ]
+        },
+        {
+            "level": "C2",
+            "points": 21000,
+            "questions": [
+                {
+                    "prompt": "Quantum computing could change data encryption.",
+                    "options": {
+                        "A": "It poses cybersecurity challenges.",
+                        "B": "Quantum mechanics isn't widely understood.",
+                        "C": "Such computing trends are futuristic."
+                    }
+                },
+                {
+                    "prompt": "Post-structuralism critiques language and meaning.",
+                    "options": {
+                        "A": "It's a rewarding perspective.",
+                        "B": "It deconstructs traditional narratives.",
+                        "C": "Such theories are often convoluted."
+                    }
+                },
+                {
+                    "prompt": "The interplay between geopolitics and economics is intricate.",
+                    "options": {
+                        "A": "Understanding it is key.",
+                        "B": "Geopolitics often dictates economics.",
+                        "C": "It’s a dynamic field of study."
+                    }
+                },
+                {
+                    "prompt": "Transhumanism explores the potential of enhancing the human condition.",
+                    "options": {
+                        "A": "It challenges ethical boundaries.",
+                        "B": "It pushes scientific innovations.",
+                        "C": "Such movements are controversial."
+                    }
+                },
+                {
+                    "prompt": "In literary modernism, traditional structures were often discarded.",
+                    "options": {
+                        "A": "It heralded narrative experimentation.",
+                        "B": "It was a break from classical forms.",
+                        "C": "Such styles can seem inaccessible."
+                    }
+                },
+                {
+                    "prompt": "Climate change discourse is shaped by complex scientific data.",
+                    "options": {
+                        "A": "Interpreting this data is crucial.",
+                        "B": "Climate models are predictive.",
+                        "C": "The data often presents alarming trends."
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@reading-advantage/scripts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@ai-sdk/google-vertex": "^2.0.12",
+    "@ai-sdk/openai": "^1.0.8",
+    "@google-cloud/storage": "^7.16.0",
+    "ai": "^4.0.22",
+    "automated-readability": "^2.0.1",
+    "axios": "^1.7.7",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.4.7",
+    "openai": "^4.57.3",
+    "sentence-tokenizer": "^1.0.1",
+    "text-readability": "^1.0.5",
+    "vocabulary-level-grader": "^1.1.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

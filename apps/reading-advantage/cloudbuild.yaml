@@ -1,0 +1,114 @@
+steps:
+  # build the container images
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--build-arg",
+        "GOOGLE_CLIENT_ID=$_GOOGLE_CLIENT_ID",
+        "--build-arg",
+        "GOOGLE_CLIENT_SECRET=$_GOOGLE_CLIENT_SECRET",
+        "--build-arg",
+        "GOOGLE_GENERATIVE_AI_API_KEY=$_GOOGLE_GENERATIVE_AI_API_KEY",
+        "--build-arg",
+        "VERTEX_CLIENT_EMAIL=$_VERTEX_CLIENT_EMAIL",
+        "--build-arg",
+        "VERTEX_PRIVATE_KEY=$_VERTEX_PRIVATE_KEY",
+        "--build-arg",
+        "NEXT_PUBLIC_URL=$_NEXT_PUBLIC_URL",
+        "--build-arg",
+        "NEXTAUTH_PUBLIC_URL=$_NEXTAUTH_PUBLIC_URL",
+        "--build-arg",
+        "NEXTAUTH_SECRET=$_NEXTAUTH_SECRET",
+        "--build-arg",
+        "NEXTAUTH_URL=$_NEXTAUTH_URL",
+        "--build-arg",
+        "NODE_ENV=$_NODE_ENV",
+        "--build-arg",
+        "SERVICE_ACCOUNT_KEY=$_SERVICE_ACCOUNT_KEY",
+        "--build-arg",
+        "NEXT_PUBLIC_BASE_URL=$_NEXT_PUBLIC_BASE_URL",
+        "--build-arg",
+        "OPENAI_API_KEY=$_OPENAI_API_KEY",
+        "--build-arg",
+        "FIREBASE_PROJECT_ID=$_FIREBASE_PROJECT_ID",
+        "--build-arg",
+        "FIREBASE_CLIENT_EMAIL=$_FIREBASE_CLIENT_EMAIL",
+        "--build-arg",
+        "FIREBASE_PRIVATE_KEY=$_FIREBASE_PRIVATE_KEY",
+        "--build-arg",
+        "NEXT_PUBLIC_FIREBASE_API_KEY=$_NEXT_PUBLIC_FIREBASE_API_KEY",
+        "--build-arg",
+        "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=$_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN",
+        "--build-arg",
+        "NEXT_PUBLIC_FIREBASE_PROJECT_ID=$_NEXT_PUBLIC_FIREBASE_PROJECT_ID",
+        "--build-arg",
+        "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=$_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET",
+        "--build-arg",
+        "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=$_NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID",
+        "--build-arg",
+        "NEXT_PUBLIC_FIREBASE_APP_ID=$_NEXT_PUBLIC_FIREBASE_APP_ID",
+        "--build-arg",
+        "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=$_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID",
+        "--build-arg",
+        "GOOGLE_TEXT_TO_SPEECH_API_KEY=$_GOOGLE_TEXT_TO_SPEECH_API_KEY",
+        "--build-arg",
+        "ACCESS_KEY=$_ACCESS_KEY",
+        "--build-arg",
+        "DISCORD_WEBHOOK_URL=$_DISCORD_WEBHOOK_URL",
+        "--build-arg",
+        "CLASSROOM_CLIENT_ID=$_CLASSROOM_CLIENT_ID",
+        "--build-arg",
+        "CLASSROOM_CLIENT_SECRET=$_CLASSROOM_CLIENT_SECRET",
+        "--build-arg",
+        "CLASSROOM_REDIRECT_URI=$_CLASSROOM_REDIRECT_URI",
+        "-t",
+        "asia-southeast1-docker.pkg.dev/$PROJECT_ID/web/reading-advantage-web",
+        "./web",
+      ]
+
+  # push the container images to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "asia-southeast1-docker.pkg.dev/$PROJECT_ID/web/reading-advantage-web"]
+
+  # Deploy container images to Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "run",
+        "deploy",
+        "reading-advantage-web",
+        "--image",
+        "asia-southeast1-docker.pkg.dev/$PROJECT_ID/web/reading-advantage-web",
+        "--timeout=60m",
+        "--region",
+        "asia-southeast1",
+        "--platform",
+        "managed",
+        "--allow-unauthenticated",
+        "--add-cloudsql-instances",
+        "$_CLOUD_SQL_CONNECTION_NAME",
+        "--set-env-vars",
+        "NODE_ENV=production,DATABASE_URL=$_DATABASE_URL,NEXTAUTH_URL=$_NEXTAUTH_URL,NEXT_PUBLIC_BASE_URL=$_NEXT_PUBLIC_BASE_URL,NEXTAUTH_SECRET=$_NEXTAUTH_SECRET,AUTH_GOOGLE_ID=$_GOOGLE_CLIENT_ID,AUTH_GOOGLE_SECRET=$_GOOGLE_CLIENT_SECRET,FIREBASE_PROJECT_ID=$_FIREBASE_PROJECT_ID,VERTEX_CLIENT_EMAIL=$_VERTEX_CLIENT_EMAIL,VERTEX_PRIVATE_KEY=$_VERTEX_PRIVATE_KEY,OPENAI_API_KEY=$_OPENAI_API_KEY,GOOGLE_GENERATIVE_AI_API_KEY=$_GOOGLE_GENERATIVE_AI_API_KEY,ACCESS_KEY=$_ACCESS_KEY,DISCORD_WEBHOOK_URL=$_DISCORD_WEBHOOK_URL,GOOGLE_TEXT_TO_SPEECH_API_KEY=$_GOOGLE_TEXT_TO_SPEECH_API_KEY,FIREBASE_CLIENT_EMAIL=$_FIREBASE_CLIENT_EMAIL,FIREBASE_PRIVATE_KEY=$_FIREBASE_PRIVATE_KEY,CLASSROOM_CLIENT_ID=$_CLASSROOM_CLIENT_ID,CLASSROOM_CLIENT_SECRET=$_CLASSROOM_CLIENT_SECRET,CLASSROOM_REDIRECT_URI=$_CLASSROOM_REDIRECT_URI",
+      ]
+
+  # Send a notification to Discord
+  # - name: "gcr.io/cloud-builders/curl"
+  #   args:
+  #     [
+  #       "-X",
+  #       "POST",
+  #       "-H",
+  #       "Content-Type: application/json",
+  #       "-d",
+  #       '{"content": "# Build results \n**project id**: $PROJECT_ID"',
+  #       "$DISCORD_WEBHOOK_URL",
+  #     ]
+
+images:
+  - asia-southeast1-docker.pkg.dev/$PROJECT_ID/web/reading-advantage-web
+
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 100
+  logging: CLOUD_LOGGING_ONLY
