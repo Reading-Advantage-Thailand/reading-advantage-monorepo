@@ -1,0 +1,9 @@
+{
+  "id": "unified-game-screens-20260131",
+  "title": "Unified Start and End Screens",
+  "type": "chore",
+  "status": "ready",
+  "priority": "medium",
+  "created": "2026-01-31",
+  "description": "Refactor start and end screens across all games to use shared, themeable components for consistent UX"
+}

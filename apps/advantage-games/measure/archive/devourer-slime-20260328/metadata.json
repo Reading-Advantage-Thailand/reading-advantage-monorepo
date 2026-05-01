@@ -1,0 +1,11 @@
+{
+  "id": "devourer-slime",
+  "name": "Devourer Slime",
+  "description": "Hole.io style arena growth game. Start small, eat words in the correct order to grow big enough to devour enemies!",
+  "status": "completed",
+  "priority": "medium",
+  "type": "feature",
+  "created_at": "2026-03-28T03:00:00.000Z",
+  "updated_at": "2026-03-28T04:00:00.000Z",
+  "completed_at": "2026-03-28T04:00:00.000Z"
+}

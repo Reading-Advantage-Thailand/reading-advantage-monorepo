@@ -1,0 +1,433 @@
+'use client'
+
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Group, Image as KonvaImage, Layer, Rect, Stage, Text } from 'react-konva'
+import { AnimatePresence, motion } from 'framer-motion'
+import { withBasePath } from '@/lib/games/basePath'
+import { createGameState, advanceTime, getGameResults } from '@/lib/games/gameName'
+import type { GameState, GameResults, GameRound } from '@/lib/games/gameName'
+import type { VocabularyItem } from '@/store/useGameStore'
+// rAF-based game loop — no useInterval needed for action games
+import { useSound } from '@/hooks/useSound'
+import { useDirectionalInput } from '@/hooks/useDirectionalInput'
+import { GameEndScreen } from '@/components/games/game/GameEndScreen'
+import { GameStartScreen } from '@/components/games/game/GameStartScreen'
+import { DPad } from '@/components/ui/DPad'
+
+type GameAssets = {
+  player: HTMLImageElement
+  enemy: HTMLImageElement
+  background: HTMLImageElement
+}
+
+type GameProps = {
+  vocabulary: VocabularyItem[]
+  durationMs?: number
+  onComplete?: (results: GameResults) => void
+  preloadedAssets?: GameAssets
+}
+
+type GamePhase = 'start' | 'playing' | 'ended'
+
+type StageSize = {
+  width: number
+  height: number
+}
+
+type SpriteGrid = {
+  columns: number[]
+  rows: number[]
+  columnOffsets: number[]
+  rowOffsets: number[]
+}
+
+type GameLayout = {
+  playerX: number
+  playerY: number
+  playerScale: number
+  playerFrameWidth: number
+  playerFrameHeight: number
+}
+
+const ASSETS = {
+  player: withBasePath('/games/game-name/player-3x3-sheet.png'),
+  enemy: withBasePath('/games/game-name/enemy-3x3-sheet.png'),
+  background: withBasePath('/games/game-name/background.png'),
+}
+
+const DEFAULT_STAGE: StageSize = { width: 960, height: 540 }
+const TICK_MS = 16 // rAF target ~60fps
+const PLAYER_SPEED = 4
+const PLAYER_ANIM_MS = 120
+const ENEMY_SPAWN_MS = 2000
+
+const buildSpriteGrid = (width: number, height: number): SpriteGrid => {
+  const columnBase = Math.floor(width / 3)
+  const rowBase = Math.floor(height / 3)
+  const columnRemainder = width % 3
+  const rowRemainder = height % 3
+  const columns = [0, 1, 2].map((index) => columnBase + (index < columnRemainder ? 1 : 0))
+  const rows = [0, 1, 2].map((index) => rowBase + (index < rowRemainder ? 1 : 0))
+  const columnOffsets = columns.reduce<number[]>((acc, _value, index) => {
+    const nextValue = index === 0 ? 0 : acc[index - 1] + columns[index - 1]
+    acc.push(nextValue)
+    return acc
+  }, [])
+  const rowOffsets = rows.reduce<number[]>((acc, _value, index) => {
+    const nextValue = index === 0 ? 0 : acc[index - 1] + rows[index - 1]
+    acc.push(nextValue)
+    return acc
+  }, [])
+
+  return { columns, rows, columnOffsets, rowOffsets }
+}
+
+const getSpriteCrop = (grid: SpriteGrid, col: number, row: number) => ({
+  x: grid.columnOffsets[col] ?? 0,
+  y: grid.rowOffsets[row] ?? 0,
+  width: grid.columns[col] ?? 0,
+  height: grid.rows[row] ?? 0,
+})
+
+const loadImage = (src: string) =>
+  new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = () => reject(new Error(`Failed to load ${src}`))
+    image.src = src
+  })
+
+const buildAssets = async (): Promise<GameAssets> => {
+  const [player, enemy, background] = await Promise.all([
+    loadImage(ASSETS.player),
+    loadImage(ASSETS.enemy),
+    loadImage(ASSETS.background),
+  ])
+  return { player, enemy, background }
+}
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+
+const buildLayout = (
+  stage: StageSize,
+  playerGrid: SpriteGrid
+): GameLayout => {
+  const playerFrameWidth = playerGrid.columns[0] ?? 1
+  const playerFrameHeight = playerGrid.rows[0] ?? 1
+  const playerScale = 0.3
+
+  return {
+    playerX: stage.width / 2,
+    playerY: stage.height * 0.75,
+    playerScale,
+    playerFrameWidth,
+    playerFrameHeight,
+  }
+}
+
+export function GameNameGame({
+  vocabulary,
+  durationMs = 60000,
+  onComplete,
+  preloadedAssets,
+}: GameProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [stageSize, setStageSize] = useState<StageSize>(DEFAULT_STAGE)
+  const [assets, setAssets] = useState<GameAssets | null>(preloadedAssets ?? null)
+  const [isLoading, setIsLoading] = useState(!preloadedAssets)
+  const [state, setState] = useState<GameState>(() => createGameState(vocabulary, { durationMs }))
+  const [phase, setPhase] = useState<GamePhase>('start')
+  const [playerFrame, setPlayerFrame] = useState(0)
+  const [playerPos, setPlayerPos] = useState({ x: DEFAULT_STAGE.width / 2, y: DEFAULT_STAGE.height * 0.75 })
+  const { playSound } = useSound()
+  const { input, setVirtualInput, consumeCast } = useDirectionalInput()
+
+  const measureStage = useCallback(() => {
+    const element = containerRef.current
+    if (!element) return
+    const { width, height } = element.getBoundingClientRect()
+    if (width <= 0 || height <= 0) return
+    const nextWidth = Math.round(width)
+    const nextHeight = Math.round(height)
+    setStageSize((prev) =>
+      prev.width === nextWidth && prev.height === nextHeight
+        ? prev
+        : { width: nextWidth, height: nextHeight }
+    )
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    if (preloadedAssets) {
+      setAssets(preloadedAssets)
+      setIsLoading(false)
+      return () => undefined
+    }
+
+    setIsLoading(true)
+    buildAssets()
+      .then((loadedAssets) => {
+        if (!isMounted) return
+        setAssets(loadedAssets)
+        setIsLoading(false)
+      })
+      .catch(() => {
+        if (!isMounted) return
+        setAssets(null)
+        setIsLoading(false)
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [preloadedAssets])
+
+  const resetGame = useCallback(() => {
+    const nextState = createGameState(vocabulary, { durationMs })
+    setState(nextState)
+    setPlayerPos({ x: DEFAULT_STAGE.width / 2, y: DEFAULT_STAGE.height * 0.75 })
+    setPlayerFrame(0)
+  }, [vocabulary, durationMs])
+
+  useEffect(() => {
+    resetGame()
+    setPhase('start')
+  }, [resetGame])
+
+  useEffect(() => {
+    if (isLoading) return
+    if (!containerRef.current) return
+    measureStage()
+    let frameId = 0
+    const handleResize = () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId)
+      }
+      frameId = requestAnimationFrame(() => {
+        frameId = 0
+        measureStage()
+      })
+    }
+
+    let observer: ResizeObserver | null = null
+    if (typeof ResizeObserver !== 'undefined') {
+      observer = new ResizeObserver(handleResize)
+      observer.observe(containerRef.current)
+    }
+
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('orientationchange', handleResize)
+
+    return () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId)
+      }
+      observer?.disconnect()
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('orientationchange', handleResize)
+    }
+  }, [isLoading, measureStage])
+
+  const playerGrid = useMemo(
+    () => (assets ? buildSpriteGrid(assets.player.width, assets.player.height) : null),
+    [assets]
+  )
+  const layout = useMemo(() => {
+    if (!playerGrid) return null
+    return buildLayout(stageSize, playerGrid)
+  }, [stageSize, playerGrid])
+
+  const lastFrameRef2 = useRef<number>(0)
+  const rafRef2 = useRef<number>(0)
+
+  useEffect(() => {
+    if (state.status !== 'running' || phase !== 'playing') return
+
+    const loop = (timestamp: number) => {
+      const delta = lastFrameRef2.current ? timestamp - lastFrameRef2.current : 16
+      lastFrameRef2.current = timestamp
+      const clampedDelta = Math.min(delta, 50)
+      setState((prev) => advanceTime(prev, clampedDelta))
+      rafRef2.current = requestAnimationFrame(loop)
+    }
+
+    rafRef2.current = requestAnimationFrame(loop)
+    return () => {
+      cancelAnimationFrame(rafRef2.current)
+      lastFrameRef2.current = 0
+    }
+  }, [state.status, phase])
+
+  useInterval(() => {
+    setPlayerFrame((prev) => (prev + 1) % 3)
+  }, phase === 'playing' ? PLAYER_ANIM_MS : null)
+
+  useEffect(() => {
+    if (phase !== 'playing' || !layout) return
+    
+    setPlayerPos((prev) => {
+      let nextX = prev.x + input.dx * PLAYER_SPEED
+      let nextY = prev.y + input.dy * PLAYER_SPEED
+      
+      nextX = clamp(nextX, layout.playerFrameWidth * layout.playerScale / 2, stageSize.width - layout.playerFrameWidth * layout.playerScale / 2)
+      nextY = clamp(nextY, layout.playerFrameHeight * layout.playerScale / 2, stageSize.height - layout.playerFrameHeight * layout.playerScale / 2)
+      
+      return { x: nextX, y: nextY }
+    })
+  }, [input, phase, layout, stageSize])
+
+  useEffect(() => {
+    if (input.cast && phase === 'playing') {
+      consumeCast()
+    }
+  }, [input.cast, phase, consumeCast])
+
+  useEffect(() => {
+    if (state.status === 'ended') {
+      const results = getGameResults(state)
+      onComplete?.(results)
+      setPhase('ended')
+    }
+  }, [state, onComplete])
+
+  const handleStart = useCallback(() => {
+    resetGame()
+    setPhase('playing')
+  }, [resetGame])
+
+  const handleRestart = useCallback(() => {
+    resetGame()
+    setPhase('start')
+  }, [resetGame])
+
+  const remainingRatio = state.durationMs > 0
+    ? Math.max(0, 1 - state.elapsedMs / state.durationMs)
+    : 0
+
+  if (!assets && !isLoading) {
+    return (
+      <div className='rounded-3xl border border-red-500/40 bg-red-950/30 p-6 text-sm text-red-200'>
+        Unable to load game assets. Please refresh to try again.
+      </div>
+    )
+  }
+
+  const canRenderGame = Boolean(phase !== 'start' && layout && assets)
+  const playerRow = 0
+  const playerCol = playerFrame % 3
+
+  return (
+    <div
+      ref={containerRef}
+      className={`relative w-full h-[70vh] min-h-[480px] max-h-[760px] overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 shadow-[0_20px_60px_rgba(15,23,42,0.45)] ${phase !== 'start' ? 'touch-none select-none' : ''}`}
+      data-testid='game-name'
+      data-status={phase}
+    >
+      {canRenderGame && (
+        <Stage width={stageSize.width} height={stageSize.height}>
+          <Layer>
+            <KonvaImage
+              image={assets!.background}
+              x={0}
+              y={0}
+              width={stageSize.width}
+              height={stageSize.height}
+            />
+          </Layer>
+
+          <Layer>
+            <Group
+              x={playerPos.x}
+              y={playerPos.y}
+            >
+              <KonvaImage
+                image={assets!.player}
+                crop={getSpriteCrop(playerGrid!, playerCol, playerRow)}
+                width={layout!.playerFrameWidth}
+                height={layout!.playerFrameHeight}
+                offsetX={layout!.playerFrameWidth / 2}
+                offsetY={layout!.playerFrameHeight / 2}
+                scaleX={layout!.playerScale}
+                scaleY={layout!.playerScale}
+              />
+            </Group>
+          </Layer>
+        </Stage>
+      )}
+
+      {canRenderGame && (
+        <div className='absolute inset-0 z-10 pointer-events-none'>
+          <div className='flex items-start justify-between p-6'>
+            <div className='rounded-2xl border border-white/10 bg-white/10 px-5 py-3 backdrop-blur'>
+              <div className='text-xs uppercase tracking-[0.2em] text-white/70'>Score</div>
+              <div className='text-2xl font-semibold text-white' data-testid='game-score'>
+                {state.score}
+              </div>
+            </div>
+            <div className='rounded-2xl border border-white/10 bg-white/10 px-5 py-3 backdrop-blur'>
+              <div className='text-xs uppercase tracking-[0.2em] text-white/70'>Time</div>
+              <div className='text-2xl font-semibold text-white' data-testid='game-timer'>
+                {Math.ceil((state.durationMs - state.elapsedMs) / 1000)}s
+              </div>
+            </div>
+          </div>
+
+          <div className='absolute left-6 right-6 top-20'>
+            <div
+              className='h-2 w-full overflow-hidden rounded-full bg-white/10'
+              role='progressbar'
+              aria-label='Game timer'
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(remainingRatio * 100)}
+            >
+              <motion.div
+                className='h-full rounded-full bg-gradient-to-r from-emerald-400 via-sky-400 to-indigo-400'
+                initial={{ width: '100%' }}
+                animate={{ width: `${remainingRatio * 100}%` }}
+                transition={{ duration: 0.2, ease: 'linear' }}
+                data-testid='game-timer-bar'
+              />
+            </div>
+          </div>
+
+          <div className='absolute bottom-8 left-8 z-10 pointer-events-auto'>
+            <DPad onInput={setVirtualInput} />
+          </div>
+        </div>
+      )}
+
+      {phase === 'start' && (
+        <GameStartScreen
+          gameTitle='Game Name'
+          gameSubtitle='Subtitle'
+          vocabulary={vocabulary}
+          instructions={[
+            { step: 1, text: 'Use arrow keys or D-pad to move your character.' },
+            { step: 2, text: 'Collect correct answers to earn points.' },
+            { step: 3, text: 'Avoid incorrect answers to maintain your streak.' },
+          ]}
+          proTip='Focus on accuracy over speed for maximum XP.'
+          controls={[
+            { label: 'Move', keys: 'Arrows/WASD', color: 'bg-amber-500' },
+            { label: 'Action', keys: 'Space', color: 'bg-emerald-500' },
+          ]}
+          startButtonText={isLoading ? 'Loading...' : 'Start Game'}
+          onStart={handleStart}
+        />
+      )}
+
+      <AnimatePresence>
+        {phase === 'ended' && (
+          <GameEndScreen
+            status={state.score > 0 ? 'victory' : 'defeat'}
+            score={state.score}
+            xp={getGameResults(state).xp}
+            accuracy={state.attempts > 0 ? state.correctAnswers / state.attempts : 0}
+            onRestart={handleRestart}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}

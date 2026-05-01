@@ -1,0 +1,10 @@
+{
+  "id": "dragon-rider-reskin-20260131",
+  "title": "Dragon Rider - Reskin of Dragon Flight",
+  "type": "feature",
+  "priority": "medium",
+  "status": "completed",
+  "created": "2026-01-31",
+  "completed_at": "2026-03-20T12:00:00Z",
+  "description": "Create a reskinned version of the Dragon Flight game called Dragon Rider, using new assets while maintaining the same gameplay mechanics."
+}

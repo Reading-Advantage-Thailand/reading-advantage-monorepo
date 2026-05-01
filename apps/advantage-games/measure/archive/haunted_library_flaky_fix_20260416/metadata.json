@@ -1,0 +1,14 @@
+{
+  "trackId": "haunted_library_flaky_fix_20260416",
+  "title": "Haunted Library Flaky Tests Fix",
+  "description": "Fix intermittent hauntedLibrary tests by making RNG-driven setup deterministic and verifying the suite is stable across repeated runs.",
+  "priority": "high",
+  "type": "bug",
+  "status": "completed",
+  "created": "2026-04-16",
+  "updated": "2026-04-21",
+  "estimated_tasks": 6,
+  "actual_tasks": 6,
+  "spec": "track.md",
+  "plan": "plan.md"
+}

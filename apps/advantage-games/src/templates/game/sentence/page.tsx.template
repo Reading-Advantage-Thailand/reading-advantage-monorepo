@@ -1,0 +1,71 @@
+'use client'
+
+import { useCallback, useEffect, useState } from 'react'
+import { GameNameGame } from '@/components/games/sentence/game-name/GameNameGame'
+import type { GameResults } from '@/lib/games/gameName'
+import { useGameStore } from '@/store/useGameStore'
+import { useScopedI18n, useCurrentLocale } from '@/locales/client'
+
+export default function GameNamePage() {
+  const t = useScopedI18n('games.gameName')
+  const locale = useCurrentLocale()
+  const sentences = useGameStore((state) => state.vocabulary)
+  const setVocabulary = useGameStore((state) => state.setVocabulary)
+  const setLastResult = useGameStore((state) => state.setLastResult)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const vocabulary = sentences
+
+  useEffect(() => {
+    fetch(`/api/v1/games/game-name/sentences?locale=${locale}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setVocabulary(data.sentences)
+        setIsLoading(false)
+      })
+      .catch((error) => console.error('Failed to load sentences:', error))
+  }, [setVocabulary, locale])
+
+  const handleComplete = useCallback(
+    (results: GameResults) => {
+    setLastResult(results.xp, results.accuracy)
+    fetch('/api/v1/games/game-name/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        xp: results.xp,
+        accuracy: results.accuracy,
+        correctAnswers: results.correctAnswers,
+        totalAttempts: results.totalAttempts,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log('Game completed:', data))
+      .catch((error) => console.error('Failed to submit results:', error))
+  },
+    [setLastResult]
+  )
+
+  return (
+    <main className='min-h-screen bg-slate-950 px-6 py-10 text-white'>
+      <div className='mx-auto flex w-full max-w-6xl flex-col gap-8'>
+        <header className='flex flex-col gap-3'>
+          <h1 className='text-4xl font-semibold tracking-tight md:text-5xl'>
+            {t('title')}
+          </h1>
+          <p className='max-w-2xl text-base text-white/70'>
+            {t('description')}
+          </p>
+        </header>
+
+        {isLoading ? (
+          <div className='flex items-center justify-center py-20'>
+            <div className='text-white/60'>{t('loading')}</div>
+          </div>
+        ) : (
+          <GameNameGame vocabulary={vocabulary} onComplete={handleComplete} />
+        )}
+      </div>
+    </main>
+  )
+}

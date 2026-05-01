@@ -1,0 +1,12 @@
+[
+  { "term": "The picture is a cat", "translation": "รูปภาพคือแมว" },
+  { "term": "The puppy is happy", "translation": "ลูกสุนัขมีความสุข" },
+  { "term": "They walk to a building", "translation": "พวกเขาเดินไปที่อาคาร" },
+  { "term": "This building is big", "translation": "อาคารนี้ใหญ่" },
+  { "term": "A library is quiet", "translation": "ห้องสมุดเงียบ" },
+  { "term": "Mom is the puppy's mom", "translation": "แม่คือแม่ของลูกสุนัข" },
+  { "term": "The girl has a book", "translation": "เด็กหญิงมีหนังสือ" },
+  { "term": "The puppy sees a boy", "translation": "ลูกสุนัขเห็นเด็กชาย" },
+  { "term": "Friends are happy", "translation": "เพื่อนมีความสุข" },
+  { "term": "The puppy likes the book", "translation": "ลูกสุนัขชอบหนังสือ" }
+]

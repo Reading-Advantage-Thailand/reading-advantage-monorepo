@@ -1,0 +1,11 @@
+{
+  "track_id": "sentence_game_expansion_20260423",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-04-23T00:00:00Z",
+  "updated_at": "2026-04-23T00:00:00Z",
+  "description": "Expand sentence-level game coverage with 3-4 new game types: fill-in-the-blank platformer, word reorder/sequence builder, translation matching game, and context clue detective.",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": null
+}

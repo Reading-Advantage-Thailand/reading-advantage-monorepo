@@ -1,0 +1,12 @@
+[
+  { "term": "สวัสดี", "translation": "Hello" },
+  { "term": "ขอบคุณ", "translation": "Thank you" },
+  { "term": "ลาก่อน", "translation": "Goodbye" },
+  { "term": "ใช่", "translation": "Yes" },
+  { "term": "ไม่", "translation": "No" },
+  { "term": "กรุณา", "translation": "Please" },
+  { "term": "ขอโทษ", "translation": "Sorry" },
+  { "term": "รัก", "translation": "Love" },
+  { "term": "เพื่อน", "translation": "Friend" },
+  { "term": "ครอบครัว", "translation": "Family" }
+]

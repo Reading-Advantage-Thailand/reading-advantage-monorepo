@@ -1,0 +1,128 @@
+import type { VocabularyItem } from '@/store/useGameStore'
+import { calculateXP } from '@/lib/games/xp'
+
+export type GameRound = {
+  term: string
+  correctTranslation: string
+  decoyTranslation: string
+}
+
+export type GameState = {
+  status: 'running' | 'ended'
+  durationMs: number
+  elapsedMs: number
+  score: number
+  attempts: number
+  correctAnswers: number
+  round: GameRound
+}
+
+export type GameResults = {
+  accuracy: number
+  xp: number
+  score: number
+  correctAnswers: number
+  totalAttempts: number
+}
+
+type GameConfig = {
+  durationMs?: number
+  rng?: () => number
+}
+
+const DEFAULT_DURATION_MS = 60000
+
+const pickIndex = (rng: () => number, max: number) => Math.min(max - 1, Math.floor(rng() * max))
+
+const createRound = (vocabulary: VocabularyItem[], rng: () => number): GameRound => {
+  if (vocabulary.length === 0) {
+    return {
+      term: '',
+      correctTranslation: '',
+      decoyTranslation: '',
+    }
+  }
+
+  const correctIndex = pickIndex(rng, vocabulary.length)
+  let decoyIndex = pickIndex(rng, vocabulary.length)
+  if (decoyIndex === correctIndex && vocabulary.length > 1) {
+    decoyIndex = (correctIndex + 1) % vocabulary.length
+  }
+
+  const correctItem = vocabulary[correctIndex]
+  const decoyItem = vocabulary[decoyIndex]
+
+  return {
+    term: correctItem.term,
+    correctTranslation: correctItem.translation,
+    decoyTranslation: decoyItem.translation,
+  }
+}
+
+export const createGameState = (
+  vocabulary: VocabularyItem[],
+  { durationMs = DEFAULT_DURATION_MS, rng = Math.random }: GameConfig = {}
+): GameState => ({
+  status: 'running',
+  durationMs,
+  elapsedMs: 0,
+  score: 0,
+  attempts: 0,
+  correctAnswers: 0,
+  round: createRound(vocabulary, rng),
+})
+
+export const handleCorrectAnswer = (
+  state: GameState,
+  vocabulary: VocabularyItem[],
+  rng: () => number = Math.random
+): GameState => {
+  return {
+    ...state,
+    score: state.score + 10,
+    attempts: state.attempts + 1,
+    correctAnswers: state.correctAnswers + 1,
+    round: createRound(vocabulary, rng),
+  }
+}
+
+export const handleIncorrectAnswer = (
+  state: GameState,
+  vocabulary: VocabularyItem[],
+  rng: () => number = Math.random
+): GameState => {
+  return {
+    ...state,
+    attempts: state.attempts + 1,
+    round: createRound(vocabulary, rng),
+  }
+}
+
+export const advanceTime = (
+  state: GameState,
+  deltaMs: number
+): GameState => {
+  if (state.status !== 'running') return state
+
+  const nextElapsed = Math.min(state.elapsedMs + deltaMs, state.durationMs)
+  const nextStatus = nextElapsed >= state.durationMs ? 'ended' : 'running'
+
+  return {
+    ...state,
+    elapsedMs: nextElapsed,
+    status: nextStatus,
+  }
+}
+
+export const getGameResults = (state: GameState): GameResults => {
+  const accuracy = state.attempts > 0 ? state.correctAnswers / state.attempts : 0
+  const xp = calculateXP(state.score, state.correctAnswers, state.attempts)
+
+  return {
+    accuracy,
+    xp,
+    score: state.score,
+    correctAnswers: state.correctAnswers,
+    totalAttempts: state.attempts,
+  }
+}

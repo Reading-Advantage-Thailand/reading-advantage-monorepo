@@ -1,0 +1,14 @@
+[
+  { "term": "The cat sits on the mat", "translation": "แมวนั่งอยู่บนเสื่อ" },
+  { "term": "I like to eat apples", "translation": "ฉันชอบกินแอปเปิ้ล" },
+  { "term": "The sun is bright today", "translation": "ดวงอาทิตย์สว่างวันนี้" },
+  { "term": "She runs in the park", "translation": "เธอวิ่งในสวนสาธารณะ" },
+  { "term": "We play games together", "translation": "เราเล่นเกมด้วยกัน" },
+  { "term": "He reads a book", "translation": "เขาอ่านหนังสือ" },
+  { "term": "The dog runs fast", "translation": "หมาวิ่งเร็ว" },
+  { "term": "I drink water daily", "translation": "ฉันดื่มน้ำทุกวัน" },
+  { "term": "They walk to school", "translation": "พวกเขาเดินไปโรงเรียน" },
+  { "term": "The bird flies high", "translation": "นกบินสูง" },
+  { "term": "My friend is kind", "translation": "เพื่อนของฉันใจดี" },
+  { "term": "The house is big", "translation": "บ้านหลังใหญ่" }
+]

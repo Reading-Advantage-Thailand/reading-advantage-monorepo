@@ -1,0 +1,8 @@
+{
+  "track_id": "castle-defense-fixes-20260129",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-29T12:00:00Z",
+  "updated_at": "2026-01-29T12:00:00Z",
+  "description": "Fix Castle Defense sentence loading, word collection mechanics, visual display, and add fullscreen support"
+}

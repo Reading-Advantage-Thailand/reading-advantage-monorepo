@@ -1,0 +1,12 @@
+{
+  "trackId": "difficulty_guardrail_fix_20260413",
+  "title": "Fix Difficulty Guardrail Inconsistency",
+  "description": "Fix semantic inconsistency where extreme tier wordCount.max exceeds DIFFICULTY_GUARDRAILS.maxWordCount",
+  "priority": "high",
+  "type": "bug",
+  "status": "completed",
+  "created": "2026-04-13",
+  "updated": "2026-04-21",
+  "spec": "spec.md",
+  "plan": "plan.md"
+}

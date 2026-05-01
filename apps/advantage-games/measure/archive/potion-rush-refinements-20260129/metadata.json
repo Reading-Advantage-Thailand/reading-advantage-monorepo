@@ -1,0 +1,8 @@
+{
+  "track_id": "potion-rush-refinements-20260129",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-29T10:30:00Z",
+  "updated_at": "2026-01-29T10:30:00Z",
+  "description": "Fix potion rush gameplay issues to make it enjoyable: intelligent word spawning, cauldron reset via trash, reputation system with visual feedback, and balanced conveyor speed."
+}

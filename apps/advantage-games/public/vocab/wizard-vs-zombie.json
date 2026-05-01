@@ -1,0 +1,14 @@
+[
+  { "term": "รูปภาพ", "translation": "picture" },
+  { "term": "ลูกสุนัข", "translation": "puppy" },
+  { "term": "แมว", "translation": "cat" },
+  { "term": "มีความสุข", "translation": "happy" },
+  { "term": "สนุก", "translation": "fun" },
+  { "term": "เงียบ", "translation": "quiet" },
+  { "term": "เด็กชาย", "translation": "boy" },
+  { "term": "เด็กหญิง", "translation": "girl" },
+  { "term": "แม่", "translation": "mom" },
+  { "term": "อาคาร", "translation": "building" },
+  { "term": "ห้องสมุด", "translation": "library" },
+  { "term": "เพื่อน", "translation": "friend" }
+]

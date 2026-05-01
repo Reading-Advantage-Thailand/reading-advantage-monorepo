@@ -1,0 +1,11 @@
+{
+  "track_id": "adaptive_difficulty_engine_20260423",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-04-23T00:00:00Z",
+  "updated_at": "2026-04-23T00:00:00Z",
+  "description": "Runtime difficulty adjustment engine that monitors player performance and dynamically adjusts game parameters within each session.",
+  "estimated_tasks": 14,
+  "actual_tasks": null,
+  "deviation_notes": null
+}

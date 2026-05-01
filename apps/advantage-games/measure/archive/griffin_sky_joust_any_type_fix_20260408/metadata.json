@@ -1,0 +1,11 @@
+{
+  "id": "griffin_sky_joust_any_type_fix_20260408",
+  "title": "Griffin Sky-Joust any Type Fix",
+  "description": "Replace any type with proper Konva event type in handleFlap callback",
+  "priority": "medium",
+  "type": "chore",
+  "status": "completed",
+  "created": "2026-04-08",
+  "techDebt": true,
+  "techDebtItem": "griffin-sky-joust: `any` type usage in game logic (line 94)"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "archers-revenge-20260318",
+  "title": "Archer's Revenge - Space Invaders Vocabulary Game",
+  "type": "feature",
+  "priority": "medium",
+  "status": "completed",
+  "completed_at": "2026-03-20T21:15:00Z",
+  "created": "2026-03-18",
+  "description": "Space Invaders-style vocabulary game where players shoot enemies matching the target word. Only shield-down enemies can be destroyed; wrong targets shoot back."
+}

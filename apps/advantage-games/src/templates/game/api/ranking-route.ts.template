@@ -1,0 +1,3 @@
+import { createRankingRoute } from '@/lib/games/api'
+
+export const { GET } = createRankingRoute()

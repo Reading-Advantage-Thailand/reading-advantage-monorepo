@@ -1,0 +1,11 @@
+{
+  "track_id": "teacher_dashboard_20260423",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-04-23T00:00:00Z",
+  "updated_at": "2026-04-23T00:00:00Z",
+  "description": "Teacher-facing dashboard for classroom management: class creation, game/vocabulary pack assignments, student progress tracking, and projection mode.",
+  "estimated_tasks": 17,
+  "actual_tasks": null,
+  "deviation_notes": null
+}

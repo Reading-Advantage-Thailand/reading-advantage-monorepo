@@ -1,0 +1,11 @@
+{
+  "track_id": "xp_leaderboard_20260408",
+  "type": "feature",
+  "status": "completed",
+  "created_at": "2026-04-08T12:00:00Z",
+  "updated_at": "2026-04-21T00:00:00Z",
+  "description": "Persistent XP leaderboard so players can track high scores and cumulative XP across sessions and games.",
+  "estimated_tasks": 9,
+  "actual_tasks": 9,
+  "deviation_notes": "Storage hook, leaderboard page, and GameEndScreen integration are all complete."
+}

@@ -4,5 +4,5 @@ This file tracks all major tracks for the project.
 
 ---
 
-- [ ] **Track: Scaffold monorepo and migrate first app**
+- [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./tracks/monorepo-scaffold_20260429/](./tracks/monorepo-scaffold_20260429/)*

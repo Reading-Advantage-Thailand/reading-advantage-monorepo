@@ -1,0 +1,12 @@
+{
+  "trackId": "gryphon_patrol_rng_injectable_20260415",
+  "title": "Gryphon Patrol RNG Injectable",
+  "description": "Refactor Math.random() to injectable RNG for deterministic testing",
+  "priority": "medium",
+  "type": "chore",
+  "status": "in_progress",
+  "created": "2026-04-15",
+  "updated": "2026-04-21",
+  "estimated_tasks": 7,
+  "actual_tasks": 5
+}

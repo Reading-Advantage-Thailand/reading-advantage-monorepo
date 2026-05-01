@@ -1,0 +1,11 @@
+{
+  "track_id": "content_rotation_pack_mgmt_20260407",
+  "type": "feature",
+  "status": "completed",
+  "created_at": "2026-04-07T12:00:00Z",
+  "updated_at": "2026-04-21T00:00:00Z",
+  "description": "Implement content-pack rotation and management workflow for sentence and vocabulary sets.",
+  "estimated_tasks": 7,
+  "actual_tasks": 7,
+  "deviation_notes": "Phase 1 and Phase 2 complete: schema validation, rotation workflow, rollback support, and runbook published."
+}

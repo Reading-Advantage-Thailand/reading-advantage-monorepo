@@ -1,0 +1,14 @@
+{
+  "trackId": "dungeon-liberator-sentences-bug",
+  "title": "Dungeon Liberator Sentences Bug Fix",
+  "description": "Fix Dungeon Liberator sentence loading by aligning API and component access with VocabularyItem.term and meeting the route minimum sentence count.",
+  "priority": "high",
+  "type": "bug",
+  "status": "completed",
+  "created": "2026-04-13",
+  "updated": "2026-04-21",
+  "estimated_tasks": 5,
+  "actual_tasks": 5,
+  "spec": "spec.md",
+  "plan": "plan.md"
+}

@@ -1,0 +1,4 @@
+import { createVocabularyRoute } from '@/lib/games/api'
+import { SAMPLE_VOCABULARY } from '@/lib/games/sampleVocabulary'
+
+export const { GET } = createVocabularyRoute(SAMPLE_VOCABULARY)

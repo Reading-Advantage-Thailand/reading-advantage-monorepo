@@ -1,0 +1,11 @@
+{
+  "track_id": "realm_carver_coverage_20260415",
+  "type": "chore",
+  "status": "completed",
+  "created_at": "2026-04-15T03:35:00Z",
+  "updated_at": "2026-04-15T15:40:00Z",
+  "description": "Increase realm-carver test coverage from 75.51% to ≥80% by testing GameEndScreen, VirtualDPad, and useSound",
+  "estimated_tasks": 4,
+  "actual_tasks": 4,
+  "deviation_notes": "All 4 phases completed - added tests for GameEndScreen (8 tests), VirtualDPad (3 tests), useSound (3 tests existing, all passing)"
+}

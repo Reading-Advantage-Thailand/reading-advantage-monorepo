@@ -1,0 +1,11 @@
+{
+  "track_id": "multiplayer_competitive_mode_20260423",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-04-23T00:00:00Z",
+  "updated_at": "2026-04-23T00:00:00Z",
+  "description": "Real-time multiplayer competitive mode where 2-4 players compete in vocabulary/sentence games simultaneously. Room-based matchmaking, live score tracking, and round-based progression.",
+  "estimated_tasks": 18,
+  "actual_tasks": null,
+  "deviation_notes": null
+}
