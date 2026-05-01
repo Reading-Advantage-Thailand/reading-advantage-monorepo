@@ -1,0 +1,405 @@
+{
+  "lessonId": "g3-comparing-living-things",
+  "questions": [
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "When we compare living things, what are we doing?",
+      "options": [
+        "Making them fight",
+        "Looking at how they are similar and different",
+        "Naming them",
+        "Counting them"
+      ],
+      "correctAnswer": "Looking at how they are similar and different",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is one way all living things are similar?",
+      "options": [
+        "They all fly",
+        "They all need energy to survive",
+        "They are all green",
+        "They all live in water"
+      ],
+      "correctAnswer": "They all need energy to survive",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "How are plants different from animals?",
+      "options": [
+        "Plants can make their own food; animals cannot",
+        "Plants can fly; animals cannot",
+        "Plants don't grow; animals do",
+        "No difference"
+      ],
+      "correctAnswer": "Plants can make their own food; animals cannot",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is an adaptation?",
+      "options": [
+        "A type of plant",
+        "A special feature that helps an organism survive",
+        "A color",
+        "A food"
+      ],
+      "correctAnswer": "A special feature that helps an organism survive",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why do fish have gills?",
+      "options": [
+        "To look pretty",
+        "To breathe underwater",
+        "To swim faster",
+        "To eat food"
+      ],
+      "correctAnswer": "To breathe underwater",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What helps a bird fly?",
+      "options": ["Heavy bones", "Wings and light bones", "Long legs", "Sharp teeth"],
+      "correctAnswer": "Wings and light bones",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What do all living things have in common? (Select all that apply)",
+      "options": [
+        "They are made of cells",
+        "They need energy",
+        "They can reproduce",
+        "They are all the same color",
+        "They grow"
+      ],
+      "correctAnswer": [
+        "They are made of cells",
+        "They need energy",
+        "They can reproduce",
+        "They grow"
+      ],
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What are some adaptations animals have? (Select all that apply)",
+      "options": [
+        "Sharp claws for hunting",
+        "Camouflage for hiding",
+        "Thick fur for warmth",
+        "Ability to read",
+        "Long neck to reach high leaves"
+      ],
+      "correctAnswer": [
+        "Sharp claws for hunting",
+        "Camouflage for hiding",
+        "Thick fur for warmth",
+        "Long neck to reach high leaves"
+      ],
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "How can you compare two animals? (Select all that apply)",
+      "options": [
+        "Look at body structure",
+        "Compare how they move",
+        "Compare what they eat",
+        "Count their age in years",
+        "Compare where they live"
+      ],
+      "correctAnswer": [
+        "Look at body structure",
+        "Compare how they move",
+        "Compare what they eat",
+        "Compare where they live"
+      ],
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What are adaptations in plants? (Select all that apply)",
+      "options": [
+        "Thorns for protection",
+        "Deep roots for water",
+        "Bright flowers to attract pollinators",
+        "Ability to walk",
+        "Waxy leaves to keep water in"
+      ],
+      "correctAnswer": [
+        "Thorns for protection",
+        "Deep roots for water",
+        "Bright flowers to attract pollinators",
+        "Waxy leaves to keep water in"
+      ],
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "All living things are exactly the same.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Both plants and animals need water to survive.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Adaptations help living things survive in their environment.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "A cactus has adaptations that help it survive in the desert.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Fish and birds breathe in exactly the same way.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Comparing living things helps scientists understand and classify them.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A special feature that helps an organism survive is called an _____.",
+      "correctAnswer": "adaptation",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "_____ is when an animal's color or pattern helps it blend in with its surroundings.",
+      "correctAnswer": "Camouflage",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Fish breathe underwater using _____.",
+      "correctAnswer": "gills",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A giraffe's long _____ helps it reach leaves high in trees.",
+      "correctAnswer": "neck",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Desert plants like cacti have _____ leaves to reduce water loss.",
+      "correctAnswer": "waxy",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "When we look at similarities and differences, we are _____ things.",
+      "correctAnswer": "comparing",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each adaptation with the animal it helps:",
+      "options": {
+        "terms": ["Gills", "Wings", "Fur", "Sharp claws"],
+        "definitions": [
+          "Help fish breathe underwater",
+          "Help birds fly",
+          "Keep mammals warm",
+          "Help predators catch prey"
+        ]
+      },
+      "correctAnswer": {
+        "Gills": "Help fish breathe underwater",
+        "Wings": "Help birds fly",
+        "Fur": "Keep mammals warm",
+        "Sharp claws": "Help predators catch prey"
+      },
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each term with its definition:",
+      "options": {
+        "terms": ["Adaptation", "Camouflage", "Environment", "Survival"],
+        "definitions": [
+          "Special feature that helps organisms survive",
+          "Blending in with surroundings",
+          "The place where an organism lives",
+          "Staying alive in your environment"
+        ]
+      },
+      "correctAnswer": {
+        "Adaptation": "Special feature that helps organisms survive",
+        "Camouflage": "Blending in with surroundings",
+        "Environment": "The place where an organism lives",
+        "Survival": "Staying alive in your environment"
+      },
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why do polar bears have thick white fur?",
+      "options": [
+        "To look pretty",
+        "To keep warm and blend in with snow",
+        "To swim better",
+        "No reason"
+      ],
+      "correctAnswer": "To keep warm and blend in with snow",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "How are a cat and a dog similar?",
+      "options": [
+        "Both are mammals with fur and four legs",
+        "They are not similar at all",
+        "Both can fly",
+        "Both live in water"
+      ],
+      "correctAnswer": "Both are mammals with fur and four legs",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is one difference between a tree and grass?",
+      "options": [
+        "No difference",
+        "Trees have woody stems; grass has soft stems",
+        "Grass is taller",
+        "Trees don't need sunlight"
+      ],
+      "correctAnswer": "Trees have woody stems; grass has soft stems",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why do cacti have thorns?",
+      "options": [
+        "For decoration",
+        "To protect from animals and reduce water loss",
+        "To help them fly",
+        "To catch insects"
+      ],
+      "correctAnswer": "To protect from animals and reduce water loss",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "How are a butterfly and a bird similar? (Select all that apply)",
+      "options": [
+        "Both can fly",
+        "Both have wings",
+        "Both can move from place to place",
+        "Both are exactly the same size",
+        "Both are living things"
+      ],
+      "correctAnswer": [
+        "Both can fly",
+        "Both have wings",
+        "Both can move from place to place",
+        "Both are living things"
+      ],
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "A chameleon changing color is an example of camouflage.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "All animals have exactly the same adaptations.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "An eagle's sharp _____ and claws help it catch prey.",
+      "correctAnswer": "beak",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Plants that live in water have adaptations to help them _____ in wet environments.",
+      "correctAnswer": "survive",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What can we learn by comparing different living things?",
+      "options": [
+        "Nothing useful",
+        "How they are related and how they survive in their environments",
+        "Only their colors",
+        "Only their names"
+      ],
+      "correctAnswer": "How they are related and how they survive in their environments",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which is true about living things?",
+      "options": [
+        "They are all completely different with nothing in common",
+        "They share some characteristics but also have unique features",
+        "They are all exactly the same",
+        "Only plants are living things"
+      ],
+      "correctAnswer": "They share some characteristics but also have unique features",
+      "points": 1,
+      "standards": ["Sc1.3-G3"]
+    }
+  ]
+}

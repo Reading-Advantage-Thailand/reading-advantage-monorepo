@@ -1,0 +1,164 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 4,
+  "unit": 2,
+  "lessons": [
+    {
+      "id": "g4-classifying-materials",
+      "slug": "classifying-materials",
+      "title": "Classifying Materials",
+      "description": "Classify materials as solids, liquids, or gases based on their properties.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEverything around us is made of materials. Materials can be classified based on their properties. Let's learn about the three main states of matter!\n\n## Main Content\n\n**Solids**\n\nSolids have a definite shape and volume. They do not change shape easily. Examples: rock, wood, ice, metal.\n\n**Liquids**\n\nLiquids have a definite volume but no definite shape. They take the shape of their container. Examples: water, milk, oil, juice.\n\n**Gases**\n\nGases have no definite shape or volume. They fill whatever space is available. Examples: air, steam, helium, oxygen.\n\n**Properties of Materials**\n\nMaterials have different properties:\n- **Hardness** - How easy it is to scratch the surface\n- **Transparency** - Whether light can pass through\n- **Conductivity** - How well it conducts heat or electricity\n- **Magnetism** - Whether it is attracted to magnets\n\n## Summary\n\nMaterials can be classified as solids, liquids, or gases. Each state has different properties regarding shape and volume.",
+      "order": 1,
+      "standards": [
+        "Sc3.1-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Everything around us is made of materials. Materials can be classified based on their properties."
+          },
+          {
+            "id": "states-of-matter",
+            "type": "text",
+            "content": "## States of Matter\n\n**Solids** - Have a definite shape and volume. (rock, wood, ice)\n\n**Liquids** - Have a definite volume but no definite shape. (water, milk, oil)\n\n**Gases** - Have no definite shape or volume. (air, steam, oxygen)"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Solid",
+                "thai": "ของแข็ง",
+                "definition": "A state of matter with definite shape and volume"
+              },
+              {
+                "term": "Liquid",
+                "thai": "ของเหลว",
+                "definition": "A state of matter with definite volume but no definite shape"
+              },
+              {
+                "term": "Gas",
+                "thai": "ก๊าซ",
+                "definition": "A state of matter with no definite shape or volume"
+              },
+              {
+                "term": "Property",
+                "thai": "คุณสมบัติ",
+                "definition": "A characteristic that describes a material"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การจำแนกวัสดุ"
+    },
+    {
+      "id": "g4-physical-changes",
+      "slug": "physical-changes",
+      "title": "Physical Changes",
+      "description": "Describe physical changes including dissolving, melting, and evaporation.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nMaterials can change in many ways. Some changes can be reversed while others cannot. Let's learn about physical changes!\n\n## Main Content\n\n**What is a Physical Change?**\n\nA physical change is a change in the form or appearance of a material without changing what it is made of. The substance stays the same.\n\n**Examples of Physical Changes**\n\n1. **Melting** - Ice changes to water when heated\n2. **Freezing** - Water changes to ice when cooled\n3. **Evaporation** - Water changes to water vapor when heated\n4. **Condensation** - Water vapor changes to water droplets when cooled\n5. **Dissolving** - Sugar disappears in water but is still there\n\n**Reversible vs. Irreversible Changes**\n\n- **Reversible** - Can be undone (melting ice, dissolving sugar)\n- **Irreversible** - Cannot be undone (burning paper, cooking an egg)\n\n## Summary\n\nPhysical changes alter the form or appearance of materials. Many physical changes are reversible.",
+      "order": 2,
+      "standards": [
+        "Sc3.2-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Materials can change in many ways. Some changes can be reversed while others cannot."
+          },
+          {
+            "id": "physical-changes",
+            "type": "text",
+            "content": "## Physical Changes\n\nA physical change alters the form or appearance of a material.\n\nExamples:\n- **Melting** - Ice → Water\n- **Freezing** - Water → Ice\n- **Evaporation** - Water → Water vapor\n- **Dissolving** - Sugar disappears in water"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Physical Change",
+                "thai": "การเปลี่ยนแปลงทางกายภาพ",
+                "definition": "A change in form or appearance without changing the substance"
+              },
+              {
+                "term": "Melting",
+                "thai": "การละลาย",
+                "definition": "A solid changing to a liquid when heated"
+              },
+              {
+                "term": "Evaporation",
+                "thai": "การระเหย",
+                "definition": "A liquid changing to a gas when heated"
+              },
+              {
+                "term": "Dissolving",
+                "thai": "การละลาย",
+                "definition": "When a substance mixes into a liquid and disappears"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การเปลี่ยนแปลงทางกายภาพ"
+    },
+    {
+      "id": "g4-density-sinking-floating",
+      "slug": "density-sinking-floating",
+      "title": "Density: Sinking & Floating",
+      "description": "Explain the concept of density and how it relates to sinking and floating.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nWhy do some objects sink while others float? The answer is density! Density tells us how tightly packed the particles in a material are.\n\n## Main Content\n\n**What is Density?**\n\nDensity is the amount of matter in a given space. A material is dense if its particles are packed tightly together.\n\n**Density and Floating**\n\n- If an object is **less dense** than water, it **floats**\n- If an object is **more dense** than water, it **sinks**\n\n**Examples**\n\n- Wood floats because it is less dense than water\n- Metal sinks because it is more dense than water\n- Ice floats because it is less dense than liquid water\n- A hollow ball floats because air inside makes it less dense\n\n**Changing Density**\n\n- Dissolving salt in water makes it denser\n- Heating air makes it less dense (hot air rises)\n- Compressing a gas makes it denser\n\n## Summary\n\nDensity determines whether objects sink or float. Objects less dense than water float, while objects more dense than water sink.",
+      "order": 3,
+      "standards": [
+        "Sc3.3-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Why do some objects sink while others float? The answer is density!"
+          },
+          {
+            "id": "density-explained",
+            "type": "text",
+            "content": "## What is Density?\n\nDensity is the amount of matter in a given space.\n\n- If an object is **less dense** than water, it **floats**\n- If an object is **more dense** than water, it **sinks**"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Density",
+                "thai": "ความหนาแน่น",
+                "definition": "The amount of matter in a given space"
+              },
+              {
+                "term": "Float",
+                "thai": "ลอย",
+                "definition": "To stay on the surface of a liquid"
+              },
+              {
+                "term": "Sink",
+                "thai": "จม",
+                "definition": "To go below the surface of a liquid"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ความหนาแน่น: การจมและการลอย"
+    }
+  ]
+}

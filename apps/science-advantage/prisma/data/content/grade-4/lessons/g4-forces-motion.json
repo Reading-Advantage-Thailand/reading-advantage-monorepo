@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "Every time you kick a ball, open a door, or ride your bicycle, you are using forces! Forces are pushes and pulls that make things move, stop, or change direction. Without forces, nothing would ever move. Today, you will explore the exciting world of forces and discover how they affect everything around you!",
+      "contentThai": "ทุกครั้งที่คุณเตะลูกบอล เปิดประตู หรือขี่จักรยาน คุณกำลังใช้แรง! แรงคือการผลักและดึงที่ทำให้สิ่งของเคลื่อนที่ หยุด หรือเปลี่ยนทิศทาง ถ้าไม่มีแรง จะไม่มีอะไรเคลื่อนที่เลย วันนี้คุณจะได้สำรวจโลกที่น่าตื่นเต้นของแรงและค้นพบว่าแรงส่งผลต่อทุกสิ่งรอบตัวคุณอย่างไร!"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Force",
+          "thai": "แรง",
+          "definition": "A push or pull that can change how an object moves"
+        },
+        {
+          "term": "Motion",
+          "thai": "การเคลื่อนที่",
+          "definition": "The act of moving or changing position"
+        },
+        {
+          "term": "Friction",
+          "thai": "แรงเสียดทาน",
+          "definition": "A force that slows down objects when they rub against each other"
+        },
+        {
+          "term": "Gravity",
+          "thai": "แรงโน้มถ่วง",
+          "definition": "A force that pulls objects toward the center of Earth"
+        },
+        {
+          "term": "Push",
+          "thai": "การผลัก",
+          "definition": "A force that moves something away from you"
+        },
+        {
+          "term": "Pull",
+          "thai": "การดึง",
+          "definition": "A force that moves something toward you"
+        },
+        {
+          "term": "Speed",
+          "thai": "ความเร็ว",
+          "definition": "How fast something is moving"
+        },
+        {
+          "term": "Direction",
+          "thai": "ทิศทาง",
+          "definition": "The path along which something moves"
+        },
+        {
+          "term": "Balanced forces",
+          "thai": "แรงสมดุล",
+          "definition": "Forces that are equal and opposite, causing no change in motion"
+        },
+        {
+          "term": "Unbalanced forces",
+          "thai": "แรงไม่สมดุล",
+          "definition": "Forces that are not equal, causing a change in motion"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## What Is a Force?\n\nA **force** is a push or a pull. Forces can:\n- Make objects start moving\n- Make moving objects stop\n- Make objects speed up or slow down\n- Make objects change direction\n- Change the shape of objects\n\nForces are everywhere! When you sit in a chair, the chair pushes up against you. When you pick up a book, you pull it toward you. When a magnet sticks to a refrigerator, magnetic force pulls them together.\n\n## Types of Forces\n\n### Contact Forces\nThese forces happen when objects touch each other:\n\n**Push**: A force that moves something away from you\n- Pushing a shopping cart\n- Kicking a soccer ball\n- Closing a door\n\n**Pull**: A force that moves something toward you\n- Opening a drawer\n- Playing tug-of-war\n- Pulling a wagon\n\n### Non-Contact Forces\nThese forces work without objects touching:\n\n**Gravity**: The force that pulls everything toward Earth\n- Makes things fall down\n- Keeps us on the ground\n- Keeps the moon orbiting Earth\n\n**Magnetic force**: The force between magnets\n- Makes magnets attract or repel each other\n- Can work through air, water, and even paper",
+      "contentThai": "## แรงคืออะไร?\n\n**แรง** คือการผลักหรือดึง แรงสามารถ:\n- ทำให้วัตถุเริ่มเคลื่อนที่\n- ทำให้วัตถุที่กำลังเคลื่อนที่หยุด\n- ทำให้วัตถุเร็วขึ้นหรือช้าลง\n- ทำให้วัตถุเปลี่ยนทิศทาง\n- เปลี่ยนรูปร่างของวัตถุ"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-forces-motion-1.webp",
+      "alt": "Illustrations showing examples of push forces (kicking a ball, closing a door) and pull forces (opening a drawer, tug-of-war)",
+      "caption": "Examples of Push and Pull Forces",
+      "captionThai": "ตัวอย่างของแรงผลักและแรงดึง",
+      "aspectRatio": 1.6,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "## Friction: The Slowing Force\n\n**Friction** is a force that happens when two surfaces rub against each other. Friction always works against motion - it tries to slow things down or stop them from moving.\n\n### How Friction Works\nWhen you slide a book across a table, the bottom of the book rubs against the table surface. This rubbing creates friction that slows the book down until it stops.\n\n### Friction Depends on Surfaces\n- **Rough surfaces** create MORE friction (sandpaper, carpet, gravel)\n- **Smooth surfaces** create LESS friction (ice, glass, polished wood)\n\n### Friction Can Be Helpful!\n- Helps you walk without slipping\n- Helps car tires grip the road\n- Helps you hold a pencil\n- Makes brakes work on bicycles\n\n### Friction Can Be a Problem\n- Slows down moving machines\n- Creates heat that can damage equipment\n- Makes it harder to push heavy objects\n\nWe use **lubricants** like oil to reduce friction in machines!"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "## Gravity: The Pulling Force\n\n**Gravity** is a force that pulls all objects toward each other. On Earth, gravity pulls everything toward the ground.\n\n### Effects of Gravity\n- When you jump, gravity pulls you back down\n- When you drop something, it falls to the ground\n- Water flows downhill because of gravity\n- Gravity keeps the atmosphere around Earth\n\n### Gravity and Weight\nYour **weight** is how hard gravity pulls on you. Weight is different from mass:\n- **Mass** is the amount of matter in you (stays the same everywhere)\n- **Weight** depends on gravity (would be different on the Moon!)\n\n## Balanced and Unbalanced Forces\n\n### Balanced Forces\nWhen forces on an object are equal and opposite, they are **balanced**. Balanced forces do not change an object's motion.\n\nExamples:\n- A book sitting on a table (gravity pulls down, table pushes up)\n- A tug-of-war with equal teams (neither side moves)\n\n### Unbalanced Forces\nWhen forces are not equal, they are **unbalanced**. Unbalanced forces cause objects to start moving, stop moving, or change direction.\n\nExamples:\n- Kicking a resting ball makes it move (your force is greater than friction)\n- One team winning tug-of-war (their pull is stronger)"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-forces-motion-2.webp",
+      "alt": "Diagram showing balanced forces on a stationary book and unbalanced forces on a moving soccer ball being kicked",
+      "caption": "Balanced Forces vs. Unbalanced Forces",
+      "captionThai": "แรงสมดุลเทียบกับแรงไม่สมดุล",
+      "aspectRatio": 1.5,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-4",
+      "type": "text",
+      "content": "## Motion and Speed\n\n**Motion** is when something changes its position. We describe motion using:\n\n**Speed**: How fast something is moving\n- A cheetah runs at high speed\n- A snail moves at low speed\n- Speed can be measured in meters per second or kilometers per hour\n\n**Direction**: Which way something is moving\n- Forward, backward\n- Left, right\n- Up, down\n\n### How Forces Affect Motion\n\n1. **Starting motion**: An unbalanced force can make a resting object start moving\n\n2. **Stopping motion**: A force opposite to the direction of motion can make a moving object stop\n\n3. **Changing speed**: \n   - A force in the same direction makes objects speed up\n   - A force in the opposite direction makes objects slow down\n\n4. **Changing direction**: A sideways force can change which way an object is moving"
+    },
+    {
+      "type": "reading_passage",
+      "title": "The Go-Kart Race",
+      "titleThai": "การแข่งโกคาร์ท",
+      "content": "It was Sports Day at Anan's school in Khon Kaen. The highlight was the go-kart race, and Anan's team had built their own kart.\n\n\"Remember,\" said Teacher Somchai, \"this race will teach you about forces. Pay attention to how your kart moves!\"\n\nAnan sat in the go-kart while his teammates prepared to push. \"Ready? Push!\" shouted his friend Kai.\n\nFour students pushed the go-kart with all their strength. Anan felt the kart start moving. \"That's an unbalanced force!\" he thought. \"Their push is greater than friction, so I'm moving forward.\"\n\nThe kart rolled down the track, picking up speed. Anan noticed the wheels spinning smoothly on the pavement. \"Not much friction here,\" he observed. \"The smooth wheels and pavement let me go fast.\"\n\nThen the kart reached the gravel section of the track. Suddenly, everything slowed down! Anan could feel the kart struggling to move.\n\n\"Rough surfaces create more friction!\" he remembered. The gravel was rubbing against his wheels, creating a strong force that opposed his motion.\n\nAnan's teammates caught up and gave him another push. With their force overcoming the friction, the kart moved through the gravel and onto the grass section.\n\n\"This is even worse!\" Anan groaned. The grass created so much friction that the kart almost stopped completely. He needed more pushes to keep going.\n\nFinally, Anan reached the downhill section. Even without his teammates pushing, the kart started moving faster and faster!\n\n\"Gravity!\" Anan realized. \"Gravity is pulling me and the kart down the hill. That's an unbalanced force making me speed up!\"\n\nAt the bottom of the hill, Anan pulled a lever to press brake pads against the wheels. The kart slowed down and stopped right at the finish line!\n\n\"The brakes work by creating friction,\" Anan explained to his cheering teammates. \"The brake pads rub against the wheels and slow me down.\"\n\nTeacher Somchai was impressed. \"Excellent! You experienced many forces today. What did you learn?\"\n\n\"Push and pull forces made the kart move,\" said Kai. \"And friction from the ground slowed it down.\"\n\n\"Gravity helped on the downhill,\" added Anan. \"And friction from the brakes stopped me at the end.\"\n\n\"I noticed that smooth surfaces were faster,\" said another teammate. \"Rough surfaces like gravel and grass created more friction.\"\n\nTeacher Somchai nodded. \"Forces are everywhere in our daily lives. Engineers think about forces when they design cars, buildings, and even playgrounds. Now you think about forces too!\"\n\nAnan looked at the go-kart differently now. It wasn't just a toy - it was a science experiment on wheels!",
+      "contentThai": "เป็นวันกีฬาที่โรงเรียนของอานันท์ในขอนแก่น ไฮไลท์คือการแข่งโกคาร์ท และทีมของอานันท์ได้สร้างรถของตัวเอง\n\n\"จำไว้\" ครูสมชายพูด \"การแข่งนี้จะสอนคุณเกี่ยวกับแรง สังเกตดูว่ารถของคุณเคลื่อนที่อย่างไร!\"\n\nอานันท์นั่งในโกคาร์ทขณะที่เพื่อนร่วมทีมเตรียมจะผลัก \"พร้อม? ผลัก!\" เพื่อนของเขาชื่อไกรตะโกน",
+      "wordCount": 398
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- A **force** is a push or a pull that can change an object's motion\n- **Contact forces** happen when objects touch (push, pull, friction)\n- **Non-contact forces** work without touching (gravity, magnetism)\n- **Friction** is a force that opposes motion when surfaces rub together\n  - Rough surfaces create more friction\n  - Smooth surfaces create less friction\n- **Gravity** is a force that pulls objects toward Earth\n- **Balanced forces** are equal and opposite - no change in motion\n- **Unbalanced forces** are not equal - motion changes\n- Forces can make objects start moving, stop, speed up, slow down, or change direction\n- **Speed** describes how fast something moves; **direction** describes which way\n\nUnderstanding forces helps us explain why things move the way they do!"
+    }
+  ]
+}

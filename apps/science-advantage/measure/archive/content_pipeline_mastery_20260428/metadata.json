@@ -1,0 +1,11 @@
+{
+  "track_id": "content_pipeline_mastery_20260428",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-04-28T00:00:00Z",
+  "updated_at": "2026-04-28T00:00:00Z",
+  "description": "Fix content pipeline: wire mastery computation, integrate Grade 4 content, validate seed data",
+  "estimated_tasks": 18,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

@@ -1,0 +1,57 @@
+epic: "Feature: Rich Curriculum and Interactive Content"
+tasks:
+  - title: "Task: Design Lesson Content JSON Schema"
+    description: "Define the Zod schema and TypeScript interfaces for the structured lesson content (blocks, vocabulary, media)."
+    labels:
+      type: "chore"
+      component: "backend"
+      priority: "P0"
+  
+  - title: "Task: Migration Script for Existing Content"
+    description: "Write a script to convert existing string-based lesson content to the new structured JSON format."
+    labels:
+      type: "chore"
+      component: "database"
+      priority: "P1"
+
+  - title: "Task: Implement Lesson Player Component"
+    description: "Create the main `LessonPlayer` React component that iterates through content blocks and renders them."
+    labels:
+      type: "feature"
+      component: "frontend"
+      priority: "P0"
+
+  - title: "Task: Implement Vocabulary Flashcard Component"
+    description: "Create a reusable, interactive flashcard component for vocabulary terms."
+    labels:
+      type: "feature"
+      component: "frontend"
+      priority: "P1"
+
+  - title: "Task: Implement Image Gallery Component"
+    description: "Create a responsive image gallery component for lesson media."
+    labels:
+      type: "feature"
+      component: "frontend"
+      priority: "P2"
+
+  - title: "Task: Author Grade 4 Lesson Content (JSON)"
+    description: "Create the JSON seed files for 10+ Grade 4 lessons, including text, vocabulary, and image references."
+    labels:
+      type: "feature"
+      component: "content"
+      priority: "P1"
+
+  - title: "Task: Source and Optimize Assets"
+    description: "Find and optimize images for the new Grade 4 lessons and place them in `public/images`."
+    labels:
+      type: "chore"
+      component: "design"
+      priority: "P2"
+
+  - title: "Task: Update Lesson Detail Page"
+    description: "Integrate the new `LessonPlayer` into the existing `/classes/[classId]/lessons/[lessonId]` page."
+    labels:
+      type: "feature"
+      component: "frontend"
+      priority: "P0"

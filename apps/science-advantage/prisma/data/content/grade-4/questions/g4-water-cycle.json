@@ -1,0 +1,205 @@
+{
+  "lessonId": "g4-water-cycle",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is the water cycle?",
+      "questionThai": "วัฏจักรน้ำคืออะไร?",
+      "options": ["A bicycle that floats on water", "The continuous movement of water on, above, and below Earth's surface", "A type of pump", "Water in a glass"],
+      "correctAnswer": 1,
+      "explanation": "The water cycle is the continuous movement of water on Earth through evaporation, condensation, precipitation, and collection."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is evaporation?",
+      "questionThai": "การระเหยคืออะไร?",
+      "options": ["Water falling from clouds", "Water changing from liquid to gas", "Water freezing", "Water in rivers"],
+      "correctAnswer": 1,
+      "explanation": "Evaporation is when water changes from a liquid to a gas (water vapor) and rises into the air."
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is condensation?",
+      "questionThai": "การควบแน่นคืออะไร?",
+      "options": ["Water vapor changing into liquid", "Water changing into ice", "Water falling as rain", "Water flowing in rivers"],
+      "correctAnswer": 0,
+      "explanation": "Condensation is when water vapor (gas) cools down and changes back into liquid water droplets."
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is precipitation?",
+      "questionThai": "หยาดน้ำฟ้าคืออะไร?",
+      "options": ["Water evaporating", "Water rising into clouds", "Water falling from clouds as rain, snow, sleet, or hail", "Water in the ocean"],
+      "correctAnswer": 2,
+      "explanation": "Precipitation is any form of water that falls from clouds to Earth, including rain, snow, sleet, and hail."
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What heats water to make it evaporate?",
+      "questionThai": "อะไรทำให้น้ำร้อนจนระเหย?",
+      "options": ["The moon", "The sun", "Wind", "Clouds"],
+      "correctAnswer": 1,
+      "explanation": "The sun heats water in oceans, lakes, rivers, and puddles, causing it to evaporate."
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Where does most evaporation happen?",
+      "questionThai": "การระเหยส่วนใหญ่เกิดขึ้นที่ไหน?",
+      "options": ["In deserts", "From the ocean", "In forests", "In mountains"],
+      "correctAnswer": 1,
+      "explanation": "About 80% of evaporation happens from the ocean because it covers most of Earth's surface."
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is groundwater?",
+      "questionThai": "น้ำใต้ดินคืออะไร?",
+      "options": ["Water in the sky", "Water stored underground in soil and rock", "Water in rivers", "Water in clouds"],
+      "correctAnswer": 1,
+      "explanation": "Groundwater is water that is stored underground in the spaces between soil and rock."
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What percentage of Earth's water is in the oceans?",
+      "questionThai": "น้ำบนโลกกี่เปอร์เซ็นต์อยู่ในมหาสมุทร?",
+      "options": ["About 10%", "About 50%", "About 97%", "About 25%"],
+      "correctAnswer": 2,
+      "explanation": "About 97% of Earth's water is in the oceans, and it's salty."
+    },
+    {
+      "id": "q9",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is transpiration?",
+      "questionThai": "การคายน้ำคืออะไร?",
+      "options": ["Water freezing in clouds", "Plants releasing water vapor through their leaves", "Rain falling", "Water flowing downhill"],
+      "correctAnswer": 1,
+      "explanation": "Transpiration is when plants absorb water through their roots and release water vapor through their leaves."
+    },
+    {
+      "id": "q10",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why doesn't Earth run out of water?",
+      "questionThai": "ทำไมโลกถึงไม่หมดน้ำ?",
+      "options": ["New water is created every day", "Water is recycled through the water cycle", "Rain factories make more water", "Aliens bring water"],
+      "correctAnswer": 1,
+      "explanation": "Earth has the same water it has always had. The water cycle continuously recycles water through evaporation, condensation, precipitation, and collection."
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is runoff?",
+      "questionThai": "น้ำไหลบ่าคืออะไร?",
+      "options": ["Water evaporating", "Water flowing over land into streams and rivers", "Water underground", "Water in clouds"],
+      "correctAnswer": 1,
+      "explanation": "Runoff is water that flows over the land surface and eventually reaches streams, rivers, and oceans."
+    },
+    {
+      "id": "q12",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In the reading passage, where did the raindrop's journey begin?",
+      "questionThai": "ในบทอ่าน การเดินทางของหยดน้ำฝนเริ่มต้นที่ไหน?",
+      "options": ["In a river", "In the Gulf of Thailand", "On a mountain", "In a cloud"],
+      "correctAnswer": 1,
+      "explanation": "The raindrop's journey began in the Gulf of Thailand, where it evaporated from the warm ocean."
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What causes water vapor to condense into clouds?",
+      "questionThai": "อะไรทำให้ไอน้ำควบแน่นเป็นเมฆ?",
+      "options": ["It gets warmer", "It gets cooler as it rises in the atmosphere", "Wind blows it", "It gets darker"],
+      "correctAnswer": 1,
+      "explanation": "As water vapor rises, the air gets cooler. Cool air cannot hold as much moisture, so the vapor condenses into droplets."
+    },
+    {
+      "id": "q14",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why is the water cycle important for all living things?",
+      "questionThai": "ทำไมวัฏจักรน้ำถึงสำคัญสำหรับสิ่งมีชีวิตทุกชนิด?",
+      "options": ["It makes rainbows", "It provides fresh water for drinking, farming, and other needs", "It creates wind", "It makes the sky blue"],
+      "correctAnswer": 1,
+      "explanation": "The water cycle provides fresh water for drinking, watering plants, and supporting all life on Earth."
+    },
+    {
+      "id": "q15",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What happens to rain when it falls on land?",
+      "questionThai": "เกิดอะไรขึ้นกับฝนเมื่อตกบนพื้นดิน?",
+      "options": ["It disappears forever", "Some becomes runoff, some soaks into groundwater, some is absorbed by plants", "All of it evaporates immediately", "It turns into rock"],
+      "correctAnswer": 1,
+      "explanation": "Rain can become surface runoff, soak into the ground as groundwater, or be absorbed by plants."
+    },
+    {
+      "id": "q16",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "How does the water cycle affect weather?",
+      "questionThai": "วัฏจักรน้ำส่งผลต่อสภาพอากาศอย่างไร?",
+      "options": ["It doesn't affect weather", "Evaporation adds moisture to air, condensation forms clouds, and precipitation creates rain and storms", "It only affects temperature", "It only affects wind"],
+      "correctAnswer": 1,
+      "explanation": "The water cycle drives weather by adding moisture to air (evaporation), forming clouds (condensation), and creating precipitation."
+    },
+    {
+      "id": "q17",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why might a water droplet take thousands of years to complete one cycle?",
+      "questionThai": "ทำไมหยดน้ำอาจใช้เวลาหลายพันปีในการครบรอบหนึ่งวัฏจักร?",
+      "options": ["Water moves very slowly", "Water might be stored in glaciers or deep groundwater for a very long time", "The cycle is broken", "Water doesn't really cycle"],
+      "correctAnswer": 1,
+      "explanation": "Water stored in glaciers or deep underground can remain there for thousands of years before continuing through the cycle."
+    },
+    {
+      "id": "q18",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "How do humans affect the water cycle?",
+      "questionThai": "มนุษย์ส่งผลต่อวัฏจักรน้ำอย่างไร?",
+      "options": ["We can't affect it at all", "Through pollution, deforestation, and overusing water resources", "We create new water", "We stop evaporation"],
+      "correctAnswer": 1,
+      "explanation": "Humans affect the water cycle through pollution, cutting forests (which reduces transpiration), and using too much groundwater."
+    },
+    {
+      "id": "q19",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why is only a small percentage of Earth's water available for drinking?",
+      "questionThai": "ทำไมน้ำบนโลกเพียงเปอร์เซ็นต์เล็กน้อยเท่านั้นที่ใช้ดื่มได้?",
+      "options": ["Most water has evaporated", "Most water is salty ocean water or frozen in glaciers", "There is very little water on Earth", "All water is clean"],
+      "correctAnswer": 1,
+      "explanation": "About 97% is salty ocean water, and about 2% is frozen in glaciers. Less than 1% is available as fresh liquid water."
+    },
+    {
+      "id": "q20",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why is protecting forests important for the water cycle?",
+      "questionThai": "ทำไมการปกป้องป่าถึงสำคัญสำหรับวัฏจักรน้ำ?",
+      "options": ["Forests don't affect the water cycle", "Trees release water through transpiration and their roots help water soak into groundwater", "Forests use too much water", "Trees drink all the rain"],
+      "correctAnswer": 1,
+      "explanation": "Trees release water vapor through transpiration and their roots help water filter into groundwater, both important parts of the water cycle."
+    }
+  ]
+}

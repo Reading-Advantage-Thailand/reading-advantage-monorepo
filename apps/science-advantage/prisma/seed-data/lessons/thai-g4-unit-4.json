@@ -1,0 +1,159 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 4,
+  "unit": 4,
+  "lessons": [
+    {
+      "id": "g4-forms-of-energy",
+      "slug": "forms-of-energy",
+      "title": "Forms of Energy",
+      "description": "Explain different forms of energy including heat, light, sound, and electrical energy.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEnergy is the ability to do work. It exists in many different forms. Let's explore the main forms of energy!\n\n## Main Content\n\n**1. Heat Energy (Thermal)**\nHeat energy makes things warm or hot. It comes from the movement of atoms and molecules.\nExamples: stove, sun, body heat.\n\n**2. Light Energy**\nLight energy lets us see things. It travels in waves.\nExamples: sun, flashlight, lamp.\n\n**3. Sound Energy**\nSound energy makes us hear things. It travels as vibrations through air or water.\nExamples: voice, music, clapping.\n\n**4. Electrical Energy**\nElectrical energy flows through wires. It powers many devices.\nExamples: lights, computers, fans.\n\n**5. Chemical Energy**\nChemical energy is stored in food and fuels. It is released when bonds are broken.\nExamples: food, batteries, wood.\n\n**6. Kinetic Energy (Motion)**\nKinetic energy is the energy of moving objects.\nExamples: running, rolling ball, wind.\n\n**7. Potential Energy**\nPotential energy is stored energy waiting to be used.\nExamples: stretched rubber band, water behind a dam.\n\n## Summary\n\nEnergy exists in many forms: heat, light, sound, electrical, chemical, kinetic, and potential. Energy can be converted from one form to another.",
+      "order": 1,
+      "standards": [
+        "Sc5.1-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Energy is the ability to do work. It exists in many different forms."
+          },
+          {
+            "id": "energy-forms",
+            "type": "text",
+            "content": "## Forms of Energy\n\n1. **Heat Energy** - Makes things warm\n2. **Light Energy** - Lets us see\n3. **Sound Energy** - Makes us hear\n4. **Electrical Energy** - Powers devices\n5. **Chemical Energy** - Stored in food and fuels\n6. **Kinetic Energy** - Energy of motion\n7. **Potential Energy** - Stored energy"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Energy",
+                "thai": "พลังงาน",
+                "definition": "The ability to do work"
+              },
+              {
+                "term": "Kinetic Energy",
+                "thai": "พลังงานจลน์",
+                "definition": "Energy of moving objects"
+              },
+              {
+                "term": "Potential Energy",
+                "thai": "พลังงานศักย์",
+                "definition": "Stored energy waiting to be used"
+              },
+              {
+                "term": "Chemical Energy",
+                "thai": "พลังงานเคมี",
+                "definition": "Energy stored in chemical bonds"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "รูปแบบของพลังงาน"
+    },
+    {
+      "id": "g4-energy-transformations",
+      "slug": "energy-transformations",
+      "title": "Energy Transformations",
+      "description": "Describe how energy can be transformed from one form to another.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEnergy can change from one form to another. These changes are called energy transformations. Let's see how energy transforms in everyday life!\n\n## Main Content\n\n**What is Energy Transformation?**\n\nEnergy transformation is when energy changes from one form to another.\n\n**Examples of Energy Transformations**\n\n1. **Light bulb**: Electrical energy → Light energy + Heat energy\n2. **Car engine**: Chemical energy → Kinetic energy + Heat energy\n3. **Solar panel**: Light energy → Electrical energy\n4. **Microphone**: Sound energy → Electrical energy\n5. **Speaker**: Electrical energy → Sound energy\n6. **Eating food**: Chemical energy → Kinetic energy + Heat energy\n7. **Battery**: Chemical energy → Electrical energy\n\n**Conservation of Energy**\n\nEnergy cannot be created or destroyed. It can only change forms. The total amount of energy stays the same.\n\n## Summary\n\nEnergy transforms from one form to another. Examples include light bulbs, car engines, and solar panels. Energy is always conserved.",
+      "order": 2,
+      "standards": [
+        "Sc5.2-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Energy can change from one form to another. These changes are called energy transformations."
+          },
+          {
+            "id": "examples",
+            "type": "text",
+            "content": "## Examples of Energy Transformations\n\n1. **Light bulb**: Electrical → Light + Heat\n2. **Car engine**: Chemical → Kinetic + Heat\n3. **Solar panel**: Light → Electrical\n4. **Speaker**: Electrical → Sound\n5. **Eating food**: Chemical → Kinetic + Heat"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Energy Transformation",
+                "thai": "การเปลี่ยนแปลงพลังงาน",
+                "definition": "When energy changes from one form to another"
+              },
+              {
+                "term": "Conservation of Energy",
+                "thai": "การอนุรักษ์พลังงาน",
+                "definition": "Energy cannot be created or destroyed"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การเปลี่ยนแปลงพลังงาน"
+    },
+    {
+      "id": "g4-energy-sources",
+      "slug": "energy-sources",
+      "title": "Energy Sources",
+      "description": "Identify renewable and non-renewable energy sources.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nWe need energy for everything we do. Where does our energy come from? Let's learn about different energy sources!\n\n## Main Content\n\n**Renewable Energy Sources**\n\nRenewable energy can be replaced naturally and won't run out.\n1. **Solar Energy** - From the sun\n2. **Wind Energy** - From moving air\n3. **Water Energy (Hydro)** - From flowing water\n4. **Biomass Energy** - From plants and animal waste\n5. **Geothermal Energy** - From Earth's heat\n\n**Non-Renewable Energy Sources**\n\nNon-renewable energy takes millions of years to form and will run out.\n1. **Coal** - A fossil fuel burned for electricity\n2. **Oil** - Used for transportation and plastics\n3. **Natural Gas** - Used for heating and cooking\n4. **Nuclear Energy** - From splitting atoms\n\n**Why Renewable Energy Matters**\n\nNon-renewable sources cause pollution and will eventually run out. Renewable sources are cleaner and sustainable.\n\n## Summary\n\nEnergy comes from renewable (solar, wind, water) and non-renewable (coal, oil, gas) sources. Renewable energy is better for the environment.",
+      "order": 3,
+      "standards": [
+        "Sc5.3-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "We need energy for everything we do. Where does our energy come from?"
+          },
+          {
+            "id": "renewable",
+            "type": "text",
+            "content": "## Renewable Energy\n\n- **Solar** - From the sun\n- **Wind** - From moving air\n- **Water (Hydro)** - From flowing water\n- **Biomass** - From plants and waste\n- **Geothermal** - From Earth's heat"
+          },
+          {
+            "id": "non-renewable",
+            "type": "text",
+            "content": "## Non-Renewable Energy\n\n- **Coal** - Fossil fuel for electricity\n- **Oil** - For transportation\n- **Natural Gas** - For heating\n- **Nuclear** - From splitting atoms"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Renewable Energy",
+                "thai": "พลังงานทดแทน",
+                "definition": "Energy from sources that can be naturally replaced"
+              },
+              {
+                "term": "Non-Renewable Energy",
+                "thai": "พลังงานที่ไม่สามารถทดแทนได้",
+                "definition": "Energy from sources that will run out"
+              },
+              {
+                "term": "Fossil Fuel",
+                "thai": "เชื้อเพลิงฟอสซิล",
+                "definition": "Fuels formed from ancient organisms over millions of years"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "แหล่งพลังงาน"
+    }
+  ]
+}

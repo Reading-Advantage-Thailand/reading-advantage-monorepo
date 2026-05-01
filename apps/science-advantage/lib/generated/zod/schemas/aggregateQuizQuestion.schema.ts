@@ -1,0 +1,14 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { QuizQuestionOrderByWithRelationInputObjectSchema as QuizQuestionOrderByWithRelationInputObjectSchema } from './objects/QuizQuestionOrderByWithRelationInput.schema';
+import { QuizQuestionWhereInputObjectSchema as QuizQuestionWhereInputObjectSchema } from './objects/QuizQuestionWhereInput.schema';
+import { QuizQuestionWhereUniqueInputObjectSchema as QuizQuestionWhereUniqueInputObjectSchema } from './objects/QuizQuestionWhereUniqueInput.schema';
+import { QuizQuestionCountAggregateInputObjectSchema as QuizQuestionCountAggregateInputObjectSchema } from './objects/QuizQuestionCountAggregateInput.schema';
+import { QuizQuestionMinAggregateInputObjectSchema as QuizQuestionMinAggregateInputObjectSchema } from './objects/QuizQuestionMinAggregateInput.schema';
+import { QuizQuestionMaxAggregateInputObjectSchema as QuizQuestionMaxAggregateInputObjectSchema } from './objects/QuizQuestionMaxAggregateInput.schema';
+import { QuizQuestionAvgAggregateInputObjectSchema as QuizQuestionAvgAggregateInputObjectSchema } from './objects/QuizQuestionAvgAggregateInput.schema';
+import { QuizQuestionSumAggregateInputObjectSchema as QuizQuestionSumAggregateInputObjectSchema } from './objects/QuizQuestionSumAggregateInput.schema';
+
+export const QuizQuestionAggregateSchema: z.ZodType<Prisma.QuizQuestionAggregateArgs> = z.object({ orderBy: z.union([QuizQuestionOrderByWithRelationInputObjectSchema, QuizQuestionOrderByWithRelationInputObjectSchema.array()]).optional(), where: QuizQuestionWhereInputObjectSchema.optional(), cursor: QuizQuestionWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), QuizQuestionCountAggregateInputObjectSchema ]).optional(), _min: QuizQuestionMinAggregateInputObjectSchema.optional(), _max: QuizQuestionMaxAggregateInputObjectSchema.optional(), _avg: QuizQuestionAvgAggregateInputObjectSchema.optional(), _sum: QuizQuestionSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.QuizQuestionAggregateArgs>;
+
+export const QuizQuestionAggregateZodSchema = z.object({ orderBy: z.union([QuizQuestionOrderByWithRelationInputObjectSchema, QuizQuestionOrderByWithRelationInputObjectSchema.array()]).optional(), where: QuizQuestionWhereInputObjectSchema.optional(), cursor: QuizQuestionWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), QuizQuestionCountAggregateInputObjectSchema ]).optional(), _min: QuizQuestionMinAggregateInputObjectSchema.optional(), _max: QuizQuestionMaxAggregateInputObjectSchema.optional(), _avg: QuizQuestionAvgAggregateInputObjectSchema.optional(), _sum: QuizQuestionSumAggregateInputObjectSchema.optional() }).strict();

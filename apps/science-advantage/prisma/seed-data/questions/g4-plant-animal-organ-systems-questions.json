@@ -1,0 +1,51 @@
+{
+  "lessonId": "g4-plant-animal-organ-systems",
+  "questions": [
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What are the two main organ systems in plants?",
+      "options": ["Root and shoot", "Heart and lungs", "Brain and nerves", "Stomach and intestines"],
+      "correctAnswer": "Root and shoot",
+      "points": 1,
+      "standards": ["Sc1.1-G4"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What does the root system do?",
+      "options": ["Makes food from sunlight", "Anchors the plant and absorbs water", "Produces flowers", "Stores oxygen"],
+      "correctAnswer": "Anchors the plant and absorbs water",
+      "points": 1,
+      "standards": ["Sc1.1-G4"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which system in animals transports blood?",
+      "options": ["Digestive system", "Respiratory system", "Circulatory system", "Nervous system"],
+      "correctAnswer": "Circulatory system",
+      "points": 1,
+      "standards": ["Sc1.1-G4"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "Which are plant organ systems? (Select all that apply)",
+      "options": ["Root system", "Shoot system", "Circulatory system", "Digestive system"],
+      "correctAnswer": ["Root system", "Shoot system"],
+      "points": 1,
+      "standards": ["Sc1.1-G4"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Leaves make food through photosynthesis.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.1-G4"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "The _____ system helps animals breathe.",
+      "correctAnswer": "respiratory",
+      "points": 1,
+      "standards": ["Sc1.1-G4"]
+    }
+  ]
+}

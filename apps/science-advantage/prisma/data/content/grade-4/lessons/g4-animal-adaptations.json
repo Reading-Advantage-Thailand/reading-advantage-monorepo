@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "Why do polar bears have thick white fur? How can camels survive in hot deserts without water for days? Why do chameleons change color? Animals have special features that help them survive in their environments. These special features are called adaptations. Today, you will discover how different animals have adapted to live in places all around the world!",
+      "contentThai": "ทำไมหมีขั้วโลกถึงมีขนสีขาวหนา? อูฐสามารถอยู่รอดในทะเลทรายร้อนโดยไม่มีน้ำได้หลายวันได้อย่างไร? ทำไมกิ้งก่าถึงเปลี่ยนสีได้? สัตว์มีลักษณะพิเศษที่ช่วยให้พวกมันอยู่รอดในสิ่งแวดล้อมของพวกมัน ลักษณะพิเศษเหล่านี้เรียกว่าการปรับตัว วันนี้คุณจะได้ค้นพบว่าสัตว์ต่างๆ ปรับตัวเพื่อใช้ชีวิตในที่ต่างๆ ทั่วโลกอย่างไร!"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Adaptation",
+          "thai": "การปรับตัว",
+          "definition": "A special feature or behavior that helps a living thing survive in its environment"
+        },
+        {
+          "term": "Environment",
+          "thai": "สิ่งแวดล้อม",
+          "definition": "The natural surroundings where a plant or animal lives"
+        },
+        {
+          "term": "Camouflage",
+          "thai": "การพรางตัว",
+          "definition": "Colors or patterns that help an animal blend in with its surroundings"
+        },
+        {
+          "term": "Predator",
+          "thai": "สัตว์นักล่า",
+          "definition": "An animal that hunts and eats other animals"
+        },
+        {
+          "term": "Prey",
+          "thai": "เหยื่อ",
+          "definition": "An animal that is hunted and eaten by other animals"
+        },
+        {
+          "term": "Habitat",
+          "thai": "ถิ่นที่อยู่",
+          "definition": "The natural home of a plant or animal"
+        },
+        {
+          "term": "Migration",
+          "thai": "การอพยพ",
+          "definition": "Moving from one place to another, usually with the seasons"
+        },
+        {
+          "term": "Hibernation",
+          "thai": "การจำศีล",
+          "definition": "A deep sleep that some animals use to survive winter"
+        },
+        {
+          "term": "Nocturnal",
+          "thai": "หากินกลางคืน",
+          "definition": "Active at night and sleeping during the day"
+        },
+        {
+          "term": "Survive",
+          "thai": "อยู่รอด",
+          "definition": "To stay alive and continue living"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## What Are Adaptations?\n\nAn **adaptation** is any feature or behavior that helps a living thing survive in its environment. Adaptations develop over many, many generations. Animals that have helpful features are more likely to survive and have babies. Those babies inherit the helpful features, and over time, the whole species becomes better adapted.\n\nThere are two main types of adaptations:\n\n### Physical Adaptations\nThese are body features that help animals survive. Examples include:\n- Sharp claws for catching prey\n- Thick fur for staying warm\n- Long necks for reaching food\n- Wings for flying\n- Gills for breathing underwater\n\n### Behavioral Adaptations\nThese are actions or behaviors that help animals survive. Examples include:\n- Migrating to warmer places in winter\n- Hunting at night to avoid heat\n- Living in groups for protection\n- Building nests or burrows for shelter",
+      "contentThai": "## การปรับตัวคืออะไร?\n\n**การปรับตัว** คือลักษณะหรือพฤติกรรมใดๆ ที่ช่วยให้สิ่งมีชีวิตอยู่รอดในสิ่งแวดล้อมของมัน การปรับตัวพัฒนาขึ้นในช่วงหลายๆ รุ่น สัตว์ที่มีลักษณะที่เป็นประโยชน์มีโอกาสอยู่รอดและมีลูกมากกว่า ลูกเหล่านั้นสืบทอดลักษณะที่เป็นประโยชน์ และเมื่อเวลาผ่านไป สายพันธุ์ทั้งหมดก็ปรับตัวได้ดีขึ้น"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-animal-adaptations-1.webp",
+      "alt": "Collage showing different animal adaptations: polar bear with thick white fur, giraffe with long neck, fish with gills, and bird with wings",
+      "caption": "Different Physical Adaptations Help Animals Survive",
+      "captionThai": "การปรับตัวทางกายภาพที่แตกต่างกันช่วยให้สัตว์อยู่รอด",
+      "aspectRatio": 1.5,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "## Adaptations for Different Environments\n\n### Desert Adaptations\nDeserts are hot and dry with very little water. Animals living here have special adaptations:\n\n**Camels** have:\n- Humps that store fat for energy (not water!)\n- Wide, flat feet to walk on sand without sinking\n- Long eyelashes and nostrils that close to keep out sand\n- The ability to drink huge amounts of water at once\n\n**Fennec foxes** have:\n- Very large ears that release body heat to stay cool\n- Thick fur on their feet to protect them from hot sand\n- Light-colored fur to reflect sunlight\n\n### Arctic and Cold Environment Adaptations\nThe Arctic is extremely cold with ice and snow. Animals here need to stay warm:\n\n**Polar bears** have:\n- Thick white fur that blends with snow (camouflage)\n- A layer of fat called blubber under their skin\n- Black skin under their fur to absorb heat from the sun\n- Large, furry paws that work like snowshoes\n\n**Penguins** have:\n- Waterproof feathers to stay dry and warm\n- A layer of fat for insulation\n- Huddle together in groups to share body heat"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-animal-adaptations-2.webp",
+      "alt": "Side-by-side comparison of a camel in the desert and a polar bear on ice, with labels pointing to their different adaptations",
+      "caption": "Desert vs. Arctic Adaptations",
+      "captionThai": "การปรับตัวในทะเลทรายเทียบกับขั้วโลก",
+      "aspectRatio": 1.6,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "### Rainforest Adaptations\nRainforests are warm, wet, and full of trees. Animals have adapted in amazing ways:\n\n**Monkeys** have:\n- Long tails for gripping branches\n- Strong arms and legs for swinging\n- Hands and feet that can grip like yours\n\n**Tree frogs** have:\n- Sticky toe pads for climbing smooth leaves\n- Bright colors to warn predators they are poisonous\n- Excellent vision to spot insects\n\n### Ocean Adaptations\nOcean animals need to breathe underwater and move through water:\n\n**Fish** have:\n- Gills to breathe oxygen from water\n- Streamlined bodies to swim fast\n- Fins for steering and balancing\n- Scales for protection\n\n**Dolphins** have:\n- Blowholes on top of their heads to breathe air\n- Flippers shaped like paddles for swimming\n- Echolocation to find food in dark water\n\n## Camouflage: The Art of Hiding\n\n**Camouflage** is a special adaptation that helps animals hide. Some animals use camouflage to hide from predators. Others use it to sneak up on prey!\n\nExamples of camouflage:\n- **Stick insects** look exactly like twigs\n- **Leaf insects** look like leaves\n- **Tigers** have stripes that help them hide in tall grass\n- **Chameleons** can change their skin color to match their surroundings"
+    },
+    {
+      "type": "reading_passage",
+      "title": "The Amazing Thai Elephant",
+      "titleThai": "ช้างไทยที่น่าทึ่ง",
+      "content": "The Asian elephant is one of Thailand's most beloved animals. For thousands of years, elephants have lived in Thailand's forests and worked alongside Thai people. These gentle giants have amazing adaptations that help them survive.\n\nSomchai was a young boy who lived near Elephant Nature Park in Chiang Mai. His uncle, a wildlife researcher, took him to observe the elephants and learn about their special features.\n\n\"Look at the elephant's trunk,\" said Uncle Prasit. \"It's their most amazing adaptation. The trunk has over 40,000 muscles!\"\n\nSomchai watched as an elephant used its trunk to pick up a small piece of fruit. \"It's like a hand, arm, and nose all in one!\" he said.\n\n\"Exactly! Elephants use their trunks to breathe, smell, drink water, grab food, and even communicate with other elephants. The trunk can hold up to eight liters of water at once.\"\n\nNext, Uncle Prasit pointed to the elephant's large, fan-shaped ears. \"In Thailand's hot climate, elephants need to stay cool. Those big ears have many blood vessels. When elephants flap their ears, the blood cools down, cooling the whole elephant like a natural air conditioner.\"\n\n\"What about their skin?\" Somchai asked, noticing the deep wrinkles.\n\n\"Another great adaptation! The wrinkly skin holds water and mud. When elephants roll in mud, it sticks in the wrinkles. The mud keeps them cool and protects them from sunburn and insect bites.\"\n\nSomchai observed an elephant eating leaves from a tree. Its large teeth easily ground the tough plants. \"Elephants have special teeth too,\" explained his uncle. \"They grow six sets of teeth during their lifetime because they wear out from eating so much rough plant material.\"\n\n\"Why are their feet so big and round?\" Somchai wondered aloud.\n\n\"Their large, padded feet spread their heavy weight over a bigger area. This helps them walk quietly through the forest without sinking into soft ground. Elephants can actually walk almost silently despite weighing several tons!\"\n\nAs they watched the elephants play in the water, Somchai felt amazed. \"Every part of the elephant has a purpose,\" he realized.\n\n\"That's adaptation,\" Uncle Prasit smiled. \"Over millions of years, elephants developed these features to survive in their forest habitat. Understanding these adaptations helps us protect them.\"\n\nSomchai decided then that he wanted to help protect Thailand's elephants. Every adaptation made them special, and he wanted to make sure these amazing animals would live in Thailand forever.",
+      "contentThai": "ช้างเอเชียเป็นหนึ่งในสัตว์ที่ชาวไทยรักมากที่สุด มาหลายพันปีแล้วที่ช้างอาศัยอยู่ในป่าเมืองไทยและทำงานร่วมกับคนไทย ยักษ์ใหญ่ที่อ่อนโยนเหล่านี้มีการปรับตัวที่น่าทึ่งที่ช่วยให้พวกมันอยู่รอด\n\nสมชายเป็นเด็กชายที่อาศัยอยู่ใกล้อุทยานช้างธรรมชาติในเชียงใหม่ ลุงของเขาซึ่งเป็นนักวิจัยสัตว์ป่าพาเขาไปสังเกตช้างและเรียนรู้เกี่ยวกับลักษณะพิเศษของพวกมัน",
+      "wordCount": 412
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- **Adaptations** are special features or behaviors that help animals survive in their environments\n- **Physical adaptations** are body features like thick fur, sharp claws, or gills\n- **Behavioral adaptations** are actions like migration, hibernation, or hunting at night\n- Animals in **deserts** have adaptations for heat and lack of water\n- Animals in **cold places** have adaptations to stay warm\n- Animals in **rainforests** have adaptations for climbing and life in trees\n- Animals in **oceans** have adaptations for breathing and moving in water\n- **Camouflage** helps animals hide from predators or sneak up on prey\n- Every animal has adaptations that match its habitat\n\nBy studying adaptations, we can understand how animals survive and why it's important to protect their habitats!"
+    }
+  ]
+}

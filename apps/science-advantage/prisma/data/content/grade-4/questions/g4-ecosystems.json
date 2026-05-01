@@ -1,0 +1,205 @@
+{
+  "lessonId": "g4-ecosystems",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is an ecosystem?",
+      "questionThai": "ระบบนิเวศคืออะไร?",
+      "options": ["Only animals", "Only plants", "A community of living things and non-living things working together", "Just the weather"],
+      "correctAnswer": 2,
+      "explanation": "An ecosystem is a community of living things and non-living things that interact with each other in an area."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What are biotic factors?",
+      "questionThai": "ปัจจัยชีวภาพคืออะไร?",
+      "options": ["Non-living things like water and rocks", "Living things like plants and animals", "Only air and sunlight", "Only temperature"],
+      "correctAnswer": 1,
+      "explanation": "Biotic factors are the living parts of an ecosystem, including plants, animals, fungi, and bacteria."
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What are abiotic factors?",
+      "questionThai": "ปัจจัยอชีวภาพคืออะไร?",
+      "options": ["Living things", "Non-living things like water, sunlight, air, and soil", "Only animals", "Only plants"],
+      "correctAnswer": 1,
+      "explanation": "Abiotic factors are the non-living parts of an ecosystem, including water, sunlight, air, soil, and temperature."
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a habitat?",
+      "questionThai": "ถิ่นที่อยู่คืออะไร?",
+      "options": ["A type of food", "The natural home where an organism lives", "A kind of weather", "A body covering"],
+      "correctAnswer": 1,
+      "explanation": "A habitat is the natural home or environment where a plant or animal lives."
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a producer in an ecosystem?",
+      "questionThai": "ผู้ผลิตในระบบนิเวศคืออะไร?",
+      "options": ["An animal that eats plants", "An organism that makes its own food", "A decomposer", "A top predator"],
+      "correctAnswer": 1,
+      "explanation": "A producer is an organism that makes its own food, usually plants through photosynthesis."
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a consumer?",
+      "questionThai": "ผู้บริโภคคืออะไร?",
+      "options": ["A plant", "An organism that eats other organisms", "The sun", "Water"],
+      "correctAnswer": 1,
+      "explanation": "A consumer is an organism that cannot make its own food and must eat other organisms."
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a decomposer?",
+      "questionThai": "ผู้ย่อยสลายคืออะไร?",
+      "options": ["A predator", "An organism that breaks down dead plants and animals", "A plant", "An herbivore"],
+      "correctAnswer": 1,
+      "explanation": "A decomposer is an organism that breaks down dead plants and animals, recycling nutrients back to the soil."
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Which is an example of an abiotic factor?",
+      "questionThai": "ข้อใดเป็นตัวอย่างของปัจจัยอชีวภาพ?",
+      "options": ["A fish", "A tree", "Water", "Bacteria"],
+      "correctAnswer": 2,
+      "explanation": "Water is an abiotic (non-living) factor. Fish, trees, and bacteria are all biotic (living) factors."
+    },
+    {
+      "id": "q9",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is a population?",
+      "questionThai": "ประชากรคืออะไร?",
+      "options": ["One individual organism", "All organisms of one species in an area", "All different species in an area", "The whole ecosystem"],
+      "correctAnswer": 1,
+      "explanation": "A population is all the organisms of one species living in a particular area."
+    },
+    {
+      "id": "q10",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is a community in ecology?",
+      "questionThai": "ชุมชนในนิเวศวิทยาคืออะไร?",
+      "options": ["All organisms of one species", "All different species living together in an area", "Only plants", "Only animals"],
+      "correctAnswer": 1,
+      "explanation": "A community is all the different species living together in a particular area."
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What happens when an ecosystem is balanced?",
+      "questionThai": "เกิดอะไรขึ้นเมื่อระบบนิเวศมีความสมดุล?",
+      "options": ["All organisms die", "All parts work together and populations stay stable", "Only plants grow", "There is no food"],
+      "correctAnswer": 1,
+      "explanation": "A balanced ecosystem has enough producers for consumers, nutrients are recycled, and populations stay relatively stable."
+    },
+    {
+      "id": "q12",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In the reading passage, why are mangrove forests important for fish?",
+      "questionThai": "ในบทอ่าน ทำไมป่าชายเลนถึงสำคัญสำหรับปลา?",
+      "options": ["Fish don't need mangroves", "Mangrove roots provide safe places for baby fish to grow", "Mangroves eat fish", "Fish eat mangrove leaves"],
+      "correctAnswer": 1,
+      "explanation": "Mangrove roots provide safe hiding places for baby fish until they grow big enough to survive in open water."
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What would happen if all producers in an ecosystem died?",
+      "questionThai": "จะเกิดอะไรขึ้นถ้าผู้ผลิตทั้งหมดในระบบนิเวศตาย?",
+      "options": ["Nothing would change", "All consumers would eventually die because there would be no food source", "Consumers would become producers", "Only predators would survive"],
+      "correctAnswer": 1,
+      "explanation": "Producers are the base of the food chain. Without them, herbivores would have no food, then carnivores would have no food."
+    },
+    {
+      "id": "q14",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Which is an example of a freshwater ecosystem?",
+      "questionThai": "ข้อใดเป็นตัวอย่างของระบบนิเวศน้ำจืด?",
+      "options": ["The ocean", "A coral reef", "A pond", "A beach"],
+      "correctAnswer": 2,
+      "explanation": "A pond is a freshwater ecosystem. The ocean and coral reefs are saltwater (marine) ecosystems."
+    },
+    {
+      "id": "q15",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why are decomposers important in an ecosystem?",
+      "questionThai": "ทำไมผู้ย่อยสลายถึงสำคัญในระบบนิเวศ?",
+      "options": ["They hunt other animals", "They make their own food", "They recycle nutrients from dead organisms back to the soil", "They produce oxygen"],
+      "correctAnswer": 2,
+      "explanation": "Decomposers break down dead organisms and return nutrients to the soil so producers can use them to grow."
+    },
+    {
+      "id": "q16",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is the main source of energy for most ecosystems?",
+      "questionThai": "แหล่งพลังงานหลักสำหรับระบบนิเวศส่วนใหญ่คืออะไร?",
+      "options": ["Wind", "The sun", "Water", "Soil"],
+      "correctAnswer": 1,
+      "explanation": "The sun is the main energy source. Producers capture sunlight through photosynthesis and convert it to food energy."
+    },
+    {
+      "id": "q17",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why did the pollution in the mangrove forest affect fish populations?",
+      "questionThai": "ทำไมมลพิษในป่าชายเลนถึงส่งผลต่อประชากรปลา?",
+      "options": ["Pollution doesn't affect ecosystems", "Pollution killed mangrove trees, removing nursery habitat for baby fish", "Fish like pollution", "Pollution made fish grow faster"],
+      "correctAnswer": 1,
+      "explanation": "When pollution killed mangrove trees, the fish lost their nursery habitat, affecting the whole ecosystem."
+    },
+    {
+      "id": "q18",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "What might happen if a predator is removed from an ecosystem?",
+      "questionThai": "จะเกิดอะไรขึ้นถ้าสัตว์นักล่าถูกนำออกจากระบบนิเวศ?",
+      "options": ["Nothing would change", "Prey populations could grow too large and eat too many plants, disrupting the ecosystem", "Plants would grow faster", "More predators would appear"],
+      "correctAnswer": 1,
+      "explanation": "Without predators to control them, prey populations can grow too large and overeat plants, causing ecosystem imbalance."
+    },
+    {
+      "id": "q19",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why do different ecosystems have different types of organisms?",
+      "questionThai": "ทำไมระบบนิเวศต่างๆ ถึงมีสิ่งมีชีวิตประเภทต่างกัน?",
+      "options": ["All ecosystems have the same organisms", "Different abiotic conditions require different adaptations to survive", "Organisms can live anywhere", "It's random"],
+      "correctAnswer": 1,
+      "explanation": "Different ecosystems have different temperatures, water availability, and other conditions, so organisms must have specific adaptations to survive there."
+    },
+    {
+      "id": "q20",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "How can one person help protect ecosystems?",
+      "questionThai": "คนหนึ่งคนสามารถช่วยปกป้องระบบนิเวศได้อย่างไร?",
+      "options": ["They can't help at all", "By reducing pollution, not littering, planting trees, and supporting conservation", "By ignoring nature", "By using more resources"],
+      "correctAnswer": 1,
+      "explanation": "Individuals can help by reducing pollution, not littering, planting trees, conserving water, and supporting protected areas."
+    }
+  ]
+}

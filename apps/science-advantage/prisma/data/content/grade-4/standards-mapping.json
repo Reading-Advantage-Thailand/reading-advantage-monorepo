@@ -1,0 +1,275 @@
+{
+  "gradeLevel": 4,
+  "framework": "THAI",
+  "lessons": [
+    {
+      "lessonId": "g4-plant-life-cycles",
+      "title": "Plant Life Cycles",
+      "titleThai": "วัฏจักรชีวิตของพืช",
+      "thaiStandards": [
+        {
+          "code": "Sc1.1-G4",
+          "description": "Describe plant life cycles including germination, growth, reproduction, and seed dispersal"
+        },
+        {
+          "code": "Sc1.2-G4",
+          "description": "Explain the importance of plant reproduction for species continuation"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "4-LS1-1",
+          "description": "Construct an argument that plants and animals have internal and external structures that function to support survival, growth, behavior, and reproduction"
+        }
+      ],
+      "slug": "plant-life-cycles"
+    },
+    {
+      "lessonId": "g4-animal-adaptations",
+      "title": "Animal Adaptations",
+      "titleThai": "การปรับตัวของสัตว์",
+      "thaiStandards": [
+        {
+          "code": "Sc1.2-G4",
+          "description": "Describe how animals adapt to their environment for survival"
+        },
+        {
+          "code": "Sc1.3-G4",
+          "description": "Compare and classify animals based on their physical and behavioral characteristics"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "4-LS1-1",
+          "description": "Construct an argument that plants and animals have internal and external structures that function to support survival, growth, behavior, and reproduction"
+        },
+        {
+          "code": "3-LS4-2",
+          "description": "Use evidence to construct an explanation for how the variations in characteristics among individuals of the same species may provide advantages in surviving"
+        }
+      ],
+      "slug": "animal-adaptations"
+    },
+    {
+      "lessonId": "g4-food-chains",
+      "title": "Food Chains",
+      "titleThai": "ห่วงโซ่อาหาร",
+      "thaiStandards": [
+        {
+          "code": "Sc2.1-G4",
+          "description": "Explain energy flow in ecosystems through food chains and food webs"
+        },
+        {
+          "code": "Sc2.2-G4",
+          "description": "Identify producers, consumers, and decomposers in ecosystems"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "5-LS2-1",
+          "description": "Develop a model to describe the movement of matter among plants, animals, decomposers, and the environment"
+        },
+        {
+          "code": "5-PS3-1",
+          "description": "Use models to describe that energy in animals' food (used for body repair, growth, motion, and to maintain body warmth) was once energy from the sun"
+        }
+      ],
+      "slug": "food-chains"
+    },
+    {
+      "lessonId": "g4-states-of-matter",
+      "title": "States of Matter",
+      "titleThai": "สถานะของสสาร",
+      "thaiStandards": [
+        {
+          "code": "Sc3.1-G4",
+          "description": "Describe the properties of solids, liquids, and gases"
+        },
+        {
+          "code": "Sc3.2-G4",
+          "description": "Explain how matter changes states through heating and cooling"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "2-PS1-4",
+          "description": "Construct an argument with evidence that some changes caused by heating or cooling can be reversed and some cannot"
+        },
+        {
+          "code": "5-PS1-1",
+          "description": "Develop a model to describe that matter is made of particles too small to be seen"
+        }
+      ],
+      "slug": "states-of-matter"
+    },
+    {
+      "lessonId": "g4-forces-motion",
+      "title": "Forces and Motion",
+      "titleThai": "แรงและการเคลื่อนที่",
+      "thaiStandards": [
+        {
+          "code": "Sc4.1-G4",
+          "description": "Describe types of forces including push, pull, gravity, and friction"
+        },
+        {
+          "code": "Sc4.2-G4",
+          "description": "Explain how forces affect the motion of objects"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "3-PS2-1",
+          "description": "Plan and conduct an investigation to provide evidence of the effects of balanced and unbalanced forces on the motion of an object"
+        },
+        {
+          "code": "3-PS2-2",
+          "description": "Make observations and/or measurements of an object's motion to provide evidence that a pattern can be used to predict future motion"
+        }
+      ],
+      "slug": "forces-motion"
+    },
+    {
+      "lessonId": "g4-sound-waves",
+      "title": "Sound Waves",
+      "titleThai": "คลื่นเสียง",
+      "thaiStandards": [
+        {
+          "code": "Sc5.1-G4",
+          "description": "Explain how sound is produced by vibrations and travels through different materials"
+        },
+        {
+          "code": "Sc5.2-G4",
+          "description": "Describe properties of sound including volume and pitch"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "4-PS4-1",
+          "description": "Develop a model of waves to describe patterns in terms of amplitude and wavelength"
+        },
+        {
+          "code": "1-PS4-1",
+          "description": "Plan and conduct investigations to provide evidence that vibrating materials can make sound and that sound can make materials vibrate"
+        }
+      ],
+      "slug": "sound-waves"
+    },
+    {
+      "lessonId": "g4-weather-patterns",
+      "title": "Weather Patterns",
+      "titleThai": "รูปแบบสภาพอากาศ",
+      "thaiStandards": [
+        {
+          "code": "Sc6.1-G4",
+          "description": "Describe weather elements including temperature, precipitation, humidity, and wind"
+        },
+        {
+          "code": "Sc6.2-G4",
+          "description": "Explain Thailand's seasons and their relationship to monsoon patterns"
+        },
+        {
+          "code": "Sc6.3-G4",
+          "description": "Describe how the water cycle affects weather"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "3-ESS2-1",
+          "description": "Represent data in tables and graphical displays to describe typical weather conditions expected during a particular season"
+        },
+        {
+          "code": "3-ESS2-2",
+          "description": "Obtain and combine information to describe climates in different regions of the world"
+        }
+      ],
+      "slug": "weather-patterns"
+    },
+    {
+      "lessonId": "g4-rocks-minerals",
+      "title": "Rocks and Minerals",
+      "titleThai": "หินและแร่",
+      "thaiStandards": [
+        {
+          "code": "Sc7.1-G4",
+          "description": "Describe properties of minerals including color, luster, and hardness"
+        },
+        {
+          "code": "Sc7.2-G4",
+          "description": "Explain the three types of rocks and how they form through the rock cycle"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "4-ESS1-1",
+          "description": "Identify evidence from patterns in rock formations and fossils in rock layers to support an explanation for changes in a landscape over time"
+        },
+        {
+          "code": "4-ESS2-1",
+          "description": "Make observations and/or measurements to provide evidence of the effects of weathering or the rate of erosion by water, ice, wind, or vegetation"
+        }
+      ],
+      "slug": "rocks-minerals"
+    },
+    {
+      "lessonId": "g4-water-cycle",
+      "title": "Water Cycle",
+      "titleThai": "วัฏจักรน้ำ",
+      "thaiStandards": [
+        {
+          "code": "Sc6.3-G4",
+          "description": "Describe how the water cycle affects weather"
+        },
+        {
+          "code": "Sc7.3-G4",
+          "description": "Explain the water cycle including evaporation, condensation, precipitation, and collection"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "5-ESS2-1",
+          "description": "Develop a model using an example to describe ways the geosphere, biosphere, hydrosphere, and/or atmosphere interact"
+        },
+        {
+          "code": "5-ESS2-2",
+          "description": "Describe and graph the amounts and percentages of water and fresh water in various reservoirs to provide evidence about the distribution of water on Earth"
+        }
+      ],
+      "slug": "water-cycle"
+    },
+    {
+      "lessonId": "g4-ecosystems",
+      "title": "Ecosystems",
+      "titleThai": "ระบบนิเวศ",
+      "thaiStandards": [
+        {
+          "code": "Sc2.1-G4",
+          "description": "Explain energy flow in ecosystems through food chains and food webs"
+        },
+        {
+          "code": "Sc2.3-G4",
+          "description": "Describe the components of ecosystems including biotic and abiotic factors"
+        },
+        {
+          "code": "Sc2.4-G4",
+          "description": "Explain ecosystem balance and the effects of human activities"
+        }
+      ],
+      "ngssAlignments": [
+        {
+          "code": "5-LS2-1",
+          "description": "Develop a model to describe the movement of matter among plants, animals, decomposers, and the environment"
+        },
+        {
+          "code": "3-LS4-4",
+          "description": "Make a claim about the merit of a solution to a problem caused when the environment changes and the types of plants and animals that live there may change"
+        }
+      ],
+      "slug": "ecosystems"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2024-11-23",
+    "notes": "Thai standards are mapped to approximate Thai curriculum indicators for Grade 4 science. NGSS alignments show related U.S. standards for reference. Some standards span multiple grade levels in NGSS."
+  }
+}

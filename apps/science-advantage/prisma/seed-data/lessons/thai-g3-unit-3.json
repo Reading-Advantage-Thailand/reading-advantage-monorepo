@@ -1,0 +1,495 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "unit": 3,
+  "lessons": [
+    {
+      "id": "g3-describing-materials",
+      "slug": "describing-materials",
+      "title": "Describing Materials",
+      "description": "Grade 3 MATTER & MATERIALS - Describing materials by their observable properties: color, shape, texture, and size.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEverything around you is made of materials. A wooden table, a metal spoon, a cotton shirt, and a glass cup are all made from different materials. In this lesson, you will learn how to describe materials by their properties.\n\n## Main Content\n\n**Properties of Materials**\n\nMaterials have properties that help us describe them. Color tells us what a material looks like. Shape tells us its form. Texture tells us how it feels when we touch it. Size tells us how big or small it is. By observing these properties, we can identify and classify different materials.",
+      "order": 1,
+      "standards": [
+        "Sc3.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Everything around you is made of materials. A wooden table, a metal spoon, a cotton shirt, and a glass cup are all made from different materials. In this lesson, you will learn how to describe materials by their properties."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Material",
+                "thai": "วัสดุ",
+                "definition": "A substance that things are made from"
+              },
+              {
+                "term": "Property",
+                "thai": "คุณสมบัติ",
+                "definition": "A special quality or feature of a material"
+              },
+              {
+                "term": "Texture",
+                "thai": "เนื้อสัมผัส",
+                "definition": "How a material feels when you touch it"
+              },
+              {
+                "term": "Hard",
+                "thai": "แข็ง",
+                "definition": "A material that is difficult to press or change shape"
+              },
+              {
+                "term": "Soft",
+                "thai": "นุ่ม",
+                "definition": "A material that is easy to press or change shape"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การบรรยายวัสดุ"
+    },
+    {
+      "id": "g3-classifying-materials",
+      "slug": "classifying-materials",
+      "title": "Classifying Materials",
+      "description": "Grade 3 MATTER & MATERIALS - Classifying materials into groups based on their properties.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nScientists classify materials into groups based on their properties. This helps us organize and understand the world around us. In this lesson, you will learn how to sort materials into groups.\n\n## Main Content\n\n**Sorting Materials**\n\nWe can classify materials by their state: solid, liquid, or gas. We can also classify them by their properties: hard or soft, transparent or opaque, rough or smooth. Grouping materials by shared properties helps scientists study and use them more effectively.",
+      "order": 2,
+      "standards": [
+        "Sc3.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Scientists classify materials into groups based on their properties. This helps us organize and understand the world around us. In this lesson, you will learn how to sort materials into groups."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Classify",
+                "thai": "จำแนก",
+                "definition": "To sort things into groups based on shared properties"
+              },
+              {
+                "term": "Transparent",
+                "thai": "โปร่งใส",
+                "definition": "A material that lets light pass through it"
+              },
+              {
+                "term": "Opaque",
+                "thai": "ทึบ",
+                "definition": "A material that does not let light pass through"
+              },
+              {
+                "term": "Rough",
+                "thai": "หยาบ",
+                "definition": "A material with an uneven surface"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การจำแนกวัสดุ"
+    },
+    {
+      "id": "g3-states-of-matter",
+      "slug": "states-of-matter",
+      "title": "States of Matter",
+      "description": "Grade 3 MATTER & MATERIALS - The three states of matter: solid, liquid, and gas.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEverything around you is matter. Matter is anything that has mass and takes up space. Matter can exist in three states: solid, liquid, and gas. In this lesson, you will learn about the three states of matter and their properties.\n\n## Main Content\n\n**The Three States of Matter**\n\nSolids have a fixed shape and volume. A rock keeps its shape no matter where you put it. Liquids have a fixed volume but take the shape of their container. Water fills a cup or a bucket depending on the container. Gases have no fixed shape or volume. Air fills whatever space is available.",
+      "order": 3,
+      "standards": [
+        "Sc3.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Everything around you is matter. Matter can exist in three states: solid, liquid, and gas. In this lesson, you will learn about the three states of matter and their properties."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Matter",
+                "thai": "สสาร",
+                "definition": "Anything that has mass and takes up space"
+              },
+              {
+                "term": "Solid",
+                "thai": "ของแข็ง",
+                "definition": "A state of matter with a fixed shape and volume"
+              },
+              {
+                "term": "Liquid",
+                "thai": "ของเหลว",
+                "definition": "A state of matter with a fixed volume that takes the shape of its container"
+              },
+              {
+                "term": "Gas",
+                "thai": "ก๊าซ",
+                "definition": "A state of matter that fills whatever space is available"
+              },
+              {
+                "term": "Volume",
+                "thai": "ปริมาตร",
+                "definition": "The amount of space that matter takes up"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "สถานะของสสาร"
+    },
+    {
+      "id": "g3-matter-everywhere",
+      "slug": "matter-everywhere",
+      "title": "Matter Everywhere",
+      "description": "Grade 3 MATTER & MATERIALS - Identifying matter in everyday objects and understanding that all objects are made of matter.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nMatter is everywhere! Your desk, the air you breathe, the water you drink, and even you are all made of matter. In this lesson, you will discover that all objects around you are made of matter in different states.\n\n## Main Content\n\n**Matter in Daily Life**\n\nLook around your classroom. The desk is made of wood, which is a solid. The water in your bottle is a liquid. The air you breathe is a gas. Even your pencil, your shoes, and the whiteboard are all made of matter. Everything that you can see, touch, or feel is matter.",
+      "order": 4,
+      "standards": [
+        "Sc3.1-G3",
+        "Sc3.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Matter is everywhere! Your desk, the air you breathe, the water you drink, and even you are all made of matter. In this lesson, you will discover that all objects around you are made of matter in different states."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Object",
+                "thai": "วัตถุ",
+                "definition": "A thing that can be seen or touched"
+              },
+              {
+                "term": "Mass",
+                "thai": "มวล",
+                "definition": "The amount of matter in an object"
+              },
+              {
+                "term": "State",
+                "thai": "สถานะ",
+                "definition": "The form that matter takes: solid, liquid, or gas"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "สสารอยู่รอบตัวเรา"
+    },
+    {
+      "id": "g3-materials-lab",
+      "slug": "materials-lab",
+      "title": "Materials Lab",
+      "description": "Grade 3 MATTER & MATERIALS - Hands-on investigation comparing properties of different materials.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nToday you will investigate different materials and compare their properties. You will observe, touch, and test materials to learn how scientists describe and classify them.\n\n## Main Content\n\n**Lab Activity**\n\nGather materials such as wood, metal, plastic, cloth, and paper. Observe each material carefully. Describe its color, shape, texture, and size. Test whether it is hard or soft, rough or smooth. Record your observations in a table.",
+      "order": 5,
+      "standards": [
+        "Sc3.1-G3",
+        "Sc8.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will investigate different materials and compare their properties. You will observe, touch, and test materials to learn how scientists describe and classify them."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Investigate",
+                "thai": "สอบสวน",
+                "definition": "To study something carefully to learn more about it"
+              },
+              {
+                "term": "Compare",
+                "thai": "เปรียบเทียบ",
+                "definition": "To look at how things are the same or different"
+              },
+              {
+                "term": "Record",
+                "thai": "บันทึก",
+                "definition": "To write down observations during an experiment"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ห้องปฏิบัติการวัสดุ"
+    },
+    {
+      "id": "g3-changing-materials",
+      "slug": "changing-materials",
+      "title": "Changing Materials",
+      "description": "Grade 3 MATTER & MATERIALS - How materials can be changed by heating, cooling, mixing, and cutting.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nMaterials can change in many ways. Ice melts when it gets warm. Water boils when it gets hot. Paper can be cut and folded. In this lesson, you will learn about different ways materials can be changed.\n\n## Main Content\n\n**Ways Materials Change**\n\nHeating can melt solids into liquids. Cooling can freeze liquids into solids. Mixing two materials can create something new. Cutting, bending, and folding can change a material's shape. Some changes are temporary, while others are permanent.",
+      "order": 6,
+      "standards": [
+        "Sc3.1-G3",
+        "Sc3.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Materials can change in many ways. Ice melts when it gets warm. Water boils when it gets hot. Paper can be cut and folded. In this lesson, you will learn about different ways materials can be changed."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Melt",
+                "thai": "ละลาย",
+                "definition": "To change from a solid to a liquid by heating"
+              },
+              {
+                "term": "Freeze",
+                "thai": "แข็งตัว",
+                "definition": "To change from a liquid to a solid by cooling"
+              },
+              {
+                "term": "Mix",
+                "thai": "ผสม",
+                "definition": "To combine two or more materials together"
+              },
+              {
+                "term": "Permanent",
+                "thai": "ถาวร",
+                "definition": "A change that cannot be undone"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การเปลี่ยนแปลงวัสดุ"
+    },
+    {
+      "id": "g3-unit-3-review",
+      "slug": "unit-3-review",
+      "title": "Unit 3 Review",
+      "description": "Grade 3 MATTER & MATERIALS - Review activity for properties and states of matter.",
+      "lessonType": "REVIEW",
+      "content": "## Review Activity\n\nTest your knowledge of materials and their properties! Sort materials into groups, identify states of matter, and describe properties of everyday objects.",
+      "order": 7,
+      "standards": [
+        "Sc3.1-G3",
+        "Sc3.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Test your knowledge of materials and their properties! Sort materials into groups, identify states of matter, and describe properties of everyday objects."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Review",
+                "thai": "ทบทวน",
+                "definition": "To look at something again to remember it"
+              },
+              {
+                "term": "Sort",
+                "thai": "จัดกลุ่ม",
+                "definition": "To organize things into groups"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ทบทวนหน่วย 3"
+    },
+    {
+      "id": "g3-unit-3-summative-assessment",
+      "slug": "unit-3-summative-assessment",
+      "title": "Unit 3 Summative Assessment",
+      "description": "Grade 3 MATTER & MATERIALS - Summative assessment covering material properties and states of matter.",
+      "lessonType": "ASSESSMENT",
+      "content": "## Summative Assessment\n\nThis assessment covers everything you learned about matter and materials in Unit 3. You will be tested on describing materials, classifying them by properties, and understanding the three states of matter.",
+      "order": 8,
+      "standards": [
+        "Sc3.1-G3",
+        "Sc3.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "This assessment covers everything you learned about matter and materials in Unit 3. Good luck!"
+          }
+        ]
+      },
+      "titleThai": "แบบทดสอบปลายหน่วย หน่วย 3"
+    },
+    {
+      "id": "g3-matter-sorting-game",
+      "slug": "matter-sorting-game",
+      "title": "Matter Sorting Game",
+      "description": "Grade 3 MATTER & MATERIALS - Fun game sorting objects by their properties and states of matter.",
+      "lessonType": "REVIEW",
+      "content": "## Review Game\n\nPlay a fun sorting game! Sort everyday objects into the correct state of matter: solid, liquid, or gas. Practice describing materials by their properties and see how quickly you can classify them correctly.",
+      "order": 9,
+      "standards": [
+        "Sc3.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Play a fun sorting game! Sort everyday objects into the correct state of matter: solid, liquid, or gas."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Game",
+                "thai": "เกม",
+                "definition": "An activity you play for fun and learning"
+              },
+              {
+                "term": "Sort",
+                "thai": "จัดกลุ่ม",
+                "definition": "To organize things into groups"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "เกมจัดกลุ่มสสาร"
+    },
+    {
+      "id": "g3-materials-in-our-life",
+      "slug": "materials-in-our-life",
+      "title": "Materials in Our Life",
+      "description": "Grade 3 MATTER & MATERIALS - How materials are used in everyday life.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nMaterials are all around us and are used in many ways. The clothes we wear, the food we eat, and the buildings we live in are all made from different materials. In this lesson, you will learn how materials are used in daily life.\n\n## Main Content\n\n**Using Materials Wisely**\n\nWe choose materials based on their properties. We make cooking pots from metal because metal conducts heat well. We make windows from glass because glass is transparent. We make raincoats from plastic because plastic keeps water out. Understanding material properties helps us use the right material for the right job.",
+      "order": 10,
+      "standards": [
+        "Sc3.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Materials are all around us and are used in many ways. The clothes we wear, the food we eat, and the buildings we live in are all made from different materials."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Property",
+                "thai": "คุณสมบัติ",
+                "definition": "A special quality of a material"
+              },
+              {
+                "term": "Useful",
+                "thai": "มีประโยชน์",
+                "definition": "Something that helps you do something"
+              },
+              {
+                "term": "Conduct",
+                "thai": "นำ",
+                "definition": "To allow heat or electricity to pass through"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "วัสดุในชีวิตประจำวัน"
+    },
+    {
+      "id": "g3-science-journal-materials",
+      "slug": "science-journal-materials",
+      "title": "Science Journal: Materials",
+      "description": "Grade 3 MATTER & MATERIALS - Recording observations and findings about materials in a science journal.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nScientists keep careful records of their observations and experiments. Today you will use a science journal to record everything you learned about materials in this unit.\n\n## Main Content\n\n**What to Record**\n\nRecord your observations about different materials. Draw pictures of materials you investigated. Write down the properties you discovered. Note which materials are solids, liquids, and gases. Your science journal is a valuable tool for organizing your scientific knowledge.",
+      "order": 11,
+      "standards": [
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Scientists keep careful records of their observations and experiments. Today you will use a science journal to record everything you learned about materials in this unit."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Journal",
+                "thai": "วารสาร",
+                "definition": "A book where you record observations and ideas"
+              },
+              {
+                "term": "Observation",
+                "thai": "การสังเกต",
+                "definition": "Information you gather using your senses"
+              },
+              {
+                "term": "Record",
+                "thai": "บันทึก",
+                "definition": "To write down information for later use"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "วารสารวิทยาศาสตร์: วัสดุ"
+    }
+  ]
+}

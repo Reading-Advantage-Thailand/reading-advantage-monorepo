@@ -1,0 +1,35 @@
+import * as z from 'zod';
+export const userFindManyResultSchema = z.object({
+  data: z.array(z.object({
+  id: z.string(),
+  name: z.string(),
+  username: z.string(),
+  displayUsername: z.string(),
+  email: z.string().optional(),
+  emailVerified: z.boolean(),
+  image: z.string().optional(),
+  role: z.unknown(),
+  gradeLevel: z.number().int().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  account: z.array(z.unknown()),
+  session: z.array(z.unknown()),
+  taughtClasses: z.array(z.unknown()),
+  enrolledClass: z.array(z.unknown()),
+  attempts: z.array(z.unknown()),
+  lessonCompletions: z.array(z.unknown()),
+  masteryRecords: z.array(z.unknown()),
+  masteryRuns: z.array(z.unknown()),
+  gamificationProfile: z.unknown().optional(),
+  achievements: z.array(z.unknown()),
+  assignedLessons: z.array(z.unknown())
+})),
+  pagination: z.object({
+  page: z.number().int().min(1),
+  pageSize: z.number().int().min(1),
+  total: z.number().int().min(0),
+  totalPages: z.number().int().min(0),
+  hasNext: z.boolean(),
+  hasPrev: z.boolean()
+})
+});

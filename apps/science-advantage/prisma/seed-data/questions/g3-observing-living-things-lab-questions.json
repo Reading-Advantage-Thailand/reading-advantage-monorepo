@@ -1,0 +1,405 @@
+{
+  "lessonId": "g3-observing-living-things-lab",
+  "questions": [
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is the first step in observing living things in a lab?",
+      "options": [
+        "Touch everything",
+        "Make observations using your senses",
+        "Draw conclusions",
+        "Leave the lab"
+      ],
+      "correctAnswer": "Make observations using your senses",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What tool helps you see small details on living things?",
+      "options": ["Ruler", "Magnifying glass", "Thermometer", "Balance"],
+      "correctAnswer": "Magnifying glass",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why should you be gentle when observing living things?",
+      "options": [
+        "To avoid harming them",
+        "Because they are expensive",
+        "To make them happy",
+        "It doesn't matter"
+      ],
+      "correctAnswer": "To avoid harming them",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What should you do after observing living things?",
+      "options": [
+        "Keep them as pets",
+        "Return them to their environment",
+        "Throw them away",
+        "Hide them"
+      ],
+      "correctAnswer": "Return them to their environment",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What should you record during observations?",
+      "options": [
+        "Only colors",
+        "Only sizes",
+        "Details about appearance, behavior, and measurements",
+        "Nothing"
+      ],
+      "correctAnswer": "Details about appearance, behavior, and measurements",
+      "points": 1,
+      "standards": ["Sc8.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which is the best way to observe a small insect safely?",
+      "options": [
+        "Pick it up with bare hands",
+        "Use a clear container with air holes",
+        "Step on it",
+        "Chase it around"
+      ],
+      "correctAnswer": "Use a clear container with air holes",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What safety rules should you follow in a lab? (Select all that apply)",
+      "options": [
+        "Handle living things gently",
+        "Wash hands after observations",
+        "Return organisms to their habitat",
+        "Run around",
+        "Follow teacher instructions"
+      ],
+      "correctAnswer": [
+        "Handle living things gently",
+        "Wash hands after observations",
+        "Return organisms to their habitat",
+        "Follow teacher instructions"
+      ],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What can you observe about a plant? (Select all that apply)",
+      "options": [
+        "Leaf shape",
+        "Stem color",
+        "Root structure",
+        "What it's thinking",
+        "Number of leaves"
+      ],
+      "correctAnswer": [
+        "Leaf shape",
+        "Stem color",
+        "Root structure",
+        "Number of leaves"
+      ],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What tools are useful for observing living things? (Select all that apply)",
+      "options": [
+        "Magnifying glass",
+        "Ruler for measuring",
+        "Notebook for recording",
+        "Hammer",
+        "Camera"
+      ],
+      "correctAnswer": [
+        "Magnifying glass",
+        "Ruler for measuring",
+        "Notebook for recording",
+        "Camera"
+      ],
+      "points": 1,
+      "standards": ["Sc8.2-G3", "Sc8.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What can you learn by observing insects? (Select all that apply)",
+      "options": [
+        "How many legs they have",
+        "How they move",
+        "What they eat",
+        "Their favorite TV show",
+        "Their body parts"
+      ],
+      "correctAnswer": [
+        "How many legs they have",
+        "How they move",
+        "What they eat",
+        "Their body parts"
+      ],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "It's okay to harm living things as long as you're doing an experiment.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "You should always wash your hands after handling living things.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Drawing pictures is a good way to record your observations.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "You don't need to be quiet when observing animals.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "A magnifying glass can help you see details you might miss with just your eyes.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "It's important to observe living things in their natural behavior.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "When observing, you should be _____ and respectful of living things.",
+      "correctAnswer": "gentle",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "After you finish observing living things, you should _____ them to their environment.",
+      "correctAnswer": "return",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A _____ lens or magnifying glass helps you see small details.",
+      "correctAnswer": "hand",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "You should record your observations in a science _____.",
+      "correctAnswer": "notebook",
+      "points": 1,
+      "standards": ["Sc8.3-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "When observing insects, count how many _____ they have.",
+      "correctAnswer": "legs",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Taking _____ of your observations can help you study them later.",
+      "correctAnswer": "pictures",
+      "points": 1,
+      "standards": ["Sc8.3-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each observation tool with its purpose:",
+      "options": {
+        "terms": ["Magnifying glass", "Ruler", "Notebook", "Clear container"],
+        "definitions": [
+          "See small details bigger",
+          "Measure size and length",
+          "Record observations",
+          "Safely observe small creatures"
+        ]
+      },
+      "correctAnswer": {
+        "Magnifying glass": "See small details bigger",
+        "Ruler": "Measure size and length",
+        "Notebook": "Record observations",
+        "Clear container": "Safely observe small creatures"
+      },
+      "points": 1,
+      "standards": ["Sc8.2-G3", "Sc8.3-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each observation term with its meaning:",
+      "options": {
+        "terms": ["Observe", "Record", "Habitat", "Behavior"],
+        "definitions": [
+          "Watch carefully using your senses",
+          "Write down or draw what you see",
+          "The natural home of a living thing",
+          "How a living thing acts"
+        ]
+      },
+      "correctAnswer": {
+        "Observe": "Watch carefully using your senses",
+        "Record": "Write down or draw what you see",
+        "Habitat": "The natural home of a living thing",
+        "Behavior": "How a living thing acts"
+      },
+      "points": 1,
+      "standards": ["Sc8.2-G3", "Sc8.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is the purpose of making detailed observations in a lab?",
+      "options": [
+        "To waste time",
+        "To learn more about living things and how they work",
+        "To make the teacher happy",
+        "To fill up your notebook"
+      ],
+      "correctAnswer": "To learn more about living things and how they work",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why is it important to be quiet when observing animals?",
+      "options": [
+        "So they act naturally and you can see real behavior",
+        "Because the teacher said so",
+        "It doesn't matter",
+        "So you don't wake them up"
+      ],
+      "correctAnswer": "So they act naturally and you can see real behavior",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What should you do if you find an injured animal during observations?",
+      "options": [
+        "Try to fix it yourself",
+        "Tell your teacher immediately",
+        "Ignore it",
+        "Take it home"
+      ],
+      "correctAnswer": "Tell your teacher immediately",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which is an example of observing behavior?",
+      "options": [
+        "Measuring how long a leaf is",
+        "Watching how an ant carries food",
+        "Counting flower petals",
+        "Drawing a butterfly wing"
+      ],
+      "correctAnswer": "Watching how an ant carries food",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What details should you record when observing a leaf? (Select all that apply)",
+      "options": [
+        "Color",
+        "Shape",
+        "Size",
+        "What it tastes like",
+        "Texture"
+      ],
+      "correctAnswer": [
+        "Color",
+        "Shape",
+        "Size",
+        "Texture"
+      ],
+      "points": 1,
+      "standards": ["Sc8.2-G3", "Sc8.3-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "You should observe living things from different angles to see more details.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "It's okay to take living things home from the lab without permission.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "When observing small organisms, use a _____ container so you can see them clearly.",
+      "correctAnswer": "clear",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Compare your observations with _____ to learn even more.",
+      "correctAnswer": "classmates",
+      "points": 1,
+      "standards": ["Sc8.3-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is the best way to learn about how a snail moves?",
+      "options": [
+        "Read about it in a book",
+        "Watch it carefully over time",
+        "Guess",
+        "Ask someone"
+      ],
+      "correctAnswer": "Watch it carefully over time",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why do scientists observe living things in labs?",
+      "options": [
+        "For fun only",
+        "To learn about their characteristics and behaviors in a controlled environment",
+        "To keep them as pets",
+        "Because they have nothing else to do"
+      ],
+      "correctAnswer": "To learn about their characteristics and behaviors in a controlled environment",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    }
+  ]
+}

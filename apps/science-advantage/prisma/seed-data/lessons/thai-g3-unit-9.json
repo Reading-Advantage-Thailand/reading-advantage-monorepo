@@ -1,0 +1,353 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "unit": 9,
+  "lessons": [
+    {
+      "id": "g3-choosing-your-project",
+      "slug": "choosing-your-project",
+      "title": "Choosing Your Project",
+      "description": "Grade 3 INTEGRATED PROJECTS - Selecting a science project topic that interests you.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nIt is time to choose your science project topic! A good project starts with a topic that interests you. In this lesson, you will learn how to choose a project that you will enjoy working on.\n\n## Main Content\n\n**How to Choose a Topic**\n\nThink about science topics that interest you. Consider what you have learned this year. Choose a question you can investigate with simple materials. Make sure your project can be completed in the time available. Ask your teacher for help if you need ideas.",
+      "order": 1,
+      "standards": [
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "It is time to choose your science project topic! A good project starts with a topic that interests you."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Project",
+                "thai": "โครงการ",
+                "definition": "A planned piece of work to learn about a topic"
+              },
+              {
+                "term": "Topic",
+                "thai": "หัวข้อ",
+                "definition": "The subject you will study"
+              },
+              {
+                "term": "Investigate",
+                "thai": "สอบสวน",
+                "definition": "To study something carefully to learn more about it"
+              },
+              {
+                "term": "Interest",
+                "thai": "ความสนใจ",
+                "definition": "Something you want to learn more about"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "เลือกโครงการของคุณ"
+    },
+    {
+      "id": "g3-research-and-preparation",
+      "slug": "research-and-preparation",
+      "title": "Research and Preparation",
+      "description": "Grade 3 INTEGRATED PROJECTS - Researching your project topic and preparing for your experiment.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nBefore you start your experiment, you need to research your topic. Research means finding out what other people have already learned about your topic. This helps you plan your own experiment.\n\n## Main Content\n\n**Doing Research**\n\nRead books about your topic. Ask adults what they know. Look at what scientists have discovered. Write down important facts. Use your research to make a better prediction and plan a better experiment.",
+      "order": 2,
+      "standards": [
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Before you start your experiment, you need to research your topic. Research means finding out what other people have already learned about your topic."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Research",
+                "thai": "การวิจัย",
+                "definition": "Finding information about a topic from different sources"
+              },
+              {
+                "term": "Prepare",
+                "thai": "เตรียมตัว",
+                "definition": "To get ready for something"
+              },
+              {
+                "term": "Source",
+                "thai": "แหล่งข้อมูล",
+                "definition": "A place where information comes from"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การวิจัยและการเตรียมตัว"
+    },
+    {
+      "id": "g3-conducting-experiment",
+      "slug": "conducting-experiment",
+      "title": "Conducting Your Experiment",
+      "description": "Grade 3 INTEGRATED PROJECTS - Carrying out your science experiment carefully.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nNow it is time to conduct your experiment! This means carrying out the steps you planned. Follow your plan carefully and record everything you observe.\n\n## Main Content\n\n**Conducting Your Experiment**\n\nFollow your experiment plan step by step. Record your observations as you go. Take measurements accurately. If something unexpected happens, write it down. Repeat your experiment if you have time. Be patient and careful.",
+      "order": 3,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc8.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Now it is time to conduct your experiment! This means carrying out the steps you planned."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Conduct",
+                "thai": "ดำเนินการ",
+                "definition": "To carry out an experiment or activity"
+              },
+              {
+                "term": "Carefully",
+                "thai": "อย่างระมัดระวัง",
+                "definition": "In a way that avoids mistakes"
+              },
+              {
+                "term": "Observe",
+                "thai": "สังเกต",
+                "definition": "To look at something carefully and notice details"
+              },
+              {
+                "term": "Patient",
+                "thai": "อดทน",
+                "definition": "Able to wait without getting upset"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การทดลองของคุณ"
+    },
+    {
+      "id": "g3-analyzing-data",
+      "slug": "analyzing-data",
+      "title": "Analyzing Data",
+      "description": "Grade 3 INTEGRATED PROJECTS - Analyzing experiment results and drawing conclusions.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nAfter you finish your experiment, you need to analyze your data. Analyzing means looking at your results carefully to find patterns and draw conclusions. In this lesson, you will learn how to analyze your data.\n\n## Main Content\n\n**How to Analyze Data**\n\nLook at all your measurements and observations. Make charts or graphs to organize your data. Look for patterns or trends. Compare your results to your prediction. Write conclusions based on what your data shows, not what you hoped it would show.",
+      "order": 4,
+      "standards": [
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "After you finish your experiment, you need to analyze your data. Analyzing means looking at your results carefully to find patterns and draw conclusions."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Analyze",
+                "thai": "วิเคราะห์",
+                "definition": "To examine information carefully to find patterns"
+              },
+              {
+                "term": "Pattern",
+                "thai": "รูปแบบ",
+                "definition": "Something that repeats in a predictable way"
+              },
+              {
+                "term": "Graph",
+                "thai": "กราฟ",
+                "definition": "A visual display of data using lines or bars"
+              },
+              {
+                "term": "Trend",
+                "thai": "แนวโน้ม",
+                "definition": "A general direction of change"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การวิเคราะห์ข้อมูล"
+    },
+    {
+      "id": "g3-creating-display",
+      "slug": "creating-display",
+      "title": "Creating Your Display",
+      "description": "Grade 3 INTEGRATED PROJECTS - Creating a science fair display board for your project.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nNow you will create a display board for your science project. Your display should tell the story of your project clearly and attractively. In this lesson, you will learn how to create an effective display.\n\n## Main Content\n\n**Display Board Tips**\n\nInclude your question, prediction, procedure, results, and conclusion. Use clear headings and labels. Add pictures, charts, and diagrams. Make your text large enough to read. Organize information from left to right. Check for spelling errors.",
+      "order": 5,
+      "standards": [
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Now you will create a display board for your science project. Your display should tell the story of your project clearly and attractively."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Display",
+                "thai": "นิทรรศการ",
+                "definition": "A visual presentation of information"
+              },
+              {
+                "term": "Heading",
+                "thai": "หัวข้อ",
+                "definition": "A title or label at the top of a section"
+              },
+              {
+                "term": "Procedure",
+                "thai": "ขั้นตอน",
+                "definition": "The steps followed in an experiment"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การสร้างนิทรรศการ"
+    },
+    {
+      "id": "g3-presenting-findings",
+      "slug": "presenting-findings",
+      "title": "Presenting Your Findings",
+      "description": "Grade 3 INTEGRATED PROJECTS - Presenting your science project to classmates and judges.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nIt is time to present your science project! You will share what you learned with your classmates and teacher. Practice presenting clearly and confidently.\n\n## Main Content\n\n**Presentation Tips**\n\nSpeak clearly and loudly. Look at your audience. Explain each part of your project. Be ready to answer questions. Practice beforehand. Be proud of your work, even if your prediction was wrong. Scientists learn from every experiment.",
+      "order": 6,
+      "standards": [
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "It is time to present your science project! You will share what you learned with your classmates and teacher."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Present",
+                "thai": "นำเสนอ",
+                "definition": "To show and explain something to others"
+              },
+              {
+                "term": "Confident",
+                "thai": "มั่นใจ",
+                "definition": "Feeling sure about your abilities"
+              },
+              {
+                "term": "Audience",
+                "thai": "ผู้ชม",
+                "definition": "People who watch a presentation"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การนำเสนอผลการค้นพบ"
+    },
+    {
+      "id": "g3-unit-9-review",
+      "slug": "unit-9-review",
+      "title": "Unit 9 Review",
+      "description": "Grade 3 INTEGRATED PROJECTS - Review activity for the science project process.",
+      "lessonType": "REVIEW",
+      "content": "## Review Activity\n\nReview everything you learned about planning and conducting science projects! Reflect on your own project experience and identify what you did well and what you could improve.",
+      "order": 7,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc8.2-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Review everything you learned about planning and conducting science projects!"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Reflect",
+                "thai": "ไตร่ตรอง",
+                "definition": "To think carefully about something"
+              },
+              {
+                "term": "Improve",
+                "thai": "ปรับปรุง",
+                "definition": "To make something better"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ทบทวนหน่วย 9"
+    },
+    {
+      "id": "g3-unit-9-summative-assessment",
+      "slug": "unit-9-summative-assessment",
+      "title": "Unit 9 Summative Assessment",
+      "description": "Grade 3 INTEGRATED PROJECTS - Summative assessment covering the science project process.",
+      "lessonType": "ASSESSMENT",
+      "content": "## Summative Assessment\n\nThis assessment covers everything you learned about science projects in Unit 9. You will be tested on planning, conducting, analyzing, and presenting science projects.",
+      "order": 8,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc8.2-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "This assessment covers everything you learned about science projects in Unit 9. Good luck!"
+          }
+        ]
+      },
+      "titleThai": "แบบทดสอบปลายหน่วย หน่วย 9"
+    }
+  ]
+}

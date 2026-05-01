@@ -1,0 +1,14 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { CurriculumUnitOrderByWithRelationInputObjectSchema as CurriculumUnitOrderByWithRelationInputObjectSchema } from './objects/CurriculumUnitOrderByWithRelationInput.schema';
+import { CurriculumUnitWhereInputObjectSchema as CurriculumUnitWhereInputObjectSchema } from './objects/CurriculumUnitWhereInput.schema';
+import { CurriculumUnitWhereUniqueInputObjectSchema as CurriculumUnitWhereUniqueInputObjectSchema } from './objects/CurriculumUnitWhereUniqueInput.schema';
+import { CurriculumUnitCountAggregateInputObjectSchema as CurriculumUnitCountAggregateInputObjectSchema } from './objects/CurriculumUnitCountAggregateInput.schema';
+import { CurriculumUnitMinAggregateInputObjectSchema as CurriculumUnitMinAggregateInputObjectSchema } from './objects/CurriculumUnitMinAggregateInput.schema';
+import { CurriculumUnitMaxAggregateInputObjectSchema as CurriculumUnitMaxAggregateInputObjectSchema } from './objects/CurriculumUnitMaxAggregateInput.schema';
+import { CurriculumUnitAvgAggregateInputObjectSchema as CurriculumUnitAvgAggregateInputObjectSchema } from './objects/CurriculumUnitAvgAggregateInput.schema';
+import { CurriculumUnitSumAggregateInputObjectSchema as CurriculumUnitSumAggregateInputObjectSchema } from './objects/CurriculumUnitSumAggregateInput.schema';
+
+export const CurriculumUnitAggregateSchema: z.ZodType<Prisma.CurriculumUnitAggregateArgs> = z.object({ orderBy: z.union([CurriculumUnitOrderByWithRelationInputObjectSchema, CurriculumUnitOrderByWithRelationInputObjectSchema.array()]).optional(), where: CurriculumUnitWhereInputObjectSchema.optional(), cursor: CurriculumUnitWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), CurriculumUnitCountAggregateInputObjectSchema ]).optional(), _min: CurriculumUnitMinAggregateInputObjectSchema.optional(), _max: CurriculumUnitMaxAggregateInputObjectSchema.optional(), _avg: CurriculumUnitAvgAggregateInputObjectSchema.optional(), _sum: CurriculumUnitSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.CurriculumUnitAggregateArgs>;
+
+export const CurriculumUnitAggregateZodSchema = z.object({ orderBy: z.union([CurriculumUnitOrderByWithRelationInputObjectSchema, CurriculumUnitOrderByWithRelationInputObjectSchema.array()]).optional(), where: CurriculumUnitWhereInputObjectSchema.optional(), cursor: CurriculumUnitWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), CurriculumUnitCountAggregateInputObjectSchema ]).optional(), _min: CurriculumUnitMinAggregateInputObjectSchema.optional(), _max: CurriculumUnitMaxAggregateInputObjectSchema.optional(), _avg: CurriculumUnitAvgAggregateInputObjectSchema.optional(), _sum: CurriculumUnitSumAggregateInputObjectSchema.optional() }).strict();

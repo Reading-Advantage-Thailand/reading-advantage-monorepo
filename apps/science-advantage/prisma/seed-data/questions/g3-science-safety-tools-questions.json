@@ -1,0 +1,358 @@
+{
+  "lessonId": "g3-science-safety-tools",
+  "questions": [
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What should you do before starting a science activity?",
+      "options": ["Start right away", "Wait for teacher permission", "Ask a friend", "Clean up first"],
+      "correctAnswer": "Wait for teacher permission",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What tool makes things look bigger so you can see more details?",
+      "options": ["Ruler", "Magnifying glass", "Thermometer", "Balance"],
+      "correctAnswer": "Magnifying glass",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What tool do you use to measure how long something is?",
+      "options": ["Thermometer", "Balance", "Ruler", "Measuring cup"],
+      "correctAnswer": "Ruler",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What tool measures temperature?",
+      "options": ["Ruler", "Balance", "Thermometer", "Magnifying glass"],
+      "correctAnswer": "Thermometer",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "In the reading passage, who was the teacher?",
+      "options": ["Teacher May", "Teacher Kai", "Teacher Niran", "Teacher Som"],
+      "correctAnswer": "Teacher Niran",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "How long was Kai's pencil when he measured it?",
+      "options": ["10 centimeters", "15 centimeters", "20 centimeters", "25 centimeters"],
+      "correctAnswer": "15 centimeters",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What unit is temperature measured in?",
+      "options": ["Centimeters", "Grams", "Degrees Celsius", "Milliliters"],
+      "correctAnswer": "Degrees Celsius",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "Which items are safety equipment? (Select all that apply)",
+      "options": ["Safety goggles", "Gloves", "Aprons", "Pencils", "Books"],
+      "correctAnswer": ["Safety goggles", "Gloves", "Aprons"],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What are important science safety rules? (Select all that apply)",
+      "options": [
+        "Listen to your teacher",
+        "Wash your hands after activities",
+        "Never taste materials without permission",
+        "Play with science tools",
+        "Run in the lab"
+      ],
+      "correctAnswer": [
+        "Listen to your teacher",
+        "Wash your hands after activities",
+        "Never taste materials without permission"
+      ],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What can you observe with a magnifying glass? (Select all that apply)",
+      "options": [
+        "Details on a leaf",
+        "Lines on a flower petal",
+        "Tiny parts of insects",
+        "Temperature of water"
+      ],
+      "correctAnswer": [
+        "Details on a leaf",
+        "Lines on a flower petal",
+        "Tiny parts of insects"
+      ],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "In the story, what did students practice measuring? (Select all that apply)",
+      "options": ["Pencil length", "Water temperature", "Rock weight", "Book color"],
+      "correctAnswer": ["Pencil length", "Water temperature", "Rock weight"],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "You should always wear safety goggles on your forehead, not over your eyes.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "It's okay to taste science materials if they look safe.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "A messy workspace can cause accidents in science class.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "You should always include units (like cm or °C) when recording measurements.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Thermometers should be shaken or banged to make them work better.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "In the story, Kai was excited about science class after learning about safety and tools.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A _____ glass makes objects look bigger so you can see more details.",
+      "correctAnswer": "magnifying",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Safety _____ protect your eyes during science activities.",
+      "correctAnswer": "goggles",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A ruler measures length in units called _____.",
+      "correctAnswer": "centimeters",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A balance or scale measures how _____ something is.",
+      "correctAnswer": "heavy",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "You should always _____ your hands after doing science activities.",
+      "correctAnswer": "wash",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "In the story, the warm water was _____ degrees Celsius.",
+      "correctAnswer": "35",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each tool with what it measures:",
+      "options": {
+        "terms": ["Ruler", "Thermometer", "Balance", "Measuring cup"],
+        "definitions": [
+          "Measures length or distance",
+          "Measures temperature",
+          "Measures weight or mass",
+          "Measures volume of liquids"
+        ]
+      },
+      "correctAnswer": {
+        "Ruler": "Measures length or distance",
+        "Thermometer": "Measures temperature",
+        "Balance": "Measures weight or mass",
+        "Measuring cup": "Measures volume of liquids"
+      },
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each safety term with its definition:",
+      "options": {
+        "terms": ["Safety goggles", "Procedure", "Accident", "Measure"],
+        "definitions": [
+          "Special glasses that protect your eyes",
+          "Steps to follow to do something correctly",
+          "Something unplanned and possibly harmful that happens",
+          "To find out the size, amount, or temperature using tools"
+        ]
+      },
+      "correctAnswer": {
+        "Safety goggles": "Special glasses that protect your eyes",
+        "Procedure": "Steps to follow to do something correctly",
+        "Accident": "Something unplanned and possibly harmful that happens",
+        "Measure": "To find out the size, amount, or temperature using tools"
+      },
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "When using a magnifying glass, you should hold it:",
+      "options": [
+        "Far from your eye",
+        "Close to your eye",
+        "On top of the object",
+        "Behind your back"
+      ],
+      "correctAnswer": "Close to your eye",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "When using a ruler to measure, where should you start?",
+      "options": [
+        "At the 5 cm mark",
+        "At zero or the end of the ruler",
+        "In the middle of the ruler",
+        "At the 10 cm mark"
+      ],
+      "correctAnswer": "At zero or the end of the ruler",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What should you do if something spills or breaks during science?",
+      "options": [
+        "Clean it up yourself quickly",
+        "Tell your teacher right away",
+        "Ignore it",
+        "Ask a friend to clean it"
+      ],
+      "correctAnswer": "Tell your teacher right away",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "How heavy was the rock that Teacher Niran weighed in the story?",
+      "options": ["35 grams", "40 grams", "45 grams", "50 grams"],
+      "correctAnswer": "45 grams",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What should you do to take care of science tools? (Select all that apply)",
+      "options": [
+        "Clean them after use",
+        "Store them in proper places",
+        "Handle them gently",
+        "Throw them around",
+        "Share them respectfully"
+      ],
+      "correctAnswer": [
+        "Clean them after use",
+        "Store them in proper places",
+        "Handle them gently",
+        "Share them respectfully"
+      ],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "When measuring liquids with a graduated cylinder, you should look at it from above.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "In the story, students observed that warm water had a higher temperature than cold water.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "The amount of space a liquid takes up is called _____.",
+      "correctAnswer": "volume",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "When using a thermometer, you should wait a few _____ for the reading to stabilize.",
+      "correctAnswer": "minutes",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "According to the lesson, why are safety rules important?",
+      "options": [
+        "To scare students",
+        "To keep everyone safe so they can enjoy science",
+        "To make science boring",
+        "To waste time"
+      ],
+      "correctAnswer": "To keep everyone safe so they can enjoy science",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What did Teacher Niran say about being a safe scientist?",
+      "options": [
+        "It's not important",
+        "It's the first step to being a good scientist",
+        "It's only for teachers",
+        "It's too hard for students"
+      ],
+      "correctAnswer": "It's the first step to being a good scientist",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    }
+  ]
+}

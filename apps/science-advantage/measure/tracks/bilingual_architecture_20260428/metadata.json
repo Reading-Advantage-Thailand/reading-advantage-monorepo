@@ -1,0 +1,11 @@
+{
+  "track_id": "bilingual_architecture_20260428",
+  "type": "refactor",
+  "status": "new",
+  "created_at": "2026-04-28T00:00:00Z",
+  "updated_at": "2026-04-28T00:00:00Z",
+  "description": "Reframe bilingual support from UI toggle to content-layer concern with side-by-side rendering",
+  "estimated_tasks": 15,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

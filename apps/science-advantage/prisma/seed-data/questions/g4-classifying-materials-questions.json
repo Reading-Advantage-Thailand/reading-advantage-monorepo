@@ -1,0 +1,43 @@
+{
+  "lessonId": "g4-classifying-materials",
+  "questions": [
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which state of matter has a definite shape?",
+      "options": ["Solid", "Liquid", "Gas", "All of them"],
+      "correctAnswer": "Solid",
+      "points": 1,
+      "standards": ["Sc3.1-G4"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Water takes the shape of its container. What state of matter is water?",
+      "options": ["Solid", "Liquid", "Gas", "Plasma"],
+      "correctAnswer": "Liquid",
+      "points": 1,
+      "standards": ["Sc3.1-G4"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "Which are properties of gases? (Select all that apply)",
+      "options": ["Definite shape", "Definite volume", "No definite shape", "No definite volume"],
+      "correctAnswer": ["No definite shape", "No definite volume"],
+      "points": 1,
+      "standards": ["Sc3.1-G4"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "A solid has no definite shape.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc3.1-G4"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A liquid has a definite _____ but no definite shape.",
+      "correctAnswer": "volume",
+      "points": 1,
+      "standards": ["Sc3.1-G4"]
+    }
+  ]
+}

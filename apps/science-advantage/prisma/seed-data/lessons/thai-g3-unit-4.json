@@ -1,0 +1,478 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "unit": 4,
+  "lessons": [
+    {
+      "id": "g3-push-and-pull",
+      "slug": "push-and-pull",
+      "title": "Push and Pull",
+      "description": "Grade 3 FORCES & MOTION - Understanding push and pull forces and how they affect objects.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nHave you ever pushed a door to open it or pulled a toy toward you? You were using forces! A force is a push or a pull that can make objects move, stop, or change direction. In this lesson, you will learn about push and pull forces.\n\n## Main Content\n\n**Forces All Around Us**\n\nA push moves something away from you. A pull moves something toward you. When you kick a ball, you push it. When you open a drawer, you pull it. Forces are everywhere in our daily lives.",
+      "order": 1,
+      "standards": [
+        "Sc4.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Have you ever pushed a door to open it or pulled a toy toward you? You were using forces! A force is a push or a pull that can make objects move, stop, or change direction."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Force",
+                "thai": "แรง",
+                "definition": "A push or a pull on an object"
+              },
+              {
+                "term": "Push",
+                "thai": "ผลัก",
+                "definition": "A force that moves something away from you"
+              },
+              {
+                "term": "Pull",
+                "thai": "ดึง",
+                "definition": "A force that moves something toward you"
+              },
+              {
+                "term": "Motion",
+                "thai": "การเคลื่อนที่",
+                "definition": "The act of moving"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ผลักและดึง"
+    },
+    {
+      "id": "g3-how-forces-change-motion",
+      "slug": "how-forces-change-motion",
+      "title": "How Forces Change Motion",
+      "description": "Grade 3 FORCES & MOTION - How forces can start, stop, speed up, slow down, or change the direction of moving objects.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nForces can do more than just make things move. They can also change how things move. A force can start an object moving, stop it, make it go faster or slower, or change its direction. In this lesson, you will learn how forces change motion.\n\n## Main Content\n\n**Changing Motion**\n\nWhen you push a stationary ball, it starts moving. When you catch a ball, you stop its motion. When you kick a ball harder, it goes faster. When you kick it gently, it goes slower. When you bounce a ball off a wall, its direction changes.",
+      "order": 2,
+      "standards": [
+        "Sc4.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Forces can do more than just make things move. They can also change how things move. A force can start an object moving, stop it, make it go faster or slower, or change its direction."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Speed",
+                "thai": "ความเร็ว",
+                "definition": "How fast something moves"
+              },
+              {
+                "term": "Direction",
+                "thai": "ทิศทาง",
+                "definition": "The way something is moving"
+              },
+              {
+                "term": "Stationary",
+                "thai": "หยุดนิ่ง",
+                "definition": "Not moving"
+              },
+              {
+                "term": "Friction",
+                "thai": "แรงเสียดทาน",
+                "definition": "A force that slows down moving objects"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "แรง如何ทำให้การเคลื่อนที่เปลี่ยน"
+    },
+    {
+      "id": "g3-forces-lab",
+      "slug": "forces-lab",
+      "title": "Forces Lab",
+      "description": "Grade 3 FORCES & MOTION - Hands-on investigation of push and pull forces using everyday objects.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nToday you will investigate forces by experimenting with everyday objects. You will push and pull objects of different sizes and weights to see how forces affect motion.\n\n## Main Content\n\n**Lab Activity**\n\nUse a toy car, a book, and a ball. Push each object with different amounts of force. Record how far each object moves. Pull each object gently and then harder. Observe how the amount of force changes the motion.",
+      "order": 3,
+      "standards": [
+        "Sc4.1-G3",
+        "Sc8.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will investigate forces by experimenting with everyday objects. You will push and pull objects of different sizes and weights to see how forces affect motion."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Experiment",
+                "thai": "การทดลอง",
+                "definition": "A test to find out if your prediction is right"
+              },
+              {
+                "term": "Weight",
+                "thai": "น้ำหนัก",
+                "definition": "How heavy something is"
+              },
+              {
+                "term": "Distance",
+                "thai": "ระยะทาง",
+                "definition": "How far something moves"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ห้องปฏิบัติการแรง"
+    },
+    {
+      "id": "g3-forces-in-daily-life",
+      "slug": "forces-in-daily-life",
+      "title": "Forces in Daily Life",
+      "description": "Grade 3 FORCES & MOTION - Identifying push and pull forces in everyday activities.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nForces are everywhere in our daily lives! Every time you move, you are using forces. In this lesson, you will identify push and pull forces in everyday activities.\n\n## Main Content\n\n**Forces Around You**\n\nOpening a door is a pull. Closing a door is a push. Kicking a ball is a push. Pulling a wagon is a pull. Writing with a pencil involves pushing. Riding a bicycle uses both pushing and pulling forces.",
+      "order": 4,
+      "standards": [
+        "Sc4.1-G3",
+        "Sc4.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Forces are everywhere in our daily lives! Every time you move, you are using forces. In this lesson, you will identify push and pull forces in everyday activities."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Activity",
+                "thai": "กิจกรรม",
+                "definition": "Something you do"
+              },
+              {
+                "term": "Identify",
+                "thai": "ระบุ",
+                "definition": "To recognize and name something"
+              },
+              {
+                "term": "Everyday",
+                "thai": "ทุกวัน",
+                "definition": "Happening regularly, each day"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "แรงในชีวิตประจำวัน"
+    },
+    {
+      "id": "g3-balanced-forces",
+      "slug": "balanced-forces",
+      "title": "Balanced Forces",
+      "description": "Grade 3 FORCES & MOTION - Understanding balanced forces and why objects stay still or move at constant speed.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nWhy do some objects stay still even when forces are acting on them? This happens because of balanced forces. When forces are balanced, objects do not change their motion. In this lesson, you will learn about balanced forces.\n\n## Main Content\n\n**What Are Balanced Forces?**\n\nBalanced forces are equal forces acting on an object in opposite directions. When you push a book on a table and it does not move, your push is balanced by friction. When forces are balanced, an object either stays still or keeps moving at the same speed in the same direction.",
+      "order": 5,
+      "standards": [
+        "Sc4.1-G3",
+        "Sc4.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Why do some objects stay still even when forces are acting on them? This happens because of balanced forces. When forces are balanced, objects do not change their motion."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Balanced forces",
+                "thai": "แรงที่สมดุล",
+                "definition": "Equal forces acting in opposite directions"
+              },
+              {
+                "term": "Opposite",
+                "thai": "ตรงข้าม",
+                "definition": "Completely different or facing the other way"
+              },
+              {
+                "term": "Equal",
+                "thai": "เท่ากัน",
+                "definition": "The same in amount"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "แรงที่สมดุล"
+    },
+    {
+      "id": "g3-forces-motion-review",
+      "slug": "forces-motion-review",
+      "title": "Forces and Motion Review",
+      "description": "Grade 3 FORCES & MOTION - Review activity for push, pull, and balanced forces.",
+      "lessonType": "REVIEW",
+      "content": "## Review Activity\n\nTest your understanding of forces and motion! Identify push and pull forces, describe how forces change motion, and recognize balanced forces in everyday situations.",
+      "order": 6,
+      "standards": [
+        "Sc4.1-G3",
+        "Sc4.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Test your understanding of forces and motion! Identify push and pull forces, describe how forces change motion, and recognize balanced forces in everyday situations."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Identify",
+                "thai": "ระบุ",
+                "definition": "To recognize and name something"
+              },
+              {
+                "term": "Recognize",
+                "thai": "รู้จัก",
+                "definition": "To know something from previous experience"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ทบทวนแรงและการเคลื่อนที่"
+    },
+    {
+      "id": "g3-unit-4-summative-assessment",
+      "slug": "unit-4-summative-assessment",
+      "title": "Unit 4 Summative Assessment",
+      "description": "Grade 3 FORCES & MOTION - Summative assessment covering push, pull, and balanced forces.",
+      "lessonType": "ASSESSMENT",
+      "content": "## Summative Assessment\n\nThis assessment covers everything you learned about forces and motion in Unit 4. You will be tested on push and pull forces, how forces change motion, and balanced forces.",
+      "order": 7,
+      "standards": [
+        "Sc4.1-G3",
+        "Sc4.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "This assessment covers everything you learned about forces and motion in Unit 4. Good luck!"
+          }
+        ]
+      },
+      "titleThai": "แบบทดสอบปลายหน่วย หน่วย 4"
+    },
+    {
+      "id": "g3-force-experiments",
+      "slug": "force-experiments",
+      "title": "Force Experiments",
+      "description": "Grade 3 FORCES & MOTION - Designing and conducting simple experiments to test force predictions.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nNow that you understand forces, it is time to design your own experiments! You will make predictions about how forces affect objects and test them.\n\n## Main Content\n\n**Design an Experiment**\n\nChoose a question about forces. Make a prediction. Design a test using everyday objects. Record your results. Draw a conclusion. This is the scientific method in action!",
+      "order": 8,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc4.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Now that you understand forces, it is time to design your own experiments! You will make predictions about how forces affect objects and test them."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Prediction",
+                "thai": "การทำนาย",
+                "definition": "A guess about what you think will happen"
+              },
+              {
+                "term": "Hypothesis",
+                "thai": "สมมติฐาน",
+                "definition": "An educated guess that can be tested"
+              },
+              {
+                "term": "Conclusion",
+                "thai": "สรุป",
+                "definition": "A statement about what you learned from an experiment"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การทดลองเกี่ยวกับแรง"
+    },
+    {
+      "id": "g3-sports-and-forces",
+      "slug": "sports-and-forces",
+      "title": "Sports and Forces",
+      "description": "Grade 3 FORCES & MOTION - Understanding forces in sports activities.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nSports are full of forces! When you kick a soccer ball, throw a basketball, or swim through water, you are using forces. In this lesson, you will discover how forces work in different sports.\n\n## Main Content\n\n**Forces in Sports**\n\nIn soccer, a kick applies a push force to the ball. In basketball, throwing the ball applies both push and gravity pulls it down. In swimming, you push water backward to move forward. Every sport uses forces in different ways.",
+      "order": 9,
+      "standards": [
+        "Sc4.1-G3",
+        "Sc4.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Sports are full of forces! When you kick a soccer ball, throw a basketball, or swim through water, you are using forces."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Gravity",
+                "thai": "แรงโน้มถ่วง",
+                "definition": "The force that pulls objects toward the Earth"
+              },
+              {
+                "term": "Apply",
+                "thai": "ใช้",
+                "definition": "To use or put into action"
+              },
+              {
+                "term": "Athlete",
+                "thai": "นักกีฬา",
+                "definition": "A person who plays sports"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "กีฬาและแรง"
+    },
+    {
+      "id": "g3-force-museum",
+      "slug": "force-museum",
+      "title": "Force Museum",
+      "description": "Grade 3 FORCES & MOTION - Creating a classroom force museum with interactive exhibits.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nCreate a classroom force museum! Design interactive exhibits that demonstrate push and pull forces. Each exhibit should show how forces work in a fun and educational way.\n\n## Main Content\n\n**Exhibit Design**\n\nChoose a force concept to demonstrate. Build or find materials for your exhibit. Create labels that explain the force. Make sure visitors can interact with your exhibit safely. Practice explaining your exhibit to classmates.",
+      "order": 10,
+      "standards": [
+        "Sc4.1-G3",
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Create a classroom force museum! Design interactive exhibits that demonstrate push and pull forces."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Exhibit",
+                "thai": "นิทรรศการ",
+                "definition": "A display that teaches visitors about a topic"
+              },
+              {
+                "term": "Interactive",
+                "thai": "เชิงโต้ตอบ",
+                "definition": "Allowing visitors to participate and try things"
+              },
+              {
+                "term": "Demonstrate",
+                "thai": "แสดงให้เห็น",
+                "definition": "To show how something works"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "พิพิธภัณฑ์แรง"
+    },
+    {
+      "id": "g3-science-journal-forces",
+      "slug": "science-journal-forces",
+      "title": "Science Journal: Forces",
+      "description": "Grade 3 FORCES & MOTION - Recording observations and findings about forces in a science journal.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nToday you will use your science journal to record everything you learned about forces and motion. Good scientists always keep detailed records of their observations and experiments.\n\n## Main Content\n\n**Recording Your Learning**\n\nDraw diagrams showing push and pull forces. Write down your observations from force experiments. Record any questions you still have. Your science journal helps you organize your scientific knowledge.",
+      "order": 11,
+      "standards": [
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will use your science journal to record everything you learned about forces and motion."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Diagram",
+                "thai": "แผนภาพ",
+                "definition": "A drawing that shows how something works"
+              },
+              {
+                "term": "Record",
+                "thai": "บันทึก",
+                "definition": "To write down information for later use"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "วารสารวิทยาศาสตร์: แรง"
+    }
+  ]
+}

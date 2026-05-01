@@ -1,0 +1,11 @@
+{
+  "track_id": "curriculum_foundation_20260311",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-03-11T00:00:00Z",
+  "updated_at": "2026-03-11T00:00:00Z",
+  "description": "Create a single source of truth for standards, units, lessons, questions, slugs, and media so the planned curriculum can ship reliably.",
+  "estimated_tasks": 10,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

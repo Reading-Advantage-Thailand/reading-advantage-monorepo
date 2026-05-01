@@ -1,0 +1,205 @@
+{
+  "lessonId": "g4-animal-adaptations",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is an adaptation?",
+      "questionThai": "การปรับตัวคืออะไร?",
+      "options": ["A type of animal", "A special feature that helps an animal survive", "A kind of food", "A place where animals live"],
+      "correctAnswer": 1,
+      "explanation": "An adaptation is a special feature or behavior that helps a living thing survive in its environment."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Why do polar bears have thick white fur?",
+      "questionThai": "ทำไมหมีขั้วโลกถึงมีขนสีขาวหนา?",
+      "options": ["To look pretty", "To stay warm and blend in with snow", "To swim faster", "To scare other animals"],
+      "correctAnswer": 1,
+      "explanation": "Polar bears have thick white fur to stay warm in the cold Arctic and to camouflage with the snow."
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is camouflage?",
+      "questionThai": "การพรางตัวคืออะไร?",
+      "options": ["A type of food", "Colors or patterns that help animals hide", "A place to sleep", "A way to move fast"],
+      "correctAnswer": 1,
+      "explanation": "Camouflage is colors or patterns that help an animal blend in with its surroundings to hide from predators or prey."
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a predator?",
+      "questionThai": "สัตว์นักล่าคืออะไร?",
+      "options": ["An animal that eats plants", "An animal that hunts other animals", "A baby animal", "A type of tree"],
+      "correctAnswer": 1,
+      "explanation": "A predator is an animal that hunts and eats other animals."
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What do camels store in their humps?",
+      "questionThai": "อูฐเก็บอะไรไว้ในหนอก?",
+      "options": ["Water", "Fat for energy", "Sand", "Air"],
+      "correctAnswer": 1,
+      "explanation": "Camels store fat in their humps, not water. This fat provides energy when food is scarce."
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What does 'nocturnal' mean?",
+      "questionThai": "'หากินกลางคืน' หมายความว่าอะไร?",
+      "options": ["Active during the day", "Active at night", "Living in water", "Living in trees"],
+      "correctAnswer": 1,
+      "explanation": "Nocturnal means being active at night and sleeping during the day."
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Which of these is a physical adaptation?",
+      "questionThai": "ข้อใดต่อไปนี้เป็นการปรับตัวทางกายภาพ?",
+      "options": ["Migration", "Thick fur", "Hunting at night", "Living in groups"],
+      "correctAnswer": 1,
+      "explanation": "Thick fur is a physical adaptation (body feature). Migration, hunting at night, and living in groups are behavioral adaptations."
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a habitat?",
+      "questionThai": "ถิ่นที่อยู่คืออะไร?",
+      "options": ["An animal's behavior", "The natural home of an animal", "A type of food", "An animal's color"],
+      "correctAnswer": 1,
+      "explanation": "A habitat is the natural home where a plant or animal lives."
+    },
+    {
+      "id": "q9",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why do fennec foxes have very large ears?",
+      "questionThai": "ทำไมจิ้งจอกเฟนเนคถึงมีหูใหญ่มาก?",
+      "options": ["To hear better only", "To release body heat and stay cool in the desert", "To catch prey", "To look scary"],
+      "correctAnswer": 1,
+      "explanation": "Fennec foxes' large ears release body heat to help them stay cool in the hot desert environment."
+    },
+    {
+      "id": "q10",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is migration?",
+      "questionThai": "การอพยพคืออะไร?",
+      "options": ["Sleeping through winter", "Moving to a new place with the seasons", "Changing color", "Growing thick fur"],
+      "correctAnswer": 1,
+      "explanation": "Migration is when animals move from one place to another, usually with the seasons, to find food or better weather."
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why do fish have gills?",
+      "questionThai": "ทำไมปลาถึงมีเหงือก?",
+      "options": ["To swim faster", "To breathe oxygen from water", "To see underwater", "To eat food"],
+      "correctAnswer": 1,
+      "explanation": "Fish have gills to breathe oxygen from the water. Gills extract oxygen as water passes over them."
+    },
+    {
+      "id": "q12",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "How do monkeys' tails help them survive in the rainforest?",
+      "questionThai": "หางของลิงช่วยให้พวกมันอยู่รอดในป่าฝนได้อย่างไร?",
+      "options": ["To keep warm", "To grip branches while climbing", "To attract mates", "To fight predators"],
+      "correctAnswer": 1,
+      "explanation": "Monkeys use their long tails to grip branches, helping them climb and swing through trees in the rainforest."
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is hibernation?",
+      "questionThai": "การจำศีลคืออะไร?",
+      "options": ["Moving to a warmer place", "A deep sleep to survive winter", "Changing color", "Hunting at night"],
+      "correctAnswer": 1,
+      "explanation": "Hibernation is a deep sleep that some animals use to survive winter when food is scarce and it's very cold."
+    },
+    {
+      "id": "q14",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In the reading passage, what amazing adaptation does the elephant's trunk have?",
+      "questionThai": "ในบทอ่าน งวงช้างมีการปรับตัวที่น่าทึ่งอะไร?",
+      "options": ["It has bones", "It has over 40,000 muscles", "It can change color", "It stores water"],
+      "correctAnswer": 1,
+      "explanation": "The reading passage states that an elephant's trunk has over 40,000 muscles, making it incredibly versatile."
+    },
+    {
+      "id": "q15",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why do some animals have bright colors that warn predators?",
+      "questionThai": "ทำไมสัตว์บางชนิดมีสีสดใสที่เตือนสัตว์นักล่า?",
+      "options": ["To look pretty", "To show they are poisonous or dangerous", "To hide from prey", "To stay warm"],
+      "correctAnswer": 1,
+      "explanation": "Bright warning colors tell predators that an animal is poisonous or dangerous, helping the animal avoid being eaten."
+    },
+    {
+      "id": "q16",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is an example of a behavioral adaptation?",
+      "questionThai": "ตัวอย่างของการปรับตัวทางพฤติกรรมคืออะไร?",
+      "options": ["Having sharp claws", "Migrating to warmer places", "Having thick fur", "Having gills"],
+      "correctAnswer": 1,
+      "explanation": "Migrating is a behavioral adaptation - an action animals do to survive. Physical features like claws, fur, and gills are physical adaptations."
+    },
+    {
+      "id": "q17",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "How do adaptations develop over time?",
+      "questionThai": "การปรับตัวพัฒนาขึ้นอย่างไรเมื่อเวลาผ่านไป?",
+      "options": ["Animals choose their adaptations", "Helpful features are passed from parents to offspring over many generations", "Scientists create them", "They happen overnight"],
+      "correctAnswer": 1,
+      "explanation": "Adaptations develop over many generations. Animals with helpful features survive better and pass those features to their offspring."
+    },
+    {
+      "id": "q18",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why might an animal have BOTH physical AND behavioral adaptations?",
+      "questionThai": "ทำไมสัตว์อาจมีทั้งการปรับตัวทางกายภาพและพฤติกรรม?",
+      "options": ["They only need one type", "Different challenges require different solutions for survival", "Behavioral adaptations don't work", "Physical adaptations are better"],
+      "correctAnswer": 1,
+      "explanation": "Animals face many different challenges, so they often need both body features (physical) and behaviors to survive in their environment."
+    },
+    {
+      "id": "q19",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "In the reading passage, why does the elephant's wrinkly skin help it survive?",
+      "questionThai": "ในบทอ่าน ทำไมผิวหนังที่ย่นของช้างช่วยให้มันอยู่รอด?",
+      "options": ["It makes elephants look bigger", "Wrinkles hold water and mud to keep cool and protect from sun and insects", "Wrinkles help elephants swim", "Wrinkles store food"],
+      "correctAnswer": 1,
+      "explanation": "Elephant's wrinkly skin holds water and mud, which helps them stay cool and protects them from sunburn and insect bites."
+    },
+    {
+      "id": "q20",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why is it important to protect animals' habitats?",
+      "questionThai": "ทำไมการปกป้องถิ่นที่อยู่ของสัตว์จึงมีความสำคัญ?",
+      "options": ["Habitats aren't important", "Animals' adaptations are designed for their specific habitat, so they can't survive elsewhere easily", "Animals can live anywhere", "Only some animals need habitats"],
+      "correctAnswer": 1,
+      "explanation": "Animals have adaptations specific to their habitat. If their habitat is destroyed, their adaptations may not help them survive elsewhere."
+    }
+  ]
+}

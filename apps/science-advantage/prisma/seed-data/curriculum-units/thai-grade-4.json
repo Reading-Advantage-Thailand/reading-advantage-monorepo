@@ -1,0 +1,71 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 4,
+  "units": [
+    {
+      "id": "thai-g4-unit-1",
+      "title": "Unit 1: Living Things & Ecosystems / หน่วยที่ 1: สิ่งมีชีวิตและระบบนิเวศ",
+      "description": "Explore plant and animal organ systems, life cycles, and ecosystem relationships.",
+      "order": 1,
+      "lessonIds": [
+        "g4-plant-animal-organ-systems",
+        "g4-life-cycles",
+        "g4-energy-from-food",
+        "g4-ecosystem-relationships"
+      ]
+    },
+    {
+      "id": "thai-g4-unit-2",
+      "title": "Unit 2: Matter & Materials / หน่วยที่ 2: สสารและวัสดุ",
+      "description": "Classify materials, explore physical changes, and understand density.",
+      "order": 2,
+      "lessonIds": [
+        "g4-classifying-materials",
+        "g4-physical-changes",
+        "g4-density-sinking-floating"
+      ]
+    },
+    {
+      "id": "thai-g4-unit-3",
+      "title": "Unit 3: Forces & Simple Machines / หน่วยที่ 3: แรงและเครื่องมือง่าย",
+      "description": "Learn about simple machines and how forces affect motion.",
+      "order": 3,
+      "lessonIds": [
+        "g4-simple-machines",
+        "g4-forces-and-motion"
+      ]
+    },
+    {
+      "id": "thai-g4-unit-4",
+      "title": "Unit 4: Energy / หน่วยที่ 4: พลังงาน",
+      "description": "Explore different forms of energy, energy transformations, and energy sources.",
+      "order": 4,
+      "lessonIds": [
+        "g4-forms-of-energy",
+        "g4-energy-transformations",
+        "g4-energy-sources"
+      ]
+    },
+    {
+      "id": "thai-g4-unit-5",
+      "title": "Unit 5: Solar System & Natural Resources / หน่วยที่ 5: ระบบสุริยะและทรัพยากรธรรมชาติ",
+      "description": "Study the solar system, day/night cycles, seasons, and natural resources.",
+      "order": 5,
+      "lessonIds": [
+        "g4-solar-system",
+        "g4-day-night-seasons",
+        "g4-natural-resources"
+      ]
+    },
+    {
+      "id": "thai-g4-unit-6",
+      "title": "Unit 6: Scientific Process & Data / หน่วยที่ 6: กระบวนการทางวิทยาศาสตร์และข้อมูล",
+      "description": "Develop scientific investigation skills and data literacy.",
+      "order": 6,
+      "lessonIds": [
+        "g4-scientific-method",
+        "g4-data-graphs"
+      ]
+    }
+  ]
+}

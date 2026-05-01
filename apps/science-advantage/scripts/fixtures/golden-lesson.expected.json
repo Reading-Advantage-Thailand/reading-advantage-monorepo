@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "image-0",
+      "type": "image",
+      "src": "https://example.com/images/photosynthesis.png",
+      "alt": "Plant diagram showing photosynthesis process"
+    },
+    {
+      "id": "intro-0",
+      "type": "text",
+      "content": "This is the introduction paragraph that comes before any sections."
+    },
+    {
+      "id": "key-vocabulary-2",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Photosynthesis",
+          "thai": "การสังเคราะห์ด้วยแสง",
+          "definition": "The process by which plants convert sunlight into energy"
+        },
+        {
+          "term": "Chlorophyll",
+          "thai": "คลอโรฟิลล์",
+          "definition": "The green pigment in plants that captures sunlight"
+        },
+        {
+          "term": "Glucose",
+          "thai": "กลูโคส",
+          "definition": "A type of sugar that plants produce during photosynthesis"
+        }
+      ]
+    },
+    {
+      "id": "reading-passage-3",
+      "type": "reading_passage",
+      "title": "Reading Passage",
+      "content": "Plants are amazing organisms that can create their own food through a process called photosynthesis. During this process, plants use sunlight, water, and carbon dioxide to produce glucose and oxygen.\n\nThe leaves of a plant contain tiny structures called chloroplasts, which contain chlorophyll. This green pigment absorbs sunlight and uses its energy to power the chemical reactions of photosynthesis.",
+      "wordCount": 59
+    },
+    {
+      "id": "materials-4",
+      "type": "materials",
+      "items": [
+        {
+          "quantity": "2",
+          "item": "small potted plants"
+        },
+        {
+          "quantity": "One per student",
+          "item": "magnifying glass"
+        },
+        {
+          "quantity": "Several",
+          "item": "sheets of paper"
+        },
+        {
+          "item": "Science notebook and pencil"
+        }
+      ]
+    },
+    {
+      "id": "procedure-5",
+      "type": "procedure",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "instruction": "Examine your plants carefully using the magnifying glass",
+          "subSteps": [
+            "Look at the color and shape of the leaves",
+            "Count the number of leaves on each plant"
+          ]
+        },
+        {
+          "stepNumber": 2,
+          "instruction": "Place one plant in direct sunlight"
+        },
+        {
+          "stepNumber": 3,
+          "instruction": "Place the other plant in a dark closet"
+        },
+        {
+          "stepNumber": 4,
+          "instruction": "Observe both plants daily for one week",
+          "subSteps": [
+            "Record your observations in your science notebook",
+            "Draw pictures of any changes you see"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "image-6",
+      "type": "image",
+      "src": "https://example.com/images/student-observation.jpg",
+      "alt": "Student observing plants in science class"
+    },
+    {
+      "id": "discussion-questions-7",
+      "type": "text",
+      "content": "What do you think will happen to each plant? Why do plants need sunlight to survive?"
+    }
+  ]
+}

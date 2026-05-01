@@ -1,0 +1,322 @@
+{
+  "lessonId": "g3-being-a-scientist",
+  "questions": [
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is the first step of the scientific method?",
+      "options": ["Observe", "Predict", "Test", "Conclude"],
+      "correctAnswer": "Observe",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "A scientist makes a guess about what might happen. This is called a:",
+      "options": ["Question", "Prediction", "Observation", "Conclusion"],
+      "correctAnswer": "Prediction",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What does a scientist do to test their prediction?",
+      "options": ["Ask more questions", "Do an experiment", "Make a conclusion", "Observe again"],
+      "correctAnswer": "Do an experiment",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "In the story, where did Mai find the open flowers?",
+      "options": ["In the shade under the mango tree", "In the sunny part of the garden", "Inside her house", "In a vase"],
+      "correctAnswer": "In the sunny part of the garden",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What did Mai conclude about flowers?",
+      "options": ["Flowers need water to open", "Flowers open when they are in sunlight", "Flowers close at night", "Flowers need soil to open"],
+      "correctAnswer": "Flowers open when they are in sunlight",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is the last step of the scientific method?",
+      "options": ["Test", "Observe", "Conclude", "Question"],
+      "correctAnswer": "Conclude",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "Which are steps in the scientific method? (Select all that apply)",
+      "options": ["Observe", "Guess randomly", "Predict", "Test", "Give up"],
+      "correctAnswer": ["Observe", "Predict", "Test"],
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What senses do scientists use to observe? (Select all that apply)",
+      "options": ["Eyes", "Ears", "Nose", "Hands", "Magic powers"],
+      "correctAnswer": ["Eyes", "Ears", "Nose", "Hands"],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "In the reading passage, what did Mai do as a scientist? (Select all that apply)",
+      "options": ["Observed flowers", "Made a prediction", "Tested her idea", "Used a microscope", "Visited a laboratory"],
+      "correctAnswer": ["Observed flowers", "Made a prediction", "Tested her idea"],
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What makes someone a good scientist? (Select all that apply)",
+      "options": ["Being curious", "Working with others", "Asking questions", "Knowing all answers already"],
+      "correctAnswer": ["Being curious", "Working with others", "Asking questions"],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "You have to work in a laboratory to be a scientist.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Scientists always work alone and never share their ideas.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Observing means looking carefully and noticing details.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "A prediction is made after you do your experiment.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "In the story, Mai's flower in the sun opened after two hours.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Being curious means you don't want to learn new things.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A _____ is a person who studies the world and asks questions.",
+      "correctAnswer": "scientist",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "The five steps of the scientific method are: observe, question, predict, test, and _____.",
+      "correctAnswer": "conclude",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "When you want to know more about something, you ask a _____.",
+      "correctAnswer": "question",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Mai lives with her grandmother in _____.",
+      "correctAnswer": "Chiang Mai",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A special room where scientists do experiments is called a _____.",
+      "correctAnswer": "laboratory",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Being _____ means you want to learn and discover new things.",
+      "correctAnswer": "curious",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each vocabulary word with its correct definition:",
+      "options": {
+        "terms": ["Observe", "Predict", "Experiment", "Curious"],
+        "definitions": [
+          "To look at something carefully and notice details",
+          "A guess about what you think will happen",
+          "A test to find out if your prediction is right",
+          "Wanting to learn about new things"
+        ]
+      },
+      "correctAnswer": {
+        "Observe": "To look at something carefully and notice details",
+        "Predict": "A guess about what you think will happen",
+        "Experiment": "A test to find out if your prediction is right",
+        "Curious": "Wanting to learn about new things"
+      },
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each vocabulary word with its correct definition:",
+      "options": {
+        "terms": ["Question", "Test", "Conclude", "Discovery"],
+        "definitions": [
+          "Something you ask when you want to know more",
+          "To try something out to see what happens",
+          "To decide what you learned from your experiment",
+          "Finding out something new"
+        ]
+      },
+      "correctAnswer": {
+        "Question": "Something you ask when you want to know more",
+        "Test": "To try something out to see what happens",
+        "Conclude": "To decide what you learned from your experiment",
+        "Discovery": "Finding out something new"
+      },
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "When Mai first observed the flowers, what did she notice?",
+      "options": [
+        "All flowers were the same color",
+        "Some flowers were open and some were closed",
+        "All flowers were wilted",
+        "Some flowers had bees on them"
+      ],
+      "correctAnswer": "Some flowers were open and some were closed",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What question did Mai ask after observing the flowers?",
+      "options": [
+        "Why are flowers pretty?",
+        "Do flowers open in the sun and close in the shade?",
+        "When will the flowers bloom?",
+        "What color are the flowers?"
+      ],
+      "correctAnswer": "Do flowers open in the sun and close in the shade?",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "How long did Mai wait to check her experiment?",
+      "options": ["One hour", "Two hours", "Three hours", "All day"],
+      "correctAnswer": "Two hours",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "How did Mai feel at the end of the story?",
+      "options": ["Sad", "Angry", "Proud", "Scared"],
+      "correctAnswer": "Proud",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "According to the lesson, where can you be a scientist? (Select all that apply)",
+      "options": ["At home", "At school", "At the park", "Only in a laboratory"],
+      "correctAnswer": ["At home", "At school", "At the park"],
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Mai's grandmother told her to stop asking questions.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Scientists use experiments to test their predictions.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "According to the lesson, you need special equipment to be a scientist.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "After Mai did her experiment, she made a _____ about what she learned.",
+      "correctAnswer": "conclusion",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Mai's closed flowers were in the _____ under the mango tree.",
+      "correctAnswer": "shade",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is a conclusion in the scientific method?",
+      "options": [
+        "The first question you ask",
+        "What you learned from your experiment",
+        "A guess before testing",
+        "The tools you use"
+      ],
+      "correctAnswer": "What you learned from your experiment",
+      "points": 1,
+      "standards": ["Sc8.1-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "After her experiment, what other questions did Mai want to explore?",
+      "options": [
+        "Why homework is hard",
+        "Why rain falls and why ants walk in lines",
+        "What to eat for dinner",
+        "Where to go on vacation"
+      ],
+      "correctAnswer": "Why rain falls and why ants walk in lines",
+      "points": 1,
+      "standards": ["Sc8.2-G3"]
+    }
+  ]
+}

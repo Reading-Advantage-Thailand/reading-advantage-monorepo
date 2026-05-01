@@ -1,0 +1,86 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 4,
+  "standards": [
+    {
+      "code": "Sc1.1-G4",
+      "description": "Describe the structure and function of plant and animal organ systems"
+    },
+    {
+      "code": "Sc1.2-G4",
+      "description": "Explain how organisms obtain and use energy from food"
+    },
+    {
+      "code": "Sc1.3-G4",
+      "description": "Describe life cycles of plants and animals including metamorphosis"
+    },
+    {
+      "code": "Sc2.1-G4",
+      "description": "Describe the relationship between organisms in an ecosystem including food chains and food webs"
+    },
+    {
+      "code": "Sc2.2-G4",
+      "description": "Explain how organisms are adapted to their environment"
+    },
+    {
+      "code": "Sc2.3-G4",
+      "description": "Identify human impacts on ecosystems and ways to protect the environment"
+    },
+    {
+      "code": "Sc3.1-G4",
+      "description": "Classify materials as solids, liquids, or gases based on their properties"
+    },
+    {
+      "code": "Sc3.2-G4",
+      "description": "Describe physical changes including dissolving, melting, and evaporation"
+    },
+    {
+      "code": "Sc3.3-G4",
+      "description": "Explain the concept of density and how it relates to sinking and floating"
+    },
+    {
+      "code": "Sc4.1-G4",
+      "description": "Identify simple machines and explain how they make work easier"
+    },
+    {
+      "code": "Sc4.2-G4",
+      "description": "Describe how forces affect the motion of objects"
+    },
+    {
+      "code": "Sc5.1-G4",
+      "description": "Explain different forms of energy including heat, light, sound, and electrical energy"
+    },
+    {
+      "code": "Sc5.2-G4",
+      "description": "Describe how energy can be transformed from one form to another"
+    },
+    {
+      "code": "Sc5.3-G4",
+      "description": "Identify renewable and non-renewable energy sources"
+    },
+    {
+      "code": "Sc6.1-G4",
+      "description": "Describe the structure of the solar system including the Sun, planets, and moons"
+    },
+    {
+      "code": "Sc6.2-G4",
+      "description": "Explain the cause of day and night and the seasons"
+    },
+    {
+      "code": "Sc6.3-G4",
+      "description": "Identify natural resources and explain the importance of conservation"
+    },
+    {
+      "code": "Sc7.1-G4",
+      "description": "Use the scientific method to design and conduct simple investigations"
+    },
+    {
+      "code": "Sc7.2-G4",
+      "description": "Collect, organize, and interpret data using tables, charts, and graphs"
+    },
+    {
+      "code": "Sc7.3-G4",
+      "description": "Communicate scientific findings using appropriate vocabulary and representations"
+    }
+  ]
+}

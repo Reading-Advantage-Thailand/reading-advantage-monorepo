@@ -1,0 +1,205 @@
+{
+  "lessonId": "g4-plant-life-cycles",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a life cycle?",
+      "questionThai": "วัฏจักรชีวิตคืออะไร?",
+      "options": ["A bicycle made of leaves", "The stages a living thing goes through from birth to death", "A type of plant", "A wheel that spins"],
+      "correctAnswer": 1,
+      "explanation": "A life cycle is the series of stages that a living thing goes through from birth to death and reproduction."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What does a seed need to start growing?",
+      "questionThai": "เมล็ดต้องการอะไรเพื่อเริ่มเติบโต?",
+      "options": ["Only sunlight", "Water, warmth, and air", "Only water", "Flowers"],
+      "correctAnswer": 1,
+      "explanation": "Seeds need water, warmth, and air to germinate and start growing."
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is the first part of a plant to grow from a seed?",
+      "questionThai": "ส่วนแรกของพืชที่เติบโตจากเมล็ดคืออะไร?",
+      "options": ["Flower", "Leaf", "Root", "Fruit"],
+      "correctAnswer": 2,
+      "explanation": "The root is the first part to grow from a seed. It grows downward into the soil to absorb water."
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a young plant called after it sprouts from a seed?",
+      "questionThai": "พืชต้นเล็กที่งอกจากเมล็ดเรียกว่าอะไร?",
+      "options": ["Adult plant", "Seedling", "Flower", "Fruit"],
+      "correctAnswer": 1,
+      "explanation": "A young plant that has just sprouted from a seed is called a seedling."
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Which part of a plant makes seeds?",
+      "questionThai": "ส่วนใดของพืชที่สร้างเมล็ด?",
+      "options": ["Roots", "Stem", "Flowers", "Leaves"],
+      "correctAnswer": 2,
+      "explanation": "Flowers are the part of plants that make seeds through the process of pollination."
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is germination?",
+      "questionThai": "การงอกคืออะไร?",
+      "options": ["When a flower blooms", "When a seed begins to grow", "When a plant dies", "When leaves fall off"],
+      "correctAnswer": 1,
+      "explanation": "Germination is when a seed begins to grow and a new plant starts to develop."
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What does the root do for a plant?",
+      "questionThai": "รากทำหน้าที่อะไรสำหรับพืช?",
+      "options": ["Makes flowers", "Absorbs water and anchors the plant", "Catches sunlight", "Attracts bees"],
+      "correctAnswer": 1,
+      "explanation": "Roots absorb water and nutrients from the soil and anchor the plant in place."
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is inside a seed?",
+      "questionThai": "มีอะไรอยู่ภายในเมล็ด?",
+      "options": ["Only water", "A tiny baby plant and stored food", "Just air", "Flowers"],
+      "correctAnswer": 1,
+      "explanation": "Inside a seed is a tiny baby plant (embryo) and stored food to help it start growing."
+    },
+    {
+      "id": "q9",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is pollination?",
+      "questionThai": "การผสมเกสรคืออะไร?",
+      "options": ["When a seed sprouts", "When pollen moves from one flower to another", "When a plant makes leaves", "When roots grow deeper"],
+      "correctAnswer": 1,
+      "explanation": "Pollination is when pollen moves from the stamen of one flower to the pistil of another, which helps make seeds."
+    },
+    {
+      "id": "q10",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Which animals help with pollination?",
+      "questionThai": "สัตว์ชนิดใดช่วยในการผสมเกสร?",
+      "options": ["Fish and whales", "Bees, butterflies, and birds", "Dogs and cats", "Elephants and tigers"],
+      "correctAnswer": 1,
+      "explanation": "Bees, butterflies, and birds are pollinators that carry pollen between flowers when they visit them for nectar."
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What happens AFTER a flower is pollinated?",
+      "questionThai": "เกิดอะไรขึ้นหลังจากดอกไม้ได้รับการผสมเกสร?",
+      "options": ["The plant dies", "Seeds begin to form", "The roots grow", "Nothing happens"],
+      "correctAnswer": 1,
+      "explanation": "After pollination, seeds begin to form inside the flower, and a fruit may develop around them."
+    },
+    {
+      "id": "q12",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why do plants make fruits?",
+      "questionThai": "ทำไมพืชถึงสร้างผลไม้?",
+      "options": ["Just to look pretty", "To protect seeds and help them spread", "To feed the roots", "To make more leaves"],
+      "correctAnswer": 1,
+      "explanation": "Fruits protect seeds and help them spread to new places through wind, water, or animals eating them."
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Which of these is a way seeds can spread to new places?",
+      "questionThai": "ข้อใดต่อไปนี้เป็นวิธีที่เมล็ดสามารถแพร่กระจายไปยังที่ใหม่?",
+      "options": ["By rolling uphill", "By wind, water, or animals", "By walking", "By talking to other plants"],
+      "correctAnswer": 1,
+      "explanation": "Seeds spread through wind (like dandelions), water (like coconuts), and animals (like berries)."
+    },
+    {
+      "id": "q14",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What do plants need to make their own food?",
+      "questionThai": "พืชต้องการอะไรในการสร้างอาหารของตัวเอง?",
+      "options": ["Meat and vegetables", "Sunlight, water, and air", "Soil and rocks only", "Other plants"],
+      "correctAnswer": 1,
+      "explanation": "Plants make food through photosynthesis using sunlight, water, and carbon dioxide from the air."
+    },
+    {
+      "id": "q15",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is pollen?",
+      "questionThai": "ละอองเกสรคืออะไร?",
+      "options": ["A type of water", "Yellow powder in flowers needed to make seeds", "A part of the root", "A kind of fruit"],
+      "correctAnswer": 1,
+      "explanation": "Pollen is a yellow powder found in flowers that is necessary for making seeds."
+    },
+    {
+      "id": "q16",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In the reading passage, what did Noi plant?",
+      "questionThai": "ในบทอ่าน น้อยปลูกอะไร?",
+      "options": ["Rice seeds", "Sunflower seeds", "Mango seeds", "Coconut seeds"],
+      "correctAnswer": 1,
+      "explanation": "In the reading passage, Noi planted sunflower seeds that her grandmother gave her."
+    },
+    {
+      "id": "q17",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why does the plant life cycle never really end?",
+      "questionThai": "ทำไมวัฏจักรชีวิตของพืชไม่เคยสิ้นสุดจริงๆ?",
+      "options": ["Because plants live forever", "Because seeds from one plant grow into new plants that make more seeds", "Because plants don't need water", "Because flowers never die"],
+      "correctAnswer": 1,
+      "explanation": "The life cycle continues because plants make seeds, and those seeds grow into new plants that make more seeds, repeating the cycle."
+    },
+    {
+      "id": "q18",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "What is the correct order of the plant life cycle?",
+      "questionThai": "ลำดับที่ถูกต้องของวัฏจักรชีวิตพืชคืออะไร?",
+      "options": ["Flower, seed, seedling, adult plant", "Seed, germination, seedling, adult plant, flower", "Seedling, seed, flower, root", "Adult plant, seed, flower, seedling"],
+      "correctAnswer": 1,
+      "explanation": "The correct order is: seed, germination (sprouting), seedling, adult plant, then flower (which makes new seeds)."
+    },
+    {
+      "id": "q19",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why do different plants take different amounts of time to become adults?",
+      "questionThai": "ทำไมพืชต่างชนิดใช้เวลาต่างกันในการเป็นต้นโตเต็มวัย?",
+      "options": ["Because some plants are lazy", "Because different species have different growth rates and life spans", "Because all plants grow at the same speed", "Because plants don't actually grow"],
+      "correctAnswer": 1,
+      "explanation": "Different species have different growth rates - a bean plant may mature in weeks, while an oak tree takes many years."
+    },
+    {
+      "id": "q20",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "How do seeds benefit from being inside fruits?",
+      "questionThai": "เมล็ดได้ประโยชน์อย่างไรจากการอยู่ภายในผลไม้?",
+      "options": ["Fruits make seeds taste better", "Fruits protect seeds and animals spread them when they eat the fruit", "Seeds don't need fruits", "Fruits make seeds heavier"],
+      "correctAnswer": 1,
+      "explanation": "Fruits protect seeds from damage and help spread them when animals eat the fruit and deposit the seeds elsewhere through their droppings."
+    }
+  ]
+}

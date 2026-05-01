@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "Have you ever planted a seed and watched it grow? Plants go through amazing changes during their lives! From a tiny seed to a tall plant with flowers, every plant follows a special pattern called a life cycle. Today, you will discover the incredible journey that plants take as they grow, reproduce, and create new life.",
+      "contentThai": "คุณเคยปลูกเมล็ดพืชและเฝ้าดูมันเติบโตไหม? พืชมีการเปลี่ยนแปลงอย่างน่าทึ่งตลอดชีวิต! ตั้งแต่เมล็ดเล็กๆ จนเป็นต้นไม้สูงที่มีดอก พืชทุกชนิดจะเดินตามรูปแบบพิเศษที่เรียกว่าวัฏจักรชีวิต วันนี้คุณจะได้ค้นพบการเดินทางอันน่าทึ่งของพืชในขณะที่มันเติบโต สืบพันธุ์ และสร้างชีวิตใหม่"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Life cycle",
+          "thai": "วัฏจักรชีวิต",
+          "definition": "The stages a living thing goes through from birth to death and reproduction"
+        },
+        {
+          "term": "Seed",
+          "thai": "เมล็ด",
+          "definition": "A small part of a plant that can grow into a new plant"
+        },
+        {
+          "term": "Germination",
+          "thai": "การงอก",
+          "definition": "When a seed begins to grow and sprout"
+        },
+        {
+          "term": "Seedling",
+          "thai": "ต้นกล้า",
+          "definition": "A young plant that has just started growing from a seed"
+        },
+        {
+          "term": "Root",
+          "thai": "ราก",
+          "definition": "The part of a plant that grows underground and absorbs water"
+        },
+        {
+          "term": "Stem",
+          "thai": "ลำต้น",
+          "definition": "The main body of a plant that supports leaves and flowers"
+        },
+        {
+          "term": "Pollination",
+          "thai": "การผสมเกสร",
+          "definition": "When pollen moves from one flower to another to help make seeds"
+        },
+        {
+          "term": "Pollen",
+          "thai": "ละอองเกสร",
+          "definition": "A yellow powder in flowers needed to make seeds"
+        },
+        {
+          "term": "Fruit",
+          "thai": "ผลไม้",
+          "definition": "The part of a plant that contains and protects seeds"
+        },
+        {
+          "term": "Reproduce",
+          "thai": "สืบพันธุ์",
+          "definition": "To make new living things of the same kind"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## What Is a Life Cycle?\n\nA **life cycle** is the series of changes a living thing goes through during its life. Just like you were once a baby and will grow into an adult, plants also change as they grow. The plant life cycle shows how plants are born, grow, make new plants, and eventually die. But here's the amazing part: the cycle never really ends! When a plant makes seeds, those seeds can grow into new plants, starting the cycle all over again.\n\n## The Stages of a Plant's Life Cycle\n\n### Stage 1: The Seed\n\nEvery flowering plant starts as a **seed**. A seed is like a tiny package that contains everything a baby plant needs to start growing. Inside the seed, there is:\n- A tiny baby plant called an **embryo**\n- Stored food to help the baby plant grow\n- A protective outer covering called the **seed coat**\n\nSeeds can be different sizes and shapes. A coconut is a very large seed, while orchid seeds are as small as dust! Seeds can stay dormant (sleeping) for a long time until conditions are right for growing.",
+      "contentThai": "## วัฏจักรชีวิตคืออะไร?\n\n**วัฏจักรชีวิต** คือชุดการเปลี่ยนแปลงที่สิ่งมีชีวิตผ่านในช่วงชีวิตของมัน เช่นเดียวกับที่คุณเคยเป็นทารกและจะเติบโตเป็นผู้ใหญ่ พืชก็เปลี่ยนแปลงเช่นกันเมื่อมันเติบโต วัฏจักรชีวิตพืชแสดงให้เห็นว่าพืชเกิดมาอย่างไร เติบโต สร้างพืชใหม่ และในที่สุดก็ตาย แต่นี่คือส่วนที่น่าทึ่ง: วัฏจักรไม่เคยสิ้นสุดจริงๆ! เมื่อพืชสร้างเมล็ด เมล็ดเหล่านั้นสามารถเติบโตเป็นพืชใหม่ เริ่มต้นวัฏจักรใหม่อีกครั้ง"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-plant-life-cycles-1.webp",
+      "alt": "Circular diagram showing the four main stages of a plant life cycle: seed, seedling, adult plant, and flower with seeds",
+      "caption": "The Plant Life Cycle",
+      "captionThai": "วัฏจักรชีวิตของพืช",
+      "aspectRatio": 1.0,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "### Stage 2: Germination\n\nWhen a seed gets water, warmth, and air, it wakes up and starts to grow. This is called **germination**. During germination:\n\n1. The seed absorbs water and swells up\n2. The seed coat cracks open\n3. A tiny root grows downward into the soil\n4. A small shoot grows upward toward the light\n\nThe root is very important because it anchors the plant in the soil and absorbs water and nutrients. The shoot will become the stem and leaves.\n\n### Stage 3: Seedling\n\nOnce the shoot breaks through the soil and the first leaves appear, the young plant is called a **seedling**. The seedling's first leaves might look different from the adult leaves. These first leaves use energy from sunlight to make food for the growing plant through **photosynthesis**.\n\nThe seedling grows taller and develops more leaves. Its roots grow deeper and spread out underground. The stem grows thicker and stronger to support the plant.\n\n### Stage 4: Adult Plant\n\nAs the seedling continues to grow, it becomes a mature adult plant. An adult plant has:\n- A strong root system\n- A tall, sturdy stem\n- Many leaves for making food\n- The ability to make flowers\n\nDifferent plants take different amounts of time to become adults. A bean plant might become an adult in just a few weeks, while an oak tree takes many years!"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-plant-life-cycles-2.webp",
+      "alt": "Cross-section illustration showing germination process with labeled parts: seed coat, root growing down, and shoot growing up through soil",
+      "caption": "Germination: A Seed Coming to Life",
+      "captionThai": "การงอก: เมล็ดเริ่มมีชีวิต",
+      "aspectRatio": 1.5,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "### Stage 5: Flowering and Pollination\n\nWhen an adult plant is ready to reproduce, it grows **flowers**. Flowers are not just pretty - they are the plant's way of making new seeds! Inside a flower, there are special parts:\n\n- **Stamens** make pollen (the male part)\n- **Pistil** contains eggs that will become seeds (the female part)\n\nFor seeds to form, pollen must travel from the stamen to the pistil. This is called **pollination**. Pollinators like bees, butterflies, and birds help move pollen between flowers. When they visit flowers to drink nectar, pollen sticks to their bodies and gets carried to other flowers.\n\n### Stage 6: Seed Formation and Dispersal\n\nAfter pollination, seeds begin to form inside the flower. The flower parts fall away, and a **fruit** grows around the seeds. Fruits protect seeds and help them spread to new places. Seeds can travel in many ways:\n\n- **Wind**: Dandelion seeds float on the wind\n- **Water**: Coconuts float to new islands\n- **Animals**: Birds eat berries and spread seeds in their droppings\n- **Explosion**: Some seed pods pop open and shoot seeds far away\n\nWhen seeds land in a good spot with water, warmth, and soil, the cycle begins again!"
+    },
+    {
+      "type": "reading_passage",
+      "title": "Noi's Sunflower Garden",
+      "titleThai": "สวนดอกทานตะวันของน้อย",
+      "content": "Noi lived in a small village in Lopburi province. One sunny morning, her grandmother gave her a handful of sunflower seeds. \"Plant these,\" Grandmother said with a smile. \"Watch what happens, and you will learn one of nature's greatest secrets.\"\n\nNoi carefully dug small holes in the garden soil and placed one seed in each hole. She covered them with dirt and watered them gently. \"Now we wait,\" said Grandmother.\n\nEvery day, Noi checked her seeds. For the first few days, nothing seemed to happen. \"Be patient,\" Grandmother reminded her. \"Big things are happening underground that you cannot see.\"\n\nOn the seventh day, Noi saw tiny green shoots poking through the soil! \"Grandmother, look! My seeds are growing!\" she shouted with excitement.\n\n\"That's called germination,\" Grandmother explained. \"The seeds woke up when they got water and warmth. Now roots are growing down into the soil while shoots grow up toward the sun.\"\n\nAs the weeks passed, Noi watched her seedlings grow taller and taller. They developed more leaves and thick, strong stems. \"Your sunflowers are becoming adult plants now,\" said Grandmother.\n\nOne morning, Noi noticed something new. Bright yellow flower buds were forming at the tops of her plants! Within days, beautiful sunflowers opened their petals toward the sun. Each flower was as big as a dinner plate!\n\nBees buzzed around the flowers, collecting nectar. \"The bees are helping your sunflowers,\" Grandmother explained. \"They carry pollen from flower to flower. This is called pollination, and it helps the flowers make seeds.\"\n\nAs summer turned to fall, Noi watched the sunflower petals dry and fall off. In the center of each flower, hundreds of sunflower seeds had formed in neat spiral patterns. \"Look at all those seeds!\" Noi exclaimed. \"From just one seed I planted, my sunflower made so many more!\"\n\n\"That is nature's magic,\" said Grandmother. \"Each of those seeds can grow into a new sunflower. The life cycle continues forever.\"\n\nNoi harvested some seeds for roasting and saved some for planting next year. She understood now why plants make so many seeds - it gives them the best chance to grow in new places and keep the species alive.\n\n\"Thank you for teaching me about life cycles, Grandmother,\" said Noi.\n\n\"You taught yourself,\" Grandmother replied. \"You observed, you asked questions, and you learned. That makes you a true scientist!\"",
+      "contentThai": "น้อยอาศัยอยู่ในหมู่บ้านเล็กๆ ในจังหวัดลพบุรี เช้าวันหนึ่งที่แดดจ้า คุณยายของเธอให้เมล็ดทานตะวันหนึ่งกำมือ \"ปลูกพวกนี้นะ\" คุณยายพูดพร้อมรอยยิ้ม \"ดูว่าเกิดอะไรขึ้น แล้วหลานจะได้เรียนรู้ความลับที่ยิ่งใหญ่ที่สุดอย่างหนึ่งของธรรมชาติ\"\n\nน้อยขุดหลุมเล็กๆ ในดินสวนอย่างระมัดระวังและใส่เมล็ดหนึ่งเมล็ดในแต่ละหลุม เธอกลบด้วยดินและรดน้ำเบาๆ \"ตอนนี้เราต้องรอ\" คุณยายบอก\n\nทุกวันน้อยตรวจดูเมล็ดของเธอ ในช่วงสองสามวันแรก ดูเหมือนไม่มีอะไรเกิดขึ้น \"อดทนหน่อยนะ\" คุณยายเตือน \"สิ่งยิ่งใหญ่กำลังเกิดขึ้นใต้ดินที่หลานมองไม่เห็น\"\n\nในวันที่เจ็ด น้อยเห็นหน่อเขียวเล็กๆ โผล่ขึ้นมาจากดิน! \"คุณยายดูสิ! เมล็ดของหนูกำลังงอกแล้ว!\" เธอตะโกนด้วยความตื่นเต้น",
+      "wordCount": 425
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- A **life cycle** is the stages a living thing goes through from birth to death and reproduction\n- Plants start as **seeds** that contain a baby plant, stored food, and a protective coat\n- **Germination** happens when seeds get water, warmth, and air, causing them to sprout\n- **Seedlings** are young plants that grow leaves and begin making their own food\n- Adult plants grow **flowers** to reproduce\n- **Pollination** occurs when pollen moves between flowers, often helped by bees and butterflies\n- After pollination, **fruits** form around seeds\n- Seeds spread through wind, water, animals, or explosion\n- The cycle continues when new seeds germinate and grow into plants\n\nUnderstanding plant life cycles helps us grow food, protect nature, and appreciate the amazing world of plants!"
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "lessonId": "g4-food-chains",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Where does all energy in a food chain originally come from?",
+      "questionThai": "พลังงานทั้งหมดในห่วงโซ่อาหารมาจากไหนในตอนแรก?",
+      "options": ["Plants", "Animals", "The sun", "Water"],
+      "correctAnswer": 2,
+      "explanation": "All energy in food chains originally comes from the sun. Plants capture this energy through photosynthesis."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a producer in a food chain?",
+      "questionThai": "ผู้ผลิตในห่วงโซ่อาหารคืออะไร?",
+      "options": ["An animal that eats plants", "A living thing that makes its own food", "An animal that hunts", "A decomposer"],
+      "correctAnswer": 1,
+      "explanation": "A producer is a living thing that makes its own food, usually a plant through photosynthesis."
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a consumer?",
+      "questionThai": "ผู้บริโภคคืออะไร?",
+      "options": ["A plant that makes food", "A living thing that eats other living things", "The sun", "Soil"],
+      "correctAnswer": 1,
+      "explanation": "A consumer is a living thing that cannot make its own food and must eat other living things."
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a herbivore?",
+      "questionThai": "สัตว์กินพืชคืออะไร?",
+      "options": ["An animal that eats only plants", "An animal that eats only meat", "An animal that eats both", "A plant"],
+      "correctAnswer": 0,
+      "explanation": "A herbivore is an animal that only eats plants."
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a carnivore?",
+      "questionThai": "สัตว์กินเนื้อคืออะไร?",
+      "options": ["An animal that eats only plants", "An animal that eats only other animals", "An animal that eats both", "A type of plant"],
+      "correctAnswer": 1,
+      "explanation": "A carnivore is an animal that only eats other animals."
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What do decomposers do?",
+      "questionThai": "ผู้ย่อยสลายทำอะไร?",
+      "options": ["Hunt other animals", "Make their own food", "Break down dead plants and animals", "Eat only plants"],
+      "correctAnswer": 2,
+      "explanation": "Decomposers break down dead plants and animals and return nutrients to the soil."
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "In this food chain: Grass - Rabbit - Fox, what is the rabbit?",
+      "questionThai": "ในห่วงโซ่อาหารนี้: หญ้า - กระต่าย - สุนัขจิ้งจอก กระต่ายคืออะไร?",
+      "options": ["Producer", "Decomposer", "Primary consumer", "Top predator"],
+      "correctAnswer": 2,
+      "explanation": "The rabbit is a primary consumer because it eats the producer (grass)."
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Which of these is a decomposer?",
+      "questionThai": "ข้อใดต่อไปนี้เป็นผู้ย่อยสลาย?",
+      "options": ["Rabbit", "Tiger", "Mushroom", "Grass"],
+      "correctAnswer": 2,
+      "explanation": "Mushrooms are decomposers that break down dead organic matter."
+    },
+    {
+      "id": "q9",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why are producers always at the beginning of a food chain?",
+      "questionThai": "ทำไมผู้ผลิตจึงอยู่ที่จุดเริ่มต้นของห่วงโซ่อาหารเสมอ?",
+      "options": ["Because they are bigger", "Because they capture energy from the sun first", "Because they eat animals", "Because they are faster"],
+      "correctAnswer": 1,
+      "explanation": "Producers are first because they capture the sun's energy and make it available to other living things."
+    },
+    {
+      "id": "q10",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What happens to energy as it moves through a food chain?",
+      "questionThai": "เกิดอะไรขึ้นกับพลังงานเมื่อมันเคลื่อนที่ผ่านห่วงโซ่อาหาร?",
+      "options": ["Energy increases", "Energy stays the same", "Some energy is lost at each level", "Energy disappears completely"],
+      "correctAnswer": 2,
+      "explanation": "Energy decreases at each level. Only about 10% passes to the next level; the rest is used for living."
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is a food web?",
+      "questionThai": "สายใยอาหารคืออะไร?",
+      "options": ["A spider's web", "One simple food chain", "Many connected food chains", "A type of plant"],
+      "correctAnswer": 2,
+      "explanation": "A food web is many connected food chains in an ecosystem, showing how organisms are connected in multiple ways."
+    },
+    {
+      "id": "q12",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is an omnivore?",
+      "questionThai": "สัตว์กินทั้งพืชและสัตว์คืออะไร?",
+      "options": ["An animal that eats only plants", "An animal that eats only meat", "An animal that eats both plants and animals", "A type of plant"],
+      "correctAnswer": 2,
+      "explanation": "An omnivore eats both plants and animals. Humans and bears are examples of omnivores."
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In the reading passage, what ate the rice plants?",
+      "questionThai": "ในบทอ่าน อะไรกินต้นข้าว?",
+      "options": ["Spiders", "Birds", "Planthoppers", "Frogs"],
+      "correctAnswer": 2,
+      "explanation": "In the reading passage, planthoppers were eating the rice plants."
+    },
+    {
+      "id": "q14",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why are there usually more plants than herbivores in an ecosystem?",
+      "questionThai": "ทำไมมักจะมีพืชมากกว่าสัตว์กินพืชในระบบนิเวศ?",
+      "options": ["Plants grow faster", "It takes many plants to provide enough energy for herbivores", "Herbivores don't like plants", "There is no reason"],
+      "correctAnswer": 1,
+      "explanation": "Since energy is lost at each level, many plants are needed to support fewer herbivores."
+    },
+    {
+      "id": "q15",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What would happen if all decomposers disappeared?",
+      "questionThai": "จะเกิดอะไรขึ้นถ้าผู้ย่อยสลายทั้งหมดหายไป?",
+      "options": ["Nothing would change", "Dead things would pile up and nutrients wouldn't return to soil", "Plants would grow better", "Animals would have more food"],
+      "correctAnswer": 1,
+      "explanation": "Without decomposers, dead organisms would pile up and nutrients wouldn't be recycled back to the soil for plants."
+    },
+    {
+      "id": "q16",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In the reading passage, how did Ploy's family fix the food chain problem?",
+      "questionThai": "ในบทอ่าน ครอบครัวของปลอยแก้ปัญหาห่วงโซ่อาหารอย่างไร?",
+      "options": ["Used more chemicals", "Stopped growing rice", "Brought spiders back by stopping chemicals and planting flowers", "Bought new rice plants"],
+      "correctAnswer": 2,
+      "explanation": "They stopped using chemicals and planted flowers to attract helpful insects, allowing spiders to return and control planthoppers."
+    },
+    {
+      "id": "q17",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why do food chains usually have only 4-5 links?",
+      "questionThai": "ทำไมห่วงโซ่อาหารมักจะมีเพียง 4-5 ข้อต่อ?",
+      "options": ["There aren't enough animals", "Energy decreases at each level so there isn't enough for more levels", "It's a rule scientists made", "Animals don't like long chains"],
+      "correctAnswer": 1,
+      "explanation": "Since only about 10% of energy passes to each level, there isn't enough energy left to support more than 4-5 levels."
+    },
+    {
+      "id": "q18",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "What happens when one part of a food chain is removed?",
+      "questionThai": "เกิดอะไรขึ้นเมื่อส่วนหนึ่งของห่วงโซ่อาหารถูกนำออกไป?",
+      "options": ["Nothing changes", "The whole food chain and ecosystem can be affected", "Only that animal is affected", "A new animal appears"],
+      "correctAnswer": 1,
+      "explanation": "Removing one part affects all other parts. For example, removing predators causes prey populations to grow too large."
+    },
+    {
+      "id": "q19",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why are food webs more realistic than simple food chains?",
+      "questionThai": "ทำไมสายใยอาหารจึงเป็นจริงมากกว่าห่วงโซ่อาหารธรรมดา?",
+      "options": ["They are simpler", "Animals in nature eat many different things, not just one", "Scientists prefer webs", "Chains don't exist"],
+      "correctAnswer": 1,
+      "explanation": "Food webs are more realistic because most animals eat multiple food sources, not just one, creating many interconnections."
+    },
+    {
+      "id": "q20",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why is protecting all parts of a food chain important for humans?",
+      "questionThai": "ทำไมการปกป้องทุกส่วนของห่วงโซ่อาหารจึงสำคัญสำหรับมนุษย์?",
+      "options": ["It's not important", "Humans are part of food webs and depend on healthy ecosystems for food and resources", "Humans don't need food chains", "Only animals need food chains"],
+      "correctAnswer": 1,
+      "explanation": "Humans depend on healthy ecosystems for food, clean water, and other resources. Broken food chains affect us too."
+    }
+  ]
+}

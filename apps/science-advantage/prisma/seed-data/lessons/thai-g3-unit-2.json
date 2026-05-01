@@ -1,0 +1,575 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "unit": 2,
+  "lessons": [
+    {
+      "id": "g3-basic-needs-of-living-things",
+      "slug": "basic-needs-of-living-things",
+      "title": "Basic Needs of Living Things",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - What all living things need to survive: food, water, air, and shelter.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEvery living thing needs certain things to stay alive. Without these basic needs, plants, animals, and even tiny organisms cannot survive. In this lesson, you will learn about the four basic needs that all living things share.\n\n## Main Content\n\n**The Four Basic Needs**\n\nAll living things need food for energy, water to drink and use in their bodies, air to breathe, and shelter for protection. Plants make their own food from sunlight, while animals must find or hunt for food. Water is essential for every living thing on Earth. Air provides oxygen that animals breathe and carbon dioxide that plants use. Shelter can be a house, a nest, a burrow, or even a tree branch.\n\n**How Different Organisms Meet Their Needs**\n\nBirds build nests in trees for shelter and search for seeds and insects for food. Fish live in water and breathe through gills. Plants use their roots to absorb water from the soil and their leaves to collect sunlight for making food. Every organism has special ways to meet its basic needs.",
+      "order": 1,
+      "standards": [
+        "Sc2.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Every living thing needs certain things to stay alive. Without these basic needs, plants, animals, and even tiny organisms cannot survive. In this lesson, you will learn about the four basic needs that all living things share: food, water, air, and shelter."
+          },
+          {
+            "id": "content-1",
+            "type": "text",
+            "content": "## The Four Basic Needs\n\nAll living things need **food** for energy, **water** to drink and use in their bodies, **air** to breathe, and **shelter** for protection. Plants make their own food from sunlight, while animals must find or hunt for food. Water is essential for every living thing on Earth. Air provides oxygen that animals breathe and carbon dioxide that plants use. Shelter can be a house, a nest, a burrow, or even a tree branch."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Basic needs",
+                "thai": "ความต้องการพื้นฐาน",
+                "definition": "The essential things all living things must have to survive"
+              },
+              {
+                "term": "Shelter",
+                "thai": "ที่อยู่อาศัย",
+                "definition": "A place that protects living things from weather and danger"
+              },
+              {
+                "term": "Survive",
+                "thai": "อยู่รอด",
+                "definition": "To stay alive"
+              },
+              {
+                "term": "Energy",
+                "thai": "พลังงาน",
+                "definition": "The power living things get from food to move and grow"
+              },
+              {
+                "term": "Organism",
+                "thai": "สิ่งมีชีวิต",
+                "definition": "Any living thing, such as a plant, animal, or person"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ความต้องการพื้นฐานของสิ่งมีชีวิต"
+    },
+    {
+      "id": "g3-habitats-around-the-world",
+      "slug": "habitats-around-the-world",
+      "title": "Habitats Around the World",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Different habitats around the world and the organisms that live there.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nA habitat is the natural home of a living thing. Habitats around the world are very different from each other. Some habitats are hot and dry, while others are cold and wet. Each habitat provides food, water, and shelter for the organisms that live there.\n\n## Main Content\n\n**Types of Habitats**\n\nForests are home to many plants and animals. Deserts receive very little rain and have special plants like cacti. Oceans cover most of the Earth and contain saltwater fish, whales, and coral. Freshwater habitats like rivers and lakes have fish, frogs, and water plants. Arctic habitats are very cold with snow and ice, home to polar bears and penguins.",
+      "order": 2,
+      "standards": [
+        "Sc2.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "A habitat is the natural home of a living thing. Habitats around the world are very different from each other. Each habitat provides food, water, and shelter for the organisms that live there."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Habitat",
+                "thai": "ถิ่นที่อยู่",
+                "definition": "The natural home of a living thing"
+              },
+              {
+                "term": "Desert",
+                "thai": "ทะเลทราย",
+                "definition": "A dry habitat that receives very little rain"
+              },
+              {
+                "term": "Forest",
+                "thai": "ป่า",
+                "definition": "A habitat with many trees and plants"
+              },
+              {
+                "term": "Freshwater",
+                "thai": "น้ำจืด",
+                "definition": "Water that is not salty, found in rivers and lakes"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ถิ่นที่อยู่ทั่วโลก"
+    },
+    {
+      "id": "g3-habitat-investigation",
+      "slug": "habitat-investigation",
+      "title": "Habitat Investigation",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Investigating a local habitat and recording observations about organisms and their environment.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nToday you will become a habitat detective! By observing a local habitat closely, you can discover which organisms live there and how they meet their basic needs. Let's learn how to investigate a habitat like a real scientist.\n\n## Main Content\n\n**How to Investigate a Habitat**\n\nChoose a small area to study, such as a garden, a park, or a stream bank. Observe carefully and record what you see. Look for animals, plants, insects, and other living things. Notice the water sources, shelter spots, and food sources in the area.",
+      "order": 3,
+      "standards": [
+        "Sc2.1-G3",
+        "Sc8.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will become a habitat detective! By observing a local habitat closely, you can discover which organisms live there and how they meet their basic needs."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Investigate",
+                "thai": "สอบสวน",
+                "definition": "To study something carefully to learn more about it"
+              },
+              {
+                "term": "Observe",
+                "thai": "สังเกต",
+                "definition": "To look at something carefully and notice details"
+              },
+              {
+                "term": "Record",
+                "thai": "บันทึก",
+                "definition": "To write down or draw what you observe"
+              },
+              {
+                "term": "Environment",
+                "thai": "สิ่งแวดล้อม",
+                "definition": "The natural surroundings where living things exist"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การสำรวจถิ่นที่อยู่"
+    },
+    {
+      "id": "g3-where-does-food-come-from",
+      "slug": "where-does-food-come-from",
+      "title": "Where Does Food Come From?",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Understanding the sources of food for different organisms.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nHave you ever thought about where your food comes from? The rice on your plate, the fish in your soup, and the fruit in your lunch all come from nature. In this lesson, you will learn how different organisms get their food.\n\n## Main Content\n\n**Food Sources**\n\nPlants make their own food using sunlight, water, and air through photosynthesis. Animals eat plants, other animals, or both. Herbivores eat only plants, carnivores eat only other animals, and omnivores eat both plants and animals. Humans are omnivores.",
+      "order": 4,
+      "standards": [
+        "Sc2.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Have you ever thought about where your food comes from? The rice on your plate, the fish in your soup, and the fruit in your lunch all come from nature. In this lesson, you will learn how different organisms get their food."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Food source",
+                "thai": "แหล่งอาหาร",
+                "definition": "Where an organism gets its food"
+              },
+              {
+                "term": "Herbivore",
+                "thai": "สัตว์กินพืช",
+                "definition": "An animal that eats only plants"
+              },
+              {
+                "term": "Carnivore",
+                "thai": "สัตว์กินเนื้อ",
+                "definition": "An animal that eats only other animals"
+              },
+              {
+                "term": "Omnivore",
+                "thai": "สัตว์กินทั้งพืชและเนื้อ",
+                "definition": "An animal that eats both plants and animals"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "อาหารมาจากไหน?"
+    },
+    {
+      "id": "g3-simple-food-chains",
+      "slug": "simple-food-chains",
+      "title": "Simple Food Chains",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Understanding how energy flows through food chains.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEvery organism needs food to survive. But where does energy come from in nature? Food chains show us how energy flows from one organism to another. In this lesson, you will learn about simple food chains.\n\n## Main Content\n\n**What Is a Food Chain?**\n\nA food chain shows the path that food and energy take as it moves from one organism to another. Every food chain starts with the Sun, which gives energy to plants. Plants are eaten by plant-eating animals, which are then eaten by meat-eating animals. The arrows in a food chain point in the direction that energy flows.",
+      "order": 5,
+      "standards": [
+        "Sc2.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Every organism needs food to survive. Food chains show us how energy flows from one organism to another. In this lesson, you will learn about simple food chains and how energy moves through nature."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Food chain",
+                "thai": "ห่วงโซ่อาหาร",
+                "definition": "A path that shows how energy moves from one organism to another"
+              },
+              {
+                "term": "Producer",
+                "thai": "ผู้ผลิต",
+                "definition": "A plant that makes its own food from sunlight"
+              },
+              {
+                "term": "Consumer",
+                "thai": "ผู้บริโภค",
+                "definition": "An organism that eats other organisms for food"
+              },
+              {
+                "term": "Energy flow",
+                "thai": "การไหลเวียนของพลังงาน",
+                "definition": "The direction energy moves through a food chain"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ห่วงโซ่อาหารอย่างง่าย"
+    },
+    {
+      "id": "g3-food-webs",
+      "slug": "food-webs",
+      "title": "Food Webs",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - How food chains connect to form food webs.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nIn nature, food chains do not exist alone. Many food chains connect together to form a food web. A food web shows how all the organisms in a habitat are connected through what they eat.\n\n## Main Content\n\n**From Food Chains to Food Webs**\n\nMost organisms eat more than one type of food, and most organisms are eaten by more than one type of predator. This creates a web of connections. In a pond food web, a frog might eat both insects and small worms, while also being eaten by snakes and birds.",
+      "order": 6,
+      "standards": [
+        "Sc2.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "In nature, food chains do not exist alone. Many food chains connect together to form a food web. A food web shows how all the organisms in a habitat are connected through what they eat."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Food web",
+                "thai": "ใยอาหาร",
+                "definition": "A network of interconnected food chains in a habitat"
+              },
+              {
+                "term": "Predator",
+                "thai": "นักล่า",
+                "definition": "An animal that hunts and eats other animals"
+              },
+              {
+                "term": "Prey",
+                "thai": "เหยื่อ",
+                "definition": "An animal that is eaten by another animal"
+              },
+              {
+                "term": "Interconnected",
+                "thai": "เชื่อมต่อกัน",
+                "definition": "Linked together in a complex way"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ใยอาหาร"
+    },
+    {
+      "id": "g3-why-we-need-to-protect-nature",
+      "slug": "why-we-need-to-protect-nature",
+      "title": "Why We Need to Protect Nature",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Understanding the importance of protecting natural habitats and the organisms within them.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nNature provides us with everything we need to live: clean air, fresh water, food, and materials. But human activities can harm nature. When we protect nature, we protect ourselves and all living things on Earth.\n\n## Main Content\n\n**Threats to Nature**\n\nDeforestation removes trees and destroys habitats. Pollution contaminates water and air. Littering harms animals that may eat or get trapped in trash. When habitats are destroyed, organisms lose their homes, food, and shelter. This is why protecting nature is so important.",
+      "order": 7,
+      "standards": [
+        "Sc2.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Nature provides us with everything we need to live: clean air, fresh water, food, and materials. But human activities can harm nature. When we protect nature, we protect ourselves and all living things on Earth."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Protect",
+                "thai": "ปกป้อง",
+                "definition": "To keep something safe from harm"
+              },
+              {
+                "term": "Deforestation",
+                "thai": "การตัดป่าไม้",
+                "definition": "The cutting down of trees in a forest"
+              },
+              {
+                "term": "Pollution",
+                "thai": "มลพิษ",
+                "definition": "Harmful substances that damage the environment"
+              },
+              {
+                "term": "Conservation",
+                "thai": "การอนุรักษ์",
+                "definition": "Protecting nature and using resources wisely"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ทำไมเราต้องปกป้องธรรมชาติ"
+    },
+    {
+      "id": "g3-conservation-in-action",
+      "slug": "conservation-in-action",
+      "title": "Conservation in Action",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Real examples of conservation efforts and how students can help protect nature.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nConservation means protecting nature. Around the world, people are working hard to protect animals, plants, and their habitats. In this lesson, you will learn about conservation efforts and how you can help protect nature in your community.\n\n## Main Content\n\n**Conservation Around the World**\n\nNational parks protect forests, mountains, and wildlife. Marine reserves protect ocean habitats. Wildlife sanctuaries provide safe homes for endangered animals. Even in your own community, you can help by reducing waste, recycling, planting trees, and keeping your neighborhood clean.",
+      "order": 8,
+      "standards": [
+        "Sc2.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Conservation means protecting nature. Around the world, people are working hard to protect animals, plants, and their habitats. Even you can help protect nature in your community!"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "National park",
+                "thai": "อุทยานแห่งชาติ",
+                "definition": "A protected area of land managed by the government"
+              },
+              {
+                "term": "Endangered",
+                "thai": "ใกล้สูญพันธุ์",
+                "definition": "At risk of no longer existing"
+              },
+              {
+                "term": "Recycle",
+                "thai": "รีไซเคิล",
+                "definition": "To process waste materials into new products"
+              },
+              {
+                "term": "Reduce",
+                "thai": "ลด",
+                "definition": "To use less of something"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การอนุรักษ์ในภาคปฏิบัติ"
+    },
+    {
+      "id": "g3-design-a-habitat",
+      "slug": "design-a-habitat",
+      "title": "Design a Habitat",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Designing a habitat that meets the basic needs of organisms.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nNow that you understand what organisms need to survive, it is time to design your own habitat! You will create a habitat that provides food, water, air, and shelter for a group of organisms of your choice.\n\n## Main Content\n\n**Design Challenge**\n\nChoose an organism such as a bird, fish, or insect. Think about what it needs to survive. Create a drawing or model of a habitat that provides all four basic needs. Consider the climate, food sources, water sources, and shelter options.",
+      "order": 9,
+      "standards": [
+        "Sc2.1-G3",
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Now that you understand what organisms need to survive, it is time to design your own habitat! You will create a habitat that provides food, water, air, and shelter for a group of organisms of your choice."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Design",
+                "thai": "ออกแบบ",
+                "definition": "To plan and create something with a purpose"
+              },
+              {
+                "term": "Climate",
+                "thai": "สภาพอากาศ",
+                "definition": "The usual weather conditions in a place"
+              },
+              {
+                "term": "Natural resources",
+                "thai": "ทรัพยากรธรรมชาติ",
+                "definition": "Materials found in nature that living things need"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ออกแบบถิ่นที่อยู่"
+    },
+    {
+      "id": "g3-habitat-match-game",
+      "slug": "habitat-match-game",
+      "title": "Habitat Match Game",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Review activity matching organisms to their habitats.",
+      "lessonType": "REVIEW",
+      "content": "## Review Activity\n\nTest your knowledge of habitats and organisms! Match each organism to its correct habitat and identify the basic needs it meets there. This game helps you review everything you learned in this unit about environments and habitats.",
+      "order": 10,
+      "standards": [
+        "Sc2.1-G3",
+        "Sc2.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Test your knowledge of habitats and organisms! Match each organism to its correct habitat and identify the basic needs it meets there."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Match",
+                "thai": "จับคู่",
+                "definition": "To pair things that go together"
+              },
+              {
+                "term": "Identify",
+                "thai": "ระบุ",
+                "definition": "To recognize and name something"
+              },
+              {
+                "term": "Review",
+                "thai": "ทบทวน",
+                "definition": "To look at something again to remember it"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "เกมจับคู่ถิ่นที่อยู่"
+    },
+    {
+      "id": "g3-unit-2-summative-assessment",
+      "slug": "unit-2-summative-assessment",
+      "title": "Unit 2 Summative Assessment",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Summative assessment covering habitats, food chains, and conservation.",
+      "lessonType": "ASSESSMENT",
+      "content": "## Summative Assessment\n\nThis assessment covers everything you learned about environments and habitats in Unit 2. You will be tested on the basic needs of living things, food chains and food webs, and the importance of conservation.",
+      "order": 11,
+      "standards": [
+        "Sc2.1-G3",
+        "Sc2.2-G3",
+        "Sc2.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "This assessment covers everything you learned about environments and habitats in Unit 2. Good luck!"
+          }
+        ]
+      },
+      "titleThai": "แบบทดสอบปลายหน่วย หน่วย 2"
+    },
+    {
+      "id": "g3-plant-growth-final-observation",
+      "slug": "plant-growth-final-observation",
+      "title": "Plant Growth Final Observation",
+      "description": "Grade 3 ENVIRONMENTS & HABITATS - Final observation and recording of plant growth experiment results.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nIt is time to check on your plant growth experiment! You have been observing plants over several weeks. Today, you will record your final observations and draw conclusions about what you learned.\n\n## Main Content\n\n**Recording Final Observations**\n\nMeasure the height of your plants. Count the number of leaves. Compare the plants that received different conditions. Record all your data carefully and use it to write a conclusion about what you discovered.",
+      "order": 12,
+      "standards": [
+        "Sc8.3-G3",
+        "Sc2.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "It is time to check on your plant growth experiment! You have been observing plants over several weeks. Today, you will record your final observations and draw conclusions about what you learned."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Conclusion",
+                "thai": "สรุป",
+                "definition": "A statement about what you learned from an experiment"
+              },
+              {
+                "term": "Measure",
+                "thai": "วัด",
+                "definition": "To find the size or amount of something"
+              },
+              {
+                "term": "Data",
+                "thai": "ข้อมูล",
+                "definition": "Facts and numbers collected during an experiment"
+              },
+              {
+                "term": "Compare",
+                "thai": "เปรียบเทียบ",
+                "definition": "To look at how things are the same or different"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การสังเกตการเจริญเติบโตของพืชครั้งสุดท้าย"
+    }
+  ]
+}

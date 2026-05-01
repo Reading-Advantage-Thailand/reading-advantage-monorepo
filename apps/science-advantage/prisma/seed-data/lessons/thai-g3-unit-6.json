@@ -1,0 +1,493 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "unit": 6,
+  "lessons": [
+    {
+      "id": "g3-land-and-water",
+      "slug": "land-and-water",
+      "title": "Land and Water",
+      "description": "Grade 3 OUR CHANGING EARTH - Understanding the major features of Earth's surface: land and water.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEarth's surface is made up of land and water. About seventy percent of Earth's surface is covered by water, mainly in oceans. The remaining thirty percent is land. In this lesson, you will learn about Earth's land and water features.\n\n## Main Content\n\n**Land Features**\n\nEarth's land includes mountains, hills, plains, valleys, and deserts. Mountains are the highest land features. Plains are flat areas. Valleys are low areas between mountains. Deserts are dry areas with very little rain.",
+      "order": 1,
+      "standards": [
+        "Sc6.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Earth's surface is made up of land and water. About seventy percent of Earth's surface is covered by water, mainly in oceans. The remaining thirty percent is land."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Surface",
+                "thai": "ผิวโลก",
+                "definition": "The outside part of the Earth"
+              },
+              {
+                "term": "Mountain",
+                "thai": "ภูเขา",
+                "definition": "A very tall natural feature of land"
+              },
+              {
+                "term": "Ocean",
+                "thai": "มหาสมุทร",
+                "definition": "A very large body of salt water"
+              },
+              {
+                "term": "Valley",
+                "thai": "หุบเขา",
+                "definition": "A low area of land between hills or mountains"
+              },
+              {
+                "term": "Plain",
+                "thai": "ที่ราบ",
+                "definition": "A large flat area of land"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "แผ่นดินและน้ำ"
+    },
+    {
+      "id": "g3-rocks-and-soil",
+      "slug": "rocks-and-soil",
+      "title": "Rocks and Soil",
+      "description": "Grade 3 OUR CHANGING EARTH - Understanding the composition and types of rocks and soil.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nThe ground beneath our feet is made of rocks and soil. Rocks come in many sizes, shapes, and colors. Soil is made from tiny pieces of broken rock mixed with living things. In this lesson, you will learn about rocks and soil.\n\n## Main Content\n\n**Types of Rocks**\n\nThere are three main types of rocks: igneous rocks formed from cooled lava, sedimentary rocks formed from layers of sediment, and metamorphic rocks changed by heat and pressure. Soil is made from weathered rock pieces mixed with decaying plants and animals.",
+      "order": 2,
+      "standards": [
+        "Sc6.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "The ground beneath our feet is made of rocks and soil. Rocks come in many sizes, shapes, and colors. Soil is made from tiny pieces of broken rock mixed with living things."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Rock",
+                "thai": "หิน",
+                "definition": "A solid natural material that makes up Earth's surface"
+              },
+              {
+                "term": "Soil",
+                "thai": "ดิน",
+                "definition": "The top layer of Earth's surface where plants grow"
+              },
+              {
+                "term": "Sediment",
+                "thai": "ตะกอน",
+                "definition": "Tiny pieces of rock, sand, and mud"
+              },
+              {
+                "term": "Weathering",
+                "thai": "การผุพัง",
+                "definition": "The breaking down of rocks by wind, water, and ice"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "หินและดิน"
+    },
+    {
+      "id": "g3-weather-patterns",
+      "slug": "weather-patterns",
+      "title": "Weather Patterns",
+      "description": "Grade 3 OUR CHANGING EARTH - Observing and recording weather patterns.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nWeather is the condition of the air outside at a particular time and place. Weather changes every day. In this lesson, you will learn about different types of weather and how to observe and record weather patterns.\n\n## Main Content\n\n**Types of Weather**\n\nSunny weather means the sky is clear and bright. Cloudy weather means the sky is covered with clouds. Rainy weather means water falls from clouds. Stormy weather includes strong wind and rain. Weather affects what we wear, what we do, and how we feel.",
+      "order": 3,
+      "standards": [
+        "Sc6.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Weather is the condition of the air outside at a particular time and place. Weather changes every day. In this lesson, you will learn about different types of weather and how to observe and record weather patterns."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Weather",
+                "thai": "สภาพอากาศ",
+                "definition": "The condition of the air outside at a particular time"
+              },
+              {
+                "term": "Temperature",
+                "thai": "อุณหภูมิ",
+                "definition": "How hot or cold the air is"
+              },
+              {
+                "term": "Forecast",
+                "thai": "การพยากรณ์อากาศ",
+                "definition": "A prediction of future weather conditions"
+              },
+              {
+                "term": "Climate",
+                "thai": "สภาพอากาศ",
+                "definition": "The usual weather conditions in an area over a long time"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "รูปแบบสภาพอากาศ"
+    },
+    {
+      "id": "g3-day-and-night",
+      "slug": "day-and-night",
+      "title": "Day and Night",
+      "description": "Grade 3 OUR CHANGING EARTH - Understanding the causes of day and night through Earth's rotation.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nWhy does the Sun rise every morning and set every evening? Why do we have day and night? The answer lies in how Earth moves. In this lesson, you will learn what causes day and night.\n\n## Main Content\n\n**Earth's Rotation**\n\nEarth spins on an axis like a top. This spinning is called rotation. It takes about twenty-four hours for Earth to complete one full rotation. The side of Earth facing the Sun has day. The side facing away from the Sun has night.",
+      "order": 4,
+      "standards": [
+        "Sc6.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Why does the Sun rise every morning and set every evening? Why do we have day and night? The answer lies in how Earth moves."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Rotation",
+                "thai": "การหมุนรอบตัวเอง",
+                "definition": "The spinning of Earth on its axis"
+              },
+              {
+                "term": "Axis",
+                "thai": "แกน",
+                "definition": "An imaginary line through the center of Earth"
+              },
+              {
+                "term": "Sunrise",
+                "thai": "พระอาทิตย์ขึ้น",
+                "definition": "The time when the Sun appears above the horizon"
+              },
+              {
+                "term": "Sunset",
+                "thai": "พระอาทิตย์ตก",
+                "definition": "The time when the Sun disappears below the horizon"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "กลางวันและกลางคืน"
+    },
+    {
+      "id": "g3-weather-observation",
+      "slug": "weather-observation",
+      "title": "Weather Observation",
+      "description": "Grade 3 OUR CHANGING EARTH - Hands-on weather observation and recording activity.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nToday you will become a weather scientist! You will observe the weather outside and record your observations using scientific tools and methods.\n\n## Main Content\n\n**Weather Observation Activity**\n\nUse a thermometer to measure temperature. Observe the sky and clouds. Check the direction of the wind. Record all your observations in a weather journal. Compare your observations with the weather forecast.",
+      "order": 5,
+      "standards": [
+        "Sc6.2-G3",
+        "Sc8.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will become a weather scientist! You will observe the weather outside and record your observations using scientific tools and methods."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Thermometer",
+                "thai": "เทอร์มอมิเตอร์",
+                "definition": "A tool for measuring temperature"
+              },
+              {
+                "term": "Wind direction",
+                "thai": "ทิศทางลม",
+                "definition": "The direction the wind is blowing from"
+              },
+              {
+                "term": "Journal",
+                "thai": "วารสาร",
+                "definition": "A book for recording observations"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การสังเกตสภาพอากาศ"
+    },
+    {
+      "id": "g3-changing-earth",
+      "slug": "changing-earth",
+      "title": "Changing Earth",
+      "description": "Grade 3 OUR CHANGING EARTH - How Earth's surface changes over time through erosion, weathering, and volcanic activity.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEarth's surface is always changing. Wind, water, and ice slowly wear away rocks and shape the land. Volcanoes can create new land. In this lesson, you will learn how Earth changes over time.\n\n## Main Content\n\n**How Earth Changes**\n\nErosion is when wind and water move rocks and soil from one place to another. Weathering breaks rocks into smaller pieces. Rivers can carve valleys. Waves shape coastlines. These changes happen slowly over thousands of years, but they constantly reshape our planet.",
+      "order": 6,
+      "standards": [
+        "Sc6.1-G3",
+        "Sc6.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Earth's surface is always changing. Wind, water, and ice slowly wear away rocks and shape the land. In this lesson, you will learn how Earth changes over time."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Erosion",
+                "thai": "การกัดเซาะ",
+                "definition": "The wearing away of land by wind, water, or ice"
+              },
+              {
+                "term": "Volcano",
+                "thai": "ภูเขาไฟ",
+                "definition": "An opening in Earth that lets out hot lava and gas"
+              },
+              {
+                "term": "Coastline",
+                "thai": "ชายฝั่ง",
+                "definition": "The line where land meets the ocean"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "โลกที่เปลี่ยนแปลง"
+    },
+    {
+      "id": "g3-earth-model",
+      "slug": "earth-model",
+      "title": "Earth Model",
+      "description": "Grade 3 OUR CHANGING EARTH - Creating a model of Earth showing land and water features.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nCreate a 3D model of Earth! Your model should show major land features like mountains, plains, and deserts, as well as water features like oceans and rivers.\n\n## Main Content\n\n**Model Building**\n\nUse clay, paint, and other materials to build your Earth model. Identify the continents and oceans. Label major landforms. Add details like rivers, lakes, and mountain ranges. Present your model and explain the features you included.",
+      "order": 7,
+      "standards": [
+        "Sc6.1-G3",
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Create a 3D model of Earth! Your model should show major land features like mountains, plains, and deserts, as well as water features like oceans and rivers."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Model",
+                "thai": "แบบจำลอง",
+                "definition": "A representation of something real"
+              },
+              {
+                "term": "Continent",
+                "thai": "ทวีป",
+                "definition": "One of the seven large land masses on Earth"
+              },
+              {
+                "term": "River",
+                "thai": "แม่น้ำ",
+                "definition": "A large natural stream of water flowing to the sea"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "แบบจำลองโลก"
+    },
+    {
+      "id": "g3-unit-6-review",
+      "slug": "unit-6-review",
+      "title": "Unit 6 Review",
+      "description": "Grade 3 OUR CHANGING EARTH - Review activity for Earth's surface features, weather, and day/night.",
+      "lessonType": "REVIEW",
+      "content": "## Review Activity\n\nTest your knowledge of Earth's features, weather patterns, and day and night! Identify landforms, read weather instruments, and explain Earth's rotation.",
+      "order": 8,
+      "standards": [
+        "Sc6.1-G3",
+        "Sc6.2-G3",
+        "Sc6.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Test your knowledge of Earth's features, weather patterns, and day and night!"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Identify",
+                "thai": "ระบุ",
+                "definition": "To recognize and name something"
+              },
+              {
+                "term": "Explain",
+                "thai": "อธิบาย",
+                "definition": "To make something clear by giving details"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ทบทวนหน่วย 6"
+    },
+    {
+      "id": "g3-unit-6-summative-assessment",
+      "slug": "unit-6-summative-assessment",
+      "title": "Unit 6 Summative Assessment",
+      "description": "Grade 3 OUR CHANGING EARTH - Summative assessment covering landforms, weather, and Earth's rotation.",
+      "lessonType": "ASSESSMENT",
+      "content": "## Summative Assessment\n\nThis assessment covers everything you learned about Earth's surface, weather, and day and night in Unit 6.",
+      "order": 9,
+      "standards": [
+        "Sc6.1-G3",
+        "Sc6.2-G3",
+        "Sc6.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "This assessment covers everything you learned about Earth's surface, weather, and day and night in Unit 6. Good luck!"
+          }
+        ]
+      },
+      "titleThai": "แบบทดสอบปลายหน่วย หน่วย 6"
+    },
+    {
+      "id": "g3-weather-week",
+      "slug": "weather-week",
+      "title": "Weather Week",
+      "description": "Grade 3 OUR CHANGING EARTH - Recording weather observations for one week and identifying patterns.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nFor this activity, you will observe and record the weather every day for one week. At the end of the week, you will look for patterns in your data.\n\n## Main Content\n\n**Recording Weather for a Week**\n\nEach day, observe the sky, measure the temperature, and record the weather type. At the end of the week, create a chart showing all your observations. Look for patterns in temperature and weather conditions.",
+      "order": 10,
+      "standards": [
+        "Sc6.2-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "For this activity, you will observe and record the weather every day for one week. At the end of the week, you will look for patterns in your data."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Pattern",
+                "thai": "รูปแบบ",
+                "definition": "Something that repeats in a predictable way"
+              },
+              {
+                "term": "Chart",
+                "thai": "แผนภูมิ",
+                "definition": "A visual display of information"
+              },
+              {
+                "term": "Data",
+                "thai": "ข้อมูล",
+                "definition": "Facts and numbers collected during observations"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "สัปดาห์สภาพอากาศ"
+    },
+    {
+      "id": "g3-science-journal-earth",
+      "slug": "science-journal-earth",
+      "title": "Science Journal: Earth",
+      "description": "Grade 3 OUR CHANGING EARTH - Recording observations and findings about Earth in a science journal.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nToday you will use your science journal to record everything you learned about Earth's surface, weather, and day and night.\n\n## Main Content\n\n**Recording Earth Learning**\n\nDraw maps showing land and water features. Record weather observations and patterns. Write down what you learned about day and night. Include any questions you still have about our changing Earth.",
+      "order": 11,
+      "standards": [
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will use your science journal to record everything you learned about Earth's surface, weather, and day and night."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Map",
+                "thai": "แผนที่",
+                "definition": "A drawing of an area showing physical features"
+              },
+              {
+                "term": "Record",
+                "thai": "บันทึก",
+                "definition": "To write down information for later use"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "วารสารวิทยาศาสตร์: โลก"
+    }
+  ]
+}

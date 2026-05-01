@@ -1,0 +1,11 @@
+{
+  "track_id": "onboarding_flow_20260428",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-04-28T00:00:00Z",
+  "updated_at": "2026-04-28T00:00:00Z",
+  "description": "Build guided first-run experience for students joining classes and teachers creating them",
+  "estimated_tasks": 15,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

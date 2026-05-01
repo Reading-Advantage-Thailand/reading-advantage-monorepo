@@ -1,0 +1,15 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { MasteryRunWhereInputObjectSchema as MasteryRunWhereInputObjectSchema } from './objects/MasteryRunWhereInput.schema';
+import { MasteryRunOrderByWithAggregationInputObjectSchema as MasteryRunOrderByWithAggregationInputObjectSchema } from './objects/MasteryRunOrderByWithAggregationInput.schema';
+import { MasteryRunScalarWhereWithAggregatesInputObjectSchema as MasteryRunScalarWhereWithAggregatesInputObjectSchema } from './objects/MasteryRunScalarWhereWithAggregatesInput.schema';
+import { MasteryRunScalarFieldEnumSchema } from './enums/MasteryRunScalarFieldEnum.schema';
+import { MasteryRunCountAggregateInputObjectSchema as MasteryRunCountAggregateInputObjectSchema } from './objects/MasteryRunCountAggregateInput.schema';
+import { MasteryRunMinAggregateInputObjectSchema as MasteryRunMinAggregateInputObjectSchema } from './objects/MasteryRunMinAggregateInput.schema';
+import { MasteryRunMaxAggregateInputObjectSchema as MasteryRunMaxAggregateInputObjectSchema } from './objects/MasteryRunMaxAggregateInput.schema';
+import { MasteryRunAvgAggregateInputObjectSchema as MasteryRunAvgAggregateInputObjectSchema } from './objects/MasteryRunAvgAggregateInput.schema';
+import { MasteryRunSumAggregateInputObjectSchema as MasteryRunSumAggregateInputObjectSchema } from './objects/MasteryRunSumAggregateInput.schema';
+
+export const MasteryRunGroupBySchema: z.ZodType<Prisma.MasteryRunGroupByArgs> = z.object({ where: MasteryRunWhereInputObjectSchema.optional(), orderBy: z.union([MasteryRunOrderByWithAggregationInputObjectSchema, MasteryRunOrderByWithAggregationInputObjectSchema.array()]).optional(), having: MasteryRunScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(MasteryRunScalarFieldEnumSchema), _count: z.union([ z.literal(true), MasteryRunCountAggregateInputObjectSchema ]).optional(), _min: MasteryRunMinAggregateInputObjectSchema.optional(), _max: MasteryRunMaxAggregateInputObjectSchema.optional(), _avg: MasteryRunAvgAggregateInputObjectSchema.optional(), _sum: MasteryRunSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.MasteryRunGroupByArgs>;
+
+export const MasteryRunGroupByZodSchema = z.object({ where: MasteryRunWhereInputObjectSchema.optional(), orderBy: z.union([MasteryRunOrderByWithAggregationInputObjectSchema, MasteryRunOrderByWithAggregationInputObjectSchema.array()]).optional(), having: MasteryRunScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(MasteryRunScalarFieldEnumSchema), _count: z.union([ z.literal(true), MasteryRunCountAggregateInputObjectSchema ]).optional(), _min: MasteryRunMinAggregateInputObjectSchema.optional(), _max: MasteryRunMaxAggregateInputObjectSchema.optional(), _avg: MasteryRunAvgAggregateInputObjectSchema.optional(), _sum: MasteryRunSumAggregateInputObjectSchema.optional() }).strict();

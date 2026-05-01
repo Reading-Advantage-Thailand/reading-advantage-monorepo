@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "Look around you! Everything you can see and touch is made of matter. The chair you sit on, the air you breathe, and the water you drink are all matter. But have you noticed that matter can look very different? Ice is hard, water flows, and steam floats away. These are the three states of matter. Today, you will discover what makes matter solid, liquid, or gas!",
+      "contentThai": "มองไปรอบๆ ตัวคุณ! ทุกสิ่งที่คุณเห็นและสัมผัสได้ทำจากสสาร เก้าอี้ที่คุณนั่ง อากาศที่คุณหายใจ และน้ำที่คุณดื่มล้วนเป็นสสาร แต่คุณสังเกตไหมว่าสสารสามารถดูแตกต่างกันได้มาก? น้ำแข็งแข็ง น้ำไหล และไอน้ำลอยหายไป นี่คือสสารสามสถานะ วันนี้คุณจะได้ค้นพบว่าอะไรทำให้สสารเป็นของแข็ง ของเหลว หรือก๊าซ!"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Matter",
+          "thai": "สสาร",
+          "definition": "Anything that takes up space and has mass"
+        },
+        {
+          "term": "Solid",
+          "thai": "ของแข็ง",
+          "definition": "A state of matter with a definite shape and volume"
+        },
+        {
+          "term": "Liquid",
+          "thai": "ของเหลว",
+          "definition": "A state of matter that flows and takes the shape of its container"
+        },
+        {
+          "term": "Gas",
+          "thai": "ก๊าซ",
+          "definition": "A state of matter that spreads out to fill any space"
+        },
+        {
+          "term": "Particle",
+          "thai": "อนุภาค",
+          "definition": "A tiny piece of matter too small to see"
+        },
+        {
+          "term": "Melting",
+          "thai": "การหลอมเหลว",
+          "definition": "When a solid changes into a liquid"
+        },
+        {
+          "term": "Freezing",
+          "thai": "การแข็งตัว",
+          "definition": "When a liquid changes into a solid"
+        },
+        {
+          "term": "Evaporation",
+          "thai": "การระเหย",
+          "definition": "When a liquid changes into a gas"
+        },
+        {
+          "term": "Condensation",
+          "thai": "การควบแน่น",
+          "definition": "When a gas changes into a liquid"
+        },
+        {
+          "term": "Temperature",
+          "thai": "อุณหภูมิ",
+          "definition": "A measure of how hot or cold something is"
+        },
+        {
+          "term": "Volume",
+          "thai": "ปริมาตร",
+          "definition": "The amount of space something takes up"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## What Is Matter?\n\n**Matter** is anything that takes up space and has mass. Mass is the amount of stuff in an object. Everything around you is made of matter - your desk, your body, the air, even things you cannot see!\n\nMatter is made of tiny pieces called **particles**. These particles are so small that we cannot see them even with a magnifying glass. How particles are arranged and how they move determines whether matter is a solid, liquid, or gas.\n\n## The Three States of Matter\n\n### Solids\n\n**Solids** have a definite shape and a definite volume. They don't change shape unless you do something to them, like cut or break them.\n\n**What particles do in solids:**\n- Particles are packed tightly together\n- Particles vibrate in place but don't move around\n- Particles are held together by strong forces\n\n**Examples of solids:**\n- Wood, plastic, metal\n- Ice, rocks, glass\n- Your desk, pencil, book\n\nBecause particles in solids are packed so tightly, you cannot push your hand through a solid wall!",
+      "contentThai": "## สสารคืออะไร?\n\n**สสาร** คือสิ่งใดก็ตามที่มีพื้นที่และมีมวล มวลคือปริมาณของสสารในวัตถุ ทุกสิ่งรอบตัวคุณทำจากสสาร - โต๊ะของคุณ ร่างกายของคุณ อากาศ แม้แต่สิ่งที่คุณมองไม่เห็น!"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-states-of-matter-1.webp",
+      "alt": "Diagram showing particle arrangement in solids (tightly packed), liquids (loosely arranged), and gases (spread apart)",
+      "caption": "How Particles Are Arranged in Each State of Matter",
+      "captionThai": "อนุภาคถูกจัดเรียงอย่างไรในสสารแต่ละสถานะ",
+      "aspectRatio": 1.8,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "### Liquids\n\n**Liquids** have a definite volume but no definite shape. They take the shape of whatever container they're in. Pour water into a cup, and it becomes cup-shaped. Pour it into a bottle, and it becomes bottle-shaped!\n\n**What particles do in liquids:**\n- Particles are close together but not as tight as in solids\n- Particles can slide past each other\n- Particles move around more freely than in solids\n\n**Examples of liquids:**\n- Water, milk, juice\n- Oil, honey, soap\n- Gasoline, mercury\n\nBecause particles in liquids can move around, liquids can flow and pour!\n\n### Gases\n\n**Gases** have no definite shape AND no definite volume. They spread out to fill whatever container they're in. If you open a bottle of perfume, the smell spreads throughout the entire room!\n\n**What particles do in gases:**\n- Particles are very far apart from each other\n- Particles move very fast in all directions\n- Particles bounce off each other and the container walls\n\n**Examples of gases:**\n- Air (oxygen, nitrogen, carbon dioxide)\n- Steam (water vapor)\n- Helium in balloons\n\nBecause gas particles are so spread out, you can walk right through air!"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-states-of-matter-2.webp",
+      "alt": "Examples of the three states of matter using water: ice cube as solid, water in glass as liquid, and steam rising as gas",
+      "caption": "Water Can Be Solid, Liquid, or Gas",
+      "captionThai": "น้ำสามารถเป็นของแข็ง ของเหลว หรือก๊าซ",
+      "aspectRatio": 1.5,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "## Changing States of Matter\n\nMatter can change from one state to another! This happens when you add or remove heat energy. Heat makes particles move faster, while cold makes them slow down.\n\n### Melting (Solid → Liquid)\nWhen you add heat to a solid, the particles start moving more. Eventually, they break free from their fixed positions and can slide around. The solid **melts** into a liquid!\n\nExamples:\n- Ice melts into water\n- Butter melts in a hot pan\n- Chocolate melts in your mouth\n\n### Freezing (Liquid → Solid)\nWhen you remove heat from a liquid (cool it down), the particles slow down. They stop moving around and lock into fixed positions. The liquid **freezes** into a solid!\n\nExamples:\n- Water freezes into ice\n- Melted wax hardens into a candle\n- Liquid chocolate hardens when cooled\n\n### Evaporation (Liquid → Gas)\nWhen you add heat to a liquid, some particles get enough energy to escape into the air. The liquid **evaporates** into a gas!\n\nExamples:\n- Puddles dry up on sunny days\n- Wet clothes dry on a clothesline\n- Water boils into steam\n\n### Condensation (Gas → Liquid)\nWhen you cool a gas, the particles slow down and come together. The gas **condenses** into a liquid!\n\nExamples:\n- Water droplets form on a cold glass\n- Clouds form in the sky\n- Morning dew appears on grass"
+    },
+    {
+      "type": "reading_passage",
+      "title": "The Ice Cream Adventure",
+      "titleThai": "การผจญภัยไอศกรีม",
+      "content": "Lek and her grandmother were making mango ice cream. It was a hot summer day in Bangkok, and Lek watched every step carefully.\n\n\"First, we mix the mango, sugar, and cream,\" said Grandmother. \"What state of matter are these ingredients?\"\n\nLek thought about it. \"The sugar is solid because it has a definite shape. The cream is liquid because it takes the shape of the bowl. The mango is solid too, but when we blend it, it becomes more like a liquid!\"\n\n\"Excellent!\" smiled Grandmother. \"Now we pour the mixture into this container and put it in the freezer.\"\n\n\"Why does the freezer turn it into ice cream?\" asked Lek.\n\n\"The freezer is very cold. It removes heat from our mixture. When liquid gets cold enough, it freezes and becomes solid. The particles slow down and lock together.\"\n\nWhile waiting for the ice cream, Lek noticed water droplets on the outside of her cold water glass. \"Grandmother, where did this water come from? I didn't spill anything!\"\n\n\"That's condensation!\" explained Grandmother. \"The air around us contains water vapor, which is a gas. When the cold glass cools the air around it, the water vapor slows down and turns back into liquid water. See how the gas became a liquid?\"\n\nLek touched the droplets. They were cool and wet. \"So the water was invisible in the air, but now I can see it!\"\n\nAfter two hours, the ice cream was ready. But when Grandmother opened the container, she frowned. \"We forgot to stir it! Now it's too hard.\"\n\nShe left the container on the counter for a few minutes. Slowly, the edges began to soften.\n\n\"It's melting!\" said Lek. \"The heat from the room is making the solid ice cream turn back into liquid.\"\n\n\"Just a little melting,\" said Grandmother, scooping the softened ice cream into bowls. \"We want it soft enough to scoop but still cold.\"\n\nAs they ate their delicious mango ice cream, Lek thought about everything she had learned. \"Grandmother, our ice cream went from liquid to solid to almost liquid again. Matter keeps changing states!\"\n\n\"You're right,\" said Grandmother. \"And it all depends on temperature. Add heat, and things melt or evaporate. Remove heat, and things freeze or condense. That's why scientists call these changes 'physical changes' - the matter is still the same stuff, just in a different form.\"\n\nLek finished her ice cream, but she kept thinking about states of matter. She noticed steam rising from her mother's cooking - water changing to gas. She saw ice cubes melting in her father's drink - solid changing to liquid. States of matter were everywhere once you knew how to look!",
+      "contentThai": "เล็กและคุณยายกำลังทำไอศกรีมมะม่วง เป็นวันฤดูร้อนที่ร้อนในกรุงเทพฯ และเล็กดูทุกขั้นตอนอย่างระมัดระวัง\n\n\"ก่อนอื่น เราผสมมะม่วง น้ำตาล และครีม\" คุณยายพูด \"ส่วนผสมเหล่านี้เป็นสสารสถานะอะไร?\"\n\nเล็กคิดเกี่ยวกับมัน \"น้ำตาลเป็นของแข็งเพราะมีรูปร่างที่แน่นอน ครีมเป็นของเหลวเพราะมันเป็นรูปร่างของชาม มะม่วงก็เป็นของแข็งเหมือนกัน แต่เมื่อเราปั่น มันจะคล้ายของเหลวมากขึ้น!\"",
+      "wordCount": 425
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- **Matter** is anything that takes up space and has mass\n- Matter is made of tiny **particles** that move and are arranged differently in each state\n- **Solids** have a definite shape and volume (particles are tightly packed)\n- **Liquids** have a definite volume but take the shape of their container (particles can slide around)\n- **Gases** have no definite shape or volume and spread out to fill any space (particles are far apart)\n- **Melting**: solid → liquid (add heat)\n- **Freezing**: liquid → solid (remove heat)\n- **Evaporation**: liquid → gas (add heat)\n- **Condensation**: gas → liquid (remove heat)\n- Temperature determines whether matter is solid, liquid, or gas\n\nUnderstanding states of matter helps us explain everyday things like ice melting, puddles drying, and water droplets forming on cold surfaces!"
+    }
+  ]
+}

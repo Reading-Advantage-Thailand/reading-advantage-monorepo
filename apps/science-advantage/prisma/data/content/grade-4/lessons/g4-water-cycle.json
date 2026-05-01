@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "The water you drink today might have been part of a dinosaur's drink millions of years ago! Water on Earth is constantly moving and changing form in a never-ending cycle. It evaporates from oceans, falls as rain, flows in rivers, and starts all over again. Today, you will explore the amazing water cycle and discover how water travels around our planet!",
+      "contentThai": "น้ำที่คุณดื่มวันนี้อาจเคยเป็นส่วนหนึ่งของน้ำที่ไดโนเสาร์ดื่มเมื่อหลายล้านปีก่อน! น้ำบนโลกเคลื่อนที่และเปลี่ยนรูปอยู่ตลอดเวลาในวัฏจักรที่ไม่สิ้นสุด มันระเหยจากมหาสมุทร ตกลงมาเป็นฝน ไหลในแม่น้ำ และเริ่มต้นใหม่ วันนี้คุณจะได้สำรวจวัฏจักรน้ำที่น่าทึ่งและค้นพบว่าน้ำเดินทางรอบโลกของเราอย่างไร!"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Water cycle",
+          "thai": "วัฏจักรน้ำ",
+          "definition": "The continuous movement of water on, above, and below Earth's surface"
+        },
+        {
+          "term": "Evaporation",
+          "thai": "การระเหย",
+          "definition": "When water changes from liquid to gas (water vapor)"
+        },
+        {
+          "term": "Condensation",
+          "thai": "การควบแน่น",
+          "definition": "When water vapor changes from gas to liquid"
+        },
+        {
+          "term": "Precipitation",
+          "thai": "หยาดน้ำฟ้า",
+          "definition": "Water falling from clouds as rain, snow, sleet, or hail"
+        },
+        {
+          "term": "Collection",
+          "thai": "การสะสม",
+          "definition": "When water gathers in oceans, lakes, rivers, and underground"
+        },
+        {
+          "term": "Water vapor",
+          "thai": "ไอน้ำ",
+          "definition": "Water in its gas form, invisible in the air"
+        },
+        {
+          "term": "Groundwater",
+          "thai": "น้ำใต้ดิน",
+          "definition": "Water stored underground in soil and rock"
+        },
+        {
+          "term": "Runoff",
+          "thai": "น้ำไหลบ่า",
+          "definition": "Water flowing over the land surface into streams and rivers"
+        },
+        {
+          "term": "Transpiration",
+          "thai": "การคายน้ำ",
+          "definition": "When plants release water vapor through their leaves"
+        },
+        {
+          "term": "Glacier",
+          "thai": "ธารน้ำแข็ง",
+          "definition": "A large mass of ice that moves slowly over land"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## The Water Cycle: Earth's Recycling System\n\nThe **water cycle** is the continuous movement of water on Earth. Water doesn't stay in one place - it moves from oceans to sky to land and back again. This cycle has been happening for billions of years!\n\n### Why Is the Water Cycle Important?\n\n- Provides fresh water for drinking\n- Waters plants and crops\n- Creates weather patterns\n- Supports all life on Earth\n- Cleans and purifies water naturally\n\n**Amazing fact:** Earth has the same amount of water today as it had when dinosaurs lived! Water is never created or destroyed - it just keeps cycling.\n\n## The Four Main Steps of the Water Cycle\n\n### Step 1: Evaporation\n\n**Evaporation** happens when the sun heats water in oceans, lakes, rivers, and puddles. The water changes from liquid to gas (water vapor) and rises into the air.\n\n- Warm water evaporates faster than cold water\n- More evaporation happens on sunny, windy days\n- Most evaporation occurs from the ocean (about 80%)\n\n**Transpiration** is a special kind of evaporation. Plants absorb water through their roots, use it for growth, and release water vapor through tiny holes in their leaves. A large tree can release hundreds of liters of water per day!"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-water-cycle-1.webp",
+      "alt": "Colorful diagram of the complete water cycle showing evaporation from ocean, cloud formation, precipitation as rain and snow, and water collection in rivers and groundwater",
+      "caption": "The Water Cycle: How Water Moves Around Earth",
+      "captionThai": "วัฏจักรน้ำ: น้ำเคลื่อนที่รอบโลกอย่างไร",
+      "aspectRatio": 1.6,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "### Step 2: Condensation\n\n**Condensation** happens when water vapor rises high into the sky and cools down. Cool air cannot hold as much water vapor, so the vapor changes back into tiny liquid water droplets.\n\n- Water vapor condenses around tiny particles of dust, pollen, or pollution\n- Billions of water droplets come together to form clouds\n- Different cloud types form at different heights\n\n**You can see condensation happening:**\n- Water droplets on a cold glass of water\n- Fog in the morning\n- Your breath on a cold day\n- Steam from a pot turning into water drops on a lid\n\n### Step 3: Precipitation\n\n**Precipitation** is any water that falls from clouds to Earth. When water droplets in clouds combine and get heavy enough, they fall due to gravity.\n\n**Types of precipitation:**\n- **Rain**: Liquid water drops (most common)\n- **Snow**: Ice crystals (when air is cold enough)\n- **Sleet**: Rain that freezes as it falls\n- **Hail**: Balls of ice formed in thunderstorms\n\nIn Thailand, most precipitation is rain. Northern mountains sometimes get frost in winter, but snow is extremely rare!"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "### Step 4: Collection\n\n**Collection** is when water gathers on Earth's surface and underground.\n\n**Where water collects:**\n- **Oceans**: Hold 97% of Earth's water (salty!)\n- **Lakes and rivers**: Fresh water on the surface\n- **Groundwater**: Water stored in underground rock and soil\n- **Glaciers**: Frozen water at poles and mountains\n- **Atmosphere**: Water vapor in the air\n\n**What happens to rain when it falls?**\n- Some water flows over land as **runoff**, joining streams and rivers\n- Some water soaks into the soil and becomes **groundwater**\n- Some water is absorbed by plant roots\n- Some water evaporates right away and starts the cycle again\n\n## Following a Water Droplet\n\nImagine you are a water droplet in the ocean. Your journey might look like this:\n\n1. The sun heats you and you evaporate into the air\n2. You rise up, cool down, and condense into a cloud\n3. You join other droplets until you're heavy enough to fall as rain\n4. You land on a mountain and flow into a river\n5. The river carries you back to the ocean\n6. The cycle starts again!\n\nThis journey might take days, weeks, or even thousands of years depending on where you go."
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-water-cycle-2.webp",
+      "alt": "Illustration showing where Earth's water is stored: oceans 97%, glaciers 2%, groundwater and lakes under 1%",
+      "caption": "Where Is Earth's Water?",
+      "captionThai": "น้ำของโลกอยู่ที่ไหน?",
+      "aspectRatio": 1.4,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-4",
+      "type": "text",
+      "content": "## The Water Cycle and Weather\n\nThe water cycle drives weather patterns:\n\n- **Evaporation** adds moisture to the air\n- **Condensation** forms clouds\n- **Precipitation** creates rain and storms\n- **Collection** in oceans provides water for more evaporation\n\n### Monsoons in Thailand\n\nThailand's rainy season is caused by the water cycle and wind patterns:\n\n1. The sun heats the ocean, evaporating lots of water\n2. Monsoon winds blow moist ocean air over Thailand\n3. The moist air rises over mountains and cools\n4. Water vapor condenses and falls as heavy rain\n5. Rivers fill with water and flow back to the sea\n\n## Humans and the Water Cycle\n\nWe depend on the water cycle for:\n- Drinking water from rivers, lakes, and groundwater\n- Water for growing rice and other crops\n- Hydroelectric power from flowing rivers\n- Fish and other food from water bodies\n\n**We must protect water resources!**\n- Don't pollute rivers and lakes\n- Use water wisely and don't waste it\n- Protect forests (trees help the water cycle through transpiration)\n- Keep oceans clean"
+    },
+    {
+      "type": "reading_passage",
+      "title": "The Journey of a Raindrop",
+      "titleThai": "การเดินทางของหยดน้ำฝน",
+      "content": "Lin held out her hand and caught a raindrop. \"Where did you come from?\" she wondered.\n\nIf that raindrop could talk, it might tell this story:\n\n\"My journey began far away in the Gulf of Thailand. I was part of the warm ocean, swimming with fish and rocking with the waves. One sunny day, the sun heated me so much that I evaporated! I turned into invisible water vapor and floated up into the sky.\n\nUp, up, up I went. As I rose higher, the air got colder. I started to slow down and cool off. Then something amazing happened - I condensed! I changed from invisible vapor back into a tiny water droplet. I joined billions of other droplets, and together we formed a fluffy white cloud.\n\nThe wind pushed our cloud across the sky. We floated over the ocean, over the coast, and over the green hills of Chiang Rai. The air got colder as we rose over the mountains.\n\nInside the cloud, I kept bumping into other droplets. We joined together and grew bigger. Soon I was too heavy to float! Along with millions of my friends, I fell from the cloud as rain.\n\nFalling was exciting! I could see farms, houses, and rivers below. I landed with a splash on a teak leaf in the forest.\n\nBut my journey wasn't over. I slid off the leaf and fell to the ground. The soil soaked me up like a sponge. I became groundwater, slowly moving through tiny spaces in the soil and rock.\n\nAfter many weeks underground, I found my way into a small spring. The spring fed into a stream, and the stream joined a river. The river carried me past villages and rice fields.\n\nFinally, after many kilometers, I reached the Chao Phraya River. The great river carried me all the way to Bangkok and back to the sea. The Gulf of Thailand welcomed me home!\n\nNow I float in the warm ocean again, waiting for the sun to heat me and start my next adventure. Maybe next time I'll fall on a different mountain, or join a different river. Maybe I'll be drunk by a person or absorbed by a rice plant. Every journey through the water cycle is different!\"\n\nLin smiled at the raindrop in her hand. \"Thank you for visiting,\" she said, watching it slide off and join a puddle. Soon the sun would warm that puddle, and the little droplet would begin another journey through the wonderful water cycle.",
+      "contentThai": "ลินยื่นมือออกไปรับหยดน้ำฝน \"เธอมาจากไหน?\" เธอสงสัย\n\nถ้าหยดน้ำฝนนั้นพูดได้ มันอาจจะเล่าเรื่องนี้:\n\n\"การเดินทางของฉันเริ่มต้นจากอ่าวไทยไกลๆ ฉันเป็นส่วนหนึ่งของมหาสมุทรที่อบอุ่น ว่ายน้ำกับปลาและโยกไปมากับคลื่น วันหนึ่งที่แดดจ้า ดวงอาทิตย์ทำให้ฉันร้อนมากจนฉันระเหย! ฉันกลายเป็นไอน้ำที่มองไม่เห็นและลอยขึ้นไปบนฟ้า\"",
+      "wordCount": 410
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- The **water cycle** is the continuous movement of water on Earth\n- Water is never created or destroyed - the same water has been cycling for billions of years\n- **Four main steps**: Evaporation, Condensation, Precipitation, Collection\n- **Evaporation**: Water changes from liquid to gas and rises into the air\n- **Condensation**: Water vapor cools and forms clouds\n- **Precipitation**: Water falls from clouds as rain, snow, sleet, or hail\n- **Collection**: Water gathers in oceans, lakes, rivers, and underground\n- **Transpiration**: Plants release water vapor through their leaves\n- Most water (97%) is in the oceans and is salty\n- The water cycle drives weather and is essential for all life\n- We must protect water resources by keeping them clean and not wasting water\n\nUnderstanding the water cycle helps us appreciate where our water comes from and why we must protect it!"
+    }
+  ]
+}

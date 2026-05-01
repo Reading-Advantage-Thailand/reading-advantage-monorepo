@@ -1,0 +1,954 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "unit": 1,
+  "lessons": [
+    {
+      "id": "g3-being-a-scientist",
+      "slug": "being-a-scientist",
+      "title": "Being a Scientist",
+      "description": "What do scientists do? Learn about observing, questioning, predicting, testing, and concluding.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nHave you ever wondered why the sky is blue? Or how birds can fly? Scientists wonder about things too! A scientist is someone who asks questions about the world and looks for answers. Today, you will learn how to think like a scientist. You can be a scientist right now!\n\n## Main Content\n\n**What Do Scientists Do?**\n\nScientists follow special steps to learn about the world. These steps help them find answers to their questions. Let's learn the five important steps scientists use:\n\n**1. Observe**\n\nFirst, scientists look carefully at things around them. They use their eyes, ears, nose, and hands to notice details. For example, a scientist might observe that leaves fall from trees. Observing means paying close attention to what you see, hear, smell, or feel.\n\n**2. Question**\n\nAfter observing, scientists ask questions. They wonder \"why\" or \"how\" something happens. Our scientist might ask: \"Why do leaves fall from trees?\" Good questions help scientists know what to study.\n\n**3. Predict**\n\nNext, scientists make a prediction. A prediction is a guess about what might happen. It's like saying \"I think...\" before you know the answer. Our scientist might predict: \"I think leaves fall because they get old and dry.\"\n\n**4. Test**\n\nNow comes the fun part! Scientists do experiments to test their predictions. They try things out to see what happens. Our scientist might collect leaves from different trees and look at them closely to see if old leaves really are dry.\n\n**5. Conclude**\n\nFinally, scientists look at what they learned and make a conclusion. A conclusion tells what the experiment showed. Our scientist might conclude: \"Leaves fall when they stop getting water and turn dry.\"\n\n**Scientists Are Curious**\n\nScientists are curious people. Being curious means you want to learn and discover new things. You don't have to work in a laboratory to be a scientist. You can be a scientist at home, at school, or at the park. All you need is curiosity and the five steps!\n\n**Scientists Work Together**\n\nScientists often work in teams. They share their ideas and help each other. When you work with classmates on a science project, you are working like real scientists do!\n\n## Key Vocabulary\n\n- **Observe** (Thai: สังเกต) - To look at something carefully and notice details\n- **Question** (Thai: คำถาม) - Something you ask when you want to know more\n- **Predict** (Thai: การทำนาย) - A guess about what you think will happen\n- **Test** (Thai: การทดสอบ) - To try something out to see what happens\n- **Conclude** (Thai: การสรุป) - To decide what you learned from your experiment\n- **Scientist** (Thai: นักวิทยาศาสตร์) - A person who studies the world and asks questions\n- **Experiment** (Thai: การทดลอง) - A test to find out if your prediction is right\n- **Curious** (Thai: อยากรู้อยากเห็น) - Wanting to learn about new things\n- **Laboratory** (Thai: ห้องปฏิบัติการ) - A special room where scientists do experiments\n- **Discovery** (Thai: การค้นพบ) - Finding out something new\n\n## Reading Passage: Mai Becomes a Scientist\n\nMai loved playing in her grandmother's garden in Chiang Mai. One sunny morning, she noticed something strange. Some flowers were open and bright, but other flowers were closed tight.\n\n\"Yai, why are some flowers open and some flowers closed?\" Mai asked her grandmother.\n\nHer grandmother smiled. \"That's a good question, Mai. Why don't you observe the flowers and find out?\"\n\nMai decided to be a scientist. First, she observed the flowers carefully. The open flowers were in the sunny part of the garden. The closed flowers were in the shade under the mango tree.\n\nThen Mai asked a question: \"Do flowers open in the sun and close in the shade?\"\n\nNext, she made a prediction: \"I think flowers need sunlight to open.\"\n\nMai wanted to test her prediction. She picked two closed flowers and put one in a sunny spot and one in a shady spot. She watched them for two hours.\n\nAfter two hours, Mai checked her flowers. The flower in the sun had opened! But the flower in the shade was still closed.\n\nMai made her conclusion: \"Flowers open when they are in the sunlight. Sunlight helps flowers open their petals.\"\n\nMai ran to tell her grandmother what she discovered. \"Yai! I was a scientist today! I found out that flowers need sun to open!\"\n\nHer grandmother hugged her. \"You did wonderful scientific work, Mai. You observed, questioned, predicted, tested, and concluded. Those are the five steps scientists use!\"\n\nMai felt proud. She couldn't wait to ask more questions and make more discoveries. Being a scientist was exciting!\n\nFrom that day on, Mai looked at the world with curious eyes. She asked questions about everything - why rain falls, why ants walk in lines, why the moon changes shape. Mai learned that anyone can be a scientist. All you need is curiosity and the five special steps.\n\n## Summary\n\nScientists are people who ask questions about the world and look for answers. They follow five important steps: observe, question, predict, test, and conclude. You can be a scientist too! All you need is to be curious and follow these steps. Scientists work together and share their discoveries. Being a scientist means looking at the world with curious eyes and always wanting to learn more.",
+      "order": 1,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc8.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Have you ever wondered why the sky is blue? Or how birds can fly? Scientists wonder about things too! A scientist is someone who asks questions about the world and looks for answers. Today, you will learn how to think like a scientist. You can be a scientist right now!"
+          },
+          {
+            "id": "content-1",
+            "type": "text",
+            "content": "## Main Content\n\n**What Do Scientists Do?**\n\nScientists follow special steps to learn about the world. These steps help them find answers to their questions. Let's learn the five important steps scientists use:\n\n**1. Observe**\n\nFirst, scientists look carefully at things around them. They use their eyes, ears, nose, and hands to notice details. For example, a scientist might observe that leaves fall from trees. Observing means paying close attention to what you see, hear, smell, or feel.\n\n**2. Question**\n\nAfter observing, scientists ask questions. They wonder \"why\" or \"how\" something happens. Our scientist might ask: \"Why do leaves fall from trees?\" Good questions help scientists know what to study.\n\n**3. Predict**\n\nNext, scientists make a prediction. A prediction is a guess about what might happen. It's like saying \"I think...\" before you know the answer. Our scientist might predict: \"I think leaves fall because they get old and dry.\"\n\n**4. Test**\n\nNow comes the fun part! Scientists do experiments to test their predictions. They try things out to see what happens. Our scientist might collect leaves from different trees and look at them closely to see if old leaves really are dry.\n\n**5. Conclude**\n\nFinally, scientists look at what they learned and make a conclusion. A conclusion tells what the experiment showed. Our scientist might conclude: \"Leaves fall when they stop getting water and turn dry.\"\n\n**Scientists Are Curious**\n\nScientists are curious people. Being curious means you want to learn and discover new things. You don't have to work in a laboratory to be a scientist. You can be a scientist at home, at school, or at the park. All you need is curiosity and the five steps!\n\n**Scientists Work Together**\n\nScientists often work in teams. They share their ideas and help each other. When you work with classmates on a science project, you are working like real scientists do!"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Observe",
+                "thai": "สังเกต",
+                "definition": "To look at something carefully and notice details"
+              },
+              {
+                "term": "Question",
+                "thai": "คำถาม",
+                "definition": "Something you ask when you want to know more"
+              },
+              {
+                "term": "Predict",
+                "thai": "การทำนาย",
+                "definition": "A guess about what you think will happen"
+              },
+              {
+                "term": "Test",
+                "thai": "การทดสอบ",
+                "definition": "To try something out to see what happens"
+              },
+              {
+                "term": "Conclude",
+                "thai": "การสรุป",
+                "definition": "To decide what you learned from your experiment"
+              },
+              {
+                "term": "Scientist",
+                "thai": "นักวิทยาศาสตร์",
+                "definition": "A person who studies the world and asks questions"
+              },
+              {
+                "term": "Experiment",
+                "thai": "การทดลอง",
+                "definition": "A test to find out if your prediction is right"
+              },
+              {
+                "term": "Curious",
+                "thai": "อยากรู้อยากเห็น",
+                "definition": "Wanting to learn about new things"
+              },
+              {
+                "term": "Laboratory",
+                "thai": "ห้องปฏิบัติการ",
+                "definition": "A special room where scientists do experiments"
+              },
+              {
+                "term": "Discovery",
+                "thai": "การค้นพบ",
+                "definition": "Finding out something new"
+              }
+            ]
+          },
+          {
+            "id": "reading",
+            "type": "reading_passage",
+            "title": "Mai Becomes a Scientist",
+            "content": "Mai loved playing in her grandmother's garden in Chiang Mai. One sunny morning, she noticed something strange. Some flowers were open and bright, but other flowers were closed tight.\n\n\"Yai, why are some flowers open and some flowers closed?\" Mai asked her grandmother.\n\nHer grandmother smiled. \"That's a good question, Mai. Why don't you observe the flowers and find out?\"\n\nMai decided to be a scientist. First, she observed the flowers carefully. The open flowers were in the sunny part of the garden. The closed flowers were in the shade under the mango tree.\n\nThen Mai asked a question: \"Do flowers open in the sun and close in the shade?\"\n\nNext, she made a prediction: \"I think flowers need sunlight to open.\"\n\nMai wanted to test her prediction. She picked two closed flowers and put one in a sunny spot and one in a shady spot. She watched them for two hours.\n\nAfter two hours, Mai checked her flowers. The flower in the sun had opened! But the flower in the shade was still closed.\n\nMai made her conclusion: \"Flowers open when they are in the sunlight. Sunlight helps flowers open their petals.\"\n\nMai ran to tell her grandmother what she discovered. \"Yai! I was a scientist today! I found out that flowers need sun to open!\"\n\nHer grandmother hugged her. \"You did wonderful scientific work, Mai. You observed, questioned, predicted, tested, and concluded. Those are the five steps scientists use!\"\n\nMai felt proud. She couldn't wait to ask more questions and make more discoveries. Being a scientist was exciting!\n\nFrom that day on, Mai looked at the world with curious eyes. She asked questions about everything - why rain falls, why ants walk in lines, why the moon changes shape. Mai learned that anyone can be a scientist. All you need is curiosity and the five special steps.",
+            "wordCount": 309
+          },
+          {
+            "id": "summary",
+            "type": "text",
+            "content": "## Summary\n\nScientists are people who ask questions about the world and look for answers. They follow five important steps: observe, question, predict, test, and conclude. You can be a scientist too! All you need is to be curious and follow these steps. Scientists work together and share their discoveries. Being a scientist means looking at the world with curious eyes and always wanting to learn more."
+          }
+        ]
+      },
+      "titleThai": "การเป็นนักวิทยาศาสตร์"
+    },
+    {
+      "id": "g3-science-safety-tools",
+      "slug": "science-safety-tools",
+      "title": "Science Safety and Tools",
+      "description": "Staying safe in science and using basic tools like magnifying glass, ruler, and thermometer.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nScience is exciting and fun! When you do science activities, you get to explore, experiment, and discover new things. But science can also involve tools, materials, and activities that need to be done carefully. Just like you wear a helmet when riding a bicycle, you need to follow safety rules when doing science.\n\nScientists use many special tools to help them observe and measure things. These tools help scientists see tiny details, measure exactly, and collect information. Today, you will learn how to stay safe in science and how to use basic science tools correctly.\n\n## Main Content\n\n### Science Safety Rules\n\nFollowing safety rules keeps you and your classmates safe during science activities. Here are the most important safety rules:\n\n**1. Listen to Your Teacher**\n\nAlways listen carefully when your teacher gives instructions. Ask questions if you don't understand something. Never start an activity until your teacher says it's okay.\n\n**2. Wear Safety Equipment When Needed**\n\nSometimes you need to wear special equipment to stay safe:\n- **Safety goggles** protect your eyes\n- **Gloves** protect your hands\n- **Aprons** protect your clothes\n\nYour teacher will tell you when to wear safety equipment. Always wear it properly.\n\n**3. Handle Materials Carefully**\n\nBe gentle with science materials and tools. Don't play with them or use them in ways your teacher didn't show you. Rough handling can break tools or cause accidents.\n\n**4. Keep Your Workspace Clean**\n\nKeep your work area neat and organized. Clean up spills right away. Put away materials when you're done. A messy workspace can cause accidents.\n\n**5. Never Taste or Smell Without Permission**\n\nNever put science materials in your mouth. Never smell something unless your teacher says it's safe. Some materials might look harmless but can make you sick.\n\n**6. Wash Your Hands**\n\nAlways wash your hands with soap and water after doing science activities. This removes any materials that might have gotten on your skin.\n\n**7. Report Accidents Immediately**\n\nIf something spills, breaks, or if someone gets hurt, tell your teacher right away. Even small accidents should be reported so they can be fixed safely.\n\n**8. Use Tools Correctly**\n\nUse science tools only for their intended purpose. Your teacher will show you the right way to use each tool. Never play with or throw tools.\n\n**9. Follow Cleanup Procedures**\n\nPut away materials and tools in their proper places. Wipe tables and wash equipment as instructed. Leave your workspace clean for the next class.\n\n### Science Tools\n\nScientists use tools to help them observe and measure. Let's learn about some basic science tools you will use:\n\n**Magnifying Glass (Hand Lens)**\n\nA magnifying glass makes things look bigger so you can see details you might miss with just your eyes.\n\n**How to Use:**\n- Hold the magnifying glass close to your eye\n- Move the object you're observing closer or farther until it looks clear and big\n- Keep the magnifying glass still and move the object, or keep the object still and move the magnifying glass\n- Look through the magnifying glass, not at it\n\n**What It's Used For:**\n- Looking at leaves, flowers, and insects\n- Seeing details on rocks or soil\n- Observing tiny parts of objects\n\n**Ruler**\n\nA ruler measures how long or wide something is. Rulers usually measure in centimeters or meters.\n\n**How to Use:**\n- Place the ruler next to the object you want to measure\n- Line up the 0 mark (or the end of the ruler) with one end of the object\n- See what number on the ruler matches the other end of the object\n- Read the measurement and include the unit (centimeters or cm)\n\n**What It's Used For:**\n- Measuring how long a leaf is\n- Measuring how tall a plant grows\n- Measuring the size of objects\n\n**Thermometer**\n\nA thermometer measures temperature (how hot or cold something is). The temperature is usually measured in degrees Celsius (°C).\n\n**How to Use:**\n- Place the thermometer in the substance you want to measure (air, water, soil)\n- Wait a few minutes for the reading to stabilize\n- Read the number where the liquid inside stops\n- Record the temperature with the unit (°C)\n\n**What It's Used For:**\n- Measuring air temperature\n- Measuring water temperature\n- Comparing temperatures in different places\n\n**Important:** Never shake or bang a thermometer. Handle it very gently because it contains glass that can break.\n\n**Balance or Scale**\n\nA balance measures how heavy something is (mass or weight). Weight is usually measured in grams or kilograms.\n\n**How to Use:**\n- Make sure the balance starts at zero\n- Place the object on the pan or platform\n- Read the number the pointer shows or the digital display\n- Record the weight with the unit (grams or kg)\n\n**What It's Used For:**\n- Weighing rocks or soil samples\n- Comparing weights of different objects\n- Measuring ingredients for experiments\n\n**Measuring Cup or Graduated Cylinder**\n\nThese tools measure the volume of liquids (how much liquid there is). Volume is measured in milliliters (mL) or liters (L).\n\n**How to Use:**\n- Pour the liquid into the measuring cup or cylinder\n- Place it on a flat surface and look at it at eye level\n- Read where the bottom of the liquid curve meets the measurement marks\n- Record the volume with the unit (mL or L)\n\n**What It's Used For:**\n- Measuring water for plant experiments\n- Measuring liquids for mixing\n- Comparing volumes of different liquids\n\n### Taking Care of Tools\n\nScience tools can last a long time if we take good care of them:\n- Clean tools after each use\n- Store tools in their proper places\n- Handle tools gently - don't drop them\n- Report broken or damaged tools to your teacher\n- Share tools respectfully with classmates\n\n## Key Vocabulary\n\n- **Safety goggles** (Thai: แว่นตานิรภัย) - Special glasses that protect your eyes during science activities\n- **Magnifying glass** (Thai: แว่นขยาย) - A tool with a curved glass that makes objects look bigger\n- **Ruler** (Thai: ไม้บรรทัด) - A tool for measuring length or distance\n- **Thermometer** (Thai: เทอร์มอมิเตอร์) - A tool for measuring temperature\n- **Balance** (Thai: เครื่องชั่ง) - A tool for measuring weight or mass\n- **Measure** (Thai: วัด) - To find out the size, amount, or temperature of something using tools\n- **Temperature** (Thai: อุณหภูมิ) - How hot or cold something is\n- **Volume** (Thai: ปริมาตร) - The amount of space a liquid takes up\n- **Centimeter** (Thai: เซนติเมตร) - A unit for measuring length (cm)\n- **Degree** (Thai: องศา) - A unit for measuring temperature (°C)\n- **Accident** (Thai: อุบัติเหตุ) - Something unplanned and possibly harmful that happens\n- **Procedure** (Thai: ขั้นตอน) - Steps to follow to do something correctly\n\n## Reading Passage: The First Day in the Science Lab\n\nKai walked into the science lab for the first time. His eyes grew wide. The room had special tables with sinks. Shelves held interesting tools and equipment. A poster on the wall showed safety rules with pictures.\n\n\"Welcome to the science lab!\" said Teacher Niran. \"Today you will learn how to be safe and how to use science tools.\"\n\nTeacher Niran held up a pair of clear plastic glasses. \"These are safety goggles,\" she explained. \"We wear them to protect our eyes. When I tell you to put on safety goggles, you must wear them properly - over your eyes, not on your forehead!\"\n\nThe class giggled. Teacher Niran demonstrated how to put the goggles on correctly.\n\n\"Now, let's talk about safety rules,\" Teacher Niran continued. \"Safety rules are not meant to scare you. They keep you safe so you can enjoy science. Who can think of a safety rule we should follow?\"\n\nMay raised her hand. \"Don't taste things in science class?\"\n\n\"Excellent!\" said Teacher Niran. \"We never taste or eat science materials unless I specifically say it's okay. Even things that look safe might not be safe to eat.\"\n\n\"Always listen to the teacher?\" suggested Kai.\n\n\"Yes! Listening carefully to instructions is one of the most important safety rules,\" agreed Teacher Niran. \"What else?\"\n\n\"Wash your hands when you're done,\" added Som.\n\n\"Perfect! Washing hands removes any materials that got on them,\" said Teacher Niran. \"Now let me show you some tools scientists use.\"\n\nTeacher Niran held up a magnifying glass. \"This is a magnifying glass or hand lens. It makes things look bigger. Watch how I use it.\"\n\nShe held the magnifying glass close to her eye and moved a leaf toward it until it came into clear focus. \"See? The leaf looks much bigger now. I can see the tiny lines and details on it.\"\n\nTeacher Niran passed around magnifying glasses. Each student practiced looking at different objects - a flower petal, a coin, their own skin. Kai was amazed at how much detail he could see!\n\n\"Now let's learn about rulers,\" said Teacher Niran. She showed the class how to line up a ruler with the edge of an object. \"You start measuring from zero or from the end of the ruler. See where the other end of the object reaches, and that's your measurement.\"\n\nKai measured a pencil. \"My pencil is 15 centimeters long!\" he announced proudly.\n\n\"Good job remembering to include the unit - centimeters!\" praised Teacher Niran. \"Scientists always write units with their measurements.\"\n\nNext, Teacher Niran showed a thermometer. \"This measures temperature - how hot or cold something is. The red liquid inside goes up when it's warm and down when it's cold. We read the number where it stops.\"\n\nShe put a thermometer in a cup of warm water and another in a cup of cold water. After a few minutes, the students could see the difference in the readings.\n\n\"The warm water is 35 degrees Celsius,\" observed May. \"The cold water is only 15 degrees Celsius.\"\n\n\"Excellent observation!\" said Teacher Niran. \"Thermometers help us measure exactly instead of just guessing.\"\n\nFinally, Teacher Niran showed the class a balance for weighing objects. \"This tells us how heavy something is,\" she explained. She placed a small rock on the balance. \"This rock weighs 45 grams.\"\n\nKai and his classmates took turns weighing different objects - erasers, pencils, small toys. They recorded their measurements in their science notebooks.\n\nAt the end of class, Teacher Niran reminded everyone of the cleanup procedures. \"Put tools back where they belong. Wipe your tables. Wash your hands. A clean lab is a safe lab!\"\n\nAs Kai washed his hands, he felt excited about science class. He had learned important safety rules and how to use science tools. He couldn't wait to use these tools to explore and discover!\n\n\"Teacher Niran,\" Kai asked as he left class, \"will we do experiments with these tools?\"\n\n\"Absolutely!\" Teacher Niran smiled. \"Now that you know how to be safe and use the tools, we can do many exciting science investigations. Being a safe scientist is the first step to being a good scientist!\"\n\n## Summary\n\nScience is fun and safe when we follow safety rules. Important safety rules include listening to your teacher, wearing safety equipment when needed, handling materials carefully, never tasting or smelling without permission, and washing your hands after activities. Scientists use special tools to observe and measure. A magnifying glass makes things look bigger. A ruler measures length. A thermometer measures temperature. A balance measures weight. Measuring tools help us collect accurate information. Taking care of our tools makes them last longer. Following safety rules and using tools correctly are important skills for every scientist.\n\n**Key Takeaways:**\n- Safety rules protect us during science activities\n- Science tools help us observe and measure accurately\n- Each tool has a specific purpose and proper way to use it\n- Scientists always include units when recording measurements\n- Being a safe scientist is being a good scientist",
+      "order": 2,
+      "standards": [
+        "Sc8.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Science is exciting and fun! When you do science activities, you get to explore, experiment, and discover new things. But science can also involve tools, materials, and activities that need to be done carefully. Just like you wear a helmet when riding a bicycle, you need to follow safety rules when doing science.\n\nScientists use many special tools to help them observe and measure things. These tools help scientists see tiny details, measure exactly, and collect information. Today, you will learn how to stay safe in science and how to use basic science tools correctly."
+          },
+          {
+            "id": "content-1",
+            "type": "text",
+            "content": "## Main Content\n\n### Science Safety Rules\n\nFollowing safety rules keeps you and your classmates safe during science activities. Here are the most important safety rules:\n\n**1. Listen to Your Teacher**\n\nAlways listen carefully when your teacher gives instructions. Ask questions if you don't understand something. Never start an activity until your teacher says it's okay.\n\n**2. Wear Safety Equipment When Needed**\n\nSometimes you need to wear special equipment to stay safe:\n- **Safety goggles** protect your eyes\n- **Gloves** protect your hands\n- **Aprons** protect your clothes\n\nYour teacher will tell you when to wear safety equipment. Always wear it properly.\n\n**3. Handle Materials Carefully**\n\nBe gentle with science materials and tools. Don't play with them or use them in ways your teacher didn't show you. Rough handling can break tools or cause accidents.\n\n**4. Keep Your Workspace Clean**\n\nKeep your work area neat and organized. Clean up spills right away. Put away materials when you're done. A messy workspace can cause accidents.\n\n**5. Never Taste or Smell Without Permission**\n\nNever put science materials in your mouth. Never smell something unless your teacher says it's safe. Some materials might look harmless but can make you sick.\n\n**6. Wash Your Hands**\n\nAlways wash your hands with soap and water after doing science activities. This removes any materials that might have gotten on your skin.\n\n**7. Report Accidents Immediately**\n\nIf something spills, breaks, or if someone gets hurt, tell your teacher right away. Even small accidents should be reported so they can be fixed safely.\n\n**8. Use Tools Correctly**\n\nUse science tools only for their intended purpose. Your teacher will show you the right way to use each tool. Never play with or throw tools.\n\n**9. Follow Cleanup Procedures**\n\nPut away materials and tools in their proper places. Wipe tables and wash equipment as instructed. Leave your workspace clean for the next class.\n\n### Science Tools\n\nScientists use tools to help them observe and measure. Let's learn about some basic science tools you will use:\n\n**Magnifying Glass (Hand Lens)**\n\nA magnifying glass makes things look bigger so you can see details you might miss with just your eyes.\n\n**How to Use:**\n- Hold the magnifying glass close to your eye\n- Move the object you're observing closer or farther until it looks clear and big\n- Keep the magnifying glass still and move the object, or keep the object still and move the magnifying glass\n- Look through the magnifying glass, not at it\n\n**What It's Used For:**\n- Looking at leaves, flowers, and insects\n- Seeing details on rocks or soil\n- Observing tiny parts of objects\n\n**Ruler**\n\nA ruler measures how long or wide something is. Rulers usually measure in centimeters or meters.\n\n**How to Use:**\n- Place the ruler next to the object you want to measure\n- Line up the 0 mark (or the end of the ruler) with one end of the object\n- See what number on the ruler matches the other end of the object\n- Read the measurement and include the unit (centimeters or cm)\n\n**What It's Used For:**\n- Measuring how long a leaf is\n- Measuring how tall a plant grows\n- Measuring the size of objects\n\n**Thermometer**\n\nA thermometer measures temperature (how hot or cold something is). The temperature is usually measured in degrees Celsius (°C).\n\n**How to Use:**\n- Place the thermometer in the substance you want to measure (air, water, soil)\n- Wait a few minutes for the reading to stabilize\n- Read the number where the liquid inside stops\n- Record the temperature with the unit (°C)\n\n**What It's Used For:**\n- Measuring air temperature\n- Measuring water temperature\n- Comparing temperatures in different places\n\n**Important:** Never shake or bang a thermometer. Handle it very gently because it contains glass that can break.\n\n**Balance or Scale**\n\nA balance measures how heavy something is (mass or weight). Weight is usually measured in grams or kilograms.\n\n**How to Use:**\n- Make sure the balance starts at zero\n- Place the object on the pan or platform\n- Read the number the pointer shows or the digital display\n- Record the weight with the unit (grams or kg)\n\n**What It's Used For:**\n- Weighing rocks or soil samples\n- Comparing weights of different objects\n- Measuring ingredients for experiments\n\n**Measuring Cup or Graduated Cylinder**\n\nThese tools measure the volume of liquids (how much liquid there is). Volume is measured in milliliters (mL) or liters (L).\n\n**How to Use:**\n- Pour the liquid into the measuring cup or cylinder\n- Place it on a flat surface and look at it at eye level\n- Read where the bottom of the liquid curve meets the measurement marks\n- Record the volume with the unit (mL or L)\n\n**What It's Used For:**\n- Measuring water for plant experiments\n- Measuring liquids for mixing\n- Comparing volumes of different liquids\n\n### Taking Care of Tools\n\nScience tools can last a long time if we take good care of them:\n- Clean tools after each use\n- Store tools in their proper places\n- Handle tools gently - don't drop them\n- Report broken or damaged tools to your teacher\n- Share tools respectfully with classmates"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Safety goggles",
+                "thai": "แว่นตานิรภัย",
+                "definition": "Special glasses that protect your eyes during science activities"
+              },
+              {
+                "term": "Magnifying glass",
+                "thai": "แว่นขยาย",
+                "definition": "A tool with a curved glass that makes objects look bigger"
+              },
+              {
+                "term": "Ruler",
+                "thai": "ไม้บรรทัด",
+                "definition": "A tool for measuring length or distance"
+              },
+              {
+                "term": "Thermometer",
+                "thai": "เทอร์มอมิเตอร์",
+                "definition": "A tool for measuring temperature"
+              },
+              {
+                "term": "Balance",
+                "thai": "เครื่องชั่ง",
+                "definition": "A tool for measuring weight or mass"
+              },
+              {
+                "term": "Measure",
+                "thai": "วัด",
+                "definition": "To find out the size, amount, or temperature of something using tools"
+              },
+              {
+                "term": "Temperature",
+                "thai": "อุณหภูมิ",
+                "definition": "How hot or cold something is"
+              },
+              {
+                "term": "Volume",
+                "thai": "ปริมาตร",
+                "definition": "The amount of space a liquid takes up"
+              },
+              {
+                "term": "Centimeter",
+                "thai": "เซนติเมตร",
+                "definition": "A unit for measuring length (cm)"
+              },
+              {
+                "term": "Degree",
+                "thai": "องศา",
+                "definition": "A unit for measuring temperature (°C)"
+              },
+              {
+                "term": "Accident",
+                "thai": "อุบัติเหตุ",
+                "definition": "Something unplanned and possibly harmful that happens"
+              },
+              {
+                "term": "Procedure",
+                "thai": "ขั้นตอน",
+                "definition": "Steps to follow to do something correctly"
+              }
+            ]
+          },
+          {
+            "id": "reading",
+            "type": "reading_passage",
+            "title": "The First Day in the Science Lab",
+            "content": "Kai walked into the science lab for the first time. His eyes grew wide. The room had special tables with sinks. Shelves held interesting tools and equipment. A poster on the wall showed safety rules with pictures.\n\n\"Welcome to the science lab!\" said Teacher Niran. \"Today you will learn how to be safe and how to use science tools.\"\n\nTeacher Niran held up a pair of clear plastic glasses. \"These are safety goggles,\" she explained. \"We wear them to protect our eyes. When I tell you to put on safety goggles, you must wear them properly - over your eyes, not on your forehead!\"\n\nThe class giggled. Teacher Niran demonstrated how to put the goggles on correctly.\n\n\"Now, let's talk about safety rules,\" Teacher Niran continued. \"Safety rules are not meant to scare you. They keep you safe so you can enjoy science. Who can think of a safety rule we should follow?\"\n\nMay raised her hand. \"Don't taste things in science class?\"\n\n\"Excellent!\" said Teacher Niran. \"We never taste or eat science materials unless I specifically say it's okay. Even things that look safe might not be safe to eat.\"\n\n\"Always listen to the teacher?\" suggested Kai.\n\n\"Yes! Listening carefully to instructions is one of the most important safety rules,\" agreed Teacher Niran. \"What else?\"\n\n\"Wash your hands when you're done,\" added Som.\n\n\"Perfect! Washing hands removes any materials that got on them,\" said Teacher Niran. \"Now let me show you some tools scientists use.\"\n\nTeacher Niran held up a magnifying glass. \"This is a magnifying glass or hand lens. It makes things look bigger. Watch how I use it.\"\n\nShe held the magnifying glass close to her eye and moved a leaf toward it until it came into clear focus. \"See? The leaf looks much bigger now. I can see the tiny lines and details on it.\"\n\nTeacher Niran passed around magnifying glasses. Each student practiced looking at different objects - a flower petal, a coin, their own skin. Kai was amazed at how much detail he could see!\n\n\"Now let's learn about rulers,\" said Teacher Niran. She showed the class how to line up a ruler with the edge of an object. \"You start measuring from zero or from the end of the ruler. See where the other end of the object reaches, and that's your measurement.\"\n\nKai measured a pencil. \"My pencil is 15 centimeters long!\" he announced proudly.\n\n\"Good job remembering to include the unit - centimeters!\" praised Teacher Niran. \"Scientists always write units with their measurements.\"\n\nNext, Teacher Niran showed a thermometer. \"This measures temperature - how hot or cold something is. The red liquid inside goes up when it's warm and down when it's cold. We read the number where it stops.\"\n\nShe put a thermometer in a cup of warm water and another in a cup of cold water. After a few minutes, the students could see the difference in the readings.\n\n\"The warm water is 35 degrees Celsius,\" observed May. \"The cold water is only 15 degrees Celsius.\"\n\n\"Excellent observation!\" said Teacher Niran. \"Thermometers help us measure exactly instead of just guessing.\"\n\nFinally, Teacher Niran showed the class a balance for weighing objects. \"This tells us how heavy something is,\" she explained. She placed a small rock on the balance. \"This rock weighs 45 grams.\"\n\nKai and his classmates took turns weighing different objects - erasers, pencils, small toys. They recorded their measurements in their science notebooks.\n\nAt the end of class, Teacher Niran reminded everyone of the cleanup procedures. \"Put tools back where they belong. Wipe your tables. Wash your hands. A clean lab is a safe lab!\"\n\nAs Kai washed his hands, he felt excited about science class. He had learned important safety rules and how to use science tools. He couldn't wait to use these tools to explore and discover!\n\n\"Teacher Niran,\" Kai asked as he left class, \"will we do experiments with these tools?\"\n\n\"Absolutely!\" Teacher Niran smiled. \"Now that you know how to be safe and use the tools, we can do many exciting science investigations. Being a safe scientist is the first step to being a good scientist!\"",
+            "wordCount": 693
+          },
+          {
+            "id": "summary",
+            "type": "text",
+            "content": "## Summary\n\nScience is fun and safe when we follow safety rules. Important safety rules include listening to your teacher, wearing safety equipment when needed, handling materials carefully, never tasting or smelling without permission, and washing your hands after activities. Scientists use special tools to observe and measure. A magnifying glass makes things look bigger. A ruler measures length. A thermometer measures temperature. A balance measures weight. Measuring tools help us collect accurate information. Taking care of our tools makes them last longer. Following safety rules and using tools correctly are important skills for every scientist.\n\n**Key Takeaways:**\n- Safety rules protect us during science activities\n- Science tools help us observe and measure accurately\n- Each tool has a specific purpose and proper way to use it\n- Scientists always include units when recording measurements\n- Being a safe scientist is being a good scientist"
+          }
+        ]
+      },
+      "titleThai": "ความปลอดภัยและเครื่องมือทางวิทยาศาสตร์"
+    },
+    {
+      "id": "g3-making-observations",
+      "slug": "making-observations",
+      "title": "Making Observations",
+      "description": "Using our senses to observe and record what we see in detail.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nYour senses are amazing tools for learning about the world! Every day, you use your eyes to see, your ears to hear, your nose to smell, your tongue to taste, and your skin to feel. Scientists use their senses too. They call this making observations.\n\nObservations are what you notice using your senses. Good observations include lots of details. Instead of saying \"I see a bird,\" a scientist might say \"I see a small brown bird with a yellow beak sitting on a branch.\" Today, you will learn how to make detailed observations like a scientist!\n\n## Main Content\n\n### The Five Senses\n\nYou have five senses that help you observe the world:\n\n**Sight (Eyes)**\n\nYour eyes let you see colors, shapes, sizes, and movement. When you observe with your eyes, you can notice:\n- Colors (red, blue, green, etc.)\n- Shapes (round, square, triangular)\n- Size (big, small, tall, short)\n- Texture appearance (smooth, bumpy, rough)\n- Movement (fast, slow, still)\n\n**Hearing (Ears)**\n\nYour ears let you hear sounds. When you observe with your ears, you can notice:\n- Loud or soft sounds\n- High or low sounds (pitch)\n- Types of sounds (music, voices, nature sounds)\n- Where sounds come from\n\n**Touch (Skin)**\n\nYour skin lets you feel textures and temperatures. When you observe by touching, you can notice:\n- Texture (smooth, rough, bumpy, soft, hard)\n- Temperature (hot, cold, warm, cool)\n- Wetness (wet, dry, sticky)\n- Weight (heavy, light)\n\n**Smell (Nose)**\n\nYour nose lets you smell different scents. When you observe with your nose, you can notice:\n- Pleasant smells (flowers, food)\n- Unpleasant smells (garbage, smoke)\n- Familiar smells (things you've smelled before)\n- Different strengths (strong smell, faint smell)\n\n**Taste (Tongue)**\n\nYour tongue lets you taste flavors. You can taste:\n- Sweet (sugar, fruit)\n- Salty (chips, pretzels)\n- Sour (lemons, vinegar)\n- Bitter (dark chocolate, some vegetables)\n\n**Important Safety Rule:** In science, we never taste or smell something unless our teacher says it is safe!\n\n### Making Good Observations\n\n**Use Specific Words**\n\nInstead of saying \"big,\" say how big. Instead of \"pretty,\" describe what makes it pretty. Compare your observations to things people know.\n\n- Not specific: \"The leaf is big.\"\n- Specific: \"The leaf is as long as my hand and wider than my palm.\"\n\n**Use Numbers When Possible**\n\nMeasure things to make your observations exact.\n\n- Not exact: \"The plant is tall.\"\n- Exact: \"The plant is 25 centimeters tall.\"\n\n**Include Many Details**\n\nThe more details you include, the better your observation.\n\n- Few details: \"I see a flower.\"\n- Many details: \"I see a red flower with five petals. The petals are smooth. The flower has a yellow center. It smells sweet.\"\n\n**Use All Your Senses**\n\nDon't just use your eyes. Try to use multiple senses when it's safe.\n\n### Qualitative vs. Quantitative Observations\n\n**Qualitative Observations** describe qualities (what something is like):\n- \"The rock is gray and rough.\"\n- \"The water feels cold.\"\n- \"The bird sings a high-pitched song.\"\n\n**Quantitative Observations** use numbers and measurements:\n- \"The rock weighs 50 grams.\"\n- \"The water temperature is 15 degrees Celsius.\"\n- \"The bird sang for 30 seconds.\"\n\nGood scientists use both types of observations!\n\n### Recording Observations\n\nScientists record (write down) their observations so they can remember them and share them with others. You can record observations by:\n\n**Writing**\n- Write detailed descriptions\n- Use specific words\n- Include the date and time\n\n**Drawing**\n- Draw what you see with labels\n- Show important details\n- Use colors if available\n\n**Making Charts or Tables**\n- Organize observations in rows and columns\n- Compare different observations\n- Track changes over time\n\n## Key Vocabulary\n\n- **Observation** (Thai: การสังเกต) - Information you gather using your senses\n- **Senses** (Thai: ประสาทสัมผัส) - The five ways you learn about the world: sight, hearing, touch, smell, and taste\n- **Detail** (Thai: รายละเอียด) - A small piece of specific information\n- **Describe** (Thai: บรรยาย) - To tell about something using words\n- **Texture** (Thai: เนื้อสัมผัส) - How something feels when you touch it\n- **Record** (Thai: บันทึก) - To write down or keep track of information\n- **Qualitative** (Thai: เชิงคุณภาพ) - Describing qualities or characteristics without numbers\n- **Quantitative** (Thai: เชิงปริมาณ) - Using numbers and measurements\n- **Specific** (Thai: เฉพาะเจาะจง) - Clear and exact, not general\n- **Compare** (Thai: เปรียบเทียบ) - To look at how things are the same or different\n\n## Reading Passage: The Observation Challenge\n\nMs. Preeda's class was having an observation challenge. She put a mystery box on each table. \"Inside each box is an object,\" she said. \"Your job is to observe the object and describe it with as many details as possible. The group with the most accurate and detailed observations wins!\"\n\nPen's group opened their box. Inside was a mango. \"It's just a mango,\" said one student. \"We all know what mangoes are!\"\n\n\"Wait,\" said Pen. \"Remember what Ms. Preeda taught us. We need to use all our senses and include lots of specific details. Let's observe this mango like we've never seen one before!\"\n\nPen took out her science notebook. \"Let's start with sight,\" she said. \"What do we see?\"\n\n\"It's yellow and green,\" said Nok.\n\n\"Be more specific,\" reminded Pen. She looked closely. \"The bottom is bright yellow. The top near the stem is green. The colors blend together in the middle. The skin looks smooth and shiny.\"\n\n\"I see small white spots on the skin,\" added Nok, looking closer.\n\n\"Good detail!\" said Pen, writing everything down. \"What about the shape?\"\n\n\"It's oval,\" said Som. \"It's about 10 centimeters long and 7 centimeters wide.\" He measured with a ruler.\n\n\"Excellent! That's a quantitative observation,\" said Pen. \"Now let's feel it.\"\n\nNok gently touched the mango. \"The skin feels smooth and firm. It's not soft like a ripe banana. It feels cool, not warm.\"\n\nPen wrote this down. \"Now let's smell it.\" She held the mango near her nose. \"It smells sweet and fruity. The smell is stronger near the stem.\"\n\n\"Can we taste it?\" asked Som hopefully.\n\n\"Ms. Preeda said we could taste it if it's safe, and we all know mangoes are safe,\" said Pen. \"But let's ask first.\"\n\nMs. Preeda came over. \"Yes, you may taste a small piece if you want to.\"\n\nShe cut a small slice for each student. \"Now observe the inside too,\" said Pen.\n\n\"The inside is orange-yellow,\" observed Nok. \"It's juicy. I can see the fibers in the fruit.\"\n\nThey each tasted a piece. \"It tastes sweet with a little bit of sour,\" said Som. \"It's soft and juicy in my mouth.\"\n\n\"The texture is smooth but a little fibrous,\" added Nok.\n\nPen organized all their observations in a chart:\n\n**Sight:** Yellow and green skin, oval shape, 10 cm long, 7 cm wide, smooth shiny appearance, small white spots\n**Touch:** Smooth firm skin, cool temperature  \n**Smell:** Sweet fruity smell, stronger near stem  \n**Taste:** Sweet with slight sour flavor, juicy, soft texture  \n**Inside:** Orange-yellow color, visible fibers, very juicy\n\nWhen time was up, each group shared their observations. Ms. Preeda smiled when she heard Pen's group.\n\n\"Excellent work!\" she said. \"You used all your senses. You included specific details and even measurements. You recorded both qualitative observations like 'smooth' and quantitative observations like '10 centimeters long.' This is exactly how scientists observe!\"\n\nPen's group won the challenge. But more importantly, Pen realized something. \"Ms. Preeda,\" she said, \"I've eaten mangoes my whole life, but I never really observed one before. When you look closely and use all your senses, even familiar things become interesting!\"\n\n\"That's the power of good observation,\" said Ms. Preeda. \"Scientists look at the world with curious eyes. They notice details others might miss. You can all be observant scientists, starting right now!\"\n\n## Summary\n\nObservations are what you notice using your five senses: sight, hearing, touch, smell, and taste. Good observations include many specific details. Scientists use qualitative observations to describe qualities and quantitative observations with numbers and measurements. Recording observations by writing, drawing, or making charts helps us remember and share what we learned. The more carefully you observe, the more you will discover about the world around you.\n\n**Key Takeaways:**\n- Use all five senses to make observations (but only when it's safe!)\n- Include specific details instead of general words\n- Use both qualitative and quantitative observations\n- Record your observations so you can remember and share them",
+      "order": 3,
+      "standards": [
+        "Sc8.2-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Your senses are amazing tools for learning about the world! Every day, you use your eyes to see, your ears to hear, your nose to smell, your tongue to taste, and your skin to feel. Scientists use their senses too. They call this making observations.\n\nObservations are what you notice using your senses. Good observations include lots of details. Instead of saying \"I see a bird,\" a scientist might say \"I see a small brown bird with a yellow beak sitting on a branch.\" Today, you will learn how to make detailed observations like a scientist!"
+          },
+          {
+            "id": "content-1",
+            "type": "text",
+            "content": "## Main Content\n\n### The Five Senses\n\nYou have five senses that help you observe the world:\n\n**Sight (Eyes)**\n\nYour eyes let you see colors, shapes, sizes, and movement. When you observe with your eyes, you can notice:\n- Colors (red, blue, green, etc.)\n- Shapes (round, square, triangular)\n- Size (big, small, tall, short)\n- Texture appearance (smooth, bumpy, rough)\n- Movement (fast, slow, still)\n\n**Hearing (Ears)**\n\nYour ears let you hear sounds. When you observe with your ears, you can notice:\n- Loud or soft sounds\n- High or low sounds (pitch)\n- Types of sounds (music, voices, nature sounds)\n- Where sounds come from\n\n**Touch (Skin)**\n\nYour skin lets you feel textures and temperatures. When you observe by touching, you can notice:\n- Texture (smooth, rough, bumpy, soft, hard)\n- Temperature (hot, cold, warm, cool)\n- Wetness (wet, dry, sticky)\n- Weight (heavy, light)\n\n**Smell (Nose)**\n\nYour nose lets you smell different scents. When you observe with your nose, you can notice:\n- Pleasant smells (flowers, food)\n- Unpleasant smells (garbage, smoke)\n- Familiar smells (things you've smelled before)\n- Different strengths (strong smell, faint smell)\n\n**Taste (Tongue)**\n\nYour tongue lets you taste flavors. You can taste:\n- Sweet (sugar, fruit)\n- Salty (chips, pretzels)\n- Sour (lemons, vinegar)\n- Bitter (dark chocolate, some vegetables)\n\n**Important Safety Rule:** In science, we never taste or smell something unless our teacher says it is safe!\n\n### Making Good Observations\n\n**Use Specific Words**\n\nInstead of saying \"big,\" say how big. Instead of \"pretty,\" describe what makes it pretty. Compare your observations to things people know.\n\n- Not specific: \"The leaf is big.\"\n- Specific: \"The leaf is as long as my hand and wider than my palm.\"\n\n**Use Numbers When Possible**\n\nMeasure things to make your observations exact.\n\n- Not exact: \"The plant is tall.\"\n- Exact: \"The plant is 25 centimeters tall.\"\n\n**Include Many Details**\n\nThe more details you include, the better your observation.\n\n- Few details: \"I see a flower.\"\n- Many details: \"I see a red flower with five petals. The petals are smooth. The flower has a yellow center. It smells sweet.\"\n\n**Use All Your Senses**\n\nDon't just use your eyes. Try to use multiple senses when it's safe.\n\n### Qualitative vs. Quantitative Observations\n\n**Qualitative Observations** describe qualities (what something is like):\n- \"The rock is gray and rough.\"\n- \"The water feels cold.\"\n- \"The bird sings a high-pitched song.\"\n\n**Quantitative Observations** use numbers and measurements:\n- \"The rock weighs 50 grams.\"\n- \"The water temperature is 15 degrees Celsius.\"\n- \"The bird sang for 30 seconds.\"\n\nGood scientists use both types of observations!\n\n### Recording Observations\n\nScientists record (write down) their observations so they can remember them and share them with others. You can record observations by:\n\n**Writing**\n- Write detailed descriptions\n- Use specific words\n- Include the date and time\n\n**Drawing**\n- Draw what you see with labels\n- Show important details\n- Use colors if available\n\n**Making Charts or Tables**\n- Organize observations in rows and columns\n- Compare different observations\n- Track changes over time"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Observation",
+                "thai": "การสังเกต",
+                "definition": "Information you gather using your senses"
+              },
+              {
+                "term": "Senses",
+                "thai": "ประสาทสัมผัส",
+                "definition": "The five ways you learn about the world: sight, hearing, touch, smell, and taste"
+              },
+              {
+                "term": "Detail",
+                "thai": "รายละเอียด",
+                "definition": "A small piece of specific information"
+              },
+              {
+                "term": "Describe",
+                "thai": "บรรยาย",
+                "definition": "To tell about something using words"
+              },
+              {
+                "term": "Texture",
+                "thai": "เนื้อสัมผัส",
+                "definition": "How something feels when you touch it"
+              },
+              {
+                "term": "Record",
+                "thai": "บันทึก",
+                "definition": "To write down or keep track of information"
+              },
+              {
+                "term": "Qualitative",
+                "thai": "เชิงคุณภาพ",
+                "definition": "Describing qualities or characteristics without numbers"
+              },
+              {
+                "term": "Quantitative",
+                "thai": "เชิงปริมาณ",
+                "definition": "Using numbers and measurements"
+              },
+              {
+                "term": "Specific",
+                "thai": "เฉพาะเจาะจง",
+                "definition": "Clear and exact, not general"
+              },
+              {
+                "term": "Compare",
+                "thai": "เปรียบเทียบ",
+                "definition": "To look at how things are the same or different"
+              }
+            ]
+          },
+          {
+            "id": "reading",
+            "type": "reading_passage",
+            "title": "The Observation Challenge",
+            "content": "Ms. Preeda's class was having an observation challenge. She put a mystery box on each table. \"Inside each box is an object,\" she said. \"Your job is to observe the object and describe it with as many details as possible. The group with the most accurate and detailed observations wins!\"\n\nPen's group opened their box. Inside was a mango. \"It's just a mango,\" said one student. \"We all know what mangoes are!\"\n\n\"Wait,\" said Pen. \"Remember what Ms. Preeda taught us. We need to use all our senses and include lots of specific details. Let's observe this mango like we've never seen one before!\"\n\nPen took out her science notebook. \"Let's start with sight,\" she said. \"What do we see?\"\n\n\"It's yellow and green,\" said Nok.\n\n\"Be more specific,\" reminded Pen. She looked closely. \"The bottom is bright yellow. The top near the stem is green. The colors blend together in the middle. The skin looks smooth and shiny.\"\n\n\"I see small white spots on the skin,\" added Nok, looking closer.\n\n\"Good detail!\" said Pen, writing everything down. \"What about the shape?\"\n\n\"It's oval,\" said Som. \"It's about 10 centimeters long and 7 centimeters wide.\" He measured with a ruler.\n\n\"Excellent! That's a quantitative observation,\" said Pen. \"Now let's feel it.\"\n\nNok gently touched the mango. \"The skin feels smooth and firm. It's not soft like a ripe banana. It feels cool, not warm.\"\n\nPen wrote this down. \"Now let's smell it.\" She held the mango near her nose. \"It smells sweet and fruity. The smell is stronger near the stem.\"\n\n\"Can we taste it?\" asked Som hopefully.\n\n\"Ms. Preeda said we could taste it if it's safe, and we all know mangoes are safe,\" said Pen. \"But let's ask first.\"\n\nMs. Preeda came over. \"Yes, you may taste a small piece if you want to.\"\n\nShe cut a small slice for each student. \"Now observe the inside too,\" said Pen.\n\n\"The inside is orange-yellow,\" observed Nok. \"It's juicy. I can see the fibers in the fruit.\"\n\nThey each tasted a piece. \"It tastes sweet with a little bit of sour,\" said Som. \"It's soft and juicy in my mouth.\"\n\n\"The texture is smooth but a little fibrous,\" added Nok.\n\nPen organized all their observations in a chart:\n\n**Sight:** Yellow and green skin, oval shape, 10 cm long, 7 cm wide, smooth shiny appearance, small white spots\n**Touch:** Smooth firm skin, cool temperature  \n**Smell:** Sweet fruity smell, stronger near stem  \n**Taste:** Sweet with slight sour flavor, juicy, soft texture  \n**Inside:** Orange-yellow color, visible fibers, very juicy\n\nWhen time was up, each group shared their observations. Ms. Preeda smiled when she heard Pen's group.\n\n\"Excellent work!\" she said. \"You used all your senses. You included specific details and even measurements. You recorded both qualitative observations like 'smooth' and quantitative observations like '10 centimeters long.' This is exactly how scientists observe!\"\n\nPen's group won the challenge. But more importantly, Pen realized something. \"Ms. Preeda,\" she said, \"I've eaten mangoes my whole life, but I never really observed one before. When you look closely and use all your senses, even familiar things become interesting!\"\n\n\"That's the power of good observation,\" said Ms. Preeda. \"Scientists look at the world with curious eyes. They notice details others might miss. You can all be observant scientists, starting right now!\"",
+            "wordCount": 553
+          },
+          {
+            "id": "summary",
+            "type": "text",
+            "content": "## Summary\n\nObservations are what you notice using your five senses: sight, hearing, touch, smell, and taste. Good observations include many specific details. Scientists use qualitative observations to describe qualities and quantitative observations with numbers and measurements. Recording observations by writing, drawing, or making charts helps us remember and share what we learned. The more carefully you observe, the more you will discover about the world around you.\n\n**Key Takeaways:**\n- Use all five senses to make observations (but only when it's safe!)\n- Include specific details instead of general words\n- Use both qualitative and quantitative observations\n- Record your observations so you can remember and share them"
+          }
+        ]
+      },
+      "titleThai": "การสังเกต"
+    },
+    {
+      "id": "g3-what-makes-alive",
+      "slug": "what-makes-alive",
+      "lessonType": "LESSON",
+      "title": "What Makes Something Alive?",
+      "description": "Seven characteristics of living things: movement, growth, reproduction, response, nutrition, respiration, excretion.",
+      "content": "## Introduction\n\nLook around you. You can see many things - a desk, a book, a plant, a friend. Some of these things are alive, and some are not alive. But how can you tell the difference? What makes something alive? Scientists have found seven special things that all living things can do. Today, you will learn how to tell if something is alive!\n\n## Main Content\n\n**The Seven Characteristics of Living Things**\n\nAll living things share seven important characteristics. These are special things that living things can do. Non-living things cannot do all seven of these things. Let's learn about each one:\n\n**1. Movement**\n\nAll living things can move. Some move from place to place, like a cat running or a bird flying. Other living things move in different ways. A plant cannot walk, but it can move its leaves toward the sun. Even tiny living things too small to see can move!\n\n**2. Growth**\n\nLiving things grow and get bigger. You were once a tiny baby, and now you are much bigger! Plants start as small seeds and grow into big trees. Animals start small and grow larger. Non-living things like rocks do not grow.\n\n**3. Reproduction**\n\nLiving things can make more living things like themselves. This is called reproduction. Dogs have puppies. Cats have kittens. Chickens lay eggs that hatch into chicks. Plants make seeds that grow into new plants. This is how living things continue to exist.\n\n**4. Response**\n\nLiving things respond to the world around them. This means they react to changes. If you touch something hot, you pull your hand away. If a plant doesn't get water, its leaves droop. If you turn on a light at night, moths fly toward it. Living things sense their surroundings and respond.\n\n**5. Nutrition**\n\nAll living things need food for energy. Plants make their own food from sunlight, water, and air. Animals must eat plants or other animals to get food. You need to eat breakfast, lunch, and dinner! Without food, living things cannot survive.\n\n**6. Respiration**\n\nLiving things need to breathe. Respiration is how living things use air to get energy from food. You breathe air in and out. Fish get air from water. Even plants breathe, but so slowly you cannot see it. Respiration gives living things energy to move, grow, and live.\n\n**7. Excretion**\n\nLiving things make waste that must leave their bodies. This is called excretion. When you go to the bathroom, that is excretion. When you sweat, that is excretion too. Animals and plants all have ways to get rid of waste. This keeps them healthy.\n\n**Remembering the Seven Characteristics**\n\nHere is a way to remember all seven: **MRS GREN**\n- **M**ovement\n- **R**espiration\n- **S**ensitivity (Response)\n- **G**rowth\n- **R**eproduction\n- **E**xcretion\n- **N**utrition\n\n**Living or Non-Living?**\n\nNow you can test if something is alive. Does it do all seven things? A dog moves, grows, has puppies, responds to sounds, eats food, breathes, and makes waste. A dog is alive!\n\nWhat about a toy robot? It can move, but it cannot grow. It cannot have baby robots on its own. It does not eat or breathe. It does not make waste. A toy robot is not alive.\n\nWhat about fire? Fire is tricky! Fire can move and grow. It seems to eat wood. It makes waste like smoke. But fire cannot reproduce on its own. Fire cannot respond like living things do. Fire is not alive - even though it seems like it might be!\n\n## Key Vocabulary\n\n- **Living thing** (Thai: สิ่งมีชีวิต) - Something that is alive and can do all seven characteristics\n- **Non-living thing** (Thai: สิ่งไม่มีชีวิต) - Something that is not alive\n- **Movement** (Thai: การเคลื่อนไหว) - The ability to move or change position\n- **Growth** (Thai: การเติบโต) - Getting bigger over time\n- **Reproduction** (Thai: การสืบพันธุ์) - Making more living things like yourself\n- **Response** (Thai: การตอบสนอง) - Reacting to changes around you\n- **Nutrition** (Thai: การได้รับอาหาร) - Getting food for energy\n- **Respiration** (Thai: การหายใจ) - Breathing to get energy from food\n- **Excretion** (Thai: การขับถ่าย) - Getting rid of waste from the body\n- **Characteristic** (Thai: ลักษณะ) - A special feature or quality\n- **Energy** (Thai: พลังงาน) - The power to do work and stay alive\n- **Survive** (Thai: อยู่รอด) - To stay alive\n\n## Reading Passage: The Nature Walk Mystery\n\nTeacher Somchai took his class on a nature walk through the forest near their school in Khon Kaen. He gave each student a special job.\n\n\"Today, you are scientists,\" Teacher Somchai said. \"Your job is to find ten things. Five should be living things, and five should be non-living things. Remember the seven characteristics we learned!\"\n\nPloy and Niran worked as partners. First, they found a big tree. \"That's living!\" said Ploy. \"Trees grow, and they make seeds. That's reproduction.\"\n\n\"Trees also need water and sunlight for food,\" added Niran. \"That's nutrition. And they respond to light by growing toward it. I think trees do all seven things!\"\n\nThey wrote \"tree\" on their living things list.\n\nNext, they found a beautiful blue rock. \"This is not alive,\" said Niran. \"Rocks don't grow or eat or breathe.\"\n\n\"And rocks can't have baby rocks!\" laughed Ploy.\n\nAs they walked deeper into the forest, they heard a sound. \"Look!\" whispered Ploy. A small lizard sat on a log. The lizard's sides moved in and out as it breathed. When the children moved closer, the lizard ran away quickly.\n\n\"The lizard is definitely alive,\" said Niran. \"It moves fast, it breathes, and it responded when we got close.\"\n\n\"I wonder if it's hungry,\" said Ploy. \"I bet it eats insects for nutrition.\"\n\nThey added \"lizard\" to their living things list.\n\nNear a stream, they found a mushroom growing on a dead tree. \"Is a mushroom alive?\" asked Ploy.\n\n\"Hmm, that's tricky,\" said Niran. \"Let me think about the seven characteristics.\"\n\n\"Well, mushrooms grow,\" said Ploy. \"And I think they can make more mushrooms. My dad says mushrooms make tiny seeds called spores.\"\n\n\"Mushrooms need food too,\" said Niran. \"They eat dead wood. I think mushrooms are alive, even though they don't move from place to place.\"\n\nTeacher Somchai walked over. \"Good thinking! Mushrooms are living things. They're called fungi. They might not move around like animals, but they do all seven characteristics. Some in ways we cannot easily see.\"\n\nBy the end of the walk, Ploy and Niran had found many living things: trees, grass, lizards, ants, mushrooms, and a spider. They found non-living things too: rocks, water, dead leaves, a clay pot, and an old bottle.\n\n\"Now I know how to tell if something is alive!\" said Ploy. \"I just check if it does all seven things from MRS GREN!\"\n\n\"Being a scientist is fun,\" agreed Niran. \"I never knew there was so much to discover in our forest!\"\n\n## Summary\n\nAll living things share seven special characteristics that help us identify them. Living things can move, grow, reproduce, respond to their surroundings, get nutrition, breathe through respiration, and remove waste through excretion. You can remember these seven characteristics with the helper MRS GREN. Non-living things cannot do all seven of these things. By checking for these characteristics, you can tell if something is alive or not alive. Understanding what makes something alive helps us see how special and amazing living things are!",
+      "order": 4,
+      "standards": [
+        "Sc1.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Look around you. You can see many things - a desk, a book, a plant, a friend. Some of these things are alive, and some are not alive. But how can you tell the difference? What makes something alive? Scientists have found seven special things that all living things can do. Today, you will learn how to tell if something is alive!"
+          },
+          {
+            "id": "content-1",
+            "type": "text",
+            "content": "## Main Content\n\n**The Seven Characteristics of Living Things**\n\nAll living things share seven important characteristics. These are special things that living things can do. Non-living things cannot do all seven of these things. Let's learn about each one:\n\n**1. Movement**\n\nAll living things can move. Some move from place to place, like a cat running or a bird flying. Other living things move in different ways. A plant cannot walk, but it can move its leaves toward the sun. Even tiny living things too small to see can move!\n\n**2. Growth**\n\nLiving things grow and get bigger. You were once a tiny baby, and now you are much bigger! Plants start as small seeds and grow into big trees. Animals start small and grow larger. Non-living things like rocks do not grow.\n\n**3. Reproduction**\n\nLiving things can make more living things like themselves. This is called reproduction. Dogs have puppies. Cats have kittens. Chickens lay eggs that hatch into chicks. Plants make seeds that grow into new plants. This is how living things continue to exist.\n\n**4. Response**\n\nLiving things respond to the world around them. This means they react to changes. If you touch something hot, you pull your hand away. If a plant doesn't get water, its leaves droop. If you turn on a light at night, moths fly toward it. Living things sense their surroundings and respond.\n\n**5. Nutrition**\n\nAll living things need food for energy. Plants make their own food from sunlight, water, and air. Animals must eat plants or other animals to get food. You need to eat breakfast, lunch, and dinner! Without food, living things cannot survive.\n\n**6. Respiration**\n\nLiving things need to breathe. Respiration is how living things use air to get energy from food. You breathe air in and out. Fish get air from water. Even plants breathe, but so slowly you cannot see it. Respiration gives living things energy to move, grow, and live.\n\n**7. Excretion**\n\nLiving things make waste that must leave their bodies. This is called excretion. When you go to the bathroom, that is excretion. When you sweat, that is excretion too. Animals and plants all have ways to get rid of waste. This keeps them healthy.\n\n**Remembering the Seven Characteristics**\n\nHere is a way to remember all seven: **MRS GREN**\n- **M**ovement\n- **R**espiration\n- **S**ensitivity (Response)\n- **G**rowth\n- **R**eproduction\n- **E**xcretion\n- **N**utrition\n\n**Living or Non-Living?**\n\nNow you can test if something is alive. Does it do all seven things? A dog moves, grows, has puppies, responds to sounds, eats food, breathes, and makes waste. A dog is alive!\n\nWhat about a toy robot? It can move, but it cannot grow. It cannot have baby robots on its own. It does not eat or breathe. It does not make waste. A toy robot is not alive.\n\nWhat about fire? Fire is tricky! Fire can move and grow. It seems to eat wood. It makes waste like smoke. But fire cannot reproduce on its own. Fire cannot respond like living things do. Fire is not alive - even though it seems like it might be!"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Living thing",
+                "thai": "สิ่งมีชีวิต",
+                "definition": "Something that is alive and can do all seven characteristics"
+              },
+              {
+                "term": "Non-living thing",
+                "thai": "สิ่งไม่มีชีวิต",
+                "definition": "Something that is not alive"
+              },
+              {
+                "term": "Movement",
+                "thai": "การเคลื่อนไหว",
+                "definition": "The ability to move or change position"
+              },
+              {
+                "term": "Growth",
+                "thai": "การเติบโต",
+                "definition": "Getting bigger over time"
+              },
+              {
+                "term": "Reproduction",
+                "thai": "การสืบพันธุ์",
+                "definition": "Making more living things like yourself"
+              },
+              {
+                "term": "Response",
+                "thai": "การตอบสนอง",
+                "definition": "Reacting to changes around you"
+              },
+              {
+                "term": "Nutrition",
+                "thai": "การได้รับอาหาร",
+                "definition": "Getting food for energy"
+              },
+              {
+                "term": "Respiration",
+                "thai": "การหายใจ",
+                "definition": "Breathing to get energy from food"
+              },
+              {
+                "term": "Excretion",
+                "thai": "การขับถ่าย",
+                "definition": "Getting rid of waste from the body"
+              },
+              {
+                "term": "Characteristic",
+                "thai": "ลักษณะ",
+                "definition": "A special feature or quality"
+              },
+              {
+                "term": "Energy",
+                "thai": "พลังงาน",
+                "definition": "The power to do work and stay alive"
+              },
+              {
+                "term": "Survive",
+                "thai": "อยู่รอด",
+                "definition": "To stay alive"
+              }
+            ]
+          },
+          {
+            "id": "reading",
+            "type": "reading_passage",
+            "title": "The Nature Walk Mystery",
+            "content": "Teacher Somchai took his class on a nature walk through the forest near their school in Khon Kaen. He gave each student a special job.\n\n\"Today, you are scientists,\" Teacher Somchai said. \"Your job is to find ten things. Five should be living things, and five should be non-living things. Remember the seven characteristics we learned!\"\n\nPloy and Niran worked as partners. First, they found a big tree. \"That's living!\" said Ploy. \"Trees grow, and they make seeds. That's reproduction.\"\n\n\"Trees also need water and sunlight for food,\" added Niran. \"That's nutrition. And they respond to light by growing toward it. I think trees do all seven things!\"\n\nThey wrote \"tree\" on their living things list.\n\nNext, they found a beautiful blue rock. \"This is not alive,\" said Niran. \"Rocks don't grow or eat or breathe.\"\n\n\"And rocks can't have baby rocks!\" laughed Ploy.\n\nAs they walked deeper into the forest, they heard a sound. \"Look!\" whispered Ploy. A small lizard sat on a log. The lizard's sides moved in and out as it breathed. When the children moved closer, the lizard ran away quickly.\n\n\"The lizard is definitely alive,\" said Niran. \"It moves fast, it breathes, and it responded when we got close.\"\n\n\"I wonder if it's hungry,\" said Ploy. \"I bet it eats insects for nutrition.\"\n\nThey added \"lizard\" to their living things list.\n\nNear a stream, they found a mushroom growing on a dead tree. \"Is a mushroom alive?\" asked Ploy.\n\n\"Hmm, that's tricky,\" said Niran. \"Let me think about the seven characteristics.\"\n\n\"Well, mushrooms grow,\" said Ploy. \"And I think they can make more mushrooms. My dad says mushrooms make tiny seeds called spores.\"\n\n\"Mushrooms need food too,\" said Niran. \"They eat dead wood. I think mushrooms are alive, even though they don't move from place to place.\"\n\nTeacher Somchai walked over. \"Good thinking! Mushrooms are living things. They're called fungi. They might not move around like animals, but they do all seven characteristics. Some in ways we cannot easily see.\"\n\nBy the end of the walk, Ploy and Niran had found many living things: trees, grass, lizards, ants, mushrooms, and a spider. They found non-living things too: rocks, water, dead leaves, a clay pot, and an old bottle.\n\n\"Now I know how to tell if something is alive!\" said Ploy. \"I just check if it does all seven things from MRS GREN!\"\n\n\"Being a scientist is fun,\" agreed Niran. \"I never knew there was so much to discover in our forest!\"",
+            "wordCount": 416
+          },
+          {
+            "id": "summary",
+            "type": "text",
+            "content": "## Summary\n\nAll living things share seven special characteristics that help us identify them. Living things can move, grow, reproduce, respond to their surroundings, get nutrition, breathe through respiration, and remove waste through excretion. You can remember these seven characteristics with the helper MRS GREN. Non-living things cannot do all seven of these things. By checking for these characteristics, you can tell if something is alive or not alive. Understanding what makes something alive helps us see how special and amazing living things are!"
+          }
+        ]
+      },
+      "titleThai": "อะไรทำให้สิ่งมีชีวิต"
+    },
+    {
+      "id": "g3-diversity-living-things",
+      "slug": "diversity-living-things",
+      "lessonType": "LESSON",
+      "title": "Diversity of Living Things",
+      "description": "Many types of living things - plants, animals, and more. Basic grouping by observable features.",
+      "content": "## Introduction\n\nOur world is full of living things! There are millions of different kinds of plants, animals, and other living things. Some are big like elephants. Some are tiny like ants. Some live in water. Some live on land. Some can fly in the air. This amazing variety of living things is called diversity. Today, you will learn about the wonderful diversity of life on Earth!\n\n## Main Content\n\n**What Is Diversity?**\n\nDiversity means having many different types. When we talk about the diversity of living things, we mean all the different kinds of plants, animals, and other organisms. Earth has millions of different species. A species is one particular type of living thing. Dogs are one species. Cats are another species. Rice plants are a species too.\n\n**Major Groups of Living Things**\n\nScientists organize living things into large groups based on what they have in common. Let's learn about the main groups:\n\n**Animals**\n\nAnimals are living things that can move around to find food. Most animals eat plants or other animals. Animals include creatures with backbones like fish, frogs, lizards, birds, and mammals. Animals also include creatures without backbones like insects, spiders, worms, and jellyfish.\n\nIn Thailand, we have many amazing animals! We have elephants, tigers, monkeys, colorful birds, butterflies, geckos, and thousands more. Animals can live on land, in water, or in the air.\n\n**Plants**\n\nPlants are living things that usually stay in one place. Most plants have roots, stems, and leaves. Plants make their own food from sunlight, water, and air. They do not need to eat other living things.\n\nThailand has beautiful plants! We have rice plants, bamboo, lotus flowers, mango trees, banana trees, and countless other plants. Some plants are as tall as buildings. Some are so small you can barely see them.\n\n**Fungi**\n\nFungi are living things that are not plants or animals. Mushrooms are fungi. Fungi cannot make their own food like plants do. They get food by breaking down dead plants and animals. Some fungi are so tiny you need a microscope to see them.\n\n**Microorganisms**\n\nMicroorganisms are living things so tiny you cannot see them without a microscope. Bacteria and other microorganisms are everywhere - in the soil, in water, in the air, and even in your body! Some help us, and some can make us sick.\n\n**Grouping Living Things by Observable Features**\n\nScientists look at features they can observe to group living things. Here are some ways to group animals:\n\n**By Body Covering:**\n- Fur or hair (dogs, cats, monkeys)\n- Feathers (birds)\n- Scales (fish, lizards, snakes)\n- Smooth skin (frogs)\n- Hard shell (turtles, beetles)\n\n**By How They Move:**\n- Walk or run (elephants, dogs)\n- Fly (birds, butterflies, bats)\n- Swim (fish, dolphins)\n- Crawl (snakes, worms)\n- Hop (frogs, rabbits)\n\n**By Where They Live:**\n- Land animals (elephants, ants)\n- Water animals (fish, octopus)\n- Animals that live in both (frogs, crocodiles)\n\n**By What They Eat:**\n- Plant eaters (elephants, rabbits, caterpillars)\n- Meat eaters (tigers, eagles, spiders)\n- Animals that eat both (bears, humans, chickens)\n\n**Why Is Diversity Important?**\n\nDiversity makes our world beautiful and healthy. Each living thing has a special job in nature. Plants make oxygen for us to breathe. Bees help flowers make seeds. Worms make soil healthy. All living things depend on each other. If we lose too many species, it hurts all living things, including us.\n\n## Key Vocabulary\n\n- **Diversity** (Thai: ความหลากหลาย) - Having many different types\n- **Species** (Thai: ชนิด) - One particular type of living thing\n- **Organism** (Thai: สิ่งมีชีวิต) - Any living thing\n- **Animal** (Thai: สัตว์) - A living thing that moves to find food\n- **Plant** (Thai: พืช) - A living thing that makes its own food from sunlight\n- **Fungi** (Thai: เชื้อรา) - Living things like mushrooms that break down dead things\n- **Microorganism** (Thai: จุลินทรีย์) - A living thing too small to see without a microscope\n- **Feature** (Thai: ลักษณะ) - A part or quality you can observe\n- **Group** (Thai: กลุ่ม) - Things that are similar and belong together\n- **Observe** (Thai: สังเกต) - To look at carefully and notice details\n- **Classify** (Thai: จำแนก) - To sort things into groups\n\n## Reading Passage: The Amazing Market\n\nNong and her grandfather walked through the morning market in Bangkok. Everywhere Nong looked, she saw living things for sale.\n\n\"Grandpa, there are so many different kinds!\" said Nong. \"How can there be so many?\"\n\n\"That's diversity,\" said Grandfather. \"Earth has millions of different species. Let's see how many different groups we can find here.\"\n\nThey stopped at a vegetable stand. Nong saw green vegetables, orange carrots, purple eggplants, and red tomatoes. \"All of these are plants,\" she said. \"But they look so different!\"\n\n\"Plants have great diversity,\" agreed Grandfather. \"Look at the shapes. Some have big leaves. Some have tiny leaves. Some grow underground like carrots. Some grow on vines like tomatoes.\"\n\nAt the fruit stand, Nong counted mangoes, bananas, rambutans, dragon fruit, and coconuts. \"These are all fruits from plants, but each one is special,\" she observed.\n\nThey walked to the fish section. Nong saw silver fish, catfish with whiskers, and prawns with long antennae. \"These are all animals that live in water,\" she said. \"They all have different body coverings. Fish have scales. Prawns have hard shells.\"\n\n\"Excellent observation!\" said Grandfather. \"You're thinking like a scientist.\"\n\nAt the meat section, Nong saw chicken, pork, and beef. \"These animals all lived on land,\" she said. \"Chickens have feathers. Pigs have skin with some hair. Cows have fur.\"\n\nNear the edge of the market, Nong spotted something interesting. \"Grandpa, what are those?\" she asked, pointing to brown mushrooms.\n\n\"Those are fungi,\" explained Grandfather. \"They're not plants or animals. They're in their own special group. Mushrooms grow in dark, wet places and feed on dead plants.\"\n\nAs they left the market, Nong carried a bag of vegetables. She thought about everything she had seen.\n\n\"Grandpa, I saw plants with different colors and shapes. I saw water animals and land animals. I saw different body coverings - scales, shells, feathers, and skin. I even saw fungi! The diversity of living things is amazing!\"\n\nGrandfather smiled. \"And that was just one market! Imagine all the species in Thailand's forests, rivers, and oceans. Imagine all the tiny microorganisms we cannot even see. Earth is full of wonderful diversity.\"\n\n\"Why are there so many different kinds?\" asked Nong.\n\n\"Each living thing has special features that help it survive where it lives,\" said Grandfather. \"Fish have fins for swimming. Birds have wings for flying. Cactus plants have thick stems to store water in the desert. Diversity helps living things survive in different places.\"\n\n\"We need to protect all these different species,\" said Nong.\n\n\"Yes,\" agreed Grandfather. \"Every species is important. Diversity makes our world healthy and beautiful. You are learning important lessons today, Nong.\"\n\nNong smiled. She would never look at living things the same way again. Now she would observe their features and think about how wonderfully diverse life is!\n\n## Summary\n\nThe diversity of living things means there are millions of different species on Earth. Scientists group living things into categories like animals, plants, fungi, and microorganisms. We can observe features like body covering, how they move, where they live, and what they eat to classify living things into groups. Each species has special features that help it survive. Diversity is important because it makes our world healthy and beautiful. All living things depend on each other, so we must protect the diversity of life.",
+      "order": 5,
+      "standards": [
+        "Sc1.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Our world is full of living things! There are millions of different kinds of plants, animals, and other living things. Some are big like elephants. Some are tiny like ants. Some live in water. Some live on land. Some can fly in the air. This amazing variety of living things is called diversity. Today, you will learn about the wonderful diversity of life on Earth!"
+          },
+          {
+            "id": "content-1",
+            "type": "text",
+            "content": "## Main Content\n\n**What Is Diversity?**\n\nDiversity means having many different types. When we talk about the diversity of living things, we mean all the different kinds of plants, animals, and other organisms. Earth has millions of different species. A species is one particular type of living thing. Dogs are one species. Cats are another species. Rice plants are a species too.\n\n**Major Groups of Living Things**\n\nScientists organize living things into large groups based on what they have in common. Let's learn about the main groups:\n\n**Animals**\n\nAnimals are living things that can move around to find food. Most animals eat plants or other animals. Animals include creatures with backbones like fish, frogs, lizards, birds, and mammals. Animals also include creatures without backbones like insects, spiders, worms, and jellyfish.\n\nIn Thailand, we have many amazing animals! We have elephants, tigers, monkeys, colorful birds, butterflies, geckos, and thousands more. Animals can live on land, in water, or in the air.\n\n**Plants**\n\nPlants are living things that usually stay in one place. Most plants have roots, stems, and leaves. Plants make their own food from sunlight, water, and air. They do not need to eat other living things.\n\nThailand has beautiful plants! We have rice plants, bamboo, lotus flowers, mango trees, banana trees, and countless other plants. Some plants are as tall as buildings. Some are so small you can barely see them.\n\n**Fungi**\n\nFungi are living things that are not plants or animals. Mushrooms are fungi. Fungi cannot make their own food like plants do. They get food by breaking down dead plants and animals. Some fungi are so tiny you need a microscope to see them.\n\n**Microorganisms**\n\nMicroorganisms are living things so tiny you cannot see them without a microscope. Bacteria and other microorganisms are everywhere - in the soil, in water, in the air, and even in your body! Some help us, and some can make us sick.\n\n**Grouping Living Things by Observable Features**\n\nScientists look at features they can observe to group living things. Here are some ways to group animals:\n\n**By Body Covering:**\n- Fur or hair (dogs, cats, monkeys)\n- Feathers (birds)\n- Scales (fish, lizards, snakes)\n- Smooth skin (frogs)\n- Hard shell (turtles, beetles)\n\n**By How They Move:**\n- Walk or run (elephants, dogs)\n- Fly (birds, butterflies, bats)\n- Swim (fish, dolphins)\n- Crawl (snakes, worms)\n- Hop (frogs, rabbits)\n\n**By Where They Live:**\n- Land animals (elephants, ants)\n- Water animals (fish, octopus)\n- Animals that live in both (frogs, crocodiles)\n\n**By What They Eat:**\n- Plant eaters (elephants, rabbits, caterpillars)\n- Meat eaters (tigers, eagles, spiders)\n- Animals that eat both (bears, humans, chickens)\n\n**Why Is Diversity Important?**\n\nDiversity makes our world beautiful and healthy. Each living thing has a special job in nature. Plants make oxygen for us to breathe. Bees help flowers make seeds. Worms make soil healthy. All living things depend on each other. If we lose too many species, it hurts all living things, including us."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Diversity",
+                "thai": "ความหลากหลาย",
+                "definition": "Having many different types"
+              },
+              {
+                "term": "Species",
+                "thai": "ชนิด",
+                "definition": "One particular type of living thing"
+              },
+              {
+                "term": "Organism",
+                "thai": "สิ่งมีชีวิต",
+                "definition": "Any living thing"
+              },
+              {
+                "term": "Animal",
+                "thai": "สัตว์",
+                "definition": "A living thing that moves to find food"
+              },
+              {
+                "term": "Plant",
+                "thai": "พืช",
+                "definition": "A living thing that makes its own food from sunlight"
+              },
+              {
+                "term": "Fungi",
+                "thai": "เชื้อรา",
+                "definition": "Living things like mushrooms that break down dead things"
+              },
+              {
+                "term": "Microorganism",
+                "thai": "จุลินทรีย์",
+                "definition": "A living thing too small to see without a microscope"
+              },
+              {
+                "term": "Feature",
+                "thai": "ลักษณะ",
+                "definition": "A part or quality you can observe"
+              },
+              {
+                "term": "Group",
+                "thai": "กลุ่ม",
+                "definition": "Things that are similar and belong together"
+              },
+              {
+                "term": "Observe",
+                "thai": "สังเกต",
+                "definition": "To look at carefully and notice details"
+              },
+              {
+                "term": "Classify",
+                "thai": "จำแนก",
+                "definition": "To sort things into groups"
+              }
+            ]
+          },
+          {
+            "id": "reading",
+            "type": "reading_passage",
+            "title": "The Amazing Market",
+            "content": "Nong and her grandfather walked through the morning market in Bangkok. Everywhere Nong looked, she saw living things for sale.\n\n\"Grandpa, there are so many different kinds!\" said Nong. \"How can there be so many?\"\n\n\"That's diversity,\" said Grandfather. \"Earth has millions of different species. Let's see how many different groups we can find here.\"\n\nThey stopped at a vegetable stand. Nong saw green vegetables, orange carrots, purple eggplants, and red tomatoes. \"All of these are plants,\" she said. \"But they look so different!\"\n\n\"Plants have great diversity,\" agreed Grandfather. \"Look at the shapes. Some have big leaves. Some have tiny leaves. Some grow underground like carrots. Some grow on vines like tomatoes.\"\n\nAt the fruit stand, Nong counted mangoes, bananas, rambutans, dragon fruit, and coconuts. \"These are all fruits from plants, but each one is special,\" she observed.\n\nThey walked to the fish section. Nong saw silver fish, catfish with whiskers, and prawns with long antennae. \"These are all animals that live in water,\" she said. \"They all have different body coverings. Fish have scales. Prawns have hard shells.\"\n\n\"Excellent observation!\" said Grandfather. \"You're thinking like a scientist.\"\n\nAt the meat section, Nong saw chicken, pork, and beef. \"These animals all lived on land,\" she said. \"Chickens have feathers. Pigs have skin with some hair. Cows have fur.\"\n\nNear the edge of the market, Nong spotted something interesting. \"Grandpa, what are those?\" she asked, pointing to brown mushrooms.\n\n\"Those are fungi,\" explained Grandfather. \"They're not plants or animals. They're in their own special group. Mushrooms grow in dark, wet places and feed on dead plants.\"\n\nAs they left the market, Nong carried a bag of vegetables. She thought about everything she had seen.\n\n\"Grandpa, I saw plants with different colors and shapes. I saw water animals and land animals. I saw different body coverings - scales, shells, feathers, and skin. I even saw fungi! The diversity of living things is amazing!\"\n\nGrandfather smiled. \"And that was just one market! Imagine all the species in Thailand's forests, rivers, and oceans. Imagine all the tiny microorganisms we cannot even see. Earth is full of wonderful diversity.\"\n\n\"Why are there so many different kinds?\" asked Nong.\n\n\"Each living thing has special features that help it survive where it lives,\" said Grandfather. \"Fish have fins for swimming. Birds have wings for flying. Cactus plants have thick stems to store water in the desert. Diversity helps living things survive in different places.\"\n\n\"We need to protect all these different species,\" said Nong.\n\n\"Yes,\" agreed Grandfather. \"Every species is important. Diversity makes our world healthy and beautiful. You are learning important lessons today, Nong.\"\n\nNong smiled. She would never look at living things the same way again. Now she would observe their features and think about how wonderfully diverse life is!",
+            "wordCount": 466
+          },
+          {
+            "id": "summary",
+            "type": "text",
+            "content": "## Summary\n\nThe diversity of living things means there are millions of different species on Earth. Scientists group living things into categories like animals, plants, fungi, and microorganisms. We can observe features like body covering, how they move, where they live, and what they eat to classify living things into groups. Each species has special features that help it survive. Diversity is important because it makes our world healthy and beautiful. All living things depend on each other, so we must protect the diversity of life."
+          }
+        ]
+      },
+      "titleThai": "ความหลากหลายของสิ่งมีชีวิต"
+    },
+    {
+      "id": "g3-observing-living-things-lab",
+      "slug": "observing-living-things-lab",
+      "title": "Lab: Observing Living Things",
+      "description": "Plant observation study - bean seed planting and initial observations.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nScientists learn about the world by observing carefully. In this lab, you will observe living things just like real scientists do. You will plant bean seeds and observe them as they grow. You will also observe other living things around you. By the end of this lab, you will know how to make detailed observations like a scientist!\n\nThis lab connects to what you learned about being a scientist and the characteristics of living things. You will see growth, response to light, and other life processes happening right before your eyes!\n\n## Learning Objectives\n\n- Students will be able to observe living things using multiple senses\n- Students will be able to record observations with drawings and descriptions\n- Students will be able to identify characteristics of living things through observation\n- Students will be able to compare living and non-living things based on observations\n\n## Materials\n\n**Per Student:**\n- 3 bean seeds\n- 1 small plastic cup or pot\n- Potting soil (enough to fill cup)\n- 1 magnifying glass\n- Science notebook and pencil\n- Ruler (centimeters)\n\n**Per Group (4 students):**\n- 1 watering bottle or cup\n- Paper towels for cleanup\n- Several small objects (rock, leaf, stick, flower, small toy)\n\n**Teacher Preparation:**\n- Prepare bean seeds (soak overnight for faster germination - optional)\n- Set up observation station with various living and non-living items\n- Prepare sunny windowsill space for student pots\n\n## Safety Notes\n\n⚠ Wash your hands after handling soil and seeds.\n⚠ Do not eat or taste the seeds or soil.\n⚠ Clean up any spilled soil or water immediately to prevent slipping.\n⚠ Handle the magnifying glass carefully - do not look at the sun through it.\n⚠ Be gentle with living things - treat them with respect.\n\n## Procedure\n\n1. **Examine Your Seeds**\n   - Take your three bean seeds and look at them carefully\n   - Use the magnifying glass to see details\n   - Draw one seed in your notebook and write 3 observations\n   - Measure the length of one seed with your ruler\n\n2. **Prepare Your Pot**\n   - Fill your cup about 3/4 full with potting soil\n   - Press the soil down gently but don't pack it too tight\n   - Make a small hole about 2 centimeters deep in the center\n\n3. **Plant Your Seeds**\n   - Place all three seeds in the hole (planting multiple seeds increases chances one will sprout)\n   - Cover the seeds with soil\n   - Gently pat the soil down\n   - Write your name on the cup\n\n4. **Water Your Seeds**\n   - Add water to the soil until it feels damp like a wrung-out sponge\n   - Do not add too much water - the soil should not be muddy\n   - Place your cup on the windowsill in a sunny spot\n\n5. **Observe Living Things Station**\n   - Go to the observation station your teacher has set up\n   - Choose one living thing (plant, leaf, flower, insect if available)\n   - Choose one non-living thing (rock, stick, toy)\n   - Use your magnifying glass to observe each object closely\n\n6. **Make Detailed Observations**\n   - For each object, record in your notebook:\n     - What do you see? (color, shape, texture, size)\n     - What do you feel? (smooth, rough, hard, soft, wet, dry)\n     - What do you smell? (only if teacher says it's safe)\n     - Is it living or non-living? How do you know?\n\n7. **Compare and Record**\n   - Draw both objects in your notebook\n   - Write at least 5 observations for each object\n   - Use the characteristics of living things to help you identify what's living\n\n8. **Cleanup**\n   - Wash your hands with soap and water\n   - Wipe your workspace with paper towels\n   - Return all materials to their proper places\n   - Make sure your pot is safely on the windowsill\n\n**Teacher Tip:** Over the next 2 weeks, have students observe and measure their bean plants every 2-3 days. They should record changes in height, number of leaves, and other observations. This creates a perfect ongoing observation study!\n\n## Observations\n\n**Seed Observations (Before Planting):**\n\n| What I Observed | Details |\n|----------------|----------|\n| Color | |\n| Size (length in cm) | |\n| Shape | |\n| Texture (smooth, rough, etc.) | |\n| Special features | |\n\n**Living Thing Observations:**\n\nName of object: _________________  \nIs it living? _______\n\nObservations:\n1. What I see: ________________________________________________\n2. What I feel (texture): ______________________________________\n3. What I smell (if safe): _____________________________________\n4. How I know it's living or non-living: _______________________\n______________________________________________________________\n\n**Non-Living Thing Observations:**\n\nName of object: _________________  \nIs it living? _______\n\nObservations:\n1. What I see: ________________________________________________\n2. What I feel (texture): ______________________________________\n3. How I know it's living or non-living: _______________________\n______________________________________________________________\n\n**Drawings:**\n\n[Space for students to draw their observations]\n\n## Conclusion Questions\n\n1. **What differences did you observe between living and non-living things?**\n   Think about the seven characteristics of life (MRS GREN). Which characteristics did you observe in the living things?\n\n2. **What details did you notice when using the magnifying glass that you couldn't see with just your eyes?**\n   Explain why tools like magnifying glasses help scientists make better observations.\n\n3. **Why do you think we planted three seeds instead of just one?**\n   What advantage does planting multiple seeds give us?\n\n4. **Predict what will happen to your bean seeds over the next two weeks.**\n   Make at least three specific predictions about changes you expect to see. Base your predictions on what you learned about growth and living things.\n\n## Summary\n\nIn this lab, you practiced making observations like a scientist. You used your senses and tools to observe details. You recorded your observations with drawings and descriptions. You compared living and non-living things and identified characteristics that show something is alive. Making careful observations is an essential science skill that you will use throughout your life.\n\n**What We Learned:**\n- Scientists observe carefully using multiple senses and tools\n- Recording observations helps us remember and compare what we see\n- Living things show characteristics like growth and response that non-living things don't have\n- Tools like magnifying glasses help us see details we would miss with our eyes alone\n- Planting seeds is the first step in observing plant growth over time",
+      "order": 6,
+      "standards": [
+        "Sc1.2-G3",
+        "Sc8.1-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Scientists learn about the world by observing carefully. In this lab, you will observe living things just like real scientists do. You will plant bean seeds and observe them as they grow. You will also observe other living things around you. By the end of this lab, you will know how to make detailed observations like a scientist!\n\nThis lab connects to what you learned about being a scientist and the characteristics of living things. You will see growth, response to light, and other life processes happening right before your eyes!"
+          },
+          {
+            "id": "objectives",
+            "type": "text",
+            "content": "## Learning Objectives\n\n- Students will be able to observe living things using multiple senses\n- Students will be able to record observations with drawings and descriptions\n- Students will be able to identify characteristics of living things through observation\n- Students will be able to compare living and non-living things based on observations"
+          },
+          {
+            "id": "materials",
+            "type": "materials",
+            "items": [
+              {
+                "notes": "Per Student",
+                "item": "3 bean seeds"
+              },
+              {
+                "notes": "Per Student",
+                "item": "1 small plastic cup or pot"
+              },
+              {
+                "notes": "Per Student",
+                "item": "Potting soil (enough to fill cup)"
+              },
+              {
+                "notes": "Per Student",
+                "item": "1 magnifying glass"
+              },
+              {
+                "notes": "Per Student",
+                "item": "Science notebook and pencil"
+              },
+              {
+                "notes": "Per Student",
+                "item": "Ruler (centimeters)"
+              },
+              {
+                "notes": "Per Group (4 students)",
+                "item": "1 watering bottle or cup"
+              },
+              {
+                "notes": "Per Group (4 students)",
+                "item": "Paper towels for cleanup"
+              },
+              {
+                "notes": "Per Group (4 students)",
+                "item": "Several small objects (rock, leaf, stick, flower, small toy)"
+              },
+              {
+                "notes": "Teacher Preparation",
+                "item": "Prepare bean seeds (soak overnight for faster germination - optional)"
+              },
+              {
+                "notes": "Teacher Preparation",
+                "item": "Set up observation station with various living and non-living items"
+              },
+              {
+                "notes": "Teacher Preparation",
+                "item": "Prepare sunny windowsill space for student pots"
+              }
+            ]
+          },
+          {
+            "id": "safety",
+            "type": "text",
+            "content": "## Safety Notes\n\n⚠ Wash your hands after handling soil and seeds.\n⚠ Do not eat or taste the seeds or soil.\n⚠ Clean up any spilled soil or water immediately to prevent slipping.\n⚠ Handle the magnifying glass carefully - do not look at the sun through it.\n⚠ Be gentle with living things - treat them with respect."
+          },
+          {
+            "id": "procedure",
+            "type": "procedure",
+            "steps": [
+              {
+                "instruction": "Examine Your Seeds\n- Take your three bean seeds and look at them carefully\n- Use the magnifying glass to see details\n- Draw one seed in your notebook and write 3 observations\n- Measure the length of one seed with your ruler",
+                "stepNumber": 1
+              },
+              {
+                "instruction": "Prepare Your Pot\n- Fill your cup about 3/4 full with potting soil\n- Press the soil down gently but don't pack it too tight\n- Make a small hole about 2 centimeters deep in the center",
+                "stepNumber": 2
+              },
+              {
+                "instruction": "Plant Your Seeds\n- Place all three seeds in the hole (planting multiple seeds increases chances one will sprout)\n- Cover the seeds with soil\n- Gently pat the soil down\n- Write your name on the cup",
+                "stepNumber": 3
+              },
+              {
+                "instruction": "Water Your Seeds\n- Add water to the soil until it feels damp like a wrung-out sponge\n- Do not add too much water - the soil should not be muddy\n- Place your cup on the windowsill in a sunny spot",
+                "stepNumber": 4
+              },
+              {
+                "instruction": "Observe Living Things Station\n- Go to the observation station your teacher has set up\n- Choose one living thing (plant, leaf, flower, insect if available)\n- Choose one non-living thing (rock, stick, toy)\n- Use your magnifying glass to observe each object closely",
+                "stepNumber": 5
+              },
+              {
+                "instruction": "Make Detailed Observations\n- For each object, record in your notebook:\n- What do you see? (color, shape, texture, size)\n- What do you feel? (smooth, rough, hard, soft, wet, dry)\n- What do you smell? (only if teacher says it's safe)\n- Is it living or non-living? How do you know?",
+                "stepNumber": 6
+              },
+              {
+                "instruction": "Compare and Record\n- Draw both objects in your notebook\n- Write at least 5 observations for each object\n- Use the characteristics of living things to help you identify what's living",
+                "stepNumber": 7
+              },
+              {
+                "instruction": "Cleanup\n- Wash your hands with soap and water\n- Wipe your workspace with paper towels\n- Return all materials to their proper places\n- Make sure your pot is safely on the windowsill\n**Teacher Tip:** Over the next 2 weeks, have students observe and measure their bean plants every 2-3 days. They should record changes in height, number of leaves, and other observations. This creates a perfect ongoing observation study!",
+                "stepNumber": 8
+              }
+            ]
+          },
+          {
+            "id": "observations",
+            "type": "text",
+            "content": "## Observations\n\n**Seed Observations (Before Planting):**\n\n| What I Observed | Details |\n|----------------|----------|\n| Color | |\n| Size (length in cm) | |\n| Shape | |\n| Texture (smooth, rough, etc.) | |\n| Special features | |\n\n**Living Thing Observations:**\n\nName of object: _________________  \nIs it living? _______\n\nObservations:\n1. What I see: ________________________________________________\n2. What I feel (texture): ______________________________________\n3. What I smell (if safe): _____________________________________\n4. How I know it's living or non-living: _______________________\n______________________________________________________________\n\n**Non-Living Thing Observations:**\n\nName of object: _________________  \nIs it living? _______\n\nObservations:\n1. What I see: ________________________________________________\n2. What I feel (texture): ______________________________________\n3. How I know it's living or non-living: _______________________\n______________________________________________________________\n\n**Drawings:**\n\n[Space for students to draw their observations]"
+          },
+          {
+            "id": "conclusion",
+            "type": "text",
+            "content": "## Conclusion Questions\n\n1. **What differences did you observe between living and non-living things?**\n   Think about the seven characteristics of life (MRS GREN). Which characteristics did you observe in the living things?\n\n2. **What details did you notice when using the magnifying glass that you couldn't see with just your eyes?**\n   Explain why tools like magnifying glasses help scientists make better observations.\n\n3. **Why do you think we planted three seeds instead of just one?**\n   What advantage does planting multiple seeds give us?\n\n4. **Predict what will happen to your bean seeds over the next two weeks.**\n   Make at least three specific predictions about changes you expect to see. Base your predictions on what you learned about growth and living things."
+          },
+          {
+            "id": "summary",
+            "type": "text",
+            "content": "## Summary\n\nIn this lab, you practiced making observations like a scientist. You used your senses and tools to observe details. You recorded your observations with drawings and descriptions. You compared living and non-living things and identified characteristics that show something is alive. Making careful observations is an essential science skill that you will use throughout your life.\n\n**What We Learned:**\n- Scientists observe carefully using multiple senses and tools\n- Recording observations helps us remember and compare what we see\n- Living things show characteristics like growth and response that non-living things don't have\n- Tools like magnifying glasses help us see details we would miss with our eyes alone\n- Planting seeds is the first step in observing plant growth over time"
+          }
+        ]
+      },
+      "titleThai": "การสังเกตสิ่งมีชีวิต"
+    },
+    {
+      "id": "g3-life-processes-growth",
+      "slug": "life-processes-growth",
+      "lessonType": "LESSON",
+      "title": "Life Processes - Growth",
+      "description": "How living things grow and change over time with examples from plants and animals.",
+      "content": "## Introduction\n\nWhen you look at old photos of yourself as a baby, you see how much you have changed! You were tiny, and now you are bigger and can do more things. This change is called growth. All living things grow and change over time. Today, you will learn about how different living things grow and what they need to grow well.\n\n## Main Content\n\n**What Is Growth?**\n\nGrowth means getting bigger and changing over time. Living things start small and grow larger. A seed becomes a tall tree. A tiny puppy becomes a big dog. You were once a baby, and now you are a child. One day you will be an adult. Growth is one of the seven characteristics that all living things share.\n\n**How Do Living Things Grow?**\n\nLiving things grow by making more cells. Cells are the tiny building blocks that make up all living things. You started as one single cell. That cell divided into two cells, then four cells, then eight cells, and so on. Now your body has trillions of cells! As living things make more cells, they grow bigger.\n\n**Growth in Plants**\n\nPlants grow in special ways. Let's follow how a bean plant grows:\n\n**Stage 1: The Seed**\nA bean seed holds a baby plant inside. The seed has stored food to help the baby plant start growing. When the seed gets water, warmth, and air, it begins to grow.\n\n**Stage 2: Sprouting**\nFirst, a tiny root breaks out of the seed and grows down into the soil. The root takes in water and minerals from the soil. Then a small stem pushes up toward the light. This is called sprouting or germination.\n\n**Stage 3: Seedling**\nThe stem breaks through the soil and reaches the sunlight. The first leaves open. Now the plant can make its own food from sunlight. The plant is called a seedling. It keeps growing taller and making more leaves.\n\n**Stage 4: Mature Plant**\nThe plant grows bigger and stronger. The roots grow deeper. The stem grows thicker. More leaves grow. Eventually, the plant makes flowers. The flowers turn into new seed pods. The plant has become a mature adult.\n\nPlants need several things to grow well:\n- **Sunlight** - to make food\n- **Water** - for all the processes inside the plant\n- **Air** - especially carbon dioxide for making food\n- **Nutrients** - minerals from the soil\n- **Space** - room for roots and leaves to grow\n\n**Growth in Animals**\n\nAnimals also start small and grow bigger. Let's look at how a chicken grows:\n\n**Stage 1: The Egg**\nA baby chick grows inside an egg. The egg protects the chick and gives it food as it develops.\n\n**Stage 2: Hatching**\nAfter about 21 days, the chick is ready to hatch. It pecks its way out of the shell. The new chick is wet and tired, but soon its feathers dry and fluff up.\n\n**Stage 3: Young Chick**\nThe young chick eats, drinks, and grows quickly. In just a few weeks, it grows much bigger. Its baby fluff is replaced by real feathers.\n\n**Stage 4: Adult Chicken**\nAfter several months, the chick becomes an adult chicken. It is fully grown and can have its own baby chicks.\n\nAnimals need several things to grow well:\n- **Food** - for energy and building materials\n- **Water** - for all body processes\n- **Air** - oxygen for respiration\n- **Shelter** - protection from weather and danger\n- **Care** - especially when they are young\n\n**How Humans Grow**\n\nYou grow in stages too! You were a baby, now you are a child, later you will be a teenager, and finally an adult. At each stage, your body grows and changes. You get taller. Your bones get longer and stronger. Your muscles get bigger. Your brain grows and you learn new things.\n\nRight now, you are growing every day! You might not notice it because growth happens slowly. But if you measure your height every few months, you will see that you are getting taller.\n\n**Growth Takes Time**\n\nDifferent living things grow at different speeds. Bamboo can grow very fast - up to 91 centimeters in one day! Trees like oaks grow slowly and can take 20 years to become full adults. Humans take about 18 years to finish growing. An elephant takes about 16 years to grow up.\n\n**Growth Never Completely Stops**\n\nEven when living things reach their full size, some parts keep growing. Your hair keeps growing. Your fingernails keep growing. Trees keep adding new wood each year. While the main growth stops, small growth continues throughout life.\n\n## Key Vocabulary\n\n- **Growth** (Thai: การเติบโต) - Getting bigger and changing over time\n- **Cell** (Thai: เซลล์) - The tiny building block that makes up all living things\n- **Seed** (Thai: เมล็ด) - The part of a plant that can grow into a new plant\n- **Sprout** (Thai: งอก) - When a seed begins to grow\n- **Seedling** (Thai: ต้นกล้า) - A young plant that just started growing\n- **Mature** (Thai: เต็มวัย) - Fully grown and adult\n- **Root** (Thai: ราก) - The part of a plant that grows in soil and takes in water\n- **Nutrients** (Thai: สารอาหาร) - Substances that living things need to grow and stay healthy\n- **Stage** (Thai: ระยะ) - A step or period in growth\n- **Hatch** (Thai: ฟัก) - When a baby animal breaks out of an egg\n- **Develop** (Thai: พัฒนา) - To grow and change over time\n\n## Reading Passage: Pim's Bean Plant Journal\n\nPim's teacher gave each student three bean seeds to plant. Pim was excited to watch her seeds grow. She decided to keep a journal to record what happened.\n\n**Week 1 - January 10**\nToday I planted my bean seeds in a small pot with soil. I planted them about 2 centimeters deep. I watered the soil until it was damp but not too wet. Teacher said seeds need water, warmth, and air to sprout. I put my pot on the windowsill where it's warm and sunny. I can't wait to see what happens!\n\n**Week 1 - January 14** \nI checked my pot every day. This morning, I saw something amazing! A tiny green stem pushed up through the soil. My seed sprouted! The stem is only about 1 centimeter tall. I can see the top of the seed still attached. I watered it gently.\n\n**Week 2 - January 17**\nMy seedling is growing fast! It's now 5 centimeters tall. Two small leaves opened. They are light green and smooth. I can see the roots if I look carefully at the edge of the pot. The roots are white and thin. They grow down into the soil to get water.\n\n**Week 3 - January 24**\nThe seedling is now 12 centimeters tall! More leaves are growing. I counted six leaves now. The stem is getting thicker and stronger. The plant is bigger than my hand. I water it every two days. I also measured my classmates' plants. Some grew faster than mine. Some grew slower. I wonder why?\n\n**Week 4 - January 31**\nMy bean plant is 20 centimeters tall now! The leaves are dark green and healthy. I can see tiny bumps on the stem where new leaves will grow. Teacher explained that plants grow from special parts called growing points. The growing points are at the tips of stems and roots.\n\n**Week 6 - February 14**\nAmazing news! My plant has flowers! They are small white flowers with purple marks. Teacher said flowers will turn into bean pods with seeds inside. My plant is becoming a mature adult. It took about 6 weeks to grow from a seed to a flowering plant.\n\n**Week 8 - February 28**\nI can see small bean pods growing where the flowers were! The pods are green and about 5 centimeters long. Inside each pod, I can feel the bump of beans growing. These beans are seeds. If I plant them, they will grow into new bean plants. My plant has completed its life cycle!\n\n**What I Learned:**\nLiving things grow and change over time. My bean plant needed water, sunlight, air, nutrients from soil, and space to grow well. Growth happens in stages: seed, sprout, seedling, and mature plant. Different plants grow at different speeds. Growth takes time and the right conditions. I took good care of my plant, and it grew healthy and strong!\n\nPim felt proud of her bean plant. She learned that growing things need care and patience. She also learned that observing and recording changes helps scientists understand growth. Pim couldn't wait to plant the new beans and watch the cycle start all over again!\n\n## Summary\n\nGrowth means getting bigger and changing over time. All living things grow by making more cells. Plants grow from seeds through stages: sprouting, seedling, and mature adult. Plants need sunlight, water, air, nutrients, and space to grow. Animals also grow in stages, from babies to adults. Animals need food, water, air, shelter, and care to grow well. Different living things grow at different speeds. Growth takes time and the right conditions. Understanding growth helps us take care of plants and animals properly.",
+      "order": 7,
+      "standards": [
+        "Sc1.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "When you look at old photos of yourself as a baby, you see how much you have changed! You were tiny, and now you are bigger and can do more things. This change is called growth. All living things grow and change over time. Today, you will learn about how different living things grow and what they need to grow well."
+          },
+          {
+            "id": "content-1",
+            "type": "text",
+            "content": "## Main Content\n\n**What Is Growth?**\n\nGrowth means getting bigger and changing over time. Living things start small and grow larger. A seed becomes a tall tree. A tiny puppy becomes a big dog. You were once a baby, and now you are a child. One day you will be an adult. Growth is one of the seven characteristics that all living things share.\n\n**How Do Living Things Grow?**\n\nLiving things grow by making more cells. Cells are the tiny building blocks that make up all living things. You started as one single cell. That cell divided into two cells, then four cells, then eight cells, and so on. Now your body has trillions of cells! As living things make more cells, they grow bigger.\n\n**Growth in Plants**\n\nPlants grow in special ways. Let's follow how a bean plant grows:\n\n**Stage 1: The Seed**\nA bean seed holds a baby plant inside. The seed has stored food to help the baby plant start growing. When the seed gets water, warmth, and air, it begins to grow.\n\n**Stage 2: Sprouting**\nFirst, a tiny root breaks out of the seed and grows down into the soil. The root takes in water and minerals from the soil. Then a small stem pushes up toward the light. This is called sprouting or germination.\n\n**Stage 3: Seedling**\nThe stem breaks through the soil and reaches the sunlight. The first leaves open. Now the plant can make its own food from sunlight. The plant is called a seedling. It keeps growing taller and making more leaves.\n\n**Stage 4: Mature Plant**\nThe plant grows bigger and stronger. The roots grow deeper. The stem grows thicker. More leaves grow. Eventually, the plant makes flowers. The flowers turn into new seed pods. The plant has become a mature adult.\n\nPlants need several things to grow well:\n- **Sunlight** - to make food\n- **Water** - for all the processes inside the plant\n- **Air** - especially carbon dioxide for making food\n- **Nutrients** - minerals from the soil\n- **Space** - room for roots and leaves to grow\n\n**Growth in Animals**\n\nAnimals also start small and grow bigger. Let's look at how a chicken grows:\n\n**Stage 1: The Egg**\nA baby chick grows inside an egg. The egg protects the chick and gives it food as it develops.\n\n**Stage 2: Hatching**\nAfter about 21 days, the chick is ready to hatch. It pecks its way out of the shell. The new chick is wet and tired, but soon its feathers dry and fluff up.\n\n**Stage 3: Young Chick**\nThe young chick eats, drinks, and grows quickly. In just a few weeks, it grows much bigger. Its baby fluff is replaced by real feathers.\n\n**Stage 4: Adult Chicken**\nAfter several months, the chick becomes an adult chicken. It is fully grown and can have its own baby chicks.\n\nAnimals need several things to grow well:\n- **Food** - for energy and building materials\n- **Water** - for all body processes\n- **Air** - oxygen for respiration\n- **Shelter** - protection from weather and danger\n- **Care** - especially when they are young\n\n**How Humans Grow**\n\nYou grow in stages too! You were a baby, now you are a child, later you will be a teenager, and finally an adult. At each stage, your body grows and changes. You get taller. Your bones get longer and stronger. Your muscles get bigger. Your brain grows and you learn new things.\n\nRight now, you are growing every day! You might not notice it because growth happens slowly. But if you measure your height every few months, you will see that you are getting taller.\n\n**Growth Takes Time**\n\nDifferent living things grow at different speeds. Bamboo can grow very fast - up to 91 centimeters in one day! Trees like oaks grow slowly and can take 20 years to become full adults. Humans take about 18 years to finish growing. An elephant takes about 16 years to grow up.\n\n**Growth Never Completely Stops**\n\nEven when living things reach their full size, some parts keep growing. Your hair keeps growing. Your fingernails keep growing. Trees keep adding new wood each year. While the main growth stops, small growth continues throughout life."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Growth",
+                "thai": "การเติบโต",
+                "definition": "Getting bigger and changing over time"
+              },
+              {
+                "term": "Cell",
+                "thai": "เซลล์",
+                "definition": "The tiny building block that makes up all living things"
+              },
+              {
+                "term": "Seed",
+                "thai": "เมล็ด",
+                "definition": "The part of a plant that can grow into a new plant"
+              },
+              {
+                "term": "Sprout",
+                "thai": "งอก",
+                "definition": "When a seed begins to grow"
+              },
+              {
+                "term": "Seedling",
+                "thai": "ต้นกล้า",
+                "definition": "A young plant that just started growing"
+              },
+              {
+                "term": "Mature",
+                "thai": "เต็มวัย",
+                "definition": "Fully grown and adult"
+              },
+              {
+                "term": "Root",
+                "thai": "ราก",
+                "definition": "The part of a plant that grows in soil and takes in water"
+              },
+              {
+                "term": "Nutrients",
+                "thai": "สารอาหาร",
+                "definition": "Substances that living things need to grow and stay healthy"
+              },
+              {
+                "term": "Stage",
+                "thai": "ระยะ",
+                "definition": "A step or period in growth"
+              },
+              {
+                "term": "Hatch",
+                "thai": "ฟัก",
+                "definition": "When a baby animal breaks out of an egg"
+              },
+              {
+                "term": "Develop",
+                "thai": "พัฒนา",
+                "definition": "To grow and change over time"
+              }
+            ]
+          },
+          {
+            "id": "reading",
+            "type": "reading_passage",
+            "title": "Pim's Bean Plant Journal",
+            "content": "Pim's teacher gave each student three bean seeds to plant. Pim was excited to watch her seeds grow. She decided to keep a journal to record what happened.\n\n**Week 1 - January 10**\nToday I planted my bean seeds in a small pot with soil. I planted them about 2 centimeters deep. I watered the soil until it was damp but not too wet. Teacher said seeds need water, warmth, and air to sprout. I put my pot on the windowsill where it's warm and sunny. I can't wait to see what happens!\n\n**Week 1 - January 14** \nI checked my pot every day. This morning, I saw something amazing! A tiny green stem pushed up through the soil. My seed sprouted! The stem is only about 1 centimeter tall. I can see the top of the seed still attached. I watered it gently.\n\n**Week 2 - January 17**\nMy seedling is growing fast! It's now 5 centimeters tall. Two small leaves opened. They are light green and smooth. I can see the roots if I look carefully at the edge of the pot. The roots are white and thin. They grow down into the soil to get water.\n\n**Week 3 - January 24**\nThe seedling is now 12 centimeters tall! More leaves are growing. I counted six leaves now. The stem is getting thicker and stronger. The plant is bigger than my hand. I water it every two days. I also measured my classmates' plants. Some grew faster than mine. Some grew slower. I wonder why?\n\n**Week 4 - January 31**\nMy bean plant is 20 centimeters tall now! The leaves are dark green and healthy. I can see tiny bumps on the stem where new leaves will grow. Teacher explained that plants grow from special parts called growing points. The growing points are at the tips of stems and roots.\n\n**Week 6 - February 14**\nAmazing news! My plant has flowers! They are small white flowers with purple marks. Teacher said flowers will turn into bean pods with seeds inside. My plant is becoming a mature adult. It took about 6 weeks to grow from a seed to a flowering plant.\n\n**Week 8 - February 28**\nI can see small bean pods growing where the flowers were! The pods are green and about 5 centimeters long. Inside each pod, I can feel the bump of beans growing. These beans are seeds. If I plant them, they will grow into new bean plants. My plant has completed its life cycle!\n\n**What I Learned:**\nLiving things grow and change over time. My bean plant needed water, sunlight, air, nutrients from soil, and space to grow well. Growth happens in stages: seed, sprout, seedling, and mature plant. Different plants grow at different speeds. Growth takes time and the right conditions. I took good care of my plant, and it grew healthy and strong!\n\nPim felt proud of her bean plant. She learned that growing things need care and patience. She also learned that observing and recording changes helps scientists understand growth. Pim couldn't wait to plant the new beans and watch the cycle start all over again!",
+            "wordCount": 526
+          },
+          {
+            "id": "summary",
+            "type": "text",
+            "content": "## Summary\n\nGrowth means getting bigger and changing over time. All living things grow by making more cells. Plants grow from seeds through stages: sprouting, seedling, and mature adult. Plants need sunlight, water, air, nutrients, and space to grow. Animals also grow in stages, from babies to adults. Animals need food, water, air, shelter, and care to grow well. Different living things grow at different speeds. Growth takes time and the right conditions. Understanding growth helps us take care of plants and animals properly."
+          }
+        ]
+      },
+      "titleThai": "กระบวนการชีวิต - การเติบโต"
+    },
+    {
+      "id": "g3-life-processes-reproduction",
+      "slug": "life-processes-reproduction",
+      "lessonType": "LESSON",
+      "title": "Life Processes - Reproduction",
+      "description": "How living things make more of their kind with simple examples appropriate for Grade 3.",
+      "content": "## Introduction\n\nHave you ever wondered why baby dogs look like their parents? Or how new plants grow from seeds? Living things can make more living things like themselves. This is called reproduction. Reproduction is very important because it keeps species alive. Without reproduction, species would disappear. Today, you will learn how different living things reproduce.\n\n## Main Content\n\n**What Is Reproduction?**\n\nReproduction is the process of making new living things. It is one of the seven characteristics that all living things share. When living things reproduce, they create offspring. Offspring are the babies or young living things. Dogs have puppies. Cats have kittens. Birds lay eggs. Plants make seeds. Each species has its own way of reproducing.\n\n**Why Is Reproduction Important?**\n\nReproduction keeps species alive. Living things do not live forever. Eventually, all living things die. But before they die, they can have offspring. The offspring grow up and have their own offspring. This continues generation after generation. That's why we still have elephants, mango trees, and butterflies today!\n\n**Two Main Types of Reproduction**\n\nThere are two main ways living things reproduce:\n\n**1. Reproduction That Needs Two Parents**\n\nMost animals reproduce this way. It takes a male parent and a female parent to make offspring. The male and female each give special cells that join together to start a new life.\n\nExamples:\n- Dogs: A male dog and a female dog have puppies together\n- Birds: A male bird and a female bird together create eggs\n- Fish: A female fish lays eggs, and a male fish fertilizes them\n- Humans: A mother and father have a baby together\n\n**2. Reproduction That Needs Only One Parent**\n\nSome living things can reproduce by themselves without needing a partner. This is more common in plants and simple organisms.\n\nExamples:\n- Strawberry plants grow runners that become new plants\n- Potatoes can sprout new plants from their \"eyes\"\n- Some bacteria split in half to become two bacteria\n\n**How Animals Reproduce**\n\nLet's look at how different animals make babies:\n\n**Mammals (Animals That Feed Milk to Babies)**\n\nMammals like dogs, cats, elephants, and humans have babies that grow inside the mother's body. After growing for weeks or months, the baby is born alive. The mother feeds her baby milk from her body. She takes care of the baby until it can survive on its own.\n\n**Birds**\n\nBirds lay eggs with hard shells. The parent birds sit on the eggs to keep them warm. Inside each egg, a baby bird grows. After days or weeks, the baby bird hatches out of the egg. The parent birds bring food to their chicks and protect them until they can fly.\n\n**Fish and Frogs**\n\nMost fish and frogs lay many eggs in water. The eggs have soft, jelly-like coverings. In fish eggs, baby fish grow. In frog eggs, baby tadpoles grow. When they hatch, the babies must take care of themselves. The parents usually do not stay to help them.\n\n**Insects**\n\nInsects like butterflies lay eggs on leaves. When the eggs hatch, caterpillars come out. The caterpillars eat and grow. Later, they make a chrysalis and change into butterflies. The adult butterflies then lay their own eggs. This cycle continues.\n\n**How Plants Reproduce**\n\nPlants have several ways to make new plants:\n\n**From Seeds**\n\nMost plants make seeds. Here's how it works:\n\n1. A plant makes flowers\n2. The flower needs pollen from another flower (bees and butterflies help by carrying pollen between flowers)\n3. When pollen reaches the flower, seeds begin to form\n4. The seeds grow inside fruits or pods\n5. When the seeds are ready, they fall to the ground or are carried away by wind or animals\n6. The seeds sprout and grow into new plants\n\n**From Plant Parts**\n\nSome plants can grow new plants from their parts:\n- A piece of stem planted in soil can grow roots and become a new plant\n- Some plants grow baby plants on their leaves\n- Bulbs like onions and garlic can split to make new plants\n\n**Offspring Look Like Their Parents**\n\nHave you noticed that puppies look like dogs, not cats? Kittens look like cats, not birds? Offspring inherit features from their parents. A baby elephant has a trunk like its parents. A mango tree's seeds grow into mango trees, not banana trees. This is because parents pass information to their offspring through special cells. This information tells the offspring how to look and grow.\n\n**Caring for Young**\n\nDifferent animals care for their young in different ways. Mammals take care of their babies for a long time. Birds feed their chicks. But many fish and insects do not take care of their babies at all. The babies must survive on their own from the moment they hatch. That's why these animals lay hundreds or thousands of eggs - because many of the babies will not survive.\n\n## Key Vocabulary\n\n- **Reproduction** (Thai: การสืบพันธุ์) - The process of making new living things\n- **Offspring** (Thai: ลูกหลาน) - The babies or young of a living thing\n- **Parent** (Thai: พ่อแม่) - A living thing that has offspring\n- **Egg** (Thai: ไข่) - A round or oval object that contains a baby animal\n- **Hatch** (Thai: ฟัก) - When a baby animal breaks out of an egg\n- **Seed** (Thai: เมล็ด) - The part of a plant that can grow into a new plant\n- **Mammal** (Thai: สัตว์เลี้ยงลูกด้วยนม) - An animal that feeds milk to its babies\n- **Pollen** (Thai: ละอองเกสร) - Powder from flowers that helps make seeds\n- **Inherit** (Thai: ถ่ายทอด) - To receive features from parents\n- **Generation** (Thai: รุ่น) - All offspring born at about the same time\n- **Species** (Thai: ชนิด) - One particular type of living thing\n\n## Reading Passage: New Life at the Farm\n\nSomjai's family owned a small farm in Nakhon Sawan. One spring morning, Somjai woke up to exciting news.\n\n\"Somjai! Come quickly!\" called her mother. \"Mali had her puppies!\"\n\nSomjai ran to see Mali, their dog. Mali was lying in a soft bed with six tiny puppies snuggled against her. The puppies were so small! Their eyes were closed, and they made tiny squeaking sounds.\n\n\"They were born early this morning,\" said Mother. \"See how Mali is taking care of them?\"\n\nSomjai watched as the puppies drank milk from their mother. \"Mali is a mammal,\" said Somjai. \"Mammals feed milk to their babies. That's how they reproduce.\"\n\n\"Very good!\" said Mother. \"Mali will care for these puppies for many weeks until they are big enough to eat regular food.\"\n\nLater that morning, Somjai went to check on the chickens. \"Mother! Come see!\" she shouted.\n\nIn the nesting box, three baby chicks had hatched! The chicks were fluffy and yellow. They peeped loudly. The mother hen clucked and kept her chicks warm under her wing.\n\n\"The hen sat on those eggs for 21 days,\" explained Mother. \"The babies grew inside the eggs. Now they've hatched. Birds reproduce by laying eggs with hard shells.\"\n\nSomjai gently touched an empty eggshell. \"It's so light and fragile. The chick broke right through it!\"\n\nIn the afternoon, Somjai's brother Tam called her to the pond. \"Look at all the tadpoles!\"\n\nThe pond was full of tiny black tadpoles swimming in the shallow water. \"The frogs laid eggs last month,\" said Tam. \"Now hundreds of tadpoles have hatched. Frogs lay many eggs in the water.\"\n\n\"Will the mother frog take care of them?\" asked Somjai.\n\n\"No,\" said Tam. \"Tadpoles take care of themselves. That's why frogs lay so many eggs. Many tadpoles will be eaten by fish or birds. But some will survive and grow into adult frogs.\"\n\nAt dinner, Somjai's father showed her something special. \"Look at the mango tree,\" he said. \"See the small green mangoes growing?\"\n\nSomjai saw hundreds of tiny mangoes on the tree. \"How did they grow there?\" she asked.\n\n\"First, the tree made flowers,\" explained Father. \"Bees visited the flowers and carried pollen between them. The pollen helped the flowers make seeds. The seeds are inside those little mangoes. When the mangoes fall to the ground, some seeds might sprout and grow into new mango trees. That's how plants reproduce.\"\n\n\"I also planted new banana trees today,\" added Father. \"I cut pieces from the old banana plant's roots. Each piece will grow into a new banana tree. Some plants can reproduce from their parts, not just from seeds.\"\n\nThat evening, Somjai wrote in her journal:\n\n\"Today I learned about reproduction! I saw four different ways living things make offspring:\n1. Mali the dog had puppies that grew inside her body - mammal reproduction\n2. The hen hatched chicks from eggs with hard shells - bird reproduction  \n3. Tadpoles hatched from soft eggs in the water - frog reproduction\n4. The mango tree made seeds inside fruits - plant reproduction from flowers\n5. Father planted banana pieces that will grow into new plants - plant reproduction from parts\n\nEvery living thing has its own way of reproducing. Some take care of their babies, like Mali and the hen. Some don't, like the frogs. But they all make new life to keep their species alive. Reproduction is amazing!\"\n\n## Summary\n\nReproduction is the process living things use to make offspring. It is one of the seven characteristics of life. Reproduction keeps species alive from generation to generation. Some reproduction needs two parents, like most animals. Some reproduction needs only one parent, like many plants. Mammals have babies that grow inside the mother and drink milk. Birds, fish, and frogs lay eggs. Insects go through changes as they grow. Plants reproduce through seeds or by growing new plants from plant parts. Offspring inherit features from their parents. Understanding reproduction helps us appreciate how life continues.",
+      "order": 8,
+      "standards": [
+        "Sc1.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Have you ever wondered why baby dogs look like their parents? Or how new plants grow from seeds? Living things can make more living things like themselves. This is called reproduction. Reproduction is very important because it keeps species alive. Without reproduction, species would disappear. Today, you will learn how different living things reproduce."
+          },
+          {
+            "id": "content-1",
+            "type": "text",
+            "content": "## Main Content\n\n**What Is Reproduction?**\n\nReproduction is the process of making new living things. It is one of the seven characteristics that all living things share. When living things reproduce, they create offspring. Offspring are the babies or young living things. Dogs have puppies. Cats have kittens. Birds lay eggs. Plants make seeds. Each species has its own way of reproducing.\n\n**Why Is Reproduction Important?**\n\nReproduction keeps species alive. Living things do not live forever. Eventually, all living things die. But before they die, they can have offspring. The offspring grow up and have their own offspring. This continues generation after generation. That's why we still have elephants, mango trees, and butterflies today!\n\n**Two Main Types of Reproduction**\n\nThere are two main ways living things reproduce:\n\n**1. Reproduction That Needs Two Parents**\n\nMost animals reproduce this way. It takes a male parent and a female parent to make offspring. The male and female each give special cells that join together to start a new life.\n\nExamples:\n- Dogs: A male dog and a female dog have puppies together\n- Birds: A male bird and a female bird together create eggs\n- Fish: A female fish lays eggs, and a male fish fertilizes them\n- Humans: A mother and father have a baby together\n\n**2. Reproduction That Needs Only One Parent**\n\nSome living things can reproduce by themselves without needing a partner. This is more common in plants and simple organisms.\n\nExamples:\n- Strawberry plants grow runners that become new plants\n- Potatoes can sprout new plants from their \"eyes\"\n- Some bacteria split in half to become two bacteria\n\n**How Animals Reproduce**\n\nLet's look at how different animals make babies:\n\n**Mammals (Animals That Feed Milk to Babies)**\n\nMammals like dogs, cats, elephants, and humans have babies that grow inside the mother's body. After growing for weeks or months, the baby is born alive. The mother feeds her baby milk from her body. She takes care of the baby until it can survive on its own.\n\n**Birds**\n\nBirds lay eggs with hard shells. The parent birds sit on the eggs to keep them warm. Inside each egg, a baby bird grows. After days or weeks, the baby bird hatches out of the egg. The parent birds bring food to their chicks and protect them until they can fly.\n\n**Fish and Frogs**\n\nMost fish and frogs lay many eggs in water. The eggs have soft, jelly-like coverings. In fish eggs, baby fish grow. In frog eggs, baby tadpoles grow. When they hatch, the babies must take care of themselves. The parents usually do not stay to help them.\n\n**Insects**\n\nInsects like butterflies lay eggs on leaves. When the eggs hatch, caterpillars come out. The caterpillars eat and grow. Later, they make a chrysalis and change into butterflies. The adult butterflies then lay their own eggs. This cycle continues.\n\n**How Plants Reproduce**\n\nPlants have several ways to make new plants:\n\n**From Seeds**\n\nMost plants make seeds. Here's how it works:\n\n1. A plant makes flowers\n2. The flower needs pollen from another flower (bees and butterflies help by carrying pollen between flowers)\n3. When pollen reaches the flower, seeds begin to form\n4. The seeds grow inside fruits or pods\n5. When the seeds are ready, they fall to the ground or are carried away by wind or animals\n6. The seeds sprout and grow into new plants\n\n**From Plant Parts**\n\nSome plants can grow new plants from their parts:\n- A piece of stem planted in soil can grow roots and become a new plant\n- Some plants grow baby plants on their leaves\n- Bulbs like onions and garlic can split to make new plants\n\n**Offspring Look Like Their Parents**\n\nHave you noticed that puppies look like dogs, not cats? Kittens look like cats, not birds? Offspring inherit features from their parents. A baby elephant has a trunk like its parents. A mango tree's seeds grow into mango trees, not banana trees. This is because parents pass information to their offspring through special cells. This information tells the offspring how to look and grow.\n\n**Caring for Young**\n\nDifferent animals care for their young in different ways. Mammals take care of their babies for a long time. Birds feed their chicks. But many fish and insects do not take care of their babies at all. The babies must survive on their own from the moment they hatch. That's why these animals lay hundreds or thousands of eggs - because many of the babies will not survive."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Reproduction",
+                "thai": "การสืบพันธุ์",
+                "definition": "The process of making new living things"
+              },
+              {
+                "term": "Offspring",
+                "thai": "ลูกหลาน",
+                "definition": "The babies or young of a living thing"
+              },
+              {
+                "term": "Parent",
+                "thai": "พ่อแม่",
+                "definition": "A living thing that has offspring"
+              },
+              {
+                "term": "Egg",
+                "thai": "ไข่",
+                "definition": "A round or oval object that contains a baby animal"
+              },
+              {
+                "term": "Hatch",
+                "thai": "ฟัก",
+                "definition": "When a baby animal breaks out of an egg"
+              },
+              {
+                "term": "Seed",
+                "thai": "เมล็ด",
+                "definition": "The part of a plant that can grow into a new plant"
+              },
+              {
+                "term": "Mammal",
+                "thai": "สัตว์เลี้ยงลูกด้วยนม",
+                "definition": "An animal that feeds milk to its babies"
+              },
+              {
+                "term": "Pollen",
+                "thai": "ละอองเกสร",
+                "definition": "Powder from flowers that helps make seeds"
+              },
+              {
+                "term": "Inherit",
+                "thai": "ถ่ายทอด",
+                "definition": "To receive features from parents"
+              },
+              {
+                "term": "Generation",
+                "thai": "รุ่น",
+                "definition": "All offspring born at about the same time"
+              },
+              {
+                "term": "Species",
+                "thai": "ชนิด",
+                "definition": "One particular type of living thing"
+              }
+            ]
+          },
+          {
+            "id": "reading",
+            "type": "reading_passage",
+            "title": "New Life at the Farm",
+            "content": "Somjai's family owned a small farm in Nakhon Sawan. One spring morning, Somjai woke up to exciting news.\n\n\"Somjai! Come quickly!\" called her mother. \"Mali had her puppies!\"\n\nSomjai ran to see Mali, their dog. Mali was lying in a soft bed with six tiny puppies snuggled against her. The puppies were so small! Their eyes were closed, and they made tiny squeaking sounds.\n\n\"They were born early this morning,\" said Mother. \"See how Mali is taking care of them?\"\n\nSomjai watched as the puppies drank milk from their mother. \"Mali is a mammal,\" said Somjai. \"Mammals feed milk to their babies. That's how they reproduce.\"\n\n\"Very good!\" said Mother. \"Mali will care for these puppies for many weeks until they are big enough to eat regular food.\"\n\nLater that morning, Somjai went to check on the chickens. \"Mother! Come see!\" she shouted.\n\nIn the nesting box, three baby chicks had hatched! The chicks were fluffy and yellow. They peeped loudly. The mother hen clucked and kept her chicks warm under her wing.\n\n\"The hen sat on those eggs for 21 days,\" explained Mother. \"The babies grew inside the eggs. Now they've hatched. Birds reproduce by laying eggs with hard shells.\"\n\nSomjai gently touched an empty eggshell. \"It's so light and fragile. The chick broke right through it!\"\n\nIn the afternoon, Somjai's brother Tam called her to the pond. \"Look at all the tadpoles!\"\n\nThe pond was full of tiny black tadpoles swimming in the shallow water. \"The frogs laid eggs last month,\" said Tam. \"Now hundreds of tadpoles have hatched. Frogs lay many eggs in the water.\"\n\n\"Will the mother frog take care of them?\" asked Somjai.\n\n\"No,\" said Tam. \"Tadpoles take care of themselves. That's why frogs lay so many eggs. Many tadpoles will be eaten by fish or birds. But some will survive and grow into adult frogs.\"\n\nAt dinner, Somjai's father showed her something special. \"Look at the mango tree,\" he said. \"See the small green mangoes growing?\"\n\nSomjai saw hundreds of tiny mangoes on the tree. \"How did they grow there?\" she asked.\n\n\"First, the tree made flowers,\" explained Father. \"Bees visited the flowers and carried pollen between them. The pollen helped the flowers make seeds. The seeds are inside those little mangoes. When the mangoes fall to the ground, some seeds might sprout and grow into new mango trees. That's how plants reproduce.\"\n\n\"I also planted new banana trees today,\" added Father. \"I cut pieces from the old banana plant's roots. Each piece will grow into a new banana tree. Some plants can reproduce from their parts, not just from seeds.\"\n\nThat evening, Somjai wrote in her journal:\n\n\"Today I learned about reproduction! I saw four different ways living things make offspring:\n1. Mali the dog had puppies that grew inside her body - mammal reproduction\n2. The hen hatched chicks from eggs with hard shells - bird reproduction  \n3. Tadpoles hatched from soft eggs in the water - frog reproduction\n4. The mango tree made seeds inside fruits - plant reproduction from flowers\n5. Father planted banana pieces that will grow into new plants - plant reproduction from parts\n\nEvery living thing has its own way of reproducing. Some take care of their babies, like Mali and the hen. Some don't, like the frogs. But they all make new life to keep their species alive. Reproduction is amazing!\"",
+            "wordCount": 565
+          },
+          {
+            "id": "summary",
+            "type": "text",
+            "content": "## Summary\n\nReproduction is the process living things use to make offspring. It is one of the seven characteristics of life. Reproduction keeps species alive from generation to generation. Some reproduction needs two parents, like most animals. Some reproduction needs only one parent, like many plants. Mammals have babies that grow inside the mother and drink milk. Birds, fish, and frogs lay eggs. Insects go through changes as they grow. Plants reproduce through seeds or by growing new plants from plant parts. Offspring inherit features from their parents. Understanding reproduction helps us appreciate how life continues."
+          }
+        ]
+      },
+      "titleThai": "กระบวนการชีวิต - การสืบพันธุ์"
+    },
+    {
+      "id": "g3-comparing-living-things",
+      "slug": "comparing-living-things",
+      "title": "Comparing Living Things",
+      "description": "Similarities and differences among organisms and how we group living things by features.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nHave you ever noticed how cats and dogs are different, but also similar in some ways? They both have four legs, but cats meow and dogs bark. This is called comparing - looking at how things are the same and how they are different. Scientists compare living things all the time! By comparing, they can group similar living things together and understand how they are related. Today, you will learn how to compare living things like a scientist!\n\n## Main Content\n\n### What Does It Mean to Compare?\n\nWhen you compare living things, you look for:\n- **Similarities**: Ways they are the SAME\n- **Differences**: Ways they are DIFFERENT\n\nFor example, let's compare a butterfly and a bird:\n\n**Similarities:**\n- Both can fly\n- Both have wings\n- Both can move from place to place\n- Both are living things\n\n**Differences:**\n- Birds have feathers, butterflies have scales on their wings\n- Birds have beaks, butterflies have a proboscis (tube mouth)\n- Birds are bigger than butterflies\n- Birds lay eggs with hard shells, butterflies lay tiny soft eggs\n\n### Why Do Scientists Compare Living Things?\n\nScientists compare living things to:\n1. **Group them** - Put similar living things into categories\n2. **Understand them** - Learn how they survive and grow\n3. **Name them** - Give similar living things related names\n4. **Study them** - See how different living things are connected\n\n### Observable Features to Compare\n\nWhen comparing living things, look at features you can observe:\n\n**Body Parts:**\n- Does it have legs? How many?\n- Does it have wings, fins, or arms?\n- Does it have eyes, a mouth, a nose?\n- Does it have a tail?\n\n**Body Covering:**\n- Fur or hair\n- Feathers\n- Scales\n- Smooth skin\n- Hard shell\n\n**Size:**\n- Big or small\n- Tall or short\n- Long or round\n\n**Color:**\n- What colors do you see?\n- Are there patterns like stripes or spots?\n\n**How It Moves:**\n- Walk, run, hop\n- Fly\n- Swim\n- Crawl or slither\n\n**Where It Lives:**\n- Land\n- Water\n- Air\n- Trees\n- Underground\n\n**What It Eats:**\n- Plants\n- Other animals\n- Both plants and animals\n\n### Comparing Animals\n\nLet's compare different animals:\n\n**Dogs and Cats**\n\n**Same:**\n- Four legs\n- Fur covering\n- Sharp teeth\n- Tails\n- Good hearing and smell\n- Mammals that feed milk to babies\n\n**Different:**\n- Dogs bark, cats meow\n- Cats can climb trees better\n- Dogs come in more sizes\n- Cats have retractable claws\n- Dogs like to live in packs, cats are more independent\n\n**Fish and Frogs**\n\n**Same:**\n- Both can live in water\n- Both lay eggs\n- Both need water to survive\n\n**Different:**\n- Fish have scales and fins, frogs have smooth skin and legs\n- Fish can only breathe in water, frogs can breathe air too\n- Fish live in water all the time, frogs can live on land too\n- Frogs can hop on land, fish cannot walk\n\n### Comparing Plants\n\nPlants can be compared too!\n\n**Tree and Grass**\n\n**Same:**\n- Both are plants\n- Both have roots, stems, and leaves\n- Both make their own food from sunlight\n- Both are green\n\n**Different:**\n- Trees are tall and woody, grass is short and soft\n- Trees live for many years, some grass lives for one year\n- Trees have thick trunks, grass has thin stems\n- Tree roots go very deep, grass roots are shallow\n\n### Using Comparisons to Group Living Things\n\nBy comparing features, scientists group living things:\n\n**Mammals**\n- Have fur or hair\n- Feed milk to babies\n- Most give birth to live babies\n- Examples: dogs, cats, elephants, humans\n\n**Birds**\n- Have feathers\n- Have wings (most can fly)\n- Lay eggs with hard shells\n- Have beaks\n- Examples: chickens, eagles, parrots\n\n**Fish**\n- Have scales\n- Have fins\n- Breathe through gills in water\n- Live in water\n- Examples: goldfish, sharks, catfish\n\n**Insects**\n- Have six legs\n- Have three body parts\n- Many have wings\n- Examples: butterflies, ants, beetles\n\n**Reptiles**\n- Have scales\n- Lay eggs\n- Cold-blooded\n- Examples: snakes, lizards, turtles\n\n## Key Vocabulary\n\n- **Compare** (Thai: เปรียบเทียบ) - To look at how things are the same and different\n- **Similarity** (Thai: ความเหมือน) - A way things are the same\n- **Difference** (Thai: ความแตกต่าง) - A way things are different\n- **Feature** (Thai: ลักษณะ) - A part or quality you can observe\n- **Category** (Thai: หมวดหมู่) - A group of similar things\n- **Mammal** (Thai: สัตว์เลี้ยงลูกด้วยนม) - Animals that feed milk to their babies\n- **Reptile** (Thai: สัตว์เลื้อยคลาน) - Animals with scales that lay eggs and are cold-blooded\n- **Insect** (Thai: แมลง) - Small animals with six legs and three body parts\n- **Pattern** (Thai: ลวดลาย) - Repeating designs like stripes or spots\n- **Observable** (Thai: สังเกตได้) - Something you can see or notice\n\n## Reading Passage: The Animal Comparison Project\n\nMr. Suwan's class was doing a special project. Each pair of students had to compare two animals and present their findings.\n\nTong and Mint chose to compare elephants and mice. At first, their classmates laughed. \"Those are so different!\" said one student.\n\nBut Tong smiled. \"That's what makes it interesting! Let's find similarities AND differences.\"\n\nThe girls made a chart with two columns: \"Same\" and \"Different.\"\n\n\"Both elephants and mice are mammals,\" said Mint, writing this in the \"Same\" column. \"They both have fur, feed milk to their babies, and give birth to live young.\"\n\n\"Both have four legs, a tail, and can walk,\" added Tong.\n\n\"Both have good hearing and a good sense of smell,\" said Mint.\n\n\"Okay, now differences,\" said Tong. \"This is easier! Elephants are HUGE. Mice are tiny.\"\n\n\"Elephants have trunks, mice don't,\" added Mint.\n\n\"Elephants live about 70 years. Mice only live about 2 years,\" said Tong, reading from a book.\n\n\"Elephants eat plants like grass and leaves. Mice eat seeds, grains, and sometimes insects,\" noted Mint.\n\n\"Elephants live in herds in Africa and Asia. Mice live almost everywhere in the world, even in buildings,\" added Tong.\n\nWhen it was time to present, Tong and Mint showed their chart to the class.\n\n\"We found that even very different animals can have important similarities,\" explained Mint. \"Both elephants and mice are mammals. They share basic features that all mammals have.\"\n\n\"But they also have many differences that help them survive in different ways,\" added Tong. \"The elephant's large size and trunk help it reach food and defend itself. The mouse's small size helps it hide from predators and live in small spaces.\"\n\nMr. Suwan was impressed. \"Excellent work! You've shown that comparing isn't just about finding differences. It's also about finding what things have in common. This is exactly how scientists group living things!\"\n\nAnother group compared goldfish and dolphins.\n\n\"At first, we thought they'd be the same because they both live in water,\" explained one student. \"But we were surprised!\"\n\n\"Dolphins are actually mammals, not fish!\" said the other. \"Dolphins have smooth skin, not scales. They breathe air through a blowhole. They give birth to live babies and feed them milk. Dolphins are more similar to elephants than to goldfish!\"\n\nThe class was amazed. By comparing features carefully, they discovered that sometimes living things that look similar are actually very different, and things that look different can be similar!\n\nMr. Suwan smiled. \"This is why scientists compare observable features carefully. They don't just look at where an animal lives or its size. They look at many features - body covering, how it breathes, how it has babies, what it eats. By comparing all these features, scientists can understand how living things are related.\"\n\nAt the end of class, Tong raised her hand. \"Mr. Suwan, comparing living things is like solving a puzzle! The more features you compare, the more you understand.\"\n\n\"Exactly!\" said Mr. Suwan. \"And the best part is, there are millions of living things to compare. Scientists are still discovering new species and learning how they're all connected. You can be scientists too, comparing and discovering!\"\n\n## Summary\n\nComparing means looking at how things are the same and how they are different. Scientists compare living things by observing their features like body parts, body covering, size, color, how they move, where they live, and what they eat. Finding similarities helps scientists group living things into categories like mammals, birds, fish, insects, and reptiles. Finding differences helps us understand how each living thing is special and how it survives. By comparing carefully, we can discover surprising connections - sometimes things that look different are similar, and things that look similar are different. Comparing is an important science skill that helps us understand the wonderful diversity of life.\n\n**Key Takeaways:**\n- Compare living things by looking at observable features\n- Look for both similarities (same) and differences (different)\n- Similarities help us group living things\n- Differences help us understand how each living thing is special",
+      "order": 9,
+      "standards": [
+        "Sc1.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Have you ever noticed how cats and dogs are different, but also similar in some ways? They both have four legs, but cats meow and dogs bark. This is called comparing - looking at how things are the same and how they are different. Scientists compare living things all the time! By comparing, they can group similar living things together and understand how they are related. Today, you will learn how to compare living things like a scientist!"
+          },
+          {
+            "id": "content-1",
+            "type": "text",
+            "content": "## Main Content\n\n### What Does It Mean to Compare?\n\nWhen you compare living things, you look for:\n- **Similarities**: Ways they are the SAME\n- **Differences**: Ways they are DIFFERENT\n\nFor example, let's compare a butterfly and a bird:\n\n**Similarities:**\n- Both can fly\n- Both have wings\n- Both can move from place to place\n- Both are living things\n\n**Differences:**\n- Birds have feathers, butterflies have scales on their wings\n- Birds have beaks, butterflies have a proboscis (tube mouth)\n- Birds are bigger than butterflies\n- Birds lay eggs with hard shells, butterflies lay tiny soft eggs\n\n### Why Do Scientists Compare Living Things?\n\nScientists compare living things to:\n1. **Group them** - Put similar living things into categories\n2. **Understand them** - Learn how they survive and grow\n3. **Name them** - Give similar living things related names\n4. **Study them** - See how different living things are connected\n\n### Observable Features to Compare\n\nWhen comparing living things, look at features you can observe:\n\n**Body Parts:**\n- Does it have legs? How many?\n- Does it have wings, fins, or arms?\n- Does it have eyes, a mouth, a nose?\n- Does it have a tail?\n\n**Body Covering:**\n- Fur or hair\n- Feathers\n- Scales\n- Smooth skin\n- Hard shell\n\n**Size:**\n- Big or small\n- Tall or short\n- Long or round\n\n**Color:**\n- What colors do you see?\n- Are there patterns like stripes or spots?\n\n**How It Moves:**\n- Walk, run, hop\n- Fly\n- Swim\n- Crawl or slither\n\n**Where It Lives:**\n- Land\n- Water\n- Air\n- Trees\n- Underground\n\n**What It Eats:**\n- Plants\n- Other animals\n- Both plants and animals\n\n### Comparing Animals\n\nLet's compare different animals:\n\n**Dogs and Cats**\n\n**Same:**\n- Four legs\n- Fur covering\n- Sharp teeth\n- Tails\n- Good hearing and smell\n- Mammals that feed milk to babies\n\n**Different:**\n- Dogs bark, cats meow\n- Cats can climb trees better\n- Dogs come in more sizes\n- Cats have retractable claws\n- Dogs like to live in packs, cats are more independent\n\n**Fish and Frogs**\n\n**Same:**\n- Both can live in water\n- Both lay eggs\n- Both need water to survive\n\n**Different:**\n- Fish have scales and fins, frogs have smooth skin and legs\n- Fish can only breathe in water, frogs can breathe air too\n- Fish live in water all the time, frogs can live on land too\n- Frogs can hop on land, fish cannot walk\n\n### Comparing Plants\n\nPlants can be compared too!\n\n**Tree and Grass**\n\n**Same:**\n- Both are plants\n- Both have roots, stems, and leaves\n- Both make their own food from sunlight\n- Both are green\n\n**Different:**\n- Trees are tall and woody, grass is short and soft\n- Trees live for many years, some grass lives for one year\n- Trees have thick trunks, grass has thin stems\n- Tree roots go very deep, grass roots are shallow\n\n### Using Comparisons to Group Living Things\n\nBy comparing features, scientists group living things:\n\n**Mammals**\n- Have fur or hair\n- Feed milk to babies\n- Most give birth to live babies\n- Examples: dogs, cats, elephants, humans\n\n**Birds**\n- Have feathers\n- Have wings (most can fly)\n- Lay eggs with hard shells\n- Have beaks\n- Examples: chickens, eagles, parrots\n\n**Fish**\n- Have scales\n- Have fins\n- Breathe through gills in water\n- Live in water\n- Examples: goldfish, sharks, catfish\n\n**Insects**\n- Have six legs\n- Have three body parts\n- Many have wings\n- Examples: butterflies, ants, beetles\n\n**Reptiles**\n- Have scales\n- Lay eggs\n- Cold-blooded\n- Examples: snakes, lizards, turtles"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Compare",
+                "thai": "เปรียบเทียบ",
+                "definition": "To look at how things are the same and different"
+              },
+              {
+                "term": "Similarity",
+                "thai": "ความเหมือน",
+                "definition": "A way things are the same"
+              },
+              {
+                "term": "Difference",
+                "thai": "ความแตกต่าง",
+                "definition": "A way things are different"
+              },
+              {
+                "term": "Feature",
+                "thai": "ลักษณะ",
+                "definition": "A part or quality you can observe"
+              },
+              {
+                "term": "Category",
+                "thai": "หมวดหมู่",
+                "definition": "A group of similar things"
+              },
+              {
+                "term": "Mammal",
+                "thai": "สัตว์เลี้ยงลูกด้วยนม",
+                "definition": "Animals that feed milk to their babies"
+              },
+              {
+                "term": "Reptile",
+                "thai": "สัตว์เลื้อยคลาน",
+                "definition": "Animals with scales that lay eggs and are cold-blooded"
+              },
+              {
+                "term": "Insect",
+                "thai": "แมลง",
+                "definition": "Small animals with six legs and three body parts"
+              },
+              {
+                "term": "Pattern",
+                "thai": "ลวดลาย",
+                "definition": "Repeating designs like stripes or spots"
+              },
+              {
+                "term": "Observable",
+                "thai": "สังเกตได้",
+                "definition": "Something you can see or notice"
+              }
+            ]
+          },
+          {
+            "id": "reading",
+            "type": "reading_passage",
+            "title": "The Animal Comparison Project",
+            "content": "Mr. Suwan's class was doing a special project. Each pair of students had to compare two animals and present their findings.\n\nTong and Mint chose to compare elephants and mice. At first, their classmates laughed. \"Those are so different!\" said one student.\n\nBut Tong smiled. \"That's what makes it interesting! Let's find similarities AND differences.\"\n\nThe girls made a chart with two columns: \"Same\" and \"Different.\"\n\n\"Both elephants and mice are mammals,\" said Mint, writing this in the \"Same\" column. \"They both have fur, feed milk to their babies, and give birth to live young.\"\n\n\"Both have four legs, a tail, and can walk,\" added Tong.\n\n\"Both have good hearing and a good sense of smell,\" said Mint.\n\n\"Okay, now differences,\" said Tong. \"This is easier! Elephants are HUGE. Mice are tiny.\"\n\n\"Elephants have trunks, mice don't,\" added Mint.\n\n\"Elephants live about 70 years. Mice only live about 2 years,\" said Tong, reading from a book.\n\n\"Elephants eat plants like grass and leaves. Mice eat seeds, grains, and sometimes insects,\" noted Mint.\n\n\"Elephants live in herds in Africa and Asia. Mice live almost everywhere in the world, even in buildings,\" added Tong.\n\nWhen it was time to present, Tong and Mint showed their chart to the class.\n\n\"We found that even very different animals can have important similarities,\" explained Mint. \"Both elephants and mice are mammals. They share basic features that all mammals have.\"\n\n\"But they also have many differences that help them survive in different ways,\" added Tong. \"The elephant's large size and trunk help it reach food and defend itself. The mouse's small size helps it hide from predators and live in small spaces.\"\n\nMr. Suwan was impressed. \"Excellent work! You've shown that comparing isn't just about finding differences. It's also about finding what things have in common. This is exactly how scientists group living things!\"\n\nAnother group compared goldfish and dolphins.\n\n\"At first, we thought they'd be the same because they both live in water,\" explained one student. \"But we were surprised!\"\n\n\"Dolphins are actually mammals, not fish!\" said the other. \"Dolphins have smooth skin, not scales. They breathe air through a blowhole. They give birth to live babies and feed them milk. Dolphins are more similar to elephants than to goldfish!\"\n\nThe class was amazed. By comparing features carefully, they discovered that sometimes living things that look similar are actually very different, and things that look different can be similar!\n\nMr. Suwan smiled. \"This is why scientists compare observable features carefully. They don't just look at where an animal lives or its size. They look at many features - body covering, how it breathes, how it has babies, what it eats. By comparing all these features, scientists can understand how living things are related.\"\n\nAt the end of class, Tong raised her hand. \"Mr. Suwan, comparing living things is like solving a puzzle! The more features you compare, the more you understand.\"\n\n\"Exactly!\" said Mr. Suwan. \"And the best part is, there are millions of living things to compare. Scientists are still discovering new species and learning how they're all connected. You can be scientists too, comparing and discovering!\"",
+            "wordCount": 523
+          },
+          {
+            "id": "summary",
+            "type": "text",
+            "content": "## Summary\n\nComparing means looking at how things are the same and how they are different. Scientists compare living things by observing their features like body parts, body covering, size, color, how they move, where they live, and what they eat. Finding similarities helps scientists group living things into categories like mammals, birds, fish, insects, and reptiles. Finding differences helps us understand how each living thing is special and how it survives. By comparing carefully, we can discover surprising connections - sometimes things that look different are similar, and things that look similar are different. Comparing is an important science skill that helps us understand the wonderful diversity of life.\n\n**Key Takeaways:**\n- Compare living things by looking at observable features\n- Look for both similarities (same) and differences (different)\n- Similarities help us group living things\n- Differences help us understand how each living thing is special"
+          }
+        ]
+      },
+      "titleThai": "การเปรียบเทียบสิ่งมีชีวิต"
+    }
+  ]
+}

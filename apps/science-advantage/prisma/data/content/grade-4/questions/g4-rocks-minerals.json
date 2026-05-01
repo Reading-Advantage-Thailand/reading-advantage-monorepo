@@ -1,0 +1,205 @@
+{
+  "lessonId": "g4-rocks-minerals",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a mineral?",
+      "questionThai": "แร่คืออะไร?",
+      "options": ["A type of plant", "A natural solid substance with a specific chemical makeup", "A kind of animal", "A liquid"],
+      "correctAnswer": 1,
+      "explanation": "A mineral is a natural solid substance found in Earth with a specific chemical makeup."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What are rocks made of?",
+      "questionThai": "หินทำจากอะไร?",
+      "options": ["Water", "Air", "One or more minerals", "Plants"],
+      "correctAnswer": 2,
+      "explanation": "Rocks are made of one or more minerals combined together."
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is an igneous rock?",
+      "questionThai": "หินอัคนีคืออะไร?",
+      "options": ["Rock formed from pressed layers", "Rock formed when melted rock cools and hardens", "Rock changed by heat and pressure", "Rock made from fossils"],
+      "correctAnswer": 1,
+      "explanation": "Igneous rocks form when hot, melted rock (magma or lava) cools down and becomes solid."
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a sedimentary rock?",
+      "questionThai": "หินตะกอนคืออะไร?",
+      "options": ["Rock from volcanoes", "Rock formed from layers of sediment pressed together", "Rock changed by heat", "Rock from the moon"],
+      "correctAnswer": 1,
+      "explanation": "Sedimentary rocks form when layers of sand, mud, or shells get pressed together over millions of years."
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Where are fossils usually found?",
+      "questionThai": "ฟอสซิลมักจะพบที่ไหน?",
+      "options": ["Igneous rocks", "Sedimentary rocks", "Metamorphic rocks", "In the air"],
+      "correctAnswer": 1,
+      "explanation": "Fossils are usually found in sedimentary rocks because dead organisms get buried in sediment layers."
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is lava?",
+      "questionThai": "ลาวาคืออะไร?",
+      "options": ["Cold rock", "Hot melted rock that comes out of a volcano", "A type of water", "Frozen ice"],
+      "correctAnswer": 1,
+      "explanation": "Lava is hot, melted rock that comes out of a volcano onto Earth's surface."
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is granite?",
+      "questionThai": "หินแกรนิตคืออะไร?",
+      "options": ["A sedimentary rock", "An igneous rock", "A metamorphic rock", "A type of sand"],
+      "correctAnswer": 1,
+      "explanation": "Granite is an igneous rock that formed when magma cooled slowly underground."
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is the hardest natural mineral?",
+      "questionThai": "แร่ธรรมชาติที่แข็งที่สุดคืออะไร?",
+      "options": ["Gold", "Quartz", "Diamond", "Talc"],
+      "correctAnswer": 2,
+      "explanation": "Diamond is the hardest natural mineral on Earth."
+    },
+    {
+      "id": "q9",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is a metamorphic rock?",
+      "questionThai": "หินแปรคืออะไร?",
+      "options": ["Rock from cooling lava", "Rock from pressed sediment", "Rock that has been changed by heat and pressure", "New rock from the moon"],
+      "correctAnswer": 2,
+      "explanation": "Metamorphic rocks are existing rocks that have been changed by extreme heat, pressure, or both."
+    },
+    {
+      "id": "q10",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is the rock cycle?",
+      "questionThai": "วัฏจักรหินคืออะไร?",
+      "options": ["A bicycle made of rocks", "The continuous process of rocks changing from one type to another", "Rocks rolling down hills", "Rocks that never change"],
+      "correctAnswer": 1,
+      "explanation": "The rock cycle is the continuous process where rocks change from one type to another over millions of years."
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Marble is a metamorphic rock that was originally:",
+      "questionThai": "หินอ่อนเป็นหินแปรที่เดิมทีเป็น:",
+      "options": ["Granite", "Sandstone", "Limestone", "Basalt"],
+      "correctAnswer": 2,
+      "explanation": "Marble forms when limestone is subjected to heat and pressure, changing its structure."
+    },
+    {
+      "id": "q12",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is erosion?",
+      "questionThai": "การกัดเซาะคืออะไร?",
+      "options": ["Rock getting bigger", "Rock being worn away by water, wind, or ice", "Rock heating up", "Rock changing color"],
+      "correctAnswer": 1,
+      "explanation": "Erosion is the process of rock being worn away by water, wind, ice, or other forces."
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In the reading passage, what type of rock made up most of the cave?",
+      "questionThai": "ในบทอ่าน หินประเภทใดเป็นส่วนใหญ่ของถ้ำ?",
+      "options": ["Granite", "Basalt", "Limestone", "Marble"],
+      "correctAnswer": 2,
+      "explanation": "The cave was inside a limestone mountain. Limestone is a sedimentary rock."
+    },
+    {
+      "id": "q14",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "How do stalactites form in caves?",
+      "questionThai": "หินย้อยก่อตัวขึ้นในถ้ำอย่างไร?",
+      "options": ["They grow from the floor up", "Water dripping from the ceiling deposits minerals over thousands of years", "They are placed there by people", "They form in one day"],
+      "correctAnswer": 1,
+      "explanation": "Stalactites form when water dripping from cave ceilings deposits tiny bits of dissolved minerals over thousands of years."
+    },
+    {
+      "id": "q15",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What property is used to describe how shiny a mineral is?",
+      "questionThai": "คุณสมบัติใดใช้อธิบายว่าแร่วาวแค่ไหน?",
+      "options": ["Hardness", "Luster", "Color", "Weight"],
+      "correctAnswer": 1,
+      "explanation": "Luster describes how a mineral's surface reflects light - whether it's metallic, glassy, or dull."
+    },
+    {
+      "id": "q16",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What happens to magma when it reaches Earth's surface?",
+      "questionThai": "เกิดอะไรขึ้นกับแมกมาเมื่อมันขึ้นมาถึงผิวโลก?",
+      "options": ["It's called magma forever", "It's called lava", "It disappears", "It becomes water"],
+      "correctAnswer": 1,
+      "explanation": "When magma reaches Earth's surface through a volcano, it is called lava."
+    },
+    {
+      "id": "q17",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why does granite have larger crystals than basalt?",
+      "questionThai": "ทำไมหินแกรนิตถึงมีผลึกใหญ่กว่าหินบะซอลต์?",
+      "options": ["Granite is older", "Granite cooled slowly underground, giving crystals time to grow; basalt cooled quickly", "Basalt is not a rock", "They have the same crystal size"],
+      "correctAnswer": 1,
+      "explanation": "Granite cooled slowly underground, allowing large crystals to form. Basalt cooled quickly on the surface, creating tiny crystals."
+    },
+    {
+      "id": "q18",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "In the reading passage, how did all three rock types form in the same cave?",
+      "questionThai": "ในบทอ่าน หินทั้งสามประเภทก่อตัวขึ้นในถ้ำเดียวกันได้อย่างไร?",
+      "options": ["They were put there by people", "Limestone formed the cave, magma created basalt, and heat from magma changed limestone into marble", "They all formed at the same time", "The guide was wrong"],
+      "correctAnswer": 1,
+      "explanation": "Sedimentary limestone made up the cave, igneous basalt formed when magma pushed in, and metamorphic marble formed where heat from magma changed the limestone."
+    },
+    {
+      "id": "q19",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why can any type of rock become any other type of rock?",
+      "questionThai": "ทำไมหินประเภทใดก็สามารถกลายเป็นหินประเภทอื่นได้?",
+      "options": ["Rocks never change", "The rock cycle shows that with enough time and the right conditions, rocks continuously change forms", "Only some rocks can change", "Rocks choose which type to become"],
+      "correctAnswer": 1,
+      "explanation": "The rock cycle shows that over millions of years, any rock can be melted, eroded, or changed by heat and pressure into any other type."
+    },
+    {
+      "id": "q20",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why is understanding rocks important for humans?",
+      "questionThai": "ทำไมการเข้าใจหินถึงสำคัญสำหรับมนุษย์?",
+      "options": ["It's not important", "Rocks provide building materials, contain valuable minerals, and tell us about Earth's history", "Rocks are only decoration", "We only use rocks for jewelry"],
+      "correctAnswer": 1,
+      "explanation": "Understanding rocks helps us find useful minerals, build structures, and learn about Earth's history through fossils and rock layers."
+    }
+  ]
+}

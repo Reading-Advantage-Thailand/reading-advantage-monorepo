@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "What did you eat for breakfast today? Where did that food come from? All living things need energy to survive, and that energy comes from food. But have you ever wondered where food energy really begins? Today, you will learn how energy flows from the sun through plants and animals in something called a food chain!",
+      "contentThai": "วันนี้คุณกินอะไรเป็นอาหารเช้า? อาหารนั้นมาจากไหน? สิ่งมีชีวิตทุกชนิดต้องการพลังงานเพื่อความอยู่รอด และพลังงานนั้นมาจากอาหาร แต่คุณเคยสงสัยไหมว่าพลังงานอาหารเริ่มต้นจากที่ไหนจริงๆ? วันนี้คุณจะได้เรียนรู้ว่าพลังงานไหลจากดวงอาทิตย์ผ่านพืชและสัตว์อย่างไรในสิ่งที่เรียกว่าห่วงโซ่อาหาร!"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Food chain",
+          "thai": "ห่วงโซ่อาหาร",
+          "definition": "A path that shows how energy moves from one living thing to another"
+        },
+        {
+          "term": "Producer",
+          "thai": "ผู้ผลิต",
+          "definition": "A living thing that makes its own food, usually a plant"
+        },
+        {
+          "term": "Consumer",
+          "thai": "ผู้บริโภค",
+          "definition": "A living thing that eats other living things for food"
+        },
+        {
+          "term": "Decomposer",
+          "thai": "ผู้ย่อยสลาย",
+          "definition": "A living thing that breaks down dead plants and animals"
+        },
+        {
+          "term": "Herbivore",
+          "thai": "สัตว์กินพืช",
+          "definition": "An animal that only eats plants"
+        },
+        {
+          "term": "Carnivore",
+          "thai": "สัตว์กินเนื้อ",
+          "definition": "An animal that only eats other animals"
+        },
+        {
+          "term": "Omnivore",
+          "thai": "สัตว์กินทั้งพืชและสัตว์",
+          "definition": "An animal that eats both plants and animals"
+        },
+        {
+          "term": "Energy",
+          "thai": "พลังงาน",
+          "definition": "The power that living things need to grow, move, and stay alive"
+        },
+        {
+          "term": "Food web",
+          "thai": "สายใยอาหาร",
+          "definition": "Many connected food chains in an ecosystem"
+        },
+        {
+          "term": "Photosynthesis",
+          "thai": "การสังเคราะห์ด้วยแสง",
+          "definition": "The process plants use to make food from sunlight, water, and air"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## Where Does Food Energy Begin?\n\nAll energy on Earth originally comes from the **sun**. But animals cannot eat sunlight! So how does the sun's energy become food that animals can eat?\n\nPlants are the answer! Through a process called **photosynthesis**, plants capture energy from sunlight and use it to make their own food. Plants combine:\n- Sunlight (energy)\n- Water (from the soil)\n- Carbon dioxide (from the air)\n\nThese ingredients are turned into sugar, which the plant uses for energy. Plants also release oxygen into the air, which animals need to breathe!\n\n## What Is a Food Chain?\n\nA **food chain** shows the path that energy takes as it moves from one living thing to another. Each living thing in a food chain is called a **link**. Energy flows through the chain when one living thing eats another.\n\nHere's a simple food chain:\n\n**Sun** → **Grass** → **Rabbit** → **Fox**\n\nIn this food chain:\n1. The sun gives energy to the grass\n2. The grass uses the energy to grow\n3. The rabbit eats the grass and gets energy\n4. The fox eats the rabbit and gets energy",
+      "contentThai": "## พลังงานอาหารเริ่มต้นจากที่ไหน?\n\nพลังงานทั้งหมดบนโลกมาจาก **ดวงอาทิตย์** ในตอนแรก แต่สัตว์ไม่สามารถกินแสงแดดได้! แล้วพลังงานจากดวงอาทิตย์กลายเป็นอาหารที่สัตว์กินได้อย่างไร?\n\nพืชคือคำตอบ! ผ่านกระบวนการที่เรียกว่า **การสังเคราะห์ด้วยแสง** พืชจับพลังงานจากแสงแดดและใช้มันในการสร้างอาหารของตัวเอง"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-food-chains-1.webp",
+      "alt": "Diagram showing a simple food chain with arrows from sun to grass to rabbit to fox, with labels for producer and consumers",
+      "caption": "A Simple Food Chain",
+      "captionThai": "ห่วงโซ่อาหารอย่างง่าย",
+      "aspectRatio": 2.0,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "## Parts of a Food Chain\n\n### Producers\n**Producers** are living things that make their own food. They are always at the beginning of a food chain. Almost all producers are plants because they use photosynthesis.\n\nExamples of producers:\n- Grass and trees\n- Algae in water\n- Seaweed in the ocean\n- Rice plants and vegetables\n\nProducers are very important because they capture the sun's energy and make it available to other living things!\n\n### Consumers\n**Consumers** are living things that cannot make their own food. They must eat other living things to get energy. There are different levels of consumers:\n\n**Primary consumers** (first-level consumers):\n- Eat plants directly\n- Also called **herbivores**\n- Examples: rabbits, cows, caterpillars, deer\n\n**Secondary consumers** (second-level consumers):\n- Eat primary consumers\n- Can be **carnivores** (meat-eaters) or **omnivores** (plant and meat eaters)\n- Examples: frogs eat caterpillars, chickens eat insects\n\n**Tertiary consumers** (third-level consumers):\n- Eat secondary consumers\n- Usually **carnivores**\n- Often called **top predators**\n- Examples: eagles, sharks, tigers"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "### Decomposers\n**Decomposers** have a special job in the food chain. They break down dead plants and animals into nutrients. These nutrients go back into the soil, helping new plants grow.\n\nExamples of decomposers:\n- Mushrooms and fungi\n- Bacteria\n- Earthworms\n- Some insects\n\nWithout decomposers, dead things would pile up everywhere! Decomposers recycle nutrients and keep ecosystems healthy.\n\n## Energy Flow in Food Chains\n\nAs energy moves through a food chain, some energy is lost at each step. Here's why:\n\n1. **Plants** capture only a small amount of the sun's energy\n2. **Animals** use energy for moving, breathing, and keeping warm\n3. Only about **10%** of energy passes to the next level\n\nThis is why food chains usually have only 4-5 links. There isn't enough energy left for more levels!\n\nThis also explains why there are:\n- MANY plants (producers)\n- FEWER herbivores\n- EVEN FEWER carnivores\n- VERY FEW top predators\n\nFor example, it takes many grass plants to feed one rabbit, and many rabbits to feed one fox."
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-food-chains-2.webp",
+      "alt": "Energy pyramid showing decreasing energy at each level from producers at the bottom to top predators at the top",
+      "caption": "Energy Pyramid: Less Energy at Each Level",
+      "captionThai": "พีระมิดพลังงาน: พลังงานน้อยลงในแต่ละระดับ",
+      "aspectRatio": 1.2,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-4",
+      "type": "text",
+      "content": "## Food Webs: Connected Food Chains\n\nIn nature, animals don't eat just one thing. A rabbit might eat grass, flowers, and vegetables. A fox might eat rabbits, mice, and birds. When we connect many food chains together, we get a **food web**.\n\nA food web shows all the different feeding relationships in an ecosystem. It's more realistic than a single food chain because it shows how living things are connected in many ways.\n\n## What Happens When a Food Chain Breaks?\n\nFood chains and webs are carefully balanced. If one part is removed, it affects everything else:\n\n- If plants die, herbivores have no food\n- If herbivores disappear, carnivores have nothing to eat\n- If predators disappear, herbivores might eat too many plants\n\nThis is why protecting all parts of an ecosystem is important!"
+    },
+    {
+      "type": "reading_passage",
+      "title": "Mystery in the Rice Field",
+      "titleThai": "ปริศนาในนาข้าว",
+      "content": "Ploy's family grew rice in Suphan Buri province. One year, something strange happened. The rice plants had many small holes in their leaves, and the harvest was smaller than usual.\n\n\"Something is eating our rice plants,\" said Ploy's father with worry.\n\nPloy decided to investigate like a scientist. She went to the rice field early in the morning to observe. She saw tiny insects called planthoppers jumping on the rice leaves and eating them!\n\n\"I found the problem,\" Ploy told her father. \"There are too many planthoppers.\"\n\nBut Ploy wondered why. Last year, there weren't so many planthoppers. What had changed?\n\nPloy remembered learning about food chains in school. She drew a food chain:\n\nRice plants → Planthoppers → Spiders → Birds\n\nIn this food chain, spiders eat planthoppers and help control their numbers. But when Ploy looked around the rice field, she saw very few spiders. Where had they gone?\n\nPloy asked her grandfather, who had been farming for fifty years. \"Ah,\" he said sadly. \"Last year, we sprayed chemicals to kill insects. The chemicals killed the spiders too. Without spiders, the planthoppers had no predators.\"\n\n\"So the food chain broke!\" Ploy exclaimed.\n\nGrandfather nodded. \"Nature is like a web. When you remove one part, everything changes.\"\n\nPloy had an idea. \"What if we bring spiders back instead of using chemicals?\"\n\nThe family decided to try. They stopped spraying chemicals and planted flowers along the rice field to attract helpful insects. Within a few months, spiders returned. The spider population grew, and they ate many planthoppers.\n\nBy the next harvest, the rice plants were healthy again. There were still some planthoppers, but the spiders kept their numbers low. The food chain was balanced once more.\n\n\"We learned an important lesson,\" said Ploy's father. \"Every creature in the food chain has a job. When we protect the whole food web, nature takes care of itself.\"\n\nPloy felt proud. By understanding food chains, she had helped save her family's rice farm. She couldn't wait to share what she learned with her classmates!\n\nNow Ploy always looks for food chains wherever she goes. In her backyard, she sees: grass → caterpillars → birds → cats. At the pond, she sees: algae → mosquito larvae → fish → herons. The more she looks, the more connections she finds. Food chains are everywhere!",
+      "contentThai": "ครอบครัวของปลอยปลูกข้าวในจังหวัดสุพรรณบุรี ในปีหนึ่ง มีเหตุการณ์แปลกเกิดขึ้น ต้นข้าวมีรูเล็กๆ มากมายที่ใบ และผลผลิตน้อยกว่าปกติ\n\n\"มีบางอย่างกินต้นข้าวของเรา\" พ่อของปลอยพูดด้วยความเป็นห่วง\n\nปลอยตัดสินใจสืบสวนเหมือนนักวิทยาศาสตร์ เธอไปที่นาข้าวตั้งแต่เช้าตรู่เพื่อสังเกต เธอเห็นแมลงตัวเล็กที่เรียกว่าเพลี้ยกระโดดบนใบข้าวและกินมัน!",
+      "wordCount": 389
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- All energy in food chains originally comes from the **sun**\n- **Producers** (plants) make their own food through photosynthesis\n- **Consumers** eat other living things to get energy\n  - **Herbivores** eat plants\n  - **Carnivores** eat animals\n  - **Omnivores** eat both plants and animals\n- **Decomposers** break down dead things and recycle nutrients\n- Energy decreases at each level of the food chain (about 10% passes on)\n- **Food webs** show connected food chains in an ecosystem\n- Removing one part of a food chain affects all other parts\n- Protecting all parts of food chains keeps ecosystems healthy\n\nUnderstanding food chains helps us see how all living things depend on each other!"
+    }
+  ]
+}

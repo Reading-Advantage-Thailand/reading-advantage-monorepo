@@ -1,0 +1,115 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 4,
+  "unit": 3,
+  "lessons": [
+    {
+      "id": "g4-simple-machines",
+      "slug": "simple-machines",
+      "title": "Simple Machines",
+      "description": "Identify simple machines and explain how they make work easier.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nSimple machines help us do work more easily. They change the direction or amount of force needed. There are six types of simple machines!\n\n## Main Content\n\n**The Six Simple Machines**\n\n1. **Lever** - A bar that pivots on a fulcrum (seesaw, crowbar)\n2. **Wheel and Axle** - A wheel attached to a rod (doorknob, bicycle wheel)\n3. **Pulley** - A wheel with a rope around it (flagpole, crane)\n4. **Inclined Plane** - A flat surface tilted at an angle (ramp, stairs)\n5. **Wedge** - Two inclined planes joined together (axe, doorstop)\n6. **Screw** - An inclined plane wrapped around a cylinder (jar lid, screw)\n\n**How Simple Machines Help**\n\n- They reduce the amount of force needed\n- They change the direction of force\n- They make work easier\n\n**Compound Machines**\n\nTwo or more simple machines working together. Examples: bicycle, wheelbarrow, scissors.\n\n## Summary\n\nThere are six simple machines: lever, wheel and axle, pulley, inclined plane, wedge, and screw. They make work easier by changing force or direction.",
+      "order": 1,
+      "standards": [
+        "Sc4.1-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Simple machines help us do work more easily. They change the direction or amount of force needed."
+          },
+          {
+            "id": "six-machines",
+            "type": "text",
+            "content": "## The Six Simple Machines\n\n1. **Lever** - A bar that pivots on a fulcrum\n2. **Wheel and Axle** - A wheel attached to a rod\n3. **Pulley** - A wheel with a rope around it\n4. **Inclined Plane** - A tilted flat surface\n5. **Wedge** - Two inclined planes joined together\n6. **Screw** - An inclined plane wrapped around a cylinder"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Simple Machine",
+                "thai": "เครื่องมือง่ายๆ",
+                "definition": "A device that makes work easier by changing force"
+              },
+              {
+                "term": "Lever",
+                "thai": "คันโยก",
+                "definition": "A bar that pivots on a fulcrum"
+              },
+              {
+                "term": "Pulley",
+                "thai": "รอก",
+                "definition": "A wheel with a rope around it used to lift things"
+              },
+              {
+                "term": "Fulcrum",
+                "thai": "จุดหมุน",
+                "definition": "The point where a lever pivots"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "เครื่องมือง่ายๆ"
+    },
+    {
+      "id": "g4-forces-and-motion",
+      "slug": "forces-and-motion",
+      "title": "Forces and Motion",
+      "description": "Describe how forces affect the motion of objects.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nForces cause objects to move, stop, or change direction. Understanding forces helps us explain how things move around us.\n\n## Main Content\n\n**What is a Force?**\n\nA force is a push or pull on an object. Forces are measured in Newtons (N).\n\n**Types of Forces**\n\n1. **Gravity** - Pulls objects toward Earth\n2. **Friction** - A force that opposes motion\n3. **Air Resistance** - Friction from air\n4. **Magnetic Force** - Force from magnets\n5. **Muscular Force** - Force from muscles\n\n**Motion**\n\n- An object at rest stays at rest unless a force acts on it\n- An object in motion stays in motion unless a force acts on it\n- The greater the force, the greater the acceleration\n\n**Balanced vs. Unbalanced Forces**\n\n- **Balanced forces** - Equal forces in opposite directions (no movement)\n- **Unbalanced forces** - Forces not equal (causes movement)\n\n## Summary\n\nForces are pushes or pulls that affect motion. Gravity, friction, and other forces determine how objects move.",
+      "order": 2,
+      "standards": [
+        "Sc4.2-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Forces cause objects to move, stop, or change direction. Understanding forces helps us explain how things move."
+          },
+          {
+            "id": "types-of-forces",
+            "type": "text",
+            "content": "## Types of Forces\n\n1. **Gravity** - Pulls objects toward Earth\n2. **Friction** - Opposes motion\n3. **Air Resistance** - Friction from air\n4. **Magnetic Force** - Force from magnets\n5. **Muscular Force** - Force from muscles"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Force",
+                "thai": "แรง",
+                "definition": "A push or pull on an object"
+              },
+              {
+                "term": "Gravity",
+                "thai": "แรงโน้มถ่วง",
+                "definition": "The force that pulls objects toward Earth"
+              },
+              {
+                "term": "Friction",
+                "thai": "แรงเสียดทาน",
+                "definition": "A force that opposes motion"
+              },
+              {
+                "term": "Newton",
+                "thai": "นิวตัน",
+                "definition": "The unit used to measure force"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "แรงและการเคลื่อนที่"
+    }
+  ]
+}

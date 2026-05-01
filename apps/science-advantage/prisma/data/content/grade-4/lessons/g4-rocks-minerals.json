@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "Pick up a rock. It might look ordinary, but that rock has an incredible story! Some rocks are millions of years old. Some were once part of volcanoes. Some contain fossils of ancient creatures. Rocks are everywhere - beneath your feet, in mountains, and even in buildings. Today, you will discover the fascinating world of rocks and minerals!",
+      "contentThai": "หยิบหินขึ้นมาดู มันอาจดูธรรมดา แต่หินก้อนนั้นมีเรื่องราวที่น่าทึ่ง! หินบางก้อนมีอายุหลายล้านปี บางก้อนเคยเป็นส่วนหนึ่งของภูเขาไฟ บางก้อนมีฟอสซิลของสิ่งมีชีวิตโบราณ หินอยู่ทุกที่ - ใต้เท้าของคุณ บนภูเขา และแม้แต่ในอาคาร วันนี้คุณจะได้ค้นพบโลกที่น่าหลงใหลของหินและแร่!"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Rock",
+          "thai": "หิน",
+          "definition": "A solid natural material made of one or more minerals"
+        },
+        {
+          "term": "Mineral",
+          "thai": "แร่",
+          "definition": "A natural solid substance with a specific chemical makeup"
+        },
+        {
+          "term": "Igneous rock",
+          "thai": "หินอัคนี",
+          "definition": "Rock formed when hot melted rock cools and hardens"
+        },
+        {
+          "term": "Sedimentary rock",
+          "thai": "หินตะกอน",
+          "definition": "Rock formed from layers of sand, mud, or shells pressed together"
+        },
+        {
+          "term": "Metamorphic rock",
+          "thai": "หินแปร",
+          "definition": "Rock that has been changed by heat and pressure"
+        },
+        {
+          "term": "Lava",
+          "thai": "ลาวา",
+          "definition": "Hot melted rock that comes out of a volcano"
+        },
+        {
+          "term": "Magma",
+          "thai": "แมกมา",
+          "definition": "Hot melted rock that is still underground"
+        },
+        {
+          "term": "Fossil",
+          "thai": "ฟอสซิล",
+          "definition": "The remains or traces of ancient living things found in rock"
+        },
+        {
+          "term": "Erosion",
+          "thai": "การกัดเซาะ",
+          "definition": "The process of rock being worn away by water, wind, or ice"
+        },
+        {
+          "term": "Crystal",
+          "thai": "ผลึก",
+          "definition": "A solid with atoms arranged in a regular pattern"
+        },
+        {
+          "term": "Rock cycle",
+          "thai": "วัฏจักรหิน",
+          "definition": "The continuous process of rocks changing from one type to another"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## What Are Rocks and Minerals?\n\n### Minerals\n\n**Minerals** are natural solid substances found in the Earth. Each mineral has its own special characteristics:\n- A specific chemical makeup\n- A specific crystal shape\n- Consistent properties like color and hardness\n\nExamples of minerals:\n- **Quartz**: Clear or white, very hard, used in watches\n- **Feldspar**: Pink or white, common in granite\n- **Mica**: Thin sheets that sparkle\n- **Calcite**: White, makes up limestone and marble\n- **Gold, silver, copper**: Valuable metal minerals\n\n### Rocks\n\n**Rocks** are made of one or more minerals combined together. A single rock might contain several different minerals. For example, granite contains quartz, feldspar, and mica.\n\n## The Three Types of Rocks\n\nAll rocks on Earth belong to one of three main groups based on how they formed."
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-rocks-minerals-1.webp",
+      "alt": "Photos of three rock types: igneous granite, sedimentary limestone, and metamorphic marble, with labels",
+      "caption": "The Three Types of Rocks",
+      "captionThai": "หินสามประเภท",
+      "aspectRatio": 1.8,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "### Igneous Rocks\n\n**Igneous rocks** form when hot, melted rock cools down and becomes solid. \"Igneous\" comes from the Latin word for \"fire.\"\n\n**How they form:**\n1. Deep underground, rock gets so hot it melts into **magma**\n2. Magma rises toward the surface\n3. As it cools, it hardens into rock\n4. If it comes out of a volcano as **lava**, it cools on the surface\n\n**Examples:**\n- **Granite**: Cooled slowly underground, has large crystals\n- **Basalt**: Cooled quickly from lava, has tiny crystals\n- **Obsidian**: Cooled very fast, looks like black glass\n- **Pumice**: Has holes from gas bubbles, floats on water!\n\n### Sedimentary Rocks\n\n**Sedimentary rocks** form from layers of sediment (tiny pieces of rock, sand, mud, or shells) that get pressed together over time.\n\n**How they form:**\n1. Wind, water, and ice break down rocks into tiny pieces\n2. These pieces wash into rivers, lakes, and oceans\n3. Layers of sediment pile up over millions of years\n4. The weight presses layers together into rock\n\n**Examples:**\n- **Sandstone**: Made from sand grains pressed together\n- **Limestone**: Made from shells and sea creature skeletons\n- **Shale**: Made from mud and clay\n- **Conglomerate**: Made from pebbles cemented together\n\n**Special feature:** Fossils are usually found in sedimentary rocks!"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "### Metamorphic Rocks\n\n**Metamorphic rocks** are rocks that have been changed by heat, pressure, or both. \"Metamorphic\" means \"to change form.\"\n\n**How they form:**\n1. Existing rocks get buried deep underground\n2. Heat from magma and pressure from rock above\n3. The minerals in the rock change and reorganize\n4. A new type of rock is created!\n\n**Examples:**\n- **Marble**: Changed from limestone (used for statues and buildings)\n- **Slate**: Changed from shale (used for roof tiles)\n- **Quartzite**: Changed from sandstone (very hard)\n- **Gneiss**: Changed from granite (has bands of color)\n\n## The Rock Cycle\n\nRocks don't stay the same forever. Over millions of years, rocks change from one type to another. This is called the **rock cycle**.\n\n**The process:**\n1. **Igneous rocks** form from cooling magma or lava\n2. **Erosion** breaks rocks into sediment\n3. **Sediment** gets pressed into **sedimentary rocks**\n4. **Heat and pressure** change rocks into **metamorphic rocks**\n5. **Melting** turns rocks back into magma\n6. The cycle continues!\n\nAny rock can become any other type of rock given enough time and the right conditions."
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-rocks-minerals-2.webp",
+      "alt": "Circular diagram of the rock cycle showing how igneous, sedimentary, and metamorphic rocks transform into each other through melting, cooling, erosion, pressure, and heat",
+      "caption": "The Rock Cycle: Rocks Are Always Changing",
+      "captionThai": "วัฏจักรหิน: หินเปลี่ยนแปลงอยู่เสมอ",
+      "aspectRatio": 1.2,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-4",
+      "type": "text",
+      "content": "## Properties of Rocks and Minerals\n\nScientists identify rocks and minerals by testing their properties:\n\n**Color**: What color is it? (Not always reliable - quartz can be many colors!)\n\n**Luster**: How does it shine?\n- Metallic (shiny like metal)\n- Glassy (shiny like glass)\n- Dull (not shiny)\n\n**Hardness**: How easily does it scratch?\n- Soft minerals (like talc) can be scratched with a fingernail\n- Hard minerals (like quartz) can scratch glass\n- Diamond is the hardest natural mineral!\n\n**Texture**: How does it feel?\n- Smooth, rough, grainy, glassy\n\n**Crystal shape**: What shape do the crystals have?\n\n## Rocks and Minerals in Thailand\n\nThailand has many interesting rocks and minerals:\n\n- **Limestone** makes up many mountains in southern Thailand and creates beautiful caves\n- **Granite** is found in many areas and is used for building\n- **Gemstones** like rubies and sapphires are found in Chanthaburi province\n- **Tin** was once mined in southern Thailand\n- **Marble** from Saraburi is used in temples and buildings"
+    },
+    {
+      "type": "reading_passage",
+      "title": "The Cave Adventure",
+      "titleThai": "การผจญภัยในถ้ำ",
+      "content": "Fah's class went on a field trip to Tham Lot cave in Mae Hong Son province. The cave was famous for its beautiful rock formations.\n\n\"Before we enter,\" said the guide, \"let me tell you about this cave. It formed inside a limestone mountain over millions of years.\"\n\n\"How did the cave form?\" asked Fah.\n\n\"Limestone is a sedimentary rock made from ancient sea creature shells. It's easily dissolved by acidic water. Over millions of years, rainwater mixed with carbon dioxide from the air and soil to make a weak acid. This acid slowly dissolved the limestone, creating caves and tunnels.\"\n\nInside the cave, Fah saw amazing formations hanging from the ceiling and growing from the floor.\n\n\"Those hanging formations are called stalactites,\" explained the guide. \"Water dripping from the ceiling leaves behind tiny bits of dissolved limestone. Drop by drop, over thousands of years, stalactites grow down from the ceiling.\"\n\n\"And the ones growing up from the floor?\" asked another student.\n\n\"Those are stalagmites! The dripping water hits the floor and deposits more limestone. Sometimes stalactites and stalagmites meet in the middle and form columns!\"\n\nFah touched a cave wall. It felt smooth and cool. She could see layers in the rock. \"Teacher, I can see stripes in the limestone!\"\n\n\"Great observation!\" said Teacher Pranee. \"Those layers show how sedimentary rocks form. Each layer was once the bottom of an ancient sea, millions of years ago. Shells and skeletons piled up and got pressed into rock.\"\n\nThe guide showed them a section where crystals sparkled in their flashlight beams. \"Those are calcite crystals. Calcite is the mineral that makes up limestone. When conditions are right, calcite forms beautiful crystals.\"\n\nDeeper in the cave, they found a darker rock mixed with the limestone. \"This is igneous rock,\" explained the guide. \"Long ago, hot magma pushed up into the limestone. The magma cooled and became this dark basalt.\"\n\n\"So there are two types of rock here?\" Fah asked.\n\n\"Actually, three! Look here.\" The guide pointed to a section where the limestone had changed color and looked different. \"Near the magma, the limestone got so hot it changed into marble, a metamorphic rock. You can see where the heat transformed it.\"\n\nFah was amazed. In one cave, she had seen all three types of rocks! Sedimentary limestone making up most of the cave, igneous basalt from ancient magma, and metamorphic marble where they met.\n\nOn the bus ride home, Fah looked at the mountains differently. \"All those mountains are made of rocks with stories,\" she thought. \"Rocks that were once sea floors, or hot magma, or changed by heat deep underground. Every rock has a history waiting to be discovered!\"",
+      "contentThai": "ห้องเรียนของฟ้าไปทัศนศึกษาที่ถ้ำลอดในจังหวัดแม่ฮ่องสอน ถ้ำนี้มีชื่อเสียงเรื่องหินงอกหินย้อยที่สวยงาม\n\n\"ก่อนเราจะเข้าไป\" ไกด์พูด \"ขอเล่าให้ฟังเกี่ยวกับถ้ำนี้ มันก่อตัวขึ้นในภูเขาหินปูนเมื่อหลายล้านปีก่อน\"\n\n\"ถ้ำก่อตัวขึ้นมาได้อย่างไร?\" ฟ้าถาม\n\n\"หินปูนเป็นหินตะกอนที่ทำจากเปลือกของสิ่งมีชีวิตทะเลโบราณ มันละลายได้ง่ายด้วยน้ำที่เป็นกรด\"",
+      "wordCount": 435
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- **Minerals** are natural solid substances with specific properties\n- **Rocks** are made of one or more minerals\n- There are three types of rocks:\n  - **Igneous**: Formed from cooled magma or lava (granite, basalt)\n  - **Sedimentary**: Formed from pressed layers of sediment (limestone, sandstone)\n  - **Metamorphic**: Changed by heat and pressure (marble, slate)\n- The **rock cycle** shows how rocks change from one type to another over millions of years\n- Scientists identify rocks and minerals by properties like color, luster, hardness, and texture\n- **Fossils** are found in sedimentary rocks\n- Thailand has diverse rocks including limestone caves, granite, and gemstones\n- Every rock has a story about how it formed and changed over time\n\nUnderstanding rocks helps us learn about Earth's history and find useful resources!"
+    }
+  ]
+}

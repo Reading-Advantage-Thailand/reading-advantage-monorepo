@@ -1,0 +1,90 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "standards": [
+    {
+      "code": "Sc1.1-G3",
+      "description": "Identify and describe characteristics that distinguish living from non-living things"
+    },
+    {
+      "code": "Sc1.2-G3",
+      "description": "Observe and record basic life processes"
+    },
+    {
+      "code": "Sc1.3-G3",
+      "description": "Compare similarities and differences among living things"
+    },
+    {
+      "code": "Sc2.1-G3",
+      "description": "Describe relationships between organisms and their environment"
+    },
+    {
+      "code": "Sc2.2-G3",
+      "description": "Create simple food chains showing energy flow"
+    },
+    {
+      "code": "Sc2.3-G3",
+      "description": "Identify ways to protect local environments"
+    },
+    {
+      "code": "Sc3.1-G3",
+      "description": "Observe and describe properties of common substances"
+    },
+    {
+      "code": "Sc3.2-G3",
+      "description": "Identify the three states of matter in everyday objects"
+    },
+    {
+      "code": "Sc4.1-G3",
+      "description": "Demonstrate push and pull forces"
+    },
+    {
+      "code": "Sc4.2-G3",
+      "description": "Describe how forces cause motion or changes in motion"
+    },
+    {
+      "code": "Sc5.1-G3",
+      "description": "Identify different forms of energy in daily life"
+    },
+    {
+      "code": "Sc5.2-G3",
+      "description": "Describe basic energy sources"
+    },
+    {
+      "code": "Sc6.1-G3",
+      "description": "Describe major features of Earth's surface"
+    },
+    {
+      "code": "Sc6.2-G3",
+      "description": "Observe and record weather patterns"
+    },
+    {
+      "code": "Sc6.3-G3",
+      "description": "Explain the day-night cycle"
+    },
+    {
+      "code": "Sc7.1-G3",
+      "description": "Describe the Sun, Earth, and Moon"
+    },
+    {
+      "code": "Sc7.2-G3",
+      "description": "Explain what causes day and night"
+    },
+    {
+      "code": "Sc7.3-G3",
+      "description": "Observe and record moon phases"
+    },
+    {
+      "code": "Sc8.1-G3",
+      "description": "Use scientific process to investigate simple questions"
+    },
+    {
+      "code": "Sc8.2-G3",
+      "description": "Use basic tools for observation and measurement"
+    },
+    {
+      "code": "Sc8.3-G3",
+      "description": "Record observations using drawings and simple descriptions"
+    }
+  ]
+}

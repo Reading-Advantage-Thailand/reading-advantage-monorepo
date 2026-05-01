@@ -1,0 +1,354 @@
+{
+  "lessonId": "g3-diversity-living-things",
+  "questions": [
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What does diversity mean?",
+      "options": ["All the same", "Many different types", "Only animals", "Only plants"],
+      "correctAnswer": "Many different types",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What are the two main groups of living things?",
+      "options": ["Big and small", "Plants and animals", "Land and water", "Old and young"],
+      "correctAnswer": "Plants and animals",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which group of animals has a backbone?",
+      "options": ["Invertebrates", "Vertebrates", "Insects", "Worms"],
+      "correctAnswer": "Vertebrates",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which of these is an invertebrate?",
+      "options": ["Dog", "Fish", "Butterfly", "Bird"],
+      "correctAnswer": "Butterfly",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is classification?",
+      "options": [
+        "Counting animals",
+        "Sorting things into groups based on similarities",
+        "Naming plants",
+        "Drawing pictures"
+      ],
+      "correctAnswer": "Sorting things into groups based on similarities",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which group of animals includes frogs and salamanders?",
+      "options": ["Mammals", "Amphibians", "Reptiles", "Fish"],
+      "correctAnswer": "Amphibians",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "Which are vertebrates? (Select all that apply)",
+      "options": ["Cat", "Snake", "Butterfly", "Bird", "Worm"],
+      "correctAnswer": ["Cat", "Snake", "Bird"],
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "Which are groups of vertebrates? (Select all that apply)",
+      "options": ["Mammals", "Insects", "Reptiles", "Fish", "Spiders"],
+      "correctAnswer": ["Mammals", "Reptiles", "Fish"],
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "Which are invertebrates? (Select all that apply)",
+      "options": ["Spider", "Jellyfish", "Snail", "Elephant", "Ant"],
+      "correctAnswer": ["Spider", "Jellyfish", "Snail", "Ant"],
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "What helps scientists classify animals? (Select all that apply)",
+      "options": [
+        "Body structure",
+        "Where they live",
+        "How they move",
+        "Their favorite color",
+        "What they eat"
+      ],
+      "correctAnswer": [
+        "Body structure",
+        "Where they live",
+        "How they move",
+        "What they eat"
+      ],
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "All animals have backbones.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Insects are invertebrates.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "All plants are exactly the same.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Birds and mammals are both groups of vertebrates.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Classification helps scientists organize and study living things.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "There are more invertebrates than vertebrates on Earth.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Animals with backbones are called _____.",
+      "correctAnswer": "vertebrates",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Animals without backbones are called _____.",
+      "correctAnswer": "invertebrates",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "The variety of different living things is called _____.",
+      "correctAnswer": "diversity",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Sorting living things into groups based on similarities is called _____.",
+      "correctAnswer": "classification",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "The hard structure inside vertebrates that supports their body is called a _____.",
+      "correctAnswer": "backbone",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "_____ are animals that can live both in water and on land.",
+      "correctAnswer": "Amphibians",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each vertebrate group with an example:",
+      "options": {
+        "terms": ["Mammals", "Birds", "Fish", "Reptiles"],
+        "definitions": [
+          "Dogs, cats, humans",
+          "Eagles, sparrows, penguins",
+          "Goldfish, sharks, tuna",
+          "Snakes, lizards, turtles"
+        ]
+      },
+      "correctAnswer": {
+        "Mammals": "Dogs, cats, humans",
+        "Birds": "Eagles, sparrows, penguins",
+        "Fish": "Goldfish, sharks, tuna",
+        "Reptiles": "Snakes, lizards, turtles"
+      },
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "VOCABULARY_MATCH",
+      "text": "Match each term with its definition:",
+      "options": {
+        "terms": ["Vertebrate", "Invertebrate", "Classification", "Diversity"],
+        "definitions": [
+          "Animal with a backbone",
+          "Animal without a backbone",
+          "Sorting into groups by similarities",
+          "Variety of different types"
+        ]
+      },
+      "correctAnswer": {
+        "Vertebrate": "Animal with a backbone",
+        "Invertebrate": "Animal without a backbone",
+        "Classification": "Sorting into groups by similarities",
+        "Diversity": "Variety of different types"
+      },
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which characteristic separates vertebrates from invertebrates?",
+      "options": [
+        "Ability to fly",
+        "Having a backbone",
+        "Living in water",
+        "Eating plants"
+      ],
+      "correctAnswer": "Having a backbone",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which group includes the most species?",
+      "options": ["Mammals", "Birds", "Insects", "Fish"],
+      "correctAnswer": "Insects",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What do mammals have that other vertebrates don't?",
+      "options": ["Backbones", "Hair or fur", "Legs", "Eyes"],
+      "correctAnswer": "Hair or fur",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "How are plants different from animals?",
+      "options": [
+        "Plants can make their own food",
+        "Plants can run faster",
+        "Plants eat meat",
+        "Plants have backbones"
+      ],
+      "correctAnswer": "Plants can make their own food",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "Which are characteristics of mammals? (Select all that apply)",
+      "options": [
+        "Have hair or fur",
+        "Feed milk to babies",
+        "Are warm-blooded",
+        "Have scales",
+        "Lay eggs in water"
+      ],
+      "correctAnswer": [
+        "Have hair or fur",
+        "Feed milk to babies",
+        "Are warm-blooded"
+      ],
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "All insects have six legs.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "Spiders are insects.",
+      "correctAnswer": "False",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Scientists use _____ to organize living things into groups.",
+      "correctAnswer": "classification",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "Fish are vertebrates that live in _____ and breathe through gills.",
+      "correctAnswer": "water",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why is biodiversity important?",
+      "options": [
+        "It makes the world boring",
+        "It helps ecosystems stay healthy and balanced",
+        "It has no importance",
+        "It only helps humans"
+      ],
+      "correctAnswer": "It helps ecosystems stay healthy and balanced",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is one way scientists classify plants?",
+      "options": [
+        "By their color only",
+        "By whether they have flowers and seeds",
+        "By how tall they are",
+        "By how much water they drink"
+      ],
+      "correctAnswer": "By whether they have flowers and seeds",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which is true about the diversity of life?",
+      "options": [
+        "There are only a few types of living things",
+        "There are millions of different species",
+        "All animals look the same",
+        "Plants don't come in different types"
+      ],
+      "correctAnswer": "There are millions of different species",
+      "points": 1,
+      "standards": ["Sc1.2-G3"]
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 4,
+  "unit": 5,
+  "lessons": [
+    {
+      "id": "g4-solar-system",
+      "slug": "solar-system",
+      "title": "The Solar System",
+      "description": "Describe the structure of the solar system including the Sun, planets, and moons.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nOur solar system is home to the Sun, eight planets, and many other objects. Let's explore the amazing world beyond Earth!\n\n## Main Content\n\n**The Sun**\n\nThe Sun is a star at the center of our solar system. It provides light and heat energy. The Sun is very large - about 1.3 million Earths could fit inside it!\n\n**The Eight Planets**\n\n1. **Mercury** - Smallest planet, closest to the Sun\n2. **Venus** - Hottest planet, spins backwards\n3. **Earth** - Our home, has water and life\n4. **Mars** - The Red Planet, has polar ice caps\n5. **Jupiter** - Largest planet, has the Great Red Spot\n6. **Saturn** - Known for its beautiful rings\n7. **Uranus** - Tilted on its side, blue-green color\n8. **Neptune** - Farthest planet, very windy\n\n**Dwarf Planets and Other Objects**\n\n- **Pluto** - A dwarf planet beyond Neptune\n- **Asteroids** - Rocky objects between Mars and Jupiter\n- **Comets** - Icy objects with tails when near the Sun\n- **Moons** - Natural satellites orbiting planets\n\n## Summary\n\nThe solar system has the Sun at its center with eight planets, dwarf planets, asteroids, and comets orbiting around it.",
+      "order": 1,
+      "standards": [
+        "Sc6.1-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Our solar system is home to the Sun, eight planets, and many other objects."
+          },
+          {
+            "id": "planets",
+            "type": "text",
+            "content": "## The Eight Planets\n\n1. **Mercury** - Smallest, closest to Sun\n2. **Venus** - Hottest, spins backwards\n3. **Earth** - Our home planet\n4. **Mars** - The Red Planet\n5. **Jupiter** - Largest planet\n6. **Saturn** - Has rings\n7. **Uranus** - Tilted on its side\n8. **Neptune** - Farthest planet"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Solar System",
+                "thai": "ระบบสุริยะ",
+                "definition": "The Sun and all the objects that orbit it"
+              },
+              {
+                "term": "Planet",
+                "thai": "ดาวเคราะห์",
+                "definition": "A large object that orbits a star"
+              },
+              {
+                "term": "Star",
+                "thai": "ดาวฤกษ์",
+                "definition": "A large ball of hot gas that produces light"
+              },
+              {
+                "term": "Orbit",
+                "thai": "วงโคจร",
+                "definition": "The path an object takes around another object"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ระบบสุริยะ"
+    },
+    {
+      "id": "g4-day-night-seasons",
+      "slug": "day-night-seasons",
+      "title": "Day, Night & Seasons",
+      "description": "Explain the cause of day and night and the seasons.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nWhy do we have day and night? Why do seasons change? The answers involve Earth's rotation and tilt!\n\n## Main Content\n\n**Day and Night**\n\nEarth spins on its axis once every 24 hours. When your part of Earth faces the Sun, it is daytime. When it faces away, it is nighttime.\n\n**The Seasons**\n\nEarth's axis is tilted at 23.5 degrees. As Earth orbits the Sun, different parts get more or less sunlight.\n\n- **Summer** - Your part of Earth tilts toward the Sun (more sunlight, longer days)\n- **Winter** - Your part of Earth tilts away from the Sun (less sunlight, shorter days)\n- **Spring/Fall** - Between summer and winter\n\n**Thailand's Seasons**\n\nThailand has three seasons:\n1. **Hot Season** (March-May) - Very hot and sunny\n2. **Rainy Season** (June-October) - Lots of rain\n3. **Cool Season** (November-February) - Cooler and drier\n\n## Summary\n\nDay and night are caused by Earth's rotation. Seasons are caused by Earth's tilt and its orbit around the Sun.",
+      "order": 2,
+      "standards": [
+        "Sc6.2-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Why do we have day and night? Why do seasons change? The answers involve Earth's rotation and tilt!"
+          },
+          {
+            "id": "day-night",
+            "type": "text",
+            "content": "## Day and Night\n\nEarth spins on its axis once every 24 hours.\n\n- When your part of Earth faces the Sun → **Daytime**\n- When it faces away → **Nighttime**"
+          },
+          {
+            "id": "seasons",
+            "type": "text",
+            "content": "## The Seasons\n\nEarth's axis is tilted at 23.5 degrees.\n\n- **Summer** - Tilts toward Sun (more sunlight)\n- **Winter** - Tilts away from Sun (less sunlight)\n- **Spring/Fall** - Between summer and winter"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Rotation",
+                "thai": "การหมุนรอบตัวเอง",
+                "definition": "Spinning on an axis"
+              },
+              {
+                "term": "Revolution",
+                "thai": "การโคจร",
+                "definition": "Moving in an orbit around something"
+              },
+              {
+                "term": "Axis",
+                "thai": "แกน",
+                "definition": "An imaginary line through the center of a spinning object"
+              },
+              {
+                "term": "Seasons",
+                "thai": "ฤดูกาล",
+                "definition": "Periods of the year with different weather patterns"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "กลางวัน กลางคืน และฤดูกาล"
+    },
+    {
+      "id": "g4-natural-resources",
+      "slug": "natural-resources",
+      "title": "Natural Resources",
+      "description": "Identify natural resources and explain the importance of conservation.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nNatural resources are materials from nature that people use. Some can be replaced, others cannot. Let's learn about natural resources and why we need to protect them!\n\n## Main Content\n\n**Types of Natural Resources**\n\n**Renewable Resources**\n- Water\n- Forests (trees)\n- Air\n- Soil\n- Animals\n\n**Non-Renewable Resources**\n- Coal\n- Oil\n- Natural gas\n- Minerals\n- Metals\n\n**Why Conservation Matters**\n\nConservation means protecting natural resources. We need to conserve because:\n- Non-renewable resources will run out\n- Pollution harms the environment\n- Many species are losing their habitats\n- Clean water and air are essential for life\n\n**What Can We Do?**\n- Reduce, reuse, recycle\n- Save water and electricity\n- Plant trees\n- Use less plastic\n- Protect wildlife habitats\n\n## Summary\n\nNatural resources include renewable (water, forests) and non-renewable (coal, oil) materials. Conservation helps protect these resources for future generations.",
+      "order": 3,
+      "standards": [
+        "Sc6.3-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Natural resources are materials from nature that people use. Some can be replaced, others cannot."
+          },
+          {
+            "id": "types",
+            "type": "text",
+            "content": "## Types of Natural Resources\n\n**Renewable** - Can be replaced: Water, Forests, Air, Soil\n\n**Non-Renewable** - Will run out: Coal, Oil, Natural Gas, Minerals"
+          },
+          {
+            "id": "conservation",
+            "type": "text",
+            "content": "## What Can We Do?\n\n- Reduce, reuse, recycle\n- Save water and electricity\n- Plant trees\n- Use less plastic\n- Protect wildlife habitats"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Natural Resource",
+                "thai": "ทรัพยากรธรรมชาติ",
+                "definition": "Materials from nature that people use"
+              },
+              {
+                "term": "Conservation",
+                "thai": "การอนุรักษ์",
+                "definition": "Protecting natural resources from waste or destruction"
+              },
+              {
+                "term": "Renewable",
+                "thai": "ทดแทนได้",
+                "definition": "Can be naturally replaced"
+              },
+              {
+                "term": "Non-Renewable",
+                "thai": "ทดแทนไม่ได้",
+                "definition": "Cannot be replaced once used up"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ทรัพยากรธรรมชาติ"
+    }
+  ]
+}

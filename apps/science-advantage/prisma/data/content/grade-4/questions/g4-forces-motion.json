@@ -1,0 +1,205 @@
+{
+  "lessonId": "g4-forces-motion",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a force?",
+      "questionThai": "แรงคืออะไร?",
+      "options": ["A type of animal", "A push or pull", "A color", "A sound"],
+      "correctAnswer": 1,
+      "explanation": "A force is a push or a pull that can change how an object moves."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is an example of a push force?",
+      "questionThai": "ตัวอย่างของแรงผลักคืออะไร?",
+      "options": ["Opening a drawer", "Kicking a ball", "Pulling a wagon", "Fishing with a rod"],
+      "correctAnswer": 1,
+      "explanation": "Kicking a ball is a push force because you move the ball away from you."
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is gravity?",
+      "questionThai": "แรงโน้มถ่วงคืออะไร?",
+      "options": ["A force that pushes things up", "A force that pulls things toward Earth", "A type of friction", "A loud sound"],
+      "correctAnswer": 1,
+      "explanation": "Gravity is a force that pulls all objects toward the center of Earth."
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is friction?",
+      "questionThai": "แรงเสียดทานคืออะไร?",
+      "options": ["A force that speeds things up", "A force that slows down objects when surfaces rub together", "A type of push", "A pulling force"],
+      "correctAnswer": 1,
+      "explanation": "Friction is a force that opposes motion when two surfaces rub against each other."
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Which surface creates MORE friction?",
+      "questionThai": "พื้นผิวใดสร้างแรงเสียดทานมากกว่า?",
+      "options": ["Ice", "Glass", "Carpet", "Polished wood"],
+      "correctAnswer": 2,
+      "explanation": "Rough surfaces like carpet create more friction than smooth surfaces like ice or glass."
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What makes a ball stop rolling?",
+      "questionThai": "อะไรทำให้ลูกบอลหยุดกลิ้ง?",
+      "options": ["Gravity pulling up", "Friction between the ball and ground", "The ball wants to stop", "Wind pushing it"],
+      "correctAnswer": 1,
+      "explanation": "Friction between the ball and the ground gradually slows the ball until it stops."
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is motion?",
+      "questionThai": "การเคลื่อนที่คืออะไร?",
+      "options": ["Staying in one place", "The act of moving or changing position", "A type of sound", "A color change"],
+      "correctAnswer": 1,
+      "explanation": "Motion is when something moves or changes its position."
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Which is an example of a pull force?",
+      "questionThai": "ข้อใดเป็นตัวอย่างของแรงดึง?",
+      "options": ["Pushing a door closed", "Opening a drawer", "Kicking a ball", "Throwing a ball"],
+      "correctAnswer": 1,
+      "explanation": "Opening a drawer is a pull force because you move it toward you."
+    },
+    {
+      "id": "q9",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What are balanced forces?",
+      "questionThai": "แรงสมดุลคืออะไร?",
+      "options": ["Forces that cause motion", "Forces that are equal and opposite, causing no change in motion", "Forces that are very strong", "Forces that only push"],
+      "correctAnswer": 1,
+      "explanation": "Balanced forces are equal and opposite, so they cancel out and don't change an object's motion."
+    },
+    {
+      "id": "q10",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What happens when forces are unbalanced?",
+      "questionThai": "เกิดอะไรขึ้นเมื่อแรงไม่สมดุล?",
+      "options": ["Nothing happens", "The object stays still", "The object's motion changes", "The forces become equal"],
+      "correctAnswer": 2,
+      "explanation": "Unbalanced forces cause objects to start moving, stop moving, speed up, slow down, or change direction."
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why does a book stay still on a table?",
+      "questionThai": "ทำไมหนังสือถึงอยู่นิ่งบนโต๊ะ?",
+      "options": ["There are no forces on it", "Gravity pulls down and the table pushes up with equal force", "The book is too heavy to move", "Friction holds it in place"],
+      "correctAnswer": 1,
+      "explanation": "The book stays still because gravity pulling down and the table pushing up are balanced forces."
+    },
+    {
+      "id": "q12",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "How does friction help you walk?",
+      "questionThai": "แรงเสียดทานช่วยคุณเดินได้อย่างไร?",
+      "options": ["It pushes you forward", "It prevents your feet from slipping", "It makes you lighter", "It doesn't help walking"],
+      "correctAnswer": 1,
+      "explanation": "Friction between your shoes and the ground prevents your feet from slipping, allowing you to walk."
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In the reading passage, what made the go-kart slow down on gravel?",
+      "questionThai": "ในบทอ่าน อะไรทำให้โกคาร์ทช้าลงบนกรวด?",
+      "options": ["Gravity", "More friction from the rough surface", "Wind", "The kart ran out of energy"],
+      "correctAnswer": 1,
+      "explanation": "The rough gravel surface created more friction than the smooth pavement, slowing the go-kart."
+    },
+    {
+      "id": "q14",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Why did the go-kart speed up going downhill?",
+      "questionThai": "ทำไมโกคาร์ทถึงเร็วขึ้นเมื่อลงเนินเขา?",
+      "options": ["The students pushed harder", "Gravity pulled the kart downhill", "There was no friction", "The wheels got bigger"],
+      "correctAnswer": 1,
+      "explanation": "Gravity pulled the go-kart down the hill, creating an unbalanced force that made it speed up."
+    },
+    {
+      "id": "q15",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is speed?",
+      "questionThai": "ความเร็วคืออะไร?",
+      "options": ["How heavy something is", "How fast something is moving", "The direction of motion", "The color of an object"],
+      "correctAnswer": 1,
+      "explanation": "Speed is how fast something is moving, usually measured in meters per second or kilometers per hour."
+    },
+    {
+      "id": "q16",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "How do brakes on a bicycle work?",
+      "questionThai": "เบรกจักรยานทำงานอย่างไร?",
+      "options": ["By pushing the bicycle forward", "By creating friction that slows the wheels", "By making the bicycle lighter", "By using gravity"],
+      "correctAnswer": 1,
+      "explanation": "Brakes press pads against the wheels, creating friction that slows down and stops the bicycle."
+    },
+    {
+      "id": "q17",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "If a car is moving at constant speed in a straight line, what can you say about the forces on it?",
+      "questionThai": "ถ้ารถเคลื่อนที่ด้วยความเร็วคงที่ในเส้นตรง คุณพูดได้อะไรเกี่ยวกับแรงที่กระทำต่อมัน?",
+      "options": ["There are no forces on it", "The forces are unbalanced", "The forces are balanced", "Only gravity is acting on it"],
+      "correctAnswer": 2,
+      "explanation": "Constant speed in a straight line means balanced forces. The engine's push equals friction and air resistance."
+    },
+    {
+      "id": "q18",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why do we use oil in machines?",
+      "questionThai": "ทำไมเราใช้น้ำมันในเครื่องจักร?",
+      "options": ["To increase friction", "To reduce friction between moving parts", "To make parts heavier", "To change the color"],
+      "correctAnswer": 1,
+      "explanation": "Oil is a lubricant that reduces friction between moving parts, preventing damage and making machines work better."
+    },
+    {
+      "id": "q19",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "What is the difference between mass and weight?",
+      "questionThai": "อะไรคือความแตกต่างระหว่างมวลและน้ำหนัก?",
+      "options": ["They are the same thing", "Mass is the amount of matter; weight is the force of gravity on that matter", "Weight is heavier than mass", "Mass changes with location"],
+      "correctAnswer": 1,
+      "explanation": "Mass is the amount of matter in an object (stays the same). Weight is how hard gravity pulls on that mass (changes with gravity)."
+    },
+    {
+      "id": "q20",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why would a ball roll farther on a smooth floor than on carpet?",
+      "questionThai": "ทำไมลูกบอลถึงกลิ้งไปได้ไกลกว่าบนพื้นเรียบกว่าบนพรม?",
+      "options": ["The ball is heavier on smooth floors", "Smooth floors have less friction, so less force opposes the ball's motion", "Carpet pushes the ball forward", "Gravity is stronger on carpet"],
+      "correctAnswer": 1,
+      "explanation": "Smooth floors create less friction than carpet, so there is less force opposing the ball's motion, allowing it to roll farther."
+    }
+  ]
+}

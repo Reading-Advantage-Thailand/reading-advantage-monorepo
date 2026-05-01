@@ -1,0 +1,11 @@
+{
+  "track_id": "shared_config_consolidation_20260502",
+  "type": "chore",
+  "status": "pending",
+  "created_at": "2026-05-02T00:00:00Z",
+  "updated_at": "2026-05-02T00:00:00Z",
+  "description": "Consolidate shared tooling across all apps: migrate remaining Tailwind v3 configs to v4, adopt ESLint v9 flat config everywhere, unify i18n on next-intl, and remove duplicated UI components and local utility copies",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

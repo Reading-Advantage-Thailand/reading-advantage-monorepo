@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "Close your eyes and listen. What do you hear? Maybe birds singing, cars passing, or people talking. Sound is all around us! But what exactly is sound, and how does it travel to your ears? Today, you will discover the amazing science of sound waves and learn how you hear the world around you!",
+      "contentThai": "หลับตาและฟัง คุณได้ยินอะไรบ้าง? อาจจะเป็นเสียงนกร้อง รถผ่าน หรือคนคุยกัน เสียงอยู่รอบตัวเรา! แต่เสียงคืออะไรกันแน่ และมันเดินทางมาถึงหูของคุณได้อย่างไร? วันนี้คุณจะได้ค้นพบวิทยาศาสตร์ที่น่าทึ่งของคลื่นเสียงและเรียนรู้ว่าคุณได้ยินโลกรอบตัวอย่างไร!"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Sound",
+          "thai": "เสียง",
+          "definition": "Energy that travels in waves and can be heard"
+        },
+        {
+          "term": "Vibration",
+          "thai": "การสั่น",
+          "definition": "A quick back-and-forth movement"
+        },
+        {
+          "term": "Wave",
+          "thai": "คลื่น",
+          "definition": "A disturbance that moves energy from one place to another"
+        },
+        {
+          "term": "Volume",
+          "thai": "ความดัง",
+          "definition": "How loud or soft a sound is"
+        },
+        {
+          "term": "Pitch",
+          "thai": "ระดับเสียง",
+          "definition": "How high or low a sound is"
+        },
+        {
+          "term": "Frequency",
+          "thai": "ความถี่",
+          "definition": "How many times something vibrates in one second"
+        },
+        {
+          "term": "Echo",
+          "thai": "เสียงสะท้อน",
+          "definition": "A sound that bounces back to you from a surface"
+        },
+        {
+          "term": "Eardrum",
+          "thai": "แก้วหู",
+          "definition": "A thin piece of skin inside your ear that vibrates when sound hits it"
+        },
+        {
+          "term": "Amplitude",
+          "thai": "แอมพลิจูด",
+          "definition": "The height of a wave, which determines volume"
+        },
+        {
+          "term": "Medium",
+          "thai": "ตัวกลาง",
+          "definition": "A substance that sound travels through, like air or water"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## What Is Sound?\n\n**Sound** is a type of energy that you can hear. Sound is made when something vibrates - moves back and forth very quickly. These vibrations travel through the air to your ears.\n\n### How Sound Is Made\n\n1. Something vibrates (like a guitar string)\n2. The vibrations push air particles back and forth\n3. The air particles bump into other air particles\n4. This creates a wave of energy moving through the air\n5. The wave reaches your ear, and you hear sound!\n\nYou can feel vibrations making sound:\n- Touch your throat when you hum - you feel it vibrating!\n- Watch a drum when it's hit - the surface moves up and down\n- Look at a speaker playing music - it shakes back and forth\n\n## Sound Waves\n\nSound travels in **waves**. Think of dropping a stone in water. Ripples spread out in all directions. Sound waves work the same way, but they move through air instead of water.\n\n### How Sound Waves Travel\n\nSound waves need particles to travel. When the first air particles vibrate, they bump into nearby particles. Those particles bump into more particles, passing the energy along.\n\n**Sound can travel through:**\n- Gases (like air)\n- Liquids (like water) - sounds travel faster!\n- Solids (like wood or metal) - sounds travel fastest!\n\n**Sound CANNOT travel through:**\n- Empty space (vacuum) - there are no particles to vibrate!\n\nThis is why there is no sound in outer space!",
+      "contentThai": "## เสียงคืออะไร?\n\n**เสียง** เป็นพลังงานชนิดหนึ่งที่คุณสามารถได้ยิน เสียงเกิดขึ้นเมื่อมีบางสิ่งสั่น - เคลื่อนที่ไปมาอย่างรวดเร็ว การสั่นเหล่านี้เดินทางผ่านอากาศมาถึงหูของคุณ"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-sound-waves-1.webp",
+      "alt": "Diagram showing how sound waves travel from a vibrating drum through air particles to a person's ear",
+      "caption": "Sound Waves Travel Through Air",
+      "captionThai": "คลื่นเสียงเดินทางผ่านอากาศ",
+      "aspectRatio": 1.8,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "## Properties of Sound\n\n### Volume (Loudness)\n\n**Volume** is how loud or soft a sound is. Volume depends on how much energy is in the sound wave.\n\n- **Loud sounds** have waves with big vibrations (high amplitude)\n- **Soft sounds** have waves with small vibrations (low amplitude)\n\nExamples:\n- A whisper is soft (low volume)\n- A jet engine is loud (high volume)\n- A shout has more energy than a whisper\n\n**Volume is measured in decibels (dB):**\n- Whisper: about 20 dB\n- Normal conversation: about 60 dB\n- Rock concert: about 110 dB\n- Jet engine: about 140 dB\n\n**Warning:** Very loud sounds (over 85 dB) can damage your hearing!\n\n### Pitch\n\n**Pitch** is how high or low a sound is. Pitch depends on how fast something vibrates.\n\n- **High pitch** sounds come from fast vibrations (high frequency)\n- **Low pitch** sounds come from slow vibrations (low frequency)\n\nExamples:\n- A bird chirping is high pitch\n- A lion roaring is low pitch\n- A small bell has higher pitch than a big bell\n- A thin guitar string has higher pitch than a thick string"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-sound-waves-2.webp",
+      "alt": "Comparison of sound waves showing high amplitude waves for loud sounds, low amplitude for soft sounds, high frequency for high pitch, and low frequency for low pitch",
+      "caption": "Volume and Pitch in Sound Waves",
+      "captionThai": "ความดังและระดับเสียงในคลื่นเสียง",
+      "aspectRatio": 1.5,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "## How We Hear Sound\n\nYour ears are amazing organs that turn sound waves into signals your brain can understand!\n\n### Parts of the Ear\n\n1. **Outer ear**: The part you can see. It collects sound waves and funnels them into your ear canal.\n\n2. **Ear canal**: A tube that carries sound waves to the eardrum.\n\n3. **Eardrum**: A thin piece of skin that vibrates when sound waves hit it.\n\n4. **Middle ear**: Contains tiny bones that pass vibrations from the eardrum to the inner ear.\n\n5. **Inner ear**: Contains liquid and tiny hairs that turn vibrations into nerve signals.\n\n6. **Auditory nerve**: Carries signals from your ear to your brain.\n\n### The Hearing Process\n\n1. Sound waves enter your outer ear\n2. Waves travel down the ear canal\n3. Waves hit the eardrum, making it vibrate\n4. Tiny bones in the middle ear pass the vibrations\n5. The inner ear turns vibrations into nerve signals\n6. Your brain receives the signals and recognizes the sound!\n\n## Echoes: Sound Bouncing Back\n\nAn **echo** happens when sound waves hit a hard surface and bounce back to you.\n\n**Where you hear echoes:**\n- Mountains and canyons\n- Large empty rooms\n- Tunnels and caves\n\n**Why hard surfaces create echoes:**\n- Hard surfaces like rock and concrete reflect sound well\n- Soft surfaces like carpet and curtains absorb sound\n\nAnimals like bats and dolphins use echoes to find food. This is called **echolocation**!"
+    },
+    {
+      "type": "reading_passage",
+      "title": "The Music Mystery",
+      "titleThai": "ปริศนาดนตรี",
+      "content": "Nong was learning to play the khim, a traditional Thai hammered dulcimer. Her teacher, Ajarn Pensri, taught her about the science of sound.\n\n\"Watch what happens when I strike this string,\" said Ajarn Pensri, gently hitting a string with a mallet. The string moved back and forth quickly, making a beautiful ringing sound.\n\n\"The string is vibrating!\" observed Nong. \"That's making the sound!\"\n\n\"Exactly,\" smiled her teacher. \"Now listen to what happens when I hit a longer string.\"\n\nAjarn Pensri struck a longer string. This time, the sound was deeper and lower.\n\n\"Why is it different?\" Nong asked.\n\n\"Longer strings vibrate more slowly. Slow vibrations make low-pitched sounds. Shorter strings vibrate faster and make higher sounds. That's how we can play different notes!\"\n\nNong tried both strings herself. She could even see that the longer string vibrated more slowly. \"The short string moves so fast I can barely see it!\"\n\n\"Now let's experiment with volume,\" said Ajarn Pensri. She struck a string softly. The sound was quiet and gentle. Then she struck the same string harder. The sound was much louder!\n\n\"When I hit harder, the string vibrates with bigger movements. That makes louder sound because the waves have more energy.\"\n\nNong practiced controlling the volume by hitting softer or harder. She was making music and learning science at the same time!\n\n\"One more thing,\" said Ajarn Pensri. She moved the khim into a small closet and played a note. The sound seemed muffled and quiet.\n\nThen she brought the khim into the large music hall. When she played the same note, the sound was rich and bright, and Nong could hear it echo off the walls!\n\n\"Why does it sound so different?\" Nong wondered.\n\n\"The small closet has soft walls and clothes that absorb sound waves. The big hall has hard walls that reflect the sound waves, making the music richer and allowing echoes.\"\n\nNong understood now. \"So sound isn't just about the instrument - it's also about where you play it!\"\n\nFrom that day on, Nong noticed sounds everywhere. She heard high-pitched birds and low-pitched trucks. She noticed how sounds changed in different rooms. She even discovered that putting her ear against a wall let her hear sounds from the other side - because sound travels through solids too!\n\nMusic had taught Nong the science of sound. Now every note she played reminded her of vibrations, waves, and the amazing journey sound takes to reach our ears.",
+      "contentThai": "น้องกำลังเรียนเล่นขิม เครื่องดนตรีไทยโบราณ ครูของเธอ อาจารย์เพ็ญศรี สอนเธอเกี่ยวกับวิทยาศาสตร์ของเสียง\n\n\"ดูว่าเกิดอะไรขึ้นเมื่อครูตีสายนี้\" อาจารย์เพ็ญศรีพูด ค่อยๆ ตีสายด้วยไม้ตี สายเคลื่อนที่ไปมาอย่างรวดเร็ว ทำให้เกิดเสียงดังกังวานสวยงาม\n\n\"สายกำลังสั่น!\" น้องสังเกต \"นั่นทำให้เกิดเสียง!\"",
+      "wordCount": 402
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- **Sound** is energy made by vibrations that travels in waves\n- Sound waves need a **medium** (particles) to travel through - they cannot travel through empty space\n- Sound travels fastest through solids, slower through liquids, and slowest through gases\n- **Volume** (loudness) depends on the size of vibrations (amplitude)\n  - Loud sounds = big vibrations\n  - Soft sounds = small vibrations\n- **Pitch** depends on how fast something vibrates (frequency)\n  - High pitch = fast vibrations\n  - Low pitch = slow vibrations\n- Your ear has parts that collect sound waves, make them vibrate, and send signals to your brain\n- **Echoes** happen when sound bounces off hard surfaces\n- Soft surfaces absorb sound; hard surfaces reflect sound\n\nUnderstanding sound helps us appreciate music, protect our hearing, and understand how we communicate!"
+    }
+  ]
+}

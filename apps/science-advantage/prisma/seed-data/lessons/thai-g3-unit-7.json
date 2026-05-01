@@ -1,0 +1,549 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "unit": 7,
+  "lessons": [
+    {
+      "id": "g3-our-sun",
+      "slug": "our-sun",
+      "title": "Our Sun",
+      "description": "Grade 3 THE SKY ABOVE - Understanding the Sun as the star closest to Earth.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nThe Sun is the star closest to Earth. It gives us light and heat energy that makes life possible. In this lesson, you will learn about the Sun and why it is so important.\n\n## Main Content\n\n**Our Star**\n\nThe Sun is a giant ball of hot gas. It is much bigger than Earth. The Sun provides light energy that helps us see during the day. It also provides heat energy that keeps Earth warm enough for living things. The Sun rises in the east and sets in the west.",
+      "order": 1,
+      "standards": [
+        "Sc7.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "The Sun is the star closest to Earth. It gives us light and heat energy that makes life possible. In this lesson, you will learn about the Sun and why it is so important."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Sun",
+                "thai": "ดวงอาทิตย์",
+                "definition": "The star closest to Earth that provides light and heat"
+              },
+              {
+                "term": "Star",
+                "thai": "ดาว",
+                "definition": "A large ball of hot gas that produces light"
+              },
+              {
+                "term": "Light energy",
+                "thai": "พลังงานแสง",
+                "definition": "Energy that allows us to see"
+              },
+              {
+                "term": "Heat energy",
+                "thai": "พลังงานความร้อน",
+                "definition": "Energy that makes things warm"
+              },
+              {
+                "term": "Daylight",
+                "thai": "แสงสว่าง",
+                "definition": "Natural light from the Sun during the day"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ดวงอาทิตย์ของเรา"
+    },
+    {
+      "id": "g3-our-planet-earth",
+      "slug": "our-planet-earth",
+      "title": "Our Planet Earth",
+      "description": "Grade 3 THE SKY ABOVE - Understanding Earth as our planet in the solar system.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEarth is the planet we live on. It is special because it has water, air, and the right conditions for life. In this lesson, you will learn about our planet and what makes it unique.\n\n## Main Content\n\n**Our Blue Planet**\n\nEarth is called the blue planet because about seventy percent of its surface is covered with water. Earth has an atmosphere, which is a layer of gases surrounding our planet. The atmosphere protects us from harmful rays from the Sun and keeps us warm.",
+      "order": 2,
+      "standards": [
+        "Sc7.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Earth is the planet we live on. It is special because it has water, air, and the right conditions for life."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Planet",
+                "thai": "ดาวเคราะห์",
+                "definition": "A large object that orbits a star"
+              },
+              {
+                "term": "Atmosphere",
+                "thai": "ชั้นบรรยากาศ",
+                "definition": "The layer of gases surrounding a planet"
+              },
+              {
+                "term": "Orbit",
+                "thai": "วงโคจร",
+                "definition": "The path an object takes around another object"
+              },
+              {
+                "term": "Solar system",
+                "thai": "ระบบสุริยะ",
+                "definition": "The Sun and all the objects that orbit it"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ดาวเคราะห์โลก"
+    },
+    {
+      "id": "g3-the-moon",
+      "slug": "the-moon",
+      "title": "The Moon",
+      "description": "Grade 3 THE SKY ABOVE - Understanding the Moon and its relationship to Earth.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nThe Moon is Earth's closest neighbor in space. It orbits Earth and reflects sunlight, which is why we can see it at night. In this lesson, you will learn about the Moon.\n\n## Main Content\n\n**Our Moon**\n\nThe Moon is much smaller than Earth. It has no air and no water. The Moon reflects sunlight, which is why it glows at night. The Moon's shape appears to change throughout the month. These changes are called moon phases.",
+      "order": 3,
+      "standards": [
+        "Sc7.1-G3",
+        "Sc7.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "The Moon is Earth's closest neighbor in space. It orbits Earth and reflects sunlight, which is why we can see it at night."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Moon",
+                "thai": "ดวงจันทร์",
+                "definition": "The natural satellite that orbits Earth"
+              },
+              {
+                "term": "Reflect",
+                "thai": "สะท้อน",
+                "definition": "To bounce light off a surface"
+              },
+              {
+                "term": "Moon phases",
+                "thai": "ข้างขึ้นข้างแรม",
+                "definition": "The changing shapes of the Moon as seen from Earth"
+              },
+              {
+                "term": "Satellite",
+                "thai": "ดาวเทียม",
+                "definition": "An object that orbits a planet"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ดวงจันทร์"
+    },
+    {
+      "id": "g3-day-night-explanation",
+      "slug": "day-night-explanation",
+      "title": "Day and Night Explained",
+      "description": "Grade 3 THE SKY ABOVE - Detailed explanation of day and night through Earth's rotation.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nIn Unit 6, you learned that Earth rotates. Now you will learn more about how this rotation causes day and night. You will also learn about the different positions of the Sun in the sky throughout the day.\n\n## Main Content\n\n**The Sun's Path**\n\nDuring the day, the Sun appears to move across the sky from east to west. In reality, it is Earth that is spinning. The Sun does not actually move around us. When your part of Earth faces the Sun, it is daytime. When your part faces away, it is nighttime.",
+      "order": 4,
+      "standards": [
+        "Sc7.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "In Unit 6, you learned that Earth rotates. Now you will learn more about how this rotation causes day and night."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Rotation",
+                "thai": "การหมุนรอบตัวเอง",
+                "definition": "The spinning of Earth on its axis"
+              },
+              {
+                "term": "Axis",
+                "thai": "แกน",
+                "definition": "An imaginary line through the center of Earth"
+              },
+              {
+                "term": "East",
+                "thai": "ทิศตะวันออก",
+                "definition": "The direction where the Sun rises"
+              },
+              {
+                "term": "West",
+                "thai": "ทิศตะวันตก",
+                "definition": "The direction where the Sun sets"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "อธิบายกลางวันและกลางคืน"
+    },
+    {
+      "id": "g3-moon-phases",
+      "slug": "moon-phases",
+      "title": "Moon Phases",
+      "description": "Grade 3 THE SKY ABOVE - Observing and recording the phases of the Moon over a month.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nHave you noticed that the Moon looks different each night? Sometimes it looks like a circle, sometimes like a half circle, and sometimes like a thin curve. These different shapes are called moon phases. In this lesson, you will learn why the Moon's shape changes.\n\n## Main Content\n\n**Why the Moon Changes Shape**\n\nThe Moon does not make its own light. It reflects sunlight. As the Moon orbits Earth, different parts of the Moon are lit by the Sun. This creates the phases: new moon, crescent, half moon, gibbous, and full moon.",
+      "order": 5,
+      "standards": [
+        "Sc7.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Have you noticed that the Moon looks different each night? Sometimes it looks like a circle, sometimes like a half circle, and sometimes like a thin curve. These different shapes are called moon phases."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "New moon",
+                "thai": "จันทร์ดับ",
+                "definition": "The phase when the Moon is not visible from Earth"
+              },
+              {
+                "term": "Full moon",
+                "thai": "จันทร์เพ็ญ",
+                "definition": "The phase when the entire Moon is visible"
+              },
+              {
+                "term": "Crescent",
+                "thai": "พระจันทร์เสี้ยว",
+                "definition": "A moon phase shaped like a thin curve"
+              },
+              {
+                "term": "Phase",
+                "thai": "ข้าง",
+                "definition": "The shape of the illuminated part of the Moon"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ข้างขึ้นข้างแรม"
+    },
+    {
+      "id": "g3-sky-observation",
+      "slug": "sky-observation",
+      "title": "Sky Observation",
+      "description": "Grade 3 THE SKY ABOVE - Observing the sky during the day and at night to identify celestial objects.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nToday you will observe the sky carefully during the day and at night. You will identify the Sun, Moon, clouds, stars, and other celestial objects.\n\n## Main Content\n\n**Observation Activity**\n\nDuring the day, observe the Sun's position, clouds, and blue sky. At night, observe the Moon, stars, and planets. Record your observations with drawings and descriptions. Note the time of each observation.",
+      "order": 6,
+      "standards": [
+        "Sc7.1-G3",
+        "Sc8.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will observe the sky carefully during the day and at night. You will identify the Sun, Moon, clouds, stars, and other celestial objects."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Celestial",
+                "thai": "ท้องฟ้า",
+                "definition": "Related to the sky or outer space"
+              },
+              {
+                "term": "Planet",
+                "thai": "ดาวเคราะห์",
+                "definition": "A large object that orbits a star"
+              },
+              {
+                "term": "Constellation",
+                "thai": "กลุ่มดาว",
+                "definition": "A group of stars that form a pattern"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การสังเกตท้องฟ้า"
+    },
+    {
+      "id": "g3-sun-earth-moon-system",
+      "slug": "sun-earth-moon-system",
+      "title": "Sun-Earth-Moon System",
+      "description": "Grade 3 THE SKY ABOVE - Understanding how the Sun, Earth, and Moon are connected.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nThe Sun, Earth, and Moon are all connected in a system. The Sun gives light and heat to Earth. Earth orbits the Sun. The Moon orbits Earth. In this lesson, you will learn how this system works together.\n\n## Main Content\n\n**How They Work Together**\n\nThe Sun lights up half of Earth at a time, creating day and night. The Moon reflects sunlight so we can see it at night. Earth's orbit around the Sun causes the seasons. The Moon's orbit around Earth causes moon phases and affects ocean tides.",
+      "order": 7,
+      "standards": [
+        "Sc7.1-G3",
+        "Sc7.2-G3",
+        "Sc7.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "The Sun, Earth, and Moon are all connected in a system. The Sun gives light and heat to Earth. Earth orbits the Sun. The Moon orbits Earth."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "System",
+                "thai": "ระบบ",
+                "definition": "A group of things that work together"
+              },
+              {
+                "term": "Orbit",
+                "thai": "วงโคจร",
+                "definition": "The path an object takes around another object"
+              },
+              {
+                "term": "Season",
+                "thai": "ฤดู",
+                "definition": "A time of year with particular weather conditions"
+              },
+              {
+                "term": "Tide",
+                "thai": "น้ำขึ้นน้ำลง",
+                "definition": "The rise and fall of ocean water caused by the Moon"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ระบบดวงอาทิตย์-โลก-ดวงจันทร์"
+    },
+    {
+      "id": "g3-unit-7-review",
+      "slug": "unit-7-review",
+      "title": "Unit 7 Review",
+      "description": "Grade 3 THE SKY ABOVE - Review activity for the Sun, Earth, Moon, and moon phases.",
+      "lessonType": "REVIEW",
+      "content": "## Review Activity\n\nTest your knowledge of the sky above! Identify the Sun, Earth, and Moon, explain day and night, and describe moon phases.",
+      "order": 8,
+      "standards": [
+        "Sc7.1-G3",
+        "Sc7.2-G3",
+        "Sc7.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Test your knowledge of the sky above! Identify the Sun, Earth, and Moon, explain day and night, and describe moon phases."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Identify",
+                "thai": "ระบุ",
+                "definition": "To recognize and name something"
+              },
+              {
+                "term": "Describe",
+                "thai": "บรรยาย",
+                "definition": "To tell about something using words"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ทบทวนหน่วย 7"
+    },
+    {
+      "id": "g3-unit-7-summative-assessment",
+      "slug": "unit-7-summative-assessment",
+      "title": "Unit 7 Summative Assessment",
+      "description": "Grade 3 THE SKY ABOVE - Summative assessment covering the Sun, Earth, Moon, and moon phases.",
+      "lessonType": "ASSESSMENT",
+      "content": "## Summative Assessment\n\nThis assessment covers everything you learned about the sky above in Unit 7. You will be tested on the Sun, Earth, Moon, day and night, and moon phases.",
+      "order": 9,
+      "standards": [
+        "Sc7.1-G3",
+        "Sc7.2-G3",
+        "Sc7.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "This assessment covers everything you learned about the sky above in Unit 7. Good luck!"
+          }
+        ]
+      },
+      "titleThai": "แบบทดสอบปลายหน่วย หน่วย 7"
+    },
+    {
+      "id": "g3-moon-calendar",
+      "slug": "moon-calendar",
+      "title": "Moon Calendar",
+      "description": "Grade 3 THE SKY ABOVE - Creating a moon calendar by tracking moon phases over a month.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nFor this project, you will observe the Moon every night for one month. Draw the Moon's shape each night and create your own moon calendar. You will see the full cycle of moon phases.\n\n## Main Content\n\n**Tracking Moon Phases**\n\nEach night, go outside and observe the Moon. Draw its shape in your calendar. After one month, you will have seen a complete cycle of moon phases. From new moon to full moon and back to new moon again.",
+      "order": 10,
+      "standards": [
+        "Sc7.3-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "For this project, you will observe the Moon every night for one month. Draw the Moon's shape each night and create your own moon calendar."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Calendar",
+                "thai": "ปฏิทิน",
+                "definition": "A system of organizing days"
+              },
+              {
+                "term": "Cycle",
+                "thai": "รอบ",
+                "definition": "A series of events that repeat in the same order"
+              },
+              {
+                "term": "Track",
+                "thai": "ติดตาม",
+                "definition": "To follow and record changes over time"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ปฏิทินดวงจันทร์"
+    },
+    {
+      "id": "g3-space-exploration",
+      "slug": "space-exploration",
+      "title": "Space Exploration",
+      "description": "Grade 3 THE SKY ABOVE - Learning about space exploration and how scientists study the sky.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nScientists use special tools to study the sky and space. Telescopes help us see objects that are very far away. Satellites orbit Earth and send information back to scientists. In this lesson, you will learn about space exploration.\n\n## Main Content\n\n**Exploring Space**\n\nTelescopes magnify distant objects in space. Astronauts travel to space in rockets and spaceships. The International Space Station orbits Earth and is a laboratory in space. Scientists study the Moon, planets, and stars using these tools.",
+      "order": 11,
+      "standards": [
+        "Sc7.1-G3",
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Scientists use special tools to study the sky and space. Telescopes help us see objects that are very far away. Satellites orbit Earth and send information back to scientists."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Telescope",
+                "thai": "กล้องโทรทรรศน์",
+                "definition": "A tool that makes distant objects look closer"
+              },
+              {
+                "term": "Astronaut",
+                "thai": "นักบินอวกาศ",
+                "definition": "A person who travels to space"
+              },
+              {
+                "term": "Rocket",
+                "thai": "จรวด",
+                "definition": "A vehicle that travels into space"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การสำรวจอวกาศ"
+    },
+    {
+      "id": "g3-science-journal-sky",
+      "slug": "science-journal-sky",
+      "title": "Science Journal: Sky",
+      "description": "Grade 3 THE SKY ABOVE - Recording observations and findings about the sky in a science journal.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nToday you will use your science journal to record everything you learned about the sky above. Keep detailed records of your sky observations and moon phase tracking.\n\n## Main Content\n\n**Recording Sky Learning**\n\nDraw diagrams of the Sun, Earth, and Moon system. Record your moon phase observations. Write down what you learned about day and night. Include questions you still have about space.",
+      "order": 12,
+      "standards": [
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will use your science journal to record everything you learned about the sky above."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Diagram",
+                "thai": "แผนภาพ",
+                "definition": "A drawing that shows how something works"
+              },
+              {
+                "term": "Record",
+                "thai": "บันทึก",
+                "definition": "To write down information for later use"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "วารสารวิทยาศาสตร์: ท้องฟ้า"
+    }
+  ]
+}

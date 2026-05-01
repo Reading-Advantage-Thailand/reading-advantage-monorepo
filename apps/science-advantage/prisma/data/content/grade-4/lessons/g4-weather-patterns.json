@@ -1,0 +1,124 @@
+{
+  "slug": "weather-patterns",
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "Will it rain today? Should you bring an umbrella? Weather affects our daily lives in many ways! Sometimes it's sunny and hot, other times it's rainy and cool. But weather doesn't happen randomly - it follows patterns that scientists can observe and predict. Today, you will learn about weather patterns and discover how scientists forecast the weather!",
+      "contentThai": "วันนี้ฝนจะตกไหม? คุณควรพกร่มไหม? สภาพอากาศส่งผลต่อชีวิตประจำวันของเราในหลายๆ ด้าน! บางครั้งก็แดดจ้าและร้อน บางครั้งก็ฝนตกและเย็น แต่สภาพอากาศไม่ได้เกิดขึ้นแบบสุ่ม - มันเป็นไปตามรูปแบบที่นักวิทยาศาสตร์สามารถสังเกตและพยากรณ์ได้ วันนี้คุณจะได้เรียนรู้เกี่ยวกับรูปแบบสภาพอากาศและค้นพบว่านักวิทยาศาสตร์พยากรณ์อากาศอย่างไร!"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Weather",
+          "thai": "สภาพอากาศ",
+          "definition": "The condition of the atmosphere at a certain place and time"
+        },
+        {
+          "term": "Climate",
+          "thai": "ภูมิอากาศ",
+          "definition": "The average weather conditions in a place over many years"
+        },
+        {
+          "term": "Atmosphere",
+          "thai": "บรรยากาศ",
+          "definition": "The layer of gases surrounding Earth"
+        },
+        {
+          "term": "Temperature",
+          "thai": "อุณหภูมิ",
+          "definition": "A measure of how hot or cold the air is"
+        },
+        {
+          "term": "Precipitation",
+          "thai": "หยาดน้ำฟ้า",
+          "definition": "Water that falls from clouds as rain, snow, sleet, or hail"
+        },
+        {
+          "term": "Humidity",
+          "thai": "ความชื้น",
+          "definition": "The amount of water vapor in the air"
+        },
+        {
+          "term": "Wind",
+          "thai": "ลม",
+          "definition": "Moving air caused by differences in air pressure"
+        },
+        {
+          "term": "Cloud",
+          "thai": "เมฆ",
+          "definition": "A collection of tiny water droplets or ice crystals in the sky"
+        },
+        {
+          "term": "Forecast",
+          "thai": "พยากรณ์",
+          "definition": "A prediction of what the weather will be like"
+        },
+        {
+          "term": "Season",
+          "thai": "ฤดู",
+          "definition": "A time of year with specific weather patterns"
+        },
+        {
+          "term": "Meteorologist",
+          "thai": "นักอุตุนิยมวิทยา",
+          "definition": "A scientist who studies and predicts weather"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## What Is Weather?\n\n**Weather** is what the atmosphere is like at a specific place and time. Weather changes from day to day and even hour to hour. When we talk about weather, we describe:\n\n- **Temperature**: How hot or cold it is\n- **Precipitation**: Rain, snow, or other water falling from the sky\n- **Humidity**: How much moisture is in the air\n- **Wind**: How fast and which direction air is moving\n- **Cloud cover**: How many clouds are in the sky\n- **Air pressure**: The weight of air pushing down on Earth\n\n## Weather vs. Climate\n\nDon't confuse weather with climate!\n\n**Weather** is short-term:\n- \"It's raining today\"\n- \"The temperature is 32°C right now\"\n- Changes quickly\n\n**Climate** is long-term:\n- \"Thailand has a tropical climate\"\n- \"Bangkok is usually hot and humid\"\n- Average conditions over 30+ years\n\nThink of it this way: **Weather is what you wear today. Climate is what's in your closet.**"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-weather-patterns-1.webp",
+      "alt": "Weather symbols showing sun, clouds, rain, wind, and temperature, with labels in English and Thai",
+      "caption": "Weather Elements We Observe",
+      "captionThai": "องค์ประกอบสภาพอากาศที่เราสังเกต",
+      "aspectRatio": 1.6,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "## How Clouds Form\n\nClouds are important for understanding weather. Here's how they form:\n\n1. The sun heats water in oceans, lakes, and rivers\n2. Water **evaporates** and rises into the air as invisible water vapor\n3. As air rises, it cools down\n4. Cool air can't hold as much water vapor\n5. Water vapor **condenses** into tiny water droplets or ice crystals\n6. Billions of droplets together form a cloud!\n\n### Types of Clouds\n\n**Cumulus clouds**\n- Fluffy, white, cotton-ball shapes\n- Usually mean fair weather\n- Can grow into thunderstorm clouds\n\n**Stratus clouds**\n- Flat, gray layers covering the sky\n- Often bring drizzle or light rain\n- Look like a gray blanket\n\n**Cirrus clouds**\n- Thin, wispy, high in the sky\n- Made of ice crystals\n- Usually mean fair weather\n\n**Cumulonimbus clouds**\n- Tall, dark thunderstorm clouds\n- Bring heavy rain, lightning, and thunder\n- Can be dangerous!"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "## What Causes Weather?\n\n### The Sun's Energy\n\nThe sun is the main driver of weather! The sun heats Earth's surface unevenly:\n- Dark surfaces (like roads) absorb more heat\n- Light surfaces (like snow) reflect more heat\n- Land heats up faster than water\n\nThis uneven heating creates differences in air temperature and pressure, which causes wind and weather patterns.\n\n### Wind\n\n**Wind** is moving air. It happens because of differences in air pressure:\n- Warm air is lighter and rises (low pressure)\n- Cool air is heavier and sinks (high pressure)\n- Air moves from high pressure to low pressure = wind!\n\n### The Water Cycle\n\nWeather is connected to the water cycle:\n1. **Evaporation**: Sun heats water, turning it into vapor\n2. **Condensation**: Vapor rises, cools, and forms clouds\n3. **Precipitation**: Water falls as rain, snow, or hail\n4. **Collection**: Water gathers in oceans, lakes, rivers\n5. The cycle repeats!\n\n## Thailand's Seasons\n\nThailand has three main seasons:\n\n**Hot Season (March-May)**\n- Very hot and dry\n- Temperatures can reach 40°C\n- Least rainfall\n\n**Rainy Season (June-October)**\n- Monsoon brings rain from the ocean\n- High humidity\n- Cooler than hot season\n\n**Cool Season (November-February)**\n- Cooler and drier\n- Most comfortable weather\n- North Thailand can get cold!"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-weather-patterns-2.webp",
+      "alt": "Diagram of the water cycle showing evaporation from ocean, cloud formation, precipitation as rain, and water collection in rivers and lakes",
+      "caption": "The Water Cycle Powers Weather",
+      "captionThai": "วัฏจักรน้ำขับเคลื่อนสภาพอากาศ",
+      "aspectRatio": 1.4,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-4",
+      "type": "text",
+      "content": "## Weather Tools and Forecasting\n\n**Meteorologists** are scientists who study and predict weather. They use special tools:\n\n**Thermometer**: Measures temperature\n\n**Barometer**: Measures air pressure\n- Rising pressure usually means good weather\n- Falling pressure can mean storms are coming\n\n**Rain gauge**: Measures how much rain falls\n\n**Wind vane**: Shows which direction wind is blowing from\n\n**Anemometer**: Measures wind speed\n\n**Hygrometer**: Measures humidity (moisture in air)\n\n**Weather satellite**: Takes pictures of clouds from space\n\n**Radar**: Detects rain and storms\n\n### Making a Forecast\n\nMeteorologists combine information from many sources:\n1. Current weather observations\n2. Satellite images\n3. Radar data\n4. Computer models\n5. Knowledge of weather patterns\n\nThis helps them predict what weather is coming. But weather is very complex, so forecasts are not always perfect!"
+    },
+    {
+      "type": "reading_passage",
+      "title": "Niran the Weather Watcher",
+      "titleThai": "นิรันดร์ นักเฝ้าดูสภาพอากาศ",
+      "content": "Niran loved watching the sky. Every morning before school, he looked at the clouds and tried to predict the day's weather.\n\n\"I think it will rain this afternoon,\" Niran told his mother one morning. \"I see big, puffy clouds getting darker.\"\n\nHis mother smiled. \"How do you know?\"\n\n\"Those are cumulus clouds. When they get tall and dark, they become cumulonimbus clouds that bring thunderstorms. I learned about it in science class!\"\n\nAt school, Niran's teacher announced a special project. \"We're going to build a class weather station and track weather patterns for one month,\" said Teacher Ratana.\n\nNiran was excited! The class made simple weather instruments:\n- A rain gauge from a plastic bottle with measurements marked on it\n- A wind vane using a straw and cardboard\n- A thermometer to measure daily temperature\n\nEvery day, different students recorded the weather data. They measured temperature, checked for rain, observed wind direction, and described the clouds.\n\nAfter two weeks, Niran noticed patterns. \"Teacher,\" he said, \"the temperature is highest at around 2 PM every day. And when the air pressure drops on the barometer, it usually rains the next day!\"\n\n\"Excellent observation!\" said Teacher Ratana. \"You're thinking like a meteorologist. Weather follows patterns because it's controlled by the sun, wind, and water cycle.\"\n\nNiran also noticed the seasons changing. In October, the afternoon rains started happening less often. \"The monsoon is ending,\" he explained to his classmates. \"Soon we'll have the cool season.\"\n\n\"How do you know that?\" asked his friend Ploy.\n\n\"The monsoon winds bring moisture from the ocean during rainy season. When the wind patterns change, we get less rain. That's why Thailand has different seasons!\"\n\nAt the end of the month, the class presented their findings. They had made charts showing temperature changes, rainfall amounts, and cloud types. They could see how weather changed over time and identify patterns.\n\n\"Weather isn't random,\" Niran concluded in his presentation. \"It follows patterns that we can observe and sometimes predict. By watching the sky, measuring conditions, and understanding the science, we can forecast what's coming.\"\n\nTeacher Ratana was proud. \"You've all become junior meteorologists! Understanding weather helps farmers know when to plant, helps pilots fly safely, and helps everyone plan their daily activities.\"\n\nNiran continued watching the weather long after the project ended. Now when dark clouds gathered, he knew to bring an umbrella. When the barometer dropped, he expected rain. Science had given him the power to read the sky!",
+      "contentThai": "นิรันดร์ชอบดูท้องฟ้า ทุกเช้าก่อนไปโรงเรียน เขาจะดูเมฆและพยายามทำนายสภาพอากาศของวัน\n\n\"ผมคิดว่าบ่ายนี้ฝนจะตก\" นิรันดร์บอกแม่เช้าวันหนึ่ง \"ผมเห็นเมฆก้อนใหญ่พองฟูมืดขึ้น\"\n\nแม่ยิ้ม \"ลูกรู้ได้อย่างไร?\"\n\n\"พวกนั้นเป็นเมฆคิวมูลัส เมื่อมันสูงขึ้นและมืด มันจะกลายเป็นเมฆคิวมูโลนิมบัสที่นำพายุฝนฟ้าคะนอง ผมเรียนรู้เรื่องนี้ในชั้นเรียนวิทยาศาสตร์!\"",
+      "wordCount": 418
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- **Weather** is the condition of the atmosphere at a specific place and time\n- **Climate** is the average weather over many years\n- Weather elements include temperature, precipitation, humidity, wind, and cloud cover\n- **Clouds** form when water vapor condenses into tiny droplets\n  - Cumulus: fluffy, usually fair weather\n  - Stratus: flat, gray layers\n  - Cirrus: thin and wispy\n  - Cumulonimbus: tall thunderstorm clouds\n- The **sun** is the main driver of weather through uneven heating\n- **Wind** happens when air moves from high to low pressure\n- The **water cycle** (evaporation, condensation, precipitation) powers weather\n- Thailand has three seasons: hot, rainy, and cool\n- **Meteorologists** use tools like thermometers, barometers, and satellites to forecast weather\n- Weather follows patterns that we can observe and predict\n\nUnderstanding weather helps us plan our daily activities and stay safe during storms!"
+    }
+  ]
+}

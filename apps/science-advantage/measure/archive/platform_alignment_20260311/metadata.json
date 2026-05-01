@@ -1,0 +1,11 @@
+{
+  "track_id": "platform_alignment_20260311",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-03-11T00:00:00Z",
+  "updated_at": "2026-03-11T00:00:00Z",
+  "description": "Realign authentication, environment contracts, shared platform services, and regression coverage with the declared Science Advantage stack.",
+  "estimated_tasks": 10,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

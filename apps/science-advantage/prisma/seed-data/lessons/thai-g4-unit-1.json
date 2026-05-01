@@ -1,0 +1,244 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 4,
+  "unit": 1,
+  "lessons": [
+    {
+      "id": "g4-plant-animal-organ-systems",
+      "slug": "plant-animal-organ-systems",
+      "title": "Plant & Animal Organ Systems",
+      "description": "Learn about the major organ systems in plants and animals and how they function together.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nEvery living thing has organ systems that work together to keep it alive. Plants and animals have different organ systems, but both are organized to help them survive. Let's explore how these systems work!\n\n## Main Content\n\n**Plant Organ Systems**\n\nPlants have two main organ systems:\n\n**1. Root System**\nThe root system is underground. Roots anchor the plant in the soil and absorb water and nutrients. They also store food for the plant.\n\n**2. Shoot System**\nThe shoot system is above ground. It includes stems, leaves, flowers, and fruits. Stems transport water and nutrients. Leaves make food through photosynthesis. Flowers help plants reproduce.\n\n**Animal Organ Systems**\n\nAnimals have several organ systems:\n\n**1. Digestive System**\nBreaks down food into nutrients the body can use. It includes the mouth, stomach, and intestines.\n\n**2. Respiratory System**\nHelps animals breathe. It brings oxygen into the body and removes carbon dioxide.\n\n**3. Circulatory System**\nTransports blood throughout the body. The heart pumps blood through blood vessels.\n\n**4. Nervous System**\nControls the body's actions. The brain and nerves send signals to different parts of the body.\n\n**5. Muscular System**\nAllows animals to move. Muscles work with bones to create movement.\n\n## Summary\n\nOrgan systems work together to keep living things alive. Plants have root and shoot systems. Animals have digestive, respiratory, circulatory, nervous, and muscular systems.",
+      "order": 1,
+      "standards": [
+        "Sc1.1-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Every living thing has organ systems that work together to keep it alive. Plants and animals have different organ systems, but both are organized to help them survive."
+          },
+          {
+            "id": "plant-systems",
+            "type": "text",
+            "content": "## Plant Organ Systems\n\nPlants have two main organ systems:\n\n**1. Root System** - Underground. Roots anchor the plant and absorb water and nutrients.\n\n**2. Shoot System** - Above ground. Includes stems, leaves, flowers, and fruits."
+          },
+          {
+            "id": "animal-systems",
+            "type": "text",
+            "content": "## Animal Organ Systems\n\nAnimals have several organ systems:\n\n**1. Digestive System** - Breaks down food into nutrients.\n\n**2. Respiratory System** - Helps animals breathe.\n\n**3. Circulatory System** - Transports blood throughout the body.\n\n**4. Nervous System** - Controls the body's actions.\n\n**5. Muscular System** - Allows animals to move."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Organ System",
+                "thai": "ระบบอวัยวะ",
+                "definition": "A group of organs that work together to perform a specific function"
+              },
+              {
+                "term": "Photosynthesis",
+                "thai": "การสังเคราะห์ด้วยแสง",
+                "definition": "The process by which plants make food using sunlight"
+              },
+              {
+                "term": "Digestive System",
+                "thai": "ระบบย่อยอาหาร",
+                "definition": "The system that breaks down food into nutrients"
+              },
+              {
+                "term": "Circulatory System",
+                "thai": "ระบบไหลเวียน",
+                "definition": "The system that transports blood throughout the body"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ระบบอวัยวะของพืชและสัตว์"
+    },
+    {
+      "id": "g4-life-cycles",
+      "slug": "life-cycles",
+      "title": "Life Cycles",
+      "description": "Explore the life cycles of plants and animals, including metamorphosis.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nAll living things go through changes as they grow. These changes follow a pattern called a life cycle. Some animals change dramatically while others just get bigger. Let's explore different life cycles!\n\n## Main Content\n\n**Life Cycle of a Plant**\n\nPlants go through these stages:\n1. **Seed** - A tiny baby plant inside a hard shell\n2. **Germination** - The seed sprouts and a root grows down, stem grows up\n3. **Seedling** - A young plant with a few leaves\n4. **Mature Plant** - A full-grown plant that can make flowers and seeds\n5. **Flowering/Fruiting** - The plant makes flowers that become fruits with seeds\n\n**Life Cycle of a Butterfly (Complete Metamorphosis)**\n\nButterflies go through four stages:\n1. **Egg** - A tiny egg laid on a leaf\n2. **Larva (Caterpillar)** - Hatches from the egg and eats a lot\n3. **Pupa (Chrysalis)** - Wraps itself in a hard case and changes inside\n4. **Adult (Butterfly)** - Emerges with wings and can fly\n\n**Life Cycle of a Frog (Complete Metamorphosis)**\n\n1. **Egg** - Laid in water in jelly-like clusters\n2. **Tadpole** - Lives in water, has a tail, no legs\n3. **Froglet** - Growing legs, tail shrinking\n4. **Adult Frog** - No tail, lives on land and in water\n\n**Life Cycle of a Chicken (Complete Metamorphosis)**\n\n1. **Egg** - Incubated by the mother for 21 days\n2. **Chick** - Hatches from the egg covered in downy feathers\n3. **Pullet/Rooster** - Young chicken growing adult feathers\n4. **Hen/Cock** - Adult chicken that can lay eggs\n\n## Summary\n\nLife cycles show the stages of growth from birth to adulthood. Some animals undergo metamorphosis - a dramatic change in body form.",
+      "order": 2,
+      "standards": [
+        "Sc1.3-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "All living things go through changes as they grow. These changes follow a pattern called a life cycle."
+          },
+          {
+            "id": "plant-life-cycle",
+            "type": "text",
+            "content": "## Life Cycle of a Plant\n\n1. **Seed** - A tiny baby plant inside a hard shell\n2. **Germination** - The seed sprouts\n3. **Seedling** - A young plant with a few leaves\n4. **Mature Plant** - Full-grown with flowers\n5. **Flowering/Fruiting** - Makes fruits with seeds"
+          },
+          {
+            "id": "metamorphosis",
+            "type": "text",
+            "content": "## Metamorphosis\n\nSome animals undergo complete metamorphosis - a dramatic change in body form. Butterflies have four stages: Egg → Caterpillar → Chrysalis → Butterfly.\n\nFrogs also undergo metamorphosis: Egg → Tadpole → Froglet → Adult Frog."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Life Cycle",
+                "thai": "วัฏจักรชีวิต",
+                "definition": "The series of changes an organism goes through from birth to reproduction"
+              },
+              {
+                "term": "Metamorphosis",
+                "thai": "การเปลี่ยนแปลงลักษณะ",
+                "definition": "A dramatic change in body form during an organism's life cycle"
+              },
+              {
+                "term": "Germination",
+                "thai": "การงอก",
+                "definition": "When a seed starts to grow into a plant"
+              },
+              {
+                "term": "Larva",
+                "thai": "ตัวอ่อน",
+                "definition": "The young form of an insect before it becomes an adult"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "วัฏจักรชีวิต"
+    },
+    {
+      "id": "g4-energy-from-food",
+      "slug": "energy-from-food",
+      "title": "Energy from Food",
+      "description": "Understand how organisms obtain and use energy from food.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nAll living things need energy to survive. Animals get energy by eating food. Plants make their own food using sunlight. Let's learn how organisms get and use energy!\n\n## Main Content\n\n**How Animals Get Energy**\n\nAnimals eat food to get energy. Food contains nutrients like carbohydrates, proteins, and fats. The digestive system breaks food down into smaller molecules that cells can use.\n\n**How Plants Get Energy**\n\nPlants make their own food through photosynthesis. They use sunlight, water, and carbon dioxide to make glucose (sugar) and oxygen.\n\nEquation: Sunlight + Water + Carbon Dioxide → Glucose + Oxygen\n\n**Energy in Food Chains**\n\nEnergy flows from one organism to another in food chains:\n- Plants (producers) make food using sunlight\n- Herbivores (primary consumers) eat plants\n- Carnivores (secondary consumers) eat herbivores\n- Decomposers break down dead organisms\n\n**Why Energy Matters**\n\nWithout energy, organisms cannot grow, move, or reproduce. Energy is needed for all life processes.\n\n## Summary\n\nLiving things get energy from food. Plants make food through photosynthesis. Animals eat plants or other animals. Energy flows through food chains.",
+      "order": 3,
+      "standards": [
+        "Sc1.2-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "All living things need energy to survive. Animals get energy by eating food. Plants make their own food using sunlight."
+          },
+          {
+            "id": "photosynthesis",
+            "type": "text",
+            "content": "## How Plants Get Energy\n\nPlants make their own food through **photosynthesis**. They use sunlight, water, and carbon dioxide to make glucose and oxygen.\n\nSunlight + Water + Carbon Dioxide → Glucose + Oxygen"
+          },
+          {
+            "id": "food-chains",
+            "type": "text",
+            "content": "## Energy in Food Chains\n\nEnergy flows from one organism to another:\n- **Plants** (producers) make food using sunlight\n- **Herbivores** (primary consumers) eat plants\n- **Carnivores** (secondary consumers) eat herbivores\n- **Decomposers** break down dead organisms"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Photosynthesis",
+                "thai": "การสังเคราะห์ด้วยแสง",
+                "definition": "The process by which plants make food using sunlight"
+              },
+              {
+                "term": "Producer",
+                "thai": "สิ่งมีชีวิตผลิตอาหาร",
+                "definition": "An organism that makes its own food (plants)"
+              },
+              {
+                "term": "Consumer",
+                "thai": "สิ่งมีชีวิตกินอาหาร",
+                "definition": "An organism that eats other organisms for energy"
+              },
+              {
+                "term": "Decomposer",
+                "thai": "สิ่งมีชีวิตย่อยสลาย",
+                "definition": "An organism that breaks down dead material"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "พลังงานจากอาหาร"
+    },
+    {
+      "id": "g4-ecosystem-relationships",
+      "slug": "ecosystem-relationships",
+      "title": "Ecosystem Relationships",
+      "description": "Learn about food chains, food webs, and how organisms depend on each other.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nIn nature, organisms depend on each other for food and survival. These relationships form complex networks called ecosystems. Let's explore how organisms are connected!\n\n## Main Content\n\n**Food Chains**\n\nA food chain shows how energy flows from one organism to another. For example:\nGrass → Grasshopper → Frog → Snake → Hawk\n\nEach organism in the chain depends on the one before it for food.\n\n**Food Webs**\n\nFood webs are more complex than food chains. They show how many food chains overlap. A hawk might eat snakes, rabbits, and mice. A frog might eat grasshoppers, flies, and spiders.\n\n**Producer-Consumer Relationships**\n\n- **Producers** (plants) make their own food\n- **Primary consumers** (herbivores) eat producers\n- **Secondary consumers** (carnivores) eat primary consumers\n- **Tertiary consumers** (top predators) eat secondary consumers\n- **Decomposers** break down dead organisms\n\n**Adaptations**\n\nOrganisms have special features that help them survive in their environment. These are called adaptations.\n- Camouflage helps animals hide from predators\n- Sharp teeth help carnivores catch prey\n- Long roots help desert plants find water\n\n## Summary\n\nOrganisms in ecosystems are connected through food chains and food webs. Energy flows from producers to consumers. Decomposers recycle nutrients back into the ecosystem.",
+      "order": 4,
+      "standards": [
+        "Sc2.1-G4",
+        "Sc2.2-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "In nature, organisms depend on each other for food and survival. These relationships form complex networks called ecosystems."
+          },
+          {
+            "id": "food-chains",
+            "type": "text",
+            "content": "## Food Chains\n\nA food chain shows how energy flows from one organism to another:\n\nGrass → Grasshopper → Frog → Snake → Hawk\n\nEach organism depends on the one before it for food."
+          },
+          {
+            "id": "adaptations",
+            "type": "text",
+            "content": "## Adaptations\n\nOrganisms have special features that help them survive:\n- **Camouflage** helps animals hide\n- **Sharp teeth** help carnivores catch prey\n- **Long roots** help desert plants find water"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Ecosystem",
+                "thai": "ระบบนิเวศ",
+                "definition": "A community of organisms and their environment working together"
+              },
+              {
+                "term": "Food Chain",
+                "thai": "สายโซ่อาหาร",
+                "definition": "A sequence of organisms where each is food for the next"
+              },
+              {
+                "term": "Adaptation",
+                "thai": "การปรับตัว",
+                "definition": "A feature that helps an organism survive in its environment"
+              },
+              {
+                "term": "Habitat",
+                "thai": "ถิ่นที่อยู่",
+                "definition": "The natural home of an organism"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ความสัมพันธ์ในระบบนิเวศ"
+    }
+  ]
+}

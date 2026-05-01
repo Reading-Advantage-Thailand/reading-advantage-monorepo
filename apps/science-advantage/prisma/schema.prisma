@@ -1,0 +1,376 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider         = "prisma-zod-generator"
+  output           = "../lib/generated/zod"
+  useMultipleFiles = true
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model user {
+  id                String             @id
+  name              String
+  username          String             @unique
+  displayUsername   String             @unique
+  email             String?            @unique
+  emailVerified     Boolean            @default(false)
+  image             String?
+  role              UserRole           @default(STUDENT)
+  gradeLevel        Int?
+  createdAt         DateTime
+  updatedAt         DateTime
+  account           account[]
+  session           session[]
+  taughtClasses     Class[]            @relation("ClassTeacher")
+  enrolledClass     Class[]            @relation("ClassStudents")
+  attempts            Attempt[]              @relation("StudentAttempts")
+  lessonCompletions   LessonCompletion[]     @relation("StudentLessonCompletions")
+  masteryRecords      StandardMastery[]      @relation("StudentMastery")
+  masteryRuns         MasteryRun[]
+  gamificationProfile GamificationProfile?
+  achievements        Achievement[]
+  assignedLessons     Assignment[]          @relation("AssignedLessons")
+}
+
+model GamificationProfile {
+  id           String    @id @default(cuid())
+  userId       String    @unique
+  xp           Int       @default(0)
+  level        Int       @default(1)
+  streak       Int       @default(0)
+  lastActiveAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Achievement {
+  id         String   @id @default(cuid())
+  userId     String
+  badgeType  String
+  unlockedAt DateTime @default(now())
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeType])
+  @@index([userId])
+}
+
+model verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+}
+
+// Curriculum and Class Management Models
+
+enum StandardsAlignment {
+  THAI
+  NGSS
+}
+
+enum LessonType {
+  LESSON // Regular instructional lesson
+  LAB // Hands-on laboratory activity
+  ASSESSMENT // Quiz/test lesson
+  REVIEW // Fun review activity
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMIN
+  SYSTEM
+}
+
+enum MasteryRunStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model Class {
+  id                 String             @id @default(cuid())
+  /// @zod.string.min(3).max(100).trim()
+  name               String
+  /// @zod.number.int().min(3).max(6)
+  gradeLevel         Int
+  standardsAlignment StandardsAlignment
+  joinCode           String             @unique
+  teacherId          String
+  teacher            user               @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: Cascade)
+  students           user[]             @relation("ClassStudents")
+  curriculumUnits    CurriculumUnit[]
+  assignments       Assignment[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@index([teacherId])
+  @@index([gradeLevel])
+  @@index([standardsAlignment])
+  @@index([joinCode])
+}
+
+model Standard {
+  id             String             @id @default(cuid())
+  framework      StandardsAlignment
+  code           String
+  description    String
+  gradeLevel     Int?
+  lessons        Lesson[]
+  quizQuestions  QuizQuestion[]
+  masteryRecords StandardMastery[]
+
+  @@unique([framework, code])
+  @@index([framework])
+  @@index([gradeLevel])
+}
+
+model StandardMastery {
+  id             String   @id @default(cuid())
+  studentId      String
+  standardId     String
+  masteryLevel   Decimal  @db.Decimal(3, 2)
+  evidenceCount  Int      @default(0)
+  lastAssessedAt DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  student  user     @relation("StudentMastery", fields: [studentId], references: [id], onDelete: Cascade)
+  standard Standard @relation(fields: [standardId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, standardId])
+  /// Used by teacher intervention queries to quickly pull struggling students
+  @@index([studentId, masteryLevel])
+  @@index([standardId])
+}
+
+model Lesson {
+  id                String             @id @default(cuid())
+  slug              String             @unique
+  title             String
+  titleThai         String?
+  description       String?
+  descriptionThai   String?
+  content           String?
+  /// @zod.custom.use(z.any())
+  structuredContent Json?              // Structured lesson content (LessonContent schema)
+  lessonType        LessonType         @default(LESSON)
+  gradeLevel        Int
+  order             Int
+  standards         Standard[]
+  curriculumUnits   CurriculumUnit[]
+  quizQuestions     QuizQuestion[]
+  attempts          Attempt[]          @relation("LessonAttempts")
+  lessonCompletions LessonCompletion[] @relation("LessonCompletions")
+  assignments       Assignment[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@index([gradeLevel])
+  @@index([order])
+  @@index([lessonType])
+  @@index([slug])
+}
+
+model CurriculumUnit {
+  id          String             @id @default(cuid())
+  slug        String             @unique
+  title       String
+  description String?
+  framework   StandardsAlignment
+  gradeLevel  Int
+  order       Int
+  lessons     Lesson[]
+  classId     String
+  class       Class              @relation(fields: [classId], references: [id], onDelete: Cascade)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@unique([classId, framework, order])
+  @@index([classId])
+  @@index([framework])
+  @@index([gradeLevel])
+  @@index([slug])
+}
+
+// Assessment System Models
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  MULTIPLE_SELECT
+  TRUE_FALSE
+  FILL_IN_BLANK
+  VOCABULARY_MATCH
+}
+
+enum LessonCompletionStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model QuizQuestion {
+  id            String             @id @default(cuid())
+  slug          String             @unique
+  lessonId      String
+  type          QuestionType
+  text          String
+  /// @zod.custom.use(z.any())
+  options       Json?
+  /// @zod.custom.use(z.any())
+  correctAnswer Json
+  points        Int                @default(1)
+  order         Int
+  version       Int                @default(1)
+  lesson        Lesson             @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  standards     Standard[]
+  responses     QuestionResponse[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([lessonId])
+  @@index([type])
+  @@index([order])
+  @@index([slug])
+}
+
+model Attempt {
+  id                String             @id @default(cuid())
+  studentId         String
+  lessonId          String
+  score             Float              @default(0)
+  maxScore          Float
+  attemptNumber     Int
+  startedAt         DateTime           @default(now())
+  completedAt       DateTime?
+  student           user               @relation("StudentAttempts", fields: [studentId], references: [id], onDelete: Cascade)
+  lesson            Lesson             @relation("LessonAttempts", fields: [lessonId], references: [id], onDelete: Cascade)
+  questionResponses QuestionResponse[]
+  masteryRun        MasteryRun?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@unique([studentId, lessonId, attemptNumber])
+  @@index([studentId])
+  @@index([lessonId])
+  @@index([completedAt])
+}
+
+model QuestionResponse {
+  id               String       @id @default(cuid())
+  attemptId        String
+  questionId       String
+  /// @zod.custom.use(z.any())
+  studentAnswer    Json
+  isCorrect        Boolean
+  timeSpentSeconds Int          @default(0)
+  answeredAt       DateTime     @default(now())
+  order            Int?
+  attempt          Attempt      @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question         QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt        DateTime     @default(now())
+
+  @@index([attemptId])
+  @@index([questionId])
+  @@index([isCorrect])
+}
+
+model LessonCompletion {
+  id                        String                 @id @default(cuid())
+  studentId                 String
+  lessonId                  String
+  status                    LessonCompletionStatus @default(NOT_STARTED)
+  completedAt               DateTime?
+  attemptsCount             Int                    @default(0)
+  bestScore                 Float?
+  bestScorePercentage       Float?
+  mostRecentScore           Float?
+  mostRecentScorePercentage Float?
+  totalTimeSpentSeconds     Int                    @default(0)
+  lastAttemptAt             DateTime?
+  student                   user                   @relation("StudentLessonCompletions", fields: [studentId], references: [id], onDelete: Cascade)
+  lesson                    Lesson                 @relation("LessonCompletions", fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
+
+  @@unique([studentId, lessonId])
+  @@index([studentId])
+  @@index([lessonId])
+  @@index([status])
+}
+
+model MasteryRun {
+  attemptId    String           @id
+  studentId    String
+  status       MasteryRunStatus @default(PENDING)
+  updatedCount Int              @default(0)
+  lastError    String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  attempt Attempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  student user    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+model Assignment {
+  id        String    @id @default(cuid())
+  classId   String
+  lessonId  String
+  assignedAt DateTime @default(now())
+  dueAt     DateTime?
+  assignedBy String
+  class     Class     @relation(fields: [classId], references: [id], onDelete: Cascade)
+  lesson    Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  teacher   user      @relation("AssignedLessons", fields: [assignedBy], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@unique([classId, lessonId])
+  @@index([classId])
+  @@index([lessonId])
+  @@index([assignedBy])
+}

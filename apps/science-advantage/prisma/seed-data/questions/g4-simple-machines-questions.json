@@ -1,0 +1,43 @@
+{
+  "lessonId": "g4-simple-machines",
+  "questions": [
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "How many types of simple machines are there?",
+      "options": ["Four", "Five", "Six", "Seven"],
+      "correctAnswer": "Six",
+      "points": 1,
+      "standards": ["Sc4.1-G4"]
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "text": "A seesaw is an example of which simple machine?",
+      "options": ["Pulley", "Lever", "Wedge", "Screw"],
+      "correctAnswer": "Lever",
+      "points": 1,
+      "standards": ["Sc4.1-G4"]
+    },
+    {
+      "type": "MULTIPLE_SELECT",
+      "text": "Which are simple machines? (Select all that apply)",
+      "options": ["Lever", "Car engine", "Pulley", "Computer", "Screw"],
+      "correctAnswer": ["Lever", "Pulley", "Screw"],
+      "points": 1,
+      "standards": ["Sc4.1-G4"]
+    },
+    {
+      "type": "TRUE_FALSE",
+      "text": "A ramp is an example of an inclined plane.",
+      "correctAnswer": "True",
+      "points": 1,
+      "standards": ["Sc4.1-G4"]
+    },
+    {
+      "type": "FILL_IN_BLANK",
+      "text": "A _____ is a wheel with a rope around it used to lift things.",
+      "correctAnswer": "pulley",
+      "points": 1,
+      "standards": ["Sc4.1-G4"]
+    }
+  ]
+}

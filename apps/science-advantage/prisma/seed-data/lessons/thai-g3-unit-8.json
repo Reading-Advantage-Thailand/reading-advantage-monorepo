@@ -1,0 +1,488 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "unit": 8,
+  "lessons": [
+    {
+      "id": "g3-asking-scientific-questions",
+      "slug": "asking-scientific-questions",
+      "title": "Asking Scientific Questions",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Learning to ask good scientific questions that can be investigated.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nScientists start every investigation with a question. Good scientific questions can be tested through experiments. In this lesson, you will learn how to ask questions that scientists can investigate.\n\n## Main Content\n\n**What Makes a Good Scientific Question?**\n\nA good scientific question can be answered by observing or experimenting. It is specific and clear. It uses measurable words like how many, how much, or how fast. Questions like why is the sky blue or how do plants grow are good scientific questions.",
+      "order": 1,
+      "standards": [
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Scientists start every investigation with a question. Good scientific questions can be tested through experiments. In this lesson, you will learn how to ask questions that scientists can investigate."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Scientific question",
+                "thai": "คำถามทางวิทยาศาสตร์",
+                "definition": "A question that can be investigated through observation or experiment"
+              },
+              {
+                "term": "Investigate",
+                "thai": "สอบสวน",
+                "definition": "To study something carefully to learn more about it"
+              },
+              {
+                "term": "Measurable",
+                "thai": "วัดได้",
+                "definition": "Can be counted or measured with numbers"
+              },
+              {
+                "term": "Specific",
+                "thai": "เฉพาะเจาะจง",
+                "definition": "Clear and exact, not general"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การตั้งคำถามทางวิทยาศาสตร์"
+    },
+    {
+      "id": "g3-making-predictions",
+      "slug": "making-predictions",
+      "title": "Making Predictions",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Learning to make predictions based on observations and prior knowledge.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nBefore scientists do an experiment, they make a prediction. A prediction is a guess about what you think will happen. Scientists base their predictions on what they already know. In this lesson, you will learn how to make good predictions.\n\n## Main Content\n\n**How to Make Predictions**\n\nThink about what you already know. Look at the evidence around you. Use your observations to make an educated guess. Write your prediction as a statement: I think that... Predictions can be right or wrong, and that is okay. Scientists learn from both.",
+      "order": 2,
+      "standards": [
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Before scientists do an experiment, they make a prediction. A prediction is a guess about what you think will happen. Scientists base their predictions on what they already know."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Prediction",
+                "thai": "การทำนาย",
+                "definition": "A guess about what you think will happen"
+              },
+              {
+                "term": "Evidence",
+                "thai": "หลักฐาน",
+                "definition": "Information that helps support an idea"
+              },
+              {
+                "term": "Educated guess",
+                "thai": "การคาดเดาที่มีเหตุผล",
+                "definition": "A prediction based on knowledge and observations"
+              },
+              {
+                "term": "Hypothesis",
+                "thai": "สมมติฐาน",
+                "definition": "An educated guess that can be tested"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การทำนาย"
+    },
+    {
+      "id": "g3-planning-experiments",
+      "slug": "planning-experiments",
+      "title": "Planning Experiments",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Learning to plan fair and well-structured experiments.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nA good experiment needs a good plan. Scientists carefully plan their experiments before they start. In this lesson, you will learn how to plan an experiment step by step.\n\n## Main Content\n\n**Planning Your Experiment**\n\nStart with your question. Make a prediction. Identify what you will change and what you will measure. Plan how to keep things fair by only changing one thing at a time. Decide how many times to repeat your experiment. Plan how to record your results.",
+      "order": 3,
+      "standards": [
+        "Sc8.1-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "A good experiment needs a good plan. Scientists carefully plan their experiments before they start."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Experiment",
+                "thai": "การทดลอง",
+                "definition": "A test to find out if your prediction is right"
+              },
+              {
+                "term": "Fair test",
+                "thai": "การทดสอบที่ยุติธรรม",
+                "definition": "An experiment where only one thing is changed at a time"
+              },
+              {
+                "term": "Variable",
+                "thai": "ตัวแปร",
+                "definition": "Something that can change in an experiment"
+              },
+              {
+                "term": "Repeat",
+                "thai": "ทำซ้ำ",
+                "definition": "To do an experiment again to check results"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การวางแผนการทดลอง"
+    },
+    {
+      "id": "g3-recording-results",
+      "slug": "recording-results",
+      "title": "Recording Results",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Learning to record experiment results accurately.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nRecording results is an important part of any experiment. Scientists write down everything they observe during an experiment. Good records help scientists share their findings with others. In this lesson, you will learn how to record results.\n\n## Main Content\n\n**How to Record Results**\n\nUse clear and organized notes. Record the date and time. Write down exactly what you observe, not what you expect to see. Use tables and charts to organize numbers. Draw pictures when words are not enough. Be honest about your results, even if they are unexpected.",
+      "order": 4,
+      "standards": [
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Recording results is an important part of any experiment. Scientists write down everything they observe during an experiment."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Results",
+                "thai": "ผลลัพธ์",
+                "definition": "The information found from an experiment"
+              },
+              {
+                "term": "Table",
+                "thai": "ตาราง",
+                "definition": "An organized way to display information in rows and columns"
+              },
+              {
+                "term": "Chart",
+                "thai": "แผนภูมิ",
+                "definition": "A visual display of information"
+              },
+              {
+                "term": "Accurate",
+                "thai": "ถูกต้อง",
+                "definition": "Free from errors, exact"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การบันทึกผล"
+    },
+    {
+      "id": "g3-drawing-conclusions",
+      "slug": "drawing-conclusions",
+      "title": "Drawing Conclusions",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Learning to draw conclusions from experiment results.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nAfter you finish an experiment and record your results, you need to draw a conclusion. A conclusion tells what you learned from your experiment. In this lesson, you will learn how to write good conclusions.\n\n## Main Content\n\n**Writing Conclusions**\n\nLook at your results carefully. Did your prediction come true? What did you learn? Write your conclusion as a clear statement. Explain what your results mean. If your prediction was wrong, that is still valuable information. Scientists learn from unexpected results.",
+      "order": 5,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "After you finish an experiment and record your results, you need to draw a conclusion. A conclusion tells what you learned from your experiment."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Conclusion",
+                "thai": "สรุป",
+                "definition": "A statement about what you learned from an experiment"
+              },
+              {
+                "term": "Analyze",
+                "thai": "วิเคราะห์",
+                "definition": "To examine information carefully"
+              },
+              {
+                "term": "Unexpected",
+                "thai": "ไม่คาดคิด",
+                "definition": "Not what you thought would happen"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การสรุปผล"
+    },
+    {
+      "id": "g3-scientific-method-review",
+      "slug": "scientific-method-review",
+      "title": "Scientific Method Review",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Reviewing all steps of the scientific method.",
+      "lessonType": "REVIEW",
+      "content": "## Review Activity\n\nTest your knowledge of the scientific method! Practice asking questions, making predictions, planning experiments, recording results, and drawing conclusions.",
+      "order": 6,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc8.2-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Test your knowledge of the scientific method! Practice all five steps: ask, predict, test, record, and conclude."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Scientific method",
+                "thai": "วิธีทางวิทยาศาสตร์",
+                "definition": "The steps scientists use to investigate questions"
+              },
+              {
+                "term": "Practice",
+                "thai": "ฝึก",
+                "definition": "To do something repeatedly to improve"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ทบทวนวิธีทางวิทยาศาสตร์"
+    },
+    {
+      "id": "g3-unit-8-summative-assessment",
+      "slug": "unit-8-summative-assessment",
+      "title": "Unit 8 Summative Assessment",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Summative assessment covering the scientific method.",
+      "lessonType": "ASSESSMENT",
+      "content": "## Summative Assessment\n\nThis assessment covers everything you learned about the scientific method in Unit 8. You will be tested on asking questions, making predictions, planning experiments, recording results, and drawing conclusions.",
+      "order": 7,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc8.2-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "This assessment covers everything you learned about the scientific method in Unit 8. Good luck!"
+          }
+        ]
+      },
+      "titleThai": "แบบทดสอบปลายหน่วย หน่วย 8"
+    },
+    {
+      "id": "g3-science-tool-mastery",
+      "slug": "science-tool-mastery",
+      "title": "Science Tool Mastery",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Demonstrating mastery of science tools: magnifying glass, ruler, and thermometer.",
+      "lessonType": "LAB",
+      "content": "## Introduction\n\nToday you will demonstrate your ability to use science tools correctly. You will show how to use a magnifying glass, ruler, and thermometer to make accurate measurements.\n\n## Main Content\n\n**Tool Mastery Challenge**\n\nUse a magnifying glass to observe tiny details. Use a ruler to measure objects in centimeters. Use a thermometer to measure temperature. Record all measurements accurately. Explain why each tool is useful.",
+      "order": 8,
+      "standards": [
+        "Sc8.2-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will demonstrate your ability to use science tools correctly. You will show how to use a magnifying glass, ruler, and thermometer to make accurate measurements."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Magnifying glass",
+                "thai": "แว่นขยาย",
+                "definition": "A tool that makes objects look bigger"
+              },
+              {
+                "term": "Ruler",
+                "thai": "ไม้บรรทัด",
+                "definition": "A tool for measuring length in centimeters"
+              },
+              {
+                "term": "Thermometer",
+                "thai": "เทอร์มอมิเตอร์",
+                "definition": "A tool for measuring temperature"
+              },
+              {
+                "term": "Measurement",
+                "thai": "การวัด",
+                "definition": "The act of finding the size or amount of something"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "การใช้เครื่องมือวิทยาศาสตร์"
+    },
+    {
+      "id": "g3-science-fair-prep",
+      "slug": "science-fair-prep",
+      "title": "Science Fair Preparation",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Preparing for a science fair project using the scientific method.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nIt is time to prepare for the science fair! You will plan and prepare your own science fair project using everything you have learned about the scientific method.\n\n## Main Content\n\n**Science Fair Project**\n\nChoose a scientific question to investigate. Make a prediction. Design and conduct an experiment. Record your results carefully. Draw conclusions from your data. Prepare a presentation to share your findings with others.",
+      "order": 9,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "It is time to prepare for the science fair! You will plan and prepare your own science fair project using everything you have learned about the scientific method."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Science fair",
+                "thai": "งานวิทยาศาสตร์",
+                "definition": "An event where students present science projects"
+              },
+              {
+                "term": "Project",
+                "thai": "โครงการ",
+                "definition": "A planned piece of work to learn about a topic"
+              },
+              {
+                "term": "Presentation",
+                "thai": "การนำเสนอ",
+                "definition": "A talk that gives information to an audience"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "เตรียมงานวิทยาศาสตร์"
+    },
+    {
+      "id": "g3-unit-8-review",
+      "slug": "unit-8-review",
+      "title": "Unit 8 Review",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Review activity for the scientific method and science tools.",
+      "lessonType": "REVIEW",
+      "content": "## Review Activity\n\nTest everything you learned about the scientific method! Practice each step and review how to use science tools correctly.",
+      "order": 10,
+      "standards": [
+        "Sc8.1-G3",
+        "Sc8.2-G3",
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Test everything you learned about the scientific method! Practice each step and review how to use science tools correctly."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Review",
+                "thai": "ทบทวน",
+                "definition": "To look at something again to remember it"
+              },
+              {
+                "term": "Practice",
+                "thai": "ฝึก",
+                "definition": "To do something repeatedly to improve"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ทบทวนหน่วย 8"
+    },
+    {
+      "id": "g3-science-journal-method",
+      "slug": "science-journal-method",
+      "title": "Science Journal: Method",
+      "description": "Grade 3 INTEGRATED SCIENCE APPLICATIONS - Recording findings about the scientific method in a science journal.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nToday you will use your science journal to record everything you learned about the scientific method and science tools. Keep detailed records of your learning.\n\n## Main Content\n\n**Recording Scientific Method Learning**\n\nWrite down each step of the scientific method. Record examples of good scientific questions. Note tips for making predictions. Include diagrams of science tools and how to use them.",
+      "order": 11,
+      "standards": [
+        "Sc8.3-G3"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Today you will use your science journal to record everything you learned about the scientific method and science tools."
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Journal",
+                "thai": "วารสาร",
+                "definition": "A book for recording observations and ideas"
+              },
+              {
+                "term": "Record",
+                "thai": "บันทึก",
+                "definition": "To write down information for later use"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "วารสารวิทยาศาสตร์: วิธี"
+    }
+  ]
+}

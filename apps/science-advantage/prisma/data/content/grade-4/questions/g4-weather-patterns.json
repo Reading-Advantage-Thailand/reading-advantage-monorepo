@@ -1,0 +1,326 @@
+{
+  "lessonId": "g4-weather-patterns",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is weather?",
+      "questionThai": "สภาพอากาศคืออะไร?",
+      "options": [
+        "The same as climate",
+        "The condition of the atmosphere at a certain place and time",
+        "Only temperature",
+        "Only rain"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Weather is what the atmosphere is like at a specific place and time, including temperature, precipitation, and wind.",
+      "slug": "q-1"
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is precipitation?",
+      "questionThai": "หยาดน้ำฟ้าคืออะไร?",
+      "options": [
+        "Only rain",
+        "Water falling from clouds as rain, snow, sleet, or hail",
+        "Clouds in the sky",
+        "Wind blowing"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Precipitation is any form of water that falls from clouds, including rain, snow, sleet, and hail.",
+      "slug": "q-2"
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is a cloud made of?",
+      "questionThai": "เมฆทำจากอะไร?",
+      "options": [
+        "Cotton",
+        "Tiny water droplets or ice crystals",
+        "Smoke",
+        "Dust only"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Clouds are made of billions of tiny water droplets or ice crystals floating in the air.",
+      "slug": "q-3"
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What causes wind?",
+      "questionThai": "อะไรเป็นสาเหตุของลม?",
+      "options": [
+        "Trees blowing",
+        "Differences in air pressure",
+        "Clouds moving",
+        "Rain falling"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Wind is caused by differences in air pressure. Air moves from high pressure areas to low pressure areas.",
+      "slug": "q-4"
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What is the main source of energy that drives weather?",
+      "questionThai": "อะไรเป็นแหล่งพลังงานหลักที่ขับเคลื่อนสภาพอากาศ?",
+      "options": [
+        "The moon",
+        "The sun",
+        "The ocean",
+        "Volcanoes"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The sun is the main driver of weather. It heats Earth's surface unevenly, creating weather patterns.",
+      "slug": "q-5"
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Which type of cloud is fluffy and white like cotton?",
+      "questionThai": "เมฆชนิดใดฟูและขาวเหมือนสำลี?",
+      "options": [
+        "Stratus",
+        "Cirrus",
+        "Cumulus",
+        "Cumulonimbus"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Cumulus clouds are fluffy, white, and look like cotton balls. They usually indicate fair weather.",
+      "slug": "q-6"
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "What does a thermometer measure?",
+      "questionThai": "เทอร์โมมิเตอร์วัดอะไร?",
+      "options": [
+        "Wind speed",
+        "Rainfall",
+        "Temperature",
+        "Air pressure"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A thermometer measures temperature - how hot or cold the air is.",
+      "slug": "q-7"
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "How many main seasons does Thailand have?",
+      "questionThai": "ประเทศไทยมีกี่ฤดูกาลหลัก?",
+      "options": [
+        "Two",
+        "Three",
+        "Four",
+        "Six"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Thailand has three main seasons: hot season, rainy season, and cool season.",
+      "slug": "q-8"
+    },
+    {
+      "id": "q9",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is the difference between weather and climate?",
+      "questionThai": "อะไรคือความแตกต่างระหว่างสภาพอากาศและภูมิอากาศ?",
+      "options": [
+        "They are the same thing",
+        "Weather is short-term conditions; climate is average conditions over many years",
+        "Climate is only about rain",
+        "Weather never changes"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Weather is short-term (today's conditions), while climate is the average weather over 30+ years.",
+      "slug": "q-9"
+    },
+    {
+      "id": "q10",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "How do clouds form?",
+      "questionThai": "เมฆก่อตัวขึ้นอย่างไร?",
+      "options": [
+        "Clouds are always in the sky",
+        "Water evaporates, rises, cools, and condenses into droplets",
+        "Wind blows clouds from somewhere else",
+        "The sun creates clouds"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Clouds form when water evaporates, rises into the sky, cools down, and condenses into tiny droplets.",
+      "slug": "q-10"
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Which type of cloud brings thunderstorms?",
+      "questionThai": "เมฆชนิดใดนำพายุฝนฟ้าคะนอง?",
+      "options": [
+        "Cirrus",
+        "Stratus",
+        "Cumulus",
+        "Cumulonimbus"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Cumulonimbus clouds are tall, dark storm clouds that bring heavy rain, lightning, and thunder.",
+      "slug": "q-11"
+    },
+    {
+      "id": "q12",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What is humidity?",
+      "questionThai": "ความชื้นคืออะไร?",
+      "options": [
+        "How hot it is",
+        "The amount of water vapor in the air",
+        "How much rain falls",
+        "Wind direction"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Humidity is the amount of water vapor (invisible moisture) in the air.",
+      "slug": "q-12"
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What does a barometer measure?",
+      "questionThai": "บารอมิเตอร์วัดอะไร?",
+      "options": [
+        "Temperature",
+        "Rainfall",
+        "Air pressure",
+        "Wind speed"
+      ],
+      "correctAnswer": 2,
+      "explanation": "A barometer measures air pressure. Changes in pressure help predict weather changes.",
+      "slug": "q-13"
+    },
+    {
+      "id": "q14",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In the reading passage, what pattern did Niran notice about temperature?",
+      "questionThai": "ในบทอ่าน นิรันดร์สังเกตเห็นรูปแบบอะไรเกี่ยวกับอุณหภูมิ?",
+      "options": [
+        "It was always the same",
+        "Temperature was highest around 2 PM every day",
+        "Temperature was highest at night",
+        "Temperature changed randomly"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Niran noticed that the temperature was highest at around 2 PM every day, showing a predictable pattern.",
+      "slug": "q-14"
+    },
+    {
+      "id": "q15",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "What brings heavy rain during Thailand's rainy season?",
+      "questionThai": "อะไรนำฝนตกหนักในฤดูฝนของประเทศไทย?",
+      "options": [
+        "Cold winds from the north",
+        "Monsoon winds carrying moisture from the ocean",
+        "Snow melting",
+        "Volcanoes"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Monsoon winds blow moist air from the ocean over Thailand, causing heavy rain during the rainy season.",
+      "slug": "q-15"
+    },
+    {
+      "id": "q16",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Who studies and predicts weather?",
+      "questionThai": "ใครศึกษาและพยากรณ์สภาพอากาศ?",
+      "options": [
+        "Biologists",
+        "Meteorologists",
+        "Geologists",
+        "Astronomers"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Meteorologists are scientists who study weather patterns and make weather forecasts.",
+      "slug": "q-16"
+    },
+    {
+      "id": "q17",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why does falling air pressure often mean rain is coming?",
+      "questionThai": "ทำไมความกดอากาศที่ลดลงมักหมายความว่าฝนกำลังจะมา?",
+      "options": [
+        "Lower pressure doesn't affect weather",
+        "Low pressure allows warm, moist air to rise and form clouds",
+        "Low pressure blows rain away",
+        "Pressure and rain are not related"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Low pressure allows warm, moist air to rise more easily. As it rises and cools, clouds form and precipitation follows.",
+      "slug": "q-17"
+    },
+    {
+      "id": "q18",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why is the water cycle important for weather?",
+      "questionThai": "ทำไมวัฏจักรน้ำถึงสำคัญสำหรับสภาพอากาศ?",
+      "options": [
+        "The water cycle doesn't affect weather",
+        "It provides the moisture for clouds and precipitation through evaporation and condensation",
+        "It only affects oceans",
+        "It only happens at night"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The water cycle moves water through evaporation, condensation, and precipitation, which are essential for weather patterns.",
+      "slug": "q-18"
+    },
+    {
+      "id": "q19",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Why are weather forecasts not always accurate?",
+      "questionThai": "ทำไมพยากรณ์อากาศถึงไม่ถูกต้องเสมอไป?",
+      "options": [
+        "Meteorologists don't try hard enough",
+        "Weather systems are very complex with many interacting factors",
+        "They use wrong tools",
+        "Weather doesn't follow patterns"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Weather involves many complex, interacting factors that are difficult to predict perfectly, even with advanced technology.",
+      "slug": "q-19"
+    },
+    {
+      "id": "q20",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "How do weather satellites help with forecasting?",
+      "questionThai": "ดาวเทียมสภาพอากาศช่วยพยากรณ์อากาศอย่างไร?",
+      "options": [
+        "They change the weather",
+        "They take pictures of clouds and storms from space to show weather patterns",
+        "They blow clouds away",
+        "They don't help forecasting"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Weather satellites take pictures from space showing cloud formations, storm systems, and weather patterns moving across Earth.",
+      "slug": "q-20"
+    }
+  ],
+  "slug": "weather-patterns"
+}

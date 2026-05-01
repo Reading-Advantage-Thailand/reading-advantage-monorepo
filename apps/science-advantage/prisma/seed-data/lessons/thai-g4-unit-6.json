@@ -1,0 +1,116 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 4,
+  "unit": 6,
+  "lessons": [
+    {
+      "id": "g4-scientific-method",
+      "slug": "scientific-method",
+      "title": "The Scientific Method",
+      "description": "Use the scientific method to design and conduct simple investigations.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nScientists use a systematic way to investigate questions and solve problems. This is called the scientific method. Let's learn the steps!\n\n## Main Content\n\n**The Scientific Method Steps**\n\n1. **Ask a Question** - Start with a question about something you observe\n2. **Do Background Research** - Learn what is already known\n3. **Form a Hypothesis** - Make an educated guess (prediction)\n4. **Test with an Experiment** - Design a fair test to check your hypothesis\n5. **Analyze Data** - Look at your results\n6. **Draw a Conclusion** - Decide if your hypothesis was correct\n7. **Communicate Results** - Share what you learned\n\n**Example Investigation**\n\nQuestion: Which plant grows taller - in sun or shade?\n\n- Hypothesis: Plants in the sun will grow taller\n- Experiment: Grow two identical plants, one in sun, one in shade\n- Data: Measure plant height every week\n- Conclusion: Compare heights after 4 weeks\n\n**Fair Tests**\n\nOnly change one variable at a time. Keep everything else the same.\n\n## Summary\n\nThe scientific method has 7 steps: Ask, Research, Hypothesize, Test, Analyze, Conclude, Communicate. It helps us find reliable answers.",
+      "order": 1,
+      "standards": [
+        "Sc7.1-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Scientists use a systematic way to investigate questions. This is called the scientific method."
+          },
+          {
+            "id": "steps",
+            "type": "text",
+            "content": "## The Scientific Method Steps\n\n1. **Ask a Question**\n2. **Do Background Research**\n3. **Form a Hypothesis**\n4. **Test with an Experiment**\n5. **Analyze Data**\n6. **Draw a Conclusion**\n7. **Communicate Results**"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Scientific Method",
+                "thai": "วิธีทางวิทยาศาสตร์",
+                "definition": "A systematic approach to investigating questions"
+              },
+              {
+                "term": "Hypothesis",
+                "thai": "สมมติฐาน",
+                "definition": "An educated guess that can be tested"
+              },
+              {
+                "term": "Experiment",
+                "thai": "การทดลอง",
+                "definition": "A test to check a hypothesis"
+              },
+              {
+                "term": "Variable",
+                "thai": "ตัวแปร",
+                "definition": "Something that can change in an experiment"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "วิธีทางวิทยาศาสตร์"
+    },
+    {
+      "id": "g4-data-graphs",
+      "slug": "data-graphs",
+      "title": "Data & Graphs",
+      "description": "Collect, organize, and interpret data using tables, charts, and graphs.",
+      "lessonType": "LESSON",
+      "content": "## Introduction\n\nScientists collect and organize data to understand their experiments. Tables, charts, and graphs help us see patterns and trends. Let's learn how to work with data!\n\n## Main Content\n\n**What is Data?**\n\nData is information collected during an investigation. It can be numbers, measurements, or observations.\n\n**Organizing Data with Tables**\n\nTables organize data in rows and columns.\nExample:\n| Week | Sun Plant Height | Shade Plant Height |\n|------|-----------------|--------------------|\n| 1 | 5 cm | 4 cm |\n| 2 | 8 cm | 5 cm |\n| 3 | 12 cm | 6 cm |\n| 4 | 16 cm | 7 cm |\n\n**Types of Graphs**\n\n1. **Bar Graph** - Compares different groups or categories\n2. **Line Graph** - Shows changes over time\n3. **Pie Chart** - Shows parts of a whole\n\n**Reading Graphs**\n\n- Look at the title to know what the graph shows\n- Check the axes (labels and units)\n- Look for patterns (increasing, decreasing, staying the same)\n- Compare different groups\n\n## Summary\n\nData is organized in tables and shown in graphs. Bar graphs compare groups, line graphs show changes over time, and pie charts show parts of a whole.",
+      "order": 2,
+      "standards": [
+        "Sc7.2-G4",
+        "Sc7.3-G4"
+      ],
+      "structuredContent": {
+        "version": 1,
+        "blocks": [
+          {
+            "id": "intro",
+            "type": "text",
+            "content": "Scientists collect and organize data to understand their experiments."
+          },
+          {
+            "id": "graph-types",
+            "type": "text",
+            "content": "## Types of Graphs\n\n1. **Bar Graph** - Compares different groups\n2. **Line Graph** - Shows changes over time\n3. **Pie Chart** - Shows parts of a whole"
+          },
+          {
+            "id": "vocab",
+            "type": "vocabulary",
+            "terms": [
+              {
+                "term": "Data",
+                "thai": "ข้อมูล",
+                "definition": "Information collected during an investigation"
+              },
+              {
+                "term": "Bar Graph",
+                "thai": "กราฟแท่ง",
+                "definition": "A graph that uses bars to compare groups"
+              },
+              {
+                "term": "Line Graph",
+                "thai": "กราฟเส้น",
+                "definition": "A graph that shows changes over time"
+              },
+              {
+                "term": "Axis",
+                "thai": "แกน",
+                "definition": "The horizontal or vertical line on a graph"
+              }
+            ]
+          }
+        ]
+      },
+      "titleThai": "ข้อมูลและกราฟ"
+    }
+  ]
+}

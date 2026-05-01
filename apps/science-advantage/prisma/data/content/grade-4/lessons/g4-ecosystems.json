@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "blocks": [
+    {
+      "id": "intro",
+      "type": "text",
+      "content": "A forest is more than just trees. A pond is more than just water. Everywhere you look, living things and non-living things work together in amazing ways! When we study how living things interact with each other and their environment, we are studying ecosystems. Today, you will explore the wonderful connections that make ecosystems work!",
+      "contentThai": "ป่าไม้มีมากกว่าแค่ต้นไม้ บ่อน้ำมีมากกว่าแค่น้ำ ทุกที่ที่คุณมอง สิ่งมีชีวิตและสิ่งไม่มีชีวิตทำงานร่วมกันอย่างน่าทึ่ง! เมื่อเราศึกษาว่าสิ่งมีชีวิตมีปฏิสัมพันธ์กันและกับสิ่งแวดล้อมอย่างไร เรากำลังศึกษาระบบนิเวศ วันนี้คุณจะได้สำรวจความเชื่อมโยงที่ยอดเยี่ยมที่ทำให้ระบบนิเวศทำงาน!"
+    },
+    {
+      "id": "vocab",
+      "type": "vocabulary",
+      "terms": [
+        {
+          "term": "Ecosystem",
+          "thai": "ระบบนิเวศ",
+          "definition": "A community of living things and their non-living environment working together"
+        },
+        {
+          "term": "Habitat",
+          "thai": "ถิ่นที่อยู่",
+          "definition": "The natural home where a plant or animal lives"
+        },
+        {
+          "term": "Community",
+          "thai": "ชุมชน",
+          "definition": "All the different species living together in an area"
+        },
+        {
+          "term": "Population",
+          "thai": "ประชากร",
+          "definition": "All the organisms of one species living in an area"
+        },
+        {
+          "term": "Biotic",
+          "thai": "สิ่งมีชีวิต",
+          "definition": "Living parts of an ecosystem (plants, animals, fungi, bacteria)"
+        },
+        {
+          "term": "Abiotic",
+          "thai": "สิ่งไม่มีชีวิต",
+          "definition": "Non-living parts of an ecosystem (water, air, sunlight, soil)"
+        },
+        {
+          "term": "Producer",
+          "thai": "ผู้ผลิต",
+          "definition": "An organism that makes its own food (usually plants)"
+        },
+        {
+          "term": "Consumer",
+          "thai": "ผู้บริโภค",
+          "definition": "An organism that eats other organisms for energy"
+        },
+        {
+          "term": "Decomposer",
+          "thai": "ผู้ย่อยสลาย",
+          "definition": "An organism that breaks down dead plants and animals"
+        },
+        {
+          "term": "Balance",
+          "thai": "สมดุล",
+          "definition": "When all parts of an ecosystem work together in harmony"
+        }
+      ]
+    },
+    {
+      "id": "content-1",
+      "type": "text",
+      "content": "## What Is an Ecosystem?\n\nAn **ecosystem** is a community of living things and non-living things that interact with each other in a specific area. Everything in an ecosystem is connected!\n\n### Parts of an Ecosystem\n\n**Biotic factors** (living things):\n- Plants and trees\n- Animals and insects\n- Fungi and mushrooms\n- Bacteria and microorganisms\n\n**Abiotic factors** (non-living things):\n- Water\n- Sunlight\n- Air and wind\n- Soil and rocks\n- Temperature\n\nBoth biotic and abiotic factors are important. Plants need sunlight and water. Animals need air to breathe. Everything depends on everything else!\n\n### Levels of Organization\n\n**Organism**: One individual living thing (one bird)\n\n**Population**: All the same species in an area (all the birds of one type in a forest)\n\n**Community**: All the different species in an area (all plants and animals in a forest)\n\n**Ecosystem**: The community plus its non-living environment (the forest, including soil, water, and climate)"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-ecosystems-1.webp",
+      "alt": "Illustration showing the components of a pond ecosystem with labeled biotic factors (fish, plants, frogs) and abiotic factors (water, sunlight, rocks)",
+      "caption": "Parts of a Pond Ecosystem",
+      "captionThai": "ส่วนประกอบของระบบนิเวศบ่อน้ำ",
+      "aspectRatio": 1.5,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-2",
+      "type": "text",
+      "content": "## Types of Ecosystems\n\n### Terrestrial (Land) Ecosystems\n\n**Forest ecosystems**\n- Trees, plants, animals, fungi\n- Thailand has tropical rainforests and seasonal forests\n- High biodiversity (many different species)\n\n**Grassland ecosystems**\n- Grasses, grazing animals, predators\n- Few trees, lots of sun\n- Savannas and prairies\n\n**Desert ecosystems**\n- Plants and animals adapted to little water\n- Hot days, cold nights\n- Cacti, lizards, camels\n\n### Aquatic (Water) Ecosystems\n\n**Freshwater ecosystems**\n- Rivers, lakes, ponds, streams\n- Fish, frogs, water plants, insects\n- Thailand has many rivers like the Chao Phraya\n\n**Marine (ocean) ecosystems**\n- Saltwater oceans and seas\n- Fish, whales, coral, seaweed\n- Thailand has the Gulf of Thailand and Andaman Sea\n\n**Wetland ecosystems**\n- Swamps, marshes, mangroves\n- Both water and land\n- Very important for many species"
+    },
+    {
+      "id": "content-3",
+      "type": "text",
+      "content": "## Roles in an Ecosystem\n\nEvery organism has a job (role) in its ecosystem:\n\n### Producers\n**Producers** make their own food through photosynthesis. They are the base of every ecosystem!\n- Green plants\n- Algae\n- Some bacteria\n\nProducers convert sunlight energy into food that other organisms can use.\n\n### Consumers\n**Consumers** cannot make their own food. They eat other organisms.\n\n**Primary consumers** (herbivores):\n- Eat plants\n- Examples: rabbits, deer, caterpillars\n\n**Secondary consumers**:\n- Eat primary consumers\n- Examples: frogs eating insects, birds eating worms\n\n**Tertiary consumers** (top predators):\n- Eat secondary consumers\n- Examples: eagles, tigers, sharks\n\n### Decomposers\n**Decomposers** break down dead plants and animals.\n- Bacteria\n- Fungi (mushrooms)\n- Some insects and worms\n\nDecomposers are recyclers! They return nutrients to the soil so plants can use them again.\n\n## How Energy Flows\n\nEnergy moves through an ecosystem:\n1. **Sun** provides energy\n2. **Producers** capture energy in food\n3. **Consumers** eat and pass energy along\n4. **Decomposers** recycle nutrients back to the soil\n5. The cycle continues!"
+    },
+    {
+      "type": "image",
+      "src": "/images/g4-ecosystems-2.webp",
+      "alt": "Diagram showing energy flow in a forest ecosystem from sun to producers to consumers to decomposers, with arrows showing the direction of energy transfer",
+      "caption": "Energy Flow in an Ecosystem",
+      "captionThai": "การไหลของพลังงานในระบบนิเวศ",
+      "aspectRatio": 1.6,
+      "attribution": "Science Advantage, 2024"
+    },
+    {
+      "id": "content-4",
+      "type": "text",
+      "content": "## Ecosystem Balance\n\nHealthy ecosystems are **balanced**. This means:\n- There are enough producers to feed consumers\n- There are enough prey for predators\n- Decomposers recycle nutrients\n- Populations stay stable over time\n\n### What Happens When Balance Is Disrupted?\n\nIf one part of an ecosystem changes, it affects everything else:\n\n**Example 1**: If predators disappear...\n- Prey populations grow too large\n- Prey eat too many plants\n- Plants can't recover\n- Whole ecosystem suffers\n\n**Example 2**: If plants are removed...\n- Herbivores have no food\n- Herbivores die or leave\n- Predators have nothing to eat\n- Decomposers have less to break down\n\n## Protecting Ecosystems\n\nHumans can harm ecosystems through:\n- **Pollution**: Putting harmful substances in air, water, or soil\n- **Deforestation**: Cutting down forests\n- **Overhunting**: Killing too many animals\n- **Habitat destruction**: Building over natural areas\n\nWe can help ecosystems by:\n- Reducing pollution\n- Protecting forests and wetlands\n- Not littering\n- Creating nature reserves\n- Planting trees"
+    },
+    {
+      "type": "reading_passage",
+      "title": "The Mangrove Mystery",
+      "titleThai": "ปริศนาป่าชายเลน",
+      "content": "Kanya's class visited a mangrove forest in Trat province on the coast of Thailand. Their guide, Khun Priya, worked to protect this special ecosystem.\n\n\"Mangroves are amazing ecosystems,\" explained Khun Priya. \"They grow where the river meets the sea, in brackish water that is partly salty and partly fresh.\"\n\nKanya looked at the strange trees with their roots sticking out of the water. \"Why do the roots grow above water?\"\n\n\"Mangrove roots need to breathe! The mud underwater has very little oxygen. Those special roots take in oxygen from the air, even during high tide.\"\n\nAs they walked on a wooden boardwalk, Kanya saw crabs scuttling between the roots. Fish swam in the shallow water. Birds perched in the branches.\n\n\"How many species live here?\" asked Kanya's friend Pim.\n\n\"Hundreds!\" said Khun Priya. \"Mangroves are nurseries for many fish species. The roots provide safe hiding places for baby fish until they grow big enough to swim in the open ocean. Without mangroves, many fish populations would decline.\"\n\n\"I see lots of crabs,\" observed Kanya.\n\n\"Crabs are important consumers here. They eat fallen leaves and dead animals. They're also food for birds and fish. See how everything is connected?\"\n\nThe guide showed them a mudskipper - a strange fish that could climb onto roots and breathe air! \"This is an example of adaptation. Mudskippers evolved special features to survive in this ecosystem where land meets water.\"\n\nKanya noticed some of the mangroves looked unhealthy. \"What happened to those trees?\"\n\nKhun Priya's face became serious. \"Pollution from a nearby town. When chemicals enter the water, they harm the trees. When trees die, animals lose their homes. Fish lose their nursery. The whole ecosystem suffers.\"\n\n\"Can we fix it?\" asked Kanya.\n\n\"We're trying! We clean up trash, we plant new mangroves, and we teach people why this ecosystem matters. Did you know mangroves also protect the coast from storms and floods? The roots hold the soil together and absorb wave energy.\"\n\nBefore leaving, the class helped plant baby mangrove trees in a restoration area. Kanya carefully placed her seedling in the mud.\n\n\"This little tree will grow tall,\" she thought. \"It will provide habitat for crabs and fish. Birds will nest in its branches. Its roots will protect the shore. One tree makes a difference!\"\n\nOn the bus home, Kanya wrote in her notebook: \"An ecosystem is like a web. Every part is connected. When we protect one part, we protect everything. When we harm one part, everything suffers. Today I learned that even I can help protect ecosystems - one tree at a time.\"",
+      "contentThai": "ห้องเรียนของกัญญาไปเยี่ยมชมป่าชายเลนในจังหวัดตราดบนชายฝั่งของประเทศไทย ไกด์ของพวกเขา คุณปรียา ทำงานเพื่อปกป้องระบบนิเวศพิเศษนี้\n\n\"ป่าชายเลนเป็นระบบนิเวศที่น่าทึ่ง\" คุณปรียาอธิบาย \"พวกมันเติบโตที่แม่น้ำพบกับทะเล ในน้ำกร่อยที่เค็มบางส่วนและจืดบางส่วน\"\n\nกัญญามองต้นไม้แปลกๆ ที่มีรากยื่นออกมาจากน้ำ \"ทำไมรากถึงงอกเหนือน้ำ?\"",
+      "wordCount": 420
+    },
+    {
+      "id": "summary",
+      "type": "text",
+      "content": "## Key Takeaways\n\n- An **ecosystem** is a community of living things and non-living things that interact together\n- **Biotic factors** are living parts (plants, animals, fungi, bacteria)\n- **Abiotic factors** are non-living parts (water, sunlight, air, soil, temperature)\n- Ecosystems are organized in levels: organism, population, community, ecosystem\n- There are many ecosystem types: forests, grasslands, deserts, freshwater, marine, wetlands\n- Living things have roles:\n  - **Producers** make food (plants)\n  - **Consumers** eat other organisms (herbivores, carnivores, omnivores)\n  - **Decomposers** break down dead things and recycle nutrients\n- Energy flows from sun to producers to consumers to decomposers\n- Healthy ecosystems are **balanced** - all parts work together\n- Humans can harm ecosystems through pollution, deforestation, and habitat destruction\n- We can help by reducing pollution, protecting habitats, and planting trees\n\nEvery part of an ecosystem matters - including us!"
+    }
+  ]
+}

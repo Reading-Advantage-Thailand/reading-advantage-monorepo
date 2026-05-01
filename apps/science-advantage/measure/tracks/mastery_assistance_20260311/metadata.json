@@ -1,0 +1,11 @@
+{
+  "track_id": "mastery_assistance_20260311",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-03-11T00:00:00Z",
+  "updated_at": "2026-03-11T00:00:00Z",
+  "description": "Strengthen the mastery pipeline, next-step recommendations, intervention alerts, and observability that sit on top of curriculum and assessment data.",
+  "estimated_tasks": 10,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

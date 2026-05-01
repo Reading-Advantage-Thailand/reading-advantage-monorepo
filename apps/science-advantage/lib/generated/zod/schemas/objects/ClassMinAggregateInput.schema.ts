@@ -1,0 +1,16 @@
+import * as z from 'zod';
+import type { Prisma } from '@prisma/client';
+
+
+const makeSchema = () => z.object({
+  id: z.literal(true).optional(),
+  name: z.literal(true).optional(),
+  gradeLevel: z.literal(true).optional(),
+  standardsAlignment: z.literal(true).optional(),
+  joinCode: z.literal(true).optional(),
+  teacherId: z.literal(true).optional(),
+  createdAt: z.literal(true).optional(),
+  updatedAt: z.literal(true).optional()
+}).strict();
+export const ClassMinAggregateInputObjectSchema: z.ZodType<Prisma.ClassMinAggregateInputType> = makeSchema() as unknown as z.ZodType<Prisma.ClassMinAggregateInputType>;
+export const ClassMinAggregateInputObjectZodSchema = makeSchema();

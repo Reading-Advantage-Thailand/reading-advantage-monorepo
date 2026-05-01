@@ -1,0 +1,202 @@
+{
+  "framework": "THAI",
+  "gradeLevel": 3,
+  "units": [
+    {
+      "id": "thai-g3-unit-1",
+      "slug": "unit-1-introduction-to-science",
+      "title": "Unit 1: Introduction to Science & Living Things / หน่วยที่ 1: บทนำสู่วิทยาศาสตร์และสิ่งมีชีวิต",
+      "description": "Explore what science is and learn about living things and their characteristics.",
+      "order": 1,
+      "lessonIds": [
+        "g3-being-a-scientist",
+        "g3-science-safety-tools",
+        "g3-making-observations",
+        "g3-what-makes-alive",
+        "g3-diversity-living-things",
+        "g3-observing-living-things-lab",
+        "g3-life-processes-growth",
+        "g3-life-processes-reproduction",
+        "g3-comparing-living-things"
+      ]
+    },
+    {
+      "id": "thai-g3-unit-2",
+      "slug": "unit-2-environments-habitats",
+      "title": "Unit 2: ENVIRONMENTS & HABITATS / หน่วยที่ 2: ENVIRONMENTS & HABITATS",
+      "description": "Grade 3 Unit 2 covering 2",
+      "order": 2,
+      "lessonIds": [
+        "g3-basic-needs-of-living-things",
+        "g3-habitats-around-the-world",
+        "g3-habitat-investigation",
+        "g3-where-does-food-come-from",
+        "g3-simple-food-chains",
+        "g3-food-webs",
+        "g3-why-we-need-to-protect-nature",
+        "g3-conservation-in-action",
+        "g3-design-a-habitat",
+        "g3-habitat-match-game",
+        "g3-unit-2-summative-assessment",
+        "g3-plant-growth-final-observation"
+      ]
+    },
+    {
+      "id": "thai-g3-unit-3",
+      "slug": "unit-3-matter-materials",
+      "title": "Unit 3: MATTER & MATERIALS / หน่วยที่ 3: MATTER & MATERIALS",
+      "description": "Grade 3 Unit 3 covering 3",
+      "order": 3,
+      "lessonIds": [
+        "g3-describing-materials",
+        "g3-classifying-materials",
+        "g3-property-investigation",
+        "g3-solids-liquids-and-gases",
+        "g3-states-of-matter-around-us",
+        "g3-waters-three-states",
+        "g3-why-we-choose-materials",
+        "g3-designing-with-materials",
+        "g3-material-selection-challenge",
+        "g3-material-mystery",
+        "g3-unit-3-summative-assessment",
+        "g3-properties-in-nature"
+      ]
+    },
+    {
+      "id": "thai-g3-unit-4",
+      "slug": "unit-4-forces-motion",
+      "title": "Unit 4: FORCES & MOTION / หน่วยที่ 4: FORCES & MOTION",
+      "description": "Grade 3 Unit 4 covering 4",
+      "order": 4,
+      "lessonIds": [
+        "g3-push-and-pull",
+        "g3-how-forces-change-motion",
+        "g3-testing-push-and-pull-forces",
+        "g3-fast-and-slow",
+        "g3-direction-and-distance",
+        "g3-stopping-motion",
+        "g3-the-force-of-gravity",
+        "g3-friction-the-stopping-force",
+        "g3-ramp-races",
+        "g3-force-and-motion-olympics",
+        "g3-unit-4-summative-assessment",
+        "g3-forces-in-sports-and-play"
+      ]
+    },
+    {
+      "id": "thai-g3-unit-5",
+      "slug": "unit-5-energy-all-around-us",
+      "title": "Unit 5: ENERGY ALL AROUND US / หน่วยที่ 5: ENERGY ALL AROUND US",
+      "description": "Grade 3 Unit 5 covering 5",
+      "order": 5,
+      "lessonIds": [
+        "g3-what-is-energy",
+        "g3-light-energy",
+        "g3-light-and-shadows",
+        "g3-heat-energy",
+        "g3-sound-energy",
+        "g3-comparing-energy-forms",
+        "g3-where-does-energy-come-from",
+        "g3-energy-and-living-things",
+        "g3-solar-energy-investigation",
+        "g3-energy-scavenger-hunt",
+        "g3-unit-5-summative-assessment",
+        "g3-energy-transformations"
+      ]
+    },
+    {
+      "id": "thai-g3-unit-6",
+      "slug": "unit-6-our-changing-earth",
+      "title": "Unit 6: OUR CHANGING EARTH / หน่วยที่ 6: OUR CHANGING EARTH",
+      "description": "Grade 3 Unit 6 covering 6",
+      "order": 6,
+      "lessonIds": [
+        "g3-land-and-water",
+        "g3-rocks-and-soil",
+        "g3-rock-and-soil-investigation",
+        "g3-what-is-weather",
+        "g3-weather-patterns",
+        "g3-seasons-in-thailand",
+        "g3-day-and-night",
+        "g3-measuring-time",
+        "g3-weather-watch-project",
+        "g3-earth-explorer-game",
+        "g3-unit-6-summative-assessment",
+        "g3-how-weather-affects-us"
+      ]
+    },
+    {
+      "id": "thai-g3-unit-7",
+      "slug": "unit-7-the-sky-above",
+      "title": "Unit 7: THE SKY ABOVE / หน่วยที่ 7: THE SKY ABOVE",
+      "description": "Grade 3 Unit 7 covering 7",
+      "order": 7,
+      "lessonIds": [
+        "g3-our-sun",
+        "g3-our-planet-earth",
+        "g3-modeling-day-and-night",
+        "g3-earths-moon",
+        "g3-moon-phases",
+        "g3-observing-the-moon",
+        "g3-how-they-work-together",
+        "g3-the-sun-gives-us-energy",
+        "g3-moon-phase-calendar-project",
+        "g3-space-exploration-game",
+        "g3-unit-7-summative-assessment",
+        "g3-stars-and-space"
+      ]
+    },
+    {
+      "id": "thai-g3-unit-8",
+      "slug": "unit-8-integrated-science-applications",
+      "title": "Unit 8: INTEGRATED SCIENCE APPLICATIONS / หน่วยที่ 8: INTEGRATED SCIENCE APPLICATIONS",
+      "description": "Grade 3 Unit 8 covering 8",
+      "order": 8,
+      "lessonIds": [
+        "g3-asking-scientific-questions",
+        "g3-making-predictions",
+        "g3-design-your-own-investigation",
+        "g3-measuring-in-science",
+        "g3-recording-data",
+        "g3-communicating-science",
+        "g3-technology-helps-us",
+        "g3-science-and-technology-working-together",
+        "g3-technology-investigation",
+        "g3-science-fair-preview",
+        "g3-unit-8-summative-assessment",
+        "g3-scientists-and-their-work"
+      ]
+    },
+    {
+      "id": "thai-g3-unit-9",
+      "slug": "unit-9-integrated-projects",
+      "title": "Unit 9: INTEGRATED PROJECTS / หน่วยที่ 9: INTEGRATED PROJECTS",
+      "description": "Grade 3 Unit 9 covering ",
+      "order": 9,
+      "lessonIds": [
+        "g3-choosing-your-project",
+        "g3-research-and-preparation",
+        "g3-project-testingverification",
+        "g3-science-year-in-review-game",
+        "g3-connecting-the-strands",
+        "g3-preparing-for-grade-4"
+      ]
+    },
+    {
+      "id": "thai-g3-unit-10",
+      "slug": "unit-10-final-assessment-closure",
+      "title": "Unit 10: FINAL ASSESSMENT & CLOSURE / หน่วยที่ 10: FINAL ASSESSMENT & CLOSURE",
+      "description": "Grade 3 Unit 10 covering ",
+      "order": 10,
+      "lessonIds": [
+        "g3-strands-12-review",
+        "g3-strands-34-review",
+        "g3-strands-56-review",
+        "g3-final-exam-knowledge",
+        "g3-final-exam-application",
+        "g3-final-exam-scientific-process",
+        "g3-science-celebration"
+      ]
+    }
+  ]
+}
