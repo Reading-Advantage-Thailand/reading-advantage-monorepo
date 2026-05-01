@@ -1,0 +1,11 @@
+{
+  "track_id": "video_pipeline_fix_20260429",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-04-29T00:00:00Z",
+  "updated_at": "2026-04-29T00:00:00Z",
+  "description": "Fix structural bugs in video pipeline: Thai text bleeding, audio/video sync, jingle mixing truncation, image text enforcement",
+  "estimated_tasks": 12,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

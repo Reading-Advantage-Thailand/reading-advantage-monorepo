@@ -1,0 +1,11 @@
+{
+  "track_id": "marketing_pages_redesign_20260418",
+  "type": "refactor",
+  "status": "completed",
+  "created_at": "2026-04-18T07:45:00Z",
+  "updated_at": "2026-04-18T15:30:00Z",
+  "description": "Apply the established brand design system (glassmorphism, asymmetric layouts, uppercase wayfinding labels, rounded-3xl cards, standard Button CTAs) to all non-product marketing pages: Home, About, Features, Pricing, Services, and Contact.",
+  "estimated_tasks": 24,
+  "actual_tasks": 28,
+  "deviation_notes": "Generated 2 images (about-classroom.jpg, about-team.jpg) for the About page redesign. Home page hardcoded stats (10,000+, 12) left as-is since no locale keys exist for them. Scope expanded to include services/blended-learning and services/managed-service pages. Fixed broken Overview section on managed-service (was missing text content)."
+}

@@ -1,0 +1,11 @@
+{
+  "track_id": "testing_infrastructure_20260408",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-04-08T12:00:00Z",
+  "updated_at": "2026-04-08T12:00:00Z",
+  "description": "Install and configure Vitest + Testing Library for unit tests and Playwright for E2E, establishing the TDD foundation required by the project workflow.",
+  "estimated_tasks": 18,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

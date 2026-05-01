@@ -1,0 +1,16 @@
+{
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["**/messages/**", "@/messages/**", "../messages/**", "./messages/**"],
+            "message": "Import from '@/locales' instead. The 'src/messages' directory has been deprecated in favor of 'src/locales' for translation management."
+          }
+        ]
+      }
+    ]
+  }
+}

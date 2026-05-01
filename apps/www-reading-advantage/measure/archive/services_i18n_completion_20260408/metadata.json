@@ -1,0 +1,11 @@
+{
+  "track_id": "services_i18n_completion_20260408",
+  "type": "bug",
+  "status": "completed",
+  "created_at": "2026-04-08T12:00:00Z",
+  "updated_at": "2026-04-09T00:00:00Z",
+  "description": "Wire up prepared locale files to the blended-learning and managed-service pages, replacing all hard-coded English strings so Thai and Chinese visitors see translated content.",
+  "estimated_tasks": 14,
+  "actual_tasks": 14,
+  "deviation_notes": "Work was already completed prior to track creation. Both pages (blended-learning and managed-service) use correct i18n scopes (pages.blendedLearning and pages.managedService). All t() calls properly reference locale keys. Build passes with no TypeScript errors. Tests pass."
+}

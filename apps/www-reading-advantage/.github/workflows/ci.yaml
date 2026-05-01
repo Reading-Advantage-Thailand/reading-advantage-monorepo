@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  linting:
+    name: Code Linting 🔍
+    runs-on: ubuntu-latest
+    container: node:lts
+    steps:
+      - name: Checkout Repository 📂
+        uses: actions/checkout@v2
+      - name: Install Dependencies 📦
+        run: npm install
+      - name: Run Unit Tests 🧪
+        run: npm test
+      - name: Execute Linting Check ✔️
+        run: npm run lint
+
+  build:
+    name: Build Verification 🛠️
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container: node:lts
+    steps:
+      - name: Checkout Repository 📂
+        uses: actions/checkout@v3
+      - name: Install and Build Project ⚙️
+        run: |
+          npm install
+          npm run build
+      - name: Completion Notification 🎉
+        run: echo "Build process complete"
+
+  e2e:
+    name: E2E Tests with Playwright 🎭
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Repository 📂
+        uses: actions/checkout@v3
+      - name: Install Dependencies 📦
+        run: npm install
+      - name: Install Playwright Browsers 🔧
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E Tests 🎭
+        run: npm run test:e2e
+        continue-on-error: true

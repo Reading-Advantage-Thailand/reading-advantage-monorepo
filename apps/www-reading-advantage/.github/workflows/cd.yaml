@@ -1,0 +1,52 @@
+name: CD
+
+on:
+  push: 
+    branches: 
+      - main
+
+jobs:
+  deployment:
+    name: Application Deployment 🚀
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository 📂
+        uses: actions/checkout@v3
+
+      - id: "auth"
+        name: Authenticate with Google Cloud 🔑
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: "${{ secrets.GCP_SERVICE_ACCOUNT }}"
+
+      - name: Set Up Google Cloud SDK ☁️
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Verify gcloud CLI Configuration 🛠️
+        run: gcloud info
+
+      - name: Build and Push Docker Image 🐳
+        env:
+          GOOGLE_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          gcloud auth configure-docker asia-southeast1-docker.pkg.dev --quiet
+          docker build -t asia-southeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/app:latest .
+          docker push asia-southeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/app:latest
+
+      - name: Deploy to Cloud Run ☁️
+        env:
+          GOOGLE_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          gcloud run deploy www-reading-advantage \
+            --image asia-southeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/app:latest \
+            --platform managed \
+            --region asia-southeast1 \
+            --allow-unauthenticated \
+            --quiet
+
+      - name: Display Deployment URL 📋
+        run: |
+          echo "Application successfully deployed to Cloud Run"
+          gcloud run services describe www-reading-advantage --platform managed --region asia-southeast1 --format='value(status.url)'

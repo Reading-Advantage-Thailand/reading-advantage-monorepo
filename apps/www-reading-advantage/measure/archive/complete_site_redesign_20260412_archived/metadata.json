@@ -1,0 +1,11 @@
+{
+  "track_id": "complete_site_redesign_20260412",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-04-12T00:00:00Z",
+  "updated_at": "2026-04-12T00:00:00Z",
+  "description": "Complete site redesign applying the Clay-inspired design system defined in DESIGN.md across all pages, components, and layouts.",
+  "estimated_tasks": 35,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

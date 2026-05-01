@@ -1,0 +1,245 @@
+{
+  "lesson_number": "Lesson 1",
+  "lesson_title": "The Quest for the Golden Sword",
+  "level_name": "Level 3",
+  "cefr_level": "CEFR A1",
+  "article_type": "fiction",
+  "genre": "Fantasy",
+  "vocabulary": [
+    {
+      "word": "adventures",
+      "phonetic": "",
+      "definition": "exciting experiences that involve exploration or risk"
+    },
+    {
+      "word": "powerful",
+      "phonetic": "",
+      "definition": "having great strength or influence"
+    },
+    {
+      "word": "defeat",
+      "phonetic": "",
+      "definition": "to win against someone in a fight or competition"
+    },
+    {
+      "word": "scared",
+      "phonetic": "",
+      "definition": "feeling frightened or afraid"
+    },
+    {
+      "word": "fierce",
+      "phonetic": "",
+      "definition": "having a violent and intense nature"
+    }
+  ],
+  "article_image_url": "https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/images/i4iNzw6AArWrTOU0SE6f.png",
+  "article_caption": "Lila embarks on an epic quest to find a powerful golden sword, facing a dragon and returning as a hero.",
+  "article_url": "https://app.reading-advantage.com/th/student/read/i4iNzw6AArWrTOU0SE6f",
+  "article_paragraphs": [
+    {
+      "number": 1,
+      "text": "In a small village, there lived a brave girl named Lila. Lila loved adventures. One day, she heard a story. The story was about a golden sword. The sword was very powerful. It could defeat any monster. Lila wanted the sword. She wanted to be a hero. Lila packed her bag. She took food, water, and a map. She said goodbye to her mom. \"I will be back soon!\" she said. Lila walked into the dark forest. The trees were tall. The path was narrow."
+    },
+    {
+      "number": 2,
+      "text": "Lila felt scared but excited. Suddenly, she heard a roar. A big dragon appeared! The dragon was green and fierce. Lila was afraid. But she remembered the golden sword. \"I must find it!\" she thought. Lila ran past the dragon. She ran fast. After a long time, Lila found a cave. Inside the cave, she saw the golden sword. It shone bright. Lila took the sword. She felt strong. But the dragon followed her!"
+    },
+    {
+      "number": 3,
+      "text": "Lila turned to the dragon. \"I am not afraid!\" she shouted. She raised the sword. The dragon stopped. It looked scared. Lila smiled. \"You can go now!\" she said. The dragon flew away. Lila returned to her village. She was a hero. Everyone cheered. Lila was happy. She had the golden sword. She had a great adventure. Now, she was ready for more!"
+    }
+  ],
+  "comprehension_questions": [
+    {
+      "number": 1,
+      "question": "What did Lila shout to the dragon?",
+      "options": [
+        "I am not afraid!",
+        "Go away!",
+        "Help me!",
+        "Come here!"
+      ]
+    },
+    {
+      "number": 2,
+      "question": "What did Lila feel in the forest?",
+      "options": [
+        "Scared but excited",
+        "Happy and relaxed",
+        "Bored and tired",
+        "Angry and sad"
+      ]
+    },
+    {
+      "number": 3,
+      "question": "What did Lila pack in her bag?",
+      "options": [
+        "Food and water",
+        "Toys and games",
+        "Books and pencils",
+        "Clothes and shoes"
+      ]
+    },
+    {
+      "number": 4,
+      "question": "Where did Lila walk into?",
+      "options": [
+        "Dark forest",
+        "Bright city",
+        "Sunny beach",
+        "Cold mountain"
+      ]
+    }
+  ],
+  "short_answer_question": "What does Lila feel when she has the sword?",
+  "sentence_starters": [
+    "I think...",
+    "The article says...",
+    "In my opinion..."
+  ],
+  "vocab_match": [
+    {
+      "number": 1,
+      "word": "adventures",
+      "letter": "a",
+      "definition": "exciting experiences that involve exploration or risk"
+    },
+    {
+      "number": 2,
+      "word": "powerful",
+      "letter": "b",
+      "definition": "feeling frightened or afraid"
+    },
+    {
+      "number": 3,
+      "word": "defeat",
+      "letter": "c",
+      "definition": "having great strength or influence"
+    },
+    {
+      "number": 4,
+      "word": "scared",
+      "letter": "d",
+      "definition": "having a violent and intense nature"
+    },
+    {
+      "number": 5,
+      "word": "fierce",
+      "letter": "e",
+      "definition": "to win against someone in a fight or competition"
+    }
+  ],
+  "vocab_fill": [
+    {
+      "number": 1,
+      "sentence": "Lila loved <span class=\"blank\"></span>."
+    },
+    {
+      "number": 2,
+      "sentence": "The sword was very <span class=\"blank\"></span>."
+    },
+    {
+      "number": 3,
+      "sentence": "It could <span class=\"blank\"></span> any monster."
+    },
+    {
+      "number": 4,
+      "sentence": "Lila felt <span class=\"blank\"></span> but excited."
+    }
+  ],
+  "vocab_word_bank": [
+    "adventures",
+    "powerful",
+    "defeat",
+    "scared",
+    "fierce"
+  ],
+  "sentence_order_questions": [
+    {
+      "words": [
+        "a",
+        "lived",
+        "village,",
+        "In",
+        "girl",
+        "a",
+        "brave",
+        "named",
+        "small",
+        "there"
+      ]
+    },
+    {
+      "words": [
+        "scared",
+        "felt",
+        "excited",
+        "but",
+        "Lila"
+      ]
+    }
+  ],
+  "sentence_completion_prompts": [
+    {
+      "number": 1,
+      "prompt": "In a small village, there"
+    },
+    {
+      "number": 2,
+      "prompt": "Suddenly, she heard"
+    },
+    {
+      "number": 3,
+      "prompt": "\"I am not afraid!\" she"
+    }
+  ],
+  "writing_prompt": "Write about a character from the story. Who is your favorite character? Why do you like them? Use simple sentences. (25 words)",
+  "mc_answers": [
+    {
+      "number": 1,
+      "letter": "a",
+      "text": "I am not afraid!"
+    },
+    {
+      "number": 2,
+      "letter": "a",
+      "text": "Scared but excited"
+    },
+    {
+      "number": 3,
+      "letter": "a",
+      "text": "Food and water"
+    },
+    {
+      "number": 4,
+      "letter": "a",
+      "text": "Dark forest"
+    }
+  ],
+  "vocab_match_answer_string": "1-a, 2-c, 3-e, 4-b, 5-d",
+  "vocab_fill_answer_string": "1. adventures, 2. powerful, 3. defeat, 4. scared",
+  "sentence_order_answers": [
+    {
+      "number": 1,
+      "sentence": "In a small village, there lived a brave girl named."
+    },
+    {
+      "number": 2,
+      "sentence": "Lila felt scared but excited."
+    }
+  ],
+  "translation_paragraphs": [
+    {
+      "label": "Paragraph 1",
+      "text": "ในหมู่บ้านเล็กๆ แห่งหนึ่ง มีเด็กหญิงผู้กล้าหาญชื่อ ลีลา อาศัยอยู่ ลีลารักการผจญภัย วันหนึ่ง เธอได้ยินเรื่องราวเรื่องหนึ่ง เรื่องราวนั้นเกี่ยวกับดาบทองคำ ดาบนั้นทรงพลังมาก มันสามารถเอาชนะสัตว์ประหลาดใดก็ได้ ลีลาต้องการดาบนั้น เธออยากเป็นฮีโร่ ลีลาเก็บกระเป๋าของเธอ เธอเอาอาหาร น้ำ และแผนที่ เธอกล่าวลาแม่ของเธอ “ฉันจะกลับมาเร็วๆ นี้!” เธอพูด ลีลาเดินเข้าไปในป่าทึบ ต้นไม้สูงตระหง่าน ทางเดินแคบ"
+    },
+    {
+      "label": "Paragraph 2",
+      "text": "ลีลารู้สึกกลัวแต่ก็ตื่นเต้น ทันใดนั้น เธอได้ยินเสียงคำราม มังกรตัวใหญ่ปรากฏตัวขึ้น! มังกรตัวนั้นมีสีเขียวและดุร้าย ลีลากลัว แต่เธอจำดาบทองคำได้ “ฉันต้องหามันให้เจอ!” เธอคิด ลิล่วิ่งผ่านมังกรไป เธอวิ่งเร็ว หลังจากนั้นนาน ลิลาพบถ้ำ ข้างในถ้ำ เธอเห็นดาบทองคำ มันส่องแสงสว่าง ลิลาหยิบดาบ เธอรู้สึกแข็งแกร่ง แต่มังกรตามเธอมา!"
+    },
+    {
+      "label": "Paragraph 3",
+      "text": "ลิลาหันไปหามังกร “ฉันไม่กลัว!” เธอตะโกน เธอยกดาบขึ้น มังกรหยุด มันดูหวาดกลัว ลิลายิ้ม “ตอนนี้คุณไปได้แล้ว!” เธอกล่าว มังกรบินหนีไป ลิลากลับไปยังหมู่บ้านของเธอ เธอเป็นฮีโร่ ทุกคนโห่ร้อง ลิลามีความสุข เธอมีดาบทองคำ เธอมีการผจญภัยที่ยิ่งใหญ่ ตอนนี้เธอพร้อมสำหรับสิ่งอื่นๆ อีกมากมาย!"
+    }
+  ]
+}

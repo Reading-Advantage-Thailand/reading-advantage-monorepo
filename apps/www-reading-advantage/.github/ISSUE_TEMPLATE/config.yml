@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Spec Guidance
+    url: https://github.com/Reading-Advantage-Thailand/www-reading-advantage/tree/main/docs/specs
+    about: Review existing specs before filing new work.

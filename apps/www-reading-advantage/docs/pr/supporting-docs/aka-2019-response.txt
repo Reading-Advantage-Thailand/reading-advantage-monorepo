@@ -1,0 +1,268 @@
+Reading in a Foreign Language                                          October 2019, Volume 31, No. 2
+ISSN 1539-0578                                                                           pp. 296–301
+
+
+
+             Response to the critiques of the Aka (2019) article,
+ “Reading performance of Japanese high school learners following a one-year
+                       extensive reading program”
+                                         Natsuki Aka
+                                Okinawa International University
+                                             Japan
+
+
+First, I would like to thank Dr. Meredith Stephens for the insightful response to my article,
+“Reading performance of Japanese high school learners following a one-year extensive reading
+program” (Aka, 2019). Her constructive feedback on my article has helped me to expand my
+knowledge on the topic. I would like to clarify here that the purpose of the above study was to
+investigate the effects of extensive reading on the development of Japanese high school learners’
+linguistic knowledge and reading abilities. The findings revealed that the experimental group,
+who received a year of extensive reading, scored higher on the linguistic knowledge and reading
+sections of a post-test than the control group, who received grammar instruction instead. The
+study was conducted because previous studies on this topic have had some experimental
+limitations, as many studies have neglected the use of control groups, and few longitudinal
+studies have been conducted with high school learners. Overcoming these limitations would help
+to reveal the real effects of extensive reading; this possibility encouraged me to begin conducting
+further research on this important topic.
+
+There is no denying, as Dr. Stephens mentioned, that bi- and multiple-modal input might have
+enhanced learners’ linguistic knowledge and reading comprehension skills more because many
+studies on bi-modal input have shown the positive effect of augmenting learners’ vocabulary
+knowledge (Brown, Waring, & Donkaewbua, 2008; Teng, 2016; Webb & Chang, 2012), reading
+rate and comprehension (Chang & Millet, 2015), listening comprehension (Chang, 2009), and so
+on. My unpublished research, which I presented at the 4th Extensive Reading World Congress
+(ERWC), also supported the effects of reading while listening (RWL) on learners’ reading
+comprehension, especially among low proficiency groups (Aka, 2017). While acknowledging
+that bi- and multi-modal input is effective, I also suggest that learners need to become
+autonomous readers over time without depending heavily on audio support, which is a natural
+reading behavior. Moreover, there is a possibility that long-term use of bi- and multi-modal input
+might prevent students from learning to read autonomously. In this article, I would like to assert
+the importance of autonomous reading by discussing the findings of previous studies and the
+results of my unpublished research on the effects of bi-modal input – that is, the reading only
+(RO) mode and the reading while listening (RWL) mode – on reading comprehension and
+learners’ perceptions of them.
+
+As suggested above, bi-and multi-modal input is an important approach to supporting learners’
+reading fluency development. Amer (1997) showed that RWL helps learners to move beyond the
+
+                                      http://nflrc.hawaii.edu/rfl
+Aka: Response to the critiques of the Aka (2019) article                                        297
+
+bottom-up reading style and develop positive attitudes toward reading. Chang and Millet (2015)
+compared two groups of participants, audio-assisted and silent reading groups, and found that
+both groups improved their reading rates and reading comprehension levels after the intervention,
+but the improvement of the audio-assisted reading group was substantially higher than that of the
+silent reading group. Brown, Waring, and Dankaewbua (2008) also investigated the rate at which
+English vocabulary was acquired from the three input modes: RO, RWL, and listening only (LO)
+to stories with two test formats: 1) multiple-choice recognition test and 2) a meaning-by-
+translation test. The findings indicated that more repetitions were needed in listening (15-20) and
+reading (10-13) than reading while listening (7-9) for substantive improvement in incidental
+learning. Teng (2016) also investigated the effects of both the RO and RWL modes on
+vocabulary acquisition, and the best results occurred for the RWL group. These findings are
+similar to those of Brown et al. (2008), who found that the RWL mode required less word
+exposure than the RO mode for learners to acquire new vocabulary. These studies supported the
+effects of bi-modal input, however, the RWL mode works best when learners reading rates are
+slightly slower than the speech rates in audio recordings (Chang & Millet, 2015). In other words,
+if learners are able to read faster than the audio recording, they might feel frustrated listening to
+the audio while reading.
+
+My unpublished research presented at the 4th ERWC, compared the effects of RWL and RO on
+the reading comprehension of Japanese high school learners (Aka, 2017). The purpose of this
+study was to investigate whether the RWL mode is more effective than the RO mode in reading
+comprehension and to examine how learners perceive them in relation to their own reading
+comprehension. In the study, each participant undertook reading comprehension tests in both the
+RWL and RO modes. The results showed no statistically significant differences between the two
+modes, implying that neither mode influenced the learners’ reading comprehension scores.
+
+In the next stage, the study divided the participants into three different proficiency groups based
+on their scores of the New Vocabulary Levels Test (McLean & Kramer, 2015). The reason for
+dividing the participants into different proficiency groups is that it provides us with more
+detailed information about who needs audio support and who does not understand the passages.
+The findings showed that the different modes of reading did not affect reading performance in
+the high proficiency group (HPG) or middle proficiency group (MPG), while the low proficiency
+group (LPG) scored higher using the RWL mode than the RO mode (Figure 1). This is an
+indication that learners in the LPG depended more on audio support while reading than the HPG
+and MPG in order to understand the reading passages.
+
+
+
+
+Reading in a Foreign Language 31(2)
+Aka: Response to the critiques of the Aka (2019) article                                                    298
+
+
+
+                                   10.00
+
+                                    9.50
+                                                                                 9.08
+                                    9.00                        8.68
+                                                                                 8.97
+                                    8.50
+                                           8.00
+                                    8.00                        8.34
+                                                                                        RO
+                                    7.50
+
+                           Score
+                                    7.00                                                RWL
+                                            7.00
+                                    6.50
+
+                                    6.00
+
+                                    5.50
+
+                                    5.00
+                                           Low                 Mid               High
+                                                   Learners' Proficiency Level
+
+                Figure 1. Reading comprehension test scores in RWL and RO modes
+
+In addition to the reading comprehension tests, a questionnaire was also implemented asking the
+participants whether they preferred the RWL mode or RO mode. In addition, one open-ended
+question was asked to the learners about why they preferred that mode and how it affected their
+reading comprehension. The results showed that 60.84% of the students preferred the RWL
+mode to the RO mode to help them comprehend reading passages, while 39.16% of learners
+responded that they better understood the passages with the RO mode (Table 1). Overall, a large
+proportion of participants preferred the RWL mode to RO mode, especially those in the LPG.
+This result implies that low proficiency learners need more audio support than high and middle
+proficiency learners.
+
+Table 1. Learners' perceptions of the RWL and RO modes
+                                                           RWL                                   RO
+           HPG (n=51)                                 30 (58.82%)                             21 (41.18%)
+           MPG (n=69)                                 39 (56.52%)                             30 (43.38%)
+           LPG (n=46)                                 32 (69.57%)                             14 (30.43%)
+          Total (n=166)                              101 (60.84%)                             65 (39.16%)
+
+In the open-ended question, the participants were asked to explain their preference for the RWL
+or RO mode. The participants who preferred the RWL mode made comments such as the
+following:
+
+Student 1: I can better understand how the words sound like.
+Student 2: I can better understand the meaning of the words by listening to the audio.
+Student 3: By the listening to the audio, I did not need to read the passage by myself.
+Student 4: It is hard to understand without knowing how to pronounce words, but listening to the
+          audio gives you appropriate sounds; therefore, it is easy to understand the meaning of
+          a passage.
+
+Reading in a Foreign Language 31(2)
+Aka: Response to the critiques of the Aka (2019) article                                        299
+
+Student 5: Information from listening to the audio tends to remain more in my memory than
+            without audio support.
+
+On the other hand, the participants who preferred the RO mode made comments as the following:
+
+Student 6: I can take the time to read a passage at my own pace.
+Student 7: I can re-read a passage until I understand.
+Student 8: There is no time to think during reading while listening mode, as the audio does not
+            stop.
+           However, with reading only mode, I can take time and go back to unknown words or
+           sentences again and guess their meanings.
+Student 9: I can read something again that I could not understand well.
+Student 10: I can read at my own pace.
+
+Based on their comments, students who preferred the RWL mode faced difficulties decoding
+written words into phonologically correct sounds. They felt comfortable listening to the audio
+recording of the passage while reading along. However, Student 3 mentioned that he did not
+need to read it by himself, which indicates that some students may just listen to the audio without
+reading the passage. On the other hand, most of the learners who preferred the RO mode
+answered that they liked it because they could read at their own pace. Their comments indicate
+that some of them might have read back and forth repeatedly to comprehend the passage, while
+others read faster than the audio recording, which prevented them from reading at their own pace.
+
+The result of the reading comprehension tests and the learners’ perceptions of the two modes of
+readings suggest that as a learner’s proficiency level increases, the less they need audio support
+to help with their reading comprehension. In this study, the participants in the HPG and MPG
+had already achieved 80% of comprehension levels in both RWL and RO modes, while learners
+in the LPG scored 80% in the RWL mode, but only 70% in the RO mode (Figure 1). The results
+of the questionnaire also showed only 30% of learners in the LPG felt comfortable with the RO
+mode compared to the RWL mode, while over 40% of learners in the HPG and MPG reported
+that they preferred the RO mode to the RWL mode. Therefore, using the audio support might
+help low proficiency learners improve their reading fluency skills. During the process of reading
+while listening to an audio version of the story, low proficiency learners have likely been
+learning the words by making form-meaning connections through reading while listening, which
+in turn improves their reading abilities.
+
+I do not believe that the mono-modal approach is an effective approach for all learners. Learners
+should engage in ample supplementary reading using a multi-dimensional approach in their
+private studies, which would enhance their reading skills and improve their general English
+learning motivation as well (Cheetham, 2017). However, a one-year bi- and multi-modal
+extensive instructional program in the English as a Foreign Language (EFL) classroom, as Dr.
+Stephens suggested, might prevent higher learners’ progress toward the goal of autonomous
+reading. Cheetham (2017) also pointed out that the benefits from bi-modal input vary from
+learner to learner. In the EFL classroom, some learners still need audio support while reading,
+whereas others who can read faster than audio recordings are better off reading by themselves
+without audio support because this is a natural reading behavior. It would be great if each learner
+
+Reading in a Foreign Language 31(2)
+Aka: Response to the critiques of the Aka (2019) article                                       300
+
+could adjust the speed of the audio recording to a level that is appropriate for them. In reality,
+however, learners in the EFL classroom usually listen to audio recordings all together due to
+technological limitations; therefore, some learners might consider the speed too fast while others
+might consider it too slow. This is one of the limitations of my research.
+
+I am also interested in the effects of bi-and multi-modal input on the development of learners’
+reading fluency skills. According to Cheetham (2017), the learning benefits of bi-modal input
+may not occur soon after the intervention. In other words, it takes time for learners to get
+accustomed to the bi-modal learning method; however, Cheetham (2017) points out that bi-
+modal input helps learners reduce input overload compared to mono-modal input and improves
+their reading ability over time. In future research, I would like to more clearly identify at what
+point learners still need audio support for reading comprehension, and at what point they do not.
+In addition, I would like to investigate what aspects of audio support would contribute to
+learners’ reading comprehension. I would like to thank Dr. Stephens again for her insightful
+comments on my article. I hope this response has served to dispel any doubts concerning the
+subject.
+
+
+References
+
+Aka, N. (2019). Reading performance of Japanese high school learners of following a one-year
+       extensive reading program. Reading in a Foreign Language, 31, 1–18.
+Aka, N. (2017, August). Effects of reading while listening and reading only on reading
+       comprehension of Japanese engineering EFL learners. Paper presented at The 4th
+       Extensive Reading World Congress at Toyo Gakuen University, Tokyo, Japan.
+       Presentation slides retrieved from:
+       https://www.dropbox.com/sh/x5wvi4eae8knafp/AACeNu-
+       3ULpHLmbSHyOPAJQka?dl=0&preview=Aka_Effects_of_RWL___RO+(1).pdf
+Amer, A. (1997). The effect of the teacher’s reading aloud on the reading comprehension of EFL
+       students. ELT Journal, 51, 43–47.
+Brown, R., Waring, R., & Donkaewbua, R. (2008). Incidental vocabulary acquisition from
+       reading, reading-while-listening, and listening to stories. Reading in a Foreign Language,
+       20, 136–163.
+Chang, C.-S. (2009). Gains to L2 listeners from reading while listening vs. listening only in
+       comprehending short stories. System, 37, 652–663.
+       doi:http://dx.doi.org/10.1016/j.system.2009.09.009
+Chang, C.-S., & Millet, S. (2015). Improving reading rates and comprehension through audio
+      assisted extensive reading for beginner learners. System, 52, 91–102.
+Cheetham, D. (2017). Multi-modal language input: A learned superadditive effect. Applied
+      Linguistics Review, Advance Online Publication, 1–22. doi:10.1515/applirev-2017-0036
+McLean, S., & Kramer, B. (2015). The creation of a new vocabulary levels tests. JALT, Testing
+      and Evaluation SIG Newsletter, 19(2), 1–12.
+Teng, F. (2016). Incidental vocabulary acquisition from reading-only and reading-while-listening:
+       a multidimensional approach. Innovation in Language Learning and Teaching, 1–15.
+       doi:https://doi.org/10.1080/17501229.2016.1203328
+
+
+
+Reading in a Foreign Language 31(2)
+Aka: Response to the critiques of the Aka (2019) article                                       301
+
+Webb, S., & Chang, C-S. A. (2012). Vocabulary learning through assisted and unassisted
+      repeated reading. The Canadian Modern Language Review, 68, 267–290.
+      doi:10.3138/cmlr.1204.1
+
+
+About the Author
+
+Natsuki Aka is a lecturer at Okinawa International University. Her areas of interest include
+second language reading, especially reading fluency development. Email: natsuki@okiu.ac.jp
+
+
+
+
+Reading in a Foreign Language 31(2)
+

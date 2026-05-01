@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(git-workflow)",
+      "Bash(gh issue:*)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:authjs.dev)",
+      "Bash(npx prisma:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)",
+      "Bash(gh pr:*)",
+      "Bash(npm run lint)",
+      "Bash(git switch:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run dev)",
+      "Bash(find:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(git push:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(git add:*)",
+      "Bash(git log:*)",
+      "Bash(git commit:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh label:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "track_id": "blog_day02_pisa_crisis_20260423",
+  "type": "feature",
+  "status": "completed",
+  "created_at": "2026-04-23T00:00:00Z",
+  "updated_at": "2026-04-23T00:00:00Z",
+  "description": "Create Day 2 blog post for 30-Day Advantage Blog Marketing Campaign - The PISA Crisis: Why Reading is a Math Problem",
+  "estimated_tasks": 6,
+  "actual_tasks": 6,
+  "deviation_notes": "Build verification skipped due to pre-existing TypeScript error in revideo/project.ts (unrelated to this track)"
+}

@@ -1,0 +1,11 @@
+{
+  "track_id": "migrate-www-reading-advantage_20260501",
+  "type": "feature",
+  "status": "complete",
+  "created_at": "2026-05-01T00:00:00Z",
+  "updated_at": "2026-05-01T00:00:00Z",
+  "description": "Migrate www-reading-advantage into monorepo with React 18→19 and Tailwind v3→v4 upgrades",
+  "estimated_tasks": 10,
+  "actual_tasks": 10,
+  "deviation_notes": ""
+}

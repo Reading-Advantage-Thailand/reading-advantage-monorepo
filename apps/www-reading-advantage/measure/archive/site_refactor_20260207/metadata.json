@@ -1,0 +1,8 @@
+{
+  "track_id": "site_refactor_20260207",
+  "type": "chore",
+  "status": "completed",
+  "created_at": "2026-02-07T12:00:00Z",
+  "updated_at": "2026-02-08T00:00:00Z",
+  "description": "Site-wide refactor addressing appearance, performance, accessibility, and code quality issues identified in the Measure Audit (REFACTOR.md)"
+}

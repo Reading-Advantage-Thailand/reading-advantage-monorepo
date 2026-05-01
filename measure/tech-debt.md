@@ -27,3 +27,7 @@
 | 2026-05-01 | migrate-primary-advantage | primary-advantage: NextAuth v5 beta | Medium | Open | Uses `next-auth ^5.0.0-beta.29`. Upgrade to stable when available. |
 | 2026-05-01 | migrate-primary-advantage | primary-advantage: Prisma schema separate from reading-advantage | Medium | Open | Two separate Prisma schemas. Future: unify or document boundary. |
 | 2026-05-01 | migrate-primary-advantage | primary-advantage: missing `base64-js` dependency | Low | Open | Was missing from package.json; added during migration. |
+| 2026-05-01 | migrate-www | www: `ignoreBuildErrors: true` / `ignoreDuringBuilds: true` | Medium | Open | Temporarily enabled. Pre-existing TS errors. Fix incrementally. |
+| 2026-05-01 | migrate-www | www: 2 Vitite test suite failures (transform errors) | Low | Open | Vite transform errors in 2 suites. 403/403 individual tests pass. Likely pre-existing. |
+| 2026-05-01 | migrate-www | www: `next-international` vs `next-intl` across apps | Medium | Open | www uses `next-international`, reading/primary use `next-intl`. Consider unifying. |
+| 2026-05-01 | migrate-www | www: revideo dependencies in devDependencies | Low | Open | `@revideo/*` packages are heavy dev deps. Verify they're still needed. |

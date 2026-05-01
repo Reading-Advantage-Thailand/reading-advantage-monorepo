@@ -1,0 +1,8 @@
+{
+  "track_id": "blog_marketing_generation_20260421",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-04-21T00:00:00Z",
+  "updated_at": "2026-04-21T00:00:00Z",
+  "description": "Generate 30 blog posts localized into English and Thai using the mmx cli tool with the create-image-mmx skill."
+}

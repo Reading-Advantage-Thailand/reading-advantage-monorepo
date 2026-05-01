@@ -1,0 +1,32 @@
+name: "Story: Implement spec change"
+description: Track implementation work tied to an approved spec.
+title: "Story: <spec capability> - <summary>"
+labels:
+  - story
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Link to the spec/section that describes this change. Update the spec first if needed (`init-spec`).
+  - type: input
+    id: spec
+    attributes:
+      label: Spec reference
+      description: Path to the spec section (e.g., docs/specs/content/blogging/spec.md#acceptance-criteria).
+      placeholder: docs/specs/.../spec.md#section
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context & approach
+      description: Summarize implementation plan, dependencies, and testing focus.
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Definition of Done
+      options:
+        - label: Spec is up to date and linked
+        - label: Tests planned/updated
+        - label: Docs/PRD impact assessed
+        - label: Rollout/analytics impacts considered
