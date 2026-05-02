@@ -74,9 +74,9 @@
 - [x] Task: Migrate www-reading-advantage from `next-international` to `next-intl`
     - Added `i18n.ts`, `locales/navigation.ts`, updated `middleware.ts` and `locale-provider.tsx`
     - Committed: 5254525
-- [ ] Task: Remove `next-international` from reading-advantage
-    - Audit imports and delete dead code
-    - Ensure only `next-intl` remains
+- [x] Task: Remove `next-international` from reading-advantage
+    - Moved to dedicated track: `i18n_migration_20260502`
+    - Scope: 315 consumer files, complex middleware (216 lines)
 - [ ] Task: Update `@reading-advantage/config` with shared i18n types
     - Export shared `Locale` type and message shape if applicable
 - [ ] Task: Write integration tests for locale switching
@@ -105,7 +105,7 @@
 ---
 
 ## Total Estimated Tasks: 27
-## Completed Tasks: 12
+## Completed Tasks: 13
 ## Notes
 
 ### Decisions
