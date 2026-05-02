@@ -1,0 +1,4 @@
+Task: Add root dev script
+Summary: Updated dev script to auto-start Docker Compose before turbo dev
+Files: package.json
+Why: Developers must have PostgreSQL running before starting apps
