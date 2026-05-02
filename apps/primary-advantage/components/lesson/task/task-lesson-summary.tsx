@@ -22,7 +22,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Article, WordListTimestamp } from "@/types";
 import { getLessonSummaryData } from "@/actions/article";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 
 interface WordList {
   vocabulary: string;

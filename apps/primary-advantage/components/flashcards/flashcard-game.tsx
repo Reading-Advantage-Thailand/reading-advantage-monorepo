@@ -25,7 +25,7 @@ import AudioButton from "../audio-button";
 import { Rating } from "ts-fsrs";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 
 interface FlashcardGameInlineProps {
   deck: {

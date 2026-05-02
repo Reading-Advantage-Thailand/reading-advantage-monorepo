@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Icons } from "@/components/icons";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 

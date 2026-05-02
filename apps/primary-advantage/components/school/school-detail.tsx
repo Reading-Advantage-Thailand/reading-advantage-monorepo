@@ -41,7 +41,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AddAdminDialog } from "./add-admin-dialog";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 

@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { finishQuiz } from "@/actions/question";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 
 export default function MCQuestionContent({
   articleId,

@@ -39,7 +39,7 @@ import { useRouter } from "@/i18n/navigation";
 import { getLessonOrderingWords } from "@/actions/flashcard";
 import { ActivityType, UserXpEarned } from "@/types/enum";
 import { updateUserActivity } from "@/actions/user";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 
 interface OrderWordData {
   id: string;

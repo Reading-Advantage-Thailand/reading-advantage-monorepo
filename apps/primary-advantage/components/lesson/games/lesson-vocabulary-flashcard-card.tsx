@@ -64,7 +64,7 @@ import { cn } from "@/lib/utils";
 import { reviewCard } from "@/actions/flashcard";
 import { QuizContext, QuizContextProvider } from "@/contexts/question-context";
 import { updateUserActivity } from "@/actions/user";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 
 // FSRS Configuration
 const f = fsrs(generatorParameters({ enable_fuzz: true }));

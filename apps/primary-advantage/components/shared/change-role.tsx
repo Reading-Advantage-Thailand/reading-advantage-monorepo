@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { UserCircle, GraduationCap, School, Ghost } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 import { useRouter } from "@/i18n/navigation";
 import React, { useState } from "react";
 import { Role } from "@/types/enum";

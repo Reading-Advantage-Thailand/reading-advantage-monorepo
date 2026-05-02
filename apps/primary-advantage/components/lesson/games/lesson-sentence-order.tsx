@@ -38,7 +38,7 @@ import {
 } from "@/actions/flashcard";
 import { ActivityType, FlashcardType, UserXpEarned } from "@/types/enum";
 import { updateUserActivity } from "@/actions/user";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 
 interface OrderSentenceData {
   id: string;

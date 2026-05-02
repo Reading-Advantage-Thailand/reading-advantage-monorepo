@@ -65,7 +65,7 @@ import { reviewCard } from "@/actions/flashcard";
 import { QuizContext, QuizContextProvider } from "@/contexts/question-context";
 import { updateUserActivity } from "@/actions/user";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 
 enum GameState {
   LOADING = "LOADING",

@@ -40,7 +40,7 @@ import { Icons } from "@/components/icons";
 import { finishQuiz, getFeedback } from "@/actions/question";
 import { useLocale, useTranslations } from "next-intl";
 import { convertLocaleFull } from "@/lib/utils";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 
 interface FeedbackData {
   detailedFeedback: {

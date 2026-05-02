@@ -21,7 +21,7 @@ import { ActivityType, AnswerStatus, QuestionState } from "@/types/enum";
 import { Article, MCQuestion } from "@/types";
 import { finishQuiz, retakeQuiz } from "@/actions/question";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/next-auth-compat";
 
 interface LessonMCQProps {
   article: Article;
