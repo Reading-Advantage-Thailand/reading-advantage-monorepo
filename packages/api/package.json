@@ -23,11 +23,13 @@
     "@trpc/server": "^11.1.0",
     "@trpc/client": "^11.1.0",
     "bcryptjs": "^2.4.3",
+    "drizzle-orm": "^0.44.0",
     "superjson": "^2.2.2",
     "zod": "^3.24.0"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.0.0",
     "typescript": "^5.8.0",
     "tsx": "^4.19.0",
