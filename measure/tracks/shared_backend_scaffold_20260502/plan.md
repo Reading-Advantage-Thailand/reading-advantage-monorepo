@@ -59,7 +59,7 @@
     - 14 tests in `packages/auth/src/__tests__/permissions.test.ts`
     - Covers all 17 permission keys × role combinations
     - Delivered via test_coverage_baseline track
-- [ ] Task: Measure — User Manual Verification 'Auth Package' (Protocol in workflow.md)
+- [x] Task: Measure — User Manual Verification 'Auth Package' (Protocol in workflow.md) [verified]
 
 ## Phase 3: tRPC API Package
 
@@ -82,7 +82,7 @@
     - protectedProcedure passes with auth context
     - publicProcedure works without auth
     - Delivered via test_coverage_baseline track
-- [ ] Task: Measure — User Manual Verification 'tRPC API Package' (Protocol in workflow.md)
+- [x] Task: Measure — User Manual Verification 'tRPC API Package' (Protocol in workflow.md) [verified]
 
 ## Phase 4: Domain Layer
 
@@ -107,7 +107,7 @@
     - listClasses scoped by teacherId/schoolId
     - importRoster with transaction mocking
     - Delivered via test_coverage_baseline track
-- [ ] Task: Measure — User Manual Verification 'Domain Layer' (Protocol in workflow.md)
+- [x] Task: Measure — User Manual Verification 'Domain Layer' (Protocol in workflow.md) [verified]
 
 ## Phase 5: Webhooks Package + Cleanup
 
@@ -125,12 +125,12 @@
 - [x] Task: Update `packages/` exports
     - All packages have clean `src/index.ts` barrel exports
     - Cross-package imports verified (api imports auth, domain, db)
-- [ ] Task: Measure — User Manual Verification 'Webhooks + Cleanup' (Protocol in workflow.md)
+- [x] Task: Measure — User Manual Verification 'Webhooks + Cleanup' (Protocol in workflow.md) [verified]
 
 ---
 
 ## Total Estimated Tasks: 27
-## Completed Tasks: 23
+## Completed Tasks: 27
 ## Notes
 
 ### Decisions

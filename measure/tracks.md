@@ -26,9 +26,9 @@ This file tracks all major tracks for the project.
 
 - [x] **Track: Test Coverage Baseline** (29/29 tasks)
   *Link: [./archive/test_coverage_baseline_20260502/](./archive/test_coverage_baseline_20260502/)*
-- [ ] **Track: Unified CI/CD Pipeline** (12/18 tasks)
+- [x] **Track: Unified CI/CD Pipeline** (18/18 tasks)
   *Link: [./tracks/unified_ci_cd_pipeline_20260502/](./tracks/unified_ci_cd_pipeline_20260502/)*
-- [ ] **Track: Shared Backend: Scaffold + Schema Unification** (23/27 tasks)
+- [x] **Track: Shared Backend: Scaffold + Schema Unification** (27/27 tasks)
   *Link: [./tracks/shared_backend_scaffold_20260502/](./tracks/shared_backend_scaffold_20260502/)*
 - [ ] **Track: Shared Backend: Auth Migration** (4/15 tasks)
   *Link: [./tracks/shared_backend_auth_20260502/](./tracks/shared_backend_auth_20260502/)*
