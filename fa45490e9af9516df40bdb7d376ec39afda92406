@@ -1,0 +1,4 @@
+Task: Replace Firebase Auth with tRPC auth in reading-advantage
+Summary: Added tRPC API route, provider, client, and useTrpcAuth hook. Rewrote sign-in and sign-up forms.
+Files: app/api/trpc/[trpc]/route.ts, lib/trpc.ts, lib/use-trpc-auth.ts, components/providers/trpc-provider.tsx, components/user-signin-form.tsx, components/user-signup-form.tsx, app/[locale]/layout.tsx, package.json
+Why: Core auth flow migration from Firebase+NextAuth to unified tRPC backend
