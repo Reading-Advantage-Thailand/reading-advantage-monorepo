@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
@@ -19,21 +19,25 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setError("");
-    
+
     const target = event.target as typeof event.target & {
-      email: { value: string };
+      username: { value: string };
+      name: { value: string };
       password: { value: string };
       confirmPassword: { value: string };
     };
-    
-    const email = target.email.value;
+
+    const username = target.username.value;
+    const name = target.name.value;
     const password = target.password.value;
     const confirmPassword = target.confirmPassword.value;
+
     if (password !== confirmPassword) {
       setError("Password does not match");
       return;
     }
-    const user = await register(email, password, email.split("@")[0]);
+
+    const user = await register(username, password, name);
     if (user) {
       window.location.href = "/";
     }
@@ -43,16 +47,29 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
       <form onSubmit={onSubmit}>
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
-              Email
+            <Label className="sr-only" htmlFor="username">
+              Username
             </Label>
             <Input
-              id="email"
-              placeholder="name@example.com"
-              type="email"
+              id="username"
+              placeholder="username"
+              type="text"
               autoCapitalize="none"
-              autoComplete="email"
+              autoComplete="username"
               autoCorrect="off"
+              disabled={isLoading}
+              required
+            />
+          </div>
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="name">
+              Name
+            </Label>
+            <Input
+              id="name"
+              placeholder="Your name"
+              type="text"
+              autoComplete="name"
               disabled={isLoading}
               required
             />
@@ -66,7 +83,7 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
               placeholder="password"
               type="password"
               autoCapitalize="none"
-              autoComplete="password"
+              autoComplete="new-password"
               autoCorrect="off"
               disabled={isLoading}
               required
@@ -81,7 +98,7 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
               placeholder="confirm password"
               type="password"
               autoCapitalize="none"
-              autoComplete="password"
+              autoComplete="new-password"
               autoCorrect="off"
               disabled={isLoading}
               required

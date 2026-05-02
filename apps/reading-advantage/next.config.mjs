@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  transpilePackages: [],
+  transpilePackages: ["@reading-advantage/auth-client", "@reading-advantage/ui", "@reading-advantage/utils"],
   reactStrictMode: false,
   pageExtensions: ["tsx", "ts", "jsx", "js"],
   typescript: {

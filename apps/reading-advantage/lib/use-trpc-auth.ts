@@ -1,14 +1,10 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { trpc } from "@/lib/trpc";
-
-const TOKEN_KEY = "ra_access_token";
-const REFRESH_KEY = "ra_refresh_token";
 
 export interface TrpcAuthUser {
   id: string;
-  email: string;
+  username: string;
   name: string | null;
   role: string;
   schoolId: string | null;
@@ -18,25 +14,24 @@ export function useTrpcAuth() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-  const loginMutation = trpc.auth.login.useMutation();
-  const registerMutation = trpc.auth.register.useMutation();
-  const migrateMutation = trpc.auth.migrate.useMutation();
-
-  const setTokens = useCallback((accessToken: string, refreshToken: string) => {
-    localStorage.setItem(TOKEN_KEY, accessToken);
-    localStorage.setItem(REFRESH_KEY, refreshToken);
-    // Set a cookie so server-rendered pages can read the token
-    document.cookie = `ra_access_token=${accessToken}; path=/; max-age=604800`;
-  }, []);
-
   const login = useCallback(
-    async (email: string, password: string): Promise<TrpcAuthUser | null> => {
+    async (username: string, password: string): Promise<TrpcAuthUser | null> => {
       setIsLoading(true);
       setError("");
       try {
-        const result = await loginMutation.mutateAsync({ email, password });
-        setTokens(result.accessToken, result.refreshToken);
-        return result.user;
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ message: "Login failed" }));
+          throw new Error(err.message ?? "Login failed");
+        }
+
+        const data = await res.json();
+        return data.user;
       } catch (err: unknown) {
         const msg =
           err instanceof Error ? err.message : "Login failed";
@@ -46,45 +41,31 @@ export function useTrpcAuth() {
         setIsLoading(false);
       }
     },
-    [loginMutation, setTokens]
-  );
-
-  const migrate = useCallback(
-    async (email: string, password: string): Promise<TrpcAuthUser | null> => {
-      setIsLoading(true);
-      setError("");
-      try {
-        const result = await migrateMutation.mutateAsync({ email, password });
-        setTokens(result.accessToken, result.refreshToken);
-        return result.user;
-      } catch (err: unknown) {
-        const msg =
-          err instanceof Error ? err.message : "Migration failed";
-        setError(msg);
-        return null;
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [migrateMutation, setTokens]
+    []
   );
 
   const register = useCallback(
     async (
-      email: string,
+      username: string,
       password: string,
       name: string
     ): Promise<TrpcAuthUser | null> => {
       setIsLoading(true);
       setError("");
       try {
-        const result = await registerMutation.mutateAsync({
-          email,
-          password,
-          name,
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password, name }),
         });
-        setTokens(result.accessToken, result.refreshToken);
-        return result.user;
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ message: "Registration failed" }));
+          throw new Error(err.message ?? "Registration failed");
+        }
+
+        const data = await res.json();
+        return data.user;
       } catch (err: unknown) {
         const msg =
           err instanceof Error ? err.message : "Registration failed";
@@ -94,18 +75,22 @@ export function useTrpcAuth() {
         setIsLoading(false);
       }
     },
-    [registerMutation, setTokens]
+    []
   );
 
-  const logout = useCallback(() => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(REFRESH_KEY);
-    document.cookie = "ra_access_token=; path=/; max-age=0";
+  const logout = useCallback(async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // Silently handle logout failure
+    }
   }, []);
 
   const getAccessToken = useCallback((): string | null => {
-    return localStorage.getItem(TOKEN_KEY);
+    if (typeof document === "undefined") return null;
+    const match = document.cookie.match(/session_token=([^;]+)/);
+    return match ? match[1] : null;
   }, []);
 
-  return { login, register, migrate, logout, getAccessToken, isLoading, error };
+  return { login, register, logout, getAccessToken, isLoading, error };
 }

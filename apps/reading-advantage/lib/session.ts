@@ -112,6 +112,7 @@ export async function getCurrentUser() {
 
     return {
       id: user.id,
+      username: session.user.username ?? user.email ?? "",
       email: user.email ?? "",
       display_name: user.name ?? "",
       role: user.role,

@@ -34,7 +34,12 @@ function isPublicPage(normalizedPath: string): boolean {
 }
 
 async function middleware(req: NextRequest) {
-  const token = await getToken({ req });
+  let token = null;
+  try {
+    token = await getToken({ req });
+  } catch {
+    // NextAuth not fully configured — treat as unauthenticated
+  }
   const isAuth = !!token;
   const authLocales = routing.locales;
 

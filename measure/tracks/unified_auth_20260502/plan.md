@@ -16,7 +16,7 @@
 - [x] Task: Write schema tests
     - Verify table definitions export correctly
     - Verify enum values match expected roles
-- [~] Task: Generate Drizzle migration
+- [ ] Task: Generate Drizzle migration [deferred — schema is rewritten but migration not yet generated; must run `drizzle-kit generate`]
 - [x] Task: Run `pnpm turbo run build --filter=@reading-advantage/db`
 - [x] Task: Commit schema changes
 
@@ -102,24 +102,28 @@
 
 ---
 
-## Phase 5: App Migrations
+## Phase 5: App Migrations (NOT STARTED)
 
 ### 5a: reading-advantage
-- [ ] Task: Remove `NextAuthSessionProvider` from root layout, keep only `TRPCProvider`
+- [~] Task: Add `@reading-advantage/auth-client` dependency (already present in package.json)
+- [x] Task: Remove `NextAuthSessionProvider` from root layout, wire `AuthProvider` [df57236]
+- [x] Task: Create shared auth route handlers at `app/api/auth/login|session|logout|impersonate/route.ts` [df57236]
+- [~] Task: Rewrite `lib/session.ts` — `getCurrentUser()` validates via Drizzle session, enriches via Prisma
+- [~] Task: Rewrite sign-in page to use `useAuth().login(username, password)` from `@reading-advantage/auth-client` [fixes applied in review remediation]
+- [~] Task: Rewrite `lib/use-trpc-auth.ts` — remove dead tRPC auth procedures, use cookie-based API routes [fixes applied in review remediation]
+- [~] Task: Fix `TRPCProvider` token propagation — send session_token cookie header [fixes applied in review remediation]
+- [ ] Task: Update 22+ files importing from `next-auth/react` to use `@reading-advantage/auth-client`
 - [ ] Task: Delete `app/api/auth/[...nextauth]/route.ts`
 - [ ] Task: Delete `lib/auth.ts` (NextAuth config)
-- [ ] Task: Rewrite `lib/session.ts` — `getCurrentUser()` uses session cookie instead of NextAuth/JWT
-- [ ] Task: Create shared auth route handlers at `app/api/auth/login|session|logout|impersonate/route.ts`
-- [ ] Task: Rewrite sign-in page to use `useAuth().login(username, password)`
-- [ ] Task: Update 22+ files importing from `next-auth/react` to use `@reading-advantage/auth-client`
 - [ ] Task: Remove `next-auth` from package.json
 - [ ] Task: Run `pnpm turbo run build --filter=reading-advantage`
 
 ### 5b: primary-advantage
+- [x] Task: Create shared auth route handlers at `app/api/auth/login|session|logout|impersonate/route.ts`
+- [x] Task: Fix `<a>` elements in teacher-signin-form to use locale-aware `<Link>`
 - [ ] Task: Remove `lib/auth.ts` (NextAuth v5 config)
 - [ ] Task: Remove `app/api/auth/[...nextauth]/route.ts`
 - [ ] Task: Remove `lib/next-auth-compat.ts` shim
-- [ ] Task: Create shared auth route handlers
 - [ ] Task: Update remaining `next-auth/react` imports
 - [ ] Task: Run `pnpm turbo run build --filter=primary-advantage`
 
@@ -142,7 +146,8 @@
 
 ---
 
-## Total Estimated Tasks: 40
+## Total Estimated Tasks: 47
+## Status: Phases 1–4 done, Phase 5 partially started (~30%), Phase 6 not started
 ## Notes
 
 ### Key Decisions

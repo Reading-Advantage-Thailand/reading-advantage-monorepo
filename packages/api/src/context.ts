@@ -3,12 +3,22 @@ import { validateSession, type AuthContext, type UserContext, type Tenant, type 
 import type { Context } from "./trpc.js";
 import { cookies } from "next/headers";
 
-export async function createContext(): Promise<Context> {
+interface CreateContextOptions {
+  authorization?: string | null;
+}
+
+export async function createContext(opts: CreateContextOptions = {}): Promise<Context> {
   let auth: AuthContext | null = null;
 
   try {
+    // Primary: read session_token from httpOnly cookie
     const cookieStore = await cookies();
-    const token = cookieStore.get("session_token")?.value;
+    let token = cookieStore.get("session_token")?.value;
+
+    // Fallback: read from Authorization header (for client-side tRPC calls)
+    if (!token && opts.authorization?.startsWith("Bearer ")) {
+      token = opts.authorization.slice(7);
+    }
 
     if (token) {
       const session = await validateSession(db, token);

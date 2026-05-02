@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --external react",
+    "build": "tsup src/index.ts --format esm --dts",
     "lint": "eslint .",
     "test": "vitest run",
     "check-types": "tsc --noEmit"

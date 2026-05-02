@@ -16,7 +16,11 @@ function getDatabaseUrl(): string {
   }
 
   if (!dbUrl) {
-    throw new Error("DATABASE_URL is not set");
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("DATABASE_URL is not set");
+    }
+    console.warn("⚠️  DATABASE_URL is not set, using placeholder for dev");
+    return "postgresql://placeholder:placeholder@localhost:5432/placeholder?schema=public";
   }
 
   try {
@@ -35,11 +39,13 @@ function getDatabaseUrl(): string {
   return dbUrl;
 }
 
-// During build time with placeholder, create a mock Prisma client
+// During build time or dev without DATABASE_URL, create a mock Prisma client
+const shouldUseProxy = (isPlaceholder || isBuildTime || !process.env.DATABASE_URL) && typeof window === "undefined";
+
 export const prisma: PrismaClient =
   globalForPrisma.prisma ||
   (() => {
-    if ((isPlaceholder || isBuildTime) && typeof window === "undefined") {
+    if (shouldUseProxy) {
       return new Proxy({} as PrismaClient, {
         get: (target, prop) => {
           if (prop === "$disconnect" || prop === "$connect") {
