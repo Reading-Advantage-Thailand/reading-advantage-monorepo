@@ -3,35 +3,26 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import React from "react";
 import { AuthProvider, useAuth, useSession, useRequireAuth } from "../index.js";
 
-// Mock localStorage
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: (key: string) => store[key] ?? null,
-    setItem: (key: string, value: string) => { store[key] = value; },
-    removeItem: (key: string) => { delete store[key]; },
-    clear: () => { store = {}; },
-  };
-})();
-Object.defineProperty(globalThis, "localStorage", { value: localStorageMock });
-
 function wrapper({ children }: { children: React.ReactNode }) {
-  return React.createElement(AuthProvider, { apiUrl: "http://localhost:3001" }, children);
+  return React.createElement(AuthProvider, {}, children);
 }
 
 beforeEach(() => {
-  localStorageMock.clear();
   vi.restoreAllMocks();
 });
 
 describe("useAuth", () => {
   it("returns auth context when used within AuthProvider", () => {
+    // Mock the initial session check to return no session
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ session: null }),
+    } as Response);
+
     const { result } = renderHook(() => useAuth(), { wrapper });
     expect(result.current).toBeDefined();
     expect(result.current.login).toBeTypeOf("function");
-    expect(result.current.register).toBeTypeOf("function");
     expect(result.current.logout).toBeTypeOf("function");
-    expect(result.current.refreshSession).toBeTypeOf("function");
   });
 
   it("throws when used outside AuthProvider", () => {
@@ -41,76 +32,56 @@ describe("useAuth", () => {
   });
 
   it("calls login and updates state", async () => {
-    const mockResponse = {
-      result: {
-        data: {
-          json: {
-            accessToken: "access-123",
-            refreshToken: "refresh-123",
-            user: { id: "u1", email: "test@test.com", name: "Test", role: "STUDENT", schoolId: null },
-          },
-        },
-      },
-    };
-
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockResponse),
-    } as Response);
-
-    const { result } = renderHook(() => useAuth(), { wrapper });
-
-    await act(async () => {
-      await result.current.login("test@test.com", "password123");
-    });
-
-    expect(result.current.isAuthenticated).toBe(true);
-    expect(result.current.user?.email).toBe("test@test.com");
-    expect(localStorageMock.getItem("ra_access_token")).toBe("access-123");
-    expect(localStorageMock.getItem("ra_refresh_token")).toBe("refresh-123");
-  });
-
-  it("calls register and updates state", async () => {
-    const mockResponse = {
-      result: {
-        data: {
-          json: {
-            accessToken: "access-new",
-            refreshToken: "refresh-new",
-            user: { id: "u2", email: "new@test.com", name: "New", role: "STUDENT", schoolId: null },
-          },
-        },
-      },
-    };
-
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockResponse),
-    } as Response);
+    // Mock initial session check (no session)
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ session: null }),
+      } as Response)
+      // Mock login call
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            user: {
+              id: "u1",
+              username: "testuser",
+              name: "Test",
+              role: "STUDENT",
+              schoolId: null,
+            },
+          }),
+      } as Response);
 
     const { result } = renderHook(() => useAuth(), { wrapper });
 
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
     await act(async () => {
-      await result.current.register("new@test.com", "password123", "New");
+      await result.current.login("testuser", "password123");
     });
 
     expect(result.current.isAuthenticated).toBe(true);
-    expect(result.current.user?.name).toBe("New");
+    expect(result.current.user?.username).toBe("testuser");
   });
 
   it("calls logout and clears state", async () => {
-    localStorageMock.setItem("ra_access_token", "old-access");
-    localStorageMock.setItem("ra_refresh_token", "old-refresh");
-
-    // Mock fetch for logout API call
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({}),
-    } as Response);
+    // Mock initial session check (no session)
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ session: null }),
+      } as Response)
+      // Mock logout call
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      } as Response);
 
     const { result } = renderHook(() => useAuth(), { wrapper });
 
-    // Wait for initial refreshSession to complete (no tokens, finishes loading)
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
@@ -121,32 +92,25 @@ describe("useAuth", () => {
 
     expect(result.current.isAuthenticated).toBe(false);
     expect(result.current.user).toBeNull();
-    expect(localStorageMock.getItem("ra_access_token")).toBeNull();
-    expect(localStorageMock.getItem("ra_refresh_token")).toBeNull();
   });
 
-  it("sends Authorization bearer token to correct endpoint on logout", async () => {
-    localStorageMock.setItem("ra_access_token", "access-token-123");
-    localStorageMock.setItem("ra_refresh_token", "refresh-token-123");
+  it("restores session from cookie on mount", async () => {
+    const mockSession = {
+      session: {
+        user: {
+          id: "u1",
+          username: "teacher1",
+          name: "Teacher",
+          role: "TEACHER",
+          schoolId: "school-1",
+        },
+      },
+    };
 
-    // Mock refresh + session + logout calls
-    const fetchSpy = vi.spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({
-          result: { data: { json: { accessToken: "access-token-123", refreshToken: "refresh-token-123" } } },
-        }),
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({
-          result: { data: { json: { user: { id: "u1", email: "a@b.com", name: "A", role: "STUDENT", schoolId: null } } } },
-        }),
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ result: { data: { json: {} } } }),
-      } as Response);
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockSession),
+    } as Response);
 
     const { result } = renderHook(() => useAuth(), { wrapper });
 
@@ -154,60 +118,18 @@ describe("useAuth", () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    await act(async () => {
-      await result.current.logout();
-    });
-
-    // Find the logout call
-    const logoutCall = fetchSpy.mock.calls.find((call) =>
-      (call[0] as string).includes("auth.logout")
-    );
-    expect(logoutCall).toBeDefined();
-    expect(logoutCall![0]).toBe("http://localhost:3001/api/trpc/auth.logout");
-    expect((logoutCall![1] as RequestInit).headers).toMatchObject({
-      Authorization: "Bearer access-token-123",
-      "Content-Type": "application/json",
-    });
-  });
-
-  it("sends Authorization bearer token to session endpoint during refresh", async () => {
-    localStorageMock.setItem("ra_access_token", "access-token-456");
-    localStorageMock.setItem("ra_refresh_token", "refresh-token-456");
-
-    const fetchSpy = vi.spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({
-          result: { data: { json: { accessToken: "new-access", refreshToken: "new-refresh" } } },
-        }),
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({
-          result: { data: { json: { user: { id: "u1", email: "a@b.com", name: "A", role: "STUDENT", schoolId: null } } } },
-        }),
-      } as Response);
-
-    const { result } = renderHook(() => useAuth(), { wrapper });
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
-
-    // The session call should use the new access token
-    const sessionCall = fetchSpy.mock.calls.find((call) =>
-      (call[0] as string).includes("auth.session")
-    );
-    expect(sessionCall).toBeDefined();
-    expect(sessionCall![0]).toBe("http://localhost:3001/api/trpc/auth.session");
-    expect((sessionCall![1] as RequestInit).headers).toMatchObject({
-      Authorization: "Bearer new-access",
-    });
+    expect(result.current.isAuthenticated).toBe(true);
+    expect(result.current.user?.role).toBe("TEACHER");
   });
 });
 
 describe("useSession", () => {
   it("returns session data", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ session: null }),
+    } as Response);
+
     const { result } = renderHook(() => useSession(), { wrapper });
 
     await waitFor(() => {
@@ -218,25 +140,26 @@ describe("useSession", () => {
     expect(result.current.isAuthenticated).toBe(false);
   });
 
-  it("returns authenticated session after login via useAuth", async () => {
-    const mockResponse = {
-      result: {
-        data: {
-          json: {
-            accessToken: "acc",
-            refreshToken: "ref",
-            user: { id: "u1", email: "a@b.com", name: "A", role: "TEACHER", schoolId: "s1" },
-          },
-        },
-      },
-    };
+  it("returns authenticated session after login", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ session: null }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            user: {
+              id: "u1",
+              username: "admin",
+              name: "Admin",
+              role: "ADMIN",
+              schoolId: "s1",
+            },
+          }),
+      } as Response);
 
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockResponse),
-    } as Response);
-
-    // Use a combined hook to access both login and session
     function useAuthAndSession() {
       const auth = useAuth();
       const session = useSession();
@@ -250,50 +173,32 @@ describe("useSession", () => {
     });
 
     await act(async () => {
-      await result.current.login("a@b.com", "pass");
+      await result.current.login("admin", "pass");
     });
 
     expect(result.current.session.isAuthenticated).toBe(true);
-    expect(result.current.session.user?.role).toBe("TEACHER");
+    expect(result.current.session.user?.role).toBe("ADMIN");
   });
 });
 
 describe("useRequireAuth", () => {
   it("returns auth when authenticated", async () => {
-    // Pre-seed tokens so useRequireAuth does not throw on initial render
-    localStorageMock.setItem("ra_access_token", "acc");
-    localStorageMock.setItem("ra_refresh_token", "ref");
-
-    const mockRefresh = {
-      result: {
-        data: {
-          json: {
-            accessToken: "acc2",
-            refreshToken: "ref2",
-          },
-        },
-      },
-    };
-
     const mockSession = {
-      result: {
-        data: {
-          json: {
-            user: { id: "u1", email: "a@b.com", name: "A", role: "ADMIN", schoolId: "s1" },
-          },
+      session: {
+        user: {
+          id: "u1",
+          username: "admin",
+          name: "Admin",
+          role: "ADMIN",
+          schoolId: "s1",
         },
       },
     };
 
-    vi.spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockRefresh),
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockSession),
-      } as Response);
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockSession),
+    } as Response);
 
     function useAuthThenRequire() {
       const auth = useAuth();
@@ -311,7 +216,12 @@ describe("useRequireAuth", () => {
     expect(result.current.required.isAuthenticated).toBe(true);
   });
 
-  it("has correct interface (user, isAuthenticated, isLoading, actions)", async () => {
+  it("has correct interface", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ session: null }),
+    } as Response);
+
     const { result } = renderHook(() => useAuth(), { wrapper });
 
     await waitFor(() => {
@@ -321,8 +231,6 @@ describe("useRequireAuth", () => {
     expect(result.current.user).toBeNull();
     expect(result.current.isAuthenticated).toBe(false);
     expect(result.current.login).toBeTypeOf("function");
-    expect(result.current.register).toBeTypeOf("function");
     expect(result.current.logout).toBeTypeOf("function");
-    expect(result.current.refreshSession).toBeTypeOf("function");
   });
 });

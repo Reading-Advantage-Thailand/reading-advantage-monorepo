@@ -2,24 +2,21 @@ import { createContext, useContext } from "react";
 
 export interface AuthUser {
   id: string;
-  email: string;
+  username: string;
   name: string | null;
-  role: "STUDENT" | "USER" | "TEACHER" | "ADMIN";
+  role: "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM";
   schoolId: string | null;
 }
 
 export interface AuthState {
   user: AuthUser | null;
-  accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 
 export interface AuthActions {
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  refreshSession: () => Promise<void>;
 }
 
 export type AuthContextValue = AuthState & AuthActions;
