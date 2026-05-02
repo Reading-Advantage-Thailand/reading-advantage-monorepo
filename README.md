@@ -1,5 +1,7 @@
 # Reading Advantage Monorepo
 
+[![CI](https://github.com/bodangren/reading-advantage-monorepo/actions/workflows/ci.yml/badge.svg)](https://github.com/bodangren/reading-advantage-monorepo/actions/workflows/ci.yml)
+
 A pnpm + Turborepo monorepo for the Reading Advantage educational platform — three Next.js apps with a shared tRPC backend.
 
 ## Apps
