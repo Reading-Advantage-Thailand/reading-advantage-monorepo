@@ -1,26 +1,43 @@
 # Reading Advantage Monorepo
 
-A pnpm + Turborepo monorepo for the Reading Advantage ecosystem.
+A pnpm + Turborepo monorepo for the Reading Advantage educational platform — three Next.js apps with a shared tRPC backend.
 
-## Structure
+## Apps
+
+| App | Description | Port |
+|-----|-------------|------|
+| `reading-advantage` | English reading comprehension platform | 3000 |
+| `primary-advantage` | Primary school learning platform | 3000 |
+| `science-advantage` | Science education platform | 3000 |
+| `advantage-games` | Educational browser games | 3000 |
+| `www-reading-advantage` | Marketing website | 3000 |
+
+## Packages
+
+| Package | Description |
+|---------|-------------|
+| `@reading-advantage/api` | tRPC routers — primary product backend |
+| `@reading-advantage/db` | Drizzle schema, migrations, typed client |
+| `@reading-advantage/auth` | Roles, permissions, JWT token service |
+| `@reading-advantage/domain` | Business logic (domain functions) |
+| `@reading-advantage/webhooks` | Hono app for external HTTP (Stripe, Google Classroom) |
+| `@reading-advantage/types` | Shared Zod schemas and TypeScript types |
+| `@reading-advantage/ui` | Shared Radix/shadcn UI components |
+| `@reading-advantage/utils` | Shared utilities and hooks |
+| `@reading-advantage/config` | Shared ESLint, TypeScript, Tailwind configs |
+
+## Architecture
 
 ```
-.
-├── apps/
-│   └── advantage-games/     # Next.js 15 game platform
-├── packages/
-│   ├── config/              # Shared ESLint, TypeScript, Tailwind configs
-│   ├── ui/                  # Shared React components (Radix + Tailwind)
-│   └── utils/               # Shared utilities (cn, hooks)
-├── package.json
-├── pnpm-workspace.yaml
-└── turbo.json
+Next.js apps  →  tRPC procedures  →  domain functions  →  Drizzle  →  Postgres
+External HTTP →  Hono routes      →  domain functions  →  Drizzle  →  Postgres
 ```
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) 20+
 - [pnpm](https://pnpm.io/) 8+
+- [Docker](https://docs.docker.com/get-docker/) (for local PostgreSQL)
 
 ## Getting Started
 
@@ -28,20 +45,19 @@ A pnpm + Turborepo monorepo for the Reading Advantage ecosystem.
 # Install dependencies
 pnpm install
 
-# Start dev server (runs all packages in parallel)
+# Start local PostgreSQL (creates 3 databases)
+pnpm db:start
+
+# Copy environment files
+cp apps/reading-advantage/.env.example apps/reading-advantage/.env.local
+cp apps/primary-advantage/.env.example apps/primary-advantage/.env.local
+cp apps/science-advantage/.env.example apps/science-advantage/.env.local
+
+# Start all apps in dev mode
 pnpm dev
-
-# Build all packages and apps
-pnpm build
-
-# Run tests across all workspaces
-pnpm test
-
-# Run lint across all workspaces
-pnpm lint
 ```
 
-## Workspace Commands
+## Commands
 
 | Command | Description |
 |---------|-------------|
@@ -51,28 +67,51 @@ pnpm lint
 | `pnpm lint` | Run ESLint in all workspaces |
 | `pnpm format` | Format code with Prettier |
 | `pnpm check-types` | Run TypeScript type checking |
+| `pnpm db:start` | Start PostgreSQL (Docker) |
+| `pnpm db:stop` | Stop PostgreSQL |
+| `pnpm db:reset` | Destroy data and start fresh |
 
-## Technology Stack
+Run commands for a single app:
 
-- **Package Manager**: pnpm workspaces
-- **Build Orchestration**: Turborepo
-- **App Framework**: Next.js 15 (App Router, React 19)
-- **Styling**: Tailwind CSS v4
-- **UI Components**: Radix UI primitives
-- **Testing**: Vitest (packages), Jest (app)
-- **Linting**: ESLint 9 (flat config)
+```bash
+pnpm turbo run dev --filter=science-advantage
+pnpm turbo run build --filter=@reading-advantage/db
+```
 
-## Adding a New Package
+## Database
 
-1. Create a directory under `packages/<name>`
-2. Add `package.json` with `"name": "@reading-advantage/<name>"`
-3. Add build/test/lint scripts
-4. Export from `src/index.ts`
-5. Run `pnpm install` to link the workspace
+Local PostgreSQL runs via Docker on port **5432** with three databases:
 
-## Adding a New App
+- `reading_advantage`
+- `primary_advantage`
+- `science_advantage`
 
-1. Create a directory under `apps/<name>`
-2. Add `package.json` with workspace dependencies using `"workspace:*"`
-3. Configure `tsconfig.json` to extend `@reading-advantage/config/tsconfig`
-4. Run `pnpm install` to link the workspace
+Connection string: `postgresql://postgres:postgres@localhost:5432/<db_name>`
+
+## Project Structure
+
+```
+├── apps/                        # Next.js applications
+│   ├── reading-advantage/
+│   ├── primary-advantage/
+│   ├── science-advantage/
+│   ├── advantage-games/
+│   └── www-reading-advantage/
+├── packages/                    # Shared packages
+│   ├── api/                     # tRPC routers
+│   ├── db/                      # Drizzle schema + migrations
+│   ├── auth/                    # Roles, permissions, JWT
+│   ├── domain/                  # Business logic
+│   ├── webhooks/                # Hono external HTTP
+│   ├── types/                   # Shared types
+│   ├── ui/                      # Shared UI components
+│   ├── utils/                   # Shared utilities
+│   └── config/                  # Shared configs
+├── docker-compose.yml           # Local PostgreSQL
+├── docker/                      # Docker init scripts
+├── measure/                     # Measure project management
+├── CONTRIBUTING.md              # Developer setup guide
+└── turbo.json                   # Turborepo pipeline
+```
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed setup and development guide.

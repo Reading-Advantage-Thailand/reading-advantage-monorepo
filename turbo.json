@@ -3,7 +3,8 @@
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "NODE_ENV",
-    "NEXT_PUBLIC_*"
+    "NEXT_PUBLIC_*",
+    "DATABASE_URL"
   ],
   "tasks": {
     "build": {
