@@ -1,3 +1,5 @@
 "use client";
-import { SessionProvider } from "next-auth/react";
-export default SessionProvider;
+
+import { AuthProvider } from "@reading-advantage/auth-client";
+
+export default AuthProvider;

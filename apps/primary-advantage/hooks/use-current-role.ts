@@ -1,6 +1,8 @@
-import { useSession } from "next-auth/react";
+"use client";
+
+import { useSession } from "@reading-advantage/auth-client";
 
 export const useCurrentRole = () => {
-  const { data: session } = useSession();
-  return session?.user?.role;
+  const { user } = useSession();
+  return user?.role;
 };

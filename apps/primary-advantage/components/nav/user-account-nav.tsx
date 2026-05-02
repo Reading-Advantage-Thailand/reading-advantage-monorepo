@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
-import { signOut } from "next-auth/react";
+import { useAuth } from "@reading-advantage/auth-client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,8 +21,9 @@ interface UserAccountNavProps {
   user: User;
 }
 
-export function UserAccountNav({ user }: UserAccountNavProps) {
+ export function UserAccountNav({ user }: UserAccountNavProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { logout } = useAuth();
   const t = useTranslations("MainNav.usernav");
   const tr = useTranslations("Overall.roles");
 
@@ -154,7 +155,8 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
           onClick={async (event) => {
             event.preventDefault();
             setIsLoading(true);
-            await signOut({ callbackUrl: `/` });
+            await logout();
+            window.location.href = "/";
             setIsLoading(false);
           }}
         >

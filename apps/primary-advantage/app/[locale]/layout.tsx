@@ -7,8 +7,7 @@ import { siteConfig } from "@/configs/site-config";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Inter as FontSans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
-import { SessionProvider } from "next-auth/react";
-import { auth } from "@/lib/auth";
+import AuthProvider from "@/components/providers/session-provider";
 import { LayoutProvider } from "@/hooks/use-layout";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import QueryProvider from "@/components/providers/query-provider";
@@ -60,10 +59,8 @@ export default async function RootLayout({
     notFound();
   }
 
-  const session = await auth();
-
   return (
-    <SessionProvider session={session}>
+    <AuthProvider>
       <html lang={locale} suppressHydrationWarning className="overscroll-none">
         <body
           className={`${fontSans.variable} bg-background min-h-screen font-sans antialiased [--header-height:calc(var(--spacing)*14)]`}
@@ -84,6 +81,6 @@ export default async function RootLayout({
           </NextIntlClientProvider>
         </body>
       </html>
-    </SessionProvider>
+    </AuthProvider>
   );
 }

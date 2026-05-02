@@ -16,11 +16,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { signInSchema } from "@/lib/zod";
-import { signIn } from "next-auth/react";
-import { useState, useTransition } from "react";
-import { signInAction } from "@/actions/singinAction";
+import { useState } from "react";
+import { useAuth } from "@reading-advantage/auth-client";
 import { FormError } from "../form-error";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 export function TeacherSignInForm({
@@ -28,14 +27,13 @@ export function TeacherSignInForm({
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already exists"
-      : "";
+  const router = useRouter();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const [error, setError] = useState<string | undefined>("");
   const t = useTranslations("AuthPage.signin");
-  const [isPanding, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -46,43 +44,16 @@ export function TeacherSignInForm({
 
   const onSubmit = async (value: z.infer<typeof signInSchema>) => {
     setError("");
+    setIsLoading(true);
 
-    startTransition(async () => {
-      // try {
-      //   const response = await fetch("/api/auth/signin", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       ...value,
-      //       type: "other",
-      //     }),
-      //   });
-      //   const data = await response.json();
-      //   if (data.success) {
-      //     // Handle successful login - redirect manually
-      //     const redirectUrl = callbackUrl || "/auth/signin";
-      //     window.location.href = redirectUrl;
-      //   } else {
-      //     setError(data.error);
-      //   }
-      // } catch (error) {
-      //   setError("An unexpected error occurred");
-      //   console.error("Login error:", error);
-      // }
-      signInAction(
-        {
-          ...value,
-          type: "other",
-        },
-        // callbackUrl || undefined,
-      ).then((data) => {
-        if (data?.error) {
-          setError(data?.error);
-        }
-      });
-    });
+    try {
+      await login(value.email, value.password);
+      router.push(callbackUrl);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -108,7 +79,7 @@ export function TeacherSignInForm({
                 <Input
                   type="email"
                   placeholder="name@example.com"
-                  disabled={isPanding}
+                  disabled={isLoading}
                   {...field}
                 />
               </FormControl>
@@ -138,7 +109,7 @@ export function TeacherSignInForm({
                 <Input
                   type="password"
                   placeholder="********"
-                  disabled={isPanding}
+                  disabled={isLoading}
                   {...field}
                 />
               </FormControl>
@@ -147,10 +118,10 @@ export function TeacherSignInForm({
           )}
         />
 
-        <FormError message={error || urlError} />
+        <FormError message={error} />
         <div className="grid gap-6">
-          <Button type="submit" className="w-full">
-            Login
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Login"}
           </Button>
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
             <span className="bg-background text-muted-foreground relative z-10 px-2">
@@ -161,10 +132,10 @@ export function TeacherSignInForm({
             variant="outline"
             type="button"
             className="w-full cursor-pointer"
+            disabled={isLoading}
             onClick={() => {
-              signIn("google", {
-                callbackUrl: callbackUrl || "/auth/signin",
-              });
+              // Google OAuth — redirect to API
+              window.location.href = `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"}/auth/google`;
             }}
           >
             <Icons.google className="mr-2 h-4 w-4" />

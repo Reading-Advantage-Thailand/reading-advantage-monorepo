@@ -1,7 +1,12 @@
-import { useSession } from "next-auth/react";
+"use client";
 
+import { useSession } from "@reading-advantage/auth-client";
+
+/**
+ * Drop-in replacement for the old useCurrentUser hook.
+ * Returns the same shape as NextAuth session.user.
+ */
 export const useCurrentUser = () => {
-  const { data: session } = useSession();
-  // console.log("useCurrentUser Debug - Session:", session);
-  return session?.user;
+  const { user } = useSession();
+  return user;
 };
