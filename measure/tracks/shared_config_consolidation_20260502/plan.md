@@ -15,10 +15,11 @@
     - v8 legacy: reading-advantage (.eslintrc.json), primary-advantage (.eslintrc.json), www-reading-advantage (.eslintrc.json)
     - 3 apps need flat config migration
 - [x] Task: Audit i18n library usage
-    - reading-advantage: both next-intl AND next-international (dead code to remove)
+    - reading-advantage: uses `next-international` for main i18n + `next-intl` for 2 components
     - primary-advantage: next-intl only ✅
     - www-reading-advantage: next-intl only ✅ (migrated from next-international)
     - advantage-games, science-advantage: no i18n library
+    - reading-advantage needs dedicated i18n migration (not just dead code removal)
 - [x] Task: Audit duplicated UI components and `cn()` helpers
     - cn() deduped: all 5 apps now re-export from @reading-advantage/utils (b6e8ab7)
     - www-reading-advantage still has local cn() — re-export, not duplication
