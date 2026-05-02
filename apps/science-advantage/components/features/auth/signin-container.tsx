@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { GoogleSigninButton } from './google-signin-button';
 import { DevImpersonationPanel } from './dev-impersonation-panel';
+import { SigninForm } from './signin-form';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface SigninContainerProps {
@@ -37,6 +38,17 @@ export function SigninContainer({ isDevAuth }: SigninContainerProps) {
           </CardContent>
         </Card>
       )}
+
+      <SigninForm />
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="px-2 bg-background text-muted-foreground">Or continue with</span>
+        </div>
+      </div>
 
       <GoogleSigninButton />
 
