@@ -6,17 +6,18 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { signIn } from "next-auth/react";
+import { useTrpcAuth } from "@/lib/use-trpc-auth";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const { register, isLoading, error: authError } = useTrpcAuth();
   const [error, setError] = React.useState<string>("");
+
+  const displayError = authError || error;
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
-    setIsLoading(true);
     setError("");
     
     const target = event.target as typeof event.target & {
@@ -30,31 +31,12 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
     const confirmPassword = target.confirmPassword.value;
     if (password !== confirmPassword) {
       setError("Password does not match");
-      setIsLoading(false);
-      setIsLoading(false);
       return;
     }
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    if (res.ok) {
-      const signInRes = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
-      if (signInRes?.error) {
-        setError("Sign in failed after registration");
-      } else if (signInRes?.ok) {
-        window.location.href = signInRes.url || "/";
-      }
-    } else {
-      const data = await res.json().catch(() => ({}));
-      setError(data?.message || "Sign up failed");
+    const user = await register(email, password, email.split("@")[0]);
+    if (user) {
+      window.location.href = "/";
     }
-    setIsLoading(false);
   }
   return (
     <div className={cn("grid gap-6", className)} {...props}>
@@ -76,7 +58,7 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
             />
           </div>
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
+            <Label className="sr-only" htmlFor="password">
               Password
             </Label>
             <Input
@@ -91,7 +73,7 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
             />
           </div>
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
+            <Label className="sr-only" htmlFor="confirmPassword">
               Confirm Password
             </Label>
             <Input
@@ -105,7 +87,7 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
               required
             />
           </div>
-          {error && <div className="text-red-500 text-sm">{error}</div>}
+          {displayError && <div className="text-red-500 text-sm">{displayError}</div>}
           <Button disabled={isLoading}>
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

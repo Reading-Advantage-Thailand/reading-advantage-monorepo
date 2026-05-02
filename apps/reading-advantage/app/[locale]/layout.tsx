@@ -12,6 +12,7 @@ import { Viewport } from "next";
 import { NextAuthSessionProvider } from "@/components/providers/nextauth-session-provider";
 import { getCurrentUser } from "@/lib/session";
 import { LocaleProvider } from "@/components/providers/locale-provider";
+import { TRPCProvider } from "@/components/providers/trpc-provider";
 // Onborda disabled to prevent crash
 // import { Onborda, OnbordaProvider } from "onborda";
 // import { steps } from "@/lib/steps";
@@ -99,9 +100,11 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NextAuthSessionProvider session={user}>
-            <LocaleProvider locale={locale}>
-              <ThemeWrapper>{children}</ThemeWrapper>
-            </LocaleProvider>
+            <TRPCProvider>
+              <LocaleProvider locale={locale}>
+                <ThemeWrapper>{children}</ThemeWrapper>
+              </LocaleProvider>
+            </TRPCProvider>
           </NextAuthSessionProvider>
           <Toaster />
           <TailwindIndicator />
