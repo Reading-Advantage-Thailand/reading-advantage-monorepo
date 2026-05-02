@@ -35,9 +35,9 @@ This file tracks all major tracks for the project.
 - [x] **Track: Shared Backend: API Route Migration** (9/29 core tasks complete)
   *Link: [./tracks/shared_backend_api_20260502/](./tracks/shared_backend_api_20260502/)*
   *Status: Tiers 1–2 routers implemented (users, classes, assignments, articles, progress, reports, auth). Tiers 3–4 (app-specific, AI) deferred to future tracks. Cookie-based auth update will be handled by unified auth track.*
-- [~] **Track: Unified Auth System** (0/40 tasks)
+- [~] **Track: Unified Auth System** (Phases 1–5 complete, Phase 6 deferred)
   *Link: [./tracks/unified_auth_20260502/](./tracks/unified_auth_20260502/)*
-  *Status: Replaces NextAuth+JWT+Firebase with simple username/password DB sessions. Modeled on science-advantage pattern.*
+  *Status: Schema, auth pkg, auth-client, tRPC/API routes, reading+primary apps all done. Science-advantage deferred (already has working username/password auth via Prisma). 95 tests pass across all packages.*
 - [~] **Track: Shared Config Consolidation** (20/27 tasks complete, 7 deferred)
   *Link: [./tracks/shared_config_consolidation_20260502/](./tracks/shared_config_consolidation_20260502/)*
   *Status: Tailwind v4 unified, ESLint flat config migrated for primary/www, `cn()` deduped, package builds fixed. Deferred: UI component migration, visual regression tests, full ESLint v9 for reading-advantage.*
