@@ -6,7 +6,7 @@ export interface Tenant {
 
 export interface UserContext {
   id: string;
-  email: string;
+  username: string;
   name: string | null;
   role: Role;
   schoolId: string | null;
@@ -26,8 +26,8 @@ export function assertTenantAccess(user: UserContext, targetSchoolId: string): v
   if (!user.schoolId) {
     throw new Error("User has no school assignment");
   }
-  if (user.role === "ADMIN") {
-    return; // Admins can access any school
+  if (user.role === "ADMIN" || user.role === "SYSTEM") {
+    return; // Admins and system can access any school
   }
   if (user.schoolId !== targetSchoolId) {
     throw new Error("Access denied: user does not belong to this school");

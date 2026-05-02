@@ -3,7 +3,7 @@ import { assertCan, AuthError } from "../assert.js";
 import type { UserContext } from "../tenant.js";
 
 function makeUser(role: UserContext["role"], schoolId = "school-1"): UserContext {
-  return { id: "user-1", email: "test@test.com", name: "Test", role, schoolId };
+  return { id: "user-1", username: "testuser", name: "Test", role, schoolId };
 }
 
 describe("assertCan", () => {
@@ -30,9 +30,15 @@ describe("assertCan", () => {
     );
   });
 
-  it("throws for USER role on most permissions", () => {
-    expect(() => assertCan(makeUser("USER"), "class:list")).toThrow(AuthError);
-    expect(() => assertCan(makeUser("USER"), "assignment:read")).toThrow(AuthError);
+  it("throws for STUDENT on admin permissions", () => {
+    expect(() => assertCan(makeUser("STUDENT"), "admin:dashboard")).toThrow(AuthError);
+    expect(() => assertCan(makeUser("STUDENT"), "article:create")).toThrow(AuthError);
+  });
+
+  it("SYSTEM role has all permissions", () => {
+    expect(() => assertCan(makeUser("SYSTEM"), "class:create")).not.toThrow();
+    expect(() => assertCan(makeUser("SYSTEM"), "admin:dashboard")).not.toThrow();
+    expect(() => assertCan(makeUser("SYSTEM"), "assignment:read")).not.toThrow();
   });
 });
 

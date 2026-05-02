@@ -17,12 +17,13 @@
   },
   "dependencies": {
     "@reading-advantage/db": "workspace:*",
-    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "drizzle-orm": "^0.44.0",
     "zod": "^3.24.0"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
-    "@types/jsonwebtoken": "^9.0.9",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.0.0",
     "typescript": "^5.8.0",
     "vitest": "^3.1.0"

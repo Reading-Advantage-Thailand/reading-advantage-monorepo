@@ -6,7 +6,7 @@ function makeUser(
   role: UserContext["role"],
   schoolId: string | null = "school-1"
 ): UserContext {
-  return { id: "user-1", email: "test@test.com", name: "Test", role, schoolId };
+  return { id: "user-1", username: "testuser", name: "Test", role, schoolId };
 }
 
 describe("assertTenantAccess", () => {
@@ -14,6 +14,12 @@ describe("assertTenantAccess", () => {
     const admin = makeUser("ADMIN", "school-1");
     expect(() => assertTenantAccess(admin, "school-2")).not.toThrow();
     expect(() => assertTenantAccess(admin, "school-1")).not.toThrow();
+  });
+
+  it("system can access any school", () => {
+    const system = makeUser("SYSTEM", "school-1");
+    expect(() => assertTenantAccess(system, "school-2")).not.toThrow();
+    expect(() => assertTenantAccess(system, "school-1")).not.toThrow();
   });
 
   it("student can access own school", () => {
