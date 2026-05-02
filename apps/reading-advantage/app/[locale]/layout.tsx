@@ -9,15 +9,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { TailwindIndicator } from "@/components/helpers/tailwind-indicator";
 import { Viewport } from "next";
-import { NextAuthSessionProvider } from "@/components/providers/nextauth-session-provider";
-import { getCurrentUser } from "@/lib/session";
-import { LocaleProvider } from "@/components/providers/locale-provider";
-import { TRPCProvider } from "@/components/providers/trpc-provider";
-// Onborda disabled to prevent crash
-// import { Onborda, OnbordaProvider } from "onborda";
-// import { steps } from "@/lib/steps";
-// import CustomCard from "@/components/tour/CustomCard";
-// import AuthRedirectHandler from "@/components/auth-redirect-handler";
+import { AuthProvider } from "@reading-advantage/auth-client";
 import { ThemeWrapper } from "@/components/theme-warpper";
 
 const cabinSketch = localFont({
@@ -82,7 +74,6 @@ export default async function RootLayout({
   children: ReactNode;
 }) {
   const { locale } = await params;
-  const user = await getCurrentUser();
   return (
     <html lang={locale} suppressHydrationWarning={true}>
       <body
@@ -99,13 +90,13 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NextAuthSessionProvider session={user}>
+          <AuthProvider>
             <TRPCProvider>
               <LocaleProvider locale={locale}>
                 <ThemeWrapper>{children}</ThemeWrapper>
               </LocaleProvider>
             </TRPCProvider>
-          </NextAuthSessionProvider>
+          </AuthProvider>
           <Toaster />
           <TailwindIndicator />
         </ThemeProvider>
