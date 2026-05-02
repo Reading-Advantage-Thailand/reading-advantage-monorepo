@@ -1,11 +1,11 @@
 {
   "track_id": "review_remediation_20260502",
   "type": "bug",
-  "status": "new",
+  "status": "in_progress",
   "created_at": "2026-05-02T11:12:40Z",
-  "updated_at": "2026-05-02T11:12:40Z",
+  "updated_at": "2026-05-02T19:55:00Z",
   "description": "Fix review findings from the last 24 hours of monorepo backend, auth, config, and Measure changes.",
   "estimated_tasks": 25,
-  "actual_tasks": null,
-  "deviation_notes": "Created from review of commits 3b93a05..ee62b21 plus uncommitted pnpm-lock.yaml drift. Validation currently fails at @reading-advantage/domain lint."
+  "actual_tasks": 22,
+  "deviation_notes": "7 tasks complete, 2 partially complete, 0 not started. Remaining: 4 Measure manual verification checkpoints, NextAuth vs tRPC auth decision, primary/science auth integration gaps, lessonProgress.lessonId alignment."
 }

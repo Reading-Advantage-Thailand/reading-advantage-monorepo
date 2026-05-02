@@ -40,3 +40,7 @@ coverage
 # Misc
 *.pem
 .cache
+
+# Database backups
+Backup_*.sql
+

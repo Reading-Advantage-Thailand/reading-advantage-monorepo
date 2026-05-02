@@ -46,5 +46,6 @@ This file tracks all major tracks for the project.
 
 ### Review Remediation
 
-- [ ] **Track: Last-24-Hour Review Remediation**
+- [~] **Track: Last-24-Hour Review Remediation** (7/9 tasks complete, 2 partially complete)
   *Link: [./tracks/review_remediation_20260502/](./tracks/review_remediation_20260502/)*
+  *Status: Auth tests, cross-tenant guards, config drift wiring, and DB constraint migration complete. Remaining: Measure manual verification protocols (4), NextAuth vs tRPC auth decision, primary/science auth integration, lessonProgress.lessonId alignment.*
