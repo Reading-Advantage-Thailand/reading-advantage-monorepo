@@ -1,8 +1,11 @@
 import { z } from "zod";
-import { eq } from "drizzle-orm";
-import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, publicProcedure } from "../trpc.js";
-import { articles } from "@reading-advantage/db/schema";
+import {
+  listArticles,
+  getArticle,
+  createArticle,
+  updateArticle,
+} from "@reading-advantage/domain/articles";
 
 export const articlesRouter = router({
   list: publicProcedure
@@ -14,29 +17,11 @@ export const articlesRouter = router({
         offset: z.number().min(0).default(0),
       })
     )
-    .query(async ({ ctx, input }) => {
-      return ctx.db
-        .select()
-        .from(articles)
-        .limit(input.limit)
-        .offset(input.offset);
-    }),
+    .query(({ ctx, input }) => listArticles({ db: ctx.db, input })),
 
   get: publicProcedure
     .input(z.object({ id: z.string().uuid() }))
-    .query(async ({ ctx, input }) => {
-      const [article] = await ctx.db
-        .select()
-        .from(articles)
-        .where(eq(articles.id, input.id))
-        .limit(1);
-
-      if (!article) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Article not found" });
-      }
-
-      return article;
-    }),
+    .query(({ ctx, input }) => getArticle({ db: ctx.db, input })),
 
   create: protectedProcedure
     .input(
@@ -50,14 +35,9 @@ export const articlesRouter = router({
         image: z.string().url().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      const [article] = await ctx.db
-        .insert(articles)
-        .values(input)
-        .returning();
-
-      return article;
-    }),
+    .mutation(({ ctx, input }) =>
+      createArticle({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+    ),
 
   update: protectedProcedure
     .input(
@@ -69,15 +49,7 @@ export const articlesRouter = router({
         published: z.boolean().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      const { id, ...updates } = input;
-
-      const [updated] = await ctx.db
-        .update(articles)
-        .set({ ...updates, updatedAt: new Date() })
-        .where(eq(articles.id, id))
-        .returning();
-
-      return updated;
-    }),
+    .mutation(({ ctx, input }) =>
+      updateArticle({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+    ),
 });

@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, boolean, integer, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, boolean, integer, pgEnum, unique } from "drizzle-orm/pg-core";
 
 // Enums
 export const roleEnum = pgEnum("role", ["STUDENT", "USER", "TEACHER", "ADMIN"]);
@@ -47,7 +47,9 @@ export const accounts = pgTable("accounts", {
   scope: text("scope"),
   idToken: text("id_token"),
   sessionState: text("session_state"),
-});
+}, (table) => [
+  unique("accounts_provider_unique").on(table.provider, table.providerAccountId),
+]);
 
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(),
@@ -62,7 +64,9 @@ export const verificationTokens = pgTable("verification_tokens", {
   identifier: text("identifier").notNull(),
   token: text("token").notNull(),
   expires: timestamp("expires").notNull(),
-});
+}, (table) => [
+  unique("verification_tokens_unique").on(table.identifier, table.token),
+]);
 
 export const refreshTokens = pgTable("refresh_tokens", {
   id: text("id").primaryKey(),

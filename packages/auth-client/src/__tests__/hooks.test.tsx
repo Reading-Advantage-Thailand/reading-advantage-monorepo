@@ -180,22 +180,40 @@ describe("useSession", () => {
 
 describe("useRequireAuth", () => {
   it("returns auth when authenticated", async () => {
-    const mockResponse = {
+    // Pre-seed tokens so useRequireAuth does not throw on initial render
+    localStorageMock.setItem("ra_access_token", "acc");
+    localStorageMock.setItem("ra_refresh_token", "ref");
+
+    const mockRefresh = {
       result: {
         data: {
           json: {
-            accessToken: "acc",
-            refreshToken: "ref",
+            accessToken: "acc2",
+            refreshToken: "ref2",
+          },
+        },
+      },
+    };
+
+    const mockSession = {
+      result: {
+        data: {
+          json: {
             user: { id: "u1", email: "a@b.com", name: "A", role: "ADMIN", schoolId: "s1" },
           },
         },
       },
     };
 
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockResponse),
-    } as Response);
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockRefresh),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockSession),
+      } as Response);
 
     function useAuthThenRequire() {
       const auth = useAuth();
@@ -207,10 +225,6 @@ describe("useRequireAuth", () => {
 
     await waitFor(() => {
       expect(result.current.auth.isLoading).toBe(false);
-    });
-
-    await act(async () => {
-      await result.current.auth.login("a@b.com", "pass");
     });
 
     expect(result.current.auth.isAuthenticated).toBe(true);

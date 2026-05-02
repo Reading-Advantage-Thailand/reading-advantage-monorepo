@@ -237,6 +237,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.8
         version: 1.2.8(@types/react-dom@19.2.3)(@types/react@19.2.14)(react-dom@19.2.5)(react@19.2.5)
+      '@reading-advantage/auth-client':
+        specifier: workspace:*
+        version: link:../../packages/auth-client
       '@reading-advantage/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -1294,6 +1297,9 @@ importers:
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
+      tsup:
+        specifier: ^8.4.0
+        version: 8.5.1(typescript@5.9.3)
       typescript:
         specifier: ^5.8.0
         version: 5.9.3

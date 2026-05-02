@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, boolean, integer, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, boolean, integer, jsonb, unique } from "drizzle-orm/pg-core";
 import { users, schools } from "./users";
 import { classrooms } from "./classrooms";
 
@@ -62,4 +62,6 @@ export const studentAssignments = pgTable("student_assignments", {
   completedAt: timestamp("completed_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  unique("student_assignments_unique").on(table.assignmentId, table.studentId),
+]);

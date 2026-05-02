@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -38,10 +38,6 @@ function createTestTrpc() {
 
   return { appRouter, router, publicProcedure, protectedProcedure };
 }
-
-const { appRouter } = createTestTrpc();
-
-type AppRouter = typeof appRouter;
 
 function createCaller(auth: TestContext["auth"]) {
   const { appRouter } = createTestTrpc();

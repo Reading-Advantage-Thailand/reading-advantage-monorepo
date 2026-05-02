@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, integer, unique } from "drizzle-orm/pg-core";
 import { users } from "./users";
 
 // ─── Activity Tracking ────────────────────────────────────
@@ -51,4 +51,6 @@ export const lessonProgress = pgTable("lesson_progress", {
   completedAt: timestamp("completed_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  unique("lesson_progress_user_lesson_unique").on(table.userId, table.lessonId),
+]);

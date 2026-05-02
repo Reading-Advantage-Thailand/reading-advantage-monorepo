@@ -4,21 +4,22 @@
 > Remove or condense entries that are no longer relevant to near-term planning.
 
 ## Architecture & Design
-<!-- Decisions made that future tracks should be aware of -->
 
-- (YYYY-MM-DD, track_id) Example: Chose X over Y because of Z constraint
+- (2026-05-02, shared_backend_api) Domain layer must not depend on `@trpc/server`. Use standard `Error` in domain and map to `TRPCError` in routers. This keeps domain testable without tRPC context.
+- (2026-05-02, shared_backend_api) Every workspace package that uses `.js` extensions in TypeScript imports must build to `dist/` and export `dist/` in `package.json`. Next.js `transpilePackages` does not reliably resolve `.js` → `.ts` for ESM workspace packages.
 
 ## Recurring Gotchas
-<!-- Problems encountered repeatedly; save future tracks from the same pain -->
 
-- (YYYY-MM-DD, track_id) Example: Always check for null before accessing config values
+- (2026-05-02, shared_backend_api) `AuthProvider` calling `refreshSession` on mount creates a race condition in tests. Any test rendering `useRequireAuth` must pre-seed tokens AND mock both the `auth.refresh` and `auth.session` fetch calls.
+- (2026-05-02, shared_backend_api) `useRequireAuth` throws during render when `!isLoading && !isAuthenticated`. Tests must either ensure auth is established before the hook renders, or handle the throw via `expect().toThrow()` in a separate test.
+- (2026-05-02, shared_backend_api) `tsup` bundles can accidentally pull React hooks into the main barrel (`dist/index.js`). Server components importing `cn` from that barrel will fail. Keep hooks in a separate subpath export (`./hooks`).
 
 ## Patterns That Worked Well
-<!-- Approaches worth repeating -->
 
-- (YYYY-MM-DD, track_id) Example: Writing acceptance criteria before implementation caught scope creep early
+- (2026-05-02, shared_backend_api) Extracting business logic from tRPC routers into domain functions (`createAssignment`, `recordActivity`, etc.) made permission checks and tenant scoping testable in isolation.
+- (2026-05-02, shared_backend_api) Using `insert(...).onConflictDoUpdate(...)` with a `uniqueIndex` on `(userId, lessonId)` provided a clean upsert pattern for `lessonProgress` without manual read-then-write.
+- (2026-05-02, shared_backend_api) Adding database-level unique constraints (`classroomStudents`, `studentAssignments`, `accounts`, `verificationTokens`) prevents duplicate data at the source.
 
 ## Planning Improvements
-<!-- Notes on where estimates were wrong and why -->
 
-- (YYYY-MM-DD, track_id) Example: Underestimated integration testing time by 2x
+- (2026-05-02, shared_backend_api) Fixing package exports and build outputs took ~30 min but unblocked all three apps. Always verify that workspace packages with ESM `.js` imports have proper `dist/` exports before trying to debug Next.js module resolution.

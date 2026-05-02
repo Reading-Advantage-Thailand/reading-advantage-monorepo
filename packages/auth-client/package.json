@@ -3,10 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --external react",
     "lint": "eslint .",
     "test": "vitest run",
     "check-types": "tsc --noEmit"
@@ -23,6 +33,7 @@
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "jsdom": "^26.1.0",
+    "tsup": "^8.4.0",
     "typescript": "^5.8.0",
     "vitest": "^3.1.0"
   },

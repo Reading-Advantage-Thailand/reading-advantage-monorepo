@@ -4,13 +4,37 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./classes": "./src/classes/index.ts",
-    "./students": "./src/students/index.ts",
-    "./assignments": "./src/assignments/index.ts",
-    "./progress": "./src/progress/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./articles": {
+      "types": "./dist/articles/index.d.ts",
+      "import": "./dist/articles/index.js"
+    },
+    "./assignments": {
+      "types": "./dist/assignments/index.d.ts",
+      "import": "./dist/assignments/index.js"
+    },
+    "./classes": {
+      "types": "./dist/classes/index.d.ts",
+      "import": "./dist/classes/index.js"
+    },
+    "./progress": {
+      "types": "./dist/progress/index.d.ts",
+      "import": "./dist/progress/index.js"
+    },
+    "./reports": {
+      "types": "./dist/reports/index.d.ts",
+      "import": "./dist/reports/index.js"
+    },
+    "./students": {
+      "types": "./dist/students/index.d.ts",
+      "import": "./dist/students/index.js"
+    }
   },
   "scripts": {
+    "build": "tsc",
     "lint": "eslint .",
     "test": "vitest run",
     "check-types": "tsc --noEmit"

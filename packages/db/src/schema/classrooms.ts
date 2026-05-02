@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, boolean, integer } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, boolean, integer, unique } from "drizzle-orm/pg-core";
 import { users, schools } from "./users";
 
 // ─── Classrooms ───────────────────────────────────────────
@@ -24,7 +24,9 @@ export const classroomStudents = pgTable("classroom_students", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   joinedAt: timestamp("joined_at").defaultNow().notNull(),
-});
+}, (table) => [
+  unique("classroom_students_unique").on(table.classroomId, table.studentId),
+]);
 
 export const classroomTeachers = pgTable("classroom_teachers", {
   id: uuid("id").primaryKey().defaultRandom(),

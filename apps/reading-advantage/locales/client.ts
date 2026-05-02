@@ -1,5 +1,5 @@
 import { useTranslations, useLocale } from "next-intl";
-import { useChangeLocale } from "./navigation";
+import { usePathname, useRouter } from "./navigation";
 
 export function useI18n() {
   return useTranslations();
@@ -13,4 +13,4 @@ export function useCurrentLocale() {
   return useLocale();
 }
 
-export { useChangeLocale };
+export { usePathname, useRouter };

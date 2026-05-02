@@ -1,5 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { TRPCError } from "@trpc/server";
+import { describe, it, expect, vi } from "vitest";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import bcrypt from "bcryptjs";
@@ -43,14 +42,13 @@ function createMockDb(opts: {
   return mockDb;
 }
 
-const t = initTRPC.context<{ db: ReturnType<typeof createMockDb>; auth: any }>().create({
+const t = initTRPC.context<{ db: ReturnType<typeof createMockDb>; auth: { user: { id: string }; tenant: { schoolId: string | null } } | null }>().create({
   transformer: superjson,
 });
 
 const appRouter = t.router({ auth: authRouter });
-type AppRouter = typeof appRouter;
 
-function createCaller(db: ReturnType<typeof createMockDb>, auth: any = null) {
+function createCaller(db: ReturnType<typeof createMockDb>, auth: { user: { id: string }; tenant: { schoolId: string | null } } | null = null) {
   const caller = t.createCallerFactory(appRouter)({ db, auth });
   return caller;
 }

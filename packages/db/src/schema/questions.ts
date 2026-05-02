@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, integer, jsonb, boolean } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, integer, jsonb, boolean, unique } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { articles } from "./content";
 
@@ -43,4 +43,6 @@ export const studentAnswers = pgTable("student_answers", {
   score: integer("score"),
   feedback: text("feedback"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  unique("student_answers_unique").on(table.userId, table.questionId, table.questionType),
+]);
