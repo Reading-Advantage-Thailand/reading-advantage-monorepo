@@ -9,7 +9,7 @@ interface ListStudentsInput {
 
 interface ImportRosterInput {
   classroomId: string;
-  students: Array<{ name: string; email: string }>;
+  students: Array<{ name: string; username: string }>;
 }
 
 export async function listStudents({
@@ -79,10 +79,12 @@ export async function importRoster({
     const results = [];
 
     for (const student of input.students) {
+      const lowerUsername = student.username.toLowerCase();
+
       const [existingUser] = await tx
         .select()
         .from(users)
-        .where(eq(users.email, student.email));
+        .where(eq(users.username, lowerUsername));
 
       let studentId: string;
 
@@ -93,8 +95,9 @@ export async function importRoster({
           .insert(users)
           .values({
             id: crypto.randomUUID(),
+            username: lowerUsername,
+            displayUsername: student.username,
             name: student.name,
-            email: student.email,
             role: "STUDENT",
             schoolId: tenant.schoolId,
           })
@@ -110,7 +113,7 @@ export async function importRoster({
         })
         .onConflictDoNothing();
 
-      results.push({ email: student.email, id: studentId });
+      results.push({ username: lowerUsername, id: studentId });
     }
 
     return results;

@@ -129,8 +129,8 @@ describe("users router", () => {
   describe("list", () => {
     it("scopes results to caller's school when no schoolId provided", async () => {
       const userRows = [
-        { id: "u1", email: "a@example.com", name: "A", role: "STUDENT", schoolId: "s1" },
-        { id: "u2", email: "b@example.com", name: "B", role: "STUDENT", schoolId: "s1" },
+        { id: "u1", username: "alice", name: "A", role: "STUDENT", schoolId: "s1" },
+        { id: "u2", username: "bob", name: "B", role: "STUDENT", schoolId: "s1" },
       ];
       const db = createMockDb({ selectResult: userRows });
       const caller = createCaller(db, { user: { id: "u1", role: "TEACHER" }, tenant: { schoolId: "s1" } });
@@ -145,7 +145,7 @@ describe("users router", () => {
 
     it("allows admin to query a specific school", async () => {
       const userRows = [
-        { id: "u3", email: "c@example.com", name: "C", role: "STUDENT", schoolId: "s2" },
+        { id: "u3", username: "charlie", name: "C", role: "STUDENT", schoolId: "s2" },
       ];
       const db = createMockDb({ selectResult: userRows });
       const caller = createCaller(db, { user: { id: "a1", role: "ADMIN" }, tenant: { schoolId: "s1" } });

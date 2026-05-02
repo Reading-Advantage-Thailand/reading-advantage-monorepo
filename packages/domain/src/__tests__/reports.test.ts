@@ -51,7 +51,7 @@ function createMockDb() {
 
 const mockUser = {
   id: "teacher-1",
-  email: "teacher@test.com",
+  username: "teacher1",
   name: "Teacher",
   role: "TEACHER" as const,
   schoolId: "school-1",

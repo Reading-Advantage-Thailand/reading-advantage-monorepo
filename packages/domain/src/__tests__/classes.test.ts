@@ -3,9 +3,9 @@ import { createClass, listClasses } from "../classes/index.js";
 import { createMockDb } from "./mock-db.js";
 import type { DB } from "@reading-advantage/db";
 
-const teacher = { id: "t1", email: "t@t.com", name: "T", role: "TEACHER" as const, schoolId: "s1" };
-const admin = { id: "a1", email: "a@a.com", name: "A", role: "ADMIN" as const, schoolId: "s1" };
-const student = { id: "st1", email: "st@st.com", name: "ST", role: "STUDENT" as const, schoolId: "s1" };
+const teacher = { id: "t1", username: "teacher1", name: "T", role: "TEACHER" as const, schoolId: "s1" };
+const admin = { id: "a1", username: "admin1", name: "A", role: "ADMIN" as const, schoolId: "s1" };
+const student = { id: "st1", username: "student1", name: "ST", role: "STUDENT" as const, schoolId: "s1" };
 const tenant = { schoolId: "s1" };
 
 describe("createClass", () => {

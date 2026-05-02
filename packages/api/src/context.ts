@@ -1,35 +1,35 @@
 import { db } from "@reading-advantage/db";
-import { verifyAccessToken, type AuthContext, type UserContext, type Tenant } from "@reading-advantage/auth";
+import { validateSession, type AuthContext, type UserContext, type Tenant, type Role } from "@reading-advantage/auth";
 import type { Context } from "./trpc.js";
+import { cookies } from "next/headers";
 
-interface CreateContextOptions {
-  authorization?: string | null;
-}
-
-export function createContext(opts: CreateContextOptions = {}): Context {
+export async function createContext(): Promise<Context> {
   let auth: AuthContext | null = null;
 
-  if (opts.authorization?.startsWith("Bearer ")) {
-    try {
-      const token = opts.authorization.slice(7);
-      const payload = verifyAccessToken(token);
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("session_token")?.value;
 
-      const user: UserContext = {
-        id: payload.userId,
-        email: payload.email,
-        name: null,
-        role: payload.role,
-        schoolId: payload.schoolId,
-      };
+    if (token) {
+      const session = await validateSession(db, token);
+      if (session) {
+        const user: UserContext = {
+          id: session.user.id,
+          username: session.user.username,
+          name: session.user.name,
+          role: session.user.role as Role,
+          schoolId: session.user.schoolId,
+        };
 
-      const tenant: Tenant = {
-        schoolId: payload.schoolId,
-      };
+        const tenant: Tenant = {
+          schoolId: session.user.schoolId,
+        };
 
-      auth = { user, tenant };
-    } catch {
-      // Invalid token — auth stays null
+        auth = { user, tenant };
+      }
     }
+  } catch {
+    // Session validation failed — auth stays null
   }
 
   return { db, auth };

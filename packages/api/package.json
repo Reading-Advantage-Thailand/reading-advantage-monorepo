@@ -11,6 +11,10 @@
     "./client": {
       "types": "./dist/client.d.ts",
       "import": "./dist/client.js"
+    },
+    "./routes/auth": {
+      "types": "./dist/routes/auth/index.d.ts",
+      "import": "./dist/routes/auth/index.js"
     }
   },
   "scripts": {
@@ -37,8 +41,12 @@
     "@reading-advantage/config": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.0.0",
+    "next": "^15.0.0",
     "typescript": "^5.8.0",
     "tsx": "^4.19.0",
     "vitest": "^3.1.0"
+  },
+  "peerDependencies": {
+    "next": ">=15.0.0"
   }
 }

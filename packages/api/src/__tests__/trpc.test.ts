@@ -72,7 +72,7 @@ describe("protectedProcedure", () => {
 
   it("passes through when auth is present", async () => {
     const auth = {
-      user: { id: "u1", email: "test@test.com", name: "Test", role: "TEACHER", schoolId: "s1" },
+      user: { id: "u1", username: "testuser", name: "Test", role: "TEACHER", schoolId: "s1" },
       tenant: { schoolId: "s1" },
     };
     const caller = createCaller(auth);
@@ -82,7 +82,7 @@ describe("protectedProcedure", () => {
 
   it("mutation works with auth", async () => {
     const auth = {
-      user: { id: "u1", email: "test@test.com", name: "Test", role: "TEACHER", schoolId: "s1" },
+      user: { id: "u1", username: "testuser", name: "Test", role: "TEACHER", schoolId: "s1" },
       tenant: { schoolId: "s1" },
     };
     const caller = createCaller(auth);

@@ -3,8 +3,8 @@ import { listStudents, importRoster } from "../students/index.js";
 import { createMockDb, type MockDb } from "./mock-db.js";
 import type { DB } from "@reading-advantage/db";
 
-const teacher = { id: "t1", email: "t@t.com", name: "T", role: "TEACHER" as const, schoolId: "s1" };
-const student = { id: "st1", email: "st@st.com", name: "ST", role: "STUDENT" as const, schoolId: "s1" };
+const teacher = { id: "t1", username: "teacher1", name: "T", role: "TEACHER" as const, schoolId: "s1" };
+const student = { id: "st1", username: "student1", name: "ST", role: "STUDENT" as const, schoolId: "s1" };
 const tenant = { schoolId: "s1" };
 
 function mockClassroomSelect(db: MockDb, schoolId: string) {
@@ -31,8 +31,8 @@ function mockClassroomSelect(db: MockDb, schoolId: string) {
 describe("listStudents", () => {
   it("returns students for a classroom when called by teacher", async () => {
     const students = [
-      { id: "s1", name: "Alice", email: "a@test.com", role: "STUDENT", xp: 100, level: 2, cefrLevel: "A1" },
-      { id: "s2", name: "Bob", email: "b@test.com", role: "STUDENT", xp: 200, level: 3, cefrLevel: "A2" },
+      { id: "s1", name: "Alice", username: "a@test.com", role: "STUDENT", xp: 100, level: 2, cefrLevel: "A1" },
+      { id: "s2", name: "Bob", username: "b@test.com", role: "STUDENT", xp: 200, level: 3, cefrLevel: "A2" },
     ];
     const db = createMockDb({ selectResults: students });
     mockClassroomSelect(db, "s1");
@@ -90,7 +90,7 @@ describe("listStudents", () => {
 
 describe("importRoster", () => {
   it("creates new users and links to classroom", async () => {
-    const newUser = { id: "new-1", name: "New Student", email: "new@test.com", role: "STUDENT" };
+    const newUser = { id: "new-1", name: "New Student", username: "new@test.com", role: "STUDENT" };
 
     const mockTx = createMockDb({
       selectResults: [], // no existing user
@@ -111,16 +111,16 @@ describe("importRoster", () => {
       tenant,
       input: {
         classroomId: "c1",
-        students: [{ name: "New Student", email: "new@test.com" }],
+        students: [{ name: "New Student", username: "new@test.com" }],
       },
     });
 
-    expect(result).toEqual([{ email: "new@test.com", id: "new-1" }]);
+    expect(result).toEqual([{ username: "new@test.com", id: "new-1" }]);
     expect(db.transaction).toHaveBeenCalledOnce();
   });
 
   it("reuses existing users by email", async () => {
-    const existingUser = { id: "existing-1", name: "Existing", email: "exist@test.com", role: "STUDENT" };
+    const existingUser = { id: "existing-1", name: "Existing", username: "exist@test.com", role: "STUDENT" };
 
     const mockTx = createMockDb({
       selectResults: [existingUser], // existing user found
@@ -140,11 +140,11 @@ describe("importRoster", () => {
       tenant,
       input: {
         classroomId: "c1",
-        students: [{ name: "Existing", email: "exist@test.com" }],
+        students: [{ name: "Existing", username: "exist@test.com" }],
       },
     });
 
-    expect(result).toEqual([{ email: "exist@test.com", id: "existing-1" }]);
+    expect(result).toEqual([{ username: "exist@test.com", id: "existing-1" }]);
     // Should not have inserted a new user
     const insertCall = mockTx.insert.mock.results;
     expect(insertCall.length).toBeLessThanOrEqual(2);
@@ -172,7 +172,7 @@ describe("importRoster", () => {
         db: db as unknown as DB,
         user: teacher,
         tenant,
-        input: { classroomId: "c1", students: [{ name: "Test", email: "test@test.com" }] },
+        input: { classroomId: "c1", students: [{ name: "Test", username: "test@test.com" }] },
       })
     ).rejects.toThrow(/Classroom not found/);
   });

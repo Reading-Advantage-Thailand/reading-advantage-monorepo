@@ -25,7 +25,7 @@ export const studentsRouter = router({
         students: z.array(
           z.object({
             name: z.string(),
-            email: z.string().email(),
+            username: z.string().min(1).max(100),
           })
         ),
       })
