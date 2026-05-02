@@ -12,7 +12,8 @@
     "check-types": "turbo run check-types",
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
-    "db:reset": "docker compose down -v && docker compose up -d"
+    "db:reset": "docker compose down -v && docker compose up -d",
+    "validate": "turbo run lint && turbo run test && turbo run build"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

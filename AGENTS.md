@@ -100,6 +100,16 @@ pnpm turbo run check-types  # Type check all packages
 
 Run for a single package: `pnpm turbo run build --filter=@reading-advantage/db`
 
+## Testing Requirements
+
+**Write tests for all new backend code.** Every domain function, tRPC router, or auth utility must ship with tests in the same change.
+
+- **Framework**: Vitest for `packages/`, Jest for legacy apps
+- **Location**: `src/__tests__/*.test.ts`
+- **Mocking**: Mock the DB layer with `vi.fn()` — no real Postgres for unit tests
+- **Mock DB helper**: `packages/domain/src/__tests__/mock-db.ts`
+- **CI gate**: `pnpm turbo run test` must exit 0
+
 ## Known Issues
 
 See `measure/tech-debt.md` for the full list. Key items:

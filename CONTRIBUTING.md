@@ -4,7 +4,7 @@
 
 - [Node.js](https://nodejs.org/) (v20+)
 - [pnpm](https://pnpm.io/) (v8+)
-- [Docker](https://docs.docker.com/get-docker/) (for local PostgreSQL)
+- [Docker](https://docs.docker.com/get-docker/) or [Podman](https://podman.io/) (for local PostgreSQL)
 
 ## First-Time Setup
 
@@ -104,3 +104,21 @@ Known issues tracked in `measure/tech-debt.md`. Key items:
 - Primary-advantage has 49 ESLint errors (pre-existing)
 - Mixed Jest/Vitest test runners (being normalized)
 - Apps still use Prisma (migrating to Drizzle)
+
+## Testing
+
+**Rule: Every new domain function, tRPC router, or auth utility must ship with tests.**
+
+- Use **Vitest** for all new packages (`packages/`)
+- Use **Jest** only for legacy app code (reading-advantage, advantage-games)
+- Place tests in `src/__tests__/` alongside source, named `*.test.ts`
+- **Mock the DB layer** — unit tests must not require Docker/Postgres
+- Use `vi.fn()` and helper factories (see `packages/domain/src/__tests__/mock-db.ts`)
+
+Run tests:
+```bash
+pnpm turbo run test                        # all packages
+pnpm turbo run test --filter=@reading-advantage/auth   # single package
+```
+
+CI will fail if any package with a `test` script exits non-zero.
