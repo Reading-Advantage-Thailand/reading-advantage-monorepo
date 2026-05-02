@@ -4,20 +4,24 @@
 
 ## Phase 1: Audit & Baseline Tests
 
-- [ ] Task: Audit all Tailwind configurations
-    - List every app with `tailwind.config.js` or `tailwind.config.ts`
-    - Document custom theme extensions per app
-    - Record v3 vs v4 usage matrix
-- [ ] Task: Audit all ESLint configurations
-    - List `.eslintrc.json`, `.eslintrc.js`, and flat config files
-    - Document plugin usage and version (v8 vs v9)
-    - Record which plugins fail to resolve across pnpm boundaries
-- [ ] Task: Audit i18n library usage
-    - Search `package.json` files for `next-international` and `next-intl`
-    - Document locale files and routing setup per app
-- [ ] Task: Audit duplicated UI components and `cn()` helpers
-    - Count local shadcn components per app
-    - Count `cn()` function definitions outside `@reading-advantage/utils`
+- [x] Task: Audit all Tailwind configurations
+    - All 5 apps on Tailwind v4 (CSS-based config, no tailwind.config.js)
+    - advantage-games, science-advantage: v4 native
+    - reading-advantage: v4 (migrated 9daa21a)
+    - primary-advantage: v4 (already was)
+    - www-reading-advantage: v4 (migrated 5254525 era)
+- [x] Task: Audit all ESLint configurations
+    - v9 flat config: advantage-games (eslint.config.mjs), science-advantage (eslint.config.mjs)
+    - v8 legacy: reading-advantage (.eslintrc.json), primary-advantage (.eslintrc.json), www-reading-advantage (.eslintrc.json)
+    - 3 apps need flat config migration
+- [x] Task: Audit i18n library usage
+    - reading-advantage: both next-intl AND next-international (dead code to remove)
+    - primary-advantage: next-intl only ✅
+    - www-reading-advantage: next-intl only ✅ (migrated from next-international)
+    - advantage-games, science-advantage: no i18n library
+- [x] Task: Audit duplicated UI components and `cn()` helpers
+    - cn() deduped: all 5 apps now re-export from @reading-advantage/utils (b6e8ab7)
+    - www-reading-advantage still has local cn() — re-export, not duplication
 - [ ] Task: Write a "config drift" test script
     - Assert that no app defines its own `tailwind.config.js` after this track
     - Assert that no app defines its own `cn()` after this track
@@ -30,12 +34,14 @@
     - Removed `tailwind.config.js` and `postcss.config.mjs`
     - Added v4 `@import` and `@theme` directives to `globals.css`
     - Committed: 9daa21a
-- [ ] Task: Migrate primary-advantage Tailwind v3 → v4
-    - Same process as reading-advantage
-    - Preserve custom theme extensions by inlining into `@theme`
-- [ ] Task: Update `@reading-advantage/config/tailwind` for v4
-    - Ensure shared CSS exports work for all apps
-    - Document how apps override tokens in `@theme inline`
+- [x] Task: Migrate primary-advantage Tailwind v3 → v4
+    - Already on v4: uses `@import "tailwindcss"` + `@theme inline`
+    - Uses `@tailwindcss/postcss` plugin (v4)
+    - No tailwind.config.js present
+- [x] Task: Update `@reading-advantage/config/tailwind` for v4
+    - All 5 apps verified on Tailwind v4 CSS-based config
+    - No tailwind.config.js files remain in any app
+    - Shared CSS config available via `@reading-advantage/config/tailwind`
 - [ ] Task: Write visual regression tests for migrated apps
     - Screenshot key pages before and after migration
     - Assert no broken layouts or missing utility classes
@@ -92,7 +98,7 @@
 ---
 
 ## Total Estimated Tasks: 27
-## Completed Tasks: 3
+## Completed Tasks: 9
 ## Notes
 
 ### Decisions
