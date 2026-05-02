@@ -38,3 +38,10 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/shared_config_consolidation_20260502/](./tracks/shared_config_consolidation_20260502/)*
 - [x] **Track: i18n Migration (reading-advantage)** (18/18 tasks)
   *Link: [./tracks/i18n_migration_20260502/](./tracks/i18n_migration_20260502/)*
+
+---
+
+### Review Remediation
+
+- [ ] **Track: Last-24-Hour Review Remediation**
+  *Link: [./tracks/review_remediation_20260502/](./tracks/review_remediation_20260502/)*

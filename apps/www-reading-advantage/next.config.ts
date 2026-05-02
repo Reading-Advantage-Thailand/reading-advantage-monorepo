@@ -10,7 +10,7 @@ const withMDX = createMDX({
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["next-international", "international-types"],
+  transpilePackages: [],
   output: 'standalone' as const,
   images: {
     remotePatterns: [

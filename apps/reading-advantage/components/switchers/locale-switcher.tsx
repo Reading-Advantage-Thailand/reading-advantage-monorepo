@@ -9,20 +9,18 @@ import { Button } from "../ui/button";
 import { Icons } from "../icons";
 import { Locale, localeConfig, localeNames } from "@/configs/locale-config";
 import {
-  useChangeLocale,
+  usePathname,
+  useRouter,
   useCurrentLocale,
   useScopedI18n,
 } from "@/locales/client";
 
 export function LocaleSwitcher() {
-  // Uncomment to preserve the search params. Don't forget to also uncomment the Suspense in the layout
   const t = useScopedI18n("components.localeSwitcher");
-  const changeLocale = useChangeLocale(/* { preserveSearchParams: true } */);
-
-  // Get the current locale
+  const router = useRouter();
+  const pathname = usePathname();
   const currentLocale = useCurrentLocale();
 
-  // Move the current locale to the front of the array
   const sortedLocales = [
     currentLocale,
     ...Object.keys(localeNames).filter((locale) => locale !== currentLocale),
@@ -41,7 +39,7 @@ export function LocaleSwitcher() {
           {sortedLocales.map((locale) => (
             <DropdownMenuItem
               key={locale}
-              onClick={() => changeLocale(locale as Locale)}
+              onClick={() => router.replace(pathname, { locale: locale as Locale })}
             >
               <span
                 className={`text-sm ${

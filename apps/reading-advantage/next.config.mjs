@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  transpilePackages: ["next-international", "international-types"],
+  transpilePackages: [],
   reactStrictMode: false,
   pageExtensions: ["tsx", "ts", "jsx", "js"],
   typescript: {

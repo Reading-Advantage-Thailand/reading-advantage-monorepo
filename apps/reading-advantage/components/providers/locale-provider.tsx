@@ -1,6 +1,6 @@
 'use client';
 import { ReactNode } from 'react';
-import { I18nProviderClient } from '../../locales/client';
+import { NextIntlClientProvider } from 'next-intl';
 
 type LocaleProviderProps = {
     locale: string;
@@ -9,8 +9,8 @@ type LocaleProviderProps = {
 
 export function LocaleProvider({ locale, children }: LocaleProviderProps) {
     return (
-        <I18nProviderClient locale={locale}>
+        <NextIntlClientProvider locale={locale}>
             {children}
-        </I18nProviderClient>
+        </NextIntlClientProvider>
     );
 }

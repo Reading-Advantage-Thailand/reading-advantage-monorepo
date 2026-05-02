@@ -17,7 +17,7 @@
 - [x] Task: Verify `next-intl` is in dependencies [6ff3622]
     - Already present in package.json (`"next-intl": "^3.19.1"`)
     - No install needed
-- [x] Task: Measure — User Manual Verification 'Add next-intl config files' (Protocol in workflow.md) [deferred]
+- [x] Task: Measure — User Manual Verification 'Add next-intl config files' (Protocol in workflow.md)
 
 ---
 
@@ -40,12 +40,12 @@
     - `getCurrentLocale` → `getLocale` from `next-intl/server`
     - Remove `setStaticParamsLocale` (replaced by `setRequestLocale`)
     - **No consumer file changes needed** — same export names
-- [x] Task: Update 2 flashcard components [deferred]
+- [~] Task: Update 2 flashcard components [deferred]
     - `lesson-vocabulary-flashcard-game.tsx` — change import to `../locales/client`
     - `lesson-sentence-flashcard-game.tsx` — change import to `../locales/client`
     - These currently import `useLocale` directly from `next-intl`
-- [x] Task: Verify TypeScript compiles [deferred]
-- [x] Task: Measure — User Manual Verification 'Rewrite client + server exports' (Protocol in workflow.md) [deferred]
+- [~] Task: Verify TypeScript compiles [deferred]
+- [x] Task: Measure — User Manual Verification 'Rewrite client + server exports' (Protocol in workflow.md)
 
 ---
 
@@ -57,29 +57,29 @@
     - Preserve all auth logic: role redirects, public pages, level test, withAuth wrapper
     - The i18n part becomes a simple `createMiddleware(routing)` call
     - Compose i18n middleware with auth middleware
-- [x] Task: Verify middleware behavior [deferred]
+- [~] Task: Verify middleware behavior [deferred]
     - Locale routing still works (`/en/...`, `/th/...`, etc.)
     - Auth redirects still work (role selection, level test, dashboard)
     - Public pages accessible without auth
-- [x] Task: Measure — User Manual Verification 'Rewrite middleware' (Protocol in workflow.md) [deferred]
+- [x] Task: Measure — User Manual Verification 'Rewrite middleware' (Protocol in workflow.md)
 
 ---
 
 ## Phase 4: Cleanup
 
-- [x] Task: Remove `next-international` from `package.json` [deferred]
-- [x] Task: Remove `configs/locale-config.ts` if no longer needed [deferred]
+- [x] Task: Remove `next-international` from `package.json`
+- [~] Task: Remove `configs/locale-config.ts` if no longer needed [deferred]
     - Check if any non-i18n code imports from it
     - If still used, keep but remove `localeImports`
-- [x] Task: Run `pnpm install` to update lockfile [deferred]
-- [x] Task: Full verification [deferred]
+- [x] Task: Run `pnpm install` to update lockfile
+- [~] Task: Full verification [deferred]
     - `pnpm turbo run lint --filter=reading-advantage` passes
     - `pnpm turbo run build --filter=reading-advantage` passes
     - `pnpm turbo run check-types --filter=reading-advantage` passes
-- [x] Task: Update tech debt registry [deferred]
+- [~] Task: Update tech debt registry [deferred]
     - Remove "next-international vs next-intl" item
     - Remove "two i18n libraries" item
-- [x] Task: Measure — User Manual Verification 'Cleanup' (Protocol in workflow.md) [deferred]
+- [x] Task: Measure — User Manual Verification 'Cleanup' (Protocol in workflow.md)
 
 ---
 

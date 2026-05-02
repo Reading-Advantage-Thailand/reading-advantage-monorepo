@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { createClass, listClasses } from "../classes/index.js";
-import { createMockDb } from "./mock-db.js";
+import { createMockDb, type MockDb } from "./mock-db.js";
 
 const teacher = { id: "t1", email: "t@t.com", name: "T", role: "TEACHER" as const, schoolId: "s1" };
 const admin = { id: "a1", email: "a@a.com", name: "A", role: "ADMIN" as const, schoolId: "s1" };
@@ -12,7 +12,7 @@ describe("createClass", () => {
     const mockClass = { id: "c1", name: "Math", schoolId: "s1", teacherId: "t1" };
     const db = createMockDb({ insertReturning: [mockClass] });
 
-    const result = await createClass({ db: db as any, user: teacher, tenant, input: { name: "Math" } });
+    const result = await createClass({ db: db as MockDb, user: teacher, tenant, input: { name: "Math" } });
 
     expect(result).toEqual(mockClass);
     expect(db.insert).toHaveBeenCalledOnce();
@@ -22,7 +22,7 @@ describe("createClass", () => {
     const mockClass = { id: "c1", name: "Science", schoolId: "s1", teacherId: "a1" };
     const db = createMockDb({ insertReturning: [mockClass] });
 
-    const result = await createClass({ db: db as any, user: admin, tenant, input: { name: "Science" } });
+    const result = await createClass({ db: db as MockDb, user: admin, tenant, input: { name: "Science" } });
 
     expect(result).toEqual(mockClass);
   });
@@ -31,7 +31,7 @@ describe("createClass", () => {
     const db = createMockDb();
 
     await expect(
-      createClass({ db: db as any, user: student, tenant, input: { name: "Math" } })
+      createClass({ db: db as MockDb, user: student, tenant, input: { name: "Math" } })
     ).rejects.toThrow(/STUDENT.*class:create/);
   });
 });
@@ -42,7 +42,7 @@ describe("listClasses", () => {
     const db = createMockDb({ selectResults: classes });
 
     const result = await listClasses({
-      db: db as any,
+      db: db as MockDb,
       user: teacher,
       tenant,
       input: { includeArchived: false },
@@ -57,7 +57,7 @@ describe("listClasses", () => {
     const db = createMockDb({ selectResults: classes });
 
     const result = await listClasses({
-      db: db as any,
+      db: db as MockDb,
       user: admin,
       tenant,
       input: { includeArchived: false },
@@ -70,7 +70,7 @@ describe("listClasses", () => {
     const db = createMockDb();
 
     await expect(
-      listClasses({ db: db as any, user: student, tenant, input: { includeArchived: false } })
+      listClasses({ db: db as MockDb, user: student, tenant, input: { includeArchived: false } })
     ).rejects.toThrow(/STUDENT.*class:list/);
   });
 });

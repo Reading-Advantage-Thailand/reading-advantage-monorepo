@@ -1,5 +1,11 @@
 import { vi } from "vitest";
 
+export interface MockDb {
+  insert: ReturnType<typeof vi.fn>;
+  select: ReturnType<typeof vi.fn>;
+  transaction: ReturnType<typeof vi.fn>;
+}
+
 /**
  * Create a mock Drizzle DB that supports the chain patterns used in domain functions:
  *   db.insert(table).values(data).returning()
@@ -10,9 +16,9 @@ import { vi } from "vitest";
 export function createMockDb(overrides: {
   insertReturning?: unknown[];
   selectResults?: unknown[];
-  transactionFn?: (tx: ReturnType<typeof createMockDb>) => Promise<unknown>;
-} = {}) {
-  const mockDb = {
+  transactionFn?: (tx: MockDb) => Promise<unknown>;
+} = {}): MockDb {
+  const mockDb: MockDb = {
     insert: vi.fn().mockReturnValue({
       values: vi.fn().mockReturnValue({
         returning: vi.fn().mockResolvedValue(overrides.insertReturning ?? []),
@@ -28,11 +34,9 @@ export function createMockDb(overrides: {
       }),
     }),
     transaction: vi.fn().mockImplementation(
-      overrides.transactionFn ?? ((fn: (tx: unknown) => Promise<unknown>) => fn(mockDb))
+      overrides.transactionFn ?? ((fn: (tx: MockDb) => Promise<unknown>) => fn(mockDb))
     ),
   };
 
   return mockDb;
 }
-
-export type MockDb = ReturnType<typeof createMockDb>;

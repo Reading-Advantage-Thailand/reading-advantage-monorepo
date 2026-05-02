@@ -21,7 +21,7 @@ export default async function RootLayout({ params, children }: { params: Promise
   return (
     <html lang={locale} suppressHydrationWarning={true}>
       <body className="bg-sky-50 text-sky-900 min-h-screen font-sans">
-        <LocaleProvider locale={locale}>{children}</LocaleProvider>
+        <LocaleProvider locale={locale} messages={{}}>{children}</LocaleProvider>
       </body>
     </html>
   );

@@ -27,7 +27,7 @@
     - Assert that no app defines its own `tailwind.config.js` after this track
     - Assert that no app defines its own `cn()` after this track
     - Run in CI to prevent regression
-- [x] Task: Measure — User Manual Verification 'Audit & Baseline Tests' (Protocol in workflow.md) [deferred]
+- [~] Task: Measure — User Manual Verification 'Audit & Baseline Tests' (Protocol in workflow.md) [deferred]
 
 ## Phase 2: Tailwind Unification
 
@@ -43,14 +43,14 @@
     - All 5 apps verified on Tailwind v4 CSS-based config
     - No tailwind.config.js files remain in any app
     - Shared CSS config available via `@reading-advantage/config/tailwind`
-- [x] Task: Write visual regression tests for migrated apps [deferred]
+- [~] Task: Write visual regression tests for migrated apps [deferred]
     - Screenshot key pages before and after migration
     - Assert no broken layouts or missing utility classes
-- [x] Task: Measure — User Manual Verification 'Tailwind Unification' (Protocol in workflow.md) [deferred]
+- [~] Task: Measure — User Manual Verification 'Tailwind Unification' (Protocol in workflow.md) [deferred]
 
 ## Phase 3: ESLint Unification
 
-- [x] Task: Fix shared ESLint flat config plugin resolution [deferred]
+- [~] Task: Fix shared ESLint flat config plugin resolution [deferred]
     - Investigate pnpm + ESLint v9 plugin hoisting issues
     - Add `resolvePluginsRelativeTo` equivalent or use `eslint-plugin-import-x`
     - Ensure `@reading-advantage/config/eslint` works when consumed by apps
@@ -68,7 +68,7 @@
 - [x] Task: Run `turbo run lint` and fix new errors introduced by stricter shared rules [6cb1da2]
     - Document any errors that must be fixed vs suppressed
     - 10/11 packages pass lint; primary-advantage has 49 pre-existing errors
-- [x] Task: Measure — User Manual Verification 'ESLint Unification' (Protocol in workflow.md) [deferred]
+- [~] Task: Measure — User Manual Verification 'ESLint Unification' (Protocol in workflow.md) [deferred]
 
 ## Phase 4: i18n Unification
 
@@ -78,30 +78,30 @@
 - [x] Task: Remove `next-international` from reading-advantage
     - Moved to dedicated track: `i18n_migration_20260502`
     - Scope: 315 consumer files, complex middleware (216 lines)
-- [x] Task: Update `@reading-advantage/config` with shared i18n types [deferred]
+- [~] Task: Update `@reading-advantage/config` with shared i18n types [deferred]
     - Export shared `Locale` type and message shape if applicable
-- [x] Task: Write integration tests for locale switching [deferred]
+- [~] Task: Write integration tests for locale switching [deferred]
     - Assert `/en` and `/th` (or other supported locales) render correctly
-- [x] Task: Measure — User Manual Verification 'i18n Unification' (Protocol in workflow.md) [deferred]
+- [~] Task: Measure — User Manual Verification 'i18n Unification' (Protocol in workflow.md) [deferred]
 
 ## Phase 5: UI & Utilities Deduplication
 
-- [x] Task: Expand `@reading-advantage/ui` with high-impact components [deferred]
+- [~] Task: Expand `@reading-advantage/ui` with high-impact components [deferred]
     - Migrate the top 10 most-used shadcn components from reading-advantage
     - Ensure each component is consumed by at least 2 apps
     - Target: ≥15 exported components total
 - [x] Task: Replace local `cn()` with `@reading-advantage/utils`
     - Replaced local definitions in all 5 apps with re-exports from shared utils
     - Committed: b6e8ab7
-- [x] Task: Remove local copies of migrated UI components [deferred]
+- [~] Task: Remove local copies of migrated UI components [deferred]
     - Delete duplicate `button.tsx`, `card.tsx`, etc. from app directories
     - Update imports to `@reading-advantage/ui`
-- [x] Task: Run full `turbo run lint build` across monorepo [deferred]
+- [~] Task: Run full `turbo run lint build` across monorepo [deferred]
     - Confirm zero lint errors
     - Confirm all apps build successfully
-- [x] Task: Update tech debt registry [deferred]
+- [~] Task: Update tech debt registry [deferred]
     - Remove resolved items (Tailwind v3, ESLint v8, i18n split, duplicated UI)
-- [x] Task: Measure — User Manual Verification 'UI & Utilities Deduplication' (Protocol in workflow.md) [deferred]
+- [~] Task: Measure — User Manual Verification 'UI & Utilities Deduplication' (Protocol in workflow.md) [deferred]
 
 ---
 
