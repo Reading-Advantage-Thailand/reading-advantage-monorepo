@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { listStudents, importRoster } from "../students/index.js";
 import { createMockDb, type MockDb } from "./mock-db.js";
+import type { DB } from "@reading-advantage/db";
 
 const teacher = { id: "t1", email: "t@t.com", name: "T", role: "TEACHER" as const, schoolId: "s1" };
 const student = { id: "st1", email: "st@st.com", name: "ST", role: "STUDENT" as const, schoolId: "s1" };
@@ -15,7 +16,7 @@ describe("listStudents", () => {
     const db = createMockDb({ selectResults: students });
 
     const result = await listStudents({
-      db: db as MockDb,
+      db: db as unknown as DB,
       user: teacher,
       tenant,
       input: { classroomId: "c1" },
@@ -28,7 +29,7 @@ describe("listStudents", () => {
     const db = createMockDb();
 
     await expect(
-      listStudents({ db: db as MockDb, user: student, tenant, input: { classroomId: "c1" } })
+      listStudents({ db: db as unknown as DB, user: student, tenant, input: { classroomId: "c1" } })
     ).rejects.toThrow(/STUDENT.*student:list/);
   });
 });
@@ -43,11 +44,14 @@ describe("importRoster", () => {
     });
 
     const db = createMockDb({
-      transactionFn: async (fn: (tx: MockDb) => Promise<unknown>) => fn(mockTx),
+      transactionFn: async (fn: unknown) => {
+          const castFn = fn as (tx: MockDb) => Promise<unknown>;
+          return castFn(mockTx);
+        },
     });
 
     const result = await importRoster({
-      db: db as MockDb,
+      db: db as unknown as DB,
       user: teacher,
       tenant,
       input: {
@@ -68,11 +72,14 @@ describe("importRoster", () => {
     });
 
     const db = createMockDb({
-      transactionFn: async (fn: (tx: MockDb) => Promise<unknown>) => fn(mockTx),
+      transactionFn: async (fn: unknown) => {
+          const castFn = fn as (tx: MockDb) => Promise<unknown>;
+          return castFn(mockTx);
+        },
     });
 
     const result = await importRoster({
-      db: db as MockDb,
+      db: db as unknown as DB,
       user: teacher,
       tenant,
       input: {
@@ -93,7 +100,7 @@ describe("importRoster", () => {
 
     await expect(
       importRoster({
-        db: db as MockDb,
+        db: db as unknown as DB,
         user: student,
         tenant,
         input: { classroomId: "c1", students: [] },

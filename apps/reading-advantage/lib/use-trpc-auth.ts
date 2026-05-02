@@ -20,6 +20,14 @@ export function useTrpcAuth() {
 
   const loginMutation = trpc.auth.login.useMutation();
   const registerMutation = trpc.auth.register.useMutation();
+  const migrateMutation = trpc.auth.migrate.useMutation();
+
+  const setTokens = useCallback((accessToken: string, refreshToken: string) => {
+    localStorage.setItem(TOKEN_KEY, accessToken);
+    localStorage.setItem(REFRESH_KEY, refreshToken);
+    // Set a cookie so server-rendered pages can read the token
+    document.cookie = `ra_access_token=${accessToken}; path=/; max-age=604800`;
+  }, []);
 
   const login = useCallback(
     async (email: string, password: string): Promise<TrpcAuthUser | null> => {
@@ -27,18 +35,38 @@ export function useTrpcAuth() {
       setError("");
       try {
         const result = await loginMutation.mutateAsync({ email, password });
-        localStorage.setItem(TOKEN_KEY, result.accessToken);
-        localStorage.setItem(REFRESH_KEY, result.refreshToken);
+        setTokens(result.accessToken, result.refreshToken);
         return result.user;
-      } catch (err: any) {
-        const msg = err?.message ?? "Login failed";
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : "Login failed";
         setError(msg);
         return null;
       } finally {
         setIsLoading(false);
       }
     },
-    [loginMutation]
+    [loginMutation, setTokens]
+  );
+
+  const migrate = useCallback(
+    async (email: string, password: string): Promise<TrpcAuthUser | null> => {
+      setIsLoading(true);
+      setError("");
+      try {
+        const result = await migrateMutation.mutateAsync({ email, password });
+        setTokens(result.accessToken, result.refreshToken);
+        return result.user;
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : "Migration failed";
+        setError(msg);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [migrateMutation, setTokens]
   );
 
   const register = useCallback(
@@ -55,28 +83,29 @@ export function useTrpcAuth() {
           password,
           name,
         });
-        localStorage.setItem(TOKEN_KEY, result.accessToken);
-        localStorage.setItem(REFRESH_KEY, result.refreshToken);
+        setTokens(result.accessToken, result.refreshToken);
         return result.user;
-      } catch (err: any) {
-        const msg = err?.message ?? "Registration failed";
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : "Registration failed";
         setError(msg);
         return null;
       } finally {
         setIsLoading(false);
       }
     },
-    [registerMutation]
+    [registerMutation, setTokens]
   );
 
   const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_KEY);
+    document.cookie = "ra_access_token=; path=/; max-age=0";
   }, []);
 
   const getAccessToken = useCallback((): string | null => {
     return localStorage.getItem(TOKEN_KEY);
   }, []);
 
-  return { login, register, logout, getAccessToken, isLoading, error };
+  return { login, register, migrate, logout, getAccessToken, isLoading, error };
 }

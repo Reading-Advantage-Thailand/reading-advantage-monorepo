@@ -3,7 +3,7 @@ import { vi } from "vitest";
 export interface MockDb {
   insert: ReturnType<typeof vi.fn>;
   select: ReturnType<typeof vi.fn>;
-  transaction: ReturnType<typeof vi.fn>;
+  transaction: <T>(fn: (tx: MockDb) => Promise<T>) => Promise<T>;
 }
 
 /**

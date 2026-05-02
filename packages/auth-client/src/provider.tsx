@@ -5,10 +5,12 @@ import { AuthContext, type AuthState } from "./context.js";
 
 const TOKEN_KEY = "ra_access_token";
 const REFRESH_KEY = "ra_refresh_token";
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const DEFAULT_API_URL =
+  typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+const API_URL = DEFAULT_API_URL;
 
 interface AuthProviderProps {
-  children: ReactNode;
+  children?: ReactNode;
   apiUrl?: string;
 }
 
@@ -21,11 +23,19 @@ export function AuthProvider({ children, apiUrl = API_URL }: AuthProviderProps) 
   });
 
   const callApi = useCallback(
-    async (path: string, body: unknown) => {
+    async (path: string, body: unknown, method = "POST") => {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      const accessToken = localStorage.getItem(TOKEN_KEY);
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+
       const res = await fetch(`${apiUrl}${path}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        method,
+        headers,
+        body: method === "GET" ? undefined : JSON.stringify(body),
       });
 
       if (!res.ok) {
@@ -40,7 +50,7 @@ export function AuthProvider({ children, apiUrl = API_URL }: AuthProviderProps) 
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const data = await callApi("/trpc/auth.login", {
+      const data = await callApi("/api/trpc/auth.login", {
         json: { email, password },
       });
 
@@ -61,7 +71,7 @@ export function AuthProvider({ children, apiUrl = API_URL }: AuthProviderProps) 
 
   const register = useCallback(
     async (email: string, password: string, name: string) => {
-      const data = await callApi("/trpc/auth.register", {
+      const data = await callApi("/api/trpc/auth.register", {
         json: { email, password, name },
       });
 
@@ -85,7 +95,7 @@ export function AuthProvider({ children, apiUrl = API_URL }: AuthProviderProps) 
 
     if (refreshToken && state.accessToken) {
       try {
-        await callApi("/trpc/auth.logout", {
+        await callApi("/api/trpc/auth.logout", {
           json: { refreshToken },
         });
       } catch {
@@ -113,7 +123,7 @@ export function AuthProvider({ children, apiUrl = API_URL }: AuthProviderProps) 
     }
 
     try {
-      const data = await callApi("/trpc/auth.refresh", {
+      const data = await callApi("/api/trpc/auth.refresh", {
         json: { refreshToken },
       });
 
@@ -123,7 +133,7 @@ export function AuthProvider({ children, apiUrl = API_URL }: AuthProviderProps) 
       localStorage.setItem(REFRESH_KEY, result.refreshToken);
 
       // Get user info from session
-      const sessionRes = await fetch(`${apiUrl}/trpc/auth.session`, {
+      const sessionRes = await fetch(`${apiUrl}/api/trpc/auth.session`, {
         headers: { Authorization: `Bearer ${result.accessToken}` },
       });
 

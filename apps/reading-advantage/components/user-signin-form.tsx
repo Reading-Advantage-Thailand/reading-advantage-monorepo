@@ -22,10 +22,12 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
   const t = useI18n();
-  const { login, isLoading, error: authError } = useTrpcAuth();
+  const { login, migrate, isLoading, error: authError } = useTrpcAuth();
   const [error, setError] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const [showMigration, setShowMigration] = React.useState(false);
+  const [migrationPassword, setMigrationPassword] = React.useState("");
 
   const displayError = authError || error;
 
@@ -34,6 +36,28 @@ export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
     setError("");
     const user = await login(email, password);
     if (user) {
+      // Also establish NextAuth session for server-rendered pages
+      await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      window.location.href = "/";
+    } else if (authError === "MIGRATION_REQUIRED") {
+      setShowMigration(true);
+    }
+  }
+
+  async function onMigrate(event: React.SyntheticEvent) {
+    event.preventDefault();
+    setError("");
+    const user = await migrate(email, migrationPassword);
+    if (user) {
+      await signIn("credentials", {
+        email,
+        password: migrationPassword,
+        redirect: false,
+      });
       window.location.href = "/";
     }
   }
@@ -76,7 +100,9 @@ export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
               required
             />
           </div>
-          {displayError && <div className="text-red-500 text-sm">{displayError}</div>}
+          {displayError && displayError !== "MIGRATION_REQUIRED" && (
+            <div className="text-red-500 text-sm">{displayError}</div>
+          )}
           <Button
             name="signin-button"
             type="submit"
@@ -96,6 +122,43 @@ export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
           </Link>
         </div>
       </form>
+
+      <Dialog open={showMigration} onOpenChange={setShowMigration}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Your Password</DialogTitle>
+            <DialogDescription>
+              Your account needs a new password for the updated login system.
+              Please create a password below.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={onMigrate} className="grid gap-4">
+            <div className="grid gap-1">
+              <Label htmlFor="migration-password">New Password</Label>
+              <Input
+                id="migration-password"
+                type="password"
+                placeholder="Enter a new password"
+                value={migrationPassword}
+                onChange={(e) => setMigrationPassword(e.target.value)}
+                disabled={isLoading}
+                required
+                minLength={8}
+              />
+            </div>
+            {authError && authError !== "MIGRATION_REQUIRED" && (
+              <div className="text-red-500 text-sm">{authError}</div>
+            )}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Set Password & Continue
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />

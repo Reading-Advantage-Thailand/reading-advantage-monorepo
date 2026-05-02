@@ -25,7 +25,21 @@ export const authRouter = router({
         .where(eq(users.email, input.email))
         .limit(1);
 
-      if (!user || !user.password) {
+      if (!user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid email or password",
+        });
+      }
+
+      if (!user.password && user.firebaseUid) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "MIGRATION_REQUIRED",
+        });
+      }
+
+      if (!user.password) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "Invalid email or password",
@@ -210,6 +224,64 @@ export const authRouter = router({
           message: "Invalid refresh token",
         });
       }
+    }),
+
+  migrate: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+        password: z.string().min(8),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const [user] = await ctx.db
+        .select()
+        .from(users)
+        .where(eq(users.email, input.email))
+        .limit(1);
+
+      if (!user || !user.firebaseUid || user.password) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Migration not available for this account",
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(input.password, 10);
+
+      const [updated] = await ctx.db
+        .update(users)
+        .set({ password: hashedPassword, updatedAt: new Date() })
+        .where(eq(users.id, user.id))
+        .returning();
+
+      const payload: AccessTokenPayload = {
+        userId: updated.id,
+        email: updated.email,
+        role: updated.role,
+        schoolId: updated.schoolId,
+      };
+
+      const tokens = createTokenPair(payload);
+
+      await ctx.db.insert(refreshTokens).values({
+        id: crypto.randomUUID(),
+        userId: updated.id,
+        token: tokens.refreshToken,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+
+      return {
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        user: {
+          id: updated.id,
+          email: updated.email,
+          name: updated.name,
+          role: updated.role,
+          schoolId: updated.schoolId,
+        },
+      };
     }),
 
   logout: protectedProcedure

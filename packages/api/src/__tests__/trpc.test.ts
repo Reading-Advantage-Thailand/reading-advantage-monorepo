@@ -6,8 +6,12 @@ import { z } from "zod";
  * Test the isAuthed middleware pattern used in trpc.ts
  * by recreating the same middleware locally.
  */
+interface TestContext {
+  auth: { user: { id: string }; tenant: { schoolId: string } } | null;
+}
+
 function createTestTrpc() {
-  const t = initTRPC.create();
+  const t = initTRPC.context<TestContext>().create();
 
   const isAuthed = t.middleware(async ({ ctx, next }) => {
     if (!ctx.auth) {
@@ -39,11 +43,9 @@ const { appRouter } = createTestTrpc();
 
 type AppRouter = typeof appRouter;
 
-function createCaller(auth: any) {
+function createCaller(auth: TestContext["auth"]) {
   const { appRouter } = createTestTrpc();
-  const t = initTRPC.create();
-  const createCallerFactory = t.createCallerFactory;
-  const caller = createCallerFactory(appRouter)({ db: {} as any, auth });
+  const caller = appRouter.createCaller({ auth });
   return caller;
 }
 

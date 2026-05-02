@@ -82,7 +82,7 @@ export default async function RootLayout({
   children: ReactNode;
 }) {
   const { locale } = await params;
-  const user = getCurrentUser();
+  const user = await getCurrentUser();
   return (
     <html lang={locale} suppressHydrationWarning={true}>
       <body

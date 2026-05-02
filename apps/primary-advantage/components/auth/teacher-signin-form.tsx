@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useAuth } from "@reading-advantage/auth-client";
 import { FormError } from "../form-error";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
 export function TeacherSignInForm({
@@ -95,14 +96,14 @@ export function TeacherSignInForm({
             <FormItem>
               <FormLabel className="flex items-center justify-between">
                 <span>Password</span>
-                <a
+                <Link
                   href="/auth/forgot-password"
                   className={cn(
                     "text-muted-foreground text-sm font-normal underline-offset-4 hover:underline",
                   )}
                 >
                   Forgot your password?
-                </a>
+                </Link>
               </FormLabel>
 
               <FormControl>
@@ -144,9 +145,9 @@ export function TeacherSignInForm({
         </div>
         <div className="text-center text-sm">
           Don&apos;t have an account?{" "}
-          <a href="/auth/signup" className="underline underline-offset-4">
+          <Link href="/auth/signup" className="underline underline-offset-4">
             Sign up
-          </a>
+          </Link>
         </div>
       </form>
     </Form>

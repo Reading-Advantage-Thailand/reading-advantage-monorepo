@@ -1,13 +1,27 @@
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc.js";
 import { users } from "@reading-advantage/db/schema";
 
+const safeUserCols = {
+  id: users.id,
+  email: users.email,
+  name: users.name,
+  role: users.role,
+  schoolId: users.schoolId,
+  image: users.image,
+  xp: users.xp,
+  level: users.level,
+  cefrLevel: users.cefrLevel,
+  createdAt: users.createdAt,
+  updatedAt: users.updatedAt,
+};
+
 export const usersRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
     const [user] = await ctx.db
-      .select()
+      .select(safeUserCols)
       .from(users)
       .where(eq(users.id, ctx.auth.user.id))
       .limit(1);
@@ -23,7 +37,7 @@ export const usersRouter = router({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const [user] = await ctx.db
-        .select()
+        .select(safeUserCols)
         .from(users)
         .where(eq(users.id, input.id))
         .limit(1);
@@ -57,10 +71,12 @@ export const usersRouter = router({
         conditions.push(eq(users.role, input.role));
       }
 
-      // TODO: add where clause when conditions exist
+      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
       return ctx.db
-        .select()
+        .select(safeUserCols)
         .from(users)
+        .where(whereClause)
         .limit(input.limit)
         .offset(input.offset);
     }),

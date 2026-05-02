@@ -15,6 +15,10 @@ const DEMO_ACCOUNTS = [
 ];
 
 export function SigninForm() {
+  const isProduction = typeof window !== "undefined" && window.location.hostname !== "localhost";
+  if (isProduction) {
+    return null;
+  }
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

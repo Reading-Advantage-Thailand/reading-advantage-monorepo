@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import type { DB } from "@reading-advantage/db";
 import { getStudentProgress, getClassAnalytics } from "../reports/index.js";
 
 vi.mock("@reading-advantage/db/schema", () => ({
@@ -77,7 +78,7 @@ describe("getStudentProgress", () => {
       });
 
     const result = await getStudentProgress({
-      db: db as MockDb,
+      db: db as unknown as DB,
       user: mockUser,
       tenant: mockTenant,
       input: { studentId: "student-1" },
@@ -118,7 +119,7 @@ describe("getStudentProgress", () => {
       });
 
     const result = await getStudentProgress({
-      db: db as MockDb,
+      db: db as unknown as DB,
       user: mockUser,
       tenant: mockTenant,
       input: { studentId: "student-1" },
@@ -139,7 +140,7 @@ describe("getClassAnalytics", () => {
     });
 
     const result = await getClassAnalytics({
-      db: db as MockDb,
+      db: db as unknown as DB,
       user: mockUser,
       tenant: mockTenant,
       input: { classId: "class-1" },
@@ -174,7 +175,7 @@ describe("getClassAnalytics", () => {
     }));
 
     const result = await getClassAnalytics({
-      db: db as MockDb,
+      db: db as unknown as DB,
       user: mockUser,
       tenant: mockTenant,
       input: { classId: "class-1" },
