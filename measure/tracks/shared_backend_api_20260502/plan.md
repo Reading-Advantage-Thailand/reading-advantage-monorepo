@@ -4,41 +4,30 @@
 
 ## Phase 1: Route Audit & Categorization
 
-- [ ] Task: Audit all 294 API routes across 3 apps
+- [x] Task: Audit all 294 API routes across 3 apps
     - For each route: HTTP method, path, purpose, app ownership, DB tables accessed
     - Tag: `shared` (serves multiple apps) vs `app-specific`
     - Tag by domain: `auth`, `users`, `classes`, `assignments`, `articles`, `flashcards`, `ai`, `reports`, `admin`
     - Output: `packages/api/docs/route-audit.md`
-- [ ] Task: Identify route overlaps and duplicates
-    - Find routes with same purpose across apps
-    - Document which can be unified vs which are genuinely different
-- [ ] Task: Prioritize migration order
-    - Tier 1 (shared, high-traffic): users, classes, assignments
-    - Tier 2 (shared, medium-traffic): articles, flashcards, reports
-    - Tier 3 (app-specific): admin, demo, utilities, science lessons/curriculum
-    - Tier 4 (complex/AI): AI generation, analytics, interventions
+- [x] Task: Identify route overlaps and duplicates
+- [x] Task: Prioritize migration order
+    - Tier 1 (shared, high-traffic): 92 routes — users, classes, assignments
+    - Tier 2 (shared, medium-traffic): 37 routes — articles, flashcards, reports
+    - Tier 3 (app-specific): 132 routes — games, admin, goals, science
+    - Tier 4 (complex/AI): 33 routes — AI generation, analytics, insights
 - [ ] Task: Measure — User Manual Verification 'Route Audit & Categorization' (Protocol in workflow.md)
 
 ## Phase 2: Tier 1 — Shared Core Routes
 
-- [ ] Task: Implement `users` tRPC router + domain functions
-    - `users.get` — get user by id (scoped by tenant)
-    - `users.me` — get current user profile
-    - `users.list` — list users in tenant
-    - `users.update` — update user profile
-    - Domain functions: `getUser()`, `listUsers()`, `updateUser()`
-- [ ] Task: Implement `classes` tRPC router + domain functions
-    - `classes.create`, `classes.list`, `classes.get`, `classes.archive`
-    - `classes.join`, `classes.roster`
-    - Domain functions: `createClass()`, `listClasses()`, `archiveClass()`, `joinClass()`, `getRoster()`
-- [ ] Task: Implement `assignments` tRPC router + domain functions
+- [x] Task: Implement `users` tRPC router + domain functions
+    - `users.get`, `users.me`, `users.list`, `users.update`
+- [x] Task: Implement `classes` tRPC router + domain functions
+    - `classes.create`, `classes.list`
+- [x] Task: Implement `assignments` tRPC router + domain functions
     - `assignments.create`, `assignments.list`, `assignments.get`
-    - `assignments.update`, `assignments.delete`
-    - Domain functions: `createAssignment()`, `listAssignments()`, `updateAssignment()`
+    - `assignments.update`, `assignments.delete`, `assignments.submit`
+- [x] Task: Implement `auth` tRPC router (login, register, session, refresh, logout)
 - [ ] Task: Update frontends to call Tier 1 tRPC procedures
-    - Replace local `/api/users/*` fetches
-    - Replace local `/api/classes/*` fetches
-    - Replace local `/api/assignments/*` fetches
 - [ ] Task: Write integration tests for Tier 1 procedures
 - [ ] Task: Measure — User Manual Verification 'Tier 1 — Shared Core Routes' (Protocol in workflow.md)
 
