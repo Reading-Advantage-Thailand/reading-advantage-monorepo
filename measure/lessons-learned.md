@@ -20,6 +20,12 @@
 - (2026-05-02, shared_backend_api) Using `insert(...).onConflictDoUpdate(...)` with a `uniqueIndex` on `(userId, lessonId)` provided a clean upsert pattern for `lessonProgress` without manual read-then-write.
 - (2026-05-02, shared_backend_api) Adding database-level unique constraints (`classroomStudents`, `studentAssignments`, `accounts`, `verificationTokens`) prevents duplicate data at the source.
 
+## Testing & Mocking
+
+- (2026-05-02, review_remediation) Drizzle query-builder mocks must return **thenable objects**, not plain functions. `db.select().from().where()` returns an object that is awaited directly. If `.where()` returns a function object, `await` will not call it — it will return the function itself. Use `Object.assign(Promise.resolve(value), { limit: ..., innerJoin: ... })` for chain mocks.
+- (2026-05-02, review_remediation) Cross-tenant authorization checks must be tested explicitly. `assertCan()` only checks role permissions; it does NOT verify school/class ownership. Every domain function that queries by caller-supplied ID needs an ownership guard and a corresponding cross-tenant test.
+
 ## Planning Improvements
 
 - (2026-05-02, shared_backend_api) Fixing package exports and build outputs took ~30 min but unblocked all three apps. Always verify that workspace packages with ESM `.js` imports have proper `dist/` exports before trying to debug Next.js module resolution.
+- (2026-05-02, review_remediation) When adding DB constraints in Drizzle schema, always generate a migration (`drizzle-kit generate`) in the same track. Schema-only constraints don't protect production data until the migration runs.

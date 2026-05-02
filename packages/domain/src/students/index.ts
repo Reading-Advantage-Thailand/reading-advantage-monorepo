@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
-import { users, classroomStudents } from "@reading-advantage/db/schema";
-import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
+import { users, classroomStudents, classrooms } from "@reading-advantage/db/schema";
+import { assertCan, assertTenantAccess, type UserContext, type Tenant } from "@reading-advantage/auth";
 
 interface ListStudentsInput {
   classroomId: string;
@@ -24,6 +24,17 @@ export async function listStudents({
   input: ListStudentsInput;
 }) {
   assertCan(user, "student:list", tenant);
+
+  // Verify classroom belongs to caller's school
+  const [classroom] = await db
+    .select({ schoolId: classrooms.schoolId })
+    .from(classrooms)
+    .where(eq(classrooms.id, input.classroomId))
+    .limit(1);
+
+  if (!classroom || classroom.schoolId !== tenant.schoolId) {
+    throw new Error("Classroom not found");
+  }
 
   return db
     .select({
@@ -52,6 +63,17 @@ export async function importRoster({
   input: ImportRosterInput;
 }) {
   assertCan(user, "student:import", tenant);
+
+  // Verify classroom belongs to caller's school
+  const [classroom] = await db
+    .select({ schoolId: classrooms.schoolId })
+    .from(classrooms)
+    .where(eq(classrooms.id, input.classroomId))
+    .limit(1);
+
+  if (!classroom || classroom.schoolId !== tenant.schoolId) {
+    throw new Error("Classroom not found");
+  }
 
   return db.transaction(async (tx) => {
     const results = [];

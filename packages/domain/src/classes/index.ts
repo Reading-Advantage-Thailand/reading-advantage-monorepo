@@ -58,7 +58,8 @@ export async function listClasses({
 
   if (user.role === "TEACHER") {
     conditions.push(eq(classrooms.teacherId, user.id));
-  } else if (tenant.schoolId) {
+  }
+  if (tenant.schoolId) {
     conditions.push(eq(classrooms.schoolId, tenant.schoolId));
   }
 

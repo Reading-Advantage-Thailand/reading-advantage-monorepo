@@ -5,6 +5,7 @@ import {
   userWordRecords,
   userSentenceRecords,
   classroomStudents,
+  classrooms,
 } from "@reading-advantage/db/schema";
 import { xpLogs, storyRecords } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
@@ -21,6 +22,23 @@ export async function getStudentProgress({
   input: { studentId: string };
 }) {
   assertCan(user, "progress:read:all", tenant);
+
+  // Verify student is enrolled in a classroom in the caller's school
+  const enrollment = await db
+    .select({ classroomId: classroomStudents.classroomId })
+    .from(classroomStudents)
+    .innerJoin(classrooms, eq(classroomStudents.classroomId, classrooms.id))
+    .where(
+      and(
+        eq(classroomStudents.studentId, input.studentId),
+        eq(classrooms.schoolId, tenant.schoolId!)
+      )
+    )
+    .limit(1);
+
+  if (enrollment.length === 0) {
+    throw new Error("Student not found in your school");
+  }
 
   const activities = await db
     .select()
@@ -74,6 +92,17 @@ export async function getClassAnalytics({
   input: { classId: string };
 }) {
   assertCan(user, "progress:read:all", tenant);
+
+  // Verify class belongs to caller's school
+  const [classroom] = await db
+    .select({ schoolId: classrooms.schoolId })
+    .from(classrooms)
+    .where(eq(classrooms.id, input.classId))
+    .limit(1);
+
+  if (!classroom || classroom.schoolId !== tenant.schoolId) {
+    throw new Error("Class not found");
+  }
 
   const students = await db
     .select({ studentId: classroomStudents.studentId })

@@ -13,7 +13,8 @@
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
     "db:reset": "docker compose down -v && docker compose up -d",
-    "validate": "turbo run lint && turbo run test && turbo run build"
+    "config-drift": "pnpm --filter @reading-advantage/config test",
+    "validate": "pnpm config-drift && turbo run lint test build"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

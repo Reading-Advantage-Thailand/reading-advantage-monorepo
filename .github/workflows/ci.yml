@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Config drift check
+        run: pnpm config-drift
+
       - name: Build
         run: pnpm build
 

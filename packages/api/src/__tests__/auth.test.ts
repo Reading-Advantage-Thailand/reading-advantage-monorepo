@@ -35,6 +35,13 @@ function createMockDb(opts: {
         returning: vi.fn().mockResolvedValue(opts.insertReturning ?? []),
       }),
     }),
+    update: vi.fn().mockReturnValue({
+      set: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          returning: vi.fn().mockResolvedValue(opts.insertReturning ?? []),
+        }),
+      }),
+    }),
     delete: vi.fn().mockReturnValue({
       where: vi.fn().mockResolvedValue(undefined),
     }),
@@ -126,6 +133,24 @@ describe("auth router", () => {
       await expect(
         caller.auth.login({ email: "oauth@example.com", password: "anypassword" })
       ).rejects.toThrow(/Invalid email or password/);
+    });
+
+    it("throws UNAUTHORIZED with MIGRATION_REQUIRED for Firebase-only user", async () => {
+      const userRow = {
+        id: "u1",
+        email: "firebase@example.com",
+        name: "Firebase User",
+        password: null,
+        firebaseUid: "firebase-uid-123",
+        role: "STUDENT",
+        schoolId: null,
+      };
+      const db = createMockDb({ selectResult: [userRow] });
+      const caller = createCaller(db);
+
+      await expect(
+        caller.auth.login({ email: "firebase@example.com", password: "anypassword" })
+      ).rejects.toThrow("MIGRATION_REQUIRED");
     });
   });
 
@@ -249,6 +274,76 @@ describe("auth router", () => {
       await expect(
         caller.auth.refresh({ refreshToken: "invalid-token" })
       ).rejects.toThrow(/Invalid refresh token/);
+    });
+  });
+
+  describe("migrate", () => {
+    it("sets password and returns tokens for Firebase-only user", async () => {
+      const userRow = {
+        id: "u1",
+        email: "firebase@example.com",
+        name: "Firebase User",
+        password: null,
+        firebaseUid: "firebase-uid-123",
+        role: "STUDENT",
+        schoolId: null,
+      };
+
+      const db = createMockDb({ selectResult: [userRow] });
+      db.update = vi.fn().mockReturnValue({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockResolvedValue([{ ...userRow, password: "hashed" }]),
+          }),
+        }),
+      });
+
+      const caller = createCaller(db);
+      const result = await caller.auth.migrate({
+        email: "firebase@example.com",
+        password: "newpassword123",
+      });
+
+      expect(result.accessToken).toBeDefined();
+      expect(result.refreshToken).toBeDefined();
+      expect(result.user.email).toBe("firebase@example.com");
+    });
+
+    it("throws BAD_REQUEST when user has no firebaseUid", async () => {
+      const userRow = {
+        id: "u1",
+        email: "regular@example.com",
+        name: "Regular User",
+        password: null,
+        firebaseUid: null,
+        role: "STUDENT",
+        schoolId: null,
+      };
+      const db = createMockDb({ selectResult: [userRow] });
+      const caller = createCaller(db);
+
+      await expect(
+        caller.auth.migrate({ email: "regular@example.com", password: "newpassword123" })
+      ).rejects.toThrow(/Migration not available/);
+    });
+
+    it("throws BAD_REQUEST when user already has a password", async () => {
+      const hashedPw = await bcrypt.hash("existingpassword", 10);
+      const userRow = {
+        id: "u1",
+        email: "migrated@example.com",
+        name: "Migrated User",
+        password: hashedPw,
+        firebaseUid: "firebase-uid-123",
+        role: "STUDENT",
+        schoolId: null,
+      };
+      const db = createMockDb({ selectResult: [userRow] });
+      const caller = createCaller(db);
+
+      await expect(
+        caller.auth.migrate({ email: "migrated@example.com", password: "newpassword123" })
+      ).rejects.toThrow(/Migration not available/);
     });
   });
 

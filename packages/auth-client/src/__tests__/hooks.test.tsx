@@ -124,6 +124,86 @@ describe("useAuth", () => {
     expect(localStorageMock.getItem("ra_access_token")).toBeNull();
     expect(localStorageMock.getItem("ra_refresh_token")).toBeNull();
   });
+
+  it("sends Authorization bearer token to correct endpoint on logout", async () => {
+    localStorageMock.setItem("ra_access_token", "access-token-123");
+    localStorageMock.setItem("ra_refresh_token", "refresh-token-123");
+
+    // Mock refresh + session + logout calls
+    const fetchSpy = vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({
+          result: { data: { json: { accessToken: "access-token-123", refreshToken: "refresh-token-123" } } },
+        }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({
+          result: { data: { json: { user: { id: "u1", email: "a@b.com", name: "A", role: "STUDENT", schoolId: null } } } },
+        }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ result: { data: { json: {} } } }),
+      } as Response);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    await act(async () => {
+      await result.current.logout();
+    });
+
+    // Find the logout call
+    const logoutCall = fetchSpy.mock.calls.find((call) =>
+      (call[0] as string).includes("auth.logout")
+    );
+    expect(logoutCall).toBeDefined();
+    expect(logoutCall![0]).toBe("http://localhost:3001/api/trpc/auth.logout");
+    expect((logoutCall![1] as RequestInit).headers).toMatchObject({
+      Authorization: "Bearer access-token-123",
+      "Content-Type": "application/json",
+    });
+  });
+
+  it("sends Authorization bearer token to session endpoint during refresh", async () => {
+    localStorageMock.setItem("ra_access_token", "access-token-456");
+    localStorageMock.setItem("ra_refresh_token", "refresh-token-456");
+
+    const fetchSpy = vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({
+          result: { data: { json: { accessToken: "new-access", refreshToken: "new-refresh" } } },
+        }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({
+          result: { data: { json: { user: { id: "u1", email: "a@b.com", name: "A", role: "STUDENT", schoolId: null } } } },
+        }),
+      } as Response);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    // The session call should use the new access token
+    const sessionCall = fetchSpy.mock.calls.find((call) =>
+      (call[0] as string).includes("auth.session")
+    );
+    expect(sessionCall).toBeDefined();
+    expect(sessionCall![0]).toBe("http://localhost:3001/api/trpc/auth.session");
+    expect((sessionCall![1] as RequestInit).headers).toMatchObject({
+      Authorization: "Bearer new-access",
+    });
+  });
 });
 
 describe("useSession", () => {
