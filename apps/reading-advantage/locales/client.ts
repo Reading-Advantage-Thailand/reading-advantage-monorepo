@@ -1,18 +1,16 @@
-import { localeImports } from '@/configs/locale-config';
-import { createI18nClient } from 'next-international/client';
+import { useTranslations, useLocale } from "next-intl";
+import { useChangeLocale } from "./navigation";
 
-export const {
-    useI18n,
-    useScopedI18n,
-    I18nProviderClient,
-    useChangeLocale,
-    defineLocale,
-    useCurrentLocale
-} = createI18nClient(localeImports, {
-    // Uncomment to set base path
-    // basePath: '/base',
-    // Uncomment to use custom segment name
-    // segmentName: 'locale',
-    // Uncomment to set fallback locale
-    // fallbackLocale: en,
-},);
+export function useI18n() {
+  return useTranslations();
+}
+
+export function useScopedI18n(namespace: string) {
+  return useTranslations(namespace);
+}
+
+export function useCurrentLocale() {
+  return useLocale();
+}
+
+export { useChangeLocale };

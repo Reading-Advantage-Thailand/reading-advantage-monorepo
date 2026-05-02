@@ -1,11 +1,15 @@
-import { createI18nServer } from 'next-international/server';
-import { localeImports } from '@/configs/locale-config';
+import { getTranslations, getLocale } from "next-intl/server";
 
-export const {
-    getI18n,
-    getScopedI18n,
-    getCurrentLocale,
-    getStaticParams
-} = createI18nServer(localeImports);
+export async function getI18n() {
+  return getTranslations();
+}
 
-export { setStaticParamsLocale } from 'next-international/server';
+export async function getScopedI18n(namespace: string) {
+  return getTranslations(namespace);
+}
+
+export async function getCurrentLocale() {
+  return getLocale();
+}
+
+export { setRequestLocale as setStaticParamsLocale } from "next-intl/server";

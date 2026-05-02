@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { withAuth } from "next-auth/middleware";
-import { localeConfig } from "./configs/locale-config";
-import { createI18nMiddleware } from "next-international/middleware";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
 // Define Roles locally to avoid importing @prisma/client in Edge Middleware
 const ROLES = {
@@ -14,11 +14,7 @@ const ROLES = {
   SYSTEM: "SYSTEM",
 };
 
-const I18nMiddleware = createI18nMiddleware({
-  locales: localeConfig.locales,
-  defaultLocale: localeConfig.defaultLocale,
-  // urlMappingStrategy: "rewrite",
-});
+const I18nMiddleware = createMiddleware(routing);
 
 const publicPages = [
   "/",
@@ -40,7 +36,7 @@ function isPublicPage(normalizedPath: string): boolean {
 async function middleware(req: NextRequest) {
   const token = await getToken({ req });
   const isAuth = !!token;
-  const authLocales = localeConfig.locales;
+  const authLocales = routing.locales;
 
   const pathname = req.nextUrl.pathname;
 
@@ -54,9 +50,6 @@ async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Debug Logging
-  // console.log(`[Middleware] Processing: ${pathname}`);
-
   // Normalization Logic using Array Split (Safer/Clearer)
   const segments = pathname.split("/");
   // segments[0] is always '' because path starts with /
@@ -64,20 +57,16 @@ async function middleware(req: NextRequest) {
   const potentialLocale = segments[1];
   let urlLocale = null;
   let normalizedPath = pathname;
-  let currentLocale = localeConfig.defaultLocale;
+  let currentLocale = routing.defaultLocale;
 
   if (potentialLocale && authLocales.includes(potentialLocale)) {
     urlLocale = potentialLocale;
     currentLocale = urlLocale;
     // Remove the locale segment
-    // ['', 'en', 'student', 'read'] -> ['', 'student', 'read'] -> '/student/read'
     const newSegments = ["", ...segments.slice(2)];
     normalizedPath = newSegments.join("/") || "/";
-    // If path was just "/en", segments is ['', 'en'], slice(2) is [], join is "", result "/"
     if (normalizedPath === "") normalizedPath = "/";
   }
-
-  // console.log(`[Middleware] Normalized: ${normalizedPath} | Locale: ${currentLocale} | Role: ${token?.role}`);
 
   // Handle specific auth API mocks
   if (normalizedPath.startsWith("/session")) {
@@ -92,34 +81,27 @@ async function middleware(req: NextRequest) {
 
   // AUTHENTICATION LOGIC
   if (isAuth) {
-    const userRole = token.role as string; // Treat as string
+    const userRole = token.role as string;
 
     // Guard: Prevent redirection loops if we are already on a transition page
     if (normalizedPath.startsWith("/role-selection")) {
       if (userRole === ROLES.USER) {
         return I18nMiddleware(req);
       }
-      // If valid role visiting role-selection, let them proceed (or redirect? let's stick to safe fallback)
       return I18nMiddleware(req);
     }
 
     // Step 1: Role Selection (for new users)
     if (userRole === ROLES.USER) {
       if (!normalizedPath.startsWith("/role-selection")) {
-        // console.log(`[Middleware] Redirecting USER to role-selection`);
         return NextResponse.redirect(
           new URL(`/${currentLocale}/role-selection`, req.url),
         );
       }
-      // CRITICAL FIX: If we are here, we are on /role-selection.
-      // We MUST return here. If we fall through, the 'Level Test' check below will fail (Level 0)
-      // and redirect to /level. But on /level, the check 'userRole === USER' above will redirect back to /role-selection.
-      // This causes the infinite loop.
       return I18nMiddleware(req);
     }
 
     // Step 2: Level Test
-    // Applies if level/xp info is missing
     const needsLevelTest =
       token.level === undefined ||
       token.level === null ||
@@ -129,10 +111,7 @@ async function middleware(req: NextRequest) {
       token.xp === undefined;
 
     if (needsLevelTest) {
-      // If they need level test, they must be at /level
-      // Unless they are visiting a public page? (Usually logic forces level test first)
       if (!normalizedPath.startsWith("/level")) {
-        // console.log(`[Middleware] Redirecting to Level Test`);
         return NextResponse.redirect(
           new URL(`/${currentLocale}/level`, req.url),
         );
@@ -148,7 +127,6 @@ async function middleware(req: NextRequest) {
     // Step 3: Role-based Dashboard Redirection
     let targetPath = "";
 
-    // Explicitly check current path containment to avoid loop
     if (userRole === ROLES.TEACHER) {
       if (
         !normalizedPath.startsWith("/teacher") &&
@@ -184,7 +162,6 @@ async function middleware(req: NextRequest) {
     }
 
     if (targetPath) {
-      // console.log(`[Middleware] Redirecting ${userRole} from ${normalizedPath} to ${targetPath}`);
       return NextResponse.redirect(
         new URL(`/${currentLocale}${targetPath}`, req.url),
       );
