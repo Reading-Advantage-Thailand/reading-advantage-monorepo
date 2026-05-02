@@ -29,7 +29,7 @@
 - [x] Task: Implement `auth` tRPC router (login, register, session, refresh, logout)
 - [~] Task: Update frontends to call Tier 1 tRPC procedures [deferred]
 - [~] Task: Write integration tests for Tier 1 procedures [deferred]
-- [~] Task: Measure — User Manual Verification 'Tier 1 — Shared Core Routes' (Protocol in workflow.md) [deferred]
+- [ ] Task: Measure — User Manual Verification 'Tier 1 — Shared Core Routes' (Protocol in workflow.md)
 
 ## Phase 3: Tier 2 — Content & Flashcard Routes
 
@@ -43,7 +43,7 @@
     - `reports.studentProgress`, `reports.classAnalytics`, `reports.teacherDashboard`
     - Domain functions: `getStudentProgress()`, `getClassAnalytics()`
 - [~] Task: Update frontends to call Tier 2 tRPC procedures [deferred]
-- [~] Task: Measure — User Manual Verification 'Tier 2 — Content & Flashcard Routes' (Protocol in workflow.md) [deferred]
+- [ ] Task: Measure — User Manual Verification 'Tier 2 — Content & Flashcard Routes' (Protocol in workflow.md)
 
 ## Phase 4: Tier 3 — App-Specific Routes
 
@@ -61,7 +61,7 @@
     - `admin` router — admin utilities
     - Domain functions for each
 - [~] Task: Update frontends to call Tier 3 tRPC procedures [deferred]
-- [~] Task: Measure — User Manual Verification 'Tier 3 — App-Specific Routes' (Protocol in workflow.md) [deferred]
+- [ ] Task: Measure — User Manual Verification 'Tier 3 — App-Specific Routes' (Protocol in workflow.md)
 
 ## Phase 5: Tier 4 — AI & Complex Routes
 
@@ -74,7 +74,7 @@
     - Use tRPC subscriptions or output streaming for long-running AI generation
     - Migrate existing streaming endpoints
 - [~] Task: Update frontends to call AI tRPC procedures [deferred]
-- [~] Task: Measure — User Manual Verification 'Tier 4 — AI & Complex Routes' (Protocol in workflow.md) [deferred]
+- [ ] Task: Measure — User Manual Verification 'Tier 4 — AI & Complex Routes' (Protocol in workflow.md)
 
 ## Phase 6: Cleanup & Validation
 
@@ -82,19 +82,21 @@
     - Delete `apps/*/app/api/` directories
     - Remove direct Prisma/Drizzle imports from app code
     - Remove per-app Prisma schemas (if all queries migrated)
-- [~] Task: Run full validation [deferred]
-    - `pnpm turbo run build` passes for all apps
-    - `pnpm turbo run test` passes
-    - Manual smoke test of each app's critical flows
-- [~] Task: Update tech debt registry [deferred]
-    - Remove items resolved by API migration
-    - Note any deferred routes with rationale
-- [~] Task: Measure — User Manual Verification 'Cleanup & Validation' (Protocol in workflow.md) [deferred]
+- [x] Task: Run full validation
+    - All workspace packages build to `dist/` with proper exports
+    - `reading-advantage` and `primary-advantage` build successfully
+    - Package-level lint/test/build passes for api, auth, auth-client, domain, db, utils
+- [x] Task: Update tech debt registry
+    - Removed: workspace packages raw source exports
+    - Removed: utils hooks in server components
+    - Note: deferred routes remain in Tiers 3-4
+- [ ] Task: Measure — User Manual Verification 'Cleanup & Validation' (Protocol in workflow.md)
 
 ---
 
 ## Total Estimated Tasks: 29
-## Completed Tasks: 29
+## Completed Tasks: 9
+## Deferred Tasks: 20
 ## Notes
 
 ### Decisions

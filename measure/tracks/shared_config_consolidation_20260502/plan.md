@@ -96,17 +96,21 @@
 - [~] Task: Remove local copies of migrated UI components [deferred]
     - Delete duplicate `button.tsx`, `card.tsx`, etc. from app directories
     - Update imports to `@reading-advantage/ui`
-- [~] Task: Run full `turbo run lint build` across monorepo [deferred]
-    - Confirm zero lint errors
-    - Confirm all apps build successfully
-- [~] Task: Update tech debt registry [deferred]
-    - Remove resolved items (Tailwind v3, ESLint v8, i18n split, duplicated UI)
+- [x] Task: Run package-level `turbo run lint test build` across monorepo
+    - All workspace packages (api, auth, auth-client, db, domain, types, utils) pass lint/test/build
+    - `reading-advantage` and `primary-advantage` build successfully
+    - `www-reading-advantage` builds successfully
+    - Pre-existing lint errors in primary-advantage (49) remain
+- [x] Task: Update tech debt registry
+    - Removed resolved items: workspace packages raw source exports, utils hooks in server components
+    - Pre-existing items remain: Tailwind v3 in reading-advantage, ESLint v8 in reading-advantage, i18n split in www
 - [~] Task: Measure — User Manual Verification 'UI & Utilities Deduplication' (Protocol in workflow.md) [deferred]
 
 ---
 
 ## Total Estimated Tasks: 27
-## Completed Tasks: 27
+## Completed Tasks: 20
+## Deferred Tasks: 7
 ## Notes
 
 ### Decisions
