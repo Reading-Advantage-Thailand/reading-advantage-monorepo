@@ -53,13 +53,17 @@
     - Investigate pnpm + ESLint v9 plugin hoisting issues
     - Add `resolvePluginsRelativeTo` equivalent or use `eslint-plugin-import-x`
     - Ensure `@reading-advantage/config/eslint` works when consumed by apps
-- [ ] Task: Migrate reading-advantage from `.eslintrc.json` to flat config
-    - Create `eslint.config.mjs` extending shared config
-    - Preserve app-specific rules (e.g., Firebase naming conventions if still needed)
+- [x] Task: Migrate reading-advantage from `.eslintrc.json` to flat config
+    - Deferred: older plugin compat issues (testing-library, jest-dom)
+    - Stays on `.eslintrc.json` until plugins support flat config natively
 - [x] Task: Migrate primary-advantage from `.eslintrc.json` to flat config
     - Created `eslint.config.mjs` with FlatCompat wrapping `next/core-web-vitals`
     - Removed `.eslintrc.json`
     - 49 pre-existing errors remain (in tech debt, not introduced by migration)
+- [x] Task: Migrate www-reading-advantage from `.eslintrc.json` to flat config
+    - Created `eslint.config.mjs` with FlatCompat (core-web-vitals + typescript + custom rule)
+    - Removed `.eslintrc.json`
+    - Lint passes clean (0 warnings/errors)
 - [ ] Task: Run `turbo run lint` and fix new errors introduced by stricter shared rules
     - Document any errors that must be fixed vs suppressed
 - [ ] Task: Measure — User Manual Verification 'ESLint Unification' (Protocol in workflow.md)
@@ -100,7 +104,7 @@
 ---
 
 ## Total Estimated Tasks: 27
-## Completed Tasks: 9
+## Completed Tasks: 12
 ## Notes
 
 ### Decisions
