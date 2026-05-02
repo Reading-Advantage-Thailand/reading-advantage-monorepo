@@ -17,10 +17,20 @@ This file tracks all major tracks for the project.
   *Link: [./archive/migrate-primary-advantage_20260501/](./archive/migrate-primary-advantage_20260501/)*
 - [x] **Track: Migrate www-reading-advantage into monorepo**
   *Link: [./archive/migrate-www-reading-advantage_20260501/](./archive/migrate-www-reading-advantage_20260501/)*
-- [ ] **Track: Migrate science-advantage into monorepo**
+- [x] **Track: Migrate science-advantage into monorepo**
+  *Completed: 2026-05-02 (bulk-added in 3b93a05)*
+
+---
+
+### Infrastructure & Backend
+
 - [ ] **Track: Unified CI/CD Pipeline**
   *Link: [./tracks/unified_ci_cd_pipeline_20260502/](./tracks/unified_ci_cd_pipeline_20260502/)*
-- [ ] **Track: Shared Auth Package**
-  *Link: [./tracks/shared_auth_package_20260502/](./tracks/shared_auth_package_20260502/)*
+- [ ] **Track: Shared Backend: Scaffold + Schema Unification**
+  *Link: [./tracks/shared_backend_scaffold_20260502/](./tracks/shared_backend_scaffold_20260502/)*
+- [ ] **Track: Shared Backend: Auth Migration**
+  *Link: [./tracks/shared_backend_auth_20260502/](./tracks/shared_backend_auth_20260502/)*
+- [ ] **Track: Shared Backend: API Route Migration**
+  *Link: [./tracks/shared_backend_api_20260502/](./tracks/shared_backend_api_20260502/)*
 - [ ] **Track: Shared Config Consolidation**
   *Link: [./tracks/shared_config_consolidation_20260502/](./tracks/shared_config_consolidation_20260502/)*

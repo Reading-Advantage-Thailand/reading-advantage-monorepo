@@ -22,10 +22,14 @@
 
 | Technology | Usage |
 |-----------|-------|
-| Prisma | science-advantage, reading-advantage, primary-advantage |
-| Firebase Functions | reading-advantage (legacy Cloud Functions) |
+| Drizzle | Schema, migrations, queries (replaces Prisma in new backend) |
+| tRPC | Primary product backend interface — typed procedures consumed by Next.js apps |
+| Hono | External HTTP boundaries only — webhooks, health checks, legacy endpoints |
+| Zod | Input validation on all tRPC procedures |
+| PostgreSQL | Unified database (local Docker for dev, VPS for production) |
+| JWT | Access + refresh token auth via tRPC middleware |
+| Firebase Functions | reading-advantage (legacy, being deprecated) |
 | AI SDK | Google + OpenAI providers across all apps |
-| NextAuth v5 | primary-advantage (auth may be extracted to shared package later) |
 
 ## Testing
 
@@ -54,10 +58,18 @@ reading-advantage-monorepo/
 │   ├── primary-advantage/
 │   └── www-reading-advantage/
 ├── packages/
-│   ├── ui/              # Shared Radix/shadcn components
-│   ├── utils/           # Shared utilities, hooks, types
-│   ├── config/          # Shared eslint, tsconfig, tailwind configs
-│   └── ts-config/       # Base TypeScript configurations
+│   ├── api/              # tRPC routers (primary product backend)
+│   ├── db/               # Drizzle schema, migrations, client
+│   ├── domain/           # Business logic (domain functions)
+│   ├── auth/             # Roles, permissions, tenant resolution
+│   ├── auth-client/      # React hooks for auth (useAuth, useSession)
+│   ├── webhooks/         # Hono app for external HTTP (Stripe, Google Classroom, etc.)
+│   ├── types/            # Shared API contract types
+│   ├── ui/               # Shared Radix/shadcn components
+│   ├── utils/            # Shared utilities, hooks
+│   ├── config/           # Shared eslint, tsconfig, tailwind configs
+│   └── reading-advantage-scripts/  # Legacy scripts package
+├── docker-compose.yml    # Local PostgreSQL
 ├── turbo.json
 ├── pnpm-workspace.yaml
 └── package.json

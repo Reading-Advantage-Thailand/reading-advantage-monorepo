@@ -2,37 +2,41 @@
 
 ## Context
 
-The monorepo currently has 5 apps with mixed testing strategies (Jest in advantage-games and reading-advantage, Vitest in science-advantage and www-reading-advantage), mixed lint configs, and no automated CI/CD. Developers must manually run commands per app. The product vision requires a unified pipeline that lints, tests, and builds affected apps while preserving independent Vercel deployability.
+The monorepo has 5 apps with mixed testing strategies (Jest in advantage-games and reading-advantage, Vitest in science-advantage and www-reading-advantage), mixed lint configs, and no unified local development workflow. Each app was built with its own GCP deployment in mind. Developers must manually run commands per app.
+
+This track focuses on local development tooling: a shared Docker Compose for PostgreSQL, Turborepo task orchestration for lint/test/build, and developer documentation. Production deployment (GCP) is out of scope — each app's existing deployment pipeline is preserved for now.
 
 ## Goals
 
-1. Create a root-level GitHub Actions workflow triggered on PR and push to `main`
-2. Configure Turborepo remote caching (Vercel Remote Cache or self-hosted) to speed up builds
-3. Orchestrate mixed test runners so `turbo run test` exits cleanly for all apps
-4. Set up per-app Vercel deployment with monorepo-aware `ignore` scripts
-5. Document the developer workflow for CI expectations
+1. Move PostgreSQL Docker Compose from science-advantage to monorepo root as the shared local database
+2. Ensure `turbo run lint`, `turbo run test`, and `turbo run build` work across all apps locally
+3. Normalize mixed test runners so `turbo run test` exits cleanly for all apps (Jest + Vitest coexist)
+4. Add a lightweight GitHub Actions CI check for PRs (lint + test + build, no deployment)
+5. Document the local development workflow
 
 ## Acceptance Criteria
 
-- [ ] `.github/workflows/ci.yml` exists and runs on PR + push to `main`
-- [ ] Workflow installs dependencies with pnpm caching
-- [ ] Workflow runs `turbo run lint test build` with affected filtering
-- [ ] Turborepo remote cache is configured and reducing build times
-- [ ] `turbo run test` succeeds for all 5 apps (Jest + Vitest both pass)
-- [ ] Per-app Vercel projects are linked and deploy from monorepo root
-- [ ] `vercel.json` or deployment configs use `ignore` to skip unaffected apps
-- [ ] CI status badge added to root README
-- [ ] Developer docs explain how to interpret CI failures and rerun locally
+- [ ] `docker-compose.yml` at monorepo root runs PostgreSQL 16 on port 5432
+- [ ] All apps point `DATABASE_URL` at the shared local Postgres instance
+- [ ] `pnpm dev` starts the database + all apps with one command
+- [ ] `pnpm turbo run lint` passes for all 5 apps
+- [ ] `pnpm turbo run test` succeeds for all 5 apps (Jest + Vitest both exit cleanly)
+- [ ] `pnpm turbo run build` passes for all 5 apps
+- [ ] `.github/workflows/ci.yml` runs lint + test + build on PRs (no deployment)
+- [ ] Developer docs (`CONTRIBUTING.md` or root README) explain local setup and common commands
 
 ## Out of Scope
 
-- Migrating Jest suites to Vitest (future track, or part of `shared-config-consolidation`)
-- Setting up staging / preview environments beyond Vercel's defaults
-- Firebase Functions deployment automation (reading-advantage scripts are separate)
-- Custom self-hosted runners
+- Production deployment to GCP or any cloud provider
+- Vercel deployment configuration
+- Turborepo remote caching (local only for now)
+- Migrating Jest suites to Vitest (separate track or part of config consolidation)
+- Firebase Functions deployment automation
+- Staging / preview environments
 
 ## References
 
+- `apps/science-advantage/docker-compose.yml` — existing Postgres Docker setup to be moved to root
 - `measure/tech-debt.md` — mixed test runners, ESLint v8/v9 split
-- `measure/product.md` — Key Goal #3 (CI/CD pipeline)
-- `measure/tech-stack.md` — GitHub Actions, Vercel, Turborepo
+- `measure/tech-stack.md` — Turborepo, pnpm
+- `turbo.json` — existing task pipeline config

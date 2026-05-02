@@ -2,85 +2,91 @@
 
 ---
 
-## Phase 1: Test & Audit
+## Phase 1: Shared Docker Compose
 
-- [ ] Task: Write CI workflow skeleton and validate with `act` or dry-run
-    - Create `.github/workflows/ci.yml` with a no-op job that echoes app names
-    - Verify YAML syntax and GitHub Actions schema
-- [ ] Task: Audit current test commands per app
-    - Document which apps use Jest vs Vitest
-    - Document test file glob patterns and coverage thresholds
-    - Record baseline pass/fail counts for each app
-- [ ] Task: Audit lint commands per app
-    - Document which apps use ESLint v8 vs v9
-    - Record baseline error/warning counts
-- [ ] Task: Verify Turborepo pipeline config
-    - Ensure `turbo.json` has `lint`, `test`, and `build` tasks with correct `dependsOn`
-    - Confirm task outputs are cached correctly
-- [ ] Task: Measure — User Manual Verification 'Test & Audit' (Protocol in workflow.md)
+- [x] Task: Move `docker-compose.yml` to monorepo root
+    - Copy from `apps/science-advantage/docker-compose.yml`
+    - Change container name to `reading-advantage-postgres`
+    - Change port mapping to `5432:5432` (standard Postgres port)
+    - Create multiple databases within the single Postgres instance: `reading_advantage`, `primary_advantage`, `science_advantage`
+    - Add init script (`docker/init-db.sh`) that creates databases on first run
+- [x] Task: Add root-level convenience scripts
+    - `pnpm db:start` — starts Docker Compose
+    - `pnpm db:stop` — stops Docker Compose
+    - `pnpm db:reset` — stops, removes volume, starts fresh
+- [x] Task: Remove or deprecate `apps/science-advantage/docker-compose.yml`
+    - Delete the app-level compose file
+    - Update science-advantage docs to reference root compose
+- [x] Task: Update all apps' `.env.example` to point at shared Postgres
+    - `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/<app_db>`
+    - Document which database each app uses
+- [x] Task: Verify all apps connect to shared Postgres locally
+- [ ] Task: Measure — User Manual Verification 'Shared Docker Compose' (Protocol in workflow.md)
 
-## Phase 2: Turborepo & Caching
+## Phase 2: Turborepo Task Normalization
 
-- [ ] Task: Configure Turborepo remote caching
-    - Set up Vercel Remote Cache or document self-hosted alternative
-    - Add `TURBO_TOKEN` and `TURBO_TEAM` to GitHub repository secrets
-    - Verify cache hits in local `turbo run build` with `--remote-only`
-- [ ] Task: Normalize `turbo.json` task graph
-    - Ensure `test` depends on `^build` where needed (for libs consumed by apps)
-    - Add `lint` → `test` → `build` pipeline with `affected` filtering
-- [ ] Task: Write integration test for Turborepo caching
-    - Script that runs `turbo run build` twice and asserts cache hit on second run
-- [ ] Task: Measure — User Manual Verification 'Turborepo & Caching' (Protocol in workflow.md)
+- [x] Task: Audit test commands per app
+    - advantage-games: Jest
+    - reading-advantage: Jest
+    - primary-advantage: no tests (added placeholder script)
+    - science-advantage: Vitest
+    - www-reading-advantage: Vitest
+- [x] Task: Ensure `turbo run test` exits cleanly for all apps
+    - Primary-advantage: added `test: "echo \"No tests yet\""` script
+    - Reading-advantage scripts package has pre-existing test failure (firebase import)
+- [x] Task: Audit lint commands per app
+    - advantage-games: eslint ✅
+    - reading-advantage: next lint ✅
+    - primary-advantage: next lint (49 errors, pre-existing)
+    - science-advantage: eslint ✅
+    - www-reading-advantage: next lint ✅
+- [x] Task: Verify `turbo.json` task graph
+    - Confirmed `build` depends on `^build`
+    - Confirmed `test` depends on `^build`
+    - Confirmed `lint` has `^lint` dependencies
+- [ ] Task: Write a local validation script
+    - Runs `pnpm turbo run lint test build` sequentially
+    - Reports pass/fail per app
+    - Can be run as `pnpm validate` from root
+- [ ] Task: Measure — User Manual Verification 'Turborepo Task Normalization' (Protocol in workflow.md)
 
-## Phase 3: CI Workflow Implementation
+## Phase 3: Developer Workflow
 
-- [ ] Task: Implement `install` job with pnpm caching
-    - Use `actions/setup-node` with `cache: 'pnpm'`
-    - Pin pnpm version to match `packageManager` field in root `package.json`
-- [ ] Task: Implement `lint` job
-    - Run `pnpm turbo run lint --affected` (or `--filter=[origin/main...HEAD]`)
-    - Upload lint results artifact
-- [ ] Task: Implement `test` job
-    - Run `pnpm turbo run test --affected`
-    - Handle Jest and Vitest exit codes uniformly
-    - Upload test results and coverage reports
-- [ ] Task: Implement `build` job
-    - Run `pnpm turbo run build --affected`
-    - Fail fast if any app build fails
-- [ ] Task: Add branch protection rules recommendation to developer docs
-- [ ] Task: Measure — User Manual Verification 'CI Workflow Implementation' (Protocol in workflow.md)
+- [x] Task: Create `CONTRIBUTING.md` at monorepo root
+    - Prerequisites: Node, pnpm, Docker
+    - First-time setup: `pnpm install`, `pnpm db:start`, copy .env.example files
+    - Daily commands: `pnpm dev`, `pnpm turbo run lint`, `pnpm turbo run test`
+    - How to run commands for a single app
+    - Database commands
+- [ ] Task: Add root `dev` script
+    - Starts Docker Compose if not running
+    - Runs `pnpm turbo run dev` for all apps
+- [ ] Task: Measure — User Manual Verification 'Developer Workflow' (Protocol in workflow.md)
 
-## Phase 4: Vercel Deployment
+## Phase 4: GitHub Actions CI (PR checks only)
 
-- [ ] Task: Link per-app Vercel projects to monorepo root
-    - Create or reconfigure Vercel projects for each app
-    - Set root directory to monorepo root and use `ignore` scripts
-- [ ] Task: Write `vercel.json` or `ignore` scripts per app
-    - Use `git diff --quiet HEAD^ HEAD -- apps/<app>/` to skip unaffected apps
-    - Document in `apps/<app>/README.md`
-- [ ] Task: Add deploy preview checks to PR workflow
-    - Ensure Vercel bot comments with preview URLs per app
-- [ ] Task: Measure — User Manual Verification 'Vercel Deployment' (Protocol in workflow.md)
-
-## Phase 5: Documentation & Polish
-
+- [x] Task: Create `.github/workflows/ci.yml`
+    - Trigger on PR and push to `main`
+    - Steps: checkout, setup Node, setup pnpm, install, build, lint, test
+    - Uses pnpm caching via `actions/setup-node`
+    - No deployment steps — just validation
 - [ ] Task: Add CI status badge to root README
-- [ ] Task: Write `CONTRIBUTING.md` section on CI expectations
-    - How to run the same commands locally
-    - How to interpret `turbo` output and cache status
-- [ ] Task: Add tech debt items for deferred work
-    - Jest → Vitest migration (if not part of this track)
-    - Firebase Functions deployment automation
-    - Staging environment separation
-- [ ] Task: Measure — User Manual Verification 'Documentation & Polish' (Protocol in workflow.md)
+- [ ] Task: Measure — User Manual Verification 'GitHub Actions CI' (Protocol in workflow.md)
 
 ---
 
-## Total Estimated Tasks: 18
+## Total Estimated Tasks: 15
 ## Completed Tasks: 0
 ## Notes
 
 ### Decisions
-- Use Vercel Remote Cache for simplicity (already part of Vercel ecosystem)
-- Keep Jest and Vitest side-by-side in CI; unification is a separate track
-- Use `--affected` filtering to keep CI fast as monorepo grows
+- Single Postgres instance with multiple databases (not multiple instances)
+- Port 5432 at root level (was 5433 for science-advantage only)
+- No remote caching or deployment in this track — local-first
+- GitHub Actions CI is validation-only, not a deployment pipeline
+- Production deployment remains with existing GCP pipelines per app
+
+### Sequencing
+- Phase 1 (Docker) unblocks the backend scaffold track
+- Phase 2 (turbo normalization) can run in parallel with Phase 1
+- Phase 4 (CI) depends on Phase 2 completing

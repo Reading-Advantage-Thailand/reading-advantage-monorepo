@@ -1,0 +1,11 @@
+{
+  "track_id": "shared_backend_auth_20260502",
+  "type": "feature",
+  "status": "pending",
+  "created_at": "2026-05-02T00:00:00Z",
+  "updated_at": "2026-05-02T00:00:00Z",
+  "description": "Migrate authentication into the shared Hono backend — consolidate Firebase Auth (reading-advantage) and NextAuth v5 beta (primary-advantage) into a single JWT-based auth system, with Google OAuth and email/password providers",
+  "estimated_tasks": 14,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

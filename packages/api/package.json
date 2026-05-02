@@ -1,0 +1,36 @@
+{
+  "name": "@reading-advantage/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@reading-advantage/db": "workspace:*",
+    "@reading-advantage/auth": "workspace:*",
+    "@reading-advantage/domain": "workspace:*",
+    "@reading-advantage/types": "workspace:*",
+    "@trpc/server": "^11.1.0",
+    "@trpc/client": "^11.1.0",
+    "bcryptjs": "^2.4.3",
+    "superjson": "^2.2.2",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.8.0",
+    "tsx": "^4.19.0",
+    "vitest": "^3.1.0"
+  }
+}

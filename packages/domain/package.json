@@ -1,0 +1,31 @@
+{
+  "name": "@reading-advantage/domain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./classes": "./src/classes/index.ts",
+    "./students": "./src/students/index.ts",
+    "./assignments": "./src/assignments/index.ts",
+    "./progress": "./src/progress/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@reading-advantage/db": "workspace:*",
+    "@reading-advantage/auth": "workspace:*",
+    "@reading-advantage/types": "workspace:*",
+    "drizzle-orm": "^0.44.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
+  }
+}
