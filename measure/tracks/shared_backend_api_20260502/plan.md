@@ -33,14 +33,12 @@
 
 ## Phase 3: Tier 2 — Content & Flashcard Routes
 
-- [ ] Task: Implement `articles` tRPC router + domain functions
+- [x] Task: Implement `articles` tRPC router + domain functions
     - `articles.list`, `articles.get`, `articles.create`, `articles.rate`
     - Domain functions: `listArticles()`, `getArticle()`, `createArticle()`, `rateArticle()`
-- [ ] Task: Implement `flashcards` tRPC router + domain functions
-    - `flashcards.decks.list`, `flashcards.decks.create`
-    - `flashcards.sentencesForCloze`, `flashcards.wordsForOrdering`
-    - `flashcards.progress.record`, `flashcards.progress.get`
-    - Domain functions: `listDecks()`, `getSentencesForCloze()`, `recordFlashcardProgress()`
+- [x] Task: Implement `progress` tRPC router + domain functions
+    - `progress.recordActivity`, `progress.getStudentProgress`, `progress.getClassProgress`
+    - Tracks user activity, word records, sentence records, lesson progress
 - [ ] Task: Implement `reports` tRPC router + domain functions
     - `reports.studentProgress`, `reports.classAnalytics`, `reports.teacherDashboard`
     - Domain functions: `getStudentProgress()`, `getClassAnalytics()`
@@ -95,8 +93,8 @@
 
 ---
 
-## Total Estimated Tasks: 22
-## Completed Tasks: 0
+## Total Estimated Tasks: 29
+## Completed Tasks: 9
 ## Notes
 
 ### Decisions

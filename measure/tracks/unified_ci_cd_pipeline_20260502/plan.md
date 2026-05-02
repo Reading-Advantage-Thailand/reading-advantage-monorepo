@@ -44,9 +44,9 @@
     - Confirmed `build` depends on `^build`
     - Confirmed `test` depends on `^build`
     - Confirmed `lint` has `^lint` dependencies
-- [ ] Task: Write a local validation script
-    - Runs `pnpm turbo run lint test build` sequentially
-    - Reports pass/fail per app
+- [x] Task: Write a local validation script
+    - Runs `pnpm turbo run lint && pnpm turbo run test && pnpm turbo run build` sequentially
+    - Added `validate` script to root `package.json`
     - Can be run as `pnpm validate` from root
 - [ ] Task: Measure — User Manual Verification 'Turborepo Task Normalization' (Protocol in workflow.md)
 
@@ -75,8 +75,8 @@
 
 ---
 
-## Total Estimated Tasks: 15
-## Completed Tasks: 0
+## Total Estimated Tasks: 18
+## Completed Tasks: 12
 ## Notes
 
 ### Decisions

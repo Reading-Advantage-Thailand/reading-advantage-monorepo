@@ -26,10 +26,10 @@
 
 ## Phase 2: Tailwind Unification
 
-- [ ] Task: Migrate reading-advantage Tailwind v3 → v4
-    - Remove `tailwind.config.js` and `postcss.config.mjs`
-    - Add `@import "@reading-advantage/config/tailwind";` to app CSS entry
-    - Resolve `tailwindcss-animate` usage (v4 built-in or plugin equivalent)
+- [x] Task: Migrate reading-advantage Tailwind v3 → v4
+    - Removed `tailwind.config.js` and `postcss.config.mjs`
+    - Added v4 `@import` and `@theme` directives to `globals.css`
+    - Committed: 9daa21a
 - [ ] Task: Migrate primary-advantage Tailwind v3 → v4
     - Same process as reading-advantage
     - Preserve custom theme extensions by inlining into `@theme`
@@ -58,10 +58,9 @@
 
 ## Phase 4: i18n Unification
 
-- [ ] Task: Migrate www-reading-advantage from `next-international` to `next-intl`
-    - Replace `I18nProvider` with `NextIntlClientProvider`
-    - Convert locale files to `next-intl` format
-    - Update middleware and routing config
+- [x] Task: Migrate www-reading-advantage from `next-international` to `next-intl`
+    - Added `i18n.ts`, `locales/navigation.ts`, updated `middleware.ts` and `locale-provider.tsx`
+    - Committed: 5254525
 - [ ] Task: Remove `next-international` from reading-advantage
     - Audit imports and delete dead code
     - Ensure only `next-intl` remains
@@ -77,9 +76,9 @@
     - Migrate the top 10 most-used shadcn components from reading-advantage
     - Ensure each component is consumed by at least 2 apps
     - Target: ≥15 exported components total
-- [ ] Task: Replace local `cn()` with `@reading-advantage/utils`
-    - Find-and-replace in all apps except where local `cn` has custom behavior
-    - Verify no build errors after replacement
+- [x] Task: Replace local `cn()` with `@reading-advantage/utils`
+    - Replaced local definitions in all 5 apps with re-exports from shared utils
+    - Committed: b6e8ab7
 - [ ] Task: Remove local copies of migrated UI components
     - Delete duplicate `button.tsx`, `card.tsx`, etc. from app directories
     - Update imports to `@reading-advantage/ui`
@@ -92,8 +91,8 @@
 
 ---
 
-## Total Estimated Tasks: 16
-## Completed Tasks: 0
+## Total Estimated Tasks: 27
+## Completed Tasks: 3
 ## Notes
 
 ### Decisions

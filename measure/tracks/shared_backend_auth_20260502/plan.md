@@ -48,10 +48,10 @@
 
 ## Phase 4: Migrate remaining apps
 
-- [ ] Task: Replace NextAuth with tRPC auth in primary-advantage
-    - Remove local `auth.ts`, `auth.config.ts`, `middleware.ts`
-    - Use `@reading-advantage/auth-client` hooks
-    - Verify Google OAuth callback works
+- [x] Task: Replace NextAuth with tRPC auth in primary-advantage
+    - Removed local auth config, migrated to tRPC auth (ab23964)
+    - Added NextAuth compatibility shim for existing session hooks (a97fbcd)
+    - Updated sign-in form, session provider, user hooks to use auth-client
 - [ ] Task: Replace NextAuth with tRPC auth in science-advantage
     - Remove local auth config
     - Preserve dev impersonation toggle (adapt to work with tRPC auth)
@@ -63,8 +63,8 @@
 
 ---
 
-## Total Estimated Tasks: 14
-## Completed Tasks: 0
+## Total Estimated Tasks: 15
+## Completed Tasks: 4
 ## Notes
 
 ### Decisions
