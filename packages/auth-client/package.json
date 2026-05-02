@@ -8,6 +8,7 @@
   },
   "scripts": {
     "lint": "eslint .",
+    "test": "vitest run",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,9 +18,13 @@
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/jest-dom": "^6.6.0",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
-    "typescript": "^5.8.0"
+    "jsdom": "^26.1.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
   },
   "peerDependencies": {
     "react": "^19.0.0"
