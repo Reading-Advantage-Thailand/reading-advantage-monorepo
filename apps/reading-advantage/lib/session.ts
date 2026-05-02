@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { LicenseType } from "@prisma/client";
 import { cookies } from "next/headers";
 import { verifyAccessToken } from "@reading-advantage/auth";
+import type { Session } from "next-auth";
 
 async function getUserLicenseLevel(
   userId: string,
@@ -85,9 +86,11 @@ export async function getCurrentUser() {
   return null;
 }
 
-async function buildUserFromSession(session: any) {
-  const userId = session.user.id;
-  // ... existing logic moved to helper
+
+
+async function buildUserFromSession(session: Session): Promise<ReturnType<typeof getCurrentUser>> {
+  const userId = session.user?.id;
+  if (!userId) return null;
   return buildUserFromDbInternal(userId);
 }
 
@@ -98,30 +101,35 @@ async function buildUserFromDb(user: any) {
 async function buildUserFromDbInternal(userId: string, existingUser?: any) {
   let user = existingUser;
   if (!user) {
-    user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        level: true,
-        emailVerified: true,
-        image: true,
-        xp: true,
-        cefrLevel: true,
-        expiredDate: true,
-        licenseId: true,
-        onborda: true,
-        schoolId: true,
-        licenseOnUsers: {
-          select: { licenseId: true },
-          take: 1,
+    try {
+      user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          level: true,
+          emailVerified: true,
+          image: true,
+          xp: true,
+          cefrLevel: true,
+          expiredDate: true,
+          licenseId: true,
+          onborda: true,
+          schoolId: true,
+          licenseOnUsers: {
+            select: { licenseId: true },
+            take: 1,
+          },
+          teacherClassrooms: { select: { classroomId: true } },
+          studentClassrooms: { select: { classroomId: true } },
         },
-        teacherClassrooms: { select: { classroomId: true } },
-        studentClassrooms: { select: { classroomId: true } },
-      },
-    });
+      });
+    } catch (error) {
+      console.error("Error fetching user from database:", error);
+      return null;
+    }
   }
 
   if (!user) return null;

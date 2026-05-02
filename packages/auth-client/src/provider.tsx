@@ -10,7 +10,7 @@ const DEFAULT_API_URL =
 const API_URL = DEFAULT_API_URL;
 
 interface AuthProviderProps {
-  children?: ReactNode;
+  children: ReactNode;
   apiUrl?: string;
 }
 

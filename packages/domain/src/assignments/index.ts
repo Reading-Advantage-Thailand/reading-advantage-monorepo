@@ -243,6 +243,27 @@ export async function submitAssignment({
 }) {
   assertCan(user, "assignment:submit", tenant);
 
+  // Verify assignment's classroom belongs to caller's school
+  const [assignment] = await db
+    .select({ classroomId: assignments.classroomId })
+    .from(assignments)
+    .where(eq(assignments.id, input.assignmentId))
+    .limit(1);
+
+  if (!assignment) {
+    throw new Error("Assignment not found");
+  }
+
+  const [classroom] = await db
+    .select({ schoolId: classrooms.schoolId })
+    .from(classrooms)
+    .where(eq(classrooms.id, assignment.classroomId))
+    .limit(1);
+
+  if (!classroom || classroom.schoolId !== tenant.schoolId) {
+    throw new Error("Assignment not found");
+  }
+
   const [updated] = await db
     .update(studentAssignments)
     .set({

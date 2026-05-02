@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ReactNode } from "react";
 import { LocaleProvider } from '@/providers/locale-provider';
+import { getMessages } from 'next-intl/server';
 
 export const metadata: Metadata = {
   title: 'Reading Advantage (Thailand) - Innovative EdTech Solutions',
@@ -18,10 +19,11 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ params, children }: { params: Promise<{ locale: string }>, children: ReactNode }) {
   const { locale } = await params
+  const messages = await getMessages();
   return (
     <html lang={locale} suppressHydrationWarning={true}>
       <body className="bg-sky-50 text-sky-900 min-h-screen font-sans">
-        <LocaleProvider locale={locale} messages={{}}>{children}</LocaleProvider>
+        <LocaleProvider locale={locale} messages={messages}>{children}</LocaleProvider>
       </body>
     </html>
   );

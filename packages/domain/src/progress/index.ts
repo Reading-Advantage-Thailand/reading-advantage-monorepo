@@ -1,10 +1,12 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import {
   userActivity,
   userWordRecords,
   userSentenceRecords,
   lessonProgress,
+  classroomStudents,
+  classrooms,
 } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 
@@ -59,6 +61,22 @@ export async function getStudentProgress({
 }) {
   assertCan(user, "progress:read:all", tenant);
 
+  const enrollment = await db
+    .select({ classroomId: classroomStudents.classroomId })
+    .from(classroomStudents)
+    .innerJoin(classrooms, eq(classroomStudents.classroomId, classrooms.id))
+    .where(
+      and(
+        eq(classroomStudents.studentId, input.studentId),
+        eq(classrooms.schoolId, tenant.schoolId!)
+      )
+    )
+    .limit(1);
+
+  if (enrollment.length === 0) {
+    throw new Error("Student not found in your school");
+  }
+
   const activities = await db
     .select()
     .from(userActivity)
@@ -97,7 +115,12 @@ export async function getLessonProgress({
   const [progress] = await db
     .select()
     .from(lessonProgress)
-    .where(eq(lessonProgress.lessonId, input.lessonId))
+    .where(
+      and(
+        eq(lessonProgress.userId, user.id),
+        eq(lessonProgress.lessonId, input.lessonId)
+      )
+    )
     .limit(1);
 
   return progress ?? null;

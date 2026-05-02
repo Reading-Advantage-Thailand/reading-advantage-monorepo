@@ -37,11 +37,14 @@ export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
     const user = await login(email, password);
     if (user) {
       // Also establish NextAuth session for server-rendered pages
-      await signIn("credentials", {
+      const signInResult = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
+      if (signInResult?.error) {
+        console.error("NextAuth session establishment failed:", signInResult.error);
+      }
       window.location.href = "/";
     } else if (authError === "MIGRATION_REQUIRED") {
       setShowMigration(true);
@@ -53,11 +56,14 @@ export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
     setError("");
     const user = await migrate(email, migrationPassword);
     if (user) {
-      await signIn("credentials", {
+      const signInResult = await signIn("credentials", {
         email,
         password: migrationPassword,
         redirect: false,
       });
+      if (signInResult?.error) {
+        console.error("NextAuth session establishment failed:", signInResult.error);
+      }
       window.location.href = "/";
     }
   }

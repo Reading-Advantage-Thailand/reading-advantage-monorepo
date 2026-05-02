@@ -17,7 +17,20 @@ const DEMO_ACCOUNTS = [
 export function SigninForm() {
   const isProduction = typeof window !== "undefined" && window.location.hostname !== "localhost";
   if (isProduction) {
-    return null;
+    return (
+      <div className="flex min-h-[400px] items-center justify-center p-8">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-semibold mb-4">Sign In</h2>
+          <p className="text-muted-foreground">
+            The sign-in system is being updated. Please visit{" "}
+            <a href="/" className="underline text-primary">
+              the main site
+            </a>{" "}
+            to access your account.
+          </p>
+        </div>
+      </div>
+    );
   }
   const router = useRouter();
   const [username, setUsername] = useState('');
