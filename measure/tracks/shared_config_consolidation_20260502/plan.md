@@ -56,8 +56,10 @@
 - [ ] Task: Migrate reading-advantage from `.eslintrc.json` to flat config
     - Create `eslint.config.mjs` extending shared config
     - Preserve app-specific rules (e.g., Firebase naming conventions if still needed)
-- [ ] Task: Migrate primary-advantage from `.eslintrc.json` to flat config
-    - Same process as reading-advantage
+- [x] Task: Migrate primary-advantage from `.eslintrc.json` to flat config
+    - Created `eslint.config.mjs` with FlatCompat wrapping `next/core-web-vitals`
+    - Removed `.eslintrc.json`
+    - 49 pre-existing errors remain (in tech debt, not introduced by migration)
 - [ ] Task: Run `turbo run lint` and fix new errors introduced by stricter shared rules
     - Document any errors that must be fixed vs suppressed
 - [ ] Task: Measure — User Manual Verification 'ESLint Unification' (Protocol in workflow.md)
