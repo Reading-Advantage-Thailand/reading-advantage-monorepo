@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import React from "react";
 import { AuthProvider, useAuth, useSession, useRequireAuth } from "../index.js";
@@ -199,8 +199,7 @@ describe("useRequireAuth", () => {
 
     function useAuthThenRequire() {
       const auth = useAuth();
-      // Only call useRequireAuth after login succeeds
-      const required = auth.isAuthenticated ? useRequireAuth() : null;
+      const required = useRequireAuth();
       return { auth, required };
     }
 
@@ -215,7 +214,7 @@ describe("useRequireAuth", () => {
     });
 
     expect(result.current.auth.isAuthenticated).toBe(true);
-    expect(result.current.required).not.toBeNull();
+    expect(result.current.required.isAuthenticated).toBe(true);
   });
 
   it("has correct interface (user, isAuthenticated, isLoading, actions)", async () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, type ReactNode } from "react";
-import { AuthContext, type AuthUser, type AuthState } from "./context.js";
+import { AuthContext, type AuthState } from "./context.js";
 
 const TOKEN_KEY = "ra_access_token";
 const REFRESH_KEY = "ra_refresh_token";
