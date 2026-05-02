@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import { users, classroomStudents, classrooms } from "@reading-advantage/db/schema";
-import { assertCan, assertTenantAccess, type UserContext, type Tenant } from "@reading-advantage/auth";
+import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 
 interface ListStudentsInput {
   classroomId: string;
