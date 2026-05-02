@@ -4,7 +4,7 @@
 
 ## Phase 1: Drizzle Schema Update
 
-- [ ] Task: Rewrite `packages/db/src/schema/users.ts`
+- [x] Task: Rewrite `packages/db/src/schema/users.ts`
     - Add `username` (text, unique, not null) and `displayUsername` (text, unique, not null) to users table
     - Change `email` from required to nullable
     - Update `roleEnum` to `["STUDENT", "TEACHER", "ADMIN", "SYSTEM"]`
@@ -13,92 +13,92 @@
     - Rewrite `sessions` table: `id` (cuid), `token` (unique), `userId`, `expiresAt`, `createdAt`, `updatedAt`, `ipAddress`, `userAgent`
     - Remove `verificationTokens` table
     - Remove `refreshTokens` table
-- [ ] Task: Write schema tests
+- [x] Task: Write schema tests
     - Verify table definitions export correctly
     - Verify enum values match expected roles
-- [ ] Task: Generate Drizzle migration
-- [ ] Task: Run `pnpm turbo run build --filter=@reading-advantage/db`
-- [ ] Task: Commit schema changes
+- [~] Task: Generate Drizzle migration
+- [x] Task: Run `pnpm turbo run build --filter=@reading-advantage/db`
+- [x] Task: Commit schema changes
 
 ---
 
 ## Phase 2: Shared Auth Package Rewrite
 
-- [ ] Task: Rewrite `packages/auth/src/password.ts`
+- [x] Task: Rewrite `packages/auth/src/password.ts`
     - `hashPassword(password: string): Promise<string>` — bcrypt with 10 rounds
     - `verifyPassword(password: string, hash: string): Promise<boolean>` — bcrypt compare, catch errors
-- [ ] Task: Write password tests
-- [ ] Task: Rewrite `packages/auth/src/session.ts`
+^- [x] Task: Write password tests
+- [x] Task: Rewrite `packages/auth/src/session.ts`
     - `createSession(db, userId, opts?): Promise<Session>` — generate random token, insert row, return with user
     - `validateSession(db, token): Promise<Session | null>` — find by token, include user, delete if expired
     - `deleteSession(db, token): Promise<void>` — delete row, catch errors
-- [ ] Task: Write session tests
-- [ ] Task: Rewrite `packages/auth/src/rate-limit.ts`
+^- [x] Task: Write session tests
+- [x] Task: Rewrite `packages/auth/src/rate-limit.ts`
     - In-memory Map<username, {failedCount, windowStart}>
     - `checkRateLimit(username): { allowed: boolean, retriesAfter?: number }`
     - `recordFailure(username): void`
     - `resetLimit(username): void`
     - `_testkit.resetRateLimiter()` for test isolation
-- [ ] Task: Write rate-limit tests
-- [ ] Task: Update `packages/auth/src/roles.ts`
+^- [x] Task: Write rate-limit tests
+- [x] Task: Update `packages/auth/src/roles.ts`
     - `ROLES = { STUDENT: 1, TEACHER: 2, ADMIN: 3, SYSTEM: 4 }`
     - `ROLE_HIERARCHY` and `roleAtLeast(role, minRole)`
     - `ROLE_ROUTES = { STUDENT: '/student', TEACHER: '/teacher', ADMIN: '/admin', SYSTEM: '/system' }`
-- [ ] Task: Update `packages/auth/src/permissions.ts`
+- [x] Task: Update `packages/auth/src/permissions.ts`
     - Keep existing permission matrix, update role references
-- [ ] Task: Rewrite `packages/auth/src/server.ts`
+- [x] Task: Rewrite `packages/auth/src/server.ts`
     - `requireAuth(cookie?): Promise<Session>` — get session from cookie or throw/redirect
     - `requireRole(session, minRole): Session` — check hierarchy
     - `hasRole(session, minRole): boolean`
-- [ ] Task: Update `packages/auth/src/index.ts` barrel exports
+- [x] Task: Update `packages/auth/src/index.ts` barrel exports
     - Remove JWT/token exports
     - Add password, session, rate-limit exports
-- [ ] Task: Write server guard tests
-- [ ] Task: Run `pnpm turbo run test lint build --filter=@reading-advantage/auth`
-- [ ] Task: Commit auth package changes
+^- [x] Task: Write server guard tests
+^- [x] Task: Run `pnpm turbo run test lint build --filter=@reading-advantage/auth`
+^- [x] Task: Commit auth package changes
 
 ---
 
 ## Phase 3: Auth-Client Rewrite
 
-- [ ] Task: Rewrite `packages/auth-client/src/context.ts`
+- [x] Task: Rewrite `packages/auth-client/src/context.ts`
     - `AuthUser = { id, username, name, email, role, schoolId, image }`
     - `AuthState = { user, isAuthenticated, isLoading }`
     - `AuthActions = { login(username, password), logout() }`
-- [ ] Task: Rewrite `packages/auth-client/src/provider.tsx`
+- [x] Task: Rewrite `packages/auth-client/src/provider.tsx`
     - On mount: GET `/api/auth/session` to check existing session
     - `login()`: POST `/api/auth/login` with `{ username, password }`
     - `logout()`: POST `/api/auth/logout`
     - No localStorage — everything via cookies
-- [ ] Task: Rewrite `packages/auth-client/src/index.ts`
+- [x] Task: Rewrite `packages/auth-client/src/index.ts`
     - Export `useAuth`, `useSession`, `useRequireAuth`
-- [ ] Task: Write auth-client tests
-- [ ] Task: Run `pnpm turbo run test lint build --filter=@reading-advantage/auth-client`
-- [ ] Task: Commit auth-client changes
+^- [x] Task: Write auth-client tests
+^- [x] Task: Run `pnpm turbo run test lint build --filter=@reading-advantage/auth-client``
+^- [x] Task: Commit auth-client changes
 
 ---
 
 ## Phase 4: tRPC + API Routes
 
-- [ ] Task: Rewrite `packages/api/src/context.ts`
+- [x] Task: Rewrite `packages/api/src/context.ts`
     - Read `session_token` cookie from request headers
     - Call `validateSession(db, token)` instead of JWT verify
     - Build `AuthContext` from session user
-- [ ] Task: Update `packages/api/src/trpc.ts`
+- [x] Task: Update `packages/api/src/trpc.ts`
     - `protectedProcedure` checks `ctx.auth` (already does, just different source)
-- [ ] Task: Create shared auth API routes in Next.js app directory
+^- [x] Task: Create shared auth API routes in Next.js app directory
     - `app/api/auth/login/route.ts` — POST, Zod validate, rate limit, bcrypt verify, createSession, set cookie
     - `app/api/auth/session/route.ts` — GET, getCurrentSession, return user or null
     - `app/api/auth/logout/route.ts` — POST, deleteSession, clear cookie
     - `app/api/auth/impersonate/route.ts` — POST, dev-only, auto-create demo users
-- [ ] Task: Write API route tests
-- [ ] Task: Update `packages/api/src/routers/auth.ts`
+^- [x] Task: Write API route tests
+- [x] Task: Update `packages/api/src/routers/auth.ts`
     - Remove `auth.login`, `auth.register`, `auth.refresh`, `auth.session`, `auth.migrate`, `auth.logout`
     - Auth is now handled by Next.js route handlers, not tRPC
     - Keep the router but make it a thin wrapper or remove entirely
-- [ ] Task: Write tRPC context tests
-- [ ] Task: Run `pnpm turbo run test lint build --filter=@reading-advantage/api`
-- [ ] Task: Commit tRPC + API route changes
+^- [x] Task: Write tRPC context tests
+^- [x] Task: Run `pnpm turbo run test lint build --filter=@reading-advantage/api``
+^- [x] Task: Commit tRPC + API route changes
 
 ---
 
