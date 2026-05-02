@@ -13,6 +13,7 @@
     "push": "drizzle-kit push",
     "studio": "drizzle-kit studio",
     "lint": "eslint .",
+    "test": "vitest run",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "@types/node": "^20.0.0",
     "drizzle-kit": "^0.31.0",
     "@reading-advantage/config": "workspace:*",
-    "typescript": "^5.8.0"
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
   }
 }
