@@ -1,10 +1,6 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import Tokenizer from "sentence-tokenizer";
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+export { cn } from "@reading-advantage/utils";
 
 // Convert ISO to time ago 2024-05-11T14:42:23.400Z => 2 hours ago
 export function formatDate(updatedAt: string): string {

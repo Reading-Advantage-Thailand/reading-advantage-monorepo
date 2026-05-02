@@ -1,6 +1,6 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { useTranslations } from "next-intl";
+
+export { cn } from "@reading-advantage/utils";
 
 export const LEVELS_XP = [
   { min: 0, max: 4999, cefrLevel: "A0-", raLevel: 1 },
@@ -22,10 +22,6 @@ export const LEVELS_XP = [
   // { min: 200000, max: 220999, cefrLevel: "C2", raLevel: 17 },
   // { min: 221000, max: 242999, cefrLevel: "C2+", raLevel: 18 },
 ];
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export function cleanGenre(genre: string): string {
   return genre.replace(/\s*\(.*?\)\s*$/, "");
