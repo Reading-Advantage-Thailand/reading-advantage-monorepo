@@ -8,8 +8,6 @@ describe("schema exports", () => {
     expect(schema.schools).toBeDefined();
     expect(schema.accounts).toBeDefined();
     expect(schema.sessions).toBeDefined();
-    expect(schema.verificationTokens).toBeDefined();
-    expect(schema.refreshTokens).toBeDefined();
     // Classrooms
     expect(schema.classrooms).toBeDefined();
     expect(schema.classroomStudents).toBeDefined();
@@ -54,11 +52,12 @@ describe("users table", () => {
       (k) => !k.startsWith("_") && !k.startsWith("[")
     );
     expect(columnNames).toContain("id");
+    expect(columnNames).toContain("username");
+    expect(columnNames).toContain("displayUsername");
     expect(columnNames).toContain("email");
     expect(columnNames).toContain("name");
     expect(columnNames).toContain("role");
     expect(columnNames).toContain("schoolId");
-    expect(columnNames).toContain("firebaseUid");
     expect(columnNames).toContain("xp");
     expect(columnNames).toContain("level");
     expect(columnNames).toContain("cefrLevel");
