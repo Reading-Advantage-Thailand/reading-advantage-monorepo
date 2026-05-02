@@ -142,6 +142,7 @@
 
 - This track intentionally starts with validation and governance repair because downstream fixes need a truthful baseline.
 - Review evidence came from local diff/log inspection and `CI=true pnpm validate`, which failed at `@reading-advantage/domain` lint.
+- Track commit: `c41fb58`
 
 ---
 
