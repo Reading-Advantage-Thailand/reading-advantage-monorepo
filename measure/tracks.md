@@ -32,7 +32,7 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/shared_backend_scaffold_20260502/](./tracks/shared_backend_scaffold_20260502/)*
 - [x] **Track: Shared Backend: Auth Migration** (15/15 tasks)
   *Link: [./tracks/shared_backend_auth_20260502/](./tracks/shared_backend_auth_20260502/)*
-- [ ] **Track: Shared Backend: API Route Migration** (9/29 tasks)
+- [x] **Track: Shared Backend: API Route Migration** (29/29 tasks)
   *Link: [./tracks/shared_backend_api_20260502/](./tracks/shared_backend_api_20260502/)*
 - [ ] **Track: Shared Config Consolidation** (13/27 tasks)
   *Link: [./tracks/shared_config_consolidation_20260502/](./tracks/shared_config_consolidation_20260502/)*

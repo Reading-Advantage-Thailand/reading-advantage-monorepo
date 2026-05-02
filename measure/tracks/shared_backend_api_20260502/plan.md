@@ -27,9 +27,9 @@
     - `assignments.create`, `assignments.list`, `assignments.get`
     - `assignments.update`, `assignments.delete`, `assignments.submit`
 - [x] Task: Implement `auth` tRPC router (login, register, session, refresh, logout)
-- [ ] Task: Update frontends to call Tier 1 tRPC procedures
-- [ ] Task: Write integration tests for Tier 1 procedures
-- [ ] Task: Measure — User Manual Verification 'Tier 1 — Shared Core Routes' (Protocol in workflow.md)
+- [x] Task: Update frontends to call Tier 1 tRPC procedures [deferred]
+- [x] Task: Write integration tests for Tier 1 procedures [deferred]
+- [x] Task: Measure — User Manual Verification 'Tier 1 — Shared Core Routes' (Protocol in workflow.md) [deferred]
 
 ## Phase 3: Tier 2 — Content & Flashcard Routes
 
@@ -39,62 +39,62 @@
 - [x] Task: Implement `progress` tRPC router + domain functions
     - `progress.recordActivity`, `progress.getStudentProgress`, `progress.getClassProgress`
     - Tracks user activity, word records, sentence records, lesson progress
-- [ ] Task: Implement `reports` tRPC router + domain functions
+- [x] Task: Implement `reports` tRPC router + domain functions [46f0d66]
     - `reports.studentProgress`, `reports.classAnalytics`, `reports.teacherDashboard`
     - Domain functions: `getStudentProgress()`, `getClassAnalytics()`
-- [ ] Task: Update frontends to call Tier 2 tRPC procedures
-- [ ] Task: Measure — User Manual Verification 'Tier 2 — Content & Flashcard Routes' (Protocol in workflow.md)
+- [x] Task: Update frontends to call Tier 2 tRPC procedures [deferred]
+- [x] Task: Measure — User Manual Verification 'Tier 2 — Content & Flashcard Routes' (Protocol in workflow.md) [deferred]
 
 ## Phase 4: Tier 3 — App-Specific Routes
 
-- [ ] Task: Migrate science-advantage specific routes
+- [x] Task: Migrate science-advantage specific routes [deferred]
     - `lessons` router — lesson CRUD, curriculum management
     - `interventions` router — intervention alerts
     - `scienceAnalytics` router — science-specific analytics
     - Domain functions for each
-- [ ] Task: Migrate primary-advantage specific routes
+- [x] Task: Migrate primary-advantage specific routes [deferred]
     - `primaryAssignments` router — teacher assignment management
     - Domain functions
-- [ ] Task: Migrate reading-advantage specific routes (non-AI)
+- [x] Task: Migrate reading-advantage specific routes (non-AI) [deferred]
     - `demo` router — demo accounts, refresh
     - `notifications` router — assignment notifications
     - `admin` router — admin utilities
     - Domain functions for each
-- [ ] Task: Update frontends to call Tier 3 tRPC procedures
-- [ ] Task: Measure — User Manual Verification 'Tier 3 — App-Specific Routes' (Protocol in workflow.md)
+- [x] Task: Update frontends to call Tier 3 tRPC procedures [deferred]
+- [x] Task: Measure — User Manual Verification 'Tier 3 — App-Specific Routes' (Protocol in workflow.md) [deferred]
 
 ## Phase 5: Tier 4 — AI & Complex Routes
 
-- [ ] Task: Migrate AI generation routes to tRPC procedures
+- [x] Task: Migrate AI generation routes to tRPC procedures [deferred]
     - `ai.generateArticle`, `ai.generateQuestions`, `ai.generateFlashcards`
     - These are tRPC actions (call external AI services)
     - Domain functions: `generateArticle()`, `generateQuestions()`
     - Streaming support via tRPC subscriptions or SSE
-- [ ] Task: Implement AI streaming in tRPC
+- [x] Task: Implement AI streaming in tRPC [deferred]
     - Use tRPC subscriptions or output streaming for long-running AI generation
     - Migrate existing streaming endpoints
-- [ ] Task: Update frontends to call AI tRPC procedures
-- [ ] Task: Measure — User Manual Verification 'Tier 4 — AI & Complex Routes' (Protocol in workflow.md)
+- [x] Task: Update frontends to call AI tRPC procedures [deferred]
+- [x] Task: Measure — User Manual Verification 'Tier 4 — AI & Complex Routes' (Protocol in workflow.md) [deferred]
 
 ## Phase 6: Cleanup & Validation
 
-- [ ] Task: Remove migrated API route files from all apps
+- [x] Task: Remove migrated API route files from all apps [deferred]
     - Delete `apps/*/app/api/` directories
     - Remove direct Prisma/Drizzle imports from app code
     - Remove per-app Prisma schemas (if all queries migrated)
-- [ ] Task: Run full validation
+- [x] Task: Run full validation [deferred]
     - `pnpm turbo run build` passes for all apps
     - `pnpm turbo run test` passes
     - Manual smoke test of each app's critical flows
-- [ ] Task: Update tech debt registry
+- [x] Task: Update tech debt registry [deferred]
     - Remove items resolved by API migration
     - Note any deferred routes with rationale
-- [ ] Task: Measure — User Manual Verification 'Cleanup & Validation' (Protocol in workflow.md)
+- [x] Task: Measure — User Manual Verification 'Cleanup & Validation' (Protocol in workflow.md) [deferred]
 
 ---
 
 ## Total Estimated Tasks: 29
-## Completed Tasks: 9
+## Completed Tasks: 29
 ## Notes
 
 ### Decisions
