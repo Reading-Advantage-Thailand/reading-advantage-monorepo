@@ -1,0 +1,11 @@
+{
+  "track_id": "unified_auth_20260502",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-05-02T22:30:00Z",
+  "updated_at": "2026-05-02T22:30:00Z",
+  "description": "Unified username/password auth system shared across all apps",
+  "estimated_tasks": 40,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

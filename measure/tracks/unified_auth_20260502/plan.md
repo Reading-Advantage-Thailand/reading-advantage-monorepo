@@ -1,0 +1,162 @@
+# Implementation Plan: Unified Auth System
+
+---
+
+## Phase 1: Drizzle Schema Update
+
+- [ ] Task: Rewrite `packages/db/src/schema/users.ts`
+    - Add `username` (text, unique, not null) and `displayUsername` (text, unique, not null) to users table
+    - Change `email` from required to nullable
+    - Update `roleEnum` to `["STUDENT", "TEACHER", "ADMIN", "SYSTEM"]`
+    - Remove `firebaseUid`, `emailVerified` columns
+    - Rewrite `accounts` table: `id`, `userId`, `providerId` (text), `password` (nullable text for bcrypt hash), timestamps
+    - Rewrite `sessions` table: `id` (cuid), `token` (unique), `userId`, `expiresAt`, `createdAt`, `updatedAt`, `ipAddress`, `userAgent`
+    - Remove `verificationTokens` table
+    - Remove `refreshTokens` table
+- [ ] Task: Write schema tests
+    - Verify table definitions export correctly
+    - Verify enum values match expected roles
+- [ ] Task: Generate Drizzle migration
+- [ ] Task: Run `pnpm turbo run build --filter=@reading-advantage/db`
+- [ ] Task: Commit schema changes
+
+---
+
+## Phase 2: Shared Auth Package Rewrite
+
+- [ ] Task: Rewrite `packages/auth/src/password.ts`
+    - `hashPassword(password: string): Promise<string>` — bcrypt with 10 rounds
+    - `verifyPassword(password: string, hash: string): Promise<boolean>` — bcrypt compare, catch errors
+- [ ] Task: Write password tests
+- [ ] Task: Rewrite `packages/auth/src/session.ts`
+    - `createSession(db, userId, opts?): Promise<Session>` — generate random token, insert row, return with user
+    - `validateSession(db, token): Promise<Session | null>` — find by token, include user, delete if expired
+    - `deleteSession(db, token): Promise<void>` — delete row, catch errors
+- [ ] Task: Write session tests
+- [ ] Task: Rewrite `packages/auth/src/rate-limit.ts`
+    - In-memory Map<username, {failedCount, windowStart}>
+    - `checkRateLimit(username): { allowed: boolean, retriesAfter?: number }`
+    - `recordFailure(username): void`
+    - `resetLimit(username): void`
+    - `_testkit.resetRateLimiter()` for test isolation
+- [ ] Task: Write rate-limit tests
+- [ ] Task: Update `packages/auth/src/roles.ts`
+    - `ROLES = { STUDENT: 1, TEACHER: 2, ADMIN: 3, SYSTEM: 4 }`
+    - `ROLE_HIERARCHY` and `roleAtLeast(role, minRole)`
+    - `ROLE_ROUTES = { STUDENT: '/student', TEACHER: '/teacher', ADMIN: '/admin', SYSTEM: '/system' }`
+- [ ] Task: Update `packages/auth/src/permissions.ts`
+    - Keep existing permission matrix, update role references
+- [ ] Task: Rewrite `packages/auth/src/server.ts`
+    - `requireAuth(cookie?): Promise<Session>` — get session from cookie or throw/redirect
+    - `requireRole(session, minRole): Session` — check hierarchy
+    - `hasRole(session, minRole): boolean`
+- [ ] Task: Update `packages/auth/src/index.ts` barrel exports
+    - Remove JWT/token exports
+    - Add password, session, rate-limit exports
+- [ ] Task: Write server guard tests
+- [ ] Task: Run `pnpm turbo run test lint build --filter=@reading-advantage/auth`
+- [ ] Task: Commit auth package changes
+
+---
+
+## Phase 3: Auth-Client Rewrite
+
+- [ ] Task: Rewrite `packages/auth-client/src/context.ts`
+    - `AuthUser = { id, username, name, email, role, schoolId, image }`
+    - `AuthState = { user, isAuthenticated, isLoading }`
+    - `AuthActions = { login(username, password), logout() }`
+- [ ] Task: Rewrite `packages/auth-client/src/provider.tsx`
+    - On mount: GET `/api/auth/session` to check existing session
+    - `login()`: POST `/api/auth/login` with `{ username, password }`
+    - `logout()`: POST `/api/auth/logout`
+    - No localStorage — everything via cookies
+- [ ] Task: Rewrite `packages/auth-client/src/index.ts`
+    - Export `useAuth`, `useSession`, `useRequireAuth`
+- [ ] Task: Write auth-client tests
+- [ ] Task: Run `pnpm turbo run test lint build --filter=@reading-advantage/auth-client`
+- [ ] Task: Commit auth-client changes
+
+---
+
+## Phase 4: tRPC + API Routes
+
+- [ ] Task: Rewrite `packages/api/src/context.ts`
+    - Read `session_token` cookie from request headers
+    - Call `validateSession(db, token)` instead of JWT verify
+    - Build `AuthContext` from session user
+- [ ] Task: Update `packages/api/src/trpc.ts`
+    - `protectedProcedure` checks `ctx.auth` (already does, just different source)
+- [ ] Task: Create shared auth API routes in Next.js app directory
+    - `app/api/auth/login/route.ts` — POST, Zod validate, rate limit, bcrypt verify, createSession, set cookie
+    - `app/api/auth/session/route.ts` — GET, getCurrentSession, return user or null
+    - `app/api/auth/logout/route.ts` — POST, deleteSession, clear cookie
+    - `app/api/auth/impersonate/route.ts` — POST, dev-only, auto-create demo users
+- [ ] Task: Write API route tests
+- [ ] Task: Update `packages/api/src/routers/auth.ts`
+    - Remove `auth.login`, `auth.register`, `auth.refresh`, `auth.session`, `auth.migrate`, `auth.logout`
+    - Auth is now handled by Next.js route handlers, not tRPC
+    - Keep the router but make it a thin wrapper or remove entirely
+- [ ] Task: Write tRPC context tests
+- [ ] Task: Run `pnpm turbo run test lint build --filter=@reading-advantage/api`
+- [ ] Task: Commit tRPC + API route changes
+
+---
+
+## Phase 5: App Migrations
+
+### 5a: reading-advantage
+- [ ] Task: Remove `NextAuthSessionProvider` from root layout, keep only `TRPCProvider`
+- [ ] Task: Delete `app/api/auth/[...nextauth]/route.ts`
+- [ ] Task: Delete `lib/auth.ts` (NextAuth config)
+- [ ] Task: Rewrite `lib/session.ts` — `getCurrentUser()` uses session cookie instead of NextAuth/JWT
+- [ ] Task: Create shared auth route handlers at `app/api/auth/login|session|logout|impersonate/route.ts`
+- [ ] Task: Rewrite sign-in page to use `useAuth().login(username, password)`
+- [ ] Task: Update 22+ files importing from `next-auth/react` to use `@reading-advantage/auth-client`
+- [ ] Task: Remove `next-auth` from package.json
+- [ ] Task: Run `pnpm turbo run build --filter=reading-advantage`
+
+### 5b: primary-advantage
+- [ ] Task: Remove `lib/auth.ts` (NextAuth v5 config)
+- [ ] Task: Remove `app/api/auth/[...nextauth]/route.ts`
+- [ ] Task: Remove `lib/next-auth-compat.ts` shim
+- [ ] Task: Create shared auth route handlers
+- [ ] Task: Update remaining `next-auth/react` imports
+- [ ] Task: Run `pnpm turbo run build --filter=primary-advantage`
+
+### 5c: science-advantage
+- [ ] Task: Migrate science-advantage auth from Prisma to Drizzle
+- [ ] Task: Wire science-advantage to use shared auth package
+- [ ] Task: Run `pnpm turbo run build --filter=science-advantage`
+
+---
+
+## Phase 6: Cleanup & Validation
+
+- [ ] Task: Remove `firebaseUid` from all code references
+- [ ] Task: Remove JWT token logic from all packages
+- [ ] Task: Remove `next-auth` from all package.json files
+- [ ] Task: Update tech-stack.md — remove JWT from Backend & Data table
+- [ ] Task: Run full validation — all packages build, test, lint
+- [ ] Task: Update tech debt registry
+- [ ] Task: Commit cleanup
+
+---
+
+## Total Estimated Tasks: 40
+## Notes
+
+### Key Decisions
+- DB sessions (not JWT) — simple, revocable, science-advantage proven
+- Auth via Next.js route handlers (not tRPC procedures) — simpler, cookie-native
+- Password on `accounts` table — supports future provider additions
+- No email/password reset — admin-managed accounts
+- `username` as login identifier (not email) — matches school IT patterns
+
+### Dependencies
+- Requires `@reading-advantage/db` schema update
+- Requires Docker Postgres running for local dev
+
+### Risks
+- reading-advantage has 152 `getCurrentUser()` call sites — large surface area
+- Multiple apps must be updated atomically for shared auth to work
+- science-advantage uses Prisma, shared auth uses Drizzle — dual DB clients during migration

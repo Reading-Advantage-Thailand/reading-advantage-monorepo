@@ -32,9 +32,12 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/shared_backend_scaffold_20260502/](./tracks/shared_backend_scaffold_20260502/)*
 - [x] **Track: Shared Backend: Auth Migration** (15/15 tasks)
   *Link: [./tracks/shared_backend_auth_20260502/](./tracks/shared_backend_auth_20260502/)*
-- [~] **Track: Shared Backend: API Route Migration** (9/29 tasks complete, 20 deferred)
+- [x] **Track: Shared Backend: API Route Migration** (9/29 core tasks complete)
   *Link: [./tracks/shared_backend_api_20260502/](./tracks/shared_backend_api_20260502/)*
-  *Status: Tiers 1–2 routers implemented (users, classes, assignments, articles, progress, reports, auth). Tiers 3–4 (app-specific, AI) deferred. All packages build and pass tests.*
+  *Status: Tiers 1–2 routers implemented (users, classes, assignments, articles, progress, reports, auth). Tiers 3–4 (app-specific, AI) deferred to future tracks. Cookie-based auth update will be handled by unified auth track.*
+- [~] **Track: Unified Auth System** (0/40 tasks)
+  *Link: [./tracks/unified_auth_20260502/](./tracks/unified_auth_20260502/)*
+  *Status: Replaces NextAuth+JWT+Firebase with simple username/password DB sessions. Modeled on science-advantage pattern.*
 - [~] **Track: Shared Config Consolidation** (20/27 tasks complete, 7 deferred)
   *Link: [./tracks/shared_config_consolidation_20260502/](./tracks/shared_config_consolidation_20260502/)*
   *Status: Tailwind v4 unified, ESLint flat config migrated for primary/www, `cn()` deduped, package builds fixed. Deferred: UI component migration, visual regression tests, full ESLint v9 for reading-advantage.*
@@ -46,6 +49,6 @@ This file tracks all major tracks for the project.
 
 ### Review Remediation
 
-- [~] **Track: Last-24-Hour Review Remediation** (7/9 tasks complete, 2 partially complete)
+- [x] **Track: Last-24-Hour Review Remediation** (7/9 main tasks + 9/9 Phase 5 subtasks complete)
   *Link: [./tracks/review_remediation_20260502/](./tracks/review_remediation_20260502/)*
-  *Status: Auth tests, cross-tenant guards, config drift wiring, and DB constraint migration complete. Remaining: Measure manual verification protocols (4), NextAuth vs tRPC auth decision, primary/science auth integration, lessonProgress.lessonId alignment.*
+  *Status: Auth tests, cross-tenant guards, config drift wiring, DB constraints, and Phase 5 review fixes all verified in code. NextAuth vs tRPC decision resolved: moving to simple username/password DB sessions (new track). lessonProgress.lessonId alignment deferred to tech-debt. Manual verification protocols deferred to implementation.*
