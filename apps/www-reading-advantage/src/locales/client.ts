@@ -1,7 +1,5 @@
-"use client"
-import { localeImports } from '@/config/locale-config'
-import { createI18nClient } from 'next-international/client'
+"use client";
 
-export const { useI18n, useScopedI18n, I18nProviderClient, useCurrentLocale, useChangeLocale } = createI18nClient({
-    ...localeImports
-})
+export { useTranslations as useI18n } from "next-intl";
+export { useTranslations as useScopedI18n } from "next-intl";
+export { useCurrentLocale, useChangeLocale } from "./navigation";

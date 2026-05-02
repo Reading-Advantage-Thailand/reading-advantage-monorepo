@@ -1,6 +1,2 @@
-import { localeImports } from '@/config/locale-config';
-import { createI18nServer } from 'next-international/server'
-
-export const { getI18n, getScopedI18n, getStaticParams } = createI18nServer({
-    ...localeImports,
-})
+export { getTranslations as getI18n } from "next-intl/server";
+export { getTranslations as getScopedI18n } from "next-intl/server";

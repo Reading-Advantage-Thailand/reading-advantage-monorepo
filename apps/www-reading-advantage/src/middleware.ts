@@ -1,16 +1,8 @@
-import { createI18nMiddleware } from 'next-international/middleware'
-import { NextRequest } from 'next/server'
-import { localeConfig } from './config/locale-config'
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
-const I18nMiddleware = createI18nMiddleware({
-  locales: localeConfig.locales,
-  defaultLocale: localeConfig.defaultLocale,
-})
-
-export function middleware(request: NextRequest) {
-  return I18nMiddleware(request)
-}
+export default createMiddleware(routing);
 
 export const config = {
-  matcher: ['/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)'],
-}
+  matcher: ["/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],
+};
