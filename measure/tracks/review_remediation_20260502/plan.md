@@ -133,16 +133,48 @@
 
 ---
 
-## Total Estimated Tasks: 9
-## Completed Tasks: 7
-## Partially Completed Tasks: 2
-## Not Started Tasks: 0
+## Phase 5: Review Findings Remediation
+
+> Added 2026-05-02 after independent code review of all track changes.
+
+### High Severity
+- [x] Task: Add tenant enrollment check to `progress/getStudentProgress` [f647f6b]
+  - The progress router's `getStudentProgress` only had `assertCan()` (role check) but no school enrollment verification. The reports module's `getStudentProgress` already had this check — the progress module's version was missing it.
+- [x] Task: Add user-scoping to `progress/getLessonProgress` [f647f6b]
+  - Queried `lessonProgress` by `lessonId` only, without filtering by `userId`. Could return another user's progress data for the same lesson. Added `and(eq(lessonProgress.userId, user.id), eq(lessonProgress.lessonId, input.lessonId))` to scope to the caller.
+- [x] Task: Add classroom ownership chain to `assignments/submitAssignment` [f647f6b]
+  - Only checked `assertCan()` and updated by `(assignmentId, studentId)`. Missing verification that the assignment's classroom belongs to the caller's school. Added classroom lookup before update.
+
+### Medium Severity
+- [x] Task: Add try/catch to `buildUserFromDbInternal` in reading-advantage session.ts [f647f6b]
+  - Refactoring removed the try/catch that caught Prisma failures. On DB errors, the layout would crash with 500 instead of gracefully returning null.
+- [x] Task: Pass actual messages to `www-reading-advantage` LocaleProvider [f647f6b]
+  - `messages={{}}` was a type-only fix. Client components would render raw translation keys instead of translated text. Wired `next-intl` `getMessages()` into the layout.
+- [x] Task: Handle signIn error in reading-advantage `user-signin-form.tsx` [f647f6b]
+  - After tRPC login succeeds, `signIn("credentials")` is called to establish NextAuth session. If this fails, the error is swallowed silently. Added error check before redirect.
+- [x] Task: Replace science-advantage `return null` with redirect to shared auth [f647f6b]
+  - Production signin returned `null` (blank page). Changed to render an informative message + redirect to shared auth flow or show maintenance notice.
+
+### Low Severity
+- [x] Task: Tighten `AuthProvider` children type from optional to required [f647f6b]
+  - `children?: ReactNode` was a type workaround. The component always renders `{children}` — made it required again.
+- [x] Task: Type `buildUserFromSession` param as NextAuth `Session` instead of `any` [f647f6b]
+  - `async function buildUserFromSession(session: any)` — replaced `any` with proper NextAuth session type.
+
+---
+
+## Total Estimated Tasks: 10
+## Completed Tasks: 8
+## Partially Completed Tasks: 1
+## Not Started Tasks: 1
+## Total Subtasks (Phase 5): 9
 
 ## Notes
 
 - This track intentionally starts with validation and governance repair because downstream fixes need a truthful baseline.
 - Review evidence came from local diff/log inspection and `CI=true pnpm validate`, which failed at `@reading-advantage/domain` lint.
 - Track commits: `c41fb58` (main fix), `40f0ea7` (plan update), `e3e6b70` (lint fix)
+- Review fix commits: `f647f6b` (Phase 5 findings remediation)
 
 ---
 
@@ -173,6 +205,17 @@
 ### ⚠️ Partially Done — Needs Completion
 1. **NextAuth vs tRPC auth decision** — `reading-advantage` still uses both. `getCurrentUser()` in `lib/session.ts` falls back to NextAuth first, then tRPC token. No decision made on which survives.
 2. **Primary/science auth integration** — `primary-advantage` has `@reading-advantage/auth-client` dep and uses locale-aware `Link`, but no real tRPC auth endpoint is wired. Science app still has its own password login UI.
+
+### ✅ Done (Phase 5 Review Fixes)
+- **`progress/getStudentProgress` tenant enrollment check** — Now verifies student is enrolled in caller's school before returning activity data
+- **`progress/getLessonProgress` user-scoping** — Now filters by both `userId` and `lessonId`, not just `lessonId`
+- **`assignments/submitAssignment` classroom ownership chain** — Now verifies assignment's classroom belongs to caller's school
+- **`buildUserFromDbInternal` try/catch** — Wrapped Prisma query in try/catch so DB failures return null instead of crashing layout
+- **www LocaleProvider messages** — Passes real messages from `next-intl` instead of empty `{}`
+- **user-signin-form signIn error handling** — Checks `signIn` result for errors before redirecting
+- **science-advantage signin** — Shows informative redirect instead of blank `null`
+- **AuthProvider children type** — Restored to required (`children: ReactNode`)
+- **buildUserFromSession type** — Typed as `Session` instead of `any`
 
 ### ❌ Not Done — Still Open
 1. **All 4 `Measure — User Manual Verification` checkpoints** — Never executed.
