@@ -28,17 +28,14 @@
     - [x] Fix TypeScript compilation errors (added missing `github-slugger` dependency)
     - [x] Remove `ignoreBuildErrors: true` and `ignoreDuringBuilds: true` from next.config
     - [x] Verify build passes clean
-- [ ] Task: Fix advantage-games Difficulty type mismatches
-    - [ ] Identify all ~15 files using `"medium"` where `Difficulty` expects `"normal"`
-    - [ ] Replace `"medium"` with `"normal"` or update `Difficulty` type to include `"medium"`
-    - [ ] Remove `ignoreBuildErrors: true` from advantage-games next.config.ts
-    - [ ] Verify build passes clean
-    - [ ] Commit
-- [ ] Task: Fix `prisma generate` build requirement for reading-advantage
-    - [ ] Add `prisma generate` as a prebuild step in reading-advantage package.json
-    - [ ] OR migrate remaining Prisma usages so `prisma generate` is no longer needed
-    - [ ] Verify `pnpm turbo run build --filter=reading-advantage` works without manual `prisma generate`
-    - [ ] Commit
+- [x] Task: Fix advantage-games Difficulty type mismatches
+    - [x] Identify all ~15 files using `"medium"` where `Difficulty` expects `"normal"`
+    - [x] Replace `"medium"` with `"normal"` or update `Difficulty` type to include `"medium"`
+    - [x] Remove `ignoreBuildErrors: true` from advantage-games next.config.ts
+    - [x] Verify build passes clean
+- [x] Task: Fix `prisma generate` build requirement for reading-advantage
+    - [x] Add `prisma generate` as a prebuild step in reading-advantage package.json
+    - [x] Verify `pnpm turbo run build --filter=reading-advantage` works without manual `prisma generate`
 - [ ] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
 ---
