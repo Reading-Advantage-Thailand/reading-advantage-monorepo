@@ -104,10 +104,10 @@ export async function getCurrentUser() {
     );
 
     const teacherClassIds = user.teacherClassrooms.map(
-      (tc: any) => tc.classroomId
+      (tc: { classroomId: string }) => tc.classroomId
     );
     const studentClassIds = user.studentClassrooms.map(
-      (sc: any) => sc.classroomId
+      (sc: { classroomId: string }) => sc.classroomId
     );
 
     return {

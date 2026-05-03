@@ -111,7 +111,7 @@ export async function handleRegister(request: NextRequest) {
     response.cookies.set(SESSION_COOKIE_NAME, session.token, COOKIE_OPTIONS);
     return response;
   } catch (error) {
-    console.error("Register error:", error);
+    console.error("Register error:", error instanceof Error ? error.message : "Unknown");
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

@@ -124,7 +124,7 @@ export async function handleImpersonate(request: NextRequest) {
     response.cookies.set(SESSION_COOKIE_NAME, session.token, COOKIE_OPTIONS);
     return response;
   } catch (error) {
-    console.error("Impersonate error:", error);
+    console.error("Impersonate error:", error instanceof Error ? error.message : "Unknown");
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

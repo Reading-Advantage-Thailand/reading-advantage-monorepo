@@ -6,7 +6,6 @@ import {
 import base64 from "base64-js";
 import fs from "fs";
 import uploadToBucket from "@/utils/uploadToBucket";
-import db from "@/configs/firestore-config";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();

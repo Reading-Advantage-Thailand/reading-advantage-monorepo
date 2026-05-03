@@ -58,6 +58,8 @@ This file tracks all major tracks for the project.
 - [x] **Track: Firestore to Drizzle Migration** (cleanup complete, 7 stub callers deferred)
   *Link: [./tracks/firestore_to_drizzle_migration_20260503/](./tracks/firestore_to_drizzle_migration_20260503/)*
   *Status: Firestore server code removed, Firebase deps removed from package.json. 7 files use no-op stub. Prisma→Drizzle for controllers deferred to new track.*
+- [x] **Track: Audit Remediation — Past 15 Hours** *Link: [./tracks/audit_remediation_20260503/](./tracks/audit_remediation_20260503/)*
+  Fixed 5 defects found in deep audit of commits 1a49678–314a4fc: broken migration 0002 for fresh DBs, dead firestore import, as any casts in session.ts, registration test gaps, console.error leaks. 119/119 tests pass.
 - [ ] **Track: Shared ESLint v9 Flat Config Migration** *Link: [./tracks/shared_eslint_v9_migration_20260503/](./tracks/shared_eslint_v9_migration_20260503/)*
   Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9
 - [ ] **Track: Science-Advantage Auth Migration** (26 tasks) *Link: [./tracks/science_auth_migration_20260503/](./tracks/science_auth_migration_20260503/)*
