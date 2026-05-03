@@ -136,18 +136,18 @@
 
 ## Phase 6: Cleanup & Validation
 
-- [ ] Task: Remove `firebaseUid` from all code references
-- [ ] Task: Remove JWT token logic from all packages
+- [x] Task: Remove `firebaseUid` from all code references [5a33d3e]
+- [x] Task: Remove JWT token logic from all packages [already removed in earlier phases]
 - [x] Task: Remove `next-auth` from reading-advantage and primary-advantage package.json files
-- [ ] Task: Update tech-stack.md — remove JWT from Backend & Data table
+- [x] Task: Update tech-stack.md — remove JWT from Backend & Data table [5a33d3e]
 - [x] Task: Run full validation — all packages build, test, lint (reading-advantage + primary-advantage pass)
-- [ ] Task: Update tech debt registry
-- [ ] Task: Commit cleanup
+- [x] Task: Update tech debt registry [no new items; existing auth items already resolved]
+- [x] Task: Commit cleanup [5a33d3e]
 
 ---
 
 ## Total Estimated Tasks: 47
-## Status: Phases 1–5a, 5b complete. Phase 5c (science-advantage) deferred. Phase 6 partially done.
+## Status: Phases 1–6 complete. Phase 5c (science-advantage) deferred to future track.
 ## Notes
 
 ### Key Decisions
