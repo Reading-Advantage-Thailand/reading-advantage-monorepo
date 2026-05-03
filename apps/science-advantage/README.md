@@ -65,11 +65,6 @@ If using an external PostgreSQL instance, update the `DATABASE_URL` in `.env.loc
 Complete the `.env.local` file with remaining credentials:
 
 ```bash
-# Google OAuth (required for authentication)
-GOOGLE_OAUTH_CLIENT_ID="your-google-oauth-client-id.apps.googleusercontent.com"
-GOOGLE_OAUTH_CLIENT_SECRET="your-google-oauth-secret"
-GOOGLE_OAUTH_REDIRECT_URI="http://localhost:3000/api/auth/google/callback"
-
 # Redis (optional, falls back to in-memory)
 REDIS_URL="redis://localhost:6379"
 
@@ -118,7 +113,7 @@ npm run seed
   npm run dev:reset
   ```
 
-**Demo Users:** The application uses Google OAuth exclusively. During local development with `DEV_AUTH_ENABLED=true`, use the impersonation panel on `/signin` to assume teacher or student roles for QA. Production authentication requires Google OAuth credentials configured via `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET`.
+**Demo Users:** The application uses username/password authentication. During local development with `DEV_AUTH_ENABLED=true`, use the demo accounts on `/signin` to sign in as student, teacher, admin, or system admin roles. The impersonation panel on `/signin` also allows assuming teacher or student roles for QA.
 
 ### Development Server
 

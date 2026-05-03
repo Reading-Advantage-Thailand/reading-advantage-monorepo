@@ -24,17 +24,19 @@
 
 *Severity: High. Code must match the unified auth strategy.*
 
-- [ ] Task: Remove or disable Science Google OAuth routes
-    - [ ] Delete `apps/science-advantage/app/api/auth/google/route.ts` and callback route, or replace with explicit unsupported responses if route compatibility is needed
-    - [ ] Remove direct `drizzle-orm` imports that only exist for OAuth code
-    - [ ] Remove Google OAuth env checks from active auth paths if no longer used
-- [ ] Task: Remove Science Google OAuth UI entry points
-    - [ ] Search sign-in and auth components for Google OAuth links/buttons
-    - [ ] Remove or replace with username/password-only messaging
-- [ ] Task: Verify no active Science OAuth implementation remains
-    - [ ] Run `rg -n "GOOGLE_OAUTH|/api/auth/google|google/callback|Sign in with Google" apps/science-advantage`
-    - [ ] Document any remaining archived-doc hits separately from active code
-- [ ] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Remove or disable Science Google OAuth routes
+    - [x] Delete `apps/science-advantage/app/api/auth/google/route.ts` and callback route, or replace with explicit unsupported responses if route compatibility is needed
+    - [x] Remove direct `drizzle-orm` imports that only exist for OAuth code
+    - [x] Remove Google OAuth env checks from active auth paths if no longer used
+- [x] Task: Remove Science Google OAuth UI entry points
+    - [x] Search sign-in and auth components for Google OAuth links/buttons
+    - [x] Remove or replace with username/password-only messaging
+- [x] Task: Verify no active Science OAuth implementation remains
+    - [x] Run `rg -n "GOOGLE_OAUTH|/api/auth/google|google/callback|Sign in with Google" apps/science-advantage`
+    - [x] Document any remaining archived-doc hits separately from active code
+- [x] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+    - Verified: No active Google OAuth code in science-advantage source
+    - Verified: Only docs/archive/core-workflows.md has references (archived)
 
 ---
 

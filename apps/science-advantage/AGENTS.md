@@ -47,9 +47,8 @@ Duplicate `.env.example` into `.env.local` before development and populate crede
 
 ### Local Auth Configuration Reminder
 
-- Only Google OAuth is enabled.
-- Localhost sign-in is restricted to the single Google account `bodangren@gmail.com`.
-- There are no seeded email/password accounts; tests requiring other roles must mock the session layer.
+- Authentication is username/password-only via shared `@reading-advantage/auth`.
+- Demo accounts are seeded with username/password credentials for local testing.
 - A dev-only impersonation toggle is available when `DEV_AUTH_ENABLED=true`. Use the panel on `/signin` to assume teacher or student roles; the override stores an HTTP-only cookie and is automatically cleared on sign out.
 - Any new feature must remain production-secure (no dev overrides leaking to prod) while still supporting the dev impersonation flow so manual QA can run locally.
 
