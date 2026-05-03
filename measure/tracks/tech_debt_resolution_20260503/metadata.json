@@ -1,0 +1,11 @@
+{
+  "track_id": "tech_debt_resolution_20260503",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-05-03T00:00:00Z",
+  "updated_at": "2026-05-03T00:00:00Z",
+  "description": "Resolve all open tech-debt items not covered by existing pending tracks. Prioritized by severity: High infrastructure blockers, Medium build/schema fixes, Low tooling cleanup.",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
