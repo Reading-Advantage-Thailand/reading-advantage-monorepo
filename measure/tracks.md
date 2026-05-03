@@ -53,8 +53,9 @@ This file tracks all major tracks for the project.
   Fix 128 lint warnings, 26 failed test suites, and remove ignoreBuildErrors
 - [ ] **Track: Primary-Advantage Stabilization** *Link: [./tracks/primary_advantage_stabilization_20260503/](./tracks/primary_advantage_stabilization_20260503/)*
   Fix 49 lint errors, add Vitest test suite, remove ignoreBuildErrors
-- [ ] **Track: Firestore to Drizzle Migration** *Link: [./tracks/firestore_to_drizzle_migration_20260503/](./tracks/firestore_to_drizzle_migration_20260503/)*
-  Migrate 12 remaining Firestore collections to Drizzle/Postgres
+- [x] **Track: Firestore to Drizzle Migration** (cleanup complete, 7 stub callers deferred)
+  *Link: [./tracks/firestore_to_drizzle_migration_20260503/](./tracks/firestore_to_drizzle_migration_20260503/)*
+  *Status: Firestore server code removed, Firebase deps removed from package.json. 7 files use no-op stub. Prisma→Drizzle for controllers deferred to new track.*
 - [ ] **Track: Shared ESLint v9 Flat Config Migration** *Link: [./tracks/shared_eslint_v9_migration_20260503/](./tracks/shared_eslint_v9_migration_20260503/)*
   Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9
 

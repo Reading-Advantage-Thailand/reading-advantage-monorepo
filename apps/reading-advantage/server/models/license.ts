@@ -1,8 +1,7 @@
-import { DocumentData } from "firebase/firestore";
 import { LicenseExpirationDate, LicenseSubScriptionLevel } from "./enum";
 import { randomUUID } from "crypto";
 
-export interface License extends DocumentData {
+export interface License {
   id: string; // school id
   key: string;
   schoolName: string; // Updated field name
@@ -16,7 +15,7 @@ export interface License extends DocumentData {
 }
 
 // records (sub collection) of license
-export interface LicenseRecord extends DocumentData {
+export interface LicenseRecord {
   id: string; // user id
   license_key: string;
   activated_at: string;

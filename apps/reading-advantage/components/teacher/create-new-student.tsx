@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { useScopedI18n } from "@/locales/client";
 import { last } from "lodash";
-import { Timestamp } from "firebase-admin/firestore";
 
 type Student = {
   id: string;

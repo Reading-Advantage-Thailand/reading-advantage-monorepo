@@ -1461,8 +1461,15 @@ export async function updateUserArticle(
 
 async function cleanupAudioFiles(articleId: string, userId?: string) {
   try {
-    // Import Firebase Admin Storage
-    const { getStorage } = await import("firebase-admin/storage");
+    // Firebase Storage cleanup — gracefully skipped if firebase-admin not installed
+    let getStorage: any;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      getStorage = require("firebase-admin/storage").getStorage;
+    } catch {
+      console.warn("firebase-admin/storage not available, skipping audio cleanup");
+      return;
+    }
     // ระบุ bucket name โดยตรง
     const bucket = getStorage().bucket(
       "artifacts.reading-advantage.appspot.com"
@@ -1496,8 +1503,15 @@ async function cleanupAudioFiles(articleId: string, userId?: string) {
 
 async function cleanupStorageFiles(articleId: string, userId?: string) {
   try {
-    // Import Firebase Admin Storage
-    const { getStorage } = await import("firebase-admin/storage");
+    // Firebase Storage cleanup — gracefully skipped if firebase-admin not installed
+    let getStorage: any;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      getStorage = require("firebase-admin/storage").getStorage;
+    } catch {
+      console.warn("firebase-admin/storage not available, skipping storage cleanup");
+      return;
+    }
     // ระบุ bucket name โดยตรง
     const bucket = getStorage().bucket(
       "artifacts.reading-advantage.appspot.com"

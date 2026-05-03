@@ -1,6 +1,5 @@
 import { ExtendedNextRequest } from "./auth-controller";
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/configs/firestore-config";
 import { prisma } from "@/lib/prisma";
 
 interface RequestContext {

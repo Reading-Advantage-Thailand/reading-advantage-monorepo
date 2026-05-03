@@ -1,4 +1,3 @@
-import { DocumentData } from "firebase/firestore";
 import { ArticleType } from "./enum";
 
 export enum ArticleCefrLevel {
@@ -29,7 +28,7 @@ export interface ArticleTimepoint {
   timeSeconds: number;
 }
 
-export interface Article extends DocumentData {
+export interface Article {
   average_rating: number;
   cefr_level: ArticleCefrLevel;
   created_at: string; // ISO string
@@ -47,7 +46,7 @@ export interface Article extends DocumentData {
   type: ArticleType;
 }
 
-export interface ArticleQuestion extends DocumentData {
+export interface ArticleQuestion {
   question: string;
 }
 

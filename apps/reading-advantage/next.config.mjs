@@ -51,6 +51,13 @@ const nextConfig = {
       ...config.optimization,
       minimize: false,
     };
+    // Make firebase-admin optional at build time
+    if (isServer) {
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push("firebase-admin/storage");
+      }
+    }
     return config;
   },
   // Reduce build output size

@@ -1,8 +1,10 @@
-import { DocumentData } from "firebase/firestore";
 import { fetchData } from "./fetch-helper";
 import { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 
-const createFirestoreService = <T extends DocumentData>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ApiRecord = Record<string, any>;
+
+const createFirestoreService = <T extends ApiRecord>(
   collectionPath: string
 ) => {
   const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/${collectionPath}`;
