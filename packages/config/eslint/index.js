@@ -4,8 +4,14 @@ import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
+/** Exported plugins for apps that need to add plugin-scoped rules. */
+export const plugins = {
+  react,
+  "react-hooks": reactHooks,
+};
+
+/** Base ESLint config for TypeScript + React packages and apps. */
+export const baseConfig = [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -43,12 +49,18 @@ export default [
       },
     },
   },
-  {
-    ignores: [
-      "**/node_modules/**",
-      "**/.next/**",
-      "**/dist/**",
-      "**/coverage/**",
-    ],
-  },
+];
+
+/** Default ignores for monorepo apps/packages. */
+export const ignores = [
+  "**/node_modules/**",
+  "**/.next/**",
+  "**/dist/**",
+  "**/coverage/**",
+];
+
+/** Default export for backward compatibility. */
+export default [
+  ...baseConfig,
+  { ignores },
 ];
