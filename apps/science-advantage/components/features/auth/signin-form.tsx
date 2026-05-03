@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@reading-advantage/auth-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,6 +17,7 @@ const DEMO_ACCOUNTS = [
 
 export function SigninForm() {
   const router = useRouter();
+  const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -45,33 +47,13 @@ export function SigninForm() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
+      await login(username, password);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || 'Login failed');
-        setLoading(false);
-        return;
-      }
-
-      // Redirect based on role
-      const roleRoutes = {
-        STUDENT: '/student',
-        TEACHER: '/teacher',
-        ADMIN: '/admin',
-        SYSTEM: '/system',
-      };
-
-      const redirectTo = roleRoutes[data.user.role as keyof typeof roleRoutes] || '/student';
-      router.push(redirectTo);
+      // Redirect based on role (session will be available after page reload)
+      router.push('/student');
       router.refresh();
     } catch {
-      setError('An error occurred during login');
+      setError('Invalid username or password');
       setLoading(false);
     }
   };

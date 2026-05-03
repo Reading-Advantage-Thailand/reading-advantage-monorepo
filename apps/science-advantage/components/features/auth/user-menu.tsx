@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@reading-advantage/auth-client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -15,7 +16,7 @@ import { Settings, GraduationCap, BookOpen, Shield, Server, LogOut } from 'lucid
 
 interface UserMenuProps {
   user: {
-    name: string;
+    name: string | null;
     role: string;
     image?: string | null;
   };
@@ -33,16 +34,17 @@ type UserRole = keyof typeof ROLE_HIERARCHY;
 
 export function UserMenu({ user }: UserMenuProps) {
   const router = useRouter();
+  const { logout } = useAuth();
   const userRole = user.role as UserRole;
   const userLevel = ROLE_HIERARCHY[userRole];
 
   const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
+    await logout();
     router.push('/');
     router.refresh();
   };
 
-  const initials = user.name
+  const initials = (user.name ?? 'U')
     .split(' ')
     .map((n) => n[0])
     .join('')

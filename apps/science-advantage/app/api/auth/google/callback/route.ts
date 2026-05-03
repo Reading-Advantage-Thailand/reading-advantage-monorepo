@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { eq, and } from 'drizzle-orm';
+import { db } from '@reading-advantage/db';
+import { users, accounts, schools } from '@reading-advantage/db/schema';
+import { createSession, ROLE_ROUTES, SESSION_COOKIE_NAME } from '@reading-advantage/auth';
 import { env } from '@/lib/env';
-import { createSession, setSessionCookie } from '@/lib/auth/session';
-import { ROLE_ROUTES } from '@/lib/auth/constants';
-import prisma from '@/lib/prisma';
 
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const GOOGLE_USERINFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo';
+
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  maxAge: 7 * 24 * 60 * 60,
+  path: '/',
+};
 
 interface GoogleTokenResponse {
   access_token: string;
@@ -60,6 +69,23 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
   return response.json();
 }
 
+async function getOrCreateDevSchool() {
+  let [devSchool] = await db
+    .select({ id: schools.id })
+    .from(schools)
+    .where(eq(schools.name, 'Science Dev School'))
+    .limit(1);
+
+  if (!devSchool) {
+    [devSchool] = await db
+      .insert(schools)
+      .values({ name: 'Science Dev School' })
+      .returning({ id: schools.id });
+  }
+
+  return devSchool.id;
+}
+
 export async function GET(request: NextRequest) {
   if (!env.GOOGLE_OAUTH_ENABLED) {
     return NextResponse.redirect(
@@ -87,84 +113,94 @@ export async function GET(request: NextRequest) {
     const tokens = await getGoogleTokens(code);
     const userInfo = await getGoogleUserInfo(tokens.access_token);
 
-    let user = await prisma.user.findUnique({
-      where: { email: userInfo.email },
-    });
+    // Look up existing user by email
+    let [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, userInfo.email))
+      .limit(1);
+
+    const schoolId = await getOrCreateDevSchool();
 
     if (!user) {
-      user = await prisma.user.create({
-        data: {
-          id: `google-${userInfo.sub}`,
-          email: userInfo.email,
-          name: userInfo.name,
-          username: userInfo.email.split('@')[0],
-          displayUsername: userInfo.email.split('@')[0],
-          role: 'STUDENT',
-          image: userInfo.picture,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          account: {
-            create: {
-              id: `google-account-${userInfo.sub}`,
-              accountId: userInfo.sub,
-              providerId: 'google',
-              accessToken: tokens.access_token,
-              refreshToken: tokens.refresh_token,
-              idToken: tokens.id_token,
-              accessTokenExpiresAt: new Date(
-                Date.now() + tokens.expires_in * 1000
-              ),
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            },
-          },
-        },
+      const userId = `google-${userInfo.sub}`;
+      const username = userInfo.email.split('@')[0];
+
+      [user] = await db.transaction(async (tx) => {
+        const [created] = await tx
+          .insert(users)
+          .values({
+            id: userId,
+            email: userInfo.email,
+            name: userInfo.name,
+            username,
+            displayUsername: username,
+            role: 'STUDENT',
+            image: userInfo.picture,
+            schoolId,
+          })
+          .returning();
+
+        await tx.insert(accounts).values({
+          id: `google-account-${userInfo.sub}`,
+          userId,
+          providerId: 'google',
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token,
+          accessTokenExpiresAt: new Date(
+            Date.now() + tokens.expires_in * 1000
+          ),
+        });
+
+        return [created];
       });
     } else {
-      const existingAccount = await prisma.account.findFirst({
-        where: {
-          userId: user.id,
-          providerId: 'google',
-        },
-      });
+      // Update existing Google account tokens
+      const [existingAccount] = await db
+        .select()
+        .from(accounts)
+        .where(
+          and(
+            eq(accounts.userId, user.id),
+            eq(accounts.providerId, 'google')
+          )
+        )
+        .limit(1);
 
       if (existingAccount) {
-        await prisma.account.update({
-          where: { id: existingAccount.id },
-          data: {
+        await db
+          .update(accounts)
+          .set({
             accessToken: tokens.access_token,
             refreshToken: tokens.refresh_token,
-            idToken: tokens.id_token,
             accessTokenExpiresAt: new Date(
               Date.now() + tokens.expires_in * 1000
             ),
-          },
-        });
-      } else {
-        await prisma.account.create({
-          data: {
-            id: `google-account-${userInfo.sub}`,
-            accountId: userInfo.sub,
-            userId: user.id,
-            providerId: 'google',
-            accessToken: tokens.access_token,
-            refreshToken: tokens.refresh_token,
-            idToken: tokens.id_token,
-            accessTokenExpiresAt: new Date(
-              Date.now() + tokens.expires_in * 1000
-            ),
-            createdAt: new Date(),
             updatedAt: new Date(),
-          },
+          })
+          .where(eq(accounts.id, existingAccount.id));
+      } else {
+        await db.insert(accounts).values({
+          id: `google-account-${userInfo.sub}`,
+          userId: user.id,
+          providerId: 'google',
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token,
+          accessTokenExpiresAt: new Date(
+            Date.now() + tokens.expires_in * 1000
+          ),
         });
       }
     }
 
-    const session = await createSession(user.id);
-    await setSessionCookie(session.token!);
+    const session = await createSession(db, user.id);
 
-    const redirectTo = ROLE_ROUTES[user.role] || '/student';
-    return NextResponse.redirect(new URL(redirectTo, request.url));
+    const response = NextResponse.redirect(
+      new URL(ROLE_ROUTES[user.role as keyof typeof ROLE_ROUTES] || '/student', request.url)
+    );
+
+    response.cookies.set(SESSION_COOKIE_NAME, session.token, COOKIE_OPTIONS);
+    return response;
   } catch (error) {
     console.error('Google OAuth callback error:', error);
     return NextResponse.redirect(
