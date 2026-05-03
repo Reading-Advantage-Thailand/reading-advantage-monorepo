@@ -27,7 +27,7 @@
 | Hono | External HTTP boundaries only — webhooks, health checks, legacy endpoints |
 | Zod | Input validation on all tRPC procedures |
 | PostgreSQL | Unified database (local Docker for dev, VPS for production) |
-| JWT | Access + refresh token auth via tRPC middleware |
+| Sessions | Cookie-based DB sessions via `@reading-advantage/auth` (username/password) |
 | Firebase Functions | reading-advantage (legacy, being deprecated) |
 | AI SDK | Google + OpenAI providers across all apps |
 

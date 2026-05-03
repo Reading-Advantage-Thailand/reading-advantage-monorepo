@@ -17,7 +17,6 @@ vi.mock("@reading-advantage/db/schema", () => ({
     createdAt: "created_at",
     updatedAt: "updated_at",
     password: "password",
-    firebaseUid: "firebase_uid",
   },
 }));
 
@@ -96,7 +95,6 @@ describe("users router", () => {
       expect(result.email).toBe("test@example.com");
       // Should not include sensitive fields
       expect(result).not.toHaveProperty("password");
-      expect(result).not.toHaveProperty("firebaseUid");
     });
   });
 
@@ -122,7 +120,6 @@ describe("users router", () => {
 
       expect(result.id).toBe("u2");
       expect(result).not.toHaveProperty("password");
-      expect(result).not.toHaveProperty("firebaseUid");
     });
 
     it("scopes lookup to caller tenant", async () => {
