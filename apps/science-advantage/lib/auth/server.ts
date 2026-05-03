@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getCurrentSession } from './session';
-import { ROLES, ROLE_ROUTES, roleAtLeast } from '@reading-advantage/auth';
+import { ROLE_ROUTES, roleAtLeast } from '@reading-advantage/auth';
 import type { Session, UserRole } from './types';
 
 /**

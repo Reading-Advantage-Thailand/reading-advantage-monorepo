@@ -1,2 +1,6 @@
 import { handleLogout } from "@reading-advantage/api/routes/auth";
-export const POST = handleLogout;
+import type { NextRequest } from "next/server";
+
+export async function POST(request: NextRequest) {
+  return handleLogout(request);
+}

@@ -1,6 +1,5 @@
 import crypto from "crypto";
-import { eq } from "drizzle-orm";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { eq, type PostgresJsDatabase } from "@reading-advantage/db";
 import { sessions, users } from "@reading-advantage/db/schema";
 import type * as schema from "@reading-advantage/db/schema";
 import type { UserContext } from "./tenant.js";

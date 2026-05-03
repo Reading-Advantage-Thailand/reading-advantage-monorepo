@@ -17,6 +17,7 @@
     "validate": "pnpm config-drift && turbo run lint test build"
   },
   "devDependencies": {
+    "drizzle-orm": "0.44.7",
     "prettier": "^3.5.3",
     "turbo": "^2.5.2",
     "typescript": "^5.8.3"
@@ -24,5 +25,24 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "pnpm": {
+    "overrides": {
+      "drizzle-orm": "0.44.7",
+      "next": "16.0.0",
+      "react": "19.2.5",
+      "react-dom": "19.2.5"
+    },
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@prisma/client",
+        "prisma"
+      ],
+      "allowAny": [
+        "@prisma/client",
+        "prisma"
+      ]
+    },
+    "resolvePeersFromWorkspaceRoot": true
+  }
 }

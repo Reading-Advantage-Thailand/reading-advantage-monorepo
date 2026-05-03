@@ -44,17 +44,17 @@
 
 *Severity: High. The migration must build and lint before it can be considered done.*
 
-- [ ] Task: Fix Science build failures
-    - [ ] Run `pnpm turbo run build --filter=science-advantage`
-    - [ ] Fix missing dependency or import failures introduced by auth migration
-    - [ ] Re-run until build passes
-- [ ] Task: Fix Science auth-touched lint failures
-    - [ ] Replace raw `<a href="/">` in `components/features/auth/signin-form.tsx` with `next/link`
-    - [ ] Remove unused imports introduced by auth migration
-    - [ ] Run `pnpm turbo run lint --filter=science-advantage`
-- [ ] Task: Triage unrelated Science lint baseline
-    - [ ] If analytics lint failures are unrelated baseline debt, create or update a pending track with exact command output and file list
-    - [ ] Do not mark Science auth migration complete until auth-touched lint failures are gone
+- [x] Task: Fix Science build failures
+    - [x] Run `pnpm turbo run build --filter=science-advantage`
+    - [x] Fix missing dependency or import failures introduced by auth migration
+    - [x] Re-run until build passes
+- [x] Task: Fix Science auth-touched lint failures
+    - [x] Replace raw `<a href="/">` in `components/features/auth/signin-form.tsx` with `next/link`
+    - [x] Remove unused imports introduced by auth migration
+    - [x] Run `pnpm turbo run lint --filter=science-advantage`
+- [x] Task: Triage unrelated Science lint baseline
+    - [x] If analytics lint failures are unrelated baseline debt, create or update a pending track with exact command output and file list
+    - [x] Do not mark Science auth migration complete until auth-touched lint failures are gone
 - [ ] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
 ---

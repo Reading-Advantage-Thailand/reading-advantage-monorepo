@@ -1,2 +1,6 @@
 import { handleImpersonate } from "@reading-advantage/api/routes/auth";
-export const POST = handleImpersonate;
+import type { NextRequest } from "next/server";
+
+export async function POST(request: NextRequest) {
+  return handleImpersonate(request);
+}

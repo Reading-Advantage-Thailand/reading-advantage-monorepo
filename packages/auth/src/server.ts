@@ -1,4 +1,4 @@
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { PostgresJsDatabase } from "@reading-advantage/db";
 import type * as schema from "@reading-advantage/db/schema";
 import { validateSession, type Session } from "./session.js";
 import { ROLE_HIERARCHY, type Role } from "./roles.js";

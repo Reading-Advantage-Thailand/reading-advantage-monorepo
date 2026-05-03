@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
-import { eq } from 'drizzle-orm';
+import { eq } from '@reading-advantage/db';
 import { db } from '@reading-advantage/db';
-import { sessions, users } from '@reading-advantage/db/schema';
+import { users } from '@reading-advantage/db/schema';
 import {
   createSession as sharedCreateSession,
   validateSession as sharedValidateSession,

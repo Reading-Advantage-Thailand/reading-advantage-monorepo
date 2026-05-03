@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@reading-advantage/auth-client';
 import { Button } from '@/components/ui/button';
@@ -31,9 +32,9 @@ export function SigninForm() {
           <h2 className="text-2xl font-semibold mb-4">Sign In</h2>
           <p className="text-muted-foreground">
             The sign-in system is being updated. Please visit{" "}
-            <a href="/" className="underline text-primary">
+            <Link href="/" className="underline text-primary">
               the main site
-            </a>{" "}
+            </Link>{" "}
             to access your account.
           </p>
         </div>
