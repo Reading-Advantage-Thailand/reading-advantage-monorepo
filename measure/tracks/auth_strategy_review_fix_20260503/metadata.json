@@ -1,0 +1,26 @@
+{
+  "track_id": "auth_strategy_review_fix_20260503",
+  "type": "fix",
+  "status": "completed",
+  "created_at": "2026-05-03T22:15:00+08:00",
+  "updated_at": "2026-05-04T00:00:00+08:00",
+  "description": "Fix review findings from the past-15-hour audit: align Science auth with username/password-only strategy, restore build/lint gates, harden auth migrations, and eliminate silent Firestore no-op behavior.",
+  "estimated_tasks": 23,
+  "actual_tasks": 23,
+  "source_review": {
+    "window": "last 15 hours as of 2026-05-03",
+    "commands": [
+      "pnpm turbo run build --filter=science-advantage",
+      "pnpm turbo run lint --filter=science-advantage",
+      "pnpm turbo run test --filter=@reading-advantage/db",
+      "pnpm turbo run test --filter=@reading-advantage/api"
+    ],
+    "reviewed_tracks": [
+      "unified_auth_20260502",
+      "science_auth_migration_20260503",
+      "tech_debt_resolution_20260503",
+      "firestore_to_drizzle_migration_20260503",
+      "audit_remediation_20260503"
+    ]
+  }
+}

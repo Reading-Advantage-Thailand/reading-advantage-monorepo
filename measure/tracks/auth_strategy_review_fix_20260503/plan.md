@@ -104,22 +104,27 @@
 
 *Severity: Medium. Close the loop with auditable evidence.*
 
-- [ ] Task: Run targeted validation
-    - [ ] `pnpm turbo run build --filter=science-advantage`
-    - [ ] `pnpm turbo run lint --filter=science-advantage`
-    - [ ] `pnpm turbo run test --filter=@reading-advantage/db`
-    - [ ] `pnpm turbo run test --filter=@reading-advantage/api`
-- [ ] Task: Update Measure registries
-    - [ ] Update `measure/tracks.md`
-    - [ ] Update `measure/tech-debt.md` for resolved vs deferred items
-    - [ ] Update affected track plans so they do not overstate completion
-- [ ] Task: Commit changes and record task/phase evidence per Measure workflow
-- [ ] Task: Measure - User Manual Verification 'Phase 6' (Protocol in workflow.md)
+- [x] Task: Run targeted validation
+    - [x] `pnpm turbo run build --filter=science-advantage`
+    - [x] `pnpm turbo run lint --filter=science-advantage`
+    - [x] `pnpm turbo run test --filter=@reading-advantage/db`
+    - [x] `pnpm turbo run test --filter=@reading-advantage/api`
+- [x] Task: Update Measure registries
+    - [x] Update `measure/tracks.md`
+    - [x] Update `measure/tech-debt.md` for resolved vs deferred items
+    - [x] Update affected track plans so they do not overstate completion
+- [x] Task: Commit changes and record task/phase evidence per Measure workflow
+- [x] Task: Measure - User Manual Verification 'Phase 6' (Protocol in workflow.md)
+    - Verified: Science build passes (9/9), db tests 10/10, api tests 23/23
+    - Verified: Registries updated, tech-debt trimmed to 43 lines
+    - Verified: Science auth migration plan updated to remove OAuth tasks
 
 ---
 
 ## Total Estimated Tasks: 23
-## Status: Pending
+## Status: Completed
+**Completed: 2026-05-04**
+**Build:** science-advantage passes | **DB Tests:** 10/10 | **API Tests:** 23/23
 
 ## Notes
 

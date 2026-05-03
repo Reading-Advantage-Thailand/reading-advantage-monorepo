@@ -60,6 +60,9 @@ This file tracks all major tracks for the project.
   *Status: Firestore server code removed, Firebase deps removed from package.json. 7 files use no-op stub. Prisma→Drizzle for controllers deferred to new track.*
 - [x] **Track: Audit Remediation — Past 15 Hours** *Link: [./tracks/audit_remediation_20260503/](./tracks/audit_remediation_20260503/)*
   Fixed 5 defects found in deep audit of commits 1a49678–314a4fc: broken migration 0002 for fresh DBs, dead firestore import, as any casts in session.ts, registration test gaps, console.error leaks. 119/119 tests pass.
+- [x] **Track: Auth Strategy Review Fixes** *Link: [./tracks/auth_strategy_review_fix_20260503/](./tracks/auth_strategy_review_fix_20260503/)*
+  Fix review findings from the past-15-hour audit: removed Science Google OAuth to match username/password-only auth, restored Science build/lint gates, enforced auth migration nullability, eliminated silent Firestore no-op behavior.
+  *Status: Complete. 23/23 tasks done. Science build passes, db tests 10/10, api tests 23/23.*
 - [ ] **Track: Shared ESLint v9 Flat Config Migration** *Link: [./tracks/shared_eslint_v9_migration_20260503/](./tracks/shared_eslint_v9_migration_20260503/)*
   Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9
 - [ ] **Track: Science-Advantage Auth Migration** (26 tasks) *Link: [./tracks/science_auth_migration_20260503/](./tracks/science_auth_migration_20260503/)*
