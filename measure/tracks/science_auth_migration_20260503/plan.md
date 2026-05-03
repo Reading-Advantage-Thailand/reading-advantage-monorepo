@@ -24,24 +24,21 @@
 
 ---
 
-## Phase 2: Google OAuth Rewrite (Prisma → Drizzle)
+## Phase 2: Auth Strategy Alignment (Username/Password Only)
 
-- [x] Task: Rewrite `app/api/auth/google/route.ts` to use Drizzle
-    - Google route unchanged (no DB usage, just builds OAuth URL)
-- [x] Task: Rewrite `app/api/auth/google/callback/route.ts` to use Drizzle
-    - Replaced all Prisma queries with Drizzle equivalents
-    - Uses `db` from `@reading-advantage/db`, `users`/`accounts`/`schools` from schema
-    - Uses `createSession(db, userId)` from `@reading-advantage/auth`
-    - Uses `SESSION_COOKIE_NAME` and `ROLE_ROUTES` from shared auth
-    - Creates dev school for Google OAuth users
-- [ ] Task: Write regression tests for Google OAuth callback
-    - Test: new Google user creates user + account + session via Drizzle
-    - Test: existing Google user updates tokens and creates new session
-    - Test: session cookie is set with correct attributes
-- [ ] Task: Verify Google OAuth flow end-to-end
-    - Sign in with Google, verify redirect to dashboard
-    - Verify session persists across page refresh
-- [ ] Task: Measure — User Manual Verification 'Google OAuth Rewrite' (Protocol in workflow.md)
+*Google OAuth removed per [Auth Strategy Review Fixes](../auth_strategy_review_fix_20260503/). The unified auth direction is username/password-only with no external providers.*
+
+- [x] Task: Remove Google OAuth route handlers
+    - Deleted `app/api/auth/google/route.ts` and `app/api/auth/google/callback/route.ts`
+    - Removed Google OAuth env checks from auth paths
+    - Removed direct `drizzle-orm` imports that only existed for OAuth code
+- [x] Task: Remove Google OAuth UI entry points
+    - Removed `google-signin-button.tsx` component
+    - Updated `signin-container.tsx` to remove Google OAuth references
+- [ ] Task: Verify no active Science OAuth implementation remains
+    - Run `rg -n "GOOGLE_OAUTH|/api/auth/google|Sign in with Google" apps/science-advantage`
+    - Document any remaining archived-doc hits separately from active code
+- [ ] Task: Measure — User Manual Verification 'Auth Strategy Alignment' (Protocol in workflow.md)
 
 ---
 
@@ -94,12 +91,11 @@
     - Note: `prisma generate` must run before build (pre-existing infrastructure issue)
 - [ ] Task: Run `pnpm turbo run lint --filter=science-advantage`
     - Fix any lint errors introduced by migration
-- [ ] Task: Manual verification — login/session/logout/impersonate/Google OAuth
+- [ ] Task: Manual verification — login/session/logout/impersonate
     - Start dev server, test username/password login
     - Test session check
     - Test logout clears cookie
     - Test impersonation panel
-    - Test Google OAuth sign-in flow end-to-end
 - [ ] Task: Update tech debt registry
     - Mark "science-advantage auth still uses Prisma" as Resolved
     - Note manual verification and non-auth Prisma as open items
@@ -114,14 +110,14 @@
 
 ### Key Decisions
 - Non-auth Prisma usage (curriculum, lessons) is preserved — only auth tables migrate to Drizzle
-- Google OAuth tokens (accessToken, refreshToken, idToken) are stored in the shared `accounts` table's `password` field is NOT used for OAuth; OAuth tokens go in a separate mechanism or are dropped if not needed for API calls
+- Google OAuth removed — Science uses username/password-only auth. OAuth tokens not stored.
 - `schoolId` defaults to a dev school for existing science users (no real users yet)
 
 ### Dependencies
 - Requires Docker Postgres running (`pnpm db:start`)
-- Requires Google OAuth credentials in `.env.local`
+- No longer requires Google OAuth credentials (username/password-only)
 
 ### Risks
-- Google OAuth callback rewrite is the highest-risk change — must preserve token exchange and user creation flow
+- Google OAuth removed per auth strategy review — Science now username/password-only
 - Prisma schema change (removing auth models) may break non-auth code that references auth models via Prisma
 - `bcryptjs` removal may break if any non-auth code uses it
