@@ -1,0 +1,12 @@
+Task: Remove Science Google OAuth (Phase 2, Tasks 2.1-2.4)
+Summary: Removed all Google OAuth code from science-advantage app. Deleted google/route.ts and google/callback/route.ts route handlers. Deleted GoogleSigninButton component. Updated signin-container.tsx to remove Google OAuth references. Cleaned up env.ts (removed GOOGLE_OAUTH_* env vars and GOOGLE_OAUTH_ENABLED computed property). Updated .env.example, README.md, and AGENTS.md to reflect username/password-only auth.
+Files modified:
+- Delete: apps/science-advantage/app/api/auth/google/route.ts
+- Delete: apps/science-advantage/app/api/auth/google/callback/route.ts
+- Delete: apps/science-advantage/components/features/auth/google-signin-button.tsx
+- Modified: apps/science-advantage/components/features/auth/signin-container.tsx
+- Modified: apps/science-advantage/lib/env.ts
+- Modified: apps/science-advantage/.env.example
+- Modified: apps/science-advantage/README.md
+- Modified: apps/science-advantage/AGENTS.md
+Verification: grep for GOOGLE_OAUTH in science-advantage src/ returns 0 matches. Only remaining hits are in docs/archive/ (archived documentation).
