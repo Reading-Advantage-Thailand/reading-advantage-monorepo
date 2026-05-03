@@ -246,14 +246,10 @@ export async function generateChapterAudioForWord({
         `${AUDIO_WORDS_URL}/${storyId}-${chapterNumber}.mp3`
       );
 
-      await db
-        .collection("stories-word-list")
-        .doc(`${storyId}-${chapterNumber}`)
-        .update({
-          timepoints: allTimePoints,
-          id: storyId,
-          chapterNumber: chapterNumber,
-        });
+      // Firestore removed — timepoints metadata skipped (no-op stub)
+      console.warn(
+        `[firestore-migration] Skipping Firestore write for stories-word-list ${storyId}-${chapterNumber}. Audio file uploaded to storage.`
+      );
     } catch (error: any) {
       throw `failed to generate audio: ${error} \n\n error: ${JSON.stringify(
         error.response.data

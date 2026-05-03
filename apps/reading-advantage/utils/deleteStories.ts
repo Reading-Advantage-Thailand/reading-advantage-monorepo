@@ -60,8 +60,11 @@ export async function deleteStoryAndImages(storyId: string) {
       );
     }
 
-    // ลบเอกสารของเรื่องราวจาก Firestore
-    await db.collection("stories").doc(storyId).delete();
+    // Firestore removed — story document deletion skipped (no-op stub)
+    // Storage cleanup (images, audio) still performed
+    console.warn(
+      `[firestore-migration] Skipping Firestore document deletion for story ${storyId}. Firestore removed, Prisma/Drizzle migration pending.`
+    );
     //console.log(
     //  `Successfully deleted story ${storyId} and all associated images.`
     //);

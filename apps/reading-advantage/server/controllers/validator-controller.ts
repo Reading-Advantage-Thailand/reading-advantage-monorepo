@@ -48,6 +48,16 @@ export async function validateArticle(
   params: unknown,
   next: () => void
 ) {
+  // Firestore removed — article validation requires Prisma/Drizzle migration (see tech-debt.md)
+  return NextResponse.json(
+    {
+      error: "Article validation is currently unavailable. Firestore has been removed and the validator has not yet been migrated to Prisma/Drizzle.",
+      track: "firestore_drizzle_migration_20260503",
+    },
+    { status: 501 }
+  );
+
+  /* eslint-disable-next-line no-unreachable */
   let { filterByDate, runToday } = await req.json();
 
   // Check if filterByDate is empty and runToday is true

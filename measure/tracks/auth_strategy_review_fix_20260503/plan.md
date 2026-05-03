@@ -83,17 +83,20 @@
 
 *Severity: Medium. Remaining stubs must fail visibly or be migrated.*
 
-- [ ] Task: Inventory remaining active Firestore stub callers
-    - [ ] Run `rg -n "configs/firestore-config|firestore-stub|collection\\(" apps/reading-advantage`
-    - [ ] Classify each hit as active code, archived/commented code, or test/doc-only
-- [ ] Task: Replace reachable no-op behavior
-    - [ ] Convert trivial callers to Prisma/Drizzle or delete dead code
-    - [ ] For non-trivial deferred callers, return explicit unsupported/501 behavior instead of fake empty reads or fake ids
-    - [ ] Keep any remaining stub usage documented in tech debt with owner and follow-up track
-- [ ] Task: Add regression tests where behavior changes
-    - [ ] Cover unsupported responses for reachable API routes
-    - [ ] Cover any converted utility/controller behavior
-- [ ] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md)
+- [x] Task: Inventory remaining active Firestore stub callers
+    - [x] Run `rg -n "configs/firestore-config|firestore-stub|collection\\(" apps/reading-advantage`
+    - [x] Classify each hit as active code, archived/commented code, or test/doc-only
+- [x] Task: Replace reachable no-op behavior
+    - [x] Convert trivial callers to Prisma/Drizzle or delete dead code
+    - [x] For non-trivial deferred callers, return explicit unsupported/501 behavior instead of fake empty reads or fake ids
+    - [x] Keep any remaining stub usage documented in tech debt with owner and follow-up track
+- [x] Task: Add regression tests where behavior changes
+    - [x] Cover unsupported responses for reachable API routes
+    - [x] Cover any converted utility/controller behavior
+- [x] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md)
+    - Verified: validator-controller returns 501, classroom route returns 501
+    - Verified: deleteStories skips Firestore with warning, audio-words-generator skips Firestore write
+    - Verified: stories-question-controller has only commented references
 
 ---
 

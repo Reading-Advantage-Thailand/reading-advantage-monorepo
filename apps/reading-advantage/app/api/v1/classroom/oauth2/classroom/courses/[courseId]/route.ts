@@ -11,6 +11,16 @@ export async function GET(
   req: NextRequest,
   ctx: { params: Promise<{ courseId: string }> }
 ) {
+  // Firestore removed — Google Classroom sync requires Prisma/Drizzle migration
+  return NextResponse.json(
+    {
+      error: "Google Classroom sync is currently unavailable. Firestore has been removed and this endpoint has not yet been migrated to Prisma/Drizzle.",
+      track: "firestore_drizzle_migration_20260503",
+    },
+    { status: 501 }
+  );
+
+  /* eslint-disable-next-line no-unreachable */
   const { courseId } = await ctx.params;
   const accessToken = req.cookies.get("google_access_token")?.value;
   const refreshToken = req.cookies.get("google_refresh_token")?.value;
