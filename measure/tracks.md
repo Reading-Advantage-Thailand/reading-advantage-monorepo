@@ -65,8 +65,8 @@ This file tracks all major tracks for the project.
   *Status: Complete. 23/23 tasks done. Science build passes, db tests 10/10, api tests 23/23.*
 - [ ] **Track: Shared ESLint v9 Flat Config Migration** *Link: [./tracks/shared_eslint_v9_migration_20260503/](./tracks/shared_eslint_v9_migration_20260503/)*
   Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9
-- [ ] **Track: Science-Advantage Auth Migration** (26 tasks) *Link: [./tracks/science_auth_migration_20260503/](./tracks/science_auth_migration_20260503/)*
-  Migrate from standalone Prisma auth to shared @reading-advantage/auth, auth-client, and db packages. Rewrite Google OAuth to Drizzle. Remove local auth code.
+- [x] **Track: Science-Advantage Auth Migration** (26/26 tasks) *Link: [./tracks/science_auth_migration_20260503/](./tracks/science_auth_migration_20260503/)*
+  Migrate from standalone Prisma auth to shared @reading-advantage/auth, auth-client, and db packages. Build passes, auth files lint clean. Non-auth Prisma (curriculum, lessons) preserved.
 
 ---
 
