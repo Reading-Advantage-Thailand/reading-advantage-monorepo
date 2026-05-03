@@ -1,0 +1,11 @@
+{
+  "track_id": "science_auth_migration_20260503",
+  "type": "feature",
+  "status": "in-progress",
+  "created_at": "2026-05-03T00:00:00Z",
+  "updated_at": "2026-05-03T00:00:00Z",
+  "description": "Migrate science-advantage from standalone Prisma auth to shared @reading-advantage/auth, auth-client, and db packages",
+  "estimated_tasks": 26,
+  "actual_tasks": null,
+  "deviation_notes": "Deferred from Unified Auth track Phase 5c"
+}

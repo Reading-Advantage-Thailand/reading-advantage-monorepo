@@ -35,15 +35,15 @@ This file tracks all major tracks for the project.
 - [x] **Track: Shared Backend: API Route Migration** (9/29 core tasks complete)
   *Link: [./archive/shared_backend_api_20260502/](./archive/shared_backend_api_20260502/)*
   *Status: Tiers 1–2 routers implemented (users, classes, assignments, articles, progress, reports, auth). Tiers 3–4 (app-specific, AI) deferred to future tracks. Cookie-based auth update will be handled by unified auth track.*
-- [x] **Track: Unified Auth System** (Phases 1–6 complete, Phase 5c deferred)
+- [x] **Track: Unified Auth System** (Phases 1–6 complete)
   *Link: [./tracks/unified_auth_20260502/](./tracks/unified_auth_20260502/)*
-  *Status: Schema, auth pkg, auth-client, tRPC/API routes, reading+primary apps all done. next-auth fully removed. firebaseUid/JWT cleanup complete. Science-advantage deferred to future track (has working Prisma auth).*
-- [~] **Track: Shared Config Consolidation** (20/27 tasks complete, 7 deferred)
+  *Status: Schema, auth pkg, auth-client, tRPC/API routes, reading+primary apps all done. next-auth fully removed. firebaseUid/JWT cleanup complete. Phase 5c (science-advantage) tracked separately.*
+- [x] **Track: Shared Config Consolidation** (ESLint restructuring + 10 UI components added)
   *Link: [./tracks/shared_config_consolidation_20260502/](./tracks/shared_config_consolidation_20260502/)*
-  *Status: Tailwind v4 unified, ESLint flat config migrated for primary/www, `cn()` deduped, package builds fixed. Deferred: UI component migration, visual regression tests, full ESLint v9 for reading-advantage.*
-- [~] **Track: i18n Migration (reading-advantage)** (13/18 tasks complete, 5 deferred)
+  *Status: Tailwind v4 unified, ESLint flat config migrated for primary/www, ESLint shared config restructured with composable baseConfig/plugins/ignores exports, advantage-games migrated to shared config, `cn()` deduped, 15 UI components in @reading-advantage/ui. Deferred: visual regression tests, shared i18n types, integration tests.*
+- [x] **Track: i18n Migration (reading-advantage)** (cleanup complete)
   *Link: [./tracks/i18n_migration_20260502/](./tracks/i18n_migration_20260502/)*
-  *Status: next-intl config added, client/server exports rewritten, middleware migrated, next-international removed, build passes. Deferred: flashcard component import updates, locale-config.ts cleanup.*
+  *Status: next-intl config added, client/server exports rewritten, middleware migrated, next-international removed, localeImports dead code removed, flashcard imports fixed, stale locales.ts deleted. Build passes.*
 
 ---
 
@@ -58,6 +58,8 @@ This file tracks all major tracks for the project.
   *Status: Firestore server code removed, Firebase deps removed from package.json. 7 files use no-op stub. Prisma→Drizzle for controllers deferred to new track.*
 - [ ] **Track: Shared ESLint v9 Flat Config Migration** *Link: [./tracks/shared_eslint_v9_migration_20260503/](./tracks/shared_eslint_v9_migration_20260503/)*
   Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9
+- [ ] **Track: Science-Advantage Auth Migration** (26 tasks) *Link: [./tracks/science_auth_migration_20260503/](./tracks/science_auth_migration_20260503/)*
+  Migrate from standalone Prisma auth to shared @reading-advantage/auth, auth-client, and db packages. Rewrite Google OAuth to Drizzle. Remove local auth code.
 
 ---
 
