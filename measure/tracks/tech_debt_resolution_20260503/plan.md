@@ -6,11 +6,11 @@
 
 *Severity: High. Must unblock production-readiness.*
 
-- [ ] Task: Generate Drizzle migration for unified auth schema
-    - [ ] Run `pnpm drizzle-kit generate` to produce migration SQL for current schema
-    - [ ] Verify migration SQL references correct tables (users, accounts, sessions)
-    - [ ] Run `pnpm turbo run test --filter=@reading-advantage/db`
-    - [ ] Commit generated migration files
+- [x] Task: Generate Drizzle migration for unified auth schema
+    - [x] Run `pnpm drizzle-kit generate` to produce migration SQL for current schema
+    - [x] Verify migration SQL references correct tables (users, accounts, sessions)
+    - [x] Run `pnpm turbo run test --filter=@reading-advantage/db`
+    - [x] Commit generated migration files
 - [ ] Task: Migrate reading-advantage controllers from Prisma to Drizzle
     - [ ] Audit `user-controller.ts` Prisma calls and map to Drizzle equivalents
     - [ ] Rewrite `user-controller.ts` to use `@reading-advantage/db` client

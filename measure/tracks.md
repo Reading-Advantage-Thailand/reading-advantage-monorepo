@@ -49,7 +49,7 @@ This file tracks all major tracks for the project.
 
 ### Pending Tracks
 
-- [ ] **Track: Tech Debt Resolution** *Link: [./tracks/tech_debt_resolution_20260503/](./tracks/tech_debt_resolution_20260503/)*
+- [~] **Track: Tech Debt Resolution** *Link: [./tracks/tech_debt_resolution_20260503/](./tracks/tech_debt_resolution_20260503/)*
   Resolve 16 open tech-debt items not covered by other tracks. Phases: critical infra (Prisma→Drizzle, auth migration SQL), build config cleanup (ignoreBuildErrors removal), schema integrity, app-specific fixes, shared tooling.
 - [ ] **Track: Reading-Advantage Build Remediation** *Link: [./tracks/reading_advantage_build_remediation_20260503/](./tracks/reading_advantage_build_remediation_20260503/)*
   Fix 128 lint warnings, 26 failed test suites, and remove ignoreBuildErrors
