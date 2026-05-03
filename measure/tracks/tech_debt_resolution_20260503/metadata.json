@@ -1,11 +1,11 @@
 {
   "track_id": "tech_debt_resolution_20260503",
   "type": "chore",
-  "status": "new",
+  "status": "complete",
   "created_at": "2026-05-03T00:00:00Z",
   "updated_at": "2026-05-03T00:00:00Z",
   "description": "Resolve all open tech-debt items not covered by existing pending tracks. Prioritized by severity: High infrastructure blockers, Medium build/schema fixes, Low tooling cleanup.",
   "estimated_tasks": 16,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 12,
+  "deviation_notes": "4 tasks deferred to future tracks: Prisma→Drizzle controllers (schema divergence too large), Firestore stubs (3 remaining callers need individual rewrites), react-konva peer dep (requires monorepo-wide React upgrade), advantage-games ESLint warnings (6236 pre-existing, covered by build remediation track). Drizzle migration generated manually due to drizzle-kit 0.31 TTY requirement."
 }
