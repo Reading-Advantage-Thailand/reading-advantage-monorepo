@@ -4,6 +4,7 @@ import {
   assignments,
   studentAssignments,
   classrooms,
+  classroomStudents,
 } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 
@@ -54,6 +55,28 @@ export async function createAssignment({
   }
 
   return db.transaction(async (tx) => {
+    if (input.studentIds?.length) {
+      const validRows = await tx
+        .select({ studentId: classroomStudents.studentId })
+        .from(classroomStudents)
+        .innerJoin(classrooms, eq(classroomStudents.classroomId, classrooms.id))
+        .where(
+          and(
+            eq(classroomStudents.classroomId, input.classroomId),
+            eq(classrooms.schoolId, tenant.schoolId!)
+          )
+        );
+
+      const validStudentIds = new Set(validRows.map((row) => row.studentId));
+      const invalidStudentIds = input.studentIds.filter(
+        (studentId) => !validStudentIds.has(studentId)
+      );
+
+      if (invalidStudentIds.length > 0) {
+        throw new Error("Assignment contains students outside the classroom");
+      }
+    }
+
     const [assignment] = await tx
       .insert(assignments)
       .values({

@@ -69,6 +69,31 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
   }, []);
 
+  const register = useCallback(async (
+    username: string,
+    password: string,
+    name: string,
+    schoolId: string
+  ) => {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password, name, schoolId }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: "Registration failed" }));
+      throw new Error(err.message ?? "Registration failed");
+    }
+
+    const data = await res.json();
+    setState({
+      user: data.user as AuthUser,
+      isAuthenticated: true,
+      isLoading: false,
+    });
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
@@ -88,6 +113,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       value={{
         ...state,
         login,
+        register,
         logout,
       }}
     >

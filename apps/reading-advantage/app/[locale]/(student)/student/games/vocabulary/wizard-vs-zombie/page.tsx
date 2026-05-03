@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import React, { useCallback, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@reading-advantage/auth-client";
 import {
   WizardZombieGame,
   WizardZombieGameResult,
@@ -19,7 +19,7 @@ import { useScopedI18n } from "@/locales/client";
 
 export default function WizardZombiePage() {
   const t = useScopedI18n("pages.student.gamesPage");
-  const { data: session } = useSession();
+  const { user } = useSession();
   const [vocabulary, setVocabulary] = useState<VocabularyItem[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
@@ -106,7 +106,7 @@ export default function WizardZombiePage() {
             size="sm"
             className="hover:bg-purple-500/20 text-purple-400"
           >
-            XP: {session?.user?.xp || 0}
+            XP: {user?.xp || 0}
           </Button>
         </div>
       </Header>

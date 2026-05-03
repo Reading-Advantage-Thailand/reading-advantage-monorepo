@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { Icons } from "@/components/icons";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({

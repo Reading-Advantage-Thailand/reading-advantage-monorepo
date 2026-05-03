@@ -64,7 +64,7 @@ import { cn } from "@/lib/utils";
 import { reviewCard } from "@/actions/flashcard";
 import { QuizContext, QuizContextProvider } from "@/contexts/question-context";
 import { updateUserActivity } from "@/actions/user";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 // FSRS Configuration
 const f = fsrs(generatorParameters({ enable_fuzz: true }));
@@ -142,7 +142,7 @@ function LessonVocabularyFlashcardCardContent({
     {},
   );
   const { timer, setPaused } = useContext(QuizContext);
-  const { data: session, update } = useSession();
+  const { user } = useSession();
   // Computed values
   const currentCard = words[currentCardIndex];
 

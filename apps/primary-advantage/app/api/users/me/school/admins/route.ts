@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
@@ -10,9 +10,9 @@ const addAdminSchema = z.object({
 // POST /api/users/me/school/admins - Add a user as school admin
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
+    const authUser = await getCurrentUser();
 
-    if (!session) {
+    if (!authUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     // Get current user's school and verify they are the owner
     const currentUser = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: authUser.id },
       include: {
         School: true,
       },
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if current user is the school owner
-    if (currentUser.School.ownerId !== session.user.id) {
+    if (currentUser.School.ownerId !== currentUser.id) {
       return NextResponse.json(
         { error: "Only the school owner can add admins" },
         { status: 403 },

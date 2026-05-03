@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 interface OrderWordData {
   id: string;
@@ -131,7 +131,7 @@ export function OrderWordGame({ deckId, sentences = [] }: OrderWordGameProps) {
 
   const [activeSentences, setActiveSentences] =
     useState<OrderWordData[]>(sentences);
-  const { data: session, update } = useSession();
+  const { user } = useSession();
 
   useEffect(() => {
     if (deckId && sentences.length === 0) {

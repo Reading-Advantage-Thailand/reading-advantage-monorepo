@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { Icons } from "@/components/icons";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
@@ -40,7 +39,6 @@ export function ChangeUsernameForm({
       display_name: username,
     },
   });
-  const { update } = useSession();
   const router = useRouter();
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -58,9 +56,6 @@ export function ChangeUsernameForm({
 
       // Reset the form
       form.reset({ display_name: data.display_name });
-
-      // update user session token
-      await update({ user: { display_name: data.display_name } });
 
       // refresh the page
       router.refresh();

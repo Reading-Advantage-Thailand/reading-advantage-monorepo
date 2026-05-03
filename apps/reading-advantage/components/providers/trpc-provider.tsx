@@ -11,12 +11,6 @@ function getBaseUrl() {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
-function getSessionToken(): string | null {
-  if (typeof document === "undefined") return null;
-  const match = document.cookie.match(/session_token=([^;]+)/);
-  return match ? match[1] : null;
-}
-
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
@@ -25,9 +19,8 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
           transformer: superjson,
-          headers() {
-            const token = getSessionToken();
-            return token ? { Authorization: `Bearer ${token}` } : {};
+          fetch(url, options) {
+            return fetch(url, { ...options, credentials: "same-origin" });
           },
         }),
       ],

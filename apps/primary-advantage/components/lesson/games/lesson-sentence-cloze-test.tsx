@@ -39,7 +39,7 @@ import { getLessonClozeTestSentences } from "@/actions/flashcard";
 import { ActivityType, UserXpEarned } from "@/types/enum";
 import { updateUserActivity } from "@/actions/user";
 import { useTranslations } from "next-intl";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 interface ClozeTestData {
   id: string;
@@ -127,7 +127,7 @@ export default function LessonSentenceClozeTest({
   const [activeSentences, setActiveSentences] = useState<ClozeTestData[]>([]);
 
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
-  const { data: session, update } = useSession();
+  const { user } = useSession();
   // Client-side blank generation function
   const generateBlanksForSentence = useCallback(
     (

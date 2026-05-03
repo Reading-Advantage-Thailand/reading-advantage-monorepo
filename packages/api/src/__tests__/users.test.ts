@@ -61,13 +61,13 @@ function createMockDb(opts: {
   return mockDb;
 }
 
-const t = initTRPC.context<{ db: ReturnType<typeof createMockDb>; auth: { user: { id: string; role: string }; tenant: { schoolId: string | null } } }>().create({
+const t = initTRPC.context<{ db: ReturnType<typeof createMockDb>; auth: { user: { id: string; role: string; schoolId?: string | null }; tenant: { schoolId: string | null } } }>().create({
   transformer: superjson,
 });
 
 const appRouter = t.router({ users: usersRouter });
 
-function createCaller(db: ReturnType<typeof createMockDb>, auth: { user: { id: string; role: string }; tenant: { schoolId: string | null } }) {
+function createCaller(db: ReturnType<typeof createMockDb>, auth: { user: { id: string; role: string; schoolId?: string | null }; tenant: { schoolId: string | null } }) {
   return t.createCallerFactory(appRouter)({ db, auth });
 }
 
@@ -124,6 +124,16 @@ describe("users router", () => {
       expect(result).not.toHaveProperty("password");
       expect(result).not.toHaveProperty("firebaseUid");
     });
+
+    it("scopes lookup to caller tenant", async () => {
+      const db = createMockDb({ selectResult: [] });
+      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: "s1" } });
+
+      await expect(caller.users.get({ id: "u2" })).rejects.toThrow(/User not found/);
+
+      const selectChain = db.select.mock.results[0]?.value;
+      expect(selectChain).toBeDefined();
+    });
   });
 
   describe("list", () => {
@@ -143,12 +153,21 @@ describe("users router", () => {
       expect(whereCall).toBeDefined();
     });
 
-    it("allows admin to query a specific school", async () => {
+    it("rejects non-system query for another school", async () => {
+      const db = createMockDb({ selectResult: [] });
+      const caller = createCaller(db, { user: { id: "a1", role: "ADMIN" }, tenant: { schoolId: "s1" } });
+
+      await expect(
+        caller.users.list({ schoolId: "550e8400-e29b-41d4-a716-446655440002" })
+      ).rejects.toThrow(/outside your school/);
+    });
+
+    it("allows system to query a specific school", async () => {
       const userRows = [
         { id: "u3", username: "charlie", name: "C", role: "STUDENT", schoolId: "s2" },
       ];
       const db = createMockDb({ selectResult: userRows });
-      const caller = createCaller(db, { user: { id: "a1", role: "ADMIN" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "sys1", role: "SYSTEM" }, tenant: { schoolId: "s1" } });
 
       const result = await caller.users.list({ schoolId: "550e8400-e29b-41d4-a716-446655440002" });
 
@@ -177,10 +196,10 @@ describe("users router", () => {
       expect(result.name).toBe("New Name");
     });
 
-    it("allows admin to update any profile", async () => {
+    it("allows system to update any profile", async () => {
       const updatedRow = { id: "u2", name: "Admin Updated", email: "other@example.com" };
       const db = createMockDb({ updateReturning: [updatedRow] });
-      const caller = createCaller(db, { user: { id: "a1", role: "ADMIN" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "sys1", role: "SYSTEM" }, tenant: { schoolId: "s1" } });
 
       const result = await caller.users.update({ id: "u2", name: "Admin Updated" });
 

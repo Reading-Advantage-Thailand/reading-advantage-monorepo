@@ -57,10 +57,10 @@ export async function getSentencesForOrderingGame(): Promise<{
 
     // Use the API endpoint we created
     const response = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/v1/flashcard/decks/${user.id}/sentences-for-ordering`,
+      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/flashcard/decks/${user.id}/sentences-for-ordering`,
       {
         headers: {
-          Cookie: `next-auth.session-token=${user.id}`, // You might need to adjust this based on your auth setup
+          Cookie: `session_token=${user.id}`,
         },
       },
     );

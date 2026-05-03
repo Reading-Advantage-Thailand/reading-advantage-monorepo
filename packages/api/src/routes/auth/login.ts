@@ -1,9 +1,8 @@
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@reading-advantage/db";
 import { users, accounts } from "@reading-advantage/db/schema";
 import {
-  hashPassword,
   verifyPassword,
   createSession,
   checkRateLimit,
@@ -70,10 +69,15 @@ export async function handleLogin(request: NextRequest) {
     const [account] = await db
       .select()
       .from(accounts)
-      .where(eq(accounts.userId, user.id))
+      .where(
+        and(
+          eq(accounts.userId, user.id),
+          eq(accounts.providerId, "credential")
+        )
+      )
       .limit(1);
 
-    if (!account || account.providerId !== "credential" || !account.password) {
+    if (!account || !account.password) {
       recordFailure(lowerUsername);
       return NextResponse.json(
         { message: "Invalid username or password" },

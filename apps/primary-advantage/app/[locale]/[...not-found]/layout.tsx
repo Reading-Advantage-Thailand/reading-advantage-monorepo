@@ -3,7 +3,7 @@ import { UserAccountNav } from "@/components/nav/user-account-nav";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
 import { settingsPageConfig } from "@/configs/settings-page-config";
-import { auth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 export default async function NotfoundPageLayout({
@@ -11,8 +11,8 @@ export default async function NotfoundPageLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  if (!session) {
+  const user = await getCurrentUser();
+  if (!user) {
     return redirect("/auth/signin");
   }
   return (
@@ -23,7 +23,7 @@ export default async function NotfoundPageLayout({
           <div className="flex justify-center items-center gap-2">
             <LocaleSwitcher />
             <ThemeToggle />
-            <UserAccountNav user={session?.user} />
+            <UserAccountNav user={user} />
           </div>
         </div>
       </header>

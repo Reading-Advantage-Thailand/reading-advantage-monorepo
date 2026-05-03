@@ -15,7 +15,13 @@ const DEMO_ACCOUNTS = [
 ];
 
 export function SigninForm() {
-  const isProduction = typeof window !== "undefined" && window.location.hostname !== "localhost";
+  const router = useRouter();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const isProduction = process.env.NODE_ENV === "production";
+
   if (isProduction) {
     return (
       <div className="flex min-h-[400px] items-center justify-center p-8">
@@ -32,11 +38,6 @@ export function SigninForm() {
       </div>
     );
   }
-  const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

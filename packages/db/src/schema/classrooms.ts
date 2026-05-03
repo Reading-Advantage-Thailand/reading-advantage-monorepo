@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, boolean, integer, unique } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, boolean, unique } from "drizzle-orm/pg-core";
 import { users, schools } from "./users";
 
 // ─── Classrooms ───────────────────────────────────────────

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Bot, MessageSquare, Send, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Article } from "@/types";
 import { useTranslations } from "next-intl";
@@ -28,7 +28,7 @@ export default function LessonLanguageQuestion({
   article: Article;
 }) {
   const t = useTranslations("LessonLanguageQuestion");
-  const { data: session } = useSession();
+  const { user } = useSession();
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -156,9 +156,9 @@ export default function LessonLanguageQuestion({
                     {t("title")}
                   </h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {session?.user?.name
+                    {user?.name
                       ? t("header.readyWithName", {
-                          name: (session.user.name || "").split(" ")[0],
+                          name: (user?.name || "").split(" ")[0],
                         })
                       : t("header.ready")}
                   </p>
@@ -178,8 +178,8 @@ export default function LessonLanguageQuestion({
                     <MessageSquare className="h-12 w-12 text-gray-400" />
                     <div>
                       <p className="font-medium text-gray-500 dark:text-gray-400">
-                        {session?.user?.name
-                          ? t("empty.helloName", { name: session.user.name })
+                        {user?.name
+                          ? t("empty.helloName", { name: user?.name })
                           : t("empty.start")}
                       </p>
                       <p className="text-sm text-gray-400 dark:text-gray-500">
@@ -221,12 +221,12 @@ export default function LessonLanguageQuestion({
                     {message.sender === "user" && (
                       <Avatar className="h-6 w-6 flex-shrink-0 sm:h-8 sm:w-8">
                         <AvatarImage
-                          src={session?.user?.image || ""}
-                          alt={session?.user?.name || "User"}
+                          src={"" }
+                          alt={user?.name || "User"}
                           referrerPolicy="no-referrer"
                         />
                         <AvatarFallback className="bg-gradient-to-br from-gray-400 to-gray-600 text-xs font-semibold text-white sm:text-sm">
-                          {(session?.user?.name || "U").charAt(0).toUpperCase()}
+                          {(user?.name || "U").charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     )}
@@ -277,9 +277,9 @@ export default function LessonLanguageQuestion({
                   <div className="relative flex-1">
                     <Input
                       placeholder={
-                        session?.user?.name
+                        user?.name
                           ? t("input.placeholderWithName", {
-                              name: session.user.name,
+                              name: user?.name,
                             })
                           : t("input.placeholder")
                       }

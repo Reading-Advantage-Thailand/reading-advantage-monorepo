@@ -1,8 +1,6 @@
 "use server";
 
-import { signIn } from "@/lib/auth";
 import { signInSchema } from "@/lib/zod";
-import { AuthError } from "next-auth";
 import { z } from "zod";
 
 export async function signInAction(
@@ -20,25 +18,24 @@ export async function signInAction(
   const { email, password, type } = validation.data;
 
   try {
-    await signIn("credentials", {
-      type,
-      email,
-      password,
-      // redirectTo: callbackUrl || "/auth/signin",
-    });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return {
-            error: "Invalid email or password",
-          };
-        default:
-          return {
-            error: "An unknown error occurred",
-          };
-      }
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/auth/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: email, password }),
+      },
+    );
+
+    if (!response.ok) {
+      return {
+        error: "Invalid email or password",
+      };
     }
-    throw error;
+  } catch (error) {
+    console.error("Sign-in error:", error);
+    return {
+      error: "An unknown error occurred",
+    };
   }
 }

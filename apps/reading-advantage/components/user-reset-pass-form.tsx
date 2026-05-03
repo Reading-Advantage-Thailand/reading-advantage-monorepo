@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { signIn } from "next-auth/react";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 

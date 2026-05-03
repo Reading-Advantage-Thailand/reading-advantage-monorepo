@@ -1,8 +1,7 @@
 //route
 // api/level-test
 
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import { getCurrentUser } from "@/lib/session";
 import fs from "fs";
 import path from "path";
 import { ScoreRange } from "@/types/constants";
@@ -14,8 +13,8 @@ interface RequestContext {
 
 export async function GET(req: NextRequest, ctx: RequestContext) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
+    const user = await getCurrentUser();
+    if (!user) {
       return new Response(
         JSON.stringify({
           message: "Unauthorized",

@@ -8,7 +8,7 @@ export class AuthError extends Error {
   }
 }
 
-export function assertCan(user: UserContext, permission: Permission, tenant?: Tenant): void {
+export function assertCan(user: UserContext, permission: Permission, _tenant?: Tenant): void {
   if (!hasPermission(user.role, permission)) {
     throw new AuthError(
       `User ${user.id} (${user.role}) lacks permission: ${permission}`,

@@ -13,12 +13,12 @@ import { UserAvatar } from "@/components/user-avatar";
 import { Loader2, LogOutIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Role } from "@/types/enum";
-import { User } from "next-auth";
+import { type AuthUser } from "@reading-advantage/auth-client";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useTranslations } from "next-intl";
 
 interface UserAccountNavProps {
-  user: User;
+  user: AuthUser;
 }
 
  export function UserAccountNav({ user }: UserAccountNavProps) {
@@ -43,7 +43,6 @@ interface UserAccountNavProps {
         <UserAvatar
           user={{
             name: user?.name || "",
-            image: user?.image || "",
           }}
           className="border-muted-foreground h-8 w-8 cursor-pointer border"
         />
@@ -53,7 +52,7 @@ interface UserAccountNavProps {
           <div className="flex flex-col space-y-1 leading-none">
             <p className="line-clamp-1 font-medium">{user?.name}</p>
             <p className="text-muted-foreground line-clamp-1 w-[200px] truncate text-sm">
-              {user?.email}
+              {user?.username}
             </p>
             {/* Check if the user's email is verified */}
             {/* {!user.email_verified && (

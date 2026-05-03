@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { getRedirectResult } from "firebase/auth";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "@reading-advantage/auth-client";
 import { usePathname } from "next/navigation";
 import { firebaseAuth } from "@/lib/firebase";
 import {
@@ -22,10 +22,9 @@ export const AuthRedirectHandler: React.FC<AuthRedirectHandlerProps> = ({
   const [showSkipOption, setShowSkipOption] = React.useState(false);
   const [hasHandledRedirect, setHasHandledRedirect] = React.useState(false);
   const pathname = usePathname();
-  const { data: session, status } = useSession();
+  const { isAuthenticated, isLoading } = useSession();
   const isIOSDevice = isIOS();
   const isAuthPage = pathname?.includes("/auth/");
-  const isAuthenticated = status === "authenticated";
 
   const skipRedirectHandling = () => {
     setIsHandlingRedirect(false);
@@ -38,7 +37,7 @@ export const AuthRedirectHandler: React.FC<AuthRedirectHandlerProps> = ({
       return;
     }
 
-    if (status === "loading") {
+    if (isLoading) {
       return;
     }
 
@@ -60,10 +59,13 @@ export const AuthRedirectHandler: React.FC<AuthRedirectHandlerProps> = ({
           const idToken = await result.user.getIdToken(true);
 
           if (idToken) {
-            await signIn("credentials", {
-              idToken,
-              callbackUrl: "/student/read",
+            // Post Firebase token to our login endpoint to create a session
+            await fetch("/api/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ idToken }),
             });
+            window.location.href = "/student/read";
           }
         }
       } catch (error: any) {
@@ -89,7 +91,7 @@ export const AuthRedirectHandler: React.FC<AuthRedirectHandlerProps> = ({
     };
 
     handleRedirectResult();
-  }, [isAuthPage, isAuthenticated, status, hasHandledRedirect]); // Add hasHandledRedirect dependency
+  }, [isAuthPage, isAuthenticated, isLoading, hasHandledRedirect]);
 
   if (isHandlingRedirect) {
     return (

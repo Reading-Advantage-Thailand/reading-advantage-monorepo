@@ -25,7 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
@@ -65,7 +65,7 @@ export function SchoolProfileForm({
   onCancel,
 }: SchoolProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { data: session, update } = useSession();
+  const { user } = useSession();
   const router = useRouter();
   const form = useForm<SchoolFormData>({
     resolver: zodResolver(schoolFormSchema),

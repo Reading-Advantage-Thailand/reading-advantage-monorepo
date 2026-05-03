@@ -40,7 +40,7 @@ import { Icons } from "@/components/icons";
 import { finishQuiz, getFeedback } from "@/actions/question";
 import { useLocale, useTranslations } from "next-intl";
 import { convertLocaleFull } from "@/lib/utils";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 interface FeedbackData {
   detailedFeedback: {
@@ -71,8 +71,7 @@ export default function LAQuestionContent({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const { data: session, update } = useSession();
-  const user = useCurrentUser();
+  const { user } = useSession();
   const router = useRouter();
   const [feedback, setFeedback] = useState<FeedbackData | null>(null);
   const [isPanding, startTransition] = useTransition();
@@ -143,11 +142,6 @@ export default function LAQuestionContent({
           if (res.success) {
             toast.success("Quiz finished");
             setOpenModal(false);
-            update({
-              user: {
-                ...session?.user,
-              },
-            });
             router.refresh();
           } else {
             toast.error(res.error);

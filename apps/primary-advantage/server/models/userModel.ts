@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { ActivityType } from "@/types/enum";
 import bcrypt from "bcryptjs";
@@ -74,12 +74,12 @@ export const updateUserActivity = async (
   xpEarned?: number,
 ) => {
   try {
-    const session = await auth();
-    const userId = session?.user.id;
+    const user = await getCurrentUser();
 
-    if (!userId) {
-      throw new Error("Plase login");
+    if (!user) {
+      throw new Error("Please login");
     }
+    const userId = user.id;
 
     return await prisma.userActivity.create({
       data: {

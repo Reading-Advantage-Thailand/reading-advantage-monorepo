@@ -6,6 +6,11 @@ export interface AuthUser {
   name: string | null;
   role: "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM";
   schoolId: string | null;
+  xp: number;
+  level: number;
+  cefrLevel: string;
+  email: string | null;
+  image: string | null;
 }
 
 export interface AuthState {
@@ -16,6 +21,7 @@ export interface AuthState {
 
 export interface AuthActions {
   login: (username: string, password: string) => Promise<void>;
+  register: (username: string, password: string, name: string, schoolId: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 

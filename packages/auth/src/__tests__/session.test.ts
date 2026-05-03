@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { createSession, validateSession, deleteSession } from "../session.js";
 
 vi.mock("@reading-advantage/db/schema", () => ({
@@ -63,6 +63,12 @@ function createMockDb(overrides: {
   return mockDb;
 }
 
+type SessionDb = Parameters<typeof createSession>[0];
+
+function asSessionDb(db: ReturnType<typeof createMockDb>): SessionDb {
+  return db as unknown as SessionDb;
+}
+
 describe("createSession", () => {
   it("creates a session and returns it with user", async () => {
     const db = createMockDb({
@@ -70,7 +76,7 @@ describe("createSession", () => {
       selectResults: [mockUserRow],
     });
 
-    const session = await createSession(db as any, "u1");
+    const session = await createSession(asSessionDb(db), "u1");
 
     expect(session.id).toBe("s1");
     expect(session.token).toBeDefined();
@@ -89,7 +95,7 @@ describe("createSession", () => {
       selectResults: [],
     });
 
-    await expect(createSession(db as any, "u1")).rejects.toThrow(
+    await expect(createSession(asSessionDb(db), "u1")).rejects.toThrow(
       /User not found/
     );
   });
@@ -115,7 +121,7 @@ describe("validateSession", () => {
       }),
     });
 
-    const session = await validateSession(db as any, "abc123token");
+    const session = await validateSession(asSessionDb(db), "abc123token");
 
     expect(session).not.toBeNull();
     expect(session!.id).toBe("s1");
@@ -125,7 +131,7 @@ describe("validateSession", () => {
   it("returns null when token not found", async () => {
     const db = createMockDb({ selectResults: [] });
 
-    const session = await validateSession(db as any, "bad-token");
+    const session = await validateSession(asSessionDb(db), "bad-token");
 
     expect(session).toBeNull();
   });
@@ -138,7 +144,7 @@ describe("validateSession", () => {
 
     const db = createMockDb({ selectResults: [expiredSession] });
 
-    const session = await validateSession(db as any, "expired-token");
+    const session = await validateSession(asSessionDb(db), "expired-token");
 
     expect(session).toBeNull();
     expect(db.delete).toHaveBeenCalled();
@@ -160,7 +166,7 @@ describe("validateSession", () => {
       }),
     });
 
-    const session = await validateSession(db as any, "valid-token");
+    const session = await validateSession(asSessionDb(db), "valid-token");
 
     expect(session).toBeNull();
   });
@@ -170,7 +176,7 @@ describe("deleteSession", () => {
   it("deletes session by token", async () => {
     const db = createMockDb();
 
-    await deleteSession(db as any, "some-token");
+    await deleteSession(asSessionDb(db), "some-token");
 
     expect(db.delete).toHaveBeenCalled();
   });
@@ -181,7 +187,7 @@ describe("deleteSession", () => {
       where: vi.fn().mockRejectedValue(new Error("DB error")),
     });
 
-    await expect(deleteSession(db as any, "some-token")).resolves
+    await expect(deleteSession(asSessionDb(db), "some-token")).resolves
       .toBeUndefined();
   });
 });

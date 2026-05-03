@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ROLES, ROLE_HIERARCHY, ROLE_ROUTES, roleAtLeast } from "../roles.js";
+import { ROLES, ROLE_ROUTES, roleAtLeast } from "../roles.js";
 
 describe("roles", () => {
   it("defines all expected roles", () => {

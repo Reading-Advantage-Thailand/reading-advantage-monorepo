@@ -26,7 +26,6 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
-import { useSession } from "next-auth/react";
 
 type Props = {
   userId: string;
@@ -96,7 +95,6 @@ export default function LevelTestChat({ userId }: Props) {
   const t = useScopedI18n("components.levelTestChat");
   const router = useRouter();
   const currentLocale = useCurrentLocale();
-  const { update } = useSession();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -476,8 +474,7 @@ export default function LevelTestChat({ userId }: Props) {
         title: t("toast.successUpdate"),
         description: t("toast.successUpdateDescription"),
       });
-      // Force session refresh before navigation to ensure middleware sees new level
-      await update();
+      // Force refresh before navigation to ensure middleware sees new level
       router.push("/student/read");
       router.refresh();
       return;
@@ -490,8 +487,7 @@ export default function LevelTestChat({ userId }: Props) {
           title: t("toast.successUpdate"),
           description: t("toast.successUpdateDescription"),
         });
-        // Force session refresh before navigation to ensure middleware sees new level
-        await update();
+        // Force refresh before navigation to ensure middleware sees new level
         router.push("/student/read");
         router.refresh();
       }

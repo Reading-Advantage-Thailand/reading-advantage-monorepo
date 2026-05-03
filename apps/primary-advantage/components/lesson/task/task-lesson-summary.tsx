@@ -22,7 +22,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Article, WordListTimestamp } from "@/types";
 import { getLessonSummaryData } from "@/actions/article";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 interface WordList {
   vocabulary: string;
@@ -59,7 +59,7 @@ export default function TaskLessonSummary({
     ?.sentence as Sentence[];
   const router = useRouter();
   const t = useTranslations("Lesson.Summary");
-  const { data: session, update } = useSession();
+  const { user } = useSession();
 
   // Fetch lesson summary data
   useEffect(() => {

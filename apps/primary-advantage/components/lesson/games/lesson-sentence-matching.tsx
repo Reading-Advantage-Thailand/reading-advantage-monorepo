@@ -39,7 +39,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { updateUserActivity } from "@/actions/user";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 // Type definitions
 interface VocabularyPair {
@@ -79,7 +79,7 @@ export default function LessonSentenceMatching({
   const [showResult, setShowResult] = useState(false);
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
-  const { data: session, update } = useSession();
+  const { user } = useSession();
 
   // Helper states
   const [score, setScore] = useState(0);

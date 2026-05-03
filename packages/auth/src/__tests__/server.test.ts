@@ -17,6 +17,7 @@ vi.mock("@reading-advantage/db/schema", () => ({}));
 import { validateSession } from "../session.js";
 
 const mockValidateSession = vi.mocked(validateSession);
+const mockDb = {} as Parameters<typeof getSession>[0];
 
 const mockSession: Session = {
   id: "s1",
@@ -44,19 +45,19 @@ const systemSession: Session = {
 
 describe("getSession", () => {
   it("returns null when no token provided", async () => {
-    const result = await getSession({} as any, undefined);
+    const result = await getSession(mockDb, undefined);
     expect(result).toBeNull();
   });
 
   it("returns session when token is valid", async () => {
     mockValidateSession.mockResolvedValueOnce(mockSession);
-    const result = await getSession({} as any, "token123");
+    const result = await getSession(mockDb, "token123");
     expect(result).toEqual(mockSession);
   });
 
   it("returns null when token is invalid", async () => {
     mockValidateSession.mockResolvedValueOnce(null);
-    const result = await getSession({} as any, "bad-token");
+    const result = await getSession(mockDb, "bad-token");
     expect(result).toBeNull();
   });
 });
@@ -64,16 +65,16 @@ describe("getSession", () => {
 describe("requireAuth", () => {
   it("returns session when authenticated", async () => {
     mockValidateSession.mockResolvedValueOnce(mockSession);
-    const result = await requireAuth({} as any, "token123");
+    const result = await requireAuth(mockDb, "token123");
     expect(result).toEqual(mockSession);
   });
 
   it("throws UNAUTHORIZED when not authenticated", async () => {
     mockValidateSession.mockResolvedValueOnce(null);
-    await expect(requireAuth({} as any, "bad-token")).rejects.toThrow(
+    await expect(requireAuth(mockDb, "bad-token")).rejects.toThrow(
       AuthError
     );
-    await expect(requireAuth({} as any, "bad-token")).rejects.toThrow(
+    await expect(requireAuth(mockDb, "bad-token")).rejects.toThrow(
       "Authentication required"
     );
   });
@@ -82,20 +83,20 @@ describe("requireAuth", () => {
 describe("requireRole", () => {
   it("returns session when user has sufficient role", async () => {
     mockValidateSession.mockResolvedValueOnce(adminSession);
-    const result = await requireRole({} as any, "token", "TEACHER");
+    const result = await requireRole(mockDb, "token", "TEACHER");
     expect(result.user.role).toBe("ADMIN");
   });
 
   it("throws FORBIDDEN when user has insufficient role", async () => {
     mockValidateSession.mockResolvedValueOnce(mockSession);
-    await expect(requireRole({} as any, "token", "ADMIN")).rejects.toThrow(
+    await expect(requireRole(mockDb, "token", "ADMIN")).rejects.toThrow(
       AuthError
     );
   });
 
   it("throws FORBIDDEN for unauthenticated user", async () => {
     mockValidateSession.mockResolvedValueOnce(null);
-    await expect(requireRole({} as any, "bad-token", "STUDENT")).rejects.toThrow(
+    await expect(requireRole(mockDb, "bad-token", "STUDENT")).rejects.toThrow(
       AuthError
     );
   });

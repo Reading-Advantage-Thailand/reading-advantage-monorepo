@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { db } from "@reading-advantage/db";
-import { users, accounts } from "@reading-advantage/db/schema";
+import { users, accounts, schools } from "@reading-advantage/db/schema";
 import {
   hashPassword,
   createSession,
@@ -30,8 +30,7 @@ const impersonateSchema = z.object({
 });
 
 export async function handleImpersonate(request: NextRequest) {
-  // Only allow in dev
-  if (process.env.NODE_ENV === "production" && process.env.DEV_AUTH_ENABLED !== "true") {
+  if (process.env.NODE_ENV === "production") {
     return NextResponse.json(
       { message: "Not found" },
       { status: 404 }
@@ -57,6 +56,21 @@ export async function handleImpersonate(request: NextRequest) {
       );
     }
 
+    let [devSchool] = await db
+      .select({ id: schools.id })
+      .from(schools)
+      .where(eq(schools.name, "Development Demo School"))
+      .limit(1);
+
+    if (!devSchool) {
+      [devSchool] = await db
+        .insert(schools)
+        .values({
+          name: "Development Demo School",
+        })
+        .returning({ id: schools.id });
+    }
+
     // Check if user exists
     let [user] = await db
       .select()
@@ -69,24 +83,28 @@ export async function handleImpersonate(request: NextRequest) {
       const hashedPassword = await hashPassword("Password123!");
       const displayUsername = demoUser.username;
 
-      [user] = await db
-        .insert(users)
-        .values({
-          id: demoUser.id,
-          username: demoUser.username,
-          displayUsername,
-          name: demoUser.name,
-          email: `demo_${demoUser.id}@dev.local`,
-          role: demoUser.role,
-        })
-        .returning();
+      user = await db.transaction(async (tx) => {
+        const [created] = await tx
+          .insert(users)
+          .values({
+            id: demoUser.id,
+            username: demoUser.username,
+            displayUsername,
+            name: demoUser.name,
+            email: `demo_${demoUser.id}@dev.local`,
+            role: demoUser.role,
+            schoolId: devSchool.id,
+          })
+          .returning();
 
-      // Create credential account
-      await db.insert(accounts).values({
-        id: `${demoUser.id}_credential`,
-        userId: demoUser.id,
-        providerId: "credential",
-        password: hashedPassword,
+        await tx.insert(accounts).values({
+          id: `${demoUser.id}_credential`,
+          userId: demoUser.id,
+          providerId: "credential",
+          password: hashedPassword,
+        });
+
+        return created;
       });
     }
 

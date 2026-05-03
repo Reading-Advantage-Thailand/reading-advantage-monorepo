@@ -4,7 +4,7 @@ import type { CardComponentProps } from "onborda";
 import { useOnborda } from "onborda";
 import { XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@reading-advantage/auth-client";
 
 import confetti from "canvas-confetti";
 
@@ -27,13 +27,13 @@ const CustomCard: React.FC<CardComponentProps> = ({
   prevStep,
   arrow,
 }) => {
-  const { data: session } = useSession();
+  const { user } = useSession();
   // Onborda hooks
   const { closeOnborda } = useOnborda();
   const router = useRouter();
 
   async function handleConfetti() {
-    const res = await fetch(`/api/v1/users/${session?.user?.id}`, {
+    const res = await fetch(`/api/v1/users/${user?.id}`, {
       method: "PATCH",
       body: JSON.stringify({
         onborda: true,

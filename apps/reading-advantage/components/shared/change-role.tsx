@@ -12,7 +12,6 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { UserCircle, GraduationCap, School, Ghost } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -77,7 +76,6 @@ export default function ChangeRole({ userId, userRole, className }: Props) {
   }
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>(userRole);
-  const { update } = useSession();
   const router = useRouter();
 
   async function handleRoleChange() {
@@ -92,15 +90,6 @@ export default function ChangeRole({ userId, userRole, className }: Props) {
       if (!response.ok) {
         throw new Error("Failed to update role.");
       }
-
-      // update user session token
-      await update({ user: { role: selectedRole } })
-        .then(() => {
-          console.log("Role updated in session.");
-        })
-        .catch((error) => {
-          console.error("Failed to update role in session.", error);
-        });
 
       toast({
         title: "Role updated.",

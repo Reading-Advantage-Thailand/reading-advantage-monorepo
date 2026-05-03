@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 
 // DELETE /api/users/me/school/admins/[adminId] - Remove a school admin
@@ -8,9 +8,9 @@ export async function DELETE(
   { params }: { params: Promise<{ adminId: string }> },
 ) {
   try {
-    const session = await auth();
+    const authUser = await getCurrentUser();
 
-    if (!session) {
+    if (!authUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -18,7 +18,7 @@ export async function DELETE(
 
     // Get current user's school and verify they are the owner
     const currentUser = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: authUser.id },
       include: {
         School: true,
       },
@@ -36,7 +36,7 @@ export async function DELETE(
     }
 
     // Check if current user is the school owner
-    if (currentUser.School.ownerId !== session.user.id) {
+    if (currentUser.School.ownerId !== currentUser.id) {
       return NextResponse.json(
         { error: "Only the school owner can remove admins" },
         { status: 403 },
@@ -67,7 +67,7 @@ export async function DELETE(
     }
 
     // Prevent owner from removing themselves
-    if (adminRecord.userId === session.user.id) {
+    if (adminRecord.userId === currentUser.id) {
       return NextResponse.json(
         { error: "School owner cannot remove themselves as admin" },
         { status: 400 },

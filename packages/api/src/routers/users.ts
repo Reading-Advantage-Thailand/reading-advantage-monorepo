@@ -36,10 +36,15 @@ export const usersRouter = router({
   get: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      const conditions = [eq(users.id, input.id)];
+      if (ctx.auth.user.role !== "SYSTEM" && ctx.auth.tenant.schoolId) {
+        conditions.push(eq(users.schoolId, ctx.auth.tenant.schoolId));
+      }
+
       const [user] = await ctx.db
         .select(safeUserCols)
         .from(users)
-        .where(eq(users.id, input.id))
+        .where(and(...conditions))
         .limit(1);
 
       if (!user) {
@@ -62,6 +67,15 @@ export const usersRouter = router({
       const conditions = [];
 
       if (input.schoolId) {
+        if (
+          ctx.auth.user.role !== "SYSTEM" &&
+          input.schoolId !== ctx.auth.tenant.schoolId
+        ) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot list users outside your school",
+          });
+        }
         conditions.push(eq(users.schoolId, input.schoolId));
       } else if (ctx.auth.tenant.schoolId) {
         conditions.push(eq(users.schoolId, ctx.auth.tenant.schoolId));
@@ -93,7 +107,8 @@ export const usersRouter = router({
       // Users can only update themselves (admins can update anyone)
       if (
         input.id !== ctx.auth.user.id &&
-        ctx.auth.user.role !== "ADMIN"
+        ctx.auth.user.role !== "ADMIN" &&
+        ctx.auth.user.role !== "SYSTEM"
       ) {
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -102,12 +117,20 @@ export const usersRouter = router({
       }
 
       const { id, ...updates } = input;
+      const conditions = [eq(users.id, id)];
+      if (ctx.auth.user.role !== "SYSTEM" && ctx.auth.tenant.schoolId) {
+        conditions.push(eq(users.schoolId, ctx.auth.tenant.schoolId));
+      }
 
       const [updated] = await ctx.db
         .update(users)
         .set({ ...updates, updatedAt: new Date() })
-        .where(eq(users.id, id))
+        .where(and(...conditions))
         .returning();
+
+      if (!updated) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+      }
 
       return updated;
     }),

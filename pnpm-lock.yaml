@@ -171,9 +171,6 @@ importers:
       '@ai-sdk/react':
         specifier: ^1.2.9
         version: 1.2.12(react@19.2.5)(zod@3.25.76)
-      '@auth/prisma-adapter':
-        specifier: ^2.10.0
-        version: 2.11.2(@prisma/client@6.19.3)
       '@google-cloud/storage':
         specifier: ^7.16.0
         version: 7.19.0
@@ -237,9 +234,18 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.8
         version: 1.2.8(@types/react-dom@19.2.3)(@types/react@19.2.14)(react-dom@19.2.5)(react@19.2.5)
+      '@reading-advantage/api':
+        specifier: workspace:*
+        version: link:../../packages/api
+      '@reading-advantage/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@reading-advantage/auth-client':
         specifier: workspace:*
         version: link:../../packages/auth-client
+      '@reading-advantage/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@reading-advantage/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -297,9 +303,6 @@ importers:
       next:
         specifier: 15.2.4
         version: 15.2.4(react-dom@19.2.5)(react@19.2.5)
-      next-auth:
-        specifier: ^5.0.0-beta.29
-        version: 5.0.0-beta.31(next@15.2.4)(react@19.2.5)
       next-intl:
         specifier: ^4.0.2
         version: 4.11.0(next@15.2.4)(react@19.2.5)(typescript@5.9.3)
@@ -469,9 +472,6 @@ importers:
       '@mui/material':
         specifier: ^6.0.2
         version: 6.5.0(@emotion/react@11.14.0)(@emotion/styled@11.14.1)(@types/react@19.2.14)(react-dom@19.2.5)(react@19.2.5)
-      '@next-auth/prisma-adapter':
-        specifier: ^1.0.7
-        version: 1.0.7(@prisma/client@6.19.3)(next-auth@4.24.14)
       '@prisma/client':
         specifier: ^6.10.1
         version: 6.19.3(prisma@6.19.3)(typescript@5.9.3)
@@ -604,9 +604,6 @@ importers:
       next:
         specifier: ^15.5.7
         version: 15.5.9(@babel/core@7.29.0)(react-dom@19.2.5)(react@19.2.5)
-      next-auth:
-        specifier: ^4.24.11
-        version: 4.24.14(next@15.5.9)(nodemailer@6.10.1)(react-dom@19.2.5)(react@19.2.5)
       next-connect:
         specifier: ^1.0.0
         version: 1.0.0
@@ -1825,40 +1822,6 @@ packages:
   /@asamuzakjp/nwsapi@2.3.9:
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
     dev: true
-
-  /@auth/core@0.41.2:
-    resolution: {integrity: sha512-Hx5MNBxN2fJTbJKGUKAA0wca43D0Akl3TvufY54Gn8lop7F+34vU1zA1pn0vQfIoVuLIrpfc2nkyjwIaPJMW7w==}
-    peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^7.0.7
-    peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
-      nodemailer:
-        optional: true
-    dependencies:
-      '@panva/hkdf': 1.2.1
-      jose: 6.2.3
-      oauth4webapi: 3.8.6
-      preact: 10.24.3
-      preact-render-to-string: 6.5.11(preact@10.24.3)
-    dev: false
-
-  /@auth/prisma-adapter@2.11.2(@prisma/client@6.19.3):
-    resolution: {integrity: sha512-GyNEUNtrPgDPs0M4xX6F5i7jTsCKwU6BXV9zutctcoo6K1Ud+juckrmQS11uyNgeWsw6sliextHbU/e+8lsizQ==}
-    peerDependencies:
-      '@prisma/client': '>=2.26.0 || >=3 || >=4 || >=5 || >=6'
-    dependencies:
-      '@auth/core': 0.41.2
-      '@prisma/client': 6.19.3(prisma@6.19.3)(typescript@5.9.3)
-    transitivePeerDependencies:
-      - '@simplewebauthn/browser'
-      - '@simplewebauthn/server'
-      - nodemailer
-    dev: false
 
   /@babel/code-frame@7.29.0:
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
@@ -5471,16 +5434,6 @@ packages:
       '@tybys/wasm-util': 0.10.1
     dev: true
     optional: true
-
-  /@next-auth/prisma-adapter@1.0.7(@prisma/client@6.19.3)(next-auth@4.24.14):
-    resolution: {integrity: sha512-Cdko4KfcmKjsyHFrWwZ//lfLUbcLqlyFqjd/nYE2m3aZ7tjMNUjpks47iw7NTCnXf+5UWz5Ypyt1dSs1EP5QJw==}
-    peerDependencies:
-      '@prisma/client': '>=2.26.0 || >=3'
-      next-auth: ^4
-    dependencies:
-      '@prisma/client': 6.19.3(prisma@6.19.3)(typescript@5.9.3)
-      next-auth: 4.24.14(next@15.5.9)(nodemailer@6.10.1)(react-dom@19.2.5)(react@19.2.5)
-    dev: false
 
   /@next/env@15.2.4:
     resolution: {integrity: sha512-+SFtMgoiYP3WoSswuNmxJOCwi06TdWE733D+WPjpXIe4LXGULwEaofiiAy6kbS0+XjM5xF5n3lKuBwN2SnqD9g==}
@@ -17800,10 +17753,6 @@ packages:
     resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
     dev: false
 
-  /jose@6.2.3:
-    resolution: {integrity: sha512-YYVDInQKFJfR/xa3ojUTl8c2KoTwiL1R5Wg9YCydwH0x0B9grbzlg5HC7mMjCtUJjbQ/YnGEZIhI5tCgfTb4Hw==}
-    dev: false
-
   /jotai@2.19.1(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.5):
     resolution: {integrity: sha512-sqm9lVZiqBHZH8aSRk32DSiZDHY3yUIlulXYn9GQj7/LvoUdYXSMti7ZPJGo+6zjzKFt5a25k/I6iBCi43PJcw==}
     engines: {node: '>=12.20.0'}
@@ -19545,35 +19494,6 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: true
 
-  /next-auth@4.24.14(next@15.5.9)(nodemailer@6.10.1)(react-dom@19.2.5)(react@19.2.5):
-    resolution: {integrity: sha512-YRz6xFDXKUwiXSMMChbrBEWyFktZ1qZXEgeSHQQ3nsy08B4c/xLk6REeutRsIFwkjY/1+ShHnu07DN3JeJguig==}
-    peerDependencies:
-      '@auth/core': 0.34.3
-      next: ^12.2.5 || ^13 || ^14 || ^15 || ^16
-      nodemailer: ^7.0.7
-      react: ^17.0.2 || ^18 || ^19
-      react-dom: ^17.0.2 || ^18 || ^19
-    peerDependenciesMeta:
-      '@auth/core':
-        optional: true
-      nodemailer:
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@panva/hkdf': 1.2.1
-      cookie: 0.7.2
-      jose: 4.15.9
-      next: 15.5.9(@babel/core@7.29.0)(react-dom@19.2.5)(react@19.2.5)
-      nodemailer: 6.10.1
-      oauth: 0.9.15
-      openid-client: 5.7.1
-      preact: 10.29.1
-      preact-render-to-string: 5.2.6(preact@10.29.1)
-      react: 19.2.5
-      react-dom: 19.2.5(react@19.2.5)
-      uuid: 8.3.2
-    dev: false
-
   /next-auth@4.24.14(next@15.5.9)(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-YRz6xFDXKUwiXSMMChbrBEWyFktZ1qZXEgeSHQQ3nsy08B4c/xLk6REeutRsIFwkjY/1+ShHnu07DN3JeJguig==}
     peerDependencies:
@@ -19600,27 +19520,6 @@ packages:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       uuid: 8.3.2
-    dev: false
-
-  /next-auth@5.0.0-beta.31(next@15.2.4)(react@19.2.5):
-    resolution: {integrity: sha512-1OBgCKPzo+S7UWWMp3xgvGvIJ0OpV7B3vR4ZDRqD9a4Ch+OT6dakLXG9ivhtmIWVa71nTSXattOHyCg8sNi8/Q==}
-    peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      next: ^14.0.0-0 || ^15.0.0 || ^16.0.0
-      nodemailer: ^7.0.7
-      react: ^18.2.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
-      nodemailer:
-        optional: true
-    dependencies:
-      '@auth/core': 0.41.2
-      next: 15.2.4(react-dom@19.2.5)(react@19.2.5)
-      react: 19.2.5
     dev: false
 
   /next-connect@1.0.0:
@@ -20099,10 +19998,6 @@ packages:
       citty: 0.2.2
       pathe: 2.0.3
       tinyexec: 1.1.2
-
-  /oauth4webapi@3.8.6:
-    resolution: {integrity: sha512-iwemM91xz8nryHti2yTmg5fhyEMVOkOXwHNqbvcATjyajb5oQxCQzrNOA6uElRHuMhQQTKUyFKV9y/CNyg25BQ==}
-    dev: false
 
   /oauth@0.9.15:
     resolution: {integrity: sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==}
@@ -20700,18 +20595,6 @@ packages:
     dependencies:
       preact: 10.29.1
       pretty-format: 3.8.0
-    dev: false
-
-  /preact-render-to-string@6.5.11(preact@10.24.3):
-    resolution: {integrity: sha512-ubnauqoGczeGISiOh6RjX0/cdaF8v/oDXIjO85XALCQjwQP+SB4RDXXtvZ6yTYSjG+PC1QRP2AhPgCEsM2EvUw==}
-    peerDependencies:
-      preact: '>=10'
-    dependencies:
-      preact: 10.24.3
-    dev: false
-
-  /preact@10.24.3:
-    resolution: {integrity: sha512-Z2dPnBnMUfyQfSQ+GBdsGa16hz35YmLmtTLhM169uW944hYL6xzTYkJjC07j+Wosz733pMWx0fgON3JNw1jJQA==}
     dev: false
 
   /preact@10.29.1:

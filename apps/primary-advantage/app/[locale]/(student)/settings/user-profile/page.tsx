@@ -9,17 +9,16 @@ import { Icons } from "@/components/icons";
 import { redirect } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import ChangeRole from "@/components/shared/change-role";
-import { cookies } from "next/headers";
-import { auth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { Role } from "@/types/enum";
 import { getTranslations } from "next-intl/server";
 
 export default async function UserProfileSettingsPage() {
-  const session = await auth();
+  const user = await getCurrentUser();
   const t = await getTranslations("Settings.userProfile");
 
   // check if user is not logged in and redirect to signin page
-  if (!session) {
+  if (!user) {
     return redirect("/auth/signin");
   }
 
@@ -37,43 +36,24 @@ export default async function UserProfileSettingsPage() {
       <div className="mx-2 flex flex-col gap-4 md:flex-row">
         <div className="w-full">
           <ChangeUsernameForm
-            username={session.user.name as string}
-            userId={session.user.id as string}
+            username={user.name || ""}
+            userId={user.id}
           />
           <DisplaySettingInfo
-            title={t("email")}
-            data={session.user.email as string}
-            // verified={session.user.email_verified}
+            title={t("username")}
+            data={user.username}
             resetPassword
-            showVerified
-            translations={{
-              verified: t("verified"),
-              notVerified: t("notVerified"),
-            }}
           />
-          {/* <DisplaySettingInfo title="Google Classroom Link" /> */}
-          {/* <GoogleClassroomButtonLink status={Boolean(googleActive)} /> */}
-          <DisplaySettingInfo
-            title={t("level")}
-            data={session.user.cefrLevel || t("unknown")}
-          />
-          <DisplaySettingInfo
-            title={t("xp")}
-            desc={t("xpDescription")}
-            data={session.user.xp?.toString() || "0"}
-          />
-          {/* <ResetDialog users={user.id} /> */}
           <UpdateUserLicenseForm
-            username={session.user.name as string}
-            userId={session.user.id as string}
-            // expired={user.expired_date}
+            username={user.name || ""}
+            userId={user.id}
           />
         </div>
         {process.env.NODE_ENV === "development" && (
           <ChangeRole
             className="md:w-[38rem]"
-            userId={session.user.id as string}
-            userRole={session.user.role as Role}
+            userId={user.id}
+            userRole={user.role as Role}
           />
         )}
       </div>

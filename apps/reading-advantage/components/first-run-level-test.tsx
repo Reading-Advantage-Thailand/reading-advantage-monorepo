@@ -10,7 +10,6 @@ import { Button } from "../components/ui/button";
 import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "./ui/use-toast";
 import { useRouter, redirect } from "next/navigation";
-import { useSession } from "next-auth/react";
 import Confetti from "react-confetti";
 import { useScopedI18n } from "../locales/client";
 import { levelCalculation } from "../lib/utils";
@@ -46,7 +45,6 @@ export default function FirstRunLevelTest({
 }: Props) {
   const t = useScopedI18n("components.firstRunLevelTest");
   const router = useRouter();
-  const { data: session, status, update } = useSession();
   const [testFinished, setTestFinished] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);

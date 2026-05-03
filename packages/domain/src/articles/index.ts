@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import { articles } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
@@ -29,9 +29,23 @@ export async function listArticles({
   db: DB;
   input: { topic?: string; cefrLevel?: string; limit: number; offset: number };
 }) {
-  return db
+  const conditions = [];
+  if (input.topic) {
+    conditions.push(eq(articles.topic, input.topic));
+  }
+  if (input.cefrLevel) {
+    conditions.push(eq(articles.cefrLevel, input.cefrLevel));
+  }
+
+  const query = db
     .select()
-    .from(articles)
+    .from(articles);
+
+  const filtered = conditions.length > 0
+    ? query.where(and(...conditions))
+    : query;
+
+  return filtered
     .limit(input.limit)
     .offset(input.offset);
 }

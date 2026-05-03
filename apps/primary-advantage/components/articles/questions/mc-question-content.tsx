@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { finishQuiz } from "@/actions/question";
 import { useTranslations } from "next-intl";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 export default function MCQuestionContent({
   articleId,
@@ -34,7 +34,7 @@ export default function MCQuestionContent({
   const router = useRouter();
   const [isPanding, startTransition] = useTransition();
 
-  const { data: session, update } = useSession();
+  const { user } = useSession();
   const t = useTranslations("Question");
   const tc = useTranslations("Components");
 

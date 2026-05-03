@@ -1,7 +1,7 @@
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@reading-advantage/db/schema";
 import { validateSession, type Session } from "./session.js";
-import { ROLE_HIERARCHY, ROLE_ROUTES, type Role } from "./roles.js";
+import { ROLE_HIERARCHY, type Role } from "./roles.js";
 import { AuthError } from "./assert.js";
 
 type Db = PostgresJsDatabase<typeof schema>;

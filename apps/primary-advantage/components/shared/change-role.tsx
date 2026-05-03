@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { UserCircle, GraduationCap, School, Ghost } from "lucide-react";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 import { useRouter } from "@/i18n/navigation";
 import React, { useState } from "react";
 import { Role } from "@/types/enum";
@@ -63,7 +63,7 @@ export default function ChangeRole({ userId, userRole, className }: Props) {
   }
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role>(userRole);
-  const { update } = useSession();
+  const { user: sessionUser } = useSession();
   const router = useRouter();
 
   async function handleRoleChange() {
@@ -90,9 +90,8 @@ export default function ChangeRole({ userId, userRole, className }: Props) {
 
       //   // refresh the page
       //   router.refresh();
-      await update({
-        user: { role: selectedRole },
-      });
+      // Refresh the page to pick up the new role
+      router.refresh();
 
       toast("Role updated.", {
         description: `Changed role to ${selectedRole}.`,

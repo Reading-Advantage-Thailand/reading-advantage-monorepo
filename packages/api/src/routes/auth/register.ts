@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { db } from "@reading-advantage/db";
-import { users, accounts } from "@reading-advantage/db/schema";
+import { users, accounts, schools } from "@reading-advantage/db/schema";
 import {
   hashPassword,
   createSession,
@@ -22,6 +22,7 @@ const registerSchema = z.object({
   username: z.string().min(1).max(100),
   password: z.string().min(8).max(128),
   name: z.string().min(1).max(200),
+  schoolId: z.string().uuid(),
 });
 
 export async function handleRegister(request: NextRequest) {
@@ -36,7 +37,7 @@ export async function handleRegister(request: NextRequest) {
       );
     }
 
-    const { username, password, name } = parsed.data;
+    const { username, password, name, schoolId } = parsed.data;
     const lowerUsername = username.toLowerCase();
 
     // Check for existing user
@@ -53,28 +54,44 @@ export async function handleRegister(request: NextRequest) {
       );
     }
 
+    const [school] = await db
+      .select({ id: schools.id })
+      .from(schools)
+      .where(eq(schools.id, schoolId))
+      .limit(1);
+
+    if (!school) {
+      return NextResponse.json(
+        { message: "Invalid school" },
+        { status: 400 }
+      );
+    }
+
     const hashedPassword = await hashPassword(password);
     const displayUsername = username;
     const userId = crypto.randomUUID();
 
-    // Create user
-    const [user] = await db
-      .insert(users)
-      .values({
-        id: userId,
-        username: lowerUsername,
-        displayUsername,
-        name,
-        role: "STUDENT",
-      })
-      .returning();
+    const user = await db.transaction(async (tx) => {
+      const [created] = await tx
+        .insert(users)
+        .values({
+          id: userId,
+          username: lowerUsername,
+          displayUsername,
+          name,
+          role: "STUDENT",
+          schoolId,
+        })
+        .returning();
 
-    // Create credential account
-    await db.insert(accounts).values({
-      id: `${userId}_credential`,
-      userId,
-      providerId: "credential",
-      password: hashedPassword,
+      await tx.insert(accounts).values({
+        id: `${userId}_credential`,
+        userId,
+        providerId: "credential",
+        password: hashedPassword,
+      });
+
+      return created;
     });
 
     // Create session

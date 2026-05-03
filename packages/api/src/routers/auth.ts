@@ -1,4 +1,4 @@
-import { router, publicProcedure, protectedProcedure } from "../trpc.js";
+import { router, protectedProcedure } from "../trpc.js";
 
 export const authRouter = router({
   // Auth is handled by Next.js route handlers (/api/auth/*)

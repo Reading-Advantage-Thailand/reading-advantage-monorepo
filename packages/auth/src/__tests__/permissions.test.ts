@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { hasPermission, PERMISSIONS, type Permission } from "../permissions.js";
-import type { Role } from "../roles.js";
+import { hasPermission, PERMISSIONS } from "../permissions.js";
 
 describe("permissions", () => {
   it("defines all expected permission keys", () => {

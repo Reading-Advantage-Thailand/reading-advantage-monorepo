@@ -3,6 +3,7 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { authRouter } from "../routers/auth.js";
 import type { AuthContext } from "@reading-advantage/auth";
+import type { Context } from "../trpc.js";
 
 vi.mock("@reading-advantage/db/schema", () => ({
   users: { id: "id", username: "username" },
@@ -14,7 +15,7 @@ vi.mock("drizzle-orm", () => ({
 
 function createContext(auth: AuthContext | null = null) {
   return {
-    db: {} as any,
+    db: {} as Context["db"],
     auth,
   };
 }

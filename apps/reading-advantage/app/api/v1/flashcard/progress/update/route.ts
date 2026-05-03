@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { fsrs, generatorParameters, Rating, State } from "ts-fsrs";
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({
         message: "Unauthorized",
         status: 403,
@@ -37,7 +36,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    if (!currentCard || currentCard.userId !== session.user.id) {
+    if (!currentCard || currentCard.userId !== user.id) {
       return NextResponse.json({
         message: "Card not found or unauthorized",
         status: 404,

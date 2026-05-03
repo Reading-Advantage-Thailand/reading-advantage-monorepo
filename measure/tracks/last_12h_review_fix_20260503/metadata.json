@@ -1,0 +1,11 @@
+{
+  "track_id": "last_12h_review_fix_20260503",
+  "type": "bug",
+  "status": "implemented_pending_manual_verification",
+  "created_at": "2026-05-02T23:43:56Z",
+  "updated_at": "2026-05-03T00:25:00Z",
+  "description": "Fix defects found during the last-12-hour code review",
+  "estimated_tasks": 18,
+  "actual_tasks": 18,
+  "deviation_notes": "Automated tests/lint/package builds complete. reading-advantage build passes after regenerating Prisma client. science-advantage build still fails on pre-existing curriculum type mismatch outside this track."
+}

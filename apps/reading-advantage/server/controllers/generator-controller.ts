@@ -26,8 +26,7 @@ import {
   generateTranslatedPassage,
   generateTranslatedPassageFromSentences,
 } from "../utils/generators/translation-generator";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 
 interface GenerateArticleRequest {
   type: string;
@@ -646,17 +645,14 @@ export async function generateUserArticle(req: NextRequest) {
   let userId: string = "";
 
   try {
-    //console.log("Starting user article generation...");
-
     // Get user session
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
       //console.log("Unauthorized access attempt");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    userId = session.user.id;
-    //console.log(`User ID: ${userId}`);
+    userId = currentUser.id;
 
     // Get user data from Prisma to fetch license_id
     const user = await prisma.user.findUnique({
@@ -1029,14 +1025,13 @@ export async function approveUserArticle(req: NextRequest) {
     //console.log("Starting article approval process...");
 
     // Get user session
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!user) {
       //console.log("Unauthorized access attempt");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id;
-    //console.log(`User ID: ${userId}`);
+    const userId = user.id;
 
     // Parse request body
     const { articleId } = await req.json();
@@ -1099,12 +1094,12 @@ export async function approveUserArticle(req: NextRequest) {
 export async function getUserGeneratedArticles(req: NextRequest) {
   try {
     // Get user session
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id;
+    const userId = user.id;
 
     // Get user's generated articles using Prisma
     const articles = await prisma.article.findMany({
@@ -1173,14 +1168,13 @@ export async function updateUserArticle(
     //console.log(`Starting article update for ID: ${articleId}`);
 
     // Get user session
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!user) {
       //console.log("Unauthorized access attempt");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id;
-    //console.log(`User ID: ${userId}`);
+    const userId = user.id;
 
     // Parse request body
     const { title, passage, summary, imageDesc } = await req.json();

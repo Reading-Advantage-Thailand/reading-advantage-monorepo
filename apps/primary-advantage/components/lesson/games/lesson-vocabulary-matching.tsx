@@ -39,7 +39,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { updateUserActivity } from "@/actions/user";
 import { useTranslations } from "next-intl";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 // Type definitions
 interface VocabularyPair {
@@ -70,7 +70,7 @@ export default function LessonVocabularyMatching({
   const [shuffledDefinitions, setShuffledDefinitions] = useState<
     VocabularyPair[]
   >([]);
-  const { data: session, update } = useSession();
+  const { user } = useSession();
   // Matching state
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
   const [userMatches, setUserMatches] = useState<UserMatch[]>([]);

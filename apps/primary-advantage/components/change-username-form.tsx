@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Icons } from "@/components/icons";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
@@ -35,7 +35,6 @@ export function ChangeUsernameForm({
   userId: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { update: updateSession } = useSession();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -43,7 +42,6 @@ export function ChangeUsernameForm({
     },
   });
   const router = useRouter();
-  const { data: session, update } = useSession();
   const t = useTranslations("Settings.userProfile");
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
@@ -60,19 +58,6 @@ export function ChangeUsernameForm({
       if (response.status === 200) {
         // Reset the form
         form.reset({ name: data.name });
-
-        // Update the session with the complete user data
-        await updateSession({
-          user: {
-            ...data,
-          },
-        });
-
-        update({
-          user: {
-            ...session?.user,
-          },
-        });
 
         // refresh the page
         router.refresh();

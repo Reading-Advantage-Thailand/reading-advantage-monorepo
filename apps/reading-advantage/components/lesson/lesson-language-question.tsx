@@ -9,7 +9,6 @@ import { Bot, MessageSquare, Send, Loader2, X } from "lucide-react";
 import { Article } from "@/components/models/article-model";
 import { useQuestionStore } from "@/store/question-store";
 import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface Message {
@@ -29,7 +28,6 @@ export default function LessonLanguageQuestion({
   onCompleteChange,
 }: Props) {
   const t = useScopedI18n("components.chatBot");
-  const { data: session } = useSession();
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -151,10 +149,7 @@ export default function LessonLanguageQuestion({
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white">AI Reading Assistant</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {session?.user?.display_name || session?.user?.name ?
-                      `Ready to help ${(session.user.display_name || session.user.name || "").split(' ')[0]} with questions` :
-                      "Ready to help with your questions"
-                    }
+                    Ready to help with your questions
                   </p>
                 </div>
               </div>
@@ -172,10 +167,7 @@ export default function LessonLanguageQuestion({
                     <MessageSquare className="h-12 w-12 text-gray-400" />
                     <div>
                       <p className="text-gray-500 dark:text-gray-400 font-medium">
-                        {session?.user?.display_name || session?.user?.name ? 
-                          `สวัสดี ${session.user.display_name || session.user.name}!` : 
-                          "Start the conversation!"
-                        }
+                        Start the conversation!
                       </p>
                       <p className="text-sm text-gray-400 dark:text-gray-500">Ask me anything about the article.</p>
                     </div>
@@ -210,12 +202,12 @@ export default function LessonLanguageQuestion({
                     {message.sender === "user" && (
                       <Avatar className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8">
                         <AvatarImage 
-                          src={session?.user?.picture || session?.user?.image || ""} 
-                          alt={session?.user?.display_name || session?.user?.name || "User"} 
+                          src="" 
+                          alt="User" 
                           referrerPolicy="no-referrer"
                         />
                         <AvatarFallback className="bg-gradient-to-br from-gray-400 to-gray-600 text-white text-xs sm:text-sm font-semibold">
-                          {(session?.user?.display_name || session?.user?.name || "U").charAt(0).toUpperCase()}
+                          U
                         </AvatarFallback>
                       </Avatar>
                     )}
@@ -254,11 +246,7 @@ export default function LessonLanguageQuestion({
                 >
                   <div className="flex-1 relative">
                     <Input
-                      placeholder={
-                        session?.user?.display_name || session?.user?.name ?
-                        `${session.user.display_name || session.user.name}, ask about the article...` :
-                        "Type your question about the article..."
-                      }
+                      placeholder="Type your question about the article..."
                       value={userInput}
                       onChange={(e) => {
                         if (e.target.value.length <= 500) {

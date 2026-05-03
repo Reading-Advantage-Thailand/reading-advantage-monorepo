@@ -38,7 +38,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 interface SAQFeedback {
   score: number;
@@ -59,7 +59,7 @@ export default function SAQuestionContent({
   const t = useTranslations("Question");
   const tc = useTranslations("Components");
   const router = useRouter();
-  const { data: session, update } = useSession();
+  const { user } = useSession();
 
   const formSchema = z.object({
     answer: z

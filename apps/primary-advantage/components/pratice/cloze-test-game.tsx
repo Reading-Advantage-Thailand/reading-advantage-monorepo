@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { useSession } from "@/lib/next-auth-compat";
+import { useSession } from "@reading-advantage/auth-client";
 
 interface ClozeTestData {
   id: string;
@@ -121,7 +121,7 @@ export function ClozeTestGame({ deckId, sentences = [] }: ClozeTestGameProps) {
     useState<ClozeTestData[]>(sentences);
 
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
-  const { data: session, update } = useSession();
+  const { user } = useSession();
 
   // Client-side blank generation function
   const generateBlanksForSentence = useCallback(

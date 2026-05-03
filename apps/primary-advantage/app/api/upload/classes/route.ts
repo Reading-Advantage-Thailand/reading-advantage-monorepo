@@ -5,7 +5,7 @@ import path from "path";
 import { parse } from "csv/sync";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { generateRandomClassCode } from "@/lib/utils";
 
 // Zod validation schemas
@@ -147,15 +147,15 @@ export async function POST(request: NextRequest) {
 
   try {
     const authTimer = createTimer("AUTH_CHECK");
-    const session = await auth();
+    const authUser = await getCurrentUser();
     authTimer.log("Session validation completed");
-    if (!session) {
+    if (!authUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get current user with school information
     const currentUser = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: authUser.id },
       include: {
         School: true,
         roles: {
@@ -253,7 +253,7 @@ export async function POST(request: NextRequest) {
     // Generate unique filename with timestamp
     const timestamp = Date.now();
     const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
-    const fileName = `${session.user.id}_${originalName}`;
+    const fileName = `${currentUser.id}_${originalName}`;
     const filePath = path.join(tempDir, fileName);
 
     // Convert file to buffer and save

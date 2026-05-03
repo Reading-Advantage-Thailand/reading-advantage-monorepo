@@ -57,13 +57,9 @@ export async function getSentencesForOrderingGame(): Promise<{
     }
 
     // Use the API endpoint we created
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const response = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/flashcard/decks/${deck.id}/sentences-for-ordering`,
-      {
-        headers: {
-          Cookie: `next-auth.session-token=${user.id}`, // You might need to adjust this based on your auth setup
-        },
-      },
+      `${baseUrl}/api/flashcard/decks/${deck.id}/sentences-for-ordering`,
     );
 
     if (!response.ok) {

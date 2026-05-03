@@ -1,7 +1,6 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 
 // Types for API responses
@@ -91,18 +90,18 @@ function calculateFlashcardStats(cards: any[]) {
 // Get flashcard stats from the database
 export async function getDashboardData() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!user) {
       throw new Error("Unauthorized");
     }
 
     const [vocabularies, sentences] = await Promise.all([
       prisma.userWordRecord.findMany({
-        where: { userId: session.user.id },
+        where: { userId: user.id },
         orderBy: { createdAt: "desc" },
       }),
       prisma.userSentenceRecord.findMany({
-        where: { userId: session.user.id },
+        where: { userId: user.id },
         orderBy: { createdAt: "desc" },
       }),
     ]);
@@ -126,18 +125,18 @@ export async function getDashboardData() {
 // Get user's flashcard decks with stats
 export async function getUserFlashcardDecks() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!user) {
       throw new Error("Unauthorized");
     }
 
     const [vocabularies, sentences] = await Promise.all([
       prisma.userWordRecord.findMany({
-        where: { userId: session.user.id },
+        where: { userId: user.id },
         orderBy: { createdAt: "desc" },
       }),
       prisma.userSentenceRecord.findMany({
-        where: { userId: session.user.id },
+        where: { userId: user.id },
         orderBy: { createdAt: "desc" },
       }),
     ]);
@@ -199,8 +198,8 @@ export async function getUserFlashcardDecks() {
 // Get cards for a specific deck (vocabulary or sentences)
 export async function getDeckCards(deckId: string) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!user) {
       throw new Error("Unauthorized");
     }
 
@@ -208,12 +207,12 @@ export async function getDeckCards(deckId: string) {
     
     if (deckId === 'vocabulary') {
       allCards = await prisma.userWordRecord.findMany({
-        where: { userId: session.user.id },
+        where: { userId: user.id },
         orderBy: { createdAt: "desc" },
       });
     } else if (deckId === 'sentences') {
       allCards = await prisma.userSentenceRecord.findMany({
-        where: { userId: session.user.id },
+        where: { userId: user.id },
         orderBy: { createdAt: "desc" },
       });
     } else {
@@ -252,14 +251,14 @@ export async function getDeckCards(deckId: string) {
 // Update flashcard progress after review
 export async function reviewCard(cardId: string, rating: number, type: 'vocabulary' | 'sentences') {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!user) {
       throw new Error("Unauthorized");
     }
 
     // Use the API endpoint for complex FSRS calculations
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/v1/flashcard/progress/${session.user.id}`, {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/v1/flashcard/progress/${user.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -293,8 +292,8 @@ export async function reviewCard(cardId: string, rating: number, type: 'vocabula
 // Save flashcard (placeholder for future implementation)
 export async function saveFlashcard(flashcardData: any) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!user) {
       throw new Error("Unauthorized");
     }
 

@@ -1,5 +1,7 @@
 import { db } from "@reading-advantage/db";
 import { validateSession, SESSION_COOKIE_NAME } from "@reading-advantage/auth";
+import { users } from "@reading-advantage/db/schema";
+import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -16,7 +18,20 @@ export async function handleSession(request: NextRequest) {
     return NextResponse.json({ session: null });
   }
 
-  // Return session without sensitive fields
+  // Enrich with additional user fields from Drizzle
+  const [dbUser] = await db
+    .select({
+      xp: users.xp,
+      level: users.level,
+      cefrLevel: users.cefrLevel,
+      email: users.email,
+      image: users.image,
+      schoolId: users.schoolId,
+    })
+    .from(users)
+    .where(eq(users.id, session.user.id))
+    .limit(1);
+
   return NextResponse.json({
     session: {
       user: {
@@ -25,6 +40,11 @@ export async function handleSession(request: NextRequest) {
         name: session.user.name,
         role: session.user.role,
         schoolId: session.user.schoolId,
+        xp: dbUser?.xp ?? 0,
+        level: dbUser?.level ?? 0,
+        cefrLevel: dbUser?.cefrLevel ?? "",
+        email: dbUser?.email ?? null,
+        image: dbUser?.image ?? null,
       },
     },
   });

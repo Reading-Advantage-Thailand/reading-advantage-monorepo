@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
-import { withAuth } from "next-auth/middleware";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 
@@ -34,13 +32,24 @@ function isPublicPage(normalizedPath: string): boolean {
 }
 
 async function middleware(req: NextRequest) {
-  let token = null;
-  try {
-    token = await getToken({ req });
-  } catch {
-    // NextAuth not fully configured — treat as unauthenticated
+  const sessionToken = req.cookies.get("session_token")?.value;
+
+  let userData: Record<string, unknown> | null = null;
+  if (sessionToken) {
+    try {
+      const res = await fetch(new URL("/api/auth/session", req.url), {
+        headers: { cookie: req.headers.get("cookie") ?? "" },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        userData = data?.session?.user ?? null;
+      }
+    } catch {
+      // Session endpoint unavailable — treat as unauthenticated
+    }
   }
-  const isAuth = !!token;
+
+  const isAuth = !!sessionToken && !!userData;
   const authLocales = routing.locales;
 
   const pathname = req.nextUrl.pathname;
@@ -85,8 +94,8 @@ async function middleware(req: NextRequest) {
   }
 
   // AUTHENTICATION LOGIC
-  if (isAuth) {
-    const userRole = token.role as string;
+  if (isAuth && userData) {
+    const userRole = (userData.role as string) ?? "";
 
     // Guard: Prevent redirection loops if we are already on a transition page
     if (normalizedPath.startsWith("/role-selection")) {
@@ -107,13 +116,15 @@ async function middleware(req: NextRequest) {
     }
 
     // Step 2: Level Test
+    const userLevel = userData.level as number | null | undefined;
+    const userXp = userData.xp as number | null | undefined;
     const needsLevelTest =
-      token.level === undefined ||
-      token.level === null ||
-      token.level === 0 ||
-      token.xp === 0 ||
-      token.xp === null ||
-      token.xp === undefined;
+      userLevel === undefined ||
+      userLevel === null ||
+      userLevel === 0 ||
+      userXp === 0 ||
+      userXp === null ||
+      userXp === undefined;
 
     if (needsLevelTest) {
       if (!normalizedPath.startsWith("/level")) {
@@ -187,11 +198,7 @@ async function middleware(req: NextRequest) {
   return I18nMiddleware(req);
 }
 
-export default withAuth(middleware, {
-  callbacks: {
-    authorized: async () => true,
-  },
-});
+export default middleware;
 
 export const config = {
   matcher: ["/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],

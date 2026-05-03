@@ -6,15 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { useTrpcAuth } from "@/lib/use-trpc-auth";
+import { useAuth } from "@reading-advantage/auth-client";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
-  const { register, isLoading, error: authError } = useTrpcAuth();
+  const { register, isLoading } = useAuth();
   const [error, setError] = React.useState<string>("");
-
-  const displayError = authError || error;
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
@@ -23,12 +21,14 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
     const target = event.target as typeof event.target & {
       username: { value: string };
       name: { value: string };
+      schoolId: { value: string };
       password: { value: string };
       confirmPassword: { value: string };
     };
 
     const username = target.username.value;
     const name = target.name.value;
+    const schoolId = target.schoolId.value;
     const password = target.password.value;
     const confirmPassword = target.confirmPassword.value;
 
@@ -37,9 +37,11 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
       return;
     }
 
-    const user = await register(username, password, name);
-    if (user) {
+    try {
+      await register(username, password, name, schoolId);
       window.location.href = "/";
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Registration failed");
     }
   }
   return (
@@ -57,6 +59,19 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
               autoCapitalize="none"
               autoComplete="username"
               autoCorrect="off"
+              disabled={isLoading}
+              required
+            />
+          </div>
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="schoolId">
+              School ID
+            </Label>
+            <Input
+              id="schoolId"
+              placeholder="school id"
+              type="text"
+              autoComplete="organization"
               disabled={isLoading}
               required
             />
@@ -104,7 +119,7 @@ export function UserSignUpForm({ className, ...props }: UserAuthFormProps) {
               required
             />
           </div>
-          {displayError && <div className="text-red-500 text-sm">{displayError}</div>}
+          {error && <div className="text-red-500 text-sm">{error}</div>}
           <Button disabled={isLoading}>
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

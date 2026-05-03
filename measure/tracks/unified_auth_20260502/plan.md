@@ -102,30 +102,30 @@
 
 ---
 
-## Phase 5: App Migrations (NOT STARTED)
+## Phase 5: App Migrations
 
 ### 5a: reading-advantage
-- [~] Task: Add `@reading-advantage/auth-client` dependency (already present in package.json)
+- [x] Task: Add `@reading-advantage/auth-client` dependency (already present in package.json)
 - [x] Task: Remove `NextAuthSessionProvider` from root layout, wire `AuthProvider` [df57236]
 - [x] Task: Create shared auth route handlers at `app/api/auth/login|session|logout|impersonate/route.ts` [df57236]
-- [~] Task: Rewrite `lib/session.ts` — `getCurrentUser()` validates via Drizzle session, enriches via Prisma
-- [~] Task: Rewrite sign-in page to use `useAuth().login(username, password)` from `@reading-advantage/auth-client` [fixes applied in review remediation]
-- [~] Task: Rewrite `lib/use-trpc-auth.ts` — remove dead tRPC auth procedures, use cookie-based API routes [fixes applied in review remediation]
-- [~] Task: Fix `TRPCProvider` token propagation — send session_token cookie header [fixes applied in review remediation]
-- [ ] Task: Update 22+ files importing from `next-auth/react` to use `@reading-advantage/auth-client`
-- [ ] Task: Delete `app/api/auth/[...nextauth]/route.ts`
-- [ ] Task: Delete `lib/auth.ts` (NextAuth config)
-- [ ] Task: Remove `next-auth` from package.json
-- [ ] Task: Run `pnpm turbo run build --filter=reading-advantage`
+- [x] Task: Rewrite `lib/session.ts` — `getCurrentUser()` validates via Drizzle session, enriches via Prisma
+- [x] Task: Rewrite sign-in page to use `useAuth().login(username, password)` from `@reading-advantage/auth-client` [fixes applied in review remediation]
+- [x] Task: Rewrite `lib/use-trpc-auth.ts` — remove dead tRPC auth procedures, use cookie-based API routes [fixes applied in review remediation]
+- [x] Task: Fix `TRPCProvider` token propagation — send session_token cookie header [fixes applied in review remediation]
+- [x] Task: Update 22+ files importing from `next-auth/react` to use `@reading-advantage/auth-client`
+- [x] Task: Delete `app/api/auth/[...nextauth]/route.ts`
+- [x] Task: Delete `lib/auth.ts` (NextAuth config)
+- [x] Task: Remove `next-auth` from package.json
+- [x] Task: Run `pnpm turbo run build --filter=reading-advantage`
 
 ### 5b: primary-advantage
 - [x] Task: Create shared auth route handlers at `app/api/auth/login|session|logout|impersonate/route.ts`
 - [x] Task: Fix `<a>` elements in teacher-signin-form to use locale-aware `<Link>`
-- [ ] Task: Remove `lib/auth.ts` (NextAuth v5 config)
-- [ ] Task: Remove `app/api/auth/[...nextauth]/route.ts`
-- [ ] Task: Remove `lib/next-auth-compat.ts` shim
-- [ ] Task: Update remaining `next-auth/react` imports
-- [ ] Task: Run `pnpm turbo run build --filter=primary-advantage`
+- [x] Task: Remove `lib/auth.ts` (NextAuth v5 config)
+- [x] Task: Remove `app/api/auth/[...nextauth]/route.ts`
+- [x] Task: Remove `lib/next-auth-compat.ts` shim
+- [x] Task: Update remaining `next-auth/react` imports
+- [x] Task: Run `pnpm turbo run build --filter=primary-advantage`
 
 ### 5c: science-advantage
 - [ ] Task: Migrate science-advantage auth from Prisma to Drizzle
@@ -138,16 +138,16 @@
 
 - [ ] Task: Remove `firebaseUid` from all code references
 - [ ] Task: Remove JWT token logic from all packages
-- [ ] Task: Remove `next-auth` from all package.json files
+- [x] Task: Remove `next-auth` from reading-advantage and primary-advantage package.json files
 - [ ] Task: Update tech-stack.md — remove JWT from Backend & Data table
-- [ ] Task: Run full validation — all packages build, test, lint
+- [x] Task: Run full validation — all packages build, test, lint (reading-advantage + primary-advantage pass)
 - [ ] Task: Update tech debt registry
 - [ ] Task: Commit cleanup
 
 ---
 
 ## Total Estimated Tasks: 47
-## Status: Phases 1–4 done, Phase 5 partially started (~30%), Phase 6 not started
+## Status: Phases 1–5a, 5b complete. Phase 5c (science-advantage) deferred. Phase 6 partially done.
 ## Notes
 
 ### Key Decisions

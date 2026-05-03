@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession, User } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { Role } from "@prisma/client";
 import { sendDiscordWebhook } from "../utils/send-discord-webhook";
+
+type SessionUser = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;
 
 // Middleware to protect routes
 export interface ExtendedNextRequest extends NextRequest {
   session?: {
-    user: User;
+    user: SessionUser;
   };
 }
 
@@ -17,8 +18,8 @@ export const protect = async (
   params: unknown,
   next: () => void
 ) => {
-  const session = await getServerSession(authOptions);
-  if (!session) {
+  const user = await getCurrentUser();
+  if (!user) {
     return NextResponse.json(
       { message: "Unauthorized - Please login to access this resource" },
       { status: 403 }
@@ -26,7 +27,7 @@ export const protect = async (
   }
 
   // Send user session to the next middleware
-  req.session = session;
+  req.session = { user };
   return next();
 };
 
@@ -38,17 +39,16 @@ export const restrictTo = (...allowedRoles: Role[]) => {
     params: unknown,
     next: () => void
   ) => {
-    const session = await getServerSession(authOptions);
-    // console.log('restrictTo -> session', session);
-    // Check if session exists
-    if (!session) {
+    const user = await getCurrentUser();
+    // Check if user exists
+    if (!user) {
       return NextResponse.json(
         { message: "Unauthorized - Please login to access this resource" },
         { status: 403 }
       );
     }
 
-    const { role } = session.user;
+    const { role } = user;
 
     // Check if the user role is allowed
     if (!allowedRoles.includes(role as Role)) {
@@ -58,7 +58,7 @@ export const restrictTo = (...allowedRoles: Role[]) => {
       );
     }
 
-    req.session = session;
+    req.session = { user };
     return next();
   };
 };
