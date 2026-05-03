@@ -1,0 +1,137 @@
+# Implementation Plan: Auth Strategy Review Fixes
+
+---
+
+## Phase 1: Correct the Auth Strategy Source of Truth
+
+*Severity: High. Prevent future agents from preserving the wrong auth system.*
+
+- [x] Task: Update Science auth migration plan [30b501c]
+    - [x] Remove tasks that ask for Google OAuth Drizzle rewrite or OAuth end-to-end verification
+    - [x] Replace them with username/password-only cleanup tasks
+    - [x] Preserve any still-valid shared handler tasks for login/session/logout/impersonate
+- [x] Task: Update tech-stack or tech-debt docs if needed [30b501c]
+    - [x] Confirm the documented auth strategy says cookie-based DB sessions with username/password only
+    - [x] Confirm no docs imply Google OAuth is part of the target Science auth path
+- [x] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+    - Verified: science_auth_migration plan no longer instructs OAuth rewrite
+    - Verified: tech-stack.md says username/password-only
+    - Verified: tech-debt.md corrected from "rewritten" to "removed"
+
+---
+
+## Phase 2: Remove Science Google OAuth
+
+*Severity: High. Code must match the unified auth strategy.*
+
+- [ ] Task: Remove or disable Science Google OAuth routes
+    - [ ] Delete `apps/science-advantage/app/api/auth/google/route.ts` and callback route, or replace with explicit unsupported responses if route compatibility is needed
+    - [ ] Remove direct `drizzle-orm` imports that only exist for OAuth code
+    - [ ] Remove Google OAuth env checks from active auth paths if no longer used
+- [ ] Task: Remove Science Google OAuth UI entry points
+    - [ ] Search sign-in and auth components for Google OAuth links/buttons
+    - [ ] Remove or replace with username/password-only messaging
+- [ ] Task: Verify no active Science OAuth implementation remains
+    - [ ] Run `rg -n "GOOGLE_OAUTH|/api/auth/google|google/callback|Sign in with Google" apps/science-advantage`
+    - [ ] Document any remaining archived-doc hits separately from active code
+- [ ] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+
+---
+
+## Phase 3: Restore Science Validation Gates
+
+*Severity: High. The migration must build and lint before it can be considered done.*
+
+- [ ] Task: Fix Science build failures
+    - [ ] Run `pnpm turbo run build --filter=science-advantage`
+    - [ ] Fix missing dependency or import failures introduced by auth migration
+    - [ ] Re-run until build passes
+- [ ] Task: Fix Science auth-touched lint failures
+    - [ ] Replace raw `<a href="/">` in `components/features/auth/signin-form.tsx` with `next/link`
+    - [ ] Remove unused imports introduced by auth migration
+    - [ ] Run `pnpm turbo run lint --filter=science-advantage`
+- [ ] Task: Triage unrelated Science lint baseline
+    - [ ] If analytics lint failures are unrelated baseline debt, create or update a pending track with exact command output and file list
+    - [ ] Do not mark Science auth migration complete until auth-touched lint failures are gone
+- [ ] Task: Measure - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+
+---
+
+## Phase 4: Harden Auth Migration SQL and Tests
+
+*Severity: High. Runtime DB constraints must match the Drizzle schema contract.*
+
+- [ ] Task: Fix `0003_slow_firebrand.sql` username nullability
+    - [ ] Backfill `username` and `display_username` for existing rows, or split into safe widen/migrate/narrow migrations
+    - [ ] Add `ALTER TABLE "users" ALTER COLUMN "username" SET NOT NULL`
+    - [ ] Add `ALTER TABLE "users" ALTER COLUMN "display_username" SET NOT NULL`
+    - [ ] Ensure uniqueness constraints remain valid after backfill
+- [ ] Task: Expand migration SQL tests
+    - [ ] Assert 0003 enforces `username` and `display_username` NOT NULL or documents the intentional widen phase
+    - [ ] Assert migration tests catch schema/migration drift for auth-critical columns
+- [ ] Task: Run db validation
+    - [ ] `pnpm turbo run test --filter=@reading-advantage/db`
+    - [ ] If available, run migrations against a fresh local DB and record result
+- [ ] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+
+---
+
+## Phase 5: Eliminate Silent Firestore No-Ops
+
+*Severity: Medium. Remaining stubs must fail visibly or be migrated.*
+
+- [ ] Task: Inventory remaining active Firestore stub callers
+    - [ ] Run `rg -n "configs/firestore-config|firestore-stub|collection\\(" apps/reading-advantage`
+    - [ ] Classify each hit as active code, archived/commented code, or test/doc-only
+- [ ] Task: Replace reachable no-op behavior
+    - [ ] Convert trivial callers to Prisma/Drizzle or delete dead code
+    - [ ] For non-trivial deferred callers, return explicit unsupported/501 behavior instead of fake empty reads or fake ids
+    - [ ] Keep any remaining stub usage documented in tech debt with owner and follow-up track
+- [ ] Task: Add regression tests where behavior changes
+    - [ ] Cover unsupported responses for reachable API routes
+    - [ ] Cover any converted utility/controller behavior
+- [ ] Task: Measure - User Manual Verification 'Phase 5' (Protocol in workflow.md)
+
+---
+
+## Phase 6: Final Verification and Bookkeeping
+
+*Severity: Medium. Close the loop with auditable evidence.*
+
+- [ ] Task: Run targeted validation
+    - [ ] `pnpm turbo run build --filter=science-advantage`
+    - [ ] `pnpm turbo run lint --filter=science-advantage`
+    - [ ] `pnpm turbo run test --filter=@reading-advantage/db`
+    - [ ] `pnpm turbo run test --filter=@reading-advantage/api`
+- [ ] Task: Update Measure registries
+    - [ ] Update `measure/tracks.md`
+    - [ ] Update `measure/tech-debt.md` for resolved vs deferred items
+    - [ ] Update affected track plans so they do not overstate completion
+- [ ] Task: Commit changes and record task/phase evidence per Measure workflow
+- [ ] Task: Measure - User Manual Verification 'Phase 6' (Protocol in workflow.md)
+
+---
+
+## Total Estimated Tasks: 23
+## Status: Pending
+
+## Notes
+
+### Key Decisions
+
+- Username/password-only auth is the target. OAuth should be removed, not repaired.
+- Build/lint failures can be separated into baseline debt only with exact evidence.
+- Migration SQL is production behavior; TypeScript schema declarations are not enough.
+- Silent no-op stubs are allowed only as temporary compile shims for unreachable code.
+
+### Dependencies
+
+- May require local database access to prove migration order on a fresh DB.
+- Science validation depends on removing OAuth code before deciding whether `drizzle-orm`
+  must be a direct app dependency.
+
+### Risks
+
+- Existing users without usernames require a deterministic backfill strategy.
+- Some Firestore callers may still be reachable through legacy routes and need explicit
+  product decisions before full migration.
