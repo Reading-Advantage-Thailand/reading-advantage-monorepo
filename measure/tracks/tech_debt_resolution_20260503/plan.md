@@ -11,16 +11,10 @@
     - [x] Verify migration SQL references correct tables (users, accounts, sessions)
     - [x] Run `pnpm turbo run test --filter=@reading-advantage/db`
     - [x] Commit generated migration files
-- [ ] Task: Migrate reading-advantage controllers from Prisma to Drizzle
-    - [ ] Audit `user-controller.ts` Prisma calls and map to Drizzle equivalents
-    - [ ] Rewrite `user-controller.ts` to use `@reading-advantage/db` client
-    - [ ] Audit `license-controller.ts` Prisma calls and map to Drizzle equivalents
-    - [ ] Rewrite `license-controller.ts` to use `@reading-advantage/db` client
-    - [ ] Audit `generator-controller.ts` Prisma calls and map to Drizzle equivalents
-    - [ ] Rewrite `generator-controller.ts` to use `@reading-advantage/db` client
-    - [ ] Write tests for migrated controller functions
-    - [ ] Run `pnpm turbo run build --filter=reading-advantage`
-    - [ ] Commit controller migrations
+- [~] Task: Migrate reading-advantage controllers from Prisma to Drizzle [DEFERRED]
+    - [x] Audit complete: user-controller.ts (11 Prisma tables), license-controller.ts (5 tables), generator-controller.ts (5 tables)
+    - [x] Gap analysis: Drizzle schema missing License, LicenseOnUser, Story, Chapter, StoryTimepoint, StoryAssignment, LongAnswerQuestion, RACEFRMapping, GenreAdjacency tables. Significant column divergence for userActivity, xpLogs, articles, learningGoals.
+    - [x] Decision: Deferred to future "Prisma→Drizzle Schema Alignment" track. License system needs new Drizzle tables + domain functions. User activity schema needs redesign. Story subsystem is Prisma-only.
 - [ ] Task: Measure - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
 ---
