@@ -63,18 +63,19 @@
 
 *Severity: High. Runtime DB constraints must match the Drizzle schema contract.*
 
-- [ ] Task: Fix `0003_slow_firebrand.sql` username nullability
-    - [ ] Backfill `username` and `display_username` for existing rows, or split into safe widen/migrate/narrow migrations
-    - [ ] Add `ALTER TABLE "users" ALTER COLUMN "username" SET NOT NULL`
-    - [ ] Add `ALTER TABLE "users" ALTER COLUMN "display_username" SET NOT NULL`
-    - [ ] Ensure uniqueness constraints remain valid after backfill
-- [ ] Task: Expand migration SQL tests
-    - [ ] Assert 0003 enforces `username` and `display_username` NOT NULL or documents the intentional widen phase
-    - [ ] Assert migration tests catch schema/migration drift for auth-critical columns
-- [ ] Task: Run db validation
-    - [ ] `pnpm turbo run test --filter=@reading-advantage/db`
-    - [ ] If available, run migrations against a fresh local DB and record result
-- [ ] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+- [x] Task: Fix `0003_slow_firebrand.sql` username nullability
+    - [x] Backfill `username` and `display_username` for existing rows, or split into safe widen/migrate/narrow migrations
+    - [x] Add `ALTER TABLE "users" ALTER COLUMN "username" SET NOT NULL`
+    - [x] Add `ALTER TABLE "users" ALTER COLUMN "display_username" SET NOT NULL`
+    - [x] Ensure uniqueness constraints remain valid after backfill
+- [x] Task: Expand migration SQL tests
+    - [x] Assert 0003 enforces `username` and `display_username` NOT NULL or documents the intentional widen phase
+    - [x] Assert migration tests catch schema/migration drift for auth-critical columns
+- [x] Task: Run db validation
+    - [x] `pnpm turbo run test --filter=@reading-advantage/db`
+    - [x] If available, run migrations against a fresh local DB and record result
+- [x] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+    - Verified: 10/10 db tests pass including new 0004 migration tests
 
 ---
 

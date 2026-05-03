@@ -28,4 +28,28 @@ describe("migration SQL", () => {
     expect(sql0003).toContain('"accounts_user_provider_unique"');
     expect(sql0003).toContain('ADD COLUMN "provider_id"');
   });
+
+  it("0003 adds username columns (initially nullable, hardened in 0004)", () => {
+    const sql0003 = readFileSync(
+      join(process.cwd(), "drizzle/0003_slow_firebrand.sql"),
+      "utf8"
+    );
+
+    expect(sql0003).toContain('ADD COLUMN "username"');
+    expect(sql0003).toContain('ADD COLUMN "display_username"');
+    expect(sql0003).toContain('"users_username_unique"');
+    expect(sql0003).toContain('"users_display_username_unique"');
+  });
+
+  it("0004 backfills username/display_username and enforces NOT NULL", () => {
+    const sql0004 = readFileSync(
+      join(process.cwd(), "drizzle/0004_sturdy_forge.sql"),
+      "utf8"
+    );
+
+    expect(sql0004).toContain('SET "username" = COALESCE');
+    expect(sql0004).toContain('SET "display_username" = COALESCE');
+    expect(sql0004).toContain('ALTER COLUMN "username" SET NOT NULL');
+    expect(sql0004).toContain('ALTER COLUMN "display_username" SET NOT NULL');
+  });
 });
