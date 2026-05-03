@@ -1,34 +1,27 @@
 # Plan: Firestore to Drizzle Migration
 
-## Status: Mostly complete — Firestore removed, 7 files using stub, Prisma→Drizzle deferred
+## Status: Cleanup complete. Stub migration and Prisma→Drizzle deferred.
 
-The original plan assumed Drizzle schema was missing and Firestore was actively used for data storage. Investigation revealed:
-- **Licenses**: Already on Prisma (not Firestore)
-- **Classrooms + Flashcards**: Drizzle schema + domain functions already exist
-- **Firestore was dead code**: Server-side operations only used by legacy one-off runners
+Investigation revealed Firestore was mostly dead code. Licenses are on Prisma, classrooms/flashcards have Drizzle schema + domain functions already.
 
-## What Was Done
+## Completed
 
-- [x] Deleted dead Firestore server code (6 files: operations, services, runners, handler-factory)
-- [x] Removed `DocumentData` type imports from models and client service
-- [x] Removed unused `Timestamp` import from `create-new-student.tsx`
-- [x] Removed dead `handler-factory` import from `user-controller.ts`
-- [x] Deleted Firebase Auth dead code (auth-redirect-handler, ios-auth-handler, verify-id-token, update-password route)
-- [x] Deleted Firebase config files (lib/firebase.ts, lib/firebaseAdmin.ts)
+- [x] Deleted 12 dead Firebase/Firestore files (operations, services, runners, auth handlers, config files)
 - [x] Removed `firebase`, `firebase-admin`, `firebase-mock` from package.json
-- [x] Replaced `configs/firestore-config.ts` with no-op stub for 7 remaining callers
-- [x] Made `firebase-admin/storage` usage in generator-controller gracefully optional
+- [x] Replaced `firestore-config.ts` with no-op stub for 7 remaining callers
+- [x] Removed `DocumentData` type imports from all models
+- [x] Made generator-controller storage cleanup gracefully optional
 - [x] Build passes, all package tests pass
 
-## Remaining Work (Deferred)
+## Deferred — Tech Debt
 
-7 files still use the Firestore stub (no-op). These need individual migration:
-1. `server/controllers/validator-controller.ts` — heavy Firestore usage (new-articles, word-list)
-2. `utils/deleteStories.ts` — stories collection delete
-3. `server/utils/generators/audio-words-generator.ts` — stories-word-list
-4. `server/controllers/stories-assistant-controller.ts` — dead postFlashCard function
-5. `app/api/v1/classroom/oauth2/classroom/courses/[courseId]/route.ts` — classroom sync
-6. `server/utils/generators/audio-generator.ts` — dead generateChapterAudio function
-7. `leaderboard-controller.ts` — unused import (already removed)
+7 files use the Firestore no-op stub. Each needs individual migration:
 
-The Prisma→Drizzle migration for reading-advantage controllers is a separate track.
+1. **`server/controllers/validator-controller.ts`** — Heaviest Firestore usage (new-articles, word-list, question subcollections). Needs full Prisma rewrite or be stubbed as 501.
+2. **`utils/deleteStories.ts`** — `stories` collection delete. Replace with Prisma `story.delete()`.
+3. **`server/utils/generators/audio-words-generator.ts`** — `stories-word-list` writes. Dead `saveWordList` can be deleted; `generateChapterAudioForWord` needs Prisma.
+4. **`server/controllers/stories-assistant-controller.ts`** — Dead `postFlashCard` function. Delete it.
+5. **`app/api/v1/classroom/oauth2/classroom/courses/[courseId]/route.ts`** — `classroom` Firestore collection. Needs Prisma rewrite.
+6. **`server/utils/generators/audio-generator.ts`** — Dead `generateChapterAudio` function. Delete it.
+
+Separate track needed: **Prisma→Drizzle migration** for reading-advantage controllers (user-controller, license-controller, generator-controller).
