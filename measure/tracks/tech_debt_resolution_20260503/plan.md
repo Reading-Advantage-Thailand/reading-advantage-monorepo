@@ -23,12 +23,11 @@
 
 *Severity: Medium. Remove `ignoreBuildErrors` masks and fix underlying issues.*
 
-- [ ] Task: Remove `ignoreBuildErrors` from www-reading-advantage
-    - [ ] Run `pnpm turbo run build --filter=www-reading-advantage` to catalog TS errors
-    - [ ] Fix TypeScript compilation errors
-    - [ ] Remove `ignoreBuildErrors: true` and `ignoreDuringBuilds: true` from next.config
-    - [ ] Verify build passes clean
-    - [ ] Commit
+- [x] Task: Remove `ignoreBuildErrors` from www-reading-advantage
+    - [x] Run `pnpm turbo run build --filter=www-reading-advantage` to catalog TS errors
+    - [x] Fix TypeScript compilation errors (added missing `github-slugger` dependency)
+    - [x] Remove `ignoreBuildErrors: true` and `ignoreDuringBuilds: true` from next.config
+    - [x] Verify build passes clean
 - [ ] Task: Fix advantage-games Difficulty type mismatches
     - [ ] Identify all ~15 files using `"medium"` where `Difficulty` expects `"normal"`
     - [ ] Replace `"medium"` with `"normal"` or update `Difficulty` type to include `"medium"`

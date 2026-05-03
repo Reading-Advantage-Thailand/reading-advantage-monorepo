@@ -29,6 +29,7 @@
     "@types/marked": "^6.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.454.0",
     "marked": "^14.1.3",

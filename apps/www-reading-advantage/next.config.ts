@@ -24,10 +24,10 @@ const nextConfig: NextConfig = {
 
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
