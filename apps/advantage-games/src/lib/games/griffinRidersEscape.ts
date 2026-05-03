@@ -52,7 +52,7 @@ export function createGriffinRidersEscapeState(
   }
 
   const rng = config.rng ?? Math.random
-  const difficulty = config.difficulty ?? 'medium'
+  const difficulty = config.difficulty ?? 'normal'
 
   const sentenceIndex = Math.floor(rng() * vocabulary.length)
   const currentSentence = vocabulary[sentenceIndex]

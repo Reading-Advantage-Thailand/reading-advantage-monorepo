@@ -32,7 +32,7 @@ export function ArchersRevengeGame({
 }: ArchersRevengeGameProps) {
   const [gameState, setGameState] = useState<ArchersRevengeState | null>(null);
   const [gamePhase, setGamePhase] = useState<"start" | "playing" | "ended">("start");
-  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("medium");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("normal");
   
   const { containerRef, enterFullscreen, exitFullscreen } = useGameFullscreen();
   const { getEffectiveTextSize } = useAccessibilitySettings();

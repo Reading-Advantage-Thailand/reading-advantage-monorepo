@@ -1,4 +1,4 @@
-export type SpellweaversRunDifficulty = 'easy' | 'normal' | 'hard'
+export type SpellweaversRunDifficulty = 'easy' | 'normal' | 'hard' | 'extreme'
 
 export type DifficultyConfig = {
   name: string
@@ -16,11 +16,13 @@ export const SPELLWEAVERS_RUN_CONFIG = {
     easy: 60,
     normal: 90,
     hard: 120,
+    extreme: 150,
   },
   spawnInterval: {
     easy: 2000,
     normal: 1500,
     hard: 1000,
+    extreme: 500,
   },
   collectionZoneHeight: 80,
   initialMana: 100,
@@ -49,6 +51,12 @@ export const SPELLWEAVERS_RUN_CONFIG = {
       scrollSpeed: 120,
       spawnInterval: 1000,
       maxWords: 8,
+    },
+    extreme: {
+      name: 'Extreme',
+      scrollSpeed: 150,
+      spawnInterval: 500,
+      maxWords: 10,
     },
   },
 }

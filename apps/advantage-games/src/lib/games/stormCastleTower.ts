@@ -65,7 +65,7 @@ export function createStormCastleTowerState(
   }
 
   const rng = config.rng ?? Math.random
-  const difficulty = config.difficulty ?? 'medium'
+  const difficulty = config.difficulty ?? 'normal'
   const guardType = config.guardType ?? 'alert-sentry'
 
   const sentenceIndex = Math.floor(rng() * vocabulary.length)

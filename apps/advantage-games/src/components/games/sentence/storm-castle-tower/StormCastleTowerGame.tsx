@@ -36,7 +36,7 @@ export function StormCastleTowerGame({ vocabulary, onComplete }: StormCastleTowe
   const [gameState, setGameState] = useState<StormCastleTowerState | null>(null)
   const [gamePhase, setGamePhase] = useState<'start' | 'playing' | 'ended'>('start')
   const [results, setResults] = useState<StormCastleTowerGameResult | null>(null)
-  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('medium')
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('normal')
   const [selectedGuard, setSelectedGuard] = useState<GuardType>('alert-sentry')
   const hasReportedRef = useRef(false)
   const lastHazardRef = useRef(0)

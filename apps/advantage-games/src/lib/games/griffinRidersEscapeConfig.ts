@@ -17,7 +17,7 @@ export const GRIFFIN_RIDERS_ESCAPE_CONFIG = {
   
   difficulties: {
     easy: { speedMult: 0.8, obstacleFreq: 0.1, maxWords: 4, spawnInterval: 2500 },
-    medium: { speedMult: 1.0, obstacleFreq: 0.2, maxWords: 6, spawnInterval: 2000 },
+    normal: { speedMult: 1.0, obstacleFreq: 0.2, maxWords: 6, spawnInterval: 2000 },
     hard: { speedMult: 1.3, obstacleFreq: 0.4, maxWords: 8, spawnInterval: 1500 }
   }
 }
@@ -31,6 +31,6 @@ export function getDifficultyConfig(difficulty: string): GriffinRiderDifficultyC
     case 'hard':
       return GRIFFIN_RIDERS_ESCAPE_CONFIG.difficulties.hard
     default:
-      return GRIFFIN_RIDERS_ESCAPE_CONFIG.difficulties.medium
+      return GRIFFIN_RIDERS_ESCAPE_CONFIG.difficulties.normal
   }
 }

@@ -44,7 +44,7 @@ export const STORM_CASTLE_TOWER_CONFIG = {
   
   difficulties: {
     easy: { name: "Squire's Tower", wordCount: 4, hazardSpeedMult: 0.7 },
-    medium: { name: "Knight's Keep", wordCount: 5, hazardSpeedMult: 1.0 },
+    normal: { name: "Knight's Keep", wordCount: 5, hazardSpeedMult: 1.0 },
     hard: { name: "Lord's Citadel", wordCount: 6, hazardSpeedMult: 1.3 },
     extreme: { name: "Lord's Citadel", wordCount: 7, hazardSpeedMult: 1.5 },
   },
@@ -57,7 +57,7 @@ export const STORM_CASTLE_TOWER_CONFIG = {
 }
 
 export function getDifficultyConfig(difficulty: StormCastleTowerDifficulty): DifficultyConfig {
-  return STORM_CASTLE_TOWER_CONFIG.difficulties[difficulty] ?? STORM_CASTLE_TOWER_CONFIG.difficulties.medium
+  return STORM_CASTLE_TOWER_CONFIG.difficulties[difficulty] ?? STORM_CASTLE_TOWER_CONFIG.difficulties.normal
 }
 
 export function getGuardSpeedMult(guardType: GuardType): number {

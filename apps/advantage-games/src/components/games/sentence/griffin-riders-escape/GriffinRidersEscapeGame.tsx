@@ -34,7 +34,7 @@ export function GriffinRidersEscapeGame({ vocabulary, onComplete }: GameProps) {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const [gameState, setGameState] = useState<GriffinRiderState | null>(null)
   const [gamePhase, setGamePhase] = useState<GamePhase>('start')
-  const [selectedDifficulty] = useState<Difficulty>('medium')
+  const [selectedDifficulty] = useState<Difficulty>('normal')
   const [playerVisualX, setPlayerVisualX] = useState(GAME_WIDTH / 2)
   const [shake, setShake] = useState(0)
   const [flash, setFlash] = useState<string | null>(null)

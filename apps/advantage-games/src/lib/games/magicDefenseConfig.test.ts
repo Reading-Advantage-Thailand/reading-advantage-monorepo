@@ -49,7 +49,7 @@ describe("magicDefenseConfig", () => {
   describe("DIFFICULTY_SETTINGS", () => {
     it("has all difficulty tiers", () => {
       expect(DIFFICULTY_SETTINGS.easy).toBeDefined();
-      expect(DIFFICULTY_SETTINGS.medium).toBeDefined();
+      expect(DIFFICULTY_SETTINGS.normal).toBeDefined();
       expect(DIFFICULTY_SETTINGS.hard).toBeDefined();
       expect(DIFFICULTY_SETTINGS.extreme).toBeDefined();
     });
@@ -65,7 +65,7 @@ describe("magicDefenseConfig", () => {
     });
 
     it("difficulty settings increase in difficulty", () => {
-      const difficulties = ["easy", "medium", "hard", "extreme"] as const;
+      const difficulties = ["easy", "normal", "hard", "extreme"] as const;
       for (let i = 1; i < difficulties.length; i++) {
         const prev = DIFFICULTY_SETTINGS[difficulties[i - 1]];
         const curr = DIFFICULTY_SETTINGS[difficulties[i]];
@@ -78,14 +78,14 @@ describe("magicDefenseConfig", () => {
   describe("getInitialSettings", () => {
     it("returns settings for each difficulty", () => {
       expect(getInitialSettings("easy")).toEqual(DIFFICULTY_SETTINGS.easy);
-      expect(getInitialSettings("medium")).toEqual(DIFFICULTY_SETTINGS.medium);
+      expect(getInitialSettings("normal")).toEqual(DIFFICULTY_SETTINGS.normal);
       expect(getInitialSettings("hard")).toEqual(DIFFICULTY_SETTINGS.hard);
       expect(getInitialSettings("extreme")).toEqual(DIFFICULTY_SETTINGS.extreme);
     });
 
-    it("defaults to medium for unknown difficulty", () => {
+    it("defaults to normal for unknown difficulty", () => {
       expect(getInitialSettings("unknown" as any)).toEqual(
-        DIFFICULTY_SETTINGS.medium,
+        DIFFICULTY_SETTINGS.normal,
       );
     });
   });

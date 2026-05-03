@@ -27,8 +27,8 @@ describe("archersRevenge", () => {
     });
 
     it("should handle small vocabulary by repeating if necessary", () => {
-      // Small vocab, but medium difficulty needs 15 enemies (5x3)
-      const state = createArchersRevengeState(mockVocabulary, { difficulty: "medium" });
+      // Small vocab, but normal difficulty needs 15 enemies (5x3)
+      const state = createArchersRevengeState(mockVocabulary, { difficulty: "normal" });
       expect(state.enemies.length).toBe(15);
     });
   });

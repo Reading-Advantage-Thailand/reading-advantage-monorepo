@@ -51,7 +51,7 @@ export const DIFFICULTY_SETTINGS: Record<Difficulty, GameSettings> = {
     minSpawnRate: 3000,
     minDuration: 10,
   },
-  medium: {
+  normal: {
     spawnRate: 5000,
     duration: 15,
     minSpawnRate: 2000,
@@ -72,5 +72,5 @@ export const DIFFICULTY_SETTINGS: Record<Difficulty, GameSettings> = {
 };
 
 export const getInitialSettings = (diff: Difficulty): GameSettings => {
-  return DIFFICULTY_SETTINGS[diff] || DIFFICULTY_SETTINGS["medium"];
+  return DIFFICULTY_SETTINGS[diff] || DIFFICULTY_SETTINGS["normal"];
 };

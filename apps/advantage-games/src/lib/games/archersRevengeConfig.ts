@@ -36,8 +36,9 @@ export const ARCHERS_REVENGE_CONFIG: ArchersRevengeConfig = {
   player: {
     hp: {
       easy: 5,
-      medium: 3,
+      normal: 3,
       hard: 2,
+      extreme: 1,
     },
   },
   arrow: {
@@ -48,27 +49,31 @@ export const ARCHERS_REVENGE_CONFIG: ArchersRevengeConfig = {
     columns: 5,
     rows: {
       easy: 2,
-      medium: 3,
+      normal: 3,
       hard: 4,
+      extreme: 5,
     },
   },
   enemy: {
     horizontalSpeed: {
       easy: 20,
-      medium: 35,
+      normal: 35,
       hard: 50,
+      extreme: 65,
     },
     descendSpeed: {
       easy: 10,
-      medium: 15,
+      normal: 15,
       hard: 25,
+      extreme: 35,
     },
     projectileSpeed: 200,
   },
   targetChangeInterval: {
     easy: 10000,
-    medium: 7000,
+    normal: 7000,
     hard: 5000,
+    extreme: 3000,
   },
   scoring: {
     basePointsPerEnemy: 100,

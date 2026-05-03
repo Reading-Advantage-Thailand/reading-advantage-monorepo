@@ -9,7 +9,7 @@ describe("archersRevengeConfig", () => {
     it("should define player configuration", () => {
       expect(ARCHERS_REVENGE_CONFIG.player).toBeDefined();
       expect(ARCHERS_REVENGE_CONFIG.player.hp.easy).toBe(5);
-      expect(ARCHERS_REVENGE_CONFIG.player.hp.medium).toBe(3);
+      expect(ARCHERS_REVENGE_CONFIG.player.hp.normal).toBe(3);
       expect(ARCHERS_REVENGE_CONFIG.player.hp.hard).toBe(2);
     });
 
@@ -21,7 +21,7 @@ describe("archersRevengeConfig", () => {
     it("should define enemy formation configuration", () => {
       expect(ARCHERS_REVENGE_CONFIG.formation.columns).toBe(5);
       expect(ARCHERS_REVENGE_CONFIG.formation.rows.easy).toBe(2);
-      expect(ARCHERS_REVENGE_CONFIG.formation.rows.medium).toBe(3);
+      expect(ARCHERS_REVENGE_CONFIG.formation.rows.normal).toBe(3);
       expect(ARCHERS_REVENGE_CONFIG.formation.rows.hard).toBe(4);
     });
 
@@ -54,8 +54,8 @@ describe("archersRevengeConfig", () => {
       expect(settings.descendSpeed).toBe(10);
     });
 
-    it("should return medium settings", () => {
-      const settings = getDifficultySettings("medium");
+    it("should return normal settings", () => {
+      const settings = getDifficultySettings("normal");
       expect(settings.playerHp).toBe(3);
       expect(settings.rows).toBe(3);
       expect(settings.enemySpeed).toBe(35);

@@ -125,7 +125,7 @@ const createEnemyFormation = (
 
 export const createArchersRevengeState = (
   vocabulary: VocabularyItem[],
-  { difficulty = "medium", rng = Math.random }: ArchersRevengeConfig = {}
+  { difficulty = "normal", rng = Math.random }: ArchersRevengeConfig = {}
 ): ArchersRevengeState => {
   if (vocabulary.length === 0) {
     throw new Error("Vocabulary cannot be empty");

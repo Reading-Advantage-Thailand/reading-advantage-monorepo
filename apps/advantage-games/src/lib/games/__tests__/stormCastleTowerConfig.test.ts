@@ -41,7 +41,7 @@ describe('stormCastleTowerConfig', () => {
     })
 
     it('should return medium config', () => {
-      const config = getDifficultyConfig('medium')
+      const config = getDifficultyConfig('normal')
       expect(config.name).toBe("Knight's Keep")
       expect(config.wordCount).toBe(5)
       expect(config.hazardSpeedMult).toBe(1.0)
