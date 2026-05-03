@@ -3,7 +3,6 @@ import { generateObject, streamText } from "ai";
 import fs, { stat } from "fs";
 import path from "path";
 import { z } from "zod";
-import db from "@/configs/firestore-config";
 import storage from "@/utils/storage";
 import { AUDIO_WORDS_URL } from "@/server/constants";
 import { generateChapterAudioForWord } from "../utils/generators/audio-words-generator";
@@ -278,44 +277,6 @@ export async function getChapterWordlist(
     console.error("Error in getChapterWordlist:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function postFlashCard(req: ExtendedNextRequest) {
-  try {
-    const id = req.session?.user.id as string;
-    const json = await req.json();
-
-    if (json.page === "vocabulary") {
-      await db
-        .collection("user-word-records")
-        .doc(id)
-        .update({
-          ...json,
-        });
-    } else {
-      await db
-        .collection("user-sentence-records")
-        .doc(id)
-        .update({
-          ...json,
-        });
-    }
-
-    return NextResponse.json(
-      {
-        messeges: "success",
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error:", error);
-    return NextResponse.json(
-      {
-        message: "Internal server error",
-      },
       { status: 500 }
     );
   }

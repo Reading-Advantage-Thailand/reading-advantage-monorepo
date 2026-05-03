@@ -9,7 +9,6 @@ import base64 from "base64-js";
 import fs from "fs";
 import { execSync } from "child_process";
 import uploadToBucket from "@/utils/uploadToBucket";
-import db from "@/configs/firestore-config";
 import { generateObject } from "ai";
 import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModelAudio } from "@/utils/google";
@@ -21,12 +20,6 @@ interface GenerateAudioParams {
   articleId: string;
   isChapter?: boolean;
   chapterId?: string;
-}
-
-interface GenerateChapterAudioParams {
-  passage: string; // Changed from 'content' to 'passage' to match Article structure
-  storyId: string;
-  chapterNumber: string;
 }
 
 function contentToSSML(content: string[]): string {
@@ -259,113 +252,3 @@ export async function generateAudio({
   }
 }
 
-export async function generateChapterAudio({
-  passage, // Changed from 'content' to 'passage'
-  storyId,
-  chapterNumber,
-}: GenerateChapterAudioParams): Promise<void> {
-  try {
-    const voice =
-      AVAILABLE_VOICES[Math.floor(Math.random() * AVAILABLE_VOICES.length)];
-    const newVoice =
-      NEW_MODEL_VOICES[Math.floor(Math.random() * NEW_MODEL_VOICES.length)];
-
-    const { sentences, chunks } = await splitTextIntoChunks(passage, 5000);
-    let currentIndex = 0;
-    let cumulativeTime = 0;
-
-    const result: Array<{
-      markName: string;
-      timeSeconds: number;
-      index: number;
-      file: string;
-      sentences: string;
-    }> = [];
-    [];
-    const audioPaths: string[] = [];
-
-    for (let i = 0; i < chunks.length; i++) {
-      const ssml = chunks[i];
-      const response = await fetch(
-        `${BASE_TEXT_TO_SPEECH_URL}/v1beta1/text:synthesize?key=${process.env.GOOGLE_TEXT_TO_SPEECH_API_KEY}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            input: {
-              ssml: ssml,
-            },
-            voice: {
-              languageCode: "en-US",
-              name: voice,
-            },
-            audioConfig: {
-              audioEncoding: "MP3",
-            },
-            enableTimePointing: ["SSML_MARK"],
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      const audio = data.audioContent;
-      const MP3 = base64.toByteArray(audio);
-
-      const localPath = `${process.cwd()}/data/tts/${storyId}-${chapterNumber}_${i}.mp3`;
-      fs.writeFileSync(localPath, MP3);
-      audioPaths.push(localPath);
-
-      // Process timepoints and build the result array
-      data.timepoints.forEach((tp: any) => {
-        result.push({
-          markName: `sentence${currentIndex++}`,
-          timeSeconds: tp.timeSeconds + cumulativeTime,
-          index: currentIndex - 1,
-          file: `${storyId}-${chapterNumber}.mp3`, // Final combined file name
-          sentences: sentences[currentIndex - 1],
-        });
-      });
-
-      // Update the cumulative time with the duration of the current chunk
-      // const chunkDuration = data.timepoints[data.timepoints.length - 1]?.timeSeconds || 0;
-      const chunkDuration = await getAudioDuration(localPath);
-      cumulativeTime += chunkDuration;
-    }
-
-    // Combine MP3 files using FFmpeg
-    const combinedAudioPath = `${process.cwd()}/data/audios/${storyId}-${chapterNumber}.mp3`;
-    await mergeAudioFiles(audioPaths, combinedAudioPath);
-
-    // Cleanup
-    audioPaths.forEach((p) => fs.unlinkSync(p));
-
-    await uploadToBucket(
-      combinedAudioPath,
-      `${AUDIO_URL}/${storyId}-${chapterNumber}.mp3`
-    );
-
-    // Update the database with all timepoints
-
-    await db
-      .collection("stories")
-      .doc(storyId)
-      .collection("timepoints")
-      .doc(chapterNumber)
-      .set({
-        timepoints: result,
-        id: storyId,
-        chapterNumber: chapterNumber,
-      });
-  } catch (error: any) {
-    console.log(error);
-    // throw `failed to generate audio: ${error} \n\n error: ${JSON.stringify(
-    //   error.response.data
-    // )}`;
-  }
-}

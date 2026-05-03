@@ -263,23 +263,3 @@ export async function generateChapterAudioForWord({
   }
 }
 
-export async function saveWordList({
-  wordList,
-  storyId,
-  chapterNumber,
-}: GenerateChapterAudioParams): Promise<void> {
-  {
-    try {
-      const wordListRef = db
-        .collection("stories-word-list")
-        .doc(`${storyId}-${chapterNumber}`);
-      await wordListRef.set({
-        word_list: wordList,
-      });
-    } catch (error: any) {
-      throw `failed to save word list: ${error} \n\n error: ${JSON.stringify(
-        error.response.data
-      )}`;
-    }
-  }
-}

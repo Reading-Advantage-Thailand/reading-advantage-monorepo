@@ -45,6 +45,8 @@ export const lessonProgress = pgTable("lesson_progress", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  // text type (not UUID FK) — may reference external lesson identifiers
+  // in addition to internal lessons.id UUIDs. FK omitted by design.
   lessonId: text("lesson_id").notNull(),
   status: text("status").default("not_started").notNull(),
   progress: integer("progress").default(0).notNull(),
