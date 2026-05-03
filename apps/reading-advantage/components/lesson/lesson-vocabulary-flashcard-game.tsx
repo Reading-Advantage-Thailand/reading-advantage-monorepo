@@ -30,7 +30,7 @@ import {
   AlertCircle,
   RefreshCw,
 } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useCurrentLocale } from "@/locales/client";
 import {
   Card as FsrsCard,
   Rating,
@@ -115,7 +115,7 @@ export default function LessonVocabularyFlashcardGame({
   });
 
   // Hooks
-  const currentLocale = useLocale();
+  const currentLocale = useCurrentLocale();
 
   // Computed values
   const currentCard = words[currentCardIndex];

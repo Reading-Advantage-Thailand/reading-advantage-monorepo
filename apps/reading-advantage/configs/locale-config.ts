@@ -20,14 +20,6 @@ export const localeNames: Record<Locale, string> = {
   vi: "Tiếng Việt",
 };
 
-export const localeImports = {
-  en: () => import("../locales/en"),
-  th: () => import("../locales/th"),
-  cn: () => import("../locales/cn"),
-  tw: () => import("../locales/tw"),
-  vi: () => import("../locales/vi"),
-};
-
 export const feedbackLanguage: Record<Locale, string> = {
   en: "English",
   th: "Thai",

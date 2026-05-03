@@ -27,7 +27,7 @@ import {
   Zap,
   SkipForward,
 } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useCurrentLocale } from "@/locales/client";
 import { Card as FsrsCard, Rating, fsrs, generatorParameters } from "ts-fsrs";
 import { toast } from "sonner";
 import AudioButton from "@/components/audio-button";
@@ -109,7 +109,7 @@ export default function LessonSentenceFlashcardGame({
   });
 
   // Hooks
-  const currentLocale = useLocale();
+  const currentLocale = useCurrentLocale();
 
   // Computed values
   const currentCard = sentences[currentCardIndex];
