@@ -1,0 +1,12 @@
+Task: Fix reportsRouter.teacherDashboard to use ctx.tenantDb
+
+- Replaced ctx.db.query.classrooms.findMany with ctx.tenantDb.select().from(classrooms).where(...)
+- Added packages/api/src/__tests__/reports.test.ts with 3 tests for teacherDashboard
+- Added warning comment to TenantDB interface about db.query.* bypassing tenant scoping
+- Added warning comment to Context.tenantDb in trpc.ts
+
+Files changed:
+- packages/api/src/routers/reports.ts
+- packages/api/src/__tests__/reports.test.ts (new)
+- packages/domain/src/db-contract.ts
+- packages/api/src/trpc.ts
