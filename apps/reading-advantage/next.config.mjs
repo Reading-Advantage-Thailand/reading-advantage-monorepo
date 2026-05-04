@@ -7,9 +7,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
     remotePatterns: [
       {
@@ -34,33 +31,9 @@ const nextConfig = {
       },
     ],
   },
-  // Disable console removal to avoid potential issues
   compiler: {
     removeConsole: false,
   },
-  // Disable production optimizations
-  experimental: {
-    // Optimize memory during build
-    workerThreads: false,
-    cpus: 1,
-  },
-  // Force development mode for safer build
-  webpack: (config, { isServer }) => {
-    // Disable minification in webpack
-    config.optimization = {
-      ...config.optimization,
-      minimize: false,
-    };
-    // Make firebase-admin optional at build time
-    if (isServer) {
-      config.externals = config.externals || [];
-      if (Array.isArray(config.externals)) {
-        config.externals.push("firebase-admin/storage");
-      }
-    }
-    return config;
-  },
-  // Reduce build output size
   productionBrowserSourceMaps: false,
   async headers() {
     return [

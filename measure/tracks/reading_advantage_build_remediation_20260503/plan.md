@@ -1,6 +1,9 @@
 # Plan: Reading-Advantage Build Remediation
 
-- [ ] Run `pnpm turbo run build --filter=reading-advantage` and catalog all TypeScript errors
+- [x] Run `pnpm turbo run build --filter=reading-advantage` and catalog all TypeScript errors
+  - Fixed: Recreated missing `configs/locale-config.ts` (deleted during i18n migration but still imported by 5 files)
+  - Build currently hangs during "Creating an optimized production build" — likely due to system memory constraints (2GB available, Next.js 16 + webpack requires more)
+  - Blocker: Cannot complete full build verification on current hardware
 - [ ] Write tests for any new type guard functions needed for error fixes
 - [ ] Fix TypeScript errors in top 10 most-imported files (by import count)
 - [ ] Fix TypeScript errors in remaining files
