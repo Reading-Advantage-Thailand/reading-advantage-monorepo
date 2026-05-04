@@ -8,6 +8,7 @@ import {
   classrooms,
 } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
+import type { ExternalLessonId } from "@reading-advantage/types";
 import type { TenantDB } from "../db-contract.js";
 
 interface RecordActivityInput {
@@ -17,7 +18,7 @@ interface RecordActivityInput {
 }
 
 interface UpdateLessonProgressInput {
-  lessonId: string;
+  lessonId: ExternalLessonId;
   status: string;
   progress: number;
 }
@@ -108,7 +109,7 @@ export async function getLessonProgress({
   db: TenantDB;
   user: UserContext;
   tenant: Tenant;
-  input: { lessonId: string };
+  input: { lessonId: ExternalLessonId };
 }) {
   assertCan(user, "progress:read:own", tenant);
 

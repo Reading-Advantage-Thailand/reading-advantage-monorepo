@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc.js";
+import { ExternalLessonId } from "@reading-advantage/types";
 import {
   recordActivity,
   getStudentProgress,
@@ -27,7 +28,7 @@ export const progressRouter = router({
     ),
 
   getLessonProgress: protectedProcedure
-    .input(z.object({ lessonId: z.string() }))
+    .input(z.object({ lessonId: z.string().transform((v) => ExternalLessonId.parse(v)) }))
     .query(({ ctx, input }) =>
       getLessonProgress({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
@@ -35,7 +36,7 @@ export const progressRouter = router({
   updateLessonProgress: protectedProcedure
     .input(
       z.object({
-        lessonId: z.string(),
+        lessonId: z.string().transform((v) => ExternalLessonId.parse(v)),
         status: z.string(),
         progress: z.number().min(0).max(100),
       })

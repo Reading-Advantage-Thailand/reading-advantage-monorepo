@@ -4,7 +4,7 @@
 - [x] Task: Create TenantDB Wrapper [247de12]
   - [x] Write unit tests for TenantDB wrapper enforcing tenant ID logic
   - [x] Implement `TenantDB` in `packages/domain/src/db-contract.ts`
-- [x] Task: Refactor Domain Functions [domain-refactor]
+- [x] Task: Refactor Domain Functions [2e2e85e]
   - [x] Update assignments domain functions to use TenantDB
   - [x] Update classes domain functions to use TenantDB
   - [x] Update users, students, progress, reports, articles domain functions to use TenantDB
@@ -13,7 +13,7 @@
 - [ ] Task: Measure - User Manual Verification 'Phase 1: TenantDB Wrapper' (Protocol in workflow.md)
 
 ## Phase 2: Branded Type Contracts
-- [ ] Task: Define Branded Types
+- [~] Task: Define Branded Types
   - [ ] Define `PolymorphicQuestionId` and `ExternalLessonId` in `packages/types/src/index.ts`
 - [ ] Task: Apply Branded Types to Domain
   - [ ] Update parameters in lesson and question domain functions to require branded types

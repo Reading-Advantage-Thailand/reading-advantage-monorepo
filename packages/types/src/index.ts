@@ -65,3 +65,21 @@ export const loginResponseSchema = z.object({
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>;
 export type LoginResponse = z.infer<typeof loginResponseSchema>;
+
+// ─── Branded Types ────────────────────────────────────────
+
+/**
+ * Branded type for polymorphic question IDs.
+ * Used for studentAnswers.questionId which may reference either
+ * multiple_choice_questions.id or short_answer_questions.id.
+ */
+export const PolymorphicQuestionId = z.string().brand<"PolymorphicQuestionId">();
+export type PolymorphicQuestionId = z.infer<typeof PolymorphicQuestionId>;
+
+/**
+ * Branded type for external lesson IDs.
+ * Used for lessonProgress.lessonId which may reference external
+ * lesson identifiers in addition to internal lessons.id UUIDs.
+ */
+export const ExternalLessonId = z.string().brand<"ExternalLessonId">();
+export type ExternalLessonId = z.infer<typeof ExternalLessonId>;
