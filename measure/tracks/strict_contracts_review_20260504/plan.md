@@ -12,16 +12,16 @@
 
 ## Phase 2: Validation and Authorization Fixes
 
-- [ ] Task: Fix `sessionUserSchema` silent parse failure on empty email
+- [x] Task: Fix `sessionUserSchema` silent parse failure on empty email [ee3f26f]
   - Change `email: z.string().email()` to `email: z.string().email().optional().or(z.literal("")` or use `.default("unknown@example.com")`
   - Add test in reading-advantage that simulates `user.email = null` and verifies `getCurrentUser()` returns user instead of null
-- [ ] Task: Remove remaining `as Role` cast in `context.ts`
+- [x] Task: Remove remaining `as Role` cast in `context.ts` [ee3f26f]
   - Replace with runtime Zod validation: `role: z.enum([...]).parse(session.user.role)`
   - Add test verifying invalid role strings throw a clear error
-- [ ] Task: Add `assertCan` to `getUser` domain function
+- [x] Task: Add `assertCan` to `getUser` domain function [ee3f26f]
   - Add `assertCan(user, "user:read", tenant)` at function entry
   - Update `users.test.ts` to verify unauthorized roles are rejected
-- [ ] Task: Add classroom ownership check to `importRoster`
+- [x] Task: Add classroom ownership check to `importRoster` [ee3f26f]
   - After fetching classroom, verify `classroom.teacherId === user.id` (or user is ADMIN/SYSTEM)
   - Add test in `students.test.ts` for cross-teacher roster import attempt
 
