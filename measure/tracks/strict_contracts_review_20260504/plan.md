@@ -27,17 +27,17 @@
 
 ## Phase 3: Test Coverage Backfill
 
-- [ ] Task: Backfill assignments domain tests
+- [x] Task: Backfill assignments domain tests [107486c]
   - Add test for `listAssignments` (verify classroom ownership check, tenant scoping)
   - Add test for `getAssignment` (verify returns assignment, rejects cross-tenant)
   - Add test for `updateAssignment` (verify updates allowed fields, rejects cross-tenant)
   - Add test for `deleteAssignment` (verify deletes, rejects cross-tenant)
   - Add test for `submitAssignment` (verify score update, rejects non-enrolled student)
-- [ ] Task: Backfill articles domain tests
+- [x] Task: Backfill articles domain tests [107486c]
   - Add test for `getArticle` (verify returns article, throws on missing)
   - Add test for `createArticle` (verify assertCan, inserts data)
   - Add test for `updateArticle` (verify updates, throws on missing, rejects cross-tenant)
-- [ ] Task: Backfill API router output-contract tests
+- [x] Task: Backfill API router output-contract tests [107486c]
   - Add tests for `articlesRouter` verifying `.output()` strips extraneous fields
   - Add tests for `assignmentsRouter` verifying `.output()` contracts
   - Add tests for `classesRouter` verifying `.output()` contracts
