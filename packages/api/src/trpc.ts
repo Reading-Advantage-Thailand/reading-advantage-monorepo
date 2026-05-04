@@ -6,6 +6,8 @@ import type { AuthContext } from "@reading-advantage/auth";
 
 export interface Context {
   db: DB;
+  /** Tenant-scoped DB wrapper. ONLY intercepts select/update/delete builders;
+   *  relational queries (db.query.*) bypass tenant scoping. */
   tenantDb: TenantDB;
   auth: AuthContext | null;
 }

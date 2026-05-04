@@ -2,7 +2,7 @@
 
 ## Phase 1: Critical Tenant Scoping Fixes
 
-- [ ] Task: Fix `reportsRouter.teacherDashboard` to use `ctx.tenantDb` instead of `ctx.db`
+- [~] Task: Fix `reportsRouter.teacherDashboard` to use `ctx.tenantDb` instead of `ctx.db`
   - Replace `ctx.db.query.classrooms.findMany` with `ctx.tenantDb.select().from(classrooms).where(...)`
   - Ensure the returned shape matches `teacherDashboardSchema`
   - Add/update test in `packages/api/src/__tests__/reports.test.ts`

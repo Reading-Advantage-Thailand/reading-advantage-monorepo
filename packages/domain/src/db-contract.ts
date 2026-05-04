@@ -9,6 +9,12 @@ import type { Tenant } from "@reading-advantage/auth";
  * Brand type for a DB instance that automatically injects tenant scoping
  * into select, update, and delete operations for tables that have a
  * `schoolId` column.
+ *
+ * ⚠️  IMPORTANT: The TenantDB proxy ONLY intercepts the query-builder API
+ * (`db.select()`, `db.update()`, `db.delete()`). It does NOT intercept the
+ * relational query API (`db.query.*`). Using `db.query.classrooms.findMany`
+ * will bypass tenant scoping entirely. Always use the standard query builder
+ * with TenantDB.
  */
 export interface TenantDB extends DB {
   readonly __tenantBrand: true;
