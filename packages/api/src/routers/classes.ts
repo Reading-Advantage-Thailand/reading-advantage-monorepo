@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc.js";
+import { classroomResponseSchema } from "@reading-advantage/types";
 import { createClass, listClasses } from "@reading-advantage/domain/classes";
 
 export const classesRouter = router({
@@ -9,6 +10,7 @@ export const classesRouter = router({
         name: z.string().min(1).max(100),
       })
     )
+    .output(classroomResponseSchema)
     .mutation(async ({ ctx, input }) => {
       return createClass({
         db: ctx.tenantDb,
@@ -25,6 +27,7 @@ export const classesRouter = router({
         includeArchived: z.boolean().default(false),
       })
     )
+    .output(z.array(classroomResponseSchema))
     .query(async ({ ctx, input }) => {
       return listClasses({
         db: ctx.tenantDb,

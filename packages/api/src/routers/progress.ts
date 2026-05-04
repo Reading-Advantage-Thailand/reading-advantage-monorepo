@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc.js";
-import { ExternalLessonId } from "@reading-advantage/types";
+import {
+  ExternalLessonId,
+  activityResponseSchema,
+  lessonProgressResponseSchema,
+  studentProgressReportSchema,
+} from "@reading-advantage/types";
 import {
   recordActivity,
   getStudentProgress,
@@ -17,18 +22,21 @@ export const progressRouter = router({
         metadata: z.string().optional(),
       })
     )
+    .output(activityResponseSchema)
     .mutation(({ ctx, input }) =>
       recordActivity({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   getStudentProgress: protectedProcedure
     .input(z.object({ studentId: z.string() }))
+    .output(studentProgressReportSchema)
     .query(({ ctx, input }) =>
       getStudentProgress({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   getLessonProgress: protectedProcedure
     .input(z.object({ lessonId: z.string().transform((v) => ExternalLessonId.parse(v)) }))
+    .output(lessonProgressResponseSchema.nullable())
     .query(({ ctx, input }) =>
       getLessonProgress({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
@@ -41,6 +49,7 @@ export const progressRouter = router({
         progress: z.number().min(0).max(100),
       })
     )
+    .output(lessonProgressResponseSchema)
     .mutation(({ ctx, input }) =>
       updateLessonProgress({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),

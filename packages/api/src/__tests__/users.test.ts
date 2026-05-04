@@ -73,24 +73,33 @@ function createCaller(db: ReturnType<typeof createMockDb>, auth: { user: { id: s
   return t.createCallerFactory(appRouter)({ tenantDb, auth });
 }
 
+const testDate = new Date("2024-01-01T00:00:00Z");
+const testSchoolId = "550e8400-e29b-41d4-a716-446655440001";
+const testSchoolId2 = "550e8400-e29b-41d4-a716-446655440002";
+
+function makeUserRow(overrides: Partial<Record<string, unknown>> = {}) {
+  return {
+    id: "u1",
+    email: "test@example.com",
+    name: "Test User",
+    role: "STUDENT",
+    schoolId: testSchoolId,
+    image: null,
+    xp: 100,
+    level: 2,
+    cefrLevel: "A1",
+    createdAt: testDate,
+    updatedAt: testDate,
+    ...overrides,
+  };
+}
+
 describe("users router", () => {
   describe("me", () => {
     it("returns current user with safe columns", async () => {
-      const userRow = {
-        id: "u1",
-        email: "test@example.com",
-        name: "Test User",
-        role: "STUDENT",
-        schoolId: "s1",
-        image: null,
-        xp: 100,
-        level: 2,
-        cefrLevel: "A1",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+      const userRow = makeUserRow({ id: "u1" });
       const db = createMockDb({ selectResult: [userRow] });
-      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: testSchoolId } });
 
       const result = await caller.users.me();
 
@@ -103,21 +112,9 @@ describe("users router", () => {
 
   describe("get", () => {
     it("returns user by id with safe columns", async () => {
-      const userRow = {
-        id: "u2",
-        email: "other@example.com",
-        name: "Other User",
-        role: "TEACHER",
-        schoolId: "s1",
-        image: null,
-        xp: 200,
-        level: 3,
-        cefrLevel: "A2",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+      const userRow = makeUserRow({ id: "u2", email: "other@example.com", name: "Other User", role: "TEACHER", xp: 200, level: 3, cefrLevel: "A2" });
       const db = createMockDb({ selectResult: [userRow] });
-      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: testSchoolId } });
 
       const result = await caller.users.get({ id: "u2" });
 
@@ -127,7 +124,7 @@ describe("users router", () => {
 
     it("scopes lookup to caller tenant", async () => {
       const db = createMockDb({ selectResult: [] });
-      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: testSchoolId } });
 
       await expect(caller.users.get({ id: "u2" })).rejects.toThrow(/User not found/);
 
@@ -139,15 +136,17 @@ describe("users router", () => {
   describe("list", () => {
     it("scopes results to caller's school when no schoolId provided", async () => {
       const userRows = [
-        { id: "u1", username: "alice", name: "A", role: "STUDENT", schoolId: "s1" },
-        { id: "u2", username: "bob", name: "B", role: "STUDENT", schoolId: "s1" },
+        makeUserRow({ id: "u1", name: "A" }),
+        makeUserRow({ id: "u2", name: "B", email: "bob@example.com" }),
       ];
       const db = createMockDb({ selectResult: userRows });
-      const caller = createCaller(db, { user: { id: "u1", role: "TEACHER" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "u1", role: "TEACHER" }, tenant: { schoolId: testSchoolId } });
 
       const result = await caller.users.list({});
 
-      expect(result).toEqual(userRows);
+      // Output schema strips fields not in userResponseSchema (image, updatedAt)
+      const expected = userRows.map(({ image, updatedAt, ...rest }) => rest);
+      expect(result).toEqual(expected);
       // Verify where clause was built with schoolId condition
       const whereCall = db.select.mock.results[0];
       expect(whereCall).toBeDefined();
@@ -155,28 +154,30 @@ describe("users router", () => {
 
     it("rejects non-system query for another school", async () => {
       const db = createMockDb({ selectResult: [] });
-      const caller = createCaller(db, { user: { id: "a1", role: "ADMIN" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "a1", role: "ADMIN" }, tenant: { schoolId: testSchoolId } });
 
       await expect(
-        caller.users.list({ schoolId: "550e8400-e29b-41d4-a716-446655440002" })
+        caller.users.list({ schoolId: testSchoolId2 })
       ).rejects.toThrow(/outside your school/);
     });
 
     it("allows system to query a specific school", async () => {
       const userRows = [
-        { id: "u3", username: "charlie", name: "C", role: "STUDENT", schoolId: "s2" },
+        makeUserRow({ id: "u3", name: "C", schoolId: testSchoolId2 }),
       ];
       const db = createMockDb({ selectResult: userRows });
-      const caller = createCaller(db, { user: { id: "sys1", role: "SYSTEM" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "sys1", role: "SYSTEM" }, tenant: { schoolId: testSchoolId } });
 
-      const result = await caller.users.list({ schoolId: "550e8400-e29b-41d4-a716-446655440002" });
+      const result = await caller.users.list({ schoolId: testSchoolId2 });
 
-      expect(result).toEqual(userRows);
+      // Output schema strips fields not in userResponseSchema (image, updatedAt)
+      const expected = userRows.map(({ image, updatedAt, ...rest }) => rest);
+      expect(result).toEqual(expected);
     });
 
     it("filters by role when specified", async () => {
       const db = createMockDb({ selectResult: [] });
-      const caller = createCaller(db, { user: { id: "t1", role: "TEACHER" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "t1", role: "TEACHER" }, tenant: { schoolId: testSchoolId } });
 
       await caller.users.list({ role: "STUDENT" });
 
@@ -187,9 +188,9 @@ describe("users router", () => {
 
   describe("update", () => {
     it("allows user to update their own profile", async () => {
-      const updatedRow = { id: "u1", name: "New Name", email: "test@example.com" };
+      const updatedRow = makeUserRow({ id: "u1", name: "New Name" });
       const db = createMockDb({ updateReturning: [updatedRow] });
-      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: testSchoolId } });
 
       const result = await caller.users.update({ id: "u1", name: "New Name" });
 
@@ -197,9 +198,9 @@ describe("users router", () => {
     });
 
     it("allows system to update any profile", async () => {
-      const updatedRow = { id: "u2", name: "Admin Updated", email: "other@example.com" };
+      const updatedRow = makeUserRow({ id: "u2", name: "Admin Updated", email: "other@example.com" });
       const db = createMockDb({ updateReturning: [updatedRow] });
-      const caller = createCaller(db, { user: { id: "sys1", role: "SYSTEM" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "sys1", role: "SYSTEM" }, tenant: { schoolId: testSchoolId } });
 
       const result = await caller.users.update({ id: "u2", name: "Admin Updated" });
 
@@ -208,7 +209,7 @@ describe("users router", () => {
 
     it("throws FORBIDDEN when user tries to update another user's profile", async () => {
       const db = createMockDb();
-      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: "s1" } });
+      const caller = createCaller(db, { user: { id: "u1", role: "STUDENT" }, tenant: { schoolId: testSchoolId } });
 
       await expect(
         caller.users.update({ id: "u2", name: "Hacked" })

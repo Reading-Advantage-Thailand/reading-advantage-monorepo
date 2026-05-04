@@ -1,22 +1,26 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc.js";
+import { userResponseSchema } from "@reading-advantage/types";
 import { getMe, getUser, listUsers, updateUser } from "@reading-advantage/domain/users";
 
 export const usersRouter = router({
-  me: protectedProcedure.query(async ({ ctx }) => {
-    try {
-      return await getMe({ db: ctx.tenantDb, user: ctx.auth.user });
-    } catch (err) {
-      if (err instanceof Error && err.message === "User not found") {
-        throw new TRPCError({ code: "NOT_FOUND", message: err.message });
+  me: protectedProcedure
+    .output(userResponseSchema)
+    .query(async ({ ctx }) => {
+      try {
+        return await getMe({ db: ctx.tenantDb, user: ctx.auth.user });
+      } catch (err) {
+        if (err instanceof Error && err.message === "User not found") {
+          throw new TRPCError({ code: "NOT_FOUND", message: err.message });
+        }
+        throw err;
       }
-      throw err;
-    }
-  }),
+    }),
 
   get: protectedProcedure
     .input(z.object({ id: z.string() }))
+    .output(userResponseSchema)
     .query(async ({ ctx, input }) => {
       try {
         return await getUser({
@@ -42,6 +46,7 @@ export const usersRouter = router({
         offset: z.number().min(0).default(0),
       })
     )
+    .output(z.array(userResponseSchema))
     .query(async ({ ctx, input }) => {
       try {
         return await listUsers({
@@ -66,6 +71,7 @@ export const usersRouter = router({
         image: z.string().url().optional(),
       })
     )
+    .output(userResponseSchema)
     .mutation(async ({ ctx, input }) => {
       try {
         return await updateUser({

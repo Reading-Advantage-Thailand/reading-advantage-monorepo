@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "../trpc.js";
+import { articleResponseSchema } from "@reading-advantage/types";
 import {
   listArticles,
   getArticle,
@@ -17,10 +18,12 @@ export const articlesRouter = router({
         offset: z.number().min(0).default(0),
       })
     )
+    .output(z.array(articleResponseSchema))
     .query(({ ctx, input }) => listArticles({ db: ctx.tenantDb, input })),
 
   get: publicProcedure
     .input(z.object({ id: z.string().uuid() }))
+    .output(articleResponseSchema)
     .query(({ ctx, input }) => getArticle({ db: ctx.tenantDb, input })),
 
   create: protectedProcedure
@@ -35,6 +38,7 @@ export const articlesRouter = router({
         image: z.string().url().optional(),
       })
     )
+    .output(articleResponseSchema)
     .mutation(({ ctx, input }) =>
       createArticle({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
@@ -49,6 +53,7 @@ export const articlesRouter = router({
         published: z.boolean().optional(),
       })
     )
+    .output(articleResponseSchema)
     .mutation(({ ctx, input }) =>
       updateArticle({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),

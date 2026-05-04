@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc.js";
+import { studentResponseSchema, rosterImportResultSchema } from "@reading-advantage/types";
 import { listStudents, importRoster } from "@reading-advantage/domain/students";
 
 export const studentsRouter = router({
@@ -9,6 +10,7 @@ export const studentsRouter = router({
         classroomId: z.string().uuid(),
       })
     )
+    .output(z.array(studentResponseSchema))
     .query(async ({ ctx, input }) => {
       return listStudents({
         db: ctx.tenantDb,
@@ -30,6 +32,7 @@ export const studentsRouter = router({
         ),
       })
     )
+    .output(z.array(rosterImportResultSchema))
     .mutation(async ({ ctx, input }) => {
       return importRoster({
         db: ctx.tenantDb,
