@@ -1,0 +1,11 @@
+{
+  "track_id": "strict_contracts_review_20260504",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-05-04T22:40:00Z",
+  "updated_at": "2026-05-04T22:40:00Z",
+  "description": "Review remediation for strict_contracts_20260504 — fixes tenant scoping bypass, silent validation failures, missing auth checks, and test coverage gaps.",
+  "estimated_tasks": 10,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

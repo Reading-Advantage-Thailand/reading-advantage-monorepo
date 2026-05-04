@@ -82,3 +82,6 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: Implement strict data and authorization contracts**
   *Link: [./tracks/strict_contracts_20260504/](./tracks/strict_contracts_20260504/)*
+- [ ] **Track: Strict Contracts Review Remediation** (10 tasks)
+  *Link: [./tracks/strict_contracts_review_20260504/](./tracks/strict_contracts_review_20260504/)*
+  *Status: Review of strict_contracts_20260504 (commits fd5094d–42466f1). 2 critical, 4 high, 3 medium, 2 low findings. Tenant scoping bypass in reportsRouter, silent email validation failure, remaining unsafe cast, missing auth checks, and significant test coverage gaps.*
