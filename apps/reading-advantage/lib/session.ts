@@ -1,8 +1,32 @@
 import { prisma } from "@/lib/prisma";
-import { LicenseType } from "@prisma/client";
+import { LicenseType, Role } from "@prisma/client";
 import { cookies } from "next/headers";
 import { db } from "@reading-advantage/db";
 import { validateSession } from "@reading-advantage/auth";
+import { z } from "zod";
+
+export const sessionUserSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  email: z.string().email(),
+  display_name: z.string(),
+  role: z.nativeEnum(Role),
+  level: z.number().nullable(),
+  email_verified: z.boolean(),
+  picture: z.string(),
+  xp: z.number().nullable(),
+  cefr_level: z.string(),
+  expired_date: z.string(),
+  expired: z.boolean(),
+  license_id: z.string(),
+  license_level: z.union([z.nativeEnum(LicenseType), z.literal("EXPIRED")]),
+  onborda: z.boolean(),
+  school_id: z.string().optional(),
+  teacher_class_ids: z.array(z.string()).optional(),
+  student_class_ids: z.array(z.string()).optional(),
+});
+
+export type SessionUser = z.infer<typeof sessionUserSchema>;
 
 async function getUserLicenseLevel(
   userId: string,
@@ -110,7 +134,7 @@ export async function getCurrentUser() {
       (sc: { classroomId: string }) => sc.classroomId
     );
 
-    return {
+    const sessionUser = sessionUserSchema.parse({
       id: user.id,
       username: session.user.username ?? user.email ?? "",
       email: user.email ?? "",
@@ -131,7 +155,9 @@ export async function getCurrentUser() {
         teacherClassIds.length > 0 ? teacherClassIds : undefined,
       student_class_ids:
         studentClassIds.length > 0 ? studentClassIds : undefined,
-    };
+    });
+
+    return sessionUser;
   } catch (error) {
     console.error("Error fetching user from database:", error);
     return null;

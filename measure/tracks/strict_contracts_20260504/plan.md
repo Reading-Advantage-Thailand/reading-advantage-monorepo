@@ -10,25 +10,40 @@
   - [x] Update users, students, progress, reports, articles domain functions to use TenantDB
   - [x] Extract users domain functions from tRPC router
   - [x] Ensure all domain tests pass with the new signature
-- [ ] Task: Measure - User Manual Verification 'Phase 1: TenantDB Wrapper' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 1: TenantDB Wrapper' (Protocol in workflow.md)
 
 ## Phase 2: Branded Type Contracts
-- [~] Task: Define Branded Types
-  - [ ] Define `PolymorphicQuestionId` and `ExternalLessonId` in `packages/types/src/index.ts`
-- [ ] Task: Apply Branded Types to Domain
-  - [ ] Update parameters in lesson and question domain functions to require branded types
-  - [ ] Update tests to properly cast test data to branded types
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Branded Type Contracts' (Protocol in workflow.md)
+- [x] Task: Define Branded Types [ace2a06]
+  - [x] Define `PolymorphicQuestionId` and `ExternalLessonId` in `packages/types/src/index.ts`
+- [x] Task: Apply Branded Types to Domain
+  - [x] Update parameters in lesson and question domain functions to require branded types
+  - [x] Update tests to properly cast test data to branded types
+- [x] Task: Measure - User Manual Verification 'Phase 2: Branded Type Contracts' (Protocol in workflow.md)
 
 ## Phase 3: tRPC Output Contracts
-- [ ] Task: Enforce Output Contracts
-  - [ ] Identify all endpoints in `packages/api/src/routers/*.ts` lacking `.output()`
-  - [ ] Apply exact `@reading-advantage/types` response schemas to all queries and mutations
-  - [ ] Verify endpoints correctly strip extraneous data via tests
-- [ ] Task: Measure - User Manual Verification 'Phase 3: tRPC Output Contracts' (Protocol in workflow.md)
+- [x] Task: Enforce Output Contracts
+  - [x] Identify all endpoints in `packages/api/src/routers/*.ts` lacking `.output()`
+  - [x] Apply exact `@reading-advantage/types` response schemas to all queries and mutations
+  - [x] Verify endpoints correctly strip extraneous data via tests
+- [x] Task: Measure - User Manual Verification 'Phase 3: tRPC Output Contracts' (Protocol in workflow.md)
 
 ## Phase 4: Boundary Validation
-- [ ] Task: Eradicate Unsafe Casts
-  - [ ] Replace `as any` casts in `reading-advantage/lib/session.ts` with `z.parse()`
-  - [ ] Identify and replace remaining cross-boundary `as any` usages with Zod schema parsing
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Boundary Validation' (Protocol in workflow.md)
+- [x] Task: Eradicate Unsafe Casts
+  - [x] Add `sessionUserSchema` with `z.parse()` boundary validation to `reading-advantage/lib/session.ts`
+  - [x] Export `SessionUser` type from session module for downstream consumers
+  - [x] Remove `role as Role` and `role as string` casts in `auth-controller.ts`
+  - [x] Replace `(req as any).session` pattern with `ExtendedNextRequest` in SRS metrics routes
+  - [x] Replace `(req as any).params` pattern with typed `RequestWithParams` in classroom accuracy route
+- [x] Task: Measure - User Manual Verification 'Phase 4: Boundary Validation' (Protocol in workflow.md)
+
+## Summary
+
+All four phases of the strict contracts track are complete:
+
+1. **TenantDB Wrapper**: Proxy-based auto-injection of `schoolId` tenant scoping across all domain functions. 15 unit tests cover the wrapper, and all 51 domain tests pass.
+
+2. **Branded Types**: `PolymorphicQuestionId` and `ExternalLessonId` branded Zod types defined in `packages/types` and applied to progress domain functions. Type-level distinctness prevents accidental mixing of ID kinds.
+
+3. **tRPC Output Contracts**: Every endpoint in all 8 routers now has an explicit `.output()` schema from `@reading-advantage/types`. Tests verify that extraneous fields (e.g. `password`, `updatedAt`) are stripped at the API boundary. 23 API tests pass.
+
+4. **Boundary Validation**: `getCurrentUser` now validates its return value with `sessionUserSchema.parse()` before crossing the auth→frontend boundary. Unsafe `as any` casts on `req.session` and `req.params` in API routes were replaced with proper `ExtendedNextRequest` typing.

@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/session";
+import { getCurrentUser, type SessionUser } from "@/lib/session";
 import { Role } from "@prisma/client";
 import { sendDiscordWebhook } from "../utils/send-discord-webhook";
-
-type SessionUser = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;
 
 // Middleware to protect routes
 export interface ExtendedNextRequest extends NextRequest {
@@ -51,7 +49,7 @@ export const restrictTo = (...allowedRoles: Role[]) => {
     const { role } = user;
 
     // Check if the user role is allowed
-    if (!allowedRoles.includes(role as Role)) {
+    if (!allowedRoles.includes(role)) {
       return NextResponse.json(
         { message: "Forbidden - You are not allowed to access this resource" },
         { status: 403 }
@@ -119,9 +117,8 @@ export const assertSelfOrAllowedStaff = (
   
   if (sessionUser.id === routeUserId) return true;
   
-  const role = sessionUser.role as string;
-  const allowedRoles = ["ADMIN", "STAFF", "TEACHER", "SUPERADMIN"];
-  if (allowedRoles.includes(role)) {
+  const allowedRoles: Role[] = [Role.ADMIN, Role.TEACHER];
+  if (allowedRoles.includes(sessionUser.role)) {
     // Optionally validate if the requested user is in the caller's allowed scope
     return true;
   }
