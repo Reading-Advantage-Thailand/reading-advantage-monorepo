@@ -79,3 +79,6 @@ This file tracks all major tracks for the project.
 - [x] **Track: Last-24-Hour Review Remediation** (7/9 main tasks + 9/9 Phase 5 subtasks complete)
   *Link: [./archive/review_remediation_20260502/](./archive/review_remediation_20260502/)*
   *Status: Auth tests, cross-tenant guards, config drift wiring, DB constraints, and Phase 5 review fixes all verified in code. NextAuth vs tRPC decision resolved: moving to simple username/password DB sessions (new track). lessonProgress.lessonId alignment deferred to tech-debt. Manual verification protocols deferred to implementation.*
+
+- [ ] **Track: Implement strict data and authorization contracts**
+  *Link: [./tracks/strict_contracts_20260504/](./tracks/strict_contracts_20260504/)*
