@@ -2,11 +2,11 @@
 
 ## Phase 1: Critical Tenant Scoping Fixes
 
-- [~] Task: Fix `reportsRouter.teacherDashboard` to use `ctx.tenantDb` instead of `ctx.db`
+- [x] Task: Fix `reportsRouter.teacherDashboard` to use `ctx.tenantDb` instead of `ctx.db` [ce790ee]
   - Replace `ctx.db.query.classrooms.findMany` with `ctx.tenantDb.select().from(classrooms).where(...)`
   - Ensure the returned shape matches `teacherDashboardSchema`
   - Add/update test in `packages/api/src/__tests__/reports.test.ts`
-- [ ] Task: Document TenantDB relational query API limitation
+- [x] Task: Document TenantDB relational query API limitation [ce790ee]
   - Add comment in `db-contract.ts` documenting that `db.query.*` is NOT intercepted
   - Add note in `packages/api/src/trpc.ts` or context docs warning against `ctx.db.query` usage
 
