@@ -1,0 +1,37 @@
+Track Complete: Strict Contracts Review Remediation
+
+## Verification Report
+
+### Automated Tests
+Command: pnpm turbo run test --filter=@reading-advantage/api --filter=@reading-advantage/domain --filter=@reading-advantage/auth
+Result: ALL PASS (182 tests)
+- api: 48 tests passed
+- domain: 70 tests passed
+- auth: 64 tests passed
+
+### Code Changes Summary
+
+Phase 1 - Critical Tenant Scoping:
+- Fixed reportsRouter.teacherDashboard to use ctx.tenantDb with standard query builder
+- Added warning comments about TenantDB relational query API limitation
+
+Phase 2 - Validation & Authorization:
+- Fixed sessionUserSchema to accept empty/optional emails
+- Replaced 'as Role' cast with runtime Zod validation in context.ts
+- Added user:read permission and assertCan to getUser
+- Added classroom ownership check to importRoster
+
+Phase 3 - Test Coverage:
+- Backfilled assignments domain tests (5 new tests)
+- Backfilled articles domain tests (3 new tests)
+- Added output-contract tests for 7 API routers (18 new tests)
+- Added delete method to mock-db helper
+
+Phase 4 - Code Quality:
+- Removed UTF-8 BOM from srs/route.ts
+
+### Pre-existing Issues Noted
+- Full monorepo test suite has pre-existing auth password test timeout (flaky on constrained hardware)
+- check-types has pre-existing mismatches in api routers (users.ts, progress.ts) and auth-client test
+
+Commit: dd90cee91783c923417a29d0e72bf784d769add1
