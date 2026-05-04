@@ -17,5 +17,3 @@
 - [ ] Remove `ignoreBuildErrors: true` and `ignoreDuringBuilds: true` from next.config.ts
   - Requires: build passing, TypeScript errors fixed, lint clean
 - [ ] Run full build, lint, and test pipeline to verify all gates pass
-- [ ] Remove `ignoreBuildErrors: true` and `ignoreDuringBuilds: true` from next.config.ts
-- [ ] Run full build, lint, and test pipeline to verify all gates pass
