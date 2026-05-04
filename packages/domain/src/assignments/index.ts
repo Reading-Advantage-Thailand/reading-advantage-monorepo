@@ -1,5 +1,4 @@
 import { eq, and } from "drizzle-orm";
-import type { DB } from "@reading-advantage/db";
 import {
   assignments,
   studentAssignments,
@@ -7,6 +6,7 @@ import {
   classroomStudents,
 } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
+import type { TenantDB } from "../db-contract.js";
 
 
 interface CreateAssignmentInput {
@@ -36,7 +36,7 @@ export async function createAssignment({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: CreateAssignmentInput;
@@ -109,7 +109,7 @@ export async function listAssignments({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: { classroomId: string };
@@ -139,7 +139,7 @@ export async function getAssignment({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: { id: string };
@@ -176,7 +176,7 @@ export async function updateAssignment({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: UpdateAssignmentInput;
@@ -221,7 +221,7 @@ export async function deleteAssignment({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: { id: string };
@@ -259,7 +259,7 @@ export async function submitAssignment({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: SubmitAssignmentInput;

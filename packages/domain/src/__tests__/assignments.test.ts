@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { createAssignment } from "../assignments/index.js";
 import { createMockDb, type MockDb } from "./mock-db.js";
+import { createTenantDB } from "../db-contract.js";
 import type { DB } from "@reading-advantage/db";
 
 const teacher = {
@@ -11,6 +12,10 @@ const teacher = {
   schoolId: "s1",
 };
 const tenant = { schoolId: "s1" };
+
+function wrapDb(db: ReturnType<typeof createMockDb>) {
+  return createTenantDB(db as unknown as DB, tenant);
+}
 
 function queryResult<T>(value: T) {
   return Object.assign(Promise.resolve(value), {
@@ -57,7 +62,7 @@ describe("createAssignment", () => {
 
     await expect(
       createAssignment({
-        db: db as unknown as DB,
+        db: wrapDb(db),
         user: teacher,
         tenant,
         input: {
@@ -76,7 +81,7 @@ describe("createAssignment", () => {
     const { db, tx } = createAssignmentDb({ validStudentIds: ["st1", "st2"] });
 
     const result = await createAssignment({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: teacher,
       tenant,
       input: {

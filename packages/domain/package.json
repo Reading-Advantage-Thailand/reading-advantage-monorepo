@@ -31,6 +31,10 @@
     "./students": {
       "types": "./dist/students/index.d.ts",
       "import": "./dist/students/index.js"
+    },
+    "./users": {
+      "types": "./dist/users/index.d.ts",
+      "import": "./dist/users/index.js"
     }
   },
   "scripts": {

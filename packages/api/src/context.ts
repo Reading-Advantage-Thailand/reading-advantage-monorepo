@@ -1,5 +1,6 @@
 import { db } from "@reading-advantage/db";
 import { validateSession, type AuthContext, type UserContext, type Tenant, type Role } from "@reading-advantage/auth";
+import { createTenantDB } from "@reading-advantage/domain";
 import type { Context } from "./trpc.js";
 import { cookies } from "next/headers";
 
@@ -42,5 +43,7 @@ export async function createContext(opts: CreateContextOptions = {}): Promise<Co
     // Session validation failed — auth stays null
   }
 
-  return { db, auth };
+  const tenantDb = createTenantDB(db, auth?.tenant ?? { schoolId: null });
+
+  return { db, tenantDb, auth };
 }

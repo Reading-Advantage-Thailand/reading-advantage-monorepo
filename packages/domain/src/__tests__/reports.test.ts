@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import type { DB } from "@reading-advantage/db";
 import { getStudentProgress, getClassAnalytics } from "../reports/index.js";
+import { createTenantDB } from "../db-contract.js";
 
 vi.mock("@reading-advantage/db/schema", () => ({
   userActivity: { userId: "userId" },
@@ -47,6 +48,10 @@ function createMockDb() {
     }),
   };
   return mockDb;
+}
+
+function wrapDb(db: ReturnType<typeof createMockDb>) {
+  return createTenantDB(db as unknown as DB, mockTenant);
 }
 
 const mockUser = {
@@ -101,7 +106,7 @@ describe("getStudentProgress", () => {
       });
 
     const result = await getStudentProgress({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: mockUser,
       tenant: mockTenant,
       input: { studentId: "student-1" },
@@ -126,7 +131,7 @@ describe("getStudentProgress", () => {
 
     await expect(
       getStudentProgress({
-        db: db as unknown as DB,
+        db: wrapDb(db),
         user: mockUser,
         tenant: mockTenant,
         input: { studentId: "student-other-school" },
@@ -173,7 +178,7 @@ describe("getStudentProgress", () => {
       });
 
     const result = await getStudentProgress({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: mockUser,
       tenant: mockTenant,
       input: { studentId: "student-1" },
@@ -204,7 +209,7 @@ describe("getClassAnalytics", () => {
       });
 
     const result = await getClassAnalytics({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: mockUser,
       tenant: mockTenant,
       input: { classId: "class-1" },
@@ -250,7 +255,7 @@ describe("getClassAnalytics", () => {
     }));
 
     const result = await getClassAnalytics({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: mockUser,
       tenant: mockTenant,
       input: { classId: "class-1" },
@@ -276,7 +281,7 @@ describe("getClassAnalytics", () => {
 
     await expect(
       getClassAnalytics({
-        db: db as unknown as DB,
+        db: wrapDb(db),
         user: mockUser,
         tenant: mockTenant,
         input: { classId: "class-1" },
@@ -296,7 +301,7 @@ describe("getClassAnalytics", () => {
 
     await expect(
       getClassAnalytics({
-        db: db as unknown as DB,
+        db: wrapDb(db),
         user: mockUser,
         tenant: mockTenant,
         input: { classId: "class-1" },

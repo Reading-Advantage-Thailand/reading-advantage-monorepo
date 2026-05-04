@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { createClass, listClasses } from "../classes/index.js";
 import { createMockDb } from "./mock-db.js";
+import { createTenantDB } from "../db-contract.js";
 import type { DB } from "@reading-advantage/db";
 
 const teacher = { id: "t1", username: "teacher1", name: "T", role: "TEACHER" as const, schoolId: "s1" };
@@ -8,12 +9,16 @@ const admin = { id: "a1", username: "admin1", name: "A", role: "ADMIN" as const,
 const student = { id: "st1", username: "student1", name: "ST", role: "STUDENT" as const, schoolId: "s1" };
 const tenant = { schoolId: "s1" };
 
+function wrapDb(db: ReturnType<typeof createMockDb>) {
+  return createTenantDB(db as unknown as DB, tenant);
+}
+
 describe("createClass", () => {
   it("creates a class when teacher has permission", async () => {
     const mockClass = { id: "c1", name: "Math", schoolId: "s1", teacherId: "t1" };
     const db = createMockDb({ insertReturning: [mockClass] });
 
-    const result = await createClass({ db: db as unknown as DB, user: teacher, tenant, input: { name: "Math" } });
+    const result = await createClass({ db: wrapDb(db), user: teacher, tenant, input: { name: "Math" } });
 
     expect(result).toEqual(mockClass);
     expect(db.insert).toHaveBeenCalledOnce();
@@ -23,7 +28,7 @@ describe("createClass", () => {
     const mockClass = { id: "c1", name: "Science", schoolId: "s1", teacherId: "a1" };
     const db = createMockDb({ insertReturning: [mockClass] });
 
-    const result = await createClass({ db: db as unknown as DB, user: admin, tenant, input: { name: "Science" } });
+    const result = await createClass({ db: wrapDb(db), user: admin, tenant, input: { name: "Science" } });
 
     expect(result).toEqual(mockClass);
   });
@@ -32,7 +37,7 @@ describe("createClass", () => {
     const db = createMockDb();
 
     await expect(
-      createClass({ db: db as unknown as DB, user: student, tenant, input: { name: "Math" } })
+      createClass({ db: wrapDb(db), user: student, tenant, input: { name: "Math" } })
     ).rejects.toThrow(/STUDENT.*class:create/);
   });
 });
@@ -43,7 +48,7 @@ describe("listClasses", () => {
     const db = createMockDb({ selectResults: classes });
 
     const result = await listClasses({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: teacher,
       tenant,
       input: { includeArchived: false },
@@ -58,7 +63,7 @@ describe("listClasses", () => {
     const db = createMockDb({ selectResults: classes });
 
     const result = await listClasses({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: admin,
       tenant,
       input: { includeArchived: false },
@@ -71,7 +76,7 @@ describe("listClasses", () => {
     const db = createMockDb();
 
     await expect(
-      listClasses({ db: db as unknown as DB, user: student, tenant, input: { includeArchived: false } })
+      listClasses({ db: wrapDb(db), user: student, tenant, input: { includeArchived: false } })
     ).rejects.toThrow(/STUDENT.*class:list/);
   });
 });

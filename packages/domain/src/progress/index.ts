@@ -1,5 +1,4 @@
 import { eq, and } from "drizzle-orm";
-import type { DB } from "@reading-advantage/db";
 import {
   userActivity,
   userWordRecords,
@@ -9,6 +8,7 @@ import {
   classrooms,
 } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
+import type { TenantDB } from "../db-contract.js";
 
 interface RecordActivityInput {
   activityType: string;
@@ -28,7 +28,7 @@ export async function recordActivity({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: RecordActivityInput;
@@ -54,7 +54,7 @@ export async function getStudentProgress({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: { studentId: string };
@@ -105,7 +105,7 @@ export async function getLessonProgress({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: { lessonId: string };
@@ -132,7 +132,7 @@ export async function updateLessonProgress({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: UpdateLessonProgressInput;

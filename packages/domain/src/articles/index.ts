@@ -1,8 +1,7 @@
 import { and, eq } from "drizzle-orm";
-import type { DB } from "@reading-advantage/db";
 import { articles } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
-
+import type { TenantDB } from "../db-contract.js";
 
 interface CreateArticleInput {
   title: string;
@@ -26,7 +25,7 @@ export async function listArticles({
   db,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   input: { topic?: string; cefrLevel?: string; limit: number; offset: number };
 }) {
   const conditions = [];
@@ -54,7 +53,7 @@ export async function getArticle({
   db,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   input: { id: string };
 }) {
   const [article] = await db
@@ -76,7 +75,7 @@ export async function createArticle({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: CreateArticleInput;
@@ -97,7 +96,7 @@ export async function updateArticle({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: UpdateArticleInput;

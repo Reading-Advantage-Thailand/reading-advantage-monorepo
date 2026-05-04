@@ -1,4 +1,5 @@
-import { eq, and, type SQL } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+import type { SQL } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import type { Tenant } from "@reading-advantage/auth";
 
@@ -26,6 +27,10 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
   const state = { whereCalled: false };
 
   function createProxy(obj: unknown): unknown {
+    // Don't proxy native Promises — it breaks Promise resolution
+    if (obj instanceof Promise) {
+      return obj;
+    }
     return new Proxy(obj as object, {
       get(target, prop) {
         const val = Reflect.get(target, prop);
@@ -39,7 +44,7 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
 
               if (hasSchoolId(table) && tenant.schoolId) {
                 const tenantCondition = eq(
-                  (table as { schoolId: unknown }).schoolId,
+                  (table as { schoolId: SQL<unknown> }).schoolId,
                   tenant.schoolId
                 );
                 const newCondition = userCondition
@@ -61,17 +66,22 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
         if ((prop === "then" || prop === "execute") && !state.whereCalled) {
           if (hasSchoolId(table) && tenant.schoolId) {
             const tenantCondition = eq(
-              (table as { schoolId: unknown }).schoolId,
+              (table as { schoolId: SQL<unknown> }).schoolId,
               tenant.schoolId
             );
-            const newBuilder = (target as Record<string, unknown>)[
+            const newBuilder = ((target as Record<string, unknown>)[
               "where"
-            ].call(target, tenantCondition);
+            ] as Function).call(target, tenantCondition);
             const fn = (newBuilder as Record<string, unknown>)[prop];
             if (typeof fn === "function") {
               return fn.bind(newBuilder);
             }
           }
+        }
+
+        // Bind .then on thenables so Promise machinery works correctly
+        if (prop === "then" && typeof val === "function") {
+          return val.bind(target);
         }
 
         // Wrap join results so subsequent .where() also injects
@@ -92,7 +102,8 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
 
         // Generic method wrapper: if the return value looks like a query
         // builder, wrap it so tenant context is preserved.
-        if (typeof val === "function") {
+        // Skip "then" to avoid breaking Promise resolution.
+        if (typeof val === "function" && prop !== "then") {
           return new Proxy(val, {
             apply(methodTarget, methodThis, methodArgs) {
               const result = Reflect.apply(
@@ -140,91 +151,102 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
         return val;
       }
 
-      return (...args: unknown[]) => {
-        // SELECT: intercept .from() to capture the table
-        if (prop === "select") {
-          const selectBuilder = val.apply(target, args);
-          return new Proxy(selectBuilder, {
-            get(selectTarget, selectProp) {
-              const selectVal = Reflect.get(selectTarget, selectProp);
-              if (selectProp === "from" && typeof selectVal === "function") {
-                return (...fromArgs: unknown[]) => {
-                  const table = fromArgs[0];
-                  const queryBuilder = selectVal.apply(
-                    selectTarget,
-                    fromArgs
-                  );
-                  return wrapQueryBuilder(queryBuilder, table, tenant);
-                };
-              }
-              if (typeof selectVal === "function") {
-                return (...innerArgs: unknown[]) => {
-                  const result = selectVal.apply(selectTarget, innerArgs);
-                  if (
-                    result &&
-                    typeof result === "object" &&
-                    ("then" in result || "where" in result)
-                  ) {
-                    return wrapQueryBuilder(result, null, tenant);
-                  }
-                  return result;
-                };
-              }
-              return selectVal;
-            },
-          });
-        }
+      // Use a function proxy so properties like `.mock` remain accessible
+      return new Proxy(val, {
+        apply(fnTarget, fnThis, fnArgs) {
+          // SELECT: intercept .from() to capture the table
+          if (prop === "select") {
+            const selectBuilder = fnTarget.apply(fnThis, fnArgs);
+            return new Proxy(selectBuilder, {
+              get(selectTarget, selectProp) {
+                const selectVal = Reflect.get(selectTarget, selectProp);
+                if (
+                  selectProp === "from" &&
+                  typeof selectVal === "function"
+                ) {
+                  return new Proxy(selectVal, {
+                    apply(fromFn, fromThis, fromArgs) {
+                      const table = fromArgs[0];
+                      const queryBuilder = fromFn.apply(fromThis, fromArgs);
+                      return wrapQueryBuilder(queryBuilder, table, tenant);
+                    },
+                  });
+                }
+                if (typeof selectVal === "function") {
+                  return new Proxy(selectVal, {
+                    apply(innerFn, innerThis, innerArgs) {
+                      const result = innerFn.apply(innerThis, innerArgs);
+                      if (
+                        result &&
+                        typeof result === "object" &&
+                        ("then" in result || "where" in result)
+                      ) {
+                        return wrapQueryBuilder(result, null, tenant);
+                      }
+                      return result;
+                    },
+                  });
+                }
+                return selectVal;
+              },
+            });
+          }
 
-        // UPDATE: intercept .set() to capture the table
-        if (prop === "update") {
-          const table = args[0];
-          const updateBuilder = val.apply(target, args);
-          return new Proxy(updateBuilder, {
-            get(updateTarget, updateProp) {
-              const updateVal = Reflect.get(updateTarget, updateProp);
-              if (updateProp === "set" && typeof updateVal === "function") {
-                return (...setArgs: unknown[]) => {
-                  const setBuilder = updateVal.apply(updateTarget, setArgs);
-                  return wrapQueryBuilder(setBuilder, table, tenant);
-                };
-              }
-              if (typeof updateVal === "function") {
-                return (...innerArgs: unknown[]) => {
-                  const result = updateVal.apply(updateTarget, innerArgs);
-                  if (
-                    result &&
-                    typeof result === "object" &&
-                    ("then" in result || "where" in result)
-                  ) {
-                    return wrapQueryBuilder(result, table, tenant);
-                  }
-                  return result;
-                };
-              }
-              return updateVal;
-            },
-          });
-        }
+          // UPDATE: intercept .set() to capture the table
+          if (prop === "update") {
+            const table = fnArgs[0];
+            const updateBuilder = fnTarget.apply(fnThis, fnArgs);
+            return new Proxy(updateBuilder, {
+              get(updateTarget, updateProp) {
+                const updateVal = Reflect.get(updateTarget, updateProp);
+                if (updateProp === "set" && typeof updateVal === "function") {
+                  return new Proxy(updateVal, {
+                    apply(setFn, setThis, setArgs) {
+                      const setBuilder = setFn.apply(setThis, setArgs);
+                      return wrapQueryBuilder(setBuilder, table, tenant);
+                    },
+                  });
+                }
+                if (typeof updateVal === "function") {
+                  return new Proxy(updateVal, {
+                    apply(innerFn, innerThis, innerArgs) {
+                      const result = innerFn.apply(innerThis, innerArgs);
+                      if (
+                        result &&
+                        typeof result === "object" &&
+                        ("then" in result || "where" in result)
+                      ) {
+                        return wrapQueryBuilder(result, table, tenant);
+                      }
+                      return result;
+                    },
+                  });
+                }
+                return updateVal;
+              },
+            });
+          }
 
-        // DELETE: direct wrap
-        if (prop === "delete") {
-          const table = args[0];
-          const deleteBuilder = val.apply(target, args);
-          return wrapQueryBuilder(deleteBuilder, table, tenant);
-        }
+          // DELETE: direct wrap
+          if (prop === "delete") {
+            const table = fnArgs[0];
+            const deleteBuilder = fnTarget.apply(fnThis, fnArgs);
+            return wrapQueryBuilder(deleteBuilder, table, tenant);
+          }
 
-        // TRANSACTION: wrap the transaction callback so the tx is also a TenantDB
-        if (prop === "transaction") {
-          const fn = args[0] as (tx: DB) => Promise<unknown>;
-          return val.call(target, (tx: DB) => {
-            const tenantTx = createTenantDB(tx, tenant);
-            return fn(tenantTx);
-          });
-        }
+          // TRANSACTION: wrap the transaction callback so the tx is also a TenantDB
+          if (prop === "transaction") {
+            const fn = fnArgs[0] as (tx: DB) => Promise<unknown>;
+            return fnTarget.call(fnThis, (tx: DB) => {
+              const tenantTx = createTenantDB(tx, tenant);
+              return fn(tenantTx);
+            });
+          }
 
-        // Everything else (insert, raw, etc.) passes through untouched
-        return val.apply(target, args);
-      };
+          // Everything else (insert, raw, etc.) passes through untouched
+          return fnTarget.apply(fnThis, fnArgs);
+        },
+      });
     },
   }) as TenantDB;
 }

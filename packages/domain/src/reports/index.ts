@@ -1,5 +1,4 @@
 import { eq, and, sql } from "drizzle-orm";
-import type { DB } from "@reading-advantage/db";
 import {
   userActivity,
   userWordRecords,
@@ -9,6 +8,7 @@ import {
 } from "@reading-advantage/db/schema";
 import { xpLogs, storyRecords } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
+import type { TenantDB } from "../db-contract.js";
 
 export async function getStudentProgress({
   db,
@@ -16,7 +16,7 @@ export async function getStudentProgress({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: { studentId: string };
@@ -86,7 +86,7 @@ export async function getClassAnalytics({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: { classId: string };

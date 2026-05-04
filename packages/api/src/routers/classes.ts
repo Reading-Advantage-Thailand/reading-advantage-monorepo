@@ -11,7 +11,7 @@ export const classesRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       return createClass({
-        db: ctx.db,
+        db: ctx.tenantDb,
         user: ctx.auth.user,
         tenant: ctx.auth.tenant,
         input,
@@ -27,7 +27,7 @@ export const classesRouter = router({
     )
     .query(async ({ ctx, input }) => {
       return listClasses({
-        db: ctx.db,
+        db: ctx.tenantDb,
         user: ctx.auth.user,
         tenant: ctx.auth.tenant,
         input,

@@ -3,19 +3,31 @@ import { vi } from "vitest";
 export interface MockDb {
   insert: ReturnType<typeof vi.fn>;
   select: ReturnType<typeof vi.fn>;
+  update: ReturnType<typeof vi.fn>;
   transaction: <T>(fn: (tx: MockDb) => Promise<T>) => Promise<T>;
 }
 
 function createQueryBuilder(val: unknown) {
-  const promise = Promise.resolve(val);
-  return Object.assign(promise, {
-    limit: vi.fn().mockResolvedValue(val),
+  const builder = {
+    limit: vi.fn().mockReturnThis(),
+    offset: vi.fn().mockReturnThis(),
     innerJoin: vi.fn().mockReturnValue({
-      where: vi.fn().mockReturnValue(Object.assign(Promise.resolve(val), {
-        limit: vi.fn().mockResolvedValue(val),
-      })),
+      where: vi.fn().mockReturnValue({
+        limit: vi.fn().mockReturnThis(),
+        offset: vi.fn().mockReturnThis(),
+      }),
     }),
-  });
+    then(
+      onFulfilled?: (value: unknown) => unknown,
+      onRejected?: (reason: unknown) => unknown
+    ) {
+      return Promise.resolve(val).then(onFulfilled, onRejected);
+    },
+    execute() {
+      return Promise.resolve(val);
+    },
+  };
+  return builder;
 }
 
 /**
@@ -27,6 +39,7 @@ function createQueryBuilder(val: unknown) {
  */
 export function createMockDb(overrides: {
   insertReturning?: unknown[];
+  updateReturning?: unknown[];
   selectResults?: unknown[];
   transactionFn?: (tx: MockDb) => Promise<unknown>;
 } = {}): MockDb {
@@ -47,6 +60,13 @@ export function createMockDb(overrides: {
         }),
       }),
     })),
+    update: vi.fn().mockReturnValue({
+      set: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          returning: vi.fn().mockResolvedValue(overrides.updateReturning ?? []),
+        }),
+      }),
+    }),
     transaction: vi.fn().mockImplementation(
       overrides.transactionFn ?? ((fn: (tx: MockDb) => Promise<unknown>) => fn(mockDb))
     ),

@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
-import type { DB } from "@reading-advantage/db";
 import { users, classroomStudents, classrooms } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
+import type { TenantDB } from "../db-contract.js";
 
 interface ListStudentsInput {
   classroomId: string;
@@ -18,7 +18,7 @@ export async function listStudents({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: ListStudentsInput;
@@ -57,7 +57,7 @@ export async function importRoster({
   tenant,
   input,
 }: {
-  db: DB;
+  db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: ImportRosterInput;

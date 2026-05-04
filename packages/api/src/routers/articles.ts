@@ -17,11 +17,11 @@ export const articlesRouter = router({
         offset: z.number().min(0).default(0),
       })
     )
-    .query(({ ctx, input }) => listArticles({ db: ctx.db, input })),
+    .query(({ ctx, input }) => listArticles({ db: ctx.tenantDb, input })),
 
   get: publicProcedure
     .input(z.object({ id: z.string().uuid() }))
-    .query(({ ctx, input }) => getArticle({ db: ctx.db, input })),
+    .query(({ ctx, input }) => getArticle({ db: ctx.tenantDb, input })),
 
   create: protectedProcedure
     .input(
@@ -36,7 +36,7 @@ export const articlesRouter = router({
       })
     )
     .mutation(({ ctx, input }) =>
-      createArticle({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      createArticle({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   update: protectedProcedure
@@ -50,6 +50,6 @@ export const articlesRouter = router({
       })
     )
     .mutation(({ ctx, input }) =>
-      updateArticle({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      updateArticle({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 });

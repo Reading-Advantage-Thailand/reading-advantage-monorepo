@@ -7,7 +7,7 @@ export const reportsRouter = router({
     .input(z.object({ studentId: z.string() }))
     .query(async ({ ctx, input }) => {
       return reports.getStudentProgress({
-        db: ctx.db,
+        db: ctx.tenantDb,
         user: ctx.auth.user,
         tenant: ctx.auth.tenant,
         input,
@@ -18,7 +18,7 @@ export const reportsRouter = router({
     .input(z.object({ classId: z.string() }))
     .query(async ({ ctx, input }) => {
       return reports.getClassAnalytics({
-        db: ctx.db,
+        db: ctx.tenantDb,
         user: ctx.auth.user,
         tenant: ctx.auth.tenant,
         input,

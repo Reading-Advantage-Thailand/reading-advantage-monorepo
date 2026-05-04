@@ -5,3 +5,5 @@ export * as classes from "./classes/index.js";
 export * as progress from "./progress/index.js";
 export * as students from "./students/index.js";
 export * as reports from "./reports/index.js";
+export * as users from "./users/index.js";
+export { createTenantDB, type TenantDB } from "./db-contract.js";

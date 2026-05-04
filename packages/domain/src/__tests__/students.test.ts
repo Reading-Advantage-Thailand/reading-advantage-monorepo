@@ -1,11 +1,16 @@
 import { describe, it, expect, vi } from "vitest";
 import { listStudents, importRoster } from "../students/index.js";
 import { createMockDb, type MockDb } from "./mock-db.js";
+import { createTenantDB } from "../db-contract.js";
 import type { DB } from "@reading-advantage/db";
 
 const teacher = { id: "t1", username: "teacher1", name: "T", role: "TEACHER" as const, schoolId: "s1" };
 const student = { id: "st1", username: "student1", name: "ST", role: "STUDENT" as const, schoolId: "s1" };
 const tenant = { schoolId: "s1" };
+
+function wrapDb(db: ReturnType<typeof createMockDb>) {
+  return createTenantDB(db as unknown as DB, tenant);
+}
 
 function mockClassroomSelect(db: MockDb, schoolId: string) {
   const classroomWhere = vi.fn().mockReturnValue(
@@ -38,7 +43,7 @@ describe("listStudents", () => {
     mockClassroomSelect(db, "s1");
 
     const result = await listStudents({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: teacher,
       tenant,
       input: { classroomId: "c1" },
@@ -51,7 +56,7 @@ describe("listStudents", () => {
     const db = createMockDb();
 
     await expect(
-      listStudents({ db: db as unknown as DB, user: student, tenant, input: { classroomId: "c1" } })
+      listStudents({ db: wrapDb(db), user: student, tenant, input: { classroomId: "c1" } })
     ).rejects.toThrow(/STUDENT.*student:list/);
   });
 
@@ -60,7 +65,7 @@ describe("listStudents", () => {
     mockClassroomSelect(db, "s2");
 
     await expect(
-      listStudents({ db: db as unknown as DB, user: teacher, tenant, input: { classroomId: "c1" } })
+      listStudents({ db: wrapDb(db), user: teacher, tenant, input: { classroomId: "c1" } })
     ).rejects.toThrow(/Classroom not found/);
   });
 
@@ -83,7 +88,7 @@ describe("listStudents", () => {
     });
 
     await expect(
-      listStudents({ db: db as unknown as DB, user: teacher, tenant, input: { classroomId: "c1" } })
+      listStudents({ db: wrapDb(db), user: teacher, tenant, input: { classroomId: "c1" } })
     ).rejects.toThrow(/Classroom not found/);
   });
 });
@@ -106,7 +111,7 @@ describe("importRoster", () => {
     mockClassroomSelect(db, "s1");
 
     const result = await importRoster({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: teacher,
       tenant,
       input: {
@@ -135,7 +140,7 @@ describe("importRoster", () => {
     mockClassroomSelect(db, "s1");
 
     const result = await importRoster({
-      db: db as unknown as DB,
+      db: wrapDb(db),
       user: teacher,
       tenant,
       input: {
@@ -155,7 +160,7 @@ describe("importRoster", () => {
 
     await expect(
       importRoster({
-        db: db as unknown as DB,
+        db: wrapDb(db),
         user: student,
         tenant,
         input: { classroomId: "c1", students: [] },
@@ -169,7 +174,7 @@ describe("importRoster", () => {
 
     await expect(
       importRoster({
-        db: db as unknown as DB,
+        db: wrapDb(db),
         user: teacher,
         tenant,
         input: { classroomId: "c1", students: [{ name: "Test", username: "test@test.com" }] },

@@ -1,13 +1,15 @@
 # Implementation Plan
 
 ## Phase 1: TenantDB Wrapper
-- [~] Task: Create TenantDB Wrapper
+- [x] Task: Create TenantDB Wrapper [247de12]
   - [x] Write unit tests for TenantDB wrapper enforcing tenant ID logic
   - [x] Implement `TenantDB` in `packages/domain/src/db-contract.ts`
-- [ ] Task: Refactor Domain Functions
-  - [ ] Update assignments domain functions to use TenantDB
-  - [ ] Update classes domain functions to use TenantDB
-  - [ ] Ensure all domain tests pass with the new signature
+- [x] Task: Refactor Domain Functions [domain-refactor]
+  - [x] Update assignments domain functions to use TenantDB
+  - [x] Update classes domain functions to use TenantDB
+  - [x] Update users, students, progress, reports, articles domain functions to use TenantDB
+  - [x] Extract users domain functions from tRPC router
+  - [x] Ensure all domain tests pass with the new signature
 - [ ] Task: Measure - User Manual Verification 'Phase 1: TenantDB Wrapper' (Protocol in workflow.md)
 
 ## Phase 2: Branded Type Contracts

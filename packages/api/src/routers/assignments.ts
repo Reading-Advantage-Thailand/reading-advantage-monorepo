@@ -23,7 +23,7 @@ export const assignmentsRouter = router({
       })
     )
     .mutation(({ ctx, input }) =>
-      createAssignment({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      createAssignment({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   list: protectedProcedure
@@ -33,13 +33,13 @@ export const assignmentsRouter = router({
       })
     )
     .query(({ ctx, input }) =>
-      listAssignments({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      listAssignments({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   get: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .query(({ ctx, input }) =>
-      getAssignment({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      getAssignment({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   update: protectedProcedure
@@ -51,13 +51,13 @@ export const assignmentsRouter = router({
       })
     )
     .mutation(({ ctx, input }) =>
-      updateAssignment({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      updateAssignment({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   delete: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(({ ctx, input }) =>
-      deleteAssignment({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      deleteAssignment({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   submit: protectedProcedure
@@ -68,6 +68,6 @@ export const assignmentsRouter = router({
       })
     )
     .mutation(({ ctx, input }) =>
-      submitAssignment({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      submitAssignment({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 });

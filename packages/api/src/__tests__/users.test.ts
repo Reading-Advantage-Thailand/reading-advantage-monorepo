@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { usersRouter } from "../routers/users.js";
+import { createTenantDB } from "@reading-advantage/domain";
+import type { DB } from "@reading-advantage/db";
 
 vi.mock("@reading-advantage/db/schema", () => ({
   users: {
@@ -60,14 +62,15 @@ function createMockDb(opts: {
   return mockDb;
 }
 
-const t = initTRPC.context<{ db: ReturnType<typeof createMockDb>; auth: { user: { id: string; role: string; schoolId?: string | null }; tenant: { schoolId: string | null } } }>().create({
+const t = initTRPC.context<{ tenantDb: ReturnType<typeof createTenantDB>; auth: { user: { id: string; role: string; schoolId?: string | null }; tenant: { schoolId: string | null } } }>().create({
   transformer: superjson,
 });
 
 const appRouter = t.router({ users: usersRouter });
 
 function createCaller(db: ReturnType<typeof createMockDb>, auth: { user: { id: string; role: string; schoolId?: string | null }; tenant: { schoolId: string | null } }) {
-  return t.createCallerFactory(appRouter)({ db, auth });
+  const tenantDb = createTenantDB(db as unknown as DB, auth.tenant);
+  return t.createCallerFactory(appRouter)({ tenantDb, auth });
 }
 
 describe("users router", () => {

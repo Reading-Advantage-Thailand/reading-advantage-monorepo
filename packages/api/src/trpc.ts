@@ -1,10 +1,12 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import type { DB } from "@reading-advantage/db";
+import type { TenantDB } from "@reading-advantage/domain";
 import type { AuthContext } from "@reading-advantage/auth";
 
 export interface Context {
   db: DB;
+  tenantDb: TenantDB;
   auth: AuthContext | null;
 }
 

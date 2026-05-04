@@ -17,19 +17,19 @@ export const progressRouter = router({
       })
     )
     .mutation(({ ctx, input }) =>
-      recordActivity({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      recordActivity({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   getStudentProgress: protectedProcedure
     .input(z.object({ studentId: z.string() }))
     .query(({ ctx, input }) =>
-      getStudentProgress({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      getStudentProgress({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   getLessonProgress: protectedProcedure
     .input(z.object({ lessonId: z.string() }))
     .query(({ ctx, input }) =>
-      getLessonProgress({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      getLessonProgress({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 
   updateLessonProgress: protectedProcedure
@@ -41,6 +41,6 @@ export const progressRouter = router({
       })
     )
     .mutation(({ ctx, input }) =>
-      updateLessonProgress({ db: ctx.db, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+      updateLessonProgress({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
     ),
 });

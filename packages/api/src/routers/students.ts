@@ -11,7 +11,7 @@ export const studentsRouter = router({
     )
     .query(async ({ ctx, input }) => {
       return listStudents({
-        db: ctx.db,
+        db: ctx.tenantDb,
         user: ctx.auth.user,
         tenant: ctx.auth.tenant,
         input,
@@ -32,7 +32,7 @@ export const studentsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       return importRoster({
-        db: ctx.db,
+        db: ctx.tenantDb,
         user: ctx.auth.user,
         tenant: ctx.auth.tenant,
         input,
