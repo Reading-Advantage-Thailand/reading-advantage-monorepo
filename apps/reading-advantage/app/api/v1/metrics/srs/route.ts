@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getSRSHealthMetrics, refreshSRSHealthViews } from '@/server/controllers/srs-health-controller';
 import { getCurrentUser } from '@/lib/session';
 import { type ExtendedNextRequest } from '@/server/controllers/auth-controller';
