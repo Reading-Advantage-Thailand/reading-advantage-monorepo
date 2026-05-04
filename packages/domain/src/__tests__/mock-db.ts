@@ -4,6 +4,7 @@ export interface MockDb {
   insert: ReturnType<typeof vi.fn>;
   select: ReturnType<typeof vi.fn>;
   update: ReturnType<typeof vi.fn>;
+  delete: ReturnType<typeof vi.fn>;
   transaction: <T>(fn: (tx: MockDb) => Promise<T>) => Promise<T>;
 }
 
@@ -65,6 +66,11 @@ export function createMockDb(overrides: {
         where: vi.fn().mockReturnValue({
           returning: vi.fn().mockResolvedValue(overrides.updateReturning ?? []),
         }),
+      }),
+    }),
+    delete: vi.fn().mockReturnValue({
+      where: vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([]),
       }),
     }),
     transaction: vi.fn().mockImplementation(
