@@ -1,9 +1,9 @@
 # Implementation Plan
 
 ## Phase 1: TenantDB Wrapper
-- [ ] Task: Create TenantDB Wrapper
-  - [ ] Write unit tests for TenantDB wrapper enforcing tenant ID logic
-  - [ ] Implement `TenantDB` in `packages/domain/src/db-contract.ts`
+- [~] Task: Create TenantDB Wrapper
+  - [x] Write unit tests for TenantDB wrapper enforcing tenant ID logic
+  - [x] Implement `TenantDB` in `packages/domain/src/db-contract.ts`
 - [ ] Task: Refactor Domain Functions
   - [ ] Update assignments domain functions to use TenantDB
   - [ ] Update classes domain functions to use TenantDB
