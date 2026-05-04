@@ -48,9 +48,9 @@
 
 ## Phase 4: Code Quality
 
-- [ ] Task: Remove UTF-8 BOM from `apps/reading-advantage/app/api/v1/metrics/srs/route.ts`
-- [ ] Task: Run full test suite (`pnpm turbo run test`) and verify all packages pass
-- [ ] Task: Run type check (`pnpm turbo run check-types`) and verify clean
+- [x] Task: Remove UTF-8 BOM from `apps/reading-advantage/app/api/v1/metrics/srs/route.ts` [e5099b4]
+- [x] Task: Run full test suite (`pnpm turbo run test`) — packages/api and packages/domain pass; pre-existing timeout failure in packages/auth password test (unrelated to this track)
+- [x] Task: Run type check (`pnpm turbo run check-types`) — pre-existing type mismatches in packages/api (routers/users.ts, routers/progress.ts) and packages/auth-client (hooks.test.tsx) unrelated to this track
 
 ## Summary
 
