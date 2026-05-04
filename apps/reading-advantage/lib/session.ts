@@ -8,7 +8,7 @@ import { z } from "zod";
 export const sessionUserSchema = z.object({
   id: z.string(),
   username: z.string(),
-  email: z.string().email(),
+  email: z.string().email().optional().or(z.literal("")),
   display_name: z.string(),
   role: z.nativeEnum(Role),
   level: z.number().nullable(),

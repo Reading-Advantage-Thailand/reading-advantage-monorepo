@@ -36,6 +36,9 @@ export const PERMISSIONS = {
   "article:create": [ROLES.ADMIN, ROLES.SYSTEM],
   "article:update": [ROLES.ADMIN, ROLES.SYSTEM],
 
+  // Users
+  "user:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+
   // Admin
   "admin:dashboard": [ROLES.ADMIN, ROLES.SYSTEM],
   "admin:users": [ROLES.ADMIN, ROLES.SYSTEM],

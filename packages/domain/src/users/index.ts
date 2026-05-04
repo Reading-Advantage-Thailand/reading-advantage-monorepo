@@ -48,6 +48,8 @@ export async function getUser({
   tenant: Tenant;
   input: { id: string };
 }) {
+  assertCan(user, "user:read", tenant);
+
   const conditions = [eq(users.id, input.id)];
 
   const [result] = await db

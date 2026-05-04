@@ -46,6 +46,13 @@ describe("getUser", () => {
 
     await expect(getUser({ db: wrapDb(db), user: teacher, tenant, input: { id: "u2" } })).rejects.toThrow(/User not found/);
   });
+
+  it("rejects users without user:read permission", async () => {
+    const db = createMockDb();
+    const invalidUser = { id: "x", username: "x", name: "X", role: "GUEST" as unknown as typeof teacher.role, schoolId: "s1" };
+
+    await expect(getUser({ db: wrapDb(db), user: invalidUser, tenant, input: { id: "u2" } })).rejects.toThrow(/user:read/);
+  });
 });
 
 describe("listUsers", () => {

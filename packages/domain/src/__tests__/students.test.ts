@@ -12,13 +12,14 @@ function wrapDb(db: ReturnType<typeof createMockDb>) {
   return createTenantDB(db as unknown as DB, tenant);
 }
 
-function mockClassroomSelect(db: MockDb, schoolId: string) {
+function mockClassroomSelect(db: MockDb, schoolId: string, teacherId?: string) {
+  const row = { schoolId, teacherId: teacherId ?? "t1" };
   const classroomWhere = vi.fn().mockReturnValue(
-    Object.assign(Promise.resolve([{ schoolId }]), {
-      limit: vi.fn().mockResolvedValue([{ schoolId }]),
+    Object.assign(Promise.resolve([row]), {
+      limit: vi.fn().mockResolvedValue([row]),
     })
   ) as ReturnType<typeof vi.fn> & { limit: ReturnType<typeof vi.fn> };
-  classroomWhere.limit = vi.fn().mockResolvedValue([{ schoolId }]);
+  classroomWhere.limit = vi.fn().mockResolvedValue([row]);
 
   const originalSelect = db.select;
   db.select = vi.fn().mockReturnValueOnce({
@@ -180,5 +181,50 @@ describe("importRoster", () => {
         input: { classroomId: "c1", students: [{ name: "Test", username: "test@test.com" }] },
       })
     ).rejects.toThrow(/Classroom not found/);
+  });
+
+  it("throws when teacher tries to import into another teacher's classroom", async () => {
+    const db = createMockDb();
+    mockClassroomSelect(db, "s1", "other-teacher");
+
+    await expect(
+      importRoster({
+        db: wrapDb(db),
+        user: teacher,
+        tenant,
+        input: { classroomId: "c1", students: [{ name: "Test", username: "test@test.com" }] },
+      })
+    ).rejects.toThrow(/You do not own this classroom/);
+  });
+
+  it("allows admin to import into any classroom in their school", async () => {
+    const newUser = { id: "new-1", name: "New Student", username: "new@test.com", role: "STUDENT" };
+
+    const mockTx = createMockDb({
+      selectResults: [],
+      insertReturning: [newUser],
+    });
+
+    const db = createMockDb({
+      transactionFn: async (fn: unknown) => {
+        const castFn = fn as (tx: MockDb) => Promise<unknown>;
+        return castFn(mockTx);
+      },
+    });
+    mockClassroomSelect(db, "s1", "other-teacher");
+
+    const adminUser = { id: "a1", username: "admin1", name: "A", role: "ADMIN" as const, schoolId: "s1" };
+
+    const result = await importRoster({
+      db: wrapDb(db),
+      user: adminUser,
+      tenant,
+      input: {
+        classroomId: "c1",
+        students: [{ name: "New Student", username: "new@test.com" }],
+      },
+    });
+
+    expect(result).toEqual([{ username: "new@test.com", id: "new-1" }]);
   });
 });

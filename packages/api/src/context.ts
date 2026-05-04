@@ -1,8 +1,11 @@
+import { z } from "zod";
 import { db } from "@reading-advantage/db";
-import { validateSession, type AuthContext, type UserContext, type Tenant, type Role } from "@reading-advantage/auth";
+import { validateSession, type AuthContext, type UserContext, type Tenant } from "@reading-advantage/auth";
 import { createTenantDB } from "@reading-advantage/domain";
 import type { Context } from "./trpc.js";
 import { cookies } from "next/headers";
+
+export const roleSchema = z.enum(["STUDENT", "TEACHER", "ADMIN", "SYSTEM"]);
 
 interface CreateContextOptions {
   authorization?: string | null;
@@ -28,7 +31,7 @@ export async function createContext(opts: CreateContextOptions = {}): Promise<Co
           id: session.user.id,
           username: session.user.username,
           name: session.user.name,
-          role: session.user.role as Role,
+          role: roleSchema.parse(session.user.role),
           schoolId: session.user.schoolId,
         };
 

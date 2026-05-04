@@ -64,15 +64,23 @@ export async function importRoster({
 }) {
   assertCan(user, "student:import", tenant);
 
-  // Verify classroom belongs to caller's school
+  // Verify classroom belongs to caller's school and teacher owns it
   const [classroom] = await db
-    .select({ schoolId: classrooms.schoolId })
+    .select({ schoolId: classrooms.schoolId, teacherId: classrooms.teacherId })
     .from(classrooms)
     .where(eq(classrooms.id, input.classroomId))
     .limit(1);
 
   if (!classroom || classroom.schoolId !== tenant.schoolId) {
     throw new Error("Classroom not found");
+  }
+
+  if (
+    classroom.teacherId !== user.id &&
+    user.role !== "ADMIN" &&
+    user.role !== "SYSTEM"
+  ) {
+    throw new Error("You do not own this classroom");
   }
 
   return db.transaction(async (tx) => {
