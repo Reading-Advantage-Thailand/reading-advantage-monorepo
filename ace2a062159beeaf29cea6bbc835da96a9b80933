@@ -1,0 +1,14 @@
+Task: Define Branded Types
+
+Summary: Added PolymorphicQuestionId and ExternalLessonId branded Zod types
+in packages/types/src/index.ts. Applied ExternalLessonId to progress domain
+functions and tRPC router input parsing.
+
+Files modified:
+- packages/types/src/index.ts (branded types)
+- packages/domain/src/progress/index.ts (ExternalLessonId usage)
+- packages/api/src/routers/progress.ts (input parsing)
+- measure/tracks/strict_contracts_20260504/plan.md
+
+Core why: Enforces application-layer integrity for relations that lack
+Foreign Keys, preventing accidental misuse of plain string IDs.
