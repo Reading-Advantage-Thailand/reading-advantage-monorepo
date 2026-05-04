@@ -1,0 +1,1 @@
+strict_contracts_20260504: Phase 4 - Boundary validation added to getCurrentUser with sessionUserSchema. Removed unsafe as any casts on req.session and req.params in 4 API routes.
