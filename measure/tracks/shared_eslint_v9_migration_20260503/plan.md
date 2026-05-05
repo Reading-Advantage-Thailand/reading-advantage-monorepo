@@ -26,7 +26,7 @@
   - Blocked: Lint hangs on resource-constrained hardware
 - [~] Fix any remaining plugin resolution errors
   - Blocked: Cannot identify errors without lint running
-- [x] Document shared ESLint config usage in packages/config/eslint/README.md
+- [x] Document shared ESLint config usage in packages/config/eslint/README.md [ffb931f]
   - Created README.md with exports table, usage examples, and migration notes
 
 ## Summary

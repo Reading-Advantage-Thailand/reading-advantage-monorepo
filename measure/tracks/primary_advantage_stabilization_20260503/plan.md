@@ -6,16 +6,16 @@
   - 35 unit tests added in `lib/__tests__/utils.test.ts`: `cleanGenre`, `sanitizeTranslationKey`, `generateSecureCode`, `generateRandomClassCode`, `calculateLevelAndCefrLevel`, `convertCefrLevel`, `convertLocaleFull`, `generateLicenseKey`
 - [~] Fix TypeScript compilation errors
   - Blocked: Cannot run tsc without build environment
-- [x] Run `pnpm turbo run lint --filter=primary-advantage` and catalog lint errors
+- [x] Run `pnpm turbo run lint --filter=primary-advantage` and catalog lint errors [f995430]
   - Ran `npx eslint . --quiet` successfully on available hardware
   - Catalogued and fixed all 35 errors
-- [x] Fix `react/no-unescaped-entities` errors by escaping or using components
+- [x] Fix `react/no-unescaped-entities` errors by escaping or using components [f995430]
   - Fixed 24 unescaped quote/apostrophe errors across 8 files
-- [x] Fix `react-hooks/rules-of-hooks` errors by correcting hook call patterns
+- [x] Fix `react-hooks/rules-of-hooks` errors by correcting hook call patterns [f995430]
   - `formatDate` in lib/utils.ts was calling `useTranslations` inside a plain function
   - Refactored to `useFormatDate()` hook that returns a formatter function
   - Updated all 4 call sites to use the hook at component top-level
-- [x] Fix remaining lint errors and reduce warnings
+- [x] Fix remaining lint errors and reduce warnings [f995430]
   - Fixed 2 `react/display-name` errors (LessonTimer components)
   - Fixed 7 `@next/next/no-html-link-for-pages` errors (replaced <a> with <Link> in user-signup-form)
   - All 35 lint errors resolved; 0 errors remain

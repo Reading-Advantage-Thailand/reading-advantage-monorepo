@@ -86,7 +86,7 @@
 
 ## Phase 5: UI & Utilities Deduplication
 
-- [x] Task: Expand `@reading-advantage/ui` with high-impact components
+- [x] Task: Expand `@reading-advantage/ui` with high-impact components [fc10cae]
     - 15 components already exported: Button, Card, Dialog, Input, Tabs, Label, Badge, Separator, Skeleton, Avatar, Alert, AlertDialog, Progress, Checkbox, Tooltip
     - Target met (≥15)
 - [x] Task: Replace local `cn()` with `@reading-advantage/utils`

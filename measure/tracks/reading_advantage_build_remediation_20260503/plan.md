@@ -8,7 +8,7 @@
   - Fixed workspace package resolution by adding moduleNameMapper to jest.config.ts
   - Tests now complete successfully (was hanging before)
   - 26 failed test suites (91 tests), 50 passed — pre-existing failures primarily in game components (zustand store mocking, component rendering)
-- [x] Fix test failures one suite at a time (prioritize critical path tests)
+- [x] Fix test failures one suite at a time (prioritize critical path tests) [33f0190]
   - `__test__/security/rbac.test.ts` passes (20 tests) — was incorrectly marked as hanging
   - All 8 `__test__/*` suites pass (184 tests total)
   - Game component tests hang (Zustand v4 store mocking issues) — deferred
