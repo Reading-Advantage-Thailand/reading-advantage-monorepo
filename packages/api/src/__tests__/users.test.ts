@@ -213,7 +213,7 @@ describe("users router", () => {
 
       await expect(
         caller.users.update({ id: "u2", name: "Hacked" })
-      ).rejects.toThrow(/Can only update your own profile/);
+      ).rejects.toThrow(/user:update/);
     });
   });
 });

@@ -61,7 +61,7 @@ describe("articles router", () => {
     it("returns articles with safe fields", async () => {
       const articleRows = [makeArticleResponse()];
       vi.mocked(listArticles).mockResolvedValue(articleRows as unknown as Awaited<ReturnType<typeof listArticles>>);
-      const caller = createCaller(null);
+      const caller = createCaller({ user: { id: "t1", role: "TEACHER" }, tenant: { schoolId: testSchoolId } });
 
       const result = await caller.articles.list({});
 
@@ -75,7 +75,7 @@ describe("articles router", () => {
     it("returns article by id with safe fields", async () => {
       const articleRow = makeArticleResponse();
       vi.mocked(getArticle).mockResolvedValue(articleRow as unknown as Awaited<ReturnType<typeof getArticle>>);
-      const caller = createCaller(null);
+      const caller = createCaller({ user: { id: "t1", role: "TEACHER" }, tenant: { schoolId: testSchoolId } });
 
       const result = await caller.articles.get({ id: "550e8400-e29b-41d4-a716-446655440001" });
 
