@@ -1,0 +1,11 @@
+{
+  "track_id": "tech_debt_cleanup_20260505",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-05-05T00:00:00Z",
+  "updated_at": "2026-05-05T00:00:00Z",
+  "description": "Resolve 7 remaining open tech-debt items: dependency alignment (react, zustand), lint cleanup (advantage-games, science-advantage), test stability (perf benchmarks), shared i18n types, and visual regression tests.",
+  "estimated_tasks": 14,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

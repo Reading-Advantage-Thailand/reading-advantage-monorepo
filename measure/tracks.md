@@ -59,6 +59,8 @@ This file tracks all major tracks for the project.
   Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9. *Status: reading-advantage migrated to eslint.config.mjs. All 5 apps on flat config. Shared config README written. Plugin resolution verification blocked by hardware.*
 - [x] **Track: Science-Advantage Auth Migration** (26/26 tasks) *Link: [./tracks/science_auth_migration_20260503/](./tracks/science_auth_migration_20260503/)*
   Migrate from standalone Prisma auth to shared @reading-advantage/auth, auth-client, and db packages. Build passes, auth files lint clean. Non-auth Prisma (curriculum, lessons) preserved.
+- [ ] **Track: Monorepo Tech-Debt Cleanup** *Link: [./tracks/tech_debt_cleanup_20260505/](./tracks/tech_debt_cleanup_20260505/)*
+  Resolve 7 remaining open tech-debt items: react/zustand dependency alignment, advantage-games ESLint warnings, science-advantage analytics lint, flaky perf tests, shared i18n types, and visual regression tests.
 
 ---
 
