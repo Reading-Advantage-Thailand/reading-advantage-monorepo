@@ -24,7 +24,7 @@ export default async function StudentDashboardPage() {
             user={{
               id: user.id,
               name: user.display_name,
-              email: user.email,
+              email: user.email || "",
               level: user.level,
               cefr_level: user.cefr_level,
               xp: user.xp,

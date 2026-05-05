@@ -57,7 +57,6 @@ export async function validateArticle(
     { status: 501 }
   );
 
-  /* eslint-disable-next-line no-unreachable */
   let { filterByDate, runToday } = await req.json();
 
   // Check if filterByDate is empty and runToday is true

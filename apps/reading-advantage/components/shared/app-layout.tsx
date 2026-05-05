@@ -91,7 +91,7 @@ export default async function AppLayout({
             <LocaleSwitcher />
             <ThemeCustomizer />
             <ThemeSwitcher />
-            <UserAccountNav user={user} />
+            <UserAccountNav user={{ ...user, name: user.display_name }} />
           </div>
         </div>
       </header>

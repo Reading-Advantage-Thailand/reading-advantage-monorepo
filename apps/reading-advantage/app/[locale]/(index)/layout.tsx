@@ -57,7 +57,7 @@ export default async function Layout({
             <div className="flex h-20 items-center justify-between py-6">
               <MainNav />
               <nav>
-                <UserAccountNav user={user} />
+                <UserAccountNav user={{ ...user, name: user.display_name }} />
               </nav>
             </div>
           </header>
@@ -75,7 +75,7 @@ export default async function Layout({
               <MainNav />
               {/* <ProgressBar progress={user.xp} level={user.level!} /> */}
               <nav>
-                <UserAccountNav user={user} />
+                <UserAccountNav user={{ ...user, name: user.display_name }} />
               </nav>
             </div>
           </header>

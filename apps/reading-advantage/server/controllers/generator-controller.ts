@@ -1464,7 +1464,6 @@ async function cleanupAudioFiles(articleId: string, userId?: string) {
     // Firebase Storage cleanup — gracefully skipped if firebase-admin not installed
     let getStorage: any;
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       getStorage = require("firebase-admin/storage").getStorage;
     } catch {
       console.warn("firebase-admin/storage not available, skipping audio cleanup");
@@ -1506,7 +1505,6 @@ async function cleanupStorageFiles(articleId: string, userId?: string) {
     // Firebase Storage cleanup — gracefully skipped if firebase-admin not installed
     let getStorage: any;
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       getStorage = require("firebase-admin/storage").getStorage;
     } catch {
       console.warn("firebase-admin/storage not available, skipping storage cleanup");

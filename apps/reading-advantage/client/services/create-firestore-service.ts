@@ -1,7 +1,7 @@
 import { fetchData } from "./fetch-helper";
 import { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line
 type ApiRecord = Record<string, any>;
 
 const createFirestoreService = <T extends ApiRecord>(

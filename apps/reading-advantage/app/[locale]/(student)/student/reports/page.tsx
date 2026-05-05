@@ -24,7 +24,7 @@ export default async function ReportsPage() {
             user={{
               id: user.id,
               name: user.name || null,
-              email: user.email,
+              email: user.email || "",
               level: user.level,
               cefr_level: user.cefr_level,
               xp: user.xp,

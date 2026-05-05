@@ -4,9 +4,6 @@ const nextConfig = {
   transpilePackages: ["@reading-advantage/auth-client", "@reading-advantage/ui", "@reading-advantage/utils"],
   reactStrictMode: false,
   pageExtensions: ["tsx", "ts", "jsx", "js"],
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
     remotePatterns: [
       {
@@ -34,7 +31,11 @@ const nextConfig = {
   compiler: {
     removeConsole: false,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   productionBrowserSourceMaps: false,
+  serverExternalPackages: ["text-readability-ts"],
   async headers() {
     return [
       {
