@@ -69,9 +69,10 @@
 ## Phase 4: Cleanup
 
 - [x] Task: Remove `next-international` from `package.json`
-- [~] Task: Remove `configs/locale-config.ts` if no longer needed [deferred]
-    - Check if any non-i18n code imports from it
-    - If still used, keep but remove `localeImports`
+- [x] Task: Remove `configs/locale-config.ts` if no longer needed
+    - Checked: 6 files still import from it (i18n.ts, i18n/routing.ts, locale-switcher, laq-question-card, print-article)
+    - `localeImports` already removed from the file
+    - File kept because non-i18n components still depend on `Locale`, `localeNames`, `feedbackLanguage`
 - [x] Task: Run `pnpm install` to update lockfile
 - [x] Task: Full verification
     - `pnpm turbo run build --filter=reading-advantage` passes
