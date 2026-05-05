@@ -41,9 +41,9 @@ This file tracks all major tracks for the project.
 - [x] **Track: Shared Config Consolidation** (ESLint restructuring + 10 UI components added)
   *Link: [./tracks/shared_config_consolidation_20260502/](./tracks/shared_config_consolidation_20260502/)*
   *Status: Tailwind v4 unified, ESLint flat config migrated for primary/www, ESLint shared config restructured with composable baseConfig/plugins/ignores exports, advantage-games migrated to shared config, `cn()` deduped, 15 UI components in @reading-advantage/ui. Deferred: visual regression tests, shared i18n types, integration tests.*
-- [x] **Track: i18n Migration (reading-advantage)** (cleanup complete)
-  *Link: [./tracks/i18n_migration_20260502/](./tracks/i18n_migration_20260502/)*
-  *Status: next-intl config added, client/server exports rewritten, middleware migrated, next-international removed, localeImports dead code removed, flashcard imports fixed, stale locales.ts deleted. Build passes.*
+- [x] **Track: i18n Migration (reading-advantage)** (19/19 tasks complete)
+  *Link: [./archive/i18n_migration_20260502/](./archive/i18n_migration_20260502/)*
+  *Status: next-intl config added, client/server exports rewritten, middleware migrated, next-international removed, localeImports dead code removed, flashcard imports fixed, stale locales.ts deleted. `configs/locale-config.ts` kept (still imported by 6 files). Build passes. Archived.*
 
 ---
 
@@ -51,20 +51,12 @@ This file tracks all major tracks for the project.
 
 - [x] **Track: Tech Debt Resolution** *Link: [./tracks/tech_debt_resolution_20260503/](./tracks/tech_debt_resolution_20260503/)*
   Resolve 16 open tech-debt items not covered by other tracks. Phases: critical infra (Prisma→Drizzle, auth migration SQL), build config cleanup (ignoreBuildErrors removal), schema integrity, app-specific fixes, shared tooling.
-- [ ] **Track: Reading-Advantage Build Remediation** *Link: [./tracks/reading_advantage_build_remediation_20260503/](./tracks/reading_advantage_build_remediation_20260503/)*
-  Fix 128 lint warnings, 26 failed test suites, and remove ignoreBuildErrors
-- [ ] **Track: Primary-Advantage Stabilization** *Link: [./tracks/primary_advantage_stabilization_20260503/](./tracks/primary_advantage_stabilization_20260503/)*
-  Fix 49 lint errors, add Vitest test suite, remove ignoreBuildErrors
-- [x] **Track: Firestore to Drizzle Migration** (cleanup complete, 7 stub callers deferred)
-  *Link: [./tracks/firestore_to_drizzle_migration_20260503/](./tracks/firestore_to_drizzle_migration_20260503/)*
-  *Status: Firestore server code removed, Firebase deps removed from package.json. 7 files use no-op stub. Prisma→Drizzle for controllers deferred to new track.*
-- [x] **Track: Audit Remediation — Past 15 Hours** *Link: [./tracks/audit_remediation_20260503/](./tracks/audit_remediation_20260503/)*
-  Fixed 5 defects found in deep audit of commits 1a49678–314a4fc: broken migration 0002 for fresh DBs, dead firestore import, as any casts in session.ts, registration test gaps, console.error leaks. 119/119 tests pass.
-- [x] **Track: Auth Strategy Review Fixes** *Link: [./tracks/auth_strategy_review_fix_20260503/](./tracks/auth_strategy_review_fix_20260503/)*
-  Fix review findings from the past-15-hour audit: removed Science Google OAuth to match username/password-only auth, restored Science build/lint gates, enforced auth migration nullability, eliminated silent Firestore no-op behavior.
-  *Status: Complete. 23/23 tasks done. Science build passes, db tests 10/10, api tests 23/23.*
-- [ ] **Track: Shared ESLint v9 Flat Config Migration** *Link: [./tracks/shared_eslint_v9_migration_20260503/](./tracks/shared_eslint_v9_migration_20260503/)*
-  Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9
+- [~] **Track: Reading-Advantage Build Remediation** *Link: [./tracks/reading_advantage_build_remediation_20260503/](./tracks/reading_advantage_build_remediation_20260503/)*
+  Fix 128 lint warnings, 26 failed test suites, and remove ignoreBuildErrors. *Status: Core tests fixed — all 8 `__test__/` suites pass (184 tests). ESLint v9 flat config created. Game component tests still hang (Zustand v4). Build/lint full verification blocked by hardware.*
+- [~] **Track: Primary-Advantage Stabilization** *Link: [./tracks/primary_advantage_stabilization_20260503/](./tracks/primary_advantage_stabilization_20260503/)*
+  Fix 49 lint errors, add Vitest test suite, remove ignoreBuildErrors. *Status: All 35 lint errors fixed (0 remain). Vitest 35/35 tests pass. Build/ignoreBuildErrors removal blocked by hardware.*
+- [~] **Track: Shared ESLint v9 Flat Config Migration** *Link: [./tracks/shared_eslint_v9_migration_20260503/](./tracks/shared_eslint_v9_migration_20260503/)*
+  Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9. *Status: reading-advantage migrated to eslint.config.mjs. All 5 apps on flat config. Shared config README written. Plugin resolution verification blocked by hardware.*
 - [x] **Track: Science-Advantage Auth Migration** (26/26 tasks) *Link: [./tracks/science_auth_migration_20260503/](./tracks/science_auth_migration_20260503/)*
   Migrate from standalone Prisma auth to shared @reading-advantage/auth, auth-client, and db packages. Build passes, auth files lint clean. Non-auth Prisma (curriculum, lessons) preserved.
 
@@ -72,16 +64,20 @@ This file tracks all major tracks for the project.
 
 ### Review Remediation
 
-- [ ] **Track: Last-12-Hour Review Fixes**
+- [~] **Track: Last-12-Hour Review Fixes**
   *Link: [./tracks/last_12h_review_fix_20260503/](./tracks/last_12h_review_fix_20260503/)*
-  *Status: Implemented; manual verification tasks remain open. Fixed review findings from commits `6af3b96` through `1a49678`: broken migration SQL, tenantless auth/demo users, production impersonation safety, assignment student validation, cross-tenant user reads, stale NextAuth middleware, ignored article filters, auth lint failures, and whitespace check failure.*
+  *Status: Implemented; manual verification tasks remain open. All code/tests/lint complete.*
 
 - [x] **Track: Last-24-Hour Review Remediation** (7/9 main tasks + 9/9 Phase 5 subtasks complete)
   *Link: [./archive/review_remediation_20260502/](./archive/review_remediation_20260502/)*
   *Status: Auth tests, cross-tenant guards, config drift wiring, DB constraints, and Phase 5 review fixes all verified in code. NextAuth vs tRPC decision resolved: moving to simple username/password DB sessions (new track). lessonProgress.lessonId alignment deferred to tech-debt. Manual verification protocols deferred to implementation.*
 
-- [ ] **Track: Implement strict data and authorization contracts**
-  *Link: [./tracks/strict_contracts_20260504/](./tracks/strict_contracts_20260504/)*
+- [x] **Track: Implement strict data and authorization contracts** (28/28 tasks)
+  *Link: [./archive/strict_contracts_20260504/](./archive/strict_contracts_20260504/)*
+  *Status: All four phases complete — TenantDB wrapper, branded types, tRPC output contracts, boundary validation. 28 tasks done. Plan archived.*
 - [x] **Track: Strict Contracts Review Remediation** (10 tasks)
   *Link: [./tracks/strict_contracts_review_20260504/](./tracks/strict_contracts_review_20260504/)*
   *Status: Complete. All 10 tasks finished across 4 phases. Tenant scoping fixed, validation/auth gaps closed, 26 new tests added, BOM removed. Pre-existing test/type issues in auth/api noted for separate tracks.*
+- [x] **Track: May 5 Review Remediation** (23/24 tasks)
+  *Link: [./tracks/remediation_20260505/](./tracks/remediation_20260505/)*
+  *Status: Complete. 23/24 tasks done (API test backfill deferred). Domain: 83/83 tests (+13 new). Auth: 64/64 tests. Security/auth gaps fixed, logic bugs resolved, TenantDB edge cases hardened.*

@@ -14,7 +14,7 @@
 | 2026-05-01 | migrate-reading-advantage | reading-advantage `ignoreBuildErrors: true` / `ignoreDuringBuilds: true` | Medium | Open | Temporarily enabled to pass build. Cannot verify removal due to build hanging on resource-constrained hardware. |
 | 2026-05-01 | migrate-reading-advantage | reading-advantage: 26 failed test suites (91 tests), 50 passing | Medium | Open | Pre-existing from original repo. Workspace package resolution fixed (jest moduleNameMapper). Game component tests fail due to Zustand v4 store mocking patterns. |
 | 2026-05-01 | migrate-reading-advantage | reading-advantage: zustand v4 vs v5 in monorepo | Medium | Open | App uses zustand v4, advantage-games uses v5. Align when reading-advantage is ready for v5 migration. |
-| 2026-05-01 | migrate-reading-advantage | reading-advantage: ESLint v8 vs v9 in monorepo | Medium | Open | App uses `.eslintrc.json` (legacy v8). Monorepo shared config uses flat config v9. Keep local config until ESLint migration. |
+| 2026-05-01 | migrate-reading-advantage | reading-advantage: ESLint v8 vs v9 in monorepo | Medium | **Resolved** | Migrated to `eslint.config.mjs` (v9 flat config). All 5 apps now on flat config. |
 | 2026-05-02 | migrate-reading-advantage | reading-advantage: two i18n libraries (next-intl + next-international) | Low | **Resolved** | Removed `next-international` from reading-advantage. Rewrote locale provider and locale-switcher to use `next-intl` APIs only. |
 | 2026-05-01 | migrate-primary-advantage | primary-advantage: `ignoreBuildErrors: true` / `ignoreDuringBuilds: true` | Medium | Open | Temporarily enabled. |
 | 2026-05-01 | migrate-www | www: `ignoreBuildErrors: true` / `ignoreDuringBuilds: true` | Medium | **Resolved** | Removed flags. Build passes cleanly. |
