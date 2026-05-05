@@ -20,10 +20,12 @@ const config: Config = {
     "^@reading-advantage/auth-client$": "<rootDir>/../../packages/auth-client/src/index.ts",
     "^@reading-advantage/auth$": "<rootDir>/../../packages/auth/src/index.ts",
     "^@reading-advantage/db$": "<rootDir>/../../packages/db/src/index.ts",
+    "^@reading-advantage/db/schema$": "<rootDir>/../../packages/db/src/schema/index.ts",
     "^@reading-advantage/api$": "<rootDir>/../../packages/api/src/index.ts",
     "^@reading-advantage/types$": "<rootDir>/../../packages/types/src/index.ts",
     "^@reading-advantage/domain$": "<rootDir>/../../packages/domain/src/index.ts",
     "^@/(.*)$": "<rootDir>/$1",
+    "^(\\.{1,2}/.*)\\.js$": "$1",
   },
 };
 

@@ -1,5 +1,11 @@
 import "@testing-library/jest-dom";
 
+// Mock next-intl for component tests
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
+}));
+
 // Polyfill for Next.js server components in Node test environment
 import { TextEncoder, TextDecoder } from "util";
 
