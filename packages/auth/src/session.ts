@@ -1,4 +1,4 @@
-import crypto from "crypto";
+
 import { eq, type PostgresJsDatabase } from "@reading-advantage/db";
 import { sessions, users } from "@reading-advantage/db/schema";
 import type * as schema from "@reading-advantage/db/schema";
@@ -18,7 +18,7 @@ export async function createSession(
   db: Db,
   userId: string
 ): Promise<Session> {
-  const token = crypto.randomBytes(32).toString("hex");
+  const token = Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) => b.toString(16).padStart(2, "0")).join("");
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
   const [session] = await db
@@ -38,6 +38,9 @@ export async function createSession(
       name: users.name,
       role: users.role,
       schoolId: users.schoolId,
+      xp: users.xp,
+      level: users.level,
+      cefrLevel: users.cefrLevel,
     })
     .from(users)
     .where(eq(users.id, userId))
@@ -58,6 +61,9 @@ export async function createSession(
       name: user.name,
       role: user.role as UserContext["role"],
       schoolId: user.schoolId,
+      xp: user.xp,
+      level: user.level,
+      cefrLevel: user.cefrLevel,
     },
   };
 }
@@ -89,6 +95,9 @@ export async function validateSession(
       name: users.name,
       role: users.role,
       schoolId: users.schoolId,
+      xp: users.xp,
+      level: users.level,
+      cefrLevel: users.cefrLevel,
     })
     .from(users)
     .where(eq(users.id, session.userId))
@@ -109,6 +118,9 @@ export async function validateSession(
       name: user.name,
       role: user.role as UserContext["role"],
       schoolId: user.schoolId,
+      xp: user.xp,
+      level: user.level,
+      cefrLevel: user.cefrLevel,
     },
   };
 }

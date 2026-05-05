@@ -37,6 +37,9 @@ describe("auth router", () => {
           name: "Test",
           role: "TEACHER",
           schoolId: "s1",
+          xp: 0,
+          level: 1,
+          cefrLevel: "A1-",
         },
         tenant: { schoolId: "s1" },
       };

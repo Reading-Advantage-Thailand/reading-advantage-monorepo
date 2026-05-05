@@ -33,6 +33,9 @@ export async function createContext(opts: CreateContextOptions = {}): Promise<Co
           name: session.user.name,
           role: roleSchema.parse(session.user.role),
           schoolId: session.user.schoolId,
+          xp: session.user.xp,
+          level: session.user.level,
+          cefrLevel: session.user.cefrLevel,
         };
 
         const tenant: Tenant = {

@@ -6,7 +6,7 @@ function makeUser(
   role: UserContext["role"],
   schoolId: string | null = "school-1"
 ): UserContext {
-  return { id: "user-1", username: "testuser", name: "Test", role, schoolId };
+  return { id: "user-1", username: "testuser", name: "Test", role, schoolId, xp: 0, level: 1, cefrLevel: "A1-" };
 }
 
 describe("assertTenantAccess", () => {

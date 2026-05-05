@@ -9,8 +9,8 @@ export interface AuthUser {
   xp: number;
   level: number;
   cefrLevel: string;
-  email: string | null;
-  image: string | null;
+  email?: string | null;
+  image?: string | null;
 }
 
 export interface AuthState {

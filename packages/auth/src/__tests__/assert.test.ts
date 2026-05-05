@@ -3,7 +3,7 @@ import { assertCan, AuthError } from "../assert.js";
 import type { UserContext } from "../tenant.js";
 
 function makeUser(role: UserContext["role"], schoolId = "school-1"): UserContext {
-  return { id: "user-1", username: "testuser", name: "Test", role, schoolId };
+  return { id: "user-1", username: "testuser", name: "Test", role, schoolId, xp: 0, level: 1, cefrLevel: "A1-" };
 }
 
 describe("assertCan", () => {
