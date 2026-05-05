@@ -12,13 +12,6 @@ const client = postgres(connectionString, {
 });
 
 export const db = drizzle(client, { schema });
+export { client };
 
 export type DB = typeof db;
-
-// Graceful shutdown
-if (process.env.NODE_ENV === "production") {
-  process.on("SIGTERM", async () => {
-    await client.end();
-    process.exit(0);
-  });
-}

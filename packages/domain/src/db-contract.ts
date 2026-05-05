@@ -79,7 +79,7 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
             );
             const newBuilder = ((target as Record<string, unknown>)[
               "where"
-            ] as Function).call(target, tenantCondition);
+            ] as (...args: unknown[]) => unknown).call(target, tenantCondition);
             const fn = (newBuilder as Record<string, unknown>)[prop];
             if (typeof fn === "function") {
               return fn.bind(newBuilder);

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { createTenantDB } from "../db-contract.js";
 import type { Tenant } from "@reading-advantage/auth";
 import type { DB } from "@reading-advantage/db";
