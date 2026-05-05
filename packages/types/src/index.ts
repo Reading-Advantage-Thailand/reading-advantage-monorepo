@@ -4,9 +4,9 @@ import { z } from "zod";
 
 export const userResponseSchema = z.object({
   id: z.string(),
-  email: z.string().email(),
+  email: z.string().email().nullable(),
   name: z.string().nullable(),
-  role: z.enum(["STUDENT", "USER", "TEACHER", "ADMIN"]),
+  role: z.enum(["STUDENT", "TEACHER", "ADMIN", "SYSTEM"]),
   schoolId: z.string().uuid().nullable(),
   xp: z.number(),
   level: z.number(),

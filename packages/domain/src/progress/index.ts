@@ -1,4 +1,4 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import {
   userActivity,
   userWordRecords,
@@ -6,6 +6,8 @@ import {
   lessonProgress,
   classroomStudents,
   classrooms,
+  storyRecords,
+  xpLogs,
 } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { ExternalLessonId } from "@reading-advantage/types";
@@ -93,10 +95,28 @@ export async function getStudentProgress({
     .from(userSentenceRecords)
     .where(eq(userSentenceRecords.userId, input.studentId));
 
+  const xpTotalResult = await db
+    .select({ total: sql<number>`COALESCE(SUM(${xpLogs.amount}), 0)` })
+    .from(xpLogs)
+    .where(eq(xpLogs.userId, input.studentId));
+
+  const storiesCompletedResult = await db
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(storyRecords)
+    .where(
+      and(
+        eq(storyRecords.userId, input.studentId),
+        eq(storyRecords.completed, true)
+      )
+    );
+
   return {
+    studentId: input.studentId,
     activities,
     wordRecords,
     sentenceRecords,
+    xpTotal: xpTotalResult[0]?.total ?? 0,
+    storiesCompleted: storiesCompletedResult[0]?.count ?? 0,
   };
 }
 

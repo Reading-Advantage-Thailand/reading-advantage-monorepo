@@ -79,4 +79,49 @@ describe("listClasses", () => {
       listClasses({ db: wrapDb(db), user: student, tenant, input: { includeArchived: false } })
     ).rejects.toThrow(/STUDENT.*class:list/);
   });
+
+  it("includes archived classes when includeArchived is true", async () => {
+    const classes = [
+      { id: "c1", name: "Math", archived: true },
+      { id: "c2", name: "Science", archived: false },
+    ];
+    const db = createMockDb({ selectResults: classes });
+
+    const result = await listClasses({
+      db: wrapDb(db),
+      user: teacher,
+      tenant,
+      input: { includeArchived: true },
+    });
+
+    expect(result).toEqual(classes);
+    expect(result).toHaveLength(2);
+  });
+
+  it("filters by teacherId for teacher role", async () => {
+    const classes = [{ id: "c1", name: "Math", teacherId: "t1" }];
+    const db = createMockDb({ selectResults: classes });
+
+    await listClasses({
+      db: wrapDb(db),
+      user: teacher,
+      tenant,
+      input: { includeArchived: false },
+    });
+
+    expect(db.select).toHaveBeenCalledOnce();
+  });
+
+  it("returns empty array when no classes exist", async () => {
+    const db = createMockDb({ selectResults: [] });
+
+    const result = await listClasses({
+      db: wrapDb(db),
+      user: admin,
+      tenant,
+      input: { includeArchived: false },
+    });
+
+    expect(result).toEqual([]);
+  });
 });

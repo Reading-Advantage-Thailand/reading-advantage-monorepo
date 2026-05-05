@@ -32,6 +32,21 @@ function createTrackableMockDb() {
       returning() {
         return builder;
       },
+      innerJoin() {
+        return builder;
+      },
+      leftJoin() {
+        return builder;
+      },
+      rightJoin() {
+        return builder;
+      },
+      fullJoin() {
+        return builder;
+      },
+      onConflictDoUpdate(_config: unknown) {
+        return builder;
+      },
       then(resolve: (value: unknown) => unknown) {
         return Promise.resolve([]).then(resolve);
       },
@@ -60,12 +75,16 @@ function createTrackableMockDb() {
     delete(table: string) {
       return createBuilder(table, "delete");
     },
-    insert() {
+    insert(table: string) {
+      const tbl = table;
       return {
         values(_data: unknown) {
           return {
             returning() {
               return Promise.resolve([]);
+            },
+            onConflictDoUpdate(_config: unknown) {
+              return createBuilder(String(tbl), "insert");
             },
           };
         },
@@ -100,29 +119,6 @@ function searchChunks(condition: unknown, needle: string): boolean {
     }
   }
   return false;
-}
-
-function findParamValue(condition: unknown): string | null {
-  if (!condition || typeof condition !== "object") return null;
-  const sql = condition as Record<string, unknown>;
-  if (Array.isArray(sql.queryChunks)) {
-    for (let i = 0; i < sql.queryChunks.length; i++) {
-      const chunk = sql.queryChunks[i];
-      if (chunk && typeof chunk === "object") {
-        const val = findParamValue(chunk);
-        if (val) return val;
-      }
-      // For eq() result, pattern is: "", col, " = ", val, ""
-      // For and() result, the eq SQL is nested, so recursion handles it
-      if (typeof chunk === "string" && chunk === " = " && i + 1 < sql.queryChunks.length) {
-        const nextChunk = sql.queryChunks[i + 1];
-        if (typeof nextChunk === "string") {
-          return nextChunk;
-        }
-      }
-    }
-  }
-  return null;
 }
 
 const tenantTable = { schoolId: "school_id_col" };
@@ -310,6 +306,83 @@ describe("createTenantDB", () => {
 
       expect(whereCalls).toHaveLength(1);
       expect(searchChunks(whereCalls[0].condition, "s2")).toBe(true);
+    });
+  });
+
+  describe("join proxy interception", () => {
+    it("injects tenant condition through innerJoin -> where chain", () => {
+      const { db, whereCalls } = createTrackableMockDb();
+      const tenantDb = createTenantDB(db as unknown as DB, tenant);
+
+      tenantDb.select().from(tenantTable).innerJoin(nonTenantTable, { raw: "onClause" }).where({ raw: "joinCond" });
+
+      expect(whereCalls).toHaveLength(1);
+      expect(searchChunks(whereCalls[0].condition, "s1")).toBe(true);
+      expect(searchChunks(whereCalls[0].condition, " and ")).toBe(true);
+    });
+
+    it("injects tenant condition through leftJoin -> where chain", () => {
+      const { db, whereCalls } = createTrackableMockDb();
+      const tenantDb = createTenantDB(db as unknown as DB, tenant);
+
+      tenantDb.select().from(tenantTable).leftJoin(nonTenantTable, { raw: "onClause" }).where({ raw: "joinCond" });
+
+      expect(whereCalls).toHaveLength(1);
+      expect(searchChunks(whereCalls[0].condition, "s1")).toBe(true);
+    });
+
+    it("injects tenant condition through rightJoin -> where chain", () => {
+      const { db, whereCalls } = createTrackableMockDb();
+      const tenantDb = createTenantDB(db as unknown as DB, tenant);
+
+      tenantDb.select().from(tenantTable).rightJoin(nonTenantTable, { raw: "onClause" }).where({ raw: "joinCond" });
+
+      expect(whereCalls).toHaveLength(1);
+      expect(searchChunks(whereCalls[0].condition, "s1")).toBe(true);
+    });
+
+    it("injects tenant condition through fullJoin -> where chain", () => {
+      const { db, whereCalls } = createTrackableMockDb();
+      const tenantDb = createTenantDB(db as unknown as DB, tenant);
+
+      tenantDb.select().from(tenantTable).fullJoin(nonTenantTable, { raw: "onClause" }).where({ raw: "joinCond" });
+
+      expect(whereCalls).toHaveLength(1);
+      expect(searchChunks(whereCalls[0].condition, "s1")).toBe(true);
+    });
+
+    it("does NOT inject on join for non-tenant tables", () => {
+      const { db, whereCalls } = createTrackableMockDb();
+      const tenantDb = createTenantDB(db as unknown as DB, tenant);
+
+      tenantDb.select().from(nonTenantTable).innerJoin(nonTenantTable, { raw: "onClause" }).where({ raw: "joinCond" });
+
+      expect(whereCalls).toHaveLength(1);
+      expect(whereCalls[0].condition).toEqual({ raw: "joinCond" });
+    });
+  });
+
+  describe("db.query guard", () => {
+    it("throws when db.query is accessed", () => {
+      const { db } = createTrackableMockDb();
+      const tenantDb = createTenantDB(db as unknown as DB, tenant);
+
+      expect(() => (tenantDb as Record<string, unknown>).query).toThrow(
+        /db.query is not available on TenantDB/
+      );
+    });
+  });
+
+  describe("insert upsert scoping", () => {
+    it("wraps onConflictDoUpdate().where() with tenant condition", () => {
+      const { db, whereCalls } = createTrackableMockDb();
+      const tenantDb = createTenantDB(db as unknown as DB, tenant);
+
+      tenantDb.insert(tenantTable).values({ name: "x" }).onConflictDoUpdate({ target: "id", set: { name: "y" } }).where({ raw: "upsertCond" });
+
+      expect(whereCalls).toHaveLength(1);
+      expect(whereCalls[0].type).toBe("insert");
+      expect(searchChunks(whereCalls[0].condition, "s1")).toBe(true);
     });
   });
 });

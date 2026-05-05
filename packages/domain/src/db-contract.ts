@@ -10,10 +10,9 @@ import type { Tenant } from "@reading-advantage/auth";
  * into select, update, and delete operations for tables that have a
  * `schoolId` column.
  *
- * ⚠️  IMPORTANT: The TenantDB proxy ONLY intercepts the query-builder API
- * (`db.select()`, `db.update()`, `db.delete()`). It does NOT intercept the
- * relational query API (`db.query.*`). Using `db.query.classrooms.findMany`
- * will bypass tenant scoping entirely. Always use the standard query builder
+ * The relational query API (`db.query.*`) is intercepted at runtime and
+ * will throw if accessed through a TenantDB instance. Always use the
+ * standard query builder (`db.select()`, `db.update()`, `db.delete()`)
  * with TenantDB.
  */
 export interface TenantDB extends DB {
@@ -68,8 +67,11 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
           });
         }
 
-        // Intercept .then / .execute to inject if .where() was never called
-        if ((prop === "then" || prop === "execute") && !state.whereCalled) {
+        // Intercept .then / .execute / .toSQL / .prepare to inject if .where() was never called
+        if (
+          (prop === "then" || prop === "execute" || prop === "toSQL" || prop === "prepare") &&
+          !state.whereCalled
+        ) {
           if (hasSchoolId(table) && tenant.schoolId) {
             const tenantCondition = eq(
               (table as { schoolId: SQL<unknown> }).schoolId,
@@ -149,9 +151,26 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
  * ```
  */
 export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
+  if (!tenant.schoolId) {
+    console.warn(
+      "[TenantDB] Created with null/undefined schoolId — tenant scoping will not be applied. " +
+        "Domain functions using this DB instance against tenant-scoped tables will query across ALL schools."
+    );
+  }
+
   return new Proxy(db, {
     get(target, prop, receiver) {
       const val = Reflect.get(target, prop, receiver);
+
+      // Guard: db.query.* bypasses tenant scoping entirely.
+      // Throw at runtime so it cannot be used accidentally with TenantDB.
+      if (prop === "query") {
+        throw new Error(
+          "db.query is not available on TenantDB. " +
+            "Use db.select(), db.update(), or db.delete() instead " +
+            "to ensure tenant scoping is applied."
+        );
+      }
 
       if (typeof val !== "function") {
         return val;
@@ -243,13 +262,77 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
           // TRANSACTION: wrap the transaction callback so the tx is also a TenantDB
           if (prop === "transaction") {
             const fn = fnArgs[0] as (tx: DB) => Promise<unknown>;
+            const options = fnArgs[1];
             return fnTarget.call(fnThis, (tx: DB) => {
               const tenantTx = createTenantDB(tx, tenant);
               return fn(tenantTx);
+            }, options);
+          }
+
+          // INSERT: wrap .onConflictDoUpdate().where() for tenant scoping
+          if (prop === "insert") {
+            const table = fnArgs[0];
+            const insertBuilder = fnTarget.apply(fnThis, fnArgs);
+            return new Proxy(insertBuilder, {
+              get(insertTarget, insertProp) {
+                const insertVal = Reflect.get(insertTarget, insertProp);
+                if (insertProp === "values" && typeof insertVal === "function") {
+                  return new Proxy(insertVal, {
+                    apply(valuesFn, valuesThis, valuesArgs) {
+                      const valuesBuilder = valuesFn.apply(valuesThis, valuesArgs);
+                      return new Proxy(valuesBuilder, {
+                        get(vbTarget, vbProp) {
+                          const vbVal = Reflect.get(vbTarget, vbProp);
+                          if (vbProp === "onConflictDoUpdate" && typeof vbVal === "function") {
+                            return new Proxy(vbVal, {
+                              apply(onConflictFn, onConflictThis, onConflictArgs) {
+                                const upsertBuilder = onConflictFn.apply(onConflictThis, onConflictArgs);
+                                return wrapQueryBuilder(upsertBuilder, table, tenant);
+                              },
+                            });
+                          }
+                          if (typeof vbVal === "function") {
+                            return new Proxy(vbVal, {
+                              apply(innerFn, innerThis, innerArgs) {
+                                const result = innerFn.apply(innerThis, innerArgs);
+                                if (
+                                  result &&
+                                  typeof result === "object" &&
+                                  ("then" in result || "where" in result)
+                                ) {
+                                  return wrapQueryBuilder(result, table, tenant);
+                                }
+                                return result;
+                              },
+                            });
+                          }
+                          return vbVal;
+                        },
+                      });
+                    },
+                  });
+                }
+                if (typeof insertVal === "function") {
+                  return new Proxy(insertVal, {
+                    apply(innerFn, innerThis, innerArgs) {
+                      const result = innerFn.apply(innerThis, innerArgs);
+                      if (
+                        result &&
+                        typeof result === "object" &&
+                        ("then" in result || "where" in result)
+                      ) {
+                        return wrapQueryBuilder(result, table, tenant);
+                      }
+                      return result;
+                    },
+                  });
+                }
+                return insertVal;
+              },
             });
           }
 
-          // Everything else (insert, raw, etc.) passes through untouched
+          // Everything else (raw, etc.) passes through untouched
           return fnTarget.apply(fnThis, fnArgs);
         },
       });

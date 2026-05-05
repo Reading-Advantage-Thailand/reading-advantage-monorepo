@@ -9,7 +9,7 @@ import {
 } from "@reading-advantage/domain/articles";
 
 export const articlesRouter = router({
-  list: publicProcedure
+  list: protectedProcedure
     .input(
       z.object({
         topic: z.string().optional(),
@@ -19,12 +19,16 @@ export const articlesRouter = router({
       })
     )
     .output(z.array(articleResponseSchema))
-    .query(({ ctx, input }) => listArticles({ db: ctx.tenantDb, input })),
+    .query(({ ctx, input }) =>
+      listArticles({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+    ),
 
-  get: publicProcedure
+  get: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .output(articleResponseSchema)
-    .query(({ ctx, input }) => getArticle({ db: ctx.tenantDb, input })),
+    .query(({ ctx, input }) =>
+      getArticle({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant, input })
+    ),
 
   create: protectedProcedure
     .input(

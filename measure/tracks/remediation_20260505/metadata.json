@@ -1,0 +1,11 @@
+{
+  "id": "remediation_20260505",
+  "name": "May 5 Review Remediation",
+  "type": "chore",
+  "created": "2026-05-05",
+  "status": "in_progress",
+  "parent_tracks": [
+    "strict_contracts_20260504",
+    "strict_contracts_review_20260504"
+  ]
+}

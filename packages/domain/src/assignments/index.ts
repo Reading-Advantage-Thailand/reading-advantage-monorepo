@@ -303,5 +303,9 @@ export async function submitAssignment({
     )
     .returning();
 
+  if (!updated) {
+    throw new Error("Student not assigned to this assignment");
+  }
+
   return updated;
 }

@@ -8,7 +8,6 @@ interface CreateClassInput {
 }
 
 interface ListClassesInput {
-  schoolId?: string;
   includeArchived: boolean;
 }
 

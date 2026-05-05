@@ -64,7 +64,9 @@ describe("usePotionRushStore Refinements", () => {
     });
 
     const newState = usePotionRushStore.getState();
-    expect(newState.activeWordPool).not.toContain("test");
+    // Words are removed from activeWordPool when spawned onto the belt,
+    // not when the customer is served. The pool should be unchanged here.
+    expect(newState.activeWordPool).toContain("test");
   });
 
   it("should increase completedSentences and speed when customer is served", () => {

@@ -73,7 +73,7 @@ export const restrictAccessKey = async (
     const userAgent = req.headers.get("user-agent") || "";
     const url = req.url;
 
-    await sendDiscordWebhook({
+    sendDiscordWebhook({
       title: "Unauthorized: Access key is required",
       embeds: [
         {
@@ -95,6 +95,8 @@ export const restrictAccessKey = async (
       ],
       reqUrl: url,
       userAgent,
+    }).catch(() => {
+      // Webhook failure must not block the 403 response
     });
 
     return NextResponse.json(

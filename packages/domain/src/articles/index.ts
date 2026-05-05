@@ -23,11 +23,17 @@ interface UpdateArticleInput {
 
 export async function listArticles({
   db,
+  user,
+  tenant,
   input,
 }: {
   db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
   input: { topic?: string; cefrLevel?: string; limit: number; offset: number };
 }) {
+  assertCan(user, "article:list", tenant);
+
   const conditions = [];
   if (input.topic) {
     conditions.push(eq(articles.topic, input.topic));
@@ -51,11 +57,17 @@ export async function listArticles({
 
 export async function getArticle({
   db,
+  user,
+  tenant,
   input,
 }: {
   db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
   input: { id: string };
 }) {
+  assertCan(user, "article:read", tenant);
+
   const [article] = await db
     .select()
     .from(articles)
@@ -90,6 +102,10 @@ export async function createArticle({
   return article;
 }
 
+/**
+ * Update an article. Only ADMIN and SYSTEM roles have `article:update` permission.
+ * Articles have no `authorId` column — global modification by authorized roles is by design.
+ */
 export async function updateArticle({
   db,
   user,

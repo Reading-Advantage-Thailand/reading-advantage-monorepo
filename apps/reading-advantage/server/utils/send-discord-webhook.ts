@@ -26,11 +26,16 @@ function formatDetails(details: Record<string, string>): string {
 export async function sendDiscordWebhook({
     title,
     embeds,
-    webhookUrl = process.env.DISCORD_WEBHOOK_URL as string,
+    webhookUrl = process.env.DISCORD_WEBHOOK_URL || undefined,
     userAgent = "test-user-agent",
     reqUrl,
     color = 0x0099ff,
 }: SendWebhookParams) {
+    if (!webhookUrl) {
+        console.warn("DISCORD_WEBHOOK_URL not set; skipping Discord webhook");
+        return;
+    }
+
     // Format the embeds
     const embedsFormatted = embeds.map((embed) => {
         return {

@@ -4,8 +4,8 @@ import { VocabularyItem } from "@/store/useGameStore";
 import * as castleDefense from "@/lib/games/castleDefense";
 import type React from "react";
 
-jest.mock("@/lib/castleDefense", () => {
-  const actual = jest.requireActual("@/lib/castleDefense");
+jest.mock("@/lib/games/castleDefense", () => {
+  const actual = jest.requireActual("@/lib/games/castleDefense");
   return {
     ...actual,
     createCastleDefenseState: jest.fn(actual.createCastleDefenseState),
@@ -13,7 +13,7 @@ jest.mock("@/lib/castleDefense", () => {
 });
 
 const actualCastleDefense = jest.requireActual(
-  "@/lib/castleDefense",
+  "@/lib/games/castleDefense",
 ) as typeof castleDefense;
 
 type KonvaBaseProps = React.PropsWithChildren<Record<string, unknown>>;

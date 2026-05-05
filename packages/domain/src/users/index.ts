@@ -17,6 +17,10 @@ const safeUserCols = {
   updatedAt: users.updatedAt,
 };
 
+/**
+ * Get the currently authenticated user's own profile.
+ * Intentionally unguarded — every authenticated user can read their own profile.
+ */
 export async function getMe({
   db,
   user,
@@ -81,6 +85,8 @@ export async function listUsers({
     offset: number;
   };
 }) {
+  assertCan(user, "user:list", tenant);
+
   const conditions = [];
 
   if (input.schoolId) {
@@ -119,12 +125,9 @@ export async function updateUser({
     image?: string;
   };
 }) {
-  if (
-    input.id !== user.id &&
-    user.role !== "ADMIN" &&
-    user.role !== "SYSTEM"
-  ) {
-    throw new Error("Can only update your own profile");
+  // Self-profile updates are allowed for any role; editing others requires user:update
+  if (input.id !== user.id) {
+    assertCan(user, "user:update", tenant);
   }
 
   const { id, ...updates } = input;

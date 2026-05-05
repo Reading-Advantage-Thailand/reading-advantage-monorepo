@@ -151,9 +151,8 @@ describe("importRoster", () => {
     });
 
     expect(result).toEqual([{ username: "exist@test.com", id: "existing-1" }]);
-    // Should not have inserted a new user
     const insertCall = mockTx.insert.mock.results;
-    expect(insertCall.length).toBeLessThanOrEqual(2);
+    expect(insertCall.length).toBe(1);
   });
 
   it("throws when student tries to import roster", async () => {

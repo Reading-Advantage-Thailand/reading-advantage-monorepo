@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import DragonRiderPage from "./page";
 import { useGameStore, DEFAULT_CASTLES } from "@/store/useGameStore";
 
-jest.mock("@/lib/vocabLoader", () => ({
+jest.mock("@/lib/games/vocabLoader", () => ({
   loadVocabulary: jest.fn().mockResolvedValue([
     { term: "test", translation: "ทดสอบ" },
     { term: "hello", translation: "สวัสดี" },

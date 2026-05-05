@@ -38,6 +38,8 @@ export const PERMISSIONS = {
 
   // Users
   "user:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "user:list": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "user:update": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
 
   // Admin
   "admin:dashboard": [ROLES.ADMIN, ROLES.SYSTEM],
@@ -48,5 +50,8 @@ export type Permission = keyof typeof PERMISSIONS;
 
 export function hasPermission(role: Role, permission: Permission): boolean {
   const allowedRoles = PERMISSIONS[permission];
+  if (!allowedRoles) {
+    throw new Error(`Unknown permission: ${permission}`);
+  }
   return (allowedRoles as readonly Role[]).includes(role);
 }

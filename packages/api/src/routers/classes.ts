@@ -23,7 +23,6 @@ export const classesRouter = router({
   list: protectedProcedure
     .input(
       z.object({
-        schoolId: z.string().uuid().optional(),
         includeArchived: z.boolean().default(false),
       })
     )

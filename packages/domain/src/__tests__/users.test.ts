@@ -24,6 +24,17 @@ describe("getMe", () => {
     expect(result.id).toBe("t1");
   });
 
+  it("works for SYSTEM user", async () => {
+    const userRow = { id: "sys1", email: "sys@test.com", name: "SYS", role: "SYSTEM", schoolId: null, image: null, xp: 0, level: 1, cefrLevel: "A1", createdAt: new Date(), updatedAt: new Date() };
+    const db = createMockDb({ selectResults: [userRow] });
+    const systemTenant = { schoolId: null };
+    const systemDb = createTenantDB(db as unknown as DB, systemTenant);
+
+    const result = await getMe({ db: systemDb, user: system });
+
+    expect(result.id).toBe("sys1");
+  });
+
   it("throws when user is not found", async () => {
     const db = createMockDb({ selectResults: [] });
 
@@ -75,6 +86,29 @@ describe("listUsers", () => {
     expect(db.select).toHaveBeenCalledOnce();
   });
 
+  it("rejects student from listing users", async () => {
+    const db = createMockDb();
+
+    await expect(
+      listUsers({ db: wrapDb(db), user: student, tenant, input: { limit: 50, offset: 0 } })
+    ).rejects.toThrow(/user:list/);
+  });
+
+  it("rejects teacher from listing users in another school", async () => {
+    const db = createMockDb();
+    const otherTenant = { schoolId: "s2" };
+    const otherDb = createTenantDB(db as unknown as DB, otherTenant);
+
+    await expect(
+      listUsers({
+        db: otherDb,
+        user: { ...teacher, schoolId: "s2" },
+        tenant: otherTenant,
+        input: { schoolId: "s1", limit: 50, offset: 0 },
+      })
+    ).rejects.toThrow(/outside your school/);
+  });
+
   it("allows system to query another school", async () => {
     const userRows = [{ id: "u3", name: "Charlie", email: "c@test.com", role: "STUDENT", schoolId: "s2", image: null, xp: 0, level: 1, cefrLevel: "A1", createdAt: new Date(), updatedAt: new Date() }];
     const db = createMockDb({ selectResults: userRows });
@@ -117,7 +151,7 @@ describe("updateUser", () => {
 
     await expect(
       updateUser({ db: wrapDb(db), user: student, tenant, input: { id: "other", name: "Hacked" } })
-    ).rejects.toThrow(/Can only update your own profile/);
+    ).rejects.toThrow(/user:update/);
   });
 
   it("throws when user is not found", async () => {

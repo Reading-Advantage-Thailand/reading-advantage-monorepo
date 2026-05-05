@@ -43,10 +43,23 @@ function wrapDb(db: { select: ReturnType<typeof vi.fn> }) {
 
 function createArticleDb() {
   const rows = [{ id: "article-1" }];
-  const offset = vi.fn().mockResolvedValue(rows);
-  const limit = vi.fn().mockReturnValue({ offset });
-  const where = vi.fn().mockReturnValue({ limit });
-  const from = vi.fn().mockReturnValue({ where, limit });
+  const where = vi.fn().mockReturnValue(
+    Object.assign(Promise.resolve(rows), {
+      limit: vi.fn().mockImplementation(() =>
+        Object.assign(Promise.resolve(rows), {
+          offset: vi.fn().mockResolvedValue(rows),
+        })
+      ),
+    })
+  );
+  const from = vi.fn().mockReturnValue({
+    where,
+    limit: vi.fn().mockImplementation(() =>
+      Object.assign(Promise.resolve(rows), {
+        offset: vi.fn().mockResolvedValue(rows),
+      })
+    ),
+  });
   const db = {
     select: vi.fn().mockReturnValue({ from }),
     insert: vi.fn().mockReturnValue({
@@ -56,9 +69,11 @@ function createArticleDb() {
     }),
     update: vi.fn().mockReturnValue({
       set: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue({
-          returning: vi.fn().mockResolvedValue([{ id: "article-1", title: "Updated Article" }]),
-        }),
+        where: vi.fn().mockReturnValue(
+          Object.assign(Promise.resolve([{ id: "article-1", title: "Updated Article" }]), {
+            returning: vi.fn().mockResolvedValue([{ id: "article-1", title: "Updated Article" }]),
+          })
+        ),
       }),
     }),
   };
@@ -71,6 +86,8 @@ describe("listArticles", () => {
 
     const result = await listArticles({
       db: wrapDb(db),
+      user: teacher,
+      tenant,
       input: { topic: "science", cefrLevel: "A2", limit: 10, offset: 0 },
     });
 
@@ -100,6 +117,8 @@ describe("getArticle", () => {
 
     const result = await getArticle({
       db: wrapDb(db),
+      user: teacher,
+      tenant,
       input: { id: "article-1" },
     });
 
@@ -120,6 +139,8 @@ describe("getArticle", () => {
     await expect(
       getArticle({
         db: wrapDb(db),
+        user: teacher,
+        tenant,
         input: { id: "missing" },
       })
     ).rejects.toThrow(/Article not found/);

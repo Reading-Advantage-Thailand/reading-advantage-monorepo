@@ -16,6 +16,7 @@ vi.mock("drizzle-orm", () => ({
 function createContext(auth: AuthContext | null = null) {
   return {
     db: {} as Context["db"],
+    tenantDb: {} as Context["tenantDb"],
     auth,
   };
 }
