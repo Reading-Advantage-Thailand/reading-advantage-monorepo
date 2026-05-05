@@ -26,7 +26,7 @@ import {
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { formatDate } from "@/lib/utils";
+import { useFormatDate } from "@/lib/utils";
 
 interface ReminderRecord {
   id: string;
@@ -39,6 +39,7 @@ interface ReminderRecord {
 
 export function ReminderRereadTable() {
   const t = useTranslations("Student.history");
+  const formatDate = useFormatDate();
   const tStatus = useTranslations("Overall.status");
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

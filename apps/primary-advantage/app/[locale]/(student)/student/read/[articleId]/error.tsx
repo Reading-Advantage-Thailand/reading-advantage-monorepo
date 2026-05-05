@@ -14,7 +14,7 @@ export default function ArticleError() {
             Article Not Found
           </h1>
           <p className="text-gray-500">
-            Sorry, we couldn't find the article you're looking for.
+            Sorry, we couldn&apos;t find the article you&apos;re looking for.
           </p>
         </div>
         <Link

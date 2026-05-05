@@ -39,7 +39,7 @@ import { ArrowUpDown, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { deleteFlashcardCard } from "@/actions/flashcard";
-import { formatDate } from "@/lib/utils";
+import { useFormatDate } from "@/lib/utils";
 
 type Sentence = {
   id: string;
@@ -118,6 +118,7 @@ function getDueColor(dueDate: Date): "destructive" | "secondary" | "default" {
 
 export default function ManageTab({ data }: ManageTabProps) {
   const t = useTranslations("SentencesPage.manage");
+  const formatDate = useFormatDate();
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: "due", desc: false },
   ]);
@@ -207,7 +208,7 @@ export default function ManageTab({ data }: ManageTabProps) {
                   {t("deleteDialog.description")}
                 </AlertDialogDescription>
                 <div className="bg-muted mt-2 rounded p-2 font-mono text-sm">
-                  "{sentence?.substring(0, 50)}..."
+                  &quot;{sentence?.substring(0, 50)}...&quot;
                 </div>
                 <div className="text-muted-foreground text-sm">
                   {t("deleteDialog.warning")}

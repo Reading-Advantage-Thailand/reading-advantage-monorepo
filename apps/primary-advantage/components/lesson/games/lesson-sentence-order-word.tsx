@@ -878,7 +878,7 @@ export default function LessonSentenceOrderWord({
                     {/* English sentence */}
                     <div>
                       <p className="text-lg font-medium text-blue-900 dark:text-blue-100">
-                        "{formedSentence}"{isCompleted && isCorrect && " ✓"}
+                        &quot;{formedSentence}&quot;{isCompleted && isCorrect && " ✓"}
                       </p>
                     </div>
                   </div>
@@ -899,7 +899,7 @@ export default function LessonSentenceOrderWord({
                   </span>
                 </div>
                 <p className="font-medium text-green-700 dark:text-green-300">
-                  "{getSentenceTranslation()}"
+                  &quot;{getSentenceTranslation()}&quot;
                 </p>
               </div>
             </div>

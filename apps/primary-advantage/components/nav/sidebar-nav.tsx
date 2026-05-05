@@ -172,7 +172,7 @@ export function SidebarNav({ items, user }: SidebarNavProps) {
                   </TooltipTrigger>
                   {isLocked && (
                     <TooltipContent>
-                      <p>You don't have permission to access this section</p>
+                      <p>You don&apos;t have permission to access this section</p>
                     </TooltipContent>
                   )}
                 </Tooltip>
@@ -224,7 +224,7 @@ export function SidebarNav({ items, user }: SidebarNavProps) {
                         </TooltipTrigger>
                         {isSubItemLocked && (
                           <TooltipContent>
-                            <p>You don't have permission to access this page</p>
+                            <p>You don&apos;t have permission to access this page</p>
                           </TooltipContent>
                         )}
                       </Tooltip>
@@ -271,7 +271,7 @@ export function SidebarNav({ items, user }: SidebarNavProps) {
               </TooltipTrigger>
               {isLocked && (
                 <TooltipContent>
-                  <p>You don't have permission to access this page</p>
+                  <p>You don&apos;t have permission to access this page</p>
                 </TooltipContent>
               )}
             </Tooltip>

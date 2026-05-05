@@ -93,25 +93,27 @@ export function convertLocaleFull(locale: string) {
   return localeMap[locale as keyof typeof localeMap] || locale;
 }
 
-export function formatDate(createdAt: Date): string {
+export function useFormatDate() {
   const t = useTranslations("Overall.time");
-  const now = new Date();
-  const diffMs = now.getTime() - createdAt.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  return (createdAt: Date): string => {
+    const now = new Date();
+    const diffMs = now.getTime() - createdAt.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
-  if (diffMinutes < 1) return t("justNow");
-  if (diffMinutes < 60) return t("minutesAgo", { minutes: diffMinutes });
-  if (diffHours < 24) return t("hoursAgo", { hours: diffHours });
-  if (diffDays === 1) return t("yesterday");
-  if (diffDays < 7) return t("daysAgo", { days: diffDays });
-  if (diffDays < 30) return t("weeksAgo", { weeks: Math.ceil(diffDays / 7) });
-  if (diffDays < 365)
-    return t("monthsAgo", { months: Math.ceil(diffDays / 30) });
+    if (diffMinutes < 1) return t("justNow");
+    if (diffMinutes < 60) return t("minutesAgo", { minutes: diffMinutes });
+    if (diffHours < 24) return t("hoursAgo", { hours: diffHours });
+    if (diffDays === 1) return t("yesterday");
+    if (diffDays < 7) return t("daysAgo", { days: diffDays });
+    if (diffDays < 30) return t("weeksAgo", { weeks: Math.ceil(diffDays / 7) });
+    if (diffDays < 365)
+      return t("monthsAgo", { months: Math.ceil(diffDays / 30) });
 
-  // For old items, show the actual date
-  return createdAt.toLocaleDateString();
+    // For old items, show the actual date
+    return createdAt.toLocaleDateString();
+  };
 }
 
 // Generate a random license key

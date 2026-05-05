@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import {
   Form,
   FormControl,
@@ -179,9 +179,9 @@ export function SignUpForm({
 
         <div className="text-center text-sm">
           Already have an account?{" "}
-          <a href="/auth/signin" className="underline underline-offset-2">
+          <Link href="/auth/signin" className="underline underline-offset-2">
             Login
-          </a>
+          </Link>
         </div>
       </form>
     </Form>

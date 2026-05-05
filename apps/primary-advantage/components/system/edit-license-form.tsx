@@ -393,7 +393,7 @@ export function EditLicenseForm({
               <FormMessage />
               <FormDescription>
                 License will expire after this many days from start date. Select
-                "No expiry" for permanent licenses.
+                &quot;No expiry&quot; for permanent licenses.
               </FormDescription>
             </FormItem>
           )}

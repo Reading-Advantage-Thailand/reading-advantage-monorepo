@@ -198,7 +198,7 @@ export function AddAdminDialog({
 
           {searchResults.length === 0 && searchQuery && !isSearching && (
             <div className="text-muted-foreground py-4 text-center">
-              No users found matching "{searchQuery}"
+              No users found matching &quot;{searchQuery}&quot;
             </div>
           )}
         </div>

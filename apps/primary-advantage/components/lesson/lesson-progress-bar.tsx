@@ -538,6 +538,7 @@ export default function LessonProgressBar({
       </div>
     );
   });
+  LessonTimer.displayName = "LessonTimer";
 
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">

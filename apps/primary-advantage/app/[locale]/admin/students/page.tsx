@@ -644,7 +644,7 @@ export default function StudentsPage() {
                 </span>
                 {searchQuery && (
                   <Badge variant="outline" className="text-xs">
-                    {t("filters.searchLabel")} "{searchQuery}"
+                    {t("filters.searchLabel")} &quot;{searchQuery}&quot;
                     <button
                       onClick={() => {
                         setSearchQuery("");

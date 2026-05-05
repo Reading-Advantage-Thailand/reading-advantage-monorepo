@@ -210,10 +210,10 @@ export default function EnrollmentDemo() {
                 Enrolling Students
               </h4>
               <ol className="list-inside list-decimal space-y-2 text-sm text-gray-600">
-                <li>Click the "Enroll Student" button</li>
+                <li>Click the &quot;Enroll Student&quot; button</li>
                 <li>Search for students by name or email</li>
                 <li>View student information (CEFR level, XP, etc.)</li>
-                <li>Click "Enroll" next to the desired student</li>
+                <li>Click &quot;Enroll&quot; next to the desired student</li>
                 <li>Student is immediately added to the classroom</li>
               </ol>
             </div>
