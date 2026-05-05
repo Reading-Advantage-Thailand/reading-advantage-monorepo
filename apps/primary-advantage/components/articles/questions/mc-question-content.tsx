@@ -138,11 +138,6 @@ export default function MCQuestionContent({
                 background: `var(--success)`,
               },
             });
-            update({
-              user: {
-                ...session?.user,
-              },
-            });
             router.refresh();
           } else {
             toast("Failed to finish quiz", {

@@ -229,7 +229,7 @@ export async function enrollStudentController(
     }
 
     // Only teachers and system can enroll students
-    if (user.role !== "teacher" && user.role !== "system") {
+    if (user.role !== "TEACHER" && user.role !== "SYSTEM") {
       return NextResponse.json(
         { error: "Access denied. Insufficient permissions." },
         { status: 403 },
@@ -279,7 +279,7 @@ export async function unenrollStudentController(
     }
 
     // Only teachers and system can unenroll students
-    if (user.role !== "teacher" && user.role !== "system") {
+    if (user.role !== "TEACHER" && user.role !== "SYSTEM") {
       return NextResponse.json(
         { error: "Access denied. Insufficient permissions." },
         { status: 403 },
@@ -333,7 +333,7 @@ export async function getAvailableStudentsController(
     }
 
     // Only teachers and system can view available students
-    if (user.role !== "teacher" && user.role !== "system") {
+    if (user.role !== "TEACHER" && user.role !== "SYSTEM") {
       return NextResponse.json(
         { error: "Access denied. Insufficient permissions." },
         { status: 403 },

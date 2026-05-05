@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user has system role (only system admins can create schools)
-    if (currentUser.role !== "system") {
+    if (currentUser.role !== "SYSTEM") {
       return NextResponse.json(
         {
           error: "Forbidden. Only system administrators can create schools.",
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if user has system role
-    if (currentUser.role !== "system") {
+    if (currentUser.role !== "SYSTEM") {
       return NextResponse.json(
         {
           error: "Forbidden. Only system administrators can view schools.",

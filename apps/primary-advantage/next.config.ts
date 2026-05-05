@@ -5,12 +5,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   reactStrictMode: false,
   transpilePackages: [],
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  typescript: { ignoreBuildErrors: true },
   images: {
     remotePatterns: [
       {
