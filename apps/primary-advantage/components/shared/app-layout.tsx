@@ -62,7 +62,7 @@ export default async function AppLayout({
           <div className="flex items-center justify-center gap-2">
             <LocaleSwitcher />
             <ThemeToggle />
-            <UserAccountNav user={user} />
+            <UserAccountNav user={{ ...user, xp: 0, level: 0, cefrLevel: "", email: null, image: null }} />
           </div>
         </div>
       </header>

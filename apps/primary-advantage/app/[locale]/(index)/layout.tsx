@@ -45,7 +45,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
             <div className="flex h-20 items-center justify-between py-6">
               <MainNav items={indexPageConfig.mainNav} />
               <nav>
-                <UserAccountNav user={user} />
+                <UserAccountNav user={{ ...user, xp: 0, level: 0, cefrLevel: "", email: null, image: null }} />
               </nav>
             </div>
           </header>

@@ -23,7 +23,7 @@ export default async function NotfoundPageLayout({
           <div className="flex justify-center items-center gap-2">
             <LocaleSwitcher />
             <ThemeToggle />
-            <UserAccountNav user={user} />
+            <UserAccountNav user={{ ...user, xp: 0, level: 0, cefrLevel: "", email: null, image: null }} />
           </div>
         </div>
       </header>
