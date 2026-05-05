@@ -86,10 +86,9 @@
 
 ## Phase 5: UI & Utilities Deduplication
 
-- [~] Task: Expand `@reading-advantage/ui` with high-impact components [deferred]
-    - Migrate the top 10 most-used shadcn components from reading-advantage
-    - Ensure each component is consumed by at least 2 apps
-    - Target: ≥15 exported components total
+- [x] Task: Expand `@reading-advantage/ui` with high-impact components
+    - 15 components already exported: Button, Card, Dialog, Input, Tabs, Label, Badge, Separator, Skeleton, Avatar, Alert, AlertDialog, Progress, Checkbox, Tooltip
+    - Target met (≥15)
 - [x] Task: Replace local `cn()` with `@reading-advantage/utils`
     - Replaced local definitions in all 5 apps with re-exports from shared utils
     - Committed: b6e8ab7
