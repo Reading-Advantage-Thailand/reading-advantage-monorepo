@@ -49,7 +49,7 @@ This file tracks all major tracks for the project.
 
 ### Pending Tracks
 
-- [x] **Track: Tech Debt Resolution** *Link: [./tracks/tech_debt_resolution_20260503/](./tracks/tech_debt_resolution_20260503/)*
+- [x] **Track: Tech Debt Resolution** *Link: [./archive/tech_debt_resolution_20260503/](./archive/tech_debt_resolution_20260503/)*
   Resolve 16 open tech-debt items not covered by other tracks. Phases: critical infra (Prisma→Drizzle, auth migration SQL), build config cleanup (ignoreBuildErrors removal), schema integrity, app-specific fixes, shared tooling.
 - [~] **Track: Reading-Advantage Build Remediation** *Link: [./tracks/reading_advantage_build_remediation_20260503/](./tracks/reading_advantage_build_remediation_20260503/)*
   Fix 128 lint warnings, 26 failed test suites, and remove ignoreBuildErrors. *Status: Core tests fixed — all 8 `__test__/` suites pass (184 tests). ESLint v9 flat config created. Game component tests still hang (Zustand v4). Build/lint full verification blocked by hardware.*
@@ -57,7 +57,7 @@ This file tracks all major tracks for the project.
   Fix 49 lint errors, add Vitest test suite, remove ignoreBuildErrors. *Status: All 35 lint errors fixed (0 remain). Vitest 35/35 tests pass. Build/ignoreBuildErrors removal blocked by hardware.*
 - [~] **Track: Shared ESLint v9 Flat Config Migration** *Link: [./tracks/shared_eslint_v9_migration_20260503/](./tracks/shared_eslint_v9_migration_20260503/)*
   Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9. *Status: reading-advantage migrated to eslint.config.mjs. All 5 apps on flat config. Shared config README written. Plugin resolution verification blocked by hardware.*
-- [x] **Track: Science-Advantage Auth Migration** (26/26 tasks) *Link: [./tracks/science_auth_migration_20260503/](./tracks/science_auth_migration_20260503/)*
+- [x] **Track: Science-Advantage Auth Migration** (26/26 tasks) *Link: [./archive/science_auth_migration_20260503/](./archive/science_auth_migration_20260503/)*
   Migrate from standalone Prisma auth to shared @reading-advantage/auth, auth-client, and db packages. Build passes, auth files lint clean. Non-auth Prisma (curriculum, lessons) preserved.
 - [ ] **Track: Monorepo Tech-Debt Cleanup** *Link: [./tracks/tech_debt_cleanup_20260505/](./tracks/tech_debt_cleanup_20260505/)*
   Resolve 7 remaining open tech-debt items: react/zustand dependency alignment, advantage-games ESLint warnings, science-advantage analytics lint, flaky perf tests, shared i18n types, and visual regression tests.
@@ -95,8 +95,8 @@ This file tracks all major tracks for the project.
   *Link: [./archive/strict_contracts_20260504/](./archive/strict_contracts_20260504/)*
   *Status: All four phases complete — TenantDB wrapper, branded types, tRPC output contracts, boundary validation. 28 tasks done. Plan archived.*
 - [x] **Track: Strict Contracts Review Remediation** (10 tasks)
-  *Link: [./tracks/strict_contracts_review_20260504/](./tracks/strict_contracts_review_20260504/)*
+  *Link: [./archive/strict_contracts_review_20260504/](./archive/strict_contracts_review_20260504/)*
   *Status: Complete. All 10 tasks finished across 4 phases. Tenant scoping fixed, validation/auth gaps closed, 26 new tests added, BOM removed. Pre-existing test/type issues in auth/api noted for separate tracks.*
 - [x] **Track: May 5 Review Remediation** (23/24 tasks)
-  *Link: [./tracks/remediation_20260505/](./tracks/remediation_20260505/)*
+  *Link: [./archive/remediation_20260505/](./archive/remediation_20260505/)*
   *Status: Complete. 23/24 tasks done (API test backfill deferred). Domain: 83/83 tests (+13 new). Auth: 64/64 tests. Security/auth gaps fixed, logic bugs resolved, TenantDB edge cases hardened.*

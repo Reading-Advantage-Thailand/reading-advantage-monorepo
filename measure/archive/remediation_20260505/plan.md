@@ -88,6 +88,20 @@
 - [x] Task: **Run full test suite** — Domain: 83/83 pass (up from 70). Auth: 64/64 pass. API tests deferred (pre-existing resource hang). Type-check deferred (tsc hangs on this hardware).
   - *Results*: `@reading-advantage/domain`: 83 pass | `@reading-advantage/auth`: 64 pass
 
+## Phase 5: Review Remediation Fixes (High/Medium)
+
+- [x] Task: **Backfill `progress.test.ts` for `getStudentProgress`** — Added 5 tests: full progress response (activities, wordRecords, sentenceRecords, xpTotal, storiesCompleted), empty xpLogs returns 0, 0 storiesCompleted, enrollment rejection, permission rejection. Created `packages/domain/src/__tests__/progress.test.ts`.
+  - *File*: `packages/domain/src/__tests__/progress.test.ts` (new)
+
+- [x] Task: **Document `getStudentProgress` xpTotal/storiesCompleted enhancement** — Added to return value: `xpTotal` (SUM of xpLogs.amount via COALESCE) and `storiesCompleted` (COUNT of storyRecords WHERE completed=true). Brings progress module into parity with reports module.
+  - *File*: `packages/domain/src/progress/index.ts`
+
+- [x] Task: **Document `userResponseSchema` contract changes** — Role enum: removed `"USER"`, added `"SYSTEM"`. Email: changed from `z.string().email()` to `z.string().email().nullable()`. Both changes fix incorrect assumptions about DB data shapes.
+  - *File*: `packages/types/src/index.ts`
+
+- [x] Task: **Document React 19.1.0 → 19.2.5 override** — Added `react: 19.2.5` and `react-dom: 19.2.5` to pnpm overrides to pin a consistent React version across all apps. All Radix/Framer Motion deps now resolve against 19.2.5.
+  - *File*: `pnpm-lock.yaml`
+
 ## Summary
 
 | Phase | Severity | Tasks |
@@ -96,6 +110,7 @@
 | Phase 2: Logic & Correctness | Medium | 6/6 complete |
 | Phase 3: Test Quality Backfill | Medium | 5/6 complete (API test backfill deferred) |
 | Phase 4: TenantDB Edge Cases & QA | Low/Medium | 5/5 complete |
+| Phase 5: Review Remediation Fixes | High/Medium | 4/4 complete |
 
-**23/24 tasks complete.** 1 deferred (API router failure-path test backfill — resource constraint).
-**Total domain tests: 83 (up from 70, +13 new). Auth tests: 64 pass.**
+**27/28 tasks complete.** 1 deferred (API router failure-path test backfill — resource constraint).
+**Total domain tests: 88 (up from 70, +18 new). Auth tests: 64 pass.**
