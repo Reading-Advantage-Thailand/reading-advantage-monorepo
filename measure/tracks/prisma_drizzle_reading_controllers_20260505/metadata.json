@@ -1,0 +1,11 @@
+{
+  "track_id": "prisma_drizzle_reading_controllers_20260505",
+  "type": "chore",
+  "status": "blocked",
+  "created_at": "2026-05-05T03:53:51Z",
+  "updated_at": "2026-05-05T03:53:51Z",
+  "description": "Migrate apps/reading-advantage controllers, actions, scripts, and route handlers off Prisma onto the unified Drizzle schema. Final step removes apps/reading-advantage/lib/prisma.ts, prisma/, and Prisma deps.",
+  "estimated_tasks": 19,
+  "actual_tasks": null,
+  "deviation_notes": "Blocked on prisma_drizzle_schema_unification_20260505. Plan groupings will be refined with audit findings during Phase 6 of that track."
+}

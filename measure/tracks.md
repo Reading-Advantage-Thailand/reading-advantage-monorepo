@@ -62,6 +62,23 @@ This file tracks all major tracks for the project.
 
 ---
 
+### Prisma → Drizzle Migration Program (4 tracks)
+
+- [ ] **Track: Prisma → Drizzle Schema Unification**
+  *Link: [./tracks/prisma_drizzle_schema_unification_20260505/](./tracks/prisma_drizzle_schema_unification_20260505/)*
+  Track 1 of 4. Audit, port, reshape, and unify all non-auth Prisma models into shared Drizzle schema. Adds domain helpers and parity tests. No controller changes. Unblocks tracks 2–4.
+- [ ] **Track: reading-advantage Controllers — Prisma → Drizzle**
+  *Link: [./tracks/prisma_drizzle_reading_controllers_20260505/](./tracks/prisma_drizzle_reading_controllers_20260505/)*
+  Track 2 of 4. **Blocked on track 1.** Migrate 141 Prisma references across 54 controllers, actions, lib, scripts, pages, and route handlers. Final phase deletes Prisma surface and deps.
+- [ ] **Track: science-advantage Non-Auth Prisma → Drizzle**
+  *Link: [./tracks/prisma_drizzle_science_controllers_20260505/](./tracks/prisma_drizzle_science_controllers_20260505/)*
+  Track 3 of 4. **Blocked on track 1.** Migrate 89 non-auth Prisma references (curriculum, lessons, gamification, classes, attempts, mastery). Deletes generated Zod artifacts and Prisma surface.
+- [ ] **Track: Prisma → Drizzle Per-Feature Slice Cleanup**
+  *Link: [./tracks/prisma_drizzle_slice_cleanup_20260505/](./tracks/prisma_drizzle_slice_cleanup_20260505/)*
+  Track 4 of 4. **Blocked on tracks 2–3.** Per-slice cleanup of non-generalizable surface deferred from earlier tracks. Final repo-wide Prisma eradication.
+
+---
+
 ### Review Remediation
 
 - [~] **Track: Last-12-Hour Review Fixes**
