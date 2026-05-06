@@ -36,10 +36,10 @@ This file tracks all major tracks for the project.
   *Link: [./archive/shared_backend_api_20260502/](./archive/shared_backend_api_20260502/)*
   *Status: Tiers 1–2 routers implemented (users, classes, assignments, articles, progress, reports, auth). Tiers 3–4 (app-specific, AI) deferred to future tracks. Cookie-based auth update will be handled by unified auth track.*
 - [x] **Track: Unified Auth System** (Phases 1–6 complete)
-  *Link: [./tracks/unified_auth_20260502/](./tracks/unified_auth_20260502/)*
+  *Link: [./archive/unified_auth_20260502/](./archive/unified_auth_20260502/)*
   *Status: Schema, auth pkg, auth-client, tRPC/API routes, reading+primary apps all done. next-auth fully removed. firebaseUid/JWT cleanup complete. Phase 5c (science-advantage) tracked separately.*
 - [x] **Track: Shared Config Consolidation** (ESLint restructuring + 10 UI components added)
-  *Link: [./tracks/shared_config_consolidation_20260502/](./tracks/shared_config_consolidation_20260502/)*
+  *Link: [./archive/shared_config_consolidation_20260502/](./archive/shared_config_consolidation_20260502/)*
   *Status: Tailwind v4 unified, ESLint flat config migrated for primary/www, ESLint shared config restructured with composable baseConfig/plugins/ignores exports, advantage-games migrated to shared config, `cn()` deduped, 15 UI components in @reading-advantage/ui. Deferred: visual regression tests, shared i18n types, integration tests.*
 - [x] **Track: i18n Migration (reading-advantage)** (19/19 tasks complete)
   *Link: [./archive/i18n_migration_20260502/](./archive/i18n_migration_20260502/)*
