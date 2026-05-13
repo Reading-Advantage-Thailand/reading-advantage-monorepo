@@ -1,6 +1,10 @@
 import { NextRequest } from "next/server";
 import { generateText } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { cookies } from "next/headers";
+import { db } from "@reading-advantage/db";
+import { requireAuth } from "@reading-advantage/auth";
+import { z } from "zod";
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY,
@@ -23,16 +27,33 @@ Key architectural principles:
 
 Be concise, practical, and reference actual files when helpful. If asked about code, provide working TypeScript examples that follow the monorepo conventions.`;
 
+const chatInputSchema = z.object({
+  message: z.string().min(1).max(4000),
+  lessonId: z.string().uuid().optional(),
+  moduleId: z.string().uuid().optional(),
+});
+
 export async function POST(req: NextRequest) {
   try {
-    const { message, lessonId: _lessonId, moduleId: _moduleId } = await req.json();
+    // Authenticate
+    const cookieStore = await cookies();
+    const token = cookieStore.get("session_token")?.value;
+    await requireAuth(db, token);
 
-    if (!message || typeof message !== "string") {
+    // TODO: Add per-user rate limiting for LLM API costs
+    // The existing checkRateLimit is designed for auth failures (5 attempts / 15 min).
+    // A separate general-purpose rate limiter should be implemented for API endpoints.
+
+    const body = await req.json();
+    const parsed = chatInputSchema.safeParse(body);
+    if (!parsed.success) {
       return Response.json(
-        { error: "Message is required" },
+        { error: "Invalid input", details: parsed.error.format() },
         { status: 400 }
       );
     }
+
+    const { message } = parsed.data;
 
     // Fallback if no API key is configured
     if (!process.env.GOOGLE_AI_API_KEY) {
@@ -50,6 +71,12 @@ export async function POST(req: NextRequest) {
 
     return Response.json({ response: text });
   } catch (error) {
+    if (error instanceof Error && error.message === "Authentication required") {
+      return Response.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
     console.error("Chat API error:", error);
     return Response.json(
       { error: "Failed to generate response" },

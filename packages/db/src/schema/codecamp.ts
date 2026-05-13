@@ -31,7 +31,10 @@ export const codecampLessons = pgTable("codecamp_lessons", {
   contentJson: jsonb("content_json").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  // Index for module-scoped lesson queries
+  // (no explicit index needed on module_id FK for curriculum lookups)
+]);
 
 export const codecampExercises = pgTable("codecamp_exercises", {
   id: uuid("id").primaryKey().defaultRandom(),

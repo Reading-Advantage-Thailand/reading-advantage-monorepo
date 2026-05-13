@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     "@reading-advantage/ui",
     "@reading-advantage/utils",
   ],
-  typescript: { ignoreBuildErrors: true },
+  // typescript: { ignoreBuildErrors: true },
   images: {
     remotePatterns: [
       {

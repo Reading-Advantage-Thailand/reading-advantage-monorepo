@@ -1,4 +1,4 @@
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import {
   codecampModules,
   codecampLessons,
@@ -25,11 +25,13 @@ interface DomainInput<T> {
 export async function getModulesWithProgress({
   db,
   user,
+  tenant,
 }: {
   db: TenantDB;
   user: UserContext;
+  tenant: Tenant;
 }) {
-  assertCan(user, "codecamp:read", { schoolId: null });
+  assertCan(user, "codecamp:read", tenant);
 
   const modules = await db
     .select()
@@ -66,9 +68,10 @@ export async function getModulesWithProgress({
 export async function getLessonWithContent({
   db,
   user,
+  tenant,
   input,
 }: DomainInput<{ lessonId: string }>) {
-  assertCan(user, "codecamp:read", { schoolId: null });
+  assertCan(user, "codecamp:read", tenant);
 
   const [lesson] = await db
     .select()
@@ -77,6 +80,17 @@ export async function getLessonWithContent({
     .limit(1);
 
   if (!lesson) {
+    throw new Error("Lesson not found");
+  }
+
+  // Verify parent module is published
+  const [module] = await db
+    .select()
+    .from(codecampModules)
+    .where(eq(codecampModules.id, lesson.moduleId))
+    .limit(1);
+
+  if (!module || module.status !== "published") {
     throw new Error("Lesson not found");
   }
 
@@ -126,9 +140,10 @@ export async function getLessonWithContent({
 export async function submitExerciseAttempt({
   db,
   user,
+  tenant,
   input,
 }: DomainInput<{ exerciseId: string; code: string }>) {
-  assertCan(user, "codecamp:submit", { schoolId: null });
+  assertCan(user, "codecamp:submit", tenant);
 
   const [exercise] = await db
     .select()
@@ -144,7 +159,7 @@ export async function submitExerciseAttempt({
   await updateUserProgress({
     db,
     user,
-    tenant: { schoolId: null },
+    tenant,
     input: {
       lessonId: exercise.lessonId,
       status: "in_progress",
@@ -164,12 +179,13 @@ export async function submitExerciseAttempt({
 export async function submitQuizAnswers({
   db,
   user,
+  tenant,
   input,
 }: DomainInput<{
   lessonId: string;
   answers: { questionId: string; answer: string }[];
 }>) {
-  assertCan(user, "codecamp:submit", { schoolId: null });
+  assertCan(user, "codecamp:submit", tenant);
 
   const questions = await db
     .select()
@@ -203,7 +219,7 @@ export async function submitQuizAnswers({
   await updateUserProgress({
     db,
     user,
-    tenant: { schoolId: null },
+    tenant,
     input: {
       lessonId: input.lessonId,
       status: "completed",
@@ -225,6 +241,7 @@ export async function submitQuizAnswers({
 export async function saveChatMessage({
   db,
   user,
+  tenant,
   input,
 }: DomainInput<{
   conversationId?: string;
@@ -232,44 +249,63 @@ export async function saveChatMessage({
   moduleId?: string;
   lessonId?: string;
 }>) {
-  assertCan(user, "codecamp:chat", { schoolId: null });
+  assertCan(user, "codecamp:chat", tenant);
 
   let conversationId = input.conversationId;
 
-  if (!conversationId) {
-    const [conversation] = await db
-      .insert(codecampChatConversations)
+  return db.transaction(async (tx) => {
+    if (conversationId) {
+      // Verify ownership before appending
+      const [existing] = await tx
+        .select()
+        .from(codecampChatConversations)
+        .where(
+          and(
+            eq(codecampChatConversations.id, conversationId),
+            eq(codecampChatConversations.userId, user.id)
+          )
+        )
+        .limit(1);
+
+      if (!existing) {
+        throw new Error("Conversation not found");
+      }
+    } else {
+      const [conversation] = await tx
+        .insert(codecampChatConversations)
+        .values({
+          userId: user.id,
+          title: input.message.slice(0, 60) + (input.message.length > 60 ? "..." : ""),
+          moduleId: input.moduleId ?? null,
+          lessonId: input.lessonId ?? null,
+        })
+        .returning();
+      conversationId = conversation.id;
+    }
+
+    const [userMessage] = await tx
+      .insert(codecampChatMessages)
       .values({
-        userId: user.id,
-        title: input.message.slice(0, 60) + (input.message.length > 60 ? "..." : ""),
-        moduleId: input.moduleId ?? null,
-        lessonId: input.lessonId ?? null,
+        conversationId,
+        role: "user",
+        content: input.message,
       })
       .returning();
-    conversationId = conversation.id;
-  }
 
-  const [userMessage] = await db
-    .insert(codecampChatMessages)
-    .values({
+    return {
       conversationId,
-      role: "user",
-      content: input.message,
-    })
-    .returning();
-
-  return {
-    conversationId,
-    message: userMessage,
-  };
+      message: userMessage,
+    };
+  });
 }
 
 export async function getChatHistory({
   db,
   user,
+  tenant,
   input,
 }: DomainInput<{ conversationId: string }>) {
-  assertCan(user, "codecamp:read", { schoolId: null });
+  assertCan(user, "codecamp:read", tenant);
 
   const [conversation] = await db
     .select()
@@ -306,11 +342,13 @@ export async function getChatHistory({
 export async function getUserConversations({
   db,
   user,
+  tenant,
 }: {
   db: TenantDB;
   user: UserContext;
+  tenant: Tenant;
 }) {
-  assertCan(user, "codecamp:read", { schoolId: null });
+  assertCan(user, "codecamp:read", tenant);
 
   return db
     .select()
@@ -324,13 +362,14 @@ export async function getUserConversations({
 export async function updateUserProgress({
   db,
   user,
+  tenant,
   input,
 }: DomainInput<{
   lessonId: string;
   status?: "not_started" | "in_progress" | "completed";
   score?: number;
 }>) {
-  assertCan(user, "codecamp:submit", { schoolId: null });
+  assertCan(user, "codecamp:submit", tenant);
 
   const [lesson] = await db
     .select()
@@ -342,35 +381,10 @@ export async function updateUserProgress({
     throw new Error("Lesson not found");
   }
 
-  const [existing] = await db
-    .select()
-    .from(codecampUserProgress)
-    .where(
-      and(
-        eq(codecampUserProgress.userId, user.id),
-        eq(codecampUserProgress.lessonId, input.lessonId)
-      )
-    )
-    .limit(1);
+  const now = new Date();
+  const completedAt = input.status === "completed" ? now : null;
 
-  if (existing) {
-    const [updated] = await db
-      .update(codecampUserProgress)
-      .set({
-        status: input.status ?? existing.status,
-        score: input.score ?? existing.score,
-        completedAt:
-          input.status === "completed" && existing.status !== "completed"
-            ? new Date()
-            : existing.completedAt,
-        updatedAt: new Date(),
-      })
-      .where(eq(codecampUserProgress.id, existing.id))
-      .returning();
-    return updated;
-  }
-
-  const [created] = await db
+  const [result] = await db
     .insert(codecampUserProgress)
     .values({
       userId: user.id,
@@ -378,11 +392,21 @@ export async function updateUserProgress({
       lessonId: input.lessonId,
       status: input.status ?? "not_started",
       score: input.score ?? 0,
-      completedAt: input.status === "completed" ? new Date() : null,
+      completedAt,
+      updatedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: [codecampUserProgress.userId, codecampUserProgress.lessonId],
+      set: {
+        status: input.status ?? "not_started",
+        score: input.score ?? 0,
+        completedAt: completedAt,
+        updatedAt: now,
+      },
     })
     .returning();
 
-  return created;
+  return result;
 }
 
 // ─── Dashboard ────────────────────────────────────────────
@@ -390,13 +414,15 @@ export async function updateUserProgress({
 export async function getUserDashboard({
   db,
   user,
+  tenant,
 }: {
   db: TenantDB;
   user: UserContext;
+  tenant: Tenant;
 }) {
-  assertCan(user, "codecamp:read", { schoolId: null });
+  assertCan(user, "codecamp:read", tenant);
 
-  const modules = await getModulesWithProgress({ db, user });
+  const modules = await getModulesWithProgress({ db, user, tenant });
 
   const totalLessons = modules.reduce((sum, m) => sum + m.lessonCount, 0);
   const completedLessons = modules.reduce(

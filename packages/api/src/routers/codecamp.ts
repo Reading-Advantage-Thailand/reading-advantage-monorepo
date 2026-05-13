@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc.js";
+import { AuthError } from "@reading-advantage/auth";
 import * as codecamp from "@reading-advantage/domain/codecamp";
 import {
   moduleResponseSchema,
@@ -16,6 +17,9 @@ import {
 } from "@reading-advantage/types";
 
 function mapDomainError(err: unknown): never {
+  if (err instanceof AuthError) {
+    throw new TRPCError({ code: "FORBIDDEN", message: err.message });
+  }
   if (err instanceof Error) {
     if (err.message === "Lesson not found" || err.message === "Exercise not found" || err.message === "Conversation not found") {
       throw new TRPCError({ code: "NOT_FOUND", message: err.message });
@@ -36,6 +40,7 @@ export const codecampRouter = router({
         return await codecamp.getModulesWithProgress({
           db: ctx.tenantDb,
           user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
         });
       } catch (err) {
         mapDomainError(err);
@@ -151,6 +156,7 @@ export const codecampRouter = router({
         return await codecamp.getUserConversations({
           db: ctx.tenantDb,
           user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
         });
       } catch (err) {
         mapDomainError(err);
@@ -180,6 +186,7 @@ export const codecampRouter = router({
         return await codecamp.getUserDashboard({
           db: ctx.tenantDb,
           user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
         });
       } catch (err) {
         mapDomainError(err);
