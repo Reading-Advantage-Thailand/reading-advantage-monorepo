@@ -70,6 +70,12 @@ This file tracks all major tracks for the project.
 
 ---
 
+- [ ] **Track: Import www-reading-advantage Content & Video Pipeline**
+  *Link: [./tracks/www_content_video_import_20260514/](./tracks/www_content_video_import_20260514/)*
+  Import blog posts (13 EN + 13 TH), cover images, Thai TikTok videos, and extract the video generation pipeline into a new `@reading-advantage/video-pipeline` monorepo package. Framework code (next-intl, React 19, Tailwind v4) preserved; only content/assets/scripts ported.
+
+---
+
 ### Prisma → Drizzle Migration Program (4 tracks)
 
 - [ ] **Track: Prisma → Drizzle Schema Unification**
