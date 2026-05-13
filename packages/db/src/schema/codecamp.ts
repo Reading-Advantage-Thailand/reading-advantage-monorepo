@@ -5,6 +5,7 @@ import { users } from "./users";
 
 export const lessonTypeEnum = pgEnum("codecamp_lesson_type", ["theory", "exercise", "quiz"]);
 export const progressStatusEnum = pgEnum("codecamp_progress_status", ["not_started", "in_progress", "completed"]);
+export const codecampReviewStatusEnum = pgEnum("codecamp_review_status", ["pending", "reviewed", "needs_changes", "approved"]);
 
 // ─── Curriculum ───────────────────────────────────────────
 
@@ -108,5 +109,35 @@ export const codecampChatMessages = pgTable("codecamp_chat_messages", {
     .references(() => codecampChatConversations.id, { onDelete: "cascade" }),
   role: text("role").notNull(), // 'user' | 'assistant'
   content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ─── Exercise Repos ───────────────────────────────────────
+
+export const codecampExerciseRepos = pgTable("codecamp_exercise_repos", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  moduleId: uuid("module_id")
+    .notNull()
+    .references(() => codecampModules.id, { onDelete: "cascade" }),
+  repoUrl: text("repo_url").notNull(),
+  description: text("description").notNull(),
+  order: integer("order").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ─── PR Reviews ───────────────────────────────────────────
+
+export const codecampPrReviews = pgTable("codecamp_pr_reviews", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  exerciseRepoId: uuid("exercise_repo_id")
+    .notNull()
+    .references(() => codecampExerciseRepos.id, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  prUrl: text("pr_url").notNull(),
+  reviewStatus: codecampReviewStatusEnum("review_status").default("pending").notNull(),
+  llmReviewSummary: text("llm_review_summary"),
+  reviewedAt: timestamp("reviewed_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

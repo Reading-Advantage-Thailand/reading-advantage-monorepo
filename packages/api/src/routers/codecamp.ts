@@ -5,6 +5,7 @@ import { AuthError } from "@reading-advantage/auth";
 import * as codecamp from "@reading-advantage/domain/codecamp";
 import {
   moduleResponseSchema,
+  moduleBySlugResponseSchema,
   lessonResponseSchema,
   lessonListItemSchema,
   exerciseResultSchema,
@@ -44,7 +45,23 @@ export const codecampRouter = router({
           tenant: ctx.auth.tenant,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
+      }
+    }),
+
+  moduleBySlug: protectedProcedure
+    .input(z.object({ slug: z.string() }))
+    .output(moduleBySlugResponseSchema)
+    .query(async ({ ctx, input }) => {
+      try {
+        return await codecamp.getModuleBySlug({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
       }
     }),
 
@@ -60,7 +77,7 @@ export const codecampRouter = router({
           input,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
       }
     }),
 
@@ -76,7 +93,7 @@ export const codecampRouter = router({
           input,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
       }
     }),
 
@@ -92,7 +109,7 @@ export const codecampRouter = router({
           input,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
       }
     }),
 
@@ -108,7 +125,7 @@ export const codecampRouter = router({
           input,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
       }
     }),
 
@@ -134,7 +151,7 @@ export const codecampRouter = router({
           input,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
       }
     }),
 
@@ -150,7 +167,7 @@ export const codecampRouter = router({
           input,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
       }
     }),
 
@@ -176,7 +193,7 @@ export const codecampRouter = router({
           tenant: ctx.auth.tenant,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
       }
     }),
 
@@ -192,7 +209,7 @@ export const codecampRouter = router({
           input,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
       }
     }),
 
@@ -206,7 +223,7 @@ export const codecampRouter = router({
           tenant: ctx.auth.tenant,
         });
       } catch (err) {
-        mapDomainError(err);
+        throw mapDomainError(err);
       }
     }),
 });

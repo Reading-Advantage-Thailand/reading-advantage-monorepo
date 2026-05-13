@@ -1,188 +1,162 @@
 # Code Review: codecamp_advantage_20260513
 
-**Reviewer**: Code review of committed implementation
-**Date**: 2026-05-13
-**Scope**: Commits `59815da..6b35259` (4 commits, 43 files, +3526/-42 lines)
-**Revision range**: `59815da` → `46ecb45` → `6a11ba5` → `98b1f3c` → `6b35259`
+**Reviewer**: Full-track change quality review (logical, architectural, security)
+**Date**: 2026-05-14
+**Scope**: Commits `59815da..cb2752e` (8 commits, 43 files, +3526/-42 lines)
+**Revision range**: `59815da` → `46ecb45` → `6a11ba5` → `98b1f3c` → `6b35259` → `08471b2` → `04332ad` → `bf9a408` → `f362273` → `cb2752e`
 
 ## Summary
 
-The implementation covers schema, domain functions, tRPC router, app scaffold, LLM chat, UI pages, seed data, migrations, and tests. The domain and API layers are solid and follow monorepo conventions well. However, there are two type errors in the API package, a race condition in the original `saveChatMessage` (partially fixed in `98b1f3c`), and several correctness issues in the domain logic that need attention.
+The codecamp-advantage track builds schema, domain functions, tRPC router, app scaffold, LLM chat, UI pages, seed data, migrations, and tests. The domain and API layers follow monorepo conventions well — `assertCan()` before mutations, thin routers delegating to thick domain, TenantDB for consistency, Zod contracts. Phase 0 remediation fixed earlier type errors, streaming, and UI wiring. However, a **data-corruption bug** in `updateUserProgress`, a **missing auth gate** on the chat API, and several architectural gaps remain. The most urgent items are the `completedAt` regression and the unauthenticated chat cost exposure.
 
 ## Verification Checks
 
-- [ ] **Plan Compliance**: Partial — Phase 1-3 tasks marked `[x]` but subtask checkboxes still `[ ]`; plan doesn't track actual commit SHAs
+- [x] **Plan Compliance**: Pass — Phase 0 tasks completed; remaining phases scoped correctly
 - [x] **Style Compliance**: Pass — follows domain function pattern, router thin-wrapper pattern, Zod schemas
-- [x] **New Tests**: Yes — 17 domain tests + 15 router tests, all passing
-- [ ] **Test Coverage**: Partial — domain tests rely on complex mock setups that may not reflect real Drizzle behavior; no tests for chat route, UI components, or seed data
-- [x] **Test Results**: Passed — domain (105/105), api (63/63)
-- [x] **Lint**: Pass — 0 errors in all packages and app (5 pre-existing warnings in api)
-- [ ] **Type Check**: Fail — 2 type errors in `@reading-advantage/api` (codecamp-specific)
+- [x] **New Tests**: Yes — 20 domain tests + 17 router tests, all passing
+- [ ] **Test Coverage**: Partial — domain tests rely on complex mock setups with call-count indexing that doesn't reflect real Drizzle behavior; no tests for chat route, UI components, or seed data; no test for `updateUserProgress` partial-update edge case
+- [x] **Test Results**: Passed — domain (108/108), api (65/65)
+- [x] **Lint**: Pass — 0 errors, 3 warnings (2 unused imports in codecamp test, 1 pre-existing)
+- [x] **Type Check**: Pass — all packages clean (fixed in `08471b2`)
+- [x] **Build**: Pass — `pnpm turbo run build --filter=codecamp-advantage` succeeds (Next.js 16.0.0)
 - [ ] **Browser Runtime**: Skipped (no dev server running)
+- [ ] **Security Audit**: Skipped (no npm audit or Snyk in pipeline)
 
-## Findings
+## Active Findings
 
-### [Critical] Type error: `updateUserProgress` return type destructured incorrectly in router
+### [High] `updateUserProgress` partial update resets `completedAt` to null — data corruption
 
-- **File**: `packages/api/src/routers/codecamp.ts:171`
-- **Context**: The fix commit (`98b1f3c`) changed `return await codecamp.updateUserProgress(...)` to `const [result] = await codecamp.updateUserProgress(...)`, but `updateUserProgress` returns a single row (from `.returning()`), not an array. TypeScript error: `Type '{ id: string; ... }' must have a '[Symbol.iterator]()' method that returns an iterator.`
-- **Suggestion**: Remove the destructuring — `updateUserProgress` already returns a single object:
-```diff
--        const [result] = await codecamp.updateUserProgress({
-+        return await codecamp.updateUserProgress({
-```
-This is what the original code had before the "fix" commit changed it. The original was correct.
+- **File**: `packages/domain/src/codecamp/index.ts` lines 441, 459
+- **Context**: The function computes `completedAt` before knowing whether `input.status` is defined: `const completedAt = input.status === "completed" ? now : null`. On the conflict path, when `input.status !== undefined`, it writes the pre-computed `completedAt`. This means: if a user already completed a lesson (has `completedAt` set) and then calls `updateUserProgress` with `status: "in_progress"` (e.g., re-doing an exercise), their `completedAt` gets wiped to `null`. This silently destroys audit data about when a lesson was first completed.
+- **Impact**: Loss of completion timestamps — critical for progress tracking and admin dashboards.
+- **Fix**: Preserve `completedAt` on regression. Use `COALESCE` so the first completion timestamp is never overwritten:
+  ```typescript
+  completedAt: input.status === "completed"
+    ? sql`COALESCE(${codecampUserProgress.completedAt}, ${now})`
+    : input.status !== undefined
+      ? sql`${codecampUserProgress.completedAt}` // don't wipe on regression
+      : sql`${codecampUserProgress.completedAt}`
+  ```
+- **Phase to address**: Before Phase 4 (user progress is displayed in dashboard). Add a test for "already completed → partial update preserves completedAt."
 
-### [High] Type error: `updateUserProgress` mock returns wrong shape in router test
+### [High] Chat API route has no rate limiting — LLM cost exposure
 
-- **File**: `packages/api/src/__tests__/codecamp-router.test.ts:309`
-- **Context**: `vi.mocked(updateUserProgress).mockResolvedValue([resultRow] as ...)` wraps the result in an array, but the function returns a single object. TypeScript error: `Expected 2 arguments, but got 1.`
-- **Suggestion**: Fix the mock to return a single object:
-```diff
--      vi.mocked(updateUserProgress).mockResolvedValue([resultRow] as unknown as Awaited<ReturnType<typeof updateUserProgress>>);
-+      vi.mocked(updateUserProgress).mockResolvedValue(resultRow as unknown as Awaited<ReturnType<typeof updateUserProgress>>);
-```
+- **File**: `apps/codecamp-advantage/app/api/chat/route.ts` lines 43-46 (TODO comment)
+- **Context**: Every authenticated user can make unlimited LLM API calls. A single malicious or buggy client loop could run up significant Google AI API charges. The code has a TODO acknowledging this but no mitigation. The existing `checkRateLimit` in auth is scoped for auth failures only.
+- **Impact**: Unbounded LLM cost exposure. No defense against abuse.
+- **Fix**: Implement per-user rate limiting before Phase 4 ships. Even a simple in-memory or Redis counter (e.g., 30 requests/minute per user) would prevent cost explosions.
+- **Phase to address**: Must be implemented before Phase 4 "Connect chat tutor to tRPC." This should block that phase.
 
-### [High] `updateUserProgress` uses `onConflictDoUpdate` but loses data on conflict
+### [Medium] `mapDomainError` doesn't return in catch blocks — TypeScript sees `undefined` return
 
-- **File**: `packages/domain/src/codecamp/index.ts:331-352`
-- **Context**: When a progress row already exists, the upsert always overwrites `status` and `score` with the input values (or defaults). If a user scored 100 on a quiz and later opens the lesson (triggering `updateUserProgress` with `status: "in_progress"` and no `score`), the `score` resets to 0. The `?? 0` defaults are dangerous for partial updates.
-- **Suggestion**: Use `sql.excluded` to only update provided fields, or use coalesce to preserve existing values:
-```typescript
-set: {
-  status: input.status ?? sql.raw(codecampUserProgress.status.name),
-  score: input.score ?? sql.raw(codecampUserProgress.score.name),
-  completedAt: input.status === "completed" ? now : sql.raw(codecampUserProgress.completedAt.name),
-  updatedAt: now,
-},
-```
-Or more simply: only include fields in `set` that were explicitly provided in the input.
+- **File**: `packages/api/src/routers/codecamp.ts` lines 40-48 (and all other procedure catch blocks)
+- **Context**: Every procedure follows this pattern:
+  ```typescript
+  try {
+    return await codecamp.getModulesWithProgress({...});
+  } catch (err) {
+    mapDomainError(err); // returns `never` and always throws, but TS doesn't know
+  }
+  ```
+  `mapDomainError` is typed as `() => never` but TypeScript sees the catch block as completing normally (returning `undefined`). The Zod output validator catches this at runtime, but the type-level contract is wrong. If `mapDomainError` were ever refactored to not throw in some branch, the router would silently return `undefined`.
+- **Impact**: Incorrect type narrowing; potential silent `undefined` return if `mapDomainError` logic changes.
+- **Fix**: Add `throw` or `return` before `mapDomainError(err)`:
+  ```typescript
+  } catch (err) {
+    throw mapDomainError(err);
+  }
+  ```
+  Or extract a reusable wrapper:
+  ```typescript
+  function withDomainError<T>(fn: () => Promise<T>): Promise<T> {
+    return fn().catch((err) => { throw mapDomainError(err); });
+  }
+  ```
 
-### [High] `getModulesWithProgress` fetches ALL lessons and ALL progress — N+1 alternative is still unbounded
+### [Medium] Module page slug→moduleId client-side lookup is O(2n) and fragile
 
-- **File**: `packages/domain/src/codecamp/index.ts:36-56`
-- **Context**: The function does 3 queries: all published modules, **all** lessons (no module filter), and all progress for the user. With 5 modules and ~15 lessons this is fine, but it doesn't scale. More importantly, the `lessons` query is unfiltered — it fetches every lesson in the DB, including those for unpublished modules, then discards them in JS via `.filter()`. This leaks draft content data to the client-side computation.
-- **Suggestion**: Either (a) filter lessons to only those belonging to published modules (JOIN or subquery), or (b) accept this as a known limitation for a small dataset and add a comment documenting the assumption. Option (b) is acceptable for MVP.
+- **File**: `apps/codecamp-advantage/app/module/[slug]/page.tsx` lines 12-18
+- **Context**: The page fetches ALL modules via `trpc.codecamp.modules.useQuery()`, finds the matching slug client-side with `.find()`, then fetches lessons with a second query gated by `enabled`. Two issues: (1) fetches all modules just to find one — wasteful at 18+ modules, (2) the slug-to-ID resolution is fragile and blocks SSR.
+- **Impact**: Extra data transfer, double round-trip, no server-side rendering possible for module pages.
+- **Fix**: Add a `moduleBySlug` tRPC query that takes a slug and returns the module with its lessons in one round-trip. At minimum, use the `select` option to avoid re-fetching:
+  ```typescript
+  const { data: moduleData } = trpc.codecamp.modules.useQuery(undefined, {
+    select: (data) => data?.find(m => m.slug === slug)
+  });
+  ```
 
-### [Medium] Chat route uses `generateText` instead of `streamText` — spec says streaming
+### [Medium] Chat route bypasses shared `createContext` — auth divergence risk
 
-- **File**: `apps/codecamp-advantage/app/api/chat/route.ts:34`
-- **Context**: The spec says "Streaming LLM responses for chat" (NFR) and the plan says "using AI SDK `streamText`". The implementation uses `generateText` and returns `Response.json()`. This means the user sees nothing until the entire response is generated, which violates the <3s feedback requirement for slow LLM responses.
-- **Suggestion**: Switch to `streamText` and return a streaming response:
-```typescript
-const result = streamText({ model: google("gemini-2.0-flash"), system: SYSTEM_PROMPT, prompt: message });
-return result.toDataStreamResponse();
-```
+- **File**: `apps/codecamp-advantage/app/api/chat/route.ts` lines 39-41
+- **Context**: The chat route manually reads `session_token` cookie and calls `requireAuth(db, token)`, bypassing the shared `createContext` pipeline used by all tRPC routes. This means: (1) auth behavior may diverge from the tRPC path, (2) the chat route can't access tenant-scoped data, (3) if auth logic changes in `createContext`, the chat route won't pick it up.
+- **Impact**: Auth logic drift; maintenance risk.
+- **Fix**: Extract a shared `requireAuthFromRequest(req: Request)` helper that both the chat route and tRPC handler can use. Or restructure the chat route as a tRPC mutation that uses the standard context (noted in Phase 4 plan).
 
-### [Medium] Chat page doesn't persist conversations — duplicates ChatTutor in lesson page
+### [Low] Duplicated streaming chat UI code across two pages
 
-- **File**: `apps/codecamp-advantage/app/chat/page.tsx`, `apps/codecamp-advantage/app/lesson/[id]/page.tsx`
-- **Context**: The chat page maintains messages in React state only — they're lost on refresh. The domain layer has `saveChatMessage`/`getChatHistory`, but the UI doesn't call them. The `ChatTutor` component in the lesson page is a duplicate of the chat page logic with a different layout. Neither component uses the tRPC codecamp router.
-- **Suggestion**: (1) Connect chat UI to `trpc.codecamp.saveChatMessage` and `trpc.codecamp.chatHistory` for persistence. (2) Extract a shared `ChatTutor` component that both pages use. (3) Load conversation history on mount.
+- **File**: `apps/codecamp-advantage/app/lesson/[id]/page.tsx` lines 220-341 vs `apps/codecamp-advantage/app/chat/page.tsx` lines 14-78
+- **Context**: Both implement identical streaming parsing logic with the `0:` prefix pattern. Any fix to streaming parsing (e.g., handling `e:`, `d:`, `f:` events) must be applied in two places.
+- **Impact**: Maintenance burden.
+- **Fix**: Extract a shared `useChatTutor` hook or `ChatTutor` component. Planned for Phase 4.
 
-### [Medium] Module page uses hardcoded lesson placeholders instead of real data
+### [Low] `quizQuestionSchema` exposes `correctAnswer` to the client before quiz submission
 
-- **File**: `apps/codecamp-advantage/app/module/[slug]/page.tsx:54-67`
-- **Context**: The module page renders 3 hardcoded `LessonPlaceholder` components instead of querying for actual lessons from the database. The `lessons` query is commented out. The lesson links use synthetic IDs like `${moduleData.id}-l1`.
-- **Suggestion**: Query lessons via tRPC (will need a `lessonsByModule` procedure) and render real lesson data.
+- **File**: `packages/types/src/codecamp.ts` lines 33-40; `lessonResponseSchema` line 51
+- **Context**: The `quizQuestionSchema` includes `correctAnswer` and `explanation`, and `lessonResponseSchema` embeds it via `quizQuestions: z.array(quizQuestionSchema)`. A user who inspects the tRPC response in DevTools can see all correct answers before submitting.
+- **Impact**: Quiz cheating vector — answers are visible in network traffic.
+- **Fix**: Create a `quizQuestionPublicSchema` that omits `correctAnswer` and `explanation` for the lesson query. Only return those fields in the `submitQuiz` result. This should be addressed before intern testing begins.
 
-### [Medium] Dashboard page uses hardcoded module cards, not tRPC data
+### [Low] Unused imports in codecamp test files
 
-- **File**: `apps/codecamp-advantage/app/page.tsx`
-- **Context**: The dashboard hardcodes 5 `ModuleCard` components with static titles and descriptions. It doesn't use `trpc.codecamp.dashboard.useQuery()` or `trpc.codecamp.modules.useQuery()`. Progress tracking is invisible.
-- **Suggestion**: Replace hardcoded cards with data from `trpc.codecamp.dashboard` to show real progress bars.
+- **File**: `packages/domain/src/__tests__/codecamp.test.ts` line 10 (`getUserConversations`) and line 25 (`teacher`)
+- **Context**: ESLint warnings from `@typescript-eslint/no-unused-vars`.
+- **Impact**: Code cleanliness.
+- **Fix**: Remove unused imports. Prefix unused variables with `_`.
 
-### [Medium] `ignoreBuildErrors: true` in next.config.ts
+## Residual Risks (not verifiable locally)
 
-- **File**: `apps/codecamp-advantage/next.config.ts:20`
-- **Context**: This is a known tech-debt pattern from other apps in the monorepo (primary-advantage, reading-advantage). Starting a new app with it sets a bad precedent and hides real type errors.
-- **Suggestion**: Remove `ignoreBuildErrors: true` and fix any type errors instead. This is a greenfield app — there's no legacy code to excuse it.
+1. **`updateUserProgress` completedAt regression** — Needs manual verification against real DB. Current tests don't cover the "already completed → partial update" scenario.
+2. **Chat rate limiting** — Must be implemented before any public-facing deployment. No current mitigation.
+3. **Quiz answer exposure** — Currently exploitable via DevTools. Should be fixed before intern testing.
+4. **Streaming chat error handling** — The `0:` prefix parsing in both `ChatTutor` and `ChatPage` doesn't handle `e:` (error), `d:` (data), or `9:` (finish) events from the AI SDK data stream protocol. Partial/error responses may cause silent failures or stuck "Thinking..." states.
+5. **`reactStrictMode` not actually set** — The Phase 0 plan task claims `reactStrictMode: true` was set in `08471b2`, but the key is absent from `apps/codecamp-advantage/next.config.ts`. Next.js defaults to `true`, so this works, but the config should be explicit.
+6. **Next.js 16 middleware deprecation** — Build output warns: `"middleware" file convention is deprecated. Please use "proxy" instead.` The `middleware.ts` using `next-intl/middleware` should be migrated to the `proxy` convention.
+7. **No `INTERN` role defined** — The spec (Phase 6) references an `INTERN` role for admin dashboard RBAC, but `packages/auth/src/permissions.ts` only defines `STUDENT, TEACHER, ADMIN, SYSTEM`. The `INTERN` role must be added before Phase 6.
 
-### [Medium] `reactStrictMode: false` in next.config.ts
+## Previously Resolved Findings
 
-- **File**: `apps/codecamp-advantage/next.config.ts:11`
-- **Context**: React Strict Mode helps catch bugs during development. Disabling it in a new app is unusual.
-- **Suggestion**: Set `reactStrictMode: true` (or remove the line to use Next.js default of `true`).
+These findings from the initial scaffold review (`46ecb45..6b35259`) were addressed in Phase 0 remediation:
 
-### [Low] `quizResultSchema.score` is a percentage (0-100) but schema type is `z.number()` — no bounds validation
-
-- **File**: `packages/types/src/codecamp.ts:92`
-- **Context**: The domain function computes `score = Math.round((correctCount / questions.length) * 100)` and returns a percentage. The Zod schema accepts any number. If quiz logic changes, invalid scores could pass validation.
-- **Suggestion**: Consider `z.number().min(0).max(100)` for safety, or document that score is a percentage.
-
-### [Low] `codecampChatMessages.role` is `text` not an enum — allows arbitrary values
-
-- **File**: `packages/db/src/schema/codecamp.ts:108`
-- **Context**: The comment says `// 'user' | 'assistant'` but the column is `text`. The `chatMessageSchema` validates with `z.enum(["user", "assistant"])` at the API level, but the DB accepts any string.
-- **Suggestion**: Use `pgEnum("codecamp_chat_role", ["user", "assistant"])` for DB-level enforcement, consistent with `lessonTypeEnum` and `progressStatusEnum`.
-
-### [Low] Seed script uses raw `db` import, not `tenantDb` — intentional but undocumented
-
-- **File**: `packages/db/src/seed/codecamp-seed.ts`
-- **Context**: The seed script imports `db` directly (no tenant scoping). This is correct for seeding (no tenant context needed), but curriculum data is global with no admin interface to manage it.
-- **Suggestion**: Add a comment explaining why `db` (not `tenantDb`) is used for seeding.
-
-### [Low] No `@reading-advantage/domain` dependency listed in domain's `package.json`
-
-- **File**: `packages/domain/package.json` (modified in diff)
-- **Context**: The diff shows `packages/domain/package.json` was modified. Need to verify `@reading-advantage/db` and `@reading-advantage/auth` are listed as dependencies since the codecamp domain imports from both.
-- **Suggestion**: Verify `packages/domain/package.json` includes required dependencies. (This is likely already correct since existing domain functions use the same imports.)
-
-## Resolved from Plan Review
-
-- **[High] Multi-tenancy decision**: ✅ Resolved — domain functions now accept `tenant: Tenant` and pass it to `assertCan()`. The `98b1f3c` commit added `tenant` parameter to all functions. Plan documents "codecamp tables are intentionally school-agnostic."
-- **[High] Exercise evaluation**: ✅ Partially resolved — domain layer returns `passed: false` with comment "LLM review will determine this; domain layer is agnostic." This is the "LLM-as-reviewer" approach recommended in the plan review.
-- **[High] Quiz design**: ✅ Resolved — implementation uses static, pre-seeded quizzes. Spec should be updated to match.
+| Finding | Resolution | Commit |
+|---------|-----------|--------|
+| Type error: `updateUserProgress` destructured as array in router | Fixed — removed destructuring | `08471b2` |
+| Type error: `updateUserProgress` mock returns array in test | Fixed — returns single object | `08471b2` |
+| `updateUserProgress` resets score on partial update (score `?? 0`) | Fixed — uses `sql` template to preserve existing values when input is undefined | `08471b2` |
+| Chat route uses `generateText` instead of `streamText` | Fixed — switched to `streamText` with `toDataStreamResponse()` | `08471b2` |
+| Dashboard uses hardcoded module cards | Fixed — wired to `trpc.codecamp.dashboard.useQuery()` | `bf9a408` |
+| Module page uses hardcoded lesson placeholders | Fixed — wired to `trpc.codecamp.lessons.useQuery()` | `bf9a408` |
+| Lesson page not connected to tRPC | Fixed — wired exercises and quiz to tRPC procedures | `bf9a408` |
+| `ignoreBuildErrors: true` in next.config.ts | Fixed — removed | `08471b2` |
+| `reactStrictMode` not set | Claimed fixed — removed explicit `false`, but `true` not set explicitly (relies on Next.js default) | `08471b2` |
+| Multi-tenancy decision unresolved | Resolved — domain functions accept `tenant: Tenant`, codecamp tables are school-agnostic by design | `98b1f3c` |
+| Exercise evaluation approach | Resolved — domain returns `passed: false`, LLM review determines pass/fail | `98b1f3c` |
+| `getModulesWithProgress` fetches all lessons unfiltered | Partially resolved — uses `inArray` on published module IDs | `04332ad` |
 
 ## Recommendation
 
-The two type errors (Critical + High) should be fixed immediately — they will block the build. The `updateUserProgress` data-loss issue (High) should be fixed before the app is used with real data. The chat streaming and UI persistence issues (Medium) are important for the app to be functional but aren't blocking.
+The `completedAt` regression and chat rate limiting are the most urgent items. The `mapDomainError` type narrowing is a quick fix that prevents a class of bugs. The remaining items should be addressed in their respective phases.
 
 **Priority order:**
-1. Fix type errors in `packages/api/src/routers/codecamp.ts` and test
-2. Fix `updateUserProgress` to not reset score on partial updates
-3. Switch chat route from `generateText` to `streamText`
-4. Connect UI pages to tRPC data (dashboard, module, lesson)
-5. Remove `ignoreBuildErrors: true` from next.config.ts
+1. Fix `updateUserProgress` to preserve `completedAt` on regression (before Phase 4)
+2. Add rate limiting to chat API route (blocks Phase 4)
+3. Fix `mapDomainError` return type in router catch blocks
+4. Add `moduleBySlug` query to avoid client-side slug resolution
+5. Unify chat auth with shared `createContext` pipeline
+6. Extract shared `ChatTutor` component (Phase 4)
+7. Create `quizQuestionPublicSchema` that omits answers (before intern testing)
+8. Clean up unused test imports
 
-
-## Phase 0 Code Review
-
-**Date**: 2026-05-13
-**Reviewer**: Automated (agent execution)
-**Scope**: `46ecb45..HEAD` — all changes since initial scaffold through Phase 0 completion
-**Commands run**:
-- `pnpm turbo run test --filter=@reading-advantage/domain --filter=@reading-advantage/api` ✅ 108 + 65 tests pass
-- `pnpm turbo run check-types --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/types` ✅ Clean
-- `pnpm turbo run lint --filter=codecamp-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/types` ✅ Clean (pre-existing warnings only)
-- `pnpm turbo run build --filter=codecamp-advantage` ✅ Clean
-
-### Findings
-
-**Critical**: None
-
-**High**: None
-
-**Medium**:
-1. **Chat streaming parser incomplete** — `ChatTutor` components in `lesson/[id]/page.tsx` and `chat/page.tsx` parse only `0:` (text) events from the Vercel AI SDK data stream. Error events (`e:`), finish events (`f:`), and data events (`d:`) are not handled. This could leave the UI in a "Thinking..." state if the stream errors.
-   - *Mitigation*: The stream parser gracefully falls back to displaying raw content. Full chat persistence and error handling are planned for Phase 4.
-
-**Low**:
-1. **Lesson content rendering** — `lesson.content` is currently rendered as `JSON.stringify()` in a `<pre>` block. This is a placeholder until rich content rendering is implemented in a future phase.
-2. **Module page redundant data fetch** — The module page first calls `modules` query (which internally fetches all lessons across all modules via `getModulesWithProgress`), then calls `lessons` query for the specific module. For the expected small curriculum dataset this is acceptable, but a dedicated `moduleBySlug` query would be more efficient.
-
-### Plan Compliance
-
-| Task | Status |
-|------|--------|
-| Fix type errors in router/tests | ✅ Fixed in `08471b2` |
-| Fix chat route streaming | ✅ Fixed in `08471b2` |
-| Connect UI to tRPC (dashboard) | ✅ Uses `dashboard.useQuery()` |
-| Connect UI to tRPC (module) | ✅ Uses `lessons.useQuery()` |
-| Connect UI to tRPC (lesson) | ✅ Uses `lesson.useQuery()` with exercises/quiz |
-| Remove ignoreBuildErrors | ✅ Fixed in `08471b2` |
-| Set reactStrictMode | ✅ Fixed in `08471b2` (defaults to true) |
-
-### Verdict
-
-**Phase 0 passes review.** No Critical or High findings. Medium finding (chat stream error handling) is acceptable — full chat robustness is scoped to Phase 4.
+**Phase gate recommendations:**
+- Phase 4 should not start until items 1-2 are resolved
+- Phase 6 will require adding `INTERN` role to auth package
+- Next.js 16 `middleware` → `proxy` migration should be tracked in tech debt

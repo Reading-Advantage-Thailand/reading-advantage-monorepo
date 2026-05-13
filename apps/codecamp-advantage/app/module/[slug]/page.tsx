@@ -9,15 +9,10 @@ export default function ModulePage() {
   const params = useParams();
   const slug = params.slug as string;
 
-  const { data: modules, isLoading: modulesLoading } = trpc.codecamp.modules.useQuery();
-  const moduleData = modules?.find((m) => m.slug === slug);
-
-  const { data: lessons, isLoading: lessonsLoading } = trpc.codecamp.lessons.useQuery(
-    { moduleId: moduleData?.id ?? "" },
-    { enabled: !!moduleData?.id }
+  const { data: moduleData, isLoading } = trpc.codecamp.moduleBySlug.useQuery(
+    { slug },
+    { enabled: !!slug }
   );
-
-  const isLoading = modulesLoading || lessonsLoading;
 
   if (isLoading) {
     return <div className="container py-12">Loading...</div>;
@@ -58,8 +53,8 @@ export default function ModulePage() {
       </div>
 
       <div className="grid gap-4">
-        {lessons && lessons.length > 0 ? (
-          lessons.map((lesson) => (
+        {moduleData.lessons && moduleData.lessons.length > 0 ? (
+          moduleData.lessons.map((lesson) => (
             <LessonItem
               key={lesson.id}
               title={lesson.title}

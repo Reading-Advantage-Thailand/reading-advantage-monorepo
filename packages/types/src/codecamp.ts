@@ -39,6 +39,11 @@ export const quizQuestionSchema = z.object({
   order: z.number(),
 });
 
+export const quizQuestionPublicSchema = quizQuestionSchema.omit({
+  correctAnswer: true,
+  explanation: true,
+});
+
 export const lessonResponseSchema = z.object({
   id: z.string().uuid(),
   moduleId: z.string().uuid(),
@@ -48,7 +53,7 @@ export const lessonResponseSchema = z.object({
   type: z.enum(["theory", "exercise", "quiz"]),
   content: z.record(z.unknown()),
   exercises: z.array(exerciseSchema),
-  quizQuestions: z.array(quizQuestionSchema),
+  quizQuestions: z.array(quizQuestionPublicSchema),
   userStatus: z.enum(["not_started", "in_progress", "completed"]).nullable(),
   userScore: z.number().nullable(),
   createdAt: z.date(),
@@ -57,6 +62,7 @@ export const lessonResponseSchema = z.object({
 
 export type Exercise = z.infer<typeof exerciseSchema>;
 export type QuizQuestion = z.infer<typeof quizQuestionSchema>;
+export type QuizQuestionPublic = z.infer<typeof quizQuestionPublicSchema>;
 export type LessonResponse = z.infer<typeof lessonResponseSchema>;
 
 // ─── Codecamp Lesson List ─────────────────────────────────
@@ -75,6 +81,23 @@ export const lessonListItemSchema = z.object({
 });
 
 export type LessonListItem = z.infer<typeof lessonListItemSchema>;
+
+export const moduleBySlugResponseSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),
+  description: z.string(),
+  slug: z.string(),
+  order: z.number(),
+  status: z.string(),
+  lessons: z.array(lessonListItemSchema),
+  lessonCount: z.number(),
+  completedLessons: z.number(),
+  progress: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export type ModuleBySlugResponse = z.infer<typeof moduleBySlugResponseSchema>;
 
 // ─── Codecamp Exercise Submission ─────────────────────────
 
@@ -193,3 +216,111 @@ export const dashboardResponseSchema = z.object({
 });
 
 export type DashboardResponse = z.infer<typeof dashboardResponseSchema>;
+
+// ─── Exercise Repo Types ──────────────────────────────────
+
+export const exerciseRepoSchema = z.object({
+  id: z.string().uuid(),
+  moduleId: z.string().uuid(),
+  repoUrl: z.string().url(),
+  description: z.string(),
+  order: z.number(),
+  createdAt: z.date(),
+});
+
+export const exerciseRepoInputSchema = z.object({
+  moduleId: z.string().uuid(),
+  repoUrl: z.string().url(),
+  description: z.string().min(1).max(500),
+  order: z.number().int().min(0),
+});
+
+export type ExerciseRepo = z.infer<typeof exerciseRepoSchema>;
+export type ExerciseRepoInput = z.infer<typeof exerciseRepoInputSchema>;
+
+// ─── PR Review Types ──────────────────────────────────────
+
+export const prReviewSchema = z.object({
+  id: z.string().uuid(),
+  exerciseRepoId: z.string().uuid(),
+  userId: z.string(),
+  prUrl: z.string().url(),
+  reviewStatus: z.enum(["pending", "reviewed", "needs_changes", "approved"]),
+  llmReviewSummary: z.string().nullable(),
+  reviewedAt: z.date().nullable(),
+  createdAt: z.date(),
+});
+
+export const prReviewInputSchema = z.object({
+  exerciseRepoId: z.string().uuid(),
+  prUrl: z.string().url(),
+});
+
+export const prReviewUpdateSchema = z.object({
+  reviewStatus: z.enum(["pending", "reviewed", "needs_changes", "approved"]),
+  llmReviewSummary: z.string().optional(),
+});
+
+export type PrReview = z.infer<typeof prReviewSchema>;
+export type PrReviewInput = z.infer<typeof prReviewInputSchema>;
+export type PrReviewUpdate = z.infer<typeof prReviewUpdateSchema>;
+
+// ─── GitHub Webhook Types ─────────────────────────────────
+
+export const githubWebhookPayloadSchema = z.object({
+  action: z.enum(["opened", "synchronize", "reopened"]),
+  pull_request: z.object({
+    html_url: z.string().url(),
+    head: z.object({
+      ref: z.string(),
+      sha: z.string(),
+    }),
+    base: z.object({
+      ref: z.string(),
+      repo: z.object({
+        full_name: z.string(),
+        html_url: z.string().url(),
+      }),
+    }),
+    user: z.object({
+      login: z.string(),
+    }),
+  }),
+});
+
+export type GitHubWebhookPayload = z.infer<typeof githubWebhookPayloadSchema>;
+
+// ─── Module Phase Types ───────────────────────────────────
+
+export const modulePhaseSchema = z.enum(["A", "B", "C", "D"]);
+
+export const moduleWithReposSchema = moduleBySlugResponseSchema.extend({
+  exerciseRepos: z.array(exerciseRepoSchema),
+});
+
+export type ModulePhase = z.infer<typeof modulePhaseSchema>;
+export type ModuleWithRepos = z.infer<typeof moduleWithReposSchema>;
+
+// ─── Admin Types ──────────────────────────────────────────
+
+export const internAccountInputSchema = z.object({
+  username: z.string().min(3).max(50),
+  name: z.string().min(1).max(100),
+  password: z.string().min(8).max(100),
+});
+
+export const internProgressSchema = z.object({
+  userId: z.string(),
+  name: z.string().nullable(),
+  username: z.string(),
+  overallProgress: z.number(),
+  completedModules: z.number(),
+  totalModules: z.number(),
+  quizAverage: z.number(),
+  prReviewsPending: z.number(),
+  prReviewsApproved: z.number(),
+  lastActiveAt: z.date().nullable(),
+});
+
+export type InternAccountInput = z.infer<typeof internAccountInputSchema>;
+export type InternProgress = z.infer<typeof internProgressSchema>;

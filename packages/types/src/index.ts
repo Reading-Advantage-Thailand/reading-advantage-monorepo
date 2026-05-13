@@ -6,7 +6,7 @@ export const userResponseSchema = z.object({
   id: z.string(),
   email: z.string().email().nullable(),
   name: z.string().nullable(),
-  role: z.enum(["STUDENT", "TEACHER", "ADMIN", "SYSTEM"]),
+  role: z.enum(["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM"]),
   schoolId: z.string().uuid().nullable(),
   xp: z.number(),
   level: z.number(),
@@ -195,7 +195,7 @@ export const sessionResponseSchema = z.object({
     id: z.string(),
     username: z.string(),
     name: z.string().nullable(),
-    role: z.enum(["STUDENT", "USER", "TEACHER", "ADMIN", "SYSTEM"]),
+    role: z.enum(["INTERN", "STUDENT", "USER", "TEACHER", "ADMIN", "SYSTEM"]),
     schoolId: z.string().nullable(),
   }),
   tenant: z.object({

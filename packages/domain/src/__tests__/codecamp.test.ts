@@ -7,7 +7,6 @@ import {
   submitQuizAnswers,
   saveChatMessage,
   getChatHistory,
-  getUserConversations,
   updateUserProgress,
   getUserDashboard,
 } from "../codecamp/index.js";
@@ -22,13 +21,7 @@ const student = {
   role: "STUDENT" as const,
   schoolId: "s1",
 };
-const teacher = {
-  id: "t1",
-  username: "teacher1",
-  name: "Teacher",
-  role: "TEACHER" as const,
-  schoolId: "s1",
-};
+
 const globalTenant = { schoolId: null };
 
 function wrapDb(db: ReturnType<typeof createMockDb>) {

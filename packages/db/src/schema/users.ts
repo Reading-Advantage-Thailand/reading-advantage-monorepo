@@ -1,7 +1,7 @@
 import { pgTable, uuid, text, timestamp, integer, pgEnum, unique } from "drizzle-orm/pg-core";
 
 // Enums
-export const roleEnum = pgEnum("role", ["STUDENT", "TEACHER", "ADMIN", "SYSTEM"]);
+export const roleEnum = pgEnum("role", ["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM"]);
 
 // ─── Multi-Tenant ─────────────────────────────────────────
 

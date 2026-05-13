@@ -46,9 +46,9 @@ export const PERMISSIONS = {
   "admin:users": [ROLES.ADMIN, ROLES.SYSTEM],
 
   // Codecamp
-  "codecamp:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
-  "codecamp:submit": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
-  "codecamp:chat": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "codecamp:read": [ROLES.INTERN, ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "codecamp:submit": [ROLES.INTERN, ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "codecamp:chat": [ROLES.INTERN, ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
 } as const satisfies Record<string, Role[]>;
 
 export type Permission = keyof typeof PERMISSIONS;

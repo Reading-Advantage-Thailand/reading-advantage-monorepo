@@ -80,7 +80,7 @@ export async function listUsers({
   tenant: Tenant;
   input: {
     schoolId?: string;
-    role?: "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM";
+    role?: "INTERN" | "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM";
     limit: number;
     offset: number;
   };

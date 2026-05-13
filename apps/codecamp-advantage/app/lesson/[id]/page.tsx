@@ -5,6 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
 import { ArrowLeft, Send } from "lucide-react";
 import { useState } from "react";
+import { useChatStream } from "@/lib/use-chat-stream";
 
 export default function LessonPage() {
   const params = useParams();
@@ -146,7 +147,7 @@ function QuizComponent({
   questions,
 }: {
   lessonId: string;
-  questions: { id: string; question: string; options: string[]; correctAnswer: string; explanation: string }[];
+  questions: { id: string; question: string; options: string[] }[];
 }) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -154,43 +155,57 @@ function QuizComponent({
     onSuccess: () => setSubmitted(true),
   });
 
+  // Build a lookup for correct answers from the submission result
+  const resultByQuestion = new Map(
+    submitQuiz.data?.details.map((d) => [d.questionId, d]) ?? []
+  );
+
   const allAnswered = questions.every((q) => answers[q.id]);
 
   return (
     <div className="mt-4 space-y-6">
-      {questions.map((q, idx) => (
-        <div key={q.id} className="rounded-lg border p-4">
-          <p className="font-medium">
-            {idx + 1}. {q.question}
-          </p>
-          <div className="mt-3 space-y-2">
-            {q.options.map((opt) => (
-              <label
-                key={opt}
-                className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${
-                  answers[q.id] === opt ? "border-primary bg-primary/5" : "hover:bg-accent"
-                } ${submitted && submitQuiz.data ? (opt === q.correctAnswer ? "border-green-500 bg-green-50" : answers[q.id] === opt ? "border-red-500 bg-red-50" : "") : ""}`}
-              >
-                <input
-                  type="radio"
-                  name={q.id}
-                  value={opt}
-                  checked={answers[q.id] === opt}
-                  onChange={() => setAnswers((prev) => ({ ...prev, [q.id]: opt }))}
-                  disabled={submitted}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm">{opt}</span>
-              </label>
-            ))}
-          </div>
-          {submitted && submitQuiz.data && (
-            <p className="mt-3 text-sm text-muted-foreground">
-              <span className="font-medium">Explanation:</span> {q.explanation}
+      {questions.map((q, idx) => {
+        const result = resultByQuestion.get(q.id);
+        return (
+          <div key={q.id} className="rounded-lg border p-4">
+            <p className="font-medium">
+              {idx + 1}. {q.question}
             </p>
-          )}
-        </div>
-      ))}
+            <div className="mt-3 space-y-2">
+              {q.options.map((opt) => {
+                const isSelected = answers[q.id] === opt;
+                const isCorrect = result?.correctAnswer === opt;
+                const isWrong = isSelected && !result?.isCorrect;
+
+                return (
+                  <label
+                    key={opt}
+                    className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${
+                      isSelected && !submitted ? "border-primary bg-primary/5" : "hover:bg-accent"
+                    } ${submitted && isCorrect ? "border-green-500 bg-green-50" : ""} ${submitted && isWrong ? "border-red-500 bg-red-50" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name={q.id}
+                      value={opt}
+                      checked={isSelected}
+                      onChange={() => setAnswers((prev) => ({ ...prev, [q.id]: opt }))}
+                      disabled={submitted}
+                      className="h-4 w-4"
+                    />
+                    <span className="text-sm">{opt}</span>
+                  </label>
+                );
+              })}
+            </div>
+            {submitted && result && (
+              <p className="mt-3 text-sm text-muted-foreground">
+                <span className="font-medium">Explanation:</span> {result.explanation}
+              </p>
+            )}
+          </div>
+        );
+      })}
       {!submitted ? (
         <Button
           onClick={() =>
@@ -218,80 +233,8 @@ function QuizComponent({
 }
 
 function ChatTutor({ lessonId }: { lessonId: string }) {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<
-    { role: "user" | "assistant"; content: string }[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const sendMessage = async () => {
-    if (!message.trim()) return;
-
-    const userMessage = message;
-    setMessage("");
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage, lessonId }),
-      });
-
-      if (!res.ok) throw new Error("Failed to get response");
-
-      // Check if response is streaming (text/event-stream) or JSON
-      const contentType = res.headers.get("content-type") ?? "";
-      if (contentType.includes("text/event-stream") || res.body?.getReader) {
-        // Handle streaming response
-        const reader = res.body?.getReader();
-        const decoder = new TextDecoder();
-        let assistantMessage = "";
-
-        setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-        while (reader) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          // Simple parsing for Vercel AI SDK data stream format
-          const lines = chunk.split("\n");
-          for (const line of lines) {
-            if (line.startsWith("0:")) {
-              try {
-                const text = JSON.parse(line.slice(2));
-                assistantMessage += text;
-                setMessages((prev) => {
-                  const next = [...prev];
-                  next[next.length - 1] = { role: "assistant", content: assistantMessage };
-                  return next;
-                });
-              } catch {
-                // ignore parse errors
-              }
-            }
-          }
-        }
-      } else {
-        const data = await res.json();
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: data.response },
-        ]);
-      }
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "Sorry, I'm having trouble responding right now.",
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [input, setInput] = useState("");
+  const { messages, isLoading, sendMessage } = useChatStream({ lessonId });
 
   return (
     <div className="mt-4">
@@ -326,13 +269,13 @@ function ChatTutor({ lessonId }: { lessonId: string }) {
       <div className="mt-3 flex gap-2">
         <input
           type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
           placeholder="Ask about this lesson..."
           className="flex-1 rounded-lg border bg-background px-4 py-2 text-sm"
         />
-        <Button size="sm" onClick={sendMessage} disabled={isLoading}>
+        <Button size="sm" onClick={() => sendMessage(input)} disabled={isLoading}>
           <Send className="h-4 w-4" />
         </Button>
       </div>

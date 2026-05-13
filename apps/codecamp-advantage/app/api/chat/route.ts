@@ -1,13 +1,14 @@
 import { NextRequest } from "next/server";
 import { streamText } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { cookies } from "next/headers";
+import { createOpenAI } from "@ai-sdk/openai";
 import { db } from "@reading-advantage/db";
 import { requireAuth } from "@reading-advantage/auth";
+import { getAuthToken } from "@reading-advantage/api/context";
 import { z } from "zod";
 
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_AI_API_KEY,
+const openrouter = createOpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
 });
 
 const SYSTEM_PROMPT = `You are CodeCamp Advantage AI Tutor, an expert in Next.js, React, TypeScript, and monorepo architecture.
@@ -33,16 +34,50 @@ const chatInputSchema = z.object({
   moduleId: z.string().uuid().optional(),
 });
 
+// ─── Per-user rate limiting (in-memory) ───────────────────
+
+interface RateLimitEntry {
+  count: number;
+  windowStart: number;
+}
+
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 30;     // 30 requests per minute
+
+const rateLimits = new Map<string, RateLimitEntry>();
+
+function checkRateLimit(userId: string): { allowed: boolean; retryAfter?: number } {
+  const now = Date.now();
+  const entry = rateLimits.get(userId);
+
+  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+    rateLimits.set(userId, { count: 1, windowStart: now });
+    return { allowed: true };
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
+    const retryAfter = Math.ceil((RATE_LIMIT_WINDOW_MS - (now - entry.windowStart)) / 1000);
+    return { allowed: false, retryAfter };
+  }
+
+  entry.count++;
+  return { allowed: true };
+}
+
 export async function POST(req: NextRequest) {
   try {
-    // Authenticate
-    const cookieStore = await cookies();
-    const token = cookieStore.get("session_token")?.value;
-    await requireAuth(db, token);
+    // Authenticate using shared token helper
+    const token = await getAuthToken();
+    const session = await requireAuth(db, token);
 
-    // TODO: Add per-user rate limiting for LLM API costs
-    // The existing checkRateLimit is designed for auth failures (5 attempts / 15 min).
-    // A separate general-purpose rate limiter should be implemented for API endpoints.
+    // Rate limit check
+    const rateCheck = checkRateLimit(session.user.id);
+    if (!rateCheck.allowed) {
+      return Response.json(
+        { error: "Rate limit exceeded", retryAfter: rateCheck.retryAfter },
+        { status: 429 }
+      );
+    }
 
     const body = await req.json();
     const parsed = chatInputSchema.safeParse(body);
@@ -56,14 +91,14 @@ export async function POST(req: NextRequest) {
     const { message } = parsed.data;
 
     // Fallback if no API key is configured
-    if (!process.env.GOOGLE_AI_API_KEY) {
+    if (!process.env.OPENROUTER_API_KEY) {
       return Response.json({
-        response: `[AI Tutor fallback mode — GOOGLE_AI_API_KEY not configured]\n\nYou asked: "${message}"\n\nIn production, this would stream a response from Google's Gemini model grounded in the monorepo's architecture patterns.`,
+        response: `[AI Tutor fallback mode — OPENROUTER_API_KEY not configured]\n\nYou asked: "${message}"\n\nIn production, this would stream a response from OpenRouter grounded in the monorepo's architecture patterns.`,
       });
     }
 
     const result = streamText({
-      model: google("gemini-2.0-flash"),
+      model: openrouter("openrouter/free"),
       system: SYSTEM_PROMPT,
       prompt: message,
       maxTokens: 2048,

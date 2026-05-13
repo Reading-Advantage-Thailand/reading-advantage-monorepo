@@ -1,87 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@reading-advantage/ui";
 import { Send, Plus } from "lucide-react";
+import { useState } from "react";
+import { useChatStream } from "@/lib/use-chat-stream";
 
 export default function ChatPage() {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<
-    { role: "user" | "assistant"; content: string }[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const sendMessage = async () => {
-    if (!message.trim()) return;
-
-    const userMessage = message;
-    setMessage("");
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }),
-      });
-
-      if (!res.ok) throw new Error("Failed to get response");
-
-      const contentType = res.headers.get("content-type") ?? "";
-      if (contentType.includes("text/event-stream") || res.body?.getReader) {
-        const reader = res.body?.getReader();
-        const decoder = new TextDecoder();
-        let assistantMessage = "";
-
-        setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-        while (reader) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split("\n");
-          for (const line of lines) {
-            if (line.startsWith("0:")) {
-              try {
-                const text = JSON.parse(line.slice(2));
-                assistantMessage += text;
-                setMessages((prev) => {
-                  const next = [...prev];
-                  next[next.length - 1] = { role: "assistant", content: assistantMessage };
-                  return next;
-                });
-              } catch {
-                // ignore parse errors
-              }
-            }
-          }
-        }
-      } else {
-        const data = await res.json();
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: data.response },
-        ]);
-      }
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "Sorry, I'm having trouble responding right now.",
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [input, setInput] = useState("");
+  const { messages, isLoading, sendMessage } = useChatStream();
 
   return (
     <div className="container flex h-[calc(100vh-4rem)] flex-col py-6">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">AI Tutor</h1>
-        <Button variant="outline" size="sm" onClick={() => setMessages([])}>
+        <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
           <Plus className="mr-2 h-4 w-4" />
           New Conversation
         </Button>
@@ -122,13 +54,13 @@ export default function ChatPage() {
       <div className="mt-4 flex gap-2">
         <input
           type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
           placeholder="Ask about Next.js, tRPC, Drizzle..."
           className="flex-1 rounded-lg border bg-background px-4 py-3 text-sm"
         />
-        <Button onClick={sendMessage} disabled={isLoading}>
+        <Button onClick={() => sendMessage(input)} disabled={isLoading}>
           <Send className="mr-2 h-4 w-4" />
           Send
         </Button>

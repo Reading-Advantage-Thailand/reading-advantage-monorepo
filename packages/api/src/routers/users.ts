@@ -41,7 +41,7 @@ export const usersRouter = router({
     .input(
       z.object({
         schoolId: z.string().uuid().optional(),
-        role: z.enum(["STUDENT", "TEACHER", "ADMIN", "SYSTEM"]).optional(),
+        role: z.enum(["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM"]).optional(),
         limit: z.number().min(1).max(100).default(50),
         offset: z.number().min(0).default(0),
       })

@@ -22,6 +22,65 @@ interface DomainInput<T> {
 
 // ─── Modules ──────────────────────────────────────────────
 
+export async function getModuleBySlug({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ slug: string }>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  const [module] = await db
+    .select()
+    .from(codecampModules)
+    .where(eq(codecampModules.slug, input.slug))
+    .limit(1);
+
+  if (!module || module.status !== "published") {
+    throw new Error("Module not found");
+  }
+
+  const lessons = await db
+    .select()
+    .from(codecampLessons)
+    .where(eq(codecampLessons.moduleId, module.id))
+    .orderBy(codecampLessons.order);
+
+  const progress = await db
+    .select()
+    .from(codecampUserProgress)
+    .where(
+      and(
+        eq(codecampUserProgress.userId, user.id),
+        eq(codecampUserProgress.moduleId, module.id)
+      )
+    );
+
+  const completed = progress.filter((p) => p.status === "completed").length;
+
+  return {
+    ...module,
+    lessons: lessons.map((lesson) => {
+      const lessonProgress = progress.find((p) => p.lessonId === lesson.id);
+      return {
+        id: lesson.id,
+        moduleId: lesson.moduleId,
+        title: lesson.title,
+        description: lesson.description,
+        order: lesson.order,
+        type: lesson.type,
+        userStatus: lessonProgress?.status ?? "not_started",
+        userScore: lessonProgress?.score ?? null,
+        createdAt: lesson.createdAt,
+        updatedAt: lesson.updatedAt,
+      };
+    }),
+    lessonCount: lessons.length,
+    completedLessons: completed,
+    progress: lessons.length > 0 ? Math.round((completed / lessons.length) * 100) : 0,
+  };
+}
+
 export async function getModulesWithProgress({
   db,
   user,
@@ -183,8 +242,10 @@ export async function getLessonWithContent({
       hints: (e.hintsJson as string[]) || [],
     })),
     quizQuestions: quizQuestions.map((q) => ({
-      ...q,
+      id: q.id,
+      question: q.question,
       options: (q.optionsJson as string[]) || [],
+      order: q.order,
     })),
     userStatus: progress?.status ?? "not_started",
     userScore: progress?.score ?? 0,
@@ -438,7 +499,6 @@ export async function updateUserProgress({
   }
 
   const now = new Date();
-  const completedAt = input.status === "completed" ? now : null;
 
   const [result] = await db
     .insert(codecampUserProgress)
@@ -448,7 +508,7 @@ export async function updateUserProgress({
       lessonId: input.lessonId,
       status: input.status ?? "not_started",
       score: input.score ?? 0,
-      completedAt,
+      completedAt: input.status === "completed" ? now : null,
       updatedAt: now,
     })
     .onConflictDoUpdate({
@@ -456,7 +516,12 @@ export async function updateUserProgress({
       set: {
         status: input.status !== undefined ? input.status : sql`${codecampUserProgress.status}`,
         score: input.score !== undefined ? input.score : sql`${codecampUserProgress.score}`,
-        completedAt: input.status !== undefined ? completedAt : sql`${codecampUserProgress.completedAt}`,
+        completedAt:
+          input.status === "completed"
+            ? sql`COALESCE(${codecampUserProgress.completedAt}, ${now})`
+            : input.status !== undefined
+              ? sql`${codecampUserProgress.completedAt}`
+              : sql`${codecampUserProgress.completedAt}`,
         updatedAt: now,
       },
     })

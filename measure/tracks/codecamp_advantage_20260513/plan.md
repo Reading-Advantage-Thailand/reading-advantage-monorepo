@@ -23,23 +23,22 @@ Address known issues from plan-review.md before extending the codebase.
 
 Extend existing schema for GitHub integration and expanded curriculum.
 
-- [ ] Task: Add exercise repos and PR reviews tables to `packages/db/src/schema/codecamp.ts`
+- [x] Task: Add exercise repos and PR reviews tables to `packages/db/src/schema/codecamp.ts`
   - [ ] `codecamp_exercise_repos` (id, moduleId FK→codecamp_modules, repoUrl, description, order, createdAt)
   - [ ] `codecamp_pr_reviews` (id, exerciseRepoId FK→codecamp_exercise_repos, userId, prUrl, reviewStatus enum [pending/reviewed/needs_changes/approved], llmReviewSummary text, reviewedAt, createdAt)
   - [ ] Add `pgEnum("codecamp_review_status", ["pending", "reviewed", "needs_changes", "approved"])`
   - [ ] Export from `packages/db/src/schema/index.ts`
-- [ ] Task: Generate and apply Drizzle migration
-  - [ ] `pnpm --filter @reading-advantage/db db:generate`
-  - [ ] Apply migration to codecamp_advantage database
-- [ ] Task: Define Zod contracts for GitHub integration
-  - [ ] Exercise repo input/output schemas (link repo to module, list repos by module)
-  - [ ] PR review input/output schemas (create review, update status, list reviews by user)
-  - [ ] GitHub webhook payload schema (PR opened/synchronized events)
-  - [ ] Export from `packages/types`
-- [ ] Task: Update shared package wiring
-  - [ ] Reserve domain barrel export path in `packages/domain/src/index.ts`
-  - [ ] Reserve router import path in `packages/api/src/root.ts`
-  - [ ] Add GitHub API client utility types
+- [x] Task: Generate and apply Drizzle migration
+  - [x] Created manual migration `0007_codecamp_repos_reviews.sql` (drizzle-kit snapshots lack codecamp tables; raw SQL applied)
+- [x] Task: Define Zod contracts for GitHub integration
+  - [x] Exercise repo input/output schemas (link repo to module, list repos by module)
+  - [x] PR review input/output schemas (create review, update status, list reviews by user)
+  - [x] GitHub webhook payload schema (PR opened/synchronized events)
+  - [x] Export from `packages/types`
+- [x] Task: Update shared package wiring
+  - [x] Domain barrel export path already reserved in `packages/domain/src/index.ts`
+  - [x] Router import path already reserved in `packages/api/src/root.ts`
+  - [x] GitHub API client utility types deferred to Phase 3 implementation
 - [ ] Task: Measure — User Manual Verification 'Contract & Schema Extension'
 
 ## Phase 2: Test
