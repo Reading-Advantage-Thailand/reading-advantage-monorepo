@@ -9,6 +9,18 @@ import {
   getChatHistory,
   updateUserProgress,
   getUserDashboard,
+  getExerciseRepos,
+  linkExerciseRepo,
+  getPrReviewsForUser,
+  createPrReview,
+  updatePrReview,
+  getPrReviewByPrUrl,
+  getModulesByPhase,
+  getModuleWithExercises,
+  checkModulePrerequisite,
+  createInternAccount,
+  listInterns,
+  getInternProgress,
 } from "../codecamp/index.js";
 import { createMockDb } from "./mock-db.js";
 import { createTenantDB } from "../db-contract.js";
@@ -542,5 +554,429 @@ describe("getUserDashboard", () => {
     expect(result.completedLessons).toBe(1);
     expect(result.overallProgress).toBe(100);
     expect(result.recentConversations).toHaveLength(1);
+  });
+});
+
+// ─── Exercise Repo Management ─────────────────────────────
+
+describe("getExerciseRepos", () => {
+  it("returns repos for a module ordered by order", async () => {
+    const repos = [
+      { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() },
+      { id: "r2", moduleId: "m1", repoUrl: "https://github.com/org/repo2", description: "Repo 2", order: 2, createdAt: new Date() },
+    ];
+    const db = createMockDb({ selectResults: repos });
+
+    const result = await getExerciseRepos({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { moduleId: "m1" },
+    });
+
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe("r1");
+    expect(result[1].id).toBe("r2");
+  });
+
+  it("rejects unauthenticated users", async () => {
+    const db = createMockDb();
+    const invalidUser = { id: "x", username: "x", name: "X", role: "GUEST" as unknown as typeof student.role, schoolId: "s1" };
+
+    await expect(
+      getExerciseRepos({ db: wrapDb(db), user: invalidUser, tenant: globalTenant, input: { moduleId: "m1" } })
+    ).rejects.toThrow(/codecamp:read/);
+  });
+});
+
+describe("linkExerciseRepo", () => {
+  it("allows admin to link a repo to a module", async () => {
+    const repo = { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() };
+    const db = createMockDb({ insertReturning: [repo] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const result = await linkExerciseRepo({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1 },
+    });
+
+    expect(result.id).toBe("r1");
+    expect(db.insert).toHaveBeenCalled();
+  });
+
+  it("rejects non-admin users", async () => {
+    const db = createMockDb();
+
+    await expect(
+      linkExerciseRepo({
+        db: wrapDb(db),
+        user: student,
+        tenant: globalTenant,
+        input: { moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1 },
+      })
+    ).rejects.toThrow(/codecamp:read/);
+  });
+});
+
+describe("getPrReviewsForUser", () => {
+  it("returns PR reviews for the current user", async () => {
+    const reviews = [
+      { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: new Date() },
+    ];
+    const db = createMockDb({ selectResults: reviews });
+
+    const result = await getPrReviewsForUser({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+    });
+
+    expect(result).toHaveLength(1);
+    expect(result[0].reviewStatus).toBe("pending");
+  });
+});
+
+// ─── PR Review Pipeline ───────────────────────────────────
+
+describe("createPrReview", () => {
+  it("creates a pending PR review", async () => {
+    const review = { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: new Date() };
+    const db = createMockDb({ insertReturning: [review] });
+
+    const result = await createPrReview({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { exerciseRepoId: "r1", prUrl: "https://github.com/org/repo1/pull/1" },
+    });
+
+    expect(result.id).toBe("pr1");
+    expect(result.reviewStatus).toBe("pending");
+    expect(db.insert).toHaveBeenCalled();
+  });
+
+  it("rejects unauthenticated users", async () => {
+    const db = createMockDb();
+    const invalidUser = { id: "x", username: "x", name: "X", role: "GUEST" as unknown as typeof student.role, schoolId: "s1" };
+
+    await expect(
+      createPrReview({ db: wrapDb(db), user: invalidUser, tenant: globalTenant, input: { exerciseRepoId: "r1", prUrl: "https://github.com/org/repo1/pull/1" } })
+    ).rejects.toThrow(/codecamp:read/);
+  });
+});
+
+describe("updatePrReview", () => {
+  it("updates review status and summary", async () => {
+    const review = { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "approved", llmReviewSummary: "Great work!", reviewedAt: new Date(), createdAt: new Date() };
+    const db = createMockDb({ updateReturning: [review] });
+
+    const result = await updatePrReview({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { reviewId: "pr1", reviewStatus: "approved", llmReviewSummary: "Great work!" },
+    });
+
+    expect(result.reviewStatus).toBe("approved");
+    expect(result.llmReviewSummary).toBe("Great work!");
+    expect(db.update).toHaveBeenCalled();
+  });
+});
+
+describe("getPrReviewByPrUrl", () => {
+  it("returns review by PR URL", async () => {
+    const review = { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: new Date() };
+    const db = createMockDb({ selectResults: [review] });
+
+    const result = await getPrReviewByPrUrl({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { prUrl: "https://github.com/org/repo1/pull/1" },
+    });
+
+    expect(result).not.toBeNull();
+    expect(result?.id).toBe("pr1");
+  });
+
+  it("returns null when no review found", async () => {
+    const db = createMockDb({ selectResults: [] });
+
+    const result = await getPrReviewByPrUrl({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { prUrl: "https://github.com/org/repo1/pull/99" },
+    });
+
+    expect(result).toBeNull();
+  });
+});
+
+// ─── Expanded Curriculum Queries ──────────────────────────
+
+describe("getModulesByPhase", () => {
+  it("returns modules grouped by phase A", async () => {
+    const modules = [
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod-1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m2", title: "Module 2", description: "Desc", slug: "mod-2", order: 2, status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const db = createMockDb({ selectResults: modules });
+
+    const result = await getModulesByPhase({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { phase: "A" },
+    });
+
+    expect(result).toHaveLength(2);
+  });
+
+  it("rejects invalid phase", async () => {
+    const db = createMockDb();
+
+    await expect(
+      getModulesByPhase({ db: wrapDb(db), user: student, tenant: globalTenant, input: { phase: "Z" as "A" } })
+    ).rejects.toThrow(/Invalid phase/);
+  });
+});
+
+describe("getModuleWithExercises", () => {
+  it("returns module with linked exercise repos", async () => {
+    const moduleRow = { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() };
+    const repos = [
+      { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() },
+    ];
+
+    const db = createMockDb();
+    let selectCallCount = 0;
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([moduleRow]);
+          return queryResult(repos);
+        }),
+        limit: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([moduleRow]);
+          return queryResult(repos);
+        }),
+        orderBy: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([moduleRow]);
+          return queryResult(repos);
+        }),
+      }),
+    });
+
+    const result = await getModuleWithExercises({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { moduleId: "m1" },
+    });
+
+    expect(result.id).toBe("m1");
+    expect(result.exerciseRepos).toHaveLength(1);
+    expect(result.exerciseRepos[0].repoUrl).toBe("https://github.com/org/repo1");
+  });
+
+  it("throws when module not found", async () => {
+    const db = createMockDb({ selectResults: [] });
+
+    await expect(
+      getModuleWithExercises({ db: wrapDb(db), user: student, tenant: globalTenant, input: { moduleId: "m1" } })
+    ).rejects.toThrow(/Module not found/);
+  });
+});
+
+function createSequencedMockDb(results: unknown[]) {
+  let idx = 0;
+  function nextResult() {
+    const val = results[idx++] ?? [];
+    const self = Object.assign(Promise.resolve(val), {
+      limit: vi.fn().mockImplementation(() => self),
+      orderBy: vi.fn().mockImplementation(() => self),
+    });
+    return self;
+  }
+  const db = createMockDb();
+  db.select = vi.fn().mockReturnValue({
+    from: vi.fn().mockReturnValue({
+      where: vi.fn().mockImplementation(() => nextResult()),
+      innerJoin: vi.fn().mockImplementation(() => ({
+        where: vi.fn().mockImplementation(() => nextResult()),
+      })),
+    }),
+  });
+  return db;
+}
+
+describe("checkModulePrerequisite", () => {
+  it("returns true when previous module is completed", async () => {
+    const modules = [
+      { id: "m1", title: "M1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m2", title: "M2", description: "Desc", slug: "mod2", order: 2, status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const lessons = [
+      { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const progress = [
+      { id: "p1", userId: "st1", moduleId: "m1", lessonId: "l1", status: "completed", score: 100, completedAt: new Date(), createdAt: new Date(), updatedAt: new Date() },
+    ];
+
+    const db = createSequencedMockDb([[modules[1]], [modules[0]], lessons, progress]);
+
+    const result = await checkModulePrerequisite({
+      db: db as unknown as ReturnType<typeof wrapDb>,
+      user: student,
+      tenant: globalTenant,
+      input: { moduleId: "m2" },
+    });
+
+    expect(result.canStart).toBe(true);
+  });
+
+  it("returns false when previous module is not completed", async () => {
+    const modules = [
+      { id: "m1", title: "M1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m2", title: "M2", description: "Desc", slug: "mod2", order: 2, status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const lessons = [
+      { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const progress: unknown[] = [];
+
+    const db = createSequencedMockDb([[modules[1]], [modules[0]], lessons, progress]);
+
+    const result = await checkModulePrerequisite({
+      db: db as unknown as ReturnType<typeof wrapDb>,
+      user: student,
+      tenant: globalTenant,
+      input: { moduleId: "m2" },
+    });
+
+    expect(result.canStart).toBe(false);
+  });
+});
+
+// ─── Admin Domain Functions ───────────────────────────────
+
+describe("createInternAccount", () => {
+  it("allows admin to create an intern account", async () => {
+    const user = { id: "u1", username: "intern1", name: "Intern One", role: "INTERN", schoolId: null, createdAt: new Date() };
+    const db = createMockDb({ insertReturning: [user] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const result = await createInternAccount({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { username: "intern1", name: "Intern One", password: "password123" },
+    });
+
+    expect(result.id).toBe("u1");
+    expect(result.role).toBe("INTERN");
+  });
+
+  it("rejects non-admin users", async () => {
+    const db = createMockDb();
+
+    await expect(
+      createInternAccount({
+        db: wrapDb(db),
+        user: student,
+        tenant: globalTenant,
+        input: { username: "intern1", name: "Intern One", password: "password123" },
+      })
+    ).rejects.toThrow(/admin:dashboard/);
+  });
+});
+
+describe("listInterns", () => {
+  it("returns all intern accounts with progress summary", async () => {
+    const internUsers = [
+      { id: "u1", username: "intern1", name: "Intern One", role: "INTERN", schoolId: null, createdAt: new Date() },
+    ];
+    const db = createMockDb({ selectResults: internUsers });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const result = await listInterns({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+    });
+
+    expect(result).toHaveLength(1);
+    expect(result[0].userId).toBe("u1");
+  });
+
+  it("rejects non-admin users", async () => {
+    const db = createMockDb();
+
+    await expect(
+      listInterns({ db: wrapDb(db), user: student, tenant: globalTenant })
+    ).rejects.toThrow(/admin:dashboard/);
+  });
+});
+
+describe("getInternProgress", () => {
+  it("returns detailed progress for a specific intern", async () => {
+    const intern = { id: "u1", username: "intern1", name: "Intern One", role: "INTERN", schoolId: null, createdAt: new Date() };
+    const modules = [
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const progress = [
+      { id: "p1", userId: "u1", moduleId: "m1", lessonId: "l1", status: "completed", score: 100, completedAt: new Date(), createdAt: new Date(), updatedAt: new Date() },
+    ];
+
+    const db = createMockDb();
+    let selectCallCount = 0;
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([intern]);
+          if (selectCallCount === 2) return queryResult(modules);
+          return queryResult(progress);
+        }),
+        limit: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([intern]);
+          if (selectCallCount === 2) return queryResult(modules);
+          return queryResult(progress);
+        }),
+        orderBy: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([intern]);
+          if (selectCallCount === 2) return queryResult(modules);
+          return queryResult(progress);
+        }),
+      }),
+    });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const result = await getInternProgress({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { userId: "u1" },
+    });
+
+    expect(result.userId).toBe("u1");
+    expect(result.moduleBreakdown).toHaveLength(1);
+    expect(result.moduleBreakdown[0].completed).toBe(1);
+  });
+
+  it("rejects non-admin users", async () => {
+    const db = createMockDb();
+
+    await expect(
+      getInternProgress({ db: wrapDb(db), user: student, tenant: globalTenant, input: { userId: "u1" } })
+    ).rejects.toThrow(/admin:dashboard/);
   });
 });

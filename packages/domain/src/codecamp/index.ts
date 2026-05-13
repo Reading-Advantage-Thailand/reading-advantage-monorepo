@@ -7,7 +7,11 @@ import {
   codecampUserProgress,
   codecampChatConversations,
   codecampChatMessages,
+  codecampExerciseRepos,
+  codecampPrReviews,
+  users,
 } from "@reading-advantage/db/schema";
+import { hashPassword } from "@reading-advantage/auth";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 
@@ -570,5 +574,484 @@ export async function getUserDashboard({
     completedLessons,
     overallProgress,
     recentConversations: conversations,
+  };
+}
+
+// ─── Exercise Repos ───────────────────────────────────────
+
+export async function getExerciseRepos({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ moduleId: string }>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  return db
+    .select()
+    .from(codecampExerciseRepos)
+    .where(eq(codecampExerciseRepos.moduleId, input.moduleId))
+    .orderBy(codecampExerciseRepos.order);
+}
+
+export async function linkExerciseRepo({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{
+  moduleId: string;
+  repoUrl: string;
+  description: string;
+  order: number;
+}>) {
+  assertCan(user, "codecamp:read", tenant);
+  // Admin-only: only ADMIN and SYSTEM can link repos
+  if (user.role !== "ADMIN" && user.role !== "SYSTEM") {
+    throw new Error("codecamp:read");
+  }
+
+  const [result] = await db
+    .insert(codecampExerciseRepos)
+    .values({
+      moduleId: input.moduleId,
+      repoUrl: input.repoUrl,
+      description: input.description,
+      order: input.order,
+    })
+    .returning();
+
+  return result;
+}
+
+// ─── PR Reviews ───────────────────────────────────────────
+
+export async function getPrReviewsForUser({
+  db,
+  user,
+  tenant,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+}) {
+  assertCan(user, "codecamp:read", tenant);
+
+  return db
+    .select()
+    .from(codecampPrReviews)
+    .where(eq(codecampPrReviews.userId, user.id))
+    .orderBy(desc(codecampPrReviews.createdAt));
+}
+
+export async function createPrReview({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{
+  exerciseRepoId: string;
+  prUrl: string;
+}>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  const [result] = await db
+    .insert(codecampPrReviews)
+    .values({
+      exerciseRepoId: input.exerciseRepoId,
+      userId: user.id,
+      prUrl: input.prUrl,
+      reviewStatus: "pending",
+    })
+    .returning();
+
+  return result;
+}
+
+export async function updatePrReview({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{
+  reviewId: string;
+  reviewStatus: "pending" | "reviewed" | "needs_changes" | "approved";
+  llmReviewSummary?: string;
+}>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  const [result] = await db
+    .update(codecampPrReviews)
+    .set({
+      reviewStatus: input.reviewStatus,
+      llmReviewSummary: input.llmReviewSummary ?? null,
+      reviewedAt: new Date(),
+    })
+    .where(eq(codecampPrReviews.id, input.reviewId))
+    .returning();
+
+  if (!result) {
+    throw new Error("Review not found");
+  }
+
+  return result;
+}
+
+export async function getPrReviewByPrUrl({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ prUrl: string }>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  const [result] = await db
+    .select()
+    .from(codecampPrReviews)
+    .where(
+      and(
+        eq(codecampPrReviews.prUrl, input.prUrl),
+        eq(codecampPrReviews.userId, user.id)
+      )
+    )
+    .limit(1);
+
+  return result ?? null;
+}
+
+// ─── Module Phase & Prerequisites ─────────────────────────
+
+const PHASE_RANGES: Record<string, [number, number]> = {
+  A: [1, 6],
+  B: [7, 10],
+  C: [11, 13],
+  D: [14, 18],
+};
+
+export async function getModulesByPhase({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ phase: "A" | "B" | "C" | "D" }>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  const range = PHASE_RANGES[input.phase];
+  if (!range) {
+    throw new Error("Invalid phase");
+  }
+
+  const [minOrder, maxOrder] = range;
+
+  const modules = await db
+    .select()
+    .from(codecampModules)
+    .where(
+      and(
+        eq(codecampModules.status, "published"),
+        sql`${codecampModules.order} >= ${minOrder}`,
+        sql`${codecampModules.order} <= ${maxOrder}`
+      )
+    )
+    .orderBy(codecampModules.order);
+
+  return modules;
+}
+
+export async function getModuleWithExercises({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ moduleId: string }>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  const [module] = await db
+    .select()
+    .from(codecampModules)
+    .where(eq(codecampModules.id, input.moduleId))
+    .limit(1);
+
+  if (!module || module.status !== "published") {
+    throw new Error("Module not found");
+  }
+
+  const repos = await db
+    .select()
+    .from(codecampExerciseRepos)
+    .where(eq(codecampExerciseRepos.moduleId, input.moduleId))
+    .orderBy(codecampExerciseRepos.order);
+
+  const lessons = await db
+    .select()
+    .from(codecampLessons)
+    .where(eq(codecampLessons.moduleId, input.moduleId))
+    .orderBy(codecampLessons.order);
+
+  const progress = await db
+    .select()
+    .from(codecampUserProgress)
+    .where(
+      and(
+        eq(codecampUserProgress.userId, user.id),
+        eq(codecampUserProgress.moduleId, input.moduleId)
+      )
+    );
+
+  const completed = progress.filter((p) => p.status === "completed").length;
+
+  return {
+    ...module,
+    lessons: lessons.map((lesson) => {
+      const lessonProgress = progress.find((p) => p.lessonId === lesson.id);
+      return {
+        id: lesson.id,
+        moduleId: lesson.moduleId,
+        title: lesson.title,
+        description: lesson.description,
+        order: lesson.order,
+        type: lesson.type,
+        userStatus: lessonProgress?.status ?? "not_started",
+        userScore: lessonProgress?.score ?? null,
+        createdAt: lesson.createdAt,
+        updatedAt: lesson.updatedAt,
+      };
+    }),
+    lessonCount: lessons.length,
+    completedLessons: completed,
+    progress: lessons.length > 0 ? Math.round((completed / lessons.length) * 100) : 0,
+    exerciseRepos: repos,
+  };
+}
+
+export async function checkModulePrerequisite({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ moduleId: string }>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  const [targetModule] = await db
+    .select()
+    .from(codecampModules)
+    .where(eq(codecampModules.id, input.moduleId))
+    .limit(1);
+
+  if (!targetModule) {
+    throw new Error("Module not found");
+  }
+
+  // Module 1 has no prerequisite
+  if (targetModule.order <= 1) {
+    return { canStart: true };
+  }
+
+  // Find the previous module
+  const [prevModule] = await db
+    .select()
+    .from(codecampModules)
+    .where(eq(codecampModules.order, targetModule.order - 1))
+    .limit(1);
+
+  if (!prevModule) {
+    return { canStart: true };
+  }
+
+  // Check if all lessons in previous module are completed
+  const prevLessons = await db
+    .select()
+    .from(codecampLessons)
+    .where(eq(codecampLessons.moduleId, prevModule.id))
+    .orderBy(codecampLessons.order);
+
+  if (prevLessons.length === 0) {
+    return { canStart: true };
+  }
+
+  const progress = await db
+    .select()
+    .from(codecampUserProgress)
+    .where(
+      and(
+        eq(codecampUserProgress.userId, user.id),
+        eq(codecampUserProgress.moduleId, prevModule.id),
+        eq(codecampUserProgress.status, "completed")
+      )
+    );
+
+  const completedLessonIds = new Set(progress.map((p) => p.lessonId));
+  const allCompleted = prevLessons.every((lesson) =>
+    completedLessonIds.has(lesson.id)
+  );
+
+  return { canStart: allCompleted };
+}
+
+// ─── Admin ────────────────────────────────────────────────
+
+export async function createInternAccount({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{
+  username: string;
+  name: string;
+  password: string;
+}>) {
+  assertCan(user, "admin:dashboard", tenant);
+
+  const passwordHash = await hashPassword(input.password);
+
+  const [result] = await db
+    .insert(users)
+    .values({
+      username: input.username,
+      name: input.name,
+      passwordHash,
+      role: "INTERN",
+      schoolId: null,
+      xp: 0,
+      level: 1,
+      cefrLevel: "A1",
+    })
+    .returning();
+
+  return result;
+}
+
+export async function listInterns({
+  db,
+  user,
+  tenant,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+}) {
+  assertCan(user, "admin:dashboard", tenant);
+
+  const interns = await db
+    .select()
+    .from(users)
+    .where(eq(users.role, "INTERN"))
+    .orderBy(users.createdAt);
+
+  // Fetch progress summary for each intern
+  const modules = await db
+    .select()
+    .from(codecampModules)
+    .where(eq(codecampModules.status, "published"))
+    .orderBy(codecampModules.order);
+
+  const moduleIds = modules.map((m) => m.id);
+
+  const allProgress = moduleIds.length > 0
+    ? await db
+        .select()
+        .from(codecampUserProgress)
+        .where(inArray(codecampUserProgress.moduleId, moduleIds))
+    : [];
+
+  const allReviews = await db
+    .select()
+    .from(codecampPrReviews);
+
+  return interns.map((intern) => {
+    const internProgress = allProgress.filter((p) => p.userId === intern.id);
+    const completedModules = new Set(
+      internProgress.filter((p) => p.status === "completed").map((p) => p.moduleId)
+    ).size;
+    const quizScores = internProgress
+      .filter((p) => p.score > 0)
+      .map((p) => p.score);
+    const quizAverage =
+      quizScores.length > 0
+        ? Math.round(quizScores.reduce((a, b) => a + b, 0) / quizScores.length)
+        : 0;
+
+    const internReviews = allReviews.filter((r) => r.userId === intern.id);
+    const pending = internReviews.filter((r) => r.reviewStatus === "pending").length;
+    const approved = internReviews.filter((r) => r.reviewStatus === "approved").length;
+
+    const lastActive = internProgress.length > 0
+      ? internProgress.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())[0].updatedAt
+      : null;
+
+    return {
+      userId: intern.id,
+      name: intern.name,
+      username: intern.username,
+      overallProgress: modules.length > 0 ? Math.round((completedModules / modules.length) * 100) : 0,
+      completedModules,
+      totalModules: modules.length,
+      quizAverage,
+      prReviewsPending: pending,
+      prReviewsApproved: approved,
+      lastActiveAt: lastActive,
+    };
+  });
+}
+
+export async function getInternProgress({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ userId: string }>) {
+  assertCan(user, "admin:dashboard", tenant);
+
+  const [intern] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, input.userId))
+    .limit(1);
+
+  if (!intern) {
+    throw new Error("Intern not found");
+  }
+
+  const modules = await db
+    .select()
+    .from(codecampModules)
+    .where(eq(codecampModules.status, "published"))
+    .orderBy(codecampModules.order);
+
+  const progress = await db
+    .select()
+    .from(codecampUserProgress)
+    .where(eq(codecampUserProgress.userId, input.userId));
+
+  const reviews = await db
+    .select()
+    .from(codecampPrReviews)
+    .where(eq(codecampPrReviews.userId, input.userId))
+    .orderBy(desc(codecampPrReviews.createdAt));
+
+  const moduleBreakdown = modules.map((mod) => {
+    const modProgress = progress.filter((p) => p.moduleId === mod.id);
+    const completed = modProgress.filter((p) => p.status === "completed").length;
+    const totalLessons = modProgress.length;
+    const avgScore = modProgress.length > 0
+      ? Math.round(modProgress.reduce((s, p) => s + p.score, 0) / modProgress.length)
+      : 0;
+
+    return {
+      moduleId: mod.id,
+      title: mod.title,
+      completed,
+      totalLessons,
+      avgScore,
+    };
+  });
+
+  return {
+    userId: intern.id,
+    name: intern.name,
+    username: intern.username,
+    moduleBreakdown,
+    quizScores: progress.filter((p) => p.score > 0).map((p) => ({ lessonId: p.lessonId, score: p.score })),
+    prReviews: reviews,
   };
 }

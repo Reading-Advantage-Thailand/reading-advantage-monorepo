@@ -12,10 +12,12 @@ function createQueryBuilder(val: unknown) {
   const builder = {
     limit: vi.fn().mockReturnThis(),
     offset: vi.fn().mockReturnThis(),
+    orderBy: vi.fn().mockReturnThis(),
     innerJoin: vi.fn().mockReturnValue({
       where: vi.fn().mockReturnValue({
         limit: vi.fn().mockReturnThis(),
         offset: vi.fn().mockReturnThis(),
+        orderBy: vi.fn().mockReturnThis(),
       }),
     }),
     then(
@@ -62,6 +64,12 @@ export function createMockDb(overrides: {
         innerJoin: vi.fn().mockReturnValue({
           where: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
         }),
+        then(
+          onFulfilled?: (value: unknown) => unknown,
+          onRejected?: (reason: unknown) => unknown
+        ) {
+          return Promise.resolve(resolvedValue).then(onFulfilled, onRejected);
+        },
       }),
     })),
     update: vi.fn().mockReturnValue({

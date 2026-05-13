@@ -45,27 +45,27 @@ Extend existing schema for GitHub integration and expanded curriculum.
 
 Write tests for new domain functions and GitHub integration.
 
-- [ ] Task: Write domain function unit tests for exercise repo management
-  - [ ] Test `getExerciseRepos` — returns repos for a module
-  - [ ] Test `linkExerciseRepo` — admin links repo to module
-  - [ ] Test `getPrReviewsForUser` — returns review status across all exercises
-- [ ] Task: Write domain function unit tests for PR review pipeline
-  - [ ] Test `createPrReview` — creates pending review on PR open
-  - [ ] Test `updatePrReview` — updates status and summary after LLM review
-  - [ ] Test `getPrReviewByPrUrl` — lookup review by GitHub PR URL
-- [ ] Task: Write domain function unit tests for expanded curriculum queries
-  - [ ] Test `getModulesByPhase` — returns modules grouped by phase (A/B/C/D)
-  - [ ] Test `getModuleWithExercises` — returns module + linked exercise repos
-  - [ ] Test `checkModulePrerequisite` — enforces sequential module completion
-- [ ] Task: Write tRPC router tests for new procedures
-  - [ ] Test exercise repo procedures
-  - [ ] Test PR review procedures
-  - [ ] Test module phase grouping procedure
-- [ ] Task: Write GitHub webhook handler tests
-  - [ ] Test webhook signature verification
-  - [ ] Test PR opened event → creates pending review
-  - [ ] Test PR synchronized event → re-triggers review
-  - [ ] Test invalid payload → returns 400
+- [~] Task: Write domain function unit tests for exercise repo management
+  - [~] Test `getExerciseRepos` — returns repos for a module
+  - [~] Test `linkExerciseRepo` — admin links repo to module
+  - [~] Test `getPrReviewsForUser` — returns review status across all exercises
+- [~] Task: Write domain function unit tests for PR review pipeline
+  - [~] Test `createPrReview` — creates pending review on PR open
+  - [~] Test `updatePrReview` — updates status and summary after LLM review
+  - [~] Test `getPrReviewByPrUrl` — lookup review by GitHub PR URL
+- [~] Task: Write domain function unit tests for expanded curriculum queries
+  - [~] Test `getModulesByPhase` — returns modules grouped by phase (A/B/C/D)
+  - [~] Test `getModuleWithExercises` — returns module + linked exercise repos
+  - [~] Test `checkModulePrerequisite` — enforces sequential module completion
+- [~] Task: Write tRPC router tests for new procedures
+  - [~] Test exercise repo procedures
+  - [~] Test PR review procedures
+  - [~] Test module phase grouping procedure
+- [~] Task: Write GitHub webhook handler tests
+  - [~] Test webhook signature verification
+  - [~] Test PR opened event → creates pending review
+  - [~] Test PR synchronized event → re-triggers review
+  - [~] Test invalid payload → returns 400
 - [ ] Task: Measure — User Manual Verification 'Test'
 
 ## Phase 3: Implement GitHub Integration
