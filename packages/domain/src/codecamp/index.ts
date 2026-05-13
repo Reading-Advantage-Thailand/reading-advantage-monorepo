@@ -1,4 +1,4 @@
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
 import {
   codecampModules,
   codecampLessons,
@@ -398,9 +398,9 @@ export async function updateUserProgress({
     .onConflictDoUpdate({
       target: [codecampUserProgress.userId, codecampUserProgress.lessonId],
       set: {
-        status: input.status ?? "not_started",
-        score: input.score ?? 0,
-        completedAt: completedAt,
+        status: input.status !== undefined ? input.status : sql`${codecampUserProgress.status}`,
+        score: input.score !== undefined ? input.score : sql`${codecampUserProgress.score}`,
+        completedAt: input.status !== undefined ? completedAt : sql`${codecampUserProgress.completedAt}`,
         updatedAt: now,
       },
     })

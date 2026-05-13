@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { generateText } from "ai";
+import { streamText } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { cookies } from "next/headers";
 import { db } from "@reading-advantage/db";
@@ -62,14 +62,14 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const { text } = await generateText({
+    const result = streamText({
       model: google("gemini-2.0-flash"),
       system: SYSTEM_PROMPT,
       prompt: message,
       maxTokens: 2048,
     });
 
-    return Response.json({ response: text });
+    return result.toDataStreamResponse();
   } catch (error) {
     if (error instanceof Error && error.message === "Authentication required") {
       return Response.json(

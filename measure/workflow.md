@@ -83,12 +83,27 @@ All tasks follow a strict lifecycle:
         -   If a test file is missing, you **must** create one. Before writing the test, **first, analyze other test files in the repository to determine the correct naming convention and testing style.** The new tests **must** validate the functionality described in this phase's tasks (`plan.md`).
 
 3.  **Execute Automated Tests with Proactive Debugging:**
-    -   Before execution, you **must** announce the exact shell command you will use to run the tests.
-    -   **Example Announcement:** "I will now run the automated test suite to verify the phase. **Command:** `CI=true npm test`"
-    -   Execute the announced command.
-    -   If tests fail, you **must** inform the user and begin debugging. You may attempt to propose a fix a **maximum of two times**. If the tests still fail after your second proposed fix, you **must stop**, report the persistent failure, and ask the user for guidance.
+     -   Before execution, you **must** announce the exact shell command you will use to run the tests.
+     -   **Example Announcement:** "I will now run the automated test suite to verify the phase. **Command:** `CI=true npm test`"
+     -   Execute the announced command.
+     -   If tests fail, you **must** inform the user and begin debugging. You may attempt to propose a fix a **maximum of two times**. If the tests still fail after your second proposed fix, you **must stop**, report the persistent failure, and ask the user for guidance.
 
-4.  **Propose a Detailed, Actionable Manual Verification Plan:**
+4.  **Automated Phase Code Review:**
+     -   **CRITICAL:** This step is mandatory. Do not skip it.
+     -   **Step 4.1: Determine Review Scope:** Identify the revision range for this phase. Use the Git commit SHA of the *previous* phase's checkpoint (from `plan.md`) as the base. If no previous checkpoint exists, use the first commit in the track.
+     -   **Step 4.2: Spawn Review Subagent:** Launch a `change-quality-reviewer` subagent to review the diff for the phase. The subagent prompt **must** include:
+         -   The revision range: `<previous_checkpoint_sha>..HEAD`
+         -   The track name and the phase being reviewed
+         -   Instructions to run `lint`, `check-types`, and `test` commands for all affected packages
+         -   Instructions to check for: plan compliance, style compliance, correctness, security, test coverage, and lessons-learned gotchas
+         -   A requirement to produce findings with severity levels (Critical / High / Medium / Low)
+     -   **Step 4.3: Process Findings:**
+         -   If **Critical** or **High** findings are found: **STOP**. Fix the issues, commit the fixes, and re-run the review from Step 4.2 before proceeding.
+         -   If only **Medium** or **Low** findings: Document them in `measure/tracks/<track_id>/plan-review.md` and proceed, but offer to fix them.
+         -   If no findings: Proceed to Step 5.
+     -   **Step 4.4: Commit Review Findings:** If `plan-review.md` was created or updated, stage and commit it with the message `measure(review): Phase code review findings for '<PHASE NAME>'`.
+
+5.  **Propose a Detailed, Actionable Manual Verification Plan:**
     -   **CRITICAL:** To generate the plan, first analyze `product.md`, `product-guidelines.md`, and `plan.md` to determine the user-facing goals of the completed phase.
     -   You **must** generate a step-by-step plan that walks the user through the verification process, including any necessary commands and specific, expected outcomes.
     -   The plan you present to the user **must** follow this format:
@@ -113,28 +128,28 @@ All tasks follow a strict lifecycle:
         3.  **Confirm that you receive:** A JSON response with a status of `201 Created`.
         ```
 
-5.  **Await Explicit User Feedback:**
-    -   After presenting the detailed plan, ask the user for confirmation: "**Does this meet your expectations? Please confirm with yes or provide feedback on what needs to be changed.**"
-    -   **PAUSE** and await the user's response. Do not proceed without an explicit yes or confirmation.
+6.  **Await Explicit User Feedback:**
+     -   After presenting the detailed plan, ask the user for confirmation: "**Does this meet your expectations? Please confirm with yes or provide feedback on what needs to be changed.**"
+     -   **PAUSE** and await the user's response. Do not proceed without an explicit yes or confirmation.
 
-6.  **Create Checkpoint Commit:**
-    -   Stage all changes. If no changes occurred in this step, proceed with an empty commit.
-    -   Perform the commit with a clear and concise message (e.g., `measure(checkpoint): Checkpoint end of Phase X`).
+7.  **Create Checkpoint Commit:**
+     -   Stage all changes. If no changes occurred in this step, proceed with an empty commit.
+     -   Perform the commit with a clear and concise message (e.g., `measure(checkpoint): Checkpoint end of Phase X`).
 
-7.  **Attach Auditable Verification Report using Git Notes:**
-    -   **Step 7.1: Draft Note Content:** Create a detailed verification report including the automated test command, the manual verification steps, and the user's confirmation.
-    -   **Step 7.2: Attach Note:** Use the `git notes` command and the full commit hash from the previous step to attach the full report to the checkpoint commit.
+8.  **Attach Auditable Verification Report using Git Notes:**
+     -   **Step 8.1: Draft Note Content:** Create a detailed verification report including the automated test command, the code review findings, the manual verification steps, and the user's confirmation.
+     -   **Step 8.2: Attach Note:** Use the `git notes` command and the full commit hash from the previous step to attach the full report to the checkpoint commit.
 
-8.  **Get and Record Phase Checkpoint SHA:**
-    -   **Step 8.1: Get Commit Hash:** Obtain the hash of the *just-created checkpoint commit* (`git log -1 --format="%H"`).
-    -   **Step 8.2: Update Plan:** Read `plan.md`, find the heading for the completed phase, and append the first 7 characters of the commit hash in the format `[checkpoint: <sha>]`.
-    -   **Step 8.3: Write Plan:** Write the updated content back to `plan.md`.
+9.  **Get and Record Phase Checkpoint SHA:**
+     -   **Step 9.1: Get Commit Hash:** Obtain the hash of the *just-created checkpoint commit* (`git log -1 --format="%H"`).
+     -   **Step 9.2: Update Plan:** Read `plan.md`, find the heading for the completed phase, and append the first 7 characters of the commit hash in the format `[checkpoint: <sha>]`.
+     -   **Step 9.3: Write Plan:** Write the updated content back to `plan.md`.
 
-9. **Commit Plan Update:**
+10. **Commit Plan Update:**
     - **Action:** Stage the modified `plan.md` file.
     - **Action:** Commit this change with a descriptive message following the format `measure(plan): Mark phase '<PHASE NAME>' as complete`.
 
-10.  **Announce Completion:** Inform the user that the phase is complete and the checkpoint has been created, with the detailed verification report attached as a git note.
+11.  **Announce Completion:** Inform the user that the phase is complete and the checkpoint has been created, with the detailed verification report attached as a git note.
 
 ### Quality Gates
 
@@ -149,6 +164,10 @@ Before marking any task complete, verify:
 - [ ] Works correctly on mobile (if applicable)
 - [ ] Documentation updated if needed
 - [ ] No security vulnerabilities introduced
+
+Before marking any **phase** complete, additionally verify:
+
+- [ ] Automated phase code review (Step 4) completed with no Critical or High findings remaining
 
 ## Development Commands
 

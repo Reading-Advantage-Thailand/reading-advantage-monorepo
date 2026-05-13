@@ -271,7 +271,7 @@ describe("codecamp router", () => {
         completedAt: testDate,
         updatedAt: testDate,
       };
-      vi.mocked(updateUserProgress).mockResolvedValue([resultRow] as unknown as Awaited<ReturnType<typeof updateUserProgress>>);
+      vi.mocked(updateUserProgress).mockResolvedValue(resultRow as unknown as Awaited<ReturnType<typeof updateUserProgress>>);
       const caller = createCaller({ user: testUser, tenant: testTenant });
 
       const result = await caller.codecamp.updateProgress({
@@ -306,7 +306,7 @@ describe("codecamp router", () => {
 
   describe("error mapping", () => {
     it("maps AuthError to FORBIDDEN", async () => {
-      vi.mocked(getModulesWithProgress).mockRejectedValue(new AuthError("Forbidden"));
+      vi.mocked(getModulesWithProgress).mockRejectedValue(new AuthError("Forbidden", "FORBIDDEN"));
       const caller = createCaller({ user: testUser, tenant: testTenant });
 
       await expect(caller.codecamp.modules()).rejects.toMatchObject({ code: "FORBIDDEN" });

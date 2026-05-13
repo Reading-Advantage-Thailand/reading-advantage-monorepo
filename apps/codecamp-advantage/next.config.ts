@@ -3,7 +3,6 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  reactStrictMode: false,
   transpilePackages: [
     "@reading-advantage/api",
     "@reading-advantage/auth",
