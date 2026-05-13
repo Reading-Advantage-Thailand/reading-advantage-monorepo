@@ -11,10 +11,10 @@ Address known issues from plan-review.md before extending the codebase.
 - [x] Task: Fix chat route to use streaming [08471b2]
   - [x] Switch `apps/codecamp-advantage/app/api/chat/route.ts` from `generateText` to `streamText`
   - [x] Return `result.toDataStreamResponse()`
-- [~] Task: Connect UI pages to tRPC data
-  - [~] Dashboard: replace hardcoded module cards with `trpc.codecamp.dashboard.useQuery()`
-  - [~] Module page: replace hardcoded lesson placeholders with tRPC data
-  - [~] Lesson page: connect exercises and quiz components to tRPC procedures
+- [x] Task: Connect UI pages to tRPC data [bf9a408]
+  - [x] Dashboard: replace hardcoded module cards with `trpc.codecamp.dashboard.useQuery()`
+  - [x] Module page: replace hardcoded lesson placeholders with tRPC data
+  - [x] Lesson page: connect exercises and quiz components to tRPC procedures
 - [x] Task: Remove `ignoreBuildErrors: true` from `apps/codecamp-advantage/next.config.ts` [08471b2]
 - [x] Task: Set `reactStrictMode: true` in `apps/codecamp-advantage/next.config.ts` [08471b2]
 - [ ] Task: Measure — User Manual Verification 'Remediate Existing Issues'
