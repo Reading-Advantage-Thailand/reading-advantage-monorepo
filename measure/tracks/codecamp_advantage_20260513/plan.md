@@ -19,7 +19,7 @@ Address known issues from plan-review.md before extending the codebase.
 - [x] Task: Set `reactStrictMode: true` in `apps/codecamp-advantage/next.config.ts` [08471b2]
 - [ ] Task: Measure — User Manual Verification 'Remediate Existing Issues'
 
-## Phase 1: Contract & Schema Extension
+## Phase 1: Contract & Schema Extension [checkpoint: dbcd9bf]
 
 Extend existing schema for GitHub integration and expanded curriculum.
 
@@ -39,7 +39,7 @@ Extend existing schema for GitHub integration and expanded curriculum.
   - [x] Domain barrel export path already reserved in `packages/domain/src/index.ts`
   - [x] Router import path already reserved in `packages/api/src/root.ts`
   - [x] GitHub API client utility types deferred to Phase 3 implementation
-- [ ] Task: Measure — User Manual Verification 'Contract & Schema Extension'
+- [x] Task: Measure — User Manual Verification 'Contract & Schema Extension'
 
 ## Phase 2: Test
 
