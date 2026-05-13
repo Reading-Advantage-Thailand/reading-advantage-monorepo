@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "title": "CodeCamp Advantage",
+    "description": "Learn Next.js and the Reading Advantage monorepo patterns with AI"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "modules": "Modules",
+    "chat": "Chat Tutor"
+  },
+  "dashboard": {
+    "title": "Welcome to CodeCamp Advantage",
+    "subtitle": "Master the monorepo stack one module at a time.",
+    "progress": "Your Progress",
+    "continue": "Continue Learning"
+  },
+  "module": {
+    "lessons": "Lessons",
+    "start": "Start Lesson",
+    "completed": "Completed",
+    "inProgress": "In Progress"
+  },
+  "chat": {
+    "placeholder": "Ask about Next.js, tRPC, Drizzle, or monorepo patterns...",
+    "newConversation": "New Conversation",
+    "send": "Send"
+  },
+  "exercise": {
+    "submit": "Submit",
+    "feedback": "Feedback",
+    "hint": "Hint",
+    "tryAgain": "Try Again"
+  },
+  "quiz": {
+    "submit": "Submit Answers",
+    "score": "Score",
+    "correct": "Correct",
+    "incorrect": "Incorrect"
+  }
+}

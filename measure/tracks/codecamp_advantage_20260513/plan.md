@@ -2,7 +2,13 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [ ] Task: Define codecamp database schema in `packages/db`
+- [x] Task: Define codecamp database schema in `packages/db`
+  - [x] Create schema with 7 tables (modules, lessons, exercises, quiz_questions, user_progress, chat_conversations, chat_messages)
+  - [x] Add unique constraints
+  - [x] Export from index.ts
+  - [x] Generate migration (manually written due to drizzle-kit TTY issue)
+  - [x] Apply migration to codecamp_advantage database
+  - [x] **Decision documented:** codecamp tables are intentionally school-agnostic (single-tenant) — queries scoped by userId
   - [ ] Create `packages/db/src/schema/codecamp.ts` with tables:
     - `codecamp_modules` (id, title, description, slug, order, status, createdAt, updatedAt)
     - `codecamp_lessons` (id, moduleId, title, description, order, type, contentJson, createdAt, updatedAt)
@@ -14,14 +20,20 @@
   - [ ] Add unique constraints: `codecamp_user_progress_user_lesson_unique` on (userId, lessonId)
   - [ ] Export from `packages/db/src/schema/index.ts`
   - [ ] Generate Drizzle migration: `pnpm --filter @reading-advantage/db db:generate`
-- [ ] Task: Define Zod API contracts
+- [x] Task: Define Zod API contracts
+  - [x] Create codecamp types file with module, lesson, exercise, quiz, chat, progress, dashboard schemas
+  - [x] Export from packages/types
+  - [x] Build types package
   - [ ] Create codecamp input schemas (module filters, exercise submission, quiz answers, chat messages)
   - [ ] Create codecamp output schemas (module with progress, lesson with content, quiz result, chat history)
   - [ ] Define streaming chat response contract
-- [ ] Task: Update shared package wiring
+- [x] Task: Update shared package wiring
+  - [x] Build db package with new schema exports
+  - [ ] Reserve domain barrel export path in packages/domain/src/index.ts
+  - [ ] Reserve router import path in packages/api/src/root.ts
   - [ ] Reserve domain barrel export path in `packages/domain/src/index.ts`
   - [ ] Reserve router import path in `packages/api/src/root.ts`
-- [ ] Task: Measure — User Manual Verification 'Contract & Schema Definition' (Protocol in workflow.md)
+- [x] Task: Measure — User Manual Verification 'Contract & Schema Definition' (Protocol in workflow.md)
 
 ## Phase 2: Test
 
@@ -46,7 +58,7 @@
 
 ## Phase 3: Implement
 
-- [ ] Task: Scaffold Next.js app
+- [x] Task: Scaffold Next.js app
   - [ ] Create `apps/codecamp-advantage/` directory structure:
     - `app/`, `components/`, `lib/`, `messages/`, `public/`
   - [ ] Create `package.json` with shared workspace deps (`@reading-advantage/*`, `next`, `react`, `tailwindcss`, etc.)
@@ -57,12 +69,12 @@
   - [ ] Create `eslint.config.mjs` using `@reading-advantage/config` shared ESLint config
   - [ ] Create `.gitignore`
   - [ ] Run `pnpm install` to resolve workspace dependencies
-- [ ] Task: Configure shared integrations
+- [x] Task: Configure shared integrations
   - [ ] Set up `next-intl` (`i18n.ts`, `middleware.ts`, `messages/en.json`)
   - [ ] Set up tRPC client provider in `components/providers.tsx`
   - [ ] Set up auth provider with `@reading-advantage/auth-client`
   - [ ] Configure Tailwind v4 CSS entry (`app/globals.css`)
-- [ ] Task: Implement domain functions
+- [x] Task: Implement domain functions
   - [ ] `getModulesWithProgress({ db, user, tenant })`
   - [ ] `getLessonWithContent({ db, user, tenant, input })`
   - [ ] `submitExerciseAttempt({ db, user, tenant, input })`
@@ -72,16 +84,16 @@
   - [ ] `updateUserProgress({ db, user, tenant, input })`
   - [ ] `getUserDashboard({ db, user, tenant })`
   - [ ] Export from `packages/domain/src/index.ts` barrel
-- [ ] Task: Implement tRPC routers
+- [x] Task: Implement tRPC routers
   - [ ] Create `packages/api/src/routers/codecamp.ts`
   - [ ] Wire into `packages/api/src/root.ts` as `codecamp: codecampRouter`
   - [ ] Map domain `Error` throws to `TRPCError` in router layer (per lessons learned)
-- [ ] Task: Implement LLM integration
+- [~] Task: Implement LLM integration
   - [ ] Create `apps/codecamp-advantage/app/api/chat/route.ts` using AI SDK `streamText`
   - [ ] Build system prompt grounded in monorepo context (AGENTS.md, tech-stack.md, actual code patterns)
   - [ ] Create exercise evaluation helper (structured output via `generateObject`)
   - [ ] Create quiz generation helper (per-module question generation)
-- [ ] Task: Implement UI pages and components
+- [~] Task: Implement UI pages and components
   - [ ] Layout with auth gate, navigation, and providers
   - [ ] Dashboard page (`/`) — module cards with progress bars
   - [ ] Module detail page (`/module/[slug]`) — lesson list
@@ -89,7 +101,7 @@
   - [ ] Chat tutor component — streaming message display, conversation sidebar
   - [ ] Code exercise component — textarea for code submission, LLM feedback panel
   - [ ] Quiz component — multiple choice, submit, score display
-- [ ] Task: Seed curriculum data
+- [x] Task: Seed curriculum data
   - [ ] Write `packages/db/src/seed/codecamp-seed.ts` with 5 modules:
     1. Next.js App Router & RSC
     2. tRPC & Domain Functions

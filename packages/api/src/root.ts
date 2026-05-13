@@ -7,6 +7,7 @@ import { assignmentsRouter } from "./routers/assignments.js";
 import { articlesRouter } from "./routers/articles.js";
 import { progressRouter } from "./routers/progress.js";
 import { reportsRouter } from "./routers/reports.js";
+import { codecampRouter } from "./routers/codecamp.js";
 
 export const appRouter = router({
   auth: authRouter,
@@ -17,6 +18,7 @@ export const appRouter = router({
   articles: articlesRouter,
   progress: progressRouter,
   reports: reportsRouter,
+  codecamp: codecampRouter,
 });
 
 export type AppRouter = typeof appRouter;

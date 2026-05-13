@@ -15,20 +15,20 @@ Create a new Next.js application (`apps/codecamp-advantage`) that uses LLMs to t
 ### 2. Guided Code Exercises
 - Step-by-step coding challenges embedded in the UI
 - Exercises use real monorepo patterns (e.g., "Write a domain function that uses assertCan() and db.insert()")
-- LLM evaluates submitted code against acceptance criteria
-- Immediate feedback with hints and explanations
+- **LLM reviews submitted code** and gives feedback/hints (not automated pass/fail — no sandbox in MVP)
+- Immediate feedback with explanations
 
 ### 3. Architecture Walkthroughs
-- Interactive tours of the monorepo's architecture
-- Visual diagrams + LLM narration explaining: App Router → tRPC → domain functions → Drizzle → Postgres
-- Tours reference actual files from the codebase (packages/api, packages/domain, packages/db)
-- Progressive disclosure: interns can dig deeper into any layer
+- Rich lesson content (`contentJson`) with embedded diagrams and code references
+- Explains: App Router → tRPC → domain functions → Drizzle → Postgres
+- References actual files from the codebase (packages/api, packages/domain, packages/db)
+- *Deferred:* Dedicated interactive walkthrough component with progressive disclosure (future track)
 
 ### 4. Quiz / Assessment Mode
-- LLM-generated quizzes after each module
-- Questions drawn from the monorepo's actual patterns and conventions
+- **Static quizzes** stored in `codecamp_quiz_questions` (MVP choice — reliable, testable)
+- Questions cover monorepo patterns and conventions
 - Score tracking and progress persistence
-- Adaptive difficulty based on performance
+- *Deferred:* LLM-generated adaptive quizzes (future track)
 
 ### 5. Curriculum Modules
 The app must cover the following modules:
@@ -46,6 +46,7 @@ The app must cover the following modules:
 ## Non-Functional Requirements
 
 - **Integration:** Must consume `@reading-advantage/auth`, `@reading-advantage/db`, `@reading-advantage/api`, `@reading-advantage/ui`
+- **Tenancy:** Codecamp is intentionally **single-tenant / global** — all authenticated users access the same curriculum and their own progress. `schoolId` is omitted from codecamp tables by design. Domain functions use `TenantDB` for consistency but codecamp queries are user-scoped by `userId`, not school-scoped.
 - **Styling:** Tailwind CSS v4 with shared config; Radix/shadcn components from `@reading-advantage/ui`
 - **Testing:** Vitest unit tests for all new backend/domain code; target >80% coverage
 - **i18n:** next-intl ready (English first, i18n structure in place)
@@ -57,8 +58,9 @@ The app must cover the following modules:
 - [ ] App builds successfully from monorepo root (`pnpm turbo run build --filter=codecamp-advantage`)
 - [ ] Intern can register/login via shared auth system
 - [ ] Intern can chat with LLM about Next.js patterns and receive grounded answers
-- [ ] Intern can complete at least one guided code exercise per module
-- [ ] Intern can take a quiz and see their score persisted
+- [ ] Intern can complete at least one guided code exercise per module (LLM-reviewed, not autograded)
+- [ ] Intern can take a static quiz and see their score persisted
+- [ ] Chat streaming uses a Next.js route handler (deliberate exception to tRPC-for-streaming pattern); chat persistence uses tRPC
 - [ ] Progress dashboard shows module completion status
 - [ ] All new domain functions have unit tests with >80% coverage
 - [ ] Lint passes with shared ESLint config

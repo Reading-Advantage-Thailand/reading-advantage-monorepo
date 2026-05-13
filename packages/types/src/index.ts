@@ -222,3 +222,7 @@ export type PolymorphicQuestionId = z.infer<typeof PolymorphicQuestionId>;
  */
 export const ExternalLessonId = z.string().brand<"ExternalLessonId">();
 export type ExternalLessonId = z.infer<typeof ExternalLessonId>;
+
+// ─── Codecamp Types ───────────────────────────────────────
+
+export * from "./codecamp.js";

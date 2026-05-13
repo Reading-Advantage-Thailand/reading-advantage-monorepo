@@ -35,6 +35,10 @@
     "./users": {
       "types": "./dist/users/index.d.ts",
       "import": "./dist/users/index.js"
+    },
+    "./codecamp": {
+      "types": "./dist/codecamp/index.d.ts",
+      "import": "./dist/codecamp/index.js"
     }
   },
   "scripts": {
