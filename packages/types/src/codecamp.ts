@@ -90,7 +90,7 @@ export const quizSubmissionSchema = z.object({
 
 export const quizResultSchema = z.object({
   lessonId: z.string().uuid(),
-  score: z.number(),
+  score: z.number().min(0).max(100),
   total: z.number(),
   correctCount: z.number(),
   details: z.array(

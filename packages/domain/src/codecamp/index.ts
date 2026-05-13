@@ -1,4 +1,4 @@
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, inArray } from "drizzle-orm";
 import {
   codecampModules,
   codecampLessons,
@@ -39,10 +39,15 @@ export async function getModulesWithProgress({
     .where(eq(codecampModules.status, "published"))
     .orderBy(codecampModules.order);
 
-  const lessons = await db
-    .select()
-    .from(codecampLessons)
-    .orderBy(codecampLessons.order);
+  // Only fetch lessons for published modules to avoid leaking draft content
+  const moduleIds = modules.map((m) => m.id);
+  const lessons = moduleIds.length > 0
+    ? await db
+        .select()
+        .from(codecampLessons)
+        .where(inArray(codecampLessons.moduleId, moduleIds))
+        .orderBy(codecampLessons.order)
+    : [];
 
   const progress = await db
     .select()

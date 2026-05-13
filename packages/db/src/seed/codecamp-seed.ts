@@ -1,3 +1,5 @@
+// Uses raw `db` (not tenant-scoped) because seeding is an admin operation
+// that writes global curriculum data with no user/tenant context.
 import { db } from "../index.js";
 import {
   codecampModules,
