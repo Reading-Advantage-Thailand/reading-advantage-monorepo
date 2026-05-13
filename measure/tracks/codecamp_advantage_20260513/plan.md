@@ -1,126 +1,229 @@
 # Implementation Plan: codecamp-advantage
 
-## Phase 1: Contract & Schema Definition
+## Phase 0: Remediate Existing Issues
 
-- [x] Task: Define codecamp database schema in `packages/db`
-  - [x] Create schema with 7 tables (modules, lessons, exercises, quiz_questions, user_progress, chat_conversations, chat_messages)
-  - [x] Add unique constraints
-  - [x] Export from index.ts
-  - [x] Generate migration (manually written due to drizzle-kit TTY issue)
-  - [x] Apply migration to codecamp_advantage database
-  - [x] **Decision documented:** codecamp tables are intentionally school-agnostic (single-tenant) — queries scoped by userId
-  - [ ] Create `packages/db/src/schema/codecamp.ts` with tables:
-    - `codecamp_modules` (id, title, description, slug, order, status, createdAt, updatedAt)
-    - `codecamp_lessons` (id, moduleId, title, description, order, type, contentJson, createdAt, updatedAt)
-    - `codecamp_exercises` (id, lessonId, title, instructions, starterCode, expectedOutput, hintsJson, order, createdAt, updatedAt)
-    - `codecamp_quiz_questions` (id, lessonId, question, optionsJson, correctAnswer, explanation, order, createdAt, updatedAt)
-    - `codecamp_user_progress` (id, userId, moduleId, lessonId, status, score, completedAt, createdAt, updatedAt)
-    - `codecamp_chat_conversations` (id, userId, title, moduleId, lessonId, createdAt, updatedAt)
-    - `codecamp_chat_messages` (id, conversationId, role, content, createdAt, updatedAt)
-  - [ ] Add unique constraints: `codecamp_user_progress_user_lesson_unique` on (userId, lessonId)
+Address known issues from plan-review.md before extending the codebase.
+
+- [x] Task: Fix type errors in codecamp router and tests [08471b2]
+  - [x] Fix `updateUserProgress` return type destructuring in `packages/api/src/routers/codecamp.ts`
+  - [x] Fix `updateUserProgress` mock shape in `packages/api/src/__tests__/codecamp-router.test.ts`
+  - [x] Fix `updateUserProgress` domain function to not reset score on partial updates
+- [x] Task: Fix chat route to use streaming [08471b2]
+  - [x] Switch `apps/codecamp-advantage/app/api/chat/route.ts` from `generateText` to `streamText`
+  - [x] Return `result.toDataStreamResponse()`
+- [~] Task: Connect UI pages to tRPC data
+  - [~] Dashboard: replace hardcoded module cards with `trpc.codecamp.dashboard.useQuery()`
+  - [~] Module page: replace hardcoded lesson placeholders with tRPC data
+  - [~] Lesson page: connect exercises and quiz components to tRPC procedures
+- [x] Task: Remove `ignoreBuildErrors: true` from `apps/codecamp-advantage/next.config.ts` [08471b2]
+- [x] Task: Set `reactStrictMode: true` in `apps/codecamp-advantage/next.config.ts` [08471b2]
+- [ ] Task: Measure — User Manual Verification 'Remediate Existing Issues'
+
+## Phase 1: Contract & Schema Extension
+
+Extend existing schema for GitHub integration and expanded curriculum.
+
+- [ ] Task: Add exercise repos and PR reviews tables to `packages/db/src/schema/codecamp.ts`
+  - [ ] `codecamp_exercise_repos` (id, moduleId FK→codecamp_modules, repoUrl, description, order, createdAt)
+  - [ ] `codecamp_pr_reviews` (id, exerciseRepoId FK→codecamp_exercise_repos, userId, prUrl, reviewStatus enum [pending/reviewed/needs_changes/approved], llmReviewSummary text, reviewedAt, createdAt)
+  - [ ] Add `pgEnum("codecamp_review_status", ["pending", "reviewed", "needs_changes", "approved"])`
   - [ ] Export from `packages/db/src/schema/index.ts`
-  - [ ] Generate Drizzle migration: `pnpm --filter @reading-advantage/db db:generate`
-- [x] Task: Define Zod API contracts
-  - [x] Create codecamp types file with module, lesson, exercise, quiz, chat, progress, dashboard schemas
-  - [x] Export from packages/types
-  - [x] Build types package
-  - [ ] Create codecamp input schemas (module filters, exercise submission, quiz answers, chat messages)
-  - [ ] Create codecamp output schemas (module with progress, lesson with content, quiz result, chat history)
-  - [ ] Define streaming chat response contract
-- [x] Task: Update shared package wiring
-  - [x] Build db package with new schema exports
-  - [ ] Reserve domain barrel export path in packages/domain/src/index.ts
-  - [ ] Reserve router import path in packages/api/src/root.ts
+- [ ] Task: Generate and apply Drizzle migration
+  - [ ] `pnpm --filter @reading-advantage/db db:generate`
+  - [ ] Apply migration to codecamp_advantage database
+- [ ] Task: Define Zod contracts for GitHub integration
+  - [ ] Exercise repo input/output schemas (link repo to module, list repos by module)
+  - [ ] PR review input/output schemas (create review, update status, list reviews by user)
+  - [ ] GitHub webhook payload schema (PR opened/synchronized events)
+  - [ ] Export from `packages/types`
+- [ ] Task: Update shared package wiring
   - [ ] Reserve domain barrel export path in `packages/domain/src/index.ts`
   - [ ] Reserve router import path in `packages/api/src/root.ts`
-- [x] Task: Measure — User Manual Verification 'Contract & Schema Definition' (Protocol in workflow.md)
+  - [ ] Add GitHub API client utility types
+- [ ] Task: Measure — User Manual Verification 'Contract & Schema Extension'
 
 ## Phase 2: Test
 
-- [x] Task: Set up domain test utilities
-  - [x] Uses existing `packages/domain/src/__tests__/mock-db.ts` with thenable Drizzle mocks
-  - [x] Created inline fixtures in `packages/domain/src/__tests__/codecamp.test.ts`
-- [x] Task: Write domain function unit tests (17 tests, 105 passing in domain)
-  - [x] Test `getModulesWithProgress` — returns modules with user's progress status
-  - [x] Test `getLessonWithContent` — returns lesson + exercises + quiz questions
-  - [x] Test `submitExerciseAttempt` — validates code-like input, returns feedback
-  - [x] Test `submitQuizAnswers` — scores answers, returns result
-  - [x] Test `saveChatMessage` / `getChatHistory` — persists and retrieves messages
-  - [x] Test `updateUserProgress` — transitions status, sets completedAt
-  - [x] Test `getUserDashboard` — aggregates progress across modules
-  - [x] Test cross-tenant authorization guards explicitly (per lessons learned)
-- [x] Task: Write tRPC router tests (15 tests, all passing in api)
-  - [x] Test codecamp router all 9 procedures
-  - [x] Test error mapping (AuthError → FORBIDDEN, domain errors → NOT_FOUND/BAD_REQUEST/INTERNAL_SERVER_ERROR)
-  - [x] Test output schema validation strips extra fields
-- [x] Task: Measure — User Manual Verification 'Test' (Protocol in workflow.md)
+Write tests for new domain functions and GitHub integration.
 
-## Phase 3: Implement
+- [ ] Task: Write domain function unit tests for exercise repo management
+  - [ ] Test `getExerciseRepos` — returns repos for a module
+  - [ ] Test `linkExerciseRepo` — admin links repo to module
+  - [ ] Test `getPrReviewsForUser` — returns review status across all exercises
+- [ ] Task: Write domain function unit tests for PR review pipeline
+  - [ ] Test `createPrReview` — creates pending review on PR open
+  - [ ] Test `updatePrReview` — updates status and summary after LLM review
+  - [ ] Test `getPrReviewByPrUrl` — lookup review by GitHub PR URL
+- [ ] Task: Write domain function unit tests for expanded curriculum queries
+  - [ ] Test `getModulesByPhase` — returns modules grouped by phase (A/B/C/D)
+  - [ ] Test `getModuleWithExercises` — returns module + linked exercise repos
+  - [ ] Test `checkModulePrerequisite` — enforces sequential module completion
+- [ ] Task: Write tRPC router tests for new procedures
+  - [ ] Test exercise repo procedures
+  - [ ] Test PR review procedures
+  - [ ] Test module phase grouping procedure
+- [ ] Task: Write GitHub webhook handler tests
+  - [ ] Test webhook signature verification
+  - [ ] Test PR opened event → creates pending review
+  - [ ] Test PR synchronized event → re-triggers review
+  - [ ] Test invalid payload → returns 400
+- [ ] Task: Measure — User Manual Verification 'Test'
 
-- [x] Task: Scaffold Next.js app
-  - [ ] Create `apps/codecamp-advantage/` directory structure:
-    - `app/`, `components/`, `lib/`, `messages/`, `public/`
-  - [ ] Create `package.json` with shared workspace deps (`@reading-advantage/*`, `next`, `react`, `tailwindcss`, etc.)
-  - [ ] Create `tsconfig.json` (standard Next.js + path alias `@/*`)
-  - [ ] Create `next.config.ts` with `transpilePackages: ["@reading-advantage/*"]` and next-intl plugin
-  - [ ] Create `postcss.config.mjs` with Tailwind v4
-  - [ ] Create `tailwind.config.ts` importing shared config
-  - [ ] Create `eslint.config.mjs` using `@reading-advantage/config` shared ESLint config
-  - [ ] Create `.gitignore`
-  - [ ] Run `pnpm install` to resolve workspace dependencies
-- [x] Task: Configure shared integrations
-  - [ ] Set up `next-intl` (`i18n.ts`, `middleware.ts`, `messages/en.json`)
-  - [ ] Set up tRPC client provider in `components/providers.tsx`
-  - [ ] Set up auth provider with `@reading-advantage/auth-client`
-  - [ ] Configure Tailwind v4 CSS entry (`app/globals.css`)
-- [x] Task: Implement domain functions
-  - [ ] `getModulesWithProgress({ db, user, tenant })`
-  - [ ] `getLessonWithContent({ db, user, tenant, input })`
-  - [ ] `submitExerciseAttempt({ db, user, tenant, input })`
-  - [ ] `submitQuizAnswers({ db, user, tenant, input })`
-  - [ ] `saveChatMessage({ db, user, tenant, input })`
-  - [ ] `getChatHistory({ db, user, tenant, input })`
-  - [ ] `updateUserProgress({ db, user, tenant, input })`
-  - [ ] `getUserDashboard({ db, user, tenant })`
-  - [ ] Export from `packages/domain/src/index.ts` barrel
-- [x] Task: Implement tRPC routers
-  - [ ] Create `packages/api/src/routers/codecamp.ts`
-  - [ ] Wire into `packages/api/src/root.ts` as `codecamp: codecampRouter`
-  - [ ] Map domain `Error` throws to `TRPCError` in router layer (per lessons learned)
-- [x] Task: Implement LLM integration
-  - [ ] Create `apps/codecamp-advantage/app/api/chat/route.ts` using AI SDK `streamText`
-  - [ ] Build system prompt grounded in monorepo context (AGENTS.md, tech-stack.md, actual code patterns)
-  - [ ] Create exercise evaluation helper (structured output via `generateObject`)
-  - [ ] Create quiz generation helper (per-module question generation)
-- [x] Task: Implement UI pages and components
-  - [ ] Layout with auth gate, navigation, and providers
-  - [ ] Dashboard page (`/`) — module cards with progress bars
-  - [ ] Module detail page (`/module/[slug]`) — lesson list
-  - [ ] Lesson page (`/lesson/[id]`) — renders content, exercises, quizzes
-  - [ ] Chat tutor component — streaming message display, conversation sidebar
-  - [ ] Code exercise component — textarea for code submission, LLM feedback panel
-  - [ ] Quiz component — multiple choice, submit, score display
-- [x] Task: Seed curriculum data
-  - [ ] Write `packages/db/src/seed/codecamp-seed.ts` with 5 modules:
-    1. Next.js App Router & RSC
-    2. tRPC & Domain Functions
-    3. Drizzle ORM
-    4. Auth & Multi-Tenancy
-    5. Monorepo Patterns
-  - [ ] Include real file references in lesson content (e.g., `packages/api/src/root.ts`, `packages/domain/src/index.ts`)
-  - [ ] Add seed script to `package.json` or migration
-- [x] Task: Measure — User Manual Verification 'Implement' (Protocol in workflow.md)
+## Phase 3: Implement GitHub Integration
 
-## Phase 4: Generate Docs & Doctor
+Build the fork-based exercise workflow with LLM PR review.
+
+- [ ] Task: Create GitHub App and configure credentials
+  - [ ] Register GitHub App on the Reading Advantage org with repo + PR permissions
+  - [ ] Store App ID, private key, webhook secret as environment variables
+  - [ ] Create `apps/codecamp-advantage/lib/github-app.ts` — GitHub App authentication helper
+- [ ] Task: Implement GitHub webhook endpoint
+  - [ ] Create Hono route in `packages/webhooks` for `/webhooks/github/pr`
+  - [ ] Verify webhook signature
+  - [ ] Parse PR opened/synchronized events
+  - [ ] Trigger domain function to create/update PR review
+  - [ ] Queue LLM review job
+- [ ] Task: Implement LLM PR review pipeline
+  - [ ] Create `packages/domain/src/codecamp/review-exercise.ts` — orchestrates review
+  - [ ] Fetch PR diff via GitHub API
+  - [ ] Build LLM system prompt grounded in the module's learning objectives and exercise rubric
+  - [ ] Call `generateObject` with structured output schema: { passed: boolean, summary: string, comments: Array<{line, body}> }
+  - [ ] Post review comments on the PR via GitHub API
+  - [ ] Update `codecamp_pr_reviews` with review status and summary
+- [ ] Task: Implement exercise repo management domain functions
+  - [ ] `getExerciseRepos({ db, user, tenant, input })` — returns repos for a module
+  - [ ] `linkExerciseRepo({ db, user, tenant, input })` — admin-only, links repo to module
+  - [ ] `getPrReviewsForUser({ db, user, tenant })` — returns review status across exercises
+- [ ] Task: Implement tRPC routers for new procedures
+  - [ ] Add exercise repo procedures to codecamp router
+  - [ ] Add PR review procedures to codecamp router
+  - [ ] Add module phase grouping procedure
+- [ ] Task: Measure — User Manual Verification 'Implement GitHub Integration'
+
+## Phase 4: Implement Expanded Curriculum UI
+
+Evolve existing UI to support 18 modules with phase grouping and exercise workflow.
+
+- [ ] Task: Update dashboard for 18 modules
+  - [ ] Group modules by phase (Foundations, Frameworks, Backend & Data, Production)
+  - [ ] Show module cards with progress bars, quiz scores, and PR review status
+  - [ ] Enforce module prerequisites (lock later modules until earlier ones complete)
+- [ ] Task: Update module detail page
+  - [ ] Display linked exercise repos with fork URL
+  - [ ] Show PR review status for the current user's exercises
+  - [ ] Link to GitHub exercise repos (fork instruction UI)
+- [ ] Task: Update lesson page
+  - [ ] Render lesson content with architecture diagrams
+  - [ ] Embed exercise instructions with repo links
+  - [ ] Display quiz component with immediate scoring
+  - [ ] Show PR review feedback inline (pull from `codecamp_pr_reviews`)
+- [ ] Task: Connect chat tutor to tRPC
+  - [ ] Load conversation history on mount via `trpc.codecamp.chatHistory`
+  - [ ] Save messages via `trpc.codecamp.saveChatMessage`
+  - [ ] Streaming chat with `streamText` via route handler
+  - [ ] System prompt includes current module context
+- [ ] Task: Implement fork instruction component
+  - [ ] Step-by-step UI: fork repo → clone → create branch → code → push → open PR
+  - [ ] Auto-detect PR URL when intern pastes it
+  - [ ] Show LLM review status after PR is detected
+- [ ] Task: Measure — User Manual Verification 'Implement Expanded Curriculum UI'
+
+## Phase 5: Seed Expanded Curriculum Data
+
+Replace the existing 5-module seed with the full 18-module curriculum.
+
+- [ ] Task: Write expanded seed data in `packages/db/src/seed/codecamp-seed.ts`
+  - [ ] Phase A modules (1–6, 29 lessons): Dev Environment, Git & GitHub, HTML & CSS, JavaScript, TypeScript, Testing
+  - [ ] Phase B modules (7–10, 23 lessons): React, API Fundamentals, Next.js Basics, Next.js Advanced
+  - [ ] Phase C modules (11–13, 14 lessons): Databases & ORMs, tRPC & Server Actions, Authentication
+  - [ ] Phase D modules (14–18, 19 lessons): i18n, AI Integration, Monorepo, Cloud & Docker, Real-World Practice
+  - [ ] Total: 80 lessons across 18 modules
+  - [ ] Quiz questions per module (3–5 questions each)
+  - [ ] Exercise repo entries (placeholder URLs — real repos created separately)
+- [ ] Task: Create portfolio project repositories on GitHub
+  - [ ] **Phase A — Personal Portfolio Website**: scaffolded with HTML boilerplate, README with project spec
+  - [ ] **Phase B — Learning Dashboard**: React + Next.js scaffold, README with project spec
+  - [ ] **Phase C+D — Student Progress Tracker**: Next.js + Drizzle scaffold, README with project spec, mirrors RA patterns
+- [ ] Task: Create lesson exercise repositories on GitHub (smaller standalone exercises)
+  - [ ] Module 2: Simple HTML repo for git practice
+  - [ ] Module 3: CSS layout exercise repo
+  - [ ] Module 4: JavaScript DOM manipulation exercise repo
+  - [ ] Module 5: TypeScript conversion exercise repo
+  - [ ] Module 6: Vitest test-writing exercise repo
+  - [ ] Module 7: React component-building exercise repo
+  - [ ] Module 8: API consumption exercise repo
+  - [ ] Module 9: Next.js basic app exercise repo
+  - [ ] Module 10: Next.js advanced features exercise repo
+  - [ ] Module 11: Drizzle schema + queries exercise repo (mirrors RA tenant patterns)
+  - [ ] Module 12: tRPC router + domain function exercise repo (mirrors RA thin router pattern)
+  - [ ] Module 13: Auth + assertCan exercise repo (mirrors RA auth pattern)
+  - [ ] Module 14: next-intl exercise repo (mirrors RA i18n conventions)
+  - [ ] Module 15: AI SDK chat exercise repo (mirrors RA chat route pattern)
+  - [ ] Module 16: Monorepo exploration exercises (no repo — uses real monorepo)
+  - [ ] Module 17: Docker exercise repo
+  - [ ] Module 18: Real-world Issues repo (pre-filed GitHub Issues on the Phase C+D tracker project)
+- [ ] Task: Update seed script entry in `packages/db`
+- [ ] Task: Measure — User Manual Verification 'Seed Expanded Curriculum Data'
+
+## Phase 6: Implement Admin Dashboard
+
+Build admin-facing features for account management and intern progress tracking.
+
+- [ ] Task: Implement account creation domain function
+  - [ ] `createInternAccount({ db, user, tenant, input })` — admin-only, creates user with INTERN role
+  - [ ] `listInterns({ db, user, tenant })` — admin-only, returns all intern accounts with progress summary
+  - [ ] `getInternProgress({ db, user, tenant, input })` — admin-only, returns detailed progress for a specific intern
+- [ ] Task: Implement admin tRPC procedures
+  - [ ] `admin.createIntern` — admin-protected, creates account
+  - [ ] `admin.listInterns` — admin-protected, cohort overview
+  - [ ] `admin.getInternProgress` — admin-protected, per-intern detail
+- [ ] Task: Write tests for admin domain functions and router procedures
+  - [ ] Test `createInternAccount` with permission guard (non-admin rejected)
+  - [ ] Test `listInterns` returns progress summary per intern
+  - [ ] Test `getInternProgress` returns module completion, quiz scores, PR reviews, last active
+- [ ] Task: Build admin dashboard UI
+  - [ ] Admin route group with auth gate (`ADMIN` role required)
+  - [ ] Cohort overview page (`/admin`) — table of interns with progress bars and last active
+  - [ ] Per-intern detail page (`/admin/[userId]`) — module-by-module breakdown, quiz scores, PR review history
+  - [ ] Account creation form (`/admin/new-intern`) — username, display name, initial password
+- [ ] Task: Disable self-registration for codecamp
+  - [ ] Ensure codecamp-advantage auth flow does not expose a signup endpoint
+  - [ ] Only admin-created accounts can access codecamp
+- [ ] Task: Measure — User Manual Verification 'Implement Admin Dashboard'
+
+## Phase 7: Implement Real-World Practice (Module 18)
+
+Build the capstone module with GitHub Issues end-to-end workflow.
+
+- [ ] Task: Create GitHub Issue templates for Module 18 practice repo
+  - [ ] Bug fix template
+  - [ ] Feature request template
+  - [ ] Refactor template
+- [ ] Task: Pre-file practice Issues on the Module 18 repo
+  - [ ] 5–10 Issues of varying difficulty covering skills from all prior modules
+  - [ ] Each Issue includes acceptance criteria and hints
+- [ ] Task: Build Issue→PR workflow visualization in codecamp-advantage
+  - [ ] Display open Issues from the practice repo via GitHub API
+  - [ ] Track intern's PRs linked to Issues
+  - [ ] Show workflow status: issue claimed → branch created → PR opened → review received → merged
+- [ ] Task: Build code review comment display
+  - [ ] Pull LLM review comments from `codecamp_pr_reviews`
+  - [ ] Display feedback inline with the exercise
+  - [ ] Show review history (initial review → revisions → final)
+- [ ] Task: Measure — User Manual Verification 'Implement Real-World Practice'
+
+## Phase 8: Generate Docs & Doctor
 
 - [ ] Task: Update project documentation
-  - [ ] Add `codecamp-advantage` entry to `measure/product.md` products table
-  - [ ] Update `measure/tech-stack.md` if any new dependencies introduced
+  - [ ] Verify `codecamp-advantage` entry in `measure/product.md` is accurate
+  - [ ] Update `measure/tech-stack.md` with any new dependencies
+  - [ ] Update `measure/lessons-learned.md` with insights from this track
 - [ ] Task: Run architectural linting
   - [ ] `pnpm turbo run lint --filter=codecamp-advantage`
   - [ ] `pnpm turbo run check-types --filter=codecamp-advantage`
   - [ ] `pnpm turbo run test --filter=@reading-advantage/domain`
   - [ ] `pnpm turbo run test --filter=@reading-advantage/api`
+  - [ ] `pnpm turbo run test --filter=@reading-advantage/webhooks`
 - [ ] Task: Verify build
   - [ ] `pnpm turbo run build --filter=codecamp-advantage`
-- [ ] Task: Measure — User Manual Verification 'Generate Docs & Doctor' (Protocol in workflow.md)
+- [ ] Task: Measure — User Manual Verification 'Generate Docs & Doctor'

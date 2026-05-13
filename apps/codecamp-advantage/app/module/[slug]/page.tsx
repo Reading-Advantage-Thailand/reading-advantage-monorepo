@@ -9,13 +9,15 @@ export default function ModulePage() {
   const params = useParams();
   const slug = params.slug as string;
 
-  const { data: modules, isLoading } = trpc.codecamp.modules.useQuery();
+  const { data: modules, isLoading: modulesLoading } = trpc.codecamp.modules.useQuery();
   const moduleData = modules?.find((m) => m.slug === slug);
 
-  // const { data: lessons } = trpc.codecamp.lesson.useQuery(
-  //   { lessonId: "placeholder" },
-  //   { enabled: false }
-  // );
+  const { data: lessons, isLoading: lessonsLoading } = trpc.codecamp.lessons.useQuery(
+    { moduleId: moduleData?.id ?? "" },
+    { enabled: !!moduleData?.id }
+  );
+
+  const isLoading = modulesLoading || lessonsLoading;
 
   if (isLoading) {
     return <div className="container py-12">Loading...</div>;
@@ -51,39 +53,37 @@ export default function ModulePage() {
           />
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
-          {moduleData.completedLessons} / {moduleData.lessonCount} lessons
-          completed
+          {moduleData.completedLessons} / {moduleData.lessonCount} lessons completed
         </p>
       </div>
 
       <div className="grid gap-4">
-        {/* Lesson list would come from a separate lessons query */}
-        <LessonPlaceholder
-          title="Lesson 1: Theory"
-          status="completed"
-          href={`/lesson/${moduleData.id}-l1`}
-        />
-        <LessonPlaceholder
-          title="Lesson 2: Exercise"
-          status="in_progress"
-          href={`/lesson/${moduleData.id}-l2`}
-        />
-        <LessonPlaceholder
-          title="Lesson 3: Quiz"
-          status="not_started"
-          href={`/lesson/${moduleData.id}-l3`}
-        />
+        {lessons && lessons.length > 0 ? (
+          lessons.map((lesson) => (
+            <LessonItem
+              key={lesson.id}
+              title={lesson.title}
+              description={lesson.description}
+              status={lesson.userStatus ?? "not_started"}
+              href={`/lesson/${lesson.id}`}
+            />
+          ))
+        ) : (
+          <p className="text-muted-foreground">No lessons available for this module yet.</p>
+        )}
       </div>
     </div>
   );
 }
 
-function LessonPlaceholder({
+function LessonItem({
   title,
+  description,
   status,
   href,
 }: {
   title: string;
+  description: string;
   status: "not_started" | "in_progress" | "completed";
   href: string;
 }) {
@@ -101,6 +101,7 @@ function LessonPlaceholder({
       {icons[status]}
       <div className="flex-1">
         <h3 className="font-medium">{title}</h3>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
       <Button variant="outline" size="sm">
         {status === "completed" ? "Review" : "Start"}

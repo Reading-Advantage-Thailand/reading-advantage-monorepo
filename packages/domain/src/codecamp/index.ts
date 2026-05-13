@@ -70,6 +70,57 @@ export async function getModulesWithProgress({
 
 // ─── Lessons ──────────────────────────────────────────────
 
+export async function getLessonsForModule({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ moduleId: string }>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  const [module] = await db
+    .select()
+    .from(codecampModules)
+    .where(eq(codecampModules.id, input.moduleId))
+    .limit(1);
+
+  if (!module || module.status !== "published") {
+    throw new Error("Module not found");
+  }
+
+  const lessons = await db
+    .select()
+    .from(codecampLessons)
+    .where(eq(codecampLessons.moduleId, input.moduleId))
+    .orderBy(codecampLessons.order);
+
+  const progress = await db
+    .select()
+    .from(codecampUserProgress)
+    .where(
+      and(
+        eq(codecampUserProgress.userId, user.id),
+        eq(codecampUserProgress.moduleId, input.moduleId)
+      )
+    );
+
+  return lessons.map((lesson) => {
+    const lessonProgress = progress.find((p) => p.lessonId === lesson.id);
+    return {
+      id: lesson.id,
+      moduleId: lesson.moduleId,
+      title: lesson.title,
+      description: lesson.description,
+      order: lesson.order,
+      type: lesson.type,
+      userStatus: lessonProgress?.status ?? "not_started",
+      userScore: lessonProgress?.score ?? null,
+      createdAt: lesson.createdAt,
+      updatedAt: lesson.updatedAt,
+    };
+  });
+}
+
 export async function getLessonWithContent({
   db,
   user,

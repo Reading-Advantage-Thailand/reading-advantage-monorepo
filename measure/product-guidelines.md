@@ -27,3 +27,11 @@
 - ESLint flat config shared from `packages/config`
 - Prettier shared config — no per-app formatting debates
 - Test coverage target: >80% for shared packages, >60% for app-specific logic
+
+## Codecamp-Specific Guidelines
+
+- **Zone of Proximal Development** — Exercises start simple but progressively mirror real Reading Advantage patterns (assertCan, tenant scoping, thin routers / thick domain). Never skip scaffolding steps.
+- **Authentic Workflows** — Interns fork repos, create PRs, address LLM review comments, and merge. This mirrors real company practice.
+- **LLM as Mentor, Not Gatekeeper** — The LLM posts PR review comments as suggestions. The intern owns their fork and decides when to merge. The review is advisory and educational, not a hard approval gate.
+- **Thai-Native Learners** — Curriculum content is English (standard for code), but the chatbot responds in the intern's language. Thai is the expected default for chat interactions.
+- **1+ Hour Daily** — Modules are sized for ~1 hour/day engagement over ~4 months (18 modules).

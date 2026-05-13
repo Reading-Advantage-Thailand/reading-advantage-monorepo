@@ -59,6 +59,23 @@ export type Exercise = z.infer<typeof exerciseSchema>;
 export type QuizQuestion = z.infer<typeof quizQuestionSchema>;
 export type LessonResponse = z.infer<typeof lessonResponseSchema>;
 
+// ─── Codecamp Lesson List ─────────────────────────────────
+
+export const lessonListItemSchema = z.object({
+  id: z.string().uuid(),
+  moduleId: z.string().uuid(),
+  title: z.string(),
+  description: z.string(),
+  order: z.number(),
+  type: z.enum(["theory", "exercise", "quiz"]),
+  userStatus: z.enum(["not_started", "in_progress", "completed"]).nullable(),
+  userScore: z.number().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export type LessonListItem = z.infer<typeof lessonListItemSchema>;
+
 // ─── Codecamp Exercise Submission ─────────────────────────
 
 export const exerciseSubmissionSchema = z.object({

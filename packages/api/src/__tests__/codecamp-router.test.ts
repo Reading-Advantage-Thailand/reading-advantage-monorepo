@@ -8,6 +8,7 @@ import { AuthError } from "@reading-advantage/auth";
 
 vi.mock("@reading-advantage/domain/codecamp", () => ({
   getModulesWithProgress: vi.fn(),
+  getLessonsForModule: vi.fn(),
   getLessonWithContent: vi.fn(),
   submitExerciseAttempt: vi.fn(),
   submitQuizAnswers: vi.fn(),
@@ -20,6 +21,7 @@ vi.mock("@reading-advantage/domain/codecamp", () => ({
 
 import {
   getModulesWithProgress,
+  getLessonsForModule,
   getLessonWithContent,
   submitExerciseAttempt,
   submitQuizAnswers,
@@ -77,6 +79,42 @@ describe("codecamp router", () => {
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe("550e8400-e29b-41d4-a716-446655440001");
       expect(result[0]).not.toHaveProperty("extraField");
+    });
+  });
+
+  describe("lessons", () => {
+    it("returns lessons for a module", async () => {
+      const lessonRows = [
+        {
+          id: "550e8400-e29b-41d4-a716-446655440002",
+          moduleId: "550e8400-e29b-41d4-a716-446655440001",
+          title: "Lesson 1",
+          description: "Desc",
+          order: 1,
+          type: "theory",
+          userStatus: "not_started",
+          userScore: null,
+          createdAt: testDate,
+          updatedAt: testDate,
+          extraField: "should-be-stripped",
+        },
+      ];
+      vi.mocked(getLessonsForModule).mockResolvedValue(lessonRows as unknown as Awaited<ReturnType<typeof getLessonsForModule>>);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.lessons({ moduleId: "550e8400-e29b-41d4-a716-446655440001" });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe("550e8400-e29b-41d4-a716-446655440002");
+      expect(result[0]).not.toHaveProperty("extraField");
+    });
+
+    it("maps 'Module not found' to NOT_FOUND", async () => {
+      vi.mocked(getLessonsForModule).mockRejectedValue(new Error("Module not found"));
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(caller.codecamp.lessons({ moduleId: "550e8400-e29b-41d4-a716-446655440001" }))
+        .rejects.toMatchObject({ code: "NOT_FOUND" });
     });
   });
 

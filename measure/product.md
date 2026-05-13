@@ -41,7 +41,7 @@ Unify Reading Advantage's student-facing learning applications into a single, ma
 | reading-advantage | Next.js (web) | Prisma, Firebase Functions, AI SDK | Reading comprehension |
 | primary-advantage | Next.js 15.2 | Prisma, NextAuth, AI SDK, Framer Motion | Primary education |
 | www-reading-advantage | Next.js 15.5 | MDX, Radix UI, Tailwind, i18n | Company website / marketing |
-| codecamp-advantage | Next.js 16.0 | tRPC, Drizzle, AI SDK, next-intl | Intern training (Next.js + monorepo patterns) |
+| codecamp-advantage | Next.js 16.0 | tRPC, Drizzle, AI SDK, next-intl, GitHub API | Intern bootcamp — full-stack web dev training from fundamentals, with fork-based exercises, LLM PR review, and GitHub Issues practice |
 
 ## Migration Notes
 

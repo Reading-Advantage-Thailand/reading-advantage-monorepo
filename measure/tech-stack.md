@@ -26,6 +26,7 @@
 | tRPC | Primary product backend interface — typed procedures consumed by Next.js apps |
 | Hono | External HTTP boundaries only — webhooks, health checks, legacy endpoints |
 | Zod | Input validation on all tRPC procedures |
+| GitHub REST/GraphQL API | Exercise repo management, PR reviews, Issue tracking for codecamp |
 | PostgreSQL | Unified database (local Docker for dev, VPS for production) |
 | Sessions | Cookie-based DB sessions via `@reading-advantage/auth` (username/password) |
 | Firebase Functions | reading-advantage (legacy, being deprecated) |

@@ -28,11 +28,42 @@ export default function ChatPage() {
 
       if (!res.ok) throw new Error("Failed to get response");
 
-      const data = await res.json();
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: data.response },
-      ]);
+      const contentType = res.headers.get("content-type") ?? "";
+      if (contentType.includes("text/event-stream") || res.body?.getReader) {
+        const reader = res.body?.getReader();
+        const decoder = new TextDecoder();
+        let assistantMessage = "";
+
+        setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+        while (reader) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split("\n");
+          for (const line of lines) {
+            if (line.startsWith("0:")) {
+              try {
+                const text = JSON.parse(line.slice(2));
+                assistantMessage += text;
+                setMessages((prev) => {
+                  const next = [...prev];
+                  next[next.length - 1] = { role: "assistant", content: assistantMessage };
+                  return next;
+                });
+              } catch {
+                // ignore parse errors
+              }
+            }
+          }
+        }
+      } else {
+        const data = await res.json();
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: data.response },
+        ]);
+      }
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -60,17 +91,14 @@ export default function ChatPage() {
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <p className="text-muted-foreground">
-              Ask me anything about Next.js, tRPC, Drizzle, or monorepo
-              patterns.
+              Ask me anything about Next.js, tRPC, Drizzle, or monorepo patterns.
             </p>
           </div>
         ) : (
           messages.map((m, i) => (
             <div
               key={i}
-              className={`mb-4 flex ${
-                m.role === "user" ? "justify-end" : "justify-start"
-              }`}
+              className={`mb-4 flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
                 className={`max-w-[80%] rounded-lg px-4 py-2 ${
@@ -86,9 +114,7 @@ export default function ChatPage() {
         )}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="rounded-lg bg-secondary px-4 py-2 text-sm">
-              Thinking...
-            </div>
+            <div className="rounded-lg bg-secondary px-4 py-2 text-sm">Thinking...</div>
           </div>
         )}
       </div>

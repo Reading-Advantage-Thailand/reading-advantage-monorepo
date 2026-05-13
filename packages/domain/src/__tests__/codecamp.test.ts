@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import {
   getModulesWithProgress,
+  getLessonsForModule,
   getLessonWithContent,
   submitExerciseAttempt,
   submitQuizAnswers,
@@ -94,6 +95,84 @@ describe("getModulesWithProgress", () => {
     await expect(
       getModulesWithProgress({ db: wrapDb(db), user: invalidUser, tenant: globalTenant })
     ).rejects.toThrow(/codecamp:read/);
+  });
+});
+
+// ─── getLessonsForModule ──────────────────────────────────
+
+describe("getLessonsForModule", () => {
+  it("returns lessons for a published module with user progress", async () => {
+    const moduleRow = { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() };
+    const lessons = [
+      { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+      { id: "l2", moduleId: "m1", title: "Lesson 2", description: "Desc", order: 2, type: "exercise" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const progress = [
+      { id: "p1", userId: "st1", moduleId: "m1", lessonId: "l1", status: "completed" as const, score: 100, completedAt: new Date(), createdAt: new Date(), updatedAt: new Date() },
+    ];
+
+    const db = createMockDb();
+    let selectCallCount = 0;
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([moduleRow]);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+        limit: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([moduleRow]);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+        orderBy: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([moduleRow]);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+      }),
+    });
+
+    const result = await getLessonsForModule({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { moduleId: "m1" },
+    });
+
+    expect(result).toHaveLength(2);
+    expect(result[0].userStatus).toBe("completed");
+    expect(result[0].userScore).toBe(100);
+    expect(result[1].userStatus).toBe("not_started");
+    expect(result[1].userScore).toBeNull();
+  });
+
+  it("throws when module is not published", async () => {
+    const moduleRow = { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "draft", createdAt: new Date(), updatedAt: new Date() };
+
+    const db = createMockDb();
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          limit: vi.fn().mockResolvedValue([moduleRow]),
+        }),
+      }),
+    });
+
+    await expect(
+      getLessonsForModule({ db: wrapDb(db), user: student, tenant: globalTenant, input: { moduleId: "m1" } })
+    ).rejects.toThrow(/Module not found/);
+  });
+
+  it("throws when module does not exist", async () => {
+    const db = createMockDb({ selectResults: [] });
+
+    await expect(
+      getLessonsForModule({ db: wrapDb(db), user: student, tenant: globalTenant, input: { moduleId: "m1" } })
+    ).rejects.toThrow(/Module not found/);
   });
 });
 

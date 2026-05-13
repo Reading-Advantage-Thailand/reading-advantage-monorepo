@@ -64,9 +64,9 @@ This file tracks all major tracks for the project.
 
 ---
 
-- [ ] **Track: codecamp-advantage — LLM-Powered Next.js Intern Training App**
+- [ ] **Track: codecamp-advantage — Full-Stack Web Dev Intern Bootcamp**
   *Link: [./tracks/codecamp_advantage_20260513/](./tracks/codecamp_advantage_20260513/)*
-  Create a new Next.js app that uses LLMs to teach Next.js and monorepo patterns (App Router, tRPC, Drizzle, auth, multi-tenancy) to interns via interactive chat, guided exercises, architecture walkthroughs, and quizzes.
+  18-module curriculum (dev env setup → cloud deployment) for interns with near-zero JS experience. Fork-based exercises with LLM PR review, GitHub Issues practice, and architecture mirroring of real Reading Advantage patterns. Existing schema/domain/router/UI code retained and extended.
 
 ---
 

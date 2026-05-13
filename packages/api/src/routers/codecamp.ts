@@ -6,6 +6,7 @@ import * as codecamp from "@reading-advantage/domain/codecamp";
 import {
   moduleResponseSchema,
   lessonResponseSchema,
+  lessonListItemSchema,
   exerciseResultSchema,
   quizSubmissionSchema,
   quizResultSchema,
@@ -21,7 +22,7 @@ function mapDomainError(err: unknown): never {
     throw new TRPCError({ code: "FORBIDDEN", message: err.message });
   }
   if (err instanceof Error) {
-    if (err.message === "Lesson not found" || err.message === "Exercise not found" || err.message === "Conversation not found") {
+    if (err.message === "Lesson not found" || err.message === "Module not found" || err.message === "Exercise not found" || err.message === "Conversation not found") {
       throw new TRPCError({ code: "NOT_FOUND", message: err.message });
     }
     if (err.message === "No quiz questions found for this lesson") {
@@ -41,6 +42,22 @@ export const codecampRouter = router({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
+        });
+      } catch (err) {
+        mapDomainError(err);
+      }
+    }),
+
+  lessons: protectedProcedure
+    .input(z.object({ moduleId: z.string().uuid() }))
+    .output(z.array(lessonListItemSchema))
+    .query(async ({ ctx, input }) => {
+      try {
+        return await codecamp.getLessonsForModule({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
         });
       } catch (err) {
         mapDomainError(err);
