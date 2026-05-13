@@ -88,12 +88,12 @@
   - [ ] Create `packages/api/src/routers/codecamp.ts`
   - [ ] Wire into `packages/api/src/root.ts` as `codecamp: codecampRouter`
   - [ ] Map domain `Error` throws to `TRPCError` in router layer (per lessons learned)
-- [~] Task: Implement LLM integration
+- [x] Task: Implement LLM integration
   - [ ] Create `apps/codecamp-advantage/app/api/chat/route.ts` using AI SDK `streamText`
   - [ ] Build system prompt grounded in monorepo context (AGENTS.md, tech-stack.md, actual code patterns)
   - [ ] Create exercise evaluation helper (structured output via `generateObject`)
   - [ ] Create quiz generation helper (per-module question generation)
-- [~] Task: Implement UI pages and components
+- [x] Task: Implement UI pages and components
   - [ ] Layout with auth gate, navigation, and providers
   - [ ] Dashboard page (`/`) — module cards with progress bars
   - [ ] Module detail page (`/module/[slug]`) — lesson list
@@ -110,7 +110,7 @@
     5. Monorepo Patterns
   - [ ] Include real file references in lesson content (e.g., `packages/api/src/root.ts`, `packages/domain/src/index.ts`)
   - [ ] Add seed script to `package.json` or migration
-- [ ] Task: Measure — User Manual Verification 'Implement' (Protocol in workflow.md)
+- [x] Task: Measure — User Manual Verification 'Implement' (Protocol in workflow.md)
 
 ## Phase 4: Generate Docs & Doctor
 
