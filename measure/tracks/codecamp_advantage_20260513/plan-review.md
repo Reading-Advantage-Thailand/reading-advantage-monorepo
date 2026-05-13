@@ -144,3 +144,45 @@ The two type errors (Critical + High) should be fixed immediately — they will 
 3. Switch chat route from `generateText` to `streamText`
 4. Connect UI pages to tRPC data (dashboard, module, lesson)
 5. Remove `ignoreBuildErrors: true` from next.config.ts
+
+
+## Phase 0 Code Review
+
+**Date**: 2026-05-13
+**Reviewer**: Automated (agent execution)
+**Scope**: `46ecb45..HEAD` — all changes since initial scaffold through Phase 0 completion
+**Commands run**:
+- `pnpm turbo run test --filter=@reading-advantage/domain --filter=@reading-advantage/api` ✅ 108 + 65 tests pass
+- `pnpm turbo run check-types --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/types` ✅ Clean
+- `pnpm turbo run lint --filter=codecamp-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/types` ✅ Clean (pre-existing warnings only)
+- `pnpm turbo run build --filter=codecamp-advantage` ✅ Clean
+
+### Findings
+
+**Critical**: None
+
+**High**: None
+
+**Medium**:
+1. **Chat streaming parser incomplete** — `ChatTutor` components in `lesson/[id]/page.tsx` and `chat/page.tsx` parse only `0:` (text) events from the Vercel AI SDK data stream. Error events (`e:`), finish events (`f:`), and data events (`d:`) are not handled. This could leave the UI in a "Thinking..." state if the stream errors.
+   - *Mitigation*: The stream parser gracefully falls back to displaying raw content. Full chat persistence and error handling are planned for Phase 4.
+
+**Low**:
+1. **Lesson content rendering** — `lesson.content` is currently rendered as `JSON.stringify()` in a `<pre>` block. This is a placeholder until rich content rendering is implemented in a future phase.
+2. **Module page redundant data fetch** — The module page first calls `modules` query (which internally fetches all lessons across all modules via `getModulesWithProgress`), then calls `lessons` query for the specific module. For the expected small curriculum dataset this is acceptable, but a dedicated `moduleBySlug` query would be more efficient.
+
+### Plan Compliance
+
+| Task | Status |
+|------|--------|
+| Fix type errors in router/tests | ✅ Fixed in `08471b2` |
+| Fix chat route streaming | ✅ Fixed in `08471b2` |
+| Connect UI to tRPC (dashboard) | ✅ Uses `dashboard.useQuery()` |
+| Connect UI to tRPC (module) | ✅ Uses `lessons.useQuery()` |
+| Connect UI to tRPC (lesson) | ✅ Uses `lesson.useQuery()` with exercises/quiz |
+| Remove ignoreBuildErrors | ✅ Fixed in `08471b2` |
+| Set reactStrictMode | ✅ Fixed in `08471b2` (defaults to true) |
+
+### Verdict
+
+**Phase 0 passes review.** No Critical or High findings. Medium finding (chat stream error handling) is acceptable — full chat robustness is scoped to Phase 4.
