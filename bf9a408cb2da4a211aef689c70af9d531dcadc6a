@@ -1,0 +1,26 @@
+Phase 0 Task: Connect UI pages to tRPC data
+
+Summary: Wired dashboard, module, and lesson pages to tRPC data sources.
+Backend:
+- Added getLessonsForModule domain function (packages/domain/src/codecamp/index.ts)
+- Added lessons query to codecamp router (packages/api/src/routers/codecamp.ts)
+- Added lessonListItemSchema to types (packages/types/src/codecamp.ts)
+Frontend:
+- Dashboard uses trpc.codecamp.dashboard.useQuery() with progress stats
+- Module page uses trpc.codecamp.lessons.useQuery() for real lesson list
+- Lesson page uses trpc.codecamp.lesson.useQuery() with exercises/quiz submission
+- Chat components parse streaming responses from streamText
+Tests:
+- 3 new domain tests for getLessonsForModule
+- 2 new router tests for lessons procedure
+- 108 domain tests pass, 65 API tests pass
+Files changed:
+- apps/codecamp-advantage/app/page.tsx
+- apps/codecamp-advantage/app/module/[slug]/page.tsx
+- apps/codecamp-advantage/app/lesson/[id]/page.tsx
+- apps/codecamp-advantage/app/chat/page.tsx
+- packages/domain/src/codecamp/index.ts
+- packages/api/src/routers/codecamp.ts
+- packages/types/src/codecamp.ts
+- packages/domain/src/__tests__/codecamp.test.ts
+- packages/api/src/__tests__/codecamp-router.test.ts
