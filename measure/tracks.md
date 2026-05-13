@@ -64,6 +64,12 @@ This file tracks all major tracks for the project.
 
 ---
 
+- [ ] **Track: codecamp-advantage — LLM-Powered Next.js Intern Training App**
+  *Link: [./tracks/codecamp_advantage_20260513/](./tracks/codecamp_advantage_20260513/)*
+  Create a new Next.js app that uses LLMs to teach Next.js and monorepo patterns (App Router, tRPC, Drizzle, auth, multi-tenancy) to interns via interactive chat, guided exercises, architecture walkthroughs, and quizzes.
+
+---
+
 ### Prisma → Drizzle Migration Program (4 tracks)
 
 - [ ] **Track: Prisma → Drizzle Schema Unification**
