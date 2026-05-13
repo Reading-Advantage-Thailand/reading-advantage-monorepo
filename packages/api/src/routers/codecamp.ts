@@ -168,12 +168,13 @@ export const codecampRouter = router({
     .output(progressResponseSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        return await codecamp.updateUserProgress({
+        const [result] = await codecamp.updateUserProgress({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
           input,
         });
+        return result;
       } catch (err) {
         mapDomainError(err);
       }

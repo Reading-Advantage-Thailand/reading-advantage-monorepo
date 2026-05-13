@@ -51,6 +51,9 @@ export function createMockDb(overrides: {
       values: vi.fn().mockReturnValue({
         returning: vi.fn().mockResolvedValue(overrides.insertReturning ?? []),
         onConflictDoNothing: vi.fn().mockResolvedValue([]),
+        onConflictDoUpdate: vi.fn().mockReturnValue({
+          returning: vi.fn().mockResolvedValue(overrides.insertReturning ?? []),
+        }),
       }),
     }),
     select: vi.fn().mockImplementation(() => ({

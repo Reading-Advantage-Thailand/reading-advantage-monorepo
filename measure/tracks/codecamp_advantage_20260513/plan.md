@@ -37,24 +37,23 @@
 
 ## Phase 2: Test
 
-- [ ] Task: Set up domain test utilities
-  - [ ] Create `packages/domain/src/__tests__/codecamp/mock-db.ts` with thenable Drizzle mocks (per lessons learned)
-  - [ ] Create shared fixtures for modules, lessons, exercises, quizzes
-- [ ] Task: Write domain function unit tests
-  - [ ] Test `getModulesWithProgress` — returns modules with user's progress status
-  - [ ] Test `getLessonWithContent` — returns lesson + exercises + quiz questions
-  - [ ] Test `submitExerciseAttempt` — validates code-like input, returns feedback
-  - [ ] Test `submitQuizAnswers` — scores answers, returns result
-  - [ ] Test `saveChatMessage` / `getChatHistory` — persists and retrieves messages
-  - [ ] Test `updateUserProgress` — transitions status, sets completedAt
-  - [ ] Test `getUserDashboard` — aggregates progress across modules
-  - [ ] Test cross-tenant authorization guards explicitly (per lessons learned)
-- [ ] Task: Write tRPC router tests
-  - [ ] Test codecamp router exercise endpoints
-  - [ ] Test codecamp router quiz endpoints
-  - [ ] Test codecamp router chat endpoints
-  - [ ] Test codecamp router progress endpoints
-- [ ] Task: Measure — User Manual Verification 'Test' (Protocol in workflow.md)
+- [x] Task: Set up domain test utilities
+  - [x] Uses existing `packages/domain/src/__tests__/mock-db.ts` with thenable Drizzle mocks
+  - [x] Created inline fixtures in `packages/domain/src/__tests__/codecamp.test.ts`
+- [x] Task: Write domain function unit tests (17 tests, 105 passing in domain)
+  - [x] Test `getModulesWithProgress` — returns modules with user's progress status
+  - [x] Test `getLessonWithContent` — returns lesson + exercises + quiz questions
+  - [x] Test `submitExerciseAttempt` — validates code-like input, returns feedback
+  - [x] Test `submitQuizAnswers` — scores answers, returns result
+  - [x] Test `saveChatMessage` / `getChatHistory` — persists and retrieves messages
+  - [x] Test `updateUserProgress` — transitions status, sets completedAt
+  - [x] Test `getUserDashboard` — aggregates progress across modules
+  - [x] Test cross-tenant authorization guards explicitly (per lessons learned)
+- [x] Task: Write tRPC router tests (15 tests, all passing in api)
+  - [x] Test codecamp router all 9 procedures
+  - [x] Test error mapping (AuthError → FORBIDDEN, domain errors → NOT_FOUND/BAD_REQUEST/INTERNAL_SERVER_ERROR)
+  - [x] Test output schema validation strips extra fields
+- [x] Task: Measure — User Manual Verification 'Test' (Protocol in workflow.md)
 
 ## Phase 3: Implement
 
