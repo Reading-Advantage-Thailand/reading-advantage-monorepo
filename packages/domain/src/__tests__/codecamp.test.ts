@@ -824,6 +824,22 @@ describe("getPrReviewByPrUrl", () => {
 
     expect(result).toBeNull();
   });
+
+  it("allows SYSTEM user to look up any PR review by URL", async () => {
+    const review = { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: new Date() };
+    const db = createMockDb({ selectResults: [review] });
+    const systemUser = { id: "system", username: "system", name: "System", role: "SYSTEM" as const, schoolId: null };
+
+    const result = await getPrReviewByPrUrl({
+      db: wrapDb(db),
+      user: systemUser,
+      tenant: globalTenant,
+      input: { prUrl: "https://github.com/org/repo1/pull/1" },
+    });
+
+    expect(result).not.toBeNull();
+    expect(result?.id).toBe("pr1");
+  });
 });
 
 // ─── Expanded Curriculum Queries ──────────────────────────

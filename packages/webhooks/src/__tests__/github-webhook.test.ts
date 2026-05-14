@@ -16,7 +16,6 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
 import {
   getPrReviewByPrUrl,
   updatePrReview,
-  createPrReview,
 } from "@reading-advantage/domain/codecamp";
 
 const WEBHOOK_SECRET = "test-secret";

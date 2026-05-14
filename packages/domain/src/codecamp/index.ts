@@ -759,15 +759,15 @@ export async function getPrReviewByPrUrl({
 }: DomainInput<{ prUrl: string }>) {
   assertCan(user, "codecamp:read", tenant);
 
+  const conditions = [eq(codecampPrReviews.prUrl, input.prUrl)];
+  if (user.role !== "SYSTEM") {
+    conditions.push(eq(codecampPrReviews.userId, user.id));
+  }
+
   const [result] = await db
     .select()
     .from(codecampPrReviews)
-    .where(
-      and(
-        eq(codecampPrReviews.prUrl, input.prUrl),
-        eq(codecampPrReviews.userId, user.id)
-      )
-    )
+    .where(and(...conditions))
     .limit(1);
 
   return result ?? null;
