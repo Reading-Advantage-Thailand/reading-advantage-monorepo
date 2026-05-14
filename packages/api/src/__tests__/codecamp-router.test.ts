@@ -26,6 +26,9 @@ vi.mock("@reading-advantage/domain/codecamp", () => ({
   getModulesByPhase: vi.fn(),
   getModuleWithExercises: vi.fn(),
   checkModulePrerequisite: vi.fn(),
+  createInternAccount: vi.fn(),
+  listInterns: vi.fn(),
+  getInternProgress: vi.fn(),
 }));
 
 import {
@@ -48,6 +51,9 @@ import {
   getModulesByPhase,
   getModuleWithExercises,
   checkModulePrerequisite,
+  createInternAccount,
+  listInterns,
+  getInternProgress,
 } from "@reading-advantage/domain/codecamp";
 
 const t = initTRPC.context<{
@@ -627,6 +633,120 @@ describe("codecamp router", () => {
       const result = await caller.codecamp.checkPrerequisite({ moduleId: "550e8400-e29b-41d4-a716-446655440002" });
 
       expect(result.canStart).toBe(true);
+    });
+  });
+
+  describe("createIntern", () => {
+    it("creates an intern account", async () => {
+      const userRow = {
+        id: "550e8400-e29b-41d4-a716-446655440030",
+        username: "intern1",
+        displayUsername: "intern1",
+        name: "Intern One",
+        role: "INTERN",
+        schoolId: null,
+        createdAt: testDate,
+      };
+      vi.mocked(createInternAccount).mockResolvedValue(userRow as unknown as Awaited<ReturnType<typeof createInternAccount>>);
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+
+      const result = await caller.codecamp.createIntern({
+        username: "intern1",
+        name: "Intern One",
+        password: "password123",
+      });
+
+      expect(result.id).toBe("550e8400-e29b-41d4-a716-446655440030");
+      expect(result.role).toBe("INTERN");
+    });
+
+    it("maps AuthError to FORBIDDEN for non-admin", async () => {
+      vi.mocked(createInternAccount).mockRejectedValue(new AuthError("Forbidden", "FORBIDDEN"));
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.createIntern({
+          username: "intern1",
+          name: "Intern One",
+          password: "password123",
+        })
+      ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    });
+  });
+
+  describe("listInterns", () => {
+    it("returns cohort overview", async () => {
+      const internRows = [
+        {
+          userId: "u1",
+          name: "Intern One",
+          username: "intern1",
+          overallProgress: 50,
+          completedModules: 2,
+          totalModules: 18,
+          quizAverage: 80,
+          prReviewsPending: 1,
+          prReviewsApproved: 3,
+          lastActiveAt: testDate,
+        },
+      ];
+      vi.mocked(listInterns).mockResolvedValue(internRows as unknown as Awaited<ReturnType<typeof listInterns>>);
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+
+      const result = await caller.codecamp.listInterns();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].userId).toBe("u1");
+      expect(result[0].overallProgress).toBe(50);
+    });
+
+    it("maps AuthError to FORBIDDEN for non-admin", async () => {
+      vi.mocked(listInterns).mockRejectedValue(new AuthError("Forbidden", "FORBIDDEN"));
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(caller.codecamp.listInterns()).rejects.toMatchObject({ code: "FORBIDDEN" });
+    });
+  });
+
+  describe("getInternProgress", () => {
+    it("returns detailed progress for an intern", async () => {
+      const detailRow = {
+        userId: "u1",
+        name: "Intern One",
+        username: "intern1",
+        moduleBreakdown: [
+          { moduleId: "m1", title: "Module 1", completed: 2, totalLessons: 4, avgScore: 85 },
+        ],
+        quizScores: [{ lessonId: "l1", score: 100 }],
+        prReviews: [],
+      };
+      vi.mocked(getInternProgress).mockResolvedValue(detailRow as unknown as Awaited<ReturnType<typeof getInternProgress>>);
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+
+      const result = await caller.codecamp.getInternProgress({ userId: "u1" });
+
+      expect(result.userId).toBe("u1");
+      expect(result.moduleBreakdown).toHaveLength(1);
+    });
+
+    it("maps 'Intern not found' to NOT_FOUND", async () => {
+      vi.mocked(getInternProgress).mockRejectedValue(new Error("Intern not found"));
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+
+      await expect(caller.codecamp.getInternProgress({ userId: "u1" }))
+        .rejects.toMatchObject({ code: "NOT_FOUND" });
+    });
+
+    it("maps AuthError to FORBIDDEN for non-admin", async () => {
+      vi.mocked(getInternProgress).mockRejectedValue(new AuthError("Forbidden", "FORBIDDEN"));
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(caller.codecamp.getInternProgress({ userId: "u1" }))
+        .rejects.toMatchObject({ code: "FORBIDDEN" });
     });
   });
 

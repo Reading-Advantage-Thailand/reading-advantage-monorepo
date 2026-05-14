@@ -22,6 +22,10 @@ import {
   prReviewInputSchema,
   prReviewUpdateSchema,
   moduleWithReposSchema,
+  internAccountInputSchema,
+  internAccountResponseSchema,
+  internProgressSchema,
+  internDetailSchema,
 } from "@reading-advantage/types";
 
 function mapDomainError(err: unknown): never {
@@ -29,7 +33,7 @@ function mapDomainError(err: unknown): never {
     throw new TRPCError({ code: "FORBIDDEN", message: err.message });
   }
   if (err instanceof Error) {
-    if (err.message === "Lesson not found" || err.message === "Module not found" || err.message === "Exercise not found" || err.message === "Conversation not found") {
+    if (err.message === "Lesson not found" || err.message === "Module not found" || err.message === "Exercise not found" || err.message === "Conversation not found" || err.message === "Intern not found") {
       throw new TRPCError({ code: "NOT_FOUND", message: err.message });
     }
     if (err.message === "No quiz questions found for this lesson" || err.message === "Invalid phase") {
@@ -371,6 +375,54 @@ export const codecampRouter = router({
     .query(async ({ ctx, input }) => {
       try {
         return await codecamp.checkModulePrerequisite({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  // ─── Admin ────────────────────────────────────────────────
+
+  createIntern: protectedProcedure
+    .input(internAccountInputSchema)
+    .output(internAccountResponseSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await codecamp.createInternAccount({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  listInterns: protectedProcedure
+    .output(z.array(internProgressSchema))
+    .query(async ({ ctx }) => {
+      try {
+        return await codecamp.listInterns({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  getInternProgress: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .output(internDetailSchema)
+    .query(async ({ ctx, input }) => {
+      try {
+        return await codecamp.getInternProgress({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,

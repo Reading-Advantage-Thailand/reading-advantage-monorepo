@@ -336,5 +336,39 @@ export const internProgressSchema = z.object({
   lastActiveAt: z.date().nullable(),
 });
 
+export const internAccountResponseSchema = z.object({
+  id: z.string(),
+  username: z.string().nullable(),
+  displayUsername: z.string().nullable(),
+  name: z.string().nullable(),
+  role: z.string(),
+  schoolId: z.string().nullable(),
+  createdAt: z.date(),
+});
+
+export const internDetailSchema = z.object({
+  userId: z.string(),
+  name: z.string().nullable(),
+  username: z.string(),
+  moduleBreakdown: z.array(
+    z.object({
+      moduleId: z.string(),
+      title: z.string(),
+      completed: z.number(),
+      totalLessons: z.number(),
+      avgScore: z.number(),
+    })
+  ),
+  quizScores: z.array(
+    z.object({
+      lessonId: z.string(),
+      score: z.number(),
+    })
+  ),
+  prReviews: z.array(prReviewSchema),
+});
+
 export type InternAccountInput = z.infer<typeof internAccountInputSchema>;
+export type InternAccountResponse = z.infer<typeof internAccountResponseSchema>;
 export type InternProgress = z.infer<typeof internProgressSchema>;
+export type InternDetail = z.infer<typeof internDetailSchema>;

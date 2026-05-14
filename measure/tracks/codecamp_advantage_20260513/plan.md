@@ -173,11 +173,11 @@ Replace the existing 5-module seed with the full 18-module curriculum.
 
 Build admin-facing features for account management and intern progress tracking.
 
-- [ ] Task: Implement account creation domain function
-  - [ ] `createInternAccount({ db, user, tenant, input })` — admin-only, creates user with INTERN role
-  - [ ] `listInterns({ db, user, tenant })` — admin-only, returns all intern accounts with progress summary
-  - [ ] `getInternProgress({ db, user, tenant, input })` — admin-only, returns detailed progress for a specific intern
-- [ ] Task: Implement admin tRPC procedures
+- [x] Task: Implement account creation domain function [pre-existing]
+  - [x] `createInternAccount({ db, user, tenant, input })` — admin-only, creates user with INTERN role
+  - [x] `listInterns({ db, user, tenant })` — admin-only, returns all intern accounts with progress summary
+  - [x] `getInternProgress({ db, user, tenant, input })` — admin-only, returns detailed progress for a specific intern
+- [~] Task: Implement admin tRPC procedures
   - [ ] `admin.createIntern` — admin-protected, creates account
   - [ ] `admin.listInterns` — admin-protected, cohort overview
   - [ ] `admin.getInternProgress` — admin-protected, per-intern detail
