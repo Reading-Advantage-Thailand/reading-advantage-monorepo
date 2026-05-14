@@ -1,0 +1,11 @@
+Task: Update project documentation (Phase 8)
+
+- Verified codecamp-advantage entry in product.md (accurate, added Vitest to tech list)
+- Updated tech-stack.md: added codecamp-advantage to workspace structure, listed it under Vitest testing
+- Added 4 lessons-learned entries from codecamp track:
+  * Mock-DB vs real DB constraint alignment
+  * GitHub webhook URL normalization
+  * Streaming LLM response buffering
+  * Curriculum seed data modularization
+
+Files: measure/product.md, measure/tech-stack.md, measure/lessons-learned.md
