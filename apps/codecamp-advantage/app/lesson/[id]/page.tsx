@@ -6,6 +6,7 @@ import { Button } from "@reading-advantage/ui";
 import { ArrowLeft, Send } from "lucide-react";
 import { useState } from "react";
 import { useChatStream } from "@/lib/use-chat-stream";
+import { LessonContent } from "@/components/lesson-content";
 
 export default function LessonPage() {
   const params = useParams();
@@ -63,15 +64,9 @@ export default function LessonPage() {
         {/* Lesson Content */}
         <div className="rounded-lg border p-6">
           <h2 className="text-xl font-semibold">Content</h2>
-          {lesson.content && Object.keys(lesson.content).length > 0 ? (
-            <pre className="mt-4 overflow-x-auto rounded bg-muted p-4 text-sm">
-              {JSON.stringify(lesson.content, null, 2)}
-            </pre>
-          ) : (
-            <p className="mt-4 text-muted-foreground">
-              No structured content available for this lesson yet.
-            </p>
-          )}
+          <div className="mt-4">
+            <LessonContent type={lesson.type} content={lesson.content} />
+          </div>
         </div>
 
         {/* Exercises */}
