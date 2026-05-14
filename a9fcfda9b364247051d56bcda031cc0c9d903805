@@ -1,0 +1,14 @@
+Task: Add phase column to codecamp_modules schema and migration
+
+Summary: Added 'phase' text column with default 'A' to codecamp_modules table.
+Generated and applied manual migration 0008_codecamp_phase.sql (drizzle-kit 0.31 requires TTY for prompts).
+Updated journal meta to track 0007 and 0008 migrations.
+
+Files changed:
+- packages/db/src/schema/codecamp.ts
+- packages/db/drizzle/0008_codecamp_phase.sql (new)
+- packages/db/drizzle/meta/_journal.json
+- measure/tracks/codecamp_curriculum_20260514/plan.md
+
+Why: Curriculum modules are organized into 4 phases (A-D). The phase column
+enables direct DB querying by phase instead of deriving phase from order ranges.
