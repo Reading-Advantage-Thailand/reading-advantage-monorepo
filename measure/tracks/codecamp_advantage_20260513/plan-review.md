@@ -65,4 +65,6 @@ Both findings addressed. No Critical or High findings. Phase approved for checkp
 
 ### Resolution
 
-No Critical or High findings. Phase passes review. Medium finding (missing `reviewExercise` test) will be addressed in a follow-up commit before checkpoint.
+- **Medium finding fixed** in commit `b6e36eb`: Added 3 tests for `reviewExercise` — admin access allowed, SYSTEM access allowed, non-admin rejected with FORBIDDEN. Also fixed `reviewResultSchema` mock to provide `parse()` for tRPC output validation.
+- Low findings documented for future cleanup (inline role check consistency, shared LLM utility).
+- No Critical or High findings remain. Phase approved for checkpoint.
