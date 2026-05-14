@@ -19,8 +19,24 @@ async function seed() {
   const modules = [...phaseA.modules, ...phaseB.modules];
   const exerciseRepos = [...phaseA.exerciseRepos, ...phaseB.exerciseRepos];
 
+  let seededModules = 0;
+  let seededLessons = 0;
+  let skippedModules = 0;
+
   await db.transaction(async (tx) => {
     for (const mod of modules) {
+      const existingModule = await tx
+        .select({ id: codecampModules.id })
+        .from(codecampModules)
+        .where(eq(codecampModules.slug, mod.slug))
+        .limit(1);
+
+      if (existingModule.length > 0) {
+        console.log(`  ⏭️  Module "${mod.slug}" already exists, skipping.`);
+        skippedModules++;
+        continue;
+      }
+
       const [insertedModule] = await tx
         .insert(codecampModules)
         .values({
@@ -32,6 +48,8 @@ async function seed() {
           status: mod.status,
         })
         .returning();
+
+      seededModules++;
 
       for (const lesson of mod.lessons) {
         const [insertedLesson] = await tx
@@ -45,6 +63,8 @@ async function seed() {
             contentJson: lesson.contentJson,
           })
           .returning();
+
+        seededLessons++;
 
         if (lesson.exercises && lesson.exercises.length > 0) {
           for (const ex of lesson.exercises) {
@@ -83,22 +103,35 @@ async function seed() {
         .where(eq(codecampModules.slug, repo.moduleSlug))
         .limit(1);
 
-      if (moduleRow.length > 0) {
-        await tx.insert(codecampExerciseRepos).values({
-          moduleId: moduleRow[0].id,
-          repoUrl: repo.repoUrl,
-          description: repo.description,
-          order: repo.order,
-        });
-      } else {
+      if (moduleRow.length === 0) {
         console.warn(`No module found for repo slug: ${repo.moduleSlug}`);
+        continue;
       }
+
+      const existingRepo = await tx
+        .select({ id: codecampExerciseRepos.id })
+        .from(codecampExerciseRepos)
+        .where(eq(codecampExerciseRepos.moduleId, moduleRow[0].id))
+        .limit(1);
+
+      if (existingRepo.length > 0) {
+        continue;
+      }
+
+      await tx.insert(codecampExerciseRepos).values({
+        moduleId: moduleRow[0].id,
+        repoUrl: repo.repoUrl,
+        description: repo.description,
+        order: repo.order,
+      });
     }
 
-    const totalLessons = modules.reduce((sum, m) => sum + m.lessons.length, 0);
     console.log(
-      `✅ Seeded ${modules.length} modules with ${totalLessons} lessons, exercises, and quizzes.`
+      `✅ Seeded ${seededModules} modules with ${seededLessons} lessons, exercises, and quizzes.`
     );
+    if (skippedModules > 0) {
+      console.log(`   ${skippedModules} module(s) were already present and skipped.`);
+    }
   });
 }
 

@@ -5,18 +5,18 @@
 Add `phase` column to the modules table and generate the migration.
 
 - [x] Task: Add `phase` column to `codecampModules` in `packages/db/src/schema/codecamp.ts` [a9fcfda]
-  - [ ] Add `phase: text("phase").notNull().default("A")` column
-  - [ ] Add `phaseEnum` if preferred: `pgEnum("codecamp_phase", ["A", "B", "C", "D"])`
+  - [x] Add `phase: text("phase").notNull().default("A")` column
+  - [x] Add `phaseEnum` if preferred: `pgEnum("codecamp_phase", ["A", "B", "C", "D"])`
 - [x] Task: Generate and apply Drizzle migration [a9fcfda]
-  - [ ] Run `pnpm drizzle-kit generate` to create migration for new column
-  - [ ] Apply migration to local database
+  - [x] Run `pnpm drizzle-kit generate` to create migration for new column
+  - [x] Apply migration to local database
 - [x] Task: Update `getModulesByPhase` domain function to use `phase` column [a021829]
-  - [ ] Replace the `PHASE_RANGES` order-based logic with `where(eq(codecampModules.phase, input.phase))`
-  - [ ] This is more robust than deriving phase from order number
+  - [x] Replace the `PHASE_RANGES` order-based logic with `where(eq(codecampModules.phase, input.phase))`
+  - [x] This is more robust than deriving phase from order number
 - [x] Task: Write tests for phase-column queries [a021829]
-  - [ ] Test `getModulesByPhase` returns only modules in the specified phase
-  - [ ] Test that all 4 phases return correct module counts
-- [ ] Task: Measure — User Manual Verification 'Schema Extension'
+  - [x] Test `getModulesByPhase` returns only modules in the specified phase
+  - [x] Test that all 4 phases return correct module counts
+- [x] Task: Measure — User Manual Verification 'Schema Extension'
 
 ## Phase 2: Rewrite Seed Data — Phase A (Modules 1–6, 29 lessons) [checkpoint: 9d19f9a]
 

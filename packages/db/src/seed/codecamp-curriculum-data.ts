@@ -254,7 +254,7 @@ export function getPhaseACurriculumData() {
                 "They are the same command",
                 "fetch downloads only; pull downloads and merges",
                 "fetch merges; pull downloads only",
-                " Neither downloads anything",
+                "Neither downloads anything",
               ],
               correctAnswer: "fetch downloads only; pull downloads and merges",
               explanation:
