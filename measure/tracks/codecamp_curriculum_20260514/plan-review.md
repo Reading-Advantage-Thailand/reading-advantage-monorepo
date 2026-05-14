@@ -1,54 +1,57 @@
 # Phase Code Review Findings
 
-## Phase: Phase 2 — Rewrite Seed Data — Phase A (Modules 1–6, 29 lessons)
-## Track: codecamp-advantage Curriculum Implementation
-## Reviewer: change-quality-reviewer subagent
-## Date: 2026-05-14
+## Phase 4: Write Seed Data — Phase C (Modules 11–13, 14 lessons)
+
+**Reviewer:** change-quality-reviewer subagent
+**Revision Range:** `048bc4c..HEAD`
+**Date:** 2026-05-14
 
 ---
 
-### Summary
+### Build & Test Results
 
-Phase passes review. All automated checks pass (lint, type check, tests). The implementation matches the plan. Data is comprehensive and accurate.
-
-### Findings
-
-#### Critical
-- None
-
-#### High
-- None
-
-#### Medium (All Fixed)
-
-1. **Seed script lacked transaction wrapping**
-   - **File:** `packages/db/src/seed/codecamp-seed.ts`
-   - **Fix:** Wrapped entire seed body in `db.transaction()` to prevent partial seed state on failure.
-
-2. **Minor formatting error in quiz option**
-   - **File:** `packages/db/src/seed/codecamp-curriculum-data.ts`
-   - **Fix:** Removed leading space in Module 2 quiz option: `" Neither downloads anything"` → `"Neither downloads anything"`.
-
-3. **Silent skip on orphaned exercise repos**
-   - **File:** `packages/db/src/seed/codecamp-seed.ts`
-   - **Fix:** Added `console.warn` when a repo's moduleSlug does not match any inserted module.
-
-#### Low (All Fixed)
-
-4. **Exercise repo ordering was non-unique**
-   - **File:** `packages/db/src/seed/codecamp-curriculum-data.ts`
-   - **Fix:** Changed `order: 1` to `order: mod.order` so repos reflect module ordering.
-
-5. **Redundant type assertion in test**
-   - **File:** `packages/db/src/__tests__/codecamp-curriculum-data.test.ts`
-   - **Fix:** Removed unnecessary `as Record<string, unknown>` cast.
+| Check | Result |
+|-------|--------|
+| `lint --filter=@reading-advantage/db` | ✅ Pass (0 errors, 2 pre-existing warnings) |
+| `check-types --filter=@reading-advantage/db` | ✅ Pass |
+| `test --filter=@reading-advantage/db` | ✅ Pass (45 tests) |
 
 ---
 
-### Verification Commands Run
+### Findings Summary
 
-```bash
-pnpm turbo run lint --filter=@reading-advantage/db      # Passed
-pnpm turbo run check-types --filter=@reading-advantage/db # Passed
-pnpm turbo run test --filter=@reading-advantage/db        # 21/21 passed
-```
+**Critical:** 0
+**High:** 0
+**Medium:** 2 (both fixed)
+**Low:** 3
+
+---
+
+### Medium Findings (Fixed)
+
+1. **Undefined `userId` in Server Actions code example (Module 12, Lesson 4)**
+   - The `updateProgress` Server Action used `userId` without defining it.
+   - **Fix:** Added `const user = await getCurrentUser();` before the input parsing.
+
+2. **Undefined `utils` in tRPC frontend code example (Module 12, Lesson 3)**
+   - The mutation example called `utils.modules.list.invalidate()` without defining `utils`.
+   - **Fix:** Added `const utils = trpc.useUtils();` at the top of the component.
+
+---
+
+### Low Findings (Accepted)
+
+3. **`AuthError` used without definition in Module 12 assertCan example**
+   - The `AuthError` class is not defined inline in the Module 12 snippet. This is acceptable because the lesson focuses on architecture pattern, and `AuthError` is defined in Module 13's more detailed snippet.
+
+4. **Module 11 schema example omits `description` column**
+   - The `modules` table example in the seed data omits `description: text("description")` which is present in the curriculum source plan. This is a minor simplification for brevity in the lesson content.
+
+5. **Slightly inconsistent test naming vs. Phases A/B**
+   - Phase C test names differ slightly from Phases A/B (e.g., `"has at least 1 exercise per module"` vs `"has at least 1 exercise per module that has exercises"`). Functionally equivalent since all Phase C modules have exercises.
+
+---
+
+### Recommendation
+
+Phase 4 is approved for checkpoint. The two Medium findings were fixed and re-tested. Low findings are documentation/curriculum polish that do not block the checkpoint.
