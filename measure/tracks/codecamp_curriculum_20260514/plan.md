@@ -180,11 +180,11 @@ Update the dashboard to display phase-grouped modules with portfolio project con
   - [x] Phase B: Blue (frameworks, building)
   - [x] Phase C: Purple (backend, data)
   - [x] Phase D: Orange (production, shipping)
-- [ ] Task: Verify lesson page renders contentJson correctly
-  - [ ] Theory lessons: sections with heading, body, and code blocks render properly
-  - [ ] Exercise lessons: instructions render, textarea works, submit works
-  - [ ] Quiz lessons: questions render, submit scores correctly
-- [ ] Task: Measure — User Manual Verification 'UI Updates'
+- [x] Task: Verify lesson page renders contentJson correctly [e07a019]
+  - [x] Theory lessons: sections with heading, body, and code blocks render properly
+  - [x] Exercise lessons: instructions render, textarea works, submit works
+  - [x] Quiz lessons: questions render, submit scores correctly
+- [x] Task: Measure — User Manual Verification 'UI Updates'
 
 ## Phase 8: Validation and Cleanup
 
