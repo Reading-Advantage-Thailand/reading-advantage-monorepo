@@ -177,15 +177,15 @@ Build admin-facing features for account management and intern progress tracking.
   - [x] `createInternAccount({ db, user, tenant, input })` — admin-only, creates user with INTERN role
   - [x] `listInterns({ db, user, tenant })` — admin-only, returns all intern accounts with progress summary
   - [x] `getInternProgress({ db, user, tenant, input })` — admin-only, returns detailed progress for a specific intern
-- [~] Task: Implement admin tRPC procedures
-  - [ ] `admin.createIntern` — admin-protected, creates account
-  - [ ] `admin.listInterns` — admin-protected, cohort overview
-  - [ ] `admin.getInternProgress` — admin-protected, per-intern detail
-- [ ] Task: Write tests for admin domain functions and router procedures
-  - [ ] Test `createInternAccount` with permission guard (non-admin rejected)
-  - [ ] Test `listInterns` returns progress summary per intern
-  - [ ] Test `getInternProgress` returns module completion, quiz scores, PR reviews, last active
-- [ ] Task: Build admin dashboard UI
+- [x] Task: Implement admin tRPC procedures [054c046]
+  - [x] `codecamp.createIntern` — admin-protected, creates account
+  - [x] `codecamp.listInterns` — admin-protected, cohort overview
+  - [x] `codecamp.getInternProgress` — admin-protected, per-intern detail
+- [x] Task: Write tests for admin domain functions and router procedures [054c046]
+  - [x] Test `createInternAccount` with permission guard (non-admin rejected)
+  - [x] Test `listInterns` returns progress summary per intern
+  - [x] Test `getInternProgress` returns module completion, quiz scores, PR reviews, last active
+- [~] Task: Build admin dashboard UI
   - [ ] Admin route group with auth gate (`ADMIN` role required)
   - [ ] Cohort overview page (`/admin`) — table of interns with progress bars and last active
   - [ ] Per-intern detail page (`/admin/[userId]`) — module-by-module breakdown, quiz scores, PR review history
