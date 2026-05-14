@@ -12,7 +12,7 @@ import {
 } from "@reading-advantage/ui";
 import { Input } from "@reading-advantage/ui";
 import { Label } from "@reading-advantage/ui";
-import { BookOpen, MessageCircle, LogOut, User } from "lucide-react";
+import { BookOpen, MessageCircle, LogOut, User, Shield } from "lucide-react";
 
 export function Header() {
   const { user, isAuthenticated, isLoading, login, logout } = useAuth();
@@ -61,6 +61,15 @@ export function Header() {
               <MessageCircle className="h-4 w-4" />
               Chat
             </a>
+            {user?.role === "ADMIN" && (
+              <a
+                href="/admin"
+                className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Shield className="h-4 w-4" />
+                Admin
+              </a>
+            )}
           </nav>
         </div>
 
