@@ -111,11 +111,11 @@ Evolve existing UI to support 18 modules with phase grouping and exercise workfl
   - [x] Display linked exercise repos with fork URL
   - [x] Show PR review status for the current user's exercises
   - [x] Link to GitHub exercise repos (fork instruction UI)
-- [ ] Task: Update lesson page
-  - [ ] Render lesson content with architecture diagrams
-  - [ ] Embed exercise instructions with repo links
-  - [ ] Display quiz component with immediate scoring
-  - [ ] Show PR review feedback inline (pull from `codecamp_pr_reviews`)
+- [x] Task: Update lesson page [f665d84]
+  - [x] Render lesson content with architecture diagrams — already implemented
+  - [x] Embed exercise instructions with repo links
+  - [x] Display quiz component with immediate scoring
+  - [x] Show PR review feedback inline (pull from `codecamp_pr_reviews`)
 - [ ] Task: Connect chat tutor to tRPC
   - [ ] Load conversation history on mount via `trpc.codecamp.chatHistory`
   - [ ] Save messages via `trpc.codecamp.saveChatMessage`
