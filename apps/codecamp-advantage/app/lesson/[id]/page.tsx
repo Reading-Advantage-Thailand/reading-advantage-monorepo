@@ -4,7 +4,14 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
-import { ArrowLeft, Send } from "lucide-react";
+import {
+  ArrowLeft,
+  Send,
+  GitBranch,
+  ExternalLink,
+  GitPullRequest,
+  CheckCircle,
+} from "lucide-react";
 import { useState } from "react";
 import { useChatStream } from "@/lib/use-chat-stream";
 import { LessonContent } from "@/components/lesson-content";
@@ -12,11 +19,19 @@ import { LessonContent } from "@/components/lesson-content";
 export default function LessonPage() {
   const params = useParams();
   const lessonId = params.id as string;
+  const utils = trpc.useUtils();
 
   const { data: lesson, isLoading } = trpc.codecamp.lesson.useQuery(
     { lessonId },
     { enabled: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(lessonId) }
   );
+
+  const { data: exerciseRepos } = trpc.codecamp.exerciseRepos.useQuery(
+    { moduleId: lesson?.moduleId ?? "" },
+    { enabled: !!lesson?.moduleId }
+  );
+
+  const { data: prReviews } = trpc.codecamp.prReviews.useQuery();
 
   if (isLoading) {
     return (
@@ -44,6 +59,12 @@ export default function LessonPage() {
     );
   }
 
+  // Find PR reviews linked to this module's exercise repos
+  const moduleReviews =
+    prReviews?.filter((r) =>
+      exerciseRepos?.some((repo) => repo.id === r.exerciseRepoId)
+    ) ?? [];
+
   return (
     <div className="container py-12">
       <Button variant="ghost" className="mb-6" asChild>
@@ -70,10 +91,69 @@ export default function LessonPage() {
           </div>
         </div>
 
-        {/* Exercises */}
+        {/* Exercise Repos — for exercise-type lessons */}
+        {lesson.type === "exercise" && exerciseRepos && exerciseRepos.length > 0 && (
+          <div className="mt-8 rounded-lg border p-6">
+            <h2 className="text-xl font-semibold">Fork-Based Exercise</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Complete this exercise by forking the repository, making changes on a branch, and opening a Pull Request.
+            </p>
+            <div className="mt-4 space-y-3">
+              {exerciseRepos.map((repo) => {
+                const review = prReviews?.find((r) => r.exerciseRepoId === repo.id);
+                return (
+                  <div key={repo.id} className="flex items-center justify-between rounded-lg border p-3">
+                    <div className="flex items-center gap-2">
+                      <GitBranch className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium">{repo.description}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {review && <PrReviewBadge status={review.reviewStatus} />}
+                      <a
+                        href={repo.repoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Fork
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {moduleReviews.length > 0 && (
+              <div className="mt-4 space-y-3">
+                <h3 className="text-sm font-semibold">PR Review Feedback</h3>
+                {moduleReviews.map((review) => (
+                  <div key={review.id} className="rounded-lg bg-muted p-3 text-sm">
+                    <div className="flex items-center gap-2">
+                      <GitPullRequest className="h-4 w-4 text-muted-foreground" />
+                      <a
+                        href={review.prUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        {review.prUrl.split("/").slice(-2).join("/")}
+                      </a>
+                      <PrReviewBadge status={review.reviewStatus} />
+                    </div>
+                    {review.llmReviewSummary && (
+                      <p className="mt-2 text-muted-foreground">{review.llmReviewSummary}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Inline Exercises */}
         {lesson.exercises.length > 0 && (
           <div className="mt-8 rounded-lg border p-6">
-            <h2 className="text-xl font-semibold">Exercises</h2>
+            <h2 className="text-xl font-semibold">Practice Exercises</h2>
             {lesson.exercises.map((ex) => (
               <ExerciseCard key={ex.id} exercise={ex} />
             ))}
@@ -84,17 +164,58 @@ export default function LessonPage() {
         {lesson.quizQuestions.length > 0 && (
           <div className="mt-8 rounded-lg border p-6">
             <h2 className="text-xl font-semibold">Quiz</h2>
-            <QuizComponent lessonId={lesson.id} questions={lesson.quizQuestions} />
+            <QuizComponent
+              lessonId={lesson.id}
+              moduleId={lesson.moduleId}
+              questions={lesson.quizQuestions}
+            />
           </div>
         )}
 
         {/* Chat Tutor */}
         <div className="mt-8 rounded-lg border p-6">
           <h2 className="text-xl font-semibold">Chat with AI Tutor</h2>
-          <ChatTutor lessonId={lessonId} />
+          <ChatTutor lessonId={lessonId} moduleId={lesson.moduleId} />
         </div>
       </div>
     </div>
+  );
+}
+
+function PrReviewBadge({
+  status,
+}: {
+  status: "pending" | "reviewed" | "needs_changes" | "approved";
+}) {
+  const config: Record<string, { label: string; className: string; icon: React.ReactNode }> = {
+    pending: {
+      label: "Pending",
+      className: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+      icon: <GitPullRequest className="h-3 w-3" />,
+    },
+    reviewed: {
+      label: "Reviewed",
+      className: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+      icon: <GitPullRequest className="h-3 w-3" />,
+    },
+    needs_changes: {
+      label: "Needs Changes",
+      className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+      icon: <GitPullRequest className="h-3 w-3" />,
+    },
+    approved: {
+      label: "Approved",
+      className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+      icon: <CheckCircle className="h-3 w-3" />,
+    },
+  };
+
+  const c = config[status];
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${c.className}`}>
+      {c.icon}
+      {c.label}
+    </span>
   );
 }
 
@@ -140,15 +261,38 @@ function ExerciseCard({ exercise }: { exercise: { id: string; title: string; ins
 
 function QuizComponent({
   lessonId,
+  moduleId,
   questions,
 }: {
   lessonId: string;
+  moduleId: string;
   questions: { id: string; question: string; options: string[] }[];
 }) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const utils = trpc.useUtils();
+
   const submitQuiz = trpc.codecamp.submitQuiz.useMutation({
-    onSuccess: () => setSubmitted(true),
+    onSuccess: (data) => {
+      setSubmitted(true);
+      // Mark lesson as complete if quiz score is passing (>= 70%)
+      if (data.score >= 70) {
+        utils.codecamp.lesson.invalidate();
+        utils.codecamp.moduleBySlug.invalidate();
+        utils.codecamp.dashboard.invalidate();
+        // Fire-and-forget progress update
+        fetch("/api/trpc/codecamp.updateProgress", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            json: { lessonId, status: "completed", score: data.score },
+          }),
+          credentials: "include",
+        }).catch(() => {
+          // Silent fail — progress is non-critical
+        });
+      }
+    },
   });
 
   // Build a lookup for correct answers from the submission result
@@ -228,9 +372,9 @@ function QuizComponent({
   );
 }
 
-function ChatTutor({ lessonId }: { lessonId: string }) {
+function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string }) {
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage } = useChatStream({ lessonId });
+  const { messages, isLoading, sendMessage } = useChatStream({ lessonId, moduleId });
 
   return (
     <div className="mt-4">
