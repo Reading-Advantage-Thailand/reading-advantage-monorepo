@@ -1,0 +1,11 @@
+Task: Address Phase 8 review Medium finding — add reviewExercise admin-guard tests
+
+Summary: Added 3 unit tests for the reviewExercise tRPC procedure to verify the
+inline ADMIN/SYSTEM role guard. Fixed reviewResultSchema mock to provide parse()
+so tRPC output validation works correctly in tests.
+
+Files modified:
+- packages/api/src/__tests__/codecamp-router.test.ts (+51 lines, 3 new tests)
+
+Core why: Ensures test coverage parity with other admin-protected procedures in
+the codecamp router. Prevents regression of the security guard added in 39e69df.
