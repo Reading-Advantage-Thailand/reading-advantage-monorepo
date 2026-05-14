@@ -103,10 +103,10 @@ Build the fork-based exercise workflow with LLM PR review.
 
 Evolve existing UI to support 18 modules with phase grouping and exercise workflow.
 
-- [~] Task: Update dashboard for 18 modules
-  - [ ] Group modules by phase (Foundations, Frameworks, Backend & Data, Production)
-  - [ ] Show module cards with progress bars, quiz scores, and PR review status
-  - [ ] Enforce module prerequisites (lock later modules until earlier ones complete)
+- [x] Task: Update dashboard for 18 modules [6cb00c0]
+  - [x] Group modules by phase (Foundations, Frameworks, Backend & Data, Production) — already implemented
+  - [x] Show module cards with progress bars and PR review status summary
+  - [x] Enforce module prerequisites (lock later modules until earlier ones complete)
 - [ ] Task: Update module detail page
   - [ ] Display linked exercise repos with fork URL
   - [ ] Show PR review status for the current user's exercises
