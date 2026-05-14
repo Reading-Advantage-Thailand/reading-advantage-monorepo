@@ -34,3 +34,35 @@
 ### Resolution
 
 Both findings addressed. No Critical or High findings. Phase approved for checkpoint.
+
+---
+
+## Phase 8: Generate Docs & Doctor (Follow-up Review)
+
+**Reviewer:** change-quality-reviewer subagent  
+**Date:** 2026-05-15  
+**Revision Range:** `9392e50~1..HEAD`
+
+### Findings
+
+#### Medium
+
+- **`packages/api/src/routers/codecamp.ts` (`reviewExercise`) — Missing test for admin guard.** A new ADMIN/SYSTEM role guard was added to the `reviewExercise` mutation, but `codecamp-router.test.ts` has zero test cases for this procedure. Every other admin-protected procedure in the same router has an explicit `"maps AuthError to FORBIDDEN"` test.
+
+#### Low
+
+- **`packages/api/src/routers/codecamp.ts` (`reviewExercise`) — Inline role check instead of domain `assertCan`.** The router uses an inline `ctx.auth.user.role !== "ADMIN"` check rather than delegating auth to the domain function's `assertCan`. Inconsistent with the rest of the codecamp router.
+- **`apps/codecamp-advantage/app/api/chat/route.ts` — Duplicated LLM client pattern.** `createOpenAI` + `generateObject` boilerplate duplicates the LLM client pattern in `packages/webhooks/src/github.ts`. No shared LLM review utility exists.
+
+### Verification Results
+
+| Command | Result |
+|---|---|
+| `pnpm turbo run lint --filter=codecamp-advantage` | 9 successful, 0 errors |
+| `pnpm turbo run check-types --filter=codecamp-advantage` | 7 successful, 0 type errors |
+| `pnpm turbo run test --filter=codecamp-advantage` | 39 passed (5 test files) |
+| `pnpm turbo run test --filter=@reading-advantage/api` | 86 passed (13 test files) |
+
+### Resolution
+
+No Critical or High findings. Phase passes review. Medium finding (missing `reviewExercise` test) will be addressed in a follow-up commit before checkpoint.

@@ -30,7 +30,7 @@ vi.mock("@reading-advantage/domain/codecamp", () => ({
   listInterns: vi.fn(),
   getInternProgress: vi.fn(),
   reviewExercise: vi.fn(),
-  reviewResultSchema: vi.fn(),
+  reviewResultSchema: { parse: (val: unknown) => val } as unknown as import("zod").ZodTypeAny,
 }));
 
 import {
@@ -56,6 +56,7 @@ import {
   createInternAccount,
   listInterns,
   getInternProgress,
+  reviewExercise,
 } from "@reading-advantage/domain/codecamp";
 
 const t = initTRPC.context<{
@@ -764,6 +765,54 @@ describe("codecamp router", () => {
 
       await expect(caller.codecamp.getInternProgress({ userId: "u1" }))
         .rejects.toMatchObject({ code: "FORBIDDEN" });
+    });
+  });
+
+  describe("reviewExercise", () => {
+    it("returns review result for admin", async () => {
+      const reviewRow = {
+        passed: true,
+        summary: "Good work",
+        comments: [{ line: 1, body: "Nice" }],
+      };
+      vi.mocked(reviewExercise).mockResolvedValue(reviewRow as unknown as Awaited<ReturnType<typeof reviewExercise>>);
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+
+      const result = await caller.codecamp.reviewExercise({
+        prDiff: "diff --git a/file.ts b/file.ts\n+const x = 1;",
+        moduleId: "550e8400-e29b-41d4-a716-446655440001",
+      });
+
+      expect(result.passed).toBe(true);
+      expect(result.summary).toBe("Good work");
+    });
+
+    it("returns review result for SYSTEM user", async () => {
+      const reviewRow = {
+        passed: true,
+        summary: "Approved",
+        comments: [],
+      };
+      vi.mocked(reviewExercise).mockResolvedValue(reviewRow as unknown as Awaited<ReturnType<typeof reviewExercise>>);
+      const systemUser = { id: "s1", role: "SYSTEM", schoolId: null };
+      const caller = createCaller({ user: systemUser, tenant: testTenant });
+
+      const result = await caller.codecamp.reviewExercise({
+        prDiff: "diff --git a/file.ts b/file.ts\n+const x = 1;",
+      });
+
+      expect(result.passed).toBe(true);
+    });
+
+    it("rejects non-admin with FORBIDDEN", async () => {
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.reviewExercise({
+          prDiff: "diff --git a/file.ts b/file.ts\n+const x = 1;",
+        })
+      ).rejects.toMatchObject({ code: "FORBIDDEN", message: "Admin access required" });
     });
   });
 
