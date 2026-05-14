@@ -45,23 +45,23 @@ Extend existing schema for GitHub integration and expanded curriculum.
 
 Write tests for new domain functions and GitHub integration.
 
-- [~] Task: Write domain function unit tests for exercise repo management
-  - [~] Test `getExerciseRepos` — returns repos for a module
-  - [~] Test `linkExerciseRepo` — admin links repo to module
-  - [~] Test `getPrReviewsForUser` — returns review status across all exercises
-- [~] Task: Write domain function unit tests for PR review pipeline
-  - [~] Test `createPrReview` — creates pending review on PR open
-  - [~] Test `updatePrReview` — updates status and summary after LLM review
-  - [~] Test `getPrReviewByPrUrl` — lookup review by GitHub PR URL
-- [~] Task: Write domain function unit tests for expanded curriculum queries
-  - [~] Test `getModulesByPhase` — returns modules grouped by phase (A/B/C/D)
-  - [~] Test `getModuleWithExercises` — returns module + linked exercise repos
-  - [~] Test `checkModulePrerequisite` — enforces sequential module completion
-- [~] Task: Write tRPC router tests for new procedures
+- [x] Task: Write domain function unit tests for exercise repo management [e8aada1]
+  - [x] Test `getExerciseRepos` — returns repos for a module
+  - [x] Test `linkExerciseRepo` — admin links repo to module
+  - [x] Test `getPrReviewsForUser` — returns review status across all exercises
+- [x] Task: Write domain function unit tests for PR review pipeline [e8aada1]
+  - [x] Test `createPrReview` — creates pending review on PR open
+  - [x] Test `updatePrReview` — updates status and summary after LLM review
+  - [x] Test `getPrReviewByPrUrl` — lookup review by GitHub PR URL
+- [x] Task: Write domain function unit tests for expanded curriculum queries [e8aada1]
+  - [x] Test `getModulesByPhase` — returns modules grouped by phase (A/B/C/D)
+  - [x] Test `getModuleWithExercises` — returns module + linked exercise repos
+  - [x] Test `checkModulePrerequisite` — enforces sequential module completion
+- [~] Task: Write tRPC router tests for new procedures (deferred to Phase 3 — TDD against new router procedures)
   - [~] Test exercise repo procedures
   - [~] Test PR review procedures
   - [~] Test module phase grouping procedure
-- [~] Task: Write GitHub webhook handler tests
+- [~] Task: Write GitHub webhook handler tests (deferred to Phase 3 — TDD against webhook handler)
   - [~] Test webhook signature verification
   - [~] Test PR opened event → creates pending review
   - [~] Test PR synchronized event → re-triggers review

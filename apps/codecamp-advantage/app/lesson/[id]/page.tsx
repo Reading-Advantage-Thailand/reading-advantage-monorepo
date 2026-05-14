@@ -45,7 +45,7 @@ export default function LessonPage() {
   return (
     <div className="container py-12">
       <Button variant="ghost" className="mb-6" asChild>
-        <a href={`/module/${lesson.moduleId}`}>
+        <a href={`/module/${lesson.moduleSlug}`}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Module
         </a>

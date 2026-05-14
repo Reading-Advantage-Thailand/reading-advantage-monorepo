@@ -241,6 +241,7 @@ export async function getLessonWithContent({
 
   return {
     ...lessonRest,
+    moduleSlug: module.slug,
     content: (contentJson as Record<string, unknown>) || {},
     exercises: exercises.map((e) => ({
       ...e,
@@ -1003,17 +1004,26 @@ export async function listInterns({
     .orderBy(codecampModules.order);
 
   const moduleIds = modules.map((m) => m.id);
+  const internIds = interns.map((i) => i.id);
 
-  const allProgress = moduleIds.length > 0
+  const allProgress = moduleIds.length > 0 && internIds.length > 0
     ? await db
         .select()
         .from(codecampUserProgress)
-        .where(inArray(codecampUserProgress.moduleId, moduleIds))
+        .where(
+          and(
+            inArray(codecampUserProgress.moduleId, moduleIds),
+            inArray(codecampUserProgress.userId, internIds)
+          )
+        )
     : [];
 
-  const allReviews = await db
-    .select()
-    .from(codecampPrReviews);
+  const allReviews = internIds.length > 0
+    ? await db
+        .select()
+        .from(codecampPrReviews)
+        .where(inArray(codecampPrReviews.userId, internIds))
+    : [];
 
   return interns.map((intern) => {
     const internProgress = allProgress.filter((p) => p.userId === intern.id);

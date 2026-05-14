@@ -17,6 +17,15 @@ vi.mock("@reading-advantage/domain/codecamp", () => ({
   getUserConversations: vi.fn(),
   updateUserProgress: vi.fn(),
   getUserDashboard: vi.fn(),
+  getExerciseRepos: vi.fn(),
+  linkExerciseRepo: vi.fn(),
+  getPrReviewsForUser: vi.fn(),
+  createPrReview: vi.fn(),
+  updatePrReview: vi.fn(),
+  getPrReviewByPrUrl: vi.fn(),
+  getModulesByPhase: vi.fn(),
+  getModuleWithExercises: vi.fn(),
+  checkModulePrerequisite: vi.fn(),
 }));
 
 import {
@@ -30,6 +39,15 @@ import {
   getUserConversations,
   updateUserProgress,
   getUserDashboard,
+  getExerciseRepos,
+  linkExerciseRepo,
+  getPrReviewsForUser,
+  createPrReview,
+  updatePrReview,
+  getPrReviewByPrUrl,
+  getModulesByPhase,
+  getModuleWithExercises,
+  checkModulePrerequisite,
 } from "@reading-advantage/domain/codecamp";
 
 const t = initTRPC.context<{
@@ -124,6 +142,7 @@ describe("codecamp router", () => {
       const lessonRow = {
         id: "550e8400-e29b-41d4-a716-446655440002",
         moduleId: "550e8400-e29b-41d4-a716-446655440001",
+        moduleSlug: "test-module",
         title: "Lesson 1",
         description: "Desc",
         order: 1,
@@ -347,6 +366,267 @@ describe("codecamp router", () => {
       expect(result.overallProgress).toBe(30);
       expect(result.phases.A.title).toBe("Foundations");
       expect(result.phases.D.portfolioProject).toBe("Production Tracker");
+    });
+  });
+
+  describe("exerciseRepos", () => {
+    it("returns exercise repos for a module", async () => {
+      const repoRows = [
+        {
+          id: "550e8400-e29b-41d4-a716-446655440010",
+          moduleId: "550e8400-e29b-41d4-a716-446655440001",
+          repoUrl: "https://github.com/org/repo1",
+          description: "Exercise repo 1",
+          order: 1,
+          createdAt: testDate,
+        },
+      ];
+      vi.mocked(getExerciseRepos).mockResolvedValue(repoRows as unknown as Awaited<ReturnType<typeof getExerciseRepos>>);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.exerciseRepos({ moduleId: "550e8400-e29b-41d4-a716-446655440001" });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].repoUrl).toBe("https://github.com/org/repo1");
+    });
+  });
+
+  describe("linkExerciseRepo", () => {
+    it("links a repo to a module", async () => {
+      const repoRow = {
+        id: "550e8400-e29b-41d4-a716-446655440010",
+        moduleId: "550e8400-e29b-41d4-a716-446655440001",
+        repoUrl: "https://github.com/org/repo1",
+        description: "Exercise repo 1",
+        order: 1,
+        createdAt: testDate,
+      };
+      vi.mocked(linkExerciseRepo).mockResolvedValue(repoRow as unknown as Awaited<ReturnType<typeof linkExerciseRepo>>);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.linkExerciseRepo({
+        moduleId: "550e8400-e29b-41d4-a716-446655440001",
+        repoUrl: "https://github.com/org/repo1",
+        description: "Exercise repo 1",
+        order: 1,
+      });
+
+      expect(result.id).toBe("550e8400-e29b-41d4-a716-446655440010");
+    });
+
+    it("maps AuthError to FORBIDDEN for non-admin", async () => {
+      vi.mocked(linkExerciseRepo).mockRejectedValue(new AuthError("Forbidden", "FORBIDDEN"));
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.linkExerciseRepo({
+          moduleId: "550e8400-e29b-41d4-a716-446655440001",
+          repoUrl: "https://github.com/org/repo1",
+          description: "Exercise repo 1",
+          order: 1,
+        })
+      ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    });
+  });
+
+  describe("prReviews", () => {
+    it("returns PR reviews for the current user", async () => {
+      const reviewRows = [
+        {
+          id: "550e8400-e29b-41d4-a716-446655440011",
+          exerciseRepoId: "550e8400-e29b-41d4-a716-446655440010",
+          userId: "u1",
+          prUrl: "https://github.com/org/repo1/pull/1",
+          reviewStatus: "pending",
+          llmReviewSummary: null,
+          reviewedAt: null,
+          createdAt: testDate,
+        },
+      ];
+      vi.mocked(getPrReviewsForUser).mockResolvedValue(reviewRows as unknown as Awaited<ReturnType<typeof getPrReviewsForUser>>);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.prReviews();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].reviewStatus).toBe("pending");
+    });
+  });
+
+  describe("createPrReview", () => {
+    it("creates a pending PR review", async () => {
+      const reviewRow = {
+        id: "550e8400-e29b-41d4-a716-446655440011",
+        exerciseRepoId: "550e8400-e29b-41d4-a716-446655440010",
+        userId: "u1",
+        prUrl: "https://github.com/org/repo1/pull/1",
+        reviewStatus: "pending",
+        llmReviewSummary: null,
+        reviewedAt: null,
+        createdAt: testDate,
+      };
+      vi.mocked(createPrReview).mockResolvedValue(reviewRow as unknown as Awaited<ReturnType<typeof createPrReview>>);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.createPrReview({
+        exerciseRepoId: "550e8400-e29b-41d4-a716-446655440010",
+        prUrl: "https://github.com/org/repo1/pull/1",
+      });
+
+      expect(result.reviewStatus).toBe("pending");
+    });
+  });
+
+  describe("updatePrReview", () => {
+    it("updates review status and summary", async () => {
+      const reviewRow = {
+        id: "550e8400-e29b-41d4-a716-446655440011",
+        exerciseRepoId: "550e8400-e29b-41d4-a716-446655440010",
+        userId: "u1",
+        prUrl: "https://github.com/org/repo1/pull/1",
+        reviewStatus: "approved",
+        llmReviewSummary: "Great work!",
+        reviewedAt: testDate,
+        createdAt: testDate,
+      };
+      vi.mocked(updatePrReview).mockResolvedValue(reviewRow as unknown as Awaited<ReturnType<typeof updatePrReview>>);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.updatePrReview({
+        reviewId: "550e8400-e29b-41d4-a716-446655440011",
+        reviewStatus: "approved",
+        llmReviewSummary: "Great work!",
+      });
+
+      expect(result.reviewStatus).toBe("approved");
+      expect(result.llmReviewSummary).toBe("Great work!");
+    });
+
+    it("maps AuthError to FORBIDDEN for non-admin", async () => {
+      vi.mocked(updatePrReview).mockRejectedValue(new AuthError("Forbidden", "FORBIDDEN"));
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.updatePrReview({
+          reviewId: "550e8400-e29b-41d4-a716-446655440011",
+          reviewStatus: "approved",
+        })
+      ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    });
+  });
+
+  describe("prReviewByPrUrl", () => {
+    it("returns review by PR URL", async () => {
+      const reviewRow = {
+        id: "550e8400-e29b-41d4-a716-446655440011",
+        exerciseRepoId: "550e8400-e29b-41d4-a716-446655440010",
+        userId: "u1",
+        prUrl: "https://github.com/org/repo1/pull/1",
+        reviewStatus: "pending",
+        llmReviewSummary: null,
+        reviewedAt: null,
+        createdAt: testDate,
+      };
+      vi.mocked(getPrReviewByPrUrl).mockResolvedValue(reviewRow as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.prReviewByPrUrl({ prUrl: "https://github.com/org/repo1/pull/1" });
+
+      expect(result).not.toBeNull();
+      expect(result?.prUrl).toBe("https://github.com/org/repo1/pull/1");
+    });
+
+    it("returns null when no review found", async () => {
+      vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.prReviewByPrUrl({ prUrl: "https://github.com/org/repo1/pull/99" });
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("modulesByPhase", () => {
+    it("returns modules for a given phase", async () => {
+      const moduleRows = [
+        {
+          id: "550e8400-e29b-41d4-a716-446655440001",
+          title: "Module 1",
+          description: "Desc",
+          slug: "module-1",
+          order: 1,
+          phase: "A",
+          status: "published",
+          lessonCount: 5,
+          completedLessons: 2,
+          progress: 40,
+          createdAt: testDate,
+          updatedAt: testDate,
+        },
+      ];
+      vi.mocked(getModulesByPhase).mockResolvedValue(moduleRows as unknown as Awaited<ReturnType<typeof getModulesByPhase>>);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.modulesByPhase({ phase: "A" });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].phase).toBe("A");
+    });
+  });
+
+  describe("moduleWithExercises", () => {
+    it("returns module with exercise repos", async () => {
+      const moduleRow = {
+        id: "550e8400-e29b-41d4-a716-446655440001",
+        title: "Module 1",
+        description: "Desc",
+        slug: "module-1",
+        order: 1,
+        phase: "A",
+        status: "published",
+        lessons: [],
+        lessonCount: 0,
+        completedLessons: 0,
+        progress: 0,
+        exerciseRepos: [
+          {
+            id: "550e8400-e29b-41d4-a716-446655440010",
+            moduleId: "550e8400-e29b-41d4-a716-446655440001",
+            repoUrl: "https://github.com/org/repo1",
+            description: "Repo 1",
+            order: 1,
+            createdAt: testDate,
+          },
+        ],
+        createdAt: testDate,
+        updatedAt: testDate,
+      };
+      vi.mocked(getModuleWithExercises).mockResolvedValue(moduleRow as unknown as Awaited<ReturnType<typeof getModuleWithExercises>>);
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.moduleWithExercises({ moduleId: "550e8400-e29b-41d4-a716-446655440001" });
+
+      expect(result.exerciseRepos).toHaveLength(1);
+      expect(result.exerciseRepos[0].repoUrl).toBe("https://github.com/org/repo1");
+    });
+
+    it("maps 'Module not found' to NOT_FOUND", async () => {
+      vi.mocked(getModuleWithExercises).mockRejectedValue(new Error("Module not found"));
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(caller.codecamp.moduleWithExercises({ moduleId: "550e8400-e29b-41d4-a716-446655440001" }))
+        .rejects.toMatchObject({ code: "NOT_FOUND" });
+    });
+  });
+
+  describe("checkPrerequisite", () => {
+    it("returns canStart status", async () => {
+      vi.mocked(checkModulePrerequisite).mockResolvedValue({ canStart: true });
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      const result = await caller.codecamp.checkPrerequisite({ moduleId: "550e8400-e29b-41d4-a716-446655440002" });
+
+      expect(result.canStart).toBe(true);
     });
   });
 

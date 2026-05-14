@@ -16,6 +16,12 @@ import {
   progressUpdateSchema,
   progressResponseSchema,
   dashboardResponseSchema,
+  exerciseRepoSchema,
+  exerciseRepoInputSchema,
+  prReviewSchema,
+  prReviewInputSchema,
+  prReviewUpdateSchema,
+  moduleWithReposSchema,
 } from "@reading-advantage/types";
 
 function mapDomainError(err: unknown): never {
@@ -221,6 +227,154 @@ export const codecampRouter = router({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  // ─── Exercise Repos ───────────────────────────────────────
+
+  exerciseRepos: protectedProcedure
+    .input(z.object({ moduleId: z.string().uuid() }))
+    .output(z.array(exerciseRepoSchema))
+    .query(async ({ ctx, input }) => {
+      try {
+        return await codecamp.getExerciseRepos({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  linkExerciseRepo: protectedProcedure
+    .input(exerciseRepoInputSchema)
+    .output(exerciseRepoSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await codecamp.linkExerciseRepo({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  // ─── PR Reviews ───────────────────────────────────────────
+
+  prReviews: protectedProcedure
+    .output(z.array(prReviewSchema))
+    .query(async ({ ctx }) => {
+      try {
+        return await codecamp.getPrReviewsForUser({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  createPrReview: protectedProcedure
+    .input(prReviewInputSchema)
+    .output(prReviewSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await codecamp.createPrReview({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  updatePrReview: protectedProcedure
+    .input(z.object({ reviewId: z.string().uuid() }).merge(prReviewUpdateSchema))
+    .output(prReviewSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await codecamp.updatePrReview({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  prReviewByPrUrl: protectedProcedure
+    .input(z.object({ prUrl: z.string().url() }))
+    .output(prReviewSchema.nullable())
+    .query(async ({ ctx, input }) => {
+      try {
+        return await codecamp.getPrReviewByPrUrl({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  // ─── Module Phase & Prerequisites ─────────────────────────
+
+  modulesByPhase: protectedProcedure
+    .input(z.object({ phase: z.enum(["A", "B", "C", "D"]) }))
+    .output(z.array(moduleResponseSchema))
+    .query(async ({ ctx, input }) => {
+      try {
+        return await codecamp.getModulesByPhase({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  moduleWithExercises: protectedProcedure
+    .input(z.object({ moduleId: z.string().uuid() }))
+    .output(moduleWithReposSchema)
+    .query(async ({ ctx, input }) => {
+      try {
+        return await codecamp.getModuleWithExercises({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  checkPrerequisite: protectedProcedure
+    .input(z.object({ moduleId: z.string().uuid() }))
+    .output(z.object({ canStart: z.boolean() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        return await codecamp.checkModulePrerequisite({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
         });
       } catch (err) {
         throw mapDomainError(err);

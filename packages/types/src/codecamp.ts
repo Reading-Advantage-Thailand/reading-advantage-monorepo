@@ -48,6 +48,7 @@ export const quizQuestionPublicSchema = quizQuestionSchema.omit({
 export const lessonResponseSchema = z.object({
   id: z.string().uuid(),
   moduleId: z.string().uuid(),
+  moduleSlug: z.string(),
   title: z.string(),
   description: z.string(),
   order: z.number(),

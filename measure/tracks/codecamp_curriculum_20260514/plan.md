@@ -201,14 +201,14 @@ Run all checks and verify the curriculum works end-to-end.
   - [x] `pnpm turbo run build --filter=codecamp-advantage` — builds successfully (9/9 tasks)
   - [x] `pnpm turbo run check-types --filter=codecamp-advantage` — all pass (7/7 tasks)
   - [x] `pnpm turbo run lint --filter=codecamp-advantage` — 0 errors, 0 warnings in codecamp-advantage
-- [ ] Task: Manual smoke test
-  - [ ] Seed the database: `pnpm --filter @reading-advantage/db run seed`
-  - [ ] Start the app: `pnpm dev`
-  - [ ] Verify dashboard shows 4 phase groups with 18 modules
-  - [ ] Open a module → verify lessons appear with real content
-  - [ ] Open a theory lesson → verify contentJson renders
-  - [ ] Complete a quiz → verify scoring works
-  - [ ] Submit an exercise → verify submission works
-  - [ ] Open chat → verify module context is available
+- [~] Task: Manual smoke test
+  - [~] Seed the database: `pnpm --filter @reading-advantage/db run seed`
+  - [~] Start the app: `pnpm dev`
+  - [~] Verify dashboard shows 4 phase groups with 18 modules
+  - [~] Open a module → verify lessons appear with real content
+  - [~] Open a theory lesson → verify contentJson renders
+  - [~] Complete a quiz → verify scoring works
+  - [~] Submit an exercise → verify submission works
+  - [~] Open chat → verify module context is available
 - [ ] Task: Update `measure/tracks.md` to reference this track
 - [ ] Task: Measure — User Manual Verification 'Validation and Cleanup'

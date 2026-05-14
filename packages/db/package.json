@@ -28,9 +28,10 @@
     "postgres": "^3.4.5"
   },
   "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
     "@types/node": "^20.0.0",
     "drizzle-kit": "^0.31.0",
-    "@reading-advantage/config": "workspace:*",
+    "tsx": "^4.22.0",
     "typescript": "^5.8.0",
     "vitest": "^3.1.0"
   }
