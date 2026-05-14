@@ -193,10 +193,10 @@ Run all checks and verify the curriculum works end-to-end.
 - [x] Task: Delete old seed data completely [30c0e76]
   - [x] Verified: no code references to old 5 module slugs (only in tech-debt docs + legitimate curriculum content)
   - [x] Seed script is idempotent — checks `existingModule.length > 0` by slug and skips duplicates
-- [ ] Task: Run full test suite
-  - [ ] `pnpm turbo run test --filter=@reading-advantage/domain`
-  - [ ] `pnpm turbo run test --filter=@reading-advantage/api`
-  - [ ] All existing tests still pass with new schema and seed data
+- [x] Task: Run full test suite [e8aada1]
+  - [x] `pnpm turbo run test --filter=@reading-advantage/domain` — 134 passed (9 files)
+  - [x] `pnpm turbo run test --filter=@reading-advantage/api` — 65 passed (13 files)
+  - [x] All existing tests pass with new schema and seed data
 - [ ] Task: Run build and type checks
   - [ ] `pnpm turbo run build --filter=codecamp-advantage`
   - [ ] `pnpm turbo run check-types --filter=codecamp-advantage`
