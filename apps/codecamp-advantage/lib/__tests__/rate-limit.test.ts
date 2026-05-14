@@ -50,4 +50,14 @@ describe("checkChatRateLimit", () => {
     expect(checkChatRateLimit("user-a").allowed).toBe(false);
     expect(checkChatRateLimit("user-b").allowed).toBe(true);
   });
+
+  it("evicts oldest entries when map exceeds max size", () => {
+    // Fill the map beyond MAX_RATE_LIMIT_ENTRIES (10000)
+    for (let i = 0; i < 10002; i++) {
+      checkChatRateLimit(`flood-user-${i}`);
+    }
+    // The oldest entries should have been evicted; new users should still be allowed
+    const result = checkChatRateLimit("new-user-after-eviction");
+    expect(result.allowed).toBe(true);
+  });
 });

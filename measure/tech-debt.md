@@ -28,13 +28,16 @@
 | 2026-05-15 | codecamp_advantage | `listInterns`/`getInternProgress` quiz scores count all progress rows | Low | Open | Filter by score > 0 without checking lesson type. Exercise submissions inflate quiz averages. |
 | 2026-05-15 | codecamp_advantage | Hardcoded `moduleSlug === "real-world-practice"` for Module 18 workflow tracker | Medium | Open | Needs live GitHub Issues API fetch once practice repo is set up. |
 | 2026-05-15 | codecamp_advantage | Multiple PR reviews render duplicate WorkflowTrackers | Medium | Open | UX confusing with multiple exercise repos. Needs design decision. |
-| 2026-05-15 | codecamp_review | Quiz auto-progress uses raw `fetch()` bypassing tRPC type safety | Medium | Open | After quiz, progress is updated via raw fetch to `/api/trpc/codecamp.updateProgress`. Domain function may already persist progress; needs investigation. |
+| 2026-05-15 | codecamp_review | Quiz auto-progress uses raw `fetch()` bypassing tRPC type safety | Medium | **Resolved** | Removed redundant raw fetch; `submitQuizAnswers` domain function already persists progress. |
 | 2026-05-15 | codecamp_review | `contentJson` schema validation missing in LessonContent | Low | Open | Component trusts `content.sections` is correct shape. Consider adding Zod validation. |
 | 2026-05-15 | codecamp_review | `createInternAccount` sets `schoolId: null` (no tenant association) | Low | Open | Intentional for codecamp's global nature. Document explicitly. Consider synthetic "codecamp" tenant. |
 | 2026-05-15 | codecamp_review | `getExerciseRepos` generates repos for modules without exercises | Low | Open | M1 and M18 have no exercise lessons but still get placeholder repos. Design decision. |
+| 2026-05-15 | codecamp_review | Chat route constructs `UserContext` with unsafe `as` casts | Low | Open | `apps/codecamp-advantage/app/api/chat/route.ts` casts `session.user.role` and `cefrLevel` with `as`. Needs runtime validation or stricter session typing. |
+| 2026-05-15 | codecamp_review | `getChatContext` leaks unpublished module/lesson titles | Low | Open | Domain function doesn't check `status === "published"` before including module/lesson context. Inconsistent with other domain functions. |
+| 2026-05-15 | codecamp_review | Duplicate `generateReview` LLM implementation | Medium | Open | `packages/api/src/routers/codecamp.ts` and `packages/webhooks/src/github.ts` both define nearly identical LLM review callers. Extract shared helper. |
 | 2026-05-15 | codecamp_review | No integration tests for webhook → LLM → comment → DB pipeline | Medium | Open | Fire-and-forget async pattern means end-to-end happy path untested against real DB. |
 | — | **Resolved in this track** | | | | |
 | 2026-05-15 | codecamp_review | No server-side route protection for `/admin` paths | High | **Resolved** | Middleware now redirects unauthenticated users. `adminProcedure` enforces ADMIN/SYSTEM role at tRPC layer. |
 | 2026-05-15 | codecamp_review | `createPrReview` uses weak `codecamp:read` permission | High | **Resolved** | Changed to `codecamp:submit` + repo existence validation. |
 | 2026-05-15 | codecamp_review | `reviewExercise` router has redundant inline role check | Low | **Resolved** | Removed inline role check; now uses `adminProcedure`. |
-| 2026-05-15 | codecamp_review | Chat API uses in-memory rate limiter with unbounded Map growth | Medium | **Resolved** | Replaced with bounded rate limiter with max entries and TTL cleanup. |
+| 2026-05-15 | codecamp_review | Chat API uses in-memory rate limiter with unbounded Map growth | Medium | **Resolved** | Replaced with bounded rate limiter with max entries and TTL cleanup. Note: still instance-local; needs Redis for multi-instance deployments. |

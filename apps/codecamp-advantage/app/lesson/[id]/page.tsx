@@ -237,17 +237,6 @@ function QuizComponent({
         utils.codecamp.lesson.invalidate();
         utils.codecamp.moduleBySlug.invalidate();
         utils.codecamp.dashboard.invalidate();
-        // Fire-and-forget progress update
-        fetch("/api/trpc/codecamp.updateProgress", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            json: { lessonId, status: "completed", score: data.score },
-          }),
-          credentials: "include",
-        }).catch(() => {
-          // Silent fail — progress is non-critical
-        });
       }
     },
   });
@@ -367,7 +356,7 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
     }
   };
 
-  const handleComplete = async (message: string) => {
+  const handleComplete = async (_message: string) => {
     const cid = conversationId ?? existingConv?.id;
     if (cid) {
       // Save the assistant message server-side via a dedicated endpoint.
@@ -423,6 +412,7 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
           placeholder="Ask about this lesson..."
+          aria-label="Chat message"
           className="flex-1 rounded-lg border bg-background px-4 py-2 text-sm"
         />
         <Button size="sm" onClick={() => sendMessage(input)} disabled={isLoading}>
