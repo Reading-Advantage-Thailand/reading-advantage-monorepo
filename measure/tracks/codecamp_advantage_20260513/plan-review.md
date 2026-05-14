@@ -1,61 +1,36 @@
-# Phase Review Findings
+# Phase Code Review Findings
 
-## Phase 6: Implement Admin Dashboard
-**Review Date:** 2026-05-15
-**Reviewer:** change-quality-reviewer subagent
-**Revision Range:** dce4d85..HEAD
+## Phase: Generate Docs & Doctor
 
-### Quality Gates
-- ✅ Lint: 0 errors
-- ✅ Type check: all pass
-- ✅ Tests: 224 passed (api + domain)
-
-### Findings
-
-#### Low — PR URL display omits repository context
-**File:** `apps/codecamp-advantage/app/admin/[userId]/page.tsx:153`
-For a GitHub URL like `https://github.com/owner/repo/pull/123`, the display renders `"pull/123"`, which strips the repository context. Consider using `slice(-4)` to show `"owner/repo/pull/123"` or using a dedicated URL-parsing helper.
-
-#### Low — No server-side route protection for `/admin` paths
-**File:** `apps/codecamp-advantage/middleware.ts`
-The Next.js middleware is a no-op. While pages gate content client-side and tRPC endpoints are protected, adding a server-side redirect in middleware would harden the surface.
-
-### Verdict
-Phase passes review. Both findings are Low severity and do not block proceeding.
+**Reviewer:** change-quality-reviewer subagent  
+**Date:** 2026-05-15  
+**Revision Range:** `0be2194..HEAD`
 
 ---
 
-## Phase 7: Implement Real-World Practice (Module 18)
-**Review Date:** 2026-05-15
-**Reviewer:** change-quality-reviewer subagent
-**Revision Range:** 738a2e2..HEAD
-
-### Quality Gates
-- ✅ Lint: 0 errors, 0 warnings (after fixes)
-- ✅ Type check: all pass
-- ✅ Tests: 39 passed (5 test files)
-
 ### Findings
 
-#### Medium — Plan compliance gap: GitHub Issues API not wired to UI
-**File:** `apps/codecamp-advantage/app/lesson/[id]/page.tsx`
-The WorkflowTracker component receives hardcoded props (`issueTitle="Practice Issue"`, `issueNumber={1}`). No live GitHub Issues API fetch is present. This is acceptable as a placeholder since external repo setup is deferred.
+#### Medium
 
-#### Medium — Multiple reviews render duplicate issue trackers
-**File:** `apps/codecamp-advantage/app/lesson/[id]/page.tsx`
-When `moduleReviews.length > 1`, the page renders a separate WorkflowTracker for each review with identical hardcoded issue headers. UX could be confusing with multiple exercise repos.
+- **`plan.md` — Phase 8 commit hash annotations shifted by one.** The commit hashes for "Run architectural linting" and "Verify build" were initially misaligned (pointing to prior plan-update commits rather than the commits for those tasks). Fixed in follow-up commit.
 
-#### Low — Hardcoded aria-label in ReviewHistory (FIXED in dd9dab5)
-**File:** `apps/codecamp-advantage/components/review-history.tsx`
-Timeline container had static `aria-label="timeline step pending"`. Fixed to dynamic `aria-label={`review timeline: ${reviewStatus}`}`.
+#### Low
 
-#### Low — Empty steps edge case in WorkflowTracker (FIXED in dd9dab5)
-**File:** `apps/codecamp-advantage/components/workflow-tracker.tsx`
-Empty `steps` array would incorrectly show "All steps completed". Fixed with `steps.length > 0` guard.
+- **Phase 8 "Run architectural linting" omits app-level tests.** The task list originally recorded package tests (`@reading-advantage/domain`, `api`, `webhooks`) but did not list `pnpm turbo run test --filter=codecamp-advantage`. Added to the completed task record.
 
-#### Low — Inconsistent Circle icon sourcing (FIXED in dd9dab5)
-**File:** `components/review-history.tsx`
-Local SVG `Circle` component instead of `lucide-react` import. Fixed to use `Circle` from `lucide-react`.
+---
 
-### Verdict
-**PASS** — No Critical or High findings. All Low findings were fixed in follow-up commit dd9dab5. Medium findings are plan/UX gaps, not bugs. Phase is safe to proceed.
+### Verification Results
+
+| Command | Result |
+|---|---|
+| `pnpm turbo run lint --filter=codecamp-advantage` | 9 successful, 0 errors |
+| `pnpm turbo run check-types --filter=codecamp-advantage` | 7 successful, 0 type errors |
+| `pnpm turbo run test --filter=codecamp-advantage` | 39 passed (5 test files) |
+| `pnpm turbo run build --filter=codecamp-advantage` | 9 successful, all routes generated |
+
+---
+
+### Resolution
+
+Both findings addressed. No Critical or High findings. Phase approved for checkpoint.

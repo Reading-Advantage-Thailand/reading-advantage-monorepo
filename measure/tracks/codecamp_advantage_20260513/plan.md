@@ -217,12 +217,13 @@ Build the capstone module with GitHub Issues end-to-end workflow.
   - [x] Verify `codecamp-advantage` entry in `measure/product.md` is accurate
   - [x] Update `measure/tech-stack.md` with any new dependencies
   - [x] Update `measure/lessons-learned.md` with insights from this track
-- [x] Task: Run architectural linting [3e9b551]
+- [x] Task: Run architectural linting [bc3eeac]
   - [x] `pnpm turbo run lint --filter=codecamp-advantage` — 9 successful, 0 errors
   - [x] `pnpm turbo run check-types --filter=codecamp-advantage` — 7 successful, 0 type errors
   - [x] `pnpm turbo run test --filter=@reading-advantage/domain` — 143 passed
   - [x] `pnpm turbo run test --filter=@reading-advantage/api` — 86 passed
   - [x] `pnpm turbo run test --filter=@reading-advantage/webhooks` — 20 passed
-- [x] Task: Verify build [bc3eeac]
+  - [x] `pnpm turbo run test --filter=codecamp-advantage` — 39 passed
+- [x] Task: Verify build [eea65de]
   - [x] `pnpm turbo run build --filter=codecamp-advantage` — 9 successful, all routes generated
 - [ ] Task: Measure — User Manual Verification 'Generate Docs & Doctor'
