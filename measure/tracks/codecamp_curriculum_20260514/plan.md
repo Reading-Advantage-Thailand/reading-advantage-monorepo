@@ -197,10 +197,10 @@ Run all checks and verify the curriculum works end-to-end.
   - [x] `pnpm turbo run test --filter=@reading-advantage/domain` — 134 passed (9 files)
   - [x] `pnpm turbo run test --filter=@reading-advantage/api` — 65 passed (13 files)
   - [x] All existing tests pass with new schema and seed data
-- [ ] Task: Run build and type checks
-  - [ ] `pnpm turbo run build --filter=codecamp-advantage`
-  - [ ] `pnpm turbo run check-types --filter=codecamp-advantage`
-  - [ ] `pnpm turbo run lint --filter=codecamp-advantage`
+- [x] Task: Run build and type checks [1aaf26e]
+  - [x] `pnpm turbo run build --filter=codecamp-advantage` — builds successfully (9/9 tasks)
+  - [x] `pnpm turbo run check-types --filter=codecamp-advantage` — all pass (7/7 tasks)
+  - [x] `pnpm turbo run lint --filter=codecamp-advantage` — 0 errors, 0 warnings in codecamp-advantage
 - [ ] Task: Manual smoke test
   - [ ] Seed the database: `pnpm --filter @reading-advantage/db run seed`
   - [ ] Start the app: `pnpm dev`
