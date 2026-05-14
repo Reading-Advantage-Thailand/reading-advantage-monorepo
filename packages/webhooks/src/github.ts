@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { createHmac, timingSafeEqual } from "crypto";
-import { z } from "zod";
+// zod is used via @reading-advantage/types githubWebhookPayloadSchema
 import { db } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
 import * as codecamp from "@reading-advantage/domain/codecamp";
@@ -18,6 +18,9 @@ const systemUser = {
   name: "System",
   role: "SYSTEM" as const,
   schoolId: null,
+  xp: 0,
+  level: 1,
+  cefrLevel: "A1" as const,
 };
 
 const globalTenant = { schoolId: null as string | null };

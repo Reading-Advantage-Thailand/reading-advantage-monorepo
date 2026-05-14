@@ -19,7 +19,8 @@
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/domain": "workspace:*",
     "@reading-advantage/types": "workspace:^",
-    "hono": "^4.7.0"
+    "hono": "^4.7.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",

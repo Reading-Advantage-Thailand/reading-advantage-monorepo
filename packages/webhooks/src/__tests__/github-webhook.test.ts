@@ -104,13 +104,13 @@ describe("GitHub webhook handler", () => {
       exerciseRepoId: "r1",
       userId: "u1",
       prUrl: "https://github.com/org/repo/pull/1",
-      reviewStatus: "reviewed",
+      reviewStatus: "reviewed" as const,
       llmReviewSummary: null,
       reviewedAt: null,
       createdAt: new Date(),
     };
     vi.mocked(getPrReviewByPrUrl).mockResolvedValue(existingReview);
-    vi.mocked(updatePrReview).mockResolvedValue({ ...existingReview, reviewStatus: "pending" });
+    vi.mocked(updatePrReview).mockResolvedValue({ ...existingReview, reviewStatus: "pending" as const });
 
     const payload = JSON.stringify({
       action: "synchronize",
@@ -132,7 +132,7 @@ describe("GitHub webhook handler", () => {
   });
 
   it("returns 200 for opened event on new PR", async () => {
-    vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null);
+    vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
 
     const payload = JSON.stringify({
       action: "opened",
