@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_curriculum_20260514",
+  "type": "feature",
+  "status": "pending",
+  "created_at": "2026-05-14T12:00:00Z",
+  "updated_at": "2026-05-14T12:00:00Z",
+  "description": "Replace the placeholder 5-module seed with the full 18-module, 85-lesson curriculum defined in apps/codecamp-advantage/measure/curriculum/. Adds phase column to schema, rewrites the seed, wires phase-grouped queries to the UI, and validates with tests.",
+  "estimated_tasks": 18,
+  "actual_tasks": null,
+  "deviation_notes": null
+}

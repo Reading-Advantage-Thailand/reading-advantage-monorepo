@@ -68,6 +68,10 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/codecamp_advantage_20260513/](./tracks/codecamp_advantage_20260513/)*
   18-module curriculum (dev env setup → cloud deployment) for interns with near-zero JS experience. Fork-based exercises with LLM PR review, GitHub Issues practice, and architecture mirroring of real Reading Advantage patterns. Existing schema/domain/router/UI code retained and extended.
 
+- [ ] **Track: codecamp-advantage — Curriculum Implementation**
+  *Link: [./tracks/codecamp_curriculum_20260514/](./tracks/codecamp_curriculum_20260514/)*
+  Replace placeholder 5-module seed with the full 18-module, 85-lesson curriculum. Add phase column to schema, rewrite seed with real lesson content from curriculum plans, wire phase-grouped queries to dashboard UI, validate with tests.
+
 ---
 
 - [ ] **Track: Import www-reading-advantage Content & Video Pipeline**
