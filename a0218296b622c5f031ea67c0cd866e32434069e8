@@ -1,0 +1,13 @@
+Task: Update getModulesByPhase to use phase column and add tests
+
+Summary: Replaced PHASE_RANGES order-based logic with direct phase column
+filtering using eq(codecampModules.phase, input.phase). Added test covering
+all 4 valid phases (A, B, C, D) with phase field validation.
+
+Files changed:
+- packages/domain/src/codecamp/index.ts
+- packages/domain/src/__tests__/codecamp.test.ts
+- measure/tracks/codecamp_curriculum_20260514/plan.md
+
+Why: Direct phase column queries are more robust than deriving phase from
+order ranges, especially when module order changes or gaps exist.
