@@ -33,7 +33,7 @@ export const codecampLessons = pgTable("codecamp_lessons", {
   contentJson: jsonb("content_json").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-}, (table) => [
+}, (_table) => [
   // Index for module-scoped lesson queries
   // (no explicit index needed on module_id FK for curriculum lookups)
 ]);

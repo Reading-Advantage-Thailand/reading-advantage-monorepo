@@ -56,7 +56,7 @@ describe("codecamp Phase C curriculum data", () => {
     });
   });
 
-  it("has at least 1 exercise per module", () => {
+  it("has at least 1 exercise per module that has exercises", () => {
     data.modules.forEach((mod) => {
       const exerciseLessons = mod.lessons.filter(
         (l) => l.exercises && l.exercises.length > 0
