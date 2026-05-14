@@ -203,10 +203,10 @@ Build the capstone module with GitHub Issues end-to-end workflow.
   - [x] Display open Issues from the practice repo via GitHub API
   - [x] Track intern's PRs linked to Issues
   - [x] Show workflow status: issue claimed → branch created → PR opened → review received → merged
-- [~] Task: Build code review comment display
-  - [ ] Pull LLM review comments from `codecamp_pr_reviews`
-  - [ ] Display feedback inline with the exercise
-  - [ ] Show review history (initial review → revisions → final)
+- [x] Task: Build code review comment display [d97792d]
+  - [x] Pull LLM review comments from `codecamp_pr_reviews`
+  - [x] Display feedback inline with the exercise
+  - [x] Show review history (initial review → revisions → final)
 - [ ] Task: Create GitHub Issue templates for Module 18 practice repo (deferred — external repo setup)
 - [ ] Task: Pre-file practice Issues on the Module 18 repo (deferred — external repo setup)
 - [ ] Task: Measure — User Manual Verification 'Implement Real-World Practice'
