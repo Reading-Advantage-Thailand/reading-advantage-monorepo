@@ -1,8 +1,11 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { generateObject } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { router, protectedProcedure } from "../trpc.js";
 import { AuthError } from "@reading-advantage/auth";
 import * as codecamp from "@reading-advantage/domain/codecamp";
+import { reviewExercise, reviewResultSchema } from "@reading-advantage/domain/codecamp";
 import {
   moduleResponseSchema,
   moduleBySlugResponseSchema,
@@ -379,6 +382,54 @@ export const codecampRouter = router({
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
           input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  reviewExercise: protectedProcedure
+    .input(z.object({
+      prDiff: z.string().min(1).max(50000),
+      moduleId: z.string().uuid().optional(),
+      repoUrl: z.string().url().optional(),
+    }))
+    .output(reviewResultSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const openrouter = createOpenAI({
+          apiKey: process.env.OPENROUTER_API_KEY,
+          baseURL: "https://openrouter.ai/api/v1",
+        });
+
+        async function generateReview(system: string, prompt: string) {
+          if (!process.env.OPENROUTER_API_KEY) {
+            return {
+              passed: true,
+              summary: "[Mock review — LLM not configured] The code looks good overall. Consider adding more tests and improving variable naming.",
+              comments: [],
+            };
+          }
+
+          const { object } = await generateObject({
+            model: openrouter("openrouter/free"),
+            system,
+            prompt,
+            schema: reviewResultSchema,
+            maxTokens: 2048,
+          });
+
+          return object;
+        }
+
+        return await reviewExercise({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          prDiff: input.prDiff,
+          moduleId: input.moduleId,
+          repoUrl: input.repoUrl,
+          generateReview,
         });
       } catch (err) {
         throw mapDomainError(err);

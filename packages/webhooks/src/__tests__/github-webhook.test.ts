@@ -10,13 +10,26 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     getPrReviewByPrUrl: vi.fn(),
     updatePrReview: vi.fn(),
     createPrReview: vi.fn(),
+    getExerciseRepos: vi.fn(),
+  };
+});
+
+vi.mock("@reading-advantage/domain/users", async () => {
+  const actual = await vi.importActual<typeof import("@reading-advantage/domain/users")>("@reading-advantage/domain/users");
+  return {
+    ...actual,
+    getUserByGithubUsername: vi.fn(),
   };
 });
 
 import {
   getPrReviewByPrUrl,
   updatePrReview,
+  createPrReview,
+  getExerciseRepos,
 } from "@reading-advantage/domain/codecamp";
+
+import { getUserByGithubUsername } from "@reading-advantage/domain/users";
 
 const WEBHOOK_SECRET = "test-secret";
 
@@ -130,8 +143,34 @@ describe("GitHub webhook handler", () => {
     expect(updatePrReview).toHaveBeenCalled();
   });
 
-  it("returns 200 for opened event on new PR", async () => {
+  it("returns 200 and creates review for opened event on new PR", async () => {
     vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
+    vi.mocked(getExerciseRepos).mockResolvedValue([
+      { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo", description: "Test repo", order: 1, createdAt: new Date() },
+    ]);
+    vi.mocked(getUserByGithubUsername).mockResolvedValue({
+      id: "u2",
+      username: "intern2",
+      name: "Intern 2",
+      role: "INTERN",
+      schoolId: null,
+      image: null,
+      xp: 0,
+      level: 1,
+      cefrLevel: "A1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as Awaited<ReturnType<typeof getUserByGithubUsername>>);
+    vi.mocked(createPrReview).mockResolvedValue({
+      id: "pr2",
+      exerciseRepoId: "r1",
+      userId: "u2",
+      prUrl: "https://github.com/org/repo/pull/2",
+      reviewStatus: "pending" as const,
+      llmReviewSummary: null,
+      reviewedAt: null,
+      createdAt: new Date(),
+    });
 
     const payload = JSON.stringify({
       action: "opened",
@@ -149,6 +188,56 @@ describe("GitHub webhook handler", () => {
     expect(res.status).toBe(200);
     const json = await res.json();
     expect(json.action).toBe("opened");
+    expect(createPrReview).toHaveBeenCalledWith(expect.objectContaining({
+      input: { exerciseRepoId: "r1", prUrl: "https://github.com/org/repo/pull/2" },
+    }));
+  });
+
+  it("returns 200 when no matching exercise repo is found", async () => {
+    vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
+    vi.mocked(getExerciseRepos).mockResolvedValue([]);
+
+    const payload = JSON.stringify({
+      action: "opened",
+      pull_request: {
+        html_url: "https://github.com/org/repo/pull/2",
+        head: { ref: "feature-branch", sha: "def456" },
+        base: { ref: "main", repo: { full_name: "org/repo", html_url: "https://github.com/org/repo" } },
+        user: { login: "intern2" },
+      },
+    });
+
+    const req = createRequest(payload);
+    const res = await githubApp.fetch(req);
+
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.ignored).toContain("No matching exercise repo");
+  });
+
+  it("returns 200 when no codecamp user matches the GitHub login", async () => {
+    vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
+    vi.mocked(getExerciseRepos).mockResolvedValue([
+      { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo", description: "Test repo", order: 1, createdAt: new Date() },
+    ]);
+    vi.mocked(getUserByGithubUsername).mockResolvedValue(null);
+
+    const payload = JSON.stringify({
+      action: "opened",
+      pull_request: {
+        html_url: "https://github.com/org/repo/pull/2",
+        head: { ref: "feature-branch", sha: "def456" },
+        base: { ref: "main", repo: { full_name: "org/repo", html_url: "https://github.com/org/repo" } },
+        user: { login: "unknown-user" },
+      },
+    });
+
+    const req = createRequest(payload);
+    const res = await githubApp.fetch(req);
+
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.ignored).toContain("No matching codecamp user");
   });
 
   it("returns 200 and ignores closed actions", async () => {

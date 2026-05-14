@@ -29,6 +29,8 @@ vi.mock("@reading-advantage/domain/codecamp", () => ({
   createInternAccount: vi.fn(),
   listInterns: vi.fn(),
   getInternProgress: vi.fn(),
+  reviewExercise: vi.fn(),
+  reviewResultSchema: vi.fn(),
 }));
 
 import {

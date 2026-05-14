@@ -30,12 +30,14 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^1.3.16",
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/domain": "workspace:*",
     "@reading-advantage/types": "workspace:*",
     "@trpc/server": "^11.1.0",
     "@trpc/client": "^11.1.0",
+    "ai": "^4.3.9",
     "bcryptjs": "^2.4.3",
     "drizzle-orm": "^0.44.0",
     "superjson": "^2.2.2",

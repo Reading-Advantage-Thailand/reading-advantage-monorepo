@@ -22,6 +22,7 @@ export const users = pgTable("users", {
   name: text("name"),
   email: text("email"),
   image: text("image"),
+  githubUsername: text("github_username").unique(),
   role: roleEnum("role").default("STUDENT").notNull(),
   schoolId: uuid("school_id").references(() => schools.id),
   xp: integer("xp").default(0).notNull(),

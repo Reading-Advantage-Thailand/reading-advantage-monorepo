@@ -1,16 +1,21 @@
 import { Hono } from "hono";
-import { createHmac, timingSafeEqual } from "crypto";
-// zod is used via @reading-advantage/types githubWebhookPayloadSchema
 import { db } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
 import * as codecamp from "@reading-advantage/domain/codecamp";
+import { getUserByGithubUsername } from "@reading-advantage/domain/users";
+import { reviewExercise, reviewResultSchema } from "@reading-advantage/domain/codecamp";
 import { githubWebhookPayloadSchema } from "@reading-advantage/types";
+import { generateObject } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { z } from "zod";
+import {
+  fetchPrDiff,
+  postPrComment,
+  parsePrUrl,
+  verifyWebhookSignature,
+} from "./github-client.js";
 
 const github = new Hono();
-
-function getWebhookSecret(): string {
-  return process.env.GITHUB_WEBHOOK_SECRET ?? "";
-}
 
 const systemUser = {
   id: "system",
@@ -25,25 +30,45 @@ const systemUser = {
 
 const globalTenant = { schoolId: null as string | null };
 
-function verifySignature(payload: string, signature: string): boolean {
-  const secret = getWebhookSecret();
-  if (!secret) {
-    console.warn("[GitHub Webhook] GITHUB_WEBHOOK_SECRET is not set");
-    return false;
+// ─── LLM Review Generator ─────────────────────────────────
+
+const openrouter = createOpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
+});
+
+async function generateReview(system: string, prompt: string): Promise<z.infer<typeof reviewResultSchema>> {
+  const model = openrouter("openrouter/free");
+
+  // Fallback when no API key is configured
+  if (!process.env.OPENROUTER_API_KEY) {
+    console.warn("[LLM Review] OPENROUTER_API_KEY not configured; returning mock review");
+    return {
+      passed: true,
+      summary: "[Mock review — LLM not configured] The code looks good overall. Consider adding more tests and improving variable naming.",
+      comments: [],
+    };
   }
-  const expected = `sha256=${createHmac("sha256", secret).update(payload).digest("hex")}`;
-  try {
-    return timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
-  } catch {
-    return false;
-  }
+
+  const { object } = await generateObject({
+    model,
+    system,
+    prompt,
+    schema: reviewResultSchema,
+    maxTokens: 2048,
+  });
+
+  return object;
 }
+
+// ─── Webhook Handler ──────────────────────────────────────
 
 /**
  * POST /webhooks/github/pr
  *
  * Handles GitHub pull request webhook events.
- * Validates signature, parses the payload, and triggers PR review tracking.
+ * Validates signature, parses the payload, creates/updates PR review records,
+ * and triggers LLM code review.
  */
 github.post("/pr", async (c) => {
   const signature = c.req.header("x-hub-signature-256");
@@ -52,7 +77,7 @@ github.post("/pr", async (c) => {
   }
 
   const payload = await c.req.text();
-  if (!verifySignature(payload, signature)) {
+  if (!verifyWebhookSignature(payload, signature)) {
     return c.json({ error: "Invalid signature" }, 401);
   }
 
@@ -84,6 +109,7 @@ github.post("/pr", async (c) => {
   }
 
   const tenantDb = createTenantDB(db, globalTenant);
+  const prInfo = parsePrUrl(pr.html_url);
 
   try {
     // Look up existing review by PR URL
@@ -94,9 +120,11 @@ github.post("/pr", async (c) => {
       input: { prUrl: pr.html_url },
     });
 
+    let reviewId: string;
+
     if (existingReview) {
       // Update existing review to pending for re-review
-      await codecamp.updatePrReview({
+      const updated = await codecamp.updatePrReview({
         db: tenantDb,
         user: systemUser,
         tenant: globalTenant,
@@ -105,22 +133,120 @@ github.post("/pr", async (c) => {
           reviewStatus: "pending",
         },
       });
+      reviewId = updated.id;
       console.log(`[GitHub Webhook] Re-triggered review for PR: ${pr.html_url}`);
     } else {
-      // Find the exercise repo by matching the base repo URL
-      // This is a best-effort lookup; in production, repos would be pre-registered
-      console.log(`[GitHub Webhook] New PR opened: ${pr.html_url} on ${pr.base.repo.full_name}`);
-      // Note: Creating a new PR review entry requires mapping the GitHub user to a codecamp user.
-      // This is deferred until user GitHub usernames are stored in the users table.
+      // New PR — look up exercise repo by base repo URL
+      const repos = await codecamp.getExerciseRepos({
+        db: tenantDb,
+        user: systemUser,
+        tenant: globalTenant,
+        input: { moduleId: "" }, // empty moduleId returns all repos
+      });
+
+      const repo = repos.find((r) =>
+        pr.base.repo.html_url.startsWith(r.repoUrl)
+      );
+
+      if (!repo) {
+        console.log(`[GitHub Webhook] No matching exercise repo for ${pr.base.repo.html_url}`);
+        return c.json({ received: true, ignored: "No matching exercise repo" }, 200);
+      }
+
+      // Look up codecamp user by GitHub username
+      const githubLogin = pr.user?.login;
+      let userId: string | null = null;
+
+      if (githubLogin) {
+        const matchedUser = await getUserByGithubUsername({
+          db: tenantDb,
+          user: systemUser,
+          tenant: globalTenant,
+          input: { githubUsername: githubLogin },
+        });
+        if (matchedUser) {
+          userId = matchedUser.id;
+        }
+      }
+
+      if (!userId) {
+        console.log(`[GitHub Webhook] No codecamp user found for GitHub user: ${githubLogin}`);
+        return c.json({ received: true, ignored: "No matching codecamp user" }, 200);
+      }
+
+      // Create a user-like object for the domain function
+      const prUser = {
+        id: userId,
+        username: githubLogin ?? "unknown",
+        name: githubLogin ?? "Unknown",
+        role: "INTERN" as const,
+        schoolId: null,
+        xp: 0,
+        level: 1,
+        cefrLevel: "A1" as const,
+      };
+
+      const newReview = await codecamp.createPrReview({
+        db: tenantDb,
+        user: prUser,
+        tenant: globalTenant,
+        input: {
+          exerciseRepoId: repo.id,
+          prUrl: pr.html_url,
+        },
+      });
+      reviewId = newReview.id;
+      console.log(`[GitHub Webhook] Created PR review for ${pr.html_url}`);
     }
 
-    // TODO: Queue LLM review job (Phase 3 implementation)
-    // The review pipeline will:
-    // 1. Fetch the PR diff via GitHub API
-    // 2. Build a system prompt from the module's learning objectives
-    // 3. Call generateObject for structured review output
-    // 4. Post review comments on the PR
-    // 5. Update codecamp_pr_reviews with status and summary
+    // ─── LLM Review Pipeline ────────────────────────────────
+
+    if (prInfo) {
+      try {
+        const diff = await fetchPrDiff(prInfo);
+
+        const reviewResult = await reviewExercise({
+          db: tenantDb,
+          user: systemUser,
+          tenant: globalTenant,
+          prDiff: diff,
+          repoUrl: pr.base.repo.html_url,
+          generateReview,
+        });
+
+        // Post review summary as a PR comment
+        const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${reviewResult.passed ? "✅ Passed" : "⚠️ Needs Changes"}\n\n**Summary:** ${reviewResult.summary}\n\n${reviewResult.comments.length > 0 ? "### Comments\n" + reviewResult.comments.map((c: { line?: number; body: string }) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`).join("\n") : ""}`;
+
+        await postPrComment(prInfo, commentBody);
+
+        // Update review record with results
+        await codecamp.updatePrReview({
+          db: tenantDb,
+          user: systemUser,
+          tenant: globalTenant,
+          input: {
+            reviewId,
+            reviewStatus: reviewResult.passed ? "approved" : "needs_changes",
+            llmReviewSummary: reviewResult.summary,
+          },
+        });
+
+        console.log(`[GitHub Webhook] LLM review completed for ${pr.html_url}`);
+      } catch (reviewErr) {
+        console.error("[GitHub Webhook] LLM review failed:", reviewErr);
+        // Don't fail the webhook — mark as reviewed with error note
+        await codecamp.updatePrReview({
+          db: tenantDb,
+          user: systemUser,
+          tenant: globalTenant,
+          input: {
+            reviewId,
+            reviewStatus: "reviewed",
+            llmReviewSummary: "Review failed — please check manually.",
+          },
+        });
+      }
+    }
 
     return c.json({ received: true, action, prUrl: pr.html_url }, 200);
   } catch (err) {

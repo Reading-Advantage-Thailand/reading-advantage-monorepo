@@ -110,6 +110,28 @@ export async function listUsers({
     .offset(input.offset);
 }
 
+export async function getUserByGithubUsername({
+  db,
+  user,
+  tenant,
+  input,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+  input: { githubUsername: string };
+}) {
+  assertCan(user, "user:read", tenant);
+
+  const [result] = await db
+    .select(safeUserCols)
+    .from(users)
+    .where(eq(users.githubUsername, input.githubUsername))
+    .limit(1);
+
+  return result ?? null;
+}
+
 export async function updateUser({
   db,
   user,

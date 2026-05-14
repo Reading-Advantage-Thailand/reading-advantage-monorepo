@@ -72,10 +72,10 @@ Write tests for new domain functions and GitHub integration.
 
 Build the fork-based exercise workflow with LLM PR review.
 
-- [ ] Task: Create GitHub App and configure credentials
-  - [ ] Register GitHub App on the Reading Advantage org with repo + PR permissions
-  - [ ] Store App ID, private key, webhook secret as environment variables
-  - [ ] Create `apps/codecamp-advantage/lib/github-app.ts` — GitHub App authentication helper
+- [~] Task: Create GitHub App and configure credentials
+  - [~] Register GitHub App on the Reading Advantage org with repo + PR permissions (deferred to admin setup)
+  - [~] Store App ID, private key, webhook secret as environment variables
+  - [~] Create `apps/codecamp-advantage/lib/github-app.ts` — GitHub App authentication helper
 - [ ] Task: Implement GitHub webhook endpoint
   - [ ] Create Hono route in `packages/webhooks` for `/webhooks/github/pr`
   - [ ] Verify webhook signature
@@ -89,15 +89,15 @@ Build the fork-based exercise workflow with LLM PR review.
   - [ ] Call `generateObject` with structured output schema: { passed: boolean, summary: string, comments: Array<{line, body}> }
   - [ ] Post review comments on the PR via GitHub API
   - [ ] Update `codecamp_pr_reviews` with review status and summary
-- [ ] Task: Implement exercise repo management domain functions
-  - [ ] `getExerciseRepos({ db, user, tenant, input })` — returns repos for a module
-  - [ ] `linkExerciseRepo({ db, user, tenant, input })` — admin-only, links repo to module
-  - [ ] `getPrReviewsForUser({ db, user, tenant })` — returns review status across exercises
-- [ ] Task: Implement tRPC routers for new procedures
-  - [ ] Add exercise repo procedures to codecamp router
-  - [ ] Add PR review procedures to codecamp router
-  - [ ] Add module phase grouping procedure
-- [ ] Task: Measure — User Manual Verification 'Implement GitHub Integration'
+- [x] Task: Implement exercise repo management domain functions [pre-existing]
+  - [x] `getExerciseRepos({ db, user, tenant, input })` — returns repos for a module
+  - [x] `linkExerciseRepo({ db, user, tenant, input })` — admin-only, links repo to module
+  - [x] `getPrReviewsForUser({ db, user, tenant })` — returns review status across exercises
+- [x] Task: Implement tRPC routers for new procedures [pre-existing]
+  - [x] Add exercise repo procedures to codecamp router
+  - [x] Add PR review procedures to codecamp router
+  - [x] Add module phase grouping procedure
+- [~] Task: Measure — User Manual Verification 'Implement GitHub Integration'
 
 ## Phase 4: Implement Expanded Curriculum UI
 

@@ -1189,5 +1189,5 @@ export async function getInternProgress({
 
 // ─── Re-exports ───────────────────────────────────────────
 
-export { reviewExercise } from "./review-exercise.js";
+export { reviewExercise, reviewResultSchema } from "./review-exercise.js";
 export type { ReviewResult } from "./review-exercise.js";

@@ -64,6 +64,13 @@
       "when": 1747210000000,
       "tag": "0008_codecamp_phase",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1778784590315,
+      "tag": "0009_add_github_username",
+      "breakpoints": true
     }
   ]
 }
