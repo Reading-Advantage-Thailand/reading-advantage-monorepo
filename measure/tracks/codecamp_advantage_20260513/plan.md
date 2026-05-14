@@ -213,10 +213,10 @@ Build the capstone module with GitHub Issues end-to-end workflow.
 
 ## Phase 8: Generate Docs & Doctor [~]
 
-- [~] Task: Update project documentation
-  - [ ] Verify `codecamp-advantage` entry in `measure/product.md` is accurate
-  - [ ] Update `measure/tech-stack.md` with any new dependencies
-  - [ ] Update `measure/lessons-learned.md` with insights from this track
+- [x] Task: Update project documentation [9392e50]
+  - [x] Verify `codecamp-advantage` entry in `measure/product.md` is accurate
+  - [x] Update `measure/tech-stack.md` with any new dependencies
+  - [x] Update `measure/lessons-learned.md` with insights from this track
 - [ ] Task: Run architectural linting
   - [ ] `pnpm turbo run lint --filter=codecamp-advantage`
   - [ ] `pnpm turbo run check-types --filter=codecamp-advantage`
