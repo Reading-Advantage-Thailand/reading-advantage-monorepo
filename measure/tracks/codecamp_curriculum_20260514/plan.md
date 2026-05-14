@@ -97,23 +97,23 @@ Source: `measure/curriculum/unit-07-class-period-plan.md` through `unit-10-class
 
 Source: `measure/curriculum/unit-11-class-period-plan.md` through `unit-13-class-period-plan.md`.
 
-- [ ] Task: Write Module 11 seed (Databases & ORMs, 5 lessons)
-  - [ ] Lesson 1 (theory): PostgreSQL 16 basics and SQL
-  - [ ] Lesson 2 (theory): Drizzle ORM 0.44.7 schema definition
-  - [ ] Lesson 3 (theory): Drizzle queries (SELECT, INSERT, UPDATE, DELETE)
-  - [ ] Lesson 4 (theory): Migrations and multi-tenancy (TenantDB)
-  - [ ] Lesson 5 (exercise + quiz): Blog database design exercise + databases quiz
-- [ ] Task: Write Module 12 seed (tRPC & Server Actions, 5 lessons)
-  - [ ] Lesson 1 (theory): Thin router / thick domain architecture
-  - [ ] Lesson 2 (theory): tRPC 11.17.0 router setup
-  - [ ] Lesson 3 (theory): tRPC on the frontend (useQuery, useMutation)
-  - [ ] Lesson 4 (theory): Server Actions
-  - [ ] Lesson 5 (exercise + quiz): Blog API with tRPC exercise + tRPC quiz
-- [ ] Task: Write Module 13 seed (Authentication, 4 lessons)
-  - [ ] Lesson 1 (theory): Session-based authentication
-  - [ ] Lesson 2 (theory): Logout, middleware, auth context
-  - [ ] Lesson 3 (theory): Role-Based Access Control (RBAC) with assertCan
-  - [ ] Lesson 4 (exercise + quiz): Add auth to blog API exercise + auth quiz
+- [x] Task: Write Module 11 seed (Databases & ORMs, 5 lessons) [5923558]
+  - [x] Lesson 1 (theory): PostgreSQL 16 basics and SQL
+  - [x] Lesson 2 (theory): Drizzle ORM 0.44.7 schema definition
+  - [x] Lesson 3 (theory): Drizzle queries (SELECT, INSERT, UPDATE, DELETE)
+  - [x] Lesson 4 (theory): Migrations and multi-tenancy (TenantDB)
+  - [x] Lesson 5 (exercise + quiz): Blog database design exercise + databases quiz
+- [x] Task: Write Module 12 seed (tRPC & Server Actions, 5 lessons) [5923558]
+  - [x] Lesson 1 (theory): Thin router / thick domain architecture
+  - [x] Lesson 2 (theory): tRPC 11.17.0 router setup
+  - [x] Lesson 3 (theory): tRPC on the frontend (useQuery, useMutation)
+  - [x] Lesson 4 (theory): Server Actions
+  - [x] Lesson 5 (exercise + quiz): Blog API with tRPC exercise + tRPC quiz
+- [x] Task: Write Module 13 seed (Authentication, 4 lessons) [5923558]
+  - [x] Lesson 1 (theory): Session-based authentication
+  - [x] Lesson 2 (theory): Logout, middleware, auth context
+  - [x] Lesson 3 (theory): Role-Based Access Control (RBAC) with assertCan
+  - [x] Lesson 4 (exercise + quiz): Add auth to blog API exercise + auth quiz
 - [ ] Task: Measure — User Manual Verification 'Phase C Seed Data'
 
 ## Phase 5: Write Seed Data — Phase D (Modules 14–18, 19 lessons)
