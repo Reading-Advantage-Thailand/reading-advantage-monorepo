@@ -1472,7 +1472,7 @@ export function getPhaseCCurriculumData() {
               {
                 heading: "Using tRPC Queries and Mutations",
                 body: "Frontend hooks are auto-typed — no manual API client needed. useQuery for reads, useMutation for writes.",
-                code: "\"use client\";\nimport { trpc } from \"@/lib/trpc-react\";\n\nexport function ModuleList() {\n  const utils = trpc.useUtils();const { data: modules, isLoading } = trpc.modules.list.useQuery();\n  \nconst createModule = trpc.modules.create.useMutation({\n    onSuccess: () => { utils.modules.list.invalidate(); },\n  });\n\n  if (isLoading) return <div>Loading...</div>;\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules?.map((mod) => <ModuleCard key={mod.id} module={mod} />)}\n    </div>\n  );\n}",
+                code: "\"use client\";\nimport { trpc } from \"@/lib/trpc-react\";\n\nexport function ModuleList() {\n  const utils = trpc.useUtils();\n  const { data: modules, isLoading } = trpc.modules.list.useQuery();\n  const createModule = trpc.modules.create.useMutation({\n    onSuccess: () => { utils.modules.list.invalidate(); },\n  });\n\n  if (isLoading) return <div>Loading...</div>;\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules?.map((mod) => <ModuleCard key={mod.id} module={mod} />)}\n    </div>\n  );\n}",
               },
             ],
           },
@@ -2698,6 +2698,819 @@ export function getPhaseBCurriculumData() {
               order: 5,
             },
           ],
+        },
+      ],
+    },
+  ];
+
+  return { modules, exerciseRepos: getExerciseRepos(modules) };
+}
+
+
+export function getPhaseDCurriculumData() {
+  const modules: CurriculumModule[] = [
+    // ─── Module 14: Internationalization ──────────────────────
+    {
+      title: "Internationalization",
+      description:
+        "Add Thai and English language support to the Student Progress Tracker with next-intl 4.11.0: locale routing, message files, and component translations.",
+      slug: "internationalization",
+      order: 14,
+      phase: "D",
+      status: "published",
+      lessons: [
+        {
+          title: "Setting Up next-intl",
+          description:
+            "Install and configure next-intl with locale routing, request config, and message files for English and Thai.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Install next-intl",
+                body: "next-intl 4.11.0 is the i18n library used by Reading Advantage. It provides type-safe translations for both Server and Client Components.",
+                code: "pnpm add next-intl@4.11.0\n\n// next.config.ts\nimport createNextIntlPlugin from \"next-intl/plugin\";\nconst withNextIntl = createNextIntlPlugin();\nexport default withNextIntl(nextConfig);",
+              },
+              {
+                heading: "Configure Locale Routing",
+                body: "Define supported locales and default locale. Create routing.ts and navigation.ts for locale-aware links.",
+                code: "// src/i18n/routing.ts\nimport { defineRouting } from \"next-intl/routing\";\nexport const routing = defineRouting({\n  locales: [\"en\", \"th\"],\n  defaultLocale: \"en\",\n});\n\n// src/i18n/navigation.ts\nimport { createNavigation } from \"next-intl/navigation\";\nimport { routing } from \"./routing\";\nexport const { Link, redirect, usePathname, useRouter } =\n  createNavigation(routing);",
+              },
+              {
+                heading: "Message Files",
+                body: "Message files define all UI strings. Curriculum content stays in English — only UI chrome is translated.",
+                code: "// messages/en.json\n{\n  \"dashboard\": {\n    \"title\": \"Learning Dashboard\",\n    \"subtitle\": \"Track your progress\",\n    \"overallProgress\": \"Overall Progress\"\n  },\n  \"module\": {\n    \"start\": \"Start Module\",\n    \"continue\": \"Continue\",\n    \"completed\": \"Completed\"\n  }\n}\n\n// messages/th.json\n{\n  \"dashboard\": {\n    \"title\": \"แดชบอร์ดการเรียนรู้\",\n    \"subtitle\": \"ติดตามความคืบหน้า\",\n    \"overallProgress\": \"ความคืบหน้าโดยรวม\"\n  },\n  \"module\": {\n    \"start\": \"เริ่มโมดูล\",\n    \"continue\": \"ดำเนินการต่อ\",\n    \"completed\": \"เสร็จสิ้น\"\n  }\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Using Translations in Components",
+          description:
+            "Use getTranslations in Server Components and useTranslations in Client Components. Build a locale switcher.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Server Component Translations",
+                body: "Server Components use getTranslations from next-intl/server. It's async because it reads the locale from the request.",
+                code: "// src/app/[locale]/page.tsx\nimport { getTranslations } from \"next-intl/server\";\n\nexport default async function HomePage() {\n  const t = await getTranslations(\"dashboard\");\n  return (\n    <div>\n      <h1>{t(\"title\")}</h1>\n      <p>{t(\"subtitle\")}</p>\n    </div>\n  );\n}",
+              },
+              {
+                heading: "Client Component Translations",
+                body: "Client Components use the useTranslations hook. It works just like any other React hook.",
+                code: "\"use client\";\nimport { useTranslations } from \"next-intl\";\n\nexport function ModuleCard({ module }: { module: Module }) {\n  const t = useTranslations(\"module\");\n  return (\n    <div>\n      <h3>{module.title}</h3>\n      <button>\n        {module.progress > 0 ? t(\"continue\") : t(\"start\")}\n      </button>\n    </div>\n  );\n}",
+              },
+              {
+                heading: "Locale Switcher",
+                body: "Build a locale switcher that changes the URL locale prefix and re-renders the page with new translations.",
+                code: "\"use client\";\nimport { useLocale } from \"next-intl\";\nimport { useRouter, usePathname } from \"@/i18n/navigation\";\nimport { routing } from \"@/i18n/routing\";\n\nexport function LocaleSwitcher() {\n  const locale = useLocale();\n  const router = useRouter();\n  const pathname = usePathname();\n\n  return (\n    <div className=\"flex gap-2\">\n      {routing.locales.map((loc) => (\n        <button\n          key={loc}\n          onClick={() => router.replace(pathname, { locale: loc })}\n          className={locale === loc ? \"bg-blue-500 text-white\" : \"bg-gray-100\"}\n        >\n          {loc === \"en\" ? \"EN\" : \"ไทย\"}\n        </button>\n      ))}\n    </div>\n  );\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Internationalization Exercise + Quiz",
+          description:
+            "Add i18n to a blog app and test your internationalization knowledge.",
+          order: 3,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the i18n exercise by adding next-intl to a blog app with full Thai/English support.",
+          },
+          exercises: [
+            {
+              title: "Add i18n to the Blog App",
+              instructions:
+                "Fork the exercise repo and add next-intl 4.11.0: configure routing for en and th, create messages/en.json and messages/th.json with all UI strings, replace hardcoded strings in Server Components with getTranslations(), replace hardcoded strings in Client Components with useTranslations(), add a LocaleSwitcher component in the header, handle pluralization for comment counts, and use Link from next-intl/navigation for all internal navigation.",
+              starterCode:
+                "// TODO: Install next-intl and configure routing\n// TODO: Create message files\n// TODO: Replace hardcoded strings with translations\n// TODO: Add LocaleSwitcher\n// TODO: Handle pluralization\n// TODO: Use next-intl Link",
+              expectedOutput:
+                "A blog app with full Thai/English UI support and working locale switcher",
+              hintsJson: [
+                "Use getTranslations() in Server Components — it's async",
+                "Use useTranslations() in Client Components — it's a React hook",
+                "Use Link from next-intl/navigation, not next/link, for locale-aware routing",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "What hook do you use in a Server Component?",
+              optionsJson: [
+                "useTranslations()",
+                "getTranslations() — it's async",
+                "useLocale()",
+                "getLocale()",
+              ],
+              correctAnswer: "getTranslations() — it's async",
+              explanation:
+                "Server Components use getTranslations() from next-intl/server. It is async because it reads the locale from the request.",
+              order: 1,
+            },
+            {
+              question: "What hook do you use in a Client Component?",
+              optionsJson: [
+                "getTranslations()",
+                "useTranslations() — it's a React hook",
+                "useServerTranslations()",
+                "getLocale()",
+              ],
+              correctAnswer: "useTranslations() — it's a React hook",
+              explanation:
+                "Client Components use useTranslations() from next-intl. It is a React hook that subscribes to locale changes.",
+              order: 2,
+            },
+            {
+              question: "How do you interpolate a variable in a message?",
+              optionsJson: [
+                "$variable",
+                "{variableName} in the message, pass as second arg to t()",
+                "%s",
+                "{{variable}}",
+              ],
+              correctAnswer:
+                "{variableName} in the message, pass as second arg to t()",
+              explanation:
+                "next-intl uses ICU message format. Use {variableName} in the message string and pass the value as the second argument to t().",
+              order: 3,
+            },
+            {
+              question:
+                "Why use next-intl/navigation's Link instead of Next.js Link?",
+              optionsJson: [
+                "It is faster",
+                "It automatically includes the locale prefix in the URL",
+                "It is required by TypeScript",
+                "It has more features",
+              ],
+              correctAnswer:
+                "It automatically includes the locale prefix in the URL",
+              explanation:
+                "next-intl/navigation's Link automatically prepends the current locale to URLs. Next.js Link does not know about locales.",
+              order: 4,
+            },
+            {
+              question: "Should curriculum content be translated?",
+              optionsJson: [
+                "Yes, everything should be translated",
+                "No — only UI chrome. Content stays in its original language.",
+                "Only the quiz questions",
+                "Only the exercise instructions",
+              ],
+              correctAnswer:
+                "No — only UI chrome. Content stays in its original language.",
+              explanation:
+                "The curriculum content (lessons, code examples) stays in English. Only the UI chrome (buttons, labels, navigation) is translated.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+
+    // ─── Module 15: AI Integration ────────────────────────────
+    {
+      title: "AI Integration",
+      description:
+        "Integrate AI into the Student Progress Tracker with Vercel AI SDK 4.3.19: generateText, streamText, useChat, generateObject, and production hardening.",
+      slug: "ai-integration",
+      order: 15,
+      phase: "D",
+      status: "published",
+      lessons: [
+        {
+          title: "AI SDK Basics — generateText and streamText",
+          description:
+            "Set up the Vercel AI SDK and make your first LLM calls with generateText and streamText.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Install AI SDK",
+                body: "The Vercel AI SDK is how Reading Advantage integrates LLMs. It provides generateText, streamText, generateObject, and useChat.",
+                code: "pnpm add ai@4.3.19 @ai-sdk/openai@1.3.24 @ai-sdk/react@1.2.12\n\n// src/lib/ai.ts\nimport { createOpenAI } from \"@ai-sdk/openai\";\nexport const openrouter = createOpenAI({\n  apiKey: process.env.OPENROUTER_API_KEY,\n  baseURL: \"https://openrouter.ai/api/v1\",\n});",
+              },
+              {
+                heading: "generateText — Complete Response",
+                body: "generateText waits for the full response. Use it for one-shot explanations, classification, and summaries.",
+                code: "import { generateText } from \"ai\";\nimport { openrouter } from \"@/lib/ai\";\n\nconst { text } = await generateText({\n  model: openrouter(\"openrouter/free\"),\n  system: \"You are a programming tutor.\",\n  prompt: `Explain closures in simple terms.`,\n});\n\n// Use cases:\n// - One-shot explanations\n// - Classifying input\n// - Generating titles or summaries",
+              },
+              {
+                heading: "streamText — Streaming Response",
+                body: "streamText returns tokens as they arrive. Use it for chat interfaces where users see responses in real-time.",
+                code: "import { streamText } from \"ai\";\n\nconst result = streamText({\n  model: openrouter(\"openrouter/free\"),\n  system: `You are a coding tutor. Default to Thai language.`,\n  prompt: message,\n  maxTokens: 2048,\n});\n\nreturn result.toDataStreamResponse();\n\n// Key difference:\n// generateText → returns complete text\n// streamText → returns a stream of tokens",
+              },
+            ],
+          },
+        },
+        {
+          title: "Building a Chat UI with useChat",
+          description:
+            "Use the useChat hook from @ai-sdk/react to build a full chat interface with message persistence.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "useChat Hook",
+                body: "useChat handles the entire chat cycle: messages, streaming, submission, loading state, and errors.",
+                code: "\"use client\";\nimport { useChat } from \"@ai-sdk/react\";\n\nexport function ChatTutor({ moduleId }: { moduleId?: string }) {\n  const { messages, input, handleInputChange, handleSubmit, isLoading } =\n    useChat({\n      api: \"/api/chat\",\n      body: { moduleId },\n    });\n\n  return (\n    <div>\n      {messages.map((msg) => (\n        <div key={msg.id}>\n          {msg.role}: {msg.content}\n        </div>\n      ))}\n      <form onSubmit={handleSubmit}>\n        <input\n          value={input}\n          onChange={handleInputChange}\n          placeholder=\"Ask a question...\"\n        />\n        <button type=\"submit\" disabled={isLoading}>\n          Send\n        </button>\n      </form>\n    </div>\n  );\n}",
+              },
+              {
+                heading: "Chat Persistence",
+                body: "Save messages to the database so the intern can resume conversations across sessions.",
+                code: "// Domain function pattern\nexport async function saveMessage({ db, user, input }) {\n  assertCan(user, \"chat:use\", tenant);\n  const [message] = await db\n    .insert(chatMessages)\n    .values({\n      conversationId: input.conversationId,\n      role: input.role,\n      content: input.content,\n    })\n    .returning();\n  return message;\n}\n\nexport async function getConversationHistory({ db, user, input }) {\n  assertCan(user, \"chat:use\", tenant);\n  return db\n    .select()\n    .from(chatMessages)\n    .where(eq(chatMessages.conversationId, input.conversationId))\n    .orderBy(chatMessages.createdAt);\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Structured Output with generateObject",
+          description:
+            "Return structured, Zod-validated data from LLMs with generateObject for quiz feedback and code review.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "generateObject with Zod",
+                body: "generateObject returns a Zod-validated object instead of free-form text. Used for quiz feedback and exercise review.",
+                code: "import { generateObject } from \"ai\";\nimport { z } from \"zod\";\n\nconst quizFeedbackSchema = z.object({\n  passed: z.boolean(),\n  explanation: z.string(),\n  relatedTopics: z.array(z.string()),\n});\n\nconst { object } = await generateObject({\n  model: openrouter(\"openrouter/free\"),\n  schema: quizFeedbackSchema,\n  prompt: `Student answered: ...`,\n});\n\n// object is typed as QuizFeedback — fully type-safe!\nconsole.log(object.passed);\nconsole.log(object.explanation);",
+              },
+              {
+                heading: "Code Review Schema",
+                body: "Use generateObject for structured code review with line-by-line feedback.",
+                code: "const codeReviewSchema = z.object({\n  passed: z.boolean(),\n  score: z.number().min(0).max(100),\n  feedback: z.string(),\n  improvements: z.array(z.object({\n    line: z.number(),\n    suggestion: z.string(),\n  })),\n});\n\nconst { object } = await generateObject({\n  model: openrouter(\"openrouter/free\"),\n  schema: codeReviewSchema,\n  system: \"You are a code reviewer for a web dev bootcamp.\",\n  prompt: `Exercise: ${exerciseTitle}\\nStudent code: ...`,\n});",
+              },
+            ],
+          },
+        },
+        {
+          title: "Rate Limiting and Production Concerns",
+          description:
+            "Harden AI endpoints with rate limiting, authentication checks, input validation, and graceful fallbacks.",
+          order: 4,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Per-User Rate Limiting",
+                body: "LLM API calls cost money and can be abused. Implement per-user rate limiting with a sliding window.",
+                code: "interface RateLimitEntry {\n  count: number;\n  windowStart: number;\n}\n\nconst RATE_LIMIT_WINDOW_MS = 60 * 1000;\nconst RATE_LIMIT_MAX_REQUESTS = 30;\n\nconst rateLimits = new Map<string, RateLimitEntry>();\n\nexport function checkRateLimit(userId: string) {\n  const now = Date.now();\n  const entry = rateLimits.get(userId);\n  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {\n    rateLimits.set(userId, { count: 1, windowStart: now });\n    return { allowed: true };\n  }\n  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {\n    return { allowed: false, retryAfter: Math.ceil((RATE_LIMIT_WINDOW_MS - (now - entry.windowStart)) / 1000) };\n  }\n  entry.count++;\n  return { allowed: true };\n}",
+              },
+              {
+                heading: "Production Chat Route",
+                body: "A production-ready chat route checks auth, rate limits, validates input, and falls back gracefully.",
+                code: "export async function POST(request: Request) {\n  try {\n    const user = await getAuthUser(request);\n    if (!user) return Response.json({ error: \"Authentication required\" }, { status: 401 });\n\n    const rateCheck = checkRateLimit(user.id);\n    if (!rateCheck.allowed) {\n      return Response.json({ error: \"Rate limit exceeded\" }, { status: 429 });\n    }\n\n    const body = await request.json();\n    const parsed = chatInputSchema.safeParse(body);\n    if (!parsed.success) {\n      return Response.json({ error: \"Invalid input\" }, { status: 400 });\n    }\n\n    if (!process.env.OPENROUTER_API_KEY) {\n      return Response.json({ response: \"[AI Tutor fallback] Configure OPENROUTER_API_KEY.\" });\n    }\n\n    const result = streamText({\n      model: openrouter(\"openrouter/free\"),\n      system: buildSystemPrompt(parsed.data.moduleId),\n      prompt: parsed.data.message,\n      maxTokens: 2048,\n    });\n    return result.toDataStreamResponse();\n  } catch (error) {\n    console.error(\"Chat API error:\", error);\n    return Response.json({ error: \"Failed to generate response\" }, { status: 500 });\n  }\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "AI Integration Exercise + Quiz",
+          description:
+            "Build a code review bot with streaming chat and structured output, and test your AI SDK knowledge.",
+          order: 5,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the AI integration exercise by building a code review bot with chat and structured review output.",
+          },
+          exercises: [
+            {
+              title: "Build a Code Review Bot",
+              instructions:
+                "Fork the exercise repo and build a code review bot: create POST /api/chat that streams LLM responses using streamText, create POST /api/review that returns structured code review using generateObject, build a chat UI using useChat from @ai-sdk/react, add a system prompt that includes exercise context, add per-user rate limiting (20 requests per minute), add authentication check, add a fallback response when OPENROUTER_API_KEY is not configured, save chat messages to the database, and build a Review Code button that calls /api/review and displays structured feedback.",
+              starterCode:
+                "// TODO: Create /api/chat with streamText\n// TODO: Create /api/review with generateObject\n// TODO: Build chat UI with useChat\n// TODO: Add system prompt with context\n// TODO: Add rate limiting\n// TODO: Add auth check\n// TODO: Add fallback response\n// TODO: Save messages to DB\n// TODO: Build Review Code button",
+              expectedOutput:
+                "A code review bot with streaming chat, structured review output, rate limiting, and auth",
+              hintsJson: [
+                "Use streamText for chat and generateObject for structured review",
+                "Use result.toDataStreamResponse() for streaming endpoints",
+                "The generateObject schema should include passed, score, feedback, and suggestions",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "What is the difference between generateText and streamText?",
+              optionsJson: [
+                "There is no difference",
+                "generateText waits for the full response; streamText sends tokens as they arrive",
+                "generateText is faster",
+                "streamText only works in Node.js",
+              ],
+              correctAnswer:
+                "generateText waits for the full response; streamText sends tokens as they arrive",
+              explanation:
+                "generateText blocks until the entire response is ready. streamText returns a stream that emits tokens as the LLM generates them.",
+              order: 1,
+            },
+            {
+              question: "What does generateObject do differently from generateText?",
+              optionsJson: [
+                "It is faster",
+                "Returns a Zod-validated structured object instead of free-form text",
+                "It only works with OpenAI",
+                "It does not require an API key",
+              ],
+              correctAnswer:
+                "Returns a Zod-validated structured object instead of free-form text",
+              explanation:
+                "generateObject takes a Zod schema and returns a validated object. generateText returns plain text.",
+              order: 2,
+            },
+            {
+              question: "Why is rate limiting important for AI API endpoints?",
+              optionsJson: [
+                "It makes responses faster",
+                "LLM calls cost money and can be abused",
+                "It is required by law",
+                "It improves accuracy",
+              ],
+              correctAnswer: "LLM calls cost money and can be abused",
+              explanation:
+                "LLM API calls cost money per token. Without rate limiting, a malicious or buggy client could generate excessive costs.",
+              order: 3,
+            },
+            {
+              question: "What does useChat handle automatically?",
+              optionsJson: [
+                "Only the input field",
+                "Message state, streaming, form submission, loading state",
+                "Database persistence",
+                "Authentication",
+              ],
+              correctAnswer:
+                "Message state, streaming, form submission, loading state",
+              explanation:
+                "useChat from @ai-sdk/react handles the entire chat UI lifecycle: message state, streaming responses, form submission, and loading indicators.",
+              order: 4,
+            },
+            {
+              question: "What should you do if the LLM API key is not configured?",
+              optionsJson: [
+                "Throw an error and crash",
+                "Return a fallback response instead of crashing",
+                "Retry indefinitely",
+                "Redirect to the home page",
+              ],
+              correctAnswer: "Return a fallback response instead of crashing",
+              explanation:
+                "Production code should always have a fallback. If the API key is missing, return a helpful message instead of crashing.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+
+    // ─── Module 16: Monorepo & Package Management ─────────────
+    {
+      title: "Monorepo & Package Management",
+      description:
+        "Understand the Reading Advantage monorepo architecture: pnpm 8.15.8 workspaces, workspace:* dependencies, and Turborepo 2.9.8 pipeline and caching.",
+      slug: "monorepo-packages",
+      order: 16,
+      phase: "D",
+      status: "published",
+      lessons: [
+        {
+          title: "pnpm Workspaces",
+          description:
+            "Understand how pnpm workspaces organize multiple packages in a single repository.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Workspace Configuration",
+                body: "pnpm workspaces let you manage many packages in one repository. The pnpm-workspace.yaml file defines which directories contain packages.",
+                code: "# pnpm-workspace.yaml\npackages:\n  - \"apps/*\"\n  - \"packages/*\"\n\n# Install all workspace dependencies\npnpm install\n\n# Install a dependency for a specific package\npnpm add zod --filter=@reading-advantage/domain\n\n# Run a script in a specific package\npnpm --filter @reading-advantage/db run build",
+              },
+              {
+                heading: "workspace:* Dependencies",
+                body: "When one package depends on another in the same monorepo, use workspace:*. This creates a symlink so changes are instantly available.",
+                code: "// packages/api/package.json\n{\n  \"dependencies\": {\n    \"@reading-advantage/db\": \"workspace:*\",\n    \"@reading-advantage/auth\": \"workspace:*\",\n    \"@reading-advantage/domain\": \"workspace:*\",\n    \"@reading-advantage/types\": \"workspace:*\"\n  }\n}\n\n// workspace:* creates a symlink\n// Changes to packages/db are instantly available to packages/api",
+              },
+              {
+                heading: "Dependency Order",
+                body: "Packages must follow a strict dependency order to avoid circular dependencies.",
+                code: "// Correct dependency order:\n// db → auth → types → domain → api / webhooks\n//                ↓\n//               ui (no backend deps)\n\n// ✅ db can import: nothing (only external packages)\n// ✅ auth can import: db\n// ✅ types can import: nothing (only Zod)\n// ✅ domain can import: db, auth, types\n// ✅ api can import: db, auth, domain, types\n\n// ❌ db importing from domain → circular!\n// ❌ domain importing from api → wrong direction!\n// ❌ ui importing from db → UI must not know about DB!",
+              },
+            ],
+          },
+        },
+        {
+          title: "Turborepo Pipeline",
+          description:
+            "Understand how Turborepo automates builds, tests, and linting across the monorepo with proper task ordering and caching.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "turbo.json Configuration",
+                body: "Turborepo defines tasks and their dependencies. ^build means 'build all workspace dependencies first'.",
+                code: "// turbo.json\n{\n  \"$schema\": \"https://turbo.build/schema.json\",\n  \"tasks\": {\n    \"build\": {\n      \"dependsOn\": [\"^build\"],\n      \"outputs\": [\"dist/**\", \".next/**\"]\n    },\n    \"test\": {\n      \"dependsOn\": [\"^build\"],\n      \"outputs\": []\n    },\n    \"lint\": {\n      \"dependsOn\": [\"^build\"],\n      \"outputs\": []\n    },\n    \"dev\": {\n      \"cache\": false,\n      \"persistent\": true\n    }\n  }\n}",
+              },
+              {
+                heading: "Caching",
+                body: "Turborepo caches task outputs. If nothing changed, it skips the task. This makes monorepo builds incredibly fast.",
+                code: "# First run: builds everything\npnpm turbo run build\n\n# Second run: nothing changed → all cached\npnpm turbo run build\n\n# Change one file in packages/domain\npnpm turbo run build\n# → Rebuilds domain + api + codecamp-advantage\n# → db, auth, types, ui still cached",
+              },
+              {
+                heading: "Running Tasks",
+                body: "Common Turborepo commands for daily development.",
+                code: "# Build everything in the correct order\npnpm turbo run build\n\n# Build a single package and its dependencies\npnpm turbo run build --filter=codecamp-advantage\n\n# Run tests for a specific package\npnpm turbo run test --filter=@reading-advantage/domain\n\n# Run lint for all packages\npnpm turbo run lint\n\n# Type check all packages\npnpm turbo run check-types",
+              },
+            ],
+          },
+        },
+        {
+          title: "Monorepo Exercise + Quiz",
+          description:
+            "Map the Reading Advantage monorepo and test your monorepo knowledge.",
+          order: 3,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the monorepo exercise by mapping the Reading Advantage monorepo's dependency graph.",
+          },
+          exercises: [
+            {
+              title: "Map the Reading Advantage Monorepo",
+              instructions:
+                "Work directly in the real monorepo: read every package.json in packages/ and apps/, create docs/dependency-graph.md showing each package's name, purpose, and workspace dependencies, identify which packages import each other, answer questions about rebuild scope and dependency violations, run pnpm turbo run build and confirm it succeeds, and run pnpm turbo run build --filter=@reading-advantage/domain and explain what gets built.",
+              starterCode:
+                "// TODO: Read all package.json files\n// TODO: Create dependency-graph.md\n// TODO: Identify workspace dependencies\n// TODO: Answer rebuild scope questions\n// TODO: Run pnpm turbo run build\n// TODO: Run pnpm turbo run build --filter=@reading-advantage/domain",
+              expectedOutput:
+                "A complete dependency graph document and successful Turborepo builds",
+              hintsJson: [
+                "Use grep or cat to read package.json files quickly",
+                "Look for workspace:* in dependencies to find internal imports",
+                "Turborepo's --filter builds the package and everything it depends on",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "What does workspace:* mean in a package.json?",
+              optionsJson: [
+                "A wildcard import",
+                "A symlink to a local workspace package — changes are instantly available",
+                "A Git submodule",
+                "A remote package",
+              ],
+              correctAnswer:
+                "A symlink to a local workspace package — changes are instantly available",
+              explanation:
+                "workspace:* tells pnpm to create a symlink to the local package. Changes are immediately available without publishing or reinstalling.",
+              order: 1,
+            },
+            {
+              question: "What is the dependency order of Reading Advantage packages?",
+              optionsJson: [
+                "api → domain → types → auth → db",
+                "db → auth → types → domain → api/webhooks",
+                "ui → db → auth → domain → api",
+                "There is no order",
+              ],
+              correctAnswer: "db → auth → types → domain → api/webhooks",
+              explanation:
+                "The correct order is: db (no deps) → auth (needs db) → types (no deps) → domain (needs db, auth, types) → api/webhooks (needs db, auth, domain, types).",
+              order: 2,
+            },
+            {
+              question: "What does ^build mean in turbo.json?",
+              optionsJson: [
+                "Build the current package",
+                "The 'build' task of all upstream workspace dependencies",
+                "Build all packages",
+                "Clean and rebuild",
+              ],
+              correctAnswer:
+                "The 'build' task of all upstream workspace dependencies",
+              explanation:
+                "^build means 'run the build task of all workspace dependencies first'. This ensures packages are built in the correct order.",
+              order: 3,
+            },
+            {
+              question: "How does Turborepo know which tasks to cache?",
+              optionsJson: [
+                "It guesses",
+                "Based on input file hashes — if inputs haven't changed, skip the task",
+                "It always caches everything",
+                "It never caches",
+              ],
+              correctAnswer:
+                "Based on input file hashes — if inputs haven't changed, skip the task",
+              explanation:
+                "Turborepo hashes input files. If the hash matches a previous run and outputs exist, it skips the task and restores cached outputs.",
+              order: 4,
+            },
+            {
+              question: "Why can't packages/ui import from packages/db?",
+              optionsJson: [
+                "It is not allowed by pnpm",
+                "UI is frontend-only; it must not depend on backend packages like the database",
+                "The import path is too long",
+                "It causes a TypeScript error",
+              ],
+              correctAnswer:
+                "UI is frontend-only; it must not depend on backend packages like the database",
+              explanation:
+                "packages/ui contains React components only. It must not import backend packages like db, domain, or api to maintain clean architecture boundaries.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+
+    // ─── Module 17: Cloud & Dockerization ─────────────────────
+    {
+      title: "Cloud & Dockerization",
+      description:
+        "Containerize the Student Progress Tracker with Docker: images, containers, multi-stage builds, docker-compose, and cloud deployment overview.",
+      slug: "cloud-docker",
+      order: 17,
+      phase: "D",
+      status: "published",
+      lessons: [
+        {
+          title: "Docker Basics",
+          description:
+            "Learn Docker concepts: images, containers, volumes, networks, and basic commands.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Docker Concepts",
+                body: "Docker packages your app and all its dependencies into a container. The same container runs identically on every machine.",
+                code: "| Concept | What it is | Analogy |\n|---------|-----------|---------|\n| Image | Blueprint for a container | Recipe |\n| Container | Running instance of an image | Baked cake |\n| Volume | Persistent storage | USB drive |\n| Network | Communication between containers | WiFi |\n| Dockerfile | Instructions to build an image | Recipe card |",
+              },
+              {
+                heading: "Basic Docker Commands",
+                body: "Essential Docker commands for daily use.",
+                code: "# Pull and run a simple image\ndocker run hello-world\n\n# Run PostgreSQL\ndocker run -d \\\n  --name my-postgres \\\n  -e POSTGRES_PASSWORD=postgres \\\n  -p 5432:5432 \\\n  postgres:16-alpine\n\n# List running containers\ndocker ps\n\n# Stop and start\ndocker stop my-postgres\ndocker start my-postgres\n\n# View logs\ndocker logs my-postgres\n\n# Execute inside container\ndocker exec -it my-postgres psql -U postgres",
+              },
+              {
+                heading: "Port Mapping and Volumes",
+                body: "Map host ports to container ports and persist data across container restarts.",
+                code: "# Port mapping: -p HOST:CONTAINER\ndocker run -p 5432:5432 postgres:16-alpine\n\n# Volume for persistence\ndocker run -d \\\n  --name my-postgres \\\n  -e POSTGRES_PASSWORD=postgres \\\n  -p 5432:5432 \\\n  -v pgdata:/var/lib/postgresql/data \\\n  postgres:16-alpine\n\n# Data survives restart!\ndocker stop my-postgres\ndocker start my-postgres",
+              },
+            ],
+          },
+        },
+        {
+          title: "Dockerfile for Next.js",
+          description:
+            "Write a production Dockerfile with multi-stage build for the Student Progress Tracker.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Multi-Stage Dockerfile",
+                body: "A multi-stage build creates smaller final images by separating build tools from runtime. We use Node.js 20 with pnpm 8.15.8, matching the monorepo's tech stack.",
+                code: "# Stage 1: Install dependencies\nFROM node:20-alpine AS deps\nRUN corepack enable && corepack prepare pnpm@8.15.8 --activate\nWORKDIR /app\nCOPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./\nCOPY packages/*/package.json ./packages/*/\nCOPY apps/*/package.json ./apps/*/\nRUN pnpm install --frozen-lockfile\n\n# Stage 2: Build\nFROM node:20-alpine AS builder\nRUN corepack enable && corepack prepare pnpm@8.15.8 --activate\nWORKDIR /app\nCOPY --from=deps /app/node_modules ./node_modules\nCOPY . .\nENV NEXT_TELEMETRY_DISABLED=1\nENV NODE_ENV=production\nRUN pnpm turbo run build --filter=tracker\n\n# Stage 3: Production\nFROM node:20-alpine AS runner\nWORKDIR /app\nENV NODE_ENV=production\nRUN addgroup --system --gid 1001 nodejs && \\\n    adduser --system --uid 1001 nextjs\nCOPY --from=builder /app/apps/tracker/.next/standalone ./\nCOPY --from=builder /app/apps/tracker/.next/static ./apps/tracker/.next/static\nCOPY --from=builder /app/apps/tracker/public ./apps/tracker/public\nUSER nextjs\nEXPOSE 3000\nCMD [\"node\", \"apps/tracker/server.js\"]",
+              },
+              {
+                heading: ".dockerignore",
+                body: "Prevent unnecessary files from being copied into the Docker image.",
+                code: "# .dockerignore\nnode_modules\n.next\n.git\n*.md\n.env*.local\ndist\ncoverage",
+              },
+            ],
+          },
+        },
+        {
+          title: "docker-compose for Full Stack",
+          description:
+            "Define the entire stack in one docker-compose.yml with PostgreSQL and the Next.js app.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "docker-compose.yml",
+                body: "docker-compose defines all services, their dependencies, volumes, and environment variables.",
+                code: "version: \"3.8\"\n\nservices:\n  db:\n    image: postgres:16-alpine\n    restart: unless-stopped\n    environment:\n      POSTGRES_USER: postgres\n      POSTGRES_PASSWORD: postgres\n      POSTGRES_DB: tracker\n    ports:\n      - \"5432:5432\"\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      timeout: 5s\n      retries: 5\n\n  app:\n    build:\n      context: .\n      dockerfile: Dockerfile\n    restart: unless-stopped\n    ports:\n      - \"3000:3000\"\n    environment:\n      DATABASE_URL: postgres://postgres:postgres@db:5432/tracker\n    depends_on:\n      db:\n        condition: service_healthy\n\nvolumes:\n  pgdata:",
+              },
+              {
+                heading: "Running the Stack",
+                body: "Common docker-compose commands for managing the full stack.",
+                code: "# Start everything\ndocker compose up -d\n\n# View logs\ndocker compose logs -f\n\n# View app logs only\ndocker compose logs -f app\n\n# Stop everything\ndocker compose down\n\n# Stop and remove volumes (fresh start)\ndocker compose down -v\n\n# Rebuild after code changes\ndocker compose up -d --build",
+              },
+            ],
+          },
+        },
+        {
+          title: "Cloud & Dockerization Exercise + Quiz",
+          description:
+            "Containerize the Student Progress Tracker and test your Docker knowledge.",
+          order: 4,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the Docker exercise by containerizing the Student Progress Tracker.",
+          },
+          exercises: [
+            {
+              title: "Containerize the Student Progress Tracker",
+              instructions:
+                "No exercise repo — containerize your actual tracker project: write a production Dockerfile with multi-stage build, write a .dockerignore file, write a docker-compose.yml with PostgreSQL 16 Alpine service with healthcheck, app service that depends on db being healthy, named volume for database persistence, environment variable configuration, add a seed service that runs migrations and seeds on first start, test docker compose up -d and confirm the app works at localhost:3000, test docker compose down then docker compose up -d and confirm data persists, and document the deployment process in a docs/deployment.md file.",
+              starterCode:
+                "// TODO: Write Dockerfile (multi-stage)\n// TODO: Write .dockerignore\n// TODO: Write docker-compose.yml\n// TODO: Add seed service\n// TODO: Test docker compose up -d\n// TODO: Test data persistence\n// TODO: Write docs/deployment.md",
+              expectedOutput:
+                "A containerized tracker app running in Docker with persistent database and deployment documentation",
+              hintsJson: [
+                "Multi-stage build: deps → builder → runner",
+                "Use depends_on with condition: service_healthy to wait for the database",
+                "Named volumes persist data across container restarts",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "What is the difference between a Docker image and a container?",
+              optionsJson: [
+                "They are the same thing",
+                "Image = blueprint/template; Container = running instance",
+                "Image is larger than a container",
+                "Container is permanent; image is temporary",
+              ],
+              correctAnswer: "Image = blueprint/template; Container = running instance",
+              explanation:
+                "An image is a static blueprint. A container is a running instance of that image.",
+              order: 1,
+            },
+            {
+              question: "Why use a multi-stage Docker build?",
+              optionsJson: [
+                "It is required",
+                "Smaller final image — only includes runtime, not build tools",
+                "It is faster to build",
+                "It uses more memory",
+              ],
+              correctAnswer:
+                "Smaller final image — only includes runtime, not build tools",
+              explanation:
+                "Multi-stage builds separate build dependencies from runtime. The final image only contains what's needed to run the app.",
+              order: 2,
+            },
+            {
+              question: "What does depends_on: condition: service_healthy do?",
+              optionsJson: [
+                "Nothing",
+                "Waits for the database healthcheck to pass before starting the app",
+                "Restarts the app if it crashes",
+                "Runs the app before the database",
+              ],
+              correctAnswer:
+                "Waits for the database healthcheck to pass before starting the app",
+              explanation:
+                "service_healthy ensures the app container waits until the database passes its healthcheck before starting.",
+              order: 3,
+            },
+            {
+              question:
+                "What is a Docker volume and why do you need one for PostgreSQL?",
+              optionsJson: [
+                "A volume is a backup file",
+                "Persistent storage that survives container restarts — without it, data is lost when the container stops",
+                "A volume is a network share",
+                "Volumes are optional for databases",
+              ],
+              correctAnswer:
+                "Persistent storage that survives container restarts — without it, data is lost when the container stops",
+              explanation:
+                "Containers are ephemeral — when they stop, all data inside is lost. Volumes mount persistent storage that survives restarts.",
+              order: 4,
+            },
+            {
+              question: "Why should .env files with real secrets not be committed?",
+              optionsJson: [
+                "They are too large",
+                "Secrets in git are visible to anyone with repo access — use Secret Manager in production",
+                "Git ignores them automatically",
+                "They cause merge conflicts",
+              ],
+              correctAnswer:
+                "Secrets in git are visible to anyone with repo access — use Secret Manager in production",
+              explanation:
+                "Committing secrets to git exposes them to anyone with repository access. Use environment variables or a secret manager in production.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+
+    // ─── Module 18: Real-World Practice ───────────────────────
+    {
+      title: "Real-World Practice",
+      description:
+        "The capstone module: work through pre-filed GitHub Issues on the tracker repo, practicing the full feature delivery lifecycle from issue to merged PR.",
+      slug: "real-world-practice",
+      order: 18,
+      phase: "D",
+      status: "published",
+      lessons: [
+        {
+          title: "Reading Issues and Planning Implementation",
+          description:
+            "Learn the feature delivery lifecycle and how to read and plan from GitHub Issues.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "The Feature Delivery Lifecycle",
+                body: "Every change at Reading Advantage follows this lifecycle. It starts with an Issue and ends with a merged PR.",
+                code: "1. Read the Issue\n   ↓\n2. Understand the acceptance criteria\n   ↓\n3. Create a feature branch: feat/issue-1-description\n   ↓\n4. Implement the change (TDD: write tests first!)\n   ↓\n5. Run lint, typecheck, and tests locally\n   ↓\n6. Commit with conventional commit message\n   ↓\n7. Push the branch\n   ↓\n8. Open a PR referencing the Issue: \"Closes #1\"\n   ↓\n9. Address review feedback\n   ↓\n10. Merge when approved",
+              },
+              {
+                heading: "How to Read an Issue",
+                body: "A good Issue has a description, acceptance criteria, and technical notes. Read all three before writing code.",
+                code: "## Description\nWhat needs to change and why.\n\n## Acceptance Criteria\n- [ ] A checklist of specific requirements\n- [ ] Each item must be true for the Issue to be complete\n\n## Technical Notes\n- Where to make changes\n- Patterns to follow\n- Edge cases to handle",
+              },
+              {
+                heading: "Planning the Implementation",
+                body: "Before writing code, plan the changes: identify new domain functions, router changes, UI changes, and tests needed.",
+                code: "Example Issue: Add module completion percentage\n\n1. Domain function: getModuleCompletionPercentage\n2. Router change: add completionPercentage to dashboard query\n3. UI change: show percentage on module cards\n4. Tests: unit tests for domain function\n\nImplementation order: test → domain → router → UI",
+              },
+            ],
+          },
+        },
+        {
+          title: "Opening PRs and Code Review",
+          description:
+            "Write good PR descriptions, open PRs, and practice code review etiquette.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Write a Good PR Description",
+                body: "A good PR description makes review fast and painless. Include summary, changes, testing steps, and screenshots.",
+                code: "## Summary\nAdds module completion percentage to the dashboard.\n\nCloses #1\n\n## Changes\n- Added getModuleCompletionPercentage domain function\n- Updated dashboard tRPC query\n- Updated ModuleCard component\n\n## Testing\n- [x] Unit tests pass\n- [x] Lint passes\n- [x] Manually tested on dashboard\n\n## Screenshots\nBefore: Module card shows \"3/6 lessons\"\nAfter: Module card shows \"3/6 lessons (50%)\"",
+              },
+              {
+                heading: "Code Review Etiquette",
+                body: "When receiving review feedback: read all comments first, address every comment, explain respectfully if you disagree, push fixes as new commits, and re-request review.",
+                code: "When reviewing someone else's code:\n1. Start with something positive\n2. Be specific: \"Line 42: This could be simplified to...\"\n3. Distinguish severity:\n   🔴 Blocking — must fix (bugs, security, missing tests)\n   🟡 Suggestion — nice to have\n   🟢 Nit — pure preference\n4. Don't block on nits",
+              },
+            ],
+          },
+        },
+        {
+          title: "Continued Practice — Medium Difficulty Issues",
+          description:
+            "Work independently on medium-difficulty Issues using the full workflow.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Independent Work",
+                body: "Work on Issues independently, following the full workflow. The instructor is available for questions but does not provide step-by-step guidance.",
+                code: "Tips for medium Issues:\n- Break the Issue into smaller sub-tasks\n- Commit after each sub-task (atomic commits)\n- If stuck, write a comment on the Issue\n- Use assertCan() for any new domain functions\n- All new code needs tests\n\nExample Issues:\n- #3: Implement lesson prerequisite checks\n- #5: Add email validation to login form",
+              },
+            ],
+          },
+        },
+        {
+          title: "Final Practice and Retrospective",
+          description:
+            "Finish remaining Issues and reflect on the entire 85-lesson journey.",
+          order: 4,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Course Retrospective",
+                body: "Reflect on the entire bootcamp journey. What was challenging? What took the longest to click? How confident do you feel about joining the Reading Advantage codebase?",
+                code: "By the end of this bootcamp, you can:\n✅ Set up a professional dev environment (VS Code, Node.js 20, pnpm 8.15.8)\n✅ Use Git/GitHub with Conventional Commits\n✅ Build responsive web pages with HTML/CSS\n✅ Write interactive apps with JavaScript/TypeScript\n✅ Test your code with Vitest 4.1.5\n✅ Build UIs with React 19.2.5\n✅ Fetch data from APIs\n✅ Build full-stack apps with Next.js 16.0.0\n✅ Design schemas with Drizzle ORM 0.44.7\n✅ Build type-safe APIs with tRPC 11.17.0\n✅ Implement auth and RBAC\n✅ Add i18n with next-intl 4.11.0\n✅ Integrate AI with Vercel AI SDK 4.3.19\n✅ Understand monorepo architecture\n✅ Containerize apps with Docker\n✅ Work with GitHub Issues, PRs, and code review",
+              },
+              {
+                heading: "What's Next",
+                body: "You are ready to build real software. Join the Reading Advantage codebase — the architecture is familiar now. The AI chat tutor is always available for questions.",
+                code: "🎉 Congratulations! You've completed the Full-Stack Web Development Intern Bootcamp.\n\n18 units. 85 class periods. 4 portfolio projects.\n1 complete full-stack application from database to deployment.\n\nYou're ready to build real software.",
+              },
+            ],
+          },
         },
       ],
     },
