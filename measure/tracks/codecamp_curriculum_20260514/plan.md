@@ -18,47 +18,47 @@ Add `phase` column to the modules table and generate the migration.
   - [ ] Test that all 4 phases return correct module counts
 - [ ] Task: Measure — User Manual Verification 'Schema Extension'
 
-## Phase 2: Rewrite Seed Data — Phase A (Modules 1–6, 29 lessons)
+## Phase 2: Rewrite Seed Data — Phase A (Modules 1–6, 29 lessons) [checkpoint: 4f7bdce]
 
 Replace the old 5-module seed with Phase A modules. Source: `measure/curriculum/unit-01-class-period-plan.md` through `unit-06-class-period-plan.md`.
 
-- [ ] Task: Write Module 1 seed (Dev Environment Setup, 2 lessons)
-  - [ ] Module: `{ title: "Dev Environment Setup", slug: "dev-environment", order: 1, phase: "A", status: "published" }`
-  - [ ] Lesson 1 (theory): Terminal, Node.js 20, pnpm 8.15.8 — contentJson with sections on terminal basics, installing Node, installing pnpm
-  - [ ] Lesson 2 (quiz): Dev environment quiz — 5 questions on terminal commands, Node.js version, pnpm vs npm
-- [ ] Task: Write Module 2 seed (Git & GitHub Fundamentals, 4 lessons)
-  - [ ] Lesson 1 (theory): Git basics — init, add, commit, Conventional Commits
-  - [ ] Lesson 2 (theory): GitHub — remotes, push, pull, Issues
-  - [ ] Lesson 3 (exercise): Branching, forking, pull requests, merge conflicts
-  - [ ] Lesson 4 (quiz): Git & GitHub quiz — 5 questions
-- [ ] Task: Write Module 3 seed (HTML & CSS Crash Course, 6 lessons)
-  - [ ] Lesson 1 (theory): Semantic HTML structure
-  - [ ] Lesson 2 (theory): CSS basics — selectors, colors, box model
-  - [ ] Lesson 3 (theory): Flexbox layouts
-  - [ ] Lesson 4 (theory): CSS Grid layouts
-  - [ ] Lesson 5 (theory): Responsive design with media queries
-  - [ ] Lesson 6 (exercise + quiz): Card layout exercise + HTML/CSS quiz
-- [ ] Task: Write Module 4 seed (JavaScript Fundamentals, 8 lessons)
-  - [ ] Lesson 1 (theory): Variables, types, operators
-  - [ ] Lesson 2 (theory): Functions and scope
-  - [ ] Lesson 3 (theory): DOM manipulation
-  - [ ] Lesson 4 (theory): Events and form handling
-  - [ ] Lesson 5 (theory): Arrays and objects
-  - [ ] Lesson 6 (theory): Async/await and Promises
-  - [ ] Lesson 7 (theory): Fetch API and error handling
-  - [ ] Lesson 8 (exercise + quiz): Dynamic searchable list exercise + JavaScript quiz
-- [ ] Task: Write Module 5 seed (TypeScript, 5 lessons)
-  - [ ] Lesson 1 (theory): Type annotations, interfaces, type aliases
-  - [ ] Lesson 2 (theory): Generics and type narrowing
-  - [ ] Lesson 3 (theory): Zod 3.25.76 runtime validation
-  - [ ] Lesson 4 (theory): Converting JavaScript to TypeScript
-  - [ ] Lesson 5 (exercise + quiz): TypeScript conversion exercise + TypeScript quiz
-- [ ] Task: Write Module 6 seed (Testing with Vitest, 4 lessons)
-  - [ ] Lesson 1 (theory): Writing unit tests with Vitest 4.1.5
-  - [ ] Lesson 2 (theory): Mocking with vi.fn() and vi.mock()
-  - [ ] Lesson 3 (theory): Async testing and TDD
-  - [ ] Lesson 4 (exercise + quiz): TDD exercise + Vitest quiz
-- [ ] Task: Measure — User Manual Verification 'Phase A Seed Data'
+- [x] Task: Write Module 1 seed (Dev Environment Setup, 2 lessons) [4f7bdce]
+  - [x] Module: `{ title: "Dev Environment Setup", slug: "dev-environment", order: 1, phase: "A", status: "published" }`
+  - [x] Lesson 1 (theory): Terminal, Node.js 20, pnpm 8.15.8 — contentJson with sections on terminal basics, installing Node, installing pnpm
+  - [x] Lesson 2 (quiz): Dev environment quiz — 5 questions on terminal commands, Node.js version, pnpm vs npm
+- [x] Task: Write Module 2 seed (Git & GitHub Fundamentals, 4 lessons) [4f7bdce]
+  - [x] Lesson 1 (theory): Git basics — init, add, commit, Conventional Commits
+  - [x] Lesson 2 (theory): GitHub — remotes, push, pull, Issues
+  - [x] Lesson 3 (exercise): Branching, forking, pull requests, merge conflicts
+  - [x] Lesson 4 (quiz): Git & GitHub quiz — 5 questions
+- [x] Task: Write Module 3 seed (HTML & CSS Crash Course, 6 lessons) [4f7bdce]
+  - [x] Lesson 1 (theory): Semantic HTML structure
+  - [x] Lesson 2 (theory): CSS basics — selectors, colors, box model
+  - [x] Lesson 3 (theory): Flexbox layouts
+  - [x] Lesson 4 (theory): CSS Grid layouts
+  - [x] Lesson 5 (theory): Responsive design with media queries
+  - [x] Lesson 6 (exercise + quiz): Card layout exercise + HTML/CSS quiz
+- [x] Task: Write Module 4 seed (JavaScript Fundamentals, 8 lessons) [4f7bdce]
+  - [x] Lesson 1 (theory): Variables, types, operators
+  - [x] Lesson 2 (theory): Functions and scope
+  - [x] Lesson 3 (theory): DOM manipulation
+  - [x] Lesson 4 (theory): Events and form handling
+  - [x] Lesson 5 (theory): Arrays and objects
+  - [x] Lesson 6 (theory): Async/await and Promises
+  - [x] Lesson 7 (theory): Fetch API and error handling
+  - [x] Lesson 8 (exercise + quiz): Dynamic searchable list exercise + JavaScript quiz
+- [x] Task: Write Module 5 seed (TypeScript, 5 lessons) [4f7bdce]
+  - [x] Lesson 1 (theory): Type annotations, interfaces, type aliases
+  - [x] Lesson 2 (theory): Generics and type narrowing
+  - [x] Lesson 3 (theory): Zod 3.25.76 runtime validation
+  - [x] Lesson 4 (theory): Converting JavaScript to TypeScript
+  - [x] Lesson 5 (exercise + quiz): TypeScript conversion exercise + TypeScript quiz
+- [x] Task: Write Module 6 seed (Testing with Vitest, 4 lessons) [4f7bdce]
+  - [x] Lesson 1 (theory): Writing unit tests with Vitest 4.1.5
+  - [x] Lesson 2 (theory): Mocking with vi.fn() and vi.mock()
+  - [x] Lesson 3 (theory): Async testing and TDD
+  - [x] Lesson 4 (exercise + quiz): TDD exercise + Vitest quiz
+- [x] Task: Measure — User Manual Verification 'Phase A Seed Data' [4f7bdce]
 
 ## Phase 3: Write Seed Data — Phase B (Modules 7–10, 23 lessons)
 
