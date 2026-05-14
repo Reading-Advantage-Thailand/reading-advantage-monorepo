@@ -199,11 +199,11 @@ Build admin-facing features for account management and intern progress tracking.
 
 Build the capstone module with GitHub Issues end-to-end workflow.
 
-- [~] Task: Build Issue→PR workflow visualization in codecamp-advantage
-  - [ ] Display open Issues from the practice repo via GitHub API
-  - [ ] Track intern's PRs linked to Issues
-  - [ ] Show workflow status: issue claimed → branch created → PR opened → review received → merged
-- [ ] Task: Build code review comment display
+- [x] Task: Build Issue→PR workflow visualization in codecamp-advantage [8f2f624]
+  - [x] Display open Issues from the practice repo via GitHub API
+  - [x] Track intern's PRs linked to Issues
+  - [x] Show workflow status: issue claimed → branch created → PR opened → review received → merged
+- [~] Task: Build code review comment display
   - [ ] Pull LLM review comments from `codecamp_pr_reviews`
   - [ ] Display feedback inline with the exercise
   - [ ] Show review history (initial review → revisions → final)
