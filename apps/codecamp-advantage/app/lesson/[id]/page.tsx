@@ -11,7 +11,7 @@ import {
 import { ForkInstruction } from "@/components/fork-instruction";
 import { ReviewHistory } from "@/components/review-history";
 import { WorkflowTracker } from "@/components/workflow-tracker";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useChatStream } from "@/lib/use-chat-stream";
 import { LessonContent } from "@/components/lesson-content";
 
@@ -347,12 +347,13 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
     { enabled: !!existingConv?.id && !conversationId }
   );
 
-  const initialMessages: { role: "user" | "assistant"; content: string }[] = [];
-  if (chatHistory?.messages) {
-    for (const m of chatHistory.messages) {
-      initialMessages.push({ role: m.role as "user" | "assistant", content: m.content });
-    }
-  }
+  const initialMessages = useMemo(() => {
+    if (!chatHistory?.messages) return undefined;
+    return chatHistory.messages.map((m) => ({
+      role: m.role as "user" | "assistant",
+      content: m.content,
+    }));
+  }, [chatHistory]);
 
   const handleSend = async (message: string) => {
     const result = await saveMessage.mutateAsync({
@@ -383,7 +384,7 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
   const { messages, isLoading, sendMessage } = useChatStream({
     lessonId,
     moduleId,
-    initialMessages: initialMessages.length > 0 ? initialMessages : undefined,
+    initialMessages,
     onSend: handleSend,
     onComplete: handleComplete,
   });

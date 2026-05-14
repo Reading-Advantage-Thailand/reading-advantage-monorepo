@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     "@reading-advantage/auth",
     "@reading-advantage/auth-client",
     "@reading-advantage/db",
+    "@reading-advantage/domain",
     "@reading-advantage/types",
     "@reading-advantage/ui",
     "@reading-advantage/utils",

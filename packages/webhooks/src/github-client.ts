@@ -126,7 +126,7 @@ export async function fetchPrDiff(
   }
 
   const res = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}`,
+    `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${pullNumber}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -160,7 +160,7 @@ export async function postPrComment(
   }
 
   const res = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/issues/${pullNumber}/comments`,
+    `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/issues/${pullNumber}/comments`,
     {
       method: "POST",
       headers: {
@@ -194,7 +194,7 @@ export async function postReviewComment(
 
   // Get the latest review ID or create a new review
   const reviewsRes = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}/reviews`,
+    `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${pullNumber}/reviews`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -213,7 +213,7 @@ export async function postReviewComment(
   if (!reviewId) {
     // Create a new review first
     const createRes = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}/reviews`,
+`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${pullNumber}/reviews`,
       {
         method: "POST",
         headers: {
@@ -243,7 +243,7 @@ export async function postReviewComment(
 
   // Add comment to existing review
   const res = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}/reviews/${reviewId}/comments`,
+    `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${pullNumber}/reviews/${reviewId}/comments`,
     {
       method: "POST",
       headers: {
@@ -267,13 +267,21 @@ export async function postReviewComment(
 
 /**
  * Parse a GitHub PR URL into owner, repo, and pull number.
+ * Validates owner and repo to prevent SSRF via crafted URL segments.
  */
 export function parsePrUrl(prUrl: string): GitHubPRInfo | null {
   const match = prUrl.match(/github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)/);
   if (!match) return null;
-  return {
-    owner: match[1],
-    repo: match[2],
-    pullNumber: parseInt(match[3], 10),
-  };
+
+  const owner = match[1];
+  const repo = match[2];
+  const pullNumber = parseInt(match[3], 10);
+
+  // Validate owner and repo match safe GitHub name patterns to prevent SSRF
+  const safeNamePattern = /^[a-zA-Z0-9\-_.]+$/;
+  if (!safeNamePattern.test(owner) || !safeNamePattern.test(repo)) {
+    return null;
+  }
+
+  return { owner, repo, pullNumber };
 }

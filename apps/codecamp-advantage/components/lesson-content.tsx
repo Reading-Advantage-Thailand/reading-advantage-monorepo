@@ -37,7 +37,9 @@ export function LessonContent({ type, content }: LessonContentProps) {
 }
 
 function TheoryContent({ content }: { content: Record<string, unknown> }) {
-  const sections = Array.isArray(content.sections) ? (content.sections as TheorySection[]) : [];
+  const sections = Array.isArray(content.sections)
+    ? content.sections.filter((s): s is TheorySection => typeof s === "object" && s !== null)
+    : [];
 
   if (sections.length === 0) {
     return <EmptyContent />;
@@ -46,7 +48,7 @@ function TheoryContent({ content }: { content: Record<string, unknown> }) {
   return (
     <div className="space-y-8">
       {sections.map((section, index) => (
-        <section key={index} className="space-y-3">
+        <section key={section.heading ?? index} className="space-y-3">
           {section.heading ? (
             <h3 className="text-lg font-semibold text-foreground">{section.heading}</h3>
           ) : null}

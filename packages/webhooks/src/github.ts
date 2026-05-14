@@ -142,7 +142,7 @@ github.post("/pr", async (c) => {
         db: tenantDb,
         user: systemUser,
         tenant: globalTenant,
-        input: { moduleId: "" }, // empty moduleId returns all repos
+        input: {}, // empty input returns all repos
       });
 
       const repo = repos.find((r) => {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAuth } from "@reading-advantage/auth-client";
 import { trpc } from "@/lib/trpc";
+import { getPrDisplayName } from "@/lib/pr-url";
 import { Button } from "@reading-advantage/ui";
 import { Progress } from "@reading-advantage/ui";
 import { Badge } from "@reading-advantage/ui";
@@ -201,7 +202,7 @@ export default function InternDetailPage() {
                       rel="noopener noreferrer"
                       className="text-sm font-medium text-primary hover:underline"
                     >
-                      {review.prUrl.split("/").slice(-4).join("/")}
+                      {getPrDisplayName(review.prUrl)}
                     </a>
                     <Badge
                       variant={

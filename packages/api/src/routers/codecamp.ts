@@ -2,7 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { generateObject } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
-import { router, protectedProcedure } from "../trpc.js";
+import { router, protectedProcedure, adminProcedure } from "../trpc.js";
 import { AuthError } from "@reading-advantage/auth";
 import * as codecamp from "@reading-advantage/domain/codecamp";
 import { reviewExercise, reviewResultSchema } from "@reading-advantage/domain/codecamp";
@@ -388,7 +388,7 @@ export const codecampRouter = router({
       }
     }),
 
-  reviewExercise: protectedProcedure
+  reviewExercise: adminProcedure
     .input(z.object({
       prDiff: z.string().min(1).max(50000),
       moduleId: z.string().uuid().optional(),
@@ -396,9 +396,6 @@ export const codecampRouter = router({
     }))
     .output(reviewResultSchema)
     .mutation(async ({ ctx, input }) => {
-      if (ctx.auth.user.role !== "ADMIN" && ctx.auth.user.role !== "SYSTEM") {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
-      }
       try {
         const openrouter = createOpenAI({
           apiKey: process.env.OPENROUTER_API_KEY,
@@ -441,7 +438,7 @@ export const codecampRouter = router({
 
   // ─── Admin ────────────────────────────────────────────────
 
-  createIntern: protectedProcedure
+  createIntern: adminProcedure
     .input(internAccountInputSchema)
     .output(internAccountResponseSchema)
     .mutation(async ({ ctx, input }) => {
@@ -457,7 +454,7 @@ export const codecampRouter = router({
       }
     }),
 
-  listInterns: protectedProcedure
+  listInterns: adminProcedure
     .output(z.array(internProgressSchema))
     .query(async ({ ctx }) => {
       try {
@@ -471,7 +468,7 @@ export const codecampRouter = router({
       }
     }),
 
-  getInternProgress: protectedProcedure
+  getInternProgress: adminProcedure
     .input(z.object({ userId: z.string() }))
     .output(internDetailSchema)
     .query(async ({ ctx, input }) => {

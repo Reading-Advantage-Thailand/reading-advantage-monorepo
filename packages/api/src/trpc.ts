@@ -33,3 +33,20 @@ const isAuthed = middleware(async ({ ctx, next }) => {
 });
 
 export const protectedProcedure = t.procedure.use(isAuthed);
+
+const isAdmin = middleware(async ({ ctx, next }) => {
+  if (!ctx.auth) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Not authenticated" });
+  }
+  if (ctx.auth.user.role !== "ADMIN" && ctx.auth.user.role !== "SYSTEM") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      auth: ctx.auth,
+    },
+  });
+});
+
+export const adminProcedure = t.procedure.use(isAdmin);

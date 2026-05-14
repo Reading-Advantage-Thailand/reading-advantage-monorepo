@@ -9,6 +9,7 @@ import {
   ExternalLink,
   Circle,
 } from "lucide-react";
+import { getPrDisplayName } from "@/lib/pr-url";
 
 interface ReviewHistoryProps {
   prUrl: string;
@@ -54,19 +55,6 @@ function getStatusConfig(status: ReviewHistoryProps["reviewStatus"]) {
         message: "Great work! Your PR is approved.",
       };
   }
-}
-
-function getPrDisplayName(url: string): string {
-  try {
-    const u = new URL(url);
-    const parts = u.pathname.split("/").filter(Boolean);
-    if (parts.length >= 4) {
-      return `${parts[0]}/${parts[1]}/pull/${parts[3]}`;
-    }
-  } catch {
-    // fall through
-  }
-  return url;
 }
 
 function getTimelineStepStatus(

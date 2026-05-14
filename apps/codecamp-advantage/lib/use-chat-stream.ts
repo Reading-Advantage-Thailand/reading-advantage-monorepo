@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -29,6 +29,17 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages ?? []);
   const [isLoading, setIsLoading] = useState(false);
   const assistantRef = useRef("");
+
+  // Sync initialMessages into state when they arrive after mount,
+  // but never overwrite messages the user has already sent.
+  useEffect(() => {
+    setMessages((prev) => {
+      if (prev.length > 0 || !initialMessages || initialMessages.length === 0) {
+        return prev;
+      }
+      return initialMessages;
+    });
+  }, [initialMessages]);
 
   const sendMessage = useCallback(
     async (message: string) => {

@@ -371,6 +371,11 @@ export async function saveChatMessage({
   message: string;
   moduleId?: string;
   lessonId?: string;
+  /**
+   * Internal parameter — not exposed to clients via the tRPC schema.
+   * The streaming route uses this to persist assistant messages.
+   * Client-submitted messages always use "user" (enforced by the tRPC schema).
+   */
   role?: "user" | "assistant";
 }>) {
   assertCan(user, "codecamp:chat", tenant);
@@ -647,7 +652,7 @@ export async function getExerciseRepos({
   user,
   tenant,
   input,
-}: DomainInput<{ moduleId: string }>) {
+}: DomainInput<{ moduleId?: string }>) {
   assertCan(user, "codecamp:read", tenant);
 
   const conditions = [];
@@ -719,7 +724,29 @@ export async function createPrReview({
   exerciseRepoId: string;
   prUrl: string;
 }>) {
-  assertCan(user, "codecamp:read", tenant);
+  assertCan(user, "codecamp:submit", tenant);
+
+  // Validate that the exercise repo exists
+  const [repo] = await db
+    .select({ id: codecampExerciseRepos.id, moduleId: codecampExerciseRepos.moduleId })
+    .from(codecampExerciseRepos)
+    .where(eq(codecampExerciseRepos.id, input.exerciseRepoId))
+    .limit(1);
+
+  if (!repo) {
+    throw new Error("Exercise repo not found");
+  }
+
+  // Check for existing review with the same PR URL to prevent duplicates
+  const [existing] = await db
+    .select({ id: codecampPrReviews.id })
+    .from(codecampPrReviews)
+    .where(eq(codecampPrReviews.prUrl, input.prUrl))
+    .limit(1);
+
+  if (existing) {
+    throw new Error("A review for this PR URL already exists");
+  }
 
   const [result] = await db
     .insert(codecampPrReviews)
@@ -751,7 +778,7 @@ export async function updatePrReview({
     .set({
       reviewStatus: input.reviewStatus,
       llmReviewSummary: input.llmReviewSummary ?? null,
-      reviewedAt: new Date(),
+      reviewedAt: input.reviewStatus !== "pending" ? new Date() : sql`${codecampPrReviews.reviewedAt}`,
     })
     .where(eq(codecampPrReviews.id, input.reviewId))
     .returning();
@@ -1099,7 +1126,7 @@ export async function listInterns({
     const approved = internReviews.filter((r) => r.reviewStatus === "approved").length;
 
     const lastActive = internProgress.length > 0
-      ? internProgress.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())[0].updatedAt
+      ? [...internProgress].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())[0].updatedAt
       : null;
 
     // Calculate lesson-based overall progress (consistent with getUserDashboard)
@@ -1197,6 +1224,47 @@ export async function getInternProgress({
       })),
     prReviews: reviews,
   };
+}
+
+// ─── Chat Context ──────────────────────────────────────────
+
+/**
+ * Fetches module and lesson context for the AI chat system prompt.
+ * Replaces raw DB queries previously in the chat API route.
+ */
+export async function getChatContext({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ moduleId?: string; lessonId?: string }>) {
+  assertCan(user, "codecamp:chat", tenant);
+
+  let context = "";
+
+  if (input.moduleId) {
+    const [mod] = await db
+      .select()
+      .from(codecampModules)
+      .where(eq(codecampModules.id, input.moduleId))
+      .limit(1);
+    if (mod) {
+      context += `\n\nCurrent module: ${mod.title} — ${mod.description}`;
+    }
+  }
+
+  if (input.lessonId) {
+    const [lesson] = await db
+      .select()
+      .from(codecampLessons)
+      .where(eq(codecampLessons.id, input.lessonId))
+      .limit(1);
+    if (lesson) {
+      context += `\nCurrent lesson: ${lesson.title} — ${lesson.description}`;
+    }
+  }
+
+  return context;
 }
 
 // ─── Re-exports ───────────────────────────────────────────

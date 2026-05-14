@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { getPrDisplayName } from "@/lib/pr-url";
 import { Button } from "@reading-advantage/ui";
 import {
   GitBranch,
@@ -48,20 +49,6 @@ const STEPS = [
   },
 ];
 
-function getPrRepoName(prUrl: string): string {
-  try {
-    const url = new URL(prUrl);
-    const parts = url.pathname.split("/");
-    // Expected: /owner/repo/pull/123
-    if (parts.length >= 5) {
-      return `${parts[1]}/${parts[2]}/pull/${parts[4]}`;
-    }
-  } catch {
-    // ignore
-  }
-  return prUrl;
-}
-
 export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: ForkInstructionProps) {
   const [prUrl, setPrUrl] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -107,9 +94,14 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
                 </a>
               )}
               {idx === 1 && (
-                <code className="mt-2 block rounded bg-muted px-2 py-1 text-xs font-mono">
-                  git clone {repoUrl.replace(/\.git$/, "").replace("https://github.com/", "git@github.com:")}.git
-                </code>
+                <div className="mt-2 space-y-1">
+                  <code className="block rounded bg-muted px-2 py-1 text-xs font-mono">
+                    git clone {repoUrl.replace(/\.git$/, "")}.git
+                  </code>
+                  <p className="text-xs text-muted-foreground">
+                    Or with SSH: <code className="text-xs">git clone {repoUrl.replace(/\.git$/, "").replace("https://github.com/", "git@github.com:")}.git</code>
+                  </p>
+                </div>
               )}
               {idx === 2 && (
                 <code className="mt-2 block rounded bg-muted px-2 py-1 text-xs font-mono">
@@ -136,6 +128,7 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
               setSubmitted(false);
             }}
             placeholder="https://github.com/owner/repo/pull/123"
+            aria-label="Pull request URL"
             className="flex-1 rounded-lg border bg-background px-3 py-2 text-sm"
           />
           <Button
@@ -164,7 +157,7 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
           <div className="mt-3 rounded-lg bg-muted p-3">
             <div className="flex items-center gap-2">
               <GitPullRequest className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm">{getPrRepoName(prUrl)}</span>
+              <span className="text-sm">{getPrDisplayName(prUrl)}</span>
               {existingReview && (
                 <PrReviewStatusBadge status={existingReview.reviewStatus} />
               )}

@@ -4,9 +4,9 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { db } from "@reading-advantage/db";
 import { requireAuth } from "@reading-advantage/auth";
 import { getAuthToken } from "@reading-advantage/api/context";
+import { createTenantDB } from "@reading-advantage/domain";
+import { getChatContext } from "@reading-advantage/domain/codecamp";
 import { z } from "zod";
-import { codecampModules, codecampLessons } from "@reading-advantage/db/schema";
-import { eq } from "drizzle-orm";
 
 const openrouter = createOpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -30,30 +30,13 @@ Key architectural principles:
 
 Be concise, practical, and reference actual files when helpful. If asked about code, provide working TypeScript examples that follow the monorepo conventions.`;
 
-async function buildSystemPrompt(db: typeof import("@reading-advantage/db").db, moduleId?: string, lessonId?: string) {
-  let context = "";
-  if (moduleId) {
-    const [mod] = await db.select().from(codecampModules).where(eq(codecampModules.id, moduleId)).limit(1);
-    if (mod) {
-      context += `\n\nCurrent module: ${mod.title} — ${mod.description}`;
-    }
-  }
-  if (lessonId) {
-    const [lesson] = await db.select().from(codecampLessons).where(eq(codecampLessons.id, lessonId)).limit(1);
-    if (lesson) {
-      context += `\nCurrent lesson: ${lesson.title} — ${lesson.description}`;
-    }
-  }
-  return BASE_SYSTEM_PROMPT + context;
-}
-
 const chatInputSchema = z.object({
   message: z.string().min(1).max(4000),
   lessonId: z.string().uuid().optional(),
   moduleId: z.string().uuid().optional(),
 });
 
-// ─── Per-user rate limiting (in-memory) ───────────────────
+// ─── Per-user rate limiting (bounded, TTL-cleanup) ───────────
 
 interface RateLimitEntry {
   count: number;
@@ -61,11 +44,22 @@ interface RateLimitEntry {
 }
 
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
-const RATE_LIMIT_MAX_REQUESTS = 30;     // 30 requests per minute
+const RATE_LIMIT_MAX_REQUESTS = 30;      // 30 requests per minute
+const MAX_RATE_LIMIT_ENTRIES = 10000;    // Prevent unbounded memory growth
 
 const rateLimits = new Map<string, RateLimitEntry>();
 
-function checkRateLimit(userId: string): { allowed: boolean; retryAfter?: number } {
+function checkChatRateLimit(userId: string): { allowed: boolean; retryAfter?: number } {
+  // Periodic cleanup: evict stale entries when Map gets large
+  if (rateLimits.size > MAX_RATE_LIMIT_ENTRIES) {
+    const now = Date.now();
+    for (const [key, entry] of rateLimits) {
+      if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+        rateLimits.delete(key);
+      }
+    }
+  }
+
   const now = Date.now();
   const entry = rateLimits.get(userId);
 
@@ -89,8 +83,22 @@ export async function POST(req: NextRequest) {
     const token = await getAuthToken();
     const session = await requireAuth(db, token);
 
+    // Create tenant context for domain function
+    const tenantDb = createTenantDB(db, { schoolId: session.user.schoolId });
+    const user = {
+      id: session.user.id,
+      username: session.user.username ?? "",
+      name: session.user.name ?? "",
+      role: session.user.role as "INTERN" | "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM",
+      schoolId: session.user.schoolId,
+      xp: session.user.xp,
+      level: session.user.level,
+      cefrLevel: session.user.cefrLevel as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
+    };
+    const tenant = { schoolId: session.user.schoolId };
+
     // Rate limit check
-    const rateCheck = checkRateLimit(session.user.id);
+    const rateCheck = checkChatRateLimit(session.user.id);
     if (!rateCheck.allowed) {
       return Response.json(
         { error: "Rate limit exceeded", retryAfter: rateCheck.retryAfter },
@@ -116,7 +124,15 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const systemPrompt = await buildSystemPrompt(db, moduleId, lessonId);
+    // Fetch module/lesson context through domain layer (with auth check)
+    const contextAddition = await getChatContext({
+      db: tenantDb,
+      user,
+      tenant,
+      input: { moduleId, lessonId },
+    });
+
+    const systemPrompt = BASE_SYSTEM_PROMPT + contextAddition;
 
     const result = streamText({
       model: openrouter("openrouter/free"),

@@ -195,6 +195,9 @@ importers:
       '@reading-advantage/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@reading-advantage/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
       '@reading-advantage/types':
         specifier: workspace:*
         version: link:../../packages/types

@@ -79,6 +79,9 @@ export default function HomePage() {
 
   const phases = dashboard?.phases ?? {};
 
+  // Flatten all modules across phases for lock-state computation (computed once)
+  const allModules = Object.values(phases).flatMap((p) => p.modules);
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-12 text-center">
@@ -137,10 +140,7 @@ export default function HomePage() {
 
           const colors = PHASE_COLORS[phaseKey];
 
-          if (phase.modules.length === 0) return null;
-
-          // Flatten all modules across phases for lock-state computation
-          const allModules = Object.values(phases).flatMap((p) => p.modules);
+if (phase.modules.length === 0) return null;
 
           return (
             <section key={phaseKey}>
@@ -261,11 +261,17 @@ function ModuleCard({
           {completedLessons} / {lessonCount} lessons
         </p>
       </div>
-      <Button variant="outline" className="w-full" asChild disabled={isLocked}>
-        <Link href={isLocked ? "#" : `/module/${slug}`}>
-          {isLocked ? "Complete previous module" : t("start")}
-        </Link>
-      </Button>
+      {isLocked ? (
+        <Button variant="outline" className="w-full" disabled aria-disabled="true">
+          Complete previous module
+        </Button>
+      ) : (
+        <Button variant="outline" className="w-full" asChild>
+          <Link href={`/module/${slug}`}>
+            {t("start")}
+          </Link>
+        </Button>
+      )}
     </div>
   );
 }

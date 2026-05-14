@@ -39,14 +39,27 @@ function createQueryBuilder(val: unknown) {
  *   db.select().from(table).where(...).limit(1)
  *   db.select({...}).from(table).innerJoin(...).where(...).limit(1)
  *   db.transaction(async (tx) => { ... })
+ *
+ * If `selectSequence` is provided, each call to `select()` returns the next result
+ * in the sequence (cycling back to the start if exhausted). Otherwise, `selectResults`
+ * is used for all calls.
  */
 export function createMockDb(overrides: {
   insertReturning?: unknown[];
   updateReturning?: unknown[];
   selectResults?: unknown[];
+  selectSequence?: unknown[][];
   transactionFn?: (tx: MockDb) => Promise<unknown>;
 } = {}): MockDb {
-  const resolvedValue = overrides.selectResults ?? [];
+  let selectCallIndex = 0;
+  const getResolvedValue = () => {
+    if (overrides.selectSequence && overrides.selectSequence.length > 0) {
+      const result = overrides.selectSequence[selectCallIndex % overrides.selectSequence.length];
+      selectCallIndex++;
+      return result;
+    }
+    return overrides.selectResults ?? [];
+  };
 
   const mockDb: MockDb = {
     insert: vi.fn().mockReturnValue({
@@ -58,20 +71,23 @@ export function createMockDb(overrides: {
         }),
       }),
     }),
-    select: vi.fn().mockImplementation(() => ({
-      from: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
-        innerJoin: vi.fn().mockReturnValue({
+    select: vi.fn().mockImplementation(() => {
+      const resolvedValue = getResolvedValue();
+      return {
+        from: vi.fn().mockReturnValue({
           where: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
+          }),
+          then(
+            onFulfilled?: (value: unknown) => unknown,
+            onRejected?: (reason: unknown) => unknown
+          ) {
+            return Promise.resolve(resolvedValue).then(onFulfilled, onRejected);
+          },
         }),
-        then(
-          onFulfilled?: (value: unknown) => unknown,
-          onRejected?: (reason: unknown) => unknown
-        ) {
-          return Promise.resolve(resolvedValue).then(onFulfilled, onRejected);
-        },
-      }),
-    })),
+      };
+    }),
     update: vi.fn().mockReturnValue({
       set: vi.fn().mockReturnValue({
         where: vi.fn().mockReturnValue({

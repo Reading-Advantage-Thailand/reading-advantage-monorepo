@@ -777,7 +777,13 @@ describe("getPrReviewsForUser", () => {
 describe("createPrReview", () => {
   it("creates a pending PR review", async () => {
     const review = { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: new Date() };
-    const db = createMockDb({ insertReturning: [review] });
+    const repo = { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Test repo", order: 1, createdAt: new Date() };
+    const db = createMockDb({
+      insertReturning: [review],
+      // 1st select: exercise repo lookup → returns [repo]
+      // 2nd select: duplicate PR review check → returns [] (no duplicate)
+      selectSequence: [[repo], []],
+    });
 
     const result = await createPrReview({
       db: wrapDb(db),
@@ -797,7 +803,7 @@ describe("createPrReview", () => {
 
     await expect(
       createPrReview({ db: wrapDb(db), user: invalidUser, tenant: globalTenant, input: { exerciseRepoId: "r1", prUrl: "https://github.com/org/repo1/pull/1" } })
-    ).rejects.toThrow(/codecamp:read/);
+    ).rejects.toThrow(/codecamp:submit/);
   });
 });
 
