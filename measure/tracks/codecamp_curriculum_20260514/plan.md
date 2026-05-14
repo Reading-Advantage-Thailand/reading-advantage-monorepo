@@ -18,7 +18,7 @@ Add `phase` column to the modules table and generate the migration.
   - [ ] Test that all 4 phases return correct module counts
 - [ ] Task: Measure — User Manual Verification 'Schema Extension'
 
-## Phase 2: Rewrite Seed Data — Phase A (Modules 1–6, 29 lessons) [checkpoint: 4f7bdce]
+## Phase 2: Rewrite Seed Data — Phase A (Modules 1–6, 29 lessons) [checkpoint: 9d19f9a]
 
 Replace the old 5-module seed with Phase A modules. Source: `measure/curriculum/unit-01-class-period-plan.md` through `unit-06-class-period-plan.md`.
 
