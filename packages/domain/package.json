@@ -48,11 +48,11 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@reading-advantage/db": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
+    "@reading-advantage/db": "workspace:*",
     "@reading-advantage/types": "workspace:*",
-    "drizzle-orm": "^0.44.0",
-    "zod": "^3.24.0"
+    "drizzle-orm": "0.44.7",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",

@@ -282,7 +282,7 @@ export type PrReviewUpdate = z.infer<typeof prReviewUpdateSchema>;
 // ─── GitHub Webhook Types ─────────────────────────────────
 
 export const githubWebhookPayloadSchema = z.object({
-  action: z.enum(["opened", "synchronize", "reopened"]),
+  action: z.string(),
   pull_request: z.object({
     html_url: z.string().url(),
     head: z.object({
