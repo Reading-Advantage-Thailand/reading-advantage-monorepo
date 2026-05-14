@@ -371,10 +371,12 @@ export async function saveChatMessage({
   message: string;
   moduleId?: string;
   lessonId?: string;
+  role?: "user" | "assistant";
 }>) {
   assertCan(user, "codecamp:chat", tenant);
 
   let conversationId = input.conversationId;
+  const role = input.role ?? "user";
 
   return db.transaction(async (tx) => {
     if (conversationId) {
@@ -393,7 +395,8 @@ export async function saveChatMessage({
       if (!existing) {
         throw new Error("Conversation not found");
       }
-    } else {
+    } else if (role === "user") {
+      // Only create a new conversation for user messages
       const [conversation] = await tx
         .insert(codecampChatConversations)
         .values({
@@ -404,20 +407,22 @@ export async function saveChatMessage({
         })
         .returning();
       conversationId = conversation.id;
+    } else {
+      throw new Error("Conversation not found");
     }
 
-    const [userMessage] = await tx
+    const [savedMessage] = await tx
       .insert(codecampChatMessages)
       .values({
         conversationId,
-        role: "user",
+        role,
         content: input.message,
       })
       .returning();
 
     return {
       conversationId,
-      message: userMessage,
+      message: savedMessage,
     };
   });
 }

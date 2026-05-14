@@ -176,6 +176,7 @@ export const chatMessageInputSchema = z.object({
   message: z.string().min(1).max(4000),
   moduleId: z.string().uuid().optional(),
   lessonId: z.string().uuid().optional(),
+  role: z.enum(["user", "assistant"]).optional(),
 });
 
 export type ChatMessage = z.infer<typeof chatMessageSchema>;

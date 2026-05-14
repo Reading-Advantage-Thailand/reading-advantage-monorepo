@@ -11,7 +11,10 @@ const openrouter = createOpenAI({
   baseURL: "https://openrouter.ai/api/v1",
 });
 
-const SYSTEM_PROMPT = `You are CodeCamp Advantage AI Tutor, an expert in Next.js, React, TypeScript, and monorepo architecture.
+import { codecampModules, codecampLessons } from "@reading-advantage/db/schema";
+import { eq } from "drizzle-orm";
+
+const BASE_SYSTEM_PROMPT = `You are CodeCamp Advantage AI Tutor, an expert in Next.js, React, TypeScript, and monorepo architecture.
 
 You teach the Reading Advantage monorepo patterns:
 - Next.js 16 App Router with Server Components
@@ -27,6 +30,23 @@ Key architectural principles:
 4. All workspace packages build to dist/ and export built output
 
 Be concise, practical, and reference actual files when helpful. If asked about code, provide working TypeScript examples that follow the monorepo conventions.`;
+
+async function buildSystemPrompt(db: typeof import("@reading-advantage/db").db, moduleId?: string, lessonId?: string) {
+  let context = "";
+  if (moduleId) {
+    const [mod] = await db.select().from(codecampModules).where(eq(codecampModules.id, moduleId)).limit(1);
+    if (mod) {
+      context += `\n\nCurrent module: ${mod.title} — ${mod.description}`;
+    }
+  }
+  if (lessonId) {
+    const [lesson] = await db.select().from(codecampLessons).where(eq(codecampLessons.id, lessonId)).limit(1);
+    if (lesson) {
+      context += `\nCurrent lesson: ${lesson.title} — ${lesson.description}`;
+    }
+  }
+  return BASE_SYSTEM_PROMPT + context;
+}
 
 const chatInputSchema = z.object({
   message: z.string().min(1).max(4000),
@@ -88,7 +108,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { message } = parsed.data;
+    const { message, moduleId, lessonId } = parsed.data;
 
     // Fallback if no API key is configured
     if (!process.env.OPENROUTER_API_KEY) {
@@ -97,9 +117,11 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const systemPrompt = await buildSystemPrompt(db, moduleId, lessonId);
+
     const result = streamText({
       model: openrouter("openrouter/free"),
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       prompt: message,
       maxTokens: 2048,
     });

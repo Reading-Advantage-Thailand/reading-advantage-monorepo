@@ -374,7 +374,62 @@ function QuizComponent({
 
 function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string }) {
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage } = useChatStream({ lessonId, moduleId });
+  const [conversationId, setConversationId] = useState<string | undefined>();
+
+  const { data: conversations } = trpc.codecamp.conversations.useQuery();
+  const saveMessage = trpc.codecamp.saveChatMessage.useMutation();
+
+  // Find existing conversation for this lesson
+  const existingConv = conversations?.find(
+    (c) => c.lessonId === lessonId || c.moduleId === moduleId
+  );
+
+  // Load history on mount when conversation is found
+  const { data: chatHistory } = trpc.codecamp.chatHistory.useQuery(
+    { conversationId: existingConv?.id ?? "" },
+    { enabled: !!existingConv?.id && !conversationId }
+  );
+
+  const initialMessages: { role: "user" | "assistant"; content: string }[] = [];
+  if (chatHistory?.messages) {
+    for (const m of chatHistory.messages) {
+      initialMessages.push({ role: m.role as "user" | "assistant", content: m.content });
+    }
+  }
+
+  const handleSend = async (message: string) => {
+    const result = await saveMessage.mutateAsync({
+      conversationId,
+      message,
+      lessonId,
+      moduleId,
+      role: "user",
+    });
+    if (result.conversationId) {
+      setConversationId(result.conversationId);
+    }
+  };
+
+  const handleComplete = async (message: string) => {
+    const cid = conversationId ?? existingConv?.id;
+    if (cid) {
+      await saveMessage.mutateAsync({
+        conversationId: cid,
+        message,
+        lessonId,
+        moduleId,
+        role: "assistant",
+      });
+    }
+  };
+
+  const { messages, isLoading, sendMessage } = useChatStream({
+    lessonId,
+    moduleId,
+    initialMessages: initialMessages.length > 0 ? initialMessages : undefined,
+    onSend: handleSend,
+    onComplete: handleComplete,
+  });
 
   return (
     <div className="mt-4">

@@ -461,6 +461,43 @@ describe("saveChatMessage", () => {
       saveChatMessage({ db: wrapDb(db), user: student, tenant: globalTenant, input: { conversationId: "c1", message: "Hi" } })
     ).rejects.toThrow(/Conversation not found/);
   });
+
+  it("saves assistant message to existing conversation", async () => {
+    const existingConv = { id: "c1", userId: "st1", title: "Prev", moduleId: null, lessonId: null, createdAt: new Date(), updatedAt: new Date() };
+    const message = { id: "m3", conversationId: "c1", role: "assistant", content: "Here is the answer.", createdAt: new Date() };
+
+    const db = createMockDb();
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          limit: vi.fn().mockResolvedValue([existingConv]),
+        }),
+      }),
+    });
+    db.insert = vi.fn().mockReturnValue({
+      values: vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([message]),
+      }),
+    });
+
+    const result = await saveChatMessage({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { conversationId: "c1", message: "Here is the answer.", role: "assistant" },
+    });
+
+    expect(result.conversationId).toBe("c1");
+    expect(result.message.role).toBe("assistant");
+  });
+
+  it("throws when assistant message has no conversationId", async () => {
+    const db = createMockDb();
+
+    await expect(
+      saveChatMessage({ db: wrapDb(db), user: student, tenant: globalTenant, input: { message: "Hi", role: "assistant" } })
+    ).rejects.toThrow(/Conversation not found/);
+  });
 });
 
 // ─── getChatHistory ───────────────────────────────────────
