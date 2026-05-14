@@ -121,10 +121,10 @@ Evolve existing UI to support 18 modules with phase grouping and exercise workfl
   - [x] Save messages via `trpc.codecamp.saveChatMessage`
   - [x] Streaming chat with `streamText` via route handler
   - [x] System prompt includes current module context
-- [ ] Task: Implement fork instruction component
-  - [ ] Step-by-step UI: fork repo → clone → create branch → code → push → open PR
-  - [ ] Auto-detect PR URL when intern pastes it
-  - [ ] Show LLM review status after PR is detected
+- [x] Task: Implement fork instruction component [pre-existing]
+  - [x] Step-by-step UI: fork repo → clone → create branch → code → push → open PR
+  - [x] Auto-detect PR URL when intern pastes it
+  - [x] Show LLM review status after PR is detected
 - [ ] Task: Measure — User Manual Verification 'Implement Expanded Curriculum UI'
 
 ## Phase 5: Seed Expanded Curriculum Data
@@ -139,11 +139,11 @@ Replace the existing 5-module seed with the full 18-module curriculum.
   - [x] Phase B modules (7–10, 23 lessons): React, API Fundamentals, Next.js Basics, Next.js Advanced
   - [x] Quiz questions per module (3–5 questions each)
   - [x] Exercise repo entries (placeholder URLs — real repos created separately)
-- [ ] Task: Write Phase C seed data
-  - [ ] Phase C modules (11–13, 14 lessons): Databases & ORMs, tRPC & Server Actions, Authentication
-- [ ] Task: Write Phase D seed data
-  - [ ] Phase D modules (14–18, 19 lessons): i18n, AI Integration, Monorepo, Cloud & Docker, Real-World Practice
-  - [ ] Total: 80 lessons across 18 modules
+- [x] Task: Write Phase C seed data [curriculum-track]
+  - [x] Phase C modules (11–13, 14 lessons): Databases & ORMs, tRPC & Server Actions, Authentication
+- [x] Task: Write Phase D seed data [curriculum-track]
+  - [x] Phase D modules (14–18, 19 lessons): i18n, AI Integration, Monorepo, Cloud & Docker, Real-World Practice
+  - [x] Total: 85 lessons across 18 modules
 - [ ] Task: Create portfolio project repositories on GitHub
   - [ ] **Phase A — Personal Portfolio Website**: scaffolded with HTML boilerplate, README with project spec
   - [ ] **Phase B — Learning Dashboard**: React + Next.js scaffold, README with project spec
@@ -166,7 +166,7 @@ Replace the existing 5-module seed with the full 18-module curriculum.
   - [ ] Module 16: Monorepo exploration exercises (no repo — uses real monorepo)
   - [ ] Module 17: Docker exercise repo
   - [ ] Module 18: Real-world Issues repo (pre-filed GitHub Issues on the Phase C+D tracker project)
-- [ ] Task: Update seed script entry in `packages/db`
+- [x] Task: Update seed script entry in `packages/db` [curriculum-track]
 - [ ] Task: Measure — User Manual Verification 'Seed Expanded Curriculum Data'
 
 ## Phase 6: Implement Admin Dashboard
@@ -211,9 +211,9 @@ Build the capstone module with GitHub Issues end-to-end workflow.
 - [ ] Task: Pre-file practice Issues on the Module 18 repo (deferred — external repo setup)
 - [ ] Task: Measure — User Manual Verification 'Implement Real-World Practice'
 
-## Phase 8: Generate Docs & Doctor
+## Phase 8: Generate Docs & Doctor [~]
 
-- [ ] Task: Update project documentation
+- [~] Task: Update project documentation
   - [ ] Verify `codecamp-advantage` entry in `measure/product.md` is accurate
   - [ ] Update `measure/tech-stack.md` with any new dependencies
   - [ ] Update `measure/lessons-learned.md` with insights from this track

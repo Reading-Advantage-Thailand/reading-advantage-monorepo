@@ -29,3 +29,7 @@
 
 - (2026-05-02, shared_backend_api) Fixing package exports and build outputs took ~30 min but unblocked all three apps. Always verify that workspace packages with ESM `.js` imports have proper `dist/` exports before trying to debug Next.js module resolution.
 - (2026-05-02, review_remediation) When adding DB constraints in Drizzle schema, always generate a migration (`drizzle-kit generate`) in the same track. Schema-only constraints don't protect production data until the migration runs.
+- (2026-05-14, codecamp_advantage) Mock-DB unit tests can pass while real DB constraints are violated. Always verify schema alignment with a real database smoke test before considering schema tasks complete.
+- (2026-05-14, codecamp_advantage) GitHub webhook handlers should normalize payload URLs before matching against stored repo URLs (trailing slashes, `.git` suffixes). URL mismatch caused silent webhook drops.
+- (2026-05-14, codecamp_advantage) Streaming LLM responses via `streamText` with `toDataStreamResponse()` require careful client-side handling. The `useChatStream` hook must buffer partial chunks and only persist complete assistant messages to the DB.
+- (2026-05-15, codecamp_advantage) Separating curriculum seed data into a pure data module (`codecamp-curriculum-data.ts`) makes it testable independently from the seed script and enables curriculum content review without DB access.

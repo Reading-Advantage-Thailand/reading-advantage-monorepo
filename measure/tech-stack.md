@@ -36,7 +36,7 @@
 
 | Tool | Purpose |
 |------|---------|
-| Vitest | Unit tests (science-advantage, www-reading-advantage) |
+| Vitest | Unit tests (science-advantage, www-reading-advantage, codecamp-advantage) |
 | Jest | Unit tests (advantage-games, reading-advantage) |
 | Playwright | E2E tests (all apps) |
 
@@ -57,7 +57,8 @@ reading-advantage-monorepo/
 │   ├── science-advantage/
 │   ├── reading-advantage/
 │   ├── primary-advantage/
-│   └── www-reading-advantage/
+│   ├── www-reading-advantage/
+│   └── codecamp-advantage/
 ├── packages/
 │   ├── api/              # tRPC routers (primary product backend)
 │   ├── db/               # Drizzle schema, migrations, client
