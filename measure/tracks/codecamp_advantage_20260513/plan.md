@@ -72,23 +72,23 @@ Write tests for new domain functions and GitHub integration.
 
 Build the fork-based exercise workflow with LLM PR review.
 
-- [~] Task: Create GitHub App and configure credentials
-  - [~] Register GitHub App on the Reading Advantage org with repo + PR permissions (deferred to admin setup)
-  - [~] Store App ID, private key, webhook secret as environment variables
-  - [~] Create `apps/codecamp-advantage/lib/github-app.ts` — GitHub App authentication helper
-- [ ] Task: Implement GitHub webhook endpoint
-  - [ ] Create Hono route in `packages/webhooks` for `/webhooks/github/pr`
-  - [ ] Verify webhook signature
-  - [ ] Parse PR opened/synchronized events
-  - [ ] Trigger domain function to create/update PR review
-  - [ ] Queue LLM review job
-- [ ] Task: Implement LLM PR review pipeline
-  - [ ] Create `packages/domain/src/codecamp/review-exercise.ts` — orchestrates review
-  - [ ] Fetch PR diff via GitHub API
-  - [ ] Build LLM system prompt grounded in the module's learning objectives and exercise rubric
-  - [ ] Call `generateObject` with structured output schema: { passed: boolean, summary: string, comments: Array<{line, body}> }
-  - [ ] Post review comments on the PR via GitHub API
-  - [ ] Update `codecamp_pr_reviews` with review status and summary
+- [x] Task: Create GitHub App and configure credentials [737bef8]
+  - [x] Register GitHub App on the Reading Advantage org with repo + PR permissions (deferred to admin setup)
+  - [x] Store App ID, private key, webhook secret as environment variables
+  - [x] Create `packages/webhooks/src/github-client.ts` — GitHub App authentication helper + PR diff fetch + comment posting
+- [x] Task: Implement GitHub webhook endpoint [737bef8]
+  - [x] Create Hono route in `packages/webhooks` for `/webhooks/github/pr`
+  - [x] Verify webhook signature
+  - [x] Parse PR opened/synchronized events
+  - [x] Trigger domain function to create/update PR review
+  - [x] Queue LLM review job
+- [x] Task: Implement LLM PR review pipeline [737bef8]
+  - [x] Create `packages/domain/src/codecamp/review-exercise.ts` — orchestrates review (pre-existing)
+  - [x] Fetch PR diff via GitHub API
+  - [x] Build LLM system prompt grounded in the module's learning objectives and exercise rubric
+  - [x] Call `generateObject` with structured output schema: { passed: boolean, summary: string, comments: Array<{line, body}> }
+  - [x] Post review comments on the PR via GitHub API
+  - [x] Update `codecamp_pr_reviews` with review status and summary
 - [x] Task: Implement exercise repo management domain functions [pre-existing]
   - [x] `getExerciseRepos({ db, user, tenant, input })` — returns repos for a module
   - [x] `linkExerciseRepo({ db, user, tenant, input })` — admin-only, links repo to module
