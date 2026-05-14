@@ -223,6 +223,6 @@ Build the capstone module with GitHub Issues end-to-end workflow.
   - [x] `pnpm turbo run test --filter=@reading-advantage/domain` — 143 passed
   - [x] `pnpm turbo run test --filter=@reading-advantage/api` — 86 passed
   - [x] `pnpm turbo run test --filter=@reading-advantage/webhooks` — 20 passed
-- [ ] Task: Verify build
-  - [ ] `pnpm turbo run build --filter=codecamp-advantage`
+- [x] Task: Verify build [bc3eeac]
+  - [x] `pnpm turbo run build --filter=codecamp-advantage` — 9 successful, all routes generated
 - [ ] Task: Measure — User Manual Verification 'Generate Docs & Doctor'
