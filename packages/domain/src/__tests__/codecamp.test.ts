@@ -22,6 +22,7 @@ import {
   listInterns,
   getInternProgress,
 } from "../codecamp/index.js";
+import { chatMessageInputSchema } from "@reading-advantage/types";
 import { createMockDb } from "./mock-db.js";
 import { createTenantDB } from "../db-contract.js";
 import type { DB } from "@reading-advantage/db";
@@ -837,6 +838,62 @@ describe("updatePrReview", () => {
       })
     ).rejects.toThrow(/admin:dashboard/);
   });
+
+  it("does not overwrite reviewedAt when status is pending", async () => {
+    const existingReview = {
+      id: "pr1",
+      exerciseRepoId: "r1",
+      userId: "st1",
+      prUrl: "https://github.com/org/repo1/pull/1",
+      reviewStatus: "pending",
+      llmReviewSummary: null,
+      reviewedAt: new Date("2026-01-01T00:00:00Z"),
+      createdAt: new Date(),
+    };
+    const db = createMockDb({ updateReturning: [existingReview] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const result = await updatePrReview({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { reviewId: "pr1", reviewStatus: "pending" },
+    });
+
+    expect(result.reviewStatus).toBe("pending");
+    const setCall = db.update.mock.results[0]?.value?.set?.mock?.calls?.[0]?.[0];
+    if (setCall) {
+      expect(setCall.reviewedAt).not.toBeInstanceOf(Date);
+    }
+  });
+
+  it("sets reviewedAt when status is approved", async () => {
+    const review = {
+      id: "pr1",
+      exerciseRepoId: "r1",
+      userId: "st1",
+      prUrl: "https://github.com/org/repo1/pull/1",
+      reviewStatus: "approved",
+      llmReviewSummary: "Great work!",
+      reviewedAt: new Date(),
+      createdAt: new Date(),
+    };
+    const db = createMockDb({ updateReturning: [review] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const result = await updatePrReview({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { reviewId: "pr1", reviewStatus: "approved", llmReviewSummary: "Great work!" },
+    });
+
+    expect(result.reviewStatus).toBe("approved");
+    const setCall = db.update.mock.results[0]?.value?.set?.mock?.calls?.[0]?.[0];
+    if (setCall) {
+      expect(setCall.reviewedAt).toBeInstanceOf(Date);
+    }
+  });
 });
 
 describe("getPrReviewByPrUrl", () => {
@@ -1244,5 +1301,42 @@ describe("getInternProgress", () => {
     await expect(
       getInternProgress({ db: wrapDb(db), user: student, tenant: globalTenant, input: { userId: "u1" } })
     ).rejects.toThrow(/admin:dashboard/);
+  });
+});
+
+// ─── Schema Security ──────────────────────────────────────
+
+describe("chatMessageInputSchema", () => {
+  it("accepts a message without role", () => {
+    const result = chatMessageInputSchema.safeParse({
+      message: "Hello tutor",
+      moduleId: "550e8400-e29b-41d4-a716-446655440001",
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data).not.toHaveProperty("role");
+    }
+  });
+
+  it("strips role: assistant from client input (injection defense)", () => {
+    const result = chatMessageInputSchema.safeParse({
+      message: "Hello tutor",
+      role: "assistant",
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data).not.toHaveProperty("role");
+    }
+  });
+
+  it("strips role: user from client input (injection defense)", () => {
+    const result = chatMessageInputSchema.safeParse({
+      message: "Hello tutor",
+      role: "user",
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data).not.toHaveProperty("role");
+    }
   });
 });
