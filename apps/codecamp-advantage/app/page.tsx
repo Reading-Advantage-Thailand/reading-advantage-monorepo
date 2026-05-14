@@ -17,12 +17,15 @@ import {
   Database,
   Server,
   Lock,
+  LockKeyhole,
   Languages,
   Sparkles,
   Package,
   Cloud,
   Rocket,
+  GitPullRequest,
 } from "lucide-react";
+import { isModuleLocked } from "@/lib/module-utils";
 
 const PHASE_ORDER = ["A", "B", "C", "D"] as const;
 
@@ -43,6 +46,7 @@ const PHASE_LABELS: Record<string, string> = {
 export default function HomePage() {
   const t = useTranslations("dashboard");
   const { data: dashboard, isLoading } = trpc.codecamp.dashboard.useQuery();
+  const { data: prReviews } = trpc.codecamp.prReviews.useQuery();
 
   if (isLoading) {
     return (
@@ -100,6 +104,32 @@ export default function HomePage() {
         )}
       </div>
 
+      {/* Overall stats — PR review summary */}
+      {prReviews && prReviews.length > 0 && (
+        <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
+          {["pending", "needs_changes", "approved"].map((status) => {
+            const count = prReviews.filter((r) => r.reviewStatus === status).length;
+            if (count === 0) return null;
+            const labels: Record<string, string> = {
+              pending: "Pending Review",
+              needs_changes: "Needs Changes",
+              approved: "Approved",
+            };
+            const colors: Record<string, string> = {
+              pending: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+              needs_changes: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+              approved: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+            };
+            return (
+              <span key={status} className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${colors[status]}`}>
+                <GitPullRequest className="h-3.5 w-3.5" />
+                {count} {labels[status]}
+              </span>
+            );
+          })}
+        </div>
+      )}
+
       <div className="space-y-16">
         {PHASE_ORDER.map((phaseKey) => {
           const phase = phases[phaseKey];
@@ -108,6 +138,9 @@ export default function HomePage() {
           const colors = PHASE_COLORS[phaseKey];
 
           if (phase.modules.length === 0) return null;
+
+          // Flatten all modules across phases for lock-state computation
+          const allModules = Object.values(phases).flatMap((p) => p.modules);
 
           return (
             <section key={phaseKey}>
@@ -151,6 +184,7 @@ export default function HomePage() {
                     completedLessons={mod.completedLessons}
                     lessonCount={mod.lessonCount}
                     phaseColor={colors.border}
+                    isLocked={isModuleLocked(mod.id, allModules)}
                   />
                 ))}
               </div>
@@ -192,6 +226,7 @@ function ModuleCard({
   completedLessons,
   lessonCount,
   phaseColor,
+  isLocked,
 }: {
   icon: React.ReactNode;
   title: string;
@@ -201,12 +236,21 @@ function ModuleCard({
   completedLessons: number;
   lessonCount: number;
   phaseColor: string;
+  isLocked?: boolean;
 }) {
   const t = useTranslations("module");
 
   return (
-    <div className={`rounded-lg border border-l-4 bg-card p-6 text-card-foreground shadow-sm transition-shadow hover:shadow-md ${phaseColor}`}>
-      <div className="mb-4 text-primary">{icon}</div>
+    <div className={`rounded-lg border border-l-4 bg-card p-6 text-card-foreground shadow-sm transition-shadow hover:shadow-md ${phaseColor} ${isLocked ? "opacity-75" : ""}`}>
+      <div className="mb-4 flex items-start justify-between">
+        <div className="text-primary">{icon}</div>
+        {isLocked && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+            <LockKeyhole className="h-3 w-3" />
+            Locked
+          </span>
+        )}
+      </div>
       <h3 className="mb-2 text-xl font-semibold">{title}</h3>
       <p className="mb-4 text-sm text-muted-foreground">{description}</p>
       <div className="mb-4">
@@ -217,8 +261,10 @@ function ModuleCard({
           {completedLessons} / {lessonCount} lessons
         </p>
       </div>
-      <Button variant="outline" className="w-full" asChild>
-        <Link href={`/module/${slug}`}>{t("start")}</Link>
+      <Button variant="outline" className="w-full" asChild disabled={isLocked}>
+        <Link href={isLocked ? "#" : `/module/${slug}`}>
+          {isLocked ? "Complete previous module" : t("start")}
+        </Link>
       </Button>
     </div>
   );
