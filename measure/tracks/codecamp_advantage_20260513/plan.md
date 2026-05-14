@@ -185,15 +185,15 @@ Build admin-facing features for account management and intern progress tracking.
   - [x] Test `createInternAccount` with permission guard (non-admin rejected)
   - [x] Test `listInterns` returns progress summary per intern
   - [x] Test `getInternProgress` returns module completion, quiz scores, PR reviews, last active
-- [~] Task: Build admin dashboard UI
-  - [ ] Admin route group with auth gate (`ADMIN` role required)
-  - [ ] Cohort overview page (`/admin`) — table of interns with progress bars and last active
-  - [ ] Per-intern detail page (`/admin/[userId]`) — module-by-module breakdown, quiz scores, PR review history
-  - [ ] Account creation form (`/admin/new-intern`) — username, display name, initial password
-- [ ] Task: Disable self-registration for codecamp
-  - [ ] Ensure codecamp-advantage auth flow does not expose a signup endpoint
-  - [ ] Only admin-created accounts can access codecamp
-- [ ] Task: Measure — User Manual Verification 'Implement Admin Dashboard'
+- [x] Task: Build admin dashboard UI [6881c7b]
+  - [x] Admin route group with auth gate (`ADMIN` role required)
+  - [x] Cohort overview page (`/admin`) — table of interns with progress bars and last active
+  - [x] Per-intern detail page (`/admin/[userId]`) — module-by-module breakdown, quiz scores, PR review history
+  - [x] Account creation form (`/admin/new-intern`) — username, display name, initial password
+- [x] Task: Disable self-registration for codecamp [6881c7b]
+  - [x] Ensure codecamp-advantage auth flow does not expose a signup endpoint
+  - [x] Only admin-created accounts can access codecamp
+- [~] Task: Measure — User Manual Verification 'Implement Admin Dashboard'
 
 ## Phase 7: Implement Real-World Practice (Module 18)
 
