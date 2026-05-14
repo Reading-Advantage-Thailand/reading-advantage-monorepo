@@ -62,7 +62,7 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
         if (!res.ok) throw new Error("Failed to get response");
 
         const contentType = res.headers.get("content-type") ?? "";
-        if (contentType.includes("text/event-stream") || res.body?.getReader) {
+        if (contentType.includes("text/event-stream")) {
           const reader = res.body?.getReader();
           const decoder = new TextDecoder();
           let assistantMessage = "";

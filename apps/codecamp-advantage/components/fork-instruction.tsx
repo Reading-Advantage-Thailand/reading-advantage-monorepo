@@ -67,8 +67,8 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
   const [submitted, setSubmitted] = useState(false);
   const createPrReview = trpc.codecamp.createPrReview.useMutation();
   const { data: existingReview } = trpc.codecamp.prReviewByPrUrl.useQuery(
-    { prUrl: prUrl || " " },
-    { enabled: prUrl.startsWith("https://github.com/") }
+    { prUrl },
+    { enabled: !!prUrl && prUrl.startsWith("https://github.com/") }
   );
 
   const isValidPrUrl =
@@ -108,7 +108,7 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
               )}
               {idx === 1 && (
                 <code className="mt-2 block rounded bg-muted px-2 py-1 text-xs font-mono">
-                  git clone {repoUrl.replace("https://github.com/", "git@github.com:")}.git
+                  git clone {repoUrl.replace(/\.git$/, "").replace("https://github.com/", "git@github.com:")}.git
                 </code>
               )}
               {idx === 2 && (

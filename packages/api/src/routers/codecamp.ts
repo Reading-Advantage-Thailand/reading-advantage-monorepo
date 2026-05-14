@@ -396,6 +396,9 @@ export const codecampRouter = router({
     }))
     .output(reviewResultSchema)
     .mutation(async ({ ctx, input }) => {
+      if (ctx.auth.user.role !== "ADMIN" && ctx.auth.user.role !== "SYSTEM") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+      }
       try {
         const openrouter = createOpenAI({
           apiKey: process.env.OPENROUTER_API_KEY,

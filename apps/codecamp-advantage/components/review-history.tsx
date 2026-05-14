@@ -157,5 +157,3 @@ export function ReviewHistory({ prUrl, reviewStatus, summary }: ReviewHistoryPro
     </div>
   );
 }
-
-

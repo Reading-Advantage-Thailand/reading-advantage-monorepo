@@ -5,14 +5,13 @@ import { db } from "@reading-advantage/db";
 import { requireAuth } from "@reading-advantage/auth";
 import { getAuthToken } from "@reading-advantage/api/context";
 import { z } from "zod";
+import { codecampModules, codecampLessons } from "@reading-advantage/db/schema";
+import { eq } from "drizzle-orm";
 
 const openrouter = createOpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
   baseURL: "https://openrouter.ai/api/v1",
 });
-
-import { codecampModules, codecampLessons } from "@reading-advantage/db/schema";
-import { eq } from "drizzle-orm";
 
 const BASE_SYSTEM_PROMPT = `You are CodeCamp Advantage AI Tutor, an expert in Next.js, React, TypeScript, and monorepo architecture.
 

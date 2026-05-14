@@ -201,7 +201,7 @@ export default function InternDetailPage() {
                       rel="noopener noreferrer"
                       className="text-sm font-medium text-primary hover:underline"
                     >
-                      {review.prUrl.split("/").slice(-2).join("/")}
+                      {review.prUrl.split("/").slice(-4).join("/")}
                     </a>
                     <Badge
                       variant={

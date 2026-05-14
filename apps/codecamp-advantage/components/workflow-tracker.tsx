@@ -64,13 +64,13 @@ export function WorkflowTracker({ issueTitle, issueNumber, steps }: WorkflowTrac
                   : `pending: ${step.label}`
               }
             >
-              <div className="mt-0.5 shrink-0">
+              <div className="mt-0.5 shrink-0" aria-hidden="true">
                 {step.status === "completed" ? (
-                  <CheckCircle className="h-5 w-5 text-green-600" aria-label="completed" />
+                  <CheckCircle className="h-5 w-5 text-green-600" />
                 ) : step.status === "in_progress" ? (
-                  <Loader2 className="h-5 w-5 animate-spin text-primary" aria-label="in progress" />
+                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
                 ) : (
-                  <Circle className="h-5 w-5 text-muted-foreground" aria-label="pending" />
+                  <Circle className="h-5 w-5 text-muted-foreground" />
                 )}
               </div>
               <div className="flex-1">
