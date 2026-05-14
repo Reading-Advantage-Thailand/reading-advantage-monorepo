@@ -1,6 +1,6 @@
 # Implementation Plan: codecamp-advantage Curriculum Implementation
 
-## Phase 1: Schema Extension
+## Phase 1: Schema Extension [checkpoint: 6f3a48f]
 
 Add `phase` column to the modules table and generate the migration.
 
