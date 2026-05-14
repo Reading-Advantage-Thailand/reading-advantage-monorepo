@@ -1,0 +1,10 @@
+Task: Build code review comment display
+
+Summary: Added ReviewHistory component with visual timeline for PR review lifecycle and integrated it into the lesson page exercise section.
+
+Changes:
+- components/review-history.tsx — review history display with status badge, feedback summary, and 4-step timeline (PR Submitted → First Review → Revisions → Approved)
+- components/__tests__/review-history.test.tsx — 6 unit tests covering all review states
+- app/lesson/[id]/page.tsx — integrated ReviewHistory and WorkflowTracker into exercise section; removed unused PrReviewBadge
+
+The timeline visualizes where the intern is in the review process, making it clear what actions are needed next.
