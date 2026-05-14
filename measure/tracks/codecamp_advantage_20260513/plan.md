@@ -116,11 +116,11 @@ Evolve existing UI to support 18 modules with phase grouping and exercise workfl
   - [x] Embed exercise instructions with repo links
   - [x] Display quiz component with immediate scoring
   - [x] Show PR review feedback inline (pull from `codecamp_pr_reviews`)
-- [ ] Task: Connect chat tutor to tRPC
-  - [ ] Load conversation history on mount via `trpc.codecamp.chatHistory`
-  - [ ] Save messages via `trpc.codecamp.saveChatMessage`
-  - [ ] Streaming chat with `streamText` via route handler
-  - [ ] System prompt includes current module context
+- [x] Task: Connect chat tutor to tRPC [817f78c]
+  - [x] Load conversation history on mount via `trpc.codecamp.chatHistory`
+  - [x] Save messages via `trpc.codecamp.saveChatMessage`
+  - [x] Streaming chat with `streamText` via route handler
+  - [x] System prompt includes current module context
 - [ ] Task: Implement fork instruction component
   - [ ] Step-by-step UI: fork repo → clone → create branch → code → push → open PR
   - [ ] Auto-detect PR URL when intern pastes it
