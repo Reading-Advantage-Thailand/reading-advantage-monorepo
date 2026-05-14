@@ -1,0 +1,8 @@
+Task: Delete old seed data completely
+
+Summary: Verified no references to old 5 placeholder modules in codebase.
+- Grep search confirmed zero code references to slugs: nextjs-app-router, trpc-domain, auth-multitenancy, monorepo-patterns
+- drizzle-orm references are all legitimate (package imports, curriculum lesson content)
+- Seed script (codecamp-seed.ts) is idempotent via slug-based existence check
+
+Files: measure/tracks/codecamp_curriculum_20260514/plan.md
