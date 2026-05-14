@@ -26,7 +26,7 @@ describe("ReviewHistory", () => {
     );
 
     expect(screen.getByText(/Awaiting first review/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/timeline step pending/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/review timeline: pending/i)).toBeInTheDocument();
   });
 
   it("shows approved state with success message", () => {

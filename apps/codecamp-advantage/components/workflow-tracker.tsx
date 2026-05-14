@@ -24,7 +24,7 @@ const STEP_ICONS: Record<string, React.ReactNode> = {
 };
 
 export function WorkflowTracker({ issueTitle, issueNumber, steps }: WorkflowTrackerProps) {
-  const allCompleted = steps.every((s) => s.status === "completed");
+  const allCompleted = steps.length > 0 && steps.every((s) => s.status === "completed");
 
   return (
     <div className="space-y-4">
