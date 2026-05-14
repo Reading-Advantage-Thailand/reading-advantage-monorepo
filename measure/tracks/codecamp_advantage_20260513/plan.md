@@ -195,18 +195,11 @@ Build admin-facing features for account management and intern progress tracking.
   - [x] Only admin-created accounts can access codecamp
 - [~] Task: Measure — User Manual Verification 'Implement Admin Dashboard'
 
-## Phase 7: Implement Real-World Practice (Module 18)
+## Phase 7: Implement Real-World Practice (Module 18) [~]
 
 Build the capstone module with GitHub Issues end-to-end workflow.
 
-- [ ] Task: Create GitHub Issue templates for Module 18 practice repo
-  - [ ] Bug fix template
-  - [ ] Feature request template
-  - [ ] Refactor template
-- [ ] Task: Pre-file practice Issues on the Module 18 repo
-  - [ ] 5–10 Issues of varying difficulty covering skills from all prior modules
-  - [ ] Each Issue includes acceptance criteria and hints
-- [ ] Task: Build Issue→PR workflow visualization in codecamp-advantage
+- [~] Task: Build Issue→PR workflow visualization in codecamp-advantage
   - [ ] Display open Issues from the practice repo via GitHub API
   - [ ] Track intern's PRs linked to Issues
   - [ ] Show workflow status: issue claimed → branch created → PR opened → review received → merged
@@ -214,6 +207,8 @@ Build the capstone module with GitHub Issues end-to-end workflow.
   - [ ] Pull LLM review comments from `codecamp_pr_reviews`
   - [ ] Display feedback inline with the exercise
   - [ ] Show review history (initial review → revisions → final)
+- [ ] Task: Create GitHub Issue templates for Module 18 practice repo (deferred — external repo setup)
+- [ ] Task: Pre-file practice Issues on the Module 18 repo (deferred — external repo setup)
 - [ ] Task: Measure — User Manual Verification 'Implement Real-World Practice'
 
 ## Phase 8: Generate Docs & Doctor
