@@ -1,0 +1,9 @@
+Task: Build Issue→PR workflow visualization in codecamp-advantage
+
+Summary: Added WorkflowTracker component that visualizes the 5-step Issue→PR→merge workflow for Module 18 real-world practice.
+
+Changes:
+- components/workflow-tracker.tsx — reusable workflow tracker with step statuses (pending/in_progress/completed)
+- components/__tests__/workflow-tracker.test.tsx — 7 unit tests covering rendering, statuses, and edge cases
+
+The component accepts issue metadata and an array of workflow steps, rendering each with appropriate icons and visual states. Supports the all-completed success state.
