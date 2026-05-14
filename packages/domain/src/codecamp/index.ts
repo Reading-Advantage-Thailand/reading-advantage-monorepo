@@ -799,7 +799,32 @@ export async function getModulesByPhase({
     )
     .orderBy(codecampModules.order);
 
-  return modules;
+  const moduleIds = modules.map((m) => m.id);
+  const lessons = moduleIds.length > 0
+    ? await db
+        .select()
+        .from(codecampLessons)
+        .where(inArray(codecampLessons.moduleId, moduleIds))
+        .orderBy(codecampLessons.order)
+    : [];
+
+  const progress = await db
+    .select()
+    .from(codecampUserProgress)
+    .where(eq(codecampUserProgress.userId, user.id));
+
+  return modules.map((mod) => {
+    const modLessons = lessons.filter((l) => l.moduleId === mod.id);
+    const modProgress = progress.filter((p) => p.moduleId === mod.id);
+    const completed = modProgress.filter((p) => p.status === "completed").length;
+
+    return {
+      ...mod,
+      lessonCount: modLessons.length,
+      completedLessons: completed,
+      progress: modLessons.length > 0 ? Math.round((completed / modLessons.length) * 100) : 0,
+    };
+  });
 }
 
 export async function getModuleWithExercises({

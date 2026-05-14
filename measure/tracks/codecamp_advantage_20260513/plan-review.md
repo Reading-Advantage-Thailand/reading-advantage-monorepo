@@ -1,162 +1,112 @@
-# Code Review: codecamp_advantage_20260513
+# Phase 3 Review: Implement GitHub Integration
 
-**Reviewer**: Full-track change quality review (logical, architectural, security)
-**Date**: 2026-05-14
-**Scope**: Commits `59815da..cb2752e` (8 commits, 43 files, +3526/-42 lines)
-**Revision range**: `59815da` → `46ecb45` → `6a11ba5` → `98b1f3c` → `6b35259` → `08471b2` → `04332ad` → `bf9a408` → `f362273` → `cb2752e`
+**Commit range:** `dbcd9bf` → `HEAD`  
+**Reviewer:** automated phase review  
+**Date:** 2026-05-15
 
-## Summary
+---
 
-The codecamp-advantage track builds schema, domain functions, tRPC router, app scaffold, LLM chat, UI pages, seed data, migrations, and tests. The domain and API layers follow monorepo conventions well — `assertCan()` before mutations, thin routers delegating to thick domain, TenantDB for consistency, Zod contracts. Phase 0 remediation fixed earlier type errors, streaming, and UI wiring. However, a **data-corruption bug** in `updateUserProgress`, a **missing auth gate** on the chat API, and several architectural gaps remain. The most urgent items are the `completedAt` regression and the unauthenticated chat cost exposure.
+## Command Results
 
-## Verification Checks
+| Command | Status | Notes |
+|---|---|---|
+| `pnpm turbo run lint --filter=@reading-advantage/api --filter=@reading-advantage/webhooks --filter=@reading-advantage/domain` | ✅ Pass | 0 errors. 1 unused-var warning in `webhooks/src/__tests__/github-webhook.test.ts:19`. Pre-existing warnings in other packages. |
+| `pnpm turbo run check-types --filter=@reading-advantage/api --filter=@reading-advantage/webhooks --filter=@reading-advantage/domain` | ❌ **FAIL** | 2 errors in `@reading-advantage/api` (see Critical #1). |
+| `CI=true pnpm turbo run test --filter=@reading-advantage/api --filter=@reading-advantage/webhooks --filter=@reading-advantage/domain` | ✅ Pass | 138 domain, 78 api, 8 webhooks tests pass. |
 
-- [x] **Plan Compliance**: Pass — Phase 0 tasks completed; remaining phases scoped correctly
-- [x] **Style Compliance**: Pass — follows domain function pattern, router thin-wrapper pattern, Zod schemas
-- [x] **New Tests**: Yes — 20 domain tests + 17 router tests, all passing
-- [ ] **Test Coverage**: Partial — domain tests rely on complex mock setups with call-count indexing that doesn't reflect real Drizzle behavior; no tests for chat route, UI components, or seed data; no test for `updateUserProgress` partial-update edge case
-- [x] **Test Results**: Passed — domain (108/108), api (65/65)
-- [x] **Lint**: Pass — 0 errors, 3 warnings (2 unused imports in codecamp test, 1 pre-existing)
-- [x] **Type Check**: Pass — all packages clean (fixed in `08471b2`)
-- [x] **Build**: Pass — `pnpm turbo run build --filter=codecamp-advantage` succeeds (Next.js 16.0.0)
-- [ ] **Browser Runtime**: Skipped (no dev server running)
-- [ ] **Security Audit**: Skipped (no npm audit or Snyk in pipeline)
+---
 
-## Active Findings
+## Findings
 
-### [High] `updateUserProgress` partial update resets `completedAt` to null — data corruption
+### 🔴 Critical
 
-- **File**: `packages/domain/src/codecamp/index.ts` lines 441, 459
-- **Context**: The function computes `completedAt` before knowing whether `input.status` is defined: `const completedAt = input.status === "completed" ? now : null`. On the conflict path, when `input.status !== undefined`, it writes the pre-computed `completedAt`. This means: if a user already completed a lesson (has `completedAt` set) and then calls `updateUserProgress` with `status: "in_progress"` (e.g., re-doing an exercise), their `completedAt` gets wiped to `null`. This silently destroys audit data about when a lesson was first completed.
-- **Impact**: Loss of completion timestamps — critical for progress tracking and admin dashboards.
-- **Fix**: Preserve `completedAt` on regression. Use `COALESCE` so the first completion timestamp is never overwritten:
-  ```typescript
-  completedAt: input.status === "completed"
-    ? sql`COALESCE(${codecampUserProgress.completedAt}, ${now})`
-    : input.status !== undefined
-      ? sql`${codecampUserProgress.completedAt}` // don't wipe on regression
-      : sql`${codecampUserProgress.completedAt}`
-  ```
-- **Phase to address**: Before Phase 4 (user progress is displayed in dashboard). Add a test for "already completed → partial update preserves completedAt."
+#### C1. `check-types` failure blocks merge (`@reading-advantage/api`)
+- **`src/routers/codecamp.ts(339)`** — `getModulesByPhase` returns raw DB rows (`{ id, title, …, createdAt, updatedAt }[]`) that are missing the computed fields `lessonCount`, `completedLessons`, and `progress` required by `moduleResponseSchema`.
+- **`src/__tests__/codecamp-router.test.ts(540)`** — `getPrReviewByPrUrl` is inferred in the built `.d.ts` as `Promise<PrReview>` (no `| null`). The test calls `mockResolvedValue(null)`, which TypeScript rejects because `null` is not assignable to `PrReview`.
+- **Root cause:** Drizzle’s query-builder type for `const [result] = await db.select()…` does not include `| undefined` in the destructured element, so `return result ?? null` is collapsed to just `PrReview` in the emitted declaration.
 
-### [High] Chat API route has no rate limiting — LLM cost exposure
+#### C2. Webhook handler cannot look up existing PR reviews
+- `packages/webhooks/src/github.ts` calls `getPrReviewByPrUrl` using `systemUser.id = "system"`.
+- The domain function filters by `eq(codecampPrReviews.userId, user.id)`. Real reviews are created via the tRPC router with the logged-in user’s actual ID.
+- **Impact:** `synchronize` events never find existing reviews (always fall through to the no-op branch). `opened` events also cannot be matched. The webhook is non-functional for its intended purpose.
 
-- **File**: `apps/codecamp-advantage/app/api/chat/route.ts` lines 43-46 (TODO comment)
-- **Context**: Every authenticated user can make unlimited LLM API calls. A single malicious or buggy client loop could run up significant Google AI API charges. The code has a TODO acknowledging this but no mitigation. The existing `checkRateLimit` in auth is scoped for auth failures only.
-- **Impact**: Unbounded LLM cost exposure. No defense against abuse.
-- **Fix**: Implement per-user rate limiting before Phase 4 ships. Even a simple in-memory or Redis counter (e.g., 30 requests/minute per user) would prevent cost explosions.
-- **Phase to address**: Must be implemented before Phase 4 "Connect chat tutor to tRPC." This should block that phase.
+#### C3. Runtime tRPC validation failure on `modulesByPhase`
+- Because `getModulesByPhase` omits `lessonCount`, `completedLessons`, and `progress`, the tRPC `z.array(moduleResponseSchema)` output validation will throw at runtime when the endpoint is hit, producing 500 errors to clients.
 
-### [Medium] `mapDomainError` doesn't return in catch blocks — TypeScript sees `undefined` return
+---
 
-- **File**: `packages/api/src/routers/codecamp.ts` lines 40-48 (and all other procedure catch blocks)
-- **Context**: Every procedure follows this pattern:
-  ```typescript
-  try {
-    return await codecamp.getModulesWithProgress({...});
-  } catch (err) {
-    mapDomainError(err); // returns `never` and always throws, but TS doesn't know
-  }
-  ```
-  `mapDomainError` is typed as `() => never` but TypeScript sees the catch block as completing normally (returning `undefined`). The Zod output validator catches this at runtime, but the type-level contract is wrong. If `mapDomainError` were ever refactored to not throw in some branch, the router would silently return `undefined`.
-- **Impact**: Incorrect type narrowing; potential silent `undefined` return if `mapDomainError` logic changes.
-- **Fix**: Add `throw` or `return` before `mapDomainError(err)`:
-  ```typescript
-  } catch (err) {
-    throw mapDomainError(err);
-  }
-  ```
-  Or extract a reusable wrapper:
-  ```typescript
-  function withDomainError<T>(fn: () => Promise<T>): Promise<T> {
-    return fn().catch((err) => { throw mapDomainError(err); });
-  }
-  ```
+### 🟠 High
 
-### [Medium] Module page slug→moduleId client-side lookup is O(2n) and fragile
+#### H4. Incomplete LLM review pipeline
+- `packages/domain/src/codecamp/review-exercise.ts` implements prompt building and LLM call via injected `generateReview`, but it does **not**:
+  - Fetch the PR diff from the GitHub API.
+  - Post review comments back to GitHub.
+  - Update `codecamp_pr_reviews` with the review status/summary.
+- The plan Phase 3 explicitly requires all three steps.
 
-- **File**: `apps/codecamp-advantage/app/module/[slug]/page.tsx` lines 12-18
-- **Context**: The page fetches ALL modules via `trpc.codecamp.modules.useQuery()`, finds the matching slug client-side with `.find()`, then fetches lessons with a second query gated by `enabled`. Two issues: (1) fetches all modules just to find one — wasteful at 18+ modules, (2) the slug-to-ID resolution is fragile and blocks SSR.
-- **Impact**: Extra data transfer, double round-trip, no server-side rendering possible for module pages.
-- **Fix**: Add a `moduleBySlug` tRPC query that takes a slug and returns the module with its lessons in one round-trip. At minimum, use the `select` option to avoid re-fetching:
-  ```typescript
-  const { data: moduleData } = trpc.codecamp.modules.useQuery(undefined, {
-    select: (data) => data?.find(m => m.slug === slug)
-  });
-  ```
+#### H5. Cross-tenant data leaks in admin queries
+- `listInterns` selects **all** users with `role = "INTERN"` without filtering by `schoolId`.
+- `getInternProgress` accepts any `userId` without verifying that the intern belongs to the caller’s tenant.
+- **Violates** `measure/lessons-learned.md`: *“Cross-tenant authorization checks must be tested explicitly. `assertCan()` only checks role permissions; it does NOT verify school/class ownership.”*
 
-### [Medium] Chat route bypasses shared `createContext` — auth divergence risk
+#### H6. `createInternAccount` lacks duplicate-username guard
+- Inserts directly into `users` without checking whether the username already exists.
+- Will surface as an unhandled DB unique-constraint violation instead of a clean domain error.
 
-- **File**: `apps/codecamp-advantage/app/api/chat/route.ts` lines 39-41
-- **Context**: The chat route manually reads `session_token` cookie and calls `requireAuth(db, token)`, bypassing the shared `createContext` pipeline used by all tRPC routes. This means: (1) auth behavior may diverge from the tRPC path, (2) the chat route can't access tenant-scoped data, (3) if auth logic changes in `createContext`, the chat route won't pick it up.
-- **Impact**: Auth logic drift; maintenance risk.
-- **Fix**: Extract a shared `requireAuthFromRequest(req: Request)` helper that both the chat route and tRPC handler can use. Or restructure the chat route as a tRPC mutation that uses the standard context (noted in Phase 4 plan).
+---
 
-### [Low] Duplicated streaming chat UI code across two pages
+### 🟡 Medium
 
-- **File**: `apps/codecamp-advantage/app/lesson/[id]/page.tsx` lines 220-341 vs `apps/codecamp-advantage/app/chat/page.tsx` lines 14-78
-- **Context**: Both implement identical streaming parsing logic with the `0:` prefix pattern. Any fix to streaming parsing (e.g., handling `e:`, `d:`, `f:` events) must be applied in two places.
-- **Impact**: Maintenance burden.
-- **Fix**: Extract a shared `useChatTutor` hook or `ChatTutor` component. Planned for Phase 4.
+#### M7. `getPrReviewByPrUrl` runtime nullability hidden from TypeScript
+- Even though the function can and does return `null` at runtime, consumers of the built `.d.ts` do not see `| null` in the type.
+- Callers may omit null checks, leading to potential runtime `null` dereferences in frontend or downstream code.
 
-### [Low] `quizQuestionSchema` exposes `correctAnswer` to the client before quiz submission
+#### M8. `checkModulePrerequisite` assumes gapless ordering
+- It looks up the previous module with `eq(codecampModules.order, targetModule.order - 1)`.
+- If modules are ever reordered or gaps are introduced, prerequisite logic will reference the wrong module or return `canStart: true` incorrectly.
 
-- **File**: `packages/types/src/codecamp.ts` lines 33-40; `lessonResponseSchema` line 51
-- **Context**: The `quizQuestionSchema` includes `correctAnswer` and `explanation`, and `lessonResponseSchema` embeds it via `quizQuestions: z.array(quizQuestionSchema)`. A user who inspects the tRPC response in DevTools can see all correct answers before submitting.
-- **Impact**: Quiz cheating vector — answers are visible in network traffic.
-- **Fix**: Create a `quizQuestionPublicSchema` that omits `correctAnswer` and `explanation` for the lesson query. Only return those fields in the `submitQuiz` result. This should be addressed before intern testing begins.
+#### M9. `linkExerciseRepo` does not validate module existence
+- Can create orphaned `codecamp_exercise_repos` rows that reference non-existent `moduleId`s.
 
-### [Low] Unused imports in codecamp test files
+#### M10. Zod version mismatch between `webhooks` and `api`
+- `webhooks` depends on `zod ^4.4.3`; `api` depends on `zod ^3.24.0`.
+- The schemas used are simple enough to be compatible today, but version drift is tech debt that can cause subtle runtime issues (e.g., different `ZodError` shapes).
 
-- **File**: `packages/domain/src/__tests__/codecamp.test.ts` line 10 (`getUserConversations`) and line 25 (`teacher`)
-- **Context**: ESLint warnings from `@typescript-eslint/no-unused-vars`.
-- **Impact**: Code cleanliness.
-- **Fix**: Remove unused imports. Prefix unused variables with `_`.
+---
 
-## Residual Risks (not verifiable locally)
+### 🟢 Low
 
-1. **`updateUserProgress` completedAt regression** — Needs manual verification against real DB. Current tests don't cover the "already completed → partial update" scenario.
-2. **Chat rate limiting** — Must be implemented before any public-facing deployment. No current mitigation.
-3. **Quiz answer exposure** — Currently exploitable via DevTools. Should be fixed before intern testing.
-4. **Streaming chat error handling** — The `0:` prefix parsing in both `ChatTutor` and `ChatPage` doesn't handle `e:` (error), `d:` (data), or `9:` (finish) events from the AI SDK data stream protocol. Partial/error responses may cause silent failures or stuck "Thinking..." states.
-5. **`reactStrictMode` not actually set** — The Phase 0 plan task claims `reactStrictMode: true` was set in `08471b2`, but the key is absent from `apps/codecamp-advantage/next.config.ts`. Next.js defaults to `true`, so this works, but the config should be explicit.
-6. **Next.js 16 middleware deprecation** — Build output warns: `"middleware" file convention is deprecated. Please use "proxy" instead.` The `middleware.ts` using `next-intl/middleware` should be migrated to the `proxy` convention.
-7. **No `INTERN` role defined** — The spec (Phase 6) references an `INTERN` role for admin dashboard RBAC, but `packages/auth/src/permissions.ts` only defines `STUDENT, TEACHER, ADMIN, SYSTEM`. The `INTERN` role must be added before Phase 6.
+#### L11. Phase 6 admin domain functions landed early
+- `createInternAccount`, `listInterns`, and `getInternProgress` are scoped to Phase 6 (“Implement Admin Dashboard”) but are already present in `packages/domain/src/codecamp/index.ts`.
+- No tRPC routers expose them yet, so they are unreachable from the frontend, but they add scope bleed.
 
-## Previously Resolved Findings
+#### L12. Unused import in webhook test
+- `packages/webhooks/src/__tests__/github-webhook.test.ts:19` — `createPrReview` is imported but never referenced. Already flagged by linter.
 
-These findings from the initial scaffold review (`46ecb45..6b35259`) were addressed in Phase 0 remediation:
+---
 
-| Finding | Resolution | Commit |
-|---------|-----------|--------|
-| Type error: `updateUserProgress` destructured as array in router | Fixed — removed destructuring | `08471b2` |
-| Type error: `updateUserProgress` mock returns array in test | Fixed — returns single object | `08471b2` |
-| `updateUserProgress` resets score on partial update (score `?? 0`) | Fixed — uses `sql` template to preserve existing values when input is undefined | `08471b2` |
-| Chat route uses `generateText` instead of `streamText` | Fixed — switched to `streamText` with `toDataStreamResponse()` | `08471b2` |
-| Dashboard uses hardcoded module cards | Fixed — wired to `trpc.codecamp.dashboard.useQuery()` | `bf9a408` |
-| Module page uses hardcoded lesson placeholders | Fixed — wired to `trpc.codecamp.lessons.useQuery()` | `bf9a408` |
-| Lesson page not connected to tRPC | Fixed — wired exercises and quiz to tRPC procedures | `bf9a408` |
-| `ignoreBuildErrors: true` in next.config.ts | Fixed — removed | `08471b2` |
-| `reactStrictMode` not set | Claimed fixed — removed explicit `false`, but `true` not set explicitly (relies on Next.js default) | `08471b2` |
-| Multi-tenancy decision unresolved | Resolved — domain functions accept `tenant: Tenant`, codecamp tables are school-agnostic by design | `98b1f3c` |
-| Exercise evaluation approach | Resolved — domain returns `passed: false`, LLM review determines pass/fail | `98b1f3c` |
-| `getModulesWithProgress` fetches all lessons unfiltered | Partially resolved — uses `inArray` on published module IDs | `04332ad` |
+## Plan Compliance Summary
 
-## Recommendation
+| Phase 3 Task | Status | Notes |
+|---|---|---|
+| Create GitHub App and configure credentials | ⚠️ Partial | `GITHUB_WEBHOOK_SECRET` env var referenced, but no `lib/github-app.ts` auth helper created. |
+| Implement GitHub webhook endpoint | ⚠️ Partial | Hono route, signature verification, and payload parsing are present. PR review lookup is broken (C2); LLM job queuing is a TODO. |
+| Implement LLM PR review pipeline | ⚠️ Partial | `reviewExercise` domain function exists with DI for `generateReview`, but missing GitHub diff fetch, comment posting, and DB update (H4). |
+| Implement exercise repo management domain functions | ✅ Complete | `getExerciseRepos`, `linkExerciseRepo`, `getPrReviewsForUser` implemented. |
+| Implement tRPC routers for new procedures | ⚠️ Partial | All procedures wired, but `modulesByPhase` has a runtime bug (C3). |
+| Measure — User Manual Verification | ❌ Not done | Checkbox still unchecked in `plan.md`. |
 
-The `completedAt` regression and chat rate limiting are the most urgent items. The `mapDomainError` type narrowing is a quick fix that prevents a class of bugs. The remaining items should be addressed in their respective phases.
+---
 
-**Priority order:**
-1. Fix `updateUserProgress` to preserve `completedAt` on regression (before Phase 4)
-2. Add rate limiting to chat API route (blocks Phase 4)
-3. Fix `mapDomainError` return type in router catch blocks
-4. Add `moduleBySlug` query to avoid client-side slug resolution
-5. Unify chat auth with shared `createContext` pipeline
-6. Extract shared `ChatTutor` component (Phase 4)
-7. Create `quizQuestionPublicSchema` that omits answers (before intern testing)
-8. Clean up unused test imports
+## Recommended Fixes (in priority order)
 
-**Phase gate recommendations:**
-- Phase 4 should not start until items 1-2 are resolved
-- Phase 6 will require adding `INTERN` role to auth package
-- Next.js 16 `middleware` → `proxy` migration should be tracked in tech debt
+1. **Fix `getModulesByPhase`** to compute `lessonCount`, `completedLessons`, and `progress` (mirror `getModulesWithProgress`), or introduce a dedicated `moduleListSchema` that omits computed fields and update the router accordingly.
+2. **Fix `getPrReviewByPrUrl` nullability** by replacing `const [result] = …` with `const results = …; return results[0] ?? null;`. Array indexing forces TypeScript to include `| undefined`, which then widens to `| null`. Add an explicit return-type annotation `Promise<PrReview | null>`.
+3. **Fix webhook PR lookup** by adding a system-scoped domain function (e.g., `getPrReviewByPrUrlSystem`) that queries by `prUrl` alone, or by looking up the codecamp user from the GitHub username in the payload.
+4. **Complete the LLM review pipeline:** add a GitHub API client utility, fetch the PR diff, post comments, and call `updatePrReview` after LLM generation.
+5. **Add tenant scoping** to `listInterns` and `getInternProgress`.
+6. **Add duplicate-username guard** to `createInternAccount`.
+
+---
+
+*Review generated by automated phase review agent.*

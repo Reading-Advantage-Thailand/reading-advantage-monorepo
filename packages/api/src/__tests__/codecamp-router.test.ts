@@ -537,7 +537,7 @@ describe("codecamp router", () => {
     });
 
     it("returns null when no review found", async () => {
-      vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null);
+      vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
       const caller = createCaller({ user: testUser, tenant: testTenant });
 
       const result = await caller.codecamp.prReviewByPrUrl({ prUrl: "https://github.com/org/repo1/pull/99" });

@@ -829,12 +829,32 @@ describe("getPrReviewByPrUrl", () => {
 // ─── Expanded Curriculum Queries ──────────────────────────
 
 describe("getModulesByPhase", () => {
-  it("returns modules grouped by phase A", async () => {
+  it("returns modules grouped by phase A with computed fields", async () => {
     const modules = [
       { id: "m1", title: "Module 1", description: "Desc", slug: "mod-1", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },
       { id: "m2", title: "Module 2", description: "Desc", slug: "mod-2", order: 2, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },
     ];
-    const db = createMockDb({ selectResults: modules });
+    const lessons: typeof modules = [];
+    const progress: typeof modules = [];
+
+    const db = createMockDb();
+    let selectCallCount = 0;
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult(modules);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+        orderBy: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult(modules);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+      }),
+    });
 
     const result = await getModulesByPhase({
       db: wrapDb(db),
@@ -844,29 +864,37 @@ describe("getModulesByPhase", () => {
     });
 
     expect(result).toHaveLength(2);
+    expect(result[0]).toHaveProperty("lessonCount");
+    expect(result[0]).toHaveProperty("progress");
   });
 
   it("returns modules for all valid phases", async () => {
-    const modulesA = [
-      { id: "m1", title: "Module 1", description: "Desc", slug: "mod-1", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },
-    ];
-    const modulesB = [
-      { id: "m2", title: "Module 2", description: "Desc", slug: "mod-2", order: 7, phase: "B", status: "published", createdAt: new Date(), updatedAt: new Date() },
-    ];
-    const modulesC = [
-      { id: "m3", title: "Module 3", description: "Desc", slug: "mod-3", order: 11, phase: "C", status: "published", createdAt: new Date(), updatedAt: new Date() },
-    ];
-    const modulesD = [
-      { id: "m4", title: "Module 4", description: "Desc", slug: "mod-4", order: 14, phase: "D", status: "published", createdAt: new Date(), updatedAt: new Date() },
-    ];
+    for (const phase of ["A", "B", "C", "D"] as const) {
+      const modules = [
+        { id: `m-${phase}`, title: `Module ${phase}`, description: "Desc", slug: `mod-${phase.toLowerCase()}`, order: 1, phase, status: "published", createdAt: new Date(), updatedAt: new Date() },
+      ];
+      const lessons: typeof modules = [];
+      const progress: typeof modules = [];
 
-    for (const [phase, expectedModules] of [
-      ["A", modulesA],
-      ["B", modulesB],
-      ["C", modulesC],
-      ["D", modulesD],
-    ] as const) {
-      const db = createMockDb({ selectResults: expectedModules });
+      const db = createMockDb();
+      let selectCallCount = 0;
+      db.select = vi.fn().mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockImplementation(() => {
+            selectCallCount++;
+            if (selectCallCount === 1) return queryResult(modules);
+            if (selectCallCount === 2) return queryResult(lessons);
+            return queryResult(progress);
+          }),
+          orderBy: vi.fn().mockImplementation(() => {
+            selectCallCount++;
+            if (selectCallCount === 1) return queryResult(modules);
+            if (selectCallCount === 2) return queryResult(lessons);
+            return queryResult(progress);
+          }),
+        }),
+      });
+
       const result = await getModulesByPhase({
         db: wrapDb(db),
         user: student,
