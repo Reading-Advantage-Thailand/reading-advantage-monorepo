@@ -7,10 +7,10 @@ import { Button } from "@reading-advantage/ui";
 import {
   ArrowLeft,
   Send,
-  GitPullRequest,
-  CheckCircle,
 } from "lucide-react";
 import { ForkInstruction } from "@/components/fork-instruction";
+import { ReviewHistory } from "@/components/review-history";
+import { WorkflowTracker } from "@/components/workflow-tracker";
 import { useState } from "react";
 import { useChatStream } from "@/lib/use-chat-stream";
 import { LessonContent } from "@/components/lesson-content";
@@ -96,6 +96,28 @@ export default function LessonPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               Complete this exercise by forking the repository, making changes on a branch, and opening a Pull Request.
             </p>
+
+            {/* Module 18 workflow tracker */}
+            {lesson.moduleSlug === "real-world-practice" && moduleReviews.length > 0 && (
+              <div className="mt-6">
+                <h3 className="mb-3 text-sm font-semibold">Your Workflow</h3>
+                {moduleReviews.map((review) => (
+                  <WorkflowTracker
+                    key={review.id}
+                    issueTitle="Practice Issue"
+                    issueNumber={1}
+                    steps={[
+                      { id: "claim", label: "Issue Claimed", description: "Pick an issue to work on", status: "completed" },
+                      { id: "branch", label: "Branch Created", description: "Create a feature branch", status: "completed" },
+                      { id: "pr", label: "PR Opened", description: "Open a pull request", status: review.reviewStatus !== "pending" ? "completed" : "in_progress" },
+                      { id: "review", label: "Review Received", description: "Address feedback", status: review.reviewStatus === "needs_changes" || review.reviewStatus === "approved" ? "completed" : review.reviewStatus === "reviewed" ? "in_progress" : "pending" },
+                      { id: "merge", label: "Merged", description: "Merge to main", status: review.reviewStatus === "approved" ? "in_progress" : "pending" },
+                    ]}
+                  />
+                ))}
+              </div>
+            )}
+
             <div className="mt-4 space-y-6">
               {exerciseRepos.map((repo) => (
                 <ForkInstruction
@@ -107,26 +129,15 @@ export default function LessonPage() {
               ))}
             </div>
             {moduleReviews.length > 0 && (
-              <div className="mt-6 space-y-3">
+              <div className="mt-6 space-y-4">
                 <h3 className="text-sm font-semibold">PR Review Feedback</h3>
                 {moduleReviews.map((review) => (
-                  <div key={review.id} className="rounded-lg bg-muted p-3 text-sm">
-                    <div className="flex items-center gap-2">
-                      <GitPullRequest className="h-4 w-4 text-muted-foreground" />
-                      <a
-                        href={review.prUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                      >
-                        {review.prUrl.split("/").slice(-2).join("/")}
-                      </a>
-                      <PrReviewBadge status={review.reviewStatus} />
-                    </div>
-                    {review.llmReviewSummary && (
-                      <p className="mt-2 text-muted-foreground">{review.llmReviewSummary}</p>
-                    )}
-                  </div>
+                  <ReviewHistory
+                    key={review.id}
+                    prUrl={review.prUrl}
+                    reviewStatus={review.reviewStatus}
+                    summary={review.llmReviewSummary}
+                  />
                 ))}
               </div>
             )}
@@ -162,43 +173,6 @@ export default function LessonPage() {
         </div>
       </div>
     </div>
-  );
-}
-
-function PrReviewBadge({
-  status,
-}: {
-  status: "pending" | "reviewed" | "needs_changes" | "approved";
-}) {
-  const config: Record<string, { label: string; className: string; icon: React.ReactNode }> = {
-    pending: {
-      label: "Pending",
-      className: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
-      icon: <GitPullRequest className="h-3 w-3" />,
-    },
-    reviewed: {
-      label: "Reviewed",
-      className: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-      icon: <GitPullRequest className="h-3 w-3" />,
-    },
-    needs_changes: {
-      label: "Needs Changes",
-      className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-      icon: <GitPullRequest className="h-3 w-3" />,
-    },
-    approved: {
-      label: "Approved",
-      className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-      icon: <CheckCircle className="h-3 w-3" />,
-    },
-  };
-
-  const c = config[status];
-  return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${c.className}`}>
-      {c.icon}
-      {c.label}
-    </span>
   );
 }
 
