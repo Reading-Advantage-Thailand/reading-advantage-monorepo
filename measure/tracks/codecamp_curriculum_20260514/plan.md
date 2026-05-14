@@ -60,38 +60,38 @@ Replace the old 5-module seed with Phase A modules. Source: `measure/curriculum/
   - [x] Lesson 4 (exercise + quiz): TDD exercise + Vitest quiz
 - [x] Task: Measure — User Manual Verification 'Phase A Seed Data' [4f7bdce]
 
-## Phase 3: Write Seed Data — Phase B (Modules 7–10, 23 lessons)
+## Phase 3: Write Seed Data — Phase B (Modules 7–10, 23 lessons) [checkpoint: 048bc4c]
 
 Source: `measure/curriculum/unit-07-class-period-plan.md` through `unit-10-class-period-plan.md`.
 
-- [ ] Task: Write Module 7 seed (React, 7 lessons)
-  - [ ] Lesson 1 (theory): Components and JSX
-  - [ ] Lesson 2 (theory): useState and event handling
-  - [ ] Lesson 3 (theory): useEffect and data fetching
-  - [ ] Lesson 4 (theory): useContext and prop drilling
-  - [ ] Lesson 5 (theory): Lists, keys, and conditional rendering
-  - [ ] Lesson 6 (theory): Forms and custom hooks
-  - [ ] Lesson 7 (exercise + quiz): Filterable data table exercise + React quiz
-- [ ] Task: Write Module 8 seed (API Fundamentals, 5 lessons)
-  - [ ] Lesson 1 (theory): HTTP methods, status codes, REST conventions
-  - [ ] Lesson 2 (theory): Fetch API GET requests
-  - [ ] Lesson 3 (theory): POST, PUT, PATCH, DELETE
-  - [ ] Lesson 4 (theory): Error handling patterns
-  - [ ] Lesson 5 (exercise + quiz): CRUD client exercise + API quiz
-- [ ] Task: Write Module 9 seed (Next.js 16 — Basics, 6 lessons)
-  - [ ] Lesson 1 (theory): App Router file conventions
-  - [ ] Lesson 2 (theory): Server Components vs Client Components
-  - [ ] Lesson 3 (theory): Data fetching in Server Components
-  - [ ] Lesson 4 (theory): Dynamic routes and navigation
-  - [ ] Lesson 5 (theory): Layouts and nested routing
-  - [ ] Lesson 6 (exercise + quiz): Multi-page Next.js app exercise + Next.js basics quiz
-- [ ] Task: Write Module 10 seed (Next.js 16 — Advanced, 5 lessons)
-  - [ ] Lesson 1 (theory): Route Handlers
-  - [ ] Lesson 2 (theory): Middleware
-  - [ ] Lesson 3 (theory): Error boundaries and streaming
-  - [ ] Lesson 4 (theory): next/image, next/font, metadata
-  - [ ] Lesson 5 (exercise + quiz): API routes + streaming exercise + Next.js advanced quiz
-- [ ] Task: Measure — User Manual Verification 'Phase B Seed Data'
+- [x] Task: Write Module 7 seed (React, 7 lessons) [048bc4c]
+  - [x] Lesson 1 (theory): Components and JSX
+  - [x] Lesson 2 (theory): useState and event handling
+  - [x] Lesson 3 (theory): useEffect and data fetching
+  - [x] Lesson 4 (theory): useContext and prop drilling
+  - [x] Lesson 5 (theory): Lists, keys, and conditional rendering
+  - [x] Lesson 6 (theory): Forms and custom hooks
+  - [x] Lesson 7 (exercise + quiz): Filterable data table exercise + React quiz
+- [x] Task: Write Module 8 seed (API Fundamentals, 5 lessons) [048bc4c]
+  - [x] Lesson 1 (theory): HTTP methods, status codes, REST conventions
+  - [x] Lesson 2 (theory): Fetch API GET requests
+  - [x] Lesson 3 (theory): POST, PUT, PATCH, DELETE
+  - [x] Lesson 4 (theory): Error handling patterns
+  - [x] Lesson 5 (exercise + quiz): CRUD client exercise + API quiz
+- [x] Task: Write Module 9 seed (Next.js 16 — Basics, 6 lessons) [048bc4c]
+  - [x] Lesson 1 (theory): App Router file conventions
+  - [x] Lesson 2 (theory): Server Components vs Client Components
+  - [x] Lesson 3 (theory): Data fetching in Server Components
+  - [x] Lesson 4 (theory): Dynamic routes and navigation
+  - [x] Lesson 5 (theory): Layouts and nested routing
+  - [x] Lesson 6 (exercise + quiz): Multi-page Next.js app exercise + Next.js basics quiz
+- [x] Task: Write Module 10 seed (Next.js 16 — Advanced, 5 lessons) [048bc4c]
+  - [x] Lesson 1 (theory): Route Handlers
+  - [x] Lesson 2 (theory): Middleware
+  - [x] Lesson 3 (theory): Error boundaries and streaming
+  - [x] Lesson 4 (theory): next/image, next/font, metadata
+  - [x] Lesson 5 (exercise + quiz): API routes + streaming exercise + Next.js advanced quiz
+- [x] Task: Measure — User Manual Verification 'Phase B Seed Data' [048bc4c]
 
 ## Phase 4: Write Seed Data — Phase C (Modules 11–13, 14 lessons)
 
