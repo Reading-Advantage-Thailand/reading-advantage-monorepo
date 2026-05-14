@@ -99,11 +99,11 @@ Build the fork-based exercise workflow with LLM PR review.
   - [x] Add module phase grouping procedure
 - [~] Task: Measure — User Manual Verification 'Implement GitHub Integration'
 
-## Phase 4: Implement Expanded Curriculum UI
+## Phase 4: Implement Expanded Curriculum UI [~]
 
 Evolve existing UI to support 18 modules with phase grouping and exercise workflow.
 
-- [ ] Task: Update dashboard for 18 modules
+- [~] Task: Update dashboard for 18 modules
   - [ ] Group modules by phase (Foundations, Frameworks, Backend & Data, Production)
   - [ ] Show module cards with progress bars, quiz scores, and PR review status
   - [ ] Enforce module prerequisites (lock later modules until earlier ones complete)
