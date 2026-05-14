@@ -114,8 +114,8 @@ export async function handleLogin(request: NextRequest) {
     return response;
   } catch (error) {
     console.error("Login error:", error instanceof Error ? error.message : "Unknown");
-    if (error instanceof Error && (error as any).cause) {
-      console.error("Login error cause:", (error as any).cause);
+    if (error instanceof Error && "cause" in error) {
+      console.error("Login error cause:", error.cause);
     }
     return NextResponse.json(
       { message: "Internal server error" },

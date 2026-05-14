@@ -24,10 +24,10 @@ Address known issues from plan-review.md before extending the codebase.
 Extend existing schema for GitHub integration and expanded curriculum.
 
 - [x] Task: Add exercise repos and PR reviews tables to `packages/db/src/schema/codecamp.ts`
-  - [ ] `codecamp_exercise_repos` (id, moduleId FK→codecamp_modules, repoUrl, description, order, createdAt)
-  - [ ] `codecamp_pr_reviews` (id, exerciseRepoId FK→codecamp_exercise_repos, userId, prUrl, reviewStatus enum [pending/reviewed/needs_changes/approved], llmReviewSummary text, reviewedAt, createdAt)
-  - [ ] Add `pgEnum("codecamp_review_status", ["pending", "reviewed", "needs_changes", "approved"])`
-  - [ ] Export from `packages/db/src/schema/index.ts`
+  - [x] `codecamp_exercise_repos` (id, moduleId FK→codecamp_modules, repoUrl, description, order, createdAt)
+  - [x] `codecamp_pr_reviews` (id, exerciseRepoId FK→codecamp_exercise_repos, userId, prUrl, reviewStatus enum [pending/reviewed/needs_changes/approved], llmReviewSummary text, reviewedAt, createdAt)
+  - [x] Add `pgEnum("codecamp_review_status", ["pending", "reviewed", "needs_changes", "approved"])`
+  - [x] Export from `packages/db/src/schema/index.ts`
 - [x] Task: Generate and apply Drizzle migration
   - [x] Created manual migration `0007_codecamp_repos_reviews.sql` (drizzle-kit snapshots lack codecamp tables; raw SQL applied)
 - [x] Task: Define Zod contracts for GitHub integration
@@ -131,14 +131,19 @@ Evolve existing UI to support 18 modules with phase grouping and exercise workfl
 
 Replace the existing 5-module seed with the full 18-module curriculum.
 
-- [ ] Task: Write expanded seed data in `packages/db/src/seed/codecamp-seed.ts`
-  - [ ] Phase A modules (1–6, 29 lessons): Dev Environment, Git & GitHub, HTML & CSS, JavaScript, TypeScript, Testing
-  - [ ] Phase B modules (7–10, 23 lessons): React, API Fundamentals, Next.js Basics, Next.js Advanced
+- [x] Task: Write Phase A seed data in `packages/db/src/seed/codecamp-curriculum-data.ts`
+  - [x] Phase A modules (1–6, 29 lessons): Dev Environment, Git & GitHub, HTML & CSS, JavaScript, TypeScript, Testing
+  - [x] Quiz questions per module (3–5 questions each)
+  - [x] Exercise repo entries (placeholder URLs — real repos created separately)
+- [x] Task: Write Phase B seed data in `packages/db/src/seed/codecamp-curriculum-data.ts`
+  - [x] Phase B modules (7–10, 23 lessons): React, API Fundamentals, Next.js Basics, Next.js Advanced
+  - [x] Quiz questions per module (3–5 questions each)
+  - [x] Exercise repo entries (placeholder URLs — real repos created separately)
+- [ ] Task: Write Phase C seed data
   - [ ] Phase C modules (11–13, 14 lessons): Databases & ORMs, tRPC & Server Actions, Authentication
+- [ ] Task: Write Phase D seed data
   - [ ] Phase D modules (14–18, 19 lessons): i18n, AI Integration, Monorepo, Cloud & Docker, Real-World Practice
   - [ ] Total: 80 lessons across 18 modules
-  - [ ] Quiz questions per module (3–5 questions each)
-  - [ ] Exercise repo entries (placeholder URLs — real repos created separately)
 - [ ] Task: Create portfolio project repositories on GitHub
   - [ ] **Phase A — Personal Portfolio Website**: scaffolded with HTML boilerplate, README with project spec
   - [ ] **Phase B — Learning Dashboard**: React + Next.js scaffold, README with project spec

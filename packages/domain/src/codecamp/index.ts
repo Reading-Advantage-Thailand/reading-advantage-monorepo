@@ -10,6 +10,7 @@ import {
   codecampExerciseRepos,
   codecampPrReviews,
   users,
+  accounts,
 } from "@reading-advantage/db/schema";
 import { hashPassword } from "@reading-advantage/auth";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
@@ -605,11 +606,7 @@ export async function linkExerciseRepo({
   description: string;
   order: number;
 }>) {
-  assertCan(user, "codecamp:read", tenant);
-  // Admin-only: only ADMIN and SYSTEM can link repos
-  if (user.role !== "ADMIN" && user.role !== "SYSTEM") {
-    throw new Error("codecamp:read");
-  }
+  assertCan(user, "admin:dashboard", tenant);
 
   const [result] = await db
     .insert(codecampExerciseRepos)
@@ -678,7 +675,7 @@ export async function updatePrReview({
   reviewStatus: "pending" | "reviewed" | "needs_changes" | "approved";
   llmReviewSummary?: string;
 }>) {
-  assertCan(user, "codecamp:read", tenant);
+  assertCan(user, "admin:dashboard", tenant);
 
   const [result] = await db
     .update(codecampPrReviews)
@@ -893,20 +890,34 @@ export async function createInternAccount({
   assertCan(user, "admin:dashboard", tenant);
 
   const passwordHash = await hashPassword(input.password);
+  const userId = crypto.randomUUID();
+  const lowerUsername = input.username.toLowerCase();
 
-  const [result] = await db
-    .insert(users)
-    .values({
-      username: input.username,
-      name: input.name,
-      passwordHash,
-      role: "INTERN",
-      schoolId: null,
-      xp: 0,
-      level: 1,
-      cefrLevel: "A1",
-    })
-    .returning();
+  const result = await db.transaction(async (tx) => {
+    const [created] = await tx
+      .insert(users)
+      .values({
+        id: userId,
+        username: lowerUsername,
+        displayUsername: input.username,
+        name: input.name,
+        role: "INTERN",
+        schoolId: null,
+        xp: 0,
+        level: 1,
+        cefrLevel: "A1",
+      })
+      .returning();
+
+    await tx.insert(accounts).values({
+      id: `${userId}_credential`,
+      userId,
+      providerId: "credential",
+      password: passwordHash,
+    });
+
+    return created;
+  });
 
   return result;
 }

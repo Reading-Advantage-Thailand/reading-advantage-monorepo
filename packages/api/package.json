@@ -15,6 +15,10 @@
     "./routes/auth": {
       "types": "./dist/routes/auth/index.d.ts",
       "import": "./dist/routes/auth/index.js"
+    },
+    "./context": {
+      "types": "./dist/context.d.ts",
+      "import": "./dist/context.js"
     }
   },
   "scripts": {

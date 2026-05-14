@@ -616,7 +616,7 @@ describe("linkExerciseRepo", () => {
         tenant: globalTenant,
         input: { moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1 },
       })
-    ).rejects.toThrow(/codecamp:read/);
+    ).rejects.toThrow(/admin:dashboard/);
   });
 });
 
@@ -672,9 +672,10 @@ describe("updatePrReview", () => {
     const review = { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "approved", llmReviewSummary: "Great work!", reviewedAt: new Date(), createdAt: new Date() };
     const db = createMockDb({ updateReturning: [review] });
 
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await updatePrReview({
       db: wrapDb(db),
-      user: student,
+      user: admin,
       tenant: globalTenant,
       input: { reviewId: "pr1", reviewStatus: "approved", llmReviewSummary: "Great work!" },
     });
@@ -682,6 +683,19 @@ describe("updatePrReview", () => {
     expect(result.reviewStatus).toBe("approved");
     expect(result.llmReviewSummary).toBe("Great work!");
     expect(db.update).toHaveBeenCalled();
+  });
+
+  it("rejects non-admin users", async () => {
+    const db = createMockDb();
+
+    await expect(
+      updatePrReview({
+        db: wrapDb(db),
+        user: student,
+        tenant: globalTenant,
+        input: { reviewId: "pr1", reviewStatus: "approved" },
+      })
+    ).rejects.toThrow(/admin:dashboard/);
   });
 });
 

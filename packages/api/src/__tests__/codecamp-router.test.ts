@@ -62,6 +62,7 @@ describe("codecamp router", () => {
           description: "Desc",
           slug: "module-1",
           order: 1,
+          phase: "A",
           status: "published",
           lessonCount: 5,
           completedLessons: 2,

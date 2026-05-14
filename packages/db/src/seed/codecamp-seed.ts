@@ -9,15 +9,16 @@ import {
   codecampQuizQuestions,
   codecampExerciseRepos,
 } from "../schema/codecamp.js";
-import { getPhaseACurriculumData, getPhaseBCurriculumData } from "./codecamp-curriculum-data.js";
+import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData } from "./codecamp-curriculum-data.js";
 
 async function seed() {
   console.log("Seeding codecamp curriculum...");
 
   const phaseA = getPhaseACurriculumData();
   const phaseB = getPhaseBCurriculumData();
-  const modules = [...phaseA.modules, ...phaseB.modules];
-  const exerciseRepos = [...phaseA.exerciseRepos, ...phaseB.exerciseRepos];
+  const phaseC = getPhaseCCurriculumData();
+  const modules = [...phaseA.modules, ...phaseB.modules, ...phaseC.modules];
+  const exerciseRepos = [...phaseA.exerciseRepos, ...phaseB.exerciseRepos, ...phaseC.exerciseRepos];
 
   let seededModules = 0;
   let seededLessons = 0;

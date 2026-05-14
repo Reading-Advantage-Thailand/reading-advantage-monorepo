@@ -4,7 +4,7 @@ import React from "react";
 import { AuthProvider, useAuth, useSession, useRequireAuth } from "../index.js";
 
 function wrapper({ children }: { children: React.ReactNode }) {
-  return React.createElement(AuthProvider, { children });
+  return <AuthProvider>{children}</AuthProvider>;
 }
 
 beforeEach(() => {

@@ -7,8 +7,8 @@ export async function POST(request: NextRequest) {
     return await handleLogin(request);
   } catch (error) {
     console.error("[login] Full error:", error);
-    if (error instanceof Error && (error as any).cause) {
-      console.error("[login] Error cause:", (error as any).cause);
+    if (error instanceof Error && "cause" in error) {
+      console.error("[login] Error cause:", error.cause);
     }
     throw error;
   }

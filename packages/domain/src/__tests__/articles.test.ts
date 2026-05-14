@@ -5,7 +5,6 @@ import {
   createArticle,
   updateArticle,
 } from "../articles/index.js";
-import { createMockDb } from "./mock-db.js";
 import { createTenantDB } from "../db-contract.js";
 import type { DB } from "@reading-advantage/db";
 
