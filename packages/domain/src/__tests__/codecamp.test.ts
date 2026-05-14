@@ -21,6 +21,7 @@ import {
   createInternAccount,
   listInterns,
   getInternProgress,
+  getChatContext,
 } from "../codecamp/index.js";
 import { chatMessageInputSchema } from "@reading-advantage/types";
 import { createMockDb } from "./mock-db.js";
@@ -1338,5 +1339,86 @@ describe("chatMessageInputSchema", () => {
     if (result.success) {
       expect(result.data).not.toHaveProperty("role");
     }
+  });
+});
+
+// ─── Chat Context ─────────────────────────────────────────
+
+describe("getChatContext", () => {
+  it("returns module context when moduleId is provided", async () => {
+    const moduleRow = {
+      id: "m1",
+      title: "React Fundamentals",
+      description: "Learn React",
+      slug: "react",
+      order: 1,
+      phase: "A",
+      status: "published",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const db = createMockDb({ selectResults: [moduleRow] });
+
+    const result = await getChatContext({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { moduleId: "m1" },
+    });
+
+    expect(result).toContain("React Fundamentals");
+    expect(result).toContain("Learn React");
+  });
+
+  it("returns lesson context when lessonId is provided", async () => {
+    const lessonRow = {
+      id: "l1",
+      moduleId: "m1",
+      title: "JSX Basics",
+      description: "Understanding JSX",
+      type: "theory",
+      order: 1,
+      contentJson: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const db = createMockDb({ selectResults: [lessonRow] });
+
+    const result = await getChatContext({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { lessonId: "l1" },
+    });
+
+    expect(result).toContain("JSX Basics");
+    expect(result).toContain("Understanding JSX");
+  });
+
+  it("returns empty string when no module or lesson is found", async () => {
+    const db = createMockDb({ selectResults: [] });
+
+    const result = await getChatContext({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { moduleId: "missing" },
+    });
+
+    expect(result).toBe("");
+  });
+
+  it("rejects non-codecamp users", async () => {
+    const db = createMockDb();
+    const guest = { id: "g1", username: "guest", name: "Guest", role: "GUEST" as unknown as typeof student.role, schoolId: "s1" };
+
+    await expect(
+      getChatContext({
+        db: wrapDb(db),
+        user: guest,
+        tenant: globalTenant,
+        input: {},
+      })
+    ).rejects.toThrow(/codecamp:chat/);
   });
 });
