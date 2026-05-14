@@ -1,31 +1,54 @@
-# Phase 1 Code Review Findings
+# Phase Code Review Findings
 
-**Track:** codecamp-advantage Curriculum Implementation
-**Phase:** Phase 1 — Schema Extension
-**Review Date:** 2026-05-14
-**Reviewer:** AI Agent (manual review — subagent timed out)
-**Revision Range:** 8654491..HEAD
+## Phase: Phase 2 — Rewrite Seed Data — Phase A (Modules 1–6, 29 lessons)
+## Track: codecamp-advantage Curriculum Implementation
+## Reviewer: change-quality-reviewer subagent
+## Date: 2026-05-14
 
-## Findings Summary
+---
 
-No new Critical, High, Medium, or Low findings were introduced by the Phase 1 changes.
+### Summary
 
-### Pre-existing Issues (Not Caused by Phase 1)
+Phase passes review. All automated checks pass (lint, type check, tests). The implementation matches the plan. Data is comprehensive and accurate.
 
-| Severity | File | Description | Status |
-|----------|------|-------------|--------|
-| High | `packages/domain/src/codecamp/index.ts:899` | `createInternAccount` inserts `passwordHash` into `users` table, but schema has no `passwordHash` column | Pre-existing |
-| Low | `packages/domain/src/__tests__/articles.test.ts:8` | Unused `createMockDb` import | Pre-existing |
+### Findings
 
-## Verification Results
+#### Critical
+- None
 
-| Check | Command | Result |
-|-------|---------|--------|
-| Domain tests | `pnpm turbo run test --filter=@reading-advantage/domain` | ✅ 131/131 passed |
-| DB type check | `pnpm turbo run check-types --filter=@reading-advantage/db` | ✅ Passed |
-| Domain type check | `pnpm turbo run check-types --filter=@reading-advantage/domain` | ❌ Fails on pre-existing `passwordHash` issue |
-| Domain lint | `pnpm turbo run lint --filter=@reading-advantage/domain` | ✅ Passed (1 pre-existing warning) |
+#### High
+- None
 
-## Assessment
+#### Medium (All Fixed)
 
-Phase 1 implementation is correct and safe to proceed.
+1. **Seed script lacked transaction wrapping**
+   - **File:** `packages/db/src/seed/codecamp-seed.ts`
+   - **Fix:** Wrapped entire seed body in `db.transaction()` to prevent partial seed state on failure.
+
+2. **Minor formatting error in quiz option**
+   - **File:** `packages/db/src/seed/codecamp-curriculum-data.ts`
+   - **Fix:** Removed leading space in Module 2 quiz option: `" Neither downloads anything"` → `"Neither downloads anything"`.
+
+3. **Silent skip on orphaned exercise repos**
+   - **File:** `packages/db/src/seed/codecamp-seed.ts`
+   - **Fix:** Added `console.warn` when a repo's moduleSlug does not match any inserted module.
+
+#### Low (All Fixed)
+
+4. **Exercise repo ordering was non-unique**
+   - **File:** `packages/db/src/seed/codecamp-curriculum-data.ts`
+   - **Fix:** Changed `order: 1` to `order: mod.order` so repos reflect module ordering.
+
+5. **Redundant type assertion in test**
+   - **File:** `packages/db/src/__tests__/codecamp-curriculum-data.test.ts`
+   - **Fix:** Removed unnecessary `as Record<string, unknown>` cast.
+
+---
+
+### Verification Commands Run
+
+```bash
+pnpm turbo run lint --filter=@reading-advantage/db      # Passed
+pnpm turbo run check-types --filter=@reading-advantage/db # Passed
+pnpm turbo run test --filter=@reading-advantage/db        # 21/21 passed
+```
