@@ -116,3 +116,7 @@ This file tracks all major tracks for the project.
 - [x] **Track: May 5 Review Remediation** (23/24 tasks)
   *Link: [./archive/remediation_20260505/](./archive/remediation_20260505/)*
   *Status: Complete. 23/24 tasks done (API test backfill deferred). Domain: 83/83 tests (+13 new). Auth: 64/64 tests. Security/auth gaps fixed, logic bugs resolved, TenantDB edge cases hardened.*
+
+- [ ] **Track: Codecamp Review Remediation**
+  *Link: [./tracks/codecamp_review_remediation_20260515/](./tracks/codecamp_review_remediation_20260515/)*
+  Fix 5 High, 10 Medium, and 12 Low findings from codecamp-advantage code review. Security first (admin auth, prompt injection, role injection), then architecture (chat route, admin procedure, rate limiter), data integrity, UI/UX, and test coverage.
