@@ -10,10 +10,10 @@ Add `phase` column to the modules table and generate the migration.
 - [x] Task: Generate and apply Drizzle migration [a9fcfda]
   - [ ] Run `pnpm drizzle-kit generate` to create migration for new column
   - [ ] Apply migration to local database
-- [x] Task: Update `getModulesByPhase` domain function to use `phase` column
+- [x] Task: Update `getModulesByPhase` domain function to use `phase` column [a021829]
   - [ ] Replace the `PHASE_RANGES` order-based logic with `where(eq(codecampModules.phase, input.phase))`
   - [ ] This is more robust than deriving phase from order number
-- [x] Task: Write tests for phase-column queries
+- [x] Task: Write tests for phase-column queries [a021829]
   - [ ] Test `getModulesByPhase` returns only modules in the specified phase
   - [ ] Test that all 4 phases return correct module counts
 - [ ] Task: Measure — User Manual Verification 'Schema Extension'
