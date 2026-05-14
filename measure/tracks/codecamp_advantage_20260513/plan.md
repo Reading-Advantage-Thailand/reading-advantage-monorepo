@@ -107,10 +107,10 @@ Evolve existing UI to support 18 modules with phase grouping and exercise workfl
   - [x] Group modules by phase (Foundations, Frameworks, Backend & Data, Production) — already implemented
   - [x] Show module cards with progress bars and PR review status summary
   - [x] Enforce module prerequisites (lock later modules until earlier ones complete)
-- [ ] Task: Update module detail page
-  - [ ] Display linked exercise repos with fork URL
-  - [ ] Show PR review status for the current user's exercises
-  - [ ] Link to GitHub exercise repos (fork instruction UI)
+- [x] Task: Update module detail page [0f7b0c5]
+  - [x] Display linked exercise repos with fork URL
+  - [x] Show PR review status for the current user's exercises
+  - [x] Link to GitHub exercise repos (fork instruction UI)
 - [ ] Task: Update lesson page
   - [ ] Render lesson content with architecture diagrams
   - [ ] Embed exercise instructions with repo links
