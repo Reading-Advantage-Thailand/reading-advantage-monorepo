@@ -145,7 +145,7 @@ describe("users router", () => {
       const result = await caller.users.list({});
 
       // Output schema strips fields not in userResponseSchema (image, updatedAt)
-      const expected = userRows.map(({ image, updatedAt, ...rest }) => rest);
+      const expected = userRows.map(({ image: _image, updatedAt: _updatedAt, ...rest }) => rest);
       expect(result).toEqual(expected);
       // Verify where clause was built with schoolId condition
       const whereCall = db.select.mock.results[0];
@@ -171,7 +171,7 @@ describe("users router", () => {
       const result = await caller.users.list({ schoolId: testSchoolId2 });
 
       // Output schema strips fields not in userResponseSchema (image, updatedAt)
-      const expected = userRows.map(({ image, updatedAt, ...rest }) => rest);
+      const expected = userRows.map(({ image: _image, updatedAt: _updatedAt, ...rest }) => rest);
       expect(result).toEqual(expected);
     });
 

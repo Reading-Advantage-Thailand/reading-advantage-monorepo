@@ -405,8 +405,8 @@ export const codecampRouter = router({
         async function generateReview(system: string, prompt: string) {
           if (!process.env.OPENROUTER_API_KEY) {
             return {
-              passed: true,
-              summary: "[Mock review — LLM not configured] The code looks good overall. Consider adding more tests and improving variable naming.",
+              passed: false,
+              summary: "[Mock review — LLM not configured] No automated review available. Please ensure OPENROUTER_API_KEY is set for production reviews.",
               comments: [],
             };
           }

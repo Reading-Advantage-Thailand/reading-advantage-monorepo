@@ -7,11 +7,10 @@ import { Button } from "@reading-advantage/ui";
 import {
   ArrowLeft,
   Send,
-  GitBranch,
-  ExternalLink,
   GitPullRequest,
   CheckCircle,
 } from "lucide-react";
+import { ForkInstruction } from "@/components/fork-instruction";
 import { useState } from "react";
 import { useChatStream } from "@/lib/use-chat-stream";
 import { LessonContent } from "@/components/lesson-content";
@@ -19,7 +18,6 @@ import { LessonContent } from "@/components/lesson-content";
 export default function LessonPage() {
   const params = useParams();
   const lessonId = params.id as string;
-  const utils = trpc.useUtils();
 
   const { data: lesson, isLoading } = trpc.codecamp.lesson.useQuery(
     { lessonId },
@@ -98,33 +96,18 @@ export default function LessonPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               Complete this exercise by forking the repository, making changes on a branch, and opening a Pull Request.
             </p>
-            <div className="mt-4 space-y-3">
-              {exerciseRepos.map((repo) => {
-                const review = prReviews?.find((r) => r.exerciseRepoId === repo.id);
-                return (
-                  <div key={repo.id} className="flex items-center justify-between rounded-lg border p-3">
-                    <div className="flex items-center gap-2">
-                      <GitBranch className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-medium">{repo.description}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {review && <PrReviewBadge status={review.reviewStatus} />}
-                      <a
-                        href={repo.repoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
-                      >
-                        <ExternalLink className="h-3.5 w-3.5" />
-                        Fork
-                      </a>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="mt-4 space-y-6">
+              {exerciseRepos.map((repo) => (
+                <ForkInstruction
+                  key={repo.id}
+                  repoUrl={repo.repoUrl}
+                  repoDescription={repo.description}
+                  exerciseRepoId={repo.id}
+                />
+              ))}
             </div>
             {moduleReviews.length > 0 && (
-              <div className="mt-4 space-y-3">
+              <div className="mt-6 space-y-3">
                 <h3 className="text-sm font-semibold">PR Review Feedback</h3>
                 {moduleReviews.map((review) => (
                   <div key={review.id} className="rounded-lg bg-muted p-3 text-sm">
@@ -261,7 +244,7 @@ function ExerciseCard({ exercise }: { exercise: { id: string; title: string; ins
 
 function QuizComponent({
   lessonId,
-  moduleId,
+  moduleId: _moduleId,
   questions,
 }: {
   lessonId: string;

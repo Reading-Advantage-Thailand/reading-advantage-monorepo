@@ -17,7 +17,16 @@ interface UseChatStreamOptions {
 }
 
 export function useChatStream(options: UseChatStreamOptions = {}) {
-  const [messages, setMessages] = useState<ChatMessage[]>(options.initialMessages ?? []);
+  const {
+    endpoint,
+    lessonId,
+    moduleId,
+    initialMessages,
+    onSend,
+    onComplete,
+  } = options;
+
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages ?? []);
   const [isLoading, setIsLoading] = useState(false);
   const assistantRef = useRef("");
 
@@ -30,22 +39,22 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
       assistantRef.current = "";
 
       // Persist user message
-      if (options.onSend) {
+      if (onSend) {
         try {
-          await options.onSend(message);
+          await onSend(message);
         } catch {
           // Non-critical: continue even if persistence fails
         }
       }
 
       try {
-        const res = await fetch(options.endpoint ?? "/api/chat", {
+        const res = await fetch(endpoint ?? "/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             message,
-            lessonId: options.lessonId,
-            moduleId: options.moduleId,
+            lessonId,
+            moduleId,
           }),
           credentials: "include",
         });
@@ -88,9 +97,9 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
           assistantRef.current = assistantMessage;
 
           // Persist assistant message
-          if (options.onComplete && assistantMessage) {
+          if (onComplete && assistantMessage) {
             try {
-              await options.onComplete(assistantMessage);
+              await onComplete(assistantMessage);
             } catch {
               // Non-critical
             }
@@ -103,9 +112,9 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
           ]);
           assistantRef.current = data.response;
 
-          if (options.onComplete && data.response) {
+          if (onComplete && data.response) {
             try {
-              await options.onComplete(data.response);
+              await onComplete(data.response);
             } catch {
               // Non-critical
             }
@@ -123,7 +132,7 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
         setIsLoading(false);
       }
     },
-    [options.endpoint, options.lessonId, options.moduleId, options.onSend, options.onComplete]
+    [endpoint, lessonId, moduleId, onSend, onComplete]
   );
 
   return { messages, isLoading, sendMessage };

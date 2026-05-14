@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../trpc.js";
+import { router, protectedProcedure } from "../trpc.js";
 import { articleResponseSchema } from "@reading-advantage/types";
 import {
   listArticles,

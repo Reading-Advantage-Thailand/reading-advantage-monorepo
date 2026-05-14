@@ -11,9 +11,9 @@ import {
   ArrowLeft,
   GitBranch,
   GitPullRequest,
-  ExternalLink,
   Trophy,
 } from "lucide-react";
+import { ForkInstruction } from "@/components/fork-instruction";
 
 export default function ModulePage() {
   const params = useParams();
@@ -95,40 +95,29 @@ export default function ModulePage() {
       {exerciseRepos && exerciseRepos.length > 0 && (
         <div className="mb-8">
           <h2 className="mb-4 text-xl font-semibold">Exercise Repositories</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {exerciseRepos.map((repo) => {
-              const review = repoPrStatus.get(repo.id);
-              return (
-                <div
-                  key={repo.id}
-                  className="flex flex-col gap-3 rounded-lg border p-4"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2 text-primary">
-                      <GitBranch className="h-5 w-5" />
-                      <span className="font-medium">{repo.description}</span>
-                    </div>
-                    {review && <PrStatusBadge status={review.reviewStatus} />}
-                  </div>
-                  <a
-                    href={repo.repoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5" />
-                    Open on GitHub
-                  </a>
-                  {review?.llmReviewSummary && (
-                    <p className="text-sm text-muted-foreground">
-                      <span className="font-medium">Review:</span>{" "}
-                      {review.llmReviewSummary}
-                    </p>
-                  )}
+          {exerciseRepos.map((repo) => {
+            const review = repoPrStatus.get(repo.id);
+            return (
+              <div key={repo.id} className="mb-6">
+                <div className="mb-3 flex items-center gap-2">
+                  <GitBranch className="h-5 w-5 text-primary" />
+                  <span className="font-medium">{repo.description}</span>
+                  {review && <PrStatusBadge status={review.reviewStatus} />}
                 </div>
-              );
-            })}
-          </div>
+                <ForkInstruction
+                  repoUrl={repo.repoUrl}
+                  repoDescription={repo.description}
+                  exerciseRepoId={repo.id}
+                />
+                {review?.llmReviewSummary && (
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    <span className="font-medium">Review:</span>{" "}
+                    {review.llmReviewSummary}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
