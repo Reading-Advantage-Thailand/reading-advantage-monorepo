@@ -1,0 +1,15 @@
+Task: Update lesson page
+
+Summary: Enhanced lesson page with exercise repo links for fork-based workflow, inline PR review feedback, and automatic progress tracking on quiz completion.
+
+Changes:
+- Fetch exerciseRepos and prReviews for the lesson's module
+- For exercise-type lessons: display fork instructions with GitHub repo links and per-repo PR review status
+- Show PR review feedback inline with review summary and status badges
+- QuizComponent now auto-marks lesson as completed when score >= 70%
+- Invalidates lesson, moduleBySlug, and dashboard queries on quiz success
+- Added PrReviewBadge component for consistent status rendering
+- ChatTutor now accepts moduleId prop for context-aware tutoring
+
+Files modified:
+- apps/codecamp-advantage/app/lesson/[id]/page.tsx
