@@ -4,10 +4,10 @@
 
 Add `phase` column to the modules table and generate the migration.
 
-- [x] Task: Add `phase` column to `codecampModules` in `packages/db/src/schema/codecamp.ts`
+- [x] Task: Add `phase` column to `codecampModules` in `packages/db/src/schema/codecamp.ts` [a9fcfda]
   - [ ] Add `phase: text("phase").notNull().default("A")` column
   - [ ] Add `phaseEnum` if preferred: `pgEnum("codecamp_phase", ["A", "B", "C", "D"])`
-- [x] Task: Generate and apply Drizzle migration
+- [x] Task: Generate and apply Drizzle migration [a9fcfda]
   - [ ] Run `pnpm drizzle-kit generate` to create migration for new column
   - [ ] Apply migration to local database
 - [~] Task: Update `getModulesByPhase` domain function to use `phase` column
