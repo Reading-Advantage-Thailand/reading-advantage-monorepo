@@ -25,11 +25,11 @@ import {
 
 const PHASE_ORDER = ["A", "B", "C", "D"] as const;
 
-const PHASE_COLORS: Record<string, { border: string; badge: string; iconBg: string }> = {
-  A: { border: "border-l-green-500", badge: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200", iconBg: "bg-green-500/10 text-green-600" },
-  B: { border: "border-l-blue-500", badge: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200", iconBg: "bg-blue-500/10 text-blue-600" },
-  C: { border: "border-l-purple-500", badge: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200", iconBg: "bg-purple-500/10 text-purple-600" },
-  D: { border: "border-l-orange-500", badge: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200", iconBg: "bg-orange-500/10 text-orange-600" },
+const PHASE_COLORS: Record<string, { border: string; badge: string }> = {
+  A: { border: "border-l-green-500", badge: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" },
+  B: { border: "border-l-blue-500", badge: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" },
+  C: { border: "border-l-purple-500", badge: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200" },
+  D: { border: "border-l-orange-500", badge: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200" },
 };
 
 const PHASE_LABELS: Record<string, string> = {

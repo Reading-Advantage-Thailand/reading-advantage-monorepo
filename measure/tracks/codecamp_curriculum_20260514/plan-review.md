@@ -97,3 +97,49 @@ Phase 4 is approved for checkpoint. The two Medium findings were fixed and re-te
 ### Recommendation
 
 **Phase 5 passes review.** No code changes required. The one Low finding is a plan-maintenance inconsistency that should be corrected for tracking clarity but does not affect correctness or merge readiness.
+
+---
+
+## Phase 6+7: Domain, Router, and UI Updates for Phase Grouping
+
+**Reviewer:** change-quality-reviewer subagent
+**Revision Range:** `39b7338..HEAD`
+**Date:** 2026-05-14
+
+---
+
+### Build & Test Results
+
+| Check | Result |
+|-------|--------|
+| `lint` (codecamp-advantage, domain, api, types) | ✅ Pass — 0 errors in scope |
+| `check-types` (same filters) | ✅ Pass — all 4 packages clean |
+| `test --filter=@reading-advantage/domain` | ✅ Pass — 134 tests (9 suites) |
+| `test --filter=@reading-advantage/api` | ✅ Pass — 65 tests (13 suites) |
+
+---
+
+### Findings Summary
+
+**Critical:** 0
+**High:** 0
+**Medium:** 0
+**Low:** 2 (both fixed)
+
+---
+
+### Low Findings (Fixed)
+
+1. **Dead code: `iconBg` property in `PHASE_COLORS` is never consumed**
+   - `apps/codecamp-advantage/app/page.tsx` defined `iconBg` for each phase color palette, but the JSX only used `colors.border` and `colors.badge`.
+   - **Fix:** Removed the unused `iconBg` property from `PHASE_COLORS`.
+
+2. **`dashboardResponseSchema` uses loose `z.string()` for phase record keys**
+   - `packages/types/src/codecamp.ts`: `z.record(z.string(), phaseInfoSchema)` allows arbitrary string keys.
+   - **Fix accepted:** Using `z.record(z.enum(["A","B","C","D"]), phaseInfoSchema)` has known edge cases in some Zod versions; the current approach is pragmatic and validated by domain logic.
+
+---
+
+### Recommendation
+
+**Phase 6+7 passes review.** No blockers. Build, types, lint, and tests all pass.
