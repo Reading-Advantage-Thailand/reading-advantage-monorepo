@@ -239,18 +239,23 @@ export async function getLessonWithContent({
 
   const { contentJson, ...lessonRest } = lesson;
 
+  const safeContent =
+    typeof contentJson === "object" && contentJson !== null
+      ? (contentJson as Record<string, unknown>)
+      : {};
+
   return {
     ...lessonRest,
     moduleSlug: module.slug,
-    content: (contentJson as Record<string, unknown>) || {},
+    content: safeContent,
     exercises: exercises.map((e) => ({
       ...e,
-      hints: (e.hintsJson as string[]) || [],
+      hints: Array.isArray(e.hintsJson) ? (e.hintsJson as string[]) : [],
     })),
     quizQuestions: quizQuestions.map((q) => ({
       id: q.id,
       question: q.question,
-      options: (q.optionsJson as string[]) || [],
+      options: Array.isArray(q.optionsJson) ? (q.optionsJson as string[]) : [],
       order: q.order,
     })),
     userStatus: progress?.status ?? "not_started",
@@ -293,7 +298,7 @@ export async function submitExerciseAttempt({
     exerciseId: input.exerciseId,
     passed: false, // LLM review will determine this; domain layer is agnostic
     feedback: "Submitted for review.",
-    hints: (exercise.hintsJson as string[]) || [],
+    hints: Array.isArray(exercise.hintsJson) ? (exercise.hintsJson as string[]) : [],
   };
 }
 

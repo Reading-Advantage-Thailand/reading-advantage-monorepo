@@ -1422,3 +1422,144 @@ describe("getChatContext", () => {
     ).rejects.toThrow(/codecamp:chat/);
   });
 });
+
+// ─── Data Integrity ───────────────────────────────────────
+
+describe("getExerciseRepos optional moduleId", () => {
+  it("returns all repos when moduleId is omitted", async () => {
+    const repos = [
+      { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() },
+      { id: "r2", moduleId: "m2", repoUrl: "https://github.com/org/repo2", description: "Repo 2", order: 1, createdAt: new Date() },
+    ];
+    const db = createMockDb({ selectResults: repos });
+
+    const result = await getExerciseRepos({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: {},
+    });
+
+    expect(result).toHaveLength(2);
+  });
+});
+
+describe("createPrReview duplicate prevention", () => {
+  it("throws when a review for the same PR URL already exists", async () => {
+    const repo = { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Test repo", order: 1, createdAt: new Date() };
+    const existing = { id: "pr1", exerciseRepoId: "r1", userId: "st1", prUrl: "https://github.com/org/repo1/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: new Date() };
+    const db = createMockDb({
+      insertReturning: [existing],
+      selectSequence: [[repo], [existing]],
+    });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    await expect(
+      createPrReview({
+        db: wrapDb(db),
+        user: admin,
+        tenant: globalTenant,
+        input: { exerciseRepoId: "r1", prUrl: "https://github.com/org/repo1/pull/1" },
+      })
+    ).rejects.toThrow(/already exists/);
+  });
+});
+
+describe("getLessonWithContent JSONB runtime validation", () => {
+  it("returns empty content when contentJson is not an object", async () => {
+    const lesson = {
+      id: "l1",
+      moduleId: "m1",
+      title: "Lesson",
+      description: "Desc",
+      type: "theory",
+      order: 1,
+      contentJson: "invalid-string",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const moduleRow = { id: "m1", title: "Module", description: "Desc", slug: "mod", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() };
+    const db = createMockDb({ selectSequence: [[lesson], [moduleRow], [], [], []] });
+
+    const result = await getLessonWithContent({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { lessonId: "l1" },
+    });
+
+    expect(result.content).toEqual({});
+  });
+
+  it("returns empty hints when hintsJson is not an array", async () => {
+    const lesson = {
+      id: "l1",
+      moduleId: "m1",
+      title: "Lesson",
+      description: "Desc",
+      type: "exercise",
+      order: 1,
+      contentJson: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const exercise = {
+      id: "e1",
+      lessonId: "l1",
+      type: "coding",
+      instructions: "Do this",
+      hintsJson: 12345,
+      starterCode: "",
+      solutionCode: "",
+      order: 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const moduleRow = { id: "m1", title: "Module", description: "Desc", slug: "mod", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() };
+    const db = createMockDb({ selectSequence: [[lesson], [moduleRow], [exercise], [], []] });
+
+    const result = await getLessonWithContent({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { lessonId: "l1" },
+    });
+
+    expect(result.exercises[0].hints).toEqual([]);
+  });
+
+  it("returns empty options when optionsJson is not an array", async () => {
+    const lesson = {
+      id: "l1",
+      moduleId: "m1",
+      title: "Lesson",
+      description: "Desc",
+      type: "quiz",
+      order: 1,
+      contentJson: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const question = {
+      id: "q1",
+      lessonId: "l1",
+      question: "What is 2+2?",
+      optionsJson: null,
+      correctAnswer: "4",
+      order: 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const moduleRow = { id: "m1", title: "Module", description: "Desc", slug: "mod", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() };
+    const db = createMockDb({ selectSequence: [[lesson], [moduleRow], [], [question], []] });
+
+    const result = await getLessonWithContent({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { lessonId: "l1" },
+    });
+
+    expect(result.quizQuestions[0].options).toEqual([]);
+  });
+});
