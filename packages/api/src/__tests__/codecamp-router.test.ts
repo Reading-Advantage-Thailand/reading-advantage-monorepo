@@ -673,6 +673,20 @@ describe("codecamp router", () => {
         })
       ).rejects.toMatchObject({ code: "FORBIDDEN" });
     });
+
+    it("maps 'Username already exists' to BAD_REQUEST", async () => {
+      vi.mocked(createInternAccount).mockRejectedValue(new Error("Username already exists"));
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.createIntern({
+          username: "intern1",
+          name: "Intern One",
+          password: "password123",
+        })
+      ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    });
   });
 
   describe("listInterns", () => {

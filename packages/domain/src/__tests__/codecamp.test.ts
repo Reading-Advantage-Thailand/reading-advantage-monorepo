@@ -1070,6 +1070,21 @@ describe("createInternAccount", () => {
     expect(result.role).toBe("INTERN");
   });
 
+  it("rejects duplicate username", async () => {
+    const existingUser = { id: "u2", username: "intern1", name: "Existing", role: "INTERN", schoolId: null, createdAt: new Date() };
+    const db = createMockDb({ selectResults: [existingUser] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    await expect(
+      createInternAccount({
+        db: wrapDb(db),
+        user: admin,
+        tenant: globalTenant,
+        input: { username: "intern1", name: "Intern One", password: "password123" },
+      })
+    ).rejects.toThrow(/Username already exists/);
+  });
+
   it("rejects non-admin users", async () => {
     const db = createMockDb();
 
@@ -1168,6 +1183,16 @@ describe("getInternProgress", () => {
     expect(result.moduleBreakdown).toHaveLength(1);
     expect(result.moduleBreakdown[0].completed).toBe(1);
     expect(result.moduleBreakdown[0].totalLessons).toBe(2);
+  });
+
+  it("rejects when user is not an intern", async () => {
+    const adminUser = { id: "u1", username: "admin1", name: "Admin", role: "ADMIN", schoolId: null, createdAt: new Date() };
+    const db = createMockDb({ selectResults: [adminUser] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    await expect(
+      getInternProgress({ db: wrapDb(db), user: admin, tenant: globalTenant, input: { userId: "u1" } })
+    ).rejects.toThrow(/Intern not found/);
   });
 
   it("rejects non-admin users", async () => {

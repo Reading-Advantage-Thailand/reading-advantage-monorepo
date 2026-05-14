@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useAuth } from "@reading-advantage/auth-client";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
@@ -39,7 +40,7 @@ export default function AdminPage() {
             You need admin privileges to view this page.
           </p>
           <Button asChild>
-            <a href="/">Back to Dashboard</a>
+            <Link href="/">Back to Dashboard</Link>
           </Button>
         </div>
       </div>
@@ -61,10 +62,10 @@ export default function AdminPage() {
           </p>
         </div>
         <Button asChild>
-          <a href="/admin/new-intern">
+          <Link href="/admin/new-intern">
             <UserPlus className="mr-2 h-4 w-4" />
             New Intern
-          </a>
+          </Link>
         </Button>
       </div>
 
@@ -143,7 +144,7 @@ export default function AdminPage() {
                   lastActiveAt: Date | null;
                 }) => (
                   <tr key={intern.userId} className="border-b last:border-0">
-                    <td className="px-4 py-3 font-medium">{intern.name}</td>
+                    <td className="px-4 py-3 font-medium">{intern.name ?? intern.username}</td>
                     <td className="px-4 py-3 text-muted-foreground">
                       @{intern.username}
                     </td>
@@ -196,10 +197,10 @@ export default function AdminPage() {
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Button variant="ghost" size="sm" asChild>
-                        <a href={`/admin/${intern.userId}`}>
+                        <Link href={`/admin/${intern.userId}`}>
                           Details
                           <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                        </a>
+                        </Link>
                       </Button>
                     </td>
                   </tr>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAuth } from "@reading-advantage/auth-client";
 import { trpc } from "@/lib/trpc";
@@ -44,7 +45,7 @@ export default function InternDetailPage() {
             You need admin privileges to view this page.
           </p>
           <Button asChild>
-            <a href="/">Back to Dashboard</a>
+            <Link href="/">Back to Dashboard</Link>
           </Button>
         </div>
       </div>

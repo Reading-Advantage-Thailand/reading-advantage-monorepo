@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@reading-advantage/auth-client";
 import { trpc } from "@/lib/trpc";
@@ -48,7 +49,7 @@ export default function NewInternPage() {
             You need admin privileges to view this page.
           </p>
           <Button asChild>
-            <a href="/">Back to Dashboard</a>
+            <Link href="/">Back to Dashboard</Link>
           </Button>
         </div>
       </div>
@@ -71,10 +72,10 @@ export default function NewInternPage() {
   return (
     <div className="container mx-auto max-w-2xl px-4 py-12">
       <Button variant="ghost" className="mb-6" asChild>
-        <a href="/admin">
+        <Link href="/admin">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Admin
-        </a>
+        </Link>
       </Button>
 
       <div className="mb-8">
@@ -157,7 +158,7 @@ export default function NewInternPage() {
             {createIntern.isPending ? "Creating..." : "Create Intern Account"}
           </Button>
           <Button variant="outline" asChild>
-            <a href="/admin">Cancel</a>
+            <Link href="/admin">Cancel</Link>
           </Button>
         </div>
       </form>

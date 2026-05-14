@@ -971,9 +971,21 @@ export async function createInternAccount({
 }>) {
   assertCan(user, "admin:dashboard", tenant);
 
+  const lowerUsername = input.username.toLowerCase();
+
+  // Check for existing username before attempting insert
+  const [existing] = await db
+    .select()
+    .from(users)
+    .where(eq(users.username, lowerUsername))
+    .limit(1);
+
+  if (existing) {
+    throw new Error("Username already exists");
+  }
+
   const passwordHash = await hashPassword(input.password);
   const userId = crypto.randomUUID();
-  const lowerUsername = input.username.toLowerCase();
 
   const result = await db.transaction(async (tx) => {
     const [created] = await tx
@@ -1043,6 +1055,13 @@ export async function listInterns({
         )
     : [];
 
+  const allLessons = moduleIds.length > 0
+    ? await db
+        .select()
+        .from(codecampLessons)
+        .where(inArray(codecampLessons.moduleId, moduleIds))
+    : [];
+
   const allReviews = internIds.length > 0
     ? await db
         .select()
@@ -1071,11 +1090,16 @@ export async function listInterns({
       ? internProgress.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())[0].updatedAt
       : null;
 
+    // Calculate lesson-based overall progress (consistent with getUserDashboard)
+    const totalLessons = allLessons.length;
+    const completedLessons = internProgress.filter((p) => p.status === "completed").length;
+    const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
     return {
       userId: intern.id,
       name: intern.name,
       username: intern.username,
-      overallProgress: modules.length > 0 ? Math.round((completedModules / modules.length) * 100) : 0,
+      overallProgress,
       completedModules,
       totalModules: modules.length,
       quizAverage,
@@ -1100,7 +1124,7 @@ export async function getInternProgress({
     .where(eq(users.id, input.userId))
     .limit(1);
 
-  if (!intern) {
+  if (!intern || intern.role !== "INTERN") {
     throw new Error("Intern not found");
   }
 
