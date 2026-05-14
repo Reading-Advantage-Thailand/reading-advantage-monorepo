@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
@@ -23,7 +24,7 @@ export default function ModulePage() {
       <div className="container py-12">
         <h1 className="text-2xl font-bold">Module not found</h1>
         <Button variant="outline" className="mt-4" asChild>
-          <a href="/">← Back to Dashboard</a>
+          <Link href="/">← Back to Dashboard</Link>
         </Button>
       </div>
     );
@@ -32,10 +33,10 @@ export default function ModulePage() {
   return (
     <div className="container py-12">
       <Button variant="ghost" className="mb-6" asChild>
-        <a href="/">
+        <Link href="/">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Dashboard
-        </a>
+        </Link>
       </Button>
 
       <div className="mb-8">
@@ -89,7 +90,7 @@ function LessonItem({
   };
 
   return (
-    <a
+    <Link
       href={href}
       className="flex items-center gap-4 rounded-lg border p-4 transition-colors hover:bg-accent"
     >
@@ -101,6 +102,6 @@ function LessonItem({
       <Button variant="outline" size="sm">
         {status === "completed" ? "Review" : "Start"}
       </Button>
-    </a>
+    </Link>
   );
 }

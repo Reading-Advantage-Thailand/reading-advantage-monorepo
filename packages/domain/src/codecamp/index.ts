@@ -1176,7 +1176,13 @@ export async function getInternProgress({
     name: intern.name,
     username: intern.username,
     moduleBreakdown,
-    quizScores: progress.filter((p) => p.score > 0).map((p) => ({ lessonId: p.lessonId, score: p.score })),
+    quizScores: progress
+      .filter((p) => p.score > 0)
+      .map((p) => ({
+        lessonId: p.lessonId,
+        lessonTitle: lessons.find((l) => l.id === p.lessonId)?.title ?? "Lesson",
+        score: p.score,
+      })),
     prReviews: reviews,
   };
 }

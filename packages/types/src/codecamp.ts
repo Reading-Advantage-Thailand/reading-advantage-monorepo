@@ -362,6 +362,7 @@ export const internDetailSchema = z.object({
   quizScores: z.array(
     z.object({
       lessonId: z.string(),
+      lessonTitle: z.string(),
       score: z.number(),
     })
   ),

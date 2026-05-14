@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@reading-advantage/auth-client";
 import { Button } from "@reading-advantage/ui";
@@ -43,32 +44,32 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-6">
-          <a href="/" className="flex items-center gap-2 font-semibold">
+          <Link href="/" className="flex items-center gap-2 font-semibold">
             <BookOpen className="h-5 w-5" />
             <span>CodeCamp</span>
-          </a>
+          </Link>
           <nav className="flex items-center gap-4 text-sm">
-            <a
+            <Link
               href="/"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
               Dashboard
-            </a>
-            <a
+            </Link>
+            <Link
               href="/chat"
               className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
             >
               <MessageCircle className="h-4 w-4" />
               Chat
-            </a>
+            </Link>
             {user?.role === "ADMIN" && (
-              <a
+              <Link
                 href="/admin"
                 className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Shield className="h-4 w-4" />
                 Admin
-              </a>
+              </Link>
             )}
           </nav>
         </div>

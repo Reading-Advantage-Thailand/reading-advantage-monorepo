@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
@@ -217,7 +218,7 @@ function ModuleCard({
         </p>
       </div>
       <Button variant="outline" className="w-full" asChild>
-        <a href={`/module/${slug}`}>{t("start")}</a>
+        <Link href={`/module/${slug}`}>{t("start")}</Link>
       </Button>
     </div>
   );

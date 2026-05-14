@@ -733,7 +733,7 @@ describe("codecamp router", () => {
         moduleBreakdown: [
           { moduleId: "m1", title: "Module 1", completed: 2, totalLessons: 4, avgScore: 85 },
         ],
-        quizScores: [{ lessonId: "l1", score: 100 }],
+        quizScores: [{ lessonId: "l1", lessonTitle: "Lesson 1", score: 100 }],
         prReviews: [],
       };
       vi.mocked(getInternProgress).mockResolvedValue(detailRow as unknown as Awaited<ReturnType<typeof getInternProgress>>);

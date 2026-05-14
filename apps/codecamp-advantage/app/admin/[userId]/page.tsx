@@ -56,10 +56,10 @@ export default function InternDetailPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <Button variant="ghost" className="mb-6" asChild>
-          <a href="/admin">
+          <Link href="/admin">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Admin
-          </a>
+          </Link>
         </Button>
         <h1 className="text-2xl font-bold">Intern not found</h1>
         <p className="mt-2 text-muted-foreground">
@@ -78,14 +78,14 @@ export default function InternDetailPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <Button variant="ghost" className="mb-6" asChild>
-        <a href="/admin">
+        <Link href="/admin">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Admin
-        </a>
+        </Link>
       </Button>
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">{intern.name}</h1>
+        <h1 className="text-3xl font-bold">{intern.name ?? intern.username}</h1>
         <p className="text-muted-foreground">@{intern.username}</p>
       </div>
 
@@ -153,13 +153,13 @@ export default function InternDetailPage() {
             </div>
           ) : (
             <div className="divide-y">
-              {intern.quizScores.map((q: { lessonId: string; score: number }) => (
+              {intern.quizScores.map((q: { lessonId: string; lessonTitle: string; score: number }) => (
                 <div
                   key={q.lessonId}
                   className="flex items-center justify-between p-4"
                 >
                   <span className="text-sm text-muted-foreground">
-                    Lesson
+                    {q.lessonTitle}
                   </span>
                   <Badge
                     variant={q.score >= 80 ? "default" : q.score >= 60 ? "secondary" : "destructive"}
