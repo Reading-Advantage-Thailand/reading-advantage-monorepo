@@ -720,8 +720,8 @@ describe("getPrReviewByPrUrl", () => {
 describe("getModulesByPhase", () => {
   it("returns modules grouped by phase A", async () => {
     const modules = [
-      { id: "m1", title: "Module 1", description: "Desc", slug: "mod-1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() },
-      { id: "m2", title: "Module 2", description: "Desc", slug: "mod-2", order: 2, status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod-1", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m2", title: "Module 2", description: "Desc", slug: "mod-2", order: 2, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },
     ];
     const db = createMockDb({ selectResults: modules });
 
@@ -733,6 +733,38 @@ describe("getModulesByPhase", () => {
     });
 
     expect(result).toHaveLength(2);
+  });
+
+  it("returns modules for all valid phases", async () => {
+    const modulesA = [
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod-1", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const modulesB = [
+      { id: "m2", title: "Module 2", description: "Desc", slug: "mod-2", order: 7, phase: "B", status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const modulesC = [
+      { id: "m3", title: "Module 3", description: "Desc", slug: "mod-3", order: 11, phase: "C", status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const modulesD = [
+      { id: "m4", title: "Module 4", description: "Desc", slug: "mod-4", order: 14, phase: "D", status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+
+    for (const [phase, expectedModules] of [
+      ["A", modulesA],
+      ["B", modulesB],
+      ["C", modulesC],
+      ["D", modulesD],
+    ] as const) {
+      const db = createMockDb({ selectResults: expectedModules });
+      const result = await getModulesByPhase({
+        db: wrapDb(db),
+        user: student,
+        tenant: globalTenant,
+        input: { phase },
+      });
+      expect(result).toHaveLength(1);
+      expect(result[0].phase).toBe(phase);
+    }
   });
 
   it("rejects invalid phase", async () => {

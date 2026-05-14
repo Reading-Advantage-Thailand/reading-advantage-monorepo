@@ -721,13 +721,6 @@ export async function getPrReviewByPrUrl({
 
 // ─── Module Phase & Prerequisites ─────────────────────────
 
-const PHASE_RANGES: Record<string, [number, number]> = {
-  A: [1, 6],
-  B: [7, 10],
-  C: [11, 13],
-  D: [14, 18],
-};
-
 export async function getModulesByPhase({
   db,
   user,
@@ -736,12 +729,10 @@ export async function getModulesByPhase({
 }: DomainInput<{ phase: "A" | "B" | "C" | "D" }>) {
   assertCan(user, "codecamp:read", tenant);
 
-  const range = PHASE_RANGES[input.phase];
-  if (!range) {
+  const validPhases = ["A", "B", "C", "D"];
+  if (!validPhases.includes(input.phase)) {
     throw new Error("Invalid phase");
   }
-
-  const [minOrder, maxOrder] = range;
 
   const modules = await db
     .select()
@@ -749,8 +740,7 @@ export async function getModulesByPhase({
     .where(
       and(
         eq(codecampModules.status, "published"),
-        sql`${codecampModules.order} >= ${minOrder}`,
-        sql`${codecampModules.order} <= ${maxOrder}`
+        eq(codecampModules.phase, input.phase)
       )
     )
     .orderBy(codecampModules.order);
