@@ -3,7 +3,41 @@
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
-import { BookOpen, MessageCircle, Code2, GraduationCap } from "lucide-react";
+import {
+  BookOpen,
+  Terminal,
+  GitBranch,
+  FileCode2,
+  Braces,
+  Type,
+  FlaskConical,
+  Layers,
+  Globe,
+  Database,
+  Server,
+  Lock,
+  Languages,
+  Sparkles,
+  Package,
+  Cloud,
+  Rocket,
+} from "lucide-react";
+
+const PHASE_ORDER = ["A", "B", "C", "D"] as const;
+
+const PHASE_COLORS: Record<string, { border: string; badge: string; iconBg: string }> = {
+  A: { border: "border-l-green-500", badge: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200", iconBg: "bg-green-500/10 text-green-600" },
+  B: { border: "border-l-blue-500", badge: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200", iconBg: "bg-blue-500/10 text-blue-600" },
+  C: { border: "border-l-purple-500", badge: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200", iconBg: "bg-purple-500/10 text-purple-600" },
+  D: { border: "border-l-orange-500", badge: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200", iconBg: "bg-orange-500/10 text-orange-600" },
+};
+
+const PHASE_LABELS: Record<string, string> = {
+  A: "Phase A",
+  B: "Phase B",
+  C: "Phase C",
+  D: "Phase D",
+};
 
 export default function HomePage() {
   const t = useTranslations("dashboard");
@@ -17,7 +51,7 @@ export default function HomePage() {
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="h-48 animate-pulse rounded-lg border bg-muted" />
           ))}
         </div>
@@ -25,7 +59,7 @@ export default function HomePage() {
     );
   }
 
-  const modules = dashboard?.modules ?? [];
+  const phases = dashboard?.phases ?? {};
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -52,29 +86,84 @@ export default function HomePage() {
         )}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {modules.map((mod) => (
-          <ModuleCard
-            key={mod.id}
-            icon={getModuleIcon(mod.slug)}
-            title={mod.title}
-            description={mod.description}
-            slug={mod.slug}
-            progress={mod.progress}
-            completedLessons={mod.completedLessons}
-            lessonCount={mod.lessonCount}
-          />
-        ))}
+      <div className="space-y-16">
+        {PHASE_ORDER.map((phaseKey) => {
+          const phase = phases[phaseKey];
+          if (!phase) return null;
+
+          const colors = PHASE_COLORS[phaseKey];
+
+          return (
+            <section key={phaseKey}>
+              <div className="mb-6 flex items-center justify-between border-b pb-4">
+                <div>
+                  <div className="mb-1 flex items-center gap-3">
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors.badge}`}>
+                      {PHASE_LABELS[phaseKey]}
+                    </span>
+                    <h2 className="text-2xl font-bold">{phase.title}</h2>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{phase.description}</p>
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">
+                    Portfolio: {phase.portfolioProject}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium">
+                    {phase.completedLessons} / {phase.totalLessons} lessons
+                  </p>
+                  <div className="mt-1 h-2 w-32 overflow-hidden rounded-full bg-secondary">
+                    <div
+                      className="h-full bg-primary transition-all"
+                      style={{
+                        width: `${phase.totalLessons > 0 ? Math.round((phase.completedLessons / phase.totalLessons) * 100) : 0}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {phase.modules.map((mod) => (
+                  <ModuleCard
+                    key={mod.id}
+                    icon={getModuleIcon(mod.slug)}
+                    title={mod.title}
+                    description={mod.description}
+                    slug={mod.slug}
+                    progress={mod.progress}
+                    completedLessons={mod.completedLessons}
+                    lessonCount={mod.lessonCount}
+                    phaseColor={colors.border}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </div>
     </div>
   );
 }
 
 function getModuleIcon(slug: string) {
-  if (slug.includes("nextjs") || slug.includes("app-router")) return <BookOpen className="h-8 w-8" />;
-  if (slug.includes("trpc") || slug.includes("domain")) return <Code2 className="h-8 w-8" />;
-  if (slug.includes("drizzle") || slug.includes("orm")) return <GraduationCap className="h-8 w-8" />;
-  if (slug.includes("auth")) return <MessageCircle className="h-8 w-8" />;
+  if (slug.includes("dev-environment")) return <Terminal className="h-8 w-8" />;
+  if (slug.includes("git")) return <GitBranch className="h-8 w-8" />;
+  if (slug.includes("html") || slug.includes("css")) return <FileCode2 className="h-8 w-8" />;
+  if (slug.includes("javascript")) return <Braces className="h-8 w-8" />;
+  if (slug.includes("typescript")) return <Type className="h-8 w-8" />;
+  if (slug.includes("vitest") || slug.includes("test")) return <FlaskConical className="h-8 w-8" />;
+  if (slug.includes("react")) return <Layers className="h-8 w-8" />;
+  if (slug.includes("api")) return <Globe className="h-8 w-8" />;
+  if (slug.includes("nextjs")) return <BookOpen className="h-8 w-8" />;
+  if (slug.includes("database") || slug.includes("orm")) return <Database className="h-8 w-8" />;
+  if (slug.includes("trpc") || slug.includes("server-actions")) return <Server className="h-8 w-8" />;
+  if (slug.includes("auth")) return <Lock className="h-8 w-8" />;
+  if (slug.includes("i18n") || slug.includes("internationalization")) return <Languages className="h-8 w-8" />;
+  if (slug.includes("ai")) return <Sparkles className="h-8 w-8" />;
+  if (slug.includes("monorepo")) return <Package className="h-8 w-8" />;
+  if (slug.includes("cloud") || slug.includes("docker")) return <Cloud className="h-8 w-8" />;
+  if (slug.includes("real-world")) return <Rocket className="h-8 w-8" />;
   return <BookOpen className="h-8 w-8" />;
 }
 
@@ -86,6 +175,7 @@ function ModuleCard({
   progress,
   completedLessons,
   lessonCount,
+  phaseColor,
 }: {
   icon: React.ReactNode;
   title: string;
@@ -94,11 +184,12 @@ function ModuleCard({
   progress: number;
   completedLessons: number;
   lessonCount: number;
+  phaseColor: string;
 }) {
   const t = useTranslations("module");
 
   return (
-    <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm transition-shadow hover:shadow-md">
+    <div className={`rounded-lg border border-l-4 bg-card p-6 text-card-foreground shadow-sm transition-shadow hover:shadow-md ${phaseColor}`}>
       <div className="mb-4 text-primary">{icon}</div>
       <h3 className="mb-2 text-xl font-semibold">{title}</h3>
       <p className="mb-4 text-sm text-muted-foreground">{description}</p>

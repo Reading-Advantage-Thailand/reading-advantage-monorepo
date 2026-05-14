@@ -93,6 +93,44 @@ describe("getModulesWithProgress", () => {
     expect(result[0].progress).toBe(100);
   });
 
+  it("returns phase for each module", async () => {
+    const modules = [
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m2", title: "Module 2", description: "Desc", slug: "mod2", order: 2, phase: "B", status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const lessons: typeof modules = [];
+    const progress: typeof modules = [];
+
+    const db = createMockDb();
+    let selectCallCount = 0;
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult(modules);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+        orderBy: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult(modules);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+      }),
+    });
+
+    const result = await getModulesWithProgress({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+    });
+
+    expect(result).toHaveLength(2);
+    expect(result[0].phase).toBe("A");
+    expect(result[1].phase).toBe("B");
+  });
+
   it("rejects unauthenticated users", async () => {
     const db = createMockDb();
     const invalidUser = { id: "x", username: "x", name: "X", role: "GUEST" as unknown as typeof student.role, schoolId: "s1" };
@@ -508,12 +546,16 @@ describe("updateUserProgress", () => {
 // ─── getUserDashboard ─────────────────────────────────────
 
 describe("getUserDashboard", () => {
-  it("returns aggregated dashboard data", async () => {
+  it("returns aggregated dashboard data with phase grouping", async () => {
     const modules = [
-      { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m2", title: "Module 2", description: "Desc", slug: "mod2", order: 2, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m3", title: "Module 3", description: "Desc", slug: "mod3", order: 7, phase: "B", status: "published", createdAt: new Date(), updatedAt: new Date() },
     ];
     const lessons = [
       { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+      { id: "l2", moduleId: "m2", title: "Lesson 2", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+      { id: "l3", moduleId: "m3", title: "Lesson 3", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
     ];
     const progress = [
       { id: "p1", userId: "st1", moduleId: "m1", lessonId: "l1", status: "completed", score: 100, completedAt: new Date(), createdAt: new Date(), updatedAt: new Date() },
@@ -550,10 +592,65 @@ describe("getUserDashboard", () => {
       tenant: globalTenant,
     });
 
-    expect(result.totalLessons).toBe(1);
+    expect(result.totalLessons).toBe(3);
     expect(result.completedLessons).toBe(1);
-    expect(result.overallProgress).toBe(100);
+    expect(result.overallProgress).toBe(33);
     expect(result.recentConversations).toHaveLength(1);
+
+    // Phase grouping assertions
+    expect(result.phases).toBeDefined();
+    expect(result.phases.A).toBeDefined();
+    expect(result.phases.B).toBeDefined();
+    expect(result.phases.A.modules).toHaveLength(2);
+    expect(result.phases.B.modules).toHaveLength(1);
+    expect(result.phases.A.completedLessons).toBe(1);
+    expect(result.phases.A.totalLessons).toBe(2);
+    expect(result.phases.B.completedLessons).toBe(0);
+    expect(result.phases.B.totalLessons).toBe(1);
+    expect(result.phases.A.title).toBe("Foundations");
+    expect(result.phases.A.portfolioProject).toBe("Personal Portfolio Website");
+    expect(result.phases.B.title).toBe("Frameworks");
+    expect(result.phases.B.portfolioProject).toBe("Learning Dashboard");
+  });
+
+  it("includes all four phases even when empty", async () => {
+    const modules: typeof selectResults[number] = [];
+    const lessons: typeof selectResults[number] = [];
+    const progress: typeof selectResults[number] = [];
+    const conversations: typeof selectResults[number] = [];
+
+    const db = createMockDb();
+    const selectResults = [
+      modules, lessons, progress, conversations,
+    ];
+    let selectIdx = 0;
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockImplementation(() => {
+          const result = selectResults[selectIdx] ?? [];
+          selectIdx++;
+          return queryResult(result);
+        }),
+        orderBy: vi.fn().mockImplementation(() => {
+          const result = selectResults[selectIdx] ?? [];
+          selectIdx++;
+          return queryResult(result);
+        }),
+      }),
+    });
+
+    const result = await getUserDashboard({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+    });
+
+    expect(result.phases.A).toBeDefined();
+    expect(result.phases.B).toBeDefined();
+    expect(result.phases.C).toBeDefined();
+    expect(result.phases.D).toBeDefined();
+    expect(result.phases.A.modules).toHaveLength(0);
+    expect(result.phases.C.modules).toHaveLength(0);
   });
 });
 

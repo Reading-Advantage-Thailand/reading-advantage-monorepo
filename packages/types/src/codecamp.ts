@@ -203,8 +203,19 @@ export type ProgressResponse = z.infer<typeof progressResponseSchema>;
 
 // ─── Codecamp Dashboard Types ─────────────────────────────
 
-export const dashboardResponseSchema = z.object({
+export const phaseInfoSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  portfolioProject: z.string(),
   modules: z.array(moduleResponseSchema),
+  completedLessons: z.number(),
+  totalLessons: z.number(),
+});
+
+export type PhaseInfo = z.infer<typeof phaseInfoSchema>;
+
+export const dashboardResponseSchema = z.object({
+  phases: z.record(z.string(), phaseInfoSchema),
   totalLessons: z.number(),
   completedLessons: z.number(),
   overallProgress: z.number(),

@@ -153,33 +153,33 @@ Wire phase information through the domain and API layers.
 - [x] Task: Update `getModulesWithProgress` to include `phase` in response
   - [x] `getModulesWithProgress` already returns `...mod` which spreads all DB columns including `phase`
   - [x] `moduleResponseSchema` in `@reading-advantage/types` already includes `phase: z.string()`
-- [ ] Task: Update `getUserDashboard` to return phase-grouped data
-  - [ ] Group modules by phase in the response
-  - [ ] Include phase metadata: title, description, portfolio project name
-  - [ ] Include per-phase progress (lessons completed / total per phase)
+- [~] Task: Update `getUserDashboard` to return phase-grouped data
+  - [~] Group modules by phase in the response
+  - [~] Include phase metadata: title, description, portfolio project name
+  - [~] Include per-phase progress (lessons completed / total per phase)
 - [x] Task: Update tRPC router output schemas
   - [x] `moduleResponseSchema` already includes `phase: z.string()`
-  - [ ] Update `dashboardResponseSchema` to include phase grouping
-- [ ] Task: Write tests for updated domain functions
-  - [ ] Test `getModulesWithProgress` returns phase for each module
-  - [ ] Test `getUserDashboard` returns phase-grouped data
-  - [ ] Test `getModulesByPhase` with phase column instead of order ranges
+  - [~] Update `dashboardResponseSchema` to include phase grouping
+- [~] Task: Write tests for updated domain functions
+  - [~] Test `getModulesWithProgress` returns phase for each module
+  - [~] Test `getUserDashboard` returns phase-grouped data
+  - [~] Test `getModulesByPhase` with phase column instead of order ranges
 - [ ] Task: Measure — User Manual Verification 'Domain and Router Updates'
 
 ## Phase 7: UI Updates
 
 Update the dashboard to display phase-grouped modules with portfolio project context.
 
-- [ ] Task: Update dashboard (`app/page.tsx`) for phase grouping
-  - [ ] Group modules by phase with section headers (Foundations, Frameworks, Backend & Data, Production)
-  - [ ] Show portfolio project name and description per phase section
-  - [ ] Show per-phase progress (e.g., "12/29 lessons" under Foundations)
-  - [ ] Maintain overall progress stats in the header area
-- [ ] Task: Add phase icon/color coding
-  - [ ] Phase A: Green (foundations, getting started)
-  - [ ] Phase B: Blue (frameworks, building)
-  - [ ] Phase C: Purple (backend, data)
-  - [ ] Phase D: Orange (production, shipping)
+- [~] Task: Update dashboard (`app/page.tsx`) for phase grouping
+  - [~] Group modules by phase with section headers (Foundations, Frameworks, Backend & Data, Production)
+  - [~] Show portfolio project name and description per phase section
+  - [~] Show per-phase progress (e.g., "12/29 lessons" under Foundations)
+  - [~] Maintain overall progress stats in the header area
+- [~] Task: Add phase icon/color coding
+  - [~] Phase A: Green (foundations, getting started)
+  - [~] Phase B: Blue (frameworks, building)
+  - [~] Phase C: Purple (backend, data)
+  - [~] Phase D: Orange (production, shipping)
 - [ ] Task: Verify lesson page renders contentJson correctly
   - [ ] Theory lessons: sections with heading, body, and code blocks render properly
   - [ ] Exercise lessons: instructions render, textarea works, submit works

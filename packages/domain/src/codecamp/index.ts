@@ -537,6 +537,32 @@ export async function updateUserProgress({
 
 // ─── Dashboard ────────────────────────────────────────────
 
+const PHASE_METADATA: Record<
+  string,
+  { title: string; description: string; portfolioProject: string }
+> = {
+  A: {
+    title: "Foundations",
+    description: "Master the fundamentals of web development",
+    portfolioProject: "Personal Portfolio Website",
+  },
+  B: {
+    title: "Frameworks",
+    description: "Build interactive applications with React and Next.js",
+    portfolioProject: "Learning Dashboard",
+  },
+  C: {
+    title: "Backend & Data",
+    description: "Connect databases and build type-safe APIs",
+    portfolioProject: "Student Progress Tracker",
+  },
+  D: {
+    title: "Production",
+    description: "Ship production-ready applications to the cloud",
+    portfolioProject: "Production-Ready Tracker",
+  },
+};
+
 export async function getUserDashboard({
   db,
   user,
@@ -558,6 +584,36 @@ export async function getUserDashboard({
   const overallProgress =
     totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
+  // Group modules by phase
+  const phases: Record<
+    string,
+    {
+      title: string;
+      description: string;
+      portfolioProject: string;
+      modules: typeof modules;
+      completedLessons: number;
+      totalLessons: number;
+    }
+  > = {};
+
+  for (const phase of ["A", "B", "C", "D"]) {
+    const meta = PHASE_METADATA[phase];
+    const phaseModules = modules.filter((m) => m.phase === phase);
+    const phaseCompleted = phaseModules.reduce(
+      (sum, m) => sum + m.completedLessons,
+      0
+    );
+    const phaseTotal = phaseModules.reduce((sum, m) => sum + m.lessonCount, 0);
+
+    phases[phase] = {
+      ...meta,
+      modules: phaseModules,
+      completedLessons: phaseCompleted,
+      totalLessons: phaseTotal,
+    };
+  }
+
   const conversations = await db
     .select({
       id: codecampChatConversations.id,
@@ -570,7 +626,7 @@ export async function getUserDashboard({
     .limit(5);
 
   return {
-    modules,
+    phases,
     totalLessons,
     completedLessons,
     overallProgress,

@@ -325,9 +325,14 @@ describe("codecamp router", () => {
   });
 
   describe("dashboard", () => {
-    it("returns dashboard data", async () => {
+    it("returns dashboard data with phase grouping", async () => {
       const resultRow = {
-        modules: [],
+        phases: {
+          A: { title: "Foundations", description: "Desc", portfolioProject: "Portfolio", modules: [], completedLessons: 0, totalLessons: 0 },
+          B: { title: "Frameworks", description: "Desc", portfolioProject: "Dashboard", modules: [], completedLessons: 0, totalLessons: 0 },
+          C: { title: "Backend & Data", description: "Desc", portfolioProject: "Tracker", modules: [], completedLessons: 0, totalLessons: 0 },
+          D: { title: "Production", description: "Desc", portfolioProject: "Production Tracker", modules: [], completedLessons: 0, totalLessons: 0 },
+        },
         totalLessons: 10,
         completedLessons: 3,
         overallProgress: 30,
@@ -340,6 +345,8 @@ describe("codecamp router", () => {
 
       expect(result.totalLessons).toBe(10);
       expect(result.overallProgress).toBe(30);
+      expect(result.phases.A.title).toBe("Foundations");
+      expect(result.phases.D.portfolioProject).toBe("Production Tracker");
     });
   });
 
