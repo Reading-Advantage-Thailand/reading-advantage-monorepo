@@ -77,7 +77,7 @@ describe("codecamp Phase A curriculum data", () => {
       mod.lessons.forEach((lesson) => {
         if (lesson.type === "theory") {
           expect(lesson.contentJson).toBeDefined();
-          const sections = (lesson.contentJson as Record<string, unknown>).sections;
+          const sections = lesson.contentJson.sections;
           expect(sections).toBeDefined();
           expect((sections as unknown[]).length).toBeGreaterThan(0);
         }

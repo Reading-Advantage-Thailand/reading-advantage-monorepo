@@ -1186,6 +1186,6 @@ function getExerciseRepos(modules: CurriculumModule[]): CurriculumRepo[] {
     moduleSlug: mod.slug,
     repoUrl: `https://github.com/reading-advantage/codecamp-${mod.slug}`,
     description: `Exercise repository for ${mod.title}`,
-    order: 1,
+    order: mod.order,
   }));
 }

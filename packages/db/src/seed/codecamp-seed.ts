@@ -16,83 +16,87 @@ async function seed() {
 
   const { modules, exerciseRepos } = getPhaseACurriculumData();
 
-  for (const mod of modules) {
-    const [insertedModule] = await db
-      .insert(codecampModules)
-      .values({
-        title: mod.title,
-        description: mod.description,
-        slug: mod.slug,
-        order: mod.order,
-        phase: mod.phase,
-        status: mod.status,
-      })
-      .returning();
-
-    for (const lesson of mod.lessons) {
-      const [insertedLesson] = await db
-        .insert(codecampLessons)
+  await db.transaction(async (tx) => {
+    for (const mod of modules) {
+      const [insertedModule] = await tx
+        .insert(codecampModules)
         .values({
-          moduleId: insertedModule.id,
-          title: lesson.title,
-          description: lesson.description,
-          order: lesson.order,
-          type: lesson.type,
-          contentJson: lesson.contentJson,
+          title: mod.title,
+          description: mod.description,
+          slug: mod.slug,
+          order: mod.order,
+          phase: mod.phase,
+          status: mod.status,
         })
         .returning();
 
-      if (lesson.exercises && lesson.exercises.length > 0) {
-        for (const ex of lesson.exercises) {
-          await db.insert(codecampExercises).values({
-            lessonId: insertedLesson.id,
-            title: ex.title,
-            instructions: ex.instructions,
-            starterCode: ex.starterCode,
-            expectedOutput: ex.expectedOutput,
-            hintsJson: ex.hintsJson,
-            order: ex.order,
-          });
-        }
-      }
+      for (const lesson of mod.lessons) {
+        const [insertedLesson] = await tx
+          .insert(codecampLessons)
+          .values({
+            moduleId: insertedModule.id,
+            title: lesson.title,
+            description: lesson.description,
+            order: lesson.order,
+            type: lesson.type,
+            contentJson: lesson.contentJson,
+          })
+          .returning();
 
-      if (lesson.questions && lesson.questions.length > 0) {
-        for (const q of lesson.questions) {
-          await db.insert(codecampQuizQuestions).values({
-            lessonId: insertedLesson.id,
-            question: q.question,
-            optionsJson: q.optionsJson,
-            correctAnswer: q.correctAnswer,
-            explanation: q.explanation,
-            order: q.order,
-          });
+        if (lesson.exercises && lesson.exercises.length > 0) {
+          for (const ex of lesson.exercises) {
+            await tx.insert(codecampExercises).values({
+              lessonId: insertedLesson.id,
+              title: ex.title,
+              instructions: ex.instructions,
+              starterCode: ex.starterCode,
+              expectedOutput: ex.expectedOutput,
+              hintsJson: ex.hintsJson,
+              order: ex.order,
+            });
+          }
+        }
+
+        if (lesson.questions && lesson.questions.length > 0) {
+          for (const q of lesson.questions) {
+            await tx.insert(codecampQuizQuestions).values({
+              lessonId: insertedLesson.id,
+              question: q.question,
+              optionsJson: q.optionsJson,
+              correctAnswer: q.correctAnswer,
+              explanation: q.explanation,
+              order: q.order,
+            });
+          }
         }
       }
     }
-  }
 
-  // Seed placeholder exercise repo entries
-  for (const repo of exerciseRepos) {
-    const moduleRow = await db
-      .select({ id: codecampModules.id })
-      .from(codecampModules)
-      .where(eq(codecampModules.slug, repo.moduleSlug))
-      .limit(1);
+    // Seed placeholder exercise repo entries
+    for (const repo of exerciseRepos) {
+      const moduleRow = await tx
+        .select({ id: codecampModules.id })
+        .from(codecampModules)
+        .where(eq(codecampModules.slug, repo.moduleSlug))
+        .limit(1);
 
-    if (moduleRow.length > 0) {
-      await db.insert(codecampExerciseRepos).values({
-        moduleId: moduleRow[0].id,
-        repoUrl: repo.repoUrl,
-        description: repo.description,
-        order: repo.order,
-      });
+      if (moduleRow.length > 0) {
+        await tx.insert(codecampExerciseRepos).values({
+          moduleId: moduleRow[0].id,
+          repoUrl: repo.repoUrl,
+          description: repo.description,
+          order: repo.order,
+        });
+      } else {
+        console.warn(`No module found for repo slug: ${repo.moduleSlug}`);
+      }
     }
-  }
 
-  const totalLessons = modules.reduce((sum, m) => sum + m.lessons.length, 0);
-  console.log(
-    `✅ Seeded ${modules.length} modules with ${totalLessons} lessons, exercises, and quizzes.`
-  );
+    const totalLessons = modules.reduce((sum, m) => sum + m.lessons.length, 0);
+    console.log(
+      `✅ Seeded ${modules.length} modules with ${totalLessons} lessons, exercises, and quizzes.`
+    );
+  });
 }
 
 seed()
