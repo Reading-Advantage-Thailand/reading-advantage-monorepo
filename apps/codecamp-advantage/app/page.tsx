@@ -50,9 +50,22 @@ export default function HomePage() {
           <h1 className="mb-4 text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-48 animate-pulse rounded-lg border bg-muted" />
+        <div className="space-y-16">
+          {Array.from({ length: 2 }).map((_, sectionIdx) => (
+            <div key={sectionIdx}>
+              <div className="mb-6 flex items-center justify-between border-b pb-4">
+                <div className="space-y-2">
+                  <div className="h-6 w-48 animate-pulse rounded bg-muted" />
+                  <div className="h-4 w-72 animate-pulse rounded bg-muted" />
+                </div>
+                <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+              </div>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, cardIdx) => (
+                  <div key={cardIdx} className="h-48 animate-pulse rounded-lg border bg-muted" />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -92,6 +105,8 @@ export default function HomePage() {
           if (!phase) return null;
 
           const colors = PHASE_COLORS[phaseKey];
+
+          if (phase.modules.length === 0) return null;
 
           return (
             <section key={phaseKey}>

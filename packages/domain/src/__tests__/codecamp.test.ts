@@ -1073,6 +1073,10 @@ describe("getInternProgress", () => {
     const modules = [
       { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() },
     ];
+    const lessons = [
+      { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+      { id: "l2", moduleId: "m1", title: "Lesson 2", description: "Desc", order: 2, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+    ];
     const progress = [
       { id: "p1", userId: "u1", moduleId: "m1", lessonId: "l1", status: "completed", score: 100, completedAt: new Date(), createdAt: new Date(), updatedAt: new Date() },
     ];
@@ -1085,19 +1089,25 @@ describe("getInternProgress", () => {
           selectCallCount++;
           if (selectCallCount === 1) return queryResult([intern]);
           if (selectCallCount === 2) return queryResult(modules);
-          return queryResult(progress);
+          if (selectCallCount === 3) return queryResult(lessons);
+          if (selectCallCount === 4) return queryResult(progress);
+          return queryResult([]);
         }),
         limit: vi.fn().mockImplementation(() => {
           selectCallCount++;
           if (selectCallCount === 1) return queryResult([intern]);
           if (selectCallCount === 2) return queryResult(modules);
-          return queryResult(progress);
+          if (selectCallCount === 3) return queryResult(lessons);
+          if (selectCallCount === 4) return queryResult(progress);
+          return queryResult([]);
         }),
         orderBy: vi.fn().mockImplementation(() => {
           selectCallCount++;
           if (selectCallCount === 1) return queryResult([intern]);
           if (selectCallCount === 2) return queryResult(modules);
-          return queryResult(progress);
+          if (selectCallCount === 3) return queryResult(lessons);
+          if (selectCallCount === 4) return queryResult(progress);
+          return queryResult([]);
         }),
       }),
     });
@@ -1113,6 +1123,7 @@ describe("getInternProgress", () => {
     expect(result.userId).toBe("u1");
     expect(result.moduleBreakdown).toHaveLength(1);
     expect(result.moduleBreakdown[0].completed).toBe(1);
+    expect(result.moduleBreakdown[0].totalLessons).toBe(2);
   });
 
   it("rejects non-admin users", async () => {

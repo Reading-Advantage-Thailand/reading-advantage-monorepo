@@ -1075,6 +1075,14 @@ export async function getInternProgress({
     .where(eq(codecampModules.status, "published"))
     .orderBy(codecampModules.order);
 
+  const moduleIds = modules.map((m) => m.id);
+  const lessons = moduleIds.length > 0
+    ? await db
+        .select()
+        .from(codecampLessons)
+        .where(inArray(codecampLessons.moduleId, moduleIds))
+    : [];
+
   const progress = await db
     .select()
     .from(codecampUserProgress)
@@ -1087,9 +1095,10 @@ export async function getInternProgress({
     .orderBy(desc(codecampPrReviews.createdAt));
 
   const moduleBreakdown = modules.map((mod) => {
+    const modLessons = lessons.filter((l) => l.moduleId === mod.id);
     const modProgress = progress.filter((p) => p.moduleId === mod.id);
     const completed = modProgress.filter((p) => p.status === "completed").length;
-    const totalLessons = modProgress.length;
+    const totalLessons = modLessons.length;
     const avgScore = modProgress.length > 0
       ? Math.round(modProgress.reduce((s, p) => s + p.score, 0) / modProgress.length)
       : 0;

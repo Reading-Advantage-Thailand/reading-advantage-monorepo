@@ -190,9 +190,9 @@ Update the dashboard to display phase-grouped modules with portfolio project con
 
 Run all checks and verify the curriculum works end-to-end.
 
-- [ ] Task: Delete old seed data completely
-  - [ ] Verify no references to the old 5 modules (nextjs-app-router, trpc-domain, drizzle-orm, auth-multitenancy, monorepo-patterns)
-  - [ ] Ensure seed script is idempotent (can run multiple times safely)
+- [~] Task: Delete old seed data completely
+  - [~] Verify no references to the old 5 modules (nextjs-app-router, trpc-domain, drizzle-orm, auth-multitenancy, monorepo-patterns)
+  - [~] Ensure seed script is idempotent (can run multiple times safely)
 - [ ] Task: Run full test suite
   - [ ] `pnpm turbo run test --filter=@reading-advantage/domain`
   - [ ] `pnpm turbo run test --filter=@reading-advantage/api`
