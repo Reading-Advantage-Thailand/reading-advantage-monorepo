@@ -120,45 +120,45 @@ Source: `measure/curriculum/unit-11-class-period-plan.md` through `unit-13-class
 
 Source: `measure/curriculum/unit-14-class-period-plan.md` through `unit-18-class-period-plan.md`.
 
-- [ ] Task: Write Module 14 seed (Internationalization, 3 lessons)
+- [x] Task: Write Module 14 seed (Internationalization, 3 lessons)
   - [ ] Lesson 1 (theory): Setting up next-intl 4.11.0
   - [ ] Lesson 2 (theory): Using translations in components
   - [ ] Lesson 3 (exercise + quiz): Add i18n to blog app exercise + i18n quiz
-- [ ] Task: Write Module 15 seed (AI Integration, 5 lessons)
+- [x] Task: Write Module 15 seed (AI Integration, 5 lessons)
   - [ ] Lesson 1 (theory): AI SDK 4.3.19 basics — generateText and streamText
   - [ ] Lesson 2 (theory): Building a chat UI with useChat
   - [ ] Lesson 3 (theory): Structured output with generateObject
   - [ ] Lesson 4 (theory): Rate limiting and production concerns
   - [ ] Lesson 5 (exercise + quiz): Code review bot exercise + AI integration quiz
-- [ ] Task: Write Module 16 seed (Monorepo & Package Management, 3 lessons)
+- [x] Task: Write Module 16 seed (Monorepo & Package Management, 3 lessons)
   - [ ] Lesson 1 (theory): pnpm 8.15.8 workspaces and workspace:*
   - [ ] Lesson 2 (theory): Turborepo 2.9.8 pipeline and caching
   - [ ] Lesson 3 (exercise + quiz): Map the Reading Advantage monorepo + monorepo quiz
-- [ ] Task: Write Module 17 seed (Cloud & Dockerization, 4 lessons)
+- [x] Task: Write Module 17 seed (Cloud & Dockerization, 4 lessons)
   - [ ] Lesson 1 (theory): Docker basics — images, containers, volumes
   - [ ] Lesson 2 (theory): Dockerfile for Next.js (multi-stage build)
   - [ ] Lesson 3 (theory): docker-compose for full stack
   - [ ] Lesson 4 (exercise + quiz): Containerize the tracker exercise + Docker quiz
-- [ ] Task: Write Module 18 seed (Real-World Practice, 4 lessons)
+- [x] Task: Write Module 18 seed (Real-World Practice, 4 lessons)
   - [ ] Lesson 1 (theory): Reading Issues and planning implementation
   - [ ] Lesson 2 (theory): Opening PRs and code review
   - [ ] Lesson 3 (theory): Continued practice — medium difficulty issues
   - [ ] Lesson 4 (theory): Final practice and retrospective (no quiz — work is the assessment)
-- [ ] Task: Measure — User Manual Verification 'Phase D Seed Data'
+- [x] Task: Measure — User Manual Verification 'Phase D Seed Data' [39b7338]
 
 ## Phase 6: Domain and Router Updates
 
 Wire phase information through the domain and API layers.
 
-- [ ] Task: Update `getModulesWithProgress` to include `phase` in response
-  - [ ] Add `phase` field to returned module objects
-  - [ ] Update type contracts in `@reading-advantage/types` if needed
+- [x] Task: Update `getModulesWithProgress` to include `phase` in response
+  - [x] `getModulesWithProgress` already returns `...mod` which spreads all DB columns including `phase`
+  - [x] `moduleResponseSchema` in `@reading-advantage/types` already includes `phase: z.string()`
 - [ ] Task: Update `getUserDashboard` to return phase-grouped data
   - [ ] Group modules by phase in the response
   - [ ] Include phase metadata: title, description, portfolio project name
   - [ ] Include per-phase progress (lessons completed / total per phase)
-- [ ] Task: Update tRPC router output schemas
-  - [ ] Add `phase` to `moduleResponseSchema` in `@reading-advantage/types`
+- [x] Task: Update tRPC router output schemas
+  - [x] `moduleResponseSchema` already includes `phase: z.string()`
   - [ ] Update `dashboardResponseSchema` to include phase grouping
 - [ ] Task: Write tests for updated domain functions
   - [ ] Test `getModulesWithProgress` returns phase for each module
