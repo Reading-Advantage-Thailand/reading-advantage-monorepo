@@ -645,10 +645,17 @@ export async function getExerciseRepos({
 }: DomainInput<{ moduleId: string }>) {
   assertCan(user, "codecamp:read", tenant);
 
+  const conditions = [];
+  if (input.moduleId) {
+    conditions.push(eq(codecampExerciseRepos.moduleId, input.moduleId));
+  }
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
   return db
     .select()
     .from(codecampExerciseRepos)
-    .where(eq(codecampExerciseRepos.moduleId, input.moduleId))
+    .where(whereClause)
     .orderBy(codecampExerciseRepos.order);
 }
 

@@ -10,6 +10,7 @@ const safeUserCols = {
   role: users.role,
   schoolId: users.schoolId,
   image: users.image,
+  githubUsername: users.githubUsername,
   xp: users.xp,
   level: users.level,
   cefrLevel: users.cefrLevel,

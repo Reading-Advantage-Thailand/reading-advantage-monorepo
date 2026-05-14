@@ -648,6 +648,7 @@ describe("codecamp router", () => {
         role: "INTERN",
         schoolId: null,
         createdAt: testDate,
+        updatedAt: testDate,
       };
       vi.mocked(createInternAccount).mockResolvedValue(userRow as unknown as Awaited<ReturnType<typeof createInternAccount>>);
       const adminUser = { id: "a1", role: "ADMIN", schoolId: null };

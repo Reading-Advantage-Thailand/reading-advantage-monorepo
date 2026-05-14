@@ -344,6 +344,7 @@ export const internAccountResponseSchema = z.object({
   role: z.string(),
   schoolId: z.string().nullable(),
   createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export const internDetailSchema = z.object({

@@ -150,7 +150,7 @@ describe("GitHub webhook handler", () => {
     ]);
     vi.mocked(getUserByGithubUsername).mockResolvedValue({
       id: "u2",
-      username: "intern2",
+      email: null,
       name: "Intern 2",
       role: "INTERN",
       schoolId: null,
@@ -220,7 +220,7 @@ describe("GitHub webhook handler", () => {
     vi.mocked(getExerciseRepos).mockResolvedValue([
       { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo", description: "Test repo", order: 1, createdAt: new Date() },
     ]);
-    vi.mocked(getUserByGithubUsername).mockResolvedValue(null);
+    vi.mocked(getUserByGithubUsername).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getUserByGithubUsername>>);
 
     const payload = JSON.stringify({
       action: "opened",

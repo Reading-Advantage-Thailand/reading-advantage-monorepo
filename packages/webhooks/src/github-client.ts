@@ -25,8 +25,8 @@ function getPrivateKey(): string {
   return process.env.GITHUB_PRIVATE_KEY ?? "";
 }
 
-function getWebhookSecret(): string {
-  return process.env.GITHUB_WEBHOOK_SECRET ?? "";
+function getInstallationId(): string {
+  return process.env.GITHUB_INSTALLATION_ID ?? "";
 }
 
 // ─── JWT Auth ─────────────────────────────────────────────
@@ -82,7 +82,7 @@ export async function getInstallationToken(installationId: string): Promise<stri
 // ─── Signature Verification ───────────────────────────────
 
 export function verifyWebhookSignature(payload: string, signature: string): boolean {
-  const secret = getWebhookSecret();
+  const secret = process.env.GITHUB_WEBHOOK_SECRET ?? "";
   if (!secret) {
     console.warn("[GitHub Webhook] GITHUB_WEBHOOK_SECRET is not set");
     return false;
@@ -93,6 +93,18 @@ export function verifyWebhookSignature(payload: string, signature: string): bool
   } catch {
     return false;
   }
+}
+
+/**
+ * Get a token for the configured installation.
+ * Returns undefined if GitHub App credentials are not configured.
+ */
+export async function getInstallationTokenForRepo(): Promise<string | undefined> {
+  const installationId = getInstallationId();
+  if (!installationId) {
+    return undefined;
+  }
+  return getInstallationToken(installationId);
 }
 
 // ─── PR Diff ──────────────────────────────────────────────
