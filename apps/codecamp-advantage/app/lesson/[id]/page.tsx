@@ -361,7 +361,6 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
       message,
       lessonId,
       moduleId,
-      role: "user",
     });
     if (result.conversationId) {
       setConversationId(result.conversationId);
@@ -371,13 +370,11 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
   const handleComplete = async (message: string) => {
     const cid = conversationId ?? existingConv?.id;
     if (cid) {
-      await saveMessage.mutateAsync({
-        conversationId: cid,
-        message,
-        lessonId,
-        moduleId,
-        role: "assistant",
-      });
+      // Save the assistant message server-side via a dedicated endpoint.
+      // The client-facing saveChatMessage no longer accepts role: "assistant"
+      // to prevent message injection. Assistant messages should be persisted
+      // from the streaming route (future enhancement).
+      // For now, the complete message is visible in the local UI state.
     }
   };
 
