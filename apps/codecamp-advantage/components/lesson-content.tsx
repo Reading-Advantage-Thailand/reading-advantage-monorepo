@@ -1,5 +1,3 @@
-"use client";
-
 import type { LessonResponse } from "@reading-advantage/types";
 
 type LessonType = LessonResponse["type"];
