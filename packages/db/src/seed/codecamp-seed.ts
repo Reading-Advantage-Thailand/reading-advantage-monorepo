@@ -9,12 +9,15 @@ import {
   codecampQuizQuestions,
   codecampExerciseRepos,
 } from "../schema/codecamp.js";
-import { getPhaseACurriculumData } from "./codecamp-curriculum-data.js";
+import { getPhaseACurriculumData, getPhaseBCurriculumData } from "./codecamp-curriculum-data.js";
 
 async function seed() {
   console.log("Seeding codecamp curriculum...");
 
-  const { modules, exerciseRepos } = getPhaseACurriculumData();
+  const phaseA = getPhaseACurriculumData();
+  const phaseB = getPhaseBCurriculumData();
+  const modules = [...phaseA.modules, ...phaseB.modules];
+  const exerciseRepos = [...phaseA.exerciseRepos, ...phaseB.exerciseRepos];
 
   await db.transaction(async (tx) => {
     for (const mod of modules) {

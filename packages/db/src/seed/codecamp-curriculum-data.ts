@@ -1189,3 +1189,919 @@ function getExerciseRepos(modules: CurriculumModule[]): CurriculumRepo[] {
     order: mod.order,
   }));
 }
+
+export function getPhaseBCurriculumData() {
+  const modules: CurriculumModule[] = [
+    // ─── Module 7: React ──────────────────────────────────────
+    {
+      title: "React",
+      description:
+        "Build interactive user interfaces with React 19.2.5: components, JSX, props, state, hooks, composition, and lists.",
+      slug: "react",
+      order: 7,
+      phase: "B",
+      status: "published",
+      lessons: [
+        {
+          title: "Components and JSX",
+          description:
+            "Learn React components, JSX syntax, props, composition, and how to build your first component.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "What is React?",
+                body: "React is a library for building user interfaces with reusable components. Components are functions that return JSX (HTML-like syntax). React 19.2.5 is the version used in the Reading Advantage monorepo.",
+                code: "// A simple component\nfunction Greeting({ name }: { name: string }) {\n  return <h1>Hello, {name}!</h1>;\n}\n\n// Usage\n<Greeting name=\"Alice\" />",
+              },
+              {
+                heading: "JSX Rules",
+                body: "JSX looks like HTML but has important differences: return a single root element (or use Fragment <>...</>), use className instead of class, use {} for JavaScript expressions, and self-closing tags require a slash.",
+                code: "// ✅ Correct JSX\nfunction Card() {\n  return (\n    <div className=\"card\">\n      <img src=\"/photo.jpg\" alt=\"Photo\" />\n      <h2>Title</h2>\n    </div>\n  );\n}\n\n// ❌ Wrong — multiple roots\nfunction Bad() {\n  return <h1>A</h1><p>B</p>;\n}\n\n// ✅ Fixed with Fragment\nfunction Good() {\n  return (\n    <>\n      <h1>A</h1>\n      <p>B</p>\n    </>\n  );\n}",
+              },
+              {
+                heading: "Composition with Props",
+                body: "Props pass data from parent to child components. This is how you make components reusable. The key prop is required when rendering lists — it helps React efficiently update the DOM.",
+                code: "interface ModuleCardProps {\n  title: string;\n  description: string;\n  progress: number;\n}\n\nexport function ModuleCard({ title, description, progress }: ModuleCardProps) {\n  return (\n    <div className=\"rounded-lg border p-6\">\n      <h3 className=\"text-xl font-semibold\">{title}</h3>\n      <p className=\"mt-2 text-sm text-gray-500\">{description}</p>\n      <div className=\"mt-4 h-2 rounded-full bg-gray-200\">\n        <div className=\"h-full bg-blue-500\" style={{ width: `${progress}%` }} />\n      </div>\n    </div>\n  );\n}\n\n// Composition in parent\n{modules.map((mod) => (\n  <ModuleCard key={mod.id} {...mod} />\n))}",
+              },
+            ],
+          },
+        },
+        {
+          title: "useState and Event Handling",
+          description:
+            "Manage component state with useState and handle user interactions with events.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "The useState Hook",
+                body: "useState lets components remember values between renders. It returns an array with the current state and a setter function. Never mutate state directly — always use the setter.",
+                code: "import { useState } from \"react\";\n\nexport function Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div className=\"flex items-center gap-4\">\n      <button onClick={() => setCount(count - 1)}>-</button>\n      <span className=\"text-2xl font-bold\">{count}</span>\n      <button onClick={() => setCount(count + 1)}>+</button>\n    </div>\n  );\n}\n\n// Rules of useState:\n// 1. Never mutate state directly\n// 2. State updates are asynchronous\n// 3. Use functional updates when new state depends on old: setCount(prev => prev + 1)\n// 4. Initialize once — the argument is only used on the first render",
+              },
+              {
+                heading: "Controlled Inputs",
+                body: "A controlled input ties its value to React state. The input's value comes from state, and onChange updates state. This is the standard pattern for all form inputs in React.",
+                code: "export function SearchBar({ onSearch }: { onSearch: (query: string) => void }) {\n  const [query, setQuery] = useState(\"\");\n\n  return (\n    <input\n      type=\"text\"\n      value={query}\n      onChange={(e) => {\n        setQuery(e.target.value);\n        onSearch(e.target.value);\n      }}\n      placeholder=\"Search modules...\"\n      className=\"w-full rounded-lg border px-4 py-2\"\n    />\n  );\n}",
+              },
+              {
+                heading: "Expanding Module Card",
+                body: "Combine useState with conditional rendering to create an interactive component that shows and hides additional content.",
+                code: "export function ModuleCard({ title, lessons }: { title: string; lessons: string[] }) {\n  const [isExpanded, setIsExpanded] = useState(false);\n\n  return (\n    <div className=\"rounded-lg border p-6\">\n      <h3>{title}</h3>\n      <button onClick={() => setIsExpanded(!isExpanded)}>\n        {isExpanded ? \"Hide\" : \"Show\"} lessons\n      </button>\n      {isExpanded && (\n        <ul>\n          {lessons.map((lesson, i) => (\n            <li key={i}>{lesson}</li>\n          ))}\n        </ul>\n      )}\n    </div>\n  );\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "useEffect and Data Fetching",
+          description:
+            "Run side effects with useEffect: fetch data, set up subscriptions, and manage timers.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "useEffect Basics",
+                body: "useEffect runs code after the component renders. The dependency array controls when it re-runs: no array runs after every render, [] runs once on mount, and [dep1, dep2] runs when deps change.",
+                code: "import { useState, useEffect } from \"react\";\n\n// Runs once on mount\nuseEffect(() => {\n  console.log(\"Component mounted\");\n}, []);\n\n// Runs when count changes\nuseEffect(() => {\n  console.log(`Count: ${count}`);\n}, [count]);\n\n// Cleanup function\nuseEffect(() => {\n  const timer = setInterval(() => setTime(Date.now()), 1000);\n  return () => clearInterval(timer);\n}, []);",
+              },
+              {
+                heading: "Fetching Data with useEffect",
+                body: "Fetch data inside useEffect with an empty dependency array. Track loading and error states for a complete data-fetching pattern.",
+                code: "export function useModules() {\n  const [modules, setModules] = useState<Module[]>([]);\n  const [isLoading, setIsLoading] = useState(true);\n  const [error, setError] = useState<string | null>(null);\n\n  useEffect(() => {\n    const fetchModules = async () => {\n      try {\n        const response = await fetch(\"/data/modules.json\");\n        if (!response.ok) throw new Error(`HTTP ${response.status}`);\n        const data = await response.json();\n        setModules(data);\n      } catch (err) {\n        setError(err instanceof Error ? err.message : \"Failed\");\n      } finally {\n        setIsLoading(false);\n      }\n    };\n    fetchModules();\n  }, []);\n\n  return { modules, isLoading, error };\n}",
+              },
+              {
+                heading: "Loading and Error States",
+                body: "Always handle three states: loading, success, and error. Show skeletons while loading, content on success, and friendly error messages on failure.",
+                code: "function App() {\n  const { modules, isLoading, error } = useModules();\n\n  if (isLoading) return <ModuleCardSkeleton count={6} />;\n  if (error) return <ErrorDisplay message={error} />;\n\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules.map((mod) => (\n        <ModuleCard key={mod.id} {...mod} />\n      ))}\n    </div>\n  );\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "useContext and Prop Drilling",
+          description:
+            "Share data across many component levels without passing props through every level.",
+          order: 4,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "The Prop Drilling Problem",
+                body: "Props pass data down one level at a time. When many levels need the same data, you end up passing props through components that don't use them. Context solves this.",
+                code: "// Without context: theme passed through 3 levels\n<App theme=\"dark\">\n  <Header theme=\"dark\">\n    <Nav theme=\"dark\">\n      <ThemeToggle theme=\"dark\" />\n    </Nav>\n  </Header>\n</App>\n\n// With context: no prop drilling\n<ThemeProvider>\n  <App />\n</ThemeProvider>",
+              },
+              {
+                heading: "Creating and Using Context",
+                body: "Create a context with createContext, provide it with a Provider, and consume it with useContext. Always throw an error if useContext is called outside the Provider.",
+                code: "import { createContext, useContext, useState, type ReactNode } from \"react\";\n\ninterface ThemeContextType {\n  theme: \"light\" | \"dark\";\n  toggleTheme: () => void;\n}\n\nconst ThemeContext = createContext<ThemeContextType | undefined>(undefined);\n\nexport function ThemeProvider({ children }: { children: ReactNode }) {\n  const [theme, setTheme] = useState<\"light\" | \"dark\">(\"light\");\n  const toggleTheme = () => setTheme((prev) => (prev === \"light\" ? \"dark\" : \"light\"));\n  return (\n    <ThemeContext.Provider value={{ theme, toggleTheme }}>\n      {children}\n    </ThemeContext.Provider>\n  );\n}\n\nexport function useTheme() {\n  const context = useContext(ThemeContext);\n  if (!context) throw new Error(\"useTheme must be inside ThemeProvider\");\n  return context;\n}",
+              },
+              {
+                heading: "When to Use Context vs Props",
+                body: "Use context for data needed by many components at different levels (theme, auth, locale). Use props for direct parent-child data flow. Don't use context for data that changes frequently.",
+                code: "// Use context for: theme, auth state, locale\n// Use props for: direct parent → child, 1–2 levels\n\n// Best practice: push \"use client\" as far down the tree as possible\n// Keep parent components as Server Components for performance",
+              },
+            ],
+          },
+        },
+        {
+          title: "Lists, Keys, and Conditional Rendering",
+          description:
+            "Render lists efficiently with proper keys and show/hide elements with conditional rendering patterns.",
+          order: 5,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Keys Matter",
+                body: "React uses keys to match old elements with new elements during re-render. Bad keys cause bugs, lost focus, and poor performance. Never use array index as a key for lists that can reorder or delete items.",
+                code: "// ✅ Correct — unique, stable key from data\n{modules.map((mod) => (\n  <ModuleCard key={mod.id} title={mod.title} />\n))}\n\n// ❌ Wrong — array index as key\n{modules.map((mod, index) => (\n  <ModuleCard key={index} title={mod.title} />\n))}\n\n// ❌ Wrong — duplicate keys\n{items.map((item) => (\n  <li key={item.category}>{item.name}</li>\n))}",
+              },
+              {
+                heading: "Conditional Rendering Patterns",
+                body: "Use ternary for either/or, && for show/hide, early return for guard clauses, and enum objects for multiple states.",
+                code: "// Ternary\n{isLoading ? <Spinner /> : <Content />}\n\n// && operator\n{error && <ErrorMessage>{error}</ErrorMessage>}\n\n// Early return\nif (isLoading) return <Spinner />;\nif (error) return <ErrorMessage>{error}</ErrorMessage>;\nreturn <Content />;\n\n// Enum object\nconst statusComponents = {\n  idle: <IdleState />,\n  loading: <LoadingState />,\n  success: <SuccessState data={data} />,\n  error: <ErrorState message={error} />,\n};\nreturn statusComponents[status];",
+              },
+              {
+                heading: "Building a Filtered Lesson List",
+                body: "Combine list rendering, filtering, and conditional rendering to build a practical component.",
+                code: "export function LessonList({ lessons, filter }: { lessons: Lesson[]; filter: string }) {\n  const filtered = filter === \"all\"\n    ? lessons\n    : lessons.filter((l) => l.type === filter);\n\n  return (\n    <div className=\"space-y-3\">\n      {filtered.length === 0 && (\n        <p className=\"text-center text-gray-400\">No lessons match.</p>\n      )}\n      {filtered.map((lesson) => (\n        <LessonItem key={lesson.id} lesson={lesson} />\n      ))}\n    </div>\n  );\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Forms and Custom Hooks",
+          description:
+            "Build forms with controlled inputs and extract reusable logic into custom hooks.",
+          order: 6,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Controlled Form Pattern",
+                body: "A controlled form ties every input to React state. Validate on submit with Zod and show field-level errors.",
+                code: "import { useState, type FormEvent } from \"react\";\nimport { z } from \"zod\";\n\nconst contactSchema = z.object({\n  name: z.string().min(1, \"Name is required\"),\n  email: z.string().email(\"Invalid email\"),\n  message: z.string().min(10, \"Message too short\"),\n});\n\nexport function ContactForm() {\n  const [formData, setFormData] = useState({ name: \"\", email: \"\", message: \"\" });\n  const [errors, setErrors] = useState<Record<string, string>>({});\n\n  const handleSubmit = (e: FormEvent) => {\n    e.preventDefault();\n    const result = contactSchema.safeParse(formData);\n    if (!result.success) {\n      const fieldErrors: Record<string, string> = {};\n      result.error.issues.forEach((issue) => {\n        fieldErrors[issue.path[0].toString()] = issue.message;\n      });\n      setErrors(fieldErrors);\n      return;\n    }\n    console.log(\"Submitted!\", formData);\n  };\n\n  return (\n    <form onSubmit={handleSubmit} className=\"space-y-4\">\n      <input\n        value={formData.name}\n        onChange={(e) => setFormData({ ...formData, name: e.target.value })}\n        placeholder=\"Name\"\n      />\n      {errors.name && <p className=\"text-red-500\">{errors.name}</p>}\n      <button type=\"submit\">Send</button>\n    </form>\n  );\n}",
+              },
+              {
+                heading: "Custom Hook — useFormState",
+                body: "Extract form logic into a custom hook for reuse across multiple forms. Custom hooks are functions whose names start with 'use' and can call other hooks.",
+                code: "export function useFormState<T extends Record<string, unknown>>(\n  schema: z.ZodType<T>,\n  initialValues: T\n) {\n  const [values, setValues] = useState(initialValues);\n  const [errors, setErrors] = useState<Record<string, string>>({});\n\n  const setValue = (field: keyof T, value: string) => {\n    setValues((prev) => ({ ...prev, [field]: value }));\n    setErrors((prev) => {\n      const next = { ...prev };\n      delete next[field as string];\n      return next;\n    });\n  };\n\n  const handleSubmit = (e: FormEvent) => {\n    e.preventDefault();\n    const result = schema.safeParse(values);\n    if (!result.success) {\n      const fieldErrors: Record<string, string> = {};\n      result.error.issues.forEach((issue) => {\n        fieldErrors[issue.path[0].toString()] = issue.message;\n      });\n      setErrors(fieldErrors);\n      return;\n    }\n    return values;\n  };\n\n  return { values, errors, setValue, handleSubmit };\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "React Exercise + Quiz",
+          description:
+            "Build a filterable data table with all React concepts learned and test your knowledge.",
+          order: 7,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the React exercise by building a filterable student data table with sorting, search, and a theme toggle.",
+          },
+          exercises: [
+            {
+              title: "Build a Filterable Data Table",
+              instructions:
+                "Fork the exercise repo and build a filterable data table: render students from JSON, add search filtering by name, add department filter buttons, add sortable column headers, extract a useStudentFilters custom hook, implement a ThemeContext with light/dark toggle, show loading skeletons, and handle empty states.",
+              starterCode:
+                "// TODO: Create StudentTable component\n// TODO: Add SearchBar with controlled input\n// TODO: Add department filter buttons\n// TODO: Add sortable column headers\n// TODO: Extract useStudentFilters hook\n// TODO: Implement ThemeContext and ThemeToggle\n// TODO: Show skeleton while loading\n// TODO: Handle empty state",
+              expectedOutput:
+                "A fully interactive student table with search, filters, sorting, and theme toggle",
+              hintsJson: [
+                "Use useState for search query, filter, and sort state",
+                "Extract filter/sort logic into a custom hook called useStudentFilters",
+                "Create ThemeContext with createContext and useContext for the theme toggle",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question:
+                "Why should you never use array index as a React key?",
+              optionsJson: [
+                "It is slower",
+                "Causes bugs when items are reordered or deleted",
+                "React ignores it",
+                "It makes the code longer",
+              ],
+              correctAnswer:
+                "Causes bugs when items are reordered or deleted",
+              explanation:
+                "Array indices change when items reorder, causing React to mismatch DOM elements. This leads to bugs, lost focus, and poor performance.",
+              order: 1,
+            },
+            {
+              question: "What is the dependency array in useEffect for?",
+              optionsJson: [
+                "To make the effect run faster",
+                "Controls when the effect re-runs — only when listed deps change",
+                "It is optional and can be omitted",
+                "To declare variable types",
+              ],
+              correctAnswer:
+                "Controls when the effect re-runs — only when listed deps change",
+              explanation:
+                "The dependency array tells React which values the effect depends on. The effect only re-runs when one of those values changes.",
+              order: 2,
+            },
+            {
+              question: "When should you use Context vs props?",
+              optionsJson: [
+                "Always use Context",
+                "Context for data needed by many components at different levels; props for direct parent→child",
+                "Props are deprecated in React 19",
+                "Context is faster than props",
+              ],
+              correctAnswer:
+                "Context for data needed by many components at different levels; props for direct parent→child",
+              explanation:
+                "Use Context when data is needed by many components at different nesting levels (theme, auth, locale). Use props for direct parent-child data flow.",
+              order: 3,
+            },
+            {
+              question: "What does a custom hook's name need to start with?",
+              optionsJson: [
+                "get",
+                "use",
+                "hook",
+                "react",
+              ],
+              correctAnswer: "use",
+              explanation:
+                "Custom hooks must start with 'use'. This is a convention that React enforces via the Rules of Hooks linter.",
+              order: 4,
+            },
+            {
+              question: "What happens if you call useState inside a conditional?",
+              optionsJson: [
+                "It works fine",
+                "Violates Rules of Hooks — hooks must be called in the same order every render",
+                "It throws a syntax error",
+                "The state is shared across components",
+              ],
+              correctAnswer:
+                "Violates Rules of Hooks — hooks must be called in the same order every render",
+              explanation:
+                "Hooks must be called in the exact same order on every render. Conditionals can change the order, causing React to mismatch hook state.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+    // ─── Module 8: API Fundamentals ───────────────────────────
+    {
+      title: "API Fundamentals",
+      description:
+        "Understand HTTP methods, status codes, REST conventions, and the Fetch API for making requests to backend services.",
+      slug: "api-fundamentals",
+      order: 8,
+      phase: "B",
+      status: "published",
+      lessons: [
+        {
+          title: "HTTP and REST Basics",
+          description:
+            "Learn HTTP request/response anatomy, methods, status codes, and REST URL conventions.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "HTTP Request/Response Anatomy",
+                body: "APIs are how the frontend talks to the backend. The Reading Advantage frontend talks to the backend via tRPC — but underneath it is still HTTP. Every request has a method, URL, headers, and optional body. Every response has a status code and body.",
+                code: "REQUEST:\nPOST /api/modules HTTP/1.1\nHost: localhost:3000\nContent-Type: application/json\n\n{\"title\": \"React\", \"description\": \"Learn React\"}\n\nRESPONSE:\nHTTP/1.1 201 Created\nContent-Type: application/json\n\n{\"id\": \"7\", \"title\": \"React\", \"description\": \"Learn React\"}",
+              },
+              {
+                heading: "HTTP Methods",
+                body: "HTTP methods define the action. GET reads, POST creates, PUT replaces, PATCH partially updates, DELETE removes. Idempotent methods produce the same result when called multiple times. Safe methods do not modify data.",
+                code: "| Method | Purpose     | Idempotent | Safe |\n|--------|-------------|-----------|------|\n| GET    | Read data   | Yes       | Yes  |\n| POST   | Create data | No        | No   |\n| PUT    | Replace data| Yes       | No   |\n| PATCH  | Partial update| No      | No   |\n| DELETE | Remove data | Yes       | No   |\n\n// Idempotent: same result every time\n// Safe: does not modify data",
+              },
+              {
+                heading: "HTTP Status Codes",
+                body: "Status codes tell you what happened. 200s mean success, 300s mean redirection, 400s mean client error, 500s mean server error.",
+                code: "| Range | Meaning      | Common Codes |\n|-------|-------------|--------------|\n| 200–299 | Success     | 200 OK, 201 Created, 204 No Content |\n| 300–399 | Redirection | 301 Moved Permanently, 304 Not Modified |\n| 400–499 | Client error| 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found |\n| 500–599 | Server error| 500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable |",
+              },
+              {
+                heading: "REST URL Conventions",
+                body: "REST APIs use nouns (not verbs) for URLs. Collections are plural. Nested resources show relationships.",
+                code: "GET    /api/modules          → List all modules\nGET    /api/modules/7        → Get module 7\nPOST   /api/modules          → Create a new module\nPUT    /api/modules/7        → Replace module 7 entirely\nPATCH  /api/modules/7        → Update module 7 partially\nDELETE /api/modules/7        → Delete module 7\n\nGET    /api/modules/7/lessons     → List lessons in module 7\nPOST   /api/modules/7/lessons     → Add a lesson to module 7",
+              },
+            ],
+          },
+        },
+        {
+          title: "Fetch API — GET Requests",
+          description:
+            "Make GET requests with the Fetch API, parse JSON responses, and handle loading and error states.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Basic GET Request",
+                body: "The Fetch API is built into modern browsers. Always check response.ok — fetch does not throw on 4xx or 5xx status codes. It only throws on network failures.",
+                code: "export async function fetchModules() {\n  const response = await fetch(\"http://localhost:3001/modules\");\n\n  if (!response.ok) {\n    throw new Error(`HTTP ${response.status}: ${response.statusText}`);\n  }\n\n  return response.json() as Promise<Module[]>;\n}\n\nexport async function fetchModule(id: string) {\n  const response = await fetch(`http://localhost:3001/modules/${id}`);\n\n  if (!response.ok) {\n    if (response.status === 404) {\n      throw new Error(\"Module not found\");\n    }\n    throw new Error(`HTTP ${response.status}: ${response.statusText}`);\n  }\n\n  return response.json() as Promise<Module>;\n}",
+              },
+              {
+                heading: "The useApi Hook",
+                body: "Encapsulate data fetching in a reusable hook that tracks idle, loading, success, and error states using a discriminated union.",
+                code: "type ApiState<T> =\n  | { status: \"idle\" }\n  | { status: \"loading\" }\n  | { status: \"success\"; data: T }\n  | { status: \"error\"; error: string };\n\nexport function useApi<T>(fetcher: () => Promise<T>, deps: unknown[] = []) {\n  const [state, setState] = useState<ApiState<T>>({ status: \"idle\" });\n\n  useEffect(() => {\n    let cancelled = false;\n    const fetchData = async () => {\n      setState({ status: \"loading\" });\n      try {\n        const data = await fetcher();\n        if (!cancelled) setState({ status: \"success\", data });\n      } catch (error) {\n        if (!cancelled) {\n          setState({\n            status: \"error\",\n            error: error instanceof Error ? error.message : \"Unknown error\",\n          });\n        }\n      }\n    };\n    fetchData();\n    return () => { cancelled = true; };\n  }, deps);\n\n  return state;\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "POST, PUT, PATCH, DELETE",
+          description:
+            "Create, update, and delete data with the Fetch API. Build a reusable mutation hook.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "POST — Creating Data",
+                body: "POST requests create new resources. Set the Content-Type header to application/json and send the body as a JSON string.",
+                code: "export async function createModule(input: { title: string; description: string }) {\n  const response = await fetch(`${API_BASE}/modules`, {\n    method: \"POST\",\n    headers: { \"Content-Type\": \"application/json\" },\n    body: JSON.stringify(input),\n  });\n\n  if (!response.ok) {\n    throw new Error(`HTTP ${response.status}: ${response.statusText}`);\n  }\n\n  return response.json() as Promise<Module>;\n}",
+              },
+              {
+                heading: "PATCH and DELETE",
+                body: "PATCH partially updates a resource. DELETE removes it. A successful DELETE often returns 204 No Content with no body.",
+                code: "export async function updateModuleProgress(id: string, progress: number) {\n  const response = await fetch(`${API_BASE}/modules/${id}`, {\n    method: \"PATCH\",\n    headers: { \"Content-Type\": \"application/json\" },\n    body: JSON.stringify({ progress }),\n  });\n  if (!response.ok) throw new Error(`HTTP ${response.status}`);\n  return response.json();\n}\n\nexport async function deleteModule(id: string) {\n  const response = await fetch(`${API_BASE}/modules/${id}`, {\n    method: \"DELETE\",\n  });\n  if (!response.ok) throw new Error(`HTTP ${response.status}`);\n  if (response.status === 204) return null;\n  return response.json();\n}",
+              },
+              {
+                heading: "Mutation Hook with Optimistic Updates",
+                body: "A mutation hook tracks pending, error, and data states for write operations. Use useCallback to memoize the mutate function.",
+                code: "export function useMutation<TInput, TOutput>(\n  mutationFn: (input: TInput) => Promise<TOutput>\n) {\n  const [isPending, setIsPending] = useState(false);\n  const [error, setError] = useState<string | null>(null);\n  const [data, setData] = useState<TOutput | null>(null);\n\n  const mutate = useCallback(async (input: TInput) => {\n    setIsPending(true);\n    setError(null);\n    try {\n      const result = await mutationFn(input);\n      setData(result);\n      return result;\n    } catch (err) {\n      const message = err instanceof Error ? err.message : \"Mutation failed\";\n      setError(message);\n      throw err;\n    } finally {\n      setIsPending(false);\n    }\n  }, [mutationFn]);\n\n  return { mutate, isPending, error, data };\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Error Handling Patterns",
+          description:
+            "Classify errors, build a typed API client, and show user-friendly error messages.",
+          order: 4,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Error Classification",
+                body: "Not all errors are the same. Network errors mean the user is offline. API errors mean the server rejected the request. Distinguish them for better UX.",
+                code: "class ApiError extends Error {\n  constructor(\n    public status: number,\n    public statusText: string,\n    public body?: unknown\n  ) {\n    super(`HTTP ${status}: ${statusText}`);\n    this.name = \"ApiError\";\n  }\n}\n\nclass NetworkError extends Error {\n  constructor(message: string) {\n    super(message);\n    this.name = \"NetworkError\";\n  }\n}\n\nfunction isApiError(error: unknown): error is ApiError {\n  return error instanceof ApiError;\n}\n\nfunction isNetworkError(error: unknown): error is NetworkError {\n  return error instanceof NetworkError;\n}",
+              },
+              {
+                heading: "Typed API Client",
+                body: "Wrap fetch in a reusable client that handles errors, parses JSON, and returns typed responses.",
+                code: "export async function apiClient<T>(\n  url: string,\n  options: RequestInit = {}\n): Promise<T> {\n  try {\n    const response = await fetch(`${API_BASE}${url}`, {\n      ...options,\n      headers: {\n        \"Content-Type\": \"application/json\",\n        ...options.headers,\n      },\n    });\n\n    if (!response.ok) {\n      const body = await response.json().catch(() => null);\n      throw new ApiError(response.status, response.statusText, body);\n    }\n\n    if (response.status === 204) return null as T;\n    return response.json() as T;\n  } catch (error) {\n    if (error instanceof ApiError) throw error;\n    throw new NetworkError(\n      error instanceof Error ? error.message : \"Network request failed\"\n    );\n  }\n}",
+              },
+              {
+                heading: "User-Facing Error Display",
+                body: "Show different messages for different error types. Let users retry network errors. Guide them on authentication errors.",
+                code: "export function ErrorDisplay({ error, onRetry }: { error: unknown; onRetry?: () => void }) {\n  if (isNetworkError(error)) {\n    return (\n      <div className=\"rounded-lg border border-red-200 bg-red-50 p-6 text-center\">\n        <p className=\"font-medium text-red-800\">Network Error</p>\n        <p className=\"mt-1 text-sm text-red-600\">Could not connect to the server.</p>\n        {onRetry && (\n          <button onClick={onRetry} className=\"mt-3 rounded-lg bg-red-600 px-4 py-2 text-white\">\n            Retry\n          </button>\n        )}\n      </div>\n    );\n  }\n\n  if (isApiError(error)) {\n    if (error.status === 401) {\n      return <p className=\"text-amber-600\">Please log in to continue.</p>;\n    }\n    if (error.status === 404) {\n      return <p className=\"text-gray-500\">The requested resource was not found.</p>;\n    }\n    return (\n      <div className=\"rounded-lg border border-red-200 bg-red-50 p-4\">\n        <p className=\"text-red-800\">Server error ({error.status})</p>\n        <p className=\"text-sm text-red-600\">{error.statusText}</p>\n      </div>\n    );\n  }\n\n  return <p className=\"text-red-600\">An unexpected error occurred.</p>;\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "API Fundamentals Exercise + Quiz",
+          description:
+            "Build a full CRUD client for a notes app and test your API knowledge.",
+          order: 5,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the API exercise by building a notes CRUD client with typed error handling.",
+          },
+          exercises: [
+            {
+              title: "Build a CRUD Client",
+              instructions:
+                "Fork the exercise repo and build a notes CRUD client: create a typed apiClient<T> with ApiError and NetworkError handling, GET /notes to display cards, POST /notes to create via form, PATCH /notes/:id for inline editing, DELETE /notes/:id with confirmation, use useApi for reads and useMutation for writes, show loading skeletons, show user-friendly error messages, add client-side search filtering, and refetch after mutations.",
+              starterCode:
+                "// TODO: Create apiClient<T> with error classification\n// TODO: Create useApi hook for reads\n// TODO: Create useMutation hook for writes\n// TODO: Build NotesList with cards\n// TODO: Build NoteForm for creation\n// TODO: Add inline edit and delete\n// TODO: Add search filter\n// TODO: Refetch after mutations",
+              expectedOutput:
+                "A fully functional notes CRUD app with typed errors, loading states, and search",
+              hintsJson: [
+                "Use apiClient<T> for all fetch calls — it handles errors uniformly",
+                "Use useApi(() => apiClient<Note[]>('/notes'), []) for reading",
+                "After create/update/delete, refetch the list to show updated data",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "What HTTP method do you use to create a new resource?",
+              optionsJson: ["GET", "POST", "PUT", "PATCH"],
+              correctAnswer: "POST",
+              explanation:
+                "POST creates a new resource. GET reads, PUT replaces, PATCH partially updates.",
+              order: 1,
+            },
+            {
+              question: "What does a 404 status code mean?",
+              optionsJson: [
+                "Server error",
+                "Unauthorized",
+                "The requested resource was not found",
+                "Bad request",
+              ],
+              correctAnswer: "The requested resource was not found",
+              explanation:
+                "404 Not Found means the URL does not correspond to any existing resource on the server.",
+              order: 2,
+            },
+            {
+              question: "Why do you check response.ok after fetch?",
+              optionsJson: [
+                "fetch throws on 4xx/5xx automatically",
+                "fetch only throws on network failures; response.ok checks HTTP status",
+                "It is required by TypeScript",
+                "It makes the request faster",
+              ],
+              correctAnswer:
+                "fetch only throws on network failures; response.ok checks HTTP status",
+              explanation:
+                "fetch resolves successfully even for 404 and 500 responses. You must check response.ok to detect HTTP errors.",
+              order: 3,
+            },
+            {
+              question: "What is the difference between PUT and PATCH?",
+              optionsJson: [
+                "They are identical",
+                "PUT replaces the entire resource; PATCH updates partially",
+                "PATCH replaces; PUT updates partially",
+                "PUT is for reading; PATCH is for writing",
+              ],
+              correctAnswer:
+                "PUT replaces the entire resource; PATCH updates partially",
+              explanation:
+                "PUT sends the full replacement object. PATCH sends only the fields that changed.",
+              order: 4,
+            },
+            {
+              question: "What should you do when a mutation succeeds?",
+              optionsJson: [
+                "Nothing — the UI updates automatically",
+                "Refetch the relevant data to show the updated state",
+                "Reload the entire page",
+                "Show an alert",
+              ],
+              correctAnswer:
+                "Refetch the relevant data to show the updated state",
+              explanation:
+                "After a mutation, refetch the data that changed so the UI reflects the server state.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+    // ─── Module 9: Next.js 16 — Basics ────────────────────────
+    {
+      title: "Next.js 16 — Basics",
+      description:
+        "Migrate your React SPA to Next.js 16.0.0: App Router, Server Components, data fetching, dynamic routes, and layouts.",
+      slug: "nextjs-basics",
+      order: 9,
+      phase: "B",
+      status: "published",
+      lessons: [
+        {
+          title: "App Router File Conventions",
+          description:
+            "Learn Next.js App Router file conventions: layout, page, loading, and error files.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Project Structure",
+                body: "Next.js 16.0.0 uses the file system to define routes. The App Router in src/app/ uses special file names: layout.tsx wraps pages, page.tsx defines the UI, loading.tsx shows loading states, and error.tsx catches errors. All Reading Advantage apps are built with TypeScript 5.9.3 and Next.js 16.0.0.",
+                code: "src/app/\n├── layout.tsx       # Root layout (wraps everything)\n├── page.tsx         # Home page (/)\n├── globals.css      # Global styles\n├── modules/\n│   ├── page.tsx     # Module list (/modules)\n│   └── [slug]/\n│       └── page.tsx # Module detail (/modules/:slug)\n├── loading.tsx      # Auto loading state\n└── error.tsx        # Auto error boundary",
+              },
+              {
+                heading: "Layout and Page Files",
+                body: "layout.tsx wraps all pages in its directory and persists across navigation. page.tsx defines the UI for a route.",
+                code: "// layout.tsx — wraps all pages\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <html lang=\"en\">\n      <body>\n        <nav>\n          <a href=\"/\">Dashboard</a>\n          <a href=\"/modules\">Modules</a>\n        </nav>\n        {children}\n      </body>\n    </html>\n  );\n}\n\n// page.tsx — defines the UI for a route\nexport default function HomePage() {\n  return <h1>Welcome to the Learning Dashboard</h1>;\n}",
+              },
+              {
+                heading: "Loading and Error Files",
+                body: "loading.tsx is shown while page data is loading via Suspense. error.tsx catches errors in Server Components and shows a fallback UI.",
+                code: "// loading.tsx — shown while page loads\nexport default function Loading() {\n  return <div className=\"animate-pulse\">Loading...</div>;\n}\n\n// error.tsx — catches errors (must be a Client Component)\n\"use client\";\n\nexport default function Error({\n  error,\n  reset,\n}: {\n  error: Error & { digest?: string };\n  reset: () => void;\n}) {\n  return (\n    <div>\n      <h2>Something went wrong!</h2>\n      <button onClick={reset}>Try again</button>\n    </div>\n  );\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Server Components vs Client Components",
+          description:
+            "Understand the boundary between Server Components and Client Components in the App Router.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Server Components (default)",
+                body: "Server Components run on the server by default. They can do async/await, direct database access, and keep secrets safe. They cannot use hooks, events, or browser APIs.",
+                code: "// Server Component — no \"use client\" needed\nexport default async function ModuleList() {\n  const modules = await fetchModules(); // Server-side fetch!\n\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules.map((mod) => (\n        <ModuleCard key={mod.id} module={mod} />\n      ))}\n    </div>\n  );\n}\n\n// ✅ Can do: async/await, DB access, env vars\n// ❌ Cannot do: useState, useEffect, onClick, localStorage",
+              },
+              {
+                heading: "Client Components",
+                body: "Add the 'use client' directive to make a component run in the browser. Client Components can use hooks, handle events, and access browser APIs.",
+                code: "\"use client\";\n\nimport { useState } from \"react\";\n\nexport function SearchBar({ onSearch }: { onSearch: (query: string) => void }) {\n  const [query, setQuery] = useState(\"\");\n\n  return (\n    <input\n      value={query}\n      onChange={(e) => {\n        setQuery(e.target.value);\n        onSearch(e.target.value);\n      }}\n      placeholder=\"Search...\"\n    />\n  );\n}\n\n// The boundary rule: \"use client\" marks the boundary\n// Components imported by a Client Component are also Client Components",
+              },
+              {
+                heading: "Composition Pattern",
+                body: "Push 'use client' as far down the tree as possible. Keep parent components as Server Components for maximum performance. Server Components can pass data as props to Client Components.",
+                code: "// Server Component (default)\nexport default async function ModulesPage() {\n  const modules = await fetchModules();\n\n  return (\n    <div>\n      <ModuleSearch />  {/* Client — handles input */}\n      <ModuleList modules={modules} />  {/* Server — renders data */}\n    </div>\n  );\n}\n\n// Best practice: Server wraps Client\n// Server fetches data → passes to Client for interactivity",
+              },
+            ],
+          },
+        },
+        {
+          title: "Data Fetching in Server Components",
+          description:
+            "Fetch data directly in Server Components with async/await. No useEffect needed.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Server-Side Data Fetching",
+                body: "In Server Components, fetch data directly with async/await. No useEffect, no loading state management. Next.js handles the loading UI with loading.tsx.",
+                code: "async function getModules() {\n  const response = await fetch(\"http://localhost:3001/modules\", {\n    cache: \"no-store\", // Always fresh\n  });\n  if (!response.ok) throw new Error(\"Failed to fetch\");\n  return response.json() as Promise<Module[]>;\n}\n\nexport default async function HomePage() {\n  const modules = await getModules();\n\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules.map((mod) => (\n        <ModuleCard key={mod.id} module={mod} />\n      ))}\n    </div>\n  );\n}",
+              },
+              {
+                heading: "Caching Strategies",
+                body: "Next.js fetch has built-in caching. Default caches until revalidated (like SSG). Use cache: no-store for always fresh (like SSR). Use next.revalidate for ISR.",
+                code: "// Default: cached until revalidated (SSG-like)\nfetch(url);\n\n// Always fresh (SSR-like)\nfetch(url, { cache: \"no-store\" });\n\n// Revalidate every 60 seconds (ISR)\nfetch(url, { next: { revalidate: 60 } });",
+              },
+              {
+                heading: "Parallel Data Fetching",
+                body: "Fetch multiple resources in parallel with Promise.all. This is much faster than sequential fetching.",
+                code: "export default async function ModuleDetailPage(\n  { params }: { params: Promise<{ slug: string }> }\n) {\n  const { slug } = await params;\n  const [module, lessons, progress] = await Promise.all([\n    getModule(slug),\n    getLessons(slug),\n    getProgress(slug),\n  ]);\n\n  return (\n    <div>\n      <ModuleHeader module={module} />\n      <LessonList lessons={lessons} progress={progress} />\n    </div>\n  );\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Dynamic Routes and Navigation",
+          description:
+            "Build dynamic routes and navigate between pages with Link and useRouter.",
+          order: 4,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Dynamic Route Segments",
+                body: "Dynamic routes handle URLs with variable segments. In Next.js 16, params is a Promise — you must await it.",
+                code: "// File: src/app/modules/[slug]/page.tsx\n// URL: /modules/react-basics\n\ninterface Props {\n  params: Promise<{ slug: string }>;\n}\n\nexport default async function ModuleDetailPage({ params }: Props) {\n  const { slug } = await params;\n  const module = await getModule(slug);\n\n  if (!module) {\n    return <div>Module not found</div>;\n  }\n\n  return (\n    <div>\n      <h1>{module.title}</h1>\n      <p>{module.description}</p>\n      <LessonList lessons={module.lessons} />\n    </div>\n  );\n}",
+              },
+              {
+                heading: "Navigation with Link",
+                body: "Use next/link for client-side navigation without full page reloads. Avoid <a> for internal links.",
+                code: "import Link from \"next/link\";\n\n// Client-side navigation — no full page reload!\n<Link href=\"/modules\">All Modules</Link>\n<Link href={`/modules/${module.slug}`}>{module.title}</Link>\n\n// vs. <a> tag — full page reload (avoid for internal links)\n<a href=\"/modules\">All Modules</a>  // ❌ Don't do this internally",
+              },
+              {
+                heading: "Programmatic Navigation",
+                body: "Use useRouter from next/navigation for programmatic navigation in Client Components.",
+                code: "\"use client\";\n\nimport { useRouter } from \"next/navigation\";\n\nexport function QuizComplete({ moduleSlug }: { moduleSlug: string }) {\n  const router = useRouter();\n\n  return (\n    <div>\n      <p>Quiz complete!</p>\n      <button onClick={() => router.push(`/modules/${moduleSlug}`)}>\n        Back to Module\n      </button>\n    </div>\n  );\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Layouts and Nested Routing",
+          description:
+            "Build layout hierarchies and use route groups for organized page shells.",
+          order: 5,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Layout Hierarchy",
+                body: "Layouts wrap pages and persist across navigation. Nested layouts allow different UI shells for different route groups.",
+                code: "// Root layout (required)\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <html lang=\"en\">\n      <body>\n        <nav>\n          <Link href=\"/\">Dashboard</Link>\n          <Link href=\"/modules\">Modules</Link>\n        </nav>\n        {children}\n      </body>\n    </html>\n  );\n}\n\n// Nested layout for modules\nexport default function ModulesLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <div className=\"flex\">\n      <aside className=\"w-64 border-r p-4\">\n        <ModuleSidebar />\n      </aside>\n      <div className=\"flex-1 p-6\">{children}</div>\n    </div>\n  );\n}",
+              },
+              {
+                heading: "Route Groups",
+                body: "Route groups (folder) don't create URL segments. They organize routes with shared layouts.",
+                code: "app/\n├── (dashboard)/       → No URL segment\n│   ├── layout.tsx     → Dashboard layout\n│   ├── page.tsx       → / (home)\n│   └── modules/\n├── (auth)/            → No URL segment\n│   ├── layout.tsx     → Auth layout\n│   └── login/\n│       └── page.tsx   → /login",
+              },
+            ],
+          },
+        },
+        {
+          title: "Next.js Basics Exercise + Quiz",
+          description:
+            "Build a multi-page Next.js app with dynamic routes, layouts, and server-side data fetching.",
+          order: 6,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the Next.js exercise by building a multi-page app with server-side data fetching.",
+          },
+          exercises: [
+            {
+              title: "Build a Multi-Page Next.js App",
+              instructions:
+                "Fork the exercise repo and build a multi-page Next.js app: create a home page that fetches modules (Server Component), create /modules/[slug] dynamic route for module detail, create /modules/[slug]/lessons/[id] for lesson view, add a root layout with navigation (Link components), add loading.tsx for modules page skeleton, add error.tsx for module detail with retry button, use Server Components for data fetching, add \"use client\" only where needed, fetch module list in a layout sidebar, and use Promise.all for parallel data fetching on detail pages.",
+              starterCode:
+                "// TODO: Create home page with server-side fetch\n// TODO: Create /modules/[slug]/page.tsx\n// TODO: Create /modules/[slug]/lessons/[id]/page.tsx\n// TODO: Add root layout with nav\n// TODO: Add loading.tsx\n// TODO: Add error.tsx\n// TODO: Add sidebar layout\n// TODO: Use Promise.all for parallel fetching",
+              expectedOutput:
+                "A multi-page Next.js app with dynamic routes, layouts, loading states, and server-side data fetching",
+              hintsJson: [
+                "Use async function for Server Components that fetch data",
+                "Remember: params is a Promise in Next.js 16 — await it",
+                "Push 'use client' as far down the tree as possible",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "What file defines a route's UI in the App Router?",
+              optionsJson: ["route.ts", "page.tsx", "layout.tsx", "index.tsx"],
+              correctAnswer: "page.tsx",
+              explanation:
+                "page.tsx defines the UI for a route. layout.tsx wraps pages, route.ts defines API endpoints.",
+              order: 1,
+            },
+            {
+              question: "When do you need \"use client\"?",
+              optionsJson: [
+                "Always",
+                "When using hooks, event handlers, or browser APIs",
+                "Only for API routes",
+                "Never in Next.js 16",
+              ],
+              correctAnswer:
+                "When using hooks, event handlers, or browser APIs",
+              explanation:
+                "Client Components need the 'use client' directive when they use React hooks, handle events, or access browser-only APIs.",
+              order: 2,
+            },
+            {
+              question: "How do you fetch data in a Server Component?",
+              optionsJson: [
+                "With useEffect",
+                "With async/await directly in the component",
+                "With useQuery",
+                "With fetch in useState",
+              ],
+              correctAnswer: "With async/await directly in the component",
+              explanation:
+                "Server Components can fetch data directly with async/await. No useEffect or client-side data fetching is needed.",
+              order: 3,
+            },
+            {
+              question: "What does loading.tsx do?",
+              optionsJson: [
+                "Shows a 404 page",
+                "Automatic loading UI shown via Suspense while the page loads",
+                "Handles errors",
+                "Redirects to login",
+              ],
+              correctAnswer:
+                "Automatic loading UI shown via Suspense while the page loads",
+              explanation:
+                "Next.js automatically wraps Server Component pages in Suspense and shows loading.tsx while data is being fetched.",
+              order: 4,
+            },
+            {
+              question:
+                "What is the difference between <Link> and <a> for internal navigation?",
+              optionsJson: [
+                "There is no difference",
+                "<Link> does client-side navigation without a full page reload",
+                "<a> is faster",
+                "<Link> only works for external URLs",
+              ],
+              correctAnswer:
+                "<Link> does client-side navigation without a full page reload",
+              explanation:
+                "next/link provides client-side navigation that preserves state and is faster. Use <a> only for external links.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+    // ─── Module 10: Next.js 16 — Advanced ─────────────────────
+    {
+      title: "Next.js 16 — Advanced",
+      description:
+        "Productionize your Next.js app with Route Handlers, middleware, error boundaries, streaming, and optimization.",
+      slug: "nextjs-advanced",
+      order: 10,
+      phase: "B",
+      status: "published",
+      lessons: [
+        {
+          title: "Route Handlers",
+          description:
+            "Build API endpoints with Route Handlers in the App Router.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "GET and POST Route Handlers",
+                body: "Route Handlers live in app/api/.../route.ts. They handle HTTP requests and return responses using NextResponse. Input validation uses Zod 3.25.76 — the same runtime validation library used across the monorepo.",
+                code: "// src/app/api/modules/route.ts\nimport { NextResponse } from \"next/server\";\n\nexport async function GET() {\n  const modules = await fetchModules();\n  return NextResponse.json(modules);\n}\n\nexport async function POST(request: Request) {\n  const body = await request.json();\n  const result = createModuleSchema.safeParse(body);\n  if (!result.success) {\n    return NextResponse.json(\n      { error: \"Invalid input\", details: result.error.issues },\n      { status: 400 }\n    );\n  }\n  const newModule = await createModule(result.data);\n  return NextResponse.json(newModule, { status: 201 });\n}",
+              },
+              {
+                heading: "Dynamic Route Handlers",
+                body: "Dynamic segments in route handlers let you build RESTful APIs.",
+                code: "// src/app/api/quizzes/[lessonId]/route.ts\nexport async function POST(\n  request: Request,\n  { params }: { params: Promise<{ lessonId: string }> }\n) {\n  const { lessonId } = await params;\n  const body = await request.json();\n\n  const result = submitQuizSchema.safeParse(body);\n  if (!result.success) {\n    return NextResponse.json({ error: \"Invalid input\" }, { status: 400 });\n  }\n\n  const questions = await getQuizQuestions(lessonId);\n  const score = calculateScore(questions, result.data.answers);\n  await saveQuizResult(lessonId, score);\n\n  return NextResponse.json({ score, total: questions.length });\n}",
+              },
+              {
+                heading: "Error Handling in Route Handlers",
+                body: "Wrap route handlers in try/catch and return appropriate status codes.",
+                code: "export async function POST(request: Request) {\n  try {\n    const body = await request.json();\n    // ... process\n    return NextResponse.json({ success: true });\n  } catch (error) {\n    if (error instanceof SyntaxError) {\n      return NextResponse.json({ error: \"Invalid JSON\" }, { status: 400 });\n    }\n    console.error(\"API error:\", error);\n    return NextResponse.json(\n      { error: \"Internal server error\" },\n      { status: 500 }\n    );\n  }\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Middleware",
+          description:
+            "Run code before requests reach pages or API routes with Next.js middleware.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Basic Middleware",
+                body: "Middleware runs before a request reaches a page or API route. Use the matcher config to limit which routes it runs on.",
+                code: "// src/middleware.ts\nimport { NextResponse } from \"next/server\";\nimport type { NextRequest } from \"next/server\";\n\nexport function middleware(request: NextRequest) {\n  console.log(`Request: ${request.nextUrl.pathname}`);\n  return NextResponse.next();\n}\n\nexport const config = {\n  matcher: [\n    \"/modules/:path*\",\n    \"/chat/:path*\",\n    \"/api/((?!auth).)*\",\n  ],\n};",
+              },
+              {
+                heading: "Auth Middleware",
+                body: "Check for session cookies and redirect unauthenticated users to login.",
+                code: "export function middleware(request: NextRequest) {\n  const sessionToken = request.cookies.get(\"session\")?.value;\n\n  if (!sessionToken) {\n    const loginUrl = new URL(\"/login\", request.url);\n    loginUrl.searchParams.set(\"from\", request.nextUrl.pathname);\n    return NextResponse.redirect(loginUrl);\n  }\n\n  const response = NextResponse.next();\n  response.headers.set(\"x-user-id\", decodeSessionToken(sessionToken));\n  return response;\n}\n\nexport const config = {\n  matcher: [\"/modules/:path*\", \"/chat/:path*\"],\n};",
+              },
+              {
+                heading: "Middleware Patterns",
+                body: "Redirect old URLs, rewrite requests, and add CORS headers.",
+                code: "// Redirect old URLs\nif (request.nextUrl.pathname.startsWith(\"/course/\")) {\n  const newUrl = request.nextUrl.pathname.replace(\"/course/\", \"/modules/\");\n  return NextResponse.redirect(new URL(newUrl, request.url));\n}\n\n// Add CORS headers for API routes\nif (request.nextUrl.pathname.startsWith(\"/api/\")) {\n  const response = NextResponse.next();\n  response.headers.set(\"Access-Control-Allow-Origin\", \"*\");\n  response.headers.set(\"Access-Control-Allow-Methods\", \"GET, POST\");\n  return response;\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Error Boundaries and Streaming",
+          description:
+            "Handle errors gracefully and stream parts of the page independently with Suspense.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Error Boundaries",
+                body: "error.tsx catches errors in Server Components. not-found.tsx handles 404s. Both improve user experience when things go wrong.",
+                code: "// error.tsx — catches runtime errors\n\"use client\";\n\nexport default function Error({\n  error,\n  reset,\n}: {\n  error: Error & { digest?: string };\n  reset: () => void;\n}) {\n  return (\n    <div className=\"flex flex-col items-center py-12\">\n      <h2 className=\"text-2xl font-bold text-red-600\">Something went wrong!</h2>\n      <p className=\"mt-2 text-gray-500\">{error.message}</p>\n      <button\n        onClick={reset}\n        className=\"mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white\">\n        Try again\n      </button>\n    </div>\n  );\n}\n\n// not-found.tsx — handles 404s\nexport default function NotFound() {\n  return (\n    <div className=\"flex flex-col items-center py-12\">\n      <h2 className=\"text-4xl font-bold\">404</h2>\n      <p className=\"mt-2 text-gray-500\">Page not found</p>\n      <Link href=\"/\" className=\"mt-4 text-blue-500 hover:underline\">\n        Go home\n      </Link>\n    </div>\n  );\n}",
+              },
+              {
+                heading: "Streaming with Suspense",
+                body: "Stream parts of the page independently so users see content progressively. Each Suspense boundary loads independently.",
+                code: "import { Suspense } from \"react\";\n\nexport default function HomePage() {\n  return (\n    <div>\n      {/* Header renders immediately */}\n      <h1>Learning Dashboard</h1>\n\n      {/* Module list streams when ready */}\n      <Suspense fallback={<ModuleGridSkeleton />}>\n        <ModuleList />\n      </Suspense>\n\n      {/* Progress streams independently */}\n      <Suspense fallback={<ProgressSkeleton />}>\n        <ProgressSummary />\n      </Suspense>\n    </div>\n  );\n}\n\n// ModuleList fetches its own data\nasync function ModuleList() {\n  const modules = await getModules();\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules.map((mod) => (\n        <ModuleCard key={mod.id} module={mod} />\n      ))}\n    </div>\n  );\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Image, Font, and Metadata Optimization",
+          description:
+            "Optimize images, fonts, and metadata for performance and SEO.",
+          order: 4,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "next/image",
+                body: "next/image automatically optimizes images: lazy loading, resizing, WebP/AVIF conversion, and layout shift prevention.",
+                code: "import Image from \"next/image\";\n\n// Automatic optimization\n<Image\n  src=\"/photos/team.jpg\"\n  alt=\"Team photo\"\n  width={800}\n  height={600}\n  priority\n/>\n\n// Remote images — configure domains in next.config.ts\nconst nextConfig = {\n  images: {\n    remotePatterns: [\n      { protocol: \"https\", hostname: \"avatars.githubusercontent.com\" },\n    ],\n  },\n};",
+              },
+              {
+                heading: "next/font",
+                body: "next/font self-hosts fonts for zero layout shift, privacy, and performance.",
+                code: "import { Inter } from \"next/font/google\";\n\nconst inter = Inter({ subsets: [\"latin\"] });\n\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <html lang=\"en\" className={inter.className}>\n      <body>{children}</body>\n    </html>\n  );\n}",
+              },
+              {
+                heading: "Metadata API",
+                body: "Define static or dynamic metadata for SEO and social sharing.",
+                code: "import type { Metadata } from \"next\";\n\n// Static metadata\nexport const metadata: Metadata = {\n  title: \"Learning Dashboard\",\n  description: \"Track your codecamp progress\",\n};\n\n// Dynamic metadata\nexport async function generateMetadata(\n  { params }: { params: Promise<{ slug: string }> }\n): Promise<Metadata> {\n  const { slug } = await params;\n  const module = await getModule(slug);\n  return {\n    title: `${module.title} — Learning Dashboard`,\n    description: module.description,\n  };\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Next.js Advanced Exercise + Quiz",
+          description:
+            "Productionize your Next.js app with API routes, middleware, error handling, and optimization.",
+          order: 5,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the Next.js Advanced exercise by adding API routes, middleware, and optimization.",
+          },
+          exercises: [
+            {
+              title: "Add API Routes and Streaming",
+              instructions:
+                "Fork the exercise repo and productionize your Next.js app: create POST /api/notes route handler with Zod validation, create GET /api/notes with optional category filter, create DELETE /api/notes/[id] route handler, add middleware that logs request method + path + duration, add middleware that checks mock session cookie on /notes/* routes, wrap notes list in Suspense with skeleton fallback, add error.tsx for notes page with retry button, add not-found.tsx for the app, use next/image for avatars, and add dynamic generateMetadata for note detail page.",
+              starterCode:
+                "// TODO: Create POST /api/notes with Zod validation\n// TODO: Create GET /api/notes with category filter\n// TODO: Create DELETE /api/notes/[id]\n// TODO: Add logging middleware\n// TODO: Add auth middleware\n// TODO: Add Suspense + skeleton\n// TODO: Add error.tsx and not-found.tsx\n// TODO: Use next/image\n// TODO: Add dynamic metadata",
+              expectedOutput:
+                "A production-ready Next.js app with API routes, middleware, error boundaries, and optimizations",
+              hintsJson: [
+                "Use NextResponse.json() to return JSON from route handlers",
+                "Middleware matcher controls which routes run the middleware",
+                "Use generateMetadata for dynamic page titles and descriptions",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "What file do you create for an API endpoint in the App Router?",
+              optionsJson: ["api.ts", "route.ts", "handler.ts", "endpoint.ts"],
+              correctAnswer: "route.ts",
+              explanation:
+                "API endpoints in the App Router use route.ts files inside app/api/ directories.",
+              order: 1,
+            },
+            {
+              question: "When does Next.js middleware run?",
+              optionsJson: [
+                "After the page renders",
+                "Before the request reaches a page or API route",
+                "Only on the first request",
+                "After the API response",
+              ],
+              correctAnswer:
+                "Before the request reaches a page or API route",
+              explanation:
+                "Middleware runs before the request reaches its destination. It can redirect, rewrite, or modify the response.",
+              order: 2,
+            },
+            {
+              question: "How does streaming improve user experience?",
+              optionsJson: [
+                "It makes images load faster",
+                "Users see content progressively instead of waiting for the entire page",
+                "It reduces bundle size",
+                "It enables offline mode",
+              ],
+              correctAnswer:
+                "Users see content progressively instead of waiting for the entire page",
+              explanation:
+                "Streaming with Suspense sends parts of the page as they are ready. Users see content faster and independent sections load in parallel.",
+              order: 3,
+            },
+            {
+              question: "Why use next/image instead of <img>?",
+              optionsJson: [
+                "It is required by Next.js",
+                "Automatic lazy loading, resizing, WebP conversion, and layout shift prevention",
+                "It supports more image formats",
+                "It is easier to type",
+              ],
+              correctAnswer:
+                "Automatic lazy loading, resizing, WebP conversion, and layout shift prevention",
+              explanation:
+                "next/image optimizes images automatically: lazy loads below-the-fold images, serves the right size for each device, converts to modern formats, and prevents layout shift.",
+              order: 4,
+            },
+            {
+              question:
+                "What is the difference between error.tsx and not-found.tsx?",
+              optionsJson: [
+                "They are the same",
+                "error.tsx catches runtime errors; not-found.tsx handles 404s",
+                "error.tsx handles 404s; not-found.tsx catches runtime errors",
+                "not-found.tsx is deprecated",
+              ],
+              correctAnswer:
+                "error.tsx catches runtime errors; not-found.tsx handles 404s",
+              explanation:
+                "error.tsx is an error boundary that catches runtime errors in its subtree. not-found.tsx renders when a page doesn't exist (404).",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  return { modules, exerciseRepos: getExerciseRepos(modules) };
+}
