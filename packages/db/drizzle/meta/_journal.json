@@ -50,6 +50,20 @@
       "when": 1747130000000,
       "tag": "0006_codecamp_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1747200000000,
+      "tag": "0007_codecamp_repos_reviews",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1747210000000,
+      "tag": "0008_codecamp_phase",
+      "breakpoints": true
     }
   ]
 }

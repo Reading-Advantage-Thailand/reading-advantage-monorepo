@@ -15,6 +15,7 @@ export const codecampModules = pgTable("codecamp_modules", {
   description: text("description").notNull(),
   slug: text("slug").notNull().unique(),
   order: integer("order").notNull(),
+  phase: text("phase").notNull().default("A"),
   status: text("status").default("draft").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
