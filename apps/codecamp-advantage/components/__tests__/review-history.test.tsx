@@ -85,4 +85,31 @@ describe("ReviewHistory", () => {
     expect(screen.getAllByText(/Revisions/i).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText(/Approved/i)).toBeInTheDocument();
   });
+
+  it("renders without summary when summary is null", () => {
+    render(
+      <ReviewHistory
+        prUrl="https://github.com/org/repo/pull/5"
+        reviewStatus="pending"
+        summary={null}
+      />
+    );
+
+    expect(screen.queryByText(/Review Feedback/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/Awaiting first review/i)).toBeInTheDocument();
+  });
+
+  it("renders with empty string summary", () => {
+    render(
+      <ReviewHistory
+        prUrl="https://github.com/org/repo/pull/5"
+        reviewStatus="reviewed"
+        summary=""
+      />
+    );
+
+    // Empty string is falsy, so Review Feedback block should not render
+    expect(screen.queryByText(/Review Feedback/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/Initial review complete/i)).toBeInTheDocument();
+  });
 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle, Circle, Loader2, GitPullRequest, GitBranch, GitMerge, MessageSquare } from "lucide-react";
+import type { ReactNode } from "react";
 
 interface WorkflowStep {
   id: string;
@@ -15,7 +16,7 @@ interface WorkflowTrackerProps {
   steps: WorkflowStep[];
 }
 
-const STEP_ICONS: Record<string, React.ReactNode> = {
+const STEP_ICONS: Record<string, ReactNode> = {
   claim: <MessageSquare className="h-5 w-5" />,
   branch: <GitBranch className="h-5 w-5" />,
   pr: <GitPullRequest className="h-5 w-5" />,

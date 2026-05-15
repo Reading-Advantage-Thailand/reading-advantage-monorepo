@@ -90,7 +90,7 @@ export default function LessonPage() {
         </div>
 
         {/* Exercise Repos — for exercise-type lessons */}
-        {lesson.type === "exercise" && exerciseRepos && exerciseRepos.length > 0 && (
+        {(lesson.type === "exercise" || lesson.moduleSlug === "real-world-practice") && exerciseRepos && exerciseRepos.length > 0 && (
           <div className="mt-8 rounded-lg border p-6">
             <h2 className="text-xl font-semibold">Fork-Based Exercise</h2>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -339,8 +339,8 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
 
   const initialMessages = useMemo(() => {
     if (!chatHistory?.messages) return undefined;
-    return chatHistory.messages.map((m) => ({
-      role: m.role as "user" | "assistant",
+    return chatHistory.messages.map((m): { role: "user" | "assistant"; content: string } => ({
+      role: m.role === "assistant" ? "assistant" : "user",
       content: m.content,
     }));
   }, [chatHistory]);

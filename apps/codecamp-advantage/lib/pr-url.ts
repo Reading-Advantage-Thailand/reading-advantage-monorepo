@@ -6,7 +6,7 @@ export function getPrDisplayName(url: string): string {
   try {
     const u = new URL(url);
     const parts = u.pathname.split("/").filter(Boolean);
-    if (parts.length >= 4) {
+    if (parts.length >= 4 && parts[2] === "pull") {
       return `${parts[0]}/${parts[1]}/pull/${parts[3]}`;
     }
   } catch {

@@ -61,4 +61,20 @@ describe("WorkflowTracker", () => {
     render(<WorkflowTracker {...allCompleted} />);
     expect(screen.getByText(/All steps completed/i)).toBeInTheDocument();
   });
+
+  it("handles empty steps array", () => {
+    render(<WorkflowTracker issueTitle="Empty issue" issueNumber={1} steps={[]} />);
+    expect(screen.getByText(/#1/)).toBeInTheDocument();
+    expect(screen.queryByText(/All steps completed/i)).not.toBeInTheDocument();
+  });
+
+  it("renders fallback icon for unknown step id", () => {
+    const props = {
+      issueTitle: "Unknown step",
+      issueNumber: 2,
+      steps: [{ id: "unknown", label: "Custom Step", description: "A step without a mapped icon", status: "pending" as const }],
+    };
+    render(<WorkflowTracker {...props} />);
+    expect(screen.getByText("Custom Step")).toBeInTheDocument();
+  });
 });
