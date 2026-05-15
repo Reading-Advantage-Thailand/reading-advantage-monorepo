@@ -716,6 +716,17 @@ export async function linkExerciseRepo({
     throw new Error(`Module not found: ${input.moduleId}`);
   }
 
+  // Prevent duplicate repo URLs
+  const [existing] = await db
+    .select({ id: codecampExerciseRepos.id })
+    .from(codecampExerciseRepos)
+    .where(eq(codecampExerciseRepos.repoUrl, input.repoUrl))
+    .limit(1);
+
+  if (existing) {
+    throw new Error("A repo with this URL already exists");
+  }
+
   const [result] = await db
     .insert(codecampExerciseRepos)
     .values({

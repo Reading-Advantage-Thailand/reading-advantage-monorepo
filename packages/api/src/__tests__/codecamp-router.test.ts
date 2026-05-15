@@ -436,6 +436,21 @@ describe("codecamp router", () => {
         })
       ).rejects.toMatchObject({ code: "FORBIDDEN" });
     });
+
+    it("maps 'A repo with this URL already exists' to BAD_REQUEST", async () => {
+      vi.mocked(linkExerciseRepo).mockRejectedValue(new Error("A repo with this URL already exists"));
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.linkExerciseRepo({
+          moduleId: "550e8400-e29b-41d4-a716-446655440001",
+          repoUrl: "https://github.com/org/repo1",
+          description: "Exercise repo 1",
+          order: 1,
+        })
+      ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    });
   });
 
   describe("prReviews", () => {

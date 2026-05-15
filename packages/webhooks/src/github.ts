@@ -175,12 +175,9 @@ github.post("/pr", async (c) => {
       const prUser = {
         id: userId,
         username: githubLogin ?? "unknown",
-        name: githubLogin ?? "Unknown",
+        name: githubLogin ?? null,
         role: "INTERN" as const,
         schoolId: null,
-        xp: 0,
-        level: 1,
-        cefrLevel: "A1" as const,
       };
 
       const newReview = await codecamp.createPrReview({

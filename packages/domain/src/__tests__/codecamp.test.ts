@@ -917,7 +917,9 @@ describe("linkExerciseRepo", () => {
     const repo = { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() };
     const db = createMockDb({
       insertReturning: [repo],
-      selectSequence: [[existingModule]],
+      // 1st select: module lookup → [existingModule]
+      // 2nd select: duplicate URL check → [] (no duplicate)
+      selectSequence: [[existingModule], []],
     });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
@@ -958,6 +960,24 @@ describe("linkExerciseRepo", () => {
       })
     ).rejects.toThrow(/Module not found/);
   });
+
+  it("rejects when repo URL already exists", async () => {
+    const existingModule = { id: "m1" };
+    const existingRepo = { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Existing", order: 1, createdAt: new Date() };
+    const db = createMockDb({
+      selectSequence: [[existingModule], [existingRepo]],
+    });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    await expect(
+      linkExerciseRepo({
+        db: wrapDb(db),
+        user: admin,
+        tenant: globalTenant,
+        input: { moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1 },
+      })
+    ).rejects.toThrow(/A repo with this URL already exists/);
+  });
 });
 
 describe("getExerciseRepoByUrl", () => {
@@ -970,6 +990,20 @@ describe("getExerciseRepoByUrl", () => {
       user: student,
       tenant: globalTenant,
       input: { repoUrl: "https://github.com/org/repo1" },
+    });
+
+    expect(result).toEqual(repo);
+  });
+
+  it("normalizes trailing slash before lookup", async () => {
+    const repo = { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() };
+    const db = createMockDb({ selectResults: [repo] });
+
+    const result = await getExerciseRepoByUrl({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { repoUrl: "https://github.com/org/repo1/" },
     });
 
     expect(result).toEqual(repo);
@@ -1048,6 +1082,19 @@ describe("createPrReview", () => {
     await expect(
       createPrReview({ db: wrapDb(db), user: invalidUser, tenant: globalTenant, input: { exerciseRepoId: "r1", prUrl: "https://github.com/org/repo1/pull/1" } })
     ).rejects.toThrow(/codecamp:submit/);
+  });
+
+  it("throws when exercise repo does not exist", async () => {
+    const db = createMockDb({ selectResults: [] });
+
+    await expect(
+      createPrReview({
+        db: wrapDb(db),
+        user: student,
+        tenant: globalTenant,
+        input: { exerciseRepoId: "nonexistent", prUrl: "https://github.com/org/repo1/pull/1" },
+      })
+    ).rejects.toThrow(/Exercise repo not found/);
   });
 });
 
