@@ -32,7 +32,7 @@ export default function ModulePage() {
   const { data: prReviews } = trpc.codecamp.prReviews.useQuery();
 
   if (isLoading) {
-    return <div className="container py-12">Loading...</div>;
+    return <div className="container py-12">{t("loading")}</div>;
   }
 
   if (!moduleData) {
@@ -115,7 +115,7 @@ export default function ModulePage() {
                 />
                 {review?.llmReviewSummary && (
                   <p className="mt-3 text-sm text-muted-foreground">
-                    <span className="font-medium">Review:</span>{" "}
+                    <span className="font-medium">{t("review")}:</span>{" "}
                     {review.llmReviewSummary}
                   </p>
                 )}

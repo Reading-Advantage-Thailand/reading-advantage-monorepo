@@ -1,22 +1,22 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { LanguageSwitcher } from "../language-switcher";
 
 const mockUseLocale = vi.fn(() => "th");
-const mockReplace = vi.fn();
+const mockPush = vi.fn();
 
 vi.mock("next-intl", () => ({
   useLocale: () => mockUseLocale(),
 }));
 
 vi.mock("@/i18n/navigation", () => ({
-  useRouter: () => ({ replace: mockReplace }),
+  useRouter: () => ({ push: mockPush }),
   usePathname: () => "/dashboard",
 }));
 
 describe("LanguageSwitcher", () => {
   beforeEach(() => {
-    mockReplace.mockClear();
+    mockPush.mockClear();
     mockUseLocale.mockClear();
   });
 
@@ -44,14 +44,25 @@ describe("LanguageSwitcher", () => {
     mockUseLocale.mockReturnValue("th");
     render(<LanguageSwitcher />);
     fireEvent.click(screen.getByText("EN"));
-    expect(mockReplace).toHaveBeenCalledWith("/dashboard", { locale: "en" });
+    expect(mockPush).toHaveBeenCalledWith("/dashboard", { locale: "en" });
   });
 
   it("navigates to same path with Thai locale when clicking ไทย", () => {
     mockUseLocale.mockReturnValue("en");
     render(<LanguageSwitcher />);
     fireEvent.click(screen.getByText("ไทย"));
-    expect(mockReplace).toHaveBeenCalledWith("/dashboard", { locale: "th" });
+    expect(mockPush).toHaveBeenCalledWith("/dashboard", { locale: "th" });
+  });
+
+  it("uses native button elements for keyboard accessibility", () => {
+    mockUseLocale.mockReturnValue("th");
+    render(<LanguageSwitcher />);
+    const enButton = screen.getByText("EN").closest("button") as HTMLButtonElement;
+    const thaiButton = screen.getByText("ไทย").closest("button") as HTMLButtonElement;
+    expect(enButton).toBeDefined();
+    expect(thaiButton).toBeDefined();
+    expect(enButton.tagName).toBe("BUTTON");
+    expect(thaiButton.tagName).toBe("BUTTON");
   });
 
   it("has accessible labels for screen readers", () => {

@@ -1,12 +1,13 @@
 import { describe, it, expect } from "vitest";
 
 describe("chat API locale awareness", () => {
-  function buildSystemPrompt(locale: string): string {
+  function buildSystemPrompt(locale: string | undefined): string {
     const thaiInstruction =
       "Respond in Thai (ภาษาไทย) by default. **Mirror the user: if the user writes entirely in English, answer in English; otherwise answer in Thai.**";
     const englishInstruction =
       "Respond in English by default. Mirror the user's language if they switch.";
-    const languageInstruction = locale === "th" ? thaiInstruction : englishInstruction;
+    const effectiveLocale = locale === "en" ? "en" : "th";
+    const languageInstruction = effectiveLocale === "th" ? thaiInstruction : englishInstruction;
     return `You are CodeCamp Advantage AI Tutor. ${languageInstruction}`;
   }
 
@@ -24,9 +25,16 @@ describe("chat API locale awareness", () => {
     expect(prompt).not.toContain("ภาษาไทย");
   });
 
+  it("defaults to Thai instruction for undefined locale", () => {
+    const prompt = buildSystemPrompt(undefined);
+    expect(prompt).toContain("Respond in Thai");
+    expect(prompt).not.toContain("Respond in English");
+  });
+
   it("defaults to Thai instruction for unknown locale", () => {
     const prompt = buildSystemPrompt("fr");
-    expect(prompt).toContain("Respond in English");
+    expect(prompt).toContain("Respond in Thai");
+    expect(prompt).not.toContain("Respond in English");
   });
 
   it("prompt contains mirror instruction for th locale", () => {

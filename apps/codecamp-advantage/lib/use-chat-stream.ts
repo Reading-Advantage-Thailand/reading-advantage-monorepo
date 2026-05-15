@@ -139,7 +139,7 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
           ...prev,
           {
             role: "assistant",
-            content: "Sorry, I'm having trouble responding right now.",
+            content: locale === "th" ? "ขออภัย ขณะนี้ไม่สามารถตอบกลับได้" : "Sorry, I'm having trouble responding right now.",
           },
         ]);
       } finally {

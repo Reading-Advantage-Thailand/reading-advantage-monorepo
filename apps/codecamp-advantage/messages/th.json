@@ -46,6 +46,7 @@
     "exerciseRepos": "โพรเจกต์แบบฝึกหัด",
     "noLessons": "ยังไม่มีบทเรียนในโมดูลนี้",
     "review": "ทบทวน",
+    "loading": "กำลังโหลด...",
     "lessonsInEnglish": "บทเรียนเป็นภาษาอังกฤษ"
   },
   "chat": {
@@ -54,7 +55,8 @@
     "send": "ส่ง",
     "title": "ติวเตอร์ AI",
     "defaultText": "ถามอะไรก็ได้เกี่ยวกับ Next.js, tRPC, Drizzle หรือรูปแบบ monorepo",
-    "thinking": "กำลังคิด..."
+    "thinking": "กำลังคิด...",
+    "error": "ขออภัย ขณะนี้ไม่สามารถตอบกลับได้"
   },
   "exercise": {
     "submit": "ส่งงาน",

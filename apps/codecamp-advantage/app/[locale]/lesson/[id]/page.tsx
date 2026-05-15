@@ -12,6 +12,7 @@ import { ForkInstruction } from "@/components/fork-instruction";
 import { ReviewHistory } from "@/components/review-history";
 import { WorkflowTracker } from "@/components/workflow-tracker";
 import { useState, useMemo } from "react";
+import { useLocale } from "next-intl";
 import { useChatStream } from "@/lib/use-chat-stream";
 import { LessonContent } from "@/components/lesson-content";
 
@@ -323,6 +324,7 @@ function QuizComponent({
 }
 
 function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string }) {
+  const locale = useLocale();
   const [input, setInput] = useState("");
   const [conversationId, setConversationId] = useState<string | undefined>();
 
@@ -368,6 +370,7 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
   const { messages, isLoading, sendMessage } = useChatStream({
     lessonId,
     moduleId,
+    locale,
     initialMessages,
     onSend: handleSend,
     onComplete: handleComplete,

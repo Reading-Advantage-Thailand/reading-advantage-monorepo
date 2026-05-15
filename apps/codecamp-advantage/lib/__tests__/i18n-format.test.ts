@@ -49,6 +49,7 @@ describe("formatRelativeTime", () => {
 
   it("returns fallback for undefined date", () => {
     expect(formatRelativeTime(undefined, "en")).toBe("unknown");
+    expect(formatRelativeTime(undefined, "th")).toBe("ไม่ทราบ");
   });
 
   it("returns fallback for invalid date", () => {

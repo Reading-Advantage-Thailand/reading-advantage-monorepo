@@ -255,7 +255,7 @@ function ModuleCard({
         <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
           <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
         </div>
-<p className="mt-1 text-xs text-muted-foreground">
+        <p className="mt-1 text-xs text-muted-foreground">
           {completedLessons} / {lessonCount} {t("lessons")}
         </p>
       </div>

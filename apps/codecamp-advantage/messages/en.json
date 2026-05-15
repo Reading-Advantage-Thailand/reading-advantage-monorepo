@@ -46,6 +46,7 @@
     "exerciseRepos": "Exercise Repositories",
     "noLessons": "No lessons available for this module yet.",
     "review": "Review",
+    "loading": "Loading...",
     "lessonsInEnglish": "Lessons are in English"
   },
   "chat": {
@@ -54,7 +55,8 @@
     "send": "Send",
     "title": "AI Tutor",
     "defaultText": "Ask me anything about Next.js, tRPC, Drizzle, or monorepo patterns.",
-    "thinking": "Thinking..."
+    "thinking": "Thinking...",
+    "error": "Sorry, I'm having trouble responding right now."
   },
   "exercise": {
     "submit": "Submit",
