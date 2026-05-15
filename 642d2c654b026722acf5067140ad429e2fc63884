@@ -1,0 +1,7 @@
+Task: Pre-empt Thai text-width regressions
+
+Changes:
+- apps/codecamp-advantage/app/[locale]/page.tsx: Added line-clamp-2/3 on module cards, flex-wrap/stats bar, break-words on phase titles
+- apps/codecamp-advantage/app/[locale]/admin/page.tsx: Added whitespace-nowrap on all table headers
+- apps/codecamp-advantage/components/header.tsx: Added min-w-0, shrink-0, gap fixes for overflow prevention
+- apps/codecamp-advantage/lib/__tests__/thai-text-width.test.ts: New test file verifying CSS safeguarding patterns
