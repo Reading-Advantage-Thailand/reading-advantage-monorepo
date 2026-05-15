@@ -56,8 +56,9 @@ export default function ChatPage() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
+          onKeyDown={(e) => e.key === "Enter" && !isLoading && sendMessage(input)}
           placeholder="Ask about Next.js, tRPC, Drizzle..."
+          aria-label="Chat message"
           className="flex-1 rounded-lg border bg-background px-4 py-3 text-sm"
         />
         <Button onClick={() => sendMessage(input)} disabled={isLoading}>

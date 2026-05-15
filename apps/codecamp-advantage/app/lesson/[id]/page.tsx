@@ -189,6 +189,7 @@ function ExerciseCard({ exercise }: { exercise: { id: string; title: string; ins
         onChange={(e) => setCode(e.target.value)}
         className="mt-3 h-32 w-full rounded-lg border bg-background px-3 py-2 font-mono text-sm"
         placeholder="Write your solution here..."
+        aria-label="Exercise solution"
       />
       <Button
         className="mt-3"
@@ -410,7 +411,7 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
+          onKeyDown={(e) => e.key === "Enter" && !isLoading && sendMessage(input)}
           placeholder="Ask about this lesson..."
           aria-label="Chat message"
           className="flex-1 rounded-lg border bg-background px-4 py-2 text-sm"

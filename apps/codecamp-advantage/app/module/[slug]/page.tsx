@@ -216,9 +216,9 @@ function LessonItem({
       {score !== null && score > 0 && (
         <span className="text-sm font-medium text-amber-600">{score}%</span>
       )}
-      <Button variant="outline" size="sm">
+      <span className="inline-flex items-center rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-accent">
         {status === "completed" ? "Review" : "Start"}
-      </Button>
+      </span>
     </Link>
   );
 }
