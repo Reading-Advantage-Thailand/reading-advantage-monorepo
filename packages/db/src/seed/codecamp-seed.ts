@@ -1,7 +1,7 @@
 // Uses raw `db` (not tenant-scoped) because seeding is an admin operation
 // that writes global curriculum data with no user/tenant context.
 import { db } from "../index.js";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import {
   codecampModules,
   codecampLessons,
@@ -9,7 +9,7 @@ import {
   codecampQuizQuestions,
   codecampExerciseRepos,
 } from "../schema/codecamp.js";
-import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData, getPhaseDCurriculumData } from "./codecamp-curriculum-data.js";
+import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData, getPhaseDCurriculumData, MODULE_REPO_MAP } from "./codecamp-curriculum-data.js";
 
 async function seed() {
   console.log("Seeding codecamp curriculum...");
@@ -97,7 +97,7 @@ async function seed() {
       }
     }
 
-    // Seed placeholder exercise repo entries
+    // Seed exercise repo entries (idempotent — updates URL/description on re-run)
     for (const repo of exerciseRepos) {
       const moduleRow = await tx
         .select({ id: codecampModules.id })
@@ -117,15 +117,43 @@ async function seed() {
         .limit(1);
 
       if (existingRepo.length > 0) {
-        continue;
+        await tx
+          .update(codecampExerciseRepos)
+          .set({
+            repoUrl: repo.repoUrl,
+            description: repo.description,
+            order: repo.order,
+          })
+          .where(eq(codecampExerciseRepos.id, existingRepo[0].id));
+      } else {
+        await tx.insert(codecampExerciseRepos).values({
+          moduleId: moduleRow[0].id,
+          repoUrl: repo.repoUrl,
+          description: repo.description,
+          order: repo.order,
+        });
       }
+    }
 
-      await tx.insert(codecampExerciseRepos).values({
-        moduleId: moduleRow[0].id,
-        repoUrl: repo.repoUrl,
-        description: repo.description,
-        order: repo.order,
-      });
+    // Clean up orphaned exercise-repo rows for modules no longer in MODULE_REPO_MAP
+    // (e.g. M1 dev-environment and M16 monorepo-packages were removed from the map)
+    const validSlugs = new Set(Object.keys(MODULE_REPO_MAP));
+    const allModules = await tx
+      .select({ id: codecampModules.id, slug: codecampModules.slug })
+      .from(codecampModules);
+
+    let deletedOrphans = 0;
+    for (const mod of allModules) {
+      if (!validSlugs.has(mod.slug)) {
+        const deleted = await tx
+          .delete(codecampExerciseRepos)
+          .where(eq(codecampExerciseRepos.moduleId, mod.id))
+          .returning({ id: codecampExerciseRepos.id });
+        if (deleted.length > 0) {
+          console.log(`  🗑️  Removed orphaned exercise-repo row for module "${mod.slug}"`);
+          deletedOrphans += deleted.length;
+        }
+      }
     }
 
     console.log(
@@ -133,6 +161,9 @@ async function seed() {
     );
     if (skippedModules > 0) {
       console.log(`   ${skippedModules} module(s) were already present and skipped.`);
+    }
+    if (deletedOrphans > 0) {
+      console.log(`   ${deletedOrphans} orphaned exercise-repo row(s) removed.`);
     }
   });
 }

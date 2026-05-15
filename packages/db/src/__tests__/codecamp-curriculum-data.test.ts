@@ -88,12 +88,22 @@ describe("codecamp Phase A curriculum data", () => {
     });
   });
 
-  it("has exercise repo placeholder entries for all modules", () => {
-    expect(data.exerciseRepos).toHaveLength(6);
-    data.modules.forEach((mod) => {
-      const repos = data.exerciseRepos.filter((r) => r.moduleSlug === mod.slug);
-      expect(repos.length).toBeGreaterThanOrEqual(1);
-    });
+  it("has exercise repo entries for mapped modules only", () => {
+    expect(data.exerciseRepos).toHaveLength(5);
+    // M1 (dev-environment) excluded — no exercise repo
+    const m1Repos = data.exerciseRepos.filter(
+      (r) => r.moduleSlug === "dev-environment"
+    );
+    expect(m1Repos).toHaveLength(0);
+    // All other Phase A modules have repos
+    ["git-github", "html-css", "javascript", "typescript", "vitest"].forEach(
+      (slug) => {
+        const repos = data.exerciseRepos.filter(
+          (r) => r.moduleSlug === slug
+        );
+        expect(repos.length).toBe(1);
+      }
+    );
   });
 
   it("has lesson order starting at 1 within each module", () => {

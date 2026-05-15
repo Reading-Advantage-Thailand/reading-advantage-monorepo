@@ -93,12 +93,21 @@ describe("codecamp Phase D curriculum data", () => {
     });
   });
 
-  it("has exercise repo placeholder entries for all modules", () => {
-    expect(data.exerciseRepos).toHaveLength(5);
-    data.modules.forEach((mod) => {
-      const repos = data.exerciseRepos.filter((r) => r.moduleSlug === mod.slug);
-      expect(repos.length).toBeGreaterThanOrEqual(1);
-    });
+  it("has exercise repo entries for mapped modules only", () => {
+    expect(data.exerciseRepos).toHaveLength(4);
+    // M16 (monorepo-packages) excluded — uses live monorepo
+    const m16Repos = data.exerciseRepos.filter(
+      (r) => r.moduleSlug === "monorepo-packages"
+    );
+    expect(m16Repos).toHaveLength(0);
+    // M18 uses capstone repo, not codecamp-exercise-
+    const m18Repos = data.exerciseRepos.filter(
+      (r) => r.moduleSlug === "real-world-practice"
+    );
+    expect(m18Repos).toHaveLength(1);
+    expect(m18Repos[0].repoUrl).toBe(
+      "https://github.com/reading-advantage/codecamp-progress-tracker"
+    );
   });
 
   it("has lesson order starting at 1 within each module", () => {
