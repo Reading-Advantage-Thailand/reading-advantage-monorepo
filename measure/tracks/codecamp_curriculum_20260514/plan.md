@@ -114,7 +114,7 @@ Source: `measure/curriculum/unit-11-class-period-plan.md` through `unit-13-class
   - [x] Lesson 2 (theory): Logout, middleware, auth context
   - [x] Lesson 3 (theory): Role-Based Access Control (RBAC) with assertCan
   - [x] Lesson 4 (exercise + quiz): Add auth to blog API exercise + auth quiz
-- [ ] Task: Measure — User Manual Verification 'Phase C Seed Data'
+- [x] Task: Measure — User Manual Verification 'Phase C Seed Data' [96e179d]
 
 ## Phase 5: Write Seed Data — Phase D (Modules 14–18, 19 lessons)
 
