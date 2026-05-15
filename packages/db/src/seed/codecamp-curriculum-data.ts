@@ -1,4 +1,4 @@
-// Pure data module for the Phase A codecamp curriculum.
+// Pure data module for the full codecamp curriculum (Phases A–D, 18 modules, 85 lessons).
 // Separated from the seed script so it can be tested independently.
 
 export interface CurriculumLesson {
