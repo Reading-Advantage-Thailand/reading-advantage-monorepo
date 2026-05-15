@@ -153,11 +153,11 @@ Translate all remaining user-facing strings and add locale-aware chat.
 
 Run all quality gates and verify no regressions.
 
-- [ ] Task: Pre-empt Thai text-width regressions (don't just verify after the fact)
-  - [ ] Audit fixed-width containers in `app/page.tsx`, `app/admin/page.tsx`, and `components/*.tsx`
-  - [ ] Apply `min-w-0` + `truncate` (or `line-clamp-N`) on flex/grid children where text could wrap unpredictably
-  - [ ] Loosen any `max-w-*` constraints on cards/buttons that were sized for English
-  - [ ] Then verify with Thai locale: dashboard cards, admin table columns, chat input placeholder, progress bar labels, locked-module tooltips
+- [x] Task: Pre-empt Thai text-width regressions (don't just verify after the fact) (642d2c6)
+  - [x] Audit fixed-width containers in `app/page.tsx`, `app/admin/page.tsx`, and `components/*.tsx`
+  - [x] Apply `min-w-0` + `truncate` (or `line-clamp-N`) on flex/grid children where text could wrap unpredictably
+  - [x] Loosen any `max-w-*` constraints on cards/buttons that were sized for English
+  - [x] Then verify with Thai locale: dashboard cards, admin table columns, chat input placeholder, progress bar labels, locked-module tooltips
 - [ ] Task: Add lesson-language badge to clarify that lessons are English
   - [ ] **Why:** Default locale is Thai but the 85 lesson `contentJson` rows are intentionally English (out of scope to translate per spec). Thai-default users will be confused without a hint.
   - [ ] Add an inline badge or notice on the dashboard and module pages: "บทเรียนเป็นภาษาอังกฤษ" (Lessons in English)
