@@ -124,7 +124,9 @@ export const codecampExerciseRepos = pgTable("codecamp_exercise_repos", {
   description: text("description").notNull(),
   order: integer("order").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  unique("codecamp_exercise_repos_repo_url_unique").on(table.repoUrl),
+]);
 
 // ─── PR Reviews ───────────────────────────────────────────
 
@@ -141,4 +143,6 @@ export const codecampPrReviews = pgTable("codecamp_pr_reviews", {
   llmReviewSummary: text("llm_review_summary"),
   reviewedAt: timestamp("reviewed_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  unique("codecamp_pr_reviews_pr_url_unique").on(table.prUrl),
+]);

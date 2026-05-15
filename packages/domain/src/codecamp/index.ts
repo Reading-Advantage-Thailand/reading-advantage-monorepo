@@ -1,4 +1,4 @@
-import { eq, and, desc, sql, inArray } from "drizzle-orm";
+import { eq, and, desc, sql, inArray, lt } from "drizzle-orm";
 import {
   codecampModules,
   codecampLessons,
@@ -960,11 +960,12 @@ export async function checkModulePrerequisite({
     return { canStart: true };
   }
 
-  // Find the previous module
+  // Find the previous module (highest order less than target)
   const [prevModule] = await db
     .select()
     .from(codecampModules)
-    .where(eq(codecampModules.order, targetModule.order - 1))
+    .where(lt(codecampModules.order, targetModule.order))
+    .orderBy(desc(codecampModules.order))
     .limit(1);
 
   if (!prevModule) {
