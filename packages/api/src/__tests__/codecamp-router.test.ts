@@ -484,6 +484,30 @@ describe("codecamp router", () => {
 
       expect(result.reviewStatus).toBe("pending");
     });
+
+    it("maps 'A review for this PR URL already exists' to BAD_REQUEST", async () => {
+      vi.mocked(createPrReview).mockRejectedValue(new Error("A review for this PR URL already exists"));
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.createPrReview({
+          exerciseRepoId: "550e8400-e29b-41d4-a716-446655440010",
+          prUrl: "https://github.com/org/repo1/pull/1",
+        })
+      ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    });
+
+    it("maps 'Exercise repo not found' to NOT_FOUND", async () => {
+      vi.mocked(createPrReview).mockRejectedValue(new Error("Exercise repo not found"));
+      const caller = createCaller({ user: testUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.createPrReview({
+          exerciseRepoId: "550e8400-e29b-41d4-a716-446655440010",
+          prUrl: "https://github.com/org/repo1/pull/1",
+        })
+      ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    });
   });
 
   describe("updatePrReview", () => {
@@ -509,6 +533,19 @@ describe("codecamp router", () => {
 
       expect(result.reviewStatus).toBe("approved");
       expect(result.llmReviewSummary).toBe("Great work!");
+    });
+
+    it("maps 'Review not found' to NOT_FOUND", async () => {
+      vi.mocked(updatePrReview).mockRejectedValue(new Error("Review not found"));
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.updatePrReview({
+          reviewId: "550e8400-e29b-41d4-a716-446655440011",
+          reviewStatus: "approved",
+        })
+      ).rejects.toMatchObject({ code: "NOT_FOUND" });
     });
 
     it("maps AuthError to FORBIDDEN for non-admin", async () => {
@@ -688,6 +725,20 @@ describe("codecamp router", () => {
           username: "intern1",
           name: "Intern One",
           password: "password123",
+        })
+      ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    });
+
+    it("maps password complexity error to BAD_REQUEST", async () => {
+      vi.mocked(createInternAccount).mockRejectedValue(new Error("Password must contain at least one uppercase letter, one lowercase letter, and one digit"));
+      const adminUser = { id: "a1", role: "ADMIN", schoolId: null };
+      const caller = createCaller({ user: adminUser, tenant: testTenant });
+
+      await expect(
+        caller.codecamp.createIntern({
+          username: "intern1",
+          name: "Intern One",
+          password: "weak",
         })
       ).rejects.toMatchObject({ code: "BAD_REQUEST" });
     });

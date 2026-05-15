@@ -5,70 +5,74 @@
 Update next-intl config and create the Thai translation file.
 
 - [x] Task: Update `i18n/routing.ts` to add Thai locale and set `th` as default (302d142)
-  - [ ] Set `locales: ['th', 'en']` and `defaultLocale: 'th'`
-  - [ ] Configure locale prefix strategy (always show prefix)
-  - [ ] Ensure root `/` redirects to `/th/`
+  - [x] Set `locales: ['th', 'en']` and `defaultLocale: 'th'`
+  - [x] Configure locale prefix strategy (always show prefix)
+  - [x] Ensure root `/` redirects to `/th/`
 - [x] Task: Update `i18n/request.ts` to load Thai messages (b7beb5b)
   - [x] Add `th` locale loader mapping to `messages/th.json`
   - [x] Verify fallback chain works (missing key in `th` falls back to `en`)
 - [x] Task: Create `apps/codecamp-advantage/messages/th.json` with Thai translations (b7beb5b)
-  - [ ] `metadata.title`: "CodeCamp Advantage"
-  - [ ] `metadata.description`: "เรียนรู้ Next.js และรูปแบบการทำงานของ Reading Advantage ด้วย AI"
-  - [ ] `navigation.dashboard`: "แดชบอร์ด"
-  - [ ] `navigation.modules`: "โมดูล"
-  - [ ] `navigation.chat`: "แชท"
-  - [ ] `dashboard.title`: "เรียนรู้การพัฒนาเว็บ"
-  - [ ] `dashboard.subtitle`: "โมดูล 18 โมดูล ตั้งแต่พื้นฐานจนถึงระดับมืออาชีพ พร้อมการตรวจโค้ดด้วย AI"
-  - [ ] `dashboard.progress`: "ความคืบหน้า"
-  - [ ] `dashboard.continue`: "ดำเนินการต่อ"
-  - [ ] `module.lessons`: "บทเรียน"
-  - [ ] `module.start`: "เริ่มเรียน"
-  - [ ] `module.completed`: "เสร็จสิ้น"
-  - [ ] `module.inProgress`: "กำลังเรียน"
-  - [ ] `chat.placeholder`: "ถามคำถามเกี่ยวกับโมดูลนี้ได้เลย..."
-  - [ ] `chat.newConversation`: "สนทนาใหม่"
-  - [ ] `chat.send`: "ส่ง"
-  - [ ] `exercise.submit`: "ส่งงาน"
-  - [ ] `exercise.feedback`: "ผลตอบรับ"
-  - [ ] `exercise.hint`: "คำใบ้"
-  - [ ] `exercise.tryAgain`: "ลองอีกครั้ง"
-  - [ ] `quiz.submit`: "ส่งคำตอบ"
-  - [ ] `quiz.score`: "คะแนน"
-  - [ ] `quiz.correct`: "ถูกต้อง"
-  - [ ] `quiz.incorrect`: "ไม่ถูกต้อง"
+  - [x] `metadata.title`: "CodeCamp Advantage"
+  - [x] `metadata.description`: "เรียนรู้ Next.js และรูปแบบการทำงานของ Reading Advantage ด้วย AI"
+  - [x] `navigation.dashboard`: "แดชบอร์ด"
+  - [x] `navigation.modules`: "โมดูล"
+  - [x] `navigation.chat`: "แชท"
+  - [x] `dashboard.title`: "เรียนรู้การพัฒนาเว็บ"
+  - [x] `dashboard.subtitle`: "โมดูล 18 โมดูล ตั้งแต่พื้นฐานจนถึงระดับมืออาชีพ พร้อมการตรวจโค้ดด้วย AI"
+  - [x] `dashboard.progress`: "ความคืบหน้า"
+  - [x] `dashboard.continue`: "ดำเนินการต่อ"
+  - [x] `module.lessons`: "บทเรียน"
+  - [x] `module.start`: "เริ่มเรียน"
+  - [x] `module.completed`: "เสร็จสิ้น"
+  - [x] `module.inProgress`: "กำลังเรียน"
+  - [x] `chat.placeholder`: "ถามคำถามเกี่ยวกับโมดูลนี้ได้เลย..."
+  - [x] `chat.newConversation`: "สนทนาใหม่"
+  - [x] `chat.send`: "ส่ง"
+  - [x] `exercise.submit`: "ส่งงาน"
+  - [x] `exercise.feedback`: "ผลตอบรับ"
+  - [x] `exercise.hint`: "คำใบ้"
+  - [x] `exercise.tryAgain`: "ลองอีกครั้ง"
+  - [x] `quiz.submit`: "ส่งคำตอบ"
+  - [x] `quiz.score`: "คะแนน"
+  - [x] `quiz.correct`: "ถูกต้อง"
+  - [x] `quiz.incorrect`: "ไม่ถูกต้อง"
 - [x] Task: Add Thai-friendly font loading via `next/font` (1fd9d8f)
-  - [ ] Import `Noto_Sans_Thai` (or `IBM_Plex_Sans_Thai`) alongside the existing Latin font in `app/layout.tsx`
-  - [ ] Apply the Thai font family in the root layout so glyphs render correctly on all platforms
-  - [ ] Verify no FOUT/CLS regressions
+  - [x] Import `Noto_Sans_Thai` (or `IBM_Plex_Sans_Thai`) alongside the existing Latin font in `app/layout.tsx`
+  - [x] Apply the Thai font family in the root layout so glyphs render correctly on all platforms
+  - [x] Verify no FOUT/CLS regressions
 - [x] Task: Add localized formatting helpers in `lib/i18n-format.ts` (4d93844)
-  - [ ] `formatRelativeTime(date, locale)` for "Last Active" timestamps on the admin table
-  - [ ] `formatNumber(n, locale)` for quiz scores/percentages
-  - [ ] `formatDate(date, locale)` for review history
-  - [ ] Use `Intl.RelativeTimeFormat`, `Intl.NumberFormat`, `Intl.DateTimeFormat` with the active locale
+  - [x] `formatRelativeTime(date, locale)` for "Last Active" timestamps on the admin table
+  - [x] `formatNumber(n, locale)` for quiz scores/percentages
+  - [x] `formatDate(date, locale)` for review history
+  - [x] Use `Intl.RelativeTimeFormat`, `Intl.NumberFormat`, `Intl.DateTimeFormat` with the active locale
 - [x] Task: Add translation keys for admin dashboard to both `en.json` and `th.json` (2215e2f)
-  - [ ] `admin.title`: "Intern Management" / "จัดการผู้ฝึกงาน"
-  - [ ] `admin.interns`: "Interns" / "ผู้ฝึกงาน"
-  - [ ] `admin.addIntern`: "Add Intern" / "เพิ่มผู้ฝึกงาน"
-  - [ ] `admin.overview`: "Overview" / "ภาพรวม"
-  - [ ] `admin.progress`: "Progress" / "ความคืบหน้า"
-  - [ ] `admin.prReviews`: "PR Reviews" / "รีวิว PR"
-  - [ ] `admin.username`: "Username" / "ชื่อผู้ใช้"
-  - [ ] `admin.name`: "Name" / "ชื่อ"
-  - [ ] `admin.lastActive`: "Last Active" / "ใช้งานล่าสุด"
-  - [ ] `admin.noInterns`: "No interns yet" / "ยังไม่มีผู้ฝึกงาน"
-  - [ ] `admin.createIntern`: "Create Intern Account" / "สร้างบัญชีผู้ฝึกงาน"
-  - [ ] `admin.backToOverview`: "Back to Overview" / "กลับไปหน้าภาพรวม"
+  - [x] `admin.title`: "Intern Management" / "จัดการผู้ฝึกงาน"
+  - [x] `admin.interns`: "Interns" / "ผู้ฝึกงาน"
+  - [x] `admin.addIntern`: "Add Intern" / "เพิ่มผู้ฝึกงาน"
+  - [x] `admin.overview`: "Overview" / "ภาพรวม"
+  - [x] `admin.progress`: "Progress" / "ความคืบหน้า"
+  - [x] `admin.prReviews`: "PR Reviews" / "รีวิว PR"
+  - [x] `admin.username`: "Username" / "ชื่อผู้ใช้"
+  - [x] `admin.name`: "Name" / "ชื่อ"
+  - [x] `admin.lastActive`: "Last Active" / "ใช้งานล่าสุด"
+  - [x] `admin.noInterns`: "No interns yet" / "ยังไม่มีผู้ฝึกงาน"
+  - [x] `admin.createIntern`: "Create Intern Account" / "สร้างบัญชีผู้ฝึกงาน"
+  - [x] `admin.backToOverview`: "Back to Overview" / "กลับไปหน้าภาพรวม"
 - [x] Task: Enumerate and add additional translation surfaces commonly missed (7740abb)
-  - [ ] Form validation messages (admin/new-intern): required, password complexity, username conflict
-  - [ ] Toast / inline success+error messages across admin + chat
-  - [ ] Per-page `<title>` metadata for every route (currently only `metadata.title` exists)
-  - [ ] Empty-state strings (e.g. "No PR reviews yet", "No completed modules")
-  - [ ] Locked-module tooltip text from the dashboard prerequisite UI
+  - [x] Form validation messages (admin/new-intern): required, password complexity, username conflict
+  - [x] Toast / inline success+error messages across admin + chat
+  - [x] Per-page `<title>` metadata for every route (currently only `metadata.title` exists)
+  - [x] Empty-state strings (e.g. "No PR reviews yet", "No completed modules")
+  - [x] Locked-module tooltip text from the dashboard prerequisite UI
 - [x] Task: Write tests for Thai locale loading (be8cbb5)
   - [ ] Test: `routing.ts` exports `th` as the default locale
   - [ ] Test: `messages/th.json` parses and loads via `getRequestConfig`
   - [ ] Note: key-parity and "Thai is not English copy" tests are added in Phase 4 once Phase 3 finishes extracting keys from components — running them now would fail prematurely
-- [ ] Task: Measure — User Manual Verification 'Contract & Schema'
+- [x] Task: Write tests for Thai locale loading (be8cbb5)
+  - [x] Test: `routing.ts` exports `th` as the default locale
+  - [x] Test: `messages/th.json` parses and loads via `getRequestConfig`
+  - [x] Note: key-parity and "Thai is not English copy" tests are added in Phase 4 once Phase 3 finishes extracting keys from components — running them now would fail prematurely
+- [x] Task: Measure — User Manual Verification 'Contract & Schema'
 
 ## Phase 2: Implement Language Switcher & Routing
 

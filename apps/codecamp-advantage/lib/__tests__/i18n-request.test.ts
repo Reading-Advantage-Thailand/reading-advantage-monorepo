@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { resolveLocale, loadMessages } from "../i18n-messages";
+import { resolveLocale, loadMessages, deepMerge } from "../i18n-messages";
 import type { NestedMessages } from "../i18n-messages";
 
 describe("i18n request config", () => {
@@ -46,6 +46,29 @@ describe("i18n request config", () => {
       const navigation = messages.navigation as NestedMessages;
       expect(navigation.dashboard as string).toBe("แดชบอร์ด");
       expect(navigation.modules as string).toBe("โมดูล");
+    });
+
+    it("rejects unsupported locales", async () => {
+      await expect(loadMessages("fr")).rejects.toThrow("Unsupported locale");
+      await expect(loadMessages("../../../etc/passwd")).rejects.toThrow(
+        "Unsupported locale"
+      );
+    });
+  });
+
+  describe("deepMerge", () => {
+    it("falls back to English when a Thai key is missing", () => {
+      const en = { hello: "Hello", nested: { a: "A" } };
+      const th = { nested: { a: "ก" } };
+      const result = deepMerge(en, th);
+      expect(result).toEqual({ hello: "Hello", nested: { a: "ก" } });
+    });
+
+    it("overrides English with Thai when key exists in both", () => {
+      const en = { greeting: "Hello" };
+      const th = { greeting: "สวัสดี" };
+      const result = deepMerge(en, th);
+      expect(result).toEqual({ greeting: "สวัสดี" });
     });
   });
 });

@@ -11,6 +11,7 @@ describe("additional translation surfaces", () => {
     expect(form.usernameRequired as string).toBe("Username is required");
     expect(form.passwordRequired as string).toBe("Password is required");
     expect(form.passwordMinLength as string).toBe("Password must be at least 8 characters");
+    expect(form.usernameConflict as string).toBe("This username is already taken");
   });
 
   it("th locale has form validation keys", async () => {
@@ -20,6 +21,7 @@ describe("additional translation surfaces", () => {
     expect(form).toBeDefined();
     expect(form.usernameRequired as string).toBe("กรุณากรอกชื่อผู้ใช้");
     expect(form.passwordMinLength as string).toBe("รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร");
+    expect(form.usernameConflict as string).toBe("ชื่อผู้ใช้นี้มีอยู่แล้ว");
   });
 
   it("en locale has toast/success keys", async () => {

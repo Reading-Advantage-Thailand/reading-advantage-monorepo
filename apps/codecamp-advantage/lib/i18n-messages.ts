@@ -16,7 +16,7 @@ export function resolveLocale(
   return routing.defaultLocale;
 }
 
-function deepMerge(base: Messages, override: Messages): Messages {
+export function deepMerge(base: Messages, override: Messages): Messages {
   const result: Messages = { ...base };
   for (const key of Object.keys(override)) {
     if (
@@ -47,6 +47,9 @@ async function importMessages(
 export async function loadMessages(
   locale: string
 ): Promise<Messages> {
+  if (!hasLocale(routing.locales, locale)) {
+    throw new Error(`Unsupported locale: ${locale}`);
+  }
   const enMessages = await importMessages("en");
   if (locale === "en") return enMessages;
   const localeMessages = await importMessages(locale);

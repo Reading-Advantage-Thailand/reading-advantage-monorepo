@@ -72,7 +72,10 @@ describe("codecamp Phase C curriculum data", () => {
           expect(lesson.contentJson).toBeDefined();
           const sections = lesson.contentJson.sections;
           expect(sections).toBeDefined();
-          expect((sections as unknown[]).length).toBeGreaterThan(0);
+          expect(Array.isArray(sections)).toBe(true);
+          if (Array.isArray(sections)) {
+            expect(sections.length).toBeGreaterThan(0);
+          }
         }
       });
     });

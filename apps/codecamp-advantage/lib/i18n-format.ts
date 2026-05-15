@@ -1,4 +1,7 @@
-export function formatRelativeTime(date: Date, locale: string): string {
+export function formatRelativeTime(date: Date | null | undefined, locale: string): string {
+  if (!date || isNaN(date.getTime())) {
+    return locale === "th" ? "ไม่ทราบ" : "unknown";
+  }
   const now = Date.now();
   const diff = now - date.getTime();
   const seconds = Math.floor(diff / 1000);
@@ -18,11 +21,17 @@ export function formatRelativeTime(date: Date, locale: string): string {
   return rtf.format(-Math.floor(days / 30), "month");
 }
 
-export function formatNumber(n: number, locale: string): string {
+export function formatNumber(n: number | null | undefined, locale: string): string {
+  if (n === null || n === undefined || isNaN(n)) {
+    return locale === "th" ? "ไม่ทราบ" : "unknown";
+  }
   return new Intl.NumberFormat(locale).format(n);
 }
 
-export function formatDate(date: Date, locale: string): string {
+export function formatDate(date: Date | null | undefined, locale: string): string {
+  if (!date || isNaN(date.getTime())) {
+    return locale === "th" ? "ไม่ทราบ" : "unknown";
+  }
   return new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "short",

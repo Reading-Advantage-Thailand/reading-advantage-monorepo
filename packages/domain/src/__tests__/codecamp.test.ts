@@ -1,12 +1,14 @@
 import { describe, it, expect, vi } from "vitest";
 import {
   getModulesWithProgress,
+  getModuleBySlug,
   getLessonsForModule,
   getLessonWithContent,
   submitExerciseAttempt,
   submitQuizAnswers,
   saveChatMessage,
   getChatHistory,
+  getUserConversations,
   updateUserProgress,
   getUserDashboard,
   getExerciseRepos,
@@ -140,6 +142,83 @@ describe("getModulesWithProgress", () => {
     await expect(
       getModulesWithProgress({ db: wrapDb(db), user: invalidUser, tenant: globalTenant })
     ).rejects.toThrow(/codecamp:read/);
+  });
+});
+
+// ─── getModuleBySlug ──────────────────────────────────────
+
+describe("getModuleBySlug", () => {
+  it("returns published module with lessons and progress", async () => {
+    const moduleRow = { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, phase: "A", status: "published", createdAt: new Date(), updatedAt: new Date() };
+    const lessons = [
+      { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const progress = [
+      { id: "p1", userId: "st1", moduleId: "m1", lessonId: "l1", status: "completed" as const, score: 100, completedAt: new Date(), createdAt: new Date(), updatedAt: new Date() },
+    ];
+
+    const db = createMockDb();
+    let selectCallCount = 0;
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([moduleRow]);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+        limit: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([moduleRow]);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+        orderBy: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          if (selectCallCount === 1) return queryResult([moduleRow]);
+          if (selectCallCount === 2) return queryResult(lessons);
+          return queryResult(progress);
+        }),
+      }),
+    });
+
+    const result = await getModuleBySlug({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { slug: "mod1" },
+    });
+
+    expect(result.id).toBe("m1");
+    expect(result.lessons).toHaveLength(1);
+    expect(result.lessonCount).toBe(1);
+    expect(result.completedLessons).toBe(1);
+    expect(result.progress).toBe(100);
+  });
+
+  it("throws when module is not published", async () => {
+    const moduleRow = { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "draft", createdAt: new Date(), updatedAt: new Date() };
+
+    const db = createMockDb();
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          limit: vi.fn().mockResolvedValue([moduleRow]),
+        }),
+      }),
+    });
+
+    await expect(
+      getModuleBySlug({ db: wrapDb(db), user: student, tenant: globalTenant, input: { slug: "mod1" } })
+    ).rejects.toThrow(/Module not found/);
+  });
+
+  it("throws when module does not exist", async () => {
+    const db = createMockDb({ selectResults: [] });
+
+    await expect(
+      getModuleBySlug({ db: wrapDb(db), user: student, tenant: globalTenant, input: { slug: "missing" } })
+    ).rejects.toThrow(/Module not found/);
   });
 });
 
@@ -306,6 +385,50 @@ describe("getLessonWithContent", () => {
     await expect(
       getLessonWithContent({ db: wrapDb(db), user: student, tenant: globalTenant, input: { lessonId: "l1" } })
     ).rejects.toThrow(/Lesson not found/);
+  });
+
+  it("returns null userScore when no progress exists", async () => {
+    const lesson = { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "theory" as const, contentJson: { sections: [] }, createdAt: new Date(), updatedAt: new Date() };
+    const moduleRow = { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() };
+
+    const db = createMockDb();
+    let selectCallCount = 0;
+    db.select = vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          const calls = [
+            queryResult([lesson]),
+            queryResult([moduleRow]),
+            queryResult([]),
+            queryResult([]),
+            queryResult([]),
+          ];
+          return calls[selectCallCount - 1] ?? queryResult([]);
+        }),
+        orderBy: vi.fn().mockImplementation(() => {
+          selectCallCount++;
+          const calls = [
+            queryResult([lesson]),
+            queryResult([moduleRow]),
+            queryResult([]),
+            queryResult([]),
+            queryResult([]),
+          ];
+          return calls[selectCallCount - 1] ?? queryResult([]);
+        }),
+      }),
+    });
+
+    const result = await getLessonWithContent({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { lessonId: "l1" },
+    });
+
+    expect(result.userStatus).toBe("not_started");
+    expect(result.userScore).toBeNull();
   });
 });
 
@@ -550,6 +673,38 @@ describe("getChatHistory", () => {
     await expect(
       getChatHistory({ db: wrapDb(db), user: student, tenant: globalTenant, input: { conversationId: "c1" } })
     ).rejects.toThrow(/Conversation not found/);
+  });
+});
+
+// ─── getUserConversations ─────────────────────────────────
+
+describe("getUserConversations", () => {
+  it("returns user's conversations ordered by updatedAt", async () => {
+    const conversations = [
+      { id: "c1", userId: "st1", title: "Chat 1", moduleId: null, lessonId: null, createdAt: new Date(), updatedAt: new Date("2026-01-02") },
+      { id: "c2", userId: "st1", title: "Chat 2", moduleId: null, lessonId: null, createdAt: new Date(), updatedAt: new Date("2026-01-01") },
+    ];
+
+    const db = createMockDb({ selectResults: conversations });
+
+    const result = await getUserConversations({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+    });
+
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe("c1");
+    expect(result[1].id).toBe("c2");
+  });
+
+  it("rejects unauthenticated users", async () => {
+    const db = createMockDb();
+    const invalidUser = { id: "x", username: "x", name: "X", role: "GUEST" as unknown as typeof student.role, schoolId: "s1" };
+
+    await expect(
+      getUserConversations({ db: wrapDb(db), user: invalidUser, tenant: globalTenant })
+    ).rejects.toThrow(/codecamp:read/);
   });
 });
 

@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/header";
 import { getBodyFontClass } from "@/lib/i18n-font";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "CodeCamp Advantage",
-  description: "Learn Next.js and the Reading Advantage monorepo patterns with AI",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function RootLayout({
   children,

@@ -259,7 +259,7 @@ export async function getLessonWithContent({
       order: q.order,
     })),
     userStatus: progress?.status ?? "not_started",
-    userScore: progress?.score ?? 0,
+    userScore: progress?.score ?? null,
   };
 }
 
