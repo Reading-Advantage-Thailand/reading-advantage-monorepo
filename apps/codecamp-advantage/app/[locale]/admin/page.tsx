@@ -6,6 +6,8 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
 import { Progress } from "@reading-advantage/ui";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import { formatDate } from "@/lib/i18n-format";
 import {
   UserPlus,
   Users,
@@ -17,6 +19,7 @@ import {
 
 export default function AdminPage() {
   const t = useTranslations("admin");
+  const locale = useLocale();
   const { user, isLoading: authLoading } = useAuth();
   const { data: interns, isLoading: dataLoading } = trpc.codecamp.listInterns.useQuery(
     undefined,
@@ -191,7 +194,7 @@ export default function AdminPage() {
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Clock className="h-3.5 w-3.5" />
                         {intern.lastActiveAt
-                          ? new Date(intern.lastActiveAt).toLocaleDateString()
+                          ? formatDate(intern.lastActiveAt, locale)
                           : t("never")}
                       </div>
                     </td>

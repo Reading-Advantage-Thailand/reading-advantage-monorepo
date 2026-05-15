@@ -169,7 +169,7 @@ function PrReviewStatusBadge({
 }: {
   status: "pending" | "reviewed" | "needs_changes" | "approved";
 }) {
-  const t = useTranslations("fork");
+  const t = useTranslations("review");
   const styles: Record<string, string> = {
     pending: "bg-amber-100 text-amber-800",
     reviewed: "bg-blue-100 text-blue-800",
@@ -177,10 +177,10 @@ function PrReviewStatusBadge({
     approved: "bg-green-100 text-green-800",
   };
   const labels: Record<string, string> = {
-    pending: t("pending"),
-    reviewed: "Reviewed",
-    needs_changes: "Needs Changes",
-    approved: "Approved",
+    pending: t("statusPending"),
+    reviewed: t("statusReviewedBadge"),
+    needs_changes: t("statusNeedsChangesBadge"),
+    approved: t("statusApprovedBadge"),
   };
   return (
     <span

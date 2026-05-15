@@ -9,6 +9,8 @@ import { Button } from "@reading-advantage/ui";
 import { Progress } from "@reading-advantage/ui";
 import { Badge } from "@reading-advantage/ui";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import { formatDate } from "@/lib/i18n-format";
 import {
   ArrowLeft,
   AlertCircle,
@@ -20,6 +22,7 @@ import {
 
 export default function InternDetailPage() {
   const t = useTranslations("admin");
+  const locale = useLocale();
   const reviewT = useTranslations("review");
   const statusBadgeLabels: Record<string, string> = {
     pending: reviewT("statusPending"),
@@ -228,10 +231,10 @@ export default function InternDetailPage() {
                       {review.llmReviewSummary}
                     </p>
                   )}
-                  {review.reviewedAt && (
+                    {review.reviewedAt && (
                     <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
                       <Clock className="h-3 w-3" />
-                      {new Date(review.reviewedAt).toLocaleDateString()}
+                      {formatDate(review.reviewedAt, locale)}
                     </div>
                   )}
                 </div>
