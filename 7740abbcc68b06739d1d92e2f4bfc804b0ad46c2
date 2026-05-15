@@ -1,0 +1,6 @@
+Task: Enumerate and add additional translation surfaces
+Summary: Added form validation, toast messages, empty states, and locked module tooltip keys. Covers admin.form.*, admin.toast.*, admin.empty.*, and module.locked namespaces.
+Files:
+- apps/codecamp-advantage/messages/en.json (modified)
+- apps/codecamp-advantage/messages/th.json (modified)
+- apps/codecamp-advantage/lib/__tests__/i18n-additional-keys.test.ts (created)
