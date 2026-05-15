@@ -18,7 +18,8 @@
     "lessons": "บทเรียน",
     "start": "เริ่มเรียน",
     "completed": "เสร็จสิ้น",
-    "inProgress": "กำลังเรียน"
+    "inProgress": "กำลังเรียน",
+    "locked": "ทำโมดูลก่อนหน้าให้เสร็จสิ้น"
   },
   "chat": {
     "placeholder": "ถามคำถามเกี่ยวกับโมดูลนี้ได้เลย...",
@@ -49,6 +50,21 @@
     "lastActive": "ใช้งานล่าสุด",
     "noInterns": "ยังไม่มีผู้ฝึกงาน",
     "createIntern": "สร้างบัญชีผู้ฝึกงาน",
-    "backToOverview": "กลับไปหน้าภาพรวม"
+    "backToOverview": "กลับไปหน้าภาพรวม",
+    "form": {
+      "usernameRequired": "กรุณากรอกชื่อผู้ใช้",
+      "passwordRequired": "กรุณากรอกรหัสผ่าน",
+      "passwordMinLength": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
+      "usernameConflict": "ชื่อผู้ใช้นี้มีอยู่แล้ว"
+    },
+    "toast": {
+      "createSuccess": "สร้างบัญชีผู้ฝึกงานสำเร็จ!",
+      "createError": "ไม่สามารถสร้างบัญชีผู้ฝึกงานได้"
+    },
+    "empty": {
+      "noInterns": "ไม่พบผู้ฝึกงาน",
+      "noQuizzes": "ยังไม่มีการส่งคำตอบแบบทดสอบ",
+      "noPrReviews": "ยังไม่มีรีวิว PR"
+    }
   }
 }
