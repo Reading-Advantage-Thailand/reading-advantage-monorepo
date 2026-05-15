@@ -8,10 +8,10 @@ Update next-intl config and create the Thai translation file.
   - [ ] Set `locales: ['th', 'en']` and `defaultLocale: 'th'`
   - [ ] Configure locale prefix strategy (always show prefix)
   - [ ] Ensure root `/` redirects to `/th/`
-- [ ] Task: Update `i18n/request.ts` to load Thai messages
-  - [ ] Add `th` locale loader mapping to `messages/th.json`
-  - [ ] Verify fallback chain works (missing key in `th` falls back to `en`)
-- [ ] Task: Create `apps/codecamp-advantage/messages/th.json` with Thai translations
+- [x] Task: Update `i18n/request.ts` to load Thai messages (b7beb5b)
+  - [x] Add `th` locale loader mapping to `messages/th.json`
+  - [x] Verify fallback chain works (missing key in `th` falls back to `en`)
+- [x] Task: Create `apps/codecamp-advantage/messages/th.json` with Thai translations (b7beb5b)
   - [ ] `metadata.title`: "CodeCamp Advantage"
   - [ ] `metadata.description`: "เรียนรู้ Next.js และรูปแบบการทำงานของ Reading Advantage ด้วย AI"
   - [ ] `navigation.dashboard`: "แดชบอร์ด"
