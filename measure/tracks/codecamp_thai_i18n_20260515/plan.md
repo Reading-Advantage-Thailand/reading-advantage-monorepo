@@ -100,16 +100,16 @@ Build the locale toggle and update app routing.
   - [ ] `app/[locale]/admin/new-intern/page.tsx` — create intern
   - [ ] Move existing pages under `[locale]/` directory structure
   - [ ] Verify API routes (`/api/*`) remain locale-free (they should not have locale prefix)
-- [ ] Task: Migrate from `middleware.ts` to Next 16 `proxy.ts` and compose with next-intl
-  - [ ] **Context:** Next.js 16 replaces the Edge `middleware.ts` convention with `proxy.ts`. The current `apps/codecamp-advantage/middleware.ts` (admin route guard from the remediation track) must move.
-  - [ ] Create `apps/codecamp-advantage/proxy.ts` that:
+- [x] Task: Migrate from `middleware.ts` to Next 16 `proxy.ts` and compose with next-intl (7b108cf)
+  - [x] **Context:** Next.js 16 replaces the Edge `middleware.ts` convention with `proxy.ts`. The current `apps/codecamp-advantage/middleware.ts` (admin route guard from the remediation track) must move.
+  - [x] Create `apps/codecamp-advantage/proxy.ts` that:
     - Builds the next-intl proxy via `createNavigation`/`createMiddleware`-equivalent for Next 16 proxy (use the next-intl version that supports proxy; upgrade `next-intl` if needed)
     - Runs the intl locale handler first (URL prefix → cookie → `Accept-Language`)
     - Then applies the admin route guard for `/admin/*` paths (auth check + role check)
     - Skips both intl and auth handling for `/api/*` and static assets via the `matcher` config
-  - [ ] Delete the old `middleware.ts` after `proxy.ts` is verified
-  - [ ] Update existing admin-route protection tests to target the proxy file path / export shape
-  - [ ] If `next-intl` version in use does not support Next 16 proxy, add a sub-task to bump it and adjust imports
+  - [x] Delete the old `middleware.ts` after `proxy.ts` is verified
+  - [x] Update existing admin-route protection tests to target the proxy file path / export shape
+  - [x] If `next-intl` version in use does not support Next 16 proxy, add a sub-task to bump it and adjust imports
 - [ ] Task: Write tests for language switcher
   - [ ] Test: switcher renders both locale labels
   - [ ] Test: clicking Thai navigates to `/th/` path
