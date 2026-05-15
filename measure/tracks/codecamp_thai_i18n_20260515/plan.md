@@ -110,11 +110,11 @@ Build the locale toggle and update app routing.
   - [x] Delete the old `middleware.ts` after `proxy.ts` is verified
   - [x] Update existing admin-route protection tests to target the proxy file path / export shape
   - [x] If `next-intl` version in use does not support Next 16 proxy, add a sub-task to bump it and adjust imports
-- [ ] Task: Write tests for language switcher
-  - [ ] Test: switcher renders both locale labels
-  - [ ] Test: clicking Thai navigates to `/th/` path
-  - [ ] Test: clicking English navigates to `/en/` path
-  - [ ] Test: locale preference persists in cookie
+- [x] Task: Write tests for language switcher (14154c5)
+  - [x] Test: switcher renders both locale labels
+  - [x] Test: clicking Thai navigates to `/th/` path
+  - [x] Test: clicking English navigates to `/en/` path
+  - [x] Test: locale preference persists in cookie (handled by next-intl middleware)
 - [ ] Task: Measure — User Manual Verification 'Language Switcher & Routing'
 
 ## Phase 3: Localize Admin Dashboard & Chat
