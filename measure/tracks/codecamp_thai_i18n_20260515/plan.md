@@ -121,33 +121,32 @@ Build the locale toggle and update app routing.
 
 Translate all remaining user-facing strings and add locale-aware chat.
 
-- [ ] Task: Replace all硬编码 (hardcoded) strings in admin pages with translation keys
-  - [ ] `app/[locale]/admin/page.tsx` — table headers, buttons, empty state
-  - [ ] `app/[locale]/admin/[userId]/page.tsx` — progress labels, quiz scores, PR review labels
-  - [ ] `app/[locale]/admin/new-intern/page.tsx` — form labels, submit button, success/error messages
-- [ ] Task: Replace hardcoded strings in components with translation keys
-  - [ ] `components/fork-instruction.tsx` — step labels, PR URL input placeholder
-  - [ ] `components/review-history.tsx` — status labels (pending, approved, needs_changes)
-  - [ ] `components/workflow-tracker.tsx` — step labels (claimed, branched, PR opened, reviewed, merged)
-  - [ ] `components/lesson-content.tsx` — quiz submit button, score display
-  - [ ] `app/[locale]/module/[slug]/page.tsx` — back button, module metadata labels
-- [ ] Task: Add Thai and English keys for all newly extracted strings to both locale files
-  - [ ] Add to `messages/en.json` and `messages/th.json`
-  - [ ] Keys grouped by component: `admin.*`, `module.*`, `lesson.*`, `exercise.*`, `review.*`
-- [ ] Task: Pipe locale to the chat API route
-  - [ ] **Mechanism:** client sends locale in the request body alongside `messages` (most reliable — API routes are not under `[locale]/`, and the next-intl cookie is best-effort). Add `locale: "th" | "en"` to the chat request schema.
-  - [ ] Update the `useChatStream` (or current chat client hook) to read `useLocale()` and include it in each request body
-  - [ ] Validate locale on the server with Zod; fall back to `th` (default) if missing or invalid
-- [ ] Task: Update chat system prompt to be locale-aware
-  - [ ] In `apps/codecamp-advantage/app/api/chat/route.ts`, branch on the validated locale
-  - [ ] When locale is `th`: "Respond in Thai (ภาษาไทย) by default. **Mirror the user: if the user writes entirely in English, answer in English; otherwise answer in Thai.**"
-  - [ ] When locale is `en`: "Respond in English by default. Mirror the user's language if they switch."
-  - [ ] Use the `getChatContext` domain function to include module context
-  - [ ] Test that chat responses match the expected locale (mock the LLM, assert system prompt content)
-- [ ] Task: Write tests for admin localization
-  - [ ] Test: admin page renders Thai labels when locale is `th`
-  - [ ] Test: admin page renders English labels when locale is `en`
-  - [ ] Test: chat system prompt includes Thai instruction when locale is `th`
+- [x] Task: Replace all硬编码 (hardcoded) strings in admin pages with translation keys (9d7ebf8)
+  - [x] `app/[locale]/admin/page.tsx` — table headers, buttons, empty state
+  - [x] `app/[locale]/admin/[userId]/page.tsx` — progress labels, quiz scores, PR review labels
+  - [x] `app/[locale]/admin/new-intern/page.tsx` — form labels, submit button, success/error messages
+- [x] Task: Replace hardcoded strings in components with translation keys (9d7ebf8)
+  - [x] `components/fork-instruction.tsx` — step labels, PR URL input placeholder
+  - [x] `components/review-history.tsx` — status labels (pending, approved, needs_changes)
+  - [x] `components/workflow-tracker.tsx` — step labels (claimed, branched, PR opened, reviewed, merged)
+  - [x] `components/lesson-content.tsx` — exercise/quiz instruction labels, empty content
+  - [x] `app/[locale]/module/[slug]/page.tsx` — back button, module metadata labels
+- [x] Task: Add Thai and English keys for all newly extracted strings to both locale files (9d7ebf8)
+  - [x] Add to `messages/en.json` and `messages/th.json`
+  - [x] Keys grouped by component: `admin.*`, `fork.*`, `review.*`, `workflow.*`, `lesson.*`, `chat.*`, `module.*`
+- [x] Task: Pipe locale to the chat API route (9d7ebf8)
+  - [x] **Mechanism:** client sends locale in the request body alongside `messages`. Added `locale: "th" | "en"` to the chat request schema.
+  - [x] Update the `useChatStream` hook to accept locale option and include it in request body
+  - [x] Validate locale on the server with Zod; fall back to `th` (default) if missing or invalid
+- [x] Task: Update chat system prompt to be locale-aware (9d7ebf8)
+  - [x] In `apps/codecamp-advantage/app/api/chat/route.ts`, branch on the validated locale
+  - [x] When locale is `th`: "Respond in Thai (ภาษาไทย) by default. Mirror the user..."
+  - [x] When locale is `en`: "Respond in English by default. Mirror the user's language if they switch."
+  - [x] Test: chat responses match the expected locale (mock buildSystemPrompt, assert content)
+- [x] Task: Write tests for admin localization (9d7ebf8)
+  - [x] Test: all admin keys exist in both en and th locales with correct values
+  - [x] Test: keys for fork, review, workflow, lesson, module, chat namespaces in both locales
+  - [x] Test: chat system prompt includes Thai instruction when locale is `th`
 - [ ] Task: Measure — User Manual Verification 'Admin & Chat Localization'
 
 ## Phase 4: Validation & Cleanup
