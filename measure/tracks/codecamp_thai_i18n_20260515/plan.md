@@ -45,7 +45,7 @@ Update next-intl config and create the Thai translation file.
   - [ ] `formatNumber(n, locale)` for quiz scores/percentages
   - [ ] `formatDate(date, locale)` for review history
   - [ ] Use `Intl.RelativeTimeFormat`, `Intl.NumberFormat`, `Intl.DateTimeFormat` with the active locale
-- [ ] Task: Add translation keys for admin dashboard to both `en.json` and `th.json`
+- [x] Task: Add translation keys for admin dashboard to both `en.json` and `th.json` (2215e2f)
   - [ ] `admin.title`: "Intern Management" / "จัดการผู้ฝึกงาน"
   - [ ] `admin.interns`: "Interns" / "ผู้ฝึกงาน"
   - [ ] `admin.addIntern`: "Add Intern" / "เพิ่มผู้ฝึกงาน"
