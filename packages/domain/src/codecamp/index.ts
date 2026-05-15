@@ -1120,7 +1120,10 @@ export async function listInterns({
       internProgress.filter((p) => p.status === "completed").map((p) => p.moduleId)
     ).size;
     const quizScores = internProgress
-      .filter((p) => p.score > 0)
+      .filter((p) => {
+        const lesson = allLessons.find((l) => l.id === p.lessonId);
+        return p.score > 0 && lesson?.type === "quiz";
+      })
       .map((p) => p.score);
     const quizAverage =
       quizScores.length > 0
@@ -1222,7 +1225,10 @@ export async function getInternProgress({
     username: intern.username,
     moduleBreakdown,
     quizScores: progress
-      .filter((p) => p.score > 0)
+      .filter((p) => {
+        const lesson = lessons.find((l) => l.id === p.lessonId);
+        return p.score > 0 && lesson?.type === "quiz";
+      })
       .map((p) => ({
         lessonId: p.lessonId,
         lessonTitle: lessons.find((l) => l.id === p.lessonId)?.title ?? "Lesson",
@@ -1252,7 +1258,12 @@ export async function getChatContext({
     const [mod] = await db
       .select()
       .from(codecampModules)
-      .where(eq(codecampModules.id, input.moduleId))
+      .where(
+        and(
+          eq(codecampModules.id, input.moduleId),
+          eq(codecampModules.status, "published")
+        )
+      )
       .limit(1);
     if (mod) {
       context += `\n\nCurrent module: ${mod.title} — ${mod.description}`;
@@ -1266,7 +1277,15 @@ export async function getChatContext({
       .where(eq(codecampLessons.id, input.lessonId))
       .limit(1);
     if (lesson) {
-      context += `\nCurrent lesson: ${lesson.title} — ${lesson.description}`;
+      // Only include lesson context if its parent module is published
+      const [mod] = await db
+        .select({ status: codecampModules.status })
+        .from(codecampModules)
+        .where(eq(codecampModules.id, lesson.moduleId))
+        .limit(1);
+      if (mod?.status === "published") {
+        context += `\nCurrent lesson: ${lesson.title} — ${lesson.description}`;
+      }
     }
   }
 

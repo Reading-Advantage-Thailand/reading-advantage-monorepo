@@ -243,7 +243,7 @@ export const codecampRouter = router({
   // ─── Exercise Repos ───────────────────────────────────────
 
   exerciseRepos: protectedProcedure
-    .input(z.object({ moduleId: z.string().uuid() }))
+    .input(z.object({ moduleId: z.string().uuid().optional() }))
     .output(z.array(exerciseRepoSchema))
     .query(async ({ ctx, input }) => {
       try {

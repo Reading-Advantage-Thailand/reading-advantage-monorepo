@@ -140,7 +140,7 @@ export default function HomePage() {
 
           const colors = PHASE_COLORS[phaseKey];
 
-if (phase.modules.length === 0) return null;
+          if (phase.modules.length === 0) return null;
 
           return (
             <section key={phaseKey}>

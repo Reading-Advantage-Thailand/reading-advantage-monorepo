@@ -45,16 +45,7 @@ export async function POST(req: NextRequest) {
 
     // Create tenant context for domain function
     const tenantDb = createTenantDB(db, { schoolId: session.user.schoolId });
-    const user = {
-      id: session.user.id,
-      username: session.user.username ?? "",
-      name: session.user.name ?? "",
-      role: session.user.role as "INTERN" | "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM",
-      schoolId: session.user.schoolId,
-      xp: session.user.xp,
-      level: session.user.level,
-      cefrLevel: session.user.cefrLevel as "A1" | "A2" | "B1" | "B2" | "C1" | "C2",
-    };
+    const user = session.user;
     const tenant = { schoolId: session.user.schoolId };
 
     // Rate limit check

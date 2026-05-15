@@ -1382,7 +1382,9 @@ describe("getChatContext", () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const db = createMockDb({ selectResults: [lessonRow] });
+    const db = createMockDb({
+      selectSequence: [[lessonRow], [{ status: "published" }]],
+    });
 
     const result = await getChatContext({
       db: wrapDb(db),
@@ -1403,6 +1405,32 @@ describe("getChatContext", () => {
       user: student,
       tenant: globalTenant,
       input: { moduleId: "missing" },
+    });
+
+    expect(result).toBe("");
+  });
+
+  it("returns empty string when lesson's module is not published", async () => {
+    const lessonRow = {
+      id: "l1",
+      moduleId: "m1",
+      title: "JSX Basics",
+      description: "Understanding JSX",
+      type: "theory",
+      order: 1,
+      contentJson: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const db = createMockDb({
+      selectSequence: [[lessonRow], [{ status: "draft" }]],
+    });
+
+    const result = await getChatContext({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { lessonId: "l1" },
     });
 
     expect(result).toBe("");
