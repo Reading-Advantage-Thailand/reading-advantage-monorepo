@@ -1,11 +1,11 @@
 {
   "track_id": "codecamp_advantage_20260513",
   "type": "feature",
-  "status": "in_progress",
+  "status": "completed",
   "created_at": "2026-05-13T19:40:27Z",
-  "updated_at": "2026-05-13T21:00:00Z",
+  "updated_at": "2026-05-15T22:00:00Z",
   "description": "codecamp-advantage: a full-stack web dev bootcamp for interns with near-zero JS experience. 18 curriculum modules from dev environment setup through cloud deployment, using fork-based exercises, LLM PR review, and GitHub Issues practice. Exercises progressively mirror Reading Advantage architecture patterns.",
   "estimated_tasks": 40,
-  "actual_tasks": null,
+  "actual_tasks": 40,
   "deviation_notes": "Rescoped from 'teach monorepo patterns' to 'teach web dev from fundamentals'. Existing schema/domain/router/UI code retained and extended."
 }

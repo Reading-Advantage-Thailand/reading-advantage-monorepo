@@ -138,7 +138,7 @@ Evolve existing UI to support 18 modules with phase grouping and exercise workfl
   - [x] Component tests pass (workflow-tracker: 7, review-history: 6, fork-instruction: 5, lesson-content: 11)
   - [x] Lint passes, type check passes
 
-## Phase 5: Seed Expanded Curriculum Data [checkpoint: curriculum-track]
+## Phase 5: Seed Expanded Curriculum Data [checkpoint: e0621f9]
 
 Replace the existing 5-module seed with the full 18-module curriculum.
 
