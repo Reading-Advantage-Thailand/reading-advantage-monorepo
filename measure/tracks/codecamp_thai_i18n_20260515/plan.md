@@ -162,13 +162,13 @@ Run all quality gates and verify no regressions.
   - [x] **Why:** Default locale is Thai but the 85 lesson `contentJson` rows are intentionally English (out of scope to translate per spec). Thai-default users will be confused without a hint.
   - [x] Add an inline badge or notice on the dashboard and module pages: "บทเรียนเป็นภาษาอังกฤษ" (Lessons in English)
   - [x] Add to the chat: when locale is `th`, the system prompt should mention the lesson content is English so the AI can translate on request
-- [~] Task: Run full quality gate
-  - [ ] `pnpm turbo run build --filter=codecamp-advantage`
-  - [ ] `pnpm turbo run lint --filter=codecamp-advantage`
-  - [ ] `pnpm turbo run check-types --filter=codecamp-advantage`
-  - [ ] `pnpm turbo run test --filter=@reading-advantage/domain`
-  - [ ] `pnpm turbo run test --filter=@reading-advantage/api`
-  - [ ] `pnpm turbo run test --filter=codecamp-advantage`
+- [x] Task: Run full quality gate (1ea0896)
+  - [x] `pnpm turbo run build --filter=codecamp-advantage`
+  - [x] `pnpm turbo run lint --filter=codecamp-advantage`
+  - [x] `pnpm turbo run check-types --filter=codecamp-advantage`
+  - [x] `pnpm turbo run test --filter=@reading-advantage/domain`
+  - [x] `pnpm turbo run test --filter=@reading-advantage/api`
+  - [x] `pnpm turbo run test --filter=codecamp-advantage`
 - [x] Task: Add key-parity and quality tests now that all extraction is done (4acbd8b)
   - [x] Test: `messages/th.json` has exactly the same key set as `messages/en.json` (no extras, none missing)
   - [x] Test: every Thai value is non-empty and not byte-identical to the English value (excluding intentional proper nouns like "CodeCamp Advantage")
