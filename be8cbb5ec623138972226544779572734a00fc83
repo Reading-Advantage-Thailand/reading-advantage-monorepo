@@ -1,0 +1,4 @@
+Task: Write tests for Thai locale loading
+Summary: Added integration tests verifying th locale routing registration, th as default locale, dynamic import of th.json, and resolveLocale fallback behavior.
+Files:
+- apps/codecamp-advantage/lib/__tests__/i18n-locale-loading.test.ts (created)
