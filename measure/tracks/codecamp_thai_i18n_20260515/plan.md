@@ -4,7 +4,7 @@
 
 Update next-intl config and create the Thai translation file.
 
-- [ ] Task: Update `i18n/routing.ts` to add Thai locale and set `th` as default
+- [x] Task: Update `i18n/routing.ts` to add Thai locale and set `th` as default (302d142)
   - [ ] Set `locales: ['th', 'en']` and `defaultLocale: 'th'`
   - [ ] Configure locale prefix strategy (always show prefix)
   - [ ] Ensure root `/` redirects to `/th/`
@@ -36,6 +36,15 @@ Update next-intl config and create the Thai translation file.
   - [ ] `quiz.score`: "คะแนน"
   - [ ] `quiz.correct`: "ถูกต้อง"
   - [ ] `quiz.incorrect`: "ไม่ถูกต้อง"
+- [ ] Task: Add Thai-friendly font loading via `next/font`
+  - [ ] Import `Noto_Sans_Thai` (or `IBM_Plex_Sans_Thai`) alongside the existing Latin font in `app/layout.tsx`
+  - [ ] Apply the Thai font family in the root layout so glyphs render correctly on all platforms
+  - [ ] Verify no FOUT/CLS regressions
+- [ ] Task: Add localized formatting helpers in `lib/i18n-format.ts`
+  - [ ] `formatRelativeTime(date, locale)` for "Last Active" timestamps on the admin table
+  - [ ] `formatNumber(n, locale)` for quiz scores/percentages
+  - [ ] `formatDate(date, locale)` for review history
+  - [ ] Use `Intl.RelativeTimeFormat`, `Intl.NumberFormat`, `Intl.DateTimeFormat` with the active locale
 - [ ] Task: Add translation keys for admin dashboard to both `en.json` and `th.json`
   - [ ] `admin.title`: "Intern Management" / "จัดการผู้ฝึกงาน"
   - [ ] `admin.interns`: "Interns" / "ผู้ฝึกงาน"
@@ -49,10 +58,16 @@ Update next-intl config and create the Thai translation file.
   - [ ] `admin.noInterns`: "No interns yet" / "ยังไม่มีผู้ฝึกงาน"
   - [ ] `admin.createIntern`: "Create Intern Account" / "สร้างบัญชีผู้ฝึกงาน"
   - [ ] `admin.backToOverview`: "Back to Overview" / "กลับไปหน้าภาพรวม"
+- [ ] Task: Enumerate and add additional translation surfaces commonly missed
+  - [ ] Form validation messages (admin/new-intern): required, password complexity, username conflict
+  - [ ] Toast / inline success+error messages across admin + chat
+  - [ ] Per-page `<title>` metadata for every route (currently only `metadata.title` exists)
+  - [ ] Empty-state strings (e.g. "No PR reviews yet", "No completed modules")
+  - [ ] Locked-module tooltip text from the dashboard prerequisite UI
 - [ ] Task: Write tests for Thai locale loading
-  - [ ] Test: `messages/th.json` has the same keys as `messages/en.json`
   - [ ] Test: `routing.ts` exports `th` as the default locale
-  - [ ] Test: Thai translations are non-empty strings (not just English copies)
+  - [ ] Test: `messages/th.json` parses and loads via `getRequestConfig`
+  - [ ] Note: key-parity and "Thai is not English copy" tests are added in Phase 4 once Phase 3 finishes extracting keys from components — running them now would fail prematurely
 - [ ] Task: Measure — User Manual Verification 'Contract & Schema'
 
 ## Phase 2: Implement Language Switcher & Routing
@@ -81,11 +96,16 @@ Build the locale toggle and update app routing.
   - [ ] `app/[locale]/admin/new-intern/page.tsx` — create intern
   - [ ] Move existing pages under `[locale]/` directory structure
   - [ ] Verify API routes (`/api/*`) remain locale-free (they should not have locale prefix)
-- [ ] Task: Update `middleware.ts` to handle locale routing
-  - [ ] Use `createMiddleware` from `next-intl/middleware`
-  - [ ] Configure locale detection from URL prefix, then cookie, then browser preference
-  - [ ] Continue protecting `/admin/*` routes for authenticated users
-  - [ ] Ensure API routes bypass locale handling
+- [ ] Task: Migrate from `middleware.ts` to Next 16 `proxy.ts` and compose with next-intl
+  - [ ] **Context:** Next.js 16 replaces the Edge `middleware.ts` convention with `proxy.ts`. The current `apps/codecamp-advantage/middleware.ts` (admin route guard from the remediation track) must move.
+  - [ ] Create `apps/codecamp-advantage/proxy.ts` that:
+    - Builds the next-intl proxy via `createNavigation`/`createMiddleware`-equivalent for Next 16 proxy (use the next-intl version that supports proxy; upgrade `next-intl` if needed)
+    - Runs the intl locale handler first (URL prefix → cookie → `Accept-Language`)
+    - Then applies the admin route guard for `/admin/*` paths (auth check + role check)
+    - Skips both intl and auth handling for `/api/*` and static assets via the `matcher` config
+  - [ ] Delete the old `middleware.ts` after `proxy.ts` is verified
+  - [ ] Update existing admin-route protection tests to target the proxy file path / export shape
+  - [ ] If `next-intl` version in use does not support Next 16 proxy, add a sub-task to bump it and adjust imports
 - [ ] Task: Write tests for language switcher
   - [ ] Test: switcher renders both locale labels
   - [ ] Test: clicking Thai navigates to `/th/` path
@@ -110,12 +130,16 @@ Translate all remaining user-facing strings and add locale-aware chat.
 - [ ] Task: Add Thai and English keys for all newly extracted strings to both locale files
   - [ ] Add to `messages/en.json` and `messages/th.json`
   - [ ] Keys grouped by component: `admin.*`, `module.*`, `lesson.*`, `exercise.*`, `review.*`
+- [ ] Task: Pipe locale to the chat API route
+  - [ ] **Mechanism:** client sends locale in the request body alongside `messages` (most reliable — API routes are not under `[locale]/`, and the next-intl cookie is best-effort). Add `locale: "th" | "en"` to the chat request schema.
+  - [ ] Update the `useChatStream` (or current chat client hook) to read `useLocale()` and include it in each request body
+  - [ ] Validate locale on the server with Zod; fall back to `th` (default) if missing or invalid
 - [ ] Task: Update chat system prompt to be locale-aware
-  - [ ] In `apps/codecamp-advantage/app/api/chat/route.ts`, pass the user's locale to the system prompt
-  - [ ] When locale is `th`: add "Respond in Thai (ภาษาไทย) by default. Switch to English only if the user explicitly asks."
-  - [ ] When locale is `en`: add "Respond in English."
+  - [ ] In `apps/codecamp-advantage/app/api/chat/route.ts`, branch on the validated locale
+  - [ ] When locale is `th`: "Respond in Thai (ภาษาไทย) by default. **Mirror the user: if the user writes entirely in English, answer in English; otherwise answer in Thai.**"
+  - [ ] When locale is `en`: "Respond in English by default. Mirror the user's language if they switch."
   - [ ] Use the `getChatContext` domain function to include module context
-  - [ ] Test that chat responses match the expected locale
+  - [ ] Test that chat responses match the expected locale (mock the LLM, assert system prompt content)
 - [ ] Task: Write tests for admin localization
   - [ ] Test: admin page renders Thai labels when locale is `th`
   - [ ] Test: admin page renders English labels when locale is `en`
@@ -126,11 +150,15 @@ Translate all remaining user-facing strings and add locale-aware chat.
 
 Run all quality gates and verify no regressions.
 
-- [ ] Task: Verify layout stability when switching locales
-  - [ ] Check dashboard cards don't clip with Thai text
-  - [ ] Check admin table columns don't overflow with Thai labels
-  - [ ] Check chat input placeholder doesn't clip
-  - [ ] Check module progress bars render correctly with Thai labels
+- [ ] Task: Pre-empt Thai text-width regressions (don't just verify after the fact)
+  - [ ] Audit fixed-width containers in `app/page.tsx`, `app/admin/page.tsx`, and `components/*.tsx`
+  - [ ] Apply `min-w-0` + `truncate` (or `line-clamp-N`) on flex/grid children where text could wrap unpredictably
+  - [ ] Loosen any `max-w-*` constraints on cards/buttons that were sized for English
+  - [ ] Then verify with Thai locale: dashboard cards, admin table columns, chat input placeholder, progress bar labels, locked-module tooltips
+- [ ] Task: Add lesson-language badge to clarify that lessons are English
+  - [ ] **Why:** Default locale is Thai but the 85 lesson `contentJson` rows are intentionally English (out of scope to translate per spec). Thai-default users will be confused without a hint.
+  - [ ] Add an inline badge or notice on the dashboard and module pages: "บทเรียนเป็นภาษาอังกฤษ" (Lessons in English)
+  - [ ] Add to the chat: when locale is `th`, the system prompt should mention the lesson content is English so the AI can translate on request
 - [ ] Task: Run full quality gate
   - [ ] `pnpm turbo run build --filter=codecamp-advantage`
   - [ ] `pnpm turbo run lint --filter=codecamp-advantage`
@@ -138,9 +166,10 @@ Run all quality gates and verify no regressions.
   - [ ] `pnpm turbo run test --filter=@reading-advantage/domain`
   - [ ] `pnpm turbo run test --filter=@reading-advantage/api`
   - [ ] `pnpm turbo run test --filter=codecamp-advantage`
-- [ ] Task: Resolve tech-debt item: "`contentJson` schema validation missing in LessonContent"
-  - [ ] Add Zod validation for `contentJson` in `LessonContent` component
-  - [ ] Provide safe fallback for invalid shapes
-  - [ ] Write test for invalid content rendering gracefully
+- [ ] Task: Add key-parity and quality tests now that all extraction is done
+  - [ ] Test: `messages/th.json` has exactly the same key set as `messages/en.json` (no extras, none missing)
+  - [ ] Test: every Thai value is non-empty and not byte-identical to the English value (excluding intentional proper nouns like "CodeCamp Advantage")
 - [ ] Task: Update `measure/tracks.md` to reference this track
+
+> **Note:** The unrelated tech-debt item "`contentJson` schema validation missing in LessonContent" has been moved out of this track. It is not coupled to i18n and belongs in the next codecamp review-remediation track.
 - [ ] Task: Measure — User Manual Verification 'Validation & Cleanup'
