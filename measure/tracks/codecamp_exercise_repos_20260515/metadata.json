@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_exercise_repos_20260515",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-05-15T00:00:00Z",
+  "updated_at": "2026-05-15T00:00:00Z",
+  "description": "Create real GitHub exercise repos and portfolio projects for the codecamp-advantage bootcamp, update seed data with real URLs, and validate the fork→PR→review cycle end-to-end.",
+  "estimated_tasks": 36,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
