@@ -32,12 +32,12 @@ describe("LessonContent", () => {
 
     it("renders empty fallback when sections array is missing", () => {
       render(<LessonContent type="theory" content={{}} />);
-      expect(screen.getByText(/no structured content available/i)).toBeInTheDocument();
+      expect(screen.getByText(/noContent/i)).toBeInTheDocument();
     });
 
     it("renders empty fallback when sections array is empty", () => {
       render(<LessonContent type="theory" content={{ sections: [] }} />);
-      expect(screen.getByText(/no structured content available/i)).toBeInTheDocument();
+      expect(screen.getByText(/noContent/i)).toBeInTheDocument();
     });
 
     it("renders section without code when code is missing", () => {
@@ -68,7 +68,7 @@ describe("LessonContent", () => {
 
     it("renders empty fallback when instructions are missing", () => {
       render(<LessonContent type="exercise" content={{}} />);
-      expect(screen.getByText(/no structured content available/i)).toBeInTheDocument();
+      expect(screen.getByText(/noContent/i)).toBeInTheDocument();
     });
   });
 
@@ -87,7 +87,7 @@ describe("LessonContent", () => {
 
     it("renders empty fallback when instructions are missing", () => {
       render(<LessonContent type="quiz" content={{}} />);
-      expect(screen.getByText(/no structured content available/i)).toBeInTheDocument();
+      expect(screen.getByText(/noContent/i)).toBeInTheDocument();
     });
   });
 
@@ -95,7 +95,7 @@ describe("LessonContent", () => {
     it("renders empty fallback for unknown lesson type", () => {
       // @ts-expect-error testing invalid type
       render(<LessonContent type="unknown" content={{}} />);
-      expect(screen.getByText(/no structured content available/i)).toBeInTheDocument();
+      expect(screen.getByText(/noContent/i)).toBeInTheDocument();
     });
 
     it("preserves whitespace in body text", () => {

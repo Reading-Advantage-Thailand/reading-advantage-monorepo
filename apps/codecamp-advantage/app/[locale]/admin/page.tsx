@@ -5,6 +5,7 @@ import { useAuth } from "@reading-advantage/auth-client";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
 import { Progress } from "@reading-advantage/ui";
+import { useTranslations } from "next-intl";
 import {
   UserPlus,
   Users,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 
 export default function AdminPage() {
+  const t = useTranslations("admin");
   const { user, isLoading: authLoading } = useAuth();
   const { data: interns, isLoading: dataLoading } = trpc.codecamp.listInterns.useQuery(
     undefined,
@@ -35,12 +37,12 @@ export default function AdminPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col items-center justify-center gap-4 text-center">
           <AlertCircle className="h-12 w-12 text-destructive" />
-          <h1 className="text-2xl font-bold">Access Denied</h1>
+          <h1 className="text-2xl font-bold">{t("accessDenied")}</h1>
           <p className="text-muted-foreground">
-            You need admin privileges to view this page.
+            {t("noPrivileges")}
           </p>
           <Button asChild>
-            <Link href="/">Back to Dashboard</Link>
+            <Link href="/">{t("backToDashboard")}</Link>
           </Button>
         </div>
       </div>
@@ -55,29 +57,29 @@ export default function AdminPage() {
         <div>
           <div className="mb-2 flex items-center gap-3">
             <Users className="h-6 w-6 text-primary" />
-            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold">{t("dashboardTitle")}</h1>
           </div>
           <p className="text-muted-foreground">
-            Manage intern accounts and track cohort progress
+            {t("dashboardSubtitle")}
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/new-intern">
             <UserPlus className="mr-2 h-4 w-4" />
-            New Intern
+            {t("newIntern")}
           </Link>
         </Button>
       </div>
 
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         <div className="rounded-lg border bg-card p-6">
-          <p className="text-sm text-muted-foreground">Total Interns</p>
+          <p className="text-sm text-muted-foreground">{t("totalInterns")}</p>
           <p className="mt-2 text-3xl font-bold">
             {isLoading ? "—" : interns?.length ?? 0}
           </p>
         </div>
         <div className="rounded-lg border bg-card p-6">
-          <p className="text-sm text-muted-foreground">Avg. Progress</p>
+          <p className="text-sm text-muted-foreground">{t("avgProgress")}</p>
           <p className="mt-2 text-3xl font-bold">
             {isLoading
               ? "—"
@@ -89,7 +91,7 @@ export default function AdminPage() {
           </p>
         </div>
         <div className="rounded-lg border bg-card p-6">
-          <p className="text-sm text-muted-foreground">Pending Reviews</p>
+          <p className="text-sm text-muted-foreground">{t("pendingReviews")}</p>
           <p className="mt-2 text-3xl font-bold">
             {isLoading
               ? "—"
@@ -100,7 +102,7 @@ export default function AdminPage() {
 
       <div className="rounded-lg border">
         <div className="p-4">
-          <h2 className="text-lg font-semibold">Cohort Overview</h2>
+          <h2 className="text-lg font-semibold">{t("cohortOverview")}</h2>
         </div>
         {isLoading ? (
           <div className="p-8">
@@ -108,9 +110,9 @@ export default function AdminPage() {
           </div>
         ) : !interns || interns.length === 0 ? (
           <div className="p-8 text-center">
-            <p className="text-muted-foreground">No interns found.</p>
+            <p className="text-muted-foreground">{t("empty.noInterns")}</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Create intern accounts to get started.
+              {t("empty.createToStart")}
             </p>
           </div>
         ) : (
@@ -118,14 +120,14 @@ export default function AdminPage() {
             <table className="w-full text-sm" aria-label="Intern accounts">
               <thead>
                 <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-3 text-left font-medium">Name</th>
-                  <th className="px-4 py-3 text-left font-medium">Username</th>
-                  <th className="px-4 py-3 text-left font-medium">Progress</th>
-                  <th className="px-4 py-3 text-left font-medium">Modules</th>
-                  <th className="px-4 py-3 text-left font-medium">Quiz Avg</th>
-                  <th className="px-4 py-3 text-left font-medium">PR Reviews</th>
-                  <th className="px-4 py-3 text-left font-medium">Last Active</th>
-                  <th className="px-4 py-3 text-right font-medium">Actions</th>
+                  <th className="px-4 py-3 text-left font-medium">{t("name")}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t("username")}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t("progress")}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t("modules")}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t("quizAvg")}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t("prReviews")}</th>
+                  <th className="px-4 py-3 text-left font-medium">{t("lastActive")}</th>
+                  <th className="px-4 py-3 text-right font-medium">{t("actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -190,13 +192,13 @@ export default function AdminPage() {
                         <Clock className="h-3.5 w-3.5" />
                         {intern.lastActiveAt
                           ? new Date(intern.lastActiveAt).toLocaleDateString()
-                          : "Never"}
+                          : t("never")}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Button variant="ghost" size="sm" asChild>
                         <Link href={`/admin/${intern.userId}`}>
-                          Details
+                          {t("details")}
                           <ArrowRight className="ml-1 h-3.5 w-3.5" />
                         </Link>
                       </Button>

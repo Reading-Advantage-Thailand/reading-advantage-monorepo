@@ -10,6 +10,7 @@ import {
   Circle,
 } from "lucide-react";
 import { getPrDisplayName } from "@/lib/pr-url";
+import { useTranslations } from "next-intl";
 
 interface ReviewHistoryProps {
   prUrl: string;
@@ -17,42 +18,35 @@ interface ReviewHistoryProps {
   summary: string | null;
 }
 
-const TIMELINE_STEPS = [
-  { id: "submitted", label: "PR Submitted", description: "Your PR is open and awaiting review" },
-  { id: "first_review", label: "First Review", description: "LLM has provided initial feedback" },
-  { id: "revisions", label: "Revisions", description: "Address feedback and push updates" },
-  { id: "approved", label: "Approved", description: "All feedback resolved — ready to merge" },
-];
-
-function getStatusConfig(status: ReviewHistoryProps["reviewStatus"]) {
+function getStatusConfig(status: ReviewHistoryProps["reviewStatus"], t: ReturnType<typeof useTranslations>) {
   switch (status) {
     case "pending":
       return {
-        label: "Pending Review",
+        label: t("statusPending"),
         className: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
         icon: <Clock className="h-4 w-4" />,
-        message: "Awaiting first review",
+        message: t("statusPendingMsg"),
       };
     case "reviewed":
       return {
-        label: "Reviewed",
+        label: t("statusReviewed"),
         className: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
         icon: <CheckCircle className="h-4 w-4" />,
-        message: "Initial review complete",
+        message: t("statusReviewedMsg"),
       };
     case "needs_changes":
       return {
-        label: "Needs Changes",
+        label: t("statusNeedsChanges"),
         className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
         icon: <AlertCircle className="h-4 w-4" />,
-        message: "Please address the feedback and push revisions",
+        message: t("statusNeedsChangesMsg"),
       };
     case "approved":
       return {
-        label: "Approved",
+        label: t("statusApproved"),
         className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
         icon: <CheckCircle className="h-4 w-4" />,
-        message: "Great work! Your PR is approved.",
+        message: t("statusApprovedMsg"),
       };
   }
 }
@@ -64,7 +58,7 @@ function getTimelineStepStatus(
   const statusOrder = ["pending", "reviewed", "needs_changes", "approved"];
   const currentIndex = statusOrder.indexOf(reviewStatus);
 
-  const stepIndex = TIMELINE_STEPS.findIndex((s) => s.id === stepId);
+  const stepIndex = ["submitted", "first_review", "revisions", "approved"].indexOf(stepId);
 
   if (stepIndex < currentIndex) return "completed";
   if (stepIndex === currentIndex) return "active";
@@ -72,7 +66,15 @@ function getTimelineStepStatus(
 }
 
 export function ReviewHistory({ prUrl, reviewStatus, summary }: ReviewHistoryProps) {
-  const config = getStatusConfig(reviewStatus);
+  const t = useTranslations("review");
+  const config = getStatusConfig(reviewStatus, t);
+
+  const timelineSteps = [
+    { id: "submitted", label: t("prSubmitted"), description: t("prSubmittedDesc") },
+    { id: "first_review", label: t("firstReview"), description: t("firstReviewDesc") },
+    { id: "revisions", label: t("revisions"), description: t("revisionsDesc") },
+    { id: "approved", label: t("approved"), description: t("approvedDesc") },
+  ];
 
   return (
     <div className="space-y-4">
@@ -102,16 +104,16 @@ export function ReviewHistory({ prUrl, reviewStatus, summary }: ReviewHistoryPro
       {/* Review summary */}
       {summary && (
         <div className="rounded-lg border bg-muted/50 p-3">
-          <p className="text-sm font-medium">Review Feedback</p>
+          <p className="text-sm font-medium">{t("feedback")}</p>
           <p className="mt-1 text-sm text-muted-foreground">{summary}</p>
         </div>
       )}
 
       {/* Timeline */}
       <div>
-        <p className="mb-2 text-sm font-medium">Review History</p>
+        <p className="mb-2 text-sm font-medium">{t("history")}</p>
         <div className="space-y-2" aria-label={`review timeline: ${reviewStatus}`}>
-          {TIMELINE_STEPS.map((step) => {
+          {timelineSteps.map((step) => {
             const stepStatus = getTimelineStepStatus(step.id, reviewStatus);
             return (
               <div

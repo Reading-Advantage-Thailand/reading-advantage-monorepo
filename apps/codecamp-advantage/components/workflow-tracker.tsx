@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle, Circle, Loader2, GitPullRequest, GitBranch, GitMerge, MessageSquare } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
 interface WorkflowStep {
@@ -25,6 +26,7 @@ const STEP_ICONS: Record<string, ReactNode> = {
 };
 
 export function WorkflowTracker({ issueTitle, issueNumber, steps }: WorkflowTrackerProps) {
+  const t = useTranslations("workflow");
   const allCompleted = steps.length > 0 && steps.every((s) => s.status === "completed");
 
   return (
@@ -34,7 +36,7 @@ export function WorkflowTracker({ issueTitle, issueNumber, steps }: WorkflowTrac
         <GitPullRequest className="h-5 w-5 text-primary" />
         <div>
           <p className="text-sm font-medium">
-            Issue #{issueNumber}: {issueTitle}
+            {t("issueLabel", { number: issueNumber, title: issueTitle })}
           </p>
         </div>
       </div>
@@ -93,7 +95,7 @@ export function WorkflowTracker({ issueTitle, issueNumber, steps }: WorkflowTrac
 
       {allCompleted && (
         <div className="rounded-lg bg-green-50 p-3 text-center text-sm font-medium text-green-800">
-          All steps completed — great work!
+          {t("allCompleted")}
         </div>
       )}
     </div>

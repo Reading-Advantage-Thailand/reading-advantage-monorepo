@@ -17,8 +17,7 @@ describe("WorkflowTracker", () => {
 
   it("renders issue title and number", () => {
     render(<WorkflowTracker {...defaultProps} />);
-    expect(screen.getByText(/#42/)).toBeInTheDocument();
-    expect(screen.getByText(/Fix navigation bug in dashboard/)).toBeInTheDocument();
+    expect(screen.getByText(/issueLabel/i)).toBeInTheDocument();
   });
 
   it("renders all workflow steps", () => {
@@ -59,13 +58,13 @@ describe("WorkflowTracker", () => {
       steps: defaultProps.steps.map((s) => ({ ...s, status: "completed" as const })),
     };
     render(<WorkflowTracker {...allCompleted} />);
-    expect(screen.getByText(/All steps completed/i)).toBeInTheDocument();
+    expect(screen.getByText(/allCompleted/i)).toBeInTheDocument();
   });
 
   it("handles empty steps array", () => {
     render(<WorkflowTracker issueTitle="Empty issue" issueNumber={1} steps={[]} />);
-    expect(screen.getByText(/#1/)).toBeInTheDocument();
-    expect(screen.queryByText(/All steps completed/i)).not.toBeInTheDocument();
+    expect(screen.getByText("issueLabel")).toBeInTheDocument();
+    expect(screen.queryByText("allCompleted")).not.toBeInTheDocument();
   });
 
   it("renders fallback icon for unknown step id", () => {

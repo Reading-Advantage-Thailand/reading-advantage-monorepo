@@ -3,19 +3,23 @@
 import { Button } from "@reading-advantage/ui";
 import { Send, Plus } from "lucide-react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import { useChatStream } from "@/lib/use-chat-stream";
 
 export default function ChatPage() {
+  const t = useTranslations("chat");
+  const locale = useLocale();
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage } = useChatStream();
+  const { messages, isLoading, sendMessage } = useChatStream({ locale });
 
   return (
     <div className="container flex h-[calc(100vh-4rem)] flex-col py-6">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">AI Tutor</h1>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
         <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
           <Plus className="mr-2 h-4 w-4" />
-          New Conversation
+          {t("newConversation")}
         </Button>
       </div>
 
@@ -23,7 +27,7 @@ export default function ChatPage() {
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <p className="text-muted-foreground">
-              Ask me anything about Next.js, tRPC, Drizzle, or monorepo patterns.
+              {t("defaultText")}
             </p>
           </div>
         ) : (
@@ -46,7 +50,7 @@ export default function ChatPage() {
         )}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="rounded-lg bg-secondary px-4 py-2 text-sm">Thinking...</div>
+            <div className="rounded-lg bg-secondary px-4 py-2 text-sm">{t("thinking")}</div>
           </div>
         )}
       </div>
@@ -57,13 +61,13 @@ export default function ChatPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && !isLoading && sendMessage(input)}
-          placeholder="Ask about Next.js, tRPC, Drizzle..."
+          placeholder={t("placeholder")}
           aria-label="Chat message"
           className="flex-1 rounded-lg border bg-background px-4 py-3 text-sm"
         />
         <Button onClick={() => sendMessage(input)} disabled={isLoading}>
           <Send className="mr-2 h-4 w-4" />
-          Send
+          {t("send")}
         </Button>
       </div>
     </div>

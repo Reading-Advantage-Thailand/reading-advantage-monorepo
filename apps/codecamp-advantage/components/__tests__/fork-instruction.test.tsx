@@ -19,7 +19,7 @@ vi.mock("@/lib/trpc", () => ({
 }));
 
 describe("ForkInstruction", () => {
-  it("renders step-by-step fork instructions", () => {
+  it("renders step-by-step fork instructions with translation keys", () => {
     render(
       <ForkInstruction
         repoUrl="https://github.com/org/repo"
@@ -28,11 +28,11 @@ describe("ForkInstruction", () => {
       />
     );
 
-    expect(screen.getByText(/Fork the repository/i)).toBeInTheDocument();
-    expect(screen.getByText(/Clone your fork/i)).toBeInTheDocument();
-    expect(screen.getByText(/Create a branch/i)).toBeInTheDocument();
-    expect(screen.getByText(/Complete the exercise/i)).toBeInTheDocument();
-    expect(screen.getByText(/Push and open a PR/i)).toBeInTheDocument();
+    expect(screen.getByText(/step1Title/i)).toBeInTheDocument();
+    expect(screen.getByText(/step2Title/i)).toBeInTheDocument();
+    expect(screen.getByText(/step3Title/i)).toBeInTheDocument();
+    expect(screen.getByText(/step4Title/i)).toBeInTheDocument();
+    expect(screen.getByText(/step5Title/i)).toBeInTheDocument();
   });
 
   it("shows GitHub repo link in first step", () => {
@@ -44,7 +44,7 @@ describe("ForkInstruction", () => {
       />
     );
 
-    const link = screen.getByText(/Open Test Exercise on GitHub/i);
+    const link = screen.getByText(/openOnGitHub/i);
     expect(link).toHaveAttribute("href", "https://github.com/org/repo");
     expect(link).toHaveAttribute("target", "_blank");
   });
@@ -70,12 +70,12 @@ describe("ForkInstruction", () => {
       />
     );
 
-    const input = screen.getByPlaceholderText(/https:\/\/github.com/i);
+    const input = screen.getByPlaceholderText(/prUrlPlaceholder/i);
     fireEvent.change(input, { target: { value: "not-a-url" } });
 
-    const button = screen.getByRole("button", { name: /Track PR/i });
+    const button = screen.getByRole("button", { name: /trackPr/i });
     expect(button).toBeDisabled();
-    expect(screen.getByText(/Please enter a valid GitHub Pull Request URL/i)).toBeInTheDocument();
+    expect(screen.getByText(/invalidPrUrl/i)).toBeInTheDocument();
   });
 
   it("enables Track PR button for valid PR URL", () => {
@@ -87,10 +87,10 @@ describe("ForkInstruction", () => {
       />
     );
 
-    const input = screen.getByPlaceholderText(/https:\/\/github.com/i);
+    const input = screen.getByPlaceholderText(/prUrlPlaceholder/i);
     fireEvent.change(input, { target: { value: "https://github.com/org/repo/pull/5" } });
 
-    const button = screen.getByRole("button", { name: /Track PR/i });
+    const button = screen.getByRole("button", { name: /trackPr/i });
     expect(button).not.toBeDisabled();
   });
 });

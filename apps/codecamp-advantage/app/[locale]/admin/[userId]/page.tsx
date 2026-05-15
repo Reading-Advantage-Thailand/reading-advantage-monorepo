@@ -8,6 +8,7 @@ import { getPrDisplayName } from "@/lib/pr-url";
 import { Button } from "@reading-advantage/ui";
 import { Progress } from "@reading-advantage/ui";
 import { Badge } from "@reading-advantage/ui";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeft,
   AlertCircle,
@@ -18,6 +19,14 @@ import {
 } from "lucide-react";
 
 export default function InternDetailPage() {
+  const t = useTranslations("admin");
+  const reviewT = useTranslations("review");
+  const statusBadgeLabels: Record<string, string> = {
+    pending: reviewT("statusPending"),
+    reviewed: reviewT("statusReviewedBadge"),
+    needs_changes: reviewT("statusNeedsChangesBadge"),
+    approved: reviewT("statusApprovedBadge"),
+  };
   const params = useParams();
   const userId = params.userId as string;
   const { user, isLoading: authLoading } = useAuth();
@@ -41,12 +50,12 @@ export default function InternDetailPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col items-center justify-center gap-4 text-center">
           <AlertCircle className="h-12 w-12 text-destructive" />
-          <h1 className="text-2xl font-bold">Access Denied</h1>
+          <h1 className="text-2xl font-bold">{t("accessDenied")}</h1>
           <p className="text-muted-foreground">
-            You need admin privileges to view this page.
+            {t("noPrivileges")}
           </p>
           <Button asChild>
-            <Link href="/">Back to Dashboard</Link>
+            <Link href="/">{t("backToDashboard")}</Link>
           </Button>
         </div>
       </div>
@@ -59,12 +68,13 @@ export default function InternDetailPage() {
         <Button variant="ghost" className="mb-6" asChild>
           <Link href="/admin">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Admin
+            {t("backToAdmin")}
           </Link>
         </Button>
-        <h1 className="text-2xl font-bold">Intern not found</h1>
+
+        <h1 className="text-2xl font-bold">{t("internNotFound")}</h1>
         <p className="mt-2 text-muted-foreground">
-          The intern with ID <code>{userId}</code> does not exist.
+          {t("internNotFound")}: <code>{userId}</code>
         </p>
       </div>
     );
@@ -81,7 +91,7 @@ export default function InternDetailPage() {
       <Button variant="ghost" className="mb-6" asChild>
         <Link href="/admin">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Admin
+          {t("backToAdmin")}
         </Link>
       </Button>
 
@@ -94,7 +104,7 @@ export default function InternDetailPage() {
         <div className="border-b p-4">
           <div className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">Module Progress</h2>
+            <h2 className="text-lg font-semibold">{t("moduleProgress")}</h2>
           </div>
         </div>
         <div className="divide-y">
@@ -121,13 +131,13 @@ export default function InternDetailPage() {
                     className="h-2 w-32"
                   />
                   <span className="text-xs text-muted-foreground">
-                    {mod.completed}/{mod.totalLessons} lessons
+                    {mod.completed}/{mod.totalLessons} {t("lessonsLabel")}
                   </span>
                 </div>
               </div>
               <div className="ml-4 text-right">
                 <Badge variant={mod.avgScore >= 80 ? "default" : "secondary"}>
-                  Avg: {mod.avgScore}%
+                  {t("avgLabel")} {mod.avgScore}%
                 </Badge>
               </div>
             </div>
@@ -141,14 +151,14 @@ export default function InternDetailPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
-                <h2 className="text-lg font-semibold">Quiz Scores</h2>
+                <h2 className="text-lg font-semibold">{t("quizScores")}</h2>
               </div>
-              <Badge variant="outline">Avg: {avgQuizScore}%</Badge>
+              <Badge variant="outline">{t("avgLabel")} {avgQuizScore}%</Badge>
             </div>
           </div>
           {intern.quizScores.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
-              No quiz submissions yet.
+              {t("empty.noQuizzes")}
             </div>
           ) : (
             <div className="divide-y">
@@ -175,12 +185,12 @@ export default function InternDetailPage() {
           <div className="border-b p-4">
             <div className="flex items-center gap-2">
               <GitPullRequest className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-semibold">PR Reviews</h2>
+              <h2 className="text-lg font-semibold">{t("prReviews")}</h2>
             </div>
           </div>
           {intern.prReviews.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
-              No PR reviews yet.
+              {t("empty.noPrReviews")}
             </div>
           ) : (
             <div className="divide-y">
@@ -210,7 +220,7 @@ export default function InternDetailPage() {
                             : "secondary"
                       }
                     >
-                      {review.reviewStatus}
+                      {statusBadgeLabels[review.reviewStatus]}
                     </Badge>
                   </div>
                   {review.llmReviewSummary && (

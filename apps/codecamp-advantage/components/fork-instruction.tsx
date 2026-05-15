@@ -4,6 +4,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { getPrDisplayName } from "@/lib/pr-url";
 import { Button } from "@reading-advantage/ui";
+import { useTranslations } from "next-intl";
 import {
   GitBranch,
   Copy,
@@ -21,35 +22,8 @@ interface ForkInstructionProps {
   exerciseRepoId: string;
 }
 
-const STEPS = [
-  {
-    icon: <GitBranch className="h-5 w-5" />,
-    title: "Fork the repository",
-    description: "Click the fork button on GitHub to create your own copy.",
-  },
-  {
-    icon: <Terminal className="h-5 w-5" />,
-    title: "Clone your fork",
-    description: "Copy the repository to your local machine.",
-  },
-  {
-    icon: <GitBranch className="h-5 w-5" />,
-    title: "Create a branch",
-    description: "Make a new branch for your changes.",
-  },
-  {
-    icon: <Copy className="h-5 w-5" />,
-    title: "Complete the exercise",
-    description: "Make your changes following the instructions.",
-  },
-  {
-    icon: <ArrowRight className="h-5 w-5" />,
-    title: "Push and open a PR",
-    description: "Push your branch and open a Pull Request to the original repo.",
-  },
-];
-
 export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: ForkInstructionProps) {
+  const t = useTranslations("fork");
   const [prUrl, setPrUrl] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const createPrReview = trpc.codecamp.createPrReview.useMutation();
@@ -71,53 +45,63 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
     <div className="space-y-6">
       {/* Step-by-step instructions */}
       <div className="space-y-3">
-        {STEPS.map((step, idx) => (
-          <div
-            key={idx}
-            className="flex items-start gap-3 rounded-lg border p-3"
-          >
-            <div className="mt-0.5 text-primary">{step.icon}</div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">
-                {idx + 1}. {step.title}
-              </p>
-              <p className="text-xs text-muted-foreground">{step.description}</p>
-              {idx === 0 && (
-                <a
-                  href={repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-1 text-xs text-blue-600 hover:underline"
-                >
-                  <ExternalLink className="h-3 w-3" />
-                  Open {repoDescription} on GitHub
-                </a>
-              )}
-              {idx === 1 && (
-                <div className="mt-2 space-y-1">
-                  <code className="block rounded bg-muted px-2 py-1 text-xs font-mono">
-                    git clone {repoUrl.replace(/\.git$/, "")}.git
+        {[1, 2, 3, 4, 5].map((stepNum) => {
+          const idx = stepNum - 1;
+          const icons = [
+            <GitBranch key="step1-icon" className="h-5 w-5" />,
+            <Terminal key="step2-icon" className="h-5 w-5" />,
+            <GitBranch key="step3-icon" className="h-5 w-5" />,
+            <Copy key="step4-icon" className="h-5 w-5" />,
+            <ArrowRight key="step5-icon" className="h-5 w-5" />,
+          ];
+          return (
+            <div
+              key={idx}
+              className="flex items-start gap-3 rounded-lg border p-3"
+            >
+              <div className="mt-0.5 text-primary">{icons[idx]}</div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">
+                  {stepNum}. {t(`step${stepNum}Title`)}
+                </p>
+                <p className="text-xs text-muted-foreground">{t(`step${stepNum}Desc`)}</p>
+                {idx === 0 && (
+                  <a
+                    href={repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex items-center gap-1 text-xs text-blue-600 hover:underline"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    {t("openOnGitHub", { description: repoDescription })}
+                  </a>
+                )}
+                {idx === 1 && (
+                  <div className="mt-2 space-y-1">
+                    <code className="block rounded bg-muted px-2 py-1 text-xs font-mono">
+                      git clone {repoUrl.replace(/\.git$/, "")}.git
+                    </code>
+                    <p className="text-xs text-muted-foreground">
+                      {t("cloneCommand")} <code className="text-xs">git clone {repoUrl.replace(/\.git$/, "").replace("https://github.com/", "git@github.com:")}.git</code>
+                    </p>
+                  </div>
+                )}
+                {idx === 2 && (
+                  <code className="mt-2 block rounded bg-muted px-2 py-1 text-xs font-mono">
+                    git checkout -b feature/{repoDescription.toLowerCase().replace(/\s+/g, "-")}
                   </code>
-                  <p className="text-xs text-muted-foreground">
-                    Or with SSH: <code className="text-xs">git clone {repoUrl.replace(/\.git$/, "").replace("https://github.com/", "git@github.com:")}.git</code>
-                  </p>
-                </div>
-              )}
-              {idx === 2 && (
-                <code className="mt-2 block rounded bg-muted px-2 py-1 text-xs font-mono">
-                  git checkout -b feature/{repoDescription.toLowerCase().replace(/\s+/g, "-")}
-                </code>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* PR URL input */}
       <div className="rounded-lg border p-4">
-        <h4 className="text-sm font-semibold">Submit your Pull Request</h4>
+        <h4 className="text-sm font-semibold">{t("submitTitle")}</h4>
         <p className="text-xs text-muted-foreground">
-          Paste the URL of your Pull Request to track review status.
+          {t("prUrlHint")}
         </p>
         <div className="mt-3 flex gap-2">
           <input
@@ -127,7 +111,7 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
               setPrUrl(e.target.value);
               setSubmitted(false);
             }}
-            placeholder="https://github.com/owner/repo/pull/123"
+            placeholder={t("prUrlPlaceholder")}
             aria-label="Pull request URL"
             className="flex-1 rounded-lg border bg-background px-3 py-2 text-sm"
           />
@@ -143,12 +127,12 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
             ) : (
               <GitPullRequest className="h-4 w-4" />
             )}
-            <span className="ml-1.5">{submitted ? "Submitted" : "Track PR"}</span>
+            <span className="ml-1.5">{submitted ? t("submitted") : t("trackPr")}</span>
           </Button>
         </div>
         {prUrl && !isValidPrUrl && (
           <p className="mt-2 text-xs text-red-600">
-            Please enter a valid GitHub Pull Request URL.
+            {t("invalidPrUrl")}
           </p>
         )}
 
@@ -164,7 +148,7 @@ export function ForkInstruction({ repoUrl, repoDescription, exerciseRepoId }: Fo
               {submitted && !existingReview && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
                   <Loader2 className="h-3 w-3 animate-spin" />
-                  Pending
+                  {t("pending")}
                 </span>
               )}
             </div>
@@ -185,6 +169,7 @@ function PrReviewStatusBadge({
 }: {
   status: "pending" | "reviewed" | "needs_changes" | "approved";
 }) {
+  const t = useTranslations("fork");
   const styles: Record<string, string> = {
     pending: "bg-amber-100 text-amber-800",
     reviewed: "bg-blue-100 text-blue-800",
@@ -192,7 +177,7 @@ function PrReviewStatusBadge({
     approved: "bg-green-100 text-green-800",
   };
   const labels: Record<string, string> = {
-    pending: "Pending",
+    pending: t("pending"),
     reviewed: "Reviewed",
     needs_changes: "Needs Changes",
     approved: "Approved",

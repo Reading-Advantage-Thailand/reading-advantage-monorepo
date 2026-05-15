@@ -12,8 +12,8 @@ describe("ReviewHistory", () => {
       />
     );
 
-    expect(screen.getByText(/Review History/i)).toBeInTheDocument();
-    expect(screen.getByText(/needs changes/i)).toBeInTheDocument();
+    expect(screen.getByText(/history/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/statusNeedsChanges/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it("shows pending state when no review yet", () => {
@@ -25,7 +25,7 @@ describe("ReviewHistory", () => {
       />
     );
 
-    expect(screen.getByText(/Awaiting first review/i)).toBeInTheDocument();
+    expect(screen.getByText(/statusPendingMsg/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/review timeline: pending/i)).toBeInTheDocument();
   });
 
@@ -38,8 +38,7 @@ describe("ReviewHistory", () => {
       />
     );
 
-    // "Approved" appears in both status badge and timeline step
-    expect(screen.getAllByText(/approved/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/statusApproved/i).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText(/Great work! All tests pass./i)).toBeInTheDocument();
   });
 
@@ -52,8 +51,7 @@ describe("ReviewHistory", () => {
       />
     );
 
-    // "Reviewed" appears in both status badge and timeline step
-    expect(screen.getAllByText(/reviewed/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/statusReviewed/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders PR link with shortened display", () => {
@@ -79,11 +77,10 @@ describe("ReviewHistory", () => {
       />
     );
 
-    expect(screen.getByText(/PR Submitted/i)).toBeInTheDocument();
-    expect(screen.getByText(/First Review/i)).toBeInTheDocument();
-    // "Revisions" appears in both the step label and the status message for needs_changes
-    expect(screen.getAllByText(/Revisions/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/Approved/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/prSubmitted/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/firstReview/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/revisions/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/approvedDesc/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders without summary when summary is null", () => {
@@ -95,8 +92,8 @@ describe("ReviewHistory", () => {
       />
     );
 
-    expect(screen.queryByText(/Review Feedback/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/Awaiting first review/i)).toBeInTheDocument();
+    expect(screen.queryByText(/feedback/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/statusPendingMsg/i)).toBeInTheDocument();
   });
 
   it("renders with empty string summary", () => {
@@ -108,8 +105,7 @@ describe("ReviewHistory", () => {
       />
     );
 
-    // Empty string is falsy, so Review Feedback block should not render
-    expect(screen.queryByText(/Review Feedback/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/Initial review complete/i)).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /feedback/i })).not.toBeInTheDocument();
+    expect(screen.getByText(/statusReviewedMsg/i)).toBeInTheDocument();
   });
 });

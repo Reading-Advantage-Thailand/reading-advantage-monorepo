@@ -14,7 +14,13 @@ const openrouter = createOpenAI({
   baseURL: "https://openrouter.ai/api/v1",
 });
 
-const BASE_SYSTEM_PROMPT = `You are CodeCamp Advantage AI Tutor, an expert in Next.js, React, TypeScript, and monorepo architecture.
+function buildSystemPrompt(locale: string): string {
+  const thaiInstruction = `Respond in Thai (ภาษาไทย) by default. **Mirror the user: if the user writes entirely in English, answer in English; otherwise answer in Thai.**`;
+  const englishInstruction = `Respond in English by default. Mirror the user's language if they switch.`;
+
+  const languageInstruction = locale === "th" ? thaiInstruction : englishInstruction;
+
+  return `You are CodeCamp Advantage AI Tutor, an expert in Next.js, React, TypeScript, and monorepo architecture.
 
 You teach the Reading Advantage monorepo patterns:
 - Next.js 16 App Router with Server Components
@@ -29,12 +35,16 @@ Key architectural principles:
 3. TenantDB automatically injects schoolId into queries
 4. All workspace packages build to dist/ and export built output
 
-Be concise, practical, and reference actual files when helpful. If asked about code, provide working TypeScript examples that follow the monorepo conventions.`;
+Be concise, practical, and reference actual files when helpful. If asked about code, provide working TypeScript examples that follow the monorepo conventions.
+
+${languageInstruction}`;
+}
 
 const chatInputSchema = z.object({
   message: z.string().min(1).max(4000),
   lessonId: z.string().uuid().optional(),
   moduleId: z.string().uuid().optional(),
+  locale: z.enum(["th", "en"]).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -66,7 +76,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { message, moduleId, lessonId } = parsed.data;
+    const { message, moduleId, lessonId, locale } = parsed.data;
 
     // Fallback if no API key is configured
     if (!process.env.OPENROUTER_API_KEY) {
@@ -83,7 +93,7 @@ export async function POST(req: NextRequest) {
       input: { moduleId, lessonId },
     });
 
-    const systemPrompt = BASE_SYSTEM_PROMPT + contextAddition;
+    const systemPrompt = buildSystemPrompt(locale ?? "th") + contextAddition;
 
     const result = streamText({
       model: openrouter("openrouter/free"),

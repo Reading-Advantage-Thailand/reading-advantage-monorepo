@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { LessonResponse } from "@reading-advantage/types";
 
 type LessonType = LessonResponse["type"];
@@ -21,19 +22,29 @@ interface TheorySection {
  * - **quiz**: Renders quiz instructions.
  */
 export function LessonContent({ type, content }: LessonContentProps) {
+  const t = useTranslations("lesson");
   if (type === "theory") {
     return <TheoryContent content={content} />;
   }
 
   if (type === "exercise") {
-    return <InstructionsContent content={content} label="Exercise Instructions" />;
+    return <InstructionsContent content={content} label={t("exerciseInstructions")} />;
   }
 
   if (type === "quiz") {
-    return <InstructionsContent content={content} label="Quiz Instructions" />;
+    return <InstructionsContent content={content} label={t("quizInstructions")} />;
   }
 
   return <EmptyContent />;
+}
+
+function EmptyContent() {
+  const t = useTranslations("lesson");
+  return (
+    <p className="text-muted-foreground">
+      {t("noContent")}
+    </p>
+  );
 }
 
 function TheoryContent({ content }: { content: Record<string, unknown> }) {
@@ -94,10 +105,4 @@ function InstructionsContent({
   );
 }
 
-function EmptyContent() {
-  return (
-    <p className="text-muted-foreground">
-      No structured content available for this lesson yet.
-    </p>
-  );
-}
+

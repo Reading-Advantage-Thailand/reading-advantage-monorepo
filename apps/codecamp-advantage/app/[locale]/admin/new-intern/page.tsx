@@ -7,9 +7,11 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
 import { Input } from "@reading-advantage/ui";
 import { Label } from "@reading-advantage/ui";
+import { useTranslations } from "next-intl";
 import { ArrowLeft, UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
 
 export default function NewInternPage() {
+  const t = useTranslations("admin");
   const { user, isLoading: authLoading } = useAuth();
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
@@ -44,12 +46,12 @@ export default function NewInternPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col items-center justify-center gap-4 text-center">
           <AlertCircle className="h-12 w-12 text-destructive" />
-          <h1 className="text-2xl font-bold">Access Denied</h1>
+          <h1 className="text-2xl font-bold">{t("accessDenied")}</h1>
           <p className="text-muted-foreground">
-            You need admin privileges to view this page.
+            {t("noPrivileges")}
           </p>
           <Button asChild>
-            <Link href="/">Back to Dashboard</Link>
+            <Link href="/">{t("backToDashboard")}</Link>
           </Button>
         </div>
       </div>
@@ -62,7 +64,7 @@ export default function NewInternPage() {
     setSuccess(false);
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters");
+      setError(t("form.passwordMinLength"));
       return;
     }
 
@@ -74,25 +76,24 @@ export default function NewInternPage() {
       <Button variant="ghost" className="mb-6" asChild>
         <Link href="/admin">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Admin
+          {t("backToAdmin")}
         </Link>
       </Button>
 
       <div className="mb-8">
         <div className="mb-2 flex items-center gap-3">
           <UserPlus className="h-6 w-6 text-primary" />
-          <h1 className="text-3xl font-bold">Create Intern Account</h1>
+          <h1 className="text-3xl font-bold">{t("createIntern")}</h1>
         </div>
         <p className="text-muted-foreground">
-          Create a new intern account. The intern will be able to log in with
-          the username and password you set.
+          {t("createInternDescription")}
         </p>
       </div>
 
       {success && (
         <div className="mb-6 flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
           <CheckCircle2 className="h-5 w-5" />
-          <p>Intern account created successfully!</p>
+          <p>{t("toast.createSuccess")}</p>
         </div>
       )}
 
@@ -105,7 +106,7 @@ export default function NewInternPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="username">Username</Label>
+          <Label htmlFor="username">{t("username")}</Label>
           <Input
             id="username"
             value={username}
@@ -116,12 +117,12 @@ export default function NewInternPage() {
             maxLength={50}
           />
           <p className="text-xs text-muted-foreground">
-            Used for login. Must be unique.
+            {t("usernameHint")}
           </p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="name">Display Name</Label>
+          <Label htmlFor="name">{t("displayName")}</Label>
           <Input
             id="name"
             value={name}
@@ -133,7 +134,7 @@ export default function NewInternPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">Initial Password</Label>
+          <Label htmlFor="password">{t("initialPassword")}</Label>
           <Input
             id="password"
             type="password"
@@ -145,7 +146,7 @@ export default function NewInternPage() {
             maxLength={100}
           />
           <p className="text-xs text-muted-foreground">
-            Minimum 8 characters. The intern can change this after first login.
+            {t("passwordHint")}
           </p>
         </div>
 
@@ -155,10 +156,10 @@ export default function NewInternPage() {
             disabled={createIntern.isPending}
             className="w-full"
           >
-            {createIntern.isPending ? "Creating..." : "Create Intern Account"}
+            {createIntern.isPending ? t("creating") : t("createIntern")}
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/admin">Cancel</Link>
+            <Link href="/admin">{t("cancel")}</Link>
           </Button>
         </div>
       </form>

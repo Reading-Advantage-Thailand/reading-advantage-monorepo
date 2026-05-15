@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
+import { useTranslations } from "next-intl";
 import {
   BookOpen,
   CheckCircle,
@@ -16,6 +17,7 @@ import {
 import { ForkInstruction } from "@/components/fork-instruction";
 
 export default function ModulePage() {
+  const t = useTranslations("module");
   const params = useParams();
   const slug = params.slug as string;
 
@@ -36,9 +38,9 @@ export default function ModulePage() {
   if (!moduleData) {
     return (
       <div className="container py-12">
-        <h1 className="text-2xl font-bold">Module not found</h1>
+        <h1 className="text-2xl font-bold">{t("notFound")}</h1>
         <Button variant="outline" className="mt-4" asChild>
-          <Link href="/">← Back to Dashboard</Link>
+          <Link href="/">← {t("backToDashboard")}</Link>
         </Button>
       </div>
     );
@@ -65,7 +67,7 @@ export default function ModulePage() {
       <Button variant="ghost" className="mb-6" asChild>
         <Link href="/">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Dashboard
+          {t("backToDashboard")}
         </Link>
       </Button>
 
@@ -79,19 +81,19 @@ export default function ModulePage() {
           />
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
-          {moduleData.completedLessons} / {moduleData.lessonCount} lessons completed
+          {t("lessonsCompleted", { completed: moduleData.completedLessons, total: moduleData.lessonCount })}
         </p>
         {quizAverage !== null && (
           <p className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-amber-600">
             <Trophy className="h-4 w-4" />
-            Quiz average: {quizAverage}%
+            {t("quizAverage", { score: quizAverage })}
           </p>
         )}
       </div>
 
       {exerciseRepos && exerciseRepos.length > 0 && (
         <div className="mb-8">
-          <h2 className="mb-4 text-xl font-semibold">Exercise Repositories</h2>
+          <h2 className="mb-4 text-xl font-semibold">{t("exerciseRepos")}</h2>
           {exerciseRepos.map((repo) => {
             const review = repoPrStatus.get(repo.id);
             return (
@@ -119,7 +121,7 @@ export default function ModulePage() {
       )}
 
       <div className="grid gap-4">
-        <h2 className="text-xl font-semibold">Lessons</h2>
+        <h2 className="text-xl font-semibold">{t("lessons")}</h2>
         {moduleData.lessons && moduleData.lessons.length > 0 ? (
           moduleData.lessons.map((lesson) => (
             <LessonItem
@@ -132,7 +134,7 @@ export default function ModulePage() {
             />
           ))
         ) : (
-          <p className="text-muted-foreground">No lessons available for this module yet.</p>
+          <p className="text-muted-foreground">{t("noLessons")}</p>
         )}
       </div>
     </div>
@@ -144,27 +146,28 @@ function PrStatusBadge({
 }: {
   status: "pending" | "reviewed" | "needs_changes" | "approved";
 }) {
+  const t = useTranslations("review");
   const config: Record<
     string,
     { label: string; className: string }
   > = {
     pending: {
-      label: "Pending",
+      label: t("statusPending"),
       className:
         "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
     },
     reviewed: {
-      label: "Reviewed",
+      label: t("statusReviewedBadge"),
       className:
         "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
     },
     needs_changes: {
-      label: "Needs Changes",
+      label: t("statusNeedsChangesBadge"),
       className:
         "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
     },
     approved: {
-      label: "Approved",
+      label: t("statusApprovedBadge"),
       className:
         "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
     },
@@ -194,6 +197,7 @@ function LessonItem({
   score: number | null;
   href: string;
 }) {
+  const t = useTranslations("module");
   const icons = {
     not_started: <Circle className="h-5 w-5 text-muted-foreground" />,
     in_progress: <BookOpen className="h-5 w-5 text-primary" />,
@@ -214,7 +218,7 @@ function LessonItem({
         <span className="text-sm font-medium text-amber-600">{score}%</span>
       )}
       <span className="inline-flex items-center rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-accent">
-        {status === "completed" ? "Review" : "Start"}
+        {status === "completed" ? t("review") : t("start")}
       </span>
     </Link>
   );

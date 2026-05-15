@@ -9,6 +9,7 @@ interface ChatMessage {
 
 interface UseChatStreamOptions {
   endpoint?: string;
+  locale?: string;
   lessonId?: string;
   moduleId?: string;
   initialMessages?: ChatMessage[];
@@ -19,6 +20,7 @@ interface UseChatStreamOptions {
 export function useChatStream(options: UseChatStreamOptions = {}) {
   const {
     endpoint,
+    locale,
     lessonId,
     moduleId,
     initialMessages,
@@ -66,6 +68,7 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
             message,
             lessonId,
             moduleId,
+            locale,
           }),
           credentials: "include",
         });
@@ -143,7 +146,7 @@ export function useChatStream(options: UseChatStreamOptions = {}) {
         setIsLoading(false);
       }
     },
-    [endpoint, lessonId, moduleId, onSend, onComplete]
+    [endpoint, locale, lessonId, moduleId, onSend, onComplete]
   );
 
   return { messages, isLoading, sendMessage };
