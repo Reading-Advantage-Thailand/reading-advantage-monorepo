@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useState } from "react";
 import { useAuth } from "@reading-advantage/auth-client";
 import { Button } from "@reading-advantage/ui";
@@ -13,7 +13,8 @@ import {
 } from "@reading-advantage/ui";
 import { Input } from "@reading-advantage/ui";
 import { Label } from "@reading-advantage/ui";
-import { BookOpen, MessageCircle, LogOut, User, Shield } from "lucide-react";
+import { BookOpen, MessageCircle, LogOut, User, Shield, Languages } from "lucide-react";
+import { LanguageSwitcher } from "./language-switcher";
 
 export function Header() {
   const { user, isAuthenticated, isLoading, login, logout } = useAuth();
@@ -75,6 +76,10 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 border-r pr-3">
+            <Languages className="h-3.5 w-3.5 text-muted-foreground" />
+            <LanguageSwitcher />
+          </div>
           {isLoading ? (
             <div className="h-8 w-20 animate-pulse rounded bg-muted" />
           ) : isAuthenticated && user ? (
