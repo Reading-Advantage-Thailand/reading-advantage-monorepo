@@ -6,25 +6,53 @@
   "navigation": {
     "dashboard": "แดชบอร์ด",
     "modules": "โมดูล",
-    "chat": "แชท"
+    "chat": "แชท",
+    "admin": "ผู้ดูแลระบบ"
+  },
+  "login": {
+    "login": "เข้าสู่ระบบ",
+    "logout": "ออกจากระบบ",
+    "loginTitle": "เข้าสู่ระบบ CodeCamp",
+    "username": "ชื่อผู้ใช้",
+    "password": "รหัสผ่าน"
   },
   "dashboard": {
     "title": "เรียนรู้การพัฒนาเว็บ",
     "subtitle": "โมดูล 18 โมดูล ตั้งแต่พื้นฐานจนถึงระดับมืออาชีพ พร้อมการตรวจโค้ดด้วย AI",
     "progress": "ความคืบหน้า",
-    "continue": "ดำเนินการต่อ"
+    "continue": "ดำเนินการต่อ",
+    "overallProgress": "ความคืบหน้าโดยรวม",
+    "lessonsCompleted": "บทเรียนที่เรียนแล้ว",
+    "totalLessons": "บทเรียนทั้งหมด",
+    "portfolio": "โพรเจกต์",
+    "lessons": "บทเรียน",
+    "phaseA": "เฟส A",
+    "phaseB": "เฟส B",
+    "phaseC": "เฟส C",
+    "phaseD": "เฟส D"
   },
   "module": {
     "lessons": "บทเรียน",
     "start": "เริ่มเรียน",
     "completed": "เสร็จสิ้น",
     "inProgress": "กำลังเรียน",
-    "locked": "ทำโมดูลก่อนหน้าให้เสร็จสิ้น"
+    "locked": "ทำโมดูลก่อนหน้าให้เสร็จสิ้น",
+    "lockedShort": "ล็อก",
+    "notFound": "ไม่พบโมดูล",
+    "backToDashboard": "กลับไปแดชบอร์ด",
+    "lessonsCompleted": "{completed} / {total} บทเรียนที่เรียนแล้ว",
+    "quizAverage": "คะแนนสอบเฉลี่ย: {score}%",
+    "exerciseRepos": "โพรเจกต์แบบฝึกหัด",
+    "noLessons": "ยังไม่มีบทเรียนในโมดูลนี้",
+    "review": "ทบทวน"
   },
   "chat": {
-    "placeholder": "ถามคำถามเกี่ยวกับโมดูลนี้ได้เลย...",
+    "placeholder": "ถามเกี่ยวกับ Next.js, tRPC, Drizzle, หรือรูปแบบ monorepo...",
     "newConversation": "สนทนาใหม่",
-    "send": "ส่ง"
+    "send": "ส่ง",
+    "title": "ติวเตอร์ AI",
+    "defaultText": "ถามอะไรก็ได้เกี่ยวกับ Next.js, tRPC, Drizzle หรือรูปแบบ monorepo",
+    "thinking": "กำลังคิด..."
   },
   "exercise": {
     "submit": "ส่งงาน",
@@ -149,27 +177,5 @@
     "noContent": "ยังไม่มีเนื้อหาสำหรับบทเรียนนี้",
     "exerciseInstructions": "คำแนะนำแบบฝึกหัด",
     "quizInstructions": "คำแนะนำแบบทดสอบ"
-  },
-  "chat": {
-    "placeholder": "ถามเกี่ยวกับ Next.js, tRPC, Drizzle, หรือรูปแบบ monorepo...",
-    "newConversation": "สนทนาใหม่",
-    "send": "ส่ง",
-    "title": "ติวเตอร์ AI",
-    "defaultText": "ถามอะไรก็ได้เกี่ยวกับ Next.js, tRPC, Drizzle หรือรูปแบบ monorepo",
-    "thinking": "กำลังคิด..."
-  },
-  "module": {
-    "lessons": "บทเรียน",
-    "start": "เริ่มเรียน",
-    "completed": "เสร็จสิ้น",
-    "inProgress": "กำลังเรียน",
-    "locked": "ทำโมดูลก่อนหน้าให้เสร็จสิ้น",
-    "notFound": "ไม่พบโมดูล",
-    "backToDashboard": "กลับไปแดชบอร์ด",
-    "lessonsCompleted": "{completed} / {total} บทเรียนที่เรียนแล้ว",
-    "quizAverage": "คะแนนสอบเฉลี่ย: {score}%",
-    "exerciseRepos": "โพรเจกต์แบบฝึกหัด",
-    "noLessons": "ยังไม่มีบทเรียนในโมดูลนี้",
-    "review": "ทบทวน"
   }
 }

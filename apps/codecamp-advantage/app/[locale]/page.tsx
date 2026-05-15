@@ -36,15 +36,10 @@ const PHASE_COLORS: Record<string, { border: string; badge: string }> = {
   D: { border: "border-l-orange-500", badge: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200" },
 };
 
-const PHASE_LABELS: Record<string, string> = {
-  A: "Phase A",
-  B: "Phase B",
-  C: "Phase C",
-  D: "Phase D",
-};
-
 export default function HomePage() {
   const t = useTranslations("dashboard");
+  const tm = useTranslations("module");
+  const tr = useTranslations("review");
   const { data: dashboard, isLoading } = trpc.codecamp.dashboard.useQuery();
   const { data: prReviews } = trpc.codecamp.prReviews.useQuery();
 
@@ -90,17 +85,17 @@ export default function HomePage() {
           <div className="mt-6 inline-flex items-center gap-4 rounded-lg border bg-card px-6 py-3">
             <div className="text-center">
               <p className="text-2xl font-bold">{dashboard.overallProgress}%</p>
-              <p className="text-xs text-muted-foreground">Overall Progress</p>
+              <p className="text-xs text-muted-foreground">{t("overallProgress")}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
               <p className="text-2xl font-bold">{dashboard.completedLessons}</p>
-              <p className="text-xs text-muted-foreground">Lessons Completed</p>
+              <p className="text-xs text-muted-foreground">{t("lessonsCompleted")}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
               <p className="text-2xl font-bold">{dashboard.totalLessons}</p>
-              <p className="text-xs text-muted-foreground">Total Lessons</p>
+              <p className="text-xs text-muted-foreground">{t("totalLessons")}</p>
             </div>
           </div>
         )}
@@ -112,9 +107,9 @@ export default function HomePage() {
             const count = prReviews.filter((r) => r.reviewStatus === status).length;
             if (count === 0) return null;
             const labels: Record<string, string> = {
-              pending: "Pending Review",
-              needs_changes: "Needs Changes",
-              approved: "Approved",
+              pending: tr("statusPending"),
+              needs_changes: tr("statusNeedsChangesBadge"),
+              approved: tr("statusApprovedBadge"),
             };
             const colors: Record<string, string> = {
               pending: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
@@ -146,18 +141,18 @@ export default function HomePage() {
                 <div>
                   <div className="mb-1 flex items-center gap-3">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors.badge}`}>
-                      {PHASE_LABELS[phaseKey]}
+                      {t(`phase${phaseKey}`)}
                     </span>
                     <h2 className="text-2xl font-bold">{phase.title}</h2>
                   </div>
                   <p className="text-sm text-muted-foreground">{phase.description}</p>
                   <p className="mt-1 text-xs font-medium text-muted-foreground">
-                    Portfolio: {phase.portfolioProject}
+                    {t("portfolio")}: {phase.portfolioProject}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium">
-                    {phase.completedLessons} / {phase.totalLessons} lessons
+                    {phase.completedLessons} / {phase.totalLessons} {tm("lessons")}
                   </p>
                   <div className="mt-1 h-2 w-32 overflow-hidden rounded-full bg-secondary">
                     <div
@@ -245,7 +240,7 @@ function ModuleCard({
         {isLocked && (
           <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
             <LockKeyhole className="h-3 w-3" />
-            Locked
+            {t("lockedShort")}
           </span>
         )}
       </div>
@@ -255,13 +250,13 @@ function ModuleCard({
         <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
           <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
         </div>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {completedLessons} / {lessonCount} lessons
+<p className="mt-1 text-xs text-muted-foreground">
+          {completedLessons} / {lessonCount} {t("lessons")}
         </p>
       </div>
       {isLocked ? (
         <Button variant="outline" className="w-full" disabled aria-disabled="true">
-          Complete previous module
+          {t("locked")}
         </Button>
       ) : (
         <Button variant="outline" className="w-full" asChild>

@@ -6,25 +6,53 @@
   "navigation": {
     "dashboard": "Dashboard",
     "modules": "Modules",
-    "chat": "Chat Tutor"
+    "chat": "Chat Tutor",
+    "admin": "Admin"
+  },
+  "login": {
+    "login": "Log in",
+    "logout": "Log out",
+    "loginTitle": "Log in to CodeCamp",
+    "username": "Username",
+    "password": "Password"
   },
   "dashboard": {
     "title": "Welcome to CodeCamp Advantage",
     "subtitle": "Master the monorepo stack one module at a time.",
     "progress": "Your Progress",
-    "continue": "Continue Learning"
+    "continue": "Continue Learning",
+    "overallProgress": "Overall Progress",
+    "lessonsCompleted": "Lessons Completed",
+    "totalLessons": "Total Lessons",
+    "portfolio": "Portfolio",
+    "lessons": "lessons",
+    "phaseA": "Phase A",
+    "phaseB": "Phase B",
+    "phaseC": "Phase C",
+    "phaseD": "Phase D"
   },
   "module": {
     "lessons": "Lessons",
     "start": "Start Lesson",
     "completed": "Completed",
     "inProgress": "In Progress",
-    "locked": "Complete previous module"
+    "locked": "Complete previous module",
+    "lockedShort": "Locked",
+    "notFound": "Module not found",
+    "backToDashboard": "Back to Dashboard",
+    "lessonsCompleted": "{completed} / {total} lessons completed",
+    "quizAverage": "Quiz average: {score}%",
+    "exerciseRepos": "Exercise Repositories",
+    "noLessons": "No lessons available for this module yet.",
+    "review": "Review"
   },
   "chat": {
     "placeholder": "Ask about Next.js, tRPC, Drizzle, or monorepo patterns...",
     "newConversation": "New Conversation",
-    "send": "Send"
+    "send": "Send",
+    "title": "AI Tutor",
+    "defaultText": "Ask me anything about Next.js, tRPC, Drizzle, or monorepo patterns.",
+    "thinking": "Thinking..."
   },
   "exercise": {
     "submit": "Submit",
@@ -149,27 +177,5 @@
     "noContent": "No structured content available for this lesson yet.",
     "exerciseInstructions": "Exercise Instructions",
     "quizInstructions": "Quiz Instructions"
-  },
-  "chat": {
-    "placeholder": "Ask about Next.js, tRPC, Drizzle, or monorepo patterns...",
-    "newConversation": "New Conversation",
-    "send": "Send",
-    "title": "AI Tutor",
-    "defaultText": "Ask me anything about Next.js, tRPC, Drizzle, or monorepo patterns.",
-    "thinking": "Thinking..."
-  },
-  "module": {
-    "lessons": "Lessons",
-    "start": "Start Lesson",
-    "completed": "Completed",
-    "inProgress": "In Progress",
-    "locked": "Complete previous module",
-    "notFound": "Module not found",
-    "backToDashboard": "Back to Dashboard",
-    "lessonsCompleted": "{completed} / {total} lessons completed",
-    "quizAverage": "Quiz average: {score}%",
-    "exerciseRepos": "Exercise Repositories",
-    "noLessons": "No lessons available for this module yet.",
-    "review": "Review"
   }
 }
