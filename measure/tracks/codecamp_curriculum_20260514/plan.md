@@ -164,7 +164,7 @@ Wire phase information through the domain and API layers.
   - [x] Test `getModulesWithProgress` returns phase for each module
   - [x] Test `getUserDashboard` returns phase-grouped data
   - [x] Test `getModulesByPhase` with phase column instead of order ranges
-- [ ] Task: Measure — User Manual Verification 'Domain and Router Updates'
+- [x] Task: Measure — User Manual Verification 'Domain and Router Updates'
 
 ## Phase 7: UI Updates
 
@@ -210,5 +210,5 @@ Run all checks and verify the curriculum works end-to-end.
   - [~] Complete a quiz → verify scoring works
   - [~] Submit an exercise → verify submission works
   - [~] Open chat → verify module context is available
-- [ ] Task: Update `measure/tracks.md` to reference this track
+- [x] Task: Update `measure/tracks.md` to reference this track
 - [ ] Task: Measure — User Manual Verification 'Validation and Cleanup'

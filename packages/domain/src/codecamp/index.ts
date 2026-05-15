@@ -960,11 +960,16 @@ export async function checkModulePrerequisite({
     return { canStart: true };
   }
 
-  // Find the previous module (highest order less than target)
+  // Find the previous published module (highest order less than target)
   const [prevModule] = await db
     .select()
     .from(codecampModules)
-    .where(lt(codecampModules.order, targetModule.order))
+    .where(
+      and(
+        lt(codecampModules.order, targetModule.order),
+        eq(codecampModules.status, "published")
+      )
+    )
     .orderBy(desc(codecampModules.order))
     .limit(1);
 
@@ -1004,6 +1009,8 @@ export async function checkModulePrerequisite({
 
 // ─── Admin ────────────────────────────────────────────────
 
+const PASSWORD_COMPLEXITY = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
+
 export async function createInternAccount({
   db,
   user,
@@ -1015,6 +1022,10 @@ export async function createInternAccount({
   password: string;
 }>) {
   assertCan(user, "admin:dashboard", tenant);
+
+  if (!PASSWORD_COMPLEXITY.test(input.password)) {
+    throw new Error("Password must contain at least one uppercase letter, one lowercase letter, and one digit");
+  }
 
   const lowerUsername = input.username.toLowerCase();
 
@@ -1041,6 +1052,8 @@ export async function createInternAccount({
         displayUsername: input.username,
         name: input.name,
         role: "INTERN",
+        // Intentionally null: codecamp interns are global, not scoped to a school tenant.
+        // See tech-debt.md — may introduce a synthetic "codecamp" tenant later.
         schoolId: null,
         xp: 0,
         level: 1,

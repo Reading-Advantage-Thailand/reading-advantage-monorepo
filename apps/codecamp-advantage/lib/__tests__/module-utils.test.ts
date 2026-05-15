@@ -28,13 +28,22 @@ describe("isModuleLocked", () => {
     expect(isModuleLocked("m1", modules)).toBe(false);
   });
 
-  it("handles gaps in module order", () => {
+  it("handles gaps in module order when previous is complete", () => {
     const modules = [
       { id: "m1", order: 1, progress: 100 },
       { id: "m3", order: 3, progress: 0 },
     ];
-    // No module with order 2, so m3 is not locked
+    // m1 is the highest preceding module and is complete, so m3 is not locked
     expect(isModuleLocked("m3", modules)).toBe(false);
+  });
+
+  it("locks module when preceding module with gap is incomplete", () => {
+    const modules = [
+      { id: "m1", order: 1, progress: 50 },
+      { id: "m3", order: 3, progress: 0 },
+    ];
+    // m1 is the highest preceding module and is incomplete, so m3 is locked
+    expect(isModuleLocked("m3", modules)).toBe(true);
   });
 });
 

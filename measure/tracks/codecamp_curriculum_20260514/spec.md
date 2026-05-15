@@ -141,22 +141,22 @@ These already work with the existing data structure. The new seed data will make
 
 ## Acceptance Criteria
 
-- [ ] `codecamp_modules` has a `phase` column with migration applied
-- [ ] `codecamp-seed.ts` seeds all 18 modules with correct slugs, phases, and orders
-- [ ] All 85 lessons are seeded with real `contentJson` from the curriculum plans
-- [ ] Every module has a quiz lesson with 3–5 questions
-- [ ] Modules with exercises have proper exercise entries with starter code and hints
-- [ ] `codecampExerciseRepos` has placeholder entries per module
-- [ ] `getModulesWithProgress` returns phase information
-- [ ] `getUserDashboard` returns phase-grouped data with portfolio project context
-- [ ] Dashboard UI groups modules by phase (A/B/C/D) with phase headers
-- [ ] Module detail page displays real lesson content (rendered from contentJson)
-- [ ] Quizzes work end-to-end with the new question data
-- [ ] `pnpm turbo run test --filter=@reading-advantage/domain` passes
-- [ ] `pnpm turbo run test --filter=@reading-advantage/api` passes
-- [ ] `pnpm turbo run build --filter=codecamp-advantage` passes
-- [ ] Existing 5-module seed is completely replaced (no leftover data)
-- [ ] All technology versions in lesson content match the monorepo (Node.js 20, React 19.2.5, Next.js 16.0.0, etc.)
+- [x] `codecamp_modules` has a `phase` column with migration applied
+- [x] `codecamp-seed.ts` seeds all 18 modules with correct slugs, phases, and orders
+- [x] All 85 lessons are seeded with real `contentJson` from the curriculum plans
+- [~] Every module has a quiz lesson with 3–5 questions — Modules 1–17 comply; Module 18 (Real-World Practice) intentionally has no quiz (work is the assessment)
+- [x] Modules with exercises have proper exercise entries with starter code and hints
+- [x] `codecampExerciseRepos` has placeholder entries per module
+- [x] `getModulesWithProgress` returns phase information
+- [x] `getUserDashboard` returns phase-grouped data with portfolio project context
+- [x] Dashboard UI groups modules by phase (A/B/C/D) with phase headers
+- [x] Module detail page displays real lesson content (rendered from contentJson)
+- [x] Quizzes work end-to-end with the new question data
+- [x] `pnpm turbo run test --filter=@reading-advantage/domain` passes
+- [x] `pnpm turbo run test --filter=@reading-advantage/api` passes
+- [x] `pnpm turbo run build --filter=codecamp-advantage` passes
+- [x] Existing 5-module seed is completely replaced (no leftover data)
+- [x] All technology versions in lesson content match the monorepo (Node.js 20, React 19.2.5, Next.js 16.0.0, etc.)
 
 ## Dependencies
 

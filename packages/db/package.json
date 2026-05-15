@@ -19,6 +19,7 @@
     "migrate": "drizzle-kit migrate",
     "push": "drizzle-kit push",
     "studio": "drizzle-kit studio",
+    "seed:codecamp": "tsx src/seed/codecamp-seed.ts",
     "lint": "eslint .",
     "test": "vitest run",
     "check-types": "tsc --noEmit"

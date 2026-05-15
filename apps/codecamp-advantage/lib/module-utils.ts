@@ -1,6 +1,7 @@
 /**
  * Determine if a module should be locked based on prerequisite completion.
- * A module is locked if the module with `order - 1` exists and is not 100% complete.
+ * A module is locked if the highest-order published module before it exists
+ * and is not 100% complete. This handles gaps in module ordering.
  */
 export function isModuleLocked(
   moduleId: string,
@@ -10,7 +11,9 @@ export function isModuleLocked(
   if (!mod) return false;
   if (mod.order <= 1) return false;
 
-  const prevMod = modules.find((m) => m.order === mod.order - 1);
+  const prevMod = modules
+    .filter((m) => m.order < mod.order)
+    .sort((a, b) => b.order - a.order)[0];
   if (!prevMod) return false;
 
   return prevMod.progress < 100;

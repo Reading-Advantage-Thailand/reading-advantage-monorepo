@@ -1150,6 +1150,32 @@ describe("checkModulePrerequisite", () => {
 
     expect(result.canStart).toBe(false);
   });
+
+  it("skips unpublished modules when finding prerequisite", async () => {
+    const modules = [
+      { id: "m1", title: "M1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m2", title: "M2", description: "Desc", slug: "mod2", order: 2, status: "draft", createdAt: new Date(), updatedAt: new Date() },
+      { id: "m3", title: "M3", description: "Desc", slug: "mod3", order: 3, status: "published", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const lessons = [
+      { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() },
+    ];
+    const progress = [
+      { id: "p1", userId: "st1", moduleId: "m1", lessonId: "l1", status: "completed", score: 100, completedAt: new Date(), createdAt: new Date(), updatedAt: new Date() },
+    ];
+
+    // Sequenced mock: select target module (m3), select prev published module (m1), select lessons for m1, select progress
+    const db = createSequencedMockDb([[modules[2]], [modules[0]], lessons, progress]);
+
+    const result = await checkModulePrerequisite({
+      db: db as unknown as ReturnType<typeof wrapDb>,
+      user: student,
+      tenant: globalTenant,
+      input: { moduleId: "m3" },
+    });
+
+    expect(result.canStart).toBe(true);
+  });
 });
 
 // ─── Admin Domain Functions ───────────────────────────────
@@ -1164,7 +1190,7 @@ describe("createInternAccount", () => {
       db: wrapDb(db),
       user: admin,
       tenant: globalTenant,
-      input: { username: "intern1", name: "Intern One", password: "password123" },
+      input: { username: "intern1", name: "Intern One", password: "Password1" },
     });
 
     expect(result.id).toBe("u1");
@@ -1181,9 +1207,23 @@ describe("createInternAccount", () => {
         db: wrapDb(db),
         user: admin,
         tenant: globalTenant,
-        input: { username: "intern1", name: "Intern One", password: "password123" },
+        input: { username: "intern1", name: "Intern One", password: "Password1" },
       })
     ).rejects.toThrow(/Username already exists/);
+  });
+
+  it("rejects passwords lacking complexity requirements", async () => {
+    const db = createMockDb();
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    await expect(
+      createInternAccount({
+        db: wrapDb(db),
+        user: admin,
+        tenant: globalTenant,
+        input: { username: "intern2", name: "Intern Two", password: "password123" },
+      })
+    ).rejects.toThrow(/Password must contain/);
   });
 
   it("rejects non-admin users", async () => {
@@ -1194,7 +1234,7 @@ describe("createInternAccount", () => {
         db: wrapDb(db),
         user: student,
         tenant: globalTenant,
-        input: { username: "intern1", name: "Intern One", password: "password123" },
+        input: { username: "intern1", name: "Intern One", password: "Password1" },
       })
     ).rejects.toThrow(/admin:dashboard/);
   });
