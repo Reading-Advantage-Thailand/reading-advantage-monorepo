@@ -64,7 +64,7 @@ Update next-intl config and create the Thai translation file.
   - [ ] Per-page `<title>` metadata for every route (currently only `metadata.title` exists)
   - [ ] Empty-state strings (e.g. "No PR reviews yet", "No completed modules")
   - [ ] Locked-module tooltip text from the dashboard prerequisite UI
-- [ ] Task: Write tests for Thai locale loading
+- [x] Task: Write tests for Thai locale loading (be8cbb5)
   - [ ] Test: `routing.ts` exports `th` as the default locale
   - [ ] Test: `messages/th.json` parses and loads via `getRequestConfig`
   - [ ] Note: key-parity and "Thai is not English copy" tests are added in Phase 4 once Phase 3 finishes extracting keys from components — running them now would fail prematurely
