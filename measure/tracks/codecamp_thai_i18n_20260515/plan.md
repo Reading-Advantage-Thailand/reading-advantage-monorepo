@@ -158,10 +158,10 @@ Run all quality gates and verify no regressions.
   - [x] Apply `min-w-0` + `truncate` (or `line-clamp-N`) on flex/grid children where text could wrap unpredictably
   - [x] Loosen any `max-w-*` constraints on cards/buttons that were sized for English
   - [x] Then verify with Thai locale: dashboard cards, admin table columns, chat input placeholder, progress bar labels, locked-module tooltips
-- [ ] Task: Add lesson-language badge to clarify that lessons are English
-  - [ ] **Why:** Default locale is Thai but the 85 lesson `contentJson` rows are intentionally English (out of scope to translate per spec). Thai-default users will be confused without a hint.
-  - [ ] Add an inline badge or notice on the dashboard and module pages: "บทเรียนเป็นภาษาอังกฤษ" (Lessons in English)
-  - [ ] Add to the chat: when locale is `th`, the system prompt should mention the lesson content is English so the AI can translate on request
+- [x] Task: Add lesson-language badge to clarify that lessons are English (d4e5ec7)
+  - [x] **Why:** Default locale is Thai but the 85 lesson `contentJson` rows are intentionally English (out of scope to translate per spec). Thai-default users will be confused without a hint.
+  - [x] Add an inline badge or notice on the dashboard and module pages: "บทเรียนเป็นภาษาอังกฤษ" (Lessons in English)
+  - [x] Add to the chat: when locale is `th`, the system prompt should mention the lesson content is English so the AI can translate on request
 - [ ] Task: Run full quality gate
   - [ ] `pnpm turbo run build --filter=codecamp-advantage`
   - [ ] `pnpm turbo run lint --filter=codecamp-advantage`
