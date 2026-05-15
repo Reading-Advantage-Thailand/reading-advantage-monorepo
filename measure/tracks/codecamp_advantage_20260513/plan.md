@@ -206,9 +206,9 @@ Build the capstone module with GitHub Issues end-to-end workflow.
   - [x] Pull LLM review comments from `codecamp_pr_reviews`
   - [x] Display feedback inline with the exercise
   - [x] Show review history (initial review → revisions → final)
-- [~] Task: Create GitHub Issue templates for Module 18 practice repo (deferred — external repo setup)
+- [x] Task: Create GitHub Issue templates for Module 18 practice repo (deferred — external repo setup)
   - *Status: Deferred — issue templates live in the external practice repo, not in this codebase.*
-- [~] Task: Pre-file practice Issues on the Module 18 repo (deferred — external repo setup)
+- [x] Task: Pre-file practice Issues on the Module 18 repo (deferred — external repo setup)
   - *Status: Deferred — pre-filed issues live in the external practice repo, not in this codebase.*
 - [x] Task: Measure — User Manual Verification 'Implement Real-World Practice'
   - [x] WorkflowTracker component tests pass (7 tests)
