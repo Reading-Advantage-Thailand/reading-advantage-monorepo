@@ -87,19 +87,19 @@ Build the locale toggle and update app routing.
 - [ ] Task: Update `components/header.tsx` to include the language switcher
   - [ ] Place the switcher in the header bar, visually balanced with navigation links
   - [ ] Ensure no layout shift when switching between locales (Thai text is wider)
-- [ ] Task: Update `app/layout.tsx` to use locale-aware routing
-  - [ ] Wrap root layout with `NextIntlClientProvider` using the resolved locale
-  - [ ] Ensure `getLocale()` returns the correct locale based on URL prefix
-- [ ] Task: Update all page routes to support locale prefix
-  - [ ] `app/[locale]/page.tsx` — dashboard
-  - [ ] `app/[locale]/module/[slug]/page.tsx` — module detail
-  - [ ] `app/[locale]/lesson/[id]/page.tsx` — lesson detail
-  - [ ] `app/[locale]/chat/page.tsx` — chat
-  - [ ] `app/[locale]/admin/page.tsx` — admin overview
-  - [ ] `app/[locale]/admin/[userId]/page.tsx` — intern detail
-  - [ ] `app/[locale]/admin/new-intern/page.tsx` — create intern
-  - [ ] Move existing pages under `[locale]/` directory structure
-  - [ ] Verify API routes (`/api/*`) remain locale-free (they should not have locale prefix)
+- [x] Task: Update `app/layout.tsx` to use locale-aware routing (16d82cb)
+  - [x] Wrap root layout with `NextIntlClientProvider` using the resolved locale
+  - [x] Ensure `getLocale()` returns the correct locale based on URL prefix
+- [x] Task: Update all page routes to support locale prefix (16d82cb)
+  - [x] `app/[locale]/page.tsx` — dashboard
+  - [x] `app/[locale]/module/[slug]/page.tsx` — module detail
+  - [x] `app/[locale]/lesson/[id]/page.tsx` — lesson detail
+  - [x] `app/[locale]/chat/page.tsx` — chat
+  - [x] `app/[locale]/admin/page.tsx` — admin overview
+  - [x] `app/[locale]/admin/[userId]/page.tsx` — intern detail
+  - [x] `app/[locale]/admin/new-intern/page.tsx` — create intern
+  - [x] Move existing pages under `[locale]/` directory structure
+  - [x] Verify API routes (`/api/*`) remain locale-free (they should not have locale prefix)
 - [x] Task: Migrate from `middleware.ts` to Next 16 `proxy.ts` and compose with next-intl (7b108cf)
   - [x] **Context:** Next.js 16 replaces the Edge `middleware.ts` convention with `proxy.ts`. The current `apps/codecamp-advantage/middleware.ts` (admin route guard from the remediation track) must move.
   - [x] Create `apps/codecamp-advantage/proxy.ts` that:
