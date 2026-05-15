@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
 import { useAuth } from "@reading-advantage/auth-client";
 import { trpc } from "@/lib/trpc";
@@ -90,7 +90,6 @@ export default function InternDetailPage() {
         <p className="text-muted-foreground">@{intern.username}</p>
       </div>
 
-      {/* Module Breakdown */}
       <div className="mb-8 rounded-lg border">
         <div className="border-b p-4">
           <div className="flex items-center gap-2">
@@ -137,7 +136,6 @@ export default function InternDetailPage() {
       </div>
 
       <div className="grid gap-8 md:grid-cols-2">
-        {/* Quiz Scores */}
         <div className="rounded-lg border">
           <div className="border-b p-4">
             <div className="flex items-center justify-between">
@@ -173,7 +171,6 @@ export default function InternDetailPage() {
           )}
         </div>
 
-        {/* PR Reviews */}
         <div className="rounded-lg border">
           <div className="border-b p-4">
             <div className="flex items-center gap-2">

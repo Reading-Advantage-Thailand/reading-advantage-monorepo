@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
@@ -79,7 +79,6 @@ export default function HomePage() {
 
   const phases = dashboard?.phases ?? {};
 
-  // Flatten all modules across phases for lock-state computation (computed once)
   const allModules = Object.values(phases).flatMap((p) => p.modules);
 
   return (
@@ -107,7 +106,6 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* Overall stats — PR review summary */}
       {prReviews && prReviews.length > 0 && (
         <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
           {["pending", "needs_changes", "approved"].map((status) => {

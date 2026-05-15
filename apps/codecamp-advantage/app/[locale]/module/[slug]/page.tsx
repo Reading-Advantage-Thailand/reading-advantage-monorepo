@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
@@ -44,7 +44,6 @@ export default function ModulePage() {
     );
   }
 
-  // Compute module quiz average from lesson scores
   const scoredLessons = moduleData.lessons.filter((l) => l.userScore !== null && l.userScore > 0);
   const quizAverage =
     scoredLessons.length > 0
@@ -53,7 +52,6 @@ export default function ModulePage() {
         )
       : null;
 
-  // Map PR reviews to exercise repos for this module
   const repoPrStatus = new Map<string, NonNullable<typeof prReviews>[number]>();
   if (prReviews && exerciseRepos) {
     for (const repo of exerciseRepos) {
@@ -91,7 +89,6 @@ export default function ModulePage() {
         )}
       </div>
 
-      {/* Exercise Repos */}
       {exerciseRepos && exerciseRepos.length > 0 && (
         <div className="mb-8">
           <h2 className="mb-4 text-xl font-semibold">Exercise Repositories</h2>

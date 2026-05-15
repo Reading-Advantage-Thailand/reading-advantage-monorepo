@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useAuth } from "@reading-advantage/auth-client";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
@@ -69,7 +69,6 @@ export default function AdminPage() {
         </Button>
       </div>
 
-      {/* Stats Cards */}
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         <div className="rounded-lg border bg-card p-6">
           <p className="text-sm text-muted-foreground">Total Interns</p>
@@ -99,7 +98,6 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Interns Table */}
       <div className="rounded-lg border">
         <div className="p-4">
           <h2 className="text-lg font-semibold">Cohort Overview</h2>

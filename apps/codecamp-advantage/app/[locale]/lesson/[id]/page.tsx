@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@reading-advantage/ui";
@@ -57,7 +57,6 @@ export default function LessonPage() {
     );
   }
 
-  // Find PR reviews linked to this module's exercise repos
   const moduleReviews =
     prReviews?.filter((r) =>
       exerciseRepos?.some((repo) => repo.id === r.exerciseRepoId)
@@ -81,7 +80,6 @@ export default function LessonPage() {
           <p className="mt-2 text-muted-foreground">{lesson.description}</p>
         </div>
 
-        {/* Lesson Content */}
         <div className="rounded-lg border p-6">
           <h2 className="text-xl font-semibold">Content</h2>
           <div className="mt-4">
@@ -89,7 +87,6 @@ export default function LessonPage() {
           </div>
         </div>
 
-        {/* Exercise Repos — for exercise-type lessons */}
         {(lesson.type === "exercise" || lesson.moduleSlug === "real-world-practice") && exerciseRepos && exerciseRepos.length > 0 && (
           <div className="mt-8 rounded-lg border p-6">
             <h2 className="text-xl font-semibold">Fork-Based Exercise</h2>
@@ -97,7 +94,6 @@ export default function LessonPage() {
               Complete this exercise by forking the repository, making changes on a branch, and opening a Pull Request.
             </p>
 
-            {/* Module 18 workflow tracker — one tracker per exercise, using latest review status */}
             {lesson.moduleSlug === "real-world-practice" && moduleReviews.length > 0 && (() => {
               const reviewsByRepo = new Map<string, typeof moduleReviews[number]>();
               for (const review of moduleReviews) {
@@ -156,7 +152,6 @@ export default function LessonPage() {
           </div>
         )}
 
-        {/* Inline Exercises */}
         {lesson.exercises.length > 0 && (
           <div className="mt-8 rounded-lg border p-6">
             <h2 className="text-xl font-semibold">Practice Exercises</h2>
@@ -166,7 +161,6 @@ export default function LessonPage() {
           </div>
         )}
 
-        {/* Quiz */}
         {lesson.quizQuestions.length > 0 && (
           <div className="mt-8 rounded-lg border p-6">
             <h2 className="text-xl font-semibold">Quiz</h2>
@@ -178,7 +172,6 @@ export default function LessonPage() {
           </div>
         )}
 
-        {/* Chat Tutor */}
         <div className="mt-8 rounded-lg border p-6">
           <h2 className="text-xl font-semibold">Chat with AI Tutor</h2>
           <ChatTutor lessonId={lessonId} moduleId={lesson.moduleId} />
@@ -245,7 +238,6 @@ function QuizComponent({
   const submitQuiz = trpc.codecamp.submitQuiz.useMutation({
     onSuccess: (data) => {
       setSubmitted(true);
-      // Mark lesson as complete if quiz score is passing (>= 70%)
       if (data.score >= 70) {
         utils.codecamp.lesson.invalidate();
         utils.codecamp.moduleBySlug.invalidate();
@@ -254,7 +246,6 @@ function QuizComponent({
     },
   });
 
-  // Build a lookup for correct answers from the submission result
   const resultByQuestion = new Map(
     submitQuiz.data?.details.map((d) => [d.questionId, d]) ?? []
   );
@@ -338,12 +329,10 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
   const { data: conversations } = trpc.codecamp.conversations.useQuery();
   const saveMessage = trpc.codecamp.saveChatMessage.useMutation();
 
-  // Find existing conversation for this lesson
   const existingConv = conversations?.find(
     (c) => c.lessonId === lessonId || c.moduleId === moduleId
   );
 
-  // Load history on mount when conversation is found
   const { data: chatHistory } = trpc.codecamp.chatHistory.useQuery(
     { conversationId: existingConv?.id ?? "" },
     { enabled: !!existingConv?.id && !conversationId }
@@ -372,11 +361,7 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
   const handleComplete = async (_message: string) => {
     const cid = conversationId ?? existingConv?.id;
     if (cid) {
-      // Save the assistant message server-side via a dedicated endpoint.
-      // The client-facing saveChatMessage no longer accepts role: "assistant"
-      // to prevent message injection. Assistant messages should be persisted
-      // from the streaming route (future enhancement).
-      // For now, the complete message is visible in the local UI state.
+      // Save assistant message server-side (future enhancement)
     }
   };
 
