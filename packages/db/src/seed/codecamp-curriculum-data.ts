@@ -1181,615 +1181,6 @@ export function getPhaseACurriculumData() {
   return { modules, exerciseRepos: getExerciseRepos(modules) };
 }
 
-export function getPhaseCCurriculumData() {
-  const modules: CurriculumModule[] = [
-    // ─── Module 11: Databases & ORMs ──────────────────────────
-    {
-      title: "Databases & ORMs",
-      description:
-        "Add a PostgreSQL database to the Student Progress Tracker with Drizzle ORM 0.44.7: schema definition, queries, migrations, and multi-tenant patterns.",
-      slug: "databases-orms",
-      order: 11,
-      phase: "C",
-      status: "published",
-      lessons: [
-        {
-          title: "PostgreSQL Basics and SQL",
-          description:
-            "Learn relational database concepts and write basic SQL: CREATE TABLE, INSERT, SELECT, UPDATE, DELETE, and JOIN.",
-          order: 1,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "Relational Database Concepts",
-                body: "Databases store your application's data permanently. PostgreSQL 16 is the database used by Reading Advantage. A relational database organizes data into tables with rows and columns. Tables relate to each other through foreign keys.",
-                code: "| Concept | What it is | SQL equivalent |\n|---------|-----------|---------------|\n| Table | A collection of related data | CREATE TABLE |\n| Row | A single record | INSERT INTO |\n| Column | A field in the record | Defined in CREATE TABLE |\n| Primary Key | Unique identifier for a row | id SERIAL PRIMARY KEY |\n| Foreign Key | Reference to another table's row | REFERENCES other_table(id) |\n| Index | Speeds up lookups | CREATE INDEX |",
-              },
-              {
-                heading: "Start PostgreSQL with Docker",
-                body: "Reading Advantage uses Docker to run PostgreSQL locally. The same command works on every developer's machine.",
-                code: "# Start Postgres (same as Reading Advantage's pnpm db:start)\ndocker run -d \\\n  --name tracker-db \\\n  -e POSTGRES_PASSWORD=postgres \\\n  -e POSTGRES_DB=tracker \\\n  -p 5432:5432 \\\n  postgres:16-alpine\n\n# Connect to it\ndocker exec -it tracker-db psql -U postgres -d tracker",
-              },
-              {
-                heading: "Basic SQL",
-                body: "SQL is the language for interacting with relational databases. These are the four basic operations you'll use every day.",
-                code: "-- Create a table\nCREATE TABLE students (\n  id SERIAL PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE,\n  school_id TEXT NOT NULL,\n  role TEXT NOT NULL DEFAULT 'student'\n);\n\n-- Insert data\nINSERT INTO students (name, email, school_id, role)\nVALUES ('Alice', 'alice@school.com', 'school-1', 'student');\n\n-- Query data\nSELECT * FROM students;\nSELECT name, email FROM students WHERE school_id = 'school-1';\nSELECT * FROM students WHERE role = 'student' ORDER BY name;\n\n-- Update data\nUPDATE students SET role = 'teacher' WHERE email = 'alice@school.com';\n\n-- Delete data\nDELETE FROM students WHERE id = 2;\n\n-- Join tables\nSELECT s.name, p.score, l.title\nFROM progress p\nJOIN students s ON p.student_id = s.id\nJOIN lessons l ON p.lesson_id = l.id\nWHERE s.school_id = 'school-1';",
-              },
-            ],
-          },
-        },
-        {
-          title: "Drizzle Schema Definition",
-          description:
-            "Define database schemas in TypeScript with Drizzle ORM 0.44.7: pgTable, columns, enums, and relations.",
-          order: 2,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "Install and Configure Drizzle",
-                body: "Drizzle ORM lets you define schemas in TypeScript and get auto-completed queries. Same tool used in packages/db/src/schema/ in the Reading Advantage monorepo.",
-                code: "pnpm add drizzle-orm@0.44.7\npnpm add -D drizzle-kit@0.31.10\n\n// drizzle.config.ts\nimport { defineConfig } from \"drizzle-kit\";\n\nexport default defineConfig({\n  schema: \"./src/db/schema.ts\",\n  out: \"./drizzle\",\n  dialect: \"postgresql\",\n  dbCredentials: {\n    url: process.env.DATABASE_URL ?? \"postgres://postgres:postgres@localhost:5432/tracker\",\n  },\n});",
-              },
-              {
-                heading: "Define Tables with pgTable",
-                body: "Drizzle's pgTable lets you define tables with type-safe columns. Every column has a type, constraints, and defaults.",
-                code: "import { pgTable, uuid, text, integer, timestamp, pgEnum } from \"drizzle-orm/pg-core\";\n\nexport const roleEnum = pgEnum(\"role\", [\"student\", \"teacher\", \"admin\"]);\nexport const lessonTypeEnum = pgEnum(\"lesson_type\", [\"theory\", \"exercise\", \"quiz\"]);\n\nexport const students = pgTable(\"students\", {\n  id: uuid(\"id\").defaultRandom().primaryKey(),\n  name: text(\"name\").notNull(),\n  email: text(\"email\").notNull().unique(),\n  schoolId: text(\"school_id\").notNull(),\n  role: roleEnum(\"role\").notNull().default(\"student\"),\n  createdAt: timestamp(\"created_at\").defaultNow().notNull(),\n});\n\nexport const modules = pgTable(\"modules\", {\n  id: uuid(\"id\").defaultRandom().primaryKey(),\n  title: text(\"title\").notNull(),\n  slug: text(\"slug\").notNull().unique(),\n  order: integer(\"order\").notNull(),\n  schoolId: text(\"school_id\").notNull(),\n  status: text(\"status\").notNull().default(\"draft\"),\n  createdAt: timestamp(\"created_at\").defaultNow().notNull(),\n});",
-              },
-              {
-                heading: "Define Relations",
-                body: "Drizzle relations define how tables connect. This gives you type-safe joins and nested queries.",
-                code: "import { relations } from \"drizzle-orm\";\n\nexport const modulesRelations = relations(modules, ({ many }) => ({\n  lessons: many(lessons),\n}));\n\nexport const lessonsRelations = relations(lessons, ({ one, many }) => ({\n  module: one(modules, {\n    fields: [lessons.moduleId],\n    references: [modules.id],\n  }),\n  progress: many(progress),\n}));",
-              },
-            ],
-          },
-        },
-        {
-          title: "Drizzle Queries",
-          description:
-            "Write fully type-safe SELECT, INSERT, UPDATE, and DELETE queries with Drizzle.",
-          order: 3,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "SELECT Queries",
-                body: "Drizzle queries are fully type-safe: auto-completed column names, inferred return types. Always scope by schoolId for multi-tenancy.",
-                code: "import { eq, and, desc, sql } from \"drizzle-orm\";\n\n// Get all modules for a school (multi-tenant!)\nconst schoolModules = await db\n  .select()\n  .from(modules)\n  .where(eq(modules.schoolId, \"school-1\"))\n  .orderBy(modules.order);\n\n// Get a specific module by slug\nconst [module] = await db\n  .select()\n  .from(modules)\n  .where(and(eq(modules.slug, \"react\"), eq(modules.schoolId, \"school-1\")));\n\n// Select specific columns\nconst moduleTitles = await db\n  .select({ id: modules.id, title: modules.title })\n  .from(modules)\n  .where(eq(modules.schoolId, \"school-1\"));\n\n// Count\nconst [{ count }] = await db\n  .select({ count: sql<number>`count(*)` })\n  .from(progress)\n  .where(eq(progress.status, \"completed\"));",
-              },
-              {
-                heading: "INSERT and UPDATE",
-                body: "Insert new rows and update existing ones with .returning() to get the modified data back.",
-                code: "// Insert one row\nconst [newStudent] = await db\n  .insert(students)\n  .values({\n    name: \"Alice\",\n    email: \"alice@school.com\",\n    schoolId: \"school-1\",\n    role: \"student\",\n  })\n  .returning();\n\n// Update progress\nconst [updated] = await db\n  .update(progress)\n  .set({\n    status: \"completed\",\n    score: 95,\n    completedAt: new Date(),\n  })\n  .where(and(\n    eq(progress.studentId, studentId),\n    eq(progress.lessonId, lessonId),\n    eq(progress.schoolId, \"school-1\")\n  ))\n  .returning();",
-              },
-            ],
-          },
-        },
-        {
-          title: "Migrations and Multi-Tenancy",
-          description:
-            "Generate migrations with drizzle-kit and understand Reading Advantage's TenantDB multi-tenant pattern.",
-          order: 4,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "Migration Workflow",
-                body: "Migrations track schema changes over time — like Git for your database. The workflow is: edit schema, generate migration, apply migration, commit both.",
-                code: "# Generate a migration from schema changes\npnpm drizzle-kit generate\n\n# Apply pending migrations\npnpm drizzle-kit migrate\n\n# View current state\npnpm drizzle-kit studio  # Opens a visual DB browser",
-              },
-              {
-                heading: "Multi-Tenancy Pattern",
-                body: "The core pattern from Reading Advantage: every query MUST include schoolId. TenantDB enforces this automatically.",
-                code: "// ❌ WRONG — no schoolId filter\nconst allModules = await db.select().from(modules);\n\n// ✅ CORRECT — scoped to the tenant's school\nconst schoolModules = await db\n  .select()\n  .from(modules)\n  .where(eq(modules.schoolId, \"school-1\"));\n\n// The rule: Every query MUST include schoolId.\n// TenantDB injects it automatically in Reading Advantage.",
-              },
-              {
-                heading: "Seed Data",
-                body: "Seed scripts populate the database with initial data for development and testing.",
-                code: "async function seed() {\n  const [school1] = await db.insert(schools).values({\n    id: \"school-1\",\n    name: \"Reading Advantage Academy\",\n  }).returning();\n\n  await db.insert(modules).values([\n    { title: \"Dev Environment\", slug: \"dev-env\", order: 1, schoolId: school1.id },\n    { title: \"Git & GitHub\", slug: \"git-github\", order: 2, schoolId: school1.id },\n  ]);\n}",
-              },
-            ],
-          },
-        },
-        {
-          title: "Databases & ORMs Exercise + Quiz",
-          description:
-            "Design a blog database with Drizzle and test your database knowledge.",
-          order: 5,
-          type: "quiz",
-          contentJson: {
-            instructions:
-              "Complete the database exercise by designing a schema and writing queries for a blog application.",
-          },
-          exercises: [
-            {
-              title: "Design a Blog Database",
-              instructions:
-                "Fork the exercise repo and design a blog database with Drizzle: define users, posts, comments, tags, and post_tags tables; define relations; generate and apply the migration; write multi-tenant query functions; write a seed script.",
-              starterCode:
-                "// TODO: Define tables with Drizzle\n// TODO: Define relations\n// TODO: Generate migration\n// TODO: Write query functions\n// TODO: Write seed script",
-              expectedOutput:
-                "A working blog database with schema, migrations, queries, and seed data",
-              hintsJson: [
-                "Use pgEnum for status and role columns",
-                "Add .references() with onDelete: 'cascade' for foreign keys",
-                "Every query function must accept and use schoolId",
-              ],
-              order: 1,
-            },
-          ],
-          questions: [
-            {
-              question: "What is a foreign key?",
-              optionsJson: [
-                "A key that unlocks the database",
-                "A column that references the primary key of another table",
-                "A password for the database",
-                "An index that speeds up queries",
-              ],
-              correctAnswer: "A column that references the primary key of another table",
-              explanation:
-                "A foreign key creates a relationship between two tables by referencing the primary key of another table.",
-              order: 1,
-            },
-            {
-              question: "What does `drizzle-kit generate` do?",
-              optionsJson: [
-                "Runs the database",
-                "Compares schema to database and creates a SQL migration file",
-                "Installs dependencies",
-                "Deletes old data",
-              ],
-              correctAnswer:
-                "Compares schema to database and creates a SQL migration file",
-              explanation:
-                "drizzle-kit generate compares your TypeScript schema to the current database state and generates a SQL migration file.",
-              order: 2,
-            },
-            {
-              question: "Why must every query include `schoolId`?",
-              optionsJson: [
-                "It is required by PostgreSQL",
-                "To enforce multi-tenancy — each school can only see its own data",
-                "It makes queries faster",
-                "It is a Drizzle requirement",
-              ],
-              correctAnswer:
-                "To enforce multi-tenancy — each school can only see its own data",
-              explanation:
-                "Multi-tenancy means multiple schools share one database but can only access their own data. schoolId scopes every query.",
-              order: 3,
-            },
-            {
-              question: "What does `.returning()` do on an INSERT?",
-              optionsJson: [
-                "Nothing",
-                "Returns the inserted row including auto-generated fields like id",
-                "Rolls back the insert",
-                "Validates the data",
-              ],
-              correctAnswer:
-                "Returns the inserted row including auto-generated fields like id",
-              explanation:
-                ".returning() tells Drizzle to return the inserted row, including auto-generated fields like the UUID primary key.",
-              order: 4,
-            },
-            {
-              question: "What is the difference between `onDelete: 'cascade'` and the default?",
-              optionsJson: [
-                "There is no difference",
-                "cascade automatically deletes related rows; default prevents deletion if referenced rows exist",
-                "cascade is slower",
-                "default deletes everything",
-              ],
-              correctAnswer:
-                "cascade automatically deletes related rows; default prevents deletion if referenced rows exist",
-              explanation:
-                "With cascade, deleting a parent row automatically deletes child rows that reference it. The default behavior prevents deleting a parent if children exist.",
-              order: 5,
-            },
-          ],
-        },
-      ],
-    },
-
-    // ─── Module 12: tRPC & Server Actions ─────────────────────
-    {
-      title: "tRPC & Server Actions",
-      description:
-        "Build the API layer for the Student Progress Tracker with tRPC 11.17.0: thin routers, thick domain functions, and Server Actions.",
-      slug: "trpc-server-actions",
-      order: 12,
-      phase: "C",
-      status: "published",
-      lessons: [
-        {
-          title: "Thin Router / Thick Domain Architecture",
-          description:
-            "Understand the most important architectural pattern in Reading Advantage: routers validate, domain functions hold logic.",
-          order: 1,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "The Architecture",
-                body: "The most important architectural pattern in Reading Advantage. Routers validate input and delegate — domain functions hold the logic. This separation makes code testable, maintainable, and secure.",
-                code: "┌──────────────────┐     ┌───────────────────┐     ┌──────────────┐     ┌──────────┐\n│  tRPC Router     │     │  Domain Function  │     │   Drizzle    │     │ Postgres │\n│  (thin wrapper)  │────▶│  (business logic) │────▶│   (query)    │────▶│  (data)  │\n│                  │     │                   │     │              │     │          │\n│ • Validate input │     │ • assertCan()     │     │ • select()   │     │          │\n│ • Call domain fn │     │ • Business rules  │     │ • insert()   │     │          │\n│ • Return result  │     │ • Data transforms │     │ • update()   │     │          │\n└──────────────────┘     └───────────────────┘     └──────────────┘     └──────────┘",
-              },
-              {
-                heading: "Domain Function Pattern",
-                body: "Every domain function follows the same pattern: permission check first, then business logic, then return the result.",
-                code: "export async function getModules({ db, user, tenant }: {\n  db: DB; user: User; tenant: Tenant;\n}) {\n  // 1. Permission check FIRST\n  assertCan(user, \"module:read\", tenant);\n\n  // 2. Business logic\n  const result = await db\n    .select()\n    .from(modules)\n    .where(eq(modules.schoolId, tenant.schoolId))\n    .orderBy(modules.order);\n\n  // 3. Return the result\n  return result;\n}",
-              },
-              {
-                heading: "assertCan Implementation",
-                body: "assertCan checks if a user's role has permission to perform an action. It is called first in every domain function before any mutation.",
-                code: "type Permission =\n  | \"module:read\"\n  | \"module:create\"\n  | \"progress:read\"\n  | \"progress:update\"\n  | \"quiz:submit\";\n\nconst ROLE_PERMISSIONS: Record<string, Permission[]> = {\n  student: [\"module:read\", \"progress:read\", \"progress:update\", \"quiz:submit\"],\n  teacher: [\"module:read\", \"module:create\", \"progress:read\", \"progress:update\", \"quiz:submit\"],\n  admin: [\"module:read\", \"module:create\", \"progress:read\", \"progress:update\", \"quiz:submit\"],\n};\n\nexport function assertCan(user: User, permission: Permission, tenant: Tenant) {\n  const allowed = ROLE_PERMISSIONS[user.role] ?? [];\n  if (!allowed.includes(permission)) {\n    throw new AuthError(`User role '${user.role}' cannot '${permission}'`);\n  }\n}",
-              },
-            ],
-          },
-        },
-        {
-          title: "tRPC Router Setup",
-          description:
-            "Set up tRPC 11.17.0 with type-safe routers, input validation with Zod, and protected procedures.",
-          order: 2,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "Install and Configure tRPC",
-                body: "tRPC gives you end-to-end type safety — the frontend automatically knows the API types. No more writing fetch calls and manually typing responses.",
-                code: "pnpm add @trpc/server@11.17.0 @trpc/client@11.17.0 @trpc/react-query@11.17.0 @tanstack/react-query@5.90.10\n\n// src/server/trpc.ts\nimport { initTRPC } from \"@trpc/server\";\n\nexport interface Context {\n  db: DB;\n  user: User | null;\n  tenant: Tenant;\n}\n\nconst t = initTRPC.context<Context>().create();\n\nexport const router = t.router;\nexport const publicProcedure = t.procedure;\nexport const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {\n  if (!ctx.user) throw new AuthError(\"Authentication required\");\n  return next({ ctx: { ...ctx, user: ctx.user } });\n});",
-              },
-              {
-                heading: "Write a tRPC Router",
-                body: "The router is thin — validate input with Zod 3.25.76, call domain, return result. Zero business logic in the router.",
-                code: "import { z } from \"zod\";\nimport { router, protectedProcedure } from \"../trpc.js\";\nimport { getModules, createModule } from \"../../domain/modules/index.js\";\n\nexport const modulesRouter = router({\n  list: protectedProcedure\n    .query(({ ctx }) => getModules({\n      db: ctx.db, user: ctx.user, tenant: ctx.tenant,\n    })),\n\n  create: protectedProcedure\n    .input(z.object({\n      title: z.string().min(1),\n      slug: z.string().min(1),\n      description: z.string(),\n      order: z.number().int().positive(),\n    }))\n    .mutation(({ ctx, input }) => createModule({\n      db: ctx.db, user: ctx.user, tenant: ctx.tenant, input,\n    })),\n});",
-              },
-              {
-                heading: "Merge Routers",
-                body: "Combine all routers into a single appRouter. Export the type for frontend type inference.",
-                code: "import { router } from \"./trpc.js\";\nimport { modulesRouter } from \"./routers/modules.js\";\nimport { progressRouter } from \"./routers/progress.js\";\n\nexport const appRouter = router({\n  modules: modulesRouter,\n  progress: progressRouter,\n});\n\nexport type AppRouter = typeof appRouter;",
-              },
-            ],
-          },
-        },
-        {
-          title: "tRPC on the Frontend",
-          description:
-            "Consume tRPC procedures from React with fully typed hooks: useQuery, useMutation, and cache invalidation.",
-          order: 3,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "Set Up tRPC Client",
-                body: "The frontend client connects to the tRPC API and provides fully typed hooks.",
-                code: "// src/lib/trpc-react.ts\nimport { createTRPCReact } from \"@trpc/react-query\";\nimport type { AppRouter } from \"@/server/root\";\n\nexport const trpc = createTRPCReact<AppRouter>();\n\n// src/app/providers.tsx\n\"use client\";\nimport { QueryClient, QueryClientProvider } from \"@tanstack/react-query\";\nimport { httpBatchLink } from \"@trpc/client\";\nimport { trpc } from \"@/lib/trpc-react\";\nimport { useState } from \"react\";\n\nexport function Providers({ children }: { children: React.ReactNode }) {\n  const [queryClient] = useState(() => new QueryClient());\n  const [trpcClient] = useState(() =>\n    trpc.createClient({ links: [httpBatchLink({ url: \"/api/trpc\" })] })\n  );\n  return (\n    <trpc.Provider client={trpcClient} queryClient={queryClient}>\n      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>\n    </trpc.Provider>\n  );\n}",
-              },
-              {
-                heading: "Using tRPC Queries and Mutations",
-                body: "Frontend hooks are auto-typed — no manual API client needed. useQuery for reads, useMutation for writes.",
-                code: "\"use client\";\nimport { trpc } from \"@/lib/trpc-react\";\n\nexport function ModuleList() {\n  const utils = trpc.useUtils();\n  const { data: modules, isLoading } = trpc.modules.list.useQuery();\n  const createModule = trpc.modules.create.useMutation({\n    onSuccess: () => { utils.modules.list.invalidate(); },\n  });\n\n  if (isLoading) return <div>Loading...</div>;\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules?.map((mod) => <ModuleCard key={mod.id} module={mod} />)}\n    </div>\n  );\n}",
-              },
-            ],
-          },
-        },
-        {
-          title: "Server Actions",
-          description:
-            "Use Next.js Server Actions for simple form submissions without building an API route.",
-          order: 4,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "Define a Server Action",
-                body: "Server Actions are Next.js's way to call server code directly from a form. Simpler than tRPC for simple mutations.",
-                code: "// src/app/actions/progress.ts\n\"use server\";\n\nimport { assertCan } from \"@/auth/permissions\";\nimport { db } from \"@/db\";\nimport { progress } from \"@/db/schema\";\nimport { eq, and } from \"drizzle-orm\";\nimport { z } from \"zod\";\n\nconst updateProgressSchema = z.object({\n  lessonId: z.string().uuid(),\n  status: z.enum([\"not_started\", \"in_progress\", \"completed\"]),\n  score: z.number().int().min(0).max(100).optional(),\n});\n\nexport async function updateProgress(formData: FormData) {\n  const user = await getCurrentUser();\n  const input = updateProgressSchema.parse({\n    lessonId: formData.get(\"lessonId\"),\n    status: formData.get(\"status\"),\n    score: formData.get(\"score\") ? Number(formData.get(\"score\")) : undefined,\n  });\n  await db.update(progress).set({ status: input.status, score: input.score })\n    .where(and(eq(progress.studentId, user.id), eq(progress.lessonId, input.lessonId)));\n  revalidatePath(\"/modules\");\n}",
-              },
-              {
-                heading: "tRPC vs Server Actions",
-                body: "Reading Advantage uses tRPC for almost everything. Server Actions are useful for specific form flows.",
-                code: "| Use tRPC when | Use Server Actions when |\n|---------------|----------------------|\n| Complex queries with caching | Simple form submissions |\n| Multiple consumers | Only one Next.js app uses it |\n| Need React Query caching | Progressive enhancement |\n| Complex input validation | Quick mutations without cache mgmt |",
-              },
-            ],
-          },
-        },
-        {
-          title: "tRPC & Server Actions Exercise + Quiz",
-          description:
-            "Build a Blog API with tRPC and test your API knowledge.",
-          order: 5,
-          type: "quiz",
-          contentJson: {
-            instructions:
-              "Complete the tRPC exercise by building routers and domain functions for a blog API.",
-          },
-          exercises: [
-            {
-              title: "Build a Blog API with tRPC",
-              instructions:
-                "Fork the exercise repo and build a blog API: create domain functions with assertCan, create tRPC routers with Zod validation, merge routers into appRouter, set up the API route handler, create a frontend component using useQuery and useMutation.",
-              starterCode:
-                "// TODO: Create domain functions in src/domain/\n// TODO: Create tRPC routers in src/server/routers/\n// TODO: Merge routers and export type\n// TODO: Set up API route handler\n// TODO: Create frontend component",
-              expectedOutput:
-                "A fully typed blog API with tRPC routers, domain functions, and a React frontend",
-              hintsJson: [
-                "Call assertCan() in every domain function before any mutation",
-                "Use Zod schemas for input validation on all procedures",
-                "The router should be thin — zero business logic",
-              ],
-              order: 1,
-            },
-          ],
-          questions: [
-            {
-              question: "Where should business logic live?",
-              optionsJson: [
-                "In the tRPC router",
-                "In domain functions",
-                "In the database",
-                "In the frontend",
-              ],
-              correctAnswer: "In domain functions",
-              explanation:
-                "Business logic lives in domain functions. Routers are thin wrappers that validate input and delegate.",
-              order: 1,
-            },
-            {
-              question: "What does `assertCan()` do and where is it called?",
-              optionsJson: [
-                "Checks permissions, called first in every domain function",
-                "Validates input, called in the router",
-                "Hashes passwords, called in auth",
-                "Creates sessions, called in middleware",
-              ],
-              correctAnswer: "Checks permissions, called first in every domain function",
-              explanation:
-                "assertCan() checks if the user's role has the required permission. It is called first in every domain function before any mutation.",
-              order: 2,
-            },
-            {
-              question: "What makes tRPC 'type-safe'?",
-              optionsJson: [
-                "It uses TypeScript",
-                "The frontend automatically infers types from the router definition",
-                "It validates at runtime",
-                "It uses Zod",
-              ],
-              correctAnswer: "The frontend automatically infers types from the router definition",
-              explanation:
-                "tRPC uses the AppRouter type to infer all input and output types on the frontend. No manual typing needed.",
-              order: 3,
-            },
-            {
-              question: "When should you use Server Actions instead of tRPC?",
-              optionsJson: [
-                "Always",
-                "Simple form submissions, progressive enhancement, single-consumer mutations",
-                "Never",
-                "Only for API routes",
-              ],
-              correctAnswer: "Simple form submissions, progressive enhancement, single-consumer mutations",
-              explanation:
-                "Server Actions are simpler than tRPC for basic form submissions that don't need complex caching or multiple consumers.",
-              order: 4,
-            },
-            {
-              question: "What is the domain function signature?",
-              optionsJson: [
-                "(input) => result",
-                "({ db, user, tenant, input }) => result",
-                "(req, res) => void",
-                "(props) => JSX",
-              ],
-              correctAnswer: "({ db, user, tenant, input }) => result",
-              explanation:
-                "Every domain function receives an object with db, user, tenant, and optional input. This is the standard pattern in Reading Advantage.",
-              order: 5,
-            },
-          ],
-        },
-      ],
-    },
-
-    // ─── Module 13: Authentication ────────────────────────────
-    {
-      title: "Authentication",
-      description:
-        "Add login, logout, sessions, and role-based access control to the Student Progress Tracker.",
-      slug: "authentication",
-      order: 13,
-      phase: "C",
-      status: "published",
-      lessons: [
-        {
-          title: "Session-Based Authentication",
-          description:
-            "Implement cookie-based session authentication with password hashing and secure session cookies.",
-          order: 1,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "Sessions and Password Hashing",
-                body: "Authentication proves who you are. Authorization decides what you can do. Sessions track logged-in users with secure cookies.",
-                code: "// Schema additions\nexport const sessions = pgTable(\"sessions\", {\n  id: uuid(\"id\").defaultRandom().primaryKey(),\n  userId: uuid(\"user_id\").notNull().references(() => students.id),\n  token: text(\"token\").notNull().unique(),\n  expiresAt: timestamp(\"expires_at\").notNull(),\n  createdAt: timestamp(\"created_at\").defaultNow().notNull(),\n});\n\n// Password hashing\nimport bcrypt from \"bcrypt\";\nexport async function hashPassword(password: string) {\n  return bcrypt.hash(password, 10);\n}\nexport async function verifyPassword(password: string, hash: string) {\n  return bcrypt.compare(password, hash);\n}",
-              },
-              {
-                heading: "Login Flow",
-                body: "The login flow: validate credentials, create a session, set a secure cookie.",
-                code: "export async function createSession(db: DB, userId: string): Promise<string> {\n  const token = randomUUID();\n  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);\n  await db.insert(sessions).values({ userId, token, expiresAt });\n  return token;\n}\n\n// Login route\nconst token = await createSession(db, user.id);\nconst response = NextResponse.json({ success: true });\nresponse.cookies.set(\"session\", token, {\n  httpOnly: true,\n  secure: process.env.NODE_ENV === \"production\",\n  sameSite: \"lax\",\n  maxAge: 30 * 24 * 60 * 60,\n  path: \"/\",\n});\nreturn response;",
-              },
-            ],
-          },
-        },
-        {
-          title: "Logout, Middleware, and Auth Context",
-          description:
-            "Complete the auth flow with logout, route protection middleware, and tRPC auth context.",
-          order: 2,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "Logout Route",
-                body: "Logout deletes the session and clears the cookie.",
-                code: "export async function POST(request: Request) {\n  const token = request.cookies.get(\"session\")?.value;\n  if (token) await deleteSession(db, token);\n  const response = NextResponse.json({ success: true });\n  response.cookies.set(\"session\", \"\", {\n    httpOnly: true, secure: true, sameSite: \"lax\",\n    maxAge: 0, path: \"/\",\n  });\n  return response;\n}",
-              },
-              {
-                heading: "Auth Middleware",
-                body: "Middleware protects routes by checking for valid session cookies before requests reach pages.",
-                code: "// src/middleware.ts\nexport function middleware(request: NextRequest) {\n  const sessionToken = request.cookies.get(\"session\")?.value;\n  const protectedPaths = [\"/modules\", \"/progress\", \"/chat\"];\n  const isProtected = protectedPaths.some((p) =>\n    request.nextUrl.pathname.startsWith(p)\n  );\n  if (isProtected && !sessionToken) {\n    const loginUrl = new URL(\"/login\", request.url);\n    loginUrl.searchParams.set(\"from\", request.nextUrl.pathname);\n    return NextResponse.redirect(loginUrl);\n  }\n  return NextResponse.next();\n}",
-              },
-              {
-                heading: "tRPC Context with Auth",
-                body: "The tRPC context resolves the user from the session cookie. protectedProcedure guarantees a non-null user.",
-                code: "export async function createContext(request: Request): Promise<Context> {\n  const sessionToken = request.cookies.get(\"session\")?.value;\n  const user = sessionToken ? await getSession(db, sessionToken) : null;\n  const tenant = user ? { schoolId: user.schoolId } : { schoolId: \"\" };\n  return { db, user, tenant };\n}\n\nexport const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {\n  if (!ctx.user) {\n    throw new TRPCError({ code: \"UNAUTHORIZED\" });\n  }\n  return next({ ctx: { ...ctx, user: ctx.user } });\n});",
-              },
-            ],
-          },
-        },
-        {
-          title: "Role-Based Access Control (RBAC)",
-          description:
-            "Implement RBAC with assertCan: different roles have different permissions, and users can only access their own school's data.",
-          order: 3,
-          type: "theory",
-          contentJson: {
-            sections: [
-              {
-                heading: "Define Roles and Permissions",
-                body: "RBAC assigns permissions to roles, not individual users. The assertCan function checks both permission and tenant.",
-                code: "const PERMISSIONS = {\n  student: [\"module:read\", \"lesson:read\", \"progress:read\", \"progress:update\", \"quiz:submit\", \"chat:use\"],\n  teacher: [\"module:read\", \"lesson:read\", \"progress:read\", \"progress:update\", \"quiz:submit\", \"chat:use\", \"student:read\", \"student:list\"],\n  admin: [\"module:read\", \"module:create\", \"module:update\", \"lesson:read\", \"lesson:create\", \"progress:read\", \"progress:update\", \"quiz:submit\", \"chat:use\", \"student:read\", \"student:list\", \"student:create\", \"student:update\"],\n};\n\nexport function assertCan(user: User, permission: string, tenant: Tenant) {\n  const allowed = PERMISSIONS[user.role] ?? [];\n  if (!allowed.includes(permission)) {\n    throw new AuthError(`Permission denied: role '${user.role}' cannot '${permission}'`);\n  }\n  if (user.schoolId !== tenant.schoolId) {\n    throw new AuthError(\"Access denied: wrong school\");\n  }\n}",
-              },
-              {
-                heading: "Apply assertCan to Domain Functions",
-                body: "Every domain function that modifies data calls assertCan first. Students can only update their own progress.",
-                code: "export async function updateProgress({ db, user, tenant, input }) {\n  assertCan(user, \"progress:update\", tenant);\n  if (user.role === \"student\" && input.studentId !== user.id) {\n    throw new AuthError(\"Students can only update their own progress\");\n  }\n  const [result] = await db.update(progress).set({\n    status: input.status, score: input.score,\n  }).where(and(\n    eq(progress.studentId, input.studentId),\n    eq(progress.lessonId, input.lessonId),\n    eq(progress.schoolId, tenant.schoolId)\n  )).returning();\n  return result;\n}",
-              },
-              {
-                heading: "Conditional UI Based on Role",
-                body: "Show or hide UI elements based on the user's role. Never rely on UI alone for security — always validate server-side.",
-                code: "\"use client\";\nimport { useAuth } from \"@/hooks/useAuth\";\n\nexport function AdminOnly({ children }: { children: React.ReactNode }) {\n  const { user } = useAuth();\n  if (user?.role !== \"admin\") return null;\n  return <>{children}</>;\n}\n\n// Usage\n<AdminOnly>\n  <button>Create Module</button>\n</AdminOnly>",
-              },
-            ],
-          },
-        },
-        {
-          title: "Authentication Exercise + Quiz",
-          description:
-            "Add authentication to a blog API and test your auth knowledge.",
-          order: 4,
-          type: "quiz",
-          contentJson: {
-            instructions:
-              "Complete the authentication exercise by adding login, logout, sessions, and RBAC to a blog API.",
-          },
-          exercises: [
-            {
-              title: "Add Auth to the Blog API",
-              instructions:
-                "Fork the exercise repo and add auth: create users table with passwordHash and role, implement POST /api/auth/login with session cookie, implement POST /api/auth/logout, implement GET /api/auth/session, add middleware to protect routes, add assertCan to every domain function, add protectedProcedure to mutations, create a login page, create useAuth hook, show UI conditionally based on role.",
-              starterCode:
-                "// TODO: Add users table with passwordHash and role\n// TODO: Implement login route\n// TODO: Implement logout route\n// TODO: Implement session route\n// TODO: Add middleware\n// TODO: Add assertCan to domain functions\n// TODO: Add protectedProcedure\n// TODO: Create login page\n// TODO: Create useAuth hook",
-              expectedOutput:
-                "A fully authenticated blog API with login, logout, sessions, RBAC, and conditional UI",
-              hintsJson: [
-                "Use bcrypt to hash passwords before storing",
-                "Use httpOnly cookies for session tokens to prevent XSS",
-                "Always validate permissions server-side — never trust the UI",
-              ],
-              order: 1,
-            },
-          ],
-          questions: [
-            {
-              question: "Why use `httpOnly` cookies for session tokens?",
-              optionsJson: [
-                "They are faster",
-                "Prevents JavaScript access — protects against XSS",
-                "They look better",
-                "Required by all browsers",
-              ],
-              correctAnswer: "Prevents JavaScript access — protects against XSS",
-              explanation:
-                "httpOnly cookies cannot be accessed by JavaScript, preventing XSS attacks from stealing session tokens.",
-              order: 1,
-            },
-            {
-              question: "What is the difference between authentication and authorization?",
-              optionsJson: [
-                "They are the same",
-                "Authentication = who you are; Authorization = what you can do",
-                "Authentication is faster",
-                "Authorization is optional",
-              ],
-              correctAnswer: "Authentication = who you are; Authorization = what you can do",
-              explanation:
-                "Authentication proves identity (login). Authorization decides permissions (what actions are allowed).",
-              order: 2,
-            },
-            {
-              question: "Where should `assertCan()` be called?",
-              optionsJson: [
-                "In the router only",
-                "In the domain function, before any mutation",
-                "In the frontend only",
-                "In the database",
-              ],
-              correctAnswer: "In the domain function, before any mutation",
-              explanation:
-                "assertCan() must be called in the domain function before any mutation. Never rely on the router or UI alone.",
-              order: 3,
-            },
-            {
-              question: "What does RBAC stand for?",
-              optionsJson: [
-                "Really Big Access Control",
-                "Role-Based Access Control",
-                "Runtime Browser Access Control",
-                "Router-Based Authentication Control",
-              ],
-              correctAnswer: "Role-Based Access Control",
-              explanation:
-                "RBAC = Role-Based Access Control. Permissions are assigned to roles, and users inherit permissions through their roles.",
-              order: 4,
-            },
-            {
-              question: "Why check `user.schoolId !== tenant.schoolId`?",
-              optionsJson: [
-                "It is required by TypeScript",
-                "Multi-tenant security — prevents cross-school data access",
-                "It makes queries faster",
-                "It validates the password",
-              ],
-              correctAnswer: "Multi-tenant security — prevents cross-school data access",
-              explanation:
-                "In a multi-tenant system, users belong to a school and can only access that school's data. This check enforces that boundary.",
-              order: 5,
-            },
-          ],
-        },
-      ],
-    },
-  ];
-
-  return { modules, exerciseRepos: getExerciseRepos(modules) };
-}
-
-function getExerciseRepos(modules: CurriculumModule[]): CurriculumRepo[] {
-  return modules.map((mod) => ({
-    moduleSlug: mod.slug,
-    repoUrl: `https://github.com/reading-advantage/codecamp-${mod.slug}`,
-    description: `Exercise repository for ${mod.title}`,
-    order: mod.order,
-  }));
-}
-
 export function getPhaseBCurriculumData() {
   const modules: CurriculumModule[] = [
     // ─── Module 7: React ──────────────────────────────────────
@@ -2706,6 +2097,614 @@ export function getPhaseBCurriculumData() {
   return { modules, exerciseRepos: getExerciseRepos(modules) };
 }
 
+export function getPhaseCCurriculumData() {
+  const modules: CurriculumModule[] = [
+    // ─── Module 11: Databases & ORMs ──────────────────────────
+    {
+      title: "Databases & ORMs",
+      description:
+        "Add a PostgreSQL database to the Student Progress Tracker with Drizzle ORM 0.44.7: schema definition, queries, migrations, and multi-tenant patterns.",
+      slug: "databases-orms",
+      order: 11,
+      phase: "C",
+      status: "published",
+      lessons: [
+        {
+          title: "PostgreSQL Basics and SQL",
+          description:
+            "Learn relational database concepts and write basic SQL: CREATE TABLE, INSERT, SELECT, UPDATE, DELETE, and JOIN.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Relational Database Concepts",
+                body: "Databases store your application's data permanently. PostgreSQL 16 is the database used by Reading Advantage. A relational database organizes data into tables with rows and columns. Tables relate to each other through foreign keys.",
+                code: "| Concept | What it is | SQL equivalent |\n|---------|-----------|---------------|\n| Table | A collection of related data | CREATE TABLE |\n| Row | A single record | INSERT INTO |\n| Column | A field in the record | Defined in CREATE TABLE |\n| Primary Key | Unique identifier for a row | id SERIAL PRIMARY KEY |\n| Foreign Key | Reference to another table's row | REFERENCES other_table(id) |\n| Index | Speeds up lookups | CREATE INDEX |",
+              },
+              {
+                heading: "Start PostgreSQL with Docker",
+                body: "Reading Advantage uses Docker to run PostgreSQL locally. The same command works on every developer's machine.",
+                code: "# Start Postgres (same as Reading Advantage's pnpm db:start)\ndocker run -d \\\n  --name tracker-db \\\n  -e POSTGRES_PASSWORD=postgres \\\n  -e POSTGRES_DB=tracker \\\n  -p 5432:5432 \\\n  postgres:16-alpine\n\n# Connect to it\ndocker exec -it tracker-db psql -U postgres -d tracker",
+              },
+              {
+                heading: "Basic SQL",
+                body: "SQL is the language for interacting with relational databases. These are the four basic operations you'll use every day.",
+                code: "-- Create a table\nCREATE TABLE students (\n  id SERIAL PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE,\n  school_id TEXT NOT NULL,\n  role TEXT NOT NULL DEFAULT 'student'\n);\n\n-- Insert data\nINSERT INTO students (name, email, school_id, role)\nVALUES ('Alice', 'alice@school.com', 'school-1', 'student');\n\n-- Query data\nSELECT * FROM students;\nSELECT name, email FROM students WHERE school_id = 'school-1';\nSELECT * FROM students WHERE role = 'student' ORDER BY name;\n\n-- Update data\nUPDATE students SET role = 'teacher' WHERE email = 'alice@school.com';\n\n-- Delete data\nDELETE FROM students WHERE id = 2;\n\n-- Join tables\nSELECT s.name, p.score, l.title\nFROM progress p\nJOIN students s ON p.student_id = s.id\nJOIN lessons l ON p.lesson_id = l.id\nWHERE s.school_id = 'school-1';",
+              },
+            ],
+          },
+        },
+        {
+          title: "Drizzle Schema Definition",
+          description:
+            "Define database schemas in TypeScript with Drizzle ORM 0.44.7: pgTable, columns, enums, and relations.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Install and Configure Drizzle",
+                body: "Drizzle ORM lets you define schemas in TypeScript and get auto-completed queries. Same tool used in packages/db/src/schema/ in the Reading Advantage monorepo.",
+                code: "pnpm add drizzle-orm@0.44.7\npnpm add -D drizzle-kit@0.31.10\n\n// drizzle.config.ts\nimport { defineConfig } from \"drizzle-kit\";\n\nexport default defineConfig({\n  schema: \"./src/db/schema.ts\",\n  out: \"./drizzle\",\n  dialect: \"postgresql\",\n  dbCredentials: {\n    url: process.env.DATABASE_URL ?? \"postgres://postgres:postgres@localhost:5432/tracker\",\n  },\n});",
+              },
+              {
+                heading: "Define Tables with pgTable",
+                body: "Drizzle's pgTable lets you define tables with type-safe columns. Every column has a type, constraints, and defaults.",
+                code: "import { pgTable, uuid, text, integer, timestamp, pgEnum } from \"drizzle-orm/pg-core\";\n\nexport const roleEnum = pgEnum(\"role\", [\"student\", \"teacher\", \"admin\"]);\nexport const lessonTypeEnum = pgEnum(\"lesson_type\", [\"theory\", \"exercise\", \"quiz\"]);\n\nexport const students = pgTable(\"students\", {\n  id: uuid(\"id\").defaultRandom().primaryKey(),\n  name: text(\"name\").notNull(),\n  email: text(\"email\").notNull().unique(),\n  schoolId: text(\"school_id\").notNull(),\n  role: roleEnum(\"role\").notNull().default(\"student\"),\n  createdAt: timestamp(\"created_at\").defaultNow().notNull(),\n});\n\nexport const modules = pgTable(\"modules\", {\n  id: uuid(\"id\").defaultRandom().primaryKey(),\n  title: text(\"title\").notNull(),\n  slug: text(\"slug\").notNull().unique(),\n  order: integer(\"order\").notNull(),\n  schoolId: text(\"school_id\").notNull(),\n  status: text(\"status\").notNull().default(\"draft\"),\n  createdAt: timestamp(\"created_at\").defaultNow().notNull(),\n});",
+              },
+              {
+                heading: "Define Relations",
+                body: "Drizzle relations define how tables connect. This gives you type-safe joins and nested queries.",
+                code: "import { relations } from \"drizzle-orm\";\n\nexport const modulesRelations = relations(modules, ({ many }) => ({\n  lessons: many(lessons),\n}));\n\nexport const lessonsRelations = relations(lessons, ({ one, many }) => ({\n  module: one(modules, {\n    fields: [lessons.moduleId],\n    references: [modules.id],\n  }),\n  progress: many(progress),\n}));",
+              },
+            ],
+          },
+        },
+        {
+          title: "Drizzle Queries",
+          description:
+            "Write fully type-safe SELECT, INSERT, UPDATE, and DELETE queries with Drizzle.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "SELECT Queries",
+                body: "Drizzle queries are fully type-safe: auto-completed column names, inferred return types. Always scope by schoolId for multi-tenancy.",
+                code: "import { eq, and, desc, sql } from \"drizzle-orm\";\n\n// Get all modules for a school (multi-tenant!)\nconst schoolModules = await db\n  .select()\n  .from(modules)\n  .where(eq(modules.schoolId, \"school-1\"))\n  .orderBy(modules.order);\n\n// Get a specific module by slug\nconst [module] = await db\n  .select()\n  .from(modules)\n  .where(and(eq(modules.slug, \"react\"), eq(modules.schoolId, \"school-1\")));\n\n// Select specific columns\nconst moduleTitles = await db\n  .select({ id: modules.id, title: modules.title })\n  .from(modules)\n  .where(eq(modules.schoolId, \"school-1\"));\n\n// Count\nconst [{ count }] = await db\n  .select({ count: sql<number>`count(*)` })\n  .from(progress)\n  .where(eq(progress.status, \"completed\"));",
+              },
+              {
+                heading: "INSERT and UPDATE",
+                body: "Insert new rows and update existing ones with .returning() to get the modified data back.",
+                code: "// Insert one row\nconst [newStudent] = await db\n  .insert(students)\n  .values({\n    name: \"Alice\",\n    email: \"alice@school.com\",\n    schoolId: \"school-1\",\n    role: \"student\",\n  })\n  .returning();\n\n// Update progress\nconst [updated] = await db\n  .update(progress)\n  .set({\n    status: \"completed\",\n    score: 95,\n    completedAt: new Date(),\n  })\n  .where(and(\n    eq(progress.studentId, studentId),\n    eq(progress.lessonId, lessonId),\n    eq(progress.schoolId, \"school-1\")\n  ))\n  .returning();",
+              },
+            ],
+          },
+        },
+        {
+          title: "Migrations and Multi-Tenancy",
+          description:
+            "Generate migrations with drizzle-kit and understand Reading Advantage's TenantDB multi-tenant pattern.",
+          order: 4,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Migration Workflow",
+                body: "Migrations track schema changes over time — like Git for your database. The workflow is: edit schema, generate migration, apply migration, commit both.",
+                code: "# Generate a migration from schema changes\npnpm drizzle-kit generate\n\n# Apply pending migrations\npnpm drizzle-kit migrate\n\n# View current state\npnpm drizzle-kit studio  # Opens a visual DB browser",
+              },
+              {
+                heading: "Multi-Tenancy Pattern",
+                body: "The core pattern from Reading Advantage: every query MUST include schoolId. TenantDB enforces this automatically.",
+                code: "// ❌ WRONG — no schoolId filter\nconst allModules = await db.select().from(modules);\n\n// ✅ CORRECT — scoped to the tenant's school\nconst schoolModules = await db\n  .select()\n  .from(modules)\n  .where(eq(modules.schoolId, \"school-1\"));\n\n// The rule: Every query MUST include schoolId.\n// TenantDB injects it automatically in Reading Advantage.",
+              },
+              {
+                heading: "Seed Data",
+                body: "Seed scripts populate the database with initial data for development and testing.",
+                code: "async function seed() {\n  const [school1] = await db.insert(schools).values({\n    id: \"school-1\",\n    name: \"Reading Advantage Academy\",\n  }).returning();\n\n  await db.insert(modules).values([\n    { title: \"Dev Environment\", slug: \"dev-env\", order: 1, schoolId: school1.id },\n    { title: \"Git & GitHub\", slug: \"git-github\", order: 2, schoolId: school1.id },\n  ]);\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Databases & ORMs Exercise + Quiz",
+          description:
+            "Design a blog database with Drizzle and test your database knowledge.",
+          order: 5,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the database exercise by designing a schema and writing queries for a blog application.",
+          },
+          exercises: [
+            {
+              title: "Design a Blog Database",
+              instructions:
+                "Fork the exercise repo and design a blog database with Drizzle: define users, posts, comments, tags, and post_tags tables; define relations; generate and apply the migration; write multi-tenant query functions; write a seed script.",
+              starterCode:
+                "// TODO: Define tables with Drizzle\n// TODO: Define relations\n// TODO: Generate migration\n// TODO: Write query functions\n// TODO: Write seed script",
+              expectedOutput:
+                "A working blog database with schema, migrations, queries, and seed data",
+              hintsJson: [
+                "Use pgEnum for status and role columns",
+                "Add .references() with onDelete: 'cascade' for foreign keys",
+                "Every query function must accept and use schoolId",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "What is a foreign key?",
+              optionsJson: [
+                "A key that unlocks the database",
+                "A column that references the primary key of another table",
+                "A password for the database",
+                "An index that speeds up queries",
+              ],
+              correctAnswer: "A column that references the primary key of another table",
+              explanation:
+                "A foreign key creates a relationship between two tables by referencing the primary key of another table.",
+              order: 1,
+            },
+            {
+              question: "What does `drizzle-kit generate` do?",
+              optionsJson: [
+                "Runs the database",
+                "Compares schema to database and creates a SQL migration file",
+                "Installs dependencies",
+                "Deletes old data",
+              ],
+              correctAnswer:
+                "Compares schema to database and creates a SQL migration file",
+              explanation:
+                "drizzle-kit generate compares your TypeScript schema to the current database state and generates a SQL migration file.",
+              order: 2,
+            },
+            {
+              question: "Why must every query include `schoolId`?",
+              optionsJson: [
+                "It is required by PostgreSQL",
+                "To enforce multi-tenancy — each school can only see its own data",
+                "It makes queries faster",
+                "It is a Drizzle requirement",
+              ],
+              correctAnswer:
+                "To enforce multi-tenancy — each school can only see its own data",
+              explanation:
+                "Multi-tenancy means multiple schools share one database but can only access their own data. schoolId scopes every query.",
+              order: 3,
+            },
+            {
+              question: "What does `.returning()` do on an INSERT?",
+              optionsJson: [
+                "Nothing",
+                "Returns the inserted row including auto-generated fields like id",
+                "Rolls back the insert",
+                "Validates the data",
+              ],
+              correctAnswer:
+                "Returns the inserted row including auto-generated fields like id",
+              explanation:
+                ".returning() tells Drizzle to return the inserted row, including auto-generated fields like the UUID primary key.",
+              order: 4,
+            },
+            {
+              question: "What is the difference between `onDelete: 'cascade'` and the default?",
+              optionsJson: [
+                "There is no difference",
+                "cascade automatically deletes related rows; default prevents deletion if referenced rows exist",
+                "cascade is slower",
+                "default deletes everything",
+              ],
+              correctAnswer:
+                "cascade automatically deletes related rows; default prevents deletion if referenced rows exist",
+              explanation:
+                "With cascade, deleting a parent row automatically deletes child rows that reference it. The default behavior prevents deleting a parent if children exist.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+
+    // ─── Module 12: tRPC & Server Actions ─────────────────────
+    {
+      title: "tRPC & Server Actions",
+      description:
+        "Build the API layer for the Student Progress Tracker with tRPC 11.17.0: thin routers, thick domain functions, and Server Actions.",
+      slug: "trpc-server-actions",
+      order: 12,
+      phase: "C",
+      status: "published",
+      lessons: [
+        {
+          title: "Thin Router / Thick Domain Architecture",
+          description:
+            "Understand the most important architectural pattern in Reading Advantage: routers validate, domain functions hold logic.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "The Architecture",
+                body: "The most important architectural pattern in Reading Advantage. Routers validate input and delegate — domain functions hold the logic. This separation makes code testable, maintainable, and secure.",
+                code: "┌──────────────────┐     ┌───────────────────┐     ┌──────────────┐     ┌──────────┐\n│  tRPC Router     │     │  Domain Function  │     │   Drizzle    │     │ Postgres │\n│  (thin wrapper)  │────▶│  (business logic) │────▶│   (query)    │────▶│  (data)  │\n│                  │     │                   │     │              │     │          │\n│ • Validate input │     │ • assertCan()     │     │ • select()   │     │          │\n│ • Call domain fn │     │ • Business rules  │     │ • insert()   │     │          │\n│ • Return result  │     │ • Data transforms │     │ • update()   │     │          │\n└──────────────────┘     └───────────────────┘     └──────────────┘     └──────────┘",
+              },
+              {
+                heading: "Domain Function Pattern",
+                body: "Every domain function follows the same pattern: permission check first, then business logic, then return the result.",
+                code: "export async function getModules({ db, user, tenant }: {\n  db: DB; user: User; tenant: Tenant;\n}) {\n  // 1. Permission check FIRST\n  assertCan(user, \"module:read\", tenant);\n\n  // 2. Business logic\n  const result = await db\n    .select()\n    .from(modules)\n    .where(eq(modules.schoolId, tenant.schoolId))\n    .orderBy(modules.order);\n\n  // 3. Return the result\n  return result;\n}",
+              },
+              {
+                heading: "assertCan Implementation",
+                body: "assertCan checks if a user's role has permission to perform an action. It is called first in every domain function before any mutation.",
+                code: "type Permission =\n  | \"module:read\"\n  | \"module:create\"\n  | \"progress:read\"\n  | \"progress:update\"\n  | \"quiz:submit\";\n\nconst ROLE_PERMISSIONS: Record<string, Permission[]> = {\n  student: [\"module:read\", \"progress:read\", \"progress:update\", \"quiz:submit\"],\n  teacher: [\"module:read\", \"module:create\", \"progress:read\", \"progress:update\", \"quiz:submit\"],\n  admin: [\"module:read\", \"module:create\", \"progress:read\", \"progress:update\", \"quiz:submit\"],\n};\n\nexport function assertCan(user: User, permission: Permission, tenant: Tenant) {\n  const allowed = ROLE_PERMISSIONS[user.role] ?? [];\n  if (!allowed.includes(permission)) {\n    throw new AuthError(`User role '${user.role}' cannot '${permission}'`);\n  }\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "tRPC Router Setup",
+          description:
+            "Set up tRPC 11.17.0 with type-safe routers, input validation with Zod, and protected procedures.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Install and Configure tRPC",
+                body: "tRPC gives you end-to-end type safety — the frontend automatically knows the API types. No more writing fetch calls and manually typing responses.",
+                code: "pnpm add @trpc/server@11.17.0 @trpc/client@11.17.0 @trpc/react-query@11.17.0 @tanstack/react-query@5.90.10\n\n// src/server/trpc.ts\nimport { initTRPC } from \"@trpc/server\";\n\nexport interface Context {\n  db: DB;\n  user: User | null;\n  tenant: Tenant;\n}\n\nconst t = initTRPC.context<Context>().create();\n\nexport const router = t.router;\nexport const publicProcedure = t.procedure;\nexport const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {\n  if (!ctx.user) throw new AuthError(\"Authentication required\");\n  return next({ ctx: { ...ctx, user: ctx.user } });\n});",
+              },
+              {
+                heading: "Write a tRPC Router",
+                body: "The router is thin — validate input with Zod 3.25.76, call domain, return result. Zero business logic in the router.",
+                code: "import { z } from \"zod\";\nimport { router, protectedProcedure } from \"../trpc.js\";\nimport { getModules, createModule } from \"../../domain/modules/index.js\";\n\nexport const modulesRouter = router({\n  list: protectedProcedure\n    .query(({ ctx }) => getModules({\n      db: ctx.db, user: ctx.user, tenant: ctx.tenant,\n    })),\n\n  create: protectedProcedure\n    .input(z.object({\n      title: z.string().min(1),\n      slug: z.string().min(1),\n      description: z.string(),\n      order: z.number().int().positive(),\n    }))\n    .mutation(({ ctx, input }) => createModule({\n      db: ctx.db, user: ctx.user, tenant: ctx.tenant, input,\n    })),\n});",
+              },
+              {
+                heading: "Merge Routers",
+                body: "Combine all routers into a single appRouter. Export the type for frontend type inference.",
+                code: "import { router } from \"./trpc.js\";\nimport { modulesRouter } from \"./routers/modules.js\";\nimport { progressRouter } from \"./routers/progress.js\";\n\nexport const appRouter = router({\n  modules: modulesRouter,\n  progress: progressRouter,\n});\n\nexport type AppRouter = typeof appRouter;",
+              },
+            ],
+          },
+        },
+        {
+          title: "tRPC on the Frontend",
+          description:
+            "Consume tRPC procedures from React with fully typed hooks: useQuery, useMutation, and cache invalidation.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Set Up tRPC Client",
+                body: "The frontend client connects to the tRPC API and provides fully typed hooks.",
+                code: "// src/lib/trpc-react.ts\nimport { createTRPCReact } from \"@trpc/react-query\";\nimport type { AppRouter } from \"@/server/root\";\n\nexport const trpc = createTRPCReact<AppRouter>();\n\n// src/app/providers.tsx\n\"use client\";\nimport { QueryClient, QueryClientProvider } from \"@tanstack/react-query\";\nimport { httpBatchLink } from \"@trpc/client\";\nimport { trpc } from \"@/lib/trpc-react\";\nimport { useState } from \"react\";\n\nexport function Providers({ children }: { children: React.ReactNode }) {\n  const [queryClient] = useState(() => new QueryClient());\n  const [trpcClient] = useState(() =>\n    trpc.createClient({ links: [httpBatchLink({ url: \"/api/trpc\" })] })\n  );\n  return (\n    <trpc.Provider client={trpcClient} queryClient={queryClient}>\n      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>\n    </trpc.Provider>\n  );\n}",
+              },
+              {
+                heading: "Using tRPC Queries and Mutations",
+                body: "Frontend hooks are auto-typed — no manual API client needed. useQuery for reads, useMutation for writes.",
+                code: "\"use client\";\nimport { trpc } from \"@/lib/trpc-react\";\n\nexport function ModuleList() {\n  const utils = trpc.useUtils();\n  const { data: modules, isLoading } = trpc.modules.list.useQuery();\n  const createModule = trpc.modules.create.useMutation({\n    onSuccess: () => { utils.modules.list.invalidate(); },\n  });\n\n  if (isLoading) return <div>Loading...</div>;\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules?.map((mod) => <ModuleCard key={mod.id} module={mod} />)}\n    </div>\n  );\n}",
+              },
+            ],
+          },
+        },
+        {
+          title: "Server Actions",
+          description:
+            "Use Next.js Server Actions for simple form submissions without building an API route.",
+          order: 4,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Define a Server Action",
+                body: "Server Actions are Next.js's way to call server code directly from a form. Simpler than tRPC for simple mutations.",
+                code: "// src/app/actions/progress.ts\n\"use server\";\n\nimport { assertCan } from \"@/auth/permissions\";\nimport { db } from \"@/db\";\nimport { progress } from \"@/db/schema\";\nimport { eq, and } from \"drizzle-orm\";\nimport { z } from \"zod\";\n\nconst updateProgressSchema = z.object({\n  lessonId: z.string().uuid(),\n  status: z.enum([\"not_started\", \"in_progress\", \"completed\"]),\n  score: z.number().int().min(0).max(100).optional(),\n});\n\nexport async function updateProgress(formData: FormData) {\n  const user = await getCurrentUser();\n  const input = updateProgressSchema.parse({\n    lessonId: formData.get(\"lessonId\"),\n    status: formData.get(\"status\"),\n    score: formData.get(\"score\") ? Number(formData.get(\"score\")) : undefined,\n  });\n  await db.update(progress).set({ status: input.status, score: input.score })\n    .where(and(eq(progress.studentId, user.id), eq(progress.lessonId, input.lessonId)));\n  revalidatePath(\"/modules\");\n}",
+              },
+              {
+                heading: "tRPC vs Server Actions",
+                body: "Reading Advantage uses tRPC for almost everything. Server Actions are useful for specific form flows.",
+                code: "| Use tRPC when | Use Server Actions when |\n|---------------|----------------------|\n| Complex queries with caching | Simple form submissions |\n| Multiple consumers | Only one Next.js app uses it |\n| Need React Query caching | Progressive enhancement |\n| Complex input validation | Quick mutations without cache mgmt |",
+              },
+            ],
+          },
+        },
+        {
+          title: "tRPC & Server Actions Exercise + Quiz",
+          description:
+            "Build a Blog API with tRPC and test your API knowledge.",
+          order: 5,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the tRPC exercise by building routers and domain functions for a blog API.",
+          },
+          exercises: [
+            {
+              title: "Build a Blog API with tRPC",
+              instructions:
+                "Fork the exercise repo and build a blog API: create domain functions with assertCan, create tRPC routers with Zod validation, merge routers into appRouter, set up the API route handler, create a frontend component using useQuery and useMutation.",
+              starterCode:
+                "// TODO: Create domain functions in src/domain/\n// TODO: Create tRPC routers in src/server/routers/\n// TODO: Merge routers and export type\n// TODO: Set up API route handler\n// TODO: Create frontend component",
+              expectedOutput:
+                "A fully typed blog API with tRPC routers, domain functions, and a React frontend",
+              hintsJson: [
+                "Call assertCan() in every domain function before any mutation",
+                "Use Zod schemas for input validation on all procedures",
+                "The router should be thin — zero business logic",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "Where should business logic live?",
+              optionsJson: [
+                "In the tRPC router",
+                "In domain functions",
+                "In the database",
+                "In the frontend",
+              ],
+              correctAnswer: "In domain functions",
+              explanation:
+                "Business logic lives in domain functions. Routers are thin wrappers that validate input and delegate.",
+              order: 1,
+            },
+            {
+              question: "What does `assertCan()` do and where is it called?",
+              optionsJson: [
+                "Checks permissions, called first in every domain function",
+                "Validates input, called in the router",
+                "Hashes passwords, called in auth",
+                "Creates sessions, called in middleware",
+              ],
+              correctAnswer: "Checks permissions, called first in every domain function",
+              explanation:
+                "assertCan() checks if the user's role has the required permission. It is called first in every domain function before any mutation.",
+              order: 2,
+            },
+            {
+              question: "What makes tRPC 'type-safe'?",
+              optionsJson: [
+                "It uses TypeScript",
+                "The frontend automatically infers types from the router definition",
+                "It validates at runtime",
+                "It uses Zod",
+              ],
+              correctAnswer: "The frontend automatically infers types from the router definition",
+              explanation:
+                "tRPC uses the AppRouter type to infer all input and output types on the frontend. No manual typing needed.",
+              order: 3,
+            },
+            {
+              question: "When should you use Server Actions instead of tRPC?",
+              optionsJson: [
+                "Always",
+                "Simple form submissions, progressive enhancement, single-consumer mutations",
+                "Never",
+                "Only for API routes",
+              ],
+              correctAnswer: "Simple form submissions, progressive enhancement, single-consumer mutations",
+              explanation:
+                "Server Actions are simpler than tRPC for basic form submissions that don't need complex caching or multiple consumers.",
+              order: 4,
+            },
+            {
+              question: "What is the domain function signature?",
+              optionsJson: [
+                "(input) => result",
+                "({ db, user, tenant, input }) => result",
+                "(req, res) => void",
+                "(props) => JSX",
+              ],
+              correctAnswer: "({ db, user, tenant, input }) => result",
+              explanation:
+                "Every domain function receives an object with db, user, tenant, and optional input. This is the standard pattern in Reading Advantage.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+
+    // ─── Module 13: Authentication ────────────────────────────
+    {
+      title: "Authentication",
+      description:
+        "Add login, logout, sessions, and role-based access control to the Student Progress Tracker.",
+      slug: "authentication",
+      order: 13,
+      phase: "C",
+      status: "published",
+      lessons: [
+        {
+          title: "Session-Based Authentication",
+          description:
+            "Implement cookie-based session authentication with password hashing and secure session cookies.",
+          order: 1,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Sessions and Password Hashing",
+                body: "Authentication proves who you are. Authorization decides what you can do. Sessions track logged-in users with secure cookies.",
+                code: "// Schema additions\nexport const sessions = pgTable(\"sessions\", {\n  id: uuid(\"id\").defaultRandom().primaryKey(),\n  userId: uuid(\"user_id\").notNull().references(() => students.id),\n  token: text(\"token\").notNull().unique(),\n  expiresAt: timestamp(\"expires_at\").notNull(),\n  createdAt: timestamp(\"created_at\").defaultNow().notNull(),\n});\n\n// Password hashing\nimport bcrypt from \"bcrypt\";\nexport async function hashPassword(password: string) {\n  return bcrypt.hash(password, 10);\n}\nexport async function verifyPassword(password: string, hash: string) {\n  return bcrypt.compare(password, hash);\n}",
+              },
+              {
+                heading: "Login Flow",
+                body: "The login flow: validate credentials, create a session, set a secure cookie.",
+                code: "export async function createSession(db: DB, userId: string): Promise<string> {\n  const token = randomUUID();\n  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);\n  await db.insert(sessions).values({ userId, token, expiresAt });\n  return token;\n}\n\n// Login route\nconst token = await createSession(db, user.id);\nconst response = NextResponse.json({ success: true });\nresponse.cookies.set(\"session\", token, {\n  httpOnly: true,\n  secure: process.env.NODE_ENV === \"production\",\n  sameSite: \"lax\",\n  maxAge: 30 * 24 * 60 * 60,\n  path: \"/\",\n});\nreturn response;",
+              },
+            ],
+          },
+        },
+        {
+          title: "Logout, Middleware, and Auth Context",
+          description:
+            "Complete the auth flow with logout, route protection middleware, and tRPC auth context.",
+          order: 2,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Logout Route",
+                body: "Logout deletes the session and clears the cookie.",
+                code: "export async function POST(request: Request) {\n  const token = request.cookies.get(\"session\")?.value;\n  if (token) await deleteSession(db, token);\n  const response = NextResponse.json({ success: true });\n  response.cookies.set(\"session\", \"\", {\n    httpOnly: true, secure: true, sameSite: \"lax\",\n    maxAge: 0, path: \"/\",\n  });\n  return response;\n}",
+              },
+              {
+                heading: "Auth Middleware",
+                body: "Middleware protects routes by checking for valid session cookies before requests reach pages.",
+                code: "// src/middleware.ts\nexport function middleware(request: NextRequest) {\n  const sessionToken = request.cookies.get(\"session\")?.value;\n  const protectedPaths = [\"/modules\", \"/progress\", \"/chat\"];\n  const isProtected = protectedPaths.some((p) =>\n    request.nextUrl.pathname.startsWith(p)\n  );\n  if (isProtected && !sessionToken) {\n    const loginUrl = new URL(\"/login\", request.url);\n    loginUrl.searchParams.set(\"from\", request.nextUrl.pathname);\n    return NextResponse.redirect(loginUrl);\n  }\n  return NextResponse.next();\n}",
+              },
+              {
+                heading: "tRPC Context with Auth",
+                body: "The tRPC context resolves the user from the session cookie. protectedProcedure guarantees a non-null user.",
+                code: "export async function createContext(request: Request): Promise<Context> {\n  const sessionToken = request.cookies.get(\"session\")?.value;\n  const user = sessionToken ? await getSession(db, sessionToken) : null;\n  const tenant = user ? { schoolId: user.schoolId } : { schoolId: \"\" };\n  return { db, user, tenant };\n}\n\nexport const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {\n  if (!ctx.user) {\n    throw new TRPCError({ code: \"UNAUTHORIZED\" });\n  }\n  return next({ ctx: { ...ctx, user: ctx.user } });\n});",
+              },
+            ],
+          },
+        },
+        {
+          title: "Role-Based Access Control (RBAC)",
+          description:
+            "Implement RBAC with assertCan: different roles have different permissions, and users can only access their own school's data.",
+          order: 3,
+          type: "theory",
+          contentJson: {
+            sections: [
+              {
+                heading: "Define Roles and Permissions",
+                body: "RBAC assigns permissions to roles, not individual users. The assertCan function checks both permission and tenant.",
+                code: "const PERMISSIONS = {\n  student: [\"module:read\", \"lesson:read\", \"progress:read\", \"progress:update\", \"quiz:submit\", \"chat:use\"],\n  teacher: [\"module:read\", \"lesson:read\", \"progress:read\", \"progress:update\", \"quiz:submit\", \"chat:use\", \"student:read\", \"student:list\"],\n  admin: [\"module:read\", \"module:create\", \"module:update\", \"lesson:read\", \"lesson:create\", \"progress:read\", \"progress:update\", \"quiz:submit\", \"chat:use\", \"student:read\", \"student:list\", \"student:create\", \"student:update\"],\n};\n\nexport function assertCan(user: User, permission: string, tenant: Tenant) {\n  const allowed = PERMISSIONS[user.role] ?? [];\n  if (!allowed.includes(permission)) {\n    throw new AuthError(`Permission denied: role '${user.role}' cannot '${permission}'`);\n  }\n  if (user.schoolId !== tenant.schoolId) {\n    throw new AuthError(\"Access denied: wrong school\");\n  }\n}",
+              },
+              {
+                heading: "Apply assertCan to Domain Functions",
+                body: "Every domain function that modifies data calls assertCan first. Students can only update their own progress.",
+                code: "export async function updateProgress({ db, user, tenant, input }) {\n  assertCan(user, \"progress:update\", tenant);\n  if (user.role === \"student\" && input.studentId !== user.id) {\n    throw new AuthError(\"Students can only update their own progress\");\n  }\n  const [result] = await db.update(progress).set({\n    status: input.status, score: input.score,\n  }).where(and(\n    eq(progress.studentId, input.studentId),\n    eq(progress.lessonId, input.lessonId),\n    eq(progress.schoolId, tenant.schoolId)\n  )).returning();\n  return result;\n}",
+              },
+              {
+                heading: "Conditional UI Based on Role",
+                body: "Show or hide UI elements based on the user's role. Never rely on UI alone for security — always validate server-side.",
+                code: "\"use client\";\nimport { useAuth } from \"@/hooks/useAuth\";\n\nexport function AdminOnly({ children }: { children: React.ReactNode }) {\n  const { user } = useAuth();\n  if (user?.role !== \"admin\") return null;\n  return <>{children}</>;\n}\n\n// Usage\n<AdminOnly>\n  <button>Create Module</button>\n</AdminOnly>",
+              },
+            ],
+          },
+        },
+        {
+          title: "Authentication Exercise + Quiz",
+          description:
+            "Add authentication to a blog API and test your auth knowledge.",
+          order: 4,
+          type: "quiz",
+          contentJson: {
+            instructions:
+              "Complete the authentication exercise by adding login, logout, sessions, and RBAC to a blog API.",
+          },
+          exercises: [
+            {
+              title: "Add Auth to the Blog API",
+              instructions:
+                "Fork the exercise repo and add auth: create users table with passwordHash and role, implement POST /api/auth/login with session cookie, implement POST /api/auth/logout, implement GET /api/auth/session, add middleware to protect routes, add assertCan to every domain function, add protectedProcedure to mutations, create a login page, create useAuth hook, show UI conditionally based on role.",
+              starterCode:
+                "// TODO: Add users table with passwordHash and role\n// TODO: Implement login route\n// TODO: Implement logout route\n// TODO: Implement session route\n// TODO: Add middleware\n// TODO: Add assertCan to domain functions\n// TODO: Add protectedProcedure\n// TODO: Create login page\n// TODO: Create useAuth hook",
+              expectedOutput:
+                "A fully authenticated blog API with login, logout, sessions, RBAC, and conditional UI",
+              hintsJson: [
+                "Use bcrypt to hash passwords before storing",
+                "Use httpOnly cookies for session tokens to prevent XSS",
+                "Always validate permissions server-side — never trust the UI",
+              ],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "Why use `httpOnly` cookies for session tokens?",
+              optionsJson: [
+                "They are faster",
+                "Prevents JavaScript access — protects against XSS",
+                "They look better",
+                "Required by all browsers",
+              ],
+              correctAnswer: "Prevents JavaScript access — protects against XSS",
+              explanation:
+                "httpOnly cookies cannot be accessed by JavaScript, preventing XSS attacks from stealing session tokens.",
+              order: 1,
+            },
+            {
+              question: "What is the difference between authentication and authorization?",
+              optionsJson: [
+                "They are the same",
+                "Authentication = who you are; Authorization = what you can do",
+                "Authentication is faster",
+                "Authorization is optional",
+              ],
+              correctAnswer: "Authentication = who you are; Authorization = what you can do",
+              explanation:
+                "Authentication proves identity (login). Authorization decides permissions (what actions are allowed).",
+              order: 2,
+            },
+            {
+              question: "Where should `assertCan()` be called?",
+              optionsJson: [
+                "In the router only",
+                "In the domain function, before any mutation",
+                "In the frontend only",
+                "In the database",
+              ],
+              correctAnswer: "In the domain function, before any mutation",
+              explanation:
+                "assertCan() must be called in the domain function before any mutation. Never rely on the router or UI alone.",
+              order: 3,
+            },
+            {
+              question: "What does RBAC stand for?",
+              optionsJson: [
+                "Really Big Access Control",
+                "Role-Based Access Control",
+                "Runtime Browser Access Control",
+                "Router-Based Authentication Control",
+              ],
+              correctAnswer: "Role-Based Access Control",
+              explanation:
+                "RBAC = Role-Based Access Control. Permissions are assigned to roles, and users inherit permissions through their roles.",
+              order: 4,
+            },
+            {
+              question: "Why check `user.schoolId !== tenant.schoolId`?",
+              optionsJson: [
+                "It is required by TypeScript",
+                "Multi-tenant security — prevents cross-school data access",
+                "It makes queries faster",
+                "It validates the password",
+              ],
+              correctAnswer: "Multi-tenant security — prevents cross-school data access",
+              explanation:
+                "In a multi-tenant system, users belong to a school and can only access that school's data. This check enforces that boundary.",
+              order: 5,
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  return { modules, exerciseRepos: getExerciseRepos(modules) };
+}
+
+function getExerciseRepos(modules: CurriculumModule[]): CurriculumRepo[] {
+  return modules.map((mod) => ({
+    moduleSlug: mod.slug,
+    repoUrl: `https://github.com/reading-advantage/codecamp-${mod.slug}`,
+    description: `Exercise repository for ${mod.title}`,
+    order: mod.order,
+  }));
+}
 
 export function getPhaseDCurriculumData() {
   const modules: CurriculumModule[] = [
