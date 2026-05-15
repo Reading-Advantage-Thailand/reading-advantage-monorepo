@@ -168,7 +168,7 @@ for i in $(seq "$START_PHASE" "$TOTAL_PHASES"); do
 
   STEP1_PROMPT="Load the measure skill. Read the project context from measure/index.md and the current track plan from ${plan_file}. Implement ${phase_heading} of the codecamp-advantage track (track ID: ${track_id}). Work ONLY in the codecamp-advantage codebase -- specifically: ${CODECAMP_PATHS}). Do NOT modify other projects in this monorepo (no reading-advantage, primary-advantage, science-advantage, or www-reading-advantage changes). Follow the measure workflow from measure/workflow.md: find the next uncompleted task in the phase, mark it as in-progress [~], write failing tests first (Red phase), implement to pass tests (Green phase), refactor, verify coverage, commit with a descriptive message following Conventional Commits, and update plan.md with the commit SHA. Repeat for all tasks in this phase. Use the kimi-webbridge skill to manually check your work against the running application. When all tasks in the phase are done, execute the phase completion verification and checkpointing protocol from measure/workflow.md: run lint, type-check, and tests for all affected packages, spawn a change-quality-reviewer for the phase diff, and propose a manual verification plan."
 
-  opencode run -m opencode/qwen3.6-plus-free "${STEP1_PROMPT}"
+  opencode run -m deepseek/deepseek-v4-flash "${STEP1_PROMPT}"
 
   echo ""
   echo ">>> Step 1 complete for: ${phase_heading}"

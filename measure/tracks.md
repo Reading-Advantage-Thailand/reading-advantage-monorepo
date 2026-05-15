@@ -65,7 +65,7 @@ This file tracks all major tracks for the project.
 ---
 
 - [x] **Track: codecamp-advantage — Full-Stack Web Dev Intern Bootcamp**
-  *Link: [./tracks/codecamp_advantage_20260513/](./tracks/codecamp_advantage_20260513/)*
+  *Link: [./archive/codecamp_advantage_20260513/](./archive/codecamp_advantage_20260513/)*
   *Status: COMPLETE — All 8 phases done. 18-module curriculum, GitHub integration (webhook + LLM review), admin dashboard, chat tutor, workflow tracker. Build passes, all tests green (domain: 159, api: 86, webhooks: 31, codecamp: 49). Subagent reviews completed with findings resolved.*
 
 - [ ] **Track: codecamp-advantage — Curriculum Implementation**
@@ -77,7 +77,7 @@ This file tracks all major tracks for the project.
   Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end. *Status: Phases 1, 4, 5 (partial) complete. Phase 6 quality gate passed (792 tests green, 0 lint/type errors). E2E manual test, fork-instruction M1/M18 edge cases, and WorkflowTracker GitHub API wiring deferred.*
 
 - [x] **Track: codecamp-advantage — Thai Localization**
-  *Link: [./tracks/codecamp_thai_i18n_20260515/](./tracks/codecamp_thai_i18n_20260515/)*
+  *Link: [./archive/codecamp_thai_i18n_20260515/](./archive/codecamp_thai_i18n_20260515/)*
   Add Thai (th) locale as default, create th.json translations, build language switcher, localize admin dashboard, and make the chat tutor respond in Thai by default.
   *Status: COMPLETE — All 4 phases done. Thai locale default, full th.json with 181 keys, language switcher, admin/chat/component localization, locale-aware chat API, Thai font loading, text-width regression prevention, lesson-language badge, 463 passing tests across 21 files.*
 
@@ -130,5 +130,5 @@ This file tracks all major tracks for the project.
   *Status: Complete. 23/24 tasks done (API test backfill deferred). Domain: 83/83 tests (+13 new). Auth: 64/64 tests. Security/auth gaps fixed, logic bugs resolved, TenantDB edge cases hardened.*
 
 - [x] **Track: Codecamp Review Remediation**
-  *Link: [./tracks/codecamp_review_remediation_20260515/](./tracks/codecamp_review_remediation_20260515/)*
+  *Link: [./archive/codecamp_review_remediation_20260515/](./archive/codecamp_review_remediation_20260515/)*
   *Status: COMPLETE — All 5 High, 10 Medium, 12 Low findings resolved. Security (adminProcedure, prompt injection hardening, role stripping), architecture (domain chat context, bounded rate limiter), data integrity (JSONB guards, duplicate prevention, prerequisite gap handling), UI/UX (ARIA labels, disabled Link, HTTPS clone), and test coverage (github-client tests, SSRF defense).*
