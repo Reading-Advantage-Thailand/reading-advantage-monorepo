@@ -1,0 +1,5 @@
+Task: Update i18n/routing.ts to add Thai locale
+Summary: Changed locales from ['en'] to ['th', 'en'], defaultLocale from 'en' to 'th', and localePrefix from 'never' to 'always'
+Files:
+- apps/codecamp-advantage/i18n/routing.ts (modified)
+- apps/codecamp-advantage/lib/__tests__/i18n-routing.test.ts (created)
