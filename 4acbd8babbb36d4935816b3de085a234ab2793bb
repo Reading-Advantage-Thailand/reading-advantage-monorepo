@@ -1,0 +1,6 @@
+Task: Add key-parity and quality tests
+
+- apps/codecamp-advantage/lib/__tests__/i18n-key-parity.test.ts: New test file with 297 tests
+  - Tests th.json has exactly the same keys as en.json (no missing, no extras)
+  - Tests every Thai value is non-empty
+  - Tests Thai values are not byte-identical to English (except technical strings: git commands, URLs like https://github.com/owner/repo/pull/123, and format patterns like Issue #{number}: {title})
