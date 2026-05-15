@@ -97,26 +97,38 @@ export default function LessonPage() {
               Complete this exercise by forking the repository, making changes on a branch, and opening a Pull Request.
             </p>
 
-            {/* Module 18 workflow tracker */}
-            {lesson.moduleSlug === "real-world-practice" && moduleReviews.length > 0 && (
-              <div className="mt-6">
-                <h3 className="mb-3 text-sm font-semibold">Your Workflow</h3>
-                {moduleReviews.map((review) => (
-                  <WorkflowTracker
-                    key={review.id}
-                    issueTitle="Practice Issue"
-                    issueNumber={1}
-                    steps={[
-                      { id: "claim", label: "Issue Claimed", description: "Pick an issue to work on", status: "completed" },
-                      { id: "branch", label: "Branch Created", description: "Create a feature branch", status: "completed" },
-                      { id: "pr", label: "PR Opened", description: "Open a pull request", status: review.reviewStatus !== "pending" ? "completed" : "in_progress" },
-                      { id: "review", label: "Review Received", description: "Address feedback", status: review.reviewStatus === "needs_changes" || review.reviewStatus === "approved" ? "completed" : review.reviewStatus === "reviewed" ? "in_progress" : "pending" },
-                      { id: "merge", label: "Merged", description: "Merge to main", status: review.reviewStatus === "approved" ? "in_progress" : "pending" },
-                    ]}
-                  />
-                ))}
-              </div>
-            )}
+            {/* Module 18 workflow tracker — one tracker per exercise, using latest review status */}
+            {lesson.moduleSlug === "real-world-practice" && moduleReviews.length > 0 && (() => {
+              const reviewsByRepo = new Map<string, typeof moduleReviews[number]>();
+              for (const review of moduleReviews) {
+                const existing = reviewsByRepo.get(review.exerciseRepoId);
+                if (!existing || review.createdAt > existing.createdAt) {
+                  reviewsByRepo.set(review.exerciseRepoId, review);
+                }
+              }
+              return (
+                <div className="mt-6">
+                  <h3 className="mb-3 text-sm font-semibold">Your Workflow</h3>
+                  {Array.from(reviewsByRepo.entries()).map(([repoId, review]) => {
+                    const repo = exerciseRepos?.find((r) => r.id === repoId);
+                    return (
+                      <WorkflowTracker
+                        key={repoId}
+                        issueTitle={repo?.description ?? "Practice Exercise"}
+                        issueNumber={repo?.order ?? 1}
+                        steps={[
+                          { id: "claim", label: "Issue Claimed", description: "Pick an issue to work on", status: "completed" },
+                          { id: "branch", label: "Branch Created", description: "Create a feature branch", status: "completed" },
+                          { id: "pr", label: "PR Opened", description: "Open a pull request", status: review.reviewStatus !== "pending" ? "completed" : "in_progress" },
+                          { id: "review", label: "Review Received", description: "Address feedback", status: review.reviewStatus === "needs_changes" || review.reviewStatus === "approved" ? "completed" : review.reviewStatus === "reviewed" ? "in_progress" : "pending" },
+                          { id: "merge", label: "Merged", description: "Merge to main", status: review.reviewStatus === "approved" ? "in_progress" : "pending" },
+                        ]}
+                      />
+                    );
+                  })}
+                </div>
+              );
+            })()}
 
             <div className="mt-4 space-y-6">
               {exerciseRepos.map((repo) => (
