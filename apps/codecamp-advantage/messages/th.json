@@ -36,5 +36,19 @@
     "score": "คะแนน",
     "correct": "ถูกต้อง",
     "incorrect": "ไม่ถูกต้อง"
+  },
+  "admin": {
+    "title": "จัดการผู้ฝึกงาน",
+    "interns": "ผู้ฝึกงาน",
+    "addIntern": "เพิ่มผู้ฝึกงาน",
+    "overview": "ภาพรวม",
+    "progress": "ความคืบหน้า",
+    "prReviews": "รีวิว PR",
+    "username": "ชื่อผู้ใช้",
+    "name": "ชื่อ",
+    "lastActive": "ใช้งานล่าสุด",
+    "noInterns": "ยังไม่มีผู้ฝึกงาน",
+    "createIntern": "สร้างบัญชีผู้ฝึกงาน",
+    "backToOverview": "กลับไปหน้าภาพรวม"
   }
 }

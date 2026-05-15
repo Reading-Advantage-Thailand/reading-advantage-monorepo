@@ -36,5 +36,19 @@
     "score": "Score",
     "correct": "Correct",
     "incorrect": "Incorrect"
+  },
+  "admin": {
+    "title": "Intern Management",
+    "interns": "Interns",
+    "addIntern": "Add Intern",
+    "overview": "Overview",
+    "progress": "Progress",
+    "prReviews": "PR Reviews",
+    "username": "Username",
+    "name": "Name",
+    "lastActive": "Last Active",
+    "noInterns": "No interns yet",
+    "createIntern": "Create Intern Account",
+    "backToOverview": "Back to Overview"
   }
 }
