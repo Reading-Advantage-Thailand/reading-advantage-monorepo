@@ -1,49 +1,31 @@
-# Phase Review: Contract & Schema
+# Phase 2 Code Review Findings: Language Switcher & Routing
 
 **Track:** codecamp_thai_i18n_20260515
-**Phase:** 1 — Contract & Schema
-**Review Date:** 2026-05-15
-**Revision Range:** a3572a5..HEAD
+**Phase:** 2 — Implement Language Switcher & Routing
+**Revision range:** c5012d0..46ebe2a
+**Date:** 2026-05-15
 
-## Summary
+## Resolved Findings
 
-All quality gates pass (lint, type-check, 97 tests). No Critical or High findings.
+| Severity | Finding | Fix Commit |
+|----------|---------|------------|
+| HIGH | Admin guard case-sensitive — uppercase variants bypass auth check | 46ebe2a |
+| MEDIUM | Admin guard bypass for dot-containing paths | 46ebe2a (guard restructured) |
+| MEDIUM | Query parameters lost in auth redirect | 46ebe2a |
+| LOW | `aria-current` uses string instead of boolean | 46ebe2a |
 
-## Findings
+## Remaining Medium/Low Findings (Accepted)
 
-### Medium
+| Severity | Finding | Notes |
+|----------|---------|-------|
+| MEDIUM | Missing test: authenticated nested admin route | Added in 46ebe2a |
+| LOW | Redundant static-bypass check inside proxy body | The matcher is the primary gate; body check is intentional defense-in-depth. Accept as-is. |
+| LOW | Proxy tests do not verify `config.matcher` export | Added in 46ebe2a |
 
-- **M-1: `metadata` export in `layout.tsx` remains hardcoded to English**  
-  The root layout's `metadata.title` and `metadata.description` are static English strings. The translation keys exist in both locale files but are not wired. Per-page `generateMetadata()` functions consuming locale messages will be implemented in Phase 3.  
-  **Recommendation:** Address in Phase 3 when per-page metadata is wired.
-
-### Low
-
-- **L-1: `formatRelativeTime` misclassifies small future dates as "just now"**  
-  Negative diff values (future dates) bypass the `< 30` check incorrectly. Low risk because all current callers pass past dates.  
-  **Recommendation:** Consider adding a `diff < 0` guard.
-
-- **L-2: `formatRelativeTime` has no test coverage for hours/days branches**  
-  Only seconds and minutes branches are tested.  
-  **Recommendation:** Add test cases for hours, days, and months.
-
-- **L-3: `deepMerge` is tested only indirectly**  
-  No direct unit test for the merge function.  
-  **Recommendation:** Add direct `deepMerge` tests in Phase 4.
-
-- **L-4: `importMessages` will throw runtime error for unvalidated locales**  
-  Dynamic `import()` lacks a guard against locale strings not in `routing.locales`.  
-  **Recommendation:** Add defensive check.
-
-- **L-5: Plan.md sub-item checkboxes not updated**  
-  Sub-items show `[ ]` despite being implemented.  
-  **Recommendation:** Fix checkboxes for consistency.
-
-## Quality Gate Results
+## Validation Gates
 
 | Gate | Result |
 |------|--------|
-| Lint | ✅ Pass |
-| Type Check | ✅ Pass |
-| Unit Tests | ✅ 97/97 pass (15 files) |
-| Security Audit | ✅ No issues |
+| Tests (codecamp-advantage) | ✅ 130 passed, 0 failed, 16 files |
+| Lint (codecamp-advantage) | ✅ 0 errors, 0 warnings |
+| Check-types (all) | ✅ All packages type-check cleanly |
