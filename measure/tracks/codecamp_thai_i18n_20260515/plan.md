@@ -40,7 +40,7 @@ Update next-intl config and create the Thai translation file.
   - [ ] Import `Noto_Sans_Thai` (or `IBM_Plex_Sans_Thai`) alongside the existing Latin font in `app/layout.tsx`
   - [ ] Apply the Thai font family in the root layout so glyphs render correctly on all platforms
   - [ ] Verify no FOUT/CLS regressions
-- [ ] Task: Add localized formatting helpers in `lib/i18n-format.ts`
+- [x] Task: Add localized formatting helpers in `lib/i18n-format.ts` (4d93844)
   - [ ] `formatRelativeTime(date, locale)` for "Last Active" timestamps on the admin table
   - [ ] `formatNumber(n, locale)` for quiz scores/percentages
   - [ ] `formatDate(date, locale)` for review history
