@@ -138,17 +138,11 @@ github.post("/pr", async (c) => {
       console.log(`[GitHub Webhook] Re-triggered review for PR: ${pr.html_url}`);
     } else {
       // New PR — look up exercise repo by base repo URL
-      const repos = await codecamp.getExerciseRepos({
+      const repo = await codecamp.getExerciseRepoByUrl({
         db: tenantDb,
         user: systemUser,
         tenant: globalTenant,
-        input: {}, // empty input returns all repos
-      });
-
-      const repo = repos.find((r) => {
-        const normalizedRepo = r.repoUrl.replace(/\/$/, "");
-        const normalizedPrRepo = pr.base.repo.html_url.replace(/\/$/, "");
-        return normalizedRepo === normalizedPrRepo;
+        input: { repoUrl: pr.base.repo.html_url },
       });
 
       if (!repo) {

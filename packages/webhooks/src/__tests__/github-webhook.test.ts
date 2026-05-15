@@ -10,7 +10,7 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     getPrReviewByPrUrl: vi.fn(),
     updatePrReview: vi.fn(),
     createPrReview: vi.fn(),
-    getExerciseRepos: vi.fn(),
+    getExerciseRepoByUrl: vi.fn(),
   };
 });
 
@@ -26,7 +26,7 @@ import {
   getPrReviewByPrUrl,
   updatePrReview,
   createPrReview,
-  getExerciseRepos,
+  getExerciseRepoByUrl,
 } from "@reading-advantage/domain/codecamp";
 
 import { getUserByGithubUsername } from "@reading-advantage/domain/users";
@@ -145,9 +145,9 @@ describe("GitHub webhook handler", () => {
 
   it("returns 200 and creates review for opened event on new PR", async () => {
     vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
-    vi.mocked(getExerciseRepos).mockResolvedValue([
-      { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo", description: "Test repo", order: 1, createdAt: new Date() },
-    ]);
+    vi.mocked(getExerciseRepoByUrl).mockResolvedValue({
+      id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo", description: "Test repo", order: 1, createdAt: new Date(),
+    });
     vi.mocked(getUserByGithubUsername).mockResolvedValue({
       id: "u2",
       email: null,
@@ -195,7 +195,7 @@ describe("GitHub webhook handler", () => {
 
   it("returns 200 when no matching exercise repo is found", async () => {
     vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
-    vi.mocked(getExerciseRepos).mockResolvedValue([]);
+    vi.mocked(getExerciseRepoByUrl).mockResolvedValue(null);
 
     const payload = JSON.stringify({
       action: "opened",
@@ -217,9 +217,9 @@ describe("GitHub webhook handler", () => {
 
   it("returns 200 when no codecamp user matches the GitHub login", async () => {
     vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
-    vi.mocked(getExerciseRepos).mockResolvedValue([
-      { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo", description: "Test repo", order: 1, createdAt: new Date() },
-    ]);
+    vi.mocked(getExerciseRepoByUrl).mockResolvedValue({
+      id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo", description: "Test repo", order: 1, createdAt: new Date(),
+    });
     vi.mocked(getUserByGithubUsername).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getUserByGithubUsername>>);
 
     const payload = JSON.stringify({

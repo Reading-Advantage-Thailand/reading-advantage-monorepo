@@ -674,6 +674,25 @@ export async function getExerciseRepos({
     .orderBy(codecampExerciseRepos.order);
 }
 
+export async function getExerciseRepoByUrl({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ repoUrl: string }>) {
+  assertCan(user, "codecamp:read", tenant);
+
+  const normalizedUrl = input.repoUrl.replace(/\/$/, "");
+
+  const [repo] = await db
+    .select()
+    .from(codecampExerciseRepos)
+    .where(eq(codecampExerciseRepos.repoUrl, normalizedUrl))
+    .limit(1);
+
+  return repo ?? null;
+}
+
 export async function linkExerciseRepo({
   db,
   user,
@@ -686,6 +705,16 @@ export async function linkExerciseRepo({
   order: number;
 }>) {
   assertCan(user, "admin:dashboard", tenant);
+
+  const [module] = await db
+    .select({ id: codecampModules.id })
+    .from(codecampModules)
+    .where(eq(codecampModules.id, input.moduleId))
+    .limit(1);
+
+  if (!module) {
+    throw new Error(`Module not found: ${input.moduleId}`);
+  }
 
   const [result] = await db
     .insert(codecampExerciseRepos)

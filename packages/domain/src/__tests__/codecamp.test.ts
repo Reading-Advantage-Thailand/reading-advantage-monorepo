@@ -12,6 +12,7 @@ import {
   updateUserProgress,
   getUserDashboard,
   getExerciseRepos,
+  getExerciseRepoByUrl,
   linkExerciseRepo,
   getPrReviewsForUser,
   createPrReview,
@@ -912,8 +913,12 @@ describe("getExerciseRepos", () => {
 
 describe("linkExerciseRepo", () => {
   it("allows admin to link a repo to a module", async () => {
+    const existingModule = { id: "m1" };
     const repo = { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() };
-    const db = createMockDb({ insertReturning: [repo] });
+    const db = createMockDb({
+      insertReturning: [repo],
+      selectSequence: [[existingModule]],
+    });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await linkExerciseRepo({
@@ -938,6 +943,58 @@ describe("linkExerciseRepo", () => {
         input: { moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1 },
       })
     ).rejects.toThrow(/admin:dashboard/);
+  });
+
+  it("rejects when module does not exist", async () => {
+    const db = createMockDb({ selectResults: [] });
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+
+    await expect(
+      linkExerciseRepo({
+        db: wrapDb(db),
+        user: admin,
+        tenant: globalTenant,
+        input: { moduleId: "nonexistent", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1 },
+      })
+    ).rejects.toThrow(/Module not found/);
+  });
+});
+
+describe("getExerciseRepoByUrl", () => {
+  it("returns the repo matching a URL", async () => {
+    const repo = { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() };
+    const db = createMockDb({ selectResults: [repo] });
+
+    const result = await getExerciseRepoByUrl({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { repoUrl: "https://github.com/org/repo1" },
+    });
+
+    expect(result).toEqual(repo);
+  });
+
+  it("returns null when no repo matches", async () => {
+    const db = createMockDb({ selectResults: [] });
+
+    const result = await getExerciseRepoByUrl({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { repoUrl: "https://github.com/org/unknown" },
+    });
+
+    expect(result).toBeNull();
+  });
+
+  it("rejects unauthenticated users", async () => {
+    const db = createMockDb();
+    const invalidUser = { id: "x", username: "x", name: "X", role: "GUEST" as unknown as typeof student.role, schoolId: "s1" };
+
+    await expect(
+      getExerciseRepoByUrl({ db: wrapDb(db), user: invalidUser, tenant: globalTenant, input: { repoUrl: "https://github.com/org/repo1" } })
+    ).rejects.toThrow(/codecamp:read/);
   });
 });
 
