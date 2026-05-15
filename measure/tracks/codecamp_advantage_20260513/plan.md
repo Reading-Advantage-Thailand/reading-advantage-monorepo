@@ -235,7 +235,7 @@ Build the capstone module with GitHub Issues end-to-end workflow.
   - [x] ReviewHistory component tests pass (6 tests)
   - [x] Subagent review completed — no Critical or High findings
 
-## Phase 8: Generate Docs & Doctor [checkpoint: eea65de]
+## Phase 8: Generate Docs & Doctor [checkpoint: eea65de] [final-verification: 191ea0f]
 
 - [x] Task: Update project documentation [9392e50]
   - [x] Verify `codecamp-advantage` entry in `measure/product.md` is accurate
