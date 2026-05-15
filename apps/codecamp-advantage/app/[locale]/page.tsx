@@ -81,8 +81,13 @@ export default function HomePage() {
       <div className="mb-12 text-center">
         <h1 className="mb-4 text-4xl font-bold tracking-tight">{t("title")}</h1>
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">{t("subtitle")}</p>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+            {t("lessonsInEnglish")}
+          </span>
+        </div>
           {dashboard && (
-          <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-4 rounded-lg border bg-card px-6 py-3">
+          <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-4 rounded-lg border bg-card px-6 py-3">
             <div className="text-center">
               <p className="text-2xl font-bold">{dashboard.overallProgress}%</p>
               <p className="text-xs text-muted-foreground">{t("overallProgress")}</p>

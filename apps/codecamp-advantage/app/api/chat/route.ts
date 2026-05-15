@@ -15,10 +15,13 @@ const openrouter = createOpenAI({
 });
 
 function buildSystemPrompt(locale: string): string {
-  const thaiInstruction = `Respond in Thai (ภาษาไทย) by default. **Mirror the user: if the user writes entirely in English, answer in English; otherwise answer in Thai.**`;
-  const englishInstruction = `Respond in English by default. Mirror the user's language if they switch.`;
+  const thaiInstruction = `Respond in Thai (ภาษาไทย) by default. **Mirror the user: if the user writes entirely in English, answer in English; otherwise answer in Thai.**
+Note: The lesson content is written in English, not Thai. If the user asks about lesson content or wants it explained, you may translate it to Thai on request.`;
+  const englishInstruction = `Respond in English by default. Mirror the user's language if they switch.
+Note: The lesson content is in English, which is the default language for all materials.`;
 
-  const languageInstruction = locale === "th" ? thaiInstruction : englishInstruction;
+  const effectiveLocale = locale === "en" ? "en" : "th";
+  const languageInstruction = effectiveLocale === "th" ? thaiInstruction : englishInstruction;
 
   return `You are CodeCamp Advantage AI Tutor, an expert in Next.js, React, TypeScript, and monorepo architecture.
 

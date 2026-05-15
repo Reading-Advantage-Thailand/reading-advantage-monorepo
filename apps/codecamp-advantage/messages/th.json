@@ -29,7 +29,8 @@
     "phaseA": "เฟส A",
     "phaseB": "เฟส B",
     "phaseC": "เฟส C",
-    "phaseD": "เฟส D"
+    "phaseD": "เฟส D",
+    "lessonsInEnglish": "บทเรียนเป็นภาษาอังกฤษ"
   },
   "module": {
     "lessons": "บทเรียน",
@@ -44,7 +45,8 @@
     "quizAverage": "คะแนนสอบเฉลี่ย: {score}%",
     "exerciseRepos": "โพรเจกต์แบบฝึกหัด",
     "noLessons": "ยังไม่มีบทเรียนในโมดูลนี้",
-    "review": "ทบทวน"
+    "review": "ทบทวน",
+    "lessonsInEnglish": "บทเรียนเป็นภาษาอังกฤษ"
   },
   "chat": {
     "placeholder": "ถามเกี่ยวกับ Next.js, tRPC, Drizzle, หรือรูปแบบ monorepo...",

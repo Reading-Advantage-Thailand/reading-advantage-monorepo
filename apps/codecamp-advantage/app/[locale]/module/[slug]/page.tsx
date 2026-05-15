@@ -72,7 +72,12 @@ export default function ModulePage() {
       </Button>
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">{moduleData.title}</h1>
+        <div className="flex flex-wrap items-start gap-3">
+          <h1 className="text-3xl font-bold">{moduleData.title}</h1>
+          <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+            {t("lessonsInEnglish")}
+          </span>
+        </div>
         <p className="mt-2 text-muted-foreground">{moduleData.description}</p>
         <div className="mt-4 h-2 w-full max-w-md overflow-hidden rounded-full bg-secondary">
           <div

@@ -29,7 +29,8 @@
     "phaseA": "Phase A",
     "phaseB": "Phase B",
     "phaseC": "Phase C",
-    "phaseD": "Phase D"
+    "phaseD": "Phase D",
+    "lessonsInEnglish": "Lessons are in English"
   },
   "module": {
     "lessons": "Lessons",
@@ -44,7 +45,8 @@
     "quizAverage": "Quiz average: {score}%",
     "exerciseRepos": "Exercise Repositories",
     "noLessons": "No lessons available for this module yet.",
-    "review": "Review"
+    "review": "Review",
+    "lessonsInEnglish": "Lessons are in English"
   },
   "chat": {
     "placeholder": "Ask about Next.js, tRPC, Drizzle, or monorepo patterns...",
