@@ -1,0 +1,12 @@
+Task: Update all page routes to support locale prefix
+
+Summary: Moved all 7 page routes under app/[locale]/ directory structure to support locale-prefixed URLs (/th/, /en/). Replaced next/link imports with locale-aware Link from @/i18n/navigation in all pages. API routes remain at app/api/* without locale prefix. Layout.tsx already handles locale-aware routing correctly via getLocale()/getMessages()/NextIntlClientProvider.
+
+Files moved:
+- app/[locale]/page.tsx (from app/page.tsx)
+- app/[locale]/admin/page.tsx (from app/admin/page.tsx)
+- app/[locale]/admin/[userId]/page.tsx (from app/admin/[userId]/page.tsx)
+- app/[locale]/admin/new-intern/page.tsx (from app/admin/new-intern/page.tsx)
+- app/[locale]/chat/page.tsx (from app/chat/page.tsx)
+- app/[locale]/lesson/[id]/page.tsx (from app/lesson/[id]/page.tsx)
+- app/[locale]/module/[slug]/page.tsx (from app/module/[slug]/page.tsx)
