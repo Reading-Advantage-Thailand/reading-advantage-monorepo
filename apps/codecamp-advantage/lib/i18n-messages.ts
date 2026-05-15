@@ -3,6 +3,10 @@ import { routing } from "../i18n/routing";
 
 type Messages = Record<string, unknown>;
 
+export type NestedMessages = {
+  [key: string]: string | NestedMessages;
+};
+
 export function resolveLocale(
   requested: string | undefined
 ): string {
