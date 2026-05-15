@@ -76,9 +76,10 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/codecamp_exercise_repos_20260515/](./tracks/codecamp_exercise_repos_20260515/)*
   Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end.
 
-- [ ] **Track: codecamp-advantage — Thai Localization**
+- [x] **Track: codecamp-advantage — Thai Localization**
   *Link: [./tracks/codecamp_thai_i18n_20260515/](./tracks/codecamp_thai_i18n_20260515/)*
   Add Thai (th) locale as default, create th.json translations, build language switcher, localize admin dashboard, and make the chat tutor respond in Thai by default.
+  *Status: COMPLETE — All 4 phases done. Thai locale default, full th.json with 181 keys, language switcher, admin/chat/component localization, locale-aware chat API, Thai font loading, text-width regression prevention, lesson-language badge, 463 passing tests across 21 files.*
 
 - [ ] **Track: codecamp-advantage — Deployment** *(stub — details TBD)*
   Docker setup, database provisioning, CI/CD, environment configuration, HTTPS, and production deployment for codecamp-advantage.

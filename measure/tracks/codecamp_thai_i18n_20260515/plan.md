@@ -172,7 +172,7 @@ Run all quality gates and verify no regressions.
 - [x] Task: Add key-parity and quality tests now that all extraction is done (4acbd8b)
   - [x] Test: `messages/th.json` has exactly the same key set as `messages/en.json` (no extras, none missing)
   - [x] Test: every Thai value is non-empty and not byte-identical to the English value (excluding intentional proper nouns like "CodeCamp Advantage")
-- [ ] Task: Update `measure/tracks.md` to reference this track
+- [x] Task: Update `measure/tracks.md` to reference this track
 
 > **Note:** The unrelated tech-debt item "`contentJson` schema validation missing in LessonContent" has been moved out of this track. It is not coupled to i18n and belongs in the next codecamp review-remediation track.
 - [ ] Task: Measure — User Manual Verification 'Validation & Cleanup'
