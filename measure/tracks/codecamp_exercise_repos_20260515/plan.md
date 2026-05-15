@@ -169,6 +169,7 @@ Configure and verify the GitHub App integration for automatic PR review.
 Validate the full intern workflow and fix any issues found.
 
 - [ ] Task: End-to-end manual test — fork, branch, commit, PR
+  > **Blocked**: Requires actual GitHub repos (Phase 3 exercise repos not yet created on GitHub org). Deferred until repos exist.
   - [ ] Fork one exercise repo (e.g., Module 2 `codecamp-exercise-git-basics`)
   - [ ] Create a feature branch
   - [ ] Make a commit modifying the exercise files
@@ -178,23 +179,25 @@ Validate the full intern workflow and fix any issues found.
   - [ ] Verify: `prReviews` tRPC query returns the review status
   - [ ] Verify: `review-history.tsx` component displays the review
 - [ ] Task: Update `fork-instruction.tsx` to handle Module 1 and Module 18 edge cases
+  > **Deferred**: Requires new translation keys (en+th), component logic changes in lesson/module pages, and tests. Not a quick fix. Tech-debt note updated.
   - [ ] Module 1 (Dev Environment): show a message like "No exercise repo — this module is setup only"
   - [ ] Module 18 (Real-World Practice): link to the practice Issues on the tracker repo
   - [ ] Write tests for the edge cases
-- [ ] Task: Resolve tech-debt item: "`getExerciseRepos` generates repos for modules without exercises"
-  - [ ] Resolved structurally by the Phase 1 explicit-map refactor (M1, M16 produce no rows)
-  - [ ] Write test confirming empty repo list for `getExerciseRepos({ moduleId: <M1 or M16 id> })`
+- [x] Task: Resolve tech-debt item: "`getExerciseRepos` generates repos for modules without exercises"
+  - [x] Resolved structurally by the Phase 1 explicit-map refactor (M1, M16 produce no rows)
+  - [x] Test coverage: `MODULE_REPO_MAP` excludes `dev-environment` and `monorepo-packages`; domain test confirms empty array for modules without repos; seed data test confirms exactly 16 rows (15 exercise + 1 capstone, no M1/M16)
 - [ ] Task: Resolve tech-debt item: "Module 18 WorkflowTracker uses hardcoded issue data"
+  > **Deferred**: Requires new `getPracticeIssues()` domain function calling GitHub Issues API, tRPC router, API tests, and frontend wiring. Tech-debt note updated.
   - [ ] Wire WorkflowTracker to a new domain function `getPracticeIssues({ db, user, tenant })` that calls the GitHub Issues API for the `codecamp-progress-tracker` repo
   - [ ] Replace hardcoded title/number/steps with API-fetched issue data
   - [ ] Add test with mocked GitHub API client
-  - [ ] If scoping is too large, defer with an updated tech-debt note linking to a new track
-- [ ] Task: Run full quality gate
-  - [ ] `pnpm turbo run build --filter=codecamp-advantage`
-  - [ ] `pnpm turbo run lint --filter=codecamp-advantage`
-  - [ ] `pnpm turbo run check-types --filter=codecamp-advantage`
-  - [ ] `pnpm turbo run test --filter=@reading-advantage/domain`
-  - [ ] `pnpm turbo run test --filter=@reading-advantage/api`
-  - [ ] `pnpm turbo run test --filter=@reading-advantage/webhooks`
-  - [ ] `pnpm turbo run test --filter=codecamp-advantage`
+  - [x] If scoping is too large, defer with an updated tech-debt note linking to a new track
+- [x] Task: Run full quality gate
+  - [x] `pnpm turbo run build --filter=codecamp-advantage` — 9 tasks OK
+  - [x] `pnpm turbo run lint --filter=codecamp-advantage` — 0 errors, 9 tasks OK
+  - [x] `pnpm turbo run check-types --filter=codecamp-advantage` — 0 errors, 7 tasks OK
+  - [x] `pnpm turbo run test --filter=@reading-advantage/domain` — 10 files, 177 tests passed
+  - [x] `pnpm turbo run test --filter=@reading-advantage/api` — 13 files, 94 tests passed
+  - [x] `pnpm turbo run test --filter=@reading-advantage/webhooks` — 4 files, 54 tests passed
+  - [x] `pnpm turbo run test --filter=codecamp-advantage` — 21 files, 467 tests passed
 - [ ] Task: Measure — User Manual Verification 'End-to-End Validation & Cleanup'

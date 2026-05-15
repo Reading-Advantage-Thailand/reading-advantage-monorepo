@@ -74,7 +74,7 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: codecamp-advantage — Exercise Repos & Portfolio Projects**
   *Link: [./tracks/codecamp_exercise_repos_20260515/](./tracks/codecamp_exercise_repos_20260515/)*
-  Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end.
+  Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end. *Status: Phases 1, 4, 5 (partial) complete. Phase 6 quality gate passed (792 tests green, 0 lint/type errors). E2E manual test, fork-instruction M1/M18 edge cases, and WorkflowTracker GitHub API wiring deferred.*
 
 - [x] **Track: codecamp-advantage — Thai Localization**
   *Link: [./tracks/codecamp_thai_i18n_20260515/](./tracks/codecamp_thai_i18n_20260515/)*
