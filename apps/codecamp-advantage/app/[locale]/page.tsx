@@ -81,8 +81,8 @@ export default function HomePage() {
       <div className="mb-12 text-center">
         <h1 className="mb-4 text-4xl font-bold tracking-tight">{t("title")}</h1>
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">{t("subtitle")}</p>
-        {dashboard && (
-          <div className="mt-6 inline-flex items-center gap-4 rounded-lg border bg-card px-6 py-3">
+          {dashboard && (
+          <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-4 rounded-lg border bg-card px-6 py-3">
             <div className="text-center">
               <p className="text-2xl font-bold">{dashboard.overallProgress}%</p>
               <p className="text-xs text-muted-foreground">{t("overallProgress")}</p>
@@ -140,10 +140,10 @@ export default function HomePage() {
               <div className="mb-6 flex items-center justify-between border-b pb-4">
                 <div>
                   <div className="mb-1 flex items-center gap-3">
-                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors.badge}`}>
+                    <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors.badge}`}>
                       {t(`phase${phaseKey}`)}
                     </span>
-                    <h2 className="text-2xl font-bold">{phase.title}</h2>
+                    <h2 className="text-2xl font-bold break-words">{phase.title}</h2>
                   </div>
                   <p className="text-sm text-muted-foreground">{phase.description}</p>
                   <p className="mt-1 text-xs font-medium text-muted-foreground">
@@ -244,8 +244,8 @@ function ModuleCard({
           </span>
         )}
       </div>
-      <h3 className="mb-2 text-xl font-semibold">{title}</h3>
-      <p className="mb-4 text-sm text-muted-foreground">{description}</p>
+      <h3 className="mb-2 text-xl font-semibold line-clamp-2">{title}</h3>
+      <p className="mb-4 text-sm text-muted-foreground line-clamp-3">{description}</p>
       <div className="mb-4">
         <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
           <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />

@@ -123,14 +123,14 @@ export default function AdminPage() {
             <table className="w-full text-sm" aria-label="Intern accounts">
               <thead>
                 <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-3 text-left font-medium">{t("name")}</th>
-                  <th className="px-4 py-3 text-left font-medium">{t("username")}</th>
-                  <th className="px-4 py-3 text-left font-medium">{t("progress")}</th>
-                  <th className="px-4 py-3 text-left font-medium">{t("modules")}</th>
-                  <th className="px-4 py-3 text-left font-medium">{t("quizAvg")}</th>
-                  <th className="px-4 py-3 text-left font-medium">{t("prReviews")}</th>
-                  <th className="px-4 py-3 text-left font-medium">{t("lastActive")}</th>
-                  <th className="px-4 py-3 text-right font-medium">{t("actions")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("name")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("username")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("progress")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("modules")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("quizAvg")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("prReviews")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("lastActive")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-right font-medium">{t("actions")}</th>
                 </tr>
               </thead>
               <tbody>

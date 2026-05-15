@@ -14,9 +14,12 @@ import {
 import { Input } from "@reading-advantage/ui";
 import { Label } from "@reading-advantage/ui";
 import { BookOpen, MessageCircle, LogOut, User, Shield, Languages } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./language-switcher";
 
 export function Header() {
+  const t = useTranslations("navigation");
+  const tl = useTranslations("login");
   const { user, isAuthenticated, isLoading, login, logout } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -43,33 +46,33 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-      <div className="container mx-auto flex h-14 items-center justify-between px-4">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
+      <div className="container mx-auto flex h-14 items-center justify-between gap-2 px-4">
+        <div className="flex min-w-0 items-center gap-4">
+          <Link href="/" className="flex shrink-0 items-center gap-2 font-semibold">
             <BookOpen className="h-5 w-5" />
             <span>CodeCamp</span>
           </Link>
-          <nav className="flex items-center gap-4 text-sm">
+          <nav className="flex items-center gap-2 text-sm">
             <Link
               href="/"
-              className="text-muted-foreground transition-colors hover:text-foreground"
+              className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
             >
-              Dashboard
+              {t("dashboard")}
             </Link>
             <Link
               href="/chat"
-              className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+              className="flex shrink-0 items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
             >
               <MessageCircle className="h-4 w-4" />
-              Chat
+              {t("chat")}
             </Link>
             {user?.role === "ADMIN" && (
               <Link
                 href="/admin"
-                className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+                className="flex shrink-0 items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Shield className="h-4 w-4" />
-                Admin
+                {t("admin")}
               </Link>
             )}
           </nav>
@@ -93,23 +96,23 @@ export function Header() {
               </div>
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="mr-1 h-4 w-4" />
-                Log out
+                {tl("logout")}
               </Button>
             </div>
           ) : (
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
-                  Log in
+                  {tl("login")}
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Log in to CodeCamp</DialogTitle>
+                  <DialogTitle>{tl("loginTitle")}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="username">{tl("username")}</Label>
                     <Input
                       id="username"
                       value={username}
@@ -119,7 +122,7 @@ export function Header() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{tl("password")}</Label>
                     <Input
                       id="password"
                       type="password"
@@ -133,7 +136,7 @@ export function Header() {
                     <p className="text-sm text-destructive">{loginError}</p>
                   )}
                   <Button type="submit" className="w-full">
-                    Log in
+                    {tl("login")}
                   </Button>
                 </form>
               </DialogContent>
