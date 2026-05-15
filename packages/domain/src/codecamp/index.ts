@@ -12,6 +12,7 @@ import {
   users,
   accounts,
 } from "@reading-advantage/db/schema";
+import { PORTFOLIO_PROJECTS } from "@reading-advantage/db";
 import { hashPassword } from "@reading-advantage/auth";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
@@ -553,6 +554,10 @@ export async function updateUserProgress({
 
 // ─── Dashboard ────────────────────────────────────────────
 
+const PORTFOLIO_BY_PHASE = Object.fromEntries(
+  PORTFOLIO_PROJECTS.map((p) => [p.phase, p])
+) as Record<string, typeof PORTFOLIO_PROJECTS[number]>;
+
 const PHASE_METADATA: Record<
   string,
   { title: string; description: string; portfolioProject: string; portfolioProjectUrl: string }
@@ -560,26 +565,26 @@ const PHASE_METADATA: Record<
   A: {
     title: "Foundations",
     description: "Master the fundamentals of web development",
-    portfolioProject: "Personal Portfolio Website",
-    portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-portfolio-website",
+    portfolioProject: PORTFOLIO_BY_PHASE["A"]!.title,
+    portfolioProjectUrl: PORTFOLIO_BY_PHASE["A"]!.repoUrl,
   },
   B: {
     title: "Frameworks",
     description: "Build interactive applications with React and Next.js",
-    portfolioProject: "Learning Dashboard",
-    portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-learning-dashboard",
+    portfolioProject: PORTFOLIO_BY_PHASE["B"]!.title,
+    portfolioProjectUrl: PORTFOLIO_BY_PHASE["B"]!.repoUrl,
   },
   C: {
     title: "Backend & Data",
     description: "Connect databases and build type-safe APIs",
-    portfolioProject: "Student Progress Tracker",
-    portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-progress-tracker",
+    portfolioProject: PORTFOLIO_BY_PHASE["C"]!.title,
+    portfolioProjectUrl: PORTFOLIO_BY_PHASE["C"]!.repoUrl,
   },
   D: {
     title: "Production",
     description: "Ship production-ready applications to the cloud",
-    portfolioProject: "Production-Ready Tracker",
-    portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-progress-tracker",
+    portfolioProject: PORTFOLIO_BY_PHASE["D"]!.title,
+    portfolioProjectUrl: PORTFOLIO_BY_PHASE["D"]!.repoUrl,
   },
 };
 

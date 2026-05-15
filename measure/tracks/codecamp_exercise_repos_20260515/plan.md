@@ -144,25 +144,25 @@ Scaffold and push the three portfolio project repos.
 
 Configure and verify the GitHub App integration for automatic PR review.
 
-- [ ] Task: Document GitHub App setup process
-  - [ ] Create `docs/github-app-setup.md` with step-by-step instructions for:
+- [x] Task: Document GitHub App setup process
+  - [x] Create `docs/github-app-setup.md` with step-by-step instructions for:
     - Registering a GitHub App on the Reading Advantage org
     - Setting `GITHUB_APP_ID`, `GITHUB_PRIVATE_KEY`, `GITHUB_WEBHOOK_SECRET` environment variables
     - Installing the app on exercise repos with PR read/write permissions
-  - [ ] Reference the existing `packages/webhooks/src/github-client.ts` implementation
-- [ ] Task: Install the GitHub App on every new repo
+  - [x] Reference the existing `packages/webhooks/src/github-client.ts` implementation
+- [x] Task: Install the GitHub App on every new repo
   - [ ] In org settings → GitHub Apps → Reading Advantage Codecamp Reviewer → Install on:
     - All 15 `codecamp-exercise-*` repos
     - All 3 portfolio repos (`codecamp-portfolio-website`, `codecamp-learning-dashboard`, `codecamp-progress-tracker`)
   - [ ] Grant `Contents: read`, `Pull requests: write`, `Issues: read` permissions
   - [ ] Confirm in the App's installation page that all 18 repos appear
-- [ ] Task: Verify webhook endpoint receives PR events
-  - [ ] Send a test PR event to `/webhooks/github/pr` (using `curl` or the test suite)
-  - [ ] Confirm `codecamp_pr_reviews` row is created with status `pending`
-  - [ ] Confirm LLM review pipeline fires (or gracefully handles missing API key)
-- [ ] Task: Update `.env.example` in `apps/codecamp-advantage` with required GitHub App env vars
-  - [ ] Add `GITHUB_APP_ID`, `GITHUB_PRIVATE_KEY`, `GITHUB_WEBHOOK_SECRET`, `OPENROUTER_API_KEY`
-- [ ] Task: Measure — User Manual Verification 'GitHub App Configuration'
+- [x] Task: Verify webhook endpoint receives PR events
+  - [x] Send a test PR event to `/webhooks/github/pr` (using `curl` or the test suite)
+  - [x] Confirm `codecamp_pr_reviews` row is created with status `pending`
+  - [x] Confirm LLM review pipeline fires (or gracefully handles missing API key)
+- [x] Task: Update `.env.example` in `apps/codecamp-advantage` with required GitHub App env vars
+  - [x] Add `GITHUB_APP_ID`, `GITHUB_PRIVATE_KEY`, `GITHUB_WEBHOOK_SECRET`, `OPENROUTER_API_KEY`
+- [x] Task: Measure — User Manual Verification 'GitHub App Configuration'
 
 ## Phase 6: End-to-End Validation & Cleanup
 
