@@ -113,11 +113,11 @@ describe("codecamp combined curriculum data", () => {
     allRepos.forEach((repo) => {
       if (repo.moduleSlug === "real-world-practice") {
         expect(repo.repoUrl).toBe(
-          "https://github.com/reading-advantage/codecamp-progress-tracker"
+          "https://github.com/Reading-Advantage-Thailand/codecamp-progress-tracker"
         );
       } else {
         expect(repo.repoUrl).toMatch(
-          /^https:\/\/github\.com\/reading-advantage\/codecamp-exercise-[a-z0-9-]+$/
+          /^https:\/\/github\.com\/Reading-Advantage-Thailand\/codecamp-exercise-[a-z0-9-]+$/
         );
       }
     });
@@ -138,7 +138,7 @@ describe("codecamp combined curriculum data", () => {
     // M18 capstone and Phase C/D portfolio share the progress-tracker repo
     const overlap = [...exerciseUrls].filter((url) => portfolioUrls.has(url));
     expect(overlap).toEqual([
-      "https://github.com/reading-advantage/codecamp-progress-tracker",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-progress-tracker",
     ]);
     // Phase A and B portfolios are unique to portfolios
     const phaseA = PORTFOLIO_PROJECTS.find((p) => p.phase === "A");
@@ -155,7 +155,7 @@ describe("codecamp combined curriculum data", () => {
   it("MODULE_REPO_MAP maps real-world-practice to capstone repo", () => {
     expect(MODULE_REPO_MAP["real-world-practice"]).toBeDefined();
     expect(MODULE_REPO_MAP["real-world-practice"].repoUrl).toBe(
-      "https://github.com/reading-advantage/codecamp-progress-tracker"
+      "https://github.com/Reading-Advantage-Thailand/codecamp-progress-tracker"
     );
   });
 });

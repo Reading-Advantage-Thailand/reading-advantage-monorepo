@@ -2706,81 +2706,81 @@ export const MODULE_REPO_MAP: Record<
 > = {
   "git-github": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-git-github",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-git-github",
     description: "Exercise repository for Git & GitHub Fundamentals",
   },
   "html-css": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-html-css",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-html-css",
     description: "Exercise repository for HTML & CSS Crash Course",
   },
   "javascript": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-javascript",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-javascript",
     description: "Exercise repository for JavaScript Fundamentals",
   },
   "typescript": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-typescript",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-typescript",
     description: "Exercise repository for TypeScript",
   },
   "vitest": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-vitest",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-vitest",
     description: "Exercise repository for Testing with Vitest",
   },
   "react": {
-    repoUrl: "https://github.com/reading-advantage/codecamp-exercise-react",
+    repoUrl: "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-react",
     description: "Exercise repository for React",
   },
   "api-fundamentals": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-api-fundamentals",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-api-fundamentals",
     description: "Exercise repository for API Fundamentals",
   },
   "nextjs-basics": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-nextjs-basics",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-nextjs-basics",
     description: "Exercise repository for Next.js Basics",
   },
   "nextjs-advanced": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-nextjs-advanced",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-nextjs-advanced",
     description: "Exercise repository for Next.js Advanced",
   },
   "databases-orms": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-databases-orms",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-databases-orms",
     description: "Exercise repository for Databases & ORMs",
   },
   "trpc-server-actions": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-trpc-server-actions",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-trpc-server-actions",
     description: "Exercise repository for tRPC & Server Actions",
   },
   "authentication": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-authentication",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-authentication",
     description: "Exercise repository for Authentication",
   },
   "internationalization": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-internationalization",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-internationalization",
     description: "Exercise repository for Internationalization",
   },
   "ai-integration": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-ai-integration",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-ai-integration",
     description: "Exercise repository for AI Integration",
   },
   "cloud-docker": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-exercise-cloud-docker",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-exercise-cloud-docker",
     description: "Exercise repository for Cloud & Dockerization",
   },
   "real-world-practice": {
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-progress-tracker",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-progress-tracker",
     description: "Capstone repository for Real-World Practice",
   },
 };
@@ -2811,7 +2811,7 @@ export interface PortfolioProject {
 export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
     phase: "A",
-    repoUrl: "https://github.com/reading-advantage/codecamp-portfolio-website",
+    repoUrl: "https://github.com/Reading-Advantage-Thailand/codecamp-portfolio-website",
     title: "Personal Portfolio Website",
     description:
       "Build a personal portfolio with semantic HTML, CSS, and responsive design",
@@ -2819,21 +2819,21 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
     phase: "B",
     repoUrl:
-      "https://github.com/reading-advantage/codecamp-learning-dashboard",
+      "https://github.com/Reading-Advantage-Thailand/codecamp-learning-dashboard",
     title: "Learning Dashboard",
     description:
       "Build a React dashboard showing learning progress, module cards, and quiz scores",
   },
   {
     phase: "C",
-    repoUrl: "https://github.com/reading-advantage/codecamp-progress-tracker",
+    repoUrl: "https://github.com/Reading-Advantage-Thailand/codecamp-progress-tracker",
     title: "Student Progress Tracker",
     description:
       "Build a full-stack progress tracker with database, API, and auth",
   },
   {
     phase: "D",
-    repoUrl: "https://github.com/reading-advantage/codecamp-progress-tracker",
+    repoUrl: "https://github.com/Reading-Advantage-Thailand/codecamp-progress-tracker",
     title: "Production-Ready Tracker",
     description:
       "Deploy the progress tracker with Docker, CI/CD, and cloud hosting",

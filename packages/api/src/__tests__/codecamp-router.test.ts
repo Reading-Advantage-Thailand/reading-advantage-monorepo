@@ -356,10 +356,10 @@ describe("codecamp router", () => {
     it("returns dashboard data with phase grouping", async () => {
       const resultRow = {
         phases: {
-          A: { title: "Foundations", description: "Desc", portfolioProject: "Portfolio", portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-portfolio-website", modules: [], completedLessons: 0, totalLessons: 0 },
-          B: { title: "Frameworks", description: "Desc", portfolioProject: "Dashboard", portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-learning-dashboard", modules: [], completedLessons: 0, totalLessons: 0 },
-          C: { title: "Backend & Data", description: "Desc", portfolioProject: "Tracker", portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-progress-tracker", modules: [], completedLessons: 0, totalLessons: 0 },
-          D: { title: "Production", description: "Desc", portfolioProject: "Production Tracker", portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-progress-tracker", modules: [], completedLessons: 0, totalLessons: 0 },
+          A: { title: "Foundations", description: "Desc", portfolioProject: "Portfolio", portfolioProjectUrl: "https://github.com/Reading-Advantage-Thailand/codecamp-portfolio-website", modules: [], completedLessons: 0, totalLessons: 0 },
+          B: { title: "Frameworks", description: "Desc", portfolioProject: "Dashboard", portfolioProjectUrl: "https://github.com/Reading-Advantage-Thailand/codecamp-learning-dashboard", modules: [], completedLessons: 0, totalLessons: 0 },
+          C: { title: "Backend & Data", description: "Desc", portfolioProject: "Tracker", portfolioProjectUrl: "https://github.com/Reading-Advantage-Thailand/codecamp-progress-tracker", modules: [], completedLessons: 0, totalLessons: 0 },
+          D: { title: "Production", description: "Desc", portfolioProject: "Production Tracker", portfolioProjectUrl: "https://github.com/Reading-Advantage-Thailand/codecamp-progress-tracker", modules: [], completedLessons: 0, totalLessons: 0 },
         },
         totalLessons: 10,
         completedLessons: 3,

@@ -106,7 +106,7 @@ describe("codecamp Phase D curriculum data", () => {
     );
     expect(m18Repos).toHaveLength(1);
     expect(m18Repos[0].repoUrl).toBe(
-      "https://github.com/reading-advantage/codecamp-progress-tracker"
+      "https://github.com/Reading-Advantage-Thailand/codecamp-progress-tracker"
     );
   });
 
