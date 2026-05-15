@@ -870,6 +870,36 @@ describe("getExerciseRepos", () => {
     expect(result[1].id).toBe("r2");
   });
 
+  it("returns empty array when no repos exist for module", async () => {
+    const db = createMockDb({ selectResults: [] });
+
+    const result = await getExerciseRepos({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { moduleId: "m1" },
+    });
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("returns all repos when moduleId is omitted", async () => {
+    const repos = [
+      { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() },
+      { id: "r2", moduleId: "m2", repoUrl: "https://github.com/org/repo2", description: "Repo 2", order: 1, createdAt: new Date() },
+    ];
+    const db = createMockDb({ selectResults: repos });
+
+    const result = await getExerciseRepos({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: {},
+    });
+
+    expect(result).toHaveLength(2);
+  });
+
   it("rejects unauthenticated users", async () => {
     const db = createMockDb();
     const invalidUser = { id: "x", username: "x", name: "X", role: "GUEST" as unknown as typeof student.role, schoolId: "s1" };
