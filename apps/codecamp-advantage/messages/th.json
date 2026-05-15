@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "title": "CodeCamp Advantage",
+    "description": "เรียนรู้ Next.js และรูปแบบการทำงานของ Reading Advantage ด้วย AI"
+  },
+  "navigation": {
+    "dashboard": "แดชบอร์ด",
+    "modules": "โมดูล",
+    "chat": "แชท"
+  },
+  "dashboard": {
+    "title": "เรียนรู้การพัฒนาเว็บ",
+    "subtitle": "โมดูล 18 โมดูล ตั้งแต่พื้นฐานจนถึงระดับมืออาชีพ พร้อมการตรวจโค้ดด้วย AI",
+    "progress": "ความคืบหน้า",
+    "continue": "ดำเนินการต่อ"
+  },
+  "module": {
+    "lessons": "บทเรียน",
+    "start": "เริ่มเรียน",
+    "completed": "เสร็จสิ้น",
+    "inProgress": "กำลังเรียน"
+  },
+  "chat": {
+    "placeholder": "ถามคำถามเกี่ยวกับโมดูลนี้ได้เลย...",
+    "newConversation": "สนทนาใหม่",
+    "send": "ส่ง"
+  },
+  "exercise": {
+    "submit": "ส่งงาน",
+    "feedback": "ผลตอบรับ",
+    "hint": "คำใบ้",
+    "tryAgain": "ลองอีกครั้ง"
+  },
+  "quiz": {
+    "submit": "ส่งคำตอบ",
+    "score": "คะแนน",
+    "correct": "ถูกต้อง",
+    "incorrect": "ไม่ถูกต้อง"
+  }
+}
