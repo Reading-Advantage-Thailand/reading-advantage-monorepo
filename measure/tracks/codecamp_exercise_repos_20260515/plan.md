@@ -43,46 +43,46 @@ Scaffold and push the first 9 exercise repos to the Reading Advantage GitHub org
 > - Reference solution lives on a `solution/` branch (not a file in `main`) to keep it out of forks-by-default
 > - `.github/ISSUE_TEMPLATE/` only on Module 17 and the Module 18 capstone repo (per spec)
 
-- [ ] Task: Create Module 2 exercise repo (`codecamp-exercise-git-github`)
-  - [ ] Scaffold: simple HTML file with practice areas for git add/commit/push
-  - [ ] README.md: exercise instructions, learning objectives, acceptance criteria
-  - [ ] Push to `reading-advantage/codecamp-exercise-git-github` on GitHub
-- [ ] Task: Create Module 3 exercise repo (`codecamp-exercise-html-css`)
-  - [ ] Scaffold: HTML file with placeholder content, empty CSS file
-  - [ ] README.md: CSS layout exercise instructions (flexbox, grid)
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 4 exercise repo (`codecamp-exercise-javascript`)
-  - [ ] Scaffold: HTML + empty JS file for DOM manipulation exercises
-  - [ ] README.md: DOM event handling and dynamic UI instructions
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 5 exercise repo (`codecamp-exercise-typescript`)
-  - [ ] Scaffold: JS files that need converting to TypeScript
-  - [ ] README.md: type annotation and interface exercises
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 6 exercise repo (`codecamp-exercise-vitest`)
-  - [ ] Scaffold: untested functions + empty test files
-  - [ ] README.md: write unit tests for the provided functions
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 7 exercise repo (`codecamp-exercise-react`)
-  - [ ] Scaffold: Next.js app with component stubs
-  - [ ] README.md: build React components (useState, useEffect, lists)
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 8 exercise repo (`codecamp-exercise-api-fundamentals`)
-  - [ ] Scaffold: Next.js app with empty data-fetching functions
-  - [ ] README.md: fetch and display data from public APIs
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 9 exercise repo (`codecamp-exercise-nextjs-basics`)
-  - [ ] Scaffold: minimal Next.js app with empty pages
-  - [ ] README.md: create routes, layouts, and server components
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 10 exercise repo (`codecamp-exercise-nextjs-advanced`)
-  - [ ] Scaffold: Next.js app with route handler stubs
-  - [ ] README.md: implement Route Handlers, middleware, streaming
-  - [ ] Push to GitHub
-- [ ] Task: Push reference solutions to `solution/` branch on each Phase 2 repo
-  - [ ] For each repo above, create a `solution/` branch with the completed exercise
-  - [ ] Verify `solution/` branch is not the default branch (forks should pull `main` only)
-- [ ] Task: Measure — User Manual Verification 'Exercise Repos Modules 2–10'
+- [x] Task: Create Module 2 exercise repo (`codecamp-exercise-git-github`)
+  - [x] Scaffold: simple HTML file with practice areas for git add/commit/push
+  - [x] README.md: exercise instructions, learning objectives, acceptance criteria
+  - [x] Push to `Reading-Advantage-Thailand/codecamp-exercise-git-github` on GitHub
+- [x] Task: Create Module 3 exercise repo (`codecamp-exercise-html-css`)
+  - [x] Scaffold: HTML file with placeholder content, empty CSS file
+  - [x] README.md: CSS layout exercise instructions (flexbox, grid)
+  - [x] Push to GitHub
+- [x] Task: Create Module 4 exercise repo (`codecamp-exercise-javascript`)
+  - [x] Scaffold: HTML + empty JS file for DOM manipulation exercises
+  - [x] README.md: DOM event handling and dynamic UI instructions
+  - [x] Push to GitHub
+- [x] Task: Create Module 5 exercise repo (`codecamp-exercise-typescript`)
+  - [x] Scaffold: JS files that need converting to TypeScript
+  - [x] README.md: type annotation and interface exercises
+  - [x] Push to GitHub
+- [x] Task: Create Module 6 exercise repo (`codecamp-exercise-vitest`)
+  - [x] Scaffold: untested functions + empty test files
+  - [x] README.md: write unit tests for the provided functions
+  - [x] Push to GitHub
+- [x] Task: Create Module 7 exercise repo (`codecamp-exercise-react`)
+  - [x] Scaffold: Next.js app with component stubs
+  - [x] README.md: build React components (useState, useEffect, lists)
+  - [x] Push to GitHub
+- [x] Task: Create Module 8 exercise repo (`codecamp-exercise-api-fundamentals`)
+  - [x] Scaffold: Next.js app with empty data-fetching functions
+  - [x] README.md: fetch and display data from public APIs
+  - [x] Push to GitHub
+- [x] Task: Create Module 9 exercise repo (`codecamp-exercise-nextjs-basics`)
+  - [x] Scaffold: minimal Next.js app with empty pages
+  - [x] README.md: create routes, layouts, and server components
+  - [x] Push to GitHub
+- [x] Task: Create Module 10 exercise repo (`codecamp-exercise-nextjs-advanced`)
+  - [x] Scaffold: Next.js app with route handler stubs
+  - [x] README.md: implement Route Handlers, middleware, streaming
+  - [x] Push to GitHub
+- [x] Task: Push reference solutions to `solution/` branch on each Phase 2 repo
+  - [x] For each repo above, create a `solution/` branch with the completed exercise
+  - [x] Verify `solution/` branch is not the default branch (forks should pull `main` only)
+- [~] Task: Measure — User Manual Verification 'Exercise Repos Modules 2–10'
 
 ## Phase 3: Create Exercise Repositories (Modules 11–15, 17)
 
