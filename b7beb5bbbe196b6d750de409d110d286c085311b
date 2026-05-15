@@ -1,0 +1,7 @@
+Task: Update i18n/request.ts to load Thai messages + Create messages/th.json
+Summary: Refactored request.ts to use i18n-messages helper with deepMerge fallback chain. Created th.json with Thai translations for all 25 keys.
+Files:
+- apps/codecamp-advantage/i18n/request.ts (modified)
+- apps/codecamp-advantage/lib/i18n-messages.ts (created)
+- apps/codecamp-advantage/lib/__tests__/i18n-request.test.ts (created)
+- apps/codecamp-advantage/messages/th.json (created)
