@@ -162,7 +162,7 @@ Run all quality gates and verify no regressions.
   - [x] **Why:** Default locale is Thai but the 85 lesson `contentJson` rows are intentionally English (out of scope to translate per spec). Thai-default users will be confused without a hint.
   - [x] Add an inline badge or notice on the dashboard and module pages: "บทเรียนเป็นภาษาอังกฤษ" (Lessons in English)
   - [x] Add to the chat: when locale is `th`, the system prompt should mention the lesson content is English so the AI can translate on request
-- [ ] Task: Run full quality gate
+- [~] Task: Run full quality gate
   - [ ] `pnpm turbo run build --filter=codecamp-advantage`
   - [ ] `pnpm turbo run lint --filter=codecamp-advantage`
   - [ ] `pnpm turbo run check-types --filter=codecamp-advantage`
