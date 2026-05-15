@@ -64,9 +64,9 @@ This file tracks all major tracks for the project.
 
 ---
 
-- [ ] **Track: codecamp-advantage — Full-Stack Web Dev Intern Bootcamp**
+- [x] **Track: codecamp-advantage — Full-Stack Web Dev Intern Bootcamp**
   *Link: [./tracks/codecamp_advantage_20260513/](./tracks/codecamp_advantage_20260513/)*
-  18-module curriculum (dev env setup → cloud deployment) for interns with near-zero JS experience. Fork-based exercises with LLM PR review, GitHub Issues practice, and architecture mirroring of real Reading Advantage patterns. Existing schema/domain/router/UI code retained and extended.
+  *Status: COMPLETE — All 8 phases done. 18-module curriculum, GitHub integration (webhook + LLM review), admin dashboard, chat tutor, workflow tracker. Build passes, all tests green (domain: 159, api: 86, webhooks: 31, codecamp: 49). Subagent reviews completed with findings resolved.*
 
 - [ ] **Track: codecamp-advantage — Curriculum Implementation**
   *Link: [./tracks/codecamp_curriculum_20260514/](./tracks/codecamp_curriculum_20260514/)*
@@ -117,6 +117,6 @@ This file tracks all major tracks for the project.
   *Link: [./archive/remediation_20260505/](./archive/remediation_20260505/)*
   *Status: Complete. 23/24 tasks done (API test backfill deferred). Domain: 83/83 tests (+13 new). Auth: 64/64 tests. Security/auth gaps fixed, logic bugs resolved, TenantDB edge cases hardened.*
 
-- [~] **Track: Codecamp Review Remediation**
+- [x] **Track: Codecamp Review Remediation**
   *Link: [./tracks/codecamp_review_remediation_20260515/](./tracks/codecamp_review_remediation_20260515/)*
-  Fix 5 High, 10 Medium, 12 Low findings from codecamp-advantage code review. Security first (admin auth, prompt injection, role injection), then architecture (chat route, admin procedure, rate limiter), data integrity, UI/UX, and test coverage.
+  *Status: COMPLETE — All 5 High, 10 Medium, 12 Low findings resolved. Security (adminProcedure, prompt injection hardening, role stripping), architecture (domain chat context, bounded rate limiter), data integrity (JSONB guards, duplicate prevention, prerequisite gap handling), UI/UX (ARIA labels, disabled Link, HTTPS clone), and test coverage (github-client tests, SSRF defense).*
