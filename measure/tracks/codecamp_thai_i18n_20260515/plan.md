@@ -58,7 +58,7 @@ Update next-intl config and create the Thai translation file.
   - [ ] `admin.noInterns`: "No interns yet" / "ยังไม่มีผู้ฝึกงาน"
   - [ ] `admin.createIntern`: "Create Intern Account" / "สร้างบัญชีผู้ฝึกงาน"
   - [ ] `admin.backToOverview`: "Back to Overview" / "กลับไปหน้าภาพรวม"
-- [ ] Task: Enumerate and add additional translation surfaces commonly missed
+- [x] Task: Enumerate and add additional translation surfaces commonly missed (7740abb)
   - [ ] Form validation messages (admin/new-intern): required, password complexity, username conflict
   - [ ] Toast / inline success+error messages across admin + chat
   - [ ] Per-page `<title>` metadata for every route (currently only `metadata.title` exists)
