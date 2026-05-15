@@ -555,27 +555,31 @@ export async function updateUserProgress({
 
 const PHASE_METADATA: Record<
   string,
-  { title: string; description: string; portfolioProject: string }
+  { title: string; description: string; portfolioProject: string; portfolioProjectUrl: string }
 > = {
   A: {
     title: "Foundations",
     description: "Master the fundamentals of web development",
     portfolioProject: "Personal Portfolio Website",
+    portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-portfolio-website",
   },
   B: {
     title: "Frameworks",
     description: "Build interactive applications with React and Next.js",
     portfolioProject: "Learning Dashboard",
+    portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-learning-dashboard",
   },
   C: {
     title: "Backend & Data",
     description: "Connect databases and build type-safe APIs",
     portfolioProject: "Student Progress Tracker",
+    portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-progress-tracker",
   },
   D: {
     title: "Production",
     description: "Ship production-ready applications to the cloud",
     portfolioProject: "Production-Ready Tracker",
+    portfolioProjectUrl: "https://github.com/reading-advantage/codecamp-progress-tracker",
   },
 };
 
@@ -607,6 +611,7 @@ export async function getUserDashboard({
       title: string;
       description: string;
       portfolioProject: string;
+      portfolioProjectUrl: string;
       modules: typeof modules;
       completedLessons: number;
       totalLessons: number;

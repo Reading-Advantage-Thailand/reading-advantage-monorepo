@@ -804,8 +804,10 @@ describe("getUserDashboard", () => {
     expect(result.phases.B.totalLessons).toBe(1);
     expect(result.phases.A.title).toBe("Foundations");
     expect(result.phases.A.portfolioProject).toBe("Personal Portfolio Website");
+    expect(result.phases.A.portfolioProjectUrl).toBe("https://github.com/reading-advantage/codecamp-portfolio-website");
     expect(result.phases.B.title).toBe("Frameworks");
     expect(result.phases.B.portfolioProject).toBe("Learning Dashboard");
+    expect(result.phases.B.portfolioProjectUrl).toBe("https://github.com/reading-advantage/codecamp-learning-dashboard");
   });
 
   it("includes all four phases even when empty", async () => {

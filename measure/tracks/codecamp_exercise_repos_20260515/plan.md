@@ -126,19 +126,19 @@ Scaffold and push the remaining exercise repos.
 
 Scaffold and push the three portfolio project repos.
 
-- [ ] Task: Create Phase A portfolio repo (`codecamp-portfolio-website`)
-  - [ ] Scaffold: HTML boilerplate with CSS reset and basic layout
-  - [ ] README.md: project spec — personal portfolio with sections for about, skills, projects, contact
-  - [ ] Push to GitHub
-- [ ] Task: Create Phase B portfolio repo (`codecamp-learning-dashboard`)
-  - [ ] Scaffold: React + Next.js app with layout shell and empty pages
-  - [ ] README.md: project spec — dashboard showing learning progress, module cards, quiz scores
-  - [ ] Push to GitHub
-- [ ] Task: Verify Phase C+D portfolio repo reuses the Module 18 capstone (no separate repo)
-  - [ ] `codecamp-progress-tracker` (already created in Phase 3) is the Phase C+D capstone AND the source of Module 18 practice Issues
-  - [ ] Confirm README spec covers both uses — portfolio showcase + practice-issue source
-  - [ ] No new repo creation here; this task is verification only
-- [ ] Task: Measure — User Manual Verification 'Portfolio Project Repos'
+- [x] Task: Create Phase A portfolio repo (`codecamp-portfolio-website`)
+  - [x] Scaffold: HTML boilerplate with CSS reset and basic layout
+  - [x] README.md: project spec — personal portfolio with sections for about, skills, projects, contact
+  - [x] Push to GitHub
+- [x] Task: Create Phase B portfolio repo (`codecamp-learning-dashboard`)
+  - [x] Scaffold: React + Next.js app with layout shell and empty pages
+  - [x] README.md: project spec — dashboard showing learning progress, module cards, quiz scores
+  - [x] Push to GitHub
+- [x] Task: Verify Phase C+D portfolio repo reuses the Module 18 capstone (no separate repo)
+  - [x] `codecamp-progress-tracker` (already created in Phase 3) is the Phase C+D capstone AND the source of Module 18 practice Issues
+  - [x] Confirm README spec covers both uses — portfolio showcase + practice-issue source
+  - [x] No new repo creation here; this task is verification only
+- [x] Task: Measure — User Manual Verification 'Portfolio Project Repos'
 
 ## Phase 5: GitHub App Configuration & Webhook Verification
 

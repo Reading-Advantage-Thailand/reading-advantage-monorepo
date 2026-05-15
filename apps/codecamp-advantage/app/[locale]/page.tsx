@@ -152,7 +152,15 @@ export default function HomePage() {
                   </div>
                   <p className="text-sm text-muted-foreground">{phase.description}</p>
                   <p className="mt-1 text-xs font-medium text-muted-foreground">
-                    {t("portfolio")}: {phase.portfolioProject}
+                    {t("portfolio")}:{" "}
+                    <a
+                      href={phase.portfolioProjectUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {phase.portfolioProject}
+                    </a>
                   </p>
                 </div>
                 <div className="text-right">

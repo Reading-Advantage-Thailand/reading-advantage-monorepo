@@ -208,6 +208,7 @@ export const phaseInfoSchema = z.object({
   title: z.string(),
   description: z.string(),
   portfolioProject: z.string(),
+  portfolioProjectUrl: z.string().url(),
   modules: z.array(moduleResponseSchema),
   completedLessons: z.number(),
   totalLessons: z.number(),
