@@ -93,7 +93,7 @@ Source: `measure/curriculum/unit-07-class-period-plan.md` through `unit-10-class
   - [x] Lesson 5 (exercise + quiz): API routes + streaming exercise + Next.js advanced quiz
 - [x] Task: Measure — User Manual Verification 'Phase B Seed Data' [048bc4c]
 
-## Phase 4: Write Seed Data — Phase C (Modules 11–13, 14 lessons)
+## Phase 4: Write Seed Data — Phase C (Modules 11–13, 14 lessons) [checkpoint: 96e179d]
 
 Source: `measure/curriculum/unit-11-class-period-plan.md` through `unit-13-class-period-plan.md`.
 
@@ -116,7 +116,7 @@ Source: `measure/curriculum/unit-11-class-period-plan.md` through `unit-13-class
   - [x] Lesson 4 (exercise + quiz): Add auth to blog API exercise + auth quiz
 - [x] Task: Measure — User Manual Verification 'Phase C Seed Data' [96e179d]
 
-## Phase 5: Write Seed Data — Phase D (Modules 14–18, 19 lessons)
+## Phase 5: Write Seed Data — Phase D (Modules 14–18, 19 lessons) [checkpoint: 39b7338]
 
 Source: `measure/curriculum/unit-14-class-period-plan.md` through `unit-18-class-period-plan.md`.
 
@@ -146,7 +146,7 @@ Source: `measure/curriculum/unit-14-class-period-plan.md` through `unit-18-class
   - [x] Lesson 4 (theory): Final practice and retrospective (no quiz — work is the assessment)
 - [x] Task: Measure — User Manual Verification 'Phase D Seed Data' [39b7338]
 
-## Phase 6: Domain and Router Updates
+## Phase 6: Domain and Router Updates [checkpoint: 461ff82]
 
 Wire phase information through the domain and API layers.
 
@@ -166,7 +166,7 @@ Wire phase information through the domain and API layers.
   - [x] Test `getModulesByPhase` with phase column instead of order ranges
 - [x] Task: Measure — User Manual Verification 'Domain and Router Updates'
 
-## Phase 7: UI Updates
+## Phase 7: UI Updates [checkpoint: e07a019]
 
 Update the dashboard to display phase-grouped modules with portfolio project context.
 
@@ -186,7 +186,7 @@ Update the dashboard to display phase-grouped modules with portfolio project con
   - [x] Quiz lessons: questions render, submit scores correctly
 - [x] Task: Measure — User Manual Verification 'UI Updates'
 
-## Phase 8: Validation and Cleanup
+## Phase 8: Validation and Cleanup [checkpoint: 950b643]
 
 Run all checks and verify the curriculum works end-to-end.
 
@@ -201,14 +201,15 @@ Run all checks and verify the curriculum works end-to-end.
   - [x] `pnpm turbo run build --filter=codecamp-advantage` — builds successfully (9/9 tasks)
   - [x] `pnpm turbo run check-types --filter=codecamp-advantage` — all pass (7/7 tasks)
   - [x] `pnpm turbo run lint --filter=codecamp-advantage` — 0 errors, 0 warnings in codecamp-advantage
-- [~] Task: Manual smoke test
-  - [~] Seed the database: `pnpm --filter @reading-advantage/db run seed`
-  - [~] Start the app: `pnpm dev`
-  - [~] Verify dashboard shows 4 phase groups with 18 modules
-  - [~] Open a module → verify lessons appear with real content
-  - [~] Open a theory lesson → verify contentJson renders
-  - [~] Complete a quiz → verify scoring works
-  - [~] Submit an exercise → verify submission works
-  - [~] Open chat → verify module context is available
-- [x] Task: Update `measure/tracks.md` to reference this track
-- [ ] Task: Measure — User Manual Verification 'Validation and Cleanup'
+- [x] Task: Manual smoke test [950b643]
+  - [x] **Prerequisite:** drop or reset the codecamp tables before seeding — stale 5-module placeholder rows from earlier DBs will mask 18-module regressions (see tech-debt: "Old placeholder curriculum modules remain in existing DBs")
+  - [x] Seed the database: `pnpm --filter @reading-advantage/db run seed`
+  - [x] Start the app: `pnpm dev`
+  - [x] Verify dashboard shows 4 phase groups with 18 modules
+  - [x] Open a module → verify lessons appear with real content
+  - [x] Open a theory lesson → verify contentJson renders
+  - [x] Complete a quiz → verify scoring works
+  - [x] Submit an exercise → verify submission works
+  - [x] Open chat → verify module context is available
+- [x] Task: Update `measure/tracks.md` to reference this track [950b643]
+- [x] Task: Measure — User Manual Verification 'Validation and Cleanup' [950b643]

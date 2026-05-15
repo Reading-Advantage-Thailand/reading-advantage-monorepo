@@ -2698,12 +2698,14 @@ export function getPhaseCCurriculumData() {
 }
 
 function getExerciseRepos(modules: CurriculumModule[]): CurriculumRepo[] {
-  return modules.map((mod) => ({
-    moduleSlug: mod.slug,
-    repoUrl: `https://github.com/reading-advantage/codecamp-${mod.slug}`,
-    description: `Exercise repository for ${mod.title}`,
-    order: mod.order,
-  }));
+  return modules
+    .filter((mod) => mod.lessons.some((l) => l.type === "exercise"))
+    .map((mod) => ({
+      moduleSlug: mod.slug,
+      repoUrl: `https://github.com/reading-advantage/codecamp-${mod.slug}`,
+      description: `Exercise repository for ${mod.title}`,
+      order: mod.order,
+    }));
 }
 
 export function getPhaseDCurriculumData() {
