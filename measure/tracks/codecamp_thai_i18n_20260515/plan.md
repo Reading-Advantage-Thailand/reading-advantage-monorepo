@@ -78,15 +78,15 @@ Update next-intl config and create the Thai translation file.
 
 Build the locale toggle and update app routing.
 
-- [ ] Task: Create `components/language-switcher.tsx`
-  - [ ] Render a toggle between "EN" and "ไทย" with the current locale highlighted
-  - [ ] On click, set the locale cookie and navigate to the locale-prefixed URL
-  - [ ] Use `useRouter()` and `useLocale()` from `next-intl`
-  - [ ] Ensure keyboard accessibility (tab to focus, Enter/Space to activate)
-  - [ ] Add `aria-label` for screen readers
-- [ ] Task: Update `components/header.tsx` to include the language switcher
-  - [ ] Place the switcher in the header bar, visually balanced with navigation links
-  - [ ] Ensure no layout shift when switching between locales (Thai text is wider)
+- [x] Task: Create `components/language-switcher.tsx` (9990e70)
+  - [x] Render a toggle between "EN" and "ไทย" with the current locale highlighted
+  - [x] On click, set the locale cookie and navigate to the locale-prefixed URL
+  - [x] Use `useRouter()` and `useLocale()` from `next-intl`
+  - [x] Ensure keyboard accessibility (tab to focus, Enter/Space to activate)
+  - [x] Add `aria-label` for screen readers
+- [x] Task: Update `components/header.tsx` to include the language switcher (9990e70)
+  - [x] Place the switcher in the header bar, visually balanced with navigation links
+  - [x] Ensure no layout shift when switching between locales (Thai text is wider)
 - [x] Task: Update `app/layout.tsx` to use locale-aware routing (16d82cb)
   - [x] Wrap root layout with `NextIntlClientProvider` using the resolved locale
   - [x] Ensure `getLocale()` returns the correct locale based on URL prefix
