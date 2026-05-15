@@ -36,7 +36,7 @@ Update next-intl config and create the Thai translation file.
   - [ ] `quiz.score`: "คะแนน"
   - [ ] `quiz.correct`: "ถูกต้อง"
   - [ ] `quiz.incorrect`: "ไม่ถูกต้อง"
-- [ ] Task: Add Thai-friendly font loading via `next/font`
+- [x] Task: Add Thai-friendly font loading via `next/font` (1fd9d8f)
   - [ ] Import `Noto_Sans_Thai` (or `IBM_Plex_Sans_Thai`) alongside the existing Latin font in `app/layout.tsx`
   - [ ] Apply the Thai font family in the root layout so glyphs render correctly on all platforms
   - [ ] Verify no FOUT/CLS regressions
