@@ -6,19 +6,21 @@ import { routing } from "./i18n/routing";
 const intlMiddleware = createIntlMiddleware(routing);
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
+  const lowerPath = pathname.toLowerCase();
 
-  if (pathname.startsWith("/api") || pathname.startsWith("/_next") || pathname.includes(".")) {
-    return NextResponse.next();
-  }
-
-  if (pathname.match(/^\/(th|en)\/admin/) || pathname === "/admin" || pathname.startsWith("/admin/")) {
+  if (lowerPath.match(/^\/(th|en)\/admin/) || lowerPath === "/admin" || lowerPath.startsWith("/admin/")) {
     const sessionToken = request.cookies.get("session_token")?.value;
     if (!sessionToken) {
       const homeUrl = new URL("/", request.url);
-      homeUrl.searchParams.set("redirectTo", pathname);
+      const redirectTarget = pathname + search;
+      homeUrl.searchParams.set("redirectTo", redirectTarget);
       return NextResponse.redirect(homeUrl);
     }
+  }
+
+  if (pathname.startsWith("/api") || pathname.startsWith("/_next") || pathname.includes(".")) {
+    return NextResponse.next();
   }
 
   return intlMiddleware(request);

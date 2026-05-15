@@ -21,7 +21,7 @@ export function LanguageSwitcher() {
         className="h-8 px-2 text-xs"
         onClick={() => switchLocale("en")}
         aria-label="Switch to English"
-        aria-current={locale === "en" ? "true" : undefined}
+        aria-current={locale === "en" ? true : undefined}
       >
         EN
       </Button>
@@ -31,7 +31,7 @@ export function LanguageSwitcher() {
         className="h-8 px-2 text-xs"
         onClick={() => switchLocale("th")}
         aria-label="เปลี่ยนเป็นภาษาไทย"
-        aria-current={locale === "th" ? "true" : undefined}
+        aria-current={locale === "th" ? true : undefined}
       >
         ไทย
       </Button>

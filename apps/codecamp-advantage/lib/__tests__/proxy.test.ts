@@ -16,7 +16,7 @@ vi.mock("next-intl/middleware", async () => {
 });
 
 import { NextRequest } from "next/server";
-import { proxy } from "../../proxy";
+import { proxy, config } from "../../proxy";
 
 function createRequest(pathname: string, cookies?: Record<string, string>) {
   const url = new URL(pathname, "http://localhost:3000");
@@ -97,5 +97,41 @@ describe("proxy", () => {
 
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2Fth%2Fadmin%2Fuser-123");
+  });
+
+  it("allows authenticated users through to nested locale-prefixed admin routes", async () => {
+    const req = createRequest("/en/admin/user-123", { session_token: "valid-token" });
+    const res = await proxy(req);
+
+    expect(res.status).toBe(200);
+  });
+
+  it("blocks uppercase /Admin bypass via case-insensitive match", async () => {
+    const req = createRequest("/Admin");
+    const res = await proxy(req);
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2FAdmin");
+  });
+
+  it("blocks /EN/Admin bypass via case-insensitive match", async () => {
+    const req = createRequest("/EN/Admin");
+    const res = await proxy(req);
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2FEN%2FAdmin");
+  });
+
+  it("preserves query parameters in redirectTo", async () => {
+    const req = createRequest("/admin?debug=true&internId=42");
+    const res = await proxy(req);
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2Fadmin%3Fdebug%3Dtrue%26internId%3D42");
+  });
+
+  it("exports a matcher config", () => {
+    expect(config.matcher).toBeDefined();
+    expect(Array.isArray(config.matcher)).toBe(true);
   });
 });
