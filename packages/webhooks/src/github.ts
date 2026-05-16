@@ -178,6 +178,9 @@ github.post("/pr", async (c) => {
         name: githubLogin ?? null,
         role: "INTERN" as const,
         schoolId: null,
+        xp: 0,
+        level: 1,
+        cefrLevel: "A1" as const,
       };
 
       const newReview = await codecamp.createPrReview({
@@ -213,7 +216,7 @@ github.post("/pr", async (c) => {
           });
 
           // Post review summary as a PR comment
-          const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${reviewResult.passed ? "✅ Passed" : "⚠️ Needs Changes"}\n\n**Summary:** ${reviewResult.summary}\n\n${reviewResult.comments.length > 0 ? "### Comments\n" + reviewResult.comments.map((c: { line?: number; body: string }) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`).join("\n") : ""}`;
+          const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${reviewResult.passed ? "✅ Passed" : "⚠️ Needs Changes"}\n\n**Summary:** ${reviewResult.summary}\n\n${reviewResult.comments.length > 0 ? "### Comments\n" + reviewResult.comments.map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`).join("\n") : ""}`;
 
           await postPrComment(prInfo, commentBody, token);
 

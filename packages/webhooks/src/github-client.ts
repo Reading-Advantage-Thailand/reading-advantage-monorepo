@@ -213,7 +213,7 @@ export async function postReviewComment(
   if (!reviewId) {
     // Create a new review first
     const createRes = await fetch(
-`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${pullNumber}/reviews`,
+      `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${pullNumber}/reviews`,
       {
         method: "POST",
         headers: {

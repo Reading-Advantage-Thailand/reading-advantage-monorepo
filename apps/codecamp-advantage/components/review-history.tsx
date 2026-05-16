@@ -60,6 +60,7 @@ function getTimelineStepStatus(
 
   const stepIndex = ["submitted", "first_review", "revisions", "approved"].indexOf(stepId);
 
+  if (stepIndex === -1) return "pending";
   if (stepIndex < currentIndex) return "completed";
   if (stepIndex === currentIndex) return "active";
   return "pending";

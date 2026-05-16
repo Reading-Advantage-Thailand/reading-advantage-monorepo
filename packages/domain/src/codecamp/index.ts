@@ -554,9 +554,12 @@ export async function updateUserProgress({
 
 // ─── Dashboard ────────────────────────────────────────────
 
-const PORTFOLIO_BY_PHASE = Object.fromEntries(
+const PORTFOLIO_BY_PHASE: Record<
+  string,
+  typeof PORTFOLIO_PROJECTS[number]
+> = Object.fromEntries(
   PORTFOLIO_PROJECTS.map((p) => [p.phase, p])
-) as Record<string, typeof PORTFOLIO_PROJECTS[number]>;
+);
 
 const PHASE_METADATA: Record<
   string,

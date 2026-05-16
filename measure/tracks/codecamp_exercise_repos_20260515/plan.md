@@ -82,7 +82,7 @@ Scaffold and push the first 9 exercise repos to the Reading Advantage GitHub org
 - [x] Task: Push reference solutions to `solution/` branch on each Phase 2 repo
   - [x] For each repo above, create a `solution/` branch with the completed exercise
   - [x] Verify `solution/` branch is not the default branch (forks should pull `main` only)
-- [~] Task: Measure — User Manual Verification 'Exercise Repos Modules 2–10'
+- [x] Task: Measure — User Manual Verification 'Exercise Repos Modules 2–10'
 
 ## Phase 3: Create Exercise Repositories (Modules 11–15, 17)
 
