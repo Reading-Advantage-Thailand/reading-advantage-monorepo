@@ -81,8 +81,9 @@ This file tracks all major tracks for the project.
   Add Thai (th) locale as default, create th.json translations, build language switcher, localize admin dashboard, and make the chat tutor respond in Thai by default.
   *Status: COMPLETE — All 4 phases done. Thai locale default, full th.json with 181 keys, language switcher, admin/chat/component localization, locale-aware chat API, Thai font loading, text-width regression prevention, lesson-language badge, 463 passing tests across 21 files.*
 
-- [ ] **Track: codecamp-advantage — Deployment** *(stub — details TBD)*
-  Docker setup, database provisioning, CI/CD, environment configuration, HTTPS, and production deployment for codecamp-advantage.
+- [ ] **Track: codecamp-advantage — Deployment**
+  *Link: [./tracks/codecamp_deployment_20260516/](./tracks/codecamp_deployment_20260516/)*
+  Docker setup, shared Cloud SQL connectivity, CI/CD, environment configuration, HTTPS, DNS, and production deployment for codecamp-advantage.
 
 ---
 

@@ -41,4 +41,5 @@ coverage
 *.pem
 .cache
 # Database backups
+/Backup*.sql
 Backup_*.sql*.out

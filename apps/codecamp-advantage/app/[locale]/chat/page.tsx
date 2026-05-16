@@ -1,17 +1,41 @@
 "use client";
 
 import { Button } from "@reading-advantage/ui";
-import { Send, Plus } from "lucide-react";
+import { Send, Plus, Lock } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import { useChatStream } from "@/lib/use-chat-stream";
+import { useAuth } from "@reading-advantage/auth-client";
 
 export default function ChatPage() {
   const t = useTranslations("chat");
+  const tl = useTranslations("login");
   const locale = useLocale();
   const [input, setInput] = useState("");
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { messages, isLoading, sendMessage } = useChatStream({ locale });
+
+  if (authLoading) {
+    return (
+      <div className="container flex h-[calc(100vh-4rem)] flex-col py-6">
+        <div className="mb-4 h-8 w-36 animate-pulse rounded bg-muted" />
+        <div className="flex-1 animate-pulse rounded-lg border bg-muted" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="container flex h-[calc(100vh-4rem)] items-center justify-center py-6">
+        <div className="max-w-md rounded-lg border bg-card p-8 text-center text-card-foreground">
+          <Lock className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
+          <h1 className="mb-2 text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{tl("loginTitle")}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container flex h-[calc(100vh-4rem)] flex-col py-6">

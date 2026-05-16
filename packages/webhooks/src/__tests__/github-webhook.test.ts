@@ -195,7 +195,7 @@ describe("GitHub webhook handler", () => {
 
   it("returns 200 when no matching exercise repo is found", async () => {
     vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getPrReviewByPrUrl>>);
-    vi.mocked(getExerciseRepoByUrl).mockResolvedValue(null);
+    vi.mocked(getExerciseRepoByUrl).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof getExerciseRepoByUrl>>);
 
     const payload = JSON.stringify({
       action: "opened",

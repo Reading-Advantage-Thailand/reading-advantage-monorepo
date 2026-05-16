@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_deployment_20260516",
+  "type": "feature",
+  "status": "in-progress",
+  "created_at": "2026-05-16T00:00:00Z",
+  "updated_at": "2026-05-16T00:00:00Z",
+  "description": "Deploy codecamp-advantage to Google Cloud Run in the codecamp-advantage project, connected to the shared Cloud SQL instance in reading-advantage, with provider-neutral runtime configuration and GitHub App webhook support.",
+  "estimated_tasks": 12,
+  "actual_tasks": null,
+  "deviation_notes": null
+}

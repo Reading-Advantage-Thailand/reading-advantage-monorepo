@@ -26,6 +26,7 @@
     "@reading-advantage/types": "workspace:*",
     "@reading-advantage/ui": "workspace:*",
     "@reading-advantage/utils": "workspace:*",
+    "@reading-advantage/webhooks": "workspace:*",
     "@tanstack/react-query": "^5.90.10",
     "@trpc/client": "^11.1.0",
     "@trpc/react-query": "^11.1.0",

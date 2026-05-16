@@ -207,6 +207,9 @@ importers:
       '@reading-advantage/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@reading-advantage/webhooks':
+        specifier: workspace:*
+        version: link:../../packages/webhooks
       '@tanstack/react-query':
         specifier: ^5.90.10
         version: 5.100.8(react@19.2.5)

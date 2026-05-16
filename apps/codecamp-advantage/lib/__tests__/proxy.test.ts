@@ -18,9 +18,9 @@ vi.mock("next-intl/middleware", async () => {
 import { NextRequest } from "next/server";
 import { proxy, config } from "../../proxy";
 
-function createRequest(pathname: string, cookies?: Record<string, string>) {
+function createRequest(pathname: string, cookies?: Record<string, string>, headers?: HeadersInit) {
   const url = new URL(pathname, "http://localhost:3000");
-  const req = new NextRequest(url);
+  const req = new NextRequest(url, { headers });
   if (cookies) {
     for (const [name, value] of Object.entries(cookies)) {
       req.cookies.set(name, value);
@@ -74,11 +74,29 @@ describe("proxy", () => {
     const res = await proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/th/");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/th");
+  });
+
+  it("builds non-prefixed locale redirects from forwarded Cloud Run host headers", async () => {
+    const req = createRequest("/", undefined, {
+      "x-forwarded-host": "codecamp.reading-advantage.com",
+      "x-forwarded-proto": "https",
+    });
+    const res = await proxy(req);
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe("https://codecamp.reading-advantage.com/th");
   });
 
   it("allows API routes through without intl processing", async () => {
     const req = createRequest("/api/trpc");
+    const res = await proxy(req);
+
+    expect(res.status).toBe(200);
+  });
+
+  it("allows webhook routes through without intl processing", async () => {
+    const req = createRequest("/webhooks/github/pr");
     const res = await proxy(req);
 
     expect(res.status).toBe(200);
@@ -133,5 +151,6 @@ describe("proxy", () => {
   it("exports a matcher config", () => {
     expect(config.matcher).toBeDefined();
     expect(Array.isArray(config.matcher)).toBe(true);
+    expect(config.matcher[0]).toContain("webhooks");
   });
 });

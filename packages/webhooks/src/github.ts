@@ -14,7 +14,7 @@ import {
   parsePrUrl,
   verifyWebhookSignature,
   getInstallationTokenForRepo,
-} from "./github-client.js";
+} from "./github-client";
 
 const github = new Hono();
 
