@@ -168,7 +168,7 @@ for i in $(seq "$START_PHASE" "$TOTAL_PHASES"); do
 
   STEP1_PROMPT="Load the measure skill. Read the project context from measure/index.md and the current track plan from ${plan_file}. Implement ${phase_heading} of the codecamp-advantage track (track ID: ${track_id}). Work ONLY in the codecamp-advantage codebase -- specifically: ${CODECAMP_PATHS}). Do NOT modify other projects in this monorepo (no reading-advantage, primary-advantage, science-advantage, or www-reading-advantage changes). Follow the measure workflow from measure/workflow.md: find the next uncompleted task in the phase, mark it as in-progress [~], write failing tests first (Red phase), implement to pass tests (Green phase), refactor, verify coverage, commit with a descriptive message following Conventional Commits, and update plan.md with the commit SHA. Repeat for all tasks in this phase. Use the kimi-webbridge skill to manually check your work against the running application. When all tasks in the phase are done, execute the phase completion verification and checkpointing protocol from measure/workflow.md: run lint, type-check, and tests for all affected packages, spawn a change-quality-reviewer for the phase diff, and propose a manual verification plan."
 
-  opencode run -m deepseek/deepseek-v4-flash "${STEP1_PROMPT}"
+  opencode run -m minimax-cn-coding-plan/MiniMax-M2.7 "${STEP1_PROMPT}"
 
   echo ""
   echo ">>> Step 1 complete for: ${phase_heading}"
@@ -192,7 +192,7 @@ for i in $(seq "$START_PHASE" "$TOTAL_PHASES"); do
 
   STEP3_PROMPT="Load the measure skill. Perform a final review of the just-completed phase: ${phase_heading} of the codecamp-advantage project (track ID: ${track_id}). Read the track plan from ${plan_file} to verify all tasks are properly marked [x] and all checkpoint SHAs are recorded. Then review measure/tech-debt.md and resolve all items related to codecamp-advantage: (1) If the issue has been fixed in the just-completed phase, change its status to 'Resolved' and add a brief note. (2) If it is a quick fix you can do in under 5 minutes, fix it now, test it, commit, and mark it 'Resolved'. (3) If it requires significant work, leave it as 'Open' but add a brief note about why it is deferred. After processing tech-debt items, run the full quality gate: pnpm turbo run lint --filter=codecamp-advantage, pnpm turbo run check-types --filter=codecamp-advantage, and the full codecamp test suite (${CODECAMP_TESTS}). Ensure all tests pass with zero failures. Commit any changes with an appropriate message following Conventional Commits format."
 
-  opencode run -m opencode-go/glm-5.1 "${STEP3_PROMPT}"
+  opencode run -m xiaomi/mimo-v2.5 "${STEP3_PROMPT}"
 
   echo ""
   echo ">>> Step 3 complete for: ${phase_heading}"

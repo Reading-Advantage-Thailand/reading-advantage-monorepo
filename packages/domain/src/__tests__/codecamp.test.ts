@@ -1011,6 +1011,20 @@ describe("getExerciseRepoByUrl", () => {
     expect(result).toEqual(repo);
   });
 
+  it("normalizes .git suffix before lookup", async () => {
+    const repo = { id: "r1", moduleId: "m1", repoUrl: "https://github.com/org/repo1", description: "Repo 1", order: 1, createdAt: new Date() };
+    const db = createMockDb({ selectResults: [repo] });
+
+    const result = await getExerciseRepoByUrl({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { repoUrl: "https://github.com/org/repo1.git" },
+    });
+
+    expect(result).toEqual(repo);
+  });
+
   it("returns null when no repo matches", async () => {
     const db = createMockDb({ selectResults: [] });
 

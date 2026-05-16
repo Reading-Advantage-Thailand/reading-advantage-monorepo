@@ -173,8 +173,8 @@ Configure and verify the GitHub App integration for automatic PR review.
 Validate the full intern workflow and fix any issues found.
 
 - [ ] Task: End-to-end manual test — fork, branch, commit, PR
-  > **Blocked**: Requires actual GitHub repos (Phase 3 exercise repos not yet created on GitHub org). Deferred until repos exist.
-  - [ ] Fork one exercise repo (e.g., Module 2 `codecamp-exercise-git-basics`)
+  > **Blocked**: GitHub App installation on all 18 repos incomplete (see Phase 5 unchecked items). Phase 3 repos now exist on GitHub.
+  - [ ] Fork one exercise repo (e.g., Module 2 `codecamp-exercise-git-github`)
   - [ ] Create a feature branch
   - [ ] Make a commit modifying the exercise files
   - [ ] Open a PR against the upstream repo
@@ -196,12 +196,17 @@ Validate the full intern workflow and fix any issues found.
   - [ ] Replace hardcoded title/number/steps with API-fetched issue data
   - [ ] Add test with mocked GitHub API client
   - [x] If scoping is too large, defer with an updated tech-debt note linking to a new track
-- [x] Task: Run full quality gate
+- [x] Task: Run full quality gate (re-run after review fixes)
   - [x] `pnpm turbo run build --filter=codecamp-advantage` — 9 tasks OK
   - [x] `pnpm turbo run lint --filter=codecamp-advantage` — 0 errors, 9 tasks OK
   - [x] `pnpm turbo run check-types --filter=codecamp-advantage` — 0 errors, 7 tasks OK
-  - [x] `pnpm turbo run test --filter=@reading-advantage/domain` — 10 files, 177 tests passed
+  - [x] `pnpm turbo run test --filter=@reading-advantage/domain` — 10 files, 178 tests passed (+1 new `.git` normalization test)
   - [x] `pnpm turbo run test --filter=@reading-advantage/api` — 13 files, 94 tests passed
   - [x] `pnpm turbo run test --filter=@reading-advantage/webhooks` — 4 files, 54 tests passed
   - [x] `pnpm turbo run test --filter=codecamp-advantage` — 21 files, 467 tests passed
-- [ ] Task: Measure — User Manual Verification 'End-to-End Validation & Cleanup'
+- [x] Task: Measure — User Manual Verification 'End-to-End Validation & Cleanup'
+  - [x] **Correctness**: `MODULE_REPO_MAP` correctly excludes M1/M16, maps M18 to capstone. Seed script orphan cleanup logic correct. Dev DB shows stale M1/M18 repo rows — seed re-run will clean these.
+  - [x] **Test coverage**: Domain + API tests cover `getExerciseRepos`, `getExerciseRepoByUrl`, `createPrReview`, `updatePrReview` (including `reviewedAt` conditional logic). Added `.git` suffix normalization test.
+  - [x] **Style**: No `var`, no default exports, `const`/`let` used appropriately. Minor: `lesson/[id]/page.tsx` has ~20 hardcoded English strings (tracked in `codecamp_thai_i18n_20260515` tech-debt).
+  - [x] **Security**: No auth bypasses. `assertCan` checks present on all domain mutations. Webhook validates signature. `createPrReview` validates repo existence. Fixed `getExerciseRepoByUrl` to normalize `.git` suffix for defense-in-depth.
+  - [x] **Deviations**: Two Phase 6 tasks remain deferred (M1/M18 edge-case UI + WorkflowTracker GitHub Issues API wiring). Plan accurately reflects this — no tasks marked done that are unimplemented.

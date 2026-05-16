@@ -695,7 +695,7 @@ export async function getExerciseRepoByUrl({
 }: DomainInput<{ repoUrl: string }>) {
   assertCan(user, "codecamp:read", tenant);
 
-  const normalizedUrl = input.repoUrl.replace(/\/$/, "");
+  const normalizedUrl = input.repoUrl.replace(/\.git$/, "").replace(/\/$/, "");
 
   const [repo] = await db
     .select()

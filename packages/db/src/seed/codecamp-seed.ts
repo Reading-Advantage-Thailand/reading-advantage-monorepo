@@ -1,7 +1,7 @@
 // Uses raw `db` (not tenant-scoped) because seeding is an admin operation
 // that writes global curriculum data with no user/tenant context.
 import { db } from "../index.js";
-import { eq, inArray } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import {
   codecampModules,
   codecampLessons,
