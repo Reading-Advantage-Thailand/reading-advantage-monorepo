@@ -88,38 +88,38 @@ Scaffold and push the first 9 exercise repos to the Reading Advantage GitHub org
 
 Scaffold and push the remaining exercise repos.
 
-- [ ] Task: Create Module 11 exercise repo (`codecamp-exercise-drizzle-queries`)
-  - [ ] Scaffold: Drizzle schema file + empty query files
-  - [ ] README.md: write SELECT, INSERT, UPDATE, DELETE queries
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 12 exercise repo (`codecamp-exercise-trpc-routers`)
-  - [ ] Scaffold: thin router + empty domain function files
-  - [ ] README.md: implement tRPC procedures calling domain functions
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 13 exercise repo (`codecamp-exercise-auth-rbac`)
-  - [ ] Scaffold: app with login stub and protected routes
-  - [ ] README.md: implement assertCan checks and role-based access
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 14 exercise repo (`codecamp-exercise-next-intl`)
-  - [ ] Scaffold: Next.js app with i18n config, empty translation files
-  - [ ] README.md: add Thai and English translations, use them in components
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 15 exercise repo (`codecamp-exercise-ai-sdk-chat`)
-  - [ ] Scaffold: Next.js app with empty chat route handler
-  - [ ] README.md: implement streaming chat with AI SDK
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 17 exercise repo (`codecamp-exercise-docker-deploy`)
-  - [ ] Scaffold: Next.js app with empty Dockerfile and docker-compose.yml
-  - [ ] README.md: write a multi-stage Dockerfile and docker-compose setup
-  - [ ] Push to GitHub
-- [ ] Task: Create Module 18 practice repo (`codecamp-progress-tracker`)
-  - [ ] Scaffold: Next.js + Drizzle + tRPC scaffold mirroring RA patterns
-  - [ ] README.md: project spec for the capstone progress tracker
-  - [ ] Create `.github/ISSUE_TEMPLATE/` with practice issue templates
-  - [ ] Pre-file 5–10 practice Issues on the repo (feature requests, bug reports)
-  - [ ] Push to GitHub
-- [ ] Task: Push reference solutions to `solution/` branch on each Phase 3 exercise repo (M11–15, M17)
-  - [ ] Capstone repo (M18) does not need a `solution/` branch — interns submit PRs against open Issues
+- [x] Task: Create Module 11 exercise repo (`codecamp-exercise-databases-orms`)
+  - [x] Scaffold: Drizzle schema file + empty query files
+  - [x] README.md: write SELECT, INSERT, UPDATE, DELETE queries
+  - [x] Push to GitHub
+- [x] Task: Create Module 12 exercise repo (`codecamp-exercise-trpc-server-actions`)
+  - [x] Scaffold: thin router + empty domain function files
+  - [x] README.md: implement tRPC procedures calling domain functions
+  - [x] Push to GitHub
+- [x] Task: Create Module 13 exercise repo (`codecamp-exercise-authentication`)
+  - [x] Scaffold: app with login stub and protected routes
+  - [x] README.md: implement assertCan checks and role-based access
+  - [x] Push to GitHub
+- [x] Task: Create Module 14 exercise repo (`codecamp-exercise-internationalization`)
+  - [x] Scaffold: Next.js app with i18n config, empty translation files
+  - [x] README.md: add Thai and English translations, use them in components
+  - [x] Push to GitHub
+- [x] Task: Create Module 15 exercise repo (`codecamp-exercise-ai-integration`)
+  - [x] Scaffold: Next.js app with empty chat route handler
+  - [x] README.md: implement streaming chat with AI SDK
+  - [x] Push to GitHub
+- [x] Task: Create Module 17 exercise repo (`codecamp-exercise-cloud-docker`)
+  - [x] Scaffold: Next.js app with empty Dockerfile and docker-compose.yml
+  - [x] README.md: write a multi-stage Dockerfile and docker-compose setup
+  - [x] Push to GitHub
+- [x] Task: Create Module 18 practice repo (`codecamp-progress-tracker`)
+  - [x] Scaffold: Next.js + Drizzle + tRPC scaffold mirroring RA patterns
+  - [x] README.md: project spec for the capstone progress tracker
+  - [x] Create `.github/ISSUE_TEMPLATE/` with practice issue templates
+  - [x] Pre-file 5–10 practice Issues on the repo (8 issues created: 6 features, 2 bugs)
+  - [x] Push to GitHub
+- [x] Task: Push reference solutions to `solution/` branch on each Phase 3 exercise repo (M11–15, M17)
+  - [x] Capstone repo (M18) does not need a `solution/` branch — interns submit PRs against open Issues
 - [ ] Task: Measure — User Manual Verification 'Exercise Repos Modules 11–18'
 
 ## Phase 4: Create Portfolio Project Repos
