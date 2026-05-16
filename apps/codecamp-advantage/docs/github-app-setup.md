@@ -4,12 +4,12 @@ This document describes how to configure the GitHub App integration for automati
 
 ## Prerequisites
 
-- Organization owner access to the `reading-advantage` GitHub organization
+- Organization owner access to the `Reading-Advantage-Thailand` GitHub organization
 - A GitHub App registered under the organization
 
 ## Registering a GitHub App
 
-1. Go to **Settings → Developer settings → GitHub Apps** in the `reading-advantage` org
+1. Go to **Settings → Developer settings → GitHub Apps** in the `Reading-Advantage-Thailand` org
 2. Click **New GitHub App**
 3. Fill in the app name (e.g., `Reading Advantage Codecamp Reviewer`)
 4. Set **Homepage URL** to `https://codecamp.reading-advantage.com`
@@ -26,7 +26,7 @@ This document describes how to configure the GitHub App integration for automati
 ## Installing the App
 
 1. From the GitHub App settings page, click **Install App**
-2. Select the `reading-advantage` organization
+2. Select the `Reading-Advantage-Thailand` organization
 3. Choose **All repositories** or select only the exercise and portfolio repos:
    - All `codecamp-exercise-*` repos (15 repos)
    - `codecamp-portfolio-website`
