@@ -120,7 +120,11 @@ Scaffold and push the remaining exercise repos.
   - [x] Push to GitHub
 - [x] Task: Push reference solutions to `solution/` branch on each Phase 3 exercise repo (M11–15, M17)
   - [x] Capstone repo (M18) does not need a `solution/` branch — interns submit PRs against open Issues
-- [ ] Task: Measure — User Manual Verification 'Exercise Repos Modules 11–18'
+- [x] Task: Measure — User Manual Verification 'Exercise Repos Modules 11–18'
+  - [x] Verified `MODULE_REPO_MAP` contains all 6 Phase 3 repos (M11–15, M17) + M18 capstone
+  - [x] Verified seed data tests pass (16 repos total, M1/M16 excluded, no placeholders)
+  - [x] Visually verified module pages at localhost:3000 render exercise repos correctly
+  - [x] Note: M1 repo visible in dev DB is stale data — seed script cleanup logic is correct (lines 138–157 of `seed-codecamp.ts`)
 
 ## Phase 4: Create Portfolio Project Repos
 
