@@ -1,82 +1,112 @@
 export const en = {
     hero: {
         title: "CodeCamp Advantage",
-        subtitle: "The Future of AI-Powered Full-Stack Development Learning",
-        description: "Experience personalized learning with advanced AI that adapts to your unique journey in becoming a full-stack developer.",
-        comingSoon: "Coming in 2025",
+        subtitle: "Full-Stack Web Development Internship",
+        description: "An intensive 18-module bootcamp covering modern web development from fundamentals to production deployment. Learn by building real projects with AI-powered tutoring and automated code review.",
+        badge: "Now Enrolling",
+        status: "Active Bootcamp",
     },
-    keyFeatures: {
-        heading: "Key Features",
-        personalizedAI: {
-            title: "Personalized AI Instruction",
-            points: [
-                "One-on-one learning with advanced AI instructors",
-                "Adaptive curriculum that adjusts to your pace",
-                "Real-time feedback and code review",
+    curriculum: {
+        heading: "18-Module Curriculum",
+        subtitle: "4 phases from fundamentals to production",
+        phases: {
+            A: {
+                name: "Phase A",
+                title: "Fundamentals",
+                description: "Master the building blocks of modern web development",
+                modules: [
+                    "Dev Environment Setup",
+                    "Git & GitHub Fundamentals",
+                    "HTML & CSS Crash Course",
+                    "JavaScript Fundamentals",
+                    "TypeScript",
+                    "Testing with Vitest",
+                ],
+            },
+            B: {
+                name: "Phase B",
+                title: "Frontend & APIs",
+                description: "Build interactive user interfaces and RESTful APIs",
+                modules: [
+                    "React",
+                    "API Fundamentals",
+                    "Next.js 16 — Basics",
+                    "Next.js 16 — Advanced",
+                ],
+            },
+            C: {
+                name: "Phase C",
+                title: "Backend & Data",
+                description: "Connect to databases and build secure backends",
+                modules: [
+                    "Databases & ORMs",
+                    "tRPC & Server Actions",
+                    "Authentication",
+                ],
+            },
+            D: {
+                name: "Phase D",
+                title: "Advanced & Production",
+                description: "Add AI, internationalization, and deploy to production",
+                modules: [
+                    "Internationalization",
+                    "AI Integration",
+                    "Monorepo & Package Management",
+                    "Cloud & Dockerization",
+                    "Real-World Practice",
+                ],
+            },
+        },
+        projects: {
+            heading: "Portfolio Projects",
+            items: [
+                { phase: "A", title: "Personal Portfolio Website" },
+                { phase: "B", title: "Learning Dashboard" },
+                { phase: "C", title: "Student Progress Tracker" },
+                { phase: "D", title: "Full-Stack Production App" },
             ],
         },
-        projectBasedLearning: {
-            title: "Project-Based Learning",
+    },
+    features: {
+        heading: "Platform Features",
+        aiTutor: {
+            title: "AI Chat Tutor",
+            description: "24/7 coding assistant with streaming responses and conversation history. Get help with debugging, code review, and concept explanations instantly.",
             points: [
-                "Five major projects per course",
-                "GitHub integration for portfolio building",
-                "AI-powered project feedback",
+                "Real-time streaming responses",
+                "Persistent conversation history",
+                "Context-aware module assistance",
+                "Code snippet explanations",
             ],
         },
-    },
-    technologyTracks: {
-        heading: "Technology Tracks",
-        tracks: [
-            {
-                title: "Next.js Full-Stack",
-                description: "Master modern web development with Next.js 14 and related technologies.",
-            },
-            {
-                title: "MERN Stack",
-                description: "Build powerful applications with MongoDB, Express, React, and Node.js.",
-            },
-            {
-                title: "Django + React",
-                description: "Combine Python's powerful Django framework with React's frontend capabilities.",
-            },
-        ],
-    },
-    professionalTools: {
-        heading: "Professional Development Tools",
-        tools: [
-            { name: "GitHub Integration", icon: "🔗" },
-            { name: "VS Code Compatible", icon: "💻" },
-            { name: "Docker Support", icon: "🐳" },
-            { name: "Deployment Tools", icon: "🚀" },
-        ],
-    },
-    technicalDetails: {
-        heading: "Technical Specifications",
-        details: [
-            {
-                title: "Built on Next.js 14",
-                description: "Utilizing the latest features for optimal performance.",
-            },
-            {
-                title: "Advanced AI Models",
-                description: "Powered by state-of-the-art language models.",
-            },
-            {
-                title: "Cloud Infrastructure",
-                description: "Scalable and reliable cloud-based platform.",
-            },
-            {
-                title: "Enterprise Security",
-                description: "Industry-standard security protocols.",
-            },
-        ],
+        githubIntegration: {
+            title: "GitHub Integration",
+            description: "Fork-based exercise workflow with automated PR review via OpenRouter. Submit exercises as pull requests and receive AI-powered code reviews.",
+            points: [
+                "Fork exercise repositories",
+                "Automated LLM code review",
+                "Pass/fail with detailed feedback",
+                "PR review status tracking",
+            ],
+        },
+        progressTracking: {
+            title: "Progress Tracking",
+            description: "Visual progress bars, locked modules with prerequisites, and phase completion stats keep you motivated and on track.",
+            points: [
+                "Phase completion visualization",
+                "Locked module prerequisites",
+                "Lesson progress tracking",
+                "Exercise and quiz scores",
+            ],
+        },
     },
     cta: {
         heading: "Ready to Start Your Development Journey?",
-        description: "Join our waitlist to be the first to experience CodeCamp Advantage in 2025.",
+        description: "Join our full-stack web development internship and build production-ready skills with AI-powered support.",
         buttons: {
-            joinWaitlist: "Join Waitlist",
-            learnMore: "Learn More",
+            applyNow: "Apply Now",
+            viewCurriculum: "View Curriculum",
+            contactSales: "Contact Sales",
         },
     },
 };
@@ -84,82 +114,112 @@ export const en = {
 export const th = {
     hero: {
         title: "โค้ดแคมป์แอดแวนเทจ",
-        subtitle: "อนาคตของการเรียนรู้การพัฒนาฟูลสแตกที่ขับเคลื่อนด้วย AI",
-        description: "สัมผัสการเรียนรู้แบบเฉพาะบุคคลด้วย AI ขั้นสูงที่ปรับให้เหมาะกับเส้นทางการเรียนรู้ของคุณในการเป็นนักพัฒนาฟูลสแตก",
-        comingSoon: "เปิดตัวในปี 2025",
+        subtitle: "การฝึกงานพัฒนาเว็บฟูลสแตก",
+        description: "บูทแคมป์ 18 โมดูลเข้มข้นครอบคลุมการพัฒนาเว็บสมัยใหม่ตั้งแต่พื้นฐานจนถึงการปรับใช้งานจริง เรียนรู้โดยการสร้างโปรเจกต์จริงพร้อม AI ติวเตอร์และการตรวจสอบโค้ดอัตโนมัติ",
+        badge: "เปิดรับสมัครแล้ว",
+        status: "บูทแคมป์กำลังดำเนินการ",
     },
-    keyFeatures: {
-        heading: "คุณสมบัติเด่น",
-        personalizedAI: {
-            title: "การสอนด้วย AI แบบเฉพาะบุคคล",
-            points: [
-                "เรียนรู้แบบตัวต่อตัวกับ AI ขั้นสูง",
-                "หลักสูตรปรับได้ตามจังหวะของคุณ",
-                "คำติชมและการตรวจโค้ดแบบเรียลไทม์",
+    curriculum: {
+        heading: "หลักสูตร 18 โมดูล",
+        subtitle: "4 เฟสตั้งแต่พื้นฐานจนถึงการปรับใช้งาน",
+        phases: {
+            A: {
+                name: "เฟส A",
+                title: "พื้นฐาน",
+                description: "เชี่ยวชาญพื้นฐานของการพัฒนาเว็บสมัยใหม่",
+                modules: [
+                    "การตั้งค่าสภาพแวดล้อมการพัฒนา",
+                    "พื้นฐาน Git และ GitHub",
+                    "คอร์สเร่งรัด HTML และ CSS",
+                    "พื้นฐาน JavaScript",
+                    "TypeScript",
+                    "การทดสอบด้วย Vitest",
+                ],
+            },
+            B: {
+                name: "เฟส B",
+                title: "ฟรอนต์เอนด์และ API",
+                description: "สร้างอินเตอร์เฟซผู้ใช้แบบโต้ตอบและ RESTful APIs",
+                modules: [
+                    "React",
+                    "พื้นฐาน API",
+                    "Next.js 16 — พื้นฐาน",
+                    "Next.js 16 — ขั้นสูง",
+                ],
+            },
+            C: {
+                name: "เฟส C",
+                title: "แบ็คเอนด์และข้อมูล",
+                description: "เชื่อมต่อกับฐานข้อมูลและสร้างแบ็คเอนด์ที่ปลอดภัย",
+                modules: [
+                    "ฐานข้อมูลและ ORMs",
+                    "tRPC และ Server Actions",
+                    "การยืนยันตัวตน",
+                ],
+            },
+            D: {
+                name: "เฟส D",
+                title: "ขั้นสูงและการปรับใช้งาน",
+                description: "เพิ่ม AI, การรองรับหลายภาษา, และปรับใช้งานจริง",
+                modules: [
+                    "การรองรับหลายภาษา",
+                    "การผสานรวม AI",
+                    "การจัดการ Monorepo และแพคเกจ",
+                    "คลาวด์และ Docker",
+                    "การฝึกฝนสถานการณ์จริง",
+                ],
+            },
+        },
+        projects: {
+            heading: "โปรเจกต์พอร์ตโฟลิโอ",
+            items: [
+                { phase: "A", title: "เว็บไซต์พอร์ตโฟลิโอส่วนตัว" },
+                { phase: "B", title: "แดชบอร์ดการเรียนรู้" },
+                { phase: "C", title: "ตัวติดตามความคืบหน้านักเรียน" },
+                { phase: "D", title: "แอปฟูลสแตกสำหรับการใช้งานจริง" },
             ],
         },
-        projectBasedLearning: {
-            title: "การเรียนรู้แบบโครงงาน",
+    },
+    features: {
+        heading: "คุณสมบัติของแพลตฟอร์ม",
+        aiTutor: {
+            title: "AI ติวเตอร์แชท",
+            description: "ผู้ช่วยเขียนโค้ดตลอด 24 ชั่วโมงพร้อมการตอบสนองแบบสตรีมมิ่งและประวัติการสนทนา รับความช่วยเหลือด้านการดีบั๊ก การตรวจสอบโค้ด และการอธิบายแนวคิดทันที",
             points: [
-                "โครงงานใหญ่ 5 โครงงานต่อหลักสูตร",
-                "เชื่อมต่อ GitHub เพื่อสร้างผลงานของคุณ",
-                "คำติชมโครงงานโดย AI",
+                "การตอบสนองแบบสตรีมมิ่งแบบเรียลไทม์",
+                "ประวัติการสนทนาที่คงทนของข้อมูล",
+                "การช่วยเหลือตามบริบทของโมดูล",
+                "คำอธิบายโค้ดสแน็ปเป็ต",
             ],
         },
-    },
-    technologyTracks: {
-        heading: "เส้นทางเทคโนโลยี",
-        tracks: [
-            {
-                title: "ฟูลสแตก Next.js",
-                description: "เชี่ยวชาญการพัฒนาเว็บยุคใหม่ด้วย Next.js 14 และเทคโนโลยีที่เกี่ยวข้อง",
-            },
-            {
-                title: "สแตก MERN",
-                description: "สร้างแอปพลิเคชันที่ทรงพลังด้วย MongoDB, Express, React และ Node.js",
-            },
-            {
-                title: "Django + React",
-                description: "ผสมผสานเฟรมเวิร์ก Django ของ Python กับความสามารถด้านส่วนหน้าของ React",
-            },
-        ],
-    },
-    professionalTools: {
-        heading: "เครื่องมือสำหรับการพัฒนาวิชาชีพ",
-        tools: [
-            { name: "การรวมเข้ากับ GitHub", icon: "🔗" },
-            { name: "รองรับ VS Code", icon: "💻" },
-            { name: "รองรับ Docker", icon: "🐳" },
-            { name: "เครื่องมือการปรับใช้", icon: "🚀" },
-        ],
-    },
-    technicalDetails: {
-        heading: "ข้อมูลทางเทคนิค",
-        details: [
-            {
-                title: "สร้างขึ้นบน Next.js 14",
-                description: "ใช้ฟีเจอร์ล่าสุดเพื่อประสิทธิภาพสูงสุด",
-            },
-            {
-                title: "โมเดล AI ขั้นสูง",
-                description: "ขับเคลื่อนโดยโมเดลภาษาที่ล้ำสมัย",
-            },
-            {
-                title: "โครงสร้างพื้นฐานระบบคลาวด์",
-                description: "แพลตฟอร์มบนคลาวด์ที่ปรับขนาดได้และเชื่อถือได้",
-            },
-            {
-                title: "ความปลอดภัยระดับองค์กร",
-                description: "โปรโตคอลความปลอดภัยตามมาตรฐานอุตสาหกรรม",
-            },
-        ],
+        githubIntegration: {
+            title: "การผสานรวม GitHub",
+            description: "เวิร์กโฟลว์การฝึกปฏิบัติแบบ Fork พร้อมการตรวจสอบ PR อัตโนมัติผ่าน OpenRouter ส่งแบบฝึกหัดเป็น pull request และรับการตรวจสอบโค้ดที่ขับเคลื่อนด้วย AI",
+            points: [
+                "Fork รีโป้แบบฝึกหัด",
+                "การตรวจสอบโค้ด LLM อัตโนมัติ",
+                "ผ่าน/ไม่ผ่านพร้อมข้อเสนอแนะโดยละเอียด",
+                "การติดตามสถานะการตรวจสอบ PR",
+            ],
+        },
+        progressTracking: {
+            title: "การติดตามความคืบหน้า",
+            description: "แถบความคืบหน้าแบบภาพ โมดูลที่ถูกล็อกพร้อมข้อกำหนดเบื้องต้น และสถิติการเสร็จสิ้นแต่ละเฟสช่วยให้คุณมีแรงจูงใจและอยู่ในเส้นทางที่ถูกต้อง",
+            points: [
+                "การแสดงภาพการเสร็จสิ้นเฟส",
+                "ข้อกำหนดเบื้องต้นของโมดูลที่ถูกล็อก",
+                "การติดตามความคืบหน้าบทเรียน",
+                "คะแนนแบบฝึกหัดและแบบทดสอบ",
+            ],
+        },
     },
     cta: {
         heading: "พร้อมเริ่มต้นเส้นทางการพัฒนาของคุณแล้วหรือยัง?",
-        description: "เข้าร่วมรายชื่อรอของเราเพื่อเป็นคนแรกที่ได้สัมผัส CodeCamp Advantage ในปี 2025",
+        description: "เข้าร่วมการฝึกงานพัฒนาเว็บฟูลสแตกของเราและสร้างทักษะระดับการใช้งานจริงพร้อมการสนับสนุนจาก AI",
         buttons: {
-            joinWaitlist: "เข้าร่วมรายชื่อรอ",
-            learnMore: "เรียนรู้เพิ่มเติม",
+            applyNow: "สมัครตอนนี้",
+            viewCurriculum: "ดูหลักสูตร",
+            contactSales: "ติดต่อฝ่ายขาย",
         },
     },
 };
@@ -167,82 +227,112 @@ export const th = {
 export const zh = {
     hero: {
         title: "代码营优势",
-        subtitle: "AI驱动的全栈开发学习的未来",
-        description: "体验由高级AI驱动的个性化学习，适应您成为全栈开发人员的独特旅程。",
-        comingSoon: "2025年推出",
+        subtitle: "全栈网页开发实习",
+        description: "一个包含18个模块的强化训练营，涵盖从基础到生产部署的现代网页开发。通过构建真实项目来学习，配备AI辅导和自动代码审查。",
+        badge: "正在招生",
+        status: "活跃训练营",
     },
-    keyFeatures: {
-        heading: "关键特点",
-        personalizedAI: {
-            title: "个性化AI指导",
-            points: [
-                "与先进的AI导师一对一学习",
-                "根据您的进度调整的自适应课程",
-                "实时反馈和代码审查",
+    curriculum: {
+        heading: "18模块课程",
+        subtitle: "从基础到生产的4个阶段",
+        phases: {
+            A: {
+                name: "阶段 A",
+                title: "基础",
+                description: "掌握现代网页开发的构建模块",
+                modules: [
+                    "开发环境设置",
+                    "Git与GitHub基础",
+                    "HTML与CSS速成课程",
+                    "JavaScript基础",
+                    "TypeScript",
+                    "使用Vitest进行测试",
+                ],
+            },
+            B: {
+                name: "阶段 B",
+                title: "前端与API",
+                description: "构建交互式用户界面和RESTful API",
+                modules: [
+                    "React",
+                    "API基础",
+                    "Next.js 16 — 基础",
+                    "Next.js 16 — 高级",
+                ],
+            },
+            C: {
+                name: "阶段 C",
+                title: "后端与数据",
+                description: "连接数据库并构建安全后端",
+                modules: [
+                    "数据库与ORM",
+                    "tRPC与Server Actions",
+                    "身份验证",
+                ],
+            },
+            D: {
+                name: "阶段 D",
+                title: "高级与生产",
+                description: "添加AI、国际化并部署到生产环境",
+                modules: [
+                    "国际化",
+                    "AI集成",
+                    "Monorepo与包管理",
+                    "云与Docker化",
+                    "真实世界实践",
+                ],
+            },
+        },
+        projects: {
+            heading: "作品集项目",
+            items: [
+                { phase: "A", title: "个人作品集网站" },
+                { phase: "B", title: "学习仪表板" },
+                { phase: "C", title: "学生进度追踪器" },
+                { phase: "D", title: "全栈生产应用" },
             ],
         },
-        projectBasedLearning: {
-            title: "基于项目的学习",
+    },
+    features: {
+        heading: "平台功能",
+        aiTutor: {
+            title: "AI聊天辅导",
+            description: "全天候编程助手，提供流式响应和对话历史记录。即时获取调试、代码审查和概念解释方面的帮助。",
             points: [
-                "每门课程包含五个主要项目",
-                "GitHub集成，用于创建您的作品集",
-                "由AI提供的项目反馈",
+                "实时流式响应",
+                "持久对话历史",
+                "上下文感知模块辅助",
+                "代码片段解释",
             ],
         },
-    },
-    technologyTracks: {
-        heading: "技术路线",
-        tracks: [
-            {
-                title: "Next.js 全栈",
-                description: "掌握使用Next.js 14及相关技术的现代Web开发",
-            },
-            {
-                title: "MERN技术栈",
-                description: "使用MongoDB, Express, React和Node.js构建强大的应用程序",
-            },
-            {
-                title: "Django + React",
-                description: "结合Python强大的Django框架与React的前端功能",
-            },
-        ],
-    },
-    professionalTools: {
-        heading: "专业开发工具",
-        tools: [
-            { name: "GitHub 集成", icon: "🔗" },
-            { name: "兼容 VS Code", icon: "💻" },
-            { name: "支持 Docker", icon: "🐳" },
-            { name: "部署工具", icon: "🚀" },
-        ],
-    },
-    technicalDetails: {
-        heading: "技术规格",
-        details: [
-            {
-                title: "基于 Next.js 14 构建",
-                description: "利用最新功能实现最佳性能",
-            },
-            {
-                title: "先进的AI模型",
-                description: "由最先进的语言模型驱动",
-            },
-            {
-                title: "云基础设施",
-                description: "可扩展且可靠的基于云的平台",
-            },
-            {
-                title: "企业级安全",
-                description: "符合行业标准的安全协议",
-            },
-        ],
+        githubIntegration: {
+            title: "GitHub集成",
+            description: "基于Fork的练习工作流，通过OpenRouter进行自动PR审查。将练习作为拉取请求提交并接收AI驱动的代码审查。",
+            points: [
+                "Fork练习仓库",
+                "自动LLM代码审查",
+                "通过/失败并附带详细反馈",
+                "PR审查状态跟踪",
+            ],
+        },
+        progressTracking: {
+            title: "进度跟踪",
+            description: "可视化进度条、带先决条件的锁定模块以及阶段完成统计，让您保持动力并走在正轨上。",
+            points: [
+                "阶段完成可视化",
+                "锁定模块先决条件",
+                "课程进度跟踪",
+                "练习和测验分数",
+            ],
+        },
     },
     cta: {
-        heading: "准备好开始您的开发旅程了吗？",
-        description: "加入我们的候补名单，成为首批体验2025年推出的CodeCamp Advantage的人",
+        heading: "准备好开始您的开发之旅了吗？",
+        description: "加入我们的全栈网页开发实习，借助AI支持构建可用于生产的技能。",
         buttons: {
-            joinWaitlist: "加入候补名单",
-            learnMore: "了解更多",
+            applyNow: "立即申请",
+            viewCurriculum: "查看课程",
+            contactSales: "联系销售",
         },
     },
 };
