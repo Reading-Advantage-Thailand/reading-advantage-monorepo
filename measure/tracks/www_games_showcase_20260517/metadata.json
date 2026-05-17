@@ -1,0 +1,10 @@
+{
+  "id": "www_games_showcase_20260517",
+  "title": "Create Advantage Games Showcase Page",
+  "status": "pending",
+  "created": "2026-05-17",
+  "description": "Create a dedicated games showcase page highlighting all 27 implemented educational games (vocabulary and sentence games) with XP system, leaderboard, and cross-platform integration info.",
+  "priority": "medium",
+  "spec": "spec.md",
+  "plan": "plan.md"
+}

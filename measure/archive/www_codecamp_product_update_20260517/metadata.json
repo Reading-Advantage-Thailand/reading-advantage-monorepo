@@ -1,0 +1,10 @@
+{
+  "id": "www_codecamp_product_update_20260517",
+  "title": "Update CodeCamp Advantage Product Page",
+  "status": "pending",
+  "created": "2026-05-17",
+  "description": "Update CodeCamp Advantage marketing page from 'Coming Soon' to reflect deployed platform: 18+ module curriculum, AI chat tutor, GitHub PR review automation, and intern management.",
+  "priority": "high",
+  "spec": "spec.md",
+  "plan": "plan.md"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "www_product_features_refresh_20260517",
+  "title": "Refresh Product Pages with Real Features",
+  "status": "pending",
+  "created": "2026-05-17",
+  "description": "Update Reading Advantage and Primary Advantage product pages with accurate feature lists, actual app screenshots, and a feature comparison matrix showing real capabilities across all products.",
+  "priority": "high",
+  "spec": "spec.md",
+  "plan": "plan.md"
+}

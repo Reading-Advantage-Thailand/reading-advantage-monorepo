@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_qa_prod_20260517",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-05-17T06:45:00Z",
+  "updated_at": "2026-05-17T06:45:00Z",
+  "description": "Comprehensive manual QA/QC testing of codecamp-advantage on the deployed production server (https://codecamp.reading-advantage.com). Covers production-specific infrastructure, HTTPS, Cloud Run, Cloud SQL, Secret Manager, real GitHub/OpenRouter integrations, DNS, caching, performance, and security.",
+  "estimated_tasks": 55,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

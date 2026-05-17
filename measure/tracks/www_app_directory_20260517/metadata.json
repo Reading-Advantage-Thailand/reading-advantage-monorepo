@@ -1,0 +1,10 @@
+{
+  "id": "www_app_directory_20260517",
+  "title": "Create Unified App Directory Page",
+  "status": "pending",
+  "created": "2026-05-17",
+  "description": "Create a central app directory page (/apps) that showcases all 5 products with role-based filtering, helping users understand which app is right for them and how to access it.",
+  "priority": "medium",
+  "spec": "spec.md",
+  "plan": "plan.md"
+}

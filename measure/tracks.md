@@ -64,6 +64,25 @@ This file tracks all major tracks for the project.
 
 ---
 
+### www-reading-advantage Website Updates (Based on Real Implementation)
+
+- [ ] **Track: Update Science Advantage Product Page** *Link: [./tracks/www_science_product_update_20260517/](./tracks/www_science_product_update_20260517/)*
+  Update marketing page from "Coming 2025" to reflect actual implemented features: student dashboards, teacher intervention alerts, AI recommendations, NGSS-aligned curriculum. Add real screenshots and role-based CTAs.
+
+- [x] **Track: Update CodeCamp Advantage Product Page** *Link: [./archive/www_codecamp_product_update_20260517/](./archive/www_codecamp_product_update_20260517/)*
+  Update marketing page from "Coming Soon" to reflect deployed platform: 18+ module curriculum, AI chat tutor, GitHub PR review automation, intern management. Add curriculum timeline and feature highlights. *Status: COMPLETE — Page updated with 4-phase curriculum (18 modules), AI tutor, GitHub integration, and progress tracking features. All 7 tests passing, lint clean. Commit: e27afc5*
+
+- [ ] **Track: Create Advantage Games Showcase Page** *Link: [./tracks/www_games_showcase_20260517/](./tracks/www_games_showcase_20260517/)*
+  Create dedicated games showcase page highlighting all 27 implemented educational games with XP system, leaderboard, adaptive difficulty, and cross-platform integration info.
+
+- [ ] **Track: Refresh Product Pages with Real Features** *Link: [./tracks/www_product_features_refresh_20260517/](./tracks/www_product_features_refresh_20260517/)*
+  Update Reading Advantage and Primary Advantage pages with accurate feature lists (AI content generation, 12-level system, FSRS flashcards, workbook generator, read-along audio, school rankings). Add actual app screenshots and feature comparison matrix.
+
+- [ ] **Track: Create Unified App Directory Page** *Link: [./tracks/www_app_directory_20260517/](./tracks/www_app_directory_20260517/)*
+  Create central app directory (/apps) showcasing all 5 products with role-based filtering (Student, Teacher, Admin, Parent, Intern), helping users navigate the ecosystem and choose the right platform.
+
+---
+
 - [x] **Track: codecamp-advantage — Full-Stack Web Dev Intern Bootcamp**
   *Link: [./archive/codecamp_advantage_20260513/](./archive/codecamp_advantage_20260513/)*
   *Status: COMPLETE — All 8 phases done. 18-module curriculum, GitHub integration (webhook + LLM review), admin dashboard, chat tutor, workflow tracker. Build passes, all tests green (domain: 159, api: 86, webhooks: 31, codecamp: 49). Subagent reviews completed with findings resolved.*
@@ -85,11 +104,19 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/codecamp_deployment_20260516/](./tracks/codecamp_deployment_20260516/)*
   Docker setup, shared Cloud SQL connectivity, CI/CD, environment configuration, HTTPS, DNS, and production deployment for codecamp-advantage.
 
+- [x] **Track: codecamp-advantage — Local QA/QC Testing**
+  *Link: [./archive/codecamp_qa_local_20260517/](./archive/codecamp_qa_local_20260517/)*
+  Comprehensive manual QA testing on local dev server. Covers auth, i18n, dashboard, lessons, quizzes, AI chat, PR workflow, admin panel, edge cases, and performance. *Status: COMPLETE — 41 tests passed, 0 failed, 0 partial. All 5 issues fixed: Chat AI (API key rotated), Quiz progress save (Date→ISO string), PR form (verified working), Locked module UX (tooltip added), Dashboard ARIA (role=progressbar added). Full report at measure/archive/codecamp_qa_local_20260517/qa-report.md*
+
+- [ ] **Track: codecamp-advantage — Production QA/QC Testing**
+  *Link: [./tracks/codecamp_qa_prod_20260517/](./tracks/codecamp_qa_prod_20260517/)*
+  Comprehensive manual QA testing on deployed production server. Covers infrastructure (HTTPS, DNS, Cloud Run), real integrations (OpenRouter, GitHub App), performance, caching, monitoring, and cross-browser testing. *Status: Plan created, ready for execution.*
+
 ---
 
-- [ ] **Track: Import www-reading-advantage Content & Video Pipeline**
-  *Link: [./tracks/www_content_video_import_20260514/](./tracks/www_content_video_import_20260514/)*
-  Import blog posts (13 EN + 13 TH), cover images, Thai TikTok videos, and extract the video generation pipeline into a new `@reading-advantage/video-pipeline` monorepo package. Framework code (next-intl, React 19, Tailwind v4) preserved; only content/assets/scripts ported.
+- [x] **Track: Import www-reading-advantage Content & Video Pipeline** *[ARCHIVED]*
+  *Link: [./archive/www_content_video_import_20260514/](./archive/www_content_video_import_20260514/)*
+  Import blog posts (13 EN + 13 TH), cover images, Thai TikTok videos, and extract the video generation pipeline into a new `@reading-advantage/video-pipeline` monorepo package. Framework code (next-intl, React 19, Tailwind v4) preserved; only content/assets/scripts ported. *Superseded by tracks based on actual app implementation.*
 
 ---
 
