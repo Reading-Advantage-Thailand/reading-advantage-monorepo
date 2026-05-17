@@ -1,0 +1,33 @@
+Task: Update CodeCamp Advantage Product Page (www_codecamp_product_update_20260517)
+
+Summary:
+Updated the CodeCamp Advantage marketing page to reflect the actual deployed platform
+instead of showing 'Coming Soon'. The page now accurately describes the 18-module
+curriculum, AI chat tutor, GitHub integration, and progress tracking features.
+
+Changes:
+- Updated locale file (EN/TH/ZH) with new content structure:
+  * hero: Now Enrolling badge, updated subtitle/description
+  * curriculum: 4 phases with 18 modules, portfolio projects
+  * features: AI Tutor, GitHub Integration, Progress Tracking
+  * cta: Apply Now, View Curriculum, Contact Sales buttons
+
+- Updated page component:
+  * Hero: Changed badge from 'Coming Soon' to 'Now Enrolling'
+  * Added Curriculum section with 4 phase cards (A-D)
+  * Added Portfolio Projects showcase
+  * Replaced generic feature cards with actual platform features
+  * Updated tech stack strip with relevant technologies
+  * Updated CTAs to reflect active enrollment
+
+- Updated tests:
+  * Added tests for phase cards, project cards, feature cards
+  * Verified all sections render correctly
+
+Files modified:
+- apps/www-reading-advantage/src/locales/pages/products/codecamp-advantage.ts
+- apps/www-reading-advantage/src/app/[locale]/(marketing)/products/codecamp-advantage/page.tsx
+- apps/www-reading-advantage/src/app/[locale]/(marketing)/products/codecamp-advantage/page.test.tsx
+
+Tests: 7/7 passing
+Lint: Clean (0 errors, 0 warnings)
