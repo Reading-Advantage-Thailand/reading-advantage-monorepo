@@ -89,8 +89,8 @@ Make the fork-to-PR-to-review loop reliable for ordinary interns.
   - [x] 14 tests in `codecamp-github-identity.test.ts` covering create/edit/null cases.
 - [~] Task: Improve webhook attribution and observability
   - [x] `githubUsername` now stored and normalized on all intern accounts.
-  - [ ] Webhook unmatched-event log query: deferred (existing webhook logs match on githubUsername; no new UI needed for MVP).
-  - [ ] Admin diagnostic view for unmatched events: deferred to future admin enhancement.
+  - [ ] Webhook unmatched-event log query: **blocked** — no webhook event log table in schema. Requires schema migration + new table + admin UI. Out of scope for this track; deferred to a dedicated admin observability track.
+  - [ ] Admin diagnostic view for unmatched events: same blocker — requires schema change first.
 - [x] Task: Fix manual PR tracking behavior
   - [x] Decision: manual submission tracks PR status only (webhook triggers LLM review). This is accurately documented in the fork-instruction UI.
   - [x] Invalid/wrong-repo PR URLs are now rejected server-side with a clear error message.
@@ -114,13 +114,13 @@ Ensure every linked repository exists and the capstone workflow uses real issues
   - [x] Create `Reading-Advantage-Thailand/codecamp-learning-dashboard` or update seed/dashboard links to the correct existing repo.
   - [x] Verify visibility is public.
   - [x] README added to both repos with unit progression table, acceptance criteria, getting-started commands, and submission instructions. Default branch `main` confirmed.
-  - [ ] Update `measure/tracks/codecamp_exercise_repos_20260515/plan.md` if prior completion claims were inaccurate.
+  - [x] Updated `measure/tracks/codecamp_exercise_repos_20260515/plan.md`: marked WorkflowTracker and fork-instruction tasks as complete; updated README audit and lockfile findings; Module 17 issue-template requirement revised to "not needed".
 - [x] Task: Verify exercise repo health
   - [x] Use `gh repo view` to verify all 15 `codecamp-exercise-*` repos and `codecamp-progress-tracker`.
   - [x] Verify every exercise repo has a `solution` branch and default branch `main`. (all 15 exercise repos confirmed; progress-tracker has only main — expected)
-  - [ ] Verify README instructions match current curriculum and command expectations. (deferred — requires repo-by-repo audit)
-  - [ ] Verify lockfiles or package manager instructions are intentional and consistent. (deferred)
-  - [ ] Add missing Module 17 issue templates or revise the requirement. (Module 17 uses cloud-docker repo; issue templates deferred)
+  - [x] README audit complete: all 15 exercise repos have substantive READMEs (2.4–4.0 KB). 12 repos with package.json had `npm install` — updated to `pnpm install` / `pnpm run` via GitHub API. TypeScript repo was missing Setup section entirely — added.
+  - [x] Lockfile check: no repos have lockfiles (correct — interns run `pnpm install` on fork, producing their own pnpm-lock.yaml).
+  - [x] Module 17 issue templates: **not needed** — Unit 17 (Cloud & Dockerization) has no GitHub Issues workflow in the class-period plan. Issue templates are only appropriate for Module 18 capstone. Plan convention note was incorrect; revised.
 - [x] Task: Build Module 18 issue-driven UI
   - [x] `getPracticeIssues(repoOwner, repoName)` domain function fetches open issues from GitHub public API (no auth, 5-min cache, filters out PRs, graceful 403/failure degradation).
   - [x] `PracticeIssue` interface exported from domain.
@@ -185,7 +185,7 @@ Prove the remediation is ready before running the GCP deployment sequence.
   - [x] Admin can create/edit intern GitHub username (form + procedure + inline edit added).
   - [x] Invalid/wrong-repo PR URL is rejected server-side.
   - [ ] Full manual E2E UI walkthrough: deferred to production QA track after redeployment.
-  - [ ] Module 18 practice issues render from GitHub data: deferred (WorkflowTracker GitHub API integration is medium-priority tech debt).
+  - [x] Module 18 practice issues render from GitHub data — implemented in this track (IssueSelector + practiceIssues tRPC procedure).
 - [x] Task: Produce pre-redeployment readiness note
   - [x] See `readiness-note.md` — resolves all P0 critical items; 2 conditional blockers (GitHub App on new repos, env vars).
   - [x] Points to `docs/deployment/gcp-cloud-run-monorepo-deployment.md`.

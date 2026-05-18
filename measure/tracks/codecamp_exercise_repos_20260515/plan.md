@@ -182,20 +182,18 @@ Validate the full intern workflow and fix any issues found.
   - [ ] Verify: LLM review posts comments on the PR (or mock review if API key missing)
   - [ ] Verify: `prReviews` tRPC query returns the review status
   - [ ] Verify: `review-history.tsx` component displays the review
-- [ ] Task: Update `fork-instruction.tsx` to handle Module 1 and Module 18 edge cases
-  > **Deferred**: Requires new translation keys (en+th), component logic changes in lesson/module pages, and tests. Not a quick fix. Tech-debt note updated.
-  - [ ] Module 1 (Dev Environment): show a message like "No exercise repo — this module is setup only"
-  - [ ] Module 18 (Real-World Practice): link to the practice Issues on the tracker repo
-  - [ ] Write tests for the edge cases
+- [x] Task: Update `fork-instruction.tsx` to handle Module 1 and Module 18 edge cases
+  - [x] Module 1 (Dev Environment): no change needed — Module 1 has only `theory`-type lessons, so the fork-exercise section never renders for Module 1. No dead-code guard required.
+  - [x] Module 18 (Real-World Practice): IssueSelector component added to lesson page in pre_redeploy track — shows open GitHub Issues from `codecamp-progress-tracker` above the ForkInstruction, with label badges and click-to-select. WorkflowTracker uses the selected issue's title/number.
 - [x] Task: Resolve tech-debt item: "`getExerciseRepos` generates repos for modules without exercises"
   - [x] Resolved structurally by the Phase 1 explicit-map refactor (M1, M16 produce no rows)
   - [x] Test coverage: `MODULE_REPO_MAP` excludes `dev-environment` and `monorepo-packages`; domain test confirms empty array for modules without repos; seed data test confirms exactly 16 rows (15 exercise + 1 capstone, no M1/M16)
-- [ ] Task: Resolve tech-debt item: "Module 18 WorkflowTracker uses hardcoded issue data"
-  > **Deferred**: Requires new `getPracticeIssues()` domain function calling GitHub Issues API, tRPC router, API tests, and frontend wiring. Tech-debt note updated.
-  - [ ] Wire WorkflowTracker to a new domain function `getPracticeIssues({ db, user, tenant })` that calls the GitHub Issues API for the `codecamp-progress-tracker` repo
-  - [ ] Replace hardcoded title/number/steps with API-fetched issue data
-  - [ ] Add test with mocked GitHub API client
-  - [x] If scoping is too large, defer with an updated tech-debt note linking to a new track
+- [x] Task: Resolve tech-debt item: "Module 18 WorkflowTracker uses hardcoded issue data"
+  - [x] `getPracticeIssues(repoOwner, repoName)` domain function implemented — fetches open issues from GitHub public API, filters out PRs, graceful 403 fallback, 5-min cache.
+  - [x] `practiceIssues: protectedProcedure` tRPC query added to codecamp router.
+  - [x] `IssueSelector` component on lesson page (Module 18 only) shows issues with label badges; WorkflowTracker uses selected issue's title/number.
+  - [x] 3 unit tests in `packages/domain/src/__tests__/codecamp-github-issues.test.ts`.
+  - [x] Implemented in pre_redeploy_remediation_20260518 track.
 - [x] Task: Run full quality gate (re-run after review fixes)
   - [x] `pnpm turbo run build --filter=codecamp-advantage` — 9 tasks OK
   - [x] `pnpm turbo run lint --filter=codecamp-advantage` — 0 errors, 9 tasks OK
