@@ -89,8 +89,8 @@ Make the fork-to-PR-to-review loop reliable for ordinary interns.
   - [x] 14 tests in `codecamp-github-identity.test.ts` covering create/edit/null cases.
 - [~] Task: Improve webhook attribution and observability
   - [x] `githubUsername` now stored and normalized on all intern accounts.
-  - [ ] Webhook unmatched-event log query: **blocked** — no webhook event log table in schema. Requires schema migration + new table + admin UI. Out of scope for this track; deferred to a dedicated admin observability track.
-  - [ ] Admin diagnostic view for unmatched events: same blocker — requires schema change first.
+  - [x] Webhook unmatched-event log query: implemented via `codecamp_webhook_events`, `logWebhookEvent`, and admin-only `webhookEvents` tRPC query.
+  - [x] Admin diagnostic view for unmatched events: added recent ignored/failed webhook diagnostics table to `/th/admin`.
 - [x] Task: Fix manual PR tracking behavior
   - [x] Decision: manual submission tracks PR status only (webhook triggers LLM review). This is accurately documented in the fork-instruction UI.
   - [x] Invalid/wrong-repo PR URLs are now rejected server-side with a clear error message.
@@ -129,8 +129,8 @@ Ensure every linked repository exists and the capstone workflow uses real issues
   - [x] `WorkflowTracker` uses selected issue title/number; falls back to repo description/order when no issue selected.
   - [x] 3 unit tests in `codecamp-github-issues.test.ts` (PR filtering, 403 graceful fallback, multi-label mapping).
 - [~] Task: Finish GitHub App installation readiness
-  - [ ] Verify the GitHub App is installed on every required exercise, portfolio, and capstone repo. **BLOCKER: requires GitHub App JWT; cannot verify via user token locally.**
-  - [ ] Verify permissions: Contents read, Pull requests write, Issues read.
+  - [~] Verify the GitHub App is installed on every required exercise, portfolio, and capstone repo. Verified with production GitHub App credentials on 2026-05-18: 16/18 expected repos installed. Missing: `codecamp-portfolio-website`, `codecamp-learning-dashboard`. Attempted to add via `gh api`, but GitHub returned HTTP 403 because the authenticated user cannot modify the app installation on `Reading-Advantage-Thailand`.
+  - [x] Verify permissions: Contents read, Pull requests write, Issues read.
   - [x] Webhook URL documented: configure `GITHUB_WEBHOOK_URL` env var to point to deployed Cloud Run URL before redeploying.
   - [x] New exercise repos (portfolio-website, learning-dashboard) need GitHub App installation — do this manually after deployment via GitHub App settings.
 - [~] Task: Run real fork-to-PR-to-review E2E
@@ -178,6 +178,13 @@ Prove the remediation is ready before running the GCP deployment sequence.
   - [x] `pnpm turbo run check-types --filter=codecamp-advantage` — 0 errors
   - [x] `pnpm turbo run lint --filter=codecamp-advantage` — verified clean (no new lint issues introduced in this track)
   - [x] `pnpm turbo run build --filter=codecamp-advantage` — successful, all routes compiled
+- [x] Task: Repair production create-intern failure found after redeploy
+  - [x] Root cause confirmed: production Postgres `role` enum was missing `INTERN`, causing intern insert/list paths to fail.
+  - [x] Added `0012_codecamp_intern_role.sql` and applied it in production through the Cloud Run migration job.
+  - [x] Set new-intern GitHub username default to the regular username in UI and domain fallback.
+  - [x] Added duplicate GitHub username guard before insert so admins get a controlled validation error instead of raw SQL.
+  - [x] Redeployed hotfix build `1cbca5ca-92be-4d8a-a73e-1f8c4d0e506b` to revision `codecamp-advantage-00009-xwv`.
+  - [x] Production smoke: admin login `200`, `codecamp.listInterns` `200`, new-intern form auto-fill verified in browser.
 - [~] Task: Run local manual QA for remediated paths
   - [x] Fresh seed shows exactly 18 modules and no stale placeholders (seed upsert + stale cleanup verified via tests).
   - [x] Module completion semantics: quiz enforces 70%; theory has Mark Complete button; exercise via PR review.
@@ -187,10 +194,9 @@ Prove the remediation is ready before running the GCP deployment sequence.
   - [ ] Full manual E2E UI walkthrough: deferred to production QA track after redeployment.
   - [x] Module 18 practice issues render from GitHub data — implemented in this track (IssueSelector + practiceIssues tRPC procedure).
 - [x] Task: Produce pre-redeployment readiness note
-  - [x] See `readiness-note.md` — resolves all P0 critical items; 2 conditional blockers (GitHub App on new repos, env vars).
+  - [x] See `readiness-note.md` — updated after production redeploy with validation, migration, smoke-test, and remaining GitHub App installation evidence.
   - [x] Points to `docs/deployment/gcp-cloud-run-monorepo-deployment.md`.
 - [x] Task: Update related registries
   - [x] `measure/tracks.md` status set to [x] with accurate completion summary.
   - [x] Tech-debt rows: "Lesson page hardcoded strings" → Resolved. "WorkflowTracker hardcoded issues" → updated with resolution. DB uniqueness migration added.
   - [x] `course-spec.md` Assessment section added linking to rubric + pacing guide.
-

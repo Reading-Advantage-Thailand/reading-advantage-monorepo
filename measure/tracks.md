@@ -93,7 +93,7 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: codecamp-advantage — Exercise Repos & Portfolio Projects**
   *Link: [./tracks/codecamp_exercise_repos_20260515/](./tracks/codecamp_exercise_repos_20260515/)*
-  Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end. *Status: Phases 1, 4, 5 (partial) complete. Phase 6 quality gate passed (792 tests green, 0 lint/type errors). E2E manual test, fork-instruction M1/M18 edge cases, and WorkflowTracker GitHub API wiring deferred.*
+  Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end. *Status: Repo README audit complete, Module 18 GitHub Issues UI wired, M1/M17 edge cases resolved/not needed, quality gates green. GitHub App verified on 16/18 expected repos with correct permissions; missing `codecamp-portfolio-website` and `codecamp-learning-dashboard` due org-owner install permissions. E2E manual test remains open.*
 
 - [x] **Track: codecamp-advantage — Thai Localization**
   *Link: [./archive/codecamp_thai_i18n_20260515/](./archive/codecamp_thai_i18n_20260515/)*
@@ -105,8 +105,8 @@ This file tracks all major tracks for the project.
   Docker setup, shared Cloud SQL connectivity, CI/CD, environment configuration, HTTPS, DNS, and production deployment for codecamp-advantage.
 
 - [x] **Track: codecamp-advantage — Pre-Redeployment Remediation**
-  *Link: [./tracks/codecamp_pre_redeploy_remediation_20260518/](./tracks/codecamp_pre_redeploy_remediation_20260518/)*
-  Fix audited curriculum/runtime blockers before redeploying: module progression deadlock, prerequisite enforcement, canonical seed cleanup, GitHub username attribution, manual PR review flow, missing portfolio repos, Module 18 issue workflow, curriculum fidelity tests, rubrics, and redeployment readiness gates. *Status: COMPLETE — All 44 tasks done. 990 tests passing. Module 18 GitHub Issues UI, curriculum fidelity tests (66), portfolio repo READMEs, DB uniqueness migration, lesson page fully localized. Blocked externals: GitHub App installation on new repos, E2E fork→PR→review (deferred to Production QA track).*
+  *Link: [./archive/codecamp_pre_redeploy_remediation_20260518/](./archive/codecamp_pre_redeploy_remediation_20260518/)*
+  Fix audited curriculum/runtime blockers before redeploying: module progression deadlock, prerequisite enforcement, canonical seed cleanup, GitHub username attribution, manual PR review flow, missing portfolio repos, Module 18 issue workflow, curriculum fidelity tests, rubrics, and redeployment readiness gates. *Status: COMPLETE + REDEPLOYED — 1004 targeted tests passing, Codecamp lint/type/build green, production build `6e53d3fe-4520-45bf-a6a1-292cfde07dfc` plus create-intern hotfix `1cbca5ca-92be-4d8a-a73e-1f8c4d0e506b`, DB changes applied through `0012_codecamp_intern_role.sql`, seed completed, smoke tests passed. Remaining external: GitHub App install on two portfolio repos plus real fork→PR→review Production QA.*
 
 - [x] **Track: codecamp-advantage — Local QA/QC Testing**
   *Link: [./archive/codecamp_qa_local_20260517/](./archive/codecamp_qa_local_20260517/)*
@@ -115,6 +115,10 @@ This file tracks all major tracks for the project.
 - [ ] **Track: codecamp-advantage — Production QA/QC Testing**
   *Link: [./tracks/codecamp_qa_prod_20260517/](./tracks/codecamp_qa_prod_20260517/)*
   Comprehensive manual QA testing on deployed production server. Covers infrastructure (HTTPS, DNS, Cloud Run), real integrations (OpenRouter, GitHub App), performance, caching, monitoring, and cross-browser testing. *Status: Plan created, ready for execution.*
+
+- [x] **Track: codecamp-advantage — AI Review Visibility**
+  *Link: [./archive/codecamp_ai_review_visibility_20260518/](./archive/codecamp_ai_review_visibility_20260518/)*
+  Clarify when AI PR review is expected, expose latest PR links/status in admin reporting, and show no-review-expected guidance for non-PR modules such as Unit 1. *Status: COMPLETE — cohort dashboard latest PR link/status, intern detail module-level review expectation, and student no-review-expected module copy implemented with tests/typecheck/lint/build green.*
 
 ---
 
