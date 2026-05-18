@@ -255,6 +255,28 @@ export const codecampRouter = router({
       }
     }),
 
+  // ─── GitHub Practice Issues (Module 18) ──────────────────
+
+  practiceIssues: protectedProcedure
+    .output(
+      z.array(
+        z.object({
+          number: z.number(),
+          title: z.string(),
+          body: z.string().nullable(),
+          htmlUrl: z.string(),
+          labels: z.array(z.string()),
+          state: z.string(),
+        })
+      )
+    )
+    .query(async () => {
+      return codecamp.getPracticeIssues(
+        "Reading-Advantage-Thailand",
+        "codecamp-progress-tracker"
+      );
+    }),
+
   // ─── Exercise Repos ───────────────────────────────────────
 
   exerciseRepos: protectedProcedure

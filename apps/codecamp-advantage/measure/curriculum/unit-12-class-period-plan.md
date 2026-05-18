@@ -553,7 +553,7 @@ git push
 
 ### Activity: Exercise — Build a Blog API with tRPC (40 min)
 
-**Exercise repo:** `codecamp-trpc-exercise`
+**Exercise repo:** `codecamp-exercise-trpc-server-actions`
 
 The intern forks the exercise repo which contains:
 - The blog database from Unit 11's exercise (Drizzle schema + seed data)

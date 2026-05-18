@@ -510,7 +510,7 @@ git push
 
 ### Activity: Exercise — Build a Code Review Bot (40 min)
 
-**Exercise repo:** `codecamp-ai-exercise`
+**Exercise repo:** `codecamp-exercise-ai-integration`
 
 The intern forks the exercise repo which contains:
 - A Next.js 16.0.0 app with a basic form

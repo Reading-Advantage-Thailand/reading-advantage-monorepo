@@ -521,7 +521,7 @@ git push
 
 ### Activity: Exercise — Convert a JS Module to TypeScript with Zod (40 min)
 
-**Exercise repo:** `codecamp-typescript-exercise`
+**Exercise repo:** `codecamp-exercise-typescript`
 
 The intern forks the exercise repo which contains:
 - `src/users.js` — a module with functions to fetch, filter, and sort users

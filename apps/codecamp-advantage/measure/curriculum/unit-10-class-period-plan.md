@@ -437,7 +437,7 @@ git push
 
 ### Activity: Exercise — Add API Routes and Streaming (40 min)
 
-**Exercise repo:** `codecamp-nextjs-advanced-exercise`
+**Exercise repo:** `codecamp-exercise-nextjs-advanced`
 
 The intern forks the exercise repo which contains:
 - A Next.js 16.0.0 app with basic pages (from Unit 09 exercise)

@@ -281,7 +281,7 @@ git push
 
 ### Activity: Exercise — Add i18n to the Blog App (40 min)
 
-**Exercise repo:** `codecamp-i18n-exercise`
+**Exercise repo:** `codecamp-exercise-internationalization`
 
 The intern forks the exercise repo which contains:
 - A Next.js 16.0.0 blog app with hardcoded English strings

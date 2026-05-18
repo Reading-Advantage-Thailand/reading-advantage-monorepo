@@ -545,7 +545,7 @@ git push
 
 ### Activity: Exercise — Build a Multi-Page Next.js App (40 min)
 
-**Exercise repo:** `codecamp-nextjs-basics-exercise`
+**Exercise repo:** `codecamp-exercise-nextjs-basics`
 
 The intern forks the exercise repo which contains:
 - A json-server with `modules`, `lessons`, and `progress` resources

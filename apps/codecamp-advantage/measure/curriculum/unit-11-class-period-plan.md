@@ -497,7 +497,7 @@ git push
 
 ### Activity: Exercise — Design a Blog Database (40 min)
 
-**Exercise repo:** `codecamp-drizzle-exercise`
+**Exercise repo:** `codecamp-exercise-databases-orms`
 
 The intern forks the exercise repo which contains:
 - A running PostgreSQL 16 instance (Docker)

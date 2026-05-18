@@ -563,7 +563,7 @@ section + section {
 
 ### Activity: Exercise — Build a Card Layout from a Mockup (25 min)
 
-**Exercise repo:** `codecamp-html-css-exercise`
+**Exercise repo:** `codecamp-exercise-html-css`
 
 The intern forks the exercise repo which contains:
 - A `design-mockup.png` showing a 3-column card grid with a hero

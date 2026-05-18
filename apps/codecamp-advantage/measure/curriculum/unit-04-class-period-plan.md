@@ -818,7 +818,7 @@ git push
 
 ### Activity: Exercise — Build a Dynamic Searchable List (40 min)
 
-**Exercise repo:** `codecamp-javascript-exercise`
+**Exercise repo:** `codecamp-exercise-javascript`
 
 The intern forks the exercise repo which contains:
 - A `data/users.json` with 20 user objects: `{ id, name, email, role, department }`

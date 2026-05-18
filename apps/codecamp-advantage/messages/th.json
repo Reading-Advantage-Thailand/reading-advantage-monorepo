@@ -200,6 +200,7 @@
     "solutionPlaceholder": "เขียนคำตอบของคุณที่นี่...",
     "markComplete": "ทำเครื่องหมายว่าเสร็จสิ้น",
     "lessonComplete": "บทเรียนเสร็จสิ้นแล้ว",
-    "completing": "กำลังดำเนินการ..."
+    "completing": "กำลังดำเนินการ...",
+    "expectedOutput": "ผลลัพธ์ที่คาดหวัง"
   }
 }

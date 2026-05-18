@@ -510,7 +510,7 @@ git push
 
 ### Activity: Exercise — Add Auth to the Blog API (40 min)
 
-**Exercise repo:** `codecamp-auth-exercise`
+**Exercise repo:** `codecamp-exercise-authentication`
 
 The intern forks the exercise repo which contains:
 - The blog tRPC API from Unit 12's exercise

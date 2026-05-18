@@ -885,7 +885,7 @@ git push
 
 ### Activity: Exercise — Build a Filterable Data Table (40 min)
 
-**Exercise repo:** `codecamp-react-exercise`
+**Exercise repo:** `codecamp-exercise-react`
 
 The intern forks the exercise repo which contains:
 - `data/students.json` — 15 student objects: `{ id, name, email, role, department, enrollDate, progress }`

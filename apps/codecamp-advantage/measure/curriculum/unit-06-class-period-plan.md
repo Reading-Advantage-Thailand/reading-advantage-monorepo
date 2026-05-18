@@ -436,7 +436,7 @@ Key metrics:
 
 ### Activity: Exercise — Write Tests Using TDD (30 min)
 
-**Exercise repo:** `codecamp-vitest-exercise`
+**Exercise repo:** `codecamp-exercise-vitest`
 
 The intern forks the exercise repo which contains:
 - `src/string-utils.ts` — with empty function signatures and JSDoc descriptions

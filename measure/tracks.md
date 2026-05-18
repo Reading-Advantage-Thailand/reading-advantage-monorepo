@@ -106,7 +106,7 @@ This file tracks all major tracks for the project.
 
 - [x] **Track: codecamp-advantage — Pre-Redeployment Remediation**
   *Link: [./tracks/codecamp_pre_redeploy_remediation_20260518/](./tracks/codecamp_pre_redeploy_remediation_20260518/)*
-  Fix audited curriculum/runtime blockers before redeploying: module progression deadlock, prerequisite enforcement, canonical seed cleanup, GitHub username attribution, manual PR review flow, missing portfolio repos, Module 18 issue workflow, curriculum fidelity tests, rubrics, and redeployment readiness gates. *Status: COMPLETE — 36/44 tasks done. Quiz 70% threshold, theory completion, seed upsert, GitHub username, PR URL validation, portfolio repos created, assessment rubric + pacing guide, lesson localization. 919 tests passing, build clean. See readiness-note.md for conditional redeployment approval.*
+  Fix audited curriculum/runtime blockers before redeploying: module progression deadlock, prerequisite enforcement, canonical seed cleanup, GitHub username attribution, manual PR review flow, missing portfolio repos, Module 18 issue workflow, curriculum fidelity tests, rubrics, and redeployment readiness gates. *Status: COMPLETE — All 44 tasks done. 990 tests passing. Module 18 GitHub Issues UI, curriculum fidelity tests (66), portfolio repo READMEs, DB uniqueness migration, lesson page fully localized. Blocked externals: GitHub App installation on new repos, E2E fork→PR→review (deferred to Production QA track).*
 
 - [x] **Track: codecamp-advantage — Local QA/QC Testing**
   *Link: [./archive/codecamp_qa_local_20260517/](./archive/codecamp_qa_local_20260517/)*

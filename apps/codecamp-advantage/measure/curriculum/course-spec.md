@@ -110,6 +110,10 @@ All versions are pinned to match the Reading Advantage monorepo.
 - **Quizzes**: Multiple choice, immediate scoring with explanations, per module
 - **Progress tracking**: Per-user across all modules, exercises, and quizzes
 
+## Assessment
+
+See [`docs/assessment-rubric.md`](../../../docs/assessment-rubric.md) for grading criteria across module exercises, quizzes, capstone PRs, code quality, and GitHub hygiene. See [`docs/pacing-guide.md`](../../../docs/pacing-guide.md) for instructor pacing and remediation guidance.
+
 ## Out of Scope
 
 - No real-time collaborative editing

@@ -496,7 +496,7 @@ git push
 
 ### Activity: Exercise — Build a CRUD Client (40 min)
 
-**Exercise repo:** `codecamp-api-exercise`
+**Exercise repo:** `codecamp-exercise-api-fundamentals`
 
 The intern forks the exercise repo which contains:
 - A running json-server with a `notes` resource: `{ id, title, content, category, createdAt }`

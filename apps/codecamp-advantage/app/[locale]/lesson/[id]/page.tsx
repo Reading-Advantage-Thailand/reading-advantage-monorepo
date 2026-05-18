@@ -33,6 +33,13 @@ export default function LessonPage() {
 
   const { data: prReviews } = trpc.codecamp.prReviews.useQuery();
 
+  const { data: practiceIssues } = trpc.codecamp.practiceIssues.useQuery(
+    undefined,
+    { enabled: lesson?.moduleSlug === "real-world-practice" }
+  );
+
+  const [selectedIssueNumber, setSelectedIssueNumber] = useState<number | null>(null);
+
   if (isLoading) {
     return (
       <div className="container py-12">
@@ -101,6 +108,14 @@ export default function LessonPage() {
               {tLesson("forkExerciseDesc")}
             </p>
 
+            {lesson.moduleSlug === "real-world-practice" && (
+              <IssueSelector
+                issues={practiceIssues ?? []}
+                selectedIssueNumber={selectedIssueNumber}
+                onSelect={setSelectedIssueNumber}
+              />
+            )}
+
             {lesson.moduleSlug === "real-world-practice" && moduleReviews.length > 0 && (() => {
               const reviewsByRepo = new Map<string, typeof moduleReviews[number]>();
               for (const review of moduleReviews) {
@@ -109,16 +124,19 @@ export default function LessonPage() {
                   reviewsByRepo.set(review.exerciseRepoId, review);
                 }
               }
+              const selectedIssue = practiceIssues?.find((i) => i.number === selectedIssueNumber);
               return (
                 <div className="mt-6">
                   <h3 className="mb-3 text-sm font-semibold">{tLesson("yourWorkflow")}</h3>
                   {Array.from(reviewsByRepo.entries()).map(([repoId, review]) => {
                     const repo = exerciseRepos?.find((r) => r.id === repoId);
+                    const issueTitle = selectedIssue?.title ?? repo?.description ?? "Practice Exercise";
+                    const issueNumber = selectedIssue?.number ?? repo?.order ?? 1;
                     return (
                       <WorkflowTracker
                         key={repoId}
-                        issueTitle={repo?.description ?? "Practice Exercise"}
-                        issueNumber={repo?.order ?? 1}
+                        issueTitle={issueTitle}
+                        issueNumber={issueNumber}
                         steps={[
                           { id: "claim", label: "Issue Claimed", description: "Pick an issue to work on", status: "completed" },
                           { id: "branch", label: "Branch Created", description: "Create a feature branch", status: "completed" },
@@ -163,7 +181,7 @@ export default function LessonPage() {
           <div className="mt-8 rounded-lg border p-6">
             <h2 className="text-xl font-semibold">{tLesson("practiceExercises")}</h2>
             {lesson.exercises.map((ex) => (
-              <ExerciseCard key={ex.id} exercise={ex} />
+              <ExerciseCard key={ex.id} exercise={ex} expectedOutput={(ex as { expectedOutput?: string | null }).expectedOutput ?? null} />
             ))}
           </div>
         )}
@@ -188,7 +206,7 @@ export default function LessonPage() {
   );
 }
 
-function ExerciseCard({ exercise }: { exercise: { id: string; title: string; instructions: string; starterCode: string | null; hints: string[] } }) {
+function ExerciseCard({ exercise, expectedOutput }: { exercise: { id: string; title: string; instructions: string; starterCode: string | null; hints: string[] }; expectedOutput: string | null }) {
   const tLesson = useTranslations("lesson");
   const [code, setCode] = useState(exercise.starterCode ?? "");
   const submitExercise = trpc.codecamp.submitExercise.useMutation();
@@ -197,6 +215,12 @@ function ExerciseCard({ exercise }: { exercise: { id: string; title: string; ins
     <div className="mt-4 rounded-lg border p-4">
       <h3 className="font-medium">{exercise.title}</h3>
       <p className="mt-2 text-sm text-muted-foreground">{exercise.instructions}</p>
+      {expectedOutput && (
+        <div className="mt-3 rounded-lg bg-muted p-3">
+          <p className="text-xs font-medium text-muted-foreground">{tLesson("expectedOutput")}</p>
+          <pre className="mt-1 overflow-x-auto text-xs font-mono">{expectedOutput}</pre>
+        </div>
+      )}
       <textarea
         value={code}
         onChange={(e) => setCode(e.target.value)}
@@ -457,6 +481,108 @@ function ChatTutor({ lessonId, moduleId }: { lessonId: string; moduleId: string 
           <Send className="h-4 w-4" />
         </Button>
       </div>
+    </div>
+  );
+}
+
+// ─── Issue Selector (Module 18) ───────────────────────────
+
+const LABEL_COLORS: Record<string, string> = {
+  Easy: "bg-green-100 text-green-700 border-green-300",
+  Medium: "bg-yellow-100 text-yellow-700 border-yellow-300",
+  Hard: "bg-red-100 text-red-700 border-red-300",
+};
+
+function IssueLabelBadge({ label }: { label: string }) {
+  const colorClass =
+    LABEL_COLORS[label] ?? "bg-secondary text-secondary-foreground border-border";
+  return (
+    <span
+      className={`inline-block rounded-full border px-2 py-0.5 text-xs font-medium ${colorClass}`}
+    >
+      {label}
+    </span>
+  );
+}
+
+interface PracticeIssue {
+  number: number;
+  title: string;
+  body: string | null;
+  htmlUrl: string;
+  labels: string[];
+  state: string;
+}
+
+function IssueSelector({
+  issues,
+  selectedIssueNumber,
+  onSelect,
+}: {
+  issues: PracticeIssue[];
+  selectedIssueNumber: number | null;
+  onSelect: (num: number | null) => void;
+}) {
+  if (issues.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="mt-6 rounded-lg border bg-muted/30 p-4">
+      <h3 className="mb-1 text-sm font-semibold">Choose a GitHub Issue to Work On</h3>
+      <p className="mb-3 text-xs text-muted-foreground">
+        Select an open issue from the practice tracker. Your selected issue will be
+        tracked in the workflow below.
+      </p>
+      <ul className="space-y-2">
+        {issues.map((issue) => {
+          const isSelected = issue.number === selectedIssueNumber;
+          return (
+            <li key={issue.number}>
+              <button
+                type="button"
+                onClick={() => onSelect(isSelected ? null : issue.number)}
+                className={`w-full rounded-lg border px-4 py-3 text-left transition-colors ${
+                  isSelected
+                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                    : "border-border hover:bg-accent"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <span className="mr-2 text-xs text-muted-foreground">
+                      #{issue.number}
+                    </span>
+                    <span className="text-sm font-medium">{issue.title}</span>
+                    {issue.labels.length > 0 && (
+                      <div className="mt-1.5 flex flex-wrap gap-1">
+                        {issue.labels.map((label) => (
+                          <IssueLabelBadge key={label} label={label} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <a
+                    href={issue.htmlUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="shrink-0 text-xs text-primary underline-offset-2 hover:underline"
+                    aria-label={`View issue #${issue.number} on GitHub`}
+                  >
+                    View on GitHub
+                  </a>
+                </div>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {selectedIssueNumber !== null && (
+        <p className="mt-2 text-xs text-muted-foreground">
+          Selected: Issue #{selectedIssueNumber}. Click again to deselect.
+        </p>
+      )}
     </div>
   );
 }

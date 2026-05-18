@@ -200,6 +200,7 @@
     "solutionPlaceholder": "Write your solution here...",
     "markComplete": "Mark Complete",
     "lessonComplete": "Lesson Completed",
-    "completing": "Completing..."
+    "completing": "Completing...",
+    "expectedOutput": "Expected Output"
   }
 }

@@ -1457,6 +1457,55 @@ export async function getChatContext({
   return context;
 }
 
+// ─── GitHub Issues (Module 18) ────────────────────────────
+
+export interface PracticeIssue {
+  number: number;
+  title: string;
+  body: string | null;
+  htmlUrl: string;
+  labels: string[];
+  state: string;
+}
+
+export async function getPracticeIssues(
+  repoOwner: string,
+  repoName: string
+): Promise<PracticeIssue[]> {
+  const url = `https://api.github.com/repos/${encodeURIComponent(repoOwner)}/${encodeURIComponent(repoName)}/issues?state=open&per_page=20`;
+  const fetchOptions = {
+    headers: { Accept: "application/vnd.github.v3+json" },
+    // next.revalidate is a Next.js ISR extension to RequestInit (not in standard types)
+    next: { revalidate: 300 },
+  } as RequestInit;
+  const res = await fetch(url, fetchOptions);
+  if (!res.ok) {
+    // If GitHub is unreachable, return empty list (graceful degradation)
+    console.warn(`[getPracticeIssues] GitHub API returned ${res.status}`);
+    return [];
+  }
+  const data = await res.json() as Array<{
+    number: number;
+    title: string;
+    body: string | null;
+    html_url: string;
+    labels: Array<{ name: string }>;
+    state: string;
+    pull_request?: unknown;
+  }>;
+  // Filter out pull requests (GitHub issues endpoint returns both)
+  return data
+    .filter((item) => !item.pull_request)
+    .map((item) => ({
+      number: item.number,
+      title: item.title,
+      body: item.body,
+      htmlUrl: item.html_url,
+      labels: item.labels.map((l) => l.name),
+      state: item.state,
+    }));
+}
+
 // ─── Re-exports ───────────────────────────────────────────
 
 export { reviewExercise, reviewResultSchema } from "./review-exercise.js";
