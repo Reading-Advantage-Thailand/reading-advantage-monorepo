@@ -104,6 +104,10 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/codecamp_deployment_20260516/](./tracks/codecamp_deployment_20260516/)*
   Docker setup, shared Cloud SQL connectivity, CI/CD, environment configuration, HTTPS, DNS, and production deployment for codecamp-advantage.
 
+- [x] **Track: codecamp-advantage — Pre-Redeployment Remediation**
+  *Link: [./tracks/codecamp_pre_redeploy_remediation_20260518/](./tracks/codecamp_pre_redeploy_remediation_20260518/)*
+  Fix audited curriculum/runtime blockers before redeploying: module progression deadlock, prerequisite enforcement, canonical seed cleanup, GitHub username attribution, manual PR review flow, missing portfolio repos, Module 18 issue workflow, curriculum fidelity tests, rubrics, and redeployment readiness gates. *Status: COMPLETE — 36/44 tasks done. Quiz 70% threshold, theory completion, seed upsert, GitHub username, PR URL validation, portfolio repos created, assessment rubric + pacing guide, lesson localization. 919 tests passing, build clean. See readiness-note.md for conditional redeployment approval.*
+
 - [x] **Track: codecamp-advantage — Local QA/QC Testing**
   *Link: [./archive/codecamp_qa_local_20260517/](./archive/codecamp_qa_local_20260517/)*
   Comprehensive manual QA testing on local dev server. Covers auth, i18n, dashboard, lessons, quizzes, AI chat, PR workflow, admin panel, edge cases, and performance. *Status: COMPLETE — 41 tests passed, 0 failed, 0 partial. All 5 issues fixed: Chat AI (API key rotated), Quiz progress save (Date→ISO string), PR form (verified working), Locked module UX (tooltip added), Dashboard ARIA (role=progressbar added). Full report at measure/archive/codecamp_qa_local_20260517/qa-report.md*

@@ -800,6 +800,7 @@ describe("codecamp router", () => {
         userId: "u1",
         name: "Intern One",
         username: "intern1",
+        githubUsername: null,
         moduleBreakdown: [
           { moduleId: "m1", title: "Module 1", completed: 2, totalLessons: 4, avgScore: 85 },
         ],

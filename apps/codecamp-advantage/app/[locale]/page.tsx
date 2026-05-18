@@ -27,7 +27,7 @@ import {
   Rocket,
   GitPullRequest,
 } from "lucide-react";
-import { isModuleLocked } from "@/lib/module-utils";
+import { isModuleLocked, getLockedByModuleTitle } from "@/lib/module-utils";
 
 const PHASE_ORDER = ["A", "B", "C", "D"] as const;
 
@@ -238,7 +238,14 @@ export default function HomePage() {
                   <p className="text-sm font-medium">
                     {phase.completedLessons} / {phase.totalLessons} {tm("lessons")}
                   </p>
-                  <div className="mt-1 h-2 w-32 overflow-hidden rounded-full bg-secondary">
+                  <div
+                    className="mt-1 h-2 w-32 overflow-hidden rounded-full bg-secondary"
+                    role="progressbar"
+                    aria-valuenow={phase.totalLessons > 0 ? Math.round((phase.completedLessons / phase.totalLessons) * 100) : 0}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={`${tm("lessons")}: ${phase.completedLessons} / ${phase.totalLessons}`}
+                  >
                     <div
                       className="h-full bg-primary transition-all"
                       style={{
@@ -262,6 +269,7 @@ export default function HomePage() {
                     lessonCount={mod.lessonCount}
                     phaseColor={colors.border}
                     isLocked={isModuleLocked(mod.id, allModules)}
+                    lockedByModule={getLockedByModuleTitle(mod.id, allModules)}
                   />
                 ))}
               </div>
@@ -304,6 +312,7 @@ function ModuleCard({
   lessonCount,
   phaseColor,
   isLocked,
+  lockedByModule,
 }: {
   icon: React.ReactNode;
   title: string;
@@ -314,8 +323,12 @@ function ModuleCard({
   lessonCount: number;
   phaseColor: string;
   isLocked?: boolean;
+  lockedByModule?: string | null;
 }) {
   const t = useTranslations("module");
+  const tooltipText = isLocked && lockedByModule
+    ? t("lockedTooltip", { module: lockedByModule })
+    : "";
 
   return (
     <div className={`rounded-lg border border-l-4 bg-card p-6 text-card-foreground shadow-sm transition-shadow hover:shadow-md ${phaseColor} ${isLocked ? "opacity-75" : ""}`}>
@@ -331,7 +344,14 @@ function ModuleCard({
       <h3 className="mb-2 text-xl font-semibold line-clamp-2">{title}</h3>
       <p className="mb-4 text-sm text-muted-foreground line-clamp-3">{description}</p>
       <div className="mb-4">
-        <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
+        <div
+          className="h-2 w-full overflow-hidden rounded-full bg-secondary"
+          role="progressbar"
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`${t("lessons")}: ${completedLessons} / ${lessonCount}`}
+        >
           <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
         </div>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -339,7 +359,13 @@ function ModuleCard({
         </p>
       </div>
       {isLocked ? (
-        <Button variant="outline" className="w-full" disabled aria-disabled="true">
+        <Button
+          variant="outline"
+          className="w-full"
+          disabled
+          aria-disabled="true"
+          title={tooltipText}
+        >
           {t("locked")}
         </Button>
       ) : (

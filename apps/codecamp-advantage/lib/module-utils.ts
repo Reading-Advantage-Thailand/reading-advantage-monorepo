@@ -19,6 +19,26 @@ export function isModuleLocked(
   return prevMod.progress < 100;
 }
 
+/**
+ * Get the title of the module that must be completed before this one.
+ * Returns null if the module is not locked or has no prerequisite.
+ */
+export function getLockedByModuleTitle(
+  moduleId: string,
+  modules: { id: string; order: number; title: string }[]
+): string | null {
+  const mod = modules.find((m) => m.id === moduleId);
+  if (!mod) return null;
+  if (mod.order <= 1) return null;
+
+  const prevMod = modules
+    .filter((m) => m.order < mod.order)
+    .sort((a, b) => b.order - a.order)[0];
+  if (!prevMod) return null;
+
+  return prevMod.title;
+}
+
 export type PrReviewStatus = "pending" | "reviewed" | "needs_changes" | "approved";
 
 /**

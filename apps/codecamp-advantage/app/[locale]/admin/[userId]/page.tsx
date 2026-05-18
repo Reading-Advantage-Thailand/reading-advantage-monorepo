@@ -2,6 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 import { useAuth } from "@reading-advantage/auth-client";
 import { trpc } from "@/lib/trpc";
 import { getPrDisplayName } from "@/lib/pr-url";
@@ -33,11 +34,16 @@ export default function InternDetailPage() {
   const params = useParams();
   const userId = params.userId as string;
   const { user, isLoading: authLoading } = useAuth();
+  const utils = trpc.useUtils();
   const { data: intern, isLoading: dataLoading } =
     trpc.codecamp.getInternProgress.useQuery(
       { userId },
       { enabled: user?.role === "ADMIN" && !!userId }
     );
+  const [githubUsername, setGithubUsername] = useState(intern?.githubUsername ?? "");
+  const updateGithub = trpc.codecamp.updateInternGithubUsername.useMutation({
+    onSuccess: () => utils.codecamp.getInternProgress.invalidate(),
+  });
 
   if (authLoading || dataLoading) {
     return (
@@ -101,6 +107,23 @@ export default function InternDetailPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold">{intern.name ?? intern.username}</h1>
         <p className="text-muted-foreground">@{intern.username}</p>
+        <div className="mt-3 flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">{t("githubUsername")}:</span>
+          <input
+            className="rounded border px-2 py-1 text-sm"
+            value={githubUsername}
+            onChange={(e) => setGithubUsername(e.target.value)}
+            placeholder="github-handle"
+          />
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={updateGithub.isPending}
+            onClick={() => updateGithub.mutate({ userId: intern.userId, githubUsername: githubUsername || null })}
+          >
+            {updateGithub.isPending ? t("saving") : t("save")}
+          </Button>
+        </div>
       </div>
 
       <div className="mb-8 rounded-lg border">

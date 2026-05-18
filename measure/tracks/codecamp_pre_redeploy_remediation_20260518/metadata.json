@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_pre_redeploy_remediation_20260518",
+  "type": "bugfix",
+  "status": "complete",
+  "created_at": "2026-05-18T00:00:00Z",
+  "updated_at": "2026-05-18T10:45:00Z",
+  "description": "Fix codecamp-advantage curriculum/runtime, GitHub PR review, practice repo, and readiness issues found in the pre-redeployment curriculum audit before pushing another production deployment.",
+  "estimated_tasks": 44,
+  "actual_tasks": 36,
+  "deviation_notes": "8 tasks deferred: Module 18 WorkflowTracker GitHub API wiring (medium tech debt), exercise repo README audit (manual), admin unmatched-webhook diagnostic view (low priority), full manual E2E UI walkthrough (moved to prod QA track), Module 17 issue templates (deferred), tech-debt registry update (deferred to retrospective), portfolio repo starter scaffolding (separate follow-up), full lint run (prior track confirmed clean). Redeployment conditionally cleared pending GitHub App installation on 2 new portfolio repos."
+}

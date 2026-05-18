@@ -12,13 +12,14 @@ import { ForkInstruction } from "@/components/fork-instruction";
 import { ReviewHistory } from "@/components/review-history";
 import { WorkflowTracker } from "@/components/workflow-tracker";
 import { useState, useMemo } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useChatStream } from "@/lib/use-chat-stream";
 import { LessonContent } from "@/components/lesson-content";
 
 export default function LessonPage() {
   const params = useParams();
   const lessonId = params.id as string;
+  const tLesson = useTranslations("lesson");
 
   const { data: lesson, isLoading } = trpc.codecamp.lesson.useQuery(
     { lessonId },
@@ -68,7 +69,7 @@ export default function LessonPage() {
       <Button variant="ghost" className="mb-6" asChild>
         <Link href={`/module/${lesson.moduleSlug}`}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Module
+          {tLesson("backToModule")}
         </Link>
       </Button>
 
@@ -82,17 +83,22 @@ export default function LessonPage() {
         </div>
 
         <div className="rounded-lg border p-6">
-          <h2 className="text-xl font-semibold">Content</h2>
+          <h2 className="text-xl font-semibold">{tLesson("content")}</h2>
           <div className="mt-4">
             <LessonContent type={lesson.type} content={lesson.content} />
           </div>
+          {lesson.type === "theory" && (
+            <div className="mt-4">
+              <TheoryCompleteButton lessonId={lesson.id} moduleId={lesson.moduleId} status={lesson.userStatus ?? "not_started"} />
+            </div>
+          )}
         </div>
 
         {(lesson.type === "exercise" || lesson.moduleSlug === "real-world-practice") && exerciseRepos && exerciseRepos.length > 0 && (
           <div className="mt-8 rounded-lg border p-6">
-            <h2 className="text-xl font-semibold">Fork-Based Exercise</h2>
+            <h2 className="text-xl font-semibold">{tLesson("forkExercise")}</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Complete this exercise by forking the repository, making changes on a branch, and opening a Pull Request.
+              {tLesson("forkExerciseDesc")}
             </p>
 
             {lesson.moduleSlug === "real-world-practice" && moduleReviews.length > 0 && (() => {
@@ -105,7 +111,7 @@ export default function LessonPage() {
               }
               return (
                 <div className="mt-6">
-                  <h3 className="mb-3 text-sm font-semibold">Your Workflow</h3>
+                  <h3 className="mb-3 text-sm font-semibold">{tLesson("yourWorkflow")}</h3>
                   {Array.from(reviewsByRepo.entries()).map(([repoId, review]) => {
                     const repo = exerciseRepos?.find((r) => r.id === repoId);
                     return (
@@ -139,7 +145,7 @@ export default function LessonPage() {
             </div>
             {moduleReviews.length > 0 && (
               <div className="mt-6 space-y-4">
-                <h3 className="text-sm font-semibold">PR Review Feedback</h3>
+                <h3 className="text-sm font-semibold">{tLesson("prReviewFeedback")}</h3>
                 {moduleReviews.map((review) => (
                   <ReviewHistory
                     key={review.id}
@@ -155,7 +161,7 @@ export default function LessonPage() {
 
         {lesson.exercises.length > 0 && (
           <div className="mt-8 rounded-lg border p-6">
-            <h2 className="text-xl font-semibold">Practice Exercises</h2>
+            <h2 className="text-xl font-semibold">{tLesson("practiceExercises")}</h2>
             {lesson.exercises.map((ex) => (
               <ExerciseCard key={ex.id} exercise={ex} />
             ))}
@@ -164,7 +170,7 @@ export default function LessonPage() {
 
         {lesson.quizQuestions.length > 0 && (
           <div className="mt-8 rounded-lg border p-6">
-            <h2 className="text-xl font-semibold">Quiz</h2>
+            <h2 className="text-xl font-semibold">{tLesson("quizSection")}</h2>
             <QuizComponent
               lessonId={lesson.id}
               moduleId={lesson.moduleId}
@@ -174,7 +180,7 @@ export default function LessonPage() {
         )}
 
         <div className="mt-8 rounded-lg border p-6">
-          <h2 className="text-xl font-semibold">Chat with AI Tutor</h2>
+          <h2 className="text-xl font-semibold">{tLesson("chatTutor")}</h2>
           <ChatTutor lessonId={lessonId} moduleId={lesson.moduleId} />
         </div>
       </div>
@@ -183,6 +189,7 @@ export default function LessonPage() {
 }
 
 function ExerciseCard({ exercise }: { exercise: { id: string; title: string; instructions: string; starterCode: string | null; hints: string[] } }) {
+  const tLesson = useTranslations("lesson");
   const [code, setCode] = useState(exercise.starterCode ?? "");
   const submitExercise = trpc.codecamp.submitExercise.useMutation();
 
@@ -194,7 +201,7 @@ function ExerciseCard({ exercise }: { exercise: { id: string; title: string; ins
         value={code}
         onChange={(e) => setCode(e.target.value)}
         className="mt-3 h-32 w-full rounded-lg border bg-background px-3 py-2 font-mono text-sm"
-        placeholder="Write your solution here..."
+        placeholder={tLesson("solutionPlaceholder")}
         aria-label="Exercise solution"
       />
       <Button
@@ -203,7 +210,7 @@ function ExerciseCard({ exercise }: { exercise: { id: string; title: string; ins
         onClick={() => submitExercise.mutate({ exerciseId: exercise.id, code })}
         disabled={submitExercise.isPending}
       >
-        {submitExercise.isPending ? "Submitting..." : "Submit Exercise"}
+        {submitExercise.isPending ? tLesson("submittingExercise") : tLesson("submitExercise")}
       </Button>
       {submitExercise.data && (
         <div className="mt-3 rounded-lg bg-muted p-3 text-sm">
@@ -220,6 +227,36 @@ function ExerciseCard({ exercise }: { exercise: { id: string; title: string; ins
         </div>
       )}
     </div>
+  );
+}
+
+function TheoryCompleteButton({ lessonId, moduleId: _moduleId, status }: { lessonId: string; moduleId: string; status: string }) {
+  const tLesson = useTranslations("lesson");
+  const utils = trpc.useUtils();
+  const markComplete = trpc.codecamp.markTheoryLessonComplete.useMutation({
+    onSuccess: () => {
+      utils.codecamp.lesson.invalidate();
+      utils.codecamp.moduleBySlug.invalidate();
+      utils.codecamp.dashboard.invalidate();
+    },
+  });
+
+  if (status === "completed") {
+    return (
+      <div className="flex items-center gap-2 rounded-lg bg-green-50 px-4 py-2 text-sm text-green-700">
+        <span>&#10003;</span>
+        <span>{tLesson("lessonComplete")}</span>
+      </div>
+    );
+  }
+
+  return (
+    <Button
+      onClick={() => markComplete.mutate({ lessonId })}
+      disabled={markComplete.isPending}
+    >
+      {markComplete.isPending ? tLesson("completing") : tLesson("markComplete")}
+    </Button>
   );
 }
 

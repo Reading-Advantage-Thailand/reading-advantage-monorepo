@@ -305,6 +305,8 @@ export async function submitExerciseAttempt({
 
 // ─── Quiz ─────────────────────────────────────────────────
 
+export const QUIZ_PASS_THRESHOLD = 70;
+
 export async function submitQuizAnswers({
   db,
   user,
@@ -345,13 +347,15 @@ export async function submitQuizAnswers({
 
   const score = Math.round((correctCount / questions.length) * 100);
 
+  const passed = score >= QUIZ_PASS_THRESHOLD;
+
   await updateUserProgress({
     db,
     user,
     tenant,
     input: {
       lessonId: input.lessonId,
-      status: "completed",
+      status: passed ? "completed" : "in_progress",
       score,
     },
   });
@@ -359,10 +363,44 @@ export async function submitQuizAnswers({
   return {
     lessonId: input.lessonId,
     score,
+    passed,
     total: questions.length,
     correctCount,
     details,
   };
+}
+
+export async function markTheoryComplete({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ lessonId: string }>) {
+  assertCan(user, "codecamp:submit", tenant);
+
+  const [lesson] = await db
+    .select()
+    .from(codecampLessons)
+    .where(eq(codecampLessons.id, input.lessonId))
+    .limit(1);
+
+  if (!lesson) {
+    throw new Error("Lesson not found");
+  }
+
+  if (lesson.type !== "theory") {
+    throw new Error("Lesson is not a theory lesson");
+  }
+
+  return updateUserProgress({
+    db,
+    user,
+    tenant,
+    input: {
+      lessonId: input.lessonId,
+      status: "completed",
+    },
+  });
 }
 
 // ─── Chat ─────────────────────────────────────────────────
@@ -521,6 +559,7 @@ export async function updateUserProgress({
   }
 
   const now = new Date();
+  const nowIso = now.toISOString();
 
   const [result] = await db
     .insert(codecampUserProgress)
@@ -540,7 +579,7 @@ export async function updateUserProgress({
         score: input.score !== undefined ? input.score : sql`${codecampUserProgress.score}`,
         completedAt:
           input.status === "completed"
-            ? sql`COALESCE(${codecampUserProgress.completedAt}, ${now})`
+            ? sql`COALESCE(${codecampUserProgress.completedAt}, ${nowIso})`
             : input.status !== undefined
               ? sql`${codecampUserProgress.completedAt}`
               : sql`${codecampUserProgress.completedAt}`,
@@ -786,13 +825,37 @@ export async function createPrReview({
 
   // Validate that the exercise repo exists
   const [repo] = await db
-    .select({ id: codecampExerciseRepos.id, moduleId: codecampExerciseRepos.moduleId })
+    .select({ id: codecampExerciseRepos.id, moduleId: codecampExerciseRepos.moduleId, repoUrl: codecampExerciseRepos.repoUrl })
     .from(codecampExerciseRepos)
     .where(eq(codecampExerciseRepos.id, input.exerciseRepoId))
     .limit(1);
 
   if (!repo) {
     throw new Error("Exercise repo not found");
+  }
+
+  // Validate PR URL format
+  let prUrlObj: URL;
+  try {
+    prUrlObj = new URL(input.prUrl);
+  } catch {
+    throw new Error("Invalid PR URL");
+  }
+  if (prUrlObj.hostname !== "github.com") {
+    throw new Error("PR URL must be a GitHub URL");
+  }
+  const prPathParts = prUrlObj.pathname.split("/").filter(Boolean);
+  // Expect: /owner/repo/pull/number
+  if (prPathParts.length < 4 || prPathParts[2] !== "pull" || isNaN(Number(prPathParts[3]))) {
+    throw new Error("Invalid PR URL: must be a GitHub pull request URL (e.g. https://github.com/owner/repo/pull/123)");
+  }
+
+  // Validate PR URL is for the correct exercise repo
+  const normalizedExerciseUrl = repo.repoUrl.replace(/\.git$/, "").replace(/\/$/, "").toLowerCase();
+  const prTargetUrl = `https://github.com/${prPathParts[0]}/${prPathParts[1]}`.toLowerCase();
+  if (prTargetUrl !== normalizedExerciseUrl) {
+    const repoName = normalizedExerciseUrl.split("/").pop() ?? "the exercise repo";
+    throw new Error(`PR URL must be for the ${repoName} repository`);
   }
 
   // Check for existing review with the same PR URL to prevent duplicates
@@ -1073,6 +1136,7 @@ export async function createInternAccount({
   username: string;
   name: string;
   password: string;
+  githubUsername?: string | null;
 }>) {
   assertCan(user, "admin:dashboard", tenant);
 
@@ -1111,6 +1175,9 @@ export async function createInternAccount({
         xp: 0,
         level: 1,
         cefrLevel: "A1",
+        githubUsername: input.githubUsername
+          ? input.githubUsername.replace(/^@/, "").toLowerCase()
+          : null,
       })
       .returning();
 
@@ -1123,6 +1190,37 @@ export async function createInternAccount({
 
     return created;
   });
+
+  return result;
+}
+
+export async function updateInternGithubUsername({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ userId: string; githubUsername: string | null }>) {
+  assertCan(user, "admin:dashboard", tenant);
+
+  const [intern] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(and(eq(users.id, input.userId), eq(users.role, "INTERN")))
+    .limit(1);
+
+  if (!intern) {
+    throw new Error("Intern not found");
+  }
+
+  const normalizedUsername = input.githubUsername
+    ? input.githubUsername.replace(/^@/, "").toLowerCase()
+    : null;
+
+  const [result] = await db
+    .update(users)
+    .set({ githubUsername: normalizedUsername })
+    .where(eq(users.id, input.userId))
+    .returning();
 
   return result;
 }
@@ -1289,6 +1387,7 @@ export async function getInternProgress({
     userId: intern.id,
     name: intern.name,
     username: intern.username,
+    githubUsername: intern.githubUsername ?? null,
     moduleBreakdown,
     quizScores: progress
       .filter((p) => {

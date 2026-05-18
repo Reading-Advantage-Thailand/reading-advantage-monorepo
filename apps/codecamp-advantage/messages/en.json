@@ -38,6 +38,7 @@
     "completed": "Completed",
     "inProgress": "In Progress",
     "locked": "Complete previous module",
+    "lockedTooltip": "Complete \"{module}\" to unlock this module",
     "lockedShort": "Locked",
     "notFound": "Module not found",
     "backToDashboard": "Back to Dashboard",
@@ -121,6 +122,10 @@
       "createSuccess": "Intern account created successfully!",
       "createError": "Failed to create intern account"
     },
+    "githubUsername": "GitHub Username",
+    "githubUsernameHint": "Optional. Used to attribute GitHub PR reviews. Enter without the @ symbol.",
+    "save": "Save",
+    "saving": "Saving...",
     "empty": {
       "noInterns": "No interns found",
       "noQuizzes": "No quiz submissions yet",
@@ -180,6 +185,21 @@
   "lesson": {
     "noContent": "No structured content available for this lesson yet.",
     "exerciseInstructions": "Exercise Instructions",
-    "quizInstructions": "Quiz Instructions"
+    "quizInstructions": "Quiz Instructions",
+    "backToModule": "Back to Module",
+    "content": "Content",
+    "forkExercise": "Fork-Based Exercise",
+    "forkExerciseDesc": "Complete this exercise by forking the repository, making changes on a branch, and opening a Pull Request.",
+    "yourWorkflow": "Your Workflow",
+    "prReviewFeedback": "PR Review Feedback",
+    "practiceExercises": "Practice Exercises",
+    "quizSection": "Quiz",
+    "chatTutor": "Chat with AI Tutor",
+    "submitExercise": "Submit Exercise",
+    "submittingExercise": "Submitting...",
+    "solutionPlaceholder": "Write your solution here...",
+    "markComplete": "Mark Complete",
+    "lessonComplete": "Lesson Completed",
+    "completing": "Completing..."
   }
 }

@@ -16,6 +16,7 @@ export default function NewInternPage() {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [githubUsername, setGithubUsername] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -25,6 +26,7 @@ export default function NewInternPage() {
       setUsername("");
       setName("");
       setPassword("");
+      setGithubUsername("");
       setError(null);
     },
     onError: (err: { message: string }) => {
@@ -68,7 +70,7 @@ export default function NewInternPage() {
       return;
     }
 
-    createIntern.mutate({ username, name, password });
+    createIntern.mutate({ username, name, password, githubUsername: githubUsername || undefined });
   }
 
   return (
@@ -147,6 +149,20 @@ export default function NewInternPage() {
           />
           <p className="text-xs text-muted-foreground">
             {t("passwordHint")}
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="githubUsername">{t("githubUsername")}</Label>
+          <Input
+            id="githubUsername"
+            value={githubUsername}
+            onChange={(e) => setGithubUsername(e.target.value)}
+            placeholder="github-handle"
+            maxLength={100}
+          />
+          <p className="text-xs text-muted-foreground">
+            {t("githubUsernameHint")}
           </p>
         </div>
 

@@ -39,7 +39,7 @@ function mapDomainError(err: unknown): never {
     if (err.message === "Lesson not found" || err.message === "Module not found" || err.message === "Exercise not found" || err.message === "Conversation not found" || err.message === "Intern not found" || err.message === "Exercise repo not found" || err.message === "Review not found") {
       throw new TRPCError({ code: "NOT_FOUND", message: err.message });
     }
-    if (err.message === "No quiz questions found for this lesson" || err.message === "Invalid phase" || err.message === "Username already exists" || err.message === "A review for this PR URL already exists" || err.message === "A repo with this URL already exists" || err.message.startsWith("Password must contain")) {
+    if (err.message === "No quiz questions found for this lesson" || err.message === "Invalid phase" || err.message === "Username already exists" || err.message === "A review for this PR URL already exists" || err.message === "A repo with this URL already exists" || err.message === "Lesson is not a theory lesson" || err.message.startsWith("Password must contain") || err.message === "Invalid PR URL" || err.message === "PR URL must be a GitHub URL" || err.message.startsWith("Invalid PR URL: must be a GitHub pull request URL") || err.message.startsWith("PR URL must be for the")) {
       throw new TRPCError({ code: "BAD_REQUEST", message: err.message });
     }
     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: err.message });
@@ -132,6 +132,21 @@ export const codecampRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await codecamp.submitQuizAnswers({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  markTheoryLessonComplete: protectedProcedure
+    .input(z.object({ lessonId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await codecamp.markTheoryComplete({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,
@@ -444,6 +459,24 @@ export const codecampRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await codecamp.createInternAccount({
+          db: ctx.tenantDb,
+          user: ctx.auth.user,
+          tenant: ctx.auth.tenant,
+          input,
+        });
+      } catch (err) {
+        throw mapDomainError(err);
+      }
+    }),
+
+  updateInternGithubUsername: adminProcedure
+    .input(z.object({
+      userId: z.string(),
+      githubUsername: z.string().nullable(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await codecamp.updateInternGithubUsername({
           db: ctx.tenantDb,
           user: ctx.auth.user,
           tenant: ctx.auth.tenant,

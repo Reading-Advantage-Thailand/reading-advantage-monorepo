@@ -38,6 +38,7 @@
     "completed": "เสร็จสิ้น",
     "inProgress": "กำลังเรียน",
     "locked": "ทำโมดูลก่อนหน้าให้เสร็จสิ้น",
+    "lockedTooltip": "ทำโมดูล \"{module}\" ให้เสร็จสิ้นเพื่อปลดล็อกโมดูลนี้",
     "lockedShort": "ล็อก",
     "notFound": "ไม่พบโมดูล",
     "backToDashboard": "กลับไปแดชบอร์ด",
@@ -121,6 +122,10 @@
       "createSuccess": "สร้างบัญชีผู้ฝึกงานสำเร็จ!",
       "createError": "ไม่สามารถสร้างบัญชีผู้ฝึกงานได้"
     },
+    "githubUsername": "ชื่อผู้ใช้ GitHub",
+    "githubUsernameHint": "ไม่บังคับ ใช้สำหรับระบุการตรวจสอบ PR บน GitHub ป้อนโดยไม่ต้องใส่สัญลักษณ์ @",
+    "save": "บันทึก",
+    "saving": "กำลังบันทึก...",
     "empty": {
       "noInterns": "ไม่พบผู้ฝึกงาน",
       "noQuizzes": "ยังไม่มีการส่งคำตอบแบบทดสอบ",
@@ -180,6 +185,21 @@
   "lesson": {
     "noContent": "ยังไม่มีเนื้อหาสำหรับบทเรียนนี้",
     "exerciseInstructions": "คำแนะนำแบบฝึกหัด",
-    "quizInstructions": "คำแนะนำแบบทดสอบ"
+    "quizInstructions": "คำแนะนำแบบทดสอบ",
+    "backToModule": "กลับไปที่โมดูล",
+    "content": "เนื้อหา",
+    "forkExercise": "การออกกำลังกายแบบ Fork",
+    "forkExerciseDesc": "ทำแบบฝึกหัดนี้โดยการ Fork ที่เก็บข้อมูล ทำการเปลี่ยนแปลงบน branch และเปิด Pull Request",
+    "yourWorkflow": "ขั้นตอนการทำงาน",
+    "prReviewFeedback": "ความคิดเห็นการตรวจสอบ PR",
+    "practiceExercises": "แบบฝึกหัด",
+    "quizSection": "แบบทดสอบ",
+    "chatTutor": "พูดคุยกับผู้สอน AI",
+    "submitExercise": "ส่งแบบฝึกหัด",
+    "submittingExercise": "กำลังส่ง...",
+    "solutionPlaceholder": "เขียนคำตอบของคุณที่นี่...",
+    "markComplete": "ทำเครื่องหมายว่าเสร็จสิ้น",
+    "lessonComplete": "บทเรียนเสร็จสิ้นแล้ว",
+    "completing": "กำลังดำเนินการ..."
   }
 }

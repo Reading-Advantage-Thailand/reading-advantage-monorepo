@@ -11,6 +11,14 @@ import {
 } from "../schema/codecamp.js";
 import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData, getPhaseDCurriculumData, MODULE_REPO_MAP } from "./codecamp-curriculum-data.js";
 
+/**
+ * Identifies which DB module slugs are stale (not in the canonical curriculum).
+ * Exported for unit testing.
+ */
+export function findStaleModuleSlugs(canonicalSlugs: Set<string>, dbSlugs: string[]): string[] {
+  return dbSlugs.filter((slug) => !canonicalSlugs.has(slug));
+}
+
 async function seed() {
   console.log("Seeding codecamp curriculum...");
 
@@ -21,23 +29,20 @@ async function seed() {
   const modules = [...phaseA.modules, ...phaseB.modules, ...phaseC.modules, ...phaseD.modules];
   const exerciseRepos = [...phaseA.exerciseRepos, ...phaseB.exerciseRepos, ...phaseC.exerciseRepos, ...phaseD.exerciseRepos];
 
-  let seededModules = 0;
+  let newModules = 0;
+  let updatedModules = 0;
   let seededLessons = 0;
-  let skippedModules = 0;
 
   await db.transaction(async (tx) => {
     for (const mod of modules) {
+      // Check existence before upsert so we can report new vs updated
       const existingModule = await tx
         .select({ id: codecampModules.id })
         .from(codecampModules)
         .where(eq(codecampModules.slug, mod.slug))
         .limit(1);
 
-      if (existingModule.length > 0) {
-        console.log(`  ⏭️  Module "${mod.slug}" already exists, skipping.`);
-        skippedModules++;
-        continue;
-      }
+      const isExisting = existingModule.length > 0;
 
       const [insertedModule] = await tx
         .insert(codecampModules)
@@ -49,9 +54,26 @@ async function seed() {
           phase: mod.phase,
           status: mod.status,
         })
+        .onConflictDoUpdate({
+          target: codecampModules.slug,
+          set: {
+            title: mod.title,
+            description: mod.description,
+            order: mod.order,
+            phase: mod.phase,
+            status: mod.status,
+          },
+        })
         .returning();
 
-      seededModules++;
+      if (isExisting) {
+        console.log(`  ✏️  Module "${mod.slug}" already exists, updated metadata.`);
+        updatedModules++;
+        // Skip lessons/exercises/quizzes for existing modules to avoid disrupting student progress
+        continue;
+      }
+
+      newModules++;
 
       for (const lesson of mod.lessons) {
         const [insertedLesson] = await tx
@@ -156,11 +178,32 @@ async function seed() {
       }
     }
 
+    // Unpublish stale modules (slugs not in the canonical curriculum)
+    const canonicalSlugs = new Set(modules.map((m) => m.slug));
+    const allDbModules = await tx
+      .select({ id: codecampModules.id, slug: codecampModules.slug, status: codecampModules.status })
+      .from(codecampModules);
+
+    let unpublishedStale = 0;
+    for (const dbMod of allDbModules) {
+      if (!canonicalSlugs.has(dbMod.slug) && dbMod.status === "published") {
+        await tx
+          .update(codecampModules)
+          .set({ status: "draft" })
+          .where(eq(codecampModules.id, dbMod.id));
+        console.log(`  📦 Unpublished stale module "${dbMod.slug}"`);
+        unpublishedStale++;
+      }
+    }
+    if (unpublishedStale > 0) {
+      console.log(`   ${unpublishedStale} stale module(s) unpublished.`);
+    }
+
     console.log(
-      `✅ Seeded ${seededModules} modules with ${seededLessons} lessons, exercises, and quizzes.`
+      `✅ Seeded ${newModules} new module(s) with ${seededLessons} lessons, exercises, and quizzes.`
     );
-    if (skippedModules > 0) {
-      console.log(`   ${skippedModules} module(s) were already present and skipped.`);
+    if (updatedModules > 0) {
+      console.log(`   ${updatedModules} existing module(s) had metadata updated.`);
     }
     if (deletedOrphans > 0) {
       console.log(`   ${deletedOrphans} orphaned exercise-repo row(s) removed.`);
