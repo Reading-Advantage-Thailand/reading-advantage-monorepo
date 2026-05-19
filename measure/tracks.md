@@ -66,7 +66,7 @@ This file tracks all major tracks for the project.
 
 ### www-reading-advantage Website Updates (Based on Real Implementation)
 
-- [x] **Track: Update Science Advantage Product Page** *Link: [./tracks/www_science_product_update_20260517/](./tracks/www_science_product_update_20260517/)*
+- [x] **Track: Update Science Advantage Product Page** *Link: [./archive/www_science_product_update_20260517/](./archive/www_science_product_update_20260517/)*
   Update marketing page from "Coming 2025" to reflect actual implemented features: student dashboards, teacher intervention alerts, AI recommendations, NGSS-aligned curriculum. Add real screenshots and role-based CTAs. *Status: COMPLETE — Page updated with Early Access badge, student features (join classes, interactive lessons, progress tracking, AI recommendations), teacher features (intervention alerts, class analytics, student progress, assignments), and platform features. All 7 tests passing, lint clean. Commit: 1c384a1*
 
 - [x] **Track: Update CodeCamp Advantage Product Page** *Link: [./archive/www_codecamp_product_update_20260517/](./archive/www_codecamp_product_update_20260517/)*
