@@ -1,0 +1,34 @@
+Task: Update Science Advantage Product Page (www_science_product_update_20260517)
+
+Summary:
+Updated the Science Advantage marketing page from 'Coming 2025' to 'Early Access'
+to reflect the actual implemented features in the science-advantage app.
+
+Changes:
+- Updated locale file (EN/TH/ZH):
+  * hero: Early Access badge, Request Demo CTA
+  * coreValue: NGSS curriculum, AI learning, real-time intervention
+  * studentFeatures: Join classes, interactive lessons, progress tracking, AI recommendations
+  * teacherFeatures: Intervention alerts, class analytics, student progress, assignments
+  * keyFeatures: Interactive curriculum, AI insights, assessment tools
+  * cta: Request Demo, Contact Sales
+
+- Updated page component:
+  * Hero: Changed badge from 'Coming Soon' to 'Early Access'
+  * Added Student Features section with 4 feature cards
+  * Added Teacher Features section with 4 feature cards
+  * Updated Key Features with actual platform capabilities
+  * Updated CTAs to reflect Early Access status
+
+- Updated tests:
+  * Added tests for student feature cards, teacher feature cards, key feature cards
+  * Verified hero badge renders correctly
+  * All 7 tests passing
+
+Files modified:
+- apps/www-reading-advantage/src/locales/pages/products/science-advantage.ts
+- apps/www-reading-advantage/src/app/[locale]/(marketing)/products/science-advantage/page.tsx
+- apps/www-reading-advantage/src/app/[locale]/(marketing)/products/science-advantage/page.test.tsx
+
+Tests: 7/7 passing
+Lint: Clean (0 errors, 0 warnings)
