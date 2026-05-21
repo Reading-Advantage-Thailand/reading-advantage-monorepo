@@ -1,0 +1,44 @@
+{
+  "skill_name": "mmx-generate-game-music",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate background music for the castle-defense game. I want something epic and orchestral for when the player is defending the castle.",
+      "expected_output": "A bash command using mmx music generate with --instrumental flag, appropriate orchestral genre, epic mood, and saved to apps/advantage-games/public/sounds/castle-defense-battle.mp3",
+      "files": [],
+      "expectations": [
+        "The command uses mmx music generate",
+        "The command includes --instrumental flag",
+        "The output path includes apps/advantage-games/public/sounds/",
+        "The filename includes castle-defense",
+        "The prompt mentions castle, defense, or medieval theme"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create a main theme song with lyrics for Reading Advantage. Make it an inspiring anime-style opening theme about learning and adventure.",
+      "expected_output": "A bash command with mmx music generate including --lyrics with substantial multi-verse content (not just a few lines), saved to the sounds directory",
+      "files": [],
+      "expectations": [
+        "The command uses mmx music generate",
+        "The command includes --lyrics with substantial content (multiple verses, chorus, bridge)",
+        "The lyrics mention Reading Advantage, learning, or adventure",
+        "The lyrics include at least 3 sections (Verse, Chorus, Bridge)",
+        "The output path includes apps/advantage-games/public/sounds/"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Generate music for the haunted-library game. It should be spooky but not too scary since it's for kids.",
+      "expected_output": "An mmx command with ambient/mysterious mood, appropriate for children, saved to sounds directory",
+      "files": [],
+      "expectations": [
+        "The command uses mmx music generate",
+        "The command includes --instrumental flag",
+        "The mood is mysterious, magical, or whimsical (not terrifying)",
+        "The output path includes apps/advantage-games/public/sounds/",
+        "The filename includes haunted-library"
+      ]
+    }
+  ]
+}

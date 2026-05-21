@@ -4,35 +4,38 @@ import Link from "next/link";
 import {
   BookOpen,
   Target,
+  RefreshCw,
+  GraduationCap,
   ArrowRight,
   Check,
   Microscope,
+  Atom,
   Sparkles,
-  Users,
-  Zap,
-  Brain,
-  AlertTriangle,
-  BarChart3,
-  ClipboardList,
-  UserCheck,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { LargeImageBreak } from "@/components/ui/large-image-break";
 import { Card } from "@/components/ui/card";
+import { MarketingSvg } from "@/components/marketing/marketing-svg";
+import type { Locale } from "@/config/locale-config";
 
 export const metadata: Metadata = {
   title: "Science Advantage - Reading Advantage Thailand",
   description:
-    "NGSS-aligned K-12 science education platform with interactive lessons, AI-powered recommendations, and real-time teacher intervention alerts.",
+    "Comprehensive K-12 science education platform aligned with NGSS standards. Interactive learning, adaptive curriculum, and teacher support tools.",
   openGraph: {
     title: "Science Advantage - Reading Advantage Thailand",
     description:
-      "Transform K-12 science education with our NGSS-aligned, AI-powered platform with real-time intervention tools.",
+      "Transform K-12 science education with our comprehensive, NGSS-aligned platform launching in 2025.",
   },
 };
 
-export default async function ScienceAdvantage() {
+export default async function ScienceAdvantage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const t = await getScopedI18n("pages.products.scienceAdvantage");
   return (
     <main className="overflow-x-hidden">
@@ -52,8 +55,7 @@ export default async function ScienceAdvantage() {
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-7 animate-in fade-in slide-in-from-bottom-8 duration-700">
               <div className="inline-flex items-center gap-2 bg-rose-100 text-rose-800 px-4 py-2 rounded-full text-sm font-bold mb-6">
-                <Sparkles className="w-4 h-4" />
-                {t("hero.badge")}
+                {t("hero.comingSoon")}
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
                 {t("hero.title")}
@@ -64,21 +66,13 @@ export default async function ScienceAdvantage() {
               <p className="text-lg md:text-xl leading-relaxed mb-8 text-rose-100">
                 {t("hero.description")}
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 bg-white text-rose-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-rose-50"
-                >
-                  {t("hero.cta")}
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-                <Link
-                  href="#features"
-                  className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white/20 border border-white/20"
-                >
-                  {t("hero.secondaryCta")}
-                </Link>
-              </div>
+              <Link
+                href="#waitlist"
+                className="inline-flex items-center gap-2 bg-white text-rose-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-rose-50"
+              >
+                {t("hero.cta")}
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
             <div className="lg:col-span-5 flex justify-center lg:justify-end animate-in fade-in slide-in-from-right-8 duration-1000">
               <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-4 shadow-2xl">
@@ -96,7 +90,36 @@ export default async function ScienceAdvantage() {
         </div>
       </section>
 
-      {/* Core Value Proposition */}
+      {/* Adaptive Learning Path — SVG Visualization */}
+      <section className="py-24 bg-white border-y border-[#dad4c8]">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-5">
+              <span className="uppercase tracking-widest text-xs font-semibold text-rose-600 mb-4 block">
+                Adaptive Engine
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Inquiry-based science, personalized for every student
+              </h2>
+              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+                Powered by Mastery Advantage — the KST + SRS engine that maps every science skill and schedules practice at the perfect moment.
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
+                <MarketingSvg
+                  baseName="ra-marketing-science-advantage"
+                  locale={locale as Locale}
+                  className="w-full h-auto"
+                  alt="Science Advantage adaptive learning visualization"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Value Proposition — Full-Width Color Room (Rose) */}
       <section className="bg-gradient-to-br from-rose-500 via-rose-600 to-rose-700 py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
@@ -107,40 +130,51 @@ export default async function ScienceAdvantage() {
               {t("coreValue.heading")}
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: BookOpen,
-                  title: t("coreValue.features.0.title"),
-                  description: t("coreValue.features.0.description"),
-                },
-                {
-                  icon: Brain,
-                  title: t("coreValue.features.1.title"),
-                  description: t("coreValue.features.1.description"),
-                },
-                {
-                  icon: AlertTriangle,
-                  title: t("coreValue.features.2.title"),
-                  description: t("coreValue.features.2.description"),
-                },
-              ].map((feature) => (
-                <Card
-                  key={feature.title}
-                  padding="p-12"
-                  className="rounded-[40px] bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
-                  data-testid="value-card"
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-rose-300 to-rose-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                    <feature.icon className="w-8 h-8 text-white" strokeWidth={2} />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4">
-                    {feature.title}
-                  </h3>
-                  <p className="text-rose-50 leading-relaxed">
-                    {feature.description}
-                  </p>
-                </Card>
-              ))}
+              <Card
+                padding="p-12"
+                className="rounded-[40px] bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
+                data-testid="value-card"
+              >
+                <div className="w-16 h-16 bg-gradient-to-br from-rose-300 to-rose-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <BookOpen className="w-8 h-8 text-white" strokeWidth={2} />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">
+                  {t("coreValue.features.0.title")}
+                </h3>
+                <p className="text-rose-50 leading-relaxed">
+                  {t("coreValue.features.0.description")}
+                </p>
+              </Card>
+              <Card
+                padding="p-12"
+                className="rounded-[40px] bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
+                data-testid="value-card"
+              >
+                <div className="w-16 h-16 bg-gradient-to-br from-rose-300 to-rose-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <Target className="w-8 h-8 text-white" strokeWidth={2} />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">
+                  {t("coreValue.features.1.title")}
+                </h3>
+                <p className="text-rose-50 leading-relaxed">
+                  {t("coreValue.features.1.description")}
+                </p>
+              </Card>
+              <Card
+                padding="p-12"
+                className="rounded-[40px] bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
+                data-testid="value-card"
+              >
+                <div className="w-16 h-16 bg-gradient-to-br from-rose-300 to-rose-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <RefreshCw className="w-8 h-8 text-white" strokeWidth={2} />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">
+                  {t("coreValue.features.2.title")}
+                </h3>
+                <p className="text-rose-50 leading-relaxed">
+                  {t("coreValue.features.2.description")}
+                </p>
+              </Card>
             </div>
           </div>
         </div>
@@ -164,196 +198,166 @@ export default async function ScienceAdvantage() {
         }
       />
 
-      {/* Student Features */}
-      <section id="features" className="bg-white py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-rose-600 block mb-4">
-              FOR STUDENTS
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-              {t("studentFeatures.heading")}
-            </h2>
-            <p className="text-xl text-slate-600 mb-16 max-w-2xl">
-              {t("studentFeatures.subtitle")}
-            </p>
-            <div className="grid md:grid-cols-2 gap-8">
-              {[
-                {
-                  icon: Users,
-                  title: t("studentFeatures.features.0.title"),
-                  description: t("studentFeatures.features.0.description"),
-                },
-                {
-                  icon: Microscope,
-                  title: t("studentFeatures.features.1.title"),
-                  description: t("studentFeatures.features.1.description"),
-                },
-                {
-                  icon: Zap,
-                  title: t("studentFeatures.features.2.title"),
-                  description: t("studentFeatures.features.2.description"),
-                },
-                {
-                  icon: Brain,
-                  title: t("studentFeatures.features.3.title"),
-                  description: t("studentFeatures.features.3.description"),
-                },
-              ].map((feature) => (
-                <Card
-                  key={feature.title}
-                  padding="p-10"
-                  className="border-slate-200 border-l-4 border-l-rose-500 bg-gradient-to-br from-rose-50 to-white hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
-                  data-testid="student-feature-card"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                    <feature.icon className="w-6 h-6 text-white" strokeWidth={2} />
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-slate-900">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    {feature.description}
-                  </p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Teacher Features */}
-      <section className="bg-slate-50 py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-slate-500 block mb-4">
-              FOR TEACHERS
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-              {t("teacherFeatures.heading")}
-            </h2>
-            <p className="text-xl text-slate-600 mb-16 max-w-2xl">
-              {t("teacherFeatures.subtitle")}
-            </p>
-            <div className="grid md:grid-cols-2 gap-8">
-              {[
-                {
-                  icon: AlertTriangle,
-                  title: t("teacherFeatures.features.0.title"),
-                  description: t("teacherFeatures.features.0.description"),
-                },
-                {
-                  icon: BarChart3,
-                  title: t("teacherFeatures.features.1.title"),
-                  description: t("teacherFeatures.features.1.description"),
-                },
-                {
-                  icon: UserCheck,
-                  title: t("teacherFeatures.features.2.title"),
-                  description: t("teacherFeatures.features.2.description"),
-                },
-                {
-                  icon: ClipboardList,
-                  title: t("teacherFeatures.features.3.title"),
-                  description: t("teacherFeatures.features.3.description"),
-                },
-              ].map((feature) => (
-                <Card
-                  key={feature.title}
-                  padding="p-10"
-                  className="bg-white border-slate-100 hover:border-rose-200 hover:shadow-xl transition-all duration-300"
-                  data-testid="teacher-feature-card"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                    <feature.icon className="w-6 h-6 text-white" strokeWidth={2} />
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-slate-900">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    {feature.description}
-                  </p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Key Features */}
+      {/* NGSS Aligned Features — Asymmetric 7/5 */}
       <section className="bg-white py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-rose-600 block mb-4">
-              PLATFORM FEATURES
+              NGSS ALIGNED
+            </span>
+            <div className="grid lg:grid-cols-12 gap-12 items-start">
+              <div className="lg:col-span-7">
+                <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+                  {t("keyFeatures.heading")}
+                </h2>
+                <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                  {t("hero.description")}
+                </p>
+              </div>
+              <div className="lg:col-span-5 space-y-8">
+                {[
+                  {
+                    icon: BookOpen,
+                    title: t("keyFeatures.features.0.title"),
+                    points: [
+                      t("keyFeatures.features.0.points.0"),
+                      t("keyFeatures.features.0.points.1"),
+                      t("keyFeatures.features.0.points.2"),
+                      t("keyFeatures.features.0.points.3"),
+                    ],
+                  },
+                  {
+                    icon: RefreshCw,
+                    title: t("keyFeatures.features.1.title"),
+                    points: [
+                      t("keyFeatures.features.1.points.0"),
+                      t("keyFeatures.features.1.points.1"),
+                      t("keyFeatures.features.1.points.2"),
+                      t("keyFeatures.features.1.points.3"),
+                    ],
+                  },
+                  {
+                    icon: Microscope,
+                    title: t("keyFeatures.features.2.title"),
+                    points: [
+                      t("keyFeatures.features.2.points.0"),
+                      t("keyFeatures.features.2.points.1"),
+                      t("keyFeatures.features.2.points.2"),
+                      t("keyFeatures.features.2.points.3"),
+                    ],
+                  },
+                ].map((feature) => (
+                  <div
+                    key={feature.title}
+                    className="bg-gradient-to-br from-rose-50 to-white rounded-3xl p-8 border border-rose-100"
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl flex items-center justify-center shadow-md">
+                        <feature.icon
+                          className="w-6 h-6 text-white"
+                          strokeWidth={2}
+                        />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900">
+                        {feature.title}
+                      </h3>
+                    </div>
+                    <ul className="space-y-3">
+                      {feature.points.map((point, i) => (
+                        <li key={i} className="flex items-start gap-3">
+                          <Check className="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-slate-600 leading-relaxed">
+                            {point.replace(/^[✓•]\s*/, "")}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Target Audience — 2-column editorial layout */}
+      <section className="bg-slate-50 py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <span className="uppercase tracking-widest text-xs font-semibold text-slate-500 block mb-4">
+              BUILT FOR
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16">
-              {t("keyFeatures.heading")}
+              {t("targetAudience.heading")}
             </h2>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div
+              className="grid md:grid-cols-2 gap-8"
+              data-testid="editorial-layout"
+            >
               {[
                 {
-                  icon: BookOpen,
-                  title: t("keyFeatures.features.0.title"),
+                  icon: GraduationCap,
+                  title: t("targetAudience.audiences.0.title"),
                   points: [
-                    t("keyFeatures.features.0.points.0"),
-                    t("keyFeatures.features.0.points.1"),
-                    t("keyFeatures.features.0.points.2"),
-                    t("keyFeatures.features.0.points.3"),
+                    t("targetAudience.audiences.0.points.0"),
+                    t("targetAudience.audiences.0.points.1"),
+                    t("targetAudience.audiences.0.points.2"),
+                    t("targetAudience.audiences.0.points.3"),
                   ],
                 },
                 {
-                  icon: Brain,
-                  title: t("keyFeatures.features.1.title"),
+                  icon: Atom,
+                  title: t("targetAudience.audiences.1.title"),
                   points: [
-                    t("keyFeatures.features.1.points.0"),
-                    t("keyFeatures.features.1.points.1"),
-                    t("keyFeatures.features.1.points.2"),
-                    t("keyFeatures.features.1.points.3"),
+                    t("targetAudience.audiences.1.points.0"),
+                    t("targetAudience.audiences.1.points.1"),
+                    t("targetAudience.audiences.1.points.2"),
+                    t("targetAudience.audiences.1.points.3"),
                   ],
                 },
                 {
-                  icon: Target,
-                  title: t("keyFeatures.features.2.title"),
+                  icon: Sparkles,
+                  title: t("targetAudience.audiences.2.title"),
                   points: [
-                    t("keyFeatures.features.2.points.0"),
-                    t("keyFeatures.features.2.points.1"),
-                    t("keyFeatures.features.2.points.2"),
-                    t("keyFeatures.features.2.points.3"),
+                    t("targetAudience.audiences.2.points.0"),
+                    t("targetAudience.audiences.2.points.1"),
+                    t("targetAudience.audiences.2.points.2"),
+                    t("targetAudience.audiences.2.points.3"),
                   ],
                 },
-              ].map((feature) => (
-                <div
-                  key={feature.title}
-                  className="bg-gradient-to-br from-rose-50 to-white rounded-3xl p-8 border border-rose-100"
-                  data-testid="key-feature-card"
+              ].map((audience) => (
+                <Card
+                  key={audience.title}
+                  padding="p-10"
+                  className="bg-white border-slate-100 hover:border-rose-200 hover:shadow-xl"
                 >
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl flex items-center justify-center shadow-md">
-                      <feature.icon className="w-6 h-6 text-white" strokeWidth={2} />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900">
-                      {feature.title}
-                    </h3>
+                  <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
+                    <audience.icon
+                      className="w-7 h-7 text-white"
+                      strokeWidth={2}
+                    />
                   </div>
+                  <h3 className="text-xl font-bold mb-4 text-slate-900">
+                    {audience.title}
+                  </h3>
                   <ul className="space-y-3">
-                    {feature.points.map((point, i) => (
+                    {audience.points.map((point, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" />
+                        <Check className="w-4 h-4 text-rose-500 mt-1 flex-shrink-0" />
                         <span className="text-slate-600 leading-relaxed">
-                          {point.replace(/^[✓•]\s*/, "")}
+                          {point.replace(/^[•]\s*/, "")}
                         </span>
                       </li>
                     ))}
                   </ul>
-                </div>
+                </Card>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* Overlapping Waitlist Card */}
       <OverlappingSection
         overlapAmount="-mt-12"
         background="bg-gradient-to-br from-white via-rose-50 to-white"
@@ -364,28 +368,28 @@ export default async function ScienceAdvantage() {
           <div className="max-w-2xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-rose-100 text-rose-800 px-4 py-2 rounded-full text-sm font-bold mb-6">
               <Sparkles className="w-4 h-4" />
-              {t("hero.badge")}
+              {t("hero.comingSoon")}
             </div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900">
-              {t("cta.heading")}
+              {t("waitlist.heading")}
             </h2>
             <p className="text-xl text-slate-600 mb-12 max-w-xl mx-auto">
-              {t("cta.description")}
+              {t("waitlist.description")}
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-rose-500 to-rose-600 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:shadow-rose-500/30"
-              >
-                {t("cta.buttons.requestDemo")}
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 bg-white text-rose-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg border-2 border-rose-200 hover:border-rose-300"
-              >
-                {t("cta.buttons.contactSales")}
-              </Link>
+            <div className="bg-white rounded-3xl shadow-xl border border-rose-100 p-8">
+              <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input
+                  type="email"
+                  placeholder={t("waitlist.form.placeholder")}
+                  className="flex-1 px-6 py-4 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent text-lg"
+                />
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-rose-500 to-rose-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:from-rose-600 hover:to-rose-700 hover:shadow-lg hover:-translate-y-1"
+                >
+                  {t("waitlist.form.button")}
+                </button>
+              </form>
             </div>
           </div>
         </div>

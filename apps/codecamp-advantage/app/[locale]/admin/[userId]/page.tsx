@@ -19,6 +19,7 @@ import {
   Clock,
   BookOpen,
   GitPullRequest,
+  ExternalLink,
 } from "lucide-react";
 
 export default function InternDetailPage() {
@@ -140,6 +141,10 @@ export default function InternDetailPage() {
             completed: number;
             totalLessons: number;
             avgScore: number;
+            reviewExpected: boolean;
+            reviewReceived: boolean;
+            latestPrUrl: string | null;
+            latestPrReviewStatus: string | null;
           }) => (
             <div
               key={mod.moduleId}
@@ -159,6 +164,23 @@ export default function InternDetailPage() {
                   <span className="text-xs text-muted-foreground">
                     {mod.completed}/{mod.totalLessons} {t("lessonsLabel")}
                   </span>
+                </div>
+                <div className="mt-2 text-xs text-muted-foreground">
+                  {!mod.reviewExpected ? (
+                    <span>{t("noAiReviewExpected")}</span>
+                  ) : mod.latestPrUrl ? (
+                    <a
+                      href={mod.latestPrUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-primary hover:underline"
+                    >
+                      {t("reviewReceived")}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  ) : (
+                    <span>{t("awaitingPrReview")}</span>
+                  )}
                 </div>
               </div>
               <div className="ml-4 text-right">

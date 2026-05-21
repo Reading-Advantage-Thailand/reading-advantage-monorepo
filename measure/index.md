@@ -16,3 +16,7 @@
 ## Management
 - [Tracks Registry](./tracks.md)
 - [Tracks Directory](./tracks/)
+
+## Plans
+- [Mastery Advantage Integration Plan](./mastery-advantage-integration-plan.md)
+- [Mastery Advantage Workbook Series Plan](./mastery-advantage-workbook-plan.md)

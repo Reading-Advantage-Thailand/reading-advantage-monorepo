@@ -39,6 +39,12 @@ describe("admin translation keys", () => {
     expect(admin.lessonsLabel as string).toBe("lessons");
     expect(admin.avgLabel as string).toBe("Avg:");
     expect(admin.quizScores as string).toBe("Quiz Scores");
+    expect(admin.not_expected_yet as string).toBe("No AI review expected yet");
+    expect(admin.awaiting_pr as string).toBe("Awaiting PR submission");
+    expect(admin.review_received as string).toBe("Review received");
+    expect(admin.noAiReviewExpected as string).toBe("No AI review expected for this module");
+    expect(admin.awaitingPrReview as string).toBe("AI review expected after PR submission");
+    expect(admin.reviewReceived as string).toBe("PR review received");
     expect(admin.displayName as string).toBe("Display Name");
     expect(admin.initialPassword as string).toBe("Initial Password");
     expect(admin.usernameHint as string).toBe("Used for login. Must be unique.");
@@ -86,6 +92,12 @@ describe("admin translation keys", () => {
     expect(admin.lessonsLabel as string).toBe("บทเรียน");
     expect(admin.avgLabel as string).toBe("เฉลี่ย:");
     expect(admin.quizScores as string).toBe("คะแนนแบบทดสอบ");
+    expect(admin.not_expected_yet as string).toBe("ยังไม่ต้องมีรีวิว AI");
+    expect(admin.awaiting_pr as string).toBe("รอส่ง PR");
+    expect(admin.review_received as string).toBe("ได้รับรีวิวแล้ว");
+    expect(admin.noAiReviewExpected as string).toBe("โมดูลนี้ไม่ต้องมีรีวิว AI");
+    expect(admin.awaitingPrReview as string).toBe("ต้องมีรีวิว AI หลังจากส่ง PR");
+    expect(admin.reviewReceived as string).toBe("ได้รับรีวิว PR แล้ว");
     expect(admin.displayName as string).toBe("ชื่อที่แสดง");
     expect(admin.initialPassword as string).toBe("รหัสผ่านเริ่มต้น");
     expect(admin.usernameHint as string).toBe("ใช้สำหรับเข้าสู่ระบบ ต้องไม่ซ้ำกับผู้อื่น");

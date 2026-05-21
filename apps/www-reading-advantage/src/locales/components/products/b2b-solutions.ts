@@ -84,6 +84,17 @@ export const en = {
                 3: "Track reading progress with detailed parent/teacher reports",
             },
         },
+        codecampAdvantage: {
+            title: "CodeCamp Advantage",
+            badge: "Coming 2027",
+            gradeRange: "Grades 3-12 coding & computational thinking",
+            features: {
+                0: "Teach coding through project-based challenges with AI-assisted scaffolding",
+                1: "Build computational thinking skills with structured problem-solving prompts",
+                2: "Track student progress through evidence dashboards for teachers",
+                3: "Connect coding concepts to math and science through cross-curricular projects",
+            },
+        },
     },
 };
 
@@ -173,6 +184,17 @@ export const th = {
                 3: "ติดตามความก้าวหน้าแบบรายบุคคลผ่านรายงานสำหรับครูและผู้ปกครอง",
             },
         },
+        codecampAdvantage: {
+            title: "CodeCamp Advantage",
+            badge: "เตรียมเปิดตัวปี 2027",
+            gradeRange: "การเขียนโค้ดและคิดเชิงคำนวณ ป.3-ม.6",
+            features: {
+                0: "สอนการเขียนโค้ดผ่านโครงงานที่มี AI ช่วยเหลือ",
+                1: "พัฒนาทักษะคิดเชิงคำนวณด้วยโจทย์แก้ปัญหาแบบมีโครงสร้าง",
+                2: "ติดตามความก้าวหน้าผ่านแดชบอร์ดสำหรับครู",
+                3: "เชื่อมโยงแนวคิดการเขียนโค้ดกับคณิตศาสตร์และวิทยาศาสตร์ผ่านโครงงานข้ามวิชา",
+            },
+        },
     },
 };
 
@@ -260,6 +282,17 @@ export const zh = {
                 1: "用互动故事提升阅读兴趣",
                 2: "通过引导式练习强化语音技能",
                 3: "为教师与家长提供详尽的进度报告",
+            },
+        },
+        codecampAdvantage: {
+            title: "CodeCamp Advantage",
+            badge: "2027 年上线",
+            gradeRange: "三至十二年级编程与计算思维",
+            features: {
+                0: "通过 AI 辅助支架的项目式挑战教授编程",
+                1: "用结构化问题解决提示培养计算思维",
+                2: "通过教师证据仪表板追踪学生进度",
+                3: "通过跨学科项目将编程概念与数学和科学联系起来",
             },
         },
     },

@@ -9,6 +9,7 @@ import {
   Languages,
   BookMarked,
   Beaker,
+  Code,
   type LucideIcon,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
@@ -21,7 +22,8 @@ type ProductKey =
   | "scienceAdvantage"
   | "mathAdvantage"
   | "zhongwenAdvantage"
-  | "storytimeAdvantage";
+  | "storytimeAdvantage"
+  | "codecampAdvantage";
 
 interface ProductConfig {
   key: ProductKey;
@@ -117,6 +119,16 @@ const productConfigs = [
     gradientFrom: "from-indigo-400",
     gradientTo: "to-indigo-600",
     accentColor: "text-indigo-700",
+  },
+  {
+    key: "codecampAdvantage",
+    href: "/products/codecamp-advantage",
+    bgColor: "from-fuchsia-50 to-indigo-50",
+    icon: Code,
+    badgeKey: "products.codecampAdvantage.badge",
+    gradientFrom: "from-fuchsia-400",
+    gradientTo: "to-indigo-500",
+    accentColor: "text-fuchsia-700",
   },
 ] as const satisfies readonly ProductConfig[];
 

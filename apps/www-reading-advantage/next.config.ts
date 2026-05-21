@@ -26,9 +26,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },

@@ -32,6 +32,10 @@ export function Header() {
       href: "/products",
     },
     {
+      title: n("masteryAdvantage"),
+      href: "/mastery-advantage",
+    },
+    {
       title: n("services"),
       href: "/services",
     },

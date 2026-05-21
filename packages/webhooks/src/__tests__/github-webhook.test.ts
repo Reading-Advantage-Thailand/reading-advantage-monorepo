@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from "vitest";
 import { createHmac } from "crypto";
 import githubApp from "../github.js";
 
@@ -11,6 +11,7 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
     updatePrReview: vi.fn(),
     createPrReview: vi.fn(),
     getExerciseRepoByUrl: vi.fn(),
+    logWebhookEvent: vi.fn(),
   };
 });
 
@@ -27,6 +28,7 @@ import {
   updatePrReview,
   createPrReview,
   getExerciseRepoByUrl,
+  logWebhookEvent,
 } from "@reading-advantage/domain/codecamp";
 
 import { getUserByGithubUsername } from "@reading-advantage/domain/users";
@@ -57,6 +59,10 @@ function createRequest(payload: string, options: {
 describe("GitHub webhook handler", () => {
   beforeAll(() => {
     process.env.GITHUB_WEBHOOK_SECRET = WEBHOOK_SECRET;
+  });
+
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
   afterAll(() => {
@@ -99,6 +105,13 @@ describe("GitHub webhook handler", () => {
     expect(res.status).toBe(200);
     const json = await res.json();
     expect(json.ignored).toContain("push");
+    expect(logWebhookEvent).toHaveBeenCalledWith(expect.objectContaining({
+      input: expect.objectContaining({
+        event: "push",
+        outcome: "ignored",
+        reason: "Event push not handled",
+      }),
+    }));
   });
 
   it("returns 400 when payload fails validation", async () => {
@@ -213,6 +226,15 @@ describe("GitHub webhook handler", () => {
     expect(res.status).toBe(200);
     const json = await res.json();
     expect(json.ignored).toContain("No matching exercise repo");
+    expect(logWebhookEvent).toHaveBeenCalledWith(expect.objectContaining({
+      input: expect.objectContaining({
+        repoUrl: "https://github.com/org/repo",
+        prUrl: "https://github.com/org/repo/pull/2",
+        githubUsername: "intern2",
+        outcome: "ignored",
+        reason: "No matching exercise repo",
+      }),
+    }));
   });
 
   it("returns 200 when no codecamp user matches the GitHub login", async () => {
@@ -238,6 +260,15 @@ describe("GitHub webhook handler", () => {
     expect(res.status).toBe(200);
     const json = await res.json();
     expect(json.ignored).toContain("No matching codecamp user");
+    expect(logWebhookEvent).toHaveBeenCalledWith(expect.objectContaining({
+      input: expect.objectContaining({
+        repoUrl: "https://github.com/org/repo",
+        prUrl: "https://github.com/org/repo/pull/2",
+        githubUsername: "unknown-user",
+        outcome: "ignored",
+        reason: "No matching codecamp user",
+      }),
+    }));
   });
 
   it("returns 200 and ignores closed actions", async () => {
@@ -257,5 +288,12 @@ describe("GitHub webhook handler", () => {
     expect(res.status).toBe(200);
     const json = await res.json();
     expect(json.ignored).toContain("closed");
+    expect(logWebhookEvent).toHaveBeenCalledWith(expect.objectContaining({
+      input: expect.objectContaining({
+        action: "closed",
+        outcome: "ignored",
+        reason: "Action closed not handled",
+      }),
+    }));
   });
 });

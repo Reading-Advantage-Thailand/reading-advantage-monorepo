@@ -17,6 +17,8 @@ import { StepFlow } from "@/components/ui/step-flow";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { MarketingSvg } from "@/components/marketing/marketing-svg";
+import type { Locale } from "@/config/locale-config";
 
 export const metadata: Metadata = {
   title: "Tutor Advantage - Reading Advantage Thailand",
@@ -29,7 +31,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function TutorAdvantage() {
+export default async function TutorAdvantage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const t = await getScopedI18n("pages.products.tutorAdvantage");
 
   return (
@@ -79,6 +86,35 @@ export default async function TutorAdvantage() {
                   height={350}
                   className="w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl"
                   priority
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Adaptive Learning Path — SVG Visualization */}
+      <section className="py-24 bg-white border-y border-[#dad4c8]">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-5">
+              <span className="uppercase tracking-widest text-xs font-semibold text-emerald-600 mb-4 block">
+                Adaptive Engine
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                AI tutoring, adapted to every student&apos;s level
+              </h2>
+              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+                Powered by Mastery Advantage — the KST + SRS engine that maps every skill and schedules practice at the perfect moment.
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
+                <MarketingSvg
+                  baseName="ra-marketing-tutor-advantage"
+                  locale={locale as Locale}
+                  className="w-full h-auto"
+                  alt="Tutor Advantage adaptive learning visualization"
                 />
               </div>
             </div>

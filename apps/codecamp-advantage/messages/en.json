@@ -48,7 +48,9 @@
     "noLessons": "No lessons available for this module yet.",
     "review": "Review",
     "loading": "Loading...",
-    "lessonsInEnglish": "Lessons are in English"
+    "lessonsInEnglish": "Lessons are in English",
+    "noAiReviewExpectedTitle": "No AI code review expected for this module",
+    "noAiReviewExpectedBody": "AI review begins when you submit a GitHub pull request in an exercise-backed module."
   },
   "chat": {
     "placeholder": "Ask about Next.js, tRPC, Drizzle, or monorepo patterns...",
@@ -93,6 +95,12 @@
     "totalInterns": "Total Interns",
     "avgProgress": "Avg. Progress",
     "pendingReviews": "Pending Reviews",
+    "webhookDiagnostics": "Webhook Diagnostics",
+    "webhookDiagnosticsHint": "Recent ignored or failed GitHub webhook events.",
+    "time": "Time",
+    "outcome": "Outcome",
+    "reason": "Reason",
+    "repository": "Repository",
     "cohortOverview": "Cohort Overview",
     "modules": "Modules",
     "quizAvg": "Quiz Avg",
@@ -105,6 +113,13 @@
     "lessonsLabel": "lessons",
     "avgLabel": "Avg:",
     "quizScores": "Quiz Scores",
+    "latestPr": "Latest PR",
+    "not_expected_yet": "No AI review expected yet",
+    "awaiting_pr": "Awaiting PR submission",
+    "review_received": "Review received",
+    "noAiReviewExpected": "No AI review expected for this module",
+    "awaitingPrReview": "AI review expected after PR submission",
+    "reviewReceived": "PR review received",
     "displayName": "Display Name",
     "initialPassword": "Initial Password",
     "usernameHint": "Used for login. Must be unique.",
@@ -123,13 +138,14 @@
       "createError": "Failed to create intern account"
     },
     "githubUsername": "GitHub Username",
-    "githubUsernameHint": "Optional. Used to attribute GitHub PR reviews. Enter without the @ symbol.",
+    "githubUsernameHint": "Defaults to the login username. Used to attribute GitHub PR reviews. Enter without the @ symbol.",
     "save": "Save",
     "saving": "Saving...",
     "empty": {
       "noInterns": "No interns found",
       "noQuizzes": "No quiz submissions yet",
       "noPrReviews": "No PR reviews yet",
+      "noWebhookEvents": "No ignored or failed webhook events logged.",
       "createToStart": "Create intern accounts to get started."
     }
   },

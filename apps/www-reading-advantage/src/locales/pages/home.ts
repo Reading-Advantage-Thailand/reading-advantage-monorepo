@@ -1,16 +1,43 @@
 export const en = {
     hero: {
-        eyebrow: "Reading Advantage · Thailand",
-        title: "Twice-weekly extensive reading, proven to outperform grammar instruction.",
+        eyebrow: "Mastery Advantage · The Adaptive Engine",
+        title: "One engine. Nine products. Every student on their own path to mastery.",
         description:
-            "The turnkey extensive reading platform for Thai private schools. AI-curated articles, real classroom data, and a fidelity protocol that holds the line — so teachers can spend less time planning and more time responding to the students in front of them.",
+            "Mastery Advantage is the proprietary KST + SRS adaptive engine that powers every Reading Advantage product — mapping skills, scheduling reviews, and surfacing exactly what each student needs next.",
         cta: "Book a 20-min demo",
-        secondaryCta: "See the research",
+        secondaryCta: "See the engine",
         stats: {
-            gain: "pts vs. grammar instruction (Aka 2019)",
-            articles: "AI-curated articles",
-            levels: "CEFR levels",
+            products: "Products powered",
+            skills: "Mapped skills",
+            engine: "KST + SRS engine",
         },
+    },
+    engine: {
+        eyebrow: "The engine",
+        title: "Knowledge Space Theory meets Spaced Repetition.",
+        description:
+            "Two research-backed systems working together: KST maps every skill dependency so the system always knows what's next, and FSRS schedules each review at the moment before forgetting — so nothing is lost and nothing is wasted.",
+        cta: "Learn more about Mastery Advantage",
+        pillars: {
+            kst: {
+                title: "Knowledge Space Theory",
+                description: "A directed graph of skill prerequisites. The system knows exactly which skills a student is ready to learn — and which ones they're not ready for yet.",
+            },
+            srs: {
+                title: "Spaced Repetition (FSRS)",
+                description: "Free Spaced Repetition Scheduler calibrates each review interval to the individual. Items surface at the optimal moment — not too early, not too late.",
+            },
+            placement: {
+                title: "Adaptive Placement",
+                description: "Students are placed at their true level from day one through edge-calibrated assessment. No placement tests, no guessing — just data.",
+            },
+        },
+    },
+    suite: {
+        eyebrow: "The suite",
+        title: "One engine, nine products.",
+        description:
+            "Every product uses the same Mastery Advantage engine — the same KST graph, the same FSRS scheduler, the same proficiency tracking. Different subjects, same adaptive intelligence.",
     },
     mission: {
         title: "Student Success Is Our Mission",
@@ -131,17 +158,44 @@ export const en = {
 
 export const th = {
     hero: {
-        eyebrow: "Reading Advantage · ประเทศไทย",
-        title: "การอ่านกว้างสัปดาห์ละสองครั้ง พิสูจน์แล้วว่าได้ผลดีกว่าการสอนไวยากรณ์",
+        eyebrow: "Mastery Advantage · เครื่องยนต์ปรับตัว",
+        title: "เครื่องยนต์เดียว เก้าผลิตภัณฑ์ นักเรียนทุกคนอยู่ในเส้นทางสู่ความชำนาญของตัวเอง",
         description:
-            "แพลตฟอร์มการอ่านกว้างแบบครบวงจรสำหรับโรงเรียนเอกชนไทย บทความที่คัดสรรโดย AI ข้อมูลห้องเรียนจริง และโปรโตคอลความเที่ยงธรรมที่รักษามาตรฐาน — เพื่อให้ครูใช้เวลาน้อยลงกับการวางแผนและมากขึ้นกับการตอบสนองนักเรียนตรงหน้า",
+            "Mastery Advantage คือเครื่องยนต์ปรับตัว KST + SRS ที่เป็นทรัพย์สินทางปัญญาซึ่งขับเคลื่อนผลิตภัณฑ์ Reading Advantage ทุกตัว — ทำแผนที่ทักษะ จัดตารางทบทวน และแสดงสิ่งที่นักเรียนแต่ละคนต้องการถัดไปอย่างแม่นยำ",
         cta: "จองสาธิต 20 นาที",
-        secondaryCta: "ดูงานวิจัย",
+        secondaryCta: "ดูเครื่องยนต์",
         stats: {
-            gain: "คะแนนเทียบกับการสอนไวยากรณ์ (Aka 2019)",
-            articles: "บทความที่คัดสรรโดย AI",
-            levels: "ระดับ CEFR",
+            products: "ผลิตภัณฑ์ที่ขับเคลื่อน",
+            skills: "ทักษะที่ทำแผนที่",
+            engine: "เครื่องยนต์ KST + SRS",
         },
+    },
+    engine: {
+        eyebrow: "เครื่องยนต์",
+        title: "Knowledge Space Theory พบกับ Spaced Repetition",
+        description:
+            "สองระบบที่พิสูจน์ด้วยงานวิจัยทำงานร่วมกัน: KST ทำแผนที่การพึ่งพาทักษะทุกระดับเพื่อให้ระบบรู้ว่าอะไรคือขั้นตอนถัดไป และ FSRS จัดตารางทบทวนแต่ละครั้งในช่วงเวลาก่อนที่จะลืม — ไม่มีอะไรหายไปและไม่มีอะไรเสียเปล่า",
+        cta: "เรียนรู้เพิ่มเติมเกี่ยวกับ Mastery Advantage",
+        pillars: {
+            kst: {
+                title: "Knowledge Space Theory",
+                description: "กราฟกำกับของข้อกำหนดเบื้องต้นด้านทักษะ ระบบรู้ว่านักเรียนพร้อมเรียนทักษะใดแล้ว — และทักษะใดยังไม่พร้อม",
+            },
+            srs: {
+                title: "Spaced Repetition (FSRS)",
+                description: "Free Spaced Repetition Scheduler ปรับช่วงทบทวนแต่ละครั้งให้เหมาะกับแต่ละคน เนื้อหาจะแสดงในช่วงเวลาที่เหมาะสม — ไม่เร็วเกินไป ไม่ช้าเกินไป",
+            },
+            placement: {
+                title: "การจัดตำแหน่งแบบปรับตัว",
+                description: "นักเรียนถูกจัดอยู่ในระดับที่แท้จริงตั้งแต่วันแรกผ่านการประเมินที่ปรับขอบเขต ไม่มีแบบทดสอบจัดตำแหน่ง ไม่มีเดา — มีเพียงข้อมูล",
+            },
+        },
+    },
+    suite: {
+        eyebrow: "ชุดผลิตภัณฑ์",
+        title: "เครื่องยนต์เดียว เก้าผลิตภัณฑ์",
+        description:
+            "ทุกผลิตภัณฑ์ใช้เครื่องยนต์ Mastery Advantage เดียวกัน — กราฟ KST เดียวกัน ตัวจัดตาราง FSRS เดียวกัน การติดตามความชำนาญเดียวกัน วิชาต่างกัน แต่ใช้ความฉลาดแบบปรับตัวเดียวกัน",
     },
     mission: {
         title: "ภารกิจของเราคือความสำเร็จของนักเรียน",
@@ -262,17 +316,44 @@ export const th = {
 
 export const zh = {
     hero: {
-        eyebrow: "Reading Advantage · 泰国",
-        title: "每周两次泛读，已证明优于语法教学。",
+        eyebrow: "Mastery Advantage · 自适应引擎",
+        title: "一个引擎，九个产品，每个学生都在自己的精通之路上。",
         description:
-            "专为泰国私立学校打造的一站式泛读平台。AI精选文章、真实课堂数据和保真度协议确保质量——让教师减少备课时间，把更多精力放在眼前的学生身上。",
+            "Mastery Advantage 是专有的 KST + SRS 自适应引擎，为所有 Reading Advantage 产品提供动力——映射技能、安排复习、精准呈现每个学生下一步所需。",
         cta: "预约20分钟演示",
-        secondaryCta: "查看研究",
+        secondaryCta: "了解引擎",
         stats: {
-            gain: "分 vs. 语法教学 (Aka 2019)",
-            articles: "AI精选文章",
-            levels: "CEFR级别",
+            products: "驱动的产品",
+            skills: "已映射技能",
+            engine: "KST + SRS 引擎",
         },
+    },
+    engine: {
+        eyebrow: "引擎",
+        title: "知识空间理论遇见间隔重复。",
+        description:
+            "两个经过研究验证的系统协同工作：KST 映射每个技能依赖关系，让系统始终知道下一步是什么；FSRS 在遗忘之前安排每次复习——不丢失任何东西，也不浪费任何东西。",
+        cta: "了解更多关于 Mastery Advantage",
+        pillars: {
+            kst: {
+                title: "知识空间理论",
+                description: "技能先决条件的有向图。系统确切地知道学生准备好学习哪些技能——以及哪些技能他们还没准备好。",
+            },
+            srs: {
+                title: "间隔重复（FSRS）",
+                description: "自由间隔重复调度器为每个人校准每次复习间隔。项目在最佳时刻出现——不太早，不太晚。",
+            },
+            placement: {
+                title: "自适应分班",
+                description: "学生从第一天起就通过边缘校准评估被放置在真实水平。没有分班测试，没有猜测——只有数据。",
+            },
+        },
+    },
+    suite: {
+        eyebrow: "产品套件",
+        title: "一个引擎，九个产品。",
+        description:
+            "每个产品都使用相同的 Mastery Advantage 引擎——相同的 KST 图、相同的 FSRS 调度器、相同的熟练度追踪。不同学科，相同的自适应智能。",
     },
     mission: {
         title: "学生的成功就是我们的使命",

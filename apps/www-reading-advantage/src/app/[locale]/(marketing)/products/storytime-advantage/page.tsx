@@ -14,6 +14,8 @@ import {
 import { getScopedI18n } from "@/locales/server";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
+import { MarketingSvg } from "@/components/marketing/marketing-svg";
+import type { Locale } from "@/config/locale-config";
 
 export const metadata: Metadata = {
   title:
@@ -27,7 +29,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function StorytimeAdvantage() {
+export default async function StorytimeAdvantage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const t = await getScopedI18n("pages.products.storytimeAdvantage");
 
   const keyFeatures = [
@@ -141,6 +148,35 @@ export default async function StorytimeAdvantage() {
                 className="w-full max-w-md rounded-2xl shadow-2xl"
                 priority
               />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Adaptive Learning Path — SVG Visualization */}
+      <section className="py-24 bg-white border-y border-[#dad4c8]">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-5">
+              <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
+                Adaptive Engine
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Early literacy paths, adapted to every young learner
+              </h2>
+              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+                Powered by Mastery Advantage — the KST + SRS engine that maps every literacy skill and schedules practice at the perfect moment.
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
+                <MarketingSvg
+                  baseName="ra-marketing-storytime-advantage"
+                  locale={locale as Locale}
+                  className="w-full h-auto"
+                  alt="Storytime Advantage adaptive learning visualization"
+                />
+              </div>
             </div>
           </div>
         </div>

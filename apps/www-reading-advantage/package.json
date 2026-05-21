@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "next-blog-day": "npx tsx scripts/next-blog-day.ts",
     "i18n:verify": "tsx scripts/i18n-verify.ts",
     "i18n:tree": "tsx scripts/i18n-tree.ts",
     "i18n:update": "tsx scripts/i18n-update.ts",

@@ -48,7 +48,9 @@
     "noLessons": "ยังไม่มีบทเรียนในโมดูลนี้",
     "review": "ทบทวน",
     "loading": "กำลังโหลด...",
-    "lessonsInEnglish": "บทเรียนเป็นภาษาอังกฤษ"
+    "lessonsInEnglish": "บทเรียนเป็นภาษาอังกฤษ",
+    "noAiReviewExpectedTitle": "โมดูลนี้ไม่ต้องมีรีวิวโค้ดจาก AI",
+    "noAiReviewExpectedBody": "รีวิว AI จะเริ่มเมื่อคุณส่ง GitHub pull request ในโมดูลที่มีแบบฝึกหัดพร้อม repository"
   },
   "chat": {
     "placeholder": "ถามเกี่ยวกับ Next.js, tRPC, Drizzle, หรือรูปแบบ monorepo...",
@@ -93,6 +95,12 @@
     "totalInterns": "จำนวนผู้ฝึกงานทั้งหมด",
     "avgProgress": "ความคืบหน้าเฉลี่ย",
     "pendingReviews": "รีวิวที่รอการตรวจ",
+    "webhookDiagnostics": "การวินิจฉัย Webhook",
+    "webhookDiagnosticsHint": "เหตุการณ์ GitHub webhook ล่าสุดที่ถูกข้ามหรือล้มเหลว",
+    "time": "เวลา",
+    "outcome": "ผลลัพธ์",
+    "reason": "เหตุผล",
+    "repository": "ที่เก็บโค้ด",
     "cohortOverview": "ภาพรวมกลุ่ม",
     "modules": "โมดูล",
     "quizAvg": "คะแนนสอบเฉลี่ย",
@@ -105,6 +113,13 @@
     "lessonsLabel": "บทเรียน",
     "avgLabel": "เฉลี่ย:",
     "quizScores": "คะแนนแบบทดสอบ",
+    "latestPr": "PR ล่าสุด",
+    "not_expected_yet": "ยังไม่ต้องมีรีวิว AI",
+    "awaiting_pr": "รอส่ง PR",
+    "review_received": "ได้รับรีวิวแล้ว",
+    "noAiReviewExpected": "โมดูลนี้ไม่ต้องมีรีวิว AI",
+    "awaitingPrReview": "ต้องมีรีวิว AI หลังจากส่ง PR",
+    "reviewReceived": "ได้รับรีวิว PR แล้ว",
     "displayName": "ชื่อที่แสดง",
     "initialPassword": "รหัสผ่านเริ่มต้น",
     "usernameHint": "ใช้สำหรับเข้าสู่ระบบ ต้องไม่ซ้ำกับผู้อื่น",
@@ -123,13 +138,14 @@
       "createError": "ไม่สามารถสร้างบัญชีผู้ฝึกงานได้"
     },
     "githubUsername": "ชื่อผู้ใช้ GitHub",
-    "githubUsernameHint": "ไม่บังคับ ใช้สำหรับระบุการตรวจสอบ PR บน GitHub ป้อนโดยไม่ต้องใส่สัญลักษณ์ @",
+    "githubUsernameHint": "ค่าเริ่มต้นจะใช้ชื่อผู้ใช้สำหรับเข้าสู่ระบบ ใช้สำหรับระบุการตรวจสอบ PR บน GitHub ป้อนโดยไม่ต้องใส่สัญลักษณ์ @",
     "save": "บันทึก",
     "saving": "กำลังบันทึก...",
     "empty": {
       "noInterns": "ไม่พบผู้ฝึกงาน",
       "noQuizzes": "ยังไม่มีการส่งคำตอบแบบทดสอบ",
       "noPrReviews": "ยังไม่มีรีวิว PR",
+      "noWebhookEvents": "ยังไม่มีเหตุการณ์ webhook ที่ถูกข้ามหรือล้มเหลว",
       "createToStart": "สร้างบัญชีผู้ฝึกงานเพื่อเริ่มต้น"
     }
   },

@@ -17,6 +17,7 @@ export default function NewInternPage() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [githubUsername, setGithubUsername] = useState("");
+  const [githubUsernameTouched, setGithubUsernameTouched] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -27,6 +28,7 @@ export default function NewInternPage() {
       setName("");
       setPassword("");
       setGithubUsername("");
+      setGithubUsernameTouched(false);
       setError(null);
     },
     onError: (err: { message: string }) => {
@@ -70,7 +72,7 @@ export default function NewInternPage() {
       return;
     }
 
-    createIntern.mutate({ username, name, password, githubUsername: githubUsername || undefined });
+    createIntern.mutate({ username, name, password, githubUsername: githubUsername || username });
   }
 
   return (
@@ -112,7 +114,12 @@ export default function NewInternPage() {
           <Input
             id="username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              if (!githubUsernameTouched) {
+                setGithubUsername(e.target.value);
+              }
+            }}
             placeholder="intern1"
             required
             minLength={3}
@@ -157,7 +164,10 @@ export default function NewInternPage() {
           <Input
             id="githubUsername"
             value={githubUsername}
-            onChange={(e) => setGithubUsername(e.target.value)}
+            onChange={(e) => {
+              setGithubUsernameTouched(true);
+              setGithubUsername(e.target.value);
+            }}
             placeholder="github-handle"
             maxLength={100}
           />

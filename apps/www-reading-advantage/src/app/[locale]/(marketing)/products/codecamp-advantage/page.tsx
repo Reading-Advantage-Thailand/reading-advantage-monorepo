@@ -7,64 +7,38 @@ import {
   Cpu,
   Braces,
   ArrowRight,
+  Check,
   Sparkles,
   GitBranch,
   Container,
   Rocket,
-  MessageSquare,
-  Github,
-  BarChart3,
-  Lock,
-  Globe,
-  Zap,
-  Database,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { HorizontalStrip } from "@/components/ui/horizontal-strip";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { MarketingSvg } from "@/components/marketing/marketing-svg";
+import type { Locale } from "@/config/locale-config";
 
 export const metadata: Metadata = {
   title: "CodeCamp Advantage - Reading Advantage Thailand",
   description:
-    "Full-stack web development internship with 18-module curriculum, AI chat tutor, GitHub integration, and automated code review.",
+    "AI-powered full-stack development learning platform with personalized instruction and project-based curriculum.",
   openGraph: {
     title: "CodeCamp Advantage - Reading Advantage Thailand",
     description:
-      "Join our active full-stack web development bootcamp with AI-powered learning and real-world projects.",
+      "Transform your development journey with our AI-powered learning platform launching in 2025.",
   },
 };
 
-export default async function CodeCampAdvantage() {
+export default async function CodeCampAdvantage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const t = await getScopedI18n("pages.products.codecampAdvantage");
-
-  const phases = [
-    {
-      key: "A",
-      icon: Terminal,
-      color: "from-green-500 to-emerald-600",
-      borderColor: "border-l-green-500",
-    },
-    {
-      key: "B",
-      icon: Code2,
-      color: "from-blue-500 to-indigo-600",
-      borderColor: "border-l-blue-500",
-    },
-    {
-      key: "C",
-      icon: Database,
-      color: "from-purple-500 to-violet-600",
-      borderColor: "border-l-purple-500",
-    },
-    {
-      key: "D",
-      icon: Rocket,
-      color: "from-orange-500 to-amber-600",
-      borderColor: "border-l-orange-500",
-    },
-  ];
 
   return (
     <main className="overflow-x-hidden">
@@ -85,7 +59,7 @@ export default async function CodeCampAdvantage() {
             <div className="lg:col-span-7">
               <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-bold mb-6">
                 <Sparkles className="w-4 h-4" />
-                {t("hero.badge")}
+                {t("hero.comingSoon")}
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
                 {t("hero.title")}
@@ -96,21 +70,13 @@ export default async function CodeCampAdvantage() {
               <p className="text-lg md:text-xl leading-relaxed mb-8 text-slate-400 max-w-2xl">
                 {t("hero.description")}
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:shadow-amber-500/30"
-                >
-                  {t("cta.buttons.applyNow")}
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-                <Link
-                  href="#curriculum"
-                  className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white/20 border border-white/20"
-                >
-                  {t("cta.buttons.viewCurriculum")}
-                </Link>
-              </div>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:shadow-amber-500/30"
+              >
+                {t("cta.buttons.joinWaitlist")}
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <div className="relative w-full max-w-md aspect-square">
@@ -128,8 +94,37 @@ export default async function CodeCampAdvantage() {
         </div>
       </section>
 
-      {/* Curriculum Showcase */}
-      <section id="curriculum" className="relative py-24 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-white overflow-hidden">
+      {/* Adaptive Learning Path — SVG Visualization */}
+      <section className="py-24 bg-white border-y border-[#dad4c8]">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-5">
+              <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block">
+                Adaptive Engine
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Coding paths, adapted to every student&apos;s pace
+              </h2>
+              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+                Powered by Mastery Advantage — the KST + SRS engine that maps every coding skill and schedules practice at the perfect moment.
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
+                <MarketingSvg
+                  baseName="ra-marketing-codecamp-advantage"
+                  locale={locale as Locale}
+                  className="w-full h-auto"
+                  alt="CodeCamp Advantage adaptive learning visualization"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Technology Tracks — Full-Width Dark Room (Slate) */}
+      <section className="relative py-24 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-white overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
         <div
           className="absolute top-20 left-20 w-[500px] h-[500px] bg-slate-700/20 rounded-full blur-[150px]"
@@ -142,192 +137,126 @@ export default async function CodeCampAdvantage() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-amber-400 mb-4 block text-center font-mono">
-              [ CURRICULUM ]
+              [ TRACKS ]
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
-              {t("curriculum.heading")}
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+              {t("technologyTracks.heading")}
             </h2>
-            <p className="text-xl text-slate-400 text-center mb-16 max-w-2xl mx-auto">
-              {t("curriculum.subtitle")}
-            </p>
-
-            {/* Phase Timeline */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-              {phases.map((phase) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: Code2,
+                  title: t("technologyTracks.tracks.0.title"),
+                  description: t("technologyTracks.tracks.0.description"),
+                  bracket: "[ NEXT ]",
+                },
+                {
+                  icon: Terminal,
+                  title: t("technologyTracks.tracks.1.title"),
+                  description: t("technologyTracks.tracks.1.description"),
+                  bracket: "[ MERN ]",
+                },
+                {
+                  icon: Cpu,
+                  title: t("technologyTracks.tracks.2.title"),
+                  description: t("technologyTracks.tracks.2.description"),
+                  bracket: "[ DJANGO ]",
+                },
+              ].map((track) => (
                 <div
-                  key={phase.key}
-                  data-testid="phase-card"
-                  className="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10 hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-3 shadow-xl"
+                  key={track.title}
+                  data-testid="track-card"
+                  className="bg-white/5 backdrop-blur-sm rounded-3xl p-10 border border-white/10 hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-3 shadow-xl"
                 >
-                  <div className={`w-14 h-14 bg-gradient-to-br ${phase.color} rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
-                    <phase.icon className="w-7 h-7 text-white" strokeWidth={2} />
+                  <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                    <track.icon className="w-7 h-7 text-white" strokeWidth={2} />
                   </div>
-                  <span className="font-mono text-xs text-amber-400 uppercase tracking-wider mb-2 block">
-                    {t(`curriculum.phases.${phase.key}.name`)}
+                  <span className="font-mono text-xs text-amber-400 uppercase tracking-wider mb-3 block">
+                    {track.bracket}
                   </span>
-                  <h3 className="text-xl font-bold mb-3 text-white">
-                    {t(`curriculum.phases.${phase.key}.title`)}
+                  <h3 className="text-xl font-bold mb-4 text-white">
+                    {track.title}
                   </h3>
-                  <p className="text-slate-400 text-sm mb-6">
-                    {t(`curriculum.phases.${phase.key}.description`)}
+                  <p className="text-slate-300 leading-relaxed">
+                    {track.description}
                   </p>
-                  <ul className="space-y-2">
-                    {[0, 1, 2, 3, 4, 5].map((moduleIndex) => {
-                      const moduleTitle = t(`curriculum.phases.${phase.key}.modules.${moduleIndex}`);
-                      if (!moduleTitle || moduleTitle === `curriculum.phases.${phase.key}.modules.${moduleIndex}`) return null;
-                      return (
-                        <li key={moduleIndex} className="flex items-start gap-2 text-sm text-slate-300">
-                          <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-1.5 flex-shrink-0" />
-                          {moduleTitle}
-                        </li>
-                      );
-                    })}
-                  </ul>
                 </div>
               ))}
-            </div>
-
-            {/* Portfolio Projects */}
-            <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-10 border border-white/10">
-              <h3 className="text-2xl font-bold text-center mb-8 text-white">
-                {t("curriculum.projects.heading")}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  { phase: "A", icon: Globe },
-                  { phase: "B", icon: BarChart3 },
-                  { phase: "C", icon: Lock },
-                  { phase: "D", icon: Rocket },
-                ].map((project) => (
-                  <div
-                    key={project.phase}
-                    data-testid="project-card"
-                    className="bg-white/5 rounded-2xl p-6 border border-white/10 text-center"
-                  >
-                    <div className="inline-flex items-center justify-center w-12 h-12 bg-amber-500/20 rounded-xl mb-4">
-                      <project.icon className="w-6 h-6 text-amber-400" />
-                    </div>
-                    <span className="font-mono text-xs text-amber-400 uppercase tracking-wider mb-2 block">
-                      {t(`curriculum.phases.${project.phase}.name`)}
-                    </span>
-                    <p className="text-white font-semibold">
-                      {t(`curriculum.projects.items.${project.phase === "A" ? "0" : project.phase === "B" ? "1" : project.phase === "C" ? "2" : "3"}.title`)}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <OverlappingSection
-        background="bg-white"
-        data-testid="features-section"
-      >
-        <div className="container mx-auto px-4 py-24">
-          <div className="max-w-5xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
-              PLATFORM FEATURES
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16">
-              {t("features.heading")}
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* AI Tutor */}
-              <Card
-                data-testid="feature-card"
-                padding="p-10"
-                className="border-slate-200 border-l-4 border-l-amber-500 bg-gradient-to-br from-slate-50 to-white"
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                  <MessageSquare className="w-6 h-6 text-white" />
-                </div>
-                <div className="font-mono text-xs text-slate-400 mb-4">
-                  [ FEATURE_01 ]
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-slate-900">
-                  {t("features.aiTutor.title")}
-                </h3>
-                <p className="text-slate-600 leading-relaxed mb-6">
-                  {t("features.aiTutor.description")}
-                </p>
-                <ul className="space-y-3">
-                  {[0, 1, 2, 3].map((index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-600 leading-relaxed">
-                        {t(`features.aiTutor.points.${index}`)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-
-              {/* GitHub Integration */}
-              <Card
-                data-testid="feature-card"
-                padding="p-10"
-                className="border-slate-200 border-l-4 border-l-amber-500 bg-gradient-to-br from-slate-50 to-white"
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-slate-700 to-slate-900 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                  <Github className="w-6 h-6 text-white" />
-                </div>
-                <div className="font-mono text-xs text-slate-400 mb-4">
-                  [ FEATURE_02 ]
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-slate-900">
-                  {t("features.githubIntegration.title")}
-                </h3>
-                <p className="text-slate-600 leading-relaxed mb-6">
-                  {t("features.githubIntegration.description")}
-                </p>
-                <ul className="space-y-3">
-                  {[0, 1, 2, 3].map((index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-600 leading-relaxed">
-                        {t(`features.githubIntegration.points.${index}`)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-
-              {/* Progress Tracking */}
-              <Card
-                data-testid="feature-card"
-                padding="p-10"
-                className="border-slate-200 border-l-4 border-l-amber-500 bg-gradient-to-br from-slate-50 to-white"
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                  <BarChart3 className="w-6 h-6 text-white" />
-                </div>
-                <div className="font-mono text-xs text-slate-400 mb-4">
-                  [ FEATURE_03 ]
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-slate-900">
-                  {t("features.progressTracking.title")}
-                </h3>
-                <p className="text-slate-600 leading-relaxed mb-6">
-                  {t("features.progressTracking.description")}
-                </p>
-                <ul className="space-y-3">
-                  {[0, 1, 2, 3].map((index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-600 leading-relaxed">
-                        {t(`features.progressTracking.points.${index}`)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
+      {/* Project-Based Learning — Asymmetric 7/5 */}
+      <section className="bg-white py-24">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
+            <div className="lg:col-span-7">
+              <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
+                PROJECT-BASED LEARNING
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight">
+                {t("keyFeatures.projectBasedLearning.title")}
+              </h2>
+              <ul className="space-y-4 mb-8">
+                {[
+                  t("keyFeatures.projectBasedLearning.points.0"),
+                  t("keyFeatures.projectBasedLearning.points.1"),
+                  t("keyFeatures.projectBasedLearning.points.2"),
+                ].map((point, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                    </div>
+                    <span className="text-slate-600 leading-relaxed">
+                      {point}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className="inline-flex items-center gap-2 font-mono text-sm text-amber-600 bg-amber-50 px-4 py-2 rounded-xl border border-amber-200">
+                <Code2 className="w-4 h-4" />
+                <span>code → build → deploy</span>
+              </div>
+            </div>
+            <div className="lg:col-span-5">
+              <div className="space-y-4">
+                <Card
+                  padding="p-6"
+                  className="border-slate-200 bg-gradient-to-br from-slate-50 to-white"
+                >
+                  <div className="font-mono text-xs text-slate-400 mb-2">
+                    $ git commit -m &quot;init&quot;
+                  </div>
+                  <div className="font-mono text-sm text-slate-700">
+                    <span className="text-amber-600">const</span> project ={" "}
+                    <span className="text-green-600">&quot;Portfolio Site&quot;</span>;
+                  </div>
+                  <div className="mt-3 text-slate-600 text-sm">
+                    Start with real-world projects from day one.
+                  </div>
+                </Card>
+                <Card
+                  padding="p-6"
+                  className="border-slate-200 bg-gradient-to-br from-slate-50 to-white"
+                >
+                  <div className="font-mono text-xs text-slate-400 mb-2">
+                    $ npm run deploy
+                  </div>
+                  <div className="font-mono text-sm text-slate-700">
+                    <span className="text-amber-600">export</span>{" "}
+                    <span className="text-blue-600">default</span>{" "}
+                    <span className="text-slate-900">ProductionApp</span>;
+                  </div>
+                  <div className="mt-3 text-slate-600 text-sm">
+                    Ship to production with CI/CD pipelines.
+                  </div>
+                </Card>
+              </div>
             </div>
           </div>
         </div>
-      </OverlappingSection>
+      </section>
 
       {/* Technology Stack Strip */}
       <HorizontalStrip
@@ -340,18 +269,16 @@ export default async function CodeCampAdvantage() {
             [ TECH STACK ]
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-white">
-            Technologies You Will Master
+            {t("professionalTools.heading")}
           </h2>
         </div>
         {[
           { name: "Next.js", icon: <Code2 className="w-8 h-8" /> },
           { name: "React", icon: <Braces className="w-8 h-8" /> },
-          { name: "TypeScript", icon: <Terminal className="w-8 h-8" /> },
-          { name: "Node.js", icon: <Cpu className="w-8 h-8" /> },
+          { name: "Node.js", icon: <Terminal className="w-8 h-8" /> },
           { name: "GitHub", icon: <GitBranch className="w-8 h-8" /> },
           { name: "Docker", icon: <Container className="w-8 h-8" /> },
-          { name: "tRPC", icon: <Zap className="w-8 h-8" /> },
-          { name: "AI SDK", icon: <Sparkles className="w-8 h-8" /> },
+          { name: "Vercel", icon: <Rocket className="w-8 h-8" /> },
         ].map((tech) => (
           <div
             key={tech.name}
@@ -366,6 +293,84 @@ export default async function CodeCampAdvantage() {
           </div>
         ))}
       </HorizontalStrip>
+
+      {/* Key Features — Overlapping Section */}
+      <OverlappingSection
+        background="bg-white"
+        data-testid="overlapping-section"
+      >
+        <div className="container mx-auto px-4 py-24">
+          <div className="max-w-5xl mx-auto">
+            <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
+              KEY FEATURES
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16">
+              {t("keyFeatures.heading")}
+            </h2>
+            <div className="grid md:grid-cols-2 gap-8">
+              <Card
+                data-testid="feature-card"
+                padding="p-10"
+                className="border-slate-200 border-l-4 border-l-amber-500 bg-gradient-to-br from-slate-50 to-white"
+              >
+                <div className="font-mono text-xs text-slate-400 mb-4">
+                  [ FEATURE_01 ]
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-slate-900">
+                  {t("keyFeatures.personalizedAI.title")}
+                </h3>
+                <ul className="space-y-3">
+                  {[
+                    t("keyFeatures.personalizedAI.points.0"),
+                    t("keyFeatures.personalizedAI.points.1"),
+                    t("keyFeatures.personalizedAI.points.2"),
+                  ].map((point, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
+                      <span className="text-slate-600 leading-relaxed">
+                        {point}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6 font-mono text-xs text-slate-400 bg-slate-100 p-3 rounded-xl">
+                  <span className="text-amber-600">AI</span>.review(code) →{" "}
+                  <span className="text-green-600">feedback</span>
+                </div>
+              </Card>
+              <Card
+                data-testid="feature-card"
+                padding="p-10"
+                className="border-slate-200 border-l-4 border-l-amber-500 bg-gradient-to-br from-slate-50 to-white"
+              >
+                <div className="font-mono text-xs text-slate-400 mb-4">
+                  [ FEATURE_02 ]
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-slate-900">
+                  {t("keyFeatures.projectBasedLearning.title")}
+                </h3>
+                <ul className="space-y-3">
+                  {[
+                    t("keyFeatures.projectBasedLearning.points.0"),
+                    t("keyFeatures.projectBasedLearning.points.1"),
+                    t("keyFeatures.projectBasedLearning.points.2"),
+                  ].map((point, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
+                      <span className="text-slate-600 leading-relaxed">
+                        {point}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6 font-mono text-xs text-slate-400 bg-slate-100 p-3 rounded-xl">
+                  <span className="text-amber-600">git</span> push origin main
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </OverlappingSection>
 
       {/* Final CTA — Dark slate with amber accent */}
       <section className="relative py-24 bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden">
@@ -391,7 +396,7 @@ export default async function CodeCampAdvantage() {
                 className="px-10 py-5 rounded-2xl font-bold text-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:shadow-xl hover:shadow-amber-500/30 hover:-translate-y-1"
               >
                 <Link href="/contact" className="inline-flex items-center gap-2">
-                  {t("cta.buttons.applyNow")}
+                  {t("cta.buttons.joinWaitlist")}
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
@@ -401,7 +406,7 @@ export default async function CodeCampAdvantage() {
                 className="px-10 py-5 rounded-2xl font-bold text-lg border-2 border-slate-500 text-white hover:bg-slate-700 hover:border-slate-400"
               >
                 <Link href="/contact">
-                  {t("cta.buttons.contactSales")}
+                  {t("cta.buttons.learnMore")}
                 </Link>
               </Button>
             </div>

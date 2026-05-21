@@ -146,3 +146,19 @@ export const codecampPrReviews = pgTable("codecamp_pr_reviews", {
 }, (table) => [
   unique("codecamp_pr_reviews_pr_url_unique").on(table.prUrl),
 ]);
+
+// ─── Webhook Diagnostics ─────────────────────────────────
+
+export const codecampWebhookEvents = pgTable("codecamp_webhook_events", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  deliveryId: text("delivery_id"),
+  event: text("event").notNull(),
+  action: text("action"),
+  repoUrl: text("repo_url"),
+  prUrl: text("pr_url"),
+  githubUsername: text("github_username"),
+  outcome: text("outcome").notNull(),
+  reason: text("reason").notNull(),
+  payloadJson: jsonb("payload_json"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});

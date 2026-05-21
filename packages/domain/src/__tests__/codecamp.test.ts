@@ -1563,6 +1563,44 @@ describe("listInterns", () => {
     expect(result[0].userId).toBe("u1");
   });
 
+  it("returns latest PR review metadata and review expectation", async () => {
+    const createdAt = new Date("2026-05-18T08:00:00Z");
+    const later = new Date("2026-05-18T09:00:00Z");
+    const internUsers = [
+      { id: "u1", username: "intern1", name: "Intern One", role: "INTERN", schoolId: null, createdAt },
+    ];
+    const modules = [
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt, updatedAt: createdAt },
+      { id: "m2", title: "Module 2", description: "Desc", slug: "mod2", order: 2, status: "published", createdAt, updatedAt: createdAt },
+    ];
+    const lessons = [
+      { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "quiz" as const, contentJson: {}, createdAt, updatedAt: createdAt },
+      { id: "l2", moduleId: "m2", title: "Lesson 2", description: "Desc", order: 1, type: "exercise" as const, contentJson: {}, createdAt, updatedAt: createdAt },
+    ];
+    const progress = [
+      { id: "p1", userId: "u1", moduleId: "m1", lessonId: "l1", status: "completed", score: 100, completedAt: createdAt, createdAt, updatedAt: createdAt },
+    ];
+    const repos = [
+      { id: "repo2", moduleId: "m2", repoUrl: "https://github.com/org/repo2", description: "Repo", order: 1, createdAt },
+    ];
+    const reviews = [
+      { id: "pr1", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt },
+      { id: "pr2", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/2", reviewStatus: "approved", llmReviewSummary: "Good work", reviewedAt: later, createdAt: later },
+    ];
+    const db = createMockDb({ selectSequence: [internUsers, modules, progress, lessons, repos, reviews] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const result = await listInterns({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+    });
+
+    expect(result[0].reviewExpectation).toBe("review_received");
+    expect(result[0].latestPrReview?.prUrl).toBe("https://github.com/org/repo2/pull/2");
+    expect(result[0].latestPrReview?.reviewStatus).toBe("approved");
+  });
+
   it("rejects non-admin users", async () => {
     const db = createMockDb();
 
@@ -1629,6 +1667,50 @@ describe("getInternProgress", () => {
     expect(result.moduleBreakdown).toHaveLength(1);
     expect(result.moduleBreakdown[0].completed).toBe(1);
     expect(result.moduleBreakdown[0].totalLessons).toBe(2);
+  });
+
+  it("marks modules that expect AI PR review and links the latest PR", async () => {
+    const now = new Date("2026-05-18T08:00:00Z");
+    const intern = { id: "u1", username: "intern1", name: "Intern One", role: "INTERN", schoolId: null, createdAt: now };
+    const modules = [
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: now, updatedAt: now },
+      { id: "m2", title: "Module 2", description: "Desc", slug: "mod2", order: 2, status: "published", createdAt: now, updatedAt: now },
+    ];
+    const lessons = [
+      { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "theory" as const, contentJson: {}, createdAt: now, updatedAt: now },
+      { id: "l2", moduleId: "m2", title: "Lesson 2", description: "Desc", order: 1, type: "exercise" as const, contentJson: {}, createdAt: now, updatedAt: now },
+    ];
+    const progress = [
+      { id: "p1", userId: "u1", moduleId: "m1", lessonId: "l1", status: "completed", score: 0, completedAt: now, createdAt: now, updatedAt: now },
+    ];
+    const repos = [
+      { id: "repo2", moduleId: "m2", repoUrl: "https://github.com/org/repo2", description: "Repo", order: 1, createdAt: now },
+    ];
+    const reviews = [
+      { id: "pr1", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/1", reviewStatus: "approved", llmReviewSummary: "Good work", reviewedAt: now, createdAt: now },
+    ];
+    const db = createMockDb({ selectSequence: [[intern], modules, lessons, progress, repos, reviews] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const result = await getInternProgress({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { userId: "u1" },
+    });
+
+    expect(result.moduleBreakdown[0]).toMatchObject({
+      moduleId: "m1",
+      reviewExpected: false,
+      reviewReceived: false,
+      latestPrUrl: null,
+    });
+    expect(result.moduleBreakdown[1]).toMatchObject({
+      moduleId: "m2",
+      reviewExpected: true,
+      reviewReceived: true,
+      latestPrUrl: "https://github.com/org/repo2/pull/1",
+    });
   });
 
   it("rejects when user is not an intern", async () => {

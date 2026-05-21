@@ -280,6 +280,22 @@ export type PrReview = z.infer<typeof prReviewSchema>;
 export type PrReviewInput = z.infer<typeof prReviewInputSchema>;
 export type PrReviewUpdate = z.infer<typeof prReviewUpdateSchema>;
 
+export const webhookEventSchema = z.object({
+  id: z.string().uuid(),
+  deliveryId: z.string().nullable(),
+  event: z.string(),
+  action: z.string().nullable(),
+  repoUrl: z.string().nullable(),
+  prUrl: z.string().nullable(),
+  githubUsername: z.string().nullable(),
+  outcome: z.enum(["ignored", "failed"]),
+  reason: z.string(),
+  payloadJson: z.unknown().nullable(),
+  createdAt: z.date(),
+});
+
+export type WebhookEvent = z.infer<typeof webhookEventSchema>;
+
 // ─── GitHub Webhook Types ─────────────────────────────────
 
 export const githubWebhookPayloadSchema = z.object({
@@ -335,6 +351,13 @@ export const internProgressSchema = z.object({
   quizAverage: z.number(),
   prReviewsPending: z.number(),
   prReviewsApproved: z.number(),
+  reviewExpectation: z.enum(["not_expected_yet", "awaiting_pr", "review_received"]),
+  latestPrReview: z.object({
+    prUrl: z.string(),
+    reviewStatus: z.enum(["pending", "reviewed", "needs_changes", "approved"]),
+    llmReviewSummary: z.string().nullable(),
+    createdAt: z.date(),
+  }).nullable(),
   lastActiveAt: z.date().nullable(),
 });
 
@@ -361,6 +384,10 @@ export const internDetailSchema = z.object({
       completed: z.number(),
       totalLessons: z.number(),
       avgScore: z.number(),
+      reviewExpected: z.boolean(),
+      reviewReceived: z.boolean(),
+      latestPrUrl: z.string().nullable(),
+      latestPrReviewStatus: z.enum(["pending", "reviewed", "needs_changes", "approved"]).nullable(),
     })
   ),
   quizScores: z.array(

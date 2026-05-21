@@ -17,6 +17,7 @@ import { zh as storytimePage } from "./pages/products/storytime-advantage";
 import { zh as tutorPage } from "./pages/products/tutor-advantage";
 import { zh as zhongwenPage } from "./pages/products/zhongwen-advantage";
 import { zh as primaryPage } from "./pages/products/primary-advantage";
+import { zh as masteryAdvantagePage } from "./pages/mastery-advantage";
 import { zh as pricingPage } from "./pages/pricing";
 import { zh as blogPage } from "./pages/blog";
 // components
@@ -44,6 +45,7 @@ export default {
     managedService: managedServicePage,
     pricing: pricingPage,
     blog: blogPage,
+    masteryAdvantage: masteryAdvantagePage,
     products: {
       overview: productsOverview,
       codecampAdvantage: codecampPage,

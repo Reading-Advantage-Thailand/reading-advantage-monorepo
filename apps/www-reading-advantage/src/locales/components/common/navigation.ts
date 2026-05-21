@@ -1,6 +1,7 @@
 export const en = {
     home: "Home",
     products: "Products",
+    masteryAdvantage: "Mastery Advantage",
     services: "Services",
     features: "Features",
     pricing: "Pricing",
@@ -23,6 +24,7 @@ export const en = {
 export const th = {
     home: "หน้าแรก",
     products: "ผลิตภัณฑ์",
+    masteryAdvantage: "Mastery Advantage",
     services: "บริการ",
     features: "คุณสมบัติ",
     pricing: "ราคา",
@@ -45,6 +47,7 @@ export const th = {
 export const zh = {
     home: "首页",
     products: "产品",
+    masteryAdvantage: "Mastery Advantage",
     services: "服务",
     features: "特点",
     pricing: "定价",

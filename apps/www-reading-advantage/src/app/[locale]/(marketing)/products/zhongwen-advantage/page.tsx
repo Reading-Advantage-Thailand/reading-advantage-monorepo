@@ -18,6 +18,8 @@ import {
 import { getScopedI18n } from "@/locales/server";
 import { LargeImageBreak } from "@/components/ui/large-image-break";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
+import { MarketingSvg } from "@/components/marketing/marketing-svg";
+import type { Locale } from "@/config/locale-config";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getScopedI18n("pages.products.zhongwenAdvantage.hero");
@@ -33,7 +35,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function ZhongwenAdvantage() {
+export default async function ZhongwenAdvantage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const heroT = await getScopedI18n("pages.products.zhongwenAdvantage.hero");
 
   const interactiveFeatures = [
@@ -136,6 +143,35 @@ export default async function ZhongwenAdvantage() {
                 className="rounded-2xl shadow-2xl"
                 priority
               />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Adaptive Learning Path — SVG Visualization */}
+      <section className="py-24 bg-white border-y border-[#dad4c8]">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-5">
+              <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block">
+                Adaptive Engine
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Chinese learning paths, adapted to every student
+              </h2>
+              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+                Powered by Mastery Advantage — the KST + SRS engine that maps every language skill and schedules practice at the perfect moment.
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
+                <MarketingSvg
+                  baseName="ra-marketing-zhongwen-advantage"
+                  locale={locale as Locale}
+                  className="w-full h-auto"
+                  alt="Zhongwen Advantage adaptive learning visualization"
+                />
+              </div>
             </div>
           </div>
         </div>

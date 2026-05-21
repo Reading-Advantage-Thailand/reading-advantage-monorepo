@@ -7,8 +7,15 @@ import { StepFlow } from "@/components/ui/step-flow";
 import { Card, CardContent } from "@/components/ui/card";
 import { getScopedI18n } from "@/locales/server";
 import { Mail, BookOpen, Target, Zap } from "lucide-react";
+import { MarketingSvg } from "@/components/marketing/marketing-svg";
+import type { Locale } from "@/config/locale-config";
 
-export default async function PrimaryAdvantage() {
+export default async function PrimaryAdvantage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const t = await getScopedI18n("pages.products.primaryAdvantage");
 
   const features = [
@@ -121,6 +128,35 @@ export default async function PrimaryAdvantage() {
           alt: "Children using English learning apps",
         }}
       />
+
+      {/* Adaptive Learning Path — SVG Visualization */}
+      <section className="py-24 bg-white border-y border-[#dad4c8]">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-5">
+              <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
+                Adaptive Engine
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Primary literacy paths, adapted to every young learner
+              </h2>
+              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+                Powered by Mastery Advantage — the KST + SRS engine that maps every literacy skill and schedules practice at the perfect moment.
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
+                <MarketingSvg
+                  baseName="ra-marketing-primary-advantage"
+                  locale={locale as Locale}
+                  className="w-full h-auto"
+                  alt="Primary Advantage adaptive learning visualization"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* CEFR Aligned — Full-Width Color Room */}
       <section className="py-24 bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-700 text-white relative overflow-hidden">

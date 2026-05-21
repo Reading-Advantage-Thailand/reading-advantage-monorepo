@@ -9,6 +9,7 @@ import {
   codecampChatMessages,
   codecampExerciseRepos,
   codecampPrReviews,
+  codecampWebhookEvents,
   users,
   accounts,
 } from "@reading-advantage/db/schema";
@@ -933,6 +934,68 @@ export async function getPrReviewByPrUrl({
   return result ?? null;
 }
 
+// ─── Webhook Diagnostics ─────────────────────────────────
+
+export type CodecampWebhookEventOutcome = "ignored" | "failed";
+
+export async function logWebhookEvent({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{
+  deliveryId?: string | null;
+  event: string;
+  action?: string | null;
+  repoUrl?: string | null;
+  prUrl?: string | null;
+  githubUsername?: string | null;
+  outcome: CodecampWebhookEventOutcome;
+  reason: string;
+  payload?: unknown;
+}>) {
+  assertCan(user, "admin:dashboard", tenant);
+
+  const [result] = await db
+    .insert(codecampWebhookEvents)
+    .values({
+      deliveryId: input.deliveryId ?? null,
+      event: input.event,
+      action: input.action ?? null,
+      repoUrl: input.repoUrl ?? null,
+      prUrl: input.prUrl ?? null,
+      githubUsername: input.githubUsername ?? null,
+      outcome: input.outcome,
+      reason: input.reason,
+      payloadJson: input.payload ?? null,
+    })
+    .returning();
+
+  return result;
+}
+
+export async function listWebhookEvents({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ limit?: number }>) {
+  assertCan(user, "admin:dashboard", tenant);
+
+  const limit = Math.min(Math.max(input.limit ?? 25, 1), 100);
+
+  const rows = await db
+    .select()
+    .from(codecampWebhookEvents)
+    .orderBy(desc(codecampWebhookEvents.createdAt))
+    .limit(limit);
+
+  return rows.map((row) => ({
+    ...row,
+    outcome: row.outcome === "failed" ? "failed" as const : "ignored" as const,
+  }));
+}
+
 // ─── Module Phase & Prerequisites ─────────────────────────
 
 export async function getModulesByPhase({
@@ -1145,6 +1208,9 @@ export async function createInternAccount({
   }
 
   const lowerUsername = input.username.toLowerCase();
+  const normalizedGithubUsername = (input.githubUsername || input.username)
+    .replace(/^@/, "")
+    .toLowerCase();
 
   // Check for existing username before attempting insert
   const [existing] = await db
@@ -1155,6 +1221,16 @@ export async function createInternAccount({
 
   if (existing) {
     throw new Error("Username already exists");
+  }
+
+  const [existingGithubUser] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.githubUsername, normalizedGithubUsername))
+    .limit(1);
+
+  if (existingGithubUser) {
+    throw new Error("GitHub username already exists");
   }
 
   const passwordHash = await hashPassword(input.password);
@@ -1175,9 +1251,7 @@ export async function createInternAccount({
         xp: 0,
         level: 1,
         cefrLevel: "A1",
-        githubUsername: input.githubUsername
-          ? input.githubUsername.replace(/^@/, "").toLowerCase()
-          : null,
+        githubUsername: normalizedGithubUsername,
       })
       .returning();
 
@@ -1271,6 +1345,13 @@ export async function listInterns({
         .where(inArray(codecampLessons.moduleId, moduleIds))
     : [];
 
+  const allRepos = moduleIds.length > 0
+    ? await db
+        .select()
+        .from(codecampExerciseRepos)
+        .where(inArray(codecampExerciseRepos.moduleId, moduleIds))
+    : [];
+
   const allReviews = internIds.length > 0
     ? await db
         .select()
@@ -1297,6 +1378,7 @@ export async function listInterns({
     const internReviews = allReviews.filter((r) => r.userId === intern.id);
     const pending = internReviews.filter((r) => r.reviewStatus === "pending").length;
     const approved = internReviews.filter((r) => r.reviewStatus === "approved").length;
+    const latestPrReview = [...internReviews].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0] ?? null;
 
     const lastActive = internProgress.length > 0
       ? [...internProgress].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())[0].updatedAt
@@ -1306,6 +1388,20 @@ export async function listInterns({
     const totalLessons = allLessons.length;
     const completedLessons = internProgress.filter((p) => p.status === "completed").length;
     const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+    const currentModule = modules.find((mod) => {
+      const moduleLessons = allLessons.filter((lesson) => lesson.moduleId === mod.id);
+      if (moduleLessons.length === 0) return false;
+      const completedForModule = internProgress.filter((p) => p.moduleId === mod.id && p.status === "completed").length;
+      return completedForModule < moduleLessons.length;
+    }) ?? null;
+    const currentModuleHasReview = currentModule
+      ? allRepos.some((repo) => repo.moduleId === currentModule.id)
+      : false;
+    const reviewExpectation = latestPrReview
+      ? "review_received" as const
+      : currentModuleHasReview
+        ? "awaiting_pr" as const
+        : "not_expected_yet" as const;
 
     return {
       userId: intern.id,
@@ -1317,6 +1413,15 @@ export async function listInterns({
       quizAverage,
       prReviewsPending: pending,
       prReviewsApproved: approved,
+      reviewExpectation,
+      latestPrReview: latestPrReview
+        ? {
+            prUrl: latestPrReview.prUrl,
+            reviewStatus: latestPrReview.reviewStatus,
+            llmReviewSummary: latestPrReview.llmReviewSummary,
+            createdAt: latestPrReview.createdAt,
+          }
+        : null,
       lastActiveAt: lastActive,
     };
   });
@@ -1359,6 +1464,13 @@ export async function getInternProgress({
     .from(codecampUserProgress)
     .where(eq(codecampUserProgress.userId, input.userId));
 
+  const exerciseRepos = moduleIds.length > 0
+    ? await db
+        .select()
+        .from(codecampExerciseRepos)
+        .where(inArray(codecampExerciseRepos.moduleId, moduleIds))
+    : [];
+
   const reviews = await db
     .select()
     .from(codecampPrReviews)
@@ -1373,6 +1485,11 @@ export async function getInternProgress({
     const avgScore = modProgress.length > 0
       ? Math.round(modProgress.reduce((s, p) => s + p.score, 0) / modProgress.length)
       : 0;
+    const moduleRepos = exerciseRepos.filter((repo) => repo.moduleId === mod.id);
+    const moduleRepoIds = new Set(moduleRepos.map((repo) => repo.id));
+    const latestModuleReview = reviews
+      .filter((review) => moduleRepoIds.has(review.exerciseRepoId))
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0] ?? null;
 
     return {
       moduleId: mod.id,
@@ -1380,6 +1497,10 @@ export async function getInternProgress({
       completed,
       totalLessons,
       avgScore,
+      reviewExpected: moduleRepos.length > 0,
+      reviewReceived: latestModuleReview !== null,
+      latestPrUrl: latestModuleReview?.prUrl ?? null,
+      latestPrReviewStatus: latestModuleReview?.reviewStatus ?? null,
     };
   });
 

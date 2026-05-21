@@ -31,6 +31,29 @@ const systemUser = {
 
 const globalTenant = { schoolId: null as string | null };
 
+async function logWebhookEvent(input: {
+  deliveryId?: string | null;
+  event: string;
+  action?: string | null;
+  repoUrl?: string | null;
+  prUrl?: string | null;
+  githubUsername?: string | null;
+  outcome: "ignored" | "failed";
+  reason: string;
+  payload?: unknown;
+}) {
+  try {
+    await codecamp.logWebhookEvent({
+      db: createTenantDB(db, globalTenant),
+      user: systemUser,
+      tenant: globalTenant,
+      input,
+    });
+  } catch (err) {
+    console.error("[GitHub Webhook] Failed to log webhook diagnostic:", err);
+  }
+}
+
 // ─── LLM Review Generator ─────────────────────────────────
 
 const openrouter = createOpenAI({
@@ -90,7 +113,15 @@ github.post("/pr", async (c) => {
   }
 
   const event = c.req.header("x-github-event");
+  const deliveryId = c.req.header("x-github-delivery");
   if (event !== "pull_request") {
+    await logWebhookEvent({
+      deliveryId,
+      event: event ?? "unknown",
+      outcome: "ignored",
+      reason: `Event ${event} not handled`,
+      payload: parsed,
+    });
     return c.json({ received: true, ignored: `Event ${event} not handled` }, 200);
   }
 
@@ -106,6 +137,17 @@ github.post("/pr", async (c) => {
 
   // Only handle opened and synchronize events
   if (action !== "opened" && action !== "synchronize") {
+    await logWebhookEvent({
+      deliveryId,
+      event,
+      action,
+      repoUrl: pr.base.repo.html_url,
+      prUrl: pr.html_url,
+      githubUsername: pr.user?.login ?? null,
+      outcome: "ignored",
+      reason: `Action ${action} not handled`,
+      payload: data,
+    });
     return c.json({ received: true, ignored: `Action ${action} not handled` }, 200);
   }
 
@@ -147,6 +189,17 @@ github.post("/pr", async (c) => {
 
       if (!repo) {
         console.log(`[GitHub Webhook] No matching exercise repo for ${pr.base.repo.html_url}`);
+        await logWebhookEvent({
+          deliveryId,
+          event,
+          action,
+          repoUrl: pr.base.repo.html_url,
+          prUrl: pr.html_url,
+          githubUsername: pr.user?.login ?? null,
+          outcome: "ignored",
+          reason: "No matching exercise repo",
+          payload: data,
+        });
         return c.json({ received: true, ignored: "No matching exercise repo" }, 200);
       }
 
@@ -168,6 +221,17 @@ github.post("/pr", async (c) => {
 
       if (!userId) {
         console.log(`[GitHub Webhook] No codecamp user found for GitHub user: ${githubLogin}`);
+        await logWebhookEvent({
+          deliveryId,
+          event,
+          action,
+          repoUrl: pr.base.repo.html_url,
+          prUrl: pr.html_url,
+          githubUsername: githubLogin ?? null,
+          outcome: "ignored",
+          reason: "No matching codecamp user",
+          payload: data,
+        });
         return c.json({ received: true, ignored: "No matching codecamp user" }, 200);
       }
 
@@ -258,6 +322,17 @@ github.post("/pr", async (c) => {
     return c.json({ received: true, action, prUrl: pr.html_url }, 200);
   } catch (err) {
     console.error("[GitHub Webhook] Error processing PR event:", err);
+    await logWebhookEvent({
+      deliveryId,
+      event,
+      action,
+      repoUrl: pr.base.repo.html_url,
+      prUrl: pr.html_url,
+      githubUsername: pr.user?.login ?? null,
+      outcome: "failed",
+      reason: err instanceof Error ? err.message : "Internal error",
+      payload: data,
+    });
     return c.json({ error: "Internal error" }, 500);
   }
 });

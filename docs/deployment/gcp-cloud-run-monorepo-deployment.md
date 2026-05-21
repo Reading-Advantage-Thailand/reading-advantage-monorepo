@@ -241,6 +241,26 @@ gcloud builds submit \
   .
 ```
 
+For the 2026-05-18 Codecamp redeploy, the full monorepo upload was too large
+and stalled before Cloud Build registered. Use a reduced build context instead:
+
+```bash
+rm -rf /tmp/codecamp-build-context
+mkdir -p /tmp/codecamp-build-context/apps
+rsync -a --exclude node_modules --exclude .next --exclude .turbo --exclude dist --exclude coverage \
+  package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .pnpmfile.cjs \
+  /tmp/codecamp-build-context/
+rsync -a --exclude node_modules --exclude .next --exclude .turbo --exclude dist --exclude coverage \
+  apps/codecamp-advantage /tmp/codecamp-build-context/apps/
+rsync -a --exclude node_modules --exclude .next --exclude .turbo --exclude dist --exclude coverage \
+  packages /tmp/codecamp-build-context/
+
+gcloud builds submit \
+  --project="$APP_PROJECT" \
+  --config="apps/${SERVICE}/cloudbuild.yaml" \
+  /tmp/codecamp-build-context
+```
+
 Confirm service state:
 
 ```bash
@@ -295,6 +315,38 @@ gcloud run jobs execute "${SERVICE}-db-migrate" \
   --project="$APP_PROJECT" \
   --region="$REGION" \
   --wait
+```
+
+For the 2026-05-18 Codecamp redeploy, the existing job name was
+`codecamp-db-migrate`, not `${SERVICE}-db-migrate`. The normal
+`drizzle-kit migrate` command failed inside Cloud Run without exposing the
+underlying SQL error in Cloud Logging. Production data had no duplicate repo or
+PR URLs, and the production `role` enum was missing `INTERN`, so the pending
+changes were applied with an idempotent direct SQL script and then the canonical
+seed was run:
+
+```bash
+gcloud run jobs update codecamp-db-migrate \
+  --project="$APP_PROJECT" \
+  --region="$REGION" \
+  --image="$MIGRATE_IMAGE" \
+  --service-account=codecamp-cloud-run@codecamp-advantage.iam.gserviceaccount.com \
+  --set-cloudsql-instances="$SQL_CONNECTION" \
+  --set-secrets=CODECAMP_DATABASE_URL=CODECAMP_DATABASE_URL:latest \
+  --set-env-vars=NODE_ENV=production \
+  --command=sh \
+  --args='-lc,export DATABASE_URL="$CODECAMP_DATABASE_URL" && <apply idempotent SQL for 0010/0011/0012> && pnpm --dir packages/db seed:codecamp'
+```
+
+The successful production verification logged the expected enum/table/index
+state and then reseeded the canonical curriculum:
+
+```text
+"enumlabel": "INTERN"
+"webhook_table": "codecamp_webhook_events"
+"repo_unique_index": "codecamp_exercise_repos_repo_url_unique"
+"pr_unique_index": "codecamp_pr_reviews_pr_url_unique"
+18 existing module(s) had metadata updated.
 ```
 
 Verify logs:

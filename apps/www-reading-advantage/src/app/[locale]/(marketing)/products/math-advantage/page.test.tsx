@@ -17,28 +17,28 @@ afterEach(() => {
 
 describe("MathAdvantage", () => {
   it("renders organic bubble cluster", async () => {
-    const element = await MathAdvantage();
+    const element = await MathAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(element);
     const cluster = document.querySelector("[data-testid='bubble-cluster']");
     expect(cluster).toBeInTheDocument();
   });
 
   it("renders single deep-dive feature section", async () => {
-    const element = await MathAdvantage();
+    const element = await MathAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(element);
     const deepDive = document.querySelector("[data-testid='deep-dive']");
     expect(deepDive).toBeInTheDocument();
   });
 
   it("renders overlapping section", async () => {
-    const element = await MathAdvantage();
+    const element = await MathAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(element);
     const overlap = document.querySelector("[data-testid='overlapping-section']");
     expect(overlap).toBeInTheDocument();
   });
 
   it("renders floating pills", async () => {
-    const element = await MathAdvantage();
+    const element = await MathAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(element);
     const pills = document.querySelectorAll("[data-testid='stat-pill']");
     expect(pills.length).toBeGreaterThanOrEqual(2);

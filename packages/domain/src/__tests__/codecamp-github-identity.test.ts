@@ -67,14 +67,14 @@ describe("createInternAccount with githubUsername", () => {
     }
   });
 
-  it("stores githubUsername as null when not provided", async () => {
+  it("defaults githubUsername to the login username when not provided", async () => {
     const insertedUser = {
       id: "u2",
       username: "intern2",
       name: "Intern Two",
       role: "INTERN",
       schoolId: null,
-      githubUsername: null,
+      githubUsername: "intern2",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -90,7 +90,7 @@ describe("createInternAccount with githubUsername", () => {
       input: { username: "intern2", name: "Intern Two", password: "Password1" },
     });
 
-    expect(result.githubUsername).toBeNull();
+    expect(result.githubUsername).toBe("intern2");
   });
 
   it("normalizes uppercase githubUsername to lowercase", async () => {
@@ -117,6 +117,26 @@ describe("createInternAccount with githubUsername", () => {
     });
 
     expect(result.githubUsername).toBe("lowercasehandle");
+  });
+
+  it("throws before insert when the GitHub username is already assigned", async () => {
+    const db = createMockDb({
+      selectSequence: [
+        [],
+        [{ id: "existing-user" }],
+      ],
+    });
+
+    await expect(
+      createInternAccount({
+        db: wrapDb(db),
+        user: admin,
+        tenant: globalTenant,
+        input: { username: "intern4", name: "Intern Four", password: "Password1", githubUsername: "ExistingUser" },
+      })
+    ).rejects.toThrow("GitHub username already exists");
+
+    expect(db.insert).not.toHaveBeenCalled();
   });
 });
 

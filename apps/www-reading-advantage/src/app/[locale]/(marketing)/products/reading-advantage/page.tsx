@@ -19,6 +19,7 @@ import HeroSection from "@/components/marketing/hero-section";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FloatingPill } from "@/components/ui/floating-pill";
 import { HorizontalStrip } from "@/components/ui/horizontal-strip";
+import { MarketingSvgClient } from "@/components/marketing/marketing-svg-client";
 
 export default function ReadingAdvantage() {
   const t = useScopedI18n("pages.products.readingAdvantage");
@@ -74,6 +75,34 @@ export default function ReadingAdvantage() {
           alt: "Student engaging with digital reading platform",
         }}
       />
+
+      {/* Adaptive Learning Path — SVG Visualization */}
+      <section className="py-24 bg-white border-y border-[#dad4c8]">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-5">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+                Adaptive Engine
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Personalized reading paths for every student
+              </h2>
+              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+                Powered by Mastery Advantage — the KST + SRS engine that maps every reading skill and schedules practice at the perfect moment.
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
+                <MarketingSvgClient
+                  baseName="ra-marketing-reading-advantage"
+                  className="w-full h-auto"
+                  alt="Reading Advantage adaptive learning visualization"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Platform Features — Full-Width Color Room (Sky) */}
       <section

@@ -1,55 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Mail, Check } from "lucide-react";
+import { ArrowRight, Mail, GitBranch, Clock, Target } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { Button } from "@/components/ui/button";
-
-/**
- * Home page — rewritten April 2026.
- *
- * Design language: Clay-inspired warm cream (#faf9f7) canvas with a single
- * product accent (sky-500 / sky-900 for Reading Advantage). Roobert type,
- * oat borders (#dad4c8), playful hover (rotateZ + hard offset shadow).
- *
- * Structural changes vs. previous version:
- *   - 8 sections → 5
- *   - Mission + Overview merged into the hero as evidence stats
- *   - Innovation + Big 4 merged into "How it works"
- *   - Amber / orange / slate / rose palette mix removed — sky only
- *   - Single CTA verb ("Book a demo") repeated instead of 4 different asks
- *   - Gradient-text headlines, blurred color blobs, and decorative icon
- *     gradients removed in favor of honest typography and oat rules
- *
- * See: conductor/DESIGN.md for the full rationale + tokens.
- */
-export default async function Home() {
+import { MasteryAdvantageGraph } from "@/components/marketing/mastery-advantage-graph";
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  await params;
   const t = await getScopedI18n("pages.home");
-
-  const benefits = [
-    t("flagship.benefits.0"),
-    t("flagship.benefits.1"),
-    t("flagship.benefits.2"),
-    t("flagship.benefits.3"),
-  ];
-
-  const howItWorks = [
-    {
-      title: t("qualityProtocol.features.0.title"),
-      description: t("qualityProtocol.features.0.description"),
-    },
-    {
-      title: t("qualityProtocol.features.1.title"),
-      description: t("qualityProtocol.features.1.description"),
-    },
-    {
-      title: t("qualityProtocol.features.2.title"),
-      description: t("qualityProtocol.features.2.description"),
-    },
-    {
-      title: t("qualityProtocol.features.3.title"),
-      description: t("qualityProtocol.features.3.description"),
-    },
-  ];
 
   const thaiFeatures = [
     {
@@ -66,10 +26,22 @@ export default async function Home() {
     },
   ];
 
+  const products = [
+    { key: "reading-advantage", name: "Reading Advantage", color: "bg-sky-100 text-sky-800 border-sky-200" },
+    { key: "primary-advantage", name: "Primary Advantage", color: "bg-sky-50 text-sky-700 border-sky-100" },
+    { key: "storytime-advantage", name: "Storytime Advantage", color: "bg-amber-50 text-amber-700 border-amber-100" },
+    { key: "math-advantage", name: "Math Advantage", color: "bg-orange-50 text-orange-700 border-orange-100" },
+    { key: "science-advantage", name: "Science Advantage", color: "bg-rose-50 text-rose-700 border-rose-100" },
+    { key: "stem-advantage", name: "STEM Advantage", color: "bg-indigo-50 text-indigo-700 border-indigo-100" },
+    { key: "zhongwen-advantage", name: "Zhongwen Advantage", color: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-100" },
+    { key: "tutor-advantage", name: "Tutor Advantage", color: "bg-violet-50 text-violet-700 border-violet-100" },
+    { key: "codecamp-advantage", name: "CodeCamp Advantage", color: "bg-purple-50 text-purple-700 border-purple-100" },
+  ];
+
   return (
     <main className="overflow-x-hidden bg-[#faf9f7] text-black">
       {/* ─────────────────────────────────────────────────────────────
-          HERO — evidence-led, single CTA, warm cream canvas
+          HERO — Mastery Advantage as the engine
          ───────────────────────────────────────────────────────────── */}
       <section className="relative pt-28 md:pt-36 pb-24 md:pb-32">
         <div className="container mx-auto px-4 max-w-6xl">
@@ -93,37 +65,37 @@ export default async function Home() {
                   </Link>
                 </Button>
                 <Link
-                  href="/products/reading-advantage"
+                  href="/mastery-advantage"
                   className="text-sm font-medium text-black border-b border-[#dad4c8] pb-0.5 hover:border-sky-500 transition-colors"
                 >
                   {t("hero.secondaryCta")} →
                 </Link>
               </div>
 
-              {/* Evidence bar — the old Overview stats, promoted to hero */}
+              {/* Evidence bar */}
               <dl className="mt-16 grid grid-cols-3 gap-6 pt-8 border-t border-[#dad4c8] max-w-xl">
                 <div>
                   <dd className="text-3xl md:text-4xl font-semibold tracking-tight text-black">
-                    +9.5
+                    9
                   </dd>
                   <dt className="text-xs uppercase tracking-wider text-[#9f9b93] mt-2">
-                    {t("hero.stats.gain")}
+                    {t("hero.stats.products")}
                   </dt>
                 </div>
                 <div>
                   <dd className="text-3xl md:text-4xl font-semibold tracking-tight text-black">
-                    10K+
+                    2,172+
                   </dd>
                   <dt className="text-xs uppercase tracking-wider text-[#9f9b93] mt-2">
-                    {t("hero.stats.articles")}
+                    {t("hero.stats.skills")}
                   </dt>
                 </div>
                 <div>
                   <dd className="text-3xl md:text-4xl font-semibold tracking-tight text-black">
-                    12
+                    KST+SRS
                   </dd>
                   <dt className="text-xs uppercase tracking-wider text-[#9f9b93] mt-2">
-                    {t("hero.stats.levels")}
+                    {t("hero.stats.engine")}
                   </dt>
                 </div>
               </dl>
@@ -131,14 +103,7 @@ export default async function Home() {
 
             <div className="lg:col-span-5 hidden lg:block">
               <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-[rgba(0,0,0,0.1)_0px_1px_1px,rgba(0,0,0,0.04)_0px_-1px_1px_inset,rgba(0,0,0,0.05)_0px_-0.5px_1px]">
-                <Image
-                  src="/images/reading-advantage-demo.png"
-                  alt="Reading Advantage student dashboard"
-                  width={720}
-                  height={720}
-                  className="w-full h-auto"
-                  priority
-                />
+                <MasteryAdvantageGraph className="w-full h-auto" />
               </div>
             </div>
           </div>
@@ -146,93 +111,101 @@ export default async function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          FLAGSHIP — what it is, who it's for
-         ───────────────────────────────────────────────────────────── */}
-      <section id="products" className="py-24 md:py-32 border-t border-[#dad4c8]">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
-            <header className="lg:col-span-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 mb-6">
-                {t("flagship.eyebrow")}
-              </p>
-              <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-6">
-                {t("flagship.title")}
-              </h2>
-              <p className="text-base md:text-lg leading-relaxed text-[#55534e] mb-10">
-                {t("flagship.description")}
-              </p>
-
-              <Button variant="default" asChild>
-                <Link href="/products/reading-advantage">
-                  {t("flagship.cta")}
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </Button>
-            </header>
-
-            <ul className="lg:col-span-7 space-y-5">
-              {benefits.map((benefit, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-5 p-6 bg-white border border-[#dad4c8] rounded-2xl"
-                >
-                  <span
-                    className="flex-shrink-0 w-10 h-10 rounded-full bg-sky-100 text-sky-900 flex items-center justify-center font-semibold text-sm"
-                    aria-hidden="true"
-                  >
-                    <Check className="w-5 h-5" />
-                  </span>
-                  <p className="text-base md:text-lg leading-relaxed text-black">
-                    {benefit}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────────
-          HOW IT WORKS — the Big 4 Quality Protocol
-          (merged from the old Innovation + Quality Protocol sections)
+          THE ENGINE — KST + SRS pillars
          ───────────────────────────────────────────────────────────── */}
       <section className="py-24 md:py-32 bg-white border-y border-[#dad4c8]">
         <div className="container mx-auto px-4 max-w-6xl">
           <header className="max-w-2xl mb-16">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 mb-6">
-              {t("howItWorks.eyebrow")}
+              {t("engine.eyebrow")}
             </p>
             <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-6">
-              {t("howItWorks.title")}
+              {t("engine.title")}
             </h2>
-            <p className="text-base md:text-lg leading-relaxed text-[#55534e]">
-              {t("howItWorks.description")}
+            <p className="text-base md:text-lg leading-relaxed text-[#55534e] mb-10">
+              {t("engine.description")}
             </p>
+            <Button variant="default" asChild>
+              <Link href="/mastery-advantage">
+                {t("engine.cta")}
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </Button>
           </header>
 
-          <ol className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-[#dad4c8] border border-[#dad4c8] rounded-2xl overflow-hidden">
-            {howItWorks.map((item, i) => (
-              <li
-                key={item.title}
-                className="bg-white p-8 flex flex-col gap-4"
-              >
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">
-                  0{i + 1}
-                </span>
-                <h3 className="text-xl font-semibold tracking-tight text-black">
-                  {item.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-[#55534e]">
-                  {item.description}
-                </p>
-              </li>
-            ))}
-          </ol>
+          <div className="grid md:grid-cols-3 gap-px bg-[#dad4c8] border border-[#dad4c8] rounded-2xl overflow-hidden">
+            <div className="bg-white p-8 flex flex-col gap-4">
+              <span className="w-10 h-10 rounded-full bg-sky-100 text-sky-900 flex items-center justify-center">
+                <GitBranch className="w-5 h-5" />
+              </span>
+              <h3 className="text-xl font-semibold tracking-tight text-black">
+                {t("engine.pillars.kst.title")}
+              </h3>
+              <p className="text-sm leading-relaxed text-[#55534e]">
+                {t("engine.pillars.kst.description")}
+              </p>
+            </div>
+            <div className="bg-white p-8 flex flex-col gap-4">
+              <span className="w-10 h-10 rounded-full bg-sky-100 text-sky-900 flex items-center justify-center">
+                <Clock className="w-5 h-5" />
+              </span>
+              <h3 className="text-xl font-semibold tracking-tight text-black">
+                {t("engine.pillars.srs.title")}
+              </h3>
+              <p className="text-sm leading-relaxed text-[#55534e]">
+                {t("engine.pillars.srs.description")}
+              </p>
+            </div>
+            <div className="bg-white p-8 flex flex-col gap-4">
+              <span className="w-10 h-10 rounded-full bg-sky-100 text-sky-900 flex items-center justify-center">
+                <Target className="w-5 h-5" />
+              </span>
+              <h3 className="text-xl font-semibold tracking-tight text-black">
+                {t("engine.pillars.placement.title")}
+              </h3>
+              <p className="text-sm leading-relaxed text-[#55534e]">
+                {t("engine.pillars.placement.description")}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          FOR THAI PRIVATE SCHOOLS — the "loud" section (sky-900)
+          THE SUITE — all 9 products
+         ───────────────────────────────────────────────────────────── */}
+      <section id="products" className="py-24 md:py-32 border-t border-[#dad4c8]">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <header className="max-w-2xl mb-16">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 mb-6">
+              {t("suite.eyebrow")}
+            </p>
+            <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-6">
+              {t("suite.title")}
+            </h2>
+            <p className="text-base md:text-lg leading-relaxed text-[#55534e]">
+              {t("suite.description")}
+            </p>
+          </header>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {products.map((product) => (
+              <Link
+                key={product.key}
+                href={`/products/${product.key}`}
+                className={`flex items-center justify-center p-6 rounded-2xl border ${product.color} hover:shadow-md hover:-translate-y-1 transition-all duration-200`}
+              >
+                <span className="text-sm font-semibold text-center">
+                  {product.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────
+          FOR THAI PRIVATE SCHOOLS
          ───────────────────────────────────────────────────────────── */}
       <section className="py-24 md:py-32 bg-sky-900 text-white">
         <div className="container mx-auto px-4 max-w-6xl">
@@ -270,7 +243,7 @@ export default async function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          CTA — single ask, time-boxed, repeated verb from the hero
+          CTA
          ───────────────────────────────────────────────────────────── */}
       <section className="py-24 md:py-32">
         <div className="container mx-auto px-4 max-w-4xl text-center">
@@ -292,7 +265,7 @@ export default async function Home() {
               </Link>
             </Button>
             <Link
-              href="/products/reading-advantage"
+              href="/mastery-advantage"
               className="text-sm font-medium text-black border-b border-[#dad4c8] pb-0.5 hover:border-sky-500 transition-colors"
             >
               {t("impact.secondaryCta")} →

@@ -772,6 +772,13 @@ describe("codecamp router", () => {
           quizAverage: 80,
           prReviewsPending: 1,
           prReviewsApproved: 3,
+          reviewExpectation: "review_received",
+          latestPrReview: {
+            prUrl: "https://github.com/org/repo/pull/1",
+            reviewStatus: "approved",
+            llmReviewSummary: "Good work",
+            createdAt: testDate,
+          },
           lastActiveAt: testDate,
         },
       ];
@@ -802,7 +809,17 @@ describe("codecamp router", () => {
         username: "intern1",
         githubUsername: null,
         moduleBreakdown: [
-          { moduleId: "m1", title: "Module 1", completed: 2, totalLessons: 4, avgScore: 85 },
+          {
+            moduleId: "m1",
+            title: "Module 1",
+            completed: 2,
+            totalLessons: 4,
+            avgScore: 85,
+            reviewExpected: true,
+            reviewReceived: true,
+            latestPrUrl: "https://github.com/org/repo/pull/1",
+            latestPrReviewStatus: "approved",
+          },
         ],
         quizScores: [{ lessonId: "l1", lessonTitle: "Lesson 1", score: 100 }],
         prReviews: [],

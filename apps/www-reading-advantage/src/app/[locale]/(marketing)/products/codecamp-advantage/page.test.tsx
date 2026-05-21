@@ -7,52 +7,31 @@ afterEach(() => {
 });
 
 describe("CodeCampAdvantage", () => {
-  it("renders hero section with enrollment badge", async () => {
-    const jsx = await CodeCampAdvantage();
+  it("renders dark tech track cards", async () => {
+    const jsx = await CodeCampAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(jsx);
-    const badge = document.querySelector(".bg-amber-100");
-    expect(badge).toBeInTheDocument();
-  });
-
-  it("renders curriculum section with phase cards", async () => {
-    const jsx = await CodeCampAdvantage();
-    render(jsx);
-    const phaseCards = document.querySelectorAll("[data-testid='phase-card']");
-    expect(phaseCards.length).toBeGreaterThanOrEqual(4);
-  });
-
-  it("renders project cards", async () => {
-    const jsx = await CodeCampAdvantage();
-    render(jsx);
-    const projectCards = document.querySelectorAll("[data-testid='project-card']");
-    expect(projectCards.length).toBeGreaterThanOrEqual(4);
-  });
-
-  it("renders feature cards", async () => {
-    const jsx = await CodeCampAdvantage();
-    render(jsx);
-    const cards = document.querySelectorAll("[data-testid='feature-card']");
+    const cards = document.querySelectorAll("[data-testid='track-card']");
     expect(cards.length).toBeGreaterThanOrEqual(3);
   });
 
   it("renders horizontal tech strip", async () => {
-    const jsx = await CodeCampAdvantage();
+    const jsx = await CodeCampAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(jsx);
     const strip = document.querySelector("[data-testid='tech-strip']");
     expect(strip).toBeInTheDocument();
   });
 
-  it("renders features section", async () => {
-    const jsx = await CodeCampAdvantage();
+  it("renders overlapping section", async () => {
+    const jsx = await CodeCampAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(jsx);
-    const section = document.querySelector("[data-testid='features-section']");
+    const section = document.querySelector("[data-testid='overlapping-section']");
     expect(section).toBeInTheDocument();
   });
 
-  it("renders CTA buttons", async () => {
-    const jsx = await CodeCampAdvantage();
+  it("renders border-left accent feature cards", async () => {
+    const jsx = await CodeCampAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(jsx);
-    const buttons = document.querySelectorAll("a, button");
-    expect(buttons.length).toBeGreaterThan(0);
+    const cards = document.querySelectorAll("[data-testid='feature-card']");
+    expect(cards.length).toBeGreaterThanOrEqual(2);
   });
 });

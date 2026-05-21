@@ -8,28 +8,28 @@ afterEach(() => {
 
 describe("StorytimeAdvantage", () => {
   it("renders staggered cards", async () => {
-    const jsx = await StorytimeAdvantage();
+    const jsx = await StorytimeAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(jsx);
     const cards = document.querySelectorAll("[data-testid='staggered-card']");
     expect(cards.length).toBeGreaterThanOrEqual(3);
   });
 
   it("renders FAQ accordion", async () => {
-    const jsx = await StorytimeAdvantage();
+    const jsx = await StorytimeAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(jsx);
     const faq = document.querySelector("[data-testid='faq-accordion']");
     expect(faq).toBeInTheDocument();
   });
 
   it("renders overlapping section", async () => {
-    const jsx = await StorytimeAdvantage();
+    const jsx = await StorytimeAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(jsx);
     const section = document.querySelector("[data-testid='overlapping-section']");
     expect(section).toBeInTheDocument();
   });
 
   it("renders decorative dashed frame", async () => {
-    const jsx = await StorytimeAdvantage();
+    const jsx = await StorytimeAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(jsx);
     const frame = document.querySelector("[data-testid='dashed-frame']");
     expect(frame).toBeInTheDocument();

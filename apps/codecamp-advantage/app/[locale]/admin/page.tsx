@@ -3,6 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import { useAuth } from "@reading-advantage/auth-client";
 import { trpc } from "@/lib/trpc";
+import { getPrDisplayName } from "@/lib/pr-url";
 import { Button } from "@reading-advantage/ui";
 import { Progress } from "@reading-advantage/ui";
 import { useTranslations } from "next-intl";
@@ -15,6 +16,7 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
+  ExternalLink,
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -23,6 +25,10 @@ export default function AdminPage() {
   const { user, isLoading: authLoading } = useAuth();
   const { data: interns, isLoading: dataLoading } = trpc.codecamp.listInterns.useQuery(
     undefined,
+    { enabled: user?.role === "ADMIN" }
+  );
+  const { data: webhookEvents, isLoading: webhookLoading } = trpc.codecamp.webhookEvents.useQuery(
+    { limit: 10 },
     { enabled: user?.role === "ADMIN" }
   );
 
@@ -103,6 +109,66 @@ export default function AdminPage() {
         </div>
       </div>
 
+      <div className="mb-8 rounded-lg border">
+        <div className="flex items-center justify-between p-4">
+          <div>
+            <h2 className="text-lg font-semibold">{t("webhookDiagnostics")}</h2>
+            <p className="text-sm text-muted-foreground">{t("webhookDiagnosticsHint")}</p>
+          </div>
+          <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+            {webhookLoading ? "—" : webhookEvents?.length ?? 0}
+          </span>
+        </div>
+        {webhookLoading ? (
+          <div className="p-4">
+            <div className="h-24 animate-pulse rounded bg-muted" />
+          </div>
+        ) : !webhookEvents || webhookEvents.length === 0 ? (
+          <div className="border-t p-4 text-sm text-muted-foreground">
+            {t("empty.noWebhookEvents")}
+          </div>
+        ) : (
+          <div className="overflow-x-auto border-t">
+            <table className="w-full text-sm" aria-label="Webhook diagnostics">
+              <thead>
+                <tr className="border-b bg-muted/50">
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("time")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("outcome")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("reason")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("githubUsername")}</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-left font-medium">{t("repository")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {webhookEvents.map((event) => (
+                  <tr key={event.id} className="border-b last:border-0">
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {formatDate(event.createdAt, locale)}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={
+                        event.outcome === "failed"
+                          ? "rounded-md bg-destructive/10 px-2 py-1 text-xs text-destructive"
+                          : "rounded-md bg-amber-100 px-2 py-1 text-xs text-amber-700"
+                      }>
+                        {event.outcome}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">{event.reason}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {event.githubUsername ? `@${event.githubUsername}` : "—"}
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {event.repoUrl?.replace("https://github.com/", "") ?? "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
       <div className="rounded-lg border">
         <div className="p-4">
           <h2 className="text-lg font-semibold">{t("cohortOverview")}</h2>
@@ -144,6 +210,13 @@ export default function AdminPage() {
                   quizAverage: number;
                   prReviewsPending: number;
                   prReviewsApproved: number;
+                  reviewExpectation: "not_expected_yet" | "awaiting_pr" | "review_received";
+                  latestPrReview: {
+                    prUrl: string;
+                    reviewStatus: "pending" | "reviewed" | "needs_changes" | "approved";
+                    llmReviewSummary: string | null;
+                    createdAt: Date;
+                  } | null;
                   lastActiveAt: Date | null;
                 }) => (
                   <tr key={intern.userId} className="border-b last:border-0">
@@ -172,21 +245,38 @@ export default function AdminPage() {
                     </td>
                     <td className="px-4 py-3">{intern.quizAverage}%</td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        {intern.prReviewsPending > 0 && (
-                          <span className="flex items-center gap-1 text-amber-600">
-                            <AlertCircle className="h-3.5 w-3.5" />
-                            {intern.prReviewsPending}
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          {intern.prReviewsPending > 0 && (
+                            <span className="flex items-center gap-1 text-amber-600">
+                              <AlertCircle className="h-3.5 w-3.5" />
+                              {intern.prReviewsPending}
+                            </span>
+                          )}
+                          {intern.prReviewsApproved > 0 && (
+                            <span className="flex items-center gap-1 text-green-600">
+                              <CheckCircle2 className="h-3.5 w-3.5" />
+                              {intern.prReviewsApproved}
+                            </span>
+                          )}
+                          {intern.prReviewsPending === 0 && intern.prReviewsApproved === 0 && (
+                            <span className="text-muted-foreground">—</span>
+                          )}
+                        </div>
+                        {intern.latestPrReview ? (
+                          <a
+                            href={intern.latestPrReview.prUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                          >
+                            {getPrDisplayName(intern.latestPrReview.prUrl)}
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">
+                            {t(intern.reviewExpectation)}
                           </span>
-                        )}
-                        {intern.prReviewsApproved > 0 && (
-                          <span className="flex items-center gap-1 text-green-600">
-                            <CheckCircle2 className="h-3.5 w-3.5" />
-                            {intern.prReviewsApproved}
-                          </span>
-                        )}
-                        {intern.prReviewsPending === 0 && intern.prReviewsApproved === 0 && (
-                          <span className="text-muted-foreground">—</span>
                         )}
                       </div>
                     </td>

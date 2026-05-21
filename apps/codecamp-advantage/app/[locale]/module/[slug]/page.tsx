@@ -94,6 +94,12 @@ export default function ModulePage() {
             {t("quizAverage", { score: quizAverage })}
           </p>
         )}
+        {exerciseRepos && exerciseRepos.length === 0 && (
+          <div className="mt-4 rounded-lg border bg-muted/40 p-4 text-sm">
+            <p className="font-medium">{t("noAiReviewExpectedTitle")}</p>
+            <p className="mt-1 text-muted-foreground">{t("noAiReviewExpectedBody")}</p>
+          </div>
+        )}
       </div>
 
       {exerciseRepos && exerciseRepos.length > 0 && (

@@ -17,28 +17,28 @@ afterEach(() => {
 
 describe("PrimaryAdvantage", () => {
   it("renders timeline/step CEFR display", async () => {
-    const element = await PrimaryAdvantage();
+    const element = await PrimaryAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(element);
     const timeline = document.querySelector("[data-testid='cefr-timeline']");
     expect(timeline).toBeInTheDocument();
   });
 
   it("renders reversed 5/7 split", async () => {
-    const element = await PrimaryAdvantage();
+    const element = await PrimaryAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(element);
     const split = document.querySelector("[data-testid='reversed-split']");
     expect(split).toBeInTheDocument();
   });
 
   it("renders overlapping section", async () => {
-    const element = await PrimaryAdvantage();
+    const element = await PrimaryAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(element);
     const overlap = document.querySelector("[data-testid='overlapping-section']");
     expect(overlap).toBeInTheDocument();
   });
 
   it("renders staggered stats", async () => {
-    const element = await PrimaryAdvantage();
+    const element = await PrimaryAdvantage({ params: Promise.resolve({ locale: "en" }) });
     render(element);
     const stats = document.querySelectorAll("[data-testid='stat-card']");
     expect(stats.length).toBeGreaterThanOrEqual(1);
