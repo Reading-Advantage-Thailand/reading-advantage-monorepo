@@ -59,7 +59,7 @@ This file tracks all major tracks for the project.
   Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9. *Status: COMPLETE — reading-advantage migrated to eslint.config.mjs. All 5 apps on flat config. Plugin resolution verification deferred to faster hardware.*
 - [x] **Track: Science-Advantage Auth Migration** (26/26 tasks) *Link: [./archive/science_auth_migration_20260503/](./archive/science_auth_migration_20260503/)*
   Migrate from standalone Prisma auth to shared @reading-advantage/auth, auth-client, and db packages. Build passes, auth files lint clean. Non-auth Prisma (curriculum, lessons) preserved.
-- [ ] **Track: Monorepo Tech-Debt Cleanup** *Link: [./tracks/tech_debt_cleanup_20260505/](./tracks/tech_debt_cleanup_20260505/)*
+- [ ] **Track: Monorepo Tech-Debt Cleanup** *Link: [./archive/tech_debt_cleanup_20260505/](./archive/tech_debt_cleanup_20260505/)*
   Resolve 7 remaining open tech-debt items: react/zustand dependency alignment, advantage-games ESLint warnings, science-advantage analytics lint, flaky perf tests, shared i18n types, and visual regression tests.
 
 ---
@@ -72,7 +72,7 @@ This file tracks all major tracks for the project.
 - [x] **Track: Update CodeCamp Advantage Product Page** *Link: [./archive/www_codecamp_product_update_20260517/](./archive/www_codecamp_product_update_20260517/)*
   Update marketing page from "Coming Soon" to reflect deployed platform: 18+ module curriculum, AI chat tutor, GitHub PR review automation, intern management. Add curriculum timeline and feature highlights. *Status: COMPLETE — Page updated with 4-phase curriculum (18 modules), AI tutor, GitHub integration, and progress tracking features. All 7 tests passing, lint clean. Commit: e27afc5*
 
-- [ ] **Track: Create Advantage Games Showcase Page** *Link: [./tracks/www_games_showcase_20260517/](./tracks/www_games_showcase_20260517/)*
+- [ ] **Track: Create Advantage Games Showcase Page** *Link: [./archive/www_games_showcase_20260517/](./archive/www_games_showcase_20260517/)*
   Create dedicated games showcase page highlighting all 27 implemented educational games with XP system, leaderboard, adaptive difficulty, and cross-platform integration info.
 
 - [ ] **Track: Refresh Product Pages with Real Features** *Link: [./tracks/www_product_features_refresh_20260517/](./tracks/www_product_features_refresh_20260517/)*
@@ -88,7 +88,7 @@ This file tracks all major tracks for the project.
   *Status: COMPLETE — All 8 phases done. 18-module curriculum, GitHub integration (webhook + LLM review), admin dashboard, chat tutor, workflow tracker. Build passes, all tests green (domain: 159, api: 86, webhooks: 31, codecamp: 49). Subagent reviews completed with findings resolved.*
 
 - [ ] **Track: codecamp-advantage — Curriculum Implementation**
-  *Link: [./tracks/codecamp_curriculum_20260514/](./tracks/codecamp_curriculum_20260514/)*
+  *Link: [./archive/codecamp_curriculum_20260514/](./archive/codecamp_curriculum_20260514/)*
   Replace placeholder 5-module seed with the full 18-module, 85-lesson curriculum. Add phase column to schema, rewrite seed with real lesson content from curriculum plans, wire phase-grouped queries to dashboard UI, validate with tests.
 
 - [ ] **Track: codecamp-advantage — Exercise Repos & Portfolio Projects**
@@ -101,7 +101,7 @@ This file tracks all major tracks for the project.
   *Status: COMPLETE — All 4 phases done. Thai locale default, full th.json with 181 keys, language switcher, admin/chat/component localization, locale-aware chat API, Thai font loading, text-width regression prevention, lesson-language badge, 463 passing tests across 21 files.*
 
 - [ ] **Track: codecamp-advantage — Deployment**
-  *Link: [./tracks/codecamp_deployment_20260516/](./tracks/codecamp_deployment_20260516/)*
+  *Link: [./archive/codecamp_deployment_20260516/](./archive/codecamp_deployment_20260516/)*
   Docker setup, shared Cloud SQL connectivity, CI/CD, environment configuration, HTTPS, DNS, and production deployment for codecamp-advantage.
 
 - [x] **Track: codecamp-advantage — Pre-Redeployment Remediation**
@@ -113,7 +113,7 @@ This file tracks all major tracks for the project.
   Comprehensive manual QA testing on local dev server. Covers auth, i18n, dashboard, lessons, quizzes, AI chat, PR workflow, admin panel, edge cases, and performance. *Status: COMPLETE — 41 tests passed, 0 failed, 0 partial. All 5 issues fixed: Chat AI (API key rotated), Quiz progress save (Date→ISO string), PR form (verified working), Locked module UX (tooltip added), Dashboard ARIA (role=progressbar added). Full report at measure/archive/codecamp_qa_local_20260517/qa-report.md*
 
 - [ ] **Track: codecamp-advantage — Production QA/QC Testing**
-  *Link: [./tracks/codecamp_qa_prod_20260517/](./tracks/codecamp_qa_prod_20260517/)*
+  *Link: [./archive/codecamp_qa_prod_20260517/](./archive/codecamp_qa_prod_20260517/)*
   Comprehensive manual QA testing on deployed production server. Covers infrastructure (HTTPS, DNS, Cloud Run), real integrations (OpenRouter, GitHub App), performance, caching, monitoring, and cross-browser testing. *Status: Plan created, ready for execution.*
 
 - [x] **Track: codecamp-advantage — AI Review Visibility**
@@ -131,7 +131,7 @@ This file tracks all major tracks for the project.
 ### Prisma → Drizzle Migration Program (4 tracks)
 
 - [ ] **Track: Prisma → Drizzle Schema Unification**
-  *Link: [./tracks/prisma_drizzle_schema_unification_20260505/](./tracks/prisma_drizzle_schema_unification_20260505/)*
+  *Link: [./archive/prisma_drizzle_schema_unification_20260505/](./archive/prisma_drizzle_schema_unification_20260505/)*
   Track 1 of 4. Audit, port, reshape, and unify all non-auth Prisma models into shared Drizzle schema. Adds domain helpers and parity tests. No controller changes. Unblocks tracks 2–4.
 - [ ] **Track: reading-advantage Controllers — Prisma → Drizzle**
   *Link: [./tracks/prisma_drizzle_reading_controllers_20260505/](./tracks/prisma_drizzle_reading_controllers_20260505/)*
