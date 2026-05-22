@@ -268,7 +268,7 @@ test green → swap per 0.3–0.6 → test green → commit.
 - [ ] Task: Migrate `system-dashboard-controller.ts` (article)
 - [ ] Task: Migrate `dashboard-summary-controller.ts` (types-only — swap `@prisma/client` imports per 0.4)
 - [x] Task: Migrate `metrics-controller.ts` (assignment, userActivity) — 3f106de
-- [ ] Task: Migrate `metrics-extended-controller.ts` (lessonRecord) — likely Track 4 slice; defer if it cannot map cleanly
+- [x] Task: Migrate `metrics-extended-controller.ts` (lessonRecord) — 868c809 (lessonRecords is PORT-AS-IS in unified schema; no Track 4 deferral needed)
 - [ ] Task: Migrate `activity-controller.ts` (classroomStudent, lessonRecord, license, licenseOnUser, studentAssignment, user, userActivity, userSentenceRecord)
 - [ ] Task: Migrate `lesson-controller.ts` (lessonRecord, userActivity, userSentenceRecord, userWordRecord, xPLog) — record/word/sentence paths likely Track 4
 - [ ] Task: Migrate `flashcard-controller.ts` (article, user, userActivity, userSentenceRecord, userWordRecord, xPLog) — FSRS paths likely Track 4
