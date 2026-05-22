@@ -30,12 +30,20 @@ This is the **third of 4 tracks** in the Prisma → Drizzle migration program. A
 - Science classes and assignments use the unified Drizzle tables (decision driven by audit — possibly merged with reading-advantage's classroom/assignment tables).
 
 ### FR-5: Test Migration
-- `lib/gamification/badges.test.ts`, `lib/schemas/__tests__/curriculum-identifiers.integration.test.ts`, and any other Prisma-mocked tests rewritten against Drizzle.
+- This track is a **behavior-preserving refactor**: use **characterization tests** — capture each migrated path's current output against the Prisma implementation, then keep that test green through the Drizzle swap. Do not treat it as red/green feature TDD.
+- `lib/gamification/badges.test.ts`, `lib/schemas/__tests__/curriculum-identifiers.integration.test.ts`, and any other Prisma-mocked tests rewritten against Drizzle. (science-advantage runs on **Vitest**.)
 
 ### FR-6: Prisma Removal
 - `apps/science-advantage/lib/prisma.ts`, `prisma/`, `lib/generated/zod/`, `prisma.config.ts`, `seed.ts`, `seed-users.ts`, `create-test-users.ts`, `seed-demo-users.ts` retired or rewritten against Drizzle.
 - Prisma deps removed from `package.json`.
 - App-level `ignoreBuildErrors` (tech debt 2026-05-03 auth_strategy_review) re-evaluated; remove if unblocked.
+
+### FR-7: Read/Write Seam (forward-compatibility for reactivity)
+
+A later track adds reactive queries by instrumenting the domain layer, so this migration must leave that layer in an instrumentable shape. Two rules, applied as each path is migrated — neither requires building any reactivity now:
+
+- **Purity.** Every domain helper is *either* a pure read (only `SELECT`s — no `INSERT`/`UPDATE`/`DELETE`) *or* a write. No helper does both. Where a path currently mixes them, split it into a separate read helper and write helper during migration.
+- **Explicit classification.** A helper's kind is discoverable without running it: reads are named `get*` / `list*` / `count*` / `exists*` / `find*`; all other helpers are writes. Where a name is ambiguous, add a `@kind read` or `@kind write` JSDoc tag.
 
 ## Acceptance Criteria
 
@@ -44,6 +52,7 @@ This is the **third of 4 tracks** in the Prisma → Drizzle migration program. A
 3. `pnpm --filter science-advantage build` succeeds.
 4. `pnpm --filter science-advantage test` (Vitest) green.
 5. Tech-debt entry science_auth (non-auth Prisma still in use) closed.
+6. Every domain helper added or touched is a pure read or a pure write (FR-7); no mixed-effect read helpers remain on migrated paths.
 
 ## Out of Scope
 

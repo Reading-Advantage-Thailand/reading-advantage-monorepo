@@ -10,7 +10,7 @@
     - [ ] Sub-task: For each Prisma-only model, grep for usage across apps + scripts + tests; mark as live or dead
     - [ ] Sub-task: Classify each model: port-as-is | port+reshape | unify | drop
     - [ ] Sub-task: Document column-shape mismatches (`userActivity`, `xpLog`) with explicit reshape decisions
-    - [ ] Sub-task: Identify name collisions across apps (`Class`/`Classroom`, both `Assignment`s, both `Lesson*`) and propose unified table names
+    - [ ] Sub-task: Identify name collisions across apps (`Class`/`Classroom`, both `Assignment`s, both `Lesson*`); apply the spec's Unification Decision Rubric to each, propose a unify / keep-separate call, and flag any ambiguous case as an open question for senior review before Phase 2
 - [ ] Task: Write audit artifact
     - [ ] Sub-task: Commit `audit.md` with classification table and reshape/unification decisions
     - [ ] Sub-task: List dead tables for cleanup follow-up
@@ -33,8 +33,9 @@
     - [ ] Sub-task: Write `curriculum.ts` (Standard, StandardMastery, CurriculumUnit, Lesson)
     - [ ] Sub-task: Write `quiz.ts` (QuizQuestion, Attempt, QuestionResponse, LessonCompletion, MasteryRun)
 - [ ] Task: Unify cross-app collisions per audit decisions
-    - [ ] Sub-task: Decide & implement unified `assignments` (or two tables w/ explicit names)
-    - [ ] Sub-task: Decide & implement unified `classes` vs `classrooms`
+    - [ ] Sub-task: Implement the `assignments` decision recorded in `audit.md` (unified table, or two app-prefixed tables — the rubric call is already made; do not re-decide here)
+    - [ ] Sub-task: Implement the `classes` / `classrooms` decision recorded in `audit.md`
+    - [ ] Sub-task: If `audit.md` left any collision flagged as an open question, confirm it has senior sign-off before implementing
 - [ ] Task: Wire exports
     - [ ] Sub-task: Re-export new modules from `packages/db/src/schema/index.ts`
     - [ ] Sub-task: Re-export Zod insert/select types from `packages/types/`
@@ -47,13 +48,14 @@
     - [ ] Sub-task: If drizzle-kit prompts on column conflicts, hand-write SQL following `0003_slow_firebrand.sql` precedent
     - [ ] Sub-task: Add data-transform SQL for reshapes (`userActivity`, `xpLog`)
 - [ ] Task: Verify clean apply
-    - [ ] Sub-task: `docker-compose down -v && pnpm db:migrate` from a fresh DB
+    - [ ] Sub-task: `docker-compose down -v && pnpm db:migrate` from a fresh DB (the `-v` deletes the Postgres volume — expected; no local data needs protecting)
     - [ ] Sub-task: Re-run migrations against existing dev DB; confirm idempotency
 - [ ] Task: Measure - User Manual Verification 'Migrations' (Protocol in workflow.md)
 
 ## Phase 4: Domain & Types Layer
 
 - [ ] Task: Add domain helpers for ported tables
+    - [ ] Sub-task: Use `packages/domain/src/users/index.ts` and `__tests__/users.test.ts` as the structural template for every module below — `{ db, user, tenant, input }` args, `assertCan` guards, `TenantDB` queries, `mock-db.ts` test harness
     - [ ] Sub-task: Write tests for license domain helpers (`createLicense`, `attachUser`, `listUserLicenses`)
     - [ ] Sub-task: Implement license domain module
     - [ ] Sub-task: Write tests + implement story/chapter domain module

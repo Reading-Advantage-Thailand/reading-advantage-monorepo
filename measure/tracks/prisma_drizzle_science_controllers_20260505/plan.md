@@ -1,6 +1,8 @@
 # Implementation Plan: science-advantage Non-Auth Prisma → Drizzle
 
 > **Blocked on** `prisma_drizzle_schema_unification_20260505`. Plan refined with audit findings during that track's Phase 6.
+>
+> **Per-path workflow:** this is a behavior-preserving refactor, not feature TDD. For each migration task: (1) characterization test green against the current Prisma code; (2) swap to `packages/domain` / `packages/db`, keeping every helper a pure read or pure write (FR-7 — split mixed read/write paths); (3) same test still green; (4) commit. science-advantage runs on **Vitest**.
 
 ## Phase 1: Curriculum & Lessons (read-heavy)
 

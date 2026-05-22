@@ -13,7 +13,7 @@
     - [ ] Sub-task: Add package to `pnpm-workspace.yaml` and `turbo.json` build pipeline
 - [ ] Task: Define `StorageClient` interface and `StorageConfig` Zod schema
     - [ ] Sub-task: Write `src/types.ts` with `StorageClient` interface, `PutOptions`, `StorageConfig` Zod schema
-    - [ ] Sub-task: Write `src/index.ts` barrel exporting types, factory, singleton, and URL helpers
+    - [ ] Sub-task: Write `src/index.ts` barrel exporting types, factory, lazy singleton accessor (`getStorageClient`), and URL helpers — the barrel must be import-safe with no env vars set
     - [ ] Sub-task: Export `StorageConfig` type from `packages/types/`
 - [ ] Task: Measure - User Manual Verification 'Scaffold & Contract' (Protocol in workflow.md)
 
@@ -26,9 +26,11 @@
     - [ ] Sub-task: Write failing test: `getSignedUrl()` calls `getSignedUrl` from presigner with correct expiry
     - [ ] Sub-task: Write failing test: `delete()` calls `DeleteObjectCommand` with correct bucket and key
     - [ ] Sub-task: Write failing test: `exists()` returns `true` when `HeadObjectCommand` succeeds, `false` on `NotFound`
-- [ ] Task: Write tests for `createStorageClient` factory
+- [ ] Task: Write tests for `createStorageClient` factory and `getStorageClient` lazy singleton
     - [ ] Sub-task: Write failing test: factory rejects invalid config (missing bucket, missing credentials) via Zod
     - [ ] Sub-task: Write failing test: factory constructs correct `S3Client` with provided endpoint and credentials
+    - [ ] Sub-task: Write failing test: importing the package barrel with **no `STORAGE_*` env vars set** does not throw — the Zod error surfaces only on the first `getStorageClient()` call
+    - [ ] Sub-task: Write failing test: `getStorageClient()` memoizes — two calls return the same instance
 - [ ] Task: Write tests for URL helpers
     - [ ] Sub-task: Write failing tests for `getStorageUrl`, `getArticleImageUrl`, `getAudioUrl` covering path construction and edge cases (leading slashes, missing bucket env)
 - [ ] Task: Measure - User Manual Verification 'Tests Red' (Protocol in workflow.md)
@@ -40,9 +42,9 @@
     - [ ] Sub-task: Implement `getUrl()` as pure URL construction (no network call) using `publicBaseUrl` or derived endpoint + bucket
     - [ ] Sub-task: Implement `getSignedUrl()` using `@aws-sdk/s3-request-presigner`
     - [ ] Sub-task: Run tests — confirm green
-- [ ] Task: Implement factory and singleton
-    - [ ] Sub-task: Create `src/client.ts` with `createStorageClient(config)` factory and `storageClient` singleton reading `STORAGE_*` env vars
-    - [ ] Sub-task: Confirm Zod validation throws on missing required env vars at module init
+- [ ] Task: Implement factory and lazy singleton
+    - [ ] Sub-task: Create `src/client.ts` with `createStorageClient(config)` factory and `getStorageClient()` — a lazily-memoized singleton that reads `STORAGE_*` env vars on first call, not at module load
+    - [ ] Sub-task: Confirm Zod validation throws on the first `getStorageClient()` call when env vars are missing — and that merely importing the module does not throw
     - [ ] Sub-task: Run full test suite — confirm ≥80% coverage
 - [ ] Task: Implement URL helpers
     - [ ] Sub-task: Create `src/url-helpers.ts` with `getStorageUrl`, `getArticleImageUrl`, `getAudioUrl`
@@ -58,12 +60,12 @@
     - [ ] Sub-task: Add `@reading-advantage/storage` to `apps/reading-advantage/package.json`
     - [ ] Sub-task: Update all server controllers importing `../utils/storage` or `../utils/uploadToBucket` to import from `@reading-advantage/storage`
     - [ ] Sub-task: Update all generator utilities (`server/utils/generators/`) importing old storage utils
-    - [ ] Sub-task: Update `utils/deleteStories.ts` — replace GCS SDK calls with `storageClient.delete()` for per-file deletes; note remaining batch-delete pattern in tech-debt if needed
+    - [ ] Sub-task: Migrate `utils/deleteStories.ts` — replace `@google-cloud/storage` calls with `getStorageClient().delete()` per-file deletes; if the batch-delete pattern has no clean equivalent, file a tech-debt entry (do not leave a GCS import — AC-2's grep covers this directory)
     - [ ] Sub-task: Delete `apps/reading-advantage/utils/storage.ts` and `apps/reading-advantage/utils/uploadToBucket.ts`
     - [ ] Sub-task: Remove `@google-cloud/storage` from `apps/reading-advantage/package.json`
 - [ ] Task: Migrate `primary-advantage` storage usage
     - [ ] Sub-task: Add `@reading-advantage/storage` to `apps/primary-advantage/package.json`
-    - [ ] Sub-task: Update all server generators (`server/utils/genaretors/`) importing old storage utils
+    - [ ] Sub-task: Update all server generators (`server/utils/genaretors/` — sic, the directory really is spelled `genaretors` in primary-advantage; do not "correct" it) importing old storage utils
     - [ ] Sub-task: Update `server/models/articleModel.ts` and any other callers
     - [ ] Sub-task: Delete `apps/primary-advantage/utils/storage.ts` and `apps/primary-advantage/lib/storage-config.ts`
     - [ ] Sub-task: Remove `@google-cloud/storage` from `apps/primary-advantage/package.json`
@@ -75,7 +77,7 @@
 
 - [ ] Task: Write package README
     - [ ] Sub-task: Document `StorageClient` interface and factory usage
-    - [ ] Sub-task: Document GCS HMAC key setup (enable interoperability in GCS console → create HMAC keys → map to `STORAGE_ACCESS_KEY` / `STORAGE_SECRET_KEY`)
+    - [ ] Sub-task: Document GCS HMAC key setup (enable interoperability in GCS console → create HMAC keys → map to `STORAGE_ACCESS_KEY` / `STORAGE_SECRET_KEY`). Note this is an ops/admin step needing GCS console access, outside the codebase — the package itself is fully verifiable against MinIO locally without it.
     - [ ] Sub-task: Document Cloudflare R2 config (endpoint pattern, `publicBaseUrl` for public bucket)
     - [ ] Sub-task: Document MinIO local dev setup (add MinIO service to `docker-compose.yml`, env var values)
 - [ ] Task: Add MinIO to `docker-compose.yml` for local dev

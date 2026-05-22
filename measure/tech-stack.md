@@ -45,8 +45,11 @@
 | Tool | Purpose |
 |------|---------|
 | GitHub Actions | CI/CD pipelines |
-| Vercel | Primary deployment target for Next.js apps |
-| Firebase | reading-advantage functions deployment |
+| GCP Cloud Run or Cloudflare | Production deployment target for Next.js apps — under evaluation, not yet finalized (see `measure/tracks/connection_pooling_20260522/`) |
+| Vercel | Legacy — being removed at cutover to GCP/Cloudflare |
+| Firebase | reading-advantage functions deployment (legacy, being deprecated) |
+
+> *2026-05-22: Deployment is moving off Vercel; GCP Cloud Run vs Cloudflare is not yet decided. The connection-pooling and reactive-query-layer tracks both depend on this decision.*
 
 ## Workspace Structure
 

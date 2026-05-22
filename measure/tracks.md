@@ -134,6 +134,14 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/storage_s3_compat_20260522/](./tracks/storage_s3_compat_20260522/)*
   Create `packages/storage` (`@reading-advantage/storage`) with a `StorageClient` interface backed by `@aws-sdk/client-s3`. Works with GCS (S3 interoperability), Cloudflare R2, and MinIO (local dev). Replaces duplicated `@google-cloud/storage` usage in reading-advantage and primary-advantage. Backend migration is a config/env-var change only.
 
+- [ ] **Track: Connection Pooling**
+  *Link: [./tracks/connection_pooling_20260522/](./tracks/connection_pooling_20260522/)*
+  Introduce a transaction-mode pooler (PgBouncer for GCP Cloud Run, or Cloudflare Hyperdrive for Cloudflare) between the app instances and the VPS Postgres; tune the `postgres-js` client (`prepare: false`, reduced `max`); split `DATABASE_URL` (pooled) from `DIRECT_DATABASE_URL` (migrations, `LISTEN/NOTIFY`). Independent of other tracks; prerequisite for the reactive query layer.
+
+- [ ] **Track: Reactive Query Layer** — **STUB**
+  *Link: [./tracks/reactive_query_layer_20260522/](./tracks/reactive_query_layer_20260522/)*
+  Reactive queries on Postgres + Drizzle + tRPC. **Stub only** — captures design decisions settled 2026-05-22 (no codegen; domain layer is the instrumentation point; read/write seam; connection model; pooler caveat). Blocked on the Prisma→Drizzle migration (Track 4) and Connection Pooling; the reactivity approach (LISTEN/NOTIFY vs sync engine vs WAL) must be chosen before it can be planned.
+
 ---
 
 ### Prisma → Drizzle Migration Program (4 tracks)

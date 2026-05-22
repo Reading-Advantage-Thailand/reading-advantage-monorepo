@@ -8,11 +8,13 @@ This is the **second of 4 tracks** in the Prisma → Drizzle migration program.
 
 **Blocked on:** `prisma_drizzle_schema_unification_20260505` must complete first. Audit findings from that track may reshape the controller groupings below.
 
-## Inventory (audit baseline, 2026-05-05)
+## Inventory (audit baseline — re-verify at track start)
 
-- 141 files reference Prisma in `apps/reading-advantage/`.
+The 2026-05-05 baseline is stale-prone. A 2026-05-22 re-grep showed **~145 files**. Re-run the inventory grep as the first task of Phase 1 and work from fresh numbers, not the figures below.
+
+- ~141–145 files reference Prisma in `apps/reading-advantage/` — `grep -rln "@prisma\|@/lib/prisma" apps/reading-advantage/` excluding `node_modules`, `.next/`, `dist/`, `prisma/generated`.
 - 54 controller files in `apps/reading-advantage/server/controllers/`.
-- Direct importers also present in `actions/`, `lib/cache/`, `lib/pagination/`, `lib/classroom-utils.ts`, `contexts/userRole-context.tsx`, `types/`, `scripts/`, `app/[locale]/.../page.tsx` (server components), and `app/api/v1/.../route.ts`.
+- Direct importers also present in `actions/`, `lib/cache/`, `lib/pagination/`, `lib/classroom-utils.ts`, `contexts/userRole-context.tsx`, `components/` (~7 server-component files), `middleware.ts`, `types/`, `scripts/`, `app/[locale]/.../page.tsx` (server components), and `app/api/v1/.../route.ts`.
 
 ## Functional Requirements
 
@@ -35,8 +37,16 @@ This is the **second of 4 tracks** in the Prisma → Drizzle migration program.
 - `pnpm install` clean; build succeeds without Prisma artifacts.
 
 ### FR-5: Test Coverage
-- Existing Jest suites continue passing.
-- New unit tests for migrated controllers where prior coverage was thin (target ≥80% on touched code).
+- This track is a **behavior-preserving refactor**, not a feature change — standard red/green TDD does not apply. Use **characterization tests**: before touching a controller, ensure a test captures its current observable behavior (return shape, side effects); if none exists, write one against the *current Prisma* code and confirm it passes. Then swap to Drizzle and keep that test green. The regression you are preventing *is* the test.
+- Existing test suites continue passing. (reading-advantage runs on **Jest**.)
+- New characterization/unit tests for migrated controllers where prior coverage was thin (target ≥80% on touched code).
+
+### FR-6: Read/Write Seam (forward-compatibility for reactivity)
+
+A later track adds reactive queries by instrumenting the domain layer, so this migration must leave that layer in an instrumentable shape. Two rules, applied as each controller is migrated — neither requires building any reactivity now:
+
+- **Purity.** Every domain helper is *either* a pure read (only `SELECT`s — no `INSERT`/`UPDATE`/`DELETE`) *or* a write. No helper does both. Where a controller path currently mixes them (a "get" that lazily creates a row, a read that bumps a counter), split it into a separate read helper and write helper during migration.
+- **Explicit classification.** A helper's kind is discoverable without running it: reads are named `get*` / `list*` / `count*` / `exists*` / `find*`; all other helpers are writes. Where a name is ambiguous, add a `@kind read` or `@kind write` JSDoc tag.
 
 ## Acceptance Criteria
 
@@ -46,6 +56,7 @@ This is the **second of 4 tracks** in the Prisma → Drizzle migration program.
 4. `pnpm --filter reading-advantage build` succeeds without `ignoreBuildErrors` regressions.
 5. `pnpm --filter reading-advantage test` green.
 6. Tech-debt entries firestore_drizzle (2026-05-03) closed.
+7. Every domain helper added or touched is a pure read or a pure write (FR-6); no mixed-effect read helpers remain on migrated paths.
 
 ## Out of Scope
 

@@ -56,10 +56,10 @@ export interface PutOptions {
 - GCS: enable "Cloud Storage Interoperability" in GCS console, create HMAC keys
 - R2: use `https://<accountId>.r2.cloudflarestorage.com`; set `publicBaseUrl` to R2 public bucket URL or custom domain
 
-### FR-3: Factory & Singleton
+### FR-3: Factory & Lazy Singleton
 
 - `createStorageClient(config: StorageConfig): StorageClient`
-- `storageClient` — singleton that reads env vars at module load:
+- `getStorageClient(): StorageClient` — lazily constructs and memoizes a singleton on the **first call**, reading and Zod-validating env vars at that point. Env vars must **not** be read or validated at module load: a throw at import time would break builds, test runs, and any file that imports the package barrel without using storage. A misconfiguration surfaces on first real use instead.
   - `STORAGE_ENDPOINT`, `STORAGE_REGION`, `STORAGE_BUCKET`
   - `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY`
   - `STORAGE_PUBLIC_BASE_URL` (optional)
@@ -80,6 +80,7 @@ Helpers are pure functions — they construct URLs from config without network c
 - Delete `apps/reading-advantage/utils/uploadToBucket.ts`
 - Delete `apps/primary-advantage/utils/storage.ts`
 - Delete `apps/primary-advantage/lib/storage-config.ts`
+- Migrate `apps/reading-advantage/utils/deleteStories.ts`: replace its direct `@google-cloud/storage` calls with `getStorageClient().delete()` per-file deletes. If its batch-delete pattern has no clean `StorageClient` equivalent, file a tech-debt entry — do not leave a `@google-cloud/storage` import behind (AC-2's grep covers `apps/reading-advantage/utils/`).
 - Update all server controllers, generators, and utilities in both apps to import from `@reading-advantage/storage`
 - Env var mapping: existing `SERVICE_ACCOUNT_KEY` / `PROJECT_ID` (reading-advantage) and `STORAGE_CLIENT_EMAIL` / `STORAGE_PRIVATE_KEY` / `STORAGE_BUCKET_NAME` (primary-advantage) replaced by the unified `STORAGE_*` vars. Document migration in package README.
 
@@ -93,7 +94,7 @@ Helpers are pure functions — they construct URLs from config without network c
 
 ## Acceptance Criteria
 
-1. `packages/storage` builds (`pnpm --filter @reading-advantage/storage build`) and exports `StorageClient`, `createStorageClient`, `storageClient`, URL helpers
+1. `packages/storage` builds (`pnpm --filter @reading-advantage/storage build`) and exports `StorageClient`, `createStorageClient`, `getStorageClient`, URL helpers
 2. `grep -r "@google-cloud/storage" packages/ apps/reading-advantage/utils/ apps/primary-advantage/utils/ apps/primary-advantage/lib/storage-config.ts` returns zero matches
 3. `apps/reading-advantage/utils/storage.ts`, `uploadToBucket.ts`, `apps/primary-advantage/utils/storage.ts`, and `lib/storage-config.ts` are deleted
 4. All server controllers and generators in both apps import storage utilities from `@reading-advantage/storage`
@@ -107,4 +108,3 @@ Helpers are pure functions — they construct URLs from config without network c
 - Browser-side direct upload (presigned upload URLs are a future enhancement)
 - Multipart upload support
 - CDN integration / image transformation
-- Migrating `apps/reading-advantage/utils/deleteStories.ts` (uses GCS SDK for batch delete; deferred with Prisma→Drizzle track)

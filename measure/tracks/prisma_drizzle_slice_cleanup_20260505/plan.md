@@ -1,6 +1,8 @@
 # Implementation Plan: Prisma → Drizzle Per-Feature Slice Cleanup
 
 > **Blocked on** tracks 2 and 3. Slice list populated by those tracks; this plan expands when slices are known.
+>
+> This is a **closeout track, not a standalone unit of work** — it has no concrete tasks until Tracks 2 and 3 finish and hand over their non-generalizable leftovers. Do not schedule or staff it before then.
 
 ## Phase 1: Slice Triage
 

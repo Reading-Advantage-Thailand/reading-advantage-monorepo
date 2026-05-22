@@ -26,10 +26,13 @@ Apps are not live; database content is restorable from backups. Hard cutover wit
 - Generate Drizzle migrations via `drizzle-kit generate`. Where the tool requires interactive prompts (column conflicts, identity columns), write SQL manually following the pattern from `0003_slow_firebrand.sql`.
 - Migrations apply cleanly to a fresh local Postgres (verified by `docker-compose down -v && pnpm db:migrate`).
 - Migrations include data-transform SQL where reshapes change column semantics.
+- The local dev database carries no data worth preserving — `docker-compose down -v` (which **deletes the Postgres volume**) is the expected way to retest a migration from clean. Data-transform SQL must be correct for the migration journal, but you never need to protect existing local rows.
 
 ### FR-4: Domain & Type Surface for Follow-up Tracks
-- Each newly-ported/reshaped Drizzle table gets at least a thin domain module in `packages/domain/` (CRUD-shaped helpers used by tRPC routers and controllers in follow-up tracks).
-- Branded types and tenant-scope helpers added where the existing strict-contracts pattern applies.
+- Each newly-ported/reshaped Drizzle table gets at least a thin domain module at `packages/domain/src/<feature>/index.ts` (CRUD-shaped helpers used by tRPC routers and controllers in follow-up tracks).
+- **Copy the shape of an existing module — do not invent one.** Exemplar: `packages/domain/src/users/index.ts`. Each helper takes a `{ db, user, tenant, input }` argument object, runs `assertCan(...)` guards for any non-self-scoped access, and queries through `TenantDB` (the tenant-scoped DB contract in `packages/domain/src/db-contract.ts`). Tests follow `packages/domain/src/__tests__/users.test.ts`, using the `mock-db.ts` harness in that folder.
+- **Read/write seam.** Every domain helper is *either* a pure read (only `SELECT`s — no `INSERT`/`UPDATE`/`DELETE`) *or* a write — never both. Name reads `get*` / `list*` / `count*` / `exists*` / `find*`; all other names are writes. This keeps the domain layer cheaply instrumentable by a later reactivity track; it requires no reactivity work now.
+- Where a ported table has a **polymorphic or externally-sourced ID**, follow the branded-type pattern in the "Branded Types" section of `packages/types/src/index.ts`. Ordinary primary keys do not need branding.
 - Export shared types from `packages/types/`.
 
 ### FR-5: Schema Parity Verification
@@ -40,6 +43,17 @@ Apps are not live; database content is restorable from backups. Hard cutover wit
 ### FR-6: Tech-Debt Updates
 - Update tech-debt entries 2026-05-03 (firestore_drizzle, science_auth) with status notes referencing this track. Closure stays deferred to per-app tracks.
 - File new tech-debt entries for any tables explicitly classified as **drop** (so the deletion is captured for cleanup tracks).
+
+## Unification Decision Rubric
+
+FR-1 asks the audit to classify cross-app collisions (`Class`/`Classroom`, the two `Assignment` tables, `Lesson*`) as **unify** or keep-separate. Merging two apps' tables is the highest-risk judgment in this track. Apply this rubric to every collision and record the call — with its reasoning — in `audit.md`:
+
+1. **Same real-world entity?** Unify only if both tables model the same domain concept (a class of students; an assigned unit of work). Two unrelated things that share a name → two tables.
+2. **Column overlap.** If roughly ≥70% of columns are semantically equivalent, unify and add each app's extra columns as **nullable**. Low overlap → keep separate.
+3. **Foreign-key graph.** A unified table must satisfy *both* apps' FK relationships. If unifying forces one column to reference two incompatible parent tables, do not unify.
+4. **Tenant scope.** Both apps must scope the table the same way (e.g. by `schoolId`). If one is tenant-scoped and the other global, reconcile the scope first or keep separate.
+5. **When unsure, keep two tables with explicit app-prefixed names** (`reading_assignments`, `science_assignments`). Unifying two tables later is cheap; un-merging a wrongly-merged table after follow-up tracks depend on it is not.
+6. **Escalate, don't guess.** Any collision where this rubric is ambiguous is recorded as an **open question in `audit.md`** and reviewed by a senior before Phase 2 implements it. Do not make a silent judgment call on an ambiguous merge.
 
 ## Non-Functional Requirements
 

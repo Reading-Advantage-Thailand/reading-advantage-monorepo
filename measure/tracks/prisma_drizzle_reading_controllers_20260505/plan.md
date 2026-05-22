@@ -1,6 +1,10 @@
 # Implementation Plan: reading-advantage Controllers — Prisma → Drizzle
 
 > **Blocked on** `prisma_drizzle_schema_unification_20260505`. Phase groupings below will be refined with audit findings during that track's Phase 6.
+>
+> **Granularity rule:** each controller named below is its own task — its own characterization test, its own commit, its own checkbox. Where a line lists several controllers, treat each as a separate task; the grouping is for readability only. One controller per commit keeps regressions bisectable.
+>
+> **Per-controller workflow:** (1) characterization test green against the current Prisma code; (2) replace `prisma.*` calls with `packages/domain` / `packages/db` helpers, keeping every helper a pure read or pure write (FR-6 — split mixed read/write paths); (3) same test still green; (4) commit. reading-advantage runs on **Jest**.
 
 ## Phase 1: Generalizable Controllers (data-domain)
 
@@ -44,6 +48,7 @@ Targets controllers that already map cleanly to unified Drizzle tables: user, cl
 - [ ] Task: Migrate server-component pages under `app/[locale]/(teacher|admin|system)/`
 - [ ] Task: Migrate API route handlers under `app/api/v1/`
 - [ ] Task: Migrate `contexts/userRole-context.tsx`, `types/index.d.ts`, `types/learning-goals.ts`
+- [ ] Task: Migrate Prisma-importing files in `components/` (~7 server-component files) and `middleware.ts`
 - [ ] Task: Measure - User Manual Verification 'Actions/Scripts/Pages' (Protocol in workflow.md)
 
 ## Phase 5: Prisma Removal
