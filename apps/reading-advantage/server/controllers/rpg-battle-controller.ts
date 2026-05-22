@@ -1,4 +1,11 @@
-import { prisma } from "@/lib/prisma";
+import { db, and, asc, desc, eq, sql } from "@reading-advantage/db";
+import {
+  gameRankings,
+  userActivity,
+  users,
+  userWordRecords,
+  xpLogs,
+} from "@reading-advantage/db/schema";
 import type { ExtendedNextRequest } from "@/server/controllers/auth-controller";
 import { NextResponse } from "next/server";
 import { battleHeroes } from "@/lib/games/rpgBattleSelection";
@@ -47,9 +54,10 @@ export class RpgBattleController {
 
       try {
         // Create user activity record
-        const activity = await prisma.userActivity.create({
-          data: {
-            userId: userId,
+        const [activity] = await db
+          .insert(userActivity)
+          .values({
+            userId,
             activityType: "RPG_BATTLE",
             targetId: uniqueTargetId,
             completed: true,
@@ -65,62 +73,58 @@ export class RpgBattleController {
               outcome,
               gameSession: uniqueTargetId,
             },
-          },
-        });
+          })
+          .returning();
 
         const xpEarned = Math.floor(xp);
 
         // Create XP log entry if XP was earned
         if (xpEarned > 0) {
-          await prisma.xPLog.create({
-            data: {
-              userId: userId,
-              xpEarned: xpEarned,
-              activityId: activity.id,
-              activityType: "RPG_BATTLE",
-            },
+          await db.insert(xpLogs).values({
+            userId,
+            xpEarned,
+            activityId: activity.id,
+            activityType: "RPG_BATTLE",
           });
 
           // Update user's total XP
-          const user = await prisma.user.findUnique({
-            where: { id: userId },
-          });
+          const [user] = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, userId))
+            .limit(1);
 
           if (user) {
-            await prisma.user.update({
-              where: { id: userId },
-              data: { xp: user.xp + xpEarned },
-            });
+            const updatedXp = user.xp + xpEarned;
+            await db
+              .update(users)
+              .set({ xp: updatedXp })
+              .where(eq(users.id, userId));
 
             // Update session if available
             if (req.session?.user) {
-              req.session.user.xp = user.xp + xpEarned;
+              req.session.user.xp = updatedXp;
             }
 
             // Update Game Ranking
             // Store enemy-specific ranking using enemyId as difficulty
             const difficulty = enemyId || "normal";
 
-            await prisma.gameRanking.upsert({
-              where: {
-                userId_gameType_difficulty: {
-                  userId: userId,
-                  gameType: "RPG_BATTLE",
-                  difficulty: difficulty,
-                },
-              },
-              update: {
-                totalXp: {
-                  increment: xpEarned,
-                },
-              },
-              create: {
-                userId: userId,
+            await db
+              .insert(gameRankings)
+              .values({
+                userId,
                 gameType: "RPG_BATTLE",
-                difficulty: difficulty,
+                difficulty,
                 totalXp: xpEarned,
-              },
-            });
+              })
+              .onConflictDoUpdate({
+                target: [gameRankings.userId, gameRankings.gameType, gameRankings.difficulty],
+                set: {
+                  totalXp: sql`${gameRankings.totalXp} + ${xpEarned}`,
+                  updatedAt: new Date(),
+                },
+              });
           }
         }
 
@@ -161,36 +165,36 @@ export class RpgBattleController {
       }
 
       // 1. Get current user's license/school info
-      const currentUser = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { licenseId: true, schoolId: true },
-      });
+      const [currentUser] = await db
+        .select({ licenseId: users.licenseId, schoolId: users.schoolId })
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
 
       if (!currentUser) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
 
       // 3. Fetch rankings from GameRanking table, grouped by enemy (difficulty field)
-      const gameRankings = await prisma.gameRanking.findMany({
-        where: {
-          gameType: "RPG_BATTLE",
-          user: {
-            licenseId: currentUser.licenseId || undefined,
-            schoolId: !currentUser.licenseId ? currentUser.schoolId : undefined,
-          },
-        },
-        include: {
-          user: {
-            select: {
-              name: true,
-              image: true,
-            },
-          },
-        },
-        orderBy: {
-          totalXp: "desc",
-        },
-      });
+      const rankingConditions = [eq(gameRankings.gameType, "RPG_BATTLE")];
+      if (currentUser.licenseId) {
+        rankingConditions.push(eq(users.licenseId, currentUser.licenseId));
+      } else if (currentUser.schoolId) {
+        rankingConditions.push(eq(users.schoolId, currentUser.schoolId));
+      }
+
+      const rankingRows = await db
+        .select({
+          userId: gameRankings.userId,
+          totalXp: gameRankings.totalXp,
+          difficulty: gameRankings.difficulty,
+          userName: users.name,
+          userImage: users.image,
+        })
+        .from(gameRankings)
+        .innerJoin(users, eq(gameRankings.userId, users.id))
+        .where(and(...rankingConditions))
+        .orderBy(desc(gameRankings.totalXp));
 
       type RankingEntry = {
         userId: string;
@@ -202,7 +206,7 @@ export class RpgBattleController {
       // Group rankings by enemy ID (stored in difficulty field)
       const sortedRankings: Record<string, RankingEntry[]> = {};
 
-      gameRankings.forEach((rank) => {
+      rankingRows.forEach((rank) => {
         const enemyId = rank.difficulty; // difficulty field stores enemyId
 
         if (!sortedRankings[enemyId]) {
@@ -212,8 +216,8 @@ export class RpgBattleController {
         if (sortedRankings[enemyId].length < 10) {
           sortedRankings[enemyId].push({
             userId: rank.userId,
-            name: rank.user.name || "Unknown Hero",
-            image: rank.user.image,
+            name: rank.userName || "Unknown Hero",
+            image: rank.userImage,
             xp: rank.totalXp,
           });
         }
@@ -241,14 +245,17 @@ export class RpgBattleController {
       }
 
       // Fetch user's vocabulary words
-      const vocabularies = await prisma.userWordRecord.findMany({
-        where: {
-          userId: userId,
-          saveToFlashcard: true,
-        },
-        orderBy: [{ due: "asc" }, { createdAt: "desc" }],
-        take: 50,
-      });
+      const vocabularies = await db
+        .select()
+        .from(userWordRecords)
+        .where(
+          and(
+            eq(userWordRecords.userId, userId),
+            eq(userWordRecords.saveToFlashcard, true),
+          ),
+        )
+        .orderBy(asc(userWordRecords.due), desc(userWordRecords.createdAt))
+        .limit(50);
 
       if (vocabularies.length === 0) {
         return NextResponse.json({
