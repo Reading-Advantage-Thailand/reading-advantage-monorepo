@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db, eq, and, desc } from "@reading-advantage/db";
+import {
+  assignmentNotifications,
+  assignments,
+  users,
+} from "@reading-advantage/db/schema";
 import { ExtendedNextRequest } from "./auth-controller";
 
 /**
@@ -16,31 +21,36 @@ export async function getStudentUnreadNotifications(
       return NextResponse.json({ error: "Missing studentId" }, { status: 400 });
     }
 
-    const notifications = await prisma.assignmentNotification.findMany({
-      where: {
-        studentId: studentId,
-        isNoticed: false,
-      },
-      include: {
+    const notifications = await db
+      .select({
+        id: assignmentNotifications.id,
+        teacherId: assignmentNotifications.teacherId,
+        studentId: assignmentNotifications.studentId,
+        assignmentId: assignmentNotifications.assignmentId,
+        isNoticed: assignmentNotifications.isNoticed,
+        createdAt: assignmentNotifications.createdAt,
+        updatedAt: assignmentNotifications.updatedAt,
         assignment: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            dueDate: true,
-            articleId: true,
-          },
+          id: assignments.id,
+          title: assignments.title,
+          description: assignments.description,
+          dueDate: assignments.dueDate,
+          articleId: assignments.articleId,
         },
         teacher: {
-          select: {
-            name: true,
-          },
+          name: users.name,
         },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+      })
+      .from(assignmentNotifications)
+      .leftJoin(assignments, eq(assignmentNotifications.assignmentId, assignments.id))
+      .leftJoin(users, eq(assignmentNotifications.teacherId, users.id))
+      .where(
+        and(
+          eq(assignmentNotifications.studentId, studentId),
+          eq(assignmentNotifications.isNoticed, false),
+        )
+      )
+      .orderBy(desc(assignmentNotifications.createdAt));
 
     return NextResponse.json(notifications);
   } catch (error) {
@@ -69,13 +79,17 @@ export async function checkStudentAssignmentNotification(
       );
     }
 
-    const notification = await prisma.assignmentNotification.findFirst({
-      where: {
-        studentId: studentId,
-        assignmentId: assignmentId,
-        isNoticed: false,
-      },
-    });
+    const [notification] = await db
+      .select()
+      .from(assignmentNotifications)
+      .where(
+        and(
+          eq(assignmentNotifications.studentId, studentId),
+          eq(assignmentNotifications.assignmentId, assignmentId),
+          eq(assignmentNotifications.isNoticed, false),
+        )
+      )
+      .limit(1);
 
     return NextResponse.json({
       hasNotification: !!notification,
@@ -106,16 +120,16 @@ export async function acknowledgeNotification(
       );
     }
 
-    const notification = await prisma.assignmentNotification.update({
-      where: {
-        id: notificationId,
-        studentId: studentId,
-      },
-      data: {
-        isNoticed: true,
-        updatedAt: new Date(),
-      },
-    });
+    const [notification] = await db
+      .update(assignmentNotifications)
+      .set({ isNoticed: true, updatedAt: new Date() })
+      .where(
+        and(
+          eq(assignmentNotifications.id, notificationId),
+          eq(assignmentNotifications.studentId, studentId),
+        )
+      )
+      .returning();
 
     return NextResponse.json({
       success: true,
