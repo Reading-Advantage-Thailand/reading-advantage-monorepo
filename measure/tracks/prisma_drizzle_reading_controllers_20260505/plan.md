@@ -253,8 +253,8 @@ Establishes the pattern. Do the pilot first and have it reviewed before continui
 Section 0 against reality. One controller = one task = one commit. Each task: characterization
 test green → swap per 0.3–0.6 → test green → commit.
 
-- [ ] Task: **Pilot** — migrate `student-notification-controller.ts` (`assignmentNotification`). After this commit, pause and confirm the loop with the reviewer.
-- [ ] Task: Migrate `user-controller.ts` (user, license, licenseOnUser, article, classroomStudent, userActivity, xPLog)
+- [x] Task: **Pilot** — migrate `student-notification-controller.ts` (`assignmentNotification`). After this commit, pause and confirm the loop with the reviewer. — 3659137
+- [x] Task: Migrate `user-controller.ts` (user, license, licenseOnUser, article, classroomStudent, userActivity, xPLog) — e8d0fe6
 - [ ] Task: Migrate `license-controller.ts` (license, licenseOnUser, user, userActivity, xPLog)
 - [ ] Task: Migrate `leaderboard-controller.ts` (license, user)
 - [ ] Task: Migrate `classroom-controller.ts` (classroom, classroomStudent, license, licenseOnUser, user, xPLog)
