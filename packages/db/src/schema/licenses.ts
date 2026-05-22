@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, integer, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, integer, jsonb, primaryKey } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { schools } from "./users";
 
@@ -27,4 +27,6 @@ export const licenseOnUsers = pgTable("license_on_users", {
     .notNull()
     .references(() => licenses.id, { onDelete: "cascade" }),
   activateAt: timestamp("activate_at").defaultNow().notNull(),
-});
+}, (t) => [
+  primaryKey({ columns: [t.userId, t.licenseId] }),
+]);
