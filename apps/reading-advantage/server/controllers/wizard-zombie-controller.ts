@@ -1,4 +1,11 @@
-import { prisma } from "@/lib/prisma";
+import { db, and, asc, desc, eq, sql } from "@reading-advantage/db";
+import {
+  gameRankings,
+  userActivity,
+  users,
+  userWordRecords,
+  xpLogs,
+} from "@reading-advantage/db/schema";
 import type { ExtendedNextRequest } from "@/server/controllers/auth-controller";
 import { NextResponse } from "next/server";
 
@@ -50,9 +57,10 @@ export class WizardZombieController {
       const uniqueTargetId = `wizard-zombie-${userId}-${Date.now()}`;
 
       try {
-        const activity = await prisma.userActivity.create({
-          data: {
-            userId: userId,
+        const [activity] = await db
+          .insert(userActivity)
+          .values({
+            userId,
             activityType: "WIZARD_ZOMBIE",
             targetId: uniqueTargetId,
             completed: true,
@@ -65,55 +73,51 @@ export class WizardZombieController {
               difficulty,
               gameSession: uniqueTargetId,
             },
-          },
-        });
+          })
+          .returning();
 
         if (xpEarned > 0) {
-          await prisma.xPLog.create({
-            data: {
-              userId: userId,
-              xpEarned: xpEarned,
-              activityId: activity.id,
-              activityType: "WIZARD_ZOMBIE",
-            },
+          await db.insert(xpLogs).values({
+            userId,
+            xpEarned,
+            activityId: activity.id,
+            activityType: "WIZARD_ZOMBIE",
           });
 
-          const user = await prisma.user.findUnique({
-            where: { id: userId },
-          });
+          const [user] = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, userId))
+            .limit(1);
 
           if (user) {
-            await prisma.user.update({
-              where: { id: userId },
-              data: { xp: user.xp + xpEarned },
-            });
+            const updatedXp = user.xp + xpEarned;
+            await db
+              .update(users)
+              .set({ xp: updatedXp })
+              .where(eq(users.id, userId));
 
             if (req.session?.user) {
-              req.session.user.xp = user.xp + xpEarned;
+              req.session.user.xp = updatedXp;
             }
           }
         }
 
-        await prisma.gameRanking.upsert({
-          where: {
-            userId_gameType_difficulty: {
-              userId: userId,
-              gameType: "WIZARD_VS_ZOMBIE",
-              difficulty: difficulty,
-            },
-          },
-          update: {
-            totalXp: {
-              increment: xpEarned,
-            },
-          },
-          create: {
-            userId: userId,
+        await db
+          .insert(gameRankings)
+          .values({
+            userId,
             gameType: "WIZARD_VS_ZOMBIE",
-            difficulty: difficulty,
+            difficulty,
             totalXp: xpEarned,
-          },
-        });
+          })
+          .onConflictDoUpdate({
+            target: [gameRankings.userId, gameRankings.gameType, gameRankings.difficulty],
+            set: {
+              totalXp: sql`${gameRankings.totalXp} + ${xpEarned}`,
+              updatedAt: new Date(),
+            },
+          });
 
         return NextResponse.json({
           message: "Game completed successfully",
@@ -151,14 +155,17 @@ export class WizardZombieController {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
 
-      const vocabularies = await prisma.userWordRecord.findMany({
-        where: {
-          userId: userId,
-          saveToFlashcard: true,
-        },
-        orderBy: [{ due: "asc" }, { createdAt: "desc" }],
-        take: 50,
-      });
+      const vocabularies = await db
+        .select()
+        .from(userWordRecords)
+        .where(
+          and(
+            eq(userWordRecords.userId, userId),
+            eq(userWordRecords.saveToFlashcard, true),
+          ),
+        )
+        .orderBy(asc(userWordRecords.due), desc(userWordRecords.createdAt))
+        .limit(50);
 
       if (vocabularies.length === 0) {
         return NextResponse.json({
@@ -224,10 +231,11 @@ export class WizardZombieController {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
 
-      const currentUser = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { licenseId: true, schoolId: true },
-      });
+      const [currentUser] = await db
+        .select({ licenseId: users.licenseId, schoolId: users.schoolId })
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
 
       if (!currentUser) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -236,33 +244,34 @@ export class WizardZombieController {
       const { searchParams } = new URL(req.url);
       const difficulty = searchParams.get("difficulty");
 
-      const gameRankings = await prisma.gameRanking.findMany({
-        where: {
-          gameType: "WIZARD_VS_ZOMBIE",
-          difficulty: difficulty || undefined,
-          user: {
-            licenseId: currentUser.licenseId || undefined,
-            schoolId: !currentUser.licenseId ? currentUser.schoolId : undefined,
-          },
-        },
-        include: {
-          user: {
-            select: {
-              name: true,
-              image: true,
-            },
-          },
-        },
-        orderBy: {
-          totalXp: "desc",
-        },
-        take: 50,
-      });
+      const rankingConditions = [eq(gameRankings.gameType, "WIZARD_VS_ZOMBIE")];
+      if (difficulty) {
+        rankingConditions.push(eq(gameRankings.difficulty, difficulty));
+      }
+      if (currentUser.licenseId) {
+        rankingConditions.push(eq(users.licenseId, currentUser.licenseId));
+      } else if (currentUser.schoolId) {
+        rankingConditions.push(eq(users.schoolId, currentUser.schoolId));
+      }
 
-      const rankings = gameRankings.map((rank) => ({
+      const rankingRows = await db
+        .select({
+          userId: gameRankings.userId,
+          totalXp: gameRankings.totalXp,
+          difficulty: gameRankings.difficulty,
+          userName: users.name,
+          userImage: users.image,
+        })
+        .from(gameRankings)
+        .innerJoin(users, eq(gameRankings.userId, users.id))
+        .where(and(...rankingConditions))
+        .orderBy(desc(gameRankings.totalXp))
+        .limit(50);
+
+      const rankings = rankingRows.map((rank) => ({
         userId: rank.userId,
-        name: rank.user.name || "Unknown Survivor",
-        image: rank.user.image,
+        name: rank.userName || "Unknown Survivor",
+        image: rank.userImage,
         xp: rank.totalXp,
         difficulty: rank.difficulty,
       }));
