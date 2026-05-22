@@ -49,6 +49,30 @@ export const PERMISSIONS = {
   "codecamp:read": [ROLES.INTERN, ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "codecamp:submit": [ROLES.INTERN, ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "codecamp:chat": [ROLES.INTERN, ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Licenses
+  "license:create": [ROLES.ADMIN, ROLES.SYSTEM],
+  "license:manage": [ROLES.ADMIN, ROLES.SYSTEM],
+  "license:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Stories
+  "story:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "story:list": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "story:create": [ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Gamification (science)
+  "gamification:read:all": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "gamification:update": [ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Curriculum (science)
+  "curriculum:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "curriculum:create": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Quiz (science)
+  "quiz:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "quiz:read:all": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "quiz:submit": [ROLES.STUDENT],
+  "quiz:create": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
 } as const satisfies Record<string, Role[]>;
 
 export type Permission = keyof typeof PERMISSIONS;
