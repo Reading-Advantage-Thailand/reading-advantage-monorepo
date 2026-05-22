@@ -281,14 +281,14 @@ All nine share one shape: read/write `gameRanking`, `userActivity`, `xpLogs`, FS
 `userActivity`/`xpLogs` parts; if a `gameRanking` write cannot map cleanly, defer just that path.
 
 - [x] Task: Migrate `rune-match-controller.ts` — e4f2296 (gameRankings table is unified, not deferred to Track 4)
-- [ ] Task: Migrate `wizard-zombie-controller.ts`
-- [ ] Task: Migrate `magic-defense-controller.ts`
-- [ ] Task: Migrate `castle-defense-controller.ts`
-- [ ] Task: Migrate `dragon-flight-controller.ts`
-- [ ] Task: Migrate `dragon-rider-controller.ts`
-- [ ] Task: Migrate `potion-rush-controller.ts`
-- [ ] Task: Migrate `rpg-battle-controller.ts`
-- [ ] Task: Migrate `enchanted-library-controller.ts`
+- [x] Task: Migrate `wizard-zombie-controller.ts` — a151632
+- [x] Task: Migrate `magic-defense-controller.ts` — ae7dd13
+- [x] Task: Migrate `castle-defense-controller.ts` — dc5f51a
+- [x] Task: Migrate `dragon-flight-controller.ts` — e0bd235
+- [x] Task: Migrate `dragon-rider-controller.ts` — 1287e11
+- [x] Task: Migrate `potion-rush-controller.ts` — 1b47eaf
+- [x] Task: Migrate `rpg-battle-controller.ts` — 6273767
+- [x] Task: Migrate `enchanted-library-controller.ts` — 38cfa58
 - [ ] Task: Measure - User Manual Verification 'Game Controllers' (Protocol in workflow.md)
 
 ## Phase 3: AI / admin / assignment / stories / content controllers
