@@ -99,6 +99,13 @@
       "when": 1748044800000,
       "tag": "0013_prisma_drizzle_schema_unification",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1748131200000,
+      "tag": "0014_users_license_expired_date",
+      "breakpoints": true
     }
   ]
 }

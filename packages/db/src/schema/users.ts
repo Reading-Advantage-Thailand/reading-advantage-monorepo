@@ -27,6 +27,9 @@ export const users = pgTable("users", {
   githubUsername: text("github_username").unique(),
   role: roleEnum("role").default("STUDENT").notNull(),
   schoolId: uuid("school_id").references(() => schools.id),
+  // FK to licenses.id — declared as plain text to avoid circular import (licenses.ts → users.ts)
+  licenseId: text("license_id"),
+  expiredDate: timestamp("expired_date"),
   xp: integer("xp").default(0).notNull(),
   level: integer("level").default(1).notNull(),
   cefrLevel: text("cefr_level").default("A1-").notNull(),

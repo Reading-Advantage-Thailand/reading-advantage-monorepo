@@ -1,29 +1,41 @@
 import { levelCalculation } from "@/lib/utils";
 import { ExtendedNextRequest, assertSelfOrAllowedStaff } from "./auth-controller";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { ActivityType, LicenseType } from "@prisma/client";
+import { db, eq, and, inArray, desc, asc, gte, lte, isNotNull, sql } from "@reading-advantage/db";
+import {
+  users,
+  userActivity,
+  xpLogs,
+  articles,
+  lessonRecords,
+  userWordRecords,
+  userSentenceRecords,
+  storyRecords,
+  classroomStudents,
+  licenses,
+  licenseOnUsers,
+} from "@reading-advantage/db/schema";
+import { ActivityType, LicenseType } from "@/lib/enums";
 
 async function getUserLicenseLevel(userId: string): Promise<LicenseType> {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        licenseId: true,
-        expiredDate: true,
-      },
-    });
+    const [user] = await db
+      .select({ licenseId: users.licenseId, expiredDate: users.expiredDate })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (!user) {
       return LicenseType.BASIC;
     }
 
     if (user.licenseId) {
-      const license = await prisma.license.findUnique({
-        where: { id: user.licenseId },
-        select: { licenseType: true },
-      });
-      return license?.licenseType || LicenseType.BASIC;
+      const [license] = await db
+        .select({ licenseType: licenses.licenseType })
+        .from(licenses)
+        .where(eq(licenses.id, user.licenseId))
+        .limit(1);
+      return (license?.licenseType as LicenseType) || LicenseType.BASIC;
     }
 
     if (!user.expiredDate) {
@@ -51,25 +63,13 @@ interface RequestContext {
 export async function getUser(req: ExtendedNextRequest, ctx: RequestContext) {
   try {
     const { id: routeId } = await ctx.params;
-    
-    // Auth check
+
     if (!assertSelfOrAllowedStaff(req, routeId)) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
-    const user = await prisma.user.findUnique({
-      where: { id },
-      include: {
-        userActivities: {
-          orderBy: { createdAt: "desc" },
-          take: 10,
-        },
-        xpLogs: {
-          orderBy: { createdAt: "desc" },
-          take: 10,
-        },
-      },
-    });
+
+    const [user] = await db.select().from(users).where(eq(users.id, id)).limit(1);
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -109,17 +109,16 @@ export async function updateUser(
 ) {
   try {
     const { id: routeId } = await ctx.params;
-    
-    // Auth check
+
     if (!assertSelfOrAllowedStaff(req, routeId)) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
     const data = await req.json();
 
-    const user = await prisma.user.update({
-      where: { id },
-      data: {
+    const [user] = await db
+      .update(users)
+      .set({
         name: data.name,
         email: data.email,
         role: data.role,
@@ -128,39 +127,17 @@ export async function updateUser(
         cefrLevel: data.cefr_level,
         expiredDate: data.expired_date,
         licenseId: data.license_id,
-      },
-    });
+      })
+      .where(eq(users.id, id))
+      .returning();
+
     if (data.resetXP) {
-      await prisma.$transaction(async (tx) => {
-        // Delete lesson records
-        await tx.lessonRecord.deleteMany({
-          where: { userId: id },
-        });
-
-        // Delete user activities
-        await tx.userActivity.deleteMany({
-          where: { userId: id },
-        });
-
-        // Delete XP logs
-        await tx.xPLog.deleteMany({
-          where: { userId: id },
-        });
-
-        // Delete user activities (replaces MCQ, SAQ, LAQ records)
-        await tx.userActivity.deleteMany({
-          where: { userId: id },
-        });
-
-        // Delete user word records (flashcard-related)
-        await tx.userWordRecord.deleteMany({
-          where: { userId: id },
-        });
-
-        // Delete user sentence records (flashcard-related)
-        await tx.userSentenceRecord.deleteMany({
-          where: { userId: id },
-        });
+      await db.transaction(async (tx) => {
+        await tx.delete(lessonRecords).where(eq(lessonRecords.userId, id));
+        await tx.delete(userActivity).where(eq(userActivity.userId, id));
+        await tx.delete(xpLogs).where(eq(xpLogs.userId, id));
+        await tx.delete(userWordRecords).where(eq(userWordRecords.userId, id));
+        await tx.delete(userSentenceRecords).where(eq(userSentenceRecords.userId, id));
       });
     }
 
@@ -183,20 +160,16 @@ export async function postActivityLog(
 ) {
   try {
     const { id: routeId } = await ctx.params;
-    
-    // Auth check
+
     if (!assertSelfOrAllowedStaff(req, routeId)) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
 
-    // Data from frontend
     const data = await req.json();
 
-    // Convert activity type to enum format
     const activityType = data.activityType.toUpperCase() as ActivityType;
 
-    // Validate activity type
     if (!Object.values(ActivityType).includes(activityType)) {
       console.error("Invalid activity type:", activityType);
       return NextResponse.json({
@@ -207,15 +180,11 @@ export async function postActivityLog(
 
     const targetId = data.articleId || data.storyId || data.contentId || "";
 
-    // Special handling for vocabulary and article rating activities
-    // If targetId is empty but we have articleId in details, use that
     let finalTargetId = targetId;
     if (!finalTargetId && data.details?.articleId) {
       finalTargetId = data.details.articleId;
     }
 
-    // For article rating, if targetId is a userId (starts with 'cmesn' or similar),
-    // try to get articleId from details
     if (
       activityType === ActivityType.ARTICLE_RATING &&
       finalTargetId &&
@@ -228,24 +197,24 @@ export async function postActivityLog(
       }
     }
 
-    // Get article metadata if this is an article-related activity
     let articleMetadata = {};
     if (
       data.articleId &&
       (activityType === ActivityType.ARTICLE_READ ||
         activityType === ActivityType.ARTICLE_RATING)
     ) {
-      const article = await prisma.article.findUnique({
-        where: { id: data.articleId },
-        select: {
-          type: true,
-          genre: true,
-          subGenre: true,
-          title: true,
-          cefrLevel: true,
-          raLevel: true,
-        },
-      });
+      const [article] = await db
+        .select({
+          type: articles.type,
+          genre: articles.genre,
+          subGenre: articles.subGenre,
+          title: articles.title,
+          cefrLevel: articles.cefrLevel,
+          raLevel: articles.raLevel,
+        })
+        .from(articles)
+        .where(eq(articles.id, data.articleId))
+        .limit(1);
 
       if (article) {
         articleMetadata = {
@@ -259,16 +228,17 @@ export async function postActivityLog(
       }
     }
 
-    // Check if activity already exists
-    const existingActivity = await prisma.userActivity.findUnique({
-      where: {
-        userId_activityType_targetId: {
-          userId: id,
-          activityType: activityType,
-          targetId: finalTargetId,
-        },
-      },
-    });
+    const [existingActivity] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, id),
+          eq(userActivity.activityType, activityType),
+          eq(userActivity.targetId, finalTargetId),
+        )
+      )
+      .limit(1);
 
     const commonData = {
       userId: id,
@@ -285,62 +255,54 @@ export async function postActivityLog(
     let activity;
 
     if (!existingActivity) {
-      // Create new activity
-      activity = await prisma.userActivity.create({
-        data: commonData,
-      });
+      [activity] = await db.insert(userActivity).values(commonData).returning();
     } else if (data.activityStatus === "completed" || data.completed) {
-      // Update existing activity
-      activity = await prisma.userActivity.update({
-        where: { id: existingActivity.id },
-        data: {
-          ...commonData,
-          updatedAt: new Date(),
-        },
-      });
+      [activity] = await db
+        .update(userActivity)
+        .set({ ...commonData, updatedAt: new Date() })
+        .where(eq(userActivity.id, existingActivity.id))
+        .returning();
     } else {
       activity = existingActivity;
     }
 
     let hasExistingXpLog = false;
     if (existingActivity) {
-      const existingXpLog = await prisma.xPLog.findFirst({
-        where: { activityId: existingActivity.id },
-      });
+      const [existingXpLog] = await db
+        .select()
+        .from(xpLogs)
+        .where(eq(xpLogs.activityId, existingActivity.id))
+        .limit(1);
       hasExistingXpLog = !!existingXpLog;
     }
 
-    // Create XP log if XP is earned or if it's an initial level test (even with 0 XP)
     if (
       !hasExistingXpLog &&
       ((data.xpEarned && data.xpEarned > 0) ||
         (data.isInitialLevelTest && typeof data.xpEarned === "number"))
     ) {
-      await prisma.xPLog.create({
-        data: {
-          userId: id,
-          xpEarned: data.xpEarned,
-          activityId: activity.id,
-          activityType: activityType,
-        },
+      await db.insert(xpLogs).values({
+        userId: id,
+        xpEarned: data.xpEarned,
+        activityId: activity!.id,
+        activityType: activityType,
       });
 
-      // Get current user data from database to ensure we have the latest XP
-      const currentUser = await prisma.user.findUnique({
-        where: { id },
-        select: { xp: true, level: true, cefrLevel: true },
-      });
+      const [currentUser] = await db
+        .select({ xp: users.xp, level: users.level, cefrLevel: users.cefrLevel })
+        .from(users)
+        .where(eq(users.id, id))
+        .limit(1);
 
-      // For initial level test, set XP directly instead of adding to existing XP
       const finalXp = data.isInitialLevelTest
         ? data.xpEarned
         : (currentUser?.xp || 0) + data.xpEarned;
 
       const levelData = levelCalculation(finalXp);
 
-      await prisma.user.update({
-        where: { id },
-        data: {
+      await db
+        .update(users)
+        .set({
           xp: finalXp,
           level:
             typeof levelData.raLevel === "number"
@@ -348,8 +310,8 @@ export async function postActivityLog(
               : parseInt(String(levelData.raLevel)),
           cefrLevel: levelData.cefrLevel,
           updatedAt: new Date(),
-        },
-      });
+        })
+        .where(eq(users.id, id));
     }
 
     return NextResponse.json({
@@ -371,19 +333,15 @@ export async function putActivityLog(
 ) {
   try {
     const { id: routeId } = await ctx.params;
-    
-    // Auth check
+
     if (!assertSelfOrAllowedStaff(req, routeId)) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
-    // Data from frontend
     const data = await req.json();
 
-    // Convert activity type to enum format
     const activityType = data.activityType.toUpperCase() as ActivityType;
 
-    // Validate activity type
     if (!Object.values(ActivityType).includes(activityType)) {
       return NextResponse.json({
         message: "Invalid activity type",
@@ -393,13 +351,11 @@ export async function putActivityLog(
 
     const targetId = data.articleId || data.storyId || data.contentId || "";
 
-    // Special handling for vocabulary and article rating activities (same as postActivityLog)
     let finalTargetId = targetId;
     if (!finalTargetId && data.details?.articleId) {
       finalTargetId = data.details.articleId;
     }
 
-    // For article rating, if targetId is a userId, try to get articleId from details
     if (
       activityType === ActivityType.ARTICLE_RATING &&
       finalTargetId &&
@@ -419,24 +375,24 @@ export async function putActivityLog(
       });
     }
 
-    // Get article metadata if this is an article-related activity
     let articleMetadata = {};
     if (
       data.articleId &&
       (activityType === ActivityType.ARTICLE_READ ||
         activityType === ActivityType.ARTICLE_RATING)
     ) {
-      const article = await prisma.article.findUnique({
-        where: { id: data.articleId },
-        select: {
-          type: true,
-          genre: true,
-          subGenre: true,
-          title: true,
-          cefrLevel: true,
-          raLevel: true,
-        },
-      });
+      const [article] = await db
+        .select({
+          type: articles.type,
+          genre: articles.genre,
+          subGenre: articles.subGenre,
+          title: articles.title,
+          cefrLevel: articles.cefrLevel,
+          raLevel: articles.raLevel,
+        })
+        .from(articles)
+        .where(eq(articles.id, data.articleId))
+        .limit(1);
 
       if (article) {
         articleMetadata = {
@@ -450,16 +406,17 @@ export async function putActivityLog(
       }
     }
 
-    // Find existing activity
-    const existingActivity = await prisma.userActivity.findUnique({
-      where: {
-        userId_activityType_targetId: {
-          userId: id,
-          activityType: activityType,
-          targetId: finalTargetId,
-        },
-      },
-    });
+    const [existingActivity] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, id),
+          eq(userActivity.activityType, activityType),
+          eq(userActivity.targetId, finalTargetId),
+        )
+      )
+      .limit(1);
 
     const commonData = {
       userId: id,
@@ -476,48 +433,40 @@ export async function putActivityLog(
     let activity;
 
     if (!existingActivity) {
-      // Create new activity if it doesn't exist
-      activity = await prisma.userActivity.create({
-        data: commonData,
-      });
+      [activity] = await db.insert(userActivity).values(commonData).returning();
     } else {
-      // Update existing activity
-      activity = await prisma.userActivity.update({
-        where: { id: existingActivity.id },
-        data: {
-          ...commonData,
-          updatedAt: new Date(),
-        },
-      });
+      [activity] = await db
+        .update(userActivity)
+        .set({ ...commonData, updatedAt: new Date() })
+        .where(eq(userActivity.id, existingActivity.id))
+        .returning();
     }
 
     let hasExistingXpLog = false;
     if (existingActivity) {
-      const existingXpLog = await prisma.xPLog.findFirst({
-        where: { activityId: existingActivity.id },
-      });
+      const [existingXpLog] = await db
+        .select()
+        .from(xpLogs)
+        .where(eq(xpLogs.activityId, existingActivity.id))
+        .limit(1);
       hasExistingXpLog = !!existingXpLog;
     }
 
-    // Create XP log if XP is earned
     if (!hasExistingXpLog && data.xpEarned && data.xpEarned > 0) {
-      await prisma.xPLog.create({
-        data: {
-          userId: id,
-          xpEarned: data.xpEarned,
-          activityId: activity.id,
-          activityType: activityType,
-        },
+      await db.insert(xpLogs).values({
+        userId: id,
+        xpEarned: data.xpEarned,
+        activityId: activity!.id,
+        activityType: activityType,
       });
 
-      // Update user XP and level
       const currentUser = req.session?.user;
       const finalXp = (currentUser?.xp || 0) + data.xpEarned;
       const levelData = levelCalculation(finalXp);
 
-      await prisma.user.update({
-        where: { id },
-        data: {
+      await db
+        .update(users)
+        .set({
           xp: finalXp,
           level:
             typeof levelData.raLevel === "number"
@@ -525,8 +474,8 @@ export async function putActivityLog(
               : parseInt(String(levelData.raLevel)),
           cefrLevel: levelData.cefrLevel,
           updatedAt: new Date(),
-        },
-      });
+        })
+        .where(eq(users.id, id));
     }
 
     return NextResponse.json({
@@ -547,84 +496,67 @@ export async function getActivityLog(
   ctx: RequestContext,
 ) {
   const { id: routeId } = await ctx.params;
-  
-  // Auth check
+
   if (!assertSelfOrAllowedStaff(req, routeId)) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { id },
-      select: { xp: true, level: true },
-    });
+    const [user] = await db
+      .select({ xp: users.xp, level: users.level })
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
 
-    // Get query parameters
     const articleId = req.nextUrl.searchParams.get("articleId");
-    const activityType = req.nextUrl.searchParams.get("activityType");
-    const isFiltered = !!(articleId || activityType);
+    const activityTypeParam = req.nextUrl.searchParams.get("activityType");
+    const isFiltered = !!(articleId || activityTypeParam);
 
-    // Build where condition
-    const whereCondition: any = {
-      userId: id,
-    };
+    const conditions = [eq(userActivity.userId, id)];
+    if (articleId) conditions.push(eq(userActivity.targetId, articleId));
+    if (activityTypeParam) conditions.push(eq(userActivity.activityType, activityTypeParam.toUpperCase()));
 
-    if (articleId) {
-      whereCondition.targetId = articleId;
-    }
+    const activities = await db
+      .select()
+      .from(userActivity)
+      .where(and(...conditions))
+      .orderBy(asc(userActivity.createdAt));
 
-    if (activityType) {
-      whereCondition.activityType = activityType.toUpperCase();
-    }
-
-    const activities = await prisma.userActivity.findMany({
-      where: whereCondition,
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
-
-    const xpWhereCondition: any = {
-      userId: id,
-    };
-
+    const xpWhereConditions = [eq(xpLogs.userId, id)];
     if (isFiltered) {
       const activityIds = activities.map((a) => a.id);
-      xpWhereCondition.activityId = { in: activityIds };
+      if (activityIds.length > 0) {
+        xpWhereConditions.push(inArray(xpLogs.activityId, activityIds));
+      }
     }
 
-    const allXpLogs = await prisma.xPLog.findMany({
-      where: xpWhereCondition,
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
+    const allXpLogs = await db
+      .select()
+      .from(xpLogs)
+      .where(and(...xpWhereConditions))
+      .orderBy(asc(xpLogs.createdAt));
 
     const xpLogMap = new Map(allXpLogs.map((log) => [log.activityId, log]));
 
-    const articleIds = activities
-      .map((activity) => activity.targetId)
-      .filter((id) => id);
+    const articleIds = activities.map((activity) => activity.targetId).filter((id) => id) as string[];
 
-    const articles = await prisma.article.findMany({
-      where: {
-        id: { in: articleIds },
-      },
-      select: {
-        id: true,
-        title: true,
-        type: true,
-        genre: true,
-        subGenre: true,
-        cefrLevel: true,
-        raLevel: true,
-      },
-    });
+    const articleRows = articleIds.length > 0
+      ? await db
+          .select({
+            id: articles.id,
+            title: articles.title,
+            type: articles.type,
+            genre: articles.genre,
+            subGenre: articles.subGenre,
+            cefrLevel: articles.cefrLevel,
+            raLevel: articles.raLevel,
+          })
+          .from(articles)
+          .where(inArray(articles.id, articleIds))
+      : [];
 
-    const articleMap = new Map(
-      articles.map((article) => [article.id, article]),
-    );
+    const articleMap = new Map(articleRows.map((article) => [article.id, article]));
 
     let cumulativeXp = 0;
     const xpProgressionMap = new Map();
@@ -642,8 +574,7 @@ export async function getActivityLog(
     });
 
     const formattedResults = activities.map((activity) => {
-      const article = articleMap.get(activity.targetId);
-      const xpLog = xpLogMap.get(activity.id);
+      const article = articleMap.get(activity.targetId!);
       const xpProgression = xpProgressionMap.get(activity.id);
 
       const xpEarned = xpProgression?.xpEarned || 0;
@@ -706,25 +637,25 @@ export async function getUserRecords(
   ctx: RequestContext,
 ) {
   const { id: routeId } = await ctx.params;
-  
-  // Auth check
+
   if (!assertSelfOrAllowedStaff(req, routeId)) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
-  
+
   try {
     const limit = parseInt(req.nextUrl.searchParams.get("limit") || "10");
-    const nextPage = req.nextUrl.searchParams.get("nextPage");
-    const activities = await prisma.userActivity.findMany({
-      where: {
-        userId: id,
-        activityType: ActivityType.ARTICLE_READ,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+
+    const activities = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, id),
+          eq(userActivity.activityType, ActivityType.ARTICLE_READ),
+        )
+      )
+      .orderBy(desc(userActivity.createdAt));
 
     const articleMap = new Map();
 
@@ -748,26 +679,23 @@ export async function getUserRecords(
       }
     });
 
-    // Get article IDs and fetch article details from database
     const articleIds = Array.from(articleMap.keys()).filter((id) => id);
-    const articles = await prisma.article.findMany({
-      where: {
-        id: { in: articleIds },
-      },
-      select: {
-        id: true,
-        title: true,
-        type: true,
-        genre: true,
-        subGenre: true,
-        cefrLevel: true,
-        raLevel: true,
-      },
-    });
+    const articleRows = articleIds.length > 0
+      ? await db
+          .select({
+            id: articles.id,
+            title: articles.title,
+            type: articles.type,
+            genre: articles.genre,
+            subGenre: articles.subGenre,
+            cefrLevel: articles.cefrLevel,
+            raLevel: articles.raLevel,
+          })
+          .from(articles)
+          .where(inArray(articles.id, articleIds))
+      : [];
 
-    const articlesById = new Map(
-      articles.map((article) => [article.id, article]),
-    );
+    const articlesById = new Map(articleRows.map((article) => [article.id, article]));
 
     const results: any[] = [];
 
@@ -790,7 +718,7 @@ export async function getUserRecords(
           }
         }
 
-        const resultItem = {
+        results.push({
           id: readActivity.id,
           userId: readActivity.userId,
           targetId: articleId,
@@ -828,9 +756,7 @@ export async function getUserRecords(
           },
           created_at: readActivity.createdAt,
           updated_at: ratingActivity?.updatedAt || readActivity.updatedAt,
-        };
-
-        results.push(resultItem);
+        });
       }
     });
 
@@ -858,21 +784,16 @@ export async function getUserHeatmap(
 ) {
   const { id } = await ctx.params;
   try {
-    // Get user activities and group by date for heatmap
-    const activities = await prisma.userActivity.findMany({
-      where: {
-        userId: id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const activities = await db
+      .select()
+      .from(userActivity)
+      .where(eq(userActivity.userId, id))
+      .orderBy(desc(userActivity.createdAt));
 
-    // Process activities to create heatmap data
     const heatmapData: { [key: string]: number } = {};
 
     activities.forEach((activity) => {
-      const date = activity.createdAt.toISOString().split("T")[0]; // Get YYYY-MM-DD format
+      const date = activity.createdAt.toISOString().split("T")[0];
       heatmapData[date] = (heatmapData[date] || 0) + 1;
     });
 
@@ -890,13 +811,12 @@ export async function getUserHeatmap(
 
 export async function getAllUsers(req: NextRequest) {
   try {
-    const users = await prisma.user.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const allUsers = await db
+      .select()
+      .from(users)
+      .orderBy(desc(users.createdAt));
 
-    const results = users.map((user) => ({
+    const results = allUsers.map((user) => ({
       id: user.id,
       name: user.name,
       email: user.email,
@@ -926,69 +846,57 @@ export async function updateUserData(req: ExtendedNextRequest) {
   try {
     const data = await req.json();
 
-    // Find user by email
-    const user = await prisma.user.findUnique({
-      where: {
-        email: data.email,
-      },
-    });
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, data.email))
+      .limit(1);
 
     if (!user) {
       return NextResponse.json(
-        {
-          message: "User not found",
-        },
+        { message: "User not found" },
         { status: 404 },
       );
     }
 
-    // Find license
-    const license = await prisma.license.findUnique({
-      where: {
-        id: data.license_id,
-      },
-      include: {
-        licenseUsers: true,
-      },
-    });
+    const [license] = await db
+      .select()
+      .from(licenses)
+      .where(eq(licenses.id, data.license_id))
+      .limit(1);
 
     if (!license) {
       return NextResponse.json(
-        {
-          message: "License not found",
-        },
+        { message: "License not found" },
         { status: 404 },
       );
     }
 
-    const usedLicenses = license.licenseUsers.length;
+    const [{ licenseUserCount }] = await db
+      .select({ licenseUserCount: sql<number>`count(*)::int` })
+      .from(licenseOnUsers)
+      .where(eq(licenseOnUsers.licenseId, license.id));
 
-    if (license.maxUsers <= usedLicenses) {
+    if (license.maxUsers <= licenseUserCount) {
       return NextResponse.json(
-        {
-          message: "License is already used",
-        },
+        { message: "License is already used" },
         { status: 404 },
       );
     }
 
-    // Create license-user relationship
-    await prisma.licenseOnUser.create({
-      data: {
-        userId: user.id,
-        licenseId: license.id,
-      },
+    await db.insert(licenseOnUsers).values({
+      userId: user.id,
+      licenseId: license.id,
     });
 
-    // Update user data
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
+    await db
+      .update(users)
+      .set({
         role: data.role,
         expiredDate: license.expiresAt,
         licenseId: license.id,
-      },
-    });
+      })
+      .where(eq(users.id, user.id));
 
     return NextResponse.json(
       { message: "Update user successfully" },
@@ -1009,63 +917,50 @@ export async function getUserActivityData(
 ) {
   const { id } = await ctx.params;
   try {
-    const user = await prisma.user.findUnique({
-      where: { id },
-      select: { xp: true, level: true },
-    });
+    const [user] = await db
+      .select({ xp: users.xp, level: users.level })
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
 
-    // Get user activities
-    const activities = await prisma.userActivity.findMany({
-      where: {
-        userId: id,
-      },
-      orderBy: {
-        createdAt: "asc", // Sort by ascending to calculate cumulative XP correctly
-      },
-    });
+    const activities = await db
+      .select()
+      .from(userActivity)
+      .where(eq(userActivity.userId, id))
+      .orderBy(asc(userActivity.createdAt));
 
-    // Get ALL XP logs for this user to calculate cumulative progression
-    const allXpLogs = await prisma.xPLog.findMany({
-      where: {
-        userId: id,
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
+    const allXpLogs = await db
+      .select()
+      .from(xpLogs)
+      .where(eq(xpLogs.userId, id))
+      .orderBy(asc(xpLogs.createdAt));
 
-    // Create a map of activity ID to XP log
     const xpLogMap = new Map(allXpLogs.map((log) => [log.activityId, log]));
 
-    // Get article details for activities that reference articles
     const articleIds = activities
       .map((activity) => activity.targetId)
-      .filter((id) => id);
+      .filter((id) => id) as string[];
 
-    const articles = await prisma.article.findMany({
-      where: {
-        id: { in: articleIds },
-      },
-      select: {
-        id: true,
-        title: true,
-        type: true,
-        genre: true,
-        subGenre: true,
-        cefrLevel: true,
-        raLevel: true,
-      },
-    });
+    const articleRows = articleIds.length > 0
+      ? await db
+          .select({
+            id: articles.id,
+            title: articles.title,
+            type: articles.type,
+            genre: articles.genre,
+            subGenre: articles.subGenre,
+            cefrLevel: articles.cefrLevel,
+            raLevel: articles.raLevel,
+          })
+          .from(articles)
+          .where(inArray(articles.id, articleIds))
+      : [];
 
-    const articleMap = new Map(
-      articles.map((article) => [article.id, article]),
-    );
+    const articleMap = new Map(articleRows.map((article) => [article.id, article]));
 
-    // Calculate cumulative XP progression from all XP logs chronologically
     let cumulativeXp = 0;
     const xpProgressionMap = new Map();
 
-    // Build XP progression map from all XP logs
     allXpLogs.forEach((xpLog) => {
       cumulativeXp += xpLog.xpEarned || 0;
       if (xpLog.activityId) {
@@ -1076,16 +971,14 @@ export async function getUserActivityData(
       }
     });
 
-    const formattedResults = activities.map((activity, index) => {
-      const article = articleMap.get(activity.targetId);
-      const xpLog = xpLogMap.get(activity.id);
+    const formattedResults = activities.map((activity) => {
+      const article = articleMap.get(activity.targetId!);
       const xpProgression = xpProgressionMap.get(activity.id);
 
       const xpEarned = xpProgression?.xpEarned || 0;
       const finalXp = xpProgression?.cumulativeXp || 0;
       const initialXp = finalXp - xpEarned;
 
-      // Safely extract details
       const details = (activity.details as any) || {};
 
       return {
@@ -1122,7 +1015,6 @@ export async function getUserActivityData(
       };
     });
 
-    // Sort results by timestamp descending for display (newest first)
     formattedResults.sort(
       (a, b) =>
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
@@ -1147,22 +1039,23 @@ export async function getStudentData(
 ) {
   const { id } = await ctx.params;
   try {
-    const user = await prisma.user.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        xp: true,
-        level: true,
-        cefrLevel: true,
-        expiredDate: true,
-        licenseId: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const [user] = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        role: users.role,
+        xp: users.xp,
+        level: users.level,
+        cefrLevel: users.cefrLevel,
+        expiredDate: users.expiredDate,
+        licenseId: users.licenseId,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+      })
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
 
     if (!user) {
       return NextResponse.json({
@@ -1171,24 +1064,12 @@ export async function getStudentData(
       });
     }
 
-    const studentData = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      xp: user.xp,
-      level: user.level,
-      cefrLevel: user.cefrLevel,
-      cefr_level: user.cefrLevel,
-      expiredDate: user.expiredDate,
-      licenseId: user.licenseId,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      display_name: user.name,
-    };
-
     return NextResponse.json({
-      data: studentData,
+      data: {
+        ...user,
+        cefr_level: user.cefrLevel,
+        display_name: user.name,
+      },
       message: "success",
     });
   } catch (error) {
@@ -1206,61 +1087,28 @@ export async function resetUserProgress(
 ) {
   const { id } = await ctx.params;
   try {
-    const user = await prisma.user.findUnique({
-      where: { id },
-    });
+    const [user] = await db.select().from(users).where(eq(users.id, id)).limit(1);
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    // Delete all related records using transaction for data consistency
-    await prisma.$transaction(async (tx) => {
-      // Delete lesson records
-      await tx.lessonRecord.deleteMany({
-        where: { userId: id },
-      });
-
-      // Delete user activities
-      await tx.userActivity.deleteMany({
-        where: { userId: id },
-      });
-
-      // Delete XP logs
-      await tx.xPLog.deleteMany({
-        where: { userId: id },
-      });
-
-      // Delete user activities (replaces MCQ, SAQ, LAQ records)
-      await tx.userActivity.deleteMany({
-        where: { userId: id },
-      });
-
-      // Delete story records
-      await tx.storyRecord.deleteMany({
-        where: { userId: id },
-      });
-
-      // Delete user word records (flashcard-related)
-      await tx.userWordRecord.deleteMany({
-        where: { userId: id },
-      });
-
-      // Delete user sentence records (flashcard-related)
-      await tx.userSentenceRecord.deleteMany({
-        where: { userId: id },
-      });
-
-      // Reset user progress
-      await tx.user.update({
-        where: { id },
-        data: {
+    await db.transaction(async (tx) => {
+      await tx.delete(lessonRecords).where(eq(lessonRecords.userId, id));
+      await tx.delete(userActivity).where(eq(userActivity.userId, id));
+      await tx.delete(xpLogs).where(eq(xpLogs.userId, id));
+      await tx.delete(storyRecords).where(eq(storyRecords.userId, id));
+      await tx.delete(userWordRecords).where(eq(userWordRecords.userId, id));
+      await tx.delete(userSentenceRecords).where(eq(userSentenceRecords.userId, id));
+      await tx
+        .update(users)
+        .set({
           xp: 0,
           level: 0,
-          cefrLevel: "", // Reset to default CEFR level
+          cefrLevel: "",
           updatedAt: new Date(),
-        },
-      });
+        })
+        .where(eq(users.id, id));
     });
 
     return NextResponse.json({
@@ -1282,26 +1130,20 @@ export async function getUserXpLogs(
 ) {
   const { id } = await ctx.params;
   try {
-    const xpLogs = await prisma.xPLog.findMany({
-      where: {
-        userId: id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const allXpLogs = await db
+      .select()
+      .from(xpLogs)
+      .where(eq(xpLogs.userId, id))
+      .orderBy(desc(xpLogs.createdAt));
 
-    const activityIds = xpLogs.map((log) => log.activityId);
-    const activities = await prisma.userActivity.findMany({
-      where: {
-        id: { in: activityIds },
-      },
-    });
+    const activityIds = allXpLogs.map((log) => log.activityId);
+    const activities = activityIds.length > 0
+      ? await db.select().from(userActivity).where(inArray(userActivity.id, activityIds))
+      : [];
 
-    const activityMap = new Map(
-      activities.map((activity) => [activity.id, activity]),
-    );
-    const formattedResults = xpLogs.map((xpLog) => {
+    const activityMap = new Map(activities.map((activity) => [activity.id, activity]));
+
+    const formattedResults = allXpLogs.map((xpLog) => {
       const activity = activityMap.get(xpLog.activityId);
 
       return {
@@ -1339,25 +1181,15 @@ export async function deleteUser(req: ExtendedNextRequest) {
   try {
     const { id } = await req.json();
 
-    const user = await prisma.user.findUnique({
-      where: { id },
-    });
+    const [user] = await db.select().from(users).where(eq(users.id, id)).limit(1);
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    // ลบข้อมูลที่เกี่ยวข้องในตารางอื่นก่อน
-    await prisma.$transaction(async (tx) => {
-      // ลบข้อมูลในตาราง classroomStudent
-      await tx.classroomStudent.deleteMany({
-        where: { studentId: id },
-      });
-
-      // ลบผู้ใช้
-      await tx.user.delete({
-        where: { id },
-      });
+    await db.transaction(async (tx) => {
+      await tx.delete(classroomStudents).where(eq(classroomStudents.studentId, id));
+      await tx.delete(users).where(eq(users.id, id));
     });
 
     return NextResponse.json({ message: "User deleted successfully" });
@@ -1374,37 +1206,25 @@ export async function deleteAllUsers(req: ExtendedNextRequest) {
   try {
     const batchSize = 100;
 
-    // Delete classroom-student relationships in batches
-    let classroomStudents;
+    let batch;
     do {
-      classroomStudents = await prisma.classroomStudent.findMany({
-        take: batchSize,
-      });
+      batch = await db.select().from(classroomStudents).limit(batchSize);
+      if (batch.length > 0) {
+        await db.delete(classroomStudents).where(
+          inArray(classroomStudents.id, batch.map((s) => s.id))
+        );
+      }
+    } while (batch.length > 0);
 
-      await Promise.all(
-        classroomStudents.map((student) =>
-          prisma.classroomStudent.delete({
-            where: { id: student.id },
-          }),
-        ),
-      );
-    } while (classroomStudents.length > 0);
-
-    // Delete users in batches
-    let users;
+    let userBatch;
     do {
-      users = await prisma.user.findMany({
-        take: batchSize,
-      });
-
-      await Promise.all(
-        users.map((user) =>
-          prisma.user.delete({
-            where: { id: user.id },
-          }),
-        ),
-      );
-    } while (users.length > 0);
+      userBatch = await db.select().from(users).limit(batchSize);
+      if (userBatch.length > 0) {
+        await db.delete(users).where(
+          inArray(users.id, userBatch.map((u) => u.id))
+        );
+      }
+    } while (userBatch.length > 0);
 
     return NextResponse.json({ message: "All users deleted successfully" });
   } catch (error) {
@@ -1415,3 +1235,270 @@ export async function deleteAllUsers(req: ExtendedNextRequest) {
     );
   }
 }
+
+export async function getLessonXp(
+  req: NextRequest,
+  ctx: { params: Promise<{ userId: string }> }
+) {
+  const { userId } = await ctx.params;
+  try {
+    const articleId = req.nextUrl.searchParams.get("articleId");
+
+    if (!articleId) {
+      return NextResponse.json(
+        { success: false, error: "articleId is required" },
+        { status: 400 }
+      );
+    }
+
+    const decodedArticleId = decodeURIComponent(articleId);
+    const cleanArticleId = decodedArticleId.split("/")[0];
+
+    const allUserActivities = await db
+      .select({
+        id: userActivity.id,
+        activityType: userActivity.activityType,
+        targetId: userActivity.targetId,
+        details: userActivity.details,
+        createdAt: userActivity.createdAt,
+      })
+      .from(userActivity)
+      .where(eq(userActivity.userId, userId));
+
+    const articleRelatedActivities = allUserActivities.filter((activity) => {
+      if (activity.targetId === cleanArticleId) {
+        return true;
+      }
+      if (activity.activityType === "MC_QUESTION") {
+        const details = activity.details as any;
+        return details?.articleId === cleanArticleId;
+      }
+      return false;
+    });
+
+    let allRelatedActivities = [...articleRelatedActivities];
+
+    if (articleRelatedActivities.length > 0) {
+      const earliestTime = new Date(
+        Math.min(...articleRelatedActivities.map((a) => a.createdAt.getTime()))
+      );
+      const latestTime = new Date(
+        Math.max(...articleRelatedActivities.map((a) => a.createdAt.getTime()))
+      );
+      earliestTime.setHours(earliestTime.getHours() - 1);
+      latestTime.setHours(latestTime.getHours() + 1);
+
+      const vocabularyActivities = await db
+        .select({
+          id: userActivity.id,
+          activityType: userActivity.activityType,
+          targetId: userActivity.targetId,
+          details: userActivity.details,
+          createdAt: userActivity.createdAt,
+        })
+        .from(userActivity)
+        .where(
+          and(
+            eq(userActivity.userId, userId),
+            inArray(userActivity.activityType, [
+              "VOCABULARY_FLASHCARDS",
+              "VOCABULARY_MATCHING",
+              "ARTICLE_RATING",
+            ]),
+            gte(userActivity.createdAt, earliestTime),
+            lte(userActivity.createdAt, latestTime),
+          )
+        );
+
+      allRelatedActivities = [...articleRelatedActivities, ...vocabularyActivities];
+    }
+
+    if (articleRelatedActivities.length === 0) {
+      return NextResponse.json({
+        success: true,
+        total_xp: 0,
+        breakdown: {},
+        activities_count: 0,
+      });
+    }
+
+    const activityIds = allRelatedActivities.map((activity) => activity.id);
+    const allXpLogs = activityIds.length > 0
+      ? await db
+          .select({
+            xpEarned: xpLogs.xpEarned,
+            activityType: xpLogs.activityType,
+            activityId: xpLogs.activityId,
+          })
+          .from(xpLogs)
+          .where(
+            and(
+              eq(xpLogs.userId, userId),
+              inArray(xpLogs.activityId, activityIds),
+            )
+          )
+      : [];
+
+    if (allXpLogs.length === 0) {
+      return NextResponse.json({
+        success: true,
+        total_xp: 0,
+        breakdown: {},
+        activities_count: 0,
+      });
+    }
+
+    const totalXp = allXpLogs.reduce(
+      (total: number, log) => total + (log.xpEarned || 0),
+      0
+    );
+
+    const xpByActivityType = allXpLogs.reduce(
+      (acc, log) => {
+        const at = log.activityType;
+        if (!acc[at]) acc[at] = { totalXp: 0, count: 0 };
+        acc[at].totalXp += log.xpEarned || 0;
+        acc[at].count += 1;
+        return acc;
+      },
+      {} as Record<string, { totalXp: number; count: number }>
+    );
+
+    return NextResponse.json({
+      success: true,
+      total_xp: totalXp,
+      breakdown: xpByActivityType,
+      activities_count: allXpLogs.length,
+      article_id: cleanArticleId,
+    });
+  } catch (error) {
+    console.error("Error fetching lesson XP:", error);
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+// --- License helper functions exported from user-controller ---
+
+export const calculateXpForLast30Days = async () => {
+  try {
+    const now = new Date();
+    const past30Days = new Date();
+    past30Days.setDate(now.getDate() - 30);
+
+    const xpLogRows = await db
+      .select({
+        xpEarned: xpLogs.xpEarned,
+        createdAt: xpLogs.createdAt,
+        userId: xpLogs.userId,
+      })
+      .from(xpLogs)
+      .where(
+        and(
+          gte(xpLogs.createdAt, past30Days),
+          lte(xpLogs.createdAt, now),
+        )
+      );
+
+    const userIds = [...new Set(xpLogRows.map((l) => l.userId))];
+    const userRows = userIds.length > 0
+      ? await db
+          .select({ id: users.id, licenseId: users.licenseId })
+          .from(users)
+          .where(inArray(users.id, userIds))
+      : [];
+    const userLicenseMap = new Map(userRows.map((u) => [u.id, u.licenseId]));
+
+    const xpByDateAndLicense: Record<string, Record<string, number>> = {};
+
+    xpLogRows.forEach((log) => {
+      const dateStr = log.createdAt.toISOString().slice(0, 10);
+      const licenseId = userLicenseMap.get(log.userId);
+      if (!licenseId) return;
+      if (!xpByDateAndLicense[dateStr]) xpByDateAndLicense[dateStr] = {};
+      if (!xpByDateAndLicense[dateStr][licenseId]) xpByDateAndLicense[dateStr][licenseId] = 0;
+      xpByDateAndLicense[dateStr][licenseId] += log.xpEarned;
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: xpByDateAndLicense,
+      message: "XP calculation completed successfully",
+    });
+  } catch (error) {
+    console.error("Error calculating XP:", error);
+    return NextResponse.json({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+};
+
+export const getXp30days = async (request: NextRequest) => {
+  try {
+    const { searchParams } = new URL(request.url);
+    const license_id = searchParams.get("license_id");
+
+    const now = new Date();
+    const past30Days = new Date();
+    past30Days.setDate(now.getDate() - 30);
+
+    let totalXp = 0;
+
+    if (license_id) {
+      const userRows = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.licenseId, license_id));
+      const userIds = userRows.map((u) => u.id);
+
+      if (userIds.length > 0) {
+        const xpLogRows = await db
+          .select({ xpEarned: xpLogs.xpEarned })
+          .from(xpLogs)
+          .where(
+            and(
+              inArray(xpLogs.userId, userIds),
+              gte(xpLogs.createdAt, past30Days),
+              lte(xpLogs.createdAt, now),
+            )
+          );
+        totalXp = xpLogRows.reduce((sum, log) => sum + log.xpEarned, 0);
+      }
+    } else {
+      const userRows = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(isNotNull(users.licenseId));
+      const userIds = userRows.map((u) => u.id);
+
+      if (userIds.length > 0) {
+        const xpLogRows = await db
+          .select({ xpEarned: xpLogs.xpEarned })
+          .from(xpLogs)
+          .where(
+            and(
+              inArray(xpLogs.userId, userIds),
+              gte(xpLogs.createdAt, past30Days),
+              lte(xpLogs.createdAt, now),
+            )
+          );
+        totalXp = xpLogRows.reduce((sum, log) => sum + log.xpEarned, 0);
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      license_id: license_id || "all",
+      total_xp: totalXp,
+    });
+  } catch (error) {
+    console.error("Error fetching XP logs:", error);
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+};
