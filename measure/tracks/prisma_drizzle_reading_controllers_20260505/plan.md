@@ -280,7 +280,7 @@ All nine share one shape: read/write `gameRanking`, `userActivity`, `xpLogs`, FS
 `gameRanking` is a **Track 4 slice** (reshaped `difficulty`+`totalXp`) — migrate the
 `userActivity`/`xpLogs` parts; if a `gameRanking` write cannot map cleanly, defer just that path.
 
-- [ ] Task: Migrate `rune-match-controller.ts`
+- [x] Task: Migrate `rune-match-controller.ts` — e4f2296 (gameRankings table is unified, not deferred to Track 4)
 - [ ] Task: Migrate `wizard-zombie-controller.ts`
 - [ ] Task: Migrate `magic-defense-controller.ts`
 - [ ] Task: Migrate `castle-defense-controller.ts`
