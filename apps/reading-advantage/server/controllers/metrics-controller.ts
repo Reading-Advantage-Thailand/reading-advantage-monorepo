@@ -12,8 +12,9 @@ import {
   MetricsVelocityResponse,
   VelocityDataPoint
 } from "@/types/dashboard";
-import { prisma } from "@/lib/prisma";
-import { Role, Status } from "@prisma/client";
+import { db, and, desc, eq, gte, inArray } from "@reading-advantage/db";
+import { assignments, classrooms, classroomStudents, studentAssignments, userActivity, users } from "@reading-advantage/db/schema";
+import { Status } from "@/lib/enums";
 import { advancedCache, createCachedQuery } from "@/lib/cache/advanced-cache";
 
 // Import enhanced alignment controller
@@ -29,46 +30,47 @@ async function fetchActivityData(timeframe: string, schoolId?: string | null, cl
   const startDate = new Date(now);
   startDate.setDate(startDate.getDate() - daysAgo);
 
-  // Build where clause based on filters
-  const whereClause: any = {
-    createdAt: {
-      gte: startDate,
+  const baseConditions = schoolId
+    ? and(gte(userActivity.createdAt, startDate), eq(users.schoolId, schoolId))
+    : gte(userActivity.createdAt, startDate);
+
+  const rows = classId
+    ? await db
+        .select({
+          userId: userActivity.userId,
+          createdAt: userActivity.createdAt,
+          timer: userActivity.timer,
+          userCreatedAt: users.createdAt,
+          classroomStudentId: classroomStudents.id,
+        })
+        .from(userActivity)
+        .innerJoin(users, eq(userActivity.userId, users.id))
+        .innerJoin(
+          classroomStudents,
+          and(eq(userActivity.userId, classroomStudents.studentId), eq(classroomStudents.classroomId, classId))
+        )
+        .where(baseConditions)
+    : await db
+        .select({
+          userId: userActivity.userId,
+          createdAt: userActivity.createdAt,
+          timer: userActivity.timer,
+          userCreatedAt: users.createdAt,
+          classroomStudentId: classroomStudents.id,
+        })
+        .from(userActivity)
+        .innerJoin(users, eq(userActivity.userId, users.id))
+        .where(baseConditions);
+
+  const filteredActivities = rows.map((activity) => ({
+    userId: activity.userId,
+    createdAt: activity.createdAt,
+    timer: activity.timer,
+    user: {
+      createdAt: activity.userCreatedAt,
+      studentClassrooms: activity.classroomStudentId ? [{ id: activity.classroomStudentId }] : [],
     },
-  };
-
-  if (schoolId) {
-    whereClause.schoolId = schoolId;
-  }
-
-  // Get daily activity data
-  const activities = await prisma.userActivity.findMany({
-    where: whereClause,
-    select: {
-      userId: true,
-      createdAt: true,
-      timer: true,
-      user: {
-        select: {
-          createdAt: true,
-          studentClassrooms: classId
-            ? {
-                where: {
-                  classroomId: classId,
-                },
-                select: {
-                  id: true,
-                },
-              }
-            : undefined,
-        },
-      },
-    },
-  });
-
-  // Filter by class if specified
-  const filteredActivities = classId
-    ? activities.filter((a: any) => a.user.studentClassrooms?.length > 0)
-    : activities;
+  }));
 
   return { filteredActivities, startDate, now };
 }
@@ -252,54 +254,60 @@ export async function getAssignmentMetrics(req: ExtendedNextRequest) {
     const startDate = new Date(now);
     startDate.setDate(startDate.getDate() - daysAgo);
 
-    const whereClause: any = {
-      createdAt: {
-        gte: startDate,
-      },
-    };
+    const assignmentConditions = [gte(assignments.createdAt, startDate)];
 
     if (classId) {
-      whereClause.classroomId = classId;
+      assignmentConditions.push(eq(assignments.classroomId, classId));
     } else if (schoolId) {
-      whereClause.classroom = {
-        schoolId,
-      };
+      assignmentConditions.push(eq(classrooms.schoolId, schoolId));
     }
 
-    const assignments = await prisma.assignment.findMany({
-      where: whereClause,
-      select: {
-        id: true,
-        articleId: true,
-        title: true,
-        dueDate: true,
-        createdAt: true,
-        studentAssignments: {
-          select: {
-            id: true,
-            status: true,
-            score: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    const assignmentRows = await db
+      .select({
+        id: assignments.id,
+        articleId: assignments.articleId,
+        title: assignments.title,
+        dueDate: assignments.dueDate,
+        createdAt: assignments.createdAt,
+      })
+      .from(assignments)
+      .innerJoin(classrooms, eq(assignments.classroomId, classrooms.id))
+      .where(and(...assignmentConditions))
+      .orderBy(desc(assignments.createdAt));
 
-    const assignmentMetrics: AssignmentMetrics[] = assignments.map((assignment) => {
-      const total = assignment.studentAssignments.length;
-      const completed = assignment.studentAssignments.filter(
+    const studentAssignmentRows = assignmentRows.length > 0
+      ? await db
+          .select({
+            id: studentAssignments.id,
+            assignmentId: studentAssignments.assignmentId,
+            status: studentAssignments.status,
+            score: studentAssignments.score,
+          })
+          .from(studentAssignments)
+          .where(inArray(studentAssignments.assignmentId, assignmentRows.map((assignment) => assignment.id)))
+      : [];
+
+    const studentAssignmentsByAssignment = new Map<string, typeof studentAssignmentRows>();
+    for (const studentAssignment of studentAssignmentRows) {
+      const list = studentAssignmentsByAssignment.get(studentAssignment.assignmentId) ?? [];
+      list.push(studentAssignment);
+      studentAssignmentsByAssignment.set(studentAssignment.assignmentId, list);
+    }
+
+    const assignmentMetrics: AssignmentMetrics[] = assignmentRows.map((assignment) => {
+      const assignmentStudentAssignments = studentAssignmentsByAssignment.get(assignment.id) ?? [];
+      const total = assignmentStudentAssignments.length;
+      const completed = assignmentStudentAssignments.filter(
         (sa) => sa.status === Status.COMPLETED
       ).length;
-      const inProgress = assignment.studentAssignments.filter(
+      const inProgress = assignmentStudentAssignments.filter(
         (sa) => sa.status === Status.IN_PROGRESS
       ).length;
-      const notStarted = assignment.studentAssignments.filter(
+      const notStarted = assignmentStudentAssignments.filter(
         (sa) => sa.status === Status.NOT_STARTED
       ).length;
 
-      const scores = assignment.studentAssignments
+      const scores = assignmentStudentAssignments
         .filter((sa) => sa.score !== null)
         .map((sa) => sa.score!);
 
