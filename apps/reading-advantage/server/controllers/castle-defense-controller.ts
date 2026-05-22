@@ -1,7 +1,14 @@
-import { prisma } from "@/lib/prisma";
+import { db, and, asc, desc, eq, sql } from "@reading-advantage/db";
+import {
+  gameRankings,
+  userActivity,
+  users,
+  userSentenceRecords,
+  xpLogs,
+} from "@reading-advantage/db/schema";
 import type { ExtendedNextRequest } from "@/server/controllers/auth-controller";
 import { NextResponse } from "next/server";
-import { ActivityType, GameType } from "@prisma/client";
+import { ActivityType, GameType } from "@/lib/enums";
 
 export class CastleDefenseController {
   static async completeGame(req: ExtendedNextRequest) {
@@ -46,9 +53,10 @@ export class CastleDefenseController {
 
       try {
         // Create user activity record
-        const activity = await prisma.userActivity.create({
-          data: {
-            userId: userId,
+        const [activity] = await db
+          .insert(userActivity)
+          .values({
+            userId,
             activityType: ActivityType.CASTLE_DEFENSE,
             targetId: uniqueTargetId,
             completed: true,
@@ -62,61 +70,55 @@ export class CastleDefenseController {
               difficulty,
               gameSession: uniqueTargetId,
             },
-          },
-        });
+          })
+          .returning();
 
         // Create XP log entry if XP was earned
         if (xpEarned > 0) {
-          await prisma.xPLog.create({
-            data: {
-              userId: userId,
-              xpEarned: xpEarned,
-              activityId: activity.id,
-              activityType: ActivityType.CASTLE_DEFENSE,
-            },
+          await db.insert(xpLogs).values({
+            userId,
+            xpEarned,
+            activityId: activity.id,
+            activityType: ActivityType.CASTLE_DEFENSE,
           });
 
           // Update user's total XP
-          const user = await prisma.user.findUnique({
-            where: { id: userId },
-          });
+          const [user] = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, userId))
+            .limit(1);
 
           if (user) {
-            await prisma.user.update({
-              where: { id: userId },
-              data: { xp: user.xp + xpEarned },
-            });
+            const updatedXp = user.xp + xpEarned;
+            await db
+              .update(users)
+              .set({ xp: updatedXp })
+              .where(eq(users.id, userId));
 
             // Update session if available
             if (req.session?.user) {
-              req.session.user.xp = user.xp + xpEarned;
+              req.session.user.xp = updatedXp;
             }
 
             // Update Game Ranking
             // We use upsert to create or update the ranking
-            // Note: GameRanking model might need to support CASTLE_DEFENSE in enum if it uses one
-            // Assuming GameRanking uses string or same enum
             try {
-              await prisma.gameRanking.upsert({
-                where: {
-                  userId_gameType_difficulty: {
-                    userId: userId,
-                    gameType: GameType.CASTLE_DEFENSE,
-                    difficulty: difficulty,
-                  },
-                },
-                update: {
-                  totalXp: {
-                    increment: xpEarned,
-                  },
-                },
-                create: {
-                  userId: userId,
+              await db
+                .insert(gameRankings)
+                .values({
+                  userId,
                   gameType: GameType.CASTLE_DEFENSE,
-                  difficulty: difficulty,
+                  difficulty,
                   totalXp: xpEarned,
-                },
-              });
+                })
+                .onConflictDoUpdate({
+                  target: [gameRankings.userId, gameRankings.gameType, gameRankings.difficulty],
+                  set: {
+                    totalXp: sql`${gameRankings.totalXp} + ${xpEarned}`,
+                    updatedAt: new Date(),
+                  },
+                });
             } catch (rankingError) {
               console.warn(
                 "Failed to update ranking, but game activity saved.",
@@ -164,36 +166,36 @@ export class CastleDefenseController {
       }
 
       // 1. Get current user's license/school info
-      const currentUser = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { licenseId: true, schoolId: true },
-      });
+      const [currentUser] = await db
+        .select({ licenseId: users.licenseId, schoolId: users.schoolId })
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
 
       if (!currentUser) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
 
       // 2. Fetch rankings from GameRanking table
-      const gameRankings = await prisma.gameRanking.findMany({
-        where: {
-          gameType: GameType.CASTLE_DEFENSE,
-          user: {
-            licenseId: currentUser.licenseId || undefined,
-            schoolId: !currentUser.licenseId ? currentUser.schoolId : undefined,
-          },
-        },
-        include: {
-          user: {
-            select: {
-              name: true,
-              image: true,
-            },
-          },
-        },
-        orderBy: {
-          totalXp: "desc",
-        },
-      });
+      const rankingConditions = [eq(gameRankings.gameType, GameType.CASTLE_DEFENSE)];
+      if (currentUser.licenseId) {
+        rankingConditions.push(eq(users.licenseId, currentUser.licenseId));
+      } else if (currentUser.schoolId) {
+        rankingConditions.push(eq(users.schoolId, currentUser.schoolId));
+      }
+
+      const rankingRows = await db
+        .select({
+          userId: gameRankings.userId,
+          totalXp: gameRankings.totalXp,
+          difficulty: gameRankings.difficulty,
+          userName: users.name,
+          userImage: users.image,
+        })
+        .from(gameRankings)
+        .innerJoin(users, eq(gameRankings.userId, users.id))
+        .where(and(...rankingConditions))
+        .orderBy(desc(gameRankings.totalXp));
 
       // 3. Group by difficulty
       type RankingEntry = {
@@ -210,15 +212,15 @@ export class CastleDefenseController {
         extreme: [],
       };
 
-      gameRankings.forEach((rank) => {
+      rankingRows.forEach((rank) => {
         const difficulty = rank.difficulty;
         if (sortedRankings[difficulty]) {
           // Limit to top 20
           if (sortedRankings[difficulty].length < 20) {
             sortedRankings[difficulty].push({
               userId: rank.userId,
-              name: rank.user.name || "Unknown Knight",
-              image: rank.user.image,
+              name: rank.userName || "Unknown Knight",
+              image: rank.userImage,
               xp: rank.totalXp,
             });
           }
@@ -248,17 +250,17 @@ export class CastleDefenseController {
 
       // Fetch user's sentence records
       // Prioritize words that are due or low stability
-      const records = await prisma.userSentenceRecord.findMany({
-        where: {
-          userId: userId,
-          saveToFlashcard: true,
-        },
-        orderBy: [
-          { due: "asc" }, // Sentences due for review first
-          { stability: "asc" }, // Harder sentences
-        ],
-        take: 30, // Get up to 30 sentences (enough for a long game)
-      });
+      const records = await db
+        .select()
+        .from(userSentenceRecords)
+        .where(
+          and(
+            eq(userSentenceRecords.userId, userId),
+            eq(userSentenceRecords.saveToFlashcard, true),
+          ),
+        )
+        .orderBy(asc(userSentenceRecords.due), asc(userSentenceRecords.stability))
+        .limit(30); // Get up to 30 sentences (enough for a long game)
 
       if (records.length === 0) {
         // No sentences saved to flashcards at all
