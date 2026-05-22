@@ -1,0 +1,11 @@
+{
+  "track_id": "storage_s3_compat_20260522",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-05-22T00:00:00Z",
+  "updated_at": "2026-05-22T00:00:00Z",
+  "description": "Create packages/storage — a provider-agnostic S3-compatible storage abstraction using @aws-sdk/client-s3, replacing the duplicated @google-cloud/storage usage in reading-advantage and primary-advantage.",
+  "estimated_tasks": 17,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
