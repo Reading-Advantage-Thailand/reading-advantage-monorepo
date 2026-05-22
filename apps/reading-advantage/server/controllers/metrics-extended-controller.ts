@@ -8,8 +8,8 @@ import {
   MetricsVelocityResponse,
   VelocityDataPoint,
 } from "@/types/dashboard";
-import { prisma } from "@/lib/prisma";
-import { Role } from "@prisma/client";
+import { db, and, eq, gte } from "@reading-advantage/db";
+import { articles, classroomStudents, lessonRecords, users } from "@reading-advantage/db/schema";
 import { getStudentVelocity } from "@/server/services/metrics/velocity-service";
 import { getStudentSRSHealth } from "@/server/services/metrics/srs-health-service";
 
@@ -47,50 +47,55 @@ export async function getGenreMetrics(req: ExtendedNextRequest) {
     const startDate = new Date(now);
     startDate.setDate(startDate.getDate() - daysAgo);
 
-    const whereClause: any = {
-      createdAt: {
-        gte: startDate,
+    const genreBaseConditions = schoolId
+      ? and(gte(lessonRecords.createdAt, startDate), eq(users.schoolId, schoolId))
+      : gte(lessonRecords.createdAt, startDate);
+
+    const genreRows = classId
+      ? await db
+          .select({
+            id: lessonRecords.id,
+            userId: lessonRecords.userId,
+            articleGenre: articles.genre,
+            articleRaLevel: articles.raLevel,
+            userXp: users.xp,
+            classroomStudentId: classroomStudents.id,
+          })
+          .from(lessonRecords)
+          .innerJoin(users, eq(lessonRecords.userId, users.id))
+          .leftJoin(articles, eq(lessonRecords.articleId, articles.id))
+          .innerJoin(
+            classroomStudents,
+            and(eq(classroomStudents.studentId, lessonRecords.userId), eq(classroomStudents.classroomId, classId))
+          )
+          .where(genreBaseConditions)
+      : await db
+          .select({
+            id: lessonRecords.id,
+            userId: lessonRecords.userId,
+            articleGenre: articles.genre,
+            articleRaLevel: articles.raLevel,
+            userXp: users.xp,
+            classroomStudentId: classroomStudents.id,
+          })
+          .from(lessonRecords)
+          .innerJoin(users, eq(lessonRecords.userId, users.id))
+          .leftJoin(articles, eq(lessonRecords.articleId, articles.id))
+          .leftJoin(classroomStudents, eq(classroomStudents.studentId, lessonRecords.userId))
+          .where(genreBaseConditions);
+
+    const filteredRecords = genreRows.map((record) => ({
+      id: record.id,
+      userId: record.userId,
+      article: {
+        genre: record.articleGenre,
+        raLevel: record.articleRaLevel,
       },
-    };
-
-    if (schoolId) {
-      whereClause.user = {
-        schoolId,
-      };
-    }
-
-    const lessonRecords = (await prisma.lessonRecord.findMany({
-      where: whereClause,
-      select: {
-        id: true,
-        userId: true,
-        article: {
-          select: {
-            genre: true,
-            raLevel: true,
-          },
-        },
-        user: {
-          select: {
-            xp: true,
-            studentClassrooms: classId
-              ? {
-                  where: {
-                    classroomId: classId,
-                  },
-                  select: {
-                    id: true,
-                  },
-                }
-              : undefined,
-          },
-        },
+      user: {
+        xp: record.userXp,
+        studentClassrooms: record.classroomStudentId ? [{ id: record.classroomStudentId }] : [],
       },
-    })) as any;
-
-    const filteredRecords = classId
-      ? lessonRecords.filter((lr: any) => lr.user.studentClassrooms?.length > 0)
-      : lessonRecords;
+    }));
 
     const genreMap = new Map<
       string,
@@ -269,50 +274,55 @@ export async function getVelocityMetrics(req: ExtendedNextRequest) {
     const startDate = new Date(now);
     startDate.setDate(startDate.getDate() - daysAgo);
 
-    const whereClause: any = {
-      createdAt: {
-        gte: startDate,
+    const velocityBaseConditions = schoolId
+      ? and(gte(lessonRecords.createdAt, startDate), eq(users.schoolId, schoolId))
+      : gte(lessonRecords.createdAt, startDate);
+
+    const velocityRows = classId
+      ? await db
+          .select({
+            createdAt: lessonRecords.createdAt,
+            userId: lessonRecords.userId,
+            articleRaLevel: articles.raLevel,
+            articlePassage: articles.passage,
+            userLevel: users.level,
+            classroomStudentId: classroomStudents.id,
+          })
+          .from(lessonRecords)
+          .innerJoin(users, eq(lessonRecords.userId, users.id))
+          .leftJoin(articles, eq(lessonRecords.articleId, articles.id))
+          .innerJoin(
+            classroomStudents,
+            and(eq(classroomStudents.studentId, lessonRecords.userId), eq(classroomStudents.classroomId, classId))
+          )
+          .where(velocityBaseConditions)
+      : await db
+          .select({
+            createdAt: lessonRecords.createdAt,
+            userId: lessonRecords.userId,
+            articleRaLevel: articles.raLevel,
+            articlePassage: articles.passage,
+            userLevel: users.level,
+            classroomStudentId: classroomStudents.id,
+          })
+          .from(lessonRecords)
+          .innerJoin(users, eq(lessonRecords.userId, users.id))
+          .leftJoin(articles, eq(lessonRecords.articleId, articles.id))
+          .leftJoin(classroomStudents, eq(classroomStudents.studentId, lessonRecords.userId))
+          .where(velocityBaseConditions);
+
+    const filteredRecords = velocityRows.map((record) => ({
+      createdAt: record.createdAt,
+      userId: record.userId,
+      article: {
+        raLevel: record.articleRaLevel,
+        passage: record.articlePassage,
       },
-    };
-
-    if (schoolId) {
-      whereClause.user = {
-        schoolId,
-      };
-    }
-
-    const lessonRecords = (await prisma.lessonRecord.findMany({
-      where: whereClause,
-      select: {
-        createdAt: true,
-        userId: true,
-        article: {
-          select: {
-            raLevel: true,
-            passage: true,
-          },
-        },
-        user: {
-          select: {
-            level: true,
-            studentClassrooms: classId
-              ? {
-                  where: {
-                    classroomId: classId,
-                  },
-                  select: {
-                    id: true,
-                  },
-                }
-              : undefined,
-          },
-        },
+      user: {
+        level: record.userLevel,
+        studentClassrooms: record.classroomStudentId ? [{ id: record.classroomStudentId }] : [],
       },
-    })) as any;
-
-    const filteredRecords = classId
-      ? lessonRecords.filter((lr: any) => lr.user.studentClassrooms?.length > 0)
-      : lessonRecords;
+    }));
 
     const dateMap = new Map<
       string,
