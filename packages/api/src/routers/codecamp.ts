@@ -450,7 +450,7 @@ export const codecampRouter = router({
           }
 
           const { object } = await generateObject({
-            model: openrouter("openrouter/free"),
+            model: openrouter("deepseek/deepseek-v4-flash"),
             system,
             prompt,
             schema: reviewResultSchema,

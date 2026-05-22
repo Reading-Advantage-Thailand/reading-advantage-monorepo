@@ -17,6 +17,7 @@ import {
   getPrReviewsForUser,
   createPrReview,
   updatePrReview,
+  completeApprovedPrReviewLesson,
   getPrReviewByPrUrl,
   getModulesByPhase,
   getModuleWithExercises,
@@ -1199,6 +1200,110 @@ describe("updatePrReview", () => {
     if (setCall) {
       expect(setCall.reviewedAt).toBeInstanceOf(Date);
     }
+  });
+});
+
+describe("completeApprovedPrReviewLesson", () => {
+  it("marks the reviewed module exercise lesson complete for the PR owner", async () => {
+    const review = {
+      id: "pr1",
+      exerciseRepoId: "r1",
+      userId: "st1",
+      prUrl: "https://github.com/org/repo1/pull/1",
+      reviewStatus: "approved",
+      llmReviewSummary: "Great work!",
+      reviewedAt: new Date(),
+      createdAt: new Date(),
+    };
+    const repo = {
+      id: "r1",
+      moduleId: "m1",
+      repoUrl: "https://github.com/org/repo1",
+      description: "Repo",
+      order: 1,
+      createdAt: new Date(),
+    };
+    const theoryLesson = {
+      id: "l1",
+      moduleId: "m1",
+      title: "Theory",
+      description: "Theory",
+      order: 1,
+      type: "theory",
+      contentJson: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const exerciseLesson = {
+      id: "l2",
+      moduleId: "m1",
+      title: "Exercise",
+      description: "Exercise",
+      order: 2,
+      type: "exercise",
+      contentJson: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const progress = {
+      id: "p1",
+      userId: "st1",
+      moduleId: "m1",
+      lessonId: "l2",
+      status: "completed",
+      score: 100,
+      completedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const db = createMockDb({
+      selectSequence: [[review], [repo], [theoryLesson, exerciseLesson], [exerciseLesson]],
+      insertReturning: [progress],
+    });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    const result = await completeApprovedPrReviewLesson({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { reviewId: "pr1" },
+    });
+
+    expect(result).toEqual(progress);
+    const valuesCall = db.insert.mock.results[0]?.value?.values?.mock?.calls?.[0]?.[0];
+    expect(valuesCall).toMatchObject({
+      userId: "st1",
+      moduleId: "m1",
+      lessonId: "l2",
+      status: "completed",
+      score: 100,
+    });
+  });
+
+  it("does not complete lesson progress for non-approved reviews", async () => {
+    const review = {
+      id: "pr1",
+      exerciseRepoId: "r1",
+      userId: "st1",
+      prUrl: "https://github.com/org/repo1/pull/1",
+      reviewStatus: "needs_changes",
+      llmReviewSummary: "Please revise",
+      reviewedAt: new Date(),
+      createdAt: new Date(),
+    };
+    const db = createMockDb({ selectResults: [review] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    await expect(
+      completeApprovedPrReviewLesson({
+        db: wrapDb(db),
+        user: admin,
+        tenant: globalTenant,
+        input: { reviewId: "pr1" },
+      })
+    ).rejects.toThrow(/Review is not approved/);
+    expect(db.insert).not.toHaveBeenCalled();
   });
 });
 

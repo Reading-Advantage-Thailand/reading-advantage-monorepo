@@ -912,6 +912,72 @@ export async function updatePrReview({
   return result;
 }
 
+export async function completeApprovedPrReviewLesson({
+  db,
+  user,
+  tenant,
+  input,
+}: DomainInput<{ reviewId: string }>) {
+  assertCan(user, "admin:dashboard", tenant);
+
+  const [review] = await db
+    .select()
+    .from(codecampPrReviews)
+    .where(eq(codecampPrReviews.id, input.reviewId))
+    .limit(1);
+
+  if (!review) {
+    throw new Error("Review not found");
+  }
+
+  if (review.reviewStatus !== "approved") {
+    throw new Error("Review is not approved");
+  }
+
+  const [repo] = await db
+    .select()
+    .from(codecampExerciseRepos)
+    .where(eq(codecampExerciseRepos.id, review.exerciseRepoId))
+    .limit(1);
+
+  if (!repo) {
+    throw new Error("Exercise repo not found");
+  }
+
+  const lessons = await db
+    .select()
+    .from(codecampLessons)
+    .where(eq(codecampLessons.moduleId, repo.moduleId))
+    .orderBy(codecampLessons.order);
+
+  const exerciseLesson = lessons.find((lesson) => lesson.type === "exercise");
+  if (!exerciseLesson) {
+    throw new Error("Exercise lesson not found");
+  }
+
+  const reviewOwner = {
+    id: review.userId,
+    username: review.userId,
+    name: null,
+    role: "INTERN" as const,
+    schoolId: null,
+    xp: 0,
+    level: 1,
+    cefrLevel: "A1",
+  };
+
+  return updateUserProgress({
+    db,
+    user: reviewOwner,
+    tenant,
+    input: {
+      lessonId: exerciseLesson.id,
+      status: "completed",
+      score: 100,
+    },
+  });
+}
+
 export async function getPrReviewByPrUrl({
   db,
   user,

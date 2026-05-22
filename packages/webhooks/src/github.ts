@@ -62,7 +62,7 @@ const openrouter = createOpenAI({
 });
 
 async function generateReview(system: string, prompt: string): Promise<z.infer<typeof reviewResultSchema>> {
-  const model = openrouter("openrouter/free");
+  const model = openrouter("deepseek/deepseek-v4-flash");
 
   // Fallback when no API key is configured
   if (!process.env.OPENROUTER_API_KEY) {
@@ -260,11 +260,9 @@ github.post("/pr", async (c) => {
       console.log(`[GitHub Webhook] Created PR review for ${pr.html_url}`);
     }
 
-    // ─── LLM Review Pipeline (async fire-and-forget) ────────
+    // ─── LLM Review Pipeline ───────────────────────────────
 
     if (prInfo) {
-      // Respond to GitHub immediately, then process review asynchronously
-      // so GitHub doesn't time out or retry the webhook.
       const runReview = async () => {
         try {
           const token = await getInstallationTokenForRepo();
@@ -279,13 +277,7 @@ github.post("/pr", async (c) => {
             generateReview,
           });
 
-          // Post review summary as a PR comment
-          const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${reviewResult.passed ? "✅ Passed" : "⚠️ Needs Changes"}\n\n**Summary:** ${reviewResult.summary}\n\n${reviewResult.comments.length > 0 ? "### Comments\n" + reviewResult.comments.map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`).join("\n") : ""}`;
-
-          await postPrComment(prInfo, commentBody, token);
-
-          // Update review record with results
-          await codecamp.updatePrReview({
+          const updatedReview = await codecamp.updatePrReview({
             db: tenantDb,
             user: systemUser,
             tenant: globalTenant,
@@ -295,6 +287,22 @@ github.post("/pr", async (c) => {
               llmReviewSummary: reviewResult.summary,
             },
           });
+
+          if (updatedReview.reviewStatus === "approved") {
+            await codecamp.completeApprovedPrReviewLesson({
+              db: tenantDb,
+              user: systemUser,
+              tenant: globalTenant,
+              input: { reviewId },
+            });
+          }
+
+          const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${reviewResult.passed ? "✅ Passed" : "⚠️ Needs Changes"}\n\n**Summary:** ${reviewResult.summary}\n\n${reviewResult.comments.length > 0 ? "### Comments\n" + reviewResult.comments.map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`).join("\n") : ""}`;
+          try {
+            await postPrComment(prInfo, commentBody, token);
+          } catch (commentErr) {
+            console.error("[GitHub Webhook] Failed to post PR comment:", commentErr);
+          }
 
           console.log(`[GitHub Webhook] LLM review completed for ${pr.html_url}`);
         } catch (reviewErr) {
@@ -313,10 +321,7 @@ github.post("/pr", async (c) => {
         }
       };
 
-      // Fire-and-forget the review job
-      runReview().catch((err) => {
-        console.error("[GitHub Webhook] Unhandled error in async review:", err);
-      });
+      await runReview();
     }
 
     return c.json({ received: true, action, prUrl: pr.html_url }, 200);
