@@ -32,7 +32,7 @@ describe("schema exports", () => {
     expect(schema.studentAnswers).toBeDefined();
     // Analytics
     expect(schema.storyRecords).toBeDefined();
-    expect(schema.chapterTracking).toBeDefined();
+    expect(schema.chapterTrackings).toBeDefined();
     expect(schema.xpLogs).toBeDefined();
     expect(schema.gameRankings).toBeDefined();
     expect(schema.aiInsights).toBeDefined();

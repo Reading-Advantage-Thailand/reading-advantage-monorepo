@@ -56,7 +56,7 @@ export async function getStudentProgress({
     .where(eq(userSentenceRecords.userId, input.studentId));
 
   const xpTotal = await db
-    .select({ total: sql<number>`COALESCE(SUM(${xpLogs.amount}), 0)` })
+    .select({ total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)` })
     .from(xpLogs)
     .where(eq(xpLogs.userId, input.studentId));
 
@@ -66,7 +66,7 @@ export async function getStudentProgress({
     .where(
       and(
         eq(storyRecords.userId, input.studentId),
-        eq(storyRecords.completed, true)
+        eq(storyRecords.status, "COMPLETED")
       )
     );
 
@@ -118,7 +118,7 @@ export async function getClassAnalytics({
   const studentSummaries = await Promise.all(
     studentIds.map(async (studentId) => {
       const xpResult = await db
-        .select({ total: sql<number>`COALESCE(SUM(${xpLogs.amount}), 0)` })
+        .select({ total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)` })
         .from(xpLogs)
         .where(eq(xpLogs.userId, studentId));
 
@@ -128,7 +128,7 @@ export async function getClassAnalytics({
         .where(
           and(
             eq(storyRecords.userId, studentId),
-            eq(storyRecords.completed, true)
+            eq(storyRecords.status, "COMPLETED")
           )
         );
 

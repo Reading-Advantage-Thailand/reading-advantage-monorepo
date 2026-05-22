@@ -14,8 +14,8 @@ vi.mock("@reading-advantage/db/schema", async (importOriginal) => {
     userWordRecords: { userId: "userId" },
     userSentenceRecords: { userId: "userId" },
     classroomStudents: { classroomId: "classroomId", studentId: "studentId" },
-    xpLogs: { userId: "userId", amount: "amount" },
-    storyRecords: { userId: "userId", completed: "completed" },
+    xpLogs: { userId: "userId", xpEarned: "xpEarned" },
+    storyRecords: { userId: "userId", status: "status" },
   };
 });
 

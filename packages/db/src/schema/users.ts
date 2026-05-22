@@ -9,6 +9,8 @@ export const schools = pgTable("schools", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   district: text("district"),
+  province: text("province"),
+  country: text("country").default("Thailand").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, boolean, unique } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, boolean, integer, unique } from "drizzle-orm/pg-core";
 import { users, schools } from "./users";
 
 // ─── Classrooms ───────────────────────────────────────────
@@ -11,6 +11,10 @@ export const classrooms = pgTable("classrooms", {
     .notNull()
     .references(() => users.id),
   archived: boolean("archived").default(false).notNull(),
+  classCode: text("class_code").unique(),
+  codeExpiresAt: timestamp("code_expires_at"),
+  grade: integer("grade"),
+  createdBy: text("created_by").references(() => users.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

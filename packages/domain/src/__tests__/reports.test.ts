@@ -9,8 +9,8 @@ vi.mock("@reading-advantage/db/schema", () => ({
   userSentenceRecords: { userId: "userId" },
   classroomStudents: { classroomId: "classroomId", studentId: "studentId" },
   classrooms: { id: "id", schoolId: "schoolId" },
-  xpLogs: { userId: "userId", amount: "amount" },
-  storyRecords: { userId: "userId", completed: "completed" },
+  xpLogs: { userId: "userId", xpEarned: "xpEarned" },
+  storyRecords: { userId: "userId", status: "status" },
 }));
 
 vi.mock("drizzle-orm", () => ({

@@ -6,3 +6,7 @@ export * from "./flashcards";
 export * from "./questions";
 export * from "./analytics";
 export * from "./codecamp";
+export * from "./licenses";
+export * from "./stories";
+export * from "./taxonomy";
+export * from "./science";

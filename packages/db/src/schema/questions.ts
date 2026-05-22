@@ -7,26 +7,43 @@ import { articles } from "./content";
 export const multipleChoiceQuestions = pgTable("multiple_choice_questions", {
   id: uuid("id").primaryKey().defaultRandom(),
   articleId: uuid("article_id")
-    .notNull()
     .references(() => articles.id, { onDelete: "cascade" }),
   question: text("question").notNull(),
   options: jsonb("options").notNull(), // string[]
   correctAnswer: integer("correct_answer").notNull(), // index into options
   explanation: text("explanation"),
   order: integer("order").default(0).notNull(),
+  // Prisma-ported columns
+  answer: text("answer"),
+  textualEvidence: text("textual_evidence"),
+  chapterId: text("chapter_id"),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const shortAnswerQuestions = pgTable("short_answer_questions", {
   id: uuid("id").primaryKey().defaultRandom(),
   articleId: uuid("article_id")
-    .notNull()
     .references(() => articles.id, { onDelete: "cascade" }),
   question: text("question").notNull(),
   sampleAnswer: text("sample_answer"),
   rubric: text("rubric"),
   order: integer("order").default(0).notNull(),
+  // Prisma-ported columns
+  answer: text("answer"),
+  chapterId: text("chapter_id"),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const longAnswerQuestions = pgTable("long_answer_questions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  articleId: uuid("article_id")
+    .references(() => articles.id, { onDelete: "cascade" }),
+  question: text("question").notNull(),
+  chapterId: text("chapter_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // ─── Student Answers ────────────────────────────────────
