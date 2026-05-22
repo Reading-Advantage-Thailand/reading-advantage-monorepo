@@ -16,8 +16,9 @@
 | 2026-05-01 | migrate-primary-advantage | primary-advantage: `ignoreBuildErrors: true` / `ignoreDuringBuilds: true` | Medium | Open | Temporarily enabled. |
 | 2026-05-02 | shared_config | No visual regression tests for Tailwind v4 migration | Low | Open | Deferred from shared_config_consolidation. |
 | 2026-05-02 | i18n_migration | No shared i18n types across apps | Low | Open | Each app defines its own Locale type. @reading-advantage/config should export shared Locale and message shape. |
-| 2026-05-03 | firestore_drizzle | reading-advantage controllers still use Prisma not Drizzle | High | Open | Deferred to future "Prisma→Drizzle Schema Alignment" track. |
-| 2026-05-03 | science_auth | science-advantage non-auth Prisma still in use | Medium | Open | Curriculum, lessons, gamification, classes still use `prisma.*` directly. Auth tables migrated. |
+| 2026-05-03 | firestore_drizzle | reading-advantage controllers still use Prisma not Drizzle | High | Open | Schema unification complete (track 1, 2026-05-22). Domain helpers ready. Unblocked → `prisma_drizzle_reading_controllers_20260505`. |
+| 2026-05-03 | science_auth | science-advantage non-auth Prisma still in use | Medium | Open | Domain helpers ready (gamification, curriculum, quiz). Unblocked → `prisma_drizzle_science_controllers_20260505`. |
+| 2026-05-22 | prisma_drizzle_schema_unification | verification_tokens table is dead (no live importers post unified-auth) | Low | Open | DROP already executed in migration 0003. App code may still import VerificationToken Prisma model — audit during reading-app controller migration. |
 | 2026-05-03 | auth_strategy_review | science-advantage: ignoreBuildErrors: true for type mismatch | Medium | Open | Two next@16 instances cause type conflicts. Temporary until Next.js unified. |
 | 2026-05-14 | codecamp_curriculum | vocabulary-games: 16 pre-existing test failures (4 suites) | Medium | Open | Outside curriculum track scope — vocabulary-games package issue, not codecamp-advantage. |
 | 2026-05-14 | codecamp_advantage | Mock-DB tests don't catch real DB constraint violations | Medium | Open | Requires Testcontainers/Docker-based integration test infra. Deferred: significant infra work beyond any single track; separate test-infra track required. Phase 2 review confirmed no progress. |

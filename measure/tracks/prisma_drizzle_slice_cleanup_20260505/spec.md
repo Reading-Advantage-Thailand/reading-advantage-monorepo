@@ -28,6 +28,19 @@ This track exists so that tracks 2 and 3 can land **without forcing** every app-
 4. CI green across all apps and packages.
 5. Final tech-debt entries closed; lessons-learned distilled.
 
+## Non-Generalizable Surface List
+
+Populated by track 1 audit (2026-05-22). Each entry is a surface that tracks 2/3 cannot consume from the shared schema cleanly.
+
+| Surface | App | Reason | Proposed Handling |
+|---------|-----|--------|-------------------|
+| `StoryAssignment.articleId` (nullable FK) | reading-advantage | Article FK is optional; story FK is primary. Mixed reference. | Port as-is in `story_assignments` table — already in shared schema. |
+| `UserWordRecord` FSRS fields | reading-advantage | 13 FSRS-specific fields (difficulty, due, lapses, etc.) — no science-app analogue | Ported to `user_word_records`; controllers must map old Prisma shape to new FSRS shape. |
+| `UserSentenceRecord` FSRS+audio fields | reading-advantage | Similar to UserWordRecord — audio timepoint fields unique to reading-advantage | Ported to `user_sentence_records`; controller migration must handle old sentence_id→sentence rename. |
+| `LessonRecord` phase1-phase14 jsonb | reading-advantage | 14-phase reading lesson state; science-advantage Lesson has no phase concept | Ported as `lesson_records`; no unification with `science_lessons`. |
+| `AIInsight.content` field removal | reading-advantage | Old `content` col removed; replaced with `description`+`data jsonb` | Controllers using `insight.content` must switch to `insight.description`. |
+| `GameRanking` score/level/completedAt removal | reading-advantage | Old cols dropped; replaced with `difficulty`+`total_xp` | Game controllers must use new shape. |
+
 ## Out of Scope
 
 - Anything resolvable in the unified schema (track 1) or per-app cleanly (tracks 2/3).

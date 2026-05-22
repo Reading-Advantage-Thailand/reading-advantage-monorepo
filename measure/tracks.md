@@ -146,9 +146,9 @@ This file tracks all major tracks for the project.
 
 ### Prisma → Drizzle Migration Program (4 tracks)
 
-- [~] **Track: Prisma → Drizzle Schema Unification**
-  *Link: [./tracks/prisma_drizzle_schema_unification_20260505/](./tracks/prisma_drizzle_schema_unification_20260505/)*
-  Track 1 of 4. Audit, port, reshape, and unify all non-auth Prisma models into shared Drizzle schema. Adds domain helpers and parity tests. No controller changes. Unblocks tracks 2–4. *Status: In progress.*
+- [x] **Track: Prisma → Drizzle Schema Unification**
+  *Link: [./archive/prisma_drizzle_schema_unification_20260505/](./archive/prisma_drizzle_schema_unification_20260505/)*
+  Track 1 of 4. Audit, port, reshape, and unify all non-auth Prisma models into shared Drizzle schema. Adds domain helpers and parity tests. No controller changes. Unblocks tracks 2–4. *Status: COMPLETE — 6 phases done. 45+ Prisma models classified. Migration 0013. 5 domain modules. 67-test parity suite. 550 total tests green. Completed 2026-05-22.*
 - [ ] **Track: reading-advantage Controllers — Prisma → Drizzle**
   *Link: [./tracks/prisma_drizzle_reading_controllers_20260505/](./tracks/prisma_drizzle_reading_controllers_20260505/)*
   Track 2 of 4. **Blocked on track 1.** Migrate 141 Prisma references across 54 controllers, actions, lib, scripts, pages, and route handlers. Final phase deletes Prisma surface and deps.

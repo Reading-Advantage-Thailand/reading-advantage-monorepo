@@ -1,6 +1,15 @@
 # Implementation Plan: science-advantage Non-Auth Prisma → Drizzle
 
-> **Blocked on** `prisma_drizzle_schema_unification_20260505`. Plan refined with audit findings during that track's Phase 6.
+> **Blocked on** `prisma_drizzle_schema_unification_20260505` — now unblocked (track complete 2026-05-22). Audit findings below.
+>
+> **Audit findings (from `audit.md`):**
+> - KEEP-SEPARATE tables (don't unify with reading-advantage): `science_classes`, `science_lessons`, `science_quiz_questions`, `science_assignments`
+> - Domain helpers ready: `@reading-advantage/domain/gamification`, `/curriculum`, `/quiz`
+> - `gamification`: `getGamificationProfile`, `updateGamificationXp`
+> - `curriculum`: `getScienceLesson`, `listScienceLessons`, `createScienceLesson`
+> - `quiz`: `submitScienceAttempt`, `getStudentScienceAttempts`
+> - New tables: `science_standard_mastery`, `science_curriculum_units`, `science_attempts`, `science_question_responses`, `science_lesson_completions`, `science_mastery_runs`
+> - `gamification_profiles`, `achievements` are global (no schoolId) — don't use TenantDB for these
 >
 > **Per-path workflow:** this is a behavior-preserving refactor, not feature TDD. For each migration task: (1) characterization test green against the current Prisma code; (2) swap to `packages/domain` / `packages/db`, keeping every helper a pure read or pure write (FR-7 — split mixed read/write paths); (3) same test still green; (4) commit. science-advantage runs on **Vitest**.
 

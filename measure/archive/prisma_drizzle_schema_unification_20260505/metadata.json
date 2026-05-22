@@ -1,11 +1,11 @@
 {
   "track_id": "prisma_drizzle_schema_unification_20260505",
   "type": "chore",
-  "status": "new",
+  "status": "completed",
   "created_at": "2026-05-05T03:53:51Z",
-  "updated_at": "2026-05-05T03:53:51Z",
+  "updated_at": "2026-05-22T15:00:00Z",
   "description": "Unify all non-auth Prisma schema (reading-advantage + science-advantage) into shared Drizzle schema, with reshaping and dead-code drops, before per-app controller migrations.",
   "estimated_tasks": 23,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 23,
+  "deviation_notes": "drizzle-kit generate skipped (non-TTY env); migration 0013 hand-written. All 6 phases complete: audit, schema modules, migration, domain helpers (5 modules), parity tests (67), track decomposition."
 }

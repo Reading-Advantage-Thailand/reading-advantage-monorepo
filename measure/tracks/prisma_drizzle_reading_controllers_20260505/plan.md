@@ -1,6 +1,15 @@
 # Implementation Plan: reading-advantage Controllers — Prisma → Drizzle
 
-> **Blocked on** `prisma_drizzle_schema_unification_20260505`. Phase groupings below will be refined with audit findings during that track's Phase 6.
+> **Blocked on** `prisma_drizzle_schema_unification_20260505` — now unblocked (track complete 2026-05-22). Audit findings below.
+>
+> **Audit findings (from `audit.md`):**
+> - Domain helpers ready: `@reading-advantage/domain/licenses`, `/stories`, `/progress` (getStudentProgress, recordActivity)
+> - Column renames applied in migration 0013: `xp_logs.amount→xp_earned`, `source→activity_type`, `source_id→activity_id`
+> - `story_records` reshaped: old `article_id`/`completed` replaced with `story_id` FK + `status` text
+> - `chapter_tracking` renamed to `chapter_trackings`; old `story_record_id` FK replaced with `user_id` + `story_id`
+> - `userActivity` gained: `target_id`, `timer`, `details` jsonb, `completed` bool
+> - `user_word_records` / `user_sentence_records`: complete FSRS reshape — old scalar word/sentence_id replaced with jsonb+FSRS fields
+> - DROP: `verification_tokens` table (removed in migration 0003); VerificationToken model has no live importers
 >
 > **Granularity rule:** each controller named below is its own task — its own characterization test, its own commit, its own checkbox. Where a line lists several controllers, treat each as a separate task; the grouping is for readability only. One controller per commit keeps regressions bisectable.
 >
