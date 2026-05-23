@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db, and, eq } from "@reading-advantage/db";
+import { stories, chapters as chaptersTable } from "@reading-advantage/db/schema";
 import { randomSelectGenre } from "./random-select-genre";
 import { ArticleBaseCefrLevel, ArticleType } from "../../models/enum";
 import { generateStoryBible } from "./stories-bible-generator";
@@ -72,15 +73,22 @@ export async function generateStories(req: NextRequest) {
             let storyId: string;
             let storyBible: any;
 
-            const existingStory = await prisma.story.findFirst({
-              where: {
-                title: topic,
-                cefrLevel: level,
-              },
-              include: {
-                chapters: true,
-              },
-            });
+            const [existingStoryRow] = await db
+              .select()
+              .from(stories)
+              .where(and(eq(stories.title, topic), eq(stories.cefrLevel, level)))
+              .limit(1);
+
+            const existingChapters = existingStoryRow
+              ? await db
+                  .select()
+                  .from(chaptersTable)
+                  .where(eq(chaptersTable.storyId, existingStoryRow.id))
+              : [];
+
+            const existingStory = existingStoryRow
+              ? { ...existingStoryRow, chapters: existingChapters }
+              : null;
 
             if (existingStory) {
               storyId = existingStory.id;
@@ -91,10 +99,10 @@ export async function generateStories(req: NextRequest) {
                   existingStory.summary || "",
                   level
                 );
-                await prisma.story.update({
-                  where: { id: storyId },
-                  data: { raLevel: storyRaLevel },
-                });
+                await db
+                  .update(stories)
+                  .set({ raLevel: storyRaLevel })
+                  .where(eq(stories.id, storyId));
               } catch (levelError) {
                 console.error(
                   "❌ Updating existing story raLevel failed:",
@@ -109,8 +117,9 @@ export async function generateStories(req: NextRequest) {
                 (storyBible as any)?.summary || "",
                 level
               );
-              const newStory = await prisma.story.create({
-                data: {
+              const [newStory] = await db
+                .insert(stories)
+                .values({
                   title: topic,
                   summary: (storyBible as any)?.summary || "",
                   imageDescription:
@@ -121,8 +130,8 @@ export async function generateStories(req: NextRequest) {
                   storyBible: storyBible as any, // Cast to any for JSON storage
                   cefrLevel: level,
                   raLevel: storyRaLevel,
-                },
-              });
+                })
+                .returning();
               storyId = newStory.id;
             }
 
@@ -172,12 +181,13 @@ export async function generateStories(req: NextRequest) {
               const { raLevel, cefrLevel: calculatedCefrLevel } =
                 calculateLevel((storyBible as any)?.summary || "", level);
 
-              // Save chapters to database using Prisma
+              // Save chapters to database using Drizzle
               const createdChapters = [];
               for (let i = 0; i < chapters.length; i++) {
                 const chapter = chapters[i];
-                const createdChapter = await prisma.chapter.create({
-                  data: {
+                const [createdChapter] = await db
+                  .insert(chaptersTable)
+                  .values({
                     storyId: storyId,
                     chapterNumber: i + 1,
                     type: type,
@@ -193,8 +203,8 @@ export async function generateStories(req: NextRequest) {
                     wordCount: chapter.analysis?.wordCount,
                     audioUrl: `${storyId}-${i + 1}.mp3`,
                     audioWordUrl: `${storyId}-${i + 1}.json`,
-                  },
-                });
+                  })
+                  .returning();
 
                 // Generate audio and timepoints for chapter (similar to generateUserArticle)
                 try {
@@ -247,13 +257,13 @@ export async function generateStories(req: NextRequest) {
                   }
 
                   // Update chapter with sentences and words timepoints
-                  await prisma.chapter.update({
-                    where: { id: createdChapter.id },
-                    data: {
+                  await db
+                    .update(chaptersTable)
+                    .set({
                       sentences: sentences,
                       words: wordsWithTimePoints,
-                    },
-                  });
+                    })
+                    .where(eq(chaptersTable.id, createdChapter.id));
                 } catch (audioError) {
                   console.error(
                     `❌ Chapter ${i + 1} audio generation failed:`,
@@ -282,14 +292,14 @@ export async function generateStories(req: NextRequest) {
 
               const cefr_level = calculatedCefrLevel.replace(/[+-]/g, "");
 
-              await prisma.story.update({
-                where: { id: storyId },
-                data: {
+              await db
+                .update(stories)
+                .set({
                   averageRating: averageRating,
                   raLevel: raLevel,
                   cefrLevel: cefr_level,
-                },
-              });
+                })
+                .where(eq(stories.id, storyId));
 
               // Generate chapter images
               for (let i = 0; i < chapters.length; i++) {
