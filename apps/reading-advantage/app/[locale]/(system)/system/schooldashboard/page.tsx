@@ -3,7 +3,7 @@ import { Header } from "@/components/header";
 import ShcoolsDashboard from "@/components/system/shcools-dashboard";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import UnauthorizedPage from "@/components/shared/unauthorized-page";
 import { headers } from "next/headers";
 
