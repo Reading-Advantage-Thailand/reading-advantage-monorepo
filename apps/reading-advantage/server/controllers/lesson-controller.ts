@@ -1,6 +1,15 @@
 import { ExtendedNextRequest } from "./auth-controller";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db, eq, and, asc, desc, inArray } from "@reading-advantage/db";
+import {
+  lessonRecords,
+  userActivity,
+  userWordRecords,
+  userSentenceRecords,
+  xpLogs,
+  assignments,
+  studentAssignments,
+} from "@reading-advantage/db/schema";
 
 export interface Context {
   params: Promise<{
@@ -20,14 +29,16 @@ export async function getLessonStatus(
       throw new Error("articleId is required");
     }
 
-    const lessonRecord = await prisma.lessonRecord.findUnique({
-      where: {
-        userId_articleId: {
-          userId,
-          articleId,
-        },
-      },
-    });
+    const [lessonRecord] = await db
+      .select()
+      .from(lessonRecords)
+      .where(
+        and(
+          eq(lessonRecords.userId, userId),
+          eq(lessonRecords.articleId, articleId)
+        )
+      )
+      .limit(1);
 
     if (!lessonRecord) {
       return NextResponse.json({ currentPhase: 1, elapsedTime: 0 });
@@ -36,14 +47,12 @@ export async function getLessonStatus(
     let currentPhase = 1;
     let elapsedTime = 0;
 
-    // Check each phase to find the current one (status = 1)
     for (let phase = 1; phase <= 14; phase++) {
       const phaseKey = `phase${phase}` as keyof typeof lessonRecord;
       const phaseData = lessonRecord[phaseKey] as any;
 
       if (phaseData?.status === 1) {
         currentPhase = phase;
-        // Get elapsed time from previous phase if available
         if (phase > 1) {
           const prevPhaseKey = `phase${phase - 1}` as keyof typeof lessonRecord;
           const prevPhaseData = lessonRecord[prevPhaseKey] as any;
@@ -75,29 +84,30 @@ export async function postLessonStatus(
       throw new Error("articleId is required");
     }
 
-    const existingLessonRecord = await prisma.lessonRecord.findUnique({
-      where: {
-        userId_articleId: {
-          userId,
-          articleId,
-        },
-      },
-    });
+    const [existingLessonRecord] = await db
+      .select({ id: lessonRecords.id })
+      .from(lessonRecords)
+      .where(
+        and(
+          eq(lessonRecords.userId, userId),
+          eq(lessonRecords.articleId, articleId)
+        )
+      )
+      .limit(1);
 
     if (existingLessonRecord) {
-      // If lesson record exists, update phase 1 as completed and phase 2 as current
-      await prisma.lessonRecord.update({
-        where: {
-          userId_articleId: {
-            userId,
-            articleId,
-          },
-        },
-        data: {
-          phase1: { status: 2, elapsedTime: 0 }, // Phase 1 completed
-          phase2: { status: 1, elapsedTime: 0 }, // Phase 2 current
-        },
-      });
+      await db
+        .update(lessonRecords)
+        .set({
+          phase1: { status: 2, elapsedTime: 0 },
+          phase2: { status: 1, elapsedTime: 0 },
+        })
+        .where(
+          and(
+            eq(lessonRecords.userId, userId),
+            eq(lessonRecords.articleId, articleId)
+          )
+        );
 
       return NextResponse.json(
         {
@@ -108,7 +118,6 @@ export async function postLessonStatus(
       );
     }
 
-    // Create lesson status with initial phase configuration
     const lessonStatus = {
       phase1: { status: 2, elapsedTime: 0 },
       phase2: { status: 0, elapsedTime: 0 },
@@ -126,46 +135,47 @@ export async function postLessonStatus(
       phase14: { status: 0, elapsedTime: 0 },
     };
 
-    await prisma.$transaction(async (tx) => {
-      // Create lesson record
-      await tx.lessonRecord.create({
-        data: {
-          userId,
-          articleId,
-          ...lessonStatus,
-        },
+    await db.transaction(async (tx) => {
+      await tx.insert(lessonRecords).values({
+        userId,
+        articleId,
+        ...lessonStatus,
       });
 
-      // Update assignment status if classroomId is provided
       const classroomId = req.nextUrl.searchParams.get("classroomId");
 
       if (classroomId) {
-        // Check if assignment exists
-        const assignment = await tx.assignment.findFirst({
-          where: {
-            classroomId,
-            articleId,
-          },
-        });
+        const [assignment] = await tx
+          .select({ id: assignments.id })
+          .from(assignments)
+          .where(
+            and(
+              eq(assignments.classroomId, classroomId),
+              eq(assignments.articleId, articleId)
+            )
+          )
+          .limit(1);
 
         if (assignment) {
-          // Check if student assignment exists
-          const studentAssignment = await tx.studentAssignment.findFirst({
-            where: {
-              assignmentId: assignment.id,
-              studentId: userId,
-            },
-          });
+          const [studentAssignment] = await tx
+            .select({ id: studentAssignments.id })
+            .from(studentAssignments)
+            .where(
+              and(
+                eq(studentAssignments.assignmentId, assignment.id),
+                eq(studentAssignments.studentId, userId)
+              )
+            )
+            .limit(1);
 
           if (studentAssignment) {
-            // Update student assignment status to IN_PROGRESS and set startedAt
-            await tx.studentAssignment.update({
-              where: { id: studentAssignment.id },
-              data: { 
+            await tx
+              .update(studentAssignments)
+              .set({
                 status: "IN_PROGRESS",
                 startedAt: new Date(),
-              },
-            });
+              })
+              .where(eq(studentAssignments.id, studentAssignment.id));
           }
         }
       }
@@ -200,72 +210,73 @@ export async function putLessonPhaseStatus(
       );
     }
 
-    await prisma.$transaction(async (tx) => {
-      // Get current lesson record
-      const lessonRecord = await tx.lessonRecord.findUnique({
-        where: {
-          userId_articleId: {
-            userId,
-            articleId,
-          },
-        },
-      });
+    await db.transaction(async (tx) => {
+      const [lessonRecord] = await tx
+        .select()
+        .from(lessonRecords)
+        .where(
+          and(
+            eq(lessonRecords.userId, userId),
+            eq(lessonRecords.articleId, articleId)
+          )
+        )
+        .limit(1);
 
       if (!lessonRecord) {
         throw new Error("Lesson record not found");
       }
 
-      // Prepare update data for current phase
-      const phaseKey = `phase${phase}` as keyof typeof lessonRecord;
       const updateData: any = {};
-      updateData[phaseKey] = { status, elapsedTime };
+      updateData[`phase${phase}`] = { status, elapsedTime };
 
-      // If phase < 14, set next phase to status 1 (in progress)
       if (phase < 14) {
-        const nextPhaseKey = `phase${phase + 1}` as keyof typeof lessonRecord;
-        updateData[nextPhaseKey] = { status: 1, elapsedTime: 0 };
+        updateData[`phase${phase + 1}`] = { status: 1, elapsedTime: 0 };
       }
 
-      // Update lesson record
-      await tx.lessonRecord.update({
-        where: {
-          userId_articleId: {
-            userId,
-            articleId,
-          },
-        },
-        data: updateData,
-      });
+      await tx
+        .update(lessonRecords)
+        .set(updateData)
+        .where(
+          and(
+            eq(lessonRecords.userId, userId),
+            eq(lessonRecords.articleId, articleId)
+          )
+        );
 
-      // Handle assignment completion if this is phase 13 and status is completed (2)
       const classroomId = req.nextUrl.searchParams.get("classroomId");
 
       if (classroomId && phase === 13 && status === 2) {
-        // Find assignment
-        const assignment = await tx.assignment.findFirst({
-          where: {
-            classroomId,
-            articleId,
-          },
-        });
+        const [assignment] = await tx
+          .select({ id: assignments.id })
+          .from(assignments)
+          .where(
+            and(
+              eq(assignments.classroomId, classroomId),
+              eq(assignments.articleId, articleId)
+            )
+          )
+          .limit(1);
 
         if (assignment) {
-          // Find student assignment and update status
-          const studentAssignment = await tx.studentAssignment.findFirst({
-            where: {
-              assignmentId: assignment.id,
-              studentId: userId,
-            },
-          });
+          const [studentAssignment] = await tx
+            .select({ id: studentAssignments.id })
+            .from(studentAssignments)
+            .where(
+              and(
+                eq(studentAssignments.assignmentId, assignment.id),
+                eq(studentAssignments.studentId, userId)
+              )
+            )
+            .limit(1);
 
           if (studentAssignment) {
-            await tx.studentAssignment.update({
-              where: { id: studentAssignment.id },
-              data: { 
+            await tx
+              .update(studentAssignments)
+              .set({
                 status: "COMPLETED",
                 completedAt: new Date(),
-              },
-            });
+              })
+              .where(eq(studentAssignments.id, studentAssignment.id));
           }
         }
       }
@@ -302,62 +313,56 @@ export async function getUserQuizPerformance(
     const decodedArticleId = decodeURIComponent(articleId);
     const cleanArticleId = decodedArticleId.split("/")[0];
 
-    // Find all UserActivities for MC and SA questions
-    const allUserActivities = await prisma.userActivity.findMany({
-      where: {
-        userId,
-        activityType: {
-          in: ["MC_QUESTION", "SA_QUESTION"],
-        },
-        completed: true,
-      },
-      select: {
-        id: true,
-        activityType: true,
-        details: true,
-      },
-    });
+    const allUserActivities = await db
+      .select({
+        id: userActivity.id,
+        activityType: userActivity.activityType,
+        details: userActivity.details,
+      })
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          inArray(userActivity.activityType, ["MC_QUESTION", "SA_QUESTION"]),
+          eq(userActivity.completed, true)
+        )
+      );
 
-    // Filter activities based on articleId in details
-    const userActivities = allUserActivities.filter((activity) => {
+    const filteredActivities = allUserActivities.filter((activity) => {
       const details = activity.details as any;
       return details?.articleId === cleanArticleId;
     });
 
-    if (userActivities.length === 0) {
+    if (filteredActivities.length === 0) {
       return NextResponse.json({ message: "No Data Exists" }, { status: 404 });
     }
 
-    // Get XP logs for these activities
-    const activityIds = userActivities.map((a) => a.id);
-    const allXPLogs = await prisma.xPLog.findMany({
-      where: {
-        userId,
-        activityId: { in: activityIds },
-        activityType: { in: ["MC_QUESTION", "SA_QUESTION"] },
-      },
-    });
+    const activityIds = filteredActivities.map((a) => a.id);
+    const allXPLogs = await db
+      .select()
+      .from(xpLogs)
+      .where(
+        and(
+          eq(xpLogs.userId, userId),
+          inArray(xpLogs.activityId, activityIds),
+          inArray(xpLogs.activityType, ["MC_QUESTION", "SA_QUESTION"])
+        )
+      );
 
-    const mcqLogs = allXPLogs.filter(
-      (log) => log.activityType === "MC_QUESTION"
-    );
-    const saqLogs = allXPLogs.filter(
-      (log) => log.activityType === "SA_QUESTION"
-    );
+    const mcqLogs = allXPLogs.filter((log) => log.activityType === "MC_QUESTION");
+    const saqLogs = allXPLogs.filter((log) => log.activityType === "SA_QUESTION");
 
-    // MCQ: Count correct answers based on XP earned (1 XP = 1 correct answer)
     const mcqCorrectCount = mcqLogs.reduce(
       (total, log) => total + (log.xpEarned > 0 ? 1 : 0),
       0
     );
 
-    // SAQ: Use total XP score as before
     const saqScore = saqLogs.reduce((total, log) => total + log.xpEarned, 0);
 
     return NextResponse.json(
       {
-        mcqScore: mcqCorrectCount, // Count of correct MCQ answers
-        saqScore: saqScore, // Sum of SAQ XP scores
+        mcqScore: mcqCorrectCount,
+        saqScore: saqScore,
         mcqCount: mcqLogs.length,
         saqCount: saqLogs.length,
       },
@@ -404,33 +409,31 @@ export async function getLessonWords(
       );
     }
 
-    // Get all UserWordRecords for this specific article and user
-    const userWordRecords = await prisma.userWordRecord.findMany({
-      where: {
-        userId: userId,
-        articleId: articleId,
-        saveToFlashcard: true, // Only words saved to flashcard
-      },
-      orderBy: {
-        createdAt: 'asc', // Order by when they were added
-      },
-    });
+    const wordRecords = await db
+      .select()
+      .from(userWordRecords)
+      .where(
+        and(
+          eq(userWordRecords.userId, userId),
+          eq(userWordRecords.articleId, articleId),
+          eq(userWordRecords.saveToFlashcard, true)
+        )
+      )
+      .orderBy(asc(userWordRecords.createdAt));
 
-    // Transform to flashcard format with FSRS data
-    const flashcards = userWordRecords.map((record) => {
-      const wordData = record.word as any; // JSON field containing vocabulary data
-      
+    const flashcards = wordRecords.map((record) => {
+      const wordData = record.word as any;
+
       return {
         id: record.id,
         word: {
-          vocabulary: wordData.vocabulary || wordData.word || '',
+          vocabulary: wordData.vocabulary || wordData.word || "",
           definition: wordData.definition || {},
           startTime: wordData.startTime || 0,
           endTime: wordData.endTime || 0,
           audioUrl: wordData.audioUrl || null,
         },
         articleId: articleId,
-        // FSRS card data
         due: record.due,
         stability: record.stability,
         difficulty: record.difficulty,
@@ -448,7 +451,6 @@ export async function getLessonWords(
       total: flashcards.length,
       message: "Lesson words retrieved successfully",
     });
-
   } catch (error) {
     console.error("Error getting lesson words:", error);
     return NextResponse.json(
@@ -496,31 +498,32 @@ export async function updateLessonWord(
       state,
     } = body;
 
-    // Update the UserWordRecord with new FSRS data
-    const updatedRecord = await prisma.userWordRecord.update({
-      where: {
-        id: wordId,
-        userId: userId, // Ensure user can only update their own records
-      },
-      data: {
-        due: due ? new Date(due) : undefined,
-        stability: stability ?? undefined,
-        difficulty: difficulty ?? undefined,
-        elapsedDays: elapsed_days ?? undefined,
-        scheduledDays: scheduled_days ?? undefined,
-        reps: reps ?? undefined,
-        lapses: lapses ?? undefined,
-        state: state ?? undefined,
-        updatedAt: new Date(),
-      },
-    });
+    const updateValues: any = { updatedAt: new Date() };
+    if (due !== undefined) updateValues.due = new Date(due);
+    if (stability !== undefined && stability !== null) updateValues.stability = stability;
+    if (difficulty !== undefined && difficulty !== null) updateValues.difficulty = difficulty;
+    if (elapsed_days !== undefined && elapsed_days !== null) updateValues.elapsedDays = elapsed_days;
+    if (scheduled_days !== undefined && scheduled_days !== null) updateValues.scheduledDays = scheduled_days;
+    if (reps !== undefined && reps !== null) updateValues.reps = reps;
+    if (lapses !== undefined && lapses !== null) updateValues.lapses = lapses;
+    if (state !== undefined && state !== null) updateValues.state = state;
+
+    const [updatedRecord] = await db
+      .update(userWordRecords)
+      .set(updateValues)
+      .where(
+        and(
+          eq(userWordRecords.id, wordId),
+          eq(userWordRecords.userId, userId)
+        )
+      )
+      .returning();
 
     return NextResponse.json({
       success: true,
       record: updatedRecord,
       message: "Word record updated successfully",
     });
-
   } catch (error) {
     console.error("Error updating lesson word:", error);
     return NextResponse.json(
@@ -556,23 +559,20 @@ export async function deleteLessonWord(
       );
     }
 
-    // Delete or mark as not for flashcard
-    await prisma.userWordRecord.update({
-      where: {
-        id: wordId,
-        userId: userId, // Ensure user can only delete their own records
-      },
-      data: {
-        saveToFlashcard: false,
-        updatedAt: new Date(),
-      },
-    });
+    await db
+      .update(userWordRecords)
+      .set({ saveToFlashcard: false, updatedAt: new Date() })
+      .where(
+        and(
+          eq(userWordRecords.id, wordId),
+          eq(userWordRecords.userId, userId)
+        )
+      );
 
     return NextResponse.json({
       success: true,
       message: "Word removed from flashcards",
     });
-
   } catch (error) {
     console.error("Error deleting lesson word:", error);
     return NextResponse.json(
@@ -614,35 +614,43 @@ export async function getLessonSentences(
       );
     }
 
-    // Check if user has already completed this lesson sentence flashcard activity
-    const existingActivity = await prisma.userActivity.findFirst({
-      where: {
-        userId: userId,
-        activityType: "LESSON_SENTENCE_FLASHCARDS",
-        targetId: articleId,
-        completed: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    const [existingActivity] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "LESSON_SENTENCE_FLASHCARDS"),
+          eq(userActivity.targetId, articleId),
+          eq(userActivity.completed, true)
+        )
+      )
+      .orderBy(desc(userActivity.createdAt))
+      .limit(1);
 
-    // If activity is already completed, get XP logs for this activity
     if (existingActivity) {
-      const xpLogs = await prisma.xPLog.findMany({
-        where: {
-          userId: userId,
-          activityId: existingActivity.id,
-        },
-      });
+      const xpLogRows = await db
+        .select()
+        .from(xpLogs)
+        .where(
+          and(
+            eq(xpLogs.userId, userId),
+            eq(xpLogs.activityId, existingActivity.id)
+          )
+        );
 
-      const totalXpEarned = xpLogs.reduce((sum, log) => sum + (log.xpEarned || 0), 0);
-      
-      // Get timeTaken from timer field or from details if timer is null
-      const timeTaken = existingActivity.timer || 
-        (existingActivity.details && typeof existingActivity.details === 'object' && 
-         'timeTaken' in existingActivity.details ? 
-         (existingActivity.details as any).timeTaken : 0);
+      const totalXpEarned = xpLogRows.reduce(
+        (sum, log) => sum + (log.xpEarned || 0),
+        0
+      );
+
+      const timeTaken =
+        existingActivity.timer ||
+        (existingActivity.details &&
+          typeof existingActivity.details === "object" &&
+          "timeTaken" in existingActivity.details
+          ? (existingActivity.details as any).timeTaken
+          : 0);
 
       const completionData = {
         isCompleted: true,
@@ -661,42 +669,38 @@ export async function getLessonSentences(
       });
     }
 
-    // Get all UserSentenceRecords for this specific article and user
-    const userSentenceRecords = await prisma.userSentenceRecord.findMany({
-      where: {
-        userId: userId,
-        articleId: articleId,
-        saveToFlashcard: true, // Only sentences saved to flashcard
-      },
-      orderBy: {
-        createdAt: 'asc', // Order by when they were added
-      },
-    });
+    const sentenceRecords = await db
+      .select()
+      .from(userSentenceRecords)
+      .where(
+        and(
+          eq(userSentenceRecords.userId, userId),
+          eq(userSentenceRecords.articleId, articleId),
+          eq(userSentenceRecords.saveToFlashcard, true)
+        )
+      )
+      .orderBy(asc(userSentenceRecords.createdAt));
 
-    // Transform to flashcard format with FSRS data
-    const flashcards = userSentenceRecords.map((record) => {
-      return {
-        id: record.id,
-        sentence: record.sentence,
-        translation: record.translation,
-        sn: record.sn,
-        timepoint: record.timepoint,
-        endTimepoint: record.endTimepoint,
-        audioUrl: record.audioUrl,
-        articleId: articleId,
-        // FSRS card data
-        due: record.due,
-        stability: record.stability,
-        difficulty: record.difficulty,
-        elapsed_days: record.elapsedDays,
-        scheduled_days: record.scheduledDays,
-        reps: record.reps,
-        lapses: record.lapses,
-        state: record.state,
-        last_review: record.updatedAt,
-        updateScore: record.updateScore,
-      };
-    });
+    const flashcards = sentenceRecords.map((record) => ({
+      id: record.id,
+      sentence: record.sentence,
+      translation: record.translation,
+      sn: record.sn,
+      timepoint: record.timepoint,
+      endTimepoint: record.endTimepoint,
+      audioUrl: record.audioUrl,
+      articleId: articleId,
+      due: record.due,
+      stability: record.stability,
+      difficulty: record.difficulty,
+      elapsed_days: record.elapsedDays,
+      scheduled_days: record.scheduledDays,
+      reps: record.reps,
+      lapses: record.lapses,
+      state: record.state,
+      last_review: record.updatedAt,
+      updateScore: record.updateScore,
+    }));
 
     return NextResponse.json({
       flashcards,
@@ -704,7 +708,6 @@ export async function getLessonSentences(
       isCompleted: false,
       message: "Lesson sentences retrieved successfully",
     });
-
   } catch (error) {
     console.error("Error getting lesson sentences:", error);
     return NextResponse.json(
@@ -752,31 +755,32 @@ export async function updateLessonSentence(
       state,
     } = body;
 
-    // Update the UserSentenceRecord with new FSRS data
-    const updatedRecord = await prisma.userSentenceRecord.update({
-      where: {
-        id: sentenceId,
-        userId: userId, // Ensure user can only update their own records
-      },
-      data: {
-        due: due ? new Date(due) : undefined,
-        stability: stability ?? undefined,
-        difficulty: difficulty ?? undefined,
-        elapsedDays: elapsed_days ?? undefined,
-        scheduledDays: scheduled_days ?? undefined,
-        reps: reps ?? undefined,
-        lapses: lapses ?? undefined,
-        state: state ?? undefined,
-        updatedAt: new Date(),
-      },
-    });
+    const updateValues: any = { updatedAt: new Date() };
+    if (due !== undefined) updateValues.due = new Date(due);
+    if (stability !== undefined && stability !== null) updateValues.stability = stability;
+    if (difficulty !== undefined && difficulty !== null) updateValues.difficulty = difficulty;
+    if (elapsed_days !== undefined && elapsed_days !== null) updateValues.elapsedDays = elapsed_days;
+    if (scheduled_days !== undefined && scheduled_days !== null) updateValues.scheduledDays = scheduled_days;
+    if (reps !== undefined && reps !== null) updateValues.reps = reps;
+    if (lapses !== undefined && lapses !== null) updateValues.lapses = lapses;
+    if (state !== undefined && state !== null) updateValues.state = state;
+
+    const [updatedRecord] = await db
+      .update(userSentenceRecords)
+      .set(updateValues)
+      .where(
+        and(
+          eq(userSentenceRecords.id, sentenceId),
+          eq(userSentenceRecords.userId, userId)
+        )
+      )
+      .returning();
 
     return NextResponse.json({
       success: true,
       record: updatedRecord,
       message: "Sentence record updated successfully",
     });
-
   } catch (error) {
     console.error("Error updating lesson sentence:", error);
     return NextResponse.json(
@@ -812,23 +816,20 @@ export async function deleteLessonSentence(
       );
     }
 
-    // Delete or mark as not for flashcard
-    await prisma.userSentenceRecord.update({
-      where: {
-        id: sentenceId,
-        userId: userId, // Ensure user can only delete their own records
-      },
-      data: {
-        saveToFlashcard: false,
-        updatedAt: new Date(),
-      },
-    });
+    await db
+      .update(userSentenceRecords)
+      .set({ saveToFlashcard: false, updatedAt: new Date() })
+      .where(
+        and(
+          eq(userSentenceRecords.id, sentenceId),
+          eq(userSentenceRecords.userId, userId)
+        )
+      );
 
     return NextResponse.json({
       success: true,
       message: "Sentence removed from flashcards",
     });
-
   } catch (error) {
     console.error("Error deleting lesson sentence:", error);
     return NextResponse.json(
