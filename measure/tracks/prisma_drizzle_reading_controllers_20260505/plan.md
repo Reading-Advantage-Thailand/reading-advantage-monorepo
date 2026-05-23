@@ -255,23 +255,23 @@ test green → swap per 0.3–0.6 → test green → commit.
 
 - [x] Task: **Pilot** — migrate `student-notification-controller.ts` (`assignmentNotification`). After this commit, pause and confirm the loop with the reviewer. — 3659137
 - [x] Task: Migrate `user-controller.ts` (user, license, licenseOnUser, article, classroomStudent, userActivity, xPLog) — e8d0fe6
-- [ ] Task: Migrate `license-controller.ts` (license, licenseOnUser, user, userActivity, xPLog)
-- [ ] Task: Migrate `leaderboard-controller.ts` (license, user)
-- [ ] Task: Migrate `classroom-controller.ts` (classroom, classroomStudent, license, licenseOnUser, user, xPLog)
-- [ ] Task: Migrate `classroom-goals-controller.ts` (classroomStudent, classroomTeacher, learningGoal)
-- [ ] Task: Migrate `srs-health-controller.ts` (classroomStudent, user)
-- [ ] Task: Migrate `srs-quick-actions-controller.ts` (classroomStudent, user)
-- [ ] Task: Migrate `genre-controller.ts` (classroom, classroomStudent, lessonRecord, user) — `lessonRecord` paths may defer to Track 4
-- [ ] Task: Migrate `student-dashboard-controller.ts` (user)
-- [ ] Task: Migrate `teacher-dashboard-controller.ts` (classroomTeacher, user)
-- [ ] Task: Migrate `class-dashboard-controller.ts` (assignment, classroom, classroomStudent, classroomTeacher, studentAssignment, userActivity, xPLog)
-- [ ] Task: Migrate `system-dashboard-controller.ts` (article)
-- [ ] Task: Migrate `dashboard-summary-controller.ts` (types-only — swap `@prisma/client` imports per 0.4)
+- [x] Task: Migrate `license-controller.ts` (license, licenseOnUser, user, userActivity, xPLog) — 1d031d4
+- [x] Task: Migrate `leaderboard-controller.ts` (license, user) — 0c788ca
+- [x] Task: Migrate `classroom-controller.ts` (classroom, classroomStudent, license, licenseOnUser, user, xPLog) — 5319557
+- [x] Task: Migrate `classroom-goals-controller.ts` (classroomStudent, classroomTeacher, learningGoal) — 9d9374e
+- [x] Task: Migrate `srs-health-controller.ts` (classroomStudent, user) — bdd105e
+- [x] Task: Migrate `srs-quick-actions-controller.ts` (classroomStudent, user) — d72d2de
+- [x] Task: Migrate `genre-controller.ts` (classroom, classroomStudent, lessonRecord, user) — a66fab8
+- [x] Task: Migrate `student-dashboard-controller.ts` (user) — 1b3319a
+- [x] Task: Migrate `teacher-dashboard-controller.ts` (classroomTeacher, user) — 1d983c1
+- [x] Task: Migrate `class-dashboard-controller.ts` (assignment, classroom, classroomStudent, classroomTeacher, studentAssignment, userActivity, xPLog) — 854f926
+- [x] Task: Migrate `system-dashboard-controller.ts` (article) — 1b258b0
+- [x] Task: Migrate `dashboard-summary-controller.ts` (types-only — swap `@prisma/client` imports per 0.4) — 02f39d8
 - [x] Task: Migrate `metrics-controller.ts` (assignment, userActivity) — 3f106de
 - [x] Task: Migrate `metrics-extended-controller.ts` (lessonRecord) — 868c809 (lessonRecords is PORT-AS-IS in unified schema; no Track 4 deferral needed)
-- [ ] Task: Migrate `activity-controller.ts` (classroomStudent, lessonRecord, license, licenseOnUser, studentAssignment, user, userActivity, userSentenceRecord)
-- [ ] Task: Migrate `lesson-controller.ts` (lessonRecord, userActivity, userSentenceRecord, userWordRecord, xPLog) — record/word/sentence paths likely Track 4
-- [ ] Task: Migrate `flashcard-controller.ts` (article, user, userActivity, userSentenceRecord, userWordRecord, xPLog) — FSRS paths likely Track 4
+- [x] Task: Migrate `activity-controller.ts` (classroomStudent, lessonRecord, license, licenseOnUser, studentAssignment, user, userActivity, userSentenceRecord) — 176283c
+- [x] Task: Migrate `lesson-controller.ts` (lessonRecord, userActivity, userSentenceRecord, userWordRecord, xPLog) — 5f892b4
+- [x] Task: Migrate `flashcard-controller.ts` (article, user, userActivity, userSentenceRecord, userWordRecord, xPLog) — 85807ad
 - [ ] Task: Measure - User Manual Verification 'Generalizable Controllers' (Protocol in workflow.md)
 
 ## Phase 2: Game controllers
@@ -302,19 +302,19 @@ All nine share one shape: read/write `gameRanking`, `userActivity`, `xpLogs`, FS
 - [x] Task: Migrate `generator-controller.ts` (article, longAnswerQuestion, multipleChoiceQuestion, shortAnswerQuestion, user) — f1404e4
 - [x] Task: Migrate `question-controller.ts` (article, license, longAnswerQuestion, multipleChoiceQuestion, shortAnswerQuestion, user, userActivity, xPLog) — 50fb67b
 - [x] Task: Migrate `stories-question-controller.ts` (longAnswerQuestion, multipleChoiceQuestion, shortAnswerQuestion, story, storyRecord, user, userActivity, xPLog) — 1cd0099
-- [ ] Task: Migrate `admin-controller.ts` (article, classroomStudent, lessonRecord, license, school, user, userActivity, xPLog)
-- [ ] Task: Migrate `system-controller.ts` (license, xPLog)
-- [ ] Task: Migrate `auth-controller.ts` (types-only — keep auth logic unchanged, only swap Prisma type imports)
-- [ ] Task: Migrate `translation-controller.ts` (article, chapter, story)
+- [x] Task: Migrate `admin-controller.ts` (article, classroomStudent, lessonRecord, license, school, user, userActivity, xPLog) — 1d031d4
+- [x] Task: Migrate `system-controller.ts` (license, xPLog) — b104571
+- [x] Task: Migrate `auth-controller.ts` (types-only — keep auth logic unchanged, only swap Prisma type imports) — dd6f366
+- [x] Task: Migrate `translation-controller.ts` (article, chapter, story) — 08e679f
 - [x] Task: Migrate `stories-assistant-controller.ts` (chapter) — 25854bd
-- [ ] Task: Migrate `article-controller.ts` (article, userActivity)
-- [ ] Task: Migrate `assignment-controller.ts` (article, assignment, classroom, classroomStudent, studentAssignment, user)
-- [ ] Task: Migrate `teacher-assignment-controller.ts` (assignment)
-- [ ] Task: Migrate `assignment-classroom-controller.ts` (assignment, assignmentNotification, classroomStudent, studentAssignment)
+- [x] Task: Migrate `article-controller.ts` (article, userActivity) — edf87e4
+- [x] Task: Migrate `assignment-controller.ts` (article, assignment, classroom, classroomStudent, studentAssignment, user) — 78783a0
+- [x] Task: Migrate `teacher-assignment-controller.ts` (assignment) — ba7b0e9
+- [x] Task: Migrate `assignment-classroom-controller.ts` (assignment, assignmentNotification, classroomStudent, studentAssignment) — dd091eb
 - [x] Task: Migrate `assignment-funnel-controller.ts` (assignment, user) — f180f41
-- [ ] Task: Migrate `assignment-notification-controller.ts` (assignment, assignmentNotification)
-- [ ] Task: Migrate `class-accuracy-controller.ts` (classroomStudent, classroomTeacher, userActivity)
-- [ ] Task: Migrate `class-export-controller.ts` (classroom, classroomStudent, classroomTeacher, studentAssignment, user)
+- [x] Task: Migrate `assignment-notification-controller.ts` (assignment, assignmentNotification) — 7c42430
+- [x] Task: Migrate `class-accuracy-controller.ts` (classroomStudent, classroomTeacher, userActivity) — c3973ff
+- [x] Task: Migrate `class-export-controller.ts` (classroom, classroomStudent, classroomTeacher, studentAssignment, user) — 0b6fda5
 - [x] Task: Migrate `enhanced-alignment-controller.ts` (assignment, classroom) — 910ebbb
 - [ ] Task: Measure - User Manual Verification 'AI / Admin / Assignment / Stories' (Protocol in workflow.md)
 
@@ -354,10 +354,10 @@ mandatory; verify cross-tenant/permission behavior is byte-identical before and 
 `lib/cache/*` wrap raw SQL/materialized views — document any SQL-ergonomics difference between
 the Prisma client and `postgres-js`/Drizzle `sql` in a comment on the file.
 
-- [ ] Task: Migrate `lib/cache/advanced-cache.ts`, `fallback-queries.ts`, `connection-monitor.ts`, `matview-manager.ts`, `query-optimizer.ts` (one commit each)
-- [ ] Task: Migrate `lib/pagination/smart-paginator.ts`
-- [ ] Task: Migrate `lib/classroom-utils.ts`
-- [ ] Task: Migrate `lib/session.ts` (verify against auth — auth tables already on Drizzle)
+- [x] Task: Migrate `lib/cache/advanced-cache.ts`, `fallback-queries.ts`, `connection-monitor.ts`, `matview-manager.ts`, `query-optimizer.ts` (one commit each) — 3db1420, bfac92d, b09be16, e609502, 7d911ab
+- [x] Task: Migrate `lib/pagination/smart-paginator.ts` — e2f8c0b
+- [x] Task: Migrate `lib/classroom-utils.ts` — da26f03
+- [x] Task: Migrate `lib/session.ts` (verify against auth — auth tables already on Drizzle) — 68c2519 (Note: Drizzle users lacks emailVerified/onborda; defaulted to true/false with inline flag comment)
 - [ ] Task: Measure - User Manual Verification 'lib' (Protocol in workflow.md)
 
 ## Phase 7: app/api routes, app/[locale] pages, components, contexts, types
@@ -368,23 +368,23 @@ the Prisma client and `postgres-js`/Drizzle `sql` in a comment on the file.
 `types/learning-goals.ts`. Re-grep `app/api` and `app/[locale]` for the live list. Group a
 route folder per commit; one commit per page/component.
 
-- [ ] Task: Migrate `app/api/v1/**/route.ts` handlers (re-grep; ~26 files — one folder per commit)
-- [ ] Task: Migrate `app/[locale]/(teacher|admin|system)/**/page.tsx` server components (~16 files)
-- [ ] Task: Migrate Prisma-importing files in `components/` (admin, system, shared, questions, dashboard, user-account-nav.tsx)
-- [ ] Task: Migrate `contexts/userRole-context.tsx`
-- [ ] Task: Migrate `middleware.ts` (Edge runtime — confirm Drizzle/`postgres-js` is Edge-safe; if not, defer to Track 4 with a note)
-- [ ] Task: Migrate `types/index.d.ts` and `types/learning-goals.ts` (replace `@prisma/client` types with `typeof <table>.$inferSelect` or `lib/enums.ts`)
-- [ ] Task: Remove the dead `verificationToken` importer in `__test__/session-schema.test.ts` / `lib/session.ts` (DROP — see audit)
+- [x] Task: Migrate `app/api/v1/**/route.ts` handlers (re-grep; ~26 files — one folder per commit) — 26 commits 856cd7d..66f46ac (auth signup/reset/check, admin alerts/overview/segments/teacher-effectiveness, articles export-workbook, assignments, demo status, flashcard deck-id/progress, games dragon-flight/magic-defense complete/ranking/vocabulary, health database, licenses, metrics cache/health/system, system lowest-rated-articles/school-classrooms)
+- [x] Task: Migrate `app/[locale]/(teacher|admin|system)/**/page.tsx` server components (~16 files) — 16 commits decadd1..218669e (admin dashboard/layout/reports/teacher-assignments, role-selection, student layout+read, system layout/license/reports/schooldashboard, teacher dashboard/layout/reports)
+- [x] Task: Migrate Prisma-importing files in `components/` (admin, system, shared, questions, dashboard, user-account-nav.tsx) — 7 commits c79d0e0..99a39b8
+- [x] Task: Migrate `contexts/userRole-context.tsx` — 65e7229
+- [x] Task: Migrate `middleware.ts` (Edge runtime — confirm Drizzle/`postgres-js` is Edge-safe; if not, defer to Track 4 with a note) — 4ebdfc5 (already Edge-safe via fetch('/api/auth/session') — no DB import needed)
+- [x] Task: Migrate `types/index.d.ts` and `types/learning-goals.ts` (replace `@prisma/client` types with `typeof <table>.$inferSelect` or `lib/enums.ts`) — d695d9e, b149b3e
+- [x] Task: Remove the dead `verificationToken` importer in `__test__/session-schema.test.ts` / `lib/session.ts` (DROP — see audit) — 1b4646c, e2a315b (test files migrated; verification_tokens table was dropped in migration 0003)
 - [ ] Task: Measure - User Manual Verification 'Pages / Routes / Components' (Protocol in workflow.md)
 
 ## Phase 8: scripts + seeds
 
 These do not run in production request paths — lower risk, but still one commit each.
 
-- [ ] Task: Migrate `scripts/refresh-*.ts` (velocity-matviews, materialized-views, genre-metrics, demo-data, activity-heatmap-matviews)
-- [ ] Task: Migrate `scripts/check-*.ts` (teacher-classrooms, demo-data, classroom-teachers, archived, alignment-data)
-- [ ] Task: Migrate `scripts/backfill-schools.ts`
-- [ ] Task: Migrate or retire `prisma/seed.ts` and `prisma/demo-seed.ts` (rewrite against Drizzle, or move to `packages/db/src/seed/` if a seed is still needed)
+- [x] Task: Migrate `scripts/refresh-*.ts` (velocity-matviews, materialized-views, genre-metrics, demo-data, activity-heatmap-matviews) — 27bbccd, abe1afe, 9c9cbff, 34627ef, 9e5e22e
+- [x] Task: Migrate `scripts/check-*.ts` (teacher-classrooms, demo-data, classroom-teachers, archived, alignment-data) — 2ebaa5b, 00650ce, 11b7fed, a6b56f6, 6cea358
+- [x] Task: Migrate `scripts/backfill-schools.ts` — f6d275e
+- [x] Task: Migrate or retire `prisma/seed.ts` and `prisma/demo-seed.ts` (rewrite against Drizzle, or move to `packages/db/src/seed/` if a seed is still needed) — 90367c8, fb69f18 (rewritten in place; will be moved/deleted in Phase 9)
 - [ ] Task: Measure - User Manual Verification 'Scripts / Seeds' (Protocol in workflow.md)
 
 ## Phase 9: Prisma removal & final verification
