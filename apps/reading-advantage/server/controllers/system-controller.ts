@@ -1,70 +1,92 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { Role } from "@prisma/client";
 import { requireRole } from "@/server/middleware/guards";
 import { buildSchoolFilter } from "@/server/utils/authorization";
+import {
+  db,
+  eq,
+  and,
+  gte,
+  lte,
+  ne,
+  inArray,
+  desc,
+  sql,
+} from "@reading-advantage/db";
+import {
+  licenses,
+  licenseOnUsers,
+  users,
+  xpLogs,
+} from "@reading-advantage/db/schema";
 
 export async function getSystemLicenses(req: NextRequest) {
   try {
-    // Use the new guard system
-    const authResult = await requireRole([Role.SYSTEM])(req);
+    const authResult = await requireRole(["SYSTEM"] as any)(req);
     if (authResult instanceof NextResponse) {
       return authResult;
     }
     const { user } = authResult;
 
-    // Get all licenses with their users
-    const licenses = await prisma.license.findMany({
-      include: {
-        licenseUsers: {
-          select: {
-            userId: true, // Only fetch userId
-          },
-        },
-        owner: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+    const licenseRows = await db
+      .select({
+        id: licenses.id,
+        key: licenses.key,
+        schoolName: licenses.schoolName,
+        expiresAt: licenses.expiresAt,
+        maxUsers: licenses.maxUsers,
+        licenseType: licenses.licenseType,
+        createdAt: licenses.createdAt,
+        updatedAt: licenses.updatedAt,
+        ownerUserId: licenses.ownerUserId,
+        ownerName: users.name,
+      })
+      .from(licenses)
+      .leftJoin(users, eq(licenses.ownerUserId, users.id))
+      .orderBy(desc(licenses.createdAt));
+
+    const licenseIds = licenseRows.map((l) => l.id);
+    const licenseUserRows =
+      licenseIds.length > 0
+        ? await db
+            .select({
+              licenseId: licenseOnUsers.licenseId,
+              userId: licenseOnUsers.userId,
+            })
+            .from(licenseOnUsers)
+            .where(inArray(licenseOnUsers.licenseId, licenseIds))
+        : [];
+
+    // Group licenseUsers by licenseId
+    const licenseToUsers = new Map<string, string[]>();
+    licenseUserRows.forEach((r) => {
+      if (!licenseToUsers.has(r.licenseId))
+        licenseToUsers.set(r.licenseId, []);
+      licenseToUsers.get(r.licenseId)!.push(r.userId);
     });
 
-    // Collect all userIds from licenses
-    const allUserIds = licenses.flatMap((license) =>
-      license.licenseUsers.map((licenseUser) => licenseUser.userId)
-    );
+    const allUserIds = licenseUserRows.map((r) => r.userId);
+    const xpLogRows =
+      allUserIds.length > 0
+        ? await db
+            .select({ userId: xpLogs.userId, xpEarned: xpLogs.xpEarned })
+            .from(xpLogs)
+            .where(inArray(xpLogs.userId, allUserIds))
+        : [];
 
-    // Fetch XP logs for all userIds
-    const xpLogs = await prisma.xPLog.findMany({
-      where: {
-        userId: {
-          in: allUserIds,
-        },
-      },
-      select: {
-        userId: true,
-        xpEarned: true,
-      },
-    });
-
-    // Group XP logs by userId
     const userXpMap = new Map<string, number>();
-    xpLogs.forEach((log: { userId: string; xpEarned: number | null }) => {
-      const currentXp = userXpMap.get(log.userId) || 0;
-      userXpMap.set(log.userId, currentXp + (log.xpEarned || 0));
+    xpLogRows.forEach((log) => {
+      userXpMap.set(
+        log.userId,
+        (userXpMap.get(log.userId) || 0) + (log.xpEarned || 0)
+      );
     });
 
-    // Process licenses to include XP totals
-    const processedLicenses = licenses.map((license) => {
-      let totalXp = 0;
-
-      license.licenseUsers.forEach((licenseUser) => {
-        totalXp += userXpMap.get(licenseUser.userId) || 0;
-      });
+    const processedLicenses = licenseRows.map((license) => {
+      const licenseUserIds = licenseToUsers.get(license.id) || [];
+      const totalXp = licenseUserIds.reduce(
+        (sum, uid) => sum + (userXpMap.get(uid) || 0),
+        0
+      );
 
       return {
         id: license.id,
@@ -73,14 +95,16 @@ export async function getSystemLicenses(req: NextRequest) {
         expiresAt: license.expiresAt,
         maxUsers: license.maxUsers,
         licenseType: license.licenseType,
-        currentUsers: license.licenseUsers.length,
+        currentUsers: licenseUserIds.length,
         totalXp,
         isActive: license.expiresAt
           ? new Date(license.expiresAt) > new Date()
           : false,
         createdAt: license.createdAt,
         updatedAt: license.updatedAt,
-        owner: license.owner,
+        owner: license.ownerUserId
+          ? { id: license.ownerUserId, name: license.ownerName }
+          : null,
       };
     });
 
@@ -99,8 +123,7 @@ export async function getSystemLicenses(req: NextRequest) {
 
 export async function getSchoolXpData(req: NextRequest) {
   try {
-    // Use the new guard system
-    const authResult = await requireRole([Role.SYSTEM])(req);
+    const authResult = await requireRole(["SYSTEM"] as any)(req);
     if (authResult instanceof NextResponse) {
       return authResult;
     }
@@ -109,7 +132,7 @@ export async function getSchoolXpData(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const dateFrom = searchParams.get("dateFrom");
     const dateTo = searchParams.get("dateTo");
-    const period = searchParams.get("period"); // 'day', 'week', 'month', 'all'
+    const period = searchParams.get("period");
 
     let startDate: Date | undefined;
     let endDate: Date | undefined;
@@ -120,7 +143,6 @@ export async function getSchoolXpData(req: NextRequest) {
       endDate.setHours(23, 59, 59, 999);
     } else if (period && period !== "all") {
       endDate = new Date();
-
       switch (period) {
         case "day":
           startDate = new Date();
@@ -139,62 +161,68 @@ export async function getSchoolXpData(req: NextRequest) {
       }
     }
 
-    // Build where condition for XP logs
-    const whereCondition: any = {};
-    if (startDate && endDate) {
-      whereCondition.createdAt = {
-        gte: startDate,
-        lte: endDate,
-      };
-    }
+    const licenseRows = await db
+      .select({ id: licenses.id, schoolName: licenses.schoolName })
+      .from(licenses)
+      .where(ne(licenses.schoolName, ""));
 
-    // Get all licenses with school XP data
-    const licensesWithXp = await prisma.license.findMany({
-      where: {
-        schoolName: {
-          not: "",
-        },
-      },
-      include: {
-        licenseUsers: {
-          include: {
-            user: {
-              include: {
-                xpLogs: {
-                  where: whereCondition,
-                  select: {
-                    xpEarned: true,
-                    createdAt: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+    const licenseIds = licenseRows.map((l) => l.id);
+    const licenseUserRows =
+      licenseIds.length > 0
+        ? await db
+            .select({
+              licenseId: licenseOnUsers.licenseId,
+              userId: licenseOnUsers.userId,
+            })
+            .from(licenseOnUsers)
+            .where(inArray(licenseOnUsers.licenseId, licenseIds))
+        : [];
+
+    const allUserIds = [...new Set(licenseUserRows.map((r) => r.userId))];
+    const xpLogRows =
+      allUserIds.length > 0
+        ? await db
+            .select({ userId: xpLogs.userId, xpEarned: xpLogs.xpEarned })
+            .from(xpLogs)
+            .where(
+              and(
+                inArray(xpLogs.userId, allUserIds),
+                startDate ? gte(xpLogs.createdAt, startDate) : undefined,
+                endDate ? lte(xpLogs.createdAt, endDate) : undefined
+              )
+            )
+        : [];
+
+    const userXpMap = new Map<string, number>();
+    xpLogRows.forEach((log) => {
+      userXpMap.set(
+        log.userId,
+        (userXpMap.get(log.userId) || 0) + log.xpEarned
+      );
     });
 
-    // Process data to get school XP totals
+    const licenseToUsers = new Map<string, string[]>();
+    licenseUserRows.forEach((r) => {
+      if (!licenseToUsers.has(r.licenseId))
+        licenseToUsers.set(r.licenseId, []);
+      licenseToUsers.get(r.licenseId)!.push(r.userId);
+    });
+
     const schoolXpMap = new Map<string, number>();
-
-    licensesWithXp.forEach((license) => {
+    licenseRows.forEach((license) => {
       if (license.schoolName) {
-        let schoolXp = 0;
-
-        license.licenseUsers.forEach((licenseUser) => {
-          const userXp = licenseUser.user.xpLogs.reduce(
-            (sum, log) => sum + log.xpEarned,
-            0
-          );
-          schoolXp += userXp;
-        });
-
-        const currentXp = schoolXpMap.get(license.schoolName) || 0;
-        schoolXpMap.set(license.schoolName, currentXp + schoolXp);
+        const userIds = licenseToUsers.get(license.id) || [];
+        const schoolXp = userIds.reduce(
+          (sum, uid) => sum + (userXpMap.get(uid) || 0),
+          0
+        );
+        schoolXpMap.set(
+          license.schoolName,
+          (schoolXpMap.get(license.schoolName) || 0) + schoolXp
+        );
       }
     });
 
-    // Convert to array and sort by XP
     const schoolXpData = Array.from(schoolXpMap.entries())
       .map(([school, xp]) => ({ school, xp }))
       .sort((a, b) => b.xp - a.xp);
@@ -203,7 +231,8 @@ export async function getSchoolXpData(req: NextRequest) {
       data: schoolXpData,
       total: schoolXpData.length,
       period: period || "all",
-      dateRange: startDate && endDate ? { from: startDate, to: endDate } : null,
+      dateRange:
+        startDate && endDate ? { from: startDate, to: endDate } : null,
     });
   } catch (error) {
     console.error("Error fetching school XP data:", error);
@@ -221,22 +250,17 @@ export async function getSchoolXpData(req: NextRequest) {
  * - Level 3: School-level rollups
  */
 const MATERIALIZED_VIEWS = [
-  // Level 1: Student-level metrics (base data, no dependencies)
   { name: "mv_student_velocity", level: 1 },
   { name: "mv_srs_health", level: 1 },
   { name: "mv_genre_engagement_metrics", level: 1 },
   { name: "mv_activity_heatmap", level: 1 },
   { name: "mv_assignment_funnel", level: 1 },
   { name: "mv_alignment_metrics", level: 1 },
-
-  // Level 2: Class-level metrics (aggregate student data)
   { name: "mv_class_velocity", level: 2 },
   { name: "mv_srs_health_class", level: 2 },
   { name: "mv_class_genre_engagement", level: 2 },
   { name: "mv_class_activity_heatmap", level: 2 },
   { name: "mv_class_assignment_funnel", level: 2 },
-
-  // Level 3: School-level rollups (aggregate class data)
   { name: "mv_school_velocity", level: 3 },
   { name: "mv_srs_health_school", level: 3 },
   { name: "mv_school_genre_engagement", level: 3 },
@@ -252,16 +276,9 @@ interface RefreshResult {
   error?: string;
 }
 
-/**
- * Send NOTIFY to Postgres for cache invalidation
- */
 async function notifyMetricsUpdate(
   viewNames: string[],
-  metadata: {
-    timestamp: string;
-    success: number;
-    failed: number;
-  }
+  metadata: { timestamp: string; success: number; failed: number }
 ): Promise<void> {
   try {
     const payload = JSON.stringify({
@@ -270,13 +287,8 @@ async function notifyMetricsUpdate(
       success: metadata.success,
       failed: metadata.failed,
     });
-
-    // Send NOTIFY to trigger cache invalidation
-    // Escape single quotes in payload
     const escapedPayload = payload.replace(/'/g, "''");
-    await prisma.$executeRawUnsafe(
-      `NOTIFY metrics_update, '${escapedPayload}'`
-    );
+    await db.execute(sql.raw(`NOTIFY metrics_update, '${escapedPayload}'`));
   } catch (error: any) {
     console.error(
       "[NOTIFY] Failed to send metrics_update notification:",
@@ -285,19 +297,9 @@ async function notifyMetricsUpdate(
   }
 }
 
-/**
- * Get status of all materialized views
- * 
- * Returns information about each materialized view including:
- * - Existence status
- * - Last refresh time
- * - Row count
- * - Index status
- */
 export async function getMaterializedViewsStatus(req: NextRequest) {
   try {
-    // Use the new guard system - only SYSTEM admins can view status
-    const authResult = await requireRole([Role.SYSTEM])(req);
+    const authResult = await requireRole(["SYSTEM"] as any)(req);
     if (authResult instanceof NextResponse) {
       return authResult;
     }
@@ -306,50 +308,45 @@ export async function getMaterializedViewsStatus(req: NextRequest) {
     const statusResults = await Promise.all(
       MATERIALIZED_VIEWS.map(async (view) => {
         try {
-          // Get view metadata from pg_matviews
-          const viewInfo = await prisma.$queryRawUnsafe<any[]>(
-            `SELECT 
+          const viewInfo = await db.execute(sql`
+            SELECT
               schemaname,
               matviewname,
               hasindexes,
               ispopulated,
               definition
-            FROM pg_matviews 
-            WHERE schemaname = 'public' 
-            AND matviewname = $1`,
-            view.name
-          );
+            FROM pg_matviews
+            WHERE schemaname = 'public'
+            AND matviewname = ${view.name}
+          `) as any[];
 
           if (!viewInfo || viewInfo.length === 0) {
             return {
               view: view.name,
               level: view.level,
               exists: false,
-              status: 'missing',
+              status: "missing",
             };
           }
 
           const info = viewInfo[0];
 
-          // Get row count
-          const countResult = await prisma.$queryRawUnsafe<any[]>(
-            `SELECT COUNT(*) as count FROM ${view.name}`
-          );
+          const countResult = await db.execute(
+            sql.raw(`SELECT COUNT(*) as count FROM ${view.name}`)
+          ) as any[];
           const rowCount = Number(countResult[0]?.count || 0);
 
-          // Get last refresh time from pg_stat_user_tables
-          const statsResult = await prisma.$queryRawUnsafe<any[]>(
-            `SELECT 
+          const statsResult = await db.execute(sql`
+            SELECT
               n_tup_ins + n_tup_upd + n_tup_del as modifications,
               last_vacuum,
               last_autovacuum,
               last_analyze,
               last_autoanalyze
-            FROM pg_stat_user_tables 
-            WHERE schemaname = 'public' 
-            AND relname = $1`,
-            view.name
-          );
+            FROM pg_stat_user_tables
+            WHERE schemaname = 'public'
+            AND relname = ${view.name}
+          `) as any[];
 
           const stats = statsResult[0] || {};
 
@@ -357,39 +354,47 @@ export async function getMaterializedViewsStatus(req: NextRequest) {
             view: view.name,
             level: view.level,
             exists: true,
-            status: info.ispopulated ? 'populated' : 'unpopulated',
+            status: info.ispopulated ? "populated" : "unpopulated",
             hasIndexes: info.hasindexes,
             rowCount,
-            lastAnalyze: stats.last_analyze || stats.last_autoanalyze || null,
+            lastAnalyze:
+              stats.last_analyze || stats.last_autoanalyze || null,
             modifications: Number(stats.modifications || 0),
           };
         } catch (error: any) {
-          console.error(`Error getting status for ${view.name}:`, error.message);
+          console.error(
+            `Error getting status for ${view.name}:`,
+            error.message
+          );
           return {
             view: view.name,
             level: view.level,
             exists: false,
-            status: 'error',
+            status: "error",
             error: error.message,
           };
         }
       })
     );
 
-    // Group by level
-    const byLevel = statusResults.reduce((acc, result) => {
-      if (!acc[result.level]) acc[result.level] = [];
-      acc[result.level].push(result);
-      return acc;
-    }, {} as Record<number, typeof statusResults>);
+    const byLevel = statusResults.reduce(
+      (acc, result) => {
+        if (!acc[result.level]) acc[result.level] = [];
+        acc[result.level].push(result);
+        return acc;
+      },
+      {} as Record<number, typeof statusResults>
+    );
 
-    // Calculate summary
     const summary = {
       total: MATERIALIZED_VIEWS.length,
-      populated: statusResults.filter(r => r.status === 'populated').length,
-      missing: statusResults.filter(r => r.status === 'missing').length,
-      error: statusResults.filter(r => r.status === 'error').length,
-      totalRows: statusResults.reduce((sum, r) => sum + (r.rowCount || 0), 0),
+      populated: statusResults.filter((r) => r.status === "populated").length,
+      missing: statusResults.filter((r) => r.status === "missing").length,
+      error: statusResults.filter((r) => r.status === "error").length,
+      totalRows: statusResults.reduce(
+        (sum, r) => sum + ((r as any).rowCount || 0),
+        0
+      ),
     };
 
     return NextResponse.json({
@@ -397,118 +402,98 @@ export async function getMaterializedViewsStatus(req: NextRequest) {
       byLevel,
       views: statusResults,
       queriedAt: new Date().toISOString(),
-      queriedBy: {
-        id: user.id,
-        email: user.email,
-      },
+      queriedBy: { id: user.id, email: user.email },
     });
   } catch (error) {
-    console.error('[STATUS] Error getting materialized views status:', error);
+    console.error("[STATUS] Error getting materialized views status:", error);
     return NextResponse.json(
-      {
-        message: 'Internal server error',
-        error: String(error),
-      },
+      { message: "Internal server error", error: String(error) },
       { status: 500 }
     );
   }
 }
 
-
-/**
- * Check if a materialized view exists in the database
- */
 async function viewExists(viewName: string): Promise<boolean> {
   try {
-    const result = await prisma.$queryRawUnsafe<Array<{ exists: boolean }>>(
-      `SELECT EXISTS (
-        SELECT 1 
-        FROM pg_matviews 
-        WHERE schemaname = 'public' 
-        AND matviewname = $1
-      ) as exists`,
-      viewName
-    );
+    const result = await db.execute(sql`
+      SELECT EXISTS (
+        SELECT 1
+        FROM pg_matviews
+        WHERE schemaname = 'public'
+        AND matviewname = ${viewName}
+      ) as exists
+    `) as any[];
     return result[0]?.exists ?? false;
   } catch (error: any) {
-    console.error(`[CHECK] Error checking if ${viewName} exists:`, error.message);
+    console.error(
+      `[CHECK] Error checking if ${viewName} exists:`,
+      error.message
+    );
     return false;
   }
 }
 
-/**
- * Refresh a single materialized view with CONCURRENTLY fallback
- */
 async function refreshView(
   viewName: string,
   level: number
 ): Promise<RefreshResult> {
   const startTime = Date.now();
 
-  // Check if view exists before attempting to refresh
   const exists = await viewExists(viewName);
   if (!exists) {
-    const duration = Date.now() - startTime;
-    console.warn(`[REFRESH] ⊘ ${viewName} does not exist, skipping`);
     return {
       view: viewName,
       level,
       status: "skipped",
-      duration,
+      duration: Date.now() - startTime,
       error: "Materialized view does not exist",
     };
   }
 
   try {
-    // Try CONCURRENTLY first (allows reads during refresh)
-    await prisma.$executeRawUnsafe(
-      `REFRESH MATERIALIZED VIEW CONCURRENTLY ${viewName}`
+    await db.execute(
+      sql.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY ${viewName}`)
     );
-
-    const duration = Date.now() - startTime;
 
     return {
       view: viewName,
       level,
       status: "success_concurrent",
-      duration,
+      duration: Date.now() - startTime,
     };
   } catch (error: any) {
-    // Check if error is due to missing unique index
-    const isMissingIndex = error.message?.includes('cannot refresh materialized view') && 
-                           error.message?.includes('concurrently');
-    
-    if (isMissingIndex) {
-      console.warn(
-        `[REFRESH] ⚠ ${viewName} missing unique index for CONCURRENTLY, using regular refresh`
-      );
-    } else {
+    const isMissingIndex =
+      error.message?.includes("cannot refresh materialized view") &&
+      error.message?.includes("concurrently");
+
+    if (!isMissingIndex) {
       console.warn(
         `[REFRESH] CONCURRENTLY failed for ${viewName}, trying regular refresh`
       );
     }
 
-    // Fall back to regular refresh if CONCURRENTLY fails
     try {
-      await prisma.$executeRawUnsafe(`REFRESH MATERIALIZED VIEW ${viewName}`);
-
-      const duration = Date.now() - startTime;
+      await db.execute(
+        sql.raw(`REFRESH MATERIALIZED VIEW ${viewName}`)
+      );
 
       return {
         view: viewName,
         level,
         status: "success",
-        duration,
+        duration: Date.now() - startTime,
       };
     } catch (fallbackError: any) {
-      const duration = Date.now() - startTime;
-      console.error(`[REFRESH] ✗ ${viewName} failed:`, fallbackError.message);
+      console.error(
+        `[REFRESH] ✗ ${viewName} failed:`,
+        fallbackError.message
+      );
 
       return {
         view: viewName,
         level,
         status: "failed",
-        duration,
+        duration: Date.now() - startTime,
         error: fallbackError.message || String(fallbackError),
       };
     }
@@ -519,8 +504,7 @@ export async function refreshMaterializedViews(req: NextRequest) {
   const requestStartTime = Date.now();
 
   try {
-    // Use the new guard system - only SYSTEM admins can refresh materialized views
-    const authResult = await requireRole([Role.SYSTEM])(req);
+    const authResult = await requireRole(["SYSTEM"] as any)(req);
     if (authResult instanceof NextResponse) {
       return authResult;
     }
@@ -528,7 +512,6 @@ export async function refreshMaterializedViews(req: NextRequest) {
 
     const results: RefreshResult[] = [];
 
-    // Group views by level for better observability
     const viewsByLevel = MATERIALIZED_VIEWS.reduce(
       (acc, view) => {
         if (!acc[view.level]) acc[view.level] = [];
@@ -538,25 +521,13 @@ export async function refreshMaterializedViews(req: NextRequest) {
       {} as Record<number, (typeof MATERIALIZED_VIEWS)[number][]>
     );
 
-    // Refresh each level in order
     for (const level of [1, 2, 3]) {
       const views = viewsByLevel[level] || [];
       if (views.length === 0) continue;
 
-      const levelStartTime = Date.now();
-
-      // Refresh views at the same level in parallel
       const levelResults = await Promise.all(
         views.map((view) => refreshView(view.name, view.level))
       );
-
-      const levelDuration = Date.now() - levelStartTime;
-      const levelSuccess = levelResults.filter(
-        (r) => r.status !== "failed"
-      ).length;
-      const levelFailed = levelResults.filter(
-        (r) => r.status === "failed"
-      ).length;
 
       results.push(...levelResults);
     }
@@ -569,9 +540,10 @@ export async function refreshMaterializedViews(req: NextRequest) {
     const skippedCount = results.filter((r) => r.status === "skipped").length;
     const refreshedAt = new Date().toISOString();
 
-    // Send notification for cache invalidation (only for successfully refreshed views)
     const successfulViews = results
-      .filter((r) => r.status === "success" || r.status === "success_concurrent")
+      .filter(
+        (r) => r.status === "success" || r.status === "success_concurrent"
+      )
       .map((r) => r.view);
 
     if (successfulViews.length > 0) {
@@ -593,10 +565,7 @@ export async function refreshMaterializedViews(req: NextRequest) {
       },
       results,
       refreshedAt,
-      refreshedBy: {
-        id: user.id,
-        email: user.email,
-      },
+      refreshedBy: { id: user.id, email: user.email },
     });
   } catch (error) {
     const duration = Date.now() - requestStartTime;
@@ -612,23 +581,16 @@ export async function refreshMaterializedViews(req: NextRequest) {
   }
 }
 
-/**
- * Refresh materialized views (automated via Cloud Scheduler)
- *
- * This version does NOT require user authentication - uses access key only
- * Designed to be called by Google Cloud Scheduler every 15 minutes
- */
 export async function refreshMaterializedViewsAutomated(req: NextRequest) {
   const requestStartTime = Date.now();
 
-  console.log(`[CLOUD_SCHEDULER] Starting automated refresh of ${MATERIALIZED_VIEWS.length} materialized views`);
+  console.log(
+    `[CLOUD_SCHEDULER] Starting automated refresh of ${MATERIALIZED_VIEWS.length} materialized views`
+  );
 
   try {
-    // No user authentication - this is called by Cloud Scheduler with access key
-
     const results: RefreshResult[] = [];
 
-    // Group views by level for better observability
     const viewsByLevel = MATERIALIZED_VIEWS.reduce(
       (acc, view) => {
         if (!acc[view.level]) acc[view.level] = [];
@@ -638,15 +600,15 @@ export async function refreshMaterializedViewsAutomated(req: NextRequest) {
       {} as Record<number, (typeof MATERIALIZED_VIEWS)[number][]>
     );
 
-    // Refresh each level in order
     for (const level of [1, 2, 3]) {
       const views = viewsByLevel[level] || [];
       if (views.length === 0) continue;
 
       const levelStartTime = Date.now();
-      console.log(`[CLOUD_SCHEDULER] Refreshing Level ${level}: ${views.length} views`);
+      console.log(
+        `[CLOUD_SCHEDULER] Refreshing Level ${level}: ${views.length} views`
+      );
 
-      // Refresh views at the same level in parallel
       const levelResults = await Promise.all(
         views.map((view) => refreshView(view.name, view.level))
       );
@@ -678,18 +640,21 @@ export async function refreshMaterializedViewsAutomated(req: NextRequest) {
       `[CLOUD_SCHEDULER] Refresh completed: ${successCount} success, ${failedCount} failed, ${skippedCount} skipped (${duration}ms)`
     );
 
-    // Log any failures for monitoring
     if (failedCount > 0) {
-      const failures = results.filter(r => r.status === "failed");
-      console.error("[CLOUD_SCHEDULER] Failed views:", failures.map(f => f.view).join(", "));
-      failures.forEach(f => {
+      const failures = results.filter((r) => r.status === "failed");
+      console.error(
+        "[CLOUD_SCHEDULER] Failed views:",
+        failures.map((f) => f.view).join(", ")
+      );
+      failures.forEach((f) => {
         console.error(`  - ${f.view}: ${f.error}`);
       });
     }
 
-    // Send notification for cache invalidation (only for successfully refreshed views)
     const successfulViews = results
-      .filter((r) => r.status === "success" || r.status === "success_concurrent")
+      .filter(
+        (r) => r.status === "success" || r.status === "success_concurrent"
+      )
       .map((r) => r.view);
 
     if (successfulViews.length > 0) {
@@ -715,7 +680,7 @@ export async function refreshMaterializedViewsAutomated(req: NextRequest) {
     });
   } catch (error) {
     const duration = Date.now() - requestStartTime;
-    console.error("[CLOUD_SCHEDULER] ❌ Error in automated refresh:", error);
+    console.error("[CLOUD_SCHEDULER] Error in automated refresh:", error);
     return NextResponse.json(
       {
         message: "Internal server error",
@@ -727,34 +692,23 @@ export async function refreshMaterializedViewsAutomated(req: NextRequest) {
   }
 }
 
-/**
- * Get automated refresh status (health check for Cloud Scheduler)
- * 
- * Returns basic information about the refresh endpoint and materialized views
- * No authentication required (same as refresh endpoint - uses access key)
- */
 export async function getAutomatedRefreshStatus(req: NextRequest) {
   try {
-    // Quick health check - count views by status
     const viewChecks = await Promise.all(
       MATERIALIZED_VIEWS.map(async (view) => {
         const exists = await viewExists(view.name);
-        return {
-          name: view.name,
-          level: view.level,
-          exists,
-        };
+        return { name: view.name, level: view.level, exists };
       })
     );
 
     const summary = {
       totalViews: MATERIALIZED_VIEWS.length,
-      existing: viewChecks.filter(v => v.exists).length,
-      missing: viewChecks.filter(v => !v.exists).length,
+      existing: viewChecks.filter((v) => v.exists).length,
+      missing: viewChecks.filter((v) => !v.exists).length,
       byLevel: {
-        level1: MATERIALIZED_VIEWS.filter(v => v.level === 1).length,
-        level2: MATERIALIZED_VIEWS.filter(v => v.level === 2).length,
-        level3: MATERIALIZED_VIEWS.filter(v => v.level === 3).length,
+        level1: MATERIALIZED_VIEWS.filter((v) => v.level === 1).length,
+        level2: MATERIALIZED_VIEWS.filter((v) => v.level === 2).length,
+        level3: MATERIALIZED_VIEWS.filter((v) => v.level === 3).length,
       },
     };
 
@@ -764,10 +718,11 @@ export async function getAutomatedRefreshStatus(req: NextRequest) {
       purpose: "Automated materialized view refresh for Cloud Scheduler",
       schedule: "Every 15 minutes",
       summary,
-      views: MATERIALIZED_VIEWS.map(v => ({
+      views: MATERIALIZED_VIEWS.map((v) => ({
         name: v.name,
         level: v.level,
-        exists: viewChecks.find(vc => vc.name === v.name)?.exists || false,
+        exists:
+          viewChecks.find((vc) => vc.name === v.name)?.exists || false,
       })),
       checkedAt: new Date().toISOString(),
     });
