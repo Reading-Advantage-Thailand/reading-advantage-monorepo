@@ -19,8 +19,9 @@ import {
   SystemVelocityMetrics,
 } from "@/server/services/metrics/velocity-service";
 import { getCachedVelocity } from "@/server/services/metrics/cache-service";
-import { prisma } from "@/lib/prisma";
-import { Role } from "@prisma/client";
+import { db, and, eq, inArray } from "@reading-advantage/db";
+import { classroomStudents, classroomTeachers, users } from "@reading-advantage/db/schema";
+import { Role } from "@/lib/enums";
 
 // ============================================================================
 // Types
@@ -231,19 +232,25 @@ async function checkAccess(
 
     // Teachers can access students in their classes
     if (userRole === Role.TEACHER) {
-      const teacherClasses = await prisma.classroomTeacher.findMany({
-        where: { teacherId: session.user.id },
-        select: { classroomId: true },
-      });
+      const teacherClasses = await db
+        .select({ classroomId: classroomTeachers.classroomId })
+        .from(classroomTeachers)
+        .where(eq(classroomTeachers.teacherId, session.user.id));
 
       const classIds = teacherClasses.map((tc) => tc.classroomId);
 
-      const studentInClass = await prisma.classroomStudent.findFirst({
-        where: {
-          studentId: scopeId,
-          classroomId: { in: classIds },
-        },
-      });
+      const [studentInClass] = classIds.length > 0
+        ? await db
+            .select()
+            .from(classroomStudents)
+            .where(
+              and(
+                eq(classroomStudents.studentId, scopeId),
+                inArray(classroomStudents.classroomId, classIds),
+              ),
+            )
+            .limit(1)
+        : [];
 
       if (!studentInClass) {
         return { allowed: false, reason: "Student not in your classes" };
@@ -256,12 +263,16 @@ async function checkAccess(
   if (scope === "class") {
     // Teachers can access their own classes
     if (userRole === Role.TEACHER) {
-      const isTeacher = await prisma.classroomTeacher.findFirst({
-        where: {
-          teacherId: session.user.id,
-          classroomId: scopeId,
-        },
-      });
+      const [isTeacher] = await db
+        .select()
+        .from(classroomTeachers)
+        .where(
+          and(
+            eq(classroomTeachers.teacherId, session.user.id),
+            eq(classroomTeachers.classroomId, scopeId),
+          ),
+        )
+        .limit(1);
 
       if (!isTeacher) {
         return { allowed: false, reason: "Not a teacher of this class" };
@@ -274,10 +285,11 @@ async function checkAccess(
   if (scope === "school") {
     // Teachers can access their school data
     if (userRole === Role.TEACHER) {
-      const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { schoolId: true },
-      });
+      const [user] = await db
+        .select({ schoolId: users.schoolId })
+        .from(users)
+        .where(eq(users.id, session.user.id))
+        .limit(1);
 
       if (user?.schoolId !== scopeId) {
         return { allowed: false, reason: "Not in this school" };
@@ -387,10 +399,10 @@ export async function getVelocityMetrics(req: ExtendedNextRequest) {
             );
           }
 
-          const students = await prisma.classroomStudent.findMany({
-            where: { classroomId: classId },
-            select: { studentId: true },
-          });
+          const students = await db
+            .select({ studentId: classroomStudents.studentId })
+            .from(classroomStudents)
+            .where(eq(classroomStudents.classroomId, classId));
           studentIds = students.map((s) => s.studentId);
         } else if (schoolId) {
           const access = await checkAccess(session, "school", schoolId);
@@ -401,10 +413,10 @@ export async function getVelocityMetrics(req: ExtendedNextRequest) {
             );
           }
 
-          const students = await prisma.user.findMany({
-            where: { schoolId, role: Role.STUDENT },
-            select: { id: true },
-          });
+          const students = await db
+            .select({ id: users.id })
+            .from(users)
+            .where(and(eq(users.schoolId, schoolId), eq(users.role, Role.STUDENT)));
           studentIds = students.map((s) => s.id);
         }
 
