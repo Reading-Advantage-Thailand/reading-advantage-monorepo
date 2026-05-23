@@ -13,8 +13,9 @@
  * @module server/utils/authorization
  */
 
-import { Role } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
+import { Role } from "@/lib/enums";
+import { db, eq } from "@reading-advantage/db";
+import { classrooms, users } from "@reading-advantage/db/schema";
 
 export interface UserContext {
   id: string;
@@ -228,10 +229,11 @@ export async function verifyClassroomSchool(
     throw new Error("User does not belong to a school");
   }
 
-  const classroom = await prisma.classroom.findUnique({
-    where: { id: classroomId },
-    select: { schoolId: true },
-  });
+  const [classroom] = await db
+    .select({ schoolId: classrooms.schoolId })
+    .from(classrooms)
+    .where(eq(classrooms.id, classroomId))
+    .limit(1);
 
   if (!classroom) {
     throw new Error("Classroom not found");
@@ -263,10 +265,11 @@ export async function verifyStudentSchool(
     throw new Error("User does not belong to a school");
   }
 
-  const student = await prisma.user.findUnique({
-    where: { id: studentId },
-    select: { schoolId: true, role: true },
-  });
+  const [student] = await db
+    .select({ schoolId: users.schoolId, role: users.role })
+    .from(users)
+    .where(eq(users.id, studentId))
+    .limit(1);
 
   if (!student) {
     throw new Error("Student not found");
