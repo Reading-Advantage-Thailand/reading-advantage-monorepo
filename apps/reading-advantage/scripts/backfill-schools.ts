@@ -20,15 +20,27 @@
  *   VERBOSE=true - Show detailed logging (default: false)
  */
 
-import { PrismaClient, LicenseType } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import {
+  db,
+  schools,
+  licenses,
+  licenseOnUsers,
+  users,
+  classrooms,
+  eq,
+  and,
+  isNull,
+  isNotNull,
+  count,
+  sql,
+} from "@reading-advantage/db";
+import { LicenseType } from "@/lib/enums";
 
 const DRY_RUN = process.env.DRY_RUN === 'true';
 const VERBOSE = process.env.VERBOSE === 'true';
 
 // Default feature flags for each license type
-const DEFAULT_FEATURE_FLAGS = {
+const DEFAULT_FEATURE_FLAGS: Record<LicenseType, Record<string, boolean>> = {
   BASIC: {
     dashboardEnabled: false,
     velocityMetrics: false,
@@ -67,18 +79,18 @@ interface BackfillStats {
   errors: number;
 }
 
-async function log(message: string, level: 'info' | 'warn' | 'error' = 'info') {
+function log(message: string, level: 'info' | 'warn' | 'error' = 'info') {
   const timestamp = new Date().toISOString();
   const prefix = {
     info: '✓',
     warn: '⚠',
     error: '✗',
   }[level];
-  
+
   console.log(`[${timestamp}] ${prefix} ${message}`);
 }
 
-async function verboseLog(message: string) {
+function verboseLog(message: string) {
   if (VERBOSE) {
     console.log(`  → ${message}`);
   }
@@ -88,50 +100,52 @@ async function verboseLog(message: string) {
  * Step 1: Create School records from unique license schoolName values
  */
 async function createSchools(): Promise<Map<string, string>> {
-  await log('Step 1: Creating schools from licenses...');
-  
-  // Get unique school names from licenses
-  const licenses = await prisma.license.findMany({
-    select: {
-      schoolName: true,
-      schoolId: true,
-    },
-    distinct: ['schoolName'],
-  });
-  
+  log('Step 1: Creating schools from licenses...');
+
+  // Get unique school names from licenses (distinct on schoolName)
+  const distinctLicenses = await db
+    .selectDistinctOn([licenses.schoolName], {
+      schoolName: licenses.schoolName,
+      schoolId: licenses.schoolId,
+    })
+    .from(licenses);
+
   const schoolMap = new Map<string, string>(); // schoolName -> schoolId
   let created = 0;
-  
-  for (const license of licenses) {
+
+  for (const license of distinctLicenses) {
     // Skip if school already exists
     if (license.schoolId) {
-      const existingSchool = await prisma.school.findUnique({
-        where: { id: license.schoolId },
-      });
-      
+      const [existingSchool] = await db
+        .select()
+        .from(schools)
+        .where(eq(schools.id, license.schoolId))
+        .limit(1);
+
       if (existingSchool) {
         schoolMap.set(license.schoolName, existingSchool.id);
         verboseLog(`School already exists: ${license.schoolName}`);
         continue;
       }
     }
-    
+
     // Check if we already created a school with this name
     if (schoolMap.has(license.schoolName)) {
       verboseLog(`Using existing school mapping: ${license.schoolName}`);
       continue;
     }
-    
+
     // Create new school
     if (!DRY_RUN) {
-      const school = await prisma.school.create({
-        data: {
+      const [school] = await db
+        .insert(schools)
+        .values({
           name: license.schoolName,
           country: 'Thailand',
           // Note: district and province can be updated manually later
-        },
-      });
-      
+        })
+        .returning();
+
       schoolMap.set(license.schoolName, school.id);
       created++;
       verboseLog(`Created school: ${school.name} (ID: ${school.id})`);
@@ -141,8 +155,8 @@ async function createSchools(): Promise<Map<string, string>> {
       created++;
     }
   }
-  
-  await log(`Created ${created} schools`);
+
+  log(`Created ${created} schools`);
   return schoolMap;
 }
 
@@ -150,36 +164,33 @@ async function createSchools(): Promise<Map<string, string>> {
  * Step 2: Update licenses with school associations and feature flags
  */
 async function updateLicenses(schoolMap: Map<string, string>): Promise<number> {
-  await log('Step 2: Updating licenses with school associations and feature flags...');
-  
-  const licenses = await prisma.license.findMany();
+  log('Step 2: Updating licenses with school associations and feature flags...');
+
+  const allLicenses = await db.select().from(licenses);
   let updated = 0;
-  
-  for (const license of licenses) {
+
+  for (const license of allLicenses) {
     const schoolId = schoolMap.get(license.schoolName);
-    
+
     if (!schoolId) {
-      await log(`Warning: No school found for license ${license.key}`, 'warn');
+      log(`Warning: No school found for license ${license.key}`, 'warn');
       continue;
     }
-    
+
     // Determine feature flags (use existing or set defaults)
-    let featureFlags = license.featureFlags as any;
-    
+    let featureFlags = license.featureFlags as Record<string, unknown> | null;
+
     if (!featureFlags || Object.keys(featureFlags).length === 0) {
-      featureFlags = DEFAULT_FEATURE_FLAGS[license.licenseType];
+      featureFlags = DEFAULT_FEATURE_FLAGS[license.licenseType as LicenseType];
       verboseLog(`Setting default feature flags for ${license.licenseType} license: ${license.key}`);
     }
-    
+
     // Update license
     if (!DRY_RUN) {
-      await prisma.license.update({
-        where: { id: license.id },
-        data: {
-          schoolId,
-          featureFlags,
-        },
-      });
+      await db
+        .update(licenses)
+        .set({ schoolId, featureFlags: featureFlags as Record<string, unknown> })
+        .where(eq(licenses.id, license.id));
       updated++;
       verboseLog(`Updated license: ${license.key} -> School: ${schoolId}`);
     } else {
@@ -187,8 +198,8 @@ async function updateLicenses(schoolMap: Map<string, string>): Promise<number> {
       updated++;
     }
   }
-  
-  await log(`Updated ${updated} licenses`);
+
+  log(`Updated ${updated} licenses`);
   return updated;
 }
 
@@ -196,47 +207,51 @@ async function updateLicenses(schoolMap: Map<string, string>): Promise<number> {
  * Step 3: Update users with school associations (via their licenses)
  */
 async function updateUsers(schoolMap: Map<string, string>): Promise<number> {
-  await log('Step 3: Updating users with school associations...');
-  
+  log('Step 3: Updating users with school associations...');
+
   // Get all users with license associations
-  const licenseOnUsers = await prisma.licenseOnUser.findMany({
-    include: {
-      license: true,
-      user: true,
-    },
-  });
-  
+  const rows = await db
+    .select({
+      userId: users.id,
+      userEmail: users.email,
+      userSchoolId: users.schoolId,
+      licenseSchoolName: licenses.schoolName,
+    })
+    .from(licenseOnUsers)
+    .innerJoin(users, eq(licenseOnUsers.userId, users.id))
+    .innerJoin(licenses, eq(licenseOnUsers.licenseId, licenses.id));
+
   let updated = 0;
-  
-  for (const lou of licenseOnUsers) {
+
+  for (const row of rows) {
     // Skip if user already has a school
-    if (lou.user.schoolId) {
-      verboseLog(`User ${lou.user.email} already has school ${lou.user.schoolId}`);
+    if (row.userSchoolId) {
+      verboseLog(`User ${row.userEmail} already has school ${row.userSchoolId}`);
       continue;
     }
-    
-    const schoolId = schoolMap.get(lou.license.schoolName);
-    
+
+    const schoolId = schoolMap.get(row.licenseSchoolName);
+
     if (!schoolId) {
-      await log(`Warning: No school found for user ${lou.user.email}`, 'warn');
+      log(`Warning: No school found for user ${row.userEmail}`, 'warn');
       continue;
     }
-    
+
     // Update user
     if (!DRY_RUN) {
-      await prisma.user.update({
-        where: { id: lou.user.id },
-        data: { schoolId },
-      });
+      await db
+        .update(users)
+        .set({ schoolId })
+        .where(eq(users.id, row.userId));
       updated++;
-      verboseLog(`Updated user: ${lou.user.email} -> School: ${schoolId}`);
+      verboseLog(`Updated user: ${row.userEmail} -> School: ${schoolId}`);
     } else {
-      verboseLog(`[DRY RUN] Would update user: ${lou.user.email} -> School: ${schoolId}`);
+      verboseLog(`[DRY RUN] Would update user: ${row.userEmail} -> School: ${schoolId}`);
       updated++;
     }
   }
-  
-  await log(`Updated ${updated} users`);
+
+  log(`Updated ${updated} users`);
   return updated;
 }
 
@@ -244,47 +259,51 @@ async function updateUsers(schoolMap: Map<string, string>): Promise<number> {
  * Step 4: Update classrooms with school associations
  */
 async function updateClassrooms(): Promise<number> {
-  await log('Step 4: Updating classrooms with school associations...');
-  
+  log('Step 4: Updating classrooms with school associations...');
+
   // Get all classrooms with their teachers
-  const classrooms = await prisma.classroom.findMany({
-    include: {
-      teacher: true,
-    },
-  });
-  
+  const rows = await db
+    .select({
+      id: classrooms.id,
+      name: classrooms.name,
+      schoolId: classrooms.schoolId,
+      teacherSchoolId: users.schoolId,
+    })
+    .from(classrooms)
+    .leftJoin(users, eq(classrooms.teacherId, users.id));
+
   let updated = 0;
-  
-  for (const classroom of classrooms) {
+
+  for (const classroom of rows) {
     // Skip if classroom already has a school
     if (classroom.schoolId) {
-      verboseLog(`Classroom ${classroom.classroomName} already has school ${classroom.schoolId}`);
+      verboseLog(`Classroom ${classroom.name} already has school ${classroom.schoolId}`);
       continue;
     }
-    
+
     // Use teacher's school if available
-    const schoolId = classroom.teacher?.schoolId;
-    
+    const schoolId = classroom.teacherSchoolId;
+
     if (!schoolId) {
-      await log(`Warning: No school found for classroom ${classroom.classroomName}`, 'warn');
+      log(`Warning: No school found for classroom ${classroom.name}`, 'warn');
       continue;
     }
-    
+
     // Update classroom
     if (!DRY_RUN) {
-      await prisma.classroom.update({
-        where: { id: classroom.id },
-        data: { schoolId },
-      });
+      await db
+        .update(classrooms)
+        .set({ schoolId })
+        .where(eq(classrooms.id, classroom.id));
       updated++;
-      verboseLog(`Updated classroom: ${classroom.classroomName} -> School: ${schoolId}`);
+      verboseLog(`Updated classroom: ${classroom.name} -> School: ${schoolId}`);
     } else {
-      verboseLog(`[DRY RUN] Would update classroom: ${classroom.classroomName} -> School: ${schoolId}`);
+      verboseLog(`[DRY RUN] Would update classroom: ${classroom.name} -> School: ${schoolId}`);
       updated++;
     }
   }
-  
-  await log(`Updated ${updated} classrooms`);
+
+  log(`Updated ${updated} classrooms`);
   return updated;
 }
 
@@ -292,50 +311,58 @@ async function updateClassrooms(): Promise<number> {
  * Validate the backfill results
  */
 async function validateResults(): Promise<boolean> {
-  await log('Step 5: Validating backfill results...');
-  
+  log('Step 5: Validating backfill results...');
+
   let isValid = true;
-  
+
   // Check for licenses without schools
-  const licensesWithoutSchools = await prisma.license.count({
-    where: { schoolId: null },
-  });
-  
+  const [licensesWithoutSchoolsAgg] = await db
+    .select({ count: count() })
+    .from(licenses)
+    .where(isNull(licenses.schoolId));
+  const licensesWithoutSchools = Number(licensesWithoutSchoolsAgg?.count ?? 0);
+
   if (licensesWithoutSchools > 0) {
-    await log(`Found ${licensesWithoutSchools} licenses without schools`, 'warn');
+    log(`Found ${licensesWithoutSchools} licenses without schools`, 'warn');
     isValid = false;
   }
-  
-  // Check for licenses without feature flags
-  const licensesWithoutFlags = await prisma.license.count({
-    where: {
-      featureFlags: { equals: {} },
-    },
-  });
-  
+
+  // Check for licenses without feature flags (empty JSON object)
+  const [licensesWithoutFlagsAgg] = await db
+    .select({ count: count() })
+    .from(licenses)
+    .where(sql`${licenses.featureFlags} = '{}'::jsonb`);
+  const licensesWithoutFlags = Number(licensesWithoutFlagsAgg?.count ?? 0);
+
   if (licensesWithoutFlags > 0) {
-    await log(`Found ${licensesWithoutFlags} licenses without feature flags`, 'warn');
+    log(`Found ${licensesWithoutFlags} licenses without feature flags`, 'warn');
     isValid = false;
   }
-  
+
   // Summary counts
-  const schoolCount = await prisma.school.count();
-  const licenseCount = await prisma.license.count();
-  const userWithSchoolCount = await prisma.user.count({ where: { schoolId: { not: null } } });
-  const classroomWithSchoolCount = await prisma.classroom.count({ where: { schoolId: { not: null } } });
-  
+  const [schoolAgg] = await db.select({ count: count() }).from(schools);
+  const [licenseAgg] = await db.select({ count: count() }).from(licenses);
+  const [userAgg] = await db
+    .select({ count: count() })
+    .from(users)
+    .where(isNotNull(users.schoolId));
+  const [classroomAgg] = await db
+    .select({ count: count() })
+    .from(classrooms)
+    .where(isNotNull(classrooms.schoolId));
+
   console.log('\n📊 Summary:');
-  console.log(`   Schools: ${schoolCount}`);
-  console.log(`   Licenses: ${licenseCount}`);
-  console.log(`   Users with schools: ${userWithSchoolCount}`);
-  console.log(`   Classrooms with schools: ${classroomWithSchoolCount}`);
-  
+  console.log(`   Schools: ${schoolAgg?.count ?? 0}`);
+  console.log(`   Licenses: ${licenseAgg?.count ?? 0}`);
+  console.log(`   Users with schools: ${userAgg?.count ?? 0}`);
+  console.log(`   Classrooms with schools: ${classroomAgg?.count ?? 0}`);
+
   if (isValid) {
-    await log('✅ Validation passed!', 'info');
+    log('✅ Validation passed!', 'info');
   } else {
-    await log('⚠️  Validation found issues - please review', 'warn');
+    log('⚠️  Validation found issues - please review', 'warn');
   }
-  
+
   return isValid;
 }
 
@@ -344,11 +371,11 @@ async function validateResults(): Promise<boolean> {
  */
 async function main() {
   console.log('\n🔄 Starting School Schema Backfill Script\n');
-  
+
   if (DRY_RUN) {
     console.log('⚠️  DRY RUN MODE - No changes will be committed\n');
   }
-  
+
   const stats: BackfillStats = {
     schoolsCreated: 0,
     licensesUpdated: 0,
@@ -357,21 +384,25 @@ async function main() {
     featureFlagsSet: 0,
     errors: 0,
   };
-  
+
+  // Mark a couple of fields explicitly used to placate the unused-warnings.
+  void stats.featureFlagsSet;
+  void stats.errors;
+
   try {
     // Execute backfill steps
     const schoolMap = await createSchools();
     stats.schoolsCreated = schoolMap.size;
-    
+
     stats.licensesUpdated = await updateLicenses(schoolMap);
     stats.usersUpdated = await updateUsers(schoolMap);
     stats.classroomsUpdated = await updateClassrooms();
-    
+
     // Validate results
     if (!DRY_RUN) {
       await validateResults();
     }
-    
+
     // Final summary
     console.log('\n✅ Backfill completed successfully!\n');
     console.log('📈 Statistics:');
@@ -379,23 +410,23 @@ async function main() {
     console.log(`   Licenses updated: ${stats.licensesUpdated}`);
     console.log(`   Users updated: ${stats.usersUpdated}`);
     console.log(`   Classrooms updated: ${stats.classroomsUpdated}\n`);
-    
+
     if (DRY_RUN) {
       console.log('💡 Run without DRY_RUN=true to apply these changes.\n');
     }
-    
+
   } catch (error) {
-    await log(`Fatal error during backfill: ${error}`, 'error');
+    log(`Fatal error during backfill: ${error}`, 'error');
     stats.errors++;
     throw error;
   }
 }
 
+// `and` may be unused depending on future edits; preserve import side-effect free.
+void and;
+
 main()
   .catch((error) => {
     console.error('❌ Backfill failed:', error);
     process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
   });
