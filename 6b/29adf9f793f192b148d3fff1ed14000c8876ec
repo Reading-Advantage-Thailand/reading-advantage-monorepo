@@ -1,0 +1,11 @@
+Task: Phase 1/Task 3 \u2014 validate-json.ts enum swap
+
+Pure type-only change. The file declares 4 interfaces
+(StandardsFile, LessonsFile, CurriculumUnitsFile, QuizQuestionsFile) that
+use StandardsAlignment as a field type \u2014 no runtime values, no instanceof,
+no enum-iteration. Swap to import type from @/lib/enums and add the type
+qualifier for clarity.
+
+Tested via existing curriculum-identifiers.test.ts (70/70 green) which
+dynamically imports every public function in validate-json.ts \u2014 if the
+swap broke the module's load surface, those imports would throw.
