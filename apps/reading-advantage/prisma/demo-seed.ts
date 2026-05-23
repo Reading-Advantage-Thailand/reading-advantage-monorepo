@@ -1,6 +1,28 @@
-import { PrismaClient, Role, ActivityType, LicenseType } from "@prisma/client";
+import { randomUUID } from "crypto";
+import {
+  db,
+  schools,
+  licenses,
+  licenseOnUsers,
+  users,
+  classrooms,
+  classroomStudents,
+  classroomTeachers,
+  articles,
+  xpLogs,
+  userActivity,
+  userWordRecords,
+  userSentenceRecords,
+  lessonRecords,
+  eq,
+  and,
+  inArray,
+} from "@reading-advantage/db";
+import { Role, ActivityType, LicenseType } from "@/lib/enums";
 
-const prisma = new PrismaClient();
+type UserRow = typeof users.$inferSelect;
+type SchoolRow = typeof schools.$inferSelect;
+type LicenseRow = typeof licenses.$inferSelect;
 
 // Demo configuration constants
 const DEMO_CONFIG = {
@@ -73,33 +95,29 @@ const DEMO_CONFIG = {
     email: "demo-admin@reading-advantage.com",
     name: "Admin Demo",
   },
-  password: "demo123", // Simple password for demo purposes
   classrooms: [
     { name: "Beginner Class", grade: 7, studentIndices: [0, 1, 2] }, // A1, A2, B1
     { name: "Advanced Class", grade: 9, studentIndices: [3, 4, 5] }, // B2, C1, C2
   ],
 };
 
-// RA to CEFR mapping for demo students
-const RA_CEFR_MAPPINGS: { [key: number]: string } = {
-  2: "A1",
-  5: "A2",
-  8: "B1",
-  11: "B2",
-  14: "C1",
-  17: "C2",
-};
+function emailToHandle(email: string): { username: string; displayUsername: string } {
+  const local = email.split("@")[0] ?? email;
+  return { username: local.toLowerCase(), displayUsername: local };
+}
 
 /**
  * Create demo school
  */
-async function createDemoSchool() {
+async function createDemoSchool(): Promise<SchoolRow> {
   console.log("🏫 Creating demo school...");
 
   // Check if school already exists
-  const existingSchool = await prisma.school.findFirst({
-    where: { name: DEMO_CONFIG.school.name },
-  });
+  const [existingSchool] = await db
+    .select()
+    .from(schools)
+    .where(eq(schools.name, DEMO_CONFIG.school.name))
+    .limit(1);
 
   if (existingSchool) {
     console.log(
@@ -108,9 +126,10 @@ async function createDemoSchool() {
     return existingSchool;
   }
 
-  const school = await prisma.school.create({
-    data: DEMO_CONFIG.school,
-  });
+  const [school] = await db
+    .insert(schools)
+    .values(DEMO_CONFIG.school)
+    .returning();
 
   console.log(`✅ Created demo school: ${school.name} (ID: ${school.id})`);
   return school;
@@ -119,19 +138,16 @@ async function createDemoSchool() {
 /**
  * Create demo license
  */
-async function createDemoLicense(schoolId: string) {
+async function createDemoLicense(schoolId: string): Promise<LicenseRow> {
   console.log("📜 Creating demo license...");
 
   // Use a fixed license key for demo data to prevent creating new licenses every day
   const licenseKey = `DEMO-${DEMO_CONFIG.school.name.replace(/\s+/g, "-").toUpperCase()}`;
+  const oneYearFromNow = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
 
-  const license = await prisma.license.upsert({
-    where: { key: licenseKey },
-    update: {
-      // Update expiration date to extend it
-      expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
-    },
-    create: {
+  const [license] = await db
+    .insert(licenses)
+    .values({
       key: licenseKey,
       schoolName: DEMO_CONFIG.school.name,
       schoolId,
@@ -139,12 +155,61 @@ async function createDemoLicense(schoolId: string) {
       maxUsers: DEMO_CONFIG.license.maxUsers,
       usedLicenses: 0,
       featureFlags: DEMO_CONFIG.license.featureFlags,
-      expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
-    },
-  });
+      expiresAt: oneYearFromNow,
+    })
+    .onConflictDoUpdate({
+      target: licenses.key,
+      set: {
+        // Update expiration date to extend it
+        expiresAt: oneYearFromNow,
+      },
+    })
+    .returning();
 
   console.log(`✅ Created demo license: ${license.key} (ID: ${license.id})`);
   return license;
+}
+
+async function upsertDemoUser(input: {
+  email: string;
+  name: string;
+  role: Role;
+  schoolId: string;
+  licenseId: string;
+  xp: number;
+  level: number;
+  cefrLevel?: string;
+}): Promise<UserRow> {
+  // Delete first to ensure fresh data (matches original behavior for students)
+  // For teacher/admin we'll just check if exists.
+  const [existing] = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, input.email))
+    .limit(1);
+
+  if (existing) {
+    return existing;
+  }
+
+  const handle = emailToHandle(input.email);
+  const [created] = await db
+    .insert(users)
+    .values({
+      id: randomUUID(),
+      username: handle.username,
+      displayUsername: handle.displayUsername,
+      email: input.email,
+      name: input.name,
+      role: input.role,
+      schoolId: input.schoolId,
+      licenseId: input.licenseId,
+      xp: input.xp,
+      level: input.level,
+      cefrLevel: input.cefrLevel,
+    })
+    .returning();
+  return created;
 }
 
 /**
@@ -153,162 +218,107 @@ async function createDemoLicense(schoolId: string) {
 async function createDemoUsers(schoolId: string, licenseId: string) {
   console.log("👥 Creating demo users...");
 
-  const users: any[] = [];
+  const createdStudents: UserRow[] = [];
 
   // Delete existing demo users first (to ensure fresh data)
-  await prisma.user.deleteMany({
-    where: {
-      email: {
-        in: [
-          ...DEMO_CONFIG.students.map((s) => s.email),
-          DEMO_CONFIG.teacher.email,
-          DEMO_CONFIG.admin.email,
-        ],
-      },
-    },
-  });
+  await db.delete(users).where(
+    inArray(users.email, [
+      ...DEMO_CONFIG.students.map((s) => s.email),
+      DEMO_CONFIG.teacher.email,
+      DEMO_CONFIG.admin.email,
+    ]),
+  );
 
   // Create demo students
   for (const studentConfig of DEMO_CONFIG.students) {
-    const student = await prisma.user.upsert({
-      where: { email: studentConfig.email },
-      update: {},
-      create: {
-        email: studentConfig.email,
-        name: studentConfig.name,
-        role: Role.STUDENT,
-        password: DEMO_CONFIG.password, // In production, this should be hashed
-        schoolId,
-        licenseId,
-        // Calculate XP based on raLevel using actual level table
-        // raLevel 1 = 0-4999, raLevel 2 = 5000-10999, etc.
-        xp: (() => {
-          const levelTable = [
-            { raLevel: 1, min: 0, max: 4999 },
-            { raLevel: 2, min: 5000, max: 10999 },
-            { raLevel: 3, min: 11000, max: 17999 },
-            { raLevel: 4, min: 18000, max: 25999 },
-            { raLevel: 5, min: 26000, max: 34999 },
-            { raLevel: 6, min: 35000, max: 44999 },
-            { raLevel: 7, min: 45000, max: 55999 },
-            { raLevel: 8, min: 56000, max: 67999 },
-            { raLevel: 9, min: 68000, max: 80999 },
-            { raLevel: 10, min: 81000, max: 94999 },
-            { raLevel: 11, min: 95000, max: 109999 },
-            { raLevel: 12, min: 110000, max: 125999 },
-            { raLevel: 13, min: 126000, max: 142999 },
-            { raLevel: 14, min: 143000, max: 160999 },
-            { raLevel: 15, min: 161000, max: 179999 },
-            { raLevel: 16, min: 180000, max: 199999 },
-            { raLevel: 17, min: 200000, max: 220999 },
-            { raLevel: 18, min: 221000, max: 242999 },
-          ];
-          const level = levelTable.find(
-            (l) => l.raLevel === studentConfig.raLevel,
-          );
-          if (level) {
-            // Random XP within the level range
-            return Math.floor(
-              level.min + Math.random() * (level.max - level.min),
-            );
-          }
-          return 0;
-        })(),
-        // Use raLevel directly as level
-        level: studentConfig.raLevel,
-        cefrLevel: studentConfig.level,
-      },
+    // Calculate XP based on raLevel using actual level table
+    const levelTable = [
+      { raLevel: 1, min: 0, max: 4999 },
+      { raLevel: 2, min: 5000, max: 10999 },
+      { raLevel: 3, min: 11000, max: 17999 },
+      { raLevel: 4, min: 18000, max: 25999 },
+      { raLevel: 5, min: 26000, max: 34999 },
+      { raLevel: 6, min: 35000, max: 44999 },
+      { raLevel: 7, min: 45000, max: 55999 },
+      { raLevel: 8, min: 56000, max: 67999 },
+      { raLevel: 9, min: 68000, max: 80999 },
+      { raLevel: 10, min: 81000, max: 94999 },
+      { raLevel: 11, min: 95000, max: 109999 },
+      { raLevel: 12, min: 110000, max: 125999 },
+      { raLevel: 13, min: 126000, max: 142999 },
+      { raLevel: 14, min: 143000, max: 160999 },
+      { raLevel: 15, min: 161000, max: 179999 },
+      { raLevel: 16, min: 180000, max: 199999 },
+      { raLevel: 17, min: 200000, max: 220999 },
+      { raLevel: 18, min: 221000, max: 242999 },
+    ];
+    const level = levelTable.find((l) => l.raLevel === studentConfig.raLevel);
+    const xp = level
+      ? Math.floor(level.min + Math.random() * (level.max - level.min))
+      : 0;
+
+    const student = await upsertDemoUser({
+      email: studentConfig.email,
+      name: studentConfig.name,
+      role: Role.STUDENT,
+      schoolId,
+      licenseId,
+      xp,
+      level: studentConfig.raLevel,
+      cefrLevel: studentConfig.level,
     });
 
     // Associate student with license
-    await prisma.licenseOnUser.upsert({
-      where: {
-        userId_licenseId: {
-          userId: student.id,
-          licenseId,
-        },
-      },
-      update: {},
-      create: {
-        userId: student.id,
-        licenseId,
-      },
-    });
+    await db
+      .insert(licenseOnUsers)
+      .values({ userId: student.id, licenseId })
+      .onConflictDoNothing();
 
-    users.push({ ...student, raLevel: studentConfig.raLevel });
+    createdStudents.push(student);
     console.log(
       `  ✓ Created student: ${student.name} (${studentConfig.level})`,
     );
   }
 
   // Create demo teacher
-  const teacher = await prisma.user.upsert({
-    where: { email: DEMO_CONFIG.teacher.email },
-    update: {},
-    create: {
-      email: DEMO_CONFIG.teacher.email,
-      name: DEMO_CONFIG.teacher.name,
-      role: Role.TEACHER,
-      password: DEMO_CONFIG.password,
-      schoolId,
-      licenseId,
-      xp: 221000,
-      level: 18,
-    },
+  const teacher = await upsertDemoUser({
+    email: DEMO_CONFIG.teacher.email,
+    name: DEMO_CONFIG.teacher.name,
+    role: Role.TEACHER,
+    schoolId,
+    licenseId,
+    xp: 221000,
+    level: 18,
   });
 
-  await prisma.licenseOnUser.upsert({
-    where: {
-      userId_licenseId: {
-        userId: teacher.id,
-        licenseId,
-      },
-    },
-    update: {},
-    create: {
-      userId: teacher.id,
-      licenseId,
-    },
-  });
+  await db
+    .insert(licenseOnUsers)
+    .values({ userId: teacher.id, licenseId })
+    .onConflictDoNothing();
 
-  users.push(teacher);
   console.log(`  ✓ Created teacher: ${teacher.name}`);
 
   // Create demo admin
-  const admin = await prisma.user.upsert({
-    where: { email: DEMO_CONFIG.admin.email },
-    update: {},
-    create: {
-      email: DEMO_CONFIG.admin.email,
-      name: DEMO_CONFIG.admin.name,
-      role: Role.ADMIN,
-      password: DEMO_CONFIG.password,
-      schoolId,
-      licenseId,
-      xp: 221000,
-      level: 18,
-    },
+  const admin = await upsertDemoUser({
+    email: DEMO_CONFIG.admin.email,
+    name: DEMO_CONFIG.admin.name,
+    role: Role.ADMIN,
+    schoolId,
+    licenseId,
+    xp: 221000,
+    level: 18,
   });
 
-  await prisma.licenseOnUser.upsert({
-    where: {
-      userId_licenseId: {
-        userId: admin.id,
-        licenseId,
-      },
-    },
-    update: {},
-    create: {
-      userId: admin.id,
-      licenseId,
-    },
-  });
+  await db
+    .insert(licenseOnUsers)
+    .values({ userId: admin.id, licenseId })
+    .onConflictDoNothing();
 
-  users.push(admin);
   console.log(`  ✓ Created admin: ${admin.name}`);
 
-  console.log(`✅ Created ${users.length} demo users`);
-  return { students: users.slice(0, 6), teacher, admin };
+  const totalUsers = createdStudents.length + 2;
+  console.log(`✅ Created ${totalUsers} demo users`);
+  return { students: createdStudents, teacher, admin };
 }
 
 /**
@@ -317,77 +327,75 @@ async function createDemoUsers(schoolId: string, licenseId: string) {
 async function createDemoClassrooms(
   schoolId: string,
   teacherId: string,
-  students: any[],
+  students: UserRow[],
 ) {
   console.log("🎓 Creating demo classrooms...");
 
   // Delete existing demo classrooms first
-  await prisma.classroom.deleteMany({
-    where: {
-      schoolId,
-      classroomName: {
-        in: ["Beginner Class", "Advanced Class"],
-      },
-    },
-  });
+  await db
+    .delete(classrooms)
+    .where(
+      and(
+        eq(classrooms.schoolId, schoolId),
+        inArray(classrooms.name, ["Beginner Class", "Advanced Class"]),
+      ),
+    );
 
-  const classrooms = [];
+  const created: Array<typeof classrooms.$inferSelect> = [];
 
   for (const classroomConfig of DEMO_CONFIG.classrooms) {
-    const classroom = await prisma.classroom.create({
-      data: {
-        classroomName: classroomConfig.name,
+    const [classroom] = await db
+      .insert(classrooms)
+      .values({
+        name: classroomConfig.name,
         teacherId,
         schoolId,
         createdBy: teacherId,
         grade: classroomConfig.grade,
         archived: false, // Explicitly set to false
         classCode: `DEMO-${classroomConfig.name.replace(/\s+/g, "-").toUpperCase()}`,
-      },
-    });
+      })
+      .returning();
 
     // Add students to classroom
     for (const studentIndex of classroomConfig.studentIndices) {
-      await prisma.classroomStudent.create({
-        data: {
-          classroomId: classroom.id,
-          studentId: students[studentIndex].id,
-        },
+      await db.insert(classroomStudents).values({
+        classroomId: classroom.id,
+        studentId: students[studentIndex].id,
       });
     }
 
     // Add teacher to ClassroomTeacher relation (for teacher overview)
-    await prisma.classroomTeacher.create({
-      data: {
-        classroomId: classroom.id,
-        teacherId,
-        role: "OWNER",
-      },
+    await db.insert(classroomTeachers).values({
+      classroomId: classroom.id,
+      teacherId,
+      role: "OWNER",
     });
 
-    classrooms.push(classroom);
+    created.push(classroom);
     console.log(
-      `  ✓ Created classroom: ${classroom.classroomName} with ${classroomConfig.studentIndices.length} students`,
+      `  ✓ Created classroom: ${classroom.name} with ${classroomConfig.studentIndices.length} students`,
     );
   }
 
-  console.log(`✅ Created ${classrooms.length} demo classrooms`);
-  return classrooms;
+  console.log(`✅ Created ${created.length} demo classrooms`);
+  return created;
 }
 
 /**
  * Generate SRS flashcards for demo students (based on profile)
  */
-async function generateSRSFlashcards(students: any[]) {
+async function generateSRSFlashcards(students: UserRow[]) {
   console.log("📚 Generating SRS flashcards...");
 
   // Get some sample articles
-  const articles = await prisma.article.findMany({
-    where: { isPublic: true },
-    take: 10,
-  });
+  const articleList = await db
+    .select()
+    .from(articles)
+    .where(eq(articles.isPublic, true))
+    .limit(10);
 
-  if (articles.length === 0) {
+  if (articleList.length === 0) {
     console.log("⚠️  No public articles found. Skipping SRS generation.");
     return;
   }
@@ -397,10 +405,11 @@ async function generateSRSFlashcards(students: any[]) {
 
   for (const student of students) {
     // Determine student profile based on email
+    const email = student.email ?? "";
     const profile =
-      student.email.includes("a1") || student.email.includes("a2")
+      email.includes("a1") || email.includes("a2")
         ? "LAZY"
-        : student.email.includes("b1") || student.email.includes("b2")
+        : email.includes("b1") || email.includes("b2")
           ? "AVERAGE"
           : "HARDWORKING";
 
@@ -413,7 +422,7 @@ async function generateSRSFlashcards(students: any[]) {
           : Math.floor(Math.random() * 8) + 12; // 12-19
 
     for (let i = 0; i < wordCount; i++) {
-      const article = articles[Math.floor(Math.random() * articles.length)];
+      const article = articleList[Math.floor(Math.random() * articleList.length)];
 
       // Sample words for flashcards
       const sampleWords = [
@@ -448,24 +457,22 @@ async function generateSRSFlashcards(students: any[]) {
       }
 
       try {
-        await prisma.userWordRecord.create({
-          data: {
-            userId: student.id,
-            articleId: article.id,
-            word: wordData,
-            saveToFlashcard: true,
-            difficulty: Math.random() * 5,
-            due: dueDate,
-            state,
-            reps,
-            lapses,
-            stability,
-            elapsedDays: reps,
-            scheduledDays: Math.floor(stability),
-          },
+        await db.insert(userWordRecords).values({
+          userId: student.id,
+          articleId: article.id,
+          word: wordData,
+          saveToFlashcard: true,
+          difficulty: Math.random() * 5,
+          due: dueDate,
+          state,
+          reps,
+          lapses,
+          stability,
+          elapsedDays: reps,
+          scheduledDays: Math.floor(stability),
         });
         totalWordRecords++;
-      } catch (error) {
+      } catch {
         // Skip if duplicate
       }
     }
@@ -479,7 +486,7 @@ async function generateSRSFlashcards(students: any[]) {
           : Math.floor(Math.random() * 6) + 6; // 6-11
 
     for (let i = 0; i < sentenceCount; i++) {
-      const article = articles[Math.floor(Math.random() * articles.length)];
+      const article = articleList[Math.floor(Math.random() * articleList.length)];
 
       const sampleSentences = [
         {
@@ -517,25 +524,23 @@ async function generateSRSFlashcards(students: any[]) {
         dueDate.setDate(dueDate.getDate() + Math.floor(Math.random() * 7) + 3);
       }
 
-      await prisma.userSentenceRecord.create({
-        data: {
-          userId: student.id,
-          articleId: article.id,
-          sentence: sentenceData.sentence,
-          translation: sentenceData.translation,
-          sn: i + 1,
-          timepoint: Math.random() * 100,
-          endTimepoint: Math.random() * 100 + 100,
-          saveToFlashcard: true,
-          difficulty: Math.random() * 5,
-          due: dueDate,
-          state,
-          reps,
-          lapses,
-          stability,
-          elapsedDays: reps,
-          scheduledDays: Math.floor(stability),
-        },
+      await db.insert(userSentenceRecords).values({
+        userId: student.id,
+        articleId: article.id,
+        sentence: sentenceData.sentence,
+        translation: sentenceData.translation,
+        sn: i + 1,
+        timepoint: Math.random() * 100,
+        endTimepoint: Math.random() * 100 + 100,
+        saveToFlashcard: true,
+        difficulty: Math.random() * 5,
+        due: dueDate,
+        state,
+        reps,
+        lapses,
+        stability,
+        elapsedDays: reps,
+        scheduledDays: Math.floor(stability),
       });
       totalSentenceRecords++;
     }
@@ -549,16 +554,17 @@ async function generateSRSFlashcards(students: any[]) {
 /**
  * Generate LessonRecord for demo students (for AI Insight)
  */
-async function generateLessonRecords(students: any[]) {
+async function generateLessonRecords(students: UserRow[]) {
   console.log("📖 Generating lesson records...");
 
   // Get some sample articles
-  const articles = await prisma.article.findMany({
-    where: { isPublic: true },
-    take: 20,
-  });
+  const articleList = await db
+    .select()
+    .from(articles)
+    .where(eq(articles.isPublic, true))
+    .limit(20);
 
-  if (articles.length === 0) {
+  if (articleList.length === 0) {
     console.log(
       "⚠️  No public articles found. Skipping lesson record generation.",
     );
@@ -569,10 +575,11 @@ async function generateLessonRecords(students: any[]) {
 
   for (const student of students) {
     // Determine student profile
+    const email = student.email ?? "";
     const profile =
-      student.email.includes("a1") || student.email.includes("a2")
+      email.includes("a1") || email.includes("a2")
         ? "LAZY"
-        : student.email.includes("b1") || student.email.includes("b2")
+        : email.includes("b1") || email.includes("b2")
           ? "AVERAGE"
           : "HARDWORKING";
 
@@ -586,16 +593,16 @@ async function generateLessonRecords(students: any[]) {
 
     // Select random articles for this student
     const selectedArticles = [];
-    for (let i = 0; i < recordCount && i < articles.length; i++) {
-      const randomIndex = Math.floor(Math.random() * articles.length);
-      selectedArticles.push(articles[randomIndex]);
+    for (let i = 0; i < recordCount && i < articleList.length; i++) {
+      const randomIndex = Math.floor(Math.random() * articleList.length);
+      selectedArticles.push(articleList[randomIndex]);
     }
 
     for (const article of selectedArticles) {
       // Create a lesson record with some completed phases
       const completedPhases = Math.floor(Math.random() * 10) + 5; // 5-14 phases completed
 
-      const lessonData: any = {
+      const lessonData: Record<string, unknown> = {
         userId: student.id,
         articleId: article.id,
       };
@@ -609,11 +616,11 @@ async function generateLessonRecords(students: any[]) {
       }
 
       try {
-        await prisma.lessonRecord.create({
-          data: lessonData,
-        });
+        await db
+          .insert(lessonRecords)
+          .values(lessonData as typeof lessonRecords.$inferInsert);
         totalRecords++;
-      } catch (error) {
+      } catch {
         // Skip if duplicate
       }
     }
@@ -625,16 +632,17 @@ async function generateLessonRecords(students: any[]) {
 /**
  * Generate initial activities for demo students (7 days history)
  */
-async function generateInitialActivities(students: any[]) {
+async function generateInitialActivities(students: UserRow[]) {
   console.log("📊 Generating initial activities (7 days history)...");
 
   // Get some sample articles
-  const articles = await prisma.article.findMany({
-    where: { isPublic: true },
-    take: 20,
-  });
+  const articleList = await db
+    .select()
+    .from(articles)
+    .where(eq(articles.isPublic, true))
+    .limit(20);
 
-  if (articles.length === 0) {
+  if (articleList.length === 0) {
     console.log("⚠️  No public articles found. Skipping activity generation.");
     return;
   }
@@ -675,7 +683,7 @@ async function generateInitialActivities(students: any[]) {
 
       // Generate activities for this day
       for (let i = 0; i < activitiesPerDay; i++) {
-        const article = articles[Math.floor(Math.random() * articles.length)];
+        const article = articleList[Math.floor(Math.random() * articleList.length)];
         const activityTypes = [
           ActivityType.ARTICLE_READ,
           ActivityType.MC_QUESTION,
@@ -684,41 +692,41 @@ async function generateInitialActivities(students: any[]) {
         ];
         const activityType =
           activityTypes[Math.floor(Math.random() * activityTypes.length)];
+        const createdAt = new Date(activityDate.getTime() + i * 1000 * 60 * 15);
 
         // Create user activity (use upsert to avoid unique constraint error)
-        const activity = await prisma.userActivity.upsert({
-          where: {
-            userId_activityType_targetId: {
-              userId: student.id,
-              activityType,
-              targetId: article.id,
-            },
-          },
-          update: {
-            timer: Math.floor(Math.random() * 300) + 60,
-            completed: true,
-            createdAt: new Date(activityDate.getTime() + i * 1000 * 60 * 15),
-          },
-          create: {
+        const [activity] = await db
+          .insert(userActivity)
+          .values({
             userId: student.id,
             activityType,
             targetId: article.id,
             timer: Math.floor(Math.random() * 300) + 60, // 60-360 seconds
             completed: true,
-            createdAt: new Date(activityDate.getTime() + i * 1000 * 60 * 15), // Spread activities throughout the day
-          },
-        });
+            createdAt,
+          })
+          .onConflictDoUpdate({
+            target: [
+              userActivity.userId,
+              userActivity.activityType,
+              userActivity.targetId,
+            ],
+            set: {
+              timer: Math.floor(Math.random() * 300) + 60,
+              completed: true,
+              createdAt,
+            },
+          })
+          .returning();
         totalActivities++;
 
         // Create XP log
-        await prisma.xPLog.create({
-          data: {
-            userId: student.id,
-            xpEarned: xpPerActivity,
-            activityType,
-            activityId: article.id,
-            createdAt: activity.createdAt,
-          },
+        await db.insert(xpLogs).values({
+          userId: student.id,
+          xpEarned: xpPerActivity,
+          activityType,
+          activityId: String(article.id),
+          createdAt: activity.createdAt,
         });
         totalXPLogs++;
       }
@@ -798,34 +806,27 @@ async function main() {
     console.log("─".repeat(60));
     console.log("\n👨‍🎓 Students:");
     DEMO_CONFIG.students.forEach((s, i) => {
-      console.log(
-        `  ${i + 1}. ${s.name} - ${s.email} / ${DEMO_CONFIG.password}`,
-      );
+      console.log(`  ${i + 1}. ${s.name} - ${s.email}`);
     });
     console.log("\n👨‍🏫 Teacher:");
-    console.log(
-      `  ${DEMO_CONFIG.teacher.name} - ${DEMO_CONFIG.teacher.email} / ${DEMO_CONFIG.password}`,
-    );
+    console.log(`  ${DEMO_CONFIG.teacher.name} - ${DEMO_CONFIG.teacher.email}`);
     console.log("\n👨‍💼 Admin:");
-    console.log(
-      `  ${DEMO_CONFIG.admin.name} - ${DEMO_CONFIG.admin.email} / ${DEMO_CONFIG.password}`,
-    );
+    console.log(`  ${DEMO_CONFIG.admin.name} - ${DEMO_CONFIG.admin.email}`);
     console.log("\n" + "─".repeat(60));
     console.log(`\n🏫 School: ${school.name}`);
     console.log(`📜 License: ${license.key}`);
     console.log(`🆔 License ID: ${license.id}`);
-    console.log(`🆔 School ID: ${school.id}\n`);
+    console.log(`🆔 School ID: ${school.id}`);
+    // Note: admin user reference retained for backward-compat
+    void admin;
+    console.log("");
   } catch (error) {
     console.error("❌ Error during demo seed:", error);
     throw error;
   }
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
