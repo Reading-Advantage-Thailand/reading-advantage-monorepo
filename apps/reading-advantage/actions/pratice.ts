@@ -1,7 +1,8 @@
 "use server";
 
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db, eq } from "@reading-advantage/db";
+import { userSentenceRecords } from "@reading-advantage/db/schema";
 
 interface OrderSentenceGameData {
   id: string;
@@ -41,11 +42,11 @@ export async function getSentencesForOrderingGame(): Promise<{
     }
 
     // Find user's sentence flashcard deck by checking for sentence records
-    const sentences = await prisma.userSentenceRecord.findFirst({
-      where: {
-        userId: user.id,
-      },
-    });
+    const [sentences] = await db
+      .select()
+      .from(userSentenceRecords)
+      .where(eq(userSentenceRecords.userId, user.id))
+      .limit(1);
 
     if (!sentences) {
       return {
@@ -103,11 +104,11 @@ export async function getFlashcardDeckId(): Promise<{
     }
 
     // Find user's sentence flashcard deck by checking for sentence records
-    const sentences = await prisma.userSentenceRecord.findFirst({
-      where: {
-        userId: user.id,
-      },
-    });
+    const [sentences] = await db
+      .select()
+      .from(userSentenceRecords)
+      .where(eq(userSentenceRecords.userId, user.id))
+      .limit(1);
 
     if (!sentences) {
       return {
