@@ -1,6 +1,6 @@
 /**
  * Query Optimizer for Dashboard Metrics
- * 
+ *
  * Provides optimized queries that minimize connection pool usage
  * by batching queries and using transactions efficiently.
  */
@@ -25,22 +25,48 @@ export async function executeBatchQuery<T extends Record<string, any>>(
 }
 
 /**
- * Execute a raw SQL query with connection pooling optimization
- * Note: parameters are interpolated positionally via sql.raw placeholders;
- * callers must pre-sanitize inputs (this is a port-as-is helper).
+ * Execute a raw SQL query with safe parameter binding.
+ *
+ * Accepts a string template using `$1`, `$2`, ... placeholders and a list of
+ * parameter values, and converts them into Drizzle's parameterized `sql`
+ * fragments so values are bound by the driver (no string interpolation,
+ * no SQL injection risk).
+ *
+ * Example:
+ *   await executeOptimizedRaw(
+ *     'SELECT * FROM users WHERE school_id = $1 AND created_at >= $2',
+ *     schoolId,
+ *     since,
+ *   );
  */
 export async function executeOptimizedRaw<T = any>(
   query: string,
   ...params: any[]
 ): Promise<T[]> {
   try {
-    let i = 0;
-    const interpolated = query.replace(/\$\d+/g, () => {
-      const v = params[i++];
-      if (typeof v === 'number') return String(v);
-      return `'${String(v).replace(/'/g, "''")}'`;
-    });
-    const result = (await db.execute(sql.raw(interpolated))) as unknown as T[];
+    // Split on $n placeholders, preserving the surrounding literal SQL chunks.
+    // Each `$n` slot is replaced by a parameterized `sql` fragment so the
+    // driver binds the value safely.
+    const parts = query.split(/\$(\d+)/g);
+    const fragments: any[] = [];
+    for (let i = 0; i < parts.length; i++) {
+      if (i % 2 === 0) {
+        // Literal SQL chunk.
+        if (parts[i].length > 0) {
+          fragments.push(sql.raw(parts[i]));
+        }
+      } else {
+        // Placeholder index (1-based in the source query).
+        const idx = Number(parts[i]) - 1;
+        if (idx < 0 || idx >= params.length) {
+          throw new Error(
+            `[QueryOptimizer] Missing bind value for placeholder $${parts[i]}`,
+          );
+        }
+        fragments.push(sql`${params[idx]}`);
+      }
+    }
+    const result = (await db.execute(sql.join(fragments))) as unknown as T[];
     return result;
   } catch (error) {
     console.error('[QueryOptimizer] Raw query failed:', query, error);
