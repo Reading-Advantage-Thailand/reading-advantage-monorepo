@@ -8,11 +8,13 @@ This is the **third of 4 tracks** in the Prisma → Drizzle migration program. A
 
 **Blocked on:** `prisma_drizzle_schema_unification_20260505`.
 
-## Inventory (audit baseline, 2026-05-05)
+## Inventory (re-verified 2026-05-23)
 
-- 89 files reference Prisma in `apps/science-advantage/` (excluding `lib/generated/zod/` schemas, of which there are several hundred).
+- 96 files reference Prisma in `apps/science-advantage/` (excluding the auto-generated `lib/generated/zod/`, which has several hundred mostly-dead files).
 - Domains in use: curriculum, lessons, classes, gamification (profile/achievements/mastery), quiz attempts, question responses, lesson completion, mastery runs, standards, assignments.
-- `lib/generated/zod/` is an auto-generated Prisma-Zod artifact that disappears with Prisma removal.
+- `lib/generated/zod/` is an auto-generated Prisma-Zod artifact that disappears with Prisma removal — only **two** files import it (`lib/validations/class.ts`, `lib/validations/student-classes.ts`).
+- `apps/science-advantage` does **not** yet depend on `@reading-advantage/domain` — Phase 0 adds it.
+- See `plan.md` for the full per-file inventory and the Prisma-model → Drizzle-table map.
 
 ## Functional Requirements
 

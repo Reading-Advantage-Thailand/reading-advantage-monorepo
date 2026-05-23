@@ -389,17 +389,17 @@ These do not run in production request paths — lower risk, but still one commi
 
 ## Phase 9: Prisma removal & final verification
 
-- [ ] Task: Confirm zero Prisma references
-    - [ ] Sub-task: `grep -rln "@prisma\|@/lib/prisma" apps/reading-advantage --include=*.ts --include=*.tsx | grep -vE "node_modules|/.next/"` returns nothing
-- [ ] Task: Delete Prisma surface
-    - [ ] Sub-task: Delete `apps/reading-advantage/lib/prisma.ts`
-    - [ ] Sub-task: Delete `apps/reading-advantage/prisma/` (schema, migrations, generated client)
-    - [ ] Sub-task: Remove `prisma`, `@prisma/client`, `prisma-zod-generator` from `apps/reading-advantage/package.json`
-    - [ ] Sub-task: Remove the `prebuild: prisma generate` script
-- [ ] Task: Verify clean install + build + test
-    - [ ] Sub-task: `pnpm install` (lockfile no longer resolves Prisma for this app)
-    - [ ] Sub-task: `pnpm --filter reading-advantage build` — no new `ignoreBuildErrors` regressions
-    - [ ] Sub-task: `CI=true pnpm --filter reading-advantage test` green
-- [ ] Task: Close tech-debt entry `firestore_drizzle` (2026-05-03) and append any new slices to Track 4's spec
-- [ ] Task: Add lessons-learned entries for any non-obvious reshape handling (≤50-line cap — prune first)
-- [ ] Task: Measure - User Manual Verification 'Prisma Removal' (Protocol in workflow.md)
+- [x] Task: Confirm zero Prisma references
+    - [x] Sub-task: `grep -rln "@prisma\|@/lib/prisma" apps/reading-advantage --include=*.ts --include=*.tsx | grep -vE "node_modules|/.next/"` returns nothing (only comment in `lib/enums.ts` references @prisma/client by name in a documentation header — acceptable per plan AC#1 which checks for `from.*['"]@/lib/prisma['"]\|from.*['"]@prisma` imports specifically; that grep returns 0 matches)
+- [x] Task: Delete Prisma surface
+    - [x] Sub-task: Delete `apps/reading-advantage/lib/prisma.ts` — ecb9c57
+    - [x] Sub-task: Delete `apps/reading-advantage/prisma/` (schema, migrations, generated client) — ecb9c57. Note: 8 migrations containing CREATE MATERIALIZED VIEW SQL were preserved at `apps/reading-advantage/db-migrations/legacy-matviews/` (commit 5db6d21) — these matviews are required by the migrated services. README documents apply order. Tech-debt entry added for folding into a Drizzle migration as follow-up. Seeds moved to `apps/reading-advantage/scripts/seed/`.
+    - [x] Sub-task: Remove `prisma`, `@prisma/client`, `prisma-zod-generator` from `apps/reading-advantage/package.json` — 74106d5. (prisma-zod-generator was not present.)
+    - [x] Sub-task: Remove the `prebuild: prisma generate` script — 74106d5
+- [x] Task: Verify clean install + build + test
+    - [x] Sub-task: `pnpm install` (lockfile no longer resolves Prisma for this app) — verified. `@prisma/client` and `prisma` remain only as dependencies of primary-advantage and science-advantage which have their own migration tracks.
+    - [ ] Sub-task: `pnpm --filter reading-advantage build` — no new `ignoreBuildErrors` regressions — **DEFERRED to manual verification** (build hangs on resource-constrained hardware per pre-existing tech-debt 2026-05-01). Lint passes: 0 errors, 133 pre-existing react-hooks/exhaustive-deps warnings.
+    - [ ] Sub-task: `CI=true pnpm --filter reading-advantage test` green — **DEFERRED to manual verification** (Jest run timed out at 10min on this hardware; same pre-existing constraint).
+- [x] Task: Close tech-debt entry `firestore_drizzle` (2026-05-03) and append any new slices to Track 4's spec — done. Also closed `verification_tokens` (2026-05-22) since Phase 7 confirmed test files migrated and the table was dropped in migration 0003.
+- [x] Task: Add lessons-learned entries for any non-obvious reshape handling (≤50-line cap — prune first) — 2 entries added: (a) silent Prisma `where:{schoolId}` filter bugs revealed by Drizzle; (b) matview SQL preservation pattern.
+- [ ] Task: Measure - User Manual Verification 'Prisma Removal' (Protocol in workflow.md) — pending user. Suggested checks: `pnpm --filter reading-advantage build`, `CI=true pnpm --filter reading-advantage test`, smoke-test the matview-querying endpoints (alignment metrics, srs-health, genre engagement, assignment funnel, velocity), confirm auth flow (login + session resolution via migrated lib/session.ts), and verify seed scripts still run (`pnpm --filter reading-advantage db:seed:small`).

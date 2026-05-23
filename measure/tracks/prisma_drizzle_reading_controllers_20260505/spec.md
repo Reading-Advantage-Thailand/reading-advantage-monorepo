@@ -10,11 +10,12 @@ This is the **second of 4 tracks** in the Prisma → Drizzle migration program.
 
 ## Inventory (audit baseline — re-verify at track start)
 
-The 2026-05-05 baseline is stale-prone. A 2026-05-22 re-grep showed **~145 files**. Re-run the inventory grep as the first task of Phase 1 and work from fresh numbers, not the figures below.
+The 2026-05-05 baseline was stale. A 2026-05-23 re-grep showed **147 files**. Re-run the inventory grep as Task 0.0 of the plan and work from fresh numbers.
 
-- ~141–145 files reference Prisma in `apps/reading-advantage/` — `grep -rln "@prisma\|@/lib/prisma" apps/reading-advantage/` excluding `node_modules`, `.next/`, `dist/`, `prisma/generated`.
-- 54 controller files in `apps/reading-advantage/server/controllers/`.
-- Direct importers also present in `actions/`, `lib/cache/`, `lib/pagination/`, `lib/classroom-utils.ts`, `contexts/userRole-context.tsx`, `components/` (~7 server-component files), `middleware.ts`, `types/`, `scripts/`, `app/[locale]/.../page.tsx` (server components), and `app/api/v1/.../route.ts`.
+- 147 files reference Prisma in `apps/reading-advantage/` — `grep -rln "@prisma\|lib/prisma" apps/reading-advantage/` excluding `node_modules`, `.next/`, `dist/`, `prisma/generated`.
+- 50 controller files in `apps/reading-advantage/server/controllers/`; 11 in `server/services/`; 5 in `server/utils/` + `server/middleware/`.
+- Direct importers also present in `actions/`, `lib/cache/`, `lib/pagination/`, `lib/classroom-utils.ts`, `lib/session.ts`, `contexts/userRole-context.tsx`, `components/`, `middleware.ts`, `types/`, 11 `scripts/`, 2 `prisma/` seeds, ~16 `app/[locale]/.../page.tsx` server components, and 26 `app/api/v1/.../route.ts` handlers.
+- See `plan.md` for the full per-file inventory and the Prisma-model → Drizzle-table map.
 
 ## Functional Requirements
 
