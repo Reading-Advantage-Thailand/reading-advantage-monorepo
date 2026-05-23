@@ -150,13 +150,13 @@ This file tracks all major tracks for the project.
   *Link: [./archive/prisma_drizzle_schema_unification_20260505/](./archive/prisma_drizzle_schema_unification_20260505/)*
   Track 1 of 4. Audit, port, reshape, and unify all non-auth Prisma models into shared Drizzle schema. Adds domain helpers and parity tests. No controller changes. Unblocks tracks 2–4. *Status: COMPLETE — 6 phases done. 45+ Prisma models classified. Migration 0013. 5 domain modules. 67-test parity suite. 550 total tests green. Completed 2026-05-22.*
 - [x] **Track: reading-advantage Controllers — Prisma → Drizzle**
-  *Link: [./tracks/prisma_drizzle_reading_controllers_20260505/](./tracks/prisma_drizzle_reading_controllers_20260505/)*
+  *Link: [./archive/prisma_drizzle_reading_controllers_20260505/](./archive/prisma_drizzle_reading_controllers_20260505/)*
   Track 2 of 4. Migrate 141 Prisma references across 54 controllers, actions, lib, scripts, pages, and route handlers. Final phase deletes Prisma surface and deps. *Status: COMPLETE 2026-05-23 (reopened + re-closed same day). 9 phases done plus 3 reopened SQL fixes: dashboard-summary-controller unified table/column names (9b7661a), assignment-prediction-service a.created_at (58a356f), query-optimizer parameterized sql binding (0ca2e1b). New jest coverage for all three (PgDialect-rendered SQL assertions). __test__/ suite 11/11 green (194 tests). Build + lint clean. Full app-wide jest still deferred to CI/faster hardware.*
 - [~] **Track: science-advantage Non-Auth Prisma → Drizzle**
   *Link: [./tracks/prisma_drizzle_science_controllers_20260505/](./tracks/prisma_drizzle_science_controllers_20260505/)*
   Track 3 of 4. **Blocked on track 1.** Migrate 89 non-auth Prisma references (curriculum, lessons, gamification, classes, attempts, mastery). Deletes generated Zod artifacts and Prisma surface.
 - [x] **Track: science-advantage Test Infra — Prisma → Drizzle Migration**
-  *Link: [./tracks/science_test_infra_drizzle_migration_20260523/](./tracks/science_test_infra_drizzle_migration_20260523/)*
+  *Link: [./archive/science_test_infra_drizzle_migration_20260523/](./archive/science_test_infra_drizzle_migration_20260523/)*
   Sub-track of Track 3. Replaces `prisma db push --force-reset` in `vitest.setup.ts` with `drizzle-kit migrate` against a dedicated `science_advantage_test` DB; splits unit/integration setup files. Unblocks runtime verification for Track 3 Phases 1+.
 - [ ] **Track: Prisma → Drizzle Per-Feature Slice Cleanup**
   *Link: [./tracks/prisma_drizzle_slice_cleanup_20260505/](./tracks/prisma_drizzle_slice_cleanup_20260505/)*
