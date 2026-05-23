@@ -323,17 +323,17 @@ All nine share one shape: read/write `gameRanking`, `userActivity`, `xpLogs`, FS
 Same loop. Services hold reusable logic — if a service query is also done by a controller you
 already migrated, this is the place to extract a shared domain helper (per 0.5/0.6).
 
-- [ ] Task: Migrate `services/ai-insight-service.ts`
-- [ ] Task: Migrate `services/goals-service.ts`
-- [ ] Task: Migrate `services/demo-activity-generator.ts`
-- [ ] Task: Migrate `services/demo-isolation-service.ts`
-- [ ] Task: Migrate `services/refresh-matviews-service.ts`
-- [ ] Task: Migrate `services/srs-quick-actions-service.ts`
-- [ ] Task: Migrate `services/localization/genre-localization-service.ts`
-- [ ] Task: Migrate `services/metrics/assignment-prediction-service.ts`
-- [ ] Task: Migrate `services/metrics/genre-engagement-service.ts`
-- [ ] Task: Migrate `services/metrics/srs-health-service.ts`
-- [ ] Task: Migrate `services/metrics/velocity-service.ts`
+- [x] Task: Migrate `services/ai-insight-service.ts` — 52cf8ae
+- [x] Task: Migrate `services/goals-service.ts` — 8c0ca8c
+- [x] Task: Migrate `services/demo-activity-generator.ts` — 4378492
+- [x] Task: Migrate `services/demo-isolation-service.ts` — 3d4b569
+- [x] Task: Migrate `services/refresh-matviews-service.ts` — 1a160fa
+- [x] Task: Migrate `services/srs-quick-actions-service.ts` — 37ec33d
+- [x] Task: Migrate `services/localization/genre-localization-service.ts` — 09943b6
+- [x] Task: Migrate `services/metrics/assignment-prediction-service.ts` — dab543d
+- [x] Task: Migrate `services/metrics/genre-engagement-service.ts` — b60c2eb
+- [x] Task: Migrate `services/metrics/srs-health-service.ts` — 11e1571
+- [x] Task: Migrate `services/metrics/velocity-service.ts` — 05fd49d
 - [ ] Task: Measure - User Manual Verification 'Services' (Protocol in workflow.md)
 
 ## Phase 5: server/utils, server/middleware, actions
@@ -341,12 +341,12 @@ already migrated, this is the place to extract a shared domain helper (per 0.5/0
 `guards.ts` and `authorization.ts` are security-sensitive — characterization tests here are
 mandatory; verify cross-tenant/permission behavior is byte-identical before and after.
 
-- [ ] Task: Migrate `server/middleware/guards.ts`
-- [ ] Task: Migrate `server/utils/authorization.ts`
-- [ ] Task: Migrate `server/utils/generators/audio-generator.ts`
-- [ ] Task: Migrate `server/utils/generators/audio-words-generator.ts`
-- [ ] Task: Migrate `server/utils/generators/stories-generator.ts`
-- [ ] Task: Migrate `actions/flashcard.ts`, `actions/pratice.ts`, `actions/rating.ts` (one commit each)
+- [x] Task: Migrate `server/middleware/guards.ts` — 2200fb5
+- [x] Task: Migrate `server/utils/authorization.ts` — 2ec8d16
+- [x] Task: Migrate `server/utils/generators/audio-generator.ts` — 64b47a5
+- [x] Task: Migrate `server/utils/generators/audio-words-generator.ts` — 0a21e05
+- [x] Task: Migrate `server/utils/generators/stories-generator.ts` — d7cff72
+- [x] Task: Migrate `actions/flashcard.ts`, `actions/pratice.ts`, `actions/rating.ts` (one commit each) — aa1d791, 43498ef, 00c2259
 - [ ] Task: Measure - User Manual Verification 'Utils / Middleware / Actions' (Protocol in workflow.md)
 
 ## Phase 6: lib/*
