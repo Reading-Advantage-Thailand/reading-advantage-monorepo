@@ -1,7 +1,11 @@
 "use server";
 
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db, eq, desc } from "@reading-advantage/db";
+import {
+  userWordRecords,
+  userSentenceRecords,
+} from "@reading-advantage/db/schema";
 
 // Types for API responses
 interface FlashcardStats {
@@ -96,14 +100,16 @@ export async function getDashboardData() {
     }
 
     const [vocabularies, sentences] = await Promise.all([
-      prisma.userWordRecord.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.userSentenceRecord.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: "desc" },
-      }),
+      db
+        .select()
+        .from(userWordRecords)
+        .where(eq(userWordRecords.userId, user.id))
+        .orderBy(desc(userWordRecords.createdAt)),
+      db
+        .select()
+        .from(userSentenceRecords)
+        .where(eq(userSentenceRecords.userId, user.id))
+        .orderBy(desc(userSentenceRecords.createdAt)),
     ]);
 
     return {
@@ -131,14 +137,16 @@ export async function getUserFlashcardDecks() {
     }
 
     const [vocabularies, sentences] = await Promise.all([
-      prisma.userWordRecord.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.userSentenceRecord.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: "desc" },
-      }),
+      db
+        .select()
+        .from(userWordRecords)
+        .where(eq(userWordRecords.userId, user.id))
+        .orderBy(desc(userWordRecords.createdAt)),
+      db
+        .select()
+        .from(userSentenceRecords)
+        .where(eq(userSentenceRecords.userId, user.id))
+        .orderBy(desc(userSentenceRecords.createdAt)),
     ]);
 
     const decks = [];
@@ -206,15 +214,17 @@ export async function getDeckCards(deckId: string) {
     let allCards: any[] = [];
     
     if (deckId === 'vocabulary') {
-      allCards = await prisma.userWordRecord.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: "desc" },
-      });
+      allCards = await db
+        .select()
+        .from(userWordRecords)
+        .where(eq(userWordRecords.userId, user.id))
+        .orderBy(desc(userWordRecords.createdAt));
     } else if (deckId === 'sentences') {
-      allCards = await prisma.userSentenceRecord.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: "desc" },
-      });
+      allCards = await db
+        .select()
+        .from(userSentenceRecords)
+        .where(eq(userSentenceRecords.userId, user.id))
+        .orderBy(desc(userSentenceRecords.createdAt));
     } else {
       throw new Error("Invalid deck ID");
     }
