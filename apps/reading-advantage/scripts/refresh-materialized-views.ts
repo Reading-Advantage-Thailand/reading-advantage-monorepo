@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db, sql } from "@reading-advantage/db";
 
 const MATERIALIZED_VIEWS = [
   'mv_student_velocity',
@@ -18,21 +16,22 @@ async function refreshMaterializedViews() {
   for (const viewName of MATERIALIZED_VIEWS) {
     try {
       // Try CONCURRENTLY first (faster, allows reads during refresh)
-      await prisma.$executeRawUnsafe(`REFRESH MATERIALIZED VIEW CONCURRENTLY ${viewName}`);
+      await db.execute(sql.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY ${viewName}`));
       console.log(`✅ Refreshed (CONCURRENTLY): ${viewName}`);
-    } catch (error: any) {
+    } catch {
       // Fall back to regular refresh if CONCURRENTLY fails (needs unique index)
       try {
-        await prisma.$executeRawUnsafe(`REFRESH MATERIALIZED VIEW ${viewName}`);
+        await db.execute(sql.raw(`REFRESH MATERIALIZED VIEW ${viewName}`));
         console.log(`✅ Refreshed: ${viewName}`);
-      } catch (fallbackError: any) {
-        console.error(`❌ Failed to refresh ${viewName}:`, fallbackError?.message || fallbackError);
+      } catch (fallbackError: unknown) {
+        const message =
+          fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+        console.error(`❌ Failed to refresh ${viewName}:`, message);
       }
     }
   }
 
   console.log('\n✨ All materialized views refreshed!');
-  await prisma.$disconnect();
 }
 
 refreshMaterializedViews();
