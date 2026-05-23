@@ -1,4 +1,13 @@
-import { prisma as db } from "@/lib/prisma";
+import { db, eq, and, asc, desc, gte, lte, inArray, count, sql } from "@reading-advantage/db";
+import {
+  learningGoals,
+  goalMilestones,
+  goalProgressLogs,
+  users,
+  userActivity,
+  xpLogs,
+  lessonRecords,
+} from "@reading-advantage/db/schema";
 import {
   CreateGoalInput,
   UpdateGoalInput,
@@ -6,38 +15,96 @@ import {
   GoalSummary,
   GoalRecommendation,
 } from "@/types/learning-goals";
-import { GoalStatus, GoalType, GoalPriority } from "@prisma/client";
+import { GoalStatus, GoalType, GoalPriority } from "@/lib/enums";
+
+// ─── Types for assembled goal results ────────────────────────────────────────
+
+type LearningGoalRow = typeof learningGoals.$inferSelect;
+type GoalMilestoneRow = typeof goalMilestones.$inferSelect;
+type GoalProgressLogRow = typeof goalProgressLogs.$inferSelect;
+
+type GoalWithRelations = LearningGoalRow & {
+  milestones: GoalMilestoneRow[];
+  progressLogs?: GoalProgressLogRow[];
+};
+
+// ─── Helpers to load relations client-side ───────────────────────────────────
+
+async function loadMilestonesForGoals(
+  goalIds: string[]
+): Promise<Map<string, GoalMilestoneRow[]>> {
+  const map = new Map<string, GoalMilestoneRow[]>();
+  if (goalIds.length === 0) return map;
+  const rows = await db
+    .select()
+    .from(goalMilestones)
+    .where(inArray(goalMilestones.goalId, goalIds))
+    .orderBy(asc(goalMilestones.order));
+  for (const row of rows) {
+    if (!map.has(row.goalId)) map.set(row.goalId, []);
+    map.get(row.goalId)!.push(row);
+  }
+  return map;
+}
+
+async function loadProgressLogsForGoal(
+  goalId: string,
+  take?: number,
+  order: "asc" | "desc" = "desc"
+): Promise<GoalProgressLogRow[]> {
+  let q = db
+    .select()
+    .from(goalProgressLogs)
+    .where(eq(goalProgressLogs.goalId, goalId))
+    .orderBy(
+      order === "desc"
+        ? desc(goalProgressLogs.createdAt)
+        : asc(goalProgressLogs.createdAt)
+    ) as any;
+  if (typeof take === "number") {
+    q = q.limit(take);
+  }
+  return q;
+}
 
 export class GoalsService {
   /**
    * Create a new learning goal
    */
   static async createGoal(userId: string, input: CreateGoalInput) {
-    const goal = await db.learningGoal.create({
-      data: {
-        userId,
-        goalType: input.goalType,
-        title: input.title,
-        description: input.description,
-        targetValue: input.targetValue,
-        unit: input.unit,
-        targetDate: input.targetDate,
-        priority: input.priority || GoalPriority.MEDIUM,
-        isRecurring: input.isRecurring || false,
-        recurringPeriod: input.recurringPeriod,
-        metadata: input.metadata,
-        milestones: input.milestones
-          ? {
-              create: input.milestones,
-            }
-          : undefined,
-      },
-      include: {
-        milestones: true,
-      },
-    });
+    return db.transaction(async (tx) => {
+      const [goal] = await tx
+        .insert(learningGoals)
+        .values({
+          userId,
+          goalType: input.goalType,
+          title: input.title,
+          description: input.description,
+          targetValue: input.targetValue,
+          unit: input.unit,
+          targetDate: input.targetDate,
+          priority: input.priority || GoalPriority.MEDIUM,
+          isRecurring: input.isRecurring || false,
+          recurringPeriod: input.recurringPeriod,
+          metadata: input.metadata,
+        })
+        .returning();
 
-    return goal;
+      let milestones: GoalMilestoneRow[] = [];
+      if (input.milestones && input.milestones.length > 0) {
+        milestones = await tx
+          .insert(goalMilestones)
+          .values(
+            input.milestones.map((m: any) => ({
+              ...m,
+              goalId: goal.id,
+            }))
+          )
+          .returning();
+      }
+
+      return { ...goal, milestones };
+    });
   }
 
   /**
@@ -47,62 +114,69 @@ export class GoalsService {
     userId: string,
     status?: GoalStatus,
     includeProgress = false
-  ) {
-    const goals = await db.learningGoal.findMany({
-      where: {
-        userId,
-        ...(status && { status }),
-      },
-      include: {
-        milestones: {
-          orderBy: {
-            order: "asc",
-          },
-        },
-        progressLogs: includeProgress
-          ? {
-              orderBy: {
-                createdAt: "desc",
-              },
-              take: 10,
-            }
-          : false,
-      },
-      orderBy: [
-        { status: "asc" },
-        { priority: "desc" },
-        { targetDate: "asc" },
-      ],
-    });
+  ): Promise<GoalWithRelations[]> {
+    const goals = await db
+      .select()
+      .from(learningGoals)
+      .where(
+        and(
+          eq(learningGoals.userId, userId),
+          status ? eq(learningGoals.status, status) : undefined
+        )
+      )
+      .orderBy(
+        asc(learningGoals.status),
+        desc(learningGoals.priority),
+        asc(learningGoals.targetDate)
+      );
 
-    return goals;
+    const goalIds = goals.map((g) => g.id);
+    const milestonesMap = await loadMilestonesForGoals(goalIds);
+
+    const progressLogsMap = new Map<string, GoalProgressLogRow[]>();
+    if (includeProgress) {
+      // Fetch latest 10 progress logs per goal (one query per goal — matches Prisma include)
+      await Promise.all(
+        goalIds.map(async (id) => {
+          const logs = await loadProgressLogsForGoal(id, 10, "desc");
+          progressLogsMap.set(id, logs);
+        })
+      );
+    }
+
+    return goals.map((g) => ({
+      ...g,
+      milestones: milestonesMap.get(g.id) ?? [],
+      ...(includeProgress
+        ? { progressLogs: progressLogsMap.get(g.id) ?? [] }
+        : {}),
+    }));
   }
 
   /**
    * Get a single goal by ID
    */
-  static async getGoalById(goalId: string, userId: string) {
-    const goal = await db.learningGoal.findFirst({
-      where: {
-        id: goalId,
-        userId,
-      },
-      include: {
-        milestones: {
-          orderBy: {
-            order: "asc",
-          },
-        },
-        progressLogs: {
-          orderBy: {
-            createdAt: "desc",
-          },
-          take: 20,
-        },
-      },
-    });
+  static async getGoalById(
+    goalId: string,
+    userId: string
+  ): Promise<GoalWithRelations | null> {
+    const [goal] = await db
+      .select()
+      .from(learningGoals)
+      .where(and(eq(learningGoals.id, goalId), eq(learningGoals.userId, userId)))
+      .limit(1);
 
-    return goal;
+    if (!goal) return null;
+
+    const milestones = await db
+      .select()
+      .from(goalMilestones)
+      .where(eq(goalMilestones.goalId, goal.id))
+      .orderBy(asc(goalMilestones.order));
+
+    const progressLogs = await loadProgressLogsForGoal(goal.id, 20, "desc");
+
+    return { ...goal, milestones, progressLogs };
   }
 
   /**
@@ -113,29 +187,25 @@ export class GoalsService {
     userId: string,
     input: UpdateGoalInput
   ) {
-    const goal = await db.learningGoal.updateMany({
-      where: {
-        id: goalId,
-        userId,
-      },
-      data: input,
-    });
+    const result = await db
+      .update(learningGoals)
+      .set({ ...(input as any), updatedAt: new Date() })
+      .where(and(eq(learningGoals.id, goalId), eq(learningGoals.userId, userId)))
+      .returning();
 
-    return goal;
+    return { count: result.length };
   }
 
   /**
    * Delete a goal
    */
   static async deleteGoal(goalId: string, userId: string) {
-    const goal = await db.learningGoal.deleteMany({
-      where: {
-        id: goalId,
-        userId,
-      },
-    });
+    const result = await db
+      .delete(learningGoals)
+      .where(and(eq(learningGoals.id, goalId), eq(learningGoals.userId, userId)))
+      .returning({ id: learningGoals.id });
 
-    return goal;
+    return { count: result.length };
   }
 
   /**
@@ -149,89 +219,97 @@ export class GoalsService {
     activityType?: string,
     note?: string
   ) {
-    const goal = await db.learningGoal.findFirst({
-      where: {
-        id: goalId,
-        userId,
-      },
-    });
+    return db.transaction(async (tx) => {
+      const [goal] = await tx
+        .select()
+        .from(learningGoals)
+        .where(
+          and(eq(learningGoals.id, goalId), eq(learningGoals.userId, userId))
+        )
+        .limit(1);
 
-    if (!goal) {
-      throw new Error("Goal not found");
-    }
+      if (!goal) {
+        throw new Error("Goal not found");
+      }
 
-    const previousValue = goal.currentValue;
-    const newValue = previousValue + value;
+      const previousValue = goal.currentValue;
+      const newValue = previousValue + value;
 
-    // Update goal progress
-    const updatedGoal = await db.learningGoal.update({
-      where: {
-        id: goalId,
-      },
-      data: {
-        currentValue: newValue,
-        // Auto-complete if target reached
-        ...(newValue >= goal.targetValue &&
-          goal.status === GoalStatus.ACTIVE && {
+      const shouldComplete =
+        newValue >= goal.targetValue && goal.status === GoalStatus.ACTIVE;
+
+      // Update goal progress
+      const [updatedGoal] = await tx
+        .update(learningGoals)
+        .set({
+          currentValue: newValue,
+          updatedAt: new Date(),
+          ...(shouldComplete && {
             status: GoalStatus.COMPLETED,
             completedAt: new Date(),
           }),
-        progressLogs: {
-          create: {
-            value,
-            previousValue,
-            newValue,
-            activityId,
-            activityType: activityType as any,
-            note,
-          },
-        },
-      },
-      include: {
-        milestones: true,
-      },
-    });
+        })
+        .where(eq(learningGoals.id, goalId))
+        .returning();
 
-    // Check and update milestones
-    if (updatedGoal.milestones && updatedGoal.milestones.length > 0) {
-      for (const milestone of updatedGoal.milestones) {
+      // Insert progress log
+      await tx.insert(goalProgressLogs).values({
+        goalId,
+        value,
+        previousValue,
+        newValue,
+        activityId,
+        activityType,
+        note,
+      });
+
+      // Load milestones
+      const milestones = await tx
+        .select()
+        .from(goalMilestones)
+        .where(eq(goalMilestones.goalId, goalId))
+        .orderBy(asc(goalMilestones.order));
+
+      // Check and update milestones
+      for (const milestone of milestones) {
         if (newValue >= milestone.targetValue && !milestone.achievedAt) {
-          await db.goalMilestone.update({
-            where: {
-              id: milestone.id,
-            },
-            data: {
-              achievedAt: new Date(),
-            },
-          });
+          await tx
+            .update(goalMilestones)
+            .set({ achievedAt: new Date() })
+            .where(eq(goalMilestones.id, milestone.id));
         }
       }
-    }
 
-    return updatedGoal;
+      // Reload milestones to reflect achievedAt updates
+      const refreshedMilestones = await tx
+        .select()
+        .from(goalMilestones)
+        .where(eq(goalMilestones.goalId, goalId))
+        .orderBy(asc(goalMilestones.order));
+
+      return { ...updatedGoal, milestones: refreshedMilestones };
+    });
   }
 
   /**
    * Calculate goal progress analytics
    */
-  static async calculateProgress(goalId: string, userId: string): Promise<GoalProgress> {
-    const goal = await db.learningGoal.findFirst({
-      where: {
-        id: goalId,
-        userId,
-      },
-      include: {
-        progressLogs: {
-          orderBy: {
-            createdAt: "asc",
-          },
-        },
-      },
-    });
+  static async calculateProgress(
+    goalId: string,
+    userId: string
+  ): Promise<GoalProgress> {
+    const [goal] = await db
+      .select()
+      .from(learningGoals)
+      .where(and(eq(learningGoals.id, goalId), eq(learningGoals.userId, userId)))
+      .limit(1);
 
     if (!goal) {
       throw new Error("Goal not found");
     }
+
+    // progressLogs were fetched in the original Prisma include but never used
+    // in the calculation — preserve that behavior and skip the query.
 
     const progressPercentage = Math.min(
       (goal.currentValue / goal.targetValue) * 100,
@@ -278,11 +356,10 @@ export class GoalsService {
    * Get user goal summary
    */
   static async getUserGoalSummary(userId: string): Promise<GoalSummary> {
-    const goals = await db.learningGoal.findMany({
-      where: {
-        userId,
-      },
-    });
+    const goals = await db
+      .select()
+      .from(learningGoals)
+      .where(eq(learningGoals.userId, userId));
 
     const totalGoals = goals.length;
     const activeGoals = goals.filter((g) => g.status === GoalStatus.ACTIVE).length;
@@ -319,32 +396,37 @@ export class GoalsService {
    * Get AI-powered goal recommendations
    */
   static async getGoalRecommendations(userId: string): Promise<GoalRecommendation[]> {
-    const user = await db.user.findUnique({
-      where: { id: userId },
-      include: {
-        xpLogs: {
-          take: 30,
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        userActivities: {
-          take: 30,
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-      },
-    });
+    const [user] = await db
+      .select({ id: users.id, cefrLevel: users.cefrLevel })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (!user) {
       throw new Error("User not found");
     }
 
+    // Mirror Prisma `include: { xpLogs: { take: 30, orderBy: desc(createdAt) } }`
+    const recentXpLogs = await db
+      .select({ xpEarned: xpLogs.xpEarned, createdAt: xpLogs.createdAt })
+      .from(xpLogs)
+      .where(eq(xpLogs.userId, userId))
+      .orderBy(desc(xpLogs.createdAt))
+      .limit(30);
+
+    const recentActivities = await db
+      .select({ id: userActivity.id, createdAt: userActivity.createdAt })
+      .from(userActivity)
+      .where(eq(userActivity.userId, userId))
+      .orderBy(desc(userActivity.createdAt))
+      .limit(30);
+
     const recommendations: GoalRecommendation[] = [];
 
     // XP-based recommendation
-    const recentXP = user.xpLogs.slice(0, 7).reduce((sum: number, log: any) => sum + log.xpEarned, 0);
+    const recentXP = recentXpLogs
+      .slice(0, 7)
+      .reduce((sum: number, log) => sum + log.xpEarned, 0);
     const avgDailyXP = recentXP / 7;
 
     if (avgDailyXP > 0) {
@@ -361,7 +443,7 @@ export class GoalsService {
     }
 
     // Reading streak recommendation
-    const hasActiveStreak = user.userActivities.length >= 3;
+    const hasActiveStreak = recentActivities.length >= 3;
     if (hasActiveStreak) {
       recommendations.push({
         type: GoalType.STREAK,
@@ -413,12 +495,15 @@ export class GoalsService {
    * Auto-sync progress from user activities
    */
   static async syncProgressFromActivities(userId: string) {
-    const activeGoals = await db.learningGoal.findMany({
-      where: {
-        userId,
-        status: GoalStatus.ACTIVE,
-      },
-    });
+    const activeGoals = await db
+      .select()
+      .from(learningGoals)
+      .where(
+        and(
+          eq(learningGoals.userId, userId),
+          eq(learningGoals.status, GoalStatus.ACTIVE)
+        )
+      );
 
     const now = new Date();
 
@@ -430,32 +515,32 @@ export class GoalsService {
           const todayStart = new Date(now);
           todayStart.setHours(0, 0, 0, 0);
 
-          const xpLogs = await db.xPLog.findMany({
-            where: {
-              userId,
-              createdAt: {
-                gte: todayStart,
-                lte: now,
-              },
-            },
-            select: {
-              xpEarned: true,
-            },
-          });
+          const [agg] = await db
+            .select({
+              total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)`.mapWith(Number),
+            })
+            .from(xpLogs)
+            .where(
+              and(
+                eq(xpLogs.userId, userId),
+                gte(xpLogs.createdAt, todayStart),
+                lte(xpLogs.createdAt, now)
+              )
+            );
 
-          const dailyXp = xpLogs.reduce((sum, log) => sum + log.xpEarned, 0);
+          const dailyXp = agg?.total ?? 0;
 
-          await db.learningGoal.update({
-            where: { id: goal.id },
-            data: { 
+          await db
+            .update(learningGoals)
+            .set({
               currentValue: dailyXp,
-              // Auto-complete if target reached
+              updatedAt: new Date(),
               ...(dailyXp >= goal.targetValue && {
                 status: GoalStatus.COMPLETED,
                 completedAt: new Date(),
               }),
-            },
-          });
+            })
+            .where(eq(learningGoals.id, goal.id));
           break;
         }
 
@@ -464,87 +549,89 @@ export class GoalsService {
           const weekStart = new Date(now);
           weekStart.setDate(now.getDate() - 7);
 
-          const xpLogs = await db.xPLog.findMany({
-            where: {
-              userId,
-              createdAt: {
-                gte: weekStart,
-                lte: now,
-              },
-            },
-            select: {
-              xpEarned: true,
-            },
-          });
+          const [agg] = await db
+            .select({
+              total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)`.mapWith(Number),
+            })
+            .from(xpLogs)
+            .where(
+              and(
+                eq(xpLogs.userId, userId),
+                gte(xpLogs.createdAt, weekStart),
+                lte(xpLogs.createdAt, now)
+              )
+            );
 
-          const weeklyXp = xpLogs.reduce((sum, log) => sum + log.xpEarned, 0);
+          const weeklyXp = agg?.total ?? 0;
 
-          await db.learningGoal.update({
-            where: { id: goal.id },
-            data: { 
+          await db
+            .update(learningGoals)
+            .set({
               currentValue: weeklyXp,
-              // Auto-complete if target reached
+              updatedAt: new Date(),
               ...(weeklyXp >= goal.targetValue && {
                 status: GoalStatus.COMPLETED,
                 completedAt: new Date(),
               }),
-            },
-          });
+            })
+            .where(eq(learningGoals.id, goal.id));
           break;
         }
 
         case GoalType.XP_TOTAL: {
           // Calculate XP earned since goal start date
-          const xpLogs = await db.xPLog.findMany({
-            where: {
-              userId,
-              createdAt: {
-                gte: goal.startDate,
-                lte: now,
-              },
-            },
-            select: {
-              xpEarned: true,
-            },
-          });
+          const [agg] = await db
+            .select({
+              total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)`.mapWith(Number),
+            })
+            .from(xpLogs)
+            .where(
+              and(
+                eq(xpLogs.userId, userId),
+                gte(xpLogs.createdAt, goal.startDate),
+                lte(xpLogs.createdAt, now)
+              )
+            );
 
-          const totalXp = xpLogs.reduce((sum, log) => sum + log.xpEarned, 0);
+          const totalXp = agg?.total ?? 0;
 
-          await db.learningGoal.update({
-            where: { id: goal.id },
-            data: { 
+          await db
+            .update(learningGoals)
+            .set({
               currentValue: totalXp,
-              // Auto-complete if target reached
+              updatedAt: new Date(),
               ...(totalXp >= goal.targetValue && {
                 status: GoalStatus.COMPLETED,
                 completedAt: new Date(),
               }),
-            },
-          });
+            })
+            .where(eq(learningGoals.id, goal.id));
           break;
         }
 
         case GoalType.ARTICLES_READ: {
-          const articleCount = await db.lessonRecord.count({
-            where: {
-              userId,
-              createdAt: {
-                gte: goal.startDate,
-                lte: now,
-              },
-            },
-          });
-          await db.learningGoal.update({
-            where: { id: goal.id },
-            data: { 
+          const [countRow] = await db
+            .select({ c: count() })
+            .from(lessonRecords)
+            .where(
+              and(
+                eq(lessonRecords.userId, userId),
+                gte(lessonRecords.createdAt, goal.startDate),
+                lte(lessonRecords.createdAt, now)
+              )
+            );
+          const articleCount = Number(countRow?.c ?? 0);
+          await db
+            .update(learningGoals)
+            .set({
               currentValue: articleCount,
-              // Auto-complete if target reached
+              updatedAt: new Date(),
               ...(articleCount >= goal.targetValue && {
                 status: GoalStatus.COMPLETED,
                 completedAt: new Date(),
               }),
-            },
-          });
+            })
+            .where(eq(learningGoals.id, goal.id));
           break;
         }
 
