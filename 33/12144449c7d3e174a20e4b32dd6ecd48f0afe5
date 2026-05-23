@@ -1,0 +1,37 @@
+Task: Phase 1/Task 1 \u2014 migrate get-class-detail.ts off Prisma
+
+TDD loop:
+  Red:  5/5 fail (prisma.class.findUnique \u2192 'table public.Class does not exist')
+  Green: 5/5 pass (1218ms total, 340-372ms per test)
+  Refactor: docstring + @kind read tag
+
+Files touched:
+  + lib/enums.ts                                           (local enum module \u2014 new)
+  + lib/services/classes/get-class-detail.integration.test.ts (5 cases \u2014 new)
+  M lib/services/classes/get-class-detail.ts               (Prisma \u2192 Drizzle)
+
+Test coverage targets:
+  \u00b7 null class path
+  \u00b7 metadata projection (id/name/gradeLevel/standardsAlignment/joinCode/teacherId/dates)
+  \u00b7 student ids + studentCount from junction
+  \u00b7 unit ordering AND framework filter (cross-framework unit MUST be excluded)
+  \u00b7 lesson ordering inside units (seeded in reverse to prove ORDER BY works)
+  \u00b7 empty class baseline
+
+Design choices:
+  - 4 separate Drizzle queries instead of an aggregated CTE: Prisma's
+    findUnique-with-includes was already 2 queries; the per-unit lesson fan-out
+    is N+1 by design (preserves Prisma's parallel-friendly fetch shape) and
+    matches what other migrated reading-advantage controllers do.
+  - count() via separate aggregate query rather than COUNT(*) OVER() window:
+    keeps the read pure and easy to test in isolation. studentCount and the
+    students array are derived from the same junction, so consistency is the
+    DB's job, not the controller's.
+  - StandardsAlignment cast at the boundary: Drizzle text column \u2192 union type.
+    Safe because the legacy Prisma enum check constraint still exists at the
+    Postgres layer (migration 0013 preserves it).
+
+Tech-debt potentially introduced:
+  - LessonType not yet wired anywhere (added to lib/enums.ts speculatively for
+    upcoming Phase 1+ files). If no file consumes it by Phase 5, remove or
+    leave as a forward-compatibility export.
