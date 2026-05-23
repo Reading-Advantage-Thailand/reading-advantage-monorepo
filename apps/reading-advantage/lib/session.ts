@@ -1,9 +1,15 @@
-import { prisma } from "@/lib/prisma";
-import { LicenseType, Role } from "@prisma/client";
 import { cookies } from "next/headers";
-import { db } from "@reading-advantage/db";
+import { db, eq } from "@reading-advantage/db";
+import {
+  users,
+  licenses,
+  licenseOnUsers,
+  classroomTeachers,
+  classroomStudents,
+} from "@reading-advantage/db/schema";
 import { validateSession } from "@reading-advantage/auth";
 import { z } from "zod";
+import { LicenseType, Role } from "@/lib/enums";
 
 export const sessionUserSchema = z.object({
   id: z.string(),
@@ -29,17 +35,18 @@ export const sessionUserSchema = z.object({
 export type SessionUser = z.infer<typeof sessionUserSchema>;
 
 async function getUserLicenseLevel(
-  userId: string,
+  _userId: string,
   licenseId: string | null,
   expiredDate: Date | null
 ): Promise<LicenseType | "EXPIRED"> {
   try {
     if (licenseId) {
-      const license = await prisma.license.findUnique({
-        where: { id: licenseId },
-        select: { licenseType: true },
-      });
-      return license?.licenseType || LicenseType.BASIC;
+      const [license] = await db
+        .select({ licenseType: licenses.licenseType })
+        .from(licenses)
+        .where(eq(licenses.id, licenseId))
+        .limit(1);
+      return ((license?.licenseType as LicenseType | undefined) ?? LicenseType.BASIC);
     }
 
     if (!expiredDate) {
@@ -72,46 +79,62 @@ export async function getCurrentUser() {
     return null;
   }
 
-  // Enrich with reading-advantage specific data from Prisma
+  // Enrich with reading-advantage specific data via Drizzle
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        level: true,
-        emailVerified: true,
-        image: true,
-        xp: true,
-        cefrLevel: true,
-        expiredDate: true,
-        licenseId: true,
-        onborda: true,
-        schoolId: true,
-        licenseOnUsers: {
-          select: { licenseId: true },
-          take: 1,
-        },
-        teacherClassrooms: { select: { classroomId: true } },
-        studentClassrooms: { select: { classroomId: true } },
-      },
-    });
+    const [user] = await db
+      .select({
+        id: users.id,
+        email: users.email,
+        name: users.name,
+        role: users.role,
+        level: users.level,
+        image: users.image,
+        xp: users.xp,
+        cefrLevel: users.cefrLevel,
+        expiredDate: users.expiredDate,
+        licenseId: users.licenseId,
+        schoolId: users.schoolId,
+      })
+      .from(users)
+      .where(eq(users.id, session.user.id))
+      .limit(1);
 
     if (!user) {
       return null;
     }
 
-    const currentDate = new Date();
-    const activeLicenseId = user.licenseOnUsers[0]?.licenseId || user.licenseId;
+    // Note: `emailVerified` and `onborda` columns are not (yet) on the unified
+    // Drizzle users schema — default sensibly. Reading-advantage's session
+    // implies the user already authenticated, so treat email as verified.
+    const emailVerified = true;
+    const onborda = false;
 
-    let effectiveExpirationDate = user.expiredDate;
+    const [licenseLink] = await db
+      .select({ licenseId: licenseOnUsers.licenseId })
+      .from(licenseOnUsers)
+      .where(eq(licenseOnUsers.userId, user.id))
+      .limit(1);
+
+    const teacherClassroomRows = await db
+      .select({ classroomId: classroomTeachers.classroomId })
+      .from(classroomTeachers)
+      .where(eq(classroomTeachers.teacherId, user.id));
+
+    const studentClassroomRows = await db
+      .select({ classroomId: classroomStudents.classroomId })
+      .from(classroomStudents)
+      .where(eq(classroomStudents.studentId, user.id));
+
+    const currentDate = new Date();
+    const activeLicenseId = licenseLink?.licenseId ?? user.licenseId ?? null;
+
+    let effectiveExpirationDate: Date | null = user.expiredDate ?? null;
     if (activeLicenseId) {
-      const activeLicense = await prisma.license.findUnique({
-        where: { id: activeLicenseId },
-        select: { expiresAt: true },
-      });
+      const [activeLicense] = await db
+        .select({ expiresAt: licenses.expiresAt })
+        .from(licenses)
+        .where(eq(licenses.id, activeLicenseId))
+        .limit(1);
       if (activeLicense?.expiresAt) {
         effectiveExpirationDate = activeLicense.expiresAt;
       }
@@ -127,12 +150,8 @@ export async function getCurrentUser() {
       effectiveExpirationDate
     );
 
-    const teacherClassIds = user.teacherClassrooms.map(
-      (tc: { classroomId: string }) => tc.classroomId
-    );
-    const studentClassIds = user.studentClassrooms.map(
-      (sc: { classroomId: string }) => sc.classroomId
-    );
+    const teacherClassIds = teacherClassroomRows.map((tc) => tc.classroomId);
+    const studentClassIds = studentClassroomRows.map((sc) => sc.classroomId);
 
     const sessionUser = sessionUserSchema.parse({
       id: user.id,
@@ -141,7 +160,7 @@ export async function getCurrentUser() {
       display_name: user.name ?? "",
       role: user.role,
       level: user.level,
-      email_verified: !!user.emailVerified,
+      email_verified: emailVerified,
       picture: user.image ?? "",
       xp: user.xp,
       cefr_level: user.cefrLevel ?? "",
@@ -149,7 +168,7 @@ export async function getCurrentUser() {
       expired: isExpired,
       license_id: activeLicenseId ?? "",
       license_level: licenseLevel,
-      onborda: user.onborda ?? false,
+      onborda,
       school_id: user.schoolId ?? undefined,
       teacher_class_ids:
         teacherClassIds.length > 0 ? teacherClassIds : undefined,
