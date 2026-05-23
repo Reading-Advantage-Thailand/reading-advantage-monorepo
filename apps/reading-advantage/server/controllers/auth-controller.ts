@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser, type SessionUser } from "@/lib/session";
-import { Role } from "@prisma/client";
 import { sendDiscordWebhook } from "../utils/send-discord-webhook";
 
 // Middleware to protect routes
@@ -31,7 +30,7 @@ export const protect = async (
 
 // Middleware to restrict access to specific roles
 // If using the restrictTo, skip the protect middleware
-export const restrictTo = (...allowedRoles: Role[]) => {
+export const restrictTo = (...allowedRoles: string[]) => {
   return async (
     req: ExtendedNextRequest,
     params: unknown,
@@ -119,7 +118,7 @@ export const assertSelfOrAllowedStaff = (
   
   if (sessionUser.id === routeUserId) return true;
   
-  const allowedRoles: Role[] = [Role.ADMIN, Role.TEACHER];
+  const allowedRoles: string[] = ["ADMIN", "TEACHER"];
   if (allowedRoles.includes(sessionUser.role)) {
     // Optionally validate if the requested user is in the caller's allowed scope
     return true;
