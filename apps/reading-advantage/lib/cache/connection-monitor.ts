@@ -3,7 +3,7 @@
  * Provides real-time monitoring of connection usage and health
  */
 
-import { prisma } from "@/lib/prisma";
+import { db, sql } from "@reading-advantage/db";
 import { advancedCache } from "./advanced-cache";
 
 interface ConnectionMetrics {
@@ -83,20 +83,26 @@ class ConnectionPoolMonitor {
       const startTime = Date.now();
 
       // Query PostgreSQL system tables for connection info
-      const connectionStats = await prisma.$queryRaw<Array<{
-        total_connections: number;
-        active_connections: number;
-        idle_connections: number;
-        max_connections: number;
-      }>>`
-        SELECT 
+      const connectionStats = (await db.execute(sql`
+        SELECT
           (SELECT count(*) FROM pg_stat_activity) as total_connections,
           (SELECT count(*) FROM pg_stat_activity WHERE state = 'active') as active_connections,
           (SELECT count(*) FROM pg_stat_activity WHERE state = 'idle') as idle_connections,
           (SELECT setting::int FROM pg_settings WHERE name = 'max_connections') as max_connections
-      `;
+      `)) as Array<{
+        total_connections: number | string;
+        active_connections: number | string;
+        idle_connections: number | string;
+        max_connections: number | string;
+      }>;
 
-      const stats = connectionStats[0];
+      const rawStats = connectionStats[0];
+      const stats = {
+        total_connections: Number(rawStats.total_connections),
+        active_connections: Number(rawStats.active_connections),
+        idle_connections: Number(rawStats.idle_connections),
+        max_connections: Number(rawStats.max_connections),
+      };
       const responseTime = Date.now() - startTime;
 
       // Get slow query count from recent history
@@ -282,7 +288,7 @@ class ConnectionPoolMonitor {
 
     try {
       // Simple connection test
-      await prisma.$queryRaw`SELECT 1 as test`;
+      await db.execute(sql`SELECT 1 as test`);
       connectionTest = true;
     } catch (error) {
       console.error('[ConnMonitor] Connection test failed:', error);
