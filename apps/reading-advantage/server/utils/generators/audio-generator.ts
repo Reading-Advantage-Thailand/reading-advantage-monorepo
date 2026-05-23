@@ -14,6 +14,8 @@ import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModelAudio } from "@/utils/google";
 import z from "zod";
 import ffmpeg from "fluent-ffmpeg";
+import { db, eq } from "@reading-advantage/db";
+import { articles } from "@reading-advantage/db/schema";
 
 interface GenerateAudioParams {
   passage: string;
@@ -223,23 +225,22 @@ export async function generateAudio({
 
     await uploadToBucket(combinedAudioPath, `${AUDIO_URL}/${articleId}.mp3`);
 
-    //update using Prisma
-    const { prisma } = await import("@/lib/prisma");
+    //update using Drizzle
     try {
       if (isChapter && chapterId) {
         // For chapters, don't update database here, just return the result
         // The caller will handle the database update
       } else {
-        await prisma.article.update({
-          where: { id: articleId },
-          data: {
+        await db
+          .update(articles)
+          .set({
             sentences: result,
             audioUrl: `${articleId}.mp3`,
-          },
-        });
+          })
+          .where(eq(articles.id, articleId));
       }
     } catch (error) {
-      console.log("Prisma update error:", error);
+      console.log("Drizzle update error:", error);
     }
 
     // Return the timepoints for stories to use
