@@ -155,6 +155,9 @@ This file tracks all major tracks for the project.
 - [~] **Track: science-advantage Non-Auth Prisma → Drizzle**
   *Link: [./tracks/prisma_drizzle_science_controllers_20260505/](./tracks/prisma_drizzle_science_controllers_20260505/)*
   Track 3 of 4. **Blocked on track 1.** Migrate 89 non-auth Prisma references (curriculum, lessons, gamification, classes, attempts, mastery). Deletes generated Zod artifacts and Prisma surface.
+- [~] **Track: science-advantage Test Infra — Prisma → Drizzle Migration**
+  *Link: [./tracks/science_test_infra_drizzle_migration_20260523/](./tracks/science_test_infra_drizzle_migration_20260523/)*
+  Sub-track of Track 3. Replaces `prisma db push --force-reset` in `vitest.setup.ts` with `drizzle-kit migrate` against a dedicated `science_advantage_test` DB; splits unit/integration setup files. Unblocks runtime verification for Track 3 Phases 1+.
 - [ ] **Track: Prisma → Drizzle Per-Feature Slice Cleanup**
   *Link: [./tracks/prisma_drizzle_slice_cleanup_20260505/](./tracks/prisma_drizzle_slice_cleanup_20260505/)*
   Track 4 of 4. **Blocked on tracks 2–3.** Per-slice cleanup of non-generalizable surface deferred from earlier tracks. Final repo-wide Prisma eradication.

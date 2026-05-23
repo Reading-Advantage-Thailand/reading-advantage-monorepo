@@ -1,0 +1,11 @@
+{
+  "track_id": "science_test_infra_drizzle_migration_20260523",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-05-23T00:00:00Z",
+  "updated_at": "2026-05-23T00:00:00Z",
+  "description": "Replace science-advantage's Prisma-based vitest setup with a Drizzle-based one. Run drizzle-kit migrate once per integration run, split unit/integration setup files, keep truncate-and-reseed for per-test cleanup. Sub-track unblocks Track 3 Phase 1+ runtime verification.",
+  "estimated_tasks": 6,
+  "actual_tasks": null,
+  "deviation_notes": "Carved out of Track 3 (prisma_drizzle_science_controllers_20260505) Phase 0 retrospective. Track 3 pilot revealed vitest.setup.ts's `prisma db push --force-reset` is incompatible with Drizzle-first schemas: Prisma's CREATE TYPE has no IF NOT EXISTS path and collides with Track 1's migration 0013 types. Pulling this work forward from tech-debt because it is now the critical path for every remaining Track 3 phase."
+}
