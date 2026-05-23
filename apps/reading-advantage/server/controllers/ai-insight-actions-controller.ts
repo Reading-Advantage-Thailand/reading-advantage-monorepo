@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ExtendedNextRequest } from "./auth-controller";
-import { prisma } from "@/lib/prisma";
+import { db, eq, or } from "@reading-advantage/db";
+import { aiInsights } from "@reading-advantage/db/schema";
 
 /**
  * POST /api/v1/ai/insights/dismiss
@@ -27,13 +28,14 @@ export async function dismissInsight(req: ExtendedNextRequest) {
     }
 
     // Update the insight to mark as dismissed
-    const insight = await prisma.aIInsight.update({
-      where: { id: insightId },
-      data: {
+    const [insight] = await db
+      .update(aiInsights)
+      .set({
         dismissed: true,
         dismissedAt: new Date(),
-      },
-    });
+      })
+      .where(eq(aiInsights.id, insightId))
+      .returning();
 
     return NextResponse.json({
       success: true,
@@ -77,12 +79,13 @@ export async function markInsightAction(req: ExtendedNextRequest) {
       );
     }
 
-    const insight = await prisma.aIInsight.update({
-      where: { id: insightId },
-      data: {
+    const [insight] = await db
+      .update(aiInsights)
+      .set({
         actionTaken: true,
-      },
-    });
+      })
+      .where(eq(aiInsights.id, insightId))
+      .returning();
 
     return NextResponse.json({
       success: true,
@@ -121,16 +124,12 @@ export async function clearInsightCache(req: ExtendedNextRequest) {
     const classroomId = searchParams.get("classroomId");
     const licenseId = searchParams.get("licenseId");
 
-    // Delete insights matching the context
-    await prisma.aIInsight.deleteMany({
-      where: {
-        OR: [
-          { userId },
-          { classroomId: classroomId || undefined },
-          { licenseId: licenseId || undefined },
-        ],
-      },
-    });
+    // Delete insights matching the context (only defined conditions, matching Prisma's undefined-omitting behavior)
+    const conditions = [eq(aiInsights.userId, userId)];
+    if (classroomId) conditions.push(eq(aiInsights.classroomId, classroomId));
+    if (licenseId) conditions.push(eq(aiInsights.licenseId, licenseId));
+
+    await db.delete(aiInsights).where(or(...conditions));
 
     return NextResponse.json({
       success: true,
