@@ -1,5 +1,5 @@
 import { protect, restrictTo } from "@/server/controllers/auth-controller";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import {
   getAssignments,
   postAssignment,
