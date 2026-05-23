@@ -3,8 +3,9 @@ import { createEdgeRouter } from "next-connect";
 import { logRequest } from "@/server/middleware";
 import { protect } from "@/server/controllers/auth-controller";
 import { requireRole } from "@/server/middleware/guards";
-import { Role } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
+import { Role } from "@/lib/enums";
+import { db, eq, gte, desc, count, sql } from "@reading-advantage/db";
+import { users, userActivity, schools, articles } from "@reading-advantage/db/schema";
 import { getActivityMetrics, getAssignmentMetrics } from "@/server/controllers/metrics-controller";
 
 interface RequestContext {
@@ -16,32 +17,33 @@ const router = createEdgeRouter<NextRequest, RequestContext>();
 // Get recent activities
 async function getRecentActivities(limit: number = 5) {
   try {
-    const activities = await prisma.userActivity.findMany({
-      take: limit,
-      orderBy: {
-        createdAt: 'desc'
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            role: true
-          }
-        }
-      }
-    });
+    const rows = await db
+      .select({
+        id: userActivity.id,
+        activityType: userActivity.activityType,
+        userId: userActivity.userId,
+        userName: users.name,
+        userRole: users.role,
+        targetId: userActivity.targetId,
+        completed: userActivity.completed,
+        createdAt: userActivity.createdAt,
+        details: userActivity.details,
+      })
+      .from(userActivity)
+      .innerJoin(users, eq(users.id, userActivity.userId))
+      .orderBy(desc(userActivity.createdAt))
+      .limit(limit);
 
-    return activities.map(activity => ({
+    return rows.map((activity) => ({
       id: activity.id,
       type: activity.activityType,
       userId: activity.userId,
-      userName: activity.user.name,
-      userRole: activity.user.role,
+      userName: activity.userName,
+      userRole: activity.userRole,
       targetId: activity.targetId,
       completed: activity.completed,
       timestamp: activity.createdAt.toISOString(),
-      details: activity.details
+      details: activity.details,
     }));
   } catch (error) {
     console.error('Error fetching recent activities:', error);
@@ -56,7 +58,7 @@ async function calculateSystemHealth() {
   try {
     // Test database performance
     const dbStartTime = Date.now();
-    await prisma.$queryRaw`SELECT 1`;
+    await db.execute(sql`SELECT 1`);
     const dbResponseTime = Date.now() - dbStartTime;
     
     // Get database status
@@ -68,11 +70,11 @@ async function calculateSystemHealth() {
     
     // Get activity count from recent activity (last 24 hours)
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const totalActivities = await prisma.userActivity.count({
-      where: {
-        createdAt: { gte: oneDayAgo }
-      }
-    });
+    const totalActivitiesRows = await db
+      .select({ value: count() })
+      .from(userActivity)
+      .where(gte(userActivity.createdAt, oneDayAgo));
+    const totalActivities = Number(totalActivitiesRows[0]?.value ?? 0);
     
     // Simple error rate based on activity volume (could be improved with actual error tracking)
     const errorRate = totalActivities > 1000 ? 'Low' : totalActivities > 0 ? 'Low' : 'Unknown';
@@ -128,10 +130,22 @@ router.get(async (req: NextRequest) => {
     const activityMetrics = await activityMetricsResponse.json();
     const assignmentMetrics = await assignmentMetricsResponse.json();
 
-    const totalSchools = await prisma.school.count();
-    const totalStudents = await prisma.user.count({ where: { role: 'STUDENT' } });
-    const totalTeachers = await prisma.user.count({ where: { role: 'TEACHER' } });
-    const totalArticles = await prisma.article.count();
+    const [
+      totalSchoolsRows,
+      totalStudentsRows,
+      totalTeachersRows,
+      totalArticlesRows,
+    ] = await Promise.all([
+      db.select({ value: count() }).from(schools),
+      db.select({ value: count() }).from(users).where(eq(users.role, 'STUDENT')),
+      db.select({ value: count() }).from(users).where(eq(users.role, 'TEACHER')),
+      db.select({ value: count() }).from(articles),
+    ]);
+
+    const totalSchools = Number(totalSchoolsRows[0]?.value ?? 0);
+    const totalStudents = Number(totalStudentsRows[0]?.value ?? 0);
+    const totalTeachers = Number(totalTeachersRows[0]?.value ?? 0);
+    const totalArticles = Number(totalArticlesRows[0]?.value ?? 0);
 
     // Calculate real system health metrics
     const healthMetrics = await calculateSystemHealth();
