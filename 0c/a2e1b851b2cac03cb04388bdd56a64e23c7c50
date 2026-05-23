@@ -1,0 +1,20 @@
+Task: Migrate lib/cache/query-optimizer.ts (reopened) — bind params safely
+
+Summary:
+Rewrote executeOptimizedRaw so $n placeholders are converted into a
+parameterized chain of Drizzle sql fragments (via sql.join) instead of
+being string-interpolated into sql.raw. Drizzle / postgres-js now binds
+each value through the driver, restoring safe parameter handling for
+Date/json/boolean values and removing the SQL-injection surface for
+any future caller. Missing bind values now throw immediately instead
+of silently producing malformed SQL. executeBatchRawQueries is
+unchanged at the API surface and inherits the safer binding.
+
+Files:
+- apps/reading-advantage/lib/cache/query-optimizer.ts
+- apps/reading-advantage/__test__/query-optimizer.test.ts (new)
+
+Why:
+2026-05-23 review flagged the manual $n interpolation as a high-
+severity SQL-injection risk plus a correctness bug for non-string
+parameter values.
