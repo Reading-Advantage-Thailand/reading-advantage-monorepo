@@ -1,4 +1,4 @@
-import { GoalType, GoalStatus, GoalPriority, RecurringPeriod } from "@prisma/client";
+import { GoalType, GoalStatus, GoalPriority, RecurringPeriod } from "@/lib/enums";
 
 export interface LearningGoal {
   id: string;
