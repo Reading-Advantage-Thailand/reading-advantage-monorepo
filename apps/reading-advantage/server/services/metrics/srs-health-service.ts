@@ -9,7 +9,7 @@
  * - Quick-action suggestions for catching up on reviews
  */
 
-import { prisma } from '@/lib/prisma';
+import { db, sql } from '@reading-advantage/db';
 
 // ============================================================================
 // Types
@@ -180,17 +180,16 @@ export async function getStudentSRSHealth(
   userId: string,
   thresholds: OverloadThresholds = DEFAULT_OVERLOAD_THRESHOLDS
 ): Promise<SRSHealthMetrics | null> {
-  const result = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_srs_health WHERE user_id = $1`,
-    userId
-  );
-  
+  const result = (await db.execute(sql`
+    SELECT * FROM mv_srs_health WHERE user_id = ${userId}
+  `)) as unknown as any[];
+
   if (!result || result.length === 0) {
     return null;
   }
-  
+
   const data = result[0];
-  
+
   // Generate suggested actions based on health flags
   const suggestedActions = generateSuggestedActions(data, thresholds);
   
@@ -256,15 +255,14 @@ export async function getStudentSRSHealth(
 export async function getClassSRSHealth(
   classroomId: string
 ): Promise<ClassSRSHealthMetrics | null> {
-  const result = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_srs_health_class WHERE classroom_id = $1`,
-    classroomId
-  );
-  
+  const result = (await db.execute(sql`
+    SELECT * FROM mv_srs_health_class WHERE classroom_id = ${classroomId}
+  `)) as unknown as any[];
+
   if (!result || result.length === 0) {
     return null;
   }
-  
+
   const data = result[0];
   
   return {
@@ -306,15 +304,14 @@ export async function getClassSRSHealth(
 export async function getSchoolSRSHealth(
   schoolId: string
 ): Promise<SchoolSRSHealthMetrics | null> {
-  const result = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_srs_health_school WHERE school_id = $1`,
-    schoolId
-  );
-  
+  const result = (await db.execute(sql`
+    SELECT * FROM mv_srs_health_school WHERE school_id = ${schoolId}
+  `)) as unknown as any[];
+
   if (!result || result.length === 0) {
     return null;
   }
-  
+
   const data = result[0];
   
   return {
@@ -359,43 +356,30 @@ export async function getAtRiskStudents(
   riskScore: number;
   primaryConcern: string;
 }>> {
-  let whereClause = '';
-  const params: any[] = [];
-  let paramIndex = 1;
-  
-  const conditions: string[] = [];
-  
+  const conditions = [] as ReturnType<typeof sql>[];
+
   if (classroomId) {
     // Get students in specific classroom
-    conditions.push(`h.user_id IN (
+    conditions.push(sql`h.user_id IN (
       SELECT cs.student_id 
       FROM classroom_students cs 
-      WHERE cs.classroom_id = $${paramIndex}
+      WHERE cs.classroom_id = ${classroomId}
     )`);
-    params.push(classroomId);
-    paramIndex++;
   } else if (schoolId) {
-    conditions.push(`h.school_id = $${paramIndex}`);
-    params.push(schoolId);
-    paramIndex++;
+    conditions.push(sql`h.school_id = ${schoolId}`);
   }
-  
-  // Add risk conditions
-  conditions.push(`(h.is_overloaded = true OR h.has_critical_backlog = true OR h.is_inactive = true)`);
-  
-  if (conditions.length > 0) {
-    whereClause = 'WHERE ' + conditions.join(' AND ');
-  }
-  
-  params.push(limit);
-  
-  const query = `
+
+  // Add risk conditions (always present)
+  conditions.push(sql`(h.is_overloaded = true OR h.has_critical_backlog = true OR h.is_inactive = true)`);
+
+  const whereClause = sql.join([sql`WHERE`, sql.join(conditions, sql` AND `)], sql` `);
+
+  const result = (await db.execute(sql`
     SELECT 
       h.user_id,
       h.email,
       h.total_overdue_count,
       h.days_since_last_practice,
-      -- Risk score calculation
       CASE 
         WHEN h.has_critical_backlog THEN 10
         ELSE 0
@@ -412,7 +396,6 @@ export async function getAtRiskStudents(
         WHEN h.has_high_lapse_rate THEN 4
         ELSE 0
       END AS risk_score,
-      -- Primary concern
       CASE 
         WHEN h.has_critical_backlog THEN 'Critical backlog'
         WHEN h.is_overloaded THEN 'Overloaded'
@@ -423,12 +406,10 @@ export async function getAtRiskStudents(
     FROM mv_srs_health h
     ${whereClause}
     ORDER BY risk_score DESC, total_overdue_count DESC
-    LIMIT $${paramIndex}
-  `;
-  
-  const result = await prisma.$queryRawUnsafe<any[]>(query, ...params);
-  
-  return result.map(row => ({
+    LIMIT ${limit}
+  `)) as unknown as any[];
+
+  return result.map((row) => ({
     userId: row.user_id,
     email: row.email,
     totalOverdue: Number(row.total_overdue_count) || 0,
@@ -443,7 +424,7 @@ export async function getAtRiskStudents(
  */
 function generateSuggestedActions(
   healthData: any,
-  thresholds: OverloadThresholds
+  _thresholds: OverloadThresholds
 ): SuggestedAction[] {
   const actions: SuggestedAction[] = [];
   
@@ -532,14 +513,14 @@ function generateSuggestedActions(
  * Refresh all SRS health materialized views
  */
 export async function refreshSRSHealthMetrics(): Promise<void> {
-  await prisma.$executeRawUnsafe('SELECT refresh_srs_health_views()');
+  await db.execute(sql`SELECT refresh_srs_health_views()`);
 }
 
 /**
  * Get customizable overload thresholds for a school
  */
 export async function getSchoolOverloadThresholds(
-  schoolId: string
+  _schoolId: string
 ): Promise<OverloadThresholds> {
   // For now, return defaults. Later this could be configurable per school
   return DEFAULT_OVERLOAD_THRESHOLDS;
