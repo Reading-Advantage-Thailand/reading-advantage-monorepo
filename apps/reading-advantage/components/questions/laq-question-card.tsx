@@ -35,7 +35,7 @@ import { toast } from "../ui/use-toast";
 import { useQuestionStore } from "@/store/question-store";
 import { useRouter } from "next/navigation";
 import { useArticleCompletion } from "@/lib/use-article-completion";
-import { LicenseType } from "@prisma/client";
+import { LicenseType } from "@/lib/enums";
 
 interface Props {
   userId: string;
