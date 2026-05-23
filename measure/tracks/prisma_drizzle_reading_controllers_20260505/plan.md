@@ -293,28 +293,29 @@ All nine share one shape: read/write `gameRanking`, `userActivity`, `xpLogs`, FS
 
 ## Phase 3: AI / admin / assignment / stories / content controllers
 
-- [ ] Task: Migrate `ai-controller.ts` (types-only)
-- [ ] Task: Migrate `ai-insight-actions-controller.ts` (aIInsight — Track 4 slice; `content`→`description`)
-- [ ] Task: Migrate `ai-insight-refresh-controller.ts` (aIInsight, aIInsightCache, classroom, classroomTeacher, license, user)
+- [x] Task: Migrate `ai-controller.ts` (types-only) — fab9666
+- [x] Task: Migrate `velocity-controller.ts` (classroomTeacher, classroomStudent, user) — 970e676 (not in original plan; added retroactively)
+- [x] Task: Migrate `ai-insight-actions-controller.ts` (aIInsight) — 354886d (aiInsights is unified, not Track 4 slice)
+- [x] Task: Migrate `ai-insight-refresh-controller.ts` (aIInsight, aIInsightCache, classroom, classroomTeacher, license, user) — e0a1aec
+- [x] Task: Migrate `assistant-controller.ts` (article, userSentenceRecord, userWordRecord) — 6af25d4
+- [x] Task: Migrate `stories-controller.ts` (chapter, story, userActivity) — 9b9dd2f
+- [x] Task: Migrate `generator-controller.ts` (article, longAnswerQuestion, multipleChoiceQuestion, shortAnswerQuestion, user) — f1404e4
+- [x] Task: Migrate `question-controller.ts` (article, license, longAnswerQuestion, multipleChoiceQuestion, shortAnswerQuestion, user, userActivity, xPLog) — 50fb67b
+- [x] Task: Migrate `stories-question-controller.ts` (longAnswerQuestion, multipleChoiceQuestion, shortAnswerQuestion, story, storyRecord, user, userActivity, xPLog) — 1cd0099
 - [ ] Task: Migrate `admin-controller.ts` (article, classroomStudent, lessonRecord, license, school, user, userActivity, xPLog)
 - [ ] Task: Migrate `system-controller.ts` (license, xPLog)
 - [ ] Task: Migrate `auth-controller.ts` (types-only — keep auth logic unchanged, only swap Prisma type imports)
-- [ ] Task: Migrate `generator-controller.ts` (article, longAnswerQuestion, multipleChoiceQuestion, shortAnswerQuestion, user)
 - [ ] Task: Migrate `translation-controller.ts` (article, chapter, story)
-- [ ] Task: Migrate `assistant-controller.ts` (article, userSentenceRecord, userWordRecord)
-- [ ] Task: Migrate `stories-assistant-controller.ts` (chapter)
-- [ ] Task: Migrate `stories-controller.ts` (chapter, story, userActivity)
-- [ ] Task: Migrate `stories-question-controller.ts` (longAnswerQuestion, multipleChoiceQuestion, shortAnswerQuestion, story, storyRecord, user, userActivity, xPLog)
-- [ ] Task: Migrate `question-controller.ts` (article, license, longAnswerQuestion, multipleChoiceQuestion, shortAnswerQuestion, user, userActivity, xPLog)
+- [x] Task: Migrate `stories-assistant-controller.ts` (chapter) — 25854bd
 - [ ] Task: Migrate `article-controller.ts` (article, userActivity)
 - [ ] Task: Migrate `assignment-controller.ts` (article, assignment, classroom, classroomStudent, studentAssignment, user)
 - [ ] Task: Migrate `teacher-assignment-controller.ts` (assignment)
 - [ ] Task: Migrate `assignment-classroom-controller.ts` (assignment, assignmentNotification, classroomStudent, studentAssignment)
-- [ ] Task: Migrate `assignment-funnel-controller.ts` (assignment, user)
+- [x] Task: Migrate `assignment-funnel-controller.ts` (assignment, user) — f180f41
 - [ ] Task: Migrate `assignment-notification-controller.ts` (assignment, assignmentNotification)
 - [ ] Task: Migrate `class-accuracy-controller.ts` (classroomStudent, classroomTeacher, userActivity)
 - [ ] Task: Migrate `class-export-controller.ts` (classroom, classroomStudent, classroomTeacher, studentAssignment, user)
-- [ ] Task: Migrate `enhanced-alignment-controller.ts` (assignment, classroom)
+- [x] Task: Migrate `enhanced-alignment-controller.ts` (assignment, classroom) — 910ebbb
 - [ ] Task: Measure - User Manual Verification 'AI / Admin / Assignment / Stories' (Protocol in workflow.md)
 
 ## Phase 4: server/services (11 files)
