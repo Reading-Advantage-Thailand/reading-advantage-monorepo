@@ -1,0 +1,15 @@
+Task: Phase 3 \u2014 smoke verification
+
+Both smoke checks green:
+
+1. Pilot integration test (5 cases):
+   - migrations applied successfully (globalSetup)
+   - 5/5 pass in 863ms (route.integration.test.ts)
+   - other 17 integration files failed as expected (still on Prisma; Track 3 work)
+
+2. Unit test isolation:
+   - lib/api-helpers.test.ts 5/5 in 48ms
+   - 0 DB references in stdout/stderr
+   - vitest.unit.config.ts has zero DB coupling confirmed
+
+Test infra is unblocked. Phase 4 (docs) + Phase 5 (hand-back) remain.
