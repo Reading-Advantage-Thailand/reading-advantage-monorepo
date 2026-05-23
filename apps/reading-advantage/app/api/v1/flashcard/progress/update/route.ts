@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db, eq } from "@reading-advantage/db";
+import {
+  userWordRecords,
+  userSentenceRecords,
+} from "@reading-advantage/db/schema";
 import { fsrs, generatorParameters, Rating, State } from "ts-fsrs";
 
 export async function POST(request: NextRequest) {
@@ -24,16 +28,27 @@ export async function POST(request: NextRequest) {
 
     const isVocabulary = type === "vocabulary";
 
-    // Get current card with proper typing
-    let currentCard;
+    // Get current card
+    let currentCard:
+      | typeof userWordRecords.$inferSelect
+      | typeof userSentenceRecords.$inferSelect
+      | undefined;
     if (isVocabulary) {
-      currentCard = await prisma.userWordRecord.findUnique({
-        where: { id: cardId },
-      });
+      currentCard = (
+        await db
+          .select()
+          .from(userWordRecords)
+          .where(eq(userWordRecords.id, cardId))
+          .limit(1)
+      )[0];
     } else {
-      currentCard = await prisma.userSentenceRecord.findUnique({
-        where: { id: cardId },
-      });
+      currentCard = (
+        await db
+          .select()
+          .from(userSentenceRecords)
+          .where(eq(userSentenceRecords.id, cardId))
+          .limit(1)
+      )[0];
     }
 
     if (!currentCard || currentCard.userId !== user.id) {
@@ -60,10 +75,10 @@ export async function POST(request: NextRequest) {
     };
 
     const schedulingInfo = f.repeat(cardObj, now);
-    
+
     // Use the rating provided by user
     let selectedSchedule;
-    switch(rating) {
+    switch (rating) {
       case 1: // Again
         selectedSchedule = schedulingInfo[Rating.Again];
         break;
@@ -80,7 +95,7 @@ export async function POST(request: NextRequest) {
         selectedSchedule = schedulingInfo[Rating.Good];
     }
 
-    // Update card data structure to match Prisma schema
+    // Update card data structure to match Drizzle schema
     const updateData = {
       difficulty: selectedSchedule.card.difficulty,
       due: selectedSchedule.card.due,
@@ -92,17 +107,17 @@ export async function POST(request: NextRequest) {
       state: selectedSchedule.card.state,
     };
 
-    // Update with proper typing
+    // Update
     if (isVocabulary) {
-      await prisma.userWordRecord.update({
-        where: { id: cardId },
-        data: updateData,
-      });
+      await db
+        .update(userWordRecords)
+        .set(updateData)
+        .where(eq(userWordRecords.id, cardId));
     } else {
-      await prisma.userSentenceRecord.update({
-        where: { id: cardId },
-        data: updateData,
-      });
+      await db
+        .update(userSentenceRecords)
+        .set(updateData)
+        .where(eq(userSentenceRecords.id, cardId));
     }
 
     return NextResponse.json({
