@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
-import { Article } from "@/components/models/article-model";
 import { ExtendedNextRequest } from "./auth-controller";
-import { QuizStatus } from "@prisma/client";
 import { z } from "zod";
 import { splitTextIntoSentences } from "@/lib/utils";
 import { Translate } from "@google-cloud/translate/build/src/v2";
 import { generateObject } from "ai";
 import { openai, openaiModel } from "@/utils/openai";
+import {
+  db,
+  eq,
+  and,
+  gt,
+  gte,
+  lte,
+  isNotNull,
+  ilike,
+  inArray,
+  desc,
+  asc,
+  sql,
+} from "@reading-advantage/db";
+import { articles, users, userActivity } from "@reading-advantage/db/schema";
 
 // Import genre data
 import genreData from "@/data/type-genre.json";
@@ -111,84 +122,71 @@ export async function getSearchArticles(req: ExtendedNextRequest) {
       selectionType = await fetchGenres(type, genre);
     }
 
-    // Build Prisma query conditions
-    const whereConditions: any = {
-      isPublic: true,
-    };
-
-    if (type) {
-      whereConditions.type = type;
-    }
-    if (genre) {
-      whereConditions.genre = genre;
-    }
-    if (subgenre) {
-      whereConditions.subGenre = subgenre;
-    }
-
-    // OPTIMIZED: Single query using raw SQL for better performance
-    // This combines the level-range check and fallback into one query
     const queryStart = performance.now();
 
-    // Use Prisma's raw query for optimal performance
     const userLevel = Number(level);
     const offset = (page - 1) * limit;
 
-    const articles = await prisma.$queryRaw<any[]>`
-      SELECT 
-        a.id,
-        a.type,
-        a.genre,
-        a.sub_genre as "subGenre",
-        a.title,
-        a.summary,
-        a.cefr_level as "cefrLevel",
-        a.ra_level as "raLevel",
-        a.rating,
-        a."createdAt" as "createdAt",
-        a.author_id as "authorId",
-        u.id as "author_id",
-        u.name as "author_name",
-        ua.completed as "userActivityCompleted",
-        CASE 
-          WHEN a.ra_level BETWEEN ${userLevel - 1} AND ${userLevel + 1} THEN 0
-          ELSE 1
-        END as priority_order
-      FROM article a
-      LEFT JOIN users u ON a.author_id = u.id
-      LEFT JOIN "UserActivity" ua ON ua.target_id = a.id 
-        AND ua.user_id = ${userId}
-        AND ua.activity_type = 'ARTICLE_READ'
-      WHERE a.is_public = true
-        ${type ? Prisma.sql`AND a.type = ${type}` : Prisma.empty}
-        ${genre ? Prisma.sql`AND a.genre = ${genre}` : Prisma.empty}
-        ${subgenre ? Prisma.sql`AND a.sub_genre = ${subgenre}` : Prisma.empty}
-      ORDER BY priority_order ASC, a."createdAt" DESC
-      LIMIT ${limit}
-      OFFSET ${offset}
-    `;
+    const priorityOrder = sql<number>`CASE WHEN ${articles.raLevel} BETWEEN ${userLevel - 1} AND ${userLevel + 1} THEN 0 ELSE 1 END`;
+
+    const rows = await db
+      .select({
+        id: articles.id,
+        type: articles.type,
+        genre: articles.genre,
+        subGenre: articles.subGenre,
+        title: articles.title,
+        summary: articles.summary,
+        cefrLevel: articles.cefrLevel,
+        raLevel: articles.raLevel,
+        rating: articles.rating,
+        createdAt: articles.createdAt,
+        authorId: articles.authorId,
+        authorName: users.name,
+        userActivityCompleted: userActivity.completed,
+      })
+      .from(articles)
+      .leftJoin(users, eq(articles.authorId, users.id))
+      .leftJoin(
+        userActivity,
+        and(
+          eq(userActivity.targetId, articles.id),
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "ARTICLE_READ"),
+        ),
+      )
+      .where(
+        and(
+          eq(articles.isPublic, true),
+          type ? eq(articles.type, type) : undefined,
+          genre ? eq(articles.genre, genre) : undefined,
+          subgenre ? eq(articles.subGenre, subgenre) : undefined,
+        ),
+      )
+      .orderBy(priorityOrder, desc(articles.createdAt))
+      .limit(limit)
+      .offset(offset);
 
     const queryTime = performance.now() - queryStart;
 
-    // Format results
-    results = articles.map((article) => ({
-      id: article.id,
-      type: article.type,
-      genre: article.genre,
-      subgenre: article.subGenre,
-      title: article.title,
-      summary: article.summary,
-      cefr_level: article.cefrLevel,
-      ra_level: article.raLevel?.toString(),
-      average_rating: article.rating || 0,
-      created_at: article.createdAt,
-      is_read: article.userActivityCompleted !== null,
-      is_completed: article.userActivityCompleted === true,
+    results = rows.map((r) => ({
+      id: r.id,
+      type: r.type,
+      genre: r.genre,
+      subgenre: r.subGenre,
+      title: r.title,
+      summary: r.summary,
+      cefr_level: r.cefrLevel,
+      ra_level: r.raLevel?.toString(),
+      average_rating: r.rating || 0,
+      created_at: r.createdAt,
+      is_read: r.userActivityCompleted !== null,
+      is_completed: r.userActivityCompleted === true,
       is_approved: true,
-      authorId: article.authorId,
+      authorId: r.authorId,
       author: {
-        id: article.author_id || null,
-        name: article.author_name || null,
+        id: r.authorId || null,
+        name: r.authorName || null,
       },
     }));
 
@@ -243,65 +241,52 @@ export async function getArticles(req: ExtendedNextRequest) {
       return value ? value.replace(/\+/g, " ") : "";
     };
 
-    // Validate the date parameter
     const validDate = date === "asc" || date === "desc" ? date : "desc";
 
-    // Build where conditions
-    const whereConditions: any = {
-      isPublic: true,
-    };
+    const levelArray = level ? convertLevelToArray(level) : [];
 
-    if (type) {
-      whereConditions.type = type;
-    }
-    if (genre) {
-      whereConditions.genre = convertGenreToString(genre);
-    }
-    if (level) {
-      const levelArray = convertLevelToArray(level);
-      if (levelArray.length > 0) {
-        whereConditions.raLevel = { in: levelArray };
-      }
-    }
-    if (rating) {
-      whereConditions.rating = {
-        gte: Number(rating),
-        lte: Number(rating),
-      };
-    }
-    if (title) {
-      whereConditions.title = {
-        contains: title,
-        mode: "insensitive",
-      };
-    }
+    const rows = await db
+      .select({
+        id: articles.id,
+        type: articles.type,
+        genre: articles.genre,
+        subGenre: articles.subGenre,
+        title: articles.title,
+        summary: articles.summary,
+        passage: articles.passage,
+        imageDescription: articles.imageDescription,
+        cefrLevel: articles.cefrLevel,
+        raLevel: articles.raLevel,
+        rating: articles.rating,
+        audioUrl: articles.audioUrl,
+        createdAt: articles.createdAt,
+        updatedAt: articles.updatedAt,
+      })
+      .from(articles)
+      .where(
+        and(
+          eq(articles.isPublic, true),
+          type ? eq(articles.type, type) : undefined,
+          genre ? eq(articles.genre, convertGenreToString(genre)) : undefined,
+          level && levelArray.length > 0
+            ? inArray(articles.raLevel, levelArray)
+            : undefined,
+          rating
+            ? and(
+                gte(articles.rating, Number(rating)),
+                lte(articles.rating, Number(rating)),
+              )
+            : undefined,
+          title ? ilike(articles.title, `%${title}%`) : undefined,
+        ),
+      )
+      .orderBy(
+        validDate === "asc" ? asc(articles.createdAt) : desc(articles.createdAt),
+      )
+      .limit(limitPerPage)
+      .offset((page - 1) * limitPerPage);
 
-    const articles = await prisma.article.findMany({
-      where: whereConditions,
-      orderBy: {
-        createdAt: validDate === "asc" ? "asc" : "desc",
-      },
-      skip: (page - 1) * limitPerPage,
-      take: limitPerPage,
-      select: {
-        id: true,
-        type: true,
-        genre: true,
-        subGenre: true,
-        title: true,
-        summary: true,
-        passage: true,
-        imageDescription: true,
-        cefrLevel: true,
-        raLevel: true,
-        rating: true,
-        audioUrl: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-
-    return NextResponse.json(articles, { status: 200 });
+    return NextResponse.json(rows, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -319,10 +304,11 @@ export async function getArticleById(
     const { article_id } = await ctx.params;
     const userId = req.session?.user.id as string;
 
-    // Get article from Prisma
-    const article = await prisma.article.findUnique({
-      where: { id: article_id },
-    });
+    const [article] = await db
+      .select()
+      .from(articles)
+      .where(eq(articles.id, article_id))
+      .limit(1);
 
     if (!article) {
       return NextResponse.json(
@@ -334,16 +320,10 @@ export async function getArticleById(
     // Check if user has read the article and create activity record atomically
     // Wrap in try-catch to handle race conditions when multiple requests arrive simultaneously
     try {
-      await prisma.userActivity.upsert({
-        where: {
-          userId_activityType_targetId: {
-            userId: userId,
-            activityType: "ARTICLE_READ",
-            targetId: article_id,
-          },
-        },
-        create: {
-          userId: userId,
+      await db
+        .insert(userActivity)
+        .values({
+          userId,
           activityType: "ARTICLE_READ",
           targetId: article_id,
           completed: false,
@@ -351,15 +331,11 @@ export async function getArticleById(
             articleTitle: article.title,
             level: req.session?.user.level,
           },
-        },
-        update: {}, // Do nothing if record already exists
-      });
+        })
+        .onConflictDoNothing();
     } catch (error: any) {
-      // Ignore unique constraint errors (P2002) - record already exists from concurrent request
-      if (error.code !== "P2002") {
-        console.error("Error creating user activity:", error);
-        // Don't fail the request, just log the error
-      }
+      console.error("Error creating user activity:", error);
+      // Don't fail the request, just log the error
     }
 
     // Validate article data
@@ -400,10 +376,8 @@ export async function getArticleById(
       );
     }
 
-    // Extract sentences (timepoints) from the article
     const articleSentences = article.sentences;
 
-    // Format article to match expected structure
     const formattedArticle = {
       id: article.id,
       type: article.type,
@@ -421,7 +395,7 @@ export async function getArticleById(
       timepoints: articleSentences || {},
       translatedPassage: article.translatedPassage,
       translatedSummary: article.translatedSummary,
-      read_count: 0, // This field might need to be calculated differently
+      read_count: 0,
     };
 
     return NextResponse.json(
@@ -445,22 +419,21 @@ export async function deleteArticle(
 ) {
   try {
     const { article_id } = await ctx.params;
-    // Check if article exists
-    const article = await prisma.article.findUnique({
-      where: { id: article_id },
-    });
 
-    if (!article) {
+    const [existing] = await db
+      .select({ id: articles.id })
+      .from(articles)
+      .where(eq(articles.id, article_id))
+      .limit(1);
+
+    if (!existing) {
       return NextResponse.json(
         { message: "No such article found" },
         { status: 404 },
       );
     }
 
-    // Delete the article and all related data (Prisma cascade delete will handle related questions)
-    await prisma.article.delete({
-      where: { id: article_id },
-    });
+    await db.delete(articles).where(eq(articles.id, article_id));
 
     return NextResponse.json({ message: "Article deleted" }, { status: 200 });
   } catch (error) {
@@ -473,7 +446,6 @@ export async function deleteArticle(
 }
 
 export async function getArticleWithParams(req: ExtendedNextRequest) {
-  // Define the schema for input validation
   const QueryParamsSchema = z.object({
     userId: z.string().max(50),
     pageSize: z.number().int().positive().max(10),
@@ -524,98 +496,83 @@ export async function getArticleWithParams(req: ExtendedNextRequest) {
       searchTermParam,
     } = validatedParams;
 
-    const whereConditions: any = {
-      isPublic: true, // Only select articles that are public
-    };
+    const rows = await db
+      .select({
+        id: articles.id,
+        type: articles.type,
+        genre: articles.genre,
+        subGenre: articles.subGenre,
+        title: articles.title,
+        summary: articles.summary,
+        passage: articles.passage,
+        imageDescription: articles.imageDescription,
+        cefrLevel: articles.cefrLevel,
+        raLevel: articles.raLevel,
+        rating: articles.rating,
+        audioUrl: articles.audioUrl,
+        createdAt: articles.createdAt,
+        updatedAt: articles.updatedAt,
+      })
+      .from(articles)
+      .where(
+        and(
+          eq(articles.isPublic, true),
+          typeParam ? eq(articles.type, typeParam) : undefined,
+          genreParam ? eq(articles.genre, genreParam) : undefined,
+          subgenreParam ? eq(articles.subGenre, subgenreParam) : undefined,
+          levelParam ? eq(articles.raLevel, levelParam) : undefined,
+          searchTermParam
+            ? ilike(articles.title, `%${searchTermParam}%`)
+            : undefined,
+          lastDocId ? gt(articles.id, lastDocId) : undefined,
+        ),
+      )
+      .orderBy(asc(articles.id))
+      .limit(pageSize + 1);
 
-    if (typeParam) {
-      whereConditions.type = typeParam;
-    }
-    if (genreParam) {
-      whereConditions.genre = genreParam;
-    }
-    if (subgenreParam) {
-      whereConditions.subGenre = subgenreParam;
-    }
-    if (levelParam) {
-      whereConditions.raLevel = levelParam;
-    }
-    if (searchTermParam) {
-      whereConditions.title = {
-        contains: searchTermParam,
-        mode: "insensitive",
-      };
-    }
+    const hasMore = rows.length > pageSize;
+    const paginatedRows = rows.slice(0, pageSize);
 
-    // Handle cursor-based pagination
-    const cursorConditions = lastDocId ? { id: { gt: lastDocId } } : {};
+    const articleIds = paginatedRows.map((r) => r.id);
+    const activityRows =
+      articleIds.length > 0
+        ? await db
+            .select({
+              targetId: userActivity.targetId,
+              completed: userActivity.completed,
+            })
+            .from(userActivity)
+            .where(
+              and(
+                eq(userActivity.userId, userId),
+                inArray(userActivity.targetId, articleIds),
+                eq(userActivity.activityType, "ARTICLE_READ"),
+              ),
+            )
+        : [];
 
-    const articles = await prisma.article.findMany({
-      where: {
-        ...whereConditions,
-        ...cursorConditions,
-      },
-      orderBy: {
-        id: "asc", // Use ID for consistent cursor pagination
-      },
-      take: pageSize + 1, // Take one more to check if there are more results
-      select: {
-        id: true,
-        type: true,
-        genre: true,
-        subGenre: true,
-        title: true,
-        summary: true,
-        passage: true,
-        imageDescription: true,
-        cefrLevel: true,
-        raLevel: true,
-        rating: true,
-        audioUrl: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-
-    const hasMore = articles.length > pageSize;
-    const paginatedArticles = articles.slice(0, pageSize);
-
-    // Check user activities for read status
-    const articleIds = paginatedArticles.map((article) => article.id);
-    const userActivities = await prisma.userActivity.findMany({
-      where: {
-        userId: userId,
-        targetId: { in: articleIds },
-        activityType: "ARTICLE_READ",
-      },
-    });
-
-    const readArticleIds = new Set(
-      userActivities.map((activity) => activity.targetId),
-    );
+    const readArticleIds = new Set(activityRows.map((a) => a.targetId));
     const completedArticleIds = new Set(
-      userActivities
-        .filter((activity) => activity.completed)
-        .map((activity) => activity.targetId),
+      activityRows.filter((a) => a.completed).map((a) => a.targetId),
     );
 
-    const results = paginatedArticles.map((article) => ({
-      id: article.id,
-      type: article.type,
-      genre: article.genre,
-      subgenre: article.subGenre,
-      title: article.title,
-      summary: article.summary,
-      passage: article.passage,
-      image_description: article.imageDescription,
-      cefr_level: article.cefrLevel,
-      ra_level: article.raLevel,
-      average_rating: article.rating || 0,
-      audio_url: article.audioUrl,
-      created_at: article.createdAt,
-      updated_at: article.updatedAt,
-      is_read: readArticleIds.has(article.id),
-      is_completed: completedArticleIds.has(article.id),
+    const results = paginatedRows.map((r) => ({
+      id: r.id,
+      type: r.type,
+      genre: r.genre,
+      subgenre: r.subGenre,
+      title: r.title,
+      summary: r.summary,
+      passage: r.passage,
+      image_description: r.imageDescription,
+      cefr_level: r.cefrLevel,
+      ra_level: r.raLevel,
+      average_rating: r.rating || 0,
+      audio_url: r.audioUrl,
+      created_at: r.createdAt,
+      updated_at: r.updatedAt,
+      is_read: readArticleIds.has(r.id),
+      is_completed: completedArticleIds.has(r.id),
       is_approved: true,
     }));
 
@@ -623,8 +580,8 @@ export async function getArticleWithParams(req: ExtendedNextRequest) {
       passages: results,
       hasMore,
       lastDocId:
-        paginatedArticles.length > 0
-          ? paginatedArticles[paginatedArticles.length - 1].id
+        paginatedRows.length > 0
+          ? paginatedRows[paginatedRows.length - 1].id
           : null,
     };
   }
@@ -671,9 +628,6 @@ export async function updateArticlesByTypeGenre(
   req: Request,
 ): Promise<Response> {
   try {
-    // This function is kept for compatibility but with Prisma,
-    // we can calculate genre counts on-demand instead of pre-computing them
-
     return NextResponse.json(
       { message: "Updated successfully" },
       { status: 200 },
@@ -692,25 +646,22 @@ export async function updateArticlesByTypeGenre(
 
 export async function getArticlesByTypeGenre(req: Request): Promise<Response> {
   try {
-    // Calculate genre counts on-demand using Prisma
-    const genreCounts = await prisma.article.groupBy({
-      by: ["genre", "type"],
-      _count: {
-        _all: true,
-      },
-      where: {
-        genre: { not: null },
-        type: { not: null },
-      },
-    });
+    const genreCountRows = await db
+      .select({
+        genre: articles.genre,
+        type: articles.type,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(articles)
+      .where(and(isNotNull(articles.genre), isNotNull(articles.type)))
+      .groupBy(articles.genre, articles.type);
 
-    // Transform the results to match the expected format
     const genreCountsMap: Record<string, GenreCount> = {};
 
-    genreCounts.forEach((item) => {
+    genreCountRows.forEach((item) => {
       const genre = item.genre!;
       const type = item.type!;
-      const count = item._count._all;
+      const count = item.count;
 
       if (!genreCountsMap[genre]) {
         genreCountsMap[genre] = { genre };
@@ -740,7 +691,6 @@ export async function getArticlesByTypeGenre(req: Request): Promise<Response> {
 
 export const getGenres = async (req: Request): Promise<Response> => {
   try {
-    // Normalize and fetch fiction genres from JSON data
     const rawFiction = genresFiction.Genres || [];
     const fictionGenres: GenreResponse[] = rawFiction.map((genreData: any) => {
       const normalized = {
@@ -754,7 +704,6 @@ export const getGenres = async (req: Request): Promise<Response> => {
       };
     });
 
-    // Normalize and fetch nonfiction genres from JSON data
     const rawNonfiction = genresNonfiction.Genres || [];
     const nonfictionGenres: GenreResponse[] = rawNonfiction.map(
       (genreData: any) => {
@@ -770,7 +719,6 @@ export const getGenres = async (req: Request): Promise<Response> => {
       },
     );
 
-    // Sort genres alphabetically by label
     fictionGenres.sort((a, b) => a.label.localeCompare(b.label));
     nonfictionGenres.sort((a, b) => a.label.localeCompare(b.label));
 
@@ -886,14 +834,15 @@ export const translateArticleSummary = async (
       );
     }
 
-    const article = await prisma.article.findUnique({
-      where: { id: article_id },
-      select: {
-        id: true,
-        summary: true,
-        translatedSummary: true,
-      },
-    });
+    const [article] = await db
+      .select({
+        id: articles.id,
+        summary: articles.summary,
+        translatedSummary: articles.translatedSummary,
+      })
+      .from(articles)
+      .where(eq(articles.id, article_id))
+      .limit(1);
 
     if (!article) {
       return NextResponse.json(
@@ -943,12 +892,10 @@ export const translateArticleSummary = async (
         [targetLanguage]: translatedSentences,
       };
 
-      await prisma.article.update({
-        where: { id: article_id },
-        data: {
-          translatedSummary: updatedTranslations,
-        },
-      });
+      await db
+        .update(articles)
+        .set({ translatedSummary: updatedTranslations })
+        .where(eq(articles.id, article_id));
 
       return NextResponse.json({
         message: "translation successful",
