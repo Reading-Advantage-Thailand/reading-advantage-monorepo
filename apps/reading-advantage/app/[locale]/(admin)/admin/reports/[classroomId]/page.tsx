@@ -1,7 +1,7 @@
 import AdminClassroomReport from "@/components/admin/classroom-report";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import { headers } from "next/headers";
 import { log } from "console";
 
