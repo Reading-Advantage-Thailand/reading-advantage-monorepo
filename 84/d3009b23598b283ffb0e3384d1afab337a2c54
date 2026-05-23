@@ -1,0 +1,21 @@
+Task: Phase 0 / Add @reading-advantage/domain dep
+
+Changes:
+- apps/science-advantage/package.json: add @reading-advantage/domain workspace:*
+- pnpm-lock.yaml: regenerated
+- measure/tracks.md: Track 3 marked [~] In Progress
+
+Verification:
+- pnpm install: clean (1 unrelated peer warning for react-day-picker)
+- pnpm --filter @reading-advantage/db build: pass
+- pnpm --filter @reading-advantage/domain build: pass
+- Targeted tsc --noEmit on a synthetic file importing
+  { curriculum, quiz, gamification } from '@reading-advantage/domain'
+  with moduleResolution=bundler: pass
+- DB introspection: 11 science_* tables present, drizzle.__drizzle_migrations
+  has prior entries (Track 1 migration 0013 already applied)
+
+Why:
+- Track 3 plan §0.1 calls this the first prerequisite task. Without the dep,
+  science-advantage files cannot import curriculum/quiz/gamification domain
+  helpers built in Track 1.
