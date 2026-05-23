@@ -2,7 +2,7 @@ import TeacherAssignmentsTable from "@/components/admin/teacher-assignments-tabl
 import React from "react";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 export default async function TeacherAssignmentsPage() {
   const user = await getCurrentUser();
