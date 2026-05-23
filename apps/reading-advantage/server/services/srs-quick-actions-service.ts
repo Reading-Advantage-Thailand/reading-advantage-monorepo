@@ -8,8 +8,16 @@
  * - Creating teacher alerts
  */
 
-import { prisma } from '@/lib/prisma';
-import { Role } from '@prisma/client';
+import { db, eq, and, inArray, asc, desc, lt, lte } from '@reading-advantage/db';
+import {
+  users,
+  classroomStudents,
+  classrooms,
+  classroomTeachers,
+  userWordRecords,
+  userSentenceRecords,
+} from '@reading-advantage/db/schema';
+import { Role } from '@/lib/enums';
 
 // ============================================================================
 // Types
@@ -77,44 +85,66 @@ export async function createReviewSession(
   const actionId = `review_${config.userId}_${Date.now()}`;
   
   try {
-    // Get cards based on filter
-    const whereClause: any = {
-      userId: config.userId,
-      saveToFlashcard: true,
+    // Build target filter condition for FSRS state/due
+    const now = new Date();
+    const buildFilter = (
+      due: any,
+      state: any,
+    ) => {
+      switch (config.targetFilter) {
+        case 'overdue':
+          return lt(due, now);
+        case 'due':
+          return lte(due, now);
+        case 'new':
+          return eq(state, 0);
+        case 'learning':
+          return eq(state, 1);
+        default:
+          return undefined;
+      }
     };
-    
-    switch (config.targetFilter) {
-      case 'overdue':
-        whereClause.due = { lt: new Date() };
-        break;
-      case 'due':
-        whereClause.due = { lte: new Date() };
-        break;
-      case 'new':
-        whereClause.state = 0;
-        break;
-      case 'learning':
-        whereClause.state = 1;
-        break;
-    }
-    
+
     // Get vocabulary cards
-    const vocabCards = await prisma.userWordRecord.findMany({
-      where: whereClause,
-      orderBy: config.targetFilter === 'overdue' 
-        ? [{ due: 'asc' }, { lapses: 'desc' }] 
-        : [{ due: 'asc' }, { stability: 'asc' }],
-      take: Math.ceil(config.cardLimit * 0.6), // 60% vocab, 40% sentences
-    });
-    
+    const vocabFilter = buildFilter(userWordRecords.due, userWordRecords.state);
+    const vocabCards = await db
+      .select()
+      .from(userWordRecords)
+      .where(
+        and(
+          eq(userWordRecords.userId, config.userId),
+          eq(userWordRecords.saveToFlashcard, true),
+          vocabFilter,
+        ),
+      )
+      .orderBy(
+        ...(config.targetFilter === 'overdue'
+          ? [asc(userWordRecords.due), desc(userWordRecords.lapses)]
+          : [asc(userWordRecords.due), asc(userWordRecords.stability)]),
+      )
+      .limit(Math.ceil(config.cardLimit * 0.6)); // 60% vocab, 40% sentences
+
     // Get sentence cards
-    const sentenceCards = await prisma.userSentenceRecord.findMany({
-      where: whereClause,
-      orderBy: config.targetFilter === 'overdue' 
-        ? [{ due: 'asc' }, { lapses: 'desc' }] 
-        : [{ due: 'asc' }, { stability: 'asc' }],
-      take: Math.floor(config.cardLimit * 0.4),
-    });
+    const sentenceFilter = buildFilter(
+      userSentenceRecords.due,
+      userSentenceRecords.state,
+    );
+    const sentenceCards = await db
+      .select()
+      .from(userSentenceRecords)
+      .where(
+        and(
+          eq(userSentenceRecords.userId, config.userId),
+          eq(userSentenceRecords.saveToFlashcard, true),
+          sentenceFilter,
+        ),
+      )
+      .orderBy(
+        ...(config.targetFilter === 'overdue'
+          ? [asc(userSentenceRecords.due), desc(userSentenceRecords.lapses)]
+          : [asc(userSentenceRecords.due), asc(userSentenceRecords.stability)]),
+      )
+      .limit(Math.floor(config.cardLimit * 0.4));
     
     const totalCards = vocabCards.length + sentenceCards.length;
     
@@ -188,13 +218,13 @@ export async function sendPracticeReminders(
   
   try {
     // Validate user IDs
-    const validUsers = await prisma.user.findMany({
-      where: {
-        id: { in: config.userIds },
-        role: Role.STUDENT,
-      },
-      select: { id: true, email: true },
-    });
+    const validUsers =
+      config.userIds.length > 0
+        ? await db
+            .select({ id: users.id, email: users.email })
+            .from(users)
+            .where(and(inArray(users.id, config.userIds), eq(users.role, Role.STUDENT)))
+        : [];
     
     if (validUsers.length === 0) {
       return {
@@ -320,16 +350,12 @@ export async function createTeacherAlert(
   
   try {
     // Verify teacher has access to these students
-    const teacher = await prisma.user.findUnique({
-      where: { id: teacherId },
-      select: { 
-        role: true,
-        teacherClassrooms: {
-          select: { classroomId: true }
-        }
-      }
-    });
-    
+    const [teacher] = await db
+      .select({ role: users.role })
+      .from(users)
+      .where(eq(users.id, teacherId))
+      .limit(1);
+
     if (!teacher || teacher.role !== Role.TEACHER) {
       return {
         actionId,
@@ -340,20 +366,30 @@ export async function createTeacherAlert(
         createdAt: new Date().toISOString(),
       };
     }
-    
-    const teacherClassroomIds = teacher.teacherClassrooms.map(tc => tc.classroomId);
-    
+
+    const teacherClassroomRows = await db
+      .select({ classroomId: classroomTeachers.classroomId })
+      .from(classroomTeachers)
+      .where(eq(classroomTeachers.teacherId, teacherId));
+    const teacherClassroomIds = teacherClassroomRows.map((tc) => tc.classroomId);
+
     // Verify students are in teacher's classes
-    const validStudents = await prisma.classroomStudent.findMany({
-      where: {
-        studentId: { in: studentIds },
-        classroomId: { in: teacherClassroomIds }
-      },
-      select: {
-        studentId: true,
-        student: { select: { email: true } }
-      }
-    });
+    const validStudents =
+      studentIds.length > 0 && teacherClassroomIds.length > 0
+        ? await db
+            .select({
+              studentId: classroomStudents.studentId,
+              studentEmail: users.email,
+            })
+            .from(classroomStudents)
+            .leftJoin(users, eq(classroomStudents.studentId, users.id))
+            .where(
+              and(
+                inArray(classroomStudents.studentId, studentIds),
+                inArray(classroomStudents.classroomId, teacherClassroomIds),
+              ),
+            )
+        : [];
     
     if (validStudents.length === 0) {
       return {
@@ -514,54 +550,55 @@ export async function executeQuickAction(
       
     case 'send_reminder':
       let targetUserIds: string[] = [];
-      
+
       if (userId) {
         targetUserIds = [userId];
       } else if (classroomId) {
-        const classroomStudents = await prisma.classroomStudent.findMany({
-          where: { classroomId },
-          select: { studentId: true }
-        });
-        targetUserIds = classroomStudents.map(cs => cs.studentId);
+        const classroomStudentRows = await db
+          .select({ studentId: classroomStudents.studentId })
+          .from(classroomStudents)
+          .where(eq(classroomStudents.classroomId, classroomId));
+        targetUserIds = classroomStudentRows.map((cs) => cs.studentId);
       } else if (schoolId) {
-        const schoolStudents = await prisma.user.findMany({
-          where: { schoolId, role: Role.STUDENT },
-          select: { id: true }
-        });
-        targetUserIds = schoolStudents.map(u => u.id);
+        const schoolStudents = await db
+          .select({ id: users.id })
+          .from(users)
+          .where(and(eq(users.schoolId, schoolId), eq(users.role, Role.STUDENT)));
+        targetUserIds = schoolStudents.map((u) => u.id);
       }
-      
+
       return sendPracticeReminders({
         userIds: targetUserIds,
         message: parameters.reminderMessage || 'Time for your daily flashcard practice!',
         priority: parameters.priority || 'medium',
         actionUrl: '/student/flashcards',
       });
-      
+
     case 'teacher_alert':
       if (!classroomId) {
         throw new Error('classroomId required for teacher_alert action');
       }
-      
+
       // Get classroom teacher
-      const classroom = await prisma.classroom.findUnique({
-        where: { id: classroomId },
-        select: { teacherId: true }
-      });
-      
+      const [classroom] = await db
+        .select({ teacherId: classrooms.teacherId })
+        .from(classrooms)
+        .where(eq(classrooms.id, classroomId))
+        .limit(1);
+
       if (!classroom?.teacherId) {
         throw new Error('No teacher found for classroom');
       }
-      
+
       // Get at-risk students in classroom
-      const atRiskStudents = await prisma.classroomStudent.findMany({
-        where: { classroomId },
-        select: { studentId: true }
-      });
-      
+      const atRiskStudents = await db
+        .select({ studentId: classroomStudents.studentId })
+        .from(classroomStudents)
+        .where(eq(classroomStudents.classroomId, classroomId));
+
       return createTeacherAlert(
         classroom.teacherId,
-        atRiskStudents.map(s => s.studentId),
+        atRiskStudents.map((s) => s.studentId),
         'overload',
         'Some students in your class need SRS intervention'
       );
