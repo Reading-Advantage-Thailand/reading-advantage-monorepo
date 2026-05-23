@@ -2,7 +2,7 @@ import React from "react";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import ReportsContent from "@/components/admin/reports-content";
 
 export default async function AdminReportsPage() {
