@@ -4,7 +4,7 @@ import { createEdgeRouter } from "next-connect";
 import { NextResponse, type NextRequest } from "next/server";
 import type { ExtendedNextRequest } from "@/server/controllers/auth-controller";
 import { DragonFlightController } from "@/server/controllers/dragon-flight-controller";
-import { ActivityType } from "@prisma/client";
+import { ActivityType } from "@/lib/enums";
 
 const router = createEdgeRouter<NextRequest, {}>();
 
