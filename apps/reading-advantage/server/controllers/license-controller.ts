@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import catchAsync from "../utils/catch-async";
 import { ExtendedNextRequest } from "./auth-controller";
-import { prisma } from "@/lib/prisma";
-import { LicenseType } from "@prisma/client";
+import { db, eq, and, gte, lt, lte, inArray, isNotNull, ilike, sql } from "@reading-advantage/db";
+import { licenses, licenseOnUsers, users, xpLogs, userActivity } from "@reading-advantage/db/schema";
+import { LicenseType } from "@/lib/enums";
 import { randomUUID } from "crypto";
 
 interface RequestContext {
@@ -26,34 +27,33 @@ export const createLicenseKey = catchAsync(async (req: ExtendedNextRequest) => {
     expiration_date,
   } = await req.json();
 
-  // Map subscription_level to LicenseType enum
-  const licenseTypeMap: { [key: string]: LicenseType } = {
-    'basic': LicenseType.BASIC,
-    'premium': LicenseType.PREMIUM,
-    'enterprise': LicenseType.ENTERPRISE,
+  const licenseTypeMap: { [key: string]: string } = {
+    basic: LicenseType.BASIC,
+    premium: LicenseType.PREMIUM,
+    enterprise: LicenseType.ENTERPRISE,
   };
 
-  const licenseType = licenseTypeMap[subscription_level?.toLowerCase()] || LicenseType.BASIC;
+  const licenseType = licenseTypeMap[subscription_level?.toLowerCase()] ?? LicenseType.BASIC;
 
-  // Calculate expiration date from number of days
   let expiresAt: Date | null = null;
   if (expiration_date) {
-    const daysToAdd = typeof expiration_date === 'number' ? expiration_date : parseInt(expiration_date);
+    const daysToAdd = typeof expiration_date === "number" ? expiration_date : parseInt(expiration_date);
     expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + daysToAdd);
   }
 
-  const license = await prisma.license.create({
-    data: {
+  const [license] = await db
+    .insert(licenses)
+    .values({
       key: randomUUID(),
       schoolName: school_name,
       maxUsers: total_licenses,
-      licenseType: licenseType,
+      licenseType,
       ownerUserId: admin_id || req.session?.user.id,
-      expiresAt: expiresAt,
+      expiresAt,
       usedLicenses: 0,
-    },
-  });
+    })
+    .returning();
 
   return NextResponse.json({
     message: "License key created successfully",
@@ -62,75 +62,70 @@ export const createLicenseKey = catchAsync(async (req: ExtendedNextRequest) => {
 });
 
 export const getAllLicenses = catchAsync(async (req: ExtendedNextRequest) => {
-  const licenses = await prisma.license.findMany({
-    include: {
-      owner: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-      licenseUsers: {
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
-      },
-      _count: {
-        select: {
-          licenseUsers: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  const allLicenses = await db.select().from(licenses).orderBy(sql`${licenses.createdAt} desc`);
+
+  const enriched = await Promise.all(
+    allLicenses.map(async (license) => {
+      const ownerRow = license.ownerUserId
+        ? await db
+            .select({ id: users.id, name: users.name, email: users.email })
+            .from(users)
+            .where(eq(users.id, license.ownerUserId))
+            .limit(1)
+            .then((r) => r[0] ?? null)
+        : null;
+
+      const licenseUserRows = await db
+        .select({
+          userId: licenseOnUsers.userId,
+          userName: users.name,
+          userEmail: users.email,
+        })
+        .from(licenseOnUsers)
+        .leftJoin(users, eq(licenseOnUsers.userId, users.id))
+        .where(eq(licenseOnUsers.licenseId, license.id));
+
+      return {
+        ...license,
+        owner: ownerRow,
+        licenseUsers: licenseUserRows.map((r) => ({
+          user: { id: r.userId, name: r.userName, email: r.userEmail },
+        })),
+        _count: { licenseUsers: licenseUserRows.length },
+      };
+    })
+  );
 
   return NextResponse.json({
     message: "Licenses fetched successfully",
-    data: licenses,
+    data: enriched,
   });
 });
 
 export const deleteLicense = catchAsync(async (req: ExtendedNextRequest, ctx: RequestContext) => {
   const { id } = await ctx.params;
-  // Check if license exists
-  const license = await prisma.license.findUnique({
-    where: { id },
-    include: {
-      licenseUsers: true,
-    },
-  });
+
+  const [license] = await db.select().from(licenses).where(eq(licenses.id, id)).limit(1);
 
   if (!license) {
-    return NextResponse.json(
-      { message: "License not found" },
-      { status: 404 }
-    );
+    return NextResponse.json({ message: "License not found" }, { status: 404 });
   }
 
-  // If license has users, we might want to handle this case
-  if (license.licenseUsers.length > 0) {
+  const licenseUserRows = await db
+    .select()
+    .from(licenseOnUsers)
+    .where(eq(licenseOnUsers.licenseId, id));
+
+  if (licenseUserRows.length > 0) {
     return NextResponse.json(
       { message: "Cannot delete license with active users" },
       { status: 400 }
     );
   }
 
-  await prisma.license.delete({
-    where: { id },
-  });
+  await db.delete(licenses).where(eq(licenses.id, id));
 
-  return NextResponse.json({
-    message: "License deleted successfully",
-  });
+  return NextResponse.json({ message: "License deleted successfully" });
 });
 
 export const activateLicense = async (
@@ -139,16 +134,13 @@ export const activateLicense = async (
 ) => {
   try {
     const { key, userId } = await req.json();
-    
-    // Use userId from context (URL parameter) if available, otherwise from body
+
     const targetUserId = context ? (await context.params).id : userId;
-    
-    // Authorization check: users can only activate license for themselves
-    // unless they are ADMIN or TEACHER
+
     const currentUser = req.session?.user;
     if (
-      currentUser?.role !== 'ADMIN' &&
-      currentUser?.role !== 'TEACHER' &&
+      currentUser?.role !== "ADMIN" &&
+      currentUser?.role !== "TEACHER" &&
       currentUser?.id !== targetUserId
     ) {
       return NextResponse.json(
@@ -156,62 +148,37 @@ export const activateLicense = async (
         { status: 403 }
       );
     }
-    
-    // Find license by key
-    const license = await prisma.license.findUnique({
-      where: { key },
-      include: {
-        licenseUsers: true,
-      },
-    });
+
+    const [license] = await db.select().from(licenses).where(eq(licenses.key, key)).limit(1);
 
     if (!license) {
-      return NextResponse.json(
-        { message: "License not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "License not found" }, { status: 404 });
     }
 
-    // Check if license has available slots
-    if (license.licenseUsers.length >= license.maxUsers) {
-      return NextResponse.json(
-        { message: "License is already fully used" },
-        { status: 400 }
-      );
+    const licenseUserRows = await db
+      .select()
+      .from(licenseOnUsers)
+      .where(eq(licenseOnUsers.licenseId, license.id));
+
+    if (licenseUserRows.length >= license.maxUsers) {
+      return NextResponse.json({ message: "License is already fully used" }, { status: 400 });
     }
 
-    // Check if license is expired
     if (license.expiresAt && license.expiresAt < new Date()) {
-      return NextResponse.json(
-        { message: "License has expired" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "License has expired" }, { status: 400 });
     }
 
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { id: targetUserId },
-      include: {
-        licenseOnUsers: true,
-      },
-    });
+    const [user] = await db.select().from(users).where(eq(users.id, targetUserId)).limit(1);
 
     if (!user) {
-      return NextResponse.json(
-        { message: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    // Check if user already has this license
-    const existingLicenseUser = await prisma.licenseOnUser.findUnique({
-      where: {
-        userId_licenseId: {
-          userId: targetUserId,
-          licenseId: license.id,
-        },
-      },
-    });
+    const [existingLicenseUser] = await db
+      .select()
+      .from(licenseOnUsers)
+      .where(and(eq(licenseOnUsers.userId, targetUserId), eq(licenseOnUsers.licenseId, license.id)))
+      .limit(1);
 
     if (existingLicenseUser) {
       return NextResponse.json(
@@ -220,99 +187,67 @@ export const activateLicense = async (
       );
     }
 
-    // Activate the license for the user
-    await prisma.$transaction([
-      // Create license-user relationship
-      prisma.licenseOnUser.create({
-        data: {
-          userId: targetUserId,
-          licenseId: license.id,
-        },
-      }),
-      // Update user's license and expiration date
-      prisma.user.update({
-        where: { id: targetUserId },
-        data: {
-          licenseId: license.id,
-          expiredDate: license.expiresAt,
-        },
-      }),
-      // Update license used count
-      prisma.license.update({
-        where: { id: license.id },
-        data: {
-          usedLicenses: {
-            increment: 1,
-          },
-        },
-      }),
-    ]);
+    await db.transaction(async (tx) => {
+      await tx.insert(licenseOnUsers).values({ userId: targetUserId, licenseId: license.id });
+      await tx
+        .update(users)
+        .set({ licenseId: license.id, expiredDate: license.expiresAt, updatedAt: new Date() })
+        .where(eq(users.id, targetUserId));
+      await tx
+        .update(licenses)
+        .set({ usedLicenses: (license.usedLicenses ?? 0) + 1, updatedAt: new Date() })
+        .where(eq(licenses.id, license.id));
+    });
 
-    return NextResponse.json(
-      { message: "License activated successfully" },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "License activated successfully" }, { status: 200 });
   } catch (error) {
     console.error("Error activating license:", error);
-    return NextResponse.json({
-      message: "Internal server error",
-      status: 500,
-    });
+    return NextResponse.json({ message: "Internal server error", status: 500 });
   }
 };
 
-export const getLicense = async (
-  req: ExtendedNextRequest,
-  ctx: RequestContext
-) => {
+export const getLicense = async (req: ExtendedNextRequest, ctx: RequestContext) => {
   const { id } = await ctx.params;
   try {
-    const license = await prisma.license.findUnique({
-      where: { id },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        licenseUsers: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-        },
-        _count: {
-          select: {
-            licenseUsers: true,
-          },
-        },
-      },
-    });
+    const [license] = await db.select().from(licenses).where(eq(licenses.id, id)).limit(1);
 
     if (!license) {
-      return NextResponse.json(
-        { message: "License not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "License not found" }, { status: 404 });
     }
+
+    const ownerRow = license.ownerUserId
+      ? await db
+          .select({ id: users.id, name: users.name, email: users.email })
+          .from(users)
+          .where(eq(users.id, license.ownerUserId))
+          .limit(1)
+          .then((r) => r[0] ?? null)
+      : null;
+
+    const licenseUserRows = await db
+      .select({
+        userId: licenseOnUsers.userId,
+        userName: users.name,
+        userEmail: users.email,
+      })
+      .from(licenseOnUsers)
+      .leftJoin(users, eq(licenseOnUsers.userId, users.id))
+      .where(eq(licenseOnUsers.licenseId, id));
 
     return NextResponse.json({
       message: "License fetched successfully",
-      license,
+      license: {
+        ...license,
+        owner: ownerRow,
+        licenseUsers: licenseUserRows.map((r) => ({
+          user: { id: r.userId, name: r.userName, email: r.userEmail },
+        })),
+        _count: { licenseUsers: licenseUserRows.length },
+      },
     });
   } catch (error) {
     console.error("Error fetching license:", error);
-    return NextResponse.json({
-      message: "Internal server error",
-      status: 500,
-    });
+    return NextResponse.json({ message: "Internal server error", status: 500 });
   }
 };
 
@@ -322,15 +257,13 @@ export const deactivateLicense = async (
 ) => {
   try {
     const { userId, licenseId } = await req.json();
-    
-    // Use userId from context (URL parameter) if available, otherwise from body
+
     const targetUserId = context ? (await context.params).id : userId;
-    
-    // Authorization check
+
     const currentUser = req.session?.user;
     if (
-      currentUser?.role !== 'ADMIN' &&
-      currentUser?.role !== 'TEACHER' &&
+      currentUser?.role !== "ADMIN" &&
+      currentUser?.role !== "TEACHER" &&
       currentUser?.id !== targetUserId
     ) {
       return NextResponse.json(
@@ -339,15 +272,11 @@ export const deactivateLicense = async (
       );
     }
 
-    // Check if license-user relationship exists
-    const licenseUser = await prisma.licenseOnUser.findUnique({
-      where: {
-        userId_licenseId: {
-          userId: targetUserId,
-          licenseId: licenseId,
-        },
-      },
-    });
+    const [licenseUser] = await db
+      .select()
+      .from(licenseOnUsers)
+      .where(and(eq(licenseOnUsers.userId, targetUserId), eq(licenseOnUsers.licenseId, licenseId)))
+      .limit(1);
 
     if (!licenseUser) {
       return NextResponse.json(
@@ -356,46 +285,30 @@ export const deactivateLicense = async (
       );
     }
 
-    // Remove license from user
-    await prisma.$transaction([
-      // Delete license-user relationship
-      prisma.licenseOnUser.delete({
-        where: {
-          userId_licenseId: {
-            userId: targetUserId,
-            licenseId: licenseId,
-          },
-        },
-      }),
-      // Update user's license to null
-      prisma.user.update({
-        where: { id: targetUserId },
-        data: {
-          licenseId: null,
-          expiredDate: null,
-        },
-      }),
-      // Decrement license used count
-      prisma.license.update({
-        where: { id: licenseId },
-        data: {
-          usedLicenses: {
-            decrement: 1,
-          },
-        },
-      }),
-    ]);
+    const [license] = await db.select().from(licenses).where(eq(licenses.id, licenseId)).limit(1);
 
-    return NextResponse.json(
-      { message: "License deactivated successfully" },
-      { status: 200 }
-    );
+    await db.transaction(async (tx) => {
+      await tx
+        .delete(licenseOnUsers)
+        .where(
+          and(eq(licenseOnUsers.userId, targetUserId), eq(licenseOnUsers.licenseId, licenseId))
+        );
+      await tx
+        .update(users)
+        .set({ licenseId: null, expiredDate: null, updatedAt: new Date() })
+        .where(eq(users.id, targetUserId));
+      if (license) {
+        await tx
+          .update(licenses)
+          .set({ usedLicenses: Math.max(0, (license.usedLicenses ?? 1) - 1), updatedAt: new Date() })
+          .where(eq(licenses.id, licenseId));
+      }
+    });
+
+    return NextResponse.json({ message: "License deactivated successfully" }, { status: 200 });
   } catch (error) {
     console.error("Error deactivating license:", error);
-    return NextResponse.json({
-      message: "Internal server error",
-      status: 500,
-    });
+    return NextResponse.json({ message: "Internal server error", status: 500 });
   }
 };
 
@@ -405,126 +318,85 @@ export const updateUserLicense = async (
 ) => {
   try {
     const { userId, oldLicenseId, newLicenseKey } = await req.json();
-    
-    // Use userId from context (URL parameter) if available, otherwise from body
+
     const targetUserId = context ? (await context.params).id : userId;
-    
-    // Authorization check
+
     const currentUser = req.session?.user;
-    if (
-      currentUser?.role !== 'ADMIN' &&
-      currentUser?.role !== 'TEACHER'
-    ) {
+    if (currentUser?.role !== "ADMIN" && currentUser?.role !== "TEACHER") {
       return NextResponse.json(
         { message: "Only admins and teachers can update user licenses" },
         { status: 403 }
       );
     }
 
-    // Find new license by key
-    const newLicense = await prisma.license.findUnique({
-      where: { key: newLicenseKey },
-      include: {
-        licenseUsers: true,
-      },
-    });
+    const [newLicense] = await db
+      .select()
+      .from(licenses)
+      .where(eq(licenses.key, newLicenseKey))
+      .limit(1);
 
     if (!newLicense) {
-      return NextResponse.json(
-        { message: "New license not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "New license not found" }, { status: 404 });
     }
 
-    // Check if new license has available slots
-    if (newLicense.licenseUsers.length >= newLicense.maxUsers) {
-      return NextResponse.json(
-        { message: "New license is already fully used" },
-        { status: 400 }
-      );
+    const newLicenseUserRows = await db
+      .select()
+      .from(licenseOnUsers)
+      .where(eq(licenseOnUsers.licenseId, newLicense.id));
+
+    if (newLicenseUserRows.length >= newLicense.maxUsers) {
+      return NextResponse.json({ message: "New license is already fully used" }, { status: 400 });
     }
 
-    // Check if new license is expired
     if (newLicense.expiresAt && newLicense.expiresAt < new Date()) {
-      return NextResponse.json(
-        { message: "New license has expired" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "New license has expired" }, { status: 400 });
     }
 
-    // Check if user already has the new license
-    const existingNewLicenseUser = await prisma.licenseOnUser.findUnique({
-      where: {
-        userId_licenseId: {
-          userId: targetUserId,
-          licenseId: newLicense.id,
-        },
-      },
-    });
+    const [existingNewLicenseUser] = await db
+      .select()
+      .from(licenseOnUsers)
+      .where(and(eq(licenseOnUsers.userId, targetUserId), eq(licenseOnUsers.licenseId, newLicense.id)))
+      .limit(1);
 
     if (existingNewLicenseUser) {
-      return NextResponse.json(
-        { message: "User already has this license" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "User already has this license" }, { status: 400 });
     }
 
-    // Update license
-    await prisma.$transaction([
-      // Remove old license-user relationship if exists
-      ...(oldLicenseId ? [
-        prisma.licenseOnUser.deleteMany({
-          where: {
-            userId: targetUserId,
-            licenseId: oldLicenseId,
-          },
-        }),
-        // Decrement old license used count
-        prisma.license.update({
-          where: { id: oldLicenseId },
-          data: {
-            usedLicenses: {
-              decrement: 1,
-            },
-          },
-        }),
-      ] : []),
-      // Create new license-user relationship
-      prisma.licenseOnUser.create({
-        data: {
-          userId: targetUserId,
-          licenseId: newLicense.id,
-        },
-      }),
-      // Update user's license and expiration date
-      prisma.user.update({
-        where: { id: targetUserId },
-        data: {
-          licenseId: newLicense.id,
-          expiredDate: newLicense.expiresAt,
-        },
-      }),
-      // Increment new license used count
-      prisma.license.update({
-        where: { id: newLicense.id },
-        data: {
-          usedLicenses: {
-            increment: 1,
-          },
-        },
-      }),
-    ]);
+    await db.transaction(async (tx) => {
+      if (oldLicenseId) {
+        await tx
+          .delete(licenseOnUsers)
+          .where(
+            and(eq(licenseOnUsers.userId, targetUserId), eq(licenseOnUsers.licenseId, oldLicenseId))
+          );
+        const [oldLicense] = await tx
+          .select()
+          .from(licenses)
+          .where(eq(licenses.id, oldLicenseId))
+          .limit(1);
+        if (oldLicense) {
+          await tx
+            .update(licenses)
+            .set({ usedLicenses: Math.max(0, (oldLicense.usedLicenses ?? 1) - 1), updatedAt: new Date() })
+            .where(eq(licenses.id, oldLicenseId));
+        }
+      }
 
-    return NextResponse.json(
-      { message: "License updated successfully" },
-      { status: 200 }
-    );
+      await tx.insert(licenseOnUsers).values({ userId: targetUserId, licenseId: newLicense.id });
+      await tx
+        .update(users)
+        .set({ licenseId: newLicense.id, expiredDate: newLicense.expiresAt, updatedAt: new Date() })
+        .where(eq(users.id, targetUserId));
+      await tx
+        .update(licenses)
+        .set({ usedLicenses: (newLicense.usedLicenses ?? 0) + 1, updatedAt: new Date() })
+        .where(eq(licenses.id, newLicense.id));
+    });
+
+    return NextResponse.json({ message: "License updated successfully" }, { status: 200 });
   } catch (error) {
     console.error("Error updating user license:", error);
-    return NextResponse.json({
-      message: "Internal server error",
-      status: 500,
-    });
+    return NextResponse.json({ message: "Internal server error", status: 500 });
   }
 };
 
@@ -536,55 +408,53 @@ export const getFilteredLicenses = catchAsync(async (req: ExtendedNextRequest) =
   const licenseType = searchParams.get("licenseType");
   const ownerId = searchParams.get("ownerId");
 
-  const skip = (page - 1) * limit;
+  const offset = (page - 1) * limit;
 
-  // Build where condition
-  const where: any = {};
-  
-  if (schoolName) {
-    where.schoolName = {
-      contains: schoolName,
-      mode: 'insensitive',
-    };
-  }
-  
-  if (licenseType) {
-    where.licenseType = licenseType;
-  }
-  
-  if (ownerId) {
-    where.ownerUserId = ownerId;
-  }
+  const conditions = [];
+  if (schoolName) conditions.push(ilike(licenses.schoolName, `%${schoolName}%`));
+  if (licenseType) conditions.push(eq(licenses.licenseType, licenseType));
+  if (ownerId) conditions.push(eq(licenses.ownerUserId, ownerId));
 
-  const [licenses, total] = await Promise.all([
-    prisma.license.findMany({
-      where,
-      include: {
-        owner: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        _count: {
-          select: {
-            licenseUsers: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      skip,
-      take: limit,
-    }),
-    prisma.license.count({ where }),
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+  const [rows, [{ total }]] = await Promise.all([
+    db
+      .select()
+      .from(licenses)
+      .where(whereClause)
+      .orderBy(sql`${licenses.createdAt} desc`)
+      .limit(limit)
+      .offset(offset),
+    db.select({ total: sql<number>`count(*)::int` }).from(licenses).where(whereClause),
   ]);
+
+  const enriched = await Promise.all(
+    rows.map(async (license) => {
+      const ownerRow = license.ownerUserId
+        ? await db
+            .select({ id: users.id, name: users.name, email: users.email })
+            .from(users)
+            .where(eq(users.id, license.ownerUserId))
+            .limit(1)
+            .then((r) => r[0] ?? null)
+        : null;
+
+      const [{ licenseUserCount }] = await db
+        .select({ licenseUserCount: sql<number>`count(*)::int` })
+        .from(licenseOnUsers)
+        .where(eq(licenseOnUsers.licenseId, license.id));
+
+      return {
+        ...license,
+        owner: ownerRow,
+        _count: { licenseUsers: licenseUserCount },
+      };
+    })
+  );
 
   return NextResponse.json({
     message: "Licenses fetched successfully",
-    data: licenses,
+    data: enriched,
     pagination: {
       page,
       limit,
@@ -600,58 +470,36 @@ export const calculateXpForLast30Days = async () => {
     const past30Days = new Date();
     past30Days.setDate(now.getDate() - 30);
 
-    // Get all XP logs from the last 30 days
-    const xpLogs = await prisma.xPLog.findMany({
-      where: {
-        createdAt: {
-          gte: past30Days,
-          lt: now,
-        },
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            licenseId: true,
-          },
-        },
-      },
-    });
+    const logs = await db
+      .select({
+        xpEarned: xpLogs.xpEarned,
+        createdAt: xpLogs.createdAt,
+        licenseId: users.licenseId,
+      })
+      .from(xpLogs)
+      .leftJoin(users, eq(xpLogs.userId, users.id))
+      .where(and(gte(xpLogs.createdAt, past30Days), lt(xpLogs.createdAt, now)));
 
-    // Group XP by date and license
     const xpByDateAndLicense: Record<string, Record<string, number>> = {};
 
-    xpLogs.forEach((log) => {
+    for (const log of logs) {
       const dateStr = log.createdAt.toISOString().slice(0, 10);
-      const licenseId = log.user.licenseId;
+      const licenseId = log.licenseId;
+      if (!licenseId) continue;
 
-      if (!licenseId) return; // Skip users without licenses
-
-      if (!xpByDateAndLicense[dateStr]) {
-        xpByDateAndLicense[dateStr] = {};
-      }
-
-      if (!xpByDateAndLicense[dateStr][licenseId]) {
-        xpByDateAndLicense[dateStr][licenseId] = 0;
-      }
-
+      if (!xpByDateAndLicense[dateStr]) xpByDateAndLicense[dateStr] = {};
+      if (!xpByDateAndLicense[dateStr][licenseId]) xpByDateAndLicense[dateStr][licenseId] = 0;
       xpByDateAndLicense[dateStr][licenseId] += log.xpEarned;
-    });
+    }
 
-    // Save aggregated data (you might want to create a separate table for this)
-    // For now, we'll just return the data since there's no xp-gained-log table in Prisma schema
-    
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       data: xpByDateAndLicense,
-      message: "XP calculation completed successfully"
+      message: "XP calculation completed successfully",
     });
   } catch (error) {
     console.error("Error calculating XP:", error);
-    return NextResponse.json({
-      success: false,
-      error: "Internal Server Error",
-    });
+    return NextResponse.json({ success: false, error: "Internal Server Error" });
   }
 };
 
@@ -667,43 +515,47 @@ export const getXp30days = async (request: NextRequest) => {
     let totalXp = 0;
 
     if (license_id) {
-      // Get XP for specific license
-      const xpLogs = await prisma.xPLog.findMany({
-        where: {
-          createdAt: {
-            gte: past30Days,
-            lt: now,
-          },
-          user: {
-            licenseId: license_id,
-          },
-        },
-        select: {
-          xpEarned: true,
-        },
-      });
+      // Two-step: get userIds with this license, then sum their xpLogs
+      const userRows = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.licenseId, license_id));
+      const userIds = userRows.map((r) => r.id);
 
-      totalXp = xpLogs.reduce((sum, log) => sum + log.xpEarned, 0);
+      if (userIds.length > 0) {
+        const logs = await db
+          .select({ xpEarned: xpLogs.xpEarned })
+          .from(xpLogs)
+          .where(
+            and(
+              inArray(xpLogs.userId, userIds),
+              gte(xpLogs.createdAt, past30Days),
+              lt(xpLogs.createdAt, now)
+            )
+          );
+        totalXp = logs.reduce((sum, l) => sum + l.xpEarned, 0);
+      }
     } else {
-      // Get XP for all licenses
-      const xpLogs = await prisma.xPLog.findMany({
-        where: {
-          createdAt: {
-            gte: past30Days,
-            lt: now,
-          },
-          user: {
-            licenseId: {
-              not: null,
-            },
-          },
-        },
-        select: {
-          xpEarned: true,
-        },
-      });
+      // All users with any license
+      const userRows = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(isNotNull(users.licenseId));
+      const userIds = userRows.map((r) => r.id);
 
-      totalXp = xpLogs.reduce((sum, log) => sum + log.xpEarned, 0);
+      if (userIds.length > 0) {
+        const logs = await db
+          .select({ xpEarned: xpLogs.xpEarned })
+          .from(xpLogs)
+          .where(
+            and(
+              inArray(xpLogs.userId, userIds),
+              gte(xpLogs.createdAt, past30Days),
+              lt(xpLogs.createdAt, now)
+            )
+          );
+        totalXp = logs.reduce((sum, l) => sum + l.xpEarned, 0);
+      }
     }
 
     return NextResponse.json({
@@ -720,10 +572,7 @@ export const getXp30days = async (request: NextRequest) => {
   }
 };
 
-export const getLessonXp = async (
-  req: NextRequest,
-  ctx: Context
-) => {
+export const getLessonXp = async (req: NextRequest, ctx: Context) => {
   const { userId } = await ctx.params;
   try {
     const articleId = req.nextUrl.searchParams.get("articleId");
@@ -738,82 +587,25 @@ export const getLessonXp = async (
     const decodedArticleId = decodeURIComponent(articleId);
     const cleanArticleId = decodedArticleId.split("/")[0];
 
-    // Get ALL UserActivities for this user
-    const allUserActivities = await prisma.userActivity.findMany({
-      where: {
-        userId: userId,
-      },
-      select: {
-        id: true,
-        activityType: true,
-        targetId: true,
-        details: true,
-        createdAt: true,
-      },
-    });
+    const allUserActivities = await db
+      .select({
+        id: userActivity.id,
+        activityType: userActivity.activityType,
+        targetId: userActivity.targetId,
+        details: userActivity.details,
+        createdAt: userActivity.createdAt,
+      })
+      .from(userActivity)
+      .where(eq(userActivity.userId, userId));
 
-    // Filter activities based on articleId:
-    // 1. For activities with targetId = articleId (SA_QUESTION, LA_QUESTION, ARTICLE_READ, etc.)
-    // 2. For MCQ activities, check articleId in details
     const articleRelatedActivities = allUserActivities.filter((activity) => {
-      // Direct match with targetId (for SA, LA, ARTICLE_READ, etc.)
-      if (activity.targetId === cleanArticleId) {
-        return true;
-      }
-
-      // For MCQ activities, check articleId in details
+      if (activity.targetId === cleanArticleId) return true;
       if (activity.activityType === "MC_QUESTION") {
         const details = activity.details as any;
         return details?.articleId === cleanArticleId;
       }
-
       return false;
     });
-
-    // Also get vocabulary activities and article rating that might be related
-    // Get activities from the same time period (within 1 hour of article activities)
-    let allRelatedActivities = [...articleRelatedActivities];
-
-    if (articleRelatedActivities.length > 0) {
-      const earliestTime = new Date(
-        Math.min(...articleRelatedActivities.map((a) => a.createdAt.getTime()))
-      );
-      const latestTime = new Date(
-        Math.max(...articleRelatedActivities.map((a) => a.createdAt.getTime()))
-      );
-
-      // Extend time range by 1 hour before and after
-      earliestTime.setHours(earliestTime.getHours() - 1);
-      latestTime.setHours(latestTime.getHours() + 1);
-
-      const vocabularyActivities = await prisma.userActivity.findMany({
-        where: {
-          userId: userId,
-          activityType: {
-            in: [
-              "VOCABULARY_FLASHCARDS",
-              "VOCABULARY_MATCHING",
-              "ARTICLE_RATING",
-            ],
-          },
-          createdAt: {
-            gte: earliestTime,
-            lte: latestTime,
-          },
-        },
-        select: {
-          id: true,
-          activityType: true,
-          targetId: true,
-          details: true,
-          createdAt: true,
-        },
-      });
-      allRelatedActivities = [
-        ...articleRelatedActivities,
-        ...vocabularyActivities,
-      ];
-    }
 
     if (articleRelatedActivities.length === 0) {
       return NextResponse.json({
@@ -824,19 +616,48 @@ export const getLessonXp = async (
       });
     }
 
-    // Get ALL XP logs for these activities (including related vocabulary/rating activities)
-    const activityIds = allRelatedActivities.map((activity) => activity.id);
-    const allXpLogs = await prisma.xPLog.findMany({
-      where: {
-        userId: userId,
-        activityId: { in: activityIds },
-      },
-      select: {
-        xpEarned: true,
-        activityType: true,
-        activityId: true,
-      },
-    });
+    const earliestTime = new Date(
+      Math.min(...articleRelatedActivities.map((a) => a.createdAt.getTime()))
+    );
+    const latestTime = new Date(
+      Math.max(...articleRelatedActivities.map((a) => a.createdAt.getTime()))
+    );
+    earliestTime.setHours(earliestTime.getHours() - 1);
+    latestTime.setHours(latestTime.getHours() + 1);
+
+    const vocabularyActivities = await db
+      .select({
+        id: userActivity.id,
+        activityType: userActivity.activityType,
+        targetId: userActivity.targetId,
+        details: userActivity.details,
+        createdAt: userActivity.createdAt,
+      })
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          inArray(userActivity.activityType, [
+            "VOCABULARY_FLASHCARDS",
+            "VOCABULARY_MATCHING",
+            "ARTICLE_RATING",
+          ]),
+          gte(userActivity.createdAt, earliestTime),
+          lte(userActivity.createdAt, latestTime)
+        )
+      );
+
+    const allRelatedActivities = [...articleRelatedActivities, ...vocabularyActivities];
+    const activityIds = allRelatedActivities.map((a) => a.id);
+
+    const allXpLogs = await db
+      .select({
+        xpEarned: xpLogs.xpEarned,
+        activityType: xpLogs.activityType,
+        activityId: xpLogs.activityId,
+      })
+      .from(xpLogs)
+      .where(and(eq(xpLogs.userId, userId), inArray(xpLogs.activityId, activityIds)));
 
     if (allXpLogs.length === 0) {
       return NextResponse.json({
@@ -847,24 +668,14 @@ export const getLessonXp = async (
       });
     }
 
-    // Calculate total XP from all article-related activities
-    const totalXp = allXpLogs.reduce(
-      (total: number, log) => total + (log.xpEarned || 0),
-      0
-    );
+    const totalXp = allXpLogs.reduce((total, log) => total + (log.xpEarned || 0), 0);
 
-    // Break down XP by activity type
     const xpByActivityType = allXpLogs.reduce(
       (acc, log) => {
-        const activityType = log.activityType;
-        if (!acc[activityType]) {
-          acc[activityType] = {
-            totalXp: 0,
-            count: 0,
-          };
-        }
-        acc[activityType].totalXp += log.xpEarned || 0;
-        acc[activityType].count += 1;
+        const type = log.activityType;
+        if (!acc[type]) acc[type] = { totalXp: 0, count: 0 };
+        acc[type].totalXp += log.xpEarned || 0;
+        acc[type].count += 1;
         return acc;
       },
       {} as Record<string, { totalXp: number; count: number }>
