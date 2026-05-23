@@ -1,0 +1,14 @@
+Task: Phase 2 \u2014 retire legacy vitest.setup.ts
+
+Decisions:
+  - Default vitest.config.ts: switched to integration setup files (not deleted),
+    because pnpm test runs all tests in the app incl. integration ones; the
+    config must remain DB-capable.
+  - vitest.unit.setup.ts: kept (DB-free); just updated stale comment.
+  - vitest.setup.ts: deleted outright \u2014 was the only Prisma db-push caller.
+
+Verification:
+  - 0 remaining importers of vitest.setup.ts in code (only stale docs in
+    docs/archive/ and TEST_SUMMARY.md; those will get a sweep in Phase 4)
+  - eslint clean
+  - 11/11 unit tests still green
