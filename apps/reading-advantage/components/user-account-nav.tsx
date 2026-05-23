@@ -14,7 +14,7 @@ import { useScopedI18n } from "@/locales/client";
 import { Icons } from "./icons";
 import { Badge } from "./ui/badge";
 import { useState } from "react";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 interface UserAccountNavProps {
   user: {
