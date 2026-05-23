@@ -199,8 +199,8 @@ be green against BEFORE and stay green against AFTER.
 > **Prerequisite:** sub-track `science_test_infra_drizzle_migration_20260523` complete (test DB on Drizzle migrations; per-file truncate-and-reseed pattern; pilot `route.integration.test.ts` proves the loop). Without it, every controller migration in Phases 1–5 is unverifiable at runtime.
 
 - [x] Task: Migrate `lib/services/classes/get-class-detail.ts` (class, curriculumUnit) [3312144]
-- [~] Task: Migrate `lib/ai/recommendation-context.ts` (curriculumUnit, standardMastery)
-- [ ] Task: Migrate `lib/schemas/validate-json.ts` — swap `StandardsAlignment` enum import (0.7); confirm `lib/schemas/lesson-slug.schema` paths still resolve
+- [x] Task: Migrate `lib/ai/recommendation-context.ts` (curriculumUnit, standardMastery) [33a4d73]
+- [~] Task: Migrate `lib/schemas/validate-json.ts` — swap `StandardsAlignment` enum import (0.7); confirm `lib/schemas/lesson-slug.schema` paths still resolve
 - [ ] Task: Migrate `app/api/lessons/[lessonSlug]/quiz/route.ts` (attempt, gamificationProfile, lesson, lessonCompletion, masteryRun)
 - [ ] Task: Migrate `app/api/classes/[classId]/curriculum/route.ts` (class, curriculumUnit, lessonCompletion)
 - [ ] Task: Migrate `app/api/classes/[classId]/analytics/overview/route.ts` (class, lesson, lessonCompletion)
