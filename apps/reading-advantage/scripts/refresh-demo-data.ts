@@ -1,11 +1,17 @@
-import { PrismaClient } from "@prisma/client";
+import {
+  db,
+  users,
+  classrooms,
+  classroomStudents,
+  eq,
+  and,
+  asc,
+} from "@reading-advantage/db";
 import {
   getDemoIds,
   runAllIsolationChecks,
 } from "../server/services/demo-isolation-service";
 import { generateDailyActivities } from "../server/services/demo-activity-generator";
-
-const prisma = new PrismaClient();
 
 /**
  * Refresh demo data - Daily job
@@ -61,36 +67,32 @@ async function refreshDemoData() {
     console.log("📋 PHASE 2: Classroom Reset\n");
 
     // Get demo teacher
-    const teacher = await prisma.user.findFirst({
-      where: {
-        licenseId: demoLicenseId,
-        role: "TEACHER",
-      },
-    });
+    const [teacher] = await db
+      .select()
+      .from(users)
+      .where(and(eq(users.licenseId, demoLicenseId), eq(users.role, "TEACHER")))
+      .limit(1);
 
     if (!teacher) {
       throw new Error("❌ Demo teacher not found");
     }
 
     // Get demo students
-    const students = await prisma.user.findMany({
-      where: {
-        licenseId: demoLicenseId,
-        role: "STUDENT",
-      },
-      orderBy: {
-        email: "asc", // Consistent ordering
-      },
-    });
+    const students = await db
+      .select()
+      .from(users)
+      .where(and(eq(users.licenseId, demoLicenseId), eq(users.role, "STUDENT")))
+      .orderBy(asc(users.email));
 
     console.log(`✓ Found ${students.length} demo students`);
 
     // Delete existing demo classrooms (cascade will delete classroom_students)
-    const deletedClassrooms = await prisma.classroom.deleteMany({
-      where: { schoolId: demoSchoolId },
-    });
+    const deletedClassrooms = await db
+      .delete(classrooms)
+      .where(eq(classrooms.schoolId, demoSchoolId))
+      .returning({ id: classrooms.id });
 
-    console.log(`✓ Deleted ${deletedClassrooms.count} existing classrooms`);
+    console.log(`✓ Deleted ${deletedClassrooms.length} existing classrooms`);
 
     // Recreate classrooms
     const classroomConfigs = [
@@ -99,31 +101,30 @@ async function refreshDemoData() {
     ];
 
     for (const config of classroomConfigs) {
-      const classroom = await prisma.classroom.create({
-        data: {
-          classroomName: config.name,
+      const [classroom] = await db
+        .insert(classrooms)
+        .values({
+          name: config.name,
           teacherId: teacher.id,
           schoolId: demoSchoolId,
           createdBy: teacher.id,
           grade: config.grade,
           classCode: `DEMO-${config.name.replace(/\s+/g, "-").toUpperCase()}-${Date.now()}`,
-        },
-      });
+        })
+        .returning();
 
       // Add students to classroom
       for (const studentIndex of config.studentIndices) {
         if (studentIndex < students.length) {
-          await prisma.classroomStudent.create({
-            data: {
-              classroomId: classroom.id,
-              studentId: students[studentIndex].id,
-            },
+          await db.insert(classroomStudents).values({
+            classroomId: classroom.id,
+            studentId: students[studentIndex].id,
           });
         }
       }
 
       console.log(
-        `✓ Created classroom: ${classroom.classroomName} with ${config.studentIndices.length} students`
+        `✓ Created classroom: ${classroom.name} with ${config.studentIndices.length} students`
       );
     }
 
@@ -155,18 +156,18 @@ async function refreshDemoData() {
       const { refreshAllMaterializedViews } =
         await import("../server/services/refresh-matviews-service");
 
-      const result = await refreshAllMaterializedViews();
+      const matviewResult = await refreshAllMaterializedViews();
 
-      console.log(`✓ ${result.success} views refreshed successfully`);
-      if (result.failed > 0) {
-        console.log(`⚠ ${result.failed} views failed`);
+      console.log(`✓ ${matviewResult.success} views refreshed successfully`);
+      if (matviewResult.failed > 0) {
+        console.log(`⚠ ${matviewResult.failed} views failed`);
       }
-      if (result.skipped > 0) {
-        console.log(`⊘ ${result.skipped} views skipped`);
+      if (matviewResult.skipped > 0) {
+        console.log(`⊘ ${matviewResult.skipped} views skipped`);
       }
 
       console.log(
-        `✅ Materialized views refresh completed in ${result.duration}ms\n`
+        `✅ Materialized views refresh completed in ${matviewResult.duration}ms\n`
       );
     } catch (error) {
       console.error("⚠️  Failed to refresh materialized views:", error);
@@ -214,11 +215,7 @@ async function refreshDemoData() {
 }
 
 // Run the refresh job
-refreshDemoData()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+refreshDemoData().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
