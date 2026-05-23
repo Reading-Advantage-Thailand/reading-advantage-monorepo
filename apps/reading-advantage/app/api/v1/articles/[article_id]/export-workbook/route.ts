@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db, eq } from "@reading-advantage/db";
+import {
+  articles,
+  chapters,
+  multipleChoiceQuestions,
+  shortAnswerQuestions,
+  longAnswerQuestions,
+} from "@reading-advantage/db/schema";
 import { createEdgeRouter } from "next-connect";
 import { logRequest } from "@/server/middleware";
 import { restrictTo } from "@/server/controllers/auth-controller";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import { WorkbookJSON } from "@/utils/workbook-data-mapper";
 
 interface RequestContext {
@@ -21,29 +28,71 @@ router.get(async (req, ctx) => {
   try {
     const { article_id } = await ctx.params;
 
-    // 1. Fetch Article with Relations
-    let article: any = await prisma.article.findUnique({
-      where: { id: article_id },
-      include: {
-        multipleChoiceQuestions: true,
-        shortAnswerQuestions: true,
-        longAnswerQuestions: true,
-      },
-    });
+    // 1. Fetch Article (with related questions)
+    let article: any = null;
+    const articleRows = await db
+      .select()
+      .from(articles)
+      .where(eq(articles.id, article_id))
+      .limit(1);
+
+    if (articleRows.length > 0) {
+      const base = articleRows[0];
+      const [mcqs, saqs, laqs] = await Promise.all([
+        db
+          .select()
+          .from(multipleChoiceQuestions)
+          .where(eq(multipleChoiceQuestions.articleId, base.id)),
+        db
+          .select()
+          .from(shortAnswerQuestions)
+          .where(eq(shortAnswerQuestions.articleId, base.id)),
+        db
+          .select()
+          .from(longAnswerQuestions)
+          .where(eq(longAnswerQuestions.articleId, base.id)),
+      ]);
+      article = {
+        ...base,
+        multipleChoiceQuestions: mcqs,
+        shortAnswerQuestions: saqs,
+        longAnswerQuestions: laqs,
+      };
+    }
 
     let isChapter = false;
 
     // 2. If not article, Try Fetch Chapter
     if (!article) {
-      article = await prisma.chapter.findUnique({
-        where: { id: article_id },
-        include: {
-          multipleChoiceQuestions: true,
-          shortAnswerQuestions: true,
-          longAnswerQuestions: true,
-        },
-      });
-      isChapter = !!article;
+      const chapterRows = await db
+        .select()
+        .from(chapters)
+        .where(eq(chapters.id, article_id))
+        .limit(1);
+      if (chapterRows.length > 0) {
+        const base = chapterRows[0];
+        const [mcqs, saqs, laqs] = await Promise.all([
+          db
+            .select()
+            .from(multipleChoiceQuestions)
+            .where(eq(multipleChoiceQuestions.chapterId, base.id)),
+          db
+            .select()
+            .from(shortAnswerQuestions)
+            .where(eq(shortAnswerQuestions.chapterId, base.id)),
+          db
+            .select()
+            .from(longAnswerQuestions)
+            .where(eq(longAnswerQuestions.chapterId, base.id)),
+        ]);
+        article = {
+          ...base,
+          multipleChoiceQuestions: mcqs,
+          shortAnswerQuestions: saqs,
+          longAnswerQuestions: laqs,
+        };
+        isChapter = true;
+      }
     }
 
     if (!article) {
