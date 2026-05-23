@@ -1,7 +1,7 @@
 import ChangeRole from "@/components/shared/change-role";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import React from "react";
 import { SessionSyncRedirect } from "@/components/session-sync-redirect";
 
