@@ -4,7 +4,7 @@ import {
   getAllLicenses,
 } from "@/server/controllers/license-controller";
 import { logRequest } from "@/server/middleware";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import { handleRequest } from "@/server/utils/handle-request";
 import { createEdgeRouter } from "next-connect";
 import { NextRequest } from "next/server";
