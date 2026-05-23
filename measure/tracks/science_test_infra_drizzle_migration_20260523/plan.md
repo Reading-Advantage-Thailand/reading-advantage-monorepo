@@ -27,5 +27,5 @@
 
 ## Phase 5: Hand back to Track 3
 
-- [ ] Task: Add a one-line prerequisite note at the top of Track 3's Phase 1 in `measure/tracks/prisma_drizzle_science_controllers_20260505/plan.md` pointing at this sub-track's archive path.
-- [ ] Task: Close the tech-debt entry "science-advantage integration test infra incompatible with Drizzle-first DBs" (mark Resolved, link this track).
+- [x] Task: Add a one-line prerequisite note at the top of Track 3's Phase 1 in `measure/tracks/prisma_drizzle_science_controllers_20260505/plan.md` pointing at this sub-track's archive path.
+- [x] Task: Close the tech-debt entry "science-advantage integration test infra incompatible with Drizzle-first DBs" (mark Resolved, link this track).
