@@ -1,0 +1,31 @@
+Task: Phase 1/Task 2 \u2014 migrate recommendation-context.ts off Prisma
+
+TDD: red 6/6 (TypeError on destructure) \u2192 green 6/6 in 1567ms
+
+Files:
+  M lib/ai/recommendation-context.ts        (191 lines, was 217)
+  + lib/ai/recommendation-context.integration.test.ts  (6 cases)
+  M app/api/ai/recommendations/route.ts:210 (1-line call-site fix)
+
+Architectural choices:
+  - Dropped the prisma DI param. The Track 1 pattern (and reading-advantage
+    migration) imports db directly. DI would require a parallel Drizzle DI
+    pattern that doesn't exist yet, and the only caller (route.ts:210) is in
+    Phase 2 scope anyway \u2014 changing it now is cheaper than maintaining
+    backwards-compat.
+  - Nested includes \u2192 fanned-out queries. Prisma's 'include' was emitting
+    JOINs against the curriculum graph (unit \u2192 lessons \u2192 standards +
+    lessonCompletions). Drizzle equivalents:
+      \u00b7 1 unit-batch SELECT
+      \u00b7 N per-unit lesson SELECTs (one per unit; bounded by unit count)
+      \u00b7 N per-unit lesson_standards SELECTs (batched by lessonIds IN array)
+      \u00b7 N per-unit lesson_completions SELECTs (batched by lessonIds + studentId)
+    The fan-out is O(units) regardless of lesson count, which mirrors the
+    original Prisma round-trip count and avoids a 4-way JOIN with multiple
+    1:N relations (which would multiplicatively explode row counts).
+  - LessonCompletionStatus inlined as a local type rather than added to
+    lib/enums.ts \u2014 only one file uses it. Promote to enums.ts when a second
+    consumer needs it.
+
+Tech debt potentially introduced:
+  - None \u2014 the route.ts:210 patch is local and reversible.
