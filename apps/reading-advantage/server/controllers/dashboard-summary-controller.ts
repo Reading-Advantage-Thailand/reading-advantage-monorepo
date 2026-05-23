@@ -7,8 +7,8 @@
 
 import { NextResponse } from "next/server";
 import { ExtendedNextRequest } from "./auth-controller";
+import { db, sql } from "@reading-advantage/db";
 import { getCachedMetrics } from "@/lib/cache/metrics";
-import { executeBatchRawQueries } from "@/lib/cache/query-optimizer";
 
 interface DashboardSummaryResponse {
   activity: {
@@ -86,158 +86,136 @@ export async function getDashboardSummary(req: ExtendedNextRequest) {
       const sevenDaysAgo = new Date(now);
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-      // Use optimized batch query execution to minimize connection pool usage
-      const batchResults = await executeBatchRawQueries<{
-        activity: Array<{
-          total_sessions: number;
-          total_users: number;
-          avg_session_length: number;
-        }>;
-        activityPrevious: Array<{
-          total_sessions: number;
-          total_users: number;
-          avg_session_length: number;
-        }>;
-        alignment: Array<{
-          total_readings: number;
-          aligned_count: number;
-        }>;
-        velocity: Array<{
-          avg_xp_7d: number;
-          avg_xp_30d: number;
-        }>;
-        velocityPrevious: Array<{
-          avg_xp_previous: number;
-        }>;
-      }>({
-        activity: {
-          query: `
-            SELECT 
-              COUNT(*)::int as total_sessions,
-              COUNT(DISTINCT user_id)::int as total_users,
-              COALESCE(AVG(NULLIF(timer, 0) / 60.0), 0)::numeric as avg_session_length
-            FROM "UserActivity"
-            WHERE "createdAt" >= $1
-          `,
-          params: [currentPeriodStart],
-        },
-        activityPrevious: {
-          query: `
-            SELECT 
-              COUNT(*)::int as total_sessions,
-              COUNT(DISTINCT user_id)::int as total_users,
-              COALESCE(AVG(NULLIF(timer, 0) / 60.0), 0)::numeric as avg_session_length
-            FROM "UserActivity"
-            WHERE "createdAt" >= $1 AND "createdAt" < $2
-          `,
-          params: [previousPeriodStart, previousPeriodEnd],
-        },
-        alignment: {
-          query: `
-            WITH student_readings AS (
-              SELECT 
-                u.id AS user_id,
-                u.level AS student_ra_level,
-                a.ra_level AS article_ra_level,
-                lr.created_at
-              FROM users u
-              INNER JOIN lesson_records lr ON u.id = lr.user_id
-              INNER JOIN article a ON lr.article_id = a.id
-              WHERE u.role = 'STUDENT'
-                AND lr.created_at >= $1
-                AND a.ra_level IS NOT NULL
-            )
-            SELECT 
-              COUNT(*)::int as total_readings,
-              COUNT(CASE 
-                WHEN article_ra_level BETWEEN student_ra_level - 1 AND student_ra_level + 1 
-                THEN 1 
-              END)::int as aligned_count
-            FROM student_readings
-          `,
-          params: [currentPeriodStart],
-        },
+      // Use Drizzle's parameterized `sql` template directly. Each query is
+      // independently issued via Promise.all to keep behavior equivalent to
+      // the previous batched helper, but with safe binding (no manual $n
+      // interpolation) and unified Drizzle/Postgres table/column names.
+      const [
+        activityRows,
+        activityPreviousRows,
+        alignmentRows,
+        velocityRows,
+        velocityPreviousRows,
+      ] = (await Promise.all([
+        db.execute(sql`
+          SELECT
+            COUNT(*)::int AS total_sessions,
+            COUNT(DISTINCT user_id)::int AS total_users,
+            COALESCE(AVG(NULLIF(timer, 0) / 60.0), 0)::numeric AS avg_session_length
+          FROM user_activity
+          WHERE created_at >= ${currentPeriodStart}
+        `),
+        db.execute(sql`
+          SELECT
+            COUNT(*)::int AS total_sessions,
+            COUNT(DISTINCT user_id)::int AS total_users,
+            COALESCE(AVG(NULLIF(timer, 0) / 60.0), 0)::numeric AS avg_session_length
+          FROM user_activity
+          WHERE created_at >= ${previousPeriodStart} AND created_at < ${previousPeriodEnd}
+        `),
+        db.execute(sql`
+          WITH student_readings AS (
+            SELECT
+              u.id AS user_id,
+              u.level AS student_ra_level,
+              a.ra_level AS article_ra_level,
+              lr.created_at
+            FROM users u
+            INNER JOIN lesson_records lr ON u.id = lr.user_id
+            INNER JOIN articles a ON lr.article_id = a.id
+            WHERE u.role = 'STUDENT'
+              AND lr.created_at >= ${currentPeriodStart}
+              AND a.ra_level IS NOT NULL
+          )
+          SELECT
+            COUNT(*)::int AS total_readings,
+            COUNT(CASE
+              WHEN article_ra_level BETWEEN student_ra_level - 1 AND student_ra_level + 1
+              THEN 1
+            END)::int AS aligned_count
+          FROM student_readings
+        `),
         // IMPORTANT: Velocity must include ALL students (even inactive ones)
         // to avoid inflated growth percentages when comparing periods
         // with different numbers of active students.
-        velocity: {
-          query: `
-            WITH all_students AS (
-              SELECT id FROM users WHERE role = 'STUDENT'
-            ),
-            student_xp_7d AS (
-              SELECT 
-                s.id,
-                COALESCE(SUM(x.xp_earned), 0) as xp_7d
-              FROM all_students s
-              LEFT JOIN "XPLogs" x ON s.id = x.user_id 
-                AND x."createdAt" >= $2
-              GROUP BY s.id
-            ),
-            student_xp_30d AS (
-              SELECT 
-                s.id,
-                COALESCE(SUM(x.xp_earned), 0) as xp_30d
-              FROM all_students s
-              LEFT JOIN "XPLogs" x ON s.id = x.user_id 
-                AND x."createdAt" >= $1
-              GROUP BY s.id
-            )
-            SELECT 
-              COALESCE(AVG(x7.xp_7d), 0)::numeric as avg_xp_7d,
-              COALESCE(AVG(x30.xp_30d), 0)::numeric as avg_xp_30d
-            FROM student_xp_7d x7
-            INNER JOIN student_xp_30d x30 ON x7.id = x30.id
-          `,
-          params: [currentPeriodStart, sevenDaysAgo],
-        },
-        velocityPrevious: {
-          query: `
-            WITH all_students AS (
-              SELECT id FROM users WHERE role = 'STUDENT'
-            ),
-            student_xp AS (
-              SELECT 
-                s.id as user_id,
-                COALESCE(SUM(x.xp_earned), 0) as total_xp
-              FROM all_students s
-              LEFT JOIN "XPLogs" x ON s.id = x.user_id 
-                AND x."createdAt" >= $1 
-                AND x."createdAt" < $2
-              GROUP BY s.id
-            )
-            SELECT 
-              COALESCE(AVG(total_xp), 0)::numeric as avg_xp_previous
-            FROM student_xp
-          `,
-          params: [previousPeriodStart, previousPeriodEnd],
-        },
-      });
+        db.execute(sql`
+          WITH all_students AS (
+            SELECT id FROM users WHERE role = 'STUDENT'
+          ),
+          student_xp_7d AS (
+            SELECT
+              s.id,
+              COALESCE(SUM(x.xp_earned), 0) AS xp_7d
+            FROM all_students s
+            LEFT JOIN xp_logs x ON s.id = x.user_id
+              AND x.created_at >= ${sevenDaysAgo}
+            GROUP BY s.id
+          ),
+          student_xp_30d AS (
+            SELECT
+              s.id,
+              COALESCE(SUM(x.xp_earned), 0) AS xp_30d
+            FROM all_students s
+            LEFT JOIN xp_logs x ON s.id = x.user_id
+              AND x.created_at >= ${currentPeriodStart}
+            GROUP BY s.id
+          )
+          SELECT
+            COALESCE(AVG(x7.xp_7d), 0)::numeric AS avg_xp_7d,
+            COALESCE(AVG(x30.xp_30d), 0)::numeric AS avg_xp_30d
+          FROM student_xp_7d x7
+          INNER JOIN student_xp_30d x30 ON x7.id = x30.id
+        `),
+        db.execute(sql`
+          WITH all_students AS (
+            SELECT id FROM users WHERE role = 'STUDENT'
+          ),
+          student_xp AS (
+            SELECT
+              s.id AS user_id,
+              COALESCE(SUM(x.xp_earned), 0) AS total_xp
+            FROM all_students s
+            LEFT JOIN xp_logs x ON s.id = x.user_id
+              AND x.created_at >= ${previousPeriodStart}
+              AND x.created_at < ${previousPeriodEnd}
+            GROUP BY s.id
+          )
+          SELECT
+            COALESCE(AVG(total_xp), 0)::numeric AS avg_xp_previous
+          FROM student_xp
+        `),
+      ])) as unknown as [
+        Array<{ total_sessions: number; total_users: number; avg_session_length: number }>,
+        Array<{ total_sessions: number; total_users: number; avg_session_length: number }>,
+        Array<{ total_readings: number; aligned_count: number }>,
+        Array<{ avg_xp_7d: number; avg_xp_30d: number }>,
+        Array<{ avg_xp_previous: number }>,
+      ];
 
       // Process results
-      const activityData = batchResults.activity[0] || {
+      const activityData = activityRows[0] || {
         total_sessions: 0,
         total_users: 0,
         avg_session_length: 0,
       };
 
-      const activityPreviousData = batchResults.activityPrevious[0] || {
+      const activityPreviousData = activityPreviousRows[0] || {
         total_sessions: 0,
         total_users: 0,
         avg_session_length: 0,
       };
 
-      const alignmentData = batchResults.alignment[0] || {
+      const alignmentData = alignmentRows[0] || {
         total_readings: 0,
         aligned_count: 0,
       };
 
-      const velocityData = batchResults.velocity[0] || {
+      const velocityData = velocityRows[0] || {
         avg_xp_7d: 0,
         avg_xp_30d: 0,
       };
 
-      const velocityPreviousData = batchResults.velocityPrevious[0] || {
+      const velocityPreviousData = velocityPreviousRows[0] || {
         avg_xp_previous: 0,
       };
 
