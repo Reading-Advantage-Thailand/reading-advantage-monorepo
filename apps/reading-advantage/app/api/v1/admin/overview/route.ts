@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createEdgeRouter } from "next-connect";
 import { logRequest } from "@/server/middleware";
 import { restrictTo } from "@/server/controllers/auth-controller";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import { getAdminOverview } from "@/server/controllers/admin-controller";
 
 interface RequestContext {
