@@ -9,7 +9,7 @@ import { AlertCenter } from "./alert-center";
 import AIInsights from "./ai-insights";
 import { CompactActivityHeatmap } from "./compact-activity-heatmap";
 import LicenseSelector from "../admin/license-selector";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import { AdminOverviewResponse, Alert } from "@/types/dashboard";
 import {
   Users,
