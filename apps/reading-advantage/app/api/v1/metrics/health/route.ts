@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getMetricsCacheStats } from '@/lib/cache/metrics';
 import { checkMatviewsHealth } from '@/lib/cache/fallback-queries';
 import { requireRole } from '@/server/middleware/guards';
-import { Role } from '@prisma/client';
+import { Role } from '@/lib/enums';
 
 export const dynamic = 'force-dynamic';
 
