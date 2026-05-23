@@ -1,6 +1,11 @@
-import { PrismaClient, ActivityType } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db, and, eq, asc } from "@reading-advantage/db";
+import {
+  users,
+  articles,
+  userActivity,
+  xpLogs,
+} from "@reading-advantage/db/schema";
+import { ActivityType } from "@/lib/enums";
 
 /**
  * Student profile types for activity generation
@@ -102,26 +107,25 @@ async function generateArticleReadActivity(
   xpEarned: number
 ) {
   // Create user activity
-  const activity = await prisma.userActivity.create({
-    data: {
+  const [activity] = await db
+    .insert(userActivity)
+    .values({
       userId,
       activityType: ActivityType.ARTICLE_READ,
       targetId: articleId,
       timer: randomBetween(60, 360), // 1-6 minutes
       completed: true,
       createdAt,
-    },
-  });
+    })
+    .returning();
 
   // Create XP log
-  await prisma.xPLog.create({
-    data: {
-      userId,
-      xpEarned,
-      activityType: ActivityType.ARTICLE_READ,
-      activityId: articleId,
-      createdAt,
-    },
+  await db.insert(xpLogs).values({
+    userId,
+    xpEarned,
+    activityType: ActivityType.ARTICLE_READ,
+    activityId: articleId,
+    createdAt,
   });
 
   return activity;
@@ -159,8 +163,9 @@ async function generateQuestionActivity(
   const accuracy = Math.round((correctAnswers / totalQuestions) * 100);
 
   // Create user activity with detailed accuracy data
-  const activity = await prisma.userActivity.create({
-    data: {
+  const [activity] = await db
+    .insert(userActivity)
+    .values({
       userId,
       activityType,
       targetId: articleId,
@@ -175,18 +180,16 @@ async function generateQuestionActivity(
         questionsAnswered: totalQuestions,
       },
       createdAt,
-    },
-  });
+    })
+    .returning();
 
   // Create XP log
-  await prisma.xPLog.create({
-    data: {
-      userId,
-      xpEarned,
-      activityType,
-      activityId: articleId,
-      createdAt,
-    },
+  await db.insert(xpLogs).values({
+    userId,
+    xpEarned,
+    activityType,
+    activityId: articleId,
+    createdAt,
   });
 
   return activity;
@@ -202,8 +205,9 @@ async function generateFlashcardActivity(
   xpEarned: number
 ) {
   // Create user activity
-  const activity = await prisma.userActivity.create({
-    data: {
+  const [activity] = await db
+    .insert(userActivity)
+    .values({
       userId,
       activityType: ActivityType.VOCABULARY_FLASHCARDS,
       targetId: articleId,
@@ -214,18 +218,16 @@ async function generateFlashcardActivity(
         correctAnswers: randomBetween(3, 18),
       },
       createdAt,
-    },
-  });
+    })
+    .returning();
 
   // Create XP log
-  await prisma.xPLog.create({
-    data: {
-      userId,
-      xpEarned,
-      activityType: ActivityType.VOCABULARY_FLASHCARDS,
-      activityId: articleId,
-      createdAt,
-    },
+  await db.insert(xpLogs).values({
+    userId,
+    xpEarned,
+    activityType: ActivityType.VOCABULARY_FLASHCARDS,
+    activityId: articleId,
+    createdAt,
   });
 
   return activity;
@@ -284,9 +286,9 @@ export async function generateStudentDailyActivities(
   studentIndex: number,
   totalStudents: number,
   date: Date,
-  articles: any[]
+  articleList: any[]
 ): Promise<{ activitiesCreated: number; xpEarned: number }> {
-  if (articles.length === 0) {
+  if (articleList.length === 0) {
     return { activitiesCreated: 0, xpEarned: 0 };
   }
 
@@ -305,7 +307,7 @@ export async function generateStudentDailyActivities(
   // Generate activities spread throughout the day
   for (let i = 0; i < activitiesCount; i++) {
     // Random article
-    const article = articles[Math.floor(Math.random() * articles.length)];
+    const article = articleList[Math.floor(Math.random() * articleList.length)];
 
     // Select activity type
     const activityType = selectActivityType();
@@ -349,17 +351,18 @@ export async function generateDailyActivities(
     `📊 Generating activities for ${date.toISOString().split("T")[0]}...`
   );
 
-  // Get all demo students
-  const students = await prisma.user.findMany({
-    where: {
-      licenseId: demoLicenseId,
-      schoolId: demoSchoolId,
-      role: "STUDENT",
-    },
-    orderBy: {
-      email: "asc", // Consistent ordering for profile assignment
-    },
-  });
+  // Get all demo students (consistent ordering by email for profile assignment)
+  const students = await db
+    .select({ id: users.id, email: users.email })
+    .from(users)
+    .where(
+      and(
+        eq(users.licenseId, demoLicenseId),
+        eq(users.schoolId, demoSchoolId),
+        eq(users.role, "STUDENT")
+      )
+    )
+    .orderBy(asc(users.email));
 
   if (students.length === 0) {
     console.log("⚠️  No demo students found");
@@ -367,12 +370,13 @@ export async function generateDailyActivities(
   }
 
   // Get available articles
-  const articles = await prisma.article.findMany({
-    where: { isPublic: true },
-    take: 50,
-  });
+  const articleList = await db
+    .select()
+    .from(articles)
+    .where(eq(articles.isPublic, true))
+    .limit(50);
 
-  if (articles.length === 0) {
+  if (articleList.length === 0) {
     console.log("⚠️  No public articles found");
     return { totalActivities: 0, totalXP: 0 };
   }
@@ -386,11 +390,11 @@ export async function generateDailyActivities(
     const profile = generateStudentProfile(i, students.length);
 
     const result = await generateStudentDailyActivities(
-      student,
+      { id: student.id, email: student.email ?? "" },
       i,
       students.length,
       date,
-      articles
+      articleList
     );
 
     totalActivities += result.activitiesCreated;
