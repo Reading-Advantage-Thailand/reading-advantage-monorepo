@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db, asc, isNotNull } from "@reading-advantage/db";
+import { articles } from "@reading-advantage/db/schema";
 import { protect } from "@/server/controllers/auth-controller";
 import { logRequest } from "@/server/middleware";
 import { createEdgeRouter } from "next-connect";
@@ -15,27 +16,21 @@ async function getLowestRatedArticles(req: NextRequest) {
   try {
     const limit = Number(req.nextUrl.searchParams.get("limit")) || 10;
 
-    const articles = await prisma.article.findMany({
-      where: {
-        rating: {
-          not: null,
-        },
-      },
-      select: {
-        id: true,
-        title: true,
-        type: true,
-        rating: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-      orderBy: {
-        rating: 'asc',
-      },
-      take: limit,
-    });
+    const rows = await db
+      .select({
+        id: articles.id,
+        title: articles.title,
+        type: articles.type,
+        rating: articles.rating,
+        createdAt: articles.createdAt,
+        updatedAt: articles.updatedAt,
+      })
+      .from(articles)
+      .where(isNotNull(articles.rating))
+      .orderBy(asc(articles.rating))
+      .limit(limit);
 
-    const formattedArticles = articles.map(article => ({
+    const formattedArticles = rows.map((article) => ({
       id: article.id,
       title: article.title || 'Untitled',
       type: article.type || 'Unknown',
