@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db, and, eq } from "@reading-advantage/db";
+import { users, accounts } from "@reading-advantage/db/schema";
 
 export async function POST(req: Request) {
   try {
@@ -8,17 +9,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Email is required" }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-      select: { password: true },
-    });
+    const rows = await db
+      .select({ password: accounts.password })
+      .from(users)
+      .leftJoin(
+        accounts,
+        and(eq(accounts.userId, users.id), eq(accounts.providerId, "credential"))
+      )
+      .where(eq(users.email, email))
+      .limit(1);
 
-    if (!user) {
+    if (rows.length === 0) {
       return NextResponse.json({ hasPassword: false }, { status: 200 });
     }
 
-    return NextResponse.json({ hasPassword: !!user.password }, { status: 200 });
-  } catch (error: any) {
+    return NextResponse.json({ hasPassword: !!rows[0].password }, { status: 200 });
+  } catch (error) {
     console.error("Error checking password:", error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
