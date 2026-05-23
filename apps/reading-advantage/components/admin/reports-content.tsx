@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import AdminReports from "@/components/admin/reports";
 import LicenseSelector from "@/components/admin/license-selector";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 interface License {
   id: string;
