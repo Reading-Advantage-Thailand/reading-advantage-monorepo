@@ -263,7 +263,7 @@ export async function getAtRiskStudents(
   // Always-on risk condition
   conditions.push(sql`(
     (a.due_date IS NOT NULL AND a.due_date < NOW() AND sa.status != 'COMPLETED') OR
-    (EXTRACT(EPOCH FROM (NOW() - a."createdAt")) / (24 * 3600) > 7 AND sa.status = 'NOT_STARTED') OR
+    (EXTRACT(EPOCH FROM (NOW() - a.created_at)) / (24 * 3600) > 7 AND sa.status = 'NOT_STARTED') OR
     (EXTRACT(EPOCH FROM (NOW() - sa.started_at)) / (24 * 3600) > 3 AND sa.status = 'IN_PROGRESS')
   )`);
 
@@ -276,7 +276,7 @@ export async function getAtRiskStudents(
       a.id AS assignment_id,
       a.title AS assignment_title,
       sa.status,
-      EXTRACT(EPOCH FROM (NOW() - a."createdAt")) / (24 * 3600) AS days_since_assigned,
+      EXTRACT(EPOCH FROM (NOW() - a.created_at)) / (24 * 3600) AS days_since_assigned,
       CASE 
         WHEN a.due_date IS NOT NULL AND a.due_date < NOW() 
         THEN EXTRACT(EPOCH FROM (NOW() - a.due_date)) / (24 * 3600)
@@ -287,8 +287,8 @@ export async function getAtRiskStudents(
         ELSE 0
       END +
       CASE 
-        WHEN EXTRACT(EPOCH FROM (NOW() - a."createdAt")) / (24 * 3600) > 14 THEN 8
-        WHEN EXTRACT(EPOCH FROM (NOW() - a."createdAt")) / (24 * 3600) > 7 THEN 5
+        WHEN EXTRACT(EPOCH FROM (NOW() - a.created_at)) / (24 * 3600) > 14 THEN 8
+        WHEN EXTRACT(EPOCH FROM (NOW() - a.created_at)) / (24 * 3600) > 7 THEN 5
         ELSE 0
       END +
       CASE 
