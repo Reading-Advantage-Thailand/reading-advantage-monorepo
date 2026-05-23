@@ -10,7 +10,7 @@ import {
   saveInsights,
   getCachedInsights,
 } from "@/server/services/ai-insight-service";
-import { AIInsightScope, Role } from "@prisma/client";
+import { AIInsightScope, Role } from "@/lib/enums";
 
 /**
  * GET /api/v1/ai/summary
