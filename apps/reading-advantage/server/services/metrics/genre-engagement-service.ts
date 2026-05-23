@@ -6,13 +6,17 @@
  * and genre adjacency mappings.
  */
 
-import { prisma } from '@/lib/prisma';
+import { db, sql, eq, and, gte, isNotNull, like } from '@reading-advantage/db';
+import {
+  users,
+  articles,
+  chapters,
+  genreAdjacencies,
+} from '@reading-advantage/db/schema';
 import { 
   getLocalizedRationale,
-  getLocalizedGenreName,
   getUserLocale,
-  localizeGenreRecommendation,
-  SupportedLocale
+  SupportedLocale,
 } from '@/server/services/localization/genre-localization-service';
 
 // Types for genre engagement data
@@ -90,9 +94,11 @@ function getCefrDistance(level1: string, level2: string): number {
 }
 
 /**
- * Check if a genre recommendation is CEFR appropriate
+ * Check if a genre recommendation is CEFR appropriate (reserved helper —
+ * kept for parity with the original Prisma-based service; not currently
+ * called from inside this module).
  */
-function isCefrAppropriate(studentCefr: string, targetCefr: string): boolean {
+export function isCefrAppropriate(studentCefr: string, targetCefr: string): boolean {
   const distance = getCefrDistance(studentCefr, targetCefr);
   return distance <= RECOMMENDATION_CONFIG.MAX_CEFR_DISTANCE;
 }
@@ -105,8 +111,8 @@ export async function getStudentGenreEngagement(
   timeframe: '7d' | '30d' | '90d' | '6m' = '30d'
 ): Promise<GenreEngagementData[]> {
   const timeframeFilter = getTimeframeFilter(timeframe);
-  
-  const engagement = await prisma.$queryRaw<any[]>`
+
+  const engagement = (await db.execute(sql`
     SELECT 
       genre,
       cefr_bucket as "cefrBucket",
@@ -128,8 +134,8 @@ export async function getStudentGenreEngagement(
       AND last_activity_date >= ${timeframeFilter}
     GROUP BY genre, cefr_bucket
     ORDER BY "weightedEngagementScore" DESC
-  `;
-  
+  `)) as unknown as any[];
+
   return engagement.map(formatEngagementData);
 }
 
@@ -141,8 +147,8 @@ export async function getClassGenreEngagement(
   timeframe: '7d' | '30d' | '90d' | '6m' = '30d'
 ): Promise<GenreEngagementData[]> {
   const timeframeFilter = getTimeframeFilter(timeframe);
-  
-  const engagement = await prisma.$queryRaw<any[]>`
+
+  const engagement = (await db.execute(sql`
     SELECT 
       genre,
       cefr_bucket as "cefrBucket",
@@ -159,8 +165,8 @@ export async function getClassGenreEngagement(
       AND cge.class_last_activity >= ${timeframeFilter}
     GROUP BY genre, cefr_bucket
     ORDER BY "weightedEngagementScore" DESC
-  `;
-  
+  `)) as unknown as any[];
+
   return engagement.map(formatEngagementData);
 }
 
@@ -172,8 +178,8 @@ export async function getSchoolGenreEngagement(
   timeframe: '7d' | '30d' | '90d' | '6m' = '30d'
 ): Promise<GenreEngagementData[]> {
   const timeframeFilter = getTimeframeFilter(timeframe);
-  
-  const engagement = await prisma.$queryRaw<any[]>`
+
+  const engagement = (await db.execute(sql`
     SELECT 
       genre,
       cefr_bucket as "cefrBucket", 
@@ -190,8 +196,8 @@ export async function getSchoolGenreEngagement(
       AND school_last_activity >= ${timeframeFilter}
     GROUP BY genre, cefr_bucket
     ORDER BY "weightedEngagementScore" DESC
-  `;
-  
+  `)) as unknown as any[];
+
   return engagement.map(formatEngagementData);
 }
 
@@ -202,100 +208,100 @@ export async function generateStudentGenreRecommendations(
   userId: string,
   currentEngagement: GenreEngagementData[]
 ): Promise<GenreRecommendation[]> {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { cefrLevel: true }
-  });
-  
+  const [user] = await db
+    .select({ cefrLevel: users.cefrLevel })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
   if (!user) return [];
-  
+
   // Get user's preferred locale
   const userLocale = await getUserLocale(userId);
-  
+
   const studentCefrBucket = user.cefrLevel.substring(0, 2); // Extract base level (A1, B2, etc.)
-  const currentGenres = new Set(currentEngagement.map(e => e.genre));
+  const currentGenres = new Set(currentEngagement.map((e) => e.genre));
   const recommendations: GenreRecommendation[] = [];
-  
+
   // Get genre adjacencies for recommendation logic
-  const adjacencies = await prisma.genreAdjacency.findMany({
-    where: {
-      weight: { gte: RECOMMENDATION_CONFIG.MIN_ADJACENCY_WEIGHT }
-    }
-  });
-  
+  const adjacencies = await db
+    .select()
+    .from(genreAdjacencies)
+    .where(gte(genreAdjacencies.weight, RECOMMENDATION_CONFIG.MIN_ADJACENCY_WEIGHT));
+
   // Type 1: High engagement similar genres
   const highEngagementGenres = currentEngagement
-    .filter(e => e.weightedEngagementScore >= RECOMMENDATION_CONFIG.MIN_ENGAGEMENT_THRESHOLD)
+    .filter((e) => e.weightedEngagementScore >= RECOMMENDATION_CONFIG.MIN_ENGAGEMENT_THRESHOLD)
     .slice(0, 2); // Top 2 most engaging genres
-  
+
   for (const engagedGenre of highEngagementGenres) {
     const similarGenres = adjacencies
-      .filter(adj => adj.primaryGenre === engagedGenre.genre)
-      .filter(adj => !currentGenres.has(adj.adjacentGenre))
+      .filter((adj) => adj.primaryGenre === engagedGenre.genre)
+      .filter((adj) => !currentGenres.has(adj.adjacentGenre))
       .sort((a, b) => b.weight - a.weight)
       .slice(0, 2);
-    
+
     for (const similar of similarGenres) {
       const cefrAppropriate = await checkGenreCefrAlignment(similar.adjacentGenre, studentCefrBucket);
       const rationale = await generateRationale('high_engagement_similar', engagedGenre.genre, similar.adjacentGenre, userLocale);
-      
+
       recommendations.push({
         genre: similar.adjacentGenre,
         rationale,
         confidenceScore: similar.weight * RECOMMENDATION_CONFIG.RECOMMENDATION_WEIGHTS.high_engagement_similar,
         cefrAppropriate,
         adjacencyWeight: similar.weight,
-        recommendationType: 'high_engagement_similar'
+        recommendationType: 'high_engagement_similar',
       });
     }
   }
-  
-  // Type 2: Underexplored adjacent genres  
-  const exploredGenres = currentEngagement.map(e => e.genre);
+
+  // Type 2: Underexplored adjacent genres
+  const exploredGenres = currentEngagement.map((e) => e.genre);
   const underexploredAdjacent = adjacencies
-    .filter(adj => exploredGenres.includes(adj.primaryGenre))
-    .filter(adj => !currentGenres.has(adj.adjacentGenre))
-    .filter(adj => !recommendations.some(r => r.genre === adj.adjacentGenre))
+    .filter((adj) => exploredGenres.includes(adj.primaryGenre))
+    .filter((adj) => !currentGenres.has(adj.adjacentGenre))
+    .filter((adj) => !recommendations.some((r) => r.genre === adj.adjacentGenre))
     .sort((a, b) => b.weight - a.weight)
     .slice(0, 2);
-  
+
   for (const underexplored of underexploredAdjacent) {
     const cefrAppropriate = await checkGenreCefrAlignment(underexplored.adjacentGenre, studentCefrBucket);
     const rationale = await generateRationale('underexplored_adjacent', underexplored.primaryGenre, underexplored.adjacentGenre, userLocale);
-    
+
     recommendations.push({
       genre: underexplored.adjacentGenre,
       rationale,
       confidenceScore: underexplored.weight * RECOMMENDATION_CONFIG.RECOMMENDATION_WEIGHTS.underexplored_adjacent,
       cefrAppropriate,
       adjacencyWeight: underexplored.weight,
-      recommendationType: 'underexplored_adjacent'
+      recommendationType: 'underexplored_adjacent',
     });
   }
-  
+
   // Type 3: Level-appropriate new genres
   const allGenres = await getAllAvailableGenres();
   const newGenres = allGenres
-    .filter(genre => !currentGenres.has(genre))
-    .filter(genre => !recommendations.some(r => r.genre === genre));
-  
+    .filter((genre) => !currentGenres.has(genre))
+    .filter((genre) => !recommendations.some((r) => r.genre === genre));
+
   for (const newGenre of newGenres.slice(0, 1)) {
     const cefrAppropriate = await checkGenreCefrAlignment(newGenre, studentCefrBucket);
-    
+
     if (cefrAppropriate) {
       const rationale = await generateRationale('level_appropriate_new', '', newGenre, userLocale);
-      
+
       recommendations.push({
         genre: newGenre,
         rationale,
         confidenceScore: RECOMMENDATION_CONFIG.RECOMMENDATION_WEIGHTS.level_appropriate_new,
         cefrAppropriate: true,
         adjacencyWeight: 0,
-        recommendationType: 'level_appropriate_new'
+        recommendationType: 'level_appropriate_new',
       });
     }
   }
-  
+
   // Sort by confidence score and return top recommendations
   return recommendations
     .sort((a, b) => b.confidenceScore - a.confidenceScore)
@@ -315,14 +321,14 @@ async function generateRationale(
     return await getLocalizedRationale(type, sourceGenre, targetGenre, locale);
   } catch (error) {
     console.warn('Failed to get localized rationale, using fallback:', error);
-    
+
     // Fallback templates
     const templates = {
       high_engagement_similar: `Strong ${sourceGenre} engagement suggests you might enjoy ${targetGenre}`,
       underexplored_adjacent: `Based on your ${sourceGenre} reading, explore ${targetGenre} for variety`,
-      level_appropriate_new: `${targetGenre} matches your reading level - discover something new!`
+      level_appropriate_new: `${targetGenre} matches your reading level - discover something new!`,
     };
-    
+
     return templates[type];
   }
 }
@@ -331,59 +337,54 @@ async function generateRationale(
  * Check if a genre has content appropriate for the student's CEFR level
  */
 async function checkGenreCefrAlignment(genre: string, studentCefrBucket: string): Promise<boolean> {
-  const genreContent = await prisma.article.findFirst({
-    where: {
-      genre,
-      cefrLevel: {
-        startsWith: studentCefrBucket
-      }
-    }
-  });
-  
+  const [articleRow] = await db
+    .select({ id: articles.id })
+    .from(articles)
+    .where(
+      and(
+        eq(articles.genre, genre),
+        like(articles.cefrLevel, `${studentCefrBucket}%`)
+      )
+    )
+    .limit(1);
+
+  if (articleRow) return true;
+
   // Also check chapters
-  if (!genreContent) {
-    const chapterContent = await prisma.chapter.findFirst({
-      where: {
-        genre,
-        cefrLevel: {
-          startsWith: studentCefrBucket
-        }
-      }
-    });
-    return !!chapterContent;
-  }
-  
-  return !!genreContent;
+  const [chapterRow] = await db
+    .select({ id: chapters.id })
+    .from(chapters)
+    .where(
+      and(
+        eq(chapters.genre, genre),
+        like(chapters.cefrLevel, `${studentCefrBucket}%`)
+      )
+    )
+    .limit(1);
+
+  return !!chapterRow;
 }
 
 /**
  * Get all available genres in the system
  */
 async function getAllAvailableGenres(): Promise<string[]> {
-  const articleGenres = await prisma.article.findMany({
-    select: { genre: true },
-    distinct: ['genre'],
-    where: { 
-      genre: { not: null },
-      isPublic: true
-    }
-  });
-  
-  const chapterGenres = await prisma.chapter.findMany({
-    select: { genre: true },
-    distinct: ['genre'],
-    where: { 
-      genre: { not: null },
-      isPublic: true
-    }
-  });
-  
-  const allGenres = new Set([
-    ...articleGenres.map(a => a.genre).filter(Boolean),
-    ...chapterGenres.map(c => c.genre).filter(Boolean)
+  const articleGenres = await db
+    .selectDistinct({ genre: articles.genre })
+    .from(articles)
+    .where(and(isNotNull(articles.genre), eq(articles.isPublic, true)));
+
+  const chapterGenres = await db
+    .selectDistinct({ genre: chapters.genre })
+    .from(chapters)
+    .where(and(isNotNull(chapters.genre), eq(chapters.isPublic, true)));
+
+  const allGenres = new Set<string>([
+    ...articleGenres.map((a) => a.genre).filter((g): g is string => Boolean(g)),
+    ...chapterGenres.map((c) => c.genre).filter((g): g is string => Boolean(g)),
   ]);
-  
-  return Array.from(allGenres) as string[];
+
+  return Array.from(allGenres);
 }
 
 /**
@@ -432,9 +433,9 @@ function formatEngagementData(raw: any): GenreEngagementData {
  * Refresh genre engagement materialized views
  */
 export async function refreshGenreEngagementMetrics(): Promise<void> {
-  await prisma.$executeRawUnsafe('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_genre_engagement_metrics');
-  await prisma.$executeRawUnsafe('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_class_genre_engagement');
-  await prisma.$executeRawUnsafe('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_school_genre_engagement');
+  await db.execute(sql.raw('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_genre_engagement_metrics'));
+  await db.execute(sql.raw('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_class_genre_engagement'));
+  await db.execute(sql.raw('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_school_genre_engagement'));
 }
 
 /**
@@ -447,7 +448,7 @@ export async function getGenreMetrics(
 ): Promise<GenreMetricsResponse> {
   let topGenres: GenreEngagementData[];
   let recommendations: GenreRecommendation[] = [];
-  
+
   // Get engagement data based on scope
   switch (scope) {
     case 'student':
@@ -463,15 +464,15 @@ export async function getGenreMetrics(
     default:
       topGenres = [];
   }
-  
+
   // Calculate CEFR distribution
   const cefrDistribution = topGenres.reduce((acc, genre) => {
     acc[genre.cefrBucket] = (acc[genre.cefrBucket] || 0) + genre.weightedEngagementScore;
     return acc;
   }, {} as Record<string, number>);
-  
+
   const totalEngagementScore = topGenres.reduce((sum, genre) => sum + genre.weightedEngagementScore, 0);
-  
+
   return {
     scope,
     scopeId,
@@ -480,6 +481,6 @@ export async function getGenreMetrics(
     recommendations,
     cefrDistribution,
     totalEngagementScore,
-    calculatedAt: new Date()
+    calculatedAt: new Date(),
   };
 }
