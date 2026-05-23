@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { db, eq, desc, count } from "@reading-advantage/db";
+import { users, userActivity } from "@reading-advantage/db/schema";
 import { getDemoIds } from "../../../../../server/services/demo-isolation-service";
-
-const prisma = new PrismaClient();
 
 /**
  * GET /api/v1/demo/status
@@ -25,40 +24,30 @@ export async function GET() {
 
     const { licenseId, schoolId } = demoIds;
 
-    // Get last activity timestamp
-    const lastActivity = await prisma.userActivity.findFirst({
-      where: {
-        user: {
-          licenseId,
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      select: {
-        createdAt: true,
-      },
-    });
+    // Get last activity timestamp (most recent activity for any user with this license)
+    const lastActivityRows = await db
+      .select({ createdAt: userActivity.createdAt })
+      .from(userActivity)
+      .innerJoin(users, eq(users.id, userActivity.userId))
+      .where(eq(users.licenseId, licenseId))
+      .orderBy(desc(userActivity.createdAt))
+      .limit(1);
+    const lastActivity = lastActivityRows[0] ?? null;
 
-    // Count total activities
-    const totalActivities = await prisma.userActivity.count({
-      where: {
-        user: {
-          licenseId,
-        },
-      },
-    });
+    // Count total activities for users with this license
+    const totalActivitiesRows = await db
+      .select({ value: count() })
+      .from(userActivity)
+      .innerJoin(users, eq(users.id, userActivity.userId))
+      .where(eq(users.licenseId, licenseId));
+    const totalActivities = Number(totalActivitiesRows[0]?.value ?? 0);
 
-    // Count demo users
-    const userCounts = await prisma.user.groupBy({
-      by: ["role"],
-      where: {
-        licenseId,
-      },
-      _count: {
-        id: true,
-      },
-    });
+    // Count demo users grouped by role
+    const userCounts = await db
+      .select({ role: users.role, count: count() })
+      .from(users)
+      .where(eq(users.licenseId, licenseId))
+      .groupBy(users.role);
 
     // Calculate next refresh time (daily at 02:00 UTC)
     const now = new Date();
@@ -73,12 +62,12 @@ export async function GET() {
       data: {
         licenseId,
         schoolId,
-        lastRefresh: lastActivity?.createdAt || null,
+        lastRefresh: lastActivity?.createdAt ?? null,
         nextRefresh: nextRefresh.toISOString(),
         totalActivities,
         users: userCounts.reduce(
           (acc, item) => {
-            acc[item.role.toLowerCase()] = item._count.id;
+            acc[item.role.toLowerCase()] = Number(item.count);
             return acc;
           },
           {} as Record<string, number>
@@ -96,7 +85,5 @@ export async function GET() {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
