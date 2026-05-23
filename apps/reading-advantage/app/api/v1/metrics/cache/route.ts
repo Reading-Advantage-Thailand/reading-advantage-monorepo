@@ -10,7 +10,7 @@ import {
   getMetricsCacheStats,
 } from '@/lib/cache/metrics';
 import { requireRole } from '@/server/middleware/guards';
-import { Role } from '@prisma/client';
+import { Role } from '@/lib/enums';
 
 /**
  * POST /api/v1/metrics/cache/invalidate
