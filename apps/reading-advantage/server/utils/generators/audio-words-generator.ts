@@ -6,9 +6,8 @@ import {
 import base64 from "base64-js";
 import fs from "fs";
 import uploadToBucket from "@/utils/uploadToBucket";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db, eq } from "@reading-advantage/db";
+import { articles } from "@reading-advantage/db/schema";
 
 export type WordListResponse = {
   vocabulary: string;
@@ -167,22 +166,22 @@ export async function generateAudioForWord({
       }
     );
 
-    // Update using Prisma
+    // Update using Drizzle
     try {
       if (isChapter && chapterId) {
         // For chapters, don't update database here, just return the result
         // The caller will handle the database update
       } else {
-        await prisma.article.update({
-          where: { id: articleId },
-          data: {
+        await db
+          .update(articles)
+          .set({
             words: wordsWithTimePoints,
             audioWordUrl: `${articleId}.mp3`,
-          },
-        });
+          })
+          .where(eq(articles.id, articleId));
       }
     } catch (error) {
-      console.error("Prisma update error:", error);
+      console.error("Drizzle update error:", error);
     }
 
     return wordsWithTimePoints;
