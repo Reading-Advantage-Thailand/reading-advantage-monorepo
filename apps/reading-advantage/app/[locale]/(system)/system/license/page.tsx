@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import React from "react";
 import { headers } from "next/headers";
 import { Badge } from "@/components/ui/badge";
