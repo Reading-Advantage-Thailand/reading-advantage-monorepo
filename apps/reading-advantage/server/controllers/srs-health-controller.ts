@@ -24,8 +24,8 @@ import {
   SuggestedAction,
   OverloadThresholds,
 } from '@/server/services/metrics/srs-health-service';
-import { prisma } from '@/lib/prisma';
-import { Role } from '@prisma/client';
+import { db, eq, and, inArray } from '@reading-advantage/db';
+import { users, classroomTeachers, classroomStudents } from '@reading-advantage/db/schema';
 
 // ============================================================================
 // Types
@@ -95,104 +95,66 @@ export interface QuickActionSuggestion {
  */
 async function checkSRSAccess(
   userId: string,
-  userRole: Role,
+  userRole: string,
   studentId?: string,
   classroomId?: string,
   schoolId?: string
 ): Promise<{ hasAccess: boolean; scopedSchoolId?: string; scopedClassroomId?: string; scopedStudentId?: string }> {
-  // System admins have full access
-  if (userRole === Role.SYSTEM || userRole === Role.ADMIN) {
+  if (userRole === "SYSTEM" || userRole === "ADMIN") {
     return { hasAccess: true };
   }
-  
-  // Get user's associations
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { 
-      schoolId: true,
-      role: true,
-      teacherClassrooms: {
-        select: { classroomId: true }
-      },
-      studentClassrooms: {
-        select: { classroomId: true }
-      }
-    }
-  });
-  
-  if (!user) {
-    return { hasAccess: false };
+
+  const [userRow] = await db
+    .select({ schoolId: users.schoolId, role: users.role })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  if (!userRow) return { hasAccess: false };
+
+  if (userRole === "STUDENT" || userRole === "USER") {
+    if (studentId && studentId !== userId) return { hasAccess: false };
+    return { hasAccess: true, scopedStudentId: userId, scopedSchoolId: userRow.schoolId || undefined };
   }
-  
-  // Students can only access their own data
-  if (userRole === Role.STUDENT || userRole === Role.USER) {
-    if (studentId && studentId !== userId) {
-      return { hasAccess: false };
-    }
-    
-    return { 
-      hasAccess: true, 
-      scopedStudentId: userId,
-      scopedSchoolId: user.schoolId || undefined 
-    };
-  }
-  
-  // Teachers can access their school and classes
-  if (userRole === Role.TEACHER) {
-    const teacherClassroomIds = user.teacherClassrooms.map(tc => tc.classroomId);
-    
-    // If specific student requested, verify they're in teacher's class
+
+  if (userRole === "TEACHER") {
+    const teacherClassroomRows = await db
+      .select({ classroomId: classroomTeachers.classroomId })
+      .from(classroomTeachers)
+      .where(eq(classroomTeachers.teacherId, userId));
+    const teacherClassroomIds = teacherClassroomRows.map((r) => r.classroomId);
+
     if (studentId) {
-      const studentInClass = await prisma.classroomStudent.findFirst({
-        where: {
-          studentId,
-          classroomId: { in: teacherClassroomIds }
-        }
-      });
-      
-      if (!studentInClass) {
-        return { hasAccess: false };
-      }
-      
-      return { 
-        hasAccess: true, 
-        scopedStudentId: studentId,
-        scopedSchoolId: user.schoolId || undefined 
-      };
+      const [studentInClass] = await db
+        .select({ studentId: classroomStudents.studentId })
+        .from(classroomStudents)
+        .where(
+          and(
+            eq(classroomStudents.studentId, studentId),
+            teacherClassroomIds.length > 0
+              ? inArray(classroomStudents.classroomId, teacherClassroomIds)
+              : eq(classroomStudents.classroomId, "")
+          )
+        )
+        .limit(1);
+
+      if (!studentInClass) return { hasAccess: false };
+      return { hasAccess: true, scopedStudentId: studentId, scopedSchoolId: userRow.schoolId || undefined };
     }
-    
-    // If specific classroom requested, verify teacher has access
+
     if (classroomId) {
-      if (!teacherClassroomIds.includes(classroomId)) {
-        return { hasAccess: false };
-      }
-      
-      return { 
-        hasAccess: true, 
-        scopedClassroomId: classroomId,
-        scopedSchoolId: user.schoolId || undefined 
-      };
+      if (!teacherClassroomIds.includes(classroomId)) return { hasAccess: false };
+      return { hasAccess: true, scopedClassroomId: classroomId, scopedSchoolId: userRow.schoolId || undefined };
     }
-    
-    // School-level access only if teacher belongs to that school
+
     if (schoolId) {
-      if (user.schoolId !== schoolId) {
-        return { hasAccess: false };
-      }
-      
-      return { 
-        hasAccess: true, 
-        scopedSchoolId: schoolId 
-      };
+      if (userRow.schoolId !== schoolId) return { hasAccess: false };
+      return { hasAccess: true, scopedSchoolId: schoolId };
     }
-    
-    // Default to teacher's school
-    return { 
-      hasAccess: true, 
-      scopedSchoolId: user.schoolId || undefined 
-    };
+
+    return { hasAccess: true, scopedSchoolId: userRow.schoolId || undefined };
   }
-  
+
   return { hasAccess: false };
 }
 
@@ -421,7 +383,7 @@ export async function getSRSHealthMetrics(req: ExtendedNextRequest) {
     // Check RBAC permissions
     const accessCheck = await checkSRSAccess(
       session.user.id,
-      session.user.role as Role,
+      session.user.role,
       studentId || undefined,
       classroomId || undefined,
       schoolId || undefined
@@ -612,7 +574,7 @@ export async function refreshSRSHealthViews(req: ExtendedNextRequest) {
     }
 
     // Only admins can refresh views
-    if (session.user.role !== Role.ADMIN && session.user.role !== Role.SYSTEM) {
+    if (session.user.role !== "ADMIN" && session.user.role !== "SYSTEM") {
       return NextResponse.json(
         { code: 'FORBIDDEN', message: 'Admin access required' },
         { status: 403 }
