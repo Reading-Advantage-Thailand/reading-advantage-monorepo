@@ -24,7 +24,7 @@ import PieChartCustom from "@/components/pie-chart";
 import LicesneUsageList from "@/components/license-usage-list";
 import { UserActivityLog } from "../models/user-activity-log-model";
 import { CloudHail } from "lucide-react";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 // Map CEFR levels to numerical values
 const cefrToNumber = {
