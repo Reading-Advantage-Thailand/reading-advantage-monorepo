@@ -2,7 +2,7 @@ import AppLayout, { BaseAppLayoutProps } from "@/components/shared/app-layout";
 import { studentPageConfig } from "@/configs/student-page-config";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import { AssignmentNotificationPopup } from "@/components/student/assignment-notification-popup";
 
 export default async function SettingsPageLayout({
