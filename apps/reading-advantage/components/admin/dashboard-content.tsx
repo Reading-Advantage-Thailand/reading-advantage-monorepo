@@ -12,7 +12,7 @@ import LineChartCustom from "@/components/line-chart";
 import ActiveUsersChart from "@/components/system/active-users";
 import ClassRoomXpChart from "@/components/dashboard/classroom-xp-chart";
 import LicenseSelector from "@/components/admin/license-selector";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 interface License {
   id: string;
