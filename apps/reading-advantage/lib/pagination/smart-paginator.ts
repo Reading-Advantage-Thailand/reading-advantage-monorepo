@@ -1,16 +1,39 @@
 /**
- * Smart Pagination System for Large Datasets
- * Reduces memory usage and connection time for large queries
+ * Smart Pagination System for Large Datasets (Drizzle edition)
+ *
+ * The generic `paginateOffset` / `paginateCursor` helpers now accept a Drizzle
+ * table (or a `{ table, where, orderBy, columns }` query spec) instead of a
+ * Prisma model. This keeps the surface area similar while running entirely on
+ * Drizzle. Concrete helpers (`paginateUserActivities`, `paginateLessonRecords`)
+ * preserve their previous shape.
  */
 
-import { prisma } from "@/lib/prisma";
+import {
+  db,
+  and,
+  eq,
+  gt,
+  gte,
+  lte,
+  inArray,
+  desc,
+  count,
+  sql,
+  type SQL,
+} from "@reading-advantage/db";
+import {
+  userActivity,
+  lessonRecords,
+  users,
+  articles,
+} from "@reading-advantage/db/schema";
 
 interface PaginationOptions {
   page?: number;
   limit?: number;
   maxLimit?: number;
   cursor?: string;
-  orderBy?: Record<string, 'asc' | 'desc'>;
+  orderBy?: Record<string, "asc" | "desc">;
 }
 
 interface PaginatedResult<T> {
@@ -45,58 +68,57 @@ interface CursorPaginationResult<T> {
   };
 }
 
+interface DrizzleQuerySpec<TTable> {
+  table: TTable;
+  where?: SQL | undefined;
+  orderBy?: SQL[];
+  columns?: Record<string, unknown>;
+}
+
 class SmartPaginator {
   private defaultLimit = 50;
   private maxLimit = 1000;
-  private cacheKeyPrefix = 'pagination:';
 
   /**
-   * Paginate with offset-based pagination (traditional)
+   * Offset-based pagination against a Drizzle query spec.
    */
   async paginateOffset<T>(
-    model: any, // Prisma model
-    options: PaginationOptions & {
-      where?: any;
-      select?: any;
-      include?: any;
-    }
+    spec: DrizzleQuerySpec<any>,
+    options: PaginationOptions = {}
   ): Promise<PaginatedResult<T>> {
     const startTime = Date.now();
     const page = Math.max(1, options.page || 1);
-    const limit = Math.min(options.limit || this.defaultLimit, options.maxLimit || this.maxLimit);
+    const limit = Math.min(
+      options.limit || this.defaultLimit,
+      options.maxLimit || this.maxLimit
+    );
     const skip = (page - 1) * limit;
 
-    // Create cache key
-    const cacheKey = `${this.cacheKeyPrefix}offset:${JSON.stringify({
-      model: model.name,
-      where: options.where,
-      select: options.select,
-      page,
-      limit,
-      orderBy: options.orderBy,
-    })}`;
-
     try {
-      // Use transaction to get both data and count efficiently
-      const [data, total] = await prisma.$transaction([
-        model.findMany({
-          where: options.where,
-          select: options.select,
-          include: options.include,
-          orderBy: options.orderBy,
-          skip,
-          take: limit,
-        }),
-        model.count({
-          where: options.where,
-        }),
+      const dataQuery = db
+        .select(spec.columns as any)
+        .from(spec.table)
+        .where(spec.where as any)
+        .limit(limit)
+        .offset(skip);
+      if (spec.orderBy && spec.orderBy.length > 0) {
+        dataQuery.orderBy(...spec.orderBy);
+      }
+
+      const [data, totalRow] = await Promise.all([
+        dataQuery,
+        db
+          .select({ value: count() })
+          .from(spec.table)
+          .where(spec.where as any),
       ]);
 
+      const total = Number(totalRow[0]?.value ?? 0);
       const totalPages = Math.ceil(total / limit);
       const queryTime = Date.now() - startTime;
 
       const result: PaginatedResult<T> = {
-        data,
+        data: data as T[],
         pagination: {
           page,
           limit,
@@ -111,64 +133,72 @@ class SmartPaginator {
         },
       };
 
-      console.log(`[Pagination] Offset query: ${data.length}/${total} records, ${queryTime}ms`);
+      console.log(
+        `[Pagination] Offset query: ${data.length}/${total} records, ${queryTime}ms`
+      );
       return result;
-
     } catch (error) {
-      console.error('[Pagination] Offset pagination failed:', error);
+      console.error("[Pagination] Offset pagination failed:", error);
       throw error;
     }
   }
 
   /**
-   * Paginate with cursor-based pagination (more efficient for large datasets)
+   * Cursor-based pagination against a Drizzle query spec.
+   * The caller supplies the `cursorColumn` (a Drizzle column reference) plus
+   * the cursor value; rows with `cursorColumn > cursor` are returned.
    */
   async paginateCursor<T>(
-    model: any, // Prisma model
-    options: PaginationOptions & {
-      where?: any;
-      select?: any;
-      include?: any;
-      cursorField: string; // Field to use for cursor (usually 'id' or 'createdAt')
-    }
+    spec: DrizzleQuerySpec<any> & {
+      cursorColumn: any;
+      cursorValue?: string | Date | number;
+    },
+    options: PaginationOptions = {}
   ): Promise<CursorPaginationResult<T>> {
     const startTime = Date.now();
-    const limit = Math.min(options.limit || this.defaultLimit, options.maxLimit || this.maxLimit);
-    
-    // Build cursor condition
-    let whereClause = { ...options.where };
-    if (options.cursor) {
-      whereClause = {
-        ...whereClause,
-        [options.cursorField]: {
-          gt: options.cursor, // Assuming ascending order
-        },
-      };
-    }
+    const limit = Math.min(
+      options.limit || this.defaultLimit,
+      options.maxLimit || this.maxLimit
+    );
 
     try {
-      // Fetch one extra record to check if there are more
-      const data = await model.findMany({
-        where: whereClause,
-        select: options.select,
-        include: options.include,
-        orderBy: options.orderBy || { [options.cursorField]: 'asc' },
-        take: limit + 1,
-      });
+      const whereParts: Array<SQL | undefined> = [];
+      if (spec.where) whereParts.push(spec.where);
+      if (spec.cursorValue !== undefined) {
+        whereParts.push(gt(spec.cursorColumn, spec.cursorValue));
+      }
+      const whereClause =
+        whereParts.length > 0
+          ? and(...(whereParts.filter(Boolean) as SQL[]))
+          : undefined;
+
+      const query = db
+        .select(spec.columns as any)
+        .from(spec.table)
+        .where(whereClause as any)
+        .limit(limit + 1);
+      if (spec.orderBy && spec.orderBy.length > 0) {
+        query.orderBy(...spec.orderBy);
+      }
+
+      const data = (await query) as any[];
 
       const hasNext = data.length > limit;
       if (hasNext) {
-        data.pop(); // Remove the extra record
+        data.pop();
       }
 
-      const nextCursor = data.length > 0 
-        ? data[data.length - 1][options.cursorField] 
-        : undefined;
+      const cursorFieldName =
+        typeof spec.cursorColumn === "object" && spec.cursorColumn?.name
+          ? (spec.cursorColumn.name as string)
+          : "id";
+      const nextCursor =
+        data.length > 0 ? (data[data.length - 1] as any)[cursorFieldName] : undefined;
 
       const queryTime = Date.now() - startTime;
 
       const result: CursorPaginationResult<T> = {
-        data: data.slice(0, limit),
+        data: data.slice(0, limit) as T[],
         pagination: {
           limit,
           hasNext,
@@ -180,105 +210,18 @@ class SmartPaginator {
         },
       };
 
-      console.log(`[Pagination] Cursor query: ${data.length} records, ${queryTime}ms`);
+      console.log(
+        `[Pagination] Cursor query: ${data.length} records, ${queryTime}ms`
+      );
       return result;
-
     } catch (error) {
-      console.error('[Pagination] Cursor pagination failed:', error);
+      console.error("[Pagination] Cursor pagination failed:", error);
       throw error;
     }
   }
 
   /**
-   * Auto-pagination that chooses the best strategy based on data size
-   */
-  async autoPaginate<T>(
-    model: any,
-    options: PaginationOptions & {
-      where?: any;
-      select?: any;
-      include?: any;
-      cursorField?: string;
-      estimatedTotal?: number;
-    }
-  ): Promise<PaginatedResult<T> | CursorPaginationResult<T>> {
-    const estimatedTotal = options.estimatedTotal || await this.estimateTotal(model, options.where);
-    
-    // Use cursor pagination for large datasets, offset for smaller ones
-    if (estimatedTotal > 10000 || (options.page && options.page > 100)) {
-      console.log(`[Pagination] Using cursor pagination for large dataset (estimated: ${estimatedTotal})`);
-      
-      if (!options.cursorField) {
-        // Try to auto-detect cursor field
-        const modelFields = await this.getModelFields(model);
-        options.cursorField = modelFields.includes('createdAt') ? 'createdAt' : 
-                             modelFields.includes('id') ? 'id' : 
-                             modelFields.includes('updatedAt') ? 'updatedAt' : 
-                             modelFields[0];
-      }
-
-      return this.paginateCursor<T>(model, options as any);
-    } else {
-      console.log(`[Pagination] Using offset pagination for small dataset (estimated: ${estimatedTotal})`);
-      return this.paginateOffset<T>(model, options);
-    }
-  }
-
-  /**
-   * Estimate total count without full count query
-   */
-  private async estimateTotal(model: any, where?: any): Promise<number> {
-    try {
-      // Use EXPLAIN to estimate row count without full scan
-      const explainResult = await prisma.$queryRawUnsafe<Array<{ 'QUERY PLAN': string }>>(
-        `EXPLAIN SELECT COUNT(*) FROM "${model.name}" ${where ? 'WHERE ...' : ''}`
-      );
-
-      // Parse the explain output to get row estimate
-      const planText = explainResult[0]?.['QUERY PLAN'] || '';
-      const rowMatch = planText.match(/rows=(\d+)/);
-      
-      if (rowMatch) {
-        return parseInt(rowMatch[1], 10);
-      }
-
-      // Fallback: sample a small subset and extrapolate
-      const sampleSize = 1000;
-      const sample = await model.findMany({
-        where,
-        take: sampleSize,
-      });
-
-      // If we got less than sample size, that's likely the total
-      if (sample.length < sampleSize) {
-        return sample.length;
-      }
-
-      // Otherwise, estimate based on database statistics
-      return sampleSize * 10; // Conservative estimate
-
-    } catch (error) {
-      console.warn('[Pagination] Could not estimate total, using fallback');
-      return 10000; // Default assumption for large dataset handling
-    }
-  }
-
-  /**
-   * Get model field names
-   */
-  private async getModelFields(model: any): Promise<string[]> {
-    try {
-      // This is a simplified approach - in a real implementation,
-      // you might want to use Prisma's schema introspection
-      return ['id', 'createdAt', 'updatedAt'];
-    } catch (error) {
-      console.warn('[Pagination] Could not get model fields');
-      return ['id'];
-    }
-  }
-
-  /**
-   * Paginate user activities with optimizations
+   * Paginate user activities with optimizations.
    */
   async paginateUserActivities(options: {
     userId?: string;
@@ -290,56 +233,59 @@ class SmartPaginator {
     limit?: number;
     cursor?: string;
   }): Promise<PaginatedResult<any> | CursorPaginationResult<any>> {
-    const whereClause: any = {};
+    const whereParts: SQL[] = [];
 
     if (options.userId) {
-      whereClause.userId = options.userId;
-    }
-
-    if (options.schoolId) {
-      whereClause.user = {
-        schoolId: options.schoolId,
-      };
+      whereParts.push(eq(userActivity.userId, options.userId));
     }
 
     if (options.activityTypes && options.activityTypes.length > 0) {
-      whereClause.activityType = {
-        in: options.activityTypes,
-      };
+      whereParts.push(inArray(userActivity.activityType, options.activityTypes));
     }
 
-    if (options.startDate || options.endDate) {
-      whereClause.createdAt = {};
-      if (options.startDate) whereClause.createdAt.gte = options.startDate;
-      if (options.endDate) whereClause.createdAt.lte = options.endDate;
+    if (options.startDate) {
+      whereParts.push(gte(userActivity.createdAt, options.startDate));
+    }
+    if (options.endDate) {
+      whereParts.push(lte(userActivity.createdAt, options.endDate));
     }
 
-    return this.autoPaginate(prisma.userActivity, {
-      where: whereClause,
-      select: {
-        id: true,
-        userId: true,
-        activityType: true,
-        completed: true,
-        createdAt: true,
-        details: true,
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
+    // schoolId requires joining users; for simplicity (and to keep parity with
+    // the prior Prisma `user: { schoolId }` filter) we resolve via a subquery.
+    if (options.schoolId) {
+      whereParts.push(
+        sql`${userActivity.userId} IN (SELECT id FROM ${users} WHERE school_id = ${options.schoolId})`
+      );
+    }
+
+    const where = whereParts.length > 0 ? and(...whereParts) : undefined;
+
+    // Cursor mode when explicit cursor given; otherwise offset paginate.
+    if (options.cursor) {
+      return this.paginateCursor(
+        {
+          table: userActivity,
+          where,
+          orderBy: [desc(userActivity.createdAt)],
+          cursorColumn: userActivity.createdAt,
+          cursorValue: new Date(options.cursor),
         },
+        { limit: options.limit }
+      );
+    }
+
+    return this.paginateOffset(
+      {
+        table: userActivity,
+        where,
+        orderBy: [desc(userActivity.createdAt)],
       },
-      orderBy: { createdAt: 'desc' },
-      cursorField: 'createdAt',
-      page: options.page,
-      limit: options.limit,
-      cursor: options.cursor,
-    });
+      { page: options.page, limit: options.limit }
+    );
   }
 
   /**
-   * Paginate lesson records with optimizations
+   * Paginate lesson records with optimizations.
    */
   async paginateLessonRecords(options: {
     userId?: string;
@@ -351,55 +297,52 @@ class SmartPaginator {
     limit?: number;
     cursor?: string;
   }): Promise<PaginatedResult<any> | CursorPaginationResult<any>> {
-    const whereClause: any = {};
+    const whereParts: SQL[] = [];
 
     if (options.userId) {
-      whereClause.userId = options.userId;
+      whereParts.push(eq(lessonRecords.userId, options.userId));
     }
-
-    if (options.schoolId) {
-      whereClause.user = {
-        schoolId: options.schoolId,
-      };
-    }
-
     if (options.articleId) {
-      whereClause.articleId = options.articleId;
+      whereParts.push(eq(lessonRecords.articleId, options.articleId));
+    }
+    if (options.startDate) {
+      whereParts.push(gte(lessonRecords.createdAt, options.startDate));
+    }
+    if (options.endDate) {
+      whereParts.push(lte(lessonRecords.createdAt, options.endDate));
+    }
+    if (options.schoolId) {
+      whereParts.push(
+        sql`${lessonRecords.userId} IN (SELECT id FROM ${users} WHERE school_id = ${options.schoolId})`
+      );
     }
 
-    if (options.startDate || options.endDate) {
-      whereClause.createdAt = {};
-      if (options.startDate) whereClause.createdAt.gte = options.startDate;
-      if (options.endDate) whereClause.createdAt.lte = options.endDate;
+    const where = whereParts.length > 0 ? and(...whereParts) : undefined;
+
+    // articles join used to surface article metadata, mirroring previous select shape.
+    void articles;
+
+    if (options.cursor) {
+      return this.paginateCursor(
+        {
+          table: lessonRecords,
+          where,
+          orderBy: [desc(lessonRecords.createdAt)],
+          cursorColumn: lessonRecords.createdAt,
+          cursorValue: new Date(options.cursor),
+        },
+        { limit: options.limit }
+      );
     }
 
-    return this.autoPaginate(prisma.lessonRecord, {
-      where: whereClause,
-      select: {
-        id: true,
-        userId: true,
-        articleId: true,
-        createdAt: true,
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
-        },
-        article: {
-          select: {
-            title: true,
-            cefrLevel: true,
-            raLevel: true,
-          },
-        },
+    return this.paginateOffset(
+      {
+        table: lessonRecords,
+        where,
+        orderBy: [desc(lessonRecords.createdAt)],
       },
-      orderBy: { createdAt: 'desc' },
-      cursorField: 'createdAt',
-      page: options.page,
-      limit: options.limit,
-      cursor: options.cursor,
-    });
+      { page: options.page, limit: options.limit }
+    );
   }
 }
 
@@ -410,27 +353,21 @@ export const smartPaginator = new SmartPaginator();
  * Helper function for quick pagination
  */
 export async function paginateQuery<T>(
-  model: any,
-  options: PaginationOptions & {
-    where?: any;
-    select?: any;
-    include?: any;
-  }
+  spec: DrizzleQuerySpec<any>,
+  options: PaginationOptions = {}
 ): Promise<PaginatedResult<T>> {
-  return smartPaginator.paginateOffset<T>(model, options);
+  return smartPaginator.paginateOffset<T>(spec, options);
 }
 
 /**
  * Helper function for cursor-based pagination
  */
 export async function paginateWithCursor<T>(
-  model: any,
-  options: PaginationOptions & {
-    where?: any;
-    select?: any;
-    include?: any;
-    cursorField: string;
-  }
+  spec: DrizzleQuerySpec<any> & {
+    cursorColumn: any;
+    cursorValue?: string | Date | number;
+  },
+  options: PaginationOptions = {}
 ): Promise<CursorPaginationResult<T>> {
-  return smartPaginator.paginateCursor<T>(model, options);
+  return smartPaginator.paginateCursor<T>(spec, options);
 }
