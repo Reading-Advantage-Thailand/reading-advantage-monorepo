@@ -11,7 +11,7 @@
  *   tsx scripts/refresh-velocity-matviews.ts
  */
 
-import { prisma } from '../lib/prisma';
+import { db, sql } from "@reading-advantage/db";
 import { refreshVelocityMatviews } from '../server/services/metrics/velocity-service';
 
 async function main() {
@@ -25,20 +25,20 @@ async function main() {
     console.log(`[Refresh] ✅ Completed in ${duration}ms`);
 
     // Check row counts
-    const studentCount = await prisma.$queryRawUnsafe<Array<{ count: bigint }>>(
-      'SELECT COUNT(*) as count FROM mv_student_velocity'
-    );
-    const classCount = await prisma.$queryRawUnsafe<Array<{ count: bigint }>>(
-      'SELECT COUNT(*) as count FROM mv_class_velocity'
-    );
-    const schoolCount = await prisma.$queryRawUnsafe<Array<{ count: bigint }>>(
-      'SELECT COUNT(*) as count FROM mv_school_velocity'
-    );
+    const studentCount = (await db.execute(
+      sql`SELECT COUNT(*)::bigint as count FROM mv_student_velocity`
+    )) as unknown as Array<{ count: bigint | number | string }>;
+    const classCount = (await db.execute(
+      sql`SELECT COUNT(*)::bigint as count FROM mv_class_velocity`
+    )) as unknown as Array<{ count: bigint | number | string }>;
+    const schoolCount = (await db.execute(
+      sql`SELECT COUNT(*)::bigint as count FROM mv_school_velocity`
+    )) as unknown as Array<{ count: bigint | number | string }>;
 
     console.log('[Refresh] Matview stats:');
-    console.log(`  - mv_student_velocity: ${studentCount[0].count} rows`);
-    console.log(`  - mv_class_velocity: ${classCount[0].count} rows`);
-    console.log(`  - mv_school_velocity: ${schoolCount[0].count} rows`);
+    console.log(`  - mv_student_velocity: ${studentCount[0]?.count ?? 0} rows`);
+    console.log(`  - mv_class_velocity: ${classCount[0]?.count ?? 0} rows`);
+    console.log(`  - mv_school_velocity: ${schoolCount[0]?.count ?? 0} rows`);
 
     process.exit(0);
   } catch (error) {
