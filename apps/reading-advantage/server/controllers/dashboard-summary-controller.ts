@@ -7,7 +7,6 @@
 
 import { NextResponse } from "next/server";
 import { ExtendedNextRequest } from "./auth-controller";
-import { prisma } from "@/lib/prisma";
 import { getCachedMetrics } from "@/lib/cache/metrics";
 import { executeBatchRawQueries } from "@/lib/cache/query-optimizer";
 
