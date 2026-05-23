@@ -2,8 +2,8 @@
 
 ## Phase 0: Provision the test database
 
-- [ ] Task: `docker exec reading-advantage-postgres createdb -U postgres science_advantage_test`; verify connectivity (`psql ... -c "SELECT 1"`); confirm DB is empty (`\dt` returns nothing).
-- [ ] Task: Run `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test pnpm --filter @reading-advantage/db migrate`; confirm all migrations apply on a fresh DB; spot-check that `science_*` tables (incl. the 4 new junctions from 0015) and `users`/`sessions`/`accounts` exist.
+- [x] Task: `docker exec reading-advantage-postgres createdb -U postgres science_advantage_test`; verify connectivity (`psql ... -c "SELECT 1"`); confirm DB is empty (`\dt` returns nothing). [infra-only — see plan commit note]
+- [x] Task: Run `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test pnpm --filter @reading-advantage/db migrate`; confirm all migrations apply on a fresh DB; spot-check that `science_*` tables (incl. the 4 new junctions from 0015) and `users`/`sessions`/`accounts` exist. [infra-only — see plan commit note]
 
 ## Phase 1: Integration globalSetup runs drizzle migrate
 
