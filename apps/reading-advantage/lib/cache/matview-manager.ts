@@ -3,7 +3,8 @@
  * Automatically manages refresh timing to reduce database load
  */
 
-import { prisma } from "@/lib/prisma";
+import { db, count, gte, sql } from "@reading-advantage/db";
+import { userActivity } from "@reading-advantage/db/schema";
 import { advancedCache } from "./advanced-cache";
 
 interface ViewRefreshConfig {
@@ -108,9 +109,9 @@ class MaterializedViewManager {
       const healthChecks = await Promise.all(
         this.refreshConfigs.map(async (config) => {
           try {
-            const result = await prisma.$queryRawUnsafe<
-              Array<{ row_count: bigint }>
-            >(`SELECT count(*) as row_count FROM ${config.viewName}`);
+            const result = (await db.execute(
+              sql.raw(`SELECT count(*) as row_count FROM ${config.viewName}`)
+            )) as Array<{ row_count: bigint | string }>;
 
             const rowCount = Number(result[0]?.row_count || 0);
             const isHealthy = rowCount > 0;
@@ -178,13 +179,11 @@ class MaterializedViewManager {
     setInterval(
       async () => {
         try {
-          const recentActivityCount = await prisma.userActivity.count({
-            where: {
-              createdAt: {
-                gte: new Date(Date.now() - 5 * 60 * 1000), // Last 5 minutes
-              },
-            },
-          });
+          const [row] = await db
+            .select({ value: count() })
+            .from(userActivity)
+            .where(gte(userActivity.createdAt, new Date(Date.now() - 5 * 60 * 1000)));
+          const recentActivityCount = row?.value ?? 0;
 
           // If more than 100 activities in last 5 minutes, refresh activity-related views
           if (recentActivityCount > 100) {
@@ -284,12 +283,12 @@ class MaterializedViewManager {
     try {
       // Try concurrent refresh first (if supported)
       try {
-        await prisma.$executeRawUnsafe(
-          `REFRESH MATERIALIZED VIEW CONCURRENTLY ${viewName}`
+        await db.execute(
+          sql.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY ${viewName}`)
         );
-      } catch (error) {
+      } catch {
         // Fall back to regular refresh
-        await prisma.$executeRawUnsafe(`REFRESH MATERIALIZED VIEW ${viewName}`);
+        await db.execute(sql.raw(`REFRESH MATERIALIZED VIEW ${viewName}`));
       }
 
       // Update last refresh time
