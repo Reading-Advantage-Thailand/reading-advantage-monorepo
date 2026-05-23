@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db, eq, and, inArray, desc } from "@reading-advantage/db";
+import { assignments, classroomStudents, studentAssignments, assignmentNotifications, users } from "@reading-advantage/db/schema";
 import { ExtendedNextRequest } from "./auth-controller";
 
 /**
@@ -11,30 +12,20 @@ export async function getClassroomAssignments(
 ) {
   const { classroomId } = await ctx.params;
   try {
-
     if (!classroomId) {
-      return NextResponse.json(
-        { error: "Missing classroomId" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing classroomId" }, { status: 400 });
     }
 
-    const assignments = await prisma.assignment.findMany({
-      where: {
-        classroomId: classroomId,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const rows = await db
+      .select()
+      .from(assignments)
+      .where(eq(assignments.classroomId, classroomId))
+      .orderBy(desc(assignments.createdAt));
 
-    return NextResponse.json(assignments);
+    return NextResponse.json(rows);
   } catch (error) {
     console.error("Error fetching assignments:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -47,47 +38,33 @@ export async function getAssignmentStudents(
 ) {
   const { classroomId, assignmentId } = await ctx.params;
   try {
-
     if (!classroomId || !assignmentId) {
-      return NextResponse.json(
-        { error: "Missing classroomId or assignmentId" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing classroomId or assignmentId" }, { status: 400 });
     }
 
-    // Get all students in the classroom with their assignment status
-    const students = await prisma.classroomStudent.findMany({
-      where: {
-        classroomId: classroomId,
-      },
-      include: {
-        student: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-    });
+    // Get all students in the classroom with user info
+    const students = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+      })
+      .from(classroomStudents)
+      .innerJoin(users, eq(classroomStudents.studentId, users.id))
+      .where(eq(classroomStudents.classroomId, classroomId));
 
     // Get student assignments for this assignment
-    const studentAssignments = await prisma.studentAssignment.findMany({
-      where: {
-        assignmentId: assignmentId,
-      },
-    });
+    const saRows = await db
+      .select()
+      .from(studentAssignments)
+      .where(eq(studentAssignments.assignmentId, assignmentId));
 
-    // Map students with their completion status
-    const studentsWithStatus = students.map((cs) => {
-      const assignment = studentAssignments.find(
-        (sa) => sa.studentId === cs.student.id
-      );
-
+    const studentsWithStatus = students.map((s) => {
+      const assignment = saRows.find((sa) => sa.studentId === s.id);
       return {
-        id: cs.student.id,
-        name: cs.student.name || "Unknown",
-        email: cs.student.email,
+        id: s.id,
+        name: s.name || "Unknown",
+        email: s.email,
         isCompleted: assignment?.status === "COMPLETED",
       };
     });
@@ -95,10 +72,7 @@ export async function getAssignmentStudents(
     return NextResponse.json(studentsWithStatus);
   } catch (error) {
     console.error("Error fetching students for assignment:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -119,67 +93,39 @@ export async function sendClassroomAssignmentNotifications(
     }
 
     if (!classroomId) {
-      return NextResponse.json(
-        { error: "Missing classroomId" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing classroomId" }, { status: 400 });
     }
 
     const body = await req.json();
     const { assignmentIds, studentIds } = body;
 
-    if (
-      !assignmentIds ||
-      !Array.isArray(assignmentIds) ||
-      assignmentIds.length === 0
-    ) {
-      return NextResponse.json(
-        { error: "Missing or invalid assignmentIds" },
-        { status: 400 }
-      );
+    if (!assignmentIds || !Array.isArray(assignmentIds) || assignmentIds.length === 0) {
+      return NextResponse.json({ error: "Missing or invalid assignmentIds" }, { status: 400 });
     }
 
     let targetStudentIds: string[] = studentIds;
 
-    // ถ้าไม่มี studentIds ให้ดึงนักเรียนที่ยังทำไม่เสร็จจากการบ้านทั้งหมดที่เลือก
     if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
-      // ดึงนักเรียนทั้งหมดในห้องเรียน
-      const classroomStudents = await prisma.classroomStudent.findMany({
-        where: {
-          classroomId,
-        },
-        select: {
-          studentId: true,
-        },
-      });
+      const csRows = await db
+        .select({ studentId: classroomStudents.studentId })
+        .from(classroomStudents)
+        .where(eq(classroomStudents.classroomId, classroomId));
 
-      const allStudentIds = classroomStudents.map((cs) => cs.studentId);
+      const allStudentIds = csRows.map((cs) => cs.studentId);
 
-      // ดึงนักเรียนที่ทำเสร็จแล้วจากการบ้านที่เลือก
-      const completedRecords = await prisma.studentAssignment.findMany({
-        where: {
-          studentId: {
-            in: allStudentIds,
-          },
-          assignmentId: {
-            in: assignmentIds,
-          },
-          status: "COMPLETED",
-        },
-        select: {
-          studentId: true,
-        },
-        distinct: ["studentId"],
-      });
+      const completedRows = await db
+        .selectDistinct({ studentId: studentAssignments.studentId })
+        .from(studentAssignments)
+        .where(
+          and(
+            inArray(studentAssignments.studentId, allStudentIds),
+            inArray(studentAssignments.assignmentId, assignmentIds),
+            eq(studentAssignments.status, "COMPLETED")
+          )
+        );
 
-      const completedStudentIds = completedRecords.map(
-        (record) => record.studentId
-      );
-
-      // หานักเรียนที่ยังไม่ได้ทำ (นักเรียนทั้งหมด ลบด้วยนักเรียนที่ทำเสร็จแล้ว)
-      targetStudentIds = allStudentIds.filter(
-        (studentId) => !completedStudentIds.includes(studentId)
-      );
+      const completedStudentIds = completedRows.map((r) => r.studentId);
+      targetStudentIds = allStudentIds.filter((id) => !completedStudentIds.includes(id));
 
       if (targetStudentIds.length === 0) {
         return NextResponse.json(
@@ -189,34 +135,23 @@ export async function sendClassroomAssignmentNotifications(
       }
     }
 
-    // Create notifications for each combination of assignment and student
     const notifications = [];
     for (const assignmentId of assignmentIds) {
       for (const studentId of targetStudentIds) {
-        notifications.push({
-          teacherId: user.id,
-          studentId,
-          assignmentId,
-          isNoticed: false,
-        });
+        notifications.push({ teacherId: user.id, studentId, assignmentId, isNoticed: false });
       }
     }
 
-    const result = await prisma.assignmentNotification.createMany({
-      data: notifications,
-      skipDuplicates: true, // Skip if notification already exists
-    });
+    const inserted = await db
+      .insert(assignmentNotifications)
+      .values(notifications)
+      .onConflictDoNothing()
+      .returning({ id: assignmentNotifications.id });
 
-    return NextResponse.json({
-      success: true,
-      count: result.count,
-    });
+    return NextResponse.json({ success: true, count: inserted.length });
   } catch (error) {
     console.error("Error sending assignment notifications:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -229,54 +164,39 @@ export async function getClassroomNotificationHistory(
 ) {
   const { classroomId } = await ctx.params;
   try {
-
     if (!classroomId) {
-      return NextResponse.json(
-        { error: "Missing classroomId" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing classroomId" }, { status: 400 });
     }
 
-    // Get notification history for this classroom
-    const notifications = await prisma.assignmentNotification.findMany({
-      where: {
-        assignment: {
-          classroomId: classroomId,
-        },
-      },
-      include: {
-        assignment: {
-          select: {
-            title: true,
-          },
-        },
-        student: {
-          select: {
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const notifications = await db
+      .select({
+        id: assignmentNotifications.id,
+        assignmentId: assignmentNotifications.assignmentId,
+        createdAt: assignmentNotifications.createdAt,
+        assignmentTitle: assignments.title,
+        studentName: users.name,
+      })
+      .from(assignmentNotifications)
+      .innerJoin(assignments, eq(assignmentNotifications.assignmentId, assignments.id))
+      .innerJoin(users, eq(assignmentNotifications.studentId, users.id))
+      .where(eq(assignments.classroomId, classroomId))
+      .orderBy(desc(assignmentNotifications.createdAt));
 
-    // Group by assignment and createdAt (same batch)
     const grouped = notifications.reduce((acc: any[], notif) => {
       const key = `${notif.assignmentId}-${notif.createdAt.toISOString()}`;
       const existing = acc.find((item) => item.key === key);
 
       if (existing) {
         existing.studentCount++;
-        existing.notifiedStudents.push(notif.student.name || "Unknown");
+        existing.notifiedStudents.push(notif.studentName || "Unknown");
       } else {
         acc.push({
           key,
           id: notif.id,
-          assignmentTitle: notif.assignment.title || "Untitled",
+          assignmentTitle: notif.assignmentTitle || "Untitled",
           studentCount: 1,
           createdAt: notif.createdAt,
-          notifiedStudents: [notif.student.name || "Unknown"],
+          notifiedStudents: [notif.studentName || "Unknown"],
         });
       }
 
@@ -286,9 +206,6 @@ export async function getClassroomNotificationHistory(
     return NextResponse.json(grouped);
   } catch (error) {
     console.error("Error fetching notification history:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
