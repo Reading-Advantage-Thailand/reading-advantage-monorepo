@@ -1,0 +1,15 @@
+Task: Phase 1/Task 2 \u2014 globalSetup migration runner
+
+TDD: red (import failure) \u2192 green (4/4 in 22ms)
+
+Design choices:
+  - spawn injection in runDrizzleMigrate keeps tests fast (no real spawn,
+    no real DB) and side-effect free
+  - globalSetup is a one-line composition: resolveTestDatabaseUrl + runDrizzleMigrate
+  - singleFork added to vitest.integration.config.ts since all integration tests
+    share one DB and parallel truncates would race
+  - vitest.config.ts (default config) left pointing at old vitest.setup.ts on
+    purpose \u2014 Phase 1 Task 3 (next) will decide whether the default config
+    should use the same integration setup or be retired entirely
+
+Combined unit-test count after this task: 11 (7 URL + 4 migrate)
