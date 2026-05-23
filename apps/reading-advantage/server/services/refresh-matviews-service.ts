@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db, sql } from "@reading-advantage/db";
 
 /**
  * Materialized views in dependency order
@@ -42,15 +40,14 @@ interface RefreshResult {
  */
 async function viewExists(viewName: string): Promise<boolean> {
   try {
-    const result = await prisma.$queryRawUnsafe<Array<{ exists: boolean }>>(
-      `SELECT EXISTS (
-        SELECT 1 
-        FROM pg_matviews 
-        WHERE schemaname = 'public' 
-        AND matviewname = $1
-      ) as exists`,
-      viewName
-    );
+    const result = (await db.execute(sql`
+      SELECT EXISTS (
+        SELECT 1
+        FROM pg_matviews
+        WHERE schemaname = 'public'
+        AND matviewname = ${viewName}
+      ) as exists
+    `)) as unknown as Array<{ exists: boolean }>;
     return result[0]?.exists ?? false;
   } catch (error: any) {
     console.error(`Error checking if ${viewName} exists:`, error.message);
@@ -82,8 +79,8 @@ async function refreshView(
 
   try {
     // Try CONCURRENTLY first
-    await prisma.$executeRawUnsafe(
-      `REFRESH MATERIALIZED VIEW CONCURRENTLY ${viewName}`
+    await db.execute(
+      sql.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY ${viewName}`)
     );
 
     const duration = Date.now() - startTime;
@@ -96,7 +93,7 @@ async function refreshView(
   } catch (error: any) {
     // Fall back to regular refresh
     try {
-      await prisma.$executeRawUnsafe(`REFRESH MATERIALIZED VIEW ${viewName}`);
+      await db.execute(sql.raw(`REFRESH MATERIALIZED VIEW ${viewName}`));
 
       const duration = Date.now() - startTime;
       return {
