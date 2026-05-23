@@ -1,0 +1,49 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    id: "build-image"
+    args:
+      - "build"
+      - "-f"
+      - "apps/www-reading-advantage/Dockerfile"
+      - "--build-arg"
+      - "NEXT_PUBLIC_APP_URL=https://www.reading-advantage.com"
+      - "-t"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/web/www-reading-advantage:$BUILD_ID"
+      - "."
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: "push-image"
+    args:
+      - "push"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/web/www-reading-advantage:$BUILD_ID"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-cloudrun"
+    args:
+      - "run"
+      - "deploy"
+      - "www-reading-advantage"
+      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/web/www-reading-advantage:$BUILD_ID"
+      - "--region=asia-southeast1"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_APP_URL=https://www.reading-advantage.com"
+      - "--quiet"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "allow-public-invoker"
+    args:
+      - "run"
+      - "services"
+      - "add-iam-policy-binding"
+      - "www-reading-advantage"
+      - "--region=asia-southeast1"
+      - "--member=allUsers"
+      - "--role=roles/run.invoker"
+
+images:
+  - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/web/www-reading-advantage:$BUILD_ID"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8

@@ -5,6 +5,7 @@ import { LocaleProvider } from '@/providers/locale-provider';
 import { getMessages } from 'next-intl/server';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://reading-advantage.com'),
   title: 'Reading Advantage (Thailand) - Innovative EdTech Solutions',
   description: 'Reading Advantage Thailand - Leading provider of AI-enhanced learning solutions for language learning, coding, and education technology.',
   keywords: 'education technology, AI learning, language learning, coding bootcamp, Thailand education',

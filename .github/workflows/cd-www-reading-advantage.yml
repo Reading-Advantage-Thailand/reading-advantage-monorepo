@@ -1,0 +1,48 @@
+name: CD — www-reading-advantage
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "apps/www-reading-advantage/**"
+      - "packages/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+
+jobs:
+  deploy:
+    name: Deploy to Cloud Run 🚀
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository 📂
+        uses: actions/checkout@v4
+
+      - id: "auth"
+        name: Authenticate with Google Cloud 🔑
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: "${{ secrets.GCP_SERVICE_ACCOUNT }}"
+
+      - name: Set Up Google Cloud SDK ☁️
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Submit Cloud Build 🐳
+        run: |
+          gcloud builds submit \
+            --project="${{ secrets.GCP_PROJECT_ID }}" \
+            --config="apps/www-reading-advantage/cloudbuild.yaml" \
+            .
+
+      - name: Display Deployment URL 📋
+        run: |
+          echo "Application successfully deployed to Cloud Run"
+          gcloud run services describe www-reading-advantage \
+            --platform managed \
+            --region asia-southeast1 \
+            --project "${{ secrets.GCP_PROJECT_ID }}" \
+            --format='value(status.url)'
