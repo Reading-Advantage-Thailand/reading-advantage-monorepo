@@ -5,217 +5,173 @@
 
 import { NextResponse } from "next/server";
 import { ExtendedNextRequest } from "./auth-controller";
-import { prisma } from "@/lib/prisma";
-import { Role } from "@prisma/client";
-import { createCachedQuery } from "@/lib/cache/advanced-cache";
+import { db, eq, and, inArray, gte, sql } from "@reading-advantage/db";
+import {
+  classroomTeachers,
+  classrooms,
+  classroomStudents,
+  assignments,
+  studentAssignments,
+  userActivity,
+  xpLogs,
+  users,
+} from "@reading-advantage/db/schema";
 
 interface RequestContext {
-  params: Promise<{
-    classroomId: string;
-  }>;
+  params: Promise<{ classroomId: string }>;
 }
 
-/**
- * Verify class ownership/access
- */
-async function verifyClassAccess(classroomId: string, userId: string, userRole: Role): Promise<boolean> {
-  // System and Admin have access to all classes
-  if (userRole === Role.SYSTEM || userRole === Role.ADMIN) {
+async function verifyClassAccess(classroomId: string, userId: string, userRole: string): Promise<boolean> {
+  if (userRole === "SYSTEM" || userRole === "ADMIN") {
     return true;
   }
 
-  // Check if teacher is associated with this classroom
-  const classroomTeacher = await prisma.classroomTeacher.findFirst({
-    where: {
-      classroomId,
-      teacherId: userId,
-    },
-  });
+  const [ct] = await db
+    .select()
+    .from(classroomTeachers)
+    .where(and(eq(classroomTeachers.classroomId, classroomId), eq(classroomTeachers.teacherId, userId)))
+    .limit(1);
 
-  return !!classroomTeacher;
+  return !!ct;
 }
 
-/**
- * GET /api/v1/teacher/class/[classroomId]/overview
- * Get comprehensive class overview and KPIs
- */
-export async function getClassOverview(
-  req: ExtendedNextRequest,
-  ctx: RequestContext
-) {
+export async function getClassOverview(req: ExtendedNextRequest, ctx: RequestContext) {
   try {
     const { classroomId } = await ctx.params;
     const session = req.session;
 
     if (!session?.user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = session.user;
 
-    // Verify access
-    const hasAccess = await verifyClassAccess(classroomId, user.id, user.role as Role);
+    const hasAccess = await verifyClassAccess(classroomId, user.id, user.role as string);
     if (!hasAccess) {
-      return NextResponse.json(
-        { error: "Access denied. You do not have permission to view this class." },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Access denied. You do not have permission to view this class." }, { status: 403 });
     }
 
-    // Get classroom info
-    const classroom = await prisma.classroom.findUnique({
-      where: { id: classroomId },
-    });
-
+    const [classroom] = await db.select().from(classrooms).where(eq(classrooms.id, classroomId)).limit(1);
     if (!classroom) {
-      return NextResponse.json(
-        { error: "Class not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Class not found" }, { status: 404 });
     }
 
-    // Get students data
-    const students = await prisma.classroomStudent.findMany({
-      where: {
-        classroomId,
-      },
-      include: {
-        student: {
-          select: {
-            id: true,
-            level: true,
-            cefrLevel: true,
-            xp: true,
-          },
-        },
-      },
-    });
+    // Get students with level/xp data
+    const studentRows = await db
+      .select({
+        studentId: classroomStudents.studentId,
+        level: users.level,
+        cefrLevel: users.cefrLevel,
+        xp: users.xp,
+      })
+      .from(classroomStudents)
+      .innerJoin(users, eq(classroomStudents.studentId, users.id))
+      .where(eq(classroomStudents.classroomId, classroomId));
 
-    // Get assignments data
-    const assignments = await prisma.assignment.findMany({
-      where: {
-        classroomId,
-      },
-    });
+    const studentIds = studentRows.map((s) => s.studentId);
 
-    const assignmentIds = assignments.map(a => a.id);
+    // Get assignment IDs for this classroom
+    const assignmentRows = await db
+      .select({ id: assignments.id, dueDate: assignments.dueDate })
+      .from(assignments)
+      .where(eq(assignments.classroomId, classroomId));
 
-    const completedAssignments = await prisma.studentAssignment.count({
-      where: {
-        assignmentId: {
-          in: assignmentIds,
-        },
-        status: 'COMPLETED',
-      },
-    });
+    const assignmentIds = assignmentRows.map((a) => a.id);
 
-    // Get activity metrics
-    const studentIds = students.map(s => s.studentId);
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const [activity7d, activity30d] = await Promise.all([
-      prisma.userActivity.groupBy({
-        by: ['userId'],
-        where: {
-          userId: {
-            in: studentIds,
-          },
-          createdAt: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-          },
-        },
-      }),
-      prisma.userActivity.groupBy({
-        by: ['userId'],
-        where: {
-          userId: {
-            in: studentIds,
-          },
-          createdAt: {
-            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-          },
-        },
-      }),
-    ]);
+    let completedCount = 0;
+    let activity7dIds: string[] = [];
+    let activity30dIds: string[] = [];
+    let xpLogRows: { userId: string; activityType: string; xpEarned: number }[] = [];
 
-    // Calculate average accuracy from user records
-    // For now, using a simplified approach
-    // TODO: Implement proper accuracy calculation
-    const XPLogStudents = await prisma.xPLog.groupBy({
-      by: ['userId', 'activityType'],
-      where: {
-        userId: { in: studentIds },
-        activityType: {
-          in: ['MC_QUESTION', 'SA_QUESTION'],
-        },
-      },
-      _avg: {
-        xpEarned: true,
-      },
-    });
+    if (studentIds.length > 0) {
+      // Completed student assignments
+      if (assignmentIds.length > 0) {
+        const [cRow] = await db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(studentAssignments)
+          .where(
+            and(
+              inArray(studentAssignments.assignmentId, assignmentIds),
+              eq(studentAssignments.status, "COMPLETED")
+            )
+          );
+        completedCount = cRow?.count ?? 0;
+      }
 
-    const mcLogs = XPLogStudents.filter(log => log.activityType === 'MC_QUESTION');
-    const mcQuestionAccuracy = mcLogs.length > 0
-      ? Math.round((mcLogs.reduce((sum, log) => sum + (log._avg?.xpEarned || 0), 0) / mcLogs.length) * 10) / 10
-      : 0;
+      // Active users in 7d and 30d (distinct userId)
+      const [act7d, act30d] = await Promise.all([
+        db
+          .selectDistinct({ userId: userActivity.userId })
+          .from(userActivity)
+          .where(and(inArray(userActivity.userId, studentIds), gte(userActivity.createdAt, sevenDaysAgo))),
+        db
+          .selectDistinct({ userId: userActivity.userId })
+          .from(userActivity)
+          .where(and(inArray(userActivity.userId, studentIds), gte(userActivity.createdAt, thirtyDaysAgo))),
+      ]);
+      activity7dIds = act7d.map((r) => r.userId);
+      activity30dIds = act30d.map((r) => r.userId);
 
-    const saLogs = XPLogStudents.filter(log => log.activityType === 'SA_QUESTION');
-    const saQuestionAccuracy = saLogs.length > 0
-      ? Math.round((saLogs.reduce((sum, log) => sum + (log._avg?.xpEarned || 0), 0) / saLogs.length) * 10) / 10
-      : 0;
+      // XP logs for MCQ/SAQ accuracy approximation
+      xpLogRows = await db
+        .select({ userId: xpLogs.userId, activityType: xpLogs.activityType, xpEarned: xpLogs.xpEarned })
+        .from(xpLogs)
+        .where(
+          and(
+            inArray(xpLogs.userId, studentIds),
+            inArray(xpLogs.activityType, ["MC_QUESTION", "SA_QUESTION"])
+          )
+        );
+    }
 
-    const totalStudents = students.length;
-    const averageLevel = totalStudents > 0
-      ? students.reduce((sum, s) => sum + (s.student.level || 0), 0) / totalStudents
-      : 0;
+    const totalStudents = studentRows.length;
+    const averageLevel =
+      totalStudents > 0 ? studentRows.reduce((sum, s) => sum + (s.level || 0), 0) / totalStudents : 0;
+    const totalXpEarned = studentRows.reduce((sum, s) => sum + (s.xp || 0), 0);
+    const assignmentsActive = assignmentRows.filter((a) => !a.dueDate || a.dueDate > now).length;
 
-    const totalXpEarned = students.reduce((sum, s) => sum + (s.student.xp || 0), 0);
+    const mcLogs = xpLogRows.filter((l) => l.activityType === "MC_QUESTION");
+    const mcQuestionAccuracy =
+      mcLogs.length > 0
+        ? Math.round((mcLogs.reduce((sum, l) => sum + (l.xpEarned || 0), 0) / mcLogs.length) * 10) / 10
+        : 0;
 
-    const assignmentsActive = assignments.filter(a => {
-      const now = new Date();
-      return !a.dueDate || a.dueDate > now;
-    }).length;
+    const saLogs = xpLogRows.filter((l) => l.activityType === "SA_QUESTION");
+    const saQuestionAccuracy =
+      saLogs.length > 0
+        ? Math.round((saLogs.reduce((sum, l) => sum + (l.xpEarned || 0), 0) / saLogs.length) * 10) / 10
+        : 0;
 
     const result = {
       class: {
         id: classroom.id,
-        name: classroom.classroomName,
+        name: classroom.name,
         classCode: classroom.classCode,
         schoolId: classroom.schoolId,
         createdAt: classroom.createdAt.toISOString(),
       },
       summary: {
         totalStudents,
-        activeStudents7d: activity7d.length,
-        activeStudents30d: activity30d.length,
+        activeStudents7d: activity7dIds.length,
+        activeStudents30d: activity30dIds.length,
         averageLevel: Math.round(averageLevel * 10) / 10,
         totalXpEarned,
         assignmentsActive,
-        assignmentsCompleted: completedAssignments,
+        assignmentsCompleted: completedCount,
       },
-      performance: {
-        saQuestionAccuracy,
-        mcQuestionAccuracy,
-        // averageAccuracy: Math.round(averageAccuracy * 10) / 10,
-        // averageReadingTime: 0,
-        // booksCompleted: 0,
-      }
+      performance: { saQuestionAccuracy, mcQuestionAccuracy },
     };
 
     return NextResponse.json({
       ...result,
-      cache: {
-        cached: false,
-        generatedAt: new Date().toISOString(),
-      },
+      cache: { cached: false, generatedAt: new Date().toISOString() },
     });
   } catch (error) {
     console.error("Error fetching class overview:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch class overview" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch class overview" }, { status: 500 });
   }
 }
