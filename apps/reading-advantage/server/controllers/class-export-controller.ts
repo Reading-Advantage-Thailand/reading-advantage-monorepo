@@ -5,8 +5,8 @@
 
 import { NextResponse } from "next/server";
 import { ExtendedNextRequest } from "./auth-controller";
-import { prisma } from "@/lib/prisma";
-import { Role } from "@prisma/client";
+import { db, eq, and, inArray, sql } from "@reading-advantage/db";
+import { classroomTeachers, classrooms, classroomStudents, users, studentAssignments, assignments } from "@reading-advantage/db/schema";
 
 interface RequestContext {
   params: Promise<{
@@ -14,195 +14,136 @@ interface RequestContext {
   }>;
 }
 
-/**
- * Verify class ownership/access
- */
-async function verifyClassAccess(classroomId: string, userId: string, userRole: Role): Promise<boolean> {
-  if (userRole === Role.SYSTEM || userRole === Role.ADMIN) {
+async function verifyClassAccess(classroomId: string, userId: string, userRole: string): Promise<boolean> {
+  if (userRole === "SYSTEM" || userRole === "ADMIN") {
     return true;
   }
 
-  const classroomTeacher = await prisma.classroomTeacher.findFirst({
-    where: {
-      classroomId,
-      teacherId: userId,
-    },
-  });
+  const [ct] = await db
+    .select()
+    .from(classroomTeachers)
+    .where(and(eq(classroomTeachers.classroomId, classroomId), eq(classroomTeachers.teacherId, userId)))
+    .limit(1);
 
-  return !!classroomTeacher;
+  return !!ct;
 }
 
-/**
- * Convert data to CSV format
- */
 function convertToCSV(data: any[], headers: string[]): string {
   const csvRows = [];
-  
-  // Add header row
-  csvRows.push(headers.join(','));
-  
-  // Add data rows
+  csvRows.push(headers.join(","));
   for (const row of data) {
-    const values = headers.map(header => {
+    const values = headers.map((header) => {
       const value = row[header];
-      // Escape values containing commas or quotes
-      if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+      if (typeof value === "string" && (value.includes(",") || value.includes('"'))) {
         return `"${value.replace(/"/g, '""')}"`;
       }
-      return value ?? '';
+      return value ?? "";
     });
-    csvRows.push(values.join(','));
+    csvRows.push(values.join(","));
   }
-  
-  return csvRows.join('\n');
+  return csvRows.join("\n");
 }
 
-/**
- * GET /api/v1/teacher/class/[classroomId]/export
- * Export class data
- */
-export async function exportClassData(
-  req: ExtendedNextRequest,
-  ctx: RequestContext
-) {
+export async function exportClassData(req: ExtendedNextRequest, ctx: RequestContext) {
   try {
     const { classroomId } = await ctx.params;
     const session = req.session;
 
     if (!session?.user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = session.user;
     const { searchParams } = new URL(req.url);
-    const format = searchParams.get('format') || 'csv';
+    const format = searchParams.get("format") || "csv";
 
-    // Verify access
-    const hasAccess = await verifyClassAccess(classroomId, user.id, user.role as Role);
+    const hasAccess = await verifyClassAccess(classroomId, user.id, user.role as string);
     if (!hasAccess) {
-      return NextResponse.json(
-        { error: "Access denied" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    // Get classroom info
-    const classroom = await prisma.classroom.findUnique({
-      where: { id: classroomId },
-    });
+    const [classroom] = await db
+      .select()
+      .from(classrooms)
+      .where(eq(classrooms.id, classroomId))
+      .limit(1);
 
     if (!classroom) {
-      return NextResponse.json(
-        { error: "Class not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Class not found" }, { status: 404 });
     }
 
-    // Get students with their basic info
-    const classroomStudents = await prisma.classroomStudent.findMany({
-      where: { classroomId },
-      select: {
-        studentId: true,
-        createdAt: true,
-      },
-    });
+    const csRows = await db
+      .select({ studentId: classroomStudents.studentId, createdAt: classroomStudents.joinedAt })
+      .from(classroomStudents)
+      .where(eq(classroomStudents.classroomId, classroomId));
 
-    const studentIds = classroomStudents.map(cs => cs.studentId);
+    const studentIds = csRows.map((cs) => cs.studentId);
 
-    const students = await prisma.user.findMany({
-      where: {
-        id: {
-          in: studentIds,
-        },
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        level: true,
-        cefrLevel: true,
-        xp: true,
-      },
-    });
+    const studentRows = studentIds.length > 0
+      ? await db
+          .select({ id: users.id, email: users.email, name: users.name, level: users.level, cefrLevel: users.cefrLevel, xp: users.xp })
+          .from(users)
+          .where(inArray(users.id, studentIds))
+      : [];
 
-    // Get assignment completion counts
-    const studentAssignments = await prisma.studentAssignment.groupBy({
-      by: ['studentId', 'status'],
-      where: {
-        studentId: {
-          in: studentIds,
-        },
-        assignment: {
-          classroomId,
-        },
-      },
-      _count: true,
-    });
+    // Get assignment IDs for this classroom
+    const assignmentRows = studentIds.length > 0
+      ? await db
+          .select({ id: assignments.id })
+          .from(assignments)
+          .where(eq(assignments.classroomId, classroomId))
+      : [];
+    const assignmentIds = assignmentRows.map((a) => a.id);
 
-    // Prepare export data
-    const exportData = students.map(student => {
-      const joinedAt = classroomStudents.find(cs => cs.studentId === student.id)?.createdAt;
-      const completed = studentAssignments.find(
-        sa => sa.studentId === student.id && sa.status === 'COMPLETED'
-      )?._count || 0;
-      const inProgress = studentAssignments.find(
-        sa => sa.studentId === student.id && sa.status === 'IN_PROGRESS'
-      )?._count || 0;
+    // Group student assignment counts
+    const saRows = studentIds.length > 0 && assignmentIds.length > 0
+      ? await db
+          .select({ studentId: studentAssignments.studentId, status: studentAssignments.status })
+          .from(studentAssignments)
+          .where(
+            and(
+              inArray(studentAssignments.studentId, studentIds),
+              inArray(studentAssignments.assignmentId, assignmentIds)
+            )
+          )
+      : [];
+
+    const exportData = studentRows.map((student) => {
+      const joinedAt = csRows.find((cs) => cs.studentId === student.id)?.createdAt;
+      const completed = saRows.filter((sa) => sa.studentId === student.id && sa.status === "COMPLETED").length;
+      const inProgress = saRows.filter((sa) => sa.studentId === student.id && sa.status === "IN_PROGRESS").length;
 
       return {
         studentId: student.id,
-        name: student.name || 'N/A',
+        name: student.name || "N/A",
         email: student.email,
         level: student.level,
         cefrLevel: student.cefrLevel,
         xp: student.xp,
-        joinedAt: joinedAt?.toISOString() || '',
+        joinedAt: joinedAt?.toISOString() || "",
         assignmentsCompleted: completed,
         assignmentsPending: inProgress,
       };
     });
 
-    if (format === 'csv') {
-      const headers = [
-        'studentId',
-        'name',
-        'email',
-        'level',
-        'cefrLevel',
-        'xp',
-        'joinedAt',
-        'assignmentsCompleted',
-        'assignmentsPending',
-      ];
-      
+    if (format === "csv") {
+      const headers = ["studentId", "name", "email", "level", "cefrLevel", "xp", "joinedAt", "assignmentsCompleted", "assignmentsPending"];
       const csv = convertToCSV(exportData, headers);
-      
       return new NextResponse(csv, {
         headers: {
-          'Content-Type': 'text/csv',
-          'Content-Disposition': `attachment; filename="class-${classroom.classCode}-${new Date().toISOString().split('T')[0]}.csv"`,
+          "Content-Type": "text/csv",
+          "Content-Disposition": `attachment; filename="class-${classroom.classCode}-${new Date().toISOString().split("T")[0]}.csv"`,
         },
       });
     } else {
-      // JSON export
       return NextResponse.json({
-        classroom: {
-          id: classroom.id,
-          name: classroom.classroomName,
-          classCode: classroom.classCode,
-        },
+        classroom: { id: classroom.id, name: classroom.name, classCode: classroom.classCode },
         exportedAt: new Date().toISOString(),
         students: exportData,
       });
     }
   } catch (error) {
     console.error("Error exporting class data:", error);
-    return NextResponse.json(
-      { error: "Failed to export class data" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to export class data" }, { status: 500 });
   }
 }
