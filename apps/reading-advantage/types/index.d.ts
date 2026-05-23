@@ -107,7 +107,7 @@ export type SystemSidebarNavItem = {
     }
 );
 
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 export type User = {
   id: string;
