@@ -5,7 +5,8 @@
  * and recommendations. Supports multiple languages and fallback to English.
  */
 
-import { prisma } from '@/lib/prisma';
+import { db, eq } from '@reading-advantage/db';
+import { users, schools } from '@reading-advantage/db/schema';
 
 // Supported locales for genre recommendations
 export type SupportedLocale = 'en' | 'th' | 'cn' | 'tw' | 'vi';
@@ -195,16 +196,13 @@ export async function getLocalizedInsight(
 export async function getUserLocale(userId: string): Promise<SupportedLocale> {
   try {
     // Check if user has a locale preference stored
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { 
-        // Assuming we might add a locale field in the future
-        // For now, determine from school location or other factors
-        school: {
-          select: { country: true }
-        }
-      }
-    });
+    // For now, determine from school location.
+    const [row] = await db
+      .select({ country: schools.country })
+      .from(users)
+      .leftJoin(schools, eq(users.schoolId, schools.id))
+      .where(eq(users.id, userId))
+      .limit(1);
 
     // Simple country-to-locale mapping
     const countryLocaleMap: Record<string, SupportedLocale> = {
@@ -214,7 +212,7 @@ export async function getUserLocale(userId: string): Promise<SupportedLocale> {
       'Vietnam': 'vi',
     };
 
-    const country = user?.school?.country;
+    const country = row?.country;
     return countryLocaleMap[country || ''] || 'en';
   } catch (error) {
     console.warn(`Failed to get user locale for ${userId}:`, error);
