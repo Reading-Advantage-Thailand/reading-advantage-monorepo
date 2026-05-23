@@ -1,32 +1,24 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db, classrooms, desc, inArray } from "@reading-advantage/db";
 
 async function checkArchivedField() {
   console.log("\n🔍 Checking archived field...\n");
 
   try {
-    const classrooms = await prisma.classroom.findMany({
-      where: {
-        classroomName: {
-          in: ["Beginner Class", "Advanced Class"],
-        },
-      },
-      select: {
-        id: true,
-        classroomName: true,
-        archived: true,
-        teacherId: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 5,
-    });
+    const rows = await db
+      .select({
+        id: classrooms.id,
+        name: classrooms.name,
+        archived: classrooms.archived,
+        teacherId: classrooms.teacherId,
+      })
+      .from(classrooms)
+      .where(inArray(classrooms.name, ["Beginner Class", "Advanced Class"]))
+      .orderBy(desc(classrooms.createdAt))
+      .limit(5);
 
-    console.log(`Found ${classrooms.length} classrooms:\n`);
-    classrooms.forEach((c) => {
-      console.log(`- ${c.classroomName}`);
+    console.log(`Found ${rows.length} classrooms:\n`);
+    rows.forEach((c) => {
+      console.log(`- ${c.name}`);
       console.log(`  archived: ${c.archived} (type: ${typeof c.archived})`);
       console.log(`  teacherId: ${c.teacherId}\n`);
     });
@@ -34,8 +26,6 @@ async function checkArchivedField() {
     console.log("✅ Check completed!\n");
   } catch (error) {
     console.error("❌ Error:", error);
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
