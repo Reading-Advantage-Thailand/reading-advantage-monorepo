@@ -8,8 +8,8 @@ import { connectionMonitor } from '@/lib/cache/connection-monitor';
 import { advancedCache } from '@/lib/cache/advanced-cache';
 import { matViewManager } from '@/lib/cache/matview-manager';
 import { requireRole } from '@/server/middleware/guards';
-import { Role } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
+import { Role } from '@/lib/enums';
+import { db, sql } from '@reading-advantage/db';
 
 /**
  * GET /api/v1/health/database
@@ -214,12 +214,7 @@ async function getDbPerformanceMetrics() {
  */
 async function getSlowQueries() {
   try {
-    const result = await prisma.$queryRaw<Array<{
-      query: string;
-      calls: number;
-      mean_time: number;
-      total_time: number;
-    }>>`
+    const result = (await db.execute(sql`
       SELECT 
         query,
         calls,
@@ -229,7 +224,12 @@ async function getSlowQueries() {
       WHERE mean_time > 1000
       ORDER BY mean_time DESC 
       LIMIT 10
-    `;
+    `)) as unknown as Array<{
+      query: string;
+      calls: number;
+      mean_time: number;
+      total_time: number;
+    }>;
 
     return result.map(row => ({
       query: row.query.substring(0, 100) + '...',
@@ -237,7 +237,7 @@ async function getSlowQueries() {
       meanTime: Number(row.mean_time),
       totalTime: Number(row.total_time),
     }));
-  } catch (error) {
+  } catch {
     // pg_stat_statements extension might not be available
     return [];
   }
@@ -248,13 +248,7 @@ async function getSlowQueries() {
  */
 async function getIndexUsage() {
   try {
-    const result = await prisma.$queryRaw<Array<{
-      schemaname: string;
-      tablename: string;
-      indexname: string;
-      idx_tup_read: number;
-      idx_tup_fetch: number;
-    }>>`
+    const result = (await db.execute(sql`
       SELECT 
         schemaname,
         tablename,
@@ -265,7 +259,13 @@ async function getIndexUsage() {
       WHERE schemaname = 'public'
       ORDER BY idx_tup_read DESC 
       LIMIT 20
-    `;
+    `)) as unknown as Array<{
+      schemaname: string;
+      tablename: string;
+      indexname: string;
+      idx_tup_read: number;
+      idx_tup_fetch: number;
+    }>;
 
     return result.map(row => ({
       table: row.tablename,
@@ -285,14 +285,7 @@ async function getIndexUsage() {
  */
 async function getTableStats() {
   try {
-    const result = await prisma.$queryRaw<Array<{
-      schemaname: string;
-      tablename: string;
-      n_tup_ins: number;
-      n_tup_upd: number;
-      n_tup_del: number;
-      n_live_tup: number;
-    }>>`
+    const result = (await db.execute(sql`
       SELECT 
         schemaname,
         tablename,
@@ -304,7 +297,14 @@ async function getTableStats() {
       WHERE schemaname = 'public'
       ORDER BY n_live_tup DESC 
       LIMIT 10
-    `;
+    `)) as unknown as Array<{
+      schemaname: string;
+      tablename: string;
+      n_tup_ins: number;
+      n_tup_upd: number;
+      n_tup_del: number;
+      n_live_tup: number;
+    }>;
 
     return result.map(row => ({
       table: row.tablename,
@@ -324,17 +324,17 @@ async function getTableStats() {
  */
 async function getLockStats() {
   try {
-    const result = await prisma.$queryRaw<Array<{
-      mode: string;
-      count: number;
-    }>>`
+    const result = (await db.execute(sql`
       SELECT 
         mode,
         count(*) as count
       FROM pg_locks 
       GROUP BY mode
       ORDER BY count DESC
-    `;
+    `)) as unknown as Array<{
+      mode: string;
+      count: number;
+    }>;
 
     return result.reduce((acc, row) => {
       acc[row.mode] = Number(row.count);
