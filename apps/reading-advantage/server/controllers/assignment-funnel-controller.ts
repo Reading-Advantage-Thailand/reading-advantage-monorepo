@@ -18,8 +18,9 @@ import {
   SchoolAssignmentMetrics,
   AtRiskStudent,
 } from '@/server/services/metrics/assignment-prediction-service';
-import { prisma } from '@/lib/prisma';
-import { Role } from '@prisma/client';
+import { db, and, desc, eq, gte, isNotNull } from "@reading-advantage/db";
+import { assignments, classrooms, classroomTeachers, studentAssignments, users } from "@reading-advantage/db/schema";
+import { Role } from '@/lib/enums';
 
 // ============================================================================
 // Types
@@ -114,74 +115,79 @@ async function checkAssignmentAccess(
   }
   
   // Get user's school association
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { 
-      schoolId: true,
-      teacherClassrooms: {
-        select: { classroomId: true }
-      }
-    }
-  });
-  
+  const [user] = await db
+    .select({ schoolId: users.schoolId })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
   if (!user) {
     return { hasAccess: false };
   }
-  
+
+  const teacherClassroomRows = await db
+    .select({ classroomId: classroomTeachers.classroomId })
+    .from(classroomTeachers)
+    .where(eq(classroomTeachers.teacherId, userId));
+  const teacherClassroomIds = teacherClassroomRows.map((tc) => tc.classroomId);
+
   // Teachers can only access their own school and classes
   if (userRole === Role.TEACHER) {
-    const teacherClassroomIds = user.teacherClassrooms.map(tc => tc.classroomId);
-    
     // If specific assignment requested, verify it belongs to teacher's class
     if (assignmentId) {
-      const assignment = await prisma.assignment.findUnique({
-        where: { id: assignmentId },
-        select: { classroomId: true, classroom: { select: { schoolId: true } } }
-      });
-      
+      const [assignment] = await db
+        .select({
+          classroomId: assignments.classroomId,
+          classroomSchoolId: classrooms.schoolId,
+        })
+        .from(assignments)
+        .innerJoin(classrooms, eq(assignments.classroomId, classrooms.id))
+        .where(eq(assignments.id, assignmentId))
+        .limit(1);
+
       if (!assignment || !teacherClassroomIds.includes(assignment.classroomId)) {
         return { hasAccess: false };
       }
-      
-      return { 
-        hasAccess: true, 
-        scopedSchoolId: assignment.classroom.schoolId || undefined,
-        scopedClassroomId: assignment.classroomId 
+
+      return {
+        hasAccess: true,
+        scopedSchoolId: assignment.classroomSchoolId || undefined,
+        scopedClassroomId: assignment.classroomId,
       };
     }
-    
+
     // If specific classroom requested, verify teacher has access
     if (classroomId) {
       if (!teacherClassroomIds.includes(classroomId)) {
         return { hasAccess: false };
       }
-      
-      return { 
-        hasAccess: true, 
+
+      return {
+        hasAccess: true,
         scopedSchoolId: user.schoolId || undefined,
-        scopedClassroomId: classroomId 
+        scopedClassroomId: classroomId,
       };
     }
-    
+
     // School-level access only if teacher belongs to that school
     if (schoolId) {
       if (user.schoolId !== schoolId) {
         return { hasAccess: false };
       }
-      
-      return { 
-        hasAccess: true, 
-        scopedSchoolId: schoolId 
+
+      return {
+        hasAccess: true,
+        scopedSchoolId: schoolId,
       };
     }
-    
+
     // Default to teacher's school
-    return { 
-      hasAccess: true, 
-      scopedSchoolId: user.schoolId || undefined 
+    return {
+      hasAccess: true,
+      scopedSchoolId: user.schoolId || undefined,
     };
   }
-  
+
   return { hasAccess: false };
 }
 
@@ -307,21 +313,28 @@ export async function getEnhancedAssignmentMetrics(req: ExtendedNextRequest) {
       }
       
       // Get assignment details
-      const assignment = await prisma.assignment.findUnique({
-        where: { id: assignmentId },
-        select: { 
-          title: true, 
-          dueDate: true, 
-          createdAt: true,
-          studentAssignments: {
-            where: { score: { not: null } },
-            select: { score: true }
-          }
-        }
-      });
-      
-      const avgScore = assignment?.studentAssignments.length 
-        ? assignment.studentAssignments.reduce((sum, sa) => sum + (sa.score || 0), 0) / assignment.studentAssignments.length
+      const [assignment] = await db
+        .select({
+          title: assignments.title,
+          dueDate: assignments.dueDate,
+          createdAt: assignments.createdAt,
+        })
+        .from(assignments)
+        .where(eq(assignments.id, assignmentId))
+        .limit(1);
+
+      const studentScoreRows = await db
+        .select({ score: studentAssignments.score })
+        .from(studentAssignments)
+        .where(
+          and(
+            eq(studentAssignments.assignmentId, assignmentId),
+            isNotNull(studentAssignments.score),
+          ),
+        );
+
+      const avgScore = studentScoreRows.length
+        ? studentScoreRows.reduce((sum, sa) => sum + (sa.score || 0), 0) / studentScoreRows.length
         : null;
       
       const assignmentMetrics = formatAssignmentMetrics(
@@ -482,33 +495,32 @@ async function getClassAssignmentList(
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - daysAgo);
   
-  const assignments = await prisma.assignment.findMany({
-    where: {
-      classroomId,
-      createdAt: { gte: startDate }
-    },
-    select: {
-      id: true,
-      title: true,
-      dueDate: true,
-      createdAt: true,
-      studentAssignments: {
-        select: { score: true }
-      }
-    },
-    orderBy: { createdAt: 'desc' },
-    take: limit
-  });
-  
+  const assignmentRows = await db
+    .select({
+      id: assignments.id,
+      title: assignments.title,
+      dueDate: assignments.dueDate,
+      createdAt: assignments.createdAt,
+    })
+    .from(assignments)
+    .where(and(eq(assignments.classroomId, classroomId), gte(assignments.createdAt, startDate)))
+    .orderBy(desc(assignments.createdAt))
+    .limit(limit);
+
   const metrics: AssignmentFunnelMetrics[] = [];
-  
-  for (const assignment of assignments) {
+
+  for (const assignment of assignmentRows) {
     const prediction = await getAssignmentPrediction(assignment.id);
     if (prediction) {
-      const avgScore = assignment.studentAssignments.length 
-        ? assignment.studentAssignments.reduce((sum, sa) => sum + (sa.score || 0), 0) / assignment.studentAssignments.length
+      const scoreRows = await db
+        .select({ score: studentAssignments.score })
+        .from(studentAssignments)
+        .where(eq(studentAssignments.assignmentId, assignment.id));
+
+      const avgScore = scoreRows.length
+        ? scoreRows.reduce((sum, sa) => sum + (sa.score || 0), 0) / scoreRows.length
         : null;
-        
+
       metrics.push(formatAssignmentMetrics(
         prediction,
         assignment.title || 'Untitled Assignment',
@@ -518,7 +530,7 @@ async function getClassAssignmentList(
       ));
     }
   }
-  
+
   return metrics;
 }
 
@@ -526,41 +538,41 @@ async function getClassAssignmentList(
  * Get assignment list for a school with funnel metrics
  */
 async function getSchoolAssignmentList(
-  schoolId: string, 
-  timeframe: string, 
+  schoolId: string,
+  timeframe: string,
   limit: number
 ): Promise<AssignmentFunnelMetrics[]> {
   const daysAgo = timeframe === '7d' ? 7 : timeframe === '90d' ? 90 : 30;
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - daysAgo);
-  
-  const assignments = await prisma.assignment.findMany({
-    where: {
-      classroom: { schoolId },
-      createdAt: { gte: startDate }
-    },
-    select: {
-      id: true,
-      title: true,
-      dueDate: true,
-      createdAt: true,
-      studentAssignments: {
-        select: { score: true }
-      }
-    },
-    orderBy: { createdAt: 'desc' },
-    take: limit
-  });
-  
+
+  const assignmentRows = await db
+    .select({
+      id: assignments.id,
+      title: assignments.title,
+      dueDate: assignments.dueDate,
+      createdAt: assignments.createdAt,
+    })
+    .from(assignments)
+    .innerJoin(classrooms, eq(assignments.classroomId, classrooms.id))
+    .where(and(eq(classrooms.schoolId, schoolId), gte(assignments.createdAt, startDate)))
+    .orderBy(desc(assignments.createdAt))
+    .limit(limit);
+
   const metrics: AssignmentFunnelMetrics[] = [];
-  
-  for (const assignment of assignments) {
+
+  for (const assignment of assignmentRows) {
     const prediction = await getAssignmentPrediction(assignment.id);
     if (prediction) {
-      const avgScore = assignment.studentAssignments.length 
-        ? assignment.studentAssignments.reduce((sum, sa) => sum + (sa.score || 0), 0) / assignment.studentAssignments.length
+      const scoreRows = await db
+        .select({ score: studentAssignments.score })
+        .from(studentAssignments)
+        .where(eq(studentAssignments.assignmentId, assignment.id));
+
+      const avgScore = scoreRows.length
+        ? scoreRows.reduce((sum, sa) => sum + (sa.score || 0), 0) / scoreRows.length
         : null;
-        
+
       metrics.push(formatAssignmentMetrics(
         prediction,
         assignment.title || 'Untitled Assignment',
@@ -570,6 +582,6 @@ async function getSchoolAssignmentList(
       ));
     }
   }
-  
+
   return metrics;
 }
