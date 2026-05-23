@@ -189,7 +189,7 @@ be green against BEFORE and stay green against AFTER.
 
 ## Phase 0: Setup
 
-- [ ] Task: Add `@reading-advantage/domain` to `apps/science-advantage/package.json`; `pnpm install`; build `db` + `domain`; run migrations (Section 0.1). Verify `import { curriculum } from "@reading-advantage/domain"` type-checks.
+- [x] Task: Add `@reading-advantage/domain` to `apps/science-advantage/package.json`; `pnpm install`; build `db` + `domain`; run migrations (Section 0.1). Verify `import { curriculum } from "@reading-advantage/domain"` type-checks. [84d3009]
 - [ ] Task: **Pilot** — migrate `app/api/lessons/[lessonSlug]/route.ts` per the worked example. Pause, confirm the loop with the reviewer before continuing.
 - [ ] Task: Measure - User Manual Verification 'Setup' (Protocol in workflow.md)
 
