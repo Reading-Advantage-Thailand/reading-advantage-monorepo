@@ -7,7 +7,7 @@
  * @module server/services/metrics/velocity-service
  */
 
-import { prisma } from '@/lib/prisma';
+import { db, sql } from '@reading-advantage/db';
 
 // ============================================================================
 // Types
@@ -147,27 +147,27 @@ const CONFIDENCE_MULTIPLIER = 1.96; // 95% confidence interval
 async function calculateEMA(userId: string, days: number = 30): Promise<number> {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
-  
-  const dailyLogs = await prisma.$queryRaw<DailyXpLog[]>`
-    SELECT 
-      DATE("createdAt") as date,
+
+  const dailyLogs = (await db.execute(sql`
+    SELECT
+      DATE(created_at) as date,
       SUM(xp_earned) as "xpEarned"
-    FROM "XPLogs"
+    FROM xp_logs
     WHERE user_id = ${userId}
-      AND "createdAt" >= ${startDate}
-    GROUP BY DATE("createdAt")
+      AND created_at >= ${startDate}
+    GROUP BY DATE(created_at)
     ORDER BY date ASC
-  `;
-  
+  `)) as unknown as DailyXpLog[];
+
   if (dailyLogs.length === 0) return 0;
-  
+
   let ema = Number(dailyLogs[0].xpEarned);
-  
+
   for (let i = 1; i < dailyLogs.length; i++) {
     const xp = Number(dailyLogs[i].xpEarned);
     ema = EMA_ALPHA * xp + (1 - EMA_ALPHA) * ema;
   }
-  
+
   return Math.round(ema * 100) / 100;
 }
 
@@ -177,23 +177,23 @@ async function calculateEMA(userId: string, days: number = 30): Promise<number> 
 async function calculateStdDev(userId: string, days: number = 30): Promise<number> {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
-  
-  const dailyLogs = await prisma.$queryRaw<DailyXpLog[]>`
-    SELECT 
-      DATE("createdAt") as date,
+
+  const dailyLogs = (await db.execute(sql`
+    SELECT
+      DATE(created_at) as date,
       SUM(xp_earned) as "xpEarned"
-    FROM "XPLogs"
+    FROM xp_logs
     WHERE user_id = ${userId}
-      AND "createdAt" >= ${startDate}
-    GROUP BY DATE("createdAt")
-  `;
-  
+      AND created_at >= ${startDate}
+    GROUP BY DATE(created_at)
+  `)) as unknown as DailyXpLog[];
+
   if (dailyLogs.length < 2) return 0;
-  
+
   const values = dailyLogs.map(log => Number(log.xpEarned));
   const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
   const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
-  
+
   return Math.round(Math.sqrt(variance) * 100) / 100;
 }
 
@@ -271,21 +271,20 @@ export async function getStudentVelocity(
   userId: string,
   includeConfidence: boolean = true
 ): Promise<VelocityMetrics | null> {
-  const matviewData = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_student_velocity WHERE user_id = $1`,
-    userId
-  );
-  
+  const matviewData = (await db.execute(
+    sql`SELECT * FROM mv_student_velocity WHERE user_id = ${userId}`
+  )) as unknown as any[];
+
   if (!matviewData || matviewData.length === 0) {
     return null;
   }
-  
+
   const data = matviewData[0];
-  
+
   // Calculate EMA and standard deviation if confidence is needed
   let emaVelocity = Number(data.xp_per_calendar_day_30d) || 0;
   let stdDev = 0;
-  
+
   if (includeConfidence) {
     [emaVelocity, stdDev] = await Promise.all([
       calculateEMA(userId, 30),
@@ -341,11 +340,10 @@ export async function getStudentVelocity(
  * Get velocity metrics for a class
  */
 export async function getClassVelocity(classroomId: string): Promise<ClassVelocityMetrics | null> {
-  const matviewData = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_class_velocity WHERE classroom_id = $1`,
-    classroomId
-  );
-  
+  const matviewData = (await db.execute(
+    sql`SELECT * FROM mv_class_velocity WHERE classroom_id = ${classroomId}`
+  )) as unknown as any[];
+
   if (!matviewData || matviewData.length === 0) {
     return null;
   }
@@ -379,11 +377,10 @@ export async function getClassVelocity(classroomId: string): Promise<ClassVeloci
  * Get velocity metrics for a school
  */
 export async function getSchoolVelocity(schoolId: string): Promise<SchoolVelocityMetrics | null> {
-  const matviewData = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_school_velocity WHERE school_id = $1`,
-    schoolId
-  );
-  
+  const matviewData = (await db.execute(
+    sql`SELECT * FROM mv_school_velocity WHERE school_id = ${schoolId}`
+  )) as unknown as any[];
+
   if (!matviewData || matviewData.length === 0) {
     return null;
   }
@@ -419,12 +416,11 @@ export async function getBulkStudentVelocity(
   includeConfidence: boolean = false
 ): Promise<VelocityMetrics[]> {
   if (userIds.length === 0) return [];
-  
-  const matviewData = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_student_velocity WHERE user_id = ANY($1)`,
-    userIds
-  );
-  
+
+  const matviewData = (await db.execute(
+    sql`SELECT * FROM mv_student_velocity WHERE user_id = ANY(${userIds})`
+  )) as unknown as any[];
+
   if (!matviewData || matviewData.length === 0) {
     return [];
   }
@@ -478,40 +474,40 @@ export async function getBulkStudentVelocity(
  */
 export async function getSystemVelocity(): Promise<SystemVelocityMetrics | null> {
   // Get aggregated data from school-level view
-  const systemData = await prisma.$queryRawUnsafe<any[]>(`
-    SELECT 
+  const systemData = (await db.execute(sql`
+    SELECT
       COUNT(DISTINCT s.school_id) as total_schools,
       SUM(s.total_students) as total_students,
-      
+
       SUM(s.total_xp_7d) as total_xp_7d,
       SUM(s.active_students_7d) as active_students_7d,
-      CASE 
-        WHEN SUM(s.total_students) > 0 
+      CASE
+        WHEN SUM(s.total_students) > 0
         THEN ROUND(SUM(s.total_xp_7d)::numeric / SUM(s.total_students), 2)
-        ELSE 0 
+        ELSE 0
       END as avg_xp_per_student_7d,
       ROUND(SUM(s.total_xp_7d)::numeric / 7, 2) as xp_per_day_7d,
-      
+
       SUM(s.total_xp_30d) as total_xp_30d,
       SUM(s.active_students_30d) as active_students_30d,
-      CASE 
-        WHEN SUM(s.total_students) > 0 
+      CASE
+        WHEN SUM(s.total_students) > 0
         THEN ROUND(SUM(s.total_xp_30d)::numeric / SUM(s.total_students), 2)
-        ELSE 0 
+        ELSE 0
       END as avg_xp_per_student_30d,
       ROUND(SUM(s.total_xp_30d)::numeric / 30, 2) as xp_per_day_30d,
-      
+
       AVG(s.engagement_rate_30d) as avg_engagement_rate_30d,
       MAX(s.last_activity_at) as last_activity_at
     FROM mv_school_velocity s
-  `);
-  
+  `)) as unknown as any[];
+
   // Get total classes from class velocity view
-  const classData = await prisma.$queryRawUnsafe<any[]>(`
+  const classData = (await db.execute(sql`
     SELECT COUNT(DISTINCT classroom_id) as total_classes
     FROM mv_class_velocity
-  `);
-  
+  `)) as unknown as any[];
+
   if (!systemData || systemData.length === 0) {
     return null;
   }
@@ -543,7 +539,7 @@ export async function getSystemVelocity(): Promise<SystemVelocityMetrics | null>
  * Refresh materialized views
  */
 export async function refreshVelocityMatviews(): Promise<void> {
-  await prisma.$executeRawUnsafe('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_student_velocity');
-  await prisma.$executeRawUnsafe('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_class_velocity');
-  await prisma.$executeRawUnsafe('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_school_velocity');
+  await db.execute(sql.raw('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_student_velocity'));
+  await db.execute(sql.raw('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_class_velocity'));
+  await db.execute(sql.raw('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_school_velocity'));
 }
