@@ -1,6 +1,13 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db, and, eq, or, ne, gte, ilike, inArray } from "@reading-advantage/db";
+import {
+  users,
+  schools,
+  licenses,
+  classrooms,
+  classroomStudents,
+  userActivity,
+  xpLogs,
+} from "@reading-advantage/db/schema";
 
 /**
  * Isolation check result
@@ -15,26 +22,30 @@ export interface IsolationCheckResult {
  * Verify that a license is a demo license
  */
 export async function verifyDemoLicense(licenseId: string): Promise<boolean> {
-  const license = await prisma.license.findUnique({
-    where: { id: licenseId },
-    include: { school: true },
-  });
+  const [row] = await db
+    .select({ schoolName: schools.name })
+    .from(licenses)
+    .leftJoin(schools, eq(licenses.schoolId, schools.id))
+    .where(eq(licenses.id, licenseId))
+    .limit(1);
 
-  if (!license) {
+  if (!row) {
     return false;
   }
 
-  // Check if this is the demo license (school name contains "Reading Advantage Academy")
-  return license.school?.name === "Reading Advantage Academy";
+  // Check if this is the demo license (school name matches "Reading Advantage Academy")
+  return row.schoolName === "Reading Advantage Academy";
 }
 
 /**
  * Verify that a school is a demo school
  */
 export async function verifyDemoSchool(schoolId: string): Promise<boolean> {
-  const school = await prisma.school.findUnique({
-    where: { id: schoolId },
-  });
+  const [school] = await db
+    .select()
+    .from(schools)
+    .where(eq(schools.id, schoolId))
+    .limit(1);
 
   if (!school) {
     return false;
@@ -50,18 +61,28 @@ export async function getDemoIds(): Promise<{
   licenseId: string;
   schoolId: string;
 } | null> {
-  const school = await prisma.school.findFirst({
-    where: { name: "Reading Advantage Academy" },
-    include: { licenses: true },
-  });
+  const [school] = await db
+    .select()
+    .from(schools)
+    .where(eq(schools.name, "Reading Advantage Academy"))
+    .limit(1);
 
-  if (!school || school.licenses.length === 0) {
+  if (!school) {
+    return null;
+  }
+
+  const schoolLicenses = await db
+    .select({ id: licenses.id })
+    .from(licenses)
+    .where(eq(licenses.schoolId, school.id));
+
+  if (schoolLicenses.length === 0) {
     return null;
   }
 
   return {
     schoolId: school.id,
-    licenseId: school.licenses[0].id,
+    licenseId: schoolLicenses[0].id,
   };
 }
 
@@ -76,15 +97,16 @@ export async function checkDemoUsersBelongToDemoLicense(
   const warnings: string[] = [];
 
   // Find all users with demo emails
-  const demoUsers = await prisma.user.findMany({
-    where: {
-      OR: [
-        { email: { contains: "demo-student" } },
-        { email: { contains: "demo-teacher" } },
-        { email: { contains: "demo-admin" } },
-      ],
-    },
-  });
+  const demoUsers = await db
+    .select()
+    .from(users)
+    .where(
+      or(
+        ilike(users.email, "%demo-student%"),
+        ilike(users.email, "%demo-teacher%"),
+        ilike(users.email, "%demo-admin%")
+      )!
+    );
 
   // Check each demo user
   for (const user of demoUsers) {
@@ -119,25 +141,23 @@ export async function checkDemoClassesHaveOnlyDemoUsers(
   const warnings: string[] = [];
 
   // Get all demo classrooms
-  const demoClassrooms = await prisma.classroom.findMany({
-    where: { schoolId: demoSchoolId },
-    include: {
-      students: {
-        include: {
-          student: true,
-        },
-      },
-    },
-  });
+  const demoClassrooms = await db
+    .select()
+    .from(classrooms)
+    .where(eq(classrooms.schoolId, demoSchoolId));
 
-  // Check each classroom's students
+  // For each classroom, fetch its students with user record joined
   for (const classroom of demoClassrooms) {
-    for (const classroomStudent of classroom.students) {
-      const student = classroomStudent.student;
+    const enrolled = await db
+      .select({ student: users })
+      .from(classroomStudents)
+      .innerJoin(users, eq(classroomStudents.studentId, users.id))
+      .where(eq(classroomStudents.classroomId, classroom.id));
 
+    for (const { student } of enrolled) {
       if (student.licenseId !== demoLicenseId) {
         errors.push(
-          `Demo classroom ${classroom.classroomName} (${classroom.id}) contains non-demo student: ${student.email} (${student.id})`
+          `Demo classroom ${classroom.name} (${classroom.id}) contains non-demo student: ${student.email} (${student.id})`
         );
       }
     }
@@ -161,12 +181,12 @@ export async function checkCrossLicenseData(
   const warnings: string[] = [];
 
   // Check for non-demo users in demo school
-  const nonDemoUsersInDemoSchool = await prisma.user.findMany({
-    where: {
-      schoolId: demoSchoolId,
-      licenseId: { not: demoLicenseId },
-    },
-  });
+  const nonDemoUsersInDemoSchool = await db
+    .select()
+    .from(users)
+    .where(
+      and(eq(users.schoolId, demoSchoolId), ne(users.licenseId, demoLicenseId))!
+    );
 
   if (nonDemoUsersInDemoSchool.length > 0) {
     errors.push(
@@ -175,12 +195,12 @@ export async function checkCrossLicenseData(
   }
 
   // Check for demo users in non-demo schools
-  const demoUsersInNonDemoSchools = await prisma.user.findMany({
-    where: {
-      licenseId: demoLicenseId,
-      schoolId: { not: demoSchoolId },
-    },
-  });
+  const demoUsersInNonDemoSchools = await db
+    .select()
+    .from(users)
+    .where(
+      and(eq(users.licenseId, demoLicenseId), ne(users.schoolId, demoSchoolId))!
+    );
 
   if (demoUsersInNonDemoSchools.length > 0) {
     errors.push(
@@ -206,10 +226,10 @@ export async function checkDemoActivitiesIsolation(
   const warnings: string[] = [];
 
   // Get all demo users
-  const demoUsers = await prisma.user.findMany({
-    where: { licenseId: demoLicenseId },
-    select: { id: true },
-  });
+  const demoUsers = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.licenseId, demoLicenseId));
 
   const demoUserIds = demoUsers.map((u) => u.id);
 
@@ -218,39 +238,47 @@ export async function checkDemoActivitiesIsolation(
     return { passed: true, errors, warnings };
   }
 
-  // Build where clause for activities
-  const whereClause: any = {
-    userId: { in: demoUserIds },
-  };
+  // Build activity conditions
+  const activityConds = [inArray(userActivity.userId, demoUserIds)];
+  if (checkDate) activityConds.push(gte(userActivity.createdAt, checkDate));
 
-  if (checkDate) {
-    whereClause.createdAt = { gte: checkDate };
-  }
+  const xpConds = [inArray(xpLogs.userId, demoUserIds)];
+  if (checkDate) xpConds.push(gte(xpLogs.createdAt, checkDate));
 
-  // Check UserActivity
-  const userActivities = await prisma.userActivity.findMany({
-    where: whereClause,
-    include: { user: true },
-  });
+  // Check UserActivity (joined with user for licenseId comparison)
+  const userActivityRows = await db
+    .select({
+      activityId: userActivity.id,
+      userLicenseId: users.licenseId,
+      userEmail: users.email,
+    })
+    .from(userActivity)
+    .innerJoin(users, eq(userActivity.userId, users.id))
+    .where(and(...activityConds)!);
 
-  for (const activity of userActivities) {
-    if (activity.user.licenseId !== demoLicenseId) {
+  for (const activity of userActivityRows) {
+    if (activity.userLicenseId !== demoLicenseId) {
       errors.push(
-        `UserActivity ${activity.id} belongs to user ${activity.user.email} with wrong licenseId: ${activity.user.licenseId}`
+        `UserActivity ${activity.activityId} belongs to user ${activity.userEmail} with wrong licenseId: ${activity.userLicenseId}`
       );
     }
   }
 
-  // Check XPLog
-  const xpLogs = await prisma.xPLog.findMany({
-    where: whereClause,
-    include: { user: true },
-  });
+  // Check XPLog (joined with user for licenseId comparison)
+  const xpLogRows = await db
+    .select({
+      logId: xpLogs.id,
+      userLicenseId: users.licenseId,
+      userEmail: users.email,
+    })
+    .from(xpLogs)
+    .innerJoin(users, eq(xpLogs.userId, users.id))
+    .where(and(...xpConds)!);
 
-  for (const log of xpLogs) {
-    if (log.user.licenseId !== demoLicenseId) {
+  for (const log of xpLogRows) {
+    if (log.userLicenseId !== demoLicenseId) {
       errors.push(
-        `XPLog ${log.id} belongs to user ${log.user.email} with wrong licenseId: ${log.user.licenseId}`
+        `XPLog ${log.logId} belongs to user ${log.userEmail} with wrong licenseId: ${log.userLicenseId}`
       );
     }
   }
