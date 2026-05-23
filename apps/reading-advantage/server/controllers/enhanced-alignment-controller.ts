@@ -6,8 +6,9 @@ import {
   AlignmentBuckets,
   AlignmentSample,
 } from "@/types/dashboard";
-import { prisma } from "@/lib/prisma";
-import { Role } from "@prisma/client";
+import { db, and, count, eq, exists, or, sql } from "@reading-advantage/db";
+import { assignments, classrooms, classroomTeachers } from "@reading-advantage/db/schema";
+import { Role } from "@/lib/enums";
 
 interface AlignmentMetricsRow {
   scope_id: string;
@@ -105,15 +106,29 @@ export async function getEnhancedAlignmentMetrics(req: ExtendedNextRequest) {
 
       if (classId) {
         // Verify teacher has access to this classroom
-        const classroom = await prisma.classroom.findFirst({
-          where: {
-            id: classId,
-            OR: [
-              { teacherId: session.user.id },
-              { teachers: { some: { teacherId: session.user.id } } },
-            ],
-          },
-        });
+        const [classroom] = await db
+          .select({ id: classrooms.id })
+          .from(classrooms)
+          .where(
+            and(
+              eq(classrooms.id, classId),
+              or(
+                eq(classrooms.teacherId, session.user.id),
+                exists(
+                  db
+                    .select({ id: classroomTeachers.id })
+                    .from(classroomTeachers)
+                    .where(
+                      and(
+                        eq(classroomTeachers.classroomId, classId),
+                        eq(classroomTeachers.teacherId, session.user.id),
+                      ),
+                    ),
+                ),
+              ),
+            ),
+          )
+          .limit(1);
 
         if (!classroom) {
           return NextResponse.json(
@@ -136,57 +151,54 @@ export async function getEnhancedAlignmentMetrics(req: ExtendedNextRequest) {
       );
     }
 
-    // Build query filters
-    const whereClause: string[] = [];
-    const params: any[] = [];
-    let paramIndex = 1;
+    // Build query filters using sql template (parameterized)
+    const filterConditions: ReturnType<typeof sql>[] = [];
 
     // Apply scope filtering
     if (scopeType === "student" && studentIds && studentIds.length > 0) {
-      whereClause.push(`user_id = ANY($${paramIndex})`);
-      params.push(studentIds);
-      paramIndex++;
+      filterConditions.push(sql`user_id = ANY(${studentIds})`);
     } else if (scopeType === "classroom") {
-      whereClause.push(
-        `((scope_type = 'classroom' AND scope_id = $${paramIndex}) OR (scope_type = 'student' AND classroom_id = $${paramIndex}))`
+      filterConditions.push(
+        sql`((scope_type = 'classroom' AND scope_id = ${scopeId}) OR (scope_type = 'student' AND classroom_id = ${scopeId}))`
       );
-      params.push(scopeId);
-      paramIndex++;
     } else if (scopeType === "school" && scopeId !== "system") {
-      whereClause.push(`scope_id = $${paramIndex}`);
-      params.push(scopeId);
-      paramIndex++;
+      filterConditions.push(sql`scope_id = ${scopeId}`);
     }
 
     // Apply timeframe filtering if needed (the matview already filters to 90 days)
     if (timeframe !== "90d") {
       const daysAgo = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
-      whereClause.push(
-        `first_reading_at >= NOW() - INTERVAL '${daysAgo} days'`
+      filterConditions.push(
+        sql.raw(`first_reading_at >= NOW() - INTERVAL '${daysAgo} days'`)
       );
     }
 
     const whereClauseSQL =
-      whereClause.length > 0 ? `WHERE ${whereClause.join(" AND ")}` : "";
+      filterConditions.length > 0
+        ? sql`WHERE ${sql.join(filterConditions, sql` AND `)}`
+        : sql``;
+
+    const sampleColumns = includeSamples
+      ? sql.raw(
+          "below_samples, aligned_samples, above_samples,"
+        )
+      : sql.raw(
+          "NULL as below_samples, NULL as aligned_samples, NULL as above_samples,"
+        );
 
     // Query the materialized view
-    const query = `
+    const rawResults = (await db.execute(sql`
       SELECT 
         scope_id, scope_type, user_id, display_name, email, classroom_id,
         student_ra_level, student_cefr_level, mapped_student_cefr_level,
         total_readings, below_count, aligned_count, above_count, unknown_count,
         below_pct, aligned_pct, above_pct, unknown_pct,
-        ${includeSamples ? "below_samples, aligned_samples, above_samples," : "NULL as below_samples, NULL as aligned_samples, NULL as above_samples,"}
+        ${sampleColumns}
         first_reading_at, last_reading_at, unique_articles, assigned_articles
       FROM mv_alignment_metrics
       ${whereClauseSQL}
       ORDER BY scope_type, total_readings DESC
-    `;
-
-    const rawResults = await prisma.$queryRawUnsafe<AlignmentMetricsRow[]>(
-      query,
-      ...params
-    );
+    `)) as unknown as AlignmentMetricsRow[];
 
     // Aggregate results
     const studentResults = rawResults.filter(
@@ -282,14 +294,27 @@ export async function getEnhancedAlignmentMetrics(req: ExtendedNextRequest) {
     ).length;
 
     // Query assignment overrides count
-    const assignmentOverridesResult = await prisma.assignment.count({
-      where: {
-        ...(scopeType === "classroom" ? { classroomId: scopeId } : {}),
-        ...(scopeType === "school" && scopeId !== "system"
-          ? { classroom: { schoolId: scopeId } }
-          : {}),
-      },
-    });
+    const assignmentCountConditions = [] as ReturnType<typeof eq>[];
+    if (scopeType === "classroom") {
+      assignmentCountConditions.push(eq(assignments.classroomId, scopeId));
+    } else if (scopeType === "school" && scopeId !== "system") {
+      assignmentCountConditions.push(eq(classrooms.schoolId, scopeId));
+    }
+
+    const assignmentCountRows = scopeType === "school" && scopeId !== "system"
+      ? await db
+          .select({ value: count() })
+          .from(assignments)
+          .innerJoin(classrooms, eq(assignments.classroomId, classrooms.id))
+          .where(and(...assignmentCountConditions))
+      : assignmentCountConditions.length > 0
+        ? await db
+            .select({ value: count() })
+            .from(assignments)
+            .where(and(...assignmentCountConditions))
+        : await db.select({ value: count() }).from(assignments);
+
+    const assignmentOverridesResult = assignmentCountRows[0]?.value ?? 0;
 
     // Calculate content gaps
     const belowThreshold = Math.round(totalBelowCount * 0.8); // Articles significantly below
