@@ -2,7 +2,7 @@ import SystemSchoolReports from "@/components/system/school-reports";
 import React from "react";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 export default async function SystemSchoolReportsPage({
   params,
