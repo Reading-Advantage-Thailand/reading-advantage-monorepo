@@ -2,7 +2,17 @@ import {
   AnswerStatus,
   QuestionState,
 } from "@/components/models/questions-model";
-import { prisma } from "@/lib/prisma";
+import { db, and, eq, inArray, sql } from "@reading-advantage/db";
+import {
+  articles,
+  licenses,
+  longAnswerQuestions,
+  multipleChoiceQuestions,
+  shortAnswerQuestions,
+  userActivity,
+  users,
+  xpLogs,
+} from "@reading-advantage/db/schema";
 import { NextResponse } from "next/server";
 import { getFeedbackWritter } from "./assistant-controller";
 import { generateLAQuestion } from "../utils/generators/la-question-generator";
@@ -10,28 +20,30 @@ import { generateMCQuestion } from "../utils/generators/mc-question-generator";
 import { ExtendedNextRequest } from "./auth-controller";
 import { generateSAQuestion } from "../utils/generators/sa-question-generator";
 import { UserXpEarned } from "@/components/models/user-activity-log-model";
-import { LicenseType } from "@prisma/client";
+import { LicenseType } from "@/lib/enums";
 
 async function getUserLicenseLevel(userId: string): Promise<LicenseType> {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        licenseId: true,
-        expiredDate: true,
-      },
-    });
+    const [user] = await db
+      .select({
+        licenseId: users.licenseId,
+        expiredDate: users.expiredDate,
+      })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (!user) {
       return LicenseType.BASIC;
     }
 
     if (user.licenseId) {
-      const license = await prisma.license.findUnique({
-        where: { id: user.licenseId },
-        select: { licenseType: true },
-      });
-      return license?.licenseType || LicenseType.BASIC;
+      const [license] = await db
+        .select({ licenseType: licenses.licenseType })
+        .from(licenses)
+        .where(eq(licenses.id, user.licenseId))
+        .limit(1);
+      return (license?.licenseType as LicenseType) || LicenseType.BASIC;
     }
 
     if (!user.expiredDate) {
@@ -58,36 +70,47 @@ async function checkAndUpdateArticleCompletion(
     // ตรวจสอบระดับ license ของ user
     const licenseLevel = await getUserLicenseLevel(userId);
     // Find all MC_QUESTION activities for this user and filter for this article
-    const userMcqActivities = await prisma.userActivity.findMany({
-      where: {
-        userId: userId,
-        activityType: "MC_QUESTION",
-        completed: true,
-      },
-    });
+    const userMcqActivities = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "MC_QUESTION"),
+          eq(userActivity.completed, true)
+        )
+      );
 
     const mcqForThisArticle = userMcqActivities.filter((activity) => {
       const details = activity.details as any;
       return details?.articleId === articleId;
     });
 
-    const saqActivity = await prisma.userActivity.findFirst({
-      where: {
-        userId: userId,
-        activityType: "SA_QUESTION",
-        targetId: articleId,
-        completed: true,
-      },
-    });
+    const [saqActivity] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "SA_QUESTION"),
+          eq(userActivity.targetId, articleId),
+          eq(userActivity.completed, true)
+        )
+      )
+      .limit(1);
 
-    const laqActivity = await prisma.userActivity.findFirst({
-      where: {
-        userId: userId,
-        activityType: "LA_QUESTION",
-        targetId: articleId,
-        completed: true,
-      },
-    });
+    const [laqActivity] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "LA_QUESTION"),
+          eq(userActivity.targetId, articleId),
+          eq(userActivity.completed, true)
+        )
+      )
+      .limit(1);
 
     const mcqCompleted = mcqForThisArticle.length >= 5;
     const saqCompleted = !!saqActivity;
@@ -104,35 +127,35 @@ async function checkAndUpdateArticleCompletion(
     }
 
     if (allCompleted) {
-      const existingArticleRead = await prisma.userActivity.findUnique({
-        where: {
-          userId_activityType_targetId: {
-            userId: userId,
-            activityType: "ARTICLE_READ",
-            targetId: articleId,
-          },
-        },
-      });
+      const [existingArticleRead] = await db
+        .select()
+        .from(userActivity)
+        .where(
+          and(
+            eq(userActivity.userId, userId),
+            eq(userActivity.activityType, "ARTICLE_READ"),
+            eq(userActivity.targetId, articleId)
+          )
+        )
+        .limit(1);
 
       if (existingArticleRead) {
-        await prisma.userActivity.update({
-          where: { id: existingArticleRead.id },
-          data: {
+        await db
+          .update(userActivity)
+          .set({
             completed: true,
             updatedAt: new Date(),
-          },
-        });
+          })
+          .where(eq(userActivity.id, existingArticleRead.id));
       } else {
-        await prisma.userActivity.create({
-          data: {
-            userId: userId,
-            activityType: "ARTICLE_READ",
-            targetId: articleId,
-            completed: true,
-            details: {
-              articleId: articleId,
-              allQuestionsCompleted: true,
-            },
+        await db.insert(userActivity).values({
+          userId: userId,
+          activityType: "ARTICLE_READ",
+          targetId: articleId,
+          completed: true,
+          details: {
+            articleId: articleId,
+            allQuestionsCompleted: true,
           },
         });
       }
@@ -182,14 +205,17 @@ export async function getMCQuestions(
       );
     }
 
-    let questions = await prisma.multipleChoiceQuestion.findMany({
-      where: { articleId: article_id },
-    });
+    let questions = await db
+      .select()
+      .from(multipleChoiceQuestions)
+      .where(eq(multipleChoiceQuestions.articleId, article_id));
 
     if (questions.length === 0) {
-      const article = await prisma.article.findUnique({
-        where: { id: article_id },
-      });
+      const [article] = await db
+        .select()
+        .from(articles)
+        .where(eq(articles.id, article_id))
+        .limit(1);
 
       if (!article) {
         return NextResponse.json(
@@ -211,38 +237,39 @@ export async function getMCQuestions(
 
       const questionsToCreate = generateMCQ.questions.slice(0, 5);
       for (const question of questionsToCreate) {
-        await prisma.multipleChoiceQuestion.create({
-          data: {
-            articleId: article_id,
-            question: question.question,
-            options: [
-              question.correct_answer,
-              question.distractor_1,
-              question.distractor_2,
-              question.distractor_3,
-            ],
-            answer: question.correct_answer || "",
-            textualEvidence: question.textual_evidence || "",
-          },
+        await db.insert(multipleChoiceQuestions).values({
+          articleId: article_id,
+          question: question.question,
+          options: [
+            question.correct_answer,
+            question.distractor_1,
+            question.distractor_2,
+            question.distractor_3,
+          ],
+          correctAnswer: 0,
+          answer: question.correct_answer || "",
+          textualEvidence: question.textual_evidence || "",
         });
       }
 
-      questions = await prisma.multipleChoiceQuestion.findMany({
-        where: { articleId: article_id },
-      });
+      questions = await db
+        .select()
+        .from(multipleChoiceQuestions)
+        .where(eq(multipleChoiceQuestions.articleId, article_id));
     }
 
     // Fetch all MCQ activities for this user and filter by articleId in details
     // to ensure we find activities regardless of how targetId is set.
-    const allUserActivities = await prisma.userActivity.findMany({
-      where: {
-        userId: userId,
-        activityType: "MC_QUESTION",
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
+    const allUserActivities = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "MC_QUESTION")
+        )
+      )
+      .orderBy(userActivity.createdAt);
 
     const articleActivities = allUserActivities.filter((activity) => {
       const details = activity.details as any;
@@ -250,15 +277,20 @@ export async function getMCQuestions(
     });
 
     // Get XP logs for these activities
-    const activityIds = articleActivities.map(activity => activity.id);
-    const xpLogs = await prisma.xPLog.findMany({
-      where: {
-        activityId: { in: activityIds },
-        activityType: "MC_QUESTION",
-      },
-    });
+    const activityIds = articleActivities.map((activity) => activity.id);
+    const xpLogRows = activityIds.length > 0
+      ? await db
+          .select()
+          .from(xpLogs)
+          .where(
+            and(
+              inArray(xpLogs.activityId, activityIds),
+              eq(xpLogs.activityType, "MC_QUESTION")
+            )
+          )
+      : [];
 
-    const xpLogMap = new Map(xpLogs.map(log => [log.activityId, log]));
+    const xpLogMap = new Map(xpLogRows.map((log) => [log.activityId, log]));
 
     const progress: AnswerStatus[] = [];
     const answeredQuestionIds = new Set();
@@ -266,17 +298,21 @@ export async function getMCQuestions(
     const questionData = new Map(); // เก็บข้อมูลเพิ่มเติมของแต่ละคำถาม
 
     // สร้าง progress array ตามลำดับการตอบ (createdAt) แทนการใช้ question order
-    const sortedActivities = articleActivities.sort((a, b) => 
-      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    const sortedActivities = articleActivities.sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
 
     sortedActivities.forEach((activity) => {
-      const details = typeof activity.details === 'string' ? JSON.parse(activity.details) : activity.details as any;
+      const details =
+        typeof activity.details === "string"
+          ? JSON.parse(activity.details)
+          : (activity.details as any);
       const questionId = details?.questionId || activity.targetId;
       if (questionId) {
         answeredQuestionIds.add(questionId);
         questionAnswers.set(questionId, details.isCorrect);
-        
+
         const xpLog = xpLogMap.get(activity.id);
         questionData.set(questionId, {
           timer: activity.timer,
@@ -305,12 +341,16 @@ export async function getMCQuestions(
 
     if (currentQuestionIndex === -1) {
       // คำนวณ total XP ที่ได้รับทั้งหมด
-      const totalXpEarned = Array.from(questionData.values())
-        .reduce((total, data) => total + (data.xpEarned || 0), 0);
+      const totalXpEarned = Array.from(questionData.values()).reduce(
+        (total, data) => total + (data.xpEarned || 0),
+        0
+      );
 
       // คำนวณ total timer ที่ใช้ทั้งหมด
-      const totalTimer = Array.from(questionData.values())
-        .reduce((total, data) => total + (data.timer || 0), 0);
+      const totalTimer = Array.from(questionData.values()).reduce(
+        (total, data) => total + (data.timer || 0),
+        0
+      );
 
       const responseData = {
         state: QuestionState.COMPLETED,
@@ -320,8 +360,11 @@ export async function getMCQuestions(
         summary: {
           totalXpEarned,
           totalTimer,
-          correctAnswers: progress.filter(p => p === AnswerStatus.CORRECT).length,
-          incorrectAnswers: progress.filter(p => p === AnswerStatus.INCORRECT).length,
+          correctAnswers: progress.filter((p) => p === AnswerStatus.CORRECT)
+            .length,
+          incorrectAnswers: progress.filter(
+            (p) => p === AnswerStatus.INCORRECT
+          ).length,
         },
       };
 
@@ -334,15 +377,24 @@ export async function getMCQuestions(
     }
 
     // Identify answered and unanswered questions
-    const answeredQuestions = questions.filter(q => answeredQuestionIds.has(q.id));
-    const unansweredFromPool = questions.filter(q => !answeredQuestionIds.has(q.id));
-    
+    const answeredQuestions = questions.filter((q) =>
+      answeredQuestionIds.has(q.id)
+    );
+    const unansweredFromPool = questions.filter(
+      (q) => !answeredQuestionIds.has(q.id)
+    );
+
     // Shuffle the pool of unanswered questions to provide variety from the database
-    const shuffledUnanswered = unansweredFromPool.sort(() => Math.random() - 0.5);
-    
-    // Construct the set of 5 questions: prioritize questions already answered, 
+    const shuffledUnanswered = unansweredFromPool.sort(
+      () => Math.random() - 0.5
+    );
+
+    // Construct the set of 5 questions: prioritize questions already answered,
     // then fill with random questions from the pool.
-    const questionsForThisArticle = [...answeredQuestions, ...shuffledUnanswered].slice(0, 5);
+    const questionsForThisArticle = [
+      ...answeredQuestions,
+      ...shuffledUnanswered,
+    ].slice(0, 5);
 
     const unansweredQuestions = questionsForThisArticle.filter(
       (question) => !answeredQuestionIds.has(question.id)
@@ -366,7 +418,7 @@ export async function getMCQuestions(
 
     const mcq = questionsForThisArticle.map((q, index) => {
       const qData = questionData.get(q.id) || {};
-      const options = [...q.options];
+      const options = [...((q.options as string[]) ?? [])];
       return {
         id: q.id,
         question: q.question,
@@ -382,10 +434,14 @@ export async function getMCQuestions(
 
     // คำนวณ summary สำหรับคำถามที่ตอบไปแล้ว
     const answeredQuestionData = Array.from(questionData.values());
-    const totalXpEarned = answeredQuestionData
-      .reduce((total, data) => total + (data.xpEarned || 0), 0);
-    const totalTimer = answeredQuestionData
-      .reduce((total, data) => total + (data.timer || 0), 0);
+    const totalXpEarned = answeredQuestionData.reduce(
+      (total, data) => total + (data.xpEarned || 0),
+      0
+    );
+    const totalTimer = answeredQuestionData.reduce(
+      (total, data) => total + (data.timer || 0),
+      0
+    );
 
     const responseData = {
       state: QuestionState.INCOMPLETE,
@@ -395,9 +451,12 @@ export async function getMCQuestions(
       summary: {
         totalXpEarned,
         totalTimer,
-        correctAnswers: progress.filter(p => p === AnswerStatus.CORRECT).length,
-        incorrectAnswers: progress.filter(p => p === AnswerStatus.INCORRECT).length,
-        currentQuestion: progress.filter(p => p !== AnswerStatus.UNANSWERED).length + 1,
+        correctAnswers: progress.filter((p) => p === AnswerStatus.CORRECT)
+          .length,
+        incorrectAnswers: progress.filter((p) => p === AnswerStatus.INCORRECT)
+          .length,
+        currentQuestion:
+          progress.filter((p) => p !== AnswerStatus.UNANSWERED).length + 1,
       },
     };
 
@@ -424,28 +483,34 @@ export async function getSAQuestion(
   try {
     const userId = req.session?.user.id as string;
 
-    const existingActivity = await prisma.userActivity.findFirst({
-      where: {
-        userId: userId,
-        activityType: "SA_QUESTION",
-        completed: true,
-        details: {
-          path: ["articleId"],
-          equals: article_id,
-        },
-      },
-    });
+    const [existingActivity] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "SA_QUESTION"),
+          eq(userActivity.completed, true),
+          sql`${userActivity.details}->>'articleId' = ${article_id}`
+        )
+      )
+      .limit(1);
 
     let activityWithDetails = existingActivity;
     if (!activityWithDetails) {
-      activityWithDetails = await prisma.userActivity.findFirst({
-        where: {
-          userId: userId,
-          activityType: "SA_QUESTION",
-          targetId: article_id,
-          completed: true,
-        },
-      });
+      const [fallback] = await db
+        .select()
+        .from(userActivity)
+        .where(
+          and(
+            eq(userActivity.userId, userId),
+            eq(userActivity.activityType, "SA_QUESTION"),
+            eq(userActivity.targetId, article_id),
+            eq(userActivity.completed, true)
+          )
+        )
+        .limit(1);
+      activityWithDetails = fallback;
     }
 
     if (activityWithDetails) {
@@ -465,14 +530,17 @@ export async function getSAQuestion(
       );
     }
 
-    let questions = await prisma.shortAnswerQuestion.findMany({
-      where: { articleId: article_id },
-    });
+    let questions = await db
+      .select()
+      .from(shortAnswerQuestions)
+      .where(eq(shortAnswerQuestions.articleId, article_id));
 
     if (questions.length === 0) {
-      const article = await prisma.article.findUnique({
-        where: { id: article_id },
-      });
+      const [article] = await db
+        .select()
+        .from(articles)
+        .where(eq(articles.id, article_id))
+        .limit(1);
 
       if (!article) {
         return NextResponse.json(
@@ -493,18 +561,17 @@ export async function getSAQuestion(
       });
 
       for (const question of generateSAQ.questions) {
-        await prisma.shortAnswerQuestion.create({
-          data: {
-            articleId: article_id,
-            question: question.question,
-            answer: question.suggested_answer || "",
-          },
+        await db.insert(shortAnswerQuestions).values({
+          articleId: article_id,
+          question: question.question,
+          answer: question.suggested_answer || "",
         });
       }
 
-      questions = await prisma.shortAnswerQuestion.findMany({
-        where: { articleId: article_id },
-      });
+      questions = await db
+        .select()
+        .from(shortAnswerQuestions)
+        .where(eq(shortAnswerQuestions.articleId, article_id));
     }
 
     const randomQuestion =
@@ -538,9 +605,11 @@ export async function answerSAQuestion(
     const { answer, timeRecorded } = await req.json();
     const userId = req.session?.user.id as string;
 
-    const question = await prisma.shortAnswerQuestion.findUnique({
-      where: { id: question_id },
-    });
+    const [question] = await db
+      .select()
+      .from(shortAnswerQuestions)
+      .where(eq(shortAnswerQuestions.id, question_id))
+      .limit(1);
 
     if (!question) {
       return NextResponse.json(
@@ -549,21 +618,23 @@ export async function answerSAQuestion(
       );
     }
 
-    const existingActivity = await prisma.userActivity.findUnique({
-      where: {
-        userId_activityType_targetId: {
-          userId: userId,
-          activityType: "SA_QUESTION",
-          targetId: article_id,
-        },
-      },
-    });
+    const [existingActivity] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "SA_QUESTION"),
+          eq(userActivity.targetId, article_id)
+        )
+      )
+      .limit(1);
 
     let activity;
     if (existingActivity) {
-      activity = await prisma.userActivity.update({
-        where: { id: existingActivity.id },
-        data: {
+      const [updated] = await db
+        .update(userActivity)
+        .set({
           completed: true,
           timer: timeRecorded,
           details: {
@@ -574,11 +645,14 @@ export async function answerSAQuestion(
             articleId: article_id,
           },
           updatedAt: new Date(),
-        },
-      });
+        })
+        .where(eq(userActivity.id, existingActivity.id))
+        .returning();
+      activity = updated;
     } else {
-      activity = await prisma.userActivity.create({
-        data: {
+      const [created] = await db
+        .insert(userActivity)
+        .values({
           userId: userId,
           activityType: "SA_QUESTION",
           targetId: article_id,
@@ -591,31 +665,33 @@ export async function answerSAQuestion(
             suggested_answer: question.answer,
             articleId: article_id,
           },
-        },
-      });
+        })
+        .returning();
+      activity = created;
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (user) {
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: { xp: user.xp + 3 },
-      });
+      const updatedXp = user.xp + 3;
+      await db
+        .update(users)
+        .set({ xp: updatedXp })
+        .where(eq(users.id, userId));
 
-      await prisma.xPLog.create({
-        data: {
-          userId: userId,
-          xpEarned: 3,
-          activityId: activity.id,
-          activityType: "SA_QUESTION",
-        },
+      await db.insert(xpLogs).values({
+        userId: userId,
+        xpEarned: 3,
+        activityId: activity.id,
+        activityType: "SA_QUESTION",
       });
 
       if (req.session?.user) {
-        req.session.user.xp = updatedUser.xp;
+        req.session.user.xp = updatedXp;
       }
     }
 
@@ -648,14 +724,18 @@ export async function getLAQuestion(
   try {
     const userId = req.session?.user.id as string;
 
-    const existingActivity = await prisma.userActivity.findFirst({
-      where: {
-        userId: userId,
-        activityType: "LA_QUESTION",
-        targetId: article_id,
-        completed: true,
-      },
-    });
+    const [existingActivity] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "LA_QUESTION"),
+          eq(userActivity.targetId, article_id),
+          eq(userActivity.completed, true)
+        )
+      )
+      .limit(1);
 
     if (existingActivity) {
       const details = existingActivity.details as any;
@@ -673,14 +753,17 @@ export async function getLAQuestion(
       );
     }
 
-    let questions = await prisma.longAnswerQuestion.findMany({
-      where: { articleId: article_id },
-    });
+    let questions = await db
+      .select()
+      .from(longAnswerQuestions)
+      .where(eq(longAnswerQuestions.articleId, article_id));
 
     if (questions.length === 0) {
-      const article = await prisma.article.findUnique({
-        where: { id: article_id },
-      });
+      const [article] = await db
+        .select()
+        .from(articles)
+        .where(eq(articles.id, article_id))
+        .limit(1);
 
       if (!article) {
         return NextResponse.json(
@@ -700,16 +783,15 @@ export async function getLAQuestion(
         imageDesc: article.imageDescription || "",
       });
 
-      await prisma.longAnswerQuestion.create({
-        data: {
-          articleId: article_id,
-          question: generateLAQ.question,
-        },
+      await db.insert(longAnswerQuestions).values({
+        articleId: article_id,
+        question: generateLAQ.question,
       });
 
-      questions = await prisma.longAnswerQuestion.findMany({
-        where: { articleId: article_id },
-      });
+      questions = await db
+        .select()
+        .from(longAnswerQuestions)
+        .where(eq(longAnswerQuestions.articleId, article_id));
     }
 
     const randomQuestion =
@@ -743,9 +825,11 @@ export async function answerMCQuestion(
     const { selectedAnswer, timeRecorded } = await req.json();
     const userId = req.session?.user.id as string;
 
-    const question = await prisma.multipleChoiceQuestion.findUnique({
-      where: { id: question_id },
-    });
+    const [question] = await db
+      .select()
+      .from(multipleChoiceQuestions)
+      .where(eq(multipleChoiceQuestions.id, question_id))
+      .limit(1);
 
     if (!question) {
       return NextResponse.json(
@@ -756,21 +840,23 @@ export async function answerMCQuestion(
 
     const isCorrect = selectedAnswer === question.answer;
 
-    const existingActivity = await prisma.userActivity.findUnique({
-      where: {
-        userId_activityType_targetId: {
-          userId: userId,
-          activityType: "MC_QUESTION",
-          targetId: question_id,
-        },
-      },
-    });
+    const [existingActivity] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "MC_QUESTION"),
+          eq(userActivity.targetId, question_id)
+        )
+      )
+      .limit(1);
 
     let activity;
     if (existingActivity) {
-      activity = await prisma.userActivity.update({
-        where: { id: existingActivity.id },
-        data: {
+      const [updated] = await db
+        .update(userActivity)
+        .set({
           completed: true,
           timer: timeRecorded,
           details: {
@@ -783,11 +869,14 @@ export async function answerMCQuestion(
             isCorrect: isCorrect,
           },
           updatedAt: new Date(),
-        },
-      });
+        })
+        .where(eq(userActivity.id, existingActivity.id))
+        .returning();
+      activity = updated;
     } else {
-      activity = await prisma.userActivity.create({
-        data: {
+      const [created] = await db
+        .insert(userActivity)
+        .values({
           userId: userId,
           activityType: "MC_QUESTION",
           targetId: question_id,
@@ -802,29 +891,35 @@ export async function answerMCQuestion(
             textualEvidence: question.textualEvidence,
             isCorrect: isCorrect,
           },
-        },
-      });
+        })
+        .returning();
+      activity = created;
     }
 
     if (isCorrect) {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-      });
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
 
       if (user) {
-        const updatedUser = await prisma.user.update({
-          where: { id: userId },
-          data: { xp: user.xp + UserXpEarned.MC_Question },
+        const updatedXp = user.xp + UserXpEarned.MC_Question;
+        await db
+          .update(users)
+          .set({ xp: updatedXp })
+          .where(eq(users.id, userId));
+
+        await db.insert(xpLogs).values({
+          userId: userId,
+          xpEarned: UserXpEarned.MC_Question,
+          activityId: activity.id,
+          activityType: "MC_QUESTION",
         });
 
-        await prisma.xPLog.create({
-          data: {
-            userId: userId,
-            xpEarned: UserXpEarned.MC_Question,
-            activityId: activity.id,
-            activityType: "MC_QUESTION",
-          },
-        });
+        if (req.session?.user) {
+          req.session.user.xp = updatedXp;
+        }
       }
     }
 
@@ -860,12 +955,15 @@ export async function retakeMCQuestion(
     const userId = req.session?.user.id as string;
 
     // Delete all MC_QUESTION activities for this user that belong to this article
-    const allUserActivities = await prisma.userActivity.findMany({
-      where: {
-        userId: userId,
-        activityType: "MC_QUESTION",
-      },
-    });
+    const allUserActivities = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "MC_QUESTION")
+        )
+      );
 
     const articleActivityIds = allUserActivities
       .filter((activity) => {
@@ -875,35 +973,30 @@ export async function retakeMCQuestion(
       .map((activity) => activity.id);
 
     if (articleActivityIds.length > 0) {
-      await prisma.xPLog.deleteMany({
-        where: {
-          userId: userId,
-          activityType: "MC_QUESTION",
-          activityId: {
-            in: articleActivityIds,
-          },
-        },
-      });
+      await db
+        .delete(xpLogs)
+        .where(
+          and(
+            eq(xpLogs.userId, userId),
+            eq(xpLogs.activityType, "MC_QUESTION"),
+            inArray(xpLogs.activityId, articleActivityIds)
+          )
+        );
 
-      const remainingXpLogs = await prisma.xPLog.findMany({
-        where: {
-          userId: userId,
-        },
-      });
+      const remainingXpLogs = await db
+        .select()
+        .from(xpLogs)
+        .where(eq(xpLogs.userId, userId));
 
       const totalXp = remainingXpLogs.reduce(
         (sum, log) => sum + log.xpEarned,
         0
       );
 
-      await prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          xp: totalXp,
-        },
-      });
+      await db
+        .update(users)
+        .set({ xp: totalXp })
+        .where(eq(users.id, userId));
 
       if (req.session?.user) {
         req.session.user.xp = totalXp;
@@ -911,13 +1004,9 @@ export async function retakeMCQuestion(
     }
 
     if (articleActivityIds.length > 0) {
-      await prisma.userActivity.deleteMany({
-        where: {
-          id: {
-            in: articleActivityIds,
-          },
-        },
-      });
+      await db
+        .delete(userActivity)
+        .where(inArray(userActivity.id, articleActivityIds));
     }
 
     return NextResponse.json(
@@ -942,9 +1031,11 @@ export async function answerLAQuestion(
     const { answer, feedback, timeRecorded } = await req.json();
     const userId = req.session?.user.id as string;
 
-    const question = await prisma.longAnswerQuestion.findUnique({
-      where: { id: question_id },
-    });
+    const [question] = await db
+      .select()
+      .from(longAnswerQuestions)
+      .where(eq(longAnswerQuestions.id, question_id))
+      .limit(1);
 
     if (!question) {
       return NextResponse.json(
@@ -953,26 +1044,9 @@ export async function answerLAQuestion(
       );
     }
 
-    await prisma.userActivity.upsert({
-      where: {
-        userId_activityType_targetId: {
-          userId: userId,
-          activityType: "LA_QUESTION",
-          targetId: article_id,
-        },
-      },
-      update: {
-        completed: true,
-        timer: timeRecorded,
-        details: {
-          questionId: question_id,
-          question: question.question,
-          answer: answer,
-          feedback: feedback,
-        },
-        updatedAt: new Date(),
-      },
-      create: {
+    await db
+      .insert(userActivity)
+      .values({
         userId: userId,
         activityType: "LA_QUESTION",
         targetId: article_id,
@@ -984,12 +1058,31 @@ export async function answerLAQuestion(
           answer: answer,
           feedback: feedback,
         },
-      },
-    });
+      })
+      .onConflictDoUpdate({
+        target: [
+          userActivity.userId,
+          userActivity.activityType,
+          userActivity.targetId,
+        ],
+        set: {
+          completed: true,
+          timer: timeRecorded,
+          details: {
+            questionId: question_id,
+            question: question.question,
+            answer: answer,
+            feedback: feedback,
+          },
+          updatedAt: new Date(),
+        },
+      });
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -1032,13 +1125,17 @@ export async function getFeedbackLAquestion(
     const { article_id, question_id } = await ctx.params;
     const { answer, preferredLanguage } = await req.json();
 
-    const question = await prisma.longAnswerQuestion.findUnique({
-      where: { id: question_id },
-    });
+    const [question] = await db
+      .select()
+      .from(longAnswerQuestions)
+      .where(eq(longAnswerQuestions.id, question_id))
+      .limit(1);
 
-    const article = await prisma.article.findUnique({
-      where: { id: article_id },
-    });
+    const [article] = await db
+      .select()
+      .from(articles)
+      .where(eq(articles.id, article_id))
+      .limit(1);
 
     if (!question || !article) {
       return NextResponse.json(
@@ -1125,15 +1222,13 @@ export async function rateArticle(
     const { rating } = await req.json();
     const userId = req.session?.user.id as string;
 
-    const activity = await prisma.userActivity.create({
-      data: {
-        userId: userId,
-        activityType: "ARTICLE_RATING",
-        targetId: article_id,
-        completed: true,
-        details: {
-          rating: rating,
-        },
+    await db.insert(userActivity).values({
+      userId: userId,
+      activityType: "ARTICLE_RATING",
+      targetId: article_id,
+      completed: true,
+      details: {
+        rating: rating,
       },
     });
 
@@ -1159,36 +1254,47 @@ export async function getLAQuestionXP(
     const { rating } = await req.json();
     const userId = req.session?.user.id as string;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     // Find the UserActivity for this LA_QUESTION
-    const userActivity = await prisma.userActivity.findUnique({
-      where: {
-        userId_activityType_targetId: {
-          userId: userId,
-          activityType: "LA_QUESTION",
-          targetId: article_id,
-        },
-      },
-    });
+    const [userActivityRow] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "LA_QUESTION"),
+          eq(userActivity.targetId, article_id)
+        )
+      )
+      .limit(1);
 
-    if (!userActivity) {
-      return NextResponse.json({ message: "User activity not found" }, { status: 404 });
+    if (!userActivityRow) {
+      return NextResponse.json(
+        { message: "User activity not found" },
+        { status: 404 }
+      );
     }
 
-    const existingXPLog = await prisma.xPLog.findFirst({
-      where: {
-        userId: userId,
-        activityId: userActivity.id,
-        activityType: "LA_QUESTION",
-      },
-    });
+    const [existingXPLog] = await db
+      .select()
+      .from(xpLogs)
+      .where(
+        and(
+          eq(xpLogs.userId, userId),
+          eq(xpLogs.activityId, userActivityRow.id),
+          eq(xpLogs.activityType, "LA_QUESTION")
+        )
+      )
+      .limit(1);
 
     if (existingXPLog) {
       return NextResponse.json(
@@ -1199,29 +1305,28 @@ export async function getLAQuestionXP(
 
     const xpEarned = Math.max(1, Math.floor(rating / 2));
 
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: { xp: user.xp + xpEarned },
-    });
+    const updatedXp = user.xp + xpEarned;
+    await db
+      .update(users)
+      .set({ xp: updatedXp })
+      .where(eq(users.id, userId));
 
-    await prisma.xPLog.create({
-      data: {
-        userId: userId,
-        xpEarned: xpEarned,
-        activityId: userActivity.id,
-        activityType: "LA_QUESTION",
-      },
+    await db.insert(xpLogs).values({
+      userId: userId,
+      xpEarned: xpEarned,
+      activityId: userActivityRow.id,
+      activityType: "LA_QUESTION",
     });
 
     if (req.session?.user) {
-      req.session.user.xp = updatedUser.xp;
+      req.session.user.xp = updatedXp;
     }
 
     return NextResponse.json(
       {
         message: "XP awarded successfully",
         xpEarned: xpEarned,
-        userXp: updatedUser.xp,
+        userXp: updatedXp,
       },
       { status: 200 }
     );
@@ -1243,18 +1348,19 @@ export async function rateSAQuestion(
     const { rating } = await req.json();
     const userId = req.session?.user.id as string;
 
-    const existingRating = await prisma.userActivity.findFirst({
-      where: {
-        userId: userId,
-        activityType: "ARTICLE_RATING",
-        targetId: question_id,
-        completed: true,
-        details: {
-          path: ["questionId"],
-          equals: question_id,
-        },
-      },
-    });
+    const [existingRating] = await db
+      .select()
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "ARTICLE_RATING"),
+          eq(userActivity.targetId, question_id),
+          eq(userActivity.completed, true),
+          sql`${userActivity.details}->>'questionId' = ${question_id}`
+        )
+      )
+      .limit(1);
 
     if (existingRating) {
       return NextResponse.json(
@@ -1263,8 +1369,9 @@ export async function rateSAQuestion(
       );
     }
 
-    const activity = await prisma.userActivity.create({
-      data: {
+    const [activity] = await db
+      .insert(userActivity)
+      .values({
         userId: userId,
         activityType: "ARTICLE_RATING",
         targetId: question_id,
@@ -1275,30 +1382,31 @@ export async function rateSAQuestion(
           rating: rating,
           type: "SA_QUESTION_RATING",
         },
-      },
-    });
+      })
+      .returning();
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (user) {
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: { xp: user.xp + rating },
-      });
+      const updatedXp = user.xp + rating;
+      await db
+        .update(users)
+        .set({ xp: updatedXp })
+        .where(eq(users.id, userId));
 
-      await prisma.xPLog.create({
-        data: {
-          userId: userId,
-          xpEarned: rating,
-          activityId: activity.id,
-          activityType: "ARTICLE_RATING",
-        },
+      await db.insert(xpLogs).values({
+        userId: userId,
+        xpEarned: rating,
+        activityId: activity.id,
+        activityType: "ARTICLE_RATING",
       });
 
       if (req.session?.user) {
-        req.session.user.xp = updatedUser.xp;
+        req.session.user.xp = updatedXp;
       }
     }
 
