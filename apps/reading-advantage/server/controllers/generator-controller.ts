@@ -1,4 +1,13 @@
-import { prisma } from "@/lib/prisma";
+import { db, eq, and, desc, inArray } from "@reading-advantage/db";
+import {
+  articles,
+  users,
+  licenseOnUsers,
+  licenses,
+  multipleChoiceQuestions,
+  shortAnswerQuestions,
+  longAnswerQuestions,
+} from "@reading-advantage/db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { ExtendedNextRequest } from "./auth-controller";
 import { sendDiscordWebhook } from "../utils/send-discord-webhook";
@@ -43,7 +52,7 @@ interface Context {
   }>;
 }
 
-// Helper function to retry Prisma operations
+// Helper function to retry DB operations
 async function retryPrismaOperation<T>(
   operation: () => Promise<T>,
   maxRetries: number = 3
@@ -55,13 +64,13 @@ async function retryPrismaOperation<T>(
     } catch (error) {
       retries++;
       console.error(
-        `Prisma operation attempt ${retries}/${maxRetries} failed:`,
+        `DB operation attempt ${retries}/${maxRetries} failed:`,
         error
       );
 
       if (retries >= maxRetries) {
         throw new Error(
-          `Prisma operation failed after ${maxRetries} attempts: ${error instanceof Error ? error.message : "Unknown Prisma error"}`
+          `DB operation failed after ${maxRetries} attempts: ${error instanceof Error ? error.message : "Unknown DB error"}`
         );
       }
 
@@ -274,21 +283,23 @@ async function queue(
         wordCount: generatedArticle.passage.split(" ").length,
       });
 
-      // Create article using Prisma with retry mechanism
+      // Create article using Drizzle with retry mechanism
       let article;
       prismaRetries = 0;
-      console.log(`[DEBUG] Starting Prisma article creation...`);
+      console.log(`[DEBUG] Starting article DB creation...`);
       while (prismaRetries < maxPrismaRetries) {
         try {
           console.log(
-            `[DEBUG] Prisma create attempt ${prismaRetries + 1}/${maxPrismaRetries}`
+            `[DEBUG] DB insert attempt ${prismaRetries + 1}/${maxPrismaRetries}`
           );
-          article = await prisma.article.create({
-            data: {
+          const inserted = await db
+            .insert(articles)
+            .values({
               type: type,
               genre,
               subGenre: subgenre,
               title: generatedArticle.title,
+              content: generatedArticle.passage,
               summary: generatedArticle.summary,
               passage: generatedArticle.passage,
               imageDescription: generatedArticle.imageDesc,
@@ -296,26 +307,27 @@ async function queue(
               raLevel,
               rating: rating,
               isPublic: true,
-            },
-          });
-          console.log(`[DEBUG] Article created successfully in Prisma`);
+            })
+            .returning();
+          article = inserted[0];
+          console.log(`[DEBUG] Article created successfully in DB`);
           break;
         } catch (prismaError) {
           prismaRetries++;
           console.error(
-            `[DEBUG] Prisma create attempt ${prismaRetries}/${maxPrismaRetries} failed:`,
+            `[DEBUG] DB insert attempt ${prismaRetries}/${maxPrismaRetries} failed:`,
             prismaError
           );
 
           if (prismaRetries >= maxPrismaRetries) {
             throw new Error(
-              `Failed to save article to database after ${maxPrismaRetries} attempts: ${prismaError instanceof Error ? prismaError.message : "Unknown Prisma error"}`
+              `Failed to save article to database after ${maxPrismaRetries} attempts: ${prismaError instanceof Error ? prismaError.message : "Unknown DB error"}`
             );
           }
 
-          // Wait before retrying Prisma operation
+          // Wait before retrying DB operation
           console.log(
-            `[DEBUG] Waiting ${1000 * prismaRetries}ms before retrying Prisma operation...`
+            `[DEBUG] Waiting ${1000 * prismaRetries}ms before retrying DB operation...`
           );
           await new Promise((resolve) =>
             setTimeout(resolve, 1000 * prismaRetries)
@@ -324,7 +336,7 @@ async function queue(
       }
 
       if (!article) {
-        throw new Error("Failed to create article after all Prisma retries");
+        throw new Error("Failed to create article after all DB retries");
       }
 
       articleId = article.id;
@@ -419,7 +431,7 @@ async function queue(
         laqExists: !!laq.question,
       });
 
-      // Save questions to database using Prisma with retry mechanism
+      // Save questions to database using Drizzle with retry mechanism
       console.log(`[DEBUG] Starting question saving to database...`);
       const questionPromises = [];
 
@@ -428,9 +440,7 @@ async function queue(
         questionPromises.push(
           retryPrismaOperation(
             () =>
-              prisma.multipleChoiceQuestion.createMany({
-                data: transformedMCQuestions,
-              }),
+              db.insert(multipleChoiceQuestions).values(transformedMCQuestions),
             maxPrismaRetries
           )
         );
@@ -441,9 +451,7 @@ async function queue(
         questionPromises.push(
           retryPrismaOperation(
             () =>
-              prisma.shortAnswerQuestion.createMany({
-                data: transformedSAQuestions,
-              }),
+              db.insert(shortAnswerQuestions).values(transformedSAQuestions),
             maxPrismaRetries
           )
         );
@@ -454,11 +462,9 @@ async function queue(
         questionPromises.push(
           retryPrismaOperation(
             () =>
-              prisma.longAnswerQuestion.create({
-                data: {
-                  question: laq.question,
-                  articleId: articleId,
-                },
+              db.insert(longAnswerQuestions).values({
+                question: laq.question,
+                articleId: articleId,
               }),
             maxPrismaRetries
           )
@@ -505,13 +511,13 @@ async function queue(
       console.log(`[DEBUG] Starting final article update with all data...`);
       await retryPrismaOperation(
         () =>
-          prisma.article.update({
-            where: { id: articleId },
-            data: {
+          db
+            .update(articles)
+            .set({
               sentences: sentences,
               words: wordsWithTimePoints,
-            },
-          }),
+            })
+            .where(eq(articles.id, articleId)),
         maxPrismaRetries
       );
       console.log(`[DEBUG] Final article update completed`);
@@ -654,28 +660,35 @@ export async function generateUserArticle(req: NextRequest) {
 
     userId = currentUser.id;
 
-    // Get user data from Prisma to fetch license_id
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        licenseOnUsers: {
-          include: {
-            license: true,
-          },
-        },
-      },
-    });
+    // Get user data with licenses to fetch license_id
+    const [userRow] = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+      })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
-    if (!user) {
+    if (!userRow) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    let author = user.name || user.email || "Unknown Author";
+    const userLicenseRows = await db
+      .select({
+        schoolName: licenses.schoolName,
+      })
+      .from(licenseOnUsers)
+      .innerJoin(licenses, eq(licenseOnUsers.licenseId, licenses.id))
+      .where(eq(licenseOnUsers.userId, userId));
+
+    let author = userRow.name || userRow.email || "Unknown Author";
 
     // Get school name from the latest active license if needed for additional context
-    const latestLicense = user.licenseOnUsers[0]; // Get the first license
-    if (latestLicense?.license && !user.name) {
-      author = latestLicense.license.schoolName || "Unknown School";
+    const latestLicense = userLicenseRows[0]; // Get the first license
+    if (latestLicense && !userRow.name) {
+      author = latestLicense.schoolName || "Unknown School";
     }
 
     // Parse request body
@@ -746,13 +759,15 @@ export async function generateUserArticle(req: NextRequest) {
     //  `Calculated CEFR level: ${calculatedCefrLevel}, RA level: ${raLevel}`
     //);
 
-    // Create article using Prisma
-    const article = await prisma.article.create({
-      data: {
+    // Create article using Drizzle
+    const [article] = await db
+      .insert(articles)
+      .values({
         type: articleType,
         genre,
         subGenre: subgenre || "",
         title: generatedArticle.title,
+        content: generatedArticle.passage,
         summary: generatedArticle.summary,
         passage: generatedArticle.passage,
         imageDescription: generatedArticle.imageDesc,
@@ -761,8 +776,8 @@ export async function generateUserArticle(req: NextRequest) {
         rating: evaluatedRating.rating,
         authorId: userId,
         isPublic: false, // Set as private by default for user-generated articles
-      },
-    });
+      })
+      .returning();
 
     articleId = article.id;
 
@@ -860,29 +875,23 @@ export async function generateUserArticle(req: NextRequest) {
     // Save multiple choice questions if valid
     if (transformedMCQuestions.length > 0) {
       questionPromises.push(
-        prisma.multipleChoiceQuestion.createMany({
-          data: transformedMCQuestions,
-        })
+        db.insert(multipleChoiceQuestions).values(transformedMCQuestions)
       );
     }
 
     // Save short answer questions if valid
     if (transformedSAQuestions.length > 0) {
       questionPromises.push(
-        prisma.shortAnswerQuestion.createMany({
-          data: transformedSAQuestions,
-        })
+        db.insert(shortAnswerQuestions).values(transformedSAQuestions)
       );
     }
 
     // Save long answer question if valid
     if (laq.question) {
       questionPromises.push(
-        prisma.longAnswerQuestion.create({
-          data: {
-            question: laq.question,
-            articleId: articleId,
-          },
+        db.insert(longAnswerQuestions).values({
+          question: laq.question,
+          articleId: articleId,
         })
       );
     }
@@ -948,23 +957,20 @@ export async function generateUserArticle(req: NextRequest) {
     //console.log("Audio generated successfully");
 
     // Update article with translations
-    await prisma.article.update({
-      where: { id: articleId },
-      data: {
+    await db
+      .update(articles)
+      .set({
         translatedSummary: translatedSummary,
         translatedPassage: translatedPassage,
-      },
-    });
+      })
+      .where(eq(articles.id, articleId));
 
     // Get the updated article with timepoints
-    const updatedArticle = await prisma.article.findUnique({
-      where: { id: articleId },
-      include: {
-        multipleChoiceQuestions: true,
-        shortAnswerQuestions: true,
-        longAnswerQuestions: true,
-      },
-    });
+    const [updatedArticle] = await db
+      .select()
+      .from(articles)
+      .where(eq(articles.id, articleId))
+      .limit(1);
 
     if (!updatedArticle) {
       throw new Error("Article was created but not found in database");
@@ -1044,13 +1050,12 @@ export async function approveUserArticle(req: NextRequest) {
 
     //console.log(`Approving article: ${articleId}`);
 
-    // Get the user's generated article using Prisma
-    const article = await prisma.article.findUnique({
-      where: {
-        id: articleId,
-        authorId: userId, // Ensure the article belongs to the requesting user
-      },
-    });
+    // Get the user's generated article using Drizzle
+    const [article] = await db
+      .select()
+      .from(articles)
+      .where(and(eq(articles.id, articleId), eq(articles.authorId, userId)))
+      .limit(1);
 
     if (!article) {
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
@@ -1059,13 +1064,14 @@ export async function approveUserArticle(req: NextRequest) {
     //console.log("Article found, starting approval process...", article);
 
     // Update article to make it public (approved)
-    const updatedArticle = await prisma.article.update({
-      where: { id: articleId },
-      data: {
+    const [updatedArticle] = await db
+      .update(articles)
+      .set({
         isPublic: true,
         updatedAt: new Date(),
-      },
-    });
+      })
+      .where(eq(articles.id, articleId))
+      .returning();
 
     //console.log("Article approval process completed successfully");
 
@@ -1101,23 +1107,54 @@ export async function getUserGeneratedArticles(req: NextRequest) {
 
     const userId = user.id;
 
-    // Get user's generated articles using Prisma
-    const articles = await prisma.article.findMany({
-      where: {
-        authorId: userId,
-      },
-      include: {
-        multipleChoiceQuestions: true,
-        shortAnswerQuestions: true,
-        longAnswerQuestions: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+    // Get user's generated articles using Drizzle
+    const userArticles = await db
+      .select()
+      .from(articles)
+      .where(eq(articles.authorId, userId))
+      .orderBy(desc(articles.createdAt));
+
+    const articleIds = userArticles.map((a) => a.id);
+
+    const [mcqRows, saqRows, laqRows] =
+      articleIds.length > 0
+        ? await Promise.all([
+            db
+              .select()
+              .from(multipleChoiceQuestions)
+              .where(inArray(multipleChoiceQuestions.articleId, articleIds)),
+            db
+              .select()
+              .from(shortAnswerQuestions)
+              .where(inArray(shortAnswerQuestions.articleId, articleIds)),
+            db
+              .select()
+              .from(longAnswerQuestions)
+              .where(inArray(longAnswerQuestions.articleId, articleIds)),
+          ])
+        : [[], [], []];
+
+    const mcqByArticle = new Map<string, typeof mcqRows>();
+    const saqByArticle = new Map<string, typeof saqRows>();
+    const laqByArticle = new Map<string, typeof laqRows>();
+    mcqRows.forEach((q) => {
+      if (!q.articleId) return;
+      if (!mcqByArticle.has(q.articleId)) mcqByArticle.set(q.articleId, []);
+      mcqByArticle.get(q.articleId)!.push(q);
+    });
+    saqRows.forEach((q) => {
+      if (!q.articleId) return;
+      if (!saqByArticle.has(q.articleId)) saqByArticle.set(q.articleId, []);
+      saqByArticle.get(q.articleId)!.push(q);
+    });
+    laqRows.forEach((q) => {
+      if (!q.articleId) return;
+      if (!laqByArticle.has(q.articleId)) laqByArticle.set(q.articleId, []);
+      laqByArticle.get(q.articleId)!.push(q);
     });
 
     // Transform the data to match the expected format
-    const transformedArticles = articles.map((article) => ({
+    const transformedArticles = userArticles.map((article) => ({
       id: article.id,
       type: article.type,
       genre: article.genre,
@@ -1136,9 +1173,9 @@ export async function getUserGeneratedArticles(req: NextRequest) {
       sentences: article.sentences,
       words: article.words,
       status: article.isPublic ? "approved" : "draft", // Map isPublic to status
-      multipleChoiceQuestions: article.multipleChoiceQuestions,
-      shortAnswerQuestions: article.shortAnswerQuestions,
-      longAnswerQuestions: article.longAnswerQuestions,
+      multipleChoiceQuestions: mcqByArticle.get(article.id) || [],
+      shortAnswerQuestions: saqByArticle.get(article.id) || [],
+      longAnswerQuestions: laqByArticle.get(article.id) || [],
     }));
 
     return NextResponse.json({ articles: transformedArticles });
@@ -1185,13 +1222,12 @@ export async function updateUserArticle(
       );
     }
 
-    // Get the existing article using Prisma
-    const existingArticle = await prisma.article.findUnique({
-      where: {
-        id: articleId,
-        authorId: userId, // Ensure the article belongs to the requesting user
-      },
-    });
+    // Get the existing article using Drizzle
+    const [existingArticle] = await db
+      .select()
+      .from(articles)
+      .where(and(eq(articles.id, articleId), eq(articles.authorId, userId)))
+      .limit(1);
 
     if (!existingArticle) {
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
@@ -1216,33 +1252,34 @@ export async function updateUserArticle(
       normalizedCefrLevel
     );
 
-    // 3. Update article data using Prisma
-    await prisma.article.update({
-      where: { id: articleId },
-      data: {
+    // 3. Update article data using Drizzle
+    await db
+      .update(articles)
+      .set({
         title,
+        content: passage,
         passage,
         summary,
         imageDescription: imageDesc,
         cefrLevel: calculatedCefrLevel,
         raLevel,
         updatedAt: new Date(),
-      },
-    });
+      })
+      .where(eq(articles.id, articleId));
     //console.log("Article data updated in database");
 
-    // 4. Delete existing questions using Prisma
+    // 4. Delete existing questions using Drizzle
     //console.log("Deleting existing questions...");
     await Promise.all([
-      prisma.multipleChoiceQuestion.deleteMany({
-        where: { articleId },
-      }),
-      prisma.shortAnswerQuestion.deleteMany({
-        where: { articleId },
-      }),
-      prisma.longAnswerQuestion.deleteMany({
-        where: { articleId },
-      }),
+      db
+        .delete(multipleChoiceQuestions)
+        .where(eq(multipleChoiceQuestions.articleId, articleId)),
+      db
+        .delete(shortAnswerQuestions)
+        .where(eq(shortAnswerQuestions.articleId, articleId)),
+      db
+        .delete(longAnswerQuestions)
+        .where(eq(longAnswerQuestions.articleId, articleId)),
     ]);
 
     // Generate new questions
@@ -1320,29 +1357,23 @@ export async function updateUserArticle(
     // Save multiple choice questions if valid
     if (transformedMCQuestions.length > 0) {
       questionPromises.push(
-        prisma.multipleChoiceQuestion.createMany({
-          data: transformedMCQuestions,
-        })
+        db.insert(multipleChoiceQuestions).values(transformedMCQuestions)
       );
     }
 
     // Save short answer questions if valid
     if (transformedSAQuestions.length > 0) {
       questionPromises.push(
-        prisma.shortAnswerQuestion.createMany({
-          data: transformedSAQuestions,
-        })
+        db.insert(shortAnswerQuestions).values(transformedSAQuestions)
       );
     }
 
     // Save long answer question if valid
     if (laq.question) {
       questionPromises.push(
-        prisma.longAnswerQuestion.create({
-          data: {
-            question: laq.question,
-            articleId: articleId,
-          },
+        db.insert(longAnswerQuestions).values({
+          question: laq.question,
+          articleId: articleId,
         })
       );
     }
@@ -1406,13 +1437,14 @@ export async function updateUserArticle(
     });
 
     // Update article with translations and word data
-    const updatedArticle = await prisma.article.update({
-      where: { id: articleId },
-      data: {
+    const [updatedArticle] = await db
+      .update(articles)
+      .set({
         translatedSummary: translatedSummary,
         translatedPassage: translatedPassage,
-      },
-    });
+      })
+      .where(eq(articles.id, articleId))
+      .returning();
 
     //console.log("Article update completed successfully");
 
@@ -1570,25 +1602,23 @@ async function cleanupFailedPrismaGeneration(articleId: string) {
   try {
     //console.log(`Cleaning up failed generation for article: ${articleId}`);
 
-    // Delete article and all related records from database using Prisma
-    await prisma.$transaction(async (tx) => {
+    // Delete article and all related records from database using Drizzle
+    await db.transaction(async (tx) => {
       // Delete questions first (due to foreign key constraints)
-      await tx.multipleChoiceQuestion.deleteMany({
-        where: { articleId },
-      });
+      await tx
+        .delete(multipleChoiceQuestions)
+        .where(eq(multipleChoiceQuestions.articleId, articleId));
 
-      await tx.shortAnswerQuestion.deleteMany({
-        where: { articleId },
-      });
+      await tx
+        .delete(shortAnswerQuestions)
+        .where(eq(shortAnswerQuestions.articleId, articleId));
 
-      await tx.longAnswerQuestion.deleteMany({
-        where: { articleId },
-      });
+      await tx
+        .delete(longAnswerQuestions)
+        .where(eq(longAnswerQuestions.articleId, articleId));
 
       // Delete the article itself
-      await tx.article.delete({
-        where: { id: articleId },
-      });
+      await tx.delete(articles).where(eq(articles.id, articleId));
     });
 
     //console.log("Deleted article and questions from database");
