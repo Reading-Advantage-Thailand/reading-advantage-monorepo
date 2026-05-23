@@ -1,7 +1,17 @@
-import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { ActivityType } from "@prisma/client";
+import { db, eq, and, gte, inArray, desc, asc, sql } from "@reading-advantage/db";
+import {
+  userActivity,
+  users,
+  licenseOnUsers,
+  licenses,
+  articles,
+  classroomStudents,
+  lessonRecords,
+  studentAssignments,
+  assignments,
+  userSentenceRecords,
+} from "@reading-advantage/db/schema";
 import { smartPaginator } from "@/lib/pagination/smart-paginator";
 import { ExtendedNextRequest } from "./auth-controller";
 import { ActivityDataPoint, MetricsActivityResponse } from "@/types/dashboard";
@@ -77,7 +87,7 @@ interface TimelineResponse {
 // Types for activity creation
 interface CreateActivityData {
   userId: string;
-  activityType: ActivityType;
+  activityType: string;
   targetId: string;
   completed?: boolean;
   details?: any;
@@ -141,7 +151,7 @@ export async function getActivityMetrics(req: ExtendedNextRequest) {
 }
 
 /**
- * Get activity heatmap data from materialized views
+ * Get activity heatmap data
  */
 async function getActivityHeatmap(
   req: ExtendedNextRequest
@@ -150,7 +160,6 @@ async function getActivityHeatmap(
   const session = req.session!;
   const { searchParams } = new URL(req.url);
 
-  // Parse parameters
   const scope =
     (searchParams.get("scope") as "student" | "class" | "school" | "license") ||
     (session.user.role === "STUDENT"
@@ -159,19 +168,18 @@ async function getActivityHeatmap(
         ? "class"
         : "school");
 
-  // Determine entityId based on scope and params
   let entityId = searchParams.get("entityId") || searchParams.get("licenseId");
 
   if (!entityId) {
     if (scope === "student") {
       entityId = session.user.id;
     } else if (scope === "school") {
-      // For school scope, use user's schoolId if available
-      const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { schoolId: true },
-      });
-      entityId = user?.schoolId || session.user.id;
+      const [userRow] = await db
+        .select({ schoolId: users.schoolId })
+        .from(users)
+        .where(eq(users.id, session.user.id))
+        .limit(1);
+      entityId = userRow?.schoolId || session.user.id;
     } else {
       entityId = session.user.id;
     }
@@ -183,7 +191,6 @@ async function getActivityHeatmap(
   const activityTypesFilter =
     searchParams.get("activityTypes")?.split(",").filter(Boolean) || [];
 
-  // Calculate date range
   const now = new Date();
   const daysAgo =
     timeframe === "7d"
@@ -201,133 +208,75 @@ async function getActivityHeatmap(
                 : timeframe === "1y"
                   ? 365
                   : timeframe === "all"
-                    ? 3650 // 10 years for "all time"
-                    : 30; // default to 30 days
+                    ? 3650
+                    : 30;
   const startDate = new Date(now);
   startDate.setDate(startDate.getDate() - daysAgo);
 
   const cacheKey = `activity-heatmap:${scope}:${entityId}:${timeframe}:${granularity}:${activityTypesFilter.join(",")}`;
 
   const fetchHeatmapData = async () => {
-    // Use transaction for all database operations to optimize connection usage
-    const result = await prisma.$transaction(async (tx) => {
-      // Build where clause for Prisma query
-      const whereClause: any = {
-        createdAt: {
-          gte: startDate,
-        },
-      };
+    let userIds: string[] = [];
 
-      let userIds: string[] = [];
+    if (scope === "student") {
+      userIds = [entityId!];
+    } else if (scope === "school") {
+      const schoolUsers = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.schoolId, entityId!))
+        .limit(1000);
 
-      // Scope-specific filters
-      if (scope === "student") {
-        whereClause.userId = entityId;
-        userIds = [entityId];
-      } else if (scope === "school") {
-        // Get users from the school in transaction
-        const schoolUsers = await tx.user.findMany({
-          where: { schoolId: entityId },
-          select: { id: true },
-          take: 1000, // Limit to prevent huge result sets
-        });
+      if (schoolUsers.length === 0) return null;
+      userIds = schoolUsers.map((u) => u.id);
+    } else if (scope === "license") {
+      const licenseUsers = await db
+        .select({ userId: licenseOnUsers.userId })
+        .from(licenseOnUsers)
+        .where(eq(licenseOnUsers.licenseId, entityId!))
+        .limit(1000);
 
-        if (schoolUsers.length === 0) {
-          return null; // Will handle empty case outside transaction
-        }
-
-        userIds = schoolUsers.map((u) => u.id);
-        whereClause.userId = {
-          in: userIds,
-        };
-      } else if (scope === "license") {
-        // Get users from the license in transaction
-        const licenseUsers = await tx.licenseOnUser.findMany({
-          where: { licenseId: entityId },
-          select: { userId: true },
-          take: 1000, // Limit to prevent huge result sets
-        });
-
-        if (licenseUsers.length === 0) {
-          return null; // Will handle empty case outside transaction
-        }
-
-        userIds = licenseUsers.map((lu) => lu.userId);
-        whereClause.userId = {
-          in: userIds,
-        };
-      }
-
-      // Activity type filter
-      if (activityTypesFilter.length > 0) {
-        whereClause.activityType = {
-          in: activityTypesFilter as ActivityType[],
-        };
-      }
-
-      // Fetch activities and available types in parallel within transaction
-      const [activities, availableTypes] = await Promise.all([
-        tx.userActivity.findMany({
-          where: whereClause,
-          select: {
-            id: true,
-            userId: true,
-            activityType: true,
-            completed: true,
-            timer: true,
-            createdAt: true,
-          },
-          orderBy: {
-            createdAt: "asc",
-          },
-          take: 10000, // Prevent excessive memory usage
-        }),
-        tx.userActivity.findMany({
-          where: scope === "student"
-            ? { userId: entityId }
-            : scope === "school"
-              ? { userId: { in: userIds } }
-              : {},
-          select: {
-            activityType: true,
-          },
-          distinct: ["activityType"],
-        }),
-      ]);
-
-      return { activities, availableTypes, userIds };
-    });
-
-    // Handle empty school case
-    if (!result) {
-      console.warn(
-        `[Activity Heatmap] No users found for school: ${entityId}`
-      );
-      return {
-        scope,
-        entityId,
-        timeframe,
-        granularity,
-        timezone: "UTC",
-        activityTypes: activityTypesFilter,
-        buckets: [],
-        metadata: {
-          totalActivities: 0,
-          uniqueStudents: 0,
-          dateRange: {
-            start: startDate.toISOString().split("T")[0],
-            end: now.toISOString().split("T")[0],
-          },
-          availableActivityTypes: [],
-        },
-        cache: {
-          cached: false,
-          generatedAt: new Date().toISOString(),
-        },
-      };
+      if (licenseUsers.length === 0) return null;
+      userIds = licenseUsers.map((lu) => lu.userId);
     }
 
-    const { activities, availableTypes } = result;
+    // Build activity conditions
+    const activityConditions: any[] = [gte(userActivity.createdAt, startDate)];
+    if (scope === "student") {
+      activityConditions.push(eq(userActivity.userId, entityId!));
+    } else if (userIds.length > 0) {
+      activityConditions.push(inArray(userActivity.userId, userIds));
+    }
+    if (activityTypesFilter.length > 0) {
+      activityConditions.push(inArray(userActivity.activityType, activityTypesFilter));
+    }
+
+    const typesCondition =
+      scope === "student"
+        ? eq(userActivity.userId, entityId!)
+        : userIds.length > 0
+          ? inArray(userActivity.userId, userIds)
+          : undefined;
+
+    const [activities, availableTypesRows] = await Promise.all([
+      db
+        .select({
+          id: userActivity.id,
+          userId: userActivity.userId,
+          activityType: userActivity.activityType,
+          completed: userActivity.completed,
+          timer: userActivity.timer,
+          createdAt: userActivity.createdAt,
+        })
+        .from(userActivity)
+        .where(and(...activityConditions))
+        .orderBy(asc(userActivity.createdAt))
+        .limit(10000),
+      db
+        .selectDistinct({ activityType: userActivity.activityType })
+        .from(userActivity)
+        .where(typesCondition),
+    ]);
 
     // Process activities into buckets by date
     const bucketMap = new Map<
@@ -370,7 +319,6 @@ async function getActivityHeatmap(
       if (activity.timer) bucket.totalDurationMinutes += activity.timer / 60;
     });
 
-    // Convert map to array
     const buckets = Array.from(bucketMap.values()).map((bucket) => ({
       date: bucket.date,
       hour: bucket.hour,
@@ -388,14 +336,12 @@ async function getActivityHeatmap(
           : 0,
     }));
 
-    // Calculate summary metadata
     const totalActivities = buckets.reduce(
       (sum, bucket) => sum + bucket.activityCount,
       0
     );
     const allUniqueStudents = new Set<string>();
     buckets.forEach((bucket) => {
-      // We need to re-count from activities since we lost the Set
       activities.forEach((activity) => {
         const date = activity.createdAt.toISOString().split("T")[0];
         const hour = granularity === "hour" ? activity.createdAt.getHours() : 0;
@@ -411,7 +357,7 @@ async function getActivityHeatmap(
 
     return {
       scope,
-      entityId,
+      entityId: entityId!,
       timeframe,
       granularity,
       timezone: "UTC",
@@ -424,7 +370,7 @@ async function getActivityHeatmap(
           start: startDate.toISOString().split("T")[0],
           end: now.toISOString().split("T")[0],
         },
-        availableActivityTypes: availableTypes.map((t) => t.activityType),
+        availableActivityTypes: availableTypesRows.map((t) => t.activityType),
       },
       cache: {
         cached: false,
@@ -433,11 +379,34 @@ async function getActivityHeatmap(
     };
   };
 
-  // Use caching for performance
-  const data = await getCachedMetrics(cacheKey, fetchHeatmapData, {
-    ttl: 30000, // 30 seconds in milliseconds
-    staleTime: 15000, // 15 seconds stale time
+  const rawData = await getCachedMetrics(cacheKey, fetchHeatmapData, {
+    ttl: 30000,
+    staleTime: 15000,
   });
+
+  // Handle empty school/license case (fetchHeatmapData returned null)
+  const data = rawData ?? {
+    scope,
+    entityId: entityId!,
+    timeframe,
+    granularity,
+    timezone: "UTC",
+    activityTypes: activityTypesFilter,
+    buckets: [],
+    metadata: {
+      totalActivities: 0,
+      uniqueStudents: 0,
+      dateRange: {
+        start: startDate.toISOString().split("T")[0],
+        end: now.toISOString().split("T")[0],
+      },
+      availableActivityTypes: [],
+    },
+    cache: {
+      cached: false,
+      generatedAt: new Date().toISOString(),
+    },
+  };
 
   const duration = Date.now() - startTime;
 
@@ -459,32 +428,30 @@ async function getActivityTimeline(
   const session = req.session!;
   const { searchParams } = new URL(req.url);
 
-  // Determine scope based on role and parameters
   const requestedScope = searchParams.get("scope") as "student" | "class" | "school" | "license" | null;
-  const scope = requestedScope || 
+  const scope = requestedScope ||
     (session.user.role === "STUDENT" ? "student" :
      session.user.role === "TEACHER" ? "class" : "school");
-  
+
   let entityId = searchParams.get("entityId");
-  
-  // Determine entityId based on scope and user context
+
   if (!entityId) {
     if (scope === "student") {
       entityId = session.user.id;
     } else if (scope === "school") {
-      const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { schoolId: true },
-      });
-      entityId = user?.schoolId || session.user.id;
+      const [userRow] = await db
+        .select({ schoolId: users.schoolId })
+        .from(users)
+        .where(eq(users.id, session.user.id))
+        .limit(1);
+      entityId = userRow?.schoolId || session.user.id;
     } else {
       entityId = session.user.id;
     }
   }
-  
+
   const timeframe = searchParams.get("timeframe") || "30d";
 
-  // Access control
   if (session.user.role === "STUDENT" && (scope !== "student" || entityId !== session.user.id)) {
     return NextResponse.json(
       { code: "FORBIDDEN", message: "Cannot access other student data" },
@@ -492,7 +459,6 @@ async function getActivityTimeline(
     );
   }
 
-  // Calculate date range
   const now = new Date();
   const daysAgo =
     timeframe === "7d"
@@ -508,63 +474,53 @@ async function getActivityTimeline(
               : timeframe === "1y"
                 ? 365
                 : timeframe === "all"
-                  ? 3650 // 10 years for "all time"
-                  : 30; // default to 30 days
+                  ? 3650
+                  : 30;
   const startDate = new Date(now);
   startDate.setDate(startDate.getDate() - daysAgo);
 
   const cacheKey = `activity-timeline:${scope}:${entityId}:${timeframe}`;
 
   const fetchTimelineData = async (): Promise<TimelineResponse> => {
-    // Determine which users to query based on scope
     let userIds: string[] = [];
-    
+
     if (scope === "student") {
-      userIds = [entityId];
+      userIds = [entityId!];
     } else if (scope === "school") {
-      // For SYSTEM/ADMIN users without schoolId, get all students
-      if (entityId === session.user.id && !entityId.startsWith('cmgj0')) {
-        // Get all students from all schools
-        const allStudents = await prisma.user.findMany({
-          where: { 
-            role: "STUDENT"
-          },
-          select: { id: true },
-          take: 1000, // Limit to prevent excessive queries
-        });
-        userIds = allStudents.map(u => u.id);
+      if (entityId === session.user.id && !entityId.startsWith("cmgj0")) {
+        const allStudents = await db
+          .select({ id: users.id })
+          .from(users)
+          .where(eq(users.role, "STUDENT"))
+          .limit(1000);
+        userIds = allStudents.map((u) => u.id);
       } else {
-        // Get students from specific school
-        const schoolUsers = await prisma.user.findMany({
-          where: { 
-            schoolId: entityId,
-            role: "STUDENT"
-          },
-          select: { id: true },
-          take: 1000, // Limit to prevent excessive queries
-        });
-        userIds = schoolUsers.map(u => u.id);
+        const schoolUsers = await db
+          .select({ id: users.id })
+          .from(users)
+          .where(and(eq(users.schoolId, entityId!), eq(users.role, "STUDENT")))
+          .limit(1000);
+        userIds = schoolUsers.map((u) => u.id);
       }
     } else if (scope === "class") {
-      const classUsers = await prisma.classroomStudent.findMany({
-        where: { classroomId: entityId },
-        select: { studentId: true },
-      });
-      userIds = classUsers.map(u => u.studentId);
+      const classUsers = await db
+        .select({ studentId: classroomStudents.studentId })
+        .from(classroomStudents)
+        .where(eq(classroomStudents.classroomId, entityId!));
+      userIds = classUsers.map((u) => u.studentId);
     } else if (scope === "license") {
-      // Get users from the license
-      const licenseUsers = await prisma.licenseOnUser.findMany({
-        where: { licenseId: entityId },
-        select: { userId: true },
-        take: 1000, // Limit to prevent excessive queries
-      });
-      userIds = licenseUsers.map(lu => lu.userId);
+      const licenseUsers = await db
+        .select({ userId: licenseOnUsers.userId })
+        .from(licenseOnUsers)
+        .where(eq(licenseOnUsers.licenseId, entityId!))
+        .limit(1000);
+      userIds = licenseUsers.map((lu) => lu.userId);
     }
-    
+
     if (userIds.length === 0) {
       return {
         scope: scope as any,
-        entityId,
+        entityId: entityId!,
         timeframe,
         timezone: "UTC",
         events: [],
@@ -582,148 +538,132 @@ async function getActivityTimeline(
         },
       };
     }
-    
-    // Get assignments (due dates and completion)
-    const assignments = await prisma.studentAssignment.findMany({
-      where: {
-        studentId: { in: userIds },
-        createdAt: {
-          gte: startDate,
-        },
-      },
-      include: {
-        assignment: {
-          include: {
-            article: {
-              select: {
-                title: true,
-                cefrLevel: true,
-              },
-            },
-          },
-        },
-        student: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 100, // Limit results
-    });
 
-    // Get SRS practice sessions - using correct field names
-    const srsEvents = await prisma.userSentenceRecord.findMany({
-      where: {
-        userId: { in: userIds },
-        updatedAt: {
-          gte: startDate,
-        },
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      take: 100,
-    });
+    // Get assignments with article and student info
+    const assignmentRows = await db
+      .select({
+        id: studentAssignments.id,
+        studentId: studentAssignments.studentId,
+        status: studentAssignments.status,
+        completedAt: studentAssignments.completedAt,
+        createdAt: studentAssignments.createdAt,
+        articleId: assignments.articleId,
+        articleTitle: articles.title,
+        articleCefrLevel: articles.cefrLevel,
+        studentName: users.name,
+      })
+      .from(studentAssignments)
+      .leftJoin(assignments, eq(studentAssignments.assignmentId, assignments.id))
+      .leftJoin(articles, eq(assignments.articleId, articles.id))
+      .leftJoin(users, eq(studentAssignments.studentId, users.id))
+      .where(
+        and(
+          inArray(studentAssignments.studentId, userIds),
+          gte(studentAssignments.createdAt, startDate)
+        )
+      )
+      .orderBy(desc(studentAssignments.createdAt))
+      .limit(100);
+
+    // Get SRS practice sessions
+    const srsRows = await db
+      .select({
+        id: userSentenceRecords.id,
+        userId: userSentenceRecords.userId,
+        sentence: userSentenceRecords.sentence,
+        state: userSentenceRecords.state,
+        updatedAt: userSentenceRecords.updatedAt,
+        userName: users.name,
+      })
+      .from(userSentenceRecords)
+      .leftJoin(users, eq(userSentenceRecords.userId, users.id))
+      .where(
+        and(
+          inArray(userSentenceRecords.userId, userIds),
+          gte(userSentenceRecords.updatedAt, startDate)
+        )
+      )
+      .orderBy(desc(userSentenceRecords.updatedAt))
+      .limit(100);
 
     // Get reading sessions from lesson records
-    const readingSessions = await prisma.lessonRecord.findMany({
-      where: {
-        userId: { in: userIds },
-        createdAt: {
-          gte: startDate,
-        },
-      },
-      include: {
-        article: {
-          select: {
-            title: true,
-            cefrLevel: true,
-            genre: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 100, // Limit results
-    });
+    const readingRows = await db
+      .select({
+        id: lessonRecords.id,
+        userId: lessonRecords.userId,
+        articleId: lessonRecords.articleId,
+        phase1: lessonRecords.phase1,
+        phase2: lessonRecords.phase2,
+        phase3: lessonRecords.phase3,
+        phase4: lessonRecords.phase4,
+        phase5: lessonRecords.phase5,
+        phase6: lessonRecords.phase6,
+        phase7: lessonRecords.phase7,
+        phase8: lessonRecords.phase8,
+        phase9: lessonRecords.phase9,
+        phase10: lessonRecords.phase10,
+        phase11: lessonRecords.phase11,
+        phase12: lessonRecords.phase12,
+        phase13: lessonRecords.phase13,
+        phase14: lessonRecords.phase14,
+        createdAt: lessonRecords.createdAt,
+        articleTitle: articles.title,
+        articleCefrLevel: articles.cefrLevel,
+        articleGenre: articles.genre,
+        userName: users.name,
+      })
+      .from(lessonRecords)
+      .leftJoin(articles, eq(lessonRecords.articleId, articles.id))
+      .leftJoin(users, eq(lessonRecords.userId, users.id))
+      .where(
+        and(
+          inArray(lessonRecords.userId, userIds),
+          gte(lessonRecords.createdAt, startDate)
+        )
+      )
+      .orderBy(desc(lessonRecords.createdAt))
+      .limit(100);
 
-    // For now, use UTC timezone since it's not in the schema yet
-    const timezone = "UTC";
-
-    // Convert to timeline events
     const events: TimelineEvent[] = [];
 
-    // Add assignment events
-    assignments.forEach((assignment) => {
+    assignmentRows.forEach((row) => {
       events.push({
-        id: `assignment-${assignment.id}`,
+        id: `assignment-${row.id}`,
         type: "assignment",
-        title: `Assignment: ${assignment.assignment.article?.title || "Article"}`,
-        description: `Assigned reading (${assignment.assignment.article?.cefrLevel || "Unknown level"})`,
-        timestamp: assignment.createdAt.toISOString(),
+        title: `Assignment: ${row.articleTitle || "Article"}`,
+        description: `Assigned reading (${row.articleCefrLevel || "Unknown level"})`,
+        timestamp: row.createdAt.toISOString(),
         metadata: {
-          status: assignment.status,
-          articleId: assignment.assignment.articleId,
-          completedAt: assignment.completedAt?.toISOString(),
-          userId: assignment.student.id,
-          username: assignment.student.name,
+          status: row.status,
+          articleId: row.articleId,
+          completedAt: row.completedAt?.toISOString(),
+          userId: row.studentId,
+          username: row.studentName,
         },
       });
     });
 
-    // Add SRS events - using correct field names
-    srsEvents.forEach((srsEvent) => {
+    srsRows.forEach((row) => {
       events.push({
-        id: `srs-${srsEvent.id}`,
+        id: `srs-${row.id}`,
         type: "srs",
         title: "SRS Practice",
-        description: `Practiced sentence: "${srsEvent.sentence.substring(0, 50)}..."`,
-        timestamp: srsEvent.updatedAt.toISOString(),
+        description: `Practiced sentence: "${row.sentence.substring(0, 50)}..."`,
+        timestamp: row.updatedAt.toISOString(),
         metadata: {
-          state: srsEvent.state,
-          sentence: srsEvent.sentence,
-          userId: srsEvent.user.id,
-          username: srsEvent.user.name,
+          state: row.state,
+          sentence: row.sentence,
+          userId: row.userId,
+          username: row.userName,
         },
       });
     });
 
-    // Add reading sessions
-    readingSessions.forEach((session) => {
+    readingRows.forEach((row) => {
       const phases = [
-        session.phase1,
-        session.phase2,
-        session.phase3,
-        session.phase4,
-        session.phase5,
-        session.phase6,
-        session.phase7,
-        session.phase8,
-        session.phase9,
-        session.phase10,
-        session.phase11,
-        session.phase12,
-        session.phase13,
-        session.phase14,
+        row.phase1, row.phase2, row.phase3, row.phase4, row.phase5,
+        row.phase6, row.phase7, row.phase8, row.phase9, row.phase10,
+        row.phase11, row.phase12, row.phase13, row.phase14,
       ];
 
       let totalTime = 0;
@@ -737,30 +677,28 @@ async function getActivityTimeline(
       });
 
       events.push({
-        id: `reading-${session.id}`,
+        id: `reading-${row.id}`,
         type: "reading",
-        title: `Read: ${session.article?.title || "Article"}`,
-        description: `Reading session (${session.article?.genre || "Unknown genre"})`,
-        timestamp: session.createdAt.toISOString(),
-        duration: totalTime > 0 ? totalTime / 1000 : undefined, // Convert to seconds
+        title: `Read: ${row.articleTitle || "Article"}`,
+        description: `Reading session (${row.articleGenre || "Unknown genre"})`,
+        timestamp: row.createdAt.toISOString(),
+        duration: totalTime > 0 ? totalTime / 1000 : undefined,
         metadata: {
-          articleId: session.articleId,
-          cefrLevel: session.article?.cefrLevel,
-          genre: session.article?.genre,
-          completed: (session.phase14 as any)?.status === 2,
-          userId: session.user.id,
-          username: session.user.name,
+          articleId: row.articleId,
+          cefrLevel: row.articleCefrLevel,
+          genre: row.articleGenre,
+          completed: (row.phase14 as any)?.status === 2,
+          userId: row.userId,
+          username: row.userName,
         },
       });
     });
 
-    // Sort by timestamp (newest first)
     events.sort(
       (a, b) =>
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
-    // Calculate metadata
     const eventTypes = events.reduce(
       (types, event) => {
         types[event.type] = (types[event.type] || 0) + 1;
@@ -771,9 +709,9 @@ async function getActivityTimeline(
 
     return {
       scope: scope as any,
-      entityId,
+      entityId: entityId!,
       timeframe,
-      timezone,
+      timezone: "UTC",
       events,
       metadata: {
         totalEvents: events.length,
@@ -790,10 +728,9 @@ async function getActivityTimeline(
     };
   };
 
-  // Use caching for performance
   const data = await getCachedMetrics(cacheKey, fetchTimelineData, {
-    ttl: 180000, // 3 minutes in milliseconds
-    staleTime: 60000, // 1 minute stale time
+    ttl: 180000,
+    staleTime: 60000,
   });
 
   const duration = Date.now() - startTime;
@@ -826,52 +763,39 @@ async function getActivitySummary(req: ExtendedNextRequest) {
     const schoolId = searchParams.get("schoolId");
     const classId = searchParams.get("classId");
 
-    // Calculate date range
     const now = new Date();
     const daysAgo = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : timeframe === "90d" ? 90 : timeframe === "120d" ? 120 : timeframe === "365d" ? 365 : 30;
     const startDate = new Date(now);
     startDate.setDate(startDate.getDate() - daysAgo);
 
-    // Build where clause based on filters
-    const whereClause: any = {
-      createdAt: {
-        gte: startDate,
-      },
-    };
-
+    // Build conditions
+    const conditions: any[] = [gte(userActivity.createdAt, startDate)];
     if (schoolId) {
-      whereClause.schoolId = schoolId;
+      conditions.push(eq(users.schoolId, schoolId));
     }
 
-    // Get daily activity data
-    const activities = (await prisma.userActivity.findMany({
-      where: whereClause,
-      select: {
-        userId: true,
-        createdAt: true,
-        timer: true,
-        user: {
-          select: {
-            createdAt: true,
-            studentClassrooms: classId
-              ? {
-                  where: {
-                    classroomId: classId,
-                  },
-                  select: {
-                    id: true,
-                  },
-                }
-              : undefined,
-          },
-        },
-      },
-    })) as any;
+    const activityRows = await db
+      .select({
+        userId: userActivity.userId,
+        createdAt: userActivity.createdAt,
+        timer: userActivity.timer,
+        userCreatedAt: users.createdAt,
+      })
+      .from(userActivity)
+      .leftJoin(users, eq(userActivity.userId, users.id))
+      .where(and(...conditions))
+      .limit(5000);
 
     // Filter by class if specified
-    const filteredActivities = classId
-      ? activities.filter((a: any) => a.user.studentClassrooms?.length > 0)
-      : activities;
+    let filteredActivities = activityRows;
+    if (classId) {
+      const classStudentRows = await db
+        .select({ studentId: classroomStudents.studentId })
+        .from(classroomStudents)
+        .where(eq(classroomStudents.classroomId, classId));
+      const classStudentIds = new Set(classStudentRows.map((r) => r.studentId));
+      filteredActivities = activityRows.filter((a) => classStudentIds.has(a.userId));
+    }
 
     // Group by date
     const dateMap = new Map<
@@ -884,7 +808,6 @@ async function getActivitySummary(req: ExtendedNextRequest) {
       }
     >();
 
-    // Initialize all dates in range
     const currentDate = new Date(startDate);
     while (currentDate <= now) {
       const dateKey = currentDate.toISOString().split("T")[0];
@@ -897,8 +820,7 @@ async function getActivitySummary(req: ExtendedNextRequest) {
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    // Process activities
-    filteredActivities.forEach((activity: any) => {
+    filteredActivities.forEach((activity) => {
       const dateKey = new Date(activity.createdAt).toISOString().split("T")[0];
       const data = dateMap.get(dateKey);
 
@@ -909,17 +831,17 @@ async function getActivitySummary(req: ExtendedNextRequest) {
           data.totalTime += activity.timer;
         }
 
-        // Check if user is new (created on this day)
-        const userCreatedDate = new Date(activity.user.createdAt)
-          .toISOString()
-          .split("T")[0];
-        if (userCreatedDate === dateKey) {
-          data.newUsers.add(activity.userId);
+        if (activity.userCreatedAt) {
+          const userCreatedDate = new Date(activity.userCreatedAt)
+            .toISOString()
+            .split("T")[0];
+          if (userCreatedDate === dateKey) {
+            data.newUsers.add(activity.userId);
+          }
         }
       }
     });
 
-    // Convert to response format
     const dataPoints: ActivityDataPoint[] = Array.from(dateMap.entries())
       .map(([date, data]) => ({
         date,
@@ -933,17 +855,11 @@ async function getActivitySummary(req: ExtendedNextRequest) {
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
 
-    // Calculate summary
-    const totalActiveUsers = new Set(
-      filteredActivities.map((a: any) => a.userId)
-    ).size;
-
+    const totalActiveUsers = new Set(filteredActivities.map((a) => a.userId)).size;
     const totalSessions = filteredActivities.length;
-
     const totalTime = filteredActivities
-      .filter((a: any) => a.timer)
-      .reduce((sum: number, a: any) => sum + a.timer, 0);
-
+      .filter((a) => a.timer)
+      .reduce((sum, a) => sum + (a.timer ?? 0), 0);
     const averageSessionLength =
       totalSessions > 0
         ? Math.round((totalTime / totalSessions / 60) * 10) / 10
@@ -1008,15 +924,17 @@ async function getActivitySummary(req: ExtendedNextRequest) {
 
 export async function getAllUserActivity() {
   try {
-    // Get all activities without date filter
-    const activityCounts = await prisma.userActivity.groupBy({
-      by: ["activityType"],
-      _count: {
-        id: true,
-      },
-    });
+    const activityCounts = await db
+      .select({
+        activityType: userActivity.activityType,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(userActivity)
+      .groupBy(userActivity.activityType);
 
-    const totalUsers = await prisma.user.count();
+    const [{ totalUsers }] = await db
+      .select({ totalUsers: sql<number>`count(*)::int` })
+      .from(users);
 
     const userActivityData = {
       totalUsers,
@@ -1039,66 +957,52 @@ export async function getAllUserActivity() {
         case "ARTICLE_RATING":
         case "STORIES_RATING":
         case "CHAPTER_RATING":
-          userActivityData.totalRatingCount += activity._count.id;
+          userActivityData.totalRatingCount += activity.count;
           break;
         case "ARTICLE_READ":
         case "STORIES_READ":
         case "CHAPTER_READ":
-          userActivityData.totalReadingCount += activity._count.id;
+          userActivityData.totalReadingCount += activity.count;
           break;
         case "LA_QUESTION":
-          userActivityData.totalLaQuestionCount += activity._count.id;
+          userActivityData.totalLaQuestionCount += activity.count;
           break;
         case "LEVEL_TEST":
-          userActivityData.totalLevelTestCount += activity._count.id;
+          userActivityData.totalLevelTestCount += activity.count;
           break;
         case "MC_QUESTION":
-          userActivityData.totalMcQuestionCount += activity._count.id;
+          userActivityData.totalMcQuestionCount += activity.count;
           break;
         case "SA_QUESTION":
-          userActivityData.totalSaQuestionCount += activity._count.id;
+          userActivityData.totalSaQuestionCount += activity.count;
           break;
         case "SENTENCE_FLASHCARDS":
-          userActivityData.totalSentenceFlashcardsCount += activity._count.id;
+          userActivityData.totalSentenceFlashcardsCount += activity.count;
           break;
         case "VOCABULARY_FLASHCARDS":
-          userActivityData.totalVocabularyFlashcardsCount += activity._count.id;
+          userActivityData.totalVocabularyFlashcardsCount += activity.count;
           break;
         case "VOCABULARY_MATCHING":
-          userActivityData.totalVocabularyActivityCount += activity._count.id;
+          userActivityData.totalVocabularyActivityCount += activity.count;
           break;
         case "SENTENCE_MATCHING":
         case "SENTENCE_ORDERING":
         case "SENTENCE_WORD_ORDERING":
         case "SENTENCE_CLOZE_TEST":
-          userActivityData.totalSentenceActivityCount += activity._count.id;
+          userActivityData.totalSentenceActivityCount += activity.count;
           break;
         case "LESSON_FLASHCARD":
-          userActivityData.totalLessonFlashcardCount += activity._count.id;
+          userActivityData.totalLessonFlashcardCount += activity.count;
           break;
         case "LESSON_SENTENCE_FLASHCARDS":
-          userActivityData.totalLessonSentenceFlashcardsCount +=
-            activity._count.id;
+          userActivityData.totalLessonSentenceFlashcardsCount += activity.count;
           break;
       }
     });
 
-    return NextResponse.json(
-      {
-        userActivityData,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({ userActivityData }, { status: 200 });
   } catch (err) {
     console.error("Error fetching user activities from database:", err);
-
-    if (err instanceof PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { message: "Database operation failed", code: err.code },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
@@ -1108,96 +1012,70 @@ export async function getAllUserActivity() {
 
 export async function getAllUsersActivity() {
   try {
-    // Use transaction to optimize connection usage and add pagination
-    const result = await prisma.$transaction(async (tx) => {
-      // First get a reasonable amount of recent activities (reduced from 5000 to 1000)
-      const recentActivities = await tx.userActivity.findMany({
-        select: {
-          id: true,
-          userId: true,
-          activityType: true,
-          targetId: true,
-          completed: true,
-          createdAt: true,
-          details: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: 1000, // Reduced from 5000 to prevent connection issues
-        where: {
-          createdAt: {
-            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days instead of 6 months
-          },
-        },
-      });
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
-      // Get article data for activities that reference articles
-      const articleIds = new Set<string>();
-      recentActivities.forEach((activity) => {
-        // Only get article IDs from ARTICLE_READ and ARTICLE_RATING activities
-        if (
-          (activity.activityType === "ARTICLE_READ" ||
-            activity.activityType === "ARTICLE_RATING") &&
-          activity.targetId
-        ) {
-          articleIds.add(activity.targetId);
-        }
-      });
+    const [recentActivities, activityCounts] = await Promise.all([
+      db
+        .select({
+          id: userActivity.id,
+          userId: userActivity.userId,
+          activityType: userActivity.activityType,
+          targetId: userActivity.targetId,
+          completed: userActivity.completed,
+          createdAt: userActivity.createdAt,
+          details: userActivity.details,
+          userName: users.name,
+          userEmail: users.email,
+          userIdJoined: users.id,
+        })
+        .from(userActivity)
+        .leftJoin(users, eq(userActivity.userId, users.id))
+        .where(gte(userActivity.createdAt, thirtyDaysAgo))
+        .orderBy(desc(userActivity.createdAt))
+        .limit(1000),
+      db
+        .select({
+          activityType: userActivity.activityType,
+          userId: userActivity.userId,
+          count: sql<number>`count(*)::int`,
+        })
+        .from(userActivity)
+        .where(gte(userActivity.createdAt, thirtyDaysAgo))
+        .groupBy(userActivity.activityType, userActivity.userId)
+        .orderBy(desc(sql`count(*)`))
+        .limit(100),
+    ]);
 
-      // Fetch article data in the same transaction
-      const articles = articleIds.size > 0 ? await tx.article.findMany({
-        where: {
-          id: { in: Array.from(articleIds) },
-        },
-        select: {
-          id: true,
-          cefrLevel: true,
-          title: true,
-          raLevel: true,
-        },
-      }) : [];
-
-      // Get aggregated activity data for summary in the same transaction
-      const activityCounts = await tx.userActivity.groupBy({
-        by: ["activityType", "userId"],
-        _count: {
-          id: true,
-        },
-        orderBy: {
-          _count: {
-            id: "desc",
-          },
-        },
-        take: 100, // Limit to top 100 most active users
-        where: {
-          createdAt: {
-            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Same timeframe
-          },
-        },
-      });
-
-      return { recentActivities, articles, activityCounts };
+    // Collect article IDs from ARTICLE_READ and ARTICLE_RATING activities
+    const articleIds = new Set<string>();
+    recentActivities.forEach((activity) => {
+      if (
+        (activity.activityType === "ARTICLE_READ" ||
+          activity.activityType === "ARTICLE_RATING") &&
+        activity.targetId
+      ) {
+        articleIds.add(activity.targetId);
+      }
     });
 
-    const { recentActivities, articles, activityCounts } = result;
+    const articleRows =
+      articleIds.size > 0
+        ? await db
+            .select({
+              id: articles.id,
+              cefrLevel: articles.cefrLevel,
+              title: articles.title,
+              raLevel: articles.raLevel,
+            })
+            .from(articles)
+            .where(inArray(articles.id, Array.from(articleIds)))
+        : [];
 
-    const articleMap = new Map(
-      articles.map((article: any) => [article.id, article])
-    );
+    const articleMap = new Map(articleRows.map((a) => [a.id, a]));
 
     const data = recentActivities.map((activity) => {
       let details: any = activity.details || {};
-
-      // Add CEFR level to details if this activity references an article
-      const article = articleMap.get(activity.targetId);
+      const article = articleMap.get(activity.targetId ?? "");
       if (article) {
         details = {
           ...details,
@@ -1206,7 +1084,6 @@ export async function getAllUsersActivity() {
           level: article.raLevel,
         };
       }
-
       return {
         id: activity.id,
         userId: activity.userId,
@@ -1214,28 +1091,18 @@ export async function getAllUsersActivity() {
         targetId: activity.targetId,
         completed: activity.completed,
         timestamp: activity.createdAt,
-        details: details,
-        user: activity.user,
+        details,
+        user: {
+          id: activity.userIdJoined,
+          name: activity.userName,
+          email: activity.userEmail,
+        },
       };
     });
 
-    return NextResponse.json(
-      {
-        data,
-        summary: activityCounts,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({ data, summary: activityCounts }, { status: 200 });
   } catch (err) {
     console.error("Error fetching user activities from database:", err);
-
-    if (err instanceof PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { message: "Database operation failed", code: err.code },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
@@ -1248,7 +1115,6 @@ export async function getActiveUsers(
   dateRange: string = "30d"
 ) {
   try {
-    // Calculate date threshold based on dateRange parameter
     let startDate: Date | undefined;
 
     if (dateRange === "7d") {
@@ -1261,181 +1127,106 @@ export async function getActiveUsers(
       startDate = new Date();
       startDate.setDate(startDate.getDate() - 90);
     } else if (dateRange === "all") {
-      // For 'all time', don't set a start date filter
       startDate = undefined;
     } else {
-      // Default to 30 days
       startDate = new Date();
       startDate.setDate(startDate.getDate() - 30);
     }
 
     if (licenseId) {
-      // For specific license, get limited data to avoid timeout
-      const license = await prisma.license.findUnique({
-        where: { id: licenseId },
-        select: {
-          id: true,
-          licenseUsers: {
-            select: {
-              userId: true,
-            },
-            take: 100, // Limit users to reduce query size
-          },
-        },
-      });
+      const [license] = await db
+        .select({ id: licenses.id })
+        .from(licenses)
+        .where(eq(licenses.id, licenseId))
+        .limit(1);
 
       if (!license) {
-        return {
-          total: [],
-          licenses: { [licenseId]: [] },
-        };
+        return { total: [], licenses: { [licenseId]: [] } };
       }
 
-      const userIds = license.licenseUsers.map((lu) => lu.userId);
+      const licenseUserRows = await db
+        .select({ userId: licenseOnUsers.userId })
+        .from(licenseOnUsers)
+        .where(eq(licenseOnUsers.licenseId, licenseId))
+        .limit(100);
+
+      const userIds = licenseUserRows.map((lu) => lu.userId);
 
       if (userIds.length === 0) {
-        return {
-          total: [],
-          licenses: { [licenseId]: [] },
-        };
+        return { total: [], licenses: { [licenseId]: [] } };
       }
 
-      // Limit activities query to prevent timeout
-      const whereClause: any = {
-        userId: { in: userIds },
-      };
+      const actConditions: any[] = [inArray(userActivity.userId, userIds)];
+      if (startDate) actConditions.push(gte(userActivity.createdAt, startDate));
 
-      if (startDate) {
-        whereClause.createdAt = { gte: startDate };
-      }
-
-      const activities = await prisma.userActivity.findMany({
-        where: whereClause,
-        select: {
-          userId: true,
-          createdAt: true,
-        },
-        take: dateRange === "all" ? 20000 : 5000, // Increase limit for 'all time'
-      });
+      const activities = await db
+        .select({ userId: userActivity.userId, createdAt: userActivity.createdAt })
+        .from(userActivity)
+        .where(and(...actConditions))
+        .limit(dateRange === "all" ? 20000 : 5000);
 
       const dateMap: { [date: string]: Set<string> } = {};
-
       activities.forEach((activity) => {
         const date = activity.createdAt.toISOString().split("T")[0];
-        if (!dateMap[date]) {
-          dateMap[date] = new Set();
-        }
+        if (!dateMap[date]) dateMap[date] = new Set();
         dateMap[date].add(activity.userId);
       });
 
       const licenseData = Object.keys(dateMap)
         .sort()
-        .map((date) => ({
-          date,
-          noOfUsers: dateMap[date].size,
-        }));
+        .map((date) => ({ date, noOfUsers: dateMap[date].size }));
 
-      return {
-        total: licenseData,
-        licenses: { [licenseId]: licenseData },
-      };
+      return { total: licenseData, licenses: { [licenseId]: licenseData } };
     }
 
-    // For all licenses query - use more aggressive limiting
-    const whereClauseAll: any = {};
+    // All licenses
+    const allConditions: any[] = [];
+    if (startDate) allConditions.push(gte(userActivity.createdAt, startDate));
 
-    if (startDate) {
-      whereClauseAll.createdAt = { gte: startDate };
-    }
-
-    const activities = await prisma.userActivity.findMany({
-      where: whereClauseAll,
-      select: {
-        userId: true,
-        createdAt: true,
-        user: {
-          select: {
-            id: true,
-            licenseId: true,
-          },
-        },
-      },
-      take: dateRange === "all" ? 50000 : 10000, // Increase limit for 'all time'
-      orderBy: {
-        createdAt: "desc", // Get most recent activities
-      },
-    });
+    const activities = await db
+      .select({
+        userId: userActivity.userId,
+        createdAt: userActivity.createdAt,
+        userLicenseId: users.licenseId,
+      })
+      .from(userActivity)
+      .leftJoin(users, eq(userActivity.userId, users.id))
+      .where(allConditions.length > 0 ? and(...allConditions) : undefined)
+      .orderBy(desc(userActivity.createdAt))
+      .limit(dateRange === "all" ? 50000 : 10000);
 
     const totalDateMap: { [date: string]: Set<string> } = {};
-    const licenseDateMap: {
-      [licenseId: string]: { [date: string]: Set<string> };
-    } = {};
+    const licenseDateMap: { [licenseId: string]: { [date: string]: Set<string> } } = {};
 
     activities.forEach((activity) => {
       const date = activity.createdAt.toISOString().split("T")[0];
       const userId = activity.userId;
-      const userLicenseId = activity.user.licenseId;
+      const userLicenseId = activity.userLicenseId;
 
-      if (!totalDateMap[date]) {
-        totalDateMap[date] = new Set();
-      }
+      if (!totalDateMap[date]) totalDateMap[date] = new Set();
       totalDateMap[date].add(userId);
 
       if (userLicenseId) {
-        if (!licenseDateMap[userLicenseId]) {
-          licenseDateMap[userLicenseId] = {};
-        }
-        if (!licenseDateMap[userLicenseId][date]) {
-          licenseDateMap[userLicenseId][date] = new Set();
-        }
+        if (!licenseDateMap[userLicenseId]) licenseDateMap[userLicenseId] = {};
+        if (!licenseDateMap[userLicenseId][date]) licenseDateMap[userLicenseId][date] = new Set();
         licenseDateMap[userLicenseId][date].add(userId);
       }
     });
 
     const totalData = Object.keys(totalDateMap)
       .sort()
-      .map((date) => ({
-        date,
-        noOfUsers: totalDateMap[date].size,
-      }));
+      .map((date) => ({ date, noOfUsers: totalDateMap[date].size }));
 
-    const licensesData: Record<string, { date: string; noOfUsers: number }[]> =
-      {};
-
-    Object.keys(licenseDateMap).forEach((licenseId) => {
-      licensesData[licenseId] = Object.keys(licenseDateMap[licenseId])
+    const licensesData: Record<string, { date: string; noOfUsers: number }[]> = {};
+    Object.keys(licenseDateMap).forEach((lid) => {
+      licensesData[lid] = Object.keys(licenseDateMap[lid])
         .sort()
-        .map((date) => ({
-          date,
-          noOfUsers: licenseDateMap[licenseId][date].size,
-        }));
+        .map((date) => ({ date, noOfUsers: licenseDateMap[lid][date].size }));
     });
 
-    return {
-      total: totalData,
-      licenses: licensesData,
-    };
+    return { total: totalData, licenses: licensesData };
   } catch (error) {
-    console.error(
-      "Error fetching active user activities from database:",
-      error
-    );
-
-    if (error instanceof PrismaClientKnownRequestError) {
-      // If it's a connection timeout, return minimal data
-      if (error.code === "P2024") {
-        return {
-          message: "Database connection timeout - returning cached data",
-          total: [],
-          licenses: {},
-        };
-      }
-      return {
-        message: "Database operation failed",
-        code: error.code,
-      };
-    }
-
+    console.error("Error fetching active user activities from database:", error);
     return { message: "Internal server error" };
   }
 }
@@ -1451,120 +1242,86 @@ export async function getDailyActiveUsers(req: NextRequest) {
     let userIdFilter: string[] = [];
 
     if (licenseId) {
-      const license = await prisma.license.findUnique({
-        where: { id: licenseId },
-        include: {
-          licenseUsers: {
-            select: {
-              userId: true,
-            },
-          },
-        },
-      });
+      const [license] = await db
+        .select({ id: licenses.id })
+        .from(licenses)
+        .where(eq(licenses.id, licenseId))
+        .limit(1);
 
       if (!license) {
         return NextResponse.json(
-          {
-            total: [],
-            licenses: { [licenseId]: [] },
-          },
+          { total: [], licenses: { [licenseId]: [] } },
           { status: 200 }
         );
       }
 
-      userIdFilter = license.licenseUsers.map((lu) => lu.userId);
+      const licenseUserRows = await db
+        .select({ userId: licenseOnUsers.userId })
+        .from(licenseOnUsers)
+        .where(eq(licenseOnUsers.licenseId, licenseId));
+
+      userIdFilter = licenseUserRows.map((lu) => lu.userId);
     }
 
-    const whereCondition: any = {
-      createdAt: { gte: thirtyDaysAgo },
-    };
-
+    const conditions: any[] = [gte(userActivity.createdAt, thirtyDaysAgo)];
     if (licenseId && userIdFilter.length > 0) {
-      whereCondition.userId = { in: userIdFilter };
+      conditions.push(inArray(userActivity.userId, userIdFilter));
     }
 
-    const activities = await prisma.userActivity.findMany({
-      where: whereCondition,
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
-            licenseId: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const activityRows = await db
+      .select({
+        userId: userActivity.userId,
+        createdAt: userActivity.createdAt,
+        userLicenseId: users.licenseId,
+        userIdJoined: users.id,
+        userName: users.name,
+        userEmail: users.email,
+        userImage: users.image,
+      })
+      .from(userActivity)
+      .leftJoin(users, eq(userActivity.userId, users.id))
+      .where(and(...conditions))
+      .orderBy(desc(userActivity.createdAt));
 
     const totalDateMap: { [date: string]: Map<string, any> } = {};
-    const licenseDateMap: {
-      [licenseId: string]: { [date: string]: Map<string, any> };
-    } = {};
+    const licenseDateMap: { [licenseId: string]: { [date: string]: Map<string, any> } } = {};
 
-    activities.forEach((activity) => {
+    activityRows.forEach((activity) => {
       const date = activity.createdAt.toISOString().split("T")[0];
       const userId = activity.userId;
-      const user = activity.user;
-      const userLicenseId = activity.user.licenseId;
+      const userObj = {
+        id: activity.userIdJoined,
+        name: activity.userName,
+        email: activity.userEmail,
+        image: activity.userImage,
+        licenseId: activity.userLicenseId,
+      };
+      const userLicenseId = activity.userLicenseId;
 
-      // Total data
-      if (!totalDateMap[date]) {
-        totalDateMap[date] = new Map();
-      }
-      totalDateMap[date].set(userId, user);
+      if (!totalDateMap[date]) totalDateMap[date] = new Map();
+      totalDateMap[date].set(userId, userObj);
 
-      // License data
       if (userLicenseId) {
-        if (!licenseDateMap[userLicenseId]) {
-          licenseDateMap[userLicenseId] = {};
-        }
-        if (!licenseDateMap[userLicenseId][date]) {
-          licenseDateMap[userLicenseId][date] = new Map();
-        }
-        licenseDateMap[userLicenseId][date].set(userId, user);
+        if (!licenseDateMap[userLicenseId]) licenseDateMap[userLicenseId] = {};
+        if (!licenseDateMap[userLicenseId][date]) licenseDateMap[userLicenseId][date] = new Map();
+        licenseDateMap[userLicenseId][date].set(userId, userObj);
       }
     });
 
     const totalData = Object.keys(totalDateMap)
       .sort()
-      .map((date) => ({
-        date,
-        users: Array.from(totalDateMap[date].values()),
-      }));
+      .map((date) => ({ date, users: Array.from(totalDateMap[date].values()) }));
 
     const licensesData: Record<string, { date: string; users: any[] }[]> = {};
-
-    Object.keys(licenseDateMap).forEach((licenseId) => {
-      licensesData[licenseId] = Object.keys(licenseDateMap[licenseId])
+    Object.keys(licenseDateMap).forEach((lid) => {
+      licensesData[lid] = Object.keys(licenseDateMap[lid])
         .sort()
-        .map((date) => ({
-          date,
-          users: Array.from(licenseDateMap[licenseId][date].values()),
-        }));
+        .map((date) => ({ date, users: Array.from(licenseDateMap[lid][date].values()) }));
     });
 
-    return NextResponse.json(
-      {
-        total: totalData,
-        licenses: licensesData,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({ total: totalData, licenses: licensesData }, { status: 200 });
   } catch (error) {
     console.error("Error in GET /api/v1/activity/daily-active-users:", error);
-
-    if (error instanceof PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { message: "Database operation failed", code: error.code },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
@@ -1583,14 +1340,6 @@ export async function getActiveUser(req: NextRequest) {
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
     console.error("Error in GET /api/v1/activity/active-users:", error);
-
-    if (error instanceof PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { message: "Database operation failed", code: error.code },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
@@ -1600,7 +1349,6 @@ export async function getActiveUser(req: NextRequest) {
 
 export async function updateAllUserActivity() {
   try {
-    // Get today's date for activity calculation
     const today = new Date();
     const startOfDay = new Date(
       today.getFullYear(),
@@ -1608,23 +1356,19 @@ export async function updateAllUserActivity() {
       today.getDate()
     );
 
-    // Get total users count
-    const totalUsers = await prisma.user.count();
+    const [{ totalUsers }] = await db
+      .select({ totalUsers: sql<number>`count(*)::int` })
+      .from(users);
 
-    // Get activity counts by type for today
-    const activityCounts = await prisma.userActivity.groupBy({
-      by: ["activityType"],
-      where: {
-        createdAt: {
-          gte: startOfDay,
-        },
-      },
-      _count: {
-        id: true,
-      },
-    });
+    const activityCounts = await db
+      .select({
+        activityType: userActivity.activityType,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(userActivity)
+      .where(gte(userActivity.createdAt, startOfDay))
+      .groupBy(userActivity.activityType);
 
-    // Initialize total counts
     const totalCounts = {
       totalRatingCount: 0,
       totalReadingCount: 0,
@@ -1640,77 +1384,63 @@ export async function updateAllUserActivity() {
       totalLessonSentenceFlashcardsCount: 0,
     };
 
-    // Map activity types to counts
     activityCounts.forEach((activity) => {
       switch (activity.activityType) {
         case "ARTICLE_RATING":
         case "STORIES_RATING":
         case "CHAPTER_RATING":
-          totalCounts.totalRatingCount += activity._count.id;
+          totalCounts.totalRatingCount += activity.count;
           break;
         case "ARTICLE_READ":
         case "STORIES_READ":
         case "CHAPTER_READ":
-          totalCounts.totalReadingCount += activity._count.id;
+          totalCounts.totalReadingCount += activity.count;
           break;
         case "LA_QUESTION":
-          totalCounts.totalLaQuestionCount += activity._count.id;
+          totalCounts.totalLaQuestionCount += activity.count;
           break;
         case "LEVEL_TEST":
-          totalCounts.totalLevelTestCount += activity._count.id;
+          totalCounts.totalLevelTestCount += activity.count;
           break;
         case "MC_QUESTION":
-          totalCounts.totalMcQuestionCount += activity._count.id;
+          totalCounts.totalMcQuestionCount += activity.count;
           break;
         case "SA_QUESTION":
-          totalCounts.totalSaQuestionCount += activity._count.id;
+          totalCounts.totalSaQuestionCount += activity.count;
           break;
         case "SENTENCE_FLASHCARDS":
-          totalCounts.totalSentenceFlashcardsCount += activity._count.id;
+          totalCounts.totalSentenceFlashcardsCount += activity.count;
           break;
         case "VOCABULARY_FLASHCARDS":
-          totalCounts.totalVocabularyFlashcardsCount += activity._count.id;
+          totalCounts.totalVocabularyFlashcardsCount += activity.count;
           break;
         case "VOCABULARY_MATCHING":
-          totalCounts.totalVocabularyActivityCount += activity._count.id;
+          totalCounts.totalVocabularyActivityCount += activity.count;
           break;
         case "SENTENCE_MATCHING":
         case "SENTENCE_ORDERING":
         case "SENTENCE_WORD_ORDERING":
         case "SENTENCE_CLOZE_TEST":
-          totalCounts.totalSentenceActivityCount += activity._count.id;
+          totalCounts.totalSentenceActivityCount += activity.count;
           break;
         case "LESSON_FLASHCARD":
-          totalCounts.totalLessonFlashcardCount += activity._count.id;
+          totalCounts.totalLessonFlashcardCount += activity.count;
           break;
         case "LESSON_SENTENCE_FLASHCARDS":
-          totalCounts.totalLessonSentenceFlashcardsCount += activity._count.id;
+          totalCounts.totalLessonSentenceFlashcardsCount += activity.count;
           break;
       }
     });
 
-    const userActivityData = {
-      totalUsers,
-      ...totalCounts,
-    };
-
     return NextResponse.json(
       {
         updateUserActivity: "success",
-        data: userActivityData,
+        data: { totalUsers, ...totalCounts },
       },
       { status: 200 }
     );
   } catch (err) {
     console.error("Error calculating user activity from database:", err);
-
-    if (err instanceof PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { message: "Database operation failed", code: err.code },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
@@ -1721,34 +1451,24 @@ export async function updateAllUserActivity() {
 // Create a new user activity record
 export async function createUserActivity(activityData: CreateActivityData) {
   try {
-    const activity = await prisma.userActivity.create({
-      data: {
+    const [activity] = await db
+      .insert(userActivity)
+      .values({
         userId: activityData.userId,
         activityType: activityData.activityType,
         targetId: activityData.targetId,
         completed: activityData.completed ?? false,
         details: activityData.details || null,
         createdAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
     return NextResponse.json(
-      {
-        message: "Activity created successfully",
-        data: activity,
-      },
+      { message: "Activity created successfully", data: activity },
       { status: 201 }
     );
   } catch (err) {
     console.error("Error creating user activity:", err);
-
-    if (err instanceof PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { message: "Database operation failed", code: err.code },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
@@ -1759,32 +1479,16 @@ export async function createUserActivity(activityData: CreateActivityData) {
 // Get user activities by user ID
 export async function getUserActivities(userId: string, limit?: number) {
   try {
-    const activities = await prisma.userActivity.findMany({
-      where: {
-        userId: userId,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: limit || 100,
-    });
+    const activities = await db
+      .select()
+      .from(userActivity)
+      .where(eq(userActivity.userId, userId))
+      .orderBy(desc(userActivity.createdAt))
+      .limit(limit || 100);
 
-    return NextResponse.json(
-      {
-        data: activities,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({ data: activities }, { status: 200 });
   } catch (err) {
     console.error("Error fetching user activities:", err);
-
-    if (err instanceof PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { message: "Database operation failed", code: err.code },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
@@ -1795,34 +1499,24 @@ export async function getUserActivities(userId: string, limit?: number) {
 // Delete user activity by ID
 export async function deleteUserActivity(activityId: string) {
   try {
-    await prisma.userActivity.delete({
-      where: {
-        id: activityId,
-      },
-    });
+    const deleted = await db
+      .delete(userActivity)
+      .where(eq(userActivity.id, activityId))
+      .returning({ id: userActivity.id });
+
+    if (deleted.length === 0) {
+      return NextResponse.json(
+        { message: "Activity not found" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json(
-      {
-        message: "Activity deleted successfully",
-      },
+      { message: "Activity deleted successfully" },
       { status: 200 }
     );
   } catch (err) {
     console.error("Error deleting user activity:", err);
-
-    if (err instanceof PrismaClientKnownRequestError) {
-      if (err.code === "P2025") {
-        return NextResponse.json(
-          { message: "Activity not found" },
-          { status: 404 }
-        );
-      }
-      return NextResponse.json(
-        { message: "Database operation failed", code: err.code },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
@@ -1836,42 +1530,31 @@ export async function updateUserActivity(
   updateData: Partial<Omit<CreateActivityData, "userId">>
 ) {
   try {
-    const activity = await prisma.userActivity.update({
-      where: {
-        id: activityId,
-      },
-      data: {
-        activityType: updateData.activityType,
-        targetId: updateData.targetId,
-        completed: updateData.completed,
-        details: updateData.details || null,
-        updatedAt: new Date(),
-      },
-    });
+    const updateValues: Record<string, any> = { updatedAt: new Date() };
+    if (updateData.activityType !== undefined) updateValues.activityType = updateData.activityType;
+    if (updateData.targetId !== undefined) updateValues.targetId = updateData.targetId;
+    if (updateData.completed !== undefined) updateValues.completed = updateData.completed;
+    if (updateData.details !== undefined) updateValues.details = updateData.details || null;
+
+    const [activity] = await db
+      .update(userActivity)
+      .set(updateValues)
+      .where(eq(userActivity.id, activityId))
+      .returning();
+
+    if (!activity) {
+      return NextResponse.json(
+        { message: "Activity not found" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json(
-      {
-        message: "Activity updated successfully",
-        data: activity,
-      },
+      { message: "Activity updated successfully", data: activity },
       { status: 200 }
     );
   } catch (err) {
     console.error("Error updating user activity:", err);
-
-    if (err instanceof PrismaClientKnownRequestError) {
-      if (err.code === "P2025") {
-        return NextResponse.json(
-          { message: "Activity not found" },
-          { status: 404 }
-        );
-      }
-      return NextResponse.json(
-        { message: "Database operation failed", code: err.code },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
