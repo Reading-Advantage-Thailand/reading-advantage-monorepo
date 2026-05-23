@@ -1,7 +1,16 @@
 import { NextResponse } from "next/server";
 import { ExtendedNextRequest } from "./auth-controller";
 import { MetricsGenresResponse, GenreMetrics } from "@/types/dashboard";
-import { prisma } from "@/lib/prisma";
+import { db, eq, and, gte, inArray } from "@reading-advantage/db";
+import {
+  users,
+  lessonRecords,
+  articles,
+  classroomStudents,
+  classroomTeachers,
+  userActivity,
+  xpLogs,
+} from "@reading-advantage/db/schema";
 import {
   getGenreMetrics as getEnhancedGenreMetrics,
   GenreMetricsResponse,
@@ -53,94 +62,108 @@ export async function getGenreMetrics(req: ExtendedNextRequest) {
     const startDate = new Date(now);
     startDate.setDate(startDate.getDate() - daysAgo);
 
-    const whereClause: any = {
-      createdAt: {
-        gte: startDate,
-      },
-    };
-
+    // Build conditions for lesson records
+    const conditions: any[] = [gte(lessonRecords.createdAt, startDate)];
     if (schoolId) {
-      whereClause.user = {
-        schoolId,
-      };
+      conditions.push(eq(users.schoolId, schoolId));
     }
 
-    const lessonRecords = (await prisma.lessonRecord.findMany({
-      where: whereClause,
-      select: {
-        id: true,
-        userId: true,
-        article: {
-          select: {
-            id: true,
-            genre: true,
-            raLevel: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            studentClassrooms: classId
-              ? {
-                  where: {
-                    classroomId: classId,
-                  },
-                  select: {
-                    id: true,
-                  },
-                }
-              : undefined,
-          },
-        },
-      },
-    })) as any;
+    const recordRows = await db
+      .select({
+        id: lessonRecords.id,
+        userId: lessonRecords.userId,
+        articleId: articles.id,
+        articleGenre: articles.genre,
+        articleRaLevel: articles.raLevel,
+      })
+      .from(lessonRecords)
+      .leftJoin(articles, eq(lessonRecords.articleId, articles.id))
+      .leftJoin(users, eq(lessonRecords.userId, users.id))
+      .where(and(...conditions));
 
-    const filteredRecords = classId
-      ? lessonRecords.filter((lr: any) => lr.user.studentClassrooms?.length > 0)
-      : lessonRecords;
+    // Filter by class if specified
+    let filteredRecords = recordRows;
+    if (classId) {
+      const classStudentRows = await db
+        .select({ studentId: classroomStudents.studentId })
+        .from(classroomStudents)
+        .where(eq(classroomStudents.classroomId, classId));
+      const classStudentIds = new Set(classStudentRows.map((r) => r.studentId));
+      filteredRecords = recordRows.filter((r) => classStudentIds.has(r.userId));
+    }
 
-    // Get XP for each article from UserActivity and XPLogs
     const articleIds = filteredRecords
-      .map((r: any) => r.article?.id)
-      .filter((id: any) => id);
+      .map((r) => r.articleId)
+      .filter((id): id is string => !!id);
 
-    const userIds = [...new Set(filteredRecords.map((r: any) => r.userId))];
+    const userIds = [...new Set(filteredRecords.map((r) => r.userId))];
 
-    // Get XP data from UserActivity + XPLogs
-    // Include both direct article activities and MC_QUESTION activities (which use question_id as targetId)
-    const xpData = await prisma.$queryRaw<
-      Array<{
-        user_id: string;
-        article_id: string;
-        total_xp: bigint;
-      }>
-    >`
-      SELECT 
-        ua.user_id,
-        COALESCE(
-          ua.details->>'articleId',
-          ua.target_id
-        ) as article_id,
-        COALESCE(SUM(xp.xp_earned), 0) as total_xp
-      FROM "UserActivity" ua
-      LEFT JOIN "XPLogs" xp ON ua.id = xp.activity_id
-        AND xp."createdAt" >= ${startDate}
-      WHERE ua.user_id = ANY(${userIds}::text[])
-        AND ua."createdAt" >= ${startDate}
-        AND (
-          ua.target_id = ANY(${articleIds}::text[])
-          OR ua.details->>'articleId' = ANY(${articleIds}::text[])
-        )
-      GROUP BY ua.user_id, article_id
-    `;
-
-    // Create XP lookup map
+    // Get XP data from userActivity + xpLogs
     const xpMap = new Map<string, number>();
-    xpData.forEach((row) => {
-      const key = `${row.user_id}:${row.article_id}`;
-      const currentXp = xpMap.get(key) || 0;
-      xpMap.set(key, currentXp + Number(row.total_xp));
-    });
+
+    if (userIds.length > 0 && articleIds.length > 0) {
+      const articleIdSet = new Set(articleIds);
+
+      // Fetch matching userActivity rows for these users in date range
+      const activityRows = await db
+        .select({
+          id: userActivity.id,
+          userId: userActivity.userId,
+          targetId: userActivity.targetId,
+          details: userActivity.details,
+        })
+        .from(userActivity)
+        .where(
+          and(
+            inArray(userActivity.userId, userIds),
+            gte(userActivity.createdAt, startDate)
+          )
+        );
+
+      // Filter to activities referencing one of our articleIds (targetId or details.articleId)
+      const relevantActivities = activityRows.filter((act) => {
+        const detailsArticleId = (act.details as any)?.articleId;
+        return (
+          articleIdSet.has(act.targetId ?? "") ||
+          articleIdSet.has(detailsArticleId)
+        );
+      });
+
+      // Get XP logs for these activity IDs
+      const activityIds = relevantActivities.map((a) => a.id);
+      const xpRows =
+        activityIds.length > 0
+          ? await db
+              .select({
+                activityId: xpLogs.activityId,
+                xpEarned: xpLogs.xpEarned,
+              })
+              .from(xpLogs)
+              .where(
+                and(
+                  inArray(xpLogs.activityId, activityIds),
+                  gte(xpLogs.createdAt, startDate)
+                )
+              )
+          : [];
+
+      const activityXpMap = new Map<string, number>();
+      xpRows.forEach((row) => {
+        activityXpMap.set(
+          row.activityId,
+          (activityXpMap.get(row.activityId) ?? 0) + row.xpEarned
+        );
+      });
+
+      // Build user:article → xp map
+      relevantActivities.forEach((act) => {
+        const articleId =
+          (act.details as any)?.articleId ?? act.targetId ?? "";
+        const key = `${act.userId}:${articleId}`;
+        const xp = activityXpMap.get(act.id) ?? 0;
+        xpMap.set(key, (xpMap.get(key) ?? 0) + xp);
+      });
+    }
 
     const genreMap = new Map<
       string,
@@ -152,8 +175,8 @@ export async function getGenreMetrics(req: ExtendedNextRequest) {
       }
     >();
 
-    filteredRecords.forEach((record: any) => {
-      const genre = record.article?.genre || "Unknown";
+    filteredRecords.forEach((record) => {
+      const genre = record.articleGenre || "Unknown";
 
       if (!genreMap.has(genre)) {
         genreMap.set(genre, {
@@ -166,13 +189,10 @@ export async function getGenreMetrics(req: ExtendedNextRequest) {
 
       const data = genreMap.get(genre)!;
       data.count += 1;
-      data.totalLevel += record.article?.raLevel || 0;
+      data.totalLevel += record.articleRaLevel || 0;
 
-      // Get XP from the lookup map instead of user.xp
-      const xpKey = `${record.userId}:${record.article?.id}`;
-      const articleXp = xpMap.get(xpKey) || 0;
-      data.totalXp += articleXp;
-
+      const xpKey = `${record.userId}:${record.articleId}`;
+      data.totalXp += xpMap.get(xpKey) ?? 0;
       data.userSet.add(record.userId);
     });
 
@@ -261,7 +281,6 @@ async function getEnhancedGenreMetricsResponse(
   const startTime = Date.now();
 
   try {
-    // Determine scope and scope ID
     let scope: "student" | "class" | "school";
     let scopeId: string;
 
@@ -275,12 +294,10 @@ async function getEnhancedGenreMetricsResponse(
       scope = "school";
       scopeId = schoolId;
     } else {
-      // Default to requesting user's data
       scope = "student";
       scopeId = req.session!.user.id;
     }
 
-    // Check authorization
     const authCheck = await checkEnhancedAuthorization(
       req.session,
       scope,
@@ -293,10 +310,8 @@ async function getEnhancedGenreMetricsResponse(
       );
     }
 
-    // Get enhanced metrics
     const metrics = await getEnhancedGenreMetrics(scope, scopeId, timeframe);
 
-    // Filter recommendations if not requested
     if (!includeRecommendations) {
       metrics.recommendations = [];
     }
@@ -340,94 +355,97 @@ async function checkEnhancedAuthorization(
     return { authorized: false, error: "Authentication required" };
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      id: true,
-      role: true,
-      schoolId: true,
-      studentClassrooms: {
-        select: { classroomId: true },
-      },
-      teacherClassrooms: {
-        select: { classroomId: true },
-      },
-      createdClassrooms: {
-        select: { id: true },
-      },
-    },
-  });
+  const [userRow] = await db
+    .select({ id: users.id, role: users.role, schoolId: users.schoolId })
+    .from(users)
+    .where(eq(users.id, session.user.id))
+    .limit(1);
 
-  if (!user) {
-    return { authorized: false, error: "User not found" };
-  }
+  if (!userRow) return { authorized: false, error: "User not found" };
 
   switch (scope) {
     case "student":
-      // Students can only access their own data
-      // Teachers/admins can access students in their scope
-      if (user.role === "STUDENT" || user.role === "USER") {
-        if (user.id !== scopeId) {
+      if (userRow.role === "STUDENT" || userRow.role === "USER") {
+        if (userRow.id !== scopeId) {
           return {
             authorized: false,
             error: "Students can only access their own metrics",
           };
         }
-      } else if (user.role === "TEACHER") {
-        // Check if teacher has access to this student
-        const studentAccess = await prisma.classroomStudent.findFirst({
-          where: {
-            studentId: scopeId,
-            classroom: {
-              OR: [
-                { teacherId: user.id },
-                { teachers: { some: { teacherId: user.id } } },
-              ],
-            },
-          },
-        });
+      } else if (userRow.role === "TEACHER") {
+        const teacherClassroomRows = await db
+          .select({ classroomId: classroomTeachers.classroomId })
+          .from(classroomTeachers)
+          .where(eq(classroomTeachers.teacherId, userRow.id));
+        const teacherClassroomIds = teacherClassroomRows.map((r) => r.classroomId);
+
+        if (teacherClassroomIds.length === 0) {
+          return {
+            authorized: false,
+            error: "Teacher does not have access to this student",
+          };
+        }
+
+        const [studentAccess] = await db
+          .select({ studentId: classroomStudents.studentId })
+          .from(classroomStudents)
+          .where(
+            and(
+              eq(classroomStudents.studentId, scopeId),
+              inArray(classroomStudents.classroomId, teacherClassroomIds)
+            )
+          )
+          .limit(1);
+
         if (!studentAccess) {
           return {
             authorized: false,
             error: "Teacher does not have access to this student",
           };
         }
-      } else if (user.role === "ADMIN" || user.role === "SYSTEM") {
-        // System admins and system users can access any student
+      } else if (userRow.role === "ADMIN" || userRow.role === "SYSTEM") {
+        // Full access
       } else {
         return { authorized: false, error: "Insufficient permissions" };
       }
       break;
 
-    case "class":
-      // Check if user has access to this classroom
-      const classroomAccess = await prisma.classroom.findFirst({
-        where: {
-          id: scopeId,
-          OR: [
-            // Teacher owns the classroom
-            { teacherId: user.id },
-            // Teacher is added as co-teacher
-            { teachers: { some: { teacherId: user.id } } },
-            // Student is in the classroom
-            { students: { some: { studentId: user.id } } },
-            // System admin access
-            ...(user.role === "ADMIN" || user.role === "SYSTEM" ? [{}] : []),
-          ],
-        },
-      });
+    case "class": {
+      if (userRow.role === "ADMIN" || userRow.role === "SYSTEM") break;
 
-      if (!classroomAccess) {
+      const [teacherAccess] = await db
+        .select({ classroomId: classroomTeachers.classroomId })
+        .from(classroomTeachers)
+        .where(
+          and(
+            eq(classroomTeachers.classroomId, scopeId),
+            eq(classroomTeachers.teacherId, userRow.id)
+          )
+        )
+        .limit(1);
+
+      const [studentAccess] = await db
+        .select({ classroomId: classroomStudents.classroomId })
+        .from(classroomStudents)
+        .where(
+          and(
+            eq(classroomStudents.classroomId, scopeId),
+            eq(classroomStudents.studentId, userRow.id)
+          )
+        )
+        .limit(1);
+
+      if (!teacherAccess && !studentAccess) {
         return { authorized: false, error: "No access to this classroom" };
       }
       break;
+    }
 
     case "school":
-      // Check school access
-      if (user.role === "ADMIN" || user.role === "SYSTEM") {
-        // System admins and system users can access any school
-      } else if (user.schoolId === scopeId) {
-        // Users can access their own school's data
+      if (userRow.role === "ADMIN" || userRow.role === "SYSTEM") {
+        // Full access
+      } else if (userRow.schoolId === scopeId) {
+        // User belongs to this school
       } else {
         return { authorized: false, error: "No access to this school" };
       }
