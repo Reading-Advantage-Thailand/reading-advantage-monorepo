@@ -16,7 +16,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 export interface GuardContext {
   user: NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;
