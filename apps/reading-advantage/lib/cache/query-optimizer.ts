@@ -5,19 +5,19 @@
  * by batching queries and using transactions efficiently.
  */
 
-import { prisma } from "@/lib/prisma";
+import { db, sql } from "@reading-advantage/db";
 
 /**
- * Batch multiple queries into a single transaction
- * This reduces connection pool usage significantly
+ * Batch multiple queries by awaiting them together
+ * (Drizzle does not expose Prisma's interactive $transaction over a list of
+ * pre-built promises; callers should pass already-issued query promises.)
  */
 export async function executeBatchQuery<T extends Record<string, any>>(
   queries: Array<Promise<any>>
 ): Promise<T[]> {
   try {
-    // Execute all queries in a single transaction
-    const results = await prisma.$transaction(queries as any);
-    return results;
+    const results = await Promise.all(queries);
+    return results as T[];
   } catch (error) {
     console.error('[QueryOptimizer] Batch query failed:', error);
     throw error;
@@ -26,13 +26,22 @@ export async function executeBatchQuery<T extends Record<string, any>>(
 
 /**
  * Execute a raw SQL query with connection pooling optimization
+ * Note: parameters are interpolated positionally via sql.raw placeholders;
+ * callers must pre-sanitize inputs (this is a port-as-is helper).
  */
 export async function executeOptimizedRaw<T = any>(
   query: string,
   ...params: any[]
 ): Promise<T[]> {
   try {
-    return await prisma.$queryRawUnsafe<T[]>(query, ...params);
+    let i = 0;
+    const interpolated = query.replace(/\$\d+/g, () => {
+      const v = params[i++];
+      if (typeof v === 'number') return String(v);
+      return `'${String(v).replace(/'/g, "''")}'`;
+    });
+    const result = (await db.execute(sql.raw(interpolated))) as unknown as T[];
+    return result;
   } catch (error) {
     console.error('[QueryOptimizer] Raw query failed:', query, error);
     throw error;
@@ -40,23 +49,21 @@ export async function executeOptimizedRaw<T = any>(
 }
 
 /**
- * Execute multiple raw queries in a single transaction
+ * Execute multiple raw queries in parallel (no interactive transaction here;
+ * Drizzle's transaction API uses a callback receiving a tx handle).
  */
 export async function executeBatchRawQueries<T extends Record<string, any>>(
   queries: Record<keyof T, { query: string; params: any[] }>
 ): Promise<T> {
   const queryKeys = Object.keys(queries) as Array<keyof T>;
-  
+
   try {
-    // Create query promises
-    const queryPromises = queryKeys.map(key => 
-      prisma.$queryRawUnsafe(queries[key].query, ...queries[key].params)
+    const queryPromises = queryKeys.map(key =>
+      executeOptimizedRaw(queries[key].query, ...queries[key].params)
     );
 
-    // Execute all queries in a single transaction
-    const results = await prisma.$transaction(queryPromises as any);
-    
-    // Map results back to their keys
+    const results = await Promise.all(queryPromises);
+
     const mappedResults = {} as T;
     queryKeys.forEach((key, index) => {
       (mappedResults as any)[key] = results[index];
@@ -131,9 +138,9 @@ export async function checkConnectionHealth(): Promise<{
 }> {
   try {
     // Simple query to test connection
-    await prisma.$queryRaw`SELECT 1`;
-    
-    // Note: Prisma doesn't expose pool stats directly
+    await db.execute(sql`SELECT 1`);
+
+    // Note: Drizzle/postgres-js does not expose pool stats directly here
     // This is a placeholder for monitoring
     return {
       healthy: true,
