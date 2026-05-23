@@ -8,7 +8,7 @@
  * - Assignment complexity factors
  */
 
-import { prisma } from '@/lib/prisma';
+import { db, sql } from '@reading-advantage/db';
 
 // ============================================================================
 // Types
@@ -101,10 +101,9 @@ export interface AtRiskStudent {
 export async function getAssignmentPrediction(
   assignmentId: string
 ): Promise<CompletionPrediction | null> {
-  const result = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_assignment_funnel WHERE assignment_id = $1`,
-    assignmentId
-  );
+  const result = (await db.execute(sql`
+    SELECT * FROM mv_assignment_funnel WHERE assignment_id = ${assignmentId}
+  `)) as unknown as any[];
   
   if (!result || result.length === 0) {
     return null;
@@ -133,7 +132,7 @@ export async function getAssignmentPrediction(
   
   // Determine prediction confidence
   let predictionConfidence: 'low' | 'medium' | 'high' = 'low';
-  let basedOnSamples = data.completed_count || 0;
+  const basedOnSamples = Number(data.completed_count) || 0;
   
   if (data.class_low_signal || basedOnSamples < 3) {
     predictionConfidence = 'low';
@@ -176,10 +175,9 @@ export async function getAssignmentPrediction(
 export async function getClassAssignmentMetrics(
   classroomId: string
 ): Promise<ClassAssignmentMetrics | null> {
-  const result = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_class_assignment_funnel WHERE classroom_id = $1`,
-    classroomId
-  );
+  const result = (await db.execute(sql`
+    SELECT * FROM mv_class_assignment_funnel WHERE classroom_id = ${classroomId}
+  `)) as unknown as any[];
   
   if (!result || result.length === 0) {
     return null;
@@ -215,10 +213,9 @@ export async function getClassAssignmentMetrics(
 export async function getSchoolAssignmentMetrics(
   schoolId: string
 ): Promise<SchoolAssignmentMetrics | null> {
-  const result = await prisma.$queryRawUnsafe<any[]>(
-    `SELECT * FROM mv_school_assignment_funnel WHERE school_id = $1`,
-    schoolId
-  );
+  const result = (await db.execute(sql`
+    SELECT * FROM mv_school_assignment_funnel WHERE school_id = ${schoolId}
+  `)) as unknown as any[];
   
   if (!result || result.length === 0) {
     return null;
@@ -250,42 +247,29 @@ export async function getAtRiskStudents(
   assignmentId?: string,
   limit: number = 20
 ): Promise<AtRiskStudent[]> {
-  let whereClause = '';
-  const params: any[] = [];
-  let paramIndex = 1;
-  
-  const conditions: string[] = [];
-  
+  // Build dynamic WHERE conditions using parameterized sql fragments
+  const conditions = [] as ReturnType<typeof sql>[];
+
   if (assignmentId) {
-    conditions.push(`a.id = $${paramIndex}`);
-    params.push(assignmentId);
-    paramIndex++;
+    conditions.push(sql`a.id = ${assignmentId}`);
   }
-  
+
   if (classroomId) {
-    conditions.push(`a.classroom_id = $${paramIndex}`);
-    params.push(classroomId);
-    paramIndex++;
+    conditions.push(sql`a.classroom_id = ${classroomId}`);
   } else if (schoolId) {
-    conditions.push(`c.school_id = $${paramIndex}`);
-    params.push(schoolId);
-    paramIndex++;
+    conditions.push(sql`c.school_id = ${schoolId}`);
   }
-  
-  // Add risk conditions
-  conditions.push(`(
+
+  // Always-on risk condition
+  conditions.push(sql`(
     (a.due_date IS NOT NULL AND a.due_date < NOW() AND sa.status != 'COMPLETED') OR
     (EXTRACT(EPOCH FROM (NOW() - a."createdAt")) / (24 * 3600) > 7 AND sa.status = 'NOT_STARTED') OR
     (EXTRACT(EPOCH FROM (NOW() - sa.started_at)) / (24 * 3600) > 3 AND sa.status = 'IN_PROGRESS')
   )`);
-  
-  if (conditions.length > 0) {
-    whereClause = 'WHERE ' + conditions.join(' AND ');
-  }
-  
-  params.push(limit);
-  
-  const query = `
+
+  const whereClause = sql.join([sql`WHERE`, sql.join(conditions, sql` AND `)], sql` `);
+
+  const result = (await db.execute(sql`
     SELECT 
       sa.student_id,
       u.name AS display_name,
@@ -298,7 +282,6 @@ export async function getAtRiskStudents(
         THEN EXTRACT(EPOCH FROM (NOW() - a.due_date)) / (24 * 3600)
         ELSE NULL 
       END AS days_overdue,
-      -- Risk score calculation
       CASE 
         WHEN a.due_date IS NOT NULL AND a.due_date < NOW() AND sa.status != 'COMPLETED' THEN 10
         ELSE 0
@@ -320,12 +303,10 @@ export async function getAtRiskStudents(
     JOIN users u ON sa.student_id = u.id
     ${whereClause}
     ORDER BY risk_score DESC, days_since_assigned DESC
-    LIMIT $${paramIndex}
-  `;
-  
-  const result = await prisma.$queryRawUnsafe<any[]>(query, ...params);
-  
-  return result.map(row => ({
+    LIMIT ${limit}
+  `)) as unknown as any[];
+
+  return result.map((row) => ({
     studentId: row.student_id,
     displayName: row.display_name || 'Unknown Student',
     assignmentId: row.assignment_id,
@@ -341,13 +322,18 @@ export async function getAtRiskStudents(
  * Bulk refresh assignment predictions
  */
 export async function refreshAssignmentFunnelMetrics(): Promise<void> {
-  await prisma.$executeRawUnsafe('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_assignment_funnel');
-  await prisma.$executeRawUnsafe('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_class_assignment_funnel');
-  await prisma.$executeRawUnsafe('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_school_assignment_funnel');
+  await db.execute(sql.raw('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_assignment_funnel'));
+  await db.execute(sql.raw('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_class_assignment_funnel'));
+  await db.execute(sql.raw('REFRESH MATERIALIZED VIEW CONCURRENTLY mv_school_assignment_funnel'));
 }
 
 /**
  * Calculate historical completion time for an article type (for new assignments)
+ *
+ * NOTE: The original Prisma query joins `article art ON a.article_id = art.id` —
+ * the legacy Prisma model `article` mapped to the singular `article` table.
+ * The unified Drizzle schema uses the plural `articles` table; this query is
+ * updated accordingly. Behavior is otherwise preserved.
  */
 export async function getHistoricalCompletionTime(
   articleId?: string,
@@ -358,35 +344,30 @@ export async function getHistoricalCompletionTime(
   p80Hours: number | null;
   sampleSize: number;
 }> {
-  let whereClause = '';
-  const params: any[] = [];
-  let paramIndex = 1;
-  
+  const conditions = [] as ReturnType<typeof sql>[];
+
   if (articleId) {
-    whereClause = 'WHERE a.article_id = $1';
-    params.push(articleId);
-    paramIndex++;
-  } else if (cefrLevel || raLevel) {
-    const conditions: string[] = [];
-    
+    conditions.push(sql`a.article_id = ${articleId}`);
+  } else {
     if (cefrLevel) {
-      conditions.push(`art.cefr_level = $${paramIndex}`);
-      params.push(cefrLevel);
-      paramIndex++;
+      conditions.push(sql`art.cefr_level = ${cefrLevel}`);
     }
-    
     if (raLevel) {
-      conditions.push(`art.ra_level = $${paramIndex}`);
-      params.push(raLevel);
-      paramIndex++;
-    }
-    
-    if (conditions.length > 0) {
-      whereClause = 'WHERE ' + conditions.join(' AND ');
+      conditions.push(sql`art.ra_level = ${raLevel}`);
     }
   }
-  
-  const query = `
+
+  // Always-on completion filter
+  conditions.push(sql`sa.status = 'COMPLETED'`);
+  conditions.push(sql`sa.started_at IS NOT NULL`);
+  conditions.push(sql`sa.completed_at IS NOT NULL`);
+  conditions.push(
+    sql`EXTRACT(EPOCH FROM (sa.completed_at - sa.started_at)) / 3600 BETWEEN 0.1 AND 48`
+  );
+
+  const whereClause = sql.join([sql`WHERE`, sql.join(conditions, sql` AND `)], sql` `);
+
+  const result = (await db.execute(sql`
     SELECT 
       PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY EXTRACT(EPOCH FROM (sa.completed_at - sa.started_at)) / 3600
@@ -398,22 +379,16 @@ export async function getHistoricalCompletionTime(
     FROM assignments a
     JOIN classrooms c ON a.classroom_id = c.id
     JOIN student_assignments sa ON a.id = sa.assignment_id
-    JOIN article art ON a.article_id = art.id
+    JOIN articles art ON a.article_id = art.id
     ${whereClause}
-    AND sa.status = 'COMPLETED'
-    AND sa.started_at IS NOT NULL
-    AND sa.completed_at IS NOT NULL
-    AND EXTRACT(EPOCH FROM (sa.completed_at - sa.started_at)) / 3600 BETWEEN 0.1 AND 48
-  `;
-  
-  const result = await prisma.$queryRawUnsafe<any[]>(query, ...params);
-  
+  `)) as unknown as any[];
+
   if (!result || result.length === 0) {
     return { medianHours: null, p80Hours: null, sampleSize: 0 };
   }
-  
+
   const data = result[0];
-  
+
   return {
     medianHours: data.median_hours ? Number(data.median_hours) : null,
     p80Hours: data.p80_hours ? Number(data.p80_hours) : null,
