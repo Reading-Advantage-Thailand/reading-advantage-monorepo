@@ -15,7 +15,7 @@ import { UserCircle, GraduationCap, School, Ghost } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-// Define Role locally to avoid importing @prisma/client in client component
+// Define Role locally to avoid pulling enum constants into this client bundle
 enum Role {
   USER = "USER",
   STUDENT = "STUDENT",
