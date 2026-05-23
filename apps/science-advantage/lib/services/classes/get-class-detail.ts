@@ -1,6 +1,13 @@
-import type { StandardsAlignment } from '@prisma/client';
+import { and, asc, count, db, eq } from '@reading-advantage/db';
+import {
+  scienceClasses,
+  scienceClassStudents,
+  scienceCurriculumUnits,
+  scienceLessons,
+  scienceUnitLessons,
+} from '@reading-advantage/db/schema';
 
-import prisma from '@/lib/prisma';
+import type { StandardsAlignment } from '@/lib/enums';
 
 type LessonSummary = {
   id: string;
@@ -33,66 +40,93 @@ export type ClassDetailWithCurriculum = {
   curriculumUnits: CurriculumUnitSummary[];
 };
 
+/**
+ * @kind read
+ * Fetches a science class with its enrolled students and ordered curriculum
+ * (units filtered to the class's framework + grade level; lessons ordered
+ * within each unit).
+ */
 export async function getClassDetailWithCurriculum(
   classId: string
 ): Promise<ClassDetailWithCurriculum | null> {
-  const classRecord = await prisma.class.findUnique({
-    where: { id: classId },
-    include: {
-      students: {
-        select: { id: true },
-      },
-      _count: {
-        select: { students: true },
-      },
-    },
-  });
+  const [classRecord] = await db
+    .select()
+    .from(scienceClasses)
+    .where(eq(scienceClasses.id, classId))
+    .limit(1);
 
   if (!classRecord) {
     return null;
   }
 
-  const curriculumUnits = await prisma.curriculumUnit.findMany({
-    where: {
-      classId,
-      framework: classRecord.standardsAlignment,
-      gradeLevel: classRecord.gradeLevel,
-    },
-    include: {
-      lessons: {
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-          description: true,
-          order: true,
-          gradeLevel: true,
-        },
-        orderBy: { order: 'asc' },
-      },
-    },
-    orderBy: { order: 'asc' },
-  });
+  const students = await db
+    .select({ id: scienceClassStudents.studentId })
+    .from(scienceClassStudents)
+    .where(eq(scienceClassStudents.classId, classId));
 
-  const { _count, students, ...rest } = classRecord;
+  const [{ value: studentCount }] = await db
+    .select({ value: count() })
+    .from(scienceClassStudents)
+    .where(eq(scienceClassStudents.classId, classId));
+
+  const units = await db
+    .select({
+      id: scienceCurriculumUnits.id,
+      title: scienceCurriculumUnits.title,
+      description: scienceCurriculumUnits.description,
+      order: scienceCurriculumUnits.order,
+    })
+    .from(scienceCurriculumUnits)
+    .where(
+      and(
+        eq(scienceCurriculumUnits.classId, classId),
+        eq(scienceCurriculumUnits.framework, classRecord.standardsAlignment),
+        eq(scienceCurriculumUnits.gradeLevel, classRecord.gradeLevel)
+      )
+    )
+    .orderBy(asc(scienceCurriculumUnits.order));
+
+  // For each unit, fetch its lessons (via the explicit unit_lessons junction)
+  const curriculumUnits: CurriculumUnitSummary[] = await Promise.all(
+    units.map(async (unit) => {
+      const lessons = await db
+        .select({
+          id: scienceLessons.id,
+          slug: scienceLessons.slug,
+          title: scienceLessons.title,
+          description: scienceLessons.description,
+          order: scienceLessons.order,
+          gradeLevel: scienceLessons.gradeLevel,
+        })
+        .from(scienceUnitLessons)
+        .innerJoin(
+          scienceLessons,
+          eq(scienceLessons.id, scienceUnitLessons.lessonId)
+        )
+        .where(eq(scienceUnitLessons.unitId, unit.id))
+        .orderBy(asc(scienceLessons.order));
+
+      return {
+        id: unit.id,
+        title: unit.title,
+        description: unit.description,
+        order: unit.order,
+        lessons,
+      };
+    })
+  );
 
   return {
-    ...rest,
+    id: classRecord.id,
+    name: classRecord.name,
+    gradeLevel: classRecord.gradeLevel,
+    standardsAlignment: classRecord.standardsAlignment as StandardsAlignment,
+    joinCode: classRecord.joinCode,
+    teacherId: classRecord.teacherId,
+    createdAt: classRecord.createdAt,
+    updatedAt: classRecord.updatedAt,
     students,
-    studentCount: _count.students,
-    curriculumUnits: curriculumUnits.map(unit => ({
-      id: unit.id,
-      title: unit.title,
-      description: unit.description,
-      order: unit.order,
-      lessons: unit.lessons.map(lesson => ({
-        id: lesson.id,
-        slug: lesson.slug,
-        title: lesson.title,
-        description: lesson.description,
-        order: lesson.order,
-        gradeLevel: lesson.gradeLevel,
-      })),
-    })),
+    studentCount,
+    curriculumUnits,
   };
 }
