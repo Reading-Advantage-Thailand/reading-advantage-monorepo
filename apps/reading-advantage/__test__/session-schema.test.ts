@@ -1,5 +1,5 @@
 import { sessionUserSchema } from "../lib/session";
-import { Role, LicenseType } from "@prisma/client";
+import { Role, LicenseType } from "@/lib/enums";
 
 const validFullUser = {
   id: "user-123",
