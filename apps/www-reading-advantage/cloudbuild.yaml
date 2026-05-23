@@ -27,6 +27,13 @@ steps:
       - "--region=asia-southeast1"
       - "--platform=managed"
       - "--allow-unauthenticated"
+      - "--cpu=2"
+      - "--memory=2Gi"
+      - "--min-instances=1"
+      - "--max-instances=10"
+      - "--no-cpu-throttling"
+      - "--concurrency=80"
+      - "--timeout=300"
       - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_APP_URL=https://www.reading-advantage.com"
       - "--quiet"
 
