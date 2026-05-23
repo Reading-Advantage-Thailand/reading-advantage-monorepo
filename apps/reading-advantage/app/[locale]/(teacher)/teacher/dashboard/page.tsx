@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import { TeacherDashboardContent } from "@/components/dashboard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
