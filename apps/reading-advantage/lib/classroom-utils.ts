@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 async function fetchData(endpoint: string) {
   try {
