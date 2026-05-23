@@ -6,7 +6,8 @@ import { getScopedI18n } from "@/locales/server";
 import { fetchData } from "@/utils/fetch-data";
 import CustomError from "./custom-error";
 import { Article } from "@/components/models/article-model";
-import { prisma } from "@/lib/prisma";
+import { db, and, eq } from "@reading-advantage/db";
+import { userActivity } from "@reading-advantage/db/schema";
 import WordList from "@/components/word-list";
 import LAQuestionCard from "@/components/questions/laq-question-card";
 import MCQuestionCard from "@/components/questions/mc-question-card";
@@ -35,16 +36,17 @@ async function getArticleRating(
   userId: string
 ): Promise<number> {
   try {
-    const activity = await prisma.userActivity.findUnique({
-      where: {
-        userId_activityType_targetId: {
-          userId,
-          activityType: "ARTICLE_RATING",
-          targetId: articleId,
-        },
-      },
-      select: { details: true },
-    });
+    const [activity] = await db
+      .select({ details: userActivity.details })
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          eq(userActivity.activityType, "ARTICLE_RATING"),
+          eq(userActivity.targetId, articleId),
+        ),
+      )
+      .limit(1);
     return (activity?.details as any)?.rating ?? 0;
   } catch {
     return 0;
