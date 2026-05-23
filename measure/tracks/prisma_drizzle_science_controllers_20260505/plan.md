@@ -191,7 +191,7 @@ be green against BEFORE and stay green against AFTER.
 
 - [x] Task: Add `@reading-advantage/domain` to `apps/science-advantage/package.json`; `pnpm install`; build `db` + `domain`; run migrations (Section 0.1). Verify `import { curriculum } from "@reading-advantage/domain"` type-checks. [84d3009]
 - [x] Task: **Schema gap fix** (Track 1 follow-up) — add 4 M:N junction tables to `packages/db/src/schema/science.ts` (`science_lesson_standards`, `science_unit_lessons`, `science_class_students`, `science_question_standards`); generate migration `0015`; apply locally; build `db` + `domain` clean. Required by the pilot route and most of Phase 1/4 paths. [f818827]
-- [ ] Task: **Pilot** — migrate `app/api/lessons/[lessonSlug]/route.ts` per the worked example. Pause, confirm the loop with the reviewer before continuing.
+- [x] Task: **Pilot** — migrate `app/api/lessons/[lessonSlug]/route.ts` per the worked example. Pause, confirm the loop with the reviewer before continuing. [9d40a9e]
 - [ ] Task: Measure - User Manual Verification 'Setup' (Protocol in workflow.md)
 
 ## Phase 1: Curriculum, lessons & standards
