@@ -5,7 +5,15 @@
  * transactional tables when materialized views are unavailable.
  */
 
-import { prisma } from '@/lib/prisma';
+import { db, eq, and, gte, lte, sql, count } from "@reading-advantage/db";
+import {
+  users,
+  xpLogs,
+  assignments,
+  studentAssignments,
+  classrooms,
+  userActivity,
+} from "@reading-advantage/db/schema";
 
 export interface FallbackOptions {
   /** Log fallback usage for monitoring */
@@ -88,17 +96,14 @@ export async function queryWithFallback<T>(
  */
 async function checkMatviewExists(viewName: string): Promise<boolean> {
   try {
-    const result = await prisma.$queryRawUnsafe<Array<{ exists: boolean }>>(
-      `
+    const result = (await db.execute(sql`
       SELECT EXISTS (
         SELECT 1
         FROM pg_matviews
         WHERE schemaname = 'public'
-        AND matviewname = $1
+        AND matviewname = ${viewName}
       ) as exists
-      `,
-      viewName
-    );
+    `)) as Array<{ exists: boolean }>;
 
     return result[0]?.exists || false;
   } catch (error) {
@@ -118,11 +123,11 @@ export async function getStudentVelocity(
     'mv_student_velocity',
     // Materialized view query
     async () => {
-      return prisma.$queryRaw`
+      return db.execute(sql`
         SELECT *
         FROM mv_student_velocity
         WHERE user_id = ${userId}
-      `;
+      `);
     },
     // Fallback query
     async () => {
@@ -130,53 +135,53 @@ export async function getStudentVelocity(
       const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          schoolId: true,
-          xp: true,
-          level: true,
-          cefrLevel: true,
-        },
-      });
+      const [user] = await db
+        .select({
+          id: users.id,
+          email: users.email,
+          name: users.name,
+          schoolId: users.schoolId,
+          xp: users.xp,
+          level: users.level,
+          cefrLevel: users.cefrLevel,
+        })
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
 
       if (!user) return null;
 
       // Get XP logs for time windows
-      const xpLogs = await prisma.xPLog.findMany({
-        where: {
-          userId,
-          createdAt: { gte: thirtyDaysAgo },
-        },
-        select: {
-          xpEarned: true,
-          createdAt: true,
-        },
-      });
+      const xpLogEntries = await db
+        .select({
+          xpEarned: xpLogs.xpEarned,
+          createdAt: xpLogs.createdAt,
+        })
+        .from(xpLogs)
+        .where(
+          and(eq(xpLogs.userId, userId), gte(xpLogs.createdAt, thirtyDaysAgo))
+        );
 
-      const xpLast7d = xpLogs
+      const xpLast7d = xpLogEntries
         .filter(log => log.createdAt >= sevenDaysAgo)
         .reduce((sum, log) => sum + log.xpEarned, 0);
 
-      const xpLast30d = xpLogs.reduce((sum, log) => sum + log.xpEarned, 0);
+      const xpLast30d = xpLogEntries.reduce((sum, log) => sum + log.xpEarned, 0);
 
       const activeDays7d = new Set(
-        xpLogs
+        xpLogEntries
           .filter(log => log.createdAt >= sevenDaysAgo)
           .map(log => log.createdAt.toISOString().split('T')[0])
       ).size;
 
       const activeDays30d = new Set(
-        xpLogs.map(log => log.createdAt.toISOString().split('T')[0])
+        xpLogEntries.map(log => log.createdAt.toISOString().split('T')[0])
       ).size;
 
-      const lastActivity = xpLogs.length > 0
-        ? xpLogs.reduce((latest, log) => 
+      const lastActivity = xpLogEntries.length > 0
+        ? xpLogEntries.reduce((latest, log) =>
             log.createdAt > latest ? log.createdAt : latest,
-            xpLogs[0].createdAt
+            xpLogEntries[0].createdAt
           )
         : null;
 
@@ -222,42 +227,48 @@ export async function getAssignmentFunnel(
     'mv_assignment_funnel',
     // Materialized view query
     async () => {
-      return prisma.$queryRaw`
+      return db.execute(sql`
         SELECT *
         FROM mv_assignment_funnel
         WHERE assignment_id = ${assignmentId}
-      `;
+      `);
     },
     // Fallback query
     async () => {
-      const assignment = await prisma.assignment.findUnique({
-        where: { id: assignmentId },
-        include: {
-          classroom: {
-            select: { schoolId: true },
-          },
-          studentAssignments: {
-            select: {
-              studentId: true,
-              status: true,
-              startedAt: true,
-              completedAt: true,
-            },
-          },
-        },
-      });
+      const [assignment] = await db
+        .select({
+          id: assignments.id,
+          classroomId: assignments.classroomId,
+          articleId: assignments.articleId,
+          createdAt: assignments.createdAt,
+          schoolId: classrooms.schoolId,
+        })
+        .from(assignments)
+        .leftJoin(classrooms, eq(classrooms.id, assignments.classroomId))
+        .where(eq(assignments.id, assignmentId))
+        .limit(1);
 
       if (!assignment) return null;
 
-      const totalStudents = assignment.studentAssignments.length;
-      const startedCount = assignment.studentAssignments.filter(
+      const studentAssignmentRows = await db
+        .select({
+          studentId: studentAssignments.studentId,
+          status: studentAssignments.status,
+          startedAt: studentAssignments.startedAt,
+          completedAt: studentAssignments.completedAt,
+        })
+        .from(studentAssignments)
+        .where(eq(studentAssignments.assignmentId, assignmentId));
+
+      const totalStudents = studentAssignmentRows.length;
+      const startedCount = studentAssignmentRows.filter(
         (sa) => sa.status === 'IN_PROGRESS' || sa.status === 'COMPLETED'
       ).length;
-      const completedCount = assignment.studentAssignments.filter(
+      const completedCount = studentAssignmentRows.filter(
         (sa) => sa.status === 'COMPLETED'
       ).length;
 
-      const completedAssignments = assignment.studentAssignments.filter(
+      const completedAssignments = studentAssignmentRows.filter(
         (sa) => sa.status === 'COMPLETED' && sa.startedAt && sa.completedAt
       );
 
@@ -274,7 +285,7 @@ export async function getAssignmentFunnel(
       return [{
         assignment_id: assignment.id,
         classroom_id: assignment.classroomId,
-        school_id: assignment.classroom.schoolId,
+        school_id: assignment.schoolId,
         article_id: assignment.articleId,
         assigned_at: assignment.createdAt,
         total_students: totalStudents,
@@ -302,58 +313,64 @@ export async function getDailyActivityRollups(
     'mv_daily_activity_rollups',
     // Materialized view query
     async () => {
-      return prisma.$queryRaw`
+      return db.execute(sql`
         SELECT *
         FROM mv_daily_activity_rollups
         WHERE school_id = ${schoolId}
           AND activity_date >= ${startDate}
           AND activity_date <= ${endDate}
         ORDER BY activity_date DESC
-      `;
+      `);
     },
     // Fallback query
     async () => {
-      const activities = await prisma.userActivity.groupBy({
-        by: ['createdAt'],
-        where: {
-          user: {
-            schoolId,
-            role: 'STUDENT',
-          },
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        },
-        _count: {
-          id: true,
-          userId: true,
-        },
-        _sum: {
-          timer: true,
-        },
-      });
+      // Drizzle does not provide a Prisma-style groupBy with relation filters;
+      // emulate by joining users → user_activity and grouping in raw SQL.
+      const activities = (await db
+        .select({
+          createdAt: userActivity.createdAt,
+          userId: userActivity.userId,
+          activityCount: count(userActivity.id),
+          totalTimer: sql<number>`COALESCE(SUM(${userActivity.timer}), 0)`,
+        })
+        .from(userActivity)
+        .innerJoin(users, eq(users.id, userActivity.userId))
+        .where(
+          and(
+            eq(users.schoolId, schoolId as any),
+            eq(users.role, 'STUDENT'),
+            gte(userActivity.createdAt, startDate),
+            lte(userActivity.createdAt, endDate)
+          )
+        )
+        .groupBy(userActivity.createdAt, userActivity.userId)) as Array<{
+        createdAt: Date;
+        userId: string;
+        activityCount: number;
+        totalTimer: number;
+      }>;
 
       // Group by date
       const dailyStats = new Map<string, any>();
 
       for (const activity of activities) {
         const dateKey = activity.createdAt.toISOString().split('T')[0];
-        
+
         if (!dailyStats.has(dateKey)) {
           dailyStats.set(dateKey, {
             school_id: schoolId,
             activity_date: new Date(dateKey),
             total_activities: 0,
-            active_students: new Set(),
+            active_students: new Set<string>(),
             completed_activities: 0,
             total_time_minutes: 0,
           });
         }
 
         const stats = dailyStats.get(dateKey);
-        stats.total_activities += activity._count.id;
-        stats.total_time_minutes += (activity._sum.timer || 0) / 1000 / 60;
+        stats.total_activities += Number(activity.activityCount);
+        stats.active_students.add(activity.userId);
+        stats.total_time_minutes += (Number(activity.totalTimer) || 0) / 1000 / 60;
       }
 
       return Array.from(dailyStats.values()).map((stats) => ({
@@ -394,40 +411,43 @@ export async function checkMatviewsHealth(): Promise<{
     'mv_daily_activity_rollups',
   ];
 
-  // Use single transaction for all health checks to optimize connections
-  const results = await prisma.$transaction(async (tx) => {
-    const viewChecks = [];
-    
+  // Drizzle's transaction takes a callback receiving a tx handle; run health
+  // checks sequentially inside it to keep connection usage bounded.
+  const results = await db.transaction(async (tx) => {
+    const viewChecks: Array<{
+      name: string;
+      exists: boolean;
+      lastRefresh: Date | null;
+      rowCount: number | null;
+    }> = [];
+
     for (const viewName of viewNames) {
       try {
         console.log(`[HEALTH] Checking materialized view: ${viewName}`);
-        
+
         const [existsResult, statsResult] = await Promise.all([
-          tx.$queryRawUnsafe<Array<{ exists: boolean }>>(
-            `
+          tx.execute(sql`
             SELECT EXISTS (
               SELECT 1 FROM pg_matviews
-              WHERE schemaname = 'public' AND matviewname = $1
+              WHERE schemaname = 'public' AND matviewname = ${viewName}
             ) as exists
-            `,
-            viewName
-          ),
-          tx.$queryRawUnsafe<Array<{ last_refresh: Date | null; row_count: bigint | null }>>(
-            `
+          `) as Promise<Array<{ exists: boolean }>>,
+          (tx.execute(sql.raw(`
             SELECT
               pg_stat_get_last_analyze_time(c.oid) as last_refresh,
               (SELECT count(*) FROM ${viewName}) as row_count
             FROM pg_class c
             JOIN pg_namespace n ON n.oid = c.relnamespace
-            WHERE c.relname = $1 AND n.nspname = 'public'
-            `,
-            viewName
-          ).catch(() => [{ last_refresh: null, row_count: null }]), // Handle potential table doesn't exist error
+            WHERE c.relname = '${viewName}' AND n.nspname = 'public'
+          `)) as Promise<Array<{ last_refresh: Date | null; row_count: bigint | string | null }>>)
+            .catch(() => [{ last_refresh: null, row_count: null }]),
         ]);
 
         const exists = existsResult[0]?.exists || false;
         const lastRefresh = statsResult[0]?.last_refresh || null;
-        const rowCount = statsResult[0]?.row_count ? Number(statsResult[0].row_count) : null;
+        const rowCount = statsResult[0]?.row_count != null
+          ? Number(statsResult[0].row_count)
+          : null;
 
         viewChecks.push({
           name: viewName,
@@ -444,13 +464,13 @@ export async function checkMatviewsHealth(): Promise<{
           rowCount: null,
         });
       }
-      
+
       // Small delay between checks to prevent overwhelming the connection
       if (viewNames.indexOf(viewName) < viewNames.length - 1) {
         await new Promise(resolve => setTimeout(resolve, 50));
       }
     }
-    
+
     return viewChecks;
   });
 
