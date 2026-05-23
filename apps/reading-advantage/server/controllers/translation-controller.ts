@@ -1,4 +1,5 @@
-import { prisma } from "@/lib/prisma";
+import { db, eq, and, asc } from "@reading-advantage/db";
+import { articles, chapters, stories } from "@reading-advantage/db/schema";
 import { splitTextIntoSentences } from "@/lib/utils";
 import { Translate } from "@google-cloud/translate/build/src/v2";
 import { generateObject } from "ai";
@@ -38,32 +39,38 @@ export async function translate(request: NextRequest, ctx: RequestContext) {
     );
   }
 
-  let article: any = await prisma.article.findUnique({
-    where: { id: article_id },
-    select: {
-      id: true,
-      summary: true,
-      translatedSummary: true,
-      passage: true,
-      translatedPassage: true,
-      sentences: true,
-    },
-  });
+  const articleCols = {
+    id: articles.id,
+    summary: articles.summary,
+    translatedSummary: articles.translatedSummary,
+    passage: articles.passage,
+    translatedPassage: articles.translatedPassage,
+    sentences: articles.sentences,
+  };
+  const [articleRow] = await db
+    .select(articleCols)
+    .from(articles)
+    .where(eq(articles.id, article_id))
+    .limit(1);
+  let article: any = articleRow ?? null;
 
   let isChapter = false;
 
   if (!article) {
-    article = await prisma.chapter.findUnique({
-      where: { id: article_id },
-      select: {
-        id: true,
-        summary: true,
-        translatedSummary: true,
-        passage: true,
-        translatedPassage: true,
-        sentences: true,
-      },
-    });
+    const chapterCols = {
+      id: chapters.id,
+      summary: chapters.summary,
+      translatedSummary: chapters.translatedSummary,
+      passage: chapters.passage,
+      translatedPassage: chapters.translatedPassage,
+      sentences: chapters.sentences,
+    };
+    const [chapterRow] = await db
+      .select(chapterCols)
+      .from(chapters)
+      .where(eq(chapters.id, article_id))
+      .limit(1);
+    article = chapterRow ?? null;
     isChapter = !!article;
   }
 
@@ -108,15 +115,9 @@ export async function translate(request: NextRequest, ctx: RequestContext) {
       };
 
       if (isChapter) {
-        await prisma.chapter.update({
-          where: { id: article_id },
-          data: { translatedSummary: updatedTranslations },
-        });
+        await db.update(chapters).set({ translatedSummary: updatedTranslations }).where(eq(chapters.id, article_id));
       } else {
-        await prisma.article.update({
-          where: { id: article_id },
-          data: { translatedSummary: updatedTranslations },
-        });
+        await db.update(articles).set({ translatedSummary: updatedTranslations }).where(eq(articles.id, article_id));
       }
       return NextResponse.json({
         message: "Translation successful",
@@ -187,15 +188,9 @@ export async function translate(request: NextRequest, ctx: RequestContext) {
       };
 
       if (isChapter) {
-        await prisma.chapter.update({
-          where: { id: article_id },
-          data: { translatedPassage: updatedTranslations },
-        });
+        await db.update(chapters).set({ translatedPassage: updatedTranslations }).where(eq(chapters.id, article_id));
       } else {
-        await prisma.article.update({
-          where: { id: article_id },
-          data: { translatedPassage: updatedTranslations },
-        });
+        await db.update(articles).set({ translatedPassage: updatedTranslations }).where(eq(articles.id, article_id));
       }
       return NextResponse.json({
         message: "Translation successful",
@@ -418,14 +413,11 @@ export async function translateChapterContent(
     );
   }
 
-  const chapter = await prisma.chapter.findUnique({
-    where: {
-      storyId_chapterNumber: {
-        storyId,
-        chapterNumber: chapterNum,
-      },
-    },
-  });
+  const [chapter] = await db
+    .select()
+    .from(chapters)
+    .where(and(eq(chapters.storyId, storyId), eq(chapters.chapterNumber, chapterNum)))
+    .limit(1);
 
   if (!chapter) {
     return NextResponse.json({ message: "Chapter not found" }, { status: 404 });
@@ -465,17 +457,10 @@ export async function translateChapterContent(
         ...translated,
       };
 
-      await prisma.chapter.update({
-        where: {
-          storyId_chapterNumber: {
-            storyId,
-            chapterNumber: chapterNum,
-          },
-        },
-        data: {
-          translatedSummary: updatedTranslations,
-        },
-      });
+      await db
+        .update(chapters)
+        .set({ translatedSummary: updatedTranslations })
+        .where(and(eq(chapters.storyId, storyId), eq(chapters.chapterNumber, chapterNum)));
 
       return NextResponse.json({
         message: "Translation successful",
@@ -540,17 +525,10 @@ export async function translateChapterContent(
         [targetLanguage]: translatedSentences,
       };
 
-      const updated = await prisma.chapter.update({
-        where: {
-          storyId_chapterNumber: {
-            storyId,
-            chapterNumber: chapterNum,
-          },
-        },
-        data: {
-          translatedPassage: updatedTranslations,
-        },
-      });
+      await db
+        .update(chapters)
+        .set({ translatedPassage: updatedTranslations })
+        .where(and(eq(chapters.storyId, storyId), eq(chapters.chapterNumber, chapterNum)));
 
       return NextResponse.json({
         message: "Translation successful",
@@ -594,17 +572,24 @@ export async function translateStorySummary(
     return NextResponse.json({ message: "Invalid storyId" }, { status: 400 });
   }
 
-  const story = await prisma.story.findUnique({
-    where: { id: storyId },
-    include: { chapters: true },
-  });
+  const [storyRow] = await db
+    .select()
+    .from(stories)
+    .where(eq(stories.id, storyId))
+    .limit(1);
 
-  if (!story) {
+  if (!storyRow) {
     // console.log("Story not found!");
     return NextResponse.json({ message: "Story not found" }, { status: 404 });
   }
 
-  const storyData = story;
+  const storyChapters = await db
+    .select()
+    .from(chapters)
+    .where(eq(chapters.storyId, storyId))
+    .orderBy(asc(chapters.chapterNumber));
+
+  const storyData = storyRow;
   if (!storyData.storyBible || !(storyData.storyBible as any).summary) {
     // console.log("No summary found!");
     return NextResponse.json({ message: "No summary found" }, { status: 404 });
@@ -638,12 +623,10 @@ export async function translateStorySummary(
         [targetLanguage]: translatedSentences,
       };
 
-      await prisma.story.update({
-        where: { id: storyId },
-        data: {
-          translatedSummary: updatedTranslations,
-        },
-      });
+      await db
+        .update(stories)
+        .set({ translatedSummary: updatedTranslations })
+        .where(eq(stories.id, storyId));
       // console.log("Translation successful");
       return NextResponse.json({
         message: "translation successful",
@@ -665,7 +648,7 @@ export async function translateStorySummary(
     let allTranslatedSentences: { [key: string]: string[] } = {};
     let allTranslationsExist = true;
 
-    storyData.chapters.forEach((chapter: any, index: number) => {
+    storyChapters.forEach((chapter: any, index: number) => {
       if (!chapter.summary) {
         allTranslationsExist = false;
         return;
@@ -690,8 +673,8 @@ export async function translateStorySummary(
     }
 
     try {
-      for (let index = 0; index < storyData.chapters.length; index++) {
-        const chapter = storyData.chapters[index];
+      for (let index = 0; index < storyChapters.length; index++) {
+        const chapter = storyChapters[index];
         if (!chapter.summary) {
           continue;
         }
@@ -715,12 +698,10 @@ export async function translateStorySummary(
           [targetLanguage]: translatedSentences,
         };
 
-        await prisma.chapter.update({
-          where: { id: chapter.id },
-          data: {
-            translatedSummary: updatedTranslations,
-          },
-        });
+        await db
+          .update(chapters)
+          .set({ translatedSummary: updatedTranslations })
+          .where(eq(chapters.id, chapter.id));
       }
 
       // console.log("Translation successful", allTranslatedSentences);
