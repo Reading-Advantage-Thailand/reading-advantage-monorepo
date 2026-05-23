@@ -1,5 +1,6 @@
 import {
   pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, decimal, unique,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { users } from "./users";
 
@@ -229,4 +230,52 @@ export const scienceAssignments = pgTable("science_assignments", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => [
   unique("science_assignments_class_lesson_unique").on(table.classId, table.lessonId),
+]);
+
+// ─── M:N Junction Tables (Track 3 schema gap fix) ────────────────────────────
+// Prisma used implicit join tables (`_LessonToStandard`, `_CurriculumUnitToLesson`,
+// `_ClassToStudent`, `_QuizQuestionToStandard`). Drizzle requires explicit tables.
+
+export const scienceLessonStandards = pgTable("science_lesson_standards", {
+  lessonId: uuid("lesson_id")
+    .notNull()
+    .references(() => scienceLessons.id, { onDelete: "cascade" }),
+  standardId: uuid("standard_id")
+    .notNull()
+    .references(() => scienceStandards.id, { onDelete: "cascade" }),
+}, (table) => [
+  primaryKey({ columns: [table.lessonId, table.standardId] }),
+]);
+
+export const scienceUnitLessons = pgTable("science_unit_lessons", {
+  unitId: uuid("unit_id")
+    .notNull()
+    .references(() => scienceCurriculumUnits.id, { onDelete: "cascade" }),
+  lessonId: uuid("lesson_id")
+    .notNull()
+    .references(() => scienceLessons.id, { onDelete: "cascade" }),
+}, (table) => [
+  primaryKey({ columns: [table.unitId, table.lessonId] }),
+]);
+
+export const scienceClassStudents = pgTable("science_class_students", {
+  classId: uuid("class_id")
+    .notNull()
+    .references(() => scienceClasses.id, { onDelete: "cascade" }),
+  studentId: text("student_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+}, (table) => [
+  primaryKey({ columns: [table.classId, table.studentId] }),
+]);
+
+export const scienceQuestionStandards = pgTable("science_question_standards", {
+  questionId: uuid("question_id")
+    .notNull()
+    .references(() => scienceQuizQuestions.id, { onDelete: "cascade" }),
+  standardId: uuid("standard_id")
+    .notNull()
+    .references(() => scienceStandards.id, { onDelete: "cascade" }),
+}, (table) => [
+  primaryKey({ columns: [table.questionId, table.standardId] }),
 ]);

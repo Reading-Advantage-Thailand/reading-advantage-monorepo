@@ -104,3 +104,44 @@ describe("assignments table", () => {
     expect(columnNames).toContain("dueDate");
   });
 });
+
+describe("science M:N junction tables (0015)", () => {
+  it("exports the four junction tables", () => {
+    expect(schema.scienceLessonStandards).toBeDefined();
+    expect(schema.scienceUnitLessons).toBeDefined();
+    expect(schema.scienceClassStudents).toBeDefined();
+    expect(schema.scienceQuestionStandards).toBeDefined();
+  });
+
+  it("scienceLessonStandards has (lesson_id, standard_id) columns", () => {
+    const cols = Object.keys(schema.scienceLessonStandards).filter(
+      (k) => !k.startsWith("_") && !k.startsWith("[")
+    );
+    expect(cols).toContain("lessonId");
+    expect(cols).toContain("standardId");
+  });
+
+  it("scienceUnitLessons has (unit_id, lesson_id) columns", () => {
+    const cols = Object.keys(schema.scienceUnitLessons).filter(
+      (k) => !k.startsWith("_") && !k.startsWith("[")
+    );
+    expect(cols).toContain("unitId");
+    expect(cols).toContain("lessonId");
+  });
+
+  it("scienceClassStudents has (class_id, student_id) columns", () => {
+    const cols = Object.keys(schema.scienceClassStudents).filter(
+      (k) => !k.startsWith("_") && !k.startsWith("[")
+    );
+    expect(cols).toContain("classId");
+    expect(cols).toContain("studentId");
+  });
+
+  it("scienceQuestionStandards has (question_id, standard_id) columns", () => {
+    const cols = Object.keys(schema.scienceQuestionStandards).filter(
+      (k) => !k.startsWith("_") && !k.startsWith("[")
+    );
+    expect(cols).toContain("questionId");
+    expect(cols).toContain("standardId");
+  });
+});
