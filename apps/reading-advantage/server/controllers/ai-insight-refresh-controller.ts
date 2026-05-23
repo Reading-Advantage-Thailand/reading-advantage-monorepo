@@ -5,7 +5,16 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db, and, eq, gt, gte, count } from "@reading-advantage/db";
+import {
+  aiInsights,
+  aiInsightCache,
+  licenses,
+  classrooms,
+  classroomTeachers,
+  users,
+  userActivity,
+} from "@reading-advantage/db/schema";
 import {
   generateStudentInsights,
   generateTeacherInsights,
@@ -13,7 +22,7 @@ import {
   generateLicenseInsights,
   generateSystemInsights,
 } from "@/server/services/ai-insight-service";
-import { AIInsightScope } from "@prisma/client";
+import { AIInsightScope } from "@/lib/enums";
 
 interface RefreshResult {
   scope: string;
@@ -34,31 +43,27 @@ export async function getAIInsightsRefreshStatus(req: NextRequest) {
     const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
     // Get counts of recent insights
-    const recentInsights = await prisma.aIInsight.groupBy({
-      by: ['scope'],
-      where: {
-        createdAt: {
-          gte: last24h,
-        },
-      },
-      _count: true,
-    });
+    const recentInsights = await db
+      .select({ scope: aiInsights.scope, value: count() })
+      .from(aiInsights)
+      .where(gte(aiInsights.createdAt, last24h))
+      .groupBy(aiInsights.scope);
 
     // Get cache status
-    const cacheStats = await prisma.aIInsightCache.groupBy({
-      by: ['scope'],
-      _count: true,
-    });
+    const cacheStats = await db
+      .select({ scope: aiInsightCache.scope, value: count() })
+      .from(aiInsightCache)
+      .groupBy(aiInsightCache.scope);
 
     return NextResponse.json({
       status: "healthy",
       last24Hours: recentInsights.map(r => ({
         scope: r.scope,
-        count: r._count,
+        count: r.value,
       })),
       cacheStatus: cacheStats.map(c => ({
         scope: c.scope,
-        cached: c._count,
+        cached: c.value,
       })),
       timestamp: now.toISOString(),
     });
@@ -182,21 +187,15 @@ async function refreshSystemInsights(): Promise<RefreshResult> {
     const cacheKey = "system:all";
 
     // Clear old cache
-    await prisma.aIInsightCache.deleteMany({
-      where: {
-        cacheKey,
-      },
-    });
+    await db.delete(aiInsightCache).where(eq(aiInsightCache.cacheKey, cacheKey));
 
     // Save to cache
     if (insights.length > 0) {
-      await prisma.aIInsightCache.create({
-        data: {
-          cacheKey,
-          scope: AIInsightScope.SYSTEM,
-          insights: insights as any,
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        },
+      await db.insert(aiInsightCache).values({
+        cacheKey,
+        scope: AIInsightScope.SYSTEM,
+        insights: insights as any,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
     }
 
@@ -223,21 +222,15 @@ async function refreshSystemInsights(): Promise<RefreshResult> {
  * Refresh all license insights
  */
 async function refreshAllLicenseInsights(): Promise<RefreshResult[]> {
-  const licenses = await prisma.license.findMany({
-    where: {
-      expiresAt: {
-        gt: new Date(), // Only active licenses
-      },
-    },
-    select: {
-      id: true,
-    },
-  });
+  const licenseRows = await db
+    .select({ id: licenses.id })
+    .from(licenses)
+    .where(gt(licenses.expiresAt, new Date()));
 
-  console.log(`  Found ${licenses.length} active licenses`);
+  console.log(`  Found ${licenseRows.length} active licenses`);
 
   const results = await Promise.allSettled(
-    licenses.map(async (license) => {
+    licenseRows.map(async (license) => {
       const startTime = Date.now();
       try {
         const insights = await generateLicenseInsights(license.id);
@@ -245,21 +238,15 @@ async function refreshAllLicenseInsights(): Promise<RefreshResult[]> {
         const cacheKey = `license:${license.id}`;
 
         // Clear old cache
-        await prisma.aIInsightCache.deleteMany({
-          where: {
-            cacheKey,
-          },
-        });
+        await db.delete(aiInsightCache).where(eq(aiInsightCache.cacheKey, cacheKey));
 
         // Save to cache
         if (insights.length > 0) {
-          await prisma.aIInsightCache.create({
-            data: {
-              cacheKey,
-              scope: AIInsightScope.LICENSE,
-              insights: insights as any,
-              expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            },
+          await db.insert(aiInsightCache).values({
+            cacheKey,
+            scope: AIInsightScope.LICENSE,
+            insights: insights as any,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           });
         }
 
@@ -293,22 +280,15 @@ async function refreshAllClassroomInsights(): Promise<RefreshResult[]> {
   const last30Days = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
   // Get classrooms with recent activity
-  const classrooms = await prisma.classroom.findMany({
-    where: {
-      archived: false,
-      updatedAt: {
-        gte: last30Days, // Only classrooms updated in last 30 days
-      },
-    },
-    select: {
-      id: true,
-    },
-  });
+  const classroomRows = await db
+    .select({ id: classrooms.id })
+    .from(classrooms)
+    .where(and(eq(classrooms.archived, false), gte(classrooms.updatedAt, last30Days)));
 
-  console.log(`  Found ${classrooms.length} active classrooms`);
+  console.log(`  Found ${classroomRows.length} active classrooms`);
 
   const results = await Promise.allSettled(
-    classrooms.map(async (classroom) => {
+    classroomRows.map(async (classroom) => {
       const startTime = Date.now();
       try {
         const insights = await generateClassroomInsights(classroom.id);
@@ -316,21 +296,15 @@ async function refreshAllClassroomInsights(): Promise<RefreshResult[]> {
         const cacheKey = `classroom:${classroom.id}`;
 
         // Clear old cache
-        await prisma.aIInsightCache.deleteMany({
-          where: {
-            cacheKey,
-          },
-        });
+        await db.delete(aiInsightCache).where(eq(aiInsightCache.cacheKey, cacheKey));
 
         // Save to cache
         if (insights.length > 0) {
-          await prisma.aIInsightCache.create({
-            data: {
-              cacheKey,
-              scope: AIInsightScope.CLASSROOM,
-              insights: insights as any,
-              expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            },
+          await db.insert(aiInsightCache).values({
+            cacheKey,
+            scope: AIInsightScope.CLASSROOM,
+            insights: insights as any,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           });
         }
 
@@ -364,20 +338,11 @@ async function refreshAllTeacherInsights(): Promise<RefreshResult[]> {
   const last30Days = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
   // Get teachers with active classrooms via ClassroomTeacher junction table
-  const activeTeacherIds = await prisma.classroomTeacher.findMany({
-    where: {
-      classroom: {
-        archived: false,
-        updatedAt: {
-          gte: last30Days,
-        },
-      },
-    },
-    select: {
-      teacherId: true,
-    },
-    distinct: ['teacherId'],
-  });
+  const activeTeacherIds = await db
+    .selectDistinct({ teacherId: classroomTeachers.teacherId })
+    .from(classroomTeachers)
+    .innerJoin(classrooms, eq(classroomTeachers.classroomId, classrooms.id))
+    .where(and(eq(classrooms.archived, false), gte(classrooms.updatedAt, last30Days)));
 
   const teacherIds = activeTeacherIds.map(ct => ct.teacherId);
 
@@ -392,21 +357,15 @@ async function refreshAllTeacherInsights(): Promise<RefreshResult[]> {
         const cacheKey = `teacher:${teacherId}`;
 
         // Clear old cache
-        await prisma.aIInsightCache.deleteMany({
-          where: {
-            cacheKey,
-          },
-        });
+        await db.delete(aiInsightCache).where(eq(aiInsightCache.cacheKey, cacheKey));
 
         // Save to cache
         if (insights.length > 0) {
-          await prisma.aIInsightCache.create({
-            data: {
-              cacheKey,
-              scope: AIInsightScope.TEACHER,
-              insights: insights as any,
-              expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            },
+          await db.insert(aiInsightCache).values({
+            cacheKey,
+            scope: AIInsightScope.TEACHER,
+            insights: insights as any,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           });
         }
 
@@ -440,22 +399,12 @@ async function refreshAllStudentInsights(): Promise<RefreshResult[]> {
   const last7Days = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
   // Get students with recent activity
-  const students = await prisma.user.findMany({
-    where: {
-      role: "STUDENT",
-      userActivities: {
-        some: {
-          createdAt: {
-            gte: last7Days, // Active in last 7 days
-          },
-        },
-      },
-    },
-    select: {
-      id: true,
-    },
-    take: 1000, // Limit to prevent timeout - adjust based on needs
-  });
+  const students = await db
+    .selectDistinct({ id: users.id })
+    .from(users)
+    .innerJoin(userActivity, eq(userActivity.userId, users.id))
+    .where(and(eq(users.role, "STUDENT"), gte(userActivity.createdAt, last7Days)))
+    .limit(1000);
 
   console.log(`  Found ${students.length} active students`);
 
@@ -468,21 +417,15 @@ async function refreshAllStudentInsights(): Promise<RefreshResult[]> {
         const cacheKey = `student:${student.id}`;
 
         // Clear old cache
-        await prisma.aIInsightCache.deleteMany({
-          where: {
-            cacheKey,
-          },
-        });
+        await db.delete(aiInsightCache).where(eq(aiInsightCache.cacheKey, cacheKey));
 
         // Save to cache
         if (insights.length > 0) {
-          await prisma.aIInsightCache.create({
-            data: {
-              cacheKey,
-              scope: AIInsightScope.STUDENT,
-              insights: insights as any,
-              expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            },
+          await db.insert(aiInsightCache).values({
+            cacheKey,
+            scope: AIInsightScope.STUDENT,
+            insights: insights as any,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           });
         }
 
