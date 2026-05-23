@@ -35,7 +35,37 @@ Write all components and modules in TypeScript with 2-space indentation. ESLint 
 
 ## Testing Guidelines
 
-Tests are organized by scope. Execute `npm run test` for unit coverage, `npm run test:integration` when touching API routes or Prisma logic, and `npm run test:e2e` before deploys. Name test files with the `.test.ts` or `.spec.ts` suffix adjacent to the code under test. Seed deterministic fixtures before integration runs, and update snapshots whenever intentional UI changes are introduced.
+Tests are organized by scope. Execute `pnpm test` for the full suite, `pnpm test:integration` for API-route / DB integration tests only, `pnpm exec vitest run --config vitest.unit.config.ts` for the DB-free unit subset, and `pnpm test:e2e` before deploys. Name test files with the `.test.ts` or `.spec.ts` suffix adjacent to the code under test (integration tests use `.integration.test.ts`). Seed deterministic fixtures inside each `beforeEach`/`afterEach` (truncate-and-reseed against Drizzle tables; see `app/api/lessons/[lessonSlug]/route.integration.test.ts` for the canonical pattern).
+
+## Local Test Database
+
+Integration tests run against an isolated Postgres database `science_advantage_test` on the same container the rest of the monorepo uses (port 5432). The schema is applied via Drizzle migrations — Prisma is no longer involved in test-DB provisioning.
+
+**One-time setup:**
+
+```bash
+docker exec reading-advantage-postgres createdb -U postgres science_advantage_test
+```
+
+**Run integration tests** (`vitest.integration.config.ts` runs `drizzle-kit migrate` once via `globalSetup`, then your test files):
+
+```bash
+pnpm --filter science-advantage test:integration
+```
+
+**Override the test DB** (CI, remote DB, etc.):
+
+```bash
+TEST_DATABASE_URL=postgresql://user:pass@host:5432/my_test_db \
+  pnpm --filter science-advantage test:integration
+```
+
+Resolution order (see `lib/test/resolve-test-database-url.ts`):
+1. `TEST_DATABASE_URL` — used verbatim.
+2. `DATABASE_URL` with `_test` appended to the pathname.
+3. Built-in default: `postgresql://postgres:postgres@localhost:5432/science_advantage_test`.
+
+**Troubleshooting `ERROR: type "StandardsAlignment" already exists`:** this means something tried to run `prisma db push` against a database that already has Drizzle migrations applied (e.g. the dev DB). The fix is *never* point Prisma at the test DB — Track 3 moved test-DB provisioning entirely to Drizzle. Use the commands above, not `prisma db push`.
 
 ## Commit & Pull Request Guidelines
 

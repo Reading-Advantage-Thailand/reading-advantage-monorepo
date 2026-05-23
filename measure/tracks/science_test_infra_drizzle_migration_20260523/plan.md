@@ -23,7 +23,7 @@
 
 ## Phase 4: Documentation
 
-- [ ] Task: Update `apps/science-advantage/AGENTS.md` with a `## Local Test Database` section: createdb one-liner, `TEST_DATABASE_URL` env, `pnpm test` vs `pnpm test:integration` distinction, troubleshooting note for "type already exists" if anyone tries to point Prisma at the test DB.
+- [x] Task: Update `apps/science-advantage/AGENTS.md` with a `## Local Test Database` section: createdb one-liner, `TEST_DATABASE_URL` env, `pnpm test` vs `pnpm test:integration` distinction, troubleshooting note for "type already exists" if anyone tries to point Prisma at the test DB.
 
 ## Phase 5: Hand back to Track 3
 
