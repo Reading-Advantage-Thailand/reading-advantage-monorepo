@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 
-// Define Roles locally to avoid importing @prisma/client in Edge Middleware
+// Define Roles locally to avoid pulling backend enum modules into Edge Middleware
 const ROLES = {
   USER: "USER",
   STUDENT: "STUDENT",
