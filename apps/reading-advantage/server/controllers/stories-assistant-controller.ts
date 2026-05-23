@@ -10,7 +10,8 @@ import { ExtendedNextRequest } from "./auth-controller";
 import { promptChatBot } from "@/data/prompt-chatbot";
 import { openai, openaiModel } from "@/utils/openai";
 import { generateWordList } from "../utils/generators/word-list-generator";
-import { prisma } from "@/lib/prisma";
+import { db, and, eq } from "@reading-advantage/db";
+import { chapters } from "@reading-advantage/db/schema";
 
 interface RequestContext {
   params: Promise<{
@@ -133,15 +134,11 @@ export async function getChapterWordlist(
     const { storyId, chapterNumber } = await ctx.params;
     const chapNum = parseInt(chapterNumber);
 
-    const chapterData = await prisma.chapter.findUnique({
-      where: {
-        storyId_chapterNumber: {
-          storyId,
-          chapterNumber: chapNum,
-        },
-      },
-      select: { words: true, passage: true },
-    });
+    const [chapterData] = await db
+      .select({ words: chapters.words, passage: chapters.passage })
+      .from(chapters)
+      .where(and(eq(chapters.storyId, storyId), eq(chapters.chapterNumber, chapNum)))
+      .limit(1);
 
     if (!chapterData) {
       return NextResponse.json(
@@ -188,19 +185,14 @@ export async function getChapterWordlist(
               timeSeconds: index * 2,
             }));
 
-            await prisma.chapter.update({
-              where: {
-                storyId_chapterNumber: {
-                  storyId,
-                  chapterNumber: chapNum,
-                },
-              },
-              data: {
+            await db
+              .update(chapters)
+              .set({
                 words: JSON.stringify({
                   word_list: enhancedWordList,
                 }),
-              },
-            });
+              })
+              .where(and(eq(chapters.storyId, storyId), eq(chapters.chapterNumber, chapNum)));
 
             await generateChapterAudioForWord({
               wordList: wordList.word_list,
@@ -242,19 +234,14 @@ export async function getChapterWordlist(
         timeSeconds: index * 2,
       }));
 
-      await prisma.chapter.update({
-        where: {
-          storyId_chapterNumber: {
-            storyId,
-            chapterNumber: chapNum,
-          },
-        },
-        data: {
+      await db
+        .update(chapters)
+        .set({
           words: JSON.stringify({
             word_list: enhancedWordList,
           }),
-        },
-      });
+        })
+        .where(and(eq(chapters.storyId, storyId), eq(chapters.chapterNumber, chapNum)));
 
       await generateChapterAudioForWord({
         wordList: wordList.word_list,
