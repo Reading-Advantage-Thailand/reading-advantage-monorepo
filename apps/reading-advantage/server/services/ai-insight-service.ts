@@ -1,7 +1,27 @@
 import { generateText } from "ai";
 import { openai, openaiModel } from "@/utils/openai";
-import { prisma } from "@/lib/prisma";
-import { AIInsightType, AIInsightScope, AIInsightPriority } from "@prisma/client";
+import { db, and, eq, gte, lt, desc } from "@reading-advantage/db";
+import {
+  users,
+  licenses,
+  licenseOnUsers,
+  classrooms,
+  classroomTeachers,
+  classroomStudents,
+  articles,
+  assignments,
+  studentAssignments,
+  userActivity,
+  xpLogs,
+  lessonRecords,
+  learningGoals,
+  aiInsights,
+} from "@reading-advantage/db/schema";
+import {
+  AIInsightType,
+  AIInsightScope,
+  AIInsightPriority,
+} from "@/lib/enums";
 
 /**
  * AI Insight Generation Service
@@ -33,49 +53,90 @@ export async function generateStudentInsights(
   userId: string
 ): Promise<GeneratedInsight[]> {
   try {
-    // Fetch student data
-    const student = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        lessonRecords: {
-          take: 50,
-          orderBy: { createdAt: "desc" },
-          include: {
-            article: {
-              select: {
-                cefrLevel: true,
-                genre: true,
-                raLevel: true,
-              },
-            },
-          },
-        },
-        userActivities: {
-          take: 100,
-          orderBy: { createdAt: "desc" },
-        },
-        studentAssignments: {
-          take: 20,
-          orderBy: { updatedAt: "desc" },
-          include: {
-            assignment: true,
-          },
-        },
-        xpLogs: {
-          take: 100,
-          orderBy: { createdAt: "desc" },
-        },
-        learningGoals: {
-          where: {
-            status: "ACTIVE",
-          },
-        },
-      },
-    });
+    // Fetch student core record
+    const [studentRow] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
-    if (!student) {
+    if (!studentRow) {
       throw new Error("Student not found");
     }
+
+    // Fetch related data in parallel (mirrors Prisma `include` shape)
+    const [
+      lessonRecordRows,
+      userActivityRows,
+      studentAssignmentRows,
+      xpLogRows,
+      learningGoalRows,
+    ] = await Promise.all([
+      db
+        .select({
+          id: lessonRecords.id,
+          userId: lessonRecords.userId,
+          articleId: lessonRecords.articleId,
+          createdAt: lessonRecords.createdAt,
+          updatedAt: lessonRecords.updatedAt,
+          article: {
+            cefrLevel: articles.cefrLevel,
+            genre: articles.genre,
+            raLevel: articles.raLevel,
+          },
+        })
+        .from(lessonRecords)
+        .leftJoin(articles, eq(lessonRecords.articleId, articles.id))
+        .where(eq(lessonRecords.userId, userId))
+        .orderBy(desc(lessonRecords.createdAt))
+        .limit(50),
+      db
+        .select()
+        .from(userActivity)
+        .where(eq(userActivity.userId, userId))
+        .orderBy(desc(userActivity.createdAt))
+        .limit(100),
+      db
+        .select({
+          id: studentAssignments.id,
+          assignmentId: studentAssignments.assignmentId,
+          studentId: studentAssignments.studentId,
+          completed: studentAssignments.completed,
+          status: studentAssignments.status,
+          score: studentAssignments.score,
+          startedAt: studentAssignments.startedAt,
+          completedAt: studentAssignments.completedAt,
+          createdAt: studentAssignments.createdAt,
+          updatedAt: studentAssignments.updatedAt,
+          assignment: assignments,
+        })
+        .from(studentAssignments)
+        .leftJoin(assignments, eq(studentAssignments.assignmentId, assignments.id))
+        .where(eq(studentAssignments.studentId, userId))
+        .orderBy(desc(studentAssignments.updatedAt))
+        .limit(20),
+      db
+        .select()
+        .from(xpLogs)
+        .where(eq(xpLogs.userId, userId))
+        .orderBy(desc(xpLogs.createdAt))
+        .limit(100),
+      db
+        .select()
+        .from(learningGoals)
+        .where(
+          and(eq(learningGoals.userId, userId), eq(learningGoals.status, "ACTIVE"))
+        ),
+    ]);
+
+    const student = {
+      ...studentRow,
+      lessonRecords: lessonRecordRows,
+      userActivities: userActivityRows,
+      studentAssignments: studentAssignmentRows,
+      xpLogs: xpLogRows,
+      learningGoals: learningGoalRows,
+    };
 
     // Calculate metrics
     const metrics = calculateStudentMetrics(student);
@@ -107,45 +168,95 @@ export async function generateTeacherInsights(
   userId: string
 ): Promise<GeneratedInsight[]> {
   try {
-    // Fetch teacher data with classrooms and students
-    const teacher = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        teacherClassrooms: {
-          include: {
-            classroom: {
-              include: {
-                students: {
-                  include: {
-                    student: {
-                      include: {
-                        userActivities: {
-                          take: 10,
-                          orderBy: { createdAt: "desc" },
-                        },
-                        studentAssignments: {
-                          take: 10,
-                          orderBy: { updatedAt: "desc" },
-                        },
-                      },
-                    },
-                  },
-                },
-                assignments: {
-                  include: {
-                    studentAssignments: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
+    // Fetch teacher core record
+    const [teacherRow] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
-    if (!teacher) {
+    if (!teacherRow) {
       throw new Error("Teacher not found");
     }
+
+    // Fetch teacher's classrooms (via ClassroomTeacher junction)
+    const teacherClassroomRows = await db
+      .select({ classroom: classrooms })
+      .from(classroomTeachers)
+      .innerJoin(classrooms, eq(classroomTeachers.classroomId, classrooms.id))
+      .where(eq(classroomTeachers.teacherId, userId));
+
+    const classroomList = teacherClassroomRows.map((tc) => tc.classroom);
+    const classroomIds = classroomList.map((c) => c.id);
+
+    // Per-classroom: fetch students + assignments
+    const classroomTree = await Promise.all(
+      classroomList.map(async (classroom) => {
+        // students in classroom
+        const studentRows = await db
+          .select({ student: users })
+          .from(classroomStudents)
+          .innerJoin(users, eq(classroomStudents.studentId, users.id))
+          .where(eq(classroomStudents.classroomId, classroom.id));
+
+        // For each student, fetch recent activities + assignments
+        const studentsWithRelations = await Promise.all(
+          studentRows.map(async ({ student }) => {
+            const [activities, sAssignments] = await Promise.all([
+              db
+                .select()
+                .from(userActivity)
+                .where(eq(userActivity.userId, student.id))
+                .orderBy(desc(userActivity.createdAt))
+                .limit(10),
+              db
+                .select()
+                .from(studentAssignments)
+                .where(eq(studentAssignments.studentId, student.id))
+                .orderBy(desc(studentAssignments.updatedAt))
+                .limit(10),
+            ]);
+            return {
+              student: {
+                ...student,
+                userActivities: activities,
+                studentAssignments: sAssignments,
+              },
+            };
+          })
+        );
+
+        // assignments for classroom with their studentAssignments
+        const classroomAssignments = await db
+          .select()
+          .from(assignments)
+          .where(eq(assignments.classroomId, classroom.id));
+
+        const assignmentsWithSA = await Promise.all(
+          classroomAssignments.map(async (a) => {
+            const sas = await db
+              .select()
+              .from(studentAssignments)
+              .where(eq(studentAssignments.assignmentId, a.id));
+            return { ...a, studentAssignments: sas };
+          })
+        );
+
+        return {
+          classroom: {
+            ...classroom,
+            students: studentsWithRelations,
+            assignments: assignmentsWithSA,
+          },
+        };
+      })
+    );
+
+    const teacher = {
+      ...teacherRow,
+      teacherClassrooms: classroomTree,
+    };
+    void classroomIds;
 
     // Calculate metrics
     const metrics = calculateTeacherMetrics(teacher);
@@ -177,40 +288,78 @@ export async function generateClassroomInsights(
   classroomId: string
 ): Promise<GeneratedInsight[]> {
   try {
-    const classroom = await prisma.classroom.findUnique({
-      where: { id: classroomId },
-      include: {
-        students: {
-          include: {
-            student: {
-              include: {
-                userActivities: {
-                  take: 20,
-                  orderBy: { createdAt: "desc" },
-                },
-                studentAssignments: {
-                  take: 10,
-                  orderBy: { updatedAt: "desc" },
-                },
-                lessonRecords: {
-                  take: 20,
-                  orderBy: { createdAt: "desc" },
-                },
-              },
-            },
-          },
-        },
-        assignments: {
-          include: {
-            studentAssignments: true,
-          },
-        },
-      },
-    });
+    const [classroomRow] = await db
+      .select()
+      .from(classrooms)
+      .where(eq(classrooms.id, classroomId))
+      .limit(1);
 
-    if (!classroom) {
+    if (!classroomRow) {
       throw new Error("Classroom not found");
     }
+
+    // Students in this classroom (with related activities/assignments/lessons)
+    const studentRows = await db
+      .select({ student: users })
+      .from(classroomStudents)
+      .innerJoin(users, eq(classroomStudents.studentId, users.id))
+      .where(eq(classroomStudents.classroomId, classroomId));
+
+    const studentsWithRelations = await Promise.all(
+      studentRows.map(async ({ student }) => {
+        const [activities, sAssignments, lRecords] = await Promise.all([
+          db
+            .select()
+            .from(userActivity)
+            .where(eq(userActivity.userId, student.id))
+            .orderBy(desc(userActivity.createdAt))
+            .limit(20),
+          db
+            .select()
+            .from(studentAssignments)
+            .where(eq(studentAssignments.studentId, student.id))
+            .orderBy(desc(studentAssignments.updatedAt))
+            .limit(10),
+          db
+            .select()
+            .from(lessonRecords)
+            .where(eq(lessonRecords.userId, student.id))
+            .orderBy(desc(lessonRecords.createdAt))
+            .limit(20),
+        ]);
+        return {
+          student: {
+            ...student,
+            userActivities: activities,
+            studentAssignments: sAssignments,
+            lessonRecords: lRecords,
+          },
+        };
+      })
+    );
+
+    const classroomAssignments = await db
+      .select()
+      .from(assignments)
+      .where(eq(assignments.classroomId, classroomId));
+
+    const assignmentsWithSA = await Promise.all(
+      classroomAssignments.map(async (a) => {
+        const sas = await db
+          .select()
+          .from(studentAssignments)
+          .where(eq(studentAssignments.assignmentId, a.id));
+        return { ...a, studentAssignments: sas };
+      })
+    );
+
+    const classroom = {
+      ...classroomRow,
+      // Preserve the legacy `classroomName` field used by the prompt builder
+      classroomName: classroomRow.name,
+      students: studentsWithRelations,
+      assignments: assignmentsWithSA,
+    };
 
     const metrics = calculateClassroomMetrics(classroom);
     const prompt = buildClassroomInsightPrompt(classroom, metrics);
@@ -238,31 +387,53 @@ export async function generateLicenseInsights(
   licenseId: string
 ): Promise<GeneratedInsight[]> {
   try {
-    const license = await prisma.license.findUnique({
-      where: { id: licenseId },
-      include: {
-        licenseUsers: {
-          include: {
-            user: {
-              include: {
-                xpLogs: {
-                  take: 50,
-                  orderBy: { createdAt: "desc" },
-                },
-                userActivities: {
-                  take: 50,
-                  orderBy: { createdAt: "desc" },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
+    const [licenseRow] = await db
+      .select()
+      .from(licenses)
+      .where(eq(licenses.id, licenseId))
+      .limit(1);
 
-    if (!license) {
+    if (!licenseRow) {
       throw new Error("License not found");
     }
+
+    // License users via licenseOnUsers junction
+    const licenseUserRows = await db
+      .select({ user: users })
+      .from(licenseOnUsers)
+      .innerJoin(users, eq(licenseOnUsers.userId, users.id))
+      .where(eq(licenseOnUsers.licenseId, licenseId));
+
+    const licenseUsersWithRelations = await Promise.all(
+      licenseUserRows.map(async ({ user }) => {
+        const [xpRows, activityRows] = await Promise.all([
+          db
+            .select()
+            .from(xpLogs)
+            .where(eq(xpLogs.userId, user.id))
+            .orderBy(desc(xpLogs.createdAt))
+            .limit(50),
+          db
+            .select()
+            .from(userActivity)
+            .where(eq(userActivity.userId, user.id))
+            .orderBy(desc(userActivity.createdAt))
+            .limit(50),
+        ]);
+        return {
+          user: {
+            ...user,
+            xpLogs: xpRows,
+            userActivities: activityRows,
+          },
+        };
+      })
+    );
+
+    const license = {
+      ...licenseRow,
+      licenseUsers: licenseUsersWithRelations,
+    };
 
     const metrics = calculateLicenseMetrics(license);
     const prompt = buildLicenseInsightPrompt(license, metrics);
@@ -343,6 +514,8 @@ function calculateStudentMetrics(student: any) {
       )
     : 999;
 
+  void recentActivities;
+
   return {
     totalXP,
     currentLevel,
@@ -369,13 +542,13 @@ function calculateTeacherMetrics(teacher: any) {
   const now = new Date();
   const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-  const classrooms = teacher.teacherClassrooms.map((tc: any) => tc.classroom);
-  const totalStudents = classrooms.reduce(
+  const classroomsList = teacher.teacherClassrooms.map((tc: any) => tc.classroom);
+  const totalStudents = classroomsList.reduce(
     (sum: number, c: any) => sum + c.students.length,
     0
   );
 
-  const activeStudents = classrooms.reduce((sum: number, c: any) => {
+  const activeStudents = classroomsList.reduce((sum: number, c: any) => {
     return (
       sum +
       c.students.filter((s: any) => {
@@ -387,7 +560,7 @@ function calculateTeacherMetrics(teacher: any) {
     );
   }, 0);
 
-  const inactiveStudents = classrooms.reduce((sum: number, c: any) => {
+  const inactiveStudents = classroomsList.reduce((sum: number, c: any) => {
     return (
       sum +
       c.students.filter((s: any) => {
@@ -402,12 +575,12 @@ function calculateTeacherMetrics(teacher: any) {
     );
   }, 0);
 
-  const totalAssignments = classrooms.reduce(
+  const totalAssignments = classroomsList.reduce(
     (sum: number, c: any) => sum + c.assignments.length,
     0
   );
 
-  const pendingAssignments = classrooms.reduce((sum: number, c: any) => {
+  const pendingAssignments = classroomsList.reduce((sum: number, c: any) => {
     return (
       sum +
       c.assignments.filter((a: any) => {
@@ -420,7 +593,7 @@ function calculateTeacherMetrics(teacher: any) {
   }, 0);
 
   return {
-    totalClasses: classrooms.length,
+    totalClasses: classroomsList.length,
     totalStudents,
     activeStudents,
     inactiveStudents,
@@ -452,9 +625,9 @@ function calculateClassroomMetrics(classroom: any) {
   const totalXP = students.reduce((sum: number, s: any) => sum + s.xp, 0);
 
   const strugglingStudents = students.filter((s: any) => {
-    const assignments = s.studentAssignments;
-    if (assignments.length < 3) return false;
-    const recentAssignments = assignments.slice(0, 3);
+    const assignmentsArr = s.studentAssignments;
+    if (assignmentsArr.length < 3) return false;
+    const recentAssignments = assignmentsArr.slice(0, 3);
     const avgScore =
       recentAssignments.reduce((sum: number, a: any) => sum + (a.score || 0), 0) /
       recentAssignments.length;
@@ -479,17 +652,17 @@ function calculateLicenseMetrics(license: any) {
   const now = new Date();
   const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-  const users = license.licenseUsers.map((lu: any) => lu.user);
-  const totalUsers = users.length;
+  const usersList = license.licenseUsers.map((lu: any) => lu.user);
+  const totalUsers = usersList.length;
 
-  const activeUsers = users.filter((u: any) => {
+  const activeUsers = usersList.filter((u: any) => {
     const lastActivity = u.userActivities[0];
     return lastActivity && new Date(lastActivity.createdAt) > last30Days;
   }).length;
 
-  const totalXP = users.reduce((sum: number, u: any) => sum + u.xp, 0);
+  const totalXP = usersList.reduce((sum: number, u: any) => sum + u.xp, 0);
 
-  const recentXP = users.reduce((sum: number, u: any) => {
+  const recentXP = usersList.reduce((sum: number, u: any) => {
     const xp = u.xpLogs
       .filter((x: any) => new Date(x.createdAt) > last30Days)
       .reduce((s: number, x: any) => s + x.xpEarned, 0);
@@ -681,6 +854,10 @@ function parseAIResponse(
   classroomId?: string,
   licenseId?: string
 ): GeneratedInsight[] {
+  void scope;
+  void userId;
+  void classroomId;
+  void licenseId;
   try {
     // Extract JSON from response (in case AI added extra text)
     const jsonMatch = response.match(/\[[\s\S]*\]/);
@@ -705,7 +882,7 @@ function parseAIResponse(
         'RISK': 'WARNING',
         'SUCCESS': 'ACHIEVEMENT',
       };
-      
+
       const normalized = typeMap[type?.toUpperCase()] || 'RECOMMENDATION';
       return normalized;
     };
@@ -718,7 +895,7 @@ function parseAIResponse(
         'HIGH': 'HIGH',
         'CRITICAL': 'CRITICAL',
       };
-      
+
       return priorityMap[priority?.toUpperCase()] || 'MEDIUM';
     };
 
@@ -726,8 +903,8 @@ function parseAIResponse(
     const insights: GeneratedInsight[] = parsed
       .filter((item: any) => item.title && item.description)
       .map((item: any) => ({
-        type: normalizeType(item.type),
-        priority: normalizePriority(item.priority),
+        type: normalizeType(item.type) as AIInsightType,
+        priority: normalizePriority(item.priority) as AIInsightPriority,
         title: item.title.substring(0, 100),
         description: item.description.substring(0, 500),
         confidence: Math.min(Math.max(item.confidence || 0.7, 0), 1),
@@ -746,6 +923,7 @@ function parseAIResponse(
  * Fallback insights when AI is unavailable
  */
 function generateFallbackStudentInsights(userId: string): GeneratedInsight[] {
+  void userId;
   return [
     {
       type: "RECOMMENDATION",
@@ -760,6 +938,7 @@ function generateFallbackStudentInsights(userId: string): GeneratedInsight[] {
 }
 
 function generateFallbackTeacherInsights(userId: string): GeneratedInsight[] {
+  void userId;
   return [
     {
       type: "RECOMMENDATION",
@@ -776,6 +955,7 @@ function generateFallbackTeacherInsights(userId: string): GeneratedInsight[] {
 function generateFallbackClassroomInsights(
   classroomId: string
 ): GeneratedInsight[] {
+  void classroomId;
   return [
     {
       type: "RECOMMENDATION",
@@ -790,6 +970,7 @@ function generateFallbackClassroomInsights(
 }
 
 function generateFallbackLicenseInsights(licenseId: string): GeneratedInsight[] {
+  void licenseId;
   return [
     {
       type: "RECOMMENDATION",
@@ -809,53 +990,80 @@ function generateFallbackLicenseInsights(licenseId: string): GeneratedInsight[] 
 export async function generateSystemInsights(): Promise<GeneratedInsight[]> {
   try {
     // Fetch all licenses and aggregate data
-    const licenses = await prisma.license.findMany({
-      include: {
-        licenseUsers: {
-          include: {
-            user: {
-              include: {
-                xpLogs: {
-                  where: {
-                    createdAt: {
-                      gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-                    },
-                  },
-                },
-                userActivities: {
-                  where: {
-                    createdAt: {
-                      gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
+    const licenseRows = await db.select().from(licenses);
 
-    if (licenses.length === 0) {
+    const last30Days = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
+    const licensesWithUsers = await Promise.all(
+      licenseRows.map(async (lic) => {
+        const luRows = await db
+          .select({ user: users })
+          .from(licenseOnUsers)
+          .innerJoin(users, eq(licenseOnUsers.userId, users.id))
+          .where(eq(licenseOnUsers.licenseId, lic.id));
+
+        const licenseUsers = await Promise.all(
+          luRows.map(async ({ user }) => {
+            const [xpRows, activityRows] = await Promise.all([
+              db
+                .select()
+                .from(xpLogs)
+                .where(
+                  and(
+                    eq(xpLogs.userId, user.id),
+                    gte(xpLogs.createdAt, last30Days)
+                  )
+                ),
+              db
+                .select()
+                .from(userActivity)
+                .where(
+                  and(
+                    eq(userActivity.userId, user.id),
+                    gte(userActivity.createdAt, last30Days)
+                  )
+                ),
+            ]);
+            return {
+              user: {
+                ...user,
+                xpLogs: xpRows,
+                userActivities: activityRows,
+              },
+            };
+          })
+        );
+
+        return {
+          ...lic,
+          licenseUsers,
+        };
+      })
+    );
+
+    if (licensesWithUsers.length === 0) {
       return generateFallbackSystemInsights();
     }
 
     // Calculate system-wide metrics
-    const totalLicenses = licenses.length;
-    const totalUsers = licenses.reduce(
+    const totalLicenses = licensesWithUsers.length;
+    const totalUsers = licensesWithUsers.reduce(
       (sum, l) => sum + l.licenseUsers.length,
       0
     );
-    const totalCapacity = licenses.reduce((sum, l) => sum + l.maxUsers, 0);
+    const totalCapacity = licensesWithUsers.reduce(
+      (sum, l) => sum + l.maxUsers,
+      0
+    );
 
-    const activeUsers = licenses.reduce((sum, l) => {
+    const activeUsers = licensesWithUsers.reduce((sum, l) => {
       return (
         sum +
         l.licenseUsers.filter((lu) => lu.user.userActivities.length > 0).length
       );
     }, 0);
 
-    const totalXP = licenses.reduce((sum, l) => {
+    const totalXP = licensesWithUsers.reduce((sum, l) => {
       return (
         sum +
         l.licenseUsers.reduce((s, lu) => {
@@ -883,7 +1091,7 @@ System Overview:
 - Total XP (30 days): ${totalXP}
 
 Top Schools by Activity:
-${licenses
+${licensesWithUsers
   .sort((a, b) => {
     const aXP = a.licenseUsers.reduce(
       (s, lu) => s + lu.user.xpLogs.reduce((x, log) => x + log.xpEarned, 0),
@@ -964,22 +1172,25 @@ export async function saveInsights(
   licenseId?: string
 ): Promise<void> {
   try {
-    // Delete old insights for this context
-    await prisma.aIInsight.deleteMany({
-      where: {
-        scope,
-        userId,
-        classroomId,
-        licenseId,
-        createdAt: {
-          lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Older than 7 days
-        },
-      },
-    });
+    // Delete old insights for this context (older than 7 days).
+    // Mirrors Prisma's behavior of omitting `undefined` fields from the where clause.
+    const conditions = [
+      eq(aiInsights.scope, scope),
+      lt(aiInsights.createdAt, new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)),
+    ];
+    if (userId !== undefined) conditions.push(eq(aiInsights.userId, userId));
+    if (classroomId !== undefined)
+      conditions.push(eq(aiInsights.classroomId, classroomId));
+    if (licenseId !== undefined)
+      conditions.push(eq(aiInsights.licenseId, licenseId));
+
+    await db.delete(aiInsights).where(and(...conditions));
 
     // Create new insights
-    await prisma.aIInsight.createMany({
-      data: insights.map((insight) => ({
+    if (insights.length === 0) return;
+
+    await db.insert(aiInsights).values(
+      insights.map((insight) => ({
         type: insight.type,
         scope,
         priority: insight.priority,
@@ -993,8 +1204,8 @@ export async function saveInsights(
         generatedBy: "ai",
         modelVersion: openaiModel,
         validUntil: insight.validUntil,
-      })),
-    });
+      }))
+    );
   } catch (error) {
     console.error("Error saving insights:", error);
     throw error;
@@ -1011,19 +1222,22 @@ export async function getCachedInsights(
   licenseId?: string
 ): Promise<any[]> {
   try {
-    const insights = await prisma.aIInsight.findMany({
-      where: {
-        scope,
-        userId,
-        classroomId,
-        licenseId,
-        dismissed: false,
-        validUntil: {
-          gte: new Date(),
-        },
-      },
-      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
-    });
+    const conditions = [
+      eq(aiInsights.scope, scope),
+      eq(aiInsights.dismissed, false),
+      gte(aiInsights.validUntil, new Date()),
+    ];
+    if (userId !== undefined) conditions.push(eq(aiInsights.userId, userId));
+    if (classroomId !== undefined)
+      conditions.push(eq(aiInsights.classroomId, classroomId));
+    if (licenseId !== undefined)
+      conditions.push(eq(aiInsights.licenseId, licenseId));
+
+    const insights = await db
+      .select()
+      .from(aiInsights)
+      .where(and(...conditions))
+      .orderBy(desc(aiInsights.priority), desc(aiInsights.createdAt));
 
     return insights;
   } catch (error) {
