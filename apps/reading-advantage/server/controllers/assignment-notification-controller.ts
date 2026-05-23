@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { alias } from "drizzle-orm";
+import { aliasedTable } from "drizzle-orm";
 import { db, eq, and, inArray, desc } from "@reading-advantage/db";
 import {
   assignmentNotifications,
@@ -13,8 +13,8 @@ import {
 import { ExtendedNextRequest } from "./auth-controller";
 
 // Aliased user table for dual-join (teacher + student)
-const teacherUsers = alias(users, "teacher_users");
-const studentUsers = alias(users, "student_users");
+const teacherUsers = aliasedTable(users, "teacher_users");
+const studentUsers = aliasedTable(users, "student_users");
 
 export async function getAssignmentNotifications(req: ExtendedNextRequest) {
   try {
