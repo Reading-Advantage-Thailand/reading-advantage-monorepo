@@ -3,7 +3,12 @@ import { generateObject, generateText } from "ai";
 import fs, { stat } from "fs";
 import path from "path";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db, eq } from "@reading-advantage/db";
+import {
+  articles,
+  userSentenceRecords,
+  userWordRecords,
+} from "@reading-advantage/db/schema";
 import storage from "@/utils/storage";
 import { AUDIO_WORDS_URL } from "@/server/constants";
 import { generateAudioForWord } from "@/server/utils/generators/audio-words-generator";
@@ -144,10 +149,13 @@ export async function getFeedbackWritter(res: object) {
 export async function getWordlist(req: ExtendedNextRequest) {
   const { articleId } = await req.json();
 
-  const articleData = await prisma.article.findUnique({
-    where: { id: articleId },
-    select: { words: true, passage: true },
-  });
+  const articleData = (
+    await db
+      .select({ words: articles.words, passage: articles.passage })
+      .from(articles)
+      .where(eq(articles.id, articleId))
+      .limit(1)
+  )[0];
 
   if (!articleData) {
     return NextResponse.json({ message: "Article not found" }, { status: 404 });
@@ -200,14 +208,10 @@ export async function getWordlist(req: ExtendedNextRequest) {
             })
           );
 
-          await prisma.article.update({
-            where: { id: articleId },
-            data: {
-              words: {
-                wordlist: enhancedWordList,
-              },
-            },
-          });
+          await db
+            .update(articles)
+            .set({ words: { wordlist: enhancedWordList } })
+            .where(eq(articles.id, articleId));
 
           await generateAudioForWord({
             wordList: wordList.word_list,
@@ -235,14 +239,10 @@ export async function getWordlist(req: ExtendedNextRequest) {
       })
     );
 
-    await prisma.article.update({
-      where: { id: articleId },
-      data: {
-        words: {
-          wordlist: enhancedWordList,
-        },
-      },
-    });
+    await db
+      .update(articles)
+      .set({ words: { wordlist: enhancedWordList } })
+      .where(eq(articles.id, articleId));
 
     await generateAudioForWord({
       wordList: wordList.word_list,
@@ -262,64 +262,45 @@ export async function postFlashCard(
     const json = await req.json();
 
     if (json.page === "vocabulary") {
-      // Exclude fields that are not updatable or should be handled as relations
-      const {
-        id: jsonId,
-        userId,
-        articleId,
-        user,
-        article,
-        createdAt,
-        updatedAt,
-        last_review, // This field doesn't exist in schema, exclude it
-        elapsed_days,
-        scheduled_days,
-        page,
-        ...updateData
-      } = json;
+      const wordUpdate: Record<string, unknown> = {};
+      if (json.difficulty !== undefined) wordUpdate.difficulty = json.difficulty;
+      if (json.stability !== undefined) wordUpdate.stability = json.stability;
+      if (json.due !== undefined) wordUpdate.due = new Date(json.due);
+      if (json.elapsed_days !== undefined) wordUpdate.elapsedDays = json.elapsed_days;
+      if (json.scheduled_days !== undefined) wordUpdate.scheduledDays = json.scheduled_days;
+      if (json.reps !== undefined) wordUpdate.reps = json.reps;
+      if (json.lapses !== undefined) wordUpdate.lapses = json.lapses;
+      if (json.state !== undefined) wordUpdate.state = json.state;
+      if (json.saveToFlashcard !== undefined) wordUpdate.saveToFlashcard = json.saveToFlashcard;
+      if (json.word !== undefined) wordUpdate.word = json.word;
 
-      // Map the field names correctly for Prisma
-      const cleanUpdateData = {
-        ...updateData,
-        elapsedDays: json.elapsed_days,
-        scheduledDays: json.scheduled_days,
-      };
-
-      await prisma.userWordRecord.update({
-        where: { id },
-        data: cleanUpdateData,
-      });
+      await db
+        .update(userWordRecords)
+        .set(wordUpdate)
+        .where(eq(userWordRecords.id, id));
     } else {
-      // Exclude fields that are not updatable or should be handled as relations
-      const {
-        id: jsonId,
-        userId,
-        articleId,
-        user,
-        article,
-        createdAt,
-        updatedAt,
-        last_review,
-        elapsed_days,
-        scheduled_days,
-        page,
-        word, // Exclude word field - not in UserSentenceRecord schema
-        update_score, // Exclude snake_case version - will map to camelCase
-        ...updateData
-      } = json;
+      const sentenceUpdate: Record<string, unknown> = {};
+      if (json.difficulty !== undefined) sentenceUpdate.difficulty = json.difficulty;
+      if (json.stability !== undefined) sentenceUpdate.stability = json.stability;
+      if (json.due !== undefined) sentenceUpdate.due = new Date(json.due);
+      if (json.elapsed_days !== undefined) sentenceUpdate.elapsedDays = json.elapsed_days;
+      if (json.scheduled_days !== undefined) sentenceUpdate.scheduledDays = json.scheduled_days;
+      if (json.reps !== undefined) sentenceUpdate.reps = json.reps;
+      if (json.lapses !== undefined) sentenceUpdate.lapses = json.lapses;
+      if (json.state !== undefined) sentenceUpdate.state = json.state;
+      if (json.saveToFlashcard !== undefined) sentenceUpdate.saveToFlashcard = json.saveToFlashcard;
+      if (json.update_score !== undefined) sentenceUpdate.updateScore = json.update_score;
+      if (json.sentence !== undefined) sentenceUpdate.sentence = json.sentence;
+      if (json.translation !== undefined) sentenceUpdate.translation = json.translation;
+      if (json.sn !== undefined) sentenceUpdate.sn = json.sn;
+      if (json.timepoint !== undefined) sentenceUpdate.timepoint = json.timepoint;
+      if (json.endTimepoint !== undefined) sentenceUpdate.endTimepoint = json.endTimepoint;
+      if (json.audioUrl !== undefined) sentenceUpdate.audioUrl = json.audioUrl;
 
-      // Map the field names correctly for Prisma
-      const cleanUpdateData = {
-        ...updateData,
-        elapsedDays: json.elapsed_days,
-        scheduledDays: json.scheduled_days,
-        updateScore: json.update_score, // Map snake_case to camelCase
-      };
-
-      await prisma.userSentenceRecord.update({
-        where: { id },
-        data: cleanUpdateData,
-      });
+      await db
+        .update(userSentenceRecords)
+        .set(sentenceUpdate)
+        .where(eq(userSentenceRecords.id, id));
     }
 
     return NextResponse.json(
@@ -344,10 +325,18 @@ export async function chatBot(req: ExtendedNextRequest) {
     const param = await req.json();
     const validatedData = createChatbotSchema.parse(param);
     
-    const article = await prisma.article.findUnique({
-      where: { id: validatedData.articleId },
-      select: { title: true, passage: true, summary: true, imageDescription: true }
-    });
+    const article = (
+      await db
+        .select({
+          title: articles.title,
+          passage: articles.passage,
+          summary: articles.summary,
+          imageDescription: articles.imageDescription,
+        })
+        .from(articles)
+        .where(eq(articles.id, validatedData.articleId))
+        .limit(1)
+    )[0];
 
     if (!article) {
        return NextResponse.json({ error: "Article not found" }, { status: 404 });
