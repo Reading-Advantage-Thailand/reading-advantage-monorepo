@@ -207,7 +207,7 @@ export async function POST(request: NextRequest) {
     authorizeAttempt(attempt, session);
     assertRateLimit(attempt.studentId);
 
-    const context = await buildRecommendationContext(prisma, { attempt });
+    const context = await buildRecommendationContext({ attempt });
     const key = cacheKey(attempt.studentId, attempt.id, context.masteryVersion);
     const cached = recommendationCache.get(key);
 

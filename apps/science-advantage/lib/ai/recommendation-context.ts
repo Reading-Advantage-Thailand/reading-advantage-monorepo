@@ -1,16 +1,22 @@
-import type {
-  CurriculumUnit,
-  Lesson,
-  LessonCompletionStatus,
-  LessonType,
-  PrismaClient,
-  StandardsAlignment,
-} from '@prisma/client';
+import { and, asc, db, eq, inArray, max } from '@reading-advantage/db';
+import {
+  scienceCurriculumUnits,
+  scienceLessonCompletions,
+  scienceLessonStandards,
+  scienceLessons,
+  scienceStandardMastery,
+  scienceStandards,
+  scienceUnitLessons,
+} from '@reading-advantage/db/schema';
 import { createHash, randomUUID } from 'crypto';
 
 import { aiConfig } from '@/lib/config/ai';
+import type { LessonType, StandardsAlignment } from '@/lib/enums';
 
 import type { CandidateLesson, RecommendationContext } from './types';
+
+// Inline lesson-completion status union (matches DB text values).
+type LessonCompletionStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED';
 
 type AttemptWithRelations = {
   id: string;
@@ -19,14 +25,24 @@ type AttemptWithRelations = {
   score: number;
   maxScore: number;
   completedAt: Date | null;
-  lesson: Pick<Lesson, 'id' | 'title' | 'lessonType' | 'gradeLevel' | 'order'> & {
+  lesson: {
+    id: string;
+    title: string;
+    lessonType: LessonType;
+    gradeLevel: number;
+    order: number;
     standards: Array<{
       id: string;
       code: string;
       description: string | null;
       framework: StandardsAlignment;
     }>;
-    curriculumUnits: Pick<CurriculumUnit, 'id' | 'title' | 'order' | 'framework'>[];
+    curriculumUnits: Array<{
+      id: string;
+      title: string;
+      order: number;
+      framework: StandardsAlignment;
+    }>;
   };
   student: {
     id: string;
@@ -117,8 +133,15 @@ function summarizeAttempt(attempt: AttemptWithRelations) {
   };
 }
 
+/**
+ * @kind read
+ * Assembles the mastery snapshot, candidate-lesson list, and attempt summary
+ * used as input to the LLM-driven recommendation prompt.
+ *
+ * Note: `prisma` is no longer a parameter (Track 3 migration). The function
+ * uses the shared `db` import directly.
+ */
 export async function buildRecommendationContext(
-  prisma: PrismaClient,
   params: { attempt: AttemptWithRelations }
 ): Promise<RecommendationContext> {
   const { attempt } = params;
@@ -127,63 +150,152 @@ export async function buildRecommendationContext(
 
   const unitIds = attempt.lesson.curriculumUnits.map(unit => unit.id);
 
+  // ── 1. Mastery snapshot (top-N weakest standards) ────────────────────────
+  const masteryRecordsPromise = db
+    .select({
+      standardId: scienceStandardMastery.standardId,
+      masteryLevel: scienceStandardMastery.masteryLevel,
+      evidenceCount: scienceStandardMastery.evidenceCount,
+      lastAssessedAt: scienceStandardMastery.lastAssessedAt,
+      standardCode: scienceStandards.code,
+      standardDescription: scienceStandards.description,
+    })
+    .from(scienceStandardMastery)
+    .innerJoin(
+      scienceStandards,
+      eq(scienceStandards.id, scienceStandardMastery.standardId)
+    )
+    .where(eq(scienceStandardMastery.studentId, attempt.studentId))
+    .orderBy(asc(scienceStandardMastery.masteryLevel))
+    .limit(MAX_WEAK_STANDARDS);
+
+  // ── 2. Mastery version (max updatedAt across student's mastery rows) ─────
+  const masteryAggregatePromise = db
+    .select({ value: max(scienceStandardMastery.updatedAt) })
+    .from(scienceStandardMastery)
+    .where(eq(scienceStandardMastery.studentId, attempt.studentId));
+
+  // ── 3. Curriculum units + nested lessons + standards + this-student's
+  //      completion rows (assembled in-memory from 4 small queries).
+  const curriculumUnitsPromise: Promise<Array<{
+    id: string;
+    title: string;
+    order: number;
+    framework: StandardsAlignment;
+    lessons: CurriculumLesson[];
+  }>> = (async () => {
+    if (unitIds.length === 0) return [];
+
+    const units = await db
+      .select({
+        id: scienceCurriculumUnits.id,
+        title: scienceCurriculumUnits.title,
+        order: scienceCurriculumUnits.order,
+        framework: scienceCurriculumUnits.framework,
+      })
+      .from(scienceCurriculumUnits)
+      .where(inArray(scienceCurriculumUnits.id, unitIds));
+
+    // For each unit, fetch its ordered lessons + per-lesson standards +
+    // per-lesson completions for this student.
+    const enriched = await Promise.all(
+      units.map(async (unit) => {
+        const lessonRows = await db
+          .select({
+            id: scienceLessons.id,
+            title: scienceLessons.title,
+            order: scienceLessons.order,
+            lessonType: scienceLessons.lessonType,
+            gradeLevel: scienceLessons.gradeLevel,
+          })
+          .from(scienceUnitLessons)
+          .innerJoin(
+            scienceLessons,
+            eq(scienceLessons.id, scienceUnitLessons.lessonId)
+          )
+          .where(eq(scienceUnitLessons.unitId, unit.id))
+          .orderBy(asc(scienceLessons.order));
+
+        const lessonIds = lessonRows.map((l) => l.id);
+
+        const standardsRows = lessonIds.length
+          ? await db
+              .select({
+                lessonId: scienceLessonStandards.lessonId,
+                standardId: scienceStandards.id,
+                code: scienceStandards.code,
+              })
+              .from(scienceLessonStandards)
+              .innerJoin(
+                scienceStandards,
+                eq(scienceStandards.id, scienceLessonStandards.standardId)
+              )
+              .where(inArray(scienceLessonStandards.lessonId, lessonIds))
+          : [];
+
+        const completionRows = lessonIds.length
+          ? await db
+              .select({
+                lessonId: scienceLessonCompletions.lessonId,
+                status: scienceLessonCompletions.status,
+                completedAt: scienceLessonCompletions.completedAt,
+              })
+              .from(scienceLessonCompletions)
+              .where(
+                and(
+                  eq(scienceLessonCompletions.studentId, attempt.studentId),
+                  inArray(scienceLessonCompletions.lessonId, lessonIds)
+                )
+              )
+          : [];
+
+        const lessons: CurriculumLesson[] = lessonRows.map((l) => ({
+          id: l.id,
+          title: l.title,
+          order: l.order,
+          lessonType: l.lessonType as LessonType,
+          gradeLevel: l.gradeLevel,
+          standards: standardsRows
+            .filter((s) => s.lessonId === l.id)
+            .map((s) => ({ id: s.standardId, code: s.code })),
+          lessonCompletions: completionRows
+            .filter((c) => c.lessonId === l.id)
+            .map((c) => ({
+              status: c.status as LessonCompletionStatus,
+              completedAt: c.completedAt,
+            })),
+        }));
+
+        return {
+          id: unit.id,
+          title: unit.title,
+          order: unit.order,
+          framework: unit.framework as StandardsAlignment,
+          lessons,
+        };
+      })
+    );
+
+    return enriched;
+  })();
+
   const [masteryRecords, masteryAggregate, curriculumUnits] = await Promise.all([
-    prisma.standardMastery.findMany({
-      where: { studentId: attempt.studentId },
-      include: {
-        standard: {
-          select: { id: true, code: true, description: true, framework: true },
-        },
-      },
-      orderBy: { masteryLevel: 'asc' },
-      take: MAX_WEAK_STANDARDS,
-    }),
-    prisma.standardMastery.aggregate({
-      where: { studentId: attempt.studentId },
-      _max: { updatedAt: true },
-    }),
-    unitIds.length
-      ? prisma.curriculumUnit.findMany({
-          where: { id: { in: unitIds } },
-          select: {
-            id: true,
-            title: true,
-            order: true,
-            framework: true,
-            lessons: {
-              orderBy: { order: 'asc' },
-              select: {
-                id: true,
-                title: true,
-                order: true,
-                lessonType: true,
-                gradeLevel: true,
-                standards: {
-                  select: { id: true, code: true },
-                },
-                lessonCompletions: {
-                  where: { studentId: attempt.studentId },
-                  select: { status: true, completedAt: true },
-                },
-              },
-            },
-          },
-        })
-      : [],
+    masteryRecordsPromise,
+    masteryAggregatePromise,
+    curriculumUnitsPromise,
   ]);
 
   const masterySnapshot = masteryRecords.map(record => ({
     standardId: record.standardId,
-    code: record.standard.code,
-    description: record.standard.description,
+    code: record.standardCode,
+    description: record.standardDescription,
     masteryLevel: Number(record.masteryLevel),
     evidenceCount: record.evidenceCount,
     lastAssessedAt: record.lastAssessedAt.toISOString(),
   }));
 
-  const masteryVersion = masteryAggregate._max.updatedAt
-    ? masteryAggregate._max.updatedAt.getTime()
-    : 0;
+  const maxUpdatedAt = masteryAggregate[0]?.value;
+  const masteryVersion = maxUpdatedAt instanceof Date ? maxUpdatedAt.getTime() : 0;
 
   const candidateLessons: CandidateLesson[] = [];
   for (const unit of curriculumUnits) {
