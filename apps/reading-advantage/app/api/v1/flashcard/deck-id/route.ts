@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db, eq } from "@reading-advantage/db";
+import { userSentenceRecords } from "@reading-advantage/db/schema";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const user = await getCurrentUser();
 
@@ -17,13 +18,13 @@ export async function GET(req: NextRequest) {
     }
 
     // Find user's sentence flashcard deck by checking for sentence records
-    const sentences = await prisma.userSentenceRecord.findFirst({
-      where: {
-        userId: user.id,
-      },
-    });
+    const rows = await db
+      .select({ id: userSentenceRecords.id })
+      .from(userSentenceRecords)
+      .where(eq(userSentenceRecords.userId, user.id))
+      .limit(1);
 
-    if (!sentences) {
+    if (rows.length === 0) {
       return NextResponse.json({
         success: false,
         error: "No sentence flashcard deck found",
