@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import UnauthorizedPage from "@/components/shared/unauthorized-page";
 import { SchoolDashboardContent } from "@/components/dashboard/school-dashboard-content";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 import { AdminOverviewResponse } from "@/types/dashboard";
 import { KPICardSkeleton } from "@/components/dashboard/kpi-card";
 import { Skeleton } from "@/components/ui/skeleton";
