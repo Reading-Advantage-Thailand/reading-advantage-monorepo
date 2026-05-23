@@ -1,5 +1,5 @@
 'use client';
-import { Role } from '@prisma/client';
+import { Role } from '@/lib/enums';
 import React, { useEffect } from 'react';
 
 export const SelectedRoleContext = React.createContext([] as any);
