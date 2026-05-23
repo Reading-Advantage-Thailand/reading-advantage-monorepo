@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 // Mock getCurrentUser before importing guards
 jest.mock("../../lib/session", () => ({
