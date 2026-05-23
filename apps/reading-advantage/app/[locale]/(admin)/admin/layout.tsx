@@ -2,7 +2,7 @@ import AppLayout, { BaseAppLayoutProps } from "@/components/shared/app-layout";
 import { adminPageConfig } from "@/configs/admin-page-config";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
+import { Role } from "@/lib/enums";
 
 export default async function AdminLayout({ children }: BaseAppLayoutProps) {
   const user = await getCurrentUser();
