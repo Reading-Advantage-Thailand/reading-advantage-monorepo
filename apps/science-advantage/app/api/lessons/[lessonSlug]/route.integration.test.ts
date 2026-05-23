@@ -1,7 +1,18 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
-import type { user as UserModel, Class, Lesson, Standard } from '@prisma/client';
+import { db, sql } from '@reading-advantage/db';
+import {
+  scienceClasses,
+  scienceClassStudents,
+  scienceCurriculumUnits,
+  scienceLessons,
+  scienceLessonStandards,
+  scienceStandards,
+  scienceUnitLessons,
+  sessions,
+  accounts,
+  users,
+} from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
@@ -15,13 +26,36 @@ vi.mock('next/headers', () => ({
   cookies: vi.fn(() => mockCookies),
 }));
 
+type UserRow = typeof users.$inferSelect;
+type ClassRow = typeof scienceClasses.$inferSelect;
+type LessonRow = typeof scienceLessons.$inferSelect;
+type StandardRow = typeof scienceStandards.$inferSelect;
+
+async function cleanupScienceFixtures(): Promise<void> {
+  // Junction tables first (FKs ON DELETE CASCADE would cover this, but be explicit
+  // so the parent deletes below have nothing pinned).
+  await db.delete(scienceClassStudents);
+  await db.delete(scienceLessonStandards);
+  await db.delete(scienceUnitLessons);
+  await db.delete(scienceCurriculumUnits);
+  await db.delete(scienceLessons);
+  await db.delete(scienceStandards);
+  await db.delete(scienceClasses);
+  await db.delete(sessions);
+  await db.delete(accounts);
+  // Only delete users created by this suite (id prefix).
+  await db.execute(
+    sql`DELETE FROM users WHERE id LIKE 'pilot-lesson-route-%'`
+  );
+}
+
 describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
-  let testTeacher: UserModel;
-  let testStudent: UserModel;
-  let otherStudent: UserModel;
-  let testClass: Class;
-  let testLesson: Lesson;
-  let testStandard: Standard;
+  let testTeacher: UserRow;
+  let testStudent: UserRow;
+  let otherStudent: UserRow;
+  let testClass: ClassRow;
+  let testLesson: LessonRow;
+  let testStandard: StandardRow;
 
   beforeEach(async () => {
     mockCookies.get.mockReset();
@@ -29,100 +63,90 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
 
-    await prisma.$executeRaw`DELETE FROM "_CurriculumUnitToLesson"`;
-    await prisma.$executeRaw`DELETE FROM "_LessonToStandard"`;
-    await prisma.curriculumUnit.deleteMany();
-    await prisma.lesson.deleteMany();
-    await prisma.standard.deleteMany();
-    await prisma.class.deleteMany();
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+    await cleanupScienceFixtures();
 
-    testTeacher = await prisma.user.create({
-      data: {
-        id: 'test-teacher-lesson-endpoint',
+    [testTeacher] = await db
+      .insert(users)
+      .values({
+        id: 'pilot-lesson-route-teacher',
         name: 'Test Teacher',
-        username: 'testteacher-lesson-endpoint',
+        username: 'pilot-lesson-route-teacher',
         displayUsername: 'TeacherLesson',
-        email: 'teacher-lesson@example.com',
+        email: 'pilot-lesson-route-teacher@example.com',
         role: 'TEACHER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
-    testStudent = await prisma.user.create({
-      data: {
-        id: 'test-student-lesson-endpoint',
+    [testStudent] = await db
+      .insert(users)
+      .values({
+        id: 'pilot-lesson-route-student',
         name: 'Test Student',
-        username: 'teststudent-lesson-endpoint',
+        username: 'pilot-lesson-route-student',
         displayUsername: 'StudentLesson',
-        email: 'student-lesson@example.com',
+        email: 'pilot-lesson-route-student@example.com',
         role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
-    otherStudent = await prisma.user.create({
-      data: {
-        id: 'other-student-lesson-endpoint',
+    [otherStudent] = await db
+      .insert(users)
+      .values({
+        id: 'pilot-lesson-route-other',
         name: 'Other Student',
-        username: 'otherstudent-lesson-endpoint',
+        username: 'pilot-lesson-route-other',
         displayUsername: 'OtherLesson',
-        email: 'other-lesson@example.com',
+        email: 'pilot-lesson-route-other@example.com',
         role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
-    testStandard = await prisma.standard.create({
-      data: {
-        id: 'standard-lesson-endpoint',
+    [testStandard] = await db
+      .insert(scienceStandards)
+      .values({
         framework: 'THAI',
         code: 'Sc1.1-G3',
         description: 'Identify characteristics of living things',
         gradeLevel: 3,
-      },
-    });
+      })
+      .returning();
 
-    testLesson = await prisma.lesson.create({
-      data: {
-        id: 'lesson-endpoint',
+    [testLesson] = await db
+      .insert(scienceLessons)
+      .values({
         slug: 'plants-and-animals',
         title: 'Plants and Animals',
         description: 'Compare characteristics of plants and animals',
         content: 'Plants make their own food, animals consume food.',
         gradeLevel: 3,
         order: 1,
-        standards: {
-          connect: [{ id: testStandard.id }],
-        },
-      },
-      include: {
-        standards: true,
-      },
+      })
+      .returning();
+
+    await db.insert(scienceLessonStandards).values({
+      lessonId: testLesson.id,
+      standardId: testStandard.id,
     });
 
-    testClass = await prisma.class.create({
-      data: {
-        id: 'class-lesson-endpoint',
+    [testClass] = await db
+      .insert(scienceClasses)
+      .values({
         name: 'Grade 3 Science',
         gradeLevel: 3,
         standardsAlignment: 'THAI',
         joinCode: 'LESSON',
         teacherId: testTeacher.id,
-        students: {
-          connect: { id: testStudent.id },
-        },
-      },
+      })
+      .returning();
+
+    await db.insert(scienceClassStudents).values({
+      classId: testClass.id,
+      studentId: testStudent.id,
     });
 
-    await prisma.curriculumUnit.create({
-      data: {
-        id: 'unit-lesson-endpoint',
+    const [unit] = await db
+      .insert(scienceCurriculumUnits)
+      .values({
         slug: 'living-things',
         title: 'Living Things',
         description: 'Introduction to living organisms',
@@ -130,23 +154,17 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
         gradeLevel: 3,
         order: 1,
         classId: testClass.id,
-        lessons: {
-          connect: [{ id: testLesson.id }],
-        },
-      },
+      })
+      .returning();
+
+    await db.insert(scienceUnitLessons).values({
+      unitId: unit.id,
+      lessonId: testLesson.id,
     });
   });
 
   afterEach(async () => {
-    await prisma.$executeRaw`DELETE FROM "_CurriculumUnitToLesson"`;
-    await prisma.$executeRaw`DELETE FROM "_LessonToStandard"`;
-    await prisma.curriculumUnit.deleteMany();
-    await prisma.lesson.deleteMany();
-    await prisma.standard.deleteMany();
-    await prisma.class.deleteMany();
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+    await cleanupScienceFixtures();
   });
 
   it('returns 401 when not authenticated', async () => {
@@ -166,9 +184,11 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
     const session = await createSession(testStudent.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
-    const request = new NextRequest('http://localhost:3000/api/lessons/missing-lesson');
+    // Use a valid UUID that doesn't exist
+    const missingId = '00000000-0000-0000-0000-000000000000';
+    const request = new NextRequest(`http://localhost:3000/api/lessons/${missingId}`);
     const response = await GET(request, {
-      params: Promise.resolve({ lessonSlug: 'missing-lesson' }),
+      params: Promise.resolve({ lessonSlug: missingId }),
     });
     const data = await response.json();
 

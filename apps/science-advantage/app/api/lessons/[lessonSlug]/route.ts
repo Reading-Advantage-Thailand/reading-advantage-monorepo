@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { and, db, eq, inArray } from '@reading-advantage/db';
+import {
+  scienceLessons,
+  scienceStandards,
+  scienceLessonStandards,
+  scienceUnitLessons,
+  scienceCurriculumUnits,
+  scienceClasses,
+  scienceClassStudents,
+} from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
-import prisma from '@/lib/prisma';
 import { isValidLessonContent } from '@/lib/schemas/lesson-content.schema';
 
 type LessonRouteContext = {
@@ -16,7 +25,7 @@ type LessonRouteContext = {
  *
  * Authentication: Required (must be teacher of, admin of, or enrolled in a class that uses the lesson)
  */
-export async function GET(request: NextRequest, context: LessonRouteContext) {
+export async function GET(_request: NextRequest, context: LessonRouteContext) {
   try {
     const session = await getCurrentSession();
 
@@ -29,53 +38,73 @@ export async function GET(request: NextRequest, context: LessonRouteContext) {
 
     const { lessonSlug } = await context.params;
 
-    const lesson = await prisma.lesson.findUnique({
-      where: { id: lessonSlug },
-      include: {
-        standards: true,
-        curriculumUnits: {
-          include: {
-            class: {
-              include: {
-                teacher: {
-                  select: { id: true },
-                },
-                students: {
-                  select: { id: true },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
+    const [lesson] = await db
+      .select()
+      .from(scienceLessons)
+      .where(eq(scienceLessons.id, lessonSlug))
+      .limit(1);
 
     if (!lesson) {
-      return NextResponse.json(
-        { error: 'Lesson not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
     }
 
     const userId = session.user.id;
     const userRole = session.user.role;
 
-    const hasAccess = lesson.curriculumUnits.some(unit => {
-      const classRecord = unit.class;
-      if (!classRecord) {
-        return false;
-      }
+    // Standards attached to the lesson
+    const standards = await db
+      .select({
+        id: scienceStandards.id,
+        code: scienceStandards.code,
+        description: scienceStandards.description,
+        framework: scienceStandards.framework,
+        gradeLevel: scienceStandards.gradeLevel,
+      })
+      .from(scienceLessonStandards)
+      .innerJoin(
+        scienceStandards,
+        eq(scienceStandards.id, scienceLessonStandards.standardId)
+      )
+      .where(eq(scienceLessonStandards.lessonId, lesson.id));
 
-      if (classRecord.teacher.id === userId) {
-        return true;
-      }
+    // Resolve all classes that contain this lesson (via unit → class)
+    const classRows = await db
+      .select({
+        classId: scienceClasses.id,
+        teacherId: scienceClasses.teacherId,
+      })
+      .from(scienceUnitLessons)
+      .innerJoin(
+        scienceCurriculumUnits,
+        eq(scienceCurriculumUnits.id, scienceUnitLessons.unitId)
+      )
+      .innerJoin(
+        scienceClasses,
+        eq(scienceClasses.id, scienceCurriculumUnits.classId)
+      )
+      .where(eq(scienceUnitLessons.lessonId, lesson.id));
 
-      if (classRecord.students.some(student => student.id === userId)) {
-        return true;
-      }
+    const isAdmin = userRole === 'ADMIN' || userRole === 'SYSTEM';
+    let hasAccess = isAdmin;
 
-      return userRole === 'ADMIN' || userRole === 'SYSTEM';
-    });
+    if (!hasAccess && classRows.length > 0) {
+      if (classRows.some((c) => c.teacherId === userId)) {
+        hasAccess = true;
+      } else {
+        const classIds = classRows.map((c) => c.classId);
+        const myEnrollments = await db
+          .select({ classId: scienceClassStudents.classId })
+          .from(scienceClassStudents)
+          .where(
+            and(
+              eq(scienceClassStudents.studentId, userId),
+              inArray(scienceClassStudents.classId, classIds)
+            )
+          )
+          .limit(1);
+        hasAccess = myEnrollments.length > 0;
+      }
+    }
 
     if (!hasAccess) {
       return NextResponse.json(
@@ -106,7 +135,7 @@ export async function GET(request: NextRequest, context: LessonRouteContext) {
         contentType: hasStructuredContent ? 'structured' : 'legacy',
         contentVersion: hasStructuredContent ? 1 : undefined,
       },
-      standards: lesson.standards.map(standard => ({
+      standards: standards.map((standard) => ({
         id: standard.id,
         code: standard.code,
         description: standard.description,
