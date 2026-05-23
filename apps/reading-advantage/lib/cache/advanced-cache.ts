@@ -3,7 +3,8 @@
  * Reduces connection pool usage by caching expensive operations
  */
 
-import { prisma } from "@/lib/prisma";
+import { db, count, gte } from "@reading-advantage/db";
+import { users, userActivity } from "@reading-advantage/db/schema";
 
 interface CacheEntry<T> {
   data: T;
@@ -200,17 +201,22 @@ class AdvancedCache {
       // Warm up user count
       await this.get(
         'user-count:total',
-        async () => await prisma.user.count(),
+        async () => {
+          const [row] = await db.select({ value: count() }).from(users);
+          return row?.value ?? 0;
+        },
         { ttl: 600000 }
       );
 
       // Warm up activity types
       await this.get(
         'activity-types:all',
-        async () => await prisma.userActivity.findMany({
-          select: { activityType: true },
-          distinct: ['activityType'],
-        }),
+        async () => {
+          const rows = await db
+            .selectDistinct({ activityType: userActivity.activityType })
+            .from(userActivity);
+          return rows;
+        },
         { ttl: 3600000 }
       );
 
@@ -226,13 +232,14 @@ class AdvancedCache {
   private async getActivitySummary() {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
-    return prisma.userActivity.groupBy({
-      by: ['activityType'],
-      _count: { id: true },
-      where: {
-        createdAt: { gte: thirtyDaysAgo },
-      },
-    });
+    return db
+      .select({
+        activityType: userActivity.activityType,
+        count: count(userActivity.id),
+      })
+      .from(userActivity)
+      .where(gte(userActivity.createdAt, thirtyDaysAgo))
+      .groupBy(userActivity.activityType);
   }
 }
 
