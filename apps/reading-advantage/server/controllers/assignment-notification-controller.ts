@@ -1,12 +1,21 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { alias } from "drizzle-orm";
+import { db, eq, and, inArray, desc } from "@reading-advantage/db";
+import {
+  assignmentNotifications,
+  assignments,
+  articles,
+  classrooms,
+  classroomTeachers,
+  classroomStudents,
+  users,
+} from "@reading-advantage/db/schema";
 import { ExtendedNextRequest } from "./auth-controller";
 
-/**
- * Get assignment notifications
- * For students: Get their pending notifications
- * For teachers: Get notification history
- */
+// Aliased user table for dual-join (teacher + student)
+const teacherUsers = alias(users, "teacher_users");
+const studentUsers = alias(users, "student_users");
+
 export async function getAssignmentNotifications(req: ExtendedNextRequest) {
   try {
     const user = req.session?.user;
@@ -18,124 +27,119 @@ export async function getAssignmentNotifications(req: ExtendedNextRequest) {
     const history = searchParams.get("history") === "true";
     const userId = user.id;
 
-    // Student view - get their unnoticed notifications
     if (!history) {
-      const studentId = userId;
-      const notifications = await prisma.assignmentNotification.findMany({
-        where: {
-          studentId,
-          isNoticed: false,
-        },
-        include: {
-          assignment: {
-            include: {
-              article: {
-                select: {
-                  title: true,
-                  id: true,
-                },
-              },
-              classroom: {
-                select: {
-                  classroomName: true,
-                },
-              },
-            },
-          },
-          teacher: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
+      // Student view
+      const rows = await db
+        .select({
+          id: assignmentNotifications.id,
+          studentId: assignmentNotifications.studentId,
+          teacherId: assignmentNotifications.teacherId,
+          assignmentId: assignmentNotifications.assignmentId,
+          isNoticed: assignmentNotifications.isNoticed,
+          createdAt: assignmentNotifications.createdAt,
+          updatedAt: assignmentNotifications.updatedAt,
+          assignmentTitle: assignments.title,
+          assignmentDueDate: assignments.dueDate,
+          assignmentClassroomId: assignments.classroomId,
+          articleId: articles.id,
+          articleTitle: articles.title,
+          classroomName: classrooms.name,
+          teacherName: teacherUsers.name,
+        })
+        .from(assignmentNotifications)
+        .innerJoin(assignments, eq(assignmentNotifications.assignmentId, assignments.id))
+        .leftJoin(articles, eq(assignments.articleId, articles.id))
+        .leftJoin(classrooms, eq(assignments.classroomId, classrooms.id))
+        .leftJoin(teacherUsers, eq(assignmentNotifications.teacherId, teacherUsers.id))
+        .where(and(eq(assignmentNotifications.studentId, userId), eq(assignmentNotifications.isNoticed, false)))
+        .orderBy(desc(assignmentNotifications.createdAt));
 
-      return NextResponse.json({
-        success: true,
-        data: notifications,
-      });
+      const notifications = rows.map((r) => ({
+        id: r.id,
+        studentId: r.studentId,
+        teacherId: r.teacherId,
+        assignmentId: r.assignmentId,
+        isNoticed: r.isNoticed,
+        createdAt: r.createdAt,
+        updatedAt: r.updatedAt,
+        assignment: {
+          id: r.assignmentId,
+          classroomId: r.assignmentClassroomId,
+          title: r.assignmentTitle,
+          dueDate: r.assignmentDueDate,
+          article: { id: r.articleId, title: r.articleTitle },
+          classroom: { classroomName: r.classroomName },
+        },
+        teacher: { id: r.teacherId, name: r.teacherName },
+      }));
+
+      return NextResponse.json({ success: true, data: notifications });
     }
 
-    // Teacher view - get notification history
-    if (history) {
-      if (!["TEACHER", "ADMIN", "SYSTEM", "SUPERADMIN"].includes(user.role as string)) {
-        return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
+    // Teacher view
+    if (!["TEACHER", "ADMIN", "SYSTEM", "SUPERADMIN"].includes(user.role as string)) {
+      return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
+    }
+
+    const rows = await db
+      .select({
+        id: assignmentNotifications.id,
+        studentId: assignmentNotifications.studentId,
+        teacherId: assignmentNotifications.teacherId,
+        assignmentId: assignmentNotifications.assignmentId,
+        isNoticed: assignmentNotifications.isNoticed,
+        createdAt: assignmentNotifications.createdAt,
+        updatedAt: assignmentNotifications.updatedAt,
+        assignmentTitle: assignments.title,
+        articleId: articles.id,
+        articleTitle: articles.title,
+        studentName: studentUsers.name,
+      })
+      .from(assignmentNotifications)
+      .innerJoin(assignments, eq(assignmentNotifications.assignmentId, assignments.id))
+      .leftJoin(articles, eq(assignments.articleId, articles.id))
+      .leftJoin(studentUsers, eq(assignmentNotifications.studentId, studentUsers.id))
+      .where(eq(assignmentNotifications.teacherId, userId))
+      .orderBy(desc(assignmentNotifications.createdAt))
+      .limit(100);
+
+    const notifications = rows.map((r) => ({
+      id: r.id,
+      studentId: r.studentId,
+      teacherId: r.teacherId,
+      assignmentId: r.assignmentId,
+      isNoticed: r.isNoticed,
+      createdAt: r.createdAt,
+      updatedAt: r.updatedAt,
+      assignment: {
+        id: r.assignmentId,
+        title: r.assignmentTitle,
+        article: { id: r.articleId, title: r.articleTitle },
+      },
+      student: { id: r.studentId, name: r.studentName },
+    }));
+
+    const groupedNotifications = notifications.reduce((acc, notification) => {
+      const aId = notification.assignmentId;
+      if (!acc[aId]) {
+        acc[aId] = { assignment: notification.assignment, notifications: [] };
       }
-
-      const teacherId = userId;
-      const notifications = await prisma.assignmentNotification.findMany({
-        where: {
-          teacherId,
-        },
-        include: {
-          assignment: {
-            include: {
-              article: {
-                select: {
-                  title: true,
-                  id: true,
-                },
-              },
-            },
-          },
-          student: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: 100, // Limit to last 100 notifications
+      acc[aId].notifications.push({
+        id: notification.id,
+        student: notification.student,
+        isNoticed: notification.isNoticed,
+        createdAt: notification.createdAt,
       });
+      return acc;
+    }, {} as Record<string, any>);
 
-      // Group by assignment
-      const groupedNotifications = notifications.reduce((acc, notification) => {
-        const assignmentId = notification.assignmentId;
-        if (!acc[assignmentId]) {
-          acc[assignmentId] = {
-            assignment: notification.assignment,
-            notifications: [],
-          };
-        }
-        acc[assignmentId].notifications.push({
-          id: notification.id,
-          student: notification.student,
-          isNoticed: notification.isNoticed,
-          createdAt: notification.createdAt,
-        });
-        return acc;
-      }, {} as Record<string, any>);
-
-      return NextResponse.json({
-        success: true,
-        data: Object.values(groupedNotifications),
-      });
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Missing required parameters" },
-      { status: 400 }
-    );
+    return NextResponse.json({ success: true, data: Object.values(groupedNotifications) });
   } catch (error) {
     console.error("Error fetching assignment notifications:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch notifications" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: "Failed to fetch notifications" }, { status: 500 });
   }
 }
 
-/**
- * Send assignment notifications to students
- * Body: { assignmentIds: string[], studentIds: string[], teacherId: string }
- */
 export async function sendAssignmentNotifications(req: ExtendedNextRequest) {
   try {
     const user = req.session?.user;
@@ -148,96 +152,70 @@ export async function sendAssignmentNotifications(req: ExtendedNextRequest) {
     const teacherId = user.id;
 
     if (!assignmentIds || !studentIds) {
-      return NextResponse.json(
-        { success: false, message: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "Missing required fields" }, { status: 400 });
     }
 
-    // Validate that assignments exist and verify classroom scope
-    const assignments = await prisma.assignment.findMany({
-      where: {
-        id: { in: assignmentIds },
-      },
-      include: {
-        classroom: {
-          include: {
-            teachers: true,
-            students: true,
-          }
-        }
-      }
-    });
+    // Validate assignments exist and teacher has access
+    const assignmentRows = await db
+      .select({ id: assignments.id, classroomId: assignments.classroomId })
+      .from(assignments)
+      .where(inArray(assignments.id, assignmentIds));
 
-    if (assignments.length !== assignmentIds.length) {
-      return NextResponse.json(
-        { success: false, message: "Some assignments not found" },
-        { status: 404 }
-      );
+    if (assignmentRows.length !== assignmentIds.length) {
+      return NextResponse.json({ success: false, message: "Some assignments not found" }, { status: 404 });
     }
 
-    for (const assignment of assignments) {
-      // Validate teacher has access to the classroom
+    const classroomIds = [...new Set(assignmentRows.map((a) => a.classroomId))];
+
+    // Get classroomTeachers and classroomStudents for all relevant classrooms
+    const [ctRows, csRows, classroomRows] = await Promise.all([
+      db.select({ classroomId: classroomTeachers.classroomId, teacherId: classroomTeachers.teacherId })
+        .from(classroomTeachers).where(inArray(classroomTeachers.classroomId, classroomIds)),
+      db.select({ classroomId: classroomStudents.classroomId, studentId: classroomStudents.studentId })
+        .from(classroomStudents).where(inArray(classroomStudents.classroomId, classroomIds)),
+      db.select({ id: classrooms.id, teacherId: classrooms.teacherId })
+        .from(classrooms).where(inArray(classrooms.id, classroomIds)),
+    ]);
+
+    for (const assignment of assignmentRows) {
+      const cTeachers = ctRows.filter((ct) => ct.classroomId === assignment.classroomId);
+      const classroom = classroomRows.find((c) => c.id === assignment.classroomId);
       const isAuthorized =
-        assignment.classroom.teacherId === teacherId ||
-        assignment.classroom.teachers.some((t) => t.teacherId === teacherId);
-      
+        classroom?.teacherId === teacherId ||
+        cTeachers.some((t) => t.teacherId === teacherId);
+
       if (!isAuthorized) {
-        return NextResponse.json(
-          { success: false, message: "Forbidden - Not authorized for this classroom" },
-          { status: 403 }
-        );
+        return NextResponse.json({ success: false, message: "Forbidden - Not authorized for this classroom" }, { status: 403 });
       }
 
-      // Verify all studentIds belong to this classroom
-      const validStudentIds = new Set(assignment.classroom.students.map(s => s.studentId));
+      const validStudentIds = new Set(csRows.filter((cs) => cs.classroomId === assignment.classroomId).map((cs) => cs.studentId));
       for (const studentId of studentIds) {
         if (!validStudentIds.has(studentId)) {
-          return NextResponse.json(
-            { success: false, message: `Forbidden - Student ${studentId} not in classroom` },
-            { status: 403 }
-          );
+          return NextResponse.json({ success: false, message: `Forbidden - Student ${studentId} not in classroom` }, { status: 403 });
         }
       }
     }
 
-    // Create notifications for each combination of assignment and student
     const notificationsToCreate = [];
     for (const assignmentId of assignmentIds) {
       for (const studentId of studentIds) {
-        notificationsToCreate.push({
-          assignmentId,
-          studentId,
-          teacherId,
-          isNoticed: false,
-        });
+        notificationsToCreate.push({ assignmentId, studentId, teacherId, isNoticed: false });
       }
     }
 
-    // Use createMany with skipDuplicates to avoid errors if notification already exists
-    const result = await prisma.assignmentNotification.createMany({
-      data: notificationsToCreate,
-      skipDuplicates: true,
-    });
+    const inserted = await db
+      .insert(assignmentNotifications)
+      .values(notificationsToCreate)
+      .onConflictDoNothing()
+      .returning({ id: assignmentNotifications.id });
 
-    return NextResponse.json({
-      success: true,
-      message: `Sent ${result.count} notifications`,
-      data: { count: result.count },
-    });
+    return NextResponse.json({ success: true, message: `Sent ${inserted.length} notifications`, data: { count: inserted.length } });
   } catch (error) {
     console.error("Error sending assignment notifications:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to send notifications" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: "Failed to send notifications" }, { status: 500 });
   }
 }
 
-/**
- * Update notification status (mark as noticed)
- * Body: { notificationId: string, isNoticed: boolean }
- */
 export async function updateNotificationStatus(req: ExtendedNextRequest) {
   try {
     const user = req.session?.user;
@@ -249,49 +227,32 @@ export async function updateNotificationStatus(req: ExtendedNextRequest) {
     const { notificationId, isNoticed } = body;
 
     if (!notificationId || typeof isNoticed !== "boolean") {
-      return NextResponse.json(
-        { success: false, message: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "Missing required fields" }, { status: 400 });
     }
 
-    const existing = await prisma.assignmentNotification.findUnique({
-      where: { id: notificationId },
-    });
+    const [existing] = await db
+      .select()
+      .from(assignmentNotifications)
+      .where(eq(assignmentNotifications.id, notificationId))
+      .limit(1);
 
     if (!existing || existing.studentId !== user.id) {
-      return NextResponse.json(
-        { success: false, message: "Forbidden" },
-        { status: 403 }
-      );
+      return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
     }
 
-    const notification = await prisma.assignmentNotification.update({
-      where: {
-        id: notificationId,
-      },
-      data: {
-        isNoticed,
-      },
-    });
+    const [notification] = await db
+      .update(assignmentNotifications)
+      .set({ isNoticed })
+      .where(eq(assignmentNotifications.id, notificationId))
+      .returning();
 
-    return NextResponse.json({
-      success: true,
-      data: notification,
-    });
+    return NextResponse.json({ success: true, data: notification });
   } catch (error) {
     console.error("Error updating notification status:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to update notification" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: "Failed to update notification" }, { status: 500 });
   }
 }
 
-/**
- * Get notification history for a specific assignment
- * This shows which students have been notified and their status
- */
 export async function getNotificationHistory(req: ExtendedNextRequest) {
   try {
     const user = req.session?.user;
@@ -303,65 +264,64 @@ export async function getNotificationHistory(req: ExtendedNextRequest) {
     const assignmentId = searchParams.get("assignmentId");
 
     if (!assignmentId) {
-      return NextResponse.json(
-        { success: false, message: "Missing assignmentId" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "Missing assignmentId" }, { status: 400 });
     }
 
-    const assignment = await prisma.assignment.findUnique({
-      where: { id: assignmentId },
-      include: {
-        classroom: {
-          include: { teachers: true }
-        }
-      }
-    });
+    const [assignment] = await db
+      .select({ id: assignments.id, classroomId: assignments.classroomId })
+      .from(assignments)
+      .where(eq(assignments.id, assignmentId))
+      .limit(1);
 
     if (!assignment) {
       return NextResponse.json({ success: false, message: "Not found" }, { status: 404 });
     }
 
+    const [classroom] = await db
+      .select({ id: classrooms.id, teacherId: classrooms.teacherId })
+      .from(classrooms)
+      .where(eq(classrooms.id, assignment.classroomId))
+      .limit(1);
+
+    const ctRows = await db
+      .select({ teacherId: classroomTeachers.teacherId })
+      .from(classroomTeachers)
+      .where(eq(classroomTeachers.classroomId, assignment.classroomId));
+
     const isAuthorized =
-      assignment.classroom.teacherId === user.id ||
-      assignment.classroom.teachers.some((t) => t.teacherId === user.id);
+      classroom?.teacherId === user.id || ctRows.some((t) => t.teacherId === user.id);
 
     if (!isAuthorized) {
       return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
     }
 
-    const notifications = await prisma.assignmentNotification.findMany({
-      where: {
-        assignmentId,
-      },
-      include: {
-        student: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        teacher: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const rows = await db
+      .select({
+        id: assignmentNotifications.id,
+        studentId: assignmentNotifications.studentId,
+        teacherId: assignmentNotifications.teacherId,
+        assignmentId: assignmentNotifications.assignmentId,
+        isNoticed: assignmentNotifications.isNoticed,
+        createdAt: assignmentNotifications.createdAt,
+        updatedAt: assignmentNotifications.updatedAt,
+        studentName: studentUsers.name,
+        teacherName: teacherUsers.name,
+      })
+      .from(assignmentNotifications)
+      .leftJoin(studentUsers, eq(assignmentNotifications.studentId, studentUsers.id))
+      .leftJoin(teacherUsers, eq(assignmentNotifications.teacherId, teacherUsers.id))
+      .where(eq(assignmentNotifications.assignmentId, assignmentId))
+      .orderBy(desc(assignmentNotifications.createdAt));
 
-    return NextResponse.json({
-      success: true,
-      data: notifications,
-    });
+    const notifications = rows.map((r) => ({
+      ...r,
+      student: { id: r.studentId, name: r.studentName },
+      teacher: { id: r.teacherId, name: r.teacherName },
+    }));
+
+    return NextResponse.json({ success: true, data: notifications });
   } catch (error) {
     console.error("Error fetching notification history:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch notification history" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: "Failed to fetch notification history" }, { status: 500 });
   }
 }
