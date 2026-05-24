@@ -206,7 +206,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] Task: Migrate `app/api/lessons/[lessonSlug]/quiz/route.ts` (attempt, gamificationProfile, lesson, lessonCompletion, masteryRun) — _unblocked now that helpers are on Drizzle_ [be15807]
 - [x] Task: Migrate `app/api/classes/[classId]/curriculum/route.ts` (class, curriculumUnit, lessonCompletion) [23391c2]
 - [x] Task: Migrate `app/api/classes/[classId]/analytics/overview/route.ts` (class, lesson, lessonCompletion) [bca632f]
-- [ ] Task: Migrate `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (class, lesson, lessonCompletion, questionResponse)
+- [x] Task: Migrate `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (class, lesson, lessonCompletion, questionResponse) [bdcc5a6]
 - [ ] Task: Update integration test `lib/schemas/__tests__/curriculum-identifiers.integration.test.ts` (+ `content-migration.test.ts`, `curriculum-identifiers.test.ts`) against Drizzle
 - [ ] Task: Measure - User Manual Verification 'Curriculum & Lessons' (Protocol in workflow.md)
 
