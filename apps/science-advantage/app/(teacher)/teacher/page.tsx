@@ -1,21 +1,23 @@
+import { db, desc, eq } from '@reading-advantage/db';
+import { scienceClasses } from '@reading-advantage/db/schema';
+
 import { requireRole } from '@/lib/auth/server';
 import { TeacherDashboardClasses } from '@/components/features/teacher/teacher-dashboard-classes';
 import { InterventionAlertsWidget } from '@/components/features/teacher/intervention-alerts-widget';
 import { ClassProgressCard } from '@/components/features/teacher/class-progress-card';
 import { StudentsNeedAttentionCard } from '@/components/features/teacher/students-need-attention-card';
 import { RecentCompletionsFeed } from '@/components/features/teacher/recent-completions-feed';
-import prisma from '@/lib/prisma';
 
 export default async function TeacherPage() {
   const session = await requireRole('TEACHER');
 
   // Fetch teacher's classes for intervention widget
-  const teacherClasses = await prisma.class.findMany({
-    where: { teacherId: session.user.id },
-    select: { id: true, name: true },
-    orderBy: { createdAt: 'desc' },
-    take: 10,
-  });
+  const teacherClasses = await db
+    .select({ id: scienceClasses.id, name: scienceClasses.name })
+    .from(scienceClasses)
+    .where(eq(scienceClasses.teacherId, session.user.id))
+    .orderBy(desc(scienceClasses.createdAt))
+    .limit(10);
 
   return (
     <div className="space-y-8">
