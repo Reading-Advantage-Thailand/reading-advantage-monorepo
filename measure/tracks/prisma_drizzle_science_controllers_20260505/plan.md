@@ -247,7 +247,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] [6320022] Task: Migrate `app/api/students/[studentId]/assignments/route.ts` (assignment)
 - [x] [0323d6c] Task: Migrate `app/api/teachers/dashboard/route.ts` (class, lessonCompletion, standardMastery)
 - [x] [dc960ef] Task: Migrate `app/api/teachers/classes/[classId]/intervention-alerts/route.ts` (class, standardMastery) and `lib/interventions/detect-alerts.ts` (types-only)
-- [ ] Task: Migrate server components `app/(teacher)/teacher/page.tsx`, `app/(teacher)/teacher/classes/page.tsx`
+- [~] Task: Migrate server components `app/(teacher)/teacher/page.tsx`, `app/(teacher)/teacher/classes/page.tsx`
 - [ ] Task: Migrate components `class-card.tsx`, `class-detail-header.tsx`, `class-snapshot-panel.tsx`, `teacher-dashboard-classes.tsx`
 - [ ] Task: Update tests `tests/lib/get-student-classes.test.ts`, `tests/api/class-detail.test.ts`, `classes-join.test.ts`, `classes.test.ts`, `class-analytics-overview.integration.test.ts`, `teacher-dashboard.integration.test.ts` against Drizzle
 - [ ] Task: Measure - User Manual Verification 'Classes & Assignments' (Protocol in workflow.md)
