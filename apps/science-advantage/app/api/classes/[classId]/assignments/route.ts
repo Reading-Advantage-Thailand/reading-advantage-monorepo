@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { and, db, desc, eq } from '@reading-advantage/db';
+import {
+  scienceAssignments,
+  scienceClasses,
+  scienceClassStudents,
+  scienceLessons,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
-import prisma from '@/lib/prisma';
 
 /**
  * GET /api/classes/{classId}/assignments
@@ -25,13 +32,11 @@ export async function GET(
 
     const { classId } = await context.params;
 
-    const classRecord = await prisma.class.findUnique({
-      where: { id: classId },
-      select: {
-        teacherId: true,
-        students: { select: { id: true } },
-      },
-    });
+    const [classRecord] = await db
+      .select({ teacherId: scienceClasses.teacherId })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.id, classId))
+      .limit(1);
 
     if (!classRecord) {
       return NextResponse.json(
@@ -41,9 +46,20 @@ export async function GET(
     }
 
     const isTeacherOwner = classRecord.teacherId === session.user.id;
-    const isEnrolledStudent = classRecord.students.some(
-      student => student.id === session.user.id
-    );
+    let isEnrolledStudent = false;
+    if (!isTeacherOwner) {
+      const enrollment = await db
+        .select({ studentId: scienceClassStudents.studentId })
+        .from(scienceClassStudents)
+        .where(
+          and(
+            eq(scienceClassStudents.classId, classId),
+            eq(scienceClassStudents.studentId, session.user.id)
+          )
+        )
+        .limit(1);
+      isEnrolledStudent = enrollment.length > 0;
+    }
 
     if (!isTeacherOwner && !isEnrolledStudent) {
       return NextResponse.json(
@@ -52,41 +68,48 @@ export async function GET(
       );
     }
 
-    const assignments = await prisma.assignment.findMany({
-      where: { classId },
-      include: {
-        lesson: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            order: true,
-            gradeLevel: true,
-          },
-        },
-        teacher: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: { assignedAt: 'desc' },
-    });
+    const rows = await db
+      .select({
+        id: scienceAssignments.id,
+        classId: scienceAssignments.classId,
+        lessonId: scienceAssignments.lessonId,
+        assignedAt: scienceAssignments.assignedAt,
+        dueAt: scienceAssignments.dueAt,
+        assignedBy: scienceAssignments.assignedBy,
+        createdAt: scienceAssignments.createdAt,
+        teacherId: users.id,
+        teacherName: users.name,
+        lessonInnerId: scienceLessons.id,
+        lessonTitle: scienceLessons.title,
+        lessonSlug: scienceLessons.slug,
+        lessonOrder: scienceLessons.order,
+        lessonGradeLevel: scienceLessons.gradeLevel,
+      })
+      .from(scienceAssignments)
+      .innerJoin(users, eq(users.id, scienceAssignments.assignedBy))
+      .innerJoin(scienceLessons, eq(scienceLessons.id, scienceAssignments.lessonId))
+      .where(eq(scienceAssignments.classId, classId))
+      .orderBy(desc(scienceAssignments.assignedAt));
 
     return NextResponse.json(
       {
         success: true,
         data: {
-          assignments: assignments.map(a => ({
+          assignments: rows.map((a) => ({
             id: a.id,
             classId: a.classId,
             lessonId: a.lessonId,
             assignedAt: a.assignedAt.toISOString(),
             dueAt: a.dueAt?.toISOString() ?? null,
             assignedBy: a.assignedBy,
-            teacher: a.teacher,
-            lesson: a.lesson,
+            teacher: { id: a.teacherId, name: a.teacherName },
+            lesson: {
+              id: a.lessonInnerId,
+              title: a.lessonTitle,
+              slug: a.lessonSlug,
+              order: a.lessonOrder,
+              gradeLevel: a.lessonGradeLevel,
+            },
             createdAt: a.createdAt.toISOString(),
           })),
         },
@@ -142,10 +165,11 @@ export async function POST(
       );
     }
 
-    const classRecord = await prisma.class.findUnique({
-      where: { id: classId },
-      select: { teacherId: true },
-    });
+    const [classRecord] = await db
+      .select({ teacherId: scienceClasses.teacherId })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.id, classId))
+      .limit(1);
 
     if (!classRecord) {
       return NextResponse.json(
@@ -164,10 +188,11 @@ export async function POST(
       );
     }
 
-    const lesson = await prisma.lesson.findUnique({
-      where: { id: lessonId },
-      select: { id: true },
-    });
+    const [lesson] = await db
+      .select({ id: scienceLessons.id })
+      .from(scienceLessons)
+      .where(eq(scienceLessons.id, lessonId))
+      .limit(1);
 
     if (!lesson) {
       return NextResponse.json(
@@ -187,30 +212,32 @@ export async function POST(
       }
     }
 
-    const assignment = await prisma.assignment.create({
-      data: {
+    const [assignment] = await db
+      .insert(scienceAssignments)
+      .values({
         classId,
         lessonId,
         assignedBy: session.user.id,
         dueAt: parsedDueAt,
-      },
-      include: {
-        lesson: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            order: true,
-          },
-        },
-        teacher: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+      })
+      .returning();
+
+    const [teacherRow] = await db
+      .select({ id: users.id, name: users.name })
+      .from(users)
+      .where(eq(users.id, assignment.assignedBy))
+      .limit(1);
+
+    const [lessonRow] = await db
+      .select({
+        id: scienceLessons.id,
+        title: scienceLessons.title,
+        slug: scienceLessons.slug,
+        order: scienceLessons.order,
+      })
+      .from(scienceLessons)
+      .where(eq(scienceLessons.id, assignment.lessonId))
+      .limit(1);
 
     return NextResponse.json(
       {
@@ -222,8 +249,8 @@ export async function POST(
           assignedAt: assignment.assignedAt.toISOString(),
           dueAt: assignment.dueAt?.toISOString() ?? null,
           assignedBy: assignment.assignedBy,
-          teacher: assignment.teacher,
-          lesson: assignment.lesson,
+          teacher: teacherRow,
+          lesson: lessonRow,
           createdAt: assignment.createdAt.toISOString(),
         },
       },
@@ -277,10 +304,11 @@ export async function DELETE(
       );
     }
 
-    const classRecord = await prisma.class.findUnique({
-      where: { id: classId },
-      select: { teacherId: true },
-    });
+    const [classRecord] = await db
+      .select({ teacherId: scienceClasses.teacherId })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.id, classId))
+      .limit(1);
 
     if (!classRecord) {
       return NextResponse.json(
@@ -299,13 +327,16 @@ export async function DELETE(
       );
     }
 
-    const assignment = await prisma.assignment.findFirst({
-      where: {
-        id: assignmentId,
-        classId,
-      },
-      select: { id: true },
-    });
+    const [assignment] = await db
+      .select({ id: scienceAssignments.id })
+      .from(scienceAssignments)
+      .where(
+        and(
+          eq(scienceAssignments.id, assignmentId),
+          eq(scienceAssignments.classId, classId)
+        )
+      )
+      .limit(1);
 
     if (!assignment) {
       return NextResponse.json(
@@ -314,9 +345,9 @@ export async function DELETE(
       );
     }
 
-    await prisma.assignment.delete({
-      where: { id: assignmentId },
-    });
+    await db
+      .delete(scienceAssignments)
+      .where(eq(scienceAssignments.id, assignmentId));
 
     return NextResponse.json(
       { success: true, data: { deleted: true } },
