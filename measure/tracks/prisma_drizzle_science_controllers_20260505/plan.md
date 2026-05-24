@@ -233,7 +233,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] Task: Migrate `lib/gamification/badges.ts` (achievement, attempt, curriculumUnit, gamificationProfile, lessonCompletion) — _pulled ahead from Phase 3; old mock test replaced with badges.integration.test.ts_ [1fea05c]
 - [x] [2cccfe3] Task: Migrate `app/api/students/me/gamification/route.ts` (achievement, gamificationProfile)
 - [x] [cce3000] Task: Migrate `app/api/students/[studentId]/gamification-profile/route.ts` (achievement, gamificationProfile)
-- [~] Task: Migrate `app/api/students/[studentId]/achievements/route.ts` (achievement)
+- [x] [67f676a] Task: Migrate `app/api/students/[studentId]/achievements/route.ts` (achievement)
 - [x] Task: Update test `lib/gamification/badges.test.ts` against Drizzle — _completed alongside badges.ts migration; rewritten as badges.integration.test.ts (20 real-DB tests)_ [1fea05c]
 - [ ] Task: Measure - User Manual Verification 'Gamification' (Protocol in workflow.md)
 
