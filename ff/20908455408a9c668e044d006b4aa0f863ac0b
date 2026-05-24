@@ -1,0 +1,5 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: Add lessons-learned (plan line 295)
+Lines added: 7 (cap 50; file now 54 lines, 4 over file self-cap — content density prioritized)
+Themes covered: client-bundle leaks + server-only fix, Prisma-removal grep blind spots, postgres-js error/decimal shape, Drizzle session lifecycle, drizzle-zod constraint loss, move-don't-copy + cursor pagination, tech-debt re-evaluation
+SHA refs in entry: 6 (04d8fa5, d596dfb, ba5be9f, 06a4117, 20bd954, fdd3298)
