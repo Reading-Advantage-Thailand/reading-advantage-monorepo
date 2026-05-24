@@ -50,16 +50,17 @@ export const lessons = pgTable("lessons", {
 
 export const assignments = pgTable("assignments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  title: text("title"),
+  title: text("title").notNull(),
   classroomId: uuid("classroom_id")
     .notNull()
     .references(() => classrooms.id, { onDelete: "cascade" }),
   teacherId: text("teacher_id")
+    .notNull()
     .references(() => users.id),
   articleId: uuid("article_id").references(() => articles.id),
   lessonId: uuid("lesson_id").references(() => lessons.id),
   dueDate: timestamp("due_date"),
-  type: text("type"),
+  type: text("type").notNull(),
   description: text("description"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
