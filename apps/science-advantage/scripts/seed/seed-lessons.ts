@@ -104,10 +104,12 @@ export async function seedLessons(
     console.log(`  Processing ${data.framework} Grade ${data.gradeLevel} Unit ${data.unit} lessons...`);
 
     for (const lessonData of data.lessons) {
-      // Seed JSON `id` historically doubled as slug; prefer explicit `slug`
-      // field if present, else fall back to id with whitespace normalisation
-      // (matches the original prisma upsert's slug fallback).
-      const slug = lessonData.slug || lessonData.id.toLowerCase().replace(/\s+/g, '-');
+      // Original Prisma schema used the JSON `id` AS the primary key, and
+      // curriculum-units JSON references lessons by that same `id` in their
+      // `lessonIds[]` arrays. The JSON `slug` field is a display-friendly
+      // alias that does NOT line up with those cross-references. Always use
+      // `id` for the Drizzle slug column to keep curriculum cross-refs intact.
+      const slug = lessonData.id.toLowerCase().replace(/\s+/g, '-');
       const lessonType = lessonData.lessonType ?? 'LESSON';
 
       await db.transaction(async (tx) => {
