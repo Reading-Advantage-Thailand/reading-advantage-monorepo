@@ -1,17 +1,33 @@
 import { randomUUID } from 'crypto';
 
-import type { Class, StandardMastery, user } from '@prisma/client';
+import type {
+  scienceClasses,
+  scienceStandardMastery,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { interventionConfig, type AlertSeverity } from './config';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-type StudentRosterEntry = Pick<user, 'id' | 'name' | 'gradeLevel'>;
+type Class = typeof scienceClasses.$inferSelect;
+type StandardMastery = typeof scienceStandardMastery.$inferSelect;
+type user = typeof users.$inferSelect;
+
+type StudentRosterEntry = {
+  id: user['id'];
+  name: NonNullable<user['name']>;
+  gradeLevel: user['gradeLevel'];
+};
 
 export type MasteryRecord = Pick<
   StandardMastery,
-  'studentId' | 'masteryLevel' | 'lastAssessedAt'
+  'studentId' | 'lastAssessedAt'
 > & {
+  // Accept both Drizzle's decimal string and Prisma's Decimal-like object so
+  // existing Prisma-based callers (scripts/dev-interventions.ts, retired in
+  // Phase 6) still type-check during the migration window.
+  masteryLevel: string | { toString(): string };
   standard: {
     code: string;
     description: string | null;

@@ -2,6 +2,14 @@ import { randomUUID } from 'crypto';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { and, db, eq, inArray, lt, sql } from '@reading-advantage/db';
+import {
+  scienceClasses,
+  scienceClassStudents,
+  scienceStandardMastery,
+  scienceStandards,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
 import { interventionCache } from '@/lib/interventions/cache';
@@ -9,7 +17,6 @@ import { interventionConfig } from '@/lib/interventions/config';
 import { detectAlerts } from '@/lib/interventions/detect-alerts';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
-import prisma from '@/lib/prisma';
 
 const querySchema = z.object({
   limit: z.coerce
@@ -73,18 +80,15 @@ export async function GET(
   const bypassCache = refresh ?? false;
 
   try {
-    const klass = await prisma.class.findUnique({
-      where: { id: classId },
-      include: {
-        students: {
-          select: {
-            id: true,
-            name: true,
-            gradeLevel: true,
-          },
-        },
-      },
-    });
+    const [klass] = await db
+      .select({
+        id: scienceClasses.id,
+        name: scienceClasses.name,
+        teacherId: scienceClasses.teacherId,
+      })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.id, classId))
+      .limit(1);
 
     if (!klass) {
       return NextResponse.json({ error: 'Class not found' }, { status: 404 });
@@ -98,7 +102,17 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    if (klass.students.length === 0) {
+    const students = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        gradeLevel: users.gradeLevel,
+      })
+      .from(scienceClassStudents)
+      .innerJoin(users, eq(users.id, scienceClassStudents.studentId))
+      .where(eq(scienceClassStudents.classId, classId));
+
+    if (students.length === 0) {
       return NextResponse.json(
         {
           classId,
@@ -129,24 +143,50 @@ export async function GET(
     const payload =
       cached ??
       (await (async () => {
-        const masteryRecords = await prisma.standardMastery.findMany({
-          where: {
-            studentId: { in: klass.students.map((student) => student.id) },
-            masteryLevel: { lt: interventionConfig.masteryFilterLevel },
+        const studentIds = students.map((student) => student.id);
+
+        const masteryRows = await db
+          .select({
+            studentId: scienceStandardMastery.studentId,
+            masteryLevel: scienceStandardMastery.masteryLevel,
+            lastAssessedAt: scienceStandardMastery.lastAssessedAt,
+            standardCode: scienceStandards.code,
+            standardDescription: scienceStandards.description,
+          })
+          .from(scienceStandardMastery)
+          .innerJoin(
+            scienceStandards,
+            eq(scienceStandards.id, scienceStandardMastery.standardId)
+          )
+          .where(
+            and(
+              inArray(scienceStandardMastery.studentId, studentIds),
+              lt(
+                scienceStandardMastery.masteryLevel,
+                sql`${interventionConfig.masteryFilterLevel}`
+              )
+            )
+          );
+
+        const masteryRecords = masteryRows.map((row) => ({
+          studentId: row.studentId,
+          masteryLevel: row.masteryLevel,
+          lastAssessedAt: row.lastAssessedAt,
+          standard: {
+            code: row.standardCode,
+            description: row.standardDescription,
           },
-          include: {
-            standard: {
-              select: {
-                code: true,
-                description: true,
-              },
-            },
-          },
-        });
+        }));
+
+        const studentsForDetection = students.map((student) => ({
+          id: student.id,
+          name: student.name ?? '',
+          gradeLevel: student.gradeLevel,
+        }));
 
         const detectionResult = detectAlerts({
           classMeta: { id: klass.id, name: klass.name },
-          students: klass.students,
+          students: studentsForDetection,
           masteryRecords,
           maxAlerts: interventionConfig.detectionCap,
         });

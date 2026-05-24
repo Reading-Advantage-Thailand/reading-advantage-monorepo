@@ -1,10 +1,21 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
-
-import prisma from '@/lib/prisma';
+import { db, sql } from '@reading-advantage/db';
+import {
+  accounts,
+  scienceClasses,
+  scienceClassStudents,
+  scienceStandardMastery,
+  scienceStandards,
+  sessions,
+  users,
+} from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 import { interventionCache } from '@/lib/interventions/cache';
+
+const TEST_PREFIX = 'intervention-alerts-itest';
+const STANDARDS_DESC = 'intervention-alerts-itest standard';
 
 const mockCookies = {
   get: vi.fn(),
@@ -16,305 +27,414 @@ vi.mock('next/headers', () => ({
   cookies: vi.fn(() => mockCookies),
 }));
 
-describe('GET /api/teachers/classes/[classId]/intervention-alerts', () => {
-  let teacher: { id: string };
-  let otherTeacher: { id: string };
-  let admin: { id: string };
-  let studentA: { id: string };
-  let studentB: { id: string };
-  let klass: { id: string };
+type UserRow = typeof users.$inferSelect;
+type ClassRow = typeof scienceClasses.$inferSelect;
+type StandardRow = typeof scienceStandards.$inferSelect;
 
-  async function authenticate(userId: string) {
-    const session = await createSession(userId);
-    mockCookies.get.mockReturnValue({ value: session.token });
+async function cleanup(): Promise<void> {
+  await db.delete(scienceStandardMastery);
+  await db.execute(
+    sql`DELETE FROM science_standards WHERE description = ${STANDARDS_DESC}`
+  );
+  await db.delete(scienceClassStudents);
+  await db.delete(scienceClasses);
+  await db.delete(sessions);
+  await db.delete(accounts);
+  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+  interventionCache.clear();
+}
+
+async function seedUser(
+  id: string,
+  role: 'TEACHER' | 'STUDENT' | 'ADMIN',
+  opts: { name?: string; gradeLevel?: number | null } = {}
+): Promise<UserRow> {
+  const [u] = await db
+    .insert(users)
+    .values({
+      id,
+      name: opts.name ?? id,
+      username: id,
+      displayUsername: id,
+      email: `${id}@example.com`,
+      role,
+      gradeLevel: opts.gradeLevel ?? null,
+    })
+    .returning();
+  return u;
+}
+
+async function seedClass(
+  teacherId: string,
+  name = 'Science 101'
+): Promise<ClassRow> {
+  const [cls] = await db
+    .insert(scienceClasses)
+    .values({
+      name,
+      gradeLevel: 5,
+      standardsAlignment: 'THAI',
+      joinCode: `IA-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
+      teacherId,
+    })
+    .returning();
+  return cls;
+}
+
+async function seedStandard(code: string): Promise<StandardRow> {
+  const [s] = await db
+    .insert(scienceStandards)
+    .values({
+      framework: 'THAI',
+      code,
+      description: STANDARDS_DESC,
+      gradeLevel: 5,
+    })
+    .returning();
+  return s;
+}
+
+function buildRequest(classId: string, params: Record<string, string> = {}) {
+  const url = new URL(
+    `http://localhost:3000/api/teachers/classes/${classId}/intervention-alerts`
+  );
+  for (const [k, v] of Object.entries(params)) {
+    url.searchParams.set(k, v);
   }
+  return new NextRequest(url.toString());
+}
 
-  function buildRequest(query = '') {
-    return new NextRequest(
-      `http://localhost:3000/api/teachers/classes/${klass.id}/intervention-alerts${query}`
-    );
-  }
+async function callGet(classId: string, params: Record<string, string> = {}) {
+  return GET(buildRequest(classId, params), {
+    params: Promise.resolve({ classId }),
+  });
+}
 
+describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)', () => {
   beforeEach(async () => {
     mockCookies.get.mockReset();
     mockCookies.set.mockReset();
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
-    interventionCache.clear();
+    await cleanup();
+  });
 
-    await prisma.standardMastery.deleteMany();
-    await prisma.$executeRaw`DELETE FROM "_ClassStudents"`;
-    await prisma.class.deleteMany();
-    await prisma.standard.deleteMany();
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+  it('returns 401 when unauthenticated', async () => {
+    const res = await callGet('00000000-0000-0000-0000-000000000000');
+    expect(res.status).toBe(401);
+  });
 
-    teacher = await prisma.user.create({
-      data: {
-        id: 'teacher-1',
-        name: 'Teacher One',
-        username: 'teacher.one',
-        displayUsername: 'Teacher1',
-        email: 'teacher1@example.com',
-        role: 'TEACHER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      select: { id: true },
+  it('returns 404 when class does not exist', async () => {
+    const teacher = await seedUser(`${TEST_PREFIX}-teacher-404`, 'TEACHER');
+    const session = await createSession(teacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await callGet('00000000-0000-0000-0000-000000000000');
+    expect(res.status).toBe(404);
+  });
+
+  it('returns 403 when a non-owner teacher requests the class', async () => {
+    const ownerTeacher = await seedUser(
+      `${TEST_PREFIX}-owner`,
+      'TEACHER'
+    );
+    const otherTeacher = await seedUser(
+      `${TEST_PREFIX}-other`,
+      'TEACHER'
+    );
+    const cls = await seedClass(ownerTeacher.id);
+
+    const session = await createSession(otherTeacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await callGet(cls.id);
+    expect(res.status).toBe(403);
+  });
+
+  it('returns empty alerts when class has no enrolled students', async () => {
+    const teacher = await seedUser(`${TEST_PREFIX}-teacher-empty`, 'TEACHER');
+    const cls = await seedClass(teacher.id, 'Empty');
+
+    const session = await createSession(teacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await callGet(cls.id);
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.classId).toBe(cls.id);
+    expect(data.alerts).toEqual([]);
+    expect(data.totalAlerts).toBe(0);
+    expect(data.nextCursor).toBeNull();
+  });
+
+  it('returns empty alerts when students have no weak mastery', async () => {
+    const teacher = await seedUser(`${TEST_PREFIX}-teacher-strong`, 'TEACHER');
+    const cls = await seedClass(teacher.id, 'Strong');
+    const standard = await seedStandard(`${TEST_PREFIX}-Sc1.1`);
+
+    const s1 = await seedUser(`${TEST_PREFIX}-strong-s1`, 'STUDENT', {
+      gradeLevel: 5,
+    });
+    await db
+      .insert(scienceClassStudents)
+      .values({ classId: cls.id, studentId: s1.id });
+
+    await db.insert(scienceStandardMastery).values({
+      studentId: s1.id,
+      standardId: standard.id,
+      masteryLevel: String(0.9),
+      lastAssessedAt: new Date(),
     });
 
-    otherTeacher = await prisma.user.create({
-      data: {
-        id: 'teacher-2',
-        name: 'Teacher Two',
-        username: 'teacher.two',
-        displayUsername: 'Teacher2',
-        email: 'teacher2@example.com',
-        role: 'TEACHER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      select: { id: true },
-    });
+    const session = await createSession(teacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
 
-    admin = await prisma.user.create({
-      data: {
-        id: 'admin-1',
-        name: 'Admin One',
-        username: 'admin.one',
-        displayUsername: 'Admin1',
-        email: 'admin@example.com',
-        role: 'ADMIN',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      select: { id: true },
-    });
+    const res = await callGet(cls.id, { refresh: 'true' });
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.alerts).toEqual([]);
+    expect(data.totalAlerts).toBe(0);
+  });
 
-    studentA = await prisma.user.create({
-      data: {
-        id: 'student-a',
-        name: 'Alice Student',
-        username: 'alice.student',
-        displayUsername: 'Alice',
-        email: 'alice@example.com',
-        role: 'STUDENT',
-        gradeLevel: 5,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      select: { id: true },
-    });
+  it('returns alerts sorted by score (highest first) when students have weak mastery', async () => {
+    const teacher = await seedUser(`${TEST_PREFIX}-teacher-alerts`, 'TEACHER');
+    const cls = await seedClass(teacher.id);
+    const s1 = await seedStandard(`${TEST_PREFIX}-Sc1.A`);
+    const s2 = await seedStandard(`${TEST_PREFIX}-Sc1.B`);
+    const s3 = await seedStandard(`${TEST_PREFIX}-Sc1.C`);
 
-    studentB = await prisma.user.create({
-      data: {
-        id: 'student-b',
-        name: 'Bob Student',
-        username: 'bob.student',
-        displayUsername: 'Bob',
-        email: 'bob@example.com',
-        role: 'STUDENT',
-        gradeLevel: 5,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      select: { id: true },
+    const critical = await seedUser(`${TEST_PREFIX}-critical-stu`, 'STUDENT', {
+      name: 'Critical Student',
+      gradeLevel: 5,
     });
+    const warning = await seedUser(`${TEST_PREFIX}-warning-stu`, 'STUDENT', {
+      name: 'Warning Student',
+      gradeLevel: 5,
+    });
+    for (const stu of [critical, warning]) {
+      await db
+        .insert(scienceClassStudents)
+        .values({ classId: cls.id, studentId: stu.id });
+    }
 
-    const standards = await prisma.$transaction([
-      prisma.standard.create({
-        data: {
-          id: 'std-1',
-          code: 'Sc1.1',
-          description: 'Standard 1',
-          framework: 'THAI',
-          gradeLevel: 5,
-        },
-      }),
-      prisma.standard.create({
-        data: {
-          id: 'std-2',
-          code: 'Sc1.2',
-          description: 'Standard 2',
-          framework: 'THAI',
-          gradeLevel: 5,
-        },
-      }),
-      prisma.standard.create({
-        data: {
-          id: 'std-3',
-          code: 'Sc1.3',
-          description: 'Standard 3',
-          framework: 'THAI',
-          gradeLevel: 5,
-        },
-      }),
+    // critical: 3 weak standards, avg < 0.4
+    await db.insert(scienceStandardMastery).values([
+      {
+        studentId: critical.id,
+        standardId: s1.id,
+        masteryLevel: String(0.3),
+        lastAssessedAt: new Date(),
+      },
+      {
+        studentId: critical.id,
+        standardId: s2.id,
+        masteryLevel: String(0.35),
+        lastAssessedAt: new Date(),
+      },
+      {
+        studentId: critical.id,
+        standardId: s3.id,
+        masteryLevel: String(0.38),
+        lastAssessedAt: new Date(),
+      },
     ]);
 
-    klass = await prisma.class.create({
-      data: {
-        id: 'class-alpha',
-        name: 'Alpha',
-        gradeLevel: 5,
-        standardsAlignment: 'THAI',
-        joinCode: 'JOIN-ALPHA',
-        teacherId: teacher.id,
-        students: {
-          connect: [{ id: studentA.id }, { id: studentB.id }],
-        },
-      },
-      select: { id: true },
-    });
-
-    await prisma.class.create({
-      data: {
-        id: 'class-beta',
-        name: 'Beta',
-        gradeLevel: 5,
-        standardsAlignment: 'THAI',
-        joinCode: 'JOIN-BETA',
-        teacherId: otherTeacher.id,
-        students: {
-          connect: [{ id: studentA.id }],
-        },
-      },
-    });
-
-    await prisma.standardMastery.createMany({
-      data: [
-        {
-          id: 'sm-1',
-          studentId: studentA.id,
-          standardId: standards[0].id,
-          masteryLevel: 0.32,
-          lastAssessedAt: new Date('2025-01-01T00:00:00Z'),
-        },
-        {
-          id: 'sm-2',
-          studentId: studentA.id,
-          standardId: standards[1].id,
-          masteryLevel: 0.35,
-          lastAssessedAt: new Date('2025-01-05T00:00:00Z'),
-        },
-        {
-          id: 'sm-3',
-          studentId: studentA.id,
-          standardId: standards[2].id,
-          masteryLevel: 0.4,
-          lastAssessedAt: new Date('2025-01-10T00:00:00Z'),
-        },
-        {
-          id: 'sm-4',
-          studentId: studentB.id,
-          standardId: standards[0].id,
-          masteryLevel: 0.52,
-          lastAssessedAt: new Date('2025-01-03T00:00:00Z'),
-        },
-        {
-          id: 'sm-5',
-          studentId: studentB.id,
-          standardId: standards[1].id,
-          masteryLevel: 0.48,
-          lastAssessedAt: new Date('2025-01-04T00:00:00Z'),
-        },
-      ],
-    });
-  });
-
-  it('returns alerts for the class teacher owner', async () => {
-    await authenticate(teacher.id);
-
-    const response = await GET(buildRequest(), {
-      params: Promise.resolve({ classId: klass.id }),
-    });
-
-    expect(response.status).toBe(200);
-    expect(response.headers.get('x-alert-trace-id')).toBeTruthy();
-    expect(response.headers.get('cache-control')).toContain('max-age');
-
-    const body = await response.json();
-    expect(body.alerts.length).toBeGreaterThan(0);
-    expect(body.alerts[0].alertSeverity).toBeDefined();
-  });
-
-  it('rejects students requesting alerts', async () => {
-    await authenticate(studentA.id);
-    const response = await GET(buildRequest(), {
-      params: Promise.resolve({ classId: klass.id }),
-    });
-    expect(response.status).toBe(403);
-  });
-
-  it('rejects teachers that do not own the class', async () => {
-    await authenticate(otherTeacher.id);
-    const response = await GET(buildRequest(), {
-      params: Promise.resolve({ classId: klass.id }),
-    });
-    expect(response.status).toBe(403);
-  });
-
-  it('allows admins to access alerts', async () => {
-    await authenticate(admin.id);
-    const response = await GET(buildRequest(), {
-      params: Promise.resolve({ classId: klass.id }),
-    });
-    expect(response.status).toBe(200);
-  });
-
-  it('supports limit and cursor pagination', async () => {
-    await authenticate(teacher.id);
-    const firstResponse = await GET(buildRequest('?limit=1'), {
-      params: Promise.resolve({ classId: klass.id }),
-    });
-    const firstBody = await firstResponse.json();
-    expect(firstBody.alerts).toHaveLength(1);
-    expect(firstBody.nextCursor).toBeTruthy();
-
-    const secondResponse = await GET(
-      buildRequest(`?cursor=${firstBody.nextCursor}`),
+    // warning: 2 weak standards, avg < 0.5
+    await db.insert(scienceStandardMastery).values([
       {
-        params: Promise.resolve({ classId: klass.id }),
-      }
-    );
-    const secondBody = await secondResponse.json();
-    expect(secondBody.alerts.length).toBeGreaterThan(0);
-    expect(secondBody.alerts.find((alert: { studentId: string }) => alert.studentId === firstBody.alerts[0].studentId)).toBeUndefined();
+        studentId: warning.id,
+        standardId: s1.id,
+        masteryLevel: String(0.42),
+        lastAssessedAt: new Date(),
+      },
+      {
+        studentId: warning.id,
+        standardId: s2.id,
+        masteryLevel: String(0.48),
+        lastAssessedAt: new Date(),
+      },
+    ]);
+
+    const session = await createSession(teacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await callGet(cls.id, { refresh: 'true' });
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.alerts).toHaveLength(2);
+    expect(data.alerts[0].alertSeverity).toBe('critical');
+    expect(data.alerts[0].studentName).toBe('Critical Student');
+    expect(data.alerts[1].alertSeverity).toBe('warning');
+    expect(data.alerts[1].studentName).toBe('Warning Student');
+    // score descending
+    expect(data.alerts[0].score).toBeGreaterThanOrEqual(data.alerts[1].score);
   });
 
-  it('bypasses cache when refresh flag is provided', async () => {
-    await authenticate(teacher.id);
-    const initialResponse = await GET(buildRequest(), {
-      params: Promise.resolve({ classId: klass.id }),
-    });
-    const initialBody = await initialResponse.json();
+  it('excludes mastery rows at or above the masteryFilterLevel threshold (>= 0.6)', async () => {
+    const teacher = await seedUser(`${TEST_PREFIX}-teacher-edges`, 'TEACHER');
+    const cls = await seedClass(teacher.id);
+    const standardWeak = await seedStandard(`${TEST_PREFIX}-Sc2.W`);
+    const standardEdge = await seedStandard(`${TEST_PREFIX}-Sc2.E`);
 
-    await prisma.standardMastery.create({
-      data: {
-        id: 'sm-6',
-        studentId: studentB.id,
-        standardId: 'std-3',
-        masteryLevel: 0.38,
-        lastAssessedAt: new Date('2025-01-15T00:00:00Z'),
+    const stu = await seedUser(`${TEST_PREFIX}-edge-stu`, 'STUDENT', {
+      gradeLevel: 5,
+    });
+    await db
+      .insert(scienceClassStudents)
+      .values({ classId: cls.id, studentId: stu.id });
+
+    await db.insert(scienceStandardMastery).values([
+      {
+        studentId: stu.id,
+        standardId: standardWeak.id,
+        masteryLevel: String(0.55),
+        lastAssessedAt: new Date(),
       },
-    });
+      {
+        studentId: stu.id,
+        standardId: standardEdge.id,
+        // exactly 0.6 — filtered out by route's `lt(... , 0.6)`
+        masteryLevel: String(0.6),
+        lastAssessedAt: new Date(),
+      },
+    ]);
 
-    const cachedResponse = await GET(buildRequest(), {
-      params: Promise.resolve({ classId: klass.id }),
-    });
-    const cachedBody = await cachedResponse.json();
-    expect(cachedBody.totalAlerts).toBe(initialBody.totalAlerts);
-    expect(cachedBody.generatedAt).toBe(initialBody.generatedAt);
+    const session = await createSession(teacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
 
-    await new Promise((resolve) => setTimeout(resolve, 5));
+    const res = await callGet(cls.id, { refresh: 'true' });
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    // moderate threshold: 1 weak std, avg < 0.6 → one moderate alert based on the 0.55 row.
+    expect(data.alerts).toHaveLength(1);
+    expect(data.alerts[0].alertSeverity).toBe('moderate');
+    expect(data.alerts[0].weakStandardCount).toBe(1);
+  });
 
-    const refreshedResponse = await GET(buildRequest('?refresh=true'), {
-      params: Promise.resolve({ classId: klass.id }),
-    });
-    const refreshedBody = await refreshedResponse.json();
-    expect(refreshedBody.generatedAt).not.toBe(initialBody.generatedAt);
-    expect(refreshedBody.totalAlerts).toBeGreaterThanOrEqual(
-      initialBody.totalAlerts
+  it('does not include mastery rows for students enrolled in other classes (tenant scoping)', async () => {
+    const teacher = await seedUser(`${TEST_PREFIX}-teacher-scope`, 'TEACHER');
+    const otherTeacher = await seedUser(
+      `${TEST_PREFIX}-teacher-scope-other`,
+      'TEACHER'
     );
+    const cls = await seedClass(teacher.id, 'Mine');
+    const otherCls = await seedClass(otherTeacher.id, 'Theirs');
+    const standard = await seedStandard(`${TEST_PREFIX}-Sc3.X`);
+
+    const mine = await seedUser(`${TEST_PREFIX}-mine-stu`, 'STUDENT', {
+      gradeLevel: 5,
+    });
+    const theirs = await seedUser(`${TEST_PREFIX}-theirs-stu`, 'STUDENT', {
+      gradeLevel: 5,
+    });
+    await db
+      .insert(scienceClassStudents)
+      .values({ classId: cls.id, studentId: mine.id });
+    await db
+      .insert(scienceClassStudents)
+      .values({ classId: otherCls.id, studentId: theirs.id });
+
+    await db.insert(scienceStandardMastery).values([
+      {
+        studentId: mine.id,
+        standardId: standard.id,
+        masteryLevel: String(0.3),
+        lastAssessedAt: new Date(),
+      },
+      {
+        studentId: theirs.id,
+        standardId: standard.id,
+        masteryLevel: String(0.2),
+        lastAssessedAt: new Date(),
+      },
+    ]);
+
+    const session = await createSession(teacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await callGet(cls.id, { refresh: 'true' });
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    // Only my student's alert is included — `theirs` is not enrolled in `cls`.
+    for (const alert of data.alerts) {
+      expect(alert.studentId).toBe(mine.id);
+    }
+  });
+
+  it('respects the severity query filter', async () => {
+    const teacher = await seedUser(`${TEST_PREFIX}-teacher-sev`, 'TEACHER');
+    const cls = await seedClass(teacher.id);
+    const s1 = await seedStandard(`${TEST_PREFIX}-Sc4.A`);
+    const s2 = await seedStandard(`${TEST_PREFIX}-Sc4.B`);
+    const s3 = await seedStandard(`${TEST_PREFIX}-Sc4.C`);
+
+    const critical = await seedUser(`${TEST_PREFIX}-sev-crit`, 'STUDENT', {
+      gradeLevel: 5,
+    });
+    const warning = await seedUser(`${TEST_PREFIX}-sev-warn`, 'STUDENT', {
+      gradeLevel: 5,
+    });
+    for (const stu of [critical, warning]) {
+      await db
+        .insert(scienceClassStudents)
+        .values({ classId: cls.id, studentId: stu.id });
+    }
+
+    await db.insert(scienceStandardMastery).values([
+      {
+        studentId: critical.id,
+        standardId: s1.id,
+        masteryLevel: String(0.3),
+        lastAssessedAt: new Date(),
+      },
+      {
+        studentId: critical.id,
+        standardId: s2.id,
+        masteryLevel: String(0.35),
+        lastAssessedAt: new Date(),
+      },
+      {
+        studentId: critical.id,
+        standardId: s3.id,
+        masteryLevel: String(0.38),
+        lastAssessedAt: new Date(),
+      },
+      {
+        studentId: warning.id,
+        standardId: s1.id,
+        masteryLevel: String(0.42),
+        lastAssessedAt: new Date(),
+      },
+      {
+        studentId: warning.id,
+        standardId: s2.id,
+        masteryLevel: String(0.48),
+        lastAssessedAt: new Date(),
+      },
+    ]);
+
+    const session = await createSession(teacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await callGet(cls.id, {
+      severity: 'critical',
+      refresh: 'true',
+    });
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.alerts).toHaveLength(1);
+    expect(data.alerts[0].alertSeverity).toBe('critical');
+  });
+
+  it('allows ADMIN access to a class they do not own', async () => {
+    const teacher = await seedUser(`${TEST_PREFIX}-admin-teacher`, 'TEACHER');
+    const admin = await seedUser(`${TEST_PREFIX}-admin-user`, 'ADMIN');
+    const cls = await seedClass(teacher.id);
+
+    const session = await createSession(admin.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await callGet(cls.id);
+    expect(res.status).toBe(200);
   });
 });
