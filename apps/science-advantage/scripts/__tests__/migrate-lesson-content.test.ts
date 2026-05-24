@@ -1,6 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Mock the Drizzle DB before importing migrate script to avoid database setup.
 // The migration script imports `db` from `@reading-advantage/db`; tests in this

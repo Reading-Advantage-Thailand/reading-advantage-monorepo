@@ -1,12 +1,16 @@
 #!/usr/bin/env tsx
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'node:url';
 
 import { db } from '@reading-advantage/db';
 import { scienceStandards } from '@reading-advantage/db/schema';
 
 import type { StandardsAlignment } from '@/lib/enums';
 import { validateStandardsFile } from './validate-json';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface StandardData {
   code: string;

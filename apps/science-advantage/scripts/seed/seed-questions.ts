@@ -1,6 +1,7 @@
 #!/usr/bin/env tsx
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'node:url';
 
 import { db, and, eq, inArray } from '@reading-advantage/db';
 import {
@@ -18,6 +19,9 @@ import {
   validateQuizQuestionsSeedFile,
   formatValidationErrors,
 } from '@/lib/schemas/seed-validation';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface QuestionData {
   slug?: string;
