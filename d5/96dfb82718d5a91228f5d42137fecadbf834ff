@@ -1,0 +1,9 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: Fix xp.ts client-bundle leak (subtask under line 288)
+Problem: xp.ts imported @reading-advantage/db which drags postgres (node-only) into client bundles via level-up-animation.tsx → quiz-player.tsx → lesson page.
+Fix: split into xp.constants.ts (client-safe LEVEL_THRESHOLDS + LEVEL_NAMES + pure fns calculateLevel/getLevelName/calculateXpForQuiz) and xp.ts (server-only shim, starts with import 'server-only', re-exports constants, holds awardXp DB writer).
+Client importers repointed: components/features/gamification/level-up-animation.tsx, lib/gamification/xp.test.ts (pure-fn unit test, per badges-fix precedent for consistency).
+Server importers unchanged (3): app/api/lessons/[lessonSlug]/quiz/route.ts (calculateXpForQuiz + awardXp), app/api/students/[studentId]/gamification-profile/route.ts (getLevelName), app/api/students/me/gamification/route.ts (getLevelName); xp.integration.test.ts (awardXp) — all resolved via server-only xp.ts re-export.
+Behavior-preserving — no runtime logic changed, only export topology.
+Verification: tsc 360 errors (= 360 baseline, 0 NEW); lint 4 errors + 6 warnings (= baseline, 0 NEW); build PASSES (was failing on xp.ts/level-up-animation client-bundle leak before this commit).
+Mirrors the badges split in [04d8fa5].
