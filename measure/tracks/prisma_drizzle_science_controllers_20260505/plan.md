@@ -213,7 +213,7 @@ be green against BEFORE and stay green against AFTER.
 ## Phase 2: Quiz, attempts & mastery
 
 - [ ] Task: Migrate `lib/services/mastery/mastery-worker.ts` (attempt, masteryRun, standardMastery)
-- [ ] Task: Migrate `lib/services/mastery/standard-mastery.ts` (types-only — swap `@prisma/client` imports)
+- [x] Task: Migrate `lib/services/mastery/standard-mastery.ts` — _was 'types-only' in plan but had runtime DB code; ported to Drizzle onConflictDoUpdate; replaced prisma/__tests__/standard-mastery.test.ts with co-located integration test (9 real-DB tests)_ [3d1101b]
 - [ ] Task: Migrate `app/api/ai/recommendations/route.ts` (attempt)
 - [ ] Task: Migrate `app/api/ai/update-mastery/route.ts` (attempt, masteryRun)
 - [ ] Task: Migrate `app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts` (attempt, lesson, user)
