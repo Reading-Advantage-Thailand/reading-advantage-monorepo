@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { and, db, eq, inArray } from '@reading-advantage/db';
+import {
+  gamificationProfiles,
+  scienceClasses,
+  scienceClassStudents,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
-import prisma from '@/lib/prisma';
 
 export async function GET(
   _request: NextRequest,
@@ -19,10 +25,11 @@ export async function GET(
 
     const { classId } = await context.params;
 
-    const classRecord = await prisma.class.findUnique({
-      where: { id: classId },
-      select: { teacherId: true },
-    });
+    const [classRecord] = await db
+      .select({ teacherId: scienceClasses.teacherId })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.id, classId))
+      .limit(1);
 
     if (!classRecord) {
       return NextResponse.json(
@@ -41,34 +48,38 @@ export async function GET(
       );
     }
 
-    const students = await prisma.user.findMany({
-      where: {
-        enrolledClass: {
-          some: { id: classId },
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        gamificationProfile: {
-          select: { lastActiveAt: true },
-        },
-      },
-      orderBy: { name: 'asc' },
-    });
+    const enrolled = await db
+      .select({ studentId: scienceClassStudents.studentId })
+      .from(scienceClassStudents)
+      .where(eq(scienceClassStudents.classId, classId));
+
+    const studentIds = enrolled.map((e) => e.studentId);
+
+    const studentRows = studentIds.length
+      ? await db
+          .select({
+            id: users.id,
+            name: users.name,
+            email: users.email,
+            createdAt: users.createdAt,
+            lastActiveAt: gamificationProfiles.lastActiveAt,
+          })
+          .from(users)
+          .leftJoin(gamificationProfiles, eq(gamificationProfiles.userId, users.id))
+          .where(inArray(users.id, studentIds))
+          .orderBy(users.name)
+      : [];
 
     return NextResponse.json(
       {
         success: true,
         data: {
-          students: students.map(s => ({
+          students: studentRows.map((s) => ({
             id: s.id,
             name: s.name,
             email: s.email,
             joinedAt: s.createdAt.toISOString(),
-            lastActiveAt: s.gamificationProfile?.lastActiveAt?.toISOString() ?? null,
+            lastActiveAt: s.lastActiveAt?.toISOString() ?? null,
           })),
         },
       },
@@ -109,10 +120,11 @@ export async function DELETE(
       );
     }
 
-    const classRecord = await prisma.class.findUnique({
-      where: { id: classId },
-      select: { teacherId: true },
-    });
+    const [classRecord] = await db
+      .select({ teacherId: scienceClasses.teacherId })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.id, classId))
+      .limit(1);
 
     if (!classRecord) {
       return NextResponse.json(
@@ -131,15 +143,16 @@ export async function DELETE(
       );
     }
 
-    // Disconnect student from class
-    await prisma.class.update({
-      where: { id: classId },
-      data: {
-        students: {
-          disconnect: { id: studentId },
-        },
-      },
-    });
+    // Disconnect student from class. Matches Prisma's `students.disconnect`:
+    // a no-op when the enrollment row is absent.
+    await db
+      .delete(scienceClassStudents)
+      .where(
+        and(
+          eq(scienceClassStudents.classId, classId),
+          eq(scienceClassStudents.studentId, studentId)
+        )
+      );
 
     return NextResponse.json(
       { success: true, data: { removed: true } },
