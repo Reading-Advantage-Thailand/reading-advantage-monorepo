@@ -1,0 +1,24 @@
+Task: Migrate app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts (Phase 2)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+Single GET handler that lets a student fetch their own completion data
+for a lesson, or a teacher fetch a student in their class's data.
+
+Authz translated from Prisma include-tree to a single SELECT
+scienceClasses with two correlated exists() subqueries:
+  WHERE teacherId = caller
+    AND EXISTS (scienceUnitLessons JOIN scienceCurriculumUnits
+                WHERE classId = scienceClasses.id AND lessonId = ?)
+    AND EXISTS (scienceClassStudents
+                WHERE classId = scienceClasses.id AND studentId = ?)
+
+Verification:
+- 8/8 integration tests pass (401, 404 student, 404 lesson, 'me' self,
+  explicit-id self, owning teacher with full completion data, 403 non-
+  owning teacher, 403 student-to-student)
+- eslint clean
+
+Files:
+- M app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts
+- A app/api/students/[studentId]/lessons/[lessonId]/progress/route.integration.test.ts
