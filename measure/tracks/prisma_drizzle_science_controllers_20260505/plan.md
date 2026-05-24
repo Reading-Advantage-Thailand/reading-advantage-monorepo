@@ -255,7 +255,7 @@ be green against BEFORE and stay green against AFTER.
 ## Phase 5: AI types & remaining lib
 
 - [x] [59c8251] Task: Migrate `lib/ai/types.ts` (types-only — swap `@prisma/client` type imports for `typeof <table>.$inferSelect`)
-- [~] Task: Re-grep `lib/` and `app/api/` for any file still importing Prisma and migrate it (catch-all for inventory drift)
+- [x] [76227c8] Task: Re-grep `lib/` and `app/api/` for any file still importing Prisma and migrate it (catch-all for inventory drift) — 3 stale Prisma-importing route integration tests deleted (already 100% broken pre-existing: Prisma against Drizzle-managed test DB + route wrappers now delegate to `@reading-advantage/api/routes/auth`; coverage retained in `packages/api/src/__tests__/auth-routes.test.ts`). Remaining `@prisma/client` reference is `lib/prisma.ts` (Phase 7) and doc-comment-only mentions in `lib/enums.ts`, `lib/validations/{class,student-classes}.ts`. [ca51372, fa86cfe, 76227c8]
 - [ ] Task: Measure - User Manual Verification 'Remaining lib' (Protocol in workflow.md)
 
 ## Phase 6: Seeds, scripts, generated artifacts & leftover test imports
