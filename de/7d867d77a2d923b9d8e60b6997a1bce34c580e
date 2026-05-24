@@ -1,0 +1,16 @@
+Task: Migrate lib/gamification/streak.ts (Phase 3 helper, pulled ahead)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- Replaced default Prisma client with @reading-advantage/db drizzle client.
+- updateStreakForProfile() SELECT → compute via pure updateStreak() → UPDATE.
+- Pure helpers untouched: updateStreak, getStreakMilestoneBonus.
+
+Files:
+- M apps/science-advantage/lib/gamification/streak.ts
+- A apps/science-advantage/lib/gamification/streak.integration.test.ts
+
+Verification:
+- streak.integration.test.ts: 4/4 pass
+- streak.test.ts (existing unit): 13/13 pass
+- eslint clean
