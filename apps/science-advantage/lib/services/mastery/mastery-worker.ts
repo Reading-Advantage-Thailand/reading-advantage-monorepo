@@ -1,5 +1,13 @@
-import type { PrismaClient } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
+import { and, db, eq, inArray } from '@reading-advantage/db';
+import {
+  scienceAttempts,
+  scienceLessonStandards,
+  scienceMasteryRuns,
+  scienceQuestionResponses,
+  scienceQuestionStandards,
+  scienceQuizQuestions,
+  scienceStandardMastery,
+} from '@reading-advantage/db/schema';
 
 import { clampMasteryLevel, recordStandardMastery } from './standard-mastery';
 
@@ -13,46 +21,6 @@ export type MasteryRunResult = {
   status: 'COMPLETED' | 'FAILED';
   updatedCount: number;
   lastError: string | null;
-};
-
-type AttemptWithRelations = {
-  id: string;
-  studentId: string;
-  lessonId: string;
-  attemptNumber: number;
-  startedAt: Date;
-  lesson: {
-    quizQuestions: Array<{
-      id: string;
-      slug: string;
-      type: string;
-      text: string;
-      points: number;
-      order: number;
-      standards: Array<{ id: string; code: string }>;
-    }>;
-  };
-  questionResponses: Array<{
-    id: string;
-    attemptId: string;
-    questionId: string;
-    isCorrect: boolean;
-    timeSpentSeconds: number;
-    answeredAt: Date;
-  }>;
-};
-
-type ExistingMasteryRow = {
-  standardId: string;
-  masteryLevel: number;
-  evidenceCount: number;
-  lastAssessedAt: Date;
-};
-
-type WorkerPrisma = Pick<PrismaClient, '$transaction'> & {
-  masteryRun: PrismaClient['masteryRun'];
-  attempt: PrismaClient['attempt'];
-  standardMastery: PrismaClient['standardMastery'];
 };
 
 /** Compute a recency weight for an attempt based on how recently it was taken. */
@@ -76,14 +44,15 @@ function difficultyWeight(points: number): number {
  */
 export async function processMasteryRun(
   ctx: MasteryRunContext,
-  prisma: WorkerPrisma
+  client: typeof db = db
 ): Promise<MasteryRunResult> {
   const { attemptId, studentId } = ctx;
 
-  // Fetch the mastery run record
-  const masteryRun = await prisma.masteryRun.findUnique({
-    where: { attemptId },
-  });
+  const [masteryRun] = await client
+    .select()
+    .from(scienceMasteryRuns)
+    .where(eq(scienceMasteryRuns.attemptId, attemptId))
+    .limit(1);
 
   if (!masteryRun) {
     return {
@@ -94,29 +63,25 @@ export async function processMasteryRun(
     };
   }
 
-  // Transition to PROCESSING
-  await prisma.masteryRun.update({
-    where: { attemptId },
-    data: { status: 'PROCESSING' },
-  });
+  // Transition to PROCESSING.
+  await client
+    .update(scienceMasteryRuns)
+    .set({ status: 'PROCESSING', updatedAt: new Date() })
+    .where(eq(scienceMasteryRuns.attemptId, attemptId));
 
   try {
-    // Fetch the attempt with lesson questions and question responses
-    const attempt = await prisma.attempt.findUnique({
-      where: { id: attemptId },
-      include: {
-        lesson: {
-          include: {
-            quizQuestions: {
-              include: {
-                standards: true,
-              },
-            },
-          },
-        },
-        questionResponses: true,
-      },
-    });
+    const [attempt] = await client
+      .select({
+        id: scienceAttempts.id,
+        studentId: scienceAttempts.studentId,
+        lessonId: scienceAttempts.lessonId,
+        attemptNumber: scienceAttempts.attemptNumber,
+        startedAt: scienceAttempts.startedAt,
+        completedAt: scienceAttempts.completedAt,
+      })
+      .from(scienceAttempts)
+      .where(eq(scienceAttempts.id, attemptId))
+      .limit(1);
 
     if (!attempt) {
       throw new Error(`Attempt ${attemptId} not found`);
@@ -126,47 +91,98 @@ export async function processMasteryRun(
       throw new Error(`Attempt ${attemptId} has not been completed yet`);
     }
 
-    const attemptData = attempt as unknown as AttemptWithRelations;
+    // Question rows for this attempt's lesson.
+    const quizQuestionRows = await client
+      .select({
+        id: scienceQuizQuestions.id,
+        points: scienceQuizQuestions.points,
+      })
+      .from(scienceQuizQuestions)
+      .where(eq(scienceQuizQuestions.lessonId, attempt.lessonId));
 
-    // Build a map of questionId -> standards for quick lookup
-    const questionStandardsMap = new Map<
-      string,
-      Array<{ id: string; code: string }>
-    >();
-    for (const question of attemptData.lesson.quizQuestions) {
-      questionStandardsMap.set(question.id, question.standards);
+    // Each question's attached standards (via junction).
+    const questionIds = quizQuestionRows.map((q) => q.id);
+    const standardLinks = questionIds.length
+      ? await client
+          .select({
+            questionId: scienceQuestionStandards.questionId,
+            standardId: scienceQuestionStandards.standardId,
+          })
+          .from(scienceQuestionStandards)
+          .where(inArray(scienceQuestionStandards.questionId, questionIds))
+      : [];
+
+    // Lesson-level standards are not used by the worker's per-question weighting,
+    // but the original Prisma include hit `lesson.quizQuestions.standards` — same
+    // shape captured via the junction read above. Lesson standards (separate
+    // junction scienceLessonStandards) are intentionally unused here, mirroring
+    // the previous behavior; refer to standardLinks for question-attached
+    // standards. (Kept import-free so tree-shake stays happy.)
+    void scienceLessonStandards;
+
+    const questionStandardsMap = new Map<string, string[]>();
+    for (const link of standardLinks) {
+      const list = questionStandardsMap.get(link.questionId) ?? [];
+      list.push(link.standardId);
+      questionStandardsMap.set(link.questionId, list);
     }
 
-    // Gather unique standard IDs across all responses
+    const questionPointsMap = new Map<string, number>();
+    for (const q of quizQuestionRows) {
+      questionPointsMap.set(q.id, q.points);
+    }
+
+    // Question responses for this attempt.
+    const responses = await client
+      .select({
+        questionId: scienceQuestionResponses.questionId,
+        isCorrect: scienceQuestionResponses.isCorrect,
+        answeredAt: scienceQuestionResponses.answeredAt,
+      })
+      .from(scienceQuestionResponses)
+      .where(eq(scienceQuestionResponses.attemptId, attemptId));
+
+    // Unique standard IDs across all responses.
     const standardIds = new Set<string>();
-    for (const response of attemptData.questionResponses) {
-      const standards = questionStandardsMap.get(response.questionId) ?? [];
-      for (const std of standards) {
-        standardIds.add(std.id);
-      }
+    for (const r of responses) {
+      const list = questionStandardsMap.get(r.questionId) ?? [];
+      for (const id of list) standardIds.add(id);
     }
 
-    // Fetch existing mastery records for these standards
-    const existingMasteryRows = await prisma.standardMastery.findMany({
-      where: {
-        studentId,
-        standardId: { in: Array.from(standardIds) },
-      },
-    });
+    // Existing mastery for these standards.
+    const existingMasteryRows = standardIds.size
+      ? await client
+          .select({
+            standardId: scienceStandardMastery.standardId,
+            masteryLevel: scienceStandardMastery.masteryLevel,
+            evidenceCount: scienceStandardMastery.evidenceCount,
+            lastAssessedAt: scienceStandardMastery.lastAssessedAt,
+          })
+          .from(scienceStandardMastery)
+          .where(
+            and(
+              eq(scienceStandardMastery.studentId, studentId),
+              inArray(
+                scienceStandardMastery.standardId,
+                Array.from(standardIds)
+              )
+            )
+          )
+      : [];
 
-    const existingMasteryMap = new Map<string, ExistingMasteryRow>();
+    const existingMasteryMap = new Map<
+      string,
+      { masteryLevel: number; evidenceCount: number; lastAssessedAt: Date }
+    >();
     for (const row of existingMasteryRows) {
       existingMasteryMap.set(row.standardId, {
-        standardId: row.standardId,
-        masteryLevel: row.masteryLevel instanceof Decimal
-          ? row.masteryLevel.toNumber()
-          : Number(row.masteryLevel),
+        masteryLevel: Number(row.masteryLevel),
         evidenceCount: row.evidenceCount,
         lastAssessedAt: row.lastAssessedAt,
       });
     }
 
-    // Accumulate mastery adjustments per standard
+    // Accumulate mastery adjustments per standard.
     const standardAccumulators = new Map<
       string,
       {
@@ -177,27 +193,26 @@ export async function processMasteryRun(
       }
     >();
 
-    const referenceTime = attemptData.questionResponses.length > 0
-      ? attemptData.questionResponses.reduce(
-          (latest, r) => (r.answeredAt > latest ? r.answeredAt : latest),
-          attemptData.questionResponses[0].answeredAt
-        )
-      : new Date();
+    const referenceTime =
+      responses.length > 0
+        ? responses.reduce(
+            (latest, r) => (r.answeredAt > latest ? r.answeredAt : latest),
+            responses[0].answeredAt
+          )
+        : new Date();
 
-    for (const response of attemptData.questionResponses) {
+    for (const response of responses) {
       const standards = questionStandardsMap.get(response.questionId) ?? [];
       if (standards.length === 0) continue;
 
-      const question = attemptData.lesson.quizQuestions.find(
-        q => q.id === response.questionId
-      );
-      const diffWeight = difficultyWeight(question?.points ?? 1);
+      const points = questionPointsMap.get(response.questionId) ?? 1;
+      const diffWeight = difficultyWeight(points);
       const recWeight = recencyWeight(response.answeredAt, referenceTime);
       const perStandardWeight = (diffWeight * recWeight) / standards.length;
 
-      for (const std of standards) {
-        const existing = existingMasteryMap.get(std.id);
-        const accumulator = standardAccumulators.get(std.id) ?? {
+      for (const standardId of standards) {
+        const existing = existingMasteryMap.get(standardId);
+        const accumulator = standardAccumulators.get(standardId) ?? {
           totalWeight: 0,
           correctWeight: 0,
           evidence: 0,
@@ -205,19 +220,17 @@ export async function processMasteryRun(
         };
 
         accumulator.totalWeight += perStandardWeight;
-        accumulator.correctWeight += response.isCorrect
-          ? perStandardWeight
-          : 0;
+        accumulator.correctWeight += response.isCorrect ? perStandardWeight : 0;
         accumulator.evidence += 1;
         if (response.answeredAt > accumulator.lastAssessedAt) {
           accumulator.lastAssessedAt = response.answeredAt;
         }
 
-        standardAccumulators.set(std.id, accumulator);
+        standardAccumulators.set(standardId, accumulator);
       }
     }
 
-    // Apply mastery updates using recordStandardMastery
+    // Apply mastery updates.
     let updatedCount = 0;
 
     for (const [standardId, accumulator] of standardAccumulators) {
@@ -231,12 +244,14 @@ export async function processMasteryRun(
 
       const rawNext = previousMastery * 0.35 + newScore * 0.65;
       const safeNext = Number.isFinite(rawNext) ? rawNext : 0;
-      const nextMastery = clampMasteryLevel(safeNext);
+      // clampMasteryLevel returns a decimal-string; convert back so it round-
+      // trips into a JS number before re-clamping inside recordStandardMastery.
+      const nextMastery = Number(clampMasteryLevel(safeNext));
 
       const previousEvidence = existing?.evidenceCount ?? 0;
       const evidenceDelta = previousEvidence + accumulator.evidence;
 
-      await recordStandardMastery(prisma, {
+      await recordStandardMastery(client, {
         studentId,
         standardId,
         masteryLevel: nextMastery,
@@ -247,14 +262,14 @@ export async function processMasteryRun(
       updatedCount += 1;
     }
 
-    // Set MasteryRun to COMPLETED
-    await prisma.masteryRun.update({
-      where: { attemptId },
-      data: {
+    await client
+      .update(scienceMasteryRuns)
+      .set({
         status: 'COMPLETED',
         updatedCount,
-      },
-    });
+        updatedAt: new Date(),
+      })
+      .where(eq(scienceMasteryRuns.attemptId, attemptId));
 
     return {
       attemptId,
@@ -266,14 +281,14 @@ export async function processMasteryRun(
     const errorMessage =
       error instanceof Error ? error.message : String(error);
 
-    // Set MasteryRun to FAILED
-    await prisma.masteryRun.update({
-      where: { attemptId },
-      data: {
+    await client
+      .update(scienceMasteryRuns)
+      .set({
         status: 'FAILED',
         lastError: errorMessage,
-      },
-    });
+        updatedAt: new Date(),
+      })
+      .where(eq(scienceMasteryRuns.attemptId, attemptId));
 
     return {
       attemptId,
