@@ -1,0 +1,18 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: lib/validations/class.ts + student-classes.ts → hand-written Zod
+Approach: Hand-written Zod (drizzle-zod not a dep; Drizzle table uses plain text/integer columns without the 3-100 length, 3-6 grade range, or standardsAlignment enum constraints — derivation would lose the contract). Enum imported from @/lib/enums (STANDARDS_ALIGNMENT_VALUES).
+Schemas preserved (names + shapes unchanged from caller perspective):
+- createClassSchema: { name (3-100, trimmed), gradeLevel (int 3-6), standardsAlignment (THAI|NGSS) }
+- updateClassSchema: same three fields, all .optional() (matches prior Prisma .pick semantics)
+- createClassFormSchema: z.coerce.number on gradeLevel piped into base
+- joinClassSchema: trimmed/uppercased joinCode with isValidJoinCodeFormat refinement
+- studentEnrolledClassSchema: { id, name, gradeLevel, teacherId } + teacherName(min 1) + enrolledAt(datetime)
+- studentEnrolledClassesResponseSchema: { classes: array(studentEnrolledClassSchema) }
+Tests: 4/4 existing (tests/lib/class-validations.test.ts) pass + 19 new co-located tests added (10 in class.test.ts, 9 in student-classes.test.ts) — total 23/23 pass.
+Notes:
+- Removes the only two lib/generated/zod/ importers (per Track 3 §0.7); grep -r 'lib/generated/zod' apps/science-advantage/ now returns 0 importers outside the generated dir itself, unblocking the planned lib/generated/zod/ deletion.
+- updateClassSchema no longer accepts the Prisma StringFieldUpdateOperationsInput-style union — that was a Prisma artifact, never consumed by any caller (only the local vitest exercises updateClassSchema, and it passes raw {name: 'Updated Name'}).
+- No callers modified; all exported schema names, types, and runtime contracts preserved.
+- lint: pnpm exec eslint --max-warnings 0 lib/validations/ → clean
+- tsc: no new errors introduced in lib/validations/ (pre-existing integration-test RequestInit errors out of scope).
+Behavior-preserving; equivalent validation contract.
