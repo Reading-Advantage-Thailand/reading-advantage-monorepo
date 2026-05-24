@@ -1,0 +1,12 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: prisma/seed-functions/seed-standards → scripts/seed/seed-standards (part of 7-file bundle)
+Decision: REWRITE. Used by prisma/seed.ts entrypoint (still on Prisma; next task on plan.md line 270 will fix).
+Tables seeded: science_standards
+Tests: none (no test file existed for this seeder)
+Importers updated: none yet — prisma/seed.ts still imports from old path (will break temporarily; fixed by next task line 270)
+Notes:
+- Drizzle insert + onConflictDoUpdate on unique(framework, code) replaces prisma.upsert.
+- Signature change: no longer takes a PrismaClient — uses shared db client from @reading-advantage/db.
+- CLI shape preserved: file is now directly executable via tsx and exits 0/1.
+- Pre-existing tsc errors elsewhere out of scope.
+Behavior-preserving; no logic change beyond ORM swap.
