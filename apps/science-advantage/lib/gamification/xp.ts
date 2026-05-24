@@ -1,4 +1,5 @@
-import prisma from '@/lib/prisma';
+import { db, eq } from '@reading-advantage/db';
+import { gamificationProfiles } from '@reading-advantage/db/schema';
 
 const LEVEL_THRESHOLDS = [
   { level: 1, minXp: 0 },
@@ -57,9 +58,11 @@ export async function awardXp(
   profileId: string,
   amount: number
 ): Promise<{ xp: number; level: number; levelName: string; levelUp: boolean }> {
-  const profile = await prisma.gamificationProfile.findUnique({
-    where: { id: profileId },
-  });
+  const [profile] = await db
+    .select()
+    .from(gamificationProfiles)
+    .where(eq(gamificationProfiles.id, profileId))
+    .limit(1);
 
   if (!profile) {
     throw new Error(`GamificationProfile not found: ${profileId}`);
@@ -70,13 +73,15 @@ export async function awardXp(
   const newLevel = calculateLevel(newTotalXp);
   const levelUp = newLevel > previousLevel;
 
-  const updated = await prisma.gamificationProfile.update({
-    where: { id: profileId },
-    data: {
+  const [updated] = await db
+    .update(gamificationProfiles)
+    .set({
       xp: newTotalXp,
       level: newLevel,
-    },
-  });
+      updatedAt: new Date(),
+    })
+    .where(eq(gamificationProfiles.id, profileId))
+    .returning();
 
   return {
     xp: updated.xp,
