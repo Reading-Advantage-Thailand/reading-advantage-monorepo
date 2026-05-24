@@ -197,11 +197,13 @@ be green against BEFORE and stay green against AFTER.
 ## Phase 1: Curriculum, lessons & standards
 
 > **Prerequisite:** sub-track `science_test_infra_drizzle_migration_20260523` complete (test DB on Drizzle migrations; per-file truncate-and-reseed pattern; pilot `route.integration.test.ts` proves the loop). Without it, every controller migration in Phases 1–5 is unverifiable at runtime.
+>
+> **Deviation 2026-05-24:** The original ordering put `app/api/lessons/[lessonSlug]/quiz/route.ts` as the first Phase 1 task, but it depends on `processMasteryRun()` (Phase 2), `awardXp`/`updateStreakForProfile` (Phase 3), and `checkBadgeConditions` (Phase 3) — all of which are still on Prisma and would read/write the wrong tables the moment the route is swapped. The existing integration test was also already broken (Prisma tables no longer exist in the test DB post-test-infra-migration). Quiz route is moved to **Phase 2.5** (executed after the helpers it depends on are on Drizzle); the simpler Phase 1 routes that don't touch gamification/mastery proceed first.
 
 - [x] Task: Migrate `lib/services/classes/get-class-detail.ts` (class, curriculumUnit) [3312144]
 - [x] Task: Migrate `lib/ai/recommendation-context.ts` (curriculumUnit, standardMastery) [33a4d73]
 - [x] Task: Migrate `lib/schemas/validate-json.ts` — swap `StandardsAlignment` enum import (0.7); confirm `lib/schemas/lesson-slug.schema` paths still resolve [6b29adf]
-- [ ] Task: Migrate `app/api/lessons/[lessonSlug]/quiz/route.ts` (attempt, gamificationProfile, lesson, lessonCompletion, masteryRun)
+- [ ] Task: Migrate `app/api/lessons/[lessonSlug]/quiz/route.ts` (attempt, gamificationProfile, lesson, lessonCompletion, masteryRun) — **DEFERRED: must run after Phase 2 + Phase 3 helpers it depends on are on Drizzle**
 - [ ] Task: Migrate `app/api/classes/[classId]/curriculum/route.ts` (class, curriculumUnit, lessonCompletion)
 - [ ] Task: Migrate `app/api/classes/[classId]/analytics/overview/route.ts` (class, lesson, lessonCompletion)
 - [ ] Task: Migrate `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (class, lesson, lessonCompletion, questionResponse)
