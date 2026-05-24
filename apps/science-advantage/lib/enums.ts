@@ -24,3 +24,12 @@ export const LessonType = {
   ASSESSMENT: 'ASSESSMENT',
   REVIEW: 'REVIEW',
 } as const satisfies Record<LessonType, LessonType>;
+
+export const MASTERY_RUN_STATUS_VALUES = ['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED'] as const;
+export type MasteryRunStatus = (typeof MASTERY_RUN_STATUS_VALUES)[number];
+export const MasteryRunStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+} as const satisfies Record<MasteryRunStatus, MasteryRunStatus>;

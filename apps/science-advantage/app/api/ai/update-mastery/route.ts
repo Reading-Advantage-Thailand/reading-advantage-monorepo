@@ -1,13 +1,25 @@
-import { MasteryRunStatus, Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { z, ZodError } from 'zod';
 
+import { and, db, eq, inArray, asc } from '@reading-advantage/db';
+import {
+  scienceAttempts,
+  scienceMasteryRuns,
+  scienceQuestionResponses,
+  scienceQuestionStandards,
+  scienceQuizQuestions,
+  scienceStandardMastery,
+} from '@reading-advantage/db/schema';
+
 import { getCurrentSession } from '@/lib/auth/session';
-import { calculateMasteryUpdates, buildResponseInput } from '@/lib/ai/mastery-calculator';
+import {
+  calculateMasteryUpdates,
+  buildResponseInput,
+} from '@/lib/ai/mastery-calculator';
+import { MasteryRunStatus } from '@/lib/enums';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
-import prisma from '@/lib/prisma';
 
 const requestSchema = z.object({
   attemptId: z.string().min(1),
@@ -53,6 +65,20 @@ type TransactionResult =
       skipped: number;
     };
 
+/** Postgres error codes (postgres-js attaches the original as `.cause`). */
+const PG_UNIQUE_VIOLATION = '23505';
+const PG_SERIALIZATION_FAILURE = '40001';
+
+function getPgErrorCode(err: unknown): string | undefined {
+  if (err && typeof err === 'object') {
+    const cause = (err as { cause?: { code?: string }; code?: string }).cause;
+    if (cause && typeof cause.code === 'string') return cause.code;
+    const direct = (err as { code?: string }).code;
+    if (typeof direct === 'string') return direct;
+  }
+  return undefined;
+}
+
 function assertRateLimit(studentId: string) {
   const now = Date.now();
   const entry = rateLimitStore.get(studentId);
@@ -74,7 +100,7 @@ function assertRateLimit(studentId: string) {
 }
 
 function serializeRecords(records: PlainStandardMastery[]) {
-  return records.map(record => ({
+  return records.map((record) => ({
     id: record.id,
     studentId: record.studentId,
     standardId: record.standardId,
@@ -86,13 +112,101 @@ function serializeRecords(records: PlainStandardMastery[]) {
   }));
 }
 
+/**
+ * Loads the attempt + nested question/standard data needed by the mastery
+ * calculator. Replaces the deep prisma.attempt.findUnique(include) call with
+ * a small batch of Drizzle SELECTs.
+ */
+async function loadAttemptContext(
+  client: typeof db,
+  attemptId: string
+): Promise<
+  | {
+      attempt: typeof scienceAttempts.$inferSelect;
+      questionResponses: Array<{
+        questionId: string;
+        isCorrect: boolean;
+        answeredAt: Date | null;
+        question: {
+          points: number;
+          standardIds: string[];
+        };
+      }>;
+      masteryRun: typeof scienceMasteryRuns.$inferSelect | null;
+    }
+  | null
+> {
+  const [attempt] = await client
+    .select()
+    .from(scienceAttempts)
+    .where(eq(scienceAttempts.id, attemptId))
+    .limit(1);
+
+  if (!attempt) return null;
+
+  const responseRows = await client
+    .select({
+      questionId: scienceQuestionResponses.questionId,
+      isCorrect: scienceQuestionResponses.isCorrect,
+      answeredAt: scienceQuestionResponses.answeredAt,
+    })
+    .from(scienceQuestionResponses)
+    .where(eq(scienceQuestionResponses.attemptId, attemptId));
+
+  const questionIds = responseRows.map((r) => r.questionId);
+
+  const questions = questionIds.length
+    ? await client
+        .select({
+          id: scienceQuizQuestions.id,
+          points: scienceQuizQuestions.points,
+        })
+        .from(scienceQuizQuestions)
+        .where(inArray(scienceQuizQuestions.id, questionIds))
+    : [];
+  const pointsByQuestion = new Map(questions.map((q) => [q.id, q.points]));
+
+  const standardLinks = questionIds.length
+    ? await client
+        .select({
+          questionId: scienceQuestionStandards.questionId,
+          standardId: scienceQuestionStandards.standardId,
+        })
+        .from(scienceQuestionStandards)
+        .where(inArray(scienceQuestionStandards.questionId, questionIds))
+    : [];
+  const standardsByQuestion = new Map<string, string[]>();
+  for (const link of standardLinks) {
+    const arr = standardsByQuestion.get(link.questionId) ?? [];
+    arr.push(link.standardId);
+    standardsByQuestion.set(link.questionId, arr);
+  }
+
+  const [masteryRun] = await client
+    .select()
+    .from(scienceMasteryRuns)
+    .where(eq(scienceMasteryRuns.attemptId, attemptId))
+    .limit(1);
+
+  return {
+    attempt,
+    questionResponses: responseRows.map((r) => ({
+      questionId: r.questionId,
+      isCorrect: r.isCorrect,
+      answeredAt: r.answeredAt,
+      question: {
+        points: pointsByQuestion.get(r.questionId) ?? 1,
+        standardIds: standardsByQuestion.get(r.questionId) ?? [],
+      },
+    })),
+    masteryRun: masteryRun ?? null,
+  };
+}
+
 export async function POST(request: NextRequest) {
   const startedAt = Date.now();
   let attemptContext:
-    | {
-        id: string;
-        studentId: string;
-      }
+    | { id: string; studentId: string }
     | null = null;
 
   try {
@@ -106,7 +220,6 @@ export async function POST(request: NextRequest) {
     }
 
     let body: unknown;
-
     try {
       body = await request.json();
     } catch {
@@ -118,31 +231,18 @@ export async function POST(request: NextRequest) {
 
     const { attemptId } = requestSchema.parse(body);
 
-    const attempt = await prisma.attempt.findUnique({
-      where: { id: attemptId },
-      include: {
-        questionResponses: {
-          include: {
-            question: {
-              include: { standards: true },
-            },
-          },
-        },
-        masteryRun: true,
-      },
-    });
+    const loaded = await loadAttemptContext(db, attemptId);
 
-    if (!attempt) {
+    if (!loaded) {
       return NextResponse.json(
         { success: false, error: 'Attempt not found' },
         { status: 404 }
       );
     }
 
-    attemptContext = {
-      id: attempt.id,
-      studentId: attempt.studentId,
-    };
+    const { attempt, questionResponses } = loaded;
+
+    attemptContext = { id: attempt.id, studentId: attempt.studentId };
 
     if (
       session.user.role === 'STUDENT' &&
@@ -166,24 +266,21 @@ export async function POST(request: NextRequest) {
         attemptId,
         studentId: attempt.studentId,
       });
-
       return NextResponse.json(
         { success: false, reason: 'DISABLED' },
-        {
-          status: 202,
-          headers: { 'retry-after': '60' },
-        }
+        { status: 202, headers: { 'retry-after': '60' } }
       );
     }
 
     assertRateLimit(attempt.studentId);
 
-    const responses = attempt.questionResponses.map(response =>
+    const responses = questionResponses.map((response) =>
       buildResponseInput({
-        standardIds: response.question.standards.map(standard => standard.id),
+        standardIds: response.question.standardIds,
         isCorrect: response.isCorrect,
         weight: response.question.points,
-        answeredAt: response.answeredAt ?? attempt.completedAt ?? new Date(),
+        answeredAt:
+          response.answeredAt ?? attempt.completedAt ?? new Date(),
       })
     );
 
@@ -196,7 +293,6 @@ export async function POST(request: NextRequest) {
 
     if (!standardIds.size) {
       const durationMs = Date.now() - startedAt;
-
       logger.info('mastery.update', {
         attemptId,
         studentId: attempt.studentId,
@@ -204,7 +300,6 @@ export async function POST(request: NextRequest) {
         durationMs,
         fallbackUsed: false,
       });
-
       return NextResponse.json(
         {
           success: true,
@@ -216,18 +311,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const transactionResult = await prisma.$transaction(
-      async tx => {
-        const run = await tx.masteryRun.findUnique({
-          where: { attemptId },
-        });
+    const transactionResult: TransactionResult = await db.transaction(
+      async (tx) => {
+        const [run] = await tx
+          .select()
+          .from(scienceMasteryRuns)
+          .where(eq(scienceMasteryRuns.attemptId, attemptId))
+          .limit(1);
 
         if (
           run &&
           run.status === MasteryRunStatus.PROCESSING &&
           run.studentId === attempt.studentId
         ) {
-          return { state: 'processing' } as TransactionResult;
+          return { state: 'processing' };
         }
 
         if (
@@ -235,15 +332,21 @@ export async function POST(request: NextRequest) {
           run.status === MasteryRunStatus.COMPLETED &&
           run.studentId === attempt.studentId
         ) {
-          const existingRecords = await tx.standardMastery.findMany({
-            where: {
-              studentId: attempt.studentId,
-              standardId: { in: Array.from(standardIds) },
-            },
-            orderBy: { standardId: 'asc' },
-          });
+          const existingRecords = await tx
+            .select()
+            .from(scienceStandardMastery)
+            .where(
+              and(
+                eq(scienceStandardMastery.studentId, attempt.studentId),
+                inArray(
+                  scienceStandardMastery.standardId,
+                  Array.from(standardIds)
+                )
+              )
+            )
+            .orderBy(asc(scienceStandardMastery.standardId));
 
-          const plain = existingRecords.map(record => ({
+          const plain = existingRecords.map((record) => ({
             id: record.id,
             studentId: record.studentId,
             standardId: record.standardId,
@@ -254,51 +357,48 @@ export async function POST(request: NextRequest) {
             updatedAt: record.updatedAt,
           }));
 
-          return { state: 'already_complete', records: plain } as TransactionResult;
+          return { state: 'already_complete', records: plain };
         }
 
         if (run) {
-          await tx.masteryRun.update({
-            where: { attemptId },
-            data: {
+          await tx
+            .update(scienceMasteryRuns)
+            .set({
               status: MasteryRunStatus.PROCESSING,
               lastError: null,
-            },
-          });
+              updatedAt: new Date(),
+            })
+            .where(eq(scienceMasteryRuns.attemptId, attemptId));
         } else {
           try {
-            await tx.masteryRun.create({
-              data: {
-                attemptId,
-                studentId: attempt.studentId,
-                status: MasteryRunStatus.PROCESSING,
-              },
+            await tx.insert(scienceMasteryRuns).values({
+              attemptId,
+              studentId: attempt.studentId,
+              status: MasteryRunStatus.PROCESSING,
+              updatedCount: 0,
             });
           } catch (creationError) {
-            const isUniqueViolation =
-              creationError instanceof Prisma.PrismaClientKnownRequestError
-                ? creationError.code === 'P2002'
-                : typeof creationError === 'object' &&
-                  creationError !== null &&
-                  'code' in creationError &&
-                  (creationError as { code?: string }).code === 'P2002';
-
-            if (isUniqueViolation) {
-              return { state: 'processing' } as TransactionResult;
+            if (getPgErrorCode(creationError) === PG_UNIQUE_VIOLATION) {
+              return { state: 'processing' };
             }
-
             throw creationError;
           }
         }
 
-        const existingMastery = await tx.standardMastery.findMany({
-          where: {
-            studentId: attempt.studentId,
-            standardId: { in: Array.from(standardIds) },
-          },
-        });
+        const existingMastery = await tx
+          .select()
+          .from(scienceStandardMastery)
+          .where(
+            and(
+              eq(scienceStandardMastery.studentId, attempt.studentId),
+              inArray(
+                scienceStandardMastery.standardId,
+                Array.from(standardIds)
+              )
+            )
+          );
 
-        const normalizedExisting = existingMastery.map(record => ({
+        const normalizedExisting = existingMastery.map((record) => ({
           standardId: record.standardId,
           masteryLevel: Number(record.masteryLevel),
           evidenceCount: record.evidenceCount,
@@ -313,26 +413,28 @@ export async function POST(request: NextRequest) {
         const updatedRecords: PlainStandardMastery[] = [];
 
         for (const update of updates) {
-          const record = await tx.standardMastery.upsert({
-            where: {
-              studentId_standardId: {
-                studentId: attempt.studentId,
-                standardId: update.standardId,
-              },
-            },
-            update: {
-              masteryLevel: update.masteryLevel,
-              evidenceCount: update.evidenceCount,
-              lastAssessedAt: update.lastAssessedAt,
-            },
-            create: {
+          const [record] = await tx
+            .insert(scienceStandardMastery)
+            .values({
               studentId: attempt.studentId,
               standardId: update.standardId,
-              masteryLevel: update.masteryLevel,
+              masteryLevel: String(update.masteryLevel),
               evidenceCount: update.evidenceCount,
               lastAssessedAt: update.lastAssessedAt,
-            },
-          });
+            })
+            .onConflictDoUpdate({
+              target: [
+                scienceStandardMastery.studentId,
+                scienceStandardMastery.standardId,
+              ],
+              set: {
+                masteryLevel: String(update.masteryLevel),
+                evidenceCount: update.evidenceCount,
+                lastAssessedAt: update.lastAssessedAt,
+                updatedAt: new Date(),
+              },
+            })
+            .returning();
 
           updatedRecords.push({
             id: record.id,
@@ -348,25 +450,24 @@ export async function POST(request: NextRequest) {
 
         updatedRecords.sort((a, b) => a.standardId.localeCompare(b.standardId));
 
-        await tx.masteryRun.update({
-          where: { attemptId },
-          data: {
+        await tx
+          .update(scienceMasteryRuns)
+          .set({
             status: MasteryRunStatus.COMPLETED,
             updatedCount: updates.length,
             lastError: null,
-          },
-        });
+            updatedAt: new Date(),
+          })
+          .where(eq(scienceMasteryRuns.attemptId, attemptId));
 
         return {
           state: 'processed',
           records: updatedRecords,
           updatedCount: updates.length,
           skipped,
-        } as TransactionResult;
+        };
       },
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-      }
+      { isolationLevel: 'serializable' }
     );
 
     const durationMs = Date.now() - startedAt;
@@ -376,13 +477,9 @@ export async function POST(request: NextRequest) {
         attemptId,
         studentId: attempt.studentId,
       });
-
       return NextResponse.json(
         { success: false, reason: 'QUEUED' },
-        {
-          status: 202,
-          headers: { 'retry-after': '30' },
-        }
+        { status: 202, headers: { 'retry-after': '30' } }
       );
     }
 
@@ -394,7 +491,6 @@ export async function POST(request: NextRequest) {
         durationMs,
         fallbackUsed: false,
       });
-
       return NextResponse.json(
         {
           success: true,
@@ -412,10 +508,14 @@ export async function POST(request: NextRequest) {
     });
 
     if (transactionResult.skipped > 0) {
-      metrics.increment('mastery_updates_skipped_total', transactionResult.skipped, {
-        studentId: attempt.studentId,
-        attemptId,
-      });
+      metrics.increment(
+        'mastery_updates_skipped_total',
+        transactionResult.skipped,
+        {
+          studentId: attempt.studentId,
+          attemptId,
+        }
+      );
     }
 
     metrics.observe('mastery_updates_latency_ms', durationMs, {
@@ -458,7 +558,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'Validation failed',
-          details: error.errors.map(issue => ({
+          details: error.errors.map((issue) => ({
             path: issue.path.join('.'),
             message: issue.message,
           })),
@@ -467,22 +567,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2034'
-    ) {
+    if (getPgErrorCode(error) === PG_SERIALIZATION_FAILURE) {
       logger.warn('mastery.update.retry', {
         attemptId: attemptContext?.id,
         studentId: attemptContext?.studentId,
         durationMs,
       });
-
       return NextResponse.json(
         { success: false, reason: 'QUEUED' },
-        {
-          status: 202,
-          headers: { 'retry-after': '15' },
-        }
+        { status: 202, headers: { 'retry-after': '15' } }
       );
     }
 
@@ -491,7 +584,9 @@ export async function POST(request: NextRequest) {
       studentId: attemptContext?.studentId,
       durationMs,
       message:
-        error instanceof Error ? error.message : 'Unknown mastery pipeline error',
+        error instanceof Error
+          ? error.message
+          : 'Unknown mastery pipeline error',
     });
 
     metrics.increment('mastery_updates_failed_total', 1, {
@@ -500,29 +595,30 @@ export async function POST(request: NextRequest) {
     });
 
     if (attemptContext) {
-      await prisma.masteryRun.upsert({
-        where: { attemptId: attemptContext.id },
-        update: {
-          status: MasteryRunStatus.FAILED,
-          lastError:
-            error instanceof Error ? error.message : 'Unhandled mastery error',
-        },
-        create: {
+      const failureMessage =
+        error instanceof Error ? error.message : 'Unhandled mastery error';
+      await db
+        .insert(scienceMasteryRuns)
+        .values({
           attemptId: attemptContext.id,
           studentId: attemptContext.studentId,
           status: MasteryRunStatus.FAILED,
-          lastError:
-            error instanceof Error ? error.message : 'Unhandled mastery error',
-        },
-      });
+          updatedCount: 0,
+          lastError: failureMessage,
+        })
+        .onConflictDoUpdate({
+          target: scienceMasteryRuns.attemptId,
+          set: {
+            status: MasteryRunStatus.FAILED,
+            lastError: failureMessage,
+            updatedAt: new Date(),
+          },
+        });
     }
 
     return NextResponse.json(
       { success: false, reason: 'QUEUED' },
-      {
-        status: 202,
-        headers: { 'retry-after': '30' },
-      }
+      { status: 202, headers: { 'retry-after': '30' } }
     );
   }
 }
