@@ -1,0 +1,13 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: Fix lesson-slug regression discovered during manual-QA Gate 2
+Problem: science_unit_lessons junction = 0 rows; lesson list UI empty.
+Root cause: [2235c8f] preferred JSON 'slug' over 'id' when seeding lessons.
+  But curriculum-units JSON references lessons by 'id', not by the
+  display-friendly 'slug' alias.
+Fix: always derive Drizzle slug from JSON 'id' (matches original Prisma
+  behavior where 'id' WAS the upsert key).
+Verified: junction populated to 49 rows (10/10 units have linked lessons),
+  warnings dropped from 73 → 8 (remaining are missing content, not slug bug).
+Behavior-preserving for lesson rows themselves (slugs change format only for
+  lessons that had both id+slug; downstream code uses junction-resolved UUIDs,
+  not raw slugs).
