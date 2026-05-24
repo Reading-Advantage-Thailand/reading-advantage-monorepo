@@ -1,6 +1,11 @@
-import { PrismaClient, StandardsAlignment } from '@prisma/client';
+#!/usr/bin/env tsx
 import * as fs from 'fs';
 import * as path from 'path';
+
+import { db } from '@reading-advantage/db';
+import { scienceStandards } from '@reading-advantage/db/schema';
+
+import type { StandardsAlignment } from '@/lib/enums';
 import { validateStandardsFile } from './validate-json';
 
 interface StandardData {
@@ -15,7 +20,6 @@ interface StandardsFile {
 }
 
 export async function seedStandards(
-  prisma: PrismaClient,
   options?: {
     framework?: StandardsAlignment;
     gradeLevel?: number;
@@ -23,7 +27,7 @@ export async function seedStandards(
 ): Promise<void> {
   console.log('📚 Seeding standards...');
 
-  const dataDir = path.join(__dirname, '..', 'seed-data', 'standards');
+  const dataDir = path.join(__dirname, '..', '..', 'prisma', 'seed-data', 'standards');
   const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
 
   let standardsCount = 0;
@@ -47,23 +51,20 @@ export async function seedStandards(
     console.log(`  Processing ${data.framework} Grade ${data.gradeLevel} standards...`);
 
     for (const standardData of data.standards) {
-      await prisma.standard.upsert({
-        where: {
-          framework_code: {
-            framework: data.framework,
-            code: standardData.code,
-          },
-        },
-        update: {
-          description: standardData.description,
-        },
-        create: {
+      await db
+        .insert(scienceStandards)
+        .values({
           framework: data.framework,
           code: standardData.code,
           description: standardData.description,
           gradeLevel: data.gradeLevel,
-        },
-      });
+        })
+        .onConflictDoUpdate({
+          target: [scienceStandards.framework, scienceStandards.code],
+          set: {
+            description: standardData.description,
+          },
+        });
       standardsCount++;
     }
 
@@ -71,4 +72,14 @@ export async function seedStandards(
   }
 
   console.log(`✓ Total standards seeded: ${standardsCount}\n`);
+}
+
+const isDirectExecution = process.argv[1]?.includes('seed-standards');
+if (isDirectExecution) {
+  seedStandards()
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error('❌ seedStandards failed:', err);
+      process.exit(1);
+    });
 }
