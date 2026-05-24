@@ -1,0 +1,6 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: cleanup Prisma reference (part of line-280 verification)
+File: apps/science-advantage/lib/platform/session-cleanup.ts
+Was: Local interface 'PrismaSession' + DI parameter named 'prisma' shaped like Prisma session model. No actual @prisma/client import.
+Now: Renamed interface to 'SessionStore' and parameter to 'client'. Tests use 'mockPrisma as any' — still compatible.
+Behavior-preserving. Module is only consumed by tests (no production caller); rename eliminates 'prisma.<model>' search hits without changing runtime semantics.
