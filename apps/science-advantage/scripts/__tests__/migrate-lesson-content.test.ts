@@ -2,16 +2,40 @@ import { describe, it, expect, vi } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Mock Prisma before importing migrate script to avoid database setup
-vi.mock('@/lib/prisma', () => ({
-  default: {
-    lesson: {
-      findMany: vi.fn(),
-      update: vi.fn(),
+// Mock the Drizzle DB before importing migrate script to avoid database setup.
+// The migration script imports `db` from `@reading-advantage/db`; tests in this
+// file only exercise pure conversion helpers, so a no-op chainable stub is
+// sufficient to prevent connection attempts at import time.
+vi.mock('@reading-advantage/db', async () => {
+  const actual =
+    await vi.importActual<typeof import('@reading-advantage/db')>(
+      '@reading-advantage/db'
+    );
+
+  const chain = {
+    from: vi.fn(() => chain),
+    where: vi.fn(() => chain),
+    orderBy: vi.fn(() => Promise.resolve([])),
+    set: vi.fn(() => chain),
+    values: vi.fn(() => chain),
+    returning: vi.fn(() => Promise.resolve([])),
+    onConflictDoUpdate: vi.fn(() => Promise.resolve([])),
+    limit: vi.fn(() => Promise.resolve([])),
+    innerJoin: vi.fn(() => chain),
+    leftJoin: vi.fn(() => chain),
+  };
+
+  return {
+    ...actual,
+    db: {
+      select: vi.fn(() => chain),
+      insert: vi.fn(() => chain),
+      update: vi.fn(() => chain),
+      delete: vi.fn(() => chain),
+      transaction: vi.fn(async (cb: (tx: unknown) => Promise<unknown>) => cb(chain)),
     },
-    $disconnect: vi.fn(),
-  },
-}));
+  };
+});
 
 import {
   convertMarkdownToLessonContent,
