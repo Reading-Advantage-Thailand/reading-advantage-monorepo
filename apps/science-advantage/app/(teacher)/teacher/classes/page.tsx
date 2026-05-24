@@ -1,21 +1,51 @@
 import Link from 'next/link';
+import {
+  count,
+  db,
+  desc,
+  eq,
+  inArray,
+} from '@reading-advantage/db';
+import {
+  scienceClassStudents,
+  scienceClasses,
+} from '@reading-advantage/db/schema';
+
 import { requireRole } from '@/lib/auth/server';
-import prisma from '@/lib/prisma';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CreateClassForm } from '@/components/features/classes/create-class-form';
+import type { StandardsAlignment } from '@/lib/enums';
 import { formatStudentCount, getStandardsAlignmentLabel } from '@/lib/utils/class-format';
 
 export default async function TeacherClassesPage() {
   const session = await requireRole('TEACHER');
 
-  const classes = await prisma.class.findMany({
-    where: { teacherId: session.user.id },
-    include: {
-      _count: { select: { students: true } },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
+  const classRows = await db
+    .select()
+    .from(scienceClasses)
+    .where(eq(scienceClasses.teacherId, session.user.id))
+    .orderBy(desc(scienceClasses.createdAt));
+
+  const classIds = classRows.map((c) => c.id);
+  const studentCounts = classIds.length
+    ? await db
+        .select({
+          classId: scienceClassStudents.classId,
+          value: count(),
+        })
+        .from(scienceClassStudents)
+        .where(inArray(scienceClassStudents.classId, classIds))
+        .groupBy(scienceClassStudents.classId)
+    : [];
+  const countByClass = new Map(
+    studentCounts.map((row) => [row.classId, Number(row.value)])
+  );
+
+  const classes = classRows.map((cls) => ({
+    ...cls,
+    _count: { students: countByClass.get(cls.id) ?? 0 },
+  }));
 
   return (
     <div className="space-y-6">
@@ -55,7 +85,7 @@ export default async function TeacherClassesPage() {
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">{cls.name}</h3>
                         <p className="text-sm text-gray-600">
-                          Grade {cls.gradeLevel} &middot; {getStandardsAlignmentLabel(cls.standardsAlignment)}
+                          Grade {cls.gradeLevel} &middot; {getStandardsAlignmentLabel(cls.standardsAlignment as StandardsAlignment)}
                         </p>
                       </div>
                       <div className="flex flex-col items-start gap-1 text-sm md:items-end">
