@@ -245,7 +245,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] [a71dd65] Task: Migrate `app/api/classes/route.ts`, `classes/join/route.ts`, `classes/[classId]/route.ts` (class) — one commit each [c5db00e, 2456154, a71dd65]
 - [x] [5904528] Task: Migrate `app/api/classes/[classId]/roster/route.ts` (class, user) and `classes/[classId]/assignments/route.ts` (assignment, class, lesson) [93e31c4, 5904528]
 - [x] [6320022] Task: Migrate `app/api/students/[studentId]/assignments/route.ts` (assignment)
-- [~] Task: Migrate `app/api/teachers/dashboard/route.ts` (class, lessonCompletion, standardMastery)
+- [x] [0323d6c] Task: Migrate `app/api/teachers/dashboard/route.ts` (class, lessonCompletion, standardMastery)
 - [ ] Task: Migrate `app/api/teachers/classes/[classId]/intervention-alerts/route.ts` (class, standardMastery) and `lib/interventions/detect-alerts.ts` (types-only)
 - [ ] Task: Migrate server components `app/(teacher)/teacher/page.tsx`, `app/(teacher)/teacher/classes/page.tsx`
 - [ ] Task: Migrate components `class-card.tsx`, `class-detail-header.tsx`, `class-snapshot-panel.tsx`, `teacher-dashboard-classes.tsx`
