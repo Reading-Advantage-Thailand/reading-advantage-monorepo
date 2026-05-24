@@ -1,0 +1,8 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: scripts/__tests__/migrate-lesson-content.test.ts → Drizzle (part of 5-script bundle)
+Tests: 46/46 pass via `pnpm exec vitest run scripts/__tests__/migrate-lesson-content.test.ts`
+Notes:
+- Replaced vi.mock('@/lib/prisma') with vi.mock('@reading-advantage/db') using a chainable no-op stub. The test only exercises pure markdown→LessonContent conversion helpers; the mock exists solely to prevent the db client from connecting at import time.
+- Test assertions are unchanged — the conversion logic was not touched in this migration, so the existing 46 cases (computeContentHash, parseMarkdownImages, countWords, mapSectionToBlockType, generateBlockId, extractImagesFromContent, convertSectionToBlock, convertMarkdownToLessonContent, golden fixture, validation, edge cases) all still apply.
+- Trade-off: kept the test as a unit-style mocked test rather than converting to an integration test against the real DB. The scope of conversion logic is purely functional; an integration test would only validate that we wrote/read scienceLessons rows (covered already by the lessons route integration test). Keeping the test fast and DB-free preserves the original test author's intent.
+Behavior-preserving.
