@@ -1,6 +1,4 @@
-import { StandardsAlignment } from '@prisma/client';
-
-// Type guards and validators for seed data JSON files
+import type { StandardsAlignment } from '@/lib/enums';
 
 interface StandardData {
   code: string;
@@ -44,8 +42,6 @@ interface CurriculumUnitsFile {
   gradeLevel: number;
   units: CurriculumUnitData[];
 }
-
-// Validation functions
 
 export function validateStandardsFile(data: any): data is StandardsFile {
   if (!data || typeof data !== 'object') {
