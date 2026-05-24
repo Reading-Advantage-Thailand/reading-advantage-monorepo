@@ -1,0 +1,12 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/api/teachers/dashboard route → Drizzle
+Tests: 11/11 pass, lint clean (pre-existing _req unused warning only — same on original)
+Notes:
+- Tables used: scienceClasses, scienceClassStudents, scienceLessonCompletions, scienceStandardMastery, scienceLessons, users
+- Aggregation approach: in-memory JS reduce (matches original); decimal masteryLevel compared via sql`0.6` because Drizzle's lt() on a decimal column needs an unquoted SQL literal
+- countStudentsNeedingAttention: replaced Prisma groupBy + nested relation filter with a two-step selectDistinct (enrolled students → distinct mastery<0.6 rows). Behavior matches: count of distinct students with at least one weak standard among teacher's enrolled students
+- fetchRecentCompletions: replaced Prisma nested include with innerJoins on users + scienceLessons; same orderBy completedAt desc, limit 5
+- Teacher-only access enforcement preserved via existing requireRole('TEACHER')
+- Deleted legacy tests/api/teacher-dashboard.integration.test.ts (real-Prisma + tests/lib/test-utils dependency); replaced by co-located co-located route.integration.test.ts with 11 real-DB tests covering: unauth, student-non-teacher, no-classes, class-progress aggregation, mastery alert counting (below + above threshold), tenant scoping across teachers, recent-completions shape & ordering, 5-row cap, empty class, multi-class teacher
+- No-auth / wrong-role surface as 500 (NEXT_REDIRECT caught by route try/catch) — pattern matches student-lesson analytics integration test
+Behavior-preserving; no logic change beyond ORM swap.
