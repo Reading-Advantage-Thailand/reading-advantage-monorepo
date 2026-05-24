@@ -1,0 +1,5 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/api/classes/[classId]/roster → Drizzle (part of 2-route bundle)
+Tests: 16/16 pass, lint clean
+Notes: GET joins users LEFT JOIN gamification_profiles for lastActiveAt (was Prisma include). DELETE simplified Prisma students.disconnect to direct DELETE on scienceClassStudents junction (no-op when row absent, matches Prisma semantics).
+Behavior-preserving; no logic change beyond ORM swap.
