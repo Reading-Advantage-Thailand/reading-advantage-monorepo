@@ -1,0 +1,38 @@
+Task: Migrate app/api/ai/recommendations/route.ts (Phase 2) + add users.grade_level
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+DB:
+- New nullable column users.grade_level (integer); migration 0016 with
+  ADD COLUMN IF NOT EXISTS so idempotent against prod (Prisma migrations
+  already created it).
+- Filling a Drizzle schema gap discovered while migrating this route;
+  affects recommendation-context, mastery-profile route, detect-alerts.
+
+Route:
+- loadAttemptWithRelations() helper assembles the AttemptWithRelations
+  shape via 7 typed SELECTs: attempt, lesson, lessonStandards JOIN
+  standards, unitLessons JOIN curriculumUnits, users (for gradeLevel),
+  questionResponses, questionStandards JOIN standards.
+- Authz, cache key, rate-limit, fallback, metrics emission unchanged.
+- Fixed a pre-existing missing await on assertRateLimit() (was previously
+  a floating promise — would still rate-limit on subsequent calls but the
+  current call could race).
+
+Test:
+- 7-test integration suite. Mocks the LLM (@/lib/ai/recommendation-service.
+  generateRecommendation) and Redis rate-limit store, but exercises real
+  DB queries through loadAttemptWithRelations + buildRecommendationContext.
+
+Files:
+- M packages/db/src/schema/users.ts (added gradeLevel)
+- A packages/db/drizzle/0016_users_grade_level.sql
+- M packages/db/drizzle/meta/_journal.json
+- M apps/science-advantage/app/api/ai/recommendations/route.ts
+- A apps/science-advantage/app/api/ai/recommendations/route.integration.test.ts
+
+Verification:
+- 7/7 tests pass
+- eslint clean
+- migration applies to science_advantage_test (idempotent)
+- @reading-advantage/db builds clean
