@@ -1,0 +1,14 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: prisma/seed-functions/seed-curriculum-units → scripts/seed/seed-curriculum-units (part of 7-file bundle)
+Decision: REWRITE.
+Tables seeded: science_curriculum_units, science_unit_lessons (junction)
+Tests: none
+Importers updated: none yet — prisma/seed.ts + prisma/seed-functions/seed-demo-data import old path (will break temporarily; seed-demo-data updated in next commit; seed.ts on line 270 next-task).
+Notes:
+- Drizzle schema: science_curriculum_units.class_id is NOT NULL, so the optional-classId path from the original Prisma code is now required. In practice it was always called with a classId (seed-demo-data.ts line 109), so this matches actual usage.
+- Idempotency key changed: original used composite id (classId_unitId) via prisma upsert by id; new uses unique slug = classId__baseSlug. Idempotent across reruns.
+- Junction (implicit Prisma _CurriculumUnitToLesson) replaced with explicit science_unit_lessons writes inside a transaction (delete-then-insert pattern).
+- Lessons referenced by string ID in seed JSON; resolved to UUID via slug lookup against science_lessons.
+- Wrapped in db.transaction for atomic unit+junction writes.
+- CLI shape preserved (runnable via tsx, exits 0/1).
+Behavior-preserving (with the documented constraint tightening: classId now required at runtime, matching schema NOT NULL); no behavioural change beyond ORM swap.
