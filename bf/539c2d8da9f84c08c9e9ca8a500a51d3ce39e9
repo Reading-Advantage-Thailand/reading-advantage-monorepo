@@ -1,0 +1,5 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: apps/science-advantage/seed-users.ts → retired (file 3 of 4 in line-270 bundle)
+Decision: retire — no callers anywhere (no package.json script, no docs, no CI). File created 4 users via prisma.user.create with NO credential/password rows, making the seeded users un-loggable. Equivalent (and superior) coverage exists in scripts/seed-demo-users.ts (rewrite this session) which DOES create credential accounts, and scripts/seed/seed-demo-data.ts which creates users + class + curriculum + mastery.
+package.json scripts updated: none (was never wired up)
+Notes: pure deletion, zero behavior loss.
