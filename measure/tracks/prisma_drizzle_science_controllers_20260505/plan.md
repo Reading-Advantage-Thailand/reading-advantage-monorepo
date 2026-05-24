@@ -285,7 +285,7 @@ be green against BEFORE and stay green against AFTER.
     - [x] Sub-task: Delete `prisma.config.ts`
     - [x] Sub-task: Strip `prisma`, `@prisma/client`, `prisma-zod-generator` from `package.json` (and any `prebuild`/`postinstall` prisma scripts) — no zod-generator or postinstall present
 - [x] [fdd3298] Task: Re-evaluate `ignoreBuildErrors` (tech debt 2026-05-03 `auth_strategy_review`) — remove it if the build is now clean; if two `next` versions still conflict, leave it and update the tech-debt note [fdd3298: both flags retained (eslint flag not set in config; only `typescript.ignoreBuildErrors`) — pre-existing 360 tsc / 4 lint errors documented in tech-debt + next.config.ts comment enumerated. 0 errors introduced by Prisma removal; the cited "next@16 duplicate instances" blocker accounts for only ~4 of 360, real majority is ~354 testing-library matcher narrowing.]
-- [ ] Task: Verify clean install + build + test
+- [~] Task: Verify clean install + build + test
     - [ ] Sub-task: `pnpm install`
     - [ ] Sub-task: `pnpm --filter science-advantage build`
     - [ ] Sub-task: `CI=true pnpm --filter science-advantage test` green
