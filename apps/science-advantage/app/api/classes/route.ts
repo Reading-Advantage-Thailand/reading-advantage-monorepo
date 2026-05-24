@@ -4,11 +4,29 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import {
+  and,
+  count,
+  db,
+  desc,
+  eq,
+  exists,
+  inArray,
+} from '@reading-advantage/db';
+import {
+  scienceClasses,
+  scienceClassStudents,
+  scienceCurriculumUnits,
+  scienceLessonStandards,
+  scienceLessons,
+  scienceStandards,
+  scienceUnitLessons,
+} from '@reading-advantage/db/schema';
+import { ZodError } from 'zod';
+
 import { getCurrentSession } from '@/lib/auth/session';
 import { createClassSchema } from '@/lib/validations/class';
 import { generateUniqueJoinCode } from '@/lib/utils/generateJoinCode';
-import { ZodError } from 'zod';
 
 /**
  * POST /api/classes
@@ -41,64 +59,81 @@ export async function POST(request: NextRequest) {
     const validatedData = createClassSchema.parse(body);
 
     // 3. Create class with curriculum units in a transaction
-    const result = await prisma.$transaction(async (tx) => {
-      // Generate unique join code
+    const result = await db.transaction(async (tx) => {
+      // Generate unique join code (uses the tx so the SELECT sees this txn's view)
       const joinCode = await generateUniqueJoinCode(tx);
 
       // Create the class
-      const newClass = await tx.class.create({
-        data: {
+      const [newClass] = await tx
+        .insert(scienceClasses)
+        .values({
           name: validatedData.name,
           gradeLevel: validatedData.gradeLevel,
           standardsAlignment: validatedData.standardsAlignment,
           joinCode,
           teacherId: session.user.id,
-        },
-        include: {
-          _count: {
-            select: { students: true },
-          },
-        },
-      });
+        })
+        .returning();
 
-      // Find curriculum template lessons for this grade and alignment
-      const templateLessons = await tx.lesson.findMany({
-        where: {
-          gradeLevel: validatedData.gradeLevel,
-          standards: {
-            some: {
-              framework: validatedData.standardsAlignment,
-            },
-          },
-        },
-        include: {
-          standards: true,
-        },
-        orderBy: { order: 'asc' },
-      });
+      // Find curriculum template lessons for this grade and alignment.
+      // Prisma: lessons where standards.some(framework = X). Drizzle: SELECT lessons
+      // EXISTS (SELECT 1 FROM lesson_standards JOIN standards ON ... WHERE
+      // lessons.id = lesson_standards.lesson_id AND standards.framework = X).
+      const templateLessons = await tx
+        .select({ id: scienceLessons.id })
+        .from(scienceLessons)
+        .where(
+          and(
+            eq(scienceLessons.gradeLevel, validatedData.gradeLevel),
+            exists(
+              tx
+                .select({ one: scienceLessonStandards.lessonId })
+                .from(scienceLessonStandards)
+                .innerJoin(
+                  scienceStandards,
+                  eq(scienceStandards.id, scienceLessonStandards.standardId)
+                )
+                .where(
+                  and(
+                    eq(scienceLessonStandards.lessonId, scienceLessons.id),
+                    eq(scienceStandards.framework, validatedData.standardsAlignment)
+                  )
+                )
+            )
+          )
+        )
+        .orderBy(scienceLessons.order);
 
       // Group lessons into units (for now, create one unit with all lessons)
       // In the future, this could be more sophisticated based on lesson metadata
       if (templateLessons.length > 0) {
-        await tx.curriculumUnit.create({
-          data: {
+        const [unit] = await tx
+          .insert(scienceCurriculumUnits)
+          .values({
             slug: `unit-1-intro-science-${newClass.id.slice(-8)}`,
             title: `Unit 1: Introduction to Science & Living Things`,
-            description: 'Explore what science is and learn about living things and their characteristics.',
+            description:
+              'Explore what science is and learn about living things and their characteristics.',
             framework: validatedData.standardsAlignment,
             gradeLevel: validatedData.gradeLevel,
             order: 1,
             classId: newClass.id,
-            lessons: {
-              connect: templateLessons.map(lesson => ({ id: lesson.id })),
-            },
-          },
-        });
+          })
+          .returning();
+
+        await tx.insert(scienceUnitLessons).values(
+          templateLessons.map((lesson) => ({
+            unitId: unit.id,
+            lessonId: lesson.id,
+          }))
+        );
       }
 
+      // No students just-created; studentCount is 0 in the same vein as the prior
+      // Prisma `_count.students` after creation.
       return {
         ...newClass,
-        studentCount: newClass._count.students,
+        studentCount: 0,
       };
     });
 
@@ -188,32 +223,46 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20', 10);
     const skip = (page - 1) * limit;
 
-    // 3. Fetch classes with pagination
-    const [classes, total] = await Promise.all([
-      prisma.class.findMany({
-        where: { teacherId: session.user.id },
-        include: {
-          _count: {
-            select: { students: true },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: limit,
-      }),
-      prisma.class.count({
-        where: { teacherId: session.user.id },
-      }),
+    // 3. Fetch classes with pagination + total
+    const teacherId = session.user.id;
+    const [classes, [{ value: total }]] = await Promise.all([
+      db
+        .select()
+        .from(scienceClasses)
+        .where(eq(scienceClasses.teacherId, teacherId))
+        .orderBy(desc(scienceClasses.createdAt))
+        .offset(skip)
+        .limit(limit),
+      db
+        .select({ value: count() })
+        .from(scienceClasses)
+        .where(eq(scienceClasses.teacherId, teacherId)),
     ]);
 
-    // 4. Format response
+    // 4. Per-class student count via a single grouped query.
+    const classIds = classes.map((c) => c.id);
+    const studentCounts = classIds.length
+      ? await db
+          .select({
+            classId: scienceClassStudents.classId,
+            value: count(),
+          })
+          .from(scienceClassStudents)
+          .where(inArray(scienceClassStudents.classId, classIds))
+          .groupBy(scienceClassStudents.classId)
+      : [];
+    const countByClass = new Map(
+      studentCounts.map((row) => [row.classId, Number(row.value)])
+    );
+
+    // 5. Format response
     const classesWithCount = classes.map(cls => ({
       id: cls.id,
       name: cls.name,
       gradeLevel: cls.gradeLevel,
       standardsAlignment: cls.standardsAlignment,
       joinCode: cls.joinCode,
-      studentCount: cls._count.students,
+      studentCount: countByClass.get(cls.id) ?? 0,
       createdAt: cls.createdAt,
       updatedAt: cls.updatedAt,
     }));
