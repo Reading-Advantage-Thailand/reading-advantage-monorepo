@@ -1,7 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-import { parseBilingualTitle } from '../../lib/bilingual';
-
-const prisma = new PrismaClient();
+#!/usr/bin/env tsx
 
 /**
  * Backfill Thai titles from the "English / ไทย" convention.
@@ -9,17 +6,23 @@ const prisma = new PrismaClient();
  * and stores english in `title`, thai in `titleThai`.
  * Lessons without the delimiter keep their title and get titleThai = null.
  */
+
+import { db, eq } from '@reading-advantage/db';
+import { scienceLessons } from '@reading-advantage/db/schema';
+
+import { parseBilingualTitle } from '@/lib/bilingual';
+
 async function backfillThaiTitles(): Promise<void> {
   console.log('🔄 Backfilling Thai titles from bilingual convention...\n');
 
-  const lessons = await prisma.lesson.findMany({
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      titleThai: true,
-    },
-  });
+  const lessons = await db
+    .select({
+      id: scienceLessons.id,
+      slug: scienceLessons.slug,
+      title: scienceLessons.title,
+      titleThai: scienceLessons.titleThai,
+    })
+    .from(scienceLessons);
 
   let updated = 0;
   let skipped = 0;
@@ -38,13 +41,13 @@ async function backfillThaiTitles(): Promise<void> {
       continue;
     }
 
-    await prisma.lesson.update({
-      where: { id: lesson.id },
-      data: {
+    await db
+      .update(scienceLessons)
+      .set({
         title: english,
         titleThai: thai,
-      },
-    });
+      })
+      .where(eq(scienceLessons.id, lesson.id));
 
     updated++;
     console.log(`  ✓ ${lesson.slug}: "${english}" / "${thai}"`);
@@ -60,9 +63,9 @@ async function backfillThaiTitles(): Promise<void> {
 backfillThaiTitles()
   .then(() => {
     console.log('\n✅ Done.');
-    return prisma.$disconnect();
+    process.exit(0);
   })
   .catch((err) => {
     console.error('❌ Backfill failed:', err);
-    return prisma.$disconnect().then(() => process.exit(1));
+    process.exit(1);
   });
