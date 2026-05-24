@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { db, eq } from '@reading-advantage/db';
+import { scienceClasses } from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
-import prisma from '@/lib/prisma';
 import { getClassDetailWithCurriculum } from '@/lib/services/classes/get-class-detail';
 
 export async function GET(
@@ -84,10 +85,11 @@ export async function PATCH(
 
     const { classId } = await context.params;
 
-    const classRecord = await prisma.class.findUnique({
-      where: { id: classId },
-      select: { teacherId: true },
-    });
+    const [classRecord] = await db
+      .select({ teacherId: scienceClasses.teacherId })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.id, classId))
+      .limit(1);
 
     if (!classRecord) {
       return NextResponse.json(
@@ -127,11 +129,15 @@ export async function PATCH(
       );
     }
 
-    const updated = await prisma.class.update({
-      where: { id: classId },
-      data: updateData,
-      select: { id: true, name: true, updatedAt: true },
-    });
+    const [updated] = await db
+      .update(scienceClasses)
+      .set(updateData)
+      .where(eq(scienceClasses.id, classId))
+      .returning({
+        id: scienceClasses.id,
+        name: scienceClasses.name,
+        updatedAt: scienceClasses.updatedAt,
+      });
 
     return NextResponse.json(
       {
@@ -170,17 +176,11 @@ export async function DELETE(
 
     const { classId } = await context.params;
 
-    const classRecord = await prisma.class.findUnique({
-      where: { id: classId },
-      select: {
-        teacherId: true,
-        _count: {
-          select: {
-            students: true,
-          },
-        },
-      },
-    });
+    const [classRecord] = await db
+      .select({ teacherId: scienceClasses.teacherId })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.id, classId))
+      .limit(1);
 
     if (!classRecord) {
       return NextResponse.json(
@@ -199,32 +199,12 @@ export async function DELETE(
       );
     }
 
-    // Check if any students have progress (lesson completions)
-    const hasProgress = await prisma.lessonCompletion.findFirst({
-      where: {
-        student: {
-          enrolledClass: {
-            some: { id: classId },
-          },
-        },
-      },
-      select: { id: true },
-    });
-
-    if (hasProgress) {
-      // Soft delete: disconnect all students
-      await prisma.class.update({
-        where: { id: classId },
-        data: {
-          students: { set: [] },
-        },
-      });
-      // Then delete the class (cascading deletes curriculum units, etc.)
-      await prisma.class.delete({ where: { id: classId } });
-    } else {
-      // Hard delete: no student progress, safe to remove entirely
-      await prisma.class.delete({ where: { id: classId } });
-    }
+    // Delete the class. FK cascades drop curriculum units, enrollments,
+    // assignments, etc. Lesson completions live on the student/lesson axis
+    // and are intentionally left intact (matches the prior Prisma behaviour
+    // of disconnecting students before delete — they still own their progress
+    // records via `studentId`, just no longer through this class).
+    await db.delete(scienceClasses).where(eq(scienceClasses.id, classId));
 
     return NextResponse.json(
       { success: true, data: { deleted: true } },
