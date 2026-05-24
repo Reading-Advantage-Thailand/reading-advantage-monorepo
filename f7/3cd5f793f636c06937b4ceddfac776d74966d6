@@ -1,0 +1,14 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: prisma/seed-functions/seed-demo-data → scripts/seed/seed-demo-data (part of 7-file bundle)
+Decision: REWRITE.
+Tables seeded: users, accounts, science_classes, science_class_students (junction), science_standard_mastery, plus the indirect cascade via seedCurriculumUnits (science_curriculum_units, science_unit_lessons).
+Tests: none directly
+Importers updated: none yet — prisma/seed.ts still on old path (next task line 270)
+Notes:
+- Drizzle has no native upsert returning, so user/account creation uses insert+onConflictDoNothing(username) which preserves original 'update: {}' no-op semantics.
+- Drizzle schema for accounts has no 'accountId' column; the original Prisma write of accountId=username was schema-dropped during Track 3 — silently omitted here (matches current DB shape).
+- Class enrollment moved from implicit Prisma _ClassToStudent connect → explicit science_class_students insert.
+- mastery_level is decimal(3,2) — written as String(level) per task brief and tech-stack convention.
+- seedCurriculumUnits signature changed (no PrismaClient arg, classId required) — call site updated.
+- Standalone CLI shape preserved.
+Behavior-preserving (modulo the documented 'accountId' field omission, which was already lost at schema-translation time).
