@@ -1,12 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-import { hashPassword } from './lib/auth/password';
-
-const prisma = new PrismaClient();
+#!/usr/bin/env tsx
+import { hashPassword } from '@reading-advantage/auth';
+import { db } from '@reading-advantage/db';
+import { accounts, users } from '@reading-advantage/db/schema';
 
 async function createTestUsers() {
   console.log('Creating test users with passwords...');
 
-  const users = [
+  const usersData = [
     {
       username: 'student1',
       password: 'password123',
@@ -41,48 +41,54 @@ async function createTestUsers() {
     },
   ];
 
-  for (const userData of users) {
+  for (const userData of usersData) {
     try {
       const hashedPassword = await hashPassword(userData.password);
-      const user = await prisma.user.upsert({
-        where: { username: userData.username },
-        update: {
-          name: userData.name,
-          email: userData.email,
-          displayUsername: userData.displayUsername,
-          role: userData.role,
-          updatedAt: new Date(),
-        },
-        create: {
-          id: `seed_${userData.username}`,
+      const userId = `seed_${userData.username}`;
+      const now = new Date();
+
+      await db
+        .insert(users)
+        .values({
+          id: userId,
           username: userData.username,
           displayUsername: userData.displayUsername,
           name: userData.name,
           email: userData.email,
           role: userData.role,
-          emailVerified: false,
           image: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      });
+          createdAt: now,
+          updatedAt: now,
+        })
+        .onConflictDoUpdate({
+          target: users.username,
+          set: {
+            name: userData.name,
+            email: userData.email,
+            displayUsername: userData.displayUsername,
+            role: userData.role,
+            updatedAt: now,
+          },
+        });
 
-      await prisma.account.upsert({
-        where: { id: `${user.id}_credential` },
-        update: {
-          password: hashedPassword,
-          updatedAt: new Date(),
-        },
-        create: {
-          id: `${user.id}_credential`,
-          accountId: user.username,
+      const accountId = `${userId}_credential`;
+      await db
+        .insert(accounts)
+        .values({
+          id: accountId,
+          userId,
           providerId: 'credential',
-          userId: user.id,
           password: hashedPassword,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      });
+          createdAt: now,
+          updatedAt: now,
+        })
+        .onConflictDoUpdate({
+          target: accounts.id,
+          set: {
+            password: hashedPassword,
+            updatedAt: now,
+          },
+        });
 
       console.log(`✓ Ensured user ${userData.username}`);
     } catch (error) {
@@ -94,11 +100,7 @@ async function createTestUsers() {
   console.log('You can now login with any of these users using password: password123');
 }
 
-createTestUsers()
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+createTestUsers().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
