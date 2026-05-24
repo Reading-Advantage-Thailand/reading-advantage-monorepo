@@ -1,0 +1,11 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: scripts/dev-interventions → Drizzle (part of 5-script bundle)
+Tests: none for this script (detectAlerts pure-fn covered by its own unit test)
+Notes:
+- Replaced Prisma instance + nested includes with explicit Drizzle joins (scienceClassStudents+users, scienceStandardMastery+scienceStandards).
+- Used `lt(scienceStandardMastery.masteryLevel, sql` for decimal vs number comparison per project convention.
+- Coerced nullable users.name to '' to match StudentRosterEntry contract (mirrors app/api/teachers/.../intervention-alerts route pattern).
+- MasteryRecord shape preserved (studentId/lastAssessedAt/masteryLevel as string/standard{code,description}); MasteryRecord already accepts Drizzle decimal-string post Phase 5 update.
+- CLI args (CLASS_ID env / positional argv), error codes, console output preserved.
+- Dropped explicit `prisma.$disconnect()` finally hook — postgres-js client doesn't need teardown here.
+Behavior-preserving; no logic change beyond ORM swap.
