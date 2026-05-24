@@ -1,0 +1,6 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: tests/seed-activity.integration.test.ts → deferred (skip)
+Decision: defer because the suite drives prisma/seed-functions/seed-activity-data.ts which is still on Prisma (Phase 6 line 263: 'Rewrite or retire prisma/seed-functions/* against Drizzle'). The matching scripts/seed-activity-data.ts migration was already deferred for the same dependency (plan.md line 265). Per task brief: '… You may DEFER this test as well (leave the file but skip it … with a clear comment pointing to the blocker).'
+Coverage: 1/1 skipped — original suite preserved in git history; restore alongside Drizzle-port seeders during Phase 6.
+Notes: Replaced full file with a single describe.skip stub + header comment pointing to plan.md line 263/265. Confirmed runs cleanly under vitest.integration.config.ts (1 skipped, 0 failed, no Prisma imports in skipped runtime).
+Behavior-preserving (skip-with-rationale; no semantic change to passing tests).
