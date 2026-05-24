@@ -249,7 +249,13 @@ be green against BEFORE and stay green against AFTER.
 - [x] [dc960ef] Task: Migrate `app/api/teachers/classes/[classId]/intervention-alerts/route.ts` (class, standardMastery) and `lib/interventions/detect-alerts.ts` (types-only)
 - [x] [74bdf22] Task: Migrate server components `app/(teacher)/teacher/page.tsx`, `app/(teacher)/teacher/classes/page.tsx` [5e5767a, 74bdf22]
 - [x] [7ac8062] Task: Migrate components `class-card.tsx`, `class-detail-header.tsx`, `class-snapshot-panel.tsx`, `teacher-dashboard-classes.tsx`
-- [~] Task: Update tests `tests/lib/get-student-classes.test.ts`, `tests/api/class-detail.test.ts`, `classes-join.test.ts`, `classes.test.ts`, `class-analytics-overview.integration.test.ts`, `teacher-dashboard.integration.test.ts` against Drizzle
+- [x] Task: Update tests `tests/lib/get-student-classes.test.ts`, `tests/api/class-detail.test.ts`, `classes-join.test.ts`, `classes.test.ts`, `class-analytics-overview.integration.test.ts`, `teacher-dashboard.integration.test.ts` against Drizzle — triage outcome: all 6 files previously handled in earlier route/service migrations; 0 files required action this task.
+  • get-student-classes.test.ts: deleted [f662db3]; superseded by `lib/services/classes/get-student-classes.integration.test.ts` [f662db3]
+  • class-detail.test.ts: deleted [c5db00e]; superseded by `app/api/classes/[classId]/route.integration.test.ts` [c5db00e]
+  • classes-join.test.ts: deleted [a71dd65]; superseded by `app/api/classes/join/route.integration.test.ts` [a71dd65]
+  • classes.test.ts: deleted [2456154]; superseded by `app/api/classes/route.integration.test.ts` [2456154]
+  • class-analytics-overview.integration.test.ts: deleted [bca632f]; superseded by `app/api/classes/[classId]/analytics/overview/route.integration.test.ts` [bca632f]
+  • teacher-dashboard.integration.test.ts: deleted [0323d6c]; superseded by `app/api/teachers/dashboard/route.integration.test.ts` [0323d6c]
 - [ ] Task: Measure - User Manual Verification 'Classes & Assignments' (Protocol in workflow.md)
 
 ## Phase 5: AI types & remaining lib
