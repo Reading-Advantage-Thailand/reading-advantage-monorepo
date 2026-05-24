@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { and, db, eq, exists } from '@reading-advantage/db';
+import {
+  scienceClassStudents,
+  scienceClasses,
+  scienceCurriculumUnits,
+  scienceLessonCompletions,
+  scienceLessons,
+  scienceUnitLessons,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
-import prisma from '@/lib/prisma';
 
 export async function GET(
   _request: NextRequest,
@@ -15,73 +24,112 @@ export async function GET(
     }
 
     const { studentId: requestedStudentId, lessonId } = await context.params;
-    const targetStudentId = requestedStudentId === 'me' ? session.user.id : requestedStudentId;
+    const targetStudentId =
+      requestedStudentId === 'me' ? session.user.id : requestedStudentId;
 
-    const student = await prisma.user.findUnique({
-      where: { id: targetStudentId },
-      select: { id: true },
-    });
+    // 1. Target student exists.
+    const [student] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, targetStudentId))
+      .limit(1);
 
     if (!student) {
       return NextResponse.json({ error: 'Student not found' }, { status: 404 });
     }
 
-    const lesson = await prisma.lesson.findUnique({
-      where: { id: lessonId },
-      include: {
-        curriculumUnits: {
-          include: {
-            class: {
-              include: {
-                teacher: { select: { id: true } },
-                students: { select: { id: true } },
-              },
-            },
-          },
-        },
-      },
-    });
+    // 2. Lesson must exist.
+    const [lesson] = await db
+      .select({ id: scienceLessons.id })
+      .from(scienceLessons)
+      .where(eq(scienceLessons.id, lessonId))
+      .limit(1);
 
     if (!lesson) {
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
     }
 
+    // 3. Authorization: caller is the student themselves OR caller is a
+    //    teacher of a class that contains both this lesson AND the target
+    //    student.
     const isSelf = targetStudentId === session.user.id;
 
-    const authorizedViaClass = lesson.curriculumUnits.some(unit => {
-      const isTeacher = unit.class.teacher.id === session.user.id;
-      const studentInClass = unit.class.students.some(s => s.id === targetStudentId);
-      return isTeacher && studentInClass;
-    });
-
-    if (!isSelf && !authorizedViaClass) {
-      return NextResponse.json({ error: 'Not authorized to view progress' }, { status: 403 });
+    let authorizedViaClass = false;
+    if (!isSelf) {
+      const matches = await db
+        .select({ classId: scienceClasses.id })
+        .from(scienceClasses)
+        .where(
+          and(
+            eq(scienceClasses.teacherId, session.user.id),
+            exists(
+              db
+                .select({ id: scienceUnitLessons.lessonId })
+                .from(scienceUnitLessons)
+                .innerJoin(
+                  scienceCurriculumUnits,
+                  eq(scienceCurriculumUnits.id, scienceUnitLessons.unitId)
+                )
+                .where(
+                  and(
+                    eq(scienceCurriculumUnits.classId, scienceClasses.id),
+                    eq(scienceUnitLessons.lessonId, lessonId)
+                  )
+                )
+            ),
+            exists(
+              db
+                .select({ id: scienceClassStudents.studentId })
+                .from(scienceClassStudents)
+                .where(
+                  and(
+                    eq(scienceClassStudents.classId, scienceClasses.id),
+                    eq(scienceClassStudents.studentId, targetStudentId)
+                  )
+                )
+            )
+          )
+        )
+        .limit(1);
+      authorizedViaClass = matches.length > 0;
     }
 
-    const completion = await prisma.lessonCompletion.findUnique({
-      where: {
-        studentId_lessonId: {
-          studentId: targetStudentId,
-          lessonId,
-        },
+    if (!isSelf && !authorizedViaClass) {
+      return NextResponse.json(
+        { error: 'Not authorized to view progress' },
+        { status: 403 }
+      );
+    }
+
+    // 4. Completion (may not exist yet).
+    const [completion] = await db
+      .select()
+      .from(scienceLessonCompletions)
+      .where(
+        and(
+          eq(scienceLessonCompletions.studentId, targetStudentId),
+          eq(scienceLessonCompletions.lessonId, lessonId)
+        )
+      )
+      .limit(1);
+
+    return NextResponse.json(
+      {
+        studentId: targetStudentId,
+        lessonId,
+        status: completion?.status ?? 'NOT_STARTED',
+        attemptsCount: completion?.attemptsCount ?? 0,
+        bestScore: completion?.bestScore ?? null,
+        bestScorePercentage: completion?.bestScorePercentage ?? null,
+        mostRecentScore: completion?.mostRecentScore ?? null,
+        mostRecentScorePercentage:
+          completion?.mostRecentScorePercentage ?? null,
+        totalTimeSpentSeconds: completion?.totalTimeSpentSeconds ?? 0,
+        lastAttemptAt: completion?.lastAttemptAt?.toISOString() ?? null,
+        completedAt: completion?.completedAt?.toISOString() ?? null,
       },
-    });
-
-    const response = {
-      studentId: targetStudentId,
-      lessonId,
-      status: completion?.status ?? 'NOT_STARTED',
-      attemptsCount: completion?.attemptsCount ?? 0,
-      bestScore: completion?.bestScore ?? null,
-      bestScorePercentage: completion?.bestScorePercentage ?? null,
-      mostRecentScore: completion?.mostRecentScore ?? null,
-      mostRecentScorePercentage: completion?.mostRecentScorePercentage ?? null,
-      totalTimeSpentSeconds: completion?.totalTimeSpentSeconds ?? 0,
-      lastAttemptAt: completion?.lastAttemptAt?.toISOString() ?? null,
-      completedAt: completion?.completedAt?.toISOString() ?? null,
-    };
-
-    return NextResponse.json(response, { status: 200 });
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Failed to fetch lesson progress:', error);
     return NextResponse.json(
