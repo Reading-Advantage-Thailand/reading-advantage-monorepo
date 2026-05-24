@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { isValidLessonSlug, isValidQuestionSlug } from '../lesson-slug.schema';
-import { LessonType, StandardsAlignment } from '@prisma/client';
+import { LessonType, StandardsAlignment } from '@/lib/enums';
 
 describe('Content Migration Validation - Grade 4', () => {
   describe('Lesson slug requirements', () => {

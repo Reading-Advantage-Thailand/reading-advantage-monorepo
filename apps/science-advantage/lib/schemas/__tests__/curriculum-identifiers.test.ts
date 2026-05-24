@@ -16,7 +16,7 @@ import {
   generateCurriculumUnitSlug,
   generateQuestionSlug,
 } from '../lesson-slug.schema';
-import { LessonType, StandardsAlignment } from '@prisma/client';
+import { LessonType, StandardsAlignment } from '@/lib/enums';
 
 describe('Curriculum Identifiers Schema', () => {
   describe('QuestionSlugSchema', () => {
@@ -650,7 +650,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have valid lessonType for all Grade 3 lessons', async () => {
-      const { LessonType } = await import('@prisma/client');
+      const { LessonType } = await import('@/lib/enums');
       const lessonsDir = path.join(process.cwd(), 'prisma', 'seed-data', 'lessons');
       const files = fs.readdirSync(lessonsDir).filter(f => f.startsWith('thai-g3-unit') && f.endsWith('.json'));
 
