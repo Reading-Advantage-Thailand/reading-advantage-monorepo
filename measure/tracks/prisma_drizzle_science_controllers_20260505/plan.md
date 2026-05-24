@@ -254,7 +254,7 @@ be green against BEFORE and stay green against AFTER.
 
 ## Phase 5: AI types & remaining lib
 
-- [~] Task: Migrate `lib/ai/types.ts` (types-only — swap `@prisma/client` type imports for `typeof <table>.$inferSelect`)
+- [x] [59c8251] Task: Migrate `lib/ai/types.ts` (types-only — swap `@prisma/client` type imports for `typeof <table>.$inferSelect`)
 - [ ] Task: Re-grep `lib/` and `app/api/` for any file still importing Prisma and migrate it (catch-all for inventory drift)
 - [ ] Task: Measure - User Manual Verification 'Remaining lib' (Protocol in workflow.md)
 
