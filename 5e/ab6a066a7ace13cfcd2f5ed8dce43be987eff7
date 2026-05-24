@@ -1,0 +1,6 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: Close science_auth tech-debt entry (plan line 292)
+Decision: A (close)
+Rationale: Spec AC #5 explicitly mandates closure; original concern (Prisma in science-advantage) fully resolved by track Phase 7; residuals are non-Prisma and already enumerated in auth_strategy_review (fdd3298).
+Closed-by refs: line-282 Prisma deletion commits (1bd0356, df2ec5e, 52881df, d2d596e, eab9aee, c90090d, d54afd0) + a1fe9e8 line-288 clean install+build+test verification
+Residual blockers: tracked in auth_strategy_review entry (updated 2026-05-24 in fdd3298) — testing-library matcher narrowing, INTERN role, next@16 dup types, etc.
