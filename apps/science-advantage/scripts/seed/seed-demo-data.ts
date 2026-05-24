@@ -1,5 +1,16 @@
-import { PrismaClient, StandardsAlignment } from '@prisma/client';
+#!/usr/bin/env tsx
 import bcrypt from 'bcryptjs';
+
+import { db, and, eq } from '@reading-advantage/db';
+import {
+  accounts,
+  scienceClassStudents,
+  scienceClasses,
+  scienceStandardMastery,
+  scienceStandards,
+  users,
+} from '@reading-advantage/db/schema';
+
 import { seedCurriculumUnits } from './seed-curriculum-units';
 
 interface DemoUserData {
@@ -11,12 +22,19 @@ interface DemoUserData {
   gradeLevel: number | null;
 }
 
-export async function seedDemoData(prisma: PrismaClient): Promise<void> {
+interface SeededUser {
+  id: string;
+  username: string;
+  role: DemoUserData['role'];
+}
+
+export async function seedDemoData(): Promise<void> {
   console.log('👥 Seeding demo users and classes...\n');
 
   // 1. Seed demo users
   const password = 'Password123!';
   const hashedPassword = await bcrypt.hash(password, 10);
+  const now = new Date();
 
   const demoUsers: DemoUserData[] = [
     {
@@ -53,86 +71,95 @@ export async function seedDemoData(prisma: PrismaClient): Promise<void> {
     },
   ];
 
-  const users: Record<string, any> = {};
+  const seededUsers: Record<string, SeededUser> = {};
   for (const userData of demoUsers) {
-    const user = await prisma.user.upsert({
-      where: { username: userData.username },
-      update: {},
-      create: {
-        id: `demo_${userData.role.toLowerCase()}`,
-        ...userData,
-        emailVerified: false,
-        image: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+    const userId = `demo_${userData.role.toLowerCase()}`;
 
-    // Create account for Better Auth
-    const accountId = `${user.id}_credential`;
-    await prisma.account.upsert({
-      where: { id: accountId },
-      update: {},
-      create: {
+    await db
+      .insert(users)
+      .values({
+        id: userId,
+        username: userData.username,
+        displayUsername: userData.displayUsername,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        gradeLevel: userData.gradeLevel,
+        image: null,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .onConflictDoNothing({ target: users.username });
+
+    // Create Better-Auth credential account.
+    const accountId = `${userId}_credential`;
+    await db
+      .insert(accounts)
+      .values({
         id: accountId,
-        userId: user.id,
-        accountId: user.username,
+        userId,
         providerId: 'credential',
         password: hashedPassword,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+        createdAt: now,
+        updatedAt: now,
+      })
+      .onConflictDoNothing({ target: accounts.id });
 
-    users[userData.role] = user;
+    seededUsers[userData.role] = { id: userId, username: userData.username, role: userData.role };
     console.log(`  ✓ Created ${userData.role} user: ${userData.username}`);
   }
 
   // 2. Create demo class
   console.log('\n🏫 Creating demo class...');
-  const teacher = users['TEACHER'];
+  const teacher = seededUsers['TEACHER'];
 
-  const demoClass = await prisma.class.upsert({
-    where: { joinCode: 'DEMO3T' },
-    update: {},
-    create: {
+  const [demoClass] = await db
+    .insert(scienceClasses)
+    .values({
       name: 'Grade 3 Science (Thai Standards)',
       gradeLevel: 3,
       standardsAlignment: 'THAI',
       joinCode: 'DEMO3T',
       teacherId: teacher.id,
-    },
-  });
+    })
+    .onConflictDoUpdate({
+      target: scienceClasses.joinCode,
+      set: { updatedAt: new Date() },
+    })
+    .returning({ id: scienceClasses.id, name: scienceClasses.name, joinCode: scienceClasses.joinCode });
+
+  if (!demoClass) {
+    throw new Error('Failed to upsert demo class');
+  }
   console.log(`  ✓ Created class: ${demoClass.name} (Join code: ${demoClass.joinCode})`);
 
   // 3. Create curriculum units for demo class
-  await seedCurriculumUnits(prisma, {
-    framework: 'THAI' as StandardsAlignment,
+  await seedCurriculumUnits({
+    framework: 'THAI',
     gradeLevel: 3,
     classId: demoClass.id,
   });
 
-  // 4. Enroll demo student in class
-  const student = users['STUDENT'];
-  await prisma.class.update({
-    where: { id: demoClass.id },
-    data: {
-      students: {
-        connect: { id: student.id },
-      },
-    },
-  });
+  // 4. Enroll demo student in class (junction table)
+  const student = seededUsers['STUDENT'];
+  await db
+    .insert(scienceClassStudents)
+    .values({ classId: demoClass.id, studentId: student.id })
+    .onConflictDoNothing();
   console.log(`✓ Enrolled demo student in ${demoClass.name}`);
 
   // 5. Seed mastery data for demo student
   console.log('\n📊 Seeding mastery data for demo student...');
-  const standards = await prisma.standard.findMany({
-    where: {
-      framework: 'THAI',
-      gradeLevel: 3,
-    },
-    take: 12, // Get first 12 standards across different strands
-  });
+  const standards = await db
+    .select({ id: scienceStandards.id })
+    .from(scienceStandards)
+    .where(
+      and(
+        eq(scienceStandards.framework, 'THAI'),
+        eq(scienceStandards.gradeLevel, 3),
+      ),
+    )
+    .limit(12);
 
   if (standards.length > 0) {
     const masteryData = [
@@ -153,23 +180,26 @@ export async function seedDemoData(prisma: PrismaClient): Promise<void> {
     for (let i = 0; i < Math.min(standards.length, masteryData.length); i++) {
       const standard = standards[i];
       const data = masteryData[i];
+      const lastAssessedAt = new Date(
+        Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
+      );
 
-      await prisma.standardMastery.upsert({
-        where: {
-          studentId_standardId: {
-            studentId: student.id,
-            standardId: standard.id,
-          },
-        },
-        update: {},
-        create: {
+      // decimal(3,2) — write as string to preserve precision.
+      await db
+        .insert(scienceStandardMastery)
+        .values({
           studentId: student.id,
           standardId: standard.id,
-          masteryLevel: data.level,
+          masteryLevel: String(data.level),
           evidenceCount: data.evidence,
-          lastAssessedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000), // Random time within last week
-        },
-      });
+          lastAssessedAt,
+        })
+        .onConflictDoNothing({
+          target: [
+            scienceStandardMastery.studentId,
+            scienceStandardMastery.standardId,
+          ],
+        });
     }
     console.log(`  ✓ Created ${Math.min(standards.length, masteryData.length)} mastery records for demo student`);
   } else {
@@ -189,4 +219,14 @@ export async function seedDemoData(prisma: PrismaClient): Promise<void> {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('Grade 3 (Thai) - Join code: DEMO3T');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+}
+
+const isDirectExecution = process.argv[1]?.includes('seed-demo-data');
+if (isDirectExecution) {
+  seedDemoData()
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error('❌ seedDemoData failed:', err);
+      process.exit(1);
+    });
 }
