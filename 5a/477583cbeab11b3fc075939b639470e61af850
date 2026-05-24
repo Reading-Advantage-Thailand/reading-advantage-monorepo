@@ -1,0 +1,6 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: tests/schema.test.ts → deleted
+Decision: delete because the entire file tests Prisma client behavior against the Prisma schema (create/findUnique/include relations, framework_code unique constraint, FK violations). It instantiates `new PrismaClient()` directly and writes to the (no-longer-Prisma-managed) test DB; under Drizzle, schema-level guarantees are enforced by the migrations in packages/db, and CRUD against science_* tables is covered by the co-located *.integration.test.ts suites added throughout Phases 1–4 (e.g. lessons/[lessonSlug]/route.integration.test.ts, classes/[classId]/curriculum/route.integration.test.ts, mastery-worker.integration.test.ts, badges.integration.test.ts, get-class-detail.integration.test.ts, get-student-classes.integration.test.ts).
+Coverage: superseded by Drizzle-based co-located integration suites + Drizzle migration testing in packages/db
+Notes: No importers found via grep. Test was failing or unrunnable post-Track 3 (Prisma no longer provisions the test DB per AGENTS.md).
+Behavior-preserving (orphaned test of removed surface).
