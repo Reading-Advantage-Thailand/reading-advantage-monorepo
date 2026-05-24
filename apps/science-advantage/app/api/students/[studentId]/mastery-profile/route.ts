@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { and, asc, db, desc, eq, gt, inArray, like, or } from '@reading-advantage/db';
+import {
+  scienceMasteryRuns,
+  scienceStandardMastery,
+  scienceStandards,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
-import prisma from '@/lib/prisma';
 
-// Query params schema
 const querySchema = z.object({
   strand: z.string().optional(),
   grade: z.coerce.number().int().min(3).max(6).optional(),
@@ -19,7 +24,6 @@ const querySchema = z.object({
     .transform((val) => val === 'true'),
 });
 
-// Mastery thresholds
 const MASTERY_THRESHOLDS = {
   CRITICAL: 0.6,
   CAUTION: 0.8,
@@ -37,13 +41,11 @@ function getMasteryColorToken(level: number): string {
   return 'strong';
 }
 
-// Extract strand code from standard code (e.g., "Sc1.1-G3" -> "Sc1")
 function extractStrandCode(standardCode: string): string {
   const match = standardCode.match(/^([A-Za-z]+\d+)/);
   return match ? match[1] : 'Unknown';
 }
 
-// Map strand codes to titles
 function getStrandTitle(strandCode: string): string {
   const strandTitles: Record<string, string> = {
     Sc1: 'Living Things',
@@ -77,7 +79,6 @@ export async function GET(
     const resolvedParams = await params;
     const { studentId } = resolvedParams;
 
-    // Authorization: student can only access self, or teacher/admin with dev impersonation
     const isOwnProfile = session.user.id === studentId;
     const isDev = env.DEV_AUTH_ENABLED;
     const isTeacherOrAdmin =
@@ -91,7 +92,6 @@ export async function GET(
       );
     }
 
-    // Parse query params
     const url = new URL(request.url);
     const queryParams = {
       strand: url.searchParams.get('strand') || undefined,
@@ -105,11 +105,15 @@ export async function GET(
     const { strand, limit, cursor, includeRecommendations } =
       querySchema.parse(queryParams);
 
-    // Get student info
-    const student = await prisma.user.findUnique({
-      where: { id: studentId },
-      select: { id: true, name: true, gradeLevel: true },
-    });
+    const [student] = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        gradeLevel: users.gradeLevel,
+      })
+      .from(users)
+      .where(eq(users.id, studentId))
+      .limit(1);
 
     if (!student) {
       return NextResponse.json(
@@ -118,42 +122,36 @@ export async function GET(
       );
     }
 
-    // Check if there are any pending mastery runs
-    const pendingRuns = await prisma.masteryRun.findFirst({
-      where: {
-        studentId,
-        status: { in: ['PENDING', 'PROCESSING'] },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+    const [pendingRun] = await db
+      .select({ attemptId: scienceMasteryRuns.attemptId })
+      .from(scienceMasteryRuns)
+      .where(
+        and(
+          eq(scienceMasteryRuns.studentId, studentId),
+          or(
+            eq(scienceMasteryRuns.status, 'PENDING'),
+            eq(scienceMasteryRuns.status, 'PROCESSING')
+          )
+        )
+      )
+      .orderBy(desc(scienceMasteryRuns.createdAt))
+      .limit(1);
 
-    const status = pendingRuns ? 'CALCULATING' : 'READY';
-    const retryAfterSeconds = pendingRuns ? 10 : undefined;
+    const status = pendingRun ? 'CALCULATING' : 'READY';
+    const retryAfterSeconds = pendingRun ? 10 : undefined;
 
-    // Build mastery query filters
-    const masteryWhere: {
-      studentId: string;
-      standardId?: { in: string[] };
-      id?: { gt: string };
-    } = {
-      studentId,
-    };
-
-    // Filter by strand if provided
+    let strandStandardIds: string[] | null = null;
     if (strand) {
-      const standardsInStrand = await prisma.standard.findMany({
-        where: {
-          code: { startsWith: strand },
-        },
-        select: { id: true },
-      });
+      const standardsInStrand = await db
+        .select({ id: scienceStandards.id })
+        .from(scienceStandards)
+        .where(like(scienceStandards.code, `${strand}%`));
 
       if (standardsInStrand.length === 0) {
-        // No standards in this strand
         return NextResponse.json({
           status,
           generatedAt: new Date().toISOString(),
-          retryAfterSeconds,
+          ...(retryAfterSeconds && { retryAfterSeconds }),
           student: {
             id: student.id,
             name: student.name,
@@ -164,40 +162,42 @@ export async function GET(
         });
       }
 
-      masteryWhere.standardId = {
-        in: standardsInStrand.map((s) => s.id),
-      };
+      strandStandardIds = standardsInStrand.map((s) => s.id);
     }
 
-    // Cursor pagination
+    const filters = [eq(scienceStandardMastery.studentId, studentId)];
+    if (strandStandardIds) {
+      filters.push(inArray(scienceStandardMastery.standardId, strandStandardIds));
+    }
     if (cursor) {
-      masteryWhere.id = { gt: cursor };
+      filters.push(gt(scienceStandardMastery.id, cursor));
     }
 
-    // Fetch mastery records with standard details
-    const masteryRecords = await prisma.standardMastery.findMany({
-      where: masteryWhere,
-      include: {
-        standard: {
-          select: {
-            id: true,
-            code: true,
-            description: true,
-            framework: true,
-            gradeLevel: true,
-          },
-        },
-      },
-      orderBy: { id: 'asc' },
-      take: limit + 1, // Fetch one extra to check if there's a next page
-    });
+    const masteryRows = await db
+      .select({
+        id: scienceStandardMastery.id,
+        standardId: scienceStandardMastery.standardId,
+        masteryLevel: scienceStandardMastery.masteryLevel,
+        evidenceCount: scienceStandardMastery.evidenceCount,
+        lastAssessedAt: scienceStandardMastery.lastAssessedAt,
+        standardCode: scienceStandards.code,
+        standardDescription: scienceStandards.description,
+        standardFramework: scienceStandards.framework,
+        standardGradeLevel: scienceStandards.gradeLevel,
+      })
+      .from(scienceStandardMastery)
+      .innerJoin(
+        scienceStandards,
+        eq(scienceStandards.id, scienceStandardMastery.standardId)
+      )
+      .where(and(...filters))
+      .orderBy(asc(scienceStandardMastery.id))
+      .limit(limit + 1);
 
-    // Check if there's a next page
-    const hasNextPage = masteryRecords.length > limit;
-    const records = hasNextPage ? masteryRecords.slice(0, limit) : masteryRecords;
-    const nextCursor = hasNextPage ? records[records.length - 1]?.id : null;
+    const hasNextPage = masteryRows.length > limit;
+    const records = hasNextPage ? masteryRows.slice(0, limit) : masteryRows;
+    const nextCursor = hasNextPage ? records[records.length - 1]?.id ?? null : null;
 
-    // Group by strand
     const strandMap = new Map<
       string,
       {
@@ -222,7 +222,7 @@ export async function GET(
     >();
 
     for (const record of records) {
-      const strandCode = extractStrandCode(record.standard.code);
+      const strandCode = extractStrandCode(record.standardCode);
       const masteryLevel = Number(record.masteryLevel);
 
       if (!strandMap.has(strandCode)) {
@@ -235,9 +235,9 @@ export async function GET(
 
       const standardData = {
         standardId: record.standardId,
-        code: record.standard.code,
-        titleEn: record.standard.description,
-        titleTh: record.standard.description, // TODO: Add Thai translations when schema supports it
+        code: record.standardCode,
+        titleEn: record.standardDescription,
+        titleTh: record.standardDescription,
         masteryLevel,
         masteryLabel: getMasteryLabel(masteryLevel),
         masteryColorToken: getMasteryColorToken(masteryLevel),
@@ -245,7 +245,7 @@ export async function GET(
         lastAssessedAt: record.lastAssessedAt.toISOString(),
         ...(includeRecommendations && {
           aiAnnotation: {
-            recommended: false, // TODO: Integrate with AI recommendation service
+            recommended: false,
             traceId: '',
           },
         }),
@@ -254,7 +254,6 @@ export async function GET(
       strandMap.get(strandCode)!.standards.push(standardData);
     }
 
-    // Calculate mastery averages for each strand and sort strands by average (weakest first)
     const strands = Array.from(strandMap.values())
       .map((strand) => {
         const totalMastery = strand.standards.reduce(
@@ -275,7 +274,6 @@ export async function GET(
 
     const durationMs = Date.now() - startedAt;
 
-    // Emit metrics
     metrics.increment('mastery_profile_requests_total', 1, { studentId });
     metrics.observe('mastery_profile_latency_ms', durationMs, { studentId });
 
@@ -285,7 +283,6 @@ export async function GET(
       });
     }
 
-    // Log trace
     logger.info('mastery.profile.fetch', {
       studentId,
       status,
