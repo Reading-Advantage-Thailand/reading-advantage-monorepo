@@ -277,7 +277,7 @@ be green against BEFORE and stay green against AFTER.
 
 ## Phase 7: Prisma removal & final verification
 
-- [~] Task: Confirm zero non-generated Prisma references
+- [x] [06a4117] Task: Confirm zero non-generated Prisma references [06a4117: lib/platform/session-cleanup.ts (renamed DI param 'prisma'→'client' and interface 'PrismaSession'→'SessionStore' to drop stale Prisma naming; behavior-preserving, dead code consumed only by tests). All other matches are Phase-7-owned (lib/prisma.ts, package.json `@prisma/client`) or harmless comments/docs/archived measure logs.]
     - [ ] Sub-task: `grep -rln "@prisma\|@/lib/prisma" apps/science-advantage --include=*.ts --include=*.tsx | grep -vE "node_modules|/.next/|lib/generated"` returns nothing
 - [ ] Task: Delete Prisma surface
     - [ ] Sub-task: Delete `apps/science-advantage/lib/prisma.ts` and `lib/prisma.test.ts`
