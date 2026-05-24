@@ -1,16 +1,23 @@
 import { z } from 'zod';
 
-import { ClassModelSchema } from '@/lib/generated/zod/schemas/variants/pure';
-
 /**
- * Base schema leverages the Prisma-generated `ClassModelSchema`
- * so core fields stay aligned with the underlying data model.
+ * Hand-written replacement for the previously Prisma-generated
+ * `ClassModelSchema.pick({ id, name, gradeLevel, teacherId })`. Constraints
+ * mirror the original Prisma model exactly:
+ *   id           string (cuid/uuid — kept as raw string, matching prior shape)
+ *   name         string, 3–100 chars, trimmed
+ *   gradeLevel   integer, 3–6 inclusive
+ *   teacherId    string
+ *
+ * Track 3 (prisma_drizzle_science_controllers_20260505) removes the
+ * `lib/generated/zod/` dependency.
  */
-const studentClassBaseSchema = ClassModelSchema.pick({
-  id: true,
-  name: true,
-  gradeLevel: true,
-  teacherId: true,
+
+const studentClassBaseSchema = z.object({
+  id: z.string(),
+  name: z.string().min(3).max(100).trim(),
+  gradeLevel: z.number().int().min(3).max(6),
+  teacherId: z.string(),
 });
 
 export const studentEnrolledClassSchema = studentClassBaseSchema.extend({

@@ -1,35 +1,44 @@
 import { z } from 'zod';
 
-import { ClassCreateInputObjectZodSchema } from '@/lib/generated/zod/schemas/objects/ClassCreateInput.schema';
-import { ClassUpdateInputObjectZodSchema } from '@/lib/generated/zod/schemas/objects/ClassUpdateInput.schema';
+import { STANDARDS_ALIGNMENT_VALUES } from '@/lib/enums';
 import { isValidJoinCodeFormat } from '@/lib/utils/join-code-format';
 
 /**
- * Base schema derived from Prisma's `ClassCreateInput` definition.
- * Picking only the properties our API accepts directly from the client.
+ * Hand-written replacement for the previously Prisma-generated
+ * `ClassCreateInput`/`ClassUpdateInput` Zod schemas. Constraints mirror
+ * the original Prisma model exactly:
+ *   name               string, 3–100 chars, trimmed
+ *   gradeLevel         integer, 3–6 inclusive
+ *   standardsAlignment enum from `@/lib/enums`
+ *
+ * Track 3 (prisma_drizzle_science_controllers_20260505) removes the
+ * `lib/generated/zod/` dependency; these schemas preserve the prior
+ * validation contract so callers stay unchanged.
  */
-const baseCreateClassSchema = ClassCreateInputObjectZodSchema.pick({
-  name: true,
-  gradeLevel: true,
-  standardsAlignment: true,
-});
+
+const classNameSchema = z.string().min(3).max(100).trim();
+const classGradeLevelSchema = z.number().int().min(3).max(6);
+const classStandardsAlignmentSchema = z.enum(STANDARDS_ALIGNMENT_VALUES);
 
 /**
  * Server-side validation for creating a class.
- * Directly mirrors the Prisma schema so future changes propagate automatically.
  */
-export const createClassSchema = baseCreateClassSchema;
+export const createClassSchema = z.object({
+  name: classNameSchema,
+  gradeLevel: classGradeLevelSchema,
+  standardsAlignment: classStandardsAlignmentSchema,
+});
 
 export type CreateClassInput = z.infer<typeof createClassSchema>;
 
 /**
- * Update schema derived from Prisma's `ClassUpdateInput`.
- * Restricts to teacher-editable fields and keeps optionality in sync with Prisma.
+ * Update schema: restricts to teacher-editable fields. All fields are
+ * optional, matching the original Prisma-derived shape.
  */
-export const updateClassSchema = ClassUpdateInputObjectZodSchema.pick({
-  name: true,
-  gradeLevel: true,
-  standardsAlignment: true,
+export const updateClassSchema = z.object({
+  name: classNameSchema.optional(),
+  gradeLevel: classGradeLevelSchema.optional(),
+  standardsAlignment: classStandardsAlignmentSchema.optional(),
 });
 
 export type UpdateClassInput = z.infer<typeof updateClassSchema>;
