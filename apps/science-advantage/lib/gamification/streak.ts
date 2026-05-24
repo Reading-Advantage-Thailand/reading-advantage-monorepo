@@ -1,4 +1,5 @@
-import prisma from '@/lib/prisma';
+import { db, eq } from '@reading-advantage/db';
+import { gamificationProfiles } from '@reading-advantage/db/schema';
 
 function isSameDay(date1: Date, date2: Date): boolean {
   return (
@@ -43,9 +44,11 @@ export async function updateStreakForProfile(
   profileId: string,
   currentTime: Date
 ): Promise<{ streak: number; milestoneBonus: number }> {
-  const profile = await prisma.gamificationProfile.findUnique({
-    where: { id: profileId },
-  });
+  const [profile] = await db
+    .select()
+    .from(gamificationProfiles)
+    .where(eq(gamificationProfiles.id, profileId))
+    .limit(1);
 
   if (!profile) {
     throw new Error(`GamificationProfile not found: ${profileId}`);
@@ -56,13 +59,14 @@ export async function updateStreakForProfile(
     currentTime
   );
 
-  await prisma.gamificationProfile.update({
-    where: { id: profileId },
-    data: {
+  await db
+    .update(gamificationProfiles)
+    .set({
       streak,
       lastActiveAt,
-    },
-  });
+      updatedAt: new Date(),
+    })
+    .where(eq(gamificationProfiles.id, profileId));
 
   const milestoneBonus = getStreakMilestoneBonus(streak);
 
