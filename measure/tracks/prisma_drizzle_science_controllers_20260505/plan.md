@@ -266,7 +266,7 @@ be green against BEFORE and stay green against AFTER.
 
 ## Phase 6: Seeds, scripts, generated artifacts & leftover test imports
 
-- [ ] Task: Rewrite or retire `prisma/seed-functions/*` (seed-activity-data, seed-curriculum-units, seed-demo-data, seed-lessons, seed-questions, seed-standards, validate-json) against Drizzle
+- [~] Task: Rewrite or retire `prisma/seed-functions/*` (seed-activity-data, seed-curriculum-units, seed-demo-data, seed-lessons, seed-questions, seed-standards, validate-json) against Drizzle
 - [ ] Task: Rewrite or retire `prisma/seed.ts`, `prisma/seed-demo-users.ts`, root `seed-users.ts`, `create-test-users.ts` against Drizzle
 - [~] Task: Migrate `scripts/*` (backfill-mastery [9c24b7a], dev-interventions [ab96871], migrate-lesson-content [54d7cb5], **seed-activity-data DEFERRED — blocked by `prisma/seed-functions/seed-activity-data.ts` Phase 6 task (line 263)**, test-curriculum-endpoint [37f2066]) and `scripts/__tests__/migrate-lesson-content.test.ts` [f6996de]
 - [x] Task: Migrate `prisma/migrations/20260429000000_add_lesson_bilingual_fields/backfill-thai-titles.ts` (one-off backfill — retire if already applied) — _ported to Drizzle and moved to `scripts/backfill-thai-titles.ts`; original Prisma .ts deleted; migration.sql left for Phase 7 wholesale removal_ [bb2a7ad]
