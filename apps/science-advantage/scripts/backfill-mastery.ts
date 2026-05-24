@@ -7,10 +7,30 @@
  *   tsx scripts/backfill-mastery.ts [--from=2025-10-01] [--to=2025-10-29] [--student=student_123] [--batch=200] [--dry-run]
  */
 
-import { MasteryRunStatus, Prisma } from '@prisma/client';
+import {
+  and,
+  asc,
+  db,
+  eq,
+  gt,
+  gte,
+  inArray,
+  isNotNull,
+  lte,
+  or,
+} from '@reading-advantage/db';
+import type { SQL } from 'drizzle-orm';
+import {
+  scienceAttempts,
+  scienceMasteryRuns,
+  scienceQuestionResponses,
+  scienceQuestionStandards,
+  scienceQuizQuestions,
+  scienceStandardMastery,
+} from '@reading-advantage/db/schema';
 
 import { calculateMasteryUpdates, buildResponseInput } from '@/lib/ai/mastery-calculator';
-import prisma from '@/lib/prisma';
+import { MasteryRunStatus } from '@/lib/enums';
 
 type CliOptions = {
   from?: Date;
@@ -84,28 +104,56 @@ async function processAttempt(
   studentId: string,
   options: CliOptions
 ): Promise<AttemptResult> {
-  const attempt = await prisma.attempt.findUnique({
-    where: { id: attemptId },
-    include: {
-      questionResponses: {
-        include: {
-          question: {
-            include: { standards: true },
-          },
-        },
-      },
-    },
-  });
+  const [attempt] = await db
+    .select({
+      id: scienceAttempts.id,
+      completedAt: scienceAttempts.completedAt,
+    })
+    .from(scienceAttempts)
+    .where(eq(scienceAttempts.id, attemptId))
+    .limit(1);
 
   if (!attempt || !attempt.completedAt) {
     return { attemptId, studentId, updated: 0, skipped: 0, status: 'skipped' };
   }
 
-  const responses = attempt.questionResponses.map(response =>
+  const responseRows = await db
+    .select({
+      questionId: scienceQuestionResponses.questionId,
+      isCorrect: scienceQuestionResponses.isCorrect,
+      answeredAt: scienceQuestionResponses.answeredAt,
+      points: scienceQuizQuestions.points,
+    })
+    .from(scienceQuestionResponses)
+    .innerJoin(
+      scienceQuizQuestions,
+      eq(scienceQuizQuestions.id, scienceQuestionResponses.questionId)
+    )
+    .where(eq(scienceQuestionResponses.attemptId, attemptId));
+
+  const questionIds = Array.from(new Set(responseRows.map((r) => r.questionId)));
+  const standardLinks = questionIds.length
+    ? await db
+        .select({
+          questionId: scienceQuestionStandards.questionId,
+          standardId: scienceQuestionStandards.standardId,
+        })
+        .from(scienceQuestionStandards)
+        .where(inArray(scienceQuestionStandards.questionId, questionIds))
+    : [];
+
+  const standardsByQuestion = new Map<string, string[]>();
+  for (const link of standardLinks) {
+    const list = standardsByQuestion.get(link.questionId) ?? [];
+    list.push(link.standardId);
+    standardsByQuestion.set(link.questionId, list);
+  }
+
+  const responses = responseRows.map((response) =>
     buildResponseInput({
-      standardIds: response.question.standards.map(standard => standard.id),
+      standardIds: standardsByQuestion.get(response.questionId) ?? [],
       isCorrect: response.isCorrect,
-      weight: response.question.points,
+      weight: response.points,
       answeredAt: response.answeredAt ?? attempt.completedAt ?? new Date(),
     })
   );
@@ -122,14 +170,22 @@ async function processAttempt(
   }
 
   if (options.dryRun) {
-    const existingMastery = await prisma.standardMastery.findMany({
-      where: {
-        studentId,
-        standardId: { in: Array.from(standardIds) },
-      },
-    });
+    const existingMastery = await db
+      .select({
+        standardId: scienceStandardMastery.standardId,
+        masteryLevel: scienceStandardMastery.masteryLevel,
+        evidenceCount: scienceStandardMastery.evidenceCount,
+        lastAssessedAt: scienceStandardMastery.lastAssessedAt,
+      })
+      .from(scienceStandardMastery)
+      .where(
+        and(
+          eq(scienceStandardMastery.studentId, studentId),
+          inArray(scienceStandardMastery.standardId, Array.from(standardIds))
+        )
+      );
 
-    const normalized = existingMastery.map(record => ({
+    const normalized = existingMastery.map((record) => ({
       standardId: record.standardId,
       masteryLevel: Number(record.masteryLevel),
       evidenceCount: record.evidenceCount,
@@ -150,9 +206,13 @@ async function processAttempt(
     };
   }
 
-  const result = await prisma.$transaction(
-    async tx => {
-      const run = await tx.masteryRun.findUnique({ where: { attemptId } });
+  const result = await db.transaction(
+    async (tx) => {
+      const [run] = await tx
+        .select()
+        .from(scienceMasteryRuns)
+        .where(eq(scienceMasteryRuns.attemptId, attemptId))
+        .limit(1);
 
       if (
         run &&
@@ -163,31 +223,38 @@ async function processAttempt(
       }
 
       if (run) {
-        await tx.masteryRun.update({
-          where: { attemptId },
-          data: {
+        await tx
+          .update(scienceMasteryRuns)
+          .set({
             status: MasteryRunStatus.PROCESSING,
             lastError: null,
-          },
-        });
+            updatedAt: new Date(),
+          })
+          .where(eq(scienceMasteryRuns.attemptId, attemptId));
       } else {
-        await tx.masteryRun.create({
-          data: {
-            attemptId,
-            studentId,
-            status: MasteryRunStatus.PROCESSING,
-          },
+        await tx.insert(scienceMasteryRuns).values({
+          attemptId,
+          studentId,
+          status: MasteryRunStatus.PROCESSING,
         });
       }
 
-      const existingMastery = await tx.standardMastery.findMany({
-        where: {
-          studentId,
-          standardId: { in: Array.from(standardIds) },
-        },
-      });
+      const existingMastery = await tx
+        .select({
+          standardId: scienceStandardMastery.standardId,
+          masteryLevel: scienceStandardMastery.masteryLevel,
+          evidenceCount: scienceStandardMastery.evidenceCount,
+          lastAssessedAt: scienceStandardMastery.lastAssessedAt,
+        })
+        .from(scienceStandardMastery)
+        .where(
+          and(
+            eq(scienceStandardMastery.studentId, studentId),
+            inArray(scienceStandardMastery.standardId, Array.from(standardIds))
+          )
+        );
 
-      const normalized = existingMastery.map(record => ({
+      const normalized = existingMastery.map((record) => ({
         standardId: record.standardId,
         masteryLevel: Number(record.masteryLevel),
         evidenceCount: record.evidenceCount,
@@ -200,41 +267,43 @@ async function processAttempt(
       });
 
       for (const update of updates) {
-        await tx.standardMastery.upsert({
-          where: {
-            studentId_standardId: {
-              studentId,
-              standardId: update.standardId,
-            },
-          },
-          update: {
-            masteryLevel: update.masteryLevel,
-            evidenceCount: update.evidenceCount,
-            lastAssessedAt: update.lastAssessedAt,
-          },
-          create: {
+        await tx
+          .insert(scienceStandardMastery)
+          .values({
             studentId,
             standardId: update.standardId,
-            masteryLevel: update.masteryLevel,
+            masteryLevel: String(update.masteryLevel),
             evidenceCount: update.evidenceCount,
             lastAssessedAt: update.lastAssessedAt,
-          },
-        });
+          })
+          .onConflictDoUpdate({
+            target: [
+              scienceStandardMastery.studentId,
+              scienceStandardMastery.standardId,
+            ],
+            set: {
+              masteryLevel: String(update.masteryLevel),
+              evidenceCount: update.evidenceCount,
+              lastAssessedAt: update.lastAssessedAt,
+              updatedAt: new Date(),
+            },
+          });
       }
 
-      await tx.masteryRun.update({
-        where: { attemptId },
-        data: {
+      await tx
+        .update(scienceMasteryRuns)
+        .set({
           status: MasteryRunStatus.COMPLETED,
           updatedCount: updates.length,
           lastError: null,
-        },
-      });
+          updatedAt: new Date(),
+        })
+        .where(eq(scienceMasteryRuns.attemptId, attemptId));
 
       return { updated: updates.length, skipped };
     },
     {
-      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      isolationLevel: 'serializable',
     }
   );
 
@@ -258,34 +327,48 @@ async function main() {
   if (options.student) console.log(`• Student filter: ${options.student}`);
   console.log('');
 
-  const where: Prisma.AttemptWhereInput = {
-    completedAt: { not: null },
-  };
-
+  const conditions: SQL[] = [isNotNull(scienceAttempts.completedAt)];
   if (options.student) {
-    where.studentId = options.student;
+    conditions.push(eq(scienceAttempts.studentId, options.student));
+  }
+  if (options.from) {
+    conditions.push(gte(scienceAttempts.completedAt, options.from));
+  }
+  if (options.to) {
+    conditions.push(lte(scienceAttempts.completedAt, options.to));
   }
 
-  if (options.from || options.to) {
-    where.completedAt = {
-      ...(options.from ? { gte: options.from } : {}),
-      ...(options.to ? { lte: options.to } : {}),
-    };
-  }
-
-  let cursor: string | undefined;
+  let cursor: { completedAt: Date; id: string } | undefined;
   let totalProcessed = 0;
   let totalUpdated = 0;
   let totalSkipped = 0;
   let totalAttempts = 0;
 
   while (true) {
-    const attempts = await prisma.attempt.findMany({
-      where,
-      orderBy: { completedAt: 'asc' },
-      take: options.batch,
-      ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
-    });
+    const cursorConditions = cursor
+      ? [
+          or(
+            gt(scienceAttempts.completedAt, cursor.completedAt),
+            and(
+              eq(scienceAttempts.completedAt, cursor.completedAt),
+              gt(scienceAttempts.id, cursor.id)
+            )
+          ),
+        ]
+      : [];
+
+    const whereExpr = and(...conditions, ...cursorConditions);
+
+    const attempts = await db
+      .select({
+        id: scienceAttempts.id,
+        studentId: scienceAttempts.studentId,
+        completedAt: scienceAttempts.completedAt,
+      })
+      .from(scienceAttempts)
+      .where(whereExpr)
+      .orderBy(asc(scienceAttempts.completedAt), asc(scienceAttempts.id))
+      .limit(options.batch);
 
     if (!attempts.length) {
       break;
@@ -311,7 +394,11 @@ async function main() {
       }
     }
 
-    cursor = attempts[attempts.length - 1].id;
+    const last = attempts[attempts.length - 1];
+    if (!last.completedAt) {
+      break;
+    }
+    cursor = { completedAt: last.completedAt, id: last.id };
   }
 
   console.log('\n✅ Backfill complete');
@@ -319,11 +406,9 @@ async function main() {
   console.log(`• Attempts processed: ${totalProcessed}`);
   console.log(`• Mastery rows updated: ${totalUpdated}`);
   console.log(`• Responses without standards: ${totalSkipped}`);
-
-  await prisma.$disconnect();
 }
 
-main().catch(error => {
+main().catch((error) => {
   console.error('❌ Backfill failed:', error instanceof Error ? error.message : error);
   process.exit(1);
 });
