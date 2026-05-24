@@ -12,7 +12,7 @@
     "test:watch": "vitest",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test",
-    "seed": "tsx prisma/seed.ts",
+    "seed": "tsx scripts/seed.ts",
     "seed:demo-users": "tsx prisma/seed-demo-users.ts",
     "dev:reset": "npx prisma db push --force-reset && npm run seed",
     "dev:interventions": "tsx scripts/dev-interventions.ts",
