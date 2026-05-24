@@ -1,18 +1,17 @@
-import { PrismaClient } from '@prisma/client';
-import { seedActivityData } from '../prisma/seed-functions/seed-activity-data';
+#!/usr/bin/env tsx
+import { seedActivityData } from './seed/seed-activity-data';
 
-const prisma = new PrismaClient();
-
-async function main() {
+async function main(): Promise<void> {
   try {
-    await seedActivityData(prisma);
+    await seedActivityData();
     console.log('✅ Activity data seeded successfully!');
   } catch (error) {
     console.error('❌ Error seeding activity data:', error);
     throw error;
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
