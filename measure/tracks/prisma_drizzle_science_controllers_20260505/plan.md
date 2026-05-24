@@ -277,7 +277,7 @@ be green against BEFORE and stay green against AFTER.
 
 ## Phase 7: Prisma removal & final verification
 
-- [ ] Task: Confirm zero non-generated Prisma references
+- [~] Task: Confirm zero non-generated Prisma references
     - [ ] Sub-task: `grep -rln "@prisma\|@/lib/prisma" apps/science-advantage --include=*.ts --include=*.tsx | grep -vE "node_modules|/.next/|lib/generated"` returns nothing
 - [ ] Task: Delete Prisma surface
     - [ ] Sub-task: Delete `apps/science-advantage/lib/prisma.ts` and `lib/prisma.test.ts`
