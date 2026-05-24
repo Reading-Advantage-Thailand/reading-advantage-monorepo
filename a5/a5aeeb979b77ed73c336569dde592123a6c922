@@ -1,0 +1,12 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: students/[studentId]/classes/[classId]/analytics route → Drizzle
+Tests: 5/5 pass (route.integration.test.ts), lint clean
+Notes:
+- prisma.class.findUnique({include:{students:where}}) → SELECT scienceClasses + scoped JOIN scienceClassStudents⋈users (gets enrolled student's name)
+- lesson.findMany via curriculumUnits.some → JOIN scienceLessons⋈scienceUnitLessons⋈scienceCurriculumUnits, de-duped + sorted by order in memory
+- Attempts: inArray scoped SELECT + isNotNull(completedAt)
+- questionResponses fetched once via inArray(attemptId, mostRecentIds); standards-by-question loaded in parallel and grouped
+- Mastery seeded from scienceLessonStandards (lesson-level) then populated from attempts[0] only (preserves prior semantics)
+- Sort by mastery asc, needsIntervention <60%, getColorCode unchanged
+- Test fixtures use Drizzle inserts with String(decimals) for masteryLevel; cleanupFixtures deletes junctions first
+Behavior-preserving; no production logic change beyond ORM swap.
