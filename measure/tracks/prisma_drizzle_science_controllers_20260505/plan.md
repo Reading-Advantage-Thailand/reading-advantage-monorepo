@@ -204,7 +204,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] Task: Migrate `lib/ai/recommendation-context.ts` (curriculumUnit, standardMastery) [33a4d73]
 - [x] Task: Migrate `lib/schemas/validate-json.ts` — swap `StandardsAlignment` enum import (0.7); confirm `lib/schemas/lesson-slug.schema` paths still resolve [6b29adf]
 - [x] Task: Migrate `app/api/lessons/[lessonSlug]/quiz/route.ts` (attempt, gamificationProfile, lesson, lessonCompletion, masteryRun) — _unblocked now that helpers are on Drizzle_ [be15807]
-- [ ] Task: Migrate `app/api/classes/[classId]/curriculum/route.ts` (class, curriculumUnit, lessonCompletion)
+- [x] Task: Migrate `app/api/classes/[classId]/curriculum/route.ts` (class, curriculumUnit, lessonCompletion) [23391c2]
 - [ ] Task: Migrate `app/api/classes/[classId]/analytics/overview/route.ts` (class, lesson, lessonCompletion)
 - [ ] Task: Migrate `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (class, lesson, lessonCompletion, questionResponse)
 - [ ] Task: Update integration test `lib/schemas/__tests__/curriculum-identifiers.integration.test.ts` (+ `content-migration.test.ts`, `curriculum-identifiers.test.ts`) against Drizzle
