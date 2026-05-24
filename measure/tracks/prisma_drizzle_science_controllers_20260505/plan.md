@@ -284,7 +284,7 @@ be green against BEFORE and stay green against AFTER.
     - [x] Sub-task: Delete `apps/science-advantage/prisma/` (schema, migrations) — seed-data/seed-functions/data left for active consumers
     - [x] Sub-task: Delete `prisma.config.ts`
     - [x] Sub-task: Strip `prisma`, `@prisma/client`, `prisma-zod-generator` from `package.json` (and any `prebuild`/`postinstall` prisma scripts) — no zod-generator or postinstall present
-- [ ] Task: Re-evaluate `ignoreBuildErrors` (tech debt 2026-05-03 `auth_strategy_review`) — remove it if the build is now clean; if two `next` versions still conflict, leave it and update the tech-debt note
+- [~] Task: Re-evaluate `ignoreBuildErrors` (tech debt 2026-05-03 `auth_strategy_review`) — remove it if the build is now clean; if two `next` versions still conflict, leave it and update the tech-debt note
 - [ ] Task: Verify clean install + build + test
     - [ ] Sub-task: `pnpm install`
     - [ ] Sub-task: `pnpm --filter science-advantage build`
