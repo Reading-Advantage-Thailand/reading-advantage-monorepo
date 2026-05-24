@@ -1,0 +1,5 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/api/classes/[classId]/assignments → Drizzle (part of 2-route bundle)
+Tests: 27/27 pass, lint clean
+Notes: GET uses single inner-join across assignments + users (teacher) + lessons; ordered by assignedAt desc. POST follows insert+returning then two small reads (teacher, lesson) to preserve the Prisma include shape exactly. DELETE preserves 404 when assignment exists in another class. dueAt parsing & invalid-date 400 preserved verbatim.
+Behavior-preserving; no logic change beyond ORM swap.
