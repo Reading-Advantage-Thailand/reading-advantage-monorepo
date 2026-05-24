@@ -1,4 +1,4 @@
-import type { LessonType, StandardsAlignment } from '@prisma/client';
+import type { LessonType, StandardsAlignment } from '@/lib/enums';
 
 export type MasterySnapshotEntry = {
   standardId: string;
