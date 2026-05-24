@@ -1,0 +1,15 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: prisma/seed-functions/seed-questions → scripts/seed/seed-questions (part of 7-file bundle)
+Decision: REWRITE.
+Tables seeded: science_quiz_questions, science_question_standards (junction)
+Tests: none
+Importers updated: none yet — prisma/seed.ts still on old path (next task line 270)
+Notes:
+- Drizzle insert + transaction per question (insert quiz_question + insert junction rows atomically).
+- Idempotency check (existing question by lessonId+order+text) preserved verbatim.
+- Lesson lookup changed from prisma.lesson.findFirst({where:{id}}) to slug-based select (seed JSON lessonId == schema slug).
+- Standards: implicit Prisma _QuizQuestionToStandard → explicit science_question_standards.
+- Fixed pre-existing bug in original (used undefined 'file' variable instead of basename of filePath) — now uses fileName consistently. Behaviour-preserving in the sense that the original code would have crashed on the warning path; the new code logs the file name correctly.
+- Preserves normalizeQuestionType + Zod validation flow + process.exit(1) on validation errors.
+- CLI shape preserved.
+Behavior-preserving; no logic change beyond ORM swap and the implicit bug-touch noted above (variable reference fix only triggered in the warning code path).
