@@ -1,12 +1,24 @@
 #!/usr/bin/env tsx
 import 'dotenv/config';
 
-import { PrismaClient } from '@prisma/client';
+import {
+  and,
+  db,
+  eq,
+  inArray,
+  lt,
+  sql,
+} from '@reading-advantage/db';
+import {
+  scienceClasses,
+  scienceClassStudents,
+  scienceStandardMastery,
+  scienceStandards,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { detectAlerts } from '@/lib/interventions/detect-alerts';
 import { interventionConfig } from '@/lib/interventions/config';
-
-const prisma = new PrismaClient();
 
 async function main() {
   const classId = process.env.CLASS_ID ?? process.argv[2];
@@ -17,47 +29,76 @@ async function main() {
     process.exit(1);
   }
 
-  const klass = await prisma.class.findUnique({
-    where: { id: classId },
-    include: {
-      students: {
-        select: {
-          id: true,
-          name: true,
-          gradeLevel: true,
-        },
-      },
-    },
-  });
+  const [klass] = await db
+    .select({ id: scienceClasses.id, name: scienceClasses.name })
+    .from(scienceClasses)
+    .where(eq(scienceClasses.id, classId))
+    .limit(1);
 
   if (!klass) {
     console.error(`Class ${classId} not found.`);
     process.exit(1);
   }
 
-  if (klass.students.length === 0) {
+  const students = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      gradeLevel: users.gradeLevel,
+    })
+    .from(scienceClassStudents)
+    .innerJoin(users, eq(users.id, scienceClassStudents.studentId))
+    .where(eq(scienceClassStudents.classId, klass.id));
+
+  if (students.length === 0) {
     console.info(`Class ${classId} has no enrolled students.`);
     process.exit(0);
   }
 
-  const masteryRecords = await prisma.standardMastery.findMany({
-    where: {
-      studentId: { in: klass.students.map((student) => student.id) },
-      masteryLevel: { lt: interventionConfig.masteryFilterLevel },
+  const studentIds = students.map((student) => student.id);
+
+  const masteryRows = await db
+    .select({
+      studentId: scienceStandardMastery.studentId,
+      lastAssessedAt: scienceStandardMastery.lastAssessedAt,
+      masteryLevel: scienceStandardMastery.masteryLevel,
+      standardCode: scienceStandards.code,
+      standardDescription: scienceStandards.description,
+    })
+    .from(scienceStandardMastery)
+    .innerJoin(
+      scienceStandards,
+      eq(scienceStandards.id, scienceStandardMastery.standardId)
+    )
+    .where(
+      and(
+        inArray(scienceStandardMastery.studentId, studentIds),
+        lt(
+          scienceStandardMastery.masteryLevel,
+          sql`${interventionConfig.masteryFilterLevel}`
+        )
+      )
+    );
+
+  const masteryRecords = masteryRows.map((row) => ({
+    studentId: row.studentId,
+    lastAssessedAt: row.lastAssessedAt,
+    masteryLevel: row.masteryLevel,
+    standard: {
+      code: row.standardCode,
+      description: row.standardDescription,
     },
-    include: {
-      standard: {
-        select: {
-          code: true,
-          description: true,
-        },
-      },
-    },
-  });
+  }));
+
+  const studentsForDetection = students.map((student) => ({
+    id: student.id,
+    name: student.name ?? '',
+    gradeLevel: student.gradeLevel,
+  }));
 
   const detection = detectAlerts({
     classMeta: { id: klass.id, name: klass.name },
-    students: klass.students,
+    students: studentsForDetection,
     masteryRecords,
   });
 
@@ -76,11 +117,7 @@ async function main() {
   });
 }
 
-main()
-  .catch((error) => {
-    console.error('Unable to generate intervention alerts locally:', error);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch((error) => {
+  console.error('Unable to generate intervention alerts locally:', error);
+  process.exit(1);
+});
