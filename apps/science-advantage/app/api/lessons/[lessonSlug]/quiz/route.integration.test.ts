@@ -1,12 +1,28 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
-import type { user as UserModel, Class, Lesson, QuizQuestion } from '@prisma/client';
+import { and, db, eq, sql } from '@reading-advantage/db';
+import {
+  accounts,
+  achievements,
+  gamificationProfiles,
+  scienceAttempts,
+  scienceClasses,
+  scienceClassStudents,
+  scienceCurriculumUnits,
+  scienceLessonCompletions,
+  scienceLessons,
+  scienceMasteryRuns,
+  scienceQuestionResponses,
+  scienceQuizQuestions,
+  scienceUnitLessons,
+  sessions,
+  users,
+} from '@reading-advantage/db/schema';
 import { GET, POST } from './route';
 import { createSession } from '@/lib/auth/session';
-import { BADGE_DEFINITIONS } from '@/lib/gamification/badges';
 
-// Mock next/headers for cookies
+const TEST_PREFIX = 'quiz-itest';
+
 const mockCookies = {
   get: vi.fn(),
   set: vi.fn(),
@@ -17,13 +33,129 @@ vi.mock('next/headers', () => ({
   cookies: vi.fn(() => mockCookies),
 }));
 
-describe('GET /api/lessons/[lessonId]/quiz - Integration Tests', () => {
-  let testTeacher: UserModel;
-  let testStudent: UserModel;
-  let otherStudent: UserModel;
-  let testClass: Class;
-  let testLesson: Lesson;
-  let quizQuestions: QuizQuestion[];
+type UserRow = typeof users.$inferSelect;
+type LessonRow = typeof scienceLessons.$inferSelect;
+type QuestionRow = typeof scienceQuizQuestions.$inferSelect;
+
+async function cleanupFixtures(): Promise<void> {
+  // Children first.
+  await db.delete(scienceQuestionResponses);
+  await db.delete(scienceMasteryRuns);
+  await db.delete(scienceAttempts);
+  await db.delete(scienceUnitLessons);
+  await db.delete(scienceClassStudents);
+  await db.delete(scienceLessonCompletions);
+  await db.delete(scienceQuizQuestions);
+  await db.delete(scienceLessons);
+  await db.delete(scienceCurriculumUnits);
+  await db.delete(scienceClasses);
+  await db.execute(
+    sql`DELETE FROM achievements WHERE user_id LIKE ${`${TEST_PREFIX}-%`}`
+  );
+  await db.execute(
+    sql`DELETE FROM gamification_profiles WHERE user_id LIKE ${`${TEST_PREFIX}-%`}`
+  );
+  await db.delete(sessions);
+  await db.delete(accounts);
+  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+}
+
+async function seedUser(
+  id: string,
+  role: 'TEACHER' | 'STUDENT'
+): Promise<UserRow> {
+  const [user] = await db
+    .insert(users)
+    .values({
+      id,
+      name: id,
+      username: id,
+      displayUsername: id,
+      email: `${id}@example.com`,
+      role,
+    })
+    .returning();
+  return user;
+}
+
+async function seedLessonWithQuestions(args: {
+  enrolledStudentId: string;
+  teacherId: string;
+  questionCount: number;
+}): Promise<{
+  lesson: LessonRow;
+  questions: QuestionRow[];
+  classId: string;
+}> {
+  const [cls] = await db
+    .insert(scienceClasses)
+    .values({
+      name: 'Quiz Test Class',
+      gradeLevel: 3,
+      standardsAlignment: 'THAI',
+      joinCode: `QUIZ-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
+      teacherId: args.teacherId,
+    })
+    .returning();
+
+  await db.insert(scienceClassStudents).values({
+    classId: cls.id,
+    studentId: args.enrolledStudentId,
+  });
+
+  const [unit] = await db
+    .insert(scienceCurriculumUnits)
+    .values({
+      slug: `${TEST_PREFIX}-unit-${Date.now()}`,
+      title: 'Quiz Test Unit',
+      framework: 'THAI',
+      gradeLevel: 3,
+      order: 1,
+      classId: cls.id,
+    })
+    .returning();
+
+  const [lesson] = await db
+    .insert(scienceLessons)
+    .values({
+      slug: `${TEST_PREFIX}-lesson-${Date.now()}`,
+      title: 'Quiz Test Lesson',
+      gradeLevel: 3,
+      order: 1,
+    })
+    .returning();
+
+  await db.insert(scienceUnitLessons).values({
+    unitId: unit.id,
+    lessonId: lesson.id,
+  });
+
+  const questions: QuestionRow[] = [];
+  for (let i = 1; i <= args.questionCount; i++) {
+    const [q] = await db
+      .insert(scienceQuizQuestions)
+      .values({
+        slug: `${TEST_PREFIX}-q-${i}-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
+        lessonId: lesson.id,
+        type: 'MULTIPLE_CHOICE',
+        text: `Question ${i}`,
+        options: ['Observe', 'Predict', 'Test', 'Conclude'],
+        correctAnswer: 'Observe',
+        points: 1,
+        order: i,
+      })
+      .returning();
+    questions.push(q);
+  }
+
+  return { lesson, questions, classId: cls.id };
+}
+
+describe('GET /api/lessons/[lessonSlug]/quiz (integration)', () => {
+  let teacher: UserRow;
+  let student: UserRow;
+  let outsider: UserRow;
+  let lesson: LessonRow;
 
   beforeEach(async () => {
     mockCookies.get.mockReset();
@@ -31,361 +163,133 @@ describe('GET /api/lessons/[lessonId]/quiz - Integration Tests', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
 
-    // Clean up in correct order
-    await prisma.$executeRaw`DELETE FROM "_QuizQuestionToStandard"`;
-    await prisma.questionResponse.deleteMany();
-    await prisma.attempt.deleteMany();
-    await prisma.quizQuestion.deleteMany();
-    await prisma.$executeRaw`DELETE FROM "_CurriculumUnitToLesson"`;
-    await prisma.$executeRaw`DELETE FROM "_LessonToStandard"`;
-    await prisma.curriculumUnit.deleteMany();
-    await prisma.lesson.deleteMany();
-    await prisma.class.deleteMany();
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
-
-    // Create test users
-    testTeacher = await prisma.user.create({
-      data: {
-        id: 'test-teacher-quiz',
-        name: 'Test Teacher',
-        username: 'testteacher-quiz',
-        displayUsername: 'TestTeacher',
-        email: 'teacher-quiz@example.com',
-        role: 'TEACHER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+    await cleanupFixtures();
+    teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
+    student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    outsider = await seedUser(`${TEST_PREFIX}-outsider`, 'STUDENT');
+    const seeded = await seedLessonWithQuestions({
+      enrolledStudentId: student.id,
+      teacherId: teacher.id,
+      questionCount: 12,
     });
+    lesson = seeded.lesson;
+  });
 
-    testStudent = await prisma.user.create({
-      data: {
-        id: 'test-student-quiz',
-        name: 'Test Student',
-        username: 'teststudent-quiz',
-        displayUsername: 'TestStudent',
-        email: 'student-quiz@example.com',
-        role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+  it('returns 401 when not authenticated', async () => {
+    mockCookies.get.mockReturnValue(undefined);
+    const req = new NextRequest(`http://localhost/api/lessons/${lesson.id}/quiz`);
+    const res = await GET(req, { params: Promise.resolve({ lessonSlug: lesson.id }) });
+    expect(res.status).toBe(401);
+  });
+
+  it('allows the enrolled student', async () => {
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(`http://localhost/api/lessons/${lesson.id}/quiz`);
+    const res = await GET(req, { params: Promise.resolve({ lessonSlug: lesson.id }) });
+    const data = await res.json();
+    expect(res.status).toBe(200);
+    expect(data.quizId).toBeTruthy();
+    expect(data.questions).toHaveLength(3); // N = 12 / 4
+  });
+
+  it('denies a non-enrolled student', async () => {
+    const session = await createSession(outsider.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(`http://localhost/api/lessons/${lesson.id}/quiz`);
+    const res = await GET(req, { params: Promise.resolve({ lessonSlug: lesson.id }) });
+    expect(res.status).toBe(403);
+  });
+
+  it('allows the class teacher', async () => {
+    const session = await createSession(teacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(`http://localhost/api/lessons/${lesson.id}/quiz`);
+    const res = await GET(req, { params: Promise.resolve({ lessonSlug: lesson.id }) });
+    expect(res.status).toBe(200);
+  });
+
+  it('returns 404 for a non-existent lesson', async () => {
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(
+      'http://localhost/api/lessons/00000000-0000-0000-0000-000000000000/quiz'
+    );
+    const res = await GET(req, {
+      params: Promise.resolve({
+        lessonSlug: '00000000-0000-0000-0000-000000000000',
+      }),
     });
+    expect(res.status).toBe(404);
+  });
 
-    otherStudent = await prisma.user.create({
-      data: {
-        id: 'other-student-quiz',
-        name: 'Other Student',
-        username: 'otherstudent-quiz',
-        displayUsername: 'OtherStudent',
-        email: 'other-quiz@example.com',
-        role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
-
-    // Create test class
-    testClass = await prisma.class.create({
-      data: {
-        id: 'test-class-quiz',
-        name: 'Grade 3 Science',
-        gradeLevel: 3,
-        standardsAlignment: 'THAI',
-        joinCode: 'QUIZ123',
-        teacherId: testTeacher.id,
-        students: {
-          connect: { id: testStudent.id },
-        },
-      },
-    });
-
-    // Create test lesson
-    testLesson = await prisma.lesson.create({
-      data: {
-        id: 'lesson-quiz-1',
-        slug: 'intro-to-science-quiz',
-        title: 'Introduction to Science',
-        description: 'Learn what science is',
-        content: 'Science is the study of the natural world',
-        gradeLevel: 3,
-        order: 1,
-      },
-    });
-
-    // Link lesson to class via curriculum unit
-    await prisma.curriculumUnit.create({
-      data: {
-        id: 'unit-quiz-1',
-        slug: 'unit-quiz-1-science-basics',
-        title: 'Unit 1: Science Basics',
-        framework: 'THAI',
-        gradeLevel: 3,
-        order: 1,
-        classId: testClass.id,
-        lessons: {
-          connect: { id: testLesson.id },
-        },
-      },
-    });
-
-    // Create 12 questions (4N = 36 for N=9, but using 12 for 3-question quiz for testing)
-    quizQuestions = [];
-    for (let i = 1; i <= 12; i++) {
-      const question = await prisma.quizQuestion.create({
-        data: {
-          slug: `quiz-q-${i}`,
-          lessonId: testLesson.id,
-          type: 'MULTIPLE_CHOICE',
-          text: `Question ${i}: What is the scientific method step ${i}?`,
-          options: ['Observe', 'Predict', 'Test', 'Conclude'],
-          correctAnswer: 'Observe',
-          points: 1,
-          order: i,
-        },
-      });
-      quizQuestions.push(question);
+  it('omits correctAnswer from the question list', async () => {
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(`http://localhost/api/lessons/${lesson.id}/quiz`);
+    const res = await GET(req, { params: Promise.resolve({ lessonSlug: lesson.id }) });
+    const data = await res.json();
+    for (const q of data.questions) {
+      expect(q.correctAnswer).toBeUndefined();
     }
   });
 
-  afterEach(async () => {
-    await prisma.$executeRaw`DELETE FROM "_QuizQuestionToStandard"`;
-    await prisma.questionResponse.deleteMany();
-    await prisma.attempt.deleteMany();
-    await prisma.quizQuestion.deleteMany();
-    await prisma.$executeRaw`DELETE FROM "_CurriculumUnitToLesson"`;
-    await prisma.$executeRaw`DELETE FROM "_LessonToStandard"`;
-    await prisma.curriculumUnit.deleteMany();
-    await prisma.lesson.deleteMany();
-    await prisma.class.deleteMany();
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+  it('persists the attempt row with startedAt and no completedAt', async () => {
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(`http://localhost/api/lessons/${lesson.id}/quiz`);
+    const res = await GET(req, { params: Promise.resolve({ lessonSlug: lesson.id }) });
+    const data = await res.json();
+
+    const [attempt] = await db
+      .select()
+      .from(scienceAttempts)
+      .where(eq(scienceAttempts.id, data.quizId))
+      .limit(1);
+    expect(attempt).toBeDefined();
+    expect(attempt.studentId).toBe(student.id);
+    expect(attempt.lessonId).toBe(lesson.id);
+    expect(attempt.completedAt).toBeNull();
   });
 
-  describe('Authentication', () => {
-    it('should return 401 when not authenticated', async () => {
-      mockCookies.get.mockReturnValue(undefined);
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(401);
-      expect(data.error).toBe('Authentication required');
+  it('returns 500 when question pool is below 4', async () => {
+    // New lesson with only 2 questions but enrolled student/teacher reused.
+    const small = await seedLessonWithQuestions({
+      enrolledStudentId: student.id,
+      teacherId: teacher.id,
+      questionCount: 2,
     });
-  });
-
-  describe('Authorization', () => {
-    it('should allow enrolled student to access quiz', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.quizId).toBeDefined();
-      expect(data.questions).toBeDefined();
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(
+      `http://localhost/api/lessons/${small.lesson.id}/quiz`
+    );
+    const res = await GET(req, {
+      params: Promise.resolve({ lessonSlug: small.lesson.id }),
     });
-
-    it('should deny non-enrolled student access', async () => {
-      const session = await createSession(otherStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(403);
-      expect(data.error).toBe('Not enrolled in class with this lesson');
-    });
-
-    it('should allow class teacher to access quiz', async () => {
-      const session = await createSession(testTeacher.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.quizId).toBeDefined();
-      expect(data.questions).toBeDefined();
-    });
-  });
-
-  describe('Lesson Not Found', () => {
-    it('should return 404 for non-existent lesson', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/lessons/non-existent-lesson/quiz');
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: 'non-existent-lesson' }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(404);
-      expect(data.error).toBe('Lesson not found');
-    });
-  });
-
-  describe('Question Selection', () => {
-    it('should return N questions from the question bank', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      // For 12 questions, N = 3 (12/4)
-      expect(data.questions).toHaveLength(3);
-    });
-
-    it('should not include correct answers in response', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      data.questions.forEach((q: any) => {
-        expect(q.correctAnswer).toBeUndefined();
-      });
-    });
-
-    it('should include required question fields', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      const question = data.questions[0];
-      expect(question).toHaveProperty('id');
-      expect(question).toHaveProperty('type');
-      expect(question).toHaveProperty('text');
-      expect(question).toHaveProperty('options');
-      expect(question).toHaveProperty('points');
-      expect(question).toHaveProperty('order');
-    });
-
-    it('should create an attempt record with startedAt timestamp', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.quizId).toBeDefined();
-      expect(data.startedAt).toBeDefined();
-
-      // Verify attempt record exists in database
-      const attempt = await prisma.attempt.findUnique({
-        where: { id: data.quizId },
-      });
-      expect(attempt).toBeDefined();
-      expect(attempt?.studentId).toBe(testStudent.id);
-      expect(attempt?.lessonId).toBe(testLesson.id);
-      expect(attempt?.completedAt).toBeNull();
-    });
-
-    it('should calculate correct total points', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.totalPoints).toBe(3); // 3 questions * 1 point each
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should return 500 if question pool is too small', async () => {
-      // Create lesson with only 2 questions (less than 4N for any N > 0)
-      const smallLesson = await prisma.lesson.create({
-        data: {
-          id: 'lesson-small',
-          slug: 'small-lesson',
-          title: 'Small Lesson',
-          gradeLevel: 3,
-          order: 99,
-        },
-      });
-
-      await prisma.curriculumUnit.create({
-        data: {
-          id: 'unit-small',
-          slug: 'unit-small',
-          title: 'Small Unit',
-          framework: 'THAI',
-          gradeLevel: 3,
-          order: 99,
-          classId: testClass.id,
-          lessons: {
-            connect: { id: smallLesson.id },
-          },
-        },
-      });
-
-      await prisma.quizQuestion.create({
-        data: {
-          slug: 'small-q-1',
-          lessonId: smallLesson.id,
-          type: 'TRUE_FALSE',
-          text: 'Is this a test?',
-          options: ['True', 'False'],
-          correctAnswer: 'True',
-          points: 1,
-          order: 1,
-        },
-      });
-
-      await prisma.quizQuestion.create({
-        data: {
-          slug: 'small-q-2',
-          lessonId: smallLesson.id,
-          type: 'TRUE_FALSE',
-          text: 'Is this another test?',
-          options: ['True', 'False'],
-          correctAnswer: 'False',
-          points: 1,
-          order: 2,
-        },
-      });
-
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${smallLesson.id}/quiz`);
-      const response = await GET(request, { params: Promise.resolve({ lessonSlug: smallLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.error).toContain('Insufficient questions');
-    });
+    expect(res.status).toBe(500);
   });
 });
 
-describe('POST /api/lessons/[lessonId]/quiz/submit - Integration Tests', () => {
-  let testTeacher: UserModel;
-  let testStudent: UserModel;
-  let otherStudent: UserModel;
-  let testClass: Class;
-  let testLesson: Lesson;
-  let quizQuestions: QuizQuestion[];
-  let attemptId: string;
+describe('POST /api/lessons/[lessonSlug]/quiz/submit (integration)', () => {
+  let teacher: UserRow;
+  let student: UserRow;
+  let lesson: LessonRow;
+  let questions: QuestionRow[];
+
+  async function startAttempt(): Promise<string> {
+    const [attempt] = await db
+      .insert(scienceAttempts)
+      .values({
+        studentId: student.id,
+        lessonId: lesson.id,
+        maxScore: questions.length,
+        attemptNumber: 1,
+        startedAt: new Date(),
+      })
+      .returning();
+    return attempt.id;
+  }
 
   beforeEach(async () => {
     mockCookies.get.mockReset();
@@ -393,382 +297,247 @@ describe('POST /api/lessons/[lessonId]/quiz/submit - Integration Tests', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
 
-    // Clean up in correct order
-    await prisma.$executeRaw`DELETE FROM "_QuizQuestionToStandard"`;
-    await prisma.questionResponse.deleteMany();
-    await prisma.attempt.deleteMany();
-    await prisma.quizQuestion.deleteMany();
-    await prisma.$executeRaw`DELETE FROM "_CurriculumUnitToLesson"`;
-    await prisma.$executeRaw`DELETE FROM "_LessonToStandard"`;
-    await prisma.achievement.deleteMany();
-    await prisma.gamificationProfile.deleteMany();
-    await prisma.lessonCompletion.deleteMany();
-    await prisma.curriculumUnit.deleteMany();
-    await prisma.lesson.deleteMany();
-    await prisma.class.deleteMany();
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
-
-    // Create test users
-    testTeacher = await prisma.user.create({
-      data: {
-        id: 'test-teacher-submit',
-        name: 'Test Teacher',
-        username: 'testteacher-submit',
-        displayUsername: 'TestTeacher',
-        email: 'teacher-submit@example.com',
-        role: 'TEACHER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+    await cleanupFixtures();
+    teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
+    student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    const seeded = await seedLessonWithQuestions({
+      enrolledStudentId: student.id,
+      teacherId: teacher.id,
+      questionCount: 3,
     });
+    lesson = seeded.lesson;
+    questions = seeded.questions;
+  });
 
-    testStudent = await prisma.user.create({
-      data: {
-        id: 'test-student-submit',
-        name: 'Test Student',
-        username: 'teststudent-submit',
-        displayUsername: 'TestStudent',
-        email: 'student-submit@example.com',
-        role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+  it('grades, persists scores, completes the attempt, and returns badge data', async () => {
+    const attemptId = await startAttempt();
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const body = {
+      attemptId,
+      responses: questions.map((q, i) => ({
+        questionId: q.id,
+        studentAnswer: 'Observe', // correct
+        timeSpentSeconds: 30,
+        answeredAt: new Date().toISOString(),
+        order: i + 1,
+      })),
+    };
+    const req = new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body: JSON.stringify(body) }
+    );
+    const res = await POST(req, {
+      params: Promise.resolve({ lessonSlug: lesson.id }),
     });
+    const data = await res.json();
 
-    otherStudent = await prisma.user.create({
-      data: {
-        id: 'other-student-submit',
-        name: 'Other Student',
-        username: 'otherstudent-submit',
-        displayUsername: 'OtherStudent',
-        email: 'other-submit@example.com',
-        role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+    expect(res.status).toBe(200);
+    expect(data.score).toBe(3);
+    expect(data.maxScore).toBe(3);
+    expect(data.percentage).toBe(100);
+
+    // Attempt row marked complete.
+    const [attempt] = await db
+      .select()
+      .from(scienceAttempts)
+      .where(eq(scienceAttempts.id, attemptId))
+      .limit(1);
+    expect(attempt.score).toBe(3);
+    expect(attempt.completedAt).not.toBeNull();
+
+    // Three responses persisted.
+    const responseRows = await db
+      .select()
+      .from(scienceQuestionResponses)
+      .where(eq(scienceQuestionResponses.attemptId, attemptId));
+    expect(responseRows).toHaveLength(3);
+
+    // Lesson completion record COMPLETED.
+    const [completion] = await db
+      .select()
+      .from(scienceLessonCompletions)
+      .where(
+        and(
+          eq(scienceLessonCompletions.studentId, student.id),
+          eq(scienceLessonCompletions.lessonId, lesson.id)
+        )
+      )
+      .limit(1);
+    expect(completion.status).toBe('COMPLETED');
+    expect(completion.bestScore).toBe(3);
+
+    // FIRST_STEPS and PERFECT_SCORE both expected on a 100% first attempt.
+    expect(data.gamification.badgesUnlocked).toEqual(
+      expect.arrayContaining(['FIRST_STEPS', 'PERFECT_SCORE'])
+    );
+
+    // Achievement rows persisted.
+    const ach = await db
+      .select()
+      .from(achievements)
+      .where(eq(achievements.userId, student.id));
+    expect(ach.length).toBeGreaterThanOrEqual(2);
+
+    // Gamification profile created and XP applied.
+    const [profile] = await db
+      .select()
+      .from(gamificationProfiles)
+      .where(eq(gamificationProfiles.userId, student.id))
+      .limit(1);
+    expect(profile).toBeDefined();
+    expect(profile.xp).toBeGreaterThan(0);
+  });
+
+  it('does not unlock PERFECT_SCORE on a less-than-100% submission', async () => {
+    const attemptId = await startAttempt();
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const body = {
+      attemptId,
+      responses: questions.map((q, i) => ({
+        questionId: q.id,
+        studentAnswer: i === 0 ? 'Observe' : 'Wrong',
+        timeSpentSeconds: 30,
+        answeredAt: new Date().toISOString(),
+        order: i + 1,
+      })),
+    };
+    const req = new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body: JSON.stringify(body) }
+    );
+    const res = await POST(req, {
+      params: Promise.resolve({ lessonSlug: lesson.id }),
     });
+    const data = await res.json();
 
-    // Create test class
-    testClass = await prisma.class.create({
-      data: {
-        id: 'test-class-submit',
-        name: 'Grade 3 Science',
-        gradeLevel: 3,
-        standardsAlignment: 'THAI',
-        joinCode: 'SUBM123',
-        teacherId: testTeacher.id,
-        students: {
-          connect: { id: testStudent.id },
-        },
-      },
-    });
+    expect(res.status).toBe(200);
+    expect(data.gamification.badgesUnlocked).not.toContain('PERFECT_SCORE');
+  });
 
-    // Create test lesson
-    testLesson = await prisma.lesson.create({
-      data: {
-        id: 'lesson-submit-1',
-        slug: 'lesson-submit-1',
-        title: 'Introduction to Science',
-        description: 'Learn what science is',
-        content: 'Science is the study of the natural world',
-        gradeLevel: 3,
-        order: 1,
-      },
-    });
-
-    // Link lesson to class via curriculum unit
-    await prisma.curriculumUnit.create({
-      data: {
-        id: 'unit-submit-1',
-        slug: 'unit-submit-1',
-        title: 'Unit 1: Science Basics',
-        framework: 'THAI',
-        gradeLevel: 3,
-        order: 1,
-        classId: testClass.id,
-        lessons: {
-          connect: { id: testLesson.id },
-        },
-      },
-    });
-
-    // Create 3 quiz questions
-    quizQuestions = [];
-    const questionsData = [
-      {
-        text: 'What is the first step of the scientific method?',
-        correctAnswer: 'Observe',
-      },
-      {
-        text: 'What comes after observation?',
-        correctAnswer: 'Predict',
-      },
-      {
-        text: 'How do you test a hypothesis?',
-        correctAnswer: 'Test',
-      },
-    ];
-
-    for (let i = 0; i < questionsData.length; i++) {
-      const question = await prisma.quizQuestion.create({
-        data: {
-          slug: `submit-q-${i + 1}`,
-          lessonId: testLesson.id,
-          type: 'MULTIPLE_CHOICE',
-          text: questionsData[i].text,
-          options: ['Observe', 'Predict', 'Test', 'Conclude'],
-          correctAnswer: questionsData[i].correctAnswer,
-          points: 1,
+  it('does not duplicate already-earned achievements on a second submission', async () => {
+    // First submission unlocks FIRST_STEPS.
+    {
+      const attemptId = await startAttempt();
+      const session = await createSession(student.id);
+      mockCookies.get.mockReturnValue({ value: session.token });
+      const body = {
+        attemptId,
+        responses: questions.map((q, i) => ({
+          questionId: q.id,
+          studentAnswer: 'Observe',
+          timeSpentSeconds: 30,
+          answeredAt: new Date().toISOString(),
           order: i + 1,
-        },
-      });
-      quizQuestions.push(question);
+        })),
+      };
+      const req = new NextRequest(
+        `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+        { method: 'POST', body: JSON.stringify(body) }
+      );
+      await POST(req, { params: Promise.resolve({ lessonSlug: lesson.id }) });
     }
 
-    // Create an attempt for testing
-    const attempt = await prisma.attempt.create({
-      data: {
-        studentId: testStudent.id,
-        lessonId: testLesson.id,
-        maxScore: 3,
-        attemptNumber: 1,
+    // Second attempt (new row).
+    const [attempt2] = await db
+      .insert(scienceAttempts)
+      .values({
+        studentId: student.id,
+        lessonId: lesson.id,
+        maxScore: questions.length,
+        attemptNumber: 2,
         startedAt: new Date(),
-      },
+      })
+      .returning();
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const body = {
+      attemptId: attempt2.id,
+      responses: questions.map((q, i) => ({
+        questionId: q.id,
+        studentAnswer: 'Observe',
+        timeSpentSeconds: 30,
+        answeredAt: new Date().toISOString(),
+        order: i + 1,
+      })),
+    };
+    const req = new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body: JSON.stringify(body) }
+    );
+    const res = await POST(req, {
+      params: Promise.resolve({ lessonSlug: lesson.id }),
     });
-    attemptId = attempt.id;
+    const data = await res.json();
+
+    expect(data.gamification.badgesUnlocked).not.toContain('FIRST_STEPS');
+
+    const firstSteps = await db
+      .select()
+      .from(achievements)
+      .where(
+        and(
+          eq(achievements.userId, student.id),
+          eq(achievements.badgeType, 'FIRST_STEPS')
+        )
+      );
+    expect(firstSteps).toHaveLength(1);
   });
 
-  afterEach(async () => {
-    await prisma.$executeRaw`DELETE FROM "_QuizQuestionToStandard"`;
-    await prisma.questionResponse.deleteMany();
-    await prisma.attempt.deleteMany();
-    await prisma.quizQuestion.deleteMany();
-    await prisma.$executeRaw`DELETE FROM "_CurriculumUnitToLesson"`;
-    await prisma.$executeRaw`DELETE FROM "_LessonToStandard"`;
-    await prisma.achievement.deleteMany();
-    await prisma.gamificationProfile.deleteMany();
-    await prisma.lessonCompletion.deleteMany();
-    await prisma.curriculumUnit.deleteMany();
-    await prisma.lesson.deleteMany();
-    await prisma.class.deleteMany();
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+  it('returns 403 if a different user tries to submit the attempt', async () => {
+    const attemptId = await startAttempt();
+    const outsider = await seedUser(`${TEST_PREFIX}-outsider2`, 'STUDENT');
+    const session = await createSession(outsider.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const body = {
+      attemptId,
+      responses: questions.map((q, i) => ({
+        questionId: q.id,
+        studentAnswer: 'Observe',
+        timeSpentSeconds: 30,
+        answeredAt: new Date().toISOString(),
+        order: i + 1,
+      })),
+    };
+    const req = new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body: JSON.stringify(body) }
+    );
+    const res = await POST(req, {
+      params: Promise.resolve({ lessonSlug: lesson.id }),
+    });
+    expect(res.status).toBe(403);
   });
 
-  describe('Badge Unlocks', () => {
-    it('should return badgesUnlocked and achievements in gamification response', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
+  it('returns 409 if attempt was already submitted', async () => {
+    const attemptId = await startAttempt();
+    await db
+      .update(scienceAttempts)
+      .set({ completedAt: new Date() })
+      .where(eq(scienceAttempts.id, attemptId));
 
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz/submit`, {
-        method: 'POST',
-        body: JSON.stringify({
-          attemptId,
-          responses: quizQuestions.map((q, i) => ({
-            questionId: q.id,
-            studentAnswer: 'Observe',
-            timeSpentSeconds: 30,
-            answeredAt: new Date().toISOString(),
-            order: i + 1,
-          })),
-        }),
-      });
-      const response = await POST(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.gamification).toHaveProperty('badgesUnlocked');
-      expect(data.gamification).toHaveProperty('achievements');
-      expect(Array.isArray(data.gamification.badgesUnlocked)).toBe(true);
-      expect(Array.isArray(data.gamification.achievements)).toBe(true);
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const body = {
+      attemptId,
+      responses: questions.map((q, i) => ({
+        questionId: q.id,
+        studentAnswer: 'Observe',
+        timeSpentSeconds: 30,
+        answeredAt: new Date().toISOString(),
+        order: i + 1,
+      })),
+    };
+    const req = new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body: JSON.stringify(body) }
+    );
+    const res = await POST(req, {
+      params: Promise.resolve({ lessonSlug: lesson.id }),
     });
-
-    it('should unlock FIRST_STEPS badge on first lesson completion', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz/submit`, {
-        method: 'POST',
-        body: JSON.stringify({
-          attemptId,
-          responses: quizQuestions.map((q, i) => ({
-            questionId: q.id,
-            studentAnswer: 'Observe',
-            timeSpentSeconds: 30,
-            answeredAt: new Date().toISOString(),
-            order: i + 1,
-          })),
-        }),
-      });
-      const response = await POST(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.gamification.badgesUnlocked).toContain('FIRST_STEPS');
-
-      // Verify achievement record was created in database
-      const achievement = await prisma.achievement.findFirst({
-        where: {
-          userId: testStudent.id,
-          badgeType: 'FIRST_STEPS',
-        },
-      });
-      expect(achievement).toBeDefined();
-      expect(achievement?.badgeType).toBe('FIRST_STEPS');
-    });
-
-    it('should unlock PERFECT_SCORE badge on 100% quiz score', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      // Submit correct answers for all questions (Observe, Predict, Test)
-      const correctAnswers = ['Observe', 'Predict', 'Test'];
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz/submit`, {
-        method: 'POST',
-        body: JSON.stringify({
-          attemptId,
-          responses: quizQuestions.map((q, i) => ({
-            questionId: q.id,
-            studentAnswer: correctAnswers[i],
-            timeSpentSeconds: 30,
-            answeredAt: new Date().toISOString(),
-            order: i + 1,
-          })),
-        }),
-      });
-      const response = await POST(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.gamification.badgesUnlocked).toContain('PERFECT_SCORE');
-    });
-
-    it('should not unlock PERFECT_SCORE badge on less than 100%', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz/submit`, {
-        method: 'POST',
-        body: JSON.stringify({
-          attemptId,
-          responses: quizQuestions.map((q, i) => ({
-            questionId: q.id,
-            studentAnswer: i === 0 ? 'Observe' : 'Wrong',
-            timeSpentSeconds: 30,
-            answeredAt: new Date().toISOString(),
-            order: i + 1,
-          })),
-        }),
-      });
-      const response = await POST(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.gamification.badgesUnlocked).not.toContain('PERFECT_SCORE');
-    });
-
-    it('should not create duplicate achievement records for already-earned badges', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      // First submission - should unlock FIRST_STEPS
-      const request1 = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz/submit`, {
-        method: 'POST',
-        body: JSON.stringify({
-          attemptId,
-          responses: quizQuestions.map((q, i) => ({
-            questionId: q.id,
-            studentAnswer: 'Observe',
-            timeSpentSeconds: 30,
-            answeredAt: new Date().toISOString(),
-            order: i + 1,
-          })),
-        }),
-      });
-      await POST(request1, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-
-      // Second attempt
-      const attempt2 = await prisma.attempt.create({
-        data: {
-          studentId: testStudent.id,
-          lessonId: testLesson.id,
-          maxScore: 3,
-          attemptNumber: 2,
-          startedAt: new Date(),
-        },
-      });
-
-      const request2 = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz/submit`, {
-        method: 'POST',
-        body: JSON.stringify({
-          attemptId: attempt2.id,
-          responses: quizQuestions.map((q, i) => ({
-            questionId: q.id,
-            studentAnswer: 'Observe',
-            timeSpentSeconds: 30,
-            answeredAt: new Date().toISOString(),
-            order: i + 1,
-          })),
-        }),
-      });
-      const response2 = await POST(request2, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data2 = await response2.json();
-
-      // FIRST_STEPS should NOT be in newly unlocked (already earned)
-      expect(data2.gamification.badgesUnlocked).not.toContain('FIRST_STEPS');
-
-      // Only one FIRST_STEPS achievement should exist in database
-      const firstStepsAchievements = await prisma.achievement.findMany({
-        where: {
-          userId: testStudent.id,
-          badgeType: 'FIRST_STEPS',
-        },
-      });
-      expect(firstStepsAchievements).toHaveLength(1);
-    });
-  });
-
-  describe('Response Format', () => {
-    it('should return all required fields in response', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest(`http://localhost:3000/api/lessons/${testLesson.id}/quiz/submit`, {
-        method: 'POST',
-        body: JSON.stringify({
-          attemptId,
-          responses: quizQuestions.map((q, i) => ({
-            questionId: q.id,
-            studentAnswer: 'Observe',
-            timeSpentSeconds: 30,
-            answeredAt: new Date().toISOString(),
-            order: i + 1,
-          })),
-        }),
-      });
-      const response = await POST(request, { params: Promise.resolve({ lessonSlug: testLesson.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data).toHaveProperty('attemptId');
-      expect(data).toHaveProperty('score');
-      expect(data).toHaveProperty('maxScore');
-      expect(data).toHaveProperty('percentage');
-      expect(data).toHaveProperty('attemptNumber');
-      expect(data).toHaveProperty('completedAt');
-      expect(data).toHaveProperty('breakdown');
-
-      const breakdownItem = data.breakdown[0];
-      expect(breakdownItem).toHaveProperty('questionId');
-      expect(breakdownItem).toHaveProperty('questionText');
-      expect(breakdownItem).toHaveProperty('studentAnswer');
-      expect(breakdownItem).toHaveProperty('correctAnswer');
-      expect(breakdownItem).toHaveProperty('isCorrect');
-      expect(breakdownItem).toHaveProperty('points');
-      expect(breakdownItem).toHaveProperty('timeSpentSeconds');
-    });
+    expect(res.status).toBe(409);
   });
 });

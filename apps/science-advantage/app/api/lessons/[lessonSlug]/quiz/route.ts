@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import type { Prisma } from '@prisma/client';
+import { and, db, eq, inArray, count } from '@reading-advantage/db';
+import {
+  gamificationProfiles,
+  scienceAttempts,
+  scienceClasses,
+  scienceClassStudents,
+  scienceCurriculumUnits,
+  scienceLessonCompletions,
+  scienceLessons,
+  scienceMasteryRuns,
+  scienceQuestionResponses,
+  scienceQuizQuestions,
+  scienceUnitLessons,
+} from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
-import prisma from '@/lib/prisma';
 import { gradeAnswer } from '@/lib/quiz/scoring';
 import { calculateXpForQuiz, awardXp } from '@/lib/gamification/xp';
 import { updateStreakForProfile } from '@/lib/gamification/streak';
@@ -11,17 +23,18 @@ import { processMasteryRun } from '@/lib/services/mastery/mastery-worker';
 
 /**
  * GET /api/lessons/{lessonSlug}/quiz
- * Returns a random set of N questions from the lesson's 4N question bank to start a new quiz attempt.
+ * Returns a random set of N questions from the lesson's 4N question bank to
+ * start a new quiz attempt.
  *
  * Authentication: Required
- * Authorization: Student must be enrolled in a class using this lesson OR teacher must own the class
+ * Authorization: Student must be enrolled in a class using this lesson OR
+ * teacher must own the class.
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   context: { params: Promise<{ lessonSlug: string }> }
 ) {
   try {
-    // 1. Authenticate user
     const session = await getCurrentSession();
 
     if (!session) {
@@ -31,48 +44,54 @@ export async function GET(
       );
     }
 
-    // 2. Get lessonSlug from params
     const { lessonSlug } = await context.params;
 
-    // 3. Fetch the lesson with curriculum units to find associated classes
-    const lesson = await prisma.lesson.findUnique({
-      where: { id: lessonSlug },
-      include: {
-        curriculumUnits: {
-          include: {
-            class: {
-              include: {
-                teacher: {
-                  select: { id: true },
-                },
-                students: {
-                  select: { id: true },
-                },
-              },
-            },
-          },
-        },
-        quizQuestions: {
-          orderBy: { order: 'asc' },
-        },
-      },
-    });
+    // 1. Lesson lookup (param is treated as the lesson id, matching the
+    //    original route behavior).
+    const [lesson] = await db
+      .select()
+      .from(scienceLessons)
+      .where(eq(scienceLessons.id, lessonSlug))
+      .limit(1);
 
     if (!lesson) {
-      return NextResponse.json(
-        { error: 'Lesson not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
     }
 
-    // 4. Authorization: Check if user is teacher or enrolled student in any class using this lesson
-    const hasAccess = lesson.curriculumUnits.some(unit => {
-      const isTeacher = unit.class.teacher.id === session.user.id;
-      const isEnrolledStudent = unit.class.students.some(
-        student => student.id === session.user.id
-      );
-      return isTeacher || isEnrolledStudent;
-    });
+    // 2. Authorization: find all classes that contain this lesson (via
+    //    scienceUnitLessons junction → scienceCurriculumUnits → scienceClasses)
+    //    and check whether the caller teaches the class or is enrolled.
+    const classRows = await db
+      .select({
+        classId: scienceClasses.id,
+        teacherId: scienceClasses.teacherId,
+      })
+      .from(scienceUnitLessons)
+      .innerJoin(
+        scienceCurriculumUnits,
+        eq(scienceCurriculumUnits.id, scienceUnitLessons.unitId)
+      )
+      .innerJoin(
+        scienceClasses,
+        eq(scienceClasses.id, scienceCurriculumUnits.classId)
+      )
+      .where(eq(scienceUnitLessons.lessonId, lesson.id));
+
+    let hasAccess = classRows.some((c) => c.teacherId === session.user.id);
+    if (!hasAccess && classRows.length > 0) {
+      const classIds = classRows.map((c) => c.classId);
+      const myEnrollments = await db
+        .select({ classId: scienceClassStudents.classId })
+        .from(scienceClassStudents)
+        .where(
+          and(
+            eq(scienceClassStudents.studentId, session.user.id),
+            inArray(scienceClassStudents.classId, classIds)
+          )
+        )
+        .limit(1);
+      hasAccess = myEnrollments.length > 0;
+    }
 
     if (!hasAccess) {
       return NextResponse.json(
@@ -81,16 +100,21 @@ export async function GET(
       );
     }
 
-    // 5. Validate question pool size (should be 4N questions for N-question quiz)
-    const totalQuestions = lesson.quizQuestions.length;
+    // 3. Pull the question bank (ordered).
+    const quizQuestions = await db
+      .select()
+      .from(scienceQuizQuestions)
+      .where(eq(scienceQuizQuestions.lessonId, lesson.id))
+      .orderBy(scienceQuizQuestions.order);
+
+    // 4. Validate pool size.
+    const totalQuestions = quizQuestions.length;
     if (totalQuestions < 4) {
       return NextResponse.json(
         { error: 'Insufficient questions in question bank' },
         { status: 500 }
       );
     }
-
-    // Calculate N (number of questions to serve) as totalQuestions / 4
     const N = Math.floor(totalQuestions / 4);
     if (N === 0) {
       return NextResponse.json(
@@ -99,79 +123,79 @@ export async function GET(
       );
     }
 
-    // 6. Randomly select N questions from the pool
-    const shuffled = [...lesson.quizQuestions].sort(() => Math.random() - 0.5);
+    // 5. Randomly pick N.
+    const shuffled = [...quizQuestions].sort(() => Math.random() - 0.5);
     const selectedQuestions = shuffled.slice(0, N);
 
-    // 7. Calculate attempt number for this student-lesson pair
-    const previousAttempts = await prisma.attempt.count({
-      where: {
-        studentId: session.user.id,
-        lessonId: lessonSlug,
-      },
-    });
+    // 6. Compute the next attempt number for this student-lesson pair.
+    const [{ c: previousAttempts }] = await db
+      .select({ c: count() })
+      .from(scienceAttempts)
+      .where(
+        and(
+          eq(scienceAttempts.studentId, session.user.id),
+          eq(scienceAttempts.lessonId, lesson.id)
+        )
+      );
     const attemptNumber = previousAttempts + 1;
 
-    // 8. Calculate total points
+    // 7. Score total.
     const totalPoints = selectedQuestions.reduce((sum, q) => sum + q.points, 0);
 
-    // 9. Create an attempt record
-    const attempt = await prisma.attempt.create({
-      data: {
+    // 8. Create the attempt row.
+    const [attempt] = await db
+      .insert(scienceAttempts)
+      .values({
         studentId: session.user.id,
-        lessonId: lessonSlug,
+        lessonId: lesson.id,
         maxScore: totalPoints,
         attemptNumber,
         startedAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
-    // 10. Ensure a lesson completion record exists so curriculum can show "Started"
-    const existingCompletion = await prisma.lessonCompletion.findUnique({
-      where: {
-        studentId_lessonId: {
-          studentId: session.user.id,
-          lessonId: lessonSlug,
-        },
-      },
-    });
+    // 9. Ensure a lessonCompletion row exists in at least IN_PROGRESS state.
+    const [existingCompletion] = await db
+      .select()
+      .from(scienceLessonCompletions)
+      .where(
+        and(
+          eq(scienceLessonCompletions.studentId, session.user.id),
+          eq(scienceLessonCompletions.lessonId, lesson.id)
+        )
+      )
+      .limit(1);
 
     if (!existingCompletion) {
-      await prisma.lessonCompletion.create({
-        data: {
-          studentId: session.user.id,
-          lessonId: lessonSlug,
-          status: 'IN_PROGRESS',
-          attemptsCount: 0,
-          lastAttemptAt: new Date(),
-        },
+      await db.insert(scienceLessonCompletions).values({
+        studentId: session.user.id,
+        lessonId: lesson.id,
+        status: 'IN_PROGRESS',
+        attemptsCount: 0,
+        lastAttemptAt: new Date(),
       });
     } else if (existingCompletion.status === 'NOT_STARTED') {
-      await prisma.lessonCompletion.update({
-        where: {
-          studentId_lessonId: {
-            studentId: session.user.id,
-            lessonId: lessonSlug,
-          },
-        },
-        data: {
+      await db
+        .update(scienceLessonCompletions)
+        .set({
           status: 'IN_PROGRESS',
           lastAttemptAt: new Date(),
-        },
-      });
+          updatedAt: new Date(),
+        })
+        .where(eq(scienceLessonCompletions.id, existingCompletion.id));
     }
 
-    // 11. Format response (exclude correctAnswer)
+    // 10. Response — exclude correctAnswer.
     const response = {
       quizId: attempt.id,
-      lessonId: lessonSlug,
+      lessonId: lesson.id,
       questions: selectedQuestions.map((q, index) => ({
         id: q.id,
         type: q.type,
         text: q.text,
         options: q.options,
         points: q.points,
-        order: index + 1, // Order within this quiz
+        order: index + 1,
       })),
       totalPoints,
       startedAt: attempt.startedAt.toISOString(),
@@ -180,7 +204,6 @@ export async function GET(
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
     console.error('Failed to fetch quiz:', error);
-
     return NextResponse.json(
       { error: 'An unexpected error occurred while fetching the quiz' },
       { status: 500 }
@@ -200,7 +223,12 @@ export async function POST(
   context: { params: Promise<{ lessonSlug: string }> }
 ) {
   try {
-    // 1. Authenticate user
+    // lessonSlug from the URL is the lookup key for downstream routes; this
+    // handler instead trusts the attempt row to identify the lesson, so we
+    // intentionally read the params for parity with the route contract but
+    // do not destructure them.
+    void context;
+
     const session = await getCurrentSession();
 
     if (!session) {
@@ -210,10 +238,6 @@ export async function POST(
       );
     }
 
-    // 2. Get lessonSlug from params
-    const { lessonSlug } = await context.params;
-
-    // 3. Parse request body
     const body = await request.json();
     const { attemptId, responses } = body;
 
@@ -224,17 +248,12 @@ export async function POST(
       );
     }
 
-    // 4. Fetch the attempt and verify ownership
-    const attempt = await prisma.attempt.findUnique({
-      where: { id: attemptId },
-      include: {
-        lesson: {
-          include: {
-            quizQuestions: true,
-          },
-        },
-      },
-    });
+    // 1. Load the attempt and verify ownership / not-already-submitted.
+    const [attempt] = await db
+      .select()
+      .from(scienceAttempts)
+      .where(eq(scienceAttempts.id, attemptId))
+      .limit(1);
 
     if (!attempt) {
       return NextResponse.json(
@@ -243,7 +262,6 @@ export async function POST(
       );
     }
 
-    // Authorization: verify student owns this attempt
     if (attempt.studentId !== session.user.id) {
       return NextResponse.json(
         { error: 'Not authorized to submit this attempt' },
@@ -251,7 +269,6 @@ export async function POST(
       );
     }
 
-    // Check if already submitted
     if (attempt.completedAt) {
       return NextResponse.json(
         { error: 'Attempt already submitted' },
@@ -259,12 +276,14 @@ export async function POST(
       );
     }
 
-    // 5. Get all questions for this lesson to validate and grade
-    const questionMap = new Map(
-      attempt.lesson.quizQuestions.map(q => [q.id, q])
-    );
+    // 2. Load the lesson's question bank to grade against.
+    const lessonQuestions = await db
+      .select()
+      .from(scienceQuizQuestions)
+      .where(eq(scienceQuizQuestions.lessonId, attempt.lessonId));
 
-    // 6. Validate that all questions are answered
+    const questionMap = new Map(lessonQuestions.map((q) => [q.id, q]));
+
     if (responses.length === 0) {
       return NextResponse.json(
         { error: 'All questions must be answered' },
@@ -272,7 +291,7 @@ export async function POST(
       );
     }
 
-    // 7. Grade each response and create QuestionResponse records
+    // 3. Grade.
     let totalScore = 0;
     const breakdown: {
       questionId: string;
@@ -283,7 +302,7 @@ export async function POST(
       points: number;
       timeSpentSeconds: number;
     }[] = [];
-    const questionResponsesToCreate: Prisma.QuestionResponseCreateManyInput[] = [];
+    const questionResponsesToCreate: Array<typeof scienceQuestionResponses.$inferInsert> = [];
 
     for (const response of responses) {
       const question = questionMap.get(response.questionId);
@@ -294,7 +313,6 @@ export async function POST(
         );
       }
 
-      // Auto-grade based on question type
       const isCorrect = gradeAnswer(
         question.type,
         response.studentAnswer,
@@ -304,18 +322,18 @@ export async function POST(
       const pointsEarned = isCorrect ? question.points : 0;
       totalScore += pointsEarned;
 
-      // Prepare question response record
       questionResponsesToCreate.push({
         attemptId,
         questionId: question.id,
-        studentAnswer: response.studentAnswer as Prisma.InputJsonValue,
+        studentAnswer: response.studentAnswer,
         isCorrect,
         timeSpentSeconds: response.timeSpentSeconds || 0,
-        answeredAt: response.answeredAt ? new Date(response.answeredAt) : new Date(),
+        answeredAt: response.answeredAt
+          ? new Date(response.answeredAt)
+          : new Date(),
         order: response.order,
       });
 
-      // Add to breakdown for response
       breakdown.push({
         questionId: question.id,
         questionText: question.text,
@@ -329,144 +347,135 @@ export async function POST(
 
     const percentage = (totalScore / attempt.maxScore) * 100;
 
-    // Calculate total time spent on this attempt
     const attemptTimeSpent = questionResponsesToCreate.reduce((sum, qr) => {
-      const timeSpent = typeof qr.timeSpentSeconds === 'number' ? qr.timeSpentSeconds : 0;
-      return sum + timeSpent;
+      const t = typeof qr.timeSpentSeconds === 'number' ? qr.timeSpentSeconds : 0;
+      return sum + t;
     }, 0);
 
-    // 8. Use transaction to ensure data consistency
-    await prisma.$transaction(async tx => {
-      // Update attempt with score and completion time
-      await tx.attempt.update({
-        where: { id: attemptId },
-        data: {
+    // 4. Transactional write: attempt + responses + lessonCompletion upsert.
+    await db.transaction(async (tx) => {
+      await tx
+        .update(scienceAttempts)
+        .set({
           score: totalScore,
           completedAt: new Date(),
-        },
-      });
+          updatedAt: new Date(),
+        })
+        .where(eq(scienceAttempts.id, attemptId));
 
-      // Create all question responses
-      await tx.questionResponse.createMany({
-        data: questionResponsesToCreate,
-      });
+      await tx.insert(scienceQuestionResponses).values(questionResponsesToCreate);
 
-      // Update or create LessonCompletion record
-      const existingCompletion = await tx.lessonCompletion.findUnique({
-        where: {
-          studentId_lessonId: {
-            studentId: session.user.id,
-            lessonId: lessonSlug,
-          },
-        },
-      });
+      const [existingCompletion] = await tx
+        .select()
+        .from(scienceLessonCompletions)
+        .where(
+          and(
+            eq(scienceLessonCompletions.studentId, session.user.id),
+            eq(scienceLessonCompletions.lessonId, attempt.lessonId)
+          )
+        )
+        .limit(1);
+
+      const now = new Date();
 
       if (existingCompletion) {
-        // Update existing completion
-        await tx.lessonCompletion.update({
-          where: {
-            studentId_lessonId: {
-              studentId: session.user.id,
-              lessonId: lessonSlug,
-            },
-          },
-          data: {
-            attemptsCount: { increment: 1 },
+        const bestScore =
+          existingCompletion.bestScore !== null
+            ? Math.max(existingCompletion.bestScore, totalScore)
+            : totalScore;
+        const bestScorePercentage =
+          existingCompletion.bestScorePercentage !== null
+            ? Math.max(existingCompletion.bestScorePercentage, percentage)
+            : percentage;
+
+        await tx
+          .update(scienceLessonCompletions)
+          .set({
+            attemptsCount: existingCompletion.attemptsCount + 1,
             mostRecentScore: totalScore,
             mostRecentScorePercentage: percentage,
-            bestScore:
-              existingCompletion.bestScore !== null
-                ? Math.max(existingCompletion.bestScore, totalScore)
-                : totalScore,
-            bestScorePercentage:
-              existingCompletion.bestScorePercentage !== null
-                ? Math.max(existingCompletion.bestScorePercentage, percentage)
-                : percentage,
-            lastAttemptAt: new Date(),
+            bestScore,
+            bestScorePercentage,
+            lastAttemptAt: now,
             status: 'COMPLETED',
-            completedAt: new Date(),
-            totalTimeSpentSeconds: existingCompletion.totalTimeSpentSeconds + attemptTimeSpent,
-          },
-        });
+            completedAt: now,
+            totalTimeSpentSeconds:
+              existingCompletion.totalTimeSpentSeconds + attemptTimeSpent,
+            updatedAt: now,
+          })
+          .where(eq(scienceLessonCompletions.id, existingCompletion.id));
       } else {
-        // Create new completion record
-        await tx.lessonCompletion.create({
-          data: {
-            studentId: session.user.id,
-            lessonId: lessonSlug,
-            status: 'COMPLETED',
-            attemptsCount: 1,
-            bestScore: totalScore,
-            bestScorePercentage: percentage,
-            mostRecentScore: totalScore,
-            mostRecentScorePercentage: percentage,
-            lastAttemptAt: new Date(),
-            completedAt: new Date(),
-            totalTimeSpentSeconds: attemptTimeSpent,
-          },
+        await tx.insert(scienceLessonCompletions).values({
+          studentId: session.user.id,
+          lessonId: attempt.lessonId,
+          status: 'COMPLETED',
+          attemptsCount: 1,
+          bestScore: totalScore,
+          bestScorePercentage: percentage,
+          mostRecentScore: totalScore,
+          mostRecentScorePercentage: percentage,
+          lastAttemptAt: now,
+          completedAt: now,
+          totalTimeSpentSeconds: attemptTimeSpent,
         });
       }
     });
 
-    // 9. Create MasteryRun and process mastery updates
-    await prisma.masteryRun.create({
-      data: {
-        attemptId,
-        studentId: session.user.id,
-        status: 'PENDING',
-        updatedCount: 0,
-      },
+    // 5. Create MasteryRun and process mastery updates.
+    await db.insert(scienceMasteryRuns).values({
+      attemptId,
+      studentId: session.user.id,
+      status: 'PENDING',
+      updatedCount: 0,
     });
 
-    const masteryResult = await processMasteryRun(
-      { attemptId, studentId: session.user.id },
-      prisma
-    );
+    const masteryResult = await processMasteryRun({
+      attemptId,
+      studentId: session.user.id,
+    });
 
-    // 10. Award XP and update streak
+    // 6. Award XP + update streak.
     const { baseXp, firstAttemptBonus, totalXp } = calculateXpForQuiz(
       percentage,
       attempt.attemptNumber
     );
 
-    // Find or create gamification profile
-    let gamificationProfile = await prisma.gamificationProfile.findUnique({
-      where: { userId: session.user.id },
-    });
+    let [gamificationProfile] = await db
+      .select()
+      .from(gamificationProfiles)
+      .where(eq(gamificationProfiles.userId, session.user.id))
+      .limit(1);
 
     if (!gamificationProfile) {
-      gamificationProfile = await prisma.gamificationProfile.create({
-        data: {
+      [gamificationProfile] = await db
+        .insert(gamificationProfiles)
+        .values({
           userId: session.user.id,
           xp: 0,
           level: 1,
           streak: 0,
-        },
-      });
+        })
+        .returning();
     }
 
-    // Award XP
     const xpResult = await awardXp(gamificationProfile.id, totalXp);
-
-    // Update streak
     const streakResult = await updateStreakForProfile(
       gamificationProfile.id,
       new Date()
     );
 
-    // Calculate total XP including streak milestone bonus
     const totalXpAwarded = totalXp + streakResult.milestoneBonus;
 
-    // 10. Check badge unlock conditions
+    // 7. Badge checks.
     const badgeResult = await checkBadgeConditions(session.user.id, {
       type: 'quiz_completed',
       score: percentage,
       attemptNumber: attempt.attemptNumber,
-      lessonId: lessonSlug,
+      lessonId: attempt.lessonId,
       studentId: session.user.id,
     });
 
-    // 11. Format and return response
+    // 8. Response.
     return NextResponse.json(
       {
         attemptId,
@@ -498,11 +507,9 @@ export async function POST(
     );
   } catch (error) {
     console.error('Failed to submit quiz:', error);
-
     return NextResponse.json(
       { error: 'An unexpected error occurred while submitting the quiz' },
       { status: 500 }
     );
   }
 }
-
