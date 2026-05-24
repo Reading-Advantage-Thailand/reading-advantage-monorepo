@@ -279,11 +279,11 @@ be green against BEFORE and stay green against AFTER.
 
 - [x] [06a4117] Task: Confirm zero non-generated Prisma references [06a4117: lib/platform/session-cleanup.ts (renamed DI param 'prisma'→'client' and interface 'PrismaSession'→'SessionStore' to drop stale Prisma naming; behavior-preserving, dead code consumed only by tests). All other matches are Phase-7-owned (lib/prisma.ts, package.json `@prisma/client`) or harmless comments/docs/archived measure logs.]
     - [ ] Sub-task: `grep -rln "@prisma\|@/lib/prisma" apps/science-advantage --include=*.ts --include=*.tsx | grep -vE "node_modules|/.next/|lib/generated"` returns nothing
-- [~] Task: Delete Prisma surface
-    - [ ] Sub-task: Delete `apps/science-advantage/lib/prisma.ts` and `lib/prisma.test.ts`
-    - [ ] Sub-task: Delete `apps/science-advantage/prisma/` (schema, migrations, seed)
-    - [ ] Sub-task: Delete `prisma.config.ts`
-    - [ ] Sub-task: Strip `prisma`, `@prisma/client`, `prisma-zod-generator` from `package.json` (and any `prebuild`/`postinstall` prisma scripts)
+- [x] [ba5be9f] Task: Delete Prisma surface [d2d596e: lib/prisma.ts (client wrapper), 52881df: prisma/schema.prisma + prisma/migrations/ (Drizzle owns now), df2ec5e: prisma.config.ts, 1bd0356: package.json (@prisma/client + prisma deps + 'prisma generate' build prefix + dev:reset script), 6203b68: pnpm-lock.yaml refresh, ba5be9f: stale Prisma-mock tests (route.test.ts/auth-contract.test.ts/analytics route.test.ts — line-280 regression, dynamic-import + vi.mock patterns missed by 'from \"...\"' grep). Note: prisma/data/, prisma/seed-data/, prisma/seed-functions/ left in place (JSON content + utility consumed by lib/schemas/__tests__/*, scripts/validate-content.ts, tests/seed-activity.integration.test.ts); historical dir name only — no Prisma artifacts inside. Rename to non-`prisma/` dir = follow-up.]
+    - [x] Sub-task: Delete `apps/science-advantage/lib/prisma.ts` and `lib/prisma.test.ts` (lib/prisma.test.ts already deleted row 273)
+    - [x] Sub-task: Delete `apps/science-advantage/prisma/` (schema, migrations) — seed-data/seed-functions/data left for active consumers
+    - [x] Sub-task: Delete `prisma.config.ts`
+    - [x] Sub-task: Strip `prisma`, `@prisma/client`, `prisma-zod-generator` from `package.json` (and any `prebuild`/`postinstall` prisma scripts) — no zod-generator or postinstall present
 - [ ] Task: Re-evaluate `ignoreBuildErrors` (tech debt 2026-05-03 `auth_strategy_review`) — remove it if the build is now clean; if two `next` versions still conflict, leave it and update the tech-debt note
 - [ ] Task: Verify clean install + build + test
     - [ ] Sub-task: `pnpm install`
