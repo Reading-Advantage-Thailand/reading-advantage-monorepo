@@ -290,7 +290,7 @@ be green against BEFORE and stay green against AFTER.
     - [ ] Sub-task: `pnpm --filter science-advantage build`
     - [ ] Sub-task: `CI=true pnpm --filter science-advantage test` green
     - [x] [04d8fa5] Sub-task: Fix badges.ts client-bundle leak — split into `badges.constants.ts` (client-safe BADGE_DEFINITIONS + types) and `badges.ts` (server-only shim with `import "server-only"`; keeps DB checkers + re-exports constants); repoint client importers (quiz-player, badge-unlock-animation, student-badges-section)
-    - [~] Sub-task: Fix xp.ts client-bundle leak — split into `xp.constants.ts` (client-safe LEVEL_THRESHOLDS/LEVEL_NAMES + pure fns `calculateLevel`/`getLevelName`/`calculateXpForQuiz`) and `xp.ts` (server-only shim with `import "server-only"`; keeps `awardXp` DB writer + re-exports constants); repoint client importer (level-up-animation)
+    - [x] [d596dfb] Sub-task: Fix xp.ts client-bundle leak — split into `xp.constants.ts` (client-safe LEVEL_THRESHOLDS/LEVEL_NAMES + pure fns `calculateLevel`/`getLevelName`/`calculateXpForQuiz`) and `xp.ts` (server-only shim with `import "server-only"`; keeps `awardXp` DB writer + re-exports constants); repoint client importer (level-up-animation)
 - [ ] Task: Close tech-debt entry `science_auth` (2026-05-03, non-auth Prisma still in use); append any deferred slices to Track 4's spec
 - [ ] Task: Add lessons-learned entries for non-obvious reshape handling (≤50-line cap — prune first)
 - [-] Task: Measure - User Manual Verification 'Prisma Removal' (Protocol in workflow.md) — _deferred to end-of-track batch_
