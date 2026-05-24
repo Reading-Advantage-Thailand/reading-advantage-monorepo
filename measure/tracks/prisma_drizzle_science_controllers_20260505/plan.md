@@ -256,13 +256,13 @@ be green against BEFORE and stay green against AFTER.
   • classes.test.ts: deleted [2456154]; superseded by `app/api/classes/route.integration.test.ts` [2456154]
   • class-analytics-overview.integration.test.ts: deleted [bca632f]; superseded by `app/api/classes/[classId]/analytics/overview/route.integration.test.ts` [bca632f]
   • teacher-dashboard.integration.test.ts: deleted [0323d6c]; superseded by `app/api/teachers/dashboard/route.integration.test.ts` [0323d6c]
-- [ ] Task: Measure - User Manual Verification 'Classes & Assignments' (Protocol in workflow.md)
+- [-] Task: Measure - User Manual Verification 'Classes & Assignments' (Protocol in workflow.md) — _deferred to end-of-track batch_
 
 ## Phase 5: AI types & remaining lib
 
 - [x] [59c8251] Task: Migrate `lib/ai/types.ts` (types-only — swap `@prisma/client` type imports for `typeof <table>.$inferSelect`)
 - [x] [76227c8] Task: Re-grep `lib/` and `app/api/` for any file still importing Prisma and migrate it (catch-all for inventory drift) — 3 stale Prisma-importing route integration tests deleted (already 100% broken pre-existing: Prisma against Drizzle-managed test DB + route wrappers now delegate to `@reading-advantage/api/routes/auth`; coverage retained in `packages/api/src/__tests__/auth-routes.test.ts`). Remaining `@prisma/client` reference is `lib/prisma.ts` (Phase 7) and doc-comment-only mentions in `lib/enums.ts`, `lib/validations/{class,student-classes}.ts`. [ca51372, fa86cfe, 76227c8]
-- [ ] Task: Measure - User Manual Verification 'Remaining lib' (Protocol in workflow.md)
+- [-] Task: Measure - User Manual Verification 'Remaining lib' (Protocol in workflow.md) — _deferred to end-of-track batch_
 
 ## Phase 6: Seeds, scripts, generated artifacts & leftover test imports
 
@@ -273,7 +273,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] [098362f] Task: Fix leftover Prisma imports in already-migrated auth tests — `lib/auth/server.integration.test.ts`, `session-id-separation.test.ts`, `session.integration.test.ts`, `session.unit.test.ts` (DELETED), `lib/prisma.test.ts` (DELETED). Rewritten on Drizzle; auth logic unchanged. 44/44 pass.
 - [x] Task: Migrate remaining `tests/` files — `tests/api/*`, `tests/lib/test-utils.ts`, `tests/schema.test.ts`, `tests/seed-activity.integration.test.ts` [f9e642f: tests/lib/test-utils.ts (deleted — no consumers, all-Prisma helpers), 5a47758: tests/schema.test.ts (deleted — Prisma schema-validation suite, obsolete; superseded by Drizzle migrations + co-located *.integration.test.ts), cb04ed5: tests/seed-activity.integration.test.ts (deferred via describe.skip — blocked by Phase 6 line 263 prisma/seed-functions/* migration); LEAVE (no Prisma, behavior-preserving): tests/api/student-classes.test.ts + tests/lib/{bilingual-schema,class-validations,display-preference,from-zod,grade4-normalization,mastery-calculator,seed-validation}.test.{ts,tsx} — 65/65 pass (display-preference pre-existing DOM-matcher failure out of scope)]
 - [x] Task: Delete `lib/generated/zod/` entirely (no importers remain after Phase 4) and confirm `prisma-zod-generator` config is removed [eab9aee]
-- [ ] Task: Measure - User Manual Verification 'Seeds / Scripts / Generated' (Protocol in workflow.md)
+- [-] Task: Measure - User Manual Verification 'Seeds / Scripts / Generated' (Protocol in workflow.md) — _deferred to end-of-track batch_
 
 ## Phase 7: Prisma removal & final verification
 
@@ -291,4 +291,4 @@ be green against BEFORE and stay green against AFTER.
     - [ ] Sub-task: `CI=true pnpm --filter science-advantage test` green
 - [ ] Task: Close tech-debt entry `science_auth` (2026-05-03, non-auth Prisma still in use); append any deferred slices to Track 4's spec
 - [ ] Task: Add lessons-learned entries for non-obvious reshape handling (≤50-line cap — prune first)
-- [ ] Task: Measure - User Manual Verification 'Prisma Removal' (Protocol in workflow.md)
+- [-] Task: Measure - User Manual Verification 'Prisma Removal' (Protocol in workflow.md) — _deferred to end-of-track batch_
