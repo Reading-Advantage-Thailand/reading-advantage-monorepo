@@ -240,7 +240,7 @@ be green against BEFORE and stay green against AFTER.
 ## Phase 4: Classes, assignments & teacher surfaces
 
 - [x] Task: Migrate `lib/services/classes/get-student-classes.ts` (class) [f662db3]
-- [~] Task: Migrate `lib/utils/generateJoinCode.ts` (class) and `lib/utils/class-format.ts` (types-only)
+- [x] Task: Migrate `lib/utils/generateJoinCode.ts` (class) and `lib/utils/class-format.ts` (types-only) [41d2b92]
 - [ ] Task: Rewrite `lib/validations/class.ts` and `lib/validations/student-classes.ts` with hand-written Zod (or `drizzle-zod`) — removes the only two `lib/generated/zod/` importers (0.7)
 - [ ] Task: Migrate `app/api/classes/route.ts`, `classes/join/route.ts`, `classes/[classId]/route.ts` (class) — one commit each
 - [ ] Task: Migrate `app/api/classes/[classId]/roster/route.ts` (class, user) and `classes/[classId]/assignments/route.ts` (assignment, class, lesson)
