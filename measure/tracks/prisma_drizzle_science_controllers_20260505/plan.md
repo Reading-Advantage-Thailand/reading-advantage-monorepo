@@ -242,7 +242,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] Task: Migrate `lib/services/classes/get-student-classes.ts` (class) [f662db3]
 - [x] Task: Migrate `lib/utils/generateJoinCode.ts` (class) and `lib/utils/class-format.ts` (types-only) [41d2b92]
 - [ ] Task: Rewrite `lib/validations/class.ts` and `lib/validations/student-classes.ts` with hand-written Zod (or `drizzle-zod`) — removes the only two `lib/generated/zod/` importers (0.7)
-- [~] Task: Migrate `app/api/classes/route.ts`, `classes/join/route.ts`, `classes/[classId]/route.ts` (class) — one commit each
+- [x] [a71dd65] Task: Migrate `app/api/classes/route.ts`, `classes/join/route.ts`, `classes/[classId]/route.ts` (class) — one commit each [c5db00e, 2456154, a71dd65]
 - [ ] Task: Migrate `app/api/classes/[classId]/roster/route.ts` (class, user) and `classes/[classId]/assignments/route.ts` (assignment, class, lesson)
 - [ ] Task: Migrate `app/api/students/[studentId]/assignments/route.ts` (assignment)
 - [ ] Task: Migrate `app/api/teachers/dashboard/route.ts` (class, lessonCompletion, standardMastery)
