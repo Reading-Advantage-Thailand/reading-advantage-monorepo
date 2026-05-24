@@ -1,4 +1,13 @@
-import prisma from '@/lib/prisma';
+import { db, and, eq, gt, inArray, isNotNull, count } from '@reading-advantage/db';
+import {
+  achievements,
+  gamificationProfiles,
+  scienceAttempts,
+  scienceCurriculumUnits,
+  scienceLessonCompletions,
+  scienceLessons,
+  scienceUnitLessons,
+} from '@reading-advantage/db/schema';
 
 export type BadgeType =
   | 'FIRST_STEPS'
@@ -90,45 +99,73 @@ export interface BadgeTriggerEvent {
   studentId: string;
 }
 
+async function countCompletedLessons(userId: string): Promise<number> {
+  const [row] = await db
+    .select({ c: count() })
+    .from(scienceLessonCompletions)
+    .where(
+      and(
+        eq(scienceLessonCompletions.studentId, userId),
+        eq(scienceLessonCompletions.status, 'COMPLETED')
+      )
+    );
+  return row?.c ?? 0;
+}
+
 async function checkFirstSteps(userId: string): Promise<boolean> {
-  const count = await prisma.lessonCompletion.count({
-    where: { studentId: userId, status: 'COMPLETED' },
-  });
-  return count >= 1;
+  return (await countCompletedLessons(userId)) >= 1;
 }
 
 async function checkPerfectScore(userId: string): Promise<boolean> {
-  // Check if any completed attempt has score equal to maxScore
-  const attempt = await prisma.attempt.findFirst({
-    where: {
-      studentId: userId,
-      completedAt: { not: null },
-      maxScore: { gt: 0 },
-    },
-    orderBy: { completedAt: 'desc' },
-  });
+  const [attempt] = await db
+    .select({
+      score: scienceAttempts.score,
+      maxScore: scienceAttempts.maxScore,
+    })
+    .from(scienceAttempts)
+    .where(
+      and(
+        eq(scienceAttempts.studentId, userId),
+        isNotNull(scienceAttempts.completedAt),
+        gt(scienceAttempts.maxScore, 0)
+      )
+    )
+    .orderBy(scienceAttempts.completedAt)
+    .limit(1);
+
   if (!attempt) return false;
   return attempt.score >= attempt.maxScore;
 }
 
 async function checkUnitChampion(userId: string): Promise<boolean> {
-  // Check if there exists any CurriculumUnit where the student has completed all lessons
-  const units = await prisma.curriculumUnit.findMany({
-    include: { lessons: { select: { id: true } } },
-  });
+  // For each curriculum unit, check whether the student has completed every
+  // lesson in that unit via the unitLessons junction.
+  const units = await db
+    .select({ unitId: scienceCurriculumUnits.id })
+    .from(scienceCurriculumUnits);
 
   for (const unit of units) {
-    if (unit.lessons.length === 0) continue;
+    const unitLessonRows = await db
+      .select({ lessonId: scienceUnitLessons.lessonId })
+      .from(scienceUnitLessons)
+      .where(eq(scienceUnitLessons.unitId, unit.unitId));
 
-    const completedCount = await prisma.lessonCompletion.count({
-      where: {
-        studentId: userId,
-        status: 'COMPLETED',
-        lessonId: { in: unit.lessons.map(l => l.id) },
-      },
-    });
+    if (unitLessonRows.length === 0) continue;
 
-    if (completedCount === unit.lessons.length) {
+    const lessonIds = unitLessonRows.map((r) => r.lessonId);
+
+    const [completedRow] = await db
+      .select({ c: count() })
+      .from(scienceLessonCompletions)
+      .where(
+        and(
+          eq(scienceLessonCompletions.studentId, userId),
+          eq(scienceLessonCompletions.status, 'COMPLETED'),
+          inArray(scienceLessonCompletions.lessonId, lessonIds)
+        )
+      );
+
+    if ((completedRow?.c ?? 0) === lessonIds.length) {
       return true;
     }
   }
@@ -137,21 +174,25 @@ async function checkUnitChampion(userId: string): Promise<boolean> {
 }
 
 async function checkScienceExplorer(userId: string): Promise<boolean> {
-  const count = await prisma.lessonCompletion.count({
-    where: { studentId: userId, status: 'COMPLETED' },
-  });
-  return count >= 10;
+  return (await countCompletedLessons(userId)) >= 10;
 }
 
 async function checkLabPartner(userId: string): Promise<boolean> {
-  const count = await prisma.lessonCompletion.count({
-    where: {
-      studentId: userId,
-      status: 'COMPLETED',
-      lesson: { lessonType: 'LAB' },
-    },
-  });
-  return count >= 1;
+  const [row] = await db
+    .select({ c: count() })
+    .from(scienceLessonCompletions)
+    .innerJoin(
+      scienceLessons,
+      eq(scienceLessons.id, scienceLessonCompletions.lessonId)
+    )
+    .where(
+      and(
+        eq(scienceLessonCompletions.studentId, userId),
+        eq(scienceLessonCompletions.status, 'COMPLETED'),
+        eq(scienceLessons.lessonType, 'LAB')
+      )
+    );
+  return (row?.c ?? 0) >= 1;
 }
 
 async function checkBilingualScholar(_userId: string): Promise<boolean> {
@@ -160,39 +201,52 @@ async function checkBilingualScholar(_userId: string): Promise<boolean> {
 }
 
 async function checkStreakWarrior(userId: string): Promise<boolean> {
-  const profile = await prisma.gamificationProfile.findUnique({
-    where: { userId },
-    select: { streak: true },
-  });
+  const [profile] = await db
+    .select({ streak: gamificationProfiles.streak })
+    .from(gamificationProfiles)
+    .where(eq(gamificationProfiles.userId, userId))
+    .limit(1);
   return (profile?.streak ?? 0) >= 7;
 }
 
 async function checkDedicatedLearner(userId: string): Promise<boolean> {
-  const profile = await prisma.gamificationProfile.findUnique({
-    where: { userId },
-    select: { streak: true },
-  });
+  const [profile] = await db
+    .select({ streak: gamificationProfiles.streak })
+    .from(gamificationProfiles)
+    .where(eq(gamificationProfiles.userId, userId))
+    .limit(1);
   return (profile?.streak ?? 0) >= 30;
 }
 
 async function checkQuizMaster(userId: string): Promise<boolean> {
-  const count = await prisma.attempt.count({
-    where: { studentId: userId, completedAt: { not: null } },
-  });
-  return count >= 10;
+  const [row] = await db
+    .select({ c: count() })
+    .from(scienceAttempts)
+    .where(
+      and(
+        eq(scienceAttempts.studentId, userId),
+        isNotNull(scienceAttempts.completedAt)
+      )
+    );
+  return (row?.c ?? 0) >= 10;
 }
 
 async function checkFastLearner(userId: string): Promise<boolean> {
-  const firstAttempts = await prisma.attempt.findMany({
-    where: {
-      studentId: userId,
-      attemptNumber: 1,
-      completedAt: { not: null },
-    },
-    select: { score: true, maxScore: true },
-  });
+  const firstAttempts = await db
+    .select({
+      score: scienceAttempts.score,
+      maxScore: scienceAttempts.maxScore,
+    })
+    .from(scienceAttempts)
+    .where(
+      and(
+        eq(scienceAttempts.studentId, userId),
+        eq(scienceAttempts.attemptNumber, 1),
+        isNotNull(scienceAttempts.completedAt)
+      )
+    );
 
-  const passingCount = firstAttempts.filter(a => {
+  const passingCount = firstAttempts.filter((a) => {
     if (a.maxScore === 0) return false;
     return (a.score / a.maxScore) * 100 >= 80;
   }).length;
@@ -230,37 +284,36 @@ export async function evaluateAllBadges(
 export async function checkBadgeConditions(
   userId: string,
   _triggerEvent: BadgeTriggerEvent
-): Promise<{ newlyUnlocked: BadgeType[]; achievements: { badgeType: string; id: string; unlockedAt: Date }[] }> {
-  // Get already-unlocked badges
-  const existingAchievements = await prisma.achievement.findMany({
-    where: { userId },
-    select: { badgeType: true },
-  });
-  const existingBadgeTypes = new Set(existingAchievements.map(a => a.badgeType));
+): Promise<{
+  newlyUnlocked: BadgeType[];
+  achievements: { badgeType: string; id: string; unlockedAt: Date }[];
+}> {
+  const existingAchievements = await db
+    .select({ badgeType: achievements.badgeType })
+    .from(achievements)
+    .where(eq(achievements.userId, userId));
+  const existingBadgeTypes = new Set(existingAchievements.map((a) => a.badgeType));
 
-  // Evaluate all badge conditions
   const allUnlocked = await evaluateAllBadges(userId);
+  const newlyUnlocked = allUnlocked.filter((b) => !existingBadgeTypes.has(b));
 
-  // Filter to only newly unlocked
-  const newlyUnlocked = allUnlocked.filter(b => !existingBadgeTypes.has(b));
-
-  // Create Achievement records for newly unlocked badges
-  const achievements: { badgeType: string; id: string; unlockedAt: Date }[] = [];
+  const created: { badgeType: string; id: string; unlockedAt: Date }[] = [];
 
   for (const badgeType of newlyUnlocked) {
-    const achievement = await prisma.achievement.create({
-      data: {
+    const [achievement] = await db
+      .insert(achievements)
+      .values({
         userId,
         badgeType,
         unlockedAt: new Date(),
-      },
-    });
-    achievements.push({
+      })
+      .returning();
+    created.push({
       badgeType: achievement.badgeType,
       id: achievement.id,
       unlockedAt: achievement.unlockedAt,
     });
   }
 
-  return { newlyUnlocked, achievements };
+  return { newlyUnlocked, achievements: created };
 }
