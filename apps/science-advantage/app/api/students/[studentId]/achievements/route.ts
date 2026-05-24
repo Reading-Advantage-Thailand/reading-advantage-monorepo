@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { db, desc, eq } from '@reading-advantage/db';
+import { achievements } from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/observability/logger';
-import prisma from '@/lib/prisma';
 
 export async function GET(
   _request: NextRequest,
@@ -35,22 +36,22 @@ export async function GET(
       );
     }
 
-    const achievements = await prisma.achievement.findMany({
-      where: { userId: studentId },
-      orderBy: { unlockedAt: 'desc' },
-      select: {
-        badgeType: true,
-        unlockedAt: true,
-      },
-    });
+    const studentAchievements = await db
+      .select({
+        badgeType: achievements.badgeType,
+        unlockedAt: achievements.unlockedAt,
+      })
+      .from(achievements)
+      .where(eq(achievements.userId, studentId))
+      .orderBy(desc(achievements.unlockedAt));
 
     logger.info('achievements.fetch', {
       studentId,
-      count: achievements.length,
+      count: studentAchievements.length,
     });
 
     return NextResponse.json({
-      achievements,
+      achievements: studentAchievements,
     });
   } catch (error) {
     logger.error('achievements.error', {
