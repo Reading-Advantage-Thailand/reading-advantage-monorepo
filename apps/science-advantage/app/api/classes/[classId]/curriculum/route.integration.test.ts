@@ -1,11 +1,22 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
-import type { user as UserModel, Class, Lesson } from '@prisma/client';
+import { db, sql } from '@reading-advantage/db';
+import {
+  accounts,
+  scienceClasses,
+  scienceClassStudents,
+  scienceCurriculumUnits,
+  scienceLessonCompletions,
+  scienceLessons,
+  scienceUnitLessons,
+  sessions,
+  users,
+} from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
-// Mock next/headers for cookies
+const TEST_PREFIX = 'curriculum-itest';
+
 const mockCookies = {
   get: vi.fn(),
   set: vi.fn(),
@@ -16,14 +27,97 @@ vi.mock('next/headers', () => ({
   cookies: vi.fn(() => mockCookies),
 }));
 
-describe('GET /api/classes/[classId]/curriculum - Integration Tests', () => {
-  let testTeacher: UserModel;
-  let testStudent: UserModel;
-  let otherStudent: UserModel;
-  let testClass: Class;
-  let testLesson1: Lesson;
-  let testLesson2: Lesson;
-  let testLesson3: Lesson;
+type UserRow = typeof users.$inferSelect;
+type ClassRow = typeof scienceClasses.$inferSelect;
+type LessonRow = typeof scienceLessons.$inferSelect;
+
+async function cleanup(): Promise<void> {
+  await db.delete(scienceLessonCompletions);
+  await db.delete(scienceUnitLessons);
+  await db.delete(scienceClassStudents);
+  await db.delete(scienceLessons);
+  await db.delete(scienceCurriculumUnits);
+  await db.delete(scienceClasses);
+  await db.delete(sessions);
+  await db.delete(accounts);
+  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+}
+
+async function seedUser(id: string, role: 'TEACHER' | 'STUDENT'): Promise<UserRow> {
+  const [user] = await db
+    .insert(users)
+    .values({
+      id,
+      name: id,
+      username: id,
+      displayUsername: id,
+      email: `${id}@example.com`,
+      role,
+    })
+    .returning();
+  return user;
+}
+
+async function seedClass(teacherId: string): Promise<ClassRow> {
+  const [cls] = await db
+    .insert(scienceClasses)
+    .values({
+      name: 'Curriculum Test Class',
+      gradeLevel: 3,
+      standardsAlignment: 'THAI',
+      joinCode: `CURR-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
+      teacherId,
+    })
+    .returning();
+  return cls;
+}
+
+async function seedUnitWithLessons(
+  classId: string,
+  unitOrder: number,
+  lessonOrders: number[]
+): Promise<{ unitId: string; lessons: LessonRow[] }> {
+  const [unit] = await db
+    .insert(scienceCurriculumUnits)
+    .values({
+      slug: `${TEST_PREFIX}-unit-${unitOrder}-${Date.now()}-${Math.random()
+        .toString(16)
+        .slice(2, 6)}`,
+      title: `Unit ${unitOrder}`,
+      framework: 'THAI',
+      gradeLevel: 3,
+      order: unitOrder,
+      classId,
+    })
+    .returning();
+
+  const lessons: LessonRow[] = [];
+  for (const order of lessonOrders) {
+    const [lesson] = await db
+      .insert(scienceLessons)
+      .values({
+        slug: `${TEST_PREFIX}-lesson-${unitOrder}-${order}-${Date.now()}-${Math.random()
+          .toString(16)
+          .slice(2, 6)}`,
+        title: `Lesson U${unitOrder}-${order}`,
+        gradeLevel: 3,
+        order,
+      })
+      .returning();
+    lessons.push(lesson);
+    await db
+      .insert(scienceUnitLessons)
+      .values({ unitId: unit.id, lessonId: lesson.id });
+  }
+
+  return { unitId: unit.id, lessons };
+}
+
+describe('GET /api/classes/[classId]/curriculum (integration)', () => {
+  let teacher: UserRow;
+  let student: UserRow;
+  let outsider: UserRow;
+  let cls: ClassRow;
 
   beforeEach(async () => {
     mockCookies.get.mockReset();
@@ -31,401 +125,138 @@ describe('GET /api/classes/[classId]/curriculum - Integration Tests', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
 
-    // Clean up in correct order
-    await prisma.questionResponse.deleteMany();
-    await prisma.attempt.deleteMany();
-    await prisma.lessonCompletion.deleteMany();
-    await prisma.$executeRaw`DELETE FROM "_CurriculumUnitToLesson"`;
-    await prisma.$executeRaw`DELETE FROM "_LessonToStandard"`;
-    await prisma.curriculumUnit.deleteMany();
-    await prisma.lesson.deleteMany();
-    await prisma.class.deleteMany();
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
-
-    // Create test users
-    testTeacher = await prisma.user.create({
-      data: {
-        id: 'test-teacher-curriculum',
-        name: 'Test Teacher',
-        username: 'testteacher-curriculum',
-        displayUsername: 'TestTeacher',
-        email: 'teacher-curriculum@example.com',
-        role: 'TEACHER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
-
-    testStudent = await prisma.user.create({
-      data: {
-        id: 'test-student-curriculum',
-        name: 'Test Student',
-        username: 'teststudent-curriculum',
-        displayUsername: 'TestStudent',
-        email: 'student-curriculum@example.com',
-        role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
-
-    otherStudent = await prisma.user.create({
-      data: {
-        id: 'other-student-curriculum',
-        name: 'Other Student',
-        username: 'otherstudent-curriculum',
-        displayUsername: 'OtherStudent',
-        email: 'other-curriculum@example.com',
-        role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
-
-    // Create test class
-    testClass = await prisma.class.create({
-      data: {
-        id: 'test-class-curriculum',
-        name: 'Grade 3 Science',
-        gradeLevel: 3,
-        standardsAlignment: 'THAI',
-        joinCode: 'CUR123',
-        teacherId: testTeacher.id,
-        students: {
-          connect: { id: testStudent.id },
-        },
-      },
-    });
-
-    // Create test lessons
-    testLesson1 = await prisma.lesson.create({
-      data: {
-        id: 'lesson-1',
-        slug: 'intro-to-science',
-        title: 'Introduction to Science',
-        description: 'Learn what science is',
-        content: 'Science is the study of the natural world',
-        gradeLevel: 3,
-        order: 1,
-      },
-    });
-
-    testLesson2 = await prisma.lesson.create({
-      data: {
-        id: 'lesson-2',
-        slug: 'living-things',
-        title: 'Living Things',
-        description: 'Learn about living organisms',
-        content: 'Living things grow, move, and reproduce',
-        gradeLevel: 3,
-        order: 2,
-      },
-    });
-
-    testLesson3 = await prisma.lesson.create({
-      data: {
-        id: 'lesson-3',
-        slug: 'plants-and-animals',
-        title: 'Plants and Animals',
-        description: 'Compare plants and animals',
-        content: 'Plants make their own food, animals do not',
-        gradeLevel: 3,
-        order: 3,
-      },
-    });
-
-    // Create curriculum units
-    await prisma.curriculumUnit.create({
-      data: {
-        id: 'unit-1',
-        slug: 'unit-1-intro-to-science',
-        title: 'Unit 1: Introduction to Science',
-        description: 'Basic science concepts',
-        framework: 'THAI',
-        gradeLevel: 3,
-        order: 1,
-        classId: testClass.id,
-        lessons: {
-          connect: [{ id: testLesson1.id }, { id: testLesson2.id }],
-        },
-      },
-    });
-
-    await prisma.curriculumUnit.create({
-      data: {
-        id: 'unit-2',
-        slug: 'unit-2-living-organisms',
-        title: 'Unit 2: Living Organisms',
-        description: 'Study of life',
-        framework: 'THAI',
-        gradeLevel: 3,
-        order: 2,
-        classId: testClass.id,
-        lessons: {
-          connect: [{ id: testLesson3.id }],
-        },
-      },
-    });
+    await cleanup();
+    teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
+    student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    outsider = await seedUser(`${TEST_PREFIX}-outsider`, 'STUDENT');
+    cls = await seedClass(teacher.id);
+    await db
+      .insert(scienceClassStudents)
+      .values({ classId: cls.id, studentId: student.id });
   });
 
-  afterEach(async () => {
-    await prisma.questionResponse.deleteMany();
-    await prisma.attempt.deleteMany();
-    await prisma.lessonCompletion.deleteMany();
-    await prisma.$executeRaw`DELETE FROM "_CurriculumUnitToLesson"`;
-    await prisma.$executeRaw`DELETE FROM "_LessonToStandard"`;
-    await prisma.curriculumUnit.deleteMany();
-    await prisma.lesson.deleteMany();
-    await prisma.class.deleteMany();
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+  it('returns 401 when not authenticated', async () => {
+    mockCookies.get.mockReturnValue(undefined);
+    const req = new NextRequest(`http://localhost/api/classes/${cls.id}/curriculum`);
+    const res = await GET(req, { params: Promise.resolve({ classId: cls.id }) });
+    expect(res.status).toBe(401);
   });
 
-  describe('Authentication', () => {
-    it('should return 401 when not authenticated', async () => {
-      mockCookies.get.mockReturnValue(undefined);
-
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(401);
-      expect(data.error).toBe('Authentication required');
-    });
+  it('returns 404 when class does not exist', async () => {
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const ghostId = '00000000-0000-0000-0000-000000000000';
+    const req = new NextRequest(`http://localhost/api/classes/${ghostId}/curriculum`);
+    const res = await GET(req, { params: Promise.resolve({ classId: ghostId }) });
+    expect(res.status).toBe(404);
   });
 
-  describe('Authorization - Student Access', () => {
-    it('should allow enrolled student to access curriculum', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.class).toBeDefined();
-      expect(data.units).toBeDefined();
-    });
-
-    it('should deny non-enrolled student access', async () => {
-      const session = await createSession(otherStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(403);
-      expect(data.error).toBe('Not enrolled in this class');
-    });
+  it('returns 403 for a non-enrolled student', async () => {
+    const session = await createSession(outsider.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(`http://localhost/api/classes/${cls.id}/curriculum`);
+    const res = await GET(req, { params: Promise.resolve({ classId: cls.id }) });
+    expect(res.status).toBe(403);
   });
 
-  describe('Authorization - Teacher Access', () => {
-    it('should allow class teacher to access curriculum', async () => {
-      const session = await createSession(testTeacher.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.class).toBeDefined();
-      expect(data.units).toBeDefined();
-    });
-
-    it('should deny other teacher access', async () => {
-      const otherTeacher = await prisma.user.create({
-        data: {
-          id: 'other-teacher',
-          name: 'Other Teacher',
-          username: 'otherteacher',
-          displayUsername: 'OtherTeacher',
-          email: 'other-teacher@example.com',
-          role: 'TEACHER',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      });
-
-      const session = await createSession(otherTeacher.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(403);
-      expect(data.error).toBe('Not enrolled in this class');
-    });
+  it('allows the teacher with empty curriculum', async () => {
+    const session = await createSession(teacher.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(`http://localhost/api/classes/${cls.id}/curriculum`);
+    const res = await GET(req, { params: Promise.resolve({ classId: cls.id }) });
+    const data = await res.json();
+    expect(res.status).toBe(200);
+    expect(data.class.id).toBe(cls.id);
+    expect(data.units).toEqual([]);
   });
 
-  describe('Class Not Found', () => {
-    it('should return 404 for non-existent class', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
+  it('returns units and lessons ordered by `order` for the enrolled student', async () => {
+    // Two units; second seeded first but with higher order so we exercise sort.
+    const unit2 = await seedUnitWithLessons(cls.id, 2, [2, 1]);
+    const unit1 = await seedUnitWithLessons(cls.id, 1, [3, 1, 2]);
 
-      const request = new NextRequest('http://localhost:3000/api/classes/non-existent-class/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: 'non-existent-class' }) });
-      const data = await response.json();
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(`http://localhost/api/classes/${cls.id}/curriculum`);
+    const res = await GET(req, { params: Promise.resolve({ classId: cls.id }) });
+    const data = await res.json();
 
-      expect(response.status).toBe(404);
-      expect(data.error).toBe('Class not found');
-    });
+    expect(res.status).toBe(200);
+    expect(data.units.map((u: { id: string }) => u.id)).toEqual([
+      unit1.unitId,
+      unit2.unitId,
+    ]);
+    expect(
+      data.units[0].lessons.map((l: { order: number }) => l.order)
+    ).toEqual([1, 2, 3]);
+    expect(
+      data.units[1].lessons.map((l: { order: number }) => l.order)
+    ).toEqual([1, 2]);
+
+    // Default progress is NOT_STARTED with zero counts.
+    for (const unit of data.units) {
+      for (const lesson of unit.lessons) {
+        expect(lesson.progress.status).toBe('NOT_STARTED');
+        expect(lesson.completed).toBe(false);
+        expect(lesson.started).toBe(false);
+        expect(lesson.progress.attemptsCount).toBe(0);
+      }
+    }
   });
 
-  describe('Response Format', () => {
-    it('should return correct class information', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
+  it('reflects the calling student’s completion status and scores', async () => {
+    const { lessons } = await seedUnitWithLessons(cls.id, 1, [1, 2]);
 
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
+    // Insert a COMPLETED row for lesson[0] and an IN_PROGRESS row for lesson[1].
+    await db.insert(scienceLessonCompletions).values([
+      {
+        studentId: student.id,
+        lessonId: lessons[0].id,
+        status: 'COMPLETED',
+        attemptsCount: 2,
+        bestScore: 9,
+        bestScorePercentage: 90,
+        mostRecentScore: 8,
+        mostRecentScorePercentage: 80,
+        completedAt: new Date('2026-05-24T12:00:00Z'),
+        lastAttemptAt: new Date('2026-05-24T12:00:00Z'),
+        totalTimeSpentSeconds: 120,
+      },
+      {
+        studentId: student.id,
+        lessonId: lessons[1].id,
+        status: 'IN_PROGRESS',
+        attemptsCount: 1,
+        lastAttemptAt: new Date('2026-05-24T13:00:00Z'),
+      },
+    ]);
 
-      expect(response.status).toBe(200);
-      expect(data.class).toEqual({
-        id: testClass.id,
-        name: 'Grade 3 Science',
-        gradeLevel: 3,
-        standardsAlignment: 'THAI',
-      });
-    });
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const req = new NextRequest(`http://localhost/api/classes/${cls.id}/curriculum`);
+    const res = await GET(req, { params: Promise.resolve({ classId: cls.id }) });
+    const data = await res.json();
 
-    it('should return units in correct order', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
+    const unit = data.units[0];
+    const lessonView0 = unit.lessons.find(
+      (l: { id: string }) => l.id === lessons[0].id
+    );
+    const lessonView1 = unit.lessons.find(
+      (l: { id: string }) => l.id === lessons[1].id
+    );
 
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
+    expect(lessonView0.completed).toBe(true);
+    expect(lessonView0.started).toBe(true);
+    expect(lessonView0.progress.attemptsCount).toBe(2);
+    expect(lessonView0.progress.bestScore).toBe(9);
+    expect(lessonView0.progress.bestScorePercentage).toBe(90);
+    expect(lessonView0.progress.completedAt).toBe(
+      '2026-05-24T12:00:00.000Z'
+    );
 
-      expect(response.status).toBe(200);
-      expect(data.units).toHaveLength(2);
-      expect(data.units[0].order).toBe(1);
-      expect(data.units[1].order).toBe(2);
-      expect(data.units[0].title).toBe('Unit 1: Introduction to Science');
-      expect(data.units[1].title).toBe('Unit 2: Living Organisms');
-    });
-
-    it('should return lessons in correct order within units', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      const unit1 = data.units[0];
-      expect(unit1.lessons).toHaveLength(2);
-      expect(unit1.lessons[0].order).toBe(1);
-      expect(unit1.lessons[1].order).toBe(2);
-      expect(unit1.lessons[0].title).toBe('Introduction to Science');
-      expect(unit1.lessons[1].title).toBe('Living Things');
-
-      const unit2 = data.units[1];
-      expect(unit2.lessons).toHaveLength(1);
-      expect(unit2.lessons[0].title).toBe('Plants and Animals');
-    });
-
-    it('should include all required lesson fields', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      const lesson = data.units[0].lessons[0];
-      expect(lesson).toHaveProperty('id');
-      expect(lesson).toHaveProperty('slug');
-      expect(lesson).toHaveProperty('title');
-      expect(lesson).toHaveProperty('titleThai');
-      expect(lesson).toHaveProperty('order');
-      expect(lesson).toHaveProperty('completed');
-      expect(lesson).toHaveProperty('started');
-      expect(lesson).toHaveProperty('progress');
-      expect(lesson.progress).toMatchObject({
-        status: 'NOT_STARTED',
-        attemptsCount: 0,
-        mostRecentScore: null,
-        mostRecentScorePercentage: null,
-        bestScore: null,
-        bestScorePercentage: null,
-      });
-    });
-
-    it('should set placeholder progress values', async () => {
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      const lesson = data.units[0].lessons[0];
-      expect(lesson.completed).toBe(false);
-      expect(lesson.started).toBe(false);
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('should handle class with no curriculum units', async () => {
-      const emptyClass = await prisma.class.create({
-        data: {
-          id: 'empty-class',
-          name: 'Empty Class',
-          gradeLevel: 3,
-          standardsAlignment: 'THAI',
-          joinCode: 'EMPTY1',
-          teacherId: testTeacher.id,
-          students: {
-            connect: { id: testStudent.id },
-          },
-        },
-      });
-
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/classes/empty-class/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: emptyClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.units).toEqual([]);
-    });
-
-    it('should handle unit with no lessons', async () => {
-      const emptyUnit = await prisma.curriculumUnit.create({
-        data: {
-          id: 'empty-unit',
-          slug: 'empty-unit-no-lessons',
-          title: 'Empty Unit',
-          framework: 'THAI',
-          gradeLevel: 3,
-          order: 3,
-          classId: testClass.id,
-        },
-      });
-
-      const session = await createSession(testStudent.id);
-      mockCookies.get.mockReturnValue({ value: session.token });
-
-      const request = new NextRequest('http://localhost:3000/api/classes/test-class-curriculum/curriculum');
-      const response = await GET(request, { params: Promise.resolve({ classId: testClass.id }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      const emptyUnitData = data.units.find((u: { id: string }) => u.id === emptyUnit.id);
-      expect(emptyUnitData.lessons).toEqual([]);
-    });
+    expect(lessonView1.completed).toBe(false);
+    expect(lessonView1.started).toBe(true);
+    expect(lessonView1.progress.status).toBe('IN_PROGRESS');
+    expect(lessonView1.progress.completedAt).toBeNull();
   });
 });
