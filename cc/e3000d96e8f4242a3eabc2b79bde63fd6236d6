@@ -1,0 +1,12 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: students/[studentId]/gamification-profile route → Drizzle
+Tests: 6/6 pass (route.integration.test.ts), lint clean
+Notes:
+- Tables: gamificationProfiles, achievements (both global — used raw db, not TenantDB per 0.6)
+- Preserved auto-create-on-first-access behavior: select().limit(1) then insert().returning(profileColumns) into the same destructured `profile` var to keep the original control flow
+- Preserved auth flow: getCurrentSession(), 401/403 with same error strings; DEV_AUTH_ENABLED+TEACHER/ADMIN impersonation gate untouched
+- Drizzle helpers used: eq, desc; orderBy(desc(achievements.unlockedAt)).limit(3) replaces Prisma orderBy/take
+- Response shape preserved EXACTLY (xp, level, levelName, streak, xpProgress, recentBadges)
+- Test mocks @/lib/env so DEV_AUTH_ENABLED=false deterministically (covers the teacher-403 case)
+- No old mock-Prisma test existed under tests/ — only the new co-located test was added
+Behavior-preserving; no logic change beyond ORM swap.
