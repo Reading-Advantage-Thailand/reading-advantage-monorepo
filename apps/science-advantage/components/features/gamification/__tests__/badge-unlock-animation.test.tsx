@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BadgeUnlockAnimation } from '../badge-unlock-animation';
-import type { BadgeDefinition } from '@/lib/gamification/badges';
+import type { BadgeDefinition } from '@/lib/gamification/badges.constants';
 
 afterEach(() => {
   cleanup();

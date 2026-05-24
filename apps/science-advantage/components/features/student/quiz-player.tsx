@@ -28,7 +28,7 @@ import { QuizQuestion, StudentAnswer } from './quiz-questions/types';
 import { ConfettiCelebration } from '@/components/features/gamification/confetti-celebration';
 import { BadgeUnlockAnimation } from '@/components/features/gamification/badge-unlock-animation';
 import { LevelUpAnimation } from '@/components/features/gamification/level-up-animation';
-import { BadgeDefinition, BADGE_DEFINITIONS } from '@/lib/gamification/badges';
+import { BadgeDefinition, BADGE_DEFINITIONS } from '@/lib/gamification/badges.constants';
 import { toast } from 'sonner';
 
 interface QuizData {

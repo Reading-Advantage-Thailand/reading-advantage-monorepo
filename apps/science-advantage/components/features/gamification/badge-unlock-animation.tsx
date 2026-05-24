@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { BadgeDefinition } from '@/lib/gamification/badges';
+import { BadgeDefinition } from '@/lib/gamification/badges.constants';
 
 interface BadgeUnlockAnimationProps {
   badge: BadgeDefinition;
