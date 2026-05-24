@@ -212,7 +212,8 @@ be green against BEFORE and stay green against AFTER.
 
 ## Phase 2: Quiz, attempts & mastery
 
-- [ ] Task: Migrate `lib/services/mastery/mastery-worker.ts` (attempt, masteryRun, standardMastery)
+- [x] Task: Migrate `lib/services/mastery/mastery-worker.ts` (attempt, masteryRun, standardMastery) [6c5c446]
+- [x] Task: Update tests `tests/lib/mastery-pipeline.test.ts` against Drizzle — _replaced with mastery-worker.integration.test.ts (5 real-DB tests)_ [6c5c446]
 - [x] Task: Migrate `lib/services/mastery/standard-mastery.ts` — _was 'types-only' in plan but had runtime DB code; ported to Drizzle onConflictDoUpdate; replaced prisma/__tests__/standard-mastery.test.ts with co-located integration test (9 real-DB tests)_ [3d1101b]
 - [ ] Task: Migrate `app/api/ai/recommendations/route.ts` (attempt)
 - [ ] Task: Migrate `app/api/ai/update-mastery/route.ts` (attempt, masteryRun)
@@ -220,7 +221,7 @@ be green against BEFORE and stay green against AFTER.
 - [ ] Task: Migrate `app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts` (lesson, lessonCompletion, user)
 - [ ] Task: Migrate `app/api/students/[studentId]/classes/[classId]/analytics/route.ts` (attempt, class, lesson, lessonCompletion)
 - [ ] Task: Migrate `app/api/students/[studentId]/mastery-profile/route.ts` (masteryRun, standard, standardMastery, user)
-- [ ] Task: Update tests `tests/lib/mastery-pipeline.test.ts`, `prisma/__tests__/standard-mastery.test.ts`, `tests/api/ai-update-mastery.integration.test.ts`, `tests/api/lesson-analytics.integration.test.ts` against Drizzle
+- [ ] Task: Update tests `tests/api/ai-update-mastery.integration.test.ts`, `tests/api/lesson-analytics.integration.test.ts` against Drizzle _(mastery-pipeline + standard-mastery already handled in their respective commits)_
 - [ ] Task: Measure - User Manual Verification 'Quiz / Mastery' (Protocol in workflow.md)
 
 ## Phase 3: Gamification
