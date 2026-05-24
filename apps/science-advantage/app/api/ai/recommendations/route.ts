@@ -3,15 +3,28 @@ import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+import { db, eq, inArray } from '@reading-advantage/db';
+import {
+  scienceAttempts,
+  scienceCurriculumUnits,
+  scienceLessonStandards,
+  scienceLessons,
+  scienceQuestionResponses,
+  scienceQuestionStandards,
+  scienceStandards,
+  scienceUnitLessons,
+  users,
+} from '@reading-advantage/db/schema';
+
 import { getCurrentSession } from '@/lib/auth/session';
 import { buildRecommendationContext } from '@/lib/ai/recommendation-context';
 import { generateRecommendation } from '@/lib/ai/recommendation-service';
 import type { AttemptWithRelations } from '@/lib/ai/recommendation-context';
+import type { LessonType, StandardsAlignment } from '@/lib/enums';
 import { aiConfig } from '@/lib/config/ai';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
-import prisma from '@/lib/prisma';
 import { getRedisClient } from '@/lib/platform/redis-client';
 import { RedisRateLimitStore } from '@/lib/platform/rate-limit-store';
 
@@ -118,6 +131,160 @@ function authorizeAttempt(
   }
 }
 
+/**
+ * Loads a scienceAttempts row with the nested shape the recommendation
+ * pipeline expects. Replaces a single deeply-nested Prisma include with a
+ * small batch of Drizzle SELECTs assembled in-memory.
+ */
+async function loadAttemptWithRelations(
+  attemptId: string
+): Promise<AttemptWithRelations | null> {
+  const [attemptRow] = await db
+    .select({
+      id: scienceAttempts.id,
+      studentId: scienceAttempts.studentId,
+      lessonId: scienceAttempts.lessonId,
+      score: scienceAttempts.score,
+      maxScore: scienceAttempts.maxScore,
+      completedAt: scienceAttempts.completedAt,
+    })
+    .from(scienceAttempts)
+    .where(eq(scienceAttempts.id, attemptId))
+    .limit(1);
+
+  if (!attemptRow) return null;
+
+  const [lessonRow] = await db
+    .select({
+      id: scienceLessons.id,
+      title: scienceLessons.title,
+      lessonType: scienceLessons.lessonType,
+      gradeLevel: scienceLessons.gradeLevel,
+      order: scienceLessons.order,
+    })
+    .from(scienceLessons)
+    .where(eq(scienceLessons.id, attemptRow.lessonId))
+    .limit(1);
+
+  if (!lessonRow) {
+    // Defensive: schema FK should guarantee this exists, but match the
+    // previous Prisma behavior of throwing-on-missing.
+    throw new Error(`Lesson ${attemptRow.lessonId} not found`);
+  }
+
+  const lessonStandards = await db
+    .select({
+      id: scienceStandards.id,
+      code: scienceStandards.code,
+      description: scienceStandards.description,
+      framework: scienceStandards.framework,
+    })
+    .from(scienceLessonStandards)
+    .innerJoin(
+      scienceStandards,
+      eq(scienceStandards.id, scienceLessonStandards.standardId)
+    )
+    .where(eq(scienceLessonStandards.lessonId, lessonRow.id));
+
+  const lessonUnits = await db
+    .select({
+      id: scienceCurriculumUnits.id,
+      title: scienceCurriculumUnits.title,
+      order: scienceCurriculumUnits.order,
+      framework: scienceCurriculumUnits.framework,
+    })
+    .from(scienceUnitLessons)
+    .innerJoin(
+      scienceCurriculumUnits,
+      eq(scienceCurriculumUnits.id, scienceUnitLessons.unitId)
+    )
+    .where(eq(scienceUnitLessons.lessonId, lessonRow.id));
+
+  const [studentRow] = await db
+    .select({ id: users.id, gradeLevel: users.gradeLevel })
+    .from(users)
+    .where(eq(users.id, attemptRow.studentId))
+    .limit(1);
+
+  // Question responses with their question + per-question standards.
+  const responseRows = await db
+    .select({
+      id: scienceQuestionResponses.id,
+      isCorrect: scienceQuestionResponses.isCorrect,
+      questionId: scienceQuestionResponses.questionId,
+    })
+    .from(scienceQuestionResponses)
+    .where(eq(scienceQuestionResponses.attemptId, attemptRow.id));
+
+  const responseQuestionIds = responseRows.map((r) => r.questionId);
+  const questionStandardsRows = responseQuestionIds.length
+    ? await db
+        .select({
+          questionId: scienceQuestionStandards.questionId,
+          standardId: scienceStandards.id,
+          code: scienceStandards.code,
+        })
+        .from(scienceQuestionStandards)
+        .innerJoin(
+          scienceStandards,
+          eq(scienceStandards.id, scienceQuestionStandards.standardId)
+        )
+        .where(
+          inArray(scienceQuestionStandards.questionId, responseQuestionIds)
+        )
+    : [];
+
+  const standardsByQuestion = new Map<
+    string,
+    Array<{ id: string; code: string }>
+  >();
+  for (const row of questionStandardsRows) {
+    const arr = standardsByQuestion.get(row.questionId) ?? [];
+    arr.push({ id: row.standardId, code: row.code });
+    standardsByQuestion.set(row.questionId, arr);
+  }
+
+  return {
+    id: attemptRow.id,
+    studentId: attemptRow.studentId,
+    lessonId: attemptRow.lessonId,
+    score: attemptRow.score,
+    maxScore: attemptRow.maxScore,
+    completedAt: attemptRow.completedAt,
+    lesson: {
+      id: lessonRow.id,
+      title: lessonRow.title,
+      lessonType: lessonRow.lessonType as LessonType,
+      gradeLevel: lessonRow.gradeLevel,
+      order: lessonRow.order,
+      standards: lessonStandards.map((s) => ({
+        id: s.id,
+        code: s.code,
+        description: s.description,
+        framework: s.framework as StandardsAlignment,
+      })),
+      curriculumUnits: lessonUnits.map((u) => ({
+        id: u.id,
+        title: u.title,
+        order: u.order,
+        framework: u.framework as StandardsAlignment,
+      })),
+    },
+    student: {
+      id: studentRow?.id ?? attemptRow.studentId,
+      gradeLevel: studentRow?.gradeLevel ?? null,
+    },
+    questionResponses: responseRows.map((r) => ({
+      id: r.id,
+      isCorrect: r.isCorrect,
+      question: {
+        id: r.questionId,
+        standards: standardsByQuestion.get(r.questionId) ?? [],
+      },
+    })),
+  };
+}
+
 export async function POST(request: NextRequest) {
   const startedAt = Date.now();
   const traceId = `rec_${randomUUID()}`;
@@ -145,50 +312,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const attempt = (await prisma.attempt.findUnique({
-      where: { id: parse.data.attemptId },
-      select: {
-        id: true,
-        studentId: true,
-        lessonId: true,
-        score: true,
-        maxScore: true,
-        completedAt: true,
-        lesson: {
-          select: {
-            id: true,
-            title: true,
-            lessonType: true,
-            gradeLevel: true,
-            order: true,
-            standards: {
-              select: {
-                id: true,
-                code: true,
-                description: true,
-                framework: true,
-              },
-            },
-            curriculumUnits: {
-              select: { id: true, title: true, order: true, framework: true },
-            },
-          },
-        },
-        student: { select: { id: true, gradeLevel: true } },
-        questionResponses: {
-          select: {
-            id: true,
-            isCorrect: true,
-            question: {
-              select: {
-                id: true,
-                standards: { select: { id: true, code: true } },
-              },
-            },
-          },
-        },
-      },
-    })) as AttemptWithRelations | null;
+    const attempt = await loadAttemptWithRelations(parse.data.attemptId);
 
     if (!attempt) {
       return NextResponse.json(
@@ -205,7 +329,7 @@ export async function POST(request: NextRequest) {
     }
 
     authorizeAttempt(attempt, session);
-    assertRateLimit(attempt.studentId);
+    await assertRateLimit(attempt.studentId);
 
     const context = await buildRecommendationContext({ attempt });
     const key = cacheKey(attempt.studentId, attempt.id, context.masteryVersion);

@@ -33,6 +33,7 @@ export const users = pgTable("users", {
   xp: integer("xp").default(0).notNull(),
   level: integer("level").default(1).notNull(),
   cefrLevel: text("cefr_level").default("A1-").notNull(),
+  gradeLevel: integer("grade_level"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
