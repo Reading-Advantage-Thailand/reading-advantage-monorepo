@@ -25,6 +25,9 @@ import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { asc, db, eq } from '@reading-advantage/db';
+import { scienceLessons } from '@reading-advantage/db/schema';
+
 import {
   parseMarkdownSections,
   parseVocabulary,
@@ -35,7 +38,6 @@ import {
   type Material,
   type ProcedureStep,
 } from '@/lib/content-parsers';
-import prisma from '@/lib/prisma';
 import {
   validateLessonContent,
   isValidLessonContent,
@@ -599,10 +601,10 @@ async function migrateLesson(
 
     case 'db':
     default:
-      await prisma.lesson.update({
-        where: { id: lesson.id },
-        data: { structuredContent: lessonContent as object },
-      });
+      await db
+        .update(scienceLessons)
+        .set({ structuredContent: lessonContent as object })
+        .where(eq(scienceLessons.id, lesson.id));
       result.status = 'migrated';
       break;
   }
@@ -633,21 +635,19 @@ async function main(): Promise<void> {
   }
 
   // Fetch lessons
-  const where = options.lessonId ? { id: options.lessonId } : {};
-  const lessons = await prisma.lesson.findMany({
-    where,
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      structuredContent: true,
-    },
-    orderBy: { order: 'asc' },
-  });
+  const lessons = await db
+    .select({
+      id: scienceLessons.id,
+      title: scienceLessons.title,
+      content: scienceLessons.content,
+      structuredContent: scienceLessons.structuredContent,
+    })
+    .from(scienceLessons)
+    .where(options.lessonId ? eq(scienceLessons.id, options.lessonId) : undefined)
+    .orderBy(asc(scienceLessons.order));
 
   if (lessons.length === 0) {
     console.log('No lessons found matching criteria.');
-    await prisma.$disconnect();
     return;
   }
 
@@ -701,8 +701,6 @@ async function main(): Promise<void> {
       console.log(`  - ${result.title}: ${result.reason}`);
     }
   }
-
-  await prisma.$disconnect();
 
   // Exit with error code if there were errors
   if (report.errors > 0) {
