@@ -1,0 +1,10 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/api/auth/logout/route.integration.test.ts → DELETED (catch-all drift)
+Tests: N/A (deleted)
+Notes: Test was pre-existing 100% broken — imported Prisma against a
+Drizzle-managed test DB and called POST() with no NextRequest against
+the new package-delegating route wrapper whose handler lives in
+@reading-advantage/api/routes/auth. Logout behavior already covered by
+packages/api/src/__tests__/auth-routes.test.ts (handleLogout via the
+exported handler) and by lib/auth/session.integration.test.ts
+(deleteSession). Behavior-preserving (deletion of stale test).
