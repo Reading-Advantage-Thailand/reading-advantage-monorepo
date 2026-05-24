@@ -215,7 +215,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] Task: Migrate `lib/services/mastery/mastery-worker.ts` (attempt, masteryRun, standardMastery) [6c5c446]
 - [x] Task: Update tests `tests/lib/mastery-pipeline.test.ts` against Drizzle — _replaced with mastery-worker.integration.test.ts (5 real-DB tests)_ [6c5c446]
 - [x] Task: Migrate `lib/services/mastery/standard-mastery.ts` — _was 'types-only' in plan but had runtime DB code; ported to Drizzle onConflictDoUpdate; replaced prisma/__tests__/standard-mastery.test.ts with co-located integration test (9 real-DB tests)_ [3d1101b]
-- [ ] Task: Migrate `app/api/ai/recommendations/route.ts` (attempt)
+- [x] Task: Migrate `app/api/ai/recommendations/route.ts` (attempt) — _also added `users.grade_level` Drizzle column (migration 0016) to fill schema gap_ [486de0e]
 - [ ] Task: Migrate `app/api/ai/update-mastery/route.ts` (attempt, masteryRun)
 - [ ] Task: Migrate `app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts` (attempt, lesson, user)
 - [x] Task: Migrate `app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts` (lesson, lessonCompletion, user) [fd07ed2]
