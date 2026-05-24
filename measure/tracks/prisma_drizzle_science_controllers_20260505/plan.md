@@ -220,7 +220,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] Task: Migrate `app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts` (attempt, lesson, user) [5e8e3a7]
 - [x] Task: Migrate `app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts` (lesson, lessonCompletion, user) [fd07ed2]
 - [x] [a5a5aee] Task: Migrate `app/api/students/[studentId]/classes/[classId]/analytics/route.ts` (attempt, class, lesson, lessonCompletion)
-- [ ] Task: Migrate `app/api/students/[studentId]/mastery-profile/route.ts` (masteryRun, standard, standardMastery, user)
+- [x] [44342e3] Task: Migrate `app/api/students/[studentId]/mastery-profile/route.ts` (masteryRun, standard, standardMastery, user)
 - [x] Task: Update tests `tests/api/ai-update-mastery.integration.test.ts`, `tests/api/lesson-analytics.integration.test.ts` against Drizzle — _both deleted and replaced with co-located Drizzle integration suites: lesson-analytics in [bdcc5a6], ai-update-mastery in [4d6031b]_
 - [ ] Task: Measure - User Manual Verification 'Quiz / Mastery' (Protocol in workflow.md)
 
