@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { db, desc, eq } from '@reading-advantage/db';
+import { achievements, gamificationProfiles } from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/observability/logger';
-import prisma from '@/lib/prisma';
 import { getLevelName } from '@/lib/gamification/xp';
 
 const LEVEL_THRESHOLDS = [
@@ -63,40 +64,38 @@ export async function GET(
       );
     }
 
-    let profile = await prisma.gamificationProfile.findUnique({
-      where: { userId: studentId },
-      select: {
-        xp: true,
-        level: true,
-        streak: true,
-        lastActiveAt: true,
-      },
-    });
+    const profileColumns = {
+      xp: gamificationProfiles.xp,
+      level: gamificationProfiles.level,
+      streak: gamificationProfiles.streak,
+      lastActiveAt: gamificationProfiles.lastActiveAt,
+    };
+
+    let [profile] = await db
+      .select(profileColumns)
+      .from(gamificationProfiles)
+      .where(eq(gamificationProfiles.userId, studentId))
+      .limit(1);
 
     if (!profile) {
-      profile = await prisma.gamificationProfile.create({
-        data: { userId: studentId, xp: 0, level: 1, streak: 0 },
-        select: {
-          xp: true,
-          level: true,
-          streak: true,
-          lastActiveAt: true,
-        },
-      });
+      [profile] = await db
+        .insert(gamificationProfiles)
+        .values({ userId: studentId, xp: 0, level: 1, streak: 0 })
+        .returning(profileColumns);
     }
 
     const levelName = getLevelName(profile.level);
     const xpProgress = getXpProgress(profile.xp, profile.level);
 
-    const recentBadges = await prisma.achievement.findMany({
-      where: { userId: studentId },
-      orderBy: { unlockedAt: 'desc' },
-      take: 3,
-      select: {
-        badgeType: true,
-        unlockedAt: true,
-      },
-    });
+    const recentBadges = await db
+      .select({
+        badgeType: achievements.badgeType,
+        unlockedAt: achievements.unlockedAt,
+      })
+      .from(achievements)
+      .where(eq(achievements.userId, studentId))
+      .orderBy(desc(achievements.unlockedAt))
+      .limit(3);
 
     logger.info('gamification-profile.fetch', { studentId });
 
