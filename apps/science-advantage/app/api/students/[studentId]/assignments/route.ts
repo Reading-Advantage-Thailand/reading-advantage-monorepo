@@ -1,7 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  and,
+  db,
+  desc,
+  eq,
+} from '@reading-advantage/db';
+import {
+  scienceAssignments,
+  scienceClassStudents,
+  scienceClasses,
+  scienceLessons,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { getCurrentSession } from '@/lib/auth/session';
-import prisma from '@/lib/prisma';
 
 /**
  * GET /api/students/{studentId}/assignments
@@ -33,53 +45,54 @@ export async function GET(
       );
     }
 
-    const assignments = await prisma.assignment.findMany({
-      where: {
-        class: {
-          students: {
-            some: { id: studentId },
-          },
-        },
-      },
-      include: {
-        lesson: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            order: true,
-          },
-        },
-        teacher: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        class: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: { assignedAt: 'desc' },
-    });
+    const rows = await db
+      .select({
+        id: scienceAssignments.id,
+        classId: scienceAssignments.classId,
+        lessonId: scienceAssignments.lessonId,
+        assignedAt: scienceAssignments.assignedAt,
+        dueAt: scienceAssignments.dueAt,
+        assignedBy: scienceAssignments.assignedBy,
+        lessonInnerId: scienceLessons.id,
+        lessonTitle: scienceLessons.title,
+        lessonSlug: scienceLessons.slug,
+        lessonOrder: scienceLessons.order,
+        teacherId: users.id,
+        teacherName: users.name,
+        className: scienceClasses.name,
+      })
+      .from(scienceAssignments)
+      .innerJoin(
+        scienceClassStudents,
+        and(
+          eq(scienceClassStudents.classId, scienceAssignments.classId),
+          eq(scienceClassStudents.studentId, studentId)
+        )
+      )
+      .innerJoin(scienceClasses, eq(scienceClasses.id, scienceAssignments.classId))
+      .innerJoin(scienceLessons, eq(scienceLessons.id, scienceAssignments.lessonId))
+      .innerJoin(users, eq(users.id, scienceAssignments.assignedBy))
+      .orderBy(desc(scienceAssignments.assignedAt));
 
     return NextResponse.json(
       {
         success: true,
         data: {
-          assignments: assignments.map(a => ({
+          assignments: rows.map(a => ({
             id: a.id,
             classId: a.classId,
-            className: a.class.name,
+            className: a.className,
             lessonId: a.lessonId,
-            lesson: a.lesson,
+            lesson: {
+              id: a.lessonInnerId,
+              title: a.lessonTitle,
+              slug: a.lessonSlug,
+              order: a.lessonOrder,
+            },
             assignedAt: a.assignedAt.toISOString(),
             dueAt: a.dueAt?.toISOString() ?? null,
             assignedBy: a.assignedBy,
-            teacher: a.teacher,
+            teacher: { id: a.teacherId, name: a.teacherName },
           })),
         },
       },
