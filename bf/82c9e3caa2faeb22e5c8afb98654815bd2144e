@@ -1,0 +1,5 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: apps/science-advantage/create-test-users.ts → scripts/create-test-users.ts (file 4 of 4 in line-270 bundle)
+Decision: rewrite (preserved — real password-creating script useful for local dev / E2E even though no package.json script invokes it directly). Original import './lib/auth/password' was already broken (file does not exist) — fixed by importing hashPassword from @reading-advantage/auth, which is the canonical shared utility (also used by lib/auth/server.ts).
+package.json scripts updated: none (was never wired up)
+Notes: Drizzle insert with onConflictDoUpdate preserves the original prisma.user.upsert / prisma.account.upsert semantics. Removed emailVerified (not in Drizzle users schema). Resolves pre-existing tsc error 'Cannot find module ./lib/auth/password' as a side effect of the import swap. Behavior-preserving aside from the auth import fix.
