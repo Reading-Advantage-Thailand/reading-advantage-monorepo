@@ -1,9 +1,22 @@
 import { NextResponse } from 'next/server';
+import { and, asc, db, desc, eq, inArray, isNotNull } from '@reading-advantage/db';
+import {
+  scienceAttempts,
+  scienceClassStudents,
+  scienceClasses,
+  scienceCurriculumUnits,
+  scienceLessonCompletions,
+  scienceLessonStandards,
+  scienceLessons,
+  scienceQuestionResponses,
+  scienceQuestionStandards,
+  scienceStandards,
+  scienceUnitLessons,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { requireAuth } from '@/lib/auth/server';
-import prisma from '@/lib/prisma';
 
-// Helper function to get color code based on score percentage
 function getColorCode(percentage: number): string {
   if (percentage >= 90) return 'blue';
   if (percentage >= 80) return 'green';
@@ -11,8 +24,13 @@ function getColorCode(percentage: number): string {
   return 'red';
 }
 
+/**
+ * GET /api/students/{studentId}/classes/{classId}/analytics
+ * Per-student, per-class summary: lessons performance + standards mastery.
+ * Authorized for: the owning teacher or ADMIN. Student must be enrolled.
+ */
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ studentId: string; classId: string }> }
 ) {
   try {
@@ -22,30 +40,19 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const resolvedParams = await params;
-    const { studentId, classId } = resolvedParams;
+    const { studentId, classId } = await params;
 
-    // Get class information
-    const classRecord = await prisma.class.findUnique({
-      where: { id: classId },
-      select: {
-        id: true,
-        name: true,
-        gradeLevel: true,
-        standardsAlignment: true,
-        teacherId: true,
-        students: {
-          where: { id: studentId },
-          select: { id: true, name: true },
-        },
-      },
-    });
+    // 1. Class metadata + authz.
+    const [classRecord] = await db
+      .select()
+      .from(scienceClasses)
+      .where(eq(scienceClasses.id, classId))
+      .limit(1);
 
     if (!classRecord) {
       return NextResponse.json({ error: 'Class not found' }, { status: 404 });
     }
 
-    // Check authorization: teacher must own the class or be admin
     const isTeacherOwner = classRecord.teacherId === session.user.id;
     const isAdmin = session.user.role === 'ADMIN';
 
@@ -56,85 +63,151 @@ export async function GET(
       );
     }
 
-    // Check if student is enrolled in this class
-    const student = classRecord.students[0];
-    if (!student) {
+    // 2. Student must be enrolled in this class.
+    const [enrollment] = await db
+      .select({ id: users.id, name: users.name })
+      .from(scienceClassStudents)
+      .innerJoin(users, eq(users.id, scienceClassStudents.studentId))
+      .where(
+        and(
+          eq(scienceClassStudents.classId, classId),
+          eq(scienceClassStudents.studentId, studentId)
+        )
+      )
+      .limit(1);
+
+    if (!enrollment) {
       return NextResponse.json(
         { error: 'Student is not enrolled in this class' },
         { status: 403 }
       );
     }
 
-    // Get all lessons for this class
-    const lessons = await prisma.lesson.findMany({
-      where: {
-        curriculumUnits: {
-          some: {
-            classId,
-          },
-        },
-      },
-      include: {
-        standards: true,
-        quizQuestions: {
-          include: {
-            standards: true,
-          },
-        },
-      },
-      orderBy: { order: 'asc' },
-    });
+    // 3. Lessons attached to this class (de-duped, ordered).
+    const lessonRows = await db
+      .select({ lesson: scienceLessons })
+      .from(scienceLessons)
+      .innerJoin(
+        scienceUnitLessons,
+        eq(scienceUnitLessons.lessonId, scienceLessons.id)
+      )
+      .innerJoin(
+        scienceCurriculumUnits,
+        eq(scienceCurriculumUnits.id, scienceUnitLessons.unitId)
+      )
+      .where(eq(scienceCurriculumUnits.classId, classId))
+      .orderBy(asc(scienceLessons.order));
 
-    // Get all lesson completions for this student in this class
-    const lessonCompletions = await prisma.lessonCompletion.findMany({
-      where: {
-        studentId,
-        lessonId: {
-          in: lessons.map((l) => l.id),
-        },
-      },
-    });
+    const lessons = Array.from(
+      new Map(lessonRows.map((r) => [r.lesson.id, r.lesson])).values()
+    ).sort((a, b) => a.order - b.order);
 
-    // Get all attempts for this student across all lessons
-    const attempts = await prisma.attempt.findMany({
-      where: {
-        studentId,
-        lessonId: {
-          in: lessons.map((l) => l.id),
-        },
-        completedAt: { not: null },
-      },
-      include: {
-        questionResponses: {
-          include: {
-            question: {
-              include: {
-                standards: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: { completedAt: 'desc' },
-    });
+    const lessonIds = lessons.map((l) => l.id);
 
-    // Build lessons performance table
+    // 4. Lesson completions for this student, scoped to these lessons.
+    const completions = lessonIds.length
+      ? await db
+          .select()
+          .from(scienceLessonCompletions)
+          .where(
+            and(
+              eq(scienceLessonCompletions.studentId, studentId),
+              inArray(scienceLessonCompletions.lessonId, lessonIds)
+            )
+          )
+      : [];
+    const completionByLesson = new Map(
+      completions.map((c) => [c.lessonId, c])
+    );
+
+    // 5. Completed attempts (desc by completedAt) for the same set of lessons.
+    const completedAttempts = lessonIds.length
+      ? await db
+          .select()
+          .from(scienceAttempts)
+          .where(
+            and(
+              eq(scienceAttempts.studentId, studentId),
+              inArray(scienceAttempts.lessonId, lessonIds),
+              isNotNull(scienceAttempts.completedAt)
+            )
+          )
+          .orderBy(desc(scienceAttempts.completedAt))
+      : [];
+
+    // Group attempts by lessonId. Order preserved (already desc by
+    // completedAt), so attempts[0] for a lesson is "most recent".
+    const attemptsByLesson = new Map<string, typeof completedAttempts>();
+    for (const a of completedAttempts) {
+      const arr = attemptsByLesson.get(a.lessonId) ?? [];
+      arr.push(a);
+      attemptsByLesson.set(a.lessonId, arr);
+    }
+
+    // 6. Question responses for the most-recent attempt per lesson (only
+    //    those are used for standards mastery aggregation below).
+    const mostRecentAttemptIds = Array.from(attemptsByLesson.values())
+      .map((arr) => arr[0]?.id)
+      .filter((v): v is string => Boolean(v));
+
+    const recentResponses = mostRecentAttemptIds.length
+      ? await db
+          .select({
+            attemptId: scienceQuestionResponses.attemptId,
+            questionId: scienceQuestionResponses.questionId,
+            isCorrect: scienceQuestionResponses.isCorrect,
+          })
+          .from(scienceQuestionResponses)
+          .where(
+            inArray(scienceQuestionResponses.attemptId, mostRecentAttemptIds)
+          )
+      : [];
+
+    // 7. Lesson-level standards (used to initialize the standardsMap) and
+    //    per-question standards (used for the response aggregation).
+    const lessonStandardLinks = lessonIds.length
+      ? await db
+          .select({
+            lessonId: scienceLessonStandards.lessonId,
+            standard: scienceStandards,
+          })
+          .from(scienceLessonStandards)
+          .innerJoin(
+            scienceStandards,
+            eq(scienceStandards.id, scienceLessonStandards.standardId)
+          )
+          .where(inArray(scienceLessonStandards.lessonId, lessonIds))
+      : [];
+
+    const responseQuestionIds = recentResponses.map((r) => r.questionId);
+    const questionStandardLinks = responseQuestionIds.length
+      ? await db
+          .select({
+            questionId: scienceQuestionStandards.questionId,
+            standardId: scienceQuestionStandards.standardId,
+          })
+          .from(scienceQuestionStandards)
+          .where(
+            inArray(scienceQuestionStandards.questionId, responseQuestionIds)
+          )
+      : [];
+    const standardsByQuestion = new Map<string, string[]>();
+    for (const link of questionStandardLinks) {
+      const arr = standardsByQuestion.get(link.questionId) ?? [];
+      arr.push(link.standardId);
+      standardsByQuestion.set(link.questionId, arr);
+    }
+
+    // 8. Build the lessonsPerformance table.
     const lessonsPerformance = lessons.map((lesson) => {
-      const completion = lessonCompletions.find(
-        (lc) => lc.lessonId === lesson.id
-      );
-
+      const completion = completionByLesson.get(lesson.id);
       const completionStatus =
         completion?.status === 'COMPLETED'
           ? 'completed'
           : completion?.status === 'IN_PROGRESS'
             ? 'in_progress'
             : 'not_started';
-
       const mostRecentScore = completion?.mostRecentScorePercentage ?? null;
-      const attemptsCount = completion?.attemptsCount ?? 0;
-      const totalTimeSeconds = completion?.totalTimeSpentSeconds ?? 0;
-
       return {
         lessonId: lesson.id,
         lessonTitle: lesson.title,
@@ -142,18 +215,18 @@ export async function GET(
         completionStatus,
         mostRecentScore,
         mostRecentScorePercentage: mostRecentScore,
-        attemptsCount,
-        totalTimeSeconds,
-        colorCode: mostRecentScore !== null ? getColorCode(mostRecentScore) : null,
+        attemptsCount: completion?.attemptsCount ?? 0,
+        totalTimeSeconds: completion?.totalTimeSpentSeconds ?? 0,
+        colorCode:
+          mostRecentScore !== null ? getColorCode(mostRecentScore) : null,
       };
     });
 
-    // Calculate overall summary
+    // 9. Summary.
     const completedLessons = lessonsPerformance.filter(
       (lp) => lp.completionStatus === 'completed'
     );
     const lessonsCompleted = completedLessons.length;
-
     const averageScore =
       completedLessons.length > 0
         ? completedLessons.reduce(
@@ -161,18 +234,17 @@ export async function GET(
             0
           ) / completedLessons.length
         : 0;
-
     const totalTimeSpent = lessonsPerformance.reduce(
       (sum, lp) => sum + lp.totalTimeSeconds,
       0
     );
-
     const totalAttempts = lessonsPerformance.reduce(
       (sum, lp) => sum + lp.attemptsCount,
       0
     );
 
-    // Build standards mastery map
+    // 10. Standards mastery map seeded from lesson-level standards, then
+    //     populated with responses from the MOST RECENT attempt per lesson.
     const standardsMap = new Map<
       string,
       {
@@ -184,68 +256,59 @@ export async function GET(
       }
     >();
 
-    // For each lesson, get the most recent attempt and aggregate standards performance
-    lessons.forEach((lesson) => {
-      // Initialize standards from lesson
-      lesson.standards.forEach((standard) => {
-        if (!standardsMap.has(standard.id)) {
-          standardsMap.set(standard.id, {
-            standardId: standard.id,
-            standardCode: standard.code,
-            standardDescription: standard.description,
-            questionsAnswered: 0,
-            questionsCorrect: 0,
-          });
-        }
-      });
-
-      // Get most recent attempt for this lesson
-      const lessonAttempts = attempts.filter((a) => a.lessonId === lesson.id);
-      if (lessonAttempts.length === 0) return;
-
-      const mostRecentAttempt = lessonAttempts[0]; // Already sorted by completedAt desc
-
-      // Aggregate standards performance from this attempt
-      mostRecentAttempt.questionResponses.forEach((qr) => {
-        qr.question.standards.forEach((standard) => {
-          const standardData = standardsMap.get(standard.id);
-          if (standardData) {
-            standardData.questionsAnswered += 1;
-            if (qr.isCorrect) {
-              standardData.questionsCorrect += 1;
-            }
-          }
+    for (const link of lessonStandardLinks) {
+      if (!standardsMap.has(link.standard.id)) {
+        standardsMap.set(link.standard.id, {
+          standardId: link.standard.id,
+          standardCode: link.standard.code,
+          standardDescription: link.standard.description,
+          questionsAnswered: 0,
+          questionsCorrect: 0,
         });
-      });
-    });
+      }
+    }
 
-    // Calculate standards mastery
+    for (const lesson of lessons) {
+      const lessonAttempts = attemptsByLesson.get(lesson.id) ?? [];
+      if (lessonAttempts.length === 0) continue;
+      const mostRecent = lessonAttempts[0];
+      const responsesForAttempt = recentResponses.filter(
+        (r) => r.attemptId === mostRecent.id
+      );
+
+      for (const r of responsesForAttempt) {
+        const standardIds = standardsByQuestion.get(r.questionId) ?? [];
+        for (const sid of standardIds) {
+          const entry = standardsMap.get(sid);
+          if (entry) {
+            entry.questionsAnswered += 1;
+            if (r.isCorrect) entry.questionsCorrect += 1;
+          }
+        }
+      }
+    }
+
     const standardsPerformance = Array.from(standardsMap.values())
-      .map((standardData) => {
+      .map((entry) => {
         const masteryPercentage =
-          standardData.questionsAnswered > 0
-            ? (standardData.questionsCorrect / standardData.questionsAnswered) *
-              100
+          entry.questionsAnswered > 0
+            ? (entry.questionsCorrect / entry.questionsAnswered) * 100
             : 0;
-
         return {
-          standardId: standardData.standardId,
-          standardCode: standardData.standardCode,
-          standardDescription: standardData.standardDescription,
-          questionsAnswered: standardData.questionsAnswered,
-          questionsCorrect: standardData.questionsCorrect,
+          standardId: entry.standardId,
+          standardCode: entry.standardCode,
+          standardDescription: entry.standardDescription,
+          questionsAnswered: entry.questionsAnswered,
+          questionsCorrect: entry.questionsCorrect,
           masteryPercentage: Math.round(masteryPercentage * 10) / 10,
           colorCode: getColorCode(masteryPercentage),
           needsIntervention: masteryPercentage < 60,
         };
       })
-      .sort((a, b) => a.masteryPercentage - b.masteryPercentage); // Sort by mastery % (lowest first)
+      .sort((a, b) => a.masteryPercentage - b.masteryPercentage);
 
-    const response = {
-      student: {
-        id: student.id,
-        name: student.name,
-      },
+    return NextResponse.json({
+      student: { id: enrollment.id, name: enrollment.name },
       class: {
         id: classRecord.id,
         name: classRecord.name,
@@ -263,9 +326,7 @@ export async function GET(
       },
       lessonsPerformance,
       standardsPerformance,
-    };
-
-    return NextResponse.json(response);
+    });
   } catch (error) {
     console.error('Error fetching student class analytics:', error);
     return NextResponse.json(
