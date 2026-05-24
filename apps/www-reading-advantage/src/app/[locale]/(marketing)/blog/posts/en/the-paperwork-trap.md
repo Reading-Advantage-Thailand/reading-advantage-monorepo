@@ -1,6 +1,6 @@
 ---
 title: "The Paperwork Trap: Why Thai Teachers Are Burning Out From Admin Tasks"
-date: "2026-05-07"
+date: "2026-05-24"
 excerpt: "Thai teachers are drowning in administrative work. Here is how schools can return them to the work that matters most: teaching."
 coverImage: "/blog/day33-the-paperwork-trap_001.jpg"
 author: "Reading Advantage Marketing Team"
