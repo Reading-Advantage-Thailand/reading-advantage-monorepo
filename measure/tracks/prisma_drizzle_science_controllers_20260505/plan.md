@@ -192,7 +192,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] Task: Add `@reading-advantage/domain` to `apps/science-advantage/package.json`; `pnpm install`; build `db` + `domain`; run migrations (Section 0.1). Verify `import { curriculum } from "@reading-advantage/domain"` type-checks. [84d3009]
 - [x] Task: **Schema gap fix** (Track 1 follow-up) — add 4 M:N junction tables to `packages/db/src/schema/science.ts` (`science_lesson_standards`, `science_unit_lessons`, `science_class_students`, `science_question_standards`); generate migration `0015`; apply locally; build `db` + `domain` clean. Required by the pilot route and most of Phase 1/4 paths. [f818827]
 - [x] Task: **Pilot** — migrate `app/api/lessons/[lessonSlug]/route.ts` per the worked example. Pause, confirm the loop with the reviewer before continuing. [9d40a9e]
-- [ ] Task: Measure - User Manual Verification 'Setup' (Protocol in workflow.md)
+- [-] Task: Measure - User Manual Verification 'Setup' (Protocol in workflow.md) — _deferred; all manual QA gates batched to a single end-of-track pass per user direction 2026-05-24_
 
 ## Phase 1: Curriculum, lessons & standards
 
@@ -208,7 +208,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] Task: Migrate `app/api/classes/[classId]/analytics/overview/route.ts` (class, lesson, lessonCompletion) [bca632f]
 - [x] Task: Migrate `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (class, lesson, lessonCompletion, questionResponse) [bdcc5a6]
 - [x] Task: Update integration test `lib/schemas/__tests__/curriculum-identifiers.integration.test.ts` (+ `content-migration.test.ts`, `curriculum-identifiers.test.ts`) against Drizzle [56804e0]
-- [ ] Task: Measure - User Manual Verification 'Curriculum & Lessons' (Protocol in workflow.md)
+- [-] Task: Measure - User Manual Verification 'Curriculum & Lessons' (Protocol in workflow.md) — _deferred to end-of-track batch_
 
 ## Phase 2: Quiz, attempts & mastery
 
@@ -222,7 +222,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] [a5a5aee] Task: Migrate `app/api/students/[studentId]/classes/[classId]/analytics/route.ts` (attempt, class, lesson, lessonCompletion)
 - [x] [44342e3] Task: Migrate `app/api/students/[studentId]/mastery-profile/route.ts` (masteryRun, standard, standardMastery, user)
 - [x] Task: Update tests `tests/api/ai-update-mastery.integration.test.ts`, `tests/api/lesson-analytics.integration.test.ts` against Drizzle — _both deleted and replaced with co-located Drizzle integration suites: lesson-analytics in [bdcc5a6], ai-update-mastery in [4d6031b]_
-- [ ] Task: Measure - User Manual Verification 'Quiz / Mastery' (Protocol in workflow.md)
+- [-] Task: Measure - User Manual Verification 'Quiz / Mastery' (Protocol in workflow.md) — _deferred to end-of-track batch_
 
 ## Phase 3: Gamification
 
@@ -235,7 +235,7 @@ be green against BEFORE and stay green against AFTER.
 - [x] [cce3000] Task: Migrate `app/api/students/[studentId]/gamification-profile/route.ts` (achievement, gamificationProfile)
 - [x] [67f676a] Task: Migrate `app/api/students/[studentId]/achievements/route.ts` (achievement)
 - [x] Task: Update test `lib/gamification/badges.test.ts` against Drizzle — _completed alongside badges.ts migration; rewritten as badges.integration.test.ts (20 real-DB tests)_ [1fea05c]
-- [ ] Task: Measure - User Manual Verification 'Gamification' (Protocol in workflow.md)
+- [-] Task: Measure - User Manual Verification 'Gamification' (Protocol in workflow.md) — _deferred to end-of-track batch_
 
 ## Phase 4: Classes, assignments & teacher surfaces
 
