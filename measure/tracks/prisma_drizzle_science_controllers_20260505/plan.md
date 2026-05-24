@@ -262,7 +262,7 @@ be green against BEFORE and stay green against AFTER.
 
 - [ ] Task: Rewrite or retire `prisma/seed-functions/*` (seed-activity-data, seed-curriculum-units, seed-demo-data, seed-lessons, seed-questions, seed-standards, validate-json) against Drizzle
 - [ ] Task: Rewrite or retire `prisma/seed.ts`, `prisma/seed-demo-users.ts`, root `seed-users.ts`, `create-test-users.ts` against Drizzle
-- [~] Task: Migrate `scripts/*` (backfill-mastery, dev-interventions, migrate-lesson-content, seed-activity-data, test-curriculum-endpoint) and `scripts/__tests__/migrate-lesson-content.test.ts`
+- [~] Task: Migrate `scripts/*` (backfill-mastery [9c24b7a], dev-interventions [ab96871], migrate-lesson-content [54d7cb5], **seed-activity-data DEFERRED — blocked by `prisma/seed-functions/seed-activity-data.ts` Phase 6 task (line 263)**, test-curriculum-endpoint [37f2066]) and `scripts/__tests__/migrate-lesson-content.test.ts` [f6996de]
 - [ ] Task: Migrate `prisma/migrations/20260429000000_add_lesson_bilingual_fields/backfill-thai-titles.ts` (one-off backfill — retire if already applied)
 - [ ] Task: Fix leftover Prisma imports in already-migrated auth tests — `lib/auth/server.integration.test.ts`, `session-id-separation.test.ts`, `session.integration.test.ts`, `session.unit.test.ts`, `lib/prisma.test.ts` (auth logic unchanged; just remove the `lib/prisma`/`@prisma/client` imports / test fixtures)
 - [ ] Task: Migrate remaining `tests/` files — `tests/api/*`, `tests/lib/test-utils.ts`, `tests/schema.test.ts`, `tests/seed-activity.integration.test.ts`
