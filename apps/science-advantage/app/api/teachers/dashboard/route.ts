@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { and, db, desc, eq, inArray, lt, sql } from '@reading-advantage/db';
+import {
+  scienceClasses,
+  scienceClassStudents,
+  scienceLessonCompletions,
+  scienceLessons,
+  scienceStandardMastery,
+  users,
+} from '@reading-advantage/db/schema';
 
 import { requireRole } from '@/lib/auth/server';
-import prisma from '@/lib/prisma';
 
 export async function GET(_req: NextRequest) {
   try {
@@ -9,10 +17,10 @@ export async function GET(_req: NextRequest) {
 
     const teacherId = session.user.id;
 
-    const teacherClasses = await prisma.class.findMany({
-      where: { teacherId },
-      select: { id: true, name: true },
-    });
+    const teacherClasses = await db
+      .select({ id: scienceClasses.id, name: scienceClasses.name })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.teacherId, teacherId));
 
     if (teacherClasses.length === 0) {
       return NextResponse.json({
@@ -64,16 +72,12 @@ async function computeClassProgress(
     const classInfo = teacherClasses.find((c) => c.id === classId);
     if (!classInfo) continue;
 
-    const enrolledStudents = await prisma.class.findUnique({
-      where: { id: classId },
-      select: {
-        students: {
-          select: { id: true },
-        },
-      },
-    });
+    const enrolledStudents = await db
+      .select({ id: scienceClassStudents.studentId })
+      .from(scienceClassStudents)
+      .where(eq(scienceClassStudents.classId, classId));
 
-    const activeStudents = enrolledStudents?.students.length ?? 0;
+    const activeStudents = enrolledStudents.length;
 
     if (activeStudents === 0) {
       results.push({
@@ -86,18 +90,21 @@ async function computeClassProgress(
       continue;
     }
 
-    const studentIds = enrolledStudents!.students.map((s) => s.id);
+    const studentIds = enrolledStudents.map((s) => s.id);
 
-    const completions = await prisma.lessonCompletion.findMany({
-      where: {
-        studentId: { in: studentIds },
-        status: 'COMPLETED',
-      },
-      select: {
-        studentId: true,
-        mostRecentScorePercentage: true,
-      },
-    });
+    const completions = await db
+      .select({
+        studentId: scienceLessonCompletions.studentId,
+        mostRecentScorePercentage:
+          scienceLessonCompletions.mostRecentScorePercentage,
+      })
+      .from(scienceLessonCompletions)
+      .where(
+        and(
+          inArray(scienceLessonCompletions.studentId, studentIds),
+          eq(scienceLessonCompletions.status, 'COMPLETED')
+        )
+      );
 
     const uniqueCompletions = new Set(
       completions.map((c) => c.studentId)
@@ -136,47 +143,67 @@ async function computeClassProgress(
 }
 
 async function countStudentsNeedingAttention(classIds: string[]) {
-  const result = await prisma.standardMastery.groupBy({
-    by: ['studentId'],
-    where: {
-      student: {
-        enrolledClass: {
-          some: { id: { in: classIds } },
-        },
-      },
-      masteryLevel: { lt: 0.6 },
-    },
-    _count: { id: true },
-  });
+  // Distinct students in any of the teacher's classes whose mastery on at
+  // least one standard is below 0.6. Mirrors the Prisma groupBy semantics.
+  const enrolled = await db
+    .selectDistinct({ studentId: scienceClassStudents.studentId })
+    .from(scienceClassStudents)
+    .where(inArray(scienceClassStudents.classId, classIds));
 
-  return result.length;
+  if (enrolled.length === 0) return 0;
+
+  const enrolledIds = enrolled.map((e) => e.studentId);
+
+  const rows = await db
+    .selectDistinct({ studentId: scienceStandardMastery.studentId })
+    .from(scienceStandardMastery)
+    .where(
+      and(
+        inArray(scienceStandardMastery.studentId, enrolledIds),
+        lt(scienceStandardMastery.masteryLevel, sql`0.6`)
+      )
+    );
+
+  return rows.length;
 }
 
 async function fetchRecentCompletions(classIds: string[]) {
-  const completions = await prisma.lessonCompletion.findMany({
-    where: {
-      status: 'COMPLETED',
-      student: {
-        enrolledClass: {
-          some: { id: { in: classIds } },
-        },
-      },
-    },
-    include: {
-      student: {
-        select: { name: true },
-      },
-      lesson: {
-        select: { title: true },
-      },
-    },
-    orderBy: { completedAt: 'desc' },
-    take: 5,
-  });
+  const enrolled = await db
+    .selectDistinct({ studentId: scienceClassStudents.studentId })
+    .from(scienceClassStudents)
+    .where(inArray(scienceClassStudents.classId, classIds));
+
+  if (enrolled.length === 0) return [];
+
+  const enrolledIds = enrolled.map((e) => e.studentId);
+
+  const completions = await db
+    .select({
+      mostRecentScorePercentage:
+        scienceLessonCompletions.mostRecentScorePercentage,
+      completedAt: scienceLessonCompletions.completedAt,
+      createdAt: scienceLessonCompletions.createdAt,
+      studentName: users.name,
+      lessonTitle: scienceLessons.title,
+    })
+    .from(scienceLessonCompletions)
+    .innerJoin(users, eq(users.id, scienceLessonCompletions.studentId))
+    .innerJoin(
+      scienceLessons,
+      eq(scienceLessons.id, scienceLessonCompletions.lessonId)
+    )
+    .where(
+      and(
+        eq(scienceLessonCompletions.status, 'COMPLETED'),
+        inArray(scienceLessonCompletions.studentId, enrolledIds)
+      )
+    )
+    .orderBy(desc(scienceLessonCompletions.completedAt))
+    .limit(5);
 
   return completions.map((c) => ({
-    studentName: c.student.name,
-    lessonTitle: c.lesson.title,
+    studentName: c.studentName,
+    lessonTitle: c.lessonTitle,
     score: c.mostRecentScorePercentage,
     completedAt: c.completedAt?.toISOString() ?? c.createdAt.toISOString(),
   }));
