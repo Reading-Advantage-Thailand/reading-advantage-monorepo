@@ -1,4 +1,4 @@
-interface PrismaSession {
+interface SessionStore {
   findMany(args: {
     where: { expiresAt: { lt: Date } };
     select: { id: true; expiresAt: true };
@@ -22,7 +22,7 @@ interface CleanupTask {
 }
 
 export function createCleanupTask(
-  prisma: { session: PrismaSession },
+  client: { session: SessionStore },
   options: CleanupOptions
 ): CleanupTask {
   let intervalId: ReturnType<typeof setInterval> | null = null;
@@ -34,7 +34,7 @@ export function createCleanupTask(
     const cutoff = new Date(Date.now() - options.maxAgeMs);
 
     while (!stopped) {
-      const staleSessions = await prisma.session.findMany({
+      const staleSessions = await client.session.findMany({
         where: {
           expiresAt: { lt: cutoff },
         },
@@ -49,7 +49,7 @@ export function createCleanupTask(
         break;
       }
 
-      await prisma.session.deleteMany({
+      await client.session.deleteMany({
         where: {
           id: { in: staleSessions.map((s) => s.id) },
         },
