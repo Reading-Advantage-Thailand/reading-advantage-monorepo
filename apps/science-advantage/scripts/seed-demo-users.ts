@@ -1,11 +1,13 @@
-import { PrismaClient } from '@prisma/client';
+#!/usr/bin/env tsx
 import bcrypt from 'bcryptjs';
 
-const prisma = new PrismaClient();
+import { db } from '@reading-advantage/db';
+import { accounts, users } from '@reading-advantage/db/schema';
 
 async function main() {
   const password = 'Password123!';
   const hashedPassword = await bcrypt.hash(password, 10);
+  const now = new Date();
 
   // Demo accounts for each role
   const demoUsers = [
@@ -42,36 +44,36 @@ async function main() {
   console.log('🌱 Seeding demo users...');
 
   for (const userData of demoUsers) {
-    const user = await prisma.user.upsert({
-      where: { username: userData.username },
-      update: {},
-      create: {
-        id: `demo_${userData.role.toLowerCase()}`,
-        ...userData,
-        emailVerified: false,
-        image: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+    const userId = `demo_${userData.role.toLowerCase()}`;
 
-    // Create account for Better Auth
-    const accountId = `${user.id}_credential`;
-    await prisma.account.upsert({
-      where: {
+    await db
+      .insert(users)
+      .values({
+        id: userId,
+        username: userData.username,
+        displayUsername: userData.displayUsername,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        image: null,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .onConflictDoNothing({ target: users.username });
+
+    // Create account for Better Auth (credential provider)
+    const accountId = `${userId}_credential`;
+    await db
+      .insert(accounts)
+      .values({
         id: accountId,
-      },
-      update: {},
-      create: {
-        id: accountId,
-        userId: user.id,
-        accountId: user.username,
+        userId,
         providerId: 'credential',
         password: hashedPassword,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+        createdAt: now,
+        updatedAt: now,
+      })
+      .onConflictDoNothing({ target: accounts.id });
 
     console.log(`✓ Created ${userData.role} user: ${userData.username}`);
   }
@@ -85,11 +87,7 @@ async function main() {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
