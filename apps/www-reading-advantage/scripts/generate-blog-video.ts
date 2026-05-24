@@ -276,7 +276,7 @@ export default makeProject({
       range: [0, ${rangeEnd}],
     },
     rendering: {
-      fps: 8,
+      fps: 25,
       resolutionScale: 0.5,
       exporter: {
         name: '@revideo/core/ffmpeg',
@@ -286,7 +286,7 @@ export default makeProject({
       },
     },
     preview: {
-      fps: 8,
+      fps: 25,
       resolutionScale: 0.5,
     },
   },
@@ -307,7 +307,7 @@ async function renderIntroClip(
 ): Promise<void> {
   // Try Revideo first
   try {
-    const fps = 8;
+    const fps = 25;
     const rangeEnd = Math.ceil(duration * fps);
     const projectPath = createRevideoProjectFile(workDir, 'intro', rangeEnd);
 
@@ -392,7 +392,7 @@ async function renderOutroClip(
 ): Promise<void> {
   // Try Revideo first
   try {
-    const fps = 8;
+    const fps = 25;
     const rangeEnd = Math.ceil(duration * fps);
     const projectPath = createRevideoProjectFile(workDir, 'outro', rangeEnd);
 
@@ -509,7 +509,7 @@ function concatClips(clips: string[], outputPath: string): void {
   fs.writeFileSync(listPath, listContent);
 
   runCommand(
-    `ffmpeg -loglevel error -y -f concat -safe 0 -i "${listPath}" -c copy "${outputPath}" 2>/dev/null`
+    `ffmpeg -loglevel error -y -f concat -safe 0 -i "${listPath}" -r 25 -c:v libx264 -preset veryfast -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "${outputPath}" 2>/dev/null`
   );
 }
 

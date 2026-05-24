@@ -12,7 +12,7 @@ export default makeProject({
       range: [0, 9999],
     },
     rendering: {
-      fps: 8,
+      fps: 25,
       resolutionScale: 0.5,
         exporter: {
           name: '@revideo/core/ffmpeg',
@@ -22,7 +22,7 @@ export default makeProject({
         },
     },
     preview: {
-      fps: 8,
+      fps: 25,
       resolutionScale: 0.5,
     },
   },
