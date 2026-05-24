@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getLevelName } from '@/lib/gamification/xp';
+import { getLevelName } from '@/lib/gamification/xp.constants';
 
 interface LevelUpAnimationProps {
   oldLevel: number;

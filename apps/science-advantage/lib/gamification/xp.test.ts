@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateLevel, getLevelName } from './xp';
+import { calculateLevel, getLevelName } from './xp.constants';
 
 describe('XP and Level Calculation', () => {
   describe('calculateLevel', () => {
