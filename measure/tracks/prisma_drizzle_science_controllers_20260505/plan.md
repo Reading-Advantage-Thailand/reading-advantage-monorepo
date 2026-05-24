@@ -218,7 +218,7 @@ be green against BEFORE and stay green against AFTER.
 - [ ] Task: Migrate `app/api/ai/recommendations/route.ts` (attempt)
 - [ ] Task: Migrate `app/api/ai/update-mastery/route.ts` (attempt, masteryRun)
 - [ ] Task: Migrate `app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts` (attempt, lesson, user)
-- [ ] Task: Migrate `app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts` (lesson, lessonCompletion, user)
+- [x] Task: Migrate `app/api/students/[studentId]/lessons/[lessonId]/progress/route.ts` (lesson, lessonCompletion, user) [fd07ed2]
 - [ ] Task: Migrate `app/api/students/[studentId]/classes/[classId]/analytics/route.ts` (attempt, class, lesson, lessonCompletion)
 - [ ] Task: Migrate `app/api/students/[studentId]/mastery-profile/route.ts` (masteryRun, standard, standardMastery, user)
 - [ ] Task: Update tests `tests/api/ai-update-mastery.integration.test.ts`, `tests/api/lesson-analytics.integration.test.ts` against Drizzle _(mastery-pipeline + standard-mastery already handled in their respective commits)_
