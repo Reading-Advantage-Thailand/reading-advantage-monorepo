@@ -775,10 +775,7 @@ async function main() {
     console.log('\n🎵 Mixing background jingle...');
     const outDirAbs = path.resolve(outDir);
     fs.mkdirSync(outDirAbs, { recursive: true });
-    const coverImage = meta.coverImage || '';
-    const dayMatch = coverImage.match(/day(\d+)-/);
-    const dayPrefix = dayMatch ? `day${dayMatch[1]}-` : '';
-    const outputFileName = `${dayPrefix}${blogBasename}-th.mp4`;
+    const outputFileName = `${blogBasename}-th.mp4`;
     const finalOutputPath = path.join(outDirAbs, outputFileName);
 
     mixBackgroundMusic(scaledPath, fs.existsSync(JINGLE_PATH) ? JINGLE_PATH : '', finalOutputPath, workDir);
