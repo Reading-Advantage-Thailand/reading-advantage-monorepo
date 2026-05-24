@@ -1,33 +1,66 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-let capturedCreateData: Record<string, unknown> | null = null;
+type InsertCapture = { values?: Record<string, unknown>; returned?: Record<string, unknown> };
+const insertCapture: InsertCapture = {};
 
-const mockCreate = vi.fn().mockImplementation((args: { data: Record<string, unknown>; include: unknown }) => {
-  capturedCreateData = args.data;
-  return Promise.resolve({
-    id: args.data.id ?? 'auto-generated-cuid',
-    userId: args.data.userId,
-    token: args.data.token,
-    expiresAt: args.data.expiresAt,
-    user: {
-      id: args.data.userId,
-      name: 'Test',
-      username: 'test',
-      email: 'test@test.com',
-      role: 'STUDENT',
-      image: null,
-    },
-  });
+vi.mock('@reading-advantage/db', async () => {
+  const mockDb = {
+    insert: vi.fn().mockImplementation(() => ({
+      values: vi.fn().mockImplementation((vals: Record<string, unknown>) => {
+        insertCapture.values = vals;
+        return {
+          returning: vi.fn().mockResolvedValue([
+            {
+              id: vals.id ?? 'auto-generated-uuid',
+              token: vals.token,
+              userId: vals.userId,
+              expiresAt: vals.expiresAt,
+            },
+          ]),
+        };
+      }),
+    })),
+    select: vi.fn().mockImplementation(() => ({
+      from: vi.fn().mockImplementation(() => ({
+        where: vi.fn().mockImplementation(() => ({
+          limit: vi.fn().mockResolvedValue([
+            {
+              id: 'user-1',
+              username: 'test',
+              name: 'Test',
+              email: 'test@test.com',
+              role: 'STUDENT',
+              schoolId: null,
+              xp: 0,
+              level: 1,
+              cefrLevel: 'A1-',
+              image: null,
+            },
+          ]),
+        })),
+      })),
+    })),
+    delete: vi.fn(),
+  };
+  return {
+    db: mockDb,
+    eq: vi.fn(() => 'eq-clause'),
+  };
 });
 
-vi.mock('@/lib/prisma', () => ({
-  __esModule: true,
-  default: {
-    session: {
-      create: (...args: unknown[]) => mockCreate(...args),
-      findUnique: vi.fn(),
-      delete: vi.fn(),
-    },
+vi.mock('@reading-advantage/db/schema', () => ({
+  sessions: { id: 'sessions.id', token: 'sessions.token' },
+  users: {
+    id: 'users.id',
+    username: 'users.username',
+    name: 'users.name',
+    email: 'users.email',
+    role: 'users.role',
+    image: 'users.image',
+    schoolId: 'users.schoolId',
+    xp: 'users.xp',
+    level: 'users.level',
+    cefrLevel: 'users.cefrLevel',
   },
 }));
 
@@ -41,35 +74,38 @@ vi.mock('next/headers', () => ({
 
 import { createSession } from './session';
 
-describe('Session ID separation from token', () => {
+describe('Session ID separation from token (Drizzle insert payload)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    capturedCreateData = null;
+    insertCapture.values = undefined;
   });
 
-  it('should not set id equal to token when creating a session', async () => {
+  it('inserts a session whose id is a generated UUID, distinct from the token', async () => {
     await createSession('user-1');
 
-    expect(capturedCreateData).toBeDefined();
-    // The id should either be omitted (let Prisma auto-generate) or different from token
-    if (capturedCreateData!.id !== undefined) {
-      expect(capturedCreateData!.id).not.toBe(capturedCreateData!.token);
-    }
+    expect(insertCapture.values).toBeDefined();
+    const { id, token } = insertCapture.values!;
+    expect(id).toBeDefined();
+    expect(typeof id).toBe('string');
+    expect(id).not.toBe(token);
   });
 
-  it('should not include id field in session creation data (let Prisma auto-generate)', async () => {
+  it('inserts a session with an explicit UUID id (not undefined)', async () => {
     await createSession('user-1');
 
-    expect(capturedCreateData).toBeDefined();
-    expect(capturedCreateData!.id).toBeUndefined();
+    // Shared createSession always sets id = crypto.randomUUID()
+    expect(insertCapture.values!.id).toBeDefined();
+    expect(typeof insertCapture.values!.id).toBe('string');
+    // UUID v4 length
+    expect((insertCapture.values!.id as string).length).toBe(36);
   });
 
-  it('should still include a token field in session creation', async () => {
+  it('inserts a 64-char hex token separate from id', async () => {
     await createSession('user-1');
 
-    expect(capturedCreateData).toBeDefined();
-    expect(capturedCreateData!.token).toBeDefined();
-    expect(typeof capturedCreateData!.token).toBe('string');
-    expect((capturedCreateData!.token as string).length).toBe(64); // 32 bytes hex
+    expect(insertCapture.values!.token).toBeDefined();
+    expect(typeof insertCapture.values!.token).toBe('string');
+    expect((insertCapture.values!.token as string).length).toBe(64);
+    expect(insertCapture.values!.token).toMatch(/^[0-9a-f]+$/);
   });
 });

@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach, vi, type Mock } from 'vitest';
-import prisma from '@/lib/prisma';
-import type { user as UserModel } from '@prisma/client';
+import { db } from '@reading-advantage/db';
+import { users, sessions, accounts } from '@reading-advantage/db/schema';
 import { redirect } from 'next/navigation';
 import { requireAuth, requireRole, hasRole, getSession } from './server';
 import { createSession } from './session';
-import type { Session } from './types';
+import type { Session, UserRole } from './types';
 
-// Mock next/navigation
+type UserRow = typeof users.$inferSelect;
+
 vi.mock('next/navigation', () => ({
   redirect: vi.fn(),
 }));
@@ -17,88 +18,95 @@ const mockCookies = {
   delete: vi.fn(),
 };
 
-// Mock next/headers for cookies
 vi.mock('next/headers', () => ({
   cookies: vi.fn(() => mockCookies),
 }));
 
+async function cleanupAuthFixtures(): Promise<void> {
+  await db.delete(sessions);
+  await db.delete(accounts);
+  await db.delete(users);
+}
+
+function toSessionUser(user: UserRow): Session['user'] {
+  return {
+    id: user.id,
+    name: user.name,
+    username: user.username,
+    email: user.email,
+    // Drizzle users.role widens to include INTERN; this suite only seeds the four
+    // local UserRole values so the narrowing cast is safe.
+    role: user.role as UserRole,
+    image: user.image,
+  };
+}
+
 describe('Auth Server Helpers', () => {
-  let studentUser: UserModel;
-  let teacherUser: UserModel;
-  let adminUser: UserModel;
-  let systemUser: UserModel;
+  let studentUser: UserRow;
+  let teacherUser: UserRow;
+  let adminUser: UserRow;
+  let systemUser: UserRow;
 
   beforeEach(async () => {
-    // Clean up
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+    await cleanupAuthFixtures();
 
     mockCookies.get.mockReset();
     mockCookies.set.mockReset();
     mockCookies.delete.mockReset();
 
-    // Create test users with different roles
-    studentUser = await prisma.user.create({
-      data: {
-        id: 'student-1',
+    [studentUser] = await db
+      .insert(users)
+      .values({
+        id: 'auth-server-student',
         name: 'Student User',
         username: 'student',
         displayUsername: 'Student',
         email: 'student@example.com',
         role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
-    teacherUser = await prisma.user.create({
-      data: {
-        id: 'teacher-1',
+    [teacherUser] = await db
+      .insert(users)
+      .values({
+        id: 'auth-server-teacher',
         name: 'Teacher User',
         username: 'teacher',
         displayUsername: 'Teacher',
         email: 'teacher@example.com',
         role: 'TEACHER',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
-    adminUser = await prisma.user.create({
-      data: {
-        id: 'admin-1',
+    [adminUser] = await db
+      .insert(users)
+      .values({
+        id: 'auth-server-admin',
         name: 'Admin User',
         username: 'admin',
         displayUsername: 'Admin',
         email: 'admin@example.com',
         role: 'ADMIN',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
-    systemUser = await prisma.user.create({
-      data: {
-        id: 'system-1',
+    [systemUser] = await db
+      .insert(users)
+      .values({
+        id: 'auth-server-system',
         name: 'System User',
         username: 'system',
         displayUsername: 'System',
         email: 'system@example.com',
         role: 'SYSTEM',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
-    // Clear all mocks
     vi.clearAllMocks();
   });
 
   afterEach(async () => {
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+    await cleanupAuthFixtures();
   });
 
   describe('hasRole', () => {
@@ -107,14 +115,7 @@ describe('Auth Server Helpers', () => {
         id: 'test-session',
         userId: studentUser.id,
         expiresAt: new Date(),
-        user: {
-          id: studentUser.id,
-          name: studentUser.name,
-          username: studentUser.username,
-          email: studentUser.email,
-          role: 'STUDENT',
-          image: null,
-        },
+        user: toSessionUser(studentUser),
       };
 
       expect(hasRole(session, 'STUDENT')).toBe(true);
@@ -125,14 +126,7 @@ describe('Auth Server Helpers', () => {
         id: 'test-session',
         userId: teacherUser.id,
         expiresAt: new Date(),
-        user: {
-          id: teacherUser.id,
-          name: teacherUser.name,
-          username: teacherUser.username,
-          email: teacherUser.email,
-          role: 'TEACHER',
-          image: null,
-        },
+        user: toSessionUser(teacherUser),
       };
 
       expect(hasRole(session, 'STUDENT')).toBe(true);
@@ -143,14 +137,7 @@ describe('Auth Server Helpers', () => {
         id: 'test-session',
         userId: studentUser.id,
         expiresAt: new Date(),
-        user: {
-          id: studentUser.id,
-          name: studentUser.name,
-          username: studentUser.username,
-          email: studentUser.email,
-          role: 'STUDENT',
-          image: null,
-        },
+        user: toSessionUser(studentUser),
       };
 
       expect(hasRole(session, 'TEACHER')).toBe(false);
@@ -159,19 +146,11 @@ describe('Auth Server Helpers', () => {
     });
 
     it('should enforce role hierarchy correctly', () => {
-      // STUDENT (level 1)
       const studentSession: Session = {
         id: 'student-session',
         userId: studentUser.id,
         expiresAt: new Date(),
-        user: {
-          id: studentUser.id,
-          name: studentUser.name,
-          username: studentUser.username,
-          email: studentUser.email,
-          role: 'STUDENT',
-          image: null,
-        },
+        user: toSessionUser(studentUser),
       };
 
       expect(hasRole(studentSession, 'STUDENT')).toBe(true);
@@ -179,19 +158,11 @@ describe('Auth Server Helpers', () => {
       expect(hasRole(studentSession, 'ADMIN')).toBe(false);
       expect(hasRole(studentSession, 'SYSTEM')).toBe(false);
 
-      // TEACHER (level 2)
       const teacherSession: Session = {
         id: 'teacher-session',
         userId: teacherUser.id,
         expiresAt: new Date(),
-        user: {
-          id: teacherUser.id,
-          name: teacherUser.name,
-          username: teacherUser.username,
-          email: teacherUser.email,
-          role: 'TEACHER',
-          image: null,
-        },
+        user: toSessionUser(teacherUser),
       };
 
       expect(hasRole(teacherSession, 'STUDENT')).toBe(true);
@@ -199,19 +170,11 @@ describe('Auth Server Helpers', () => {
       expect(hasRole(teacherSession, 'ADMIN')).toBe(false);
       expect(hasRole(teacherSession, 'SYSTEM')).toBe(false);
 
-      // ADMIN (level 3)
       const adminSession: Session = {
         id: 'admin-session',
         userId: adminUser.id,
         expiresAt: new Date(),
-        user: {
-          id: adminUser.id,
-          name: adminUser.name,
-          username: adminUser.username,
-          email: adminUser.email,
-          role: 'ADMIN',
-          image: null,
-        },
+        user: toSessionUser(adminUser),
       };
 
       expect(hasRole(adminSession, 'STUDENT')).toBe(true);
@@ -219,19 +182,11 @@ describe('Auth Server Helpers', () => {
       expect(hasRole(adminSession, 'ADMIN')).toBe(true);
       expect(hasRole(adminSession, 'SYSTEM')).toBe(false);
 
-      // SYSTEM (level 4)
       const systemSession: Session = {
         id: 'system-session',
         userId: systemUser.id,
         expiresAt: new Date(),
-        user: {
-          id: systemUser.id,
-          name: systemUser.name,
-          username: systemUser.username,
-          email: systemUser.email,
-          role: 'SYSTEM',
-          image: null,
-        },
+        user: toSessionUser(systemUser),
       };
 
       expect(hasRole(systemSession, 'STUDENT')).toBe(true);
@@ -250,19 +205,19 @@ describe('Auth Server Helpers', () => {
       expect(result.user.id).toBe(session.user.id);
     });
 
-    it('should redirect to login when no session', async () => {
+    it('should redirect to /signin when no session', async () => {
       const redirectMock = redirect as unknown as Mock;
 
       mockCookies.get.mockReturnValue(undefined);
       await expect(requireAuth()).resolves.toBeUndefined();
-      expect(redirectMock).toHaveBeenCalledWith('/login');
+      expect(redirectMock).toHaveBeenCalledWith('/signin');
     });
   });
 
   describe('requireRole', () => {
     it('should allow user with required role', async () => {
       const createdSession = await createSession(studentUser.id);
-      mockCookies.get.mockReturnValue({ value: createdSession.id });
+      mockCookies.get.mockReturnValue({ value: createdSession.token });
 
       const session = await requireRole('STUDENT');
 
@@ -271,28 +226,28 @@ describe('Auth Server Helpers', () => {
 
     it('should allow higher role to access lower role route', async () => {
       const createdSession = await createSession(teacherUser.id);
-      mockCookies.get.mockReturnValue({ value: createdSession.id });
+      mockCookies.get.mockReturnValue({ value: createdSession.token });
 
       const session = await requireRole('STUDENT');
 
       expect(session.user.id).toBe(teacherUser.id);
     });
 
-    it('should redirect when user lacks required role', async () => {
+    it('should redirect to role dashboard when user lacks required role', async () => {
       const createdSession = await createSession(studentUser.id);
       const redirectMock = redirect as unknown as Mock;
 
-      mockCookies.get.mockReturnValue({ value: createdSession.id });
+      mockCookies.get.mockReturnValue({ value: createdSession.token });
 
       await expect(requireRole('TEACHER')).resolves.toBeUndefined();
       expect(redirectMock).toHaveBeenCalledWith('/student');
     });
 
-    it('should redirect to user dashboard when lacking required role', async () => {
+    it('should redirect to admin dashboard when admin lacks required role', async () => {
       const createdSession = await createSession(adminUser.id);
       const redirectMock = redirect as unknown as Mock;
 
-      mockCookies.get.mockReturnValue({ value: createdSession.id });
+      mockCookies.get.mockReturnValue({ value: createdSession.token });
 
       await expect(requireRole('SYSTEM')).resolves.toBeUndefined();
       expect(redirectMock).toHaveBeenCalledWith('/admin');
@@ -308,7 +263,7 @@ describe('Auth Server Helpers', () => {
 
     it('should return session when user is authenticated', async () => {
       const createdSession = await createSession(studentUser.id);
-      mockCookies.get.mockReturnValue({ value: createdSession.id });
+      mockCookies.get.mockReturnValue({ value: createdSession.token });
       const session = await getSession();
 
       expect(session?.user.id).toBe(createdSession.user.id);
@@ -337,7 +292,7 @@ describe('Auth Server Helpers', () => {
         id: 'test',
         userId: teacherUser.id,
         expiresAt: new Date(),
-        user: { ...teacherUser, image: null },
+        user: toSessionUser(teacherUser),
       };
 
       expect(hasRole(teacherSession, 'STUDENT')).toBe(true);
@@ -348,7 +303,7 @@ describe('Auth Server Helpers', () => {
         id: 'test',
         userId: studentUser.id,
         expiresAt: new Date(),
-        user: { ...studentUser, image: null },
+        user: toSessionUser(studentUser),
       };
 
       expect(hasRole(studentSession, 'TEACHER')).toBe(false);
@@ -359,7 +314,7 @@ describe('Auth Server Helpers', () => {
         id: 'test',
         userId: adminUser.id,
         expiresAt: new Date(),
-        user: { ...adminUser, image: null },
+        user: toSessionUser(adminUser),
       };
 
       expect(hasRole(adminSession, 'STUDENT')).toBe(true);
@@ -372,7 +327,7 @@ describe('Auth Server Helpers', () => {
         id: 'test',
         userId: adminUser.id,
         expiresAt: new Date(),
-        user: { ...adminUser, image: null },
+        user: toSessionUser(adminUser),
       };
 
       expect(hasRole(adminSession, 'SYSTEM')).toBe(false);
@@ -383,7 +338,7 @@ describe('Auth Server Helpers', () => {
         id: 'test',
         userId: systemUser.id,
         expiresAt: new Date(),
-        user: { ...systemUser, image: null },
+        user: toSessionUser(systemUser),
       };
 
       expect(hasRole(systemSession, 'STUDENT')).toBe(true);
@@ -416,7 +371,7 @@ describe('Auth Server Helpers', () => {
       const futureExpiry: Session = {
         id: 'test',
         userId: 'test',
-        expiresAt: new Date(Date.now() + 86400000), // 1 day future
+        expiresAt: new Date(Date.now() + 86400000),
         user: {
           id: 'test',
           name: 'Test',
@@ -432,7 +387,7 @@ describe('Auth Server Helpers', () => {
       const pastExpiry: Session = {
         id: 'test',
         userId: 'test',
-        expiresAt: new Date(Date.now() - 86400000), // 1 day past
+        expiresAt: new Date(Date.now() - 86400000),
         user: {
           id: 'test',
           name: 'Test',
@@ -443,7 +398,7 @@ describe('Auth Server Helpers', () => {
         },
       };
 
-      // hasRole doesn't check expiration - that's validateSession's job
+      // hasRole doesn't check expiration — that's validateSession's job
       expect(hasRole(pastExpiry, 'STUDENT')).toBe(true);
     });
   });

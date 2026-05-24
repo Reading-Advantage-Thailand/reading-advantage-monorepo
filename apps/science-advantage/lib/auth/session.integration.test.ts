@@ -1,42 +1,43 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { PrismaClient } from '@prisma/client';
+import { db, eq } from '@reading-advantage/db';
+import { users, sessions, accounts } from '@reading-advantage/db/schema';
 import {
   createSession,
   validateSession,
   deleteSession,
 } from './session';
 
-const prisma = new PrismaClient();
+type UserRow = typeof users.$inferSelect;
+
+async function cleanupAuthFixtures(): Promise<void> {
+  await db.delete(sessions);
+  await db.delete(accounts);
+  await db.delete(users);
+}
 
 describe('Session Management', () => {
   let testUserId: string;
 
   beforeEach(async () => {
-    // Clean up sessions and create a test user
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+    await cleanupAuthFixtures();
 
-    const user = await prisma.user.create({
-      data: {
+    const [user] = await db
+      .insert(users)
+      .values({
         id: 'test-user-session',
         name: 'Test User',
         username: 'testuser',
         displayUsername: 'TestUser',
         email: 'test@example.com',
         role: 'STUDENT',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+      })
+      .returning();
 
     testUserId = user.id;
   });
 
   afterEach(async () => {
-    await prisma.session.deleteMany();
-    await prisma.account.deleteMany();
-    await prisma.user.deleteMany();
+    await cleanupAuthFixtures();
   });
 
   describe('createSession', () => {
@@ -60,7 +61,6 @@ describe('Session Management', () => {
 
       const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 
-      // Session should expire 7 days from now
       const expectedExpiry = new Date(before.getTime() + SEVEN_DAYS);
       const maxExpiry = new Date(after.getTime() + SEVEN_DAYS);
 
@@ -88,9 +88,11 @@ describe('Session Management', () => {
     it('should create session record in database', async () => {
       const session = await createSession(testUserId);
 
-      const dbSession = await prisma.session.findUnique({
-        where: { token: session.token! },
-      });
+      const [dbSession] = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.token, session.token!))
+        .limit(1);
 
       expect(dbSession).toBeDefined();
       expect(dbSession?.userId).toBe(testUserId);
@@ -108,11 +110,12 @@ describe('Session Management', () => {
 
       expect(session1.token).not.toBe(session2.token);
 
-      const sessions = await prisma.session.findMany({
-        where: { userId: testUserId },
-      });
+      const rows = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.userId, testUserId));
 
-      expect(sessions.length).toBe(2);
+      expect(rows.length).toBe(2);
     });
   });
 
@@ -141,22 +144,22 @@ describe('Session Management', () => {
     it('should return null and delete expired session', async () => {
       const session = await createSession(testUserId);
 
-      // Manually update the session to be expired
-      await prisma.session.update({
-        where: { id: session.id },
-        data: { expiresAt: new Date(Date.now() - 1000) }, // 1 second ago
-      });
+      await db
+        .update(sessions)
+        .set({ expiresAt: new Date(Date.now() - 1000) })
+        .where(eq(sessions.id, session.id));
 
       const validatedSession = await validateSession(session.token!);
 
       expect(validatedSession).toBeNull();
 
-      // Verify session was deleted
-      const dbSession = await prisma.session.findUnique({
-        where: { id: session.id },
-      });
+      const [dbSession] = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.id, session.id))
+        .limit(1);
 
-      expect(dbSession).toBeNull();
+      expect(dbSession).toBeUndefined();
     });
 
     it('should include user data in validated session', async () => {
@@ -171,11 +174,10 @@ describe('Session Management', () => {
     it('should validate session just before expiration', async () => {
       const session = await createSession(testUserId);
 
-      // Set expiration to 1 second from now
-      await prisma.session.update({
-        where: { id: session.id },
-        data: { expiresAt: new Date(Date.now() + 1000) },
-      });
+      await db
+        .update(sessions)
+        .set({ expiresAt: new Date(Date.now() + 1000) })
+        .where(eq(sessions.id, session.id));
 
       const validatedSession = await validateSession(session.token!);
 
@@ -187,18 +189,17 @@ describe('Session Management', () => {
       const roles = ['STUDENT', 'TEACHER', 'ADMIN', 'SYSTEM'] as const;
 
       for (const role of roles) {
-        const user = await prisma.user.create({
-          data: {
+        const [user] = await db
+          .insert(users)
+          .values({
             id: `user-${role}`,
             name: `${role} User`,
             username: role.toLowerCase(),
             displayUsername: role,
             email: `${role.toLowerCase()}@example.com`,
             role,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        });
+          })
+          .returning();
 
         const session = await createSession(user.id);
         const validated = await validateSession(session.token!);
@@ -214,11 +215,13 @@ describe('Session Management', () => {
 
       await deleteSession(session.token!);
 
-      const dbSession = await prisma.session.findUnique({
-        where: { token: session.token! },
-      });
+      const [dbSession] = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.token, session.token!))
+        .limit(1);
 
-      expect(dbSession).toBeNull();
+      expect(dbSession).toBeUndefined();
     });
 
     it('should not throw when deleting non-existent session', async () => {
@@ -242,14 +245,18 @@ describe('Session Management', () => {
 
       await deleteSession(session1.token!);
 
-      const dbSession1 = await prisma.session.findUnique({
-        where: { token: session1.token! },
-      });
-      const dbSession2 = await prisma.session.findUnique({
-        where: { token: session2.token! },
-      });
+      const [dbSession1] = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.token, session1.token!))
+        .limit(1);
+      const [dbSession2] = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.token, session2.token!))
+        .limit(1);
 
-      expect(dbSession1).toBeNull();
+      expect(dbSession1).toBeUndefined();
       expect(dbSession2).toBeDefined();
     });
 
@@ -268,24 +275,25 @@ describe('Session Management', () => {
       const session1 = await createSession(testUserId);
       const session2 = await createSession(testUserId);
 
-      // Tokens should be hexadecimal strings
       expect(session1.token).toMatch(/^[0-9a-f]+$/);
       expect(session2.token).toMatch(/^[0-9a-f]+$/);
 
-      // Tokens should be 64 characters (32 bytes * 2 for hex)
       expect(session1.token!.length).toBe(64);
       expect(session2.token!.length).toBe(64);
     });
 
     it('should generate unique tokens across many sessions', async () => {
-      const sessions = await Promise.all(
-        Array.from({ length: 10 }, () => createSession(testUserId))
-      );
+      const created: Awaited<ReturnType<typeof createSession>>[] = [];
+      for (let i = 0; i < 10; i++) {
+        // Sequential to keep insert ordering deterministic in single-fork pool
+        created.push(await createSession(testUserId));
+      }
 
-      const tokens = sessions.map(s => s.token);
+      const tokens = created.map((s) => s.token);
       const uniqueTokens = new Set(tokens);
 
       expect(uniqueTokens.size).toBe(10);
     });
   });
+
 });
