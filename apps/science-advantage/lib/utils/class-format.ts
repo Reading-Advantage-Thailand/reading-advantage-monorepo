@@ -1,4 +1,4 @@
-import { StandardsAlignment } from '@prisma/client';
+import type { StandardsAlignment } from '@/lib/enums';
 
 type Locale = 'en' | 'th';
 

@@ -3,7 +3,8 @@
  * Generates unique 6-character alphanumeric codes for class join functionality
  */
 
-import { PrismaClient } from '@prisma/client';
+import { db as defaultDb, eq } from '@reading-advantage/db';
+import { scienceClasses } from '@reading-advantage/db/schema';
 
 import {
   JOIN_CODE_CHARSET,
@@ -11,7 +12,12 @@ import {
   isValidJoinCodeFormat,
 } from '@/lib/utils/join-code-format';
 
-type PrismaClassDelegate = Pick<PrismaClient, 'class'>;
+/**
+ * Minimal slice of the Drizzle database client that `generateUniqueJoinCode`
+ * needs. Both the regular `db` and a transaction client (`tx` from
+ * `db.transaction(...)`) satisfy this shape, so callers can pass either.
+ */
+type JoinCodeDb = Pick<typeof defaultDb, 'select'>;
 
 const CHARSET = JOIN_CODE_CHARSET;
 const CODE_LENGTH = JOIN_CODE_LENGTH;
@@ -34,21 +40,22 @@ export function generateJoinCode(): string {
  * Generate a unique join code by checking database for collisions
  * Retries up to MAX_RETRIES times if collision occurs
  *
- * @param prisma - Prisma client instance (can be from transaction)
+ * @param db - Drizzle database client or transaction handle
  * @returns Unique join code
  * @throws Error if unable to generate unique code after MAX_RETRIES attempts
  */
 export async function generateUniqueJoinCode(
-  prisma: PrismaClassDelegate
+  db: JoinCodeDb
 ): Promise<string> {
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     const code = generateJoinCode();
 
     // Check if code already exists
-    const existing = await prisma.class.findUnique({
-      where: { joinCode: code },
-      select: { id: true },
-    });
+    const [existing] = await db
+      .select({ id: scienceClasses.id })
+      .from(scienceClasses)
+      .where(eq(scienceClasses.joinCode, code))
+      .limit(1);
 
     if (!existing) {
       return code;
