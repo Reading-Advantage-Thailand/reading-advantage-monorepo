@@ -1,0 +1,22 @@
+Task: Migrate app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts (Phase 2)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- 6 SELECTs: student, optional authz subquery, lesson, ordered questions,
+  per-question standards, attempts (desc by attemptNumber), responses
+  ordered by .order grouped by attemptId.
+- Per-question standards collected once via inArray and grouped in memory.
+- Standards-performance only counts the MOST RECENT attempt's responses
+  (matches the previous code's attempts[0].attemptNumber filter).
+
+Files:
+- M app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts
+- A app/api/students/[studentId]/lessons/[lessonId]/analytics/route.integration.test.ts
+
+Verification:
+- 7/7 integration tests
+- eslint clean
+
+Note: requireAuth() in the unauth case throws NEXT_REDIRECT (caught by
+the route's try/catch → 500). The test asserts non-2xx rather than 401,
+which matches the original Prisma version's behavior exactly.
