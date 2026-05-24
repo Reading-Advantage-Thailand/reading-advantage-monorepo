@@ -1,0 +1,10 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: scripts/migrate-lesson-content → Drizzle (part of 5-script bundle)
+Tests: covered by migrate-lesson-content.test.ts (updated in follow-up commit)
+Notes:
+- Replaced prisma.lesson.findMany with db.select().from(scienceLessons).where(...).orderBy(asc(.order)).
+- Replaced prisma.lesson.update with db.update(scienceLessons).set(...).where(eq(.id, lessonId)).
+- Removed prisma.$disconnect() — postgres-js doesn't need explicit teardown for CLI scripts.
+- All pure conversion logic (parseMarkdownSections / parseMarkdownImages / convertSectionToBlock / etc.) untouched.
+- CLI args, --dry-run, output modes (db/json/stdout), error reporting, process.exit codes preserved.
+Behavior-preserving; no logic change beyond ORM swap.
