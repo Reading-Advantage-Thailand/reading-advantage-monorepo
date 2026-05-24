@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatStudentCount, getStandardsAlignmentLabel } from "@/lib/utils/class-format";
-import type { StandardsAlignment } from "@prisma/client";
+import type { StandardsAlignment } from "@/lib/enums";
 
 interface ClassSnapshotPanelProps {
   gradeLevel: number;

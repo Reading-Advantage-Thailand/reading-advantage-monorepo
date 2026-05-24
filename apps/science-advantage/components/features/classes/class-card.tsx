@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { StandardsAlignment } from "@prisma/client"
+import type { StandardsAlignment } from "@/lib/enums"
 
 import {
   formatGradeLevel,

@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { getStandardsAlignmentLabel } from '@/lib/utils/class-format';
-import type { StandardsAlignment } from '@prisma/client';
+import type { StandardsAlignment } from '@/lib/enums';
 
 interface ClassDetailHeaderProps {
   classId: string;

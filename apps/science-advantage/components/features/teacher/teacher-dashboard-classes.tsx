@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { StandardsAlignment } from "@prisma/client"
+import type { StandardsAlignment } from "@/lib/enums"
 
 import { Button } from "@/components/ui/button"
 import {
