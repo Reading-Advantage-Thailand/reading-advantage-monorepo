@@ -1,0 +1,22 @@
+Task: Update Phase 1 schema tests off Prisma
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- content-migration.test.ts: enum import swap @prisma/client → @/lib/enums.
+- curriculum-identifiers.test.ts (unit): enum import swap + dynamic
+  import() also redirected.
+- curriculum-identifiers.integration.test.ts: full Drizzle rewrite.
+  Replaced the implicit Prisma include relations with explicit junction-
+  table fixtures (scienceLessonStandards, scienceUnitLessons) and innerJoin
+  readbacks. Uses the cleanup-by-prefix idiom that other Phase 1 tests
+  in this track use.
+
+Files:
+- M lib/schemas/__tests__/content-migration.test.ts
+- M lib/schemas/__tests__/curriculum-identifiers.test.ts
+- M lib/schemas/__tests__/curriculum-identifiers.integration.test.ts
+
+Verification:
+- 80 unit tests pass (content-migration: 10, curriculum-identifiers: 70)
+- 4 integration tests pass
+- eslint clean
