@@ -227,7 +227,7 @@ be green against BEFORE and stay green against AFTER.
 
 `gamificationProfiles` and `achievements` are **global** — use raw `db`, not `TenantDB` (0.6).
 
-- [ ] Task: Migrate `lib/gamification/xp.ts` (gamificationProfile)
+- [x] Task: Migrate `lib/gamification/xp.ts` (gamificationProfile) — _pulled ahead from Phase 3 per 2026-05-24 deviation_ [adf2c3d]
 - [ ] Task: Migrate `lib/gamification/streak.ts` (gamificationProfile)
 - [ ] Task: Migrate `lib/gamification/badges.ts` (achievement, attempt, curriculumUnit, gamificationProfile, lessonCompletion)
 - [ ] Task: Migrate `app/api/students/me/gamification/route.ts` (achievement, gamificationProfile)
