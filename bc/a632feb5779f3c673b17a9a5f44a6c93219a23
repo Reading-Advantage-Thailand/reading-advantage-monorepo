@@ -1,0 +1,20 @@
+Task: Migrate app/api/classes/[classId]/analytics/overview/route.ts (Phase 1)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- 4 SELECTs + JOIN: class metadata, enrolled student count + ids, lessons
+  via unit→junction→lesson chain, all completions filtered by both
+  lesson-ids and enrolled-student-ids.
+- ADMIN role bypass kept; non-owner teacher gets 403.
+- Per-lesson aggregation done in JS (mostRecentScorePercentage average,
+  attemptsCount mean, totalTimeSpentSeconds mean, completionRate).
+- Color code helper + rounding preserved.
+
+Files:
+- M app/api/classes/[classId]/analytics/overview/route.ts
+- A app/api/classes/[classId]/analytics/overview/route.integration.test.ts
+- D tests/api/class-analytics-overview.integration.test.ts
+
+Verification:
+- route.integration.test.ts: 6/6 pass
+- eslint clean
