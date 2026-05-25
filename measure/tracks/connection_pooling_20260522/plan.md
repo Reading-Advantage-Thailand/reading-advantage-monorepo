@@ -34,7 +34,7 @@
     - [x] Sub-task: Point `drizzle.config.ts` and migration/seed scripts at `DIRECT_DATABASE_URL`
     - [x] Sub-task: Confirm `DATABASE_URL` (pooler) is used by the app client only
 - [x] Task: Verify migrations apply cleanly via the direct connection (701e942)
-- [ ] Task: Measure - User Manual Verification 'Direct Connection' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Direct Connection' (Protocol in workflow.md)
 
 **Phase 3 production-deployment note (carry to Phase 4 docs):**
 - `apps/codecamp-advantage/cloudbuild.yaml` currently binds only the `DATABASE_URL`
