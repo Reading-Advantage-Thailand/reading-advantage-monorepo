@@ -134,9 +134,9 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/storage_s3_compat_20260522/](./tracks/storage_s3_compat_20260522/)*
   Create `packages/storage` (`@reading-advantage/storage`) with a `StorageClient` interface backed by `@aws-sdk/client-s3`. Works with GCS (S3 interoperability), Cloudflare R2, and MinIO (local dev). Replaces duplicated `@google-cloud/storage` usage in reading-advantage and primary-advantage. Backend migration is a config/env-var change only.
 
-- [ ] **Track: Connection Pooling**
+- [x] **Track: Connection Pooling**
   *Link: [./tracks/connection_pooling_20260522/](./tracks/connection_pooling_20260522/)*
-  Introduce a transaction-mode pooler (PgBouncer for GCP Cloud Run, or Cloudflare Hyperdrive for Cloudflare) between the app instances and the VPS Postgres; tune the `postgres-js` client (`prepare: false`, reduced `max`); split `DATABASE_URL` (pooled) from `DIRECT_DATABASE_URL` (migrations, `LISTEN/NOTIFY`). Independent of other tracks; prerequisite for the reactive query layer.
+  Introduce a transaction-mode pooler (PgBouncer for GCP Cloud Run, or Cloudflare Hyperdrive for Cloudflare) between the app instances and the VPS Postgres; tune the `postgres-js` client (`prepare: false`, reduced `max`); split `DATABASE_URL` (pooled) from `DIRECT_DATABASE_URL` (migrations, `LISTEN/NOTIFY`). Independent of other tracks; prerequisite for the reactive query layer. *Status: COMPLETE 2026-05-25. All 4 phases done. Local docker-compose now runs PgBouncer 1.23.1 alongside postgres (port 6432). `buildPostgresOptions` sets `prepare:false` and env-tunable `max` (default 3). `drizzle.config.ts` + codecamp seed prefer DIRECT_DATABASE_URL with warning-on-fallback. Concurrency verified: 12 simulated app instances × max:3 driving 50 concurrent queries peaked at 8 backend connections (vs estimated 36 unpooled). tech-stack.md documents the topology. Production cutover (cloudbuild.yaml + DIRECT_DATABASE_URL secret) deliberately deferred — fallback keeps prod working.*
 
 - [ ] **Track: Reactive Query Layer** — **STUB**
   *Link: [./tracks/reactive_query_layer_20260522/](./tracks/reactive_query_layer_20260522/)*

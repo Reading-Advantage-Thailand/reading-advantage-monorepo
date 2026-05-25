@@ -14,7 +14,7 @@
 
 ## Patterns That Worked Well
 
-- (2026-05-02, shared_backend_api) Using `insert(...).onConflictDoUpdate(...)` with a `uniqueIndex` on `(userId, lessonId)` provided a clean upsert pattern for `lessonProgress` without manual read-then-write.
+- (2026-05-25, connection_pooling) Transaction-mode pooling (PgBouncer / Hyperdrive) needs THREE coordinated changes in postgres-js apps, not one: (1) `prepare: false` on the client (named statements are session-scoped and fail across pooler reassignments — `prepared statement "s_1" does not exist`); (2) split `DATABASE_URL` (pooled, app queries) from `DIRECT_DATABASE_URL` (session, migrations + seeds + `LISTEN/NOTIFY`) — `drizzle-kit migrate` takes an advisory lock that breaks under transaction mode; (3) for CLI scripts importing the shared `db`, build a dedicated direct client and guard the top-level entrypoint with `import.meta.url === pathToFileURL(process.argv[1]).href` (NOT a `\`file://${argv[1]}\`` template — fragile to spaces/unicode/Windows). The fallback pattern `process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL` with a single `console.warn` lets prod cut over incrementally without breaking deploys.
 
 ## Testing & Mocking
 
@@ -27,7 +27,6 @@
 - (2026-05-14, codecamp_advantage) Mock-DB unit tests can pass while real DB constraints are violated. Always verify schema alignment with a real database smoke test before considering schema tasks complete.
 - (2026-05-14, codecamp_advantage) GitHub webhook handlers should normalize payload URLs before matching against stored repo URLs (trailing slashes, `.git` suffixes). URL mismatch caused silent webhook drops.
 - (2026-05-14, codecamp_advantage) Streaming LLM responses via `streamText` with `toDataStreamResponse()` require careful client-side handling. The `useChatStream` hook must buffer partial chunks and only persist complete assistant messages to the DB.
-- (2026-05-15, codecamp_advantage) Separating curriculum seed data into a pure data module (`codecamp-curriculum-data.ts`) makes it testable independently from the seed script and enables curriculum content review without DB access.
 - (2026-05-15, codecamp_review) API route handlers (Next.js `/api/`) bypass the tRPC/domain layer invariant — always route through domain functions with `assertCan()` and TenantDB, never import raw `db`. For admin data, use `adminProcedure` (not `protectedProcedure`) as defense-in-depth alongside client-side role checks.
 - (2026-05-15, codecamp_review) Client-facing input schemas must never accept fields that could be used for privilege escalation (e.g., `role: "assistant"` on chat messages). Keep injection-prone fields as internal-only parameters in domain functions.
 - (2026-05-15, codecamp_review) `reviewedAt` timestamps must be conditionally set: only stamp when the review status is terminal (not "pending"). Re-triggering a webhook sets status back to "pending", which should preserve the previous `reviewedAt`.

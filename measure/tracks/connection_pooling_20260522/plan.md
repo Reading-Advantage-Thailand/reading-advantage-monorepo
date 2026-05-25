@@ -55,8 +55,8 @@
 
 ## Phase 4: Verification & Docs
 
-- [ ] Task: Connection-count check under simulated concurrency
-    - [ ] Sub-task: Drive concurrent queries; confirm `pg_stat_activity` stays bounded by `default_pool_size`
-- [ ] Task: Regression sweep — `packages/db`, `packages/domain`, `packages/api` tests
-- [ ] Task: Update `tech-stack.md` — pooling topology, the two connection strings, the `LISTEN/NOTIFY` → direct caveat
+- [x] Task: Connection-count check under simulated concurrency
+    - [x] Sub-task: Drive concurrent queries; confirm `pg_stat_activity` stays bounded by `default_pool_size`
+- [x] Task: Regression sweep — `packages/db`, `packages/domain`, `packages/api` tests
+- [x] Task: Update `tech-stack.md` — pooling topology, the two connection strings, the `LISTEN/NOTIFY` → direct caveat
 - [ ] Task: Measure - User Manual Verification 'Verification & Docs' (Protocol in workflow.md)
