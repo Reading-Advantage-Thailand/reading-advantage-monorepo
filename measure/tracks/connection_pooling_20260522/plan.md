@@ -27,7 +27,7 @@
     - [x] Sub-task: Implement; update `connection-options.test.ts`
 - [x] Task: Measure - User Manual Verification 'Client Configuration' (Protocol in workflow.md)
 
-## Phase 3: Direct Connection for Migrations
+## Phase 3: Direct Connection for Migrations [checkpoint: 51bd274]
 
 - [x] Task: Introduce `DIRECT_DATABASE_URL` (701e942)
     - [x] Sub-task: Add `DIRECT_DATABASE_URL` to the env schema / `.env.example`
