@@ -1,7 +1,18 @@
-// Uses raw `db` (not tenant-scoped) because seeding is an admin operation
-// that writes global curriculum data with no user/tenant context.
-import { db } from "../index.js";
+// Uses a dedicated direct (session-mode) DB client, not the shared `db` from
+// `../index.js`. Reason: seeding wraps many writes in a single transaction
+// (`db.transaction(...)` below), which can hold a backend session for several
+// seconds; running that through a transaction-mode pooler pins a pooler slot
+// for the duration and breaks if the pooler reassigns mid-transaction.
+// DIRECT_DATABASE_URL (Phase 3, FR-3 of connection_pooling_20260522) is the
+// direct connection; fall back to DATABASE_URL for backward compatibility.
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { eq } from "drizzle-orm";
+import * as schema from "../schema/index.js";
+import {
+  buildPostgresOptions,
+  normalizePostgresConnectionString,
+} from "../connection-options.js";
 import {
   codecampModules,
   codecampLessons,
@@ -10,6 +21,24 @@ import {
   codecampExerciseRepos,
 } from "../schema/codecamp.js";
 import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData, getPhaseDCurriculumData, MODULE_REPO_MAP } from "./codecamp-curriculum-data.js";
+
+const seedConnectionString =
+  process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL;
+
+if (!process.env.DIRECT_DATABASE_URL && process.env.DATABASE_URL) {
+  console.warn(
+    "[codecamp-seed] DIRECT_DATABASE_URL is not set; falling back to DATABASE_URL. " +
+      "Set DIRECT_DATABASE_URL to a direct (session-mode) Postgres connection to " +
+      "avoid running the seed transaction through a transaction-mode pooler."
+  );
+}
+
+const seedClient = postgres(
+  normalizePostgresConnectionString(seedConnectionString),
+  buildPostgresOptions(seedConnectionString)
+);
+
+const db = drizzle(seedClient, { schema });
 
 /**
  * Identifies which DB module slugs are stale (not in the canonical curriculum).
@@ -211,9 +240,24 @@ async function seed() {
   });
 }
 
-seed()
-  .then(() => process.exit(0))
-  .catch((err) => {
-    console.error(err);
-    process.exit(1);
-  });
+// Run the seed only when this module is executed directly (e.g. `tsx
+// src/seed/codecamp-seed.ts` or `pnpm seed:codecamp`). When imported by a
+// test (`import { findStaleModuleSlugs } from ...`), do nothing -- this
+// prevents the test from accidentally connecting to a DB and prevents the
+// pre-existing import-time `seed()` invocation from leaking across tests.
+const isMain =
+  typeof process !== "undefined" &&
+  Array.isArray(process.argv) &&
+  process.argv[1] !== undefined &&
+  import.meta.url === `file://${process.argv[1]}`;
+
+if (isMain) {
+  seed()
+    .then(() => seedClient.end({ timeout: 5 }))
+    .then(() => process.exit(0))
+    .catch(async (err) => {
+      console.error(err);
+      await seedClient.end({ timeout: 5 }).catch(() => undefined);
+      process.exit(1);
+    });
+}
