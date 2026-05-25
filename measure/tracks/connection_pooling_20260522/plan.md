@@ -3,7 +3,7 @@
 > Track Type: Chore (infrastructure). Independent of the Prisma→Drizzle and
 > storage tracks — can run in parallel. TDD applies to `connection-options.ts`.
 
-## Phase 1: Pooler Approach & Local Topology
+## Phase 1: Pooler Approach & Local Topology [checkpoint: 5969de7]
 
 - [x] Task: Ratify the pooler choice (PgBouncer transaction mode, or a recorded alternative)
 - [x] Task: Add the pooler to `docker-compose.yml` (7d0fddd)
