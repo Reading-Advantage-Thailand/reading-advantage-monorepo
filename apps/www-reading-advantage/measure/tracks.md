@@ -189,3 +189,8 @@ _Link: [./archive/video_pipeline_fix_20260429/](./archive/video_pipeline_fix_202
 
 - [ ] **Track: PR and Website Strategic Alignment**
   *Link: [./tracks/pr_website_alignment_20260501/](./tracks/pr_website_alignment_20260501/)*
+
+---
+
+- [ ] **Track: Fix Link Localization & Align i18n Convention**
+  *Link: [./tracks/link_localization_fix_20260525/](./tracks/link_localization_fix_20260525/)*
