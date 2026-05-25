@@ -19,7 +19,7 @@
 - L2 (restart semantics): document in `tech-stack.md` that restarting Postgres locally requires `docker compose restart pgbouncer` to flush stale backend connections.
 - L3 (existing volumes): document in `tech-stack.md` that devs with pre-existing `postgres_data` volumes must manually `createdb codecamp_advantage` and `createdb science_advantage_test`, or `docker compose down -v` for a fresh init.
 
-## Phase 2: Client Configuration
+## Phase 2: Client Configuration [checkpoint: 6da552d]
 
 - [x] Task: Update `buildPostgresOptions` for pooled use (TDD) (34eb03b)
     - [x] Sub-task: Write failing test: built options include `prepare: false`
