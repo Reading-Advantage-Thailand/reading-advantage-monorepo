@@ -93,7 +93,7 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: codecamp-advantage — Exercise Repos & Portfolio Projects**
   *Link: [./tracks/codecamp_exercise_repos_20260515/](./tracks/codecamp_exercise_repos_20260515/)*
-  Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end. *Status: Repo README audit complete, Module 18 GitHub Issues UI wired, M1/M17 edge cases resolved/not needed, quality gates green. GitHub App verified on 16/18 expected repos with correct permissions; missing `codecamp-portfolio-website` and `codecamp-learning-dashboard` due org-owner install permissions. E2E manual test remains open.*
+  Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end. *Status: Repo README audit complete, Module 18 GitHub Issues UI wired, M1/M17 edge cases resolved/not needed, quality gates green. GitHub App installed on all 18 repos as of 2026-05-25. E2E pipeline verified 2026-05-25 via `scripts/codecamp-pr-e2e.sh` (full webhook → DB → LLM → PR-comment loop, ~25s). UI verification deferred to separate smoke.*
 
 - [x] **Track: codecamp-advantage — Thai Localization**
   *Link: [./archive/codecamp_thai_i18n_20260515/](./archive/codecamp_thai_i18n_20260515/)*
@@ -152,9 +152,9 @@ This file tracks all major tracks for the project.
 - [x] **Track: reading-advantage Controllers — Prisma → Drizzle**
   *Link: [./archive/prisma_drizzle_reading_controllers_20260505/](./archive/prisma_drizzle_reading_controllers_20260505/)*
   Track 2 of 4. Migrate 141 Prisma references across 54 controllers, actions, lib, scripts, pages, and route handlers. Final phase deletes Prisma surface and deps. *Status: COMPLETE 2026-05-23 (reopened + re-closed same day). 9 phases done plus 3 reopened SQL fixes: dashboard-summary-controller unified table/column names (9b7661a), assignment-prediction-service a.created_at (58a356f), query-optimizer parameterized sql binding (0ca2e1b). New jest coverage for all three (PgDialect-rendered SQL assertions). __test__/ suite 11/11 green (194 tests). Build + lint clean. Full app-wide jest still deferred to CI/faster hardware.*
-- [~] **Track: science-advantage Non-Auth Prisma → Drizzle**
-  *Link: [./tracks/prisma_drizzle_science_controllers_20260505/](./tracks/prisma_drizzle_science_controllers_20260505/)*
-  Track 3 of 4. **Blocked on track 1.** Migrate 89 non-auth Prisma references (curriculum, lessons, gamification, classes, attempts, mastery). Deletes generated Zod artifacts and Prisma surface.
+- [x] **Track: science-advantage Non-Auth Prisma → Drizzle** [created: 2026-05-05, completed: 2026-05-26]
+  *Link: [./archive/prisma_drizzle_science_controllers_20260505/](./archive/prisma_drizzle_science_controllers_20260505/)*
+  Track 3 of 4. Migrate 89 non-auth Prisma references (curriculum, lessons, gamification, classes, attempts, mastery). Deletes generated Zod artifacts and Prisma surface. *Status: COMPLETE — All 65 plan tasks done. Track archived 2026-05-26.*
 - [x] **Track: science-advantage Test Infra — Prisma → Drizzle Migration**
   *Link: [./archive/science_test_infra_drizzle_migration_20260523/](./archive/science_test_infra_drizzle_migration_20260523/)*
   Sub-track of Track 3. Replaces `prisma db push --force-reset` in `vitest.setup.ts` with `drizzle-kit migrate` against a dedicated `science_advantage_test` DB; splits unit/integration setup files. Unblocks runtime verification for Track 3 Phases 1+.
