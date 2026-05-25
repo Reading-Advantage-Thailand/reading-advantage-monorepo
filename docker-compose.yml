@@ -18,6 +18,52 @@ services:
       retries: 5
       start_period: 5s
 
+  # Transaction-mode connection pooler. Mirrors the production topology
+  # (self-hosted PgBouncer fronting the VPS Postgres on GCP Cloud Run).
+  #
+  # Sizing math (FR-1, track connection_pooling_20260522):
+  #   - postgres:16-alpine default max_connections = 100
+  #   - Distinct (db, user) pairs locally = postgres x {reading_advantage,
+  #     primary_advantage, science_advantage, codecamp_advantage} = 4 pools
+  #   - default_pool_size = 20  ->  worst-case backend conns = 20 x 4 = 80
+  #     (leaves >=20 headroom for migrations / DIRECT_DATABASE_URL / psql)
+  #   - max_client_conn = 200   ->  ample headroom for concurrent dev processes
+  #
+  # Apps connect via DATABASE_URL on port 6432 (pooled, transaction mode).
+  # Migrations + LISTEN/NOTIFY connect via DIRECT_DATABASE_URL on port 5432
+  # (direct, session mode) -- see FR-3, FR-4.
+  pgbouncer:
+    # Pulled from AWS ECR public mirror (docker.io is unreachable from some networks).
+    image: public.ecr.aws/bitnami/pgbouncer:1.23.1
+    container_name: reading-advantage-pgbouncer
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRESQL_HOST: postgres
+      POSTGRESQL_PORT: "5432"
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      # Wildcard auth: any database name resolves to the postgres backend.
+      # Local dev only -- production deploys an explicit pgbouncer.ini.
+      PGBOUNCER_DATABASE: "*"
+      PGBOUNCER_PORT: "6432"
+      PGBOUNCER_POOL_MODE: transaction
+      PGBOUNCER_MAX_CLIENT_CONN: "200"
+      PGBOUNCER_DEFAULT_POOL_SIZE: "20"
+      PGBOUNCER_AUTH_TYPE: trust
+      PGBOUNCER_IGNORE_STARTUP_PARAMETERS: "extra_float_digits,search_path"
+      PGBOUNCER_BIND_ADDRESS: "0.0.0.0"
+    ports:
+      - "6432:6432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 6432 -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
 volumes:
   postgres_data:
     driver: local

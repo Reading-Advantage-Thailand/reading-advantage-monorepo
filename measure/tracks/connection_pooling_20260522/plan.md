@@ -5,11 +5,11 @@
 
 ## Phase 1: Pooler Approach & Local Topology
 
-- [ ] Task: Ratify the pooler choice (PgBouncer transaction mode, or a recorded alternative)
-- [ ] Task: Add the pooler to `docker-compose.yml`
-    - [ ] Sub-task: Add a `pgbouncer` service in transaction mode pointing at the `postgres` service
-    - [ ] Sub-task: Set `pool_mode`, `max_client_conn`, `default_pool_size`; document the sizing math
-    - [ ] Sub-task: Verify local apps connect through the pooler
+- [x] Task: Ratify the pooler choice (PgBouncer transaction mode, or a recorded alternative)
+- [~] Task: Add the pooler to `docker-compose.yml`
+    - [x] Sub-task: Add a `pgbouncer` service in transaction mode pointing at the `postgres` service
+    - [x] Sub-task: Set `pool_mode`, `max_client_conn`, `default_pool_size`; document the sizing math
+    - [x] Sub-task: Verify local apps connect through the pooler
 - [ ] Task: Measure - User Manual Verification 'Pooler & Local Topology' (Protocol in workflow.md)
 
 ## Phase 2: Client Configuration
