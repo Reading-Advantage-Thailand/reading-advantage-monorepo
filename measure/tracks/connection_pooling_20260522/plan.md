@@ -53,7 +53,7 @@
   `drizzle.config.ts` and `codecamp-seed.ts` fall back to `DATABASE_URL` with a
   console warning (correct, non-breaking behavior).
 
-## Phase 4: Verification & Docs
+## Phase 4: Verification & Docs [checkpoint: d6836ea]
 
 - [x] Task: Connection-count check under simulated concurrency
     - [x] Sub-task: Drive concurrent queries; confirm `pg_stat_activity` stays bounded by `default_pool_size`
