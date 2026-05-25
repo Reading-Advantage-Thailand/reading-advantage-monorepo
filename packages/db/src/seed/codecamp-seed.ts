@@ -5,6 +5,7 @@
 // for the duration and breaks if the pooler reassigns mid-transaction.
 // DIRECT_DATABASE_URL (Phase 3, FR-3 of connection_pooling_20260522) is the
 // direct connection; fall back to DATABASE_URL for backward compatibility.
+import { pathToFileURL } from "node:url";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { eq } from "drizzle-orm";
@@ -245,11 +246,15 @@ async function seed() {
 // test (`import { findStaleModuleSlugs } from ...`), do nothing -- this
 // prevents the test from accidentally connecting to a DB and prevents the
 // pre-existing import-time `seed()` invocation from leaking across tests.
+//
+// Uses `pathToFileURL(argv[1]).href` (not `\`file://${argv[1]}\``) so the
+// comparison is correct on paths that contain spaces or unicode (which
+// `import.meta.url` percent-encodes) and on Windows-style paths.
 const isMain =
   typeof process !== "undefined" &&
   Array.isArray(process.argv) &&
   process.argv[1] !== undefined &&
-  import.meta.url === `file://${process.argv[1]}`;
+  import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isMain) {
   seed()
