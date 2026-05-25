@@ -10,7 +10,7 @@
     - [x] Sub-task: Add a `pgbouncer` service in transaction mode pointing at the `postgres` service
     - [x] Sub-task: Set `pool_mode`, `max_client_conn`, `default_pool_size`; document the sizing math
     - [x] Sub-task: Verify the pooler is reachable (`psql -h 127.0.0.1 -p 6432`) and a live `postgres-js` client query succeeds through it (end-to-end app verification follows in Phase 2 after the env-var swap)
-- [ ] Task: Measure - User Manual Verification 'Pooler & Local Topology' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Pooler & Local Topology' (Protocol in workflow.md)
 
 **Phase 1 follow-ups (carry to Phase 4):**
 - M2 (sizing headroom): bump `postgres` `max_connections` to 200, or reduce `default_pool_size` to 15, once Phase 3+ workloads land. Re-verify with `pg_stat_activity`.
