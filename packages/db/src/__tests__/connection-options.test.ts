@@ -124,6 +124,18 @@ describe("buildPostgresOptions — pooled-use defaults (FR-2)", () => {
     ).toBe(3);
   });
 
+  it("ignores DATABASE_POOL_MAX when it is a non-integer or whitespace-only", () => {
+    process.env.DATABASE_POOL_MAX = "3.5";
+    expect(
+      buildPostgresOptions("postgresql://user:pass@db.example.com:6432/db").max
+    ).toBe(3);
+
+    process.env.DATABASE_POOL_MAX = "   ";
+    expect(
+      buildPostgresOptions("postgresql://user:pass@db.example.com:6432/db").max
+    ).toBe(3);
+  });
+
   it("applies env-configurable max to the no-DATABASE_URL fallback too", () => {
     process.env.DATABASE_POOL_MAX = "7";
 
