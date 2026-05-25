@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { and, db, eq, exists } from '@reading-advantage/db';
+import { and, db, eq, exists, or } from '@reading-advantage/db';
 import {
   scienceClassStudents,
   scienceClasses,
@@ -38,16 +38,23 @@ export async function GET(
       return NextResponse.json({ error: 'Student not found' }, { status: 404 });
     }
 
-    // 2. Lesson must exist.
+    // 2. Lesson must exist. URL param is named `lessonId` but callers may
+    //    pass either the UUID id or the human-readable slug (e.g. the
+    //    student lesson page uses the slug from its own URL). Accept both.
     const [lesson] = await db
       .select({ id: scienceLessons.id })
       .from(scienceLessons)
-      .where(eq(scienceLessons.id, lessonId))
+      .where(
+        or(eq(scienceLessons.id, lessonId), eq(scienceLessons.slug, lessonId))
+      )
       .limit(1);
 
     if (!lesson) {
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
     }
+
+    // Resolve to the canonical UUID for downstream queries.
+    const resolvedLessonId = lesson.id;
 
     // 3. Authorization: caller is the student themselves OR caller is a
     //    teacher of a class that contains both this lesson AND the target
@@ -73,7 +80,7 @@ export async function GET(
                 .where(
                   and(
                     eq(scienceCurriculumUnits.classId, scienceClasses.id),
-                    eq(scienceUnitLessons.lessonId, lessonId)
+                    eq(scienceUnitLessons.lessonId, resolvedLessonId)
                   )
                 )
             ),
@@ -108,7 +115,7 @@ export async function GET(
       .where(
         and(
           eq(scienceLessonCompletions.studentId, targetStudentId),
-          eq(scienceLessonCompletions.lessonId, lessonId)
+          eq(scienceLessonCompletions.lessonId, resolvedLessonId)
         )
       )
       .limit(1);
