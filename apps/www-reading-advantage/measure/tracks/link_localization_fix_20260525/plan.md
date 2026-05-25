@@ -9,8 +9,8 @@ _Blast radius: NEW file (src/middleware.ts) — 0 existing callers; affects ever
 - [~] Task: Contract & Schema Definition
     - [x] Confirm `routing` export from `src/i18n/routing.ts` is the single source of truth for locale list (already true; documents the contract)
     - [x] Decide middleware matcher: `["/((?!api|_next|_vercel|.*\\..*).*)"]` (mirrors primary-advantage)
-- [ ] Task: Test
-    - [ ] Add Playwright e2e spec `e2e/locale-middleware.spec.ts` covering: (a) unprefixed URL + `Accept-Language: th` → redirects to `/th/...`, (b) unprefixed URL + no header → redirects to `/en/...`, (c) `/api/health` → no redirect, (d) `/th/about` → no redirect
+- [~] Task: Test
+    - [x] Add Playwright e2e spec `e2e/locale-middleware.spec.ts` covering: (a) unprefixed URL + `Accept-Language: th` → redirects to `/th/...`, (b) unprefixed URL + no header → redirects to `/en/...`, (c) `/api/health` → no redirect, (d) `/th/about` → no redirect
 - [ ] Task: Implement
     - [ ] Create `src/middleware.ts` with `createMiddleware(routing)` and the agreed matcher
     - [ ] Verify `pnpm --filter www-reading-advantage build` still passes (Next.js picks up middleware.ts automatically)
