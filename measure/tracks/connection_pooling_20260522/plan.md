@@ -9,8 +9,15 @@
 - [x] Task: Add the pooler to `docker-compose.yml` (7d0fddd)
     - [x] Sub-task: Add a `pgbouncer` service in transaction mode pointing at the `postgres` service
     - [x] Sub-task: Set `pool_mode`, `max_client_conn`, `default_pool_size`; document the sizing math
-    - [x] Sub-task: Verify local apps connect through the pooler
+    - [x] Sub-task: Verify the pooler is reachable (`psql -h 127.0.0.1 -p 6432`) and a live `postgres-js` client query succeeds through it (end-to-end app verification follows in Phase 2 after the env-var swap)
 - [ ] Task: Measure - User Manual Verification 'Pooler & Local Topology' (Protocol in workflow.md)
+
+**Phase 1 follow-ups (carry to Phase 4):**
+- M2 (sizing headroom): bump `postgres` `max_connections` to 200, or reduce `default_pool_size` to 15, once Phase 3+ workloads land. Re-verify with `pg_stat_activity`.
+- M3 (healthcheck): consider switching pgbouncer healthcheck to `psql ... SHOW VERSION` against the admin `pgbouncer` DB. Stylistic; current `pg_isready` works.
+- L1 (`ignore_startup_parameters`): add `application_name` if Phase 2 testing surfaces "unsupported startup parameter" errors.
+- L2 (restart semantics): document in `tech-stack.md` that restarting Postgres locally requires `docker compose restart pgbouncer` to flush stale backend connections.
+- L3 (existing volumes): document in `tech-stack.md` that devs with pre-existing `postgres_data` volumes must manually `createdb codecamp_advantage` and `createdb science_advantage_test`, or `docker compose down -v` for a fresh init.
 
 ## Phase 2: Client Configuration
 
