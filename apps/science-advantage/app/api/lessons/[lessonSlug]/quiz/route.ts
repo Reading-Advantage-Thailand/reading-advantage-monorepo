@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { and, db, eq, inArray, count } from '@reading-advantage/db';
+import { and, db, eq, inArray, count, or } from '@reading-advantage/db';
 import {
   gamificationProfiles,
   scienceAttempts,
@@ -46,12 +46,16 @@ export async function GET(
 
     const { lessonSlug } = await context.params;
 
-    // 1. Lesson lookup (param is treated as the lesson id, matching the
-    //    original route behavior).
+    // 1. Lesson lookup by slug OR id (URL param is named "lessonSlug" but
+    //    callers may pass either the human-readable slug or the UUID id —
+    //    accept both for defensive compat). Original Prisma route used `id`
+    //    because Prisma `id` WAS the slug; Drizzle splits into UUID id + slug.
     const [lesson] = await db
       .select()
       .from(scienceLessons)
-      .where(eq(scienceLessons.id, lessonSlug))
+      .where(
+        or(eq(scienceLessons.slug, lessonSlug), eq(scienceLessons.id, lessonSlug))
+      )
       .limit(1);
 
     if (!lesson) {
