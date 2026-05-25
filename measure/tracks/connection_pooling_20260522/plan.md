@@ -59,4 +59,4 @@
     - [x] Sub-task: Drive concurrent queries; confirm `pg_stat_activity` stays bounded by `default_pool_size`
 - [x] Task: Regression sweep — `packages/db`, `packages/domain`, `packages/api` tests
 - [x] Task: Update `tech-stack.md` — pooling topology, the two connection strings, the `LISTEN/NOTIFY` → direct caveat
-- [ ] Task: Measure - User Manual Verification 'Verification & Docs' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Verification & Docs' (Protocol in workflow.md)
