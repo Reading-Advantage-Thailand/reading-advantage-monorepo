@@ -54,6 +54,26 @@
 ## Workspace Structure
 
 ```
+reading-advantage-monorepo/
+├── apps/
+│   ├── advantage-games/
+│   ├── science-advantage/
+│   ├── reading-advantage/
+│   ├── primary-advantage/
+│   ├── www-reading-advantage/
+│   └── codecamp-advantage/
+├── packages/
+│   ├── api/              # tRPC routers (primary product backend)
+│   ├── db/               # Drizzle schema, migrations, client
+│   ├── domain/           # Business logic (domain functions)
+│   ├── auth/             # Roles, permissions, tenant resolution
+│   ├── auth-client/      # React hooks for auth (useAuth, useSession)
+│   ├── webhooks/         # Hono app for external HTTP (Stripe, Google Classroom, etc.)
+│   ├── types/            # Shared API contract types
+│   ├── ui/               # Shared Radix/shadcn components
+│   ├── utils/            # Shared utilities, hooks
+│   ├── config/           # Shared eslint, tsconfig, tailwind configs
+│   └── reading-advantage-scripts/  # Legacy scripts package
 ├── docker-compose.yml    # Local PostgreSQL + PgBouncer (transaction-mode pooler)
 ├── turbo.json
 ├── pnpm-workspace.yaml
