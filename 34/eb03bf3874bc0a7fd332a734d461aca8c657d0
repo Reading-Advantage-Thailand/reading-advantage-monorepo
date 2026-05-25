@@ -1,0 +1,36 @@
+Phase 2 / Task 1: Update buildPostgresOptions for pooled use (TDD)
+
+Changes:
+- packages/db/src/connection-options.ts:
+  * prepare: false set on all three return paths (TCP url, socket-path url,
+    no-DATABASE_URL fallback). Required for transaction-mode pooler -- named
+    prepared statements are session-scoped and the pooler can reassign
+    backends.
+  * max sourced from resolvePoolMax(): reads DATABASE_POOL_MAX env, returns
+    DEFAULT_POOL_MAX (3) when unset, empty, NaN, non-integer, or <=0.
+  * Default lowered from 10 -> 3. Transaction-mode multiplexing means small
+    client pools are correct; the pooler does the heavy lifting.
+  * Detailed inline comment explains FR-2 rationale.
+- packages/db/src/__tests__/connection-options.test.ts:
+  * New describe block 'buildPostgresOptions -- pooled-use defaults (FR-2)'
+    with 8 tests: prepare:false on 3 paths, max default 3, env override,
+    invalid env (string), zero, negative, env applied to fallback.
+  * beforeEach/afterEach manage DATABASE_POOL_MAX env isolation.
+  * Original 5 tests preserved unchanged.
+
+Why:
+- FR-2 requires prepare:false (transaction-mode incompatibility) and a
+  smaller env-configurable per-process max (transaction multiplexing makes
+  big client pools wasteful).
+
+Verification:
+- TDD red phase: 7/13 connection-options tests FAILED before implementation.
+- TDD green phase: 13/13 pass after.
+- Full db suite: 231/231 (was 223, +8 new).
+- Regression: domain 239/239, api 94/94, webhooks 33/33.
+- db lint clean (1 pre-existing unrelated warning).
+- db check-types clean.
+- Live postgres-js client through pgbouncer:6432 returns pg_version 16.10.
+
+Files modified: packages/db/src/connection-options.ts,
+packages/db/src/__tests__/connection-options.test.ts
