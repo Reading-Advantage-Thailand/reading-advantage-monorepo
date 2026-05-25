@@ -21,10 +21,10 @@
 
 ## Phase 2: Client Configuration
 
-- [ ] Task: Update `buildPostgresOptions` for pooled use (TDD)
-    - [ ] Sub-task: Write failing test: built options include `prepare: false`
-    - [ ] Sub-task: Write failing test: `max` reads from env with a reduced default
-    - [ ] Sub-task: Implement; update `connection-options.test.ts`
+- [x] Task: Update `buildPostgresOptions` for pooled use (TDD) (34eb03b)
+    - [x] Sub-task: Write failing test: built options include `prepare: false`
+    - [x] Sub-task: Write failing test: `max` reads from env with a reduced default
+    - [x] Sub-task: Implement; update `connection-options.test.ts`
 - [ ] Task: Measure - User Manual Verification 'Client Configuration' (Protocol in workflow.md)
 
 ## Phase 3: Direct Connection for Migrations
