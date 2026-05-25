@@ -6,9 +6,9 @@
 _Story ref: spec.md#story-s1_
 _Blast radius: NEW file (src/middleware.ts) — 0 existing callers; affects every incoming request once shipped._
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Confirm `routing` export from `src/i18n/routing.ts` is the single source of truth for locale list (already true; documents the contract)
-    - [ ] Decide middleware matcher: `["/((?!api|_next|_vercel|.*\\..*).*)"]` (mirrors primary-advantage)
+- [~] Task: Contract & Schema Definition
+    - [x] Confirm `routing` export from `src/i18n/routing.ts` is the single source of truth for locale list (already true; documents the contract)
+    - [x] Decide middleware matcher: `["/((?!api|_next|_vercel|.*\\..*).*)"]` (mirrors primary-advantage)
 - [ ] Task: Test
     - [ ] Add Playwright e2e spec `e2e/locale-middleware.spec.ts` covering: (a) unprefixed URL + `Accept-Language: th` → redirects to `/th/...`, (b) unprefixed URL + no header → redirects to `/en/...`, (c) `/api/health` → no redirect, (d) `/th/about` → no redirect
 - [ ] Task: Implement
