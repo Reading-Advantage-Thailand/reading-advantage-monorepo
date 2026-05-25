@@ -1,0 +1,42 @@
+Phase 3 / Tasks 1+2: Introduce DIRECT_DATABASE_URL + verify migrations
+
+Changes:
+- packages/db/drizzle.config.ts: prefer DIRECT_DATABASE_URL, fall back to
+  DATABASE_URL with console.warn so existing deploys keep working.
+- packages/db/src/seed/codecamp-seed.ts: dedicated postgres-js client built
+  from DIRECT_DATABASE_URL (fallback + warning), uses the now-pool-aware
+  buildPostgresOptions for consistency, properly ends client on exit.
+- packages/db/src/seed/codecamp-seed.ts: guard top-level seed() under
+  'is main module?' check using import.meta.url === file://argv[1].
+  Eliminates pre-existing bug where unit tests importing
+  findStaleModuleSlugs silently invoked the seed.
+- apps/{codecamp,reading,primary,science}-advantage/.env.example: document
+  the DATABASE_URL (pooled, 6432) / DIRECT_DATABASE_URL (direct, 5432)
+  split. Add commented DATABASE_POOL_MAX tuning hint.
+
+Why:
+- FR-3 requires migrations + LISTEN/NOTIFY consumers run on a session-mode
+  connection. The codecamp seed wraps many writes in a single transaction
+  which would also be safer on a session.
+- Backward-compatible fallback prevents breaking any deploy that has not yet
+  added the new secret (especially cloudbuild.yaml).
+
+Verification:
+- Fresh DB migrate via DIRECT_DATABASE_URL: 68 tables, 17 migration rows.
+- Fresh DB seed via DIRECT_DATABASE_URL: 18 modules, 85 lessons.
+- db lint + check-types clean. 232/232 unit tests pass.
+- 'Seeding codecamp curriculum...' stdout no longer leaks into unit-test
+  output (proving the main-module guard works).
+
+Production note (in plan.md): cloudbuild.yaml deliberately NOT updated.
+There is no PgBouncer in production yet, so DATABASE_URL == direct
+connection already. The fallback path keeps prod working; the operator adds
+the DIRECT_DATABASE_URL secret when PgBouncer lands.
+
+Files modified:
+  packages/db/drizzle.config.ts
+  packages/db/src/seed/codecamp-seed.ts
+  apps/codecamp-advantage/.env.example
+  apps/reading-advantage/.env.example
+  apps/primary-advantage/.env.example
+  apps/science-advantage/.env.example
