@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { and, db, eq, inArray } from '@reading-advantage/db';
+import { and, db, eq, inArray, or } from '@reading-advantage/db';
 import {
   scienceLessons,
   scienceStandards,
@@ -41,7 +41,9 @@ export async function GET(_request: NextRequest, context: LessonRouteContext) {
     const [lesson] = await db
       .select()
       .from(scienceLessons)
-      .where(eq(scienceLessons.id, lessonSlug))
+      .where(
+        or(eq(scienceLessons.slug, lessonSlug), eq(scienceLessons.id, lessonSlug))
+      )
       .limit(1);
 
     if (!lesson) {
