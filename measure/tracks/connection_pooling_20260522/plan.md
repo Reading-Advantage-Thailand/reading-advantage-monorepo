@@ -29,12 +29,29 @@
 
 ## Phase 3: Direct Connection for Migrations
 
-- [ ] Task: Introduce `DIRECT_DATABASE_URL`
-    - [ ] Sub-task: Add `DIRECT_DATABASE_URL` to the env schema / `.env.example`
-    - [ ] Sub-task: Point `drizzle.config.ts` and migration/seed scripts at `DIRECT_DATABASE_URL`
-    - [ ] Sub-task: Confirm `DATABASE_URL` (pooler) is used by the app client only
-- [ ] Task: Verify migrations apply cleanly via the direct connection
+- [x] Task: Introduce `DIRECT_DATABASE_URL` (701e942)
+    - [x] Sub-task: Add `DIRECT_DATABASE_URL` to the env schema / `.env.example`
+    - [x] Sub-task: Point `drizzle.config.ts` and migration/seed scripts at `DIRECT_DATABASE_URL`
+    - [x] Sub-task: Confirm `DATABASE_URL` (pooler) is used by the app client only
+- [x] Task: Verify migrations apply cleanly via the direct connection (701e942)
 - [ ] Task: Measure - User Manual Verification 'Direct Connection' (Protocol in workflow.md)
+
+**Phase 3 production-deployment note (carry to Phase 4 docs):**
+- `apps/codecamp-advantage/cloudbuild.yaml` currently binds only the `DATABASE_URL`
+  Secret Manager entry. In production today there is NO PgBouncer in front of the
+  VPS Postgres, so `DATABASE_URL` IS the direct connection. The `DIRECT_DATABASE_URL`
+  env binding is deliberately NOT added to cloudbuild.yaml in Phase 3 because the
+  Secret does not exist yet — adding the binding would fail the deploy.
+- When PgBouncer is deployed in front of the VPS Postgres (separate operational
+  work, out of this track's scope), the operator MUST:
+  1. Create a new `DIRECT_DATABASE_URL` secret in Secret Manager pointing at the
+     underlying Postgres (port 5432).
+  2. Update `DATABASE_URL` to point at the pooler (port 6432).
+  3. Add `DIRECT_DATABASE_URL=DIRECT_DATABASE_URL:latest` to the `--set-secrets`
+     list in cloudbuild.yaml.
+  This 3-step swap is what makes the FR-3 split active in production. Until then,
+  `drizzle.config.ts` and `codecamp-seed.ts` fall back to `DATABASE_URL` with a
+  console warning (correct, non-breaking behavior).
 
 ## Phase 4: Verification & Docs
 
