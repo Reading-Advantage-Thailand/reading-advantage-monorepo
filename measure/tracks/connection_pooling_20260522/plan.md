@@ -25,7 +25,7 @@
     - [x] Sub-task: Write failing test: built options include `prepare: false`
     - [x] Sub-task: Write failing test: `max` reads from env with a reduced default
     - [x] Sub-task: Implement; update `connection-options.test.ts`
-- [ ] Task: Measure - User Manual Verification 'Client Configuration' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Client Configuration' (Protocol in workflow.md)
 
 ## Phase 3: Direct Connection for Migrations
 
