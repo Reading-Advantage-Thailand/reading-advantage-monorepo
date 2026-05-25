@@ -1,0 +1,37 @@
+Phase 4 / Tasks 1+2+3: Concurrency check, regression sweep, docs
+
+Concurrency check (Task 1):
+  Script: 12 simulated app instances, each with postgres-js max:3 (default
+  DATABASE_POOL_MAX), driving 50 concurrent pg_sleep(1) queries through
+  pgbouncer:6432. Admin client samples pg_stat_activity directly via 5432.
+
+  Results:
+    Baseline backend connections (warmup):      4
+    Peak backend connections (mid-workload):    8
+    Post-workload (idle pool):                 20
+    pooler default_pool_size:                  20
+    estimated unpooled peak (12*3):            36
+    delta vs unpooled:                         28
+  Verdict: PASS -- bounded_by_pooler: true.
+
+Regression sweep (Task 2):
+  db        232/232 PASS
+  domain    239/239 PASS
+  api        94/94  PASS
+  webhooks   33/33  PASS
+  auth       64/64  PASS  (bonus)
+  TOTAL    662/662  PASS
+
+Docs (Task 3):
+  - measure/tech-stack.md: new 'Database Connections' section (~70 lines)
+    covering URL split, local topology, client tuning, prod cutover.
+  - measure/lessons-learned.md: 1 new entry on 3-coordinated-change
+    pattern; 2 entries pruned to stay at 47/50.
+  - measure/tracks.md: connection_pooling_20260522 marked [x] with
+    detailed status line.
+
+Files modified:
+  measure/tech-stack.md (+67 -1)
+  measure/lessons-learned.md (+1 -2)
+  measure/tracks.md (+3 -3)
+  measure/tracks/connection_pooling_20260522/plan.md (+3 -3)
