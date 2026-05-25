@@ -8,8 +8,22 @@ export const SeedQuizQuestionSchema = z.object({
   slug: z.string().optional(),
   type: z.string().min(1, 'Question type is required'),
   text: z.string().min(1, 'Question text is required'),
-  options: z.array(z.string()).optional(),
-  correctAnswer: z.union([z.string(), z.number(), z.boolean(), z.array(z.string())]),
+  options: z
+    .union([
+      z.array(z.string()),
+      z.object({
+        terms: z.array(z.string()),
+        definitions: z.array(z.string()),
+      }),
+    ])
+    .optional(),
+  correctAnswer: z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.array(z.string()),
+    z.record(z.string(), z.string()),
+  ]),
   points: z.number().int().positive('Points must be a positive integer'),
   standards: z.array(z.string()).min(1, 'At least one standard is required'),
 });
