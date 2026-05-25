@@ -192,5 +192,5 @@ _Link: [./archive/video_pipeline_fix_20260429/](./archive/video_pipeline_fix_202
 
 ---
 
-- [ ] **Track: Fix Link Localization & Align i18n Convention**
+- [~] **Track: Fix Link Localization & Align i18n Convention**
   *Link: [./tracks/link_localization_fix_20260525/](./tracks/link_localization_fix_20260525/)*
