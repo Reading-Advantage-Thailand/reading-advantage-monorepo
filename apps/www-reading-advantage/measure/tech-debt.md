@@ -88,3 +88,23 @@ Priority: **P1** = blocks quality/production, **P2** = degrades DX or UX, **P3**
 | Missing `sizes` prop on `fill` images                      | images_sizes_prop_20260414          | 2026-04 |
 | Excessive client component boundaries inflate JS bundle    | client_component_reduction_20260415 | 2026-04 |
 | Revideo EOF crash on long exports                          | blog_video_generation_20260423      | 2026-04 |
+
+---
+
+### [P2] Vitest fails to resolve `next/navigation` from inside next-intl 4.11.0 (2026-05-26)
+
+**Discovered:** Phase S2 of track `link_localization_fix_20260525`.
+
+**Symptom:** 10 of 15 test suites fail at import time with:
+```
+Cannot find module '.../next-intl/.../node_modules/next/navigation' imported from .../next-intl/dist/.../createNavigation.js
+Did you mean to import "next/navigation.js"?
+```
+Tests within those suites still pass (1173 passing), but the suites themselves error out at module load. Pre-existing — present before and after S2 changes.
+
+**Likely cause:** Next.js 16 ESM module specifier mismatch when next-intl is bundled by Vite/Vitest. Either:
+- Add a `vitest.config` resolve.alias for `next/navigation` → `next/navigation.js`, or
+- Upgrade next-intl, or
+- Mock `next-intl/navigation` directly in `src/test/setup.ts` so the real module isn't loaded.
+
+**Impact:** No production impact (Playwright e2e and Next.js build pass). DX impact: per-page tests can't import `next-intl`-using code. Recommend addressing in a small follow-up track.

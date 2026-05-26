@@ -333,3 +333,17 @@ Retrospective insights captured after completing tracks, PR merges, and developm
 - Export utility functions from `src/lib/` for direct testing — internal functions cannot be tested without export.
 - Always call `cleanup()` in `afterEach` when using `@testing-library/react` with Vitest.
 - Use `vi.mock()` for Next.js and i18n mocks in test setup files — actual modules should not be imported during tests.
+
+## 2026-05-26 — Link Localization Bug (link_localization_fix_20260525, Phase S2)
+
+### Frontend / i18n
+
+- **Raw `next/link` silently drops the active locale from rendered hrefs.** On `/th`, `<Link href="/pricing">` from `next/link` renders `<a href="/pricing">` — the locale prefix is added only by the client-side router on left-click. Middle-click, Cmd-click, copy-link, share, hard refresh, and SEO crawls all use the raw href and end up on the unprefixed URL, where middleware (proxy.ts) re-detects locale from `Accept-Language` (usually English) and sends the user to `/en/...`.
+- **Fix:** Import `{ Link }` from `@/locales/navigation` (the project's `createNavigation(routing)` wrapper). This Link injects the active locale into the rendered href, so all navigation paths preserve it.
+- **Enforcement:** `eslint.config.mjs` now bans `import Link from "next/link"` in `src/**` via `no-restricted-imports` with an actionable error message. The shim files (`src/locales/navigation.ts`, `src/i18n/navigation.ts`, legacy `localized-link.tsx`) are allow-listed.
+- **Detection trick:** When auditing link localization, check the `href` attribute (`a.getAttribute("href")`), not the click destination. Left-click can mask the bug.
+
+### Planning improvements
+
+- **Always check for `proxy.ts` before claiming "no middleware exists" in Next.js 16+.** Next.js 16 renamed `middleware.ts` → `proxy.ts`. My initial spec assumed missing middleware was a co-cause; in fact `proxy.ts` was working correctly. Phase S1 was completed by discovery, not by writing code.
+- **`build-graph` import edges miss path-aliased `@/` imports for some scans.** During this track, `build-graph callers` returned empty for several known-used symbols (e.g., `LocalizedLink` has 3 callers + 1 test, but graph returned 0). Verify suspicious zero-counts with a `grep` cross-check before drawing conclusions about blast radius.
