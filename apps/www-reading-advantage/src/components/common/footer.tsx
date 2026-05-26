@@ -1,5 +1,5 @@
 import { getScopedI18n } from "@/locales/server";
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import React from "react";
 import Image from "next/image";
 

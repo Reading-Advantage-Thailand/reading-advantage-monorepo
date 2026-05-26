@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import { ArrowRight } from "lucide-react";
 
 interface ProductCTAProps {

@@ -1,5 +1,5 @@
 import { type JSX } from "react";
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import Image from "next/image";
 import {
   ArrowRight,

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import Image from "next/image";
 import { ArrowRight, TrendingUp, BookOpen, Target, CheckCircle, Users, BarChart3, GraduationCap } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";

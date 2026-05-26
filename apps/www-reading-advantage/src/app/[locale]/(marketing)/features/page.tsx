@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import Image from "next/image";
 import { ArrowRight, Bot, User, Pencil, BarChart3, Smartphone, Globe } from "lucide-react";
 import { ComparisonTable } from "@/components/features/comparison-table";

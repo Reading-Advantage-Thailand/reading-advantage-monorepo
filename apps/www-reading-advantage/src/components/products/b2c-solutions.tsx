@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import { Link } from "@/locales/navigation"
 import { Code, GraduationCap, BrainCircuit, Users, ArrowRight } from "lucide-react"
 import { useScopedI18n } from "@/locales/client"
 

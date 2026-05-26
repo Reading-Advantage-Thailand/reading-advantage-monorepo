@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import HeroSection from "@/components/marketing/hero-section";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FloatingPill } from "@/components/ui/floating-pill";

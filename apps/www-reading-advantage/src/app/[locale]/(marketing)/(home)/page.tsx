@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import { ArrowRight, Mail, GitBranch, Clock, Target } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { Button } from "@/components/ui/button";

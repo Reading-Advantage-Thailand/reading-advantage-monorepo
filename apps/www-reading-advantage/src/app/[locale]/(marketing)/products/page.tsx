@@ -4,7 +4,7 @@ import TutorAdvantage from "@/components/products/tutor-advantage";
 import HeroSection from "@/components/marketing/hero-section";
 import { getScopedI18n } from "@/locales/server";
 import { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import { ArrowRight, BookMarked, GraduationCap, BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {

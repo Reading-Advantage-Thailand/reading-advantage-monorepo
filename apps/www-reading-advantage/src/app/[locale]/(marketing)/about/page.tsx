@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import Image from "next/image";
 import { ArrowRight, Target, Lightbulb, Heart, Shield } from "lucide-react";
 import HeroSection from "@/components/marketing/hero-section";

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/locales/navigation";
 import { ArrowRight, Shield, Zap, Users } from "lucide-react";
 import { PricingTable } from "@/components/pricing/pricing-table";
 import HeroSection from "@/components/marketing/hero-section";
