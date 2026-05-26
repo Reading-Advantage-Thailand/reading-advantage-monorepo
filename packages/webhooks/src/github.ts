@@ -62,7 +62,7 @@ const openrouter = createOpenAI({
 });
 
 async function generateReview(system: string, prompt: string): Promise<z.infer<typeof reviewResultSchema>> {
-  const model = openrouter("deepseek/deepseek-v4-flash");
+  const model = openrouter("xiaomi/mimo-v2.5");
 
   // Fallback when no API key is configured
   if (!process.env.OPENROUTER_API_KEY) {

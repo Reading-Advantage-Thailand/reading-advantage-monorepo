@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
     const systemPrompt = buildSystemPrompt(locale ?? "th") + contextAddition;
 
     const result = streamText({
-      model: openrouter("deepseek/deepseek-v4-flash"),
+      model: openrouter("xiaomi/mimo-v2.5"),
       system: systemPrompt,
       prompt: message,
       maxTokens: 2048,

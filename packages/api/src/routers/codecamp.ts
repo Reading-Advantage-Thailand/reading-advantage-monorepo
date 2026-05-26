@@ -450,7 +450,7 @@ export const codecampRouter = router({
           }
 
           const { object } = await generateObject({
-            model: openrouter("deepseek/deepseek-v4-flash"),
+            model: openrouter("xiaomi/mimo-v2.5"),
             system,
             prompt,
             schema: reviewResultSchema,
