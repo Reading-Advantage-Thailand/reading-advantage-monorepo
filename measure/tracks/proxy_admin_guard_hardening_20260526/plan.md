@@ -46,8 +46,8 @@ Note: hierarchy correction — STUDENT can also be reached by TEACHER and ADMIN 
 
 ## Phase 4: Build & Manual Verification
 
-- [ ] Task: `pnpm --filter codecamp-advantage build` passes with new middleware.
-- [ ] Task: `pnpm --filter science-advantage build` passes with new middleware.
+- [x] Task: `pnpm --filter codecamp-advantage build` passes with new middleware. ✓ Routes /admin, /admin/[userId], /admin/new-intern, /chat, /lesson/[id], /module/[slug], /api/* compiled.
+- [x] Task: `pnpm --filter science-advantage build` passes with new middleware. ✓ Routes /admin, /system, /teacher/**, /student/**, /signin, /dashboard, all /api/* compiled.
 - [ ] Task: Local manual smoke: sign in as STUDENT in codecamp, try `/admin/cohorts`, confirm redirect.
 - [ ] Task: Local manual smoke: sign in as STUDENT in science, try `/admin/users`, confirm redirect.
 - [ ] Task: Measure - User Manual Verification 'Proxy Hardening' (Protocol in workflow.md): user confirms 4 smoke paths above and validates one prod-like scenario.

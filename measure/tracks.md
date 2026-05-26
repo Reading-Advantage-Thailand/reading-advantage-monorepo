@@ -168,7 +168,7 @@ This file tracks all major tracks for the project.
 
 - [~] **Track: Proxy Admin/Role Guard Hardening**
   *Link: [./tracks/proxy_admin_guard_hardening_20260526/](./tracks/proxy_admin_guard_hardening_20260526/)*
-  Replace cookie-presence-only auth in `apps/codecamp-advantage/proxy.ts` and `apps/science-advantage/proxy.ts` with role-aware session verification at the edge. Resolves High-severity tech-debt entry (2026-05-15) and extends scope to science-advantage (same vulnerability). Requires Phase 0 runtime feasibility spike (nodejs middleware vs internal verify endpoint).
+  Replace cookie-presence-only auth in `apps/codecamp-advantage/proxy.ts` and `apps/science-advantage/proxy.ts` with role-aware session verification at the edge. Resolves High-severity tech-debt entry (2026-05-15) and extends scope to science-advantage (same vulnerability). *Status: Phases 0–4 complete; Phase 4 manual smoke + Phase 5 archival await user confirmation. Code: 8 codecamp unit + 17 science unit + 6 science integration tests, all green; builds pass for both apps.*
 
 - [x] **Track: Last-12-Hour Review Fixes**
   *Link: [./archive/last_12h_review_fix_20260503/](./archive/last_12h_review_fix_20260503/)*

@@ -11,6 +11,7 @@
 
 - (2026-05-02, shared_backend_api) `AuthProvider` calling `refreshSession` on mount creates a race condition: tests rendering `useRequireAuth` must pre-seed tokens AND mock `auth.refresh` + `auth.session` fetches. The hook throws during render when `!isLoading && !isAuthenticated`, so either establish auth before render or `expect().toThrow()` in a dedicated test.
 - (2026-05-02, shared_backend_api) `tsup` bundles can accidentally pull React hooks into the main barrel (`dist/index.js`). Server components importing `cn` from that barrel will fail. Keep hooks in a separate subpath export (`./hooks`).
+- (2026-05-26, proxy_admin_guard_hardening) Next.js 16 promoted middleware (renamed to `proxy.ts`) to nodejs runtime as the default — `runtime` config in proxy files now THROWS. This removes the "edge-only" constraint that blocked many auth/DB-touching middleware designs. Before this, tech-debt notes assumed JWT redesign or `/api/verify` round-trips were required to do real session checks in middleware; now you can `import { requireRole } from "@reading-advantage/auth"` and call it directly. Always check the upstream framework constraint before designing around a "limitation" inherited from older docs. Vitest hoisted-mock pattern for proxy: `const { mock } = vi.hoisted(() => ({ mock: vi.fn() }))` then `vi.mock("@reading-advantage/auth", ...)` — referencing a top-level `const` inside a `vi.mock` factory triggers `ReferenceError: Cannot access X before initialization`.
 
 ## Patterns That Worked Well
 

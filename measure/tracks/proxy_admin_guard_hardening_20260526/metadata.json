@@ -1,11 +1,11 @@
 {
   "track_id": "proxy_admin_guard_hardening_20260526",
   "type": "bug",
-  "status": "ready",
+  "status": "in_progress",
   "created_at": "2026-05-26T00:00:00Z",
   "updated_at": "2026-05-26T00:00:00Z",
   "description": "Harden the proxy.ts (Next.js middleware) admin/teacher/system guards across codecamp-advantage, science-advantage, and any other monorepo app that exposes role-gated routes. Today the guards only check cookie presence and trust the route handler downstream; this allows anyone with any valid session_token to load the admin shell, which then must defend itself. Make the proxy authoritative about role.",
   "estimated_tasks": 18,
-  "actual_tasks": null,
-  "deviation_notes": "Originating tech-debt entry (2026-05-15) named only codecamp-advantage; this track expands scope to science-advantage which has the same issue. www-reading-advantage proxy is i18n-only and does not need this work."
+  "actual_tasks": 14,
+  "deviation_notes": "Originating tech-debt entry (2026-05-15) named only codecamp-advantage; this track expands scope to science-advantage which has the same issue. www-reading-advantage proxy is i18n-only and does not need this work. Phase 0 (3 tasks) reduced to 1 actionable: Next.js 16 already defaults proxy to nodejs runtime; fallback endpoint design + nodejs prototype unnecessary. Phase 3 codecamp integration test deferred — codecamp has no integration test infra (tech-debt 2026-05-14), unit + auth-pkg DB tests cover contract. Phase 4 manual smoke tasks pending user execution + confirmation."
 }
