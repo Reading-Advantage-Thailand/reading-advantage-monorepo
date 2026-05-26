@@ -1,5 +1,5 @@
 ---
-title: "Beyond Doctor or Engineer: The New High-Income Careers in Thailand's Eastern Economic Corridor (EEC) and How to Prepare"
+title: "Beyond Doctor or Engineer: EEC's New High-Income Careers"
 date: "2026-05-26"
 excerpt: "The new high-income careers in the Eastern Economic Corridor (EEC) and how to prepare."
 coverImage: "/blog/day35-beyond-doctor-or-engineer_001_001.jpg"
@@ -9,7 +9,7 @@ tags: ["EEC", "STEM", "Thai Education", "Career Preparation", "STEM Advantage"]
 readingTime: 7
 ---
 
-# Beyond Doctor or Engineer: The New High-Income Careers in Thailand's Eastern Economic Corridor (EEC) and How to Prepare
+# Beyond Doctor or Engineer: EEC's New High-Income Careers
 
 ## The Career Dream That Needs Updating
 
