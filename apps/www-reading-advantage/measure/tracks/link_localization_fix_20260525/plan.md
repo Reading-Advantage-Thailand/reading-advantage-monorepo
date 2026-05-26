@@ -40,73 +40,31 @@ _Blast radius: 30 files import `next/link` directly (verified via grep). Highest
     - [x] Add a `lessons-learned.md` entry under "Frontend / i18n" capturing the recurring gotcha
 - [x] Task: Measure - User Manual Verification 'Phase S2: Replace next/link with next-intl Link everywhere' (Protocol in workflow.md) — verified via kimi-webbridge on Thai/Chinese pages
 
-## Phase S3: Align i18n folder layout & drop legacy shims
+## Phase S3: Align i18n folder layout & drop legacy shims ⏭ DEFERRED
 _Story ref: spec.md#story-s3_
-_Blast radius: `@/locales/server` has 21 callers (getScopedI18n), `@/locales/client` has 10 callers + 2 mocks (useScopedI18n/useCurrentLocale/useChangeLocale), `@/components/common/localized-link` has 3 callers + 1 test, `@/config/locale-config` has 9 callers (Locale type + localeNames + localeConfig). Total: ~45 import sites to rewrite mechanically._
+_Status: Deferred to a follow-up track. The user-facing bug is fully resolved by Phase S2 (rendered hrefs now include the active locale prefix). S3 is pure convention/cleanup with no user impact. Given (a) the pre-existing vitest+next-intl resolver issue logged as P2 tech debt would compound risk during the ~45-import rewrite + test-mock changes, and (b) the deploy-ASAP directive, S3 will be re-spec'd as its own track once the test infra is stable._
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Specify new file layout matching primary-advantage/codecamp-advantage:
-        - `src/i18n/routing.ts` (already exists; add `export type Locale = (typeof routing.locales)[number]`)
-        - `src/i18n/navigation.ts` (moved from `src/locales/navigation.ts`; same exports)
-        - `src/i18n/request.ts` (moved from `src/i18n.ts`; same `getRequestConfig` body)
-    - [ ] Specify deletion list: `src/i18n.ts`, `src/locales/{client,server,navigation}.ts`, `src/components/common/localized-link.{tsx,test.tsx}`, `localeConfig` & `localeImports` exports from `src/config/locale-config.ts`
-    - [ ] Specify import-rewrite mapping (mechanical, 1:1):
-        - `from "@/locales/client"` — `useI18n`/`useScopedI18n` → `from "next-intl"` `useTranslations`
-        - `from "@/locales/client"` — `useCurrentLocale`/`useChangeLocale` → `from "@/i18n/navigation"` (custom hooks live there)
-        - `from "@/locales/server"` — `getI18n`/`getScopedI18n` → `from "next-intl/server"` `getTranslations`
-        - `from "@/locales/navigation"` → `from "@/i18n/navigation"`
-        - `LocalizedLink` → `Link` from `@/i18n/navigation` (3 blog files)
-        - `from "@/config/locale-config"` — `Locale` → `from "@/i18n/routing"`; `localeNames`/`feedbackLanguage` stay in `locale-config.ts` (re-typed)
-- [ ] Task: Test
-    - [ ] Update `src/test/setup.ts` mocks: replace `vi.mock("@/locales/client", ...)` and `vi.mock("@/locales/server", ...)` with `vi.mock("next-intl", ...)` and `vi.mock("next-intl/server", ...)` matching the actual export shape
-    - [ ] Update individual page-test mocks: `app/[locale]/(marketing)/products/{primary,math}-advantage/page.test.tsx` (and any others discovered)
-    - [ ] Keep the regression guard from Phase S2: assert `Link` from `@/i18n/navigation` is the next-intl Link
-    - [ ] Run `pnpm --filter www-reading-advantage test` — must pass before any production code moves
-- [ ] Task: Implement
-    - [ ] **Step A (create new files):** Create `src/i18n/navigation.ts` and `src/i18n/request.ts` with content moved from old locations; export `type Locale` from `src/i18n/routing.ts`
-    - [ ] **Step B (rewire config):** Update `next.config.ts` to `createNextIntlPlugin('./src/i18n/request.ts')`; verify build succeeds
-    - [ ] **Step C (mechanical import rewrite, 45 files):** Run the mapping from Contract step on every grep hit; commit per import-class for review-ability
-    - [ ] **Step D (delete old files):** Remove `src/i18n.ts`, `src/locales/{client,server,navigation}.ts`, `src/components/common/localized-link.{tsx,test.tsx}`; trim `src/config/locale-config.ts` to keep only `localeNames`, `feedbackLanguage`, and re-export `Locale` from `@/i18n/routing`
-    - [ ] **Step E (verify):** `pnpm --filter www-reading-advantage {build,test,lint}` + `npm run i18n:verify`; full Playwright suite
-    - [ ] **Step F (graph refresh):** From repo root, run `build-graph update ./graph.db <changed-files>` so the next agent sees the new layout
-- [ ] Task: Generate Docs & Doctor
-    - [ ] Update `apps/www-reading-advantage/measure/tech-stack.md` line 16 (anticipates Phase S5, but the line is wrong NOW — OK to fix here if convenient; otherwise defer)
-    - [ ] Add `lessons-learned.md` entry: "www-reading-advantage now matches the i18n layout of primary-advantage / codecamp-advantage — the curriculum-canonical `next-intl` pattern. Sibling apps still in migration can crib from this app's structure."
-    - [ ] Open a tech-debt item if any sub-step had to be partially completed
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Align i18n folder layout & drop legacy shims' (Protocol in workflow.md)
+- [ ] Task: Contract & Schema Definition — DEFERRED
+- [ ] Task: Test — DEFERRED
+- [ ] Task: Implement — DEFERRED
+- [ ] Task: Generate Docs & Doctor — DEFERRED
+- [ ] Task: Measure - User Manual Verification 'Phase S3: Align i18n folder layout & drop legacy shims' (Protocol in workflow.md) — DEFERRED
 
-## Phase S4: Audit blog content for hardcoded locale paths
+## Phase S4: Audit blog content for hardcoded locale paths ⏭ DEFERRED
 _Story ref: spec.md#story-s4_
-_Blast radius: blog MDX corpus under `content/blog/**` (size TBD by audit) + `components/blog/blog-tags.tsx`. The tags component is already covered by Phase S2's mechanical replacement, but content paths inside MDX bodies need human judgment._
+_Status: Deferred. The blog component (`blog-tags.tsx`, `blog-card.tsx`, `blog-pagination.tsx`, `blog-breadcrumbs.tsx`) `next/link` imports were already fixed in Phase S2 — so the structural link bug in the blog UI is resolved. Auditing MDX content for hardcoded `/en/` strings remains valuable but is not blocking the user-facing fix and will be its own follow-up track._
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Define what "hardcoded locale path" means: any href matching `/(en|th|zh)/...` in `.mdx`, `.md`, or string literal inside `content/blog/**`
-    - [ ] Define acceptable exceptions (translator notes pointing to another language version) and their required form (e.g., wrapped in an `<a hreflang="th">` rather than `<Link>`)
-- [ ] Task: Test
-    - [ ] Add a Vitest content-lint test that scans the blog corpus and fails if any hardcoded locale path is found outside the exception list
-    - [ ] Manual: visit one blog post per locale, click every tag, related post, and in-content link; assert URL prefix preserved
-- [ ] Task: Implement
-    - [ ] Run the audit: `grep -rE '/(en|th|zh)/' apps/www-reading-advantage/content/blog/ apps/www-reading-advantage/src/components/blog/`
-    - [ ] Rewrite each hit to a locale-relative path (drop the prefix; `<Link>` will add the current locale)
-    - [ ] Confirm `components/blog/blog-tags.tsx` was correctly updated in Phase S2; if not, fix here
-- [ ] Task: Generate Docs & Doctor
-    - [ ] Run the content-lint test and full e2e
-    - [ ] Add `lessons-learned.md` entry under "Blog / Content": "Never write `/en/...` or `/th/...` in blog href — the `Link` from `@/i18n/navigation` handles the prefix"
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Audit blog content for hardcoded locale paths' (Protocol in workflow.md)
+- [ ] Task: Contract & Schema Definition — DEFERRED
+- [ ] Task: Test — DEFERRED
+- [ ] Task: Implement — DEFERRED
+- [ ] Task: Generate Docs & Doctor — DEFERRED
+- [ ] Task: Measure - User Manual Verification 'Phase S4: Audit blog content for hardcoded locale paths' (Protocol in workflow.md) — DEFERRED
 
-## Phase S5: Correct tech-stack documentation
+## Phase S5: Correct tech-stack documentation ⏭ DEFERRED
 _Story ref: spec.md#story-s5_
-_Blast radius: 2 measure files (tech-stack.md, lessons-learned.md). Documentation only, no code._
+_Status: Deferred. Low-priority docs cleanup; will be folded into the follow-up track that does S3 + S4 together._
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Decide exact wording for tech-stack.md line 16: `- **i18n:** next-intl (Multilingual routing and content, App Router request-config pattern)`
-    - [ ] Decide format of the lessons-learned clarifying note
-- [ ] Task: Test
-    - [ ] N/A (docs only)
-- [ ] Task: Implement
-    - [ ] Update `apps/www-reading-advantage/measure/tech-stack.md` line 16 (if not already done in S3)
-    - [ ] Prepend a single dated clarifying note to the relevant `lessons-learned.md` section explaining the next-international → next-intl migration so old entries make sense
-    - [ ] Add a closing entry summarizing the i18n track outcome and the future-work note about `packages/i18n`
-- [ ] Task: Generate Docs & Doctor
-    - [ ] Verify `tracks.md` reflects this track as complete
-- [ ] Task: Measure - User Manual Verification 'Phase S5: Correct tech-stack documentation' (Protocol in workflow.md)
+- [ ] Task: Contract & Schema Definition — DEFERRED
+- [ ] Task: Implement — DEFERRED
+- [ ] Task: Generate Docs & Doctor — DEFERRED
+- [ ] Task: Measure - User Manual Verification 'Phase S5: Correct tech-stack documentation' (Protocol in workflow.md) — DEFERRED

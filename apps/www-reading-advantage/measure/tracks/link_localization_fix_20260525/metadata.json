@@ -1,23 +1,23 @@
 {
   "track_id": "link_localization_fix_20260525",
   "type": "feature",
-  "status": "new",
+  "status": "partial",
   "created_at": "2026-05-25T23:03:46Z",
-  "updated_at": "2026-05-25T23:03:46Z",
-  "description": "Fix link localization bug (Thai/Chinese viewers thrown back to English on every click) and align i18n folder layout with the monorepo's next-intl convention used by primary-advantage and codecamp-advantage.",
+  "updated_at": "2026-05-26T12:50:00Z",
+  "description": "Fix link localization bug (Thai/Chinese viewers thrown back to English on middle-click/copy-link/share/hard-refresh) and align i18n folder layout with the monorepo's next-intl convention.",
   "estimated_tasks": 25,
-  "actual_tasks": null,
-  "deviation_notes": "",
+  "actual_tasks": 11,
+  "deviation_notes": "S1 was already implemented as src/proxy.ts (Next.js 16 renamed middleware.ts -> proxy.ts) — verified live, marked done with zero new code. S2 (the user-facing fix) shipped: 29 next/link imports replaced + eslint guard + Playwright spec. S3, S4, S5 deferred per user direction (deploy ASAP); S3/S4/S5 are convention/docs cleanup with no user impact and will be re-spec'd as a follow-up track once the pre-existing vitest+next-intl resolver issue (logged as P2 tech debt) is resolved.",
   "sprint": {
     "goal": "A Thai or Chinese visitor can navigate the entire site without ever being thrown back to English, and the app's i18n folder layout matches the monorepo convention used by primary-advantage and codecamp-advantage.",
     "stories": [
-      { "id": "S1", "title": "Add locale-detection middleware", "size": "S", "priority": "Must", "status": "pending" },
-      { "id": "S2", "title": "Replace next/link with next-intl Link everywhere", "size": "L", "priority": "Must", "status": "pending" },
-      { "id": "S3", "title": "Align i18n folder layout & drop legacy shims", "size": "M", "priority": "Should", "status": "pending" },
-      { "id": "S4", "title": "Audit blog content for hardcoded locale paths", "size": "S", "priority": "Should", "status": "pending" },
-      { "id": "S5", "title": "Correct tech-stack documentation", "size": "S", "priority": "Could", "status": "pending" }
+      { "id": "S1", "title": "Add locale-detection middleware", "size": "S", "priority": "Must", "status": "done" },
+      { "id": "S2", "title": "Replace next/link with next-intl Link everywhere", "size": "L", "priority": "Must", "status": "done" },
+      { "id": "S3", "title": "Align i18n folder layout & drop legacy shims", "size": "M", "priority": "Should", "status": "dropped" },
+      { "id": "S4", "title": "Audit blog content for hardcoded locale paths", "size": "S", "priority": "Should", "status": "dropped" },
+      { "id": "S5", "title": "Correct tech-stack documentation", "size": "S", "priority": "Could", "status": "dropped" }
     ],
-    "demo_notes": null,
-    "retro_ref": null
+    "demo_notes": "Live verification via kimi-webbridge on dev server: /th (29/31 internal links have /th/ prefix, 2 are '/' or '/th' root — 0 offending; before fix: 31/31 unprefixed). /th/about and /zh/pricing both clean. Build pass, lint pass, i18n:verify pass.",
+    "retro_ref": "apps/www-reading-advantage/measure/lessons-learned.md#2026-05-26"
   }
 }
