@@ -1,5 +1,21 @@
 import { describe, it, expect, vi } from "vitest";
 
+const { requireRoleMock } = vi.hoisted(() => ({
+  requireRoleMock: vi.fn(),
+}));
+
+vi.mock("@reading-advantage/auth", async () => {
+  const actual = await vi.importActual<typeof import("@reading-advantage/auth")>(
+    "@reading-advantage/auth"
+  );
+  return {
+    ...actual,
+    requireRole: requireRoleMock,
+  };
+});
+
+vi.mock("@reading-advantage/db", () => ({ db: {} }));
+
 vi.mock("next-intl/middleware", async () => {
   const { NextResponse } = await import("next/server");
   return {
@@ -17,6 +33,13 @@ vi.mock("next-intl/middleware", async () => {
 
 import { NextRequest } from "next/server";
 import { proxy, config } from "../../proxy";
+
+function mockAdmin() {
+  requireRoleMock.mockResolvedValue({
+    user: { id: "u1", role: "ADMIN", schoolId: "s1", email: "a@b.com", username: "a" },
+    token: "valid-token",
+  });
+}
 
 function createRequest(pathname: string, cookies?: Record<string, string>, headers?: HeadersInit) {
   const url = new URL(pathname, "http://localhost:3000");
@@ -63,6 +86,7 @@ describe("proxy", () => {
   });
 
   it("allows authenticated users through to locale-prefixed admin routes", async () => {
+    mockAdmin();
     const req = createRequest("/th/admin", { session_token: "valid-token" });
     const res = await proxy(req);
 
@@ -118,6 +142,7 @@ describe("proxy", () => {
   });
 
   it("allows authenticated users through to nested locale-prefixed admin routes", async () => {
+    mockAdmin();
     const req = createRequest("/en/admin/user-123", { session_token: "valid-token" });
     const res = await proxy(req);
 
