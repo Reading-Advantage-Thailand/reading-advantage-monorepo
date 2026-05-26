@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { BlogListItem } from "@/types/blog";
-import { LocalizedLink } from "@/components/common/localized-link";
+import { Link } from "@/locales/navigation";
 import { getScopedI18n } from "@/locales/server";
 
 interface BlogCardProps {
@@ -37,9 +37,9 @@ export async function BlogCard({ post, locale = "en" }: BlogCardProps) {
           <span>{t("readingTime", { count: post.readingTime })}</span>
         </div>
         <h2 className="text-2xl font-bold mb-2">
-          <LocalizedLink href={`/blog/${post.slug}`} className="hover:underline">
+          <Link href={`/blog/${post.slug}`} className="hover:underline">
             {post.title}
-          </LocalizedLink>
+          </Link>
         </h2>
         <p className="text-muted-foreground mb-4">{post.excerpt}</p>
         <div className="flex items-center gap-2">

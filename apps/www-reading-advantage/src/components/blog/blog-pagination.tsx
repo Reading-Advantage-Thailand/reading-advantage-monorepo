@@ -1,6 +1,6 @@
 "use client";
 
-import { LocalizedLink } from "@/components/common/localized-link";
+import { Link } from "@/locales/navigation";
 import { useScopedI18n } from "@/locales/client";
 
 interface BlogPaginationProps {
@@ -66,7 +66,7 @@ export function BlogPagination({
       className="flex items-center justify-center gap-2 py-8"
       aria-label="Pagination"
     >
-      <LocalizedLink
+      <Link
         href={currentPage > 1 ? `${baseUrl}/page/${currentPage - 1}` : "#"}
         className={`px-4 py-2 rounded-md border ${
           currentPage === 1
@@ -77,11 +77,11 @@ export function BlogPagination({
         scroll={false}
       >
         {t("previous")}
-      </LocalizedLink>
+      </Link>
 
       {pageNumbers.map((page, index) =>
         typeof page === "number" ? (
-          <LocalizedLink
+          <Link
             key={`page-${page}-${index}`}
             href={`${baseUrl}/page/${page}`}
             className={`px-4 py-2 rounded-md border ${
@@ -92,7 +92,7 @@ export function BlogPagination({
             scroll={false}
           >
             {page}
-          </LocalizedLink>
+          </Link>
         ) : (
           <span
             key={`ellipsis-${index}`}
@@ -103,7 +103,7 @@ export function BlogPagination({
         ),
       )}
 
-      <LocalizedLink
+      <Link
         href={
           currentPage < totalPages ? `${baseUrl}/page/${currentPage + 1}` : "#"
         }
@@ -116,7 +116,7 @@ export function BlogPagination({
         scroll={false}
       >
         {t("next")}
-      </LocalizedLink>
+      </Link>
     </nav>
   );
 }

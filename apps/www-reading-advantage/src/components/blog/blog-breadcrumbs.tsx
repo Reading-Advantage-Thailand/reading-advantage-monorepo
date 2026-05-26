@@ -1,4 +1,4 @@
-import { LocalizedLink } from "@/components/common/localized-link";
+import { Link } from "@/locales/navigation";
 
 interface BlogBreadcrumbsProps {
   postTitle: string;
@@ -9,15 +9,15 @@ export function BlogBreadcrumbs({ postTitle }: BlogBreadcrumbsProps) {
     <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground mb-4">
       <ol className="flex items-center gap-2">
         <li>
-          <LocalizedLink href="/" className="hover:text-foreground transition-colors">
+          <Link href="/" className="hover:text-foreground transition-colors">
             Home
-          </LocalizedLink>
+          </Link>
         </li>
         <li aria-hidden="true">›</li>
         <li>
-          <LocalizedLink href="/blog" className="hover:text-foreground transition-colors">
+          <Link href="/blog" className="hover:text-foreground transition-colors">
             Blog
-          </LocalizedLink>
+          </Link>
         </li>
         <li aria-hidden="true">›</li>
         <li className="text-foreground font-medium truncate max-w-xs" aria-current="page">
