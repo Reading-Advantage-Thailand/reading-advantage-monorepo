@@ -1,0 +1,12 @@
+{
+  "track_id": "connection_pooling_20260522",
+  "type": "chore",
+  "status": "complete",
+  "created_at": "2026-05-22T00:00:00Z",
+  "updated_at": "2026-05-25T00:00:00Z",
+  "completed_at": "2026-05-25T00:00:00Z",
+  "description": "Introduce a transaction-mode connection pooler (PgBouncer for GCP Cloud Run, or Cloudflare Hyperdrive for Cloudflare) between the horizontally-scaled app instances and the VPS Postgres, tune the postgres-js client for pooled use, and separate the migration/direct connection from the pooled connection. Prerequisite for the reactive query layer.",
+  "estimated_tasks": 13,
+  "actual_tasks": 13,
+  "deviation_notes": "All 4 phases complete. Local docker-compose runs PgBouncer 1.23.1 (port 6432). buildPostgresOptions sets prepare:false and env-tunable max (default 3). drizzle.config.ts + codecamp seed prefer DIRECT_DATABASE_URL with warning-on-fallback. Concurrency verified: 12 simulated app instances x max:3 driving 50 concurrent queries peaked at 8 backend connections (vs ~36 unpooled). tech-stack.md documents the topology. Production cutover (cloudbuild.yaml + DIRECT_DATABASE_URL secret) deliberately deferred so fallback keeps prod working."
+}

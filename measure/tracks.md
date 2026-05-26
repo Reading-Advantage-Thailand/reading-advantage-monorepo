@@ -135,7 +135,7 @@ This file tracks all major tracks for the project.
   Create `packages/storage` (`@reading-advantage/storage`) with a `StorageClient` interface backed by `@aws-sdk/client-s3`. Works with GCS (S3 interoperability), Cloudflare R2, and MinIO (local dev). Replaces duplicated `@google-cloud/storage` usage in reading-advantage and primary-advantage. Backend migration is a config/env-var change only.
 
 - [x] **Track: Connection Pooling**
-  *Link: [./tracks/connection_pooling_20260522/](./tracks/connection_pooling_20260522/)*
+  *Link: [./archive/connection_pooling_20260522/](./archive/connection_pooling_20260522/)*
   Introduce a transaction-mode pooler (PgBouncer for GCP Cloud Run, or Cloudflare Hyperdrive for Cloudflare) between the app instances and the VPS Postgres; tune the `postgres-js` client (`prepare: false`, reduced `max`); split `DATABASE_URL` (pooled) from `DIRECT_DATABASE_URL` (migrations, `LISTEN/NOTIFY`). Independent of other tracks; prerequisite for the reactive query layer. *Status: COMPLETE 2026-05-25. All 4 phases done. Local docker-compose now runs PgBouncer 1.23.1 alongside postgres (port 6432). `buildPostgresOptions` sets `prepare:false` and env-tunable `max` (default 3). `drizzle.config.ts` + codecamp seed prefer DIRECT_DATABASE_URL with warning-on-fallback. Concurrency verified: 12 simulated app instances × max:3 driving 50 concurrent queries peaked at 8 backend connections (vs estimated 36 unpooled). tech-stack.md documents the topology. Production cutover (cloudbuild.yaml + DIRECT_DATABASE_URL secret) deliberately deferred — fallback keeps prod working.*
 
 - [ ] **Track: Reactive Query Layer** — **STUB**
@@ -160,11 +160,15 @@ This file tracks all major tracks for the project.
   Sub-track of Track 3. Replaces `prisma db push --force-reset` in `vitest.setup.ts` with `drizzle-kit migrate` against a dedicated `science_advantage_test` DB; splits unit/integration setup files. Unblocks runtime verification for Track 3 Phases 1+.
 - [ ] **Track: Prisma → Drizzle Per-Feature Slice Cleanup**
   *Link: [./tracks/prisma_drizzle_slice_cleanup_20260505/](./tracks/prisma_drizzle_slice_cleanup_20260505/)*
-  Track 4 of 4. **Blocked on tracks 2–3.** Per-slice cleanup of non-generalizable surface deferred from earlier tracks. Final repo-wide Prisma eradication.
+  Track 4 of 4. **Unblocked 2026-05-26** (Tracks 2 & 3 archived). Scope narrowed: cleans up comment-only Prisma references in reading- and science-advantage `lib/enums.ts`, corrects AGENTS.md doc drift, distills program lessons, and carves out primary-advantage migration as separate follow-up track.
 
 ---
 
 ### Review Remediation
+
+- [~] **Track: Proxy Admin/Role Guard Hardening**
+  *Link: [./tracks/proxy_admin_guard_hardening_20260526/](./tracks/proxy_admin_guard_hardening_20260526/)*
+  Replace cookie-presence-only auth in `apps/codecamp-advantage/proxy.ts` and `apps/science-advantage/proxy.ts` with role-aware session verification at the edge. Resolves High-severity tech-debt entry (2026-05-15) and extends scope to science-advantage (same vulnerability). Requires Phase 0 runtime feasibility spike (nodejs middleware vs internal verify endpoint).
 
 - [x] **Track: Last-12-Hour Review Fixes**
   *Link: [./archive/last_12h_review_fix_20260503/](./archive/last_12h_review_fix_20260503/)*
