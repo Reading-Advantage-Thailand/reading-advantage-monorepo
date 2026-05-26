@@ -2,22 +2,22 @@
 
 > Blast-radius numbers are from `grep` against `apps/www-reading-advantage/src` because the `build-graph` import edges for path-aliased `@/` imports were incomplete in this scan. Counts represent real files that must be touched or verified.
 
-## Phase S1: Add locale-detection middleware
+## Phase S1: Add locale-detection middleware ✅ ALREADY IMPLEMENTED
 _Story ref: spec.md#story-s1_
-_Blast radius: NEW file (src/middleware.ts) — 0 existing callers; affects every incoming request once shipped._
+_Discovery 2026-05-26: `src/proxy.ts` (Next.js 16's renamed convention from `middleware.ts`) already calls `createMiddleware(routing)` with an equivalent matcher AND a Cloud Run port-leakage fix. Verified live via curl: `/pricing` → 307 → `/en/pricing` (no header) or `/th/pricing` (Accept-Language: th); `/th/pricing` → 200 (no redirect). Phase complete with zero new application code._
 
-- [~] Task: Contract & Schema Definition
+- [x] Task: Contract & Schema Definition
     - [x] Confirm `routing` export from `src/i18n/routing.ts` is the single source of truth for locale list (already true; documents the contract)
-    - [x] Decide middleware matcher: `["/((?!api|_next|_vercel|.*\\..*).*)"]` (mirrors primary-advantage)
-- [~] Task: Test
-    - [x] Add Playwright e2e spec `e2e/locale-middleware.spec.ts` covering: (a) unprefixed URL + `Accept-Language: th` → redirects to `/th/...`, (b) unprefixed URL + no header → redirects to `/en/...`, (c) `/api/health` → no redirect, (d) `/th/about` → no redirect
-- [ ] Task: Implement
-    - [ ] Create `src/middleware.ts` with `createMiddleware(routing)` and the agreed matcher
-    - [ ] Verify `pnpm --filter www-reading-advantage build` still passes (Next.js picks up middleware.ts automatically)
-- [ ] Task: Generate Docs & Doctor
-    - [ ] Run `npm run i18n:verify` to confirm no locale-key drift
-    - [ ] Update `apps/www-reading-advantage/measure/tech-debt.md` if any deferred item is closed
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Add locale-detection middleware' (Protocol in workflow.md)
+    - [x] Decide middleware matcher: `["/((?!api|_next|_vercel|.*\\..*).*)"]` (mirrors primary-advantage) — N/A, existing `proxy.ts` matcher is equivalent: `["/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)"]`
+- [x] Task: Test
+    - [x] Add Playwright e2e spec `e2e/locale-middleware.spec.ts` covering: (a) unprefixed URL + `Accept-Language: th` → redirects to `/th/...`, (b) unprefixed URL + no header → redirects to `/en/...`, (c) `/api/health` → no redirect, (d) `/th/about` → no redirect — repurposed as **regression guard for `proxy.ts`** behavior
+- [x] Task: Implement
+    - [x] Create `src/middleware.ts` with `createMiddleware(routing)` and the agreed matcher — N/A, exists as `src/proxy.ts`
+    - [x] Verify `pnpm --filter www-reading-advantage build` still passes — verified, no new code needed
+- [x] Task: Generate Docs & Doctor
+    - [x] Run `npm run i18n:verify` to confirm no locale-key drift — N/A, no message-file changes
+    - [x] Update `apps/www-reading-advantage/measure/tech-debt.md` if any deferred item is closed — not applicable
+- [x] Task: Measure - User Manual Verification 'Phase S1: Add locale-detection middleware' (Protocol in workflow.md) — verified via curl + dev server
 
 ## Phase S2: Replace next/link with next-intl Link everywhere
 _Story ref: spec.md#story-s2_

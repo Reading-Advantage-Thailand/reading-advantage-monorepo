@@ -4,36 +4,40 @@
 
 **Sprint Goal:** A Thai or Chinese visitor can navigate the entire site without ever being thrown back to English, and the app's i18n folder layout matches the monorepo convention used by `primary-advantage` and `codecamp-advantage`.
 
-Today, ~30 files in `apps/www-reading-advantage/src` import `Link` directly from `next/link` instead of the locale-aware `Link` exported from `next-intl`'s `createNavigation(routing)`. Because the app also has no `middleware.ts`, a Thai viewer who lands on `/th/about` and clicks any nav, footer, hero, or product link is routed to the unprefixed URL (`/pricing`, `/about`, etc.) and falls back to the `defaultLocale: "en"` via the `[locale]` segment, throwing them back into English. The blog partly works only because its components use a bespoke `LocalizedLink` wrapper, but blog content with hardcoded `/en/...` paths defeats even that.
+> **2026-05-26 reality check (added during implementation):** Initial investigation incorrectly concluded the app had no middleware. In fact, `src/proxy.ts` (Next.js 16's renamed convention from `middleware.ts`) already calls `createMiddleware(routing)` and correctly redirects unprefixed URLs by `Accept-Language`. The bug therefore manifests on **middle-click, Cmd/Ctrl-click, right-click → "Open in new tab", copy-link → share, SEO crawls, hard refresh from a client-navigated URL, and Cloud Run direct hits** — anything that uses the raw `href` attribute instead of `next/link`'s client-side router. Plain left-clicks preserve locale via the client router. The fix (Phases S2–S5) is still correct because all those scenarios are real, but Phase S1 is dropped (middleware already exists). AC #4 below is updated to require the rendered `href` attribute, not just observed click behavior.
+
+Today, ~30 files in `apps/www-reading-advantage/src` import `Link` directly from `next/link` instead of the locale-aware `Link` exported from `next-intl`'s `createNavigation(routing)`. The rendered HTML therefore contains `<a href="/pricing">` instead of `<a href="/th/pricing">`. Left-click happens to work because `next/link`'s client router patches in the current locale, but every other navigation path (above) drops it. The blog partly works only because its components use a bespoke `LocalizedLink` wrapper, but blog content with hardcoded `/en/...` paths defeats even that.
 
 The monorepo's `next-intl` convention (taught in `packages/db/src/seed/codecamp-curriculum-data.ts` and already used by `primary-advantage` and `codecamp-advantage`) is: `src/i18n/{routing,navigation,request}.ts` + `src/middleware.ts` + direct imports of `useTranslations`/`getTranslations` from `next-intl`. This track fixes the bug AND aligns the app to that convention.
 
 ## Stories
 
 ### Story S1: Add locale-detection middleware
+> **2026-05-26: Already implemented.** During Phase S1 execution, discovered that `src/proxy.ts` (Next.js 16's renamed convention from `middleware.ts`) already calls `createMiddleware(routing)` with an equivalent matcher AND a Cloud Run port-leakage fix. Verified live via curl: `/pricing` → 307 → `/en/pricing` (no header) or `/th/pricing` (Accept-Language: th). No new code needed. Story marked done.
+
 **As a** first-time Thai visitor who lands on an unprefixed URL (e.g., from an external link or stale bookmark)
 **I want** the site to detect my language preference and redirect me to the correct locale
 **So that** I don't have to manually navigate to `/th/` every visit
 
 **Acceptance Criteria:**
-- Given a request to `/pricing` with `Accept-Language: th`, When the middleware runs, Then the user is redirected to `/th/pricing`.
-- Given a request to `/pricing` with no language header, When the middleware runs, Then the user is redirected to `/en/pricing` (defaultLocale).
-- Given a request to `/api/anything` or `/_next/...` or `/favicon.ico`, When the middleware runs, Then it does NOT redirect (matcher excludes these).
-- Given a request to `/th/pricing` (already-prefixed), When the middleware runs, Then no redirect occurs.
+- Given a request to `/pricing` with `Accept-Language: th`, When the middleware runs, Then the user is redirected to `/th/pricing`. ✅ (verified via curl 2026-05-26)
+- Given a request to `/pricing` with no language header, When the middleware runs, Then the user is redirected to `/en/pricing` (defaultLocale). ✅ (verified via curl 2026-05-26)
+- Given a request to `/api/anything` or `/_next/...` or `/favicon.ico`, When the middleware runs, Then it does NOT redirect (matcher excludes these). ✅ (proxy.ts matcher excludes these patterns)
+- Given a request to `/th/pricing` (already-prefixed), When the middleware runs, Then no redirect occurs. ✅ (verified via curl 2026-05-26)
 
-**Estimate:** S
+**Estimate:** S (originally) → **0 (actual)**
 **Priority:** Must
 
 ### Story S2: Replace next/link with next-intl Link everywhere
 **As a** Thai or Chinese visitor browsing the site
-**I want** every internal link to preserve my chosen locale
-**So that** I never get thrown back into English mid-session
+**I want** every internal link to render its href with my chosen locale prefix
+**So that** middle-clicks, copy-link, share, hard refresh, and SEO crawls all keep me (or my reader) in the correct language
 
 **Acceptance Criteria:**
-- Given a Thai visitor on `/th/about`, When they click any header nav link, footer link, product card, hero CTA, or services link, Then they remain in `/th/*`.
-- Given the codebase, When `grep -r 'from "next/link"' apps/www-reading-advantage/src` runs, Then it returns zero matches.
+- Given a Thai visitor on any page, When the page is rendered, Then every internal anchor's `href` attribute is `/th/...` (verified via `link.getAttribute("href")`, not just observed click behavior).
+- Given the codebase, When `grep -r 'from "next/link"' apps/www-reading-advantage/src` runs, Then it returns zero matches (excluding the navigation shim file itself).
 - Given a new PR that re-introduces `import Link from "next/link"` in `apps/www-reading-advantage/src/**`, When `npm run lint` runs, Then it fails with a no-restricted-imports error pointing to `@/i18n/navigation`.
-- Given the existing Playwright e2e suite, When run against a `/th/` starting URL with every nav+footer link clicked, Then the test passes with the URL always prefixed `/th/`.
+- Given the existing Playwright e2e suite, When run against a `/th/` page, Then every header nav link, footer link, and hero CTA renders an `href` starting with `/th/`.
 
 **Estimate:** L
 **Priority:** Must
