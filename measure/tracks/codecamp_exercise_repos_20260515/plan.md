@@ -155,11 +155,11 @@ Configure and verify the GitHub App integration for automatic PR review.
     - Installing the app on exercise repos with PR read/write permissions
   - [x] Reference the existing `packages/webhooks/src/github-client.ts` implementation
 - [x] Task: Install the GitHub App on every new repo
-  - [ ] In org settings → GitHub Apps → Reading Advantage Codecamp Reviewer → Install on:
+  - [x] In org settings → GitHub Apps → Reading Advantage Codecamp Reviewer → Install on:
     - All 15 `codecamp-exercise-*` repos
     - All 3 portfolio repos (`codecamp-portfolio-website`, `codecamp-learning-dashboard`, `codecamp-progress-tracker`)
-  - [ ] Grant `Contents: read`, `Pull requests: write`, `Issues: read` permissions
-  - [ ] Confirm in the App's installation page that all 18 repos appear
+  - [x] Grant `Contents: read`, `Pull requests: write`, `Issues: read` permissions (verified via installation API: `contents:read`, `issues:read`, `metadata:read`, `pull_requests:write`)
+  - [x] Confirm in the App's installation page that all 18 repos appear (org-owner added `codecamp-portfolio-website` + `codecamp-learning-dashboard` via web UI on 2026-05-25; installation `updated_at=2026-05-25T17:36:20+08:00`)
 - [x] Task: Verify webhook endpoint receives PR events
   - [x] Send a test PR event to `/webhooks/github/pr` (using `curl` or the test suite)
   - [x] Confirm `codecamp_pr_reviews` row is created with status `pending`
@@ -172,16 +172,19 @@ Configure and verify the GitHub App integration for automatic PR review.
 
 Validate the full intern workflow and fix any issues found.
 
-- [ ] Task: End-to-end manual test — fork, branch, commit, PR
-  > **Blocked**: GitHub App installation on all 18 repos incomplete (see Phase 5 unchecked items). Phase 3 repos now exist on GitHub.
-  - [ ] Fork one exercise repo (e.g., Module 2 `codecamp-exercise-git-github`)
-  - [ ] Create a feature branch
-  - [ ] Make a commit modifying the exercise files
-  - [ ] Open a PR against the upstream repo
-  - [ ] Verify: webhook creates `codecamp_pr_reviews` record
-  - [ ] Verify: LLM review posts comments on the PR (or mock review if API key missing)
-  - [ ] Verify: `prReviews` tRPC query returns the review status
-  - [ ] Verify: `review-history.tsx` component displays the review
+- [x] Task: End-to-end manual test — fork, branch, commit, PR
+  > **Verified 2026-05-25 via `scripts/codecamp-pr-e2e.sh`** (PR #3, closed). Full pipeline confirmed: fork → push → PR → webhook (signed payload accepted) → `codecamp_pr_reviews` row created (`review_status=needs_changes`, `reviewed_at` populated, 234-char `llm_review_summary` stored) → real OpenRouter DeepSeek review → comment posted to PR with correct line numbers and on-topic feedback. Total round-trip ~25 seconds. Audit blob: `e2e-results/20260525T100845Z-bodangren.json`.
+  > **Automation:** `scripts/codecamp-pr-e2e.sh` — re-runnable, idempotent, exit codes for CI.
+  > **Runbook:** `apps/codecamp-advantage/docs/pr-review-e2e-runbook.md`.
+  - [x] Fork one exercise repo (e.g., Module 2 `codecamp-exercise-git-github`)
+  - [x] Create a feature branch
+  - [x] Make a commit modifying the exercise files
+  - [x] Open a PR against the upstream repo
+  - [x] Verify: webhook creates `codecamp_pr_reviews` record
+  - [x] Verify: LLM review posts comments on the PR
+  - [x] Verify: review summary persisted to DB (`reviewed_at`, `llm_review_summary`)
+  - [ ] Verify: `prReviews` tRPC query returns the review status (requires logged-in session — deferred to UI smoke test)
+  - [ ] Verify: `review-history.tsx` component displays the review (deferred to UI smoke test)
 - [x] Task: Update `fork-instruction.tsx` to handle Module 1 and Module 18 edge cases
   - [x] Module 1 (Dev Environment): no change needed — Module 1 has only `theory`-type lessons, so the fork-exercise section never renders for Module 1. No dead-code guard required.
   - [x] Module 18 (Real-World Practice): IssueSelector component added to lesson page in pre_redeploy track — shows open GitHub Issues from `codecamp-progress-tracker` above the ForkInstruction, with label badges and click-to-select. WorkflowTracker uses the selected issue's title/number.

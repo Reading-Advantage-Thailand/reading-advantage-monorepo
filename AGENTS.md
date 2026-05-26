@@ -127,3 +127,40 @@ Follow Conventional Commits:
 - `docs:` for documentation
 
 Keep commits scoped to a single concern. Reference track IDs when relevant.
+
+## Codebase Graph
+
+This project is indexed by `build-graph` — a SQLite knowledge graph of the TypeScript codebase. Scan once, then query structure instead of grepping.
+
+### Quickstart
+
+```bash
+# Build graph.db (do this if it is missing or stale)
+build-graph scan . ./graph.db
+
+# Incremental update after editing files
+build-graph update ./graph.db src/file1.ts src/file2.ts
+```
+
+### Agent Rules
+
+| Rule | When |
+|------|------|
+| Query before grep | Before searching for "what uses X", run `build-graph callers ./graph.db X` or `build-graph deps ./graph.db X` |
+| Inspect exports before editing | Before modifying an exported function/class/schema, run `build-graph inspect ./graph.db SymbolName` to see blast radius |
+| Filter by package | In monorepos, add `--from-package=P` or `--to-package=P` to `deps` / `callers` to narrow scope |
+| Update after structural edits | After changing signatures, imports, exports, schemas, or JSX, run `build-graph update ./graph.db <files>` so the next agent has fresh context |
+| Skip for internal-only changes | Pure variable renames inside a private function do not need a graph update |
+
+### One-liners
+
+```bash
+build-graph search ./graph.db keyword           # fuzzy node search
+build-graph callers ./graph.db fnName           # who calls this
+build-graph deps ./graph.db Module --downstream # what Module depends on
+build-graph path ./graph.db A.ts B.ts           # shortest path
+build-graph stats ./graph.db                    # dashboard
+build-graph inspect ./graph.db SymbolName       # full profile
+```
+
+For full docs, read the skill: `~/.claude/skills/build-graph/SKILL.md`

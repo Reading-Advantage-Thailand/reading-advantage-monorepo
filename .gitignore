@@ -43,3 +43,7 @@ coverage
 # Database backups
 /Backup*.sql
 Backup_*.sql*.out
+
+# Build artifacts
+graph.db
+e2e-results/
