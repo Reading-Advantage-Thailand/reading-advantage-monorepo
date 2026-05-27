@@ -51,7 +51,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
   return (
     <>
       <nav className="hidden md:block sticky top-24 w-64 float-right ml-8 mb-8 p-4 border rounded-lg bg-card">
-        <h2 className="font-semibold text-lg mb-4">{t("tableOfContents")}</h2>
+        <h2 className="font-semibold text-lg mb-4">{t("onThisPage")}</h2>
         <ul className="space-y-2">
           {headings.map((heading) => (
             <li
@@ -86,7 +86,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center justify-between w-full p-4 border rounded-lg bg-card"
         >
-          <span className="font-semibold">{t("tableOfContents")}</span>
+          <span className="font-semibold">{t("onThisPage")}</span>
           <svg
             className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : ""}`}
             fill="none"

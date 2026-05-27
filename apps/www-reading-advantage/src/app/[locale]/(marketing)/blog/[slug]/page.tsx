@@ -76,13 +76,6 @@ async function BlogPost(props: Props) {
       />
       <article className="container mx-auto px-4 py-8">
         <BlogBreadcrumbs postTitle={post.title} />
-        <BlogHeader
-          title={post.title}
-          date={post.date}
-          author={post.author}
-          readingTime={post.readingTime}
-          locale={locale}
-        />
         {post.coverImage && (
           <Image
             src={post.coverImage}
@@ -92,12 +85,22 @@ async function BlogPost(props: Props) {
             className="w-full h-64 object-cover rounded-lg mb-8"
           />
         )}
-        <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+        <BlogHeader
+          title={post.title}
+          date={post.date}
+          author={post.author}
+          readingTime={post.readingTime}
+          locale={locale}
+        />
+        <BlogTags tags={post.tags} className="mb-8" />
+        <div className="border-t" />
+        <div className="lg:grid lg:grid-cols-4 lg:gap-8 mt-8">
           <div className="lg:col-span-3">
             <div
               className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-2xl prose-h3:text-xl prose-a:text-blue-600 prose-strong:text-gray-900 prose-ul:list-disc prose-ol:list-decimal"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
+            <div className="border-t my-8" />
             <ProductCTA product={post.product} locale={locale} />
             <ContactCTA locale={locale} />
           </div>
@@ -105,7 +108,6 @@ async function BlogPost(props: Props) {
             <TableOfContents headings={headings} />
           </div>
         </div>
-        <BlogTags tags={post.tags} />
         <RelatedPosts posts={relatedPosts} locale={locale} />
       </article>
     </main>

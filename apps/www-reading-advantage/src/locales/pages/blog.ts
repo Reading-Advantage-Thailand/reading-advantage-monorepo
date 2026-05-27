@@ -1,20 +1,20 @@
 export const en = {
   title: "Blog",
-  tableOfContents: "Contents",
-  relatedPosts: "Related Posts",
+  onThisPage: "On this page",
+  youMightAlsoLike: "You might also like",
   readingTime: "{count} min read",
 } as const;
 
 export const th = {
   title: "บล็อก",
-  tableOfContents: "สารบัญ",
-  relatedPosts: "โพสต์ที่เกี่ยวข้อง",
+  onThisPage: "บนหน้านี้",
+  youMightAlsoLike: "คุณอาจสนใจ",
   readingTime: "{count} นาทีในการอ่าน",
 } as const;
 
 export const zh = {
   title: "博客",
-  tableOfContents: "目录",
-  relatedPosts: "相关文章",
+  onThisPage: "本页目录",
+  youMightAlsoLike: "你可能还喜欢",
   readingTime: "{count} 分钟阅读",
 } as const;
