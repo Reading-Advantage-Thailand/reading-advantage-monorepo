@@ -1,0 +1,4 @@
+Track: www_i18n_l10n_remediation_20260527
+Summary: Created i18n audit tooling and remediation track for www-reading-advantage.
+Files: scripts/i18n-audit.ts, package.json, tracks.md, measure/tracks/www_i18n_l10n_remediation_20260527/*
+Why: Automated audit found 12 missing translation keys and 183 hardcoded English strings across 19 files. Need structured track to systematically close all gaps.
