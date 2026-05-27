@@ -12,6 +12,7 @@
     "i18n:verify": "tsx scripts/i18n-verify.ts",
     "i18n:tree": "tsx scripts/i18n-tree.ts",
     "i18n:update": "tsx scripts/i18n-update.ts",
+    "i18n:audit": "tsx scripts/i18n-audit.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

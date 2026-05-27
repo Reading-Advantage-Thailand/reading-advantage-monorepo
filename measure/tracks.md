@@ -81,6 +81,9 @@ This file tracks all major tracks for the project.
 - [ ] **Track: Create Unified App Directory Page** *Link: [./tracks/www_app_directory_20260517/](./tracks/www_app_directory_20260517/)*
   Create central app directory (/apps) showcasing all 5 products with role-based filtering (Student, Teacher, Admin, Parent, Intern), helping users navigate the ecosystem and choose the right platform.
 
+- [ ] **Track: www-reading-advantage i18n/l10n Remediation** *Link: [./tracks/www_i18n_l10n_remediation_20260527/](./tracks/www_i18n_l10n_remediation_20260527/)*
+  Remedy 12 missing translation keys (header nav) and 183 hardcoded English strings across 19 page/component files. Covers adaptive engine sections, eyebrow labels, trust signals, device names, alt text, and all remaining JSX text. Audit gate: `npm run i18n:audit` must exit 0.
+
 ---
 
 - [x] **Track: codecamp-advantage — Full-Stack Web Dev Intern Bootcamp**
