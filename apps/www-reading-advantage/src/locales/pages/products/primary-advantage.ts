@@ -52,6 +52,11 @@ export const en = {
       }
     ]
   },
+  cefrLevels: {
+    grades: "Grades",
+    aligned: "Aligned",
+  },
+  support: "Support",
   platformFeatures: {
     heading: "Platform Features",
     features: [
@@ -118,7 +123,19 @@ export const en = {
       signUp: "Contact for Pilot Program",
       freeTrial: "Learn More"
     }
-  }
+  },
+  adaptiveEngine: {
+    eyebrow: "Adaptive Engine",
+    heading: "Primary literacy paths, adapted to every young learner",
+    description: "Powered by Mastery Advantage — the KST + SRS engine that maps every literacy skill and schedules practice at the perfect moment.",
+    alt: "Primary Advantage adaptive learning visualization",
+  },
+  eyebrows: {
+    curriculumAlignment: "Curriculum Alignment",
+    keyFeatures: "Key Features",
+    platformInAction: "Platform in Action",
+    impact: "Impact",
+  },
 } as const;
 
 export const th = {
@@ -175,6 +192,11 @@ export const th = {
       }
     ]
   },
+  cefrLevels: {
+    grades: "ชั้นเรียน",
+    aligned: "สอดคล้อง",
+  },
+  support: "สนับสนุน",
   platformFeatures: {
     heading: "คุณสมบัติแพลตฟอร์ม",
     features: [
@@ -241,7 +263,19 @@ export const th = {
       signUp: "ติดต่อสำหรับโปรแกรมทดลอง",
       freeTrial: "เรียนรู้เพิ่มเติม"
     }
-  }
+  },
+  adaptiveEngine: {
+    eyebrow: "เครื่องยนต์ปรับตัว",
+    heading: "เส้นทางการรู้หนังสือระดับประถม ที่ปรับให้เข้ากับผู้เรียนทุกคน",
+    description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการรู้หนังสือทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+    alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Primary Advantage",
+  },
+  eyebrows: {
+    curriculumAlignment: "การสอดคล้องกับหลักสูตร",
+    keyFeatures: "คุณสมบัติหลัก",
+    platformInAction: "แพลตฟอร์มในการใช้งาน",
+    impact: "ผลกระทบ",
+  },
 } as const;
 
 export const zh = {
@@ -298,6 +332,11 @@ export const zh = {
       }
     ]
   },
+  cefrLevels: {
+    grades: "年级",
+    aligned: "对齐",
+  },
+  support: "支持",
   platformFeatures: {
     heading: "平台功能",
     features: [
@@ -364,5 +403,17 @@ export const zh = {
       signUp: "联系试点项目",
       freeTrial: "了解更多"
     }
-  }
+  },
+  adaptiveEngine: {
+    eyebrow: "自适应引擎",
+    heading: "为每位小学生量身定制的初级读写路径",
+    description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项读写技能并在最佳时刻安排练习。",
+    alt: "Primary Advantage 自适应学习可视化",
+  },
+  eyebrows: {
+    curriculumAlignment: "课程对齐",
+    keyFeatures: "主要特点",
+    platformInAction: "平台实战",
+    impact: "影响力",
+  },
 } as const;

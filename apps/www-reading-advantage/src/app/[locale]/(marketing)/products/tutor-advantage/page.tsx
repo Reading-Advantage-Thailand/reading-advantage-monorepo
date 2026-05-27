@@ -45,7 +45,7 @@ export default async function TutorAdvantage({
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <Image
           src="/images/hero-tutor-advantage.jpg"
-          alt="AI-powered digital tutoring dashboard"
+          alt={t("heroAlt")}
           fill
           sizes="100vw"
           className="object-cover"
@@ -81,7 +81,7 @@ export default async function TutorAdvantage({
               <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-4 shadow-2xl">
                 <Image
                   src="/tutor-advantage.png"
-                  alt="Tutor Advantage Logo"
+                  alt={t("logoAlt")}
                   width={350}
                   height={350}
                   className="w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl"
@@ -99,13 +99,13 @@ export default async function TutorAdvantage({
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
               <span className="uppercase tracking-widest text-xs font-semibold text-emerald-600 mb-4 block">
-                Adaptive Engine
+                {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                AI tutoring, adapted to every student&apos;s level
+                {t("adaptiveEngine.heading")}
               </h2>
               <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                Powered by Mastery Advantage — the KST + SRS engine that maps every skill and schedules practice at the perfect moment.
+                {t("adaptiveEngine.description")}
               </p>
             </div>
             <div className="lg:col-span-7">
@@ -114,7 +114,7 @@ export default async function TutorAdvantage({
                   baseName="ra-marketing-tutor-advantage"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="Tutor Advantage adaptive learning visualization"
+                  alt={t("adaptiveEngine.alt")}
                 />
               </div>
             </div>
@@ -136,10 +136,10 @@ export default async function TutorAdvantage({
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-emerald-200 mb-4 block text-center">
-              THE PROCESS
+              {t("eyebrows.theProcess")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-              How It Works
+              {t("eyebrows.howItWorks")}
             </h2>
             <StepFlow
               data-testid="process-flow"
@@ -177,7 +177,7 @@ export default async function TutorAdvantage({
                   <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
                     <Image
                       src="/images/tutor-advantage-hero.jpg"
-                      alt="Tutor Advantage Platform"
+                      alt={t("platformAlt")}
                       fill
                       sizes="(max-width: 1024px) 100vw, 40vw"
                       className="object-cover"
@@ -188,7 +188,7 @@ export default async function TutorAdvantage({
             </div>
             <div className="lg:col-span-7 order-1 lg:order-2">
               <span className="uppercase tracking-widest text-xs font-semibold text-emerald-600 mb-4 block">
-                AI-POWERED PERSONALIZATION
+                {t("eyebrows.aiPoweredPersonalization")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight">
                 {t("valuePropositions.features.0.title")}
@@ -228,7 +228,7 @@ export default async function TutorAdvantage({
         <div className="container mx-auto px-4 py-24">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-emerald-600 mb-4 block text-center">
-              PLATFORM FEATURES
+              {t("eyebrows.platformFeatures")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-center text-slate-900 mb-16">
               {t("platformFeatures.heading")}
@@ -298,7 +298,7 @@ export default async function TutorAdvantage({
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-emerald-200 mb-4 block text-center">
-              TRUSTED BY EDUCATORS
+              {t("eyebrows.trustedByEducators")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
               {t("trustSignals.heading")}
@@ -361,7 +361,7 @@ export default async function TutorAdvantage({
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <span className="uppercase tracking-widest text-xs font-semibold text-emerald-200 mb-4 block">
-              READY TO START?
+              {t("eyebrows.readyToStart")}
             </span>
             <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 mb-16">
               <div className="text-center">
@@ -369,7 +369,7 @@ export default async function TutorAdvantage({
                   A1–B2
                 </div>
                 <div className="text-emerald-200 font-medium">
-                  CEFR Coverage
+                  {t("eyebrows.cefrCoverage")}
                 </div>
               </div>
               <div className="hidden md:block w-px h-20 bg-emerald-400/40" />
@@ -378,7 +378,7 @@ export default async function TutorAdvantage({
                   2025
                 </div>
                 <div className="text-emerald-200 font-medium">
-                  Launching Soon
+                  {t("eyebrows.launchingSoon")}
                 </div>
               </div>
               <div className="hidden md:block w-px h-20 bg-emerald-400/40" />
@@ -387,7 +387,7 @@ export default async function TutorAdvantage({
                   AI
                 </div>
                 <div className="text-emerald-200 font-medium">
-                  Powered Learning
+                  {t("eyebrows.poweredLearning")}
                 </div>
               </div>
             </div>

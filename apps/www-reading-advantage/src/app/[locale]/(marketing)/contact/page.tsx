@@ -41,7 +41,7 @@ export default async function ContactPage() {
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-              Get in Touch
+              {t("getInTouch")}
             </span>
             <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
               {t("connectWithUs")}
@@ -105,10 +105,10 @@ export default async function ContactPage() {
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-              Connect With Us
+              {t("connectWithUs")}
             </span>
             <h2 className="text-3xl font-bold text-sky-900 tracking-tight">
-              Stay Connected
+              {t("stayConnected")}
             </h2>
           </div>
 
@@ -143,7 +143,7 @@ export default async function ContactPage() {
                 <div className="flex items-center justify-center bg-white rounded-xl p-4 mb-3">
                   <Image
                     src="/line-qr.jpg"
-                    alt="Line QR Code"
+                    alt={t("lineQrCode")}
                     width={200}
                     height={200}
                     className="rounded-xl"

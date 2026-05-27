@@ -94,7 +94,7 @@ export default async function CaseStudies() {
                   <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl">
                     <Image
                       src={index === 0 ? "/images/students-engaging-with-app.png" : "/images/students-with-app.png"}
-                      alt="Students actively engaged with Reading Advantage app on tablets during classroom activity"
+                      alt={t("altTexts.studentsEngaged")}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover"
@@ -103,7 +103,7 @@ export default async function CaseStudies() {
                   <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl">
                     <Image
                       src="/images/teacher-assisting-students.png"
-                      alt="Teacher providing personalized assistance to students using Reading Advantage platform"
+                      alt={t("altTexts.teacherAssistance")}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover"
@@ -112,7 +112,7 @@ export default async function CaseStudies() {
                   <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl">
                     <Image
                       src={index === 0 ? "/images/small-group.png" : "/images/teacher-at-board.png"}
-                      alt="Small collaborative group learning session with students working together"
+                      alt={t("altTexts.collaborativeGroup")}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover"
@@ -209,10 +209,10 @@ export default async function CaseStudies() {
                       </div>
                     </div>
                     <p className="text-slate-700 leading-relaxed italic">
-                      &ldquo;{school.testimonial.quote}&rdquo;
+                      {t("testimonial.quote", { quote: school.testimonial.quote })}
                     </p>
                     <div className="mt-4 text-sm text-slate-600">
-                      — {school.testimonial.school}
+                      {t("testimonial.attribution", { school: school.testimonial.school })}
                     </div>
                   </div>
                 </div>
@@ -222,7 +222,7 @@ export default async function CaseStudies() {
                   <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl">
                     <Image
                       src="/images/teacher-and-dashboard.png"
-                      alt="Teacher analytics dashboard displaying real-time student progress data and performance metrics"
+                      alt={t("altTexts.teacherDashboard")}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"
@@ -231,7 +231,7 @@ export default async function CaseStudies() {
                   <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl">
                     <Image
                       src="/images/workbook-cover.png"
-                      alt="Physical student workbook with structured reading exercises and guided activities"
+                      alt={t("altTexts.studentWorkbook")}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"

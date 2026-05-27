@@ -48,15 +48,13 @@ export default async function FeaturesPage() {
           <div className="grid lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
             <div className="lg:col-span-7">
               <span className="uppercase tracking-widest text-xs font-semibold text-sky-200 mb-4 block">
-                AI-Powered Platform
+                {t("hero.eyebrow")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-                Personalized Learning at Scale
+                {t("hero.heading")}
               </h2>
               <p className="text-lg text-sky-100 leading-relaxed mb-8">
-                Our advanced AI engine adapts to every learner in real time,
-                generating content matched to their exact reading level,
-                interests, and learning goals.
+                {t("hero.descriptionFull")}
               </p>
               <Button variant="white" size="lg" asChild>
                 <Link href="/contact">
@@ -71,7 +69,7 @@ export default async function FeaturesPage() {
                 <div className="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6">
                   <Image
                     src="/images/students-with-app.png"
-                    alt="Students using Reading Advantage app"
+                    alt={t("hero.alt")}
                     width={500}
                     height={400}
                     className="rounded-2xl object-contain"
@@ -88,10 +86,10 @@ export default async function FeaturesPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-              Platform Features
+              {t("platformFeatures.heading")}
             </span>
             <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
-              Everything You Need
+              {t("platformFeatures.subheading")}
             </h2>
           </div>
 
@@ -118,10 +116,10 @@ export default async function FeaturesPage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-                Comparison
+                {t("comparison.heading")}
               </span>
               <h2 className="text-3xl font-bold text-sky-900 tracking-tight">
-                How We Compare
+                {t("comparison.subheading")}
               </h2>
             </div>
             <ComparisonTable />

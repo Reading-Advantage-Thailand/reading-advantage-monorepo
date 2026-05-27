@@ -3,6 +3,8 @@ export const en = {
         title: "Services",
         subtitle: "How We Deliver Value to Your School",
         description: "From comprehensive platforms to fully managed solutions, we offer flexible delivery models tailored to Thai schools' needs.",
+        heading: "Our Services",
+        subheading: "Solutions for Every School",
     },
     services: [
         {
@@ -84,6 +86,8 @@ export const th = {
         title: "บริการ",
         subtitle: "วิธีที่เราส่งมอบมูลค่าให้โรงเรียนของคุณ",
         description: "จากแพลตฟอร์มที่ครอบคลุมไปจนถึงโซลูชันที่จัดการได้ครบถ้วน เรามอบรูปแบบการส่งมอบที่ยืดหยบ่ท์กับความต้องการของโรงเรียนไทย",
+        heading: "บริการของเรา",
+        subheading: "โซลูชันสำหรับทุกโรงเรียน",
     },
     services: [
         {
@@ -165,6 +169,8 @@ export const zh = {
         title: "服务",
         subtitle: "我们如何为您的学校创造价值",
         description: "从综合平台到完全托管解决方案，我们提供专为泰国学校需求量身定制的灵活交付模式。",
+        heading: "我们的服务",
+        subheading: "适合每所学校的解决方案",
     },
     services: [
         {

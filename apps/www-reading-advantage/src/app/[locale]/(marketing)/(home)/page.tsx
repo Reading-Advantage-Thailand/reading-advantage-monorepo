@@ -92,7 +92,7 @@ export default async function Home({
                 </div>
                 <div>
                   <dd className="text-3xl md:text-4xl font-semibold tracking-tight text-black">
-                    KST+SRS
+                    {t("kstSrs")}
                   </dd>
                   <dt className="text-xs uppercase tracking-wider text-[#9f9b93] mt-2">
                     {t("hero.stats.engine")}
@@ -228,7 +228,7 @@ export default async function Home({
                 className="border border-sky-700 rounded-2xl p-8 bg-sky-900/40 backdrop-blur-sm"
               >
                 <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300 mb-6 block">
-                  Challenge 0{i + 1}
+                  {t("challengeLabel", { num: i + 1 })}
                 </span>
                 <h3 className="text-xl font-semibold tracking-tight text-white mb-4">
                   {item.title}

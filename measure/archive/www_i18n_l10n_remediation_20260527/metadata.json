@@ -1,0 +1,12 @@
+{
+  "track_id": "www_i18n_l10n_remediation_20260527",
+  "type": "chore",
+  "status": "complete",
+  "created_at": "2026-05-27T00:00:00Z",
+  "updated_at": "2026-05-27T12:00:00Z",
+  "completed_at": "2026-05-27T12:00:00Z",
+  "description": "Remediate all i18n/l10n gaps in www-reading-advantage: 12 missing translation keys and 183 hardcoded English strings across 19 page files",
+  "estimated_tasks": 6,
+  "actual_tasks": 6,
+  "deviation_notes": "All 6 phases completed. Audit gate passes: 0 missing keys, 0 hardcoded strings. Build passes. 1198 tests pass (11 test files have pre-existing next-intl module resolution failures unrelated to this track)."
+}

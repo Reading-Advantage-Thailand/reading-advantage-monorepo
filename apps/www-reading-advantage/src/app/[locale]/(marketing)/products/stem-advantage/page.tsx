@@ -41,7 +41,7 @@ export default async function StemAdvantage({
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <Image
           src="/images/hero-stem-advantage.jpg"
-          alt="Digital STEM workspace"
+          alt={t("heroAlt")}
           fill
           sizes="100vw"
           className="object-cover"
@@ -92,13 +92,13 @@ export default async function StemAdvantage({
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
               <span className="uppercase tracking-widest text-xs font-semibold text-indigo-600 mb-4 block">
-                Adaptive Engine
+                {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Project-based STEM learning, adapted to each student
+                {t("adaptiveEngine.heading")}
               </h2>
               <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                Powered by Mastery Advantage — the KST + SRS engine that maps every STEM skill and schedules practice at the perfect moment.
+                {t("adaptiveEngine.description")}
               </p>
             </div>
             <div className="lg:col-span-7">
@@ -107,7 +107,7 @@ export default async function StemAdvantage({
                   baseName="ra-marketing-stem-advantage"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="STEM Advantage adaptive learning visualization"
+                  alt={t("adaptiveEngine.alt")}
                 />
               </div>
             </div>
@@ -120,7 +120,7 @@ export default async function StemAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-indigo-100 block mb-4">
-              GRADE LEVELS
+              {t("eyebrows.gradeLevels")}
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-16">
               {t("gradeBreakdown.heading")}
@@ -155,14 +155,14 @@ export default async function StemAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-indigo-600 block mb-4">
-              75% CODING, 25% STEM
+              {t("eyebrows.codingStem")}
             </span>
             <div className="grid lg:grid-cols-12 gap-12 items-center">
               <div className="lg:col-span-5 flex justify-center">
                 <div className="relative w-full max-w-md aspect-square">
                   <Image
                     src="/images/stem-advantage-hero.jpg"
-                    alt="STEM Advantage students coding and building"
+                    alt={t("codingAlt")}
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
                     className="object-cover rounded-3xl"
@@ -251,7 +251,7 @@ export default async function StemAdvantage({
         <div className="container mx-auto px-4 py-24">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-indigo-100 block mb-4">
-              BENEFITS
+              {t("eyebrows.benefits")}
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-16">
               {t("benefits.heading")}
@@ -325,7 +325,7 @@ export default async function StemAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-slate-500 block mb-4">
-              TECHNICAL REQUIREMENTS
+              {t("eyebrows.technicalRequirements")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-12">
               {t("technicalRequirements.heading")}

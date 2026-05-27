@@ -135,13 +135,13 @@ export default async function PrimaryAdvantage({
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
               <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
-                Adaptive Engine
+                {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Primary literacy paths, adapted to every young learner
+                {t("adaptiveEngine.heading")}
               </h2>
               <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                Powered by Mastery Advantage — the KST + SRS engine that maps every literacy skill and schedules practice at the perfect moment.
+                {t("adaptiveEngine.description")}
               </p>
             </div>
             <div className="lg:col-span-7">
@@ -150,7 +150,7 @@ export default async function PrimaryAdvantage({
                   baseName="ra-marketing-primary-advantage"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="Primary Advantage adaptive learning visualization"
+                  alt={t("adaptiveEngine.alt")}
                 />
               </div>
             </div>
@@ -164,7 +164,7 @@ export default async function PrimaryAdvantage({
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-cyan-100 mb-4 block">
-              Curriculum Alignment
+              {t("eyebrows.curriculumAlignment")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold">
               {t("cefrSection.heading")}
@@ -196,17 +196,17 @@ export default async function PrimaryAdvantage({
               </div>
               {/* Floating feature badges */}
               <div className="absolute -top-4 -right-4 animate-in fade-in zoom-in duration-700">
-                <FloatingPill value="3-6" label="Grades" variant="cyan" size="sm" />
+                <FloatingPill value="3-6" label={t("cefrLevels.grades")} variant="cyan" size="sm" />
               </div>
               <div className="absolute -bottom-4 -left-4 animate-in fade-in zoom-in duration-700 delay-150">
-                <FloatingPill value="CEFR" label="Aligned" variant="sky" size="sm" />
+                <FloatingPill value="CEFR" label={t("cefrLevels.aligned")} variant="sky" size="sm" />
               </div>
             </div>
 
             {/* Text RIGHT (7 cols) */}
             <div className="lg:col-span-7">
               <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
-                Key Features
+                {t("eyebrows.keyFeatures")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8">
                 {t("keyFeatures.heading")}
@@ -249,7 +249,7 @@ export default async function PrimaryAdvantage({
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
-              Platform in Action
+              {t("eyebrows.platformInAction")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
               {t("platformFeatures.heading")}
@@ -287,7 +287,7 @@ export default async function PrimaryAdvantage({
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
-              Impact
+              {t("eyebrows.impact")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
               {t("resultsSection.heading")}
@@ -345,7 +345,7 @@ export default async function PrimaryAdvantage({
           <FloatingPill value="AI" label="Powered" variant="sky" size="sm" />
         </div>
         <div className="absolute bottom-10 right-10 animate-bounce duration-[4000ms]">
-          <FloatingPill value="24/7" label="Support" variant="cyan" size="sm" />
+          <FloatingPill value="24/7" label={t("support")} variant="cyan" size="sm" />
         </div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">

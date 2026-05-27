@@ -13,6 +13,8 @@ export const en = {
     cta: "Request Demo",
     secondaryCta: "Learn More",
   },
+  heroAlt: "Digital science discovery platform",
+  logoAlt: "Science Advantage Logo",
   coreValue: {
     heading: "Transforming Science Education",
     features: [
@@ -116,6 +118,17 @@ export const en = {
       contactSales: "Contact Sales",
     },
   },
+  adaptiveEngine: {
+    eyebrow: "Adaptive Engine",
+    heading: "Inquiry-based science, personalized for every student",
+    description: "Powered by Mastery Advantage — the KST + SRS engine that maps every science skill and schedules practice at the perfect moment.",
+    alt: "Science Advantage adaptive learning visualization",
+  },
+  eyebrows: {
+    whyScienceAdvantage: "WHY SCIENCE ADVANTAGE",
+    ngssAligned: "NGSS ALIGNED",
+    builtFor: "BUILT FOR",
+  },
 };
 
 export const th = {
@@ -133,6 +146,8 @@ export const th = {
     cta: "ขอสาธิต",
     secondaryCta: "เรียนรู้เพิ่มเติม",
   },
+  heroAlt: "แพลตฟอร์มค้นพบวิทยาศาสตร์ดิจิทัล",
+  logoAlt: "โลโก้ Science Advantage",
   coreValue: {
     heading: "เปลี่ยนแปลงการศึกษาวิทยาศาสตร์",
     features: [
@@ -236,6 +251,17 @@ export const th = {
       contactSales: "ติดต่อฝ่ายขาย",
     },
   },
+  adaptiveEngine: {
+    eyebrow: "เครื่องยนต์ปรับตัว",
+    heading: "วิทยาศาสตร์จากการสอบถาม ปรับแต่งสำหรับนักเรียนทุกคน",
+    description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะวิทยาศาสตร์ทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+    alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Science Advantage",
+  },
+  eyebrows: {
+    whyScienceAdvantage: "ทำไมต้อง SCIENCE ADVANTAGE",
+    ngssAligned: "สอดคล้อง NGSS",
+    builtFor: "สร้างขึ้นสำหรับ",
+  },
 };
 
 export const zh = {
@@ -252,6 +278,8 @@ export const zh = {
     cta: "申请演示",
     secondaryCta: "了解更多",
   },
+  heroAlt: "数字科学发现平台",
+  logoAlt: "Science Advantage 标志",
   coreValue: {
     heading: "改变科学教育",
     features: [
@@ -352,5 +380,16 @@ export const zh = {
       requestDemo: "申请演示",
       contactSales: "联系销售",
     },
+  },
+  adaptiveEngine: {
+    eyebrow: "自适应引擎",
+    heading: "基于探究的科学教育，为每位学生个性化",
+    description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项科学技能并在最佳时刻安排练习。",
+    alt: "Science Advantage 自适应学习可视化",
+  },
+  eyebrows: {
+    whyScienceAdvantage: "为什么选择 SCIENCE ADVANTAGE",
+    ngssAligned: "NGSS 对齐",
+    builtFor: "专为",
   },
 };

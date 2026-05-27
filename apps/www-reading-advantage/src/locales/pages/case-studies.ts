@@ -7,6 +7,17 @@ export const en = {
     },
     implementationPeriod: "Implementation Period: ",
     highlights: "Key Highlights:",
+    altTexts: {
+        studentsEngaged: "Students actively engaged with Reading Advantage app on tablets during classroom activity",
+        teacherAssistance: "Teacher providing personalized assistance to students using Reading Advantage platform",
+        collaborativeGroup: "Small collaborative group learning session with students working together",
+        teacherDashboard: "Teacher analytics dashboard displaying real-time student progress data and performance metrics",
+        studentWorkbook: "Physical student workbook with structured reading exercises and guided activities",
+    },
+    testimonial: {
+        quote: "\u201C{quote}\u201D",
+        attribution: "\u2014 {school}",
+    },
     schools: [
         {
             name: "School A (Coming Soon)",
@@ -117,6 +128,17 @@ export const th = {
     },
     implementationPeriod: "ระยะเวลาการนำไปใช้: ",
     highlights: "จุดเด่นหลัก:",
+    altTexts: {
+        studentsEngaged: "นักเรียนมีส่วนร่วมอย่างมากกับแอป Reading Advantage บนแท็บเล็ตในกิจกรรมห้องเรียน",
+        teacherAssistance: "ครูให้ความช่วยเหลือเฉพาะบุคคลแก่นักเรียนโดยใช้แพลตฟอร์ม Reading Advantage",
+        collaborativeGroup: "กลุ่มการเรียนรู้ร่วมมือขนาดเล็กที่นักเรียนทำงานร่วมกัน",
+        teacherDashboard: "แดชบอร์ดการวิเคราะห์ของครูแสดงข้อมูลความก้าวหน้าของนักเรียนแบบเรียลไทม์และตัวชี้วัดประสิทธิภาพ",
+        studentWorkbook: "หนังสือแบบฝึกหัดนักเรียนทางกายภาพพร้อมแบบฝึกหัดการอ่านที่มีโครงสร้างและกิจกรรมแนะนำ",
+    },
+    testimonial: {
+        quote: "\u201C{quote}\u201D",
+        attribution: "\u2014 {school}",
+    },
     schools: [
         {
             name: "โรงเรียน A (เร็วๆ นี้)",
@@ -227,6 +249,17 @@ export const zh = {
     },
     implementationPeriod: "实施周期: ",
     highlights: "主要亮点:",
+    altTexts: {
+        studentsEngaged: "学生在课堂活动中使用平板电脑积极使用Reading Advantage应用",
+        teacherAssistance: "教师使用Reading Advantage平台为学生提供个性化协助",
+        collaborativeGroup: "小型协作学习小组，学生共同学习",
+        teacherDashboard: "教师分析仪表板显示实时学生进度数据和绩效指标",
+        studentWorkbook: "实体学生练习册，包含结构化阅读练习和指导活动",
+    },
+    testimonial: {
+        quote: "\u201C{quote}\u201D",
+        attribution: "\u2014 {school}",
+    },
     schools: [
         {
             name: "学校 A（即将推出）",

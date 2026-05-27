@@ -163,6 +163,32 @@ export const en = {
             freeTrial: "Start Free Trial",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "Adaptive Engine",
+        heading: "Personalized reading paths for every student",
+        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every reading skill and schedules practice at the perfect moment.",
+        alt: "Reading Advantage adaptive learning visualization",
+    },
+    eyebrows: {
+        platform: "PLATFORM",
+        blendedLearning: "BLENDED LEARNING",
+        educationalGames: "EDUCATIONAL GAMES",
+        results: "RESULTS",
+        getStarted: "GET STARTED",
+    },
+    devices: {
+        desktop: "Desktop",
+        tablet: "Tablet",
+        mobile: "Mobile",
+    },
+    altText: {
+        desktop: "Reading Advantage app displayed on desktop computer screen showing student dashboard",
+        tablet: "Reading Advantage app displayed on tablet device with reading exercises interface",
+        mobile: "Reading Advantage app displayed on mobile phone with personalized learning interface",
+        blendedLearningTeacher: "Teacher demonstrating blended learning approach with Reading Advantage materials",
+        blendedLearningWorkbook: "Reading Advantage student workbook with guided reading exercises and activities",
+        studentsAtBoard: "Students using Reading Advantage platform",
+    },
 };
 
 export const th = {
@@ -330,6 +356,32 @@ export const th = {
             freeTrial: "เริ่มทดลองใช้ฟรี",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "เครื่องยนต์ปรับตัว",
+        heading: "เส้นทางการอ่านที่ปรับแต่งเฉพาะบุคคลสำหรับนักเรียนทุกคน",
+        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการอ่านทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+        alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Reading Advantage",
+    },
+    eyebrows: {
+        platform: "แพลตฟอร์ม",
+        blendedLearning: "การเรียนแบบผสมผสาน",
+        educationalGames: "เกมการศึกษา",
+        results: "ผลลัพธ์",
+        getStarted: "เริ่มต้นใช้งาน",
+    },
+    devices: {
+        desktop: "เดสก์ท็อป",
+        tablet: "แท็บเล็ต",
+        mobile: "มือถือ",
+    },
+    altText: {
+        desktop: "แอป Reading Advantage แสดงบนหน้าจอคอมพิวเตอร์เดสก์ท็อปแสดงแดชบอร์ดนักเรียน",
+        tablet: "แอป Reading Advantage บนอุปกรณ์แท็บเล็ตพร้อมอินเทอร์เฟซแบบฝึกหัดการอ่าน",
+        mobile: "แอป Reading Advantage บนโทรศัพท์มือถือพร้อมอินเทอร์เฟซการเรียนรู้ส่วนบุคคล",
+        blendedLearningTeacher: "ครูสาธิตวิธีการเรียนแบบผสมผสานด้วยสื่อ Reading Advantage",
+        blendedLearningWorkbook: "หนังสือนักเรียน Reading Advantage พร้อมแบบฝึกหัดการอ่านที่มีคำแนะนำ",
+        studentsAtBoard: "นักเรียนใช้แพลตฟอร์ม Reading Advantage",
+    },
 };
 
 export const zh = {
@@ -496,5 +548,31 @@ export const zh = {
             signUp: "为您的学校注册",
             freeTrial: "开始免费试用",
         },
+    },
+    adaptiveEngine: {
+        eyebrow: "自适应引擎",
+        heading: "为每位学生量身定制的个性化阅读路径",
+        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项阅读技能并在最佳时刻安排练习。",
+        alt: "Reading Advantage 自适应学习可视化",
+    },
+    eyebrows: {
+        platform: "平台",
+        blendedLearning: "混合学习",
+        educationalGames: "教育游戏",
+        results: "成果",
+        getStarted: "立即开始",
+    },
+    devices: {
+        desktop: "桌面端",
+        tablet: "平板端",
+        mobile: "移动端",
+    },
+    altText: {
+        desktop: "Reading Advantage 应用在桌面电脑屏幕上显示学生仪表板",
+        tablet: "Reading Advantage 应用在平板设备上显示阅读练习界面",
+        mobile: "Reading Advantage 应用在手机上显示个性化学习界面",
+        blendedLearningTeacher: "教师使用 Reading Advantage 教材演示混合学习方法",
+        blendedLearningWorkbook: "Reading Advantage 学生练习册包含引导性阅读练习和活动",
+        studentsAtBoard: "学生使用 Reading Advantage 平台",
     },
 };

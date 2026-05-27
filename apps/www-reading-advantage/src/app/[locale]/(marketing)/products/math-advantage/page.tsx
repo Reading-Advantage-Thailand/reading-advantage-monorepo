@@ -79,7 +79,7 @@ export default async function MathAdvantage({
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <Image
           src="/images/hero-math-advantage.jpg"
-          alt="Interactive digital math learning environment"
+          alt={t("heroAlt")}
           fill
           sizes="100vw"
           className="object-cover"
@@ -111,7 +111,7 @@ export default async function MathAdvantage({
               <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-4 shadow-2xl">
                 <Image
                   src="/math-advantage.png"
-                  alt="Math Advantage Logo"
+                  alt={t("logoAlt")}
                   width={350}
                   height={350}
                   className="w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl"
@@ -129,13 +129,13 @@ export default async function MathAdvantage({
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
               <span className="uppercase tracking-widest text-xs font-semibold text-orange-600 mb-4 block">
-                Adaptive Engine
+                {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Personalized math paths for every student
+                {t("adaptiveEngine.heading")}
               </h2>
               <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                Powered by Mastery Advantage — the KST + SRS engine that maps every math skill and schedules practice at the perfect moment.
+                {t("adaptiveEngine.description")}
               </p>
             </div>
             <div className="lg:col-span-7">
@@ -144,7 +144,7 @@ export default async function MathAdvantage({
                   baseName="ra-marketing-math-advantage"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="Math Advantage adaptive learning visualization"
+                  alt={t("adaptiveEngine.alt")}
                 />
               </div>
             </div>
@@ -158,7 +158,7 @@ export default async function MathAdvantage({
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-orange-100 mb-4 block">
-              Subjects Covered
+              {t("eyebrows.subjectsCovered")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold">
               {t("subjectCoverage.heading")}
@@ -191,7 +191,7 @@ export default async function MathAdvantage({
             {/* Text LEFT (7 cols) */}
             <div className="lg:col-span-7">
               <span className="uppercase tracking-widest text-xs font-semibold text-orange-600 mb-4 block">
-                Smart Problem Generation
+                {t("eyebrows.smartProblemGeneration")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
                 {t("keyFeatures.smartProblemGeneration.title")}
@@ -213,7 +213,7 @@ export default async function MathAdvantage({
               <div className="relative aspect-square rounded-[40px] overflow-hidden shadow-xl">
                 <Image
                   src="/images/math-advantage-hero.jpg"
-                  alt="Math Advantage platform showing AI-powered problem generation"
+                  alt={t("problemGenerationAlt")}
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className="object-cover"
@@ -238,7 +238,7 @@ export default async function MathAdvantage({
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-orange-400 mb-4 block">
-              Benefits
+              {t("eyebrows.benefits")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-white">
               {t("benefits.heading")}
@@ -276,17 +276,17 @@ export default async function MathAdvantage({
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-orange-600 mb-4 block">
-              Results
+              {t("eyebrows.results")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
-              Proven Impact
+              {t("eyebrows.provenImpact")}
             </h2>
           </div>
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 max-w-4xl mx-auto">
             <div data-testid="stat-pill" className="md:-translate-y-6">
               <FloatingPill
                 value="3×"
-                label="Faster Learning"
+                label={t("statsBenefits.fasterLearning")}
                 variant="orange"
                 size="md"
               />
@@ -294,7 +294,7 @@ export default async function MathAdvantage({
             <div className="z-10">
               <FloatingPill
                 value="95%"
-                label="Confidence Boost"
+                label={t("statsBenefits.confidenceBoost")}
                 variant="amber"
                 size="lg"
               />
@@ -302,7 +302,7 @@ export default async function MathAdvantage({
             <div data-testid="stat-pill" className="md:translate-y-6">
               <FloatingPill
                 value="24/7"
-                label="AI Support"
+                label={t("statsBenefits.aiSupport")}
                 variant="orange"
                 size="md"
               />
@@ -334,7 +334,7 @@ export default async function MathAdvantage({
               className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-orange-700"
             >
               <Check className="w-5 h-5" />
-              Contact Us
+              {t("cta.contactUs")}
             </Link>
           </div>
         </div>

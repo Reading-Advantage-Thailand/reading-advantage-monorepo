@@ -5,6 +5,14 @@ export const en = {
         description: "Experience personalized math tutoring that combines proven teaching methods with advanced AI technology, adapting to your learning pace and style. Designed for grades 7-12.",
         comingSoon: "Coming in 2026",
     },
+    heroAlt: "Interactive digital math learning environment",
+    logoAlt: "Math Advantage Logo",
+    problemGenerationAlt: "Math Advantage platform showing AI-powered problem generation",
+    statsBenefits: {
+        fasterLearning: "Faster Learning",
+        confidenceBoost: "Confidence Boost",
+        aiSupport: "AI Support",
+    },
     keyFeatures: {
         heading: "Key Features",
         smartProblemGeneration: {
@@ -65,6 +73,20 @@ export const en = {
         heading: "Ready to Transform Your Math Journey?",
         description: "Join our waitlist to be the first to experience Math Advantage in 2026.",
         button: "Join Waitlist",
+        contactUs: "Contact Us",
+    },
+    adaptiveEngine: {
+        eyebrow: "Adaptive Engine",
+        heading: "Personalized math paths for every student",
+        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every math skill and schedules practice at the perfect moment.",
+        alt: "Math Advantage adaptive learning visualization",
+    },
+    eyebrows: {
+        subjectsCovered: "Subjects Covered",
+        smartProblemGeneration: "Smart Problem Generation",
+        benefits: "Benefits",
+        results: "Results",
+        provenImpact: "Proven Impact",
     },
 };
 
@@ -74,6 +96,14 @@ export const th = {
         subtitle: "การสอนคณิตศาสตร์ที่ปฏิวัติด้วย AI",
         description: "สัมผัสการสอนคณิตศาสตร์เฉพาะบุคคลด้วย AI ที่ก้าวหน้า พร้อมการปรับตัวตามจังหวะและสไตล์การเรียนรู้ของคุณ ออกแบบมาสำหรับชั้นมัธยมศึกษาป.1-ป.6",
         comingSoon: "เปิดตัวในปี 2026",
+    },
+    heroAlt: "สภาพแวดล้อมการเรียนรู้คณิตศาสตร์ดิจิทัลแบบโต้ตอบ",
+    logoAlt: "โลโก้ Math Advantage",
+    problemGenerationAlt: "แพลตฟอร์ม Math Advantage แสดงการสร้างโจทย์ที่ขับเคลื่อนด้วย AI",
+    statsBenefits: {
+        fasterLearning: "การเรียนรู้ที่เร็วขึ้น",
+        confidenceBoost: "เพิ่มความมั่นใจ",
+        aiSupport: "การสนับสนุน AI",
     },
     keyFeatures: {
         heading: "คุณสมบัติเด่น",
@@ -135,6 +165,20 @@ export const th = {
         heading: "พร้อมเปลี่ยนเส้นทางการเรียนคณิตศาสตร์ของคุณแล้วหรือยัง?",
         description: "เข้าร่วมรายชื่อรอเพื่อเป็นคนแรกที่ได้สัมผัสแมธแอดแวนเทจในปี 2026",
         button: "เข้าร่วมรายชื่อรอ",
+        contactUs: "ติดต่อเรา",
+    },
+    adaptiveEngine: {
+        eyebrow: "เครื่องยนต์ปรับตัว",
+        heading: "เส้นทางคณิตศาสตร์ที่ปรับแต่งเฉพาะบุคคลสำหรับนักเรียนทุกคน",
+        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะคณิตศาสตร์ทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+        alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Math Advantage",
+    },
+    eyebrows: {
+        subjectsCovered: "วิชาที่ครอบคลุม",
+        smartProblemGeneration: "การสร้างโจทย์อัจฉริยะ",
+        benefits: "ประโยชน์",
+        results: "ผลลัพธ์",
+        provenImpact: "ผลกระทบจริง",
     },
 };
 
@@ -144,6 +188,14 @@ export const zh = {
         subtitle: "革命性的 AI 增强数学辅导",
         description: "体验个性化的数学辅导，结合先进的 AI 技术，适应您的学习节奏和风格。专为7-12年级设计。",
         comingSoon: "2026年推出",
+    },
+    heroAlt: "交互式数字数学学习环境",
+    logoAlt: "Math Advantage 标志",
+    problemGenerationAlt: "Math Advantage 平台展示AI驱动的题目生成",
+    statsBenefits: {
+        fasterLearning: "学习更快",
+        confidenceBoost: "信心提升",
+        aiSupport: "AI 支持",
     },
     keyFeatures: {
         heading: "主要功能",
@@ -205,5 +257,19 @@ export const zh = {
         heading: "准备好改变您的数学旅程了吗？",
         description: "加入我们的候补名单，成为首批体验2026年推出的数学优势的人",
         button: "加入候补名单",
+        contactUs: "联系我们",
+    },
+    adaptiveEngine: {
+        eyebrow: "自适应引擎",
+        heading: "为每位学生量身定制的个性化数学路径",
+        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项数学技能并在最佳时刻安排练习。",
+        alt: "Math Advantage 自适应学习可视化",
+    },
+    eyebrows: {
+        subjectsCovered: "涵盖科目",
+        smartProblemGeneration: "智能题目生成",
+        benefits: "优势",
+        results: "成果",
+        provenImpact: "实证效果",
     },
 };

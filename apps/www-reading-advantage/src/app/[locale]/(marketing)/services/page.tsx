@@ -51,10 +51,10 @@ export default async function Services() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-                Our Services
+                {t("hero.heading")}
               </span>
               <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
-                Solutions for Every School
+                {t("hero.subheading")}
               </h2>
             </div>
 

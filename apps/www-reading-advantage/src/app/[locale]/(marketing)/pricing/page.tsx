@@ -49,22 +49,22 @@ export default async function PricingPage() {
               <div className="w-14 h-14 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-lg">
                 <Shield className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">No Hidden Fees</h3>
-              <p className="text-slate-600 text-sm">Transparent pricing with everything included</p>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">{t("trustSignals.noHiddenFees.title")}</h3>
+              <p className="text-slate-600 text-sm">{t("trustSignals.noHiddenFees.description")}</p>
             </div>
             <div className="bg-white rounded-3xl p-8 shadow-lg text-center hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
               <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-lg">
                 <Zap className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Instant Setup</h3>
-              <p className="text-slate-600 text-sm">Get started in minutes, not days</p>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">{t("trustSignals.instantSetup.title")}</h3>
+              <p className="text-slate-600 text-sm">{t("trustSignals.instantSetup.description")}</p>
             </div>
             <div className="bg-white rounded-3xl p-8 shadow-lg text-center hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
               <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-lg">
                 <Users className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Dedicated Support</h3>
-              <p className="text-slate-600 text-sm">Expert help whenever you need it</p>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">{t("trustSignals.dedicatedSupport.title")}</h3>
+              <p className="text-slate-600 text-sm">{t("trustSignals.dedicatedSupport.description")}</p>
             </div>
           </div>
         </div>
@@ -75,10 +75,10 @@ export default async function PricingPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-              Pricing Plans
+              {t("pricingPlans.heading")}
             </span>
             <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
-              Choose Your Plan
+              {t("pricingPlans.subheading")}
             </h2>
           </div>
           <PricingTable />

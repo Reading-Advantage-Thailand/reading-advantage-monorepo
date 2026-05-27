@@ -3,7 +3,10 @@ export const en = {
     description:
         "Get in touch with our team. We're here to help with any questions about our educational solutions.",
     subtitle: "Reach out through any of these channels",
+    getInTouch: "Get in Touch",
     connectWithUs: "Connect With Us",
+    stayConnected: "Stay Connected",
+    lineQrCode: "Line QR Code",
     email: {
         title: "Email Us",
         description: "Send us an email and we'll get back to you as soon as possible.",
@@ -41,7 +44,10 @@ export const th = {
     description:
         "ติดต่อทีมงานของเรา เรายินดีช่วยเหลือทุกคำถามเกี่ยวกับโซลูชันการศึกษาของเรา",
     subtitle: "ติดต่อเราผ่านช่องทางใดก็ได้",
+    getInTouch: "ติดต่อเรา",
     connectWithUs: "ติดต่อกับเรา",
+    stayConnected: "เชื่อมต่อกันอยู่",
+    lineQrCode: "รหัส QR ของ Line",
     email: {
         title: "อีเมล",
         description: "ส่งอีเมลถึงเราและเราจะติดต่อกลับโดยเร็วที่สุด",
@@ -79,7 +85,10 @@ export const zh = {
     description:
         "与我们的团队取得联系。我们随时为您解答关于教育解决方案的任何问题。",
     subtitle: "通过以下任一渠道与我们联系",
+    getInTouch: "联系我们",
     connectWithUs: "联系我们",
+    stayConnected: "保持联系",
+    lineQrCode: "Line 二维码",
     email: {
         title: "发送邮件",
         description: "给我们发送电子邮件，我们会尽快回复您。",

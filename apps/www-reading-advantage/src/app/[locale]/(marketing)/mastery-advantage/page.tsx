@@ -94,7 +94,7 @@ export default async function MasteryAdvantagePage({
                   baseName="ma-marketing-adaptive-path"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="Adaptive learning path visualization"
+                  alt={t("altTexts.adaptivePath")}
                 />
               </div>
             </div>
@@ -114,7 +114,7 @@ export default async function MasteryAdvantagePage({
                   baseName="ma-marketing-spaced-repetition"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="Spaced repetition visualization"
+                  alt={t("altTexts.spacedRepetition")}
                 />
               </div>
             </div>
@@ -158,7 +158,7 @@ export default async function MasteryAdvantagePage({
                   baseName="ma-marketing-progress"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="Progress tracking visualization"
+                  alt={t("altTexts.progressTracking")}
                 />
               </div>
             </div>

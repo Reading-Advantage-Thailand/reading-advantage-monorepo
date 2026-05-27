@@ -46,7 +46,7 @@ export default async function CodeCampAdvantage({
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <Image
           src="/images/hero-codecamp-advantage.jpg"
-          alt="Abstract digital coding creation landscape"
+          alt={t("heroAlt")}
           fill
           sizes="100vw"
           className="object-cover"
@@ -82,7 +82,7 @@ export default async function CodeCampAdvantage({
               <div className="relative w-full max-w-md aspect-square">
                 <Image
                   src="/images/codecamp-advantage-hero.jpg"
-                  alt="CodeCamp Advantage coding workspace"
+                  alt={t("workspaceAlt")}
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className="object-cover rounded-3xl shadow-2xl"
@@ -100,13 +100,13 @@ export default async function CodeCampAdvantage({
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
               <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block">
-                Adaptive Engine
+                {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Coding paths, adapted to every student&apos;s pace
+                {t("adaptiveEngine.heading")}
               </h2>
               <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                Powered by Mastery Advantage — the KST + SRS engine that maps every coding skill and schedules practice at the perfect moment.
+                {t("adaptiveEngine.description")}
               </p>
             </div>
             <div className="lg:col-span-7">
@@ -115,7 +115,7 @@ export default async function CodeCampAdvantage({
                   baseName="ra-marketing-codecamp-advantage"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="CodeCamp Advantage adaptive learning visualization"
+                  alt={t("adaptiveEngine.alt")}
                 />
               </div>
             </div>
@@ -193,7 +193,7 @@ export default async function CodeCampAdvantage({
           <div className="grid lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
             <div className="lg:col-span-7">
               <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
-                PROJECT-BASED LEARNING
+                {t("eyebrows.projectBasedLearning")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight">
                 {t("keyFeatures.projectBasedLearning.title")}
@@ -233,7 +233,7 @@ export default async function CodeCampAdvantage({
                     <span className="text-green-600">&quot;Portfolio Site&quot;</span>;
                   </div>
                   <div className="mt-3 text-slate-600 text-sm">
-                    Start with real-world projects from day one.
+                    {t("projectBenefits.startRealWorld")}
                   </div>
                 </Card>
                 <Card
@@ -249,7 +249,7 @@ export default async function CodeCampAdvantage({
                     <span className="text-slate-900">ProductionApp</span>;
                   </div>
                   <div className="mt-3 text-slate-600 text-sm">
-                    Ship to production with CI/CD pipelines.
+                    {t("projectBenefits.shipToProduction")}
                   </div>
                 </Card>
               </div>
@@ -302,7 +302,7 @@ export default async function CodeCampAdvantage({
         <div className="container mx-auto px-4 py-24">
           <div className="max-w-5xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
-              KEY FEATURES
+              {t("eyebrows.keyFeatures")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16">
               {t("keyFeatures.heading")}

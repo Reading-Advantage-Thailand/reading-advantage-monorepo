@@ -9,6 +9,8 @@ export const en = {
         description: "Transform your STEM curriculum with our innovative platform, designed for the modern classroom.",
         comingSoon: "Coming in 2025",
     },
+    heroAlt: "Digital STEM workspace",
+    codingAlt: "STEM Advantage students coding and building",
     coreFeatures: {
         heading: "Core Features",
         features: [
@@ -101,6 +103,18 @@ export const en = {
             partnerships: "School Partnerships",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "Adaptive Engine",
+        heading: "Project-based STEM learning, adapted to each student",
+        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every STEM skill and schedules practice at the perfect moment.",
+        alt: "STEM Advantage adaptive learning visualization",
+    },
+    eyebrows: {
+        gradeLevels: "GRADE LEVELS",
+        codingStem: "75% CODING, 25% STEM",
+        benefits: "BENEFITS",
+        technicalRequirements: "TECHNICAL REQUIREMENTS",
+    },
 };
 
 export const th = {
@@ -114,6 +128,8 @@ export const th = {
         description: "เปลี่ยนหลักสูตร STEM ของคุณด้วยแพลตฟอร์มการเรียนรู้ที่ออกแบบมาสำหรับห้องเรียนยุคใหม่",
         comingSoon: "เปิดตัวในปี 2025",
     },
+    heroAlt: "พื้นที่ทำงาน STEM ดิจิทัล",
+    codingAlt: "นักเรียน STEM Advantage เขียนโค้ดและสร้างสรรค์",
     coreFeatures: {
         heading: "คุณสมบัติหลัก",
         features: [
@@ -206,6 +222,18 @@ export const th = {
             partnerships: "พันธมิตรกับโรงเรียน",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "เครื่องยนต์ปรับตัว",
+        heading: "การเรียนรู้ STEM แบบโครงการ ปรับให้เข้ากับนักเรียนแต่ละคน",
+        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะ STEM ทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+        alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ STEM Advantage",
+    },
+    eyebrows: {
+        gradeLevels: "ระดับชั้นเรียน",
+        codingStem: "75% การเขียนโค้ด, 25% STEM",
+        benefits: "ประโยชน์",
+        technicalRequirements: "ข้อกำหนดทางเทคนิค",
+    },
 };
 
 export const zh = {
@@ -219,6 +247,8 @@ export const zh = {
         description: "通过我们的创新平台，将 STEM 课程转变为现代课堂的完美解决方案。",
         comingSoon: "2025 年推出",
     },
+    heroAlt: "数字 STEM 工作区",
+    codingAlt: "STEM Advantage 学生编码和构建",
     coreFeatures: {
         heading: "核心功能",
         features: [
@@ -310,5 +340,17 @@ export const zh = {
             earlyAccess: "申请提前访问",
             partnerships: "学校合作",
         },
+    },
+    adaptiveEngine: {
+        eyebrow: "自适应引擎",
+        heading: "基于项目的 STEM 学习，为每位学生量身定制",
+        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项 STEM 技能并在最佳时刻安排练习。",
+        alt: "STEM Advantage 自适应学习可视化",
+    },
+    eyebrows: {
+        gradeLevels: "年级水平",
+        codingStem: "75% 编程, 25% STEM",
+        benefits: "优势",
+        technicalRequirements: "技术要求",
     },
 };

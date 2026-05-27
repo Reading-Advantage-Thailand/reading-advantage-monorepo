@@ -1,4 +1,6 @@
 export const en = {
+    kstSrs: "KST+SRS",
+    challengeLabel: "Challenge {num}",
     hero: {
         eyebrow: "Mastery Advantage · The Adaptive Engine",
         title: "One engine. Nine products. Every student on their own path to mastery.",
@@ -157,6 +159,8 @@ export const en = {
 };
 
 export const th = {
+    kstSrs: "KST+SRS",
+    challengeLabel: "Challenge 0{num}",
     hero: {
         eyebrow: "Mastery Advantage · เครื่องยนต์ปรับตัว",
         title: "เครื่องยนต์เดียว เก้าผลิตภัณฑ์ นักเรียนทุกคนอยู่ในเส้นทางสู่ความชำนาญของตัวเอง",
@@ -315,6 +319,8 @@ export const th = {
 };
 
 export const zh = {
+    kstSrs: "KST+SRS",
+    challengeLabel: "挑战 {num}",
     hero: {
         eyebrow: "Mastery Advantage · 自适应引擎",
         title: "一个引擎，九个产品，每个学生都在自己的精通之路上。",

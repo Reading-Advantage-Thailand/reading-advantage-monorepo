@@ -22,15 +22,15 @@ import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getScopedI18n("pages.products.zhongwenAdvantage.hero");
+  const t = await getScopedI18n("pages.products.zhongwenAdvantage");
 
   return {
     title:
       "Zhongwen Advantage - The Future of Chinese Learning | Reading Advantage Thailand",
-    description: t("description"),
+    description: t("hero.description"),
     openGraph: {
       title: "Zhongwen Advantage - The Future of Chinese Learning",
-      description: t("description"),
+      description: t("hero.description"),
     },
   };
 }
@@ -41,7 +41,7 @@ export default async function ZhongwenAdvantage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const heroT = await getScopedI18n("pages.products.zhongwenAdvantage.hero");
+  const t = await getScopedI18n("pages.products.zhongwenAdvantage");
 
   const interactiveFeatures = [
     {
@@ -102,7 +102,7 @@ export default async function ZhongwenAdvantage({
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <Image
           src="/images/hero-zhongwen-advantage.jpg"
-          alt="Digital Chinese language learning with cultural elements"
+          alt={t("hero.alt")}
           fill
           sizes="100vw"
           className="object-cover"
@@ -115,22 +115,22 @@ export default async function ZhongwenAdvantage({
             <div className="lg:col-span-7">
               <div className="inline-flex items-center gap-2 bg-fuchsia-100 text-fuchsia-800 px-4 py-2 rounded-full text-sm font-bold mb-6">
                 <Sparkles className="w-4 h-4" />
-                {heroT("badge")}
+                {t("hero.badge")}
               </div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                {heroT("title")}
+                {t("hero.title")}
               </h1>
               <p className="text-xl md:text-2xl leading-relaxed mb-4 text-fuchsia-50">
-                {heroT("subtitle")}
+                {t("hero.subtitle")}
               </p>
               <p className="text-lg md:text-xl leading-relaxed mb-8 text-fuchsia-100">
-                {heroT("description")}
+                {t("hero.description")}
               </p>
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 bg-white text-fuchsia-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-fuchsia-50"
               >
-                {heroT("ctaButton")}
+                {t("hero.ctaButton")}
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
@@ -154,13 +154,13 @@ export default async function ZhongwenAdvantage({
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
               <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block">
-                Adaptive Engine
+                {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Chinese learning paths, adapted to every student
+                {t("adaptiveEngine.heading")}
               </h2>
               <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                Powered by Mastery Advantage — the KST + SRS engine that maps every language skill and schedules practice at the perfect moment.
+                {t("adaptiveEngine.description")}
               </p>
             </div>
             <div className="lg:col-span-7">
@@ -169,7 +169,7 @@ export default async function ZhongwenAdvantage({
                   baseName="ra-marketing-zhongwen-advantage"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="Zhongwen Advantage adaptive learning visualization"
+                  alt={t("adaptiveEngine.alt")}
                 />
               </div>
             </div>
@@ -182,10 +182,10 @@ export default async function ZhongwenAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-100 mb-4 block text-center">
-              LEVEL MAPPING
+              {t("eyebrows.levelMapping")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
-              Dual-Level Learning System
+              {t("levelMapping.dualLevelLearning")}
             </h2>
             <div
               data-testid="level-mapping"
@@ -208,14 +208,14 @@ export default async function ZhongwenAdvantage({
                       className="flex items-center justify-between bg-white/10 rounded-xl px-4 py-3"
                     >
                       <span className="text-white font-medium">
-                        Level {level}
+                        {t("levelMapping.levelLabel", { level })}
                       </span>
                       <ArrowRight className="w-4 h-4 text-fuchsia-200" />
                     </div>
                   ))}
                 </div>
                 <div className="mt-4 text-center text-fuchsia-200 text-sm">
-                  Maps to HSK 1-3
+                  {t("levelMapping.mapsToHsk13")}
                 </div>
               </div>
 
@@ -226,7 +226,7 @@ export default async function ZhongwenAdvantage({
                     <Bot className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-white">
-                    AI Progression
+                    {t("levelMapping.aiProgression")}
                   </h3>
                 </div>
                 <div className="space-y-3">
@@ -236,14 +236,14 @@ export default async function ZhongwenAdvantage({
                       className="flex items-center justify-between bg-white/10 rounded-xl px-4 py-3"
                     >
                       <span className="text-white font-medium">
-                        Level {level}
+                        {t("levelMapping.levelLabel", { level })}
                       </span>
                       <ArrowRight className="w-4 h-4 text-fuchsia-200" />
                     </div>
                   ))}
                 </div>
                 <div className="mt-4 text-center text-fuchsia-200 text-sm">
-                  Maps to HSK 4-6
+                  {t("levelMapping.mapsToHsk46")}
                 </div>
               </div>
 
@@ -253,7 +253,7 @@ export default async function ZhongwenAdvantage({
                   <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
                     <BookMarked className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">HSK Levels</h3>
+                  <h3 className="text-xl font-bold text-white">{t("levelMapping.hskLevels")}</h3>
                 </div>
                 <div className="space-y-3">
                   {[1, 2, 3, 4, 5, 6].map((level) => (
@@ -262,13 +262,13 @@ export default async function ZhongwenAdvantage({
                       className="bg-white/10 rounded-xl px-4 py-3 text-center"
                     >
                       <span className="text-white font-medium">
-                        HSK {level}
+                        {t("levelMapping.hskLabel", { level })}
                       </span>
                     </div>
                   ))}
                 </div>
                 <div className="mt-4 text-center text-fuchsia-200 text-sm">
-                  Standardized Certification
+                  {t("levelMapping.standardizedCertification")}
                 </div>
               </div>
             </div>
@@ -280,29 +280,29 @@ export default async function ZhongwenAdvantage({
       <LargeImageBreak
         data-testid="image-break"
         src="/images/zhongwen-advantage-hero.jpg"
-        alt="Chinese calligraphy and learning materials"
+        alt={t("levelMapping.alt")}
         overlayText={
           <div>
             <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Master Chinese with Confidence
+              {t("levelMapping.confidence")}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                 <BookOpen className="w-6 h-6 text-fuchsia-300 mb-2" />
                 <p className="text-white font-medium text-sm">
-                  Extensive reading library
+                  {t("levelMapping.readingLibrary")}
                 </p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                 <Bot className="w-6 h-6 text-fuchsia-300 mb-2" />
                 <p className="text-white font-medium text-sm">
-                  AI-powered tutoring
+                  {t("levelMapping.aiTutoring")}
                 </p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                 <Globe className="w-6 h-6 text-fuchsia-300 mb-2" />
                 <p className="text-white font-medium text-sm">
-                  Cultural immersion content
+                  {t("levelMapping.culturalImmersion")}
                 </p>
               </div>
             </div>
@@ -316,17 +316,15 @@ export default async function ZhongwenAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block">
-              INTERACTIVE LEARNING
+              {t("eyebrows.interactiveLearning")}
             </span>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
               <div className="lg:col-span-7">
                 <h2 className="text-4xl md:text-5xl font-bold mb-8 text-slate-900">
-                  Engaging, Adaptive Learning Experience
+                  {t("interactiveLearning.heading")}
                 </h2>
                 <p className="text-lg text-slate-600 leading-relaxed mb-8">
-                  Our interactive learning system combines cutting-edge technology
-                  with proven pedagogical methods to deliver an unparalleled
-                  Chinese learning experience.
+                  {t("interactiveLearning.description")}
                 </p>
                 <div className="space-y-4">
                   {[
@@ -373,10 +371,10 @@ export default async function ZhongwenAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block text-center">
-              FOR EDUCATORS
+              {t("eyebrows.forEducators")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-slate-900">
-              Powerful Tools for Teachers
+              {t("forEducators.heading")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {educatorFeatures.map((feature) => (
@@ -409,27 +407,27 @@ export default async function ZhongwenAdvantage({
           <div data-testid="combined-faq-waitlist" className="space-y-16">
             <div>
               <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block text-center">
-                QUESTIONS?
+                {t("eyebrows.questions")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-slate-900">
-                Frequently Asked Questions
+                {t("faq.heading")}
               </h2>
               <FAQAccordion variant="fuchsia" items={faqItems} />
             </div>
 
             <div className="bg-gradient-to-br from-fuchsia-50 to-white rounded-3xl p-10 border border-fuchsia-100">
               <h3 className="text-2xl font-bold text-center mb-4 text-slate-900">
-                Join the Waitlist
+                {t("waitlist.joinWaitlist")}
               </h3>
               <p className="text-slate-600 text-center mb-8">
-                Be the first to experience Zhongwen Advantage when we launch.
+                {t("waitlist.description")}
               </p>
               <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
                 <div className="relative flex-1">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <input
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder={t("waitlist.emailPlaceholder")}
                     className="w-full pl-12 pr-4 py-4 rounded-2xl border border-fuchsia-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent"
                   />
                 </div>
@@ -437,7 +435,7 @@ export default async function ZhongwenAdvantage({
                   type="submit"
                   className="inline-flex items-center justify-center gap-2 bg-fuchsia-600 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300 hover:bg-fuchsia-700 hover:-translate-y-1 shadow-lg"
                 >
-                  Subscribe
+                  {t("waitlist.subscribe")}
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </form>
@@ -451,27 +449,27 @@ export default async function ZhongwenAdvantage({
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-100 mb-4 block">
-              GET STARTED
+              {t("eyebrows.getStarted")}
             </span>
             <h2 className="text-5xl md:text-6xl font-bold mb-6">
-              Start Your Chinese Learning Journey
+              {t("cta.heading")}
             </h2>
             <p className="text-2xl mb-12 text-fuchsia-100 max-w-2xl mx-auto">
-              Join our waitlist and be the first to experience the future of Chinese education.
+              {t("cta.description")}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 bg-white text-fuchsia-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
               >
-                Join Waitlist
+                {t("cta.buttons.joinWaitlist")}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-fuchsia-700"
               >
-                Learn More
+                {t("cta.buttons.learnMore")}
               </Link>
             </div>
           </div>

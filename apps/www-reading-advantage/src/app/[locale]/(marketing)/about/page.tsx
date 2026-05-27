@@ -35,7 +35,7 @@ export default async function AboutPage() {
         }}
         floatingImage={{
           src: "/images/teacher-at-board.png",
-          alt: "Reading Advantage team collaborating with teachers in Thailand",
+          alt: t("altText.team"),
         }}
         height="medium"
         alignment="left"
@@ -46,7 +46,7 @@ export default async function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-              Introduction
+              {t("sections.labels.introduction")}
             </span>
             <p className="text-lg text-slate-600 leading-relaxed">
               {t("sections.introduction.description")}
@@ -60,7 +60,7 @@ export default async function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-              Our Story
+              {t("sections.labels.ourStory")}
             </span>
             <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
               {t("sections.story.title")}
@@ -79,7 +79,7 @@ export default async function AboutPage() {
           <div className="grid lg:grid-cols-12 gap-12 items-start max-w-6xl mx-auto">
             <div className="lg:col-span-7">
               <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-                Mission & Vision
+                {t("sections.labels.missionVision")}
               </span>
               <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
                 {t("sections.mission.title")}
@@ -106,7 +106,7 @@ export default async function AboutPage() {
                 <div className="relative rounded-3xl overflow-hidden shadow-xl">
                   <Image
                     src="/images/about-team.jpg"
-                    alt="Reading Advantage team"
+                    alt={t("altText.team")}
                     width={600}
                     height={500}
                     className="object-cover"
@@ -124,10 +124,10 @@ export default async function AboutPage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-                Technology & Impact
+                {t("sections.labels.technologyImpact")}
               </span>
               <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
-                Built for Results
+                {t("sections.labels.builtForResults")}
               </h2>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
@@ -168,7 +168,7 @@ export default async function AboutPage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-                Our Values
+                {t("sections.labels.ourValues")}
               </span>
               <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
                 {t("sections.values.title")}
@@ -205,7 +205,7 @@ export default async function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-              Research
+              {t("sections.labels.research")}
             </span>
             <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
               {t("sections.research.title")}
@@ -223,7 +223,7 @@ export default async function AboutPage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-                Quality Protocol
+                {t("sections.labels.qualityProtocol")}
               </span>
               <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
                 {t("sections.bigFour.title")}
@@ -259,7 +259,7 @@ export default async function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
-              Positioning
+              {t("sections.labels.positioning")}
             </span>
             <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
               {t("sections.positioning.title")}

@@ -6,6 +6,12 @@ export const en = {
         badge: "Now Enrolling",
         status: "Active Bootcamp",
     },
+    heroAlt: "Abstract digital coding creation landscape",
+    workspaceAlt: "CodeCamp Advantage coding workspace",
+    projectBenefits: {
+        startRealWorld: "Start with real-world projects from day one.",
+        shipToProduction: "Ship to production with CI/CD pipelines.",
+    },
     curriculum: {
         heading: "18-Module Curriculum",
         subtitle: "4 phases from fundamentals to production",
@@ -109,6 +115,16 @@ export const en = {
             contactSales: "Contact Sales",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "Adaptive Engine",
+        heading: "Coding paths, adapted to every student's pace",
+        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every coding skill and schedules practice at the perfect moment.",
+        alt: "CodeCamp Advantage adaptive learning visualization",
+    },
+    eyebrows: {
+        projectBasedLearning: "PROJECT-BASED LEARNING",
+        keyFeatures: "KEY FEATURES",
+    },
 };
 
 export const th = {
@@ -118,6 +134,12 @@ export const th = {
         description: "บูทแคมป์ 18 โมดูลเข้มข้นครอบคลุมการพัฒนาเว็บสมัยใหม่ตั้งแต่พื้นฐานจนถึงการปรับใช้งานจริง เรียนรู้โดยการสร้างโปรเจกต์จริงพร้อม AI ติวเตอร์และการตรวจสอบโค้ดอัตโนมัติ",
         badge: "เปิดรับสมัครแล้ว",
         status: "บูทแคมป์กำลังดำเนินการ",
+    },
+    heroAlt: "ภูมิทัศน์การสร้างสรรค์โค้ดดิจิทัลแบบนามธรรม",
+    workspaceAlt: "พื้นที่ทำงานเขียนโค้ด CodeCamp Advantage",
+    projectBenefits: {
+        startRealWorld: "เริ่มต้นด้วยโปรเจกต์จริงตั้งแต่วันแรก",
+        shipToProduction: "ปรับใช้งานจริงด้วย CI/CD pipelines",
     },
     curriculum: {
         heading: "หลักสูตร 18 โมดูล",
@@ -222,6 +244,16 @@ export const th = {
             contactSales: "ติดต่อฝ่ายขาย",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "เครื่องยนต์ปรับตัว",
+        heading: "เส้นทางการเขียนโค้ด ปรับให้เข้ากับจังหวะของนักเรียนทุกคน",
+        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการเขียนโค้ดทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+        alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ CodeCamp Advantage",
+    },
+    eyebrows: {
+        projectBasedLearning: "การเรียนรู้แบบโครงการ",
+        keyFeatures: "คุณสมบัติหลัก",
+    },
 };
 
 export const zh = {
@@ -231,6 +263,12 @@ export const zh = {
         description: "一个包含18个模块的强化训练营，涵盖从基础到生产部署的现代网页开发。通过构建真实项目来学习，配备AI辅导和自动代码审查。",
         badge: "正在招生",
         status: "活跃训练营",
+    },
+    heroAlt: "抽象数字编码创作景观",
+    workspaceAlt: "CodeCamp Advantage 编程工作区",
+    projectBenefits: {
+        startRealWorld: "从第一天开始就参与真实项目。",
+        shipToProduction: "使用CI/CD管道部署到生产环境。",
     },
     curriculum: {
         heading: "18模块课程",
@@ -334,5 +372,15 @@ export const zh = {
             viewCurriculum: "查看课程",
             contactSales: "联系销售",
         },
+    },
+    adaptiveEngine: {
+        eyebrow: "自适应引擎",
+        heading: "为每位学生节奏量身定制的编程路径",
+        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项编程技能并在最佳时刻安排练习。",
+        alt: "CodeCamp Advantage 自适应学习可视化",
+    },
+    eyebrows: {
+        projectBasedLearning: "项目制学习",
+        keyFeatures: "主要特点",
     },
 };

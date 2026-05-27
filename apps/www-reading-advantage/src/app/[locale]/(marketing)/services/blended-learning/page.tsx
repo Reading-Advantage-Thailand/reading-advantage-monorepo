@@ -101,7 +101,7 @@ export default async function BlendedLearning() {
                 <div className="relative bg-gradient-to-br from-sky-50 to-blue-50 rounded-3xl p-8">
                   <Image
                     src="/images/workbook-cover.png"
-                    alt="Student Workbook"
+                    alt={t("altTexts.studentWorkbook")}
                     width={400}
                     height={300}
                     sizes="(max-width: 1024px) 100vw, 50vw"
@@ -172,7 +172,7 @@ export default async function BlendedLearning() {
               <div className="relative">
                 <Image
                   src="/images/teacher-at-board.png"
-                  alt="Teacher leading classroom"
+                  alt={t("altTexts.teacherLeading")}
                   width={600}
                   height={400}
                   sizes="(max-width: 1024px) 100vw, 50vw"

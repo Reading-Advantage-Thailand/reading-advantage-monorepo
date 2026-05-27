@@ -9,6 +9,9 @@ export const en = {
         description: "Combining AI technology with personalized instruction for unprecedented learning outcomes",
         comingSoon: "Coming in 2025",
     },
+    heroAlt: "AI-powered digital tutoring dashboard",
+    logoAlt: "Tutor Advantage Logo",
+    platformAlt: "Tutor Advantage Platform",
     valuePropositions: {
         features: [
             {
@@ -67,6 +70,23 @@ export const en = {
             apply: "Apply as Tutor",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "Adaptive Engine",
+        heading: "AI tutoring, adapted to every student's level",
+        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every skill and schedules practice at the perfect moment.",
+        alt: "Tutor Advantage adaptive learning visualization",
+    },
+    eyebrows: {
+        theProcess: "THE PROCESS",
+        howItWorks: "How It Works",
+        aiPoweredPersonalization: "AI-POWERED PERSONALIZATION",
+        platformFeatures: "PLATFORM FEATURES",
+        trustedByEducators: "TRUSTED BY EDUCATORS",
+        readyToStart: "READY TO START?",
+        cefrCoverage: "CEFR Coverage",
+        launchingSoon: "Launching Soon",
+        poweredLearning: "Powered Learning",
+    },
 };
 
 export const th = {
@@ -80,6 +100,9 @@ export const th = {
         description: "ผสมผสานเทคโนโลยี AI เข้ากับการสอนเฉพาะบุคคลเพื่อผลลัพธ์การเรียนรู้ที่ไม่เคยมีมาก่อน",
         comingSoon: "เปิดตัวในปี 2025",
     },
+    heroAlt: "แดชบอร์ดการสอนพิเศษดิจิทัลที่ขับเคลื่อนด้วย AI",
+    logoAlt: "โลโก้ Tutor Advantage",
+    platformAlt: "แพลตฟอร์ม Tutor Advantage",
     valuePropositions: {
         features: [
             {
@@ -138,6 +161,23 @@ export const th = {
             apply: "สมัครเป็นครูสอนพิเศษ",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "เครื่องยนต์ปรับตัว",
+        heading: "การสอนพิเศษด้วย AI ปรับให้เข้ากับระดับของนักเรียนทุกคน",
+        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+        alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Tutor Advantage",
+    },
+    eyebrows: {
+        theProcess: "กระบวนการ",
+        howItWorks: "วิธีการทำงาน",
+        aiPoweredPersonalization: "การปรับแต่งด้วย AI",
+        platformFeatures: "คุณสมบัติแพลตฟอร์ม",
+        trustedByEducators: "ได้รับความไว้วางใจจากนักการศึกษา",
+        readyToStart: "พร้อมเริ่มต้น?",
+        cefrCoverage: "ความครอบคลุม CEFR",
+        launchingSoon: "เร็วๆ นี้",
+        poweredLearning: "การเรียนรู้ที่ขับเคลื่อนด้วย",
+    },
 };
 
 export const zh = {
@@ -151,6 +191,9 @@ export const zh = {
         description: "结合 AI 技术与个性化教学，带来前所未有的学习成果",
         comingSoon: "2025 年推出",
     },
+    heroAlt: "AI 驱动的数字辅导仪表板",
+    logoAlt: "Tutor Advantage 标志",
+    platformAlt: "Tutor Advantage 平台",
     valuePropositions: {
         features: [
             {
@@ -208,5 +251,22 @@ export const zh = {
             register: "注册早期访问",
             apply: "申请成为导师",
         },
+    },
+    adaptiveEngine: {
+        eyebrow: "自适应引擎",
+        heading: "AI 辅导，为每位学生的水平量身定制",
+        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项技能并在最佳时刻安排练习。",
+        alt: "Tutor Advantage 自适应学习可视化",
+    },
+    eyebrows: {
+        theProcess: "流程",
+        howItWorks: "工作原理",
+        aiPoweredPersonalization: "AI 驱动的个性化",
+        platformFeatures: "平台功能",
+        trustedByEducators: "教育者信赖之选",
+        readyToStart: "准备好开始了吗？",
+        cefrCoverage: "CEFR 覆盖范围",
+        launchingSoon: "即将推出",
+        poweredLearning: "赋能学习",
     },
 };

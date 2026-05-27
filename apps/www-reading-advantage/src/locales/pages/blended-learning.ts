@@ -7,6 +7,10 @@ export const en = {
         primaryCta: "Learn More",
         secondaryCta: "Request Information",
     },
+    altTexts: {
+        studentWorkbook: "Student Workbook",
+        teacherLeading: "Teacher leading classroom",
+    },
     overview: {
         title: "What is Blended Learning?",
         heading: "Physical Workbooks + Digital App",
@@ -84,6 +88,10 @@ export const th = {
         primaryCta: "เรียนรู้เพิ่มเติม",
         secondaryCta: "ขอข้อมูล",
     },
+    altTexts: {
+        studentWorkbook: "หนังสือแบบฝึกหัดนักเรียน",
+        teacherLeading: "ครูนำการสอนในห้องเรียน",
+    },
     overview: {
         title: "รูปแบบการเรียนแบบผสมผสานคืออะไร?",
         heading: "หนังสือแบบฝึกหัดทางกายภาพผสมกับแอปดิจิทัล",
@@ -160,6 +168,10 @@ export const zh = {
         badge: "2026年5月推出",
         primaryCta: "了解更多",
         secondaryCta: "请求信息",
+    },
+    altTexts: {
+        studentWorkbook: "学生练习册",
+        teacherLeading: "教师主导课堂",
     },
     overview: {
         title: "什么是混合学习？",

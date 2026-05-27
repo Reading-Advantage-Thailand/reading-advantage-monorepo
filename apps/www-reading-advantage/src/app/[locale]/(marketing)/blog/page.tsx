@@ -3,6 +3,7 @@ import { getAllPosts, getPaginatedPosts } from "@/lib/blog";
 import { BlogCard } from "@/components/blog/blog-card";
 import { BlogListItem } from "@/types/blog";
 import HeroSection from "@/components/marketing/hero-section";
+import { getScopedI18n } from "@/locales/server";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -31,13 +32,14 @@ export const metadata: Metadata = {
 
 export default async function BlogPage({ params }: PageProps) {
   const { locale } = await params;
+  const t = await getScopedI18n("pages.blog");
   const allPosts = await getAllPosts(locale as "en" | "th" | "zh");
   const { posts } = await getPaginatedPosts(1, 9, allPosts);
 
   return (
     <main>
       <HeroSection
-        title="Blog"
+        title={t("title")}
         description="Educational insights, learning strategies, and product updates from Reading Advantage."
         ctaButton={{
           text: "Contact Us",

@@ -5,6 +5,11 @@ export const en = {
         description:
             "The proprietary adaptive engine that powers every Reading Advantage product — combining Knowledge Space Theory with Spaced Repetition to place, teach, and track every student.",
     },
+    altTexts: {
+        adaptivePath: "Adaptive learning path visualization",
+        spacedRepetition: "Spaced repetition visualization",
+        progressTracking: "Progress tracking visualization",
+    },
     adaptivePath: {
         eyebrow: "Adaptive learning paths",
         title: "Always know what's next.",
@@ -73,6 +78,11 @@ export const th = {
         description:
             "เครื่องยนต์ปรับตัวที่เป็นทรัพย์สินทางปัญญาซึ่งขับเคลื่อนผลิตภัณฑ์ Reading Advantage ทุกตัว — ผสมผสาน Knowledge Space Theory กับ Spaced Repetition เพื่อจัดตำแหน่ง สอน และติดตามนักเรียนทุกคน",
     },
+    altTexts: {
+        adaptivePath: "ภาพจำลองเส้นทางการเรียนรู้แบบปรับตัว",
+        spacedRepetition: "ภาพจำลองการทบทวนแบบเว้นช่วง",
+        progressTracking: "ภาพจำลองการติดตามความก้าวหน้า",
+    },
     adaptivePath: {
         eyebrow: "เส้นทางการเรียนรู้แบบปรับตัว",
         title: "รู้ว่าต้องเรียนอะไรถัดไปเสมอ",
@@ -140,6 +150,11 @@ export const zh = {
         title: "始终知道下一步。",
         description:
             "为所有 Reading Advantage 产品提供动力的专有自适应引擎——结合知识空间理论与间隔重复，为每个学生进行分班、教学和追踪。",
+    },
+    altTexts: {
+        adaptivePath: "自适应学习路径可视化",
+        spacedRepetition: "间隔重复可视化",
+        progressTracking: "进度追踪可视化",
     },
     adaptivePath: {
         eyebrow: "自适应学习路径",

@@ -1,7 +1,11 @@
 export const en = {
     hero: {
+        eyebrow: "AI-Powered Platform",
         title: "Platform Features",
+        heading: "Personalized Learning at Scale",
         description: "Compare Reading Advantage with other leading reading programs",
+        descriptionFull: "Our advanced AI engine adapts to every learner in real time, generating content matched to their exact reading level, interests, and learning goals.",
+        alt: "Students using Reading Advantage app",
     },
     features: {
         0: {
@@ -34,12 +38,24 @@ export const en = {
         description: "Start your journey with Reading Advantage today",
         button: "Get Started",
     },
+    platformFeatures: {
+        heading: "Platform Features",
+        subheading: "Everything You Need",
+    },
+    comparison: {
+        heading: "Comparison",
+        subheading: "How We Compare",
+    },
 };
 
 export const th = {
     hero: {
+        eyebrow: "แพลตฟอร์มที่ขับเคลื่อนด้วย AI",
         title: "คุณสมบัติของแพลตฟอร์ม",
+        heading: "การเรียนรู้เฉพาะบุคคลในระดับใหญ่",
         description: "เปรียบเทียบ Reading Advantage กับโปรแกรมการอ่านชั้นนำอื่น ๆ",
+        descriptionFull: "เครื่องยนต์ AI ขั้นสูงของเราปรับตัวเข้ากับผู้เรียนทุกคนแบบเรียลไทม์ สร้างเนื้อหาที่ตรงกับระดับการอ่าน ความสนใจ และเป้าหมายการเรียนรู้ของพวกเขา",
+        alt: "นักเรียนใช้แอป Reading Advantage",
     },
     features: {
         0: {
@@ -72,12 +88,24 @@ export const th = {
         description: "เริ่มต้นการเดินทางกับ Reading Advantage วันนี้",
         button: "เริ่มต้นใช้งาน",
     },
+    platformFeatures: {
+        heading: "คุณสมบัติของแพลตฟอร์ม",
+        subheading: "ทุกสิ่งที่คุณต้องการ",
+    },
+    comparison: {
+        heading: "การเปรียบเทียบ",
+        subheading: "เราเปรียบเทียบอย่างไร",
+    },
 };
 
 export const zh = {
     hero: {
+        eyebrow: "AI驱动平台",
         title: "平台功能",
+        heading: "大规模个性化学习",
         description: "比较 Reading Advantage 与其他领先的阅读项目",
+        descriptionFull: "我们先进的AI引擎实时适应每位学习者，生成与其阅读水平、兴趣和学习目标完全匹配的内容。",
+        alt: "学生使用Reading Advantage应用",
     },
     features: {
         0: {
@@ -109,5 +137,13 @@ export const zh = {
         title: "准备好体验不同了吗？",
         description: "今天就开始您的 Reading Advantage 之旅",
         button: "开始使用",
+    },
+    platformFeatures: {
+        heading: "平台功能",
+        subheading: "您所需要的一切",
+    },
+    comparison: {
+        heading: "对比",
+        subheading: "我们的比较优势",
     },
 };

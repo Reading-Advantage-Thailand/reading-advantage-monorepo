@@ -107,7 +107,7 @@ export default async function StorytimeAdvantage({
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <Image
           src="/images/hero-storytime-advantage.jpg"
-          alt="Digital storytelling experience"
+          alt={t("heroAlt")}
           fill
           sizes="100vw"
           className="object-cover"
@@ -159,13 +159,13 @@ export default async function StorytimeAdvantage({
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
               <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
-                Adaptive Engine
+                {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Early literacy paths, adapted to every young learner
+                {t("adaptiveEngine.heading")}
               </h2>
               <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                Powered by Mastery Advantage — the KST + SRS engine that maps every literacy skill and schedules practice at the perfect moment.
+                {t("adaptiveEngine.description")}
               </p>
             </div>
             <div className="lg:col-span-7">
@@ -174,7 +174,7 @@ export default async function StorytimeAdvantage({
                   baseName="ra-marketing-storytime-advantage"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="Storytime Advantage adaptive learning visualization"
+                  alt={t("adaptiveEngine.alt")}
                 />
               </div>
             </div>
@@ -187,7 +187,7 @@ export default async function StorytimeAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <p className="uppercase tracking-widest text-xs font-semibold text-amber-100 mb-6 text-center">
-              KEY FEATURES
+              {t("eyebrows.keyFeatures")}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
               {t("keyFeatures.heading")}
@@ -231,7 +231,7 @@ export default async function StorytimeAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <p className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-6">
-              K-3 CURRICULUM
+              {t("eyebrows.k3Curriculum")}
             </p>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
               <div className="lg:col-span-7">
@@ -279,7 +279,7 @@ export default async function StorytimeAdvantage({
                 >
                   <Image
                     src="/images/storytime-advantage-hero.jpg"
-                    alt="Storytime Advantage Classroom"
+                    alt={t("classroomAlt")}
                     width={600}
                     height={400}
                     sizes="(max-width: 768px) 100vw, 40vw"
@@ -302,7 +302,7 @@ export default async function StorytimeAdvantage({
         <div className="container mx-auto px-4 py-24">
           <div className="max-w-6xl mx-auto">
             <p className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-6 text-center">
-              TEACHER RESOURCES
+              {t("eyebrows.teacherResources")}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-slate-900">
               {t("teacherTools.heading")}
@@ -339,7 +339,7 @@ export default async function StorytimeAdvantage({
       <section className="bg-white py-24">
         <div className="container mx-auto px-4 max-w-3xl">
           <p className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-6 text-center">
-            FREQUENTLY ASKED QUESTIONS
+            {t("eyebrows.frequentlyAskedQuestions")}
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-slate-900">
             {t("faq.heading")}

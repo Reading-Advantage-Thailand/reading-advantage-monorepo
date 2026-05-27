@@ -1,4 +1,7 @@
 export const en = {
+    altText: {
+        team: "Reading Advantage team",
+    },
     hero: {
         title: "Transforming Education in Southeast Asia",
         description: "Pioneering AI-powered educational solutions for a brighter future",
@@ -102,10 +105,24 @@ export const en = {
             description: "Join us in revolutionizing learning in Southeast Asia",
             button: "Get Started Today",
         },
+        labels: {
+            introduction: "Introduction",
+            ourStory: "Our Story",
+            missionVision: "Mission & Vision",
+            technologyImpact: "Technology & Impact",
+            builtForResults: "Built for Results",
+            ourValues: "Our Values",
+            research: "Research",
+            qualityProtocol: "Quality Protocol",
+            positioning: "Positioning",
+        },
     },
 };
 
 export const th = {
+    altText: {
+        team: "ทีม Reading Advantage",
+    },
     hero: {
         title: "ยกระดับการศึกษาภาคพื้นเอเชียตะวันออกเฉียงใต้",
         description: "ผู้นำด้านโซลูชันการศึกษาขับเคลื่อนด้วย AI เพื่ออนาคตที่สดใส",
@@ -209,10 +226,24 @@ export const th = {
             description: "เข้าร่วมกับเราในการปฏิวัติการเรียนรู้ในเอเชียตะวันออกเฉียงใต้",
             button: "เริ่มต้นวันนี้",
         },
+        labels: {
+            introduction: "บทนำ",
+            ourStory: "เรื่องราวของเรา",
+            missionVision: "พันธกิจและวิสัยทัศน์",
+            technologyImpact: "เทคโนโลยีและผลกระทบ",
+            builtForResults: "สร้างขึ้นเพื่อผลลัพธ์",
+            ourValues: "ค่านิยมของเรา",
+            research: "งานวิจัย",
+            qualityProtocol: "โปรโตคอลคุณภาพ",
+            positioning: "การจัดตำแหน่ง",
+        },
     },
 };
 
 export const zh = {
+    altText: {
+        team: "Reading Advantage 团队",
+    },
     hero: {
         title: "通过AI创新提升教育",
         description: "为更光明的未来开创AI驱动的教育解决方案",
@@ -315,6 +346,17 @@ export const zh = {
             title: "准备好改变教育了吗？",
             description: "加入我们一起革命性地改变东南亚的学习方式",
             button: "今天就开始",
+        },
+        labels: {
+            introduction: "简介",
+            ourStory: "我们的故事",
+            missionVision: "使命与愿景",
+            technologyImpact: "技术与影响",
+            builtForResults: "为结果而建",
+            ourValues: "我们的价值观",
+            research: "研究",
+            qualityProtocol: "质量协议",
+            positioning: "定位",
         },
     },
 };

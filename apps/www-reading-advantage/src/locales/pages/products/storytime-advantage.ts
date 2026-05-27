@@ -9,6 +9,8 @@ export const en = {
         description: "A complete K-3 literacy curriculum that perfectly balances digital innovation with hands-on learning",
         comingSoon: "Coming in 2025",
     },
+    heroAlt: "Digital storytelling experience",
+    classroomAlt: "Storytime Advantage Classroom",
     coreValue: {
         heading: "Complete Literacy Curriculum Solution",
         features: [
@@ -90,6 +92,18 @@ export const en = {
             learnMore: "Learn More",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "Adaptive Engine",
+        heading: "Early literacy paths, adapted to every young learner",
+        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every literacy skill and schedules practice at the perfect moment.",
+        alt: "Storytime Advantage adaptive learning visualization",
+    },
+    eyebrows: {
+        keyFeatures: "KEY FEATURES",
+        k3Curriculum: "K-3 CURRICULUM",
+        teacherResources: "TEACHER RESOURCES",
+        frequentlyAskedQuestions: "FREQUENTLY ASKED QUESTIONS",
+    },
 };
 
 export const th = {
@@ -103,6 +117,8 @@ export const th = {
         description: "หลักสูตรการรู้หนังสือ K-3 แบบสมบูรณ์ที่ผสมผสานนวัตกรรมดิจิทัลกับการเรียนรู้เชิงปฏิบัติได้อย่างสมบูรณ์แบบ",
         comingSoon: "เปิดตัวในปี 2025",
     },
+    heroAlt: "ประสบการณ์การเล่าเรื่องดิจิทัล",
+    classroomAlt: "ห้องเรียน Storytime Advantage",
     coreValue: {
         heading: "โซลูชันหลักสูตรการรู้หนังสือแบบครบวงจร",
         features: [
@@ -184,6 +200,18 @@ export const th = {
             learnMore: "เรียนรู้เพิ่มเติม",
         },
     },
+    adaptiveEngine: {
+        eyebrow: "เครื่องยนต์ปรับตัว",
+        heading: "เส้นทางการรู้หนังสือตอนต้น ปรับให้เข้ากับผู้เรียนทุกคน",
+        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการรู้หนังสือทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+        alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Storytime Advantage",
+    },
+    eyebrows: {
+        keyFeatures: "คุณสมบัติหลัก",
+        k3Curriculum: "หลักสูตร K-3",
+        teacherResources: "ทรัพยากรสำหรับครู",
+        frequentlyAskedQuestions: "คำถามที่พบบ่อย",
+    },
 };
 
 export const zh = {
@@ -197,6 +225,8 @@ export const zh = {
         description: "一套完整的 K-3 识字课程，完美结合数字创新和实践学习",
         comingSoon: "2025 年推出",
     },
+    heroAlt: "数字故事叙述体验",
+    classroomAlt: "Storytime Advantage 教室",
     coreValue: {
         heading: "完整的识字课程解决方案",
         features: [
@@ -277,5 +307,17 @@ export const zh = {
             joinWaitlist: "加入候补名单",
             learnMore: "了解更多",
         },
+    },
+    adaptiveEngine: {
+        eyebrow: "自适应引擎",
+        heading: "为每位年轻学习者量身定制的早期读写路径",
+        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项读写技能并在最佳时刻安排练习。",
+        alt: "Storytime Advantage 自适应学习可视化",
+    },
+    eyebrows: {
+        keyFeatures: "主要特点",
+        k3Curriculum: "K-3 课程",
+        teacherResources: "教师资源",
+        frequentlyAskedQuestions: "常见问题",
     },
 };

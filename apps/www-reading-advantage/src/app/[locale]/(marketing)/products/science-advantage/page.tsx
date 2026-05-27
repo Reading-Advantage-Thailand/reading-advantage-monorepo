@@ -43,7 +43,7 @@ export default async function ScienceAdvantage({
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <Image
           src="/images/hero-science-advantage.jpg"
-          alt="Digital science discovery platform"
+          alt={t("heroAlt")}
           fill
           sizes="100vw"
           className="object-cover"
@@ -78,7 +78,7 @@ export default async function ScienceAdvantage({
               <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-4 shadow-2xl">
                 <Image
                   src="/science-advantage.png"
-                  alt="Science Advantage Logo"
+                  alt={t("logoAlt")}
                   width={350}
                   height={350}
                   className="w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl"
@@ -96,13 +96,13 @@ export default async function ScienceAdvantage({
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
               <span className="uppercase tracking-widest text-xs font-semibold text-rose-600 mb-4 block">
-                Adaptive Engine
+                {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Inquiry-based science, personalized for every student
+                {t("adaptiveEngine.heading")}
               </h2>
               <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                Powered by Mastery Advantage — the KST + SRS engine that maps every science skill and schedules practice at the perfect moment.
+                {t("adaptiveEngine.description")}
               </p>
             </div>
             <div className="lg:col-span-7">
@@ -111,7 +111,7 @@ export default async function ScienceAdvantage({
                   baseName="ra-marketing-science-advantage"
                   locale={locale as Locale}
                   className="w-full h-auto"
-                  alt="Science Advantage adaptive learning visualization"
+                  alt={t("adaptiveEngine.alt")}
                 />
               </div>
             </div>
@@ -124,7 +124,7 @@ export default async function ScienceAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-rose-100 block mb-4">
-              WHY SCIENCE ADVANTAGE
+              {t("eyebrows.whyScienceAdvantage")}
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-16">
               {t("coreValue.heading")}
@@ -203,7 +203,7 @@ export default async function ScienceAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-rose-600 block mb-4">
-              NGSS ALIGNED
+              {t("eyebrows.ngssAligned")}
             </span>
             <div className="grid lg:grid-cols-12 gap-12 items-start">
               <div className="lg:col-span-7">
@@ -285,7 +285,7 @@ export default async function ScienceAdvantage({
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-slate-500 block mb-4">
-              BUILT FOR
+              {t("eyebrows.builtFor")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16">
               {t("targetAudience.heading")}
