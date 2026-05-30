@@ -145,6 +145,10 @@ This file tracks all major tracks for the project.
   *Link: [./tracks/reactive_query_layer_20260522/](./tracks/reactive_query_layer_20260522/)*
   Reactive queries on Postgres + Drizzle + tRPC. **Stub only** — captures design decisions settled 2026-05-22 (no codegen; domain layer is the instrumentation point; read/write seam; connection model; pooler caveat). Blocked on the Prisma→Drizzle migration (Track 4) and Connection Pooling; the reactivity approach (LISTEN/NOTIFY vs sync engine vs WAL) must be chosen before it can be planned.
 
+- [ ] **Track: JSDoc Comments for Shared Packages**
+  *Link: [./tracks/jsdoc_shared_packages_20260530/](./tracks/jsdoc_shared_packages_20260530/)*
+  Add JSDoc comments to all 154 exported functions across 8 shared packages (domain, api, auth, db, webhooks, ui, auth-client, utils). Uses build-graph to track progress and verify completion. Exported functions first, bottom-up dependency order.
+
 ---
 
 ### Prisma → Drizzle Migration Program (4 tracks)
