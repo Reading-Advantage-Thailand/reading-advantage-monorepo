@@ -77,6 +77,13 @@ export const PERMISSIONS = {
 
 export type Permission = keyof typeof PERMISSIONS;
 
+/**
+ * Checks if a role has a specific permission.
+ * @param role - The role to check
+ * @param permission - The permission to verify
+ * @returns True if the role has the permission, false otherwise
+ * @throws {Error} Throws if the permission is not defined in PERMISSIONS
+ */
 export function hasPermission(role: Role, permission: Permission): boolean {
   const allowedRoles = PERMISSIONS[permission];
   if (!allowedRoles) {

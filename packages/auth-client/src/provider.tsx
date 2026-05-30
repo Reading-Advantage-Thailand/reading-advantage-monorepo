@@ -7,6 +7,12 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Provides auth context to the React tree. Checks existing session on mount
+ * and exposes login, register, and logout actions.
+ * @param props.children - The child components to wrap with the provider.
+ * @returns A provider component that supplies auth state and actions.
+ */
 export function AuthProvider({ children }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>({
     user: null,

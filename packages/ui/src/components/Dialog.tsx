@@ -47,6 +47,11 @@ const DialogContent = React.forwardRef<
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
+/**
+ * Renders the header section of a Dialog.
+ * @param props - HTML div attributes including className for styling
+ * @returns A flex container with column layout for dialog headers
+ */
 const DialogHeader = ({
   className,
   ...props
@@ -55,6 +60,11 @@ const DialogHeader = ({
 );
 DialogHeader.displayName = "DialogHeader";
 
+/**
+ * Renders the footer section of a Dialog with action buttons.
+ * @param props - HTML div attributes including className for styling
+ * @returns A flex container with reverse column layout for dialog footers
+ */
 const DialogFooter = ({
   className,
   ...props

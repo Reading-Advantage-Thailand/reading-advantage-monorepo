@@ -21,6 +21,14 @@ interface UpdateArticleInput {
   published?: boolean;
 }
 
+/**
+ * Lists articles for a school with optional topic and CEFR level filtering.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Filter options including topic, cefrLevel, limit, and offset
+ * @returns Array of articles matching the filter criteria
+ */
 export async function listArticles({
   db,
   user,
@@ -55,6 +63,14 @@ export async function listArticles({
     .offset(input.offset);
 }
 
+/**
+ * Gets a single article by ID.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Object containing the article ID
+ * @returns The article if found, throws Error if not found
+ */
 export async function getArticle({
   db,
   user,
@@ -81,6 +97,14 @@ export async function getArticle({
   return article;
 }
 
+/**
+ * Creates a new article.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Article creation fields (title, content, summary, level, cefrLevel, topic, image)
+ * @returns The newly created article
+ */
 export async function createArticle({
   db,
   user,

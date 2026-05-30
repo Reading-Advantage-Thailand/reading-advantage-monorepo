@@ -32,6 +32,12 @@ import {
   internDetailSchema,
 } from "@reading-advantage/types";
 
+/**
+ * Maps domain errors to appropriate tRPC TRPCError instances.
+ *
+ * @param err - The error to map
+ * @returns Never returns; always throws a TRPCError
+ */
 function mapDomainError(err: unknown): never {
   if (err instanceof AuthError) {
     throw new TRPCError({ code: "FORBIDDEN", message: err.message });

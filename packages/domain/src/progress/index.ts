@@ -25,6 +25,16 @@ interface UpdateLessonProgressInput {
   progress: number;
 }
 
+/**
+ * Records a user activity event such as a lesson completion or game session,
+ * optionally awarding XP. Requires progress:record permission.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Includes `activityType`, optional `xpEarned`, and optional `metadata`
+ * @returns The newly created activity record
+ */
 export async function recordActivity({
   db,
   user,
@@ -51,6 +61,17 @@ export async function recordActivity({
   return activity;
 }
 
+/**
+ * Retrieves comprehensive progress data for a student: activity log, word records,
+ * sentence records, total XP earned, and stories completed. Requires progress:read:all
+ * and verifies the student belongs to the caller's school.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `studentId`
+ * @returns Student progress bundle including activities, records, xpTotal, storiesCompleted
+ */
 export async function getStudentProgress({
   db,
   user,
@@ -120,6 +141,16 @@ export async function getStudentProgress({
   };
 }
 
+/**
+ * Retrieves the current user's progress record for a specific lesson,
+ * or null if no progress exists yet.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `lessonId`
+ * @returns The lesson progress record or null
+ */
 export async function getLessonProgress({
   db,
   user,
@@ -147,6 +178,16 @@ export async function getLessonProgress({
   return progress ?? null;
 }
 
+/**
+ * Updates or inserts progress for a user's lesson. Sets completedAt when
+ * status is "completed". Uses upsert to handle repeated updates.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `lessonId`, `status`, and `progress`
+ * @returns The updated progress record
+ */
 export async function updateLessonProgress({
   db,
   user,

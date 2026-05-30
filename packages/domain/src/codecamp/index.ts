@@ -27,8 +27,20 @@ interface DomainInput<T> {
   input: T;
 }
 
+const PASSWORD_COMPLEXITY = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
+
 // ─── Modules ──────────────────────────────────────────────
 
+/**
+ * Retrieves a published codecamp module by its slug, including its lessons
+ * with per-lesson user progress and overall completion stats.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `slug` of the module
+ * @returns Module with lessons array, lessonCount, completedLessons, and progress percentage
+ */
 export async function getModuleBySlug({
   db,
   user,
@@ -88,6 +100,17 @@ export async function getModuleBySlug({
   };
 }
 
+// ─── Modules ──────────────────────────────────────────────
+
+/**
+ * Retrieves all published codecamp modules with per-module progress
+ * summary (lesson count, completed lessons, and progress percentage).
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @returns Array of modules with lesson counts and completion stats
+ */
 export async function getModulesWithProgress({
   db,
   user,
@@ -136,6 +159,15 @@ export async function getModulesWithProgress({
 
 // ─── Lessons ──────────────────────────────────────────────
 
+/**
+ * Retrieves all lessons for a published module with per-lesson user progress.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `moduleId`
+ * @returns Array of lessons with userStatus and userScore
+ */
 export async function getLessonsForModule({
   db,
   user,
@@ -187,6 +219,16 @@ export async function getLessonsForModule({
   });
 }
 
+/**
+ * Retrieves a single lesson with its full content, exercises, and quiz questions,
+ * along with the user's current progress on that lesson.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `lessonId`
+ * @returns Lesson with content, exercises, quizQuestions, userStatus, and userScore
+ */
 export async function getLessonWithContent({
   db,
   user,
@@ -267,6 +309,16 @@ export async function getLessonWithContent({
 
 // ─── Exercises ────────────────────────────────────────────
 
+/**
+ * Persists an exercise code submission as a progress record marked in_progress.
+ * The actual pass/fail determination is made by the LLM review flow after this call.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `exerciseId` and `code`
+ * @returns Submission confirmation with hints array
+ */
 export async function submitExerciseAttempt({
   db,
   user,
@@ -308,6 +360,16 @@ export async function submitExerciseAttempt({
 
 export const QUIZ_PASS_THRESHOLD = 70;
 
+/**
+ * Grades a set of quiz answers for a lesson, calculates the score,
+ * and updates user progress to completed (if score >= 70) or in_progress.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `lessonId` and `answers` array of {questionId, answer}
+ * @returns Score, passed flag, total questions, correct count, and per-question details
+ */
 export async function submitQuizAnswers({
   db,
   user,
@@ -371,6 +433,16 @@ export async function submitQuizAnswers({
   };
 }
 
+/**
+ * Marks a theory lesson as completed for the current user by updating progress.
+ * Fails if the lesson does not exist or is not of type "theory".
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `lessonId`
+ * @returns Updated progress record
+ */
 export async function markTheoryComplete({
   db,
   user,
@@ -406,6 +478,16 @@ export async function markTheoryComplete({
 
 // ─── Chat ─────────────────────────────────────────────────
 
+/**
+ * Saves a chat message to an existing conversation or creates a new conversation
+ * for user messages. Assistant messages must always specify an existing conversationId.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Includes `message`, optional `conversationId`, `moduleId`, `lessonId`, and `role`
+ * @returns Saved message with the conversationId it was saved to
+ */
 export async function saveChatMessage({
   db,
   user,
@@ -477,6 +559,15 @@ export async function saveChatMessage({
   });
 }
 
+/**
+ * Retrieves the full message history for a chat conversation, scoped to the user.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `conversationId`
+ * @returns Conversation with ordered messages array
+ */
 export async function getChatHistory({
   db,
   user,
@@ -517,6 +608,14 @@ export async function getChatHistory({
   };
 }
 
+/**
+ * Lists all chat conversations started by the user, ordered by most recently updated.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @returns Array of conversations ordered by updatedAt descending
+ */
 export async function getUserConversations({
   db,
   user,
@@ -537,6 +636,16 @@ export async function getUserConversations({
 
 // ─── Progress ─────────────────────────────────────────────
 
+/**
+ * Updates or inserts user progress for a codecamp lesson. Sets completedAt
+ * when status is "completed", and handles upsert for repeated submissions.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Includes `lessonId`, optional `status` and `score`
+ * @returns Updated or inserted progress record
+ */
 export async function updateUserProgress({
   db,
   user,
@@ -631,6 +740,15 @@ const PHASE_METADATA: Record<
   },
 };
 
+/**
+ * Returns the user's dashboard with modules grouped by phase (A–D),
+ * overall progress stats, and the five most recent chat conversations.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @returns Dashboard with phases, total/completed lessons, overall progress, and recent conversations
+ */
 export async function getUserDashboard({
   db,
   user,
@@ -705,6 +823,15 @@ export async function getUserDashboard({
 
 // ─── Exercise Repos ───────────────────────────────────────
 
+/**
+ * Lists exercise repositories, optionally filtered by moduleId.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Optional `moduleId` filter
+ * @returns Array of exercise repos ordered by their display order
+ */
 export async function getExerciseRepos({
   db,
   user,
@@ -727,6 +854,16 @@ export async function getExerciseRepos({
     .orderBy(codecampExerciseRepos.order);
 }
 
+/**
+ * Looks up a single exercise repo by its URL, stripping .git and trailing slashes
+ * for normalization. Returns null if not found.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `repoUrl`
+ * @returns The exercise repo record or null
+ */
 export async function getExerciseRepoByUrl({
   db,
   user,
@@ -746,6 +883,16 @@ export async function getExerciseRepoByUrl({
   return repo ?? null;
 }
 
+/**
+ * Links a new exercise repository to a codecamp module. Requires admin permission.
+ * Throws if a repo with the same URL already exists or the module is not found.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `moduleId`, `repoUrl`, `description`, and `order`
+ * @returns The newly created exercise repo record
+ */
 export async function linkExerciseRepo({
   db,
   user,
@@ -795,6 +942,14 @@ export async function linkExerciseRepo({
 
 // ─── PR Reviews ───────────────────────────────────────────
 
+/**
+ * Lists all PR reviews submitted by the current user, ordered by creation date.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @returns Array of PR review records for the user
+ */
 export async function getPrReviewsForUser({
   db,
   user,
@@ -813,6 +968,17 @@ export async function getPrReviewsForUser({
     .orderBy(desc(codecampPrReviews.createdAt));
 }
 
+/**
+ * Creates a new PR review record for an exercise repo after validating that the
+ * PR URL is a valid GitHub pull request URL targeting the correct repository.
+ * Prevents duplicate reviews for the same PR URL.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `exerciseRepoId` and `prUrl`
+ * @returns The newly created PR review record
+ */
 export async function createPrReview({
   db,
   user,
@@ -883,6 +1049,16 @@ export async function createPrReview({
   return result;
 }
 
+/**
+ * Updates the status, optional LLM review summary, and reviewedAt timestamp of a PR review.
+ * Sets reviewedAt when the reviewStatus moves away from "pending".
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `reviewId`, `reviewStatus`, and optional `llmReviewSummary`
+ * @returns The updated PR review record
+ */
 export async function updatePrReview({
   db,
   user,
@@ -912,6 +1088,17 @@ export async function updatePrReview({
   return result;
 }
 
+/**
+ * Finds the exercise lesson for the module linked to the given approved review and
+ * marks that lesson as completed (score 100) for the review owner.
+ * Throws if the review is not approved or the exercise lesson cannot be found.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `reviewId`
+ * @returns The updated progress record for the completed exercise lesson
+ */
 export async function completeApprovedPrReviewLesson({
   db,
   user,
@@ -978,6 +1165,16 @@ export async function completeApprovedPrReviewLesson({
   });
 }
 
+/**
+ * Looks up a PR review by its PR URL. SYSTEM role can look up any review;
+ * other users can only look up their own.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `prUrl`
+ * @returns The PR review record or null
+ */
 export async function getPrReviewByPrUrl({
   db,
   user,
@@ -1000,10 +1197,21 @@ export async function getPrReviewByPrUrl({
   return result ?? null;
 }
 
-// ─── Webhook Diagnostics ─────────────────────────────────
-
 export type CodecampWebhookEventOutcome = "ignored" | "failed";
 
+// ─── Webhook Diagnostics ─────────────────────────────────
+
+/**
+ * Logs a GitHub webhook event for diagnostic purposes. Records the delivery ID,
+ * event name, action, repo/PR URLs, GitHub username, outcome, reason, and
+ * optional JSON payload.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Includes `event`, `outcome`, `reason`, and optional `deliveryId`, `action`, `repoUrl`, `prUrl`, `githubUsername`, `payload`
+ * @returns The newly created webhook event record
+ */
 export async function logWebhookEvent({
   db,
   user,
@@ -1040,6 +1248,15 @@ export async function logWebhookEvent({
   return result;
 }
 
+/**
+ * Lists recent GitHub webhook events, clamped between 1 and 100.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Optional `limit` (default 25, max 100)
+ * @returns Array of webhook events ordered by creation date descending
+ */
 export async function listWebhookEvents({
   db,
   user,
@@ -1064,6 +1281,16 @@ export async function listWebhookEvents({
 
 // ─── Module Phase & Prerequisites ─────────────────────────
 
+/**
+ * Retrieves all published modules for a given phase (A–D) with per-module
+ * lesson counts, completed lessons, and progress percentage.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `phase` ("A" | "B" | "C" | "D")
+ * @returns Array of published modules in that phase with progress stats
+ */
 export async function getModulesByPhase({
   db,
   user,
@@ -1116,6 +1343,16 @@ export async function getModulesByPhase({
   });
 }
 
+/**
+ * Retrieves a published module with its lessons, user progress, and associated
+ * exercise repositories (for the exercise lesson type).
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `moduleId`
+ * @returns Module with lessons, exerciseRepos, lessonCount, completedLessons, and progress
+ */
 export async function getModuleWithExercises({
   db,
   user,
@@ -1182,6 +1419,17 @@ export async function getModuleWithExercises({
   };
 }
 
+/**
+ * Checks whether the user has completed all lessons in the immediately preceding
+ * published module, which is required before starting the target module.
+ * Modules with order <= 1 have no prerequisite.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `moduleId`
+ * @returns Object with `canStart: true` if prerequisite is met or none exists
+ */
 export async function checkModulePrerequisite({
   db,
   user,
@@ -1254,8 +1502,17 @@ export async function checkModulePrerequisite({
 
 // ─── Admin ────────────────────────────────────────────────
 
-const PASSWORD_COMPLEXITY = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
-
+/**
+ * Creates a new INTERN account with hashed password, validates uniqueness of
+ * username and GitHub username, and creates a linked credential account.
+ * Interns are global (schoolId = null) rather than tenant-scoped.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `username`, `name`, `password`, and optional `githubUsername`
+ * @returns The newly created user record
+ */
 export async function createInternAccount({
   db,
   user,
@@ -1334,6 +1591,16 @@ export async function createInternAccount({
   return result;
 }
 
+/**
+ * Updates the GitHub username for an intern account. Normalizes the username
+ * by stripping an @ prefix and lowercasing.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `userId` and `githubUsername` (or null)
+ * @returns The updated user record
+ */
 export async function updateInternGithubUsername({
   db,
   user,
@@ -1365,6 +1632,16 @@ export async function updateInternGithubUsername({
   return result;
 }
 
+/**
+ * Lists all intern accounts with a summary of their progress: overall progress,
+ * completed modules, average quiz score, pending/approved PR reviews, and last
+ * activity timestamp.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @returns Array of intern summaries with progress stats and PR review status
+ */
 export async function listInterns({
   db,
   user,
@@ -1493,6 +1770,17 @@ export async function listInterns({
   });
 }
 
+/**
+ * Returns detailed progress for a single intern: per-module breakdown with
+ * completion counts, average scores, and PR review status; quiz scores;
+ * and full PR review history.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `userId`
+ * @returns Intern profile with moduleBreakdown, quizScores, and prReviews
+ */
 export async function getInternProgress({
   db,
   user,

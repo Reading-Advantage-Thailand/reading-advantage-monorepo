@@ -42,6 +42,15 @@ export async function getMe({
   return result;
 }
 
+/**
+ * Retrieves a user by their ID with safe columns only. Requires user:read permission.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `id`
+ * @returns The user record or throws if not found
+ */
 export async function getUser({
   db,
   user,
@@ -70,6 +79,16 @@ export async function getUser({
   return result;
 }
 
+/**
+ * Lists users with optional filters for schoolId and role, with pagination.
+ *SYSTEM role can list across schools; others are scoped to their own schoolId.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Includes `schoolId`, optional `role`, `limit`, and `offset`
+ * @returns Array of user records matching the filters
+ */
 export async function listUsers({
   db,
   user,
@@ -111,6 +130,15 @@ export async function listUsers({
     .offset(input.offset);
 }
 
+/**
+ * Looks up a user by their GitHub username, returning null if not found.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `githubUsername`
+ * @returns The user record or null
+ */
 export async function getUserByGithubUsername({
   db,
   user,
@@ -133,6 +161,16 @@ export async function getUserByGithubUsername({
   return result ?? null;
 }
 
+/**
+ * Updates a user's name and/or image. Any user can update their own profile;
+ * updating another user requires user:update permission.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `id`; optional `name` and `image`
+ * @returns The updated user record or throws if not found
+ */
 export async function updateUser({
   db,
   user,

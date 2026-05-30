@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 
+/**
+ * A React hook for managing localStorage with SSR support and cross-tab synchronization.
+ * @param key - The localStorage key to store the value under
+ * @param initialValue - The initial value to use when no stored value exists
+ * @returns A tuple of [storedValue, setValue, removeValue] for state management
+ */
 export function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T>(() => {
     if (typeof window === "undefined") return initialValue;

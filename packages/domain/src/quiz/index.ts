@@ -3,6 +3,16 @@ import { scienceAttempts } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 
+/**
+ * Records a student's science quiz attempt with score, max score, and attempt number.
+ * Requires quiz:submit permission.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `lessonId`, `score`, `maxScore`, and `attemptNumber`
+ * @returns The newly created attempt record
+ */
 export async function submitScienceAttempt({
   db,
   user,
@@ -30,6 +40,17 @@ export async function submitScienceAttempt({
   return attempt;
 }
 
+/**
+ * Retrieves all science quiz attempts for a given student and lesson.
+ * Students can view their own attempts without a permission check;
+ * viewing others requires quiz:read:all.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `studentId` and `lessonId`
+ * @returns Array of attempt records ordered by attemptNumber
+ */
 export async function getStudentScienceAttempts({
   db,
   user,

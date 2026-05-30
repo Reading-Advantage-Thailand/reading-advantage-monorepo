@@ -10,6 +10,17 @@ import { xpLogs, storyRecords } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 
+/**
+ * Retrieves comprehensive progress data for a student: activity log, word records,
+ * sentence records, total XP earned, and stories completed. Verifies the student
+ * is enrolled in a classroom in the caller's school before returning data.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `studentId`
+ * @returns Student progress bundle including activities, records, xpTotal, storiesCompleted
+ */
 export async function getStudentProgress({
   db,
   user,
@@ -80,6 +91,17 @@ export async function getStudentProgress({
   };
 }
 
+/**
+ * Computes aggregate analytics for a classroom: student count, total XP across
+ * all students, average XP, and per-student XP and story completion summaries.
+ * Verifies the class belongs to the caller's school.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `classId`
+ * @returns Class analytics with studentCount, totalXp, averageXp, and per-student summaries
+ */
 export async function getClassAnalytics({
   db,
   user,

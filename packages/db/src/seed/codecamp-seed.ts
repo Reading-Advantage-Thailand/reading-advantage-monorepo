@@ -49,6 +49,11 @@ export function findStaleModuleSlugs(canonicalSlugs: Set<string>, dbSlugs: strin
   return dbSlugs.filter((slug) => !canonicalSlugs.has(slug));
 }
 
+/**
+ * Seeds the codecamp curriculum database with all Phase A–D modules,
+ * lessons, exercises, quizzes, and exercise repository entries.
+ * Handles both inserts and updates for existing data.
+ */
 async function seed() {
   console.log("Seeding codecamp curriculum...");
 

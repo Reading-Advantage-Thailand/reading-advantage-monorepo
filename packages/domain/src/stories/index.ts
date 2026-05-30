@@ -3,6 +3,15 @@ import { stories, storyRecords } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 
+/**
+ * Retrieves a single story by ID. Throws if the story does not exist.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `storyId`
+ * @returns The story record
+ */
 export async function getStory({
   db,
   user,
@@ -29,6 +38,15 @@ export async function getStory({
   return story;
 }
 
+/**
+ * Lists stories with pagination, optionally filtered by genre.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `limit`, `offset`, and optional `genre`
+ * @returns Array of story records
+ */
 export async function listStories({
   db,
   user,
@@ -49,6 +67,16 @@ export async function listStories({
     .offset(input.offset);
 }
 
+/**
+ * Records a story read event for the current user. Sets status to "READ" by default.
+ * Used to track reading progress and completion.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `storyId`; optional `status`, `title`, and `level`
+ * @returns The newly created story record
+ */
 export async function recordStoryRead({
   db,
   user,

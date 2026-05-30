@@ -45,6 +45,11 @@ const AlertDialogContent = React.forwardRef<
 ))
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName
 
+/**
+ * Renders the header section of an AlertDialog.
+ * @param props - HTML div attributes including className for styling
+ * @returns A flex container with column layout for dialog headers
+ */
 const AlertDialogHeader = ({
   className,
   ...props
@@ -59,6 +64,11 @@ const AlertDialogHeader = ({
 )
 AlertDialogHeader.displayName = "AlertDialogHeader"
 
+/**
+ * Renders the footer section of an AlertDialog with action buttons.
+ * @param props - HTML div attributes including className for styling
+ * @returns A flex container with reverse column layout for dialog footers
+ */
 const AlertDialogFooter = ({
   className,
   ...props

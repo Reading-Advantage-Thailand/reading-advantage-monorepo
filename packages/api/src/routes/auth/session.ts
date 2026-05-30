@@ -5,6 +5,12 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+/**
+ * Handles session retrieval and enrichment with additional user fields.
+ *
+ * @param request - The Next.js request object containing the session cookie
+ * @returns NextResponse with enriched session user data or null if not authenticated
+ */
 export async function handleSession(request: NextRequest) {
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
 

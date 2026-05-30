@@ -26,6 +26,13 @@ const loginSchema = z.object({
   password: z.string().min(1).max(128),
 });
 
+/**
+ * Handles user login with username/password authentication.
+ * Implements rate limiting and creates a session on success.
+ *
+ * @param request - The Next.js request object containing username and password in body
+ * @returns NextResponse with user data and session cookie on success
+ */
 export async function handleLogin(request: NextRequest) {
   try {
     const body = await request.json();

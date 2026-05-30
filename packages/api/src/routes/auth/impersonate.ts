@@ -29,6 +29,13 @@ const impersonateSchema = z.object({
   userId: z.string().min(1),
 });
 
+/**
+ * Handles impersonation of a demo user for development purposes.
+ * Only available in non-production environments.
+ *
+ * @param request - The Next.js request object containing userId in body
+ * @returns NextResponse with session cookie set for the impersonated user
+ */
 export async function handleImpersonate(request: NextRequest) {
   if (process.env.NODE_ENV === "production") {
     return NextResponse.json(

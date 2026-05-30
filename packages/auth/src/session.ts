@@ -14,6 +14,13 @@ export interface Session {
   user: UserContext;
 }
 
+/**
+ * Creates a new session for a user.
+ * @param db - Database client
+ * @param userId - The user ID to create session for
+ * @returns The created session object including token (expires in 7 days)
+ * @throws {Error} Throws if user not found after creation
+ */
 export async function createSession(
   db: Db,
   userId: string
@@ -68,6 +75,12 @@ export async function createSession(
   };
 }
 
+/**
+ * Validates a session token and returns the session if valid.
+ * @param db - Database client
+ * @param token - The session token to validate
+ * @returns The session object if valid, null otherwise (includes cleanup of expired sessions)
+ */
 export async function validateSession(
   db: Db,
   token: string
@@ -125,6 +138,11 @@ export async function validateSession(
   };
 }
 
+/**
+ * Deletes a session by token.
+ * @param db - Database client
+ * @param token - The session token to delete
+ */
 export async function deleteSession(
   db: Db,
   token: string

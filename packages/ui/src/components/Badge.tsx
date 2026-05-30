@@ -28,6 +28,11 @@ export interface BadgeProps
     React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeVariants> {}
 
+/**
+ * A badge component for displaying status, labels, or counts.
+ * @param props - BadgeProps extending HTML span attributes and variant options
+ * @returns A styled span element with variant-based styling
+ */
 function Badge({ className, variant, ...props }: BadgeProps) {
   return (
     <span

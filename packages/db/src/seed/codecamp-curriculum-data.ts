@@ -41,6 +41,10 @@ export interface CurriculumRepo {
   order: number;
 }
 
+/**
+ * Returns the full Phase A curriculum data for codecamp modules 1–6.
+ * @returns Object containing curriculum modules and exercise repos
+ */
 export function getPhaseACurriculumData() {
   const modules: CurriculumModule[] = [
     // ─── Module 1: Dev Environment Setup ──────────────────────
@@ -1181,6 +1185,10 @@ export function getPhaseACurriculumData() {
   return { modules, exerciseRepos: getExerciseRepos(modules) };
 }
 
+/**
+ * Returns the full Phase B curriculum data for codecamp modules 7–10.
+ * @returns Object containing curriculum modules and exercise repos
+ */
 export function getPhaseBCurriculumData() {
   const modules: CurriculumModule[] = [
     // ─── Module 7: React ──────────────────────────────────────
@@ -2097,6 +2105,10 @@ export function getPhaseBCurriculumData() {
   return { modules, exerciseRepos: getExerciseRepos(modules) };
 }
 
+/**
+ * Returns the full Phase C curriculum data for codecamp modules 11–13.
+ * @returns Object containing curriculum modules and exercise repos
+ */
 export function getPhaseCCurriculumData() {
   const modules: CurriculumModule[] = [
     // ─── Module 11: Databases & ORMs ──────────────────────────
@@ -2785,6 +2797,11 @@ export const MODULE_REPO_MAP: Record<
   },
 };
 
+/**
+ * Maps curriculum modules to their exercise repository metadata.
+ * @param modules - Array of curriculum modules to map
+ * @returns Array of curriculum repo entries for the given modules
+ */
 function getExerciseRepos(modules: CurriculumModule[]): CurriculumRepo[] {
   return modules
     .map((mod) => {
@@ -2840,6 +2857,10 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   },
 ];
 
+/**
+ * Returns the full Phase D curriculum data for codecamp modules 14–18.
+ * @returns Object containing curriculum modules and exercise repos
+ */
 export function getPhaseDCurriculumData() {
   const modules: CurriculumModule[] = [
     // ─── Module 14: Internationalization ──────────────────────

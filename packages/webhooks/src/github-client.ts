@@ -17,14 +17,26 @@ export interface GitHubPRInfo {
 
 // ─── Configuration ────────────────────────────────────────
 
+export /**
+ * Gets the GitHub App ID from the GITHUB_APP_ID environment variable.
+ * @returns The app ID string, or empty string if not configured.
+ */
 function getAppId(): string {
   return process.env.GITHUB_APP_ID ?? "";
 }
 
+export /**
+ * Gets the GitHub App private key from the GITHUB_PRIVATE_KEY environment variable.
+ * @returns The private key string, or empty string if not configured.
+ */
 function getPrivateKey(): string {
   return process.env.GITHUB_PRIVATE_KEY ?? "";
 }
 
+export /**
+ * Gets the GitHub App installation ID from the GITHUB_INSTALLATION_ID environment variable.
+ * @returns The installation ID string, or empty string if not configured.
+ */
 function getInstallationId(): string {
   return process.env.GITHUB_INSTALLATION_ID ?? "";
 }
@@ -81,6 +93,12 @@ export async function getInstallationToken(installationId: string): Promise<stri
 
 // ─── Signature Verification ───────────────────────────────
 
+/**
+ * Verifies the HMAC signature of a GitHub webhook payload.
+ * @param payload - The raw request body as a string.
+ * @param signature - The x-hub-signature-256 header value.
+ * @returns True if the signature is valid, false otherwise.
+ */
 export function verifyWebhookSignature(payload: string, signature: string): boolean {
   const secret = process.env.GITHUB_WEBHOOK_SECRET ?? "";
   if (!secret) {

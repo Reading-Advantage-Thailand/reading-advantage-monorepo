@@ -11,6 +11,13 @@ interface CreateContextOptions {
   authorization?: string | null;
 }
 
+/**
+ * Extracts the auth session token from request headers or cookies.
+ *
+ * @param opts - Options containing optional authorization header
+ * @param opts.authorization - Optional Authorization header value (e.g., "Bearer <token>")
+ * @returns The auth token string, or undefined if not found
+ */
 export async function getAuthToken(opts: CreateContextOptions = {}): Promise<string | undefined> {
   const cookieStore = await cookies();
   let token = cookieStore.get("session_token")?.value;
@@ -22,6 +29,13 @@ export async function getAuthToken(opts: CreateContextOptions = {}): Promise<str
   return token;
 }
 
+/**
+ * Creates the tRPC request context with database access and auth state.
+ *
+ * @param opts - Options containing optional authorization header
+ * @param opts.authorization - Optional Authorization header value (e.g., "Bearer <token>")
+ * @returns The tRPC context object with db, tenantDb, and auth properties
+ */
 export async function createContext(opts: CreateContextOptions = {}): Promise<Context> {
   let auth: AuthContext | null = null;
 

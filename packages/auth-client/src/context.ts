@@ -29,6 +29,11 @@ export type AuthContextValue = AuthState & AuthActions;
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
+/**
+ * Returns the auth context value from the nearest AuthProvider.
+ * @returns The auth context containing user state and auth actions.
+ * @throws {Error} If used outside of an AuthProvider tree.
+ */
 export function useAuthContext(): AuthContextValue {
   const ctx = useContext(AuthContext);
   if (!ctx) {

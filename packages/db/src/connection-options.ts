@@ -1,5 +1,10 @@
 import type { Options } from "postgres";
 
+/**
+ * Extracts the Unix socket path from a Postgres connection string.
+ * @param connectionString - The Postgres connection string to parse
+ * @returns The socket path if present and starting with "/", otherwise null
+ */
 export function getDatabaseSocketPath(connectionString: string | undefined): string | null {
   if (!connectionString) {
     return null;
@@ -11,6 +16,12 @@ export function getDatabaseSocketPath(connectionString: string | undefined): str
   return socketPath?.startsWith("/") ? socketPath : null;
 }
 
+/**
+ * Normalizes a Postgres connection string by removing the socket host param
+ * so the connection uses standard TCP negotiation instead of a socket file.
+ * @param connectionString - The Postgres connection string to normalize
+ * @returns The normalized connection string without socket host param
+ */
 export function normalizePostgresConnectionString(connectionString: string | undefined): string {
   if (!connectionString) {
     return "";
@@ -49,6 +60,11 @@ function resolvePoolMax(): number {
   return parsed;
 }
 
+/**
+ * Builds the Postgres connection options from environment variables.
+ * @param connectionString - Optional connection string to parse for socket/port
+ * @returns Postgres connection options object
+ */
 export function buildPostgresOptions(connectionString: string | undefined): Options<Record<string, never>> {
   // FR-2: `prepare: false` is required for transaction-mode pooling.
   //   `postgres-js` uses named prepared statements by default (`prepare: true`),

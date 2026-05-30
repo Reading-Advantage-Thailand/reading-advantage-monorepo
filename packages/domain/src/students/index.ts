@@ -12,6 +12,16 @@ interface ImportRosterInput {
   students: Array<{ name: string; username: string }>;
 }
 
+/**
+ * Lists all students enrolled in a classroom, returning their id, name, email,
+ * role, xp, level, and cefrLevel. Verifies the classroom belongs to the caller's school.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `classroomId`
+ * @returns Array of student user records enrolled in the classroom
+ */
 export async function listStudents({
   db,
   user,
@@ -51,6 +61,17 @@ export async function listStudents({
     .where(eq(classroomStudents.classroomId, input.classroomId));
 }
 
+/**
+ * Imports or upserts a roster of students into a classroom. Existing usernames
+ * are reused; new usernames are created as STUDENT role. Teacher must own the
+ * classroom or be ADMIN/SYSTEM. Runs inside a transaction.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `classroomId` and `students` array of {name, username}
+ * @returns Array of {username, id} for each processed student
+ */
 export async function importRoster({
   db,
   user,

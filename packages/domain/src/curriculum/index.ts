@@ -3,6 +3,14 @@ import { scienceLessons } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 
+/**
+ * Gets a single science lesson by ID.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Object containing the lessonId
+ * @returns The science lesson if found, throws Error if not found
+ */
 export async function getScienceLesson({
   db,
   user,
@@ -29,6 +37,14 @@ export async function getScienceLesson({
   return lesson;
 }
 
+/**
+ * Lists science lessons, optionally filtered by grade level.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Object containing optional gradeLevel filter
+ * @returns Array of science lessons
+ */
 export async function listScienceLessons({
   db,
   user,
@@ -51,6 +67,14 @@ export async function listScienceLessons({
   return query;
 }
 
+/**
+ * Creates a new science lesson.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Lesson creation fields (slug, title, gradeLevel, order, lessonType, description, structuredContent)
+ * @returns The newly created science lesson
+ */
 export async function createScienceLesson({
   db,
   user,

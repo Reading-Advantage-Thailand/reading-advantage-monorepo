@@ -33,6 +33,14 @@ export type ReviewResult = z.infer<typeof reviewResultSchema>;
 
 // ─── Prompt Builder ───────────────────────────────────────
 
+/**
+ * Builds the system prompt string for the LLM code reviewer, optionally
+ * grounded with module title and description.
+ *
+ * @param moduleTitle - Optional module title for context
+ * @param moduleDescription - Optional module description for context
+ * @returns Formatted system prompt string for the LLM
+ */
 function buildSystemPrompt(moduleTitle?: string, moduleDescription?: string): string {
   return `You are a friendly and educational code reviewer for a web development bootcamp.
 Your goal is to help interns learn by giving constructive, actionable feedback on their code.

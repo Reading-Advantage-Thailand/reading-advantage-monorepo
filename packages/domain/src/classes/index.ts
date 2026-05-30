@@ -11,6 +11,14 @@ interface ListClassesInput {
   includeArchived: boolean;
 }
 
+/**
+ * Creates a new class (classroom) for the caller's school.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Object containing the class name
+ * @returns The newly created classroom
+ */
 export async function createClass({
   db,
   user,
@@ -36,6 +44,14 @@ export async function createClass({
   return klass;
 }
 
+/**
+ * Lists all classes (classrooms) for the caller's school. Teachers only see their own classes.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Object containing includeArchived flag
+ * @returns Array of classrooms
+ */
 export async function listClasses({
   db,
   user,

@@ -25,6 +25,13 @@ const registerSchema = z.object({
   schoolId: z.string().uuid(),
 });
 
+/**
+ * Handles new user registration with username, password, name, and school.
+ * Creates the user account and establishes a session.
+ *
+ * @param request - The Next.js request object containing registration data in body
+ * @returns NextResponse with user data and session cookie on success
+ */
 export async function handleRegister(request: NextRequest) {
   try {
     const body = await request.json();

@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 
+/**
+ * A React hook for matching CSS media queries with live updates.
+ * @param query - The media query string to match against (e.g., "(min-width: 768px)")
+ * @returns A boolean indicating whether the query currently matches
+ */
 export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(() => {
     if (typeof window !== "undefined") {

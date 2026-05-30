@@ -31,6 +31,11 @@ const systemUser = {
 
 const globalTenant = { schoolId: null as string | null };
 
+/**
+ * Logs a webhook event to the database for diagnostic purposes.
+ * @param input - The event data to log including deliveryId, event type, action, repo/PR URLs, outcome, and reason.
+ * @returns void (logs to DB, swallows errors gracefully).
+ */
 async function logWebhookEvent(input: {
   deliveryId?: string | null;
   event: string;
@@ -61,6 +66,13 @@ const openrouter = createOpenAI({
   baseURL: "https://openrouter.ai/api/v1",
 });
 
+/**
+ * Generates a code review via LLM using the OpenRouter API.
+ * Falls back to a mock review when OPENROUTER_API_KEY is not configured.
+ * @param system - The system prompt defining review guidelines.
+ * @param prompt - The user prompt containing the PR diff and instructions.
+ * @returns A review result matching the reviewResultSchema.
+ */
 async function generateReview(system: string, prompt: string): Promise<z.infer<typeof reviewResultSchema>> {
   const model = openrouter("xiaomi/mimo-v2.5");
 

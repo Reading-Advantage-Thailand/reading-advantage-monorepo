@@ -19,6 +19,11 @@ export interface TenantDB extends DB {
   readonly __tenantBrand: true;
 }
 
+/**
+ * Type guard that checks if an object has a defined schoolId property.
+ * @param table - The object to check
+ * @returns True if the object has a defined schoolId property
+ */
 function hasSchoolId(table: unknown): table is { schoolId: unknown } {
   return (
     table !== null &&
@@ -28,6 +33,15 @@ function hasSchoolId(table: unknown): table is { schoolId: unknown } {
   );
 }
 
+/**
+ * Wraps a Drizzle query builder with automatic schoolId tenant scoping. Intercepts
+ * .where() calls to inject tenant conditions and ensures unscoped queries are scoped
+ * before execution.
+ * @param builder - The Drizzle query builder to wrap
+ * @param table - The table being queried (used to access schoolId column)
+ * @param tenant - The tenant context containing schoolId
+ * @returns A proxied query builder with automatic tenant scoping
+ */
 function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
   const state = { whereCalled: false };
 

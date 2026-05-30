@@ -30,6 +30,15 @@ interface SubmitAssignmentInput {
   score: number;
 }
 
+/**
+ * Creates a new assignment for a classroom. Validates that the classroom belongs to the
+ * caller's school and that all specified studentIds are enrolled in that classroom.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Assignment creation fields (title, classroomId, articleId, lessonId, dueDate, type, studentIds)
+ * @returns The newly created assignment
+ */
 export async function createAssignment({
   db,
   user,
@@ -103,6 +112,14 @@ export async function createAssignment({
   });
 }
 
+/**
+ * Lists all assignments for a specific classroom. Validates classroom ownership.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Object containing the classroomId
+ * @returns Array of assignments for the classroom
+ */
 export async function listAssignments({
   db,
   user,
@@ -133,6 +150,14 @@ export async function listAssignments({
     .where(eq(assignments.classroomId, input.classroomId));
 }
 
+/**
+ * Gets a single assignment by ID. Validates assignment belongs to caller's school.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Object containing the assignment ID
+ * @returns The assignment if found, throws Error if not found
+ */
 export async function getAssignment({
   db,
   user,
@@ -170,6 +195,14 @@ export async function getAssignment({
   return assignment;
 }
 
+/**
+ * Updates an assignment's title and/or due date. Validates assignment belongs to caller's school.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Object containing assignment ID and optional title/dueDate
+ * @returns The updated assignment
+ */
 export async function updateAssignment({
   db,
   user,
@@ -215,6 +248,14 @@ export async function updateAssignment({
   return updated;
 }
 
+/**
+ * Deletes an assignment. Validates assignment belongs to caller's school.
+ * @param db - Tenant-scoped database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) context
+ * @param input - Object containing the assignment ID
+ * @returns Object with success flag
+ */
 export async function deleteAssignment({
   db,
   user,
