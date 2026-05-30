@@ -20,6 +20,35 @@ Key files:
 
 Never start significant work without an active track.
 
+## Documentation Standards
+
+### JSDoc for All Functions
+
+Every exported function, class, interface, and type alias must have a JSDoc comment. Follow the Google TypeScript Style Guide: **do not repeat types** in JSDoc — TypeScript already provides type information.
+
+Required for all functions:
+- **Description**: One clear sentence stating what the function does.
+- **`@param`**: Describe each parameter's purpose (no types).
+- **`@returns`**: Describe the return value (no type).
+
+Required when applicable:
+- **`@throws`**: Document error conditions and what triggers them.
+- **`@example`**: For complex utilities or non-obvious usage patterns.
+
+Example:
+```ts
+/**
+ * Calculates the discounted price given an original price and discount percentage.
+ * @param originalPrice The price before discounts.
+ * @param discountPercent Integer from 0 to 100.
+ * @returns The final price after discount.
+ * @throws When discountPercent is outside 0-100.
+ */
+function calculateDiscount(originalPrice: number, discountPercent: number): number { ... }
+```
+
+This standard enables `build-graph` to extract meaningful summaries for the codebase knowledge graph.
+
 ## Architecture
 
 ```
