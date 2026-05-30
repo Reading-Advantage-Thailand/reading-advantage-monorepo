@@ -146,7 +146,7 @@ This file tracks all major tracks for the project.
   Reactive queries on Postgres + Drizzle + tRPC. **Stub only** — captures design decisions settled 2026-05-22 (no codegen; domain layer is the instrumentation point; read/write seam; connection model; pooler caveat). Blocked on the Prisma→Drizzle migration (Track 4) and Connection Pooling; the reactivity approach (LISTEN/NOTIFY vs sync engine vs WAL) must be chosen before it can be planned.
 
 - [x] **Track: JSDoc Comments for Shared Packages** (153 functions documented) [commit: 144b161]
-  *Link: [./tracks/jsdoc_shared_packages_20260530/](./tracks/jsdoc_shared_packages_20260530/)*
+  *Link: [./archive/jsdoc_shared_packages_20260530/](./archive/jsdoc_shared_packages_20260530/)*
   Add JSDoc comments to all 154 exported functions across 8 shared packages (domain, api, auth, db, webhooks, ui, auth-client, utils). Uses build-graph to track progress and verify completion. Exported functions first, bottom-up dependency order. *Status: COMPLETE — All 8 phases done. 153 functions documented. All tests pass (domain: 239, auth: 64, api: 94, db: 232). Verification script at scripts/verify-jsdoc.sh. build-graph scan timed out; use `build-graph scan . ./graph.db` to refresh summaries.*
 
 ---
