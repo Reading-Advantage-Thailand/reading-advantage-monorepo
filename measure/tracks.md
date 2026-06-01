@@ -59,7 +59,7 @@ This file tracks all major tracks for the project.
   Fix plugin resolution across workspace boundaries, migrate reading-advantage to v9. *Status: COMPLETE — reading-advantage migrated to eslint.config.mjs. All 5 apps on flat config. Plugin resolution verification deferred to faster hardware.*
 - [x] **Track: Science-Advantage Auth Migration** (26/26 tasks) *Link: [./archive/science_auth_migration_20260503/](./archive/science_auth_migration_20260503/)*
   Migrate from standalone Prisma auth to shared @reading-advantage/auth, auth-client, and db packages. Build passes, auth files lint clean. Non-auth Prisma (curriculum, lessons) preserved.
-- [ ] **Track: Monorepo Tech-Debt Cleanup** *Link: [./archive/tech_debt_cleanup_20260505/](./archive/tech_debt_cleanup_20260505/)*
+- [x] **Track: Monorepo Tech-Debt Cleanup** *Link: [./archive/tech_debt_cleanup_20260505/](./archive/tech_debt_cleanup_20260505/)*
   Resolve 7 remaining open tech-debt items: react/zustand dependency alignment, advantage-games ESLint warnings, science-advantage analytics lint, flaky perf tests, shared i18n types, and visual regression tests.
 
 ---
@@ -72,7 +72,7 @@ This file tracks all major tracks for the project.
 - [x] **Track: Update CodeCamp Advantage Product Page** *Link: [./archive/www_codecamp_product_update_20260517/](./archive/www_codecamp_product_update_20260517/)*
   Update marketing page from "Coming Soon" to reflect deployed platform: 18+ module curriculum, AI chat tutor, GitHub PR review automation, intern management. Add curriculum timeline and feature highlights. *Status: COMPLETE — Page updated with 4-phase curriculum (18 modules), AI tutor, GitHub integration, and progress tracking features. All 7 tests passing, lint clean. Commit: e27afc5*
 
-- [ ] **Track: Create Advantage Games Showcase Page** *Link: [./archive/www_games_showcase_20260517/](./archive/www_games_showcase_20260517/)*
+- [x] **Track: Create Advantage Games Showcase Page** *Link: [./archive/www_games_showcase_20260517/](./archive/www_games_showcase_20260517/)*
   Create dedicated games showcase page highlighting all 27 implemented educational games with XP system, leaderboard, adaptive difficulty, and cross-platform integration info.
 
 - [ ] **Track: Refresh Product Pages with Real Features** *Link: [./tracks/www_product_features_refresh_20260517/](./tracks/www_product_features_refresh_20260517/)*
