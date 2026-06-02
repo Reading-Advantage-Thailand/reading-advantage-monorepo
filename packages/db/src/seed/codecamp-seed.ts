@@ -104,7 +104,64 @@ async function seed() {
       if (isExisting) {
         console.log(`  ✏️  Module "${mod.slug}" already exists, updated metadata.`);
         updatedModules++;
-        // Skip lessons/exercises/quizzes for existing modules to avoid disrupting student progress
+
+        // For existing modules, insert only missing lesson types to avoid
+        // disrupting student progress on existing lessons.
+        const existingLessons = await tx
+          .select({ type: codecampLessons.type })
+          .from(codecampLessons)
+          .where(eq(codecampLessons.moduleId, insertedModule.id));
+
+        const existingTypes = new Set(existingLessons.map((l) => l.type));
+
+        for (const lesson of mod.lessons) {
+          if (existingTypes.has(lesson.type)) {
+            continue;
+          }
+
+          const [insertedLesson] = await tx
+            .insert(codecampLessons)
+            .values({
+              moduleId: insertedModule.id,
+              title: lesson.title,
+              description: lesson.description,
+              order: lesson.order,
+              type: lesson.type,
+              contentJson: lesson.contentJson,
+            })
+            .returning();
+
+          seededLessons++;
+          console.log(`    ➕ Added missing "${lesson.type}" lesson: "${lesson.title}"`);
+
+          if (lesson.exercises && lesson.exercises.length > 0) {
+            for (const ex of lesson.exercises) {
+              await tx.insert(codecampExercises).values({
+                lessonId: insertedLesson.id,
+                title: ex.title,
+                instructions: ex.instructions,
+                starterCode: ex.starterCode,
+                expectedOutput: ex.expectedOutput,
+                hintsJson: ex.hintsJson,
+                order: ex.order,
+              });
+            }
+          }
+
+          if (lesson.questions && lesson.questions.length > 0) {
+            for (const q of lesson.questions) {
+              await tx.insert(codecampQuizQuestions).values({
+                lessonId: insertedLesson.id,
+                question: q.question,
+                optionsJson: q.optionsJson,
+                correctAnswer: q.correctAnswer,
+                explanation: q.explanation,
+                order: q.order,
+              });
+            }
+          }
+        }
+
         continue;
       }
 
