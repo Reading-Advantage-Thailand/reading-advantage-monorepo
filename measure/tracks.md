@@ -99,7 +99,7 @@ This file tracks all major tracks for the project.
   Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end. *Status: Repo README audit complete, Module 18 GitHub Issues UI wired, M1/M17 edge cases resolved/not needed, quality gates green. GitHub App installed on all 18 repos as of 2026-05-25. E2E pipeline verified 2026-05-25 via `scripts/codecamp-pr-e2e.sh` (full webhook → DB → LLM → PR-comment loop, ~25s). UI verification deferred to separate smoke.*
 
 - [x] **Track: codecamp-advantage — Exercise Lessons Backfill**
-  *Link: [./tracks/codecamp_exercise_lessons_20260602/](./tracks/codecamp_exercise_lessons_20260602/)*
+  *Link: [./archive/codecamp_exercise_lessons_20260602/](./archive/codecamp_exercise_lessons_20260602/)*
   Add missing `exercise` type lessons to 16 modules (only Git & GitHub has one). The seed script skips lessons for existing modules; this track backfills them and updates the seed to support incremental lesson insertion. Unblocks PR review → lesson completion flow. *Status: COMPLETE — 15 exercise lessons backfilled, seed script updated for incremental insertion, 243 tests pass, lint/type-check clean.*
 
 - [x] **Track: codecamp-advantage — Thai Localization**
