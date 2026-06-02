@@ -26,7 +26,6 @@ import {
   codecampModules,
   codecampLessons,
   codecampExercises,
-  codecampExerciseRepos,
 } from "../schema/codecamp.js";
 import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData, getPhaseDCurriculumData, MODULE_REPO_MAP } from "./codecamp-curriculum-data.js";
 
