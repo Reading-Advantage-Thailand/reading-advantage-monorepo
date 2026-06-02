@@ -1,0 +1,14 @@
+{
+  "id": "codecamp_exercise_lessons_20260602",
+  "title": "Add Exercise Lessons to All Codecamp Modules",
+  "type": "bug",
+  "status": "completed",
+  "created": "2026-06-02",
+  "updated": "2026-06-02",
+  "priority": "high",
+  "actual_tasks": 18,
+  "relatedTracks": [
+    "codecamp_exercise_repos_20260515",
+    "codecamp_advantage_20260513"
+  ]
+}
