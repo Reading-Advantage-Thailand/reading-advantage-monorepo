@@ -12,13 +12,15 @@
 - [ ] Task: Measure - User Manual Verification 'Setup Automation Script' (Protocol in workflow.md)
 
 ## Phase 2: Generation of Days 31-40
-- [~] Task: Generate English & Thai text, 16:9 images, segments JSON, and vertical videos for Days 31-40.
+- [x] Task: Generate English & Thai text, 16:9 images, segments JSON, and vertical videos for Days 31-40.
   - Per day: EN post, TH post, cover image, `<slug>-segments.json` next to TH post, Thai video via pipeline.
+  - *Status: COMPLETE — Days 31-40 generated.*
 - [ ] Task: Measure - User Manual Verification 'Generation of Days 31-40' (Protocol in workflow.md)
 
 ## Phase 3: Generation of Days 41-50
-- [ ] Task: Generate English & Thai text, 16:9 images, segments JSON, and vertical videos for Days 41-50.
+- [~] Task: Generate English & Thai text, 16:9 images, segments JSON, and vertical videos for Days 41-50.
   - Per day: EN post, TH post, cover image, `<slug>-segments.json` next to TH post, Thai video via pipeline.
+  - *Status: IN PROGRESS — Days 41, 42, 43 generated. Days 44-50 pending.*
 - [ ] Task: Measure - User Manual Verification 'Generation of Days 41-50' (Protocol in workflow.md)
 
 ## Phase 4: Generation of Days 51-60

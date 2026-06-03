@@ -1,11 +1,11 @@
 {
   "track_id": "blog_marketing_phase2_20260501",
   "type": "feature",
-  "status": "new",
+  "status": "in_progress",
   "created_at": "2026-05-01T00:00:00Z",
-  "updated_at": "2026-05-01T00:00:00Z",
+  "updated_at": "2026-06-04T06:30:00Z",
   "description": "Phase 2 Marketing Blog Generation (Days 31-60)",
   "estimated_tasks": 7,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 3,
+  "deviation_notes": "Phase 2 (Days 31-40) complete. Phase 3 (Days 41-50) in progress: Days 41-43 generated on 2026-06-04."
 }
