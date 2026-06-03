@@ -1,0 +1,4 @@
+Task: Protocol v1.1 + graph.db Rebuild
+Summary: Rebuilt graph.db from packages/ (1204 nodes, 1716 edges, 138 files). Updated audit protocol from v1.0 to v1.1 with 6 new rules (§3.6, §4.10, §5.10, §9.7, §14, severity counting). Added CI gate script and wired into workflow.
+Files: .github/workflows/ci.yml, measure/agents-md-audit-protocol.md, measure/lessons-learned.md, measure/tech-debt.md, measure/tracks.md, scripts/ci/check-graph-db.sh, measure/tracks/protocol_v1_1_graphdb_20260603/plan.md
+Why: F-1003 — pilot audit ran against empty graph.db, forcing grep-only fallback. CI gate prevents recurrence.
