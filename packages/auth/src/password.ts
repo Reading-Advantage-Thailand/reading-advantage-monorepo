@@ -9,7 +9,7 @@ type Db = PostgresJsDatabase<typeof schema>;
 
 /** OWASP-recommended Argon2id parameters (2024). */
 export const ARGON2ID_OPTS = {
-  type: argon2.Algorithm.Argon2id,
+  type: 2, // argon2.Algorithm.Argon2id
   memoryCost: 19456,
   timeCost: 2,
   parallelism: 1,

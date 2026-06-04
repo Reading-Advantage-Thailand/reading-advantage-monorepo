@@ -9,6 +9,7 @@ import {
   recordFailure,
   resetLimit,
   SESSION_COOKIE_NAME,
+  rehashOnLogin,
 } from "@reading-advantage/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -100,6 +101,14 @@ export async function handleLogin(request: NextRequest) {
         { message: "Invalid username or password" },
         { status: 401 }
       );
+    }
+
+    // One-shot bcrypt → Argon2id migration (non-blocking)
+    try {
+      await rehashOnLogin(db, user.id, password, account.password);
+    } catch (rehashErr) {
+      // Log but don't block login — user can retry on next login
+      console.warn("Password rehash failed (non-blocking):", rehashErr instanceof Error ? rehashErr.message : "Unknown");
     }
 
     // Success — create session
