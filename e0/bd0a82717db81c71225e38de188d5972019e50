@@ -1,0 +1,4 @@
+Task: Phases 1-4 — Argon2id migration in packages/auth
+- Files changed: packages/auth/src/password.ts, packages/auth/src/__tests__/password.test.ts, packages/auth/src/index.ts, packages/auth/package.json
+- Graph blast radius: hashPassword (2 callers), verifyPassword (3 callers) — both are additive changes (signature unchanged)
+- bcryptjs kept as dependency for cross-algorithm verify; removable once all hashes are migrated
