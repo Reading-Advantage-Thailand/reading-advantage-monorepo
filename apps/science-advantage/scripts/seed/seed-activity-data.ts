@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '@reading-advantage/auth';
 
 import { db, eq, inArray, sql } from '@reading-advantage/db';
 import {
@@ -41,7 +41,7 @@ export async function seedActivityData(): Promise<void> {
   console.log('Seeding activity data...');
 
   const password = 'Password123!';
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hashPassword(password);
   const now = new Date();
 
   // 1. Expand Student Roster

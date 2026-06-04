@@ -1,12 +1,12 @@
 #!/usr/bin/env tsx
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '@reading-advantage/auth';
 
 import { db } from '@reading-advantage/db';
 import { accounts, users } from '@reading-advantage/db/schema';
 
 async function main() {
   const password = 'Password123!';
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hashPassword(password);
   const now = new Date();
 
   // Demo accounts for each role
