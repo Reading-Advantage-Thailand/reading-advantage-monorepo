@@ -191,7 +191,7 @@ describe('GET /api/students/[studentId]/mastery-profile (integration)', () => {
     });
     expect(response.status).toBe(403);
     const body = await response.json();
-    expect(body.error).toBe('Forbidden');
+    expect(body.error).toMatch(/lacks permission/);
   });
 
   it('returns READY status when no pending mastery runs exist', async () => {
@@ -390,8 +390,8 @@ describe('GET /api/students/[studentId]/mastery-profile (integration)', () => {
     const response = await GET(req, {
       params: Promise.resolve({ studentId: testStudent.id }),
     });
-    // zod throw → caught → 500. We just assert non-2xx.
-    expect(response.status).toBeGreaterThanOrEqual(400);
+    // limit is clamped to max; should succeed.
+    expect(response.status).toBe(200);
   });
 
   it('filters by strand prefix', async () => {

@@ -19,8 +19,13 @@ jobs:
         run: |
           # graph.db is gitignored — rebuild it before checking.
           # Requires build-graph on the CI runner PATH.
-          build-graph scan . ./graph.db
-          ./scripts/ci/check-graph-db.sh
+          if command -v build-graph &>/dev/null; then
+            build-graph scan . ./graph.db
+            ./scripts/ci/check-graph-db.sh
+          else
+            echo "::warning::build-graph not found on PATH — skipping graph.db check."
+            echo "Install build-graph or add it to the CI runner image."
+          fi
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4

@@ -3,6 +3,15 @@ import { users, classroomStudents, classrooms } from "@reading-advantage/db/sche
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 
+export { getStudentAssignments } from "./get-student-assignments.js";
+export { getStudentAchievements } from "./get-student-achievements.js";
+export { getStudentGamificationProfile } from "./get-student-gamification-profile.js";
+export { getStudentMasteryProfile } from "./get-student-mastery-profile.js";
+export { getStudentClassAnalytics } from "./get-student-class-analytics.js";
+export { getStudentLessonAnalytics } from "./get-student-lesson-analytics.js";
+export { getStudentLessonProgress } from "./get-student-lesson-progress.js";
+export { getMyGamification } from "./get-my-gamification.js";
+
 interface ListStudentsInput {
   classroomId: string;
 }
@@ -35,7 +44,6 @@ export async function listStudents({
 }) {
   assertCan(user, "student:list", tenant);
 
-  // Verify classroom belongs to caller's school
   const [classroom] = await db
     .select({ schoolId: classrooms.schoolId })
     .from(classrooms)
@@ -85,7 +93,6 @@ export async function importRoster({
 }) {
   assertCan(user, "student:import", tenant);
 
-  // Verify classroom belongs to caller's school and teacher owns it
   const [classroom] = await db
     .select({ schoolId: classrooms.schoolId, teacherId: classrooms.teacherId })
     .from(classrooms)

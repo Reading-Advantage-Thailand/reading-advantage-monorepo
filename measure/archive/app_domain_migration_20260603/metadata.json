@@ -1,0 +1,11 @@
+{
+  "track_id": "app_domain_migration_20260603",
+  "type": "feature",
+  "status": "completed",
+  "created_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-06-04T00:00:00Z",
+  "description": "Get apps/science-advantage/app/** to import from @reading-advantage/domain instead of @reading-advantage/db. Subsumes F-305 (root) + F-203, F-208, F-306, F-307, F-405, F-701, F-702 (all symptoms).",
+  "estimated_tasks": 30,
+  "actual_tasks": 76,
+  "deviation_notes": "Actual work was larger than estimated due to: (1) 27 routes needed migration (not 22), (2) each route needed a domain function + barrel export + tests, (3) 7 new permission keys needed to be added, (4) integration test assertions needed updating for new error messages, (5) domain package dist rebuild was required. Used subagents for parallel route migrations which significantly sped up execution."
+}

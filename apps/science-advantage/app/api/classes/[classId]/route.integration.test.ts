@@ -123,22 +123,22 @@ describe('GET /api/classes/[classId] (integration)', () => {
     expect(body).toEqual({ success: false, error: 'Class not found' });
   });
 
-  it('returns 403 for a non-owning teacher who is not admin or enrolled', async () => {
+  it('returns 404 for a non-owning teacher who is not admin or enrolled', async () => {
     const session = await createSession(otherTeacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });
     const res = await GET(buildReq(cls.id), {
       params: Promise.resolve({ classId: cls.id }),
     });
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(404);
   });
 
-  it('returns 403 for outsider student', async () => {
+  it('returns 404 for outsider student', async () => {
     const session = await createSession(outsider.id);
     mockCookies.get.mockReturnValue({ value: session.token });
     const res = await GET(buildReq(cls.id), {
       params: Promise.resolve({ classId: cls.id }),
     });
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(404);
   });
 
   it('returns 200 with full detail for the owning teacher', async () => {

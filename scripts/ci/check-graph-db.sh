@@ -18,7 +18,7 @@ if [ ! -f "$DB_PATH" ]; then
 fi
 
 STATS_OUTPUT=$(build-graph stats "$DB_PATH" 2>&1)
-TOTAL_FILES=$(echo "$STATS_OUTPUT" | grep -oP 'Total files: \K\d+' || echo "0")
+TOTAL_FILES=$(echo "$STATS_OUTPUT" | grep -o 'Total files: [0-9]*' | grep -o '[0-9]*' || echo "0")
 
 if [ "$TOTAL_FILES" = "0" ]; then
   echo "ERROR: graph.db is empty (Total files: 0)."

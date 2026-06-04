@@ -80,4 +80,40 @@ describe("migration SQL", () => {
     const cascadeCount = (sql0015.match(/ON DELETE CASCADE/g) || []).length;
     expect(cascadeCount).toBe(8); // 4 tables × 2 FKs each
   });
+
+  it("0017 adds schoolId to all 17 science tables with indexes", () => {
+    const sql0017 = readFileSync(
+      join(process.cwd(), "drizzle/0017_science_school_id.sql"),
+      "utf8"
+    );
+
+    const expectedTables = [
+      "gamification_profiles",
+      "achievements",
+      "science_classes",
+      "science_standards",
+      "science_standard_mastery",
+      "science_lessons",
+      "science_curriculum_units",
+      "science_quiz_questions",
+      "science_attempts",
+      "science_question_responses",
+      "science_lesson_completions",
+      "science_mastery_runs",
+      "science_assignments",
+      "science_lesson_standards",
+      "science_unit_lessons",
+      "science_class_students",
+      "science_question_standards",
+    ];
+
+    for (const table of expectedTables) {
+      expect(sql0017).toContain(`ALTER TABLE "${table}" ADD COLUMN "school_id"`);
+      expect(sql0017).toContain(`REFERENCES "schools"("id")`);
+    }
+
+    // Verify indexes exist for all tables
+    const indexCount = (sql0017.match(/CREATE INDEX/g) || []).length;
+    expect(indexCount).toBe(17);
+  });
 });

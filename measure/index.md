@@ -4,6 +4,7 @@
 - [Product Definition](./product.md)
 - [Product Guidelines](./product-guidelines.md)
 - [Tech Stack](./tech-stack.md)
+- [AGENTS.md Compliance Audit Protocol](./agents-md-audit-protocol.md)
 
 ## Workflow
 - [Workflow](./workflow.md)

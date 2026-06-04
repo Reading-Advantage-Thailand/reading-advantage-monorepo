@@ -1,0 +1,11 @@
+{
+  "track_id": "housekeeping_batch_20260603",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-06-03T00:00:00Z",
+  "description": "Batched Low-priority cleanup: relocate prisma/ legacy seed-data to scripts/seed-data/ and delete prisma/. Verify or delete 4 auth route.ts stubs. Update apps/science-advantage/AGENTS.md to remove Prisma + npm references. Add *.log to .gitignore. Backfill 5 orphan in-code TODOs with GH issues. Re-pin 51 ^-ranged deps. Add git notes to 24 refactor(science): ports. Add docs/adr/ directory with 3 ADRs. Add commitlint config to enforce subject-line track reference. Resolves F-205, F-503, F-705, F-1102, F-1201, F-1202, F-1207, F-1301, F-1305, F-1306. 1-2 days. Low.",
+  "estimated_tasks": 10,
+  "actual_tasks": null,
+  "deviation_notes": "Some items in this track overlap with Track 11 (CI Alignment): F-1306 (app-local CI workflow) is also addressed by Track 11's FR-9. Coordinate so the deletion happens once, in the right place. F-1203 is addressed by Track 11's `ignoreBuildErrors: false` change; F-1201 (pinned deps) and F-1207 (commit refs) are Low and may be deferred past this batch."
+}

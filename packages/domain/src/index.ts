@@ -12,4 +12,8 @@ export * as stories from "./stories/index.js";
 export * as gamification from "./gamification/index.js";
 export * as curriculum from "./curriculum/index.js";
 export * as quiz from "./quiz/index.js";
+export * as teachers from "./teachers/index.js";
+export * as mastery from "./mastery/index.js";
+export * as ai from "./ai/index.js";
+export * as interventions from "./interventions/index.js";
 export { createTenantDB, type TenantDB } from "./db-contract.js";

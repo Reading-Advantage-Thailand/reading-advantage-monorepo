@@ -3,6 +3,8 @@ import { scienceAttempts } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 
+export { startQuiz, submitAttempt, type QuizHttpResponse } from "./submit-attempt.js";
+
 /**
  * Records a student's science quiz attempt with score, max score, and attempt number.
  * Requires quiz:submit permission.
@@ -14,10 +16,7 @@ import type { TenantDB } from "../db-contract.js";
  * @returns The newly created attempt record
  */
 export async function submitScienceAttempt({
-  db,
-  user,
-  tenant,
-  input,
+  db, user, tenant, input,
 }: {
   db: TenantDB;
   user: UserContext;
@@ -25,18 +24,9 @@ export async function submitScienceAttempt({
   input: { lessonId: string; score: number; maxScore: number; attemptNumber: number };
 }) {
   assertCan(user, "quiz:submit", tenant);
-
-  const [attempt] = await db
-    .insert(scienceAttempts)
-    .values({
-      studentId: user.id,
-      lessonId: input.lessonId,
-      score: input.score,
-      maxScore: input.maxScore,
-      attemptNumber: input.attemptNumber,
-    })
+  const [attempt] = await db.insert(scienceAttempts)
+    .values({ studentId: user.id, lessonId: input.lessonId, schoolId: tenant.schoolId!, score: input.score, maxScore: input.maxScore, attemptNumber: input.attemptNumber })
     .returning();
-
   return attempt;
 }
 
@@ -52,27 +42,14 @@ export async function submitScienceAttempt({
  * @returns Array of attempt records ordered by attemptNumber
  */
 export async function getStudentScienceAttempts({
-  db,
-  user,
-  tenant,
-  input,
+  db, user, tenant, input,
 }: {
   db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: { studentId: string; lessonId: string };
 }) {
-  if (input.studentId !== user.id) {
-    assertCan(user, "quiz:read:all", tenant);
-  }
-
-  return db
-    .select()
-    .from(scienceAttempts)
-    .where(
-      and(
-        eq(scienceAttempts.studentId, input.studentId),
-        eq(scienceAttempts.lessonId, input.lessonId)
-      )
-    );
+  if (input.studentId !== user.id) assertCan(user, "quiz:read:all", tenant);
+  return db.select().from(scienceAttempts)
+    .where(and(eq(scienceAttempts.studentId, input.studentId), eq(scienceAttempts.lessonId, input.lessonId)));
 }

@@ -201,12 +201,12 @@ describe('GET /api/lessons/[lessonSlug]/quiz (integration)', () => {
     expect(res.status).toBe(403);
   });
 
-  it('allows the class teacher', async () => {
+  it('returns 403 for the class teacher (quiz:submit is student-only)', async () => {
     const session = await createSession(teacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });
     const req = new NextRequest(`http://localhost/api/lessons/${lesson.id}/quiz`);
     const res = await GET(req, { params: Promise.resolve({ lessonSlug: lesson.id }) });
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(403);
   });
 
   it('returns 404 for a non-existent lesson', async () => {

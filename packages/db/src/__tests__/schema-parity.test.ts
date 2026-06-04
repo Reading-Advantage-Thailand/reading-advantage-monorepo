@@ -528,3 +528,36 @@ describe("scienceAssignments — KEEP-SEPARATE", () => {
     expect(c).toContain("dueAt");
   });
 });
+
+// ─── schoolId column presence (Track 2: TenantDB Adoption) ──────────────────
+
+const scienceTablesWithSchoolId = [
+  "gamificationProfiles",
+  "achievements",
+  "scienceClasses",
+  "scienceStandards",
+  "scienceStandardMastery",
+  "scienceLessons",
+  "scienceCurriculumUnits",
+  "scienceQuizQuestions",
+  "scienceAttempts",
+  "scienceQuestionResponses",
+  "scienceLessonCompletions",
+  "scienceMasteryRuns",
+  "scienceAssignments",
+  "scienceLessonStandards",
+  "scienceUnitLessons",
+  "scienceClassStudents",
+  "scienceQuestionStandards",
+] as const;
+
+describe("schoolId column — Track 2 TenantDB Adoption", () => {
+  for (const tableName of scienceTablesWithSchoolId) {
+    it(`${tableName} has schoolId column`, () => {
+      const table = (schema as Record<string, unknown>)[tableName];
+      expect(table).toBeDefined();
+      const c = cols(table);
+      expect(c).toContain("schoolId");
+    });
+  }
+});

@@ -140,7 +140,7 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
     });
     expect(res.status).toBe(403);
     const body = await res.json();
-    expect(body).toEqual({ success: false, error: 'Forbidden' });
+    expect(body.error).toMatch(/lacks permission/);
   });
 
   it('returns 200 with an empty array for a student with no enrollments', async () => {

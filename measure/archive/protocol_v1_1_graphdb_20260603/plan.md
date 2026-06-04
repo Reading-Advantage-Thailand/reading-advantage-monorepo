@@ -41,4 +41,4 @@
 
 - [x] Task: Add a lessons-learned entry: "Always pre-flight `build-graph stats` before an audit; 0 files means the audit will silently degrade to grep-only."
 - [x] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-1003 Resolved.
-- [ ] Task: Move track to `measure/archive/protocol_v1_1_graphdb_20260603/` and update `measure/tracks.md`.
+- [x] Task: Move track to `measure/archive/protocol_v1_1_graphdb_20260603/` and update `measure/tracks.md`.

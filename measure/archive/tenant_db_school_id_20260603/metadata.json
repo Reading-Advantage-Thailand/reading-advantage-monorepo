@@ -1,0 +1,11 @@
+{
+  "track_id": "tenant_db_school_id_20260603",
+  "type": "feature",
+  "status": "complete",
+  "created_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-06-04T00:00:00Z",
+  "description": "Phase 1 architectural decision: (a) add schoolId to 17 science tables + migrate to createTenantDB (AGENTS.md compliant; big schema change). Path (a) selected and implemented. Resolves F-501, F-502 (merged into F-305 root cause). Depends on Track 1 (App → Domain Migration).",
+  "estimated_tasks": 25,
+  "actual_tasks": 25,
+  "deviation_notes": ""
+}

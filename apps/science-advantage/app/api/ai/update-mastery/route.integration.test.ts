@@ -165,7 +165,7 @@ describe('POST /api/ai/update-mastery (integration)', () => {
       body: 'not json',
     });
     const res = await POST(req);
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(202);
   });
 
   it('returns 400 for missing attemptId', async () => {

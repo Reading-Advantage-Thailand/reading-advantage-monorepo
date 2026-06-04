@@ -276,11 +276,14 @@ github.post("/pr", async (c) => {
 
     if (prInfo) {
       const runReview = async () => {
+        let token: string | undefined;
+        let reviewResult: { passed: boolean; summary: string; comments: { line?: number; body: string }[] } | undefined;
+
         try {
-          const token = await getInstallationTokenForRepo();
+          token = await getInstallationTokenForRepo();
           const diff = await fetchPrDiff(prInfo, token);
 
-          const reviewResult = await reviewExercise({
+          reviewResult = await reviewExercise({
             db: tenantDb,
             user: systemUser,
             tenant: globalTenant,
@@ -289,7 +292,7 @@ github.post("/pr", async (c) => {
             generateReview,
           });
 
-          const updatedReview = await codecamp.updatePrReview({
+          await codecamp.updatePrReview({
             db: tenantDb,
             user: systemUser,
             tenant: globalTenant,
@@ -300,26 +303,9 @@ github.post("/pr", async (c) => {
             },
           });
 
-          if (updatedReview.reviewStatus === "approved") {
-            await codecamp.completeApprovedPrReviewLesson({
-              db: tenantDb,
-              user: systemUser,
-              tenant: globalTenant,
-              input: { reviewId },
-            });
-          }
-
-          const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${reviewResult.passed ? "✅ Passed" : "⚠️ Needs Changes"}\n\n**Summary:** ${reviewResult.summary}\n\n${reviewResult.comments.length > 0 ? "### Comments\n" + reviewResult.comments.map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`).join("\n") : ""}`;
-          try {
-            await postPrComment(prInfo, commentBody, token);
-          } catch (commentErr) {
-            console.error("[GitHub Webhook] Failed to post PR comment:", commentErr);
-          }
-
           console.log(`[GitHub Webhook] LLM review completed for ${pr.html_url}`);
         } catch (reviewErr) {
           console.error("[GitHub Webhook] LLM review failed:", reviewErr);
-          // Don't fail the webhook — mark as reviewed with error note
           await codecamp.updatePrReview({
             db: tenantDb,
             user: systemUser,
@@ -330,6 +316,30 @@ github.post("/pr", async (c) => {
               llmReviewSummary: "Review failed — please check manually.",
             },
           });
+          return;
+        }
+
+        // Lesson completion is best-effort — don't overwrite a successful review
+        if (reviewResult.passed) {
+          try {
+            await codecamp.completeApprovedPrReviewLesson({
+              db: tenantDb,
+              user: systemUser,
+              tenant: globalTenant,
+              input: { reviewId },
+            });
+          } catch (lessonErr) {
+            console.error("[GitHub Webhook] Lesson completion failed (review still approved):", lessonErr);
+          }
+        }
+
+        if (token) {
+          const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ${reviewResult.passed ? "✅ Passed" : "⚠️ Needs Changes"}\n\n**Summary:** ${reviewResult.summary}\n\n${reviewResult.comments.length > 0 ? "### Comments\n" + reviewResult.comments.map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`).join("\n") : ""}`;
+          try {
+            await postPrComment(prInfo, commentBody, token);
+          } catch (commentErr) {
+            console.error("[GitHub Webhook] Failed to post PR comment:", commentErr);
+          }
         }
       };
 

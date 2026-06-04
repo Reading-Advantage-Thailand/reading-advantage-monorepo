@@ -107,7 +107,7 @@ describe('POST /api/classes/join (integration)', () => {
     const res = await POST(postReq({ joinCode: 'ABCDEF' }));
     expect(res.status).toBe(403);
     const body = await res.json();
-    expect(body.error).toMatch(/Forbidden/);
+    expect(body.error).toMatch(/lacks permission/);
   });
 
   it('returns 400 when join code format is invalid', async () => {

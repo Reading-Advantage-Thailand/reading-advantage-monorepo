@@ -1,8 +1,8 @@
 import {
   pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, decimal, unique,
-  primaryKey,
+  primaryKey, index,
 } from "drizzle-orm/pg-core";
-import { users } from "./users";
+import { users, schools } from "./users";
 
 // ─── Gamification (PORT-AS-IS) ────────────────────────────────────────────────
 
@@ -12,23 +12,32 @@ export const gamificationProfiles = pgTable("gamification_profiles", {
     .notNull()
     .unique()
     .references(() => users.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   xp: integer("xp").default(0).notNull(),
   level: integer("level").default(1).notNull(),
   streak: integer("streak").default(0).notNull(),
   lastActiveAt: timestamp("last_active_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("gamification_profiles_school_id_idx").on(table.schoolId),
+]);
 
 export const achievements = pgTable("achievements", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   badgeType: text("badge_type").notNull(),
   unlockedAt: timestamp("unlocked_at").defaultNow().notNull(),
 }, (table) => [
   unique("achievements_user_badge_unique").on(table.userId, table.badgeType),
+  index("achievements_school_id_idx").on(table.schoolId),
 ]);
 
 // ─── Science Classes (KEEP-SEPARATE from reading classrooms) ─────────────────
@@ -42,9 +51,14 @@ export const scienceClasses = pgTable("science_classes", {
   teacherId: text("teacher_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("science_classes_school_teacher_idx").on(table.schoolId, table.teacherId),
+]);
 
 // ─── Standards (PORT-AS-IS) ───────────────────────────────────────────────────
 
@@ -54,9 +68,13 @@ export const scienceStandards = pgTable("science_standards", {
   code: text("code").notNull(),
   description: text("description").notNull(),
   gradeLevel: integer("grade_level"),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => [
   unique("science_standards_framework_code_unique").on(table.framework, table.code),
+  index("science_standards_school_id_idx").on(table.schoolId),
 ]);
 
 export const scienceStandardMastery = pgTable("science_standard_mastery", {
@@ -67,6 +85,9 @@ export const scienceStandardMastery = pgTable("science_standard_mastery", {
   standardId: uuid("standard_id")
     .notNull()
     .references(() => scienceStandards.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   masteryLevel: decimal("mastery_level", { precision: 3, scale: 2 }).notNull(),
   evidenceCount: integer("evidence_count").default(0).notNull(),
   lastAssessedAt: timestamp("last_assessed_at").notNull(),
@@ -74,6 +95,7 @@ export const scienceStandardMastery = pgTable("science_standard_mastery", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
   unique("science_standard_mastery_student_standard_unique").on(table.studentId, table.standardId),
+  index("science_standard_mastery_school_student_idx").on(table.schoolId, table.studentId),
 ]);
 
 // ─── Science Lessons (KEEP-SEPARATE from reading lesson_records) ─────────────
@@ -90,9 +112,14 @@ export const scienceLessons = pgTable("science_lessons", {
   lessonType: text("lesson_type").default("LESSON").notNull(),
   gradeLevel: integer("grade_level").notNull(),
   order: integer("order").notNull(),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("science_lessons_school_grade_idx").on(table.schoolId, table.gradeLevel),
+]);
 
 // ─── Curriculum Units (PORT-AS-IS) ────────────────────────────────────────────
 
@@ -107,10 +134,14 @@ export const scienceCurriculumUnits = pgTable("science_curriculum_units", {
   classId: uuid("class_id")
     .notNull()
     .references(() => scienceClasses.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
   unique("science_curriculum_units_class_framework_order_unique").on(table.classId, table.framework, table.order),
+  index("science_curriculum_units_school_class_idx").on(table.schoolId, table.classId),
 ]);
 
 // ─── Science Quiz Questions (KEEP-SEPARATE) ───────────────────────────────────
@@ -128,9 +159,14 @@ export const scienceQuizQuestions = pgTable("science_quiz_questions", {
   points: integer("points").default(1).notNull(),
   order: integer("order").notNull(),
   version: integer("version").default(1).notNull(),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("science_quiz_questions_school_lesson_idx").on(table.schoolId, table.lessonId),
+]);
 
 // ─── Science Attempts (PORT-AS-IS) ────────────────────────────────────────────
 
@@ -142,6 +178,9 @@ export const scienceAttempts = pgTable("science_attempts", {
   lessonId: uuid("lesson_id")
     .notNull()
     .references(() => scienceLessons.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   score: real("score").default(0).notNull(),
   maxScore: real("max_score").notNull(),
   attemptNumber: integer("attempt_number").notNull(),
@@ -151,6 +190,7 @@ export const scienceAttempts = pgTable("science_attempts", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
   unique("science_attempts_student_lesson_attempt_unique").on(table.studentId, table.lessonId, table.attemptNumber),
+  index("science_attempts_school_student_idx").on(table.schoolId, table.studentId),
 ]);
 
 // ─── Science Question Responses (PORT-AS-IS) ──────────────────────────────────
@@ -168,8 +208,13 @@ export const scienceQuestionResponses = pgTable("science_question_responses", {
   timeSpentSeconds: integer("time_spent_seconds").default(0).notNull(),
   answeredAt: timestamp("answered_at").defaultNow().notNull(),
   order: integer("order"),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("science_question_responses_school_attempt_idx").on(table.schoolId, table.attemptId),
+]);
 
 // ─── Science Lesson Completions (PORT-AS-IS) ──────────────────────────────────
 
@@ -181,6 +226,9 @@ export const scienceLessonCompletions = pgTable("science_lesson_completions", {
   lessonId: uuid("lesson_id")
     .notNull()
     .references(() => scienceLessons.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   status: text("status").default("NOT_STARTED").notNull(),
   completedAt: timestamp("completed_at"),
   attemptsCount: integer("attempts_count").default(0).notNull(),
@@ -194,6 +242,7 @@ export const scienceLessonCompletions = pgTable("science_lesson_completions", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
   unique("science_lesson_completions_student_lesson_unique").on(table.studentId, table.lessonId),
+  index("science_lesson_completions_school_student_idx").on(table.schoolId, table.studentId),
 ]);
 
 // ─── Science Mastery Runs (PORT-AS-IS) ────────────────────────────────────────
@@ -205,12 +254,17 @@ export const scienceMasteryRuns = pgTable("science_mastery_runs", {
   studentId: text("student_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   status: text("status").default("PENDING").notNull(),
   updatedCount: integer("updated_count").default(0).notNull(),
   lastError: text("last_error"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("science_mastery_runs_school_student_idx").on(table.schoolId, table.studentId),
+]);
 
 // ─── Science Assignments (KEEP-SEPARATE from reading assignments) ─────────────
 
@@ -227,9 +281,13 @@ export const scienceAssignments = pgTable("science_assignments", {
   assignedBy: text("assigned_by")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => [
   unique("science_assignments_class_lesson_unique").on(table.classId, table.lessonId),
+  index("science_assignments_school_class_idx").on(table.schoolId, table.classId),
 ]);
 
 // ─── M:N Junction Tables (Track 3 schema gap fix) ────────────────────────────
@@ -243,8 +301,12 @@ export const scienceLessonStandards = pgTable("science_lesson_standards", {
   standardId: uuid("standard_id")
     .notNull()
     .references(() => scienceStandards.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
 }, (table) => [
   primaryKey({ columns: [table.lessonId, table.standardId] }),
+  index("science_lesson_standards_school_id_idx").on(table.schoolId),
 ]);
 
 export const scienceUnitLessons = pgTable("science_unit_lessons", {
@@ -254,8 +316,12 @@ export const scienceUnitLessons = pgTable("science_unit_lessons", {
   lessonId: uuid("lesson_id")
     .notNull()
     .references(() => scienceLessons.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
 }, (table) => [
   primaryKey({ columns: [table.unitId, table.lessonId] }),
+  index("science_unit_lessons_school_id_idx").on(table.schoolId),
 ]);
 
 export const scienceClassStudents = pgTable("science_class_students", {
@@ -265,8 +331,12 @@ export const scienceClassStudents = pgTable("science_class_students", {
   studentId: text("student_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
 }, (table) => [
   primaryKey({ columns: [table.classId, table.studentId] }),
+  index("science_class_students_school_student_idx").on(table.schoolId, table.studentId),
 ]);
 
 export const scienceQuestionStandards = pgTable("science_question_standards", {
@@ -276,6 +346,10 @@ export const scienceQuestionStandards = pgTable("science_question_standards", {
   standardId: uuid("standard_id")
     .notNull()
     .references(() => scienceStandards.id, { onDelete: "cascade" }),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
 }, (table) => [
   primaryKey({ columns: [table.questionId, table.standardId] }),
+  index("science_question_standards_school_id_idx").on(table.schoolId),
 ]);

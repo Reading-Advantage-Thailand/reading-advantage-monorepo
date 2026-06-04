@@ -54,6 +54,7 @@ export async function verifyPassword(
  * @param password - The plaintext password to verify and re-hash
  * @param storedHash - The current password hash from the database
  * @returns Object indicating whether migration occurred
+ * @throws Never — returns { migrated: false } on verification failure
  */
 export async function rehashOnLogin(
   db: Db,
@@ -68,7 +69,7 @@ export async function rehashOnLogin(
   // Legacy bcrypt hash — verify then re-hash
   const valid = await bcrypt.compare(password, storedHash);
   if (!valid) {
-    throw new Error("Password verification failed during rehash");
+    return { migrated: false };
   }
 
   const newHash = await argon2.hash(password, ARGON2ID_OPTS);

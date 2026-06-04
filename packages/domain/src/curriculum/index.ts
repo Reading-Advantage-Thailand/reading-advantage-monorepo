@@ -3,6 +3,8 @@ import { scienceLessons } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 
+export { getLessonBySlug } from "./get-lesson-by-slug.js";
+
 /**
  * Gets a single science lesson by ID.
  * @param db - Tenant-scoped database client
@@ -99,6 +101,7 @@ export async function createScienceLesson({
   const [created] = await db
     .insert(scienceLessons)
     .values({
+      schoolId: tenant.schoolId!,
       slug: input.slug,
       title: input.title,
       gradeLevel: input.gradeLevel,

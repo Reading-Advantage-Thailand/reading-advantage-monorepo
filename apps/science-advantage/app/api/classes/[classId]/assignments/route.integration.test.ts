@@ -303,10 +303,7 @@ describe('POST /api/classes/[classId]/assignments (integration)', () => {
     });
     expect(res.status).toBe(403);
     const body = await res.json();
-    expect(body).toEqual({
-      success: false,
-      error: 'Only teachers can create assignments',
-    });
+    expect(body.error).toMatch(/lacks permission/);
   });
 
   it('returns 400 when lessonId is missing', async () => {
@@ -473,10 +470,7 @@ describe('DELETE /api/classes/[classId]/assignments (integration)', () => {
     );
     expect(res.status).toBe(403);
     const body = await res.json();
-    expect(body).toEqual({
-      success: false,
-      error: 'Only teachers can delete assignments',
-    });
+    expect(body.error).toMatch(/lacks permission/);
   });
 
   it('returns 400 when assignmentId is missing', async () => {

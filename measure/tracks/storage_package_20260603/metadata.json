@@ -1,0 +1,11 @@
+{
+  "track_id": "storage_package_20260603",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-06-03T00:00:00Z",
+  "description": "Create packages/storage with StorageClient interface (put, get, delete, getSignedUrl, exists) backed by @aws-sdk/client-s3. Works with GCS S3 interop, Cloudflare R2, MinIO. Extract packages/domain/src/codecamp/index.ts:1952 GitHub fetch() to packages/integrations/github with typed methods. Resolves F-102, F-703 (partial). 1 week. High. Supersedes the in-flight storage_s3_compat_20260522 track with audit findings.",
+  "estimated_tasks": 14,
+  "actual_tasks": null,
+  "deviation_notes": "Supersedes the in-flight measure/tracks/storage_s3_compat_20260522 (which is still listed in measure/tracks.md under Infrastructure & Shared Packages). The new track inherits the StorageClient interface from that work and adds the GitHub integration extraction that the audit surfaced."
+}

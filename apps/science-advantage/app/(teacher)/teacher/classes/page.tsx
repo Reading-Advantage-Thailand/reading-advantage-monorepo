@@ -1,15 +1,6 @@
 import Link from 'next/link';
-import {
-  count,
-  db,
-  desc,
-  eq,
-  inArray,
-} from '@reading-advantage/db';
-import {
-  scienceClassStudents,
-  scienceClasses,
-} from '@reading-advantage/db/schema';
+import { teachers } from '@reading-advantage/domain';
+import type { UserContext } from '@reading-advantage/auth';
 
 import { requireRole } from '@/lib/auth/server';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,31 +12,11 @@ import { formatStudentCount, getStandardsAlignmentLabel } from '@/lib/utils/clas
 export default async function TeacherClassesPage() {
   const session = await requireRole('TEACHER');
 
-  const classRows = await db
-    .select()
-    .from(scienceClasses)
-    .where(eq(scienceClasses.teacherId, session.user.id))
-    .orderBy(desc(scienceClasses.createdAt));
-
-  const classIds = classRows.map((c) => c.id);
-  const studentCounts = classIds.length
-    ? await db
-        .select({
-          classId: scienceClassStudents.classId,
-          value: count(),
-        })
-        .from(scienceClassStudents)
-        .where(inArray(scienceClassStudents.classId, classIds))
-        .groupBy(scienceClassStudents.classId)
-    : [];
-  const countByClass = new Map(
-    studentCounts.map((row) => [row.classId, Number(row.value)])
-  );
-
-  const classes = classRows.map((cls) => ({
-    ...cls,
-    _count: { students: countByClass.get(cls.id) ?? 0 },
-  }));
+  const classes = await teachers.getTeacherClassesWithCounts({
+    user: session.user as unknown as UserContext,
+    tenant: { schoolId: session.user.schoolId },
+    teacherId: session.user.id,
+  });
 
   return (
     <div className="space-y-6">
@@ -93,7 +64,7 @@ export default async function TeacherClassesPage() {
                           Join Code: {cls.joinCode}
                         </span>
                         <span className="text-gray-500">
-                          {formatStudentCount(cls._count.students)}
+                          {formatStudentCount(cls.studentCount)}
                         </span>
                       </div>
                     </div>

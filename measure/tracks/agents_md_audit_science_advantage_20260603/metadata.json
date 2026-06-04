@@ -1,0 +1,14 @@
+{
+  "id": "agents_md_audit_science_advantage_20260603",
+  "type": "chore",
+  "title": "AGENTS.md Compliance Audit — science-advantage (pilot)",
+  "status": "active",
+  "created": "2026-06-03",
+  "owner": "audit-protocol",
+  "spec": "./spec.md",
+  "plan": "./plan.md",
+  "references": [
+    "../../agents-md-audit-protocol.md",
+    "../tech-debt.md#audit_20260526"
+  ]
+}

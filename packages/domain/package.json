@@ -39,6 +39,34 @@
     "./codecamp": {
       "types": "./dist/codecamp/index.d.ts",
       "import": "./dist/codecamp/index.js"
+    },
+    "./mastery": {
+      "types": "./dist/mastery/index.d.ts",
+      "import": "./dist/mastery/index.js"
+    },
+    "./ai": {
+      "types": "./dist/ai/index.d.ts",
+      "import": "./dist/ai/index.js"
+    },
+    "./interventions": {
+      "types": "./dist/interventions/index.d.ts",
+      "import": "./dist/interventions/index.js"
+    },
+    "./curriculum": {
+      "types": "./dist/curriculum/index.d.ts",
+      "import": "./dist/curriculum/index.js"
+    },
+    "./teachers": {
+      "types": "./dist/teachers/index.d.ts",
+      "import": "./dist/teachers/index.js"
+    },
+    "./gamification": {
+      "types": "./dist/gamification/index.d.ts",
+      "import": "./dist/gamification/index.js"
+    },
+    "./quiz": {
+      "types": "./dist/quiz/index.d.ts",
+      "import": "./dist/quiz/index.js"
     }
   },
   "scripts": {

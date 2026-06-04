@@ -46,7 +46,7 @@ export const accounts = pgTable("accounts", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   providerId: text("provider_id").notNull(), // "credential" or "google"
-  password: text("password"), // bcrypt hash, only for credential provider
+  password: text("password"), // Argon2id hash (or legacy bcrypt), only for credential provider
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   accessTokenExpiresAt: timestamp("access_token_expires_at"),

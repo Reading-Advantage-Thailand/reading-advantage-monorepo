@@ -60,9 +60,26 @@ export const PERMISSIONS = {
   "story:list": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "story:create": [ROLES.ADMIN, ROLES.SYSTEM],
 
+  // Students (own data)
+  "student:read:own": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+
   // Gamification (science)
+  "gamification:read:own": [ROLES.STUDENT],
   "gamification:read:all": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "gamification:update": [ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Mastery (science)
+  "mastery:write:own": [ROLES.STUDENT],
+
+  // AI (science)
+  "ai:recommend": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "ai:recommend:all": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Interventions (science)
+  "intervention:read": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Teachers (science)
+  "teachers:read:own": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
 
   // Curriculum (science)
   "curriculum:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],

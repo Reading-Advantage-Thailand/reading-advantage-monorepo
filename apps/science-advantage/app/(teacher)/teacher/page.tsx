@@ -1,5 +1,5 @@
-import { db, desc, eq } from '@reading-advantage/db';
-import { scienceClasses } from '@reading-advantage/db/schema';
+import { teachers } from '@reading-advantage/domain';
+import type { UserContext } from '@reading-advantage/auth';
 
 import { requireRole } from '@/lib/auth/server';
 import { TeacherDashboardClasses } from '@/components/features/teacher/teacher-dashboard-classes';
@@ -11,13 +11,11 @@ import { RecentCompletionsFeed } from '@/components/features/teacher/recent-comp
 export default async function TeacherPage() {
   const session = await requireRole('TEACHER');
 
-  // Fetch teacher's classes for intervention widget
-  const teacherClasses = await db
-    .select({ id: scienceClasses.id, name: scienceClasses.name })
-    .from(scienceClasses)
-    .where(eq(scienceClasses.teacherId, session.user.id))
-    .orderBy(desc(scienceClasses.createdAt))
-    .limit(10);
+  const teacherClasses = await teachers.getTeacherClasses({
+    user: session.user as unknown as UserContext,
+    tenant: { schoolId: session.user.schoolId },
+    teacherId: session.user.id,
+  });
 
   return (
     <div className="space-y-8">

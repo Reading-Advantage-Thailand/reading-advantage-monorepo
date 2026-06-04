@@ -3,6 +3,20 @@ import { classrooms } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 
+export { listClassesWithCounts } from "./list-classes-with-counts.js";
+export { createScienceClass } from "./create-science-class.js";
+export { joinClass, AlreadyEnrolledError } from "./join-class.js";
+export { getClassDetail } from "./get-class.js";
+export { updateClass } from "./update-class.js";
+export { archiveClass } from "./archive-class.js";
+export { getClassCurriculum } from "./get-class-curriculum.js";
+export { getClassRoster, removeStudentFromClass } from "./get-class-roster.js";
+export { getClassAnalyticsOverview } from "./get-class-analytics-overview.js";
+export { getClassLessonAnalytics } from "./get-class-lesson-analytics.js";
+export { listAssignments } from "./list-assignment.js";
+export { createAssignment } from "./create-assignment.js";
+export { deleteAssignment } from "./delete-assignment.js";
+
 interface CreateClassInput {
   name: string;
 }

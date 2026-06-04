@@ -97,25 +97,30 @@ describe("password", () => {
     });
 
     it("migrates bcrypt hash to Argon2id on correct password", async () => {
-      const { db, whereMock } = createMockDb();
+      const { db, setMock, whereMock } = createMockDb();
       const bcrypt = await import("bcryptjs");
       const bcryptHash = await bcrypt.hash("testPassword", 10);
 
       const result = await rehashOnLogin(db, "user-1", "testPassword", bcryptHash);
       expect(result).toEqual({ migrated: true });
       expect(whereMock).toHaveBeenCalled();
+      // Verify the new hash is a valid Argon2id hash
+      const setPassword = setMock.mock.calls[0][0].password;
+      expect(setPassword.startsWith("$argon2id$")).toBe(true);
+      expect(await verifyPassword("testPassword", setPassword)).toBe(true);
     });
 
-    it("throws on bcrypt hash with wrong password", async () => {
-      const { db } = createMockDb();
+    it("returns migrated: false for bcrypt hash with wrong password", async () => {
+      const { db, updateMock } = createMockDb();
       const bcrypt = await import("bcryptjs");
       const bcryptHash = await bcrypt.hash("testPassword", 10);
 
-      await expect(rehashOnLogin(db, "user-1", "wrongPassword", bcryptHash))
-        .rejects.toThrow("Password verification failed during rehash");
+      const result = await rehashOnLogin(db, "user-1", "wrongPassword", bcryptHash);
+      expect(result).toEqual({ migrated: false });
+      expect(updateMock).not.toHaveBeenCalled();
     });
 
-    it("throws on Argon2id hash with wrong password (via the no-op path)", async () => {
+    it("returns migrated: false for Argon2id hash regardless of password", async () => {
       const { db } = createMockDb();
       const argon2Hash = await hashPassword("testPassword");
 

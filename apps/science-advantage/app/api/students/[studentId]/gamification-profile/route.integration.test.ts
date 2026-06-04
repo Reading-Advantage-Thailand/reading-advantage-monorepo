@@ -95,10 +95,10 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
     });
     expect(res.status).toBe(403);
     const body = await res.json();
-    expect(body.error).toBe('Forbidden');
+    expect(body.error).toMatch(/lacks permission/);
   });
 
-  it('returns 403 when a teacher requests a student profile and DEV_AUTH_ENABLED=false', async () => {
+  it('returns 200 when a teacher requests a student profile', async () => {
     const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
     const session = await createSession(teacher.id);
@@ -108,7 +108,7 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
     const res = await GET(req, {
       params: Promise.resolve({ studentId: student.id }),
     });
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(200);
   });
 
   it('auto-creates a gamification profile on first access for own profile', async () => {

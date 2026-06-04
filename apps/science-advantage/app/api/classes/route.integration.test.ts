@@ -100,7 +100,7 @@ describe('POST /api/classes (integration)', () => {
     );
     expect(res.status).toBe(403);
     const body = await res.json();
-    expect(body.error).toMatch(/Forbidden/);
+    expect(body.error).toMatch(/lacks permission/);
   });
 
   it('returns 400 with details for invalid payload', async () => {
