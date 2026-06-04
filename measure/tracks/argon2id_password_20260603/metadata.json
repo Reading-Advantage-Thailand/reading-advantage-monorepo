@@ -1,0 +1,11 @@
+{
+  "track_id": "argon2id_password_20260603",
+  "type": "bug",
+  "status": "complete",
+  "created_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-06-04T00:00:00Z",
+  "description": "Migrate packages/auth/src/password.ts from bcryptjs to @node-rs/argon2 (AGENTS.md §4.4 compliance). One-shot migration path for existing bcrypt hashes (verify with bcrypt, re-hash on next successful login). Update 3 science-advantage seed scripts to import hashPassword from @reading-advantage/auth. Remove bcryptjs from apps/science-advantage/package.json production deps. Delete apps/science-advantage/lib/auth/{session,server}.ts (F-401) and re-point all 22 callers to @reading-advantage/auth. Resolves F-401, F-402, F-406.",
+  "estimated_tasks": 18,
+  "actual_tasks": 28,
+  "deviation_notes": "Additional tasks for cross-algorithm verify wrapper (bcrypt not natively supported by @node-rs/argon2), isolatedModules const enum fix, and test mock updates for shared auth delegation."
+}
