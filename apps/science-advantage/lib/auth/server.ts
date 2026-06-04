@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getCurrentSession } from './session';
-import { ROLE_ROUTES, roleAtLeast } from '@reading-advantage/auth';
-import type { Session, UserRole } from './types';
+import { ROLE_ROUTES, roleAtLeast, type Role } from '@reading-advantage/auth';
+import type { Session } from '@reading-advantage/auth';
 
 /**
  * Require authentication - redirect to login if not authenticated
@@ -17,7 +17,7 @@ export async function requireAuth(): Promise<Session> {
 /**
  * Require specific role - redirect if user doesn't have required role level
  */
-export async function requireRole(requiredRole: UserRole): Promise<Session> {
+export async function requireRole(requiredRole: Role): Promise<Session> {
   const session = await requireAuth();
   if (!roleAtLeast(session.user.role, requiredRole)) {
     return redirect(ROLE_ROUTES[session.user.role] || '/signin');
@@ -28,7 +28,7 @@ export async function requireRole(requiredRole: UserRole): Promise<Session> {
 /**
  * Check if user has specific role or higher
  */
-export function hasRole(session: Session, requiredRole: UserRole): boolean {
+export function hasRole(session: Session, requiredRole: Role): boolean {
   return roleAtLeast(session.user.role, requiredRole);
 }
 

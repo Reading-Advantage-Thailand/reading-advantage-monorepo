@@ -1,90 +1,21 @@
 import { cookies } from 'next/headers';
-import { eq } from '@reading-advantage/db';
 import { db } from '@reading-advantage/db';
-import { users } from '@reading-advantage/db/schema';
 import {
+  getSession as sharedGetSession,
   createSession as sharedCreateSession,
-  validateSession as sharedValidateSession,
-  deleteSession as sharedDeleteSession,
   SESSION_COOKIE_NAME,
 } from '@reading-advantage/auth';
-import type { Session } from './types';
+import type { Session } from '@reading-advantage/auth';
 
 const SESSION_DURATION_SECONDS = 7 * 24 * 60 * 60;
 
+export { SESSION_COOKIE_NAME };
+
 /**
- * Create a new session for a user (uses shared auth + Drizzle)
+ * Create a new session for a user (delegates to shared auth with local db)
  */
 export async function createSession(userId: string): Promise<Session> {
-  const shared = await sharedCreateSession(db, userId);
-
-  // Fetch full user data including email/image for local Session type
-  const [user] = await db
-    .select({
-      id: users.id,
-      name: users.name,
-      username: users.username,
-      email: users.email,
-      role: users.role,
-      image: users.image,
-    })
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
-
-  return {
-    id: shared.id,
-    token: shared.token,
-    userId: shared.userId,
-    expiresAt: shared.expiresAt,
-    user: user ?? {
-      id: shared.user.id,
-      name: shared.user.name,
-      username: shared.user.username,
-      email: null,
-      role: shared.user.role,
-      image: null,
-    },
-  };
-}
-
-/**
- * Validate a session token (uses shared auth + Drizzle)
- */
-export async function validateSession(token: string): Promise<Session | null> {
-  const shared = await sharedValidateSession(db, token);
-  if (!shared) return null;
-
-  // Fetch full user data including email/image for local Session type
-  const [user] = await db
-    .select({
-      id: users.id,
-      name: users.name,
-      username: users.username,
-      email: users.email,
-      role: users.role,
-      image: users.image,
-    })
-    .from(users)
-    .where(eq(users.id, shared.userId))
-    .limit(1);
-
-  if (!user) return null;
-
-  return {
-    id: shared.id,
-    token: shared.token,
-    userId: shared.userId,
-    expiresAt: shared.expiresAt,
-    user,
-  };
-}
-
-/**
- * Delete a session (uses shared auth)
- */
-export async function deleteSession(token: string): Promise<void> {
-  await sharedDeleteSession(db, token);
+  return sharedCreateSession(db, userId);
 }
 
 /**
@@ -118,10 +49,9 @@ export async function deleteSessionCookie(): Promise<void> {
 }
 
 /**
- * Get current session from cookie
+ * Get current session from cookie (Next.js convenience wrapper)
  */
 export async function getCurrentSession(): Promise<Session | null> {
   const token = await getSessionToken();
-  if (!token) return null;
-  return validateSession(token);
+  return sharedGetSession(db, token);
 }

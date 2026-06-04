@@ -1,4 +1,10 @@
-export * from './types';
-export * from './session';
-export * from './server';
-export { ROLE_HIERARCHY, ROLE_ROUTES } from './constants';
+export type { Session, UserRole } from './types';
+export {
+  createSession,
+  setSessionCookie,
+  getSessionToken,
+  deleteSessionCookie,
+  getCurrentSession,
+  SESSION_COOKIE_NAME,
+} from './session';
+export { requireAuth, requireRole, hasRole, getSession } from './server';
