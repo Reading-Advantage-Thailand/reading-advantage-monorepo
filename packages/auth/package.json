@@ -16,6 +16,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@node-rs/argon2": "^2.0.2",
     "@reading-advantage/db": "workspace:*",
     "bcryptjs": "^2.4.3",
     "drizzle-orm": "^0.44.0",

@@ -10,7 +10,7 @@ export { assertTenantAccess } from "./tenant.js";
 export { assertCan, AuthError } from "./assert.js";
 
 // Password
-export { hashPassword, verifyPassword } from "./password.js";
+export { hashPassword, verifyPassword, rehashOnLogin, ARGON2ID_OPTS } from "./password.js";
 
 // Sessions
 export {
