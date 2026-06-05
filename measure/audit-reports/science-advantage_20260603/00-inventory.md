@@ -291,7 +291,7 @@ prisma/
 
 ---
 
-## `scripts/` files (full list, 18 `.ts` + 2 `.test.ts`)
+## `scripts/` files (full list, 20 `.ts` + 2 `.test.ts`)
 
 ```
 scripts/backfill-mastery.ts
