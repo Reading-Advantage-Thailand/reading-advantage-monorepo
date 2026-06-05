@@ -191,6 +191,14 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 > tree, or the start-of-session protocol should `git stash -u`
 > pre-existing dirty state before the role begins.
 
-- [~] Update this track's status to `complete` in `metadata.json`
-- [~] Archive: `mv measure/tracks/agents_md_audit_science_advantage_20260603 measure/archive/`
-- [~] Add completion row to `measure/tracks.md`
+- [x] Update this track's status to `complete` in `metadata.json`
+- [x] Archive: `mv measure/tracks/agents_md_audit_science_advantage_20260603 measure/archive/`
+- [x] Add completion row to `measure/tracks.md`
+
+> **Green-phase complete (2026-06-06):** All 8 Phase 7 + 7 Phase 8 tests GREEN.
+> Flipped `metadata.json#status` to `"complete"`. Moved track directory to
+> `measure/archive/`. Updated `measure/tracks.md` row to `[x]` with archive
+> link. Updated Phase 7 test to use dynamic path resolution and accept
+> post-Phase-8 status. Stale `measure/tracks/` directory cleaned up after
+> `mv` merge with pre-existing archive copy. Track fully closed out.
+> Commit: `2ec5f8b`.

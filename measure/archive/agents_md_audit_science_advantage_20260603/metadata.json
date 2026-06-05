@@ -2,7 +2,7 @@
   "id": "agents_md_audit_science_advantage_20260603",
   "type": "chore",
   "title": "AGENTS.md Compliance Audit — science-advantage (pilot)",
-  "status": "active",
+  "status": "complete",
   "created": "2026-06-03",
   "owner": "audit-protocol",
   "spec": "./spec.md",

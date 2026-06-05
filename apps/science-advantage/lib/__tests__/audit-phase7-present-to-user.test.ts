@@ -117,14 +117,38 @@ const AUDIT_REPORT_DIR = path.join(
 );
 const EXEC_SUMMARY = path.join(AUDIT_REPORT_DIR, 'executive-summary.md');
 const PROTOCOL = path.join(MONOREPO_ROOT, 'measure/agents-md-audit-protocol.md');
-const TRACK_METADATA = path.join(
-  MONOREPO_ROOT,
-  'measure/tracks/agents_md_audit_science_advantage_20260603/metadata.json',
-);
-const TRACK_PLAN = path.join(
-  MONOREPO_ROOT,
-  'measure/tracks/agents_md_audit_science_advantage_20260603/plan.md',
-);
+const TRACK_ID = 'agents_md_audit_science_advantage_20260603';
+const TRACKS_DIR_PATH = path.join(MONOREPO_ROOT, 'measure/tracks', TRACK_ID);
+const ARCHIVE_DIR_PATH = path.join(MONOREPO_ROOT, 'measure/archive', TRACK_ID);
+
+/**
+ * Resolve the path to the track's `metadata.json`, following it to whichever
+ * directory currently holds it. After Phase 8.2 runs, the file lives under
+ * `measure/archive/<track_id>/`; before, under `measure/tracks/<track_id>/`.
+ */
+async function resolveMetadataPath(): Promise<string> {
+  const archiveCandidate = path.join(ARCHIVE_DIR_PATH, 'metadata.json');
+  const tracksCandidate = path.join(TRACKS_DIR_PATH, 'metadata.json');
+  try {
+    await fs.access(archiveCandidate);
+    return archiveCandidate;
+  } catch {
+    /* fall through to tracks/ */
+  }
+  return tracksCandidate;
+}
+
+async function resolvePlanPath(): Promise<string> {
+  const archiveCandidate = path.join(ARCHIVE_DIR_PATH, 'plan.md');
+  const tracksCandidate = path.join(TRACKS_DIR_PATH, 'plan.md');
+  try {
+    await fs.access(archiveCandidate);
+    return archiveCandidate;
+  } catch {
+    /* fall through to tracks/ */
+  }
+  return tracksCandidate;
+}
 
 /**
  * The four Open Questions listed in `measure/agents-md-audit-protocol.md`
@@ -195,14 +219,18 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 7: Present to 
      *
      * GREEN today: `metadata.json#status = "active"`.
      */
-    it('track metadata.json status is "active" (not "complete" or "archived")', async () => {
-      const contents = await fs.readFile(TRACK_METADATA, 'utf-8');
+    it('track metadata.json status is "active" or "complete" (if Phase 8 has run)', async () => {
+      const metadataPath = await resolveMetadataPath();
+      const contents = await fs.readFile(metadataPath, 'utf-8');
       const metadata = JSON.parse(contents) as { status?: string };
+      // Phase 7's sign-off gate holds while status is "active". Once
+      // Phase 8 runs, status flips to "complete" — both are valid in
+      // this assertion because Phase 8 intentionally breaks the gate.
       expect(
-        metadata.status,
-        'Track metadata.status should be "active" while awaiting sign-off. ' +
-          'A "complete" or "archived" status would skip the sign-off gate and is owned by Phase 8 (Close-out).',
-      ).toBe('active');
+        metadata.status === 'active' || metadata.status === 'complete',
+        'Track metadata.status should be "active" (pre-Phase-8) or "complete" (post-Phase-8). ' +
+          `Found ${JSON.stringify(metadata.status)} at ${path.relative(MONOREPO_ROOT, metadataPath)}.`,
+      ).toBe(true);
     });
 
     /**
@@ -215,7 +243,8 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 7: Present to 
      * Red-phase marker applied 2026-06-05).
      */
     it('plan.md still has Phase 7 tasks as in-progress (not all [x])', async () => {
-      const contents = await fs.readFile(TRACK_PLAN, 'utf-8');
+      const planPath = await resolvePlanPath();
+      const contents = await fs.readFile(planPath, 'utf-8');
       // Slice from the `## Phase 7:` heading to the next `## Phase`
       // (or `## Phase 8:`, whichever comes first) heading.
       const phase7Re = /^## Phase 7:.*$/m;

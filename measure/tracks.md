@@ -68,7 +68,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ### Pending Tracks
 
-- [ ] **Track: AGENTS.md Compliance Audit — science-advantage (pilot)** *Link: [./tracks/agents_md_audit_science_advantage_20260603/](./tracks/agents_md_audit_science_advantage_20260603/)*
+- [x] **Track: AGENTS.md Compliance Audit — science-advantage (pilot)** *Link: [./archive/agents_md_audit_science_advantage_20260603/](./archive/agents_md_audit_science_advantage_20260603/)*
   Pilot run of the audit protocol. Produces baseline checklist, findings classified by severity, and migration track proposals. Refines the protocol for the next-app rollout.
 
 #### Pending Tracks — Audit Findings (science-advantage, 2026-06-03)
