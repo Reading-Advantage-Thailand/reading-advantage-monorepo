@@ -10,8 +10,9 @@ vi.mock("ai", () => ({
 
 vi.mock("@ai-sdk/openai", () => ({
   createOpenAI: vi.fn(() => {
-    const modelFn = vi.fn((id: string) => `resolved:${id}`);
-    return modelFn;
+    const provider = vi.fn((id: string) => `resolved:${id}`);
+    (provider as any).image = vi.fn((id: string) => `image:${id}`);
+    return provider;
   }),
 }));
 
@@ -101,7 +102,7 @@ describe("OpenAIProvider", () => {
 
       expect(experimental_generateImage).toHaveBeenCalledWith(
         expect.objectContaining({
-          model: "resolved:dall-e-3",
+          model: "image:dall-e-3",
         })
       );
     });

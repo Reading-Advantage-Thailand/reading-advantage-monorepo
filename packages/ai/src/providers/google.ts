@@ -65,7 +65,7 @@ export class GoogleProvider implements AIClient {
     try {
       const modelId = input.model ?? this.defaultImageModel;
       const { image } = await aiGenerateImage({
-        model: this.client(modelId),
+        model: this.client.image(modelId),
         prompt: input.prompt,
       });
 

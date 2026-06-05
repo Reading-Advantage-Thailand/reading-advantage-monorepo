@@ -10,8 +10,9 @@ vi.mock("ai", () => ({
 
 vi.mock("@ai-sdk/google", () => ({
   createGoogleGenerativeAI: vi.fn(() => {
-    const modelFn = vi.fn((id: string) => `google:${id}`);
-    return modelFn;
+    const provider = vi.fn((id: string) => `google:${id}`);
+    (provider as any).image = vi.fn((id: string) => `image:${id}`);
+    return provider;
   }),
 }));
 
@@ -89,7 +90,7 @@ describe("GoogleProvider", () => {
 
       expect(experimental_generateImage).toHaveBeenCalledWith(
         expect.objectContaining({
-          model: "google:gemini-2.0-flash-preview-image-generation",
+          model: "image:gemini-2.0-flash-preview-image-generation",
         })
       );
     });
