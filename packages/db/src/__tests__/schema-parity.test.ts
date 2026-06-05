@@ -561,3 +561,24 @@ describe("schoolId column — Track 2 TenantDB Adoption", () => {
     });
   }
 });
+
+// ─── Audit Events (Track 4: Audit Log Infrastructure) ────────────────
+
+describe("auditEvents — Track 4 Audit Log Infrastructure", () => {
+  it("is exported from schema", () => {
+    expect(schema.auditEvents).toBeDefined();
+  });
+  it("has expected columns", () => {
+    const c = cols(schema.auditEvents);
+    expect(c).toContain("id");
+    expect(c).toContain("actorUserId");
+    expect(c).toContain("actorRole");
+    expect(c).toContain("action");
+    expect(c).toContain("targetType");
+    expect(c).toContain("targetId");
+    expect(c).toContain("ipAddress");
+    expect(c).toContain("userAgent");
+    expect(c).toContain("metadata");
+    expect(c).toContain("createdAt");
+  });
+});

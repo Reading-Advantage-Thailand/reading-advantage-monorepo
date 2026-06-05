@@ -17,6 +17,12 @@ const MODULE_DIRS = readdirSync(DOMAIN_SRC, { withFileTypes: true })
   .filter((d) => d.isDirectory() && !d.name.startsWith("_") && d.name !== "__tests__")
   .map((d) => join(DOMAIN_SRC, d.name));
 
+/**
+ * Modules exempt from tenant-coverage checks. These operate on global tables
+ * (no schoolId column) and intentionally use a raw DB, not TenantDB.
+ */
+const TENANT_EXEMPT_MODULES = ["audit"];
+
 /** Recursively collect all .ts files in a directory. */
 function collectTsFiles(dir: string): string[] {
   const files: string[] = [];
@@ -77,6 +83,12 @@ describe("tenant predicate coverage", () => {
 
   for (const moduleDir of MODULE_DIRS) {
     const moduleName = relative(DOMAIN_SRC, moduleDir);
+
+    // Skip tenant-exempt modules (global tables, no schoolId)
+    if (TENANT_EXEMPT_MODULES.includes(moduleName)) {
+      continue;
+    }
+
     const files = collectTsFiles(moduleDir);
 
     for (const filePath of files) {
