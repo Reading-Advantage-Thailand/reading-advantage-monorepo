@@ -1,0 +1,12 @@
+{
+  "track_id": "codecamp_review_ai_consolidation_20260605",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-05T00:00:00Z",
+  "updated_at": "2026-06-05T00:00:00Z",
+  "description": "Eliminate the duplicate generateReview LLM implementation (two near-identical OpenRouter calls reported at packages/webhooks .../github.ts and packages/api .../routers/codecamp.ts) by routing both through the shared AIClient from packages/ai (delivered by ai_adapter_package_20260603). Add an OpenRouter-compatible provider to packages/ai if one is not already present, then make the codecamp PR-review path call AIClient instead of constructing its own client. The domain reviewExercise already uses DI correctly and becomes the single seam.",
+  "estimated_tasks": 18,
+  "deviation_notes": "",
+  "depends_on": ["ai_adapter_package_20260603", "codecamp_advantage_20260513"],
+  "notes": "Resolves tech-debt.md row 2026-05-15 'Duplicate generateReview LLM implementation' (Medium). File paths/line numbers come from the tech-debt record and MUST be re-confirmed in Phase 0 (code may have moved). If packages/ai lacks an OpenRouter provider, add one (OpenRouter is OpenAI-API-compatible, so it may be a base-URL variant of the existing OpenAI provider)."
+}

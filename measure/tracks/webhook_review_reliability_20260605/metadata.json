@@ -1,0 +1,13 @@
+{
+  "track_id": "webhook_review_reliability_20260605",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-06-05T00:00:00Z",
+  "updated_at": "2026-06-05T00:00:00Z",
+  "description": "Make the codecamp webhook -> LLM review -> PR-comment -> DB pipeline reliable. Add a Postgres-backed job table (review_jobs) with bounded retries and a dead-letter state, replacing the current fire-and-forget pattern that marks a review 'reviewed' even on transient failure. Add a worker that claims and processes jobs with backoff, and add the missing end-to-end integration tests for the pipeline. Postgres-backed (no Redis/BullMQ) to match the monorepo's data-centric direction (cf. rate_limiter_v2).",
+  "estimated_tasks": 26,
+  "deviation_notes": "",
+  "depends_on": ["codecamp_review_ai_consolidation_20260605", "codecamp_advantage_20260513"],
+  "soft_depends_on": ["connection_pooling_20260522"],
+  "notes": "Resolves tech-debt.md rows 2026-05-16 'Webhook async LLM review pipeline has no retry or dead-letter queue' (Medium) and 2026-05-15 'No integration tests for webhook -> LLM -> comment -> DB pipeline' (Medium). Deliberately chooses a Postgres job table over Redis/BullMQ: the tech-debt note assumed BullMQ/Redis, but the project has standardized on Postgres-backed primitives (rate_limiter_v2) and LISTEN/NOTIFY (connection_pooling, reactive_query_layer). Depends on the consolidation track so there is ONE review impl to make reliable."
+}

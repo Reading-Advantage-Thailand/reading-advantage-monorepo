@@ -91,8 +91,8 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: Audit Log Infrastructure** *Link: [./archive/audit_log_infrastructure_20260603/](./archive/audit_log_infrastructure_20260603/)*
   *Status: COMPLETE — audit_events table with REVOKE UPDATE DELETE (append-only). recordAuditEvent + safeMetadata helper in packages/auth. Wired into createSession (login), deleteSession (logout), hashPassword (password:change). 4 science-advantage domain functions audited (assignment:create/delete, class:remove_student, class:delete). GET /api/admin/audit-events with Zod validation, ADMIN-only. 704 tests pass. Migration 0018.*
 
-- [ ] **Track: Audit Log Retention + DSAR Bulk Export**
-  7-year FERPA retention policy with periodic cleanup job. GDPR DSAR (data subject access request) bulk export endpoint. Depends on Track 9 (Observability Stack) for real-time audit event streaming. **Follow-up to Track 4.**
+- [ ] **Track: Audit Log Retention + DSAR Bulk Export** *Link: [./tracks/audit_log_retention_dsar_20260605/](./tracks/audit_log_retention_dsar_20260605/)*
+  7-year FERPA retention policy with periodic (advisory-locked) cleanup job over `audit_events`. GDPR/FERPA DSAR (data subject access request) ADMIN-only, tenant-scoped bulk-export endpoint. **Follow-up to Track 4** (`audit_log_infrastructure_20260603`). Real-time streaming (originally "depends on Observability Track 9") descoped to a *soft* dependency — retention + batch export do not need streaming. **spec + plan written 2026-06-05.**
 
 - [x] **Track: Shared `packages/ai` + `lib/ai/` Refactor** *Link: [./archive/ai_adapter_package_20260603/](./archive/ai_adapter_package_20260603/)*
   *Status: COMPLETE — `packages/ai` with `AIClient` interface, 3 providers (OpenAI, Google, Mock), `createAIClient`/`getAIClient` singleton. `recommendation-service.ts` and `image-generator.ts` refactored to use `AIClient`. `process.env` mutation removed. `ai`, `@ai-sdk/openai`, `@ai-sdk/google` removed from science-advantage deps. 23 packages/ai tests + 3 science-advantage unit tests pass. Docs updated.*
@@ -207,6 +207,17 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: codecamp-advantage — AI Review Visibility**
   *Link: [./archive/codecamp_ai_review_visibility_20260518/](./archive/codecamp_ai_review_visibility_20260518/)*
   Clarify when AI PR review is expected, expose latest PR links/status in admin reporting, and show no-review-expected guidance for non-PR modules such as Unit 1. *Status: COMPLETE — cohort dashboard latest PR link/status, intern detail module-level review expectation, and student no-review-expected module copy implemented with tests/typecheck/lint/build green.*
+
+#### codecamp-advantage — PR-Review Pipeline Hardening (spec + plan written 2026-06-05)
+
+> Two sequenced tracks that retire long-standing `tech-debt.md` rows on the LLM PR-review
+> pipeline. Do the consolidation first (it gives the reliability track a single seam).
+
+- [ ] **Track: Consolidate Duplicate `generateReview` onto `packages/ai`** *Link: [./tracks/codecamp_review_ai_consolidation_20260605/](./tracks/codecamp_review_ai_consolidation_20260605/)*
+  Collapse the two near-identical OpenRouter `generateReview` implementations onto the shared `AIClient` from `packages/ai` (committed `9c52c8a`); `reviewExercise` becomes the single seam. Adds an OpenRouter provider to `packages/ai` if absent. Resolves `tech-debt.md` 2026-05-15 "Duplicate `generateReview`". Depends on `ai_adapter_package_20260603`. **Do before the reliability track.**
+
+- [ ] **Track: Webhook → LLM Review Reliability (Postgres Retry + DLQ)** *Link: [./tracks/webhook_review_reliability_20260605/](./tracks/webhook_review_reliability_20260605/)*
+  Replace the fire-and-forget review path with a Postgres-backed `review_jobs` queue (`FOR UPDATE SKIP LOCKED` claim, bounded jittered-backoff retries, dead-letter state + admin replay) and add the missing webhook → LLM → comment → DB integration tests. **No Redis/BullMQ** — Postgres-backed to match `rate_limiter_v2` / `LISTEN-NOTIFY` direction. Resolves `tech-debt.md` 2026-05-16 (retry/DLQ) + 2026-05-15 (no integration tests). Depends on the consolidation track above.
 
 ---
 

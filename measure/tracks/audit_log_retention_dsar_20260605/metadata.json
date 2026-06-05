@@ -1,0 +1,13 @@
+{
+  "track_id": "audit_log_retention_dsar_20260605",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-06-05T00:00:00Z",
+  "updated_at": "2026-06-05T00:00:00Z",
+  "description": "Follow-up to audit_log_infrastructure_20260603. Add a 7-year FERPA retention policy with a periodic cleanup job over audit_events (and other PII-bearing tables, scoped to audit_events here), and a GDPR/FERPA DSAR (Data Subject Access Request) bulk-export endpoint that gathers all audit + profile data for a given subject into a downloadable archive. ADMIN-only, tenant-scoped. Builds on the append-only audit_events table and recordAuditEvent helper.",
+  "estimated_tasks": 22,
+  "deviation_notes": "",
+  "depends_on": ["audit_log_infrastructure_20260603"],
+  "soft_depends_on": ["observability_stack_20260603"],
+  "notes": "Registry previously listed this as 'Audit Log Retention + DSAR Bulk Export' under Pending Tracks with no track dir. This track materializes spec+plan. Real-time audit-event streaming (the original 'depends on Observability') is descoped to a soft dependency: retention + batch DSAR export do not require streaming."
+}
