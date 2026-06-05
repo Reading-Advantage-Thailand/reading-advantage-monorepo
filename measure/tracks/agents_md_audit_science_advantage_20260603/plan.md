@@ -24,7 +24,7 @@
 
 ## Phase 2: Static analysis (Sections 1–13)
 
-> Completed: all 70 tests GREEN after lessons-learned.md curation pass (see below).
+> Completed: all 70 tests GREEN after lessons-learned.md curation pass (see below). `cca1216` (2026-06-05)
 
 For each section, run the listed grep/build-graph queries and record evidence.
 Per `test-strategy.md` §5, the test contract for this phase is:
@@ -48,12 +48,14 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 - [x] **Section 12: Monorepo Hygiene** — `pnpm turbo run build/lint/check-types --filter=science-advantage`
 - [x] **Section 13: Workflow** — spot-check recent commits for track references; check `tech-debt.md` line count
 
-> **Fix (this session):** §13.3 test failed because `lessons-learned.md` drifted to 56 lines (cap: 50). Pruned 3 old entries (2026-05-02 shared_backend_api ×2, review_remediation ×1) by condensing into 1 line, bringing file to 46 lines. All 70 tests now pass.
+> **Fix (this session):** §13.3 test failed because `lessons-learned.md` drifted to 56 lines (cap: 50). Pruned 3 old entries (2026-05-02 shared_backend_api ×2, review_remediation ×1) by condensing into 1 line, bringing file to 46 lines. All 70 tests now pass. Commit: `cca1216`.
 
 ## Phase 3: Manual review (judgment calls)
 
-- [ ] For each static-FAIL, inspect 1–2 example files. Confirm the violation is real, not a false positive.
-- [ ] Document the inspection outcome in `findings.md`.
+- [~] For each static-FAIL, inspect 1–2 example files. Confirm the violation is real, not a false positive.
+- [~] Document the inspection outcome in `findings.md`.
+
+> Phase 3 test contract (per `test-strategy.md` §5): every FAIL in `findings.md` must have a `**Manual Inspection:**` annotation with 1–2 sample `path:line` references (subsumed FAILs may defer to the umbrella), each sample must exist on disk with the cited line in range, and a judgment keyword (`REAL` / `FALSE_POSITIVE` / `SUBSUMED` / `STATE_OK_NOW` / `REAL_AT_AUDIT_TIME`) must be recorded. Failing tests pinned in `apps/science-advantage/lib/__tests__/audit-phase3-manual-review.test.ts`. PASS findings (F-1206, F-1302–F-1304) are excluded.
 
 ## Phase 4: Classify findings
 
