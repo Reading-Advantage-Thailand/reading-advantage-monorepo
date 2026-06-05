@@ -4,9 +4,11 @@
 
 ## Phase 0: Setup
 
-- [~] Create `measure/audit-reports/science-advantage_20260603/`
-- [~] Confirm `graph.db` is fresh: `build-graph scan . ./graph.db` if mtime > 24h
-- [~] Verify `apps/science-advantage/` is the current state on `main`
+> Completed: `f358070` (2026-06-05)
+
+- [x] Create `measure/audit-reports/science-advantage_20260603/` — exists with 19 artifacts (00-inventory.md, findings.md, executive-summary.md, migration-tracks.md, checklists)
+- [x] Confirm `graph.db` is fresh: `build-graph scan . ./graph.db` if mtime > 24h — graph.db is ~6h old, 159 files, no rescan needed
+- [x] Verify `apps/science-advantage/` is the current state on `main` — directory exists; git-clean test blocked by uncommitted AI-adapter changes (tech-debt: `agents_md_audit_science_advantage_20260603` / "Phase 0 git-clean test blocked by uncommitted AI-adapter changes")
 
 ## Phase 1: Discovery (Protocol §0)
 
