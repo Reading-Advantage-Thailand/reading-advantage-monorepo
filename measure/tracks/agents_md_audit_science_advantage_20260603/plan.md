@@ -61,10 +61,10 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 
 ## Phase 4: Classify findings
 
-- [ ] Write `findings.md` with one row per FAIL, classified Critical/High/Medium/Low
-- [ ] Sort by severity; add summary table at top
-- [ ] Add Critical and High rows to `measure/tech-debt.md`
-- [ ] Add Medium/Low summary row to `measure/tech-debt.md`
+- [~] Write `findings.md` with one row per FAIL, classified Critical/High/Medium/Low
+- [~] Sort by severity; add summary table at top
+- [~] Add Critical and High rows to `measure/tech-debt.md`
+- [~] Add Medium/Low summary row to `measure/tech-debt.md`
 
 ## Phase 5: Generate migration tracks
 
