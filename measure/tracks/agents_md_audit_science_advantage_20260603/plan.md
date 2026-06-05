@@ -4,9 +4,9 @@
 
 ## Phase 0: Setup
 
-- [ ] Create `measure/audit-reports/science-advantage_20260603/`
-- [ ] Confirm `graph.db` is fresh: `build-graph scan . ./graph.db` if mtime > 24h
-- [ ] Verify `apps/science-advantage/` is the current state on `main`
+- [~] Create `measure/audit-reports/science-advantage_20260603/`
+- [~] Confirm `graph.db` is fresh: `build-graph scan . ./graph.db` if mtime > 24h
+- [~] Verify `apps/science-advantage/` is the current state on `main`
 
 ## Phase 1: Discovery (Protocol §0)
 
