@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { execSync } from "node:child_process";
+import { exec as execCb } from "node:child_process";
+import { promisify } from "node:util";
 import { readFileSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+const exec = promisify(execCb);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -80,24 +83,28 @@ describe("Phase 0: Setup invariants for @reading-advantage/ai", () => {
   });
 
   describe("Task 4: Phase 0 build smoke (per test-strategy.md §1)", () => {
-    it("`pnpm -F @reading-advantage/ai build` succeeds with no tsc errors", () => {
+    it("`pnpm -F @reading-advantage/ai build` succeeds with no tsc errors", async () => {
       // Per measure/tracks/ai_adapter_package_20260603/test-strategy.md §1,
       // the Phase 0 integration test is the build smoke. We run `tsc --noEmit`
       // from the package root to assert the compile gate is green before
       // any later phase work proceeds.
+      //
+      // Uses async `exec` instead of `execSync` to avoid blocking the vitest
+      // worker thread, which causes an RPC timeout when running under turbo
+      // with heavy parallelism (the tsc call takes ~60s, exceeding the 30s
+      // vitest RPC timeout).
       let exitCode = 0;
       let stderr = "";
       try {
-        execSync("./node_modules/.bin/tsc --noEmit", {
+        const result = await exec("./node_modules/.bin/tsc --noEmit", {
           cwd: PKG_ROOT,
-          stdio: "pipe",
           encoding: "utf8",
         });
+        stderr = result.stderr ?? "";
       } catch (error) {
-        const err = error as { status?: number; stderr?: Buffer; stdout?: Buffer };
+        const err = error as { status?: number; stderr?: string; stdout?: string };
         exitCode = err.status ?? 1;
-        stderr =
-          (err.stdout?.toString() ?? "") + (err.stderr?.toString() ?? "");
+        stderr = (err.stdout ?? "") + (err.stderr ?? "");
       }
       expect(
         exitCode,
