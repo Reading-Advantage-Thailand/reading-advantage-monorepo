@@ -43,12 +43,12 @@ import {
   recommendationFixture,
   recommendationFixturePrompt,
   recommendationFixtureSchema,
-} from "../__fixtures__/recommendations.js";
-import { diagramBuffer } from "../__fixtures__/diagram.js";
+} from "./recommendations.fixture.js";
+import { diagramBuffer } from "./diagram.fixture.js";
 import {
   defaultContractFixtures,
   runAIClientContract,
-} from "../__fixtures__/contract-suite.js";
+} from "./contract-suite.js";
 import type { MockResponses } from "../providers/mock.js";
 
 /**

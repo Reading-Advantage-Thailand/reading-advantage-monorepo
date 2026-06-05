@@ -22,8 +22,8 @@ import {
   recommendationFixture,
   recommendationFixturePrompt,
   recommendationFixtureSchema,
-} from "./recommendations.js";
-import { diagramBuffer } from "./diagram.js";
+} from "./recommendations.fixture.js";
+import { diagramBuffer } from "./diagram.fixture.js";
 
 /**
  * Optional pre-configured responses that providers may need to wire into

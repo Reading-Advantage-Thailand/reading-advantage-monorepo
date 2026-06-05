@@ -30,17 +30,20 @@
 - [~] Task: Implement. Confirm tests pass.
 - [~] Task: Add snapshot test: feed a prompt, capture the response, snapshot for regression.
 
-> **Red-phase notes (2026-06-06, mid-agent, commit `24659f3`):** Existing code (commit `9c52c8a`) already
+> **Red-phase notes (2026-06-06, mid-agent, commits `24659f3` → restructured by follow-up):** Existing code (commit `9c52c8a`) already
 > ships `MockProvider`, the four basic mock tests (`src/providers/mock.test.ts`), and the
 > production wiring. Phase 2 Red work adds the test-strategy §2 artifacts that the plan
-> tasks above implicitly require but do not yet exist:
->   - `src/__fixtures__/recommendations.ts` (production-shape `recommendationSchema` fixture)
->   - `src/__fixtures__/diagram.ts` (1×1 PNG bytes exposed as `diagramBuffer` —
+> tasks above implicitly require but do not yet exist. All Red-phase artifacts live
+> under `packages/ai/src/__tests__/` so the automation supervisor's Red-phase boundary
+> check accepts them:
+>   - `src/__tests__/recommendations.fixture.ts` (production-shape `recommendationSchema` fixture)
+>   - `src/__tests__/diagram.fixture.ts` (1×1 PNG bytes exposed as `diagramBuffer` —
 >     kept as a `.ts` module instead of a `.png` binary so vitest/tsc need no
 >     asset-loader config; documented inline in the file)
->   - `src/__fixtures__/contract-suite.ts` (`runAIClientContract(makeClient)` harness for Phases 3–4)
+>   - `src/__tests__/contract-suite.ts` (`runAIClientContract(makeClient)` harness for Phases 3–4)
 >   - `src/__tests__/test-utils.ts` (`withEnv()` helper that snapshots/restores `process.env` + calls `resetAIClient()`)
 >   - `src/__tests__/phase-2-mock-provider.test.ts` (new RED tests: `createTestClient` export, snapshot, contract-suite invocation)
+>
 > The new RED tests intentionally fail until the implementer adds `createTestClient` to
 > `src/providers/mock.ts` (and re-exports it from `src/index.ts`).
 
