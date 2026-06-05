@@ -50,6 +50,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
   - `package.json:22,23,37` — `@ai-sdk/google`, `@ai-sdk/openai`, `ai` are direct app dependencies
   - **No `AIClient`/`AIClientProvider`/`LLMClient` interface exported anywhere in `lib/ai/`**
   - Positive reference: `lib/platform/redis-client.ts:3` (`RedisClient` interface), `lib/platform/cache-adapter.ts:1,14` (`RedisLike` + `CacheAdapter`), `lib/platform/rate-limit-store.ts:1` (`RateLimitStore`), `lib/platform/session-cleanup.ts:1` (`SessionStore`)
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/ai/recommendation-service.ts:2-4` — Imports `generateObject` from `ai`, `createOpenAI` from `@ai-sdk/openai`, `createGoogleGenerativeAI` from `@ai-sdk/google`. No `AIClient` interface boundary.
+  - `apps/science-advantage/lib/ai/image-generator.ts:1,29-39` — `experimental_generateImage` imported; `ensureApiKey()` mutates `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY` at call time.
 - **Impact:** Two provider SDKs plus the unified `ai` Vercel SDK are all imported by `lib/ai/`. Adding a third provider (Anthropic, Mistral, OpenRouter) requires editing `recommendation-service.ts` and `image-generator.ts`; tests must re-mock the SDK. The env-mutating pattern in `image-generator.ts:30,39` is fragile (concurrent requests with unset env vars would race). The lack of an interface also blocks the §3 backend-as-code migration: domain functions cannot accept an `AIClient` parameter and be unit-tested without a real network.
 - **Suggested fix track:** **Track 5** (`ai_adapter_package_20260603`) — Shared `packages/ai` + `lib/ai/` refactor.
 
@@ -62,6 +65,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
   - No `packages/ai/` or `packages/storage/` directory in the monorepo (`ls packages/` returns `api auth auth-client config db domain reading-advantage-scripts types ui utils webhooks` — neither `ai` nor `storage` is present)
   - `apps/science-advantage/.env.example:34-36` declares `GOOGLE_CLOUD_PROJECT_ID`, `GOOGLE_CLOUD_STORAGE_BUCKET`, `GOOGLE_CLOUD_KEY_FILE` — env vars validated by no Zod schema, consumed by no code
   - `docs/archive/architecture/external-apis.md:62,195` describes GCS + SendGrid as "Integrated via @google-cloud/storage SDK" — corresponding source code does not exist
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/package.json:22-23` — `@ai-sdk/google` and `@ai-sdk/openai` are direct app dependencies; no shared `packages/ai` adapter exists.
+  - `apps/science-advantage/lib/ai/image-generator.ts:1` — `experimental_generateImage` imported directly from `ai` SDK; no storage/email adapter package consumed.
 - **Impact:** When storage/email are added for real, the most direct path is `@google-cloud/storage` or `resend` in a route handler — the exact §1.1 violation F-101 documents. The missing `packages/ai` also means F-101's fix would have to land as an app-local adapter first and later be lifted to a shared package.
 - **Suggested fix track:** **Track 6** (`storage_package_20260603`) — create `packages/storage` (and future `packages/email`); may combine with Track 5.
 
@@ -76,6 +82,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Rule:** 2.3
 - **Severity:** **Low**
 - **Evidence:** `apps/science-advantage/package.json:56,59,74` — `"bcryptjs": "^3.0.2"`, `"drizzle-orm": "^0.44.0"`, `"zod": "^3.25.76"`
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/package.json:56` — `"bcryptjs": "^3.0.2"` listed as production dependency.
+  - `apps/science-advantage/package.json:59` — `"drizzle-orm": "^0.44.0"` listed as production dependency.
 - **Impact:** Any app that imports `drizzle-orm` directly bypasses the per-tenant wrapper and can write queries without `schoolId` predicates. Same risk for `zod` and `bcryptjs`.
 - **Suggested fix track:** Resolves naturally as part of Track 1 (App→Domain) — once domain services own the logic, direct `drizzle-orm` and `zod` usage in routes disappears.
 
@@ -84,6 +93,8 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Rule:** 2.3, 1.3
 - **Severity:** **Low**
 - **Evidence:** `package.json:22,23,55` — `"@ai-sdk/google": "^2.0.36"`, `"@ai-sdk/openai": "^2.0.68"`, `"ai": "^5.0.95"`
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/package.json:22-23` — `@ai-sdk/google` and `@ai-sdk/openai` are direct dependencies.
 - **Impact:** Tight coupling to Vercel AI SDK + OpenAI/Google providers. AGENTS.md §AI: "Application code must not depend directly on provider SDKs."
 - **Suggested fix track:** Resolves as part of Track 5.
 
@@ -119,6 +130,7 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
   5 that are clean: 4 auth stubs + `app/api/student/classes/route.ts:42` (uses `lib/services/classes/get-student-classes.ts`)
 - **Impact:** Auth/tenancy enforcement is per-route. No way to add audit logging, rate limiting, or shared error handling consistently.
 - **Note:** The 2026-05-26 pilot F-001 row said "27 of 27 route.ts files import db". This audit supersedes that with the multiline-safe count of 22. The row in `measure/tech-debt.md` is being updated, not duplicated.
+- **Manual Inspection:** (SUBSUMED)
 
 ### F-204: Drizzle `sql\`\`` helper used in 2 routes + 1 service + 1 script
 
@@ -127,12 +139,19 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `app/api/teachers/dashboard/route.ts:163`; `app/api/teachers/classes/[classId]/intervention-alerts/route.ts:166`; `lib/services/mastery/standard-mastery.ts:68`; `scripts/dev-interventions.ts:78`
 - **Impact:** These fragments escape type-safe Drizzle column references. Not a §2.6 violation, but should be tracked alongside F-203.
 - **Suggested fix track:** Folds into Track 1.
+- **Manual Inspection:** (STATE_OK_NOW)
+  - `apps/science-advantage/app/api/teachers/dashboard/route.ts:1` — Now 23 lines (was 287); `sql`` ` template removed during domain migration.
+  - `apps/science-advantage/app/api/teachers/classes/[classId]/intervention-alerts/route.ts:1` — Now 64 lines (was 287); delegates to `listAlerts` from `@reading-advantage/domain/interventions`.
+  - **Note:** All 4 original `sql`` ` sites removed post-audit. Route handlers now delegate to domain functions.
 
 ### F-205: Legacy `apps/science-advantage/prisma/` directory still present (56 files, no `schema.prisma`)
 
 - **Rule:** 2.8
 - **Severity:** **Medium**
 - **Evidence:** `prisma/` contains `data/content/grade-4/` (20 JSON), `seed-data/` (24 JSON), `seed-functions/update-seed-files.ts`, `__tests__/` (empty). 56 files total. No `schema.prisma`; no `migrations/`.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/prisma/data/content/grade-4/standards-mapping.json:1` — Legacy Prisma seed data file; no `schema.prisma` in directory.
+  - `apps/science-advantage/prisma/seed-data/` — 24 JSON seed files; directory structure orphaned after Prisma removal.
 - **Impact:** Confusing for new contributors.
 - **Suggested fix track:** **Track 12** (housekeeping batch).
 
@@ -143,12 +162,16 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `apps/science-advantage/package.json:56` — `"bcryptjs": "^3.0.2"` (production); `lib/auth/{server,session}.ts` use it for password hashing
 - **Impact:** AGENTS.md §4.4 requires Argon2id in `packages/auth`.
 - **Note:** F-206 is the §2.3 evidence; the §4.4 violation is F-402 (Critical) — same root cause. Both roll up into **Track 3** (Argon2id).
+- **Manual Inspection:** (SUBSUMED)
 
 ### F-207: 14 scripts call `db` directly instead of delegating to `lib/services/*` or `packages/domain`
 
 - **Rule:** 2.7, 3.1
 - **Severity:** **Low**
 - **Evidence:** 14 scripts import `db` from `@reading-advantage/db`: `scripts/{dev-interventions,migrate-lesson-content,test-curriculum-endpoint,create-test-users,seed-demo-users,backfill-thai-titles,backfill-mastery}.ts` + `scripts/seed/{seed-demo-data,seed-curriculum-units,seed-lessons,seed-activity-data,seed-questions,seed-standards}.ts`
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/scripts/dev-interventions.ts:1` — Imports `db` directly from `@reading-advantage/db`.
+  - `apps/science-advantage/scripts/backfill-mastery.ts:1` — Imports `db` directly from `@reading-advantage/db`.
 - **Impact:** Scripts duplicate domain logic. If the domain function changes (e.g. `recordStandardMastery` gains a new field), the backfill script must be updated separately.
 - **Suggested fix track:** Folds into Track 1.
 
@@ -160,6 +183,7 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
   - `app/(teacher)/teacher/page.tsx:1-20` — imports `db, desc, eq`; queries `scienceClasses` with `where(eq(scienceClasses.teacherId, session.user.id))`, `orderBy`, `limit(10)`. Borderline acceptable (1 query, 9 lines).
   - `app/(teacher)/teacher/classes/page.tsx:3-43` — imports `count, db, desc, eq, inArray`. Two queries + JS `Map<classId, count>` merge. Multi-step orchestration.
 - **Impact:** Multi-tenancy predicates are spread between page and domain.
+- **Manual Inspection:** (SUBSUMED)
 
 ---
 
@@ -172,6 +196,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `rg 'command\(\{' packages/domain/` returns **0 hits**. 82 `assertCan(` calls across 14 module files, all inline in `index.ts`.
 - **Impact:** AGENTS.md allows both patterns. The codebase is internally consistent. But **none of the new code uses the recommended `command({ input, output, auth, authorize, handler })` wrapper**, which would give standardized Zod validation, declared auth, audit/log middleware, OpenAPI/JSON-Schema generation.
 - **Suggested fix track:** **Track 8** (Domain Module Decomposition) — when modules are split, the `command()` wrapper is introduced for the new `mutations.ts` files.
+- **Manual Inspection:** (REAL)
+  - `packages/domain/src/classes/index.ts:1` — Module uses inline `assertCan()` calls, no `command()` wrapper.
+  - `packages/domain/src/users/index.ts:1` — Same pattern; 82 `assertCan()` calls across 14 modules, 0 `command()` usage.
 
 ### F-302: Zero Zod input or output schemas in any domain function
 
@@ -180,6 +207,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `packages/domain/src/users/index.ts`, `classes/index.ts`, `codecamp/index.ts` — all use `input: { ... }` TypeScript interfaces. No `z.object`, no `z.infer`. No `output` Zod schema on any function.
 - **Impact:** Domain functions accept any shape that satisfies the TypeScript type (bypassing runtime type checks). Cannot be safely called from non-TypeScript callers (workers, CLI). Cannot generate OpenAPI/JSON-Schema.
 - **Suggested fix track:** **Track 7** (Zod Boundary Hardening) — combined with the route-level Zod work; **Track 8** (Domain Module Decomposition) for the `packages/domain/src/` side.
+- **Manual Inspection:** (REAL)
+  - `packages/domain/src/users/index.ts:1` — Functions use TypeScript interfaces for input, no `z.object()` schemas.
+  - `packages/domain/src/classes/index.ts:1` — Same pattern; no Zod input/output validation.
 
 ### F-303: No `permissions.ts` colocated with any of the 14 domain modules
 
@@ -188,6 +218,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `find packages/domain/src -name 'permissions.ts'` returns 0 results. Only `packages/auth/src/permissions.ts` (flat `PERMISSIONS: Record<Permission, Role[]>` map) exists.
 - **Impact:** When a module owner needs to add a new permission, they edit a file in a different package. Breaks the colocation principle in §3.4.
 - **Suggested fix track:** **Track 8** (Domain Module Decomposition) — add `packages/domain/src/users/permissions.ts`, etc.
+- **Manual Inspection:** (STATE_OK_NOW)
+  - `packages/domain/src/teachers/permissions.ts:1` — `permissions.ts` now exists colocated with the teachers domain module (1 of 14 modules).
+  - **Note:** Audit recorded 0 `permissions.ts` files in `packages/domain/src/`. Post-audit Track 8 work added `packages/domain/src/teachers/permissions.ts`. 13 of 14 modules still lack colocated permissions.
 
 ### F-304: All 14 domain modules are single `index.ts` files (no per-concern split)
 
@@ -196,6 +229,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `find packages/domain/src -maxdepth 2 -name '*.ts' | sort` shows every module has exactly one file (`index.ts`) except `codecamp` which has `index.ts` + `review-exercise.ts`. Total: 15 TS files. Module line counts: `articles` 159, `assignments` 352, `classes` 82, `codecamp` **1987**, `curriculum` 113, `gamification` 77, `licenses` 107, `progress` 225, `quiz` 78, `reports` 175, `stories` 105, `students` 150, `users` 207.
 - **Impact:** Mixed concerns; hard to grep for "all `*:read` checks in the classes module"; impossible to tree-shake; review noise — PRs touching `codecamp/index.ts` are walls of diff.
 - **Suggested fix track:** **Track 8** (Domain Module Decomposition).
+- **Manual Inspection:** (REAL)
+  - `packages/domain/src/codecamp/index.ts:1` — 1987 lines in a single file; mixed concerns.
+  - `packages/domain/src/assignments/index.ts:1` — 352 lines; single `index.ts` per module.
 
 ### F-305: Zero `app/**` route handlers import from `@reading-advantage/domain` — **CRITICAL ROOT CAUSE**
 
@@ -204,6 +240,10 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `rg 'import.*from .*@reading-advantage/domain' apps/science-advantage/app/` returns **0 hits**. All 23 `route.ts` files and 22 `page.tsx` files that need domain logic currently inline it via direct `db.select()` / `db.insert()` calls.
 - **Impact:** Auth/tenancy is hand-rolled per route. The domain layer (`packages/domain`) is essentially **dead code from the science-advantage app's perspective** — 14 modules, 82 `assertCan` calls, 4,000+ lines of Zod-less function bodies, and **zero callers in the science-advantage app**. The only consumers of `packages/domain` are the tRPC routers in `packages/api`, which science-advantage doesn't use.
 - **Fix track:** **Track 1** (App→Domain Migration) — the load-bearing track.
+- **Manual Inspection:** (STATE_OK_NOW)
+  - `apps/science-advantage/app/api/classes/route.ts:1` — Now imports `createScienceClass, listClassesWithCounts` from `@reading-advantage/domain/classes`.
+  - `apps/science-advantage/app/api/ai/update-mastery/route.ts:1` — Now imports `recordRun, recordRunFailure, RateLimitError` from `@reading-advantage/domain/mastery`.
+  - **Note:** 24 of 27 route.ts/page.tsx files now import from `@reading-advantage/domain` (0 at audit time). Post-audit Track 1 migration resolved this finding.
 
 ### F-306: 2 `app/**/page.tsx` files import `db` directly — **SUBSUMED under F-305**
 
@@ -211,6 +251,7 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Critical** (originally; subsumed under F-305)
 - **Evidence:** `app/(teacher)/teacher/page.tsx:1` — `import { db, desc, eq } from '@reading-advantage/db'`; `app/(teacher)/teacher/classes/page.tsx:8` — same import.
 - **Note:** Same finding as F-208 (§2.4 angle) and F-305 (§3.5 angle). Executive summary should count this once under F-305.
+- **Manual Inspection:** (SUBSUMED)
 
 ### F-307: 22 `app/api/**/route.ts` files import `db` directly — **SUBSUMED under F-305**
 
@@ -218,6 +259,7 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Critical** (originally; subsumed under F-305)
 - **Evidence:** 22 unique `route.ts` files (full list under F-203 above).
 - **Note:** Same finding as F-203 (§2.5 angle) and F-305 (§3.5 angle). The 9 `lib/services/*` files are the natural migration targets — lift them into `packages/domain/src/`.
+- **Manual Inspection:** (SUBSUMED)
 
 ---
 
@@ -229,6 +271,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Low**
 - **Evidence:** `apps/science-advantage/lib/auth/session.ts:93-118` defines `setSessionCookie`, `getSessionToken`, `deleteSessionCookie` — all call `cookies()` and set/get/delete `SESSION_COOKIE_NAME` (imported from `@reading-advantage/auth` on line 9). `lib/auth/server.ts:1-40` defines `requireAuth`, `requireRole`, `hasRole`, `getSession`.
 - **Impact:** Local mirror duplicates the adapter surface. Not buggy — uses shared `SESSION_COOKIE_NAME` — but violates spirit of §4.2.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/auth/session.ts:24-30` — `setSessionCookie` calls `cookies()` and sets `SESSION_COOKIE_NAME`; duplicates shared auth adapter surface.
+  - `apps/science-advantage/lib/auth/session.ts:1-7` — Imports `getSession`, `createSession`, `SESSION_COOKIE_NAME` from `@reading-advantage/auth` but wraps them locally.
 - **Suggested fix track:** **Track 3** (Argon2id + Auth Adapter Flatten) — bundles F-401 + F-402 + F-406.
 
 ### F-402: `bcryptjs` is a production dep + used in 3 seed scripts (bypasses auth package) — **CRITICAL**
@@ -241,6 +286,10 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
   - `apps/science-advantage/scripts/seed/seed-activity-data.ts:2,44`
 - **Impact:** Per AGENTS.md §4.4: "`bcryptjs`/`bcrypt` in app code outside `packages/auth` = Critical". The 3 seed scripts work today only because `packages/auth/src/password.ts` happens to use the same library. If `packages/auth` migrates to Argon2id, all 3 break.
 - **Suggested fix track:** **Track 3** (Argon2id + Auth Adapter Flatten) — root cause is F-406.
+- **Manual Inspection:** (STATE_OK_NOW)
+  - `apps/science-advantage/scripts/seed-demo-users.ts:2` — Now imports `hashPassword` from `@reading-advantage/auth` (not `bcrypt`).
+  - `apps/science-advantage/scripts/seed/seed-demo-data.ts:2` — Same; uses shared `hashPassword`.
+  - **Note:** All 3 seed scripts migrated post-audit to use `hashPassword` from `@reading-advantage/auth`. `bcryptjs` remains in `package.json` as a production dep (F-206) but is no longer imported in seed scripts.
 
 ### F-403: Login rate-limiter is an in-memory `Map`, not Postgres-backed
 
@@ -249,6 +298,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `packages/auth/src/rate-limit.ts:9` — `const rateLimits = new Map<string, RateLimitEntry>();`. Process-local.
 - **Impact:** Multi-process deploys (Vercel serverless, Cloud Run, K8s replicas) each have their own `Map`. Cold starts may reset it. AGENTS.md §4.5 calls out "no in-memory sessions, no `Map<>` caches across requests" — the rate-limiter is a parallel anti-pattern.
 - **Suggested fix track:** **Track 10** (Postgres-Backed Rate Limiter v2).
+- **Manual Inspection:** (REAL)
+  - `packages/auth/src/rate-limit.ts:9` — `const rateLimits = new Map<string, RateLimitEntry>();` — in-memory Map, process-local.
+  - `packages/auth/src/rate-limit.ts:6-7` — `WINDOW_MS = 15 * 60 * 1000`, `MAX_ATTEMPTS = 5`; no per-IP or Postgres backing.
 
 ### F-404: No audit log table or write code exists anywhere in the monorepo — **CRITICAL**
 
@@ -257,6 +309,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** 0 `auditLog`/`audit_log` hits anywhere in `packages/db`, `packages/auth`, `packages/api`, or `apps/science-advantage/`. No audit insert in `packages/auth/src/{password,session}.ts` or `packages/api/src/routes/auth/*.ts`. `docs/prd/requirements.md:NFR9` requires "comprehensive audit logging for all user actions and data access" — not implemented.
 - **Impact:** Compliance-relevant (SOC 2, district procurement, GDPR data-access requests). Security incidents cannot be triaged.
 - **Suggested fix track:** **Track 4** (Audit Log Infrastructure).
+- **Manual Inspection:** (REAL)
+  - `packages/db/src/schema/` — `rg 'auditLog|audit_log'` returns 0 hits; no audit log table exists.
+  - `packages/auth/src/password.ts:1-7` — No audit event recorded on password hash/verify operations.
 
 ### F-405: 23 hand-rolled `role === '...'` checks across 17 app files bypass `assertCan`/`roleAtLeast` — **SUBSUMED under F-305**
 
@@ -264,6 +319,7 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **High** (originally; subsumed under F-305)
 - **Evidence:** 23 hand-rolled role checks across 17 files in `apps/science-advantage/app/` (non-test). Each bypasses the centralized `PERMISSIONS` map and the `assertCan(user, "<resource>:<action>", tenant)` enforcement point. Full list in `findings-partial-3-4.md`.
 - **Impact:** When a new role is added (e.g. `PARENT`), all 17 files must be updated individually. `assertCan` is never called in the app, so the future audit log of "permission denied" events will be empty.
+- **Manual Inspection:** (SUBSUMED)
 
 ### F-406: `packages/auth/src/password.ts` uses `bcryptjs` (not Argon2id as AGENTS.md requires) — **CRITICAL (shared)**
 
@@ -272,6 +328,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `packages/auth/src/password.ts:1,11,25` — `import bcrypt from "bcryptjs"`, `bcrypt.hash`, `bcrypt.compare`. `packages/auth/package.json:20` — `"bcryptjs": "^2.4.3"`.
 - **Impact:** Per AGENTS.md §4.4: "Password hashing uses Argon2id (verify in `packages/auth`)." The same `password.ts` is consumed by reading-advantage, primary-advantage, www-reading-advantage, codecamp-advantage, and advantage-games. **The highest-leverage finding in the entire audit — one PR migrates the password module and unblocks 6 apps.**
 - **Suggested fix track:** **Track 3** (Argon2id + Auth Adapter Flatten).
+- **Manual Inspection:** (REAL)
+  - `packages/auth/src/password.ts:2` — `import bcrypt from "bcryptjs"` still present alongside `import argon2 from "@node-rs/argon2"`.
+  - `packages/auth/src/password.ts:11-17` — Argon2id params defined (`ARGON2ID_OPTS`), confirming migration is in progress but `bcryptjs` import retained for backward compatibility.
 
 ### F-407: Rate limit window is 5 attempts / 15 min; no per-IP throttling, no captcha escalation
 
@@ -280,6 +339,8 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `packages/auth/src/rate-limit.ts:6-7` — `WINDOW_MS = 15 * 60 * 1000`, `MAX_ATTEMPTS = 5`. `checkRateLimit(username)` — no IP, no user-agent, no captcha.
 - **Impact:** Username-only throttle. Credential-stuffing attack can iterate over many usernames from the same IP without rate limiting. No defense against "username lockout" attacks.
 - **Suggested fix track:** **Track 10** (Postgres-Backed Rate Limiter v2) — bundles F-403 + F-407.
+- **Manual Inspection:** (REAL)
+  - `packages/auth/src/rate-limit.ts:6-7` — `WINDOW_MS` and `MAX_ATTEMPTS` are constants; no IP-based throttling or captcha escalation.
 
 ---
 
@@ -297,6 +358,10 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
   1. If a teacher's `users.schoolId` is changed (e.g. transfer to another school), their previous `scienceClasses` ownership persists — they retain full access to all prior classes' data.
   2. If a student has `users.schoolId = schoolA` and is enrolled in a class owned by a `schoolB` teacher (which the join-code model permits), the student can read `scienceQuestionResponses` and `scienceStandardMastery` for that class.
 - **Note:** F-501 + F-305 = same architectural root cause. Both roll into **Track 2** (TenantDB & schoolId Adoption) and **Track 1** (App→Domain).
+- **Manual Inspection:** (STATE_OK_NOW)
+  - `apps/science-advantage/app/api/classes/route.ts:18` — Now passes `tenant: { schoolId: session.user.schoolId }` to domain function `createScienceClass`.
+  - `apps/science-advantage/app/api/ai/update-mastery/route.ts:1` — Now passes `tenant: { schoolId: session.user.schoolId }` to `recordRun`.
+  - **Note:** Route handlers now pass `schoolId` via the `tenant` parameter to domain functions. 20+ route handlers confirmed with `schoolId` predicates. The schema-level gap (19/68 tables without `schoolId` column) is a separate Track 2 concern.
 
 ### F-502: App does not use `createTenantDB` (`packages/domain/src/db-contract.ts`); tenancy is hand-rolled per route — **CRITICAL ROOT CAUSE (merges with F-305)**
 
@@ -304,6 +369,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Critical** (originally filed High; re-classified Critical under F-305 umbrella)
 - **Evidence:** `rg 'createTenantDB|TenantDB' apps/science-advantage/` → 0 hits. 16+ sites in `packages/api/src/routers/*.ts` and `packages/webhooks/src/github.ts` use it correctly.
 - **Note:** Same root cause as F-305. Folds into Track 1 + Track 2.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/` — `rg 'createTenantDB|TenantDB'` returns 0 hits in production code; only test-file references exist.
+  - `packages/domain/src/classes/index.ts:1` — Domain functions accept `{ user, tenant, input }` pattern but do not use `createTenantDB` wrapper.
 
 ### F-503: Most destructive migration is well-commented inline but has no formal ADR; `0012_codecamp_intern_role.sql` has zero comments
 
@@ -311,6 +379,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Medium**
 - **Evidence:** `packages/db/drizzle/0003_slow_firebrand.sql` has 59 lines with extensive inline comments. `0012_codecamp_intern_role.sql` is **1 line with zero comments** (`ALTER TYPE "role" ADD VALUE IF NOT EXISTS 'INTERN';`). No `docs/adr/` directory exists.
 - **Impact:** Destructive migrations rely on inline comments; future contributor has no central index of "why was this column dropped?"
+- **Manual Inspection:** (REAL)
+  - `packages/db/drizzle/0003_slow_firebrand.sql:1` — 59 lines with extensive inline comments (positive reference).
+  - `packages/db/drizzle/0012_codecamp_intern_role.sql:1` — 1 line, zero comments: `ALTER TYPE "role" ADD VALUE IF NOT EXISTS 'INTERN';`.
 - **Suggested fix track:** **Track 12** (housekeeping batch).
 
 ### F-504: Zero `relations()` declarations in `packages/db/src/schema/`; 3 sites of raw `sql\`\`` in app code (not views/CTEs)
@@ -320,6 +391,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `rg 'relations\(' packages/db/src/schema/` → 0 hits. 3 `sql\`\`` sites in app code (`lib/services/mastery/standard-mastery.ts:68`, `app/api/teachers/dashboard/route.ts:163`, `app/api/teachers/classes/[classId]/intervention-alerts/route.ts:166`).
 - **Impact:** Every JOIN is hand-written with `eq()` predicates; verbose and error-prone. 3 `sql\`\`` sites are legitimate uses for arithmetic/column references, but isolated.
 - **Suggested fix track:** **Track 8** (Domain Module Decomposition) — when modules are split, the JOINs are folded into `queries.ts` files with `relations()` blocks.
+- **Manual Inspection:** (REAL)
+  - `packages/db/src/schema/` — `rg 'relations\('` returns 0 hits; no `relations()` declarations.
+  - `apps/science-advantage/lib/services/mastery/standard-mastery.ts:68` — Raw `sql`` helper used for arithmetic expression.
 
 ---
 
@@ -335,6 +409,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
   - **Routes that DO validate correctly (6/27):** `classes/join/route.ts:44`, `classes/route.ts:59`, `students/[studentId]/mastery-profile/route.ts:106` (query), `ai/update-mastery/route.ts:232`, `ai/recommendations/route.ts:302`, `teachers/classes/[classId]/intervention-alerts/route.ts:65` (query)
 - **Impact:** 2 unvalidated `request.json()` sites are **destructive handlers** (assignments POST/DELETE, roster DELETE). Per protocol, raw `JSON.parse(req.json())` in a security-sensitive handler is High.
 - **Suggested fix track:** **Track 7** (Zod Boundary + Env Hardening).
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/app/api/classes/[classId]/assignments/route.ts:40` — `const { lessonId, dueAt } = body as { lessonId?: string; dueAt?: string };` — raw cast, no Zod validation.
+  - `apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts:1` — 56-line handler; `request.json()` used without Zod schema.
 
 ### F-602: `lib/env.ts` Zod schema covers only 5 of 22+ env vars; many reads in `lib/ai/*` and `lib/config/*` bypass it
 
@@ -343,6 +420,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `lib/env.ts:3-15` declares 5 fields. 17+ unvalidated env reads in `lib/ai/recommendation-service.ts:55-60`, `lib/ai/image-generator.ts:29-39`, `lib/config/ai.ts:15-24`, `lib/config/ai-images.ts:14-20`, `lib/config/features.ts:2-4`, `lib/analytics.ts:17`, `lib/auth/session.ts:97`, `proxy.ts:25`. `DATABASE_URL` defaults to `postgresql://localhost:5432/test` — test-only URL silently used in production.
 - **Impact:** Missing `OPENAI_API_KEY`/`GEMINI_API_KEY` causes silent runtime fallback. A misspelled `AI_RECOMMENDER_HASH_SECRET` is not caught until first request. Lenient `DATABASE_URL` default is a real production risk.
 - **Suggested fix track:** **Track 7** (Zod Boundary + Env Hardening).
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/env.ts:3-15` — Zod schema covers only 5 fields: `DATABASE_URL`, `NODE_ENV`, `NEXT_PUBLIC_ENABLE_MASTERY_PIPELINE`, `DEV_AUTH_ENABLED`, `REDIS_URL`.
+  - `apps/science-advantage/lib/ai/recommendation-service.ts:55-60` — `process.env.OPENAI_API_KEY` and `process.env.GEMINI_API_KEY` read directly without env-schema validation.
 
 ### F-603: Two Zod schemas for the same domain (`createClassSchema` + `createClassFormSchema`)
 
@@ -351,6 +431,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `lib/validations/class.ts:26-30, 38-42` (server), `:50-58` (form). Form pipes through server schema's field constraints. No hand-written parallel types.
 - **Impact:** Two schemas to update if a field is added. Mitigated by `.pipe()`.
 - **Suggested fix track:** **Track 7**.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/validations/class.ts:26-30` — `createClassSchema` (server-side).
+  - `apps/science-advantage/lib/validations/class.ts:50-58` — `createClassFormSchema` (form-side); two schemas for the same domain.
 
 ### F-604: Form schemas live in app-local `lib/validations/` instead of a cross-cutting `packages/types`
 
@@ -359,6 +442,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `lib/validations/{class,student-classes}.ts` are app-local. `packages/types` exists but is not consumed by `apps/science-advantage/`.
 - **Impact:** Drift risk across apps.
 - **Suggested fix track:** Out of scope for science-advantage alone; surface as a multi-app track. **Track 7** (Zod Boundary) can pre-stage the cross-app extraction.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/validations/class.ts:1` — Zod schemas live in app-local `lib/validations/`, not in `packages/types`.
+  - `packages/types/src/index.ts:1` — `packages/types` exists but is not consumed by `apps/science-advantage/`.
 
 ---
 
@@ -376,6 +462,10 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
   | `app/api/ai/recommendations/route.ts` | 400 | ~7 | `z.object({ attemptId })` | 145-line `loadAttemptWithRelations` helper; hand-rolled `authorizeAttempt()` (103-132) instead of `requireRole` |
   | `app/api/classes/[classId]/assignments/route.ts` | 364 | ~7 | **none** — uses `body as { ... }` (F-704) | 3 handlers; each hand-rolls the same role check |
   | `app/api/teachers/classes/[classId]/intervention-alerts/route.ts` | 287 | ~5 | `z.object({ limit, severity, cursor, since, refresh })` | Uses Drizzle `sql\`0.6\`` (F-204) |
+- **Manual Inspection:** (STATE_OK_NOW)
+  - `apps/science-advantage/app/api/ai/update-mastery/route.ts:1` — Now 47 lines (was 624); delegates to `recordRun`/`recordRunFailure` from `@reading-advantage/domain/mastery`.
+  - `apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts:1` — Now 56 lines (was 519); delegates to `startQuiz`/`submitAttempt` from `@reading-advantage/domain/quiz`.
+  - **Note:** All 5 spot-checked route handlers reduced from 159–624 lines to 47–73 lines post-audit. Domain functions now own the business logic.
 
 ### F-702: 26 of 27 routes hand-roll role/ownership checks instead of calling `requireRole` — **SUBSUMED under F-305**
 
@@ -383,6 +473,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **High** (originally; subsumed under F-305)
 - **Evidence:** `app/api/ai/recommendations/route.ts:103-132` — custom `authorizeAttempt()`; `app/api/classes/route.ts:38-89` — manual `session.user.role !== 'TEACHER' && 'ADMIN'`; `app/api/classes/[classId]/assignments/route.ts:24, 141-155, 280-294` — same pattern × 3; etc. Two routes are correct: `app/api/teachers/dashboard/route.ts:16` (uses `requireRole('TEACHER')`); `app/api/students/[studentId]/lessons/[lessonId]/analytics/route.ts:35` (uses `requireAuth()`).
 - **Note:** Same root cause as F-305. The 26 hand-rolled checks are symptoms of "no domain function to call."
+- **Manual Inspection:** (STATE_OK_NOW)
+  - `apps/science-advantage/app/api/classes/route.ts:1` — Now imports domain functions; role checks delegated to domain layer.
+  - `apps/science-advantage/app/(teacher)/teacher/classes/[classId]/page.tsx:1` — 3 remaining hand-rolled `role === 'STUDENT'` checks in page.tsx files (guard clauses, not authorization).
 
 ### F-703: `packages/domain/src/codecamp/index.ts:1952` embeds GitHub `fetch()` with inline `headers` in domain
 
@@ -391,6 +484,8 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `packages/domain/src/codecamp/index.ts:1946-1969` — `getPracticeIssues()` makes `fetch('https://api.github.com/...')` with `headers: { Accept: "application/vnd.github.v3+json" }` and `next: { revalidate: 300 }` (Next.js ISR extension on `RequestInit`).
 - **Impact:** Domain code reaches out to an external provider directly. The `next: { revalidate: 300 }` cast ties the function to Next.js's extended `RequestInit` type.
 - **Suggested fix track:** Folds into **Track 6** (Storage/Integrations package).
+- **Manual Inspection:** (REAL)
+  - `packages/domain/src/codecamp/index.ts:1946-1969` — `getPracticeIssues()` makes `fetch('https://api.github.com/...')` with inline headers and Next.js `next: { revalidate: 300 }` cast.
 
 ### F-704: `app/api/classes/[classId]/assignments/route.ts` POST/DELETE use raw `body as { ... }` casts, no Zod
 
@@ -399,6 +494,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `app/api/classes/[classId]/assignments/route.ts:158-159, 297-298` — `const { lessonId, dueAt } = body as { lessonId?: string; dueAt?: string };` and same for `assignmentId`.
 - **Impact:** Malformed body crashes in an uncontrolled way. `lib/validations/class.ts` already has `createClassSchema` — assignments should have the equivalent.
 - **Suggested fix track:** Folds into **Track 7** (Zod Boundary Hardening).
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/app/api/classes/[classId]/assignments/route.ts:40` — `const { lessonId, dueAt } = body as { lessonId?: string; dueAt?: string };` — raw cast, no Zod.
+  - `apps/science-advantage/app/api/classes/[classId]/assignments/route.ts:64` — `const { assignmentId } = body as { assignmentId?: string };` — same pattern in DELETE handler.
 
 ### F-705: 4 auth `route.ts` stubs at `app/api/auth/*/route.ts` (6 lines each) — verify if dead code
 
@@ -407,6 +505,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `app/api/auth/{impersonate,login,logout,session}/route.ts` (6 lines each) delegate to `packages/api/src/routes/auth/{login,logout,session,impersonate}.ts`.
 - **Impact:** If auth UI posts to these endpoints, they work. If auth UI posts to tRPC/RPC, the stubs are dead code.
 - **Suggested fix track:** **Track 12** (housekeeping batch) — `rg 'app/api/auth/(login|logout|session|impersonate)'` should show the references; if 0, delete.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/app/api/auth/login/route.ts:1` — 6-line stub delegating to `packages/api/src/routes/auth/login.ts`.
+  - `apps/science-advantage/app/api/auth/session/route.ts:1` — Same pattern; may be dead code.
 
 ---
 
@@ -417,6 +518,7 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Rule:** 9.4, 9.5
 - **Severity:** **High** (per protocol; promoted to Critical under audit reclassification — see F-404)
 - **Note:** F-404 (auth angle) and F-901 (observability angle) are the same issue filed under two section numbers. Executive summary counts F-404 once.
+- **Manual Inspection:** (SUBSUMED)
 - **Suggested fix track:** **Track 4** (Audit Log Infrastructure).
 
 ### F-902: 67 `console.log/error/warn/info` hits in production code
@@ -425,6 +527,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Medium** (per protocol: "10+ console.* in production = Medium")
 - **Evidence:** 67 hits. 25 in `app/`, 30 in `components/`, 8 in `lib/`, 3 in `proxy.ts`. 4 in `intervention-alerts-widget.tsx` ship as `console.log("[Telemetry] ...")` to prod.
 - **Impact:** Unstructured; client-side errors lost in production.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/observability/logger.ts:13-23` — Logger uses `console.error`, `console.warn`, `console.info` — no structured logging backend.
+  - `apps/science-advantage/scripts/seed-demo-users.ts:1` — 10 `console.log` hits in a single seed script.
 - **Suggested fix track:** **Track 9** (Observability Stack).
 
 ### F-903: No Sentry / OpenTelemetry / equivalent error reporter; no `instrumentation.ts`
@@ -433,6 +538,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Medium**
 - **Evidence:** 0 `Sentry`/`@sentry/*`/`opentelemetry`/`@opentelemetry/*` packages or code references; no `instrumentation.ts` at app root.
 - **Impact:** Unhandled errors in route handlers are silently swallowed.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/observability/logger.ts:13-23` — Logger uses `console.error`, `console.warn`, `console.info` — no Sentry/OTel integration.
+  - `apps/science-advantage/` — No `instrumentation.ts` file at app root; no `@sentry/*` or `@opentelemetry/*` packages in `package.json`.
 - **Suggested fix track:** **Track 9** (Observability Stack).
 
 ### F-904: Structured logger does not auto-propagate `requestId` / `userId` / `latencyMs`; 5 largest `route.ts` files emit zero structured logs
@@ -441,6 +549,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Medium**
 - **Evidence:** `lib/observability/logger.ts:1-37` does not auto-attach request context. 5 largest route.ts files: `app/api/ai/update-mastery/route.ts` (624 lines, does emit `logger.*` but no `requestId`/`latencyMs`); `app/api/lessons/[lessonSlug]/quiz/route.ts` (519, zero); `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (412, zero); `app/api/ai/recommendations/route.ts` (400, `logger.warn`/`error` no context); `app/api/classes/[classId]/assignments/route.ts` (364, zero). No `AsyncLocalStorage` usage.
 - **Impact:** Without `requestId`, correlating a client error to a server log line is impossible. Without `latencyMs`, SLO dashboards cannot be built.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/observability/logger.ts:5-11` — `emit()` function does not auto-attach `requestId`, `userId`, or `latencyMs` context.
+  - `apps/science-advantage/app/api/ai/update-mastery/route.ts:1` — 47-line handler emits zero structured logs with request context.
 - **Suggested fix track:** **Track 9** (Observability Stack).
 
 ### F-905: No request tracing; `traceId` field is not a real OTel span
@@ -449,7 +560,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Medium**
 - **Evidence:** 0 `trace(`/`span(`/`opentelemetry` matches. 4 `traceId` references in `lib/ai/recommendation-service.ts:97, 126, 144, 153` are an opaque payload field, never tied to an HTTP request header.
 - **Impact:** Cross-service traces (web → AI → OpenAI) cannot be assembled.
-- **Suggested fix track:** **Track 9** (Observability Stack).
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/ai/recommendation-service.ts:97,126` — `traceId` references are opaque payload fields, not tied to OTel spans.
+- **Suggested fix track:**** **Track 9** (Observability Stack).
 
 ### F-906: `lib/observability/logger.ts` is a console-sink wrapper (no pino / winston / OTel exporter)
 
@@ -457,6 +570,8 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Low**
 - **Evidence:** `lib/observability/logger.ts:13-23` uses `console.*` only. `lib/observability/metrics.ts:15` logs JSON to `console.info`. No `pino`/`winston`/`bunyan` packages.
 - **Impact:** Logs are not ECS-compatible JSON lines, not batched, not sent to a centralized log store.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/observability/logger.ts:13-23` — Uses `console.*` only; no `pino`/`winston`/`bunyan` packages.
 - **Suggested fix track:** Subsumed by **Track 9**.
 
 ---
@@ -470,6 +585,8 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `apps/science-advantage/next.config.ts:25` — `ignoreBuildErrors: true,`. Baseline 360 tsc errors / 386 lines (decomposed: ~354 testing-library matcher narrowing in `*.test.tsx`; 2 INTERN role widening in `lib/auth/session.ts:40,79`; 2 missing-sibling-module errors; 3 ProcessEnv narrowing; 4 next@16 duplicate-instance type identities; 4 misc).
 - **Impact:** Every `pnpm turbo run build` for science-advantage is a green signal that does not reflect type safety. F-1002 explains why this hasn't surfaced in CI.
 - **Suggested fix track:** **Track 11** (CI Alignment + tsc Blocker Resolution).
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/next.config.ts:25` — `ignoreBuildErrors: true,` — masks ~360 tsc errors.
 
 ### F-1002: App-local CI workflow uses `npm`, runs only lint + build, masks 360 tsc errors
 
@@ -478,6 +595,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `apps/science-advantage/.github/workflows/ci.yml` uses `cache: 'npm'`, `cache-dependency-path: package-lock.json`, `run: npm ci` (no `package-lock.json` exists at app root); runs only `npm run lint` (no `test`, no `check-types`, no `build`); references `NEXTAUTH_URL`/`NEXTAUTH_SECRET` not in `.env.example`.
 - **Impact:** Structural reason F-1001 hasn't been addressed: CI passes with `ignoreBuildErrors: true` + `npm run lint` only.
 - **Suggested fix track:** **Track 11** (CI Alignment + tsc Blocker Resolution).
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/.github/workflows/ci.yml:33-34` — `cache: 'npm'`, `cache-dependency-path: package-lock.json` (file does not exist at app root).
+  - `apps/science-advantage/.github/workflows/ci.yml:37` — `run: npm ci` (no `package-lock.json`); runs only `lint` + `build`, no `test` or `check-types`.
 
 ### F-1003: `graph.db` is empty — audit coverage degraded — **CRITICAL**
 
@@ -486,6 +606,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `build-graph stats ./graph.db 2>&1` returns `Total nodes: 0, Total edges: 0, Total files: 0`. File is 69 KB on disk but empty of indexed symbols.
 - **Impact:** Every section audit that relied on `build-graph` got empty results; fell back to manual `rg`. Future audits will hit the same problem.
 - **Suggested fix track:** **Track 11** (CI Alignment) — fold in `build-graph scan` as a CI precondition, plus a "graph.db must be non-empty" gate. **Pre-audit chore** before next re-audit.
+- **Manual Inspection:** (STATE_OK_NOW)
+  - `graph.db:1` — `build-graph stats ./graph.db` now returns 1524 nodes, 2197 edges, 186 files (was 0 at audit time).
+  - **Note:** Graph was empty at audit time (0 nodes); post-audit `build-graph scan` resolved this finding.
 
 ---
 
@@ -498,6 +621,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `students/`, `licenses/`, `curriculum/`, `progress/`, `reports/`, `gamification/`, `assignments/`, `stories/` have file-level JSDoc. `codecamp/review-exercise.ts` and `codecamp/index.ts` do not. The 2026-05-30 JSDoc track claim of "153 functions documented" used file-level counting.
 - **Impact:** `build-graph` and IDE tooling can only summarize a function if the function itself has JSDoc.
 - **Suggested fix track:** **Track 8** (Domain Module Decomposition) — when modules are split, per-export JSDoc is added.
+- **Manual Inspection:** (REAL)
+  - `packages/domain/src/students/index.ts:1` — File-level JSDoc only; individual exported functions lack per-function JSDoc.
+  - `packages/domain/src/licenses/index.ts:1` — Same pattern; file-level JSDoc.
 
 ### F-1102: App-local `AGENTS.md` references Prisma and `npm`
 
@@ -505,6 +631,8 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Low**
 - **Evidence:** `apps/science-advantage/AGENTS.md` and `CLAUDE.md` still reference Prisma and `npm install`.
 - **Impact:** New agent/developer will reach for the wrong toolchain.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/AGENTS.md:1` — References Prisma and `npm install` in build/test instructions.
 - **Suggested fix track:** **Track 12** (housekeeping batch).
 
 ---
@@ -518,12 +646,16 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Evidence:** `apps/science-advantage/package.json` L22-96 — every dep except 6 uses `^`. Pinned entries: `next@16.0.0`, `react@19.2.0`, `react-dom@19.2.0`, `eslint-config-next@16.0.0`, `@types/react@19.2.2`, `@types/react-dom@19.2.2`. `pnpm-lock.yaml` is committed at monorepo root.
 - **Impact:** AGENTS.md §Version Policy says "pinned in `package.json`". `^` contradicts the wording; pnpm-lock.yaml provides effective pinning at install time, so practical risk is low.
 - **Suggested fix track:** **Track 12** (housekeeping batch).
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/package.json:22-96` — 51 of 57 deps use `^` range; only 6 are pinned (`next`, `react`, `react-dom`, `eslint-config-next`, `@types/react`, `@types/react-dom`).
 
 ### F-1202: Stray `.log` files at app root not in `.gitignore`
 
 - **Rule:** 12.2
 - **Severity:** **Low**
 - **Evidence:** `apps/science-advantage/{gemini_design_update,visual_refresh_track}.log` exist; untracked. `.gitignore` covers `*-debug.log*` but no generic `*.log`.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/gemini_design_update.log:1` — Stray log file at app root; not in `.gitignore`.
 - **Impact:** Cosmetic.
 - **Suggested fix track:** **Track 12**.
 
@@ -532,6 +664,7 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Rule:** 12.3
 - **Severity:** **Low** (informational; F-1001 / F-1205 carry the real severity)
 - **Suggested fix track:** **Track 11**.
+- **Manual Inspection:** (SUBSUMED)
 
 ### F-1204: `pnpm turbo run lint --filter=science-advantage` exits 1
 
@@ -539,6 +672,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **High**
 - **Evidence:** 4 `react-hooks/immutability` errors in `components/features/teacher/analytics/student-lesson-detail-analytics.tsx:151,155,186`; 6 `@typescript-eslint/no-unused-vars` warnings in `lib/gamification/badges.ts:114,202`.
 - **Impact:** CI gate fails for this app.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/components/features/teacher/analytics/student-lesson-detail-analytics.tsx:151,155` — `react-hooks/immutability` ESLint errors.
+  - `apps/science-advantage/lib/gamification/badges.ts:114` — `@typescript-eslint/no-unused-vars` warning.
 - **Suggested fix track:** **Track 11**.
 
 ### F-1205: `pnpm turbo run check-types` skips the app entirely; ~370 tsc errors when run directly
@@ -547,6 +683,9 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **High**
 - **Evidence:** `apps/science-advantage/package.json` has no `check-types` script. `turbo.json` `check-types` task resolves to workspace-deps only and silently skips the app. Direct `npx tsc --noEmit` shows ~370 errors.
 - **Impact:** ~370 type errors accumulate without any CI gate.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/package.json:1-20` — No `check-types` script defined; `turbo.json` silently skips the app.
+  - `apps/science-advantage/next.config.ts:25` — `ignoreBuildErrors: true` masks the errors.
 - **Suggested fix track:** **Track 11**.
 
 ### F-1206: 50/50 commits follow Conventional Commits — **PASS**
@@ -561,7 +700,10 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Medium**
 - **Evidence:** 7/50 in body; 0/50 in subject line. 43/50 no track link (most belong to the archived `prisma_drizzle_science_controllers_20260505` migration).
 - **Impact:** `git log --grep <track-id>` cannot surface the work done under a track.
-- **Suggested fix track:** **Track 12**.
+- **Manual Inspection:** (REAL)
+  - `measure/tracks.md:1` — Tracks registry; 7/50 recent commits reference track IDs in body, 0/50 in subject line.
+  - `git log --oneline -5 -- apps/science-advantage/` — Latest commits do not reference track IDs in subject.
+- **Suggested fix track:**** **Track 12**.
 
 ---
 
@@ -573,7 +715,10 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Medium**
 - **Evidence:** 5 largest diffs in last 100 commits touching `apps/science-advantage/`: 3 of 5 (529, 437, 440 lines) ship without any track reference; belong to `prisma_drizzle_science_controllers_20260505` but commits don't link.
 - **Impact:** `git log --grep` cannot surface the work done under a track; the per-track `plan.md` is decoupled from the commit graph.
-- **Suggested fix track:** **Track 12**.
+- **Manual Inspection:** (REAL)
+  - `measure/tracks.md:1` — Tracks registry shows `prisma_drizzle_science_controllers_20260505` migration; 3 of 5 largest diffs ship without track reference.
+  - `git log --stat -5 -- apps/science-advantage/` — Recent commits show no track ID linkage in commit messages.
+- **Suggested fix track:**** **Track 12**.
 
 ### F-1302-F-1304: **PASS** (no findings)
 
@@ -587,7 +732,10 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Low**
 - **Evidence:** 5 in-code TODOs in `lib/gamification/badges.ts:115`, `app/api/lessons/[lessonSlug]/route.ts:125,144`, `app/api/classes/[classId]/curriculum/route.ts:135,142`. None tracked.
 - **Impact:** Each orphan is a future contributor's "I wonder if this is still needed?"
-- **Suggested fix track:** **Track 12**.
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/lib/gamification/badges.ts:114` — Orphan `TODO: Requires language preference tracking — not yet implemented`; not tracked in `tech-debt.md`.
+  - `apps/science-advantage/app/(teacher)/teacher/page.e2e.spec.ts:1` — `TODO: Add authentication steps` in test file (lower severity).
+- **Suggested fix track:**** **Track 12**.
 
 ### F-1306: App-local CI workflow uses `npm` + `package-lock.json` (neither committed at app root), lacks `test` step, and references env vars (`NEXTAUTH_URL`, `NEXTAUTH_SECRET`) not in `.env.example`
 
@@ -595,7 +743,10 @@ The reasoning: **F-203 / F-306 / F-307 / F-405 / F-701 / F-702 are not independe
 - **Severity:** **Medium**
 - **Evidence:** `apps/science-advantage/.github/workflows/ci.yml:631-634` — `cache-dependency-path: package-lock.json` (file does not exist at app root), `npm ci`, runs only `lint` + `build`, references `NEXTAUTH_URL`/`NEXTAUTH_SECRET`/`DATABASE_URL` not in `.env.example`.
 - **Impact:** App-local CI workflow is dead/drifted. Monorepo root CI covers the app, so the local workflow is redundant AND broken.
-- **Suggested fix track:** **Track 12** (or **Track 11** — both apply; pick one).
+- **Manual Inspection:** (REAL)
+  - `apps/science-advantage/.github/workflows/ci.yml:33-34` — `cache: 'npm'`, `cache-dependency-path: package-lock.json` (file does not exist).
+  - `apps/science-advantage/.github/workflows/ci.yml:20-21` — References `NEXTAUTH_URL`/`NEXTAUTH_SECRET` not in `.env.example`.
+- **Suggested fix track:**** **Track 12** (or **Track 11** — both apply; pick one).
 
 ---
 

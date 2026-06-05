@@ -52,8 +52,10 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 
 ## Phase 3: Manual review (judgment calls)
 
-- [~] For each static-FAIL, inspect 1–2 example files. Confirm the violation is real, not a false positive.
-- [~] Document the inspection outcome in `findings.md`.
+> Completed: `8a00021` (2026-06-05)
+
+- [x] For each static-FAIL, inspect 1–2 example files. Confirm the violation is real, not a false positive.
+- [x] Document the inspection outcome in `findings.md`.
 
 > Phase 3 test contract (per `test-strategy.md` §5): every FAIL in `findings.md` must have a `**Manual Inspection:**` annotation with 1–2 sample `path:line` references (subsumed FAILs may defer to the umbrella), each sample must exist on disk with the cited line in range, and a judgment keyword (`REAL` / `FALSE_POSITIVE` / `SUBSUMED` / `STATE_OK_NOW` / `REAL_AT_AUDIT_TIME`) must be recorded. Failing tests pinned in `apps/science-advantage/lib/__tests__/audit-phase3-manual-review.test.ts`. PASS findings (F-1206, F-1302–F-1304) are excluded.
 
