@@ -144,6 +144,28 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 
 ## Phase 8: Close-out
 
-- [ ] Update this track's status to `complete` in `metadata.json`
-- [ ] Archive: `mv measure/tracks/agents_md_audit_science_advantage_20260603 measure/archive/`
-- [ ] Add completion row to `measure/tracks.md`
+> Test contract (`test-strategy.md` §5 / §1 "Phase 7–8: Present/close"): the
+> close-out evidence must show (a) `metadata.json#status == "complete"`,
+> (b) the track directory has been moved from `measure/tracks/` to
+> `measure/archive/` with its artifacts intact (`metadata.json`, `spec.md`,
+> `plan.md`), and (c) `measure/tracks.md` has a checked completion row
+> (`[x]`) whose link points at `./archive/agents_md_audit_science_advantage_20260603/`
+> (not `./tracks/…`). Phase 8 has no executable behavior to test; the
+> contract is pinned for future re-audits so a reader can confirm the
+> pilot was actually closed out (not just paused at "presented for
+> sign-off"). Tests live in
+> `apps/science-advantage/lib/__tests__/audit-phase8-close-out.test.ts`.
+>
+> **Red-phase work (2026-06-06):** Phase 8 contract tests authored; the
+> suite is RED today on all three close-out contracts: (a) status is still
+> `"active"` per Phase 7's sign-off-gate state, (b) the track directory
+> is still under `measure/tracks/` (no archive copy yet), and (c) the
+> `measure/tracks.md` row is still `[ ]` and links to `./tracks/…`.
+> Green-phase implementation (the actual close-out work — `mv` to
+> `measure/archive/`, flip status, edit the registry row) is owned by a
+> subsequent task. This commit pins the contract only; no source code
+> outside the test file and this plan.md was modified.
+
+- [~] Update this track's status to `complete` in `metadata.json`
+- [~] Archive: `mv measure/tracks/agents_md_audit_science_advantage_20260603 measure/archive/`
+- [~] Add completion row to `measure/tracks.md`
