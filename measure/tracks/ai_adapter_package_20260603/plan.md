@@ -7,7 +7,7 @@
 - [x] Task: Confirm `packages/` directory has no `ai/` package today. Initialize `packages/ai/` with `package.json`, `tsconfig.json` (extending monorepo shared config), and `src/index.ts` barrel. (`a5ed0b9`)
 - [x] Task: Add `@node-rs/argon2` and `ai` / `@ai-sdk/openai` / `@ai-sdk/google` to `packages/ai/package.json` `dependencies`. Pin versions per AGENTS.md §Version Policy. (`a5ed0b9`)
 - [x] Task: Add to monorepo root `pnpm-workspace.yaml` if not already. (`a5ed0b9`)
-- [x] Task: Pull `apps/science-advantage`; confirm baseline tests pass. (`b628bdb` — fixed ImageModelV2 type error in generateImage, updated provider test mocks)
+- [x] Task: Pull `apps/science-advantage`; confirm baseline tests pass. (`b628bdb`, `a1b9272` — fixed ImageModelV2 type error, updated mocks, increased vitest timeout for turbo parallel)
 
 ## Phase 1: `AIClient` Interface
 
