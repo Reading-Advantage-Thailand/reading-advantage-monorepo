@@ -129,6 +129,16 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 > only on 2026-06-03) are mirrored into §"Maintenance" with a `Resolved:`
 > date. Tests live in
 > `apps/science-advantage/lib/__tests__/audit-phase7-present-to-user.test.ts`.
+>
+> **Test run (2026-06-05, `de5e1f0`):** 8 tests — 5 RED / 3 GREEN. RED tests:
+> 7.2 (Share marker), 7.4.a (all 4 Open Questions have `**Status:**`), 7.4.b
+> ("Per-rule weights" specifically is RESOLVED), 7.5.a (Maintenance has at
+> least one `Resolved: YYYY-MM-DD` entry), 7.5.b (Maintenance mirrors the
+> "Per-rule weights" decision). GREEN tests: 7.1.a (track status = "active"),
+> 7.1.b (plan Phase 7 tasks still in-progress, not all `[x]`), 7.3 (Top 3
+> proposed tracks named in the executive summary). Green-phase implementation
+> (the actual present/sign-off work) remains owned by a subsequent task; this
+> commit is the Red-phase contract pin.
 
 ## Phase 8: Close-out
 
