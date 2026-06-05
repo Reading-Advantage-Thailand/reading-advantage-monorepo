@@ -25,20 +25,26 @@
 ## Phase 2: Static analysis (Sections 1–13)
 
 For each section, run the listed grep/build-graph queries and record evidence.
+Per `test-strategy.md` §5, the test contract for this phase is:
+- Run protocol grep/query per section.
+- Cross-validate 3 sections with both `build-graph search` and `rg`.
+- Snapshot `rg` output to `measure/tracks/agents_md_audit_science_advantage_20260603/fixtures/`.
+The test file `apps/science-advantage/lib/__tests__/audit-phase2-static-analysis.test.ts`
+pins the audit's PASS/FAIL claims as expected values. Cross-validation sections: §1, §4, §9.
 
-- [ ] **Section 1: Provider Neutrality** — grep for `@aws-sdk`, `@google-cloud`, `openai`, `@anthropic-ai/sdk`, `@google/generative-ai`, `firebase`, `resend`, `sendgrid`, `nodemailer`, `minio`
-- [ ] **Section 2: Package Boundaries** — grep `route.ts` for `import.*db`, `actions.ts` for `import.*db`, count `prisma/` files
-- [ ] **Section 3: Backend-as-Code** — list `packages/domain/` modules, check for `command()`/`assertCan()` usage
-- [ ] **Section 4: Auth** — grep for `next-auth`, `@auth/`, `firebase/auth`, `bcrypt`, `getServerSession`, `cookies()`, `headers()`, JWT patterns; check `proxy.ts`
-- [ ] **Section 5: Database** — check `apps/science-advantage/prisma/`, `@prisma/client` imports, `schoolId` predicate coverage
-- [ ] **Section 6: Validation** — grep for `JSON.parse(`, `req.json()`, `formData()` outside zod `safeParse`
-- [ ] **Section 7: Transport** — confirm `route.ts` and `actions.ts` are thin (manual spot-check 5 each)
-- [ ] **Section 8: Storage/AI/Workers** — grep for storage/AI SDK calls; check for long-running work in route handlers
-- [ ] **Section 9: Observability** — grep `console.log`/`console.error` in non-test files; check for Sentry/OTel
-- [ ] **Section 10: Testing** — confirm framework (Vitest or Jest), count tests, check `ignoreBuildErrors`
-- [ ] **Section 11: Documentation** — sample 10 exported functions from `packages/*` and check JSDoc
-- [ ] **Section 12: Monorepo Hygiene** — `pnpm turbo run build/lint/check-types --filter=science-advantage`
-- [ ] **Section 13: Workflow** — spot-check recent commits for track references; check `tech-debt.md` line count
+- [x] **Section 1: Provider Neutrality** — grep for `@aws-sdk`, `@google-cloud`, `openai`, `@anthropic-ai/sdk`, `@google/generative-ai`, `firebase`, `resend`, `sendgrid`, `nodemailer`, `minio`
+- [x] **Section 2: Package Boundaries** — grep `route.ts` for `import.*db`, `actions.ts` for `import.*db`, count `prisma/` files
+- [x] **Section 3: Backend-as-Code** — list `packages/domain/` modules, check for `command()`/`assertCan()` usage
+- [x] **Section 4: Auth** — grep for `next-auth`, `@auth/`, `firebase/auth`, `bcrypt`, `getServerSession`, `cookies()`, `headers()`, JWT patterns; check `proxy.ts`
+- [x] **Section 5: Database** — check `apps/science-advantage/prisma/`, `@prisma/client` imports, `schoolId` predicate coverage
+- [x] **Section 6: Validation** — grep for `JSON.parse(`, `req.json()`, `formData()` outside zod `safeParse`
+- [x] **Section 7: Transport** — confirm `route.ts` and `actions.ts` are thin (manual spot-check 5 each)
+- [x] **Section 8: Storage/AI/Workers** — grep for storage/AI SDK calls; check for long-running work in route handlers
+- [x] **Section 9: Observability** — grep `console.log`/`console.error` in non-test files; check for Sentry/OTel
+- [x] **Section 10: Testing** — confirm framework (Vitest or Jest), count tests, check `ignoreBuildErrors`
+- [x] **Section 11: Documentation** — sample 10 exported functions from `packages/*` and check JSDoc
+- [x] **Section 12: Monorepo Hygiene** — `pnpm turbo run build/lint/check-types --filter=science-advantage`
+- [x] **Section 13: Workflow** — spot-check recent commits for track references; check `tech-debt.md` line count
 
 ## Phase 3: Manual review (judgment calls)
 

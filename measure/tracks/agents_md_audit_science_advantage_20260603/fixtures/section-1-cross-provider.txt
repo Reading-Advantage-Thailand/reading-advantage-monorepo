@@ -1,0 +1,6 @@
+apps/science-advantage/docs/archive/architecture/testing-strategy.md
+apps/science-advantage/docs/specs/ai-structured-data-generation/spec.md
+apps/science-advantage/lib/__tests__/audit-phase2-static-analysis.test.ts
+apps/science-advantage/lib/ai/recommendation-service.ts
+apps/science-advantage/measure/archive/replan_20260311/root/tech-stack.md
+apps/science-advantage/package.json
