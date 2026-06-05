@@ -1,0 +1,11 @@
+{
+  "track_id": "audit_log_infrastructure_20260603",
+  "type": "feature",
+  "status": "complete",
+  "created_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-06-04T00:00:00Z",
+  "description": "Add audit_events table to packages/db/src/schema/audit.ts with REVOKE UPDATE, DELETE (append-only). Add recordAuditEvent(action, ctx, payload) helper + safeMetadata (PII redaction) to packages/auth. Wire into packages/auth/src/{password,session}.ts (login/logout/password change) and 4 science-advantage domain functions (assignment:create/delete, class:remove_student, class:delete). GET /api/admin/audit-events with Zod validation, ADMIN-only. SOC 2 / GDPR / district-procurement requirement. Resolves F-404, F-901.",
+  "estimated_tasks": 14,
+  "actual_tasks": 38,
+  "deviation_notes": "More tasks than estimated due to hand-written migration (drizzle-kit requires TTY), tenant-coverage exemption for global audit table, and additional domain function wiring (Track 1 complete → Path B). Phase 2 append-only tests deferred to integration suite (local dev uses superuser)."
+}

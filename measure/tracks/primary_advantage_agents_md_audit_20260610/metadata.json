@@ -1,0 +1,10 @@
+{
+  "id": "primary_advantage_agents_md_audit_20260610",
+  "title": "AGENTS.md Compliance Audit — primary-advantage",
+  "type": "chore",
+  "status": "new",
+  "created": "2026-06-05",
+  "scheduled": "2026-06-10",
+  "protocol": "measure/agents-md-audit-protocol.md (v1.1)",
+  "notes": "Stub. Third app audit. Known blocker first: primary-advantage Prisma is still fully active (15 files import @prisma/client; prisma/schema.prisma + migrations + lib/prisma.ts still present; package.json still depends on @prisma/client/prisma/@prisma/adapter-pg). tracks.md previously listed this migration as complete — it is NOT (tech-debt.md audit_20260526, Critical, Open). Audit should confirm migration state first, then run the 13-section protocol."
+}

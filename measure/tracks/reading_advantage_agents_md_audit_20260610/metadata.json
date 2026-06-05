@@ -1,0 +1,10 @@
+{
+  "id": "reading_advantage_agents_md_audit_20260610",
+  "title": "AGENTS.md Compliance Audit — reading-advantage",
+  "type": "chore",
+  "status": "new",
+  "created": "2026-06-05",
+  "scheduled": "2026-06-10",
+  "protocol": "measure/agents-md-audit-protocol.md (v1.1)",
+  "notes": "Stub. Second app audit after the science-advantage pilot. Highest known debt: 209 app/**/route.ts files import db directly, 0 use @reading-advantage/domain/assertCan/TenantDB (tech-debt.md audit_20260526, Critical, Open). Run build-graph scan before auditing (Graph-Aware Mode). Produce checklist/findings/migration-tracks artifacts under measure/audit-reports/reading-advantage_20260610/."
+}

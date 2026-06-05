@@ -4,6 +4,25 @@ This file tracks all major tracks for the project.
 
 ---
 
+## Current Focus (updated 2026-06-05)
+
+Two parallel programs are in flight; priority order when picking the next track:
+
+1. **science-advantage audit remediation.** The 4 Critical tracks are done (domain
+   migration, tenancy, argon2id, audit log). **Next: `ci_typecheck_alignment_20260603`**
+   — pulled ahead of audit tracks #6–#10 because it removes `ignoreBuildErrors: true`
+   (masks ~360 tsc errors) and adds the CI gate that protects the just-shipped Critical
+   work. Then resume #6–#10 (storage, zod, domain-decomp, observability, rate-limiter),
+   then #12 housekeeping.
+2. **Next audits.** Schedule `reading-advantage` and `primary-advantage` AGENTS.md
+   audits (see §Pending Audits below). reading-advantage's domain-bypass (209 route.ts
+   files) and primary-advantage's still-active Prisma are larger than anything the
+   science pilot covered.
+3. **codecamp-advantage productization** (deployment, prod-QA, exercise-repos) proceeds
+   independently; lower priority than securing the shared packages above.
+
+---
+
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
 
@@ -69,11 +88,14 @@ This file tracks all major tracks for the project.
 - [x] **Track: Argon2id Migration + Auth Adapter Flatten** *Link: [./archive/argon2id_password_20260603/](./archive/argon2id_password_20260603/)*
   Migrate `packages/auth/src/password.ts` from `bcryptjs` to `@node-rs/argon2`. One-shot migration path for existing bcrypt hashes (verify with bcrypt, re-hash on next successful login). Update 3 science-advantage seed scripts to import `hashPassword` from `@reading-advantage/auth`. Remove `bcryptjs` from `apps/science-advantage/package.json`. Delete `lib/auth/{session,server}.ts` (F-401) and re-point all callers to `@reading-advantage/auth`. Resolves F-401, F-402, F-406. 1 week. **Highest-leverage shared-package change** — unblocks 6 apps. **Critical.** **Track 3.**
 
-- [ ] **Track: Audit Log Infrastructure** *Link: [./tracks/audit_log_infrastructure_20260603/](./tracks/audit_log_infrastructure_20260603/)*
-  Add `audit_events` table to `packages/db/src/schema/audit.ts` (id, actor_user_id, actor_role, action, target_type, target_id, ip_address, user_agent, metadata jsonb, created_at) with `REVOKE UPDATE, DELETE` (append-only). Add `recordAuditEvent(action, ctx, payload)` helper. Wire into `packages/auth/src/{password,session}.ts` + 4 destructive `route.ts` handlers in science-advantage. SOC 2 / GDPR / district-procurement requirement (`docs/prd/requirements.md:NFR9`). Resolves F-404, F-901. 1 week. **Critical.** **Track 4.**
+- [x] **Track: Audit Log Infrastructure** *Link: [./archive/audit_log_infrastructure_20260603/](./archive/audit_log_infrastructure_20260603/)*
+  *Status: COMPLETE — audit_events table with REVOKE UPDATE DELETE (append-only). recordAuditEvent + safeMetadata helper in packages/auth. Wired into createSession (login), deleteSession (logout), hashPassword (password:change). 4 science-advantage domain functions audited (assignment:create/delete, class:remove_student, class:delete). GET /api/admin/audit-events with Zod validation, ADMIN-only. 704 tests pass. Migration 0018.*
 
-- [ ] **Track: Shared `packages/ai` + `lib/ai/` Refactor** *Link: [./tracks/ai_adapter_package_20260603/](./tracks/ai_adapter_package_20260603/)*
-  Create `packages/ai/src/` with `AIClient` interface (`generateObject<T>`, `generateImage`, `generateText`) + provider selector (`openai` | `google` | `mock`). Refactor `lib/ai/recommendation-service.ts` and `image-generator.ts` to depend on the interface, not on `@ai-sdk/*`; stop mutating `process.env` at call time. Remove `ai`, `@ai-sdk/openai`, `@ai-sdk/google` from `apps/science-advantage/package.json`. Update `docs/specs/ai-structured-data-generation/spec.md` and `docs/ai-image-generation.md` to reference the new interface. Resolves F-101, F-202. 2 weeks. **High.** **Track 5.**
+- [ ] **Track: Audit Log Retention + DSAR Bulk Export**
+  7-year FERPA retention policy with periodic cleanup job. GDPR DSAR (data subject access request) bulk export endpoint. Depends on Track 9 (Observability Stack) for real-time audit event streaming. **Follow-up to Track 4.**
+
+- [x] **Track: Shared `packages/ai` + `lib/ai/` Refactor** *Link: [./archive/ai_adapter_package_20260603/](./archive/ai_adapter_package_20260603/)*
+  *Status: COMPLETE — `packages/ai` with `AIClient` interface, 3 providers (OpenAI, Google, Mock), `createAIClient`/`getAIClient` singleton. `recommendation-service.ts` and `image-generator.ts` refactored to use `AIClient`. `process.env` mutation removed. `ai`, `@ai-sdk/openai`, `@ai-sdk/google` removed from science-advantage deps. 23 packages/ai tests + 3 science-advantage unit tests pass. Docs updated.*
 
 - [ ] **Track: Shared `packages/storage` S3-Compatible Package** *Link: [./tracks/storage_package_20260603/](./tracks/storage_package_20260603/)*
   Create `packages/storage/src/` with `StorageClient` interface (`put`, `get`, `delete`, `getSignedUrl`); implement for `@aws-sdk/client-s3` (GCS S3 interop, Cloudflare R2, MinIO). Extract `packages/domain/src/codecamp/index.ts:1952` GitHub `fetch()` to `packages/integrations/github` with typed methods. Resolves F-102, F-703 (partial). 1 week. **High.** **Track 6.** (Supersedes the in-flight `storage_s3_compat_20260522` track in §Infrastructure & Shared Packages with audit findings.)
@@ -91,10 +113,22 @@ This file tracks all major tracks for the project.
   Add `login_attempts` table in `packages/db/src/schema/auth.ts` (username, failed_count, window_start, last_attempt_at). Replace in-memory `Map` in `packages/auth/src/rate-limit.ts:9` with `SELECT ... FOR UPDATE` upsert. Add per-IP rate limit (30/15 min) alongside per-username (5/15 min). Add periodic cleanup job. Keep the in-memory `Map` as a dev-only fast-path. Resolves F-403, F-407. 1 week. **Medium.** **Track 10.**
 
 - [ ] **Track: CI Alignment + tsc Blocker Resolution** *Link: [./tracks/ci_typecheck_alignment_20260603/](./tracks/ci_typecheck_alignment_20260603/)*
-  Resolve the 360 tsc errors masking by `next.config.ts:25` `ignoreBuildErrors: true`: add `@testing-library/jest-dom/vitest` to `vitest.unit.setup.ts` (~354 errors); fix INTERN role widening in `lib/auth/session.ts:40,79` (2); add `lib/auth/{password,rate-limit}.test.ts` siblings (2); type-cast `process.env` reads (3); dedupe next@16 instances (4); misc (4). Add `"check-types": "tsc --noEmit"` to `apps/science-advantage/package.json`; remove `ignoreBuildErrors: true`. Delete the dead/drifted `apps/science-advantage/.github/workflows/ci.yml`; add a `path-filter: apps/science-advantage/**` token to the monorepo root `.github/workflows/ci.yml`. Fix the 4 `react-hooks/immutability` errors in `components/features/teacher/analytics/student-lesson-detail-analytics.tsx:151,155,186`; silence 6 unused-var warnings in `lib/gamification/badges.ts:114,202`. Resolves F-1001, F-1002, F-1003, F-1204, F-1205. 2 weeks. **High.** **Track 11.** Cross-references existing `measure/tech-debt.md` row `auth_strategy_review` (2026-05-03).
+  Resolve the 360 tsc errors masking by `next.config.ts:25` `ignoreBuildErrors: true`: add `@testing-library/jest-dom/vitest` to `vitest.unit.setup.ts` (~354 errors); fix INTERN role widening in `lib/auth/session.ts:40,79` (2); add `lib/auth/{password,rate-limit}.test.ts` siblings (2); type-cast `process.env` reads (3); dedupe next@16 instances (4); misc (4). Add `"check-types": "tsc --noEmit"` to `apps/science-advantage/package.json`; remove `ignoreBuildErrors: true`. Delete the dead/drifted `apps/science-advantage/.github/workflows/ci.yml`; add a `path-filter: apps/science-advantage/**` token to the monorepo root `.github/workflows/ci.yml`. Fix the 4 `react-hooks/immutability` errors in `components/features/teacher/analytics/student-lesson-detail-analytics.tsx:151,155,186`; silence 6 unused-var warnings in `lib/gamification/badges.ts:114,202`. Resolves F-1001, F-1002, F-1003, F-1204, F-1205. 2 weeks. **High.** **Track 11.** Cross-references existing `measure/tech-debt.md` row `auth_strategy_review` (2026-05-03). **⚑ PROMOTED — do this next, ahead of audit tracks #6–#10** (see §Current Focus): it is the CI gate that protects the just-completed Critical security work.
 
 - [ ] **Track: Audit Housekeeping Batch** *Link: [./tracks/housekeeping_batch_20260603/](./tracks/housekeeping_batch_20260603/)*
   Batched Low-priority cleanup: relocate `prisma/` legacy seed-data → `scripts/seed-data/` and delete `prisma/`; verify or delete 4 auth `route.ts` stubs (F-705); update `apps/science-advantage/AGENTS.md` to remove Prisma + `npm` references (F-1102); add `*.log` to `.gitignore`; backfill 5 orphan in-code `TODO`s with GH issues; re-pin 51 `^`-ranged deps; add `git notes` to 24 `refactor(science):` ports; add `docs/adr/` directory with 3 ADRs; add `commitlint` config to enforce subject-line track reference. Resolves F-205, F-503, F-705, F-1102, F-1201, F-1202, F-1207, F-1301, F-1305, F-1306. 1–2 days. **Low.** **Track 12.**
+
+#### Pending Audits — Next-App Rollout (scheduled 2026-06-10)
+
+> The science-advantage audit was a **pilot**. The two largest known compliance gaps in
+> the monorepo live in apps the pilot never touched. Both are open **Critical** rows in
+> `measure/tech-debt.md` (`audit_20260526`). Run with protocol v1.1 + a fresh `graph.db`.
+
+- [ ] **Track: AGENTS.md Compliance Audit — reading-advantage** *Link: [./tracks/reading_advantage_agents_md_audit_20260610/](./tracks/reading_advantage_agents_md_audit_20260610/)*
+  **STUB — scheduled 2026-06-10.** Largest known gap: **209** `app/**/route.ts` files import `db` directly, **0** route through `@reading-advantage/domain`/`assertCan`/`TenantDB` (~8× the science pilot's F-305 surface). Produces the audit artifact set + proposed migration tracks; reconciles `audit_20260526`.
+
+- [ ] **Track: AGENTS.md Compliance Audit — primary-advantage** *Link: [./tracks/primary_advantage_agents_md_audit_20260610/](./tracks/primary_advantage_agents_md_audit_20260610/)*
+  **STUB — scheduled 2026-06-10.** Known blocker: Prisma is **still fully active** (15 files import `@prisma/client`; schema/migrations/`lib/prisma.ts` present; deps intact) — the migration was **incorrectly recorded as complete**. Audit verifies migration state first, then runs the 13-section protocol; coordinates with Prisma→Drizzle Track 4.
 
 - [x] **Track: Tech Debt Resolution** *Link: [./archive/tech_debt_resolution_20260503/](./archive/tech_debt_resolution_20260503/)*
   Resolve 16 open tech-debt items not covered by other tracks. Phases: critical infra (Prisma→Drizzle, auth migration SQL), build config cleanup (ignoreBuildErrors removal), schema integrity, app-specific fixes, shared tooling.
@@ -137,9 +171,9 @@ This file tracks all major tracks for the project.
   *Link: [./archive/codecamp_advantage_20260513/](./archive/codecamp_advantage_20260513/)*
   *Status: COMPLETE — All 8 phases done. 18-module curriculum, GitHub integration (webhook + LLM review), admin dashboard, chat tutor, workflow tracker. Build passes, all tests green (domain: 159, api: 86, webhooks: 31, codecamp: 49). Subagent reviews completed with findings resolved.*
 
-- [ ] **Track: codecamp-advantage — Curriculum Implementation**
+- [x] **Track: codecamp-advantage — Curriculum Implementation**
   *Link: [./archive/codecamp_curriculum_20260514/](./archive/codecamp_curriculum_20260514/)*
-  Replace placeholder 5-module seed with the full 18-module, 85-lesson curriculum. Add phase column to schema, rewrite seed with real lesson content from curriculum plans, wire phase-grouped queries to dashboard UI, validate with tests.
+  Replace placeholder 5-module seed with the full 18-module, 85-lesson curriculum. Add phase column to schema, rewrite seed with real lesson content from curriculum plans, wire phase-grouped queries to dashboard UI, validate with tests. *Status: COMPLETE (metadata.json `completed`; archived). Checkbox reconciled 2026-06-05.*
 
 - [ ] **Track: codecamp-advantage — Exercise Repos & Portfolio Projects**
   *Link: [./tracks/codecamp_exercise_repos_20260515/](./tracks/codecamp_exercise_repos_20260515/)*
@@ -154,9 +188,9 @@ This file tracks all major tracks for the project.
   Add Thai (th) locale as default, create th.json translations, build language switcher, localize admin dashboard, and make the chat tutor respond in Thai by default.
   *Status: COMPLETE — All 4 phases done. Thai locale default, full th.json with 181 keys, language switcher, admin/chat/component localization, locale-aware chat API, Thai font loading, text-width regression prevention, lesson-language badge, 463 passing tests across 21 files.*
 
-- [ ] **Track: codecamp-advantage — Deployment**
+- [x] **Track: codecamp-advantage — Deployment**
   *Link: [./archive/codecamp_deployment_20260516/](./archive/codecamp_deployment_20260516/)*
-  Docker setup, shared Cloud SQL connectivity, CI/CD, environment configuration, HTTPS, DNS, and production deployment for codecamp-advantage.
+  Docker setup, shared Cloud SQL connectivity, CI/CD, environment configuration, HTTPS, DNS, and production deployment for codecamp-advantage. *Status: Core deployment done — production build deployed via `codecamp_pre_redeploy_remediation_20260518`. Checkbox reconciled 2026-06-05 (metadata.json still reads `in-progress`). Open follow-up: no automatic CI/CD deploy trigger — see `tech-debt.md` 2026-05-18.*
 
 - [x] **Track: codecamp-advantage — Pre-Redeployment Remediation**
   *Link: [./archive/codecamp_pre_redeploy_remediation_20260518/](./archive/codecamp_pre_redeploy_remediation_20260518/)*
@@ -166,9 +200,9 @@ This file tracks all major tracks for the project.
   *Link: [./archive/codecamp_qa_local_20260517/](./archive/codecamp_qa_local_20260517/)*
   Comprehensive manual QA testing on local dev server. Covers auth, i18n, dashboard, lessons, quizzes, AI chat, PR workflow, admin panel, edge cases, and performance. *Status: COMPLETE — 41 tests passed, 0 failed, 0 partial. All 5 issues fixed: Chat AI (API key rotated), Quiz progress save (Date→ISO string), PR form (verified working), Locked module UX (tooltip added), Dashboard ARIA (role=progressbar added). Full report at measure/archive/codecamp_qa_local_20260517/qa-report.md*
 
-- [ ] **Track: codecamp-advantage — Production QA/QC Testing**
+- [ ] **Track: codecamp-advantage — Production QA/QC Testing** ⚠️ **OPEN but filed under `archive/`**
   *Link: [./archive/codecamp_qa_prod_20260517/](./archive/codecamp_qa_prod_20260517/)*
-  Comprehensive manual QA testing on deployed production server. Covers infrastructure (HTTPS, DNS, Cloud Run), real integrations (OpenRouter, GitHub App), performance, caching, monitoring, and cross-browser testing. *Status: Plan created, ready for execution.*
+  Comprehensive manual QA testing on deployed production server. Covers infrastructure (HTTPS, DNS, Cloud Run), real integrations (OpenRouter, GitHub App), performance, caching, monitoring, and cross-browser testing. *Status: NOT STARTED (metadata.json `new`) — plan created, ready for execution. The track dir was placed in `archive/` prematurely; it remains open work. Move back to `tracks/` when execution begins.*
 
 - [x] **Track: codecamp-advantage — AI Review Visibility**
   *Link: [./archive/codecamp_ai_review_visibility_20260518/](./archive/codecamp_ai_review_visibility_20260518/)*
@@ -184,8 +218,9 @@ This file tracks all major tracks for the project.
 
 ### Infrastructure & Shared Packages
 
-- [ ] **Track: Shared Storage Package — S3-Compatible Abstraction Layer**
+- [x] **Track: Shared Storage Package — S3-Compatible Abstraction Layer** ⛔ **SUPERSEDED — DO NOT IMPLEMENT**
   *Link: [./tracks/storage_s3_compat_20260522/](./tracks/storage_s3_compat_20260522/)*
+  **Superseded 2026-06-05 by `storage_package_20260603` (audit Track 6)**, which covers the same `packages/storage` `StorageClient` work plus the audit findings (F-102, F-703). This older stub is retained for history only; pick up Track 6 instead.
   Create `packages/storage` (`@reading-advantage/storage`) with a `StorageClient` interface backed by `@aws-sdk/client-s3`. Works with GCS (S3 interoperability), Cloudflare R2, and MinIO (local dev). Replaces duplicated `@google-cloud/storage` usage in reading-advantage and primary-advantage. Backend migration is a config/env-var change only.
 
 - [x] **Track: Connection Pooling**
