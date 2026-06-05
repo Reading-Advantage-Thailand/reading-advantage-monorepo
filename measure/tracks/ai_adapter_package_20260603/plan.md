@@ -11,9 +11,10 @@
 
 ## Phase 1: `AIClient` Interface
 
-- [ ] Task: Create `packages/ai/src/types.ts` with the `AIClient` interface, `GenerateObjectInput`, `GenerateImageInput`, `GenerateTextInput` (FR-1).
-- [ ] Task: Create `packages/ai/src/errors.ts` with `AIClientError`, `ProviderNotConfiguredError`, `SchemaValidationError`.
-- [ ] Task: Export from `packages/ai/src/index.ts` barrel.
+- [x] Task: Create `packages/ai/src/types.ts` with the `AIClient` interface, `GenerateObjectInput`, `GenerateImageInput`, `GenerateTextInput` (FR-1).
+- [x] Task: Create `packages/ai/src/errors.ts` with `AIClientError`, `ProviderNotConfiguredError`, `SchemaValidationError`.
+- [x] Task: Export from `packages/ai/src/index.ts` barrel.
+- [x] Task: Phase 1 Red — type-level contract codified in `packages/ai/src/__tests__/phase-1-interface.test-d.ts` using `expectTypeOf` against FR-1/FR-2/FR-3. Verified by the existing Phase 0 build smoke (`tsc --noEmit` from `packages/ai/`); drift probe confirmed `tsc` exits non-zero on a deliberately wrong assertion. (Commits: `b5311a5`, follow-up revert of the vitest config change.)
 
 ## Phase 2: Mock Provider
 
