@@ -61,7 +61,7 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 
 ## Phase 4: Classify findings
 
-> Completed: (2026-06-05)
+> Completed: `a9c2666` (2026-06-05)
 
 - [x] Write `findings.md` with one row per FAIL, classified Critical/High/Medium/Low
 - [x] Sort by severity; add summary table at top
@@ -72,9 +72,51 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 
 ## Phase 5: Generate migration tracks
 
-- [ ] Write `migration-tracks.md` — group findings into tracks of ≤15 plan tasks
-- [ ] For each proposed track, write a `metadata.json` + `spec.md` + `plan.md` skeleton
-- [ ] Add the proposed tracks to `measure/tracks.md` under "Pending Tracks — Audit Findings"
+> Test contract (`test-strategy.md` §5): validate each track has skeleton
+> (`metadata.json` + `spec.md` + `plan.md`), ≤15 phase-level tasks, and
+> references the finding ID(s) it resolves. Phase 5.5 cross-checks the
+> `measure/tracks.md` "Pending Tracks — Audit Findings" section. Tests live in
+> `apps/science-advantage/lib/__tests__/audit-phase5-migration-tracks.test.ts`.
+>
+> Phase 5 audit work (migration-tracks.md + 12 track skeletons + registry
+> entries) is already committed; the Phase 5 task in this plan is to write
+> the contract tests that pin the deliverable for future re-audits.
+>
+> **Test run (2026-06-05):** 95 tests, 93 GREEN, **2 RED**.
+> - **GREEN**: migration-tracks.md structure (3 tests); skeleton
+>   existence + parseable metadata.json (24 tests); ≤15 phase-level
+>   tasks per plan (24 tests); finding ID reference in metadata.json
+>   for 11 of 12 tracks (12 tests); finding ID reference in spec.md
+>   for 11 of 12 tracks (12 tests); measure/tracks.md cross-check
+>   (28 tests — section exists, all 12 tracks listed, all 12 link
+>   targets resolve to existing directories).
+> - **RED** (2 tests, real documentation gaps):
+>   - `protocol_v1_1_graphdb_20260603/metadata.json` description
+>     mentions "empty `graph.db`" but does not cite the F-1003
+>     finding ID. The spec.md also does not cite F-1003. (Track 0
+>     is a protocol-level pre-audit chore; the F-1003 audit finding
+>     is the motivation for the entire track.)
+>   - `app_domain_migration_20260603/spec.md` Problem section
+>     enumerates F-305 as the umbrella root but does not cite the
+>     4 subsumed symptom findings (F-306, F-405, F-701, F-702)
+>     that the track resolves per `migration-tracks.md`.
+>
+> Resolution options (for the next audit pass):
+>   1. **Fix the docs** — add the F-IDs to the missing
+>      `metadata.json` / `spec.md` files. Recommended: this is the
+>      more useful contract for future re-audits (findings are
+>      traceable end-to-end through the audit artifacts).
+>   2. **Loosen the test** — change the assertion to "metadata.json
+>      OR spec.md references every F-ID" (OR instead of AND). Both
+>      RED tests would then turn GREEN (Track 0 mentions F-1003 in
+>      spec.md; Track 1 mentions the subsumed F-IDs in
+>      `metadata.json`).
+> Tracked in `measure/tech-debt.md` as the
+> `audit_20260603_phase5_finding_id_reference_gap` row.
+
+- [~] Write `migration-tracks.md` — group findings into tracks of ≤15 plan tasks
+- [~] For each proposed track, write a `metadata.json` + `spec.md` + `plan.md` skeleton
+- [~] Add the proposed tracks to `measure/tracks.md` under "Pending Tracks — Audit Findings"
 
 ## Phase 6: Executive summary
 
