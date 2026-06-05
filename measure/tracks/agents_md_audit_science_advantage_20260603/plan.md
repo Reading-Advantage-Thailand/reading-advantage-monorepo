@@ -113,9 +113,22 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 
 ## Phase 7: Present to user
 
-- [ ] Share `executive-summary.md` + top 3 proposed tracks
-- [ ] Wait for sign-off before opening track tickets
-- [ ] Capture protocol refinements in `agents-md-audit-protocol.md` §"Open Questions" → §"Maintenance"
+- [~] Share `executive-summary.md` + top 3 proposed tracks
+- [~] Wait for sign-off before opening track tickets
+- [~] Capture protocol refinements in `agents-md-audit-protocol.md` §"Open Questions" → §"Maintenance"
+
+> **Red-phase work (2026-06-05):** Phase 7 contract tests authored; the suite is
+> RED today on 7.2 ("Share" marker missing from `executive-summary.md`), 7.4
+> (Open Questions have no `**Status:**` annotation), and 7.5 (Maintenance section
+> has no resolved refinements from the pilot). 7.1 (sign-off gate, track active)
+> and 7.3 (Top 3 proposed tracks by id) are GREEN. Green-phase work is owned by
+> a subsequent task: the "Share" marker is added to `executive-summary.md` (or
+> the index cross-link is enriched), the four Open Questions are annotated
+> with `**Status:**` (RESOLVED / DEFERRED / OPEN), and any items the pilot
+> resolved (e.g. the "Per-rule weights" question — the user chose pass/fail
+> only on 2026-06-03) are mirrored into §"Maintenance" with a `Resolved:`
+> date. Tests live in
+> `apps/science-advantage/lib/__tests__/audit-phase7-present-to-user.test.ts`.
 
 ## Phase 8: Close-out
 
