@@ -85,3 +85,5 @@ The following 3 tracks should be opened first, in priority order. They resolve t
 ---
 
 **Sign-off line:** *The audit identifies 1 architectural root cause (F-305, F-501, F-502) that subsumes 8 symptoms and 4 distinct Critical findings (domain layer, tenancy, auth hashing, audit log). 12 tracks are proposed; the 4 Critical tracks should be opened in priority order before any new feature work in `apps/science-advantage/`.*
+
+**Sign-off requested:** 2026-06-05 — reviewers: Daniel (owner), team lead

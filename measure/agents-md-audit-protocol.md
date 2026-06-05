@@ -336,15 +336,17 @@ The protocol above was reverse-engineered from this pilot. Open question to conf
 
 # Open Questions
 
-- [ ] **Re-audit trigger.** Should re-audits run automatically when a migration track's PR merges, or only when a human requests it? The protocol currently says "track PR merges" but tooling does not exist yet.
-- [ ] **Coverage threshold.** AGENTS.md says ">80%" but does not enforce. Should the protocol record a FAIL when coverage drops below 80% on a domain module?
-- [ ] **Per-rule weights.** Per the user's choice on 2026-06-03, the protocol uses pass/fail only. If trends become useful later, we can add a "criticality × blast radius" matrix without changing the check items.
-- [ ] **App-specific deviations.** Some apps (e.g. `www-reading-advantage`) intentionally deviate from parts of AGENTS.md (e.g. no domain layer because it has no domain). The protocol should record these as N/A with a justification, not as FAIL.
+- [ ] **Re-audit trigger.** Should re-audits run automatically when a migration track's PR merges, or only when a human requests it? The protocol currently says "track PR merges" but tooling does not exist yet. **Status:** OPEN
+- [ ] **Coverage threshold.** AGENTS.md says ">80%" but does not enforce. Should the protocol record a FAIL when coverage drops below 80% on a domain module? **Status:** OPEN
+- [x] **Per-rule weights.** Per the user's choice on 2026-06-03, the protocol uses pass/fail only. If trends become useful later, we can add a "criticality × blast radius" matrix without changing the check items. **Status:** **RESOLVED** 2026-06-05 — pilot uses pass/fail only, no weights.
+- [ ] **App-specific deviations.** Some apps (e.g. `www-reading-advantage`) intentionally deviate from parts of AGENTS.md (e.g. no domain layer because it has no domain). The protocol should record these as N/A with a justification, not as FAIL. **Status:** OPEN
 
 ---
 
 # Maintenance
 
 This protocol is living documentation. When a new AGENTS.md rule is added or a rule becomes obsolete, update this checklist in the same change. When a check item is consistently FAIL across all audited apps, it likely indicates the protocol is asking too much — demote it to a "Recommended" footnote or remove it.
+
+- **Resolved: 2026-06-05 — Per-rule weights:** Pilot chose pass/fail only; no per-rule weighting. Future auditors should not relitigate this.
 
 Version: 1.1 (2026-06-03)

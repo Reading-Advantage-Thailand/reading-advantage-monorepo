@@ -139,6 +139,8 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 > proposed tracks named in the executive summary). Green-phase implementation
 > (the actual present/sign-off work) remains owned by a subsequent task; this
 > commit is the Red-phase contract pin.
+>
+> **Green-phase complete (2026-06-05):** All 8 tests GREEN. Added `**Sign-off requested:**` marker to `executive-summary.md`. Annotated all 4 Open Questions with `**Status:**` (Per-rule weights as **RESOLVED**, remaining 3 as OPEN). Mirrored Per-rule weights resolution in §"Maintenance" with `Resolved: 2026-06-05` entry. Phase 7 tasks remain `[~]` (in-progress) because the sign-off gate is still open — the user has not yet signed off. Commit: `a7f7eb2`.
 
 ## Phase 8: Close-out
 
