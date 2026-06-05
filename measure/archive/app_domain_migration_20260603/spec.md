@@ -6,12 +6,14 @@ Replace direct `@reading-advantage/db` imports in `apps/science-advantage/app/**
 
 ## Problem
 
-Audited 2026-06-03. Finding F-305 (reclassified Critical, umbrella):
+Audited 2026-06-03. Finding F-305 (reclassified Critical, umbrella; subsumes F-306, F-405, F-701, F-702):
 
-- **22 of 27 `app/api/**/route.ts` files** import `db` directly from `@reading-advantage/db`. The 5 clean ones: 4 auth stubs (delegate to `packages/api`) + `app/api/student/classes/route.ts` (delegates to `lib/services/classes/get-student-classes.ts`).
-- **2 of 22 `app/**/page.tsx` files** import `db` and run multi-step query orchestration: `app/(teacher)/teacher/page.tsx:1` (1 select), `app/(teacher)/teacher/classes/page.tsx:3` (2 selects with `count()`, `inArray`, `groupBy`).
+- **22 of 27 `app/api/**/route.ts` files** import `db` directly from `@reading-advantage/db` (F-307). The 5 clean ones: 4 auth stubs (delegate to `packages/api`) + `app/api/student/classes/route.ts` (delegates to `lib/services/classes/get-student-classes.ts`).
+- **2 of 22 `app/**/page.tsx` files** import `db` and run multi-step query orchestration (F-306): `app/(teacher)/teacher/page.tsx:1` (1 select), `app/(teacher)/teacher/classes/page.tsx:3` (2 selects with `count()`, `inArray`, `groupBy`).
 - **0 files in `apps/science-advantage/app/`** import from `@reading-advantage/domain`. The domain layer (14 modules, 82 `assertCan` calls, 4,000+ lines) is dead code from this app's perspective.
-- **23 hand-rolled `role === '...'` checks** across 17 app files (13 routes + 4 pages) bypass `assertCan`/`roleAtLeast`.
+- **23 hand-rolled `role === '...'` checks** across 17 app files (13 routes + 4 pages) bypass `assertCan`/`roleAtLeast` (F-405).
+- **5 spot-checked `route.ts` files are fat** (159–624 lines, multiple inline DB calls) (F-701).
+- **26 of 27 routes hand-roll role/ownership checks** instead of calling `requireRole` (F-702).
 - **9 `lib/services/*` files** are the natural domain candidates: `lib/services/classes/{get-class-detail,get-student-classes}.ts`, `lib/services/mastery/{mastery-worker,standard-mastery}.ts`, `lib/ai/recommendation-context.ts`, `lib/gamification/{badges,streak}.ts`, `lib/auth/session.ts`, `lib/utils/generateJoinCode.ts`. They are not yet part of `packages/domain` and cannot be reused by other apps.
 
 The root cause is the same: the app bypassed the domain layer on both sides — no `db` import, no `domain` import. The fix is one: get the app to call into domain functions (or services that we'll lift into `packages/domain`).

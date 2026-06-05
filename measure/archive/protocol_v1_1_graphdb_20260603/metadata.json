@@ -4,7 +4,7 @@
   "status": "complete",
   "created_at": "2026-06-03T00:00:00Z",
   "updated_at": "2026-06-04T06:00:00Z",
-  "description": "Pre-audit chore: rebuild graph.db (currently empty — 0 nodes/0 edges/0 files), update the AGENTS.md compliance audit protocol from v1.0 to v1.1 (add §3.6, §4.10, §5.10, §9.7; document multiline-safe scan method in §Severity Scheme), and add a CI gate that fails the build if graph.db is empty. No implementation work in apps/; precondition for the next re-audit.",
+  "description": "Pre-audit chore: rebuild graph.db (F-1003: currently empty — 0 nodes/0 edges/0 files), update the AGENTS.md compliance audit protocol from v1.0 to v1.1 (add §3.6, §4.10, §5.10, §9.7; document multiline-safe scan method in §Severity Scheme), and add a CI gate that fails the build if graph.db is empty. No implementation work in apps/; precondition for the next re-audit.",
   "estimated_tasks": 23,
   "actual_tasks": 23,
   "deviation_notes": ""
