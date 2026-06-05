@@ -15,6 +15,7 @@
 - [x] Task: Create `packages/ai/src/errors.ts` with `AIClientError`, `ProviderNotConfiguredError`, `SchemaValidationError`. (`9c52c8a`)
 - [x] Task: Export from `packages/ai/src/index.ts` barrel. (`9c52c8a`)
 - [x] Task: Phase 1 Red — type-level contract codified in `packages/ai/src/__tests__/phase-1-interface.test-d.ts` using `expectTypeOf` against FR-1/FR-2/FR-3. Verified by the existing Phase 0 build smoke (`tsc --noEmit` from `packages/ai/`); drift probe confirmed `tsc` exits non-zero on a deliberately wrong assertion. (`769b6ba`)
+- [x] Fix: vitest RPC timeout under turbo — added `hookTimeout`/`teardownTimeout` to `vitest.config.ts`. (`1c4c8fa`)
 
 ## Phase 2: Mock Provider
 
