@@ -12,11 +12,11 @@
 
 ## Phase 1: Discovery (Protocol §0)
 
-- [ ] Inventory all `app/**/route.ts` files (count + list)
-- [ ] Inventory all `app/**/actions.ts` files
-- [ ] Inventory `lib/`, `components/`, `prisma/`, `scripts/`
-- [ ] Capture `package.json` deps, `next.config.ts`, `proxy.ts`, `tsconfig.json`, `vitest.config.ts`, CI workflow
-- [ ] Write `00-inventory.md` with file counts and pointers
+- [~] Inventory all `app/**/route.ts` files (count + list)
+- [~] Inventory all `app/**/actions.ts` files
+- [~] Inventory `lib/`, `components/`, `prisma/`, `scripts/`
+- [~] Capture `package.json` deps, `next.config.ts`, `proxy.ts`, `tsconfig.json`, `vitest.config.ts`, CI workflow
+- [~] Write `00-inventory.md` with file counts and pointers
 
 ## Phase 2: Static analysis (Sections 1–13)
 
