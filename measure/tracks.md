@@ -230,7 +230,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 ### Infrastructure & Shared Packages
 
 - [x] **Track: Shared Storage Package — S3-Compatible Abstraction Layer** ⛔ **SUPERSEDED — DO NOT IMPLEMENT**
-  *Link: [./tracks/storage_s3_compat_20260522/](./tracks/storage_s3_compat_20260522/)*
+  *Link: [./archive/storage_s3_compat_20260522/](./archive/storage_s3_compat_20260522/)*
   **Superseded 2026-06-05 by `storage_package_20260603` (audit Track 6)**, which covers the same `packages/storage` `StorageClient` work plus the audit findings (F-102, F-703). This older stub is retained for history only; pick up Track 6 instead.
   Create `packages/storage` (`@reading-advantage/storage`) with a `StorageClient` interface backed by `@aws-sdk/client-s3`. Works with GCS (S3 interoperability), Cloudflare R2, and MinIO (local dev). Replaces duplicated `@google-cloud/storage` usage in reading-advantage and primary-advantage. Backend migration is a config/env-var change only.
 
