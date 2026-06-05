@@ -24,6 +24,8 @@
 
 ## Phase 2: Static analysis (Sections 1–13)
 
+> Completed: all 70 tests GREEN after lessons-learned.md curation pass (see below).
+
 For each section, run the listed grep/build-graph queries and record evidence.
 Per `test-strategy.md` §5, the test contract for this phase is:
 - Run protocol grep/query per section.
@@ -45,6 +47,8 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 - [x] **Section 11: Documentation** — sample 10 exported functions from `packages/*` and check JSDoc
 - [x] **Section 12: Monorepo Hygiene** — `pnpm turbo run build/lint/check-types --filter=science-advantage`
 - [x] **Section 13: Workflow** — spot-check recent commits for track references; check `tech-debt.md` line count
+
+> **Fix (this session):** §13.3 test failed because `lessons-learned.md` drifted to 56 lines (cap: 50). Pruned 3 old entries (2026-05-02 shared_backend_api ×2, review_remediation ×1) by condensing into 1 line, bringing file to 46 lines. All 70 tests now pass.
 
 ## Phase 3: Manual review (judgment calls)
 

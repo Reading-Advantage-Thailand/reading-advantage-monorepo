@@ -3,14 +3,7 @@
 > This file is curated working memory, not an append-only log. Keep it at or below **50 lines**.
 > Remove or condense entries that are no longer relevant to near-term planning.
 
-## Architecture & Design
-
-- (2026-05-02, shared_backend_api) Workspace packages using `.js` extensions in TS imports must build to `dist/` and export `dist/` in `package.json`. Next.js `transpilePackages` does not reliably resolve `.js` → `.ts` for ESM workspace packages.
-
 ## Recurring Gotchas
-
-- (2026-05-02, shared_backend_api) `AuthProvider` calling `refreshSession` on mount creates a race condition: tests rendering `useRequireAuth` must pre-seed tokens AND mock `auth.refresh` + `auth.session` fetches. The hook throws during render when `!isLoading && !isAuthenticated`, so either establish auth before render or `expect().toThrow()` in a dedicated test.
-- (2026-05-02, shared_backend_api) `tsup` bundles can accidentally pull React hooks into the main barrel (`dist/index.js`). Server components importing `cn` from that barrel will fail. Keep hooks in a separate subpath export (`./hooks`).
 - (2026-05-26, proxy_admin_guard_hardening) Next.js 16 promoted middleware (renamed to `proxy.ts`) to nodejs runtime as the default — `runtime` config in proxy files now THROWS. This removes the "edge-only" constraint that blocked many auth/DB-touching middleware designs. Before this, tech-debt notes assumed JWT redesign or `/api/verify` round-trips were required to do real session checks in middleware; now you can `import { requireRole } from "@reading-advantage/auth"` and call it directly. Always check the upstream framework constraint before designing around a "limitation" inherited from older docs. Vitest hoisted-mock pattern for proxy: `const { mock } = vi.hoisted(() => ({ mock: vi.fn() }))` then `vi.mock("@reading-advantage/auth", ...)` — referencing a top-level `const` inside a `vi.mock` factory triggers `ReferenceError: Cannot access X before initialization`.
 
 ## Patterns That Worked Well
@@ -19,9 +12,7 @@
 
 ## Testing & Mocking
 
-- (2026-05-02, review_remediation) Drizzle query-builder mocks must return **thenable objects**, not plain functions. `db.select().from().where()` returns an object that is awaited directly. If `.where()` returns a function object, `await` will not call it — it will return the function itself. Use `Object.assign(Promise.resolve(value), { limit: ..., innerJoin: ... })` for chain mocks.
-- (2026-05-02, review_remediation) Cross-tenant authorization checks must be tested explicitly. `assertCan()` only checks role permissions; it does NOT verify school/class ownership. Every domain function that queries by caller-supplied ID needs an ownership guard and a corresponding cross-tenant test.
-- (2026-05-15, codecamp_review) Mock-DB `selectResults` returns the same array for all queries. When a domain function makes multiple selects needing different results, use `selectSequence` to provide per-call result arrays.
+- (2026-05-02, review_remediation) Drizzle query-builder mocks must return **thenable objects**, not plain functions — `Object.assign(Promise.resolve(value), { limit: ..., innerJoin: ... })` for chain mocks. Cross-tenant authorization checks must be tested explicitly: `assertCan()` checks role only, not school/class ownership.
 
 ## Planning Improvements
 
@@ -51,3 +42,5 @@
 - (2026-06-04, app_domain_migration) Domain package `dist/` files must be rebuilt after refactoring source imports. Subagent parallelism works well for route migrations: each route is independent, and the pattern (extract business logic → thin route → update tests) is mechanical once established.
 - (2026-06-04, tenant_db_school_id) Tenant predicate coverage is a test, not a guideline — `tenant-coverage.test.ts` scans every domain file for `createTenantDB` usage and fails the build if a file has DB access but no tenant guard. `Tenant.schoolId` is `string | null` — insert calls need `tenant.schoolId!` (non-null assertion after `assertCan` verifies access). Science content tables (lessons, standards) without natural school context get a default school during backfill; orphan rows with NULL FK chains also get assigned to the default school.
 - (2026-06-04, argon2id_password) `@node-rs/argon2` does NOT natively verify bcrypt hashes — must keep `bcryptjs` as verify-only dependency for cross-algorithm support. The `isolatedModules` TS flag blocks `const enum` access from native modules — use numeric literal `2` for `Algorithm.Argon2id`. Auth adapter flatten: Next.js cookie-based wrappers (getCurrentSession, requireAuth, requireRole) must remain local because they depend on `next/headers`; the shared auth package is framework-agnostic. Re-export shared types to eliminate local type drift.
+- (2026-06-04, audit_log_infrastructure) Append-only at the DB level (`REVOKE UPDATE, DELETE`) is the right enforcement — the application code can be audited, but a permission error from the DB is a hard guarantee. Fire-and-forget audit logging (`.catch(() => {})`) prevents audit failures from blocking primary actions. Domain functions that import `db` directly (vs taking `TenantDB` as a param) cannot be unit-tested with mock-db — need either refactoring to accept `db` as a parameter, or integration tests with a real database. Tenant-coverage test needs an exemption list for global tables (like `audit_events`) that intentionally skip tenant scoping.
+- (2026-06-05, ai_adapter_package) Mock provider with deterministic responses is the right unit-test pattern for AI adapters; real providers are integration-tested only with API keys present. When an app's vitest config doesn't include workspace packages in `resolve.alias`, adding the package to `package.json` dependencies creates the pnpm symlink and fixes resolution — no vitest config change needed. Model IDs with provider prefixes (e.g., `google/gemini-3-pro-image`) must be stripped before passing to the AIClient since the provider is already selected by the client instance.
