@@ -108,8 +108,8 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 >
 > **Green-phase complete (2026-06-05):** All 14 tests GREEN. Updated `executive-summary.md`: severity rollup refreshed to 10/12/17/18 (57 total), "Top 3 risks" → "Top 5 risks" with 2 new risks (dead domain layer, CI gate gap), added "Recommended next 3 tracks" section naming `app_domain_migration_20260603`, `tenant_db_school_id_20260603`, `argon2id_password_20260603`. Added cross-link in `measure/index.md` under new "Audit Reports" section. Commit: `7ca5f7e`.
 
-- [x] Write `executive-summary.md`: total rules, % pass, top 5 risks, recommended next 3 tracks
-- [x] Cross-link from `measure/index.md`
+- [x] Write `executive-summary.md`: total rules, % pass, top 5 risks, recommended next 3 tracks — `7ca5f7e`
+- [x] Cross-link from `measure/index.md` — `7ca5f7e`
 
 ## Phase 7: Present to user
 
