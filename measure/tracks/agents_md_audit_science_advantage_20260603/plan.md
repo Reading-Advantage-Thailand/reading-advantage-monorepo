@@ -165,6 +165,31 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 > `measure/archive/`, flip status, edit the registry row) is owned by a
 > subsequent task. This commit pins the contract only; no source code
 > outside the test file and this plan.md was modified.
+>
+> **Supervisor gate remediation (attempt 2):** Mid-attempt-1 commit
+> (`ad229f8`) was correctly scoped to two files (the test file + this
+> plan.md). The gate flagged a single pre-existing working-tree deletion
+> at `apps/www-reading-advantage/public/videos/case-study-the-bilingual-breakthrough-th.mp4`
+> (the file was renamed to `day29-case-study-the-bilingual-breakthrough-th.mp4`
+> before this session began, and the rename was never committed by its
+> author). The deletion was not part of `ad229f8` and was not produced
+> by the mid agent. Resolved by `git restore` on the flagged path; the
+> rename's untracked counterpart (`day29-…mp4`) remains in the working
+> tree for its owner to commit. Phase 8 test suite re-run unchanged:
+> 6 RED / 1 GREEN.
+>
+> **Supervisor gate remediation (attempt 3):** Attempt 2 was a
+> working-tree-only fix (`git restore`) and produced no commit, so HEAD
+> did not advance — the gate framework requires HEAD to advance every
+> attempt. This plan.md note is the attempt-3 commit: it documents the
+> attempt-2 remediation in-band so the audit trail is preserved without
+> rewriting `ad229f8`. No test file is changed; no source code outside
+> Measure docs is touched. Phase 8 test suite remains 6 RED / 1 GREEN;
+> Green-phase ownership is unchanged. Recommendation surfaced to the
+> supervisor (carried forward from attempt-2 handoff): gate logic should
+> diff against the role's own commit range rather than the full working
+> tree, or the start-of-session protocol should `git stash -u`
+> pre-existing dirty state before the role begins.
 
 - [~] Update this track's status to `complete` in `metadata.json`
 - [~] Archive: `mv measure/tracks/agents_md_audit_science_advantage_20260603 measure/archive/`
