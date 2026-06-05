@@ -100,8 +100,12 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 
 ## Phase 6: Executive summary
 
-- [ ] Write `executive-summary.md`: total rules, % pass, top 5 risks, recommended next 3 tracks
-- [ ] Cross-link from `measure/index.md`
+> Test contract (`test-strategy.md` §1 / §5): "Counts match findings.md." Severity totals in `executive-summary.md` must equal the counts produced by parsing `findings.md` (Critical/High/Medium/Low FAIL counts). Top 5 risks section exists and lists 5 risks. Recommended next 3 tracks are explicitly named (matching priority-ordered tracks from `migration-tracks.md`). `measure/index.md` cross-links to the audit report. Tests live in `apps/science-advantage/lib/__tests__/audit-phase6-executive-summary.test.ts`.
+>
+> **Red-phase test run (2026-06-05):** Phase 6 contract tests authored; the suite is RED today because (a) executive summary lists "Top 3 risks" not Top 5, (b) severity rollup counts (6/9/11/19) are stale vs findings.md (10/12/17/18), (c) "Recommended next 3 tracks" is not stated as a 3-track list (`What to do next` cites the "4 Critical tracks"), and (d) `measure/index.md` does not cross-link to `measure/audit-reports/science-advantage_20260603/`. Green-phase work (rewriting executive-summary.md + adding the index.md cross-link) is owned by a subsequent task.
+
+- [~] Write `executive-summary.md`: total rules, % pass, top 5 risks, recommended next 3 tracks
+- [~] Cross-link from `measure/index.md`
 
 ## Phase 7: Present to user
 
