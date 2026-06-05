@@ -1,0 +1,32 @@
+{
+  "name": "@reading-advantage/ai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^2.0.36",
+    "@ai-sdk/openai": "^2.0.68",
+    "ai": "^5.0.95",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
+  }
+}
