@@ -21,3 +21,6 @@
 ## Plans
 - [Mastery Advantage Integration Plan](./mastery-advantage-integration-plan.md)
 - [Mastery Advantage Workbook Series Plan](./mastery-advantage-workbook-plan.md)
+
+## Audit Reports
+- [science-advantage AGENTS.md Audit (2026-06-03)](./audit-reports/science-advantage_20260603/)

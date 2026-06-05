@@ -29,16 +29,16 @@ The app **bypasses its own domain layer** on both sides — 22 of 27 `app/api/**
 | 13 | Workflow | 4 | 2 | 0 | 0 | 67% |
 | **Total** | | **31** | **28** | **7** | **13** | **49%** |
 
-## Severity rollup (45 findings)
+## Severity rollup (57 findings)
 
-| Severity | Count | New Critical/High findings |
+| Severity | Count | Key findings |
 |----------|------:|----------------------------|
-| Critical | 6 | F-305 (domain layer unused), F-501 (no `schoolId`), F-502 (no `TenantDB`), F-402 + F-406 (bcryptjs), F-404 + F-901 (no audit log), F-1001 (`ignoreBuildErrors` 360 errors), F-1003 (empty `graph.db`) |
-| High | 9 | F-203 / F-208 / F-306 / F-307 / F-701 / F-702 / F-405, F-601, F-1002, F-1204, F-1205 |
-| Medium | 11 | F-101, F-205, F-206, F-303, F-403, F-501, F-502, F-504, F-602, F-902–F-905, F-1201, F-1207, F-1301, F-1306 |
-| Low | 19 | F-102, F-201, F-202, F-204, F-207, F-401, F-407, F-603, F-604, F-703, F-704, F-705, F-906, F-1101, F-1102, F-1202, F-1203, F-1305 |
+| Critical | 10 | F-305 (domain layer unused, umbrella), F-306, F-307 (subsumed), F-402 (bcryptjs in seeds), F-404 (no audit log), F-406 (bcryptjs in auth pkg), F-501 (no `schoolId`), F-502 (no `TenantDB`), F-1001 (`ignoreBuildErrors`), F-1003 (empty `graph.db`) |
+| High | 12 | F-203, F-208, F-302 (no Zod in domain), F-304 (single-file modules), F-405, F-601, F-701, F-702, F-901, F-1002, F-1204, F-1205 |
+| Medium | 17 | F-101, F-205, F-206, F-303, F-403, F-503, F-504, F-602, F-902, F-903, F-904, F-905, F-1101, F-1201, F-1207, F-1301, F-1306 |
+| Low | 18 | F-102, F-201, F-202, F-204, F-207, F-301, F-401, F-407, F-603, F-604, F-703, F-704, F-705, F-906, F-1102, F-1202, F-1203, F-1305 |
 
-> Severity counts double-count findings filed under multiple section numbers. Unique-issue count is ~38. See `findings.md` for canonical IDs.
+> Severity counts are per-finding-ID as classified in `findings.md`. Some findings are filed under multiple section numbers (e.g. F-404/F-901 are the same audit-log gap from §4 and §9 angles). See `findings.md` for canonical IDs and manual inspection notes.
 
 ## The 12 proposed migration tracks (priority-ordered)
 
@@ -59,17 +59,28 @@ The app **bypasses its own domain layer** on both sides — 22 of 27 `app/api/**
 
 > Cross-references the in-flight `proxy_admin_guard_hardening_20260526` (post-pilot, in §Pending Tracks of `measure/tracks.md`) and the prior `audit_20260526` row in `measure/tech-debt.md`. The 4 Critical tracks supersede the F-001 anchor and add the security/audit dimensions.
 
-## Top 3 risks
+## Top 5 risks
 
 1. **Silent security regression** — without an audit log, a credential-stuffing or `schoolId` leak incident cannot be triaged, and the 23 hand-rolled `role ===` checks cannot be retroactively verified.
 2. **Multi-tenant data leak** — science tables have no `schoolId` column; teachers who change schools keep their class data, and a student in school A can read school B class data via the join-code model. Compliance-relevant for district procurement.
 3. **Type-safety void** — `ignoreBuildErrors: true` masks 360 tsc errors and the app-local CI workflow runs only `lint` + `build`, never `tsc --noEmit`. New errors land silently.
+4. **Dead domain layer** — `packages/domain/src/` (14 modules, 82 `assertCan` calls, 4,000+ lines) has zero callers in the science-advantage app. Auth, tenancy, and permission enforcement infrastructure exists but is completely bypassed, making every other compliance fix downstream of this architectural gap.
+5. **CI gate gap** — the app-local CI workflow uses `npm` (no `package-lock.json` exists), runs only `lint`, and has no `check-types` or `test` step. The monorepo root CI does not path-filter for science-advantage, so type errors and lint failures accumulate without blocking merges.
+
+## Recommended next 3 tracks
+
+The following 3 tracks should be opened first, in priority order. They resolve the 4 Critical findings that block all other compliance work:
+
+1. `app_domain_migration_20260603` — **App → Domain Layer Migration** (Track 1; F-305 umbrella, 4 weeks). The load-bearing track: every other section's compliance is downstream of the app actually using its domain layer.
+2. `tenant_db_school_id_20260603` — **TenantDB & schoolId Adoption** (Track 2; F-501, F-502, 2–4 weeks). Multi-tenancy isolation; requires Track 1 to land first so `schoolId` predicates live in domain functions, not in route handlers.
+3. `argon2id_password_20260603` — **Argon2id Migration + Auth Adapter Flatten** (Track 3; F-401, F-402, F-406, 1 week). Highest-leverage single PR: migrates the shared password module and unblocks all 6 apps.
 
 ## What to do next
 
-1. **Sign off** the F-305 umbrella reclassification and the 4 Critical tracks above.
-2. **Open Tracks 1–4** (Critical) in `measure/tracks/` in priority order. Tracks 1 and 2 are the load-bearing ones — every other section's compliance is downstream of them.
-3. **Schedule the next audit** (`reading-advantage_20260610` or similar) using the refined protocol v1.1 (see Track #0 of `migration-tracks.md`).
+1. **Sign off** the F-305 umbrella reclassification and the 12-track migration plan.
+2. **Open the 3 recommended tracks** above in `measure/tracks/` in priority order. Track 1 is the load-bearing one — every other section's compliance is downstream of it.
+3. **Schedule Track 4** (Audit Log Infrastructure, `audit_log_infrastructure_20260603`) in parallel with Track 3 once the first 3 are staffed. It is also Critical and has no dependency on Tracks 1–3.
+4. **Schedule the next audit** (`reading-advantage_20260610` or similar) using the refined protocol v1.1 (see Track #0 of `migration-tracks.md`).
 
 ---
 

@@ -105,9 +105,11 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 > **Red-phase test run (2026-06-05):** Phase 6 contract tests authored; the suite is RED today because (a) executive summary lists "Top 3 risks" not Top 5, (b) severity rollup counts (6/9/11/19) are stale vs findings.md (10/12/17/18), (c) "Recommended next 3 tracks" is not stated as a 3-track list (`What to do next` cites the "4 Critical tracks"), and (d) `measure/index.md` does not cross-link to `measure/audit-reports/science-advantage_20260603/`. Green-phase work (rewriting executive-summary.md + adding the index.md cross-link) is owned by a subsequent task.
 >
 > **Supervisor gate remediation (attempt 2):** Mid-attempt-1 commit (`c792a16`) was correctly scoped to two files (the test file + this plan.md). The gate flagged 14 pre-existing uncommitted modifications in `packages/api/`, `packages/auth/`, `packages/db/`, `packages/domain/`, and `pnpm-lock.yaml` — these belong to the in-flight `audit_log_infrastructure_20260603` track and other refactors that pre-date the Phase 6 session (see Phase 0 note about uncommitted AI-adapter changes). They were stashed as `stash@{0}` with the label `pre-existing wip from audit_log_infrastructure_20260603 + auth/domain refactors — preserved across Phase 6 Red-phase session (not produced by mid agent)` so their owners can recover them via `git stash pop stash@{0}`. Working tree is now clean of Red-phase violations; Phase 6 test suite re-run still produces 6 RED / 8 GREEN.
+>
+> **Green-phase complete (2026-06-05):** All 14 tests GREEN. Updated `executive-summary.md`: severity rollup refreshed to 10/12/17/18 (57 total), "Top 3 risks" → "Top 5 risks" with 2 new risks (dead domain layer, CI gate gap), added "Recommended next 3 tracks" section naming `app_domain_migration_20260603`, `tenant_db_school_id_20260603`, `argon2id_password_20260603`. Added cross-link in `measure/index.md` under new "Audit Reports" section.
 
-- [~] Write `executive-summary.md`: total rules, % pass, top 5 risks, recommended next 3 tracks
-- [~] Cross-link from `measure/index.md`
+- [x] Write `executive-summary.md`: total rules, % pass, top 5 risks, recommended next 3 tracks
+- [x] Cross-link from `measure/index.md`
 
 ## Phase 7: Present to user
 
