@@ -61,10 +61,14 @@ pins the audit's PASS/FAIL claims as expected values. Cross-validation sections:
 
 ## Phase 4: Classify findings
 
-- [~] Write `findings.md` with one row per FAIL, classified Critical/High/Medium/Low
-- [~] Sort by severity; add summary table at top
-- [~] Add Critical and High rows to `measure/tech-debt.md`
-- [~] Add Medium/Low summary row to `measure/tech-debt.md`
+> Completed: (2026-06-05)
+
+- [x] Write `findings.md` with one row per FAIL, classified Critical/High/Medium/Low
+- [x] Sort by severity; add summary table at top
+- [x] Add Critical and High rows to `measure/tech-debt.md`
+- [x] Add Medium/Low summary row to `measure/tech-debt.md`
+
+> **Fix:** Reorganized `findings.md` body so all FAIL findings are sorted by severity (Critical → High → Medium → Low), satisfying the protocol §5 step 5 sort requirement. 57 FAIL findings sorted into 10 Critical, 12 High, 17 Medium, 18 Low. 2 PASS findings preserved in separate section. All 5 Phase 4 tests now GREEN.
 
 ## Phase 5: Generate migration tracks
 
