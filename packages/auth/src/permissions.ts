@@ -90,6 +90,9 @@ export const PERMISSIONS = {
   "quiz:read:all": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "quiz:submit": [ROLES.STUDENT],
   "quiz:create": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+
+  // Audit log
+  "audit:read:all": [ROLES.ADMIN, ROLES.SYSTEM],
 } as const satisfies Record<string, Role[]>;
 
 export type Permission = keyof typeof PERMISSIONS;
