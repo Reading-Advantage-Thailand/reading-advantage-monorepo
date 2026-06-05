@@ -4,10 +4,10 @@
 
 ## Phase 0: Setup
 
-- [ ] Task: Confirm `packages/` directory has no `ai/` package today. Initialize `packages/ai/` with `package.json`, `tsconfig.json` (extending monorepo shared config), and `src/index.ts` barrel.
-- [ ] Task: Add `@node-rs/argon2` and `ai` / `@ai-sdk/openai` / `@ai-sdk/google` to `packages/ai/package.json` `dependencies`. Pin versions per AGENTS.md §Version Policy.
-- [ ] Task: Add to monorepo root `pnpm-workspace.yaml` if not already.
-- [ ] Task: Pull `apps/science-advantage`; confirm baseline tests pass.
+- [~] Task: Confirm `packages/` directory has no `ai/` package today. Initialize `packages/ai/` with `package.json`, `tsconfig.json` (extending monorepo shared config), and `src/index.ts` barrel.
+- [~] Task: Add `@node-rs/argon2` and `ai` / `@ai-sdk/openai` / `@ai-sdk/google` to `packages/ai/package.json` `dependencies`. Pin versions per AGENTS.md §Version Policy.
+- [~] Task: Add to monorepo root `pnpm-workspace.yaml` if not already.
+- [~] Task: Pull `apps/science-advantage`; confirm baseline tests pass.
 
 ## Phase 1: `AIClient` Interface
 
