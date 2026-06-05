@@ -349,4 +349,323 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
       ).toBe(claimed);
     });
   });
+
+  /**
+   * Phase 1.5 (Discovery) — extended summary-table row parity.
+   *
+   * The `Phase 1.5 — 00-inventory.md exists and is well-formed` block
+   * (above) verifies the inventory file's existence and the summary
+   * table's existence. The `Phase 1.1`–`Phase 1.4` blocks verify the
+   * route.ts / actions.ts / lib / components / prisma / scripts /
+   * config-file rows. This block fills in the remaining summary-table
+   * rows: source-file counts, page/layout/middleware counts, test
+   * file counts, and dependency counts. These are the per-row
+   * contracts that §0 Discovery must satisfy before Phase 2 (Static
+   * Analysis) consumes the inventory.
+   *
+   * Per the test strategy (`test-strategy.md` §5):
+   *   - Phase 1: File-count assertions
+   *   - Phase 1: build-graph stats matches `rg` counts
+   *   - Phase 1: Assert inventory lists all dirs
+   *
+   * Tests in this block read the inventory's summary-table value via
+   * the `readInventoryMetric` helper (defined above) and compare it
+   * to a fresh `find` / `node -p` against the live filesystem. Tests
+   * that match the filesystem pin the inventory against future drift;
+   * tests that do not match document the current drift between the
+   * inventory (written 2026-06-03) and the current main branch. The
+   * drift tests stay RED until the inventory is regenerated; the
+   * corresponding fix tracks are F-1001 (ignoreBuildErrors) and F-1305
+   * (TODO inventory drift) per `findings.md`.
+   */
+  describe('Phase 1.5 — summary table row parity (extended file counts)', () => {
+    describe('Phase 1.5.a — app/**/{page,layout,middleware}.tsx counts', () => {
+      it('22 app/**/page.tsx files exist in apps/science-advantage/app/', () => {
+        const n = countLines('find', [
+          'apps/science-advantage/app',
+          '-name', 'page.tsx',
+          '-not', '-path', '*/node_modules/*',
+        ]);
+        expect(n).toBe(22);
+      });
+      it('inventory summary table lists `app/**/page.tsx` count = 22', async () => {
+        const value = await readInventoryMetric('app/**/page.tsx');
+        expect(value).toBe('22');
+      });
+      it('6 app/**/layout.tsx files exist in apps/science-advantage/app/', () => {
+        const n = countLines('find', [
+          'apps/science-advantage/app',
+          '-name', 'layout.tsx',
+          '-not', '-path', '*/node_modules/*',
+        ]);
+        expect(n).toBe(6);
+      });
+      it('inventory summary table lists `app/**/layout.tsx` count = 6', async () => {
+        const value = await readInventoryMetric('app/**/layout.tsx');
+        expect(value).toBe('6');
+      });
+      it('0 app/**/middleware.ts files exist (proxy.ts replaced middleware)', () => {
+        const n = countLines('find', [
+          'apps/science-advantage/app',
+          '-name', 'middleware.ts',
+          '-not', '-path', '*/node_modules/*',
+        ]);
+        expect(n).toBe(0);
+      });
+      it('inventory summary table lists `app/**/middleware.ts` count = 0', async () => {
+        const value = await readInventoryMetric('app/**/middleware.ts');
+        expect(value).toBe('0');
+      });
+    });
+
+    describe('Phase 1.5.b — test file count parity (RED: inventory drift documented)', () => {
+      /**
+       * The inventory's "Test files" row reads 88. The current
+       * filesystem (after the 2026-06-04 AI-adapter and argon2id
+       * tracks added integration tests for the new auth flow) has 92
+       * `*.test.ts` / `*.test.tsx` / `*.spec.ts` files. This is a
+       * pre-existing-inventory drift, not a code regression.
+       *
+       * This test asserts the parity contract: filesystem count must
+       * equal the inventory's claimed count. The test stays RED
+       * until 00-inventory.md is regenerated. Same shape as the
+       * `Phase 1 Integration — inventory vs filesystem drift on
+       * scripts/ count` test above — see that test's JSDoc for the
+       * audit-subagent fix-track.
+       */
+      it('test file count parity: filesystem (92) matches inventory claim (88) (RED: drift documented)', () => {
+        const n = countLines('find', [
+          'apps/science-advantage',
+          '-type', 'f',
+          '(',
+          '-name', '*.test.ts',
+          '-o',
+          '-name', '*.test.tsx',
+          '-o',
+          '-name', '*.spec.ts',
+          ')',
+          '-not', '-path', '*/node_modules/*',
+          '-not', '-path', '*/.next/*',
+          '-not', '-path', '*/playwright-report/*',
+        ]);
+        const claimed = 88;
+        expect(
+          n,
+          `inventory claims ${claimed} test files, filesystem has ${n}`,
+        ).toBe(claimed);
+      });
+    });
+
+    describe('Phase 1.5.c — total .ts/.tsx source file count parity (RED: inventory drift documented)', () => {
+      /**
+       * The inventory's "Total .ts / .tsx source files" row reads
+       * 330 vs the actual 335 (a 5-file drift). The pre-existing
+       * inventory also has a "Total source files" row reading 767
+       * vs the actual 773 (a 6-file drift). Both rows are
+       * pre-existing inventory errors that will resolve when
+       * 00-inventory.md is regenerated. This test asserts the
+       * parity contract: filesystem count must equal the inventory
+       * claim.
+       */
+      it('.ts/.tsx source file count parity: filesystem (335) matches inventory claim (330) (RED: drift documented)', () => {
+        const n = countLines('find', [
+          'apps/science-advantage',
+          '-type', 'f',
+          '(',
+          '-name', '*.ts',
+          '-o',
+          '-name', '*.tsx',
+          ')',
+          '-not', '-path', '*/node_modules/*',
+          '-not', '-path', '*/.next/*',
+          '-not', '-path', '*/.turbo/*',
+          '-not', '-path', '*/playwright-report/*',
+          '-not', '-path', '*/.vite-temp/*',
+        ]);
+        const claimed = 330;
+        expect(
+          n,
+          `inventory claims ${claimed} .ts/.tsx source files, filesystem has ${n}`,
+        ).toBe(claimed);
+      });
+    });
+  });
+
+  /**
+   * Phase 1.6 (Discovery) — top-level directory and route-group coverage.
+   *
+   * The summary table only counts a curated subset of file types. The
+   * directory listings at the end of `00-inventory.md` (under
+   * "Other top-level directories") enumerate the 14 top-level
+   * directories and the 7 app route groups. These are the contracts
+   * that "inventory lists all dirs" (test strategy §5) requires.
+   */
+  describe('Phase 1.6 — top-level directory and route-group coverage', () => {
+    it('inventory mentions all 14 top-level directories of apps/science-advantage/', async () => {
+      const dirs = [
+        'app', 'components', 'contexts', 'data', 'docs', 'e2e', 'hooks',
+        'i18n', 'lib', 'measure', 'prisma', 'public', 'scripts', 'tests',
+      ];
+      const contents = await fs.readFile(INVENTORY, 'utf-8');
+      const missing: string[] = [];
+      for (const dir of dirs) {
+        // The inventory uses `` `${dir}/` `` (with trailing slash) in
+        // the "Other top-level directories" table at the end of
+        // 00-inventory.md. Match that pattern exactly.
+        const asDir = `\`${dir}/\``;
+        if (!contents.includes(asDir)) missing.push(dir);
+      }
+      expect(
+        missing,
+        `inventory is missing these top-level dirs: ${missing.join(', ')}`,
+      ).toEqual([]);
+    });
+
+    it('inventory lists all 7 app route groups: (admin), (auth), (dashboard), (student), (system), (teacher), and root app/', async () => {
+      const groups = [
+        '(admin)', '(auth)', '(dashboard)', '(student)', '(system)', '(teacher)',
+      ];
+      const contents = await fs.readFile(INVENTORY, 'utf-8');
+      const missing: string[] = [];
+      for (const group of groups) {
+        // The inventory uses `` `app/(group)/...` `` in the page.tsx
+        // listings and summary table. Match the literal `` `app/(group)` ``
+        // prefix.
+        if (!contents.includes(`app/${group}`)) {
+          missing.push(group);
+        }
+      }
+      expect(
+        missing,
+        `inventory is missing these route groups: ${missing.join(', ')}`,
+      ).toEqual([]);
+    });
+  });
+
+  /**
+   * Phase 1.7 (Discovery) — package.json dependency count parity.
+   *
+   * The §0 Discovery step captures `package.json` production and dev
+   * dependency lists. The inventory headings "## `package.json`
+   * dependencies (production, 48)" and "## `package.json` dependencies
+   * (dev, 21)" snapshot the dep surface. Since 2026-06-03, the
+   * `ai_adapter_package_20260603` and `argon2id_password_20260603`
+   * tracks have added 4 production deps (e.g. `@node-rs/argon2`,
+   * `ai` removed → added back via `packages/ai`) and removed 2 dev
+   * deps (e.g. `@types/bcryptjs`). The tests assert the parity
+   * contract: filesystem = inventory. Both stay RED until the
+   * inventory is regenerated.
+   */
+  describe('Phase 1.7 — package.json dependency count parity (RED: drift documented)', () => {
+    it('production dep count parity: filesystem (52) matches inventory claim (48) (RED: drift documented)', () => {
+      const out = runCaptured('node', [
+        '-e',
+        'const p=require("./apps/science-advantage/package.json"); process.stdout.write(String(Object.keys(p.dependencies||{}).length));',
+      ]);
+      const n = Number(out);
+      const claimed = 48;
+      expect(
+        n,
+        `inventory claims ${claimed} production deps, filesystem has ${n}`,
+      ).toBe(claimed);
+    });
+    it('dev dep count parity: filesystem (19) matches inventory claim (21) (RED: drift documented)', () => {
+      const out = runCaptured('node', [
+        '-e',
+        'const p=require("./apps/science-advantage/package.json"); process.stdout.write(String(Object.keys(p.devDependencies||{}).length));',
+      ]);
+      const n = Number(out);
+      const claimed = 21;
+      expect(
+        n,
+        `inventory claims ${claimed} dev deps, filesystem has ${n}`,
+      ).toBe(claimed);
+    });
+  });
+
+  /**
+   * Phase 1 Integration (Discovery) — build-graph file coverage (extended).
+   *
+   * The existing "build-graph coverage" describe verifies (a) the
+   * graph indexes at least one science-advantage file and (b) the
+   * route count matches `find`. Both are documented as known
+   * coverage gaps (the second test is a stale RED whose comment
+   * predates the 2026-06-04 graph scan that indexed all 27
+   * route.ts files plus 6 lib/{auth,ai}/ files). This block adds two
+   * more assertions: (1) the graph indexes every route.ts file (the
+   * most important class of files for §2.5), and (2) the non-route
+   * files in the graph are all under `lib/auth/` or `lib/ai/` (per
+   * protocol §6.1 — the graph is auth/AI-only by design today).
+   *
+   * (1) is GREEN today (the 27 route.ts files are all indexed).
+   * (2) is also GREEN today (the only non-route files are in
+   * `lib/auth/` and `lib/ai/`). These tests pin the contract so
+   * future graph updates don't silently expand coverage into other
+   * modules without explicit protocol sign-off.
+   */
+  describe('Phase 1 Integration — build-graph file coverage (extended)', () => {
+    it('build-graph indexes every app/**/route.ts file for science-advantage (GREEN today, pins contract)', () => {
+      const findRoutes = runCaptured('find', [
+        'apps/science-advantage/app',
+        '-name', 'route.ts',
+        '-not', '-path', '*/node_modules/*',
+      ])
+        .split('\n')
+        .filter((l) => l.endsWith('route.ts'))
+        .map((p) => p.replace(/^apps\/science-advantage\//, ''));
+      // `type = 'file'` covers the file entity itself (one per .ts
+      // file). `type = 'route'` is one entry per exported HTTP
+      // method, so a single route.ts with GET+POST produces two
+      // route entries — using type='file' here is the right grain
+      // for "is this .ts file in the graph?". The build-graph
+      // `query` command formats output in a padded column, so .trim()
+      // each line before comparing.
+      const graphOutput = runCaptured('build-graph', [
+        'query',
+        GRAPH_DB,
+        `SELECT DISTINCT file_path FROM nodes WHERE type = 'file' AND file_path LIKE '%science-advantage%' AND file_path LIKE '%/route.ts' ORDER BY file_path`,
+      ]);
+      const graphFiles = graphOutput
+        .split('\n')
+        .map((l) => l.trim())
+        .filter((l) => l.includes('apps/science-advantage'))
+        .map((p) => p.replace(/^.*apps\/science-advantage\//, ''));
+      const missing: string[] = [];
+      for (const rel of findRoutes) {
+        if (!graphFiles.includes(rel)) missing.push(rel);
+      }
+      expect(
+        missing,
+        `build-graph is missing these route.ts files: ${missing.join(', ')}`,
+      ).toEqual([]);
+    });
+
+    it('build-graph non-route files for science-advantage are all under lib/auth/ or lib/ai/ (protocol §6.1 carve-out, GREEN today)', () => {
+      // `type = 'file' AND file_path NOT LIKE '%/route.ts'`
+      // isolates the 6 lib/{auth,ai}/ files from the 27 route.ts
+      // files (both stored under `type = 'file'`). The build-graph
+      // `query` command pads output to the longest column width, so
+      // .trim() each line before prefix-stripping.
+      const graphOutput = runCaptured('build-graph', [
+        'query',
+        GRAPH_DB,
+        `SELECT DISTINCT file_path FROM nodes WHERE type = 'file' AND file_path LIKE '%science-advantage%' AND file_path NOT LIKE '%/route.ts' ORDER BY file_path`,
+      ]);
+      const graphFiles = graphOutput
+        .split('\n')
+        .map((l) => l.trim())
+        .filter((l) => l.includes('apps/science-advantage'))
+        .map((p) => p.replace(/^.*apps\/science-advantage\//, ''));
+      const outOfScope: string[] = [];
+      for (const f of graphFiles) {
+        if (!f.startsWith('lib/auth/') && !f.startsWith('lib/ai/')) {
+          outOfScope.push(f);
+        }
+      }
+      expect(
+        outOfScope,
+        `build-graph indexes files outside the protocol §6.1 auth/AI carve-out: ${outOfScope.join(', ')}`,
+      ).toEqual([]);
+    });
+  });
 });
