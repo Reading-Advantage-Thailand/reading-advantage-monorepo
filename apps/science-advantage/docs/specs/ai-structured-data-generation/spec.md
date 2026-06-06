@@ -71,22 +71,24 @@ The data flow and schema generation process is as follows:
     type User = z.infer<typeof userSchema>;
     ```
 
-## Supported Providers
+## Provider Configuration
 
-The following AI providers are approved for use with the Vercel AI SDK for structured data generation.
+AI provider access is mediated through the `@reading-advantage/ai` shared package, which provides a unified `AIClient` interface. Application code calls `getAIClient()` to obtain a singleton client; the runtime selects the concrete provider based on the `AI_PROVIDER` environment variable.
 
-### OpenAI
-- **Package**: `@ai-sdk/openai`
-- **Initialization**: `import { openai } from '@ai-sdk/openai';`
-- **Model Access**: Models are accessed by their ID, e.g., `openai('gpt-4o')`.
-- **Usage**: The provider is compatible with `generateObject` and `streamObject`. It is the recommended provider for generating complex structured data and for scenarios requiring tool use alongside generation.
+```typescript
+import { getAIClient } from '@reading-advantage/ai';
 
-### Google Vertex AI
-- **Package**: `@ai-sdk/google-vertex`
-- **Initialization**: `import { vertex } from '@ai-sdk/google-vertex';`
-- **Model Access**: Models are accessed by their ID, e.g., `vertex('gemini-1.5-pro')`.
-- **Authentication**: Requires Google Cloud authentication. In Node.js, this is typically handled via the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
-- **Usage**: Supports structured outputs with Gemini models. Note that there are some limitations on complex Zod schemas (e.g., `z.union` is not supported).
+const client = getAIClient();
+const { object } = await client.generateObject({ schema: mySchema, prompt: '...' });
+```
+
+### Supported Providers
+
+| Provider | `AI_PROVIDER` value | API key env var | Notes |
+|----------|---------------------|-----------------|-------|
+| OpenAI | `openai` (default in production) | `OPENAI_API_KEY` | Recommended for complex structured data and tool use. |
+| Google | `google` | `GEMINI_API_KEY` (alias: `GOOGLE_API_KEY`) | Supports structured outputs with Gemini models. Some limitations on complex Zod schemas (e.g., `z.union`). |
+| Mock | `mock` (default in test) | — | Returns configured fixture responses; used for unit testing. |
 
 ## Dependencies
 - **`ai`**: The Vercel AI SDK.
