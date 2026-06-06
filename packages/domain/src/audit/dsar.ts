@@ -1,7 +1,6 @@
 import { eq, and, desc, sql, type SQL } from "drizzle-orm";
 import { auditEvents, users, type DB } from "@reading-advantage/db";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
-import { createTenantDB } from "../db-contract.js";
 
 /**
  * Maximum number of rows returned in a single DSAR export.

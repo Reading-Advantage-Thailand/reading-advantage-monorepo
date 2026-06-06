@@ -128,6 +128,22 @@
   (`build-graph update graph.db packages/domain/src/__tests__/dsar.integration.test.ts`
   → 0 → 8 nodes, 0 → 14 edges).
 
+### Phase 4 Green-phase status (2026-06-06)
+
+- **GREEN:** all 12 tests pass (7 unit + 5 integration). No implementation
+  changes were required — `exportSubjectData` was already correct at `781ff8a`.
+- **Cleanup:** removed unused `createTenantDB` import from `dsar.ts` (dead code
+  left over from initial implementation; the function receives `db` as a parameter
+  and does not create its own tenant DB).
+- **Test command (targeted, unit):**
+  `cd packages/domain && npx vitest run src/__tests__/dsar.test.ts`
+  → 1 file, 7 tests, 7 passed.
+- **Test command (targeted, integration):**
+  `cd packages/domain && DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test npx vitest run src/__tests__/dsar.integration.test.ts`
+  → 1 file, 5 tests, 5 passed.
+- **Full domain suite:** 24 files, 276/276 pass — no regressions.
+- **Build-graph:** `graph.db` updated with `dsar.ts`.
+
 ## Phase 5: DSAR Endpoint (TDD)
 - [ ] Task: Write route test: ADMIN-only (non-admin → 403); Zod rejects neither/both of `userId`/`email`; valid request returns archive with `manifest.md` + JSON files whose counts match.
 - [ ] Task: Write route test: the export is audited as `dsar:export` (actor = admin, target = subject); too-large export → 413.
