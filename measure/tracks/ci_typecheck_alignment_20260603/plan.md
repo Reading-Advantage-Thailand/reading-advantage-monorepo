@@ -40,10 +40,10 @@
 > pinning tests live at
 > `packages/auth/src/__tests__/phase-2-intern-role-widening.test.ts`.
 
-- [~] Task: Find the central `UserRole` type (likely `packages/auth/src/roles.ts` or `lib/enums.ts`).
-- [~] Task: Add `'INTERN'` to the type union.
-- [~] Task: Update any consumer types that use `UserRole`.
-- [~] Task: Run `pnpm turbo run check-types --filter=science-advantage`; expect 2 errors gone.
+- [~] Task: Find the central `UserRole` type (likely `packages/auth/src/roles.ts` or `lib/enums.ts`). (d284850)
+- [~] Task: Add `'INTERN'` to the type union. (d284850)
+- [~] Task: Update any consumer types that use `UserRole`. (d284850)
+- [~] Task: Run `pnpm turbo run check-types --filter=science-advantage`; expect 2 errors gone. (d284850)
 
 ## Phase 3: Add `lib/auth/{password,rate-limit}.test.ts` Siblings
 
