@@ -63,7 +63,7 @@
 
 ## Phase 3: Periodic Job
 - [x] Task: Write test: lock key constant is a stable positive BigInt; scheduler start/stop/run methods exist and work. (`781ff8a`)
-- [ ] Task: Write integration test: concurrent invocation is guarded by `pg_try_advisory_lock` (second caller no-ops).
+- [~] Task: Write integration test: concurrent invocation is guarded by `pg_try_advisory_lock` (second caller no-ops).
 - [x] Task: Add the scheduler entry (mirror `session-cleanup.ts`): daily at a low-traffic hour, wrapped in the advisory lock. (`781ff8a`)
 - [x] Task: Verify — unit tests green; job registers without throwing on boot. (`781ff8a`)
 
