@@ -31,3 +31,22 @@ export {
   hasRole,
   SESSION_COOKIE_NAME,
 } from "./server.js";
+
+// Audit Retention Config
+export {
+  retentionConfigSchema,
+  getRetentionDays,
+} from "./audit-retention-config.js";
+
+// Audit Retention Purge
+export {
+  purgeExpiredAuditEvents,
+  getRetentionCutoff,
+} from "./audit-retention.js";
+
+// Audit Retention Job (periodic scheduler)
+export {
+  createAuditRetentionJob,
+  runPurgeWithLock,
+  AUDIT_RETENTION_LOCK_KEY,
+} from "./audit-retention-job.js";

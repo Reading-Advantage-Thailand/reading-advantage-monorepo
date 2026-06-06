@@ -1,6 +1,7 @@
 export { db } from "./client.js";
 export type { DB } from "./client.js";
 export * from "./schema/index.js";
+export { createPrivilegedDb } from "./privileged.js";
 export { PORTFOLIO_PROJECTS } from "./seed/codecamp-curriculum-data.js";
 export type { PortfolioProject } from "./seed/codecamp-curriculum-data.js";
 // Re-export drizzle-orm operators so consumers use the same drizzle-orm instance

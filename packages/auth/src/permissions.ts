@@ -93,6 +93,9 @@ export const PERMISSIONS = {
 
   // Audit log
   "audit:read:all": [ROLES.ADMIN, ROLES.SYSTEM],
+
+  // DSAR (Data Subject Access Request)
+  "dsar:export": [ROLES.ADMIN, ROLES.SYSTEM],
 } as const satisfies Record<string, Role[]>;
 
 export type Permission = keyof typeof PERMISSIONS;

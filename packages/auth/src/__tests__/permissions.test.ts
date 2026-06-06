@@ -108,4 +108,18 @@ describe("permissions", () => {
       expect(hasPermission("STUDENT", "admin:dashboard")).toBe(false);
     });
   });
+
+  describe("DSAR permissions", () => {
+    it("only ADMIN and SYSTEM can export DSAR data", () => {
+      expect(hasPermission("ADMIN", "dsar:export")).toBe(true);
+      expect(hasPermission("SYSTEM", "dsar:export")).toBe(true);
+      expect(hasPermission("TEACHER", "dsar:export")).toBe(false);
+      expect(hasPermission("STUDENT", "dsar:export")).toBe(false);
+    });
+
+    it("dsar:export is a known permission", () => {
+      const keys = Object.keys(PERMISSIONS);
+      expect(keys).toContain("dsar:export");
+    });
+  });
 });
