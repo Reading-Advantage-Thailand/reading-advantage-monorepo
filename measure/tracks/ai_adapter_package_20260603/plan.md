@@ -140,12 +140,27 @@
 > Existing tasks 1–3 are implementation-only and were satisfied in
 > `9c52c8a`; the Red-phase work below is the *test* coverage the
 > test-strategy and FR-3 require.
+>
+> **Green-phase complete (2026-06-06, commit `d0d5da2`):** No new
+> implementation needed — the `GoogleProvider` class in
+> `src/providers/google.ts` already satisfies all Phase 4 Red tests
+> from the original `9c52c8a` implementation. The Red-phase test
+> additions (`d0d5da2`) confirm the existing code passes the full
+> contract: 15 tests in `phase-4-google-provider.test.ts` (14 pass, 1
+> skipped — gated integration), plus 4 delegation tests in
+> `google.test.ts`. Total suite for `@reading-advantage/ai`: 73 passed,
+> 2 skipped across 8 test files.
+>
+> **Test gate note:** Use `npx vitest run` from `packages/ai/` (pnpm is
+> not installed in this sandbox; `turbo run test --filter=...` reports
+> "cannot find binary path" for the same reason). Monorepo-level
+> `npm test` has pre-existing failures in unrelated packages.
 
-- [~] Task: Create `packages/ai/src/providers/google.ts` implementing `AIClient` using `@ai-sdk/google`. (`9c52c8a`)
-- [~] Task: Same pattern as OpenAI provider; constructor takes `{ apiKey, model? }`. (`9c52c8a`)
-- [~] Task: Write failing tests with the mock as the underlying model. (basic delegation: `9c52c8a`; full contract: in flight, this SHA)
-- [~] Task: Add a single integration test gated by `GEMINI_API_KEY` env. (in this SHA)
-- [ ] Task: Confirm.
+- [x] Task: Create `packages/ai/src/providers/google.ts` implementing `AIClient` using `@ai-sdk/google`. (`9c52c8a`)
+- [x] Task: Same pattern as OpenAI provider; constructor takes `{ apiKey, model? }`. (`9c52c8a`)
+- [x] Task: Write failing tests with the mock as the underlying model. (basic delegation: `9c52c8a`; full contract: `d0d5da2` — 14 pass + contract suite, 1 gated skip)
+- [x] Task: Add a single integration test gated by `GEMINI_API_KEY` env. (`d0d5da2`)
+- [x] Task: Confirm. (73 passed, 2 skipped across 8 test files in `@reading-advantage/ai`)
 
 ## Phase 5: Provider Selector
 
