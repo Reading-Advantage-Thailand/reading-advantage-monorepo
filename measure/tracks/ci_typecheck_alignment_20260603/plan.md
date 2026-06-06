@@ -157,11 +157,39 @@
 
 ## Phase 7: Add `check-types` Script
 
-- [ ] Task: Add to `apps/science-advantage/package.json` `scripts`:
+> **Status note (2026-06-07, Red phase owned by mid role):** Verified
+> the current install state matches `test-strategy.md` §0 / §1 P7
+> snapshot: `apps/science-advantage/package.json:14` already declares
+> `"check-types": "tsc --noEmit"`, and the workspace-root
+> `turbo.json:25-27` already declares the `check-types` task with
+> `dependsOn: ["^check-types"]`. Per the test strategy, Phase 7 is
+> framed as a *verification* phase (not a fix-it phase) — the script
+> is in place, the gate must be exercised end-to-end, and the
+> regression net must lock the wiring so a future contributor cannot
+> silently neuter the gate by deleting the script, replacing it with a
+> no-op (`echo done`, `:`, `true`, `pnpm echo`, etc.), or dropping the
+> `tsc` / `--noEmit` flags. The end-state contract is:
+> `pnpm turbo run check-types --filter=science-advantage` resolves to
+> the `check-types` script in `apps/science-advantage/package.json`
+> and the script invokes `tsc --noEmit` (not a no-op, not a `tsc`
+> build). Red-phase pinning tests live at
+> `apps/science-advantage/lib/ci-gates/phase-7-check-types-script.test.ts`
+> (5 regression guards + 2 verification gates). The 5 file-content
+> guards are expected to pass today (script is in place). The 2
+> verification gates are expected to fail today: gate 1 (the
+> "not a no-op" assertion) checks for tsc-specific output in the
+> check-types invocation; gate 2 (the end-to-end exit-0 gate) checks
+> that the gate exits 0 — currently exits non-zero with the post-Phase-6
+> 265-error tsc count. Gate 2 is the "red-phase assertion" for
+> Phase 7 — it will only flip to green once Phases 0–6 are all
+> resolved and tsc reports 0 errors.
+
+- [~] Task: Add to `apps/science-advantage/package.json` `scripts`:
   ```json
   "check-types": "tsc --noEmit"
   ```
-- [ ] Task: Run `pnpm turbo run check-types --filter=science-advantage`; the app is now in scope (no longer silently skipped).
+  _(Regression-locked by `phase-7-check-types-script.test.ts` tests 1–4: script declared, non-empty, references `tsc`, includes `--noEmit`. Script is already in place per `test-strategy.md` §0 / commit `c1e77f9`; tests assert the install state so a future deletion / no-op regression surfaces immediately.)_
+- [~] Task: Run `pnpm turbo run check-types --filter=science-advantage`; the app is now in scope (no longer silently skipped). _(Regression-locked by `phase-7-check-types-script.test.ts` tests 5–7: turbo.json declares the `check-types` task with `dependsOn: ["^check-types"]`; the script invocation produces tsc-specific output (not a no-op); the end-to-end gate exits 0. Gate 7 is the red-phase assertion — currently fails with the post-Phase-6 265-error tsc count; flips to green once Phases 0–6 are all resolved.)_
 
 ## Phase 8: Remove `ignoreBuildErrors: true`
 
