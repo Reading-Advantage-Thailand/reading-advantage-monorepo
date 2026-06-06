@@ -86,8 +86,8 @@
 > Gate tests `phase-4-process-env-cast.test.ts` — 6/6 passing.
 
 - [x] Task: In `lib/test/resolve-test-database-url.ts:13`, `vitest.integration.global-setup.ts:18`, `vitest.integration.setup.ts:14`:
-  - Cast `process.env` to `{ DATABASE_URL?: string; TEST_DATABASE_URL?: string }` at all 3 sites. (a7470e9)
-- [x] Task: Run `pnpm turbo run check-types`; expect 3 errors gone. _(Verified: tsc error count 276 → 273; 0 TS2559 errors in Phase 4 cohort.)_ (a7470e9)
+  - Cast `process.env` to `{ DATABASE_URL?: string; TEST_DATABASE_URL?: string }` at all 3 sites. (1ed421a)
+- [x] Task: Run `pnpm turbo run check-types`; expect 3 errors gone. _(Verified: tsc error count 276 → 273; 0 TS2559 errors in Phase 4 cohort.)_ (1ed421a)
 
 ## Phase 5: Dedupe next@16 Instances
 
