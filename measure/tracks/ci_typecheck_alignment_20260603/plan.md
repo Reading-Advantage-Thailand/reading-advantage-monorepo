@@ -473,10 +473,78 @@
 
 ## Phase 12: Silence 6 Unused-Var Warnings
 
-- [ ] Task: In `lib/gamification/badges.ts:114,202`, examine the `_userId` and `_triggerEvent` parameters.
-- [ ] Task: If truly unused, remove them from the function signature.
-- [ ] Task: If the parameter is a placeholder (e.g. for a future callback signature), add `// eslint-disable-next-line @typescript-eslint/no-unused-vars` above the line with a comment.
-- [ ] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 warnings.
+> **Status note (2026-06-07, Red phase owned by mid role):** Re-verified
+> the current cohort via `./node_modules/.bin/eslint --no-color
+> --no-warn-ignored lib/gamification/badges.ts` from
+> `apps/science-advantage/`: **2 `@typescript-eslint/no-unused-vars`
+> warnings** at `lib/gamification/badges.ts:114:38` (`_userId` in
+> `checkBilingualScholar`) and `lib/gamification/badges.ts:202:3`
+> (`_triggerEvent` in `checkBadgeConditions`). The spec count of
+> "6" is stale — `test-strategy.md` §0 documents the baseline drift
+> (the count was decomposed before Phases 1/5 fixed an upstream type
+> cohort that was inflating the lint output). The end-state target
+> is "0 warnings on this file" regardless of the count today.
+>
+> **build-graph context:** `build-graph inspect checkBilingualScholar`
+> shows 0 outgoing edges and 2 incoming (`contains` from
+> `file:badges.ts`, `param_flow` from `param:_userId`); the function
+> is wired into the `CHECKERS` record at line 179 but is otherwise a
+> stub (`TODO: Requires language preference tracking`).
+> `build-graph inspect checkBadgeConditions` shows the function is
+> exported and consumed by `badges.integration.test.ts` (16 distinct
+> call sites — verified by grep) and the `_triggerEvent` parameter is
+> wired through the public API of the function; removing the parameter
+> would break the integration tests' invocation shape
+> `checkBadgeConditions(STUDENT_ID, { type: 'lesson_completed', ... })`.
+> The `param_flow` edge from `param:_triggerEvent` to
+> `function:checkBadgeConditions` confirms the param is on the public
+> signature (not an internal helper).
+>
+> **Root cause of the warnings (verified 2026-06-07):** The shared
+> ESLint config at `packages/config/eslint/index.js:41-44` already
+> grants the `_` prefix the canonical escape hatch
+> (`{ argsIgnorePattern: "^_", varsIgnorePattern: "^_" }`). But
+> `apps/science-advantage/eslint.config.mjs:7` overrides the rule with
+> a bare severity string (`"@typescript-eslint/no-unused-vars":
+> "warn"`), which drops the options object and re-enables the rule
+> with default settings (no `^_` escape hatch). This is why the
+> warnings fire on parameters that follow the project's "`_`-prefix
+> means intentionally unused" convention.
+>
+> Per `test-strategy.md` §1 P12 / §3 cross-phase note: the preferred
+> fix is the 1-line lint-rule fix (in
+> `apps/science-advantage/eslint.config.mjs:7` — change `"warn"` to
+> `["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }]`),
+> not 6 per-call `eslint-disable` comments. The strategy frames this
+> as "lower blast radius" — the rule fix is one line of config; the
+> per-call disable would touch 2 function signatures and 2 comment
+> lines. The implementer must also run **unfiltered**
+> `pnpm turbo run lint` after the fix per
+> `test-strategy.md` §3 cross-phase note "P12 lint-rule fix vs. code
+> fix" — the relaxation propagates to every package, so we must
+> confirm no other app starts passing warnings it was previously
+> hiding (the unfiltered run is the regression net).
+>
+> **End-state contract:** `./node_modules/.bin/eslint
+> --no-warn-ignored lib/gamification/badges.ts` reports 0
+> `@typescript-eslint/no-unused-vars` warnings for `_userId` and
+> `_triggerEvent`, regardless of which fix the implementer chooses
+> (lint-rule update, parameter removal, or per-call disable). The
+> test pins the end-state contract via a file-scoped ESLint
+> invocation; the implementer is free to pick the approach.
+>
+> Red-phase pinning tests live at
+> `apps/science-advantage/lib/ci-gates/phase-12-unused-vars-warnings.test.ts`.
+> Tests are scoped to lint output (no `tsc` or `pnpm turbo run`
+> spawns) so the targeted vitest command runs in ~5s:
+>
+>   `pnpm --filter science-advantage exec vitest run --config
+>     vitest.unit.config.ts lib/ci-gates/phase-12-unused-vars-warnings.test.ts`
+
+- [~] Task: In `lib/gamification/badges.ts:114,202`, examine the `_userId` and `_triggerEvent` parameters.
+- [~] Task: If truly unused, remove them from the function signature.
+- [~] Task: If the parameter is a placeholder (e.g. for a future callback signature), add `// eslint-disable-next-line @typescript-eslint/no-unused-vars` above the line with a comment.
+- [~] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 warnings.
 
 ## Phase 13: Final Acceptance
 
