@@ -49,6 +49,7 @@
     "tests/lib/get-student-classes.test.ts",
     "tests/lib/test-utils.ts",
     "tests/schema.test.ts",
-    "tests/seed-activity.integration.test.ts"
+    "tests/seed-activity.integration.test.ts",
+    "lib/auth/rate-limit.test.ts"
   ]
 }

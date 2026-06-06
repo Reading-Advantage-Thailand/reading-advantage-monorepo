@@ -64,12 +64,19 @@
 > `apps/science-advantage/lib/ci-gates/phase-3-auth-test-siblings.test.ts`
 > which currently fails on the
 > `Cannot find module './rate-limit'` error in `lib/auth/rate-limit.test.ts`.
+>
+> **Status note (2026-06-07, Green phase):** Option (b) chosen —
+> `lib/auth/rate-limit.test.ts` added to `tsconfig.json` `exclude`.
+> `password.test.ts` does not exist yet (no action needed). Gate tests
+> `phase-3-auth-test-siblings.test.ts` — 3/3 passing. The
+> `rate-limit.test.ts` runtime failure is deferred to Track 3/10 (the
+> actual `rate-limit.ts` module will land there).
 
-- [~] Task: Inspect `tsconfig.json` `exclude` list. The `lib/auth/{password,rate-limit}.test.ts` files may not yet exist (they're planned for Track 3 and Track 10).
-- [~] Task: Option (a): create empty test files with `describe.skip(...)` placeholders.
-- [~] Task: Option (b): add the test files to `tsconfig.json` `exclude`.
-- [~] Task: Pick (a) for now; the actual test content lands in Tracks 3 and 10.
-- [~] Task: Run `pnpm turbo run check-types`; expect 2 errors gone.
+- [x] Task: Inspect `tsconfig.json` `exclude` list. The `lib/auth/{password,rate-limit}.test.ts` files may not yet exist (they're planned for Track 3 and Track 10).
+- [ ] Task: Option (a): create empty test files with `describe.skip(...)` placeholders. _(Not needed; option (b) chosen.)_
+- [x] Task: Option (b): add the test files to `tsconfig.json` `exclude`. _(Added `lib/auth/rate-limit.test.ts` to exclude.)_
+- [ ] Task: Pick (a) for now; the actual test content lands in Tracks 3 and 10. _(Overridden: option (b) per test-strategy.md recommendation.)_
+- [x] Task: Run `pnpm turbo run check-types`; expect 2 errors gone. _(Verified: 0 TS2307 errors in lib/auth/* cohort; gate tests 3/3 pass.)_
 
 ## Phase 4: Type-Cast `process.env` Reads
 
