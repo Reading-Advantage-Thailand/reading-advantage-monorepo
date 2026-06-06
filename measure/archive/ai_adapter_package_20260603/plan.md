@@ -796,6 +796,16 @@
 > existing entries need polish, then perform the archive move +
 > tracks.md flip to satisfy Task 3.
 
-- [~] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-101, F-202 `Resolved`.
-- [~] Task: Add a lessons-learned entry: "The mock provider with snapshot tests is the unit-test pattern; the real provider is integration-tested only with API keys present in env."
-- [~] Task: Move track to `measure/archive/ai_adapter_package_20260603/` and update `measure/tracks.md`.
+- [x] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-101, F-202 `Resolved`. (`beb5f07` — already satisfied by prior phases; regression net in Phase 10 tests)
+- [x] Task: Add a lessons-learned entry: "The mock provider with snapshot tests is the unit-test pattern; the real provider is integration-tested only with API keys present in env." (`beb5f07` — already satisfied by prior phases; regression net in Phase 10 tests)
+- [x] Task: Move track to `measure/archive/ai_adapter_package_20260603/` and update `measure/tracks.md`. (`beb5f07`)
+
+> **Green-phase complete (2026-06-06, commit `beb5f07`):** Moved
+> track from `measure/tracks/` to `measure/archive/` (overwriting
+> stale 2026-06-05 stub missing `test-strategy.md`). Flipped
+> `tracks.md` entry from `[~]` / `./tracks/` to `[x]` / `./archive/`.
+> Updated status to COMPLETE. Tasks 1+2 were already satisfied by
+> prior phases (tech-debt.md line 43 + lessons-learned.md line 46
+> already contain the required annotations); Phase 10 tests confirm
+> as regression nets. All 11 Phase 10 tests pass. Full
+> `@reading-advantage/ai` suite: 111 passed, 2 skipped.
