@@ -634,9 +634,64 @@
 > `serverExternalPackages`. (Build runs ~3 min — within the 900s role budget; this is
 > the build counterpart to the smoke-test refactor noted in Phase 13.)
 
-- [ ] Task: Red — add an end-to-end build assertion at `apps/science-advantage/lib/ci-gates/phase-12c-build-resolves.test.ts` (or promote the existing smoke check in `phase-8-ignore-build-errors.test.ts`) that `pnpm --filter science-advantage build` exits 0. Confirm it fails today with the `@node-rs/argon2` Turbopack error before the fix.
-- [ ] Task: Green — add `@node-rs/argon2` to `apps/science-advantage/package.json` `dependencies` at the version resolved for `@reading-advantage/auth`; run `pnpm install` from the repo root.
-- [ ] Task: Run `pnpm turbo run build --filter=science-advantage`; expect exit 0. Re-run `check-types` and `lint`; expect no regression.
+- [~] Task: Red — add an end-to-end build assertion at `apps/science-advantage/lib/ci-gates/phase-12c-build-resolves.test.ts` (or promote the existing smoke check in `phase-8-ignore-build-errors.test.ts`) that `pnpm --filter science-advantage build` exits 0. Confirm it fails today with the `@node-rs/argon2` Turbopack error before the fix.
+
+  > **Status note (2026-06-07, mid role, Red-phase owned):** Red-phase
+  > gate tests added at
+  > `apps/science-advantage/lib/ci-gates/phase-12c-build-resolves.test.ts`.
+  > Test file is split into two describe blocks following the
+  > `phase-8-ignore-build-errors.test.ts` pattern: (1) file-content
+  > regression guards (3 tests, no spawns, run in <1s) and
+  > (2) end-to-end build gate (3 tests, `beforeAll` runs
+  > `pnpm --filter science-advantage build` once and caches the
+  > result). End-state contract pinned:
+  >   - `@node-rs/argon2` declared in
+  >     `apps/science-advantage/package.json` `dependencies` at the
+  >     same semver as `@reading-advantage/auth` (`^2.0.2`).
+  >   - `scripts.build` invokes `next build` (regression guard
+  >     against no-op replacement).
+  >   - `pnpm --filter science-advantage build` exits 0.
+  >   - Build output does not mention `@node-rs/argon2` /
+  >     `non-ecmascript placeable asset` (pins the Red-phase
+  >     failure to the documented root cause).
+  >
+  > Targeted vitest command (DB-free, ~1s for file-content; ~50s
+  > including build gate on a warm `.next/` cache):
+  > `corepack pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts lib/ci-gates/phase-12c-build-resolves.test.ts`
+  >
+  > **Verification (2026-06-07, mid role, Red-phase):** 4 failed | 2
+  > passed (6 total) in 51.16s. The 4 Red-phase failures are the
+  > expected signals:
+  >   1. `@node-rs/argon2` not declared in app `dependencies`
+  >      (fails test 1; prints the full dependencies block).
+  >   2. App `@node-rs/argon2` semver undefined (fails test 2;
+  >      `Found: undefined. Auth range: "^2.0.2".`).
+  >   3. `pnpm --filter science-advantage build` exits 1 (fails
+  >      test 5; prints 4 KB of build output).
+  >   4. Build output mentions `@node-rs/argon2` AND
+  >      `non-ecmascript placeable asset` (fails test 6; both
+  >      fragments captured).
+  > The 2 passing tests are the regression guards: the build
+  > completed (status non-null, test 4) and the `scripts.build`
+  > wiring (test 3, `next build` is in place per Phase 8). Build
+  > error message captured verbatim from the run confirms the
+  > documented root cause:
+  > ```
+  > Turbopack build encountered 1 warnings:
+  > ./packages/auth/dist
+  > Package @node-rs/argon2 can't be external
+  > The request @node-rs/argon2 matches serverExternalPackages (or the default list).
+  > The request could not be resolved by Node.js from the project directory.
+  > Packages that should be external need to be installed in the project directory, so they can be resolved from the output files.
+  > Try to install it into the project directory by running npm install @node-rs/argon2 from the project directory.
+  > ```
+  > Build ran in ~48s on a warm `.next/` cache (well under the 9-min
+  > spawn timeout). Red phase confirmed; Phase 12C Green
+  > (`pnpm install @node-rs/argon2` at `^2.0.2` in
+  > `apps/science-advantage/package.json` + `pnpm install` from
+  > repo root) is owned by the next role.
+- [~] Task: Green — add `@node-rs/argon2` to `apps/science-advantage/package.json` `dependencies` at the version resolved for `@reading-advantage/auth`; run `pnpm install` from the repo root.
+- [~] Task: Run `pnpm turbo run build --filter=science-advantage`; expect exit 0. Re-run `check-types` and `lint`; expect no regression.
 
 ## Phase 13: Final Acceptance
 
