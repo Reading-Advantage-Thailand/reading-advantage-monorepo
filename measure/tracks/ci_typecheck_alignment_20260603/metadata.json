@@ -1,9 +1,9 @@
 {
   "track_id": "ci_typecheck_alignment_20260603",
   "type": "chore",
-  "status": "new",
+  "status": "in-progress",
   "created_at": "2026-06-03T00:00:00Z",
-  "updated_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-06-07T00:00:00Z",
   "description": "Resolve the 360 tsc errors masked by next.config.ts:25 ignoreBuildErrors: true. Add @testing-library/jest-dom/vitest to vitest.unit.setup.ts (~354 errors); fix INTERN role widening (2); add lib/auth/{password,rate-limit}.test.ts siblings (2); type-cast process.env reads (3); dedupe next@16 instances (4); misc (4). Add check-types script to apps/science-advantage/package.json. Remove ignoreBuildErrors. Delete dead/drifted apps/science-advantage/.github/workflows/ci.yml; add path-filter: apps/science-advantage/** to monorepo root CI. Fix 4 react-hooks/immutability errors in components/features/teacher/analytics/student-lesson-detail-analytics.tsx. Silence 6 unused-var warnings in lib/gamification/badges.ts. Resolves F-1001, F-1002, F-1003, F-1204, F-1205. 2 weeks. High.",
   "estimated_tasks": 17,
   "actual_tasks": null,

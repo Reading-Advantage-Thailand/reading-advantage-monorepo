@@ -434,7 +434,7 @@
 - [x] Task: Open `components/features/teacher/analytics/student-lesson-detail-analytics.tsx:151,155,186`. (46a71ac)
 - [x] Task: Lift the `fetchAnalytics` function declaration above the `useEffect` that uses it (or wrap in `useCallback`). (46a71ac)
 - [x] Task: Read the function carefully; ensure the fix doesn't introduce a real bug (e.g. stale closure). (46a71ac)
-- [x] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 errors. _(File-scoped: 0 react-hooks/immutability violations. Workspace: 3 sibling files still have the same error — out of scope for Phase 11.)_ (46a71ac)
+- [x] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 errors. _(File-scoped: 0 react-hooks/immutability violations. Workspace: 3 sibling files still have the same error — now scoped to **Phase 12B**, not deferred.)_ (46a71ac)
 
 > **Status note (2026-06-07, Red phase owned by mid role):** Red-phase
 > gate tests added at
@@ -555,7 +555,94 @@
 - [x] Task: If the parameter is a placeholder (e.g. for a future callback signature), add `// eslint-disable-next-line @typescript-eslint/no-unused-vars` above the line with a comment. _(Not needed; preferred fix is lint-rule update.)_ (cbeffcb)
 - [x] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 warnings. _(File-scoped: 0 `@typescript-eslint/no-unused-vars` warnings on `badges.ts`. Workspace: 4 errors + 10 warnings — all pre-existing, not from `badges.ts`. tsc --noEmit exits 0 with 0 errors. Gate tests 6/6 pass.)_ (cbeffcb)
 
+## Phase 12B: Close Remaining Lint Blockers (react-hooks/immutability siblings + ban-ts-comment)
+
+> **Why this phase exists (2026-06-07, review reconciliation):** Phase 11 fixed
+> only the single file named in the original spec
+> (`student-lesson-detail-analytics.tsx`), but the `react-hooks/immutability`
+> rule actually fires once per file across **four** analytics files, and there is
+> a fifth pre-existing `@typescript-eslint/ban-ts-comment` error. These 4
+> remaining lint errors are the **sole blocker** keeping the Phase 13 lint
+> umbrella gate (spec AC-14, `pnpm turbo run lint --filter=science-advantage`
+> exits 0) RED. The spec undercounted/mislocated the errors (FR-11 named 3 line
+> numbers in 1 file); this phase corrects the scope so the lint gate can reach 0.
+> Earlier Phase 13 status notes called these "out of scope" and said "the
+> supervisor must coordinate a follow-up phase" — **this phase IS that follow-up**;
+> the errors are now in scope.
+>
+> Verified present 2026-06-07 via
+> `./node_modules/.bin/eslint --no-color --no-warn-ignored <files>` from
+> `apps/science-advantage/` (4 errors, 0 warnings):
+>   - `components/features/teacher/analytics/class-analytics-overview.tsx:100` — `react-hooks/immutability`
+>   - `components/features/teacher/analytics/lesson-detail-analytics.tsx:155` — `react-hooks/immutability`
+>   - `components/features/teacher/analytics/student-detail-analytics.tsx:143` — `react-hooks/immutability`
+>   - `lib/ai/image-generator.ts:144` — `@typescript-eslint/ban-ts-comment` (`@ts-ignore` → `@ts-expect-error`)
+>
+> **End-state contract:** `pnpm turbo run lint --filter=science-advantage` exits 0
+> (0 errors, 0 warnings); `pnpm turbo run check-types --filter=science-advantage`
+> still exits 0 (no type regression). The recommended fix for the 3 analytics
+> files is identical to the Phase 11 fix that already worked for the fourth file:
+> wrap the `fetchAnalytics` function in `useCallback(async () => { ... }, [<deps>])`,
+> add `useCallback` to the `import { ... } from 'react'` line, set the `useEffect`
+> dep array to `[fetchAnalytics]`, and remove the now-unnecessary
+> `// eslint-disable-next-line react-hooks/exhaustive-deps` comment. Read each
+> function first to confirm the dep list and avoid a stale closure. For
+> `lib/ai/image-generator.ts:144`, replace `@ts-ignore` with `@ts-expect-error`
+> and add a one-line reason comment.
+
+- [ ] Task: Red — add a file-scoped lint gate test at `apps/science-advantage/lib/ci-gates/phase-12b-remaining-lint-blockers.test.ts` asserting `eslint` reports 0 `react-hooks/immutability` violations across the 3 sibling analytics files and 0 `@typescript-eslint/ban-ts-comment` violations in `lib/ai/image-generator.ts`. Mirror the file-scoped pattern in `phase-11-react-hooks-immutability.test.ts` / `phase-12-unused-vars-warnings.test.ts`. Confirm it fails (4 violations) before any fix.
+- [ ] Task: Green — wrap `fetchAnalytics` in `useCallback` (deps per each file's effect) in `class-analytics-overview.tsx`, `lesson-detail-analytics.tsx`, and `student-detail-analytics.tsx`; add `useCallback` to the React import; set the `useEffect` dep array to `[fetchAnalytics]`; remove the now-unnecessary `react-hooks/exhaustive-deps` disable comment. Read each function to avoid introducing a stale closure.
+- [ ] Task: Green — in `lib/ai/image-generator.ts:144`, replace `@ts-ignore` with `@ts-expect-error` plus a one-line reason.
+- [ ] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 errors and 0 warnings. Run `pnpm turbo run check-types --filter=science-advantage`; expect 0 errors (no regression).
+
+## Phase 12C: Resolve science-advantage Production Build (AC-16)
+
+> **Why this phase exists (2026-06-07, review reconciliation):** Spec AC-16 / FR-8
+> require `pnpm turbo run build --filter=science-advantage` to exit 0, but the
+> production build currently **FAILS** (verified 2026-06-07: `next build` exits 1).
+> The failure is the `@node-rs/argon2` native module: it is listed in
+> `serverExternalPackages` but cannot be resolved by Node from the app directory
+> because it is only a transitive dep of `@reading-advantage/auth` (hoisted into
+> `.pnpm`). Turbopack reports `non-ecmascript placeable asset ... asset is not
+> placeable in ESM chunks`, and Next's own remedy is to install the external package
+> into the app directory so it resolves from the build output. Earlier Phase 8 /
+> Phase 13 notes labelled this "pre-existing / unrelated" and downgraded the build
+> gate to a smoke test — that left **AC-16 permanently unmet** and the
+> final-acceptance build gate permanently red. This phase closes it for real.
+>
+> Import traces (from `next build`): `@node-rs/argon2` → `packages/auth/dist/password.js`
+> → `packages/auth/dist/index.js`, reached via API routes, `proxy.ts` middleware, and
+> teacher server components.
+>
+> **End-state contract:** `pnpm turbo run build --filter=science-advantage` exits 0
+> with `ignoreBuildErrors: false` still set in `next.config.ts`; `check-types` and
+> `lint` remain green (no regression). Recommended fix: add `@node-rs/argon2` to
+> `apps/science-advantage/package.json` `dependencies` at the version resolved for
+> `@reading-advantage/auth`, then run `pnpm install` from the repo root. If that alone
+> does not resolve it, confirm the per-platform optional native binary
+> (`@node-rs/argon2-linux-x64-gnu`) is installed and that `@node-rs/argon2` remains in
+> `serverExternalPackages`. (Build runs ~3 min — within the 900s role budget; this is
+> the build counterpart to the smoke-test refactor noted in Phase 13.)
+
+- [ ] Task: Red — add an end-to-end build assertion at `apps/science-advantage/lib/ci-gates/phase-12c-build-resolves.test.ts` (or promote the existing smoke check in `phase-8-ignore-build-errors.test.ts`) that `pnpm --filter science-advantage build` exits 0. Confirm it fails today with the `@node-rs/argon2` Turbopack error before the fix.
+- [ ] Task: Green — add `@node-rs/argon2` to `apps/science-advantage/package.json` `dependencies` at the version resolved for `@reading-advantage/auth`; run `pnpm install` from the repo root.
+- [ ] Task: Run `pnpm turbo run build --filter=science-advantage`; expect exit 0. Re-run `check-types` and `lint`; expect no regression.
+
 ## Phase 13: Final Acceptance
+
+> **Status update (2026-06-07, review reconciliation):** The lint umbrella gate
+> (task 2 below / spec AC-14) is no longer "out of scope" and is no longer waiting
+> on an unscheduled follow-up. The 4 pre-existing lint errors that block it are now
+> owned by **Phase 12B** (added immediately above, ahead of this phase in execution
+> order). Once Phase 12B lands, re-run the umbrella gate — the lint gate is expected
+> to flip green with no further deferral. Every older status note below that says
+> "the supervisor must coordinate a follow-up phase to close these errors" is
+> **SUPERSEDED by Phase 12B**. The build umbrella gate (task 4 below / spec AC-16) is
+> likewise no longer a permanent smoke test: the `@node-rs/argon2` + Turbopack build
+> failure is now owned by **Phase 12C** (added above), which resolves it so the
+> end-to-end build exits 0. Re-run both umbrella gates after Phases 12B and 12C land;
+> all four gates (check-types, lint, test, build) are then expected green and this
+> phase can flip from `[~]` to `[x]`.
 
 > **Status note (2026-06-07, Red phase owned by mid role):** Red-phase
 > pinning tests added at
@@ -771,9 +858,9 @@
 > note, and lock the install state.
 
 - [~] Task: `pnpm turbo run check-types --filter=science-advantage` exits 0. [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts` test 1 — fast umbrella gate via `pnpm --filter science-advantage check-types`.]
-- [~] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. [Red-phase test in same file test 2 — fast umbrella gate via `pnpm --filter science-advantage lint`; currently RED per 4 pre-existing lint errors in sibling analytics files + `image-generator.ts`.]
+- [~] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. [Red-phase test in same file test 2 — fast umbrella gate via `pnpm --filter science-advantage lint`. Blocker (4 lint errors in sibling analytics files + `image-generator.ts`) is owned by **Phase 12B**; expected green once 12B lands.]
 - [~] Task: `pnpm turbo run test --filter=science-advantage` exits 0. [Red-phase smoke gate in same file test 3 — verifies `test` script wiring + `vitest.unit.config.ts` excludes integration tests + runs a single fast test file (Phase 12, ~23s) as a smoke verification. The full end-to-end test gate is exercised by the monorepo-root CI workflow per regression guard 6.]
-- [~] Task: `pnpm turbo run build --filter=science-advantage` exits 0. [Red-phase smoke gate in same file test 4 — verifies `build` script wiring + `next.config.ts` declares `ignoreBuildErrors: false` (Phase 8 Green contract). The full end-to-end build gate is exercised by `phase-8-ignore-build-errors.test.ts` and the monorepo-root CI workflow per regression guard 6.]
+- [~] Task: `pnpm turbo run build --filter=science-advantage` exits 0. [Red-phase smoke gate in same file test 4 — verifies `build` script wiring + `next.config.ts` declares `ignoreBuildErrors: false` (Phase 8 Green contract). End-to-end build blocker (`@node-rs/argon2` Turbopack failure) is owned by **Phase 12C**; expected green once 12C lands.]
 - [~] Task: Open a test PR touching `apps/science-advantage/**`; verify the monorepo root CI runs all 4 gates. [Regression guards in same file tests 5–8 lock the install state of `.github/workflows/ci.yml` (paths filter + 4 named gates + workspace-wide turbo invocations + `turbo.json` task graph) so a future over-zealous cleanup cannot silently neuter the gate.]
 
 ## Phase 14: Closeout

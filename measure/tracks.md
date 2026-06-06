@@ -200,9 +200,9 @@ Two parallel programs are in flight; priority order when picking the next track:
   *Link: [./archive/codecamp_qa_local_20260517/](./archive/codecamp_qa_local_20260517/)*
   Comprehensive manual QA testing on local dev server. Covers auth, i18n, dashboard, lessons, quizzes, AI chat, PR workflow, admin panel, edge cases, and performance. *Status: COMPLETE — 41 tests passed, 0 failed, 0 partial. All 5 issues fixed: Chat AI (API key rotated), Quiz progress save (Date→ISO string), PR form (verified working), Locked module UX (tooltip added), Dashboard ARIA (role=progressbar added). Full report at measure/archive/codecamp_qa_local_20260517/qa-report.md*
 
-- [ ] **Track: codecamp-advantage — Production QA/QC Testing** ⚠️ **OPEN but filed under `archive/`**
-  *Link: [./archive/codecamp_qa_prod_20260517/](./archive/codecamp_qa_prod_20260517/)*
-  Comprehensive manual QA testing on deployed production server. Covers infrastructure (HTTPS, DNS, Cloud Run), real integrations (OpenRouter, GitHub App), performance, caching, monitoring, and cross-browser testing. *Status: NOT STARTED (metadata.json `new`) — plan created, ready for execution. The track dir was placed in `archive/` prematurely; it remains open work. Move back to `tracks/` when execution begins.*
+- [ ] **Track: codecamp-advantage — Production QA/QC Testing**
+  *Link: [./tracks/codecamp_qa_prod_20260517/](./tracks/codecamp_qa_prod_20260517/)*
+  Comprehensive manual QA testing on deployed production server. Covers infrastructure (HTTPS, DNS, Cloud Run), real integrations (OpenRouter, GitHub App), performance, caching, monitoring, and cross-browser testing. *Status: NOT STARTED (metadata.json `new`) — plan created, ready for execution. Unarchived 2026-06-07 (had been placed in `archive/` prematurely while still open work; now correctly in `tracks/`).*
 
 - [x] **Track: codecamp-advantage — AI Review Visibility**
   *Link: [./archive/codecamp_ai_review_visibility_20260518/](./archive/codecamp_ai_review_visibility_20260518/)*
