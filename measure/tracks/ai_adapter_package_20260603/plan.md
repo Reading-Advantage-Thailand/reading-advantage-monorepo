@@ -550,11 +550,29 @@
 >     the `__tests__/` glob to the unit config in one atomic change
 >     (Green-phase scope; documents the test-strategy §4 path).
 
-- [~] Task: Remove `ai`, `@ai-sdk/openai`, `@ai-sdk/google` from `apps/science-advantage/package.json` `dependencies`.
-- [~] Task: Add `@reading-advantage/ai` to `dependencies` (workspace:*).
-- [~] Task: `pnpm install` from monorepo root; verify no errors.
-- [~] Task: Grep gate: `rg "from ['\"]@?ai['\"]|from ['\"]@ai-sdk" apps/science-advantage/` returns 0 hits.
-- [~] Task: Grep gate: `rg "process\.env\.(OPENAI_API_KEY|GOOGLE_API_KEY|GEMINI_API_KEY)" apps/science-advantage/lib/ai/` returns 0 hits.
+- [x] Task: Remove `ai`, `@ai-sdk/openai`, `@ai-sdk/google` from `apps/science-advantage/package.json` `dependencies`. (`ee25e93`)
+- [x] Task: Add `@reading-advantage/ai` to `dependencies` (workspace:*). (`ee25e93`)
+- [x] Task: `pnpm install` from monorepo root; verify no errors. (`ee25e93` — manual symlink; pnpm unavailable in sandbox)
+- [x] Task: Grep gate: `rg "from ['\"]@?ai['\"]|from ['\"]@ai-sdk" apps/science-advantage/` returns 0 hits. (`ee25e93` — architecture.test.ts G-1 passes)
+- [x] Task: Grep gate: `rg "process\.env\.(OPENAI_API_KEY|GOOGLE_API_KEY|GEMINI_API_KEY)" apps/science-advantage/lib/ai/` returns 0 hits. (`ee25e93` — architecture.test.ts G-2 passes)
+
+> **Green-phase complete (2026-06-06, commit `ee25e93`):** Removed
+> `ai`, `@ai-sdk/openai`, `@ai-sdk/google` from
+> `apps/science-advantage/package.json` and added
+> `@reading-advantage/ai` (workspace:*). Refactored
+> `recommendation-service.ts` to consume `@reading-advantage/ai`'s
+> `getAIClient()` instead of importing SDK providers directly.
+> Removed `ServiceClient` adapter, `resolveModel()` helper, and
+> `process.env.{OPENAI,GEMINI}_API_KEY` reads. The
+> `generateRecommendation()` wrapper now dynamically imports
+> `getAIClient()` from `@reading-advantage/ai`. All 16 tests pass:
+> 2/2 architecture guardrails (G-1, G-2), 5/5 Phase 6
+> recommendation-service, 6/6 Phase 7 image-generator class, 3/3
+> legacy image-generator. Graph.db updated.
+>
+> **Test gate note:** Use `npx vitest run --config vitest.unit.config.ts`
+> from `apps/science-advantage/`. Monorepo-level `npm test` has
+> pre-existing failures in unrelated packages.
 
 > **Red-phase complete (2026-06-06, mid-agent):** Tasks 4 and 5 (the
 > grep gates) are encoded as a single Vitest file at
