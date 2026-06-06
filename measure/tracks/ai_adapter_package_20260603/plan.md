@@ -297,6 +297,21 @@
 >
 > **Green-phase complete:** _pending._
 
+> **Supervisor gate note (2026-06-06, commit pending):** A prior
+> automated supervisor run flagged an unrelated modification to
+> `pnpm-lock.yaml` (a leftover from earlier Phase 0–5 workspace
+> install steps, not introduced by this Red-phase work). The
+> mid-agent rolled the file back with `git checkout -- pnpm-lock.yaml`
+> and re-confirmed the Red-phase test result is unchanged: 4 expected
+> failures (descriptive `Phase 6 RED:` `TypeError` from
+> `resolveRecommendationService`) + 1 pass (legacy
+> `generateRecommendation()` wrapper preservation check); no
+> regression in `lib/ai/image-generator.test.ts` (3/3). Working tree
+> is clean except for untracked files unrelated to this track
+> (`apps/www-reading-advantage/public/videos/*.mp4`,
+> `measure/automation-*.{sh,py}`, `measure/runs/`,
+> `measure/tracks/agents_md_audit_science_advantage_20260603/`).
+
 - [~] Task: Write a failing test for the new `RecommendationService` class (constructor takes `AIClient`; `getRecommendation(input)` calls `client.generateObject(...)`). (`6a7049f`)
 - [ ] Task: Replace the direct `generateObject` import with `getAIClient().generateObject(...)`.
 - [ ] Task: Refactor the existing `generateRecommendation(input)` exported function into a thin wrapper that calls the service.
