@@ -1402,12 +1402,15 @@ importers:
       '@reading-advantage/config':
         specifier: workspace:*
         version: link:../config
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.39
       typescript:
         specifier: ^5.8.0
         version: 5.9.3
       vitest:
         specifier: 4.1.5
-        version: 4.1.5(@types/node@20.19.39)(jsdom@29.1.1)(vite@8.0.10)
+        version: 4.1.5(@types/node@20.19.39)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.8)(jsdom@27.4.0)(vite@8.0.10)
 
   packages/api:
     dependencies:
@@ -9858,7 +9861,7 @@ packages:
       obug: 2.1.1
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.5(@types/node@20.19.39)(@vitest/coverage-v8@4.1.5)(jsdom@29.1.1)(vite@8.0.10)
+      vitest: 4.1.5(@types/node@20.19.39)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.8)(jsdom@27.4.0)(vite@8.0.10)
     dev: true
 
   /@vitest/expect@4.1.5:
