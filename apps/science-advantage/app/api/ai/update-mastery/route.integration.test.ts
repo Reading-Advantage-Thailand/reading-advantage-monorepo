@@ -13,10 +13,12 @@ import {
   scienceLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'update-mastery-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -76,6 +78,7 @@ async function seedScenario(args: { withStandards: boolean }) {
       title: 'UM Lesson',
       gradeLevel: 3,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -90,6 +93,7 @@ async function seedScenario(args: { withStandards: boolean }) {
       correctAnswer: 'A',
       points: 1,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -104,12 +108,15 @@ async function seedScenario(args: { withStandards: boolean }) {
           .slice(2, 6)}`,
         description: 'UM test standard',
         gradeLevel: 3,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     standardId = std.id;
     await db
       .insert(scienceQuestionStandards)
-      .values({ questionId: q1.id, standardId: std.id });
+      .values({ questionId: q1.id, standardId: std.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
   }
 
   const [attempt] = await db
@@ -122,6 +129,7 @@ async function seedScenario(args: { withStandards: boolean }) {
       attemptNumber: 1,
       startedAt: new Date(),
       completedAt: new Date(),
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -132,6 +140,7 @@ async function seedScenario(args: { withStandards: boolean }) {
     isCorrect: true,
     timeSpentSeconds: 30,
     answeredAt: new Date(),
+    schoolId: TEST_SCHOOL_ID,
   });
 
   return { studentId, attemptId: attempt.id, standardId };
@@ -142,6 +151,7 @@ describe('POST /api/ai/update-mastery (integration)', () => {
     mockCookies.get.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   it('returns 401 when not authenticated', async () => {
@@ -339,6 +349,7 @@ describe('POST /api/ai/update-mastery (integration)', () => {
       studentId,
       status: 'PROCESSING',
       updatedCount: 0,
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(studentId);

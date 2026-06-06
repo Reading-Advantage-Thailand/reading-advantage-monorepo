@@ -18,11 +18,7 @@ export default defineConfig({
     globalSetup: ['./vitest.integration.global-setup.ts'],
     // Tests share a single test DB; run sequentially to avoid races.
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    fileParallelism: false,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov', 'html'],

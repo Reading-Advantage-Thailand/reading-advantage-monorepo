@@ -9,12 +9,14 @@ import {
   scienceStandards,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 import { interventionCache } from '@/lib/interventions/cache';
 
 const TEST_PREFIX = 'intervention-alerts-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 const STANDARDS_DESC = 'intervention-alerts-itest standard';
 
 const mockCookies = {
@@ -76,6 +78,7 @@ async function seedClass(
       standardsAlignment: 'THAI',
       joinCode: `IA-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return cls;
@@ -89,6 +92,7 @@ async function seedStandard(code: string): Promise<StandardRow> {
       code,
       description: STANDARDS_DESC,
       gradeLevel: 5,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return s;
@@ -117,6 +121,7 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   it('returns 401 when unauthenticated', async () => {
@@ -177,13 +182,16 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
     });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: s1.id });
+      .values({ classId: cls.id, studentId: s1.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     await db.insert(scienceStandardMastery).values({
       studentId: s1.id,
       standardId: standard.id,
       masteryLevel: String(0.9),
       lastAssessedAt: new Date(),
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(teacher.id);
@@ -214,7 +222,9 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
     for (const stu of [critical, warning]) {
       await db
         .insert(scienceClassStudents)
-        .values({ classId: cls.id, studentId: stu.id });
+        .values({ classId: cls.id, studentId: stu.id ,
+            schoolId: TEST_SCHOOL_ID,
+        });
     }
 
     // critical: 3 weak standards, avg < 0.4
@@ -224,18 +234,21 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
         standardId: s1.id,
         masteryLevel: String(0.3),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: critical.id,
         standardId: s2.id,
         masteryLevel: String(0.35),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: critical.id,
         standardId: s3.id,
         masteryLevel: String(0.38),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -246,12 +259,14 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
         standardId: s1.id,
         masteryLevel: String(0.42),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: warning.id,
         standardId: s2.id,
         masteryLevel: String(0.48),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -281,7 +296,9 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
     });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: stu.id });
+      .values({ classId: cls.id, studentId: stu.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     await db.insert(scienceStandardMastery).values([
       {
@@ -289,6 +306,7 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
         standardId: standardWeak.id,
         masteryLevel: String(0.55),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: stu.id,
@@ -296,6 +314,7 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
         // exactly 0.6 — filtered out by route's `lt(... , 0.6)`
         masteryLevel: String(0.6),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -329,10 +348,14 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
     });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: mine.id });
+      .values({ classId: cls.id, studentId: mine.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: otherCls.id, studentId: theirs.id });
+      .values({ classId: otherCls.id, studentId: theirs.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     await db.insert(scienceStandardMastery).values([
       {
@@ -340,12 +363,14 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
         standardId: standard.id,
         masteryLevel: String(0.3),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: theirs.id,
         standardId: standard.id,
         masteryLevel: String(0.2),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -377,7 +402,9 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
     for (const stu of [critical, warning]) {
       await db
         .insert(scienceClassStudents)
-        .values({ classId: cls.id, studentId: stu.id });
+        .values({ classId: cls.id, studentId: stu.id ,
+            schoolId: TEST_SCHOOL_ID,
+        });
     }
 
     await db.insert(scienceStandardMastery).values([
@@ -386,30 +413,35 @@ describe('GET /api/teachers/classes/[classId]/intervention-alerts (integration)'
         standardId: s1.id,
         masteryLevel: String(0.3),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: critical.id,
         standardId: s2.id,
         masteryLevel: String(0.35),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: critical.id,
         standardId: s3.id,
         masteryLevel: String(0.38),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: warning.id,
         standardId: s1.id,
         masteryLevel: String(0.42),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: warning.id,
         standardId: s2.id,
         masteryLevel: String(0.48),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 

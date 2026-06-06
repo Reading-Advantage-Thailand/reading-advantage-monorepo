@@ -4,10 +4,12 @@ import * as path from 'path';
 import { fileURLToPath } from 'node:url';
 
 import { db } from '@reading-advantage/db';
-import { scienceStandards } from '@reading-advantage/db/schema';
+import { scienceStandards, schools } from '@reading-advantage/db/schema';
 
 import type { StandardsAlignment } from '@/lib/enums';
 import { validateStandardsFile } from './validate-json';
+
+const SEED_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,6 +32,8 @@ export async function seedStandards(
   }
 ): Promise<void> {
   console.log('📚 Seeding standards...');
+
+  await db.insert(schools).values({ id: SEED_SCHOOL_ID, name: 'Seed School' }).onConflictDoNothing();
 
   const dataDir = path.join(__dirname, '..', '..', 'prisma', 'seed-data', 'standards');
   const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
@@ -62,6 +66,7 @@ export async function seedStandards(
           code: standardData.code,
           description: standardData.description,
           gradeLevel: data.gradeLevel,
+          schoolId: SEED_SCHOOL_ID,
         })
         .onConflictDoUpdate({
           target: [scienceStandards.framework, scienceStandards.code],

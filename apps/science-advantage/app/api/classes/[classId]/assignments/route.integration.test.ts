@@ -9,11 +9,13 @@ import {
   scienceLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { DELETE, GET, POST } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'assignments-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -67,6 +69,7 @@ async function seedClass(teacherId: string): Promise<ClassRow> {
       standardsAlignment: 'THAI',
       joinCode: `ASN-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return cls;
@@ -82,6 +85,7 @@ async function seedLesson(suffix: string, order: number): Promise<LessonRow> {
       title: `Lesson ${suffix}`,
       gradeLevel: 3,
       order,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return lesson;
@@ -100,6 +104,7 @@ async function seedAssignment(
       lessonId,
       assignedBy: teacherId,
       dueAt: dueAt ?? null,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return a;
@@ -148,6 +153,7 @@ describe('GET /api/classes/[classId]/assignments (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
@@ -155,7 +161,9 @@ describe('GET /api/classes/[classId]/assignments (integration)', () => {
     cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     lessonA = await seedLesson('A', 1);
     lessonB = await seedLesson('B', 2);
     assignmentA = await seedAssignment(cls.id, lessonA.id, teacher.id);

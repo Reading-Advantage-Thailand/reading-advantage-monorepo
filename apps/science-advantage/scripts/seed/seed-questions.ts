@@ -9,6 +9,7 @@ import {
   scienceQuizQuestions,
   scienceQuestionStandards,
   scienceStandards,
+  schools,
 } from '@reading-advantage/db/schema';
 
 import {
@@ -19,6 +20,8 @@ import {
   validateQuizQuestionsSeedFile,
   formatValidationErrors,
 } from '@/lib/schemas/seed-validation';
+
+const SEED_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,6 +74,8 @@ export async function seedQuestions(
   }
 ): Promise<void> {
   console.log('❓ Seeding questions...');
+
+  await db.insert(schools).values({ id: SEED_SCHOOL_ID, name: 'Seed School' }).onConflictDoNothing();
 
   const files = collectQuestionFiles(options?.gradeLevel);
 
@@ -174,6 +179,7 @@ export async function seedQuestions(
               points: q.points,
               order,
               version: 1,
+              schoolId: SEED_SCHOOL_ID,
             })
             .returning({ id: scienceQuizQuestions.id });
 
@@ -186,6 +192,7 @@ export async function seedQuestions(
               standardRecords.map((s) => ({
                 questionId: created.id,
                 standardId: s.id,
+                schoolId: SEED_SCHOOL_ID,
               })),
             );
           }

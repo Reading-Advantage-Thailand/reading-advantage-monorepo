@@ -29,8 +29,8 @@ export default async function SettingsPage() {
             <p className="mt-1 text-gray-900">{user.name}</p>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">Email</label>
-            <p className="mt-1 text-gray-900">{user.email}</p>
+            <label className="text-sm font-medium text-gray-700">Username</label>
+            <p className="mt-1 text-gray-900">{user.username}</p>
           </div>
           <div>
             <label className="text-sm font-medium text-gray-700">Role</label>

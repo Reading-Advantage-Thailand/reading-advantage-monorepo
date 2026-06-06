@@ -6,11 +6,13 @@ import {
   gamificationProfiles,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'me-gamification-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -55,6 +57,7 @@ describe('GET /api/students/me/gamification (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   it('returns 401 when unauthenticated', async () => {
@@ -91,6 +94,7 @@ describe('GET /api/students/me/gamification (integration)', () => {
       xp: 450,
       level: 3,
       streak: 7,
+      schoolId: TEST_SCHOOL_ID,
     });
     // 4 achievements; the route returns the 3 most-recently unlocked.
     const baseTime = Date.now();
@@ -99,6 +103,7 @@ describe('GET /api/students/me/gamification (integration)', () => {
         userId: student.id,
         badgeType: `BADGE_${i}`,
         unlockedAt: new Date(baseTime + i * 1000),
+        schoolId: TEST_SCHOOL_ID,
       });
     }
 
@@ -132,6 +137,7 @@ describe('GET /api/students/me/gamification (integration)', () => {
       xp: 2000,
       level: 6, // last threshold — no next; route returns currentLevelXp:0, nextLevelXp:0, progressPercent:100
       streak: 0,
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(student.id);

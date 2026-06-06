@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       const attemptId = body?.attemptId;
       const session = await getCurrentSession();
       if (attemptId && session?.user?.id) {
-        await recordRunFailure({ attemptId, studentId: session.user.id, errorMessage: error instanceof Error ? error.message : 'Unknown error' });
+        await recordRunFailure({ attemptId, studentId: session.user.id, schoolId: session.user.schoolId ?? '', errorMessage: error instanceof Error ? error.message : 'Unknown error' });
       }
     } catch {
       // Best-effort failure recording — don't mask the original error

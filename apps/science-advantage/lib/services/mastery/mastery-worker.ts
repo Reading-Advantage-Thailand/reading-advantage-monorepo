@@ -254,6 +254,7 @@ export async function processMasteryRun(
       await recordStandardMastery(client, {
         studentId,
         standardId,
+        schoolId: masteryRun.schoolId,
         masteryLevel: nextMastery,
         evidenceDelta,
         lastAssessedAt: accumulator.lastAssessedAt,

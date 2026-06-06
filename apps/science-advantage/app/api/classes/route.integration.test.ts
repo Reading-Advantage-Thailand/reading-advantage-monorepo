@@ -12,11 +12,13 @@ import {
   scienceUnitLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET, POST } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'classes-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -71,6 +73,7 @@ describe('POST /api/classes (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
   });
@@ -159,6 +162,7 @@ describe('POST /api/classes (integration)', () => {
         framework: 'NGSS',
         code: `${TEST_PREFIX}-STD-1`,
         description: 'std',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     const [l1] = await db
@@ -168,6 +172,7 @@ describe('POST /api/classes (integration)', () => {
         title: 'Template 1',
         gradeLevel: 5,
         order: 1,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     const [l2] = await db
@@ -177,11 +182,16 @@ describe('POST /api/classes (integration)', () => {
         title: 'Template 2',
         gradeLevel: 5,
         order: 2,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     await db.insert(scienceLessonStandards).values([
-      { lessonId: l1.id, standardId: standard.id },
-      { lessonId: l2.id, standardId: standard.id },
+      { lessonId: l1.id, standardId: standard.id ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { lessonId: l2.id, standardId: standard.id ,
+        schoolId: TEST_SCHOOL_ID,
+      },
     ]);
 
     const session = await createSession(teacher.id);
@@ -261,6 +271,7 @@ describe('GET /api/classes (integration)', () => {
         standardsAlignment: 'THAI',
         joinCode: `T-${i}-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
         teacherId: teacher.id,
+        schoolId: TEST_SCHOOL_ID,
       });
     }
     await db.insert(scienceClasses).values({
@@ -269,6 +280,7 @@ describe('GET /api/classes (integration)', () => {
       standardsAlignment: 'THAI',
       joinCode: `O-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId: otherTeacher.id,
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(teacher.id);
@@ -299,6 +311,7 @@ describe('GET /api/classes (integration)', () => {
         standardsAlignment: 'THAI',
         joinCode: `P-${i}-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
         teacherId: teacher.id,
+        schoolId: TEST_SCHOOL_ID,
       });
     }
 
@@ -325,13 +338,18 @@ describe('GET /api/classes (integration)', () => {
         standardsAlignment: 'THAI',
         joinCode: `C-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
         teacherId: teacher.id,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     const s1 = await seedUser(`${TEST_PREFIX}-s1`, 'STUDENT');
     const s2 = await seedUser(`${TEST_PREFIX}-s2`, 'STUDENT');
     await db.insert(scienceClassStudents).values([
-      { classId: cls.id, studentId: s1.id },
-      { classId: cls.id, studentId: s2.id },
+      { classId: cls.id, studentId: s1.id ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { classId: cls.id, studentId: s2.id ,
+        schoolId: TEST_SCHOOL_ID,
+      },
     ]);
 
     const session = await createSession(teacher.id);

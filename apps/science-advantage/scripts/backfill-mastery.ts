@@ -108,6 +108,7 @@ async function processAttempt(
     .select({
       id: scienceAttempts.id,
       completedAt: scienceAttempts.completedAt,
+      schoolId: scienceAttempts.schoolId,
     })
     .from(scienceAttempts)
     .where(eq(scienceAttempts.id, attemptId))
@@ -116,6 +117,8 @@ async function processAttempt(
   if (!attempt || !attempt.completedAt) {
     return { attemptId, studentId, updated: 0, skipped: 0, status: 'skipped' };
   }
+
+  const attemptSchoolId = attempt.schoolId;
 
   const responseRows = await db
     .select({
@@ -236,6 +239,7 @@ async function processAttempt(
           attemptId,
           studentId,
           status: MasteryRunStatus.PROCESSING,
+          schoolId: attemptSchoolId,
         });
       }
 
@@ -275,6 +279,7 @@ async function processAttempt(
             masteryLevel: String(update.masteryLevel),
             evidenceCount: update.evidenceCount,
             lastAssessedAt: update.lastAssessedAt,
+            schoolId: attemptSchoolId,
           })
           .onConflictDoUpdate({
             target: [

@@ -11,11 +11,7 @@ export default defineConfig({
     // Integration tests share a single test DB; run sequentially to avoid
     // truncate/insert races between files.
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    fileParallelism: false,
   },
   resolve: {
     alias: {

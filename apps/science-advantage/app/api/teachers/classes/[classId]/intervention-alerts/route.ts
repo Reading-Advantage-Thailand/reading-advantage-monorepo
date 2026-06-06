@@ -6,6 +6,7 @@ import { getCurrentSession } from '@/lib/auth/session';
 import { interventionCache } from '@/lib/interventions/cache';
 import { interventionConfig } from '@/lib/interventions/config';
 import { detectAlerts } from '@/lib/interventions/detect-alerts';
+import type { AlertPayload } from '@/lib/interventions/detect-alerts';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
 import { listAlerts } from '@reading-advantage/domain/interventions';
@@ -18,16 +19,16 @@ const querySchema = z.object({
   refresh: z.string().optional().transform((v) => v === 'true' || v === '1'),
 });
 
-const cfg = {
+const cfg: Parameters<typeof listAlerts>[0]['deps'] = {
   masteryFilterLevel: interventionConfig.masteryFilterLevel,
   detectionCap: interventionConfig.detectionCap,
   defaultLimit: interventionConfig.defaultLimit,
   maxLimit: interventionConfig.maxLimit,
   freshnessHeaderSeconds: interventionConfig.freshnessHeaderSeconds,
   cacheGet: (id: string) => interventionCache.get(id),
-  cacheSet: (id: string, p: { classId: string; generatedAt: string; alerts: unknown[] }) => interventionCache.set(id, p),
+  cacheSet: (id: string, p: { classId: string; generatedAt: string; alerts: AlertPayload[] }) => interventionCache.set(id, p),
   detectAlerts,
-};
+} as Parameters<typeof listAlerts>[0]['deps'];
 
 /**
  * GET /api/teachers/classes/{classId}/intervention-alerts

@@ -3,9 +3,11 @@ import { db, eq } from '@reading-advantage/db';
 import { users, sessions, accounts } from '@reading-advantage/db/schema';
 import {
   createSession,
+} from './session';
+import {
   validateSession,
   deleteSession,
-} from './session';
+} from '@reading-advantage/auth';
 
 type UserRow = typeof users.$inferSelect;
 
@@ -81,7 +83,6 @@ describe('Session Management', () => {
 
       expect(session.user.name).toBe('Test User');
       expect(session.user.username).toBe('testuser');
-      expect(session.user.email).toBe('test@example.com');
       expect(session.user.role).toBe('STUDENT');
     });
 
@@ -122,7 +123,7 @@ describe('Session Management', () => {
   describe('validateSession', () => {
     it('should validate a valid session token', async () => {
       const createdSession = await createSession(testUserId);
-      const validatedSession = await validateSession(createdSession.token!);
+      const validatedSession = await validateSession(db,createdSession.token!);
 
       expect(validatedSession).toBeDefined();
       expect(validatedSession?.id).toBe(createdSession.id);
@@ -130,13 +131,13 @@ describe('Session Management', () => {
     });
 
     it('should return null for non-existent token', async () => {
-      const validatedSession = await validateSession('non-existent-token');
+      const validatedSession = await validateSession(db,'non-existent-token');
 
       expect(validatedSession).toBeNull();
     });
 
     it('should return null for invalid token format', async () => {
-      const validatedSession = await validateSession('invalid-token-123');
+      const validatedSession = await validateSession(db,'invalid-token-123');
 
       expect(validatedSession).toBeNull();
     });
@@ -149,7 +150,7 @@ describe('Session Management', () => {
         .set({ expiresAt: new Date(Date.now() - 1000) })
         .where(eq(sessions.id, session.id));
 
-      const validatedSession = await validateSession(session.token!);
+      const validatedSession = await validateSession(db,session.token!);
 
       expect(validatedSession).toBeNull();
 
@@ -164,7 +165,7 @@ describe('Session Management', () => {
 
     it('should include user data in validated session', async () => {
       const createdSession = await createSession(testUserId);
-      const validatedSession = await validateSession(createdSession.token!);
+      const validatedSession = await validateSession(db,createdSession.token!);
 
       expect(validatedSession?.user.name).toBe('Test User');
       expect(validatedSession?.user.username).toBe('testuser');
@@ -179,7 +180,7 @@ describe('Session Management', () => {
         .set({ expiresAt: new Date(Date.now() + 1000) })
         .where(eq(sessions.id, session.id));
 
-      const validatedSession = await validateSession(session.token!);
+      const validatedSession = await validateSession(db,session.token!);
 
       expect(validatedSession).toBeDefined();
       expect(validatedSession?.id).toBe(session.id);
@@ -202,7 +203,7 @@ describe('Session Management', () => {
           .returning();
 
         const session = await createSession(user.id);
-        const validated = await validateSession(session.token!);
+        const validated = await validateSession(db,session.token!);
 
         expect(validated?.user.role).toBe(role);
       }
@@ -213,7 +214,7 @@ describe('Session Management', () => {
     it('should delete an existing session', async () => {
       const session = await createSession(testUserId);
 
-      await deleteSession(session.token!);
+      await deleteSession(db,session.token!);
 
       const [dbSession] = await db
         .select()
@@ -226,16 +227,16 @@ describe('Session Management', () => {
 
     it('should not throw when deleting non-existent session', async () => {
       await expect(
-        deleteSession('non-existent-token')
+        deleteSession(db,'non-existent-token')
       ).resolves.not.toThrow();
     });
 
     it('should not throw when deleting already deleted session', async () => {
       const session = await createSession(testUserId);
 
-      await deleteSession(session.token!);
+      await deleteSession(db,session.token!);
       await expect(
-        deleteSession(session.token!)
+        deleteSession(db,session.token!)
       ).resolves.not.toThrow();
     });
 
@@ -243,7 +244,7 @@ describe('Session Management', () => {
       const session1 = await createSession(testUserId);
       const session2 = await createSession(testUserId);
 
-      await deleteSession(session1.token!);
+      await deleteSession(db,session1.token!);
 
       const [dbSession1] = await db
         .select()
@@ -263,9 +264,9 @@ describe('Session Management', () => {
     it('should make deleted session unvalidatable', async () => {
       const session = await createSession(testUserId);
 
-      await deleteSession(session.token!);
+      await deleteSession(db,session.token!);
 
-      const validated = await validateSession(session.token!);
+      const validated = await validateSession(db,session.token!);
       expect(validated).toBeNull();
     });
   });

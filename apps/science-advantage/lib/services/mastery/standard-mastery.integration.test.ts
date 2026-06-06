@@ -5,10 +5,12 @@ import {
   scienceStandardMastery,
   scienceStandards,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { clampMasteryLevel, recordStandardMastery } from './standard-mastery';
 
 const TEST_PREFIX = 'sm-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 async function cleanup(): Promise<void> {
   await db.execute(
@@ -46,6 +48,7 @@ async function createStandard() {
       code: `NGSS-${randomUUID().slice(0, 8)}`,
       description: 'Test standard',
       gradeLevel: 5,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return standard;
@@ -70,6 +73,7 @@ async function findOneMastery(studentId: string, standardId: string) {
 describe('standardMastery persistence (integration)', () => {
   beforeEach(async () => {
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   afterAll(async () => {
@@ -82,6 +86,7 @@ describe('standardMastery persistence (integration)', () => {
     const record = await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standard.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: 0.75,
       evidenceDelta: 2,
       lastAssessedAt: new Date('2025-10-28T08:00:00Z'),
@@ -98,6 +103,7 @@ describe('standardMastery persistence (integration)', () => {
     await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standard.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: 0.5,
       lastAssessedAt: new Date(),
     });
@@ -110,6 +116,7 @@ describe('standardMastery persistence (integration)', () => {
         masteryLevel: '0.40',
         evidenceCount: 1,
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       });
     } catch (err) {
       caught = err;
@@ -130,6 +137,7 @@ describe('standardMastery persistence (integration)', () => {
     await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standard.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: 1.34,
       lastAssessedAt: new Date(),
     });
@@ -140,6 +148,7 @@ describe('standardMastery persistence (integration)', () => {
     await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standard.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: -0.2,
       lastAssessedAt: new Date(),
     });
@@ -158,6 +167,7 @@ describe('standardMastery persistence (integration)', () => {
     await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standard.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: 0.4,
       evidenceDelta: 2,
       lastAssessedAt: new Date(),
@@ -166,6 +176,7 @@ describe('standardMastery persistence (integration)', () => {
     await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standard.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: 0.6,
       evidenceDelta: 3,
       lastAssessedAt: new Date(),
@@ -182,6 +193,7 @@ describe('standardMastery persistence (integration)', () => {
     await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standard.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: 0.65,
       lastAssessedAt: new Date(),
     });
@@ -198,6 +210,7 @@ describe('standardMastery persistence (integration)', () => {
     await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standard.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: 0.45,
       lastAssessedAt: new Date(),
     });
@@ -216,6 +229,7 @@ describe('standardMastery persistence (integration)', () => {
     await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standardA.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: 0.9,
       lastAssessedAt: new Date(),
     });
@@ -223,6 +237,7 @@ describe('standardMastery persistence (integration)', () => {
     await recordStandardMastery(db, {
       studentId: student.id,
       standardId: standardB.id,
+      schoolId: TEST_SCHOOL_ID,
       masteryLevel: 0.3,
       lastAssessedAt: new Date(),
     });
@@ -246,6 +261,7 @@ describe('standardMastery persistence (integration)', () => {
         recordStandardMastery(db, {
           studentId: student.id,
           standardId: standard.id,
+          schoolId: TEST_SCHOOL_ID,
           masteryLevel: value,
           lastAssessedAt: new Date('2025-10-28T08:00:00Z'),
         })

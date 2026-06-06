@@ -33,11 +33,13 @@ function toSessionUser(user: UserRow): Session['user'] {
     id: user.id,
     name: user.name,
     username: user.username,
-    email: user.email,
     // Drizzle users.role widens to include INTERN; this suite only seeds the four
     // local UserRole values so the narrowing cast is safe.
     role: user.role as UserRole,
-    image: user.image,
+    schoolId: null,
+    xp: 0,
+    level: 1,
+    cefrLevel: 'A1',
   };
 }
 
@@ -113,6 +115,7 @@ describe('Auth Server Helpers', () => {
     it('should return true when user has exact role', () => {
       const session: Session = {
         id: 'test-session',
+        token: 'test-token',
         userId: studentUser.id,
         expiresAt: new Date(),
         user: toSessionUser(studentUser),
@@ -124,6 +127,7 @@ describe('Auth Server Helpers', () => {
     it('should return true when user has higher role', () => {
       const session: Session = {
         id: 'test-session',
+        token: 'test-token',
         userId: teacherUser.id,
         expiresAt: new Date(),
         user: toSessionUser(teacherUser),
@@ -135,6 +139,7 @@ describe('Auth Server Helpers', () => {
     it('should return false when user has lower role', () => {
       const session: Session = {
         id: 'test-session',
+        token: 'test-token',
         userId: studentUser.id,
         expiresAt: new Date(),
         user: toSessionUser(studentUser),
@@ -148,6 +153,7 @@ describe('Auth Server Helpers', () => {
     it('should enforce role hierarchy correctly', () => {
       const studentSession: Session = {
         id: 'student-session',
+        token: 'test-token',
         userId: studentUser.id,
         expiresAt: new Date(),
         user: toSessionUser(studentUser),
@@ -160,6 +166,7 @@ describe('Auth Server Helpers', () => {
 
       const teacherSession: Session = {
         id: 'teacher-session',
+        token: 'test-token',
         userId: teacherUser.id,
         expiresAt: new Date(),
         user: toSessionUser(teacherUser),
@@ -172,6 +179,7 @@ describe('Auth Server Helpers', () => {
 
       const adminSession: Session = {
         id: 'admin-session',
+        token: 'test-token',
         userId: adminUser.id,
         expiresAt: new Date(),
         user: toSessionUser(adminUser),
@@ -184,6 +192,7 @@ describe('Auth Server Helpers', () => {
 
       const systemSession: Session = {
         id: 'system-session',
+        token: 'test-token',
         userId: systemUser.id,
         expiresAt: new Date(),
         user: toSessionUser(systemUser),
@@ -290,6 +299,7 @@ describe('Auth Server Helpers', () => {
     it('should allow teacher to access student routes', () => {
       const teacherSession: Session = {
         id: 'test',
+        token: 'test-token',
         userId: teacherUser.id,
         expiresAt: new Date(),
         user: toSessionUser(teacherUser),
@@ -301,6 +311,7 @@ describe('Auth Server Helpers', () => {
     it('should prevent student from accessing teacher routes', () => {
       const studentSession: Session = {
         id: 'test',
+        token: 'test-token',
         userId: studentUser.id,
         expiresAt: new Date(),
         user: toSessionUser(studentUser),
@@ -312,6 +323,7 @@ describe('Auth Server Helpers', () => {
     it('should allow admin to access all lower level routes', () => {
       const adminSession: Session = {
         id: 'test',
+        token: 'test-token',
         userId: adminUser.id,
         expiresAt: new Date(),
         user: toSessionUser(adminUser),
@@ -325,6 +337,7 @@ describe('Auth Server Helpers', () => {
     it('should prevent admin from accessing system routes', () => {
       const adminSession: Session = {
         id: 'test',
+        token: 'test-token',
         userId: adminUser.id,
         expiresAt: new Date(),
         user: toSessionUser(adminUser),
@@ -336,6 +349,7 @@ describe('Auth Server Helpers', () => {
     it('should allow system user to access all routes', () => {
       const systemSession: Session = {
         id: 'test',
+        token: 'test-token',
         userId: systemUser.id,
         expiresAt: new Date(),
         user: toSessionUser(systemUser),
@@ -352,15 +366,18 @@ describe('Auth Server Helpers', () => {
     it('should handle session with null user fields', () => {
       const session: Session = {
         id: 'test',
+        token: 'test-token',
         userId: 'test',
         expiresAt: new Date(),
         user: {
           id: 'test',
           name: 'Test',
           username: 'test',
-          email: null,
           role: 'STUDENT',
-          image: null,
+          schoolId: null,
+          xp: 0,
+          level: 1,
+          cefrLevel: 'A1',
         },
       };
 
@@ -370,15 +387,18 @@ describe('Auth Server Helpers', () => {
     it('should handle session expiration dates correctly', () => {
       const futureExpiry: Session = {
         id: 'test',
+        token: 'test-token',
         userId: 'test',
         expiresAt: new Date(Date.now() + 86400000),
         user: {
           id: 'test',
           name: 'Test',
           username: 'test',
-          email: null,
           role: 'STUDENT',
-          image: null,
+          schoolId: null,
+          xp: 0,
+          level: 1,
+          cefrLevel: 'A1',
         },
       };
 
@@ -386,15 +406,18 @@ describe('Auth Server Helpers', () => {
 
       const pastExpiry: Session = {
         id: 'test',
+        token: 'test-token',
         userId: 'test',
         expiresAt: new Date(Date.now() - 86400000),
         user: {
           id: 'test',
           name: 'Test',
           username: 'test',
-          email: null,
           role: 'STUDENT',
-          image: null,
+          schoolId: null,
+          xp: 0,
+          level: 1,
+          cefrLevel: 'A1',
         },
       };
 

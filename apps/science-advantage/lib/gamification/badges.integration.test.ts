@@ -10,6 +10,7 @@ import {
   scienceLessons,
   scienceUnitLessons,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import {
   checkBadgeConditions,
@@ -18,6 +19,7 @@ import {
 } from './badges';
 
 const TEST_PREFIX = 'badges-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 const TEACHER_ID = `${TEST_PREFIX}-teacher`;
 const STUDENT_ID = `${TEST_PREFIX}-student`;
 
@@ -67,6 +69,7 @@ async function seedClass(): Promise<string> {
       standardsAlignment: 'THAI',
       joinCode: `BADGES-${Date.now()}`,
       teacherId: TEACHER_ID,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return cls.id;
@@ -82,6 +85,7 @@ async function seedUnit(classId: string): Promise<string> {
       gradeLevel: 3,
       order: 1,
       classId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return unit.id;
@@ -98,13 +102,16 @@ async function seedLesson(
       gradeLevel: 3,
       order: args.order,
       lessonType: args.lessonType ?? 'LESSON',
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return lesson.id;
 }
 
 async function attachLessonToUnit(unitId: string, lessonId: string): Promise<void> {
-  await db.insert(scienceUnitLessons).values({ unitId, lessonId });
+  await db.insert(scienceUnitLessons).values({ unitId, lessonId ,
+      schoolId: TEST_SCHOOL_ID,
+  });
 }
 
 async function markLessonCompleted(lessonId: string): Promise<void> {
@@ -115,6 +122,7 @@ async function markLessonCompleted(lessonId: string): Promise<void> {
     attemptsCount: 1,
     completedAt: new Date(),
     lastAttemptAt: new Date(),
+    schoolId: TEST_SCHOOL_ID,
   });
 }
 
@@ -132,6 +140,7 @@ async function insertAttempt(args: {
     maxScore: args.maxScore,
     attemptNumber: args.attemptNumber,
     completedAt: args.completed === false ? null : new Date(),
+    schoolId: TEST_SCHOOL_ID,
   });
 }
 
@@ -143,6 +152,7 @@ async function setStreak(streak: number): Promise<void> {
       xp: 0,
       level: 1,
       streak,
+      schoolId: TEST_SCHOOL_ID,
     })
     .onConflictDoUpdate({
       target: gamificationProfiles.userId,
@@ -153,6 +163,7 @@ async function setStreak(streak: number): Promise<void> {
 describe('badges (integration)', () => {
   beforeEach(async () => {
     await cleanupFixtures();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     await seedUsers();
   });
 

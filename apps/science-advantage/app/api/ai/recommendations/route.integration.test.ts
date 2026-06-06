@@ -16,10 +16,12 @@ import {
   scienceUnitLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'ai-rec-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -115,12 +117,15 @@ async function seedScenario() {
       standardsAlignment: 'THAI',
       joinCode: `AIR-${Date.now()}`,
       teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
   await db
     .insert(scienceClassStudents)
-    .values({ classId: cls.id, studentId });
+    .values({ classId: cls.id, studentId ,
+        schoolId: TEST_SCHOOL_ID,
+    });
 
   const [unit] = await db
     .insert(scienceCurriculumUnits)
@@ -131,6 +136,7 @@ async function seedScenario() {
       gradeLevel: 3,
       order: 1,
       classId: cls.id,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -141,12 +147,15 @@ async function seedScenario() {
       title: 'AI Rec Lesson',
       gradeLevel: 3,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
   await db
     .insert(scienceUnitLessons)
-    .values({ unitId: unit.id, lessonId: lesson.id });
+    .values({ unitId: unit.id, lessonId: lesson.id ,
+        schoolId: TEST_SCHOOL_ID,
+    });
 
   const [standard] = await db
     .insert(scienceStandards)
@@ -155,11 +164,14 @@ async function seedScenario() {
       code: `Sc-${TEST_PREFIX}-${Date.now()}`,
       description: 'AI rec test standard',
       gradeLevel: 3,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   await db
     .insert(scienceLessonStandards)
-    .values({ lessonId: lesson.id, standardId: standard.id });
+    .values({ lessonId: lesson.id, standardId: standard.id ,
+        schoolId: TEST_SCHOOL_ID,
+    });
 
   const [question] = await db
     .insert(scienceQuizQuestions)
@@ -172,11 +184,13 @@ async function seedScenario() {
       correctAnswer: 'A',
       points: 1,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   await db.insert(scienceQuestionStandards).values({
     questionId: question.id,
     standardId: standard.id,
+    schoolId: TEST_SCHOOL_ID,
   });
 
   const [attempt] = await db
@@ -189,6 +203,7 @@ async function seedScenario() {
       attemptNumber: 1,
       startedAt: new Date(),
       completedAt: new Date(),
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   await db.insert(scienceQuestionResponses).values({
@@ -198,6 +213,7 @@ async function seedScenario() {
     isCorrect: true,
     timeSpentSeconds: 30,
     answeredAt: new Date(),
+    schoolId: TEST_SCHOOL_ID,
   });
 
   return { teacherId, studentId, attemptId: attempt.id };
@@ -208,6 +224,7 @@ describe('POST /api/ai/recommendations (integration)', () => {
     mockCookies.get.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     const { unstable_recommendationTestkit } = await routeImport();
     unstable_recommendationTestkit.reset();
   });
@@ -271,6 +288,7 @@ describe('POST /api/ai/recommendations (integration)', () => {
         attemptNumber: 2,
         startedAt: new Date(),
         completedAt: null,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
 

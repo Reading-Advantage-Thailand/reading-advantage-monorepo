@@ -3,6 +3,7 @@ import { db, sql } from '@reading-advantage/db';
 import {
   scienceClasses,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 
 import {
@@ -16,6 +17,7 @@ import {
 } from './join-code-format';
 
 const TEST_PREFIX = 'gjc-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 async function cleanupFixtures(): Promise<void> {
   await db.delete(scienceClasses);
@@ -46,6 +48,7 @@ async function seedClass(teacherId: string, joinCode: string) {
       standardsAlignment: 'THAI',
       joinCode,
       teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return c;
@@ -54,6 +57,7 @@ async function seedClass(teacherId: string, joinCode: string) {
 describe('generateJoinCode - Integration', () => {
   beforeEach(async () => {
     await cleanupFixtures();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   afterEach(async () => {

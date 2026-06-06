@@ -1,9 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { db, eq, sql } from '@reading-advantage/db';
-import { gamificationProfiles, users } from '@reading-advantage/db/schema';
+import { gamificationProfiles, users,
+  schools
+} from '@reading-advantage/db/schema';
 import { updateStreakForProfile } from './streak';
 
 const TEST_USER_ID = 'streak-itest-user';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 async function cleanupFixtures(): Promise<void> {
   await db.execute(sql`DELETE FROM gamification_profiles WHERE user_id = ${TEST_USER_ID}`);
@@ -31,6 +34,7 @@ async function seedProfile(args: {
       level: 1,
       streak: args.streak,
       lastActiveAt: args.lastActiveAt,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -40,6 +44,7 @@ async function seedProfile(args: {
 describe('updateStreakForProfile (integration)', () => {
   beforeEach(async () => {
     await cleanupFixtures();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   it('starts the streak at 1 when lastActiveAt is null', async () => {

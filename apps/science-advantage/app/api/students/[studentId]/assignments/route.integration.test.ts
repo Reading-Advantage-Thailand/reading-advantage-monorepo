@@ -9,11 +9,13 @@ import {
   scienceLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'student-assignments-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -67,6 +69,7 @@ async function seedClass(teacherId: string, name = 'Student Assignments Class'):
       standardsAlignment: 'THAI',
       joinCode: `SAS-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return cls;
@@ -82,6 +85,7 @@ async function seedLesson(suffix: string, order: number): Promise<LessonRow> {
       title: `Lesson ${suffix}`,
       gradeLevel: 3,
       order,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return lesson;
@@ -100,6 +104,7 @@ async function seedAssignment(
       lessonId,
       assignedBy: teacherId,
       dueAt: dueAt ?? null,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return a;
@@ -118,6 +123,7 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   it('returns 401 when unauthenticated', async () => {
@@ -162,7 +168,9 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
     const cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     const session = await createSession(student.id);
     mockCookies.get.mockReturnValue({ value: session.token });
@@ -181,7 +189,9 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
     const cls = await seedClass(teacher.id, 'Physics 101');
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     const lesson = await seedLesson('only', 1);
     const due = new Date('2026-12-01T10:00:00.000Z');
     const assignment = await seedAssignment(cls.id, lesson.id, teacher.id, due);
@@ -225,10 +235,14 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
 
     await db
       .insert(scienceClassStudents)
-      .values({ classId: enrolledClass.id, studentId: student.id });
+      .values({ classId: enrolledClass.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: otherClass.id, studentId: otherStudent.id });
+      .values({ classId: otherClass.id, studentId: otherStudent.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     const lessonA = await seedLesson('A', 1);
     const lessonB = await seedLesson('B', 2);
@@ -262,7 +276,9 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
     const cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     const lesson = await seedLesson('nd', 1);
     await seedAssignment(cls.id, lesson.id, teacher.id);
 
@@ -284,7 +300,9 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
     const cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     const lesson = await seedLesson('t', 1);
     await seedAssignment(cls.id, lesson.id, teacher.id);
 
@@ -306,7 +324,9 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
     const cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     const lesson = await seedLesson('a', 1);
     await seedAssignment(cls.id, lesson.id, teacher.id);
 

@@ -1,10 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { db, eq, sql } from '@reading-advantage/db';
-import { gamificationProfiles, users } from '@reading-advantage/db/schema';
+import { gamificationProfiles, users,
+  schools
+} from '@reading-advantage/db/schema';
 import { awardXp } from './xp';
 
 const TEST_USER_ID = 'xp-itest-user';
 const TEST_USERNAME = 'xp-itest-user';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 async function cleanupFixtures(): Promise<void> {
   await db.execute(sql`DELETE FROM gamification_profiles WHERE user_id = ${TEST_USER_ID}`);
@@ -28,6 +31,7 @@ async function seedProfile(initialXp: number, initialLevel: number) {
       xp: initialXp,
       level: initialLevel,
       streak: 0,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -37,6 +41,7 @@ async function seedProfile(initialXp: number, initialLevel: number) {
 describe('awardXp (integration)', () => {
   beforeEach(async () => {
     await cleanupFixtures();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   it('adds the awarded amount to the profile xp and recomputes level', async () => {

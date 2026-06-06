@@ -4,11 +4,13 @@ import {
   scienceClasses,
   scienceClassStudents,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 
 import { getStudentEnrolledClasses } from './get-student-classes';
 
 const TEST_PREFIX = 'gsec-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 async function cleanupFixtures(): Promise<void> {
   await db.delete(scienceClassStudents);
@@ -51,6 +53,7 @@ async function seedClass(opts: {
       joinCode: opts.joinCode,
       teacherId: opts.teacherId,
       ...(opts.createdAt ? { createdAt: opts.createdAt } : {}),
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return c;
@@ -59,6 +62,7 @@ async function seedClass(opts: {
 describe('getStudentEnrolledClasses - Integration', () => {
   beforeEach(async () => {
     await cleanupFixtures();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   afterEach(async () => {
@@ -95,7 +99,9 @@ describe('getStudentEnrolledClasses - Integration', () => {
     });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     const result = await getStudentEnrolledClasses(student.id);
     expect(result).toHaveLength(1);
@@ -130,7 +136,9 @@ describe('getStudentEnrolledClasses - Integration', () => {
     });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     const result = await getStudentEnrolledClasses(student.id);
     expect(result).toHaveLength(1);
@@ -168,9 +176,15 @@ describe('getStudentEnrolledClasses - Integration', () => {
     });
 
     await db.insert(scienceClassStudents).values([
-      { classId: older.id, studentId: student.id },
-      { classId: newest.id, studentId: student.id },
-      { classId: middle.id, studentId: student.id },
+      { classId: older.id, studentId: student.id ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { classId: newest.id, studentId: student.id ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { classId: middle.id, studentId: student.id ,
+        schoolId: TEST_SCHOOL_ID,
+      },
     ]);
 
     const result = await getStudentEnrolledClasses(student.id);
@@ -204,8 +218,12 @@ describe('getStudentEnrolledClasses - Integration', () => {
     });
 
     await db.insert(scienceClassStudents).values([
-      { classId: classA.id, studentId: studentA.id },
-      { classId: classB.id, studentId: studentB.id },
+      { classId: classA.id, studentId: studentA.id ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { classId: classB.id, studentId: studentB.id ,
+        schoolId: TEST_SCHOOL_ID,
+      },
     ]);
 
     const resultA = await getStudentEnrolledClasses(studentA.id);

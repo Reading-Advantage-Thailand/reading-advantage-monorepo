@@ -9,9 +9,12 @@ import {
   scienceStandardMastery,
   scienceStandards,
   users,
+  schools,
 } from '@reading-advantage/db/schema';
 
 import { seedCurriculumUnits } from './seed-curriculum-units';
+
+const SEED_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 interface DemoUserData {
   username: string;
@@ -30,6 +33,8 @@ interface SeededUser {
 
 export async function seedDemoData(): Promise<void> {
   console.log('👥 Seeding demo users and classes...\n');
+
+  await db.insert(schools).values({ id: SEED_SCHOOL_ID, name: 'Seed School' }).onConflictDoNothing();
 
   // 1. Seed demo users
   const password = 'Password123!';
@@ -121,6 +126,7 @@ export async function seedDemoData(): Promise<void> {
       standardsAlignment: 'THAI',
       joinCode: 'DEMO3T',
       teacherId: teacher.id,
+      schoolId: SEED_SCHOOL_ID,
     })
     .onConflictDoUpdate({
       target: scienceClasses.joinCode,
@@ -144,7 +150,9 @@ export async function seedDemoData(): Promise<void> {
   const student = seededUsers['STUDENT'];
   await db
     .insert(scienceClassStudents)
-    .values({ classId: demoClass.id, studentId: student.id })
+    .values({ classId: demoClass.id, studentId: student.id ,
+        schoolId: SEED_SCHOOL_ID,
+    })
     .onConflictDoNothing();
   console.log(`✓ Enrolled demo student in ${demoClass.name}`);
 
@@ -193,6 +201,7 @@ export async function seedDemoData(): Promise<void> {
           masteryLevel: String(data.level),
           evidenceCount: data.evidence,
           lastAssessedAt,
+          schoolId: SEED_SCHOOL_ID,
         })
         .onConflictDoNothing({
           target: [

@@ -12,7 +12,10 @@ import {
   scienceQuestionResponses,
   scienceQuizQuestions,
   users,
+  schools,
 } from '@reading-advantage/db/schema';
+
+const SEED_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 interface StudentProfile {
   profile: string;
@@ -39,6 +42,8 @@ function randomInRange(min: number, max: number): number {
 
 export async function seedActivityData(): Promise<void> {
   console.log('Seeding activity data...');
+
+  await db.insert(schools).values({ id: SEED_SCHOOL_ID, name: 'Seed School' }).onConflictDoNothing();
 
   const password = 'Password123!';
   const hashedPassword = await hashPassword(password);
@@ -96,7 +101,9 @@ export async function seedActivityData(): Promise<void> {
 
       await db
         .insert(scienceClassStudents)
-        .values({ classId: demoClass.id, studentId: userId })
+        .values({ classId: demoClass.id, studentId: userId ,
+            schoolId: SEED_SCHOOL_ID,
+        })
         .onConflictDoNothing();
     }
   }
@@ -142,6 +149,7 @@ export async function seedActivityData(): Promise<void> {
       standardsAlignment: 'THAI',
       joinCode: 'DEMO4T',
       teacherId: teacher2Id,
+      schoolId: SEED_SCHOOL_ID,
     })
     .onConflictDoNothing({ target: scienceClasses.joinCode });
 
@@ -234,6 +242,7 @@ export async function seedActivityData(): Promise<void> {
               maxScore: 9,
               startedAt,
               completedAt,
+              schoolId: SEED_SCHOOL_ID,
             })
             .returning({ id: scienceAttempts.id });
 
@@ -265,6 +274,7 @@ export async function seedActivityData(): Promise<void> {
             isCorrect: boolean;
             timeSpentSeconds: number;
             answeredAt: Date;
+            schoolId: string;
           }> = [];
 
           for (const question of sampled) {
@@ -284,6 +294,7 @@ export async function seedActivityData(): Promise<void> {
               isCorrect,
               timeSpentSeconds: Math.floor(randomInRange(30, 120)),
               answeredAt: new Date(),
+              schoolId: SEED_SCHOOL_ID,
             });
           }
 
@@ -322,6 +333,7 @@ export async function seedActivityData(): Promise<void> {
       {
         studentId: string;
         lessonId: string;
+        schoolId: string;
         status: string;
         completedAt: Date | null;
         attemptsCount: number;
@@ -342,6 +354,7 @@ export async function seedActivityData(): Promise<void> {
         lessonCompletions.set(lessonId, {
           studentId: student.id,
           lessonId,
+          schoolId: SEED_SCHOOL_ID,
           status: 'COMPLETED',
           completedAt,
           attemptsCount: 0,

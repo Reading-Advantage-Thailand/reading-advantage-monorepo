@@ -11,11 +11,13 @@ import {
   scienceUnitLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'progress-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -70,11 +72,14 @@ async function seedClassWithLesson(args: {
       standardsAlignment: 'THAI',
       joinCode: `PROG-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId: args.teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
   for (const sid of args.studentIds) {
-    await db.insert(scienceClassStudents).values({ classId: cls.id, studentId: sid });
+    await db.insert(scienceClassStudents).values({ classId: cls.id, studentId: sid ,
+        schoolId: TEST_SCHOOL_ID,
+    });
   }
 
   const [unit] = await db
@@ -86,6 +91,7 @@ async function seedClassWithLesson(args: {
       gradeLevel: 3,
       order: 1,
       classId: cls.id,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -96,10 +102,13 @@ async function seedClassWithLesson(args: {
       title: 'Progress Lesson',
       gradeLevel: 3,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
-  await db.insert(scienceUnitLessons).values({ unitId: unit.id, lessonId: lesson.id });
+  await db.insert(scienceUnitLessons).values({ unitId: unit.id, lessonId: lesson.id ,
+      schoolId: TEST_SCHOOL_ID,
+  });
 
   return { cls, lesson };
 }
@@ -116,6 +125,7 @@ describe('GET /api/students/[studentId]/lessons/[lessonId]/progress (integration
     mockCookies.get.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
@@ -199,6 +209,7 @@ describe('GET /api/students/[studentId]/lessons/[lessonId]/progress (integration
       totalTimeSpentSeconds: 240,
       completedAt: new Date('2026-05-24T10:00:00Z'),
       lastAttemptAt: new Date('2026-05-24T10:00:00Z'),
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(teacher.id);

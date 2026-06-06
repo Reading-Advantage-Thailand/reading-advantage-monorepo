@@ -1,5 +1,6 @@
-import { teachers } from '@reading-advantage/domain';
+import { teachers, createTenantDB } from '@reading-advantage/domain';
 import type { UserContext } from '@reading-advantage/auth';
+import { db } from '@reading-advantage/db';
 
 import { requireRole } from '@/lib/auth/server';
 import { TeacherDashboardClasses } from '@/components/features/teacher/teacher-dashboard-classes';
@@ -11,9 +12,12 @@ import { RecentCompletionsFeed } from '@/components/features/teacher/recent-comp
 export default async function TeacherPage() {
   const session = await requireRole('TEACHER');
 
+  const tenant = { schoolId: session.user.schoolId };
+  const tenantDb = createTenantDB(db, tenant);
   const teacherClasses = await teachers.getTeacherClasses({
+    db: tenantDb,
     user: session.user as unknown as UserContext,
-    tenant: { schoolId: session.user.schoolId },
+    tenant,
     teacherId: session.user.id,
   });
 

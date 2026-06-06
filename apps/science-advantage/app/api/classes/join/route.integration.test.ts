@@ -7,11 +7,13 @@ import {
   scienceClassStudents,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { POST } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'join-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -64,6 +66,7 @@ async function seedClass(
       standardsAlignment: 'THAI',
       joinCode,
       teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return cls;
@@ -75,7 +78,7 @@ function postReq(body: unknown) {
     body: typeof body === 'string' ? body : JSON.stringify(body),
     headers: { 'content-type': 'application/json' },
   };
-  return new NextRequest('http://localhost/api/classes/join', init);
+  return new NextRequest('http://localhost/api/classes/join', init as ConstructorParameters<typeof NextRequest>[1]);
 }
 
 describe('POST /api/classes/join (integration)', () => {
@@ -89,6 +92,7 @@ describe('POST /api/classes/join (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
     cls = await seedClass(teacher.id, 'ABCDEF');
@@ -140,7 +144,9 @@ describe('POST /api/classes/join (integration)', () => {
   it('returns 409 when student already enrolled', async () => {
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     const session = await createSession(student.id);
     mockCookies.get.mockReturnValue({ value: session.token });

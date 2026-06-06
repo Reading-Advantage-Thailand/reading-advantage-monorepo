@@ -93,8 +93,8 @@ export class RecommendationService {
           lessonTitle: response.lessonTitle,
           focusStandards: response.focusStandards,
           reasoning: response.reasoning,
-          confidence: response.confidence,
-          nextBestAlternatives: response.nextBestAlternatives,
+          confidence: response.confidence ?? 'medium',
+          nextBestAlternatives: response.nextBestAlternatives ?? [],
         };
 
         if (modelId !== aiConfig.primaryModel) {

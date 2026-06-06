@@ -8,11 +8,13 @@ import {
   scienceClassStudents,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { DELETE, GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'roster-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -65,13 +67,14 @@ async function seedClass(teacherId: string): Promise<ClassRow> {
       standardsAlignment: 'THAI',
       joinCode: `ROS-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return cls;
 }
 
 function buildReq(classId: string, init?: RequestInit) {
-  return new NextRequest(`http://localhost/api/classes/${classId}/roster`, init);
+  return new NextRequest(`http://localhost/api/classes/${classId}/roster`, init as ConstructorParameters<typeof NextRequest>[1]);
 }
 
 describe('GET /api/classes/[classId]/roster (integration)', () => {
@@ -89,6 +92,7 @@ describe('GET /api/classes/[classId]/roster (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
     admin = await seedUser(`${TEST_PREFIX}-admin`, 'ADMIN');
@@ -98,10 +102,14 @@ describe('GET /api/classes/[classId]/roster (integration)', () => {
     cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: studentA.id });
+      .values({ classId: cls.id, studentId: studentA.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: studentB.id });
+      .values({ classId: cls.id, studentId: studentB.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
   });
 
   it('returns 401 when unauthenticated', async () => {
@@ -182,6 +190,7 @@ describe('GET /api/classes/[classId]/roster (integration)', () => {
     await db.insert(gamificationProfiles).values({
       userId: studentA.id,
       lastActiveAt: lastActive,
+      schoolId: TEST_SCHOOL_ID,
     });
     const session = await createSession(teacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });
@@ -235,10 +244,14 @@ describe('DELETE /api/classes/[classId]/roster (integration)', () => {
     cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: studentA.id });
+      .values({ classId: cls.id, studentId: studentA.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: studentB.id });
+      .values({ classId: cls.id, studentId: studentB.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
   });
 
   function delReq(classId: string, body: unknown) {

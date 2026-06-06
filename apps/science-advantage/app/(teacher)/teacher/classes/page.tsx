@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { teachers } from '@reading-advantage/domain';
+import { teachers, createTenantDB } from '@reading-advantage/domain';
 import type { UserContext } from '@reading-advantage/auth';
+import { db } from '@reading-advantage/db';
 
 import { requireRole } from '@/lib/auth/server';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,9 +13,12 @@ import { formatStudentCount, getStandardsAlignmentLabel } from '@/lib/utils/clas
 export default async function TeacherClassesPage() {
   const session = await requireRole('TEACHER');
 
+  const tenant = { schoolId: session.user.schoolId };
+  const tenantDb = createTenantDB(db, tenant);
   const classes = await teachers.getTeacherClassesWithCounts({
+    db: tenantDb,
     user: session.user as unknown as UserContext,
-    tenant: { schoolId: session.user.schoolId },
+    tenant,
     teacherId: session.user.id,
   });
 

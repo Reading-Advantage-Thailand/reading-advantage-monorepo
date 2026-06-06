@@ -300,22 +300,30 @@ describe(
 
       it("pnpm --filter science-advantage check-types output contains tsc invocation evidence (not a no-op)", () => {
         // The "not a no-op" verification: a tsc invocation produces
-        // `error TS\d+:` lines (today, 265 of them) and/or a `Found N
-        // errors` summary line. A no-op (`echo done`, `:`, `true`,
-        // `pnpm echo`) would produce empty output or a single non-tsc
-        // line, neither of which matches the regex. The companion to
-        // tests 1–5 (wiring integrity) — together they form the
-        // Phase 7 "not a no-op" gate from test-strategy.md §1 P7.
+        // `error TS\d+:` lines when errors exist, OR exits 0 with no
+        // error output when the codebase is clean. A no-op (`echo done`,
+        // `:`, `true`, `pnpm echo`) would produce empty output or a
+        // single non-tsc line. When tsc exits 0 (clean), the lack of
+        // error lines is expected — the exit-0 gate (test 7) covers
+        // that case. When tsc exits non-zero, we require error lines
+        // to prove tsc actually ran.
         const tscLines = tscErrorLines(checkTypesOutput);
-        expect(
-          tscLines.length,
-          `Expected the 'check-types' gate output to contain tsc ` +
-            `invocation evidence (i.e. 'error TS<num>:' lines), not a ` +
-            `no-op's empty echo. Found ${String(tscLines.length)} tsc ` +
-            `error lines. This is the Phase 7 'not a no-op' assertion ` +
-            `from test-strategy.md §1 P7. First 1 KB of gate output:\n` +
-            `${checkTypesOutput.slice(0, 1024)}`,
-        ).toBeGreaterThan(0);
+        if (checkTypesStatus === 0) {
+          // tsc passed cleanly — no error lines expected.
+          // The file-content guards (tests 1–5) verify the script
+          // contains `tsc` and `--noEmit`, so this is not a no-op.
+          expect(checkTypesStatus).toBe(0);
+        } else {
+          expect(
+            tscLines.length,
+            `Expected the 'check-types' gate output to contain tsc ` +
+              `invocation evidence (i.e. 'error TS<num>:' lines), not a ` +
+              `no-op's empty echo. Found ${String(tscLines.length)} tsc ` +
+              `error lines. This is the Phase 7 'not a no-op' assertion ` +
+              `from test-strategy.md §1 P7. First 1 KB of gate output:\n` +
+              `${checkTypesOutput.slice(0, 1024)}`,
+          ).toBeGreaterThan(0);
+        }
       });
 
       it("pnpm --filter science-advantage check-types exits 0 (end-to-end gate)", () => {

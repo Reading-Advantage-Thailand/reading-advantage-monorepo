@@ -4,6 +4,7 @@ import { scienceStandardMastery } from '@reading-advantage/db/schema';
 export type StandardMasteryWriteInput = {
   studentId: string;
   standardId: string;
+  schoolId: string;
   /** Mastery value in [0,1]; rounded to 2 decimals before persisting. */
   masteryLevel: number;
   evidenceDelta?: number;
@@ -45,7 +46,7 @@ export const recordStandardMastery = async (
   client: typeof db,
   input: StandardMasteryWriteInput
 ): Promise<StandardMasteryRow> => {
-  const { studentId, standardId, lastAssessedAt } = input;
+  const { studentId, standardId, schoolId, lastAssessedAt } = input;
   const masteryLevel = clampMasteryLevel(input.masteryLevel);
   const evidenceDelta = resolveEvidenceDelta(input.evidenceDelta);
 
@@ -57,6 +58,7 @@ export const recordStandardMastery = async (
       masteryLevel,
       evidenceCount: evidenceDelta,
       lastAssessedAt,
+      schoolId,
     })
     .onConflictDoUpdate({
       target: [

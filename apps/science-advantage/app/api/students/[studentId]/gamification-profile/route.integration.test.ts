@@ -7,11 +7,13 @@ import {
   gamificationProfiles,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'gamification-profile-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -71,6 +73,7 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   it('returns 401 when unauthenticated', async () => {
@@ -152,6 +155,7 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
       xp: 450,
       level: 3,
       streak: 7,
+      schoolId: TEST_SCHOOL_ID,
     });
     const baseTime = Date.now();
     for (let i = 0; i < 4; i++) {
@@ -159,6 +163,7 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
         userId: student.id,
         badgeType: `GP_BADGE_${i}`,
         unlockedAt: new Date(baseTime + i * 1000),
+        schoolId: TEST_SCHOOL_ID,
       });
     }
 
@@ -194,6 +199,7 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
       xp: 2000,
       level: 6,
       streak: 0,
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(student.id);

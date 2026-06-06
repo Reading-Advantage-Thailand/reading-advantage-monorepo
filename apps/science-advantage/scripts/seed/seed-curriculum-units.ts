@@ -8,10 +8,13 @@ import {
   scienceCurriculumUnits,
   scienceLessons,
   scienceUnitLessons,
+  schools,
 } from '@reading-advantage/db/schema';
 
 import type { StandardsAlignment } from '@/lib/enums';
 import { validateCurriculumUnitsFile } from './validate-json';
+
+const SEED_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,6 +46,8 @@ export async function seedCurriculumUnits(
   if (!options.classId) {
     throw new Error('seedCurriculumUnits requires a classId (science_curriculum_units.class_id is NOT NULL)');
   }
+
+  await db.insert(schools).values({ id: SEED_SCHOOL_ID, name: 'Seed School' }).onConflictDoNothing();
 
   const dataDir = path.join(__dirname, '..', '..', 'prisma', 'seed-data', 'curriculum-units');
   const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
@@ -86,6 +91,7 @@ export async function seedCurriculumUnits(
             gradeLevel: data.gradeLevel,
             order: unitData.order,
             classId: options.classId,
+            schoolId: SEED_SCHOOL_ID,
           })
           .onConflictDoUpdate({
             target: scienceCurriculumUnits.slug,
@@ -127,7 +133,7 @@ export async function seedCurriculumUnits(
 
           if (lessonRows.length > 0) {
             await tx.insert(scienceUnitLessons).values(
-              lessonRows.map((l) => ({ unitId: unit.id, lessonId: l.id }))
+              lessonRows.map((l) => ({ unitId: unit.id, lessonId: l.id, schoolId: SEED_SCHOOL_ID }))
             );
           }
         }

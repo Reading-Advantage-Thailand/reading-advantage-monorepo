@@ -17,11 +17,13 @@ import {
   scienceUnitLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET, POST } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'quiz-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -95,12 +97,14 @@ async function seedLessonWithQuestions(args: {
       standardsAlignment: 'THAI',
       joinCode: `QUIZ-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId: args.teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
   await db.insert(scienceClassStudents).values({
     classId: cls.id,
     studentId: args.enrolledStudentId,
+    schoolId: TEST_SCHOOL_ID,
   });
 
   const [unit] = await db
@@ -112,6 +116,7 @@ async function seedLessonWithQuestions(args: {
       gradeLevel: 3,
       order: 1,
       classId: cls.id,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -122,12 +127,14 @@ async function seedLessonWithQuestions(args: {
       title: 'Quiz Test Lesson',
       gradeLevel: 3,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
   await db.insert(scienceUnitLessons).values({
     unitId: unit.id,
     lessonId: lesson.id,
+    schoolId: TEST_SCHOOL_ID,
   });
 
   const questions: QuestionRow[] = [];
@@ -143,6 +150,7 @@ async function seedLessonWithQuestions(args: {
         correctAnswer: 'Observe',
         points: 1,
         order: i,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     questions.push(q);
@@ -164,6 +172,7 @@ describe('GET /api/lessons/[lessonSlug]/quiz (integration)', () => {
     mockCookies.get.mockReturnValue(undefined);
 
     await cleanupFixtures();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
     outsider = await seedUser(`${TEST_PREFIX}-outsider`, 'STUDENT');
@@ -286,6 +295,7 @@ describe('POST /api/lessons/[lessonSlug]/quiz/submit (integration)', () => {
         maxScore: questions.length,
         attemptNumber: 1,
         startedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     return attempt.id;
@@ -450,6 +460,7 @@ describe('POST /api/lessons/[lessonSlug]/quiz/submit (integration)', () => {
         maxScore: questions.length,
         attemptNumber: 2,
         startedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     const session = await createSession(student.id);

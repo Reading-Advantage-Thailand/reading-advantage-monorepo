@@ -7,11 +7,13 @@ import {
   gamificationProfiles,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'achievements-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -71,6 +73,7 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   it('returns 401 when unauthenticated', async () => {
@@ -134,6 +137,7 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
         userId: student.id,
         badgeType: `ACH_BADGE_${i}`,
         unlockedAt: new Date(baseTime + i * 1000),
+        schoolId: TEST_SCHOOL_ID,
       });
     }
     // Achievement for a different user must not leak in.
@@ -141,6 +145,7 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
       userId: other.id,
       badgeType: 'OTHER_BADGE',
       unlockedAt: new Date(baseTime + 10_000),
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(student.id);
@@ -183,6 +188,7 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
     await db.insert(achievements).values({
       userId: student.id,
       badgeType: 'DEV_BADGE',
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(teacher.id);

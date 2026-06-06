@@ -14,10 +14,13 @@ import {
   scienceStandards,
   scienceUnitLessons,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 
 import { buildRecommendationContext } from './recommendation-context';
 import type { AttemptWithRelations } from './recommendation-context';
+
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 async function cleanup(): Promise<void> {
   await db.delete(scienceQuestionResponses);
@@ -46,6 +49,7 @@ describe('buildRecommendationContext - Integration', () => {
 
   beforeEach(async () => {
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
 
     [{ id: studentId }] = await db
       .insert(users)
@@ -79,6 +83,7 @@ describe('buildRecommendationContext - Integration', () => {
         standardsAlignment: 'THAI',
         joinCode: 'RECCTX',
         teacherId,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceClasses.id });
 
@@ -91,6 +96,7 @@ describe('buildRecommendationContext - Integration', () => {
         gradeLevel: 5,
         order: 1,
         classId,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceCurriculumUnits.id });
 
@@ -103,6 +109,7 @@ describe('buildRecommendationContext - Integration', () => {
         gradeLevel: 5,
         order: 1,
         lessonType: 'LESSON',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceLessons.id });
 
@@ -114,12 +121,17 @@ describe('buildRecommendationContext - Integration', () => {
         gradeLevel: 5,
         order: 2,
         lessonType: 'LAB',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceLessons.id });
 
     await db.insert(scienceUnitLessons).values([
-      { unitId, lessonId: attemptedLessonId },
-      { unitId, lessonId: otherLessonId },
+      { unitId, lessonId: attemptedLessonId ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { unitId, lessonId: otherLessonId ,
+        schoolId: TEST_SCHOOL_ID,
+      },
     ]);
 
     [{ id: standardLowId }] = await db
@@ -129,6 +141,7 @@ describe('buildRecommendationContext - Integration', () => {
         code: 'Sc-LOW',
         description: 'Low mastery standard',
         gradeLevel: 5,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceStandards.id });
 
@@ -139,6 +152,7 @@ describe('buildRecommendationContext - Integration', () => {
         code: 'Sc-HIGH',
         description: 'High mastery standard',
         gradeLevel: 5,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceStandards.id });
 
@@ -149,12 +163,17 @@ describe('buildRecommendationContext - Integration', () => {
         code: 'Sc-OTHER',
         description: 'Other standard (no mastery yet)',
         gradeLevel: 5,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceStandards.id });
 
     await db.insert(scienceLessonStandards).values([
-      { lessonId: attemptedLessonId, standardId: standardLowId },
-      { lessonId: otherLessonId, standardId: standardOtherId },
+      { lessonId: attemptedLessonId, standardId: standardLowId ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { lessonId: otherLessonId, standardId: standardOtherId ,
+        schoolId: TEST_SCHOOL_ID,
+      },
     ]);
 
     // Mastery: low (0.20) and high (0.95)
@@ -165,6 +184,7 @@ describe('buildRecommendationContext - Integration', () => {
         masteryLevel: '0.20',
         evidenceCount: 3,
         lastAssessedAt: new Date('2026-05-01T00:00:00Z'),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId,
@@ -172,6 +192,7 @@ describe('buildRecommendationContext - Integration', () => {
         masteryLevel: '0.95',
         evidenceCount: 10,
         lastAssessedAt: new Date('2026-05-15T00:00:00Z'),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -181,6 +202,7 @@ describe('buildRecommendationContext - Integration', () => {
       lessonId: otherLessonId,
       status: 'COMPLETED',
       completedAt: new Date('2026-05-10T00:00:00Z'),
+      schoolId: TEST_SCHOOL_ID,
     });
   });
 

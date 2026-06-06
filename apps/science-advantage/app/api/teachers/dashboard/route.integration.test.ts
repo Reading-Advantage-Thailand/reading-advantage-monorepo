@@ -11,11 +11,13 @@ import {
   scienceStandards,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'teacher-dashboard-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 const STANDARDS_DESC = 'teacher-dashboard-itest standard';
 
 const mockCookies = {
@@ -77,6 +79,7 @@ async function seedClass(
       standardsAlignment: 'THAI',
       joinCode: `TDB-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return cls;
@@ -92,6 +95,7 @@ async function seedLesson(suffix: string, order: number): Promise<LessonRow> {
       title: `Lesson ${suffix}`,
       gradeLevel: 3,
       order,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return lesson;
@@ -105,6 +109,7 @@ async function seedStandard(code: string) {
       code,
       description: STANDARDS_DESC,
       gradeLevel: 3,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return s;
@@ -121,6 +126,7 @@ describe('GET /api/teachers/dashboard (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
   });
 
   it('returns a non-2xx error when unauthenticated', async () => {
@@ -183,7 +189,9 @@ describe('GET /api/teachers/dashboard (integration)', () => {
     for (const s of [s1, s2, s3]) {
       await db
         .insert(scienceClassStudents)
-        .values({ classId: cls.id, studentId: s.id });
+        .values({ classId: cls.id, studentId: s.id ,
+            schoolId: TEST_SCHOOL_ID,
+        });
     }
 
     await db.insert(scienceLessonCompletions).values([
@@ -199,6 +207,7 @@ describe('GET /api/teachers/dashboard (integration)', () => {
         totalTimeSpentSeconds: 120,
         completedAt: new Date(),
         lastAttemptAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: s2.id,
@@ -212,6 +221,7 @@ describe('GET /api/teachers/dashboard (integration)', () => {
         totalTimeSpentSeconds: 150,
         completedAt: new Date(),
         lastAttemptAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -242,7 +252,9 @@ describe('GET /api/teachers/dashboard (integration)', () => {
     for (const s of [s1, s2, s3]) {
       await db
         .insert(scienceClassStudents)
-        .values({ classId: cls.id, studentId: s.id });
+        .values({ classId: cls.id, studentId: s.id ,
+            schoolId: TEST_SCHOOL_ID,
+        });
     }
 
     await db.insert(scienceStandardMastery).values([
@@ -251,18 +263,21 @@ describe('GET /api/teachers/dashboard (integration)', () => {
         standardId: standard.id,
         masteryLevel: String(0.4),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: s2.id,
         standardId: standard.id,
         masteryLevel: String(0.55),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: s3.id,
         standardId: standard.id,
         masteryLevel: String(0.8),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -285,7 +300,9 @@ describe('GET /api/teachers/dashboard (integration)', () => {
     for (const s of [s1, s2]) {
       await db
         .insert(scienceClassStudents)
-        .values({ classId: cls.id, studentId: s.id });
+        .values({ classId: cls.id, studentId: s.id ,
+            schoolId: TEST_SCHOOL_ID,
+        });
     }
 
     await db.insert(scienceStandardMastery).values([
@@ -294,12 +311,14 @@ describe('GET /api/teachers/dashboard (integration)', () => {
         standardId: standard.id,
         masteryLevel: String(0.85),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: s2.id,
         standardId: standard.id,
         masteryLevel: String(0.92),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -323,10 +342,14 @@ describe('GET /api/teachers/dashboard (integration)', () => {
     const otherStudent = await seedUser(`${TEST_PREFIX}-other`, 'STUDENT');
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: myStudent.id });
+      .values({ classId: cls.id, studentId: myStudent.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: otherCls.id, studentId: otherStudent.id });
+      .values({ classId: otherCls.id, studentId: otherStudent.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     await db.insert(scienceStandardMastery).values([
       {
@@ -334,6 +357,7 @@ describe('GET /api/teachers/dashboard (integration)', () => {
         standardId: standard.id,
         masteryLevel: String(0.3),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         // not in my class — should NOT count
@@ -341,6 +365,7 @@ describe('GET /api/teachers/dashboard (integration)', () => {
         standardId: standard.id,
         masteryLevel: String(0.2),
         lastAssessedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -363,7 +388,9 @@ describe('GET /api/teachers/dashboard (integration)', () => {
     for (const s of [s1, s2]) {
       await db
         .insert(scienceClassStudents)
-        .values({ classId: cls.id, studentId: s.id });
+        .values({ classId: cls.id, studentId: s.id ,
+            schoolId: TEST_SCHOOL_ID,
+        });
     }
 
     await db.insert(scienceLessonCompletions).values([
@@ -379,6 +406,7 @@ describe('GET /api/teachers/dashboard (integration)', () => {
         totalTimeSpentSeconds: 100,
         completedAt: new Date('2025-01-01T10:00:00Z'),
         lastAttemptAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: s2.id,
@@ -392,6 +420,7 @@ describe('GET /api/teachers/dashboard (integration)', () => {
         totalTimeSpentSeconds: 200,
         completedAt: new Date('2025-01-02T10:00:00Z'),
         lastAttemptAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -423,7 +452,9 @@ describe('GET /api/teachers/dashboard (integration)', () => {
       });
       await db
         .insert(scienceClassStudents)
-        .values({ classId: cls.id, studentId: s.id });
+        .values({ classId: cls.id, studentId: s.id ,
+            schoolId: TEST_SCHOOL_ID,
+        });
       await db.insert(scienceLessonCompletions).values({
         studentId: s.id,
         lessonId: lesson.id,
@@ -436,6 +467,7 @@ describe('GET /api/teachers/dashboard (integration)', () => {
         totalTimeSpentSeconds: 100 + i * 10,
         completedAt: new Date(2025, 0, i + 1),
         lastAttemptAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       });
     }
 
@@ -477,10 +509,14 @@ describe('GET /api/teachers/dashboard (integration)', () => {
     const sB = await seedUser(`${TEST_PREFIX}-sb`, 'STUDENT');
     await db
       .insert(scienceClassStudents)
-      .values({ classId: classA.id, studentId: sA.id });
+      .values({ classId: classA.id, studentId: sA.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: classB.id, studentId: sB.id });
+      .values({ classId: classB.id, studentId: sB.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
 
     const session = await createSession(teacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });

@@ -8,6 +8,7 @@ import {
   scienceStandards,
   scienceUnitLessons,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import {
   generateCurriculumUnitSlug,
@@ -17,6 +18,7 @@ import {
 } from '../lesson-slug.schema';
 
 const TEST_PREFIX = 'curr-id-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 async function cleanup(): Promise<void> {
   await db.delete(scienceLessonStandards);
@@ -40,6 +42,7 @@ describe('Curriculum Unit and Lesson Relationships (Drizzle integration)', () =>
 
   beforeEach(async () => {
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
 
     const [standard] = await db
       .insert(scienceStandards)
@@ -48,6 +51,7 @@ describe('Curriculum Unit and Lesson Relationships (Drizzle integration)', () =>
         code: `Sc1.1-G3-${TEST_PREFIX}-${Date.now()}`,
         description: 'Curriculum identifiers test standard',
         gradeLevel: 3,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     testStandardId = standard.id;
@@ -70,6 +74,7 @@ describe('Curriculum Unit and Lesson Relationships (Drizzle integration)', () =>
         standardsAlignment: 'THAI',
         joinCode: `TEST-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
         teacherId,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     testClassId = cls.id;
@@ -84,6 +89,7 @@ describe('Curriculum Unit and Lesson Relationships (Drizzle integration)', () =>
         content: 'Test content',
         gradeLevel: 3,
         order: 1,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     testLessonId = lesson.id;
@@ -91,6 +97,7 @@ describe('Curriculum Unit and Lesson Relationships (Drizzle integration)', () =>
     await db.insert(scienceLessonStandards).values({
       lessonId: lesson.id,
       standardId: standard.id,
+      schoolId: TEST_SCHOOL_ID,
     });
 
     testUnitTitle = 'Test Unit';
@@ -104,6 +111,7 @@ describe('Curriculum Unit and Lesson Relationships (Drizzle integration)', () =>
         gradeLevel: 3,
         order: 1,
         classId: cls.id,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     testUnitId = unit.id;
@@ -111,6 +119,7 @@ describe('Curriculum Unit and Lesson Relationships (Drizzle integration)', () =>
     await db.insert(scienceUnitLessons).values({
       unitId: unit.id,
       lessonId: lesson.id,
+      schoolId: TEST_SCHOOL_ID,
     });
   });
 

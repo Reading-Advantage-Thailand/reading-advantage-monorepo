@@ -215,6 +215,16 @@ export async function checkBadgeConditions(
 
   const created: { badgeType: string; id: string; unlockedAt: Date }[] = [];
 
+  const [userProfile] = await db
+    .select({ schoolId: gamificationProfiles.schoolId })
+    .from(gamificationProfiles)
+    .where(eq(gamificationProfiles.userId, userId))
+    .limit(1);
+
+  if (!userProfile) {
+    return { newlyUnlocked: [], achievements: [] };
+  }
+
   for (const badgeType of newlyUnlocked) {
     const [achievement] = await db
       .insert(achievements)
@@ -222,6 +232,7 @@ export async function checkBadgeConditions(
         userId,
         badgeType,
         unlockedAt: new Date(),
+        schoolId: userProfile.schoolId,
       })
       .returning();
     created.push({

@@ -7,11 +7,13 @@ import {
   scienceClassStudents,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'student-classes-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -60,6 +62,7 @@ async function seedClass(teacherId: string, name: string) {
       gradeLevel: 5,
       standardsAlignment: 'NGSS',
       joinCode: `code-${Date.now()}`,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return c;
@@ -69,6 +72,7 @@ async function enrollStudent(studentId: string, classId: string) {
   await db.insert(scienceClassStudents).values({
     studentId,
     classId,
+    schoolId: TEST_SCHOOL_ID,
   });
 }
 
@@ -82,6 +86,7 @@ describe('GET /api/student/classes (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
   });

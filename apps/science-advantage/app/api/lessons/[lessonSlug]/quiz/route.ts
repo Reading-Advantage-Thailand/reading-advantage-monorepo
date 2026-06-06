@@ -46,7 +46,7 @@ export async function POST(
     const result = await submitAttempt({
       user: session.user, tenant: { schoolId: session.user.schoolId },
       input: { attemptId, responses },
-      deps: { gradeAnswer, calculateXpForQuiz, awardXp, updateStreakForProfile, checkBadgeConditions, processMasteryRun },
+      deps: { gradeAnswer, calculateXpForQuiz, awardXp, updateStreakForProfile, checkBadgeConditions: checkBadgeConditions as Parameters<typeof submitAttempt>[0]['deps']['checkBadgeConditions'], processMasteryRun },
     });
     return NextResponse.json(result.body, { status: result.status });
   } catch (error) {

@@ -10,11 +10,13 @@ import {
   scienceUnitLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'analytics-overview-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -70,6 +72,7 @@ async function seedClassWithLessons(args: {
       standardsAlignment: 'THAI',
       joinCode: `AOV-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId: args.teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -77,6 +80,7 @@ async function seedClassWithLessons(args: {
     await db.insert(scienceClassStudents).values({
       classId: cls.id,
       studentId,
+      schoolId: TEST_SCHOOL_ID,
     });
   }
 
@@ -89,6 +93,7 @@ async function seedClassWithLessons(args: {
       gradeLevel: 3,
       order: 1,
       classId: cls.id,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -103,12 +108,15 @@ async function seedClassWithLessons(args: {
         title: `Lesson ${i}`,
         gradeLevel: 3,
         order: i,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     lessons.push(lesson);
     await db
       .insert(scienceUnitLessons)
-      .values({ unitId: unit.id, lessonId: lesson.id });
+      .values({ unitId: unit.id, lessonId: lesson.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
   }
 
   return { cls, lessons };
@@ -125,6 +133,7 @@ describe('GET /api/classes/[classId]/analytics/overview (integration)', () => {
     mockCookies.get.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
 
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
@@ -207,6 +216,7 @@ describe('GET /api/classes/[classId]/analytics/overview (integration)', () => {
         totalTimeSpentSeconds: 600,
         completedAt: new Date(),
         lastAttemptAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: student2.id,
@@ -217,6 +227,7 @@ describe('GET /api/classes/[classId]/analytics/overview (integration)', () => {
         totalTimeSpentSeconds: 480,
         completedAt: new Date(),
         lastAttemptAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
       // Lesson 2: only student1 completed at 55%.
       {
@@ -228,6 +239,7 @@ describe('GET /api/classes/[classId]/analytics/overview (integration)', () => {
         totalTimeSpentSeconds: 900,
         completedAt: new Date(),
         lastAttemptAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 
@@ -277,6 +289,7 @@ describe('GET /api/classes/[classId]/analytics/overview (integration)', () => {
       totalTimeSpentSeconds: 100,
       completedAt: new Date(),
       lastAttemptAt: new Date(),
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(teacher.id);

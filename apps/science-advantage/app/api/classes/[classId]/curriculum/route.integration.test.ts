@@ -11,11 +11,13 @@ import {
   scienceUnitLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'curriculum-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -67,6 +69,7 @@ async function seedClass(teacherId: string): Promise<ClassRow> {
       standardsAlignment: 'THAI',
       joinCode: `CURR-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return cls;
@@ -88,6 +91,7 @@ async function seedUnitWithLessons(
       gradeLevel: 3,
       order: unitOrder,
       classId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -102,12 +106,15 @@ async function seedUnitWithLessons(
         title: `Lesson U${unitOrder}-${order}`,
         gradeLevel: 3,
         order,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     lessons.push(lesson);
     await db
       .insert(scienceUnitLessons)
-      .values({ unitId: unit.id, lessonId: lesson.id });
+      .values({ unitId: unit.id, lessonId: lesson.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
   }
 
   return { unitId: unit.id, lessons };
@@ -126,13 +133,16 @@ describe('GET /api/classes/[classId]/curriculum (integration)', () => {
     mockCookies.get.mockReturnValue(undefined);
 
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
     outsider = await seedUser(`${TEST_PREFIX}-outsider`, 'STUDENT');
     cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id });
+      .values({ classId: cls.id, studentId: student.id ,
+          schoolId: TEST_SCHOOL_ID,
+      });
   });
 
   it('returns 401 when not authenticated', async () => {
@@ -221,6 +231,7 @@ describe('GET /api/classes/[classId]/curriculum (integration)', () => {
         completedAt: new Date('2026-05-24T12:00:00Z'),
         lastAttemptAt: new Date('2026-05-24T12:00:00Z'),
         totalTimeSpentSeconds: 120,
+        schoolId: TEST_SCHOOL_ID,
       },
       {
         studentId: student.id,
@@ -228,6 +239,7 @@ describe('GET /api/classes/[classId]/curriculum (integration)', () => {
         status: 'IN_PROGRESS',
         attemptsCount: 1,
         lastAttemptAt: new Date('2026-05-24T13:00:00Z'),
+        schoolId: TEST_SCHOOL_ID,
       },
     ]);
 

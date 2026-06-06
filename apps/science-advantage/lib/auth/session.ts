@@ -53,5 +53,5 @@ export async function deleteSessionCookie(): Promise<void> {
  */
 export async function getCurrentSession(): Promise<Session | null> {
   const token = await getSessionToken();
-  return sharedGetSession(db, token);
+  return sharedGetSession(db, token ?? undefined);
 }

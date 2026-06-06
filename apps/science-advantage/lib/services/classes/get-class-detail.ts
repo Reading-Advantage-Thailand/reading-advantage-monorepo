@@ -13,6 +13,7 @@ type LessonSummary = {
   id: string;
   slug: string;
   title: string;
+  titleThai: string | null;
   description: string | null;
   order: number;
   gradeLevel: number;
@@ -94,6 +95,7 @@ export async function getClassDetailWithCurriculum(
           id: scienceLessons.id,
           slug: scienceLessons.slug,
           title: scienceLessons.title,
+          titleThai: scienceLessons.titleThai,
           description: scienceLessons.description,
           order: scienceLessons.order,
           gradeLevel: scienceLessons.gradeLevel,

@@ -7,9 +7,12 @@ import {
   scienceLessons,
   scienceUnitLessons,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 
 import { getClassDetailWithCurriculum } from './get-class-detail';
+
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 async function cleanupFixtures(): Promise<void> {
   await db.delete(scienceClassStudents);
@@ -35,6 +38,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
 
   beforeEach(async () => {
     await cleanupFixtures();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
 
     [{ id: teacherId }] = await db
       .insert(users)
@@ -80,12 +84,17 @@ describe('getClassDetailWithCurriculum - Integration', () => {
         standardsAlignment: 'THAI',
         joinCode: 'GCDCLS',
         teacherId,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceClasses.id });
 
     await db.insert(scienceClassStudents).values([
-      { classId, studentId: studentAId },
-      { classId, studentId: studentBId },
+      { classId, studentId: studentAId ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { classId, studentId: studentBId ,
+        schoolId: TEST_SCHOOL_ID,
+      },
     ]);
 
     // Two units in this class (insert in REVERSE order to prove ORDER BY works)
@@ -99,6 +108,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
         gradeLevel: 4,
         order: 2,
         classId,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceCurriculumUnits.id });
 
@@ -112,6 +122,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
         gradeLevel: 4,
         order: 1,
         classId,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceCurriculumUnits.id });
 
@@ -124,6 +135,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
       gradeLevel: 4,
       order: 99,
       classId,
+      schoolId: TEST_SCHOOL_ID,
     });
 
     // Three lessons; insert in REVERSE order to prove ORDER BY works
@@ -135,6 +147,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
         description: 'Third',
         gradeLevel: 4,
         order: 3,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceLessons.id });
 
@@ -146,6 +159,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
         description: 'Second',
         gradeLevel: 4,
         order: 2,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceLessons.id });
 
@@ -157,14 +171,21 @@ describe('getClassDetailWithCurriculum - Integration', () => {
         description: 'First',
         gradeLevel: 4,
         order: 1,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceLessons.id });
 
     // Unit 1 has lessons 1 and 2; Unit 2 has lesson 3
     await db.insert(scienceUnitLessons).values([
-      { unitId: unitOneId, lessonId: lessonOneId },
-      { unitId: unitOneId, lessonId: lessonTwoId },
-      { unitId: unitTwoId, lessonId: lessonThreeId },
+      { unitId: unitOneId, lessonId: lessonOneId ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { unitId: unitOneId, lessonId: lessonTwoId ,
+        schoolId: TEST_SCHOOL_ID,
+      },
+      { unitId: unitTwoId, lessonId: lessonThreeId ,
+        schoolId: TEST_SCHOOL_ID,
+      },
     ]);
   });
 
@@ -253,6 +274,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
         standardsAlignment: 'NGSS',
         joinCode: 'GCDBR',
         teacherId: bareTeacherId,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: scienceClasses.id });
 

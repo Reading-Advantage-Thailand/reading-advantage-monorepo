@@ -13,10 +13,12 @@ import {
   scienceStandards,
   scienceUnitLessons,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { processMasteryRun } from './mastery-worker';
 
 const TEST_PREFIX = 'mw-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 const TEACHER_ID = `${TEST_PREFIX}-teacher`;
 const STUDENT_ID = `${TEST_PREFIX}-student`;
 
@@ -82,6 +84,7 @@ async function seedScenario(args: {
       title: 'MW Test Lesson',
       gradeLevel: 5,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -99,6 +102,7 @@ async function seedScenario(args: {
         code: `NGSS-${TEST_PREFIX}-${i}-${Date.now()}`,
         description: 'Mastery worker test standard',
         gradeLevel: 5,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     standardRows.push(s);
@@ -121,6 +125,7 @@ async function seedScenario(args: {
         correctAnswer: 'A',
         points: q.points,
         order: i + 1,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     questionRows.push(qrow);
@@ -130,6 +135,7 @@ async function seedScenario(args: {
       await db.insert(scienceQuestionStandards).values({
         questionId: qrow.id,
         standardId: standard.id,
+        schoolId: TEST_SCHOOL_ID,
       });
       if (!standardIds.includes(standard.id)) standardIds.push(standard.id);
     }
@@ -148,6 +154,7 @@ async function seedScenario(args: {
       attemptNumber: 1,
       startedAt,
       completedAt,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -161,6 +168,7 @@ async function seedScenario(args: {
       timeSpentSeconds: 30,
       answeredAt: completedAt,
       order: i + 1,
+      schoolId: TEST_SCHOOL_ID,
     });
   }
 
@@ -171,6 +179,7 @@ async function seedScenario(args: {
     studentId: STUDENT_ID,
     status: 'PENDING',
     updatedCount: 0,
+    schoolId: TEST_SCHOOL_ID,
   });
 
   return { attemptId: attempt.id, standardIds };
@@ -179,6 +188,7 @@ async function seedScenario(args: {
 describe('processMasteryRun (integration)', () => {
   beforeEach(async () => {
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     await seedUsers();
   });
 
@@ -202,6 +212,7 @@ describe('processMasteryRun (integration)', () => {
         title: 'Uncompleted',
         gradeLevel: 5,
         order: 1,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     const [attempt] = await db
@@ -214,6 +225,7 @@ describe('processMasteryRun (integration)', () => {
         attemptNumber: 1,
         startedAt: new Date(),
         completedAt: null,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     await db.insert(scienceMasteryRuns).values({
@@ -221,6 +233,7 @@ describe('processMasteryRun (integration)', () => {
       studentId: STUDENT_ID,
       status: 'PENDING',
       updatedCount: 0,
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const result = await processMasteryRun({

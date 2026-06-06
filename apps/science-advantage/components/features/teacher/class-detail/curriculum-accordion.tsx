@@ -12,7 +12,7 @@ interface LessonSummary {
   id: string;
   slug: string;
   title: string;
-  titleThai: string;
+  titleThai: string | null;
   description: string | null;
   order: number;
   gradeLevel: number;

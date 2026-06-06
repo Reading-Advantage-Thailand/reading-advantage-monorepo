@@ -16,11 +16,13 @@ import {
   scienceUnitLessons,
   sessions,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'lesson-analytics-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -85,6 +87,7 @@ async function seedStandard(code: string): Promise<StandardRow> {
       code,
       description: 'Lesson analytics test standard',
       gradeLevel: 3,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return s;
@@ -106,6 +109,7 @@ async function seedClassWithLesson(args: {
       standardsAlignment: 'NGSS',
       joinCode: `LAA-${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
       teacherId: args.teacherId,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -113,6 +117,7 @@ async function seedClassWithLesson(args: {
     await db.insert(scienceClassStudents).values({
       classId: cls.id,
       studentId,
+      schoolId: TEST_SCHOOL_ID,
     });
   }
 
@@ -125,6 +130,7 @@ async function seedClassWithLesson(args: {
       gradeLevel: 3,
       order: 1,
       classId: cls.id,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -135,18 +141,23 @@ async function seedClassWithLesson(args: {
       title: 'LA Lesson',
       gradeLevel: 3,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
   await db
     .insert(scienceUnitLessons)
-    .values({ unitId: unit.id, lessonId: lesson.id });
+    .values({ unitId: unit.id, lessonId: lesson.id ,
+        schoolId: TEST_SCHOOL_ID,
+    });
 
   if (args.lessonStandardIds) {
     for (const sid of args.lessonStandardIds) {
       await db
         .insert(scienceLessonStandards)
-        .values({ lessonId: lesson.id, standardId: sid });
+        .values({ lessonId: lesson.id, standardId: sid ,
+            schoolId: TEST_SCHOOL_ID,
+        });
     }
   }
 
@@ -172,13 +183,16 @@ async function seedQuestion(args: {
       correctAnswer: 'A',
       points: 1,
       order: args.order,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   if (args.standardIds) {
     for (const sid of args.standardIds) {
       await db
         .insert(scienceQuestionStandards)
-        .values({ questionId: q.id, standardId: sid });
+        .values({ questionId: q.id, standardId: sid ,
+            schoolId: TEST_SCHOOL_ID,
+        });
     }
   }
   return q;
@@ -200,6 +214,7 @@ async function seedAttemptWithResponses(args: {
       attemptNumber: args.attemptNumber,
       startedAt: new Date(),
       completedAt: new Date(),
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -211,6 +226,7 @@ async function seedAttemptWithResponses(args: {
       isCorrect: r.isCorrect,
       timeSpentSeconds: r.timeSpentSeconds ?? 30,
       answeredAt: new Date(),
+      schoolId: TEST_SCHOOL_ID,
     });
   }
 }
@@ -227,6 +243,7 @@ describe('GET /api/classes/[classId]/lessons/[lessonId]/analytics (integration)'
     mockCookies.get.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER', 'Teach');
     otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
     admin = await seedUser(`${TEST_PREFIX}-admin`, 'ADMIN');
@@ -271,6 +288,7 @@ describe('GET /api/classes/[classId]/lessons/[lessonId]/analytics (integration)'
         title: 'Orphan',
         gradeLevel: 3,
         order: 99,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
 
@@ -325,6 +343,7 @@ describe('GET /api/classes/[classId]/lessons/[lessonId]/analytics (integration)'
       totalTimeSpentSeconds: 90,
       completedAt: new Date(),
       lastAttemptAt: new Date(),
+      schoolId: TEST_SCHOOL_ID,
     });
     await seedAttemptWithResponses({
       studentId: alice.id,
@@ -350,6 +369,7 @@ describe('GET /api/classes/[classId]/lessons/[lessonId]/analytics (integration)'
       totalTimeSpentSeconds: 180,
       completedAt: new Date(),
       lastAttemptAt: new Date(),
+      schoolId: TEST_SCHOOL_ID,
     });
     await seedAttemptWithResponses({
       studentId: bob.id,

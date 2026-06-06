@@ -12,11 +12,7 @@ export default defineConfig({
     // Use a minimal setup file without database operations
     setupFiles: ['./vitest.unit.setup.ts'],
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    fileParallelism: false,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov', 'html'],

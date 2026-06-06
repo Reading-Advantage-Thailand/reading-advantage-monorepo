@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
     {
       action: "dsar:export",
       targetType: "user",
-      targetId: bundle.profile?.id ?? null,
+      targetId: bundle.profile?.id ?? undefined,
     }
   );
 
@@ -121,7 +121,7 @@ export async function GET(req: NextRequest) {
   ];
   const zipBytes = buildMinimalZip(files);
 
-  return new Response(zipBytes, {
+  return new Response(zipBytes as BodyInit, {
     status: 200,
     headers: {
       "content-type": "application/zip",

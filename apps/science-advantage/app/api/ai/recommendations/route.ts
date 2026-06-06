@@ -29,7 +29,8 @@ export async function POST(request: NextRequest) {
       user: session.user, tenant: { schoolId: session.user.schoolId }, input: { attemptId: parse.data.attemptId },
       deps: {
         assertRateLimit: async (sid: string) => { if (!(await rateLimitStore.checkLimit(sid))) throw new RateLimitError(aiConfig.rateLimitWindowMs); await rateLimitStore.recordFailure(sid); },
-        buildRecommendationContext, generateRecommendation,
+        buildRecommendationContext: buildRecommendationContext as Parameters<typeof getRecommendation>[0]['deps']['buildRecommendationContext'],
+        generateRecommendation: generateRecommendation as Parameters<typeof getRecommendation>[0]['deps']['generateRecommendation'],
         cacheGet: (k: string) => recommendationCache.get(k),
         cacheSet: (k: string, v: unknown, ttl: number) => { recommendationCache.set(k, { response: v, expiresAt: Date.now() + ttl }); },
         cacheTtlMs: aiConfig.cacheTtlMs, devAuthEnabled: env.DEV_AUTH_ENABLED,

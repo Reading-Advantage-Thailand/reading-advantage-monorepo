@@ -12,9 +12,12 @@ import {
   sessions,
   accounts,
   users,
+  schools
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
+
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -64,6 +67,7 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
     mockCookies.get.mockReturnValue(undefined);
 
     await cleanupScienceFixtures();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
 
     [testTeacher] = await db
       .insert(users)
@@ -108,6 +112,7 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
         code: 'Sc1.1-G3',
         description: 'Identify characteristics of living things',
         gradeLevel: 3,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
 
@@ -120,12 +125,14 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
         content: 'Plants make their own food, animals consume food.',
         gradeLevel: 3,
         order: 1,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
 
     await db.insert(scienceLessonStandards).values({
       lessonId: testLesson.id,
       standardId: testStandard.id,
+      schoolId: TEST_SCHOOL_ID,
     });
 
     [testClass] = await db
@@ -136,12 +143,14 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
         standardsAlignment: 'THAI',
         joinCode: 'LESSON',
         teacherId: testTeacher.id,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
 
     await db.insert(scienceClassStudents).values({
       classId: testClass.id,
       studentId: testStudent.id,
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const [unit] = await db
@@ -154,12 +163,14 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
         gradeLevel: 3,
         order: 1,
         classId: testClass.id,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
 
     await db.insert(scienceUnitLessons).values({
       unitId: unit.id,
       lessonId: testLesson.id,
+      schoolId: TEST_SCHOOL_ID,
     });
   });
 
