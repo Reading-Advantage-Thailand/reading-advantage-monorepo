@@ -427,6 +427,41 @@
 - [~] Task: Read the function carefully; ensure the fix doesn't introduce a real bug (e.g. stale closure).
 - [~] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 errors.
 
+> **Status note (2026-06-07, Red phase owned by mid role):** Red-phase
+> gate tests added at
+> `apps/science-advantage/lib/ci-gates/phase-11-react-hooks-immutability.test.ts`
+> (commit `e0cd793`). Test file is DB-free and runs in ~11s on a
+> warm cache via the standard targeted vitest command:
+>
+>   `pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts lib/ci-gates/phase-11-react-hooks-immutability.test.ts`
+>
+> Test results (Red phase, expected): **6 failed | 1 passed** (7
+> total). The 6 failures are all the red-phase assertions pinned to
+> the end-state contract (`useCallback` import, `useCallback`
+> wrapping, `[studentId, lessonId]` deps, `useEffect` deps
+> referencing `fetchAnalytics`, removal of the
+> `// eslint-disable-next-line react-hooks/exhaustive-deps`
+> comment, file-scoped ESLint gate with zero
+> `react-hooks/immutability` violations). The 1 passing test is
+> the regression guard for the public export
+> `StudentLessonDetailAnalytics` (passes today; locks the
+> export so the Green-phase fix does not silently drop it).
+>
+> **Scope note (2026-06-07, mid role):** The plan task "Run `pnpm
+> turbo run lint --filter=science-advantage`; expect 0 errors" is
+> only satisfiable once the 3 sibling analytics files
+> (`class-analytics-overview.tsx:100`,
+> `lesson-detail-analytics.tsx:155`,
+> `student-detail-analytics.tsx:143` — 1 ESLint error per file)
+> are also fixed. The Phase 11 plan tasks name only
+> `student-lesson-detail-analytics.tsx`, so the Green-phase fix
+> for Phase 11 will reduce the workspace lint error count by
+> ~25% (1 of 4 `react-hooks/immutability` errors). The
+> supervisor handoff recommends a follow-up phase to address the
+> 3 sibling files. The in-scope gate for Phase 11 is the
+> file-scoped lint assertion (test 6), not the workspace-wide
+> lint.
+
 ## Phase 12: Silence 6 Unused-Var Warnings
 
 - [ ] Task: In `lib/gamification/badges.ts:114,202`, examine the `_userId` and `_triggerEvent` parameters.
