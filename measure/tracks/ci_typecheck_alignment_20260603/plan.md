@@ -338,8 +338,26 @@
 
 ## Phase 10: Add `path-filter: apps/science-advantage/**` to Monorepo Root CI
 
-- [ ] Task: Open `.github/workflows/ci.yml` (monorepo root).
-- [ ] Task: Find the existing `on: pull_request:` block; add a `paths:` filter:
+> **Status note (2026-06-07, Red phase owned by mid role):** Per
+> `test-strategy.md` §1 P10 / §5 P10 / §4 architecture guardrails, Phase 10
+> is a two-edit change to the monorepo-root `.github/workflows/ci.yml`:
+> (i) add a `paths:` filter on the `pull_request` event that includes
+> `apps/science-advantage/**` plus the shared paths
+> (`packages/**`, `.github/workflows/**`, `package.json`,
+> `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`); and
+> (ii) add a `Type check` step that runs `pnpm turbo run check-types`,
+> placed after the existing `Lint` step and before `Build`. The current
+> root workflow (verified 2026-06-07, commit `d3253ab`) has neither:
+> `pull_request:` declares only `branches: [master]` (no `paths:` block)
+> and the `build` job has `Build`, `Lint`, `Test` steps but no
+> `check-types` step. The end-state contract is captured by
+> red-phase pinning tests at
+> `apps/science-advantage/lib/ci-gates/phase-10-monorepo-root-ci-paths-filter.test.ts`.
+> Tests are scoped to YAML structure (no GitHub Actions runner), so the
+> targeted vitest command runs in <1s and is DB-free.
+
+- [~] Task: Open `.github/workflows/ci.yml` (monorepo root).
+- [~] Task: Find the existing `on: pull_request:` block; add a `paths:` filter:
   ```yaml
   on:
     pull_request:
@@ -354,8 +372,8 @@
         - 'turbo.json'
   ```
   (The exact list depends on the maintainer's preferences; the key is that `apps/science-advantage/**` is included.)
-- [ ] Task: Verify the job runs the 4 gates: `pnpm turbo run {build,lint,test,check-types} --filter=science-advantage`.
-- [ ] Task: Open a test PR (or push to a branch) and verify the job triggers.
+- [~] Task: Verify the job runs the 4 gates: `pnpm turbo run {build,lint,test,check-types} --filter=science-advantage`.
+- [~] Task: Open a test PR (or push to a branch) and verify the job triggers.
 
 ## Phase 11: Fix 4 `react-hooks/immutability` Errors
 
