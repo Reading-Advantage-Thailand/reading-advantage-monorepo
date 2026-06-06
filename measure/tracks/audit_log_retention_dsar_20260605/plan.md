@@ -20,7 +20,7 @@
 ## Phase 1: Retention Config (Contract)
 - [x] Task: Add `AUDIT_RETENTION_DAYS` to the validated env schema (`lib/env.ts` / shared env), default `2557`, `.refine(n => Number.isInteger(n) && n >= 365)`. (`781ff8a`)
 - [x] Task: Write test asserting the default and that values < 365 throw at parse time. (`781ff8a`)
-- [ ] Task: Document the policy in `packages/auth/README.md` + new `docs/compliance/retention.md`.
+- [~] Task: Document the policy in `packages/auth/README.md` + new `docs/compliance/retention.md`. (Red-phase: doc-content tests pinned; see `phase-1-docs.test.ts`.)
 - [x] Task: Verify — env parse test passes. (`781ff8a`)
 
 ## Phase 2: Purge Function (TDD)
