@@ -72,11 +72,11 @@
 > `rate-limit.test.ts` runtime failure is deferred to Track 3/10 (the
 > actual `rate-limit.ts` module will land there).
 
-- [x] Task: Inspect `tsconfig.json` `exclude` list. The `lib/auth/{password,rate-limit}.test.ts` files may not yet exist (they're planned for Track 3 and Track 10).
+- [x] Task: Inspect `tsconfig.json` `exclude` list. The `lib/auth/{password,rate-limit}.test.ts` files may not yet exist (they're planned for Track 3 and Track 10). (0b08056)
 - [ ] Task: Option (a): create empty test files with `describe.skip(...)` placeholders. _(Not needed; option (b) chosen.)_
-- [x] Task: Option (b): add the test files to `tsconfig.json` `exclude`. _(Added `lib/auth/rate-limit.test.ts` to exclude.)_
+- [x] Task: Option (b): add the test files to `tsconfig.json` `exclude`. _(Added `lib/auth/rate-limit.test.ts` to exclude.)_ (0b08056)
 - [ ] Task: Pick (a) for now; the actual test content lands in Tracks 3 and 10. _(Overridden: option (b) per test-strategy.md recommendation.)_
-- [x] Task: Run `pnpm turbo run check-types`; expect 2 errors gone. _(Verified: 0 TS2307 errors in lib/auth/* cohort; gate tests 3/3 pass.)_
+- [x] Task: Run `pnpm turbo run check-types`; expect 2 errors gone. _(Verified: 0 TS2307 errors in lib/auth/* cohort; gate tests 3/3 pass.)_ (0b08056)
 
 ## Phase 4: Type-Cast `process.env` Reads
 
