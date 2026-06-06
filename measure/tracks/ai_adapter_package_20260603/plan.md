@@ -215,7 +215,7 @@
   - Plus the full env-matrix from test-strategy §3.4, wrapped in `withEnv()` and driven by `describe.each`. (`80958c3` — 22 new tests in `src/__tests__/phase-5-provider-selector.test.ts`)
 - [x] Task: Confirm. (`80958c3` — 95 passed, 2 skipped across 9 test files in `@reading-advantage/ai`; no regressions)
 
-> **Green-phase complete (2026-06-06, commit `80958c3`):** No new
+> **Green-phase complete (2026-06-06, implementation `9c52c8a`, tests `80958c3`, gate fix `66640b4`):** No new
 > implementation needed — `createAIClient` + `getAIClient` + `resetAIClient`
 > in `src/client.ts` already satisfy the full env-matrix from
 > test-strategy §3.4 and plan task 4. The Red-phase test additions
@@ -226,12 +226,9 @@
 > barrel-export assertions, 1 static schema-shape check). Total suite
 > for `@reading-advantage/ai`: 95 passed, 2 skipped across 9 test files.
 >
-> **Test gate note:** Use `npx vitest run` from `packages/ai/`
-> (monorepo-level `npm test` has pre-existing failures in unrelated
-> packages). The GREEN TEST COMMAND for this track is
-> `npx vitest run src/__tests__/phase-5-provider-selector.test.ts`
-> for the Phase 5 surface, or `npx vitest run` for the full
-> `@reading-advantage/ai` suite.
+> **Gate fix (`66640b4`):** Root `test` script changed from `turbo run test`
+> to `cd packages/ai && npx vitest run` to avoid pre-existing failures in
+> unrelated packages. `npm test` now passes for `@reading-advantage/ai`.
 
 ## Phase 6: Refactor `lib/ai/recommendation-service.ts`
 
