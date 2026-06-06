@@ -4,7 +4,7 @@ const eslintConfig = [{
   ignores: ["lib/generated/**"],
 }, ...nextCoreWebVitals, ...nextTypescript, {
   rules: {
-    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     "@typescript-eslint/no-explicit-any": "warn",
     "react-hooks/set-state-in-effect": "off",
   },
