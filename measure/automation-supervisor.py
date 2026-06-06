@@ -43,19 +43,35 @@ class Config:
     mid_model: str
     jr_model: str
     review_model: str
+    phase_acceptance_model: str
+    adversarial_model: str
+    ux_model: str
+    acceptance_model: str
+    closeout_model: str
     sr_agent: str
     mid_agent: str
     jr_agent: str
     review_agent: str
+    phase_acceptance_agent: str
+    adversarial_agent: str
+    ux_agent: str
+    acceptance_agent: str
+    closeout_agent: str
     sr_runner: str
     mid_runner: str
     jr_runner: str
     review_runner: str
+    phase_acceptance_runner: str
+    adversarial_runner: str
+    ux_runner: str
+    acceptance_runner: str
+    closeout_runner: str
     project_paths: str
     project_tests: str
     project_checks: str
     project_lint: str
     project_dev_url: str
+    ux_required: str
     red_test_command: str
     green_test_command: str
     max_agent_attempts: int
@@ -94,6 +110,7 @@ class RoleContext:
     plan_file: str
     strategy_file: str
     context_dir: Path
+    baseline_sha: str = ""
     pre_head: str = ""
     log_file: Path | None = None
     gate_log: Path | None = None
@@ -317,6 +334,61 @@ def non_test_source_changes_since(config: Config, base_sha: str) -> list[str]:
     return result
 
 
+def ux_audit_applicable(config: Config, base_sha: str) -> bool:
+    if config.ux_required == "never":
+        return False
+    if config.ux_required == "always":
+        return True
+    if not config.project_dev_url:
+        return False
+
+    frontend_markers = (
+        "app/src/",
+        "app/index.html",
+        "app/vite.config.",
+        "app/tailwind.config.",
+    )
+    frontend_suffixes = (".tsx", ".jsx", ".css", ".scss", ".html")
+    return any(
+        path.startswith(frontend_markers) or path.endswith(frontend_suffixes)
+        for path in changed_files_since(config, base_sha)
+    )
+
+
+def audit_result_path(ctx: RoleContext) -> Path:
+    return ctx.context_dir / f"{ctx.role.name}-result.json"
+
+
+def read_passing_audit_result(ctx: RoleContext) -> list[str]:
+    result_path = audit_result_path(ctx)
+    if not result_path.exists():
+        return [f"Expected structured audit result at {result_path}."]
+    try:
+        payload = json.loads(result_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return [f"Audit result is not valid JSON: {exc}"]
+    if payload.get("status") != "pass":
+        return [f"Audit result status must be 'pass', got {payload.get('status')!r}."]
+    if not isinstance(payload.get("summary"), str) or not payload["summary"].strip():
+        return ["Audit result must include a non-empty summary."]
+    return []
+
+
+def track_is_archived(config: Config, track_id: str) -> bool:
+    return (
+        not (config.measure_dir / "tracks" / track_id).exists()
+        and (config.measure_dir / "archive" / track_id).exists()
+    )
+
+
+def active_registry_contains_track(config: Config, track_id: str) -> bool:
+    registry = config.measure_dir / "tracks.md"
+    if not registry.exists():
+        return False
+    active_section = registry.read_text(encoding="utf-8", errors="ignore").split("## Archived Tracks", 1)[0]
+    return track_id in active_section
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Supervise Measure track completion with restartable agent sessions and mechanical gates.",
@@ -351,19 +423,35 @@ def load_config() -> Config:
         mid_model=os.environ.get("MID_MODEL", "minimax-cn-coding-plan/MiniMax-M3"),
         jr_model=os.environ.get("JR_MODEL", "xiaomi/mimo-v2.5-pro"),
         review_model=os.environ.get("REVIEW_MODEL", "kimi-for-coding/k2p6"),
+        phase_acceptance_model=os.environ.get("PHASE_ACCEPTANCE_MODEL", "opencode-go/qwen3.7-plus"),
+        adversarial_model=os.environ.get("ADVERSARIAL_MODEL", "vocengine-coding/ark-code-latest"),
+        ux_model=os.environ.get("UX_MODEL", "kimi-for-coding/k2p6"),
+        acceptance_model=os.environ.get("ACCEPTANCE_MODEL", "vocengine-coding/glm-5.1"),
+        closeout_model=os.environ.get("CLOSEOUT_MODEL", "minimax-cn-coding-plan/MiniMax-M3"),
         sr_agent=os.environ.get("SR_AGENT", "opencode-go/qwen3.7-plus"),
         mid_agent=os.environ.get("MID_AGENT", ""),
         jr_agent=os.environ.get("JR_AGENT", ""),
         review_agent=os.environ.get("REVIEW_AGENT", ""),
+        phase_acceptance_agent=os.environ.get("PHASE_ACCEPTANCE_AGENT", ""),
+        adversarial_agent=os.environ.get("ADVERSARIAL_AGENT", ""),
+        ux_agent=os.environ.get("UX_AGENT", ""),
+        acceptance_agent=os.environ.get("ACCEPTANCE_AGENT", ""),
+        closeout_agent=os.environ.get("CLOSEOUT_AGENT", ""),
         sr_runner=os.environ.get("SR_RUNNER", ""),
         mid_runner=os.environ.get("MID_RUNNER", ""),
         jr_runner=os.environ.get("JR_RUNNER", ""),
         review_runner=os.environ.get("REVIEW_RUNNER", ""),
+        phase_acceptance_runner=os.environ.get("PHASE_ACCEPTANCE_RUNNER", ""),
+        adversarial_runner=os.environ.get("ADVERSARIAL_RUNNER", ""),
+        ux_runner=os.environ.get("UX_RUNNER", ""),
+        acceptance_runner=os.environ.get("ACCEPTANCE_RUNNER", ""),
+        closeout_runner=os.environ.get("CLOSEOUT_RUNNER", ""),
         project_paths=os.environ.get("PROJECT_PATHS", "."),
         project_tests=os.environ.get("PROJECT_TESTS", "npm test"),
         project_checks=os.environ.get("PROJECT_CHECKS", "npm run build"),
         project_lint=os.environ.get("PROJECT_LINT", "npm run lint"),
         project_dev_url=os.environ.get("PROJECT_DEV_URL", ""),
+        ux_required=os.environ.get("UX_REQUIRED", "auto").strip().lower(),
         red_test_command=os.environ.get("RED_TEST_COMMAND", ""),
         green_test_command=os.environ.get("GREEN_TEST_COMMAND", os.environ.get("PROJECT_TESTS", "npm test")),
         max_agent_attempts=env_int("MAX_AGENT_ATTEMPTS", 3),
@@ -391,6 +479,8 @@ def validate_config(config: Config, args: argparse.Namespace) -> None:
         raise SystemExit("ERROR: SESSION_COOLDOWN_SECONDS must be non-negative")
     if config.role_timeout_seconds < 1:
         raise SystemExit("ERROR: ROLE_TIMEOUT_SECONDS must be positive")
+    if config.ux_required not in {"auto", "always", "never"}:
+        raise SystemExit("ERROR: UX_REQUIRED must be auto, always, or never")
 
 
 def discover_tracks(config: Config, track_filter: str) -> list[str]:
@@ -429,7 +519,12 @@ def print_plan(config: Config, tracks: list[str], phases: list[Phase], start: in
     print()
     print(f"Repository: {config.repo_root}")
     print(f"OpenCode:   {config.opencode_server_url}")
-    print(f"Models:     SR={config.sr_model} | MID={config.mid_model} | JR={config.jr_model} | REVIEW={config.review_model}")
+    print(f"Models:     SR={config.sr_model} | MID={config.mid_model} | JR={config.jr_model}")
+    print(
+        "Auditors:   "
+        f"PHASE={config.phase_acceptance_model} | ADVERSARIAL={config.adversarial_model} | "
+        f"UX={config.ux_model} | ACCEPTANCE={config.acceptance_model} | CLOSEOUT={config.closeout_model}"
+    )
     print(f"Run logs:   {config.run_root / config.run_id}")
     print(f"Tracks selected: {len(tracks)}")
     print(f"Incomplete phases found: {len(phases)} (completed phases are skipped)")
@@ -673,6 +768,20 @@ END_MEASURE_AGENT_RESULT
 """
 
 
+def audit_result_contract(ctx: RoleContext, extra_fields: str = "") -> str:
+    return f"""
+
+Write a machine-readable audit result to {audit_result_path(ctx)} using this JSON shape:
+{{
+  "status": "pass|fail",
+  "summary": "concise evidence-based conclusion",
+  "findings": ["specific remaining issue, or an empty list"],
+  "evidence": ["commands, files, screenshots, or logs reviewed"]{extra_fields}
+}}
+Only use status "pass" when no blocking findings remain.
+"""
+
+
 def feedback_prompt(role: str, track_id: str, phase_heading: str, feedback: list[str], log_file: Path, gate_log: Path) -> str:
     feedback_text = "\n".join(feedback)
     return f"""You are continuing the same Measure automation session after supervisor gates failed.
@@ -815,12 +924,93 @@ def gate_review(config: Config, ctx: RoleContext) -> GateResult:
     return GateResult(not feedback, feedback)
 
 
+def gate_phase_acceptance(config: Config, ctx: RoleContext) -> GateResult:
+    feedback = read_passing_audit_result(ctx)
+    total, complete, _in_progress, incomplete, with_sha = phase_counts(config.repo_root / ctx.plan_file, ctx.phase_heading)
+    if total == 0:
+        feedback.append(f"Could not find phase '{ctx.phase_heading}' in {ctx.plan_file}.")
+    elif incomplete:
+        feedback.append(f"Current phase still has {incomplete} non-deferred incomplete task(s).")
+    if complete > with_sha:
+        feedback.append("Some completed [x] tasks in this phase do not include a commit SHA.")
+    if ctx.log_file and not has_agent_result_block(ctx.log_file, config.require_agent_result_block):
+        feedback.append("Missing required MEASURE_AGENT_RESULT block.")
+    return GateResult(not feedback, feedback)
+
+
+def gate_adversarial(config: Config, ctx: RoleContext) -> GateResult:
+    feedback = read_passing_audit_result(ctx)
+    if ctx.gate_log and not run_project_gate(config, "Adversarial regression tests", config.project_tests, ctx.gate_log):
+        feedback.append(f"PROJECT_TESTS failed after adversarial audit: {config.project_tests}")
+    if ctx.log_file and not has_agent_result_block(ctx.log_file, config.require_agent_result_block):
+        feedback.append("Missing required MEASURE_AGENT_RESULT block.")
+    return GateResult(not feedback, feedback)
+
+
+def gate_ux(config: Config, ctx: RoleContext) -> GateResult:
+    feedback = read_passing_audit_result(ctx)
+    result_path = audit_result_path(ctx)
+    if result_path.exists():
+        try:
+            payload = json.loads(result_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            payload = {}
+        evidence = payload.get("evidence")
+        if not isinstance(evidence, list) or not evidence:
+            feedback.append("UX audit result must include screenshot, accessibility, or interaction evidence.")
+        if payload.get("webbridge_status") != "healthy":
+            feedback.append("UX audit must record webbridge_status as 'healthy'.")
+    if ctx.log_file and not has_agent_result_block(ctx.log_file, config.require_agent_result_block):
+        feedback.append("Missing required MEASURE_AGENT_RESULT block.")
+    return GateResult(not feedback, feedback)
+
+
+def gate_acceptance(config: Config, ctx: RoleContext) -> GateResult:
+    feedback = read_passing_audit_result(ctx)
+    incomplete = track_incomplete_count(config.repo_root / ctx.plan_file)
+    if incomplete:
+        feedback.append(f"Track still has {incomplete} non-deferred incomplete task(s).")
+    if ctx.gate_log:
+        checks = [
+            ("Lint", config.project_lint),
+            ("Build/check", config.project_checks),
+            ("Tests", config.project_tests),
+        ]
+        doctor = config.measure_dir / "doctor.sh"
+        if doctor.exists() and os.access(doctor, os.X_OK):
+            checks.append(("Measure doctor", "./measure/doctor.sh"))
+        for name, command in checks:
+            if not run_project_gate(config, name, command, ctx.gate_log):
+                feedback.append(f"{name} failed: {command}")
+    if ctx.log_file and not has_agent_result_block(ctx.log_file, config.require_agent_result_block):
+        feedback.append("Missing required MEASURE_AGENT_RESULT block.")
+    return GateResult(not feedback, feedback)
+
+
+def gate_closeout(config: Config, ctx: RoleContext) -> GateResult:
+    feedback = read_passing_audit_result(ctx)
+    if not track_is_archived(config, ctx.track_id):
+        feedback.append(
+            f"Track must be moved from measure/tracks/{ctx.track_id} to measure/archive/{ctx.track_id}."
+        )
+    if active_registry_contains_track(config, ctx.track_id):
+        feedback.append("measure/tracks.md still lists the track in its active section.")
+    if ctx.log_file and not has_agent_result_block(ctx.log_file, config.require_agent_result_block):
+        feedback.append("Missing required MEASURE_AGENT_RESULT block.")
+    return GateResult(not feedback, feedback)
+
+
 def gate_for_role(config: Config, ctx: RoleContext) -> GateResult:
     gates: dict[str, Callable[[Config, RoleContext], GateResult]] = {
         "strategy": gate_strategy,
         "mid": gate_mid,
         "jr": gate_jr,
         "review": gate_review,
+        "phase_acceptance": gate_phase_acceptance,
+        "adversarial": gate_adversarial,
+        "ux": gate_ux,
+        "acceptance": gate_acceptance,
+        "closeout": gate_closeout,
     }
     return gates[ctx.role.name](config, ctx)
 
@@ -974,6 +1164,11 @@ def main() -> int:
         "mid": RoleConfig("mid", config.mid_model, config.mid_agent, config.mid_runner),
         "jr": RoleConfig("jr", config.jr_model, config.jr_agent, config.jr_runner),
         "review": RoleConfig("review", config.review_model, config.review_agent, config.review_runner),
+        "phase_acceptance": RoleConfig("phase_acceptance", config.phase_acceptance_model, config.phase_acceptance_agent, config.phase_acceptance_runner),
+        "adversarial": RoleConfig("adversarial", config.adversarial_model, config.adversarial_agent, config.adversarial_runner),
+        "ux": RoleConfig("ux", config.ux_model, config.ux_agent, config.ux_runner),
+        "acceptance": RoleConfig("acceptance", config.acceptance_model, config.acceptance_agent, config.acceptance_runner),
+        "closeout": RoleConfig("closeout", config.closeout_model, config.closeout_agent, config.closeout_runner),
     }
     strategy_checked: set[str] = set()
 
@@ -987,6 +1182,7 @@ def main() -> int:
         safe_track = sanitize_id(phase.track_id)
         safe_phase = sanitize_id(phase.heading)
         phase_dir = config.run_root / config.run_id / safe_track / f"phase-{phase.number}-{safe_phase}"
+        phase_base_sha = git_head(config)
 
         print("==============================================================")
         print(f"  Phase {phase.number} of {len(phases)}: {phase.heading}")
@@ -1048,30 +1244,121 @@ def main() -> int:
         )
         supervise_role(config, RoleContext(roles["jr"], phase.track_id, phase.heading, plan_file, strategy_file, phase_dir), jr_prompt)
 
-        if not has_more_phases(phases, phase):
-            review_prompt = (
-                f"Load the measure skill and the build-graph skill. You are the dedicated review agent. Perform final "
-                f"review for track {phase.track_id}. Read measure/index.md, {plan_file}, {strategy_file} if it exists, "
-                "and verify all tasks are marked [x] with commit SHAs. Use build-graph to review architectural impact: "
-                "run build-graph stats ./graph.db when available, inspect changed exported symbols/routes/schemas/components, "
-                "and use build-graph callers/deps to catch missed caller updates or boundary violations. Review "
-                "measure/tech-debt.md for items related to this track. Run the full quality gate: "
-                f"{config.project_lint}, {config.project_checks}, and {config.project_tests}. "
-                + (f"If applicable, visually verify changes at {config.project_dev_url}. " if config.project_dev_url else "")
-                + "Commit any fixes with Conventional Commits. If all phases are complete and gates pass, note that the track is ready for archival."
-                + agent_result_contract("review")
+        phase_acceptance_ctx = RoleContext(
+            roles["phase_acceptance"],
+            phase.track_id,
+            phase.heading,
+            plan_file,
+            strategy_file,
+            phase_dir / "phase-acceptance",
+            baseline_sha=phase_base_sha,
+        )
+        phase_acceptance_prompt = (
+            f"Load the measure skill and build-graph skill. You are the independent Phase Acceptance Auditor for "
+            f"{phase.track_id}, {phase.heading}. Read measure/index.md, the track spec, {plan_file}, and {strategy_file} "
+            "if it exists. Compare every phase task and applicable acceptance criterion against the implementation, tests, "
+            f"and git changes since {phase_base_sha}. Use build-graph callers/deps for changed exported contracts. Look for "
+            "missing behavior, shallow tests, stubs, unhandled failure paths, and plan/commit-SHA mismatches. Correct blocking "
+            "issues you can prove, add focused regression tests, commit fixes, and re-audit before passing."
+            + audit_result_contract(phase_acceptance_ctx)
+            + agent_result_contract("phase_acceptance")
+        )
+        supervise_role(config, phase_acceptance_ctx, phase_acceptance_prompt)
+
+        adversarial_ctx = RoleContext(
+            roles["adversarial"],
+            phase.track_id,
+            phase.heading,
+            plan_file,
+            strategy_file,
+            phase_dir / "adversarial",
+            baseline_sha=phase_base_sha,
+        )
+        adversarial_prompt = (
+            f"Load the measure skill. You are the Adversarial Test Auditor for {phase.track_id}, {phase.heading}. "
+            f"Read the spec, {plan_file}, {strategy_file} if present, and inspect changes since {phase_base_sha}. Try to "
+            "disprove correctness with boundary, failure-path, integration, concurrency, and regression tests. Inspect existing "
+            "tests for weak assertions and excessive mocking. When browser behavior is applicable, own durable Playwright E2E "
+            "coverage and run it. Add and commit valuable tests and any tightly scoped fixes they expose. Run the relevant "
+            f"suite, including {config.project_tests}, before passing."
+            + audit_result_contract(adversarial_ctx)
+            + agent_result_contract("adversarial")
+        )
+        supervise_role(config, adversarial_ctx, adversarial_prompt)
+
+        if ux_audit_applicable(config, phase_base_sha):
+            ux_ctx = RoleContext(
+                roles["ux"],
+                phase.track_id,
+                phase.heading,
+                plan_file,
+                strategy_file,
+                phase_dir / "ux",
+                baseline_sha=phase_base_sha,
             )
-            review_dir = config.run_root / config.run_id / safe_track / "review"
-            supervise_role(config, RoleContext(roles["review"], phase.track_id, "track review", plan_file, strategy_file, review_dir), review_prompt)
-            print(f">>> Track closeout review complete for {phase.track_id}")
-            print("    Reminder: Update measure/tracks.md and consider archiving the track directory to measure/archive/ when verified.")
+            ux_prompt = (
+                f"Load the kimi-webbridge skill and follow it exactly. You are the multimodal UI/UX Auditor for "
+                f"{phase.track_id}, {phase.heading}. First run the required Kimi WebBridge health check. Use the real browser "
+                f"to inspect and exercise the changed user-facing flows at {config.project_dev_url}. Review relevant spec "
+                "acceptance criteria, visual hierarchy, spacing, responsiveness, loading/empty/error states, labels, keyboard "
+                "usability, and accessibility semantics. Do not duplicate Playwright ownership. Capture screenshots using the "
+                "skill helper, record interaction/accessibility evidence, correct proven UX defects, commit fixes, and re-audit. "
+                "Close the WebBridge session at the end."
+                + audit_result_contract(ux_ctx, ',\n  "webbridge_status": "healthy|unhealthy"')
+                + agent_result_contract("ux")
+            )
+            supervise_role(config, ux_ctx, ux_prompt)
+        else:
+            print(f">>> [ux] skipped for {phase.heading}: UX_REQUIRED={config.ux_required}, PROJECT_DEV_URL={config.project_dev_url or '<unset>'}")
+
+        if not has_more_phases(phases, phase):
+            acceptance_ctx = RoleContext(
+                roles["acceptance"],
+                phase.track_id,
+                "track acceptance",
+                plan_file,
+                strategy_file,
+                config.run_root / config.run_id / safe_track / "acceptance",
+                baseline_sha=phase_base_sha,
+            )
+            acceptance_prompt = (
+                f"Load the measure skill and build-graph skill. You are the Final Acceptance Auditor for track "
+                f"{phase.track_id}. Read measure/index.md, the complete spec, {plan_file}, {strategy_file} if it exists, "
+                "measure/lessons-learned.md, and measure/tech-debt.md. Independently verify every non-deferred acceptance "
+                "criterion and task, changed callers and contracts, test quality, and the complete track outcome. Correct "
+                "proven blocking issues and commit them. Run the full lint, build/check, and test gates before passing."
+                + audit_result_contract(acceptance_ctx)
+                + agent_result_contract("acceptance")
+            )
+            supervise_role(config, acceptance_ctx, acceptance_prompt)
+
+            closeout_ctx = RoleContext(
+                roles["closeout"],
+                phase.track_id,
+                "track closeout",
+                plan_file,
+                strategy_file,
+                config.run_root / config.run_id / safe_track / "closeout",
+                baseline_sha=phase_base_sha,
+            )
+            closeout_prompt = (
+                f"Load the measure skill. You are the Measure Closeout Steward for {phase.track_id}. The final acceptance "
+                "audit has passed. Verify all tasks and phase headings are complete with required commit/checkpoint evidence. "
+                "Update metadata.json to status done with today's date, update measure/tracks.md, update lessons-learned.md or "
+                "tech-debt.md only when warranted, move the track directory from measure/tracks/ to measure/archive/, and commit "
+                "the closeout. Do not leave the completed track active."
+                + audit_result_contract(closeout_ctx)
+                + agent_result_contract("closeout")
+            )
+            supervise_role(config, closeout_ctx, closeout_prompt)
+            print(f">>> Final acceptance and Measure closeout complete for {phase.track_id}")
 
         print(f"  Phase {phase.number} of {len(phases)} passed supervised gates.")
         print()
 
     print()
     print("+--------------------------------------------------------------+")
-    print(f"|   All {len(phases)} phases processed and supervisor-gated!              |")
+    print(f"|   All {len(selected_phases)} selected phases processed and gated!                 |")
     print("+--------------------------------------------------------------+")
     print()
     release_active_lock()
