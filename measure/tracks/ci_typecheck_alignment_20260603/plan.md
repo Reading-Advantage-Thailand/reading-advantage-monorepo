@@ -10,10 +10,21 @@
 
 ## Phase 1: Add `@testing-library/jest-dom/vitest` Types
 
-- [ ] Task: Add `@testing-library/jest-dom` to `apps/science-advantage/package.json` `devDependencies`. Pin to a version compatible with `@testing-library/react@^16.3.0`.
-- [ ] Task: `pnpm install` from monorepo root; verify install.
-- [ ] Task: Update `apps/science-advantage/vitest.unit.setup.ts` to add `import '@testing-library/jest-dom/vitest';` at the top.
-- [ ] Task: Run `pnpm turbo run check-types --filter=science-advantage`; expect ~354 errors gone (down from 360).
+> **Status note (2026-06-06, Red phase):** Per `test-strategy.md` §0, tasks 1.1 and 1.3
+> are already satisfied in the source tree (the import is at
+> `apps/science-advantage/vitest.unit.setup.ts:7` and the dependency is
+> `apps/science-advantage/package.json:77`). The remaining real defect is the
+> **multi-version vitest split** (3.2.4 / 4.1.5 / 4.1.6) that silently breaks the
+> `declare module 'vitest'` augmentation in `@testing-library/jest-dom`, which
+> is fixed in Phase 5 (`pnpm.overrides`). The implementer should follow
+> `test-strategy.md` §7 and execute P5 *before* the verification in 1.4 — the
+> 1.1/1.3 import becomes effective only after the dedupe. Red-phase gate tests
+> live at `apps/science-advantage/lib/ci-gates/phase-1-jest-dom-types.test.ts`.
+
+- [~] Task: Add `@testing-library/jest-dom` to `apps/science-advantage/package.json` `devDependencies`. Pin to a version compatible with `@testing-library/react@^16.3.0`. _(Source already satisfies: `apps/science-advantage/package.json:77`; Red-phase guard test `phase-1-jest-dom-types.test.ts` regression-locks this entry.)_
+- [~] Task: `pnpm install` from monorepo root; verify install. _(Action, not a unit test; gated indirectly by the check-types assertion in 1.4.)_
+- [~] Task: Update `apps/science-advantage/vitest.unit.setup.ts` to add `import '@testing-library/jest-dom/vitest';` at the top. _(Source already satisfies: `apps/science-advantage/vitest.unit.setup.ts:7`; Red-phase guard test regression-locks this line.)_
+- [~] Task: Run `pnpm turbo run check-types --filter=science-advantage`; expect ~354 errors gone (down from 360). _(Red-phase test asserts the jest-dom matcher cohort error count is 0 in `tsc --noEmit` output; currently fails with 287+ errors due to the vitest version split — see `test-strategy.md` §0 / §3.)_
 
 ## Phase 2: Fix `lib/auth/session.ts:40,79` INTERN Role Widening
 
