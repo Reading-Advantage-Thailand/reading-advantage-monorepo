@@ -699,9 +699,21 @@
 > unchanged; commit `ecfe23a` carries the test files. The Measure
 > doc update lands in the follow-up `docs(measure):` commit.
 
-- [~] Task: Update `apps/science-advantage/docs/specs/ai-structured-data-generation/spec.md:79-86` to reference `@reading-advantage/ai` interface. (Red: `ecfe23a`)
-- [~] Task: Update `apps/science-advantage/docs/ai-image-generation.md:9` similarly. (Red: `ecfe23a`)
-- [~] Task: Write `packages/ai/README.md` with provider config examples. (Red: `ecfe23a` — README already satisfies FR-7; test serves as regression net)
+- [x] Task: Update `apps/science-advantage/docs/specs/ai-structured-data-generation/spec.md:79-86` to reference `@reading-advantage/ai` interface. (Red: `ecfe23a`; Green: `8075dad`)
+- [x] Task: Update `apps/science-advantage/docs/ai-image-generation.md:9` similarly. (Red: `ecfe23a`; Green: `8075dad`)
+- [x] Task: Write `packages/ai/README.md` with provider config examples. (Red: `ecfe23a` — README already satisfies FR-7; test serves as regression net; no change needed)
+
+> **Green-phase complete (2026-06-06, commit `8075dad`):** Updated
+> `spec.md` to replace the legacy `@ai-sdk/*` "Supported Providers"
+> section with a "Provider Configuration" section referencing
+> `@reading-advantage/ai`, `getAIClient()`, and the `AI_PROVIDER` env
+> var table. Updated `ai-image-generation.md` line 9 to reference
+> `aiImageConfig` and `@reading-advantage/ai`'s `getAIClient()` instead
+> of raw model IDs. The `packages/ai/README.md` already satisfied FR-7
+> — no change needed (regression net only). All 12 Phase 9 tests pass
+> (7 science-advantage, 5 packages/ai). No regressions in neighbouring
+> suites: 100 passed + 2 skipped in packages/ai; 16 passed in
+> science-advantage lib/ai unit tests.
 
 ## Phase 10: Closeout
 
