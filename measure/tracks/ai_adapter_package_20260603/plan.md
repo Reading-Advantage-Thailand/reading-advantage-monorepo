@@ -444,11 +444,149 @@
 
 ## Phase 8: Remove Direct Provider SDK Deps
 
-- [ ] Task: Remove `ai`, `@ai-sdk/openai`, `@ai-sdk/google` from `apps/science-advantage/package.json` `dependencies`.
-- [ ] Task: Add `@reading-advantage/ai` to `dependencies` (workspace:*).
-- [ ] Task: `pnpm install` from monorepo root; verify no errors.
-- [ ] Task: Grep gate: `rg "from ['\"]@?ai['\"]|from ['\"]@ai-sdk" apps/science-advantage/` returns 0 hits.
-- [ ] Task: Grep gate: `rg "process\.env\.(OPENAI_API_KEY|GOOGLE_API_KEY|GEMINI_API_KEY)" apps/science-advantage/lib/ai/` returns 0 hits.
+> **Red-phase notes (2026-06-06, mid-agent):** The mid-agent owns the
+> Red phase for every currently incomplete non-deferred task in this
+> phase. Per test-strategy §4 (architecture guardrails), the two
+> grep-gate tasks (Phase 8 task 4 / G-1 and Phase 8 task 5 / G-2) are
+> the test deliverables — encoded as a single Vitest file at
+> **`apps/science-advantage/lib/ai/__tests__/architecture.test.ts`**
+> (see Location note below for the deviation from test-strategy §4's
+> `apps/science-advantage/__tests__/architecture.test.ts`). Tasks 1–3
+> (drop SDK deps, add `@reading-advantage/ai`, `pnpm install`) are
+> pure dependency / install work with no test surface; the test file
+> fails *today* on the source-code violations in
+> `lib/ai/recommendation-service.ts` (Phase 6/7 left the
+> `ai` / `@ai-sdk/*` imports and `process.env.{OPENAI,GEMINI}_API_KEY`
+> reads in place because those modules still consumed them at the time
+> — Phase 8 is where the app stops depending on the SDKs directly).
+>
+> **Location note (test-strategy §4 vs Red-phase boundary):**
+> test-strategy §4 specifies the file at
+> `apps/science-advantage/__tests__/architecture.test.ts`, but the
+> existing `vitest.unit.config.ts` `include` patterns are
+> `app/`, `components/`, `lib/` (no top-level `__tests__/` glob).
+> The Red-phase boundary bars editing the unit config (the supervisor
+> flagged a config edit in attempt-2 as out-of-scope), so the file is
+> placed at `lib/ai/__tests__/architecture.test.ts` — adjacent to the
+> code under test, picked up by the existing
+> `lib/**/*test.{ts,tsx}` pattern (the `**` segment matches
+> `ai/__tests__/`), preserving the `__tests__/` subdirectory
+> convention. Green phase may move it back to the test-strategy path
+> and add the `__tests__/` glob to the unit config in one atomic
+> change.
+>
+> Test scope:
+>   1. **G-1**: walk `apps/science-advantage/`, skip test files /
+>      `node_modules` / build outputs; assert zero
+>      `from 'ai'` / `from '@ai-sdk/...'` matches. Mirrors the
+>      `rg "from ['\"](ai|@ai-sdk/)" apps/science-advantage/` gate
+>      from the plan task 4 bullet. The trailing-`['\"]` anchor from
+>      the original draft was removed: real `@ai-sdk/*` packages have
+>      a suffix (e.g. `@ai-sdk/openai`), so the closing quote isn't
+>      immediately after `@ai-sdk/`. `@reading-advantage/ai` is still
+>      excluded because the regex requires the literal `'ai'` between
+>      quotes OR the prefix `@ai-sdk/`, neither of which is present
+>      in `@reading-advantage/ai`.
+>   2. **G-2**: walk `apps/science-advantage/lib/ai/`, skip test
+>      files; assert zero
+>      `process.env.{OPENAI|GOOGLE|GEMINI}_API_KEY` matches. Mirrors
+>      the plan task 5 rg gate, scoped to source code only (test
+>      fixtures that set env vars for legacy modules are a
+>      Green-phase cleanup).
+>
+> Test files are intentionally excluded from both scans: the G-1 / G-2
+> guardrails guard *production* code. The `vi.mock('ai', ...)` calls
+> in existing test files don't match the G-1 regex (they use
+> `vi.mock(...)`, not `from 'ai'`), and the `process.env.X = '...'`
+> writes in legacy test files are setup, not reads — both are out of
+> scope per the gate's intent. The walker also skips the test file
+> itself when it recurses into `lib/ai/__tests__/` (it has a `.test.ts`
+> suffix), so the G-2 regex literal inside the test file does not
+> produce a false positive.
+>
+> Run command (targeted, no DB / no network):
+> ```bash
+> cd apps/science-advantage && \
+>   npx vitest run --config vitest.unit.config.ts \
+>     lib/ai/__tests__/architecture.test.ts
+> ```
+>
+> Expected RED (2026-06-06, verified 2026-06-06 12:08 CST, 7.17s):
+>   - G-1: 3 hits in `lib/ai/recommendation-service.ts` — line 2
+>     (`import { generateObject } from 'ai';`), line 3
+>     (`import { createOpenAI } from '@ai-sdk/openai';`), line 4
+>     (`import { createGoogleGenerativeAI } from '@ai-sdk/google';`).
+>   - G-2: 4 hits in `lib/ai/recommendation-service.ts` — lines
+>     67-68 (two `process.env.OPENAI_API_KEY` reads) and lines 71-72
+>     (two `process.env.GEMINI_API_KEY` reads).
+>
+> Green-phase (not this turn):
+>   - Drop `ai` / `@ai-sdk/openai` / `@ai-sdk/google` from
+>     `apps/science-advantage/package.json` and add
+>     `@reading-advantage/ai` (workspace:*) — tasks 1–2.
+>   - `pnpm install` from monorepo root — task 3.
+>   - Migrate `lib/ai/recommendation-service.ts` to consume
+>     `@reading-advantage/ai`'s `AIClient` (out of Phase 8 scope per
+>     the plan's task list; expected to follow in a follow-up track
+>     that resolves the G-1 / G-2 source-code violations).
+>   - Re-run this test; both assertions pass (0 hits in each scan).
+>   - Optional: move the test back to
+>     `apps/science-advantage/__tests__/architecture.test.ts` and add
+>     the `__tests__/` glob to the unit config in one atomic change
+>     (Green-phase scope; documents the test-strategy §4 path).
+
+- [~] Task: Remove `ai`, `@ai-sdk/openai`, `@ai-sdk/google` from `apps/science-advantage/package.json` `dependencies`.
+- [~] Task: Add `@reading-advantage/ai` to `dependencies` (workspace:*).
+- [~] Task: `pnpm install` from monorepo root; verify no errors.
+- [~] Task: Grep gate: `rg "from ['\"]@?ai['\"]|from ['\"]@ai-sdk" apps/science-advantage/` returns 0 hits.
+- [~] Task: Grep gate: `rg "process\.env\.(OPENAI_API_KEY|GOOGLE_API_KEY|GEMINI_API_KEY)" apps/science-advantage/lib/ai/` returns 0 hits.
+
+> **Red-phase complete (2026-06-06, mid-agent):** Tasks 4 and 5 (the
+> grep gates) are encoded as a single Vitest file at
+> `apps/science-advantage/lib/ai/__tests__/architecture.test.ts`
+> (see Location note in the Red-phase block above for the deviation
+> from test-strategy §4's `__tests__/` path). The G-1 and
+> G-2 guards both fail RED on the source-code violations in
+> `lib/ai/recommendation-service.ts`:
+>   - **G-1**: 3 hits — `import { generateObject } from 'ai'`
+>     (line 2), `import { createOpenAI } from '@ai-sdk/openai'`
+>     (line 3), `import { createGoogleGenerativeAI } from
+>     '@ai-sdk/google'` (line 4).
+>   - **G-2**: 4 hits — two `process.env.OPENAI_API_KEY` reads
+>     (lines 67-68) and two `process.env.GEMINI_API_KEY` reads
+>     (lines 71-72).
+>
+> Targeted run: `cd apps/science-advantage && npx vitest run
+> --config vitest.unit.config.ts lib/ai/__tests__/architecture.test.ts`
+> (2 tests, 2 failed, 7.17s, no DB / no network — verified 2026-06-06
+> 12:08 CST).
+>
+> No edits to `vitest.unit.config.ts` (Red-phase boundary respected
+> after attempt-2 supervisor flag). The test is picked up by the
+> existing `lib/...test.{ts,tsx}` include pattern; the `__tests__/`
+> subdirectory matches the globby `**` segment.
+>
+> Test files (`.test.ts`, `*.integration.test.ts`, `*.spec.ts`) are
+> intentionally excluded from both scans: the G-1 / G-2 gates guard
+> *production* code. The `vi.mock('ai', ...)` calls in the existing
+> lib/ai test fixtures don't match the G-1 regex (they use
+> `vi.mock(...)`, not `from 'ai'`), and the `process.env.X = '...'`
+> writes in legacy test files are setup, not the dangerous reads
+> the gates are about. Green-phase cleanup of test fixtures is out
+> of Phase 8 scope.
+>
+> Tasks 1-3 (drop SDK deps, add `@reading-advantage/ai`,
+> `pnpm install`) are pure dependency / install work with no test
+> surface; left as `[~]` for the Green implementer. Tasks 4-5
+> (the grep-gate *checks*) become `[x]` only when the test file
+> passes, which requires: (a) Phase 8 task 1-3 (package.json +
+> `pnpm install`), (b) a follow-up migration of
+> `lib/ai/recommendation-service.ts` to consume
+> `@reading-advantage/ai`'s `AIClient` interface instead of the raw
+> `generateObject` / `createOpenAI` / `createGoogleGenerativeAI` /
+> `process.env.{OPENAI,GEMINI}_API_KEY` reads. (b) is out of Phase 8
+> scope per the plan's task list; it is expected to follow in a
+> follow-up track.
 
 ## Phase 9: Update Docs
 
