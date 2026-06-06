@@ -151,9 +151,9 @@
   - `user-menu string|null` (in `components/features/auth/user-menu.tsx`)
   - `beforeEach import` (in some test file)
   - `xp.test comparison` (in `lib/gamification/xp.test.ts:124`)
-  - `mastery-profile overload` (in some other test file) (b3f5771)
-- [x] Task: Inspect each error; fix in place. Most are trivial type corrections. (b3f5771)
-- [x] Task: Run `pnpm turbo run check-types`; expect 4 errors gone. _(Verified: tsc error count 273 → 265; 0 errors in Phase 6 cohort; gate tests 7/7 pass.)_ (b3f5771)
+  - `mastery-profile overload` (in some other test file) (701c04b)
+- [x] Task: Inspect each error; fix in place. Most are trivial type corrections. (701c04b)
+- [x] Task: Run `pnpm turbo run check-types`; expect 4 errors gone. _(Verified: tsc error count 273 → 265; 0 errors in Phase 6 cohort; gate tests 7/7 pass.)_ (701c04b)
 
 ## Phase 7: Add `check-types` Script
 
