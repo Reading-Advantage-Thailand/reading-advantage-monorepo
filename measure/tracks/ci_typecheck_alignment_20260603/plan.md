@@ -325,9 +325,16 @@
 > regression guard passes. The test file is self-contained (no
 > `tsc` or `pnpm turbo run ...` spawns — Phase 9 is a pure
 > file-system operation).
+>
+> **Status note (2026-06-07, Green phase):** Deleted
+> `apps/science-advantage/.github/workflows/ci.yml` and removed
+> the empty `workflows/` directory. `.github/` directory preserved
+> (contains `ISSUE_TEMPLATE/` and `pull_request_template.md`).
+> Gate tests `phase-9-delete-app-local-ci-workflow.test.ts` —
+> 4/4 passing.
 
-- [~] Task: Delete `apps/science-advantage/.github/workflows/ci.yml`.
-- [~] Task: Verify the file is gone: `ls apps/science-advantage/.github/workflows/`.
+- [x] Task: Delete `apps/science-advantage/.github/workflows/ci.yml`. (35599c2)
+- [x] Task: Verify the file is gone: `ls apps/science-advantage/.github/workflows/`. (35599c2)
 
 ## Phase 10: Add `path-filter: apps/science-advantage/**` to Monorepo Root CI
 
