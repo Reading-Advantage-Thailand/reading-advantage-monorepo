@@ -4,9 +4,9 @@
 
 ## Phase 0: Setup
 
-- [ ] Task: Confirm `pnpm turbo run check-types --filter=science-advantage` currently exits with the ~370-error list (baseline).
-- [ ] Task: Confirm `pnpm turbo run lint --filter=science-advantage` currently exits 1 with 4 errors + 6 warnings (baseline).
-- [ ] Task: Coordinate with Track 3 (Argon2id + Auth Flatten) — `lib/auth/session.ts` is deleted; FR-2 must land first or coordinate the type change.
+- [~] Task: Confirm `pnpm turbo run check-types --filter=science-advantage` currently exits with the ~370-error list (baseline). [Red-phase test in `apps/science-advantage/lib/ci-gates/ci-gates.test.ts` asserts exit 0 — currently fails with 617 errors per `test-strategy.md` §0.]
+- [~] Task: Confirm `pnpm turbo run lint --filter=science-advantage` currently exits 1 with 4 errors + 6 warnings (baseline). [Red-phase test in same file asserts exit 0 — currently fails with 4 errors + 6 warnings.]
+- [~] Task: Coordinate with Track 3 (Argon2id + Auth Flatten) — `lib/auth/session.ts` is deleted; FR-2 must land first or coordinate the type change. [Coordination test in same file asserts `Role` from `@reading-advantage/auth` includes `INTERN` — currently passes (already widened in `packages/auth/src/roles.ts`); serves as regression guard so P2's fix in the canonical source remains intact.]
 
 ## Phase 1: Add `@testing-library/jest-dom/vitest` Types
 
