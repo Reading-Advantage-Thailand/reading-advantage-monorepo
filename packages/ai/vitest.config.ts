@@ -5,5 +5,6 @@ export default defineConfig({
     testTimeout: 120_000,
     hookTimeout: 120_000,
     teardownTimeout: 60_000,
+    exclude: ["dist/**", "node_modules/**"],
   },
 });
