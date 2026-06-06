@@ -15,7 +15,7 @@ import { runDrizzleMigrate } from './lib/test/run-drizzle-migrate';
  * app/api/lessons/[lessonSlug]/route.integration.test.ts).
  */
 export default function globalSetup(): void {
-  const databaseUrl = resolveTestDatabaseUrl(process.env);
+  const databaseUrl = resolveTestDatabaseUrl(process.env as { DATABASE_URL?: string; TEST_DATABASE_URL?: string });
 
   console.log(`[vitest.integration] Migrating test DB \u2192 ${databaseUrl}`);
 

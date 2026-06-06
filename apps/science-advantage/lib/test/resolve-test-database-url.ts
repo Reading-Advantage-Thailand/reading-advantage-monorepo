@@ -10,7 +10,7 @@
  * to point both the per-test client and the migration runner at the same DB.
  */
 export function resolveTestDatabaseUrl(
-  env: { DATABASE_URL?: string; TEST_DATABASE_URL?: string } = process.env,
+  env: { DATABASE_URL?: string; TEST_DATABASE_URL?: string } = process.env as { DATABASE_URL?: string; TEST_DATABASE_URL?: string },
 ): string {
   if (env.TEST_DATABASE_URL) {
     return env.TEST_DATABASE_URL;

@@ -11,4 +11,4 @@
 import '@testing-library/jest-dom/vitest';
 import { resolveTestDatabaseUrl } from './lib/test/resolve-test-database-url';
 
-process.env.DATABASE_URL = resolveTestDatabaseUrl(process.env);
+process.env.DATABASE_URL = resolveTestDatabaseUrl(process.env as { DATABASE_URL?: string; TEST_DATABASE_URL?: string });
