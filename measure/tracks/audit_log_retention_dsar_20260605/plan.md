@@ -5,9 +5,17 @@
 > `science_advantage_test` DB (append-only DELETE cannot be exercised against mock-db).
 
 ## Phase 0: Setup
-- [ ] Task: Confirm `packages/db/src/schema/audit.ts` and `packages/auth/src/audit.ts` are present at HEAD (committed `87b2432`); read both to capture the exact `auditEvents` columns and `recordAuditEvent` signature.
-- [ ] Task: Locate the privileged/DDL connection used by `drizzle-kit migrate` (`DIRECT_DATABASE_URL`); confirm it has DELETE on `audit_events` (the app role does not).
-- [ ] Task: Read `lib/platform/session-cleanup.ts` to reuse the periodic-job + advisory-lock pattern.
+- [x] Task: Confirm `packages/db/src/schema/audit.ts` and `packages/auth/src/audit.ts` are present at HEAD (committed `87b2432`); read both to capture the exact `auditEvents` columns and `recordAuditEvent` signature.
+- [x] Task: Locate the privileged/DDL connection used by `drizzle-kit migrate` (`DIRECT_DATABASE_URL`); confirm it has DELETE on `audit_events` (the app role does not).
+- [x] Task: Read `lib/platform/session-cleanup.ts` to reuse the periodic-job + advisory-lock pattern.
+
+### Phase 0 Findings (handoff to Green)
+
+- **`auditEvents` columns** (DB column → field): `id`, `actor_user_id` (FK→users.id, ON DELETE SET NULL), `actor_role`, `action` (NOT NULL), `target_type`, `target_id`, `ip_address`, `user_agent`, `metadata` (jsonb), `created_at` (`timestamptz`, default `now()`). Indexes: `(actor_user_id, created_at)`, `(action, created_at)`, `(target_type, target_id)`. **No `schoolId` column** — DSAR tenant scoping must join through `users.schoolId` (per test-strategy §3).
+- **`recordAuditEvent` signature**: `recordAuditEvent(ctx: AuditContext, payload: AuditPayload): Promise<void>`. Throws `AuditEventError` on empty `action` or DB failure. `safeMetadata(payload.metadata)` is applied internally — do not re-redact.
+- **Privileged connection**: `DIRECT_DATABASE_URL` (env) is read by `packages/db/drizzle.config.ts:11` and applied to `drizzle-kit migrate`. The migration role (typically `postgres` locally, dedicated maintenance role in prod) is the only one with DELETE on `audit_events`. The `REVOKE UPDATE, DELETE ON audit_events FROM app_user` in `0018_audit_events.sql:38` is conditional on `app_user` role existence; locally (superuser-only) it's a no-op but documents intent. **Implication for P2 purge**: the purge function must read `DIRECT_DATABASE_URL`, build a dedicated `postgres-js` client (not the shared pool), and execute batched DELETEs against that connection.
+- **`createCleanupTask` in `apps/science-advantage/lib/platform/session-cleanup.ts`** is the **interval-scheduler template only** — it does **not** contain `pg_try_advisory_lock`. The advisory-lock pattern referenced by the spec/test-strategy comes from `rate_limiter_v2_20260603` (separate track). P3 must **combine** the scheduler shape from `createCleanupTask` with an advisory-lock guard sourced from the rate-limiter track; do not expect both patterns in one file.
+- **Baseline tests green**: `pnpm --filter @reading-advantage/auth test` → 83/83 passing (includes the 11-test `audit.test.ts`). No new test files required for Phase 0.
 
 ## Phase 1: Retention Config (Contract)
 - [ ] Task: Add `AUDIT_RETENTION_DAYS` to the validated env schema (`lib/env.ts` / shared env), default `2557`, `.refine(n => Number.isInteger(n) && n >= 365)`.
