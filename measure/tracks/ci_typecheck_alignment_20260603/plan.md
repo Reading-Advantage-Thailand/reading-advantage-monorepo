@@ -385,10 +385,47 @@
 
 ## Phase 11: Fix 4 `react-hooks/immutability` Errors
 
-- [ ] Task: Open `components/features/teacher/analytics/student-lesson-detail-analytics.tsx:151,155,186`.
-- [ ] Task: Lift the `fetchAnalytics` function declaration above the `useEffect` that uses it (or wrap in `useCallback`).
-- [ ] Task: Read the function carefully; ensure the fix doesn't introduce a real bug (e.g. stale closure).
-- [ ] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 errors.
+> **Status note (2026-06-07, Red phase owned by mid role):** The
+> end-state contract for Phase 11 is captured by 6 red-phase
+> pinning tests at
+> `apps/science-advantage/lib/ci-gates/phase-11-react-hooks-immutability.test.ts`
+> (commits pending). The test file is DB-free and runs in <1s via
+> the standard targeted vitest command.
+>
+> **Scope note (2026-06-07, mid role):** The plan task
+> "Open `components/features/teacher/analytics/student-lesson-detail-analytics.tsx:151,155,186`"
+> names one file, but the current `react-hooks/immutability`
+> violations are spread across 4 files in the analytics folder
+> (verified 2026-06-07 via `npx eslint .`): `class-analytics-overview.tsx:100`,
+> `lesson-detail-analytics.tsx:155`, `student-detail-analytics.tsx:143`,
+> and `student-lesson-detail-analytics.tsx:151` — 1 ESLint error per
+> file (each error report spans the access site + the declaration
+> site + a secondary site). The test file pins the fix to
+> `student-lesson-detail-analytics.tsx` (the file named in the
+> plan tasks) and uses file-scoped assertions so it does not
+> regress when the other 3 sibling files are addressed in a
+> follow-up phase. The Phase 11 plan task "Run `pnpm turbo run
+> lint --filter=science-advantage`; expect 0 errors" is only
+> satisfiable once all 4 sibling files are fixed; for Phase 11
+> the in-scope gate is the file-scoped lint assertion
+> (test 6), not the workspace-wide lint. The supervisor handoff
+> flags this scope expansion as a follow-up.
+>
+> Per `test-strategy.md` §1 P11 / §3 cross-phase note / §5 P11:
+> the recommended fix is `useCallback(fetchAnalytics,
+> [studentId, lessonId])` (NOT hoisting as a plain function —
+> hoisting re-creates the function each render and re-triggers
+> the `useEffect` infinitely). After wrapping in `useCallback`,
+> the `useEffect` deps should reference `fetchAnalytics`
+> directly, the `// eslint-disable-next-line
+> react-hooks/exhaustive-deps` disable becomes unnecessary
+> and should be removed, and `useCallback` must be added to
+> the `import { ... } from 'react'` line.
+
+- [~] Task: Open `components/features/teacher/analytics/student-lesson-detail-analytics.tsx:151,155,186`.
+- [~] Task: Lift the `fetchAnalytics` function declaration above the `useEffect` that uses it (or wrap in `useCallback`).
+- [~] Task: Read the function carefully; ensure the fix doesn't introduce a real bug (e.g. stale closure).
+- [~] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 errors.
 
 ## Phase 12: Silence 6 Unused-Var Warnings
 
