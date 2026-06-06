@@ -191,27 +191,51 @@
   _(Regression-locked by `phase-7-check-types-script.test.ts` tests 1–4: script declared, non-empty, references `tsc`, includes `--noEmit`. Script is already in place per `test-strategy.md` §0 / commit `c1e77f9`; tests assert the install state so a future deletion / no-op regression surfaces immediately.)_ (bd2e3a5, 1b8c89c)
 - [x] Task: Run `pnpm turbo run check-types --filter=science-advantage`; the app is now in scope (no longer silently skipped). _(Regression-locked by `phase-7-check-types-script.test.ts` tests 5–7: turbo.json declares the `check-types` task with `dependsOn: ["^check-types"]`; the script invocation produces tsc-specific output (not a no-op); the end-to-end gate exits 0. Gate 8 is the red-phase assertion — currently fails with the post-Phase-6 265-error tsc count; flips to green once Phases 0–6 are all resolved.)_ (bd2e3a5, 1b8c89c)
 
-  > **Status note (2026-06-07, Red phase owned by mid role, COMPLETE):**
-  > Test file `apps/science-advantage/lib/ci-gates/phase-7-check-types-script.test.ts`
-  > committed in `bd2e3a5` with 8 tests; local vitest run (via
-  > `corepack pnpm exec vitest run --config vitest.unit.config.ts
-  > lib/ci-gates/phase-7-check-types-script.test.ts`) reports
-  > **7 passed / 1 failed** (16.25s wall). The 7 passes are the regression
-  > guards + verification prep (script declared, non-empty, references `tsc`,
-  > includes `--noEmit`; turbo wiring correct; sanity check on shared setup;
-  > tsc-evidence gate confirms the script is not a no-op). The 1 failure is
-  > the precise end-to-end gate (`pnpm --filter science-advantage check-types
-  > exits 0`) — fails with exit code 1, 265 tsc errors reported. This is the
-  > expected Red-phase behavior per `test-strategy.md` §1 P7: the gate flips
-  > to green only when Phases 0–6 are all resolved and tsc reports 0 errors
-  > (the work of those phases is out of scope for Phase 7). No additional
-  > tests or code changes required from the mid role for Phase 7.
+  > **Status note (2026-06-07, Green phase):** All 8 tests pass.
+  > `pnpm --filter science-advantage check-types` exits 0 with 0 tsc errors.
+  > The "not a no-op" test (test 6) was updated to handle the 0-error case:
+  > when tsc exits 0, the lack of error lines is expected (the file-content
+  > guards verify the script contains `tsc` and `--noEmit`).
+  > tsc error count: 265 → 0 (all errors resolved across Phases 0–6 + Phase 7 fixes).
+  > Gate tests `phase-7-check-types-script.test.ts` — 8/8 passing.
 
 ## Phase 8: Remove `ignoreBuildErrors: true`
 
-- [ ] Task: In `apps/science-advantage/next.config.ts:25`, change `ignoreBuildErrors: true,` to `ignoreBuildErrors: false,` (or remove the line).
-- [ ] Task: Update the inline comment to remove the ~370-error enumeration (now resolved).
-- [ ] Task: Run `pnpm turbo run build --filter=science-advantage`; should pass with the new tsc-clean code.
+> **Status note (2026-06-07, Red phase owned by mid role):** Red-phase
+> pinning tests live at
+> `apps/science-advantage/lib/ci-gates/phase-8-ignore-build-errors.test.ts`.
+> The end-state contract (per `test-strategy.md` §1 P8 / §4 architecture
+> guardrails) is:
+>
+>   (a) **File content** — `apps/science-advantage/next.config.ts:25`
+>       no longer contains `ignoreBuildErrors: true` (the value is
+>       `false` or the line is removed entirely), and the 9-line
+>       resolved-error enumeration comment block is collapsed to a
+>       one-liner (or removed). A regression that re-introduces
+>       `ignoreBuildErrors: true` (or any future re-enabling of the
+>       mask) must surface immediately per `test-strategy.md` §4
+>       architecture guardrail ("No new `ignoreBuildErrors` anywhere
+>       in `apps/**` or `packages/**`. Add a `doctor` rule (or grep
+>       guard in CI) that fails if any `next.config.{ts,js,mjs}`
+>       contains `ignoreBuildErrors: true` after this track lands.").
+>   (b) **End-to-end build gate** —
+>       `pnpm turbo run build --filter=science-advantage` exits 0 with
+>       the new tsc-clean code, per `test-strategy.md` §1 P8 ("Build
+>       must pass *before* the flip is committed — sequence the
+>       commits: typecheck-clean first, then flip, then build.").
+>
+> Tests 1–4 are file-content regression guards (expected to fail
+> today: `ignoreBuildErrors: true` is still on line 25 and the
+> 9-line comment block is still present). Tests 5–7 are end-to-end
+> gates (the build gate is expected to pass today because
+> `ignoreBuildErrors: true` masks tsc errors during the build; this
+> is a forward-looking smoke test that locks the build state so a
+> future flip of `ignoreBuildErrors: true → false` does not regress
+> the build).
+
+- [~] Task: In `apps/science-advantage/next.config.ts:25`, change `ignoreBuildErrors: true,` to `ignoreBuildErrors: false,` (or remove the line). [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-8-ignore-build-errors.test.ts` test 1 — currently fails; the line still reads `ignoreBuildErrors: true,`.]
+- [~] Task: Update the inline comment to remove the ~370-error enumeration (now resolved). [Red-phase test in same file test 2 — currently fails; the 9-line comment block is still present.]
+- [~] Task: Run `pnpm turbo run build --filter=science-advantage`; should pass with the new tsc-clean code. [Green-phase test in same file test 5 — currently passes (the build is masked by `ignoreBuildErrors: true`); serves as regression guard so a future contributor cannot silently re-introduce a build failure while flipping the flag.]
 
 ## Phase 9: Delete App-Local CI Workflow
 
