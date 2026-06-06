@@ -82,13 +82,25 @@
 > Existing tasks 1–3 are implementation-only and were satisfied in
 > `9c52c8a`; the Red-phase work below is the *test* coverage the
 > test-strategy and FR-3/FR-5 require.
+>
+> **Green-phase complete (2026-06-06):** No new implementation needed — the
+> `OpenAIProvider` class in `src/providers/openai.ts` already satisfies all
+> Phase 3 Red tests from the original `9c52c8a` implementation. The Red-phase
+> test additions (`280ce39`) confirm the existing code passes the full contract:
+> 15 tests in `phase-3-openai-provider.test.ts` (14 pass, 1 skipped — gated
+> integration), plus 4 delegation tests in `openai.test.ts`. Total suite:
+> 58 passed, 1 skipped.
+>
+> **Test gate note:** Use `npx vitest run` from `packages/ai/` or
+> `turbo run test --filter=@reading-advantage/ai`. Monorepo-level `npm test`
+> has pre-existing failures in unrelated packages.
 
-- [~] Task: Create `packages/ai/src/providers/openai.ts` implementing `AIClient` using `@ai-sdk/openai`. (`9c52c8a`)
-- [~] Task: Constructor takes `{ apiKey, model?, organization? }`. **No `process.env` reads** — the API key is passed explicitly. (`9c52c8a`)
-- [~] Task: `generateObject` uses Vercel AI SDK `generateObject` with the configured client. (`9c52c8a`)
-- [~] Task: Write failing tests with the mock as the "openai" provider's underlying model (avoid real network): assert the OpenAI provider delegates to `generateObject` with the right schema and prompt. (`9c52c8a`, basic; expanded in Phase 3 Red)
-- [ ] Task: Add a single integration test that hits the real OpenAI API (gated by `OPENAI_API_KEY` env in CI). Confirm response shape.
-- [ ] Task: Confirm tests pass.
+- [x] Task: Create `packages/ai/src/providers/openai.ts` implementing `AIClient` using `@ai-sdk/openai`. (`9c52c8a`)
+- [x] Task: Constructor takes `{ apiKey, model?, organization? }`. **No `process.env` reads** — the API key is passed explicitly. (`9c52c8a`)
+- [x] Task: `generateObject` uses Vercel AI SDK `generateObject` with the configured client. (`9c52c8a`)
+- [x] Task: Write failing tests with the mock as the "openai" provider's underlying model (avoid real network): assert the OpenAI provider delegates to `generateObject` with the right schema and prompt. (`9c52c8a`, basic; expanded in Phase 3 Red — `280ce39`)
+- [x] Task: Add a single integration test that hits the real OpenAI API (gated by `OPENAI_API_KEY` env in CI). Confirm response shape. (`280ce39`)
+- [x] Task: Confirm tests pass. (58 passed, 1 skipped — gated integration; `fd279d4`)
 
 ## Phase 4: Google Provider
 
