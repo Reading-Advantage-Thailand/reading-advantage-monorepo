@@ -36,12 +36,39 @@
 
 ## Phase 2: Purge Function (TDD)
 - [x] Task: Write `audit-retention.test.ts` (unit): `getRetentionCutoff` math (UTC cutoff, default days, configured days). (`781ff8a`)
-- [~] Task: Write `audit-retention.integration.test.ts`: seed rows at `window-1d` (kept) and `window+1d` (purged); assert `purgeExpiredAuditEvents` deletes only the expired row and returns the count. (Red phase: test file added; requires `science_advantage_test` DB with migrations applied. Currently fails with PostgresError 42P01.)
-- [~] Task: Write test: purge runs in batches (`LIMIT 5000`) and loops until empty (seed > 5000 expired rows or stub the batch size). (Red phase: test file added; uses sub-batch-size seed since monkey-patching the module-level `BATCH_SIZE` const is not allowed without source changes.)
-- [~] Task: Write test: a successful purge records exactly one `audit:retention_purge` event with the deleted count. (Red phase: test file added; asserts count == 1 + metadata.deletedCount match + post-purge row's createdAt >= cutoff per test-strategy §3.)
+- [x] Task: Write `audit-retention.integration.test.ts`: seed rows at `window-1d` (kept) and `window+1d` (purged); assert `purgeExpiredAuditEvents` deletes only the expired row and returns the count. (`b397c3e` — Red phase test added; fails with PostgresError 42P01 until migrations are applied to `science_advantage_test`.)
+- [x] Task: Write test: purge runs in batches (`LIMIT 5000`) and loops until empty (seed > 5000 expired rows or stub the batch size). (`b397c3e` + multi-batch strengthening — Red phase test added: seeds `BATCH_SIZE + 7 = 5007` rows to force ≥2 batch iterations, asserting `result.deleted === 5007` and no `multibatch:test:expired` rows remain. Fails with PostgresError 42P01 in Red.)
+- [x] Task: Write test: a successful purge records exactly one `audit:retention_purge` event with the deleted count. (`b397c3e` — Red phase test added; asserts count == 1, `metadata.deletedCount === seedCount`, `metadata.retentionDays` matches config, `metadata.cutoff` is the UTC ISO string, and the post-purge row's `createdAt >= cutoff` per test-strategy §3 self-audit-recursion guard. Fails with PostgresError 42P01 in Red.)
 - [x] Task: Implement `packages/auth/src/audit-retention.ts` `purgeExpiredAuditEvents(now)` using the privileged connection + batched DELETE + post-purge `recordAuditEvent`. (`781ff8a`)
 - [x] Task: Export from `packages/auth/src/index.ts`. (`781ff8a`)
 - [x] Task: Verify — `vitest run` in packages/auth green (108 tests, 12 files). (`781ff8a`)
+
+### Phase 2 Red-phase status (2026-06-06)
+
+- **GREEN (Red-phase tests committed):** all three Red-phase tasks for the DELETE-path
+  are written, committed, and fail with the expected `42P01 relation "audit_events"
+  does not exist` signal when run without migrations applied to
+  `science_advantage_test`.
+- **Test file:** `packages/auth/src/__tests__/audit-retention.integration.test.ts` — 4 tests
+  (1 boundary, 1 sub-batch-size batch, 1 multi-batch >BATCH_SIZE strengthening, 1 audit
+  event). All 4 fail with `42P01` in Red; the unit suite (`audit-retention.test.ts`) is
+  4/4 green and the full unit suite is 118/118 green.
+- **Test command (targeted, Red):**
+  `cd packages/auth && DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test DIRECT_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test npx vitest run src/__tests__/audit-retention.integration.test.ts`
+  → 1 file failed, 4 tests failed, all 4 with `PostgresError 42P01` (relation
+  "audit_events" does not exist) in `truncateAuditEvents` (beforeEach).
+- **Multi-batch strengthening rationale:** the plan called for "seed > 5000 expired rows
+  or stub the batch size." The pre-existing batch test seeded 10 rows (sub-batch-size),
+  which a single-batch implementation would also pass. The new "multi-batch" test
+  seeds `BATCH_SIZE + 7 = 5007` rows to force at least two batch iterations; it asserts
+  `result.deleted === 5007` and that no `multibatch:test:expired` rows remain.
+- **No source changes:** the integration test file and `plan.md` are the only files
+  touched. No vitest config, no global setup, no source code.
+- **Green-phase handoff:** the Green-phase implementer must (a) apply Drizzle migrations
+  to `science_advantage_test` (`pnpm --filter @reading-advantage/db migrate`), and
+  (b) wire the integration harness into a global setup file (or run it with the env
+  vars above) so the tests execute against a real DB. No further test code changes
+  are expected — the Red deliverable is the test surface itself.
 
 ## Phase 3: Periodic Job
 - [x] Task: Write test: lock key constant is a stable positive BigInt; scheduler start/stop/run methods exist and work. (`781ff8a`)

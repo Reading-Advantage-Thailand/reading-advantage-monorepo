@@ -192,6 +192,79 @@ describe("purgeExpiredAuditEvents — integration", () => {
     expect(remaining.length).toBe(0);
   });
 
+  it("purges across multiple batch iterations when expired rows exceed BATCH_SIZE", async () => {
+    // -----------------------------------------------------------------
+    // Phase 2 Red-phase task #2 (multi-batch strengthening):
+    //   The pre-existing batch test seeds 10 rows (< BATCH_SIZE = 5000),
+    //   which a single-batch implementation would also pass. Per the
+    //   plan: "seed > 5000 expired rows or stub the batch size."
+    //
+    //   This test seeds BATCH_SIZE + 7 = 5007 rows, forcing at least
+    //   two batch iterations:
+    //     batch 1: deletes 5000 rows (== BATCH_SIZE; loop must continue)
+    //     batch 2: deletes 7 rows   (< BATCH_SIZE; loop terminates)
+    //
+    //   A naive "single DELETE, return count" implementation that
+    //   happened to delete all rows in one statement would *also* pass
+    //   this assertion — the contract we enforce here is the
+    //   observable behavior "every expired row is gone after the call
+    //   and result.deleted matches the seed," not the literal number
+    //   of DELETE statements. The spec mandates batched DELETE LIMIT
+    //   5000; this test verifies the function honors the
+    //   "no rows left behind" invariant at > BATCH_SIZE scale, which
+    //   a buggy implementation that deletes once and returns early
+    //   would violate.
+    // -----------------------------------------------------------------
+    const retentionDays = getRetentionDays();
+    const now = new Date("2026-06-06T00:00:00Z");
+    const cutoff = new Date(now.getTime() - retentionDays * 24 * 60 * 60 * 1000);
+    const longExpired = new Date(cutoff.getTime() - 365 * 24 * 60 * 60 * 1000);
+
+    // BATCH_SIZE is a module-level const in audit-retention.ts and is
+    // not exported. The spec pins it at 5000 (FR-2). We mirror the
+    // constant here so the test documents the contract being asserted.
+    const BATCH_SIZE = 5000;
+    const seedCount = BATCH_SIZE + 7;
+
+    const rows: Array<{
+      id: string;
+      action: string;
+      createdAt: Date;
+    }> = [];
+    for (let i = 0; i < seedCount; i += 1) {
+      rows.push({
+        id: `purge-test-multibatch-${i.toString().padStart(5, "0")}`,
+        action: "multibatch:test:expired",
+        createdAt: longExpired,
+      });
+    }
+    // Bulk insert in a single VALUES (...) batch. At ~6 parameters per
+    // row this is ~30k params, well under the postgres 65535-parameter
+    // limit, so the insert executes as one round-trip.
+    await db.insert(auditEvents).values(
+      rows.map((r) => ({
+        id: r.id,
+        actorUserId: null,
+        actorRole: "SYSTEM",
+        action: r.action,
+        createdAt: r.createdAt,
+      })),
+    );
+
+    const result = await purgeExpiredAuditEvents(now);
+
+    // (a) The function reports the correct total deleted count across
+    //     all batch iterations.
+    expect(result.deleted).toBe(seedCount);
+
+    // (b) No expired rows with the seeded action remain in the table.
+    const remaining = await db
+      .select({ id: auditEvents.id })
+      .from(auditEvents)
+      .where(sql`action = 'multibatch:test:expired'`);
+    expect(remaining.length).toBe(0);
+  });
+
   it("records exactly one audit:retention_purge event with the deleted count", async () => {
     // -----------------------------------------------------------------
     // Phase 2 Red-phase task #3:
