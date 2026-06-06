@@ -167,14 +167,50 @@
 
 ## Phase 5: Provider Selector
 
-- [ ] Task: Create `packages/ai/src/client.ts` with `createAIClient(config: AIConfig)` and `getAIClient()` lazy singleton.
-- [ ] Task: `AIConfig` Zod schema: `{ provider: z.enum(['openai', 'google', 'mock']).default('openai'), apiKey: z.string().optional(), model: z.string().optional(), organization: z.string().optional() }`.
-- [ ] Task: `getAIClient()` reads `AI_PROVIDER`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, `AI_RECOMMENDER_MODEL` from `process.env` (via the validated `env` from Track 7, when available) and constructs the right provider.
-- [ ] Task: Write failing tests:
+> **GREEN TEST COMMAND: `npx vitest run` from `packages/ai/`**
+> (NOT `npm test` — monorepo-level tests have pre-existing failures in
+> `www-reading-advantage` and `vocabulary-games` unrelated to this track.)
+
+> **Red-phase notes (2026-06-06, mid-agent):** Implementation already shipped in
+> `feat(ai): commit shared packages/ai adapter package` (`9c52c8a`) and the
+> basic delegation tests live in `src/client.test.ts` (9 tests using
+> `vi.stubEnv`/`vi.unstubAllEnvs`). The test-strategy §1 / §3.1 / §3.4 / §5
+> artifacts that the plan tasks implicitly require are missing — Phase 5 Red
+> fills those gaps with `src/__tests__/phase-5-provider-selector.test.ts`
+> so the Green-phase implementer (and any future regression) is held to the
+> full env-matrix contract:
+>   1. Env-matrix table-driven tests via `describe.each` covering
+>      `{AI_PROVIDER, OPENAI_API_KEY, GEMINI_API_KEY, GOOGLE_API_KEY,
+>      NODE_ENV}` × expected client or thrown error, all wrapped in the
+>      `withEnv()` helper (test-strategy §1 row 5, §3.1, §3.4, §5).
+>   2. Explicit plan task 4 scenarios re-codified under the
+>      `withEnv()` pattern (mock by `AI_PROVIDER`, openai via
+>      `AI_PROVIDER`+`OPENAI_API_KEY`, no-env production throw, no-env
+>      test default).
+>   3. Singleton identity + `resetAIClient()` behaviour (test-strategy
+>      §3.1: singleton state must not leak between tests).
+>   4. G-4 barrel-export assertion: `src/index.ts` re-exports
+>      `createAIClient`, `getAIClient`, `resetAIClient`, the three error
+>      classes, `MockProvider`, and (per Phase 2/3/4 additions)
+>      `createTestClient`, `OpenAIProvider`, `GoogleProvider`
+>      (test-strategy §4 G-4).
+>   5. Static check: `client.ts` declares an `AIConfig` Zod schema with
+>      `provider`, `apiKey`, `model`, `organization` keys and a default
+>      `provider` of `'openai'` (test-strategy §1 row 5 + plan task 2).
+>
+> Existing tasks 1–3 are implementation-only and were satisfied in
+> `9c52c8a`; the Red-phase work below is the *test* coverage the
+> test-strategy and FR-2/FR-6 require.
+
+- [~] Task: Create `packages/ai/src/client.ts` with `createAIClient(config: AIConfig)` and `getAIClient()` lazy singleton. (`9c52c8a` — implementation present; Red-phase test addition in progress)
+- [~] Task: `AIConfig` Zod schema: `{ provider: z.enum(['openai', 'google', 'mock']).default('openai'), apiKey: z.string().optional(), model: z.string().optional(), organization: z.string().optional() }`. (`9c52c8a` — implementation present; Red-phase test addition in progress)
+- [~] Task: `getAIClient()` reads `AI_PROVIDER`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, `AI_RECOMMENDER_MODEL` from `process.env` (via the validated `env` from Track 7, when available) and constructs the right provider. (`9c52c8a` reads the first three; `AI_RECOMMENDER_MODEL` is gated on Track 7's env validator — out of Phase 5 scope)
+- [~] Task: Write failing tests:
   - `getAIClient()` with `AI_PROVIDER='mock'` returns the mock provider.
   - `getAIClient()` with `AI_PROVIDER='openai'` + `OPENAI_API_KEY='test-key'` returns the OpenAI provider.
   - `getAIClient()` with no env vars + `NODE_ENV='production'` throws `ProviderNotConfiguredError`.
   - `getAIClient()` with no env vars + `NODE_ENV='test'` returns the mock provider.
+  - Plus the full env-matrix from test-strategy §3.4, wrapped in `withEnv()` and driven by `describe.each`.
 - [ ] Task: Confirm.
 
 ## Phase 6: Refactor `lib/ai/recommendation-service.ts`
