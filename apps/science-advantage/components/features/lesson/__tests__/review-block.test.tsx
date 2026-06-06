@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ReviewBlock } from '../blocks/review-block';
 import type { ReviewBlock as ReviewBlockType } from '@/lib/schemas/lesson-content.schema';

@@ -136,14 +136,24 @@
 > `apps/science-advantage/lib/ci-gates/phase-6-misc-cleanup.test.ts` and
 > currently fail (8 errors across the 4 files; expect ≥ 8 to disappear,
 > bringing the tsc total from 273 → ≤ 265).
+>
+> **Status note (2026-06-07, Green phase):** All 4 files fixed:
+> - `user-menu.tsx:89` — `alt={user.name || undefined}` (coerce null → undefined).
+> - `review-block.test.tsx:3` — added `beforeEach` to vitest import.
+> - `xp.test.ts:121` — `const attemptNumber: number = 2;` widens literal type.
+> - `route.integration.test.ts` — added `schoolId: TEST_SCHOOL_ID` to all
+>   seed `.values()` calls + fixed `maxScore: '100'` → `maxScore: 100` (real column).
+>   Also added `schools` import and `TEST_SCHOOL_ID` constant with cleanup.
+> tsc error count: 273 → 265 (8 errors eliminated). Gate tests
+> `phase-6-misc-cleanup.test.ts` — 7/7 passing.
 
-- [~] Task: Per the existing `auth_strategy_review` row, the 4 misc errors are:
+- [x] Task: Per the existing `auth_strategy_review` row, the 4 misc errors are:
   - `user-menu string|null` (in `components/features/auth/user-menu.tsx`)
   - `beforeEach import` (in some test file)
   - `xp.test comparison` (in `lib/gamification/xp.test.ts:124`)
-  - `mastery-profile overload` (in some other test file)
-- [~] Task: Inspect each error; fix in place. Most are trivial type corrections.
-- [~] Task: Run `pnpm turbo run check-types`; expect 4 errors gone.
+  - `mastery-profile overload` (in some other test file) (b3f5771)
+- [x] Task: Inspect each error; fix in place. Most are trivial type corrections. (b3f5771)
+- [x] Task: Run `pnpm turbo run check-types`; expect 4 errors gone. _(Verified: tsc error count 273 → 265; 0 errors in Phase 6 cohort; gate tests 7/7 pass.)_ (b3f5771)
 
 ## Phase 7: Add `check-types` Script
 

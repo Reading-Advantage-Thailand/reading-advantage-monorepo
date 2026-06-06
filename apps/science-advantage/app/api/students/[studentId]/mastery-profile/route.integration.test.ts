@@ -8,6 +8,7 @@ import {
   scienceMasteryRuns,
   scienceStandardMastery,
   scienceStandards,
+  schools,
   sessions,
   users,
 } from '@reading-advantage/db/schema';
@@ -16,6 +17,7 @@ import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'mastery-profile-itest';
 const STANDARDS_DESC = 'mastery-profile-itest standard';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
 
 const mockCookies = {
   get: vi.fn(),
@@ -38,6 +40,11 @@ async function cleanup(): Promise<void> {
   await db.delete(sessions);
   await db.delete(accounts);
   await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+  await db.execute(sql`DELETE FROM schools WHERE id = ${TEST_SCHOOL_ID}`);
+  await db
+    .insert(schools)
+    .values({ id: TEST_SCHOOL_ID, name: 'Mastery Profile Test School' })
+    .onConflictDoNothing();
 }
 
 async function seedUser(
@@ -55,6 +62,7 @@ async function seedUser(
       email: `${id}@example.com`,
       role,
       gradeLevel: opts.gradeLevel ?? null,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;
@@ -68,6 +76,7 @@ async function seedStandard(code: string, gradeLevel = 3) {
       description: STANDARDS_DESC,
       framework: 'THAI',
       gradeLevel,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return s;
@@ -88,6 +97,7 @@ async function seedMastery(
       masteryLevel: String(masteryLevel),
       evidenceCount,
       lastAssessedAt,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return m;
@@ -221,6 +231,7 @@ describe('GET /api/students/[studentId]/mastery-profile (integration)', () => {
         title: 'Mastery Profile Lesson',
         gradeLevel: 3,
         order: 1,
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     const [attempt] = await db
@@ -229,14 +240,16 @@ describe('GET /api/students/[studentId]/mastery-profile (integration)', () => {
         studentId: testStudent.id,
         lessonId: lesson.id,
         attemptNumber: 1,
-        maxScore: '100',
+        maxScore: 100,
         completedAt: new Date(),
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     await db.insert(scienceMasteryRuns).values({
       attemptId: attempt.id,
       studentId: testStudent.id,
       status: 'PROCESSING',
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(testStudent.id);

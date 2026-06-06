@@ -118,7 +118,7 @@ describe('XP Award Calculation', () => {
   });
 
   it('does not award first-attempt bonus for second attempt', () => {
-    const attemptNumber = 2;
+    const attemptNumber: number = 2;
     const scorePercentage = 85;
     const baseXp = scorePercentage >= 90 ? 100 : scorePercentage >= 80 ? 75 : 50;
     const firstAttemptBonus = attemptNumber === 1 && scorePercentage >= 80 ? 25 : 0;

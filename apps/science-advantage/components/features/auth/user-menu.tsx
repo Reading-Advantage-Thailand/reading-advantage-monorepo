@@ -86,7 +86,7 @@ export function UserMenu({ user }: UserMenuProps) {
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-3 outline-none">
         <Avatar className="cursor-pointer">
-          <AvatarImage src={user.image || undefined} alt={user.name} />
+          <AvatarImage src={user.image || undefined} alt={user.name || undefined} />
           <AvatarFallback className="bg-rose-600 text-white">{initials}</AvatarFallback>
         </Avatar>
         <div className="hidden md:block text-left">
