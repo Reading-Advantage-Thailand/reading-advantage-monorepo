@@ -43,32 +43,23 @@
 - [x] Task: Export from `packages/auth/src/index.ts`. (`781ff8a`)
 - [x] Task: Verify — `vitest run` in packages/auth green (108 tests, 12 files). (`781ff8a`)
 
-### Phase 2 Red-phase status (2026-06-06)
+### Phase 2 Green-phase status (2026-06-06)
 
-- **GREEN (Red-phase tests committed):** all three Red-phase tasks for the DELETE-path
-  are written, committed, and fail with the expected `42P01 relation "audit_events"
-  does not exist` signal when run without migrations applied to
-  `science_advantage_test`.
-- **Test file:** `packages/auth/src/__tests__/audit-retention.integration.test.ts` — 4 tests
-  (1 boundary, 1 sub-batch-size batch, 1 multi-batch >BATCH_SIZE strengthening, 1 audit
-  event). All 4 fail with `42P01` in Red; the unit suite (`audit-retention.test.ts`) is
-  4/4 green and the full unit suite is 118/118 green.
-- **Test command (targeted, Red):**
+- **GREEN:** all 4 integration tests pass. (`004e690`)
+- **Fixes applied:**
+  1. `audit-retention.ts`: Convert `cutoff` Date to ISO string before passing to
+     `sql` template — postgres-js cannot bind raw Date objects
+     (`ERR_INVALID_ARG_TYPE`).
+  2. `audit-retention.integration.test.ts`: Boundary test used `actorUserId: actorId`
+     (non-existent synthetic user) which violated FK constraint
+     `audit_events_actor_user_id_fkey`. Changed to `actorUserId: null` consistent
+     with all 3 other tests in the file (existing test style).
+- **Migration prerequisite:** 0018_audit_events.sql must be applied to
+  `science_advantage_test` (not registered in drizzle journal; applied manually).
+- **Test command (targeted, Green):**
   `cd packages/auth && DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test DIRECT_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test npx vitest run src/__tests__/audit-retention.integration.test.ts`
-  → 1 file failed, 4 tests failed, all 4 with `PostgresError 42P01` (relation
-  "audit_events" does not exist) in `truncateAuditEvents` (beforeEach).
-- **Multi-batch strengthening rationale:** the plan called for "seed > 5000 expired rows
-  or stub the batch size." The pre-existing batch test seeded 10 rows (sub-batch-size),
-  which a single-batch implementation would also pass. The new "multi-batch" test
-  seeds `BATCH_SIZE + 7 = 5007` rows to force at least two batch iterations; it asserts
-  `result.deleted === 5007` and that no `multibatch:test:expired` rows remain.
-- **No source changes:** the integration test file and `plan.md` are the only files
-  touched. No vitest config, no global setup, no source code.
-- **Green-phase handoff:** the Green-phase implementer must (a) apply Drizzle migrations
-  to `science_advantage_test` (`pnpm --filter @reading-advantage/db migrate`), and
-  (b) wire the integration harness into a global setup file (or run it with the env
-  vars above) so the tests execute against a real DB. No further test code changes
-  are expected — the Red deliverable is the test surface itself.
+  → 1 file passed, 4 tests passed.
+- **Full suite:** 14 files, 122/122 pass — no regressions.
 
 ## Phase 3: Periodic Job
 - [x] Task: Write test: lock key constant is a stable positive BigInt; scheduler start/stop/run methods exist and work. (`781ff8a`)
