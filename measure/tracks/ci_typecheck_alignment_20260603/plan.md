@@ -284,8 +284,8 @@
 
 ## Phase 9: Delete App-Local CI Workflow
 
-- [ ] Task: Delete `apps/science-advantage/.github/workflows/ci.yml`.
-- [ ] Task: Verify the file is gone: `ls apps/science-advantage/.github/workflows/`.
+- [~] Task: Delete `apps/science-advantage/.github/workflows/ci.yml`.
+- [~] Task: Verify the file is gone: `ls apps/science-advantage/.github/workflows/`.
 
 ## Phase 10: Add `path-filter: apps/science-advantage/**` to Monorepo Root CI
 
