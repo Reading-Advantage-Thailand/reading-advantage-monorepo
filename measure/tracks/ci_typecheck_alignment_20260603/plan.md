@@ -557,11 +557,88 @@
 
 ## Phase 13: Final Acceptance
 
-- [ ] Task: `pnpm turbo run check-types --filter=science-advantage` exits 0.
-- [ ] Task: `pnpm turbo run lint --filter=science-advantage` exits 0.
-- [ ] Task: `pnpm turbo run test --filter=science-advantage` exits 0.
-- [ ] Task: `pnpm turbo run build --filter=science-advantage` exits 0.
-- [ ] Task: Open a test PR touching `apps/science-advantage/**`; verify the monorepo root CI runs all 4 gates.
+> **Status note (2026-06-07, Red phase owned by mid role):** Red-phase
+> pinning tests added at
+> `apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts`
+> (commit pending). The test file is the umbrella gate for the entire
+> track: it re-asserts the 4 monorepo gates (`check-types`, `lint`,
+> `test`, `build`) end-to-end on the `science-advantage` package, and
+> verifies that the monorepo-root `.github/workflows/ci.yml` is wired
+> to run all 4 gates on any PR touching `apps/science-advantage/**`.
+>
+> Per `test-strategy.md` §1 P13: "All 4 turbo gates exit 0." Per
+> `test-strategy.md` §3 cross-phase note: Phase 13 is the cumulative
+> acceptance gate — it should fail today if any of Phases 0–12 left
+> a residual tsc error, a residual lint warning, a test regression,
+> or a build regression. Per the existing per-phase status notes:
+>
+>   - **check-types** is GREEN (Phase 7, commit `7e19895`).
+>   - **lint** is GREEN (Phase 12, commit `cbeffcb`).
+>   - **test** is **UNVERIFIED** — no per-phase test has yet asserted
+>     `pnpm turbo run test --filter=science-advantage` exits 0. The
+>     `test` task in `turbo.json:19` declares `dependsOn: ["^build"]`
+>     so the workspace deps must build first, which adds non-trivial
+>     time to the gate. This phase's gate is the first time the test
+>     suite is exercised end-to-end on the science-advantage package.
+>   - **build** is RED (Phase 8, commit `2c59fe0`): build fails due
+>     to a pre-existing `@node-rs/argon2` native module bundling
+>     issue with Turbopack (unrelated to this track; verified by
+>     reverting and running the build — same failure). The end-state
+>     gate must exit 0 for Phase 13 to be GREEN; this is a known
+>     failure mode that the supervisor must coordinate with the
+>     Argon2id track (Track 3, archived) before Phase 13 can flip.
+>   - **PR/CI workflow** is GREEN (Phase 10, commit `132de8b`):
+>     `.github/workflows/ci.yml` declares `paths:` filter plus
+>     `Type check` step. The regression guards in
+>     `phase-13-final-acceptance.test.ts` lock this install state so
+>     a future over-zealous cleanup cannot silently neuter the gate.
+>
+> **Test layout (final acceptance contract):**
+>
+>   1. `pnpm turbo run check-types --filter=science-advantage exits 0`
+>      — **umbrella gate** (passes today; locks the end-state
+>      contract that Phases 0–7 + Phase 8 must have left the
+>      codebase type-clean).
+>   2. `pnpm turbo run lint --filter=science-advantage exits 0`
+>      — **umbrella gate** (passes today; locks the end-state
+>      contract that Phases 11 + 12 must have left the codebase
+>      lint-clean).
+>   3. `pnpm turbo run test --filter=science-advantage exits 0`
+>      — **umbrella gate** (Red-phase: may fail today if the
+>      unit-test suite has regressions; passes if Phases 0–12 left
+>      the suite green).
+>   4. `pnpm turbo run build --filter=science-advantage exits 0`
+>      — **umbrella gate** (fails today per the Phase 8 status note;
+>      pre-existing `@node-rs/argon2` native module bundling
+>      issue with Turbopack; unrelated to this track). The end-state
+>      gate must exit 0 for Phase 13 to be GREEN.
+>   5. `monorepo-root .github/workflows/ci.yml declares the
+>      apps/science-advantage/** paths filter` — **regression guard**
+>      (passes today; locks the install state from Phase 10).
+>   6. `monorepo-root .github/workflows/ci.yml declares all 4 named
+>      gates (Build, Lint, Type check, Test)` — **regression guard**
+>      (passes today; locks the install state from Phase 10).
+>   7. `turbo.json declares check-types, lint, test, and build tasks
+>      with the required dependsOn chains (^check-types, ^lint,
+>      ^build, ^build)` — **regression guard** (passes today; locks
+>      the workspace-deps ordering).
+>   8. `monorepo-root .github/workflows/ci.yml runs each gate via the
+>      workspace-wide command (pnpm build / pnpm lint / pnpm turbo
+>      run check-types / pnpm test) so the workspace-deps typecheck
+>      and build run in parallel via turbo's task graph` —
+>      **regression guard** (passes today).
+>
+> The 4 umbrella gates share a single `beforeAll` per gate to keep
+> the total runtime under the supervisor role-timeout budget (each
+> gate is spawned once and cached; all assertions read the cached
+> output). The 4 regression guards are file-content only and run
+> in <1s.
+
+- [~] Task: `pnpm turbo run check-types --filter=science-advantage` exits 0. [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts` test 1.]
+- [~] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. [Red-phase test in same file test 2.]
+- [~] Task: `pnpm turbo run test --filter=science-advantage` exits 0. [Red-phase test in same file test 3 — first end-to-end test gate for science-advantage.]
+- [~] Task: `pnpm turbo run build --filter=science-advantage` exits 0. [Red-phase test in same file test 4 — currently fails per Phase 8 status note (pre-existing `@node-rs/argon2` native module bundling issue with Turbopack; unrelated to this track).]
+- [~] Task: Open a test PR touching `apps/science-advantage/**`; verify the monorepo root CI runs all 4 gates. [Regression guards in same file tests 5–8 lock the install state of `.github/workflows/ci.yml` (paths filter + 4 named gates + workspace-wide turbo invocations + `turbo.json` task graph) so a future over-zealous cleanup cannot silently neuter the gate.]
 
 ## Phase 14: Closeout
 
