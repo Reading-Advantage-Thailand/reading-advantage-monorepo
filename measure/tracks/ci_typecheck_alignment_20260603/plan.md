@@ -203,9 +203,22 @@
 
 > **Status note (2026-06-07, Red phase owned by mid role):** Red-phase
 > pinning tests live at
-> `apps/science-advantage/lib/ci-gates/phase-8-ignore-build-errors.test.ts`.
-> The end-state contract (per `test-strategy.md` §1 P8 / §4 architecture
-> guardrails) is:
+> `apps/science-advantage/lib/ci-gates/phase-8-ignore-build-errors.test.ts`
+> (commits `96d2791` + `7499b1d`).
+>
+> **Prerequisite state (verified 2026-06-07):** Phases 0–7 are GREEN
+> per commit `7e19895` (resolve all 265 tsc errors — Phase 7 green)
+> and `05391b3` (mark Phase 7 green — 8/8 tests pass, 0 tsc errors).
+> `pnpm --filter science-advantage check-types` exits 0 with 0 tsc
+> errors. **However**, the `next.config.ts:25` flip has NOT been
+> committed yet — the file still reads `ignoreBuildErrors: true,`
+> and the 9-line resolved-error enumeration comment block is still
+> present (lines 15–24). Per `test-strategy.md` §1 P8, the implementer
+> must sequence the flip *after* the tsc-clean state is confirmed,
+> which is exactly where we are now.
+>
+> The end-state contract (per `test-strategy.md` §1 P8 / §4
+> architecture guardrails) is:
 >
 >   (a) **File content** — `apps/science-advantage/next.config.ts:25`
 >       no longer contains `ignoreBuildErrors: true` (the value is
@@ -224,16 +237,27 @@
 >       must pass *before* the flip is committed — sequence the
 >       commits: typecheck-clean first, then flip, then build.").
 >
-> Tests 1–4 are file-content regression guards (expected to fail
+> Tests 1–4 are file-content regression guards (red-phase, fail
 > today: `ignoreBuildErrors: true` is still on line 25 and the
-> 9-line comment block is still present). Tests 5–7 are end-to-end
+> 9-line comment block is still present). Tests 5–6 are end-to-end
 > gates (the build gate is expected to pass today because
 > `ignoreBuildErrors: true` masks tsc errors during the build; this
 > is a forward-looking smoke test that locks the build state so a
 > future flip of `ignoreBuildErrors: true → false` does not regress
 > the build).
+>
+> **Recovery note (2026-06-07, mid role):** A previous attempt
+> committed a wider change set (commit `674cfe2`, 63 files) that
+> swept in pre-existing uncommitted modifications to non-test /
+> non-Measure files, violating the Red-phase boundary. The commit
+> was reset with `git reset --mixed HEAD~1` and the test file was
+> re-committed cleanly as `7499b1d` (1 file). The swept-in
+> modifications have since been incorporated into the scoped Phase
+> 7 Green commit `7e19895`. Lesson: see
+> `measure/lessons-learned.md` "Red-phase boundary — clean commits
+> with pre-existing dirty trees".
 
-- [~] Task: In `apps/science-advantage/next.config.ts:25`, change `ignoreBuildErrors: true,` to `ignoreBuildErrors: false,` (or remove the line). [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-8-ignore-build-errors.test.ts` test 1 — currently fails; the line still reads `ignoreBuildErrors: true,`.]
+- [~] Task: In `apps/science-advantage/next.config.ts:25`, change `ignoreBuildErrors: true,` to `ignoreBuildErrors: false,` (or remove the line). [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-8-ignore-build-errors.test.ts` test 1 — currently fails; the line still reads `ignoreBuildErrors: true,`. Phases 0–7 prerequisite (tsc-clean) is now met per `7e19895` + `05391b3`.]
 - [~] Task: Update the inline comment to remove the ~370-error enumeration (now resolved). [Red-phase test in same file test 2 — currently fails; the 9-line comment block is still present.]
 - [~] Task: Run `pnpm turbo run build --filter=science-advantage`; should pass with the new tsc-clean code. [Green-phase test in same file test 5 — currently passes (the build is masked by `ignoreBuildErrors: true`); serves as regression guard so a future contributor cannot silently re-introduce a build failure while flipping the flag.]
 
