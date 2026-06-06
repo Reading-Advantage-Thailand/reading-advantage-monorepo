@@ -316,7 +316,60 @@
 
 ## Phase 7: Refactor `lib/ai/image-generator.ts`
 
-- [ ] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`).
+> **Red-phase notes (2026-06-06, mid-agent):** The plan tasks split the
+> refactor into 5 steps. Only Task 1 is a test deliverable; the rest are
+> implementation (Green). The mid-agent Red work adds a single test file —
+> `apps/science-advantage/lib/ai/image-generator.class.test.ts` — that
+> codifies the full Phase 7 / test-strategy §1 row 7 / FR-5 contract:
+>
+>   1. `ImageGenerator` is exported from `./image-generator` (Phase 7 task 1).
+>   2. The class constructor accepts an `AIClient` instance (FR-5).
+>   3. `generateDiagram(request)` delegates to `client.generateImage(...)`
+>      with the prompt built from the request (sentinel substrings checked)
+>      and the primary model from `aiImageConfig`, and returns a `Buffer`
+>      payload (test-strategy §3.6) in the legacy `GenerateDiagramResult`
+>      shape `{ buffer, mimeType, modelUsed, prompt, fallbackUsed, sizeBytes }`.
+>   4. **No `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY`
+>      mutation** at call time (test-strategy §3.2 / FR-5): snapshot the
+>      env values before, call `service.generateDiagram(...)`, assert
+>      strict equality after. This is the bug the track exists to fix.
+>   5. Falls back to the secondary model when the primary call throws
+>      (regression net for Phase 7 task 3's "thin wrapper" contract).
+>   6. The legacy `generateLessonDiagram(input)` wrapper is preserved
+>      (Phase 7 task 3) so the existing call site at
+>      `components/features/lesson/blocks/image-block.tsx` keeps working
+>      unchanged.
+>
+> Test-design notes for the Green-phase implementer:
+>
+>   - The test mocks `'ai'`, `'sharp'`, `'@/lib/observability/logger'`, and
+>     `'@reading-advantage/ai'` (with a `StubAIClient`) so the legacy
+>     module can load in vitest unit mode. The Green refactor can drop
+>     several of these mocks as it removes the direct SDK imports
+>     (Phase 7 task 2) and the `process.env` reads from this file.
+>   - `'@reading-advantage/ai'` is mocked with a `StubAIClient` because
+>     the workspace package is not yet an `apps/science-advantage`
+>     dependency (that lands in Phase 8 task 2). The stub mirrors the
+>     `AIClient` interface (`packages/ai/src/types.ts:52`) just enough for
+>     the assertion surface. Once the Green refactor is in place the
+>     implementer can swap the stub for the real `createTestClient` and
+>     drop the `@reading-advantage/ai` mock; the assertion surface
+>     stays the same.
+>   - `ImageGenerator` is resolved through `resolveImageGenerator()`
+>     which throws a descriptive `Phase 7 RED:` `TypeError` if the class
+>     is not exported. The error message includes the expected class
+>     shape so the Green implementer has a single-string checklist.
+>   - The test only runs the unit test config (no DB, no Redis, no
+>     network). It is intentionally scoped to `vitest.unit.config.ts`
+>     and excludes integration tests.
+>   - The existing `image-generator.test.ts` (3 tests, all passing) is
+>     left intact as the legacy regression net; it mocks `'ai'` and
+>     `'sharp'` directly and exercises the pre-refactor `generateLessonDiagram`
+>     behaviour. Green may need to update that file (e.g., mock the
+>     `AIClient` factory instead of `'ai'`) — that is a Green-phase
+>     concern, not a Red-phase one.
+
+- [~] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: _pending_)
 - [ ] Task: **Remove the `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY` mutation** in `ensureApiKey()`. The API key is passed via the `AIClient` constructor (set in Phase 5 by `getAIClient()`).
 - [ ] Task: Refactor the existing `generateLessonDiagram(input)` exported function into a thin wrapper.
 - [ ] Task: Update call sites in `components/features/lesson/blocks/image-block.tsx` etc.
