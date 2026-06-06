@@ -232,7 +232,7 @@
 
 ## Phase 6: Refactor `lib/ai/recommendation-service.ts`
 
-- [ ] Task: Write a failing test for the new `RecommendationService` class (constructor takes `AIClient`; `getRecommendation(input)` calls `client.generateObject(...)`).
+- [~] Task: Write a failing test for the new `RecommendationService` class (constructor takes `AIClient`; `getRecommendation(input)` calls `client.generateObject(...)`).
 - [ ] Task: Replace the direct `generateObject` import with `getAIClient().generateObject(...)`.
 - [ ] Task: Refactor the existing `generateRecommendation(input)` exported function into a thin wrapper that calls the service.
 - [ ] Task: Update the call site `app/api/ai/recommendations/route.ts:21` to use the new wrapper (or the service directly).
