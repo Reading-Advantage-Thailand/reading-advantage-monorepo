@@ -1,8 +1,6 @@
 import { z } from 'zod';
-import { generateObject } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createHash } from 'crypto';
+import type { AIClient } from '@reading-advantage/ai';
 
 import { aiConfig } from '@/lib/config/ai';
 import { logger } from '@/lib/observability/logger';
@@ -37,18 +35,6 @@ type GenerateResult = {
   fallbackUsed: boolean;
 };
 
-interface AIClient {
-  generateObject<T>(input: {
-    schema: z.ZodType<T, z.ZodTypeDef, unknown>;
-    prompt: string;
-    model?: string;
-    temperature?: number;
-    maxTokens?: number;
-  }): Promise<T>;
-  generateImage(input: unknown): Promise<Buffer>;
-  generateText(input: unknown): Promise<string>;
-}
-
 const recommendationCache = new RedisCacheAdapter(getRedisClient(), {
   prefix: 'rec:',
   defaultTtlMs: aiConfig.cacheTtlMs,
@@ -62,57 +48,6 @@ function buildCacheKey(context: RecommendationContext): string {
   const keyData = `${context.studentId}:${context.masteryVersion}:${candidateIds}`;
   const hash = createHash('sha256').update(keyData).digest('hex').slice(0, 16);
   return hash;
-}
-
-const openaiClient = process.env.OPENAI_API_KEY
-  ? createOpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  : null;
-
-const geminiClient = process.env.GEMINI_API_KEY
-  ? createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY })
-  : null;
-
-function resolveModel(modelId: string) {
-  if (modelId.startsWith('gemini')) {
-    if (!geminiClient) {
-      throw new Error('Missing GEMINI_API_KEY');
-    }
-    return geminiClient(modelId);
-  }
-
-  if (!openaiClient) {
-    throw new Error('Missing OPENAI_API_KEY');
-  }
-
-  return openaiClient(modelId);
-}
-
-class ServiceClient implements AIClient {
-  constructor(private readonly modelId: string) {}
-
-  async generateObject<T>(input: {
-    schema: z.ZodType<T, z.ZodTypeDef, unknown>;
-    prompt: string;
-    model?: string;
-    temperature?: number;
-    maxTokens?: number;
-  }): Promise<T> {
-    const { object } = await generateObject({
-      model: resolveModel(input.model ?? this.modelId),
-      schema: input.schema,
-      prompt: input.prompt,
-      maxRetries: 1,
-    });
-    return object as T;
-  }
-
-  async generateImage(_input: unknown): Promise<Buffer> {
-    throw new Error('Not implemented in ServiceClient');
-  }
-
-  async generateText(_input: unknown): Promise<string> {
-    throw new Error('Not implemented in ServiceClient');
-  }
 }
 
 export class RecommendationService {
@@ -211,7 +146,8 @@ export class RecommendationService {
 export async function generateRecommendation(
   context: RecommendationContext
 ): Promise<GenerateResult> {
-  const client = new ServiceClient(aiConfig.primaryModel);
+  const { getAIClient } = await import('@reading-advantage/ai');
+  const client = getAIClient();
   const service = new RecommendationService(client);
   return service.getRecommendation(context);
 }
