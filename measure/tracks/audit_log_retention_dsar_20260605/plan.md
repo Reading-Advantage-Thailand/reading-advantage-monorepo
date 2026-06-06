@@ -145,10 +145,23 @@
 - **Build-graph:** `graph.db` updated with `dsar.ts`.
 
 ## Phase 5: DSAR Endpoint (TDD)
-- [ ] Task: Write route test: ADMIN-only (non-admin → 403); Zod rejects neither/both of `userId`/`email`; valid request returns archive with `manifest.md` + JSON files whose counts match.
-- [ ] Task: Write route test: the export is audited as `dsar:export` (actor = admin, target = subject); too-large export → 413.
+- [~] Task: Write route test: ADMIN-only (non-admin → 403); Zod rejects neither/both of `userId`/`email`; valid request returns archive with `manifest.md` + JSON files whose counts match.
+- [~] Task: Write route test: the export is audited as `dsar:export` (actor = admin, target = subject); too-large export → 413.
+  - **413 contract decision (mid, 2026-06-06):** the 413 test uses `vi.doMock` to force `exportSubjectData` to return `status: "tooLarge"`, then asserts the route returns 413. The full end-to-end variant (seed 100,001 rows, run the real domain function) is impractical for a route-layer integration test (~60-90s of seeding) and is already pinned at the domain level by `packages/domain/src/__tests__/dsar.integration.test.ts` (test #5). The mock-based test pins the route-level translation only (one-liner: `if (bundle.status === "tooLarge") return new Response(null, { status: 413 })`).
 - [ ] Task: Implement `GET /api/admin/dsar/export` (zip default, `?format=json` alternative), Zod-validated query, calling `exportSubjectData`, recording the `dsar:export` event.
 - [ ] Task: Verify — route tests green.
+
+### Phase 5 Red-phase status (2026-06-06)
+
+- **RED:** the route file `app/api/admin/dsar/export/route.ts` does not exist yet, so the test file's top-level `import { GET } from "./route"` fails with `ERR_MODULE_NOT_FOUND` (`Cannot find module './route' imported from '.../route.integration.test.ts'`). The test suite reports `1 failed (1) / no tests` — the expected Red-phase signal.
+- **Test file:** `apps/science-advantage/app/api/admin/dsar/export/route.integration.test.ts`
+- **11 `it()` blocks** across three `describe` groups:
+  1. *auth and validation* (5 tests): unauthenticated → 401, TEACHER → 403, STUDENT → 403, no `userId`/`email` → 400, both `userId`/`email` → 400.
+  2. *happy path + bundle integrity* (3 tests): `?format=json` returns 200 + manifest counts match profile+events; default returns `application/zip` + PK magic bytes; `?email=…` returns the same payload as `?userId=…`.
+  3. *audit row + 413* (3 tests): exactly one `dsar:export` row with actor=admin / target=subject; no audit row on 401/403/400; 413 when `exportSubjectData` returns `status: "tooLarge"` (via `vi.doMock`).
+- **Test command (targeted, Red):** the committed `vitest.integration.config.ts` calls `pnpm --filter @reading-advantage/db migrate` in its global setup, but `pnpm` is not on PATH in this sandbox. The mid agent ran migrations directly (`drizzle-kit migrate` against `science_advantage_test`) and used a sandbox-only `vitest.integration.no-pnpm-setup.config.ts` to bypass the global setup. Normal CI (where `pnpm` is available) will use the committed config and reproduce the same Red failure. The bypass config is NOT committed.
+- **No regressions:** the test file does not touch any existing source code; no other test file is modified.
+- **Source code changes:** NONE. Per the TDD contract, this commit adds tests only. The implementer (Green phase) will create `apps/science-advantage/app/api/admin/dsar/export/route.ts`.
 
 ## Phase 6: Integration + Acceptance
 - [ ] Task: End-to-end: seed → request export → unzip → assert manifest counts == file row counts == DB counts for the subject.
