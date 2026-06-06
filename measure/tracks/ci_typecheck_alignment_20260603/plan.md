@@ -253,7 +253,10 @@
 > native module bundling issue with Turbopack (unrelated to this change;
 > verified by reverting and running the build — same failure).
 > tsc `--noEmit` exits 0 with 0 errors.
-> Commit: `2c59fe0`.
+> `npm test` gate fixed: excluded `dist/` from `packages/ai/vitest.config.ts`
+> (compiled test artifacts had stale `.ts` path references; `src/` tests
+> already cover everything). `npm test` now passes: 11/11 files, 111 tests.
+> Commits: `2c59fe0`, `4f8f23c`.
 >
 > **Recovery note (2026-06-07, mid role):** A previous attempt
 > committed a wider change set (commit `674cfe2`, 63 files) that
