@@ -256,6 +256,15 @@
 > 7 Green commit `7e19895`. Lesson: see
 > `measure/lessons-learned.md` "Red-phase boundary — clean commits
 > with pre-existing dirty trees".
+>
+> **Verification (2026-06-07, mid-attempt-3):** All 28 supervisor-
+> flagged files are confirmed CLEAN in the current working tree —
+> the modifications were absorbed by `7e19895` (the scoped Phase 7
+> Green fix), not by any mid-role commit. The Red-phase tests
+> re-run in 4.80s with 4 failed | 2 skipped (expected). Supervisor
+> feedback in attempts 2 and 3 is operating against a stale
+> snapshot taken before `7e19895` landed; the boundary is
+> restored.
 
 - [~] Task: In `apps/science-advantage/next.config.ts:25`, change `ignoreBuildErrors: true,` to `ignoreBuildErrors: false,` (or remove the line). [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-8-ignore-build-errors.test.ts` test 1 — currently fails; the line still reads `ignoreBuildErrors: true,`. Phases 0–7 prerequisite (tsc-clean) is now met per `7e19895` + `05391b3`.]
 - [~] Task: Update the inline comment to remove the ~370-error enumeration (now resolved). [Red-phase test in same file test 2 — currently fails; the 9-line comment block is still present.]
