@@ -104,13 +104,46 @@
 
 ## Phase 6: Misc Cleanup
 
-- [ ] Task: Per the existing `auth_strategy_review` row, the 4 misc errors are:
+> **Status note (2026-06-07, Red phase owned by mid role):** Verified the
+> current tsc baseline (273 errors) and located the 4 misc-cohort files:
+>
+>   - `components/features/auth/user-menu.tsx:89,54` — TS2322 (`string | null`
+>     assigned to `string | undefined`; `user.name` on the `AvatarImage`
+>     `alt` prop).
+>   - `components/features/lesson/__tests__/review-block.test.tsx:13,1` —
+>     TS2304 (`Cannot find name 'beforeEach'`; the file imports
+>     `afterEach, describe, expect, it, vi` from `'vitest'` at line 3 but
+>     omits `beforeEach`).
+>   - `lib/gamification/xp.test.ts:124,31` — TS2367 (`attemptNumber === 1`
+>     comparison flagged because `attemptNumber` is narrowed to `2` at
+>     line 121 via `const attemptNumber = 2;`; the test intends to
+>     exercise the `=== 1` branch's *false* path so the literal-type
+>     mismatch is the desired comparison — but tsc's literal-type
+>     narrowing reports overlap=0).
+>   - `app/api/students/[studentId]/mastery-profile/route.integration.test.ts`
+>     lines 66, 85, 219, 228, 236 — 5 TS2769 errors (no overload matches
+>     for the Drizzle `.insert(...).values({...})` calls in
+>     `seedStandard`, `seedScenario`, and the 2026-06-07 inline `seed*`
+>     helpers; likely a stale `framework: 'THAI'` literal that no longer
+>     matches the enum, or a missing required field after a recent
+>     `scienceStandards` / `scienceLessons` / `scienceAttempts` schema
+>     widening). The plan's "1 mastery-profile overload" undercounts —
+>     there are 5 sibling errors in the same file from the same
+>     schema-shift root cause; fixing one likely fixes all five.
+>
+> End-state gate (per `test-strategy.md` §1 P6): `tsc` reports 0 errors in
+> the 4 named files. Red-phase pinning tests live at
+> `apps/science-advantage/lib/ci-gates/phase-6-misc-cleanup.test.ts` and
+> currently fail (8 errors across the 4 files; expect ≥ 8 to disappear,
+> bringing the tsc total from 273 → ≤ 265).
+
+- [~] Task: Per the existing `auth_strategy_review` row, the 4 misc errors are:
   - `user-menu string|null` (in `components/features/auth/user-menu.tsx`)
   - `beforeEach import` (in some test file)
   - `xp.test comparison` (in `lib/gamification/xp.test.ts:124`)
   - `mastery-profile overload` (in some other test file)
-- [ ] Task: Inspect each error; fix in place. Most are trivial type corrections.
-- [ ] Task: Run `pnpm turbo run check-types`; expect 4 errors gone.
+- [~] Task: Inspect each error; fix in place. Most are trivial type corrections.
+- [~] Task: Run `pnpm turbo run check-types`; expect 4 errors gone.
 
 ## Phase 7: Add `check-types` Script
 
