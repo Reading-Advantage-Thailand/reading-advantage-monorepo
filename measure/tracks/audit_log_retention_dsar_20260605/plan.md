@@ -281,7 +281,7 @@ above).
 - **Build-graph:** `graph.db` updated with `apps/science-advantage/package.json`.
 
 ## Phase 7: Closeout
-- [ ] Task: Update `measure/tech-debt.md`: note retention/DSAR delivered; reconcile any audit-log follow-up rows.
-- [ ] Task: Add a lessons-learned entry if anything non-obvious surfaced (privileged-connection DELETE against an append-only table; advisory-lock job pattern).
-- [ ] Task: Update `measure/tracks.md` (mark complete) and move the track dir to `measure/archive/`.
-- [ ] Task: Commit with `git notes` summarizing the track.
+- [~] Task: Update `measure/tech-debt.md`: note retention/DSAR delivered; reconcile any audit-log follow-up rows.
+- [~] Task: Add a lessons-learned entry if anything non-obvious surfaced (privileged-connection DELETE against an append-only table; advisory-lock job pattern).
+- [~] Task: Update `measure/tracks.md` (mark complete) and move the track dir to `measure/archive/`.
+- [~] Task: Commit with `git notes` summarizing the track.
