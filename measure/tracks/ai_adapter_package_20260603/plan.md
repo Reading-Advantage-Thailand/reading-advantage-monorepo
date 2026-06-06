@@ -108,10 +108,43 @@
 
 ## Phase 4: Google Provider
 
-- [ ] Task: Create `packages/ai/src/providers/google.ts` implementing `AIClient` using `@ai-sdk/google`.
-- [ ] Task: Same pattern as OpenAI provider; constructor takes `{ apiKey, model? }`.
-- [ ] Task: Write failing tests with the mock as the underlying model.
-- [ ] Task: Add a single integration test gated by `GEMINI_API_KEY` env.
+> **GREEN TEST COMMAND: `npx turbo run test --filter=@reading-advantage/ai`**
+> (NOT `npm test` — monorepo-level tests have pre-existing failures in
+> `www-reading-advantage` and `vocabulary-games` unrelated to this track.)
+
+> **Red-phase notes (2026-06-06, mid-agent):** Implementation already shipped in
+> `feat(ai): commit shared packages/ai adapter package` (`9c52c8a`) and the
+> basic delegation tests live in `src/providers/google.test.ts` (4 tests).
+> The test-strategy §1 / §4 / §5.1 artifacts that the plan tasks implicitly
+> require are missing — Phase 4 Red fills those gaps with
+> `src/__tests__/phase-4-google-provider.test.ts` so the Green-phase
+> implementer (and any future regression) is held to the full contract:
+>   1. `runAIClientContract` re-runs the Phase 2 contract suite against
+>      the Google provider (test-strategy §1, contract column).
+>   2. Explicit-`apiKey` assertion: `createGoogleGenerativeAI` is
+>      constructed with the constructor's `apiKey`, never from
+>      `process.env.GOOGLE_API_KEY` / `GEMINI_API_KEY` (test-strategy
+>      §5.1; G-3).
+>   3. Architecture guardrail G-3: `src/providers/google.ts` must not
+>      `import "process"` (test-strategy §4).
+>   4. Schema-validation boundary: provider surfaces
+>      `AIClientError`/schema failure rather than silent passthrough
+>      (test-strategy §3.3).
+>   5. Gated real-network integration test (`skipIf(!GEMINI_API_KEY)`,
+>      per test-strategy §1 integration + §5.7 "skipped, not hidden").
+>   6. Google-specific default-model assertions: text/object default
+>      is `gemini-2.5-flash`; image default is
+>      `gemini-2.0-flash-preview-image-generation`; no `organization`
+>      concept is forwarded.
+>
+> Existing tasks 1–3 are implementation-only and were satisfied in
+> `9c52c8a`; the Red-phase work below is the *test* coverage the
+> test-strategy and FR-3 require.
+
+- [~] Task: Create `packages/ai/src/providers/google.ts` implementing `AIClient` using `@ai-sdk/google`. (`9c52c8a`)
+- [~] Task: Same pattern as OpenAI provider; constructor takes `{ apiKey, model? }`. (`9c52c8a`)
+- [~] Task: Write failing tests with the mock as the underlying model. (basic delegation: `9c52c8a`; full contract: in flight, this SHA)
+- [~] Task: Add a single integration test gated by `GEMINI_API_KEY` env. (in this SHA)
 - [ ] Task: Confirm.
 
 ## Phase 5: Provider Selector
