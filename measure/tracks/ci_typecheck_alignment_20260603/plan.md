@@ -188,8 +188,8 @@
   ```json
   "check-types": "tsc --noEmit"
   ```
-  _(Regression-locked by `phase-7-check-types-script.test.ts` tests 1–4: script declared, non-empty, references `tsc`, includes `--noEmit`. Script is already in place per `test-strategy.md` §0 / commit `c1e77f9`; tests assert the install state so a future deletion / no-op regression surfaces immediately.)_ (bd2e3a5, 1b8c89c)
-- [x] Task: Run `pnpm turbo run check-types --filter=science-advantage`; the app is now in scope (no longer silently skipped). _(Regression-locked by `phase-7-check-types-script.test.ts` tests 5–7: turbo.json declares the `check-types` task with `dependsOn: ["^check-types"]`; the script invocation produces tsc-specific output (not a no-op); the end-to-end gate exits 0. Gate 8 is the red-phase assertion — currently fails with the post-Phase-6 265-error tsc count; flips to green once Phases 0–6 are all resolved.)_ (bd2e3a5, 1b8c89c)
+  _(Regression-locked by `phase-7-check-types-script.test.ts` tests 1–4: script declared, non-empty, references `tsc`, includes `--noEmit`. Script is already in place per `test-strategy.md` §0 / commit `c1e77f9`; tests assert the install state so a future deletion / no-op regression surfaces immediately.)_ (bd2e3a5, 1b8c89c, 7e19895)
+- [x] Task: Run `pnpm turbo run check-types --filter=science-advantage`; the app is now in scope (no longer silently skipped). _(Regression-locked by `phase-7-check-types-script.test.ts` tests 5–7: turbo.json declares the `check-types` task with `dependsOn: ["^check-types"]`; the script invocation produces tsc-specific output (not a no-op); the end-to-end gate exits 0. tsc error count: 265 → 0. Gate tests 8/8 pass.)_ (bd2e3a5, 1b8c89c, 7e19895)
 
   > **Status note (2026-06-07, Green phase):** All 8 tests pass.
   > `pnpm --filter science-advantage check-types` exits 0 with 0 tsc errors.
