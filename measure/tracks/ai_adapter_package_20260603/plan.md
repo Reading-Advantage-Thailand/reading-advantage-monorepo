@@ -432,9 +432,24 @@
 > ```bash
 > cd apps/science-advantage && \
 >   npx vitest run --config vitest.unit.config.ts \
->     lib/ai/image-generator.class.test.ts \
+>     lib/ai/__tests__/architecture.test.ts \
 >     lib/ai/image-generator.test.ts
 > ```
+
+> **Red-phase re-verified (2026-06-06 12:19 CST, mid-agent):** Re-ran the
+> targeted command from the new turn that owns the Phase 8 Red-phase
+> re-verification. Result: `Test Files 1 failed (1) | Tests 2 failed
+> (2) | Duration 10.81s`. Same 7 source-code violations reported by
+> the same 2 assertions — G-1 (3 hits) + G-2 (4 hits) in
+> `lib/ai/recommendation-service.ts`. No source-code drift since the
+> original Red-phase commit `9c8b1d2`; no regressions in the
+> neighbouring Phase 6/7 unit tests (`image-generator.class.test.ts`,
+> `recommendation-service.test.ts`, `image-generator.test.ts` — 14
+> tests pass when the full `lib/ai/` unit suite is run). The Red-phase
+> work shipped by the prior mid-agent holds; no new test deliverable
+> is required for Phase 8. The 5 Phase 8 tasks remain `[~]` — Red is
+> done, Green (Phase 8 tasks 1–3) and the follow-up
+> `recommendation-service.ts` migration are not.
 
 - [x] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: `2fd5887`; **Red work verified 2026-06-06 — 5 fail / 1 pass.** Left in `[~]` per Measure in-flight convention: the next agent — typically the Green implementer — will flip this to `[x]` when Phase 7 ships.)
 - [x] Task: **Remove the `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY` mutation** in `ensureApiKey()`. The API key is passed via the `AIClient` constructor (set in Phase 5 by `getAIClient()`). (`0bf81d7`)
@@ -544,6 +559,7 @@
 > **Red-phase complete (2026-06-06, mid-agent):** Tasks 4 and 5 (the
 > grep gates) are encoded as a single Vitest file at
 > `apps/science-advantage/lib/ai/__tests__/architecture.test.ts`
+> (commit `9c8b1d2`).
 > (see Location note in the Red-phase block above for the deviation
 > from test-strategy §4's `__tests__/` path). The G-1 and
 > G-2 guards both fail RED on the source-code violations in
