@@ -415,7 +415,7 @@
 > (c) note this for the Phase 9 docs update so the spec is reconciled
 > with the actual call graph.
 
-- [x] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: `2fd5887`; verified 2026-06-06 — 5 fail / 1 pass)
+- [~] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: `2fd5887`; **Red work verified 2026-06-06 — 5 fail / 1 pass.** Left in `[~]` per Measure in-flight convention: the next agent — typically the Green implementer — will flip this to `[x]` when Phase 7 ships.)
 - [ ] Task: **Remove the `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY` mutation** in `ensureApiKey()`. The API key is passed via the `AIClient` constructor (set in Phase 5 by `getAIClient()`).
 - [ ] Task: Refactor the existing `generateLessonDiagram(input)` exported function into a thin wrapper.
 - [ ] Task: Update call sites in `components/features/lesson/blocks/image-block.tsx` etc.
