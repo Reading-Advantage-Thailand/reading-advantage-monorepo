@@ -727,6 +727,48 @@
 > The Red phase is complete; the 5 plan tasks below remain
 > `[~]` because the Green phase is blocked on the supervisor's
 > follow-up to close the 4 pre-existing lint errors.
+>
+> **Status note (2026-06-07, mid role, Red-phase re-verified
+> end-to-end):** The mid role took ownership of the Phase 13
+> Red phase for the 5 currently incomplete non-deferred tasks
+> below. The Red-phase gate tests at
+> `apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts`
+> (commit `030dd08`) were re-executed end-to-end via the
+> targeted vitest command (the "most-targeted" per the original
+> spec):
+> `corepack pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts lib/ci-gates/phase-13-final-acceptance.test.ts`
+> Result: **1 failed | 16 passed (17 total)** in 142.28s
+> (test wall-clock 134.71s). The single failure is the lint
+> umbrella gate (test 2, `pnpm --filter science-advantage lint
+> exits 0`) — this is the **expected** Red-phase signal. The
+> lint output shows the same 4 pre-existing errors documented
+> in the prior status note: 3 `react-hooks/immutability` errors
+> in sibling analytics files
+> (`class-analytics-overview.tsx:100`,
+> `lesson-detail-analytics.tsx:155`,
+> `student-detail-analytics.tsx:143`) and 1
+> `@typescript-eslint/ban-ts-comment` error in
+> `lib/ai/image-generator.ts:144` (not in the truncated 4 KB
+> output, but expected by the prior status note). None of
+> these errors are introduced by this track. The 16 passing
+> tests confirm the rest of the umbrella gates and regression
+> guards: check-types GREEN (Phase 7, commit `7e19895`), test
+> smoke GREEN (Phase 12 test, ~23s), build smoke GREEN
+> (`next.config.ts` `ignoreBuildErrors: false` per Phase 8
+> commit `2c59fe0`), and the 4 regression guards
+> (`apps/science-advantage/**` paths filter + 4 named gates +
+> workspace-wide turbo invocations + `turbo.json` `dependsOn`
+> chains). The Red phase is confirmed; the 5 plan tasks below
+> remain `[~]` because the Green phase is blocked on the
+> supervisor's follow-up to close the 4 pre-existing lint
+> errors. **No new test code was written** — the
+> `phase-13-final-acceptance.test.ts` file at commit `030dd08`
+> already covers the end-state contract (2 fast umbrella
+> gates + 2 smoke umbrella gates + 4 regression guards = 8
+> describe-level test groups, 17 it-blocks). The mid role's
+> work was verification-only: re-run the targeted command,
+> confirm Red-phase failure mode matches the prior status
+> note, and lock the install state.
 
 - [~] Task: `pnpm turbo run check-types --filter=science-advantage` exits 0. [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts` test 1 — fast umbrella gate via `pnpm --filter science-advantage check-types`.]
 - [~] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. [Red-phase test in same file test 2 — fast umbrella gate via `pnpm --filter science-advantage lint`; currently RED per 4 pre-existing lint errors in sibling analytics files + `image-generator.ts`.]
