@@ -59,6 +59,10 @@
 
 ## Phase 3: OpenAI Provider
 
+> **GREEN TEST COMMAND: `npx turbo run test --filter=@reading-advantage/ai`**
+> (NOT `npm test` — monorepo-level tests have pre-existing failures in
+> `www-reading-advantage` and `vocabulary-games` unrelated to this track.)
+
 > **Red-phase notes (2026-06-06, mid-agent):** Implementation already shipped in
 > `feat(ai): commit shared packages/ai adapter package` (`9c52c8a`) and the
 > basic delegation tests live in `src/providers/openai.test.ts`. The
