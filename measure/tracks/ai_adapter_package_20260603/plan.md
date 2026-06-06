@@ -59,10 +59,34 @@
 
 ## Phase 3: OpenAI Provider
 
-- [ ] Task: Create `packages/ai/src/providers/openai.ts` implementing `AIClient` using `@ai-sdk/openai`.
-- [ ] Task: Constructor takes `{ apiKey, model?, organization? }`. **No `process.env` reads** — the API key is passed explicitly.
-- [ ] Task: `generateObject` uses Vercel AI SDK `generateObject` with the configured client.
-- [ ] Task: Write failing tests with the mock as the "openai" provider's underlying model (avoid real network): assert the OpenAI provider delegates to `generateObject` with the right schema and prompt.
+> **Red-phase notes (2026-06-06, mid-agent):** Implementation already shipped in
+> `feat(ai): commit shared packages/ai adapter package` (`9c52c8a`) and the
+> basic delegation tests live in `src/providers/openai.test.ts`. The
+> test-strategy §1 / §4 / §5.1 artifacts that the plan tasks implicitly
+> require were never added — Phase 3 Red fills those gaps with
+> `src/__tests__/phase-3-openai-provider.test.ts` so the Green-phase
+> implementer (and any future regression) is held to the full contract:
+>   1. `runAIClientContract` re-runs the Phase 2 contract suite against
+>      the OpenAI provider (test-strategy §1 contract column).
+>   2. Explicit-`apiKey` assertion: `createOpenAI` is constructed with
+>      the constructor's `apiKey`, never from `process.env`
+>      (test-strategy §5.1; G-3).
+>   3. Architecture guardrail G-3: `src/providers/openai.ts` must not
+>      `import "process"` (test-strategy §4).
+>   4. Schema-validation boundary: provider surfaces
+>      `AIClientError`/schema failure rather than silent passthrough
+>      (test-strategy §3.3).
+>   5. Gated real-network integration test (`skipIf(!OPENAI_API_KEY)`,
+>      per test-strategy §1 integration + §5.7 "skipped, not hidden").
+>
+> Existing tasks 1–3 are implementation-only and were satisfied in
+> `9c52c8a`; the Red-phase work below is the *test* coverage the
+> test-strategy and FR-3/FR-5 require.
+
+- [~] Task: Create `packages/ai/src/providers/openai.ts` implementing `AIClient` using `@ai-sdk/openai`. (`9c52c8a`)
+- [~] Task: Constructor takes `{ apiKey, model?, organization? }`. **No `process.env` reads** — the API key is passed explicitly. (`9c52c8a`)
+- [~] Task: `generateObject` uses Vercel AI SDK `generateObject` with the configured client. (`9c52c8a`)
+- [~] Task: Write failing tests with the mock as the "openai" provider's underlying model (avoid real network): assert the OpenAI provider delegates to `generateObject` with the right schema and prompt. (`9c52c8a`, basic; expanded in Phase 3 Red)
 - [ ] Task: Add a single integration test that hits the real OpenAI API (gated by `OPENAI_API_KEY` env in CI). Confirm response shape.
 - [ ] Task: Confirm tests pass.
 
