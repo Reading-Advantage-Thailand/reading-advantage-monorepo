@@ -22,12 +22,11 @@
 
 - [x] Task: Create `packages/ai/src/providers/mock.ts` implementing `AIClient`. (`9c52c8a`)
 - [x] Task: Mock takes a `responses: { generateObject?: ..., generateImage?: ..., generateText?: ... }` config in the constructor. If a response is configured, return it; otherwise throw `ProviderNotConfiguredError`. (`9c52c8a`)
-- [x] Task: Write failing tests:
+- [x] Task: Write failing tests: (`24659f3`)
   - `mock.generateObject({ schema, prompt: 'test' })` with a configured response returns the configured object.
   - `mock.generateImage({ prompt: 'test' })` with a configured response returns a Buffer.
   - `mock.generateText({ prompt: 'test' })` with no configured response throws.
   - `mock.generateObject` validates the response against the schema; invalid response throws `SchemaValidationError`.
-  (`24659f3`)
 - [x] Task: Implement. Confirm tests pass. (`abcac78`)
 - [x] Task: Add snapshot test: feed a prompt, capture the response, snapshot for regression. (`abcac78`)
 
@@ -52,6 +51,11 @@
 > factory to `src/providers/mock.ts` with default fixture set (recommendation object, diagram
 > buffer, text output). Re-exported `createTestClient` and `MockResponses` from `src/index.ts`.
 > All 44 tests pass including the 10 Phase 2 RED tests. Snapshots written.
+>
+> **Test gate note:** `npm test` (turbo run test) fails at monorepo level due to pre-existing
+> failures in `www-reading-advantage` and `vocabulary-games` (unrelated to Phase 2). The
+> targeted gate `@reading-advantage/ai:test` passes: 6 files, 44 tests, 0 failures. Use
+> `pnpm vitest run` from `packages/ai/` or `turbo run test --filter=@reading-advantage/ai`.
 
 ## Phase 3: OpenAI Provider
 
