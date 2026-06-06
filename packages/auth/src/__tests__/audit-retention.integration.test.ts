@@ -89,23 +89,22 @@ describe("purgeExpiredAuditEvents — integration", () => {
     const keptTimestamp = new Date(cutoff.getTime() + 1000);
     const purgedTimestamp = new Date(cutoff.getTime() - 1000);
 
-    // Use a synthetic actor id; the FK to users(id) is ON DELETE SET NULL,
+    // Use null actor; the FK to users(id) is ON DELETE SET NULL,
     // and audit_events rows must be insertable with a real user id (or null).
     // The tests below don't care about actor identity — just boundary semantics.
-    const actorId = "purge-test-boundary-actor";
     await db
       .insert(auditEvents)
       .values([
         {
           id: "purge-test-keep-1",
-          actorUserId: actorId,
+          actorUserId: null,
           actorRole: "SYSTEM",
           action: "boundary:test:keep",
           createdAt: keptTimestamp,
         },
         {
           id: "purge-test-purge-1",
-          actorUserId: actorId,
+          actorUserId: null,
           actorRole: "SYSTEM",
           action: "boundary:test:purge",
           createdAt: purgedTimestamp,

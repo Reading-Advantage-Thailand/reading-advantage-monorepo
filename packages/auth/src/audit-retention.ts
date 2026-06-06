@@ -35,6 +35,7 @@ export async function purgeExpiredAuditEvents(
 
   const { db: privilegedDb, client } = createPrivilegedDb();
 
+  const cutoffIso = cutoff.toISOString();
   let totalDeleted = 0;
 
   try {
@@ -43,7 +44,7 @@ export async function purgeExpiredAuditEvents(
         DELETE FROM audit_events
         WHERE id IN (
           SELECT id FROM audit_events
-          WHERE created_at < ${cutoff}
+          WHERE created_at < ${cutoffIso}
           LIMIT ${BATCH_SIZE}
         )
         RETURNING id
