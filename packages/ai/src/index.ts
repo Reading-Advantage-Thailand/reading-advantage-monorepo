@@ -14,6 +14,7 @@ export {
 
 export { createAIClient, getAIClient, resetAIClient } from "./client.js";
 
-export { MockProvider } from "./providers/mock.js";
+export { MockProvider, createTestClient } from "./providers/mock.js";
+export type { MockResponses } from "./providers/mock.js";
 export { OpenAIProvider } from "./providers/openai.js";
 export { GoogleProvider } from "./providers/google.js";

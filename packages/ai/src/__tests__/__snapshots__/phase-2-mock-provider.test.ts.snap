@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Phase 2 — mock provider snapshot (plan.md §Phase 2 task 5) > emits the 1×1 PNG buffer for the deterministic image prompt 1`] = `
+{
+  "base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII=",
+  "byteLength": 68,
+  "isBuffer": true,
+}
+`;
+
+exports[`Phase 2 — mock provider snapshot (plan.md §Phase 2 task 5) > emits the captured recommendation fixture for the deterministic prompt 1`] = `
+{
+  "confidence": "high",
+  "focusStandards": [
+    "MS-PS1-1",
+    "MS-PS1-4",
+  ],
+  "lessonTitle": "Atoms and Molecules: Building Blocks of Matter",
+  "nextBestAlternatives": [
+    {
+      "lessonId": "lesson_ngss_ms_ps1_2_chemical_change",
+      "lessonTitle": "Evidence of a Chemical Reaction",
+    },
+    {
+      "lessonId": "lesson_ngss_ms_ps1_3_synthetic_materials",
+      "lessonTitle": "Synthetic Materials and Their Sources",
+    },
+  ],
+  "reasoning": "The student answered 2 of 5 questions correctly on the diagnostic, with errors concentrated on subatomic-particle identification. Re-anchoring with the atoms-and-molecules lesson rebuilds the prerequisite model before progressing to chemical reactions.",
+  "recommendedLessonId": "lesson_ngss_ms_ps1_1_atoms",
+  "recommendedLessonSlug": "atoms-and-molecules",
+}
+`;
