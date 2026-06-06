@@ -202,16 +202,34 @@
 > `9c52c8a`; the Red-phase work below is the *test* coverage the
 > test-strategy and FR-2/FR-6 require.
 
-- [~] Task: Create `packages/ai/src/client.ts` with `createAIClient(config: AIConfig)` and `getAIClient()` lazy singleton. (`9c52c8a` — implementation present; Red-phase test addition in progress)
-- [~] Task: `AIConfig` Zod schema: `{ provider: z.enum(['openai', 'google', 'mock']).default('openai'), apiKey: z.string().optional(), model: z.string().optional(), organization: z.string().optional() }`. (`9c52c8a` — implementation present; Red-phase test addition in progress)
-- [~] Task: `getAIClient()` reads `AI_PROVIDER`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, `AI_RECOMMENDER_MODEL` from `process.env` (via the validated `env` from Track 7, when available) and constructs the right provider. (`9c52c8a` reads the first three; `AI_RECOMMENDER_MODEL` is gated on Track 7's env validator — out of Phase 5 scope)
-- [~] Task: Write failing tests:
+- [x] Task: Create `packages/ai/src/client.ts` with `createAIClient(config: AIConfig)` and `getAIClient()` lazy singleton. (`9c52c8a` — implementation present; Red-phase test coverage in `80958c3`)
+- [x] Task: `AIConfig` Zod schema: `{ provider: z.enum(['openai', 'google', 'mock']).default('openai'), apiKey: z.string().optional(), model: z.string().optional(), organization: z.string().optional() }`. (`9c52c8a` — implementation present; static source-shape assertion added in `80958c3`)
+- [x] Task: `getAIClient()` reads `AI_PROVIDER`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, `AI_RECOMMENDER_MODEL` from `process.env` (via the validated `env` from Track 7, when available) and constructs the right provider. (`9c52c8a` reads the first three; `AI_RECOMMENDER_MODEL` is gated on Track 7's env validator — out of Phase 5 scope. Env-matrix in `80958c3` codifies which keys are read.)
+- [x] Task: Write failing tests:
   - `getAIClient()` with `AI_PROVIDER='mock'` returns the mock provider.
   - `getAIClient()` with `AI_PROVIDER='openai'` + `OPENAI_API_KEY='test-key'` returns the OpenAI provider.
   - `getAIClient()` with no env vars + `NODE_ENV='production'` throws `ProviderNotConfiguredError`.
   - `getAIClient()` with no env vars + `NODE_ENV='test'` returns the mock provider.
-  - Plus the full env-matrix from test-strategy §3.4, wrapped in `withEnv()` and driven by `describe.each`.
-- [ ] Task: Confirm.
+  - Plus the full env-matrix from test-strategy §3.4, wrapped in `withEnv()` and driven by `describe.each`. (`80958c3` — 22 new tests in `src/__tests__/phase-5-provider-selector.test.ts`)
+- [x] Task: Confirm. (`80958c3` — 95 passed, 2 skipped across 9 test files in `@reading-advantage/ai`; no regressions)
+
+> **Green-phase complete (2026-06-06, commit `80958c3`):** No new
+> implementation needed — `createAIClient` + `getAIClient` + `resetAIClient`
+> in `src/client.ts` already satisfy the full env-matrix from
+> test-strategy §3.4 and plan task 4. The Red-phase test additions
+> (`80958c3`) codify the test-strategy §1 / §3 / §4 / §5 contract that the
+> existing 9-test `src/client.test.ts` does not cover: 22 new tests in
+> `phase-5-provider-selector.test.ts` (10 env-matrix rows via
+> `describe.each`, 3 singleton/reset tests, 5 explicit-config tests, 3
+> barrel-export assertions, 1 static schema-shape check). Total suite
+> for `@reading-advantage/ai`: 95 passed, 2 skipped across 9 test files.
+>
+> **Test gate note:** Use `npx vitest run` from `packages/ai/`
+> (monorepo-level `npm test` has pre-existing failures in unrelated
+> packages). The GREEN TEST COMMAND for this track is
+> `npx vitest run src/__tests__/phase-5-provider-selector.test.ts`
+> for the Phase 5 surface, or `npx vitest run` for the full
+> `@reading-advantage/ai` suite.
 
 ## Phase 6: Refactor `lib/ai/recommendation-service.ts`
 
