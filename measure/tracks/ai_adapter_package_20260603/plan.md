@@ -232,7 +232,72 @@
 
 ## Phase 6: Refactor `lib/ai/recommendation-service.ts`
 
-- [~] Task: Write a failing test for the new `RecommendationService` class (constructor takes `AIClient`; `getRecommendation(input)` calls `client.generateObject(...)`).
+> **Red-phase notes (2026-06-06, mid-agent, commit `6a7049f`):** The plan
+> tasks above split the refactor into 5 steps. Only Task 1 is a test
+> deliverable; the rest are implementation (Green). The mid-agent Red
+> work adds a single test file — `apps/science-advantage/lib/ai/recommendation-service.test.ts`
+> — that codifies the full Phase 6 / test-strategy contract:
+>
+>   1. `RecommendationService` is exported from `./recommendation-service`
+>      (Phase 6 task 1).
+>   2. The class constructor accepts an `AIClient` instance (FR-4).
+>   3. `getRecommendation(context)` delegates to `client.generateObject(...)`
+>      with the prompt built from the context (sentinel substrings checked)
+>      and a Zod-shaped schema, and returns the legacy `{ recommendation,
+>      modelUsed, fallbackUsed }` shape (Phase 6 task 3 contract).
+>   4. The Redis cache short-circuits repeat calls — two
+>      `getRecommendation` invocations with the same context must invoke
+>      `generateObject` exactly once (test-strategy §3.5).
+>   5. The legacy `generateRecommendation(input)` wrapper is preserved
+>      (Phase 6 task 3) so the route handler at
+>      `app/api/ai/recommendations/route.ts:6` keeps working unchanged.
+>
+> Test-design notes for the Green-phase implementer:
+>
+>   - The test mocks `'ai'`, `'@ai-sdk/openai'`, `'@ai-sdk/google'`,
+>     `'@/lib/platform/redis-client'` (in-memory store), and
+>     `'@/lib/observability/logger'` so the legacy module can load in
+>     vitest unit mode. The Green refactor can drop several of these
+>     mocks as it removes the direct SDK imports (Phase 6 task 2) and
+>     the `process.env` reads from this file (those mutate in
+>     `image-generator.ts` — covered in Phase 7).
+>   - `'@reading-advantage/ai'` is mocked with a `StubAIClient` because
+>     the workspace package is not yet an `apps/science-advantage`
+>     dependency (that lands in Phase 8 task 2). The stub mirrors the
+>     `AIClient` interface (packages/ai/src/types.ts:52) just enough for
+>     the assertion surface. Once the Green refactor is in place the
+>     implementer can swap the stub for the real `createTestClient` and
+>     drop the `@reading-advantage/ai` mock; the assertion surface
+>     stays the same.
+>   - `RecommendationService` is resolved through `resolveRecommendationService()`
+>     which throws a descriptive `Phase 6 RED:` `TypeError` if the
+>     class is not exported. The error message includes the expected
+>     class shape so the Green implementer has a single-string
+>     checklist.
+>   - The test only runs the unit test config (no DB, no Redis, no
+>     network). It is intentionally scoped to `vitest.unit.config.ts`
+>     and excludes integration tests.
+>
+> **Red-phase state (2026-06-06):** 4 tests fail with the
+> `Phase 6 RED:` `TypeError` (class not exported — the expected
+> signal). 1 test passes (the legacy `generateRecommendation()` wrapper
+> preservation check, which must keep passing in Green). No
+> regressions in the existing `image-generator.test.ts` (3/3 still
+> pass). No new TypeScript errors in the test file.
+>
+> **Test command (targeted):**
+> ```bash
+> cd apps/science-advantage && \
+>   npx vitest run --config vitest.unit.config.ts \
+>     lib/ai/recommendation-service.test.ts
+> ```
+> (NOT `pnpm turbo run test --filter=science-advantage` — that runs
+> the integration config and needs Postgres, which the local unit
+> tests intentionally avoid.)
+>
+> **Green-phase complete:** _pending._
+
+- [~] Task: Write a failing test for the new `RecommendationService` class (constructor takes `AIClient`; `getRecommendation(input)` calls `client.generateObject(...)`). (`6a7049f`)
 - [ ] Task: Replace the direct `generateObject` import with `getAIClient().generateObject(...)`.
 - [ ] Task: Refactor the existing `generateRecommendation(input)` exported function into a thin wrapper that calls the service.
 - [ ] Task: Update the call site `app/api/ai/recommendations/route.ts:21` to use the new wrapper (or the service directly).
