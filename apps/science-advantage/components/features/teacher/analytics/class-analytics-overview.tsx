@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -96,12 +96,7 @@ export function ClassAnalyticsOverview({
   const [sortField, setSortField] = useState<SortField>('order');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
-  useEffect(() => {
-    fetchAnalytics();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [classId]);
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -129,7 +124,11 @@ export function ClassAnalyticsOverview({
     } finally {
       setLoading(false);
     }
-  };
+  }, [classId]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {

@@ -589,11 +589,21 @@
 > function first to confirm the dep list and avoid a stale closure. For
 > `lib/ai/image-generator.ts:144`, replace `@ts-ignore` with `@ts-expect-error`
 > and add a one-line reason comment.
+>
+> **Status note (2026-06-07, Green phase):** Wrapped `fetchAnalytics` in
+> `useCallback(async () => { ... }, [deps])` in all 3 sibling analytics files;
+> added `useCallback` to React import; updated `useEffect` dep array to
+> `[fetchAnalytics]`; removed `// eslint-disable-next-line
+> react-hooks/exhaustive-deps` comment. Replaced `@ts-ignore` with
+> `@ts-expect-error` in `lib/ai/image-generator.ts:144` (reason comment
+> preserved). Lint: 0 errors + 10 warnings (all pre-existing, none from the
+> 4 target files). check-types: 0 errors. Gate tests
+> `phase-12b-remaining-lint-blockers.test.ts` — 24/24 passing.
 
-- [~] Task: Red — add a file-scoped lint gate test at `apps/science-advantage/lib/ci-gates/phase-12b-remaining-lint-blockers.test.ts` asserting `eslint` reports 0 `react-hooks/immutability` violations across the 3 sibling analytics files and 0 `@typescript-eslint/ban-ts-comment` violations in `lib/ai/image-generator.ts`. Mirror the file-scoped pattern in `phase-11-react-hooks-immutability.test.ts` / `phase-12-unused-vars-warnings.test.ts`. Confirm it fails (4 violations) before any fix.
-- [ ] Task: Green — wrap `fetchAnalytics` in `useCallback` (deps per each file's effect) in `class-analytics-overview.tsx`, `lesson-detail-analytics.tsx`, and `student-detail-analytics.tsx`; add `useCallback` to the React import; set the `useEffect` dep array to `[fetchAnalytics]`; remove the now-unnecessary `react-hooks/exhaustive-deps` disable comment. Read each function to avoid introducing a stale closure.
-- [ ] Task: Green — in `lib/ai/image-generator.ts:144`, replace `@ts-ignore` with `@ts-expect-error` plus a one-line reason.
-- [ ] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 errors and 0 warnings. Run `pnpm turbo run check-types --filter=science-advantage`; expect 0 errors (no regression).
+- [x] Task: Red — add a file-scoped lint gate test at `apps/science-advantage/lib/ci-gates/phase-12b-remaining-lint-blockers.test.ts` asserting `eslint` reports 0 `react-hooks/immutability` violations across the 3 sibling analytics files and 0 `@typescript-eslint/ban-ts-comment` violations in `lib/ai/image-generator.ts`. Mirror the file-scoped pattern in `phase-11-react-hooks-immutability.test.ts` / `phase-12-unused-vars-warnings.test.ts`. Confirm it fails (4 violations) before any fix. (e0cd793)
+- [x] Task: Green — wrap `fetchAnalytics` in `useCallback` (deps per each file's effect) in `class-analytics-overview.tsx`, `lesson-detail-analytics.tsx`, and `student-detail-analytics.tsx`; add `useCallback` to the React import; set the `useEffect` dep array to `[fetchAnalytics]`; remove the now-unnecessary `react-hooks/exhaustive-deps` disable comment. Read each function to avoid introducing a stale closure. (adae6f7)
+- [x] Task: Green — in `lib/ai/image-generator.ts:144`, replace `@ts-ignore` with `@ts-expect-error` plus a one-line reason. (adae6f7)
+- [x] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 errors and 0 warnings. Run `pnpm turbo run check-types --filter=science-advantage`; expect 0 errors (no regression). _(Verified: lint reports 0 errors + 10 warnings (all pre-existing); check-types exits 0 with 0 tsc errors. Gate tests `phase-12b-remaining-lint-blockers.test.ts` — 24/24 passing.)_ (adae6f7)
 
 ## Phase 12C: Resolve science-advantage Production Build (AC-16)
 

@@ -141,7 +141,7 @@ function ensureApiKey(modelId: string) {
 export async function generateLessonDiagram(
   request: DiagramRequest
 ): Promise<GenerateDiagramResult> {
-  // @ts-ignore -- ai is a transitive dep available at runtime via @reading-advantage/ai
+  // @ts-expect-error -- ai is a transitive dep available at runtime via @reading-advantage/ai
   const { experimental_generateImage } = await import('ai');
 
   const client: AIClient = {
