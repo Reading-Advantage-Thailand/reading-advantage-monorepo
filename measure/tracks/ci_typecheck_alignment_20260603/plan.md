@@ -55,11 +55,21 @@
 
 ## Phase 3: Add `lib/auth/{password,rate-limit}.test.ts` Siblings
 
-- [ ] Task: Inspect `tsconfig.json` `exclude` list. The `lib/auth/{password,rate-limit}.test.ts` files may not yet exist (they're planned for Track 3 and Track 10).
-- [ ] Task: Option (a): create empty test files with `describe.skip(...)` placeholders.
-- [ ] Task: Option (b): add the test files to `tsconfig.json` `exclude`.
-- [ ] Task: Pick (a) for now; the actual test content lands in Tracks 3 and 10.
-- [ ] Task: Run `pnpm turbo run check-types`; expect 2 errors gone.
+> **Status note (2026-06-06, Red phase owned by mid role):** The test
+> strategy (`test-strategy.md` §1, row P3; §3 cross-phase note) recommends
+> **option (b) tsconfig exclude** over option (a) empty stubs, because
+> Track 3 (Argon2id) and Track 10 (Rate Limiter v2) are in flight and
+> will replace these files any week now. An empty stub creates merge
+> friction. End-state is captured in
+> `apps/science-advantage/lib/ci-gates/phase-3-auth-test-siblings.test.ts`
+> which currently fails on the
+> `Cannot find module './rate-limit'` error in `lib/auth/rate-limit.test.ts`.
+
+- [~] Task: Inspect `tsconfig.json` `exclude` list. The `lib/auth/{password,rate-limit}.test.ts` files may not yet exist (they're planned for Track 3 and Track 10).
+- [~] Task: Option (a): create empty test files with `describe.skip(...)` placeholders.
+- [~] Task: Option (b): add the test files to `tsconfig.json` `exclude`.
+- [~] Task: Pick (a) for now; the actual test content lands in Tracks 3 and 10.
+- [~] Task: Run `pnpm turbo run check-types`; expect 2 errors gone.
 
 ## Phase 4: Type-Cast `process.env` Reads
 
