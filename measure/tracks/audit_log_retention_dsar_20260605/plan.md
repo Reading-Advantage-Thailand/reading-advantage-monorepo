@@ -18,33 +18,33 @@
 - **Baseline tests green**: `pnpm --filter @reading-advantage/auth test` → 83/83 passing (includes the 11-test `audit.test.ts`). No new test files required for Phase 0.
 
 ## Phase 1: Retention Config (Contract)
-- [x] Task: Add `AUDIT_RETENTION_DAYS` to the validated env schema (`lib/env.ts` / shared env), default `2557`, `.refine(n => Number.isInteger(n) && n >= 365)`.
-- [x] Task: Write test asserting the default and that values < 365 throw at parse time.
+- [x] Task: Add `AUDIT_RETENTION_DAYS` to the validated env schema (`lib/env.ts` / shared env), default `2557`, `.refine(n => Number.isInteger(n) && n >= 365)`. (`781ff8a`)
+- [x] Task: Write test asserting the default and that values < 365 throw at parse time. (`781ff8a`)
 - [ ] Task: Document the policy in `packages/auth/README.md` + new `docs/compliance/retention.md`.
-- [x] Task: Verify — env parse test passes.
+- [x] Task: Verify — env parse test passes. (`781ff8a`)
 
 ## Phase 2: Purge Function (TDD)
-- [x] Task: Write `audit-retention.test.ts` (unit): `getRetentionCutoff` math (UTC cutoff, default days, configured days).
+- [x] Task: Write `audit-retention.test.ts` (unit): `getRetentionCutoff` math (UTC cutoff, default days, configured days). (`781ff8a`)
 - [ ] Task: Write `audit-retention.integration.test.ts`: seed rows at `window-1d` (kept) and `window+1d` (purged); assert `purgeExpiredAuditEvents` deletes only the expired row and returns the count.
 - [ ] Task: Write test: purge runs in batches (`LIMIT 5000`) and loops until empty (seed > 5000 expired rows or stub the batch size).
 - [ ] Task: Write test: a successful purge records exactly one `audit:retention_purge` event with the deleted count.
-- [x] Task: Implement `packages/auth/src/audit-retention.ts` `purgeExpiredAuditEvents(now)` using the privileged connection + batched DELETE + post-purge `recordAuditEvent`.
-- [x] Task: Export from `packages/auth/src/index.ts`.
-- [x] Task: Verify — `vitest run` in packages/auth green (108 tests, 12 files).
+- [x] Task: Implement `packages/auth/src/audit-retention.ts` `purgeExpiredAuditEvents(now)` using the privileged connection + batched DELETE + post-purge `recordAuditEvent`. (`781ff8a`)
+- [x] Task: Export from `packages/auth/src/index.ts`. (`781ff8a`)
+- [x] Task: Verify — `vitest run` in packages/auth green (108 tests, 12 files). (`781ff8a`)
 
 ## Phase 3: Periodic Job
-- [x] Task: Write test: lock key constant is a stable positive BigInt; scheduler start/stop/run methods exist and work.
+- [x] Task: Write test: lock key constant is a stable positive BigInt; scheduler start/stop/run methods exist and work. (`781ff8a`)
 - [ ] Task: Write integration test: concurrent invocation is guarded by `pg_try_advisory_lock` (second caller no-ops).
-- [x] Task: Add the scheduler entry (mirror `session-cleanup.ts`): daily at a low-traffic hour, wrapped in the advisory lock.
-- [x] Task: Verify — unit tests green; job registers without throwing on boot.
+- [x] Task: Add the scheduler entry (mirror `session-cleanup.ts`): daily at a low-traffic hour, wrapped in the advisory lock. (`781ff8a`)
+- [x] Task: Verify — unit tests green; job registers without throwing on boot. (`781ff8a`)
 
 ## Phase 4: DSAR Domain Function (TDD)
-- [x] Task: Add `dsar:export` permission key to `packages/auth`; update `assertCan` coverage test.
-- [x] Task: Write `dsar.test.ts` (unit): assertCan gate, shape validation, tooLarge ceiling guard, empty result handling.
+- [x] Task: Add `dsar:export` permission key to `packages/auth`; update `assertCan` coverage test. (`781ff8a`)
+- [x] Task: Write `dsar.test.ts` (unit): assertCan gate, shape validation, tooLarge ceiling guard, empty result handling. (`781ff8a`)
 - [ ] Task: Write `dsar.integration.test.ts`: two-school fixture; assert `exportSubjectData` returns the subject's profile + audit events + activity, and that an admin in school A is DENIED a subject in school B.
 - [ ] Task: Write test: export streams/paginates and returns `tooLarge` when the row ceiling is exceeded (integration).
-- [x] Task: Implement `packages/domain/src/audit/dsar.ts` `exportSubjectData(tenant, subjectRef)`, gated by `assertCan(actor, 'dsar:export')`, paginated reads, row ceiling. (Note: audit module is tenant-exempt per `tenant-coverage.test.ts:24`; manual schoolId scoping used for profile lookup.)
-- [x] Task: Verify — domain tests green (271 tests, 23 files); `tenant-coverage.test.ts` still passes.
+- [x] Task: Implement `packages/domain/src/audit/dsar.ts` `exportSubjectData(tenant, subjectRef)`, gated by `assertCan(actor, 'dsar:export')`, paginated reads, row ceiling. (Note: audit module is tenant-exempt per `tenant-coverage.test.ts:24`; manual schoolId scoping used for profile lookup.) (`781ff8a`)
+- [x] Task: Verify — domain tests green (271 tests, 23 files); `tenant-coverage.test.ts` still passes. (`781ff8a`)
 
 ## Phase 5: DSAR Endpoint (TDD)
 - [ ] Task: Write route test: ADMIN-only (non-admin → 403); Zod rejects neither/both of `userId`/`email`; valid request returns archive with `manifest.md` + JSON files whose counts match.
