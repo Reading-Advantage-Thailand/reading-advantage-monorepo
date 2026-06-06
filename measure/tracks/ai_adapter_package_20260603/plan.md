@@ -369,7 +369,7 @@
 >     `AIClient` factory instead of `'ai'`) — that is a Green-phase
 >     concern, not a Red-phase one.
 
-- [~] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: _pending_)
+- [~] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: `2fd5887`)
 - [ ] Task: **Remove the `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY` mutation** in `ensureApiKey()`. The API key is passed via the `AIClient` constructor (set in Phase 5 by `getAIClient()`).
 - [ ] Task: Refactor the existing `generateLessonDiagram(input)` exported function into a thin wrapper.
 - [ ] Task: Update call sites in `components/features/lesson/blocks/image-block.tsx` etc.
