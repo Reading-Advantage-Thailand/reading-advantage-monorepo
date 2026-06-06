@@ -284,6 +284,48 @@
 
 ## Phase 9: Delete App-Local CI Workflow
 
+> **Status note (2026-06-07, Red phase owned by mid role):** Red-phase
+> gate tests added at
+> `apps/science-advantage/lib/ci-gates/phase-9-delete-app-local-ci-workflow.test.ts`
+> (commit `c8fe2e7`). The end-state contract is captured by 3
+> red-phase assertions + 1 regression guard:
+>
+>   - **Test 1** — `apps/science-advantage/.github/workflows/ci.yml does
+>     not exist` (**fails today**; 43-line / 900-byte file is
+>     present). Per `test-strategy.md` §0, the file drifted from
+>     monorepo reality: it runs `npm ci` against a non-existent
+>     `package-lock.json` (the project uses `pnpm` exclusively) and
+>     references `NEXTAUTH_URL` / `NEXTAUTH_SECRET` env vars that
+>     the migrated `@reading-advantage/auth` adapter no longer reads.
+>   - **Test 2** — `find apps/science-advantage -path '*/.github/workflows/*.yml'
+>     returns 0 results` (**fails today**; find returns
+>     `apps/science-advantage/.github/workflows/ci.yml`). The loose
+>     companion to test 1 that catches the case where a future
+>     contributor introduces a *different* workflow file
+>     (`cd.yml`, `release.yml`, ...) in the same directory.
+>   - **Test 3** — `apps/science-advantage/.github/workflows/
+>     directory does not exist or is empty` (**fails today**;
+>     directory contains `ci.yml`). Mirrors the
+>     `rmdir apps/science-advantage/.github/workflows` step in
+>     `test-strategy.md` §5 P9.
+>   - **Test 4** — `apps/science-advantage/.github/ directory still
+>     exists` (**passes today**; regression guard). The `.github/`
+>     directory is NOT expected to be removed by Phase 9 — it
+>     contains `ISSUE_TEMPLATE/` and `pull_request_template.md`.
+>     A regression that over-zealously runs `rm -rf .github/`
+>     (intending to remove only the `workflows/` subdirectory) would
+>     delete the contributor-workflow files alongside the workflow
+>     file; this guard makes that failure mode loud.
+>
+> Targeted vitest command (DB-free, ~2s):
+> `pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts lib/ci-gates/phase-9-delete-app-local-ci-workflow.test.ts`
+>
+> **Verification (2026-06-07):** 3 failed | 1 passed (4 total). The
+> 3 red-phase assertions fail with the expected messages; the 1
+> regression guard passes. The test file is self-contained (no
+> `tsc` or `pnpm turbo run ...` spawns — Phase 9 is a pure
+> file-system operation).
+
 - [~] Task: Delete `apps/science-advantage/.github/workflows/ci.yml`.
 - [~] Task: Verify the file is gone: `ls apps/science-advantage/.github/workflows/`.
 
