@@ -624,9 +624,84 @@
 
 ## Phase 9: Update Docs
 
-- [ ] Task: Update `apps/science-advantage/docs/specs/ai-structured-data-generation/spec.md:79-86` to reference `@reading-advantage/ai` interface.
-- [ ] Task: Update `apps/science-advantage/docs/ai-image-generation.md:9` similarly.
-- [ ] Task: Write `packages/ai/README.md` with provider config examples.
+> **Red-phase notes (2026-06-06, mid-agent):** Phase 9 ships three doc
+> updates per FR-7. None have been written yet. The Red-phase work
+> codifies each as a Vitest assertion against the doc file contents
+> (markdown is a deployable artifact and the only way to enforce "the
+> docs reference the new package" without a human review is to assert
+> on the file). Two test files are added:
+>
+>   1. `apps/science-advantage/lib/ai/__tests__/phase-9-docs.test.ts`
+>      covers FR-7 task 1 (spec.md:79-86 must reference
+>      `@reading-advantage/ai`, not `@ai-sdk/openai` /
+>      `@ai-sdk/google-vertex`) and FR-7 task 2 (line 9 of
+>      `ai-image-generation.md` must reference the new package
+>      interface instead of hard-coding provider model IDs).
+>   2. `packages/ai/src/__tests__/phase-9-docs.test.ts` covers FR-7
+>      task 3 (the `@reading-advantage/ai` README must contain provider
+>      config examples for OpenAI, Google, and Mock).
+>
+> Test design:
+>   - All assertions read the doc file at runtime via `node:fs` and
+>     pin specific structural elements (heading text, code-block
+>     contents, mention of `@reading-advantage/ai`).
+>   - No test edits the docs. The Green-phase implementer updates the
+>     markdown so the assertions pass.
+>   - The test files are unit-only (no DB, no network, no module
+>     imports from the libraries under test). Both will be picked up
+>     by the existing `vitest` include patterns without config changes.
+>
+> Test commands (targeted):
+> ```bash
+> # packages/ai (Task 3 — README, expected to pass RED→GREEN)
+> cd packages/ai && npx vitest run src/__tests__/phase-9-docs.test.ts
+>
+> # apps/science-advantage (Tasks 1+2 — spec.md & ai-image-generation.md, expected RED)
+> cd apps/science-advantage && \
+>   npx vitest run --config vitest.unit.config.ts \
+>     lib/ai/__tests__/phase-9-docs.test.ts
+> ```
+>
+> **Red-phase re-verified (2026-06-06 12:53 CST, mid-agent, commit
+> `ecfe23a`):**
+>   - `packages/ai/src/__tests__/phase-9-docs.test.ts` (Task 3, README):
+>     5/5 passed. The existing README already satisfies FR-7 (it has
+>     "Provider Configuration" with OpenAI/Google/Mock, the
+>     `AI_PROVIDER` / `OPENAI_API_KEY` / `GEMINI_API_KEY` env vars,
+>     the `getAIClient()` entry point, and a `MockProvider` example).
+>     The test serves as a regression net.
+>   - `apps/science-advantage/lib/ai/__tests__/phase-9-docs.test.ts`
+>     (Tasks 1+2): 5/7 failed, 2/7 passed. The 2 passing tests are
+>     the file-exists sanity checks (both docs exist). The 5 failing
+>     tests pin the contract:
+>     - Task 1 (spec.md, 3 fails):
+>       - Legacy `import { openai } from '@ai-sdk/openai'` /
+>         `import { vertex } from '@ai-sdk/google-vertex'` snippets
+>         are still present in lines 80 and 86.
+>       - `@reading-advantage/ai` is not yet mentioned in the file.
+>       - No `## Provider Configuration` section (the doc only has
+>         `## Supported Providers` listing the raw SDKs).
+>     - Task 2 (ai-image-generation.md, 2 fails):
+>       - Line 9 does not reference `@reading-advantage/ai`.
+>       - Line 9 does not name `aiImageConfig` / `getAIClient()` /
+>         `createAIClient()` — it hard-codes `google/gemini-3-pro-image`
+>         and `openai/dall-e-3` as raw model IDs.
+>   - Neighbouring test suites (regression check, all green):
+>     packages/ai full suite: 100 passed, 2 skipped (102 total);
+>     science-advantage lib/ai neighbours: 4 files, 16 tests passed
+>     (architecture / recommendation-service / image-generator.class /
+>     image-generator).
+>
+> **Supervisor gate fix (2026-06-06, mid-attempt-2):** Prior
+> mid-attempt was killed with status 124 (process timeout). No code
+> change required — the fix is to keep the agent response short and
+> avoid long-running tool loops. The Red-phase work above holds
+> unchanged; commit `ecfe23a` carries the test files. The Measure
+> doc update lands in the follow-up `docs(measure):` commit.
+
+- [~] Task: Update `apps/science-advantage/docs/specs/ai-structured-data-generation/spec.md:79-86` to reference `@reading-advantage/ai` interface. (Red: `ecfe23a`)
+- [~] Task: Update `apps/science-advantage/docs/ai-image-generation.md:9` similarly. (Red: `ecfe23a`)
+- [~] Task: Write `packages/ai/README.md` with provider config examples. (Red: `ecfe23a` — README already satisfies FR-7; test serves as regression net)
 
 ## Phase 10: Closeout
 
