@@ -699,6 +699,35 @@
 > 15s + lint 44s + test smoke 23s + build smoke <1s) — well under
 > the supervisor's 900s budget.
 
+> **Status note (2026-06-07, mid role, Red-phase verified):** The
+> Phase 13 Red-phase gate tests at
+> `apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts`
+> (commit `030dd08`) were re-executed end-to-end and the Red-phase
+> contract is confirmed. Targeted vitest command (the
+> "most-targeted" per the original spec):
+> `pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts lib/ci-gates/phase-13-final-acceptance.test.ts`
+> Result: **1 failed | 16 passed (17 total)** in 107.44s.
+> The single failure is `pnpm --filter science-advantage lint exits 0`
+> (test 2 of the lint describe block, line 414) — this is the
+> expected Red-phase signal: the lint gate is RED today due to 4
+> pre-existing lint errors that are out of scope for this track
+> (3 `react-hooks/immutability` errors in sibling analytics files
+> + 1 `@typescript-eslint/ban-ts-comment` error in
+> `lib/ai/image-generator.ts:144`). The supervisor must coordinate
+> a follow-up phase to close these errors before Phase 13 can
+> flip green. The 16 passing tests confirm the rest of the
+> umbrella gates (check-types GREEN per Phase 7, test smoke
+> GREEN via single fast test file, build smoke GREEN via
+> `next.config.ts` `ignoreBuildErrors: false` per Phase 8) and
+> the 4 regression guards (CI workflow has paths filter + 4
+> named gates + workspace-wide turbo invocations + `turbo.json`
+> `dependsOn` chains). A re-run targeting only the lint
+> describe block via `vitest run -t "umbrella gate 2"` confirms
+> the same failure in 52.02s (1 failed | 1 passed | 15 skipped).
+> The Red phase is complete; the 5 plan tasks below remain
+> `[~]` because the Green phase is blocked on the supervisor's
+> follow-up to close the 4 pre-existing lint errors.
+
 - [~] Task: `pnpm turbo run check-types --filter=science-advantage` exits 0. [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts` test 1 — fast umbrella gate via `pnpm --filter science-advantage check-types`.]
 - [~] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. [Red-phase test in same file test 2 — fast umbrella gate via `pnpm --filter science-advantage lint`; currently RED per 4 pre-existing lint errors in sibling analytics files + `image-generator.ts`.]
 - [~] Task: `pnpm turbo run test --filter=science-advantage` exits 0. [Red-phase smoke gate in same file test 3 — verifies `test` script wiring + `vitest.unit.config.ts` excludes integration tests + runs a single fast test file (Phase 12, ~23s) as a smoke verification. The full end-to-end test gate is exercised by the monorepo-root CI workflow per regression guard 6.]
