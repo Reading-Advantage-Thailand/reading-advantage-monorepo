@@ -540,11 +540,20 @@
 >
 >   `pnpm --filter science-advantage exec vitest run --config
 >     vitest.unit.config.ts lib/ci-gates/phase-12-unused-vars-warnings.test.ts`
+>
+> **Status note (2026-06-07, Green phase):** 1-line lint-rule fix in
+> `apps/science-advantage/eslint.config.mjs:7` — changed bare `"warn"`
+> to `["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }]`,
+> restoring the shared config's `_`-prefix escape hatch. Both warnings
+> (`_userId` on line 114, `_triggerEvent` on line 202) are now silenced.
+> Gate tests `phase-12-unused-vars-warnings.test.ts` — 6/6 passing.
+> `tsc --noEmit` exits 0 with 0 errors. `eslint .` reports 4 errors +
+> 10 warnings (all pre-existing; none from `badges.ts`).
 
-- [~] Task: In `lib/gamification/badges.ts:114,202`, examine the `_userId` and `_triggerEvent` parameters.
-- [~] Task: If truly unused, remove them from the function signature.
-- [~] Task: If the parameter is a placeholder (e.g. for a future callback signature), add `// eslint-disable-next-line @typescript-eslint/no-unused-vars` above the line with a comment.
-- [~] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 warnings.
+- [x] Task: In `lib/gamification/badges.ts:114,202`, examine the `_userId` and `_triggerEvent` parameters. (cbeffcb)
+- [x] Task: If truly unused, remove them from the function signature. _(Not needed; preferred fix is lint-rule update per test-strategy.md §3.)_ (cbeffcb)
+- [x] Task: If the parameter is a placeholder (e.g. for a future callback signature), add `// eslint-disable-next-line @typescript-eslint/no-unused-vars` above the line with a comment. _(Not needed; preferred fix is lint-rule update.)_ (cbeffcb)
+- [x] Task: Run `pnpm turbo run lint --filter=science-advantage`; expect 0 warnings. _(File-scoped: 0 `@typescript-eslint/no-unused-vars` warnings on `badges.ts`. Workspace: 4 errors + 10 warnings — all pre-existing, not from `badges.ts`. tsc --noEmit exits 0 with 0 errors. Gate tests 6/6 pass.)_ (cbeffcb)
 
 ## Phase 13: Final Acceptance
 
