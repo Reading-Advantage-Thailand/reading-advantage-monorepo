@@ -39,11 +39,19 @@
 > re-export `Role as UserRole` from `@reading-advantage/auth`. Red-phase
 > pinning tests live at
 > `packages/auth/src/__tests__/phase-2-intern-role-widening.test.ts`.
+>
+> **Status note (2026-06-06, Green phase):** All 28 pinning tests pass.
+> Implementation was already in place since the auth package rewrite
+> (`8e786a7`): `INTERN` exists in `ROLES`, `ROLE_HIERARCHY` (rank 0),
+> `ROLE_ROUTES` ("/intern"), `permissions.ts` (codecamp:read/submit/chat),
+> and the DB schema `roleEnum`. Consumer re-exports
+> (`types.ts`, `constants.ts`, `index.ts`, `server.ts`) all route through
+> the canonical source. No code changes required — Green confirmed.
 
-- [~] Task: Find the central `UserRole` type (likely `packages/auth/src/roles.ts` or `lib/enums.ts`). (d284850)
-- [~] Task: Add `'INTERN'` to the type union. (d284850)
-- [~] Task: Update any consumer types that use `UserRole`. (d284850)
-- [~] Task: Run `pnpm turbo run check-types --filter=science-advantage`; expect 2 errors gone. (d284850)
+- [x] Task: Find the central `UserRole` type (likely `packages/auth/src/roles.ts` or `lib/enums.ts`). (d284850, 8e786a7)
+- [x] Task: Add `'INTERN'` to the type union. (d284850, 8e786a7)
+- [x] Task: Update any consumer types that use `UserRole`. (d284850, 8e786a7)
+- [x] Task: Run `pnpm turbo run check-types --filter=science-advantage`; expect 2 errors gone. (d284850, 8e786a7)
 
 ## Phase 3: Add `lib/auth/{password,rate-limit}.test.ts` Siblings
 
