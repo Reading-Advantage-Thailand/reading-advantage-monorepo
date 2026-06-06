@@ -385,8 +385,37 @@
 > (NOT `pnpm turbo run test --filter=science-advantage` — that runs
 > the integration config and needs Postgres, which the local unit
 > tests intentionally avoid.)
+>
+> **Red-phase complete (2026-06-06, mid-agent verification):** Re-ran
+> the targeted command above. Result: `Test Files 1 failed (1) | Tests
+> 5 failed | 1 passed (6)`. Failure messages all carry the descriptive
+> `Phase 7 RED:` `TypeError` from `resolveImageGenerator()`. The single
+> passing test (`preserves the legacy generateLessonDiagram(input) public API`)
+> confirms the Green-phase implementer must keep that export intact.
+> No regressions in `image-generator.test.ts` (3/3 pass when run alone
+> with the same vitest unit config).
+>
+> **Call-site note for Green implementer (2026-06-06):** A targeted
+> `grep -rn "generateLessonDiagram" apps/science-advantage/ --include
+> "*.ts" --include "*.tsx"` returns hits **only** in
+> `lib/ai/image-generator.ts` (definition),
+> `lib/ai/image-generator.test.ts` (legacy tests), and
+> `lib/ai/image-generator.class.test.ts` (Red-phase tests).
+> `components/features/lesson/blocks/image-block.tsx` is a pure
+> presentational component (renders `<Image src={block.src} />`); it
+> does **not** import `generateLessonDiagram` or `ImageGenerator`.
+> Therefore Phase 7 Task 4 ("Update call sites in
+> `components/features/lesson/blocks/image-block.tsx` etc.") has no
+> production call sites to update. The test-strategy §6 graph note
+> that claimed "call sites in `components/.../image-block.tsx` exist"
+> was inaccurate — the function is currently dead code at the
+> production surface (only tests exercise it). Green implementer
+> should: (a) keep the legacy `generateLessonDiagram` export per the
+> Red-phase preservation test, (b) skip Task 4 (no call sites), and
+> (c) note this for the Phase 9 docs update so the spec is reconciled
+> with the actual call graph.
 
-- [~] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: `2fd5887`)
+- [x] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: `2fd5887`; verified 2026-06-06 — 5 fail / 1 pass)
 - [ ] Task: **Remove the `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY` mutation** in `ensureApiKey()`. The API key is passed via the `AIClient` constructor (set in Phase 5 by `getAIClient()`).
 - [ ] Task: Refactor the existing `generateLessonDiagram(input)` exported function into a thin wrapper.
 - [ ] Task: Update call sites in `components/features/lesson/blocks/image-block.tsx` etc.
