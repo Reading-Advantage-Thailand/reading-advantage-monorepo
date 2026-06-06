@@ -364,7 +364,7 @@
 > and before `Test`. Gate tests `phase-10-monorepo-root-ci-paths-filter.test.ts`
 > — 9/9 passing. `tsc --noEmit` exits 0 with 0 errors.
 
-- [x] Task: Open `.github/workflows/ci.yml` (monorepo root). (c831c7e)
+- [x] Task: Open `.github/workflows/ci.yml` (monorepo root). (132de8b)
 - [x] Task: Find the existing `on: pull_request:` block; add a `paths:` filter:
   ```yaml
   on:
@@ -379,9 +379,9 @@
         - 'pnpm-workspace.yaml'
         - 'turbo.json'
   ```
-  (The exact list depends on the maintainer's preferences; the key is that `apps/science-advantage/**` is included.) (c831c7e)
-- [x] Task: Verify the job runs the 4 gates: `pnpm turbo run {build,lint,test,check-types} --filter=science-advantage`. (c831c7e)
-- [x] Task: Open a test PR (or push to a branch) and verify the job triggers. (c831c7e)
+  (The exact list depends on the maintainer's preferences; the key is that `apps/science-advantage/**` is included.) (132de8b)
+- [x] Task: Verify the job runs the 4 gates: `pnpm turbo run {build,lint,test,check-types} --filter=science-advantage`. (132de8b)
+- [x] Task: Open a test PR (or push to a branch) and verify the job triggers. (132de8b)
 
 ## Phase 11: Fix 4 `react-hooks/immutability` Errors
 
