@@ -281,10 +281,10 @@ above).
 - **Build-graph:** `graph.db` updated with `apps/science-advantage/package.json`.
 
 ## Phase 7: Closeout
-- [~] Task: Update `measure/tech-debt.md`: note retention/DSAR delivered; reconcile any audit-log follow-up rows.
-- [~] Task: Add a lessons-learned entry if anything non-obvious surfaced (privileged-connection DELETE against an append-only table; advisory-lock job pattern).
-- [~] Task: Update `measure/tracks.md` (mark complete) and move the track dir to `measure/archive/`.
-- [~] Task: Commit with `git notes` summarizing the track.
+- [x] Task: Update `measure/tech-debt.md`: note retention/DSAR delivered; reconcile any audit-log follow-up rows. (`7fdaf60`)
+- [x] Task: Add a lessons-learned entry if anything non-obvious surfaced (privileged-connection DELETE against an append-only table; advisory-lock job pattern). (`7fdaf60`)
+- [x] Task: Update `measure/tracks.md` (mark complete) and move the track dir to `measure/archive/`. (`7fdaf60`)
+- [x] Task: Commit with `git notes` summarizing the track. (`7fdaf60`)
 
 ### Phase 7 Red-phase status (2026-06-06)
 
@@ -341,3 +341,29 @@ above).
   — file node + 3 test function nodes + 13 contains edges). Stats
   unchanged at 1665 nodes / 2408 edges / 215 files (test file already
   indexed from a prior scan).
+
+### Phase 7 Green-phase status (2026-06-06)
+
+- **GREEN:** all 13 phase-7-closeout tests pass. (`7fdaf60`)
+- **Fixes applied:**
+  1. `measure/tech-debt.md`: pruned the resolved Phase 2 lessons-learned
+     drift entry (condensed from 2 lines to 1 earlier, now removed entirely)
+     and added a new `audit_log_retention_dsar_20260605` Resolved row.
+     File stays at 50 lines (the 50-line cap).
+  2. `measure/lessons-learned.md`: added 2026-06-06 entry covering the
+     advisory-lock single-session pattern and privileged-connection DELETE
+     for append-only tables. File at 47 lines (under the 50-line cap).
+  3. `measure/tracks.md`: changed `[ ]` to `[x]` for the track entry,
+     added archive link and completion summary.
+  4. `git mv measure/tracks/audit_log_retention_dsar_20260605/`
+     → `measure/archive/audit_log_retention_dsar_20260605/`.
+  5. `git notes add -m "Track: audit_log_retention_dsar_20260605 — COMPLETE..." 7fdaf60`.
+- **Test command (targeted):**
+  `cd packages/auth && npx vitest run src/__tests__/phase-7-closeout.test.ts`
+  → 1 file, 13 tests, 13 passed.
+- **No regressions:** unit tests 22/22 pass (3 integration test files
+  fail with `DIRECT_DATABASE_URL is not set` — pre-existing, requires
+  real DB; not caused by this change).
+- **No structural TS files changed** — only markdown docs and git notes.
+  `graph.db` does not need updating.
+- **Track is fully closed.** All 8 phases complete. Archive-ready.
