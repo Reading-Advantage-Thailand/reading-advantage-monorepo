@@ -80,10 +80,10 @@
 
 ## Phase 4: Type-Cast `process.env` Reads
 
-- [ ] Task: In `lib/test/resolve-test-database-url.ts:13`, `vitest.integration.global-setup.ts:18`, `vitest.integration.setup.ts:14`:
+- [~] Task: In `lib/test/resolve-test-database-url.ts:13`, `vitest.integration.global-setup.ts:18`, `vitest.integration.setup.ts:14`:
   - Either cast `process.env` to `NodeJS.ProcessEnv` (the explicit type).
   - Or import the validated `env` from `lib/env.ts` (Track 7 prerequisite; the cast is a placeholder).
-- [ ] Task: Run `pnpm turbo run check-types`; expect 3 errors gone.
+- [~] Task: Run `pnpm turbo run check-types`; expect 3 errors gone.
 
 ## Phase 5: Dedupe next@16 Instances
 
