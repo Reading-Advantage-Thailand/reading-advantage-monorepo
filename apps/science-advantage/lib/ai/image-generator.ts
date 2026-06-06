@@ -1,4 +1,3 @@
-import { experimental_generateImage } from 'ai';
 import sharp from 'sharp';
 
 import { aiImageConfig } from '@/lib/config/ai-images';
@@ -21,24 +20,8 @@ type GenerateDiagramResult = {
   sizeBytes: number;
 };
 
-function ensureApiKey(modelId: string) {
-  if (modelId.startsWith('google/')) {
-    if (!aiImageConfig.googleApiKey) {
-      throw new Error('Missing GOOGLE_API_KEY or GEMINI_API_KEY for Google image generation');
-    }
-    if (!process.env.GOOGLE_API_KEY) {
-      process.env.GOOGLE_API_KEY = aiImageConfig.googleApiKey;
-    }
-  }
-
-  if (modelId.startsWith('openai/')) {
-    if (!aiImageConfig.openaiApiKey) {
-      throw new Error('Missing OPENAI_API_KEY for OpenAI image generation');
-    }
-    if (!process.env.OPENAI_API_KEY) {
-      process.env.OPENAI_API_KEY = aiImageConfig.openaiApiKey;
-    }
-  }
+interface AIClient {
+  generateImage(input: { prompt: string; model?: string }): Promise<Buffer>;
 }
 
 function buildPrompt(request: DiagramRequest) {
@@ -100,61 +83,80 @@ async function optimizeImage(buffer: Buffer) {
   };
 }
 
-async function generateWithModel(modelId: string, prompt: string) {
-  ensureApiKey(modelId);
+export class ImageGenerator {
+  constructor(private readonly client: AIClient) {}
 
-  const { image } = await experimental_generateImage({
-    model: modelId,
-    prompt,
-  });
+  async generateDiagram(request: DiagramRequest): Promise<GenerateDiagramResult> {
+    const prompt = buildPrompt(request);
+    const modelsToTry = [
+      aiImageConfig.primaryModel,
+      ...aiImageConfig.fallbackModels,
+    ].filter((value, index, array) => Boolean(value) && array.indexOf(value) === index);
 
-  if (!image) {
-    throw new Error(`Model ${modelId} did not return an image`);
+    let lastError: Error | null = null;
+
+    for (const modelId of modelsToTry) {
+      try {
+        const rawBuffer = await this.client.generateImage({ prompt, model: modelId });
+        const optimized = await optimizeImage(rawBuffer);
+
+        if (optimized.sizeBytes > aiImageConfig.maxBytes) {
+          logger.warn('ai.image.optimization_limit_exceeded', {
+            model: modelId,
+            sizeBytes: optimized.sizeBytes,
+            maxBytes: aiImageConfig.maxBytes,
+          });
+        }
+
+        return {
+          buffer: optimized.buffer,
+          mimeType: optimized.mimeType,
+          modelUsed: modelId,
+          prompt,
+          fallbackUsed: modelId !== aiImageConfig.primaryModel,
+          sizeBytes: optimized.sizeBytes,
+        };
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error('Unknown error');
+        logger.warn('ai.image.model_error', {
+          model: modelId,
+          error: lastError.message,
+        });
+      }
+    }
+
+    throw lastError ?? new Error('Image generation failed for all models');
   }
+}
 
-  return Buffer.from(image.base64, 'base64');
+function ensureApiKey(modelId: string) {
+  if (modelId.startsWith('google/') && !aiImageConfig.googleApiKey) {
+    throw new Error('Missing GOOGLE_API_KEY or GEMINI_API_KEY for Google image generation');
+  }
+  if (modelId.startsWith('openai/') && !aiImageConfig.openaiApiKey) {
+    throw new Error('Missing OPENAI_API_KEY for OpenAI image generation');
+  }
 }
 
 export async function generateLessonDiagram(
   request: DiagramRequest
 ): Promise<GenerateDiagramResult> {
-  const prompt = buildPrompt(request);
-  const modelsToTry = [
-    aiImageConfig.primaryModel,
-    ...aiImageConfig.fallbackModels,
-  ].filter((value, index, array) => Boolean(value) && array.indexOf(value) === index);
+  const { experimental_generateImage } = await import('ai');
 
-  let lastError: Error | null = null;
-
-  for (const modelId of modelsToTry) {
-    try {
-      const rawBuffer = await generateWithModel(modelId, prompt);
-      const optimized = await optimizeImage(rawBuffer);
-
-      if (optimized.sizeBytes > aiImageConfig.maxBytes) {
-        logger.warn('ai.image.optimization_limit_exceeded', {
-          model: modelId,
-          sizeBytes: optimized.sizeBytes,
-          maxBytes: aiImageConfig.maxBytes,
-        });
-      }
-
-      return {
-        buffer: optimized.buffer,
-        mimeType: optimized.mimeType,
-        modelUsed: modelId,
-        prompt,
-        fallbackUsed: modelId !== aiImageConfig.primaryModel,
-        sizeBytes: optimized.sizeBytes,
-      };
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error('Unknown error');
-      logger.warn('ai.image.model_error', {
-        model: modelId,
-        error: lastError.message,
+  const client: AIClient = {
+    async generateImage(input) {
+      ensureApiKey(input.model ?? aiImageConfig.primaryModel);
+      const { image } = await experimental_generateImage({
+        model: input.model ?? aiImageConfig.primaryModel,
+        prompt: input.prompt,
       });
-    }
-  }
+      if (!image) {
+        throw new Error(`Model ${input.model} did not return an image`);
+      }
+      return Buffer.from(image.base64, 'base64');
+    },
+  };
 
-  throw lastError ?? new Error('Image generation failed for all models');
+  const service = new ImageGenerator(client);
+  return service.generateDiagram(request);
 }

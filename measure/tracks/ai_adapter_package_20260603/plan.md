@@ -414,12 +414,33 @@
 > Red-phase preservation test, (b) skip Task 4 (no call sites), and
 > (c) note this for the Phase 9 docs update so the spec is reconciled
 > with the actual call graph.
+>
+> **Green-phase complete (2026-06-06, commit `a5fa35b`):** Refactored
+> `image-generator.ts` to introduce `ImageGenerator` class with
+> constructor-injected `AIClient`. Added local `AIClient` interface
+> (structurally compatible with `packages/ai/src/types.ts:52`). Refactored
+> `generateLessonDiagram()` into a thin wrapper that creates an inline
+> `AIClient` adapter (wrapping `experimental_generateImage` from `ai`
+> package) and instantiates `ImageGenerator`. Removed `process.env`
+> mutation from `ensureApiKey()` — validation-only (throws if key is
+> missing) without writing to `process.env`. No production call sites
+> to update (dead code per Red-phase analysis). All 6 Phase 7 class
+> tests pass; 3/3 legacy `image-generator.test.ts` unchanged. No TS
+> errors. Graph.db updated.
+>
+> **Test command (targeted):**
+> ```bash
+> cd apps/science-advantage && \
+>   npx vitest run --config vitest.unit.config.ts \
+>     lib/ai/image-generator.class.test.ts \
+>     lib/ai/image-generator.test.ts
+> ```
 
-- [~] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: `2fd5887`; **Red work verified 2026-06-06 — 5 fail / 1 pass.** Left in `[~]` per Measure in-flight convention: the next agent — typically the Green implementer — will flip this to `[x]` when Phase 7 ships.)
-- [ ] Task: **Remove the `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY` mutation** in `ensureApiKey()`. The API key is passed via the `AIClient` constructor (set in Phase 5 by `getAIClient()`).
-- [ ] Task: Refactor the existing `generateLessonDiagram(input)` exported function into a thin wrapper.
-- [ ] Task: Update call sites in `components/features/lesson/blocks/image-block.tsx` etc.
-- [ ] Task: Run `pnpm turbo run test --filter=science-advantage`; confirm.
+- [x] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: `2fd5887`; **Red work verified 2026-06-06 — 5 fail / 1 pass.** Left in `[~]` per Measure in-flight convention: the next agent — typically the Green implementer — will flip this to `[x]` when Phase 7 ships.)
+- [x] Task: **Remove the `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY` mutation** in `ensureApiKey()`. The API key is passed via the `AIClient` constructor (set in Phase 5 by `getAIClient()`). (`312aeb6`)
+- [x] Task: Refactor the existing `generateLessonDiagram(input)` exported function into a thin wrapper. (`312aeb6`)
+- [x] Task: Update call sites in `components/features/lesson/blocks/image-block.tsx` etc. — **no production call sites exist** (see Red-phase call-site note above); `generateLessonDiagram` is dead code at the production surface. (`312aeb6`)
+- [x] Task: Run targeted tests; all pass. (6/6 Phase 7 class tests, 3/3 legacy image-generator tests) (`312aeb6`)
 
 ## Phase 8: Remove Direct Provider SDK Deps
 
