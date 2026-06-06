@@ -145,11 +145,11 @@
 - **Build-graph:** `graph.db` updated with `dsar.ts`.
 
 ## Phase 5: DSAR Endpoint (TDD)
-- [~] Task: Write route test: ADMIN-only (non-admin → 403); Zod rejects neither/both of `userId`/`email`; valid request returns archive with `manifest.md` + JSON files whose counts match.
-- [~] Task: Write route test: the export is audited as `dsar:export` (actor = admin, target = subject); too-large export → 413.
+- [x] Task: Write route test: ADMIN-only (non-admin → 403); Zod rejects neither/both of `userId`/`email`; valid request returns archive with `manifest.md` + JSON files whose counts match. (`bff83bb`)
+- [x] Task: Write route test: the export is audited as `dsar:export` (actor = admin, target = subject); too-large export → 413. (`bff83bb`)
   - **413 contract decision (mid, 2026-06-06):** the 413 test uses `vi.doMock` to force `exportSubjectData` to return `status: "tooLarge"`, then asserts the route returns 413. The full end-to-end variant (seed 100,001 rows, run the real domain function) is impractical for a route-layer integration test (~60-90s of seeding) and is already pinned at the domain level by `packages/domain/src/__tests__/dsar.integration.test.ts` (test #5). The mock-based test pins the route-level translation only (one-liner: `if (bundle.status === "tooLarge") return new Response(null, { status: 413 })`).
-- [ ] Task: Implement `GET /api/admin/dsar/export` (zip default, `?format=json` alternative), Zod-validated query, calling `exportSubjectData`, recording the `dsar:export` event.
-- [ ] Task: Verify — route tests green.
+- [x] Task: Implement `GET /api/admin/dsar/export` (zip default, `?format=json` alternative), Zod-validated query, calling `exportSubjectData`, recording the `dsar:export` event. (`bff83bb`)
+- [x] Task: Verify — route tests green. (`bff83bb`)
 
 ### Phase 5 Red-phase status (2026-06-06)
 
@@ -162,6 +162,22 @@
 - **Test command (targeted, Red):** the committed `vitest.integration.config.ts` calls `pnpm --filter @reading-advantage/db migrate` in its global setup, but `pnpm` is not on PATH in this sandbox. The mid agent ran migrations directly (`drizzle-kit migrate` against `science_advantage_test`) and used a sandbox-only `vitest.integration.no-pnpm-setup.config.ts` to bypass the global setup. Normal CI (where `pnpm` is available) will use the committed config and reproduce the same Red failure. The bypass config is NOT committed.
 - **No regressions:** the test file does not touch any existing source code; no other test file is modified.
 - **Source code changes:** NONE. Per the TDD contract, this commit adds tests only. The implementer (Green phase) will create `apps/science-advantage/app/api/admin/dsar/export/route.ts`.
+
+### Phase 5 Green-phase status (2026-06-06)
+
+- **GREEN:** all 11 integration tests pass. (`bff83bb`)
+- **Implementation files created:**
+  - `apps/science-advantage/app/api/admin/dsar/export/route.ts` — GET handler with session auth, Zod query validation, exportSubjectData call, audit recording, zip/json response.
+  - `apps/science-advantage/lib/zip/minimal-zip.ts` — minimal ZIP archive builder (STORE method, no compression) for DSAR export.
+- **Supporting changes:**
+  - `packages/auth/src/index.ts` — added `recordAuditEvent`, `AuditContext`, `AuditPayload`, `AuditEventError` exports.
+  - `packages/domain/package.json` — added `./audit/dsar` export path.
+- **Test fix (justified):** `route.integration.test.ts` lines 569-649: `db.execute()` with postgres-js returns a plain array, not `{ rows: [...] }`. Changed cast from `{ rows: Array<...> }` to `Array<...>` and access from `.rows[0]` to `[0]`. This matches the existing pattern in `packages/auth/src/audit-retention.ts:64` (`Array.isArray(result) ? result.length : 0`).
+- **Test command (targeted):**
+  `cd apps/science-advantage && DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test npx vitest run --config vitest.integration.config.ts app/api/admin/dsar/export/route.integration.test.ts`
+  → 1 file, 11 tests, 11 passed.
+- **No regressions:** auth unit 118/118 pass; domain unit 271/271 pass.
+- **Build-graph:** `graph.db` updated with route.ts, minimal-zip.ts, index.ts, package.json.
 
 ## Phase 6: Integration + Acceptance
 - [ ] Task: End-to-end: seed → request export → unzip → assert manifest counts == file row counts == DB counts for the subject.
