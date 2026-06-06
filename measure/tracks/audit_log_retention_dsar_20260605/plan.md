@@ -63,9 +63,22 @@
 
 ## Phase 3: Periodic Job
 - [x] Task: Write test: lock key constant is a stable positive BigInt; scheduler start/stop/run methods exist and work. (`781ff8a`)
-- [~] Task: Write integration test: concurrent invocation is guarded by `pg_try_advisory_lock` (second caller no-ops).
+- [~] Task: Write integration test: concurrent invocation is guarded by `pg_try_advisory_lock` (second caller no-ops). (`32b5a57`)
 - [x] Task: Add the scheduler entry (mirror `session-cleanup.ts`): daily at a low-traffic hour, wrapped in the advisory lock. (`781ff8a`)
 - [x] Task: Verify — unit tests green; job registers without throwing on boot. (`781ff8a`)
+
+### Phase 3 Red-phase status (2026-06-06)
+
+- **RED:** new integration test fails for the expected missing behavior.
+  - **Test file:** `packages/auth/src/__tests__/audit-retention-job.integration.test.ts` (new, 1 test).
+  - **Test command (targeted, Red):**
+    `cd packages/auth && DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test DIRECT_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test npx vitest run src/__tests__/audit-retention-job.integration.test.ts`
+  - **Failure:** `AssertionError: expected "purgeExpiredAuditEvents" to be called 1 times, but got 2 times`
+  - **Postgres WARNING emitted during the run:** `"you don't own a lock of type ExclusiveLock"` from `LockRelease` (lock.c:1999) — `releaseAdvisoryLock` tries to release a lock that was never held by its connection. This is the smoking gun for the bug.
+  - **Root cause:** `tryAcquireAdvisoryLock` and `releaseAdvisoryLock` each open a fresh `postgres-js` client via `createPrivilegedDb()` and close it in `finally`. PostgreSQL advisory locks are session-scoped, so the lock is released the moment the acquire helper's connection closes. The lock is never held across the lock + purge + release cycle.
+  - **Strong discriminator:** `vi.spyOn(auditRetention, "purgeExpiredAuditEvents")` — with a correct lock, the no-op caller must not invoke the purge at all. Behavior-based assertions (return values, event count, remaining rows) pass coincidentally with the current implementation because the race between the two purges typically results in one call deleting all rows and the other finding 0 rows (the `recordAuditEvent` call is gated on `totalDeleted > 0`).
+- **Green-phase handoff:** the fix must consolidate the lock + purge + release cycle onto a **single** `postgres-js` connection inside `runPurgeWithLock` (or refactor `purgeExpiredAuditEvents` to accept a privileged client passed in by the caller). With a single connection, the second concurrent caller's `tryAcquire` on its own connection returns `false` and the no-op path is taken deterministically.
+- **No regressions:** existing unit + integration tests for Phase 2 and the Phase 3 unit test still pass.
 
 ## Phase 4: DSAR Domain Function (TDD)
 - [x] Task: Add `dsar:export` permission key to `packages/auth`; update `assertCan` coverage test. (`781ff8a`)
