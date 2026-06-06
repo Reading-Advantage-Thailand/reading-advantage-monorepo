@@ -368,6 +368,23 @@
 >     behaviour. Green may need to update that file (e.g., mock the
 >     `AIClient` factory instead of `'ai'`) — that is a Green-phase
 >     concern, not a Red-phase one.
+>
+> **Red-phase state (2026-06-06, commit `2fd5887`):** 5 tests fail with
+> the `Phase 7 RED:` `TypeError` (class not exported — the expected
+> signal). 1 test passes (the legacy `generateLessonDiagram()` wrapper
+> preservation check, which must keep passing in Green). No regressions
+> in the existing `image-generator.test.ts` (3/3 still pass). No new
+> TypeScript errors in the test file.
+>
+> **Test command (targeted):**
+> ```bash
+> cd apps/science-advantage && \
+>   npx vitest run --config vitest.unit.config.ts \
+>     lib/ai/image-generator.class.test.ts
+> ```
+> (NOT `pnpm turbo run test --filter=science-advantage` — that runs
+> the integration config and needs Postgres, which the local unit
+> tests intentionally avoid.)
 
 - [~] Task: Write a failing test for the new `ImageGenerator` class (constructor takes `AIClient`; `generateDiagram(input)` calls `client.generateImage(...)`). (Red-phase SHA: `2fd5887`)
 - [ ] Task: **Remove the `process.env.OPENAI_API_KEY` / `process.env.GOOGLE_API_KEY` mutation** in `ensureApiKey()`. The API key is passed via the `AIClient` constructor (set in Phase 5 by `getAIClient()`).
