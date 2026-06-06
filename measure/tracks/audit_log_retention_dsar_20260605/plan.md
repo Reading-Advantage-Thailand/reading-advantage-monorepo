@@ -285,3 +285,59 @@ above).
 - [~] Task: Add a lessons-learned entry if anything non-obvious surfaced (privileged-connection DELETE against an append-only table; advisory-lock job pattern).
 - [~] Task: Update `measure/tracks.md` (mark complete) and move the track dir to `measure/archive/`.
 - [~] Task: Commit with `git notes` summarizing the track.
+
+### Phase 7 Red-phase status (2026-06-06)
+
+- **RED:** all four Phase 7 closeout deliverables are pinned by
+  `packages/auth/src/__tests__/phase-7-closeout.test.ts` (13 tests, 4
+  describe groups — one per task). Test runs in 1.3s, no DB, no pnpm,
+  no global vitest setup. (`bafda23`)
+- **Red signal — 9 tests fail, 4 pass.** The 4 passing are
+  existence/cap guards that hold in both pre- and post-closeout
+  states:
+  - `tech-debt.md exists at the expected path` ✓
+  - `tech-debt.md stays within the 50-line working-memory cap` ✓
+    (currently at the 50-line cap; the new row forces a prune)
+  - `lessons-learned.md exists at the expected path` ✓
+  - `lessons-learned.md stays within the 50-line working-memory cap` ✓
+    (currently 46 lines; the new entry must stay within 50)
+- **The 9 expected failures map 1:1 to the four Phase 7 tasks:**
+  1. **Task 1 (tech-debt.md)** — 2 fail: no row tagged
+     `audit_log_retention_dsar_20260605`; no row with `Resolved` status.
+  2. **Task 2 (lessons-learned.md)** — 2 fail: no 2026-06-06 entry
+     tagged with this track id; entry does not mention privileged-
+     connection DELETE or advisory-lock job pattern.
+  3. **Task 3 (tracks.md + dir move)** — 3 fail: dir is still at
+     `measure/tracks/`, not `measure/archive/`; `tracks.md` still has
+     the `[ ] Audit Log Retention + DSAR Bulk Export` pending entry.
+  4. **Task 4 (git notes)** — 2 fail: the latest commit touching the
+     track dir has no `git notes` note attached; the note (if any) does
+     not mention the track id.
+- **Test command (targeted, Red):**
+  `cd packages/auth && npx vitest run src/__tests__/phase-7-closeout.test.ts`
+  → 1 file, 13 tests, 9 failed | 4 passed (Duration ~1.3s).
+- **No source code changes.** Per the TDD contract, this commit adds
+  tests only. The closeout Green-phase work is doc + git only and
+  lives in `measure/tech-debt.md`, `measure/lessons-learned.md`,
+  `measure/tracks.md`, and the git notes ref. The Green-phase owner
+  flips all four `[~]` tasks to `[x]` once the tests go green.
+- **Why Task 1's "reconcile any audit-log follow-up rows" is not
+  pinned by a separate test:** the prior `audit_log_infrastructure_20260603`
+  row (2026-06-03) is already `Resolved` and has no follow-up rows
+  pending. The new Phase 7 row is the only audit-log-related tech-debt
+  delta from this track. The "reconcile" clause is therefore a
+  no-op; the test for row existence + Resolved status covers the
+  net effect.
+- **Why Task 4's "git notes" test targets the latest commit touching
+  the track dir, not HEAD:** the closeout sequence is
+  `git mv measure/tracks/<id>/* measure/archive/<id>/*`
+  followed by `git notes add -m "..." <dir-move-sha>`. The
+  dir-move commit is the latest commit to touch the track dir *before*
+  any post-move cleanup commits. Pinning to "latest commit touching
+  the track dir" makes the test robust against follow-up commits that
+  also touch files in the new archive location.
+- **Build-graph:** `graph.db` updated with `phase-7-closeout.test.ts`
+  (`build-graph update graph.db packages/auth/src/__tests__/phase-7-closeout.test.ts`
+  — file node + 3 test function nodes + 13 contains edges). Stats
+  unchanged at 1665 nodes / 2408 edges / 215 files (test file already
+  indexed from a prior scan).
