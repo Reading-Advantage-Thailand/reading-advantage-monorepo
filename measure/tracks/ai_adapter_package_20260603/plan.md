@@ -154,13 +154,16 @@
 > **Test gate note:** Use `npx vitest run` from `packages/ai/` (pnpm is
 > not installed in this sandbox; `turbo run test --filter=...` reports
 > "cannot find binary path" for the same reason). Monorepo-level
-> `npm test` has pre-existing failures in unrelated packages.
+> `npm test` has pre-existing failures in unrelated packages
+> (`vocabulary-games` performance benchmark + GameEndScreen;
+> `www-reading-advantage` 0-test files). The GREEN TEST COMMAND for
+> this track is `npx vitest run` from `packages/ai/`, NOT `npm test`.
 
 - [x] Task: Create `packages/ai/src/providers/google.ts` implementing `AIClient` using `@ai-sdk/google`. (`9c52c8a`)
 - [x] Task: Same pattern as OpenAI provider; constructor takes `{ apiKey, model? }`. (`9c52c8a`)
 - [x] Task: Write failing tests with the mock as the underlying model. (basic delegation: `9c52c8a`; full contract: `d0d5da2` — 14 pass + contract suite, 1 gated skip)
 - [x] Task: Add a single integration test gated by `GEMINI_API_KEY` env. (`d0d5da2`)
-- [x] Task: Confirm. (73 passed, 2 skipped across 8 test files in `@reading-advantage/ai`)
+- [x] Task: Confirm. (73 passed, 2 skipped across 8 test files in `@reading-advantage/ai`; `d0d5da2`)
 
 ## Phase 5: Provider Selector
 
