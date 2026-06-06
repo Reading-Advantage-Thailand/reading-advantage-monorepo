@@ -28,10 +28,22 @@
 
 ## Phase 2: Fix `lib/auth/session.ts:40,79` INTERN Role Widening
 
-- [ ] Task: Find the central `UserRole` type (likely `packages/auth/src/roles.ts` or `lib/enums.ts`).
-- [ ] Task: Add `'INTERN'` to the type union.
-- [ ] Task: Update any consumer types that use `UserRole`.
-- [ ] Task: Run `pnpm turbo run check-types --filter=science-advantage`; expect 2 errors gone.
+> **Status note (2026-06-06, Red phase owned by mid role):** Canonical
+> `Role` source confirmed at `packages/auth/src/roles.ts` (per
+> `test-strategy.md` §6 build-graph probe; 6 imports, re-exported as
+> `UserRole` by consumers). The `Role` union is derived from `ROLES`
+> (`(typeof ROLES)[keyof typeof ROLES]`), so `INTERN: "INTERN"` in the
+> `ROLES` constant widens the union transitively. Consumer re-exports
+> route through the canonical source:
+> `apps/science-advantage/lib/auth/types.ts` and `constants.ts` both
+> re-export `Role as UserRole` from `@reading-advantage/auth`. Red-phase
+> pinning tests live at
+> `packages/auth/src/__tests__/phase-2-intern-role-widening.test.ts`.
+
+- [~] Task: Find the central `UserRole` type (likely `packages/auth/src/roles.ts` or `lib/enums.ts`).
+- [~] Task: Add `'INTERN'` to the type union.
+- [~] Task: Update any consumer types that use `UserRole`.
+- [~] Task: Run `pnpm turbo run check-types --filter=science-advantage`; expect 2 errors gone.
 
 ## Phase 3: Add `lib/auth/{password,rate-limit}.test.ts` Siblings
 
