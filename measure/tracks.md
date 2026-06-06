@@ -229,6 +229,10 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ### Infrastructure & Shared Packages
 
+- [ ] **Track: Dependency Upgrade Hardening and Alignment**
+  *Link: [./tracks/dependency_upgrade_hardening_20260607/](./tracks/dependency_upgrade_hardening_20260607/)*
+  Replace the vulnerable root `next@16.0.0` override; align Next/React/Vitest versions; apply reviewed patch/minor upgrades in bounded batches; resolve the Vitest and `react-day-picker` peer conflicts; remove deprecated type stubs; replace unsupported `fluent-ffmpeg`; dedupe the lockfile; and route major AI SDK/Zod/TypeScript/Jest/Zustand/Drizzle/pnpm migrations into dedicated follow-up tracks. Explicitly excludes Prisma 7 because primary-advantage is migrating to Drizzle.
+
 - [x] **Track: Shared Storage Package — S3-Compatible Abstraction Layer** ⛔ **SUPERSEDED — DO NOT IMPLEMENT**
   *Link: [./archive/storage_s3_compat_20260522/](./archive/storage_s3_compat_20260522/)*
   **Superseded 2026-06-05 by `storage_package_20260603` (audit Track 6)**, which covers the same `packages/storage` `StorageClient` work plus the audit findings (F-102, F-703). This older stub is retained for history only; pick up Track 6 instead.
