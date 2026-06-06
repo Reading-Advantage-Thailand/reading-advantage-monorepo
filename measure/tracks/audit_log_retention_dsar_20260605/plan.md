@@ -82,10 +82,10 @@
 ## Phase 4: DSAR Domain Function (TDD)
 - [x] Task: Add `dsar:export` permission key to `packages/auth`; update `assertCan` coverage test. (`781ff8a`)
 - [x] Task: Write `dsar.test.ts` (unit): assertCan gate, shape validation, tooLarge ceiling guard, empty result handling. (`781ff8a`)
-- [ ] Task: Write `dsar.integration.test.ts`: two-school fixture; assert `exportSubjectData` returns the subject's profile + audit events + activity, and that an admin in school A is DENIED a subject in school B.
-- [ ] Task: Write test: export streams/paginates and returns `tooLarge` when the row ceiling is exceeded (integration).
+- [~] Task: Write `dsar.integration.test.ts`: two-school fixture; assert `exportSubjectData` returns the subject's profile + audit events + activity, and that an admin in school A is DENIED a subject in school B.
+- [~] Task: Write test: export streams/paginates and returns `tooLarge` when the row ceiling is exceeded (integration).
 - [x] Task: Implement `packages/domain/src/audit/dsar.ts` `exportSubjectData(tenant, subjectRef)`, gated by `assertCan(actor, 'dsar:export')`, paginated reads, row ceiling. (Note: audit module is tenant-exempt per `tenant-coverage.test.ts:24`; manual schoolId scoping used for profile lookup.) (`781ff8a`)
-- [x] Task: Verify — domain tests green (271 tests, 23 files); `tenant-coverage.test.ts` still passes. (`781ff8a`)
+- [ ] Task: Verify — domain tests green (271 tests, 23 files); `tenant-coverage.test.ts` still passes. (Pending Green-phase verification after integration tests are added.)
 
 ## Phase 5: DSAR Endpoint (TDD)
 - [ ] Task: Write route test: ADMIN-only (non-admin → 403); Zod rejects neither/both of `userId`/`email`; valid request returns archive with `manifest.md` + JSON files whose counts match.
