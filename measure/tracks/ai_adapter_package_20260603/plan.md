@@ -20,15 +20,16 @@
 
 ## Phase 2: Mock Provider
 
-- [~] Task: Create `packages/ai/src/providers/mock.ts` implementing `AIClient`.
-- [~] Task: Mock takes a `responses: { generateObject?: ..., generateImage?: ..., generateText?: ... }` config in the constructor. If a response is configured, return it; otherwise throw `ProviderNotConfiguredError`.
-- [~] Task: Write failing tests:
+- [x] Task: Create `packages/ai/src/providers/mock.ts` implementing `AIClient`. (`9c52c8a`)
+- [x] Task: Mock takes a `responses: { generateObject?: ..., generateImage?: ..., generateText?: ... }` config in the constructor. If a response is configured, return it; otherwise throw `ProviderNotConfiguredError`. (`9c52c8a`)
+- [x] Task: Write failing tests:
   - `mock.generateObject({ schema, prompt: 'test' })` with a configured response returns the configured object.
   - `mock.generateImage({ prompt: 'test' })` with a configured response returns a Buffer.
   - `mock.generateText({ prompt: 'test' })` with no configured response throws.
   - `mock.generateObject` validates the response against the schema; invalid response throws `SchemaValidationError`.
-- [~] Task: Implement. Confirm tests pass.
-- [~] Task: Add snapshot test: feed a prompt, capture the response, snapshot for regression.
+  (`24659f3`)
+- [x] Task: Implement. Confirm tests pass. (`abcac78`)
+- [x] Task: Add snapshot test: feed a prompt, capture the response, snapshot for regression. (`abcac78`)
 
 > **Red-phase notes (2026-06-06, mid-agent, commits `24659f3` → restructured by follow-up):** Existing code (commit `9c52c8a`) already
 > ships `MockProvider`, the four basic mock tests (`src/providers/mock.test.ts`), and the
@@ -46,6 +47,11 @@
 >
 > The new RED tests intentionally fail until the implementer adds `createTestClient` to
 > `src/providers/mock.ts` (and re-exports it from `src/index.ts`).
+>
+> **Green-phase complete (2026-06-06, commit `abcac78`):** Added `createTestClient(overrides?)`
+> factory to `src/providers/mock.ts` with default fixture set (recommendation object, diagram
+> buffer, text output). Re-exported `createTestClient` and `MockResponses` from `src/index.ts`.
+> All 44 tests pass including the 10 Phase 2 RED tests. Snapshots written.
 
 ## Phase 3: OpenAI Provider
 
