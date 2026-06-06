@@ -20,30 +20,19 @@
 ## Phase 1: Retention Config (Contract)
 - [x] Task: Add `AUDIT_RETENTION_DAYS` to the validated env schema (`lib/env.ts` / shared env), default `2557`, `.refine(n => Number.isInteger(n) && n >= 365)`. (`781ff8a`)
 - [x] Task: Write test asserting the default and that values < 365 throw at parse time. (`781ff8a`)
-- [~] Task: Document the policy in `packages/auth/README.md` + new `docs/compliance/retention.md`. (Red-phase: doc-content tests pinned; see `phase-1-docs.test.ts`.)
+- [x] Task: Document the policy in `packages/auth/README.md` + new `docs/compliance/retention.md`. (Red-phase: doc-content tests pinned; see `phase-1-docs.test.ts`.) (`f36ce90`)
 - [x] Task: Verify — env parse test passes. (`781ff8a`)
 
-### Phase 1 Red-phase state (handoff to Green)
+### Phase 1 Green-phase status
 
-- **Test file (new):** `packages/auth/src/__tests__/phase-1-docs.test.ts` — 10 tests
-  pinning the FR-1 doc surface. Mirrors the prior track's
-  `phase-9-docs.test.ts` convention (runtime `readFileSync` + content
-  assertions; no DB / no network).
-- **RED (2026-06-06):** all 10 tests fail because neither doc exists
-  yet. 5 fail on the auth README (file-exists, AUDIT_RETENTION_DAYS
-  name, default 2557, refine 365, export references) and 5 fail on
-  the compliance doc (file-exists, 7-year / 2557 window, 365 floor,
-  FERPA citation, cross-reference to the auth README).
-- **Test command (targeted):**
-  `cd packages/auth && npx vitest run src/__tests__/phase-1-docs.test.ts`
-- **No regressions:** the 12 pre-existing auth test files still
-  pass (108/108); the new file is the only failure in the run.
-- **Green-phase TODO for the implementer:** create both files. The
-  test contract pins the exact signals that must appear, so the
-  implementer can write the docs against the assertions and turn
-  the suite green without re-deriving the contract.
-- **Build-graph:** `graph.db` updated with the new test file
-  (commit `aff01d7`) so the next agent sees it in the index.
+- **GREEN (2026-06-06):** all 10 phase-1-docs tests pass.
+  - `packages/auth/README.md` created — documents `AUDIT_RETENTION_DAYS` env var, default 2557, ≥365 floor, FERPA rationale, and exports `retentionConfigSchema`/`getRetentionDays`.
+  - `docs/compliance/retention.md` created — plain-language retention policy, 7-year/2557 window, 365 footgun guard, FERPA citation, cross-reference to auth README.
+- **Test file:** `packages/auth/src/__tests__/phase-1-docs.test.ts` — 10/10 green.
+- **Test command (targeted):** `cd packages/auth && npx vitest run src/__tests__/phase-1-docs.test.ts`
+- **No regressions:** 13 test files, 118/118 pass.
+- **Test fix:** path resolution in test corrected from 3 to 4 levels up (workspace root, not `packages/`).
+- **Build-graph:** `graph.db` updated with changed test file.
 
 ## Phase 2: Purge Function (TDD)
 - [x] Task: Write `audit-retention.test.ts` (unit): `getRetentionCutoff` math (UTC cutoff, default days, configured days). (`781ff8a`)

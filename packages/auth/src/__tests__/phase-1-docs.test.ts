@@ -56,8 +56,8 @@ import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-// `src/__tests__/phase-1-docs.test.ts` → up 3 levels → workspace root.
-const ROOT = join(__dirname, "..", "..", "..");
+// `packages/auth/src/__tests__/phase-1-docs.test.ts` → up 4 levels → workspace root.
+const ROOT = join(__dirname, "..", "..", "..", "..");
 
 const AUTH_README_PATH = join(ROOT, "packages", "auth", "README.md");
 const RETENTION_DOC_PATH = join(ROOT, "docs", "compliance", "retention.md");
