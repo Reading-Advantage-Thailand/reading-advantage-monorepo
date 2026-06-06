@@ -167,9 +167,11 @@
 
 ## Phase 5: Provider Selector
 
-> **GREEN TEST COMMAND: `npx vitest run` from `packages/ai/`**
+> **GREEN TEST COMMAND: `npx vitest run` (working directory: `packages/ai/`)**
 > (NOT `npm test` — monorepo-level tests have pre-existing failures in
 > `www-reading-advantage` and `vocabulary-games` unrelated to this track.)
+>
+> **Automation gate command:** `cd packages/ai && npx vitest run`
 
 > **Red-phase notes (2026-06-06, mid-agent):** Implementation already shipped in
 > `feat(ai): commit shared packages/ai adapter package` (`9c52c8a`) and the
