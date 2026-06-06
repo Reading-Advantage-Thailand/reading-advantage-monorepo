@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -147,12 +147,7 @@ export function StudentLessonDetailAnalytics({
     new Set()
   );
 
-  useEffect(() => {
-    fetchAnalytics();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [studentId, lessonId]);
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -180,7 +175,11 @@ export function StudentLessonDetailAnalytics({
     } finally {
       setLoading(false);
     }
-  };
+  }, [studentId, lessonId]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
   const toggleAttemptExpand = (attemptId: string) => {
     const newExpanded = new Set(expandedAttempts);
