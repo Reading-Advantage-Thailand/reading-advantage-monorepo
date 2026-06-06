@@ -67,6 +67,10 @@
     "./quiz": {
       "types": "./dist/quiz/index.d.ts",
       "import": "./dist/quiz/index.js"
+    },
+    "./audit/dsar": {
+      "types": "./dist/audit/dsar.d.ts",
+      "import": "./dist/audit/dsar.js"
     }
   },
   "scripts": {

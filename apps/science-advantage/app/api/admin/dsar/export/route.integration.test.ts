@@ -561,31 +561,25 @@ describe("GET /api/admin/dsar/export — audit row + 413 (Phase 5 task #2)", () 
 
     // Baseline count of dsar:export rows for our admin (should be 0
     // from beforeEach cleanup).
-    const beforeCount = await db.execute(sql`
+    const beforeCount = (await db.execute(sql`
       SELECT COUNT(*)::int AS n FROM audit_events
       WHERE action = 'dsar:export'
         AND actor_user_id = ${ADMIN_A_ID}
-    `);
-    const before = Number(
-      (beforeCount as unknown as { rows: Array<{ n: number }> }).rows[0]?.n ??
-        0,
-    );
+    `)) as unknown as Array<{ n: number }>;
+    const before = Number(beforeCount[0]?.n ?? 0);
     expect(before).toBe(0);
 
     const res = await GET(buildRequest(`?userId=${SUBJECT_A_ID}&format=json`));
     expect(res.status).toBe(200);
 
     // After the request, exactly one new row.
-    const afterCount = await db.execute(sql`
+    const afterCount = (await db.execute(sql`
       SELECT COUNT(*)::int AS n FROM audit_events
       WHERE action = 'dsar:export'
         AND actor_user_id = ${ADMIN_A_ID}
         AND target_id = ${SUBJECT_A_ID}
-    `);
-    const after = Number(
-      (afterCount as unknown as { rows: Array<{ n: number }> }).rows[0]?.n ??
-        0,
-    );
+    `)) as unknown as Array<{ n: number }>;
+    const after = Number(afterCount[0]?.n ?? 0);
     expect(after).toBe(1);
 
     // Inspect the row's full shape.
@@ -595,17 +589,15 @@ describe("GET /api/admin/dsar/export — audit row + 413 (Phase 5 task #2)", () 
       WHERE action = 'dsar:export'
         AND actor_user_id = ${ADMIN_A_ID}
         AND target_id = ${SUBJECT_A_ID}
-    `)) as unknown as {
-      rows: Array<{
-        actor_user_id: string;
-        actor_role: string;
-        action: string;
-        target_type: string;
-        target_id: string;
-        metadata: Record<string, unknown> | null;
-      }>;
-    };
-    const row = rows.rows[0];
+    `)) as unknown as Array<{
+      actor_user_id: string;
+      actor_role: string;
+      action: string;
+      target_type: string;
+      target_id: string;
+      metadata: Record<string, unknown> | null;
+    }>;
+    const row = rows[0];
     expect(row).toBeDefined();
     expect(row.actor_user_id).toBe(ADMIN_A_ID);
     expect(row.actor_role).toBe("ADMIN");
@@ -653,8 +645,8 @@ describe("GET /api/admin/dsar/export — audit row + 413 (Phase 5 task #2)", () 
     const rows = (await db.execute(sql`
       SELECT COUNT(*)::int AS n FROM audit_events
       WHERE action = 'dsar:export'
-    `)) as unknown as { rows: Array<{ n: number }> };
-    expect(Number(rows.rows[0]?.n ?? 0)).toBe(0);
+    `)) as unknown as Array<{ n: number }>;
+    expect(Number(rows[0]?.n ?? 0)).toBe(0);
   });
 
   it(

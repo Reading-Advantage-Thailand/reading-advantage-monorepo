@@ -9,6 +9,9 @@ export { assertTenantAccess } from "./tenant.js";
 // Authorization
 export { assertCan, AuthError } from "./assert.js";
 
+// Audit
+export { recordAuditEvent, type AuditContext, type AuditPayload, AuditEventError } from "./audit.js";
+
 // Password
 export { hashPassword, verifyPassword, rehashOnLogin, ARGON2ID_OPTS } from "./password.js";
 
