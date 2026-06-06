@@ -5,6 +5,14 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+    paths:
+      - 'apps/science-advantage/**'
+      - 'packages/**'
+      - '.github/workflows/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'turbo.json'
 
 jobs:
   build:
@@ -47,6 +55,9 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Type check
+        run: pnpm turbo run check-types
 
       - name: Test
         run: pnpm test

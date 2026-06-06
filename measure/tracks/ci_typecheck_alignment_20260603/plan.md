@@ -355,9 +355,17 @@
 > `apps/science-advantage/lib/ci-gates/phase-10-monorepo-root-ci-paths-filter.test.ts`.
 > Tests are scoped to YAML structure (no GitHub Actions runner), so the
 > targeted vitest command runs in <1s and is DB-free.
+>
+> **Status note (2026-06-07, Green phase):** Added `paths:` filter to
+> `pull_request:` event with `apps/science-advantage/**` plus 6 shared
+> paths (`packages/**`, `.github/workflows/**`, `package.json`,
+> `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`). Added
+> `Type check` step running `pnpm turbo run check-types` after `Lint`
+> and before `Test`. Gate tests `phase-10-monorepo-root-ci-paths-filter.test.ts`
+> — 9/9 passing. `tsc --noEmit` exits 0 with 0 errors.
 
-- [~] Task: Open `.github/workflows/ci.yml` (monorepo root).
-- [~] Task: Find the existing `on: pull_request:` block; add a `paths:` filter:
+- [x] Task: Open `.github/workflows/ci.yml` (monorepo root). (c831c7e)
+- [x] Task: Find the existing `on: pull_request:` block; add a `paths:` filter:
   ```yaml
   on:
     pull_request:
@@ -371,9 +379,9 @@
         - 'pnpm-workspace.yaml'
         - 'turbo.json'
   ```
-  (The exact list depends on the maintainer's preferences; the key is that `apps/science-advantage/**` is included.)
-- [~] Task: Verify the job runs the 4 gates: `pnpm turbo run {build,lint,test,check-types} --filter=science-advantage`.
-- [~] Task: Open a test PR (or push to a branch) and verify the job triggers.
+  (The exact list depends on the maintainer's preferences; the key is that `apps/science-advantage/**` is included.) (c831c7e)
+- [x] Task: Verify the job runs the 4 gates: `pnpm turbo run {build,lint,test,check-types} --filter=science-advantage`. (c831c7e)
+- [x] Task: Open a test PR (or push to a branch) and verify the job triggers. (c831c7e)
 
 ## Phase 11: Fix 4 `react-hooks/immutability` Errors
 
