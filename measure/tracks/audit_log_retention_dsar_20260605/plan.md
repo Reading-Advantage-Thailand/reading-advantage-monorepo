@@ -180,9 +180,22 @@
 - **Build-graph:** `graph.db` updated with route.ts, minimal-zip.ts, index.ts, package.json.
 
 ## Phase 6: Integration + Acceptance
-- [ ] Task: End-to-end: seed → request export → unzip → assert manifest counts == file row counts == DB counts for the subject.
-- [ ] Task: Boundary: row at exactly the retention edge is handled per spec (UTC, off-by-one).
-- [ ] Task: Run `pnpm turbo run {test,check-types,build} --filter=@reading-advantage/auth --filter=@reading-advantage/domain --filter=science-advantage`; all exit 0.
+- [x] Task: End-to-end: seed → request export → unzip → assert manifest counts == file row counts == DB counts for the subject. (Red-phase test added — `apps/science-advantage/app/api/admin/dsar/export/dsar-export-e2e.integration.test.ts`. 2/2 pass against the existing implementation; tests are the missing deliverable per test-strategy §1 P6 row.)
+- [x] Task: Boundary: row at exactly the retention edge is handled per spec (UTC, off-by-one). (Red-phase tests added — `packages/auth/src/__tests__/audit-retention-boundary.integration.test.ts`. 4/4 pass: (1) row at exact cutoff kept, cutoff-1ms purged; (2) UTC-anchored at any time of day, not just midnight; (3) custom retentionDays override produces same boundary; (4) self-audit recursion guard — second purge does not delete first run's `audit:retention_purge` row.)
+- [~] Task: Run `pnpm turbo run {test,check-types,build} --filter=@reading-advantage/auth --filter=@reading-advantage/domain --filter=science-advantage`; all exit 0. (Red-phase pin test added — `packages/auth/src/__tests__/phase-6-quality-gates.test.ts`. 10/11 pass; the one failing assertion is the expected Red-phase signal: `science-advantage` package.json does not define a `check-types` script, so the gating command cannot exit 0 today. Green-phase fix tracked in `ci_typecheck_alignment_20260603` (F-1001: add `"check-types": "tsc --noEmit"` to `apps/science-advantage/package.json`, remove `ignoreBuildErrors: true`). Placed in `packages/auth/` because that package has no `vitest.config.ts` and no pnpm global setup, so the test runs in 1.3s with no DB / no pnpm dependency.)
+
+### Phase 6 Red-phase status (2026-06-06)
+
+- **Task 1 (E2E) — RED-PHASE TESTS PASS** (2/2) against the existing implementation. The implementation in `apps/science-advantage/app/api/admin/dsar/export/route.ts` already builds the zip body with `manifest.md`, `profile.json`, and `audit-events.json`, and the cross-reference triple (manifest counts == file row counts == DB counts) is correct. The test pins this contract going forward.
+  - Run command (sandbox-only — bypasses the pnpm-needing global setup):
+    `cd apps/science-advantage && DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test npx vitest run --config /tmp/opencode/phase6-bypass/vitest.integration.no-pnpm-setup.config.ts app/api/admin/dsar/export/dsar-export-e2e.integration.test.ts`
+- **Task 2 (Boundary) — RED-PHASE TESTS PASS** (4/4) against the existing implementation. Pins the exact-millisecond boundary (cutoff inclusive), UTC anchoring at any time of day, custom retentionDays override, and the self-audit recursion guard.
+  - Run command (no bypass needed — packages/auth/ has no pnpm global setup):
+    `cd packages/auth && DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test DIRECT_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/science_advantage_test npx vitest run src/__tests__/audit-retention-boundary.integration.test.ts`
+- **Task 3 (Quality gates) — RED-PHASE PIN TEST** (10/11 pass; 1 fails on the expected assertion). The failing test is the one that asserts `science-advantage` exposes a `check-types` script — currently it does not, so the gating command from plan.md would fail with a non-zero exit. The test is a guard: when the Green-phase work in `ci_typecheck_alignment_20260603` lands, this test goes green. The placement in `packages/auth/src/__tests__/` was a deliberate move: the science-advantage app's `vitest.config.ts` has a `globalSetup` that calls `pnpm --filter @reading-advantage/db migrate` (not on PATH in this sandbox); packages/auth/ has no vitest config and no global setup, so the test runs in 1.3s with no external dependency.
+  - Run command: `cd packages/auth && npx vitest run src/__tests__/phase-6-quality-gates.test.ts`
+  - The test was originally placed at `apps/science-advantage/tests/phase-6-quality-gates.test.ts` and was the source of the supervisor's `status 124` (timeout) on attempt 1: vitest's default config in that app has `globalSetup: ['./vitest.integration.global-setup.ts']` which spawns `pnpm` synchronously; the global setup hung waiting for pnpm indefinitely. Moving the test to `packages/auth/` (no global setup) eliminates the pnpm dependency entirely.
+- **No source code changes.** Per the TDD contract, all three new test files add tests only. The existing implementations in `route.ts`, `audit-retention.ts`, and `dsar.ts` are unchanged.
 
 ## Phase 7: Closeout
 - [ ] Task: Update `measure/tech-debt.md`: note retention/DSAR delivered; reconcile any audit-log follow-up rows.
