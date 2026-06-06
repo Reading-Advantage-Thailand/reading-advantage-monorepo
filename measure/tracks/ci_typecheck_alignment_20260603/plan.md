@@ -184,12 +184,28 @@
 > Phase 7 — it will only flip to green once Phases 0–6 are all
 > resolved and tsc reports 0 errors.
 
-- [~] Task: Add to `apps/science-advantage/package.json` `scripts`:
+- [x] Task: Add to `apps/science-advantage/package.json` `scripts`:
   ```json
   "check-types": "tsc --noEmit"
   ```
-  _(Regression-locked by `phase-7-check-types-script.test.ts` tests 1–4: script declared, non-empty, references `tsc`, includes `--noEmit`. Script is already in place per `test-strategy.md` §0 / commit `c1e77f9`; tests assert the install state so a future deletion / no-op regression surfaces immediately.)_
-- [~] Task: Run `pnpm turbo run check-types --filter=science-advantage`; the app is now in scope (no longer silently skipped). _(Regression-locked by `phase-7-check-types-script.test.ts` tests 5–7: turbo.json declares the `check-types` task with `dependsOn: ["^check-types"]`; the script invocation produces tsc-specific output (not a no-op); the end-to-end gate exits 0. Gate 7 is the red-phase assertion — currently fails with the post-Phase-6 265-error tsc count; flips to green once Phases 0–6 are all resolved.)_
+  _(Regression-locked by `phase-7-check-types-script.test.ts` tests 1–4: script declared, non-empty, references `tsc`, includes `--noEmit`. Script is already in place per `test-strategy.md` §0 / commit `c1e77f9`; tests assert the install state so a future deletion / no-op regression surfaces immediately.)_ (bd2e3a5, 1b8c89c)
+- [x] Task: Run `pnpm turbo run check-types --filter=science-advantage`; the app is now in scope (no longer silently skipped). _(Regression-locked by `phase-7-check-types-script.test.ts` tests 5–7: turbo.json declares the `check-types` task with `dependsOn: ["^check-types"]`; the script invocation produces tsc-specific output (not a no-op); the end-to-end gate exits 0. Gate 8 is the red-phase assertion — currently fails with the post-Phase-6 265-error tsc count; flips to green once Phases 0–6 are all resolved.)_ (bd2e3a5, 1b8c89c)
+
+  > **Status note (2026-06-07, Red phase owned by mid role, COMPLETE):**
+  > Test file `apps/science-advantage/lib/ci-gates/phase-7-check-types-script.test.ts`
+  > committed in `bd2e3a5` with 8 tests; local vitest run (via
+  > `corepack pnpm exec vitest run --config vitest.unit.config.ts
+  > lib/ci-gates/phase-7-check-types-script.test.ts`) reports
+  > **7 passed / 1 failed** (16.25s wall). The 7 passes are the regression
+  > guards + verification prep (script declared, non-empty, references `tsc`,
+  > includes `--noEmit`; turbo wiring correct; sanity check on shared setup;
+  > tsc-evidence gate confirms the script is not a no-op). The 1 failure is
+  > the precise end-to-end gate (`pnpm --filter science-advantage check-types
+  > exits 0`) — fails with exit code 1, 265 tsc errors reported. This is the
+  > expected Red-phase behavior per `test-strategy.md` §1 P7: the gate flips
+  > to green only when Phases 0–6 are all resolved and tsc reports 0 errors
+  > (the work of those phases is out of scope for Phase 7). No additional
+  > tests or code changes required from the mid role for Phase 7.
 
 ## Phase 8: Remove `ignoreBuildErrors: true`
 
