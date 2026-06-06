@@ -1,5 +1,7 @@
 import { sql } from "drizzle-orm";
 import { createPrivilegedDb } from "@reading-advantage/db";
+import type { DB } from "@reading-advantage/db/client";
+import type postgres from "postgres";
 import { purgeExpiredAuditEvents } from "./audit-retention.js";
 
 /**
@@ -11,14 +13,36 @@ import { purgeExpiredAuditEvents } from "./audit-retention.js";
  */
 export const AUDIT_RETENTION_LOCK_KEY = 0x6175_6469_7472_6574n;
 
+interface PrivilegedConnection {
+  db: DB;
+  client: postgres.Sql;
+}
+
 /**
  * Attempts to acquire a PostgreSQL advisory lock. If the lock is already
  * held (e.g., by another replica), returns false and the caller should
  * no-op.
  *
+ * When a shared connection is provided, the lock is held on that
+ * connection's session (session-scoped). The caller must also use the
+ * same connection for release. When no connection is provided, a new
+ * privileged connection is created and closed internally — the lock
+ * will be released immediately on close.
+ *
+ * @param conn - Optional shared privileged connection to acquire the lock on
  * @returns True if the lock was acquired, false if already held
  */
-export async function tryAcquireAdvisoryLock(): Promise<boolean> {
+export async function tryAcquireAdvisoryLock(
+  conn?: PrivilegedConnection
+): Promise<boolean> {
+  if (conn) {
+    const result = await conn.db.execute(
+      sql`SELECT pg_try_advisory_lock(${AUDIT_RETENTION_LOCK_KEY}) AS acquired`
+    );
+    const row = result[0] as { acquired: boolean } | undefined;
+    return row?.acquired === true;
+  }
+
   const { db, client } = createPrivilegedDb();
   try {
     const result = await db.execute(
@@ -32,9 +56,20 @@ export async function tryAcquireAdvisoryLock(): Promise<boolean> {
 }
 
 /**
- * Releases the PostgreSQL advisory lock held by this connection.
+ * Releases the PostgreSQL advisory lock held by the given connection.
+ *
+ * @param conn - Optional shared privileged connection that holds the lock
  */
-export async function releaseAdvisoryLock(): Promise<void> {
+export async function releaseAdvisoryLock(
+  conn?: PrivilegedConnection
+): Promise<void> {
+  if (conn) {
+    await conn.db.execute(
+      sql`SELECT pg_advisory_unlock(${AUDIT_RETENTION_LOCK_KEY})`
+    );
+    return;
+  }
+
   const { db, client } = createPrivilegedDb();
   try {
     await db.execute(
@@ -49,18 +84,26 @@ export async function releaseAdvisoryLock(): Promise<void> {
  * Runs the audit retention purge once, guarded by a PostgreSQL advisory lock.
  * If the lock is already held by another process, the run is silently skipped.
  *
+ * Uses a single privileged connection for the entire lock → purge → release
+ * cycle so the session-scoped advisory lock is held throughout.
+ *
  * @returns The result of the purge, or { deleted: 0 } if the lock was not acquired
  */
 export async function runPurgeWithLock(): Promise<{ deleted: number }> {
-  const acquired = await tryAcquireAdvisoryLock();
-  if (!acquired) {
-    return { deleted: 0 };
-  }
-
+  const { db, client } = createPrivilegedDb();
   try {
-    return await purgeExpiredAuditEvents();
+    const acquired = await tryAcquireAdvisoryLock({ db, client });
+    if (!acquired) {
+      return { deleted: 0 };
+    }
+
+    try {
+      return await purgeExpiredAuditEvents(undefined, { db, client });
+    } finally {
+      await releaseAdvisoryLock({ db, client });
+    }
   } finally {
-    await releaseAdvisoryLock();
+    await client.end();
   }
 }
 

@@ -1,9 +1,16 @@
 import { sql } from "drizzle-orm";
 import { createPrivilegedDb } from "@reading-advantage/db";
+import type { DB } from "@reading-advantage/db/client";
+import type postgres from "postgres";
 import { recordAuditEvent } from "./audit.js";
 import { getRetentionDays } from "./audit-retention-config.js";
 
 const BATCH_SIZE = 5000;
+
+interface PrivilegedConnection {
+  db: DB;
+  client: postgres.Sql;
+}
 
 /**
  * Calculates the UTC cutoff date before which audit events are expired.
@@ -25,15 +32,19 @@ export function getRetentionCutoff(now: Date, retentionDays?: number): Date {
  * with the total deleted count.
  *
  * @param now - The reference date for calculating the retention window
+ * @param conn - Optional shared privileged connection (for advisory lock hold)
  * @returns An object with the total number of deleted rows
  */
 export async function purgeExpiredAuditEvents(
-  now: Date = new Date()
+  now: Date = new Date(),
+  conn?: PrivilegedConnection
 ): Promise<{ deleted: number }> {
   const retentionDays = getRetentionDays();
   const cutoff = getRetentionCutoff(now, retentionDays);
 
-  const { db: privilegedDb, client } = createPrivilegedDb();
+  const owned = conn ? null : createPrivilegedDb();
+  const privilegedDb = conn?.db ?? owned!.db;
+  const client = conn?.client ?? owned!.client;
 
   const cutoffIso = cutoff.toISOString();
   let totalDeleted = 0;
@@ -77,7 +88,9 @@ export async function purgeExpiredAuditEvents(
       );
     }
   } finally {
-    await client.end();
+    if (owned) {
+      await client.end();
+    }
   }
 
   return { deleted: totalDeleted };
