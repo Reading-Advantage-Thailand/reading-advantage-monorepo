@@ -295,7 +295,7 @@
 > the integration config and needs Postgres, which the local unit
 > tests intentionally avoid.)
 >
-> **Green-phase complete (2026-06-06, commit `51c2b54`):** Refactored
+> **Green-phase complete (2026-06-06, commit `659c8e0`):** Refactored
 > `recommendation-service.ts` to introduce `RecommendationService`
 > class with constructor-injected `AIClient`. Added local `AIClient`
 > interface (structurally compatible with `packages/ai/src/types.ts:52`),
@@ -309,10 +309,10 @@
 > `recommendation-service.ts`. Graph.db updated.
 
 - [x] Task: Write a failing test for the new `RecommendationService` class (constructor takes `AIClient`; `getRecommendation(input)` calls `client.generateObject(...)`). (`6a7049f`)
-- [x] Task: Replace the direct `generateObject` import with `client.generateObject(...)` via `ServiceClient` adapter. (`51c2b54`)
-- [x] Task: Refactor the existing `generateRecommendation(input)` exported function into a thin wrapper that calls the service. (`51c2b54`)
-- [x] Task: Update the call site `app/api/ai/recommendations/route.ts:21` — no change needed; the wrapper preserves the public API and is consumed as a dependency injection parameter by `@reading-advantage/domain/ai`. (`51c2b54`)
-- [x] Task: Run targeted tests; all pass. (5/5 Phase 6 tests, 3/3 image-generator tests) (`51c2b54`)
+- [x] Task: Replace the direct `generateObject` import with `client.generateObject(...)` via `ServiceClient` adapter. (`659c8e0`)
+- [x] Task: Refactor the existing `generateRecommendation(input)` exported function into a thin wrapper that calls the service. (`659c8e0`)
+- [x] Task: Update the call site `app/api/ai/recommendations/route.ts:21` — no change needed; the wrapper preserves the public API and is consumed as a dependency injection parameter by `@reading-advantage/domain/ai`. (`659c8e0`)
+- [x] Task: Run targeted tests; all pass. (5/5 Phase 6 tests, 3/3 image-generator tests) (`659c8e0`)
 
 ## Phase 7: Refactor `lib/ai/image-generator.ts`
 
