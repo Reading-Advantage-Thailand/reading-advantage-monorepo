@@ -23,6 +23,28 @@
 - [~] Task: Document the policy in `packages/auth/README.md` + new `docs/compliance/retention.md`. (Red-phase: doc-content tests pinned; see `phase-1-docs.test.ts`.)
 - [x] Task: Verify — env parse test passes. (`781ff8a`)
 
+### Phase 1 Red-phase state (handoff to Green)
+
+- **Test file (new):** `packages/auth/src/__tests__/phase-1-docs.test.ts` — 10 tests
+  pinning the FR-1 doc surface. Mirrors the prior track's
+  `phase-9-docs.test.ts` convention (runtime `readFileSync` + content
+  assertions; no DB / no network).
+- **RED (2026-06-06):** all 10 tests fail because neither doc exists
+  yet. 5 fail on the auth README (file-exists, AUDIT_RETENTION_DAYS
+  name, default 2557, refine 365, export references) and 5 fail on
+  the compliance doc (file-exists, 7-year / 2557 window, 365 floor,
+  FERPA citation, cross-reference to the auth README).
+- **Test command (targeted):**
+  `cd packages/auth && npx vitest run src/__tests__/phase-1-docs.test.ts`
+- **No regressions:** the 12 pre-existing auth test files still
+  pass (108/108); the new file is the only failure in the run.
+- **Green-phase TODO for the implementer:** create both files. The
+  test contract pins the exact signals that must appear, so the
+  implementer can write the docs against the assertions and turn
+  the suite green without re-deriving the contract.
+- **Build-graph:** `graph.db` updated with the new test file
+  (commit `aff01d7`) so the next agent sees it in the index.
+
 ## Phase 2: Purge Function (TDD)
 - [x] Task: Write `audit-retention.test.ts` (unit): `getRetentionCutoff` math (UTC cutoff, default days, configured days). (`781ff8a`)
 - [ ] Task: Write `audit-retention.integration.test.ts`: seed rows at `window-1d` (kept) and `window+1d` (purged); assert `purgeExpiredAuditEvents` deletes only the expired row and returns the count.
