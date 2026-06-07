@@ -275,26 +275,26 @@ Green-phase verification confirms all auth code is correct and production-ready.
 
 Run the same critical paths as local QA to catch environment-specific regressions.
 
-- [x] Task: Dashboard (commit `cc834cf`)
-  - [x] Loads with correct progress stats (commit `cc834cf`)
-  - [x] Module locking works correctly (commit `cc834cf`)
-  - [x] Phase grouping renders correctly (commit `cc834cf`)
-  - [x] PR review badges display correctly (commit `cc834cf`)
-- [x] Task: Module & Lesson pages (commit `cc834cf`)
-  - [x] Module detail page loads with lesson list (commit `cc834cf`)
-  - [x] Theory lessons render correctly (commit `cc834cf`)
-  - [x] Exercise lessons accept submissions (commit `cc834cf`)
-  - [x] Quiz lessons score correctly (>=70% marks completed) (commit `cc834cf`)
-  - [x] Progress updates after quiz submission (commit `cc834cf`)
-- [x] Task: Admin panel (commit `cc834cf`)
-  - [x] Admin dashboard loads with cohort stats (commit `cc834cf`)
-  - [x] Intern table renders correctly (commit `cc834cf`)
-  - [x] Create intern form works (commit `cc834cf`)
-  - [x] Intern detail page shows progress breakdown (commit `cc834cf`)
-- [x] Task: Internationalization (commit `cc834cf`)
-  - [x] TH → EN locale switch works (commit `cc834cf`)
-  - [x] All translated content renders correctly (commit `cc834cf`)
-  - [x] Thai font loads correctly (commit `cc834cf`)
+- [x] Task: Dashboard (commit `5b4f278`)
+  - [x] Loads with correct progress stats (commit `5b4f278`)
+  - [x] Module locking works correctly (commit `5b4f278`)
+  - [x] Phase grouping renders correctly (commit `5b4f278`)
+  - [x] PR review badges display correctly (commit `5b4f278`)
+- [x] Task: Module & Lesson pages (commit `5b4f278`)
+  - [x] Module detail page loads with lesson list (commit `5b4f278`)
+  - [x] Theory lessons render correctly (commit `5b4f278`)
+  - [x] Exercise lessons accept submissions (commit `5b4f278`)
+  - [x] Quiz lessons score correctly (>=70% marks completed) (commit `5b4f278`)
+  - [x] Progress updates after quiz submission (commit `5b4f278`)
+- [x] Task: Admin panel (commit `5b4f278`)
+  - [x] Admin dashboard loads with cohort stats (commit `5b4f278`)
+  - [x] Intern table renders correctly (commit `5b4f278`)
+  - [x] Create intern form works (commit `5b4f278`)
+  - [x] Intern detail page shows progress breakdown (commit `5b4f278`)
+- [x] Task: Internationalization (commit `5b4f278`)
+  - [x] TH → EN locale switch works (commit `5b4f278`)
+  - [x] All translated content renders correctly (commit `5b4f278`)
+  - [x] Thai font loads correctly (commit `5b4f278`)
 
 ### Phase 4 — Red-phase probe results (2026-06-07)
 
@@ -383,7 +383,7 @@ Code changes:
 Post-fix verification: `Tests  18 passed | 18 skipped (36)` — 0 failures.
 18 credential-gated probes remain skipped (no `PHASE4_TEST_*` env vars provided).
 
-Green-phase commit: `cc834cf`
+Green-phase commit: `5b4f278`
 
 ## Phase 5: Real External Integrations (P0)
 
