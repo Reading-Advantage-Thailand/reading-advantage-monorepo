@@ -336,4 +336,84 @@ describe("auth route handlers", () => {
     const body = await response.json();
     expect(body.message).toBe("Invalid username or password");
   });
+
+  it("returns 401 and does not create a session when password verification fails", async () => {
+    const { createSession, recordFailure, verifyPassword } = await import("@reading-advantage/auth");
+    vi.mocked(verifyPassword).mockResolvedValueOnce(false);
+
+    mockDb.select
+      .mockReturnValueOnce(
+        selectResult([
+          {
+            id: "u1",
+            username: "student1",
+            name: "Student One",
+            role: "STUDENT",
+            schoolId: "s1",
+          },
+        ])
+      )
+      .mockReturnValueOnce(
+        selectResult([
+          {
+            userId: "u1",
+            providerId: "credential",
+            password: "hash",
+          },
+        ])
+      );
+
+    const response = await handleLogin(
+      jsonRequest("/api/auth/login", {
+        username: "Student1",
+        password: "wrong-password",
+      })
+    );
+
+    expect(response.status).toBe(401);
+    const body = await response.json();
+    expect(body.message).toBe("Invalid username or password");
+    expect(recordFailure).toHaveBeenCalledWith("student1");
+    expect(createSession).not.toHaveBeenCalled();
+  });
+
+  it("returns 401 and does not verify a password when credential password is missing", async () => {
+    const { createSession, recordFailure, verifyPassword } = await import("@reading-advantage/auth");
+
+    mockDb.select
+      .mockReturnValueOnce(
+        selectResult([
+          {
+            id: "u1",
+            username: "student1",
+            name: "Student One",
+            role: "STUDENT",
+            schoolId: "s1",
+          },
+        ])
+      )
+      .mockReturnValueOnce(
+        selectResult([
+          {
+            userId: "u1",
+            providerId: "credential",
+            password: null,
+          },
+        ])
+      );
+
+    const response = await handleLogin(
+      jsonRequest("/api/auth/login", {
+        username: "student1",
+        password: "Password123!",
+      })
+    );
+
+    expect(response.status).toBe(401);
+    const body = await response.json();
+    expect(body.message).toBe("Invalid username or password");
+    expect(recordFailure).toHaveBeenCalledWith("student1");
+    expect(verifyPassword).not.toHaveBeenCalled();
+    expect(createSession).not.toHaveBeenCalled();
+  });
 });

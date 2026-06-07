@@ -1,0 +1,22 @@
+{
+  "status": "fail",
+  "summary": "Phase 2 cannot pass: live production still returns 500 for POST /api/auth/login with bad credentials, and repeated production smoke runs fail the P0 launch gate. Local focused auth failure-path tests, npm test, lint, and type checks pass for the touched code.",
+  "findings": [
+    "P0 blocker: apps/codecamp-advantage production endpoint POST /api/auth/login returns 500 for invalid credentials; expected a 4xx client error. Phase 2 P0 launch gate fails on this item.",
+    "Production smoke verification was intermittently affected by runner network failures (ETIMEDOUT/ENETUNREACH to 173.194.202.121:443 / IPv6), so remaining live HTTP checks should be re-run from a reliable network after deploy. This does not clear the observed login 500 blocker.",
+    "Authenticated write probe for lastActiveAt remains skipped because PHASE2_TEST_INTERN_USERNAME and PHASE2_TEST_INTERN_PASSWORD were not provided."
+  ],
+  "evidence": [
+    "Read measure/tracks/codecamp_qa_prod_20260517/spec.md, plan.md, and test-strategy.md.",
+    "Inspected git diff since 3adcf11986760a8b9eb4eda3c42e6d6543e4b3cf for Phase 2 auth and prod-smoke changes.",
+    "npm test: PASS (packages/ai, 11 files, 111 passed, 2 skipped).",
+    "packages/api npm test -- src/__tests__/auth-routes.test.ts --reporter=verbose: PASS (11 passed).",
+    "packages/api npm run lint: PASS.",
+    "packages/api npm run check-types: PASS.",
+    "apps/codecamp-advantage npm run lint: PASS after fixing prefer-const in Phase 2 prod-smoke test.",
+    "apps/codecamp-advantage npm run check-types: PASS.",
+    "apps/codecamp-advantage npm test -- lib/__tests__/prod-smoke/phase-2-database-and-configuration.test.ts --reporter=verbose: FAIL; initial run had 10 passed, 1 skipped, 2 failed due to POST /api/auth/login 500 and P0 launch gate. Re-run had additional ETIMEDOUT/ENETUNREACH network failures and the same launch-gate login 500 blocker.",
+    "Added adversarial assertions in packages/api/src/__tests__/auth-routes.test.ts for password verification failure and missing credential password not creating sessions.",
+    "Fixed weak cookie assertion in apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-2-database-and-configuration.test.ts from /session=/ to /session_token=/i."
+  ]
+}

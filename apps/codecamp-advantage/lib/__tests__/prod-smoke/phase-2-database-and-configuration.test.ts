@@ -229,15 +229,9 @@ describe("Phase 2 — Database connectivity", () => {
 });
 
 describe("Phase 2 — Secret Manager (config-level)", () => {
-  let yaml: string;
-  let setSecrets: string[];
-  let setEnvVars: string[];
-
-  // Read the deploy spec once for all Secret Manager checks.
-  // The parse helpers tolerate a missing flag (returns []).
-  yaml = loadCloudbuildYaml();
-  setSecrets = parseSetSecretsFlags(yaml);
-  setEnvVars = parseSetEnvVarsFlags(yaml);
+  const yaml = loadCloudbuildYaml();
+  const setSecrets = parseSetSecretsFlags(yaml);
+  const setEnvVars = parseSetEnvVarsFlags(yaml);
 
   skipIf(
     "cloudbuild.yaml binds DATABASE_URL via --set-secrets= (not env var)",
@@ -345,7 +339,7 @@ describe("Phase 2 — Data integrity", () => {
         `expected 200 on valid login, got ${loginResponse.status}`,
       ).toBe(200);
       const setCookie = loginResponse.headers.get("set-cookie") ?? "";
-      expect.soft(setCookie, "expected a session cookie on successful login").toMatch(/session=/i);
+      expect.soft(setCookie, "expected a session_token cookie on successful login").toMatch(/session_token=/i);
 
       // Hitting the dashboard tRPC with the issued session cookie exercises
       // the getUserDashboard domain function, which (per
