@@ -20,24 +20,22 @@
  *         `pnpm --filter science-advantage check-types` exits 0
  *         with 0 tsc errors.
  *
- *       - **lint** is GREEN per the Phase 12 status note
- *         (commit `cbeffcb`) for the `badges.ts` warnings, but
- *         the workspace has 4 other pre-existing lint errors
- *         that are not introduced by this track:
+ *       - **lint** is GREEN per the Phase 12B status note
+ *         (commit `c019c0c`): the 4 pre-existing lint errors
+ *         that previously blocked the umbrella gate have all
+ *         been resolved:
  *
  *           - 3 `react-hooks/immutability` errors in sibling
- *             analytics files (out of scope for Phase 11 per
- *             the supervisor handoff; see
- *             `class-analytics-overview.tsx:100`,
- *             `lesson-detail-analytics.tsx:155`,
- *             `student-detail-analytics.tsx:143`)
+ *             analytics files (now fixed by wrapping the
+ *             per-file `fetchAnalytics` in `useCallback`,
+ *             mirroring the Phase 11 fix pattern)
  *           - 1 `@typescript-eslint/ban-ts-comment` error in
- *             `lib/ai/image-generator.ts:144`
+ *             `lib/ai/image-generator.ts:144` (fixed by
+ *             replacing `@ts-ignore` with `@ts-expect-error`)
  *
- *         The Phase 13 lint gate is therefore RED today;
- *         the supervisor must coordinate a follow-up phase
- *         to close these pre-existing errors before Phase 13
- *         can flip green.
+ *         Workspace `pnpm --filter science-advantage lint`
+ *         exits 0 (0 errors + 10 pre-existing warnings, all
+ *         unrelated to this track).
  *
  *       - **test** is **UNVERIFIED** at the track level — no
  *         per-phase test has yet asserted
@@ -62,14 +60,20 @@
  *         `apps/science-advantage/**`. May fail today if any of
  *         Phases 0–12 introduced a unit-test regression.
  *
- *       - **build** is RED (Phase 8, commit `2c59fe0`): build
- *         fails due to a pre-existing `@node-rs/argon2` native
- *         module bundling issue with Turbopack (unrelated to this
- *         track; verified by reverting and running the build —
- *         same failure). The end-state gate must exit 0 for
- *         Phase 13 to be GREEN; this is a known failure mode
- *         that the supervisor must coordinate with the Argon2id
- *         track (Track 3, archived) before Phase 13 can flip.
+ *       - **build** is GREEN per the Phase 12C status note
+ *         (commit `779f4a5`): the `@node-rs/argon2` Turbopack
+ *         bundling issue is resolved by declaring
+ *         `@node-rs/argon2@^2.0.2` in
+ *         `apps/science-advantage/package.json:23` dependencies
+ *         so Node can resolve the native module from the app
+ *         directory (the package is also kept in
+ *         `serverExternalPackages` in `next.config.ts`). The
+ *         end-to-end `pnpm --filter science-advantage build`
+ *         now exits 0 with the new tsc-clean code (per Phase 8
+ *         `ignoreBuildErrors: false` fix, commit `2c59fe0`); the
+ *         end-to-end build gate is exercised by
+ *         `phase-8-ignore-build-errors.test.ts` and the
+ *         monorepo-root CI workflow per regression guard 6.
  *
  *       - **PR/CI workflow** is GREEN (Phase 10, commit `132de8b`):
  *         `.github/workflows/ci.yml` declares `paths:` filter plus
@@ -111,10 +115,10 @@
  *      contract that Phases 0–7 + Phase 8 must have left the
  *      codebase type-clean).
  *   2. `pnpm --filter science-advantage lint exits 0`
- *      — **umbrella gate** (RED today: 4 pre-existing lint
- *      errors in sibling analytics files + `image-generator.ts`
- *      are not introduced by this track; see status notes
- *      above).
+ *      — **umbrella gate** (Green per Phase 12B, commit
+ *      `c019c0c`; the 4 pre-existing lint errors in sibling
+ *      analytics files + `image-generator.ts` are all
+ *      closed).
  *   3. `pnpm --filter science-advantage test` smoke gate
  *      (script wiring + single fast test file runs cleanly)
  *      — **umbrella gate** (Red-phase: first test gate for
@@ -391,19 +395,19 @@ describe(
       });
 
       it("pnpm --filter science-advantage lint exits 0", () => {
-        // The Phase 13 umbrella gate for `lint`. Currently fails
-        // (red-phase): the workspace has 4 pre-existing lint
+        // The Phase 13 umbrella gate for `lint`. Green per
+        // Phase 12B (commit `c019c0c`): the 4 pre-existing lint
         // errors — 3 `react-hooks/immutability` errors in sibling
-        // analytics files (out of scope for Phase 11 per the
-        // supervisor handoff; see Phase 11 status note
-        // `class-analytics-overview.tsx:100`,
+        // analytics files (`class-analytics-overview.tsx:100`,
         // `lesson-detail-analytics.tsx:155`,
         // `student-detail-analytics.tsx:143`) and 1
         // `@typescript-eslint/ban-ts-comment` error in
-        // `lib/ai/image-generator.ts:144`. None of these are
-        // introduced by this track. The supervisor must coordinate
-        // a follow-up phase to close them before Phase 13 can
-        // flip green.
+        // `lib/ai/image-generator.ts:144` — are all closed.
+        // `pnpm --filter science-advantage lint` exits 0
+        // (0 errors + 10 pre-existing warnings, all unrelated
+        // to this track). The assertion locks the end-state
+        // contract that a future regression that re-introduces
+        // any of those errors surfaces here.
         expect(
           lintStatus,
           `Expected pnpm --filter science-advantage lint to ` +
@@ -630,14 +634,11 @@ describe(
         });
 
         it("next.config.ts declares ignoreBuildErrors: false (locks Phase 8 Green contract)", () => {
-          // Per Phase 8 status note (commit `2c59fe0`), the
-          // build gate is RED today due to a pre-existing
-          // `@node-rs/argon2` native module bundling issue with
-          // Turbopack (unrelated to this track; the failure is
-          // reproducible on `main` without any of this track's
-          // changes). The supervisor must coordinate with the
-          // Argon2id track (Track 3, archived) before the
-          // end-to-end build gate can flip green.
+          // Per Phase 12C status note (commit `779f4a5`), the
+          // end-to-end build gate is Green: the `@node-rs/argon2`
+          // Turbopack bundling issue is resolved by declaring
+          // `@node-rs/argon2@^2.0.2` in
+          // `apps/science-advantage/package.json:23` dependencies.
           //
           // This smoke gate locks the *Phase 8 Green contract*:
           // `next.config.ts` must declare
