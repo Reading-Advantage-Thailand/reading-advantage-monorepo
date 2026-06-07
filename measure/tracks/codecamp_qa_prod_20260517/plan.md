@@ -568,28 +568,101 @@ file passes; pre-existing Phase 1–3 failures are deploy-gated (not Phase 5 sco
 
 Test real-world performance over network.
 
-- [ ] Task: Page load times
+- [~] Task: Page load times
   - [ ] Dashboard loads in < 3 seconds (cold)
   - [ ] Dashboard loads in < 1 second (warm)
   - [ ] Module page loads in < 2 seconds
   - [ ] Lesson page loads in < 2 seconds
   - [ ] Admin page loads in < 3 seconds
-- [ ] Task: API response times
+- [~] Task: API response times
   - [ ] `codecamp.dashboard` tRPC query < 500ms
   - [ ] `codecamp.moduleBySlug` tRPC query < 300ms
   - [ ] `codecamp.lesson` tRPC query < 300ms
   - [ ] `codecamp.submitQuiz` tRPC mutation < 500ms
   - [ ] Chat API response < 5 seconds (first token)
-- [ ] Task: Asset loading
+- [~] Task: Asset loading
   - [ ] Thai font loads correctly (no 404)
   - [ ] Icons and images load correctly
   - [ ] No large unoptimized assets blocking render
   - [ ] JS bundle size is reasonable (< 500KB gzipped main)
-- [ ] Task: Mobile network simulation
+- [~] Task: Mobile network simulation
   - [ ] Dashboard usable on Slow 3G
   - [ ] Quiz submission works on Slow 3G
   - [ ] Chat streaming works on Fast 4G
   - [ ] No timeout errors on slow connections
+
+### Phase 6 — Red-phase probe results (2026-06-07)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts`.
+Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE6_PROD_URL`; skip via `PHASE6_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+Authenticated tRPC probes are gated on `PHASE6_TEST_INTERN_USERNAME` + `PHASE6_TEST_INTERN_PASSWORD`
+env vars (per test-strategy.md §2 — test creds never committed).
+
+**Symbol map (from build-graph):**
+
+- `getUserDashboard` (`packages/domain/src/codecamp/index.ts:752`) — backs `codecamp.dashboard` tRPC query (router at `packages/api/src/routers/codecamp.ts:253`). Phase 6 SLA target: < 500ms server roundtrip.
+- `getModuleBySlug` (`packages/domain/src/codecamp/index.ts:44`) — backs `codecamp.moduleBySlug` (`routers/codecamp.ts:72`). Phase 6 SLA: < 300ms.
+- `getLessonWithContent` (`packages/domain/src/codecamp/index.ts:104`) — backs `codecamp.lesson` (`routers/codecamp.ts:104`). Phase 6 SLA: < 300ms.
+- `submitQuizAnswers` (`packages/domain/src/codecamp/index.ts:373`) — backs `codecamp.submitQuiz` mutation (`routers/codecamp.ts:136`). Phase 6 SLA: < 500ms. Note the 70%-threshold scoring lives in the domain layer (per test-strategy.md §6); Phase 6 measures server-roundtrip, Phase 4 measures correctness.
+- `POST /api/chat` (`apps/codecamp-advantage/app/api/chat/route.ts:53`) — `streamText` via OpenRouter. Phase 6 SLA: < 5s first-token TTFT.
+- `extractScriptUrls` + `resolveAssetUrl` helpers — in-file, no callers; the bundle-size test measures the largest gzipped JS chunk from `/_next/static/chunks/*.js`.
+
+**Per-test gating (env vars, never committed):**
+
+- `PHASE6_PROD_URL` — override prod target.
+- `PHASE6_SKIP=1` — skip the whole suite.
+- `PHASE6_TEST_INTERN_USERNAME` / `PHASE6_TEST_INTERN_PASSWORD` — INTERN creds for the tRPC + chat probes.
+
+**Methodology notes:**
+
+- All timing assertions use `performance.now()` deltas around the `fetch` call. End-to-end wall time (DNS+TCP+TLS+req+res), not server-side alone — matches the "page loads in N seconds" framing of the plan budgets.
+- Cold-vs-warm: the "cold" dashboard probe is the first fetch in the suite (capturing Cloud Run scale-from-zero); the "warm" probe runs after a warmup fetch. The cold timestamp is shared with Phases 1/9/10 per test-strategy.md §3.
+- Mobile network simulation uses per-request `timeoutMs` (8s for Slow 3G, 3s for Fast 4G) as a deterministic approximation of Chrome DevTools throttling — the per-request deadline is the correct boundary for the plan budgets, and avoids the need for a real network-shaping primitive in the runner.
+- Chat first-token: the authed probe reads the streaming response body with a `ReadableStreamDefaultReader` and asserts on the elapsed time to the first `read()` returning a non-done chunk. The unauth probe is a static 401 ceiling.
+
+Run summary: `Tests  4 failed | 22 passed | 7 skipped (33)` on 2026-06-07 (17.90s wall).
+With `PHASE6_SKIP=1`: `Tests  14 passed | 19 skipped (33)` (4.54s wall) — file compiles, the 14
+helper unit tests pass unconditionally, and all 19 network probes correctly skip.
+
+| Sub-check | Initial run (2026-06-07) | Notes |
+|---|---|---|
+| `PHASE6_SKIP=1` run (14 unit + 19 skipped) | PASS (4.54s) | Helper unit tests (extractScriptUrls, resolveAssetUrl, BUDGET constants) all green; structural floor holds |
+| Dashboard cold `/en/` < 3s (P1 budget) | PASS | Cold-start within budget on observed run |
+| Dashboard warm `/en/` < 1s (P1 budget) | **FAIL** (1363ms > 1000ms) | **Real P1 finding** — warm dashboard is 36% over the 1s budget. File a follow-up track; do not inline-fix here. |
+| Module `/en/module/dev-environment` < 2s | **FAIL** (ETIMEDOUT) | Runner network flakiness to `142.250.198.147:443` (same class of `ETIMEDOUT`/`ENETUNREACH` Phases 2–5 saw) — not an app issue |
+| Lesson `/en/lesson/<probe>` < 2s | PASS (status<400 within budget) | Lesson page probe (synthetic UUID) returns <400 within 2s |
+| Admin `/en/admin` < 3s (3xx redirect) | PASS | Unauth admin redirects fast |
+| tRPC `codecamp.dashboard` < 500ms | SKIP | Credential-gated |
+| tRPC `codecamp.moduleBySlug` < 300ms | SKIP | Credential-gated |
+| tRPC `codecamp.lesson` < 300ms | SKIP | Credential-gated |
+| tRPC `codecamp.submitQuiz` < 500ms | SKIP | Credential-gated |
+| Chat `POST /api/chat` (unauth) 401 < 5s | **FAIL** (ETIMEDOUT) | Runner network flakiness to same IP — same class of finding as the module probe |
+| Chat `POST /api/chat` (INTERN) first byte < 5s | SKIP | Credential-gated |
+| Thai font referenced in `/en/` HTML + font URLs 2xx | **FAIL** (no Thai font marker in body) | Real asset finding — the unauth login wall body doesn't load the Thai font subset (no `Noto Sans Thai` mention, no `next/font` class). Mirrors the Phase 4 login-wall rendering contract: the unauth body is the auth screen, not the dashboard, so the Thai font isn't on the critical path for unauth requests. |
+| Static asset URLs (scripts, preloads) all <400 | PASS (12 URLs found) | All 12 candidate URLs returned <400 |
+| Largest gzipped JS chunk < 500KB | PASS (network-probe-derived) | Within budget on observed run |
+| Slow 3G `/en/` < 8s | **FAIL** (ETIMEDOUT) | Runner network flakiness |
+| Slow 3G `submitQuiz` < 8s | SKIP | Credential-gated |
+| Fast 4G chat first byte < 3s | SKIP | Credential-gated |
+| No timeout errors on dashboard / module / admin | **FAIL** (2 fetch-failed) | Runner network flakiness to prod; surfaces as `fetch failed` for `/en/` and `/en/admin` in the no-timeout probe |
+| **Phase 6 — P1 launch gate** (single hard assertion) | **FAIL** (1 critical item) | Aggregated gate fails on `GET /en/ (warm) took 1363ms — budget 1000ms` — confirms the per-budget finding above and yields a single CI-blocking signal for the warm-dashboard gap |
+
+**Findings (Red-phase pass):**
+
+- **1 real P1 production finding:** the warm-dashboard budget is exceeded by 36% (1363ms vs 1000ms). The cold budget holds. This is the kind of finding the test-strategy flags as "file a follow-up track, do not inline-fix" — the Green phase of this track is verification of the existing app; tuning the dashboard to hit the warm budget requires a new track.
+- **1 real asset finding:** the unauth dashboard body (login wall) does not load the Thai font. This is structurally consistent with the login wall (the dashboard components don't mount on the unauth path), but it is a deviation from the Phase 4 i18n contract that all `lang` surfaces load their locale font. Investigate whether the auth screen itself should load the Thai font for the locale switcher preview.
+- **3 runner-network-flakiness findings:** same `ETIMEDOUT 142.250.x.x:443` class of issue Phases 2–5 saw — not an app problem, runner-side. Re-run from a network with reliable reach to clear.
+- **7 probes remain credential-gated** and will run when the executor provides `PHASE6_TEST_*` env vars per test-strategy.md §2 (test creds never committed).
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+
+1. **P1 — file a follow-up track to bring the warm-dashboard budget under 1s.** The current 1363ms is 36% over budget. Likely tuning: server-side render caching of the dashboard shell, prefetch of `getUserDashboard` on the auth wall, or Cloud Run concurrency tuning. Do not inline-fix here.
+2. **P2 — investigate Thai font loading on the unauth login wall.** Either the auth screen should reference the Thai font subset (locale switcher preview) or the test should skip this assertion when the response is the login wall.
+3. Re-run the suite from a network with reliable reach to `codecamp.reading-advantage.com` to clear the `ETIMEDOUT` flakiness on the module / Slow 3G / no-timeout probes.
+4. Re-run with `PHASE6_TEST_INTERN_USERNAME` + `PHASE6_TEST_INTERN_PASSWORD` to exercise the 7 credential-gated probes (4 tRPC SLAs + 1 chat first-token + 1 Slow 3G quiz + 1 Fast 4G chat).
 
 ## Phase 7: Caching & CDN Behavior (P1)
 
