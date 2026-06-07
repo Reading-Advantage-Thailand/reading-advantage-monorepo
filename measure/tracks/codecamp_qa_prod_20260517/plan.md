@@ -405,30 +405,60 @@ Verification:
 
 Test integrations that use live external services.
 
-- [ ] Task: OpenRouter AI Tutor (Live)
-  - [ ] Chat message returns real AI response (not fallback mock)
-  - [ ] Streaming works over HTTPS
-  - [ ] Thai input → Thai response
-  - [ ] English input → English response
-  - [ ] Rate limiting works (30 req/min)
-  - [ ] Message persistence saves to Cloud SQL
-  - [ ] Context grounding references lesson content
-- [ ] Task: GitHub App Webhook (Live)
-  - [ ] Webhook delivery to `https://codecamp.reading-advantage.com/webhooks/github/pr` succeeds
-  - [ ] Signature verification passes
-  - [ ] PR `opened` event creates `codecamp_pr_reviews` row
-  - [ ] PR `synchronize` event updates existing row
-  - [ ] LLM review is generated and posted to PR
-  - [ ] Review status updates correctly (`pending` → `approved`/`needs_changes`)
-  - [ ] Unmapped repo / unknown user → ignored gracefully
-- [ ] Task: GitHub PR Review End-to-End
-  - [ ] Create a real test PR in a configured exercise repo
-  - [ ] Webhook fires and app receives it
-  - [ ] App fetches PR diff from GitHub API
-  - [ ] LLM generates review summary
-  - [ ] Review comment is posted to the PR
-  - [ ] Review appears in app's ReviewHistory component
-  - [ ] Review status badge updates in dashboard/module page
+- [~] Task: OpenRouter AI Tutor (Live)
+  - [~] Chat message returns real AI response (not fallback mock)
+  - [~] Streaming works over HTTPS
+  - [~] Thai input → Thai response
+  - [~] English input → English response
+  - [~] Rate limiting works (30 req/min)
+  - [~] Message persistence saves to Cloud SQL
+  - [~] Context grounding references lesson content
+- [~] Task: GitHub App Webhook (Live)
+  - [~] Webhook delivery to `https://codecamp.reading-advantage.com/webhooks/github/pr` succeeds
+  - [~] Signature verification passes
+  - [~] PR `opened` event creates `codecamp_pr_reviews` row
+  - [~] PR `synchronize` event updates existing row
+  - [~] LLM review is generated and posted to PR
+  - [~] Review status updates correctly (`pending` → `approved`/`needs_changes`)
+  - [~] Unmapped repo / unknown user → ignored gracefully
+- [~] Task: GitHub PR Review End-to-End
+  - [~] Create a real test PR in a configured exercise repo
+  - [~] Webhook fires and app receives it
+  - [~] App fetches PR diff from GitHub API
+  - [~] LLM generates review summary
+  - [~] Review comment is posted to the PR
+  - [~] Review appears in app's ReviewHistory component
+  - [~] Review status badge updates in dashboard/module page
+
+### Phase 5 — Red-phase probe results (2026-06-07, in progress)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-5-real-external-integrations.test.ts`.
+Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-5-real-external-integrations.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE5_PROD_URL`; skip via `PHASE5_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+**Symbol map (from build-graph):**
+
+- `generateReview` (`packages/webhooks/src/github.ts:76`) — LLM call via OpenRouter using `generateObject({ schema: reviewResultSchema })`; falls back to a mock `[Mock review — LLM not configured]` summary when `OPENROUTER_API_KEY` is absent.
+- `POST /pr` (`packages/webhooks/src/github.ts:109`) — Hono route, signature-verified, dispatches `opened`/`synchronize` actions to `codecamp.getPrReviewByPrUrl` / `codecamp.createPrReview` / `codecamp.updatePrReview` and posts the review back to GitHub via `postPrComment`.
+- `POST /api/chat` (`apps/codecamp-advantage/app/api/chat/route.ts:53`) — calls `streamText` with model `openrouter("xiaomi/mimo-v2.5")`; falls back to a `[AI Tutor fallback mode — OPENROUTER_API_KEY not configured]` JSON response when the key is absent; rate limit gated on `checkChatRateLimit` (30 req/min in `apps/codecamp-advantage/lib/rate-limit.ts:7`).
+- `codecamp.saveChatMessage` (`packages/api/src/routers/codecamp.ts:167`) — tRPC mutation persisting messages to Cloud SQL.
+- `codecamp.chatHistory` (`packages/api/src/routers/codecamp.ts:193`) — read-after-write oracle for the persistence probe.
+- `codecamp.prReviews` (`packages/api/src/routers/codecamp.ts:323`) — review feed surface that backs the `ReviewHistory` component.
+- `codecamp.webhookEvents` (`packages/api/src/routers/codecamp.ts:549`) — admin tRPC listing the recent deliveries, with `outcome: "ignored" | "failed"` enum from `packages/types/src/codecamp.ts:291` (note: domain layer has no `"processed"` outcome — the live success path simply doesn't call `logWebhookEvent`).
+- `MODULE_REPO_MAP` (`packages/db/src/seed/codecamp-curriculum-data.ts:2715`) — the seed oracle for the keystone PR E2E test (test-strategy.md §2 designates one disposable repo from this map).
+
+**Per-test gating (env vars, never committed):**
+
+- `PHASE5_PROD_URL` — override prod target.
+- `PHASE5_SKIP=1` — skip the whole suite.
+- `PHASE5_TEST_INTERN_USERNAME` / `PHASE5_TEST_INTERN_PASSWORD` — INTERN creds for the authenticated chat + persistence probes.
+- `PHASE5_TEST_ADMIN_USERNAME` / `PHASE5_TEST_ADMIN_PASSWORD` — ADMIN creds for the `codecamp.webhookEvents` listing.
+- `PHASE5_TEST_REPO_URL` — repo URL for the keystone PR E2E (must appear in `MODULE_REPO_MAP` and have a real PR); per test-strategy.md §2 "designate one disposable GitHub repo".
+- `PHASE5_TEST_PR_URL` — full PR URL for the keystone E2E.
+- `PHASE5_TEST_GITHUB_DELIVERY_ID` — most recent `x-github-delivery` for that PR (used to assert idempotency / outcome=processed in the listing).
+
+Red-phase run results will be appended in the next mid-session pass.
 
 ## Phase 6: Performance & Latency (P1)
 
