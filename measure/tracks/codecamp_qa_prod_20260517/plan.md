@@ -30,6 +30,22 @@ Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/p
 Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts` from
 `apps/codecamp-advantage` (or override target via `PHASE1_PROD_URL`; skip via `PHASE1_SKIP=1`).
 
+### Phase 1 — Red-phase strengthening (2026-06-07, commit e0b8f59)
+
+The per-header checks above use `expect.soft` so a single test run can enumerate
+all missing headers at once. To give CI a single hard gate that fails the build
+when *any* P0 security header is missing, the suite now also includes:
+
+  - **Hard body assertion on the no-mixed-content probe** — `expect(body.length, ...)
+    .toBeGreaterThan(0)`. Prevents the probe from passing vacuously when the
+    network never reached prod and the body is empty.
+  - **Phase 1 — P0 launch gate (single hard assertion)** — collects all missing
+    critical headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options,
+    Referrer-Policy) into a single list and fails with one
+    `expect(missing, ...).toEqual([])`. Current run: **5 critical headers
+    missing** — fail matches the per-header soft failures, confirming the
+    security-header code at commit `a0862b3` has not yet been deployed.
+
 | Sub-check | Initial run (2026-06-07) | Notes |
 |---|---|---|
 | DNS resolves | PASS (~1s) | |

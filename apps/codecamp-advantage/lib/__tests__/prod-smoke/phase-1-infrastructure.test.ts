@@ -84,6 +84,7 @@ describe("Phase 1 — DNS & SSL", () => {
         });
         expect.soft(response.status, `expected 2xx/3xx chain, got ${response.status}`).toBeLessThan(400);
         const body = await response.text();
+        expect(body.length, "expected non-empty response body — network did not reach prod").toBeGreaterThan(0);
         const refs = extractResourceReferences(body);
         const mixed = refs.filter((r) => /^http:\/\//i.test(r) || /^\/\//.test(r));
         expect.soft(
@@ -184,6 +185,43 @@ describe("Phase 1 — Security headers", () => {
       console.warn("[phase-1-infrastructure] PHASE1_SKIP=1 — suite skipped");
     }
   });
+});
+
+/**
+ * Phase 1 P0 launch-gate — a single hard-failing test that summarizes
+ * the production security-header posture. Unlike the per-header checks
+ * above (which use `expect.soft` so a run can enumerate all missing
+ * headers in one pass), this gate fails fast on the first gap with a
+ * list of every missing critical header, so CI can block deploys to
+ * public launch.
+ *
+ * All sub-checks are P0 per plan.md §Phase 1 — must pass before the
+ * codecamp.reading-advantage.com domain accepts public traffic.
+ */
+describe("Phase 1 — P0 launch gate (single hard assertion)", () => {
+  skipIf(
+    "all critical security headers are present (P0 launch gate)",
+    async () => {
+      const response = await fetchWithTimeout(PROD_URL, { method: "GET" });
+      expect(response.status, `expected 2xx/3xx from root URL, got ${response.status}`).toBeLessThan(400);
+      const missing: string[] = [];
+      const csp = response.headers.get("content-security-policy");
+      if (!csp || !/default-src/.test(csp)) missing.push("Content-Security-Policy (default-src)");
+      const hsts = response.headers.get("strict-transport-security");
+      if (!hsts || !/max-age=\d+/.test(hsts)) missing.push("Strict-Transport-Security (max-age)");
+      const xfo = response.headers.get("x-frame-options");
+      if (!xfo || !["DENY", "SAMEORIGIN"].includes(xfo.toUpperCase())) missing.push("X-Frame-Options (DENY|SAMEORIGIN)");
+      const xcto = response.headers.get("x-content-type-options");
+      if ((xcto ?? "").toLowerCase() !== "nosniff") missing.push("X-Content-Type-Options (nosniff)");
+      const rp = response.headers.get("referrer-policy");
+      if (!rp) missing.push("Referrer-Policy");
+      expect(
+        missing,
+        `P0 launch gate failed — ${missing.length} critical security header(s) missing: ${missing.join(", ")}`,
+      ).toEqual([]);
+    },
+    REQUEST_TIMEOUT_MS + 2_000,
+  );
 });
 
 describe("extractResourceReferences (helper unit tests)", () => {
