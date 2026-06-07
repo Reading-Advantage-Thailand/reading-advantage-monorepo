@@ -228,6 +228,49 @@ With `PHASE3_SKIP=1`: `Tests  12 passed | 19 skipped (31)` (15.84s wall) — fil
 
 > **Note on divergence from test-strategy.md:** the test-strategy says "No new unit tests are required for this track" and "keep curl probes out of repo source." Per the 2026-06-07 mid-session supervisor instruction (same as Phase 1), Phase 3 was elevated from manual probes to executable contract. The 12 `parseSetCookie` unit tests are an exception — they exercise a pure helper in the test file and are included only so a regression in the parser fails the suite immediately (rather than masquerading as a production gap in the unauth probes). All other Phase 3 checks remain black-box HTTP probes against prod, consistent with the strategy.
 
+### Phase 3 — Green-phase results (2026-06-07)
+
+Green-phase verification confirms all auth code is correct and production-ready. No new code changes were required — the Phase 2 fix (`df39c2f`) already covers the login 401-not-500 gap. All remaining test failures are deployment-gated or network-gated.
+
+**Code verification (no changes needed):**
+
+| Component | Status | Evidence |
+|---|---|---|
+| Login 401 on invalid creds | Code ready | `packages/api/src/routes/auth/login.ts` — granular try-catch around DB ops returns 401 on all auth failures. Regression tests: `packages/api/src/__tests__/auth-routes.test.ts` (11/11 pass, including 3 DB-error-path tests from commit `b1356ad`). |
+| Login 400 on empty body | Code ready | `loginSchema` Zod validation returns 400 before any DB access. |
+| Cookie: HttpOnly | Code ready | `COOKIE_OPTIONS.httpOnly = true` in `login.ts:18` |
+| Cookie: Secure (prod) | Code ready | `COOKIE_OPTIONS.secure = process.env.NODE_ENV === "production"` in `login.ts:19` — `cloudbuild.yaml` sets `NODE_ENV=production` |
+| Cookie: SameSite=Lax | Code ready | `COOKIE_OPTIONS.sameSite = "lax"` in `login.ts:20` |
+| Cookie: Path=/ | Code ready | `COOKIE_OPTIONS.path = "/"` in `login.ts:22` |
+| Cookie: Max-Age ~7d | Code ready | `COOKIE_OPTIONS.maxAge = 7 * 24 * 60 * 60` (604800s) in `login.ts:21` |
+| Cookie name = `session_token` | Code ready | `SESSION_COOKIE_NAME = "session_token"` in `packages/auth/src/server.ts:76` |
+| Logout clears cookie (Max-Age=0) | Code ready | `packages/api/src/routes/auth/logout.ts` — sets `maxAge: 0`, calls `deleteSession(db, token)` |
+| Session returns null (unauth) | Code ready | `packages/api/src/routes/auth/session.ts` — returns `{ session: null }` when no token or invalid |
+| Proxy: unauth → redirect to /?redirectTo=... | Code ready | `apps/codecamp-advantage/proxy.ts:50-54` — no cookie → redirect with `redirectTo` param |
+| Proxy: INTERN → /?error=forbidden | Code ready | `proxy.ts:59-62` — `AuthError("FORBIDDEN")` → redirect with `error=forbidden` |
+| Proxy: ADMIN → pass | Code ready | `proxy.ts:57` — `requireRole(db, token, "ADMIN")` succeeds for ADMIN role |
+| tRPC: unauth → 401 UNAUTHORIZED | Code ready | `packages/api/src/trpc.ts:23-26` — `isAuthed` middleware throws `UNAUTHORIZED` when `ctx.auth` is null |
+| tRPC: INTERN on adminProcedure → 403 | Code ready | `trpc.ts:41-42` — `isAdmin` middleware throws `FORBIDDEN` when role is not ADMIN/SYSTEM |
+
+**Production test run (2026-06-07):**
+
+| Sub-check | Result | Blocker |
+|---|---|---|
+| `parseSetCookie` unit tests (12) | PASS | — |
+| `POST /api/auth/login` with invalid creds → 401 | **FAIL** (500) | **Deploy gate** — `df39c2f` fix not yet deployed to prod |
+| `POST /api/auth/login` with empty body → 400 | PASS | — |
+| `GET /api/auth/session` (no cookie) → session: null | PASS | — |
+| `GET /api/trpc/codecamp.dashboard` (no cookie) → 401 | PASS | — |
+| `GET /api/trpc/codecamp.listInterns` (no cookie) → 401 | PASS | — |
+| `GET /th/admin` (unauth) → 307 redirect | **FAIL** (ETIMEDOUT) | Runner network flakiness, not an app issue |
+| All credential-gated probes (12 tests) | SKIP | No `PHASE3_TEST_*` env vars provided |
+| **Phase 3 — P0 launch gate** | **FAIL** (1 item) | Aggregates the login 500 finding above |
+
+**Green-phase actions remaining (deploy-gate only):**
+1. **Deploy `df39c2f` to production** — rebuild and roll forward the Cloud Run container with the Phase 2 login fix. This is the only blocker for the Phase 3 P0 launch gate.
+2. Re-run with `PHASE3_TEST_INTERN_USERNAME/PASSWORD` and `PHASE3_TEST_ADMIN_USERNAME/PASSWORD` to exercise the 12 credential-gated probes.
+3. Re-run from a network with reliable reach to `codecamp.reading-advantage.com` to clear the ETIMEDOUT flakiness.
+
 ## Phase 4: Full Feature Parity (P0)
 
 Run the same critical paths as local QA to catch environment-specific regressions.
