@@ -385,6 +385,22 @@ Post-fix verification: `Tests  18 passed | 18 skipped (36)` — 0 failures.
 
 Green-phase commit: `5b4f278`
 
+### Phase 4 — Adversarial continuation (2026-06-07, commit `deb6e57`)
+
+Hardened the Phase 4 prod-smoke contract after adversarial review:
+
+- Replaced credential-gated probe early returns with required-value assertions so missing seed lessons/exercises/questions fail instead of silently passing.
+- Replaced the quiz threshold probe's masking `updateProgress` write with a read-after-submit check against `codecamp.lesson.userStatus` and `userScore`.
+- Removed unused helpers/imports and linted the codecamp app.
+
+Verification:
+
+- `PHASE4_SKIP=1 node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-4-feature-parity.test.ts` — PASS (`4 passed | 32 skipped`).
+- `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-4-feature-parity.test.ts` — PASS (`18 passed | 18 skipped`).
+- `npm test` — PASS (`packages/ai`, `111 passed | 2 skipped`).
+- `npm run check-types --workspace=codecamp-advantage` — PASS.
+- `npm run lint --workspace=codecamp-advantage` — PASS with one pre-existing Phase 3 warning.
+
 ## Phase 5: Real External Integrations (P0)
 
 Test integrations that use live external services.
