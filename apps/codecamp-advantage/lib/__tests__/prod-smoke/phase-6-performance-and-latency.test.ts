@@ -235,6 +235,61 @@ function resolveAssetUrl(href: string): string | null {
   return null;
 }
 
+/**
+ * Extracts `<img>` URLs from rendered HTML. Captures both eager-loaded
+ * `src=` and lazy-loaded `data-src=` attributes, plus the first URL of
+ * each `srcset=` entry (responsive images declare multiple candidates
+ * per attribute). Used by the Phase 6 "Icons and images load correctly"
+ * sub-task — when an image URL is referenced it must return <400 or
+ * the user sees a broken-image icon in the browser.
+ */
+function extractImageUrls(html: string): string[] {
+  const urls = new Set<string>();
+  const attrRe = /<img\b[^>]+(?:src|data-src)\s*=\s*["']([^"']+)["']/gi;
+  const srcsetRe = /<img\b[^>]+srcset\s*=\s*["']([^"']+)["']/gi;
+  let m: RegExpExecArray | null;
+  while ((m = attrRe.exec(html))) urls.add(m[1]!);
+  while ((m = srcsetRe.exec(html))) {
+    for (const entry of m[1]!.split(",")) {
+      const url = entry.trim().split(/\s+/)[0];
+      if (url) urls.add(url);
+    }
+  }
+  return [...urls];
+}
+
+/**
+ * Counts render-blocking external scripts in the document `<head>`.
+ * A script is render-blocking when ALL of the following hold:
+ *   - it lives in the `<head>` element (not `<body>`),
+ *   - it has a `src=` attribute (external script — inline scripts
+ *     are ignored because they make no network request),
+ *   - it does NOT have `defer`, `async`, or `type="module"` (any of
+ *     which makes the script non-blocking).
+ *
+ * Modern Next.js emits scripts with `async` / `defer` and never
+ * produces a render-blocking external script, so the expected
+ * count is 0. A non-zero count indicates an unoptimized asset is
+ * blocking first paint of the page.
+ */
+function countRenderBlockingScripts(html: string): number {
+  const headMatch = html.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i);
+  if (!headMatch) return 0;
+  const head = headMatch[1]!;
+  const scriptRe = /<script\b([^>]*)>/gi;
+  let m: RegExpExecArray | null;
+  let count = 0;
+  while ((m = scriptRe.exec(head))) {
+    const attrs = m[1]!;
+    if (!/\bsrc\s*=/i.test(attrs)) continue; // ignore inline scripts
+    if (/\bdefer\b/i.test(attrs)) continue;
+    if (/\basync\b/i.test(attrs)) continue;
+    if (/\btype\s*=\s*["']module["']/i.test(attrs)) continue;
+    count++;
+  }
+  return count;
+}
+
 // ─── Tests ────────────────────────────────────────────────
 
 describe("Phase 6 — Page load times", () => {
@@ -639,6 +694,103 @@ describe("Phase 6 — Asset loading", () => {
       BUDGET.DASHBOARD_COLD_MS + 15_000,
     );
   });
+
+  describe("Icons and images (no broken-image assets)", () => {
+    // The unauth login wall is rendered with lucide-react (inline SVG)
+    // so the body is expected to contain zero `<img>` tags. The probe
+    // below still runs — it documents the contract that IF a page
+    // surfaces an image URL, that URL must return <400. A zero-image
+    // result is a valid pass; the test exercises the regression guard
+    // for the credential-gated surface, which is the more interesting
+    // case (the authed dashboard can include user/profile imagery).
+    skipIf(
+      "GET /en/ (unauth login wall) surfaces zero broken <img> asset URLs",
+      async () => {
+        const response = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET" });
+        expect.soft(response.status, `expected 200 from /en/, got ${response.status}`).toBe(200);
+        const body = await response.text();
+        const imageUrls = extractImageUrls(body)
+          .map(resolveAssetUrl)
+          .filter((u): u is string => u !== null)
+          .filter((u) => /^https?:\/\//i.test(u));
+        const failing: string[] = [];
+        for (const url of imageUrls) {
+          const r = await fetchWithTimeout(url, { method: "HEAD" });
+          if (r.status >= 400) failing.push(`${url} → ${r.status}`);
+        }
+        expect.soft(
+          failing,
+          `image asset 404/5xx: ${failing.slice(0, 5).join(", ")} (${failing.length} of ${imageUrls.length} failed)`,
+        ).toEqual([]);
+      },
+      BUDGET.DASHBOARD_COLD_MS + 8_000,
+    );
+
+    skipIfNoInternCreds(
+      "GET /en/ (INTERN cookie) surfaces zero broken <img> asset URLs on the authed dashboard",
+      async () => {
+        const { cookie } = await loginAndGetCookie(
+          process.env.PHASE6_TEST_INTERN_USERNAME!,
+          process.env.PHASE6_TEST_INTERN_PASSWORD!,
+        );
+        const response = await fetchWithTimeout(`${PROD_URL}/en/`, {
+          method: "GET",
+          headers: { Cookie: cookie },
+        });
+        expect.soft(
+          response.status,
+          `expected 200 from authed /en/, got ${response.status}`,
+        ).toBe(200);
+        const body = await response.text();
+        const imageUrls = extractImageUrls(body)
+          .map(resolveAssetUrl)
+          .filter((u): u is string => u !== null)
+          .filter((u) => /^https?:\/\//i.test(u));
+        const failing: string[] = [];
+        for (const url of imageUrls.slice(0, 30)) {
+          const r = await fetchWithTimeout(url, { method: "HEAD" });
+          if (r.status >= 400) failing.push(`${url} → ${r.status}`);
+        }
+        expect.soft(
+          failing,
+          `authed dashboard image asset 404/5xx: ${failing.slice(0, 5).join(", ")} (${failing.length} of ${imageUrls.length} failed)`,
+        ).toEqual([]);
+      },
+      BUDGET.DASHBOARD_COLD_MS + 12_000,
+    );
+  });
+
+  describe("No large unoptimized assets blocking render", () => {
+    skipIf(
+      "GET /en/ has zero render-blocking external <script> tags in <head>",
+      async () => {
+        const response = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET" });
+        expect.soft(response.status, `expected 200 from /en/, got ${response.status}`).toBe(200);
+        const body = await response.text();
+        const blocking = countRenderBlockingScripts(body);
+        expect.soft(
+          blocking,
+          `expected 0 render-blocking external <script src="..."> in <head>, found ${blocking}`,
+        ).toBe(0);
+      },
+      BUDGET.DASHBOARD_COLD_MS + 4_000,
+    );
+
+    skipIf(
+      "GET /th/ has zero render-blocking external <script> tags in <head>",
+      async () => {
+        const response = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET" });
+        expect.soft(response.status, `expected 200 from /th/, got ${response.status}`).toBe(200);
+        const body = await response.text();
+        const blocking = countRenderBlockingScripts(body);
+        expect.soft(
+          blocking,
+          `expected 0 render-blocking external <script src="..."> in /th/ <head>, found ${blocking}`,
+        ).toBe(0);
+      },
+      BUDGET.DASHBOARD_COLD_MS + 4_000,
+    );
+  });
 });
 
 describe("Phase 6 — Mobile network simulation", () => {
@@ -954,6 +1106,99 @@ describe("Phase 6 — helper unit tests", () => {
 
     it("main JS gzipped budget is 500KB", () => {
       expect(BUDGET.MAIN_JS_GZIPPED_BYTES).toBe(500 * 1024);
+    });
+  });
+
+  describe("extractImageUrls", () => {
+    it("captures <img src=> attributes", () => {
+      const html = `<img src="/_next/static/media/avatar.png" alt="me">`;
+      expect(extractImageUrls(html)).toContain("/_next/static/media/avatar.png");
+    });
+
+    it("captures single-quoted src= attributes", () => {
+      const html = `<img src='/_next/static/media/avatar.png'>`;
+      expect(extractImageUrls(html)).toContain("/_next/static/media/avatar.png");
+    });
+
+    it("captures lazy-loaded data-src= attributes", () => {
+      const html = `<img data-src="https://cdn.example.com/lazy.png" class="lazy">`;
+      expect(extractImageUrls(html)).toContain("https://cdn.example.com/lazy.png");
+    });
+
+    it("captures the first URL of each srcset= entry", () => {
+      const html = `<img srcset="/img-1x.png 1x, /img-2x.png 2x" src="/img-1x.png">`;
+      const urls = extractImageUrls(html);
+      expect(urls).toContain("/img-1x.png");
+      expect(urls).toContain("/img-2x.png");
+    });
+
+    it("returns an empty array for HTML with no <img> tags", () => {
+      const html = `<p>no images, only lucide-react inline SVG</p>`;
+      expect(extractImageUrls(html)).toEqual([]);
+    });
+
+    it("deduplicates repeated URLs", () => {
+      const html = `<img src="/a.png"><img src="/a.png"><img data-src="/a.png">`;
+      expect(extractImageUrls(html).filter((u) => u === "/a.png")).toHaveLength(1);
+    });
+  });
+
+  describe("countRenderBlockingScripts", () => {
+    it("returns 0 for a head with no scripts", () => {
+      const html = `<html><head><title>x</title></head><body></body></html>`;
+      expect(countRenderBlockingScripts(html)).toBe(0);
+    });
+
+    it("returns 0 when every external script has async or defer", () => {
+      const html = `
+        <html>
+          <head>
+            <script src="/a.js" async></script>
+            <script src="/b.js" defer></script>
+            <script type="module" src="/c.js"></script>
+          </head>
+          <body></body>
+        </html>
+      `;
+      expect(countRenderBlockingScripts(html)).toBe(0);
+    });
+
+    it("counts synchronous external <script src=...> in <head>", () => {
+      const html = `
+        <html>
+          <head>
+            <script src="/a.js" async></script>
+            <script src="/blocker.js"></script>
+          </head>
+          <body></body>
+        </html>
+      `;
+      expect(countRenderBlockingScripts(html)).toBe(1);
+    });
+
+    it("ignores inline scripts (no src= attribute)", () => {
+      const html = `
+        <html>
+          <head>
+            <script>window.__NEXT_DATA__ = {};</script>
+            <script src="/blocker.js"></script>
+          </head>
+          <body></body>
+        </html>
+      `;
+      expect(countRenderBlockingScripts(html)).toBe(1);
+    });
+
+    it("ignores scripts in <body> (only counts <head>)", () => {
+      const html = `
+        <html>
+          <head><title>x</title></head>
+          <body>
+            <script src="/body-blocker.js"></script>
+          </body>
+        </html>
+      `;
+      expect(countRenderBlockingScripts(html)).toBe(0);
     });
   });
 });

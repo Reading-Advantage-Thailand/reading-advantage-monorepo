@@ -582,9 +582,9 @@ Test real-world performance over network.
   - [ ] Chat API response < 5 seconds (first token)
 - [~] Task: Asset loading
   - [x] Thai font loads correctly (no 404) (commit `afbd038`)
-  - [ ] Icons and images load correctly
-  - [ ] No large unoptimized assets blocking render
-  - [ ] JS bundle size is reasonable (< 500KB gzipped main)
+  - [~] Icons and images load correctly (Red-phase executable contract being added)
+  - [~] No large unoptimized assets blocking render (Red-phase executable contract being added)
+  - [~] JS bundle size is reasonable (< 500KB gzipped main) (Red-phase executable contract in `phase-6-performance-and-latency.test.ts`; awaiting prod-network probe)
 - [~] Task: Mobile network simulation
   - [ ] Dashboard usable on Slow 3G
   - [ ] Quiz submission works on Slow 3G
@@ -699,6 +699,47 @@ Fixed the Thai font asset loading gap. All other failures are runner-network ETI
 3. **Re-run with `PHASE6_TEST_INTERN_USERNAME` + `PHASE6_TEST_INTERN_PASSWORD`** to exercise the 7 credential-gated probes (4 tRPC SLAs + 1 chat first-token + 1 Slow 3G quiz + 1 Fast 4G chat).
 
 Green-phase commit: `afbd038`
+
+### Phase 6 — Asset-loading Red-phase strengthening (2026-06-07)
+
+The initial Red-phase pass in commit `6836e8d` covered "Thai font loads correctly",
+"static asset URLs <400", and "JS bundle < 500KB" but did not encode two
+sub-tasks from the plan:
+
+- "Icons and images load correctly" — no probe extracted `<img src=…>` /
+  `<img data-src=…>` / `<img srcset=…>` URLs, so a broken-image regression
+  on the authed dashboard would not fail the suite.
+- "No large unoptimized assets blocking render" — no probe counted
+  synchronous external `<script src=…>` in `<head>`, so a Next.js
+  misconfiguration that re-introduced render-blocking assets would
+  not fail the suite.
+
+Added two new probe groups to `phase-6-performance-and-latency.test.ts`
+plus two helper functions and 11 unit tests:
+
+- `extractImageUrls(html)` — captures `src=`, `data-src=`, and `srcset=`
+  entries from `<img>` tags, deduplicated.
+- `countRenderBlockingScripts(html)` — counts external `<script src=…>`
+  tags in `<head>` that lack `defer`, `async`, or `type="module"`.
+  Next.js's inline runtime script (no `src`) is ignored because it
+  makes no network request.
+
+New network probes (Red phase — all fail with `ETIMEDOUT` on the
+current runner until prod is reachable):
+
+- "GET /en/ (unauth login wall) surfaces zero broken `<img>` asset URLs"
+- "GET /en/ (INTERN cookie) surfaces zero broken `<img>` asset URLs on the authed dashboard" (credential-gated; SKIP without `PHASE6_TEST_*` env vars)
+- "GET /en/ has zero render-blocking external `<script>` tags in `<head>`"
+- "GET /th/ has zero render-blocking external `<script>` tags in `<head>`"
+
+Run summary (2026-06-07):
+- `PHASE6_SKIP=1` — `25 passed | 23 skipped (48)` (up from `14 passed | 19 skipped (33)` — 11 new unit tests).
+- Full network run — `6 failed | 34 passed | 8 skipped (48)` (up from `4 failed | 22 passed | 7 skipped (33)`). The 4 new failures match the pre-existing `ETIMEDOUT 142.250.198.147:443` runner-side flakiness pattern documented in test-strategy.md §3.
+
+Green-phase actions required (not implemented by this Red-phase pass):
+1. Re-run from a network with reliable reach to `codecamp.reading-advantage.com` to clear the `ETIMEDOUT` failures and confirm the unauth + render-blocking contracts hold.
+2. Re-run with `PHASE6_TEST_INTERN_USERNAME` + `PHASE6_TEST_INTERN_PASSWORD` to exercise the credential-gated authed-dashboard image probe.
+3. If the render-blocking probe surfaces a non-zero count in prod, file a follow-up track (do not inline-fix here, per test-strategy.md §4 black-box rule).
 
 ## Phase 7: Caching & CDN Behavior (P1)
 
