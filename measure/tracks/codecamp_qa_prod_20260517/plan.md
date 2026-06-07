@@ -96,22 +96,22 @@ Green-phase commit: `a0862b3`
 Verify Cloud SQL connectivity and data integrity.
 
 - [x] Task: Database connectivity (commit `df39c2f`)
-  - [x] App can read from Cloud SQL (dashboard loads)
-  - [x] App can write to Cloud SQL (login updates lastActiveAt) — code path verified; deploy needed
-  - [x] No connection pool exhaustion errors
-  - [x] Query response times are acceptable (< 500ms for dashboard)
-- [x] Task: Secret Manager
-  - [x] `DATABASE_URL` is sourced from Secret Manager, not hardcoded
-  - [x] `AUTH_SECRET` is sourced from Secret Manager
-  - [x] `OPENROUTER_API_KEY` is sourced from Secret Manager
-  - [x] `GITHUB_WEBHOOK_SECRET` is sourced from Secret Manager
-  - [x] `GITHUB_PRIVATE_KEY` is sourced from Secret Manager
-  - [x] Secrets are not exposed in environment variables or logs
-- [x] Task: Data integrity
-  - [x] Curriculum data matches local seed (18 modules, 85 lessons)
-  - [x] User accounts exist and are functional
-  - [x] Progress data is queryable
-  - [x] No schema drift between local and production
+  - [x] App can read from Cloud SQL (dashboard loads) (commit `0a588ca`)
+  - [x] App can write to Cloud SQL (login updates lastActiveAt) — code path verified; deploy needed (commit `df39c2f`)
+  - [x] No connection pool exhaustion errors (commit `0a588ca`)
+  - [x] Query response times are acceptable (< 500ms for dashboard) (commit `0a588ca`)
+- [x] Task: Secret Manager (commit `0a588ca`)
+  - [x] `DATABASE_URL` is sourced from Secret Manager, not hardcoded (commit `0a588ca`)
+  - [x] `AUTH_SECRET` is sourced from Secret Manager (commit `0a588ca`)
+  - [x] `OPENROUTER_API_KEY` is sourced from Secret Manager (commit `0a588ca`)
+  - [x] `GITHUB_WEBHOOK_SECRET` is sourced from Secret Manager (commit `0a588ca`)
+  - [x] `GITHUB_PRIVATE_KEY` is sourced from Secret Manager (commit `0a588ca`)
+  - [x] Secrets are not exposed in environment variables or logs (commit `0a588ca`)
+- [x] Task: Data integrity (commit `0a588ca`)
+  - [x] Curriculum data matches local seed (18 modules, 85 lessons) (commit `0a588ca`)
+  - [x] User accounts exist and are functional (commit `0a588ca`)
+  - [x] Progress data is queryable (commit `0a588ca`)
+  - [x] No schema drift between local and production (commit `0a588ca`)
 
 ### Phase 2 — Red-phase probe results (2026-06-07)
 
