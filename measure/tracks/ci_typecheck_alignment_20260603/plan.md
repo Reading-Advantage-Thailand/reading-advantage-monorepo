@@ -1006,7 +1006,7 @@
 
 ## Phase 14: Closeout
 
-- [ ] Task: Update `measure/tech-debt.md` row `auth_strategy_review` to `Resolved`. Add a note that the resolution was via this track.
-- [ ] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-1001, F-1002, F-1204, F-1205 `Resolved`. F-1003 was resolved by Track 0.
-- [ ] Task: Add a lessons-learned entry: "`ignoreBuildErrors: true` is the single biggest type-safety hole; ~370 errors masked 6 root causes, each fixable in a small PR."
-- [ ] Task: Move track to `measure/archive/ci_typecheck_alignment_20260603/` and update `measure/tracks.md`.
+- [~] Task: Update `measure/tech-debt.md` row `auth_strategy_review` to `Resolved`. Add a note that the resolution was via this track.
+- [~] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-1001, F-1002, F-1204, F-1205 `Resolved`. F-1003 was resolved by Track 0.
+- [~] Task: Add a lessons-learned entry: "`ignoreBuildErrors: true` is the single biggest type-safety hole; ~370 errors masked 6 root causes, each fixable in a small PR."
+- [~] Task: Move track to `measure/archive/ci_typecheck_alignment_20260603/` and update `measure/tracks.md`.
