@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "summary": "Phase 12B changes close the targeted react-hooks/immutability sibling errors and ban-ts-comment blocker without typecheck regression; no blocking findings remain for this phase.",
+  "findings": [],
+  "evidence": [
+    "Reviewed measure/tracks/ci_typecheck_alignment_20260603/spec.md, plan.md Phase 12B, and test-strategy.md.",
+    "Inspected git diff 134c2948951213291129cb3c05dde40fd83fdb17..HEAD: class-analytics-overview.tsx, lesson-detail-analytics.tsx, student-detail-analytics.tsx, image-generator.ts, phase-12b-remaining-lint-blockers.test.ts, plan.md.",
+    "Verified useCallback dependency arrays match prop-driven fetch URLs: [classId], [classId, lessonId], [classId, studentId], and useEffect depends on [fetchAnalytics].",
+    "Verified lib/ai/image-generator.ts uses @ts-expect-error with a reason instead of @ts-ignore.",
+    "corepack pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts lib/ci-gates/phase-12b-remaining-lint-blockers.test.ts: PASS (24 tests).",
+    "./node_modules/.bin/eslint . from apps/science-advantage: PASS for blocking errors (0 errors, 10 pre-existing warnings).",
+    "./node_modules/.bin/tsc --noEmit from apps/science-advantage: PASS.",
+    "npm test from repo root: PASS (packages/ai 11 files, 111 passed, 2 skipped).",
+    "pnpm turbo run lint/check-types could not be executed directly because pnpm is not on PATH; corepack pnpm turbo failed with Turbo 'Unable to find package manager binary'. Direct package equivalents were run."
+  ]
+}

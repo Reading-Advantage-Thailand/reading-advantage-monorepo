@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "summary": "Phase 12C (AC-16) is fully resolved. @node-rs/argon2 ^2.0.2 added to apps/science-advantage/package.json dependencies matching packages/auth's declaration. pnpm-lock.yaml updated. Production build exits 0 with ignoreBuildErrors: false. All 6 gate tests pass (3 file-content regression guards + 3 end-to-end build assertions including a real spawnSync build invocation). check-types exits 0 with 0 tsc errors. lint reports 0 errors (10 pre-existing warnings unrelated to this phase). No exported contract changes; no shallow tests or stubs detected.",
+  "findings": [],
+  "evidence": [
+    "git diff c019c0ce9aa6f1f2e854fe227634b1d6592e02a5..HEAD -- apps/science-advantage/package.json: +\"@node-rs/argon2\": \"^2.0.2\" in dependencies",
+    "git diff c019c0ce9aa6f1f2e854fe227634b1d6592e02a5..HEAD -- pnpm-lock.yaml: lockfile updated with @node-rs/argon2 2.0.2 for science-advantage importer",
+    "apps/science-advantage/next.config.ts:15 — ignoreBuildErrors: false (Phase 8 Green contract intact)",
+    "packages/auth/package.json — @node-rs/argon2: ^2.0.2 (semver match confirmed)",
+    "apps/science-advantage/package.json — @node-rs/argon2: ^2.0.2 (semver match confirmed)",
+    "corepack pnpm --filter science-advantage check-types — exit 0, 0 tsc errors",
+    "corepack pnpm --filter science-advantage lint — exit 0, 0 errors, 10 warnings (all pre-existing)",
+    "corepack pnpm --filter science-advantage build — exit 0, no @node-rs/argon2 errors in output",
+    "corepack pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts lib/ci-gates/phase-12c-build-resolves.test.ts — 6/6 passed in 101.49s",
+    "apps/science-advantage/lib/ci-gates/phase-12c-build-resolves.test.ts — 368 lines, non-shallow: spawnSync build with 540s timeout, file-content guards for dep declaration + semver match + build script wiring, end-to-end assertions for exit 0 + no argon2 error fragments",
+    "build-graph stats graph.db — 1835 nodes, 2705 edges, 230 files (graph current; no exported contract changes in this phase to re-inspect)"
+  ]
+}
