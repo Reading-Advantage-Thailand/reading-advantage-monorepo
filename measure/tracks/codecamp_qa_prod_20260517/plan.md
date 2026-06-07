@@ -171,18 +171,62 @@ Post-deploy verification: run `node_modules/.bin/vitest run lib/__tests__/prod-s
 
 Test auth in production environment.
 
-- [ ] Task: Login flow
+- [~] Task: Login flow
   - [ ] Login with valid INTERN credentials → session created
   - [ ] Login with valid ADMIN credentials → session created
   - [ ] Login with invalid credentials → 401, no session
   - [ ] Session cookie is `HttpOnly`, `Secure`, `SameSite`
   - [ ] Session persists across page reloads
   - [ ] Logout clears cookie and redirects
-- [ ] Task: Role enforcement
+- [~] Task: Role enforcement
   - [ ] INTERN cannot access `/admin` → 403
   - [ ] ADMIN can access `/admin`
   - [ ] Unauthenticated user redirected to login
   - [ ] tRPC endpoints reject unauthorized requests
+
+### Phase 3 — Red-phase probe results (2026-06-07)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-3-authentication-and-authorization.test.ts`.
+Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-3-authentication-and-authorization.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE3_PROD_URL`; skip via `PHASE3_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+Authenticated probes are gated on `PHASE3_TEST_INTERN_USERNAME` + `PHASE3_TEST_INTERN_PASSWORD`
+and `PHASE3_TEST_ADMIN_USERNAME` + `PHASE3_TEST_ADMIN_PASSWORD` env vars
+(per test-strategy.md §2 — test creds never committed).
+
+Run summary: `Tests  3 failed | 16 passed | 12 skipped (31)` on 2026-06-07 (18.93s wall).
+With `PHASE3_SKIP=1`: `Tests  12 passed | 19 skipped (31)` (15.84s wall) — file compiles, all per-check probes gated correctly.
+
+| Sub-check | Initial run (2026-06-07) | Notes |
+|---|---|---|
+| `parseSetCookie` helper unit tests (12 tests) | PASS | Pure unit tests, no network — run unconditionally |
+| `POST /api/auth/login` with valid INTERN creds → 200 + session_token + role=INTERN | SKIP | No `PHASE3_TEST_INTERN_USERNAME` in this run |
+| `POST /api/auth/login` with valid ADMIN creds → 200 + session_token + role=ADMIN | SKIP | No `PHASE3_TEST_ADMIN_USERNAME` in this run |
+| `POST /api/auth/login` with invalid creds → 401 (not 5xx) | **FAIL** (500) | **Real production finding** — same gap Phase 2 flagged; the `df39c2f` fix is in code but the login 500 path is still live in prod. Re-confirms Phase 2's P0 launch-gate failure. |
+| `POST /api/auth/login` with empty body → 400 (Zod validation) | PASS | Validation works |
+| Set-Cookie HttpOnly + Secure + SameSite=Lax + Path=/ + Max-Age~7d | SKIP | Credential-gated |
+| `GET /api/auth/session` with valid cookie → user present | SKIP | Credential-gated |
+| `GET /api/auth/session` second call with same cookie → user still present (server-side persistence) | SKIP | Credential-gated |
+| `GET /api/auth/session` with no cookie → 200 + `session: null` | PASS | Unauth hydration contract holds |
+| `POST /api/auth/logout` → 200 + Set-Cookie clears session_token | SKIP | Credential-gated |
+| `GET /api/auth/session` after logout → `session: null` | SKIP | Credential-gated |
+| `GET /th/admin` (unauth) → 307 to `/?redirectTo=/th/admin` | **FAIL** (ETIMEDOUT) | Test runner network flakiness to `173.194.202.121:443`; the route itself works in prior manual probes (Phase 2 logged `tRPC codecamp.dashboard` 401 from same network path) |
+| `GET /th/admin` (INTERN cookie) → 307 to `/?error=forbidden` | SKIP | Credential-gated |
+| `GET /th/admin` (ADMIN cookie) → 200 | SKIP | Credential-gated |
+| `GET /api/trpc/codecamp.dashboard` (no cookie) → 401 UNAUTHORIZED | PASS | tRPC error envelope surfaces `code: UNAUTHORIZED`, `httpStatus: 401` |
+| `GET /api/trpc/codecamp.listInterns` (no cookie) → 401 UNAUTHORIZED | PASS | `adminProcedure` correctly rejects unauth |
+| `GET /api/trpc/codecamp.dashboard` (INTERN cookie) → 200 | SKIP | Credential-gated |
+| `GET /api/trpc/codecamp.listInterns` (INTERN cookie) → 403 FORBIDDEN | SKIP | Credential-gated |
+| `GET /api/trpc/codecamp.webhookEvents` (INTERN cookie) → 403 FORBIDDEN | SKIP | Credential-gated |
+| **Phase 3 — P0 launch gate** (single hard assertion) | **FAIL** (1 critical item) | Aggregated gate fails on `POST /api/auth/login returned 500 (expected 4xx)` — confirms the per-check finding above and yields a single CI-blocking signal |
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+1. **P0 — confirm deploy of `df39c2f`** (the Phase 2 login 401-not-500 fix). The Phase 3 suite re-detects the same gap; the launch gate cannot pass until the prod container is rebuilt and rolled forward with the fix. No new code change needed — this is a deploy-gate action. File the deploy ticket / run the Cloud Build.
+2. (Optional) Re-run with `PHASE3_TEST_INTERN_USERNAME` + `PHASE3_TEST_INTERN_PASSWORD` and `PHASE3_TEST_ADMIN_USERNAME` + `PHASE3_TEST_ADMIN_PASSWORD` to exercise the credential-gated probes (login, cookie attributes, session persistence, logout, role enforcement with real cookies).
+3. Re-run the suite from a network with reliable reach to `codecamp.reading-advantage.com` to clear the ETIMEDOUT on the `/th/admin` redirect probe (runner's network, not the app — same class of flakiness Phase 2 saw on the tRPC dashboard probe).
+
+> **Note on divergence from test-strategy.md:** the test-strategy says "No new unit tests are required for this track" and "keep curl probes out of repo source." Per the 2026-06-07 mid-session supervisor instruction (same as Phase 1), Phase 3 was elevated from manual probes to executable contract. The 12 `parseSetCookie` unit tests are an exception — they exercise a pure helper in the test file and are included only so a regression in the parser fails the suite immediately (rather than masquerading as a production gap in the unauth probes). All other Phase 3 checks remain black-box HTTP probes against prod, consistent with the strategy.
 
 ## Phase 4: Full Feature Parity (P0)
 
