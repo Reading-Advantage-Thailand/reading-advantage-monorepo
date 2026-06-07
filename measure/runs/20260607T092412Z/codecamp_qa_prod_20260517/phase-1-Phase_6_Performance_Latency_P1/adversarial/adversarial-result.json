@@ -1,0 +1,18 @@
+{
+  "status": "fail",
+  "summary": "Phase 6 audit failed: hardened prod-smoke assertions show production /en/ still exposes no Thai font URL and /en/ plus /th/ each contain one render-blocking external script in <head>; npm test also remains red due existing Phase 1-3 prod deploy-gate failures.",
+  "findings": [
+    "apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts now rejects generic Next font classes as Thai-font evidence; live /en/ HTML has zero Thai font URL candidates, so the Thai font asset acceptance criterion is not actually met in production.",
+    "Live /en/ and /th/ HTML each contain one render-blocking external <script src=...> in <head>, violating Phase 6 no-large-unoptimized-assets-blocking-render criteria.",
+    "apps/codecamp-advantage npm test remains failing because prod-smoke Phase 1 security headers and Phase 2/3 bad-credential login deploy-gates are still red; these are outside Phase 6 but block a clean app test run."
+  ],
+  "evidence": [
+    "git diff --name-status 035ae957084697f6be6f38ff197bead109c1746c..HEAD reviewed: Phase 6 changed apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts, apps/codecamp-advantage/lib/__tests__/i18n-font.test.ts, and plan.md.",
+    "PHASE6_SKIP=1 node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts lib/__tests__/i18n-font.test.ts: PASS — 32 passed, 23 skipped.",
+    "node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts --reporter=verbose: FAIL — 3 failed, 41 passed, 8 skipped; failures are Thai font URL missing and one render-blocking script on /en/ and /th/.",
+    "npm test in apps/codecamp-advantage: FAIL/TIMEOUT after surfacing Phase 1 security header failures, Phase 2/3 login bad-creds failures, and Phase 6 asset failures.",
+    "npm run lint in apps/codecamp-advantage: PASS with 2 pre-existing warnings in Phase 3/5 prod-smoke tests.",
+    "npm run check-types in apps/codecamp-advantage: PASS.",
+    "npm test at repo root: PASS — packages/ai 111 passed, 2 skipped."
+  ]
+}

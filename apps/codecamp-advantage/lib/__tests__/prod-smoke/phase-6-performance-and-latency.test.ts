@@ -215,11 +215,17 @@ function extractScriptUrls(html: string): string[] {
   const urls = new Set<string>();
   const attrRe = /<script[^>]+src=["']([^"']+)["']/gi;
   const cssImportRe = /@import\s+url\(["']?([^"')]+)["']?\)/gi;
-  const fontRelRe = /<link[^>]+rel=["']preload["'][^>]+as=["']font["'][^>]+href=["']([^"']+)["']/gi;
+  const linkRe = /<link\b([^>]*)>/gi;
   let m: RegExpExecArray | null;
   while ((m = attrRe.exec(html))) urls.add(m[1]!);
   while ((m = cssImportRe.exec(html))) urls.add(m[1]!);
-  while ((m = fontRelRe.exec(html))) urls.add(m[1]!);
+  while ((m = linkRe.exec(html))) {
+    const attrs = m[1]!;
+    if (!/\brel\s*=\s*["']preload["']/i.test(attrs)) continue;
+    if (!/\bas\s*=\s*["']font["']/i.test(attrs)) continue;
+    const href = attrs.match(/\bhref\s*=\s*["']([^"']+)["']/i)?.[1];
+    if (href) urls.add(href);
+  }
   return [...urls];
 }
 
@@ -354,19 +360,16 @@ describe("Phase 6 — Page load times", () => {
 
   describe("Lesson page (unauth → login wall)", () => {
     skipIf(
-      "GET /en/lesson/<uuid-or-slug> returns 2xx/3xx within 2 seconds",
+      "GET /en/lesson/<uuid-or-slug> returns non-5xx within 2 seconds",
       async () => {
-        // We don't have a static lesson ID in the test fixtures; a
-        // syntactically-valid UUID produces a 404 from the page (which
-        // is still <400). The budget assertion is what matters here.
         const probeId = "00000000-0000-0000-0000-000000000000";
         const { result, elapsedMs } = await measureMs(() =>
           fetchWithTimeout(`${PROD_URL}/en/lesson/${probeId}`, { method: "GET" }),
         );
         expect.soft(
           result.status,
-          `expected <400 for /en/lesson/<probe>, got ${result.status}`,
-        ).toBeLessThan(400);
+          `expected non-5xx for /en/lesson/<probe>, got ${result.status}`,
+        ).toBeLessThan(500);
         expect.soft(
           elapsedMs,
           `lesson page took ${elapsedMs.toFixed(0)}ms — budget ${BUDGET.LESSON_PAGE_MS}ms`,
@@ -595,28 +598,16 @@ describe("Phase 6 — Asset loading", () => {
         const response = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET" });
         expect.soft(response.status, `expected 200 from /en/, got ${response.status}`).toBe(200);
         const body = await response.text();
-        // Two acceptable signal shapes: a literal `Noto Sans Thai` mention
-        // (next/font with display=swap) or a `__variable_` next/font class
-        // marking the Thai subset.
-        const referencesThai =
-          /Noto\s+Sans\s+Thai/i.test(body) ||
-          /__Noto_Sans_Thai/i.test(body) ||
-          /__variable_[\w-]*thai/i.test(body) ||
-          /next-font-[a-z0-9-]+/i.test(body);
-        expect.soft(
-          referencesThai,
-          "expected /en/ HTML to reference a Thai font (Noto Sans Thai or next/font marker)",
-        ).toBe(true);
-        // Pull every candidate font URL from the HTML and probe them.
         const candidateUrls = extractScriptUrls(body)
           .map(resolveAssetUrl)
           .filter((u): u is string => u !== null);
         const fontCandidates = candidateUrls.filter(
           (u) => /\.(woff2?|ttf|otf)(\?|$)/i.test(u) || /\/font/i.test(u),
         );
+        const thaiFontCandidates = fontCandidates.filter((u) => /thai|noto/i.test(u));
         expect.soft(
-          fontCandidates.length,
-          `expected at least one font URL in /en/ HTML — found ${candidateUrls.length} total script URLs`,
+          thaiFontCandidates.length,
+          `expected at least one Thai font URL in /en/ HTML — found fonts: ${fontCandidates.join(", ")}`,
         ).toBeGreaterThan(0);
         for (const fontUrl of fontCandidates) {
           const fontRes = await fetchWithTimeout(fontUrl, { method: "HEAD" });
@@ -1057,6 +1048,34 @@ describe("Phase 6 — helper unit tests", () => {
     it("captures preload font links", () => {
       const html = `<link rel="preload" as="font" href="/_next/static/media/noto-sans-thai.woff2" crossorigin>`;
       expect(extractScriptUrls(html)).toContain("/_next/static/media/noto-sans-thai.woff2");
+    });
+
+    it("captures preload font links regardless of attribute order", () => {
+      const html = `<link href="/_next/static/media/noto-sans-thai.woff2" as="font" rel="preload" crossorigin>`;
+      expect(extractScriptUrls(html)).toContain("/_next/static/media/noto-sans-thai.woff2");
+    });
+
+    it("does not capture non-font preload links", () => {
+      const html = `<link rel="preload" as="script" href="/_next/static/chunks/main.js">`;
+      expect(extractScriptUrls(html)).not.toContain("/_next/static/chunks/main.js");
+    });
+
+    it("does not infer Thai font loading from a generic Next font class", () => {
+      const html = `<html class="next-font-a1b2c3"><head><link rel="preload" as="font" href="/_next/static/media/inter.woff2"></head></html>`;
+      const fontCandidates = extractScriptUrls(html).filter(
+        (u) => /\.(woff2?|ttf|otf)(\?|$)/i.test(u) || /\/font/i.test(u),
+      );
+      expect(fontCandidates.filter((u) => /thai|noto/i.test(u))).toEqual([]);
+    });
+
+    it("recognizes Thai font loading from the font URL", () => {
+      const html = `<link rel="preload" as="font" href="/_next/static/media/noto-sans-thai.woff2">`;
+      const fontCandidates = extractScriptUrls(html).filter(
+        (u) => /\.(woff2?|ttf|otf)(\?|$)/i.test(u) || /\/font/i.test(u),
+      );
+      expect(fontCandidates.filter((u) => /thai|noto/i.test(u))).toContain(
+        "/_next/static/media/noto-sans-thai.woff2",
+      );
     });
 
     it("deduplicates repeated URLs", () => {
