@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -56,14 +56,12 @@ const HAS_ADMIN_CREDS =
   process.env.PHASE4_TEST_ADMIN_USERNAME.length > 0 &&
   typeof process.env.PHASE4_TEST_ADMIN_PASSWORD === "string" &&
   process.env.PHASE4_TEST_ADMIN_PASSWORD.length > 0;
-const HAS_ANY_CREDS = HAS_INTERN_CREDS || HAS_ADMIN_CREDS;
 const REQUEST_TIMEOUT_MS = 5_000;
 
 const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 const skipIfNoInternCreds = testIf(SKIP || !HAS_INTERN_CREDS);
 const skipIfNoAdminCreds = testIf(SKIP || !HAS_ADMIN_CREDS);
-const skipIfNoAnyCreds = testIf(SKIP || !HAS_ANY_CREDS);
 
 // ─── Helpers ──────────────────────────────────────────────
 
@@ -150,6 +148,14 @@ async function trpcPost(
   return { status: response.status, body };
 }
 
+function requireValue<T>(value: T | null | undefined, message: string): T {
+  expect(value, message).toBeDefined();
+  if (value === null || value === undefined) {
+    throw new Error(message);
+  }
+  return value;
+}
+
 // ─── Seed-oracle helpers (no network) ──────────────────────
 
 const SEED_PATH = resolve(
@@ -181,8 +187,8 @@ function readSeedPhaseMap(): Record<string, string> {
   // leading indent for both slug and phase lines. This is the simplest
   // robust parse — the seed is a static file, not a runtime import
   // (per test-strategy.md §2, the local seed is the oracle).
-  const slugRe = /^      slug:\s*"([a-z0-9-]+)",\s*$/gm;
-  const phaseRe = /^      phase:\s*"([ABCD])",\s*$/gm;
+  const slugRe = /^ {6}slug:\s*"([a-z0-9-]+)",\s*$/gm;
+  const phaseRe = /^ {6}phase:\s*"([ABCD])",\s*$/gm;
   const slugs: string[] = [];
   const phases: string[] = [];
   let m: RegExpExecArray | null;
@@ -506,9 +512,10 @@ describe("Phase 4 — Module & Lesson pages", () => {
         const lessons = (mod.body as {
           result?: { data?: { json?: { lessons: Array<{ id: string; type: string }> } } };
         })?.result?.data?.json?.lessons ?? [];
-        const theory = lessons.find((l) => l.type === "theory");
-        expect.soft(theory, "module 'dev-environment' must have a theory lesson").toBeDefined();
-        if (!theory) return;
+        const theory = requireValue(
+          lessons.find((l) => l.type === "theory"),
+          "module 'dev-environment' must have a theory lesson",
+        );
         const { status, body } = await trpcPost("codecamp.markTheoryLessonComplete", {
           cookie,
           inputJson: { lessonId: theory.id },
@@ -554,12 +561,10 @@ describe("Phase 4 — Module & Lesson pages", () => {
             };
           };
         })?.result?.data?.json?.lessons ?? [];
-        const exerciseLesson = lessons.find((l) => l.type === "exercise");
-        expect.soft(
-          exerciseLesson,
+        const exerciseLesson = requireValue(
+          lessons.find((l) => l.type === "exercise"),
           "module 'dev-environment' must have an exercise lesson (seed contract)",
-        ).toBeDefined();
-        if (!exerciseLesson) return;
+        );
         // We need the actual exerciseId (not lessonId) to call submitExercise.
         // The lesson detail procedure returns the full exercise list.
         const detail = await trpcGet("codecamp.lesson", {
@@ -576,12 +581,11 @@ describe("Phase 4 — Module & Lesson pages", () => {
           };
         };
         const exercises = detailBody.result?.data?.json?.exercises ?? [];
-        expect.soft(
+        expect(
           exercises.length,
           "exercise lesson must have at least one exercise",
         ).toBeGreaterThan(0);
-        const exerciseId = exercises[0]?.id;
-        if (!exerciseId) return;
+        const exerciseId = requireValue(exercises[0]?.id, "exercise lesson must expose an exercise id");
         const { status, body } = await trpcPost("codecamp.submitExercise", {
           cookie,
           inputJson: { exerciseId, code: "// submitted from Phase 4 prod smoke" },
@@ -635,12 +639,10 @@ describe("Phase 4 — Module & Lesson pages", () => {
             };
           };
         })?.result?.data?.json?.lessons ?? [];
-        const quizLesson = lessons.find((l) => l.type === "quiz");
-        expect.soft(
-          quizLesson,
+        const quizLesson = requireValue(
+          lessons.find((l) => l.type === "quiz"),
           "module 'dev-environment' must have a quiz lesson (seed contract)",
-        ).toBeDefined();
-        if (!quizLesson) return;
+        );
         // Fetch the lesson detail to get real quiz question ids.
         const detail = await trpcGet("codecamp.lesson", {
           cookie,
@@ -725,8 +727,10 @@ describe("Phase 4 — Module & Lesson pages", () => {
             };
           };
         })?.result?.data?.json?.lessons ?? [];
-        const quizLesson = lessons.find((l) => l.type === "quiz");
-        if (!quizLesson) return;
+        const quizLesson = requireValue(
+          lessons.find((l) => l.type === "quiz"),
+          "module 'dev-environment' must have a quiz lesson (seed contract)",
+        );
         const detail = await trpcGet("codecamp.lesson", {
           cookie,
           inputJson: { id: quizLesson.id },
@@ -739,7 +743,7 @@ describe("Phase 4 — Module & Lesson pages", () => {
           };
         };
         const questions = detailBody.result?.data?.json?.quizQuestions ?? [];
-        if (questions.length === 0) return;
+        expect(questions.length, "quiz lesson must have at least one question").toBeGreaterThan(0);
         const { body } = await trpcPost("codecamp.submitQuiz", {
           cookie,
           inputJson: {
@@ -751,31 +755,26 @@ describe("Phase 4 — Module & Lesson pages", () => {
           result?: { data?: { json?: { score: number } } };
         };
         const score = resultBody.result?.data?.json?.score;
-        // An empty submission cannot possibly reach 70% — the threshold
-        // contract is exactly that <70 keeps progress in_progress, ≥70
-        // marks completed (see packages/domain/src/codecamp/index.ts:373
-        // submitQuizAnswers — "updates user progress to completed (if
-        // score >= 70) or in_progress").
         expect.soft(
           score,
           "empty answers must score < 70 (this is the contract boundary)",
         ).toBeLessThan(70);
-        // Now check that the lesson progress status is in_progress (not
-        // completed) — the second half of the same contract.
-        const progressRes = await trpcPost("codecamp.updateProgress", {
+        const afterSubmit = await trpcGet("codecamp.lesson", {
           cookie,
-          inputJson: { lessonId: quizLesson.id, status: "in_progress" },
+          inputJson: { id: quizLesson.id },
         });
-        const progressBody = progressRes.body as {
-          result?: { data?: { json?: { status: string } } };
+        const afterSubmitBody = afterSubmit.body as {
+          result?: { data?: { json?: { userStatus: string | null; userScore: number | null } } };
         };
-        // The updateProgress probe is best-effort — the real assertion
-        // is the score<70 invariant above. A bug here is a tracking
-        // issue, not a scoring bug.
+        const progress = afterSubmitBody.result?.data?.json;
         expect.soft(
-          progressBody.result?.data?.json?.status,
+          progress?.userStatus,
           "after a sub-70 quiz submission, lesson progress must remain in_progress",
         ).toBe("in_progress");
+        expect.soft(
+          progress?.userScore,
+          "lesson progress score must equal the sub-70 quiz result",
+        ).toBe(score);
       },
       REQUEST_TIMEOUT_MS * 2 + 3_000,
     );
@@ -800,9 +799,10 @@ describe("Phase 4 — Module & Lesson pages", () => {
             };
           };
         })?.result?.data?.json?.lessons ?? [];
-        const lesson = lessons[0];
-        expect.soft(lesson, "module 'dev-environment' must have at least one lesson").toBeDefined();
-        if (!lesson) return;
+        const lesson = requireValue(
+          lessons[0],
+          "module 'dev-environment' must have at least one lesson",
+        );
         const { status, body } = await trpcPost("codecamp.updateProgress", {
           cookie,
           inputJson: { lessonId: lesson.id, status: "in_progress" },
@@ -1062,14 +1062,13 @@ describe("Phase 4 — Admin panel", () => {
           result?: { data?: { json?: Array<{ userId: string }> } };
         };
         const firstIntern = listBody.result?.data?.json?.[0];
-        expect.soft(
+        const internUserId = requireValue(
           firstIntern?.userId,
           "admin must have at least one intern to query detail (seed contract)",
-        ).toBeTruthy();
-        if (!firstIntern?.userId) return;
+        );
         const { status, body } = await trpcGet("codecamp.getInternProgress", {
           cookie,
-          inputJson: { userId: firstIntern.userId },
+          inputJson: { userId: internUserId }
         });
         expect.soft(status, `expected 2xx, got ${status}`).toBe(200);
         const resultBody = body as {
@@ -1086,7 +1085,7 @@ describe("Phase 4 — Admin panel", () => {
         };
         const json = resultBody.result?.data?.json;
         expect.soft(json?.userId, "intern detail must echo the requested userId").toBe(
-          firstIntern.userId,
+          internUserId,
         );
         expect.soft(
           Array.isArray(json?.moduleBreakdown),
