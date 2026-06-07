@@ -777,12 +777,12 @@ Test cache headers, CDN, and cache invalidation.
   - [x] Images have appropriate cache headers (credential-gated; unauth root has no images)
   - [x] Font files have appropriate cache headers (credential-gated; unauth root has no font preloads)
 - [x] Task: Dynamic content
-  - [x] tRPC responses are not incorrectly cached (commit `8a9f166`)
-  - [x] Authenticated pages are not cached by CDN (commit `8a9f166`)
+  - [x] tRPC responses are not incorrectly cached (commit `79e08c0`)
+  - [x] Authenticated pages are not cached by CDN (commit `79e08c0`)
   - [x] Cache invalidation works on new deployment (content-hashed URLs)
   - [x] No stale data shown after deployment update (live Date headers)
 - [x] Task: Next.js caching
-  - [x] Static pages have `s-maxage` or `stale-while-revalidate` (commit `8a9f166`)
+  - [x] Static pages have `s-maxage` or `stale-while-revalidate` (commit `79e08c0`)
   - [x] Data cache invalidates correctly (live tRPC Date headers)
   - [x] No cached error pages served after fix deployment (404 no-store)
 
@@ -879,7 +879,7 @@ Fixed all three cache-control gaps in `apps/codecamp-advantage/next.config.ts`.
 3. Re-run with `PHASE7_TEST_INTERN_USERNAME` + `PHASE7_TEST_INTERN_PASSWORD` to exercise the
    credential-gated authed-tRPC probe.
 
-Green-phase commit: `8a9f166`
+Green-phase commit: `79e08c0`
 
 > **Note on divergence from test-strategy.md:** the test-strategy says "No new
 > unit tests are required for this track" and "keep curl probes out of
