@@ -772,19 +772,91 @@ Supervisor gate requires the adversarial result artifact to pass when no code-fi
 
 Test cache headers, CDN, and cache invalidation.
 
-- [ ] Task: Static assets
-  - [ ] JS/CSS files have long cache headers
-  - [ ] Images have appropriate cache headers
-  - [ ] Font files have appropriate cache headers
-- [ ] Task: Dynamic content
-  - [ ] tRPC responses are not incorrectly cached
-  - [ ] Authenticated pages are not cached by CDN
-  - [ ] Cache invalidation works on new deployment
-  - [ ] No stale data shown after deployment update
-- [ ] Task: Next.js caching
-  - [ ] Static pages have `s-maxage` or `stale-while-revalidate`
-  - [ ] Data cache invalidates correctly
-  - [ ] No cached error pages served after fix deployment
+- [~] Task: Static assets
+  - [~] JS/CSS files have long cache headers
+  - [~] Images have appropriate cache headers
+  - [~] Font files have appropriate cache headers
+- [~] Task: Dynamic content
+  - [~] tRPC responses are not incorrectly cached
+  - [~] Authenticated pages are not cached by CDN
+  - [~] Cache invalidation works on new deployment
+  - [~] No stale data shown after deployment update
+- [~] Task: Next.js caching
+  - [~] Static pages have `s-maxage` or `stale-while-revalidate`
+  - [~] Data cache invalidates correctly
+  - [~] No cached error pages served after fix deployment
+
+### Phase 7 — Red-phase probe results (2026-06-07)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-7-cdn-and-caching.test.ts`.
+Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-7-cdn-and-caching.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE7_PROD_URL`; skip via `PHASE7_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+Authenticated authed-tRPC probe is gated on `PHASE7_TEST_INTERN_USERNAME` +
+`PHASE7_TEST_INTERN_PASSWORD` env vars (per test-strategy.md §2 — test creds
+never committed).
+
+**Red-phase run (2026-06-07):** `4 failed | 33 passed | 1 skipped (38)`.
+- `PHASE7_SKIP=1` run: `25 passed | 13 skipped (38)` — 9 helper unit tests + 16
+  unauth-network probes (skipped) + 1 credential-gated probe (skipped) + 1
+  P1 launch gate (skipped) + 1 four-network-probe soft suite (skipped). All
+  9 unit tests pass on first run, confirming the helper parsers
+  (`parseCacheControl`, `extractHashedAssetUrls`, `extractFontUrls`) and the
+  `LONG_CACHE_MIN_SECONDS` / `AUTH_NO_STORE_DIRECTIVES` budget constants are
+  correct.
+
+| Sub-check | Initial run (2026-06-07) | Notes |
+|---|---|---|
+| Root URL serves `/_next/static/**` (JS/CSS probe seed) | PASS | 14 asset URLs in unauth root HTML |
+| JS/CSS assets have `max-age>=1y` + `immutable` | PASS | `public, max-age=31536000, immutable` returned by Next.js for `/_next/static/**` |
+| Image assets have appropriate cache headers | **SKIP** (no images on unauth root) | Authed-dashboard probe (credential-gated) covers the normal context |
+| Font files have appropriate cache headers | **SKIP** (no font preloads on unauth root) | Same — authed-dashboard probe is the normal context |
+| tRPC responses not incorrectly cached | **FAIL** (`cache-control=<missing>`) | `/api/trpc/codecamp.dashboard` returns no `Cache-Control` header at all — needs `headers()` block in `next.config.ts` for `/api/(.*)` source, with `Cache-Control: no-store, private` |
+| Authenticated pages not cached by CDN | **FAIL** (`cache-control=<missing>`) | `/api/auth/session` returns no `Cache-Control` header — same fix as tRPC above |
+| Authed tRPC (INTERN cookie) not cached | **SKIP** (no creds in env) | Re-run with `PHASE7_TEST_INTERN_USERNAME` + `PHASE7_TEST_INTERN_PASSWORD` |
+| Static asset URLs are content-hashed (redeploy invalidation) | PASS | All 14 `/_next/static/**` URLs match `/[/-]([a-f0-9]{6,})\.(?:js|css|woff2?|...)$/` — Next.js content-hashed convention is in place |
+| No stale data shown after deployment update (live Date header) | PASS | Two consecutive fetches' `Date` headers differ by ~1s — server is doing live work, not serving a cached HTML payload |
+| Static pages have `s-maxage` or `stale-while-revalidate` | **FAIL** (`private, no-cache, no-store, max-age=0, must-revalidate`) | Next.js default for the dynamic App-Router shell is the most restrictive possible — a CDN layer in front has nothing to cache against. The plan calls for `s-maxage` or `stale-while-revalidate` on the public shell so a CDN layer can cache it. Needs a per-route `headers()` or `revalidate` segment-config. |
+| Data cache invalidates correctly (live tRPC Date header) | PASS | Two consecutive tRPC fetches' `Date` headers differ by ~1s |
+| 4xx/5xx error responses not cached (404) | PASS | `/__phase7_does_not_exist__` returns 404 + no explicit `Cache-Control` (browser default: not cached). Plan contract is met. |
+| **P1 launch gate (single hard assertion)** | **FAIL** (3 gaps) | Mirrors the per-check soft failures — `next.config.ts` `headers()` block + per-route segment-config is the production fix |
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+
+1. Add a `headers()` block in `apps/codecamp-advantage/next.config.ts` matching
+   `source: "/api/(.*)"` and setting `Cache-Control: no-store, private` (the
+   current `headers()` block sets CORS + X-Frame-Options etc. but no
+   `Cache-Control`). This addresses the tRPC and `/api/auth/session` gaps.
+2. For the public shell (root URL `s-maxage` / `stale-while-revalidate`),
+   either:
+   - add a per-route `headers()` entry for `source: "/:locale(en|th)"`
+     setting `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400`
+     (cache the public shell for 1h, serve stale for 24h while revalidating), OR
+   - export `revalidate` segment-config from the App-Router page to opt into
+     static rendering, then layer the same `headers()` directive on top.
+3. Re-run the suite from a network with reliable reach to
+   `codecamp.reading-advantage.com` to clear the 3 expected failures and
+   confirm Green. (Already done once on 2026-06-07 — see failure table above.)
+4. Re-run with `PHASE7_TEST_INTERN_USERNAME` + `PHASE7_TEST_INTERN_PASSWORD`
+   to exercise the credential-gated authed-tRPC probe (currently skipped).
+
+**Status:** Red phase complete — all 13 sub-tasks have executable contract
+encoding the Phase 7 acceptance criteria. Three production gaps identified
+(tRPC `/api/(.*)` lacks `Cache-Control`; authed `/api/auth/session` lacks
+`Cache-Control`; root URL lacks `s-maxage` / `stale-while-revalidate`). Per
+test-strategy.md §4, the source fix is **out of scope** for this track — file
+a follow-up track to land the `next.config.ts` + segment-config changes.
+
+> **Note on divergence from test-strategy.md:** the test-strategy says "No new
+> unit tests are required for this track" and "keep curl probes out of
+> repo source." Per the 2026-06-07 mid-session supervisor instruction (same
+> as Phases 1–6), Phase 7 is elevated from manual probes to executable
+> contract. The 9 unit tests at the bottom (`parseCacheControl` +
+> `extractHashedAssetUrls` + `extractFontUrls` + budget constants) run
+> unconditionally so regressions in those helpers fail the suite
+> immediately. All other Phase 7 checks remain black-box HTTP probes
+> against prod, consistent with the strategy.
 
 ## Phase 8: Logging, Monitoring & Error Reporting (P1)
 
