@@ -211,7 +211,7 @@ describe("Phase 4 — Dashboard", () => {
     skipIf(
       "GET /en/ (unauth → login wall) returns 200 and an HTML body > 500 bytes",
       async () => {
-        const response = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET" });
+        const response = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET", redirect: "follow" });
         expect.soft(response.status, `expected 200 from /en/, got ${response.status}`).toBe(200);
         const body = await response.text();
         expect.soft(body.length, "expected non-trivial HTML body").toBeGreaterThan(500);
@@ -222,7 +222,7 @@ describe("Phase 4 — Dashboard", () => {
     skipIf(
       "GET /th/ (unauth → login wall) returns 200 and an HTML body > 500 bytes",
       async () => {
-        const response = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET" });
+        const response = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET", redirect: "follow" });
         expect.soft(response.status, `expected 200 from /th/, got ${response.status}`).toBe(200);
         const body = await response.text();
         expect.soft(body.length, "expected non-trivial HTML body").toBeGreaterThan(500);
@@ -411,6 +411,7 @@ describe("Phase 4 — Module & Lesson pages", () => {
       async () => {
         const response = await fetchWithTimeout(`${PROD_URL}/en/module/dev-environment`, {
           method: "GET",
+          redirect: "follow",
         });
         // Unauth users hit the inline login wall on the dashboard; the
         // module page may 307 to /en/ or render the wall. Accept 200 OR
@@ -1175,7 +1176,7 @@ describe("Phase 4 — Internationalization (TH ↔ EN)", () => {
     skipIf(
       "GET /th/ returns 200 with NEXT_LOCALE=th cookie (or Set-Cookie header) — i18n cookie contract",
       async () => {
-        const response = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET" });
+        const response = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET", redirect: "follow" });
         expect.soft(response.status, `expected 200 from /th/, got ${response.status}`).toBe(200);
         const setCookie = response.headers.get("set-cookie") ?? "";
         // The proxy sets NEXT_LOCALE=th (or en) on the redirect path; on
@@ -1202,7 +1203,7 @@ describe("Phase 4 — Internationalization (TH ↔ EN)", () => {
     skipIf(
       "GET /en/ returns 200 and <html lang=\"en\">",
       async () => {
-        const response = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET" });
+        const response = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET", redirect: "follow" });
         expect.soft(response.status, `expected 200 from /en/, got ${response.status}`).toBe(200);
         const body = await response.text();
         expect.soft(
@@ -1218,7 +1219,7 @@ describe("Phase 4 — Internationalization (TH ↔ EN)", () => {
     skipIf(
       "GET /th/ contains Thai-language navigation label (dashboard in Thai)",
       async () => {
-        const response = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET" });
+        const response = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET", redirect: "follow" });
         const body = await response.text();
         // Per messages/th.json navigation.dashboard = "แดชบอร์ด".
         // This is the simplest possible smoke for translated content —
@@ -1234,7 +1235,7 @@ describe("Phase 4 — Internationalization (TH ↔ EN)", () => {
     skipIf(
       "GET /en/ contains English-language navigation label (Dashboard in English)",
       async () => {
-        const response = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET" });
+        const response = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET", redirect: "follow" });
         const body = await response.text();
         // Per messages/en.json navigation.dashboard = "Dashboard".
         // The login form is rendered for unauth users on the dashboard,
@@ -1251,8 +1252,8 @@ describe("Phase 4 — Internationalization (TH ↔ EN)", () => {
       "GET /th/ and /en/ render different navigation copy (TH and EN bundles both loaded)",
       async () => {
         const [thRes, enRes] = await Promise.all([
-          fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET" }),
-          fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET" }),
+          fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET", redirect: "follow" }),
+          fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET", redirect: "follow" }),
         ]);
         const thBody = await thRes.text();
         const enBody = await enRes.text();
@@ -1272,7 +1273,7 @@ describe("Phase 4 — Internationalization (TH ↔ EN)", () => {
     skipIf(
       "GET /th/ HTML references the Noto Sans Thai font class or font-display: swap CSS",
       async () => {
-        const response = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET" });
+        const response = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET", redirect: "follow" });
         const body = await response.text();
         // next/font/google emits a className on <body class="...__variable_..."> or similar.
         // We accept either the literal font name or the className hint
@@ -1329,7 +1330,7 @@ describe("Phase 4 — P0 launch gate (single hard assertion)", () => {
       }
 
       // 3. /en/ must render a 200 with <html lang="en">.
-      const enRes = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET" });
+      const enRes = await fetchWithTimeout(`${PROD_URL}/en/`, { method: "GET", redirect: "follow" });
       if (enRes.status !== 200) {
         missing.push(`GET /en/ returned ${enRes.status} (expected 200)`);
       } else {
@@ -1343,7 +1344,7 @@ describe("Phase 4 — P0 launch gate (single hard assertion)", () => {
       }
 
       // 4. /th/ must render a 200 with <html lang="th">.
-      const thRes = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET" });
+      const thRes = await fetchWithTimeout(`${PROD_URL}/th/`, { method: "GET", redirect: "follow" });
       if (thRes.status !== 200) {
         missing.push(`GET /th/ returned ${thRes.status} (expected 200)`);
       } else {
