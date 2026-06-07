@@ -71,6 +71,31 @@ describe("Phase 1 — DNS & SSL", () => {
     expect.soft(hsts, "HSTS header missing — set in next.config.ts headers()").toBeTruthy();
     expect.soft(hsts ?? "").toMatch(/max-age=\d+/);
   }, REQUEST_TIMEOUT_MS + 2_000);
+
+  skipIf(
+    "rendered HTML contains no http:// resource references (no mixed content)",
+    async () => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+      try {
+        const response = await fetch(PROD_URL, {
+          redirect: "follow",
+          signal: controller.signal,
+        });
+        expect.soft(response.status, `expected 2xx/3xx chain, got ${response.status}`).toBeLessThan(400);
+        const body = await response.text();
+        const refs = extractResourceReferences(body);
+        const mixed = refs.filter((r) => /^http:\/\//i.test(r) || /^\/\//.test(r));
+        expect.soft(
+          mixed,
+          `mixed-content references found: ${mixed.slice(0, 5).join(", ")} (total ${refs.length} refs scanned)`,
+        ).toEqual([]);
+      } finally {
+        clearTimeout(timer);
+      }
+    },
+    REQUEST_TIMEOUT_MS + 2_000,
+  );
 });
 
 describe("Phase 1 — Cloud Run health", () => {
@@ -160,3 +185,85 @@ describe("Phase 1 — Security headers", () => {
     }
   });
 });
+
+describe("extractResourceReferences (helper unit tests)", () => {
+  it("captures absolute https:// URLs in src and href", () => {
+    const html = `<a href="https://example.com/page">x</a><img src="https://cdn.example.com/a.png">`;
+    const refs = extractResourceReferences(html);
+    expect(refs).toContain("https://example.com/page");
+    expect(refs).toContain("https://cdn.example.com/a.png");
+  });
+
+  it("captures http:// URLs (mixed-content markers)", () => {
+    const html = `<img src="http://insecure.example.com/a.png">`;
+    const refs = extractResourceReferences(html);
+    expect(refs.some((r) => r.startsWith("http://"))).toBe(true);
+  });
+
+  it("captures protocol-relative // URLs (mixed-content markers)", () => {
+    const html = `<script src="//cdn.example.com/a.js"></script>`;
+    const refs = extractResourceReferences(html);
+    expect(refs.some((r) => r.startsWith("//"))).toBe(true);
+  });
+
+  it("captures single-quoted attributes", () => {
+    const html = `<img src='https://example.com/a.png'>`;
+    const refs = extractResourceReferences(html);
+    expect(refs).toContain("https://example.com/a.png");
+  });
+
+  it("captures data: and mailto: URLs", () => {
+    const html = `<a href="mailto:hi@example.com">m</a><img src="data:image/png;base64,AAA">`;
+    const refs = extractResourceReferences(html);
+    expect(refs).toContain("mailto:hi@example.com");
+    expect(refs.some((r) => r.startsWith("data:"))).toBe(true);
+  });
+
+  it("captures root-relative paths", () => {
+    const html = `<link rel="stylesheet" href="/_next/static/css/x.css">`;
+    const refs = extractResourceReferences(html);
+    expect(refs).toContain("/_next/static/css/x.css");
+  });
+
+  it("returns empty array for html with no resource attributes", () => {
+    const html = `<p>hello</p>`;
+    const refs = extractResourceReferences(html);
+    expect(refs).toEqual([]);
+  });
+
+  it("captures data-src (lazy-load) attributes", () => {
+    const html = `<img data-src="https://cdn.example.com/lazy.png">`;
+    const refs = extractResourceReferences(html);
+    expect(refs).toContain("https://cdn.example.com/lazy.png");
+  });
+});
+
+/**
+ * Extracts resource URLs (src, href, action, poster, data-src) from an HTML
+ * document. Captures protocol-relative `//host/path` and absolute `http(s)://`
+ * URLs only — leaves relative paths and `data:`/`mailto:` URLs alone.
+ *
+ * Used by the no-mixed-content check: any `http://` or protocol-relative `//`
+ * reference rendered on an HTTPS page is a mixed-content violation.
+ */
+function extractResourceReferences(html: string): string[] {
+  const refs: string[] = [];
+  const attrRe = /\b(?:src|href|action|poster|data-src)\s*=\s*"([^"]+)"|\b(?:src|href|action|poster|data-src)\s*=\s*'([^']+)'/gi;
+  let match: RegExpExecArray | null;
+  while ((match = attrRe.exec(html)) !== null) {
+    const value = match[1] ?? match[2] ?? "";
+    if (!value) continue;
+    if (
+      /^https?:\/\//i.test(value) ||
+      /^\/\//.test(value) ||
+      /^data:/i.test(value) ||
+      /^mailto:/i.test(value) ||
+      value.startsWith("/") ||
+      value.startsWith("#") ||
+      value.startsWith("?")
+    ) {
+      refs.push(value);
+    }
+  }
+  return refs;
+}

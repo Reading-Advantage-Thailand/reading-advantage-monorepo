@@ -7,15 +7,15 @@ Verify the production deployment is healthy and accessible.
 - [~] Task: DNS & SSL
   - [x] `https://codecamp.reading-advantage.com` resolves correctly
   - [x] SSL certificate is valid (not self-signed, not expired)
-  - [ ] HTTP → HTTPS redirect works (infra: Cloud Run does not expose port 80)
+  - [~] HTTP → HTTPS redirect works (infra: Cloud Run does not expose port 80) — Red test in `phase-1-infrastructure.test.ts`
   - [x] HSTS header is present (code added; pending deployment)
-  - [ ] No mixed content warnings in browser dev tools
+  - [~] No mixed content warnings in browser dev tools — Red test in `phase-1-infrastructure.test.ts`
 - [~] Task: Cloud Run health
   - [x] Root URL returns 200 (test updated to follow locale redirect per proxy.ts behavior)
   - [x] `/api/auth/session` returns 200 (unauthenticated)
   - [x] Response headers include `X-Cloud-Trace-Context`
   - [x] No 502/503 errors on cold start
-  - [ ] Cold start time is acceptable (< 5 seconds)
+  - [~] Cold start time is acceptable (< 5 seconds) — Red test in `phase-1-infrastructure.test.ts`
 - [x] Task: Security headers
   - [x] `Content-Security-Policy` header is present and valid (code added; pending deployment)
   - [x] `X-Frame-Options` is set to `DENY` (code added; pending deployment)
