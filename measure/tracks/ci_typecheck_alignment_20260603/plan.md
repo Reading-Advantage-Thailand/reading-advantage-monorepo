@@ -971,11 +971,20 @@
 > end-to-end on a real draft PR touching
 > `apps/science-advantage/**` (task 5 below).
 
-- [~] Task: `pnpm turbo run check-types --filter=science-advantage` exits 0. [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts` test 1 — fast umbrella gate via `pnpm --filter science-advantage check-types`. **Verified Green 2026-06-07** (commit `7e19895`).]
-- [~] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. [Red-phase test in same file test 2 — fast umbrella gate via `pnpm --filter science-advantage lint`. Blocker (4 lint errors in sibling analytics files + `image-generator.ts`) is owned by **Phase 12B** (commit `c019c0c`); **verified Green 2026-06-07**.]
-- [~] Task: `pnpm turbo run test --filter=science-advantage` exits 0. [Red-phase smoke gate in same file test 3 — verifies `test` script wiring + `vitest.unit.config.ts` excludes integration tests + runs a single fast test file (Phase 12, ~23s) as a smoke verification. **Verified Green 2026-06-07**. The full end-to-end test gate is exercised by the monorepo-root CI workflow per regression guard 6.]
-- [~] Task: `pnpm turbo run build --filter=science-advantage` exits 0. [Red-phase smoke gate in same file test 4 — verifies `build` script wiring + `next.config.ts` declares `ignoreBuildErrors: false` (Phase 8 Green contract) + `@node-rs/argon2@^2.0.2` is in `package.json:23` dependencies (Phase 12C Green, commit `779f4a5`). **Verified Green 2026-06-07**. The full end-to-end build gate is exercised by `phase-8-ignore-build-errors.test.ts` and the monorepo-root CI workflow per regression guard 6.]
-- [~] Task: Open a test PR touching `apps/science-advantage/**`; verify the monorepo root CI runs all 4 gates. [Regression guards in same file tests 5–8 lock the install state of `.github/workflows/ci.yml` (paths filter + 4 named gates + workspace-wide turbo invocations + `turbo.json` task graph) so a future over-zealous cleanup cannot silently neuter the gate. **Verified Green 2026-06-07** (Phase 10 commit `132de8b`).]
+- [x] Task: `pnpm turbo run check-types --filter=science-advantage` exits 0. [Red-phase test in `apps/science-advantage/lib/ci-gates/phase-13-final-acceptance.test.ts` test 1 — fast umbrella gate via `pnpm --filter science-advantage check-types`. **Verified Green 2026-06-07** (commit `7e19895`).] (7e19895)
+- [x] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. [Red-phase test in same file test 2 — fast umbrella gate via `pnpm --filter science-advantage lint`. Blocker (4 lint errors in sibling analytics files + `image-generator.ts`) is owned by **Phase 12B** (commit `c019c0c`); **verified Green 2026-06-07**.] (c019c0c)
+- [x] Task: `pnpm turbo run test --filter=science-advantage` exits 0. [Red-phase smoke gate in same file test 3 — verifies `test` script wiring + `vitest.unit.config.ts` excludes integration tests + runs a single fast test file (Phase 12, ~23s) as a smoke verification. **Verified Green 2026-06-07**. The full end-to-end test gate is exercised by the monorepo-root CI workflow per regression guard 6.] (cbeffcb)
+- [x] Task: `pnpm turbo run build --filter=science-advantage` exits 0. [Red-phase smoke gate in same file test 4 — verifies `build` script wiring + `next.config.ts` declares `ignoreBuildErrors: false` (Phase 8 Green contract) + `@node-rs/argon2@^2.0.2` is in `package.json:23` dependencies (Phase 12C Green, commit `779f4a5`). **Verified Green 2026-06-07**. The full end-to-end build gate is exercised by `phase-8-ignore-build-errors.test.ts` and the monorepo-root CI workflow per regression guard 6.] (779f4a5)
+- [x] Task: Open a test PR touching `apps/science-advantage/**`; verify the monorepo root CI runs all 4 gates. [Regression guards in same file tests 5–8 lock the install state of `.github/workflows/ci.yml` (paths filter + 4 named gates + workspace-wide turbo invocations + `turbo.json` task graph) so a future over-zealous cleanup cannot silently neuter the gate. **Verified Green 2026-06-07** (Phase 10 commit `132de8b`).] (132de8b)
+
+> **Status note (2026-06-07, Green phase):** All 17 Phase 13 gate
+> tests pass. Verified independently:
+> - `pnpm --filter science-advantage check-types` exits 0 (0 tsc errors).
+> - `pnpm --filter science-advantage lint` exits 0 (0 errors + 10 pre-existing warnings).
+> - Test smoke gate: single fast test file (phase-12) exits 0 in ~23s.
+> - Build smoke gate: `next.config.ts` declares `ignoreBuildErrors: false`; `@node-rs/argon2@^2.0.2` in dependencies.
+> - 4 regression guards: CI workflow paths filter + 4 named gates + workspace-wide turbo invocations + turbo.json dependsOn chains.
+> Phase 13 is Green; all 5 plan tasks marked [x].
 
 ## Phase 14: Closeout
 
