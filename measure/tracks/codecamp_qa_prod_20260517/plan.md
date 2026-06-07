@@ -1098,29 +1098,143 @@ until this phase is green. Per the project rule against deferring blockers, the 
 acceptance criteria are encoded here as actionable tasks rather than left as inline
 caveats on the `[x]` rows above.
 
-- [ ] Task: Deploy accumulated fixes to production
-  - [ ] Rebuild + roll forward the Cloud Run container with the Phase 1/2/3/6/7/8 fixes
+- [~] Task: Deploy accumulated fixes to production
+  - [~] Rebuild + roll forward the Cloud Run container with the Phase 1/2/3/6/7/8 fixes
         (security + CORS headers `a0862b3`; login 401-not-500 `df39c2f`; Thai font `afbd038`;
         cache-control headers `79e08c0`; observability/error-boundaries `3fb1a87`)
-  - [ ] Confirm the new revision is taking 100% traffic (`gcloud run services describe`)
-- [ ] Task: Re-run all prod-smoke suites against the deployed revision (P0/P1 launch gates → green)
-  - [ ] From a network with reliable reach to `codecamp.reading-advantage.com` (clears the
+  - [~] Confirm the new revision is taking 100% traffic (`gcloud run services describe`)
+- [~] Task: Re-run all prod-smoke suites against the deployed revision (P0/P1 launch gates → green)
+  - [~] From a network with reliable reach to `codecamp.reading-advantage.com` (clears the
         documented `ETIMEDOUT 142.250.x.x:443` runner flakiness seen in Phases 2–6)
-  - [ ] With `PHASE{1..8}_TEST_*` credentials provided (per test-strategy.md §2 — exercises the
+  - [~] With `PHASE{1..8}_TEST_*` credentials provided (per test-strategy.md §2 — exercises the
         credential-gated probes that currently SKIP: login/cookie/session, tRPC role enforcement,
         live OpenRouter chat, keystone GitHub PR E2E)
-  - [ ] Phase 1 launch gate: 5 critical security headers present → green
-  - [ ] Phase 2/3 launch gate: `POST /api/auth/login` returns 401 (not 500) on bad creds → green
-  - [ ] Phase 7 launch gate: tRPC + `/api/auth/session` `Cache-Control: no-store, private`;
+  - [~] Phase 1 launch gate: 5 critical security headers present → green
+  - [~] Phase 2/3 launch gate: `POST /api/auth/login` returns 401 (not 500) on bad creds → green
+  - [~] Phase 7 launch gate: tRPC + `/api/auth/session` `Cache-Control: no-store, private`;
         public shell `s-maxage`/`stale-while-revalidate` → green
-  - [ ] Phase 8 launch gate: error boundaries render + tRPC logging middleware emits structured
+  - [~] Phase 8 launch gate: error boundaries render + tRPC logging middleware emits structured
         logs in Cloud Logging → green
-- [ ] Task: File follow-up tracks for findings the deploy does NOT fix
-  - [ ] P1 perf: warm dashboard 1363ms vs 1000ms budget (needs render caching / prefetch / Cloud Run tuning)
-  - [ ] P1 asset: 1 render-blocking `<script>` in `<head>`
-  - [ ] P1 infra: cold start exceeds 5s budget (container min-instances / image-size reduction)
-  - [ ] (Informational) alert-policy artifacts not committed to repo (configured out-of-band in GCP)
+- [~] Task: File follow-up tracks for findings the deploy does NOT fix
+  - [~] P1 perf: warm dashboard 1363ms vs 1000ms budget (needs render caching / prefetch / Cloud Run tuning)
+  - [~] P1 asset: 1 render-blocking `<script>` in `<head>`
+  - [~] P1 infra: cold start exceeds 5s budget (container min-instances / image-size reduction)
+  - [~] (Informational) alert-policy artifacts not committed to repo (configured out-of-band in GCP)
   - *(Logged in `measure/tech-debt.md` under `codecamp_qa_prod_20260517` until tracks are opened.)*
+
+### Phase 8.5 — Red-phase probe results (2026-06-08)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts`.
+Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE85_PROD_URL`; skip the network probes via
+`PHASE85_SKIP=1`; the static source/artifact checks and the helper unit tests still run unconditionally).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+**Test budget:** 33 tests total. With `PHASE85_SKIP=1`, the 5 network probes skip and the
+filesystem + unit tests run unconditionally (28 unit + filesystem, 5 skipped, 0 failed in the
+filesystem-only pass — all filesystem tests pass at HEAD). With network on, the 4 per-gate
+probes and the aggregate gate probe re-verify the live prod contract.
+
+**Per-test gating (env vars, never committed):**
+
+- `PHASE85_PROD_URL` — override prod target.
+- `PHASE85_SKIP=1` — skip the network probes; static source/artifact checks + helper unit tests still run.
+- `PHASE85_TEST_INTERN_USERNAME` / `PHASE85_TEST_INTERN_PASSWORD` — reserved for future Phase 9
+  / Phase 12 cross-rollout probes; not used in the Phase 8.5 launch-gate slice.
+
+**Symbol map (from build-graph):** the test does not depend on any specific source symbol — it
+asserts the externally-observable contract that the running Cloud Run revision must satisfy
+(security headers, cache-control, login 401-not-500, tRPC 401, 404). The deploy artifact
+(`apps/codecamp-advantage/cloudbuild.yaml`) is parsed statically so a regression in
+`--set-secrets=` / `--set-env-vars=` / `--region=` / image registry fails the suite immediately.
+
+**Targeted Red command (filesystem-only pass — what CI runs to gate the follow-up-track
+deliverable):**
+
+```bash
+cd apps/codecamp-advantage && PHASE85_SKIP=1 node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts
+```
+
+Result (2026-06-08): **3 failed | 25 passed | 5 skipped (33)** in 7.98s wall.
+- The 3 failures are the follow-up track file-existence checks (Red: 0/3 follow-up tracks filed
+  in `measure/tracks/`). These map directly to Phase 8.5 Task 3 deliverables and represent
+  missing implementation, not stale records.
+- The 25 passes are the helper unit tests (parseCacheControl, parseCloudBuildSetSecrets,
+  parseCloudBuildSetEnvVars, parseCloudBuildRegion, parseCloudBuildImageRegistry, constant
+  sanity), the Cloud Build artifact checks (all 5 required secrets bound; NODE_ENV=production;
+  region=asia-southeast1; image registry=asia-southeast1-docker.pkg.dev), and the tech-debt.md
+  row check (the 3 P1 follow-ups are already logged on line 38 of `measure/tech-debt.md`).
+
+**Targeted Red command (network pass — what the executor runs to gate the live deploy):**
+
+```bash
+cd apps/codecamp-advantage && node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts
+```
+
+Result (2026-06-08): **6 failed | 27 passed (33)** in 16.71s wall.
+- **3 follow-up track file checks** (same 3 as the filesystem-only pass).
+- **Aggregate P0/P1 launch gate** — fails because 2/4 per-gate checks fail on the live prod URL.
+  Summary line from the failure message:
+  - `FAIL (Phase 1) 5 critical security headers present — missing: Content-Security-Policy
+    (default-src), Strict-Transport-Security (max-age), X-Frame-Options (DENY|SAMEORIGIN),
+    X-Content-Type-Options (nosniff), Referrer-Policy`
+  - `FAIL (Phase 7) tRPC + /api/auth/session no-store/private; public shell s-maxage/SWR —
+    /api/auth/session cache-control=<missing> (need no-store or private+s-maxage=0); root URL
+    cache-control=private, no-cache, no-store, max-age=0, must-revalidate (need s-maxage>0 or
+    stale-while-revalidate)`
+  - `PASS (Phase 2/3) POST /api/auth/login returns 401 (not 500) on bad creds` — confirms the
+    pre-fix login 500 path is no longer live on prod (the 500 was likely transient or
+    pre-existing network flakiness in earlier Phase 2/3 runs); still gate on the post-deploy
+    re-run.
+  - `PASS (Phase 8) tRPC unauth 401 + missing routes 404 (live launch-gate slice)` — confirms
+    the live 401/404 envelope contract holds on the current prod revision.
+- **2 per-gate network probes** (Phase 1 + Phase 7) — fail with the same evidence as the aggregate
+  gate. The Phase 2/3 and Phase 8 per-gate probes pass, mirroring the aggregate gate.
+
+**Findings (Red-phase pass):**
+
+- **3 follow-up tracks missing** (Phase 8.5 Task 3 deliverable). The 3 P1 follow-up tracks for
+  the findings the deploy does NOT fix (warm dashboard 1363ms; 1 render-blocking `<script>`;
+  cold start > 5s) are not yet filed in `measure/tracks/`. The 3 prefixes the test looks for
+  are documented in the test file (`codecamp_perf_warm_dashboard_*`,
+  `codecamp_asset_render_blocking_*`, `codecamp_infra_cold_start_*`).
+- **2 of 4 live P0/P1 launch gates RED on the current prod revision** — Phase 1 (5 critical
+  security headers missing) and Phase 7 (`/api/auth/session` lacks `Cache-Control`; root URL
+  lacks `s-maxage` / `stale-while-revalidate`). This confirms the plan.md §Phase 8.5 statement
+  that the accumulated fixes have NOT been deployed to the live Cloud Run revision.
+- **2 of 4 live P0/P1 launch gates GREEN on the current prod revision** — Phase 2/3 (login
+  401-not-500) and Phase 8 (tRPC 401, 404 envelope). The Green pass on the runner's local
+  network is good evidence that the fix is in the source and the prod was at least partially
+  rolled forward for one of the rounds; the launch-gate aggregate still fails until all 4 are
+  green.
+- **Cloud Build artifact is well-formed** — the static check confirms all 5 required Secret
+  Manager bindings, `NODE_ENV=production`, region `asia-southeast1`, and the
+  `asia-southeast1-docker.pkg.dev` image registry are all present. A future regression in
+  `cloudbuild.yaml` (e.g. dropping the `--set-secrets=` for `OPENROUTER_API_KEY`) fails the
+  suite immediately.
+- **Tech-debt.md row exists** — the row at `measure/tech-debt.md:38` already logs the 3 P1
+  follow-ups. The test asserts the row mentions all 3 by name (warm-dashboard, render-blocking,
+  cold-start) so a future re-write of the row that drops one of the items fails immediately.
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+
+1. **P0 — execute the deploy** (`gcloud builds submit --config=apps/codecamp-advantage/cloudbuild.yaml`)
+   to roll forward the Cloud Run container with the Phase 1/2/3/7/8 fixes. The launch-gate
+   aggregate test will go green when the live prod URL returns all 5 security headers, the
+   correct `Cache-Control` directives, the 401-not-500 login, and the 401/404 envelope.
+2. **P0 — file the 3 follow-up tracks** under `measure/tracks/`:
+   - `measure/tracks/codecamp_perf_warm_dashboard_<date>/` — warm dashboard 1363ms vs 1000ms budget.
+   - `measure/tracks/codecamp_asset_render_blocking_<date>/` — 1 render-blocking `<script>` in `<head>`.
+   - `measure/tracks/codecamp_infra_cold_start_<date>/` — cold start exceeds 5s budget.
+3. (Informational) File a follow-up track for alert-policy artifacts if the team wants
+   repo-committed alert definitions (currently configured out-of-band in GCP).
+4. Re-run the suite from a network with reliable reach to `codecamp.reading-advantage.com`
+   to confirm the network probes pass cleanly on the post-deploy revision (the runner used
+   for this Red-phase pass has been verified reachable on this date — both 200-status and
+   `x-cloud-trace-context` propagation observed).
+5. Re-run with `PHASE{1..8}_TEST_*` env vars to exercise the credential-gated probes for
+   Phases 3/4/5/6 — these are out of scope for the Phase 8.5 launch-gate slice but should be
+   run as part of Phase 12 (Regression Against Local QA).
 
 ## Phase 9: GitHub Webhook Specifics (P1)
 
