@@ -458,7 +458,66 @@ Production URL default: `https://codecamp.reading-advantage.com`.
 - `PHASE5_TEST_PR_URL` — full PR URL for the keystone E2E.
 - `PHASE5_TEST_GITHUB_DELIVERY_ID` — most recent `x-github-delivery` for that PR (used to assert idempotency / outcome=processed in the listing).
 
-Red-phase run results will be appended in the next mid-session pass.
+Red-phase run results (2026-06-07, mid-session pass): **12 passed | 10 skipped (22)** in 32.57s wall
+(15.59s excluding the credential-gated waits). The test file was authored in a prior session and committed
+as `e056aa3`; this pass is the **run + documentation** step, not new code.
+
+**Red-phase contract interpretation (production QA track):** unlike a unit-test Red phase where failing
+assertions are the goal, this is an **executable contract** — a passing run against prod is the green
+state; a failing run is a real production gap. The 10 credential-gated probes are designed to SKIP
+without `PHASE5_TEST_*` env vars (which the executor will provide at run time per test-strategy.md §2).
+The 6 unauth probes and 6 unit tests run unconditionally and are the structural P0 launch gate.
+
+| Sub-check | Result | Notes |
+|---|---|---|
+| `POST /api/chat` (unauth) → 401 + `{ error: "Authentication required" }` | PASS (1697ms) | Confirmed against `apps/codecamp-advantage/app/api/chat/route.ts:112` — chat route deployed, auth gate wired |
+| `POST /api/chat` (empty body, unauth) → 400 or 401 | PASS (590ms) | Auth runs before Zod — unauth 401 is by design |
+| `POST /api/chat` (INTERN, English) → real LLM response, not fallback mock | SKIP | `PHASE5_TEST_INTERN_USERNAME`/`PASSWORD` not set |
+| `POST /api/chat` (INTERN, Thai input) → Thai-script response (language mirror) | SKIP | Credential-gated |
+| `POST /api/chat` (INTERN, streaming content-type) → AI SDK chunk markers | SKIP | Credential-gated |
+| `POST /api/chat` — 31st request in 60s → 429 + `retryAfter` | SKIP | Credential-gated; budget gated on `apps/codecamp-advantage/lib/rate-limit.ts:7` (30 req/min) |
+| `codecamp.saveChatMessage` → `codecamp.chatHistory` round-trips to Cloud SQL | SKIP | Credential-gated; nonce pattern ready for executor |
+| `POST /webhooks/github/pr` (no sig) → 401 + `{ error: "Missing signature" }` | PASS (319ms) | Confirmed against `packages/webhooks/src/github.ts:112` — webhook route deployed, sig gate wired |
+| `POST /webhooks/github/pr` (bad sig) → 401 + `{ error: "Invalid signature" }` | PASS (200ms) | Confirmed against `packages/webhooks/src/github.ts:117` |
+| `POST /webhooks/github/pr` (valid sig + PR opened) → 200, creates `codecamp_pr_reviews` row | SKIP | Keystone fixture + `PHASE5_TEST_GITHUB_WEBHOOK_SECRET` not set |
+| `POST /webhooks/github/pr` (synchronize) → 200, updates row to `reviewStatus=pending` | SKIP | Keystone-fixture-gated |
+| `POST /webhooks/github/pr` (signed, unmapped repo) → 200 + `ignored='No matching exercise repo'` | SKIP | Webhook-secret-gated; repo synthesized per run to guarantee miss |
+| `codecamp.prReviews` (INTERN) → array of `prReviewSchema` rows with valid `reviewStatus` | SKIP | Credential-gated |
+| `codecamp.prReviewByPrUrl` (ADMIN) for keystone PR → 200 with valid `reviewStatus` | PASS (8ms) — early-return | No `PHASE5_TEST_PR_URL` fixture, so the test exits early; with the fixture + admin creds, it would run |
+| `codecamp.webhookEvents` (ADMIN) → array of `webhookEventSchema` rows, `outcome ∈ {ignored,failed}` | SKIP | Credential-gated; keystone deliveryId anchor ready for executor |
+| **Phase 5 — P0 launch gate** (single hard assertion) | PASS (1209ms) | Aggregated gate: 0 critical items missing — both unauth contracts (chat 401, webhook 401) hold on prod |
+| `readSeedExerciseRepoUrls` returns the 4 entry-phase keystone repos | PASS (101ms, unit) | Confirms `MODULE_REPO_MAP` has `git-github`, `html-css`, `javascript`, `typescript` (all `github.com` URLs) |
+| `readSeedExerciseRepoUrls` produces no duplicate repo URLs | PASS (47ms, unit) | Regression floor for seed shape |
+| `readSeedExerciseRepoUrls` has ≥10 entries (covers Phase A–D exercise repos) | PASS (42ms, unit) | Regression floor for seed size |
+| `webhookEventSchema.outcome` is exactly `["ignored", "failed"]` | PASS (23ms, unit) | Live success path doesn't log — contract drift detector |
+| `prReviewSchema.reviewStatus` is exactly `["pending", "reviewed", "needs_changes", "approved"]` | PASS (12ms, unit) | Dashboard badge / ReviewHistory render contract |
+| `chatMessageInputSchema.message` is `z.string().min(1).max(4000)` | PASS (9ms, unit) | Chat route / `saveChatMessage` input contract |
+
+**Findings (Red-phase pass):**
+
+- **No P0 production gaps detected on the unauth contract surface.** All three unauth P0 launch-gate
+  checks (chat 401, webhook 401 missing-sig, webhook 401 bad-sig) pass on prod. The 5xx health check
+  on both routes also passes — the routes are wired and reachable, not erroring.
+- **10 probes remain credential- or keystone-fixture-gated** and will run when the executor provides
+  `PHASE5_TEST_*` env vars per test-strategy.md §2 (test creds + keystone PR URL + deliveryId +
+  webhook secret, all sourced from `1Password`/`.env.qa.local`, never committed).
+- **All 6 unit-test oracles pass** — the seed `MODULE_REPO_MAP` shape, the `webhookEventSchema`
+  outcome enum, the `prReviewSchema.reviewStatus` enum, and the `chatMessageInputSchema.message`
+  constraints all hold. A regression in any of these will fail the suite immediately without needing
+  network access.
+
+**Executor handoff (next run):**
+
+1. Provide credentials via env: `PHASE5_TEST_INTERN_USERNAME`/`PASSWORD`, `PHASE5_TEST_ADMIN_USERNAME`/`PASSWORD`, `PHASE5_TEST_REPO_URL`, `PHASE5_TEST_PR_URL`, `PHASE5_TEST_GITHUB_DELIVERY_ID`, `PHASE5_TEST_GITHUB_WEBHOOK_SECRET`. These are sourced from `1Password`/`.env.qa.local` per test-strategy.md §2.
+2. Use a disposable GitHub repo from `MODULE_REPO_MAP` (per test-strategy.md §2 — the seed has 4 entry-phase repos: `git-github`, `html-css`, `javascript`, `typescript`) and open a real test PR against it. Capture the `x-github-delivery` header from the most recent delivery for the keystone E2E.
+3. Re-run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-5-real-external-integrations.test.ts` from `apps/codecamp-advantage`.
+4. Record the 10 credential-gated probe results in the plan.md sub-check table (this pass shows 12/10; the executor's pass will fill in the 10 SKIPs).
+5. For the rate-limit probe: the 30-req burst uses the INTERN creds; rotate the test account if a prior run consumed the budget (per test-strategy.md §3 rate-limit interaction note).
+6. The dual-`logWebhookEvent` symbol concern from test-strategy.md §6 is not exercisable in the live prod probes — it's a code-level check; if the keystone PR's `webhookEvents` listing shows the keystone `deliveryId` with a valid `outcome` enum, the audit-trail is correctly wired through the domain layer.
+
+**Green-phase actions required (not implemented by this Red-phase pass):** none on the test file itself
+(it's the contract). If the executor's credential-gated re-run surfaces a production gap, file a new
+track per test-strategy.md §4 black-box rule — do not inline-fix here.
 
 ## Phase 6: Performance & Latency (P1)
 
