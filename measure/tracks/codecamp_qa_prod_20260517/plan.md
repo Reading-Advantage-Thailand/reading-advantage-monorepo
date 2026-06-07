@@ -1,5 +1,14 @@
 # Implementation Plan: CodeCamp Advantage — Production QA/QC Testing
 
+> **Status-marker convention (read before trusting the `[x]` marks):** In Phases 1–8 a
+> `[x]` means **the executable contract was written and the fix coded + verified locally**
+> (typecheck/lint/unit pass). It does **NOT** mean the spec's acceptance criteria
+> ("All P0 production test cases pass") are met against the live server. Most fixes carry
+> a `Needs deploy: Yes` row in their green-phase table and the P0/P1 launch gates are
+> currently RED against prod. The track's acceptance criteria are gated on **Phase 8.5
+> (Deployment Gate)** below — until that phase is green, treat Phases 1–8 as
+> *code-complete, prod-unverified*.
+
 ## Phase 1: Infrastructure & Deployment Verification (P0)
 
 Verify the production deployment is healthy and accessible.
@@ -30,7 +39,7 @@ Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/p
 Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts` from
 `apps/codecamp-advantage` (or override target via `PHASE1_PROD_URL`; skip via `PHASE1_SKIP=1`).
 
-### Phase 1 — Red-phase strengthening (2026-06-07, commit e0b8f59)
+### Phase 1 — Red-phase strengthening (2026-06-07, commit c4d8a66)
 
 The per-header checks above use `expect.soft` so a single test run can enumerate
 all missing headers at once. To give CI a single hard gate that fails the build
@@ -895,12 +904,12 @@ Green-phase commit: `79e08c0`
 
 Verify observability in production.
 
-- [x] Task: Cloud Logging (commit `31496a8`)
+- [x] Task: Cloud Logging (commit `3fb1a87`)
   - [x] Application logs appear in Cloud Logging (structured JSON via `console.log(JSON.stringify({…}))` in tRPC logging middleware)
   - [x] Error logs have stack traces (structured `{ stack: error.stack }` payload in login, chat, proxy, impersonate, mapDomainError, context)
   - [x] tRPC error logs include procedure name and input (logging middleware captures `path`, `type`, scrubbed `input`)
   - [x] Request logs include latency and status code (logging middleware captures `latencyMs`, `status`)
-- [x] Task: Error handling (commit `31496a8`)
+- [x] Task: Error handling (commit `3fb1a87`)
   - [x] 404 errors return proper Next.js error page (`app/[locale]/not-found.tsx` + `app/not-found.tsx` created)
   - [x] 500 errors return proper error page (not stack trace) (`app/[locale]/error.tsx` + `app/error.tsx` created with styled recovery affordance)
   - [x] tRPC errors return sanitized messages to client (existing — verified by network probe)
@@ -1077,6 +1086,41 @@ Fixed all 4 critical P1 launch-gate gaps and all 12 Red-phase source-code failur
 1. **Deploy to production** — rebuild and roll forward the Cloud Run container with the observability changes.
 2. Re-run the full suite from a network with reliable reach to `codecamp.reading-advantage.com` to confirm the ETIMEDOUT probe passes.
 3. (Informational) File a follow-up track for alert-policy artifacts if the team wants repo-committed alert definitions.
+
+## Phase 8.5: Deployment Gate — Deploy & Re-verify (P0, BLOCKER)
+
+**Why this phase exists:** Phases 1–8 marked their tasks `[x]` on a *code-complete* basis,
+but every P0/P1 launch gate is currently RED against the live server because the
+accumulated fixes have **not been deployed**. The spec's acceptance criteria ("All P0
+production test cases pass", "GitHub webhook delivers and processes real PR events
+successfully", "AI tutor responds with live OpenRouter integration") cannot be satisfied
+until this phase is green. Per the project rule against deferring blockers, the unmet
+acceptance criteria are encoded here as actionable tasks rather than left as inline
+caveats on the `[x]` rows above.
+
+- [ ] Task: Deploy accumulated fixes to production
+  - [ ] Rebuild + roll forward the Cloud Run container with the Phase 1/2/3/6/7/8 fixes
+        (security + CORS headers `a0862b3`; login 401-not-500 `df39c2f`; Thai font `afbd038`;
+        cache-control headers `79e08c0`; observability/error-boundaries `3fb1a87`)
+  - [ ] Confirm the new revision is taking 100% traffic (`gcloud run services describe`)
+- [ ] Task: Re-run all prod-smoke suites against the deployed revision (P0/P1 launch gates → green)
+  - [ ] From a network with reliable reach to `codecamp.reading-advantage.com` (clears the
+        documented `ETIMEDOUT 142.250.x.x:443` runner flakiness seen in Phases 2–6)
+  - [ ] With `PHASE{1..8}_TEST_*` credentials provided (per test-strategy.md §2 — exercises the
+        credential-gated probes that currently SKIP: login/cookie/session, tRPC role enforcement,
+        live OpenRouter chat, keystone GitHub PR E2E)
+  - [ ] Phase 1 launch gate: 5 critical security headers present → green
+  - [ ] Phase 2/3 launch gate: `POST /api/auth/login` returns 401 (not 500) on bad creds → green
+  - [ ] Phase 7 launch gate: tRPC + `/api/auth/session` `Cache-Control: no-store, private`;
+        public shell `s-maxage`/`stale-while-revalidate` → green
+  - [ ] Phase 8 launch gate: error boundaries render + tRPC logging middleware emits structured
+        logs in Cloud Logging → green
+- [ ] Task: File follow-up tracks for findings the deploy does NOT fix
+  - [ ] P1 perf: warm dashboard 1363ms vs 1000ms budget (needs render caching / prefetch / Cloud Run tuning)
+  - [ ] P1 asset: 1 render-blocking `<script>` in `<head>`
+  - [ ] P1 infra: cold start exceeds 5s budget (container min-instances / image-size reduction)
+  - [ ] (Informational) alert-policy artifacts not committed to repo (configured out-of-band in GCP)
+  - *(Logged in `measure/tech-debt.md` under `codecamp_qa_prod_20260517` until tracks are opened.)*
 
 ## Phase 9: GitHub Webhook Specifics (P1)
 
