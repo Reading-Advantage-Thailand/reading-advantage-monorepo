@@ -4,29 +4,56 @@
 
 Verify the production deployment is healthy and accessible.
 
-- [ ] Task: DNS & SSL
-  - [ ] `https://codecamp.reading-advantage.com` resolves correctly
-  - [ ] SSL certificate is valid (not self-signed, not expired)
+- [~] Task: DNS & SSL
+  - [x] `https://codecamp.reading-advantage.com` resolves correctly
+  - [x] SSL certificate is valid (not self-signed, not expired)
   - [ ] HTTP → HTTPS redirect works
   - [ ] HSTS header is present
   - [ ] No mixed content warnings in browser dev tools
-- [ ] Task: Cloud Run health
-  - [ ] Root URL returns 200
-  - [ ] `/api/auth/session` returns 200 (unauthenticated)
-  - [ ] Response headers include `X-Cloud-Trace-Context`
-  - [ ] No 502/503 errors on cold start
+- [~] Task: Cloud Run health
+  - [~] Root URL returns 200
+  - [x] `/api/auth/session` returns 200 (unauthenticated)
+  - [x] Response headers include `X-Cloud-Trace-Context`
+  - [x] No 502/503 errors on cold start
   - [ ] Cold start time is acceptable (< 5 seconds)
-- [ ] Task: Security headers
+- [~] Task: Security headers
   - [ ] `Content-Security-Policy` header is present and valid
   - [ ] `X-Frame-Options` is set to `DENY` or `SAMEORIGIN`
   - [ ] `X-Content-Type-Options` is `nosniff`
   - [ ] `Referrer-Policy` is set
   - [ ] CORS headers are correct for API routes
-- [ ] Task: Container & build verification
-  - [ ] Cloud Build trigger completed successfully
-  - [ ] Artifact Registry has latest image
-  - [ ] Cloud Run revision matches latest commit
-  - [ ] No build warnings or errors in Cloud Build logs
+- [ ] Task: Container & build verification (deferred — requires gcloud CLI access; covered by Phase-0 readiness checklist)
+
+### Phase 1 — Red-phase probe results (2026-06-07)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts`.
+Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE1_PROD_URL`; skip via `PHASE1_SKIP=1`).
+
+| Sub-check | Initial run (2026-06-07) | Notes |
+|---|---|---|
+| DNS resolves | PASS (~1s) | |
+| SSL valid | PASS (~1.1s) | |
+| HTTP→HTTPS redirect | **FAIL** (fetch failed; HTTP listener rejects) | Needs investigation — likely Cloud Run fronts HTTPS only; or HTTP→HTTPS redirector not configured |
+| HSTS present | **FAIL** (header missing) | `next.config.ts` has no `headers()` function |
+| Root URL returns 200 | PASS (warm) / **FAIL** (cold) | Cold-start flakiness — first request exceeded 5s budget |
+| `/api/auth/session` returns 200 | PASS (~0.4s) | |
+| `X-Cloud-Trace-Context` | PASS | Cloud Run injecting trace header |
+| No 502/503 on cold start | PASS | |
+| Cold start < 5s | **FAIL** (exceeded budget) | Real production finding — investigate container size or startup hook |
+| `Content-Security-Policy` | **FAIL** (header missing) | `next.config.ts` has no `headers()` function |
+| `X-Frame-Options: DENY/SAMEORIGIN` | **FAIL** (header missing) | Same |
+| `X-Content-Type-Options: nosniff` | **FAIL** (header missing) | Same |
+| `Referrer-Policy` | **FAIL** (header missing) | Same |
+| CORS `Access-Control-Allow-Origin` | **FAIL** (header missing on preflight) | |
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+1. Add a `headers()` block to `apps/codecamp-advantage/next.config.ts` setting CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, HSTS. (Or a reverse proxy / Cloud Run annotation alternative.)
+2. Configure HTTP→HTTPS redirect (Cloud Run default rejects HTTP, or add a redirector).
+3. Investigate cold start budget — possible container min-instances or image-size reduction.
+4. Decide CORS policy for API routes (tRPC client uses same-origin, so explicit CORS may not be needed; verify the contract first).
+
+> **Note on divergence from test-strategy.md:** the test-strategy says "No new unit tests are required for this track" and "keep curl probes out of repo source." Per the 2026-06-07 mid-session supervisor instruction, Phase 1 was elevated from manual probes to executable contract. Tests live in repo as the single source of truth for Phase 1 acceptance; all other phases remain script-free per the strategy.
 
 ## Phase 2: Production Database & Configuration (P0)
 
