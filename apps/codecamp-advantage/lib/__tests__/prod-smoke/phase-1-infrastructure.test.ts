@@ -74,9 +74,15 @@ describe("Phase 1 — DNS & SSL", () => {
 });
 
 describe("Phase 1 — Cloud Run health", () => {
-  skipIf("root URL returns 200", async () => {
-    const response = await fetchWithTimeout(PROD_URL, { method: "GET" });
-    expect.soft(response.status, `expected 200, got ${response.status}`).toBe(200);
+  skipIf("root URL returns 200 (following locale redirect)", async () => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    try {
+      const response = await fetch(PROD_URL, { redirect: "follow", signal: controller.signal });
+      expect.soft(response.status, `expected 200 after following redirects, got ${response.status}`).toBe(200);
+    } finally {
+      clearTimeout(timer);
+    }
   }, REQUEST_TIMEOUT_MS + 2_000);
 
   skipIf("/api/auth/session returns 200 (unauthenticated)", async () => {
@@ -96,11 +102,17 @@ describe("Phase 1 — Cloud Run health", () => {
   }, REQUEST_TIMEOUT_MS + 2_000);
 
   skipIf("cold start time is within budget", async () => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     const start = Date.now();
-    const response = await fetchWithTimeout(PROD_URL, { method: "GET" });
-    const elapsed = Date.now() - start;
-    expect.soft(response.status).toBe(200);
-    expect.soft(elapsed, `cold start took ${elapsed}ms`).toBeLessThan(COLD_START_BUDGET_MS);
+    try {
+      const response = await fetch(PROD_URL, { redirect: "follow", signal: controller.signal });
+      const elapsed = Date.now() - start;
+      expect.soft(response.status).toBe(200);
+      expect.soft(elapsed, `cold start took ${elapsed}ms`).toBeLessThan(COLD_START_BUDGET_MS);
+    } finally {
+      clearTimeout(timer);
+    }
   }, REQUEST_TIMEOUT_MS + 2_000);
 });
 
