@@ -244,4 +244,96 @@ describe("auth route handlers", () => {
     expect(body.user.id).toBe("u1");
     expect(body.user.role).toBe("STUDENT");
   });
+
+  it("returns 401 when user lookup throws a DB error (not 500)", async () => {
+    mockDb.select.mockReturnValueOnce({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          limit: vi.fn().mockRejectedValue(new Error("connection refused")),
+        }),
+      }),
+    });
+
+    const response = await handleLogin(
+      jsonRequest("/api/auth/login", {
+        username: "student1",
+        password: "Password123!",
+      })
+    );
+
+    expect(response.status).toBe(401);
+    const body = await response.json();
+    expect(body.message).toBe("Invalid username or password");
+  });
+
+  it("returns 401 when account lookup throws a DB error (not 500)", async () => {
+    mockDb.select
+      .mockReturnValueOnce(
+        selectResult([
+          {
+            id: "u1",
+            username: "student1",
+            name: "Student One",
+            role: "STUDENT",
+            schoolId: "s1",
+          },
+        ])
+      )
+      .mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockRejectedValue(new Error("connection timeout")),
+          }),
+        }),
+      });
+
+    const response = await handleLogin(
+      jsonRequest("/api/auth/login", {
+        username: "student1",
+        password: "Password123!",
+      })
+    );
+
+    expect(response.status).toBe(401);
+    const body = await response.json();
+    expect(body.message).toBe("Invalid username or password");
+  });
+
+  it("returns 401 when verifyPassword throws (not 500)", async () => {
+    const { verifyPassword } = await import("@reading-advantage/auth");
+    vi.mocked(verifyPassword).mockRejectedValueOnce(new Error("hash parse error"));
+
+    mockDb.select
+      .mockReturnValueOnce(
+        selectResult([
+          {
+            id: "u1",
+            username: "student1",
+            name: "Student One",
+            role: "STUDENT",
+            schoolId: "s1",
+          },
+        ])
+      )
+      .mockReturnValueOnce(
+        selectResult([
+          {
+            userId: "u1",
+            providerId: "credential",
+            password: "invalid-hash",
+          },
+        ])
+      );
+
+    const response = await handleLogin(
+      jsonRequest("/api/auth/login", {
+        username: "student1",
+        password: "Password123!",
+      })
+    );
+
+    expect(response.status).toBe(401);
+    const body = await response.json();
+    expect(body.message).toBe("Invalid username or password");
+  });
 });
