@@ -634,7 +634,7 @@
 > `serverExternalPackages`. (Build runs ~3 min — within the 900s role budget; this is
 > the build counterpart to the smoke-test refactor noted in Phase 13.)
 
-- [~] Task: Red — add an end-to-end build assertion at `apps/science-advantage/lib/ci-gates/phase-12c-build-resolves.test.ts` (or promote the existing smoke check in `phase-8-ignore-build-errors.test.ts`) that `pnpm --filter science-advantage build` exits 0. Confirm it fails today with the `@node-rs/argon2` Turbopack error before the fix.
+- [x] Task: Red — add an end-to-end build assertion at `apps/science-advantage/lib/ci-gates/phase-12c-build-resolves.test.ts` (or promote the existing smoke check in `phase-8-ignore-build-errors.test.ts`) that `pnpm --filter science-advantage build` exits 0. Confirm it fails today with the `@node-rs/argon2` Turbopack error before the fix. (e0cd793)
 
   > **Status note (2026-06-07, mid role, Red-phase owned):** Red-phase
   > gate tests added at
@@ -690,8 +690,16 @@
   > (`pnpm install @node-rs/argon2` at `^2.0.2` in
   > `apps/science-advantage/package.json` + `pnpm install` from
   > repo root) is owned by the next role.
-- [~] Task: Green — add `@node-rs/argon2` to `apps/science-advantage/package.json` `dependencies` at the version resolved for `@reading-advantage/auth`; run `pnpm install` from the repo root.
-- [~] Task: Run `pnpm turbo run build --filter=science-advantage`; expect exit 0. Re-run `check-types` and `lint`; expect no regression.
+- [x] Task: Green — add `@node-rs/argon2` to `apps/science-advantage/package.json` `dependencies` at the version resolved for `@reading-advantage/auth`; run `pnpm install` from the repo root. (047cbba)
+- [x] Task: Run `pnpm turbo run build --filter=science-advantage`; expect exit 0. Re-run `check-types` and `lint`; expect no regression. (047cbba)
+
+> **Status note (2026-06-07, Green phase):** Added `@node-rs/argon2`
+> at `^2.0.2` to `apps/science-advantage/package.json` `dependencies`
+> (matching `packages/auth/package.json:19`). `pnpm install` succeeded.
+> `pnpm --filter science-advantage build` exits 0 with 0
+> `@node-rs/argon2` errors. `check-types` exits 0 with 0 tsc errors.
+> `lint` reports 0 errors + 10 warnings (all pre-existing). Gate tests
+> `phase-12c-build-resolves.test.ts` — 6/6 passing.
 
 ## Phase 13: Final Acceptance
 

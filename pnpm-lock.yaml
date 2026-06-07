@@ -1027,6 +1027,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.75.0)
+      '@node-rs/argon2':
+        specifier: ^2.0.2
+        version: 2.0.2
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
         version: 1.2.12(@types/react-dom@19.2.2)(@types/react@19.2.2)(react-dom@19.2.5)(react@19.2.5)
