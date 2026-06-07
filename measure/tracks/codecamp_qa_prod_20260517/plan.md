@@ -275,26 +275,87 @@ Green-phase verification confirms all auth code is correct and production-ready.
 
 Run the same critical paths as local QA to catch environment-specific regressions.
 
-- [ ] Task: Dashboard
-  - [ ] Loads with correct progress stats
-  - [ ] Module locking works correctly
-  - [ ] Phase grouping renders correctly
-  - [ ] PR review badges display correctly
-- [ ] Task: Module & Lesson pages
-  - [ ] Module detail page loads with lesson list
-  - [ ] Theory lessons render correctly
-  - [ ] Exercise lessons accept submissions
-  - [ ] Quiz lessons score correctly (>=70% marks completed)
-  - [ ] Progress updates after quiz submission
-- [ ] Task: Admin panel
-  - [ ] Admin dashboard loads with cohort stats
-  - [ ] Intern table renders correctly
-  - [ ] Create intern form works
-  - [ ] Intern detail page shows progress breakdown
-- [ ] Task: Internationalization
-  - [ ] TH → EN locale switch works
-  - [ ] All translated content renders correctly
-  - [ ] Thai font loads correctly
+- [~] Task: Dashboard
+  - [~] Loads with correct progress stats
+  - [~] Module locking works correctly
+  - [~] Phase grouping renders correctly
+  - [~] PR review badges display correctly
+- [~] Task: Module & Lesson pages
+  - [~] Module detail page loads with lesson list
+  - [~] Theory lessons render correctly
+  - [~] Exercise lessons accept submissions
+  - [~] Quiz lessons score correctly (>=70% marks completed)
+  - [~] Progress updates after quiz submission
+- [~] Task: Admin panel
+  - [~] Admin dashboard loads with cohort stats
+  - [~] Intern table renders correctly
+  - [~] Create intern form works
+  - [~] Intern detail page shows progress breakdown
+- [~] Task: Internationalization
+  - [~] TH → EN locale switch works
+  - [~] All translated content renders correctly
+  - [~] Thai font loads correctly
+
+### Phase 4 — Red-phase probe results (2026-06-07)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-4-feature-parity.test.ts`.
+Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-4-feature-parity.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE4_PROD_URL`; skip via `PHASE4_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+Authenticated probes are gated on `PHASE4_TEST_INTERN_USERNAME` + `PHASE4_TEST_INTERN_PASSWORD`
+and `PHASE4_TEST_ADMIN_USERNAME` + `PHASE4_TEST_ADMIN_PASSWORD` env vars
+(per test-strategy.md §2 — test creds never committed).
+
+**Note on divergence from test-strategy.md:** the test-strategy says "No new unit tests are required for this track" and "keep curl probes out of repo source." Per the 2026-06-07 mid-session supervisor instruction (same as Phases 1–3), Phase 4 was elevated from manual probes to executable contract. The unit tests in this file are the same shape as Phases 1–3: black-box HTTP smoke probes against prod, with a small set of pure unit tests for the seed-derived module slug oracle and the i18n message-key parity check so regressions in those helpers fail the suite immediately.
+
+**Symbol map (from build-graph):** the three domain functions called out in test-strategy.md §6 (`getUserDashboard`, `getModuleBySlug`, `submitQuizAnswers`) are wired through the tRPC procedures `codecamp.dashboard`, `codecamp.moduleBySlug`, and `codecamp.submitQuiz` (see `packages/api/src/routers/codecamp.ts:251, 72, 136`). The contract is validated against the tRPC surface, not the domain layer directly — this is the correct black-box boundary for a prod QA pass.
+
+Run summary: `Tests  8 failed | 10 passed | 18 skipped (36)` on 2026-06-07 (8.78s wall).
+With `PHASE4_SKIP=1`: `Tests  4 passed | 32 skipped (36)` (3.09s wall) — file compiles, the 4
+seed-oracle unit tests pass unconditionally, and all 32 unauth/credential-gated probes are
+correctly skipped.
+
+| Sub-check | Initial run (2026-06-07) | Notes |
+|---|---|---|
+| `readSeedPhaseMap` returns the four Phase-A entry slugs | PASS (unit) | `dev-environment`, `git-github`, `html-css`, `javascript` |
+| `readSeedPhaseMap` includes modules in phases A, B, C, D | PASS (unit) | All four phases present in seed |
+| `readSeedPhaseMap` produces no duplicate slugs | PASS (unit) | 18 unique module slugs |
+| `readSeedPhaseMap` contains at least 18 modules | PASS (unit) | Matches the 18/85 plan target |
+| `GET /api/trpc/codecamp.dashboard` (unauth) → 401 UNAUTHORIZED | PASS | tRPC error envelope surfaces `code: UNAUTHORIZED` |
+| `GET /api/trpc/codecamp.listInterns` (no cookie) → 401 | PASS | `adminProcedure` rejects unauth |
+| `GET /en/admin` (unauth) → 307 redirect to `/` | PASS | Proxy `redirectTo=/en/admin` query param contract holds |
+| `GET /` (no locale) → 307 redirect to `/th` or `/en` | PASS | `proxy.ts localePrefix='always'` contract holds |
+| `GET /th/` and `GET /en/` render different bodies | PASS | Both locale bundles loaded — i18n is wired |
+| `GET /en/`, `GET /th/`, `GET /en/module/dev-environment` → 200 + HTML body | **FAIL** (308) | **Real production finding** — Next.js returns 308 trailing-slash redirect (no body). Mirrors Phase 1's "Root URL returns 200" finding (commit `a0862b3`); the Green phase should either follow the 308 or assert `< 400` consistently |
+| `GET /th/`, `GET /en/` body contains `<html lang="th|en">` | **FAIL** (308) | Cascades from the 308 finding above — 308 response has no body |
+| `GET /th/` contains Thai nav label `แดชบอร์ด` | **FAIL** (308) | Cascades from the 308 finding above |
+| `GET /en/` contains English nav label `Dashboard` | **FAIL** (308) | Cascades from the 308 finding above |
+| `GET /th/` references Noto Sans Thai or `next/font` className | **FAIL** (308) | Cascades from the 308 finding above — Thai font is not on the unauth body because we never get a body |
+| 18 credential-gated probes (dashboard payload, module detail, theory/exercise/quiz submission, intern list, intern create, intern detail, etc.) | SKIP | No `PHASE4_TEST_*` env vars in this run — re-run with creds to exercise |
+| **Phase 4 — P0 launch gate** (single hard assertion) | **FAIL** (2 critical items) | Aggregates `GET /en/ returned 308 (expected 200)` and `GET /th/ returned 308 (expected 200)` — same class of finding as Phases 1/2/3 launch gates; the 308-vs-200 contract needs to be resolved in the Green phase |
+
+**Helper fix during this pass:** the initial `readSeedPhaseMap` regex counted 22 `phase:` lines
+(18 module entries + 4 `PORTFOLIO_PROJECTS` entries at 4-space indent) but only 19 `slug:` lines,
+causing the 4 unit tests to fail with a counting error rather than the seed contract. Fixed by
+tightening the regex to require exactly 6 leading spaces (module-level indent), filtering out the
+4 `PORTFOLIO_PROJECTS` entries that have `phase:` but no `slug:` sibling. After the fix: 4 unit
+tests pass, 32 network probes correctly skip when `PHASE4_SKIP=1` is set.
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+1. **P0 — resolve the 308-vs-200 contract for `/en/`, `/th/`, and module pages.** The 308 is a
+   valid Next.js trailing-slash redirect, so the tests should either follow the redirect (per
+   `redirect: "follow"` in `fetchWithTimeout`, mirroring Phase 1's commit `a0862b3` fix) or accept
+   `< 400` as a valid response. This is a test-contract fix, not an app fix — the app's 308 is
+   semantically correct.
+2. Re-run with `PHASE4_TEST_INTERN_USERNAME` + `PHASE4_TEST_INTERN_PASSWORD` and
+   `PHASE4_TEST_ADMIN_USERNAME` + `PHASE4_TEST_ADMIN_PASSWORD` to exercise the 18 credential-gated
+   probes (dashboard payload, module detail, theory/exercise/quiz submission, intern list, intern
+   create, intern detail). The plan must include a 70%-threshold quiz submission probe
+   (per `submitQuizAnswers` in `packages/domain/src/codecamp/index.ts:373`).
+3. (Optional) Re-run from a network with reliable reach to `codecamp.reading-advantage.com` to
+   confirm the 8/9-failed-vs-10/9-passed variance is not a real regression (the module page test
+   intermittently fails with `ETIMEDOUT` from the runner — same class of flakiness Phases 2/3 saw).
 
 ## Phase 5: Real External Integrations (P0)
 
