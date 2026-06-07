@@ -67,7 +67,19 @@ export async function createContext(opts: CreateContextOptions = {}): Promise<Co
     // Session validation failed — auth stays null
   }
 
-  const tenantDb = createTenantDB(db, auth?.tenant ?? { schoolId: null });
-
-  return { db, tenantDb, auth };
+  try {
+    const tenantDb = createTenantDB(db, auth?.tenant ?? { schoolId: null });
+    return { db, tenantDb, auth };
+  } catch (err) {
+    console.error(
+      JSON.stringify({
+        level: "error",
+        event: "context_db_error",
+        message: err instanceof Error ? err.message : String(err),
+        stack: err instanceof Error ? err.stack : undefined,
+      }),
+    );
+    const tenantDb = createTenantDB(db, { schoolId: null });
+    return { db, tenantDb, auth };
+  }
 }

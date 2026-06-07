@@ -113,7 +113,14 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       );
     }
-    console.error("Chat API error:", error);
+    console.error(
+      JSON.stringify({
+        level: "error",
+        event: "chat_api_error",
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      }),
+    );
     return Response.json(
       { error: "Failed to generate response" },
       { status: 500 }

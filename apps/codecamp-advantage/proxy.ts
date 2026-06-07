@@ -74,7 +74,14 @@ export async function proxy(request: NextRequest) {
         return response;
       }
 
-      console.error("[proxy] session check failed", err);
+      console.error(
+        JSON.stringify({
+          level: "error",
+          event: "proxy_session_check_failed",
+          message: err instanceof Error ? err.message : String(err),
+          stack: err instanceof Error ? err.stack : undefined,
+        }),
+      );
       const homeUrl = getPublicUrl(request, "/");
       homeUrl.searchParams.set("error", "session_check_failed");
       return NextResponse.redirect(homeUrl);

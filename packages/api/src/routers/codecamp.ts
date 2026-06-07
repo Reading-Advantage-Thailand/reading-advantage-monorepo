@@ -34,6 +34,8 @@ import {
 
 /**
  * Maps domain errors to appropriate tRPC TRPCError instances.
+ * Logs the original error with its stack trace for server-side
+ * observability before re-throwing as a sanitized tRPC error.
  *
  * @param err - The error to map
  * @returns Never returns; always throws a TRPCError
@@ -43,6 +45,14 @@ function mapDomainError(err: unknown): never {
     throw new TRPCError({ code: "FORBIDDEN", message: err.message });
   }
   if (err instanceof Error) {
+    console.error(
+      JSON.stringify({
+        level: "error",
+        event: "domain_error",
+        message: err.message,
+        stack: err.stack,
+      }),
+    );
     if (err.message === "Lesson not found" || err.message === "Module not found" || err.message === "Exercise not found" || err.message === "Conversation not found" || err.message === "Intern not found" || err.message === "Exercise repo not found" || err.message === "Review not found") {
       throw new TRPCError({ code: "NOT_FOUND", message: err.message });
     }
