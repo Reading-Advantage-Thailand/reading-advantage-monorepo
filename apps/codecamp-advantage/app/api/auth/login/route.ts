@@ -1,5 +1,6 @@
 import { handleLogin } from "@reading-advantage/api/routes/auth";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,6 +10,9 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error && "cause" in error) {
       console.error("[login] Error cause:", error.cause);
     }
-    throw error;
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

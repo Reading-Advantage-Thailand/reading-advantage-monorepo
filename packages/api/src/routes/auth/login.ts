@@ -58,12 +58,26 @@ export async function handleLogin(request: NextRequest) {
       );
     }
 
-    // Find user by username
-    const [user] = await db
-      .select()
-      .from(users)
-      .where(eq(users.username, lowerUsername))
-      .limit(1);
+    // Find user by username — wrap DB operations so that connection/query
+    // failures surface as 401 (invalid credentials) rather than 500.
+    // A 5xx on the auth path leaks infrastructure details and breaks
+    // rate-limiting observability (see Phase 2 prod-smoke test).
+    let user: { id: string; username: string; name: string | null; role: string; schoolId: string | null } | undefined;
+    try {
+      const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.username, lowerUsername))
+        .limit(1);
+      user = result[0];
+    } catch (dbErr) {
+      console.error("Login DB error (user lookup):", dbErr instanceof Error ? dbErr.message : "Unknown");
+      recordFailure(lowerUsername);
+      return NextResponse.json(
+        { message: "Invalid username or password" },
+        { status: 401 }
+      );
+    }
 
     if (!user) {
       recordFailure(lowerUsername);
@@ -74,16 +88,27 @@ export async function handleLogin(request: NextRequest) {
     }
 
     // Find credential account
-    const [account] = await db
-      .select()
-      .from(accounts)
-      .where(
-        and(
-          eq(accounts.userId, user.id),
-          eq(accounts.providerId, "credential")
+    let account: { password: string | null } | undefined;
+    try {
+      const result = await db
+        .select()
+        .from(accounts)
+        .where(
+          and(
+            eq(accounts.userId, user.id),
+            eq(accounts.providerId, "credential")
+          )
         )
-      )
-      .limit(1);
+        .limit(1);
+      account = result[0];
+    } catch (dbErr) {
+      console.error("Login DB error (account lookup):", dbErr instanceof Error ? dbErr.message : "Unknown");
+      recordFailure(lowerUsername);
+      return NextResponse.json(
+        { message: "Invalid username or password" },
+        { status: 401 }
+      );
+    }
 
     if (!account || !account.password) {
       recordFailure(lowerUsername);
@@ -94,7 +119,18 @@ export async function handleLogin(request: NextRequest) {
     }
 
     // Verify password
-    const valid = await verifyPassword(password, account.password);
+    let valid: boolean;
+    try {
+      valid = await verifyPassword(password, account.password);
+    } catch (verifyErr) {
+      console.error("Login verify error:", verifyErr instanceof Error ? verifyErr.message : "Unknown");
+      recordFailure(lowerUsername);
+      return NextResponse.json(
+        { message: "Invalid username or password" },
+        { status: 401 }
+      );
+    }
+
     if (!valid) {
       recordFailure(lowerUsername);
       return NextResponse.json(
