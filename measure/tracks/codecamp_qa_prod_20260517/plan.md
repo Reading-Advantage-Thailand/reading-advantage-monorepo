@@ -895,20 +895,144 @@ Green-phase commit: `79e08c0`
 
 Verify observability in production.
 
-- [ ] Task: Cloud Logging
-  - [ ] Application logs appear in Cloud Logging
-  - [ ] Error logs have stack traces
-  - [ ] tRPC error logs include procedure name and input
-  - [ ] Request logs include latency and status code
-- [ ] Task: Error handling
-  - [ ] 404 errors return proper Next.js error page
-  - [ ] 500 errors return proper error page (not stack trace)
-  - [ ] tRPC errors return sanitized messages to client
-  - [ ] Database connection errors are logged and recovered
-- [ ] Task: Alerts (if configured)
-  - [ ] High error rate triggers alert
-  - [ ] High latency triggers alert
-  - [ ] Database connection issues trigger alert
+- [~] Task: Cloud Logging (Red phase in progress)
+  - [~] Application logs appear in Cloud Logging
+  - [~] Error logs have stack traces
+  - [~] tRPC error logs include procedure name and input
+  - [~] Request logs include latency and status code
+- [~] Task: Error handling (Red phase in progress)
+  - [~] 404 errors return proper Next.js error page
+  - [~] 500 errors return proper error page (not stack trace)
+  - [~] tRPC errors return sanitized messages to client
+  - [~] Database connection errors are logged and recovered
+- [~] Task: Alerts (if configured) (Red phase in progress)
+  - [~] High error rate triggers alert
+  - [~] High latency triggers alert
+  - [~] Database connection issues trigger alert
+
+### Phase 8 — Red-phase probe results (2026-06-07)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-8-logging-monitoring-and-error-reporting.test.ts`.
+Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-8-logging-monitoring-and-error-reporting.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE8_PROD_URL`; skip via `PHASE8_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+**Symbol map (from build-graph):**
+
+- `mapDomainError` (`packages/api/src/routers/codecamp.ts:41-55`) — translates
+  domain errors to tRPC `TRPCError` instances. Currently throws without
+  preserving the original error in a structured log, so a stack-trace path
+  is lost at the tRPC boundary.
+- `packages/api/src/trpc.ts` — `initTRPC.context<Context>().create(...)` with
+  `isAuthed` and `isAdmin` middlewares; **no** observability/logging/timing
+  middleware. Per-procedure latency and status code are therefore not
+  captured in Cloud Logging.
+- `packages/api/src/context.ts` — `createContext` builds the per-request
+  context. No try/catch around the DB call and no documented
+  `drizzle-orm/node-postgres` `Pool` import, so a transient DB error
+  surfaces unhandled to the tRPC caller.
+- `apps/codecamp-advantage/proxy.ts:77` and
+  `apps/codecamp-advantage/app/api/auth/login/route.ts:9` — use raw
+  `console.error` for error logging. AGENTS.md "Observability" requires
+  structured logs with `request identifiers`, `operation names`, and
+  `timing information`; raw `console.*` calls do not satisfy this.
+- `apps/codecamp-advantage/app/api/chat/route.ts:116` — same pattern
+  (`console.error("Chat API error:", error)`).
+- `apps/codecamp-advantage/app/[locale]/error.tsx` and
+  `apps/codecamp-advantage/app/[locale]/not-found.tsx` — **both missing**.
+  Other apps in the monorepo (`apps/reading-advantage/app/[locale]/not-found.tsx`,
+  `apps/science-advantage/app/(teacher)/teacher/classes/[classId]/error.tsx`)
+  have the App-Router boundary files; the codecamp app's `[locale]`
+  segment does not. Next.js will fall through to its default
+  (unstyled) error / 404 page on the locale routes.
+- `apps/codecamp-advantage/app/error.tsx` and
+  `apps/codecamp-advantage/app/global-error.tsx` — **both missing**. A
+  top-level rendering crash has no root-level boundary to render a
+  recovery affordance.
+- `apps/codecamp-advantage/app/not-found.tsx` — **missing**. No root-level
+  404 page.
+
+**Per-test gating (env vars, never committed):**
+
+- `PHASE8_PROD_URL` — override prod target.
+- `PHASE8_SKIP=1` — skip the network probes; static checks + unit tests still run.
+
+**Test methodology:**
+
+Phase 8 is observability — most of the contract is encoded as **source-code
+static checks** (file presence, regex over the codebase, source patterns)
+because the deployment unit is a Next.js server-rendered application where
+the observability primitives are baked into the source rather than
+discoverable at runtime. The network probes (404 body shape, tRPC error
+envelope sanitization, trace-header propagation on `/api/trpc/*`, tRPC
+unauth 401 status) cover the parts that are reachable from the public
+surface.
+
+This mirrors the pattern Phases 1-7 used: black-box HTTP probes for the
+runtime contract, with a small set of pure unit tests for the in-file
+helper parsers (`parseTrpcErrorEnvelope`, `classifyHttpStatus`,
+`extractTraceparent`, `bodyLooksLikeStackTrace`, `STRUCTURED_LOGGER_PATTERNS`,
+`STACK_LOG_PATTERNS`) that run unconditionally so a regression in those
+parsers fails the suite immediately.
+
+**Note on divergence from test-strategy.md:** the test-strategy §5 says
+"P8 Observability: Cloud Logging queries by
+`resource.labels.service_name="codecamp-advantage"`" — i.e. a
+console-driven manual probe. Per the 2026-06-07 mid-session supervisor
+instruction (same as Phases 1-7), Phase 8 is elevated from manual
+probes to executable contract. The static checks and helper unit tests
+run unconditionally so regressions in those primitives fail the suite
+immediately. The network probes (404 page rendering, 500 sanitization,
+tRPC envelope shape, trace-header propagation) remain black-box HTTP
+probes against prod, consistent with the strategy.
+
+Run summary (2026-06-07): `Tests  12 failed | 29 passed (41)` on
+2026-06-07 (11.10s wall). All 12 failures map to real production gaps
+in the source code; the 29 passes are the 24 unit tests + 5 network
+probes that the production server already satisfies
+(401 envelope, default 404 page returns 404, default 500 path doesn't
+trigger on bad JSON, tRPC sanitization holds, trace header propagates).
+With `PHASE8_SKIP=1`: `Tests  24 passed | 17 skipped (41)` — all
+unit tests pass, all network + source-code probes correctly skip.
+
+| Sub-check | Initial run (2026-06-07) | Notes |
+|---|---|---|
+| Helper unit tests (24 tests: parseTrpcErrorEnvelope × 7, classifyHttpStatus × 3, extractTraceparent × 4, bodyLooksLikeStackTrace × 5, STRUCTURED_LOGGER_PATTERNS × 3, STACK_LOG_PATTERNS × 2) | PASS | Pure unit tests, no network — run unconditionally |
+| `Cloud Logging: production code uses a structured logger, not raw console.*` | **FAIL** | 5 files in `app/` and `packages/api/src/` use raw `console.error` (samples: `app/api/auth/login/route.ts`, `app/api/chat/route.ts`, `packages/api/src/routes/auth/impersonate.ts`); no structured logger call site (pino/winston/@google-cloud/logging/logger.info({…}) or console.*(JSON.stringify(...))) found |
+| `Cloud Logging: error-log call sites include the stack trace` | **FAIL** | No call site in `app/` or `packages/api/src/` includes `error.stack` or a structured `{ stack: … }` payload — AGENTS.md "Error logs have stack traces" requirement unmet |
+| `tRPC: every router uses a logging middleware that captures procedure name, input, latency, and status` | **FAIL** | `packages/api/src/trpc.ts` defines only `isAuthed` and `isAdmin` middlewares; no observability/logging/timing middleware. Per-procedure latency and status code are not captured. |
+| `Next.js: app/[locale]/error.tsx exists` | **FAIL** | `app/[locale]/error.tsx` missing — 500s fall through to Next.js's default (unstyled) error page |
+| `Next.js: app/[locale]/not-found.tsx exists` | **FAIL** | `app/[locale]/not-found.tsx` missing — missing routes fall through to Next.js's default (unstyled) 404 page |
+| `Next.js: app/error.tsx OR app/global-error.tsx exists` | **FAIL** | Both `app/error.tsx` and `app/global-error.tsx` missing — no root-level error boundary |
+| `Next.js: app/not-found.tsx exists` | **FAIL** | `app/not-found.tsx` missing — no root-level 404 page |
+| `404: GET on a known-missing route returns 404 with a styled HTML body (not a raw stack trace)` | PASS (default 404 page) | Server returns 404 + non-empty body; body is Next.js's default (unstyled) 404 — the source-level `not-found.tsx` gap is captured by the static checks above, not by this network probe |
+| `500: a 500-range response on a Next.js route never leaks a raw stack trace` | PASS (4xx on bad JSON) | `/api/auth/login` with malformed JSON returns 4xx (Zod rejection), so the 5xx branch is not exercised; the contract is "if 5xx, no stack trace", and the 4xx case satisfies the broader "no 5xx for malformed input" check |
+| `tRPC: error envelope is sanitized — no internal stack frame, no DB error string, no file path leaks` | PASS | Body does not match any of the 5 internal-leakage signatures (node_modules, .ts:line:col, "relation … does not exist", ECONNREFUSED, /password/i); not a stack trace; envelope parses; message non-empty |
+| `tRPC: unauth probe returns 401` | PASS | `/api/trpc/codecamp.dashboard` without cookie returns 401 — observability signal that the framework surfaces the status code |
+| `tRPC responses propagate Cloud Run trace context` | PASS | `x-cloud-trace-context` header present on `/api/trpc/codecamp.dashboard` response (Cloud Run ingress injects it) |
+| `DB connection errors: the tRPC context uses a DB client that re-connects on transient errors` | **FAIL** | `packages/api/src/context.ts` does not wrap DB calls in a try/catch and does not use a `drizzle-orm/node-postgres` `Pool` import — a transient DB error surfaces unhandled |
+| `alerts: high error rate — at least one alert-policy artifact is present` | **FAIL** (informational) | No alert-policy artifact at any of `./infra/alerts`, `./terraform/alerts`, `./infra/monitoring`, `./measure/alerts.md` — alert policy may be configured out-of-band (gcloud / Cloud Console) |
+| `alerts: high latency — at least one alert-policy artifact is present` | **FAIL** (informational) | Same finding as above — informational only |
+| `alerts: database connection issues — at least one alert-policy artifact is present` | **FAIL** (informational) | Same finding as above — informational only |
+| **Phase 8 — P1 launch gate** (single hard assertion) | **FAIL** (4 critical items) | Aggregates the 4 most critical source-level gaps: missing `app/[locale]/error.tsx`; missing `app/[locale]/not-found.tsx`; `trpc.ts` has no logging middleware; no error-log call site includes the stack trace |
+
+**Findings (Red-phase pass):**
+
+- **4 critical P1 production gaps identified**, all in the source code (not the network response): the locale segment has no `error.tsx` / `not-found.tsx`, the tRPC router has no observability/logging middleware, and no error-log call site in `app/` or `packages/api/src/` includes the stack trace. The P1 launch gate surfaces all 4 in a single hard-failing test.
+- **1 P1 source-level gap (DB connection recovery)**: `packages/api/src/context.ts` does not wrap DB calls in a try/catch and does not use a `drizzle-orm/node-postgres` `Pool` import, so a transient DB error surfaces unhandled to the tRPC caller.
+- **3 informational P1 gaps (alert policies)**: no alert-policy artifact committed to the repo at any of the conventional paths (`./infra/alerts`, `./terraform/alerts`, `./infra/monitoring`, `./measure/alerts.md`). Per the plan, alerts are "if configured" and likely live in the GCP project out-of-band. These three are intentionally NOT part of the P1 launch gate (see test file).
+- **All 5 network probes pass** — the production server returns the expected 401 / 404 envelopes, the tRPC error envelope is sanitized (no stack frame, no DB error string, no file path leak, no `password` substring), and the Cloud Run trace context is propagated on `/api/trpc/*` responses. The gaps are at the source level, not at the runtime response level.
+- **All 24 helper unit tests pass unconditionally** — regressions in the in-file parsers (`parseTrpcErrorEnvelope`, `classifyHttpStatus`, `extractTraceparent`, `bodyLooksLikeStackTrace`, `STRUCTURED_LOGGER_PATTERNS`, `STACK_LOG_PATTERNS`) fail the suite immediately, without needing network reach or a prod build.
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+
+1. **P1 — add `app/[locale]/error.tsx` and `app/[locale]/not-found.tsx`**, mirroring the pattern in `apps/reading-advantage/app/[locale]/(student)/student/stories/[storyId]/error.tsx` and `apps/reading-advantage/app/[locale]/not-found.tsx`. Also add `app/error.tsx` (or `app/global-error.tsx`) and `app/not-found.tsx` for root-level fallback. All four files should `console.error` the error with its `digest` for server-side observability and render a styled recovery affordance.
+2. **P1 — add a tRPC observability middleware in `packages/api/src/trpc.ts`** that captures procedure name (`ctx.path`), input (`ctx.rawInput` — scrubbed of passwords/tokens), latency (`performance.now()` delta), and status code (`ok` / `INTERNAL_SERVER_ERROR` / etc.). The middleware should log to a structured logger (pino / winston / `@google-cloud/logging`) and ensure the original `Error` object (with `error.stack`) is preserved when a procedure throws.
+3. **P1 — fix `mapDomainError` in `packages/api/src/routers/codecamp.ts:41-55`** to log the original error with its stack trace before re-throwing the tRPC `TRPCError`. Currently the tRPC envelope is sanitized correctly for the client, but the server-side log loses the original error context.
+4. **P1 — wrap DB calls in `packages/api/src/context.ts`** with a try/catch that logs the connection error and recovers, OR switch to a `drizzle-orm/node-postgres` `Pool` that auto-reconnects on `ECONNRESET` / `ENOTFOUND`.
+5. **P1 — replace raw `console.error` call sites** in `app/api/auth/login/route.ts`, `app/api/chat/route.ts`, `proxy.ts`, and `packages/api/src/routes/auth/impersonate.ts` with structured logger calls (or `console.error(JSON.stringify({…}))` at minimum) that include `requestId` (from `X-Cloud-Trace-Context`), `procedureName` / `pathName`, `error.message`, and `error.stack`.
+6. **(Informational) P1 — document or commit an alert-policy artifact** at one of the conventional paths (`./infra/alerts/`, `./terraform/alerts/`, `./infra/monitoring/`, `./measure/alerts.md`). Per test-strategy.md §4, this is out of scope for inline fixing — file a follow-up track.
+7. Re-run the suite from a network with reliable reach to `codecamp.reading-advantage.com` to confirm the network probes still pass (the runner used for the Red-phase pass has a known `ETIMEDOUT 142.250.198.147:443` class of flakiness documented in test-strategy.md §3 and Phases 2-5 saw).
 
 ## Phase 9: GitHub Webhook Specifics (P1)
 
