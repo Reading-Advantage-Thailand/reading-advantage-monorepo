@@ -21,8 +21,9 @@ describe("getBodyFontClass", () => {
     expect(fontClass).toContain("inter-font");
   });
 
-  it("returns only inter class for en locale", () => {
+  it("includes both inter and noto-sans-thai classes for en locale", () => {
     const fontClass = getBodyFontClass("en");
-    expect(fontClass).toBe("inter-font");
+    expect(fontClass).toContain("inter-font");
+    expect(fontClass).toContain("noto-sans-thai-font");
   });
 });

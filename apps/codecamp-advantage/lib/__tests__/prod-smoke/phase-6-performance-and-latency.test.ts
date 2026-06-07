@@ -600,6 +600,7 @@ describe("Phase 6 — Asset loading", () => {
         // marking the Thai subset.
         const referencesThai =
           /Noto\s+Sans\s+Thai/i.test(body) ||
+          /__Noto_Sans_Thai/i.test(body) ||
           /__variable_[\w-]*thai/i.test(body) ||
           /next-font-[a-z0-9-]+/i.test(body);
         expect.soft(
