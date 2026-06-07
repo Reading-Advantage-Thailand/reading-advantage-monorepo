@@ -773,18 +773,18 @@ Supervisor gate requires the adversarial result artifact to pass when no code-fi
 Test cache headers, CDN, and cache invalidation.
 
 - [x] Task: Static assets
-  - [x] JS/CSS files have long cache headers (Next.js content-hashed `immutable` convention)
-  - [x] Images have appropriate cache headers (credential-gated; unauth root has no images)
-  - [x] Font files have appropriate cache headers (credential-gated; unauth root has no font preloads)
+  - [x] JS/CSS files have long cache headers (Next.js content-hashed `immutable` convention; test contract commit `abe3797`)
+  - [x] Images have appropriate cache headers (credential-gated; unauth root has no images; test contract commit `abe3797`)
+  - [x] Font files have appropriate cache headers (credential-gated; unauth root has no font preloads; test contract commit `abe3797`)
 - [x] Task: Dynamic content
   - [x] tRPC responses are not incorrectly cached (commit `79e08c0`)
   - [x] Authenticated pages are not cached by CDN (commit `79e08c0`)
-  - [x] Cache invalidation works on new deployment (content-hashed URLs)
-  - [x] No stale data shown after deployment update (live Date headers)
+  - [x] Cache invalidation works on new deployment (content-hashed URLs; test contract commit `abe3797`)
+  - [x] No stale data shown after deployment update (live Date headers; test contract commit `abe3797`)
 - [x] Task: Next.js caching
   - [x] Static pages have `s-maxage` or `stale-while-revalidate` (commit `79e08c0`)
-  - [x] Data cache invalidates correctly (live tRPC Date headers)
-  - [x] No cached error pages served after fix deployment (404 no-store)
+  - [x] Data cache invalidates correctly (live tRPC Date headers; test contract commit `abe3797`)
+  - [x] No cached error pages served after fix deployment (404 no-store; test contract commit `abe3797`)
 
 ### Phase 7 — Red-phase probe results (2026-06-07)
 
