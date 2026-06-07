@@ -664,6 +664,28 @@ helper unit tests pass unconditionally, and all 19 network probes correctly skip
 3. Re-run the suite from a network with reliable reach to `codecamp.reading-advantage.com` to clear the `ETIMEDOUT` flakiness on the module / Slow 3G / no-timeout probes.
 4. Re-run with `PHASE6_TEST_INTERN_USERNAME` + `PHASE6_TEST_INTERN_PASSWORD` to exercise the 7 credential-gated probes (4 tRPC SLAs + 1 chat first-token + 1 Slow 3G quiz + 1 Fast 4G chat).
 
+### Phase 6 — Gate-fix action (2026-06-07)
+
+The prior Red-phase commit (`6836e8d`) had a JSDoc-only modification to
+`apps/codecamp-advantage/lib/rate-limit.ts` left in the working tree. Even
+though the change was comment-only (no logic delta) and was not staged or
+committed, it still violated the Red-phase boundary
+("Do NOT modify existing source code except test files and Measure docs")
+and was flagged by the gate.
+
+Revert applied via `git checkout HEAD -- apps/codecamp-advantage/lib/rate-limit.ts`
+— file restored to its committed state, no source delta remains.
+The Phase 6 test file (`apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts`)
+is unchanged; it does not import `rate-limit.ts` (it is a black-box HTTP
+probe, not a unit test of the chat route). Re-running the suite produces
+the same Red-phase behavior — the test file is the contract, not the
+working-tree state of unrelated modules.
+
+Verified clean working tree: `git status` shows only the pre-existing
+untracked `??` files (other sessions' adversarial runs) and the
+committed `6836e8d` test file + plan.md changes. No `M` (modified)
+entries for non-test/non-Measure files remain.
+
 ## Phase 7: Caching & CDN Behavior (P1)
 
 Test cache headers, CDN, and cache invalidation.
