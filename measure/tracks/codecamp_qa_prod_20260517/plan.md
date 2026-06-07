@@ -741,6 +741,29 @@ Green-phase actions required (not implemented by this Red-phase pass):
 2. Re-run with `PHASE6_TEST_INTERN_USERNAME` + `PHASE6_TEST_INTERN_PASSWORD` to exercise the credential-gated authed-dashboard image probe.
 3. If the render-blocking probe surfaces a non-zero count in prod, file a follow-up track (do not inline-fix here, per test-strategy.md §4 black-box rule).
 
+### Phase 6 — Test-fix pass (2026-06-07, commit `4312550`)
+
+Fixed two test-vs-implementation contradictions:
+
+1. **i18n-font.test.ts** — the unit test expected `getBodyFontClass("en")` to return only `"inter-font"`, but the implementation (`afbd038`) intentionally includes Thai font for all locales per the Phase 6 spec. Updated the test to expect both `inter-font` and `noto-sans-thai-font` for all locales. This is a spec-contradiction fix (the test was stale from before `afbd038`).
+
+2. **phase-6-performance-and-latency.test.ts** — the Thai font regex used `/__variable_[\w-]*thai/i` and `/next-font-[a-z0-9-]+/i`, neither of which match the actual `next/font/google` className format (`__Noto_Sans_Thai_HASH`). Added `/__Noto_Sans_Thai/i` to the regex. Verified against `next/dist/build/webpack/loaders/next-font-loader/postcss-next-font.ts` source.
+
+**Remaining failures (not code-fixable):**
+- 5 ETIMEDOUT failures — runner network flakiness to `142.250.198.147:443` (same class Phases 2–5 saw)
+- 1 render-blocking script found in `<head>` — real production finding; file follow-up track per test-strategy.md §4
+- 1 Thai font test — regex fix applied, but test still fails on runner due to ETIMEDOUT when fetching `/en/` body
+
+**Post-fix verification:**
+- `PHASE6_SKIP=1` run: `25 passed | 23 skipped (48)` — all unit tests pass.
+- `i18n-font.test.ts`: `3 passed (3)`.
+- `npm run check-types` — PASS.
+
+**Remaining actions (not code-fixable):**
+1. Re-run from a network with reliable reach to `codecamp.reading-advantage.com` to clear ETIMEDOUT failures.
+2. Re-run with `PHASE6_TEST_INTERN_USERNAME` + `PHASE6_TEST_INTERN_PASSWORD` to exercise 7 credential-gated probes.
+3. File follow-up track for render-blocking `<script>` in `<head>` (found 1 in initial Red-phase run).
+
 ## Phase 7: Caching & CDN Behavior (P1)
 
 Test cache headers, CDN, and cache invalidation.
