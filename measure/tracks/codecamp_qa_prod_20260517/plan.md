@@ -95,7 +95,7 @@ Green-phase commit: `a0862b3`
 
 Verify Cloud SQL connectivity and data integrity.
 
-- [x] Task: Database connectivity (commit pending deploy)
+- [x] Task: Database connectivity (commit `df39c2f`)
   - [x] App can read from Cloud SQL (dashboard loads)
   - [x] App can write to Cloud SQL (login updates lastActiveAt) — code path verified; deploy needed
   - [x] No connection pool exhaustion errors
