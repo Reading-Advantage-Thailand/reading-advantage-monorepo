@@ -95,23 +95,55 @@ Green-phase commit: `a0862b3`
 
 Verify Cloud SQL connectivity and data integrity.
 
-- [ ] Task: Database connectivity
-  - [ ] App can read from Cloud SQL (dashboard loads)
-  - [ ] App can write to Cloud SQL (login updates lastActiveAt)
-  - [ ] No connection pool exhaustion errors
-  - [ ] Query response times are acceptable (< 500ms for dashboard)
-- [ ] Task: Secret Manager
-  - [ ] `DATABASE_URL` is sourced from Secret Manager, not hardcoded
-  - [ ] `AUTH_SECRET` is sourced from Secret Manager
-  - [ ] `OPENROUTER_API_KEY` is sourced from Secret Manager
-  - [ ] `GITHUB_WEBHOOK_SECRET` is sourced from Secret Manager
-  - [ ] `GITHUB_PRIVATE_KEY` is sourced from Secret Manager
-  - [ ] Secrets are not exposed in environment variables or logs
-- [ ] Task: Data integrity
-  - [ ] Curriculum data matches local seed (18 modules, 85 lessons)
-  - [ ] User accounts exist and are functional
-  - [ ] Progress data is queryable
-  - [ ] No schema drift between local and production
+- [~] Task: Database connectivity
+  - [~] App can read from Cloud SQL (dashboard loads)
+  - [~] App can write to Cloud SQL (login updates lastActiveAt)
+  - [~] No connection pool exhaustion errors
+  - [~] Query response times are acceptable (< 500ms for dashboard)
+- [~] Task: Secret Manager
+  - [~] `DATABASE_URL` is sourced from Secret Manager, not hardcoded
+  - [~] `AUTH_SECRET` is sourced from Secret Manager
+  - [~] `OPENROUTER_API_KEY` is sourced from Secret Manager
+  - [~] `GITHUB_WEBHOOK_SECRET` is sourced from Secret Manager
+  - [~] `GITHUB_PRIVATE_KEY` is sourced from Secret Manager
+  - [~] Secrets are not exposed in environment variables or logs
+- [~] Task: Data integrity
+  - [~] Curriculum data matches local seed (18 modules, 85 lessons)
+  - [~] User accounts exist and are functional
+  - [~] Progress data is queryable
+  - [~] No schema drift between local and production
+
+### Phase 2 — Red-phase probe results (2026-06-07)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-2-database-and-configuration.test.ts`.
+Run with `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-2-database-and-configuration.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE2_PROD_URL`; skip via `PHASE2_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+Authenticated write probe (login → lastActiveAt) is gated on `PHASE2_TEST_INTERN_USERNAME` + `PHASE2_TEST_INTERN_PASSWORD` env vars
+(per test-strategy.md §2 — test creds never committed).
+
+Run summary: `Tests  3 failed | 9 passed | 1 skipped (13)` on 2026-06-07.
+
+| Sub-check | Initial run (2026-06-07) | Notes |
+|---|---|---|
+| `GET /api/auth/session` returns 2xx (DB read smoke) | PASS | Session route reachable, body non-empty |
+| tRPC `codecamp.dashboard` 401 envelope (route alive) | **FAIL** (ETIMEDOUT) | Test runner network flakiness — `connect ETIMEDOUT 173.194.202.121:443`; route itself returned 401 in a prior manual `curl` probe |
+| Dashboard read < 500ms (server roundtrip) | PASS | Session probe well under budget in observed run |
+| `POST /api/auth/login` returns 4xx (not 5xx) on bad creds | **FAIL** (500) | **Real production finding** — login route returns 500 for unknown username, indicates a server-side fault on the auth path (likely `recordFailure` or rate-limiter hitting an error path before the user-not-found branch returns 401). File a follow-up track. |
+| Module page `dev-environment` returns 200 (DB read for non-auth content) | PASS | Module 1 from seed renders |
+| `cloudbuild.yaml` binds `DATABASE_URL` via `--set-secrets=` | PASS | Verified by parse |
+| `cloudbuild.yaml` binds `AUTH_SECRET` via `--set-secrets=` | PASS | Verified by parse |
+| `cloudbuild.yaml` binds `OPENROUTER_API_KEY` via `--set-secrets=` | PASS | Verified by parse |
+| `cloudbuild.yaml` binds `GITHUB_WEBHOOK_SECRET` via `--set-secrets=` | PASS | Verified by parse |
+| `cloudbuild.yaml` binds `GITHUB_PRIVATE_KEY` via `--set-secrets=` | PASS | Verified by parse |
+| Dashboard HTML shell renders (`/th/`) | PASS | Body > 500 bytes, 200 status |
+| Login updates `lastActiveAt` (DB write) | SKIP | Test creds not provided in this run; re-run with `PHASE2_TEST_INTERN_USERNAME` + `PHASE2_TEST_INTERN_PASSWORD` to exercise |
+| **Phase 2 — P0 launch gate** (hard assertion) | **FAIL** (1 critical item) | Aggregated launch gate fails on `POST /api/auth/login returned 500 (expected 4xx)` — confirms the per-check finding above and yields a single CI-blocking signal |
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+1. **P0 — fix `POST /api/auth/login` 500 on unknown username.** The auth path must return 4xx for any unauthenticated attempt; a 5xx is a server-side fault that breaks rate-limiting observability and may leak infra details via Cloud Logging. File as a new track; do not inline-fix here (per test-strategy.md §4 black-box rule).
+2. (Optional) Re-run with `PHASE2_TEST_INTERN_USERNAME` + `PHASE2_TEST_INTERN_PASSWORD` to exercise the `lastActiveAt` write probe and the curriculum-count data-integrity assertion.
+3. Re-run the suite from a network with reliable reach to `codecamp.reading-advantage.com` to clear the ETIMEDOUT on the tRPC dashboard probe (runner's network, not the app).
 
 ## Phase 3: Authentication & Authorization (P0)
 
