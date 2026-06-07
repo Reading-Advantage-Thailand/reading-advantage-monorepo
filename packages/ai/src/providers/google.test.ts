@@ -9,11 +9,11 @@ vi.mock("ai", () => ({
 }));
 
 vi.mock("@ai-sdk/google", () => ({
-  createGoogleGenerativeAI: vi.fn(() => {
-    const provider = vi.fn((id: string) => `google:${id}`);
-    (provider as any).image = vi.fn((id: string) => `image:${id}`);
-    return provider;
-  }),
+  createGoogleGenerativeAI: vi.fn(() =>
+    Object.assign(vi.fn((id: string) => `google:${id}`), {
+      image: vi.fn((id: string) => `image:${id}`),
+    })
+  ),
 }));
 
 import { generateObject, generateText, experimental_generateImage } from "ai";
@@ -27,7 +27,7 @@ describe("GoogleProvider", () => {
         object: { answer: "gemini-output" },
         finishReason: "stop",
         usage: { promptTokens: 10, completionTokens: 5 },
-      } as any);
+      } as unknown as Awaited<ReturnType<typeof generateObject>>);
 
       const provider = new GoogleProvider({
         apiKey: "test-key",
@@ -49,7 +49,7 @@ describe("GoogleProvider", () => {
         text: "hello from gemini",
         finishReason: "stop",
         usage: { promptTokens: 5, completionTokens: 3 },
-      } as any);
+      } as unknown as Awaited<ReturnType<typeof generateText>>);
 
       const provider = new GoogleProvider({ apiKey: "test-key" });
 
@@ -66,7 +66,7 @@ describe("GoogleProvider", () => {
         image: { base64: imageBase64, uint8Array: new Uint8Array(), mediaType: "image/png" },
         images: [],
         warnings: [],
-      } as any);
+      } as unknown as Awaited<ReturnType<typeof experimental_generateImage>>);
 
       const provider = new GoogleProvider({ apiKey: "test-key" });
 
@@ -82,7 +82,7 @@ describe("GoogleProvider", () => {
         image: { base64: imageBase64, uint8Array: new Uint8Array(), mediaType: "image/png" },
         images: [],
         warnings: [],
-      } as any);
+      } as unknown as Awaited<ReturnType<typeof experimental_generateImage>>);
 
       const provider = new GoogleProvider({ apiKey: "test-key" });
 

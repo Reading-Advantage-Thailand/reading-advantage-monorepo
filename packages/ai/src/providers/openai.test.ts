@@ -9,11 +9,11 @@ vi.mock("ai", () => ({
 }));
 
 vi.mock("@ai-sdk/openai", () => ({
-  createOpenAI: vi.fn(() => {
-    const provider = vi.fn((id: string) => `resolved:${id}`);
-    (provider as any).image = vi.fn((id: string) => `image:${id}`);
-    return provider;
-  }),
+  createOpenAI: vi.fn(() =>
+    Object.assign(vi.fn((id: string) => `resolved:${id}`), {
+      image: vi.fn((id: string) => `image:${id}`),
+    })
+  ),
 }));
 
 import { generateObject, generateText, experimental_generateImage } from "ai";
@@ -27,7 +27,7 @@ describe("OpenAIProvider", () => {
         object: { answer: "42" },
         finishReason: "stop",
         usage: { promptTokens: 10, completionTokens: 5 },
-      } as any);
+      } as unknown as Awaited<ReturnType<typeof generateObject>>);
 
       const provider = new OpenAIProvider({
         apiKey: "test-key",
@@ -55,7 +55,7 @@ describe("OpenAIProvider", () => {
         text: "hello world",
         finishReason: "stop",
         usage: { promptTokens: 5, completionTokens: 3 },
-      } as any);
+      } as unknown as Awaited<ReturnType<typeof generateText>>);
 
       const provider = new OpenAIProvider({ apiKey: "test-key" });
 
@@ -72,7 +72,7 @@ describe("OpenAIProvider", () => {
         image: { base64: imageBase64, uint8Array: new Uint8Array(), mediaType: "image/png" },
         images: [],
         warnings: [],
-      } as any);
+      } as unknown as Awaited<ReturnType<typeof experimental_generateImage>>);
 
       const provider = new OpenAIProvider({
         apiKey: "test-key",
@@ -91,7 +91,7 @@ describe("OpenAIProvider", () => {
         image: { base64: imageBase64, uint8Array: new Uint8Array(), mediaType: "image/png" },
         images: [],
         warnings: [],
-      } as any);
+      } as unknown as Awaited<ReturnType<typeof experimental_generateImage>>);
 
       const provider = new OpenAIProvider({
         apiKey: "test-key",

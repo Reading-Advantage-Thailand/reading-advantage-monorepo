@@ -1,0 +1,17 @@
+{
+  "status": "fail",
+  "summary": "Adversarial audit fixed missed workspace-dependency type/lint/build blockers and verified check-types, lint, build, Phase 13 smoke tests, and npm test; however the literal full science-advantage test gate remains red, so final acceptance is not proven.",
+  "findings": [
+    "Blocking: PATH=/tmp/opencode/bin:$PATH pnpm turbo run test --filter=science-advantage failed after ~20m with 48 failed test files / 261 failed tests / 12 unhandled errors. Failures include integration DB schema drift (science_classes.school_id missing) and jsdom unit environment gaps (window.matchMedia and scrollIntoView missing).",
+    "The Phase 13 acceptance test is only a smoke gate for tests/build; it does not catch the full science-advantage test failure required by spec AC-15 and NFR all 4 CI gates."
+  ],
+  "evidence": [
+    "PATH=/tmp/opencode/bin:$PATH pnpm turbo run check-types --filter=science-advantage: pass (8/8 tasks)",
+    "PATH=/tmp/opencode/bin:$PATH pnpm turbo run lint --filter=science-advantage: pass (10/10 tasks; warnings only)",
+    "PATH=/tmp/opencode/bin:$PATH pnpm turbo run build --filter=science-advantage: pass (10/10 tasks)",
+    "PATH=/tmp/opencode/bin:$PATH pnpm turbo run test --filter=science-advantage: fail (48 failed files, 261 failed tests, 12 unhandled errors; output captured in opencode tool output)",
+    "npm test: pass (packages/ai 11 files, 111 passed, 2 skipped)",
+    "corepack pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts lib/ci-gates/phase-13-final-acceptance.test.ts: pass (17/17)",
+    "Reviewed measure/tracks/ci_typecheck_alignment_20260603/spec.md, plan.md, test-strategy.md, and diff since 779f4a5429ef05b1a2ac9a42c25e20ac0ee0b490"
+  ]
+}

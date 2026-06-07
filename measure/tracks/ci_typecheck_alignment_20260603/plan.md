@@ -985,6 +985,24 @@
 > - Build smoke gate: `next.config.ts` declares `ignoreBuildErrors: false`; `@node-rs/argon2@^2.0.2` in dependencies.
 > - 4 regression guards: CI workflow paths filter + 4 named gates + workspace-wide turbo invocations + turbo.json dependsOn chains.
 > Phase 13 is Green; all 5 plan tasks marked [x].
+>
+> **Adversarial audit note (2026-06-07):** Literal `pnpm turbo run
+> check-types --filter=science-advantage`, `lint`, and `build` pass when a
+> `pnpm` binary is available on `PATH` (the local opencode shell only exposes
+> `corepack`, so the audit used a temporary `/tmp/opencode/bin/pnpm` wrapper).
+> The audit exposed and fixed two dependency-graph issues that the smoke tests
+> missed: `@reading-advantage/db` did not export `./client`, and
+> `@reading-advantage/auth` imported the `postgres` type without declaring a
+> direct dependency. It also added the missing `packages/ai/eslint.config.mjs`
+> and removed `no-explicit-any` errors from AI provider tests so workspace-dep
+> lint/build gates execute cleanly. Blocking finding remains: the literal full
+> test gate `pnpm turbo run test --filter=science-advantage` fails after ~20m
+> with 48 failed test files / 261 failed tests, including integration DB schema
+> drift (`science_classes.school_id` missing) and unit environment gaps
+> (`window.matchMedia` / `scrollIntoView` missing). The Phase 13 smoke test
+> still passes (17/17), but final acceptance cannot be marked `pass` until the
+> literal full test gate is either fixed or the acceptance contract is formally
+> changed.
 
 ## Phase 14: Closeout
 
