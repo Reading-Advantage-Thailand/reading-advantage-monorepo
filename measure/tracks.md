@@ -9,11 +9,9 @@ This file tracks all major tracks for the project.
 Two parallel programs are in flight; priority order when picking the next track:
 
 1. **science-advantage audit remediation.** The 4 Critical tracks are done (domain
-   migration, tenancy, argon2id, audit log). **Next: `ci_typecheck_alignment_20260603`**
-   — pulled ahead of audit tracks #6–#10 because it removes `ignoreBuildErrors: true`
-   (masks ~360 tsc errors) and adds the CI gate that protects the just-shipped Critical
-   work. Then resume #6–#10 (storage, zod, domain-decomp, observability, rate-limiter),
-   then #12 housekeeping.
+   migration, tenancy, argon2id, audit log). CI alignment track is **complete**
+   — `ignoreBuildErrors: true` removed, CI gate wired. Resume #6–#10 (storage,
+   zod, domain-decomp, observability, rate-limiter), then #12 housekeeping.
 2. **Next audits.** Schedule `reading-advantage` and `primary-advantage` AGENTS.md
    audits (see §Pending Audits below). reading-advantage's domain-bypass (209 route.ts
    files) and primary-advantage's still-active Prisma are larger than anything the
@@ -112,7 +110,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [ ] **Track: Postgres-Backed Rate Limiter v2** *Link: [./tracks/rate_limiter_v2_20260603/](./tracks/rate_limiter_v2_20260603/)*
   Add `login_attempts` table in `packages/db/src/schema/auth.ts` (username, failed_count, window_start, last_attempt_at). Replace in-memory `Map` in `packages/auth/src/rate-limit.ts:9` with `SELECT ... FOR UPDATE` upsert. Add per-IP rate limit (30/15 min) alongside per-username (5/15 min). Add periodic cleanup job. Keep the in-memory `Map` as a dev-only fast-path. Resolves F-403, F-407. 1 week. **Medium.** **Track 10.**
 
-- [ ] **Track: CI Alignment + tsc Blocker Resolution** *Link: [./tracks/ci_typecheck_alignment_20260603/](./tracks/ci_typecheck_alignment_20260603/)*
+- [x] **Track: CI Alignment + tsc Blocker Resolution (ci_typecheck_alignment_20260603)** *Link: [./archive/ci_typecheck_alignment_20260603/](./archive/ci_typecheck_alignment_20260603/)*
   Resolve the 360 tsc errors masking by `next.config.ts:25` `ignoreBuildErrors: true`: add `@testing-library/jest-dom/vitest` to `vitest.unit.setup.ts` (~354 errors); fix INTERN role widening in `lib/auth/session.ts:40,79` (2); add `lib/auth/{password,rate-limit}.test.ts` siblings (2); type-cast `process.env` reads (3); dedupe next@16 instances (4); misc (4). Add `"check-types": "tsc --noEmit"` to `apps/science-advantage/package.json`; remove `ignoreBuildErrors: true`. Delete the dead/drifted `apps/science-advantage/.github/workflows/ci.yml`; add a `path-filter: apps/science-advantage/**` token to the monorepo root `.github/workflows/ci.yml`. Fix the 4 `react-hooks/immutability` errors in `components/features/teacher/analytics/student-lesson-detail-analytics.tsx:151,155,186`; silence 6 unused-var warnings in `lib/gamification/badges.ts:114,202`. Resolves F-1001, F-1002, F-1003, F-1204, F-1205. 2 weeks. **High.** **Track 11.** Cross-references existing `measure/tech-debt.md` row `auth_strategy_review` (2026-05-03). **⚑ PROMOTED — do this next, ahead of audit tracks #6–#10** (see §Current Focus): it is the CI gate that protects the just-completed Critical security work.
 
 - [ ] **Track: Audit Housekeeping Batch** *Link: [./tracks/housekeeping_batch_20260603/](./tracks/housekeeping_batch_20260603/)*
