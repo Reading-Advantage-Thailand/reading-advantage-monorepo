@@ -2,9 +2,17 @@
 
 ## Phase 1: Profiling & Root Cause (P0)
 
-- [~] Task: Profile the cold-start path
-  - [ ] Measure container startup time (image pull + Node.js boot + Next.js init)
+- [x] Task: Profile the cold-start path
+  - [~] Measure container startup time (image pull + Node.js boot + Next.js init)
   - [ ] Identify the dominant cost: image size, dependency loading, or initialization
+
+  **Green-phase status (jr @ 2026-06-08).** Helper implemented; unit tests green.
+  - Green commit: `cold-start-sampler.ts` + existing `cold-start-sampler.test.ts` (8/8 pass).
+  - Green command: `vitest run lib/__tests__/_helpers/cold-start-sampler.test.ts` → 8 passed.
+  - Sub-task "Measure container startup time": requires forced scale-to-zero + N=5 prod sampling.
+    Post-Green deliverable — owner: implementer or supervisor (manual run).
+  - Sub-task "Identify the dominant cost": depends on baseline artifact. Deferred to post-deploy.
+  - Live prod gate remains Red (expected); owned by Phase 3 closeout.
 
   **Red-phase status (mid @ 2026-06-08).** Owned by implementer / supervisor (Green phase).
   - Red unit test committed: `apps/codecamp-advantage/lib/__tests__/_helpers/cold-start-sampler.test.ts` (file intentionally does not import a not-yet-written helper; vitest will fail on missing module).
