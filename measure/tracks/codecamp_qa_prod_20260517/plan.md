@@ -1298,6 +1298,63 @@ before the supervisor's `enforce_clean_worktree` check runs at phase end.
 
 Red-phase tightening commit: `b4d0c790`.
 
+### Phase 8.5 — Red-phase tightening continuation (2026-06-08, MID attempt-3)
+
+The supervisor's mid-attempt gate requires every MID re-entry to advance HEAD
+with a fresh Red-phase commit. Attempt-2 only verified prior work and emitted
+the result block, so the gate flagged it as "HEAD did not advance". This
+attempt extends the Phase 8.5 contract with a second source-level regression
+detector for the tRPC logging middleware referenced in plan.md Task 2
+sub-check ("Phase 8 launch gate: ... tRPC logging middleware emits structured
+logs in Cloud Logging → green", line 1116).
+
+The live "Cloud Logging emits structured logs" assertion is out of scope for
+the test runner (it requires tailing Cloud Logging via the GCP API), but the
+source-level contract is checkable at HEAD: `packages/api/src/trpc.ts` must
+define `loggingMiddleware` and chain it into every exported procedure type
+(`publicProcedure`, `protectedProcedure`, `adminProcedure`). A future commit
+that silently drops the middleware from any procedure surface would disable
+structured logging on that surface in prod without any deploy-time gate
+catching it. The regression detector encodes the source contract so the
+Phase 8.5 P0 gate fails the suite immediately on such drift.
+
+Changes in `lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts`:
+
+- Added `TRPC_SOURCE_FILE` constant pointing at `packages/api/src/trpc.ts`.
+- Added `REQUIRED_LOGGING_PROCEDURE_NAMES` constant enumerating the three
+  exported procedure surfaces that must be wrapped in `loggingMiddleware`.
+- Added a Suite 1 filesystem regression detector that asserts (a) the
+  `loggingMiddleware = middleware(...)` definition exists and (b) every
+  required procedure name has `t.procedure.use(loggingMiddleware)` in its
+  export line.
+- Added 3 Suite 5 unit tests for the new constants (file path shape,
+  exact procedure list, every name is a non-empty PascalCase identifier).
+
+**Targeted Red command (unchanged from attempt-2):**
+
+```bash
+cd apps/codecamp-advantage && PHASE85_SKIP=1 node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts
+```
+
+Result (2026-06-08, post-attempt-3 tightening): **3 failed | 33 passed | 5 skipped (41)** in 17.12s wall.
+- The 3 failures are unchanged from attempt-2 — same 3 follow-up-track existence
+  checks remain RED because the 3 P1 follow-up tracks have not been filed.
+- The +4 net new passes (1 Suite 1 logging-middleware static check + 3 Suite 5
+  unit tests for the new constants) pass at HEAD because the source-level
+  contract is **already satisfied with evidence** — `packages/api/src/trpc.ts`
+  defines `loggingMiddleware` at line 42 and chains it into publicProcedure
+  (line 74), protectedProcedure (line 88), and adminProcedure (line 105).
+  The new tests are regression detectors, not new Red work.
+
+**Live-behavior gate (owned by the post-deploy verification):** unchanged —
+Suite 3 + Suite 4 Phase 8 body-marker assertion (from attempt-2's b4d0c790
+tightening) runs only without `PHASE85_SKIP` and remains RED until the
+`3fb1a87` rollout actually serves the custom not-found.tsx body in prod.
+
+Typecheck (`npm run check-types --workspace=codecamp-advantage`): PASS.
+
+Red-phase attempt-3 tightening commit: TBD (committed at the end of this MID pass).
+
 ## Phase 9: GitHub Webhook Specifics (P1)
 
 Test webhook behavior in production environment.

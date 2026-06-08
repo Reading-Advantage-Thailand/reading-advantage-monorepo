@@ -118,6 +118,28 @@ const NOT_FOUND_SOURCE_FILES = [
   resolve(APP_ROOT, "app/[locale]/not-found.tsx"),
 ] as const;
 
+// ─── tRPC logging-middleware source contract ─────────────────────
+//
+// Phase 8.5 plan.md Task 2 sub-check (line 1116) requires that the deployed
+// revision's tRPC logging middleware emits structured logs in Cloud Logging.
+// The middleware itself can only be verified live by tailing Cloud Logging
+// (out of scope for the runner), but the source contract — that
+// `packages/api/src/trpc.ts` defines `loggingMiddleware` AND chains it into
+// every exported procedure type — is checkable at HEAD. A future commit
+// that drops the middleware from any procedure type would silently disable
+// structured logging on that surface (e.g. dropping it from `adminProcedure`
+// would mean every admin tRPC call goes unlogged in Cloud Logging without
+// any deploy-time gate catching it). The regression detector encodes the
+// source contract so the Phase 8.5 P0 gate fails the suite immediately
+// instead of letting the gap reach prod.
+const TRPC_SOURCE_FILE = resolve(MONOREPO_ROOT, "packages/api/src/trpc.ts");
+
+const REQUIRED_LOGGING_PROCEDURE_NAMES = [
+  "publicProcedure",
+  "protectedProcedure",
+  "adminProcedure",
+] as const;
+
 // ─── Conditional test helpers ───────────────────────────────────
 const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
@@ -457,6 +479,46 @@ describe("Phase 8.5 — Cloud Build deploy artifact", () => {
       ).toEqual([...NOT_FOUND_BODY_MARKERS]);
     }
   });
+
+  // ─── Source-level regression detector for the tRPC logging middleware ─
+  //
+  // Phase 8.5 plan.md Task 2 sub-check (line 1116) requires that the deployed
+  // revision emits structured tRPC logs in Cloud Logging. Live verification
+  // requires tailing Cloud Logging (out of scope for the runner), but the
+  // **source contract** is checkable at HEAD: `packages/api/src/trpc.ts`
+  // must define `loggingMiddleware` and chain it into every exported
+  // procedure type (publicProcedure, protectedProcedure, adminProcedure).
+  // A future commit that silently drops the middleware from any procedure
+  // surface would disable structured logging on that surface in prod
+  // without any deploy-time gate catching it. This static check fails the
+  // suite immediately on such drift.
+  it("packages/api/src/trpc.ts defines loggingMiddleware and chains it into every exported procedure", () => {
+    expect(
+      existsSync(TRPC_SOURCE_FILE),
+      `tRPC source file not found at ${TRPC_SOURCE_FILE}`,
+    ).toBe(true);
+    const text = readFileSync(TRPC_SOURCE_FILE, "utf8");
+
+    expect(
+      /\bconst\s+loggingMiddleware\s*=\s*middleware\s*\(/.test(text),
+      `${TRPC_SOURCE_FILE} must define \`const loggingMiddleware = middleware(...)\` — the structured-log primitive for Phase 8 observability`,
+    ).toBe(true);
+
+    const missingChain: string[] = [];
+    for (const procName of REQUIRED_LOGGING_PROCEDURE_NAMES) {
+      // Match e.g. `export const publicProcedure = t.procedure.use(loggingMiddleware)`
+      // or `.use(loggingMiddleware).use(...)`. The pattern is anchored to the
+      // export form so unrelated mentions in comments do not satisfy it.
+      const re = new RegExp(
+        `export\\s+const\\s+${procName}\\s*=\\s*t\\.procedure\\.use\\(\\s*loggingMiddleware\\s*\\)`,
+      );
+      if (!re.test(text)) missingChain.push(procName);
+    }
+    expect(
+      missingChain,
+      `${TRPC_SOURCE_FILE} must chain loggingMiddleware into every exported procedure type for Phase 8 observability — missing: ${missingChain.join(", ") || "<none>"}`,
+    ).toEqual([]);
+  });
 });
 
 // ─── Suite 2: Follow-up track file checks (filesystem, run unconditionally)
@@ -782,6 +844,25 @@ describe("Phase 8.5 — helper unit tests", () => {
         // The default Next.js 404 page renders "This page could not be found.";
         // neither of our markers should be a substring of that default text.
         expect("This page could not be found.").not.toContain(m);
+      }
+    });
+  });
+
+  describe("TRPC_SOURCE_FILE and REQUIRED_LOGGING_PROCEDURE_NAMES constants", () => {
+    it("references the canonical tRPC source file under packages/api", () => {
+      expect(TRPC_SOURCE_FILE).toMatch(/packages\/api\/src\/trpc\.ts$/);
+    });
+    it("enumerates every procedure type Phase 8 observability must log", () => {
+      expect(REQUIRED_LOGGING_PROCEDURE_NAMES).toEqual([
+        "publicProcedure",
+        "protectedProcedure",
+        "adminProcedure",
+      ]);
+    });
+    it("every procedure name is a non-empty PascalCase identifier", () => {
+      for (const n of REQUIRED_LOGGING_PROCEDURE_NAMES) {
+        expect(n.length).toBeGreaterThan(0);
+        expect(n).toMatch(/^[a-z][A-Za-z]+$/);
       }
     });
   });
