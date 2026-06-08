@@ -52,6 +52,40 @@
   should re-verify by reading `output.log` of mid-attempt-1 and looking for `Edit` /
   `Write` tool_use against the two flagged paths (there are none).
 
+  **Mid attempt-4 @ 2026-06-08T165130Z — Red re-verification + dirty-path classification.**
+  The supervisor's revised prompt (`measure/automation-supervisor.py` `dirty_worktree_context`
+  injection, visible as the same content in this turn's prompt) asked the mid role to
+  classify every dirty path before editing. Re-verification of the targeted Red command
+  was run via `node apps/codecamp-advantage/node_modules/vitest/vitest.mjs run
+  lib/__tests__/_helpers/cold-start-sampler.test.ts` (pnpm not on PATH; ran the package's
+  own vitest binary directly under `/opt/codex-desktop/resources/node-runtime/bin/node`).
+  Result is identical to attempt-3: `Test Files 1 failed (1)`, `Tests no tests`, exit 1,
+  cause `Failed to resolve import "../_helpers/cold-start-sampler" from
+  "lib/__tests__/_helpers/cold-start-sampler.test.ts"`. Red is still bounded and expected.
+
+  Dirty-path classification at this attempt-4 start (no Edit/Write issued against any of
+  them by this turn):
+
+  | Path | Status | Classification | Mid role action |
+  |------|--------|----------------|-----------------|
+  | `measure/automation-supervisor.py` | M | Unrelated user work (supervisor-tool evolution: added `dirty_worktree_context` injection, removed `ALLOW_DIRTY_WORKTREE` gate, refined mid/jr/audit prompts). | Preserve, do not touch. |
+  | `measure/tech-debt.md` | M | Unrelated user work (new `codecamp_qa_prod_20260517` P0 row for DB-migration gate; severity bump on `codecamp_review` LLM impl row to High with prod-incident detail — both belong to other tracks). | Preserve, do not touch. |
+  | `measure/tracks/codecamp_qa_prod_20260517/plan.md` | M | Unrelated user work (Green-phase commit SHA backfill `0ca8a7d4`). | Preserve, do not touch. |
+  | `measure/tracks/codecamp_review_ai_consolidation_20260605/plan.md` | M | Unrelated user work (sibling AI-consolidation track: added `[~]` repro task + preflight + smoke tasks). | Preserve, do not touch. |
+  | `measure/tracks/codecamp_review_ai_consolidation_20260605/spec.md` | M | Unrelated user work (sibling AI-consolidation track: 2026-06-08 prod-incident note + FR-1 preflight requirement). | Preserve, do not touch. |
+  | `measure/runs/20260608T*/` (multiple) | ?? | Generated/ignorable (supervisor run artifacts; no track identifier in 9 of 11 dirs, 1 dir is the `codecamp_asset_render_blocking_20260608` sibling-track run, 1 is the current `codecamp_infra_cold_start_20260608` run's parent). | Leave; gitignore contract is supervisor's. |
+  | `measure/tracks/codecamp_infra_cold_start_20260608/test-strategy.md` | ?? | **Strategy role's deliverable**, not the mid role's. Relevant to this track but authored upstream; per the Red-phase rule, fold-relevant-dirty-changes applies only to changes the mid role is responsible for. The strategy doc's own `MEASURE_AGENT_RESULT` block (`role: strategy`) makes ownership explicit. | Leave untracked; the strategy role owns its own commit. Do not fold into a mid commit. |
+
+  No dirty change is relevant for the mid role to fold. No new source/test file needed —
+  the Red contract (`cold-start-sampler.test.ts`, 8 cases) and the three prior Red-phase
+  commits (`8c272b52` test, `ac111882` false-positive evidence, `68e6f043` sibling-track
+  preservation) remain the correct Red surface. The two sub-tasks under Phase 1 stay
+  `[ ]` (pending) because the actual prod measurement and dominant-cost identification
+  are Green-phase work owned by the implementer; the Red contract is the helper unit
+  test, which is already committed and still failing as expected.
+
+  This attempt-4 produces a single docs commit appending this disposition paragraph.
+
   **Mid attempt-3 @ 2026-06-08T082140Z — worktree resolution.**
   The supervisor repeated the same false-positive on attempt-3 (same flagged files,
   same rationale). The gate appears to scan the working-tree `git status` for any
