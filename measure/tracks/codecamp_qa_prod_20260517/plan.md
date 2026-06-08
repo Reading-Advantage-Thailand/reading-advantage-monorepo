@@ -1296,7 +1296,7 @@ in the worktree at startup. The supervisor diff is unrelated to the codecamp QA-
 Per the MID-role contract, the supervisor user must commit, stash, or revert that file
 before the supervisor's `enforce_clean_worktree` check runs at phase end.
 
-Red-phase tightening commit: TBD (committed at the end of this MID pass).
+Red-phase tightening commit: `b4d0c790`.
 
 ## Phase 9: GitHub Webhook Specifics (P1)
 
