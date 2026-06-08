@@ -539,4 +539,13 @@ patch) because the `.browserslistrc` alone does not work — see
      host that can reach prod; expect 2/2 green.
   4. Re-run the harness sanity 5-case unit run (`-t
      "countRenderBlockingScripts"`); expect 5/5 still pass.
-  5. Mark Phase 3 task items `[x]` after the live probe passes.
+   5. Mark Phase 3 task items `[x]` after the live probe passes.
+
+### Phase 2 adversarial audit disposition (2026-06-08)
+
+- **Issue found and fixed:** the original `postbuild` hook did not run under `pnpm build`; a clean local build left all 32 `build-manifest.json` files with `polyfillFiles: ["static/chunks/a6dad97d9634a72d.js"]`, so the deployment command would still emit the render-blocking `noModule` script. The fix wires the strip step directly into `build` as `next build && node scripts/strip-nomodule-polyfill.mjs`.
+- **Boundary fix:** `strip-nomodule-polyfill.mjs` now uses `resolve(DIST_DIR)` instead of `join(process.cwd(), DIST_DIR)`, so absolute dist paths are handled correctly instead of being interpreted under the current working directory.
+- **Packaging fix:** `codecamp-advantage` now declares `@node-rs/argon2` because the app imports `@reading-advantage/auth` through middleware/routes and Next standalone/Turbopack requires native externals to be resolvable from the app package.
+- **New adversarial tests:** `lib/__tests__/strip-nomodule-polyfill.test.ts` executes the real CLI against temp build manifests and covers absolute-path handling plus idempotency.
+- **Verification:** clean `pnpm build` now completes and prints `[strip-nomodule-polyfill] patched 32 of 32 build-manifest.json files`; a manifest scan returns `[]` for remaining `polyfillFiles`; focused strip tests pass 2/2; `countRenderBlockingScripts` harness passes 5/5; `pnpm lint` has 0 errors / 3 pre-existing warnings; `pnpm check-types` passes; root `npm test` passes 111/113 with 2 skipped.
+

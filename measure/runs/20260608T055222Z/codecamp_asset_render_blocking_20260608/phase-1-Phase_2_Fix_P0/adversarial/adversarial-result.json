@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "summary": "Adversarial audit found and fixed a blocking deployment gap: pnpm build did not execute postbuild, leaving Next.js polyfillFiles intact. The build script now runs the strip step inline, absolute dist paths are handled correctly, the native auth dependency is declared for standalone/Turbopack builds, and focused CLI tests plus clean build verification prove manifests are stripped.",
+  "findings": [],
+  "evidence": [
+    "Clean build: apps/codecamp-advantage pnpm build -> next build && node scripts/strip-nomodule-polyfill.mjs; patched 32 of 32 build-manifest.json files",
+    "Manifest scan after clean build -> [] remaining build-manifest.json files with non-empty polyfillFiles",
+    "apps/codecamp-advantage/lib/__tests__/strip-nomodule-polyfill.test.ts -> 2 passed",
+    "pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts -t countRenderBlockingScripts -> 5 passed | 47 skipped",
+    "pnpm lint -> 0 errors, 3 pre-existing warnings",
+    "pnpm check-types -> passed",
+    "root npm test -> 11 files passed, 111 tests passed, 2 skipped",
+    "Full CodeCamp pnpm test attempted -> failed on pre-existing live prod/network and unrelated Phase 7/8 gates; not caused by Phase 2 local fix"
+  ]
+}

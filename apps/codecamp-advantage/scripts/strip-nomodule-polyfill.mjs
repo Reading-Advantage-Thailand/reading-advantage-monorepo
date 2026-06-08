@@ -25,7 +25,7 @@
  * Idempotent: yes.
  */
 import { readdir, readFile, stat, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 const DIST_DIR = process.argv[2] || ".next";
 
@@ -61,7 +61,7 @@ async function patchManifest(file) {
 }
 
 async function main() {
-  const root = join(process.cwd(), DIST_DIR);
+  const root = resolve(DIST_DIR);
   try {
     await stat(root);
   } catch (err) {
