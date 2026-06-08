@@ -2,7 +2,7 @@
 
 ## Phase 1: Identification (P0)
 
-- [~] Task: Identify the render-blocking script
+- [x] Task: Identify the render-blocking script
   - [x] Run `countRenderBlockingScripts` on the prod HTML to locate the exact `<script>` tag
   - [x] Determine if it is a Next.js internal script, a third-party script, or a misconfiguration
 
