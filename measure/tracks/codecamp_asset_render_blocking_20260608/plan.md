@@ -88,9 +88,99 @@
 
 ## Phase 2: Fix (P0)
 
-- [ ] Task: Remove or defer the render-blocking script
+- [~] Task: Remove or defer the render-blocking script
   - [ ] Add `defer`, `async`, or `type="module"` attribute as appropriate
   - [ ] If third-party, evaluate moving to `<Script strategy="lazyOnload">` (Next.js `next/script`)
+
+### Phase 2 Red command + behavioural evidence
+
+- **No new test files** (per test-strategy.md §7 Phase 2 row: "no new
+  test" — the fix is config / `<Script>` swap, no new pure logic). The
+  test contract that gates this phase is the **existing** live probe
+  `countRenderBlockingScripts` (lines 757 and 772 of
+  `phase-6-performance-and-latency.test.ts`), filtered by `-t
+  "render-blocking external <script> tags in <head>"` (the same
+  bounded command Phase 1 used). The probe is the test; no second
+  harness is introduced.
+
+- **Targeted Red command (bounded, 2 cases, no watch, no full-suite
+  smoke):**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts \
+    -t "render-blocking external <script> tags in <head>"
+  ```
+
+  Scope: only the two `skipIf(...)` cases at lines 757 and 772. Default
+  `PHASE6_PROD_URL=https://codecamp.reading-advantage.com`, `PHASE6_SKIP`
+  unset. The 5-case `describe("countRenderBlockingScripts")` unit block
+  (lines 1166-1223) is **not** part of the Red — it is a contract
+  sanity run, recorded below as the harness gate.
+
+- **Red command result (vitest, 2026-06-08):** **2 failed / 50 skipped
+  of 52.** Failure mode is the same as Phase 1: `TypeError: fetch
+  failed` → `AggregateError: ETIMEDOUT 173.194.202.121:443` +
+  `ENETUNREACH 2404:6800:4005:804::2013:443` (undici inside Node 22
+  cycling through unreachable IPs from this sandbox). Per test-strategy
+  §3 Red-mode #1, this is a network-failure Red, not a behaviour Red.
+  The probe is still wired correctly (the `-t` filter selects both
+  cases, the `fetch` call is reached, the assertion path is taken);
+  the sandbox just cannot complete the prod `fetch` via undici. This is
+  the expected state for this sandbox and the reason Phase 1
+  introduced the system-resolver `node:https` companion probe as the
+  behavioural proof.
+
+- **Behavioural Red proof (system-resolver `node:https`, 2026-06-08,
+  Phase 2 re-run, force IPv4, manual redirect follow):**
+
+  - Locale: `/en/` — `status=200 elapsedMs=988 htmlLen=20560 blockingCount=1`
+  - Locale: `/th/` — `status=200 elapsedMs=658 htmlLen=20581 blockingCount=1`
+
+  Same offending tag (verbatim, identical to Phase 1):
+
+  ```html
+  <script src="/_next/static/chunks/a6dad97d9634a72d.js" noModule="">
+  ```
+
+  The Red state is current (count=1 on both locales, same chunk hash
+  `a6dad97d9634a72d.js`) — the prod HTML has not been fixed yet, the
+  framework's `nomodule` polyfill chunk is still being emitted
+  without `defer`. Phase 2 implementation is required to flip this to
+  `blockingCount=0`.
+
+- **Harness sanity (5-case unit block, lines 1166-1223):**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts \
+    -t "countRenderBlockingScripts"
+  ```
+
+  Result: **5 passed | 47 skipped of 52.** The probe is correct
+  (harness gate green), so the live Red above is meaningful — the
+  probe is identifying the offending tag, not a probe bug.
+
+- **What "Red" means for Phase 2 (concrete):** the assertion
+  `expect.soft(blocking, ...).toBe(0)` at lines 763-766 and 778-781
+  must flip from "count=1" to "count=0" against live prod. The
+  implementation choice is the JR role's (per test-strategy §5 Phase
+  2 + plan §Phase 1 "Phase 2 implications" handoff): likely
+  `browserslist` tightening in `apps/codecamp-advantage/package.json`
+  (no `browserslist` field or `.browserslistrc` currently exists —
+  grep'd, empty result) so Next.js stops emitting the `nomodule`
+  polyfill, or a custom `_document.tsx`/`next.config` patch that adds
+  `defer` to the framework's emitted script. The `<Script
+  strategy="lazyOnload">` swap does not apply (the script is
+  framework-internal, not user code).
+
+- **JR handoff:** do not modify the test file. Re-run the same two
+  commands above to prove the fix landed. The unit-test harness must
+  remain 5/5 green (no probe regression). The live `-t` filter must
+  flip to 2/2 green (or, in this sandbox, 2/2 still fails-for-network
+  but the system-resolver `node:https` companion shows `blockingCount=0`
+  on both locales with the same chunk `a6dad97d9634a72d.js` carrying
+  the new `defer` attribute).
 
 ## Phase 3: Verification (P0)
 
