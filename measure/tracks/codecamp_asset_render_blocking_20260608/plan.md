@@ -166,9 +166,7 @@
   must flip from "count=1" to "count=0" against live prod. The
   implementation choice is the JR role's (per test-strategy §5 Phase
   2 + plan §Phase 1 "Phase 2 implications" handoff): likely
-  `browserslist` tightening in `apps/codecamp-advantage/package.json`
-  (no `browserslist` field or `.browserslistrc` currently exists —
-  grep'd, empty result) so Next.js stops emitting the `nomodule`
+  `browserslist` tightening so Next.js stops emitting the `nomodule`
   polyfill, or a custom `_document.tsx`/`next.config` patch that adds
   `defer` to the framework's emitted script. The `<Script
   strategy="lazyOnload">` swap does not apply (the script is
@@ -181,6 +179,83 @@
   but the system-resolver `node:https` companion shows `blockingCount=0`
   on both locales with the same chunk `a6dad97d9634a72d.js` carrying
   the new `defer` attribute).
+
+### Phase 2 MID attempt disposition (2026-06-08, after supervisor timeout)
+
+This subsection records the disposition of MID attempt-N (this run) that
+followed a supervisor-side timeout (status 124) on a prior MID. Per
+test-strategy.md §7 Phase 2, no new test files are written — the
+existing `countRenderBlockingScripts` live probe remains the contract.
+
+- **Live probe re-execution:** deliberately skipped. The same
+  `-t "render-blocking external <script> tags in <head>"` command was
+  already executed and recorded above (2026-06-08, vitest result 2/52
+  network-fail) and the system-resolver `node:https` companion (count=1
+  on both locales) is the behavioural proof. Re-running the vitest
+  command in this sandbox reproduces Red-mode #1 (undici IP-cycle
+  ETIMEDOUT/ENETUNREACH) with no new information; the harness-sanity
+  5/5 unit run is also already recorded. The Red contract is current
+  without re-execution.
+
+- **build-graph re-probe (TS project, `graph.db` mtime 2026-06-08
+  11:38, fresh):**
+  - `build-graph stats ./graph.db` → 1903 nodes, 238 files, 405
+    functions (no change from prior attempt).
+  - `build-graph search countRenderBlockingScripts` → exactly 1
+    definition in `phase-6-performance-and-latency.test.ts:281`.
+  - `build-graph callers countRenderBlockingScripts` → no callers.
+    The probe is test-only with zero production reach. Blast radius
+    of *changing* the probe is nil (and we deliberately do not
+    change it; we change prod to satisfy it).
+  - `build-graph search "next/script"` → no matches. Confirms no
+    pre-existing `next/script` usage in the codecamp app to template
+    from; the `<Script strategy="lazyOnload">` swap therefore
+    remains inapplicable (the offending script is framework-emitted,
+    not user code).
+
+- **Dirty worktree classification at MID start** (full `git status
+  --porcelain`, scoped to this track/phase):
+
+  | Path | State | Classification | Disposition |
+  |------|-------|----------------|-------------|
+  | `measure/automation-supervisor.py` | M | Unrelated (infra) | Preserve; out of this track's commit |
+  | `measure/tracks/codecamp_qa_prod_20260517/plan.md` | M | Unrelated (different track) | Preserve; out of this track's commit |
+  | `apps/codecamp-advantage/package.json` | M | Unrelated (`@node-rs/argon2` devDep added — not render-blocking related) | Preserve; out of this track's commit |
+  | `pnpm-lock.yaml` | M | Unrelated (lockfile for the `package.json` change above) | Preserve; out of this track's commit |
+  | `apps/codecamp-advantage/.browserslistrc` | ?? | Related **candidate fix** (untracked, see "Candidate fix" below) | Leave untracked; let Green/JR verify and commit |
+  | `measure/runs/20260608T…Z/` | ?? | Generated run logs (multiple dirs, this track and others) | Generated/ignorable; prune per the `adc53738` "prune ephemeral automation session logs" precedent |
+
+- **Candidate fix (`apps/codecamp-advantage/.browserslistrc`,
+  untracked):** a previous attempt authored this file in the working
+  tree but did not commit it. It targets modern browsers (chrome 111,
+  edge 111, firefox 111, safari 16.4), aligned with Next.js 16's
+  `MODERN_BROWSERSLIST_TARGET`. Per Phase 1's "Phase 2 implications"
+  handoff, this is the most likely Phase 2 fix path. It is **not**
+  committed by this MID because:
+  1. The MID role is Red-phase and "Do NOT modify existing source
+     code except test files and Measure docs" (the `.browserslistrc`
+     is build config, not a Measure doc).
+  2. The candidate has not been built and deployed, so the live
+     `blockingCount` cannot be confirmed as 0 from the worktree
+     alone.
+  3. Green/JR must independently verify the fix and decide whether
+     to commit the candidate, edit it, or replace it with a
+     different approach (e.g., `_document.tsx` patch).
+
+- **plan.md handoff to Green/JR (recap):**
+  1. Commit `apps/codecamp-advantage/.browserslistrc` (verbatim or
+     with review) under `fix(codecamp-asset-block): add
+     modern-browserslist config to drop nomodule polyfill`, OR
+     choose an alternative fix path and commit that instead.
+  2. Rebuild + redeploy to `https://codecamp.reading-advantage.com`.
+  3. Re-run the targeted Red command above from a host that can
+     reach prod (CI runner / developer machine) and confirm 2/2
+     pass; in this sandbox, re-run the system-resolver
+     `node:https` companion and confirm `blockingCount=0` on
+     `/en/` and `/th/`.
+  4. Re-run the 5-case harness-sanity `-t "countRenderBlockingScripts"`
+     command and confirm 5/5 still pass (no probe regression).
+  5. Mark Phase 2 task `[x]` and hand off to Phase 3.
 
 ## Phase 3: Verification (P0)
 
