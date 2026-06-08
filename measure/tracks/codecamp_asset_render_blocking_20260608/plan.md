@@ -88,9 +88,17 @@
 
 ## Phase 2: Fix (P0)
 
-- [~] Task: Remove or defer the render-blocking script
-  - [~] Add `defer`, `async`, or `type="module"` attribute as appropriate
-  - [~] If third-party, evaluate moving to `<Script strategy="lazyOnload">` (Next.js `next/script`)
+- [x] Task: Remove or defer the render-blocking script
+  - [x] Add `defer`, `async`, or `type="module"` attribute as appropriate
+  - [x] If third-party, evaluate moving to `<Script strategy="lazyOnload">` (Next.js `next/script`)
+
+> Both bullets resolved. The offending tag is framework-emitted (not
+> third-party, not a per-locale misconfig — see Phase 1
+> classification), so the `<Script strategy="lazyOnload">` swap is
+> inapplicable. The defer/async/type=module decision is the post-build
+> manifest patch documented in attempt-4 below; it strips the
+> `nomodule` polyfill from the build manifest so the framework
+> `<script src=... noModule>` tag is never emitted into `<head>`.
 
 ### Phase 2 Red command + behavioural evidence
 
@@ -393,3 +401,142 @@ the same prod HTML, with no Node TLS or redirect logic to debug.
 - [ ] Task: Re-run Phase 6 asset-loading probes
   - [ ] Zero render-blocking scripts in `<head>` for `/en/` and `/th/`
   - [ ] Page functionality regression check
+
+### Phase 2 MID attempt disposition (2026-06-08, attempt-4 — after supervisor exit 70 on attempt-3)
+
+This attempt follows supervisor exit 70 on attempt-3. The prior attempts
+left the `.browserslistrc` candidate untracked, citing a
+build-and-deploy requirement they could not satisfy in the sandbox.
+This attempt **closes the build requirement** by running `pnpm build`
+locally and **verifies the fix against a real running server** with
+the same `countRenderBlockingScripts` regexes the vitest probe uses.
+A second candidate fix is also introduced (the post-build manifest
+patch) because the `.browserslistrc` alone does not work — see
+"Evidence" below.
+
+- **No new test files** (per test-strategy.md §7 Phase 2 row). The
+  test contract is the existing live probe
+  `countRenderBlockingScripts` (lines 757 and 772 of
+  `phase-6-performance-and-latency.test.ts`). The contract is
+  unchanged.
+
+- **Evidence: `.browserslistrc` alone is insufficient (attempt-4
+  verification):**
+
+  - `pnpm build` (Turbopack, after `.browserslistrc` is in place)
+    re-emits `static/chunks/a6dad97d9634a72d.js` and writes
+    `polyfillFiles: ["static/chunks/a6dad97d9634a72d.js"]` to every
+    page's `build-manifest.json` (root, `/[locale]`, `/[locale]/admin`,
+    `/[locale]/chat`, `/[locale]/module/...`, etc.).
+  - Source confirmation: `node -e 'require("fs").readFileSync(".next/static/chunks/a6dad97d9634a72d.js","utf8").slice(0,500)'`
+    is byte-identical to
+    `node_modules/next/dist/build/polyfills/polyfill-nomodule.js`
+    (Next.js 16's unconditional `CopyFilePlugin` output, see
+    `next/dist/build/webpack-config.js` `CopyFilePlugin` block).
+  - Runtime confirmation: even with the polyfill chunk present, the
+    app-render code at `node_modules/next/dist/server/app-render/app-render.js`
+    *unconditionally* maps `buildManifest.polyfillFiles.filter(p =>
+    p.endsWith(".js") && !p.endsWith(".module.js"))` to
+    `<script src=... noModule>` tags in `<head>`. The `noModule: true`
+    attribute is hardcoded; the probe (which only accepts `defer` /
+    `async` / `type="module"`) counts these as render-blocking.
+  - **Conclusion:** `browserslist` does not gate the polyfill in
+    Next.js 16's Turbopack pipeline. The `.browserslistrc` is kept as
+    defensive future-proofing (so a future Next.js version that does
+    gate the polyfill on browserslist will Just Work), but the
+    immediate fix must strip the polyfill at the build layer.
+
+- **Candidate fix: post-build manifest patch
+  (`apps/codecamp-advantage/scripts/strip-nomodule-polyfill.mjs`,
+  this attempt):**
+
+  - A small ESM Node script that walks `.next/**/build-manifest.json`,
+    sets each `polyfillFiles: []`, and writes back. The
+    `CopyFilePlugin` chunk on disk is left in place (dead bytes; the
+    manifest no longer references it, so it is never requested).
+  - Wired into `package.json` as `postbuild`:
+    `"postbuild": "node scripts/strip-nomodule-polyfill.mjs"`.
+    `pnpm build` therefore runs the strip automatically and is
+    idempotent (second run is a no-op: `[strip-nomodule-polyfill]
+    scanned N build-manifest.json files in .next/ — no changes
+    needed`).
+  - Local run, 2026-06-08: `node
+    scripts/strip-nomodule-polyfill.mjs .next` →
+    `[strip-nomodule-polyfill] patched 32 of 32 build-manifest.json
+    files in .next/ — removed polyfills:
+    static/chunks/a6dad97d9634a72d.js`.
+
+- **End-to-end verification (this attempt, same regex shape as
+  `countRenderBlockingScripts` lines 281-297, against a real running
+  standalone server, 2026-06-08):**
+
+  1. `pnpm build` succeeds (Turbopack, after a one-time install of
+     `@node-rs/argon2@2.0.2` in app devDeps to satisfy a
+     pre-existing build-time resolution gap; tracked separately and
+     not part of this commit).
+  2. `node scripts/strip-nomodule-polyfill.mjs .next` patches all 32
+     `build-manifest.json` files (see log above).
+  3. `cd .next/standalone/apps/codecamp-advantage && PORT=18181 node
+     server.js` starts the standalone server (`Ready in 1926ms`).
+  4. `curl -L http://localhost:18181/en` and `curl -L
+     http://localhost:18181/th` return `status=200` and HTML.
+  5. The `countRenderBlockingScripts` regex (executed as a Node
+     snippet, 2026-06-08) returns:
+     - `/en/ countRenderBlockingScripts = 0`
+     - `/th/ countRenderBlockingScripts = 0`
+  6. `noModule` count in `<head>` of both responses: 0.
+  7. Spot-check: `<title>CodeCamp Advantage</title>`, body class
+     preserved, `<h1>Welcome to CodeCamp Advantage</h1>` rendered —
+     page is fully functional, no regression.
+
+  The fix is correct on the standalone build that the Dockerfile
+  ships (`COPY --from=builder .next/standalone ./` + `node
+  apps/codecamp-advantage/server.js`), so the live prod probe
+  (`PHASE6_SKIP` unset, the two assertions at lines 757 / 772) is
+  expected to flip from 2/2 red to 2/2 green on the next deploy.
+
+- **Files changed (this commit):**
+
+  | Path | State | Why |
+  |------|-------|-----|
+  | `apps/codecamp-advantage/scripts/strip-nomodule-polyfill.mjs` | New | The actual fix: post-build patch that empties `polyfillFiles` in every `build-manifest.json` |
+  | `apps/codecamp-advantage/package.json` | M | Adds `postbuild` script that runs the strip |
+  | `apps/codecamp-advantage/.browserslistrc` | New | Defensive future-proofing (chrome 111, edge 111, firefox 111, safari 16.4 — aligned with Next.js 16 `MODERN_BROWSERSLIST_TARGET`); not the load-bearing fix on its own, but keeps the project's browser target explicit and would let a future Next.js version that respects browserslist skip the polyfill on its own |
+  | `apps/codecamp-advantage/eslint.config.mjs` | M | Adds Node-globals block for `scripts/**/*.{js,mjs}` so the new script lints cleanly (base config's `files` pattern only matches `.js/.jsx/.ts/.tsx`) |
+  | `measure/tracks/codecamp_asset_render_blocking_20260608/plan.md` | M | This section + Phase 2 task marked `[x]` |
+
+- **Lint / typecheck disposition:** `pnpm lint` is 0 errors, 3
+  pre-existing warnings (`no-unused-vars` in test files unrelated to
+  this track). `pnpm check-types` has pre-existing errors in
+  `app/api/auth/{login,logout,session}/route.ts` (Next.js 16 internal
+  `NextURL` type collision between two installed copies of `next`
+  differing in `@playwright/test` peer dep). Both predate this
+  attempt and are out of scope for the render-blocking fix; the
+  `git stash` + re-typecheck dance confirms the pre-existence.
+
+- **build-graph re-probe (TS project, `graph.db` mtime 2026-06-08
+  11:38, fresh):** unchanged from prior attempts — 1903 nodes, 238
+  files, 405 functions, `countRenderBlockingScripts` has 0 production
+  callers, no `next/script` usage in the codecamp app. The strip
+  script is a build-time tooling file under `scripts/` — outside the
+  app's runtime import graph, so it does not appear in the build
+  graph and does not affect the blast-radius analysis.
+
+- **JR handoff (recap):**
+
+  1. Commit the four source files listed in "Files changed" above
+     under `fix(codecamp-asset-block): strip Next.js nomodule
+     polyfill via post-build manifest patch`. The `@node-rs/argon2`
+     devDep install is **not** part of this commit (pre-existing
+     build issue, separate concern).
+  2. Rebuild and redeploy to
+     `https://codecamp.reading-advantage.com`. The Dockerfile's
+     `pnpm turbo run build --filter=codecamp-advantage` will
+     automatically run the `postbuild` step.
+  3. Re-run the targeted Red command (`pnpm vitest run
+     lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts
+     -t "render-blocking external <script> tags in <head>"`) from a
+     host that can reach prod; expect 2/2 green.
+  4. Re-run the harness sanity 5-case unit run (`-t
+     "countRenderBlockingScripts"`); expect 5/5 still pass.
+  5. Mark Phase 3 task items `[x]` after the live probe passes.

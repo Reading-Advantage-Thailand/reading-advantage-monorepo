@@ -1,0 +1,13 @@
+# Modern browsers only — eliminates Next.js's `nomodule` polyfill, which is
+# emitted by default as a synchronous render-blocking <script src="...noModule">
+# tag in <head> for any target browser older than the versions below.
+#
+# Aligned with Next.js 16's MODERN_BROWSERSLIST_TARGET
+# (apps/codecamp-advantage/node_modules/next/dist/shared/lib/modern-browserslist-target.js,
+# generated via `pnpm browserslist "baseline widely available"` on 2025-10-01).
+#
+# Track: codecamp_asset_render_blocking_20260608
+chrome 111
+edge 111
+firefox 111
+safari 16.4

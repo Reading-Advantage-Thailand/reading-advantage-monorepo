@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/strip-nomodule-polyfill.mjs",
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
