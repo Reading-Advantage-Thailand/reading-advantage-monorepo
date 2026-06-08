@@ -21,6 +21,14 @@ providers) has landed (`ai_adapter_package_20260603`, committed `9c52c8a`). The 
 "shared impl" already exists — this track points both call sites at it rather than
 creating yet another package.
 
+**Production incident, 2026-06-08:** the deployed review path used
+`xiaomi/mimo-v2.5`, but OpenRouter returned HTTP 404 because no available endpoint
+supported the AI SDK's required `tool_choice` structured-output request. Three intern
+reviews failed without GitHub feedback. A live regional probe confirmed
+`x-ai/grok-build-0.1` supports the same forced-tool contract. Model/provider
+capability validation is therefore part of this track, not an incidental configuration
+choice.
+
 > **Phase 0 must re-confirm the exact locations and line numbers** — code may have moved
 > since 2026-05-15. The spec treats the two call sites as a *count* (two), not as fixed
 > coordinates.
@@ -44,6 +52,10 @@ creating yet another package.
   SDK. Register it in `createAIClient`/`getAIClient`.
 - Strip any provider-prefixed model IDs before dispatch (the documented `packages/ai`
   behavior, e.g. `openrouter/anthropic/claude-...`).
+- Add a bounded live capability preflight for the configured production review model:
+  it must support the exact structured-output/tool-choice contract from the deployment
+  region. Fail closed before rollout when the configured model is unavailable,
+  region-blocked, or lacks tool support.
 
 ### FR-2: Single `reviewExercise` Seam
 - The domain `reviewExercise` function already takes the model client via DI. Confirm it

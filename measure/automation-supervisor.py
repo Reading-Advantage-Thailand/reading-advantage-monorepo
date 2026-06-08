@@ -302,6 +302,31 @@ def git_status_porcelain(config: Config) -> str:
     return result.stdout if result.returncode == 0 else ""
 
 
+def enforce_clean_worktree(config: Config, context: str) -> None:
+    dirty = git_status_porcelain(config).strip()
+    if not dirty:
+        return
+    print(
+        f"ERROR: Worktree is dirty after {context}. Commit, stash, or clean these changes before the next phase.",
+        file=sys.stderr,
+    )
+    print(dirty, file=sys.stderr)
+    raise SystemExit(1)
+
+
+def dirty_worktree_context(config: Config, *, max_lines: int = 80) -> str:
+    dirty = git_status_porcelain(config).strip()
+    if not dirty:
+        return "Current git status --porcelain: clean."
+
+    lines = dirty.splitlines()
+    displayed = lines[:max_lines]
+    suffix = ""
+    if len(lines) > max_lines:
+        suffix = f"\n... truncated {len(lines) - max_lines} additional dirty path(s)"
+    return "Current git status --porcelain:\n" + "\n".join(displayed) + suffix
+
+
 def changed_files_since(config: Config, base_sha: str) -> list[str]:
     files: set[str] = set()
     commands: list[list[str]] = []

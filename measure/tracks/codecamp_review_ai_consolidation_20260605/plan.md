@@ -10,10 +10,16 @@
 - [ ] Task: Read `packages/domain/.../reviewExercise` (the DI seam) and its current client parameter type.
 - [ ] Task: Inspect `packages/ai/src/providers/` — does an OpenRouter provider exist? Record yes/no.
 - [ ] Task: Decide + document the unified prompt/params (A, B, or a reconciled version).
+- [~] Task: Reproduce and record the 2026-06-08 production failure: `xiaomi/mimo-v2.5`
+  returns no endpoint supporting the required `tool_choice` request from the deployment
+  region; record the successful `x-ai/grok-build-0.1` forced-tool probe as evidence, not
+  as an unreviewed permanent model decision.
 
 ## Phase 1: OpenRouter Provider (if absent) — TDD
 - [ ] Task: If missing, write `packages/ai/src/providers/openrouter.test.ts` against the Mock-style contract (success + error), expecting an OpenAI-compatible provider keyed by `baseURL` + `OPENROUTER_API_KEY`, with provider-prefix model-ID stripping.
 - [ ] Task: Implement `openrouter.ts` (thin variant of the OpenAI provider with OpenRouter `baseURL`); register in `createAIClient`/`getAIClient`.
+- [ ] Task: Add a bounded, credential-gated OpenRouter capability preflight for the
+  configured review model using the exact forced-tool structured-output contract.
 - [ ] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/ai` green.
 
 ## Phase 2: Confirm/Adapt the `reviewExercise` Seam — TDD
@@ -39,6 +45,8 @@
 
 ## Phase 6: Integration + Acceptance
 - [ ] Task: Run the codecamp PR-review path against the Mock provider end-to-end (or `scripts/codecamp-pr-e2e.sh` if it can run with the Mock provider) and confirm identical persisted output to the documented unified version.
+- [ ] Task: Run the real-provider preflight from the deployment region and block rollout
+  if the configured model is unavailable, region-blocked, or lacks tool-choice support.
 - [ ] Task: `pnpm turbo run build --filter=codecamp-advantage` (catches any server-only/client-bundle leak).
 - [ ] Task: Run all filtered gates: `pnpm turbo run {test,check-types,build} --filter=@reading-advantage/ai --filter=@reading-advantage/webhooks --filter=@reading-advantage/api --filter=@reading-advantage/domain --filter=codecamp-advantage`; all exit 0.
 

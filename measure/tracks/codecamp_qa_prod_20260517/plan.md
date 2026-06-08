@@ -1379,7 +1379,7 @@ the follow-up-track existence checks (Suite 2).
    P0/P1 launch gates go green on the live revision.
 3. (Informational) Alert-policy artifact follow-up.
 
-Green-phase commit: (pending)
+Green-phase commit: `0ca8a7d4`
 
 ## Phase 9: GitHub Webhook Specifics (P1)
 
