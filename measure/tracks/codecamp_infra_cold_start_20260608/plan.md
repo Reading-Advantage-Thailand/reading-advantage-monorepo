@@ -19,6 +19,39 @@
     - Interpretation: this is the **expected** Red — the helper file is intentionally absent (Green-phase deliverable). The 8 new unit-test cases will start collecting and running once `apps/codecamp-advantage/lib/__tests__/_helpers/cold-start-sampler.ts` is written.
     - Live prod probe (persistent Red gate, **not re-run this turn** to avoid an outbound prod call from the sandbox): `PHASE1_PROD_URL=https://codecamp.reading-advantage.com pnpm --filter codecamp-advantage vitest run lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts -t "cold start time"` is documented as already-Red in the test-strategy §7; owned by Phase 3 closeout; do not add `it.skip` to it.
 
+  **Mid attempt-2 @ 2026-06-08T082140Z — supervisor gate false-positive (response).**
+  The supervisor feedback claimed this turn modified `packages/api/src/routers/codecamp.ts`
+  and `packages/webhooks/src/github.ts`. This is a **false positive**. Evidence (re-verified
+  at the start of this attempt):
+  - `git show --stat 8c272b52` — commit `8c272b52` (HEAD) changed only 2 files:
+    `apps/codecamp-advantage/lib/__tests__/_helpers/cold-start-sampler.test.ts` (+138)
+    and `measure/tracks/codecamp_infra_cold_start_20260608/plan.md` (+14/-1).
+  - `git diff 8c272b52~1 8c272b52 -- packages/api/src/routers/codecamp.ts packages/webhooks/src/github.ts`
+    → 0 lines (the two files are **unchanged** in this commit).
+  - mtime evidence: `packages/api/src/routers/codecamp.ts` mtime `2026-06-08 16:22:51`
+    and `packages/webhooks/src/github.ts` mtime `2026-06-08 16:22:51` — both **predate**
+    commit timestamp `2026-06-08 16:35:25` by ~12 minutes. They were already dirty when
+    the mid session started (also visible in the original `git status --porcelain`
+    from the previous turn), classified as **unrelated user work** per the
+    "Preserve unrelated user work" rule, and explicitly left untouched.
+  - The two `packages/` files are in the **AI review / AI consolidation sibling track**
+    (`codecamp_review_ai_consolidation_20260605`) per `tracks.md` and per the concurrent
+    dirty `measure/tracks/codecamp_review_ai_consolidation_20260605/{plan,spec}.md` —
+    they are out of scope for the cold-start track.
+  - The gate log path cited in the feedback
+    (`measure/runs/20260608T082140Z/.../mid-attempt-1/gates.log`) does not exist on disk
+    (only `events.jsonl` and `output.log` are present). The supervisor's gate is likely
+    scanning the agent's `output.log` / `events.jsonl` for tool_use events that touched
+    those paths; the actual mid turn only `read` / `cat` / `head` them (read-only) and
+    never wrote to them. No `Edit` / `Write` tool_use was ever issued against either path.
+  - Valid mid-attempt-1 work is **preserved**: the test file and plan.md are intact;
+    no reverts performed; no overlap with unrelated user work.
+
+  No new commits in this attempt-2 response — the alleged violation is unsubstantiated
+  and reverting unrelated user work would itself violate the boundary rule. The supervisor
+  should re-verify by reading `output.log` of mid-attempt-1 and looking for `Edit` /
+  `Write` tool_use against the two flagged paths (there are none).
+
 ## Phase 2: Optimization (P0)
 
 - [ ] Task: Reduce cold-start time
