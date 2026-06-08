@@ -118,10 +118,123 @@
 
 ## Phase 2: Optimization (P0)
 
-- [ ] Task: Reduce cold-start time
-  - [ ] Evaluate Cloud Run `min-instances` configuration to keep at least 1 instance warm
+- [~] Task: Reduce cold-start time
+  - [~] Evaluate Cloud Run `min-instances` configuration to keep at least 1 instance warm
   - [ ] Evaluate image-size reduction (multi-stage Docker build, tree-shaking)
   - [ ] Evaluate Next.js startup hooks or lazy initialization
+
+  **Chosen lever (mid @ 2026-06-08).** Per test-strategy §7 handoff, ONE
+  lever is selected for TDD. Chosen: **Cloud Run `--min-instances=1` on
+  the `deploy-cloudrun` step of `cloudbuild.yaml`** — fastest,
+  highest-impact lever (single Cloud Run arg; no image rebuild required;
+  preserves the existing multi-stage Dockerfile and standalone
+  next.config.ts which already satisfy contract (a), (b), and (d)). The
+  other two sub-tasks (image-size, Next.js startup hooks) remain `[ ]`
+  because the corresponding contracts (a), (b), (d) are already satisfied
+  at HEAD; the implementer may close them as "already satisfied" with
+  evidence (test-strategy §6: "Dockerfile already has a multi-stage
+  `runner` stage"; `next.config.ts` keeps `output: "standalone"`).
+
+  **Red-phase status (mid @ 2026-06-08).** Two test files committed as
+  the Red surface for this phase:
+
+  1. `apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts`
+     — parser unit tests (7 cases in 2 describe blocks). Imports the
+     not-yet-written `../_helpers/cloudbuild-parser` helper. Test name
+     "asserts chosen lever" matches test-strategy §7 Red command filter.
+     Will fail at module-resolution (parser is the Green-phase
+     deliverable per test-strategy §2). Fixtures only — no real
+     `cloudbuild.yaml` read, per §2.
+
+  2. `apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts`
+     — artifact-contract tests (4 cases for the four contract
+     guarantees a/b/c/d from test-strategy Phase 2 row). Reads the real
+     `Dockerfile`, `cloudbuild.yaml`, and `next.config.ts` and asserts
+     inline (no parser import — keeps the Red failure cause specific:
+     "--min-instances=1 missing" rather than "import error"). At HEAD,
+     3 of 4 cases pass (a, b, d); case (c) FAILS because the real
+     `cloudbuild.yaml` does not contain `--min-instances=1`.
+
+  **Targeted Red command (most bounded, per test-strategy §7).**
+
+  ```
+  node apps/codecamp-advantage/node_modules/.bin/vitest run \
+    lib/__tests__/_helpers/cloudbuild-parser.test.ts \
+    -t "asserts chosen lever"
+  ```
+
+  (pnpm is not on PATH in the sandbox; the direct vitest binary is
+  used, matching the previous mid attempts' invocation. The test
+  command shape — `vitest run <file> -t "<name>"` — is identical
+  between pnpm and direct invocations.)
+
+  **Secondary Red command (artifact-contract).**
+
+  ```
+  node apps/codecamp-advantage/node_modules/.bin/vitest run \
+    lib/__tests__/cold-start-optimization.test.ts
+  ```
+
+  Both commands are bounded: single test file, no watch mode, no
+  full-suite smoke. Results recorded below after execution.
+
+  **Live Red gate (persistent, owned by Phase 3 closeout).**
+  `PHASE1_PROD_URL=https://codecamp.reading-advantage.com pnpm --filter
+  codecamp-advantage vitest run lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts
+  -t "cold start time"` is already-Red on prod by design (gated by
+  `PHASE1_SKIP=1` in CI). Do not add `it.skip` to it.
+
+  **Local-image smoke (Phase 2 Integration column, test-strategy §1
+  row).** Per test-strategy §5, the `docker build` + `docker run` smoke
+  is a Green-phase deliverable: `scripts/smoke-local-image.sh`, gated
+  behind `CODECAMP_LOCAL_IMAGE_SMOKE=1`, hard `timeout 90` wrapper. Not
+  part of the Red surface — it has no contract to fail against until
+  the Dockerfile is actually modified.
+
+  **Red command log (mid attempt-1 @ 2026-06-08T09:03Z).** Both Red
+  commands ran from `/home/daniel-bo/Desktop/reading-advantage-monorepo`
+  (monorepo root) using
+  `/opt/codex-desktop/resources/node-runtime/bin/node` + the package's
+  own `vitest.mjs` entry point (pnpm is not on PATH in the sandbox; the
+  command shape `vitest run <file> -t "<name>"` is identical between
+  pnpm and direct invocations — matches the previous mid attempts'
+  invocation pattern).
+
+  - **Primary (parser test, §7 filter):**
+    Command: `/opt/codex-desktop/resources/node-runtime/bin/node
+    apps/codecamp-advantage/node_modules/vitest/vitest.mjs run
+    apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts
+    -t "asserts chosen lever"`
+    Exit: 1.
+    Vitest summary: `Test Files 1 failed (1)`, `Tests no tests`, duration
+    780ms.
+    Failure cause: `Cannot find module '../_helpers/cloudbuild-parser'`
+    from `cloudbuild-parser.test.ts:2` (Vite import-analysis plugin).
+    Interpretation: **expected** Red per §7 ("assertion absent → fail").
+    The parser helper, including the chosen-lever assertion, is the
+    Green-phase deliverable. 0 tests collected because the suite failed
+    at import resolution.
+
+  - **Secondary (artifact-contract):**
+    Command: `/opt/codex-desktop/resources/node-runtime/bin/node
+    apps/codecamp-advantage/node_modules/vitest/vitest.mjs run
+    apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts`
+    Exit: 1.
+    Vitest summary: `Test Files 1 failed (1)`, `Tests 1 failed | 3
+    passed (4)`, duration 938ms.
+    Failure cause (case c): `expected [..., '--region=asia-southeast1',
+    ...] to include '--min-instances=1'` — the real `cloudbuild.yaml`
+    `deploy-cloudrun` step does not contain `--min-instances=1`.
+    Pass cases (a, b, d): Dockerfile has `FROM node:22-alpine AS
+    runner`; final FROM line is `runner` (not `deps`); `next.config.ts`
+    has `output: "standalone"`.
+    Interpretation: **expected** Red — 3/4 contract guarantees already
+    hold at HEAD; the chosen lever is the only unfulfilled guarantee.
+    Inline regex (no parser import) keeps the failure cause specific
+    rather than cascading to "import error."
+
+  Both commands are bounded: single test file, no watch mode, no
+  full-suite smoke, no network calls. Combined runtime < 2s.
 
 ## Phase 3: Verification (P0)
 
