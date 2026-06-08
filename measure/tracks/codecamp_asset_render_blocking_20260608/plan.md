@@ -398,9 +398,9 @@ the same prod HTML, with no Node TLS or redirect logic to debug.
 
 ## Phase 3: Verification (P0)
 
-- [~] Task: Re-run Phase 6 asset-loading probes
-  - [~] Zero render-blocking scripts in `<head>` for `/en/` and `/th/`
-  - [~] Page functionality regression check
+- [x] Task: Re-run Phase 6 asset-loading probes
+  - [x] Zero render-blocking scripts in `<head>` for `/en/` and `/th/`
+  - [x] Page functionality regression check
 
 ### Phase 3 Red-phase disposition (2026-06-08, MID attempt-1)
 
