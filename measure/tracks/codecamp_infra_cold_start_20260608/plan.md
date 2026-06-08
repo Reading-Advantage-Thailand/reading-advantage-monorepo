@@ -120,8 +120,8 @@
 
 - [~] Task: Reduce cold-start time
   - [~] Evaluate Cloud Run `min-instances` configuration to keep at least 1 instance warm
-  - [ ] Evaluate image-size reduction (multi-stage Docker build, tree-shaking)
-  - [ ] Evaluate Next.js startup hooks or lazy initialization
+  - [~] Evaluate image-size reduction (multi-stage Docker build, tree-shaking)
+  - [~] Evaluate Next.js startup hooks or lazy initialization
 
   **Chosen lever (mid @ 2026-06-08).** Per test-strategy §7 handoff, ONE
   lever is selected for TDD. Chosen: **Cloud Run `--min-instances=1` on
@@ -443,6 +443,122 @@
   part of the Green phase (test-strategy §5 sequencing: Red → Green
   implementation). The gate's strict filter does not allow this change
   to enter via the mid role's chain.
+
+  **Mid attempt-8 @ 2026-06-08T212100Z — Red surface re-verification +
+  sub-task [~] sweep.** Per the user's prompt rule "You own the Red
+  phase for every currently incomplete non-deferred task in this phase.
+  Mark tasks as [~] before starting", the two previously-`[ ]` sub-tasks
+  (image-size reduction, Next.js startup hooks) are now marked `[~]` to
+  reflect mid-role ownership of their Red contracts. **No new test
+  files are written this turn** — the committed Red surface from
+  `b44526bb` already covers all three Phase 2 sub-tasks via the four
+  artifact contracts (a/b/c/d). Disposition per sub-task:
+
+  | Sub-task | Red contract | HEAD status | Disposition |
+  |----------|--------------|-------------|-------------|
+  | `min-instances` | (c) `--min-instances=1` in `cloudbuild.yaml` deploy step | **FAILS** at HEAD (the one true Red gate) | Awaiting Green commit by jr/implementer (apply `--min-instances=1` to `cloudbuild.yaml`); commit lost in attempt-7 reset must be re-applied |
+  | Image-size reduction | (a) multi-stage `runner` stage exists + (b) final FROM is not `deps` | **PASSES** at HEAD (Dockerfile line 27: `FROM node:22-alpine AS runner`; line 39 copies from builder, not deps) | Already satisfied with evidence; close to `[x]` after jr verifies during Green phase |
+  | Next.js startup hooks | (d) `next.config.ts` keeps `output: "standalone"` | **PASSES** at HEAD (next.config.ts line 11: `output: "standalone"`) | Already satisfied with evidence; close to `[x]` after jr verifies during Green phase |
+
+  **Why no new Red tests this turn.** Per the test-strategy rule "If
+  the new tests pass at HEAD, tighten the contract until at least one
+  new test fails or mark the task as already satisfied with evidence
+  instead of creating a false Red phase": contracts (a), (b), (d)
+  already pass at HEAD and over-specifying them (e.g. asserting
+  specific base image versions, specific layer ordering, or specific
+  tree-shaking byte budgets) would deviate from the test-strategy §1
+  Phase 2 row, which lists exactly the four contracts already
+  implemented. Tightening would also entangle the cold-start track
+  with the sibling `codecamp_asset_render_blocking_20260608` track,
+  which owns bundle-size and render-blocking concerns separately.
+
+  **Build-graph verification this turn.** Ran `build-graph update
+  ./graph.db apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.ts
+  apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts
+  apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts
+  apps/codecamp-advantage/lib/__tests__/_helpers/cold-start-sampler.ts
+  apps/codecamp-advantage/lib/__tests__/_helpers/cold-start-sampler.test.ts`
+  → "Updated 5 files (0 → 27 nodes, 0 → 28 edges)". The graph was
+  stale (no `min-instances`, no `cold` results). After update:
+  `build-graph inspect ./graph.db hasMinInstances` confirms the helper
+  is exported with the documented signature (`Tags: ["exported"]`,
+  `Outgoing edges (0)`, `Incoming edges (3): contains ← cloudbuild-parser.ts, param_flow ← n, param_flow ← yamlText`).
+  No callers exist outside the test file (file-level imports, not
+  function-level call edges) — confirming the helper is correctly
+  scoped to the Phase 2 test surface only. `build-graph stats
+  ./graph.db` confirms `phase-6-performance-and-latency.test.ts`
+  remains the 6th-largest file (27 entities); the new Phase 2 helpers
+  did not bloat it.
+
+  **Red commands re-run this turn (bounded, no network).**
+
+  - **Targeted §7 filter (parser test, "asserts chosen lever"):**
+    Command: `/opt/codex-desktop/resources/node-runtime/bin/node
+    apps/codecamp-advantage/node_modules/vitest/vitest.mjs run
+    apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts
+    -t "asserts chosen lever"`
+    Exit: 0.
+    Vitest summary: `Test Files 1 passed (1)`, `Tests 1 passed | 10
+    skipped (11)`, duration 4.07s.
+    Interpretation: **Green** in the current working tree because the
+    parser helper is committed (`131d8a8e`). At HEAD before
+    `131d8a8e` this would have been Red at module-resolution. The
+    chosen-lever assertion is in place and asserts the correct
+    contract (`hasMinInstances(yaml, 1) === true` for a fixture with
+    `--min-instances=1` in the deploy step).
+
+  - **Artifact-contract suite (the true Phase 2 Red gate):**
+    Command: `/opt/codex-desktop/resources/node-runtime/bin/node
+    apps/codecamp-advantage/node_modules/vitest/vitest.mjs run
+    apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts`
+    Exit: 1.
+    Vitest summary: `Test Files 1 failed (1)`, `Tests 1 failed | 3
+    passed (4)`, duration 4.18s.
+    Failure cause (case c): `AssertionError: deploy-cloudrun step
+    args do not include --min-instances=1. Got: ["run","deploy",
+    "codecamp-advantage", "--image=…", "--region=asia-southeast1", …,
+    "--set-secrets=…"]: expected [ 'run', 'deploy', …(9) ] to include
+    '--min-instances=1'` at `cold-start-optimization.test.ts:130:7`.
+    Pass cases: (a) Dockerfile has `FROM node:22-alpine AS runner`;
+    (b) final FROM line is `FROM node:22-alpine AS runner` (not
+    `deps`); (d) `nextConfig.output === "standalone"`.
+    Interpretation: **expected and correct Red**. The (c) failure is
+    the bounded, specific signal that the chosen lever has not been
+    applied to `cloudbuild.yaml`. The 3 passing cases prove the
+    image-size and Next.js startup sub-tasks are already satisfied
+    (and so do not need separate Red tests).
+
+  - **Combined Phase 2 surface (15 cases):**
+    Command: same vitest with both test files.
+    Exit: 1.
+    Vitest summary: `Test Files 1 failed | 1 passed (2)`, `Tests 1
+    failed | 14 passed (15)`, duration 2.61s.
+    Interpretation: 1 failed (case c, `--min-instances=1` missing)
+    out of 15 — the bounded Red surface is intact and matches the
+    test-strategy §1 Phase 2 row exactly.
+
+  **Live Red gate (persistent, owned by Phase 3 closeout).**
+  `PHASE1_PROD_URL=https://codecamp.reading-advantage.com pnpm --filter
+  codecamp-advantage vitest run lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts
+  -t "cold start time"` remains already-Red on prod by design (gated
+  by `PHASE1_SKIP=1` in CI). Not re-run this turn to avoid an
+  outbound prod call from the sandbox. Do not add `it.skip` to it.
+
+  **Dirty-path classification at attempt-8 start.** `git status
+  --porcelain` returned empty — **clean worktree**. Attempt-7's
+  destructive reset cleared everything; the working tree matches HEAD
+  exactly. No fold-relevant-dirty-changes action needed. No
+  unrelated user work in flight to preserve.
+
+  **Disposition summary (one line).** Red phase is satisfied with
+  evidence (15 committed test cases at `b44526bb`, 1 case failing
+  for the correct reason at HEAD); the three Phase 2 sub-tasks are
+  now `[~]` to reflect mid-role ownership of their Red contracts;
+  no new test files needed; the next role is **jr** (Green-phase
+  implementer) to re-apply `--min-instances=1` to
+  `cloudbuild.yaml` per the test-strategy §5 sequencing.
+
+  This attempt-8 produces a single docs commit (plan.md only).
 
 ## Phase 3: Verification (P0)
 
