@@ -7,7 +7,7 @@
   - [ ] Identify the dominant cost: image size, dependency loading, or initialization
 
   **Green-phase status (jr @ 2026-06-08).** Helper implemented; unit tests green.
-  - Green commit: `cold-start-sampler.ts` + existing `cold-start-sampler.test.ts` (8/8 pass).
+  - Green commit: `c7b38bd2` — `apps/codecamp-advantage/lib/__tests__/_helpers/cold-start-sampler.ts` (105 lines) + existing test (8/8 pass).
   - Green command: `vitest run lib/__tests__/_helpers/cold-start-sampler.test.ts` → 8 passed.
   - Sub-task "Measure container startup time": requires forced scale-to-zero + N=5 prod sampling.
     Post-Green deliverable — owner: implementer or supervisor (manual run).
