@@ -940,7 +940,7 @@ patch) because the `.browserslistrc` alone does not work — see
 - **New adversarial tests:** `lib/__tests__/strip-nomodule-polyfill.test.ts` executes the real CLI against temp build manifests and covers absolute-path handling plus idempotency.
 - **Verification:** clean `pnpm build` now completes and prints `[strip-nomodule-polyfill] patched 32 of 32 build-manifest.json files`; a manifest scan returns `[]` for remaining `polyfillFiles`; focused strip tests pass 2/2; `countRenderBlockingScripts` harness passes 5/5; `pnpm lint` has 0 errors / 3 pre-existing warnings; `pnpm check-types` passes; root `npm test` passes 111/113 with 2 skipped.
 
-### Phase 3 JR verification disposition (2026-06-08, attempt-1)
+### Phase 3 JR verification disposition (2026-06-08, attempt-1, commit `e3542911`)
 
 This subsection records the JR Green-phase verification for Phase 3.
 The Phase 2 fix (`4bf93811` + `fd1e1c3a`) is on disk and committed.
