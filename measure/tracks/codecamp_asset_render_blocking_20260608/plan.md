@@ -88,9 +88,9 @@
 
 ## Phase 2: Fix (P0)
 
-- [x] Task: Remove or defer the render-blocking script
-  - [x] Add `defer`, `async`, or `type="module"` attribute as appropriate
-  - [x] If third-party, evaluate moving to `<Script strategy="lazyOnload">` (Next.js `next/script`)
+- [x] Task: Remove or defer the render-blocking script (`4bf93811`)
+  - [x] Add `defer`, `async`, or `type="module"` attribute as appropriate (`4bf93811`)
+  - [x] If third-party, evaluate moving to `<Script strategy="lazyOnload">` (Next.js `next/script`) (`4bf93811` — inapplicable; script is framework-emitted)
 
 > Both bullets resolved. The offending tag is framework-emitted (not
 > third-party, not a per-locale misconfig — see Phase 1
