@@ -1115,10 +1115,10 @@ caveats on the `[x]` rows above.
         public shell `s-maxage`/`stale-while-revalidate` → green
   - [~] Phase 8 launch gate: error boundaries render + tRPC logging middleware emits structured
         logs in Cloud Logging → green
-- [~] Task: File follow-up tracks for findings the deploy does NOT fix
-  - [~] P1 perf: warm dashboard 1363ms vs 1000ms budget (needs render caching / prefetch / Cloud Run tuning)
-  - [~] P1 asset: 1 render-blocking `<script>` in `<head>`
-  - [~] P1 infra: cold start exceeds 5s budget (container min-instances / image-size reduction)
+- [x] Task: File follow-up tracks for findings the deploy does NOT fix
+  - [x] P1 perf: warm dashboard 1363ms vs 1000ms budget (needs render caching / prefetch / Cloud Run tuning) — filed `codecamp_perf_warm_dashboard_20260608`
+  - [x] P1 asset: 1 render-blocking `<script>` in `<head>` — filed `codecamp_asset_render_blocking_20260608`
+  - [x] P1 infra: cold start exceeds 5s budget (container min-instances / image-size reduction) — filed `codecamp_infra_cold_start_20260608`
   - [~] (Informational) alert-policy artifacts not committed to repo (configured out-of-band in GCP)
   - *(Logged in `measure/tech-debt.md` under `codecamp_qa_prod_20260517` until tracks are opened.)*
 
@@ -1354,6 +1354,32 @@ tightening) runs only without `PHASE85_SKIP` and remains RED until the
 Typecheck (`npm run check-types --workspace=codecamp-advantage`): PASS.
 
 Red-phase attempt-3 tightening commit: `d4c0cb43`.
+
+### Phase 8.5 — Green-phase results: follow-up tracks filed (2026-06-08)
+
+Filed the 3 P1 follow-up tracks required by Task 3. The test at
+`lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts` now passes
+the follow-up-track existence checks (Suite 2).
+
+| Track directory | Finding | Filed |
+|---|---|---|
+| `codecamp_perf_warm_dashboard_20260608` | warm dashboard 1363ms vs 1000ms budget | Yes |
+| `codecamp_asset_render_blocking_20260608` | 1 render-blocking `<script>` in `<head>` | Yes |
+| `codecamp_infra_cold_start_20260608` | cold start exceeds 5s budget | Yes |
+
+**Post-fix verification:**
+- `PHASE85_SKIP=1` run: `36 passed | 5 skipped (41)` — 0 failures.
+- `pnpm turbo run check-types --filter=codecamp-advantage` — PASS.
+- Full `vitest run` in `apps/codecamp-advantage` — Phase 8.5 file passes;
+  pre-existing failures in Phases 1–8 are deploy-gated (not this task's scope).
+
+**Remaining Phase 8.5 blockers (Task 1 — deploy, Task 2 — live re-verify):**
+1. Deploy accumulated fixes to production (`gcloud builds submit`).
+2. Re-run Phase 8.5 network pass (`PHASE85_SKIP` unset) to confirm
+   P0/P1 launch gates go green on the live revision.
+3. (Informational) Alert-policy artifact follow-up.
+
+Green-phase commit: (pending)
 
 ## Phase 9: GitHub Webhook Specifics (P1)
 

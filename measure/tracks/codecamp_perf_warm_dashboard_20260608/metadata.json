@@ -1,0 +1,12 @@
+{
+  "track_id": "codecamp_perf_warm_dashboard_20260608",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-06-08T00:00:00Z",
+  "updated_at": "2026-06-08T00:00:00Z",
+  "description": "Bring the warm-dashboard page load under the 1000ms P1 budget. The Phase 6 prod-smoke suite measured 1363ms (36% over budget) on a warm request to /en/. Likely fixes: server-side render caching of the dashboard shell, prefetch of getUserDashboard on the auth wall, or Cloud Run concurrency tuning.",
+  "estimated_tasks": 8,
+  "deviation_notes": "",
+  "depends_on": ["codecamp_qa_prod_20260517"],
+  "notes": "Follow-up from codecamp_qa_prod_20260517 Phase 6 (P1 perf finding). Filed per plan.md Phase 8.5 Task 3."
+}
