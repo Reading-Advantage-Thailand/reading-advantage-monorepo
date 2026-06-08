@@ -50,6 +50,4 @@ e2e-results/
 
 # Measure automation run logs — ephemeral session transcripts / event streams /
 # gate output. Curated artifacts (*.feedback.md, *-result.json) are kept.
-measure/runs/**/*.session
-measure/runs/**/*.log
-measure/runs/**/*.jsonl
+measure/runs/
