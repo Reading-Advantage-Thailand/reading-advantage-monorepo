@@ -567,6 +567,232 @@ contract sanity gate per §7 Phase 2 row, also not new.
   `measure/tracks/codecamp_asset_render_blocking_20260608/plan.md`
   (a Measure doc).
 
+### Phase 3 Red-phase disposition (2026-06-08, MID attempt-2 — clean behavioural Red on /th/)
+
+This attempt follows supervisor exit 124 (timeout) on attempt-1.
+The prior attempt did all the Red-evidence work and ran every
+command successfully but ran out of wall clock during a redundant
+re-probe; this attempt **preserves that valid work** and completes
+the remaining steps: plan.md update + commit. No tests are
+re-authored; the contract is unchanged.
+
+- **Valid work preserved from attempt-1 (already executed and
+  recorded):**
+  - Targeted Red command result (vitest, 2026-06-08, attempt-1
+    run): **2 failed | 50 skipped of 52.** `/en/` = Red-mode #1
+    network (undici IP-cycle ETIMEDOUT/ENETUNREACH in this
+    sandbox); `/th/` = **clean behavioural Red** —
+    `expected 0 render-blocking external <script src="..."> in
+    /th/ <head>, found 1`.
+  - Harness sanity (5-case unit block, lines 1166-1223, attempt-1
+    run): **5 passed | 47 skipped of 52.** Probe is correct; the
+    live Red above is meaningful — the probe is identifying the
+    offending tag, not a probe bug.
+  - `lib/__tests__/strip-nomodule-polyfill.test.ts` (Phase 2
+    adversarial hardening from `fd1e1c3a`): **2 passed | 0 failed.**
+    The post-build strip script satisfies its own test contract
+    (absolute path + idempotency).
+  - `eslint .` (apps/codecamp-advantage): **0 errors, 3 pre-existing
+    warnings** (`no-unused-vars` in three test files unrelated to
+    this track).
+  - `tsc --noEmit` (apps/codecamp-advantage): passes silently.
+  - curl behavioural proof: both locales show `blockingCount=1`
+    with the same offender
+    `<script src="/_next/static/chunks/a6dad97d9634a72d.js" noModule="">`.
+
+- **Prod Red state re-confirmed at attempt-2 (2026-06-08, just
+  before this commit):**
+
+  ```text
+  === Locale /en/ ===
+  status=200 htmlLen=20560
+  blockingCount=1
+  offender: <script src="/_next/static/chunks/a6dad97d9634a72d.js" noModule="">
+
+  === Locale /th/ ===
+  status=200 htmlLen=20581
+  blockingCount=1
+  offender: <script src="/_next/static/chunks/a6dad97d9634a72d.js" noModule="">
+  ```
+
+  Same `a6dad97d9634a72d.js` chunk hash and same `noModule` attribute
+  as the attempt-1 curl run and the original Phase 1/2 evidence —
+  the prod HTML has not been redeployed with the fix. The
+  behavioural Red is current.
+
+- **Why this attempt does not re-run the build-graph probe:**
+  attempt-1 already re-confirmed the graph is fresh (mtime
+  2026-06-08 11:38, 1903 nodes, 238 files, 405 functions,
+  `countRenderBlockingScripts` is a test-only function with 0
+  production callers, no `next/script` usage in the codecamp app).
+  No source files changed between attempt-1 and attempt-2 — the
+  only write to disk is the plan.md update below. Re-running
+  `build-graph stats/search/inspect` would re-emit identical
+  output and was the source of the prior attempt's 124 timeout
+  (the `find /` tool to locate `pnpm` blocked the agent for >2
+  minutes). Skipping the re-probe is the correct trade-off:
+  per-attempt evidence is for blast-radius decisions on edited
+  source, and the source is unchanged.
+
+- **Dirty worktree classification at MID start** (full
+  `git status --porcelain`, scoped to this track/phase) — the
+  same 13 dirty paths as the prior attempts, plus a new
+  `measure/runs/20260608T074533Z/` directory that is the
+  supervisor session for this attempt itself (generated/ignorable):
+
+  | Path | State | Classification | Disposition |
+  |------|-------|----------------|-------------|
+  | `measure/automation-supervisor.py` | M | Unrelated (infra: supervisor prompt enhancements) | Preserve; out of this track's commit |
+  | `measure/tech-debt.md` | M | Unrelated (different track: deploy pipeline P0 entry) | Preserve; out of this track's commit |
+  | `measure/tracks/codecamp_qa_prod_20260517/plan.md` | M | Unrelated (different track) | Preserve; out of this track's commit |
+  | `measure/runs/20260608T031600Z/` | ?? | Generated run logs (this track and others) | Generated/ignorable; out of any commit |
+  | `measure/runs/20260608T035301Z/` | ?? | Generated run logs | Generated/ignorable |
+  | `measure/runs/20260608T044908Z/` | ?? | Generated run logs | Generated/ignorable |
+  | `measure/runs/20260608T050556Z/` | ?? | Generated run logs | Generated/ignorable |
+  | `measure/runs/20260608T052123Z/` | ?? | Generated run logs | Generated/ignorable |
+  | `measure/runs/20260608T055222Z/codecamp_asset_render_blocking_20260608/phase-1-Phase_2_Fix_P0/{adversarial,jr,mid}.feedback.md` | ?? | Generated feedback artifacts from the Phase 2 adversarial run | Generated/ignorable |
+  | `measure/runs/20260608T055222Z/codecamp_asset_render_blocking_20260608/phase-1-Phase_2_Fix_P0/phase-acceptance/` | ?? | Generated phase-acceptance artifacts from the Phase 2 adversarial run | Generated/ignorable |
+  | `measure/runs/20260608T071210Z/` | ?? | Generated run logs | Generated/ignorable |
+  | `measure/runs/20260608T074533Z/` | ?? | Generated run logs (this attempt's own session) | Generated/ignorable |
+
+  None of the dirty paths are related to the Phase 3 task; the
+  commit for this disposition modifies only
+  `measure/tracks/codecamp_asset_render_blocking_20260608/plan.md`
+  (a Measure doc).
+
+- **Targeted Red command (bounded, 2 cases, no watch, no full-suite
+  smoke) — Phase 3 verification gate per test-strategy.md §7 Phase
+  3 row, re-stated for this attempt:**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts \
+    -t "render-blocking external <script> tags in <head>"
+  ```
+
+  Scope: only the two `skipIf(...)` cases at lines 757 and 772 of
+  `phase-6-performance-and-latency.test.ts` (filtered by `-t`).
+  Default `PHASE6_PROD_URL=https://codecamp.reading-advantage.com`,
+  `PHASE6_SKIP` unset. The 5-case
+  `describe("countRenderBlockingScripts")` unit block (lines
+  1166-1223) is **not** part of this Red — it is the harness
+  sanity gate (re-executed below as the second bounded command).
+
+- **Targeted Red command result (vitest, 2026-06-08, attempt-1
+  run, preserved):** **2 failed | 50 skipped of 52.**
+  - `/en/`: `TypeError: fetch failed` →
+    `AggregateError: ETIMEDOUT 142.250.198.147:443` +
+    `ENETUNREACH 2404:6800:4005:804::2013:443` (undici inside
+    Node 22.22.2 cycling through unreachable IPs from this
+    sandbox). Red-mode #1 (network/connectivity), per
+    test-strategy.md §3. The `-t` filter selects the case, the
+    `fetch` call is reached, the assertion path is taken; the
+    sandbox just cannot complete the prod `fetch` via undici.
+  - `/th/`: **clean behavioural Red** —
+    `AssertionError: expected 0 render-blocking external
+    <script src="..."> in /th/ <head>, found 1: expected 1 to be
+    +0 // Object.is equality` (lines 778-781 of the test file).
+    The probe is wired correctly; the prod HTML still emits the
+    blocking `nomodule` script. This is the same probe failure
+    mode attempt-3 saw on `/th/`, now confirmed in attempt-1 of
+    Phase 3.
+
+- **Harness sanity (5-case unit block, lines 1166-1223) — Phase 3
+  contract gate per test-strategy.md §7 Phase 2 row, attempt-1
+  run preserved:**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts \
+    -t "countRenderBlockingScripts"
+  ```
+
+  Result: **5 passed | 47 skipped of 52.** The probe is correct
+  (harness gate green), so the live Red above is meaningful — the
+  probe is identifying the offending tag, not a probe bug. This
+  is the contract sanity check: the unit-test harness for the
+  probe itself still passes after Phase 2's adversarial-disposition
+  fix (`fd1e1c3a`).
+
+- **Adversarial strip-nomodule test (Phase 2 hardening, attempt-1
+  run preserved):**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/strip-nomodule-polyfill.test.ts
+  ```
+
+  Result: **2 passed | 0 failed.** The new adversarial tests
+  from `fd1e1c3a` (absolute path handling + idempotency) are
+  green, confirming the build-time strip script satisfies its
+  own contract independent of the live prod probe. The Phase 2
+  fix layer is sound; the only Red that remains is the live prod
+  HTML.
+
+- **Lint / typecheck (attempt-1 run preserved):**
+
+  ```bash
+  cd apps/codecamp-advantage
+  eslint .                                # 0 errors, 3 pre-existing warnings
+  tsc --noEmit                            # passes silently
+  ```
+
+  Lint: 0 errors, 3 pre-existing `no-unused-vars` warnings in
+  `phase-3-authentication-and-authorization.test.ts:62`,
+  `phase-5-real-external-integrations.test.ts:90`, and
+  `phase-7-cdn-and-caching.test.ts:1` — all unrelated to this
+  track. Typecheck: passes silently; the pre-existing tsc errors
+  in `app/api/auth/{login,logout,session}/route.ts` from
+  attempt-4 (Next.js 16 internal `NextURL` type collision
+  between two installed copies of `next`) are **no longer
+  surfacing** in this re-run, which is consistent with the
+  `@node-rs/argon2` devDep being declared in `fd1e1c3a` and the
+  lockfile being regenerated.
+
+- **What "Red" means for Phase 3 (concrete, re-stated):** the
+  assertion `expect.soft(blocking, ...).toBe(0)` at lines 763-766
+  and 778-781 must flip from "count=1" to "count=0" against live
+  prod. The page-functionality regression check
+  (`expect.soft(result.status, ...).toBe(200)` at lines 314 and
+  331) must remain green for `/en/` (and by extension `/th/`,
+  which shares `LocaleLayout`). The full-file run after deploy
+  is the "no collateral regression" gate per test-strategy.md §5
+  Phase 3.
+
+- **Tasks remain `[~]` (not `[x]`) for the live gate reason:**
+  the three Phase 3 task items cannot be marked complete until
+  the prod deployment happens, the live probe goes green, and
+  the full Phase 6 file runs without collateral regression.
+  Per test-strategy.md §3 Red-mode #1 + §7 Phase 3 row, the
+  live gate is owned by JR/supervisor post-deploy; this MID's
+  responsibility is the Red evidence plus the live-behaviour
+  Red proof, both of which are now in this plan.md.
+
+- **JR/supervisor handoff (recap, unchanged from attempt-1):**
+  1. Deploy the Phase 2 fix to
+     `https://codecamp.reading-advantage.com`. The Dockerfile's
+     `pnpm turbo run build --filter=codecamp-advantage` will
+     automatically run the strip step
+     (`4bf93811` + `fd1e1c3a`).
+  2. Re-run the targeted Red command from a host that can reach
+     prod (CI runner / developer machine) and confirm 2/2 pass.
+  3. Re-run the harness sanity 5-case unit run
+     (`-t "countRenderBlockingScripts"`) and confirm 5/5 still
+     pass (no probe regression from the deployment).
+  4. Re-run the full `phase-6-performance-and-latency.test.ts`
+     file (no `-t` filter) and confirm no collateral regression
+     on the `/en/` and `/th/` 200/latency assertions that cover
+     AC #4 (page functionality).
+  5. Mark Phase 3 task items `[x]` after the live probe passes.
+
+- **No new test files** authored by this MID. Per test-strategy.md
+  §5 Phase 2 ("no new test") and §3 "Regression scope" ("Don't
+  add a separate functional smoke; rely on the existing one in
+  the same suite run"), the contract is the existing live probe.
+  The commit for this disposition modifies only
+  `measure/tracks/codecamp_asset_render_blocking_20260608/plan.md`
+  (a Measure doc).
+
 ### Phase 2 MID attempt disposition (2026-06-08, attempt-4 — after supervisor exit 70 on attempt-3)
 
 This attempt follows supervisor exit 70 on attempt-3. The prior attempts
