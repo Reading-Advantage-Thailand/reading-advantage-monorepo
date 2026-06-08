@@ -236,6 +236,172 @@
   Both commands are bounded: single test file, no watch mode, no
   full-suite smoke, no network calls. Combined runtime < 2s.
 
+  **Mid attempt-5 @ 2026-06-08T174200Z — Red-surface re-verification, worktree
+  state classification, and disposition.** The supervisor's revised prompt
+  injected the current `git status --porcelain` and asked the mid role to
+  classify every dirty path before editing. Re-verification of the Red
+  contract was performed against the current working tree (Green state)
+  AND against `HEAD` (Red state, via git plumbing) — see the
+  classification table below. **No new Red tests were written** for the
+  following reasons, and the disposition is "Red phase already satisfied
+  with evidence" rather than "tighten the contract":
+
+  1. **The committed Red surface from `b44526bb` is complete and matches
+     test-strategy §5 exactly.** The previous mid turn committed two
+     test files:
+     - `cloudbuild-parser.test.ts` — 11 cases in 2 describe blocks
+       (NOT 7 as the plan/commit message previously stated; corrected
+       here). 6 cases in `describe("parseCloudBuildSteps …")` and 5
+       cases in `describe("hasMinInstances …")` (the chosen-lever
+       assertion lives here — matches test-strategy §7 Red command
+       filter `"asserts chosen lever"`).
+     - `cold-start-optimization.test.ts` — 4 cases for contract
+       guarantees (a, b, c, d). Case (c) is the only one that fails at
+       HEAD; (a), (b), (d) are already satisfied.
+     Together: 15 cases. test-strategy §5 specifies the contract; the
+     committed tests implement that contract in full. No additional
+     tests are required for the Red surface.
+
+  2. **The other two Phase 2 sub-tasks are out-of-scope for Red-phase
+     TDD per test-strategy §6 and the existing plan disposition.**
+     "Image-size reduction (multi-stage Docker build, tree-shaking)" and
+     "Next.js startup hooks or lazy initialization" both have
+     already-satisfied contracts at HEAD (Dockerfile has multi-stage
+     `runner`; `next.config.ts` has `output: "standalone"`). The plan
+     (lines 132–136) explicitly says the implementer may close them as
+     "already satisfied" with evidence; they remain `[ ]` and are not
+     mid-role Red work.
+
+  3. **Tightening the contract would deviate from the test-strategy.**
+     The test-strategy is the source of truth for the Red surface.
+     Adding edge-case tests (YAML comments, escaped quotes, multi-line
+     strings, etc.) would over-specify the parser and exceed the
+     strategy's bounds. Per the rule "If the new tests pass at HEAD,
+     tighten the contract until at least one new test fails or mark the
+     task as already satisfied with evidence instead of creating a false
+     Red phase" — the second option applies: evidence-based
+     disposition.
+
+  **Red contract at HEAD (re-verified this turn).** Used git plumbing
+  to inspect the committed state without modifying the working tree:
+
+  - `git show HEAD:apps/codecamp-advantage/cloudbuild.yaml | grep -c
+    "min-instances"` → **0**. At HEAD, case (c) of
+    `cold-start-optimization.test.ts` would FAIL because the
+    `deploy-cloudrun` step's args do not contain `--min-instances=1`.
+  - `git ls-tree HEAD apps/codecamp-advantage/lib/__tests__/_helpers/`
+    shows the parser test file (`cloudbuild-parser.test.ts`, blob
+    `7d139207`) and the sampler files, but **no
+    `cloudbuild-parser.ts`**. The test file's import
+    (`from "../_helpers/cloudbuild-parser"`) would fail at module
+    resolution at HEAD — Vite import-analysis plugin raises
+    `Failed to resolve import … Does the file exist?`.
+  - `git show HEAD:apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts`
+    confirms the import statement at HEAD imports the not-yet-written
+    parser.
+
+  **Current working tree state (Green state).** Both Red commands
+  re-run against the current working tree (no watch mode, no
+  full-suite smoke, no network calls). Output:
+
+  - **Combined Red surface run** (the two test files together):
+    Command: `/opt/codex-desktop/resources/node-runtime/bin/node
+    apps/codecamp-advantage/node_modules/vitest/vitest.mjs run
+    apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts
+    apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts`
+    Exit: 0.
+    Vitest summary: `Test Files 2 passed (2)`, `Tests 15 passed (15)`,
+    duration 2.87s.
+    Interpretation: **Green state in working tree**. The
+    `cloudbuild-parser.ts` helper is on disk (untracked) so the import
+    resolves; `--min-instances=1` is in `cloudbuild.yaml` (dirty) so
+    case (c) passes. This is the expected post-Green state.
+
+  - **Targeted §7 filter (parser test, "asserts chosen lever"):**
+    Command: same vitest invocation with `-t "asserts chosen lever"`
+    Exit: 0.
+    Vitest summary: `Test Files 1 passed (1)`, `Tests 1 passed | 10
+    skipped (11)`, duration 1.04s.
+    Interpretation: Green for the chosen-lever assertion. This is the
+    §7 Red command and would have failed at HEAD (parser missing
+    causes module-resolution failure with 0 tests collected); it now
+    passes in the working tree because the parser is on disk.
+
+  - **Secondary (artifact-contract):**
+    Command: same vitest invocation with
+    `apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts`
+    Exit: 0.
+    Vitest summary: `Test Files 1 passed (1)`, `Tests 4 passed (4)`,
+    duration 1.01s.
+    Interpretation: Green for all four contract guarantees. At HEAD
+    this run would have been `Tests 1 failed | 3 passed (4)` with case
+    (c) failing on missing `--min-instances=1`.
+
+  **Dirty-path classification at this attempt-5 start.** No Edit/Write
+  issued against any of these by this turn. Mid role preserves all of
+  them — none get committed in this turn's docs commit.
+
+  | Path | Status | Classification | Mid role action |
+  |------|--------|----------------|-----------------|
+  | `apps/codecamp-advantage/cloudbuild.yaml` | M | **Relevant Green-phase change**: 1-line addition `--min-instances=1` to the `deploy-cloudrun` step (diff verified: `@@ -22,6 +22,7 @@`). Exactly the lever chosen in plan §"Chosen lever" and the only artifact contract test case (c) that fails at HEAD. | Preserve uncommitted. The mid role is not authorized to commit implementation changes in a Red-phase commit. Owner: implementer (or whoever applied the change) — to be committed as the Phase 2 Green deliverable in a separate commit, not folded into a mid commit. |
+  | `apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.ts` | ?? | **Relevant Green-phase change**: 95-line parser helper implementation (`parseCloudBuildSteps` + `hasMinInstances` + `CloudBuildStep` type). Per test-strategy §2 and §5, this is the Green-phase deliverable for the Phase 2 helper. Per the "Do NOT modify existing source code except test files and Measure docs" rule, the mid role does not commit this. | Preserve untracked. Same owner as above. |
+  | `measure/automation-supervisor.py` | M | Unrelated user work (supervisor tool evolution: added `dirty_worktree_context` injection, removed `ALLOW_DIRTY_WORKTREE` gate, refined prompts). | Preserve, do not touch. |
+  | `measure/tech-debt.md` | M | Unrelated user work: new `codecamp_qa_prod_20260517` P0 row (DB-migration deploy gate, prod incident detail) and severity bump on `codecamp_review` LLM impl row to High with prod-incident detail. Belongs to sibling tracks `codecamp_qa_prod_20260517` and `codecamp_review_ai_consolidation_20260605`. | Preserve, do not touch. |
+  | `measure/tracks/codecamp_qa_prod_20260517/plan.md` | M | Unrelated user work (Green-phase commit SHA backfill `0ca8a7d4`). | Preserve, do not touch. |
+  | `measure/tracks/codecamp_review_ai_consolidation_20260605/plan.md` | M | Unrelated user work (sibling AI-consolidation track: added `[~]` repro task + preflight + smoke tasks). | Preserve, do not touch. |
+  | `measure/tracks/codecamp_review_ai_consolidation_20260605/spec.md` | M | Unrelated user work (sibling AI-consolidation track: 2026-06-08 prod-incident note + FR-1 preflight requirement). | Preserve, do not touch. |
+  | `measure/runs/20260608T*/` (multiple) | ?? | Generated/ignorable (supervisor run artifacts; no track identifier in most dirs, 1 is the `codecamp_asset_render_blocking_20260608` sibling-track run, 1 is the `codecamp_infra_cold_start_20260608` run's parent). | Leave; gitignore contract is supervisor's. |
+  | `measure/tracks/codecamp_infra_cold_start_20260608/test-strategy.md` | ?? | **Strategy role's deliverable**, not the mid role's. Per the Red-phase rule, fold-relevant-dirty-changes applies only to changes the mid role is responsible for. The strategy doc's own `MEASURE_AGENT_RESULT` block (`role: strategy`) makes ownership explicit. | Leave untracked; the strategy role owns its own commit. Do not fold into a mid commit. |
+
+  **Resolution path for the relevant Green-phase dirty changes.** The two
+  relevant changes (cloudbuild.yaml + parser.ts) are Green-phase work
+  that the mid role cannot commit. Options for the supervisor or
+  implementer (out of scope for this turn):
+
+  - **Option A (preferred)**: commit them in a separate, well-labeled
+    Green-phase commit, e.g.
+    `feat(codecamp-cold-start): add --min-instances=1 + cloudbuild-parser helper — Phase 2 Green`,
+    and leave the cold-start track's own Red commits (`8c272b52` test,
+    `ac111882` amendment, `68e6f043` sibling-track preservation,
+    `b44526bb` Phase 2 Red surface) intact. This matches the
+    test-strategy §5 sequencing: "Red on the `cloudbuild-parser`
+    assertion for whichever lever is chosen, **then implement** the
+    Dockerfile/cloudbuild change to turn it Green." The mid role's
+    Red commit (`b44526bb`) is already in place; the Green commit is
+    the natural next step, owned by the implementer role.
+  - **Option B**: leave them in the working tree for now and close out
+    Phase 2 only after a re-verify of the local-image smoke
+    (`scripts/smoke-local-image.sh` per test-strategy §5).
+
+  The mid role does not pick between A and B — that decision belongs
+  to the supervisor / implementer. This turn only records the state
+  and the options.
+
+  **Disposition summary (one line).** Red phase is already satisfied
+  with evidence (15 committed test cases covering the full
+  test-strategy §5 contract); no new Red tests written; the
+  Green-phase implementation is present in the working tree as
+  uncommitted changes; the supervisor or implementer should commit
+  the Green-phase work in a separate, well-labeled commit per
+  Option A above. The next role in the chain is **jr** (Green-phase
+  implementer) for the `cloudbuild-parser` helper and the
+  `--min-instances=1` change; **supervisor** for verifying the
+  Green commit and gating the Phase 2 → Phase 3 transition (re-sample
+  prod, force scale-to-zero per test-strategy §3, compare to baseline
+  artifact).
+
+  **Plan minor inaccuracy corrected in this turn.** The plan.md line
+  143 previously stated "7 cases in 2 describe blocks" for
+  `cloudbuild-parser.test.ts`; the actual count (verified by
+  `grep -c '  it(' apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts`
+  → 11, and by structural inspection of the file) is **11 cases in 2
+  describe blocks** (6 in `parseCloudBuildSteps`, 5 in
+  `hasMinInstances`). The disposition paragraph above records the
+  correct count. The committed tests themselves are correct; only
+  the plan's narrative was off-by-four. The commit message for
+  `b44526bb` has the same off-by-four — the commit's actual diff
+  shows the correct test count; only the message body miscounts.
+
 ## Phase 3: Verification (P0)
 
 - [ ] Task: Re-run Phase 1/6 cold-start probes
