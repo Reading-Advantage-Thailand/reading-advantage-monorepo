@@ -1236,6 +1236,68 @@ Result (2026-06-08): **6 failed | 27 passed (33)** in 16.71s wall.
    Phases 3/4/5/6 — these are out of scope for the Phase 8.5 launch-gate slice but should be
    run as part of Phase 12 (Regression Against Local QA).
 
+### Phase 8.5 — Red-phase tightening (2026-06-08, MID re-entry)
+
+The 2026-06-08 Red-phase pass left the 3 follow-up-track existence checks RED (real missing
+implementation for Task 3) but the Phase 8 launch-gate probe was too permissive: it asserted
+only `tRPC unauth status === 401 + missing route status === 404`, which would also be
+satisfied by Next.js's default unstyled 404 page. A pre-`3fb1a87` revision serving the default
+404 would therefore falsely pass the Phase 8 launch gate even though the custom
+`app/not-found.tsx` and `app/[locale]/not-found.tsx` boundaries (Phase 8 Green deliverables)
+had not deployed.
+
+The MID re-entry tightens the Phase 8 launch-gate contract to require at least one
+distinctive marker string from the custom not-found.tsx body (`"Page not found"` or
+`"Back to home"`). Next.js's default 404 (`"This page could not be found."`) contains neither
+substring, so the new assertion discriminates the custom boundary from the default. The
+tightening is paired with a Suite 1 filesystem regression detector that asserts both source
+files at `apps/codecamp-advantage/app/not-found.tsx` and `apps/codecamp-advantage/app/[locale]/not-found.tsx`
+still contain every marker — this fails at HEAD only if a future contract rewrite drops or
+renames a marker, preventing the live assertion from silently failing for the wrong reason.
+
+Changes in `lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts`:
+
+- Added `NOT_FOUND_BODY_MARKERS` and `NOT_FOUND_SOURCE_FILES` constants.
+- Tightened `probePhase8LaunchGate` (Suite 3 aggregated gate) and the Phase 8 per-gate
+  probe (Suite 4) to assert the 404 body contains at least one custom marker; expanded
+  the test description from "tRPC unauth 401 + missing routes 404" to
+  "tRPC unauth 401 + missing routes 404 + custom not-found.tsx body marker".
+- Added a Suite 1 filesystem regression detector for the marker contract.
+- Added Suite 5 unit tests for the new marker constants.
+
+**Targeted Red command (bounded, filesystem-only — what CI runs to gate the follow-up-track deliverable):**
+
+```bash
+cd apps/codecamp-advantage && PHASE85_SKIP=1 node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts
+```
+
+Result (2026-06-08, post-tightening): **3 failed | 29 passed | 5 skipped (37)** in 7.49s wall.
+- The 3 failures are unchanged from the 2026-06-08 pre-tightening run — the same 3
+  follow-up-track existence checks. These remain RED because the 3 P1 follow-up
+  tracks (`codecamp_perf_warm_dashboard_*`, `codecamp_asset_render_blocking_*`,
+  `codecamp_infra_cold_start_*`) have not been filed under `measure/tracks/`. **Red is
+  real missing implementation, not a stale durable record.**
+- The +4 net new passes are: 1 Suite 1 filesystem regression detector + 3 Suite 5 unit
+  tests for the marker constants. These pass at HEAD because the source-level contract
+  is **already satisfied with evidence** — the custom not-found.tsx files exist with the
+  expected markers (Phase 8 Green commit `3fb1a87`). The new tests are regression
+  detectors, not new Red work.
+
+**Live-behavior gate (owned by the post-deploy verification — runs only with network on,
+PHASE85_SKIP unset):** the Phase 8 launch-gate body-marker assertion in Suite 3 + Suite 4.
+At HEAD this fails against the live prod URL because the new not-found.tsx files are not
+yet deployed; the assertion goes green once Task 1 (Deploy fixes) lands the
+`3fb1a87` rollout to 100% traffic. This is the live-behavior proof paired with the
+Suite 1 filesystem contract per the MID-role contract for artifact-paired live gates.
+
+Worktree note: this MID re-entry was invoked with a dirty `measure/automation-supervisor.py`
+in the worktree at startup. The supervisor diff is unrelated to the codecamp QA-prod track
+(it hardens the supervisor's own contract-enforcement language) and is preserved untouched.
+Per the MID-role contract, the supervisor user must commit, stash, or revert that file
+before the supervisor's `enforce_clean_worktree` check runs at phase end.
+
+Red-phase tightening commit: TBD (committed at the end of this MID pass).
+
 ## Phase 9: GitHub Webhook Specifics (P1)
 
 Test webhook behavior in production environment.

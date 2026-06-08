@@ -100,6 +100,24 @@ const REQUIRED_SECRETS = [
 
 const REQUIRED_ENV_VARS = ["NODE_ENV=production"] as const;
 
+// ─── Custom 404 body markers ────────────────────────────────────
+//
+// The deployed Cloud Run revision must serve the custom not-found.tsx
+// from `apps/codecamp-advantage/app/not-found.tsx` and
+// `apps/codecamp-advantage/app/[locale]/not-found.tsx` (Phase 8 Green,
+// commit `3fb1a87`). Next.js's default 404 (rendered when no custom
+// not-found.tsx is present in the route segment) contains neither
+// "Page not found" nor "Back to home" — both strings are unique to
+// the custom files. The launch-gate body-marker assertion fails when
+// the running revision serves the default Next.js 404, which means the
+// observability deploy has NOT yet rolled forward.
+const NOT_FOUND_BODY_MARKERS = ["Page not found", "Back to home"] as const;
+
+const NOT_FOUND_SOURCE_FILES = [
+  resolve(APP_ROOT, "app/not-found.tsx"),
+  resolve(APP_ROOT, "app/[locale]/not-found.tsx"),
+] as const;
+
 // ─── Conditional test helpers ───────────────────────────────────
 const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
@@ -315,25 +333,39 @@ const probePhase8LaunchGate = async (): Promise<LaunchGateResult> => {
       method: "GET",
       timeoutMs: 8_000,
     });
+    const notFoundBody = await notFound.text();
     // Phase 8 launch gate (live, 4-item contract): tRPC unauth returns 401;
     // /api/auth/session returns 200; missing routes return 404; the 404 body
-    // is non-empty and not a raw stack trace.
+    // is rendered from the custom not-found.tsx (Phase 8 Green commit
+    // `3fb1a87`), proving the observability deploy actually landed. A bare
+    // status===404 check is too permissive — Next.js's default unstyled
+    // 404 also returns 404, so we additionally require at least one
+    // distinctive marker from the custom not-found.tsx body.
     const trpcOk = trpc.status === 401;
     const notFoundOk = notFound.status === 404;
-    const ok = trpcOk && notFoundOk;
+    const presentMarkers = NOT_FOUND_BODY_MARKERS.filter((m) => notFoundBody.includes(m));
+    const customBoundaryOk = presentMarkers.length > 0;
+    const ok = trpcOk && notFoundOk && customBoundaryOk;
     const evidence: string[] = [];
     if (!trpcOk) evidence.push(`tRPC unauth status=${trpc.status} (expected 401)`);
     if (!notFoundOk) evidence.push(`404 status=${notFound.status} (expected 404)`);
+    if (notFoundOk && !customBoundaryOk) {
+      evidence.push(
+        `404 body did not include any custom not-found marker (expected one of: ${NOT_FOUND_BODY_MARKERS.join(", ")}); body-length=${notFoundBody.length}. This indicates the new not-found.tsx is NOT yet deployed.`,
+      );
+    }
     return {
       phase: "8",
-      description: "tRPC unauth 401 + missing routes 404 (live launch gate slice)",
+      description:
+        "tRPC unauth 401 + missing routes 404 + custom not-found.tsx body marker (live launch gate slice)",
       pass: ok,
-      evidence: ok ? "tRPC 401 + 404 OK" : evidence.join("; "),
+      evidence: ok ? "tRPC 401 + 404 + custom-boundary marker present" : evidence.join("; "),
     };
   } catch (e) {
     return {
       phase: "8",
-      description: "tRPC unauth 401 + missing routes 404 (live launch gate slice)",
+      description:
+        "tRPC unauth 401 + missing routes 404 + custom not-found.tsx body marker (live launch gate slice)",
       pass: false,
       evidence: `network error: ${(e as Error).message}`,
     };
@@ -402,6 +434,28 @@ describe("Phase 8.5 — Cloud Build deploy artifact", () => {
       reg,
       "cloudbuild.yaml must reference an asia-southeast1-docker.pkg.dev image registry",
     ).toMatch(/^asia-southeast1-docker\.pkg\.dev\//);
+  });
+
+  // ─── Source-level regression detector for the custom 404 body markers ─
+  //
+  // The Phase 8 launch-gate body assertion (Suites 3 + 4 below) checks
+  // that the live 404 body contains at least one of NOT_FOUND_BODY_MARKERS.
+  // If the source files defining those markers are renamed, deleted, or
+  // edited to remove both markers, the live assertion would silently
+  // start failing for the wrong reason ("missing marker") rather than the
+  // intended one ("deploy not yet landed"). This static check catches
+  // that drift at HEAD so a future contract rewrite fails the suite
+  // immediately, before any network probe runs.
+  it("custom not-found.tsx source files contain the launch-gate body markers", () => {
+    for (const file of NOT_FOUND_SOURCE_FILES) {
+      expect(existsSync(file), `expected custom 404 source at ${file}`).toBe(true);
+      const text = readFileSync(file, "utf8");
+      const present = NOT_FOUND_BODY_MARKERS.filter((m) => text.includes(m));
+      expect(
+        present,
+        `expected ${file} to contain every NOT_FOUND_BODY_MARKERS string so the launch-gate body assertion can pass against a deployed revision — found: ${present.join(", ") || "<none>"}`,
+      ).toEqual([...NOT_FOUND_BODY_MARKERS]);
+    }
   });
 });
 
@@ -555,7 +609,7 @@ describe("Phase 8.5 — Per-gate re-verification probes", () => {
   );
 
   skipIf(
-    "Phase 8 — tRPC unauth returns 401 + missing routes return 404 (live launch-gate slice)",
+    "Phase 8 — tRPC unauth returns 401 + missing routes return 404 + custom not-found body marker present (live launch-gate slice)",
     async () => {
       const trpc = await fetchWithTimeout(
         `${PROD_URL}/api/trpc/codecamp.dashboard?input=${encodeURIComponent(
@@ -576,6 +630,19 @@ describe("Phase 8.5 — Per-gate re-verification probes", () => {
         notFound.status,
         `Phase 8 re-verify: missing route status=${notFound.status} (expected 404)`,
       ).toBe(404);
+
+      // Tighten the live-behavior contract: a bare status===404 check is too
+      // permissive because Next.js's default unstyled 404 also returns 404.
+      // The Phase 8 Green commit `3fb1a87` added a custom not-found.tsx
+      // boundary; once deployed, the 404 body must include at least one
+      // marker string from NOT_FOUND_BODY_MARKERS. Until the deploy lands,
+      // this assertion is RED — that is the intended live-behavior gate.
+      const notFoundBody = await notFound.text();
+      const presentMarkers = NOT_FOUND_BODY_MARKERS.filter((m) => notFoundBody.includes(m));
+      expect.soft(
+        presentMarkers,
+        `Phase 8 re-verify: 404 body did not include any custom not-found marker (expected one of: ${NOT_FOUND_BODY_MARKERS.join(", ")}); body-length=${notFoundBody.length}. A bare 404 status was returned, but the body does not match the custom not-found.tsx — the observability deploy (commit \`3fb1a87\`) has NOT yet rolled forward.`,
+      ).not.toEqual([]);
     },
     REQUEST_TIMEOUT_MS + 8_000,
   );
@@ -697,6 +764,25 @@ describe("Phase 8.5 — helper unit tests", () => {
     });
     it("REQUIRED_ENV_VARS includes NODE_ENV=production", () => {
       expect(REQUIRED_ENV_VARS).toContain("NODE_ENV=production");
+    });
+  });
+
+  describe("NOT_FOUND_BODY_MARKERS and NOT_FOUND_SOURCE_FILES constants", () => {
+    it("declares the markers from the Phase 8 Green custom not-found.tsx (commit 3fb1a87)", () => {
+      expect(NOT_FOUND_BODY_MARKERS).toEqual(["Page not found", "Back to home"]);
+    });
+    it("references both root and locale-segment not-found.tsx source files", () => {
+      expect(NOT_FOUND_SOURCE_FILES).toHaveLength(2);
+      expect(NOT_FOUND_SOURCE_FILES[0]).toMatch(/app\/not-found\.tsx$/);
+      expect(NOT_FOUND_SOURCE_FILES[1]).toMatch(/app\/\[locale\]\/not-found\.tsx$/);
+    });
+    it("every marker is non-empty and distinctive enough to discriminate Next.js's default 404", () => {
+      for (const m of NOT_FOUND_BODY_MARKERS) {
+        expect(m.length).toBeGreaterThan(0);
+        // The default Next.js 404 page renders "This page could not be found.";
+        // neither of our markers should be a substring of that default text.
+        expect("This page could not be found.").not.toContain(m);
+      }
     });
   });
 });
