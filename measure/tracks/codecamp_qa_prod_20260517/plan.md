@@ -1353,7 +1353,7 @@ tightening) runs only without `PHASE85_SKIP` and remains RED until the
 
 Typecheck (`npm run check-types --workspace=codecamp-advantage`): PASS.
 
-Red-phase attempt-3 tightening commit: TBD (committed at the end of this MID pass).
+Red-phase attempt-3 tightening commit: `d4c0cb43`.
 
 ## Phase 9: GitHub Webhook Specifics (P1)
 
