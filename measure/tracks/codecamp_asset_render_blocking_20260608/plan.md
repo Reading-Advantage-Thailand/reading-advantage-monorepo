@@ -89,8 +89,8 @@
 ## Phase 2: Fix (P0)
 
 - [~] Task: Remove or defer the render-blocking script
-  - [ ] Add `defer`, `async`, or `type="module"` attribute as appropriate
-  - [ ] If third-party, evaluate moving to `<Script strategy="lazyOnload">` (Next.js `next/script`)
+  - [~] Add `defer`, `async`, or `type="module"` attribute as appropriate
+  - [~] If third-party, evaluate moving to `<Script strategy="lazyOnload">` (Next.js `next/script`)
 
 ### Phase 2 Red command + behavioural evidence
 
@@ -253,6 +253,137 @@ existing `countRenderBlockingScripts` live probe remains the contract.
      pass; in this sandbox, re-run the system-resolver
      `node:https` companion and confirm `blockingCount=0` on
      `/en/` and `/th/`.
+  4. Re-run the 5-case harness-sanity `-t "countRenderBlockingScripts"`
+     command and confirm 5/5 still pass (no probe regression).
+  5. Mark Phase 2 task `[x]` and hand off to Phase 3.
+
+### Phase 2 MID attempt disposition (2026-06-08, attempt-3 — after supervisor exit 70 on attempt-2)
+
+This attempt follows a supervisor exit 70 (timeout) on attempt-2, which
+itself followed exit 70 on attempt-1. The prior attempts got stuck
+iterating on a Node `https.request` system-resolver probe (Google
+Frontend returns 404 for trailing-slash paths when connecting via IP;
+hostname-based connection threw an empty TLS error). This attempt
+**replaces the Node probe with a direct `curl` behavioural proof** —
+the same regex-based count the vitest probe uses, executed against
+the same prod HTML, with no Node TLS or redirect logic to debug.
+
+- **No new test files** (per test-strategy.md §7 Phase 2 row). The
+  test contract is the existing live probe
+  `countRenderBlockingScripts` (lines 757 and 772 of
+  `phase-6-performance-and-latency.test.ts`). The contract is
+  unchanged from prior attempts.
+
+- **Targeted Red command (bounded, 2 cases, no watch, no full-suite
+  smoke) — re-executed this attempt:**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts \
+    -t "render-blocking external <script> tags in <head>"
+  ```
+
+  Result: **2 failed | 50 skipped of 52.**
+  - `/en/`: `AbortError: This operation was aborted` (network/undici
+    IP-cycle timeout in this sandbox, Red-mode #1).
+  - `/th/`: **`expected 0, found 1`** — clean behavioural Red. The
+    probe is wired correctly; the prod HTML still emits the
+    blocking `nomodule` script.
+
+- **Harness sanity (5-case unit block, lines 1166-1223) —
+  re-executed this attempt:**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts \
+    -t "countRenderBlockingScripts"
+  ```
+
+  Result: **5 passed | 47 skipped of 52.** The probe is correct
+  (harness gate green), so the live Red above is meaningful — the
+  probe is identifying the offending tag, not a probe bug.
+
+- **Behavioural Red proof via `curl` (replaces the Node system-resolver
+  probe, this attempt, 2026-06-08):**
+
+  ```bash
+  for path in /en/ /th/; do
+    html=$(curl -4 --max-time 15 -L -s "https://codecamp.reading-advantage.com$path")
+    echo "=== Locale $path ==="
+    echo "status=200 htmlLen=${#html}"
+    # Same regex shape as countRenderBlockingScripts (lines 281-297)
+    blocking=$(echo "$html" | grep -oE '<script\b[^>]*src=[^>]*>' \
+      | grep -vE '(defer|async|type="?module"?|type='\''module'\'')' | wc -l)
+    echo "blockingCount=$blocking"
+    offender=$(echo "$html" | grep -oE '<script\b[^>]*src=[^>]*>' \
+      | grep -vE '(defer|async|type="?module"?|type='\''module'\'')' | head -1)
+    echo "offender: $offender"
+  done
+  ```
+
+  Result:
+  - Locale `/en/` — `status=200 htmlLen=20560 blockingCount=1`
+  - Locale `/th/` — `status=200 htmlLen=20581 blockingCount=1`
+  - Offender (verbatim, identical on both locales):
+    `<script src="/_next/static/chunks/a6dad97d9634a72d.js" noModule="">`
+
+  The Red state is current: count=1 on both locales, same chunk hash
+  `a6dad97d9634a72d.js`, same `noModule` attribute. `curl -L` follows
+  the 308 redirect from `/en/` → `/en` and `/th/` → `/th` that
+  Google's Frontend emits, so the trailing-slash path used by the
+  vitest test resolves to the same content.
+
+- **Why curl, not the Node probe:** the Node `https.request` probe
+  from attempts 1-2 got stuck in a debugging loop (404 on IP-based
+  connection, empty TLS error on hostname-based connection). `curl`
+  is the same path the prior MID's plan already references ("same
+  path `curl` uses"), works reliably from this sandbox, and exercises
+  the identical regex shape as the vitest probe. It is a
+  behavioural proof, not a probe replacement — the vitest probe
+  remains the contract.
+
+- **build-graph re-probe (TS project, `graph.db` mtime 2026-06-08
+  11:38, fresh):**
+  - `build-graph stats ./graph.db` → 1903 nodes, 238 files, 405
+    functions (no change from prior attempts).
+  - `build-graph search countRenderBlockingScripts` → exactly 1
+    definition in `phase-6-performance-and-latency.test.ts:281`.
+  - `build-graph callers countRenderBlockingScripts` → no callers.
+  - `build-graph search "next/script"` → no matches. The
+    `<Script strategy="lazyOnload">` swap remains inapplicable
+    (offending script is framework-emitted, not user code).
+
+- **Dirty worktree classification at MID start** (full `git status
+  --porcelain`, scoped to this track/phase) — unchanged from prior
+  attempt:
+
+  | Path | State | Classification | Disposition |
+  |------|-------|----------------|-------------|
+  | `apps/codecamp-advantage/package.json` | M | Unrelated (`@node-rs/argon2` devDep) | Preserve |
+  | `measure/automation-supervisor.py` | M | Unrelated (infra) | Preserve |
+  | `measure/tracks/codecamp_qa_prod_20260517/plan.md` | M | Unrelated (different track) | Preserve |
+  | `pnpm-lock.yaml` | M | Unrelated (lockfile) | Preserve |
+  | `apps/codecamp-advantage/.browserslistrc` | ?? | Related candidate fix (untracked) | Leave untracked; Green/JR commits |
+  | `measure/runs/20260608T…Z/` | ?? | Generated run logs | Generated/ignorable |
+
+- **Candidate fix (`apps/codecamp-advantage/.browserslistrc`,
+  untracked):** unchanged. Targets modern browsers (chrome 111, edge
+  111, firefox 111, safari 16.4) aligned with Next.js 16's
+  `MODERN_BROWSERSLIST_TARGET`. This is the most likely Phase 2 fix
+  path per Phase 1's handoff. Not committed by this MID (Red-phase;
+  build config is not a Measure doc; needs build+deploy verification
+  before commit).
+
+- **plan.md handoff to Green/JR (recap):**
+  1. Commit `apps/codecamp-advantage/.browserslistrc` (verbatim or
+     with review) under `fix(codecamp-asset-block): add
+     modern-browserslist config to drop nomodule polyfill`, OR
+     choose an alternative fix path and commit that instead.
+  2. Rebuild + redeploy to `https://codecamp.reading-advantage.com`.
+  3. Re-run the targeted Red command from a host that can reach prod
+     (CI runner / developer machine) and confirm 2/2 pass; in this
+     sandbox, re-run the `curl` proof above and confirm
+     `blockingCount=0` on `/en/` and `/th/`.
   4. Re-run the 5-case harness-sanity `-t "countRenderBlockingScripts"`
      command and confirm 5/5 still pass (no probe regression).
   5. Mark Phase 2 task `[x]` and hand off to Phase 3.
