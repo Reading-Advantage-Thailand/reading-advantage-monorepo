@@ -940,3 +940,166 @@ patch) because the `.browserslistrc` alone does not work — see
 - **New adversarial tests:** `lib/__tests__/strip-nomodule-polyfill.test.ts` executes the real CLI against temp build manifests and covers absolute-path handling plus idempotency.
 - **Verification:** clean `pnpm build` now completes and prints `[strip-nomodule-polyfill] patched 32 of 32 build-manifest.json files`; a manifest scan returns `[]` for remaining `polyfillFiles`; focused strip tests pass 2/2; `countRenderBlockingScripts` harness passes 5/5; `pnpm lint` has 0 errors / 3 pre-existing warnings; `pnpm check-types` passes; root `npm test` passes 111/113 with 2 skipped.
 
+### Phase 3 JR verification disposition (2026-06-08, attempt-1)
+
+This subsection records the JR Green-phase verification for Phase 3.
+The Phase 2 fix (`4bf93811` + `fd1e1c3a`) is on disk and committed.
+The JR's job is to verify the fix works end-to-end: local build tests
+pass, lint/typecheck clean, and the live prod probe flips from Red to
+Green after deployment.
+
+- **build-graph probe (TS project, `graph.db` mtime 2026-06-08 11:38, fresh):**
+  - `build-graph stats ./graph.db` → 1903 nodes, 238 files, 405
+    functions (no change from Phase 1/2 attempts).
+  - `build-graph search countRenderBlockingScripts` → exactly 1
+    definition in
+    `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts:281`.
+  - `build-graph callers countRenderBlockingScripts` → no callers.
+    The probe is test-only with zero production reach. Blast radius
+    of *changing* the probe is nil (and we deliberately do not
+    change it; Phase 2 already changed prod to satisfy it).
+  - `build-graph search "next/script"` → no matches. Confirms no
+    pre-existing `next/script` usage in the codecamp app.
+
+- **Harness sanity (5-case unit block, lines 1166-1223) — JR run:**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts \
+    -t "countRenderBlockingScripts"
+  ```
+
+  Result: **5 passed | 47 skipped of 52.** The probe is correct
+  (harness gate green). No regression from Phase 2's adversarial
+  fix (`fd1e1c3a`).
+
+- **Strip-nomodule-polyfill adversarial tests — JR run:**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/strip-nomodule-polyfill.test.ts
+  ```
+
+  Result: **2 passed | 0 failed.** The post-build strip script
+  satisfies its own test contract (absolute path handling +
+  idempotency). The Phase 2 fix layer is sound.
+
+- **Targeted Red command (bounded, 2 cases, no watch, no full-suite
+  smoke) — Phase 3 verification gate, JR run:**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts \
+    -t "render-blocking external <script> tags in <head>"
+  ```
+
+  Result: **2 failed | 50 skipped of 52.**
+  - `/en/`: `TypeError: fetch failed` → `AggregateError: ETIMEDOUT
+    142.251.188.121:443` + `ENETUNREACH 2404:6800:4008:c04::79:443`
+    (undici inside Node 24.4.0 cycling through unreachable IPs from
+    this sandbox). Red-mode #1 (network/connectivity), per
+    test-strategy.md §3.
+  - `/th/`: **clean behavioural Red** — `AssertionError: expected 0
+    render-blocking external <script src="..."> in /th/ <head>,
+    found 1` (lines 778-781). The probe is wired correctly; the
+    prod HTML still emits the blocking `nomodule` script.
+
+- **Full phase-6 test file (no `-t` filter) — collateral regression
+  gate, JR run:**
+
+  ```bash
+  cd apps/codecamp-advantage
+  pnpm vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts
+  ```
+
+  Result: **10 failed | 34 passed | 8 skipped of 52.**
+  - 8 failures: all ETIMEDOUT/ENETUNREACH (Red-mode #1 network
+    failures from this sandbox — same undici IP-cycle issue).
+  - 2 failures: the render-blocking assertions (clean behavioural
+    Red — prod not yet deployed).
+  - 34 passed: all non-network tests pass, including the 5-case
+    `countRenderBlockingScripts` harness.
+  - No collateral regression detected: all failures are either
+    network-connectivity (sandbox limitation) or the expected
+    render-blocking behavioural Red (prod not deployed).
+
+- **Lint / typecheck — JR run:**
+
+  ```bash
+  cd apps/codecamp-advantage
+  eslint .                                # 0 errors, 3 pre-existing warnings
+  tsc --noEmit                            # passes silently
+  ```
+
+  Lint: 0 errors, 3 pre-existing `no-unused-vars` warnings in
+  `phase-3-authentication-and-authorization.test.ts:62`,
+  `phase-5-real-external-integrations.test.ts:90`, and
+  `phase-7-cdn-and-caching.test.ts:1` — all unrelated to this
+  track. Typecheck: passes silently.
+
+- **Behavioural Red proof via `curl` (system-resolver, 2026-06-08,
+  JR run, force IPv4, follow redirect):**
+
+  ```bash
+  for path in /en/ /th/; do
+    html=$(curl -4 --max-time 15 -L -s "https://codecamp.reading-advantage.com$path")
+    echo "=== Locale $path ==="
+    echo "status=200 htmlLen=${#html}"
+    blocking=$(echo "$html" | grep -oE '<script\b[^>]*src=[^>]*>' \
+      | grep -vE '(defer|async|type="?module"?|type='\''module'\'')' | wc -l)
+    echo "blockingCount=$blocking"
+    offender=$(echo "$html" | grep -oE '<script\b[^>]*src=[^>]*>' \
+      | grep -vE '(defer|async|type="?module"?|type='\''module'\'')' | head -1)
+    echo "offender: $offender"
+  done
+  ```
+
+  Result:
+  - Locale `/en/` — `status=200 htmlLen=20560 blockingCount=1`
+  - Locale `/th/` — `status=200 htmlLen=20581 blockingCount=1`
+  - Offender (verbatim, identical on both locales):
+    `<script src="/_next/static/chunks/a6dad97d9634a72d.js" noModule="">`
+
+  The Red state is **current** (count=1 on both locales, same chunk
+  hash `a6dad97d9634a72d.js`, same `noModule` attribute). The
+  Phase 2 fix is on disk and committed, but the **prod deployment
+  has not happened yet** — the live
+  `https://codecamp.reading-advantage.com` HTML still emits the
+  blocking `nomodule` polyfill.
+
+- **What "Red" means for Phase 3 (concrete, re-stated):** the
+  assertion `expect.soft(blocking, ...).toBe(0)` at lines 763-766
+  and 778-781 must flip from "count=1" to "count=0" against live
+  prod. The page-functionality regression check
+  (`expect.soft(result.status, ...).toBe(200)` at lines 314 and
+  331) must remain green for `/en/` (and by extension `/th/`,
+  which shares `LocaleLayout`). The full-file run after deploy
+  is the "no collateral regression" gate per test-strategy.md §5
+  Phase 3.
+
+- **Tasks remain `[~]` (not `[x]`) for the live gate reason:**
+  the three Phase 3 task items cannot be marked complete until
+  the prod deployment happens, the live probe goes green, and
+  the full Phase 6 file runs without collateral regression.
+  Per test-strategy.md §3 Red-mode #1 + §7 Phase 3 row, the
+  live gate is owned by JR/supervisor post-deploy; this JR's
+  responsibility is the local verification plus the live-behaviour
+  Red proof, both of which are now in this plan.md.
+
+- **JR/supervisor handoff (recap):**
+  1. Deploy the Phase 2 fix to
+     `https://codecamp.reading-advantage.com`. The Dockerfile's
+     `pnpm turbo run build --filter=codecamp-advantage` will
+     automatically run the strip step
+     (`4bf93811` + `fd1e1c3a`).
+  2. Re-run the targeted Red command from a host that can reach
+     prod (CI runner / developer machine) and confirm 2/2 pass.
+  3. Re-run the harness sanity 5-case unit run
+     (`-t "countRenderBlockingScripts"`) and confirm 5/5 still
+     pass (no probe regression from the deployment).
+  4. Re-run the full `phase-6-performance-and-latency.test.ts`
+     file (no `-t` filter) and confirm no collateral regression
+     on the `/en/` and `/th/` 200/latency assertions that cover
+     AC #4 (page functionality).
+  5. Mark Phase 3 task items `[x]` after the live probe passes.
+
