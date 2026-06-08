@@ -466,7 +466,7 @@ export const codecampRouter = router({
           }
 
           const { object } = await generateObject({
-            model: openrouter("xiaomi/mimo-v2.5"),
+            model: openrouter("x-ai/grok-build-0.1"),
             system,
             prompt,
             schema: reviewResultSchema,

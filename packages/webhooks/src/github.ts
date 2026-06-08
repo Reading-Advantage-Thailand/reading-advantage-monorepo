@@ -74,7 +74,7 @@ const openrouter = createOpenAI({
  * @returns A review result matching the reviewResultSchema.
  */
 async function generateReview(system: string, prompt: string): Promise<z.infer<typeof reviewResultSchema>> {
-  const model = openrouter("xiaomi/mimo-v2.5");
+  const model = openrouter("x-ai/grok-build-0.1");
 
   // Fallback when no API key is configured
   if (!process.env.OPENROUTER_API_KEY) {
