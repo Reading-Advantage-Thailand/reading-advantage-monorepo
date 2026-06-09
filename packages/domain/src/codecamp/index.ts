@@ -48,6 +48,7 @@ export async function getModuleBySlug({
   input,
 }: DomainInput<{ slug: string }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [module] = await db
     .select()
@@ -121,6 +122,7 @@ export async function getModulesWithProgress({
   tenant: Tenant;
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const modules = await db
     .select()
@@ -175,6 +177,7 @@ export async function getLessonsForModule({
   input,
 }: DomainInput<{ moduleId: string }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [module] = await db
     .select()
@@ -236,6 +239,7 @@ export async function getLessonWithContent({
   input,
 }: DomainInput<{ lessonId: string }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [lesson] = await db
     .select()
@@ -326,6 +330,7 @@ export async function submitExerciseAttempt({
   input,
 }: DomainInput<{ exerciseId: string; code: string }>) {
   assertCan(user, "codecamp:submit", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [exercise] = await db
     .select()
@@ -380,6 +385,7 @@ export async function submitQuizAnswers({
   answers: { questionId: string; answer: string }[];
 }>) {
   assertCan(user, "codecamp:submit", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const questions = await db
     .select()
@@ -450,6 +456,7 @@ export async function markTheoryComplete({
   input,
 }: DomainInput<{ lessonId: string }>) {
   assertCan(user, "codecamp:submit", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [lesson] = await db
     .select()
@@ -506,11 +513,12 @@ export async function saveChatMessage({
   role?: "user" | "assistant";
 }>) {
   assertCan(user, "codecamp:chat", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   let conversationId = input.conversationId;
   const role = input.role ?? "user";
 
-  return db.transaction(async (tx) => {
+  return rawDb.transaction(async (tx) => {
     if (conversationId) {
       // Verify ownership before appending
       const [existing] = await tx
@@ -575,6 +583,7 @@ export async function getChatHistory({
   input,
 }: DomainInput<{ conversationId: string }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [conversation] = await db
     .select()
@@ -626,6 +635,7 @@ export async function getUserConversations({
   tenant: Tenant;
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   return db
     .select()
@@ -657,8 +667,11 @@ export async function updateUserProgress({
   score?: number;
 }>) {
   assertCan(user, "codecamp:submit", tenant);
+  const rawDb = "unscoped" in db
+    ? (db as TenantDB).unscoped("codecamp tables have no schoolId")
+    : db;
 
-  const [lesson] = await db
+  const [lesson] = await rawDb
     .select()
     .from(codecampLessons)
     .where(eq(codecampLessons.id, input.lessonId))
@@ -671,7 +684,7 @@ export async function updateUserProgress({
   const now = new Date();
   const nowIso = now.toISOString();
 
-  const [result] = await db
+  const [result] = await rawDb
     .insert(codecampUserProgress)
     .values({
       userId: user.id,
@@ -759,6 +772,7 @@ export async function getUserDashboard({
   tenant: Tenant;
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const modules = await getModulesWithProgress({ db, user, tenant });
 
@@ -839,6 +853,7 @@ export async function getExerciseRepos({
   input,
 }: DomainInput<{ moduleId?: string }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const conditions = [];
   if (input.moduleId) {
@@ -871,6 +886,7 @@ export async function getExerciseRepoByUrl({
   input,
 }: DomainInput<{ repoUrl: string }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const normalizedUrl = input.repoUrl.replace(/\.git$/, "").replace(/\/$/, "");
 
@@ -905,6 +921,7 @@ export async function linkExerciseRepo({
   order: number;
 }>) {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [module] = await db
     .select({ id: codecampModules.id })
@@ -960,6 +977,7 @@ export async function getPrReviewsForUser({
   tenant: Tenant;
 }) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   return db
     .select()
@@ -989,6 +1007,7 @@ export async function createPrReview({
   prUrl: string;
 }>) {
   assertCan(user, "codecamp:submit", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   // Validate that the exercise repo exists
   const [repo] = await db
@@ -1070,6 +1089,7 @@ export async function updatePrReview({
   llmReviewSummary?: string;
 }>) {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [result] = await db
     .update(codecampPrReviews)
@@ -1106,6 +1126,7 @@ export async function completeApprovedPrReviewLesson({
   input,
 }: DomainInput<{ reviewId: string }>) {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [review] = await db
     .select()
@@ -1182,6 +1203,7 @@ export async function getPrReviewByPrUrl({
   input,
 }: DomainInput<{ prUrl: string }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const conditions = [eq(codecampPrReviews.prUrl, input.prUrl)];
   if (user.role !== "SYSTEM") {
@@ -1229,6 +1251,7 @@ export async function logWebhookEvent({
   payload?: unknown;
 }>) {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [result] = await db
     .insert(codecampWebhookEvents)
@@ -1264,6 +1287,7 @@ export async function listWebhookEvents({
   input,
 }: DomainInput<{ limit?: number }>) {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const limit = Math.min(Math.max(input.limit ?? 25, 1), 100);
 
@@ -1298,6 +1322,7 @@ export async function getModulesByPhase({
   input,
 }: DomainInput<{ phase: "A" | "B" | "C" | "D" }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const validPhases = ["A", "B", "C", "D"];
   if (!validPhases.includes(input.phase)) {
@@ -1360,6 +1385,7 @@ export async function getModuleWithExercises({
   input,
 }: DomainInput<{ moduleId: string }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [module] = await db
     .select()
@@ -1437,8 +1463,11 @@ export async function checkModulePrerequisite({
   input,
 }: DomainInput<{ moduleId: string }>) {
   assertCan(user, "codecamp:read", tenant);
+  const rawDb = "unscoped" in db
+    ? (db as TenantDB).unscoped("codecamp tables have no schoolId")
+    : db;
 
-  const [targetModule] = await db
+  const [targetModule] = await rawDb
     .select()
     .from(codecampModules)
     .where(eq(codecampModules.id, input.moduleId))
@@ -1454,7 +1483,7 @@ export async function checkModulePrerequisite({
   }
 
   // Find the previous published module (highest order less than target)
-  const [prevModule] = await db
+  const [prevModule] = await rawDb
     .select()
     .from(codecampModules)
     .where(
@@ -1471,7 +1500,7 @@ export async function checkModulePrerequisite({
   }
 
   // Check if all lessons in previous module are completed
-  const prevLessons = await db
+  const prevLessons = await rawDb
     .select()
     .from(codecampLessons)
     .where(eq(codecampLessons.moduleId, prevModule.id))
@@ -1481,7 +1510,7 @@ export async function checkModulePrerequisite({
     return { canStart: true };
   }
 
-  const progress = await db
+  const progress = await rawDb
     .select()
     .from(codecampUserProgress)
     .where(
@@ -1525,6 +1554,7 @@ export async function createInternAccount({
   githubUsername?: string | null;
 }>) {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   if (!PASSWORD_COMPLEXITY.test(input.password)) {
     throw new Error("Password must contain at least one uppercase letter, one lowercase letter, and one digit");
@@ -1608,6 +1638,7 @@ export async function updateInternGithubUsername({
   input,
 }: DomainInput<{ userId: string; githubUsername: string | null }>) {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [intern] = await db
     .select({ id: users.id })
@@ -1652,6 +1683,7 @@ export async function listInterns({
   tenant: Tenant;
 }) {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const interns = await db
     .select()
@@ -1788,6 +1820,7 @@ export async function getInternProgress({
   input,
 }: DomainInput<{ userId: string }>) {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   const [intern] = await db
     .select()
@@ -1891,6 +1924,7 @@ export async function getChatContext({
   input,
 }: DomainInput<{ moduleId?: string; lessonId?: string }>) {
   assertCan(user, "codecamp:chat", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   let context = "";
 
@@ -1934,51 +1968,33 @@ export async function getChatContext({
 
 // ─── GitHub Issues (Module 18) ────────────────────────────
 
-export interface PracticeIssue {
-  number: number;
-  title: string;
-  body: string | null;
-  htmlUrl: string;
-  labels: string[];
-  state: string;
-}
+export type { PracticeIssue } from "@reading-advantage/integrations-github";
 
+/**
+ * Fetch practice issues from a GitHub repository.
+ * Uses the shared GitHubClient adapter — no direct fetch or transport concerns.
+ * @param repoOwner Repository owner.
+ * @param repoName Repository name.
+ * @returns Array of practice issues (excluding pull requests).
+ */
 export async function getPracticeIssues(
   repoOwner: string,
   repoName: string
-): Promise<PracticeIssue[]> {
-  const url = `https://api.github.com/repos/${encodeURIComponent(repoOwner)}/${encodeURIComponent(repoName)}/issues?state=open&per_page=20`;
-  const fetchOptions = {
-    headers: { Accept: "application/vnd.github.v3+json" },
-    // next.revalidate is a Next.js ISR extension to RequestInit (not in standard types)
-    next: { revalidate: 300 },
-  } as RequestInit;
-  const res = await fetch(url, fetchOptions);
-  if (!res.ok) {
-    // If GitHub is unreachable, return empty list (graceful degradation)
-    console.warn(`[getPracticeIssues] GitHub API returned ${res.status}`);
+): Promise<import("@reading-advantage/integrations-github").PracticeIssue[]> {
+  try {
+    const { getGitHubClient } = await import(
+      "@reading-advantage/integrations-github"
+    );
+    const client = getGitHubClient();
+    return await client.getPracticeIssues(repoOwner, repoName, {
+      state: "open",
+      perPage: 20,
+    });
+  } catch (err) {
+    // Graceful degradation: if GitHub is unreachable, return empty list
+    console.warn(`[getPracticeIssues] GitHub API error: ${err}`);
     return [];
   }
-  const data = await res.json() as Array<{
-    number: number;
-    title: string;
-    body: string | null;
-    html_url: string;
-    labels: Array<{ name: string }>;
-    state: string;
-    pull_request?: unknown;
-  }>;
-  // Filter out pull requests (GitHub issues endpoint returns both)
-  return data
-    .filter((item) => !item.pull_request)
-    .map((item) => ({
-      number: item.number,
-      title: item.title,
-      body: item.body,
-      htmlUrl: item.html_url,
-      labels: item.labels.map((l) => l.name),
-      state: item.state,
-    }));
 }
 
 // ─── Re-exports ───────────────────────────────────────────

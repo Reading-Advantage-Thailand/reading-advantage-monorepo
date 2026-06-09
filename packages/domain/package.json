@@ -82,6 +82,7 @@
   "dependencies": {
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/db": "workspace:*",
+    "@reading-advantage/integrations-github": "workspace:*",
     "@reading-advantage/types": "workspace:*",
     "drizzle-orm": "0.44.7",
     "zod": "^3.25.76"

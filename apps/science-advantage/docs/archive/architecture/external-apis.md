@@ -59,7 +59,7 @@ Used through NextAuth.js Google provider. Requires client ID and secret from Goo
 
 ### Integration Notes
 
-Used for storing experiment results, user avatars, and lesson assets. Integrated via @google-cloud/storage SDK with the following features:
+Used for storing experiment results, user avatars, and lesson assets. Integrated via `@reading-advantage/storage` (S3-compatible adapter — works with GCS S3 interoperability, Cloudflare R2, MinIO, or AWS S3) with the following features:
 
 - Automatic file compression for images and documents
 - CDN integration for fast content delivery in Thailand

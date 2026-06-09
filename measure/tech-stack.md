@@ -31,6 +31,8 @@
 | Sessions | Cookie-based DB sessions via `@reading-advantage/auth` (username/password) |
 | Firebase Functions | reading-advantage (legacy, being deprecated) |
 | AI SDK | Google + OpenAI providers across all apps |
+| `@reading-advantage/storage` | S3-compatible storage adapter (GCS S3 interop, R2, MinIO, S3) |
+| `@reading-advantage/integrations-github` | GitHub App REST client (issues, installation tokens, repos) |
 
 ## Testing
 
@@ -73,6 +75,9 @@ reading-advantage-monorepo/
 │   ├── ui/               # Shared Radix/shadcn components
 │   ├── utils/            # Shared utilities, hooks
 │   ├── config/           # Shared eslint, tsconfig, tailwind configs
+│   ├── integrations/     # External service adapters
+│   │   └── github/       # GitHub App REST client
+│   ├── storage/          # S3-compatible storage adapter
 │   └── reading-advantage-scripts/  # Legacy scripts package
 ├── docker-compose.yml    # Local PostgreSQL + PgBouncer (transaction-mode pooler)
 ├── turbo.json

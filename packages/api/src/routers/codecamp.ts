@@ -284,6 +284,8 @@ export const codecampRouter = router({
           htmlUrl: z.string(),
           labels: z.array(z.string()),
           state: z.string(),
+          createdAt: z.string(),
+          updatedAt: z.string(),
         })
       )
     )
