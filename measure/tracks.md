@@ -297,3 +297,8 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: Codecamp Review Remediation**
   *Link: [./archive/codecamp_review_remediation_20260515/](./archive/codecamp_review_remediation_20260515/)*
   *Status: COMPLETE — All 5 High, 10 Medium, 12 Low findings resolved. Security (adminProcedure, prompt injection hardening, role stripping), architecture (domain chat context, bounded rate limiter), data integrity (JSONB guards, duplicate prevention, prerequisite gap handling), UI/UX (ARIA labels, disabled Link, HTTPS clone), and test coverage (github-client tests, SSRF defense).*
+
+---
+
+- [ ] **Track: TenantDB Proxy Hardening & Honest Coverage**
+  *Link: [./tracks/tenant_db_proxy_hardening_20260609/](./tracks/tenant_db_proxy_hardening_20260609/)*

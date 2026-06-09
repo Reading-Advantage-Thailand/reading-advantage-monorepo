@@ -1,0 +1,11 @@
+{
+  "track_id": "tenant_db_proxy_hardening_20260609",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-09T12:14:33Z",
+  "updated_at": "2026-06-09T12:14:33Z",
+  "description": "Harden the TenantDB proxy (db-contract.ts) to fail closed: classify every table FLAT/EXEMPT/REFERENTIAL, throw on unclassified and referential tables (with an explicit unscoped escape hatch), scope joined FLAT tables, enforce schoolId on insert().values(), and replace the string-match tenant-coverage test with one that verifies real scoping.",
+  "estimated_tasks": 22,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
