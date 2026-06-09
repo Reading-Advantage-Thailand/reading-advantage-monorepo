@@ -200,6 +200,18 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [ ] **Track: codecamp-advantage — Production QA/QC Testing**
   *Link: [./tracks/codecamp_qa_prod_20260517/](./tracks/codecamp_qa_prod_20260517/)*
+
+- [ ] **Track: codecamp-advantage — Asset Render-Blocking Fix**
+  *Link: [./tracks/codecamp_asset_render_blocking_20260608/](./tracks/codecamp_asset_render_blocking_20260608/)*
+  Remove the 1 render-blocking `<script>` tag found in `<head>` by the Phase 6 asset-loading probes.
+
+- [ ] **Track: codecamp-advantage — Cloud Run Cold-Start Fix**
+  *Link: [./tracks/codecamp_infra_cold_start_20260608/](./tracks/codecamp_infra_cold_start_20260608/)*
+  Fix Cloud Run cold-start time exceeding the 5-second P0 budget.
+
+- [ ] **Track: codecamp-advantage — Warm Dashboard Performance**
+  *Link: [./tracks/codecamp_perf_warm_dashboard_20260608/](./tracks/codecamp_perf_warm_dashboard_20260608/)*
+  Bring the warm-dashboard page load under the 1000ms P1 budget.
   Comprehensive manual QA testing on deployed production server. Covers infrastructure (HTTPS, DNS, Cloud Run), real integrations (OpenRouter, GitHub App), performance, caching, monitoring, and cross-browser testing. *Status: NOT STARTED (metadata.json `new`) — plan created, ready for execution. Unarchived 2026-06-07 (had been placed in `archive/` prematurely while still open work; now correctly in `tracks/`).*
 
 - [x] **Track: codecamp-advantage — AI Review Visibility**
@@ -272,9 +284,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ### Review Remediation
 
-- [~] **Track: Proxy Admin/Role Guard Hardening**
-  *Link: [./tracks/proxy_admin_guard_hardening_20260526/](./tracks/proxy_admin_guard_hardening_20260526/)*
-  Replace cookie-presence-only auth in `apps/codecamp-advantage/proxy.ts` and `apps/science-advantage/proxy.ts` with role-aware session verification at the edge. Resolves High-severity tech-debt entry (2026-05-15) and extends scope to science-advantage (same vulnerability). *Status: Phases 0–4 complete; Phase 4 manual smoke + Phase 5 archival await user confirmation. Code: 8 codecamp unit + 17 science unit + 6 science integration tests, all green; builds pass for both apps.*
+- [x] **Track: Proxy Admin/Role Guard Hardening**
+  *Link: [./archive/proxy_admin_guard_hardening_20260526/](./archive/proxy_admin_guard_hardening_20260526/)*
+  Replace cookie-presence-only auth in `apps/codecamp-advantage/proxy.ts` and `apps/science-advantage/proxy.ts` with role-aware session verification at the edge. Resolves High-severity tech-debt entry (2026-05-15) and extends scope to science-advantage (same vulnerability). *Status: COMPLETE — Phases 0–5 done. Code: 8 codecamp unit + 17 science unit + 6 science integration tests, all green; builds pass for both apps. Phase 4 manual smoke deferred to user.*
 
 - [x] **Track: Last-12-Hour Review Fixes**
   *Link: [./archive/last_12h_review_fix_20260503/](./archive/last_12h_review_fix_20260503/)*
@@ -300,5 +312,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
-- [ ] **Track: TenantDB Proxy Hardening & Honest Coverage**
-  *Link: [./tracks/tenant_db_proxy_hardening_20260609/](./tracks/tenant_db_proxy_hardening_20260609/)*
+- [x] **Track: TenantDB Proxy Hardening & Honest Coverage**
+  *Link: [./archive/tenant_db_proxy_hardening_20260609/](./archive/tenant_db_proxy_hardening_20260609/)*
+  *Status: COMPLETE — All 6 phases done. Table classification registry (20 FLAT, 4 EXEMPT, 45 REFERENTIAL). Fail-closed proxy with TenantScopeError. Join classification (FR-4). Insert .values() enforcement (FR-5). 9 domain files migrated to unscoped(). Honest coverage test (FR-6). AGENTS.md documented. 276 domain tests pass.*
