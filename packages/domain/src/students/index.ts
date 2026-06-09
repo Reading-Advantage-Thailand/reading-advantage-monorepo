@@ -54,7 +54,7 @@ export async function listStudents({
     throw new Error("Classroom not found");
   }
 
-  return db
+  return db.unscoped("classroomStudents is REFERENTIAL, scoped via classroom FK")
     .select({
       id: users.id,
       name: users.name,
@@ -141,7 +141,10 @@ export async function importRoster({
         studentId = newUser.id;
       }
 
-      await tx
+      const rawTx = "unscoped" in tx
+        ? (tx as unknown as TenantDB).unscoped("classroomStudents is REFERENTIAL, scoped via classroom FK")
+        : tx;
+      await rawTx
         .insert(classroomStudents)
         .values({
           classroomId: input.classroomId,

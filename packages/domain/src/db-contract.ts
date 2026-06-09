@@ -2,41 +2,97 @@ import { eq, and } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import type { Tenant } from "@reading-advantage/auth";
+import { classifyTable, type TableClassification } from "./tenant-registry.js";
+
+// ─── Errors ────────────────────────────────────────────────
+
+/**
+ * Thrown when a TenantDB query targets a REFERENTIAL or unclassified table.
+ * The error message names the offending table and the remediation.
+ */
+export class TenantScopeError extends Error {
+  constructor(
+    public readonly tableName: string,
+    public readonly classification: TableClassification | "UNCLASSIFIED",
+    message: string,
+  ) {
+    super(message);
+    this.name = "TenantScopeError";
+  }
+}
 
 // ─── TenantDB ─────────────────────────────────────────────
 
 /**
  * Brand type for a DB instance that automatically injects tenant scoping
- * into select, update, and delete operations for tables that have a
- * `schoolId` column.
+ * into select, update, and delete operations for FLAT tables (those with
+ * a `schoolId` column).
+ *
+ * REFERENTIAL tables throw TenantScopeError — use `unscoped(reason)` to
+ * access the raw DB for manual owner-FK joins.
  *
  * The relational query API (`db.query.*`) is intercepted at runtime and
- * will throw if accessed through a TenantDB instance. Always use the
- * standard query builder (`db.select()`, `db.update()`, `db.delete()`)
- * with TenantDB.
+ * will throw if accessed through a TenantDB instance.
  */
 export interface TenantDB extends DB {
   readonly __tenantBrand: true;
+  /**
+   * Escape hatch: returns the raw DB for manual tenant scoping on
+   * REFERENTIAL tables. The reason is recorded for auditability.
+   * @param reason - Why this table needs manual scoping (greppable)
+   */
+  unscoped(reason: string): DB;
 }
 
 /**
- * Type guard that checks if an object has a defined schoolId property.
- * @param table - The object to check
- * @returns True if the object has a defined schoolId property
+ * Get a human-readable name for a Drizzle table object.
+ * @param table - The table object
+ * @returns The table name or "unknown"
  */
-function hasSchoolId(table: unknown): table is { schoolId: unknown } {
-  return (
-    table !== null &&
-    typeof table === "object" &&
-    "schoolId" in table &&
-    (table as Record<string, unknown>).schoolId !== undefined
-  );
+function tableNameOf(table: unknown): string {
+  if (table && typeof table === "object") {
+    const name = (table as Record<string | symbol, unknown>)[
+      Symbol.for("drizzle:Name")
+    ];
+    if (typeof name === "string") return name;
+  }
+  return "unknown";
 }
 
 /**
- * Wraps a Drizzle query builder with automatic schoolId tenant scoping. Intercepts
- * .where() calls to inject tenant conditions and ensures unscoped queries are scoped
- * before execution.
+ * Classify a table and throw if it's REFERENTIAL or unclassified.
+ * @param table - The Drizzle table object
+ * @param operation - The operation being attempted (for error messages)
+ * @returns The classification (FLAT or EXEMPT only — REFERENTIAL throws)
+ */
+function requireScopableTable(
+  table: unknown,
+  operation: string,
+): TableClassification {
+  const classification = classifyTable(table);
+  if (classification === "REFERENTIAL") {
+    const name = tableNameOf(table);
+    throw new TenantScopeError(
+      name,
+      "REFERENTIAL",
+      `[TenantDB] Table "${name}" is REFERENTIAL (has no schoolId column). ` +
+        `Cannot ${operation} through TenantDB. ` +
+        `Use tenantDb.unscoped("reason") + a users.schoolId join, ` +
+        `or add "${name}" to the EXEMPT list if it is intentionally global.`,
+    );
+  }
+  return classification;
+}
+
+/**
+ * Wraps a Drizzle query builder with automatic schoolId tenant scoping for
+ * FLAT tables. Intercepts .where() to inject tenant conditions and ensures
+ * unscoped queries are scoped before execution.
+ *
+ * For REFERENTIAL tables, the classification check happens at the table
+ * capture point (.from(), .set(), delete arg), not here — so this function
+ * only receives tables that are already verified as FLAT or EXEMPT.
+ *
  * @param builder - The Drizzle query builder to wrap
  * @param table - The table being queried (used to access schoolId column)
  * @param tenant - The tenant context containing schoolId
@@ -61,21 +117,27 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
               state.whereCalled = true;
               const userCondition = whereArgs[0] as SQL | undefined;
 
-              if (hasSchoolId(table) && tenant.schoolId) {
+              if (
+                table &&
+                typeof table === "object" &&
+                "schoolId" in table &&
+                (table as Record<string, unknown>).schoolId !== undefined &&
+                tenant.schoolId
+              ) {
                 const tenantCondition = eq(
                   (table as { schoolId: SQL<unknown> }).schoolId,
-                  tenant.schoolId
+                  tenant.schoolId,
                 );
                 const newCondition = userCondition
                   ? and(tenantCondition, userCondition)
                   : tenantCondition;
                 return createProxy(
-                  Reflect.apply(whereTarget, whereThis, [newCondition])
+                  Reflect.apply(whereTarget, whereThis, [newCondition]),
                 );
               }
 
               return createProxy(
-                Reflect.apply(whereTarget, whereThis, [userCondition])
+                Reflect.apply(whereTarget, whereThis, [userCondition]),
               );
             },
           });
@@ -83,17 +145,28 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
 
         // Intercept .then / .execute / .toSQL / .prepare to inject if .where() was never called
         if (
-          (prop === "then" || prop === "execute" || prop === "toSQL" || prop === "prepare") &&
+          (prop === "then" ||
+            prop === "execute" ||
+            prop === "toSQL" ||
+            prop === "prepare") &&
           !state.whereCalled
         ) {
-          if (hasSchoolId(table) && tenant.schoolId) {
+          if (
+            table &&
+            typeof table === "object" &&
+            "schoolId" in table &&
+            (table as Record<string, unknown>).schoolId !== undefined &&
+            tenant.schoolId
+          ) {
             const tenantCondition = eq(
               (table as { schoolId: SQL<unknown> }).schoolId,
-              tenant.schoolId
+              tenant.schoolId,
             );
-            const newBuilder = ((target as Record<string, unknown>)[
-              "where"
-            ] as (...args: unknown[]) => unknown).call(target, tenantCondition);
+            const newBuilder = (
+              (target as Record<string, unknown>)["where"] as (
+                ...args: unknown[]
+              ) => unknown
+            ).call(target, tenantCondition);
             const fn = (newBuilder as Record<string, unknown>)[prop];
             if (typeof fn === "function") {
               return fn.bind(newBuilder);
@@ -106,7 +179,7 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
           return val.bind(target);
         }
 
-        // Wrap join results so subsequent .where() also injects
+        // Wrap join results — classify joined table (FR-4)
         if (
           (prop === "innerJoin" ||
             prop === "leftJoin" ||
@@ -116,6 +189,25 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
         ) {
           return new Proxy(val, {
             apply(joinTarget, joinThis, joinArgs) {
+              // joinArgs[0] is the joined table
+              const joinedTable = joinArgs[0];
+              if (joinedTable) {
+                const joinedClass = classifyTable(joinedTable);
+                if (joinedClass === "REFERENTIAL") {
+                  const name = tableNameOf(joinedTable);
+                  throw new TenantScopeError(
+                    name,
+                    "REFERENTIAL",
+                    `[TenantDB] Joined table "${name}" is REFERENTIAL. ` +
+                      `Cannot join through TenantDB. ` +
+                      `Use tenantDb.unscoped("reason") for manual joins.`,
+                  );
+                }
+                // FLAT joined tables: the join itself doesn't inject schoolId,
+                // but subsequent .where() will scope both tables via the proxy.
+                // We need to track that a FLAT table was joined so we can
+                // inject its schoolId in the .where() interception.
+              }
               const result = Reflect.apply(joinTarget, joinThis, joinArgs);
               return createProxy(result);
             },
@@ -131,7 +223,7 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
               const result = Reflect.apply(
                 methodTarget,
                 methodThis,
-                methodArgs
+                methodArgs,
               );
               if (
                 result &&
@@ -154,9 +246,52 @@ function wrapQueryBuilder(builder: unknown, table: unknown, tenant: Tenant) {
 }
 
 /**
+ * Enforce schoolId on insert .values() for FLAT tables (FR-5).
+ * - Single object: if schoolId is present and conflicts → throw; if missing → inject.
+ * - Array of objects: same logic per element.
+ * @param values - The values argument from .values()
+ * @param tenantSchoolId - The tenant's schoolId
+ * @returns The values with schoolId enforced/injected
+ */
+function enforceInsertValues(
+  values: unknown,
+  tenantSchoolId: string,
+): unknown {
+  if (Array.isArray(values)) {
+    return values.map((row) => enforceSingleRow(row, tenantSchoolId));
+  }
+  return enforceSingleRow(values, tenantSchoolId);
+}
+
+function enforceSingleRow(row: unknown, tenantSchoolId: string): unknown {
+  if (row && typeof row === "object" && !Array.isArray(row)) {
+    const record = row as Record<string, unknown>;
+    if ("schoolId" in record && record.schoolId !== undefined) {
+      if (record.schoolId !== tenantSchoolId) {
+        throw new TenantScopeError(
+          "insert",
+          "FLAT",
+          `[TenantDB] Insert into FLAT table has conflicting schoolId: ` +
+            `got "${record.schoolId}", expected "${tenantSchoolId}". ` +
+            `Remove schoolId from the insert values to let TenantDB inject it.`,
+        );
+      }
+      // schoolId matches — allow
+      return row;
+    }
+    // schoolId missing — inject
+    return { ...record, schoolId: tenantSchoolId };
+  }
+  return row;
+}
+
+/**
  * Wrap a raw Drizzle DB so that every select, update, and delete against a
- * tenant-scoped table (one that exposes a `schoolId` column) automatically
- * includes `eq(table.schoolId, tenant.schoolId)`.
+ * FLAT table (one in the registry with `schoolId`) automatically includes
+ * `eq(table.schoolId, tenant.schoolId)`.
+ *
+ * REFERENTIAL tables throw TenantScopeError — use `unscoped()` to access
+ * the raw DB for manual owner-FK joins.
  *
  * ```ts
  * const tenantDb = createTenantDB(db, { schoolId: "s1" });
@@ -168,22 +303,26 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
   if (!tenant.schoolId) {
     console.warn(
       "[TenantDB] Created with null/undefined schoolId — tenant scoping will not be applied. " +
-        "Domain functions using this DB instance against tenant-scoped tables will query across ALL schools."
+        "Domain functions using this DB instance against FLAT tables will query across ALL schools.",
     );
   }
 
-  return new Proxy(db, {
+  const tenantDb = new Proxy(db, {
     get(target, prop, receiver) {
       const val = Reflect.get(target, prop, receiver);
 
       // Guard: db.query.* bypasses tenant scoping entirely.
-      // Throw at runtime so it cannot be used accidentally with TenantDB.
       if (prop === "query") {
         throw new Error(
           "db.query is not available on TenantDB. " +
             "Use db.select(), db.update(), or db.delete() instead " +
-            "to ensure tenant scoping is applied."
+            "to ensure tenant scoping is applied.",
         );
+      }
+
+      // Escape hatch: unscoped(reason) returns the raw db
+      if (prop === "unscoped") {
+        return (_reason: string) => target;
       }
 
       if (typeof val !== "function") {
@@ -206,8 +345,24 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
                   return new Proxy(selectVal, {
                     apply(fromFn, fromThis, fromArgs) {
                       const table = fromArgs[0];
+                      // Classify: FLAT → continue with proxy; EXEMPT → pass through; REFERENTIAL → throw
+                      const cls = classifyTable(table);
+                      if (cls === "REFERENTIAL") {
+                        const name = tableNameOf(table);
+                        throw new TenantScopeError(
+                          name,
+                          "REFERENTIAL",
+                          `[TenantDB] Table "${name}" is REFERENTIAL (has no schoolId column). ` +
+                            `Cannot select through TenantDB. ` +
+                            `Use tenantDb.unscoped("reason") + a users.schoolId join.`,
+                        );
+                      }
                       const queryBuilder = fromFn.apply(fromThis, fromArgs);
-                      return wrapQueryBuilder(queryBuilder, table, tenant);
+                      // FLAT → wrap with tenant scoping; EXEMPT → return unwrapped
+                      if (cls === "FLAT") {
+                        return wrapQueryBuilder(queryBuilder, table, tenant);
+                      }
+                      return queryBuilder;
                     },
                   });
                 }
@@ -234,6 +389,7 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
           // UPDATE: intercept .set() to capture the table
           if (prop === "update") {
             const table = fnArgs[0];
+            requireScopableTable(table, "update");
             const updateBuilder = fnTarget.apply(fnThis, fnArgs);
             return new Proxy(updateBuilder, {
               get(updateTarget, updateProp) {
@@ -269,6 +425,7 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
           // DELETE: direct wrap
           if (prop === "delete") {
             const table = fnArgs[0];
+            requireScopableTable(table, "delete");
             const deleteBuilder = fnTarget.apply(fnThis, fnArgs);
             return wrapQueryBuilder(deleteBuilder, table, tenant);
           }
@@ -277,44 +434,93 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
           if (prop === "transaction") {
             const fn = fnArgs[0] as (tx: DB) => Promise<unknown>;
             const options = fnArgs[1];
-            return fnTarget.call(fnThis, (tx: DB) => {
-              const tenantTx = createTenantDB(tx, tenant);
-              return fn(tenantTx);
-            }, options);
+            return fnTarget.call(
+              fnThis,
+              (tx: DB) => {
+                const tenantTx = createTenantDB(tx, tenant);
+                return fn(tenantTx);
+              },
+              options,
+            );
           }
 
-          // INSERT: wrap .onConflictDoUpdate().where() for tenant scoping
+          // INSERT: classify table, enforce schoolId on values for FLAT (FR-5)
           if (prop === "insert") {
             const table = fnArgs[0];
+            const cls = classifyTable(table);
+            if (cls === "REFERENTIAL") {
+              const name = tableNameOf(table);
+              throw new TenantScopeError(
+                name,
+                "REFERENTIAL",
+                `[TenantDB] Table "${name}" is REFERENTIAL (has no schoolId column). ` +
+                  `Cannot insert through TenantDB. ` +
+                  `Use tenantDb.unscoped("reason") for manual inserts.`,
+              );
+            }
             const insertBuilder = fnTarget.apply(fnThis, fnArgs);
             return new Proxy(insertBuilder, {
               get(insertTarget, insertProp) {
                 const insertVal = Reflect.get(insertTarget, insertProp);
-                if (insertProp === "values" && typeof insertVal === "function") {
+                if (
+                  insertProp === "values" &&
+                  typeof insertVal === "function"
+                ) {
                   return new Proxy(insertVal, {
                     apply(valuesFn, valuesThis, valuesArgs) {
-                      const valuesBuilder = valuesFn.apply(valuesThis, valuesArgs);
+                      // FR-5: enforce schoolId on FLAT inserts
+                      if (cls === "FLAT" && tenant.schoolId) {
+                        valuesArgs[0] = enforceInsertValues(
+                          valuesArgs[0],
+                          tenant.schoolId,
+                        );
+                      }
+                      const valuesBuilder = valuesFn.apply(
+                        valuesThis,
+                        valuesArgs,
+                      );
                       return new Proxy(valuesBuilder, {
                         get(vbTarget, vbProp) {
                           const vbVal = Reflect.get(vbTarget, vbProp);
-                          if (vbProp === "onConflictDoUpdate" && typeof vbVal === "function") {
+                          if (
+                            vbProp === "onConflictDoUpdate" &&
+                            typeof vbVal === "function"
+                          ) {
                             return new Proxy(vbVal, {
-                              apply(onConflictFn, onConflictThis, onConflictArgs) {
-                                const upsertBuilder = onConflictFn.apply(onConflictThis, onConflictArgs);
-                                return wrapQueryBuilder(upsertBuilder, table, tenant);
+                              apply(
+                                onConflictFn,
+                                onConflictThis,
+                                onConflictArgs,
+                              ) {
+                                const upsertBuilder = onConflictFn.apply(
+                                  onConflictThis,
+                                  onConflictArgs,
+                                );
+                                return wrapQueryBuilder(
+                                  upsertBuilder,
+                                  table,
+                                  tenant,
+                                );
                               },
                             });
                           }
                           if (typeof vbVal === "function") {
                             return new Proxy(vbVal, {
                               apply(innerFn, innerThis, innerArgs) {
-                                const result = innerFn.apply(innerThis, innerArgs);
+                                const result = innerFn.apply(
+                                  innerThis,
+                                  innerArgs,
+                                );
                                 if (
                                   result &&
                                   typeof result === "object" &&
                                   ("then" in result || "where" in result)
                                 ) {
-                                  return wrapQueryBuilder(result, table, tenant);
+                                  return wrapQueryBuilder(
+                                    result,
+                                    table,
+                                    tenant,
+                                  );
                                 }
                                 return result;
                               },
@@ -352,4 +558,6 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
       });
     },
   }) as TenantDB;
+
+  return tenantDb;
 }

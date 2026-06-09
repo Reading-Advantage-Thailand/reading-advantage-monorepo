@@ -48,7 +48,9 @@ export async function recordActivity({
 }) {
   assertCan(user, "progress:record", tenant);
 
-  const [activity] = await db
+  const rawDb = db.unscoped("userActivity is REFERENTIAL, scoped via userId FK");
+
+  const [activity] = await rawDb
     .insert(userActivity)
     .values({
       userId: user.id,
@@ -85,7 +87,9 @@ export async function getStudentProgress({
 }) {
   assertCan(user, "progress:read:all", tenant);
 
-  const enrollment = await db
+  const rawDb = db.unscoped("progress tables (classroomStudents, userActivity, etc.) are REFERENTIAL");
+
+  const enrollment = await rawDb
     .select({ classroomId: classroomStudents.classroomId })
     .from(classroomStudents)
     .innerJoin(classrooms, eq(classroomStudents.classroomId, classrooms.id))
@@ -101,27 +105,27 @@ export async function getStudentProgress({
     throw new Error("Student not found in your school");
   }
 
-  const activities = await db
+  const activities = await rawDb
     .select()
     .from(userActivity)
     .where(eq(userActivity.userId, input.studentId));
 
-  const wordRecords = await db
+  const wordRecords = await rawDb
     .select()
     .from(userWordRecords)
     .where(eq(userWordRecords.userId, input.studentId));
 
-  const sentenceRecords = await db
+  const sentenceRecords = await rawDb
     .select()
     .from(userSentenceRecords)
     .where(eq(userSentenceRecords.userId, input.studentId));
 
-  const xpTotalResult = await db
+  const xpTotalResult = await rawDb
     .select({ total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)` })
     .from(xpLogs)
     .where(eq(xpLogs.userId, input.studentId));
 
-  const storiesCompletedResult = await db
+  const storiesCompletedResult = await rawDb
     .select({ count: sql<number>`COUNT(*)` })
     .from(storyRecords)
     .where(
@@ -164,7 +168,9 @@ export async function getLessonProgress({
 }) {
   assertCan(user, "progress:read:own", tenant);
 
-  const [progress] = await db
+  const rawDb = db.unscoped("lessonProgress is REFERENTIAL, scoped via userId FK");
+
+  const [progress] = await rawDb
     .select()
     .from(lessonProgress)
     .where(
@@ -201,7 +207,9 @@ export async function updateLessonProgress({
 }) {
   assertCan(user, "progress:record", tenant);
 
-  const [updated] = await db
+  const rawDb = db.unscoped("lessonProgress is REFERENTIAL, scoped via userId FK");
+
+  const [updated] = await rawDb
     .insert(lessonProgress)
     .values({
       userId: user.id,

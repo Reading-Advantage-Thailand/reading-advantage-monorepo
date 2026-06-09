@@ -42,6 +42,8 @@ export async function listArticles({
 }) {
   assertCan(user, "article:list", tenant);
 
+  const rawDb = db.unscoped("articles is a global content catalog with no schoolId");
+
   const conditions = [];
   if (input.topic) {
     conditions.push(eq(articles.topic, input.topic));
@@ -50,7 +52,7 @@ export async function listArticles({
     conditions.push(eq(articles.cefrLevel, input.cefrLevel));
   }
 
-  const query = db
+  const query = rawDb
     .select()
     .from(articles);
 
@@ -84,7 +86,9 @@ export async function getArticle({
 }) {
   assertCan(user, "article:read", tenant);
 
-  const [article] = await db
+  const rawDb = db.unscoped("articles is a global content catalog with no schoolId");
+
+  const [article] = await rawDb
     .select()
     .from(articles)
     .where(eq(articles.id, input.id))
@@ -118,7 +122,9 @@ export async function createArticle({
 }) {
   assertCan(user, "article:create", tenant);
 
-  const [article] = await db
+  const rawDb = db.unscoped("articles is a global content catalog with no schoolId");
+
+  const [article] = await rawDb
     .insert(articles)
     .values(input)
     .returning();
@@ -143,9 +149,10 @@ export async function updateArticle({
 }) {
   assertCan(user, "article:update", tenant);
 
+  const rawDb = db.unscoped("articles is a global content catalog with no schoolId");
   const { id, ...updates } = input;
 
-  const [updated] = await db
+  const [updated] = await rawDb
     .update(articles)
     .set({ ...updates, updatedAt: new Date() })
     .where(eq(articles.id, id))

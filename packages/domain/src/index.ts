@@ -16,4 +16,9 @@ export * as teachers from "./teachers/index.js";
 export * as mastery from "./mastery/index.js";
 export * as ai from "./ai/index.js";
 export * as interventions from "./interventions/index.js";
-export { createTenantDB, type TenantDB } from "./db-contract.js";
+export {
+  createTenantDB,
+  type TenantDB,
+  TenantScopeError,
+} from "./db-contract.js";
+export { classifyTable, type TableClassification } from "./tenant-registry.js";

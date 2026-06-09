@@ -34,8 +34,10 @@ export async function getStudentProgress({
 }) {
   assertCan(user, "progress:read:all", tenant);
 
+  const rawDb = db.unscoped("progress tables (classroomStudents, userActivity, etc.) are REFERENTIAL");
+
   // Verify student is enrolled in a classroom in the caller's school
-  const enrollment = await db
+  const enrollment = await rawDb
     .select({ classroomId: classroomStudents.classroomId })
     .from(classroomStudents)
     .innerJoin(classrooms, eq(classroomStudents.classroomId, classrooms.id))
@@ -51,27 +53,27 @@ export async function getStudentProgress({
     throw new Error("Student not found in your school");
   }
 
-  const activities = await db
+  const activities = await rawDb
     .select()
     .from(userActivity)
     .where(eq(userActivity.userId, input.studentId));
 
-  const wordRecords = await db
+  const wordRecords = await rawDb
     .select()
     .from(userWordRecords)
     .where(eq(userWordRecords.userId, input.studentId));
 
-  const sentenceRecords = await db
+  const sentenceRecords = await rawDb
     .select()
     .from(userSentenceRecords)
     .where(eq(userSentenceRecords.userId, input.studentId));
 
-  const xpTotal = await db
+  const xpTotal = await rawDb
     .select({ total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)` })
     .from(xpLogs)
     .where(eq(xpLogs.userId, input.studentId));
 
-  const storiesCompleted = await db
+  const storiesCompleted = await rawDb
     .select({ count: sql<number>`COUNT(*)` })
     .from(storyRecords)
     .where(
@@ -115,6 +117,8 @@ export async function getClassAnalytics({
 }) {
   assertCan(user, "progress:read:all", tenant);
 
+  const rawDb = db.unscoped("classroomStudents/xpLogs/storyRecords are REFERENTIAL");
+
   // Verify class belongs to caller's school
   const [classroom] = await db
     .select({ schoolId: classrooms.schoolId })
@@ -126,7 +130,7 @@ export async function getClassAnalytics({
     throw new Error("Class not found");
   }
 
-  const students = await db
+  const students = await rawDb
     .select({ studentId: classroomStudents.studentId })
     .from(classroomStudents)
     .where(eq(classroomStudents.classroomId, input.classId));
@@ -139,12 +143,12 @@ export async function getClassAnalytics({
 
   const studentSummaries = await Promise.all(
     studentIds.map(async (studentId) => {
-      const xpResult = await db
+      const xpResult = await rawDb
         .select({ total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)` })
         .from(xpLogs)
         .where(eq(xpLogs.userId, studentId));
 
-      const storiesResult = await db
+      const storiesResult = await rawDb
         .select({ count: sql<number>`COUNT(*)` })
         .from(storyRecords)
         .where(

@@ -83,13 +83,14 @@ export async function reviewExercise({
   generateReview,
 }: ReviewExerciseInput): Promise<ReviewResult> {
   assertCan(user, "admin:dashboard", tenant);
+  const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   let moduleTitle: string | undefined;
   let moduleDescription: string | undefined;
 
   // Look up module context if available
   if (moduleId) {
-    const [mod] = await db
+    const [mod] = await rawDb
       .select()
       .from(codecampModules)
       .where(eq(codecampModules.id, moduleId))
@@ -99,13 +100,13 @@ export async function reviewExercise({
       moduleDescription = mod.description;
     }
   } else if (repoUrl) {
-    const [repo] = await db
+    const [repo] = await rawDb
       .select()
       .from(codecampExerciseRepos)
       .where(eq(codecampExerciseRepos.repoUrl, repoUrl))
       .limit(1);
     if (repo) {
-      const [mod] = await db
+      const [mod] = await rawDb
         .select()
         .from(codecampModules)
         .where(eq(codecampModules.id, repo.moduleId))

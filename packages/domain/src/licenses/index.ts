@@ -65,6 +65,7 @@ export async function attachUserToLicense({
   assertCan(user, "license:manage", tenant);
 
   const [created] = await db
+    .unscoped("licenseOnUsers is REFERENTIAL, scoped via user/license FK")
     .insert(licenseOnUsers)
     .values({
       userId: input.userId,
@@ -101,6 +102,7 @@ export async function listUserLicenses({
   }
 
   return db
+    .unscoped("licenseOnUsers is REFERENTIAL, scoped via user/license FK")
     .select()
     .from(licenseOnUsers)
     .where(eq(licenseOnUsers.userId, input.userId));

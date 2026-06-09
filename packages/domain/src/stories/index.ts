@@ -25,7 +25,9 @@ export async function getStory({
 }) {
   assertCan(user, "story:read", tenant);
 
-  const [story] = await db
+  const rawDb = db.unscoped("stories is a global content catalog with no schoolId");
+
+  const [story] = await rawDb
     .select()
     .from(stories)
     .where(eq(stories.id, input.storyId))
@@ -60,7 +62,7 @@ export async function listStories({
 }) {
   assertCan(user, "story:list", tenant);
 
-  return db
+  return db.unscoped("stories is a global content catalog with no schoolId")
     .select()
     .from(stories)
     .limit(input.limit)
@@ -90,7 +92,9 @@ export async function recordStoryRead({
 }) {
   assertCan(user, "progress:record", tenant);
 
-  const [record] = await db
+  const rawDb = db.unscoped("storyRecords has no schoolId column");
+
+  const [record] = await rawDb
     .insert(storyRecords)
     .values({
       userId: user.id,

@@ -331,6 +331,27 @@ Database access should be centralized. Do not allow arbitrary SQL access from UI
 
 Every query must be scoped by `schoolId`. Check `user.schoolId` or `tenant.schoolId`. Never trust tenant IDs from the frontend without verifying the user has access.
 
+#### Table Classification (TenantDB)
+
+Every Drizzle table is classified in `packages/domain/src/tenant-registry.ts` as one of:
+
+- **FLAT** — has a `schoolId` column. `createTenantDB` automatically injects `eq(table.schoolId, tenant.schoolId)` on select, update, delete, and insert.
+- **EXEMPT** — intentionally global (audit events, schools, auth infra). No tenant scoping applied.
+- **REFERENTIAL** — tenant data scoped via an owner FK (no `schoolId` column). Querying through TenantDB throws `TenantScopeError`. Use `tenantDb.unscoped("reason")` to access the raw DB for manual owner-FK joins.
+
+Adding a new table without classifying it in the registry is a **build failure** (enforced by `tenant-coverage.test.ts`).
+
+#### Using `unscoped()`
+
+For REFERENTIAL tables, use the escape hatch:
+
+```ts
+const rawDb = tenantDb.unscoped("classroomStudents has no schoolId, scoped via classroom FK");
+const rows = await rawDb.select().from(classroomStudents).where(...);
+```
+
+The reason string is greppable for auditability. Prefer owner-FK joins through the users.schoolId chain when practical.
+
 ---
 
 ## Authentication

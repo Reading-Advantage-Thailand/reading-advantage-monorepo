@@ -64,8 +64,12 @@ export async function createAssignment({
   }
 
   return db.transaction(async (tx) => {
+    const rawTx = "unscoped" in tx
+      ? (tx as unknown as TenantDB).unscoped("assignments/classroomStudents/studentAssignments are REFERENTIAL")
+      : tx;
+
     if (input.studentIds?.length) {
-      const validRows = await tx
+      const validRows = await rawTx
         .select({ studentId: classroomStudents.studentId })
         .from(classroomStudents)
         .innerJoin(classrooms, eq(classroomStudents.classroomId, classrooms.id))
@@ -76,7 +80,7 @@ export async function createAssignment({
           )
         );
 
-      const validStudentIds = new Set(validRows.map((row) => row.studentId));
+      const validStudentIds = new Set(validRows.map((row: { studentId: string }) => row.studentId));
       const invalidStudentIds = input.studentIds.filter(
         (studentId) => !validStudentIds.has(studentId)
       );
@@ -86,7 +90,7 @@ export async function createAssignment({
       }
     }
 
-    const [assignment] = await tx
+    const [assignment] = await rawTx
       .insert(assignments)
       .values({
         title: input.title,
@@ -100,7 +104,7 @@ export async function createAssignment({
       .returning();
 
     if (input.studentIds?.length) {
-      await tx.insert(studentAssignments).values(
+      await rawTx.insert(studentAssignments).values(
         input.studentIds.map((studentId) => ({
           assignmentId: assignment.id,
           studentId,
@@ -144,7 +148,7 @@ export async function listAssignments({
     throw new Error("Classroom not found");
   }
 
-  return db
+  return db.unscoped("assignments is REFERENTIAL, scoped via classroomId FK")
     .select()
     .from(assignments)
     .where(eq(assignments.classroomId, input.classroomId));
@@ -171,7 +175,9 @@ export async function getAssignment({
 }) {
   assertCan(user, "assignment:read", tenant);
 
-  const [assignment] = await db
+  const rawDb = db.unscoped("assignments is REFERENTIAL, scoped via classroomId FK");
+
+  const [assignment] = await rawDb
     .select()
     .from(assignments)
     .where(eq(assignments.id, input.id))
@@ -216,8 +222,10 @@ export async function updateAssignment({
 }) {
   assertCan(user, "assignment:update", tenant);
 
+  const rawDb = db.unscoped("assignments is REFERENTIAL, scoped via classroomId FK");
+
   // Verify assignment exists and is in tenant's classroom
-  const [existing] = await db
+  const [existing] = await rawDb
     .select()
     .from(assignments)
     .where(eq(assignments.id, input.id))
@@ -239,7 +247,7 @@ export async function updateAssignment({
 
   const { id, ...updates } = input;
 
-  const [updated] = await db
+  const [updated] = await rawDb
     .update(assignments)
     .set({ ...updates, updatedAt: new Date() })
     .where(eq(assignments.id, id))
@@ -269,7 +277,9 @@ export async function deleteAssignment({
 }) {
   assertCan(user, "assignment:delete", tenant);
 
-  const [existing] = await db
+  const rawDb = db.unscoped("assignments is REFERENTIAL, scoped via classroomId FK");
+
+  const [existing] = await rawDb
     .select()
     .from(assignments)
     .where(eq(assignments.id, input.id))
@@ -289,7 +299,7 @@ export async function deleteAssignment({
     throw new Error("Assignment not found");
   }
 
-  await db.delete(assignments).where(eq(assignments.id, input.id));
+  await rawDb.delete(assignments).where(eq(assignments.id, input.id));
 
   return { success: true };
 }
@@ -307,8 +317,10 @@ export async function submitAssignment({
 }) {
   assertCan(user, "assignment:submit", tenant);
 
+  const rawDb = db.unscoped("assignments/studentAssignments are REFERENTIAL");
+
   // Verify assignment's classroom belongs to caller's school
-  const [assignment] = await db
+  const [assignment] = await rawDb
     .select({ classroomId: assignments.classroomId })
     .from(assignments)
     .where(eq(assignments.id, input.assignmentId))
@@ -328,7 +340,7 @@ export async function submitAssignment({
     throw new Error("Assignment not found");
   }
 
-  const [updated] = await db
+  const [updated] = await rawDb
     .update(studentAssignments)
     .set({
       completed: true,
