@@ -144,10 +144,10 @@ const CODECAMP_TYPES_SOURCE = resolve(
 
 const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
-const skipIfNoKeystoneSecret = testIf(SKIP || !HAS_KEYSTONE_SECRET);
+const skipIfNoKeystoneSecret = testIf(SKIP || !HAS_WEBHOOK_SECRET);
 const skipIfNoKeystoneFixture = testIf(SKIP || !HAS_KEYSTONE_FIXTURE);
 const skipIfNoKeystoneSecretOrFixture = testIf(
-  SKIP || !HAS_KEYSTONE_SECRET || !HAS_KEYSTONE_FIXTURE,
+  SKIP || !HAS_WEBHOOK_SECRET || !HAS_KEYSTONE_FIXTURE,
 );
 const skipIfNoAdminCreds = testIf(SKIP || !HAS_ADMIN_CREDS);
 

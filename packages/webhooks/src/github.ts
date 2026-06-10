@@ -14,6 +14,7 @@ import {
   parsePrUrl,
   verifyWebhookSignature,
   getInstallationTokenForRepo,
+  MAX_TIMESTAMP_SKEW_SECONDS,
 } from "./github-client";
 
 const github = new Hono();
@@ -121,7 +122,7 @@ github.post("/pr", async (c) => {
     if (timestamp !== undefined) {
       const nowSeconds = Math.floor(Date.now() / 1000);
       const skew = Math.abs(nowSeconds - timestamp);
-      if (skew > 300) {
+      if (skew > MAX_TIMESTAMP_SKEW_SECONDS) {
         return c.json({ error: "Stale timestamp — replay attack rejected" }, 401);
       }
     }

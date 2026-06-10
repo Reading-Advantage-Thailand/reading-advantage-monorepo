@@ -1573,6 +1573,27 @@ Fixed the 2 RED source-contract detectors by implementing replay-attack preventi
 
 Green-phase commit: `b8bc3bf0`
 
+### Phase 9 — Phase acceptance audit (2026-06-11)
+
+Independent phase acceptance auditor reviewed all Phase 9 tasks, acceptance criteria, and implementation against git changes since `65bd8ea99f7031088844b63094239b5d05cc0e7e`.
+
+**Audit result: PASS** — all acceptance criteria met after 3 blocking issues were identified and fixed.
+
+**Issues found and fixed during audit:**
+
+1. **`HAS_KEYSTONE_SECRET` undefined reference bug** (`phase-9-github-webhook-specifics.test.ts:147,150`) — the test file referenced `HAS_KEYSTONE_SECRET` which was never declared. The correct constant is `HAS_WEBHOOK_SECRET` (declared at line 100-102). This was a latent crash when running without `PHASE9_SKIP=1` (the `skipIfNoKeystoneSecret` and `skipIfNoKeystoneSecretOrFixture` helpers would throw `ReferenceError`). Fixed by replacing both references with `HAS_WEBHOOK_SECRET`.
+
+2. **Missing unit tests for `verifyWebhookSignature` timestamp parameter** — the Green-phase commit `b8bc3bf0` added the `timestamp` parameter and `MAX_TIMESTAMP_SKEW_SECONDS` constant to `verifyWebhookSignature`, but no unit tests covered the new behavior. Added 5 unit tests in `packages/webhooks/src/__tests__/github-client.test.ts`: valid+within-window, stale (>300s), boundary (exactly 300s), over-boundary (301s), and undefined (backward compatibility). Webhooks test count went from 33 to 38.
+
+3. **Route hardcoded `300` instead of importing `MAX_TIMESTAMP_SKEW_SECONDS`** (`packages/webhooks/src/github.ts:124`) — the route's stale-timestamp check used a magic number `300` rather than the exported constant. If the constant were ever changed, the route and the function would diverge silently. Fixed by importing `MAX_TIMESTAMP_SKEW_SECONDS` and replacing the hardcoded value.
+
+**Post-audit verification:**
+- `PHASE9_SKIP=1 vitest run` — `8 passed | 12 skipped (20)` — 0 failures.
+- `packages/webhooks vitest run` — `38 passed (38)` — 5 new timestamp tests all green.
+- `pnpm turbo run check-types` — PASS.
+
+**Audit result artifact:** `measure/runs/20260610T223331Z/codecamp_qa_prod_20260517/phase-2-Phase_9_GitHub_Webhook_Specifics_P1/phase-acceptance/phase_acceptance-result.json`
+
 ## Phase 10: Edge Cases & Production-Specific Scenarios (P2)
 
 Test scenarios unique to or more likely in production.

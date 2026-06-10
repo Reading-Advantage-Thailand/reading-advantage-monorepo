@@ -98,6 +98,40 @@ describe("verifyWebhookSignature", () => {
   it("returns false for mismatched signature lengths", () => {
     expect(verifyWebhookSignature("payload", "sha256=short")).toBe(false);
   });
+
+  it("returns true when signature is valid and timestamp is within window", () => {
+    const payload = '{"action":"opened"}';
+    const signature = `sha256=${createHmac("sha256", "test-secret").update(payload).digest("hex")}`;
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    expect(verifyWebhookSignature(payload, signature, nowSeconds)).toBe(true);
+  });
+
+  it("returns false when signature is valid but timestamp is stale (>300s)", () => {
+    const payload = '{"action":"opened"}';
+    const signature = `sha256=${createHmac("sha256", "test-secret").update(payload).digest("hex")}`;
+    const staleTimestamp = Math.floor(Date.now() / 1000) - 600;
+    expect(verifyWebhookSignature(payload, signature, staleTimestamp)).toBe(false);
+  });
+
+  it("returns true when timestamp is exactly at the boundary (300s)", () => {
+    const payload = '{"action":"opened"}';
+    const signature = `sha256=${createHmac("sha256", "test-secret").update(payload).digest("hex")}`;
+    const boundaryTimestamp = Math.floor(Date.now() / 1000) - 300;
+    expect(verifyWebhookSignature(payload, signature, boundaryTimestamp)).toBe(true);
+  });
+
+  it("returns false when timestamp exceeds boundary by 1 second", () => {
+    const payload = '{"action":"opened"}';
+    const signature = `sha256=${createHmac("sha256", "test-secret").update(payload).digest("hex")}`;
+    const overBoundaryTimestamp = Math.floor(Date.now() / 1000) - 301;
+    expect(verifyWebhookSignature(payload, signature, overBoundaryTimestamp)).toBe(false);
+  });
+
+  it("returns true when timestamp is undefined (backward compatibility)", () => {
+    const payload = '{"action":"opened"}';
+    const signature = `sha256=${createHmac("sha256", "test-secret").update(payload).digest("hex")}`;
+    expect(verifyWebhookSignature(payload, signature, undefined)).toBe(true);
+  });
 });
 
 // ─── generateAppJWT ──────────────────────────────────────────
