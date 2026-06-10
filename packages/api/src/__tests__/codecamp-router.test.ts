@@ -1,7 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { codecampRouter } from "../routers/codecamp.js";
+import { clearDashboardCache } from "../cache/dashboard-cache.js";
 import { createTenantDB } from "@reading-advantage/domain";
 import type { DB } from "@reading-advantage/db";
 import { AuthError } from "@reading-advantage/auth";
@@ -353,6 +354,10 @@ describe("codecamp router", () => {
   });
 
   describe("dashboard", () => {
+    // The procedure memoises per tenant+user in a process-global cache;
+    // clear it between cases so mocked payloads aren't served across tests.
+    beforeEach(() => clearDashboardCache());
+
     it("returns dashboard data with phase grouping", async () => {
       const resultRow = {
         phases: {

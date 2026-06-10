@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { generateObject } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { router, protectedProcedure, adminProcedure } from "../trpc.js";
+import { getCachedDashboard } from "../cache/dashboard-cache.js";
 import { AuthError } from "@reading-advantage/auth";
 import * as codecamp from "@reading-advantage/domain/codecamp";
 import { reviewExercise, reviewResultSchema } from "@reading-advantage/domain/codecamp";
@@ -262,11 +263,20 @@ export const codecampRouter = router({
     .output(dashboardResponseSchema)
     .query(async ({ ctx }) => {
       try {
-        return await codecamp.getUserDashboard({
-          db: ctx.tenantDb,
-          user: ctx.auth.user,
-          tenant: ctx.auth.tenant,
-        });
+        // Short-TTL, tenant+user-scoped memo of the per-request dashboard
+        // load: warms repeat hits on a `min-instances=1` instance while
+        // bounding staleness (a completed lesson surfaces within the TTL)
+        // and memory. The cache key carries `schoolId` + `user.id`, so it
+        // can never serve one subject's dashboard to another.
+        return await getCachedDashboard(
+          { tenant: { schoolId: ctx.auth.tenant.schoolId }, user: { id: ctx.auth.user.id } },
+          () =>
+            codecamp.getUserDashboard({
+              db: ctx.tenantDb,
+              user: ctx.auth.user,
+              tenant: ctx.auth.tenant,
+            }),
+        );
       } catch (err) {
         throw mapDomainError(err);
       }
