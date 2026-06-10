@@ -679,6 +679,196 @@
 
 ## Phase 3: Verification (P0)
 
-- [ ] Task: Re-run Phase 1/6 cold-start probes
-  - [ ] Cold-start < 5s passes on prod
-  - [ ] No warm-request latency regression
+- [~] Task: Re-run Phase 1/6 cold-start probes
+  - [~] Cold-start < 5s passes on prod
+  - [~] No warm-request latency regression
+
+  **Mid attempt-10 @ 2026-06-10T200500Z — Red-contract re-verification on
+  clean worktree, sub-task [~] sweep, no new test files.** Per the
+  supervisor's prompt rule "You own the Red phase for every currently
+  incomplete non-deferred task in this phase. Mark tasks as [~] before
+  starting. Write tests first and do not implement feature logic." and
+  per test-strategy §5 Phase 3 row ("**No new tests**. Run the full
+  `prod-smoke` suite unskipped against prod; capture a second sampler
+  artifact; assert the existing Phase 1 cold-start test passes and
+  Phase 6 warm budget is unchanged."), the two previously-`[ ]` sub-tasks
+  are now marked `[~]` to reflect mid-role ownership of the verification
+  Red contract. **No new test files are written this turn** — per
+  test-strategy §5 Phase 3, the closeout gates are the **existing**
+  Phase 1/6 prod-smoke tests at HEAD. Disposition per sub-task:
+
+  | Sub-task | Red / closeout gate at HEAD | Test-strategy §7 evidence | Disposition |
+  |----------|------------------------------|---------------------------|-------------|
+  | Cold-start < 5s passes on prod | `phase-1-infrastructure.test.ts:130` — `skipIf("cold start time is within budget", …)` — `COLD_START_BUDGET_MS = 5_000` (line 27, matches AC#1) — gated by `SKIP = process.env.PHASE1_SKIP === "1"` (line 25) | Red command: `PHASE1_PROD_URL=https://codecamp.reading-advantage.com pnpm --filter codecamp-advantage vitest run lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts -t "cold start time"` — still Red implies optimization failed. | The test is the Red gate. Mid role re-verified the test exists with the §7 name filter (`"cold start time"` substring matches "cold start time is within budget"), the budget is 5000ms (AC#1), and the SKIP gate is correctly wired. **The actual prod probe is owned by the supervisor / implementer** (sandbox cannot reach `codecamp.reading-advantage.com`); mid role does not run the live command. |
+  | No warm-request latency regression | `phase-6-performance-and-latency.test.ts:323` — `skipIf("GET /en/ (warm) returns 200 within 1 second", …)` — `BUDGET.DASHBOARD_WARM_MS = 1_000` (line 81) — gated by `SKIP = process.env.PHASE6_SKIP === "1"` (line 70). Plus P1 launch gate (line 929) re-checks the warm budget and 5 other probes as a single hard assertion. | Closeout gate: `pnpm --filter codecamp-advantage vitest run lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts -t "warm dashboard"` Green vs baseline (no regression). | The live probe is the regression gate. Mid role re-verified the test exists, the warm budget is 1000ms (within test-strategy §3 "no regression ≥10% vs baseline"), and the SKIP gate is correctly wired. **Same ownership rule as above**: live prod probe is owned by supervisor / implementer. |
+
+  **Why no new test files this turn.** Per test-strategy §5 Phase 3
+  row, Phase 3 explicitly says "**No new tests**" — the closeout gates
+  are the existing Phase 1 cold-start and Phase 6 warm-dashboard
+  prod-smoke tests. Adding a new contract test (e.g. one that asserts
+  the test file has the §7 name filter and the right budget constant)
+  would (a) duplicate the structural coverage already implicit in the
+  existing test files, and (b) pass at HEAD by construction, violating
+  the rule "If the new tests pass at HEAD, tighten the contract until
+  at least one new test fails or mark the task as already satisfied
+  with evidence instead of creating a false Red phase." The mid role
+  takes the second option: mark both sub-tasks as already satisfied
+  with evidence (the re-verification below) and let the supervisor /
+  implementer run the actual prod probe.
+
+  **Worktree state.** `git status --porcelain` returned empty —
+  clean worktree at HEAD `9fc6f18a` (latest commit: `measure(audit):
+  record cold-start Phase 2 adversarial result`, 2026-06-10 19:58:01).
+  No dirty paths to classify or preserve. The cold-start track's
+  chain is intact through Phase 1 and Phase 2; Phase 3 is the
+  verification gate.
+
+  **Build-graph snapshot (this turn).** `build-graph` CLI is not on
+  PATH in the sandbox (no `build-graph` binary in any standard
+  location; skill files present at
+  `~/.claude/skills/build-graph/` and `~/.agents/skills/build-graph/`
+  but no executable). Per skill rule "every step emits a one-line
+  `Note: …` and continues if `build-graph` is missing … No HALT, no
+  breakage.", continued with direct `sqlite3 ./graph.db` queries
+  (mimicking `build-graph stats` and `build-graph search`/`inspect`).
+
+  `graph.db` mtime: `2026-06-10 19:40:08` (≈18 min stale vs HEAD
+  `2026-06-10 19:58:01`). The two intervening commits
+  (`8a64360b` Phase 2 local-image smoke script + test, `9fc6f18a`
+  adversarial result) do not touch the Phase 3 Red surface (Phase 1
+  cold-start test, Phase 6 warm-dashboard test). Graph is **stale but
+  not relevant to Phase 3** — the existing prod-smoke test files
+  predated the staleness (`phase-1-infrastructure.test.ts` mtime
+  `2026-06-09 11:39`, `phase-6-performance-and-latency.test.ts` mtime
+  `2026-06-09 18:26`, both well before the graph build at 19:40).
+
+  Graph totals (sqlite3 mimic of `build-graph stats`): **249 files,
+  2849 edges, 1971 nodes** (param: 645, function: 428, field: 341,
+  file: 249, type_alias: 98, interface: 80, schema: 72, route: 43,
+  class: 16). The Phase 3-relevant files
+  (`phase-1-infrastructure.test.ts`, `phase-6-performance-and-latency.test.ts`)
+  are in the graph with their exported functions
+  (`fetchWithTimeout`, `measureMs`, `trpcGet`, `trpcPost`,
+  `loginAndGetCookie`) and types (`LoginResult`). The graph
+  corroborates the structural claim in test-strategy §6: the
+  prod-smoke surface is large (the phase-6 file is the 6th-largest in
+  the graph) but **fully self-contained** — no domain / api / auth
+  code paths participate, so the test-strategy §4 guardrail "No
+  changes outside `apps/codecamp-advantage/{Dockerfile,cloudbuild.yaml,
+  next.config.ts,lib/__tests__/**}`" still holds for Phase 3.
+
+  **Subtle finding (test-strategy §7 Phase 3 closeout-gate filter).**
+  The test-strategy §7 Phase 3 closeout-gate filter `"warm dashboard"`
+  matches the **budget-constant unit test** in
+  `phase-6-performance-and-latency.test.ts:1111`
+  (`it("warm dashboard budget is strictly less than cold dashboard budget", …)`)
+  — not the **live warm-dashboard probe** at line 323
+  (`skipIf("GET /en/ (warm) returns 200 within 1 second", …)`).
+  Evidence: re-running
+  `PHASE6_SKIP=1 … vitest run … -t "warm dashboard"` produced
+  `Tests 1 passed | 51 skipped (52)` — the "1 passed" is the
+  unit-test, the "51 skipped" includes the live probe. The unit test
+  is a **valid closeout gate** (it asserts the cold-vs-warm budget
+  invariant — `DASHBOARD_WARM_MS < DASHBOARD_COLD_MS` — per
+  test-strategy §3 "Cold-vs-warm budget invariant") and is even more
+  bounded than the live probe (it runs in the sandbox without prod
+  access). But the documentation could be clearer: the supervisor
+  or strategy role may want to refine the §7 filter to `"GET /en/
+  \(warm\)"` or `"warmup"` if the intent is to match the live probe.
+  This finding is documented here for the strategy role to triage; the
+  mid role does not modify the test-strategy (role boundary: strategy
+  role owns `test-strategy.md`).
+
+  **Red-contract re-verification (this turn, bounded, no network).**
+
+  - **§7 Phase 3 Red command (SKIP gate ON, sandbox mode):**
+    Command: `PHASE1_SKIP=1 PHASE1_PROD_URL=https://codecamp.reading-advantage.com /opt/codex-desktop/resources/node-runtime/bin/node apps/codecamp-advantage/node_modules/vitest/vitest.mjs run apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts -t "cold start time"`
+    Exit: 0.
+    Vitest summary: `Test Files 1 skipped (1)`, `Tests 24 skipped (24)`, duration 1.28s.
+    Interpretation: SKIP gate is wired correctly — all 24 tests in the
+    Phase 1 file (including the cold-start test) are skipped when
+    `PHASE1_SKIP=1`. The test is the right test, named correctly per
+    the §7 filter (`"cold start time"`), and would run unskipped in a
+    prod-bound environment.
+
+  - **§7 Phase 3 Red command (SKIP gate OFF, unreachable URL — proves
+    the test would actually attempt the prod probe):**
+    Command: `PHASE1_PROD_URL=http://127.0.0.1:1 timeout 30 /opt/codex-desktop/resources/node-runtime/bin/node apps/codecamp-advantage/node_modules/vitest/vitest.mjs run apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts -t "cold start time"`
+    Exit: 1.
+    Vitest summary: `Test Files 1 failed (1)`, `Tests 1 failed | 23 skipped (24)`, duration 794ms.
+    Failure cause: `TypeError: fetch failed` at
+    `phase-1-infrastructure.test.ts:135:24` — the test tried to
+    `fetch(PROD_URL, { redirect: "follow", signal: controller.signal })`
+    on an unreachable URL (`127.0.0.1:1` → `Error: bad port`).
+    Interpretation: **Red contract is correct and active.** The test
+    does NOT pass in a sandbox; it would only pass when run against
+    `https://codecamp.reading-advantage.com` with a cold-start under
+    5s. This is the expected Red state for Phase 3 — the test is
+    ready to be turned Green by the prod probe (owned by supervisor
+    / implementer).
+
+  - **§7 Phase 3 closeout-gate command (SKIP gate ON, sandbox mode):**
+    Command: `PHASE6_SKIP=1 PHASE6_PROD_URL=https://codecamp.reading-advantage.com /opt/codex-desktop/resources/node-runtime/bin/node apps/codecamp-advantage/node_modules/vitest/vitest.mjs run apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts -t "warm dashboard"`
+    Exit: 0.
+    Vitest summary: `Test Files 1 passed (1)`, `Tests 1 passed | 51 skipped (52)`, duration 937ms.
+    Interpretation: The 1 passing test is the budget-constant unit test
+    (line 1111 — `DASHBOARD_WARM_MS (1000) < DASHBOARD_COLD_MS (3000)`,
+    the cold-vs-warm budget invariant per test-strategy §3). The 51
+    skipped tests include the live warm-dashboard probe (line 323) and
+    the rest of the network-bound Phase 6 suite, all correctly gated
+    by `PHASE6_SKIP=1`.
+
+  - **Live §7 filter on the live warm-dashboard probe (SKIP gate ON):**
+    Command: `PHASE6_PROD_URL=https://127.0.0.1:1 PHASE6_SKIP=1 timeout 30 /opt/codex-desktop/resources/node-runtime/bin/node apps/codecamp-advantage/node_modules/vitest/vitest.mjs run apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts -t "GET /en/ \(warm\)"`
+    Exit: 0.
+    Vitest summary: `Test Files 1 skipped (1)`, `Tests 52 skipped (52)`, duration 1.07s.
+    Interpretation: the live warm-dashboard probe (line 323) is
+    correctly SKIP-gated; with `PHASE6_SKIP=1` it is skipped. The
+    refined filter `"GET /en/ \(warm\)"` would match the live probe
+    in a prod-bound environment (a documented option for the strategy
+    role per the §7 filter finding above).
+
+  - **Combined Phase 1 + Phase 6 prod-smoke (SKIP gate ON, full-suite
+    structural check):**
+    Command: `PHASE1_PROD_URL=https://codecamp.reading-advantage.com PHASE6_PROD_URL=https://codecamp.reading-advantage.com PHASE1_SKIP=1 PHASE6_SKIP=1 /opt/codex-desktop/resources/node-runtime/bin/node apps/codecamp-advantage/node_modules/vitest/vitest.mjs run apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-1-infrastructure.test.ts apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts`
+    Exit: 0.
+    Vitest summary: `Test Files 2 passed (2)`, `Tests 37 passed | 39 skipped (76)`, duration 1.40s.
+    Interpretation: **full prod-smoke suite parses and runs in
+    sandbox mode**. The 37 passing tests are the unit / structural
+    tests (asset parsers, BUDGET-constant invariants, HTML helper
+    functions, security-header logic). The 39 skipped tests are the
+    network-bound prod-smoke probes — they are all correctly
+    SKIP-gated and would run unskipped in a prod-bound environment.
+    No new structural failures introduced by the Phase 2 work
+    (verifier confirms `--min-instances=1` change did not break the
+    prod-smoke suite).
+
+  - **Live prod probe (persistent closeout gate, NOT re-run this
+    turn):** per the test-strategy §3 scale-to-zero precondition and
+    the sandbox boundary (no outbound prod calls), the actual prod
+    re-sample is owned by the supervisor / implementer. The mid role
+    documents the gate but does not invoke it.
+
+  **Boundary compliance (this turn).** No source code modified
+  (test-strategy §4 "No changes outside
+  `apps/codecamp-advantage/{Dockerfile,cloudbuild.yaml,next.config.ts,
+  lib/__tests__/**}`"). No package.json changes. No new test files
+  written. Only `measure/tracks/codecamp_infra_cold_start_20260608/plan.md`
+  modified (this paragraph + sub-task [~] markers), per the rule
+  "Do NOT modify existing source code except test files and Measure
+  docs."
+
+  **Disposition summary (one line).** Red phase for Phase 3 is the
+  existing Phase 1 cold-start test + Phase 6 warm-dashboard test
+  (both already at HEAD, correctly named, correctly budgeted, correctly
+  SKIP-gated); the closeout gate is the supervisor / implementer's
+  prod probe (test-strategy §7 Phase 3 Green column); no new test
+  files written; no source code modified; sub-tasks marked `[~]`;
+  ready for the supervisor's closeout decision (force scale-to-zero
+  per test-strategy §3, re-sample N=5, compare to baseline artifact,
+  decide AC#1/AC#2/AC#3). The next role in the chain is
+  **supervisor** (prod-reachable closeout) or **implementer** (if a
+  retry of the prod probe is needed); mid role work is complete for
+  this phase.
+
+  This attempt-10 produces a single docs commit (plan.md only).
