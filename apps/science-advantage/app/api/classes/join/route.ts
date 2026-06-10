@@ -3,6 +3,7 @@ import { getCurrentSession } from '@/lib/auth/session';
 import { joinClassSchema } from '@/lib/validations/class';
 import { AuthError } from '@reading-advantage/auth';
 import { joinClass, AlreadyEnrolledError } from '@reading-advantage/domain/classes';
+import { parseBody, ValidationError } from '@/lib/validations/api-helpers';
 
 /**
  * POST /api/classes/join
@@ -15,20 +16,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    let body: unknown;
-    try { body = await request.json(); } catch {
-      return NextResponse.json({ success: false, error: 'Invalid join code format' }, { status: 400 });
-    }
-
-    const parseResult = joinClassSchema.safeParse(body);
-    if (!parseResult.success) {
-      return NextResponse.json({ success: false, error: 'Invalid join code format' }, { status: 400 });
+    let parsed: { joinCode: string };
+    try {
+      parsed = await parseBody(request, joinClassSchema);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        return NextResponse.json({ success: false, error: 'Invalid join code format' }, { status: 400 });
+      }
+      throw err;
     }
 
     const result = await joinClass({
       user: session.user,
       tenant: { schoolId: session.user.schoolId },
-      input: { joinCode: parseResult.data.joinCode },
+      input: { joinCode: parsed.joinCode },
     });
 
     return NextResponse.json(result, { status: 200 });

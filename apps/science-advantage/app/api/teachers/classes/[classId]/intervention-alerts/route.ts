@@ -10,6 +10,8 @@ import type { AlertPayload } from '@/lib/interventions/detect-alerts';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
 import { listAlerts } from '@reading-advantage/domain/interventions';
+import { parsePath, parseQuery, ValidationError } from '@/lib/validations/api-helpers';
+import { classIdParamSchema } from '@/lib/validations/params';
 
 const querySchema = z.object({
   limit: z.coerce.number().int().min(1).max(interventionConfig.maxLimit).optional(),
@@ -40,15 +42,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    const { classId } = await params;
-    const url = new URL(request.url);
-    const parsed = querySchema.safeParse({
-      limit: url.searchParams.get('limit') ?? undefined, severity: url.searchParams.get('severity') ?? undefined,
-      cursor: url.searchParams.get('cursor') ?? undefined, since: url.searchParams.get('since') ?? undefined,
-      refresh: url.searchParams.get('refresh') ?? undefined,
-    });
-    if (!parsed.success) return NextResponse.json({ error: 'Invalid query parameters' }, { status: 400 });
-    const result = await listAlerts({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { classId, ...parsed.data }, deps: cfg });
+    const { classId } = parsePath(await params, classIdParamSchema);
+    const parsed = parseQuery(request, querySchema);
+    const result = await listAlerts({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { classId, ...parsed }, deps: cfg });
     if ('error' in result) return NextResponse.json({ error: result.error }, { status: result.status });
     metrics.observe('intervention_alerts_latency_ms', Date.now() - startedAt, { classId, cacheStatus: result.cacheStatus });
     metrics.increment('intervention_alerts_generated_total', result.alerts.length, { classId });
@@ -58,6 +54,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       { headers: { 'cache-control': `max-age=${cfg.freshnessHeaderSeconds}`, 'x-alert-trace-id': traceId } }
     );
   } catch (error) {
+    if (error instanceof ValidationError) return NextResponse.json(error.toJSON(), { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     metrics.increment('intervention_alerts_errors_total'); logger.error('teacher_intervention.alerts_failed', { error: error instanceof Error ? error.message : 'Unknown' });
     return NextResponse.json({ error: 'Unable to generate intervention alerts' }, { status: 500 });

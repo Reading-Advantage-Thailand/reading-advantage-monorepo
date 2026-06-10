@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { getCurrentSession } from '@/lib/auth/session';
-import { createClassSchema } from '@/lib/validations/class';
+import { createClassSchema, type CreateClassInput } from '@/lib/validations/class';
 import { AuthError } from '@reading-advantage/auth';
 import { createScienceClass, listClassesWithCounts } from '@reading-advantage/domain/classes';
+import { parseBody, parseQuery, ValidationError } from '@/lib/validations/api-helpers';
+import { z } from 'zod';
+
+const listClassesQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+});
 
 /**
  * POST /api/classes
@@ -16,8 +23,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
-    const validatedData = createClassSchema.parse(body);
+    const validatedData: CreateClassInput = await parseBody(request, createClassSchema);
 
     const result = await createScienceClass({
       user: session.user,
@@ -31,6 +37,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: error.message },
         { status: error.code === 'UNAUTHORIZED' ? 401 : 403 }
+      );
+    }
+    if (error instanceof ValidationError) {
+      return NextResponse.json(
+        { success: false, ...error.toJSON() },
+        { status: 400 }
       );
     }
     if (error instanceof ZodError) {
@@ -68,9 +80,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1', 10);
-    const limit = parseInt(searchParams.get('limit') || '20', 10);
+    const { page, limit } = parseQuery(request, listClassesQuerySchema);
 
     const result = await listClassesWithCounts({
       user: session.user,
@@ -80,6 +90,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
+    if (error instanceof ValidationError) {
+      return NextResponse.json({ success: false, ...error.toJSON() }, { status: 400 });
+    }
     if (error instanceof AuthError) {
       return NextResponse.json(
         { success: false, error: error.message },

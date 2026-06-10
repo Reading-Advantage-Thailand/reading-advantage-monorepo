@@ -44,3 +44,35 @@ describe('env.ts security: DEV_AUTH_ENABLED is server-only', () => {
     expect(violations).toEqual([]);
   });
 });
+
+describe('env.ts covers .env.example surface', () => {
+  const envSource = fs.readFileSync(
+    path.resolve(__dirname, './env.ts'),
+    'utf-8'
+  );
+
+  const envExample = fs.readFileSync(
+    path.resolve(__dirname, '../.env.example'),
+    'utf-8'
+  );
+
+  const envExampleVars = envExample
+    .split('\n')
+    .filter((line) => /^[A-Z_]+=/.test(line))
+    .map((line) => line.split('=')[0]);
+
+  it.each(envExampleVars)('.env.example var %s should be declared in env.ts', (varName) => {
+    expect(envSource).toContain(varName);
+  });
+});
+
+describe('env.ts exports structured config', () => {
+  it('should export aiRecommender config object', () => {
+    const envSource = fs.readFileSync(
+      path.resolve(__dirname, './env.ts'),
+      'utf-8'
+    );
+    expect(envSource).toContain('aiRecommender');
+    expect(envSource).toContain('aiImage');
+  });
+});

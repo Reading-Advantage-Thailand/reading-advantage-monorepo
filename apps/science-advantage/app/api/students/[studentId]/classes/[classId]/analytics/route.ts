@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/server';
 import { AuthError } from '@reading-advantage/auth';
 import { getStudentClassAnalytics } from '@reading-advantage/domain/students';
+import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
+import { studentIdClassIdParamSchema } from '@/lib/validations/params';
 
 /**
  * GET /api/students/{studentId}/classes/{classId}/analytics
@@ -10,12 +12,13 @@ import { getStudentClassAnalytics } from '@reading-advantage/domain/students';
 export async function GET(_request: Request, { params }: { params: Promise<{ studentId: string; classId: string }> }) {
   try {
     const session = await requireAuth();
-    const { studentId, classId } = await params;
+    const { studentId, classId } = parsePath(await params, studentIdClassIdParamSchema);
 
     const result = await getStudentClassAnalytics({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { studentId, classId } });
 
     return NextResponse.json(result);
   } catch (error) {
+    if (error instanceof ValidationError) return NextResponse.json(error.toJSON(), { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     if (error instanceof Error) {
       if (error.message === 'Class not found') return NextResponse.json({ error: 'Class not found' }, { status: 404 });

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth/session';
 import { AuthError } from '@reading-advantage/auth';
 import { getStudentLessonProgress } from '@reading-advantage/domain/students';
+import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
+import { studentIdLessonIdParamSchema } from '@/lib/validations/params';
 
 /**
  * GET /api/students/{studentId}/lessons/{lessonId}/progress
@@ -12,11 +14,12 @@ export async function GET(_request: NextRequest, context: { params: Promise<{ st
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
-    const { studentId, lessonId } = await context.params;
+    const { studentId, lessonId } = parsePath(await context.params, studentIdLessonIdParamSchema);
     const result = await getStudentLessonProgress({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { studentId, lessonId } });
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
+    if (error instanceof ValidationError) return NextResponse.json(error.toJSON(), { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     if (error instanceof Error) {
       if (error.message === 'Student not found') return NextResponse.json({ error: 'Student not found' }, { status: 404 });

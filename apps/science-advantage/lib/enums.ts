@@ -9,12 +9,11 @@
  * `packages/db/src/schema/science.ts` (`framework`, `lessonType`, etc.).
  */
 
-export const STANDARDS_ALIGNMENT_VALUES = ['THAI', 'NGSS'] as const;
-export type StandardsAlignment = (typeof STANDARDS_ALIGNMENT_VALUES)[number];
-export const StandardsAlignment = {
-  THAI: 'THAI',
-  NGSS: 'NGSS',
-} as const satisfies Record<StandardsAlignment, StandardsAlignment>;
+export {
+  STANDARDS_ALIGNMENT_VALUES,
+  StandardsAlignment,
+} from '@reading-advantage/types/contracts/class';
+export type { StandardsAlignment as StandardsAlignmentType } from '@reading-advantage/types/contracts/class';
 
 export const LESSON_TYPE_VALUES = ['LESSON', 'LAB', 'ASSESSMENT', 'REVIEW'] as const;
 export type LessonType = (typeof LESSON_TYPE_VALUES)[number];

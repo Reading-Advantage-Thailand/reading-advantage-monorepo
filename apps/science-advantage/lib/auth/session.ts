@@ -6,6 +6,7 @@ import {
   SESSION_COOKIE_NAME,
 } from '@reading-advantage/auth';
 import type { Session } from '@reading-advantage/auth';
+import { env } from '@/lib/env';
 
 const SESSION_DURATION_SECONDS = 7 * 24 * 60 * 60;
 
@@ -25,7 +26,7 @@ export async function setSessionCookie(token: string): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: SESSION_DURATION_SECONDS,
     path: '/',

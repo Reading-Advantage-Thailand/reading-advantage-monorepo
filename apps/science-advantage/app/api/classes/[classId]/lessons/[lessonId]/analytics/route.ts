@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/server';
 import { AuthError } from '@reading-advantage/auth';
 import { getClassLessonAnalytics } from '@reading-advantage/domain/classes';
+import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
+import { classIdLessonIdParamSchema } from '@/lib/validations/params';
 
 /**
  * GET /api/classes/{classId}/lessons/{lessonId}/analytics
@@ -12,11 +14,12 @@ export async function GET(_request: Request, { params }: { params: Promise<{ cla
     const session = await requireAuth();
     if (!session || !session.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { classId, lessonId } = await params;
+    const { classId, lessonId } = parsePath(await params, classIdLessonIdParamSchema);
     const result = await getClassLessonAnalytics({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { classId, lessonId } });
 
     return NextResponse.json(result);
   } catch (error) {
+    if (error instanceof ValidationError) return NextResponse.json(error.toJSON(), { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     if (error instanceof Error) {
       if (error.message === 'Class not found') return NextResponse.json({ error: 'Class not found' }, { status: 404 });

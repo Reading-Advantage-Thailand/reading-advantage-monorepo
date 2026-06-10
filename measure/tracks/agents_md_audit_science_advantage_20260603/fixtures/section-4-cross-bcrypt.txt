@@ -1,0 +1,5 @@
+apps/science-advantage/TEST_SUMMARY.md
+apps/science-advantage/lib/__tests__/audit-phase1-discovery.test.ts
+apps/science-advantage/lib/__tests__/audit-phase2-static-analysis.test.ts
+apps/science-advantage/measure/archive/critical_security_20260206/plan.md
+apps/science-advantage/measure/archive/critical_security_20260206/spec.md

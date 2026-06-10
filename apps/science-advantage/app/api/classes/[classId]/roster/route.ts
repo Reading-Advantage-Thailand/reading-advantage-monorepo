@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth/session';
 import { AuthError } from '@reading-advantage/auth';
 import { getClassRoster, removeStudentFromClass } from '@reading-advantage/domain/classes';
+import { parseBody, ValidationError } from '@/lib/validations/api-helpers';
+import { removeStudentFromRosterSchema } from '@/lib/validations/roster';
 
 /**
  * GET /api/classes/{classId}/roster
@@ -35,17 +37,13 @@ export async function DELETE(request: NextRequest, context: { params: Promise<{ 
     if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
 
     const { classId } = await context.params;
-    const body = await request.json();
-    const { studentId } = body as { studentId?: string };
+    const body = await parseBody(request, removeStudentFromRosterSchema);
 
-    if (!studentId || typeof studentId !== 'string') {
-      return NextResponse.json({ success: false, error: 'studentId is required' }, { status: 400 });
-    }
-
-    const result = await removeStudentFromClass({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { classId, studentId } });
+    const result = await removeStudentFromClass({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { classId, studentId: body.studentId } });
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
+    if (error instanceof ValidationError) return NextResponse.json({ success: false, ...error.toJSON() }, { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ success: false, error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     if (error instanceof Error && error.message === 'Class not found') return NextResponse.json({ success: false, error: 'Class not found' }, { status: 404 });
     if (error instanceof Error && error.message === 'Forbidden') return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });

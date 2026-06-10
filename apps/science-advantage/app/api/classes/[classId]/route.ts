@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/auth/session';
 import { AuthError } from '@reading-advantage/auth';
 import { getClassDetail, updateClass, archiveClass } from '@reading-advantage/domain/classes';
+import { parseBody, parsePath, ValidationError } from '@/lib/validations/api-helpers';
+import { updateClassSchema } from '@/lib/validations/class';
+import { z } from 'zod';
+
+const classIdParamSchema = z.object({
+  classId: z.string().uuid('classId must be a valid UUID'),
+});
+
+const patchClassBodySchema = z.object({
+  name: z.string().min(3).max(100).trim().optional(),
+});
 
 /**
  * GET /api/classes/{classId}
@@ -34,16 +45,17 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ c
     if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
 
     const { classId } = await context.params;
-    const body = await request.json();
+    const body = await parseBody(request, patchClassBodySchema);
 
     const result = await updateClass({
       user: session.user,
       tenant: { schoolId: session.user.schoolId },
-      input: { classId, name: (body as { name?: string }).name },
+      input: { classId, name: body.name },
     });
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
+    if (error instanceof ValidationError) return NextResponse.json({ success: false, ...error.toJSON() }, { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ success: false, error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     if (error instanceof Error) {
       if (error.message === 'Class not found') return NextResponse.json({ success: false, error: 'Class not found' }, { status: 404 });

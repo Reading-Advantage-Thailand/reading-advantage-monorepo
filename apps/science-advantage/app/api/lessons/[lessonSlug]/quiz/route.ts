@@ -7,6 +7,9 @@ import { updateStreakForProfile } from '@/lib/gamification/streak';
 import { checkBadgeConditions } from '@/lib/gamification/badges';
 import { processMasteryRun } from '@/lib/services/mastery/mastery-worker';
 import { startQuiz, submitAttempt } from '@reading-advantage/domain/quiz';
+import { parseBody, parsePath, ValidationError } from '@/lib/validations/api-helpers';
+import { submitQuizAttemptSchema } from '@/lib/validations/quiz';
+import { lessonSlugParamSchema } from '@/lib/validations/params';
 
 /**
  * GET /api/lessons/{lessonSlug}/quiz
@@ -19,10 +22,11 @@ export async function GET(
   try {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    const { lessonSlug } = await context.params;
+    const { lessonSlug } = parsePath(await context.params, lessonSlugParamSchema);
     const result = await startQuiz({ user: session.user, tenant: { schoolId: session.user.schoolId }, lessonSlug });
     return NextResponse.json(result.body, { status: result.status });
   } catch (error) {
+    if (error instanceof ValidationError) return NextResponse.json(error.toJSON(), { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     return NextResponse.json({ error: 'An unexpected error occurred while fetching the quiz' }, { status: 500 });
   }
@@ -40,16 +44,15 @@ export async function POST(
     void context;
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    const body = await request.json();
-    const { attemptId, responses } = body;
-    if (!attemptId || !responses || !Array.isArray(responses)) return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    const body = await parseBody(request, submitQuizAttemptSchema);
     const result = await submitAttempt({
       user: session.user, tenant: { schoolId: session.user.schoolId },
-      input: { attemptId, responses },
+      input: { attemptId: body.attemptId, responses: body.responses as Parameters<typeof submitAttempt>[0]['input']['responses'] },
       deps: { gradeAnswer, calculateXpForQuiz, awardXp, updateStreakForProfile, checkBadgeConditions: checkBadgeConditions as Parameters<typeof submitAttempt>[0]['deps']['checkBadgeConditions'], processMasteryRun },
     });
     return NextResponse.json(result.body, { status: result.status });
   } catch (error) {
+    if (error instanceof ValidationError) return NextResponse.json(error.toJSON(), { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     return NextResponse.json({ error: 'An unexpected error occurred while submitting the quiz' }, { status: 500 });
   }

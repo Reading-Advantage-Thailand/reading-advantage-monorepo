@@ -7,6 +7,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./contracts/class": {
+      "types": "./dist/contracts/class.d.ts",
+      "import": "./dist/contracts/class.js"
     }
   },
   "scripts": {

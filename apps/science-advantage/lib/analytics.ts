@@ -14,7 +14,7 @@ export function track(event: string, data?: AnalyticsPayload) {
     return;
   }
 
-  if (process.env.NODE_ENV !== "production") {
+  if (typeof process !== 'undefined' && process.env?.NODE_ENV !== "production") {
     console.info(`[analytics] ${event}`, data ?? {});
   }
 }

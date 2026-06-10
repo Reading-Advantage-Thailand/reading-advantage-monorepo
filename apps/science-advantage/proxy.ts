@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthError, SESSION_COOKIE_NAME, getSession, requireRole, type Role } from '@reading-advantage/auth';
 import { db } from '@reading-advantage/db';
+import { env } from '@/lib/env';
 
-const DEV_AUTH_ENABLED = process.env.DEV_AUTH_ENABLED === 'true';
+const DEV_AUTH_ENABLED = env.DEV_AUTH_ENABLED;
 
 // Route -> required role. Hierarchy means STUDENT(1) blocked from TEACHER(2)+,
 // but TEACHER/ADMIN can transparently view STUDENT pages.

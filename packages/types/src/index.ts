@@ -256,3 +256,22 @@ export type ExternalLessonId = z.infer<typeof ExternalLessonId>;
 // ─── Codecamp Types ───────────────────────────────────────
 
 export * from "./codecamp.js";
+
+// ─── Science-Advantage Class Contracts ────────────────────
+
+export {
+  STANDARDS_ALIGNMENT_VALUES,
+  StandardsAlignment,
+  JOIN_CODE_CHARSET,
+  JOIN_CODE_LENGTH,
+  JOIN_CODE_PATTERN,
+  isValidJoinCodeFormat,
+  createClassSchema as scienceCreateClassSchema,
+  updateClassSchema as scienceUpdateClassSchema,
+  createClassFormSchema as scienceCreateClassFormSchema,
+  joinClassSchema,
+  type CreateClassInput as ScienceCreateClassInput,
+  type UpdateClassInput as ScienceUpdateClassInput,
+  type CreateClassFormInput as ScienceCreateClassFormInput,
+  type JoinClassInput,
+} from "./contracts/class.js";
