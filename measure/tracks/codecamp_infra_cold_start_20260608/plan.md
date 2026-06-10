@@ -679,9 +679,9 @@
 
 ## Phase 3: Verification (P0)
 
-- [x] Task: Re-run Phase 1/6 cold-start probes
-  - [x] Cold-start < 5s passes on prod
-  - [x] No warm-request latency regression
+- [x] Task: Re-run Phase 1/6 cold-start probes — `be1032e0`
+  - [x] Cold-start < 5s passes on prod — `be1032e0`
+  - [x] No warm-request latency regression — `be1032e0`
 
   **Mid attempt-10 @ 2026-06-10T200500Z — Red-contract re-verification on
   clean worktree, sub-task [~] sweep, no new test files.** Per the
