@@ -1,0 +1,178 @@
+import { eq, and, sql } from "drizzle-orm";
+import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
+import type { TenantDB } from "../db-contract.js";
+import {
+  userActivity,
+  userWordRecords,
+  userSentenceRecords,
+  classroomStudents,
+  classrooms,
+  xpLogs,
+  storyRecords,
+} from "@reading-advantage/db/schema";
+
+/**
+ * Retrieves comprehensive progress data for a student: activity log, word records,
+ * sentence records, total XP earned, and stories completed. Verifies the student
+ * is enrolled in a classroom in the caller's school before returning data.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `studentId`
+ * @returns Student progress bundle including activities, records, xpTotal, storiesCompleted
+ */
+export async function getStudentProgress({
+  db,
+  user,
+  tenant,
+  input,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+  input: { studentId: string };
+}) {
+  assertCan(user, "progress:read:all", tenant);
+
+  const rawDb = db.unscoped("progress tables (classroomStudents, userActivity, etc.) are REFERENTIAL");
+
+  const enrollment = await rawDb
+    .select({ classroomId: classroomStudents.classroomId })
+    .from(classroomStudents)
+    .innerJoin(classrooms, eq(classroomStudents.classroomId, classrooms.id))
+    .where(
+      and(
+        eq(classroomStudents.studentId, input.studentId),
+        eq(classrooms.schoolId, tenant.schoolId!)
+      )
+    )
+    .limit(1);
+
+  if (enrollment.length === 0) {
+    throw new Error("Student not found in your school");
+  }
+
+  const activities = await rawDb
+    .select()
+    .from(userActivity)
+    .where(eq(userActivity.userId, input.studentId));
+
+  const wordRecords = await rawDb
+    .select()
+    .from(userWordRecords)
+    .where(eq(userWordRecords.userId, input.studentId));
+
+  const sentenceRecords = await rawDb
+    .select()
+    .from(userSentenceRecords)
+    .where(eq(userSentenceRecords.userId, input.studentId));
+
+  const xpTotal = await rawDb
+    .select({ total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)` })
+    .from(xpLogs)
+    .where(eq(xpLogs.userId, input.studentId));
+
+  const storiesCompleted = await rawDb
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(storyRecords)
+    .where(
+      and(
+        eq(storyRecords.userId, input.studentId),
+        eq(storyRecords.status, "COMPLETED")
+      )
+    );
+
+  return {
+    studentId: input.studentId,
+    activities,
+    wordRecords,
+    sentenceRecords,
+    xpTotal: xpTotal[0]?.total ?? 0,
+    storiesCompleted: storiesCompleted[0]?.count ?? 0,
+  };
+}
+
+/**
+ * Computes aggregate analytics for a classroom: student count, total XP across
+ * all students, average XP, and per-student XP and story completion summaries.
+ * Verifies the class belongs to the caller's school.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @param input - Must include `classId`
+ * @returns Class analytics with studentCount, totalXp, averageXp, and per-student summaries
+ */
+export async function getClassAnalytics({
+  db,
+  user,
+  tenant,
+  input,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+  input: { classId: string };
+}) {
+  assertCan(user, "progress:read:all", tenant);
+
+  const rawDb = db.unscoped("classroomStudents/xpLogs/storyRecords are REFERENTIAL");
+
+  const [classroom] = await db
+    .select({ schoolId: classrooms.schoolId })
+    .from(classrooms)
+    .where(eq(classrooms.id, input.classId))
+    .limit(1);
+
+  if (!classroom || classroom.schoolId !== tenant.schoolId) {
+    throw new Error("Class not found");
+  }
+
+  const students = await rawDb
+    .select({ studentId: classroomStudents.studentId })
+    .from(classroomStudents)
+    .where(eq(classroomStudents.classroomId, input.classId));
+
+  const studentIds = students.map((s) => s.studentId);
+
+  if (studentIds.length === 0) {
+    return { classId: input.classId, studentCount: 0, students: [] };
+  }
+
+  const studentSummaries = await Promise.all(
+    studentIds.map(async (studentId) => {
+      const xpResult = await rawDb
+        .select({ total: sql<number>`COALESCE(SUM(${xpLogs.xpEarned}), 0)` })
+        .from(xpLogs)
+        .where(eq(xpLogs.userId, studentId));
+
+      const storiesResult = await rawDb
+        .select({ count: sql<number>`COUNT(*)` })
+        .from(storyRecords)
+        .where(
+          and(
+            eq(storyRecords.userId, studentId),
+            eq(storyRecords.status, "COMPLETED")
+          )
+        );
+
+      return {
+        studentId,
+        xpTotal: xpResult[0]?.total ?? 0,
+        storiesCompleted: storiesResult[0]?.count ?? 0,
+      };
+    })
+  );
+
+  const totalXp = studentSummaries.reduce((sum, s) => sum + s.xpTotal, 0);
+  const avgXp = studentIds.length > 0 ? totalXp / studentIds.length : 0;
+
+  return {
+    classId: input.classId,
+    studentCount: studentIds.length,
+    totalXp,
+    averageXp: Math.round(avgXp),
+    students: studentSummaries,
+  };
+}
