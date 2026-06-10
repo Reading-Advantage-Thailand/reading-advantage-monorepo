@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "summary": "Phase 2 artifact and opt-in integration contracts now pass after adding the missing local image smoke gate. The deploy artifact includes --min-instances=1, Dockerfile remains multi-stage with runner final stage, next.config.ts remains standalone, and npm test passes 27/27 targeted tests. No blocking findings remain for Phase 2; live prod cold-start proof remains Phase 3 scope.",
+  "findings": [],
+  "evidence": [
+    "Inspected spec.md, plan.md, test-strategy.md, and diff since 2f9f1295b8c06d92b94de818e5d5d6823d3460e8.",
+    "Reviewed apps/codecamp-advantage/cloudbuild.yaml: deploy-cloudrun args include --min-instances=1.",
+    "Reviewed apps/codecamp-advantage/Dockerfile: multi-stage build with final FROM node:22-alpine AS runner and standalone copy path.",
+    "Reviewed apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts, _helpers/cloudbuild-parser.test.ts, _helpers/cold-start-sampler.test.ts for contract coverage and weak assertions.",
+    "Added apps/codecamp-advantage/scripts/smoke-local-image.sh: opt-in CODECAMP_LOCAL_IMAGE_SMOKE=1 local docker build/run/curl /en/ smoke bounded by timeout 90.",
+    "Added apps/codecamp-advantage/lib/__tests__/smoke-local-image-script.test.ts: verifies script exists, is opt-in, builds/runs Docker image, probes /en/, and timeout-wraps the smoke.",
+    "PATH=/opt/codex-desktop/resources/node-runtime/bin:$PATH /opt/codex-desktop/resources/node-runtime/bin/npm test -> PASS, 4 files passed, 27 tests passed.",
+    "/opt/codex-desktop/resources/node-runtime/bin/node apps/codecamp-advantage/node_modules/typescript/bin/tsc --noEmit -p apps/codecamp-advantage/tsconfig.json -> PASS.",
+    "npm run lint and npm run check-types via turbo could not complete because turbo could not find a package manager binary in this sandbox; direct TypeScript check passed and no ESLint binary was installed locally.",
+    "Commit 8a64360b test(codecamp-cold-start): add local image smoke gate."
+  ]
+}
