@@ -560,6 +560,112 @@
 
   This attempt-8 produces a single docs commit (plan.md only).
 
+  **Mid attempt-9 @ 2026-06-10T193100Z — Red-surface re-verification on
+  clean worktree.** Per the supervisor's prompt rule "You own the Red
+  phase for every currently incomplete non-deferred task in this phase.
+  Mark tasks as [~] before starting. Write tests first and do not
+  implement feature logic." Re-verified state and disposition:
+
+  - **Worktree state.** `git status --porcelain` returned empty —
+    clean worktree at HEAD `2f9f1295` (latest commit:
+    `docs(measure): attach commit hashes to domain_module_decomposition plan`).
+    No dirty paths to classify or preserve. The attempt-7 destructive
+    reset's aftermath has been fully resolved across intervening
+    commits; the cold-start track's chain is intact (`b44526bb` test,
+    `a4868804` re-verify docs, `131d8a8e` parser preservation,
+    `7c1efc9d` attempt-7 chain reset, `bca26bc4` test-strategy update,
+    `ca76da91` attempt-8 disposition).
+  - **Sub-task markers.** All three Phase 2 sub-tasks already `[~]`
+    from attempt-8 (lines 122-124). No state change needed; the rule
+    "Mark tasks as [~] before starting" is already satisfied.
+  - **Build-graph snapshot.** `build-graph stats ./graph.db` confirms
+    the graph is fresh (mtime `2026-06-09 22:40`, post-dates all
+    Phase 2 source files): 1971 nodes, 2849 edges, 248 files.
+    `build-graph search ./graph.db "cloudbuild"` confirms the helper
+    file (`cloudbuild-parser.ts`), test file
+    (`cloudbuild-parser.test.ts`), and exported symbols
+    (`parseCloudBuildSteps`, `hasMinInstances`, `CloudBuildStep`) are
+    all in the graph with correct file paths and line ranges.
+    `build-graph inspect ./graph.db hasMinInstances` confirms
+    `Tags: ["exported"]`, `Outgoing edges (0)`,
+    `Incoming edges (3): contains ← file:cloudbuild-parser.ts,
+    param_flow ← param:n, param_flow ← param:yamlText`.
+    `build-graph callers ./graph.db hasMinInstances` → "no results"
+    (file-level import only, no function-level call edges), confirming
+    the helper is scoped to the Phase 2 test surface and has no
+    accidental callers.
+  - **Red command (the one true Phase 2 gate, re-run this turn).**
+    Command: `/opt/codex-desktop/resources/node-runtime/bin/node
+    apps/codecamp-advantage/node_modules/vitest/vitest.mjs run
+    apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts`
+    Exit: 1.
+    Vitest summary: `Test Files 1 failed (1)`, `Tests 1 failed | 3
+    passed (4)`, duration 809ms.
+    Failure cause (case c): `AssertionError: deploy-cloudrun step
+    args do not include --min-instances=1. Got: ["run","deploy",
+    "codecamp-advantage", …, "--region=asia-southeast1", …,
+    "--set-secrets=…"]: expected [ 'run', 'deploy', …(9) ] to include
+    '--min-instances=1'` at `cold-start-optimization.test.ts:130:7`.
+    Pass cases: (a) `Dockerfile` has `FROM node:22-alpine AS runner`;
+    (b) final `FROM` line is the `runner` stage (not `deps`);
+    (d) `nextConfig.output === "standalone"`.
+    Interpretation: **expected and correct Red** — the (c) failure is
+    the bounded, specific signal that the chosen lever
+    (`--min-instances=1`) has not been applied to `cloudbuild.yaml`
+    at HEAD. The 3 passing cases prove the image-size and Next.js
+    startup sub-tasks remain already-satisfied at HEAD.
+  - **§7 chosen-lever filter (parser helper unit test).**
+    Command: same vitest invocation with
+    `apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts
+    -t "asserts chosen lever"`
+    Exit: 0.
+    Vitest summary: `Test Files 1 passed (1)`, `Tests 1 passed | 10
+    skipped (11)`, duration 847ms.
+    Interpretation: Green for the chosen-lever helper assertion. At
+    HEAD before `131d8a8e` this would have been Red at
+    module-resolution (parser missing); now passes because the parser
+    helper is committed. The assertion contract (the helper must
+    detect `--min-instances=<n>` in the `deploy-cloudrun` step's
+    args) is in place and verified.
+  - **Combined Phase 2 surface (15 cases).**
+    Command: same vitest with both test files.
+    Exit: 1.
+    Vitest summary: `Test Files 1 failed | 1 passed (2)`, `Tests 1
+    failed | 14 passed (15)`, duration 1.47s.
+    Interpretation: 1 failed (case c, `--min-instances=1` missing in
+    `cloudbuild.yaml`) out of 15 — the bounded Red surface is intact
+    and matches the test-strategy §1 Phase 2 row exactly.
+  - **Live Red gate (persistent, owned by Phase 3 closeout).** Not
+    re-run this turn (sandbox boundary: avoid outbound prod calls).
+    Documented in attempt-1 as already-Red on prod; gated by
+    `PHASE1_SKIP=1` in CI; do not add `it.skip`.
+
+  **Why no new Red test files this turn.** Same reasoning as
+  attempts 5 and 8 — the committed Red surface (15 cases at
+  `b44526bb`) fully covers the test-strategy §5 contract (4 artifact
+  contracts a/b/c/d + 11 parser helper unit tests). Per the rule "If
+  the new tests pass at HEAD, tighten the contract until at least one
+  new test fails or mark the task as already satisfied with evidence
+  instead of creating a false Red phase": contracts (a), (b), (d)
+  already pass at HEAD by design (image-size + Next.js startup
+  sub-tasks already satisfied per test-strategy §6), and over-tightening
+  them (e.g. pinning base image versions, asserting specific bundle
+  byte budgets, or pinning layer ordering) would deviate from
+  test-strategy §1 Phase 2 row and entangle with the sibling
+  `codecamp_asset_render_blocking_20260608` track. Contract (c) is the
+  one true Red gate and is correctly failing for the right reason at
+  HEAD — implementer's Green-phase deliverable is a 1-line addition to
+  `cloudbuild.yaml`.
+
+  **Disposition summary (one line).** Red phase remains satisfied with
+  evidence (15 committed test cases, 1 case (c) failing for the
+  correct reason at HEAD); sub-task markers unchanged; no new test
+  files written; the next role is **jr** (Green-phase implementer)
+  to apply `--min-instances=1` to `cloudbuild.yaml` per
+  test-strategy §5 sequencing.
+
+  This attempt-9 produces a single docs commit (plan.md only).
+
 ## Phase 3: Verification (P0)
 
 - [ ] Task: Re-run Phase 1/6 cold-start probes
