@@ -1098,20 +1098,20 @@ until this phase is green. Per the project rule against deferring blockers, the 
 acceptance criteria are encoded here as actionable tasks rather than left as inline
 caveats on the `[x]` rows above.
 
-- [x] Task: Deploy accumulated fixes to production
+- [x] Task: Deploy accumulated fixes to production (commit `e3ed0c01`)
   - [x] Rebuild + roll forward the Cloud Run container with the Phase 1/2/3/6/7/8 fixes
         (security + CORS headers `a0862b3`; login 401-not-500 `df39c2f`; Thai font `afbd038`;
-        cache-control headers `79e08c0`; observability/error-boundaries `3fb1a87`)
-  - [x] Confirm the new revision is taking 100% traffic (`gcloud run services describe`)
-- [x] Task: Re-run all prod-smoke suites against the deployed revision (P0/P1 launch gates → green)
+        cache-control headers `79e08c0`; observability/error-boundaries `3fb1a87`) (commit `e3ed0c01`)
+  - [x] Confirm the new revision is taking 100% traffic (`gcloud run services describe`) (commit `e3ed0c01`)
+- [x] Task: Re-run all prod-smoke suites against the deployed revision (P0/P1 launch gates → green) (commit `e3ed0c01`)
   - [x] From a network with reliable reach to `codecamp.reading-advantage.com` (clears the
-        documented `ETIMEDOUT 142.250.x.x:443` runner flakiness seen in Phases 2–6)
-  - [x] Phase 1 launch gate: 5 critical security headers present → green
-  - [x] Phase 2/3 launch gate: `POST /api/auth/login` returns 401 (not 500) on bad creds → green
+        documented `ETIMEDOUT 142.250.x.x:443` runner flakiness seen in Phases 2–6) (commit `e3ed0c01`)
+  - [x] Phase 1 launch gate: 5 critical security headers present → green (commit `e3ed0c01`)
+  - [x] Phase 2/3 launch gate: `POST /api/auth/login` returns 401 (not 500) on bad creds → green (commit `e3ed0c01`)
   - [x] Phase 7 launch gate: tRPC + `/api/auth/session` `Cache-Control: no-store, private`;
-        public shell `s-maxage`/`stale-while-revalidate` → green
+        public shell `s-maxage`/`stale-while-revalidate` → green (commit `e3ed0c01`)
   - [x] Phase 8 launch gate: error boundaries render + tRPC logging middleware emits structured
-        logs in Cloud Logging → green
+        logs in Cloud Logging → green (commit `e3ed0c01`)
   - [ ] With `PHASE{1..8}_TEST_*` credentials provided (per test-strategy.md §2 — exercises the
         credential-gated probes that currently SKIP: login/cookie/session, tRPC role enforcement,
         live OpenRouter chat, keystone GitHub PR E2E) — deferred to Phase 12
