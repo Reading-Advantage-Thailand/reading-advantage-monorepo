@@ -1,6 +1,13 @@
 // Roles & Permissions
 export { ROLES, type Role, roleAtLeast, ROLE_HIERARCHY, ROLE_ROUTES } from "./roles.js";
-export { PERMISSIONS, type Permission, hasPermission } from "./permissions.js";
+export {
+  PERMISSIONS,
+  type Permission,
+  hasPermission,
+  type DomainModulePermissions,
+  registerDomainModulePermissions,
+  lookupPermission,
+} from "./permissions.js";
 
 // Tenant & Auth Context
 export type { Tenant, UserContext, AuthContext } from "./tenant.js";

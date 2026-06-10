@@ -1,6 +1,47 @@
 import type { Role } from "./roles.js";
 import { ROLES } from "./roles.js";
 
+/**
+ * Describes a domain module's permission registrations.
+ * Each module can register its own permission keys with associated roles.
+ */
+export interface DomainModulePermissions {
+  moduleName: string;
+  keys: Array<{ key: string; roles: Role[] }>;
+}
+
+/**
+ * Registry of domain module permissions. Modules register at import time
+ * via `registerDomainModulePermissions()`. Checked first by `lookupPermission`
+ * before falling back to the central `PERMISSIONS` map.
+ */
+const modulePermissions: DomainModulePermissions[] = [];
+
+/**
+ * Registers a domain module's permission keys. Call this at module load time
+ * from each domain module's `permissions.ts`.
+ * @param mod - The module permissions to register
+ */
+export function registerDomainModulePermissions(mod: DomainModulePermissions): void {
+  modulePermissions.push(mod);
+}
+
+/**
+ * Looks up the allowed roles for a permission key. Checks module-level
+ * registrations first, then falls back to the central PERMISSIONS map.
+ * @param key - The permission key to look up
+ * @returns The array of allowed roles, or undefined if not found
+ */
+export function lookupPermission(key: string): Role[] | undefined {
+  // 1. Check module-level first (last registered wins for duplicates)
+  for (let i = modulePermissions.length - 1; i >= 0; i--) {
+    const entry = modulePermissions[i].keys.find((k) => k.key === key);
+    if (entry) return entry.roles;
+  }
+  // 2. Fall back to central map
+  return (PERMISSIONS as Record<string, readonly Role[]>)[key] as Role[] | undefined;
+}
+
 export const PERMISSIONS = {
   // Classrooms
   "class:create": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
@@ -105,12 +146,12 @@ export type Permission = keyof typeof PERMISSIONS;
  * @param role - The role to check
  * @param permission - The permission to verify
  * @returns True if the role has the permission, false otherwise
- * @throws {Error} Throws if the permission is not defined in PERMISSIONS
+ * @throws {Error} Throws if the permission is not defined in PERMISSIONS or any module
  */
 export function hasPermission(role: Role, permission: Permission): boolean {
-  const allowedRoles = PERMISSIONS[permission];
+  const allowedRoles = lookupPermission(permission as string);
   if (!allowedRoles) {
     throw new Error(`Unknown permission: ${permission}`);
   }
-  return (allowedRoles as readonly Role[]).includes(role);
+  return allowedRoles.includes(role);
 }
