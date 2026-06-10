@@ -636,6 +636,9 @@ importers:
       '@mui/material':
         specifier: ^6.0.2
         version: 6.5.0(@emotion/react@11.14.0)(@emotion/styled@11.14.1)(@types/react@19.2.2)(react-dom@19.2.5)(react@19.2.5)
+      '@node-rs/argon2':
+        specifier: ^2.0.2
+        version: 2.0.2
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
@@ -1102,6 +1105,9 @@ importers:
       '@reading-advantage/domain':
         specifier: workspace:*
         version: link:../../packages/domain
+      '@reading-advantage/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@reading-advantage/ui':
         specifier: workspace:*
         version: link:../../packages/ui
