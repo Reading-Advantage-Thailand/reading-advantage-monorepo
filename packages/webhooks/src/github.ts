@@ -112,8 +112,19 @@ github.post("/pr", async (c) => {
     return c.json({ error: "Missing signature" }, 401);
   }
 
+  const timestampHeader = c.req.header("x-github-delivery-timestamp")
+    ?? c.req.header("x-hub-timestamp");
+  const timestamp = timestampHeader ? Number(timestampHeader) : undefined;
+
   const payload = await c.req.text();
-  if (!verifyWebhookSignature(payload, signature)) {
+  if (!verifyWebhookSignature(payload, signature, timestamp)) {
+    if (timestamp !== undefined) {
+      const nowSeconds = Math.floor(Date.now() / 1000);
+      const skew = Math.abs(nowSeconds - timestamp);
+      if (skew > 300) {
+        return c.json({ error: "Stale timestamp — replay attack rejected" }, 401);
+      }
+    }
     return c.json({ error: "Invalid signature" }, 401);
   }
 

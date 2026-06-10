@@ -94,23 +94,54 @@ export async function getInstallationToken(installationId: string): Promise<stri
 // ─── Signature Verification ───────────────────────────────
 
 /**
- * Verifies the HMAC signature of a GitHub webhook payload.
+ * Maximum allowed skew between the webhook's timestamp and the
+ * server's current time, in seconds. Matches GitHub's documented
+ * delivery-time tolerance of 5 minutes.
+ */
+export const MAX_TIMESTAMP_SKEW_SECONDS = 300;
+
+/**
+ * Verifies the HMAC signature of a GitHub webhook payload and
+ * rejects replay attacks by checking the request timestamp against
+ * a tolerance window.
  * @param payload - The raw request body as a string.
  * @param signature - The x-hub-signature-256 header value.
- * @returns True if the signature is valid, false otherwise.
+ * @param timestamp - The request timestamp in epoch seconds (from
+ *   the x-github-delivery-timestamp or x-hub-timestamp header).
+ *   If undefined, the timestamp check is skipped (backward
+ *   compatibility with older webhook deliveries).
+ * @returns True if the signature is valid and the timestamp is
+ *   within the tolerance window, false otherwise.
  */
-export function verifyWebhookSignature(payload: string, signature: string): boolean {
+export function verifyWebhookSignature(
+  payload: string,
+  signature: string,
+  timestamp?: number,
+): boolean {
   const secret = process.env.GITHUB_WEBHOOK_SECRET ?? "";
   if (!secret) {
     console.warn("[GitHub Webhook] GITHUB_WEBHOOK_SECRET is not set");
     return false;
   }
   const expected = `sha256=${createHmac("sha256", secret).update(payload).digest("hex")}`;
+  let sigValid: boolean;
   try {
-    return timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+    sigValid = timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
   } catch {
     return false;
   }
+  if (!sigValid) return false;
+  if (timestamp !== undefined) {
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    const skew = Math.abs(nowSeconds - timestamp);
+    if (skew > MAX_TIMESTAMP_SKEW_SECONDS) {
+      console.warn(
+        `[GitHub Webhook] Replay attack detected: timestamp ${timestamp} is ${skew}s from now (max ${MAX_TIMESTAMP_SKEW_SECONDS}s)`,
+      );
+      return false;
+    }
+  }
+  return true;
 }
 
 /**
