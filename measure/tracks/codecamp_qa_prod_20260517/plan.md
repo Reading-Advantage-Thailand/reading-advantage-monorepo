@@ -1462,6 +1462,13 @@ Cloud Run revision. All 4 P0/P1 launch gates pass against the live URL.
 
 **Full network test run:** `45 passed (45)` — 0 failures, 0 skipped.
 
+**Adversarial re-verification (2026-06-11):**
+- `node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts` — PASS (`45 passed`).
+- `PHASE85_SKIP=1 node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts` — PASS (`40 passed | 5 skipped`).
+- `npm run check-types --workspace=codecamp-advantage` — PASS.
+- `npm run lint --workspace=codecamp-advantage` — PASS with 4 pre-existing warnings.
+- `npm test` — PASS (`27 passed`).
+
 **Remaining Phase 8.5 items:**
 - Credential-gated probes (`PHASE{1..8}_TEST_*` env vars) deferred to Phase 12.
 
