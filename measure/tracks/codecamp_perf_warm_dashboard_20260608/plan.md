@@ -15,10 +15,10 @@
 
 ## Phase 3: Verification (P0)
 
-- [ ] Task: Re-run Phase 6 prod-smoke suite
-  - [ ] Warm `GET /en/` < 1000ms passes
-  - [ ] Phase 6 P1 launch gate passes
-  - [ ] No cold-start regression
+- [~] Task: Re-run Phase 6 prod-smoke suite
+  - [~] Warm `GET /en/` < 1000ms passes
+  - [~] Phase 6 P1 launch gate passes
+  - [~] No cold-start regression
 
 ---
 
@@ -226,3 +226,37 @@ Phase 3 will re-run `phase-6-performance-and-latency.test.ts` to confirm
   suite (`phase-6-performance-and-latency.test.ts`) and Phase 7 suite
   (`phase-7-cdn-and-caching.test.ts`) to confirm the warm budget is met and
   no caching/header regressions.
+
+### 8. Phase 3 — Red-phase work (2026-06-10)
+
+> The Phase 2 evaluation note (§6.1) deferred the `unstable_cache` /
+> `revalidate` wiring to Phase 3. The Phase 3 verification re-runs the
+> prod-smoke suite, but the **contract** for the wiring is also testable
+> locally and is the natural Red-phase contribution for this phase
+> (the helper from Phase 2 alone does not move the warm budget — only
+> the wiring does).
+>
+> A new contract test was added at
+> `apps/codecamp-advantage/lib/__tests__/dashboard-ssr-cache.test.ts`.
+> It imports a not-yet-existing module
+> `apps/codecamp-advantage/lib/cache/dashboard-ssr-cache.ts` and asserts
+> that the module (a) re-exports `buildDashboardCacheKey` (so the
+> multi-tenancy guardrail is the single source of truth for the cache
+> key — test-strategy.md §3, plan.md §4.3) and (b) exports a
+> `getCachedDashboardSSR(input, loader)` function that uses the
+> re-exported key and delegates to its loader. The test fails Red with
+> a Vite import-resolution error (`Failed to resolve import
+> "../cache/dashboard-ssr-cache"`), which is the informative Red the
+> Phase 3 implementer (jr role) will use to drive the Green
+> implementation.
+>
+> **Targeted test command** (from inside `apps/codecamp-advantage/`):
+>
+> ```bash
+> ./node_modules/.bin/vitest run lib/__tests__/dashboard-ssr-cache.test.ts
+> ```
+>
+> Observed result on 2026-06-10: 1 test file failed, 0 tests collected
+> (load-time module-resolution error — the expected Red). The Phase 2
+> `dashboard-cache-key.test.ts` continues to pass (6/6 tests), so no
+> previously-Green contract has regressed.
