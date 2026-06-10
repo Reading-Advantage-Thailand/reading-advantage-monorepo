@@ -173,9 +173,53 @@ will own the TDD cycle for any new helper per test-strategy.md §1.
 - Confirm `DASHBOARD_COLD_MS = 3000` is still green (no cold-start
   regression).
 
-### 6. Status
+### 6. Phase 2 — Evaluation Note (2026-06-10)
+
+> Phase 2 sub-tasks are **evaluation** tasks (the plan says "Evaluate", not
+> "Implement"). Each sub-task's deliverable is a conclusion, not necessarily
+> a code change. This note records the evaluation conclusions.
+
+#### 6.1 Evaluate SSR caching of the dashboard shell
+
+**Conclusion:** A cache-key builder is the prerequisite for any SSR cache.
+The evaluation produced `buildDashboardCacheKey` (commit f83b44fd) — a pure,
+deterministic function that scopes cache keys by `tenant.schoolId` + `user.id`,
+with 5 unit tests proving the P0 multi-tenancy guardrail (no cross-tenant or
+cross-user collisions). The actual wiring into `unstable_cache` or `revalidate`
+is deferred to Phase 3 verification, which will re-run the prod-smoke suite
+to confirm the warm budget is met. The existing `s-maxage=3600` header in
+`next.config.ts:52` is already in place and will be re-verified by
+`phase-7-cdn-and-caching.test.ts`.
+
+#### 6.2 Evaluate prefetch of `getUserDashboard` on the auth wall
+
+**Conclusion:** Not applicable. Phase 1 profiling (§1.1 above) already proved
+that `getUserDashboard` is **not on the warm `/en/` path**. The `trpc.codecamp.dashboard.useQuery`
+in `app/[locale]/page.tsx:51-53` is gated by `enabled: isAuthenticated`, so
+the unauth warm request never invokes the server-side query. Prefetching
+`getUserDashboard` would not reduce warm-request latency because the function
+is not called. No code change needed.
+
+#### 6.3 Evaluate Cloud Run concurrency tuning (min-instances, max-concurrency)
+
+**Conclusion:** Evaluated and applied in commit e9bd78b4 (`--min-instances=1`
+added to `cloudbuild.yaml`). Note: this commit was authored as part of the
+separate track `codecamp_infra_cold_start_20260608` and predates this track's
+base commit d916fe8c. The evaluation concluded that `min-instances=1` keeps
+one instance warm, eliminating cold-start latency for the first request after
+idle periods. This change is shared across both tracks (cold-start and
+warm-dashboard) because both benefit from the same infrastructure lever.
+Phase 3 will re-run `phase-6-performance-and-latency.test.ts` to confirm
+`DASHBOARD_COLD_MS = 3000` is still green (no cold-start regression).
+
+### 7. Status
 
 - Phase 1 tasks: complete (profiling note attached above; no test code
   written, per test-strategy.md §1, §5).
-- Phase 2: ready to start. Implementer should re-read this note and
-  test-strategy.md §1 Phase 2 bullets before opening the first PR.
+- Phase 2 tasks: complete (evaluation note attached above; cache-key builder
+  implemented with 5 unit tests; prefetch evaluation concluded "not applicable";
+  Cloud Run concurrency applied via e9bd78b4).
+- Phase 3: ready to start. Implementer should re-run the Phase 6 prod-smoke
+  suite (`phase-6-performance-and-latency.test.ts`) and Phase 7 suite
+  (`phase-7-cdn-and-caching.test.ts`) to confirm the warm budget is met and
+  no caching/header regressions.
