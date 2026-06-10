@@ -3,7 +3,7 @@ import { FlatCompat } from "@eslint/eslintrc";
 const compat = new FlatCompat({ baseDirectory: import.meta.dirname });
 
 const eslintConfig = [
-  { ignores: [".next/", "node_modules/"] },
+  { ignores: [".next/", "node_modules/", "coverage/", "scripts/", "e2e/", "revideo/"] },
   ...compat.extends("next/core-web-vitals"),
   ...compat.extends("next/typescript"),
   {

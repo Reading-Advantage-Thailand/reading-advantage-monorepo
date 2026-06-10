@@ -7,7 +7,7 @@
     "dev-turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "next-blog-day": "npx tsx scripts/next-blog-day.ts",
     "i18n:verify": "tsx scripts/i18n-verify.ts",
     "i18n:tree": "tsx scripts/i18n-tree.ts",

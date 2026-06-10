@@ -5,6 +5,7 @@ import type {
   ListIssuesOptions,
 } from "../client.js";
 import { GitHubClientError } from "../client.js";
+import { createSign } from "node:crypto";
 
 /**
  * Configuration for the REST GitHub driver.
@@ -38,8 +39,7 @@ function createJwt(appId: string, privateKey: string): string {
   const unsignedToken = `${encode(header)}.${encode(payload)}`;
 
   // Use Node.js crypto for RS256 signing
-  const crypto = require("node:crypto") as typeof import("node:crypto");
-  const sign = crypto.createSign("RSA-SHA256");
+  const sign = createSign("RSA-SHA256");
   sign.update(unsignedToken);
   const signature = sign
     .sign(privateKey, "base64")
