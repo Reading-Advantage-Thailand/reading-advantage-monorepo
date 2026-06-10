@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildDashboardCacheKey } from "@/lib/cache/dashboard-cache-key";
+import { buildDashboardCacheKey } from "../cache/dashboard-cache-key";
 
 /**
  * Phase 2 — Warm-dashboard cache-key builder contract.

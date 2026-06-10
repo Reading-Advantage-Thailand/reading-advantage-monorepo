@@ -184,8 +184,11 @@ will own the TDD cycle for any new helper per test-strategy.md §1.
 **Conclusion:** A cache-key builder is the prerequisite for any SSR cache.
 The evaluation produced `buildDashboardCacheKey` (commit f83b44fd) — a pure,
 deterministic function that scopes cache keys by `tenant.schoolId` + `user.id`,
-with 5 unit tests proving the P0 multi-tenancy guardrail (no cross-tenant or
-cross-user collisions). The actual wiring into `unstable_cache` or `revalidate`
+with unit tests proving the P0 multi-tenancy guardrail (no cross-tenant or
+cross-user collisions). Adversarial review added a delimiter-collision regression
+case and fixed the key to encode the tenant/user identity as a JSON tuple
+(commit f4c7fcec), then fixed direct root Vitest execution of the cache-key test
+with a relative import. The actual wiring into `unstable_cache` or `revalidate`
 is deferred to Phase 3 verification, which will re-run the prod-smoke suite
 to confirm the warm budget is met. The existing `s-maxage=3600` header in
 `next.config.ts:52` is already in place and will be re-verified by
