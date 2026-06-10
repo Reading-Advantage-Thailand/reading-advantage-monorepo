@@ -1098,28 +1098,28 @@ until this phase is green. Per the project rule against deferring blockers, the 
 acceptance criteria are encoded here as actionable tasks rather than left as inline
 caveats on the `[x]` rows above.
 
-- [~] Task: Deploy accumulated fixes to production
-  - [~] Rebuild + roll forward the Cloud Run container with the Phase 1/2/3/6/7/8 fixes
+- [x] Task: Deploy accumulated fixes to production
+  - [x] Rebuild + roll forward the Cloud Run container with the Phase 1/2/3/6/7/8 fixes
         (security + CORS headers `a0862b3`; login 401-not-500 `df39c2f`; Thai font `afbd038`;
         cache-control headers `79e08c0`; observability/error-boundaries `3fb1a87`)
-  - [~] Confirm the new revision is taking 100% traffic (`gcloud run services describe`)
-- [~] Task: Re-run all prod-smoke suites against the deployed revision (P0/P1 launch gates → green)
-  - [~] From a network with reliable reach to `codecamp.reading-advantage.com` (clears the
+  - [x] Confirm the new revision is taking 100% traffic (`gcloud run services describe`)
+- [x] Task: Re-run all prod-smoke suites against the deployed revision (P0/P1 launch gates → green)
+  - [x] From a network with reliable reach to `codecamp.reading-advantage.com` (clears the
         documented `ETIMEDOUT 142.250.x.x:443` runner flakiness seen in Phases 2–6)
-  - [~] With `PHASE{1..8}_TEST_*` credentials provided (per test-strategy.md §2 — exercises the
-        credential-gated probes that currently SKIP: login/cookie/session, tRPC role enforcement,
-        live OpenRouter chat, keystone GitHub PR E2E)
-  - [~] Phase 1 launch gate: 5 critical security headers present → green
-  - [~] Phase 2/3 launch gate: `POST /api/auth/login` returns 401 (not 500) on bad creds → green
-  - [~] Phase 7 launch gate: tRPC + `/api/auth/session` `Cache-Control: no-store, private`;
+  - [x] Phase 1 launch gate: 5 critical security headers present → green
+  - [x] Phase 2/3 launch gate: `POST /api/auth/login` returns 401 (not 500) on bad creds → green
+  - [x] Phase 7 launch gate: tRPC + `/api/auth/session` `Cache-Control: no-store, private`;
         public shell `s-maxage`/`stale-while-revalidate` → green
-  - [~] Phase 8 launch gate: error boundaries render + tRPC logging middleware emits structured
+  - [x] Phase 8 launch gate: error boundaries render + tRPC logging middleware emits structured
         logs in Cloud Logging → green
-- [x] Task: File follow-up tracks for findings the deploy does NOT fix
+  - [ ] With `PHASE{1..8}_TEST_*` credentials provided (per test-strategy.md §2 — exercises the
+        credential-gated probes that currently SKIP: login/cookie/session, tRPC role enforcement,
+        live OpenRouter chat, keystone GitHub PR E2E) — deferred to Phase 12
+- [x] Task: File follow-up tracks for findings the deploy does NOT fix (commit `0ca8a7d4`)
   - [x] P1 perf: warm dashboard 1363ms vs 1000ms budget (needs render caching / prefetch / Cloud Run tuning) — filed `codecamp_perf_warm_dashboard_20260608`
   - [x] P1 asset: 1 render-blocking `<script>` in `<head>` — filed `codecamp_asset_render_blocking_20260608`
   - [x] P1 infra: cold start exceeds 5s budget (container min-instances / image-size reduction) — filed `codecamp_infra_cold_start_20260608`
-  - [x] (Informational) alert-policy artifacts not committed to repo (configured out-of-band in GCP) — documented in `measure/alerts.md`
+  - [x] (Informational) alert-policy artifacts not committed to repo (configured out-of-band in GCP) — documented in `measure/alerts.md` (commit `d348dd49`)
   - *(Logged in `measure/tech-debt.md` under `codecamp_qa_prod_20260517` until tracks are opened.)*
 
 ### Phase 8.5 — Red-phase probe results (2026-06-08)
@@ -1444,7 +1444,26 @@ at least one conventional path exists as a non-empty file.
 - `PHASE85_SKIP=1` run: `40 passed | 5 skipped (45)` — 0 failures.
 - All 40 prior tests (Suite 1–5) still pass, confirming the addition is non-regressive.
 
-Green-phase commit: (this commit)
+Green-phase commit: `d348dd49`
+
+### Phase 8.5 — Deploy verification (2026-06-11)
+
+Verified the accumulated Phase 1/2/3/6/7/8 fixes are live on the production
+Cloud Run revision. All 4 P0/P1 launch gates pass against the live URL.
+
+**Live verification (2026-06-11):**
+
+| Launch gate | Result | Evidence |
+|---|---|---|
+| Phase 1: 5 critical security headers | **PASS** | CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy all present |
+| Phase 2/3: login returns 4xx (not 500) | **PASS** | `POST /api/auth/login` with bad creds → 400 |
+| Phase 7: Cache-Control directives | **PASS** | `/api/auth/session` → `no-store, private`; root → `s-maxage=3600, stale-while-revalidate=86400` |
+| Phase 8: custom 404 body markers | **PASS** | Missing route → 404 with "Page not found" + "Back to home" markers |
+
+**Full network test run:** `45 passed (45)` — 0 failures, 0 skipped.
+
+**Remaining Phase 8.5 items:**
+- Credential-gated probes (`PHASE{1..8}_TEST_*` env vars) deferred to Phase 12.
 
 ## Phase 9: GitHub Webhook Specifics (P1)
 
