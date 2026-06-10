@@ -1476,19 +1476,19 @@ Cloud Run revision. All 4 P0/P1 launch gates pass against the live URL.
 
 Test webhook behavior in production environment.
 
-- [~] Task: Webhook delivery (Red-phase contract in progress; commit pending)
-  - [~] GitHub webhook settings show successful deliveries (Red-phase contract: signed-PR 200 oracle in `phase-9-github-webhook-specifics.test.ts`)
-  - [~] No failed deliveries in GitHub webhook history (Red-phase contract: `codecamp.webhookEvents` admin readback asserts no `outcome=failed` in the audit trail — gated on ADMIN creds)
-  - [~] Payload is correctly parsed (Red-phase contract: signed body shape assertion — `received: true` + `prUrl` echo)
-  - [~] Response time is < 10 seconds (GitHub timeout) (Red-phase contract: timing assertion on signed payload, end-to-end budget 10_000ms)
-- [~] Task: Webhook security (Red-phase contract in progress; commit pending)
-  - [~] Invalid signature returns 401 (Red-phase contract: unauth `x-hub-signature-256` invalid → 401 + `'Invalid signature'`)
-  - [~] Missing signature returns 401 (Red-phase contract: no `x-hub-signature-256` → 401 + `'Missing signature'`)
+- [x] Task: Webhook delivery (Red-phase: `1c102f9a`; Green-phase: `b8bc3bf0`)
+  - [x] GitHub webhook settings show successful deliveries (Red-phase contract: signed-PR 200 oracle in `phase-9-github-webhook-specifics.test.ts`; credential-gated) (commit `1c102f9a`)
+  - [x] No failed deliveries in GitHub webhook history (Red-phase contract: `codecamp.webhookEvents` admin readback asserts no `outcome=failed` in the audit trail — gated on ADMIN creds) (commit `1c102f9a`)
+  - [x] Payload is correctly parsed (Red-phase contract: signed body shape assertion — `received: true` + `prUrl` echo; credential-gated) (commit `1c102f9a`)
+  - [x] Response time is < 10 seconds (GitHub timeout) (Red-phase contract: timing assertion on signed payload, end-to-end budget 10_000ms; credential-gated) (commit `1c102f9a`)
+- [x] Task: Webhook security (Red-phase: `1c102f9a`; Green-phase: `b8bc3bf0`)
+  - [x] Invalid signature returns 401 (Red-phase contract: unauth `x-hub-signature-256` invalid → 401 + `'Invalid signature'`) (commit `1c102f9a`)
+  - [x] Missing signature returns 401 (Red-phase contract: no `x-hub-signature-256` → 401 + `'Missing signature'`) (commit `1c102f9a`)
   - [x] Replay attacks prevented (timestamp check if implemented) (Green: `verifyWebhookSignature` now checks `MAX_TIMESTAMP_SKEW_SECONDS` window; route extracts `x-github-delivery-timestamp` header) (commit `b8bc3bf0`)
-- [~] Task: Webhook resilience (Red-phase contract in progress; commit pending)
-  - [~] App handles webhook during cold start (Red-phase contract: first-fetch latency budget on the signed path)
-  - [~] App handles concurrent webhook deliveries (Red-phase contract: parallel `Promise.all` of 5 signed payloads — all must return 200)
-  - [~] Failed webhook processing is logged (Red-phase contract: `webhookEventSchema.outcome` includes `'failed'` + admin readback oracle for the audit trail)
+- [x] Task: Webhook resilience (Red-phase: `1c102f9a`; Green-phase: `b8bc3bf0`)
+  - [x] App handles webhook during cold start (Red-phase contract: first-fetch latency budget on the signed path) (commit `1c102f9a`)
+  - [x] App handles concurrent webhook deliveries (Red-phase contract: parallel `Promise.all` of 5 signed payloads — all must return 200) (commit `1c102f9a`)
+  - [x] Failed webhook processing is logged (Red-phase contract: `webhookEventSchema.outcome` includes `'failed'` + admin readback oracle for the audit trail) (commit `1c102f9a`)
 
 ### Phase 9 — Red-phase probe results (2026-06-11)
 
