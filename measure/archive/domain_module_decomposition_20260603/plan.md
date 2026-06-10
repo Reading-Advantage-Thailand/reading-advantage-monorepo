@@ -2,6 +2,17 @@
 
 > Pilot-driven. The pattern established in `gamification/` is replicated across 12 modules; `codecamp/` gets special handling. Each module is its own PR to keep diffs reviewable.
 
+## Commit Log
+
+| Phase | Commit | Summary |
+|-------|--------|---------|
+| 1 | `4d18c012` | refactor(domain): decompose gamification/ into 7-file module structure |
+| 2 | `b95c8fa8` | feat(auth): add domainModulePermissions extension point |
+| 3 | `4f622f0d` | refactor(domain): decompose 9 modules into 7-file structure |
+| 4 | `113290f1` | refactor(domain): decompose codecamp/ (2003 lines → 11 sub-modules) |
+| 5 | `8a426931` | feat(db): add 5 relations() blocks for Drizzle relational query API |
+| 9 | `ca4ab747` | chore(measure): closeout domain_module_decomposition_20260603 |
+
 ## Phase 0: Setup
 
 - [x] Task: Read AGENTS.md §3.4, §3.5; confirm the per-concern split.
