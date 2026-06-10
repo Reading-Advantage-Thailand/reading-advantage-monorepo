@@ -211,14 +211,13 @@ async function seedAuditEvents(
 
 // ─── Test suites ─────────────────────────────────────────────────
 
-describe("exportSubjectData — integration (two-school)", () => {
+// These tests require a live `science_advantage_test` database (see the
+// file header for setup). When `DATABASE_URL` is unset — e.g. a clean
+// dev machine or a CI lane without the integration DB — skip the suite
+// with a notice instead of hard-failing the whole `domain` test script,
+// which would otherwise mask genuine unit-test failures.
+describe.skipIf(!process.env.DATABASE_URL)("exportSubjectData — integration (two-school)", () => {
   beforeEach(async () => {
-    if (!process.env.DATABASE_URL) {
-      throw new Error(
-        "DATABASE_URL is not set; required for DSAR integration tests. " +
-          "Export DATABASE_URL=postgresql://...science_advantage_test before running.",
-      );
-    }
     await cleanupDsarTestData();
     await seedSchoolsAndUsers();
   });
