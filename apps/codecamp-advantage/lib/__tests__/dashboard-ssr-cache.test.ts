@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 /**
  * Phase 3 — Warm-dashboard cache-wiring contract (Red).
@@ -136,5 +136,61 @@ describe("getCachedDashboardSSR (Phase 3 Red, warm-dashboard cache wiring)", () 
       loaderCalls,
       "getCachedDashboardSSR must use a Next.js cache primitive so the warm /en/ request benefits from the cache; a no-op pass-through that calls the loader on every invocation will not move the warm budget",
     ).toBeLessThanOrEqual(1);
+  });
+
+  it("deduplicates concurrent same-key misses so parallel SSR requests share one loader", async () => {
+    const mod = await import("../cache/dashboard-ssr-cache");
+    const input = {
+      tenant: { schoolId: "school-concurrent" },
+      user: { id: "user-concurrent" },
+    };
+    let resolveLoader: (value: { value: string }) => void = () => {};
+    const loader = vi.fn(
+      () =>
+        new Promise<{ value: string }>((resolve) => {
+          resolveLoader = resolve;
+        }),
+    );
+
+    const first = mod.getCachedDashboardSSR(input, loader);
+    const second = mod.getCachedDashboardSSR(input, loader);
+
+    expect(loader).toHaveBeenCalledTimes(1);
+    resolveLoader({ value: "shared-payload" });
+    await expect(Promise.all([first, second])).resolves.toEqual([
+      { value: "shared-payload" },
+      { value: "shared-payload" },
+    ]);
+  });
+
+  it("caches undefined payloads without treating them as misses", async () => {
+    const mod = await import("../cache/dashboard-ssr-cache");
+    const input = {
+      tenant: { schoolId: "school-undefined" },
+      user: { id: "user-undefined" },
+    };
+    const loader = vi.fn(async () => undefined);
+
+    await expect(mod.getCachedDashboardSSR(input, loader)).resolves.toBeUndefined();
+    await expect(mod.getCachedDashboardSSR(input, loader)).resolves.toBeUndefined();
+
+    expect(loader).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not cache rejected loads so transient failures can recover", async () => {
+    const mod = await import("../cache/dashboard-ssr-cache");
+    const input = {
+      tenant: { schoolId: "school-retry" },
+      user: { id: "user-retry" },
+    };
+    const loader = vi
+      .fn<() => Promise<{ value: string }>>()
+      .mockRejectedValueOnce(new Error("transient cache fill failure"))
+      .mockResolvedValueOnce({ value: "recovered" });
+
+    await expect(mod.getCachedDashboardSSR(input, loader)).rejects.toThrow("transient cache fill failure");
+    await expect(mod.getCachedDashboardSSR(input, loader)).resolves.toEqual({ value: "recovered" });
+
+    expect(loader).toHaveBeenCalledTimes(2);
   });
 });

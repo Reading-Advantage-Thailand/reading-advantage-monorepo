@@ -24,7 +24,7 @@ interface CacheKeyInput {
   [key: string]: unknown;
 }
 
-const cache = new Map<string, unknown>();
+const cache = new Map<string, Promise<unknown>>();
 
 /**
  * Return cached dashboard SSR data for the given tenant+user, calling
@@ -41,9 +41,12 @@ export async function getCachedDashboardSSR<T>(
   const key = buildDashboardCacheKey(input);
   const cached = cache.get(key);
   if (cached !== undefined) {
-    return cached as T;
+    return cached as Promise<T>;
   }
-  const value = await loader();
+  const value = loader().catch((error: unknown) => {
+    cache.delete(key);
+    throw error;
+  });
   cache.set(key, value);
   return value;
 }
