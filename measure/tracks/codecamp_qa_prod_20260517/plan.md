@@ -1490,6 +1490,58 @@ Test webhook behavior in production environment.
   - [~] App handles concurrent webhook deliveries (Red-phase contract: parallel `Promise.all` of 5 signed payloads — all must return 200)
   - [~] Failed webhook processing is logged (Red-phase contract: `webhookEventSchema.outcome` includes `'failed'` + admin readback oracle for the audit trail)
 
+### Phase 9 — Red-phase probe results (2026-06-11)
+
+Executable contract lives at `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-9-github-webhook-specifics.test.ts`.
+Run with `PHASE9_SKIP=1 node node_modules/vitest/vitest.mjs run lib/__tests__/prod-smoke/phase-9-github-webhook-specifics.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE9_PROD_URL`; skip network probes via `PHASE9_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+**Symbol map (from build-graph):**
+- `verifyWebhookSignature` (`packages/webhooks/src/github-client.ts:102-114`) — HMAC-SHA256 check only; **no** timestamp-window check. `callers` returns no upstream (the route is a Next.js Hono handler at `apps/codecamp-advantage/app/webhooks/github/pr/route.ts` which `build-graph` does not index as a `callsite` for Hono routes).
+- `POST /webhooks/github/pr` (`packages/webhooks/src/github.ts:109`) — Hono route dispatched from the Next.js route handler; signature-verified, dispatches `opened`/`synchronize` actions to `codecamp.getPrReviewByPrUrl` / `codecamp.createPrReview` / `codecamp.updatePrReview`, and posts the LLM review back to GitHub via `postPrComment`. Awaits `runReview()` synchronously before returning 200, so response time = LLM call wall time.
+- `webhookEventSchema.outcome` (`packages/types/src/codecamp.ts:291`) — `z.enum(["ignored", "failed"])`. Failure-only audit trail by design; live success path does not call `logWebhookEvent`.
+- `logWebhookEvent` (two symbols; route uses the **domain-layer** one at `packages/domain/src/codecamp/index.ts` via `codecamp.logWebhookEvent(...)`, which is the contract Phase 9 sub-task 3 depends on — the test file's last `describe` block asserts the route uses the domain-layer symbol, not a parallel webhooks-layer one).
+
+**Per-test gating (env vars, never committed):**
+- `PHASE9_PROD_URL` — override prod target.
+- `PHASE9_SKIP=1` — skip network probes; unit tests + source-contract detector still run unconditionally.
+- `PHASE9_TEST_GITHUB_WEBHOOK_SECRET` — keystone-gated signed probes.
+- `PHASE9_TEST_REPO_URL` + `PHASE9_TEST_PR_URL` — keystone PR fixture.
+- `PHASE9_TEST_ADMIN_USERNAME` + `PHASE9_TEST_ADMIN_PASSWORD` — `codecamp.webhookEvents` admin readback oracle.
+
+**Test methodology:** same pattern as Phases 5/6/7/8.5 — black-box HTTP probes for the runtime contract, with a small set of pure unit tests for the in-file parsers (`signWebhookPayload` roundtrip, signature comparison) and a source-contract detector for the missing replay-attack timestamp check. The source-contract detector fails at HEAD on the **expected missing behavior** (no `Date.now()` / no `MAX_TIMESTAMP_SKEW` constant in `verifyWebhookSignature`) and will go green when a future commit adds the replay window check.
+
+**Run summary (2026-06-11, `PHASE9_SKIP=1`):** `Tests  2 failed | 6 passed | 12 skipped (20)` in 22.88s wall (1.42s transform + 17.12s jsdom environment init + 285ms actual test execution).
+
+| Sub-check | Initial run (2026-06-11) | Notes |
+|---|---|---|
+| Source-contract detector: `verifyWebhookSignature` implements a timestamp window check | **FAIL (RED)** | Confirmed: `verifyWebhookSignature` body is `HMAC-SHA256` only — no `Date.now()`, no `timestamp` parameter, no `MAX_TIMESTAMP_SKEW` / `REPLAY_WINDOW` constant. The route has no timestamp header parsing either. A future commit that adds any of the three patterns turns this test green. |
+| Source-contract detector: the route in `github.ts` references a timestamp, `Date.now()`, or a max-skew/replay-window constant | **FAIL (RED)** | Confirmed: route file has no `timestamp` / `Date.now()` / skew constant reference. The replay-attack prevention is a Phase 9 deliverable, not a pre-existing behavior. |
+| `signWebhookPayload` produces a `sha256=…` 64-hex digest | PASS | Sanity check that the helper is a thin wrapper over `createHmac` |
+| `signWebhookPayload` produces different signatures for different payloads with the same secret | PASS | Sanity check |
+| `signWebhookPayload` produces different signatures for the same payload with different secrets | PASS | Sanity check |
+| `signWebhookPayload` matches Node's `crypto.createHmac` directly | PASS | Helper is a deterministic wrapper |
+| `webhookEventSchema.outcome` enum is exactly `["ignored", "failed"]` | PASS | Source contract for the failed-path audit trail |
+| Route calls `codecamp.logWebhookEvent(...)` (domain layer), not a local `logWebhookEvent` | PASS | Resolves the test-strategy.md §6 "dual `logWebhookEvent` symbols" concern at HEAD |
+| 12 network probes (signed-PR 200 oracle, missing/bad sig 401, payload echo, response-time budget, cold-start, 5× parallel, admin readback, P1 launch gate) | SKIP | `PHASE9_SKIP=1`; will run on the executor's pass with creds + keystone fixture + reachable network |
+
+**Findings (Red-phase pass):**
+
+- **2 genuine Red tests** for the Phase 9 sub-task "Replay attacks prevented (timestamp check if implemented)" — the source-contract detectors confirm the behavior is not implemented in either `verifyWebhookSignature` or the route. Both will go green when a future commit adds a timestamp window check.
+- **6 passing unit tests** — the sign helper, schema enums, and dual-`logWebhookEvent` wiring all hold at HEAD. A regression in any of these primitives fails the suite immediately, without needing network access.
+- **12 network probes skipped** by `PHASE9_SKIP=1`; the file compiles cleanly and the gating is correct (the per-test fixtures are keystone-gated or admin-gated, so the skipped tests run only when the executor provides the env vars per test-strategy.md §2).
+- **The test file follows the established Phase 5/8.5 contract pattern**: black-box HTTP probes against prod, source-contract detectors for code-level missing behavior, helper unit tests, and a single P1 launch gate. The same `expect.soft` pattern enumerates per-check gaps in a single run, and the aggregated P1 launch gate yields one CI-blocking signal.
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+
+1. **P1 — add a timestamp window check to `verifyWebhookSignature` (or the surrounding route) in `packages/webhooks/src/github-client.ts`.** A common implementation: add a `timestamp` parameter, check `Math.abs(Date.now() / 1000 - timestamp) < MAX_TIMESTAMP_SKEW_SECONDS` (commonly 300 = 5 minutes), and reject with 401 + a "replay" or "stale" error code when the window is exceeded. This turns the 2 RED source-contract detectors green and the keystone-gated behavioral replay probe green.
+2. **(Informational)** Re-run with `PHASE9_TEST_*` env vars to exercise the 12 keystone/credential-gated network probes (signed-PR 200 oracle, payload echo, response-time budget, cold-start, 5× parallel, admin readback).
+3. **(Informational)** If the keystone response-time budget probe exceeds GitHub's 10s timeout on the live LLM review pipeline, the route should be restructured to ack early (200) and run the LLM review asynchronously (worker or background task), so GitHub doesn't time out and re-deliver (causing duplicate audit-trail rows). File a follow-up track; do not inline-fix here (per test-strategy.md §4 black-box rule).
+4. Re-run from a network with reliable reach to `codecamp.reading-advantage.com` to clear any runner-side `ETIMEDOUT` flakiness (same class Phases 2–6 saw).
+
+Red-phase commit: `1c102f9a`
+
 ## Phase 10: Edge Cases & Production-Specific Scenarios (P2)
 
 Test scenarios unique to or more likely in production.
