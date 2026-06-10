@@ -1476,19 +1476,19 @@ Cloud Run revision. All 4 P0/P1 launch gates pass against the live URL.
 
 Test webhook behavior in production environment.
 
-- [ ] Task: Webhook delivery
-  - [ ] GitHub webhook settings show successful deliveries
-  - [ ] No failed deliveries in GitHub webhook history
-  - [ ] Payload is correctly parsed
-  - [ ] Response time is < 10 seconds (GitHub timeout)
-- [ ] Task: Webhook security
-  - [ ] Invalid signature returns 401
-  - [ ] Missing signature returns 401
-  - [ ] Replay attacks prevented (timestamp check if implemented)
-- [ ] Task: Webhook resilience
-  - [ ] App handles webhook during cold start
-  - [ ] App handles concurrent webhook deliveries
-  - [ ] Failed webhook processing is logged
+- [~] Task: Webhook delivery (Red-phase contract in progress; commit pending)
+  - [~] GitHub webhook settings show successful deliveries (Red-phase contract: signed-PR 200 oracle in `phase-9-github-webhook-specifics.test.ts`)
+  - [~] No failed deliveries in GitHub webhook history (Red-phase contract: `codecamp.webhookEvents` admin readback asserts no `outcome=failed` in the audit trail — gated on ADMIN creds)
+  - [~] Payload is correctly parsed (Red-phase contract: signed body shape assertion — `received: true` + `prUrl` echo)
+  - [~] Response time is < 10 seconds (GitHub timeout) (Red-phase contract: timing assertion on signed payload, end-to-end budget 10_000ms)
+- [~] Task: Webhook security (Red-phase contract in progress; commit pending)
+  - [~] Invalid signature returns 401 (Red-phase contract: unauth `x-hub-signature-256` invalid → 401 + `'Invalid signature'`)
+  - [~] Missing signature returns 401 (Red-phase contract: no `x-hub-signature-256` → 401 + `'Missing signature'`)
+  - [~] Replay attacks prevented (timestamp check if implemented) (RED: not implemented on HEAD — source-contract detector + behavioral probe on signed stale payload)
+- [~] Task: Webhook resilience (Red-phase contract in progress; commit pending)
+  - [~] App handles webhook during cold start (Red-phase contract: first-fetch latency budget on the signed path)
+  - [~] App handles concurrent webhook deliveries (Red-phase contract: parallel `Promise.all` of 5 signed payloads — all must return 200)
+  - [~] Failed webhook processing is logged (Red-phase contract: `webhookEventSchema.outcome` includes `'failed'` + admin readback oracle for the audit trail)
 
 ## Phase 10: Edge Cases & Production-Specific Scenarios (P2)
 
