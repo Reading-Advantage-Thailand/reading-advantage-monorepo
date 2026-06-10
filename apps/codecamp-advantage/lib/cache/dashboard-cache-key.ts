@@ -29,5 +29,5 @@ interface DashboardCacheKeyInput {
  * @returns A non-empty string cache key.
  */
 export function buildDashboardCacheKey(input: DashboardCacheKeyInput): string {
-  return `dashboard:${input.tenant.schoolId}:${input.user.id}`;
+  return `dashboard:${JSON.stringify([input.tenant.schoolId, input.user.id])}`;
 }

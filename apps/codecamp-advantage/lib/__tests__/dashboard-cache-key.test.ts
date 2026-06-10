@@ -109,4 +109,16 @@ describe("buildDashboardCacheKey (Phase 2, warm-dashboard perf)", () => {
       "different user.id within the same tenant must produce a different cache key — a key collision here is a P0 cross-user data leak (test-strategy.md §3, plan.md §4.3)",
     ).not.toBe(keyUser2);
   });
+
+  it("does not collide when tenant and user ids contain key delimiters", () => {
+    const keyA = buildDashboardCacheKey({
+      tenant: { schoolId: "school:A" },
+      user: { id: "user:1" },
+    });
+    const keyB = buildDashboardCacheKey({
+      tenant: { schoolId: "school" },
+      user: { id: "A:user:1" },
+    });
+    expect(keyA).not.toBe(keyB);
+  });
 });
