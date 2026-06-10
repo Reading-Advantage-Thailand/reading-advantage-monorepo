@@ -23,6 +23,10 @@ vi.mock("drizzle-orm", () => ({
   eq: vi.fn((col, val) => ({ col, val, type: "eq" })),
   and: vi.fn((...conds) => ({ type: "and", conds })),
   sql: vi.fn((strings, ...values) => ({ type: "sql", strings, values })),
+  // `@reading-advantage/db/schema` calls `relations()` at module load
+  // (added with the Drizzle relational-query blocks); stub it so the
+  // mocked drizzle-orm satisfies that import.
+  relations: vi.fn(() => ({})),
 }));
 
 function createMockDb(opts: { selectResult?: unknown[] } = {}) {
