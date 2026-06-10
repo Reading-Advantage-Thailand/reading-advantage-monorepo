@@ -2,9 +2,9 @@
 
 ## Phase 1: Profiling & Root Cause (P0)
 
-- [x] Task: Profile the warm-dashboard request path
-  - [x] Identify which server-side operations dominate the 1363ms budget
-  - [x] Determine if the bottleneck is DB queries, SSR rendering, or network hops
+- [x] Task: Profile the warm-dashboard request path [commit: 46f88202]
+  - [x] Identify which server-side operations dominate the 1363ms budget [commit: 46f88202]
+  - [x] Determine if the bottleneck is DB queries, SSR rendering, or network hops [commit: 46f88202]
 
 ## Phase 2: Optimization (P0)
 
