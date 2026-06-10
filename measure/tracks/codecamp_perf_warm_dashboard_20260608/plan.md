@@ -8,10 +8,10 @@
 
 ## Phase 2: Optimization (P0)
 
-- [ ] Task: Implement warm-request optimizations
-  - [ ] Evaluate SSR caching of the dashboard shell (Next.js `revalidate` / `unstable_cache`)
-  - [ ] Evaluate prefetch of `getUserDashboard` on the auth wall
-  - [ ] Evaluate Cloud Run concurrency tuning (min-instances, max-concurrency)
+- [~] Task: Implement warm-request optimizations
+  - [~] Evaluate SSR caching of the dashboard shell (Next.js `revalidate` / `unstable_cache`)
+  - [~] Evaluate prefetch of `getUserDashboard` on the auth wall
+  - [~] Evaluate Cloud Run concurrency tuning (min-instances, max-concurrency)
 
 ## Phase 3: Verification (P0)
 
