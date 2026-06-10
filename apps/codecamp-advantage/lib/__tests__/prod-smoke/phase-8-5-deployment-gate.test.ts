@@ -242,7 +242,7 @@ const parseCloudBuildSetEnvVars = (yamlText: string): string[] => {
   if (!envLine) return [];
   const m = envLine.match(/--set-env-vars=([^\s"']+)/);
   if (!m) return [];
-  return m[1]!.split(",").map((kv) => kv.split("=")[0]!.trim()).filter(Boolean);
+  return m[1]!.split(",").map((kv) => kv.trim()).filter(Boolean);
 };
 
 const parseCloudBuildRegion = (yamlText: string): string | null => {
@@ -456,12 +456,10 @@ describe("Phase 8.5 — Cloud Build deploy artifact", () => {
   it("sets NODE_ENV=production in --set-env-vars=", () => {
     const text = readFileSync(CLOUDBUILD_YAML, "utf8");
     const env = parseCloudBuildSetEnvVars(text);
-    const missing = REQUIRED_ENV_VARS.filter(
-      (e) => !env.some((k) => e.split("=")[0] === k),
-    );
+    const missing = REQUIRED_ENV_VARS.filter((e) => !env.includes(e));
     expect(
       missing,
-      `cloudbuild.yaml --set-env-vars is missing: ${missing.join(", ")}. Set: ${env.join(", ")}`,
+      `cloudbuild.yaml --set-env-vars is missing exact values: ${missing.join(", ")}. Set: ${env.join(", ")}`,
     ).toEqual([]);
   });
 
@@ -783,12 +781,12 @@ describe("Phase 8.5 — helper unit tests", () => {
   });
 
   describe("parseCloudBuildSetEnvVars", () => {
-    it("extracts the env-var keys from a --set-env-vars= argument", () => {
+    it("extracts the exact env-var key/value pairs from a --set-env-vars= argument", () => {
       const yaml =
         '      - "--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://x.example.com"\n';
       expect(parseCloudBuildSetEnvVars(yaml)).toEqual([
-        "NODE_ENV",
-        "NEXT_PUBLIC_API_URL",
+        "NODE_ENV=production",
+        "NEXT_PUBLIC_API_URL=https://x.example.com",
       ]);
     });
     it("returns an empty array if --set-env-vars= is absent", () => {
