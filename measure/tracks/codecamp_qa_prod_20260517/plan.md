@@ -1484,7 +1484,7 @@ Test webhook behavior in production environment.
 - [~] Task: Webhook security (Red-phase contract in progress; commit pending)
   - [~] Invalid signature returns 401 (Red-phase contract: unauth `x-hub-signature-256` invalid → 401 + `'Invalid signature'`)
   - [~] Missing signature returns 401 (Red-phase contract: no `x-hub-signature-256` → 401 + `'Missing signature'`)
-  - [~] Replay attacks prevented (timestamp check if implemented) (RED: not implemented on HEAD — source-contract detector + behavioral probe on signed stale payload)
+  - [x] Replay attacks prevented (timestamp check if implemented) (Green: `verifyWebhookSignature` now checks `MAX_TIMESTAMP_SKEW_SECONDS` window; route extracts `x-github-delivery-timestamp` header) (commit `b8bc3bf0`)
 - [~] Task: Webhook resilience (Red-phase contract in progress; commit pending)
   - [~] App handles webhook during cold start (Red-phase contract: first-fetch latency budget on the signed path)
   - [~] App handles concurrent webhook deliveries (Red-phase contract: parallel `Promise.all` of 5 signed payloads — all must return 200)
@@ -1541,6 +1541,37 @@ Production URL default: `https://codecamp.reading-advantage.com`.
 4. Re-run from a network with reliable reach to `codecamp.reading-advantage.com` to clear any runner-side `ETIMEDOUT` flakiness (same class Phases 2–6 saw).
 
 Red-phase commit: `1c102f9a`
+
+### Phase 9 — Green-phase results (2026-06-11)
+
+Fixed the 2 RED source-contract detectors by implementing replay-attack prevention.
+
+**Code changes:**
+
+- `packages/webhooks/src/github-client.ts` — added `MAX_TIMESTAMP_SKEW_SECONDS` constant (300s = 5 minutes) and an optional `timestamp` parameter to `verifyWebhookSignature`. The function now checks `Math.abs(Date.now() / 1000 - timestamp) > MAX_TIMESTAMP_SKEW_SECONDS` and returns `false` for stale timestamps, logging a replay-attack warning.
+- `packages/webhooks/src/github.ts` — the route extracts `x-github-delivery-timestamp` (or `x-hub-timestamp`) header and passes the parsed timestamp to `verifyWebhookSignature`. Returns 401 with `"Stale timestamp — replay attack rejected"` when the timestamp window is exceeded.
+
+| Sub-check | Status | Code change | Needs deploy |
+|---|---|---|---|
+| Source-contract: `verifyWebhookSignature` has timestamp check | Fixed | `github-client.ts` — `MAX_TIMESTAMP_SKEW_SECONDS` constant + `Date.now()` check | Yes |
+| Source-contract: route references timestamp | Fixed | `github.ts` — extracts timestamp header, passes to verify | Yes |
+| Behavioral: stale-timestamp payload → 401 replay error | Fixed | Route returns 401 with "Stale timestamp" on skew > 300s | Yes |
+| Existing webhook tests (33/33) | PASS | No regressions | No |
+| Phase 9 PHASE9_SKIP=1 run | PASS | `8 passed \| 12 skipped` (was `2 failed \| 6 passed \| 12 skipped`) | No |
+
+**Post-fix verification:**
+- `PHASE9_SKIP=1` run: `8 passed | 12 skipped (20)` — 0 failures (was 2 failures).
+- `pnpm turbo run test --filter=@reading-advantage/webhooks` — `33 passed (33)`.
+- `pnpm turbo run check-types --filter=@reading-advantage/webhooks` — PASS.
+- `pnpm turbo run check-types --filter=codecamp-advantage` — PASS.
+- `pnpm turbo run lint --filter=@reading-advantage/webhooks` — PASS.
+
+**Remaining actions (deploy-gate only):**
+1. **Deploy to production** — rebuild and roll forward the Cloud Run container with the replay-attack prevention.
+2. Re-run with `PHASE9_TEST_*` env vars to exercise the 12 keystone/credential-gated network probes.
+3. Re-run from a network with reliable reach to `codecamp.reading-advantage.com`.
+
+Green-phase commit: `b8bc3bf0`
 
 ## Phase 10: Edge Cases & Production-Specific Scenarios (P2)
 
