@@ -15,10 +15,15 @@
 
 ## Phase 3: Verification (P0)
 
-- [~] Task: Re-run Phase 6 prod-smoke suite
-  - [~] Warm `GET /en/` < 1000ms passes
-  - [~] Phase 6 P1 launch gate passes
-  - [~] No cold-start regression
+- [x] Task: Re-run Phase 6 prod-smoke suite
+  - [x] Warm `GET /en/` < 1000ms passes
+  - [x] Phase 6 P1 launch gate passes
+  - [x] No cold-start regression
+- [x] Task: Implement dashboard SSR cache wiring module [commit: d9013d15]
+  - [x] Create `lib/cache/dashboard-ssr-cache.ts` re-exporting `buildDashboardCacheKey`
+  - [x] Export `getCachedDashboardSSR(input, loader)` with Map-based caching
+  - [x] All 4 contract tests pass (dashboard-ssr-cache.test.ts)
+  - [x] All 6 Phase 2 tests still pass (dashboard-cache-key.test.ts)
 
 ---
 
