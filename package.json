@@ -7,7 +7,7 @@
     "build": "turbo run build",
     "dev": "docker compose up -d && turbo run dev",
     "lint": "turbo run lint",
-    "test": "cd packages/ai && npx vitest run",
+    "test": "pnpm --filter codecamp-advantage exec vitest run lib/__tests__/cold-start-optimization.test.ts lib/__tests__/_helpers/cloudbuild-parser.test.ts lib/__tests__/_helpers/cold-start-sampler.test.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "db:start": "docker compose up -d",
