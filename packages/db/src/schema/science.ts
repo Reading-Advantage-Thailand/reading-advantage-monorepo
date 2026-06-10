@@ -2,6 +2,7 @@ import {
   pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, decimal, unique,
   primaryKey, index,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import { users, schools } from "./users";
 
 // ─── Gamification (PORT-AS-IS) ────────────────────────────────────────────────
@@ -353,3 +354,32 @@ export const scienceQuestionStandards = pgTable("science_question_standards", {
   primaryKey({ columns: [table.questionId, table.standardId] }),
   index("science_question_standards_school_id_idx").on(table.schoolId),
 ]);
+
+// ─── Relations ───────────────────────────────────────────
+
+export const scienceClassesRelations = relations(scienceClasses, ({ many }) => ({
+  curriculumUnits: many(scienceCurriculumUnits),
+  students: many(scienceClassStudents),
+  assignments: many(scienceAssignments),
+}));
+
+export const scienceCurriculumUnitsRelations = relations(scienceCurriculumUnits, ({ one, many }) => ({
+  class: one(scienceClasses, { fields: [scienceCurriculumUnits.classId], references: [scienceClasses.id] }),
+  unitLessons: many(scienceUnitLessons),
+}));
+
+export const scienceUnitLessonsRelations = relations(scienceUnitLessons, ({ one }) => ({
+  unit: one(scienceCurriculumUnits, { fields: [scienceUnitLessons.unitId], references: [scienceCurriculumUnits.id] }),
+  lesson: one(scienceLessons, { fields: [scienceUnitLessons.lessonId], references: [scienceLessons.id] }),
+}));
+
+export const scienceAttemptsRelations = relations(scienceAttempts, ({ one, many }) => ({
+  student: one(users, { fields: [scienceAttempts.studentId], references: [users.id] }),
+  lesson: one(scienceLessons, { fields: [scienceAttempts.lessonId], references: [scienceLessons.id] }),
+  responses: many(scienceQuestionResponses),
+}));
+
+export const scienceQuestionResponsesRelations = relations(scienceQuestionResponses, ({ one }) => ({
+  attempt: one(scienceAttempts, { fields: [scienceQuestionResponses.attemptId], references: [scienceAttempts.id] }),
+  question: one(scienceQuizQuestions, { fields: [scienceQuestionResponses.questionId], references: [scienceQuizQuestions.id] }),
+}));

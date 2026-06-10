@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, timestamp, boolean, integer, unique } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import { users, schools } from "./users";
 
 // ─── Classrooms ───────────────────────────────────────────
@@ -43,3 +44,15 @@ export const classroomTeachers = pgTable("classroom_teachers", {
   role: text("role").default("member").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+// ─── Relations ───────────────────────────────────────────
+
+export const classroomsRelations = relations(classrooms, ({ many }) => ({
+  students: many(classroomStudents),
+  teachers: many(classroomTeachers),
+}));
+
+export const classroomStudentsRelations = relations(classroomStudents, ({ one }) => ({
+  classroom: one(classrooms, { fields: [classroomStudents.classroomId], references: [classrooms.id] }),
+  user: one(users, { fields: [classroomStudents.studentId], references: [users.id] }),
+}));

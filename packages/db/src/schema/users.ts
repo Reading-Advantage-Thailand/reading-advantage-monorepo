@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, timestamp, integer, pgEnum, unique } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 // Enums
 export const roleEnum = pgEnum("role", ["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM"]);
@@ -71,3 +72,18 @@ export const sessions = pgTable("sessions", {
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
 });
+
+// ─── Relations ───────────────────────────────────────────
+
+export const usersRelations = relations(users, ({ many }) => ({
+  accounts: many(accounts),
+  sessions: many(sessions),
+}));
+
+export const accountsRelations = relations(accounts, ({ one }) => ({
+  user: one(users, { fields: [accounts.userId], references: [users.id] }),
+}));
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, { fields: [sessions.userId], references: [users.id] }),
+}));
