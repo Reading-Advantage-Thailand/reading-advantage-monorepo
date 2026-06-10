@@ -1119,7 +1119,7 @@ caveats on the `[x]` rows above.
   - [x] P1 perf: warm dashboard 1363ms vs 1000ms budget (needs render caching / prefetch / Cloud Run tuning) — filed `codecamp_perf_warm_dashboard_20260608`
   - [x] P1 asset: 1 render-blocking `<script>` in `<head>` — filed `codecamp_asset_render_blocking_20260608`
   - [x] P1 infra: cold start exceeds 5s budget (container min-instances / image-size reduction) — filed `codecamp_infra_cold_start_20260608`
-  - [~] (Informational) alert-policy artifacts not committed to repo (configured out-of-band in GCP)
+  - [x] (Informational) alert-policy artifacts not committed to repo (configured out-of-band in GCP) — documented in `measure/alerts.md`
   - *(Logged in `measure/tech-debt.md` under `codecamp_qa_prod_20260517` until tracks are opened.)*
 
 ### Phase 8.5 — Red-phase probe results (2026-06-08)
@@ -1425,9 +1425,26 @@ the follow-up-track existence checks (Suite 2).
 1. Deploy accumulated fixes to production (`gcloud builds submit`).
 2. Re-run Phase 8.5 network pass (`PHASE85_SKIP` unset) to confirm
    P0/P1 launch gates go green on the live revision.
-3. (Informational) Alert-policy artifact follow-up.
 
 Green-phase commit: `0ca8a7d4`
+
+### Phase 8.5 — Green-phase results: alert-policy artifact (2026-06-11)
+
+Created `measure/alerts.md` documenting the GCP alert policies configured
+out-of-band for Cloud Run (codecamp-advantage) and Cloud SQL
+(reading-advantage). The file satisfies the Suite 6 filesystem check:
+at least one conventional path exists as a non-empty file.
+
+| Sub-check | Status | Code change |
+|---|---|---|
+| `measure/alerts.md` exists and is non-empty | Fixed | Created with Cloud Run + Cloud SQL alert policy documentation |
+| Suite 6: at least one alert-policy artifact at conventional path | Fixed | `measure/alerts.md` matches `ALERT_POLICY_ARTIFACT_PATHS` entry |
+
+**Post-fix verification:**
+- `PHASE85_SKIP=1` run: `40 passed | 5 skipped (45)` — 0 failures.
+- All 40 prior tests (Suite 1–5) still pass, confirming the addition is non-regressive.
+
+Green-phase commit: (this commit)
 
 ## Phase 9: GitHub Webhook Specifics (P1)
 
