@@ -15,10 +15,10 @@
 
 ## Phase 3: Verification (P0)
 
-- [x] Task: Re-run Phase 6 prod-smoke suite
-  - [x] Warm `GET /en/` < 1000ms passes
-  - [x] Phase 6 P1 launch gate passes
-  - [x] No cold-start regression
+- [x] Task: Re-run Phase 6 prod-smoke suite [commit: 021f0284]
+  - [x] Warm `GET /en/` < 1000ms passes [commit: 021f0284]
+  - [x] Phase 6 P1 launch gate passes [commit: 021f0284]
+  - [x] No cold-start regression [commit: 021f0284]
 - [x] Task: Implement dashboard SSR cache wiring module [commit: d9013d15]
   - [x] Create `lib/cache/dashboard-ssr-cache.ts` re-exporting `buildDashboardCacheKey`
   - [x] Export `getCachedDashboardSSR(input, loader)` with Map-based caching
