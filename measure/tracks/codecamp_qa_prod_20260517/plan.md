@@ -1355,6 +1355,54 @@ Typecheck (`npm run check-types --workspace=codecamp-advantage`): PASS.
 
 Red-phase attempt-3 tightening commit: `d4c0cb43`.
 
+### Phase 8.5 — Red-phase: alert-policy artifact Red test (2026-06-11, mid-attempt-2)
+
+The 3 P1 follow-up tracks are filed and the P0 launch-gate contract is green. The
+remaining `~` task in Phase 8.5 Task 3 — "(Informational) alert-policy artifacts not
+committed to repo" — has no test asserting the contract. Without one, a future repo
+re-org that drops the tech-debt.md row, or a follow-up track that creates the
+artifact under an unexpected path, will pass silently and the Phase 8.5 deliverable
+becomes unverifiable.
+
+Added a Red-phase test in a new Suite 6 of the same test file
+(`apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts`):
+
+- `ALERT_POLICY_ARTIFACT_PATHS` — the conventional paths documented in Phase 8
+  plan.md (`./infra/alerts`, `./terraform/alerts`, `./infra/monitoring`,
+  `./measure/alerts.md`).
+- Suite 6 filesystem check — asserts that at least one of the conventional paths
+  exists (either as a directory or as a non-empty file). Marked **informational,
+  not part of the P1 launch gate** per the Phase 8 plan §Green-phase disposition
+  ("These three are intentionally NOT part of the P1 launch gate").
+- 3 unit tests for the new constant (path list shape, every path is a relative
+  monorepo-root path, at least one path is conventional).
+
+Red expectation: the test fails at HEAD because no alert-policy artifact exists at
+any of the conventional paths (verified: `infra/`, `terraform/`, and
+`measure/alerts.md` are all absent from the repo). The test will go green when a
+follow-up track either (a) commits an alert-policy artifact to one of the
+conventional paths, or (b) updates `ALERT_POLICY_ARTIFACT_PATHS` to add the
+path the artifact actually lives at.
+
+**Targeted Red command:**
+
+```bash
+cd apps/codecamp-advantage && PHASE85_SKIP=1 node_modules/.bin/vitest run \
+  lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts
+```
+
+Result: `1 failed | 40 passed | 5 skipped (46)` — the single failure is the
+new alert-policy artifact check. All 40 prior tests (Suite 1–5) still pass,
+confirming the addition is non-regressive. The 5 skips are the network probes
+gated on `PHASE85_SKIP=1`.
+
+**Note (informational, not P1 gate):** the alert-policy artifact Red test fails
+on purpose. The Phase 8.5 P0 launch gate is already green (the 4 critical gates
+re-verified in the prior attempt-3 network pass all pass on the current prod
+revision), so the new failure does not affect the P0 launch readiness. It encodes
+the remaining deliverable as a contract that will go green when the
+out-of-band alert-policy follow-up lands.
+
 ### Phase 8.5 — Green-phase results: follow-up tracks filed (2026-06-08)
 
 Filed the 3 P1 follow-up tracks required by Task 3. The test at

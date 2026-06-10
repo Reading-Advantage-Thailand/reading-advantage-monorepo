@@ -140,6 +140,28 @@ const REQUIRED_LOGGING_PROCEDURE_NAMES = [
   "adminProcedure",
 ] as const;
 
+// ─── Alert-policy artifact paths (informational, not P1 launch gate) ────────
+//
+// Phase 8 plan.md §"Phase 8 — Green-phase actions" line 1043 and §"Phase 8 —
+// Red-phase probe results" lines 1023-1025 enumerate the conventional paths
+// where the repo would carry an alert-policy artifact if the team commits one.
+// Today, alerts are configured out-of-band in the GCP project, and no artifact
+// exists at any of these paths (verified: `infra/`, `terraform/`, and
+// `measure/alerts.md` are all absent). Per Phase 8 disposition
+// (line 1032-1034), the three alert checks are "intentionally NOT part of the
+// P1 launch gate" — they are informational only, and this Suite 6 preserves
+// that disposition. The check below fails at HEAD on purpose: the Red phase
+// encodes the remaining deliverable as a contract that goes green when a
+// follow-up track either (a) commits an alert-policy artifact to one of the
+// conventional paths, or (b) extends `ALERT_POLICY_ARTIFACT_PATHS` to add the
+// path the artifact actually lives at.
+const ALERT_POLICY_ARTIFACT_PATHS = [
+  resolve(MONOREPO_ROOT, "infra/alerts"),
+  resolve(MONOREPO_ROOT, "terraform/alerts"),
+  resolve(MONOREPO_ROOT, "infra/monitoring"),
+  resolve(MONOREPO_ROOT, "measure/alerts.md"),
+] as const;
+
 // ─── Conditional test helpers ───────────────────────────────────
 const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
@@ -864,6 +886,66 @@ describe("Phase 8.5 — helper unit tests", () => {
         expect(n.length).toBeGreaterThan(0);
         expect(n).toMatch(/^[a-z][A-Za-z]+$/);
       }
+    });
+  });
+});
+
+// ─── Suite 6: Alert-policy artifact presence (informational, NOT P1 launch gate)
+//
+// The Phase 8.5 Task 3 sub-task "(Informational) alert-policy artifacts not
+// committed to repo (configured out-of-band in GCP)" is the only remaining
+// `~` task in Phase 8.5. Per the Phase 8 plan disposition
+// (lines 1032-1034), the three alert checks are "intentionally NOT part of the
+// P1 launch gate" — they are informational only. Suite 6 preserves that
+// disposition: the test below fails at HEAD on purpose so a future
+// follow-up track that adds the artifact (or extends the path list) goes
+// green without changing the P0 launch-gate surface. The test is grouped
+// here in its own describe block (rather than folded into the P1 launch
+// gate in Suite 3) to make the informational-vs-gating boundary explicit
+// at the test-report level — a CI consumer reading the per-suite pass/fail
+// counts can see the P0 launch gate (Suites 1–5) is green while Suite 6
+// surfaces a remaining informational gap.
+describe("Phase 8.5 — Alert-policy artifact presence (informational, NOT P1 launch gate)", () => {
+  it("at least one alert-policy artifact exists at a conventional path", () => {
+    const found = ALERT_POLICY_ARTIFACT_PATHS.filter((p) => {
+      if (!existsSync(p)) return false;
+      // Directories count if non-empty; files count if non-empty.
+      try {
+        const s = statSync(p);
+        if (s.isDirectory()) {
+          return readdirSync(p).length > 0;
+        }
+        if (s.isFile()) return s.size > 0;
+      } catch {
+        return false;
+      }
+      return false;
+    });
+    expect(
+      found,
+      `expected at least one alert-policy artifact at one of the conventional paths: ${ALERT_POLICY_ARTIFACT_PATHS.map((p) => p.replace(MONOREPO_ROOT + "/", "./")).join(", ")}. Per Phase 8 plan §Green-phase line 1043, alerts are configured out-of-band in GCP today; this informational check goes green when a follow-up track commits an artifact (or extends ALERT_POLICY_ARTIFACT_PATHS to add the actual path).`,
+    ).not.toEqual([]);
+  });
+
+  describe("ALERT_POLICY_ARTIFACT_PATHS constant", () => {
+    it("enumerates the four conventional paths documented in Phase 8 plan §Green-phase line 1043", () => {
+      expect(ALERT_POLICY_ARTIFACT_PATHS).toHaveLength(4);
+    });
+    it("every path is an absolute filesystem path under the monorepo root", () => {
+      for (const p of ALERT_POLICY_ARTIFACT_PATHS) {
+        expect(p.startsWith(MONOREPO_ROOT + "/"), `${p} is not under MONOREPO_ROOT=${MONOREPO_ROOT}`).toBe(true);
+      }
+    });
+    it("at least one path matches the Phase 8 conventional list (./infra/alerts, ./terraform/alerts, ./infra/monitoring, ./measure/alerts.md)", () => {
+      const rels = ALERT_POLICY_ARTIFACT_PATHS.map((p) => p.replace(MONOREPO_ROOT + "/", ""));
+      const hasConventional = rels.some(
+        (r) =>
+          r === "infra/alerts" ||
+          r === "terraform/alerts" ||
+          r === "infra/monitoring" ||
+          r === "measure/alerts.md",
+      );
+      expect(hasConventional, `no conventional Phase 8 path found in: ${rels.join(", ")}`).toBe(true);
     });
   });
 });
