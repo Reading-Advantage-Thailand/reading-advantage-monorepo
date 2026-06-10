@@ -118,10 +118,10 @@
 
 ## Phase 2: Optimization (P0)
 
-- [~] Task: Reduce cold-start time
-  - [~] Evaluate Cloud Run `min-instances` configuration to keep at least 1 instance warm
-  - [~] Evaluate image-size reduction (multi-stage Docker build, tree-shaking)
-  - [~] Evaluate Next.js startup hooks or lazy initialization
+- [x] Task: Reduce cold-start time
+  - [x] Evaluate Cloud Run `min-instances` configuration to keep at least 1 instance warm
+  - [x] Evaluate image-size reduction (multi-stage Docker build, tree-shaking)
+  - [x] Evaluate Next.js startup hooks or lazy initialization
 
   **Chosen lever (mid @ 2026-06-08).** Per test-strategy §7 handoff, ONE
   lever is selected for TDD. Chosen: **Cloud Run `--min-instances=1` on
@@ -665,6 +665,15 @@
   test-strategy §5 sequencing.
 
   This attempt-9 produces a single docs commit (plan.md only).
+
+  **Green-phase status (jr @ 2026-06-10).** Implementer owns the Green phase.
+  - Green commit: `e9bd78b4` — `apps/codecamp-advantage/cloudbuild.yaml` (+1 line: `--min-instances=1` on the `deploy-cloudrun` step).
+  - Green command: `vitest run apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts` → 15 passed.
+  - Sub-task "min-instances": closed — `--min-instances=1` added to `cloudbuild.yaml` deploy step. Artifact-contract (c) now passes.
+  - Sub-task "image-size reduction": closed — already satisfied at HEAD (Dockerfile has `FROM node:22-alpine AS runner`; final FROM is `runner`, not `deps`). Contracts (a) and (b) pass.
+  - Sub-task "Next.js startup hooks": closed — already satisfied at HEAD (`next.config.ts` has `output: "standalone"`). Contract (d) passes.
+  - Phase 1 sampler tests still green (8/8). Lint clean (0 errors).
+  - Live prod gate remains Red (expected); owned by Phase 3 closeout.
 
 ## Phase 3: Verification (P0)
 
