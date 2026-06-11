@@ -1,0 +1,11 @@
+{
+  "track_id": "db_migration_ledger_20260611",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-06-11T17:20:00Z",
+  "updated_at": "2026-06-11T17:20:00Z",
+  "description": "Critical: non-monotonic migration-journal 'when' stamps make drizzle-orm silently skip migrations on existing DBs (db-side root cause of the June 8 incident). Re-stamp journal, add integrity test, ledger doctor script, codecamp deploy gate, snapshot refresh, plus db package hardening (ESM extensions, DATABASE_URL fail-fast, sessions indexes, barrel hygiene)",
+  "estimated_tasks": 21,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "track_id": "storage_hardening_20260611",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-11T17:10:00Z",
+  "updated_at": "2026-06-11T17:10:00Z",
+  "description": "Storage package hardening (signed-URL GET bug, default public-read ACL, exists() error swallowing, URL encoding, config diagnostics) + adoption in reading-advantage and primary-advantage (replace @google-cloud/storage, 10 call-site files)",
+  "estimated_tasks": 22,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
