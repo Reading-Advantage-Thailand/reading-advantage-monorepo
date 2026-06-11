@@ -88,9 +88,9 @@
       "phaseId": "3-authentication-and-authorization",
       "checklistItem": "Session cookie HttpOnly, Secure, SameSite=Lax",
       "priority": "P0",
-      "local": "pass",
+      "local": "skip",
       "prod": "pass",
-      "note": "COOKIE_OPTIONS in login.ts:17-23"
+      "note": "COOKIE_OPTIONS in login.ts:17-23 (local QA archive: 'Session cookie security | NOT TESTED — requires browser dev tools inspection')"
     },
     {
       "phaseId": "3-authentication-and-authorization",
@@ -136,9 +136,9 @@
       "phaseId": "4-feature-parity",
       "checklistItem": "Progress updates after quiz submission",
       "priority": "P0",
-      "local": "pass",
+      "local": "skip",
       "prod": "pass",
-      "note": "Code: commit 5b4f278"
+      "note": "Code: commit 5b4f278 (local QA archive: 'Progress update (dashboard) | NOT TESTED')"
     },
     {
       "phaseId": "4-feature-parity",
@@ -168,25 +168,25 @@
       "phaseId": "5-real-external-integrations",
       "checklistItem": "Webhook missing signature returns 401",
       "priority": "P0",
-      "local": "pass",
+      "local": "skip",
       "prod": "pass",
-      "note": "Phase 5 Red: PASS on prod"
+      "note": "Phase 5 Red: PASS on prod (local QA archive: 'GitHub webhook signature verification | NOT TESTED — requires curl test')"
     },
     {
       "phaseId": "5-real-external-integrations",
       "checklistItem": "Webhook invalid signature returns 401",
       "priority": "P0",
-      "local": "pass",
+      "local": "skip",
       "prod": "pass",
-      "note": "Phase 5 Red: PASS on prod"
+      "note": "Phase 5 Red: PASS on prod (local QA archive: webhook signature local coverage NOT TESTED)"
     },
     {
       "phaseId": "5-real-external-integrations",
       "checklistItem": "Chat rate limit (30 req/min) configured",
       "priority": "P1",
-      "local": "pass",
+      "local": "skip",
       "prod": "pass",
-      "note": "rate-limit.ts:7 RATE_LIMIT_MAX_REQUESTS=30"
+      "note": "rate-limit.ts:7 RATE_LIMIT_MAX_REQUESTS=30 (local QA archive lists chat rate limiting as out-of-scope / not exercised)"
     },
     {
       "phaseId": "6-performance-and-latency",
@@ -288,17 +288,17 @@
       "phaseId": "9-github-webhook-specifics",
       "checklistItem": "Invalid signature returns 401",
       "priority": "P1",
-      "local": "pass",
+      "local": "skip",
       "prod": "pass",
-      "note": "Code: commit 1c102f9a"
+      "note": "Code: commit 1c102f9a (local QA archive: webhook signature local coverage NOT TESTED)"
     },
     {
       "phaseId": "9-github-webhook-specifics",
       "checklistItem": "Missing signature returns 401",
       "priority": "P1",
-      "local": "pass",
+      "local": "skip",
       "prod": "pass",
-      "note": "Code: commit 1c102f9a"
+      "note": "Code: commit 1c102f9a (local QA archive: webhook signature local coverage NOT TESTED)"
     },
     {
       "phaseId": "9-github-webhook-specifics",
@@ -312,9 +312,9 @@
       "phaseId": "10-edge-cases-and-production-scenarios",
       "checklistItem": "Multiple simultaneous logins — no session conflicts",
       "priority": "P2",
-      "local": "pass",
+      "local": "skip",
       "prod": "pass",
-      "note": "Code: commit 8ba64b28"
+      "note": "Code: commit 8ba64b28 (local QA archive: 'Concurrent users | NOT TESTED')"
     },
     {
       "phaseId": "10-edge-cases-and-production-scenarios",
@@ -336,9 +336,9 @@
       "phaseId": "11-cross-browser-and-device-testing",
       "checklistItem": "Responsive Tailwind coverage on all interactive pages",
       "priority": "P2",
-      "local": "pass",
+      "local": "skip",
       "prod": "pass",
-      "note": "Code: commit 1aabf6e6 (4 pages fixed)"
+      "note": "Code: commit 1aabf6e6 (4 pages fixed) (local QA archive: 'Responsive design | NOT TESTED')"
     },
     {
       "phaseId": "11-cross-browser-and-device-testing",
