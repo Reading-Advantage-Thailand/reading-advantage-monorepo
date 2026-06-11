@@ -96,12 +96,91 @@ vi.mock("@reading-advantage/domain/users", async () => {
   };
 });
 
+vi.mock("@reading-advantage/db", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@reading-advantage/db")>();
+
+  function createQueryBuilder(val: unknown) {
+    return {
+      limit: vi.fn().mockReturnThis(),
+      offset: vi.fn().mockReturnThis(),
+      orderBy: vi.fn().mockReturnThis(),
+      groupBy: vi.fn().mockReturnThis(),
+      innerJoin: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          limit: vi.fn().mockReturnThis(),
+          offset: vi.fn().mockReturnThis(),
+          orderBy: vi.fn().mockReturnThis(),
+        }),
+      }),
+      then(onFulfilled?: (value: unknown) => unknown, onRejected?: (reason: unknown) => unknown) {
+        return Promise.resolve(val).then(onFulfilled, onRejected);
+      },
+      execute() {
+        return Promise.resolve(val);
+      },
+    };
+  }
+
+  const mockDb = {
+    insert: vi.fn().mockReturnValue({
+      values: vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([]),
+        onConflictDoNothing: vi.fn().mockResolvedValue([]),
+      }),
+    }),
+    select: vi.fn().mockImplementation(() => ({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue(createQueryBuilder([])),
+        innerJoin: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue(createQueryBuilder([])),
+        }),
+        leftJoin: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue(createQueryBuilder([])),
+          groupBy: vi.fn().mockReturnValue(createQueryBuilder([])),
+        }),
+        limit: vi.fn().mockReturnValue(createQueryBuilder([])),
+        offset: vi.fn().mockReturnValue(createQueryBuilder([])),
+        then(onFulfilled?: (value: unknown) => unknown, onRejected?: (reason: unknown) => unknown) {
+          return Promise.resolve([]).then(onFulfilled, onRejected);
+        },
+      }),
+    })),
+    update: vi.fn().mockReturnValue({
+      set: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          returning: vi.fn().mockResolvedValue([]),
+        }),
+      }),
+    }),
+    delete: vi.fn().mockReturnValue({
+      where: vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([]),
+      }),
+    }),
+    transaction: vi.fn().mockImplementation((fn: (tx: unknown) => Promise<unknown>) => fn(mockDb)),
+  };
+
+  return {
+    ...actual,
+    db: mockDb,
+  };
+});
+
 // Stub the legacy OpenAI SDK so the module load (which currently calls
 // `createOpenAI({...})` at line 65) doesn't fail in the test env. After
 // Phase 3 the implementation should not import `@ai-sdk/openai` at all
 // and this stub becomes dead code.
 vi.mock("@ai-sdk/openai", () => ({
   createOpenAI: vi.fn(() => () => ({ specifier: "stubbed-model" })),
+}));
+
+vi.mock("../github-client", () => ({
+  fetchPrDiff: vi.fn().mockResolvedValue("@@ -1,3 +1,4 @@\n+console.log('hello');\n"),
+  postPrComment: vi.fn().mockResolvedValue(undefined),
+  parsePrUrl: vi.fn().mockReturnValue({ owner: "org", repo: "repo", number: 1 }),
+  verifyWebhookSignature: vi.fn().mockReturnValue(true),
+  getInstallationTokenForRepo: vi.fn().mockResolvedValue("ghs_mock-token"),
+  MAX_TIMESTAMP_SKEW_SECONDS: 300,
 }));
 
 import {

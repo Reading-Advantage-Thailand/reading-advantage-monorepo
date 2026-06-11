@@ -38,4 +38,4 @@ export {
 export type { PracticeIssue } from "@reading-advantage/integrations-github";
 export { getPracticeIssues } from "./github-issues.js";
 
-export { reviewExercise, reviewResultSchema } from "./review-exercise.js";
+export { reviewExercise, reviewResultSchema, aiClientToGenerateReview } from "./review-exercise.js";

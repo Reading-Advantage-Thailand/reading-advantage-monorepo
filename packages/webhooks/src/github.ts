@@ -3,11 +3,9 @@ import { db } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
 import * as codecamp from "@reading-advantage/domain/codecamp";
 import { getUserByGithubUsername } from "@reading-advantage/domain/users";
-import { reviewExercise, reviewResultSchema } from "@reading-advantage/domain/codecamp";
+import { reviewExercise, reviewResultSchema, aiClientToGenerateReview } from "@reading-advantage/domain/codecamp";
+import { getAIClient } from "@reading-advantage/ai";
 import { githubWebhookPayloadSchema } from "@reading-advantage/types";
-import { generateObject } from "ai";
-import { createOpenAI } from "@ai-sdk/openai";
-import { z } from "zod";
 import {
   fetchPrDiff,
   postPrComment,
@@ -62,40 +60,13 @@ async function logWebhookEvent(input: {
 
 // ─── LLM Review Generator ─────────────────────────────────
 
-const openrouter = createOpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-});
-
 /**
- * Generates a code review via LLM using the OpenRouter API.
- * Falls back to a mock review when OPENROUTER_API_KEY is not configured.
- * @param system - The system prompt defining review guidelines.
- * @param prompt - The user prompt containing the PR diff and instructions.
- * @returns A review result matching the reviewResultSchema.
+ * Creates a review generator using the shared AIClient abstraction.
+ * Called lazily at request time so the AIClient singleton is resolved
+ * after test mocks are in place.
  */
-async function generateReview(system: string, prompt: string): Promise<z.infer<typeof reviewResultSchema>> {
-  const model = openrouter("x-ai/grok-build-0.1");
-
-  // Fallback when no API key is configured
-  if (!process.env.OPENROUTER_API_KEY) {
-    console.warn("[LLM Review] OPENROUTER_API_KEY not configured; returning mock review");
-    return {
-      passed: false,
-      summary: "[Mock review — LLM not configured] No automated review available. Please ensure OPENROUTER_API_KEY is set for production reviews.",
-      comments: [],
-    };
-  }
-
-  const { object } = await generateObject({
-    model,
-    system,
-    prompt,
-    schema: reviewResultSchema,
-    maxTokens: 2048,
-  });
-
-  return object;
+function createGenerateReview() {
+  return aiClientToGenerateReview(getAIClient(), reviewResultSchema);
 }
 
 // ─── Webhook Handler ──────────────────────────────────────
@@ -313,7 +284,7 @@ github.post("/pr", async (c) => {
             tenant: globalTenant,
             prDiff: diff,
             repoUrl: pr.base.repo.html_url,
-            generateReview,
+            generateReview: createGenerateReview(),
           });
 
           await codecamp.updatePrReview({
