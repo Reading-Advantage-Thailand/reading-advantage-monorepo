@@ -2406,6 +2406,10 @@ signoff/cross-reference cascades. The 23 passes are the 20 helper unit
 tests, the parity-matrix existence check, the 3 P1 follow-up track
 filing floor, and the suite `beforeAll` invariant checks.
 
+**Red-phase commit:** `8543d793` (verified ancestor of HEAD via
+`git merge-base --is-ancestor 8543d793 HEAD` per lessons-learned.md
+SHA-drift protocol).
+
 ---
 
 **Priority Legend:**
