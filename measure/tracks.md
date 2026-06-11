@@ -198,8 +198,9 @@ Two parallel programs are in flight; priority order when picking the next track:
   *Link: [./archive/codecamp_qa_local_20260517/](./archive/codecamp_qa_local_20260517/)*
   Comprehensive manual QA testing on local dev server. Covers auth, i18n, dashboard, lessons, quizzes, AI chat, PR workflow, admin panel, edge cases, and performance. *Status: COMPLETE — 41 tests passed, 0 failed, 0 partial. All 5 issues fixed: Chat AI (API key rotated), Quiz progress save (Date→ISO string), PR form (verified working), Locked module UX (tooltip added), Dashboard ARIA (role=progressbar added). Full report at measure/archive/codecamp_qa_local_20260517/qa-report.md*
 
-- [ ] **Track: codecamp-advantage — Production QA/QC Testing**
-  *Link: [./tracks/codecamp_qa_prod_20260517/](./tracks/codecamp_qa_prod_20260517/)*
+- [x] **Track: codecamp-advantage — Production QA/QC Testing**
+  *Link: [./archive/codecamp_qa_prod_20260517/](./archive/codecamp_qa_prod_20260517/)*
+  *Status: COMPLETE — 13 phases delivered (Phases 1–13 incl. Phase 8.5 deployment gate). 43 plan tasks complete with commit SHAs. Accumulated security/observability/cache fixes deployed via Cloud Build `e3ed0c01`. Final acceptance audit passed (status=pass, findings=[]). Production readiness report at `report.md` records launch decision = **no-go** pending two credential/fixture-gated P0 integration probes (live OpenRouter AI tutor with credentialed account; GitHub PR review keystone E2E). 3 P1 follow-up tracks filed: `codecamp_perf_warm_dashboard_20260608`, `codecamp_asset_render_blocking_20260608`, `codecamp_infra_cold_start_20260608`. Alert policy artifact captured in `measure/alerts.md`.*
 
 - [ ] **Track: codecamp-advantage — Asset Render-Blocking Fix**
   *Link: [./tracks/codecamp_asset_render_blocking_20260608/](./tracks/codecamp_asset_render_blocking_20260608/)*

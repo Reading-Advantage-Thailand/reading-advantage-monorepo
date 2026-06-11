@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_qa_prod_20260517",
+  "type": "chore",
+  "status": "complete",
+  "created_at": "2026-05-17T06:45:00Z",
+  "updated_at": "2026-06-11T11:45:00Z",
+  "description": "Comprehensive manual QA/QC testing of codecamp-advantage on the deployed production server (https://codecamp.reading-advantage.com). Covers production-specific infrastructure, HTTPS, Cloud Run, Cloud SQL, Secret Manager, real GitHub/OpenRouter integrations, DNS, caching, performance, and security.",
+  "estimated_tasks": 55,
+  "actual_tasks": 43,
+  "deviation_notes": "13 phases delivered (Phases 1-13 including Phase 8.5 deployment gate). 43 plan tasks marked [x] with commit SHAs. 2 tasks intentionally deferred: 'Container & build verification' (Phase 1, requires gcloud CLI) and 'Alerts (if configured)' (Phase 8, alert policies live out-of-band in GCP and are documented in measure/alerts.md). Final acceptance audit passed (measure/runs/20260610T223331Z/codecamp_qa_prod_20260517/acceptance/acceptance-result.json: status=pass, findings=[]). Production readiness report at report.md captures launch decision = no-go pending two credential-gated P0 integration probes (live OpenRouter AI tutor, GitHub PR review keystone E2E); these blockers are tracked in report.md Blockers section and do not block track delivery. Three P1 performance follow-ups filed as separate tracks (codecamp_perf_warm_dashboard_20260608, codecamp_asset_render_blocking_20260608, codecamp_infra_cold_start_20260608)."
+}
