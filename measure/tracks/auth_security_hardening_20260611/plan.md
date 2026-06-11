@@ -2,11 +2,11 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [ ] Task 1: Register `0018_audit_events` in the Drizzle migration journal
+- [~] Task 1: Register `0018_audit_events` in the Drizzle migration journal
     - [ ] Add missing entry (idx 18, tag `"0018_audit_events"`) to `packages/db/drizzle/meta/_journal.json` — omitted from `audit_log_infrastructure_20260603` due to non-TTY write (per lessons-learned)
     - [ ] Verify `drizzle-kit status` no longer treats 0018 as unknown
 
-- [ ] Task 2: Write migration `0019_session_token_hash.sql`
+- [~] Task 2: Write migration `0019_session_token_hash.sql`
     - [ ] Create `packages/db/drizzle/0019_session_token_hash.sql`:
       ```sql
       ALTER TABLE sessions ADD COLUMN token_hash TEXT;
@@ -16,11 +16,11 @@
       ```
     - [ ] Register entry in `packages/db/drizzle/meta/_journal.json` (idx 19, tag `"0019_session_token_hash"`)
 
-- [ ] Task 3: Add `tokenHash` field to sessions schema in `packages/db/src/schema/users.ts`
+- [~] Task 3: Add `tokenHash` field to sessions schema in `packages/db/src/schema/users.ts`
     - [ ] Add `tokenHash: text("token_hash").notNull().unique()` to `sessions` table definition
     - [ ] Keep `token` column (drop deferred — out of scope)
 
-- [ ] Task 4: Define `sha256Hex` helper in `packages/auth/src/session.ts`
+- [~] Task 4: Define `sha256Hex` helper in `packages/auth/src/session.ts`
     - [ ] Add `import { createHash } from "node:crypto";` at top
     - [ ] Add unexported module-level function:
       ```ts
@@ -29,27 +29,27 @@
       }
       ```
 
-- [ ] Task 5: Stub `revokeAllUserSessions` + extend `createSession` signature in `packages/auth/src/session.ts`
+- [~] Task 5: Stub `revokeAllUserSessions` + extend `createSession` signature in `packages/auth/src/session.ts`
     - [ ] Add stub `export async function revokeAllUserSessions(db: Db, userId: string): Promise<{ revoked: number }>` (throws `new Error("not implemented")`)
     - [ ] Extend `createSession` to accept optional third arg `opts?: { ipAddress?: string; userAgent?: string }`
     - [ ] Export `revokeAllUserSessions` from `packages/auth/src/index.ts`
 
-- [ ] Task 6: Create `packages/api/src/routes/auth/reset-password.ts` scaffold
+- [~] Task 6: Create `packages/api/src/routes/auth/reset-password.ts` scaffold
     - [ ] Define `resetPasswordSchema = z.object({ userId: z.string().min(1), newPassword: z.string().min(8).max(128) })`
     - [ ] Stub `handleResetPassword` returning `501 Not Implemented`
 
-- [ ] Task 7: Wire `handleResetPassword` into shared API barrel
+- [~] Task 7: Wire `handleResetPassword` into shared API barrel
     - [ ] Export `handleResetPassword` from `packages/api/src/routes/auth/index.ts`
 
-- [ ] Task 8: Add `DUMMY_HASH` constant to `packages/api/src/routes/auth/login.ts`
+- [~] Task 8: Add `DUMMY_HASH` constant to `packages/api/src/routes/auth/login.ts`
     - [ ] Generate once: a pre-computed Argon2id hash of a static known string; hard-code as module-level const
     - [ ] Note: used by FR-4 to ensure unknown-username paths pay the same Argon2id cost as wrong-password paths
 
-- [ ] Task 33: Extract `enrichAuthUser` helper (FR-12 contract)
+- [~] Task 33: Extract `enrichAuthUser` helper (FR-12 contract)
     - [ ] Create `packages/api/src/routes/auth/enrich.ts` exporting `enrichAuthUser(db, user): Promise<AuthUser-shaped object>` — the enrichment query currently inlined in `session.ts:28-39` (xp, level, cefrLevel, email, image, schoolId with the same null-defaults)
     - [ ] Refactor `handleSession` to use it (behaviour unchanged)
 
-- [ ] Task 34: auth-client contract changes (FR-15, FR-16 contract)
+- [~] Task 34: auth-client contract changes (FR-15, FR-16 contract)
     - [ ] `packages/auth-client/src/context.ts`: remove `register` from `AuthActions`
     - [ ] `packages/auth-client/package.json`: remove `zod`; move `react` out of `dependencies` (keep in `peerDependencies`, add to `devDependencies`)
 
