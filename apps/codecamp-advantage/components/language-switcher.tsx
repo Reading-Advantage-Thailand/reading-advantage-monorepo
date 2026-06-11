@@ -18,7 +18,7 @@ export function LanguageSwitcher() {
       <Button
         variant={locale === "en" ? "default" : "ghost"}
         size="sm"
-        className="h-8 px-2 text-xs"
+        className="h-8 min-w-8 px-2 text-xs"
         onClick={() => switchLocale("en")}
         aria-label="Switch to English"
         aria-current={locale === "en" ? true : undefined}
@@ -28,7 +28,7 @@ export function LanguageSwitcher() {
       <Button
         variant={locale === "th" ? "default" : "ghost"}
         size="sm"
-        className="h-8 px-2 text-xs"
+        className="h-8 min-w-8 px-2 text-xs"
         onClick={() => switchLocale("th")}
         aria-label="เปลี่ยนเป็นภาษาไทย"
         aria-current={locale === "th" ? true : undefined}

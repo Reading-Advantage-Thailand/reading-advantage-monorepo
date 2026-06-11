@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 
 /**
@@ -408,7 +408,6 @@ describe("Phase 11 — Source-contract detectors", () => {
     for (const dir of candidates) {
       const abs = resolve(APP_ROOT, dir);
       try {
-        const { readdirSync, statSync } = require("node:fs") as typeof import("node:fs");
         const walk = (d: string) => {
           for (const entry of readdirSync(d)) {
             const p = resolve(d, entry);
@@ -431,6 +430,14 @@ describe("Phase 11 — Source-contract detectors", () => {
       anti,
       `source files with user-scalable=no or maximum-scale=1: ${anti.join(", ")}`,
     ).toEqual([]);
+  });
+
+  it("header navigation declares minimum touch-target sizing", () => {
+    const header = readTextOrEmpty(resolve(APP_ROOT, "components/header.tsx"));
+    const languageSwitcher = readTextOrEmpty(resolve(APP_ROOT, "components/language-switcher.tsx"));
+
+    expect(header).toContain("min-h-8");
+    expect(languageSwitcher).toContain("min-w-8");
   });
 });
 

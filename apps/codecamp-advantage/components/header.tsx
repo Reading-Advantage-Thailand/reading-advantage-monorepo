@@ -48,20 +48,20 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
       <div className="container mx-auto flex h-14 items-center justify-between gap-2 px-4">
         <div className="flex min-w-0 items-center gap-4">
-          <Link href="/" className="flex shrink-0 items-center gap-2 font-semibold">
+          <Link href="/" className="flex min-h-8 shrink-0 items-center gap-2 font-semibold">
             <BookOpen className="h-5 w-5" />
             <span>CodeCamp</span>
           </Link>
           <nav className="flex items-center gap-2 text-sm">
             <Link
               href="/"
-              className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
+              className="flex min-h-8 shrink-0 items-center text-muted-foreground transition-colors hover:text-foreground"
             >
               {t("dashboard")}
             </Link>
             <Link
               href="/chat"
-              className="flex shrink-0 items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+              className="flex min-h-8 shrink-0 items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
             >
               <MessageCircle className="h-4 w-4" />
               {t("chat")}
@@ -69,7 +69,7 @@ export function Header() {
             {user?.role === "ADMIN" && (
               <Link
                 href="/admin"
-                className="flex shrink-0 items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+                className="flex min-h-8 shrink-0 items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Shield className="h-4 w-4" />
                 {t("admin")}
