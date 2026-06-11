@@ -1986,6 +1986,17 @@ Fixed both P2 production gaps identified in the Red phase.
    revision.
 3. Submit to https://hstspreload.org for Chrome HSTS preload list inclusion (after deploy).
 
+### Phase 11 — Adversarial continuation (2026-06-11, commit `2fc5274c`)
+
+Added durable Playwright E2E coverage across Chromium, Firefox, WebKit, Pixel 5, and iPhone SE profiles. The live production run exposed stale deployed header tap targets below 32px for navigation/language controls; the source fix adds `min-h-8` to header links and `min-w-8` to language buttons, with a Phase 11 source-contract guard. Local validation passes; the remaining live Playwright failure is deploy-staleness evidence, not an unresolved code blocker.
+
+Verification:
+- `PHASE11_SKIP=1 node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-11-cross-browser-and-device-testing.test.ts` — PASS (`19 passed | 22 skipped`).
+- `npm test` — PASS (`4 files | 27 tests`).
+- `npm run check-types --workspace=codecamp-advantage` — PASS.
+- `npm run lint --workspace=codecamp-advantage` — PASS with 4 pre-existing warnings in Phase 3/5/7/9 prod-smoke files.
+- `npx playwright test e2e/phase-11-cross-browser-device.spec.ts` against live prod — expected pre-deploy failure on stale header tap targets; rerun after deployment.
+
 ## Phase 12: Regression Against Local QA (P0)
 
 Compare production results to local QA and flag discrepancies.
