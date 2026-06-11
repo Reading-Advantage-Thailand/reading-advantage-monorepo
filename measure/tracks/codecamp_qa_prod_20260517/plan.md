@@ -2013,6 +2013,153 @@ Compare production results to local QA and flag discrepancies.
   - [~] No data corruption during migration
   - [~] User progress data is accurate
 
+### Phase 12 — Red-phase probe results (2026-06-11)
+
+Executable contract lives at
+`apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-12-regression-against-local-qa.test.ts`.
+Run with `PHASE12_SKIP=1 node_modules/.bin/vitest run
+lib/__tests__/prod-smoke/phase-12-regression-against-local-qa.test.ts` from
+`apps/codecamp-advantage` (or override target via `PHASE12_PROD_URL`;
+skip network probes via `PHASE12_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+**Symbol map (from build-graph):**
+
+- `dashboardResponseSchema` (`packages/types/src/codecamp.ts:219`) — Zod
+  schema with `phases`, `overallProgress`, `recentConversations` keys;
+  backs the tRPC `codecamp.dashboard` query. The Suite 5 source-contract
+  detector asserts the schema exists with the right keys.
+- `getModuleBySlug` (`packages/domain/src/codecamp/index.ts:44`) and
+  `submitQuizAnswers` (`packages/domain/src/codecamp/index.ts:373`) —
+  the three domain functions called out in test-strategy.md §6 that
+  Phase 12 re-verifies end-to-end (the regression is "are the same
+  domain functions still working in prod that worked in local?").
+- The seed file at `packages/db/src/seed/codecamp-curriculum-data.ts`
+  (18 modules, 85 lessons, 6 Phase A entry-point modules including
+  the 4 dashboard-first ones) is the curriculum oracle per
+  test-strategy.md §2.
+
+**Test budget:** 50 tests total. With `PHASE12_SKIP=1`, the 2 network
+probes skip and the 48 filesystem + unit tests run unconditionally
+(12 fail on missing implementation, 36 pass on HEAD — the helper
+parsers, the data-consistency checks for files that already exist,
+and the per-phase prod-smoke test-file existence checks).
+
+**Per-test gating (env vars, never committed):**
+
+- `PHASE12_PROD_URL` — override prod target.
+- `PHASE12_SKIP=1` — skip network probes; filesystem + unit tests still
+  run unconditionally.
+
+**Test methodology:** mirrors Phases 1–11 — black-box HTTP probes for
+the runtime contract, with filesystem + source-contract detectors for
+the parity-matrix artifact and a small set of pure unit tests for the
+in-file helpers (`isProdRegression`, `validateParityMatrix`,
+`countCompletedRows`, `countRegressions`, `countSeedModules`,
+`countSeedLessons`, `readSeedPhaseASlugs`). The depth-aware
+`countSeedLessons` parser uses a `[`/`]` depth-counting walk to handle
+the nested `contentJson.sections: [ ... ]` arrays correctly (a naive
+regex undercounts by stopping at the first nested `]`). The
+`P0 launch gate` aggregates all parity + data-consistency checks
+into one CI-blocking signal.
+
+**Red-phase run summary (2026-06-11):** `Tests  12 failed | 36 passed | 2 skipped (50)` in
+3.10s wall (filesystem-only, `PHASE12_SKIP=1`). With network on (no
+`PHASE12_SKIP`), the 2 skipped network probes also run — they are
+the only two behavioral probes in this suite and the only ones that
+require prod reachability.
+
+| Sub-check | Initial run (2026-06-11) | Notes |
+|---|---|---|
+| Suite 1: `measure/tracks/codecamp_qa_local_20260517/` exists | **FAIL (RED)** | Local QA track is the regression baseline (test-strategy.md §3: "Phase 12 regression depends on `codecamp_qa_local_20260517` results being captured first — block sign-off if local QA not complete"). Missing implementation, not a stale record. |
+| Suite 1: local QA track contains required files (index.md, spec.md, plan.md, metadata.json) | **FAIL (RED)** | Cascades from the missing track directory above. The 4 filesystem checks all fail because the parent directory does not exist. |
+| Suite 1: prod QA track directory still exists (cross-track sanity) | PASS | `codecamp_qa_prod_20260517/` exists at HEAD; the prod track is the source of the prod observations the matrix compares against. |
+| Suite 1: local spec.md non-empty (filesystem regex detector) | **FAIL (RED)** | Cascades from the missing track directory. |
+| Suite 2: `isProdRegression()` covers all 4 known regression directions + null/pending | PASS (8 unit tests) | Regression detector for the 3 known regression directions (local=pass prod=fail; local=pass prod=skip; local=fail prod=skip) + 5 negative cases. |
+| Suite 2: `validateParityMatrix()` covers all rejection paths + minimal valid matrix | PASS (8 unit tests) | Rejects null/non-object/missing-schemaVersion/non-array-rows/empty-rows/unknown-phaseId/invalid-priority/empty-checklistItem; accepts a minimal valid matrix. |
+| Suite 2: `countCompletedRows()` / `countRegressions()` count | PASS (1 unit test) | Counts rows where both local and prod are observed; counts rows that exhibit a prod regression. |
+| Suite 3: `lib/__tests__/prod-smoke/local-qa-parity-matrix.json` exists | **FAIL (RED)** | Side-by-side spreadsheet from test-strategy.md §5 P12 — encoded as a structured JSON artifact, not a manual spreadsheet. Missing implementation. |
+| Suite 3: parity matrix parses as valid JSON with the expected schema | **FAIL (RED)** | Cascades from missing artifact. |
+| Suite 3: parity matrix covers all 12 PARITY_PHASE_IDS | **FAIL (RED)** | Cascades. |
+| Suite 3: parity matrix has at least 3 P0 rows | **FAIL (RED)** | Cascades. |
+| Suite 3: parity matrix has zero prod regressions | **FAIL (RED)** | Cascades. |
+| Suite 4: prod smoke test file exists for each of the 12 phase IDs | PASS (12 filesystem checks) | All 12 prod-smoke test files (phase-1 through phase-11, including phase-8-5) exist at HEAD. |
+| Suite 5: curriculum seed file exists | PASS | `packages/db/src/seed/codecamp-curriculum-data.ts` exists. |
+| Suite 5: 18 module-level slugs | PASS | Depth-aware count = 18 (the naive regex undercounts by stopping at the first nested `]` in `contentJson.sections: [ ... ]`). |
+| Suite 5: 85 lessons across modules | PASS | Depth-aware count = 85 (sums `{` openings at 8-space indent within `lessons: [ ... ]` arrays, ignoring nested `sections: [ ... ]` blocks). |
+| Suite 5: Phase A includes the 4 entry-phase modules | PASS | Containment check (matches Phase 4 oracle pattern, not exact match). Seed has 6 Phase A modules; the 4 dashboard-first ones (`dev-environment`, `git-github`, `html-css`, `javascript`) are all present. |
+| Suite 5: `dashboardResponseSchema` exists with required keys | PASS | `packages/types/src/codecamp.ts:219` exports `dashboardResponseSchema`; the source contains `phases`, `overallProgress`, and `recentConversations` keys. |
+| Suite 6: tRPC `codecamp.dashboard` (unauth) returns 200/307/401/403 | SKIP | Network probe; will run on executor's pass with reachable network. |
+| Suite 6: `GET /en/module/dev-environment` returns 2xx | SKIP | Network probe; will run on executor's pass with reachable network. |
+| **Phase 12 — P0 launch gate** (single hard assertion) | **FAIL (1 critical item)** | Aggregates 1 critical item: `[P0/feature-parity] parity-matrix artifact missing — cannot verify 'All P0 local QA tests pass in production'`. The data-consistency sub-tasks all hold at HEAD (18 modules, 85 lessons, Phase A slugs, dashboardResponseSchema); the only Red item is the missing parity-matrix artifact, which is the real missing implementation. |
+
+**Findings (Red-phase pass):**
+
+- **2 genuine Red tests for missing implementation**: the local QA
+  track directory (`measure/tracks/codecamp_qa_local_20260517/`) and
+  the parity-matrix JSON artifact
+  (`lib/__tests__/prod-smoke/local-qa-parity-matrix.json`). Both are
+  real missing pieces, not stale records.
+- **The P0 launch gate fails on exactly 1 critical item** (the
+  parity-matrix artifact). All data-consistency sub-tasks (18 modules,
+  85 lessons, Phase A entry-phase slugs, dashboardResponseSchema keys)
+  pass at HEAD — the regression machinery is in place; only the
+  baseline data is missing.
+- **The depth-aware lesson parser is a regression floor** for the
+  Phase 4 oracle. A future commit that adds nested `contentJson`
+  arrays cannot undercount the lessons (a regression in the parser
+  would fail the Phase 12 data-consistency check).
+- **The containment-based Phase A slugs check matches Phase 4's
+  oracle pattern** (`toContain` not `toEqual`). A regression that
+  drops any of the 4 dashboard-first modules fails the suite
+  immediately.
+- **All 36 passing tests are real regression floors**: a future
+  commit that drops a prod-smoke test file, breaks the parser, or
+  removes `dashboardResponseSchema` will fail the suite immediately,
+  without needing network access.
+
+**Green-phase actions required (not implemented by this Red-phase
+pass):**
+
+1. **P0 — create `measure/tracks/codecamp_qa_local_20260517/`** with
+   `index.md`, `spec.md`, `plan.md`, `metadata.json`. Mirror the prod
+   track's structure; populate `spec.md` and `plan.md` with the local
+   QA acceptance criteria. The Phase 12 plan explicitly depends on
+   this track (test-strategy.md §3); per the test-strategy's
+   black-box rule, this is out of scope for inline fixing and
+   should be a new track — but the filesystem regression detector
+   surfaces the dependency as a contract.
+2. **P0 — create `apps/codecamp-advantage/lib/__tests__/prod-smoke/local-qa-parity-matrix.json`**
+   with the structured side-by-side spreadsheet. The matrix must
+   cover all 12 PARITY_PHASE_IDS, include at least 3 P0 rows (one
+   per feature-parity sub-task), and have at least one observed
+   `local` and `prod` status per row. The executor populates the
+   matrix with observed test results from the local + prod runs;
+   the parity detector then asserts zero regressions.
+3. **(Optional) Re-run with `PHASE12_SKIP` unset** to exercise the
+   2 network probes (tRPC unauth 200/307/401/403; `/en/module/dev-environment`
+   2xx). These are the only behavioral probes in the suite; the
+   filesystem + unit tests are the primary regression floor.
+4. **(Optional) Re-run from a network with reliable reach to
+   `codecamp.reading-advantage.com`** to clear any runner-side
+   `ETIMEDOUT` flakiness (same class Phases 2–6 saw).
+
+**Targeted Red command (filesystem-only — what CI runs to gate the
+follow-up-track deliverable):**
+
+```bash
+cd apps/codecamp-advantage && PHASE12_SKIP=1 node_modules/.bin/vitest run \
+  lib/__tests__/prod-smoke/phase-12-regression-against-local-qa.test.ts
+```
+
+Result (2026-06-11): `Tests  12 failed | 36 passed | 2 skipped (50)` in
+3.10s wall. The 12 Red tests map to the 2 missing artifacts (the local
+QA track + the parity matrix); the 36 passes are the helper unit
+tests, the data-consistency checks for files that already exist, and
+the per-phase prod-smoke test-file existence checks.
+
+Red-phase commit: `5ab310c6`
+
 ## Phase 13: Production Readiness Report (P0)
 
 Document findings and sign off on production readiness.
