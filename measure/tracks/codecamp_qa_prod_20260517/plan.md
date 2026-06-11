@@ -1611,22 +1611,175 @@ committed code/test fix `b33164d7`.
 
 Test scenarios unique to or more likely in production.
 
-- [ ] Task: Concurrent users
-  - [ ] Multiple users login simultaneously → no session conflicts
-  - [ ] Multiple users submit quizzes simultaneously → no race conditions
-  - [ ] Multiple users chat simultaneously → rate limits isolated per user
-- [ ] Task: Long-running sessions
-  - [ ] Session remains valid for expected duration
-  - [ ] Session refresh works correctly
-  - [ ] No "session expired" errors during normal use
-- [ ] Task: Data volume
-  - [ ] Large chat history loads without timeout
-  - [ ] Many PR reviews render without performance degradation
-  - [ ] Admin intern table with many rows renders correctly
-- [ ] Task: Deployment during use
-  - [ ] Zero-downtime deployment (no 503 during rollout)
-  - [ ] In-flight requests complete during deployment
-  - [ ] New revision takes traffic correctly
+- [~] Task: Concurrent users (Red-phase contract: `phase-10-edge-cases-and-production-scenarios.test.ts`)
+  - [~] Multiple users login simultaneously → no session conflicts
+  - [~] Multiple users submit quizzes simultaneously → no race conditions
+  - [~] Multiple users chat simultaneously → rate limits isolated per user
+- [~] Task: Long-running sessions (Red-phase contract: same test file)
+  - [~] Session remains valid for expected duration
+  - [~] Session refresh works correctly
+  - [~] No "session expired" errors during normal use
+- [~] Task: Data volume (Red-phase contract: same test file)
+  - [~] Large chat history loads without timeout
+  - [~] Many PR reviews render without performance degradation
+  - [~] Admin intern table with many rows renders correctly
+- [~] Task: Deployment during use (Red-phase contract: same test file)
+  - [~] Zero-downtime deployment (no 503 during rollout)
+  - [~] In-flight requests complete during deployment
+  - [~] New revision takes traffic correctly
+
+### Phase 10 — Red-phase probe results (2026-06-11)
+
+Executable contract lives at
+`apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-10-edge-cases-and-production-scenarios.test.ts`.
+Run with
+`PHASE10_SKIP=1 node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-10-edge-cases-and-production-scenarios.test.ts`
+from `apps/codecamp-advantage` (or override target via `PHASE10_PROD_URL`; skip via `PHASE10_SKIP=1`).
+Production URL default: `https://codecamp.reading-advantage.com`.
+
+**Symbol map (from build-graph):**
+
+- `checkChatRateLimit` (`apps/codecamp-advantage/lib/rate-limit.ts:12`) —
+  in-memory `Map<userId, RateLimitEntry>`, 30 req/min. Per-user keying
+  (not IP-based) is the contract the Phase 10 concurrent-user chat
+  probe asserts. Existing in-memory isolation is exercised by
+  `lib/__tests__/rate-limit.test.ts:46-52`.
+- `createSession` / `validateSession` (`packages/auth/src/session.ts:24-139`) —
+  the 7-day DB session lifetime + cookie maxAge parity check is the
+  Phase 10 long-running-sessions source-contract detector. A drift
+  between the two constants would surface as a "session expired"
+  error mid-use.
+- `getChatHistory` (`packages/domain/src/codecamp/index.ts:579-618`) —
+  backs `codecamp.chatHistory` tRPC query (router at
+  `packages/api/src/routers/codecamp.ts:204-218`). The "large chat
+  history" probe asserts this function returns a structured
+  `chatConversationSchema`-shaped body (with `messages: [...]`) on
+  200 within a 10s budget; a regression that drops the
+  `.orderBy(createdAt)` would surface as a hard timeout.
+- `getPrReviewsForUser` (`packages/domain/src/codecamp/index.ts:15-23`) —
+  backs `codecamp.prReviews` tRPC query (router at
+  `packages/api/src/routers/codecamp.ts:345-357`). The probe asserts
+  the authed call returns `Array<prReviewSchema>` within 5s.
+- `listInterns` (`packages/domain/src/codecamp/index.ts:1676-1803`) —
+  backs `codecamp.listInterns` tRPC query (router at
+  `packages/api/src/routers/codecamp.ts:541-553`). The probe asserts
+  the admin call returns `Array<internProgressSchema>` within 10s.
+- `cloudbuild.yaml:18-32` — the Cloud Run deploy step currently has
+  `--min-instances=1` but lacks `--max-instances` and `--concurrency`
+  flags. The Phase 10 source-contract detectors fail at HEAD on
+  these two missing flags (the launch-gate P2 finding).
+
+**Per-test gating (env vars, never committed):**
+
+- `PHASE10_PROD_URL` — override prod target.
+- `PHASE10_SKIP=1` — skip the network probes; source-contract
+  detectors and helper unit tests still run unconditionally.
+- `PHASE10_TEST_INTERN_USERNAME` / `PHASE10_TEST_INTERN_PASSWORD` —
+  INTERN creds for the concurrent-login + chat-history + pr-reviews
+  + session-refresh probes.
+- `PHASE10_TEST_ADMIN_USERNAME` / `PHASE10_TEST_ADMIN_PASSWORD` —
+  ADMIN creds for the `codecamp.listInterns` probe.
+- `PHASE10_TEST_LARGE_CONVERSATION_ID` — reserved for future keystone
+  large-conversation probes; not used in the Phase 10 launch-gate
+  slice.
+
+**Test methodology:** mirrors Phases 1-9 — black-box HTTP probes for
+the runtime contract, with source-contract detectors for the
+code-level missing behavior (`--max-instances` and `--concurrency`
+not in `cloudbuild.yaml`), and helper unit tests for the in-file
+constants (`EXPECTED_MAX_INSTANCES`, `EXPECTED_CONCURRENCY`,
+`ROLLOUT_LOAD_REQUESTS`, `CONCURRENT_LOGIN_PARALLEL`) and source-file
+path sanity. The `expect.soft` pattern enumerates per-check gaps in
+a single run, and a single P2 launch-gate test fails hard if any
+critical source/artifact item is missing.
+
+**Red-phase run summary (2026-06-11, `PHASE10_SKIP=1`):**
+`Tests  3 failed | 8 passed | 10 skipped (21)` in 3.90s wall.
+
+| Sub-check | Initial run (2026-06-11) | Notes |
+|---|---|---|
+| `EXPECTED_MAX_INSTANCES` is a positive integer | PASS | Sanity oracle for the launch-gate constant |
+| `EXPECTED_CONCURRENCY` is a positive integer | PASS | Sanity oracle for the launch-gate constant |
+| `ROLLOUT_LOAD_REQUESTS` between 1 and 1000 | PASS | Sanity oracle for the rollout probe budget |
+| `CONCURRENT_LOGIN_PARALLEL` between 2 and 50 | PASS | Sanity oracle for the concurrent-login probe |
+| 5 source-file paths all resolve to existing files on disk | PASS | Regression detector for path drift (login route, auth/session.ts, chat route, codecamp types, cloudbuild.yaml) |
+| `cloudbuild.yaml` deploy step sets `--min-instances=1` | PASS | Preserves zero-downtime rollout (regression detector for the cold-start fix) |
+| Login route pins `COOKIE_OPTIONS.maxAge` to 7 days | PASS | Source-contract detector for "Session remains valid for expected duration" — `7 * 24 * 60 * 60` constant present in `packages/api/src/routes/auth/login.ts:21` |
+| `createSession()` pins `expiresAt` to now + 7d | PASS | Source-contract detector for DB-side session lifetime parity with the cookie maxAge — `7 * 24 * 60 * 60 * 1000` ms constant present in `packages/auth/src/session.ts:29` |
+| `cloudbuild.yaml` deploy step sets `--max-instances=<n>` | **FAIL (RED)** | Confirmed: `--max-instances` flag is absent from the `deploy-cloudrun` step. Cloud Run defaults to 100 max-instances; a regression that lowers the default (or a traffic spike during rollout) could exhaust the cap and surface as 503s for in-flight requests mid-rollout. |
+| `cloudbuild.yaml` deploy step sets `--concurrency=<n>` | **FAIL (RED)** | Confirmed: `--concurrency` flag is absent from the `deploy-cloudrun` step. Cloud Run defaults to 80 concurrent requests per instance; a regression that increases the default (or a workload that holds requests open longer than expected) could push an instance past the cap and surface as 503s. |
+| **Phase 10 — P2 launch gate (single hard assertion)** | **FAIL (2 critical items)** | Aggregated gate fails on `cloudbuild.yaml deploy-cloudrun step is missing --max-instances=<n>` and `--concurrency=<n>` — confirms the per-check findings above and yields a single CI-blocking signal |
+| 5 concurrent `POST /api/auth/login` with bad creds (unauth) | SKIP | Network probe; will run on the executor's pass with reachable network |
+| Authed chat rate-limit isolation probe | SKIP | Credential-gated (`PHASE10_TEST_INTERN_*` not set) |
+| 5 parallel `codecamp.submitQuiz` on a quiz lesson | SKIP | Credential-gated |
+| Authed session probe (GET /api/auth/session returns user.id) | SKIP | Credential-gated |
+| Authed dashboard tRPC (GET /api/trpc/codecamp.dashboard) | SKIP | Credential-gated |
+| Authed chat-history probe | SKIP | Credential-gated |
+| Authed pr-reviews list probe (5s budget) | SKIP | Credential-gated |
+| Authed admin listInterns probe (10s budget) | SKIP | Credential-gated |
+| 10 sequential `GET /` health probes (zero 503s) | SKIP | Network probe; will run on the executor's pass with reachable network |
+| Authed `GET /en/` Cloud Run trace-context probe | SKIP | Network probe |
+
+**Findings (Red-phase pass):**
+
+- **2 genuine Red tests** for Phase 10 sub-tasks "In-flight requests
+  complete during deployment" and "Zero-downtime deployment (no 503
+  during rollout)" — the source-contract detectors confirm that
+  `cloudbuild.yaml` does not pin `--max-instances=<n>` or
+  `--concurrency=<n>`. Both will go green when a future commit adds
+  the two flags to the `deploy-cloudrun` step's args.
+- **8 passing source/oracle tests** — the helper unit-test constants,
+  the session-cookie + DB-side expiresAt 7-day parity, and the
+  existing `--min-instances=1` cold-start fix all hold at HEAD. A
+  regression in any of these primitives fails the suite
+  immediately, without needing network access.
+- **10 network probes skipped** by `PHASE10_SKIP=1`; the file
+  compiles cleanly and the per-test gating is correct (the
+  credential-gated and network-gated probes run only when the
+  executor provides the env vars and a reachable network, per
+  test-strategy.md §2 + §3).
+- **The test file follows the established Phase 5/6/7/8/8.5/9
+  contract pattern**: black-box HTTP probes against prod,
+  source-contract detectors for code-level missing behavior, helper
+  unit tests, and a single P2 launch gate. The same `expect.soft`
+  pattern enumerates per-check gaps in a single run, and the
+  aggregated P2 launch gate yields one CI-blocking signal.
+
+**Green-phase actions required (not implemented by this Red-phase
+pass):**
+
+1. **P2 — add `--max-instances=<n>` to the `deploy-cloudrun` step
+   in `apps/codecamp-advantage/cloudbuild.yaml`.** The current
+   default of 100 is the Cloud Run ceiling; a deployment that
+   wants explicit in-flight request protection during rollouts must
+   pin a cap. Recommended: `--max-instances=100` (matching the
+   Cloud Run default, but pinned so a future platform change does
+   not silently shift the contract).
+2. **P2 — add `--concurrency=<n>` to the `deploy-cloudrun` step
+   in `apps/codecamp-advantage/cloudbuild.yaml`.** The current
+   default of 80 concurrent requests per instance is the Cloud Run
+   ceiling; a deployment that wants explicit in-flight request
+   protection during rollouts must pin a cap. Recommended:
+   `--concurrency=80` (matching the Cloud Run default, but pinned).
+3. **(Optional)** Re-run with `PHASE10_TEST_INTERN_USERNAME` +
+   `PHASE10_TEST_INTERN_PASSWORD` and `PHASE10_TEST_ADMIN_USERNAME`
+   + `PHASE10_TEST_ADMIN_PASSWORD` to exercise the 8
+   credential-gated probes (concurrent chat isolation, concurrent
+   quiz, session validity, dashboard 200, chat history, pr-reviews
+   list, listInterns).
+4. **(Optional)** Re-run from a network with reliable reach to
+   `codecamp.reading-advantage.com` to clear any runner-side
+   `ETIMEDOUT` flakiness on the concurrent-login / health-probe /
+   trace-context probes (same class Phases 2-6 saw).
+5. **(Informational)** Per test-strategy.md §4 black-box rule, the
+   source-fix for the 2 production gaps is **out of scope** for
+   this track — file a follow-up track to land the
+   `cloudbuild.yaml` + segment-config changes. The
+   `phase-10-edge-cases-and-production-scenarios.test.ts` source-
+   contract detectors will turn green when the follow-up track
+   lands.
+
+Red-phase commit: `8ba64b28`
 
 ## Phase 11: Cross-Browser & Device Testing (P2)
 
