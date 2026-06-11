@@ -2001,17 +2001,17 @@ Verification:
 
 Compare production results to local QA and flag discrepancies.
 
-- [ ] Task: Feature parity check
-  - [ ] All P0 local QA tests pass in production
-  - [ ] All P1 local QA tests pass in production
-  - [ ] No production-only failures in P0/P1 areas
-- [ ] Task: Known local issues
-  - [ ] Any local QA bugs are verified fixed or still present in production
-  - [ ] No new bugs introduced in production
-- [ ] Task: Data consistency
-  - [ ] Production data matches expected seed state
-  - [ ] No data corruption during migration
-  - [ ] User progress data is accurate
+- [~] Task: Feature parity check
+  - [~] All P0 local QA tests pass in production
+  - [~] All P1 local QA tests pass in production
+  - [~] No production-only failures in P0/P1 areas
+- [~] Task: Known local issues
+  - [~] Any local QA bugs are verified fixed or still present in production
+  - [~] No new bugs introduced in production
+- [~] Task: Data consistency
+  - [~] Production data matches expected seed state
+  - [~] No data corruption during migration
+  - [~] User progress data is accurate
 
 ## Phase 13: Production Readiness Report (P0)
 
