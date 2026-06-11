@@ -88,8 +88,7 @@ const SKIP = process.env.PHASE13_SKIP === "1";
 const PRIORITIES = ["P0", "P1", "P2", "P3"] as const;
 type Priority = (typeof PRIORITIES)[number];
 
-const PROD_STATUSES = ["pass", "fail", "skip", "pending", null] as const;
-type ProdStatus = (typeof PROD_STATUSES)[number];
+type ProdStatus = "pass" | "fail" | "skip" | "pending" | null;
 
 // Go / no-go decision space. `conditional` captures "ship with
 // follow-ups" (e.g. ship after the open P1 follow-up tracks are
@@ -985,6 +984,50 @@ describe("Phase 13 — Blocker assessment (filesystem + reader)", () => {
       summary.followUpTracks.length,
       `report-summary.json declares ${blockersWithFollowup.length} blocker(s) with a followUpTrackId, but followUpTracks is empty`,
     ).toBeGreaterThan(0);
+  });
+
+  it("summary fail counts include unresolved blockers by severity", () => {
+    if (!existsSync(REPORT_SUMMARY_PATH)) {
+      expect.fail(`${REPORT_SUMMARY_PATH} does not exist — Suite 3 RED expected`);
+      return;
+    }
+    const summary = JSON.parse(readFileSync(REPORT_SUMMARY_PATH, "utf-8")) as ReportSummary;
+    const open = findOpenBlockers(summary.blockers);
+    const openP0 = open.filter((b) => b.severity === "P0");
+    const openP1 = open.filter((b) => b.severity === "P1");
+    const openP2 = open.filter((b) => b.severity === "P2");
+    expect(summary.counts.p0.fail, `counts.p0.fail must include ${openP0.length} unresolved P0 blocker(s)`).toBeGreaterThanOrEqual(openP0.length);
+    expect(summary.counts.p1.fail, `counts.p1.fail must include ${openP1.length} unresolved P1 blocker(s)`).toBeGreaterThanOrEqual(openP1.length);
+    expect(summary.counts.p2.fail, `counts.p2.fail must include ${openP2.length} unresolved P2 blocker(s)`).toBeGreaterThanOrEqual(openP2.length);
+  });
+
+  it("failed performance metrics are covered by unresolved blockers", () => {
+    if (!existsSync(REPORT_SUMMARY_PATH)) {
+      expect.fail(`${REPORT_SUMMARY_PATH} does not exist — Suite 3 RED expected`);
+      return;
+    }
+    const summary = JSON.parse(readFileSync(REPORT_SUMMARY_PATH, "utf-8")) as ReportSummary;
+    const openBlockerText = findOpenBlockers(summary.blockers)
+      .map((b) => `${b.description} ${b.source} ${b.followUpTrackId ?? ""}`.toLowerCase())
+      .join("\n");
+    const uncovered = summary.performanceMetrics
+      .filter((m) => m.status === "fail")
+      .filter((m) => !openBlockerText.includes(m.metric.toLowerCase()) && !openBlockerText.includes(m.source.toLowerCase()))
+      .map((m) => `${m.metric} (${m.source})`);
+    expect(uncovered, `${uncovered.length} failed performance metric(s) are not covered by unresolved blockers: ${uncovered.join(", ")}`).toEqual([]);
+  });
+
+  it("integration results do not mark deferred or credential-gated evidence as pass", () => {
+    if (!existsSync(REPORT_SUMMARY_PATH)) {
+      expect.fail(`${REPORT_SUMMARY_PATH} does not exist — Suite 3 RED expected`);
+      return;
+    }
+    const summary = JSON.parse(readFileSync(REPORT_SUMMARY_PATH, "utf-8")) as ReportSummary;
+    const invalidPasses = summary.integrationTestResults
+      .filter((r) => r.status === "pass")
+      .filter((r) => /deferred|credential-gated|skipped/i.test(r.evidence))
+      .map((r) => r.integration);
+    expect(invalidPasses, `integration result(s) cannot be pass while evidence says deferred/credential-gated/skipped: ${invalidPasses.join(", ")}`).toEqual([]);
   });
 });
 

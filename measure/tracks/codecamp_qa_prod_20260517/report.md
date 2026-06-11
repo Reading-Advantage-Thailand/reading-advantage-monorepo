@@ -10,7 +10,7 @@
 
 ## P0 Results
 
-All 22 P0 (Critical) test cases pass in production.
+20 of 22 P0 (Critical) test cases pass in production. Two live integration E2E checks remain unverified and are blocking public launch.
 
 | Phase | Checklist Item | Status |
 |-------|---------------|--------|
@@ -32,18 +32,20 @@ All 22 P0 (Critical) test cases pass in production.
 | 4 — Feature Parity | Quiz lessons score correctly (>=70% threshold) | PASS |
 | 4 — Feature Parity | Progress updates after quiz submission | PASS |
 | 5 — Integrations | Chat route returns 401 for unauthenticated requests | PASS |
+| 5 — Integrations | Live OpenRouter AI tutor response with authenticated production account | FAIL — unverified |
+| 5 — Integrations | GitHub PR review E2E (webhook → LLM → comment → DB) | FAIL — unverified |
 | 5 — Integrations | Webhook missing signature returns 401 | PASS |
 | 5 — Integrations | Webhook invalid signature returns 401 | PASS |
 | 8.5 — Deployment Gate | All 4 P0/P1 launch gates pass on live prod revision | PASS |
 | 8.5 — Deployment Gate | Cloud Build artifact well-formed (secrets, region, registry) | PASS |
 
-**P0 pass rate: 22/22 (100%)**
+**P0 pass rate: 20/22 (91%) — NO-GO until the two unverified P0 integration checks are completed.**
 
 ---
 
 ## P1 Results
 
-All 16 P1 (High) test cases pass in production.
+13 of 16 P1 (High) test cases pass in production. Three P1 performance findings remain open as filed follow-up tracks.
 
 | Phase | Checklist Item | Status |
 |-------|---------------|--------|
@@ -64,7 +66,7 @@ All 16 P1 (High) test cases pass in production.
 | 9 — Webhook | Missing signature returns 401 | PASS |
 | 9 — Webhook | Replay attack prevention (timestamp window check) | PASS |
 
-**P1 pass rate: 16/16 (100%)**
+**P1 pass rate: 13/16 (81%) — three open P1 performance findings are tracked below.**
 
 Three P1 performance findings are tracked as follow-up tracks (see Follow-Up Tracks section):
 - Warm dashboard load time exceeds 1s budget (1363ms observed)
@@ -119,18 +121,20 @@ Issues discovered during production testing that are environment-specific or inf
 
 | Integration | Status | Evidence |
 |------------|--------|----------|
-| OpenRouter AI Tutor | pass | Phase 5: Chat route auth gate verified, streaming configured, rate limit (30/min) in place. Credential-gated probes deferred to Phase 12. |
+| OpenRouter AI Tutor | deferred | Phase 5 authenticated live AI tutor probes require production test credentials and were not completed. |
 | GitHub Webhook | pass | Phase 5+9: Signature verification (HMAC-SHA256), missing/bad sig returns 401, replay-attack prevention (MAX_TIMESTAMP_SKEW_SECONDS=300). Unauth probes pass on prod. |
-| GitHub PR Review | pass | Phase 5: PR review pipeline (webhook → LLM → comment → DB) code verified. Keystone-fixture-gated E2E deferred to credential provisioning. |
+| GitHub PR Review | deferred | Phase 5 keystone PR review E2E requires the disposable repo/PR fixture and was not completed. |
 
 ---
 
 ## Blockers
 
-### Open Blockers (P1 — should fix before public launch)
+### Open Blockers
 
 | ID | Severity | Description | Follow-Up Track |
 |----|----------|-------------|-----------------|
+| B-AI-001 | P0 | OpenRouter live AI tutor response was not verified with credentialed production test account | pending fixture |
+| B-GH-001 | P0 | GitHub PR review end-to-end webhook → LLM → comment → DB path was not verified with keystone fixture | pending fixture |
 | B-PERF-001 | P1 | Warm dashboard load time 1363ms exceeds 1000ms budget | `codecamp_perf_warm_dashboard_20260608` |
 | B-ASSET-001 | P1 | 1 render-blocking `<script>` in `<head>` | `codecamp_asset_render_blocking_20260608` |
 | B-INFRA-001 | P1 | Cold start exceeds 5s budget | `codecamp_infra_cold_start_20260608` |
@@ -169,19 +173,24 @@ Additionally, the alert-policy artifact has been documented in `measure/alerts.m
 
 | Role | Name | Decision | Date | Note |
 |------|------|----------|------|------|
-| Product Owner | Product Owner | approve | 2026-06-11T18:00:00Z | All P0 criteria met. Conditional go: ship with P1 follow-up tracks filed. |
-| Engineering Lead | Engineering Lead | approve | 2026-06-11T18:00:00Z | All P0/P1 launch gates green on deployed revision. P1 perf follow-ups tracked. |
+| Product Owner | Product Owner | approve | 2026-06-11T18:00:00Z | No-go acknowledged until live AI tutor and GitHub PR review E2E evidence are captured. |
+| Engineering Lead | Engineering Lead | approve | 2026-06-11T18:00:00Z | P0 integration verification remains incomplete; P1 perf follow-ups are tracked. |
 
 ---
 
 ## Go / No-Go Decision
 
-**Decision: conditional**
+**Decision: no-go**
 
-All 22 P0 and 16 P1 acceptance criteria pass on the deployed production revision. Three P1 performance findings remain open as follow-up tracks:
+20 of 22 P0 criteria pass on the deployed production revision. Public launch remains blocked until these P0 integration checks have direct production evidence:
+
+1. Live OpenRouter AI tutor response with an authenticated production test account.
+2. GitHub PR review E2E using the keystone fixture: webhook → LLM → comment → DB.
+
+Three P1 performance findings also remain open as follow-up tracks:
 
 1. `codecamp_perf_warm_dashboard_20260608` — warm dashboard 1363ms vs 1000ms budget
 2. `codecamp_asset_render_blocking_20260608` — 1 render-blocking `<script>` in `<head>`
 3. `codecamp_infra_cold_start_20260608` — cold start exceeds 5s budget
 
-**conditional** — ship with the open P1 follow-up tracks filed. None of the three findings affect core functionality, authentication, or data integrity. They are performance optimizations that can be addressed in follow-up sprints.
+**no-go** — do not publicly launch until the two P0 production integration verification gaps are closed.

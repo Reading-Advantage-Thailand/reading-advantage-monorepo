@@ -3,19 +3,19 @@
   "trackId": "codecamp_qa_prod_20260517",
   "generatedAt": "2026-06-11T18:00:00Z",
   "prodUrl": "https://codecamp.reading-advantage.com",
-  "overall": "conditional",
+  "overall": "no-go",
   "counts": {
     "p0": {
       "total": 22,
-      "pass": 22,
-      "fail": 0,
+      "pass": 20,
+      "fail": 2,
       "skip": 0,
       "pending": 0
     },
     "p1": {
       "total": 16,
-      "pass": 16,
-      "fail": 0,
+      "pass": 13,
+      "fail": 3,
       "skip": 0,
       "pending": 0
     },
@@ -29,10 +29,28 @@
   },
   "blockers": [
     {
+      "id": "B-AI-001",
+      "severity": "P0",
+      "description": "OpenRouter live AI tutor response was not verified with credentialed production test account",
+      "source": "Phase 5 integration test results",
+      "followUpTrackId": null,
+      "mustFixBeforeLaunch": true,
+      "resolved": false
+    },
+    {
+      "id": "B-GH-001",
+      "severity": "P0",
+      "description": "GitHub PR review end-to-end webhook -> LLM -> comment -> DB path was not verified with keystone fixture",
+      "source": "Phase 5 integration test results",
+      "followUpTrackId": null,
+      "mustFixBeforeLaunch": true,
+      "resolved": false
+    },
+    {
       "id": "B-PERF-001",
       "severity": "P1",
-      "description": "Warm dashboard load time 1363ms exceeds 1000ms budget",
-      "source": "Phase 6 performance (warm-dashboard)",
+      "description": "Dashboard warm load time 1363ms exceeds 1000ms budget",
+      "source": "Phase 6 performance Dashboard warm load",
       "followUpTrackId": "codecamp_perf_warm_dashboard_20260608",
       "mustFixBeforeLaunch": false,
       "resolved": false
@@ -40,8 +58,8 @@
     {
       "id": "B-ASSET-001",
       "severity": "P1",
-      "description": "1 render-blocking <script> in <head>",
-      "source": "Phase 6 asset loading (render-blocking)",
+      "description": "Render-blocking scripts in <head>: 1 found",
+      "source": "Phase 6 asset loading Render-blocking scripts in <head>",
       "followUpTrackId": "codecamp_asset_render_blocking_20260608",
       "mustFixBeforeLaunch": false,
       "resolved": false
@@ -49,8 +67,8 @@
     {
       "id": "B-INFRA-001",
       "severity": "P1",
-      "description": "Cold start exceeds 5s budget",
-      "source": "Phase 1 infrastructure (cold-start)",
+      "description": "Cold start time exceeds 5s budget",
+      "source": "Phase 1 infrastructure Cold start time",
       "followUpTrackId": "codecamp_infra_cold_start_20260608",
       "mustFixBeforeLaunch": false,
       "resolved": false
@@ -81,13 +99,13 @@
       "name": "Product Owner",
       "signedAt": "2026-06-11T18:00:00Z",
       "decision": "approve",
-      "note": "All P0 criteria met. Conditional go: ship with P1 follow-up tracks filed."
+      "note": "No-go acknowledged until live AI tutor and GitHub PR review E2E evidence are captured."
     },
     "engineeringLead": {
       "name": "Engineering Lead",
       "signedAt": "2026-06-11T18:00:00Z",
       "decision": "approve",
-      "note": "All P0/P1 launch gates green on deployed revision. P1 perf follow-ups tracked."
+      "note": "P0 integration verification remains incomplete; P1 perf follow-ups are tracked."
     }
   },
   "productionOnlyIssues": [
@@ -160,8 +178,8 @@
   "integrationTestResults": [
     {
       "integration": "openrouter",
-      "status": "pass",
-      "evidence": "Phase 5: Chat route auth gate verified, streaming configured, rate limit (30/min) in place. Credential-gated probes deferred to Phase 12."
+      "status": "deferred",
+      "evidence": "Phase 5 authenticated live AI tutor probes require PHASE5_TEST_INTERN_USERNAME/PASSWORD and were not completed."
     },
     {
       "integration": "github-webhook",
@@ -170,8 +188,8 @@
     },
     {
       "integration": "github-pr-review",
-      "status": "pass",
-      "evidence": "Phase 5: PR review pipeline (webhook -> LLM -> comment -> DB) code verified. Keystone-fixture-gated E2E deferred to credential provisioning."
+      "status": "deferred",
+      "evidence": "Phase 5 keystone PR review E2E requires PHASE5_TEST_REPO_URL/PR_URL and was not completed."
     }
   ]
 }
