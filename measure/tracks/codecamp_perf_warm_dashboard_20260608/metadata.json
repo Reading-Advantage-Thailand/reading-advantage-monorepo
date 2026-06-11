@@ -1,12 +1,12 @@
 {
   "track_id": "codecamp_perf_warm_dashboard_20260608",
   "type": "feature",
-  "status": "new",
+  "status": "implemented_pending_manual_verification",
   "created_at": "2026-06-08T00:00:00Z",
-  "updated_at": "2026-06-08T00:00:00Z",
+  "updated_at": "2026-06-11T00:00:00Z",
   "description": "Bring the warm-dashboard page load under the 1000ms P1 budget. The Phase 6 prod-smoke suite measured 1363ms (36% over budget) on a warm request to /en/. Likely fixes: server-side render caching of the dashboard shell, prefetch of getUserDashboard on the auth wall, or Cloud Run concurrency tuning.",
   "estimated_tasks": 8,
-  "deviation_notes": "",
+  "deviation_notes": "2026-06-11 rectification (plan.md §9): the Phase 3 SSR-cache helper (021f0284) shipped unwired and was deleted; the actual optimization is the authed-dashboard tRPC-query memo in packages/api/src/cache/dashboard-cache.ts (042de532), green at 13/13 unit cases. Phase 6 prod-smoke (warm GET /en/ < 1000ms) NOT yet run — network-gated. Track is code-complete, prod verification outstanding.",
   "depends_on": ["codecamp_qa_prod_20260517"],
   "notes": "Follow-up from codecamp_qa_prod_20260517 Phase 6 (P1 perf finding). Filed per plan.md Phase 8.5 Task 3."
 }

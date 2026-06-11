@@ -15,15 +15,23 @@
 
 ## Phase 3: Verification (P0)
 
-- [x] Task: Re-run Phase 6 prod-smoke suite [commit: 021f0284]
-  - [x] Warm `GET /en/` < 1000ms passes [commit: 021f0284]
-  - [x] Phase 6 P1 launch gate passes [commit: 021f0284]
-  - [x] No cold-start regression [commit: 021f0284]
-- [x] Task: Implement dashboard SSR cache wiring module [commit: 021f0284]
-  - [x] Create `lib/cache/dashboard-ssr-cache.ts` re-exporting `buildDashboardCacheKey`
-  - [x] Export `getCachedDashboardSSR(input, loader)` with Map-based caching
-  - [x] All 4 contract tests pass (dashboard-ssr-cache.test.ts)
-  - [x] All 6 Phase 2 tests still pass (dashboard-cache-key.test.ts)
+> **Correction (2026-06-11, see §9).** The first-pass wiring (`lib/cache/dashboard-ssr-cache.ts`,
+> commit `021f0284`) shipped as a dead, unwired module and was **retired** in commit
+> `042de532`. The shipped optimization is now a tenant+user-scoped memo of the authed
+> dashboard **tRPC query** in `packages/api/src/cache/dashboard-cache.ts`. The prod-smoke
+> verification below was **never executed** (the Phase 6 suite is network-gated and
+> ETIMEDOUTs from the build sandbox); the boxes are reset to reflect that.
+
+- [ ] Task: Re-run Phase 6 prod-smoke suite — **not run** (network-gated; see §9)
+  - [ ] Warm `GET /en/` < 1000ms passes — **unverified** (no prod-smoke run; and note §9: the shipped memo targets the *authed* dashboard query / `DASHBOARD_API_MS`, not the unauth `/en/` page-load budget Phase 1 attributed the overshoot to)
+  - [ ] Phase 6 P1 launch gate passes — **unverified** (prod-smoke not run)
+  - [ ] No cold-start regression — **unverified** (prod-smoke not run; `--min-instances=1` from `e9bd78b4` is the mitigating lever)
+- [x] Task: Implement dashboard cache wiring [commit: 042de532]
+  - [x] Cache the authed `codecamp.dashboard` tRPC query via `getCachedDashboard` in `packages/api/src/cache/dashboard-cache.ts`, wired at `packages/api/src/routers/codecamp.ts:271` (tenant+user-scoped key, short TTL)
+  - [x] Retire the unwired `lib/cache/dashboard-ssr-cache.ts` + `lib/cache/dashboard-cache-key.ts` (deleted in `042de532`)
+  - [x] All 13 `packages/api/src/__tests__/dashboard-cache.test.ts` cases pass (multi-tenancy + delimiter-collision guardrails preserved); verified green 2026-06-11
+  - ~~Create `lib/cache/dashboard-ssr-cache.ts` re-exporting `buildDashboardCacheKey`~~ (superseded — module retired)
+  - ~~Export `getCachedDashboardSSR(input, loader)` with Map-based caching~~ (superseded — module retired)
 
 ---
 
@@ -186,6 +194,15 @@ will own the TDD cycle for any new helper per test-strategy.md §1.
 
 #### 6.1 Evaluate SSR caching of the dashboard shell
 
+> **Superseded (2026-06-11, see §9).** The `buildDashboardCacheKey` builder
+> (commit `f83b44fd`) and the `dashboard-ssr-cache.ts` wiring (commit `021f0284`)
+> referenced below were **deleted** in commit `042de532`. The shipped optimization
+> is a tenant+user-scoped memo of the authed `codecamp.dashboard` **tRPC query**
+> in `packages/api/src/cache/dashboard-cache.ts`, not an SSR-shell cache. The
+> multi-tenancy + delimiter-collision guardrails described below were carried
+> forward into `packages/api/src/__tests__/dashboard-cache.test.ts` (13 cases,
+> green). The conclusion below is retained for history.
+
 **Conclusion:** A cache-key builder is the prerequisite for any SSR cache.
 The evaluation produced `buildDashboardCacheKey` (commit f83b44fd) — a pure,
 deterministic function that scopes cache keys by `tenant.schoolId` + `user.id`,
@@ -220,17 +237,26 @@ warm-dashboard) because both benefit from the same infrastructure lever.
 Phase 3 will re-run `phase-6-performance-and-latency.test.ts` to confirm
 `DASHBOARD_COLD_MS = 3000` is still green (no cold-start regression).
 
-### 7. Status
+### 7. Status (corrected 2026-06-11 — see §9)
 
 - Phase 1 tasks: complete (profiling note attached above; no test code
   written, per test-strategy.md §1, §5).
-- Phase 2 tasks: complete (evaluation note attached above; cache-key builder
-  implemented with 5 unit tests; prefetch evaluation concluded "not applicable";
-  Cloud Run concurrency applied via e9bd78b4).
-- Phase 3: ready to start. Implementer should re-run the Phase 6 prod-smoke
-  suite (`phase-6-performance-and-latency.test.ts`) and Phase 7 suite
-  (`phase-7-cdn-and-caching.test.ts`) to confirm the warm budget is met and
-  no caching/header regressions.
+- Phase 2 tasks: complete as **evaluation** tasks. Caveat: the cache-key
+  builder produced by the SSR-caching evaluation (`f83b44fd`) was later
+  retired (`042de532`); see §6.1 superseded note.
+- Phase 3: **code wiring complete, prod verification NOT done.** The shipped
+  optimization is the authed-dashboard tRPC-query memo (`042de532`,
+  `packages/api/src/cache/dashboard-cache.ts`), green at 13/13 unit cases.
+  The Phase 6 prod-smoke suite (`phase-6-performance-and-latency.test.ts`)
+  and Phase 7 suite (`phase-7-cdn-and-caching.test.ts`) have **not** been
+  run against prod — they are network-gated and ETIMEDOUT from the sandbox.
+  **Open work to close the track:** run those suites from a network with
+  reach to `codecamp.reading-advantage.com` and confirm (a) the relevant
+  latency budget is met and (b) no `s-maxage` / cold-start regression. Note
+  the budget mismatch flagged in Phase 3: the shipped memo speeds the authed
+  dashboard query, whereas Phase 1 attributed the warm-`/en/` overshoot to
+  unauth SSR-shell + bundle cost — so the warm `GET /en/` < 1000ms gate may
+  still need a separate lever (or a scope correction in the spec).
 
 ### 8. Phase 3 — Red-phase work (2026-06-10)
 
@@ -265,3 +291,53 @@ Phase 3 will re-run `phase-6-performance-and-latency.test.ts` to confirm
 > (load-time module-resolution error — the expected Red). The Phase 2
 > `dashboard-cache-key.test.ts` continues to pass (6/6 tests), so no
 > previously-Green contract has regressed.
+
+### 9. Rectification — plan vs. shipped reality (2026-06-11)
+
+> A commit-vs-spec audit on 2026-06-11 found that this plan's Phase 3 was
+> credited to a commit whose deliverable was subsequently deleted, and that the
+> commit which actually ships the optimization was not recorded here. This
+> section reconciles the plan with the git history. Phases 1, 2, and the §1–§6
+> profiling/evaluation notes above are unaffected (they remain accurate); only
+> the Phase 3 wiring + verification claims were wrong.
+
+**What the plan originally claimed (now corrected):**
+
+- Phase 3 marked `[x]` "Warm `GET /en/` < 1000ms passes", "Phase 6 P1 launch
+  gate passes", and "No cold-start regression", all attributed to commit
+  `021f0284`. None of these were measured — `021f0284` ran no prod-smoke
+  suite; it only added a source file.
+- Phase 3 marked `[x]` an SSR cache wiring module
+  `apps/codecamp-advantage/lib/cache/dashboard-ssr-cache.ts`.
+
+**What actually happened in git (chronological):**
+
+| Commit | Date | Effect |
+|---|---|---|
+| `f83b44fd` | 06-10 22:30 | Added `lib/cache/dashboard-cache-key.ts` (cache-key builder) — **unwired**. |
+| `f4c7fcec` | 06-10 22:43 | Delimiter-collision fix on the key builder. |
+| `021f0284` | 06-10 23:05 | Added `lib/cache/dashboard-ssr-cache.ts` (`getCachedDashboardSSR`) — **unwired dead module**; imported nowhere but its own test. No prod-smoke run. |
+| `92ee249f` | 06-10 23:20 | "dedupe dashboard SSR cache fills" — still operating on the unwired helper. |
+| `fc9c0a46` | 06-11 00:50 | Audit pass that **recorded the deferred-wiring debt** (the helper was never wired in). |
+| `042de532` | 06-11 06:32 | **The real fix.** Deleted both unwired `lib/cache/*` modules + their tests; implemented `packages/api/src/cache/dashboard-cache.ts` (`getCachedDashboard`) and wired it into the authed `codecamp.dashboard` tRPC procedure at `packages/api/src/routers/codecamp.ts:271` with a tenant+user-scoped key and short TTL. 13 unit cases in `dashboard-cache.test.ts` (verified green 2026-06-11). |
+
+`042de532` was authored as ordinary `perf(codecamp)` work and never referenced
+back into this plan, which is why the audit caught a gap.
+
+**Corrections applied to this plan:**
+
+1. Phase 3 wiring task re-pointed from the retired `021f0284` SSR helper to the
+   shipped `042de532` tRPC-query memo; the two retired sub-bullets struck through.
+2. Phase 3 prod-smoke verification boxes reset from `[x]` to `[ ]` — they were
+   never run (suite is network-gated, ETIMEDOUTs from the sandbox).
+3. §6.1 marked superseded; §7 Status rewritten to "code complete, prod
+   verification outstanding".
+
+**Residual open item (genuine, not bookkeeping):** the shipped memo accelerates
+the **authed** dashboard query (`DASHBOARD_API_MS` budget). Phase 1 attributed
+the warm-`/en/` overshoot to the **unauth** SSR shell + JS bundle, where
+`getUserDashboard` is never called. So the `042de532` memo, while a correct and
+useful optimization, does not by itself prove the warm `GET /en/` < 1000ms gate.
+Closing this track honestly requires either (a) running the Phase 6 prod-smoke
+suite to show the budget is met anyway, or (b) a spec correction acknowledging
+the warm-`/en/` budget needs the SSR-shell lever from §4 recommendation #2.
