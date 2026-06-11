@@ -1834,20 +1834,20 @@ Verification:
 
 Test across different clients.
 
-- [ ] Task: Desktop browsers
-  - [ ] Chrome (latest)
-  - [ ] Firefox (latest)
-  - [ ] Safari (latest)
-  - [ ] Edge (latest)
-- [ ] Task: Mobile browsers
-  - [ ] Chrome on Android
-  - [ ] Safari on iOS
-  - [ ] Samsung Internet
-- [ ] Task: Device sizes
-  - [ ] iPhone SE (375px)
-  - [ ] iPad (768px)
-  - [ ] Desktop (1440px)
-  - [ ] Large desktop (1920px)
+- [~] Task: Desktop browsers
+  - [~] Chrome (latest)
+  - [~] Firefox (latest)
+  - [~] Safari (latest)
+  - [~] Edge (latest)
+- [~] Task: Mobile browsers
+  - [~] Chrome on Android
+  - [~] Safari on iOS
+  - [~] Samsung Internet
+- [~] Task: Device sizes
+  - [~] iPhone SE (375px)
+  - [~] iPad (768px)
+  - [~] Desktop (1440px)
+  - [~] Large desktop (1920px)
 
 ## Phase 12: Regression Against Local QA (P0)
 
