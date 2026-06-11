@@ -75,9 +75,9 @@
   - Commit: `92eeca19`
 
 ## Phase 2: Confirm/Adapt the `reviewExercise` Seam — TDD
-- [ ] Task: Write/extend a domain test that injects a Mock `AIClient` and asserts `reviewExercise` returns the typed review for a sample diff, and surfaces a model error correctly.
-- [ ] Task: If `reviewExercise` does not yet accept an `AIClient`, adapt its DI param (keep the call shape backward-compatible).
-- [ ] Task: Add a regression test for terminal `reviewedAt` stamping (pending re-trigger must not overwrite a prior terminal `reviewedAt`).
+- [~] Task: Write/extend a domain test that injects a Mock `AIClient` and asserts `reviewExercise` returns the typed review for a sample diff, and surfaces a model error correctly.
+- [~] Task: If `reviewExercise` does not yet accept an `AIClient`, adapt its DI param (keep the call shape backward-compatible).
+- [~] Task: Add a regression test for terminal `reviewedAt` stamping (pending re-trigger must not overwrite a prior terminal `reviewedAt`).
 - [ ] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/domain` green.
 
 ## Phase 3: Repoint Call Site A (webhook) — TDD

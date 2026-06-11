@@ -1174,6 +1174,34 @@ describe("updatePrReview", () => {
     }
   });
 
+  it("does not overwrite reviewedAt when re-triggering pending after a terminal approved review", async () => {
+    const priorTerminalReviewedAt = new Date("2026-01-01T00:00:00Z");
+    const existingReview = {
+      id: "pr1",
+      exerciseRepoId: "r1",
+      userId: "st1",
+      prUrl: "https://github.com/org/repo1/pull/1",
+      reviewStatus: "pending",
+      llmReviewSummary: "Great work!",
+      reviewedAt: priorTerminalReviewedAt,
+      createdAt: new Date(),
+    };
+    const db = createMockDb({ updateReturning: [existingReview] });
+
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+    await updatePrReview({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { reviewId: "pr1", reviewStatus: "pending" },
+    });
+
+    const setCall = db.update.mock.results[0]?.value?.set?.mock?.calls?.[0]?.[0];
+    expect(setCall).toBeDefined();
+    expect(setCall.reviewStatus).toBe("pending");
+    expect(setCall.reviewedAt).not.toBeInstanceOf(Date);
+  });
+
   it("sets reviewedAt when status is approved", async () => {
     const review = {
       id: "pr1",
