@@ -42,16 +42,21 @@ function signPayload(payload: string): string {
 function createRequest(payload: string, options: {
   signature?: string;
   event?: string;
+  timestamp?: string;
 } = {}): Request {
   const sig = options.signature ?? signPayload(payload);
   const event = options.event ?? "pull_request";
+  const headers: Record<string, string> = {
+    "x-hub-signature-256": sig,
+    "x-github-event": event,
+    "content-type": "application/json",
+  };
+  if (options.timestamp) {
+    headers["x-github-delivery-timestamp"] = options.timestamp;
+  }
   return new Request("http://localhost/pr", {
     method: "POST",
-    headers: {
-      "x-hub-signature-256": sig,
-      "x-github-event": event,
-      "content-type": "application/json",
-    },
+    headers,
     body: payload,
   });
 }
@@ -96,6 +101,37 @@ describe("GitHub webhook handler", () => {
     expect(res.status).toBe(400);
     const json = await res.json();
     expect(json.error).toBe("Invalid JSON");
+  });
+
+  it("returns 401 when timestamp header is malformed", async () => {
+    const payload = JSON.stringify({ action: "opened" });
+    const req = createRequest(payload, { timestamp: "not-a-number" });
+    const res = await githubApp.fetch(req);
+    expect(res.status).toBe(401);
+    const json = await res.json();
+    expect(json.error).toBe("Invalid timestamp");
+  });
+
+  it("returns 401 when timestamp header is stale despite a valid signature", async () => {
+    const payload = JSON.stringify({ action: "opened" });
+    const staleTimestamp = String(Math.floor(Date.now() / 1000) - 600);
+    const req = createRequest(payload, { timestamp: staleTimestamp });
+    const res = await githubApp.fetch(req);
+    expect(res.status).toBe(401);
+    const json = await res.json();
+    expect(json.error).toBe("Stale timestamp — replay attack rejected");
+  });
+
+  it("returns 401 when signed body timestamp is stale and no timestamp header is present", async () => {
+    const payload = JSON.stringify({
+      timestamp: Math.floor(Date.now() / 1000) - 600,
+      action: "opened",
+    });
+    const req = createRequest(payload);
+    const res = await githubApp.fetch(req);
+    expect(res.status).toBe(401);
+    const json = await res.json();
+    expect(json.error).toBe("Stale timestamp — replay attack rejected");
   });
 
   it("returns 200 and ignores non-PR events", async () => {

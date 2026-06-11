@@ -115,9 +115,21 @@ github.post("/pr", async (c) => {
 
   const timestampHeader = c.req.header("x-github-delivery-timestamp")
     ?? c.req.header("x-hub-timestamp");
-  const timestamp = timestampHeader ? Number(timestampHeader) : undefined;
 
   const payload = await c.req.text();
+  let bodyTimestamp: unknown;
+  try {
+    const timestampPayload = JSON.parse(payload) as { timestamp?: unknown };
+    bodyTimestamp = timestampPayload.timestamp;
+  } catch {
+    bodyTimestamp = undefined;
+  }
+  const timestampClaim = timestampHeader ?? bodyTimestamp;
+  const timestamp = timestampClaim !== undefined ? Number(timestampClaim) : undefined;
+  if (timestampClaim !== undefined && !Number.isFinite(timestamp)) {
+    return c.json({ error: "Invalid timestamp" }, 401);
+  }
+
   if (!verifyWebhookSignature(payload, signature, timestamp)) {
     if (timestamp !== undefined) {
       const nowSeconds = Math.floor(Date.now() / 1000);

@@ -1,0 +1,20 @@
+{
+  "status": "fail",
+  "summary": "Adversarial audit found and fixed a replay-prevention bypass: malformed/non-finite timestamp claims and stale signed body timestamps were not durably covered, while the production replay smoke probe used a body timestamp but the route only checked headers. Remaining blocker: the local environment lacks node/npm/pnpm, so required suites including npm test could not be executed here.",
+  "findings": [
+    "Validation blocked: node, npm, and pnpm are not available on PATH, so npm test, Phase 9 vitest, and @reading-advantage/webhooks tests could not run in this environment.",
+    "Deploy-gated: production must be redeployed with the replay timestamp changes and Phase9 network probes rerun with PHASE9_TEST_* fixtures."
+  ],
+  "evidence": [
+    "Read measure/tracks/codecamp_qa_prod_20260517/spec.md, plan.md Phase 9, and test-strategy.md.",
+    "Inspected changes since 65bd8ea99f7031088844b63094239b5d05cc0e7e: apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-9-github-webhook-specifics.test.ts, packages/webhooks/src/github.ts, packages/webhooks/src/github-client.ts, packages/webhooks/src/__tests__/github-client.test.ts.",
+    "Added malformed timestamp and stale signed body timestamp regression coverage in packages/webhooks/src/__tests__/github-client.test.ts and packages/webhooks/src/__tests__/github-webhook.test.ts.",
+    "Fixed packages/webhooks/src/github-client.ts to reject non-finite timestamp values via isWebhookTimestampFresh().",
+    "Fixed packages/webhooks/src/github.ts to reject malformed timestamp claims and apply replay checks to signed body timestamp claims when timestamp headers are absent.",
+    "Updated apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-9-github-webhook-specifics.test.ts source-contract detector to require malformed timestamp rejection and body timestamp parsing.",
+    "Attempted: npm test — failed before execution: /bin/bash: npm: command not found.",
+    "Attempted: PHASE9_SKIP=1 node node_modules/vitest/vitest.mjs run lib/__tests__/prod-smoke/phase-9-github-webhook-specifics.test.ts — failed before execution: /bin/bash: node: command not found.",
+    "Attempted: pnpm turbo run test --filter=@reading-advantage/webhooks — failed before execution: /bin/bash: pnpm: command not found.",
+    "Attempted: build-graph stats ./graph.db — failed before execution: build-graph: command not found."
+  ]
+}

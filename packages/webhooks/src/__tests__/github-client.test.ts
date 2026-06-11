@@ -17,6 +17,7 @@ import {
   fetchPrDiff,
   postPrComment,
   postReviewComment,
+  isWebhookTimestampFresh,
 } from "../github-client.js";
 
 // ─── parsePrUrl ──────────────────────────────────────────────
@@ -131,6 +132,32 @@ describe("verifyWebhookSignature", () => {
     const payload = '{"action":"opened"}';
     const signature = `sha256=${createHmac("sha256", "test-secret").update(payload).digest("hex")}`;
     expect(verifyWebhookSignature(payload, signature, undefined)).toBe(true);
+  });
+
+  it("returns false when timestamp is NaN even with a valid signature", () => {
+    const payload = '{"action":"opened"}';
+    const signature = `sha256=${createHmac("sha256", "test-secret").update(payload).digest("hex")}`;
+    expect(verifyWebhookSignature(payload, signature, Number.NaN)).toBe(false);
+  });
+
+  it("returns false when timestamp is infinite even with a valid signature", () => {
+    const payload = '{"action":"opened"}';
+    const signature = `sha256=${createHmac("sha256", "test-secret").update(payload).digest("hex")}`;
+    expect(verifyWebhookSignature(payload, signature, Number.POSITIVE_INFINITY)).toBe(false);
+  });
+});
+
+// ─── isWebhookTimestampFresh ──────────────────────────────────
+
+describe("isWebhookTimestampFresh", () => {
+  it("accepts a current finite timestamp", () => {
+    expect(isWebhookTimestampFresh(Math.floor(Date.now() / 1000))).toBe(true);
+  });
+
+  it("rejects non-finite timestamps", () => {
+    expect(isWebhookTimestampFresh(Number.NaN)).toBe(false);
+    expect(isWebhookTimestampFresh(Number.POSITIVE_INFINITY)).toBe(false);
+    expect(isWebhookTimestampFresh(Number.NEGATIVE_INFINITY)).toBe(false);
   });
 });
 

@@ -101,6 +101,18 @@ export async function getInstallationToken(installationId: string): Promise<stri
 export const MAX_TIMESTAMP_SKEW_SECONDS = 300;
 
 /**
+ * Checks whether a webhook timestamp is finite and within the replay window.
+ * @param timestamp The request timestamp in epoch seconds.
+ * @returns True when the timestamp is usable and within the allowed skew.
+ */
+export function isWebhookTimestampFresh(timestamp: number): boolean {
+  if (!Number.isFinite(timestamp)) return false;
+  const nowSeconds = Math.floor(Date.now() / 1000);
+  const skew = Math.abs(nowSeconds - timestamp);
+  return skew <= MAX_TIMESTAMP_SKEW_SECONDS;
+}
+
+/**
  * Verifies the HMAC signature of a GitHub webhook payload and
  * rejects replay attacks by checking the request timestamp against
  * a tolerance window.
@@ -131,15 +143,11 @@ export function verifyWebhookSignature(
     return false;
   }
   if (!sigValid) return false;
-  if (timestamp !== undefined) {
-    const nowSeconds = Math.floor(Date.now() / 1000);
-    const skew = Math.abs(nowSeconds - timestamp);
-    if (skew > MAX_TIMESTAMP_SKEW_SECONDS) {
-      console.warn(
-        `[GitHub Webhook] Replay attack detected: timestamp ${timestamp} is ${skew}s from now (max ${MAX_TIMESTAMP_SKEW_SECONDS}s)`,
-      );
-      return false;
-    }
+  if (timestamp !== undefined && !isWebhookTimestampFresh(timestamp)) {
+    console.warn(
+      `[GitHub Webhook] Replay attack detected: timestamp ${timestamp} is outside max skew ${MAX_TIMESTAMP_SKEW_SECONDS}s`,
+    );
+    return false;
   }
   return true;
 }

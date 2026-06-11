@@ -937,6 +937,18 @@ describe("Phase 9 — source-contract detector: replay-attack timestamp check", 
       `the webhook route in packages/webhooks/src/github.ts must reference a timestamp, Date.now(), or a max-skew/replay-window constant to prevent replay attacks`,
     ).toBe(true);
   });
+
+  it("the webhook route rejects malformed timestamp claims and reads body timestamps used by the replay probe", () => {
+    const src = readFileSync(WEBHOOK_ROUTE_SOURCE, "utf8");
+    expect(
+      /Number\.isFinite\(timestamp\)/.test(src) && /Invalid timestamp/.test(src),
+      "packages/webhooks/src/github.ts must reject non-finite timestamp claims with an Invalid timestamp response",
+    ).toBe(true);
+    expect(
+      /bodyTimestamp/.test(src) && /timestampPayload\.timestamp/.test(src),
+      "packages/webhooks/src/github.ts must read the signed body timestamp so the Phase 9 replay probe cannot be bypassed when timestamp headers are absent",
+    ).toBe(true);
+  });
 });
 
 describe("Phase 9 — sign helper unit tests", () => {
