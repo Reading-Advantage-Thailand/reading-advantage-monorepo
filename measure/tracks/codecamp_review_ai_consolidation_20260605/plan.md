@@ -78,7 +78,7 @@
 - [x] Task: Write/extend a domain test that injects a Mock `AIClient` and asserts `reviewExercise` returns the typed review for a sample diff, and surfaces a model error correctly.
   - Commit: `d5130fd8`
 - [x] Task: If `reviewExercise` does not yet accept an `AIClient`, adapt its DI param (keep the call shape backward-compatible).
-  - Commit: `d5130fd8` (tests), `836afb04` (implementation)
+  - Commit: `836afb04`
 - [x] Task: Add a regression test for terminal `reviewedAt` stamping (pending re-trigger must not overwrite a prior terminal `reviewedAt`).
   - Commit: `d5130fd8`
 - [x] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/domain` green.
