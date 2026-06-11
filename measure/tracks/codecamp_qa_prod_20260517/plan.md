@@ -2218,7 +2218,7 @@ Verification notes:
 
 Document findings and sign off on production readiness.
 
-- [x] Task: Compile results (Red-phase contract: `phase-13-production-readiness-report.test.ts`)
+- [x] Task: Compile results (Red-phase contract: `phase-13-production-readiness-report.test.ts`) (commit `1c5f7775`)
   - [x] Count P0 passes / fails in production (Red-phase contract: `countByPriority(parityMatrix)` reader in `phase-13-production-readiness-report.test.ts`)
   - [x] Count P1 passes / fails in production (Red-phase contract: same)
   - [x] Count P2 passes / fails in production (Red-phase contract: same)
