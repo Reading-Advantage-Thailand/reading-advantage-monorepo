@@ -1611,18 +1611,18 @@ committed code/test fix `b33164d7`.
 
 Test scenarios unique to or more likely in production.
 
-- [x] Task: Concurrent users (Red-phase contract: `phase-10-edge-cases-and-production-scenarios.test.ts`)
-  - [x] Multiple users login simultaneously → no session conflicts
-  - [x] Multiple users submit quizzes simultaneously → no race conditions
-  - [x] Multiple users chat simultaneously → rate limits isolated per user
-- [x] Task: Long-running sessions (Red-phase contract: same test file)
-  - [x] Session remains valid for expected duration
-  - [x] Session refresh works correctly
-  - [x] No "session expired" errors during normal use
-- [x] Task: Data volume (Red-phase contract: same test file)
-  - [x] Large chat history loads without timeout
-  - [x] Many PR reviews render without performance degradation
-  - [x] Admin intern table with many rows renders correctly
+- [x] Task: Concurrent users (Red-phase contract: `phase-10-edge-cases-and-production-scenarios.test.ts`; commit `8ba64b28`)
+  - [x] Multiple users login simultaneously → no session conflicts (commit `8ba64b28`)
+  - [x] Multiple users submit quizzes simultaneously → no race conditions (commit `8ba64b28`)
+  - [x] Multiple users chat simultaneously → rate limits isolated per user (commit `8ba64b28`)
+- [x] Task: Long-running sessions (Red-phase contract: same test file; commit `8ba64b28`)
+  - [x] Session remains valid for expected duration (commit `8ba64b28`)
+  - [x] Session refresh works correctly (commit `8ba64b28`)
+  - [x] No "session expired" errors during normal use (commit `8ba64b28`)
+- [x] Task: Data volume (Red-phase contract: same test file; commit `8ba64b28`)
+  - [x] Large chat history loads without timeout (commit `8ba64b28`)
+  - [x] Many PR reviews render without performance degradation (commit `8ba64b28`)
+  - [x] Admin intern table with many rows renders correctly (commit `8ba64b28`)
 - [x] Task: Deployment during use (Red-phase contract: same test file) (commit `7ddab3f7`)
   - [x] Zero-downtime deployment (no 503 during rollout) (commit `7ddab3f7`)
   - [x] In-flight requests complete during deployment (commit `7ddab3f7`)
