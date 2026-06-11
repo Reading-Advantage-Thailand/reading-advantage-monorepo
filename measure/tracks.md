@@ -318,6 +318,10 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 > Tracks listed in this section have completed their lifecycle (spec → plan → implementation → review → acceptance → closeout) and are preserved here for history. Track artifacts live under `measure/archive/`. New work that builds on or supersedes an archived track should open a fresh track rather than reopen the archived one.
 
+- [x] **Track: codecamp-advantage — Progress Monotonicity**
+  *Link: [./archive/codecamp_progress_monotonicity_20260611/](./archive/codecamp_progress_monotonicity_20260611/)*
+  *Status: COMPLETE — Diagnosed `codecamp-exercise-vitest` PR #1, repaired Pkalakorn's production progress, made completed progress monotonic, and deployed production-matched hotfix build `99666d94-a6ce-4a0e-9e55-134d6898e513`.*
+
 - [x] **Track: codecamp-advantage — Production QA/QC Testing**
   *Link: [./archive/codecamp_qa_prod_20260517/](./archive/codecamp_qa_prod_20260517/)*
   *Status: COMPLETE — 13 phases delivered (Phases 1–13 incl. Phase 8.5 deployment gate). 43 plan tasks complete with commit SHAs. Accumulated security/observability/cache fixes deployed via Cloud Build `e3ed0c01`. Final acceptance audit passed (status=pass, findings=[]). Production readiness report at `report.md` records launch decision = **no-go** pending two credential/fixture-gated P0 integration probes (live OpenRouter AI tutor with credentialed account; GitHub PR review keystone E2E). 3 P1 follow-up tracks filed: `codecamp_perf_warm_dashboard_20260608`, `codecamp_asset_render_blocking_20260608`, `codecamp_infra_cold_start_20260608`. Alert policy artifact captured in `measure/alerts.md`.*
