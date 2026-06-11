@@ -1811,6 +1811,25 @@ Fixed the 2 RED source-contract detectors by pinning `--max-instances` and
 
 Green-phase commit: `7ddab3f7`
 
+### Phase 10 — Adversarial audit continuation (2026-06-11)
+
+Hardened the Phase 10 executable contract after adversarial review:
+
+- Tightened Cloud Run deployment assertions to require exact `--max-instances=100` and `--concurrency=80` values, not just any flag with the right prefix.
+- Fixed the concurrent-login assertion to compare the response status directly.
+- Fixed the concurrent quiz probe to use a tRPC `POST` mutation request with the schema-correct string answer shape.
+- Strengthened the source-path oracle to verify files are readable, not just absolute `.ts`/`.yaml` strings.
+- Added durable Playwright E2E coverage for two concurrent browser contexts logging in without session conflicts, gated on `PHASE10_TEST_INTERN_USERNAME`/`PHASE10_TEST_INTERN_PASSWORD`.
+
+Verification:
+
+- `PHASE10_SKIP=1 node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-10-edge-cases-and-production-scenarios.test.ts` — PASS (`11 passed | 10 skipped`).
+- `PHASE10_SKIP=1 npm test --workspace=codecamp-advantage -- lib/__tests__/prod-smoke/phase-10-edge-cases-and-production-scenarios.test.ts` — PASS (`11 passed | 10 skipped`).
+- `npm run test:e2e --workspace=codecamp-advantage -- e2e/phase-10-concurrent-session.spec.ts` — PASS setup / SKIP credential-gated (`1 skipped`).
+- `npm run check-types --workspace=codecamp-advantage` — PASS.
+- `npm run lint --workspace=codecamp-advantage` — PASS with 4 pre-existing warnings in Phase 3/5/7/9 prod-smoke files.
+- `npm test` — PASS (`4 files`, `27 passed`).
+
 ## Phase 11: Cross-Browser & Device Testing (P2)
 
 Test across different clients.

@@ -61,7 +61,6 @@ export function parseCloudBuildSteps(yamlText: string): CloudBuildStep[] {
         .filter(Boolean);
     } else {
       // Block form: collect lines matching `      - "value"`.
-      const argMatches = [...block.matchAll(/^\s*-\s*"([^"]+)"\s*$/gm)];
       // Only collect args that appear after the `args:` key.
       const argsKeyIndex = block.indexOf("args:");
       if (argsKeyIndex !== -1) {

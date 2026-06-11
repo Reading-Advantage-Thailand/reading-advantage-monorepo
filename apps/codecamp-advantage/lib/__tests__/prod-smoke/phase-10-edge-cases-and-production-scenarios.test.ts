@@ -253,6 +253,28 @@ async function trpcGet(
   return { status: response.status, body };
 }
 
+async function trpcPost(
+  procedure: string,
+  init: { cookie?: string; inputJson?: unknown; timeoutMs?: number } = {},
+): Promise<{ status: number; body: unknown }> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (init.cookie) headers["Cookie"] = init.cookie;
+  const url = `${PROD_URL}/api/trpc/${procedure}?input=${trpcInput(init.inputJson ?? null)}`;
+  const response = await fetchWithTimeout(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(init.inputJson ?? {}),
+    timeoutMs: init.timeoutMs ?? CONCURRENT_LOGIN_TIMEOUT_MS,
+  });
+  let body: unknown = null;
+  try {
+    body = await response.json();
+  } catch {
+    body = null;
+  }
+  return { status: response.status, body };
+}
+
 // ─── Source-contract detector helpers ──────────────────────
 
 /**
@@ -325,7 +347,7 @@ describe("Phase 10 — Concurrent users (production)", () => {
             `concurrent login #${i} must not 5xx — got ${r.status} (db race condition?)`,
           ).toBe(true);
           expect.soft(
-            r.status === 401,
+            r.status,
             `concurrent login #${i} should be 401 (invalid creds), got ${r.status}`,
           ).toBe(401);
         }
@@ -417,10 +439,10 @@ describe("Phase 10 — Concurrent users (production)", () => {
         const N = CONCURRENT_LOGIN_PARALLEL;
         const fakeLessonId = "00000000-0000-0000-0000-000000000000";
         const fakeAnswers = [
-          { questionId: "00000000-0000-0000-0000-000000000001", answer: 0 },
+          { questionId: "00000000-0000-0000-0000-000000000001", answer: "0" },
         ];
         const requests = Array.from({ length: N }, () =>
-          trpcGet("codecamp.submitQuiz", {
+          trpcPost("codecamp.submitQuiz", {
             cookie: internLogin.cookie,
             inputJson: { lessonId: fakeLessonId, answers: fakeAnswers },
             timeoutMs: CONCURRENT_LOGIN_TIMEOUT_MS,
@@ -719,15 +741,12 @@ describe("Phase 10 — Deployment during use (production)", () => {
       ).toBe(true);
     });
 
-    it("cloudbuild.yaml deploy step sets --max-instances=<n> — caps blast radius of a rollout storm (RED on HEAD: the flag is absent)", () => {
-      // The deploy step currently has no `--max-instances`.
+    it("cloudbuild.yaml deploy step sets --max-instances=100 — caps blast radius of a rollout storm", () => {
       // Without an explicit cap, Cloud Run defaults to 100
       // max-instances. A regression that lowers the default
       // (or a traffic spike during rollout) could exhaust
       // the cap and surface as 503s for in-flight requests
-      // mid-rollout. The test is RED on HEAD because the
-      // flag is not in cloudbuild.yaml; a future commit
-      // adding it turns this green.
+      // mid-rollout.
       const yaml = readSourceOrThrow(CLOUDBUILD_YAML, "cloudbuild.yaml");
       const steps = parseCloudBuildSteps(yaml);
       const deployStep = steps.find((s) => s.id === "deploy-cloudrun");
@@ -735,25 +754,19 @@ describe("Phase 10 — Deployment during use (production)", () => {
         deployStep,
         "cloudbuild.yaml must contain a deploy-cloudrun step",
       ).toBeDefined();
-      const hasMaxInstances = deployStep?.args.some((a) =>
-        a.startsWith("--max-instances="),
-      );
       expect(
-        hasMaxInstances,
-        "deploy-cloudrun step must pin --max-instances=<n> to cap blast radius during a rollout storm; without it, Cloud Run defaults to 100 max-instances and a spike could surface 503s for in-flight requests",
-      ).toBe(true);
+        deployStep?.args,
+        `deploy-cloudrun step must pin --max-instances=${EXPECTED_MAX_INSTANCES} to cap blast radius during a rollout storm; without it, Cloud Run defaults to 100 max-instances and a spike could surface 503s for in-flight requests`,
+      ).toContain(`--max-instances=${EXPECTED_MAX_INSTANCES}`);
     });
 
-    it("cloudbuild.yaml deploy step sets --concurrency=<n> — bounds in-flight requests per instance (RED on HEAD: the flag is absent)", () => {
-      // The deploy step currently has no `--concurrency`.
+    it("cloudbuild.yaml deploy step sets --concurrency=80 — bounds in-flight requests per instance", () => {
       // Without an explicit cap, Cloud Run defaults to 80
       // concurrent requests per instance. A regression that
       // increases the default (or a workload that holds
       // requests open longer than expected) could push an
       // instance past the cap and surface as 503s for
-      // in-flight requests mid-rollout. The test is RED on
-      // HEAD because the flag is not in cloudbuild.yaml; a
-      // future commit adding it turns this green.
+      // in-flight requests mid-rollout.
       const yaml = readSourceOrThrow(CLOUDBUILD_YAML, "cloudbuild.yaml");
       const steps = parseCloudBuildSteps(yaml);
       const deployStep = steps.find((s) => s.id === "deploy-cloudrun");
@@ -761,13 +774,10 @@ describe("Phase 10 — Deployment during use (production)", () => {
         deployStep,
         "cloudbuild.yaml must contain a deploy-cloudrun step",
       ).toBeDefined();
-      const hasConcurrency = deployStep?.args.some((a) =>
-        a.startsWith("--concurrency="),
-      );
       expect(
-        hasConcurrency,
-        "deploy-cloudrun step must pin --concurrency=<n> to bound in-flight requests per instance; without it, a workload that holds requests open longer than expected can push the instance past the default 80-request cap and surface 503s",
-      ).toBe(true);
+        deployStep?.args,
+        `deploy-cloudrun step must pin --concurrency=${EXPECTED_CONCURRENCY} to bound in-flight requests per instance; without it, a workload that holds requests open longer than expected can push the instance past the default 80-request cap and surface 503s`,
+      ).toContain(`--concurrency=${EXPECTED_CONCURRENCY}`);
     });
   });
 
@@ -862,22 +872,22 @@ describe("Phase 10 — P2 launch gate (single hard assertion)", () => {
     // 2. cloudbuild.yaml deploy step must pin --max-instances
     const steps = parseCloudBuildSteps(yaml);
     const deployStep = steps.find((s) => s.id === "deploy-cloudrun");
-    const hasMaxInstances = deployStep?.args.some((a) =>
-      a.startsWith("--max-instances="),
+    const hasMaxInstances = deployStep?.args.includes(
+      `--max-instances=${EXPECTED_MAX_INSTANCES}`,
     );
     if (!hasMaxInstances) {
       missing.push(
-        "cloudbuild.yaml deploy-cloudrun step is missing --max-instances=<n> (rollout-storm blast-radius cap)",
+        `cloudbuild.yaml deploy-cloudrun step is missing --max-instances=${EXPECTED_MAX_INSTANCES} (rollout-storm blast-radius cap)`,
       );
     }
 
     // 3. cloudbuild.yaml deploy step must pin --concurrency
-    const hasConcurrency = deployStep?.args.some((a) =>
-      a.startsWith("--concurrency="),
+    const hasConcurrency = deployStep?.args.includes(
+      `--concurrency=${EXPECTED_CONCURRENCY}`,
     );
     if (!hasConcurrency) {
       missing.push(
-        "cloudbuild.yaml deploy-cloudrun step is missing --concurrency=<n> (in-flight request cap per instance)",
+        `cloudbuild.yaml deploy-cloudrun step is missing --concurrency=${EXPECTED_CONCURRENCY} (in-flight request cap per instance)`,
       );
     }
 
@@ -956,6 +966,7 @@ describe("Phase 10 — helper unit tests (run unconditionally)", () => {
     ];
     for (const p of paths) {
       expect.soft(p, `path must be absolute: ${p}`).toMatch(/^\/.*\.(ts|yaml)$/);
+      expect.soft(readSourceOrThrow(p, p).length, `path must exist and be readable: ${p}`).toBeGreaterThan(0);
     }
   });
 });
