@@ -2,56 +2,60 @@
 
 ## Overview
 
-Execute a comprehensive manual QA/QC test pass of `apps/codecamp-advantage` on the local development server. The goal is to verify every user-facing feature, integration point, and edge case before deployment or release. Testing covers the full student/intern flow, admin flow, AI tutor, GitHub PR workflow, i18n, and performance/regression checks.
+Execute a comprehensive local QA/QC test pass of `apps/codecamp-advantage` running against the local development environment. The goal is to verify every user-facing feature works correctly in the local environment, establish a regression baseline for the production QA track, and identify any code-level bugs before deployment.
+
+This track is the local counterpart to `codecamp_qa_prod_20260517`. While the production track catches environment-specific problems, this track catches **code and data bugs**.
 
 ## Context
 
-- App: `apps/codecamp-advantage` (Next.js 16, App Router, tRPC, Drizzle, Postgres)
-- Local DB: Docker Postgres on port 5432 (`reading_advantage` database)
-- Start command: `pnpm dev` (starts all apps) or `pnpm turbo run dev --filter=codecamp-advantage`
-- Default locale: `th` (Thai)
-- Available locales: `th`, `en`
-- Roles: `INTERN`, `ADMIN`
+- **Local URL:** `http://localhost:3000`
+- **Platform:** Next.js dev server
+- **Database:** Local PostgreSQL via Docker
+- **Container:** Docker Compose
+- **Secrets:** `.env.local`
+- **AI:** OpenRouter API (live key or fallback mock)
+- **GitHub:** Test webhook delivery via local tunnel or ngrok
 
 ## Prerequisites
 
-- [ ] Docker Postgres is running (`pnpm db:start`)
-- [ ] Database is migrated and seeded with curriculum data
-- [ ] At least one `ADMIN` account exists in the database
-- [ ] At least one `INTERN` account exists in the database
-- [ ] `OPENROUTER_API_KEY` is configured in `.env.local` (for AI chat tests)
-- [ ] `GITHUB_WEBHOOK_SECRET` is configured (for webhook validation tests)
-- [ ] App is running on `http://localhost:3001` (or default port)
+- [ ] Local PostgreSQL running (`pnpm db:start`)
+- [ ] Database migrated and seeded
+- [ ] Dev server running (`pnpm dev`)
+- [ ] At least one ADMIN account in local database
+- [ ] At least one INTERN account in local database
+- [ ] `OPENROUTER_API_KEY` configured (or fallback mode accepted)
+- [ ] `GITHUB_WEBHOOK_SECRET` configured for local testing
 
 ## Scope
 
 ### In Scope
 
-- Authentication & session management (login, logout, roles, middleware)
-- Internationalization (locale switching, Thai font, message parity, chat locale)
-- Dashboard (progress stats, module locking, phase grouping, PR badges)
-- Module detail pages (slug routing, lesson lists, exercise repos, quiz averages)
-- Lesson pages (theory/exercise/quiz content, code blocks, submissions, scoring)
-- AI Tutor chat (lesson-scoped and full-page, streaming, persistence, rate limits)
-- Fork-based exercises & PR workflow (URL validation, duplicate prevention, status tracking)
-- Admin panel (role gating, intern creation, stats, detail pages)
-- GitHub webhook (signature verification, payload parsing, graceful degradation)
-- Performance & UX (skeleton states, responsive design, loading states)
-- Edge cases & data integrity (empty states, long inputs, concurrent actions)
+- Authentication flows (login, logout, session, role enforcement)
+- Dashboard rendering and data accuracy
+- Module and lesson navigation
+- Theory lesson rendering
+- Exercise lesson submissions
+- Quiz scoring (70% threshold) and progress updates
+- Admin panel (intern management, cohort stats)
+- Internationalization (TH/EN locale switching, Thai font)
+- AI tutor chat (OpenRouter integration)
+- GitHub webhook processing (PR review pipeline)
+- Responsive design across breakpoints
+- Error handling and edge cases
 
 ### Out of Scope
 
-- Automated E2E test suite creation (this track is manual QA only)
-- Production Cloud Run deployment verification (covered by `codecamp_deployment_20260516`)
-- Creating real GitHub repos or live PR reviews (mock/validation only)
-- Security penetration testing (focus is functional QA)
-- Load/stress testing beyond basic rate-limit checks
+- Production infrastructure (DNS, SSL, Cloud Run, Cloud SQL)
+- Performance benchmarking (covered by prod track)
+- CDN/cache behavior (covered by prod track)
+- Security header validation (covered by prod track)
+- Cross-browser visual testing (covered by prod track)
 
 ## Acceptance Criteria
 
-- [ ] All P0 (Critical) test cases pass
-- [ ] All P1 (High) test cases pass
-- [ ] P2 (Medium) and P3 (Low) test cases are executed with findings documented
-- [ ] Any failures are logged with reproduction steps, screenshots, and severity
-- [ ] A summary report is produced with pass/fail counts per area
-- [ ] Blockers are flagged before any production deployment
+- [ ] All P0 (Critical) local test cases pass
+- [ ] All P1 (High) local test cases pass
+- [ ] P2 and P3 test cases are executed with findings documented
+- [ ] Known local issues are documented with severity and status
+- [ ] No regressions introduced during development
+- [ ] Results are captured in a structured format for Phase 12 regression comparison
