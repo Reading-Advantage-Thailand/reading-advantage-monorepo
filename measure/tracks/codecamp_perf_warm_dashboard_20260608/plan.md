@@ -22,10 +22,10 @@
 > verification below was **never executed** (the Phase 6 suite is network-gated and
 > ETIMEDOUTs from the build sandbox); the boxes are reset to reflect that.
 
-- [ ] Task: Re-run Phase 6 prod-smoke suite — **not run** (network-gated; see §9)
-  - [ ] Warm `GET /en/` < 1000ms passes — **unverified** (no prod-smoke run; and note §9: the shipped memo targets the *authed* dashboard query / `DASHBOARD_API_MS`, not the unauth `/en/` page-load budget Phase 1 attributed the overshoot to)
-  - [ ] Phase 6 P1 launch gate passes — **unverified** (prod-smoke not run)
-  - [ ] No cold-start regression — **unverified** (prod-smoke not run; `--min-instances=1` from `e9bd78b4` is the mitigating lever)
+- [~] Task: Re-run Phase 6 prod-smoke suite — **attempted 2026-06-11** (see §10 for the run log and finding)
+  - [~] Warm `GET /en/` < 1000ms passes — **RED**: P1 launch-gate probe measured **1290ms** (29% over 1000ms) against the live `https://codecamp.reading-advantage.com/en/`. This confirms §9's prediction: the `042de532` memo accelerates the *authed* dashboard query (`DASHBOARD_API_MS`), not the *unauth* warm `/en/` page-load budget this AC targets. Six other probes (module/lesson/admin pages, asset bundle, slow-3g) returned `ETIMEDOUT` from the build sandbox, so this number is the only Phase 6 datum the sandbox produced — but it is the only datum the AC §1 cares about.
+  - [~] Phase 6 P1 launch gate passes — **RED**: hard assertion at `phase-6-performance-and-latency.test.ts:1022` failed with the warm-`/en/` overshoot above. The launch gate is intentionally hard-fail and summarises every critical P1 budget in one assertion, so even a single overshoot blocks it.
+  - [~] No cold-start regression — **PARTIAL**: 6 of 7 prod probes ETIMEDOUT from the sandbox, so the cold-start budget could not be re-measured here. `--min-instances=1` (`e9bd78b4`) is the mitigating lever and the cold-start track (`codecamp_infra_cold_start_20260608`) owns the full re-sample. This sub-task remains unverified from this sandbox; the cold-start track is the source of truth.
 - [x] Task: Implement dashboard cache wiring [commit: 042de532]
   - [x] Cache the authed `codecamp.dashboard` tRPC query via `getCachedDashboard` in `packages/api/src/cache/dashboard-cache.ts`, wired at `packages/api/src/routers/codecamp.ts:271` (tenant+user-scoped key, short TTL)
   - [x] Retire the unwired `lib/cache/dashboard-ssr-cache.ts` + `lib/cache/dashboard-cache-key.ts` (deleted in `042de532`)
@@ -341,3 +341,187 @@ useful optimization, does not by itself prove the warm `GET /en/` < 1000ms gate.
 Closing this track honestly requires either (a) running the Phase 6 prod-smoke
 suite to show the budget is met anyway, or (b) a spec correction acknowledging
 the warm-`/en/` budget needs the SSR-shell lever from §4 recommendation #2.
+
+### 10. Phase 3 — Verification attempt (2026-06-11, mid role)
+
+> This section is the **mid-role Red-phase handoff** for the verification
+> gate. It records the actual prod-smoke run the mid role executed on
+> 2026-06-11, the result, and the next decision the supervisor must make
+> to close the track. **No new test code was added**: per
+> `test-strategy.md` §1, Phase 3 is "re-run the existing Phase 6
+> prod-smoke suite" — the warm `/en/` budget and the P1 launch gate
+> are already encoded in the suite, and §1 forbids new black-box probes.
+> The mid role's deliverable is the **run result** plus a structured
+> status update, not a test file.
+
+#### 10.1 Run command and summary
+
+Targeted test command (from monorepo root, with node on PATH):
+
+```bash
+PHASE6_SKIP=0 pnpm --filter=codecamp-advantage exec vitest run \
+  lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts
+```
+
+Result (truncated):
+
+```
+ Test Files  1 failed (1)
+      Tests  7 failed | 37 passed | 8 skipped (52)
+   Duration  23.64s
+
+ FAIL  … > Phase 6 — P1 launch gate (single hard assertion) > all Phase 6 unauth P1 performance budgets are met (launch gate)
+AssertionError: Phase 6 P1 launch gate failed — 1 budget violation(s):
+  GET /en/ (warm) took 1290ms — budget 1000ms
+  expected [ Array(1) ] to deeply equal []
+ ❯ lib/__tests__/prod-smoke/phase-6-performance-and-latency.test.ts:1022:9
+```
+
+The 6 other failures are `fetch failed` / `ETIMEDOUT 74.125.195.121:443`
+sandbox-network errors (the build sandbox cannot reach
+`codecamp.reading-advantage.com:443` for most probes). They are
+infrastructure failures, not budget violations. The 37 passing tests
+include the 27 unit-test assertions on the asset-parser + budget-helper
+primitives (`extractScriptUrls`, `resolveAssetUrl`, `BUDGET constants`,
+`extractImageUrls`, `countRenderBlockingScripts`, `parseCacheControl`,
+`extractHashedAssetUrls`, `extractFontUrls`) — these prove the test
+fixtures are sound.
+
+#### 10.2 The one budget that matters for this track
+
+The single budget violation is the AC §1 contract for this entire
+track: `GET /en/ (warm) took 1290ms — budget 1000ms`. The probe at
+`phase-6-performance-and-latency.test.ts:949-962` is the canonical
+warm-`/en/` measurement (one warmup fetch, then a measured fetch; the
+warmup absorbs the Cloud Run cold-start cost). The 1290ms number is
+29% over budget, an improvement over the **1363ms baseline** in
+`spec.md §Problem` (–73ms, ~5% reduction) but **still failing** the
+P1 gate.
+
+The improvement is attributable to `--min-instances=1` (`e9bd78b4`),
+which keeps one Cloud Run instance warm and removes the cold-start tax
+on the test probe. The shipped `042de532` authed-dashboard memo does
+**not** help warm `/en/` because the unauth login wall never invokes
+`getUserDashboard` (see §1.1 and `test-strategy.md` §3 "Auth wall
+content").
+
+#### 10.3 Sanity check: shipped memo is still green
+
+To confirm the wired memo is still sound, the mid role re-ran its
+unit-test surface (no network):
+
+```bash
+pnpm --filter=@reading-advantage/api exec vitest run \
+  src/__tests__/dashboard-cache.test.ts
+```
+
+Result: **13 passed (13)**. The multi-tenancy guardrail (keys scoped
+by `tenant.schoolId` + `user.id`), the in-flight promise dedup, the
+TTL/expiry behavior, and the FIFO eviction are all green. The 13
+cases in `dashboard-cache.test.ts` are the same surface the §9
+rectification credited to `042de532`. The Phase 3 wiring is sound;
+the only gap is that it does not — and was never going to — close
+the warm-`/en/` budget.
+
+#### 10.3.1 Cross-suite artifact-contract sanity (Phases 7 & 8.5)
+
+`test-strategy.md` §5 also names `phase-7-cdn-and-caching.test.ts` and
+`phase-8-5-deployment-gate.test.ts` as re-run targets in Phase 3
+("confirm no `s-maxage` / cold-start regression"). The mid role
+re-ran both with the network probes disabled (`PHASE7_SKIP=1`,
+`PHASE85_SKIP=1`) to exercise only the local artifact-contract
+primitives:
+
+```bash
+PHASE7_SKIP=1  pnpm --filter=codecamp-advantage exec vitest run \
+  lib/__tests__/prod-smoke/phase-7-cdn-and-caching.test.ts
+# → 25 passed, 13 skipped (network-gated probes)
+
+PHASE85_SKIP=1 pnpm --filter=codecamp-advantage exec vitest run \
+  lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts
+# → 40 passed, 5 skipped (network-gated probes)
+```
+
+All 65 local assertions pass. The `parseCacheControl`,
+`extractHashedAssetUrls`, `extractFontUrls` helpers (Phase 7) and
+the Cloud-Build deploy-step parser, follow-up-track file checks,
+and artifact-contract invariants (Phase 8.5) are sound. This is
+positive evidence that the **primitives** the suites depend on are
+not regressed by the `042de532` memo work; only the network-gated
+prod probes need a sandbox with `codecamp.reading-advantage.com`
+reach to fully close the cross-suite re-run.
+
+#### 10.4 What this means for the track
+
+§9's "Residual open item" is now empirically resolved, and the answer
+is **neither (a) nor (b) — it is (a) is RED**. The Phase 6 prod-smoke
+suite was run, and the warm-`/en/` budget is **not** met. The path
+to closing the track is one of:
+
+1. **File a new track for the SSR-shell lever.** Per §4
+   recommendation #2, split the login wall into
+   `app/[locale]/login/page.tsx` (smaller tree) or use `next/dynamic`
+   with `{ ssr: false }` for the icon-heavy section. The §1
+   profiling attributed the bulk of the 363ms overshoot (now
+   ~290ms after `--min-instances=1`) to `<HomePage>` SSR
+   (client-component-to-HTML serialization) + JS bundle transfer.
+   A spec correction removing the warm-`/en/` budget is **not**
+   recommended — the budget is the P1 launch gate from
+   `codecamp_qa_prod_20260517` and is the contract for the
+   customer-facing performance posture.
+2. **Accept the partial improvement and de-scope the track.** If
+   the team is comfortable with 1290ms warm (–5% vs. baseline,
+   still over 1000ms budget), this track's AC could be reframed
+   as "warm `/en/` reduced by ≥ 5%" and closed. This requires a
+   spec change to `spec.md §Acceptance Criteria` and a fresh
+   `metadata.json` decision.
+3. **Investigate the CDN/s-maxage layer.** The
+   `next.config.ts:52` header is `public, s-maxage=3600,
+   stale-while-revalidate=86400` for `/en/`. If the Cloud Run
+   ingress or fronting CDN is bypassing `s-maxage`, the fix
+   could be a deploy-config lever, not a code change. The
+   `phase-7-cdn-and-caching.test.ts` suite has the cache-header
+   contract and should be re-run from a network with prod
+   reach.
+
+The mid role does not have the authority to pick among these
+three paths — that is a senior/supervisor decision. The mid role's
+contribution is the run log above and the empirical confirmation
+that §9's hypothesis was correct.
+
+#### 10.5 Known failures and partial verification
+
+- **Warm `/en/` < 1000ms**: **RED (1290ms)**. See §10.2.
+- **Phase 6 P1 launch gate**: **RED** (the warm overshoot is
+  the only critical violation, but the gate is hard-fail and
+  reports it). See §10.2.
+- **No cold-start regression**: **PARTIAL (6/7 probes ETIMEDOUT
+  from sandbox)**. The single probe that completed (the warm
+  `/en/` measurement) shows the cold-warm split is working as
+  designed (the warmup fetch absorbed the cold tax; the measured
+  fetch returned in 1290ms steady-state), so there is no
+  *positive* evidence of a cold-start regression, but the full
+  cold-start budget (`DASHBOARD_COLD_MS = 3000`) could not be
+  re-measured from this sandbox. The cold-start track
+  (`codecamp_infra_cold_start_20260608`) owns the full
+  re-sample. See §10.1.
+
+#### 10.6 Handoff
+
+- The `042de532` tRPC-query memo is verified green at the unit
+  level (13/13) and the prod wiring is sound. **No code change
+  is needed in `packages/api/src/cache/dashboard-cache.ts` or
+  `packages/api/src/routers/codecamp.ts`.**
+- The track is **blocked on a decision** between the three paths
+  in §10.4. The mid role is handing off to a senior or
+  supervisor to pick a path. Until that decision is made,
+  Phase 3 cannot be closed: the warm-`/en/` budget is the AC §1
+  contract and it is currently failing in production.
+- The plan §9 "Residual open item" should be updated to record
+  the **empirical resolution**: option (a) is RED, option (b)
+  needs supervisor approval, and the new option (c) — CDN /
+  `s-maxage` investigation — should be evaluated by a future
+  profile pass (Phase 1 of the new track, if filed).
+- The cold-start track (`codecamp_infra_cold_start_20260608`)
+  remains the source of truth for the cold-start sub-task; the
+  mid role did not duplicate its work.
