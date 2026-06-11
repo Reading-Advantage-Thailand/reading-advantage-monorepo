@@ -129,7 +129,7 @@ expectTypeOf<AIClient["generateImage"]>().toBeCallableWith({
 });
 expectTypeOf<AIClient["generateText"]>().toBeCallableWith({ prompt: "txt" });
 
-expectTypeOf<AIProvider>().toEqualTypeOf<"openai" | "google" | "mock">();
+expectTypeOf<AIProvider>().toEqualTypeOf<"openai" | "google" | "openrouter" | "mock">();
 expectTypeOf<AIConfig>().toEqualTypeOf<ExpectedAIConfig>();
 expectTypeOf<AIConfig["provider"]>().toEqualTypeOf<AIProvider>();
 

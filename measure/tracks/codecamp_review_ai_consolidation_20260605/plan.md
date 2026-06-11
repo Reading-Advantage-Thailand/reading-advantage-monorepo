@@ -58,11 +58,15 @@
   - **Evidence referenced (not reproduced in this phase):** the live regional probe referenced in the spec was performed outside this repo. The probe transcript is linked from the spec's references block. **Action for the next role:** if a fresh probe is required, run the credential-gated preflight test under a CI env that has `OPENROUTER_API_KEY` set; otherwise trust the existing prod pin to `x-ai/grok-build-0.1` and rely on Phase 6's preflight as the regression guard.
 
 ## Phase 1: OpenRouter Provider (if absent) — TDD
-- [ ] Task: If missing, write `packages/ai/src/providers/openrouter.test.ts` against the Mock-style contract (success + error), expecting an OpenAI-compatible provider keyed by `baseURL` + `OPENROUTER_API_KEY`, with provider-prefix model-ID stripping.
-- [ ] Task: Implement `openrouter.ts` (thin variant of the OpenAI provider with OpenRouter `baseURL`); register in `createAIClient`/`getAIClient`.
-- [ ] Task: Add a bounded, credential-gated OpenRouter capability preflight for the
+- [x] Task: If missing, write `packages/ai/src/providers/openrouter.test.ts` against the Mock-style contract (success + error), expecting an OpenAI-compatible provider keyed by `baseURL` + `OPENROUTER_API_KEY`, with provider-prefix model-ID stripping.
+  - Commit: `54b00ccc`
+- [x] Task: Implement `openrouter.ts` (thin variant of the OpenAI provider with OpenRouter `baseURL`); register in `createAIClient`/`getAIClient`.
+  - Commit: `54b00ccc`
+- [x] Task: Add a bounded, credential-gated OpenRouter capability preflight for the
   configured review model using the exact forced-tool structured-output contract.
-- [ ] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/ai` green.
+  - Commit: `54b00ccc`
+- [x] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/ai` green.
+  - Commit: `54b00ccc`
 
 ## Phase 2: Confirm/Adapt the `reviewExercise` Seam — TDD
 - [ ] Task: Write/extend a domain test that injects a Mock `AIClient` and asserts `reviewExercise` returns the typed review for a sample diff, and surfaces a model error correctly.

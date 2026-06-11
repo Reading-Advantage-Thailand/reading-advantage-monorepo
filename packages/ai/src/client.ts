@@ -3,10 +3,11 @@ import type { AIClient, AIConfig, AIProvider } from "./types.js";
 import { ProviderNotConfiguredError } from "./errors.js";
 import { OpenAIProvider } from "./providers/openai.js";
 import { GoogleProvider } from "./providers/google.js";
+import { OpenRouterProvider } from "./providers/openrouter.js";
 import { MockProvider } from "./providers/mock.js";
 
 const aiConfigSchema = z.object({
-  provider: z.enum(["openai", "google", "mock"]).default("openai"),
+  provider: z.enum(["openai", "google", "openrouter", "mock"]).default("openai"),
   apiKey: z.string().optional(),
   model: z.string().optional(),
   organization: z.string().optional(),
@@ -54,6 +55,17 @@ export function createAIClient(config: AIConfig): AIClient {
       return new GoogleProvider({ apiKey, model: parsed.model });
     }
 
+    case "openrouter": {
+      const apiKey = parsed.apiKey ?? process.env.OPENROUTER_API_KEY;
+      if (!apiKey) {
+        throw new ProviderNotConfiguredError(
+          "openrouter",
+          "OPENROUTER_API_KEY is not set"
+        );
+      }
+      return new OpenRouterProvider({ apiKey, model: parsed.model });
+    }
+
     case "mock":
       return new MockProvider();
 
@@ -71,10 +83,11 @@ let singletonClient: AIClient | null = null;
  * Return a lazily-initialised singleton AIClient. The provider and API key
  * are read from environment variables on first call:
  *
- *   AI_PROVIDER  — "openai" | "google" | "mock"  (default: "openai" in
+ *   AI_PROVIDER  — "openai" | "google" | "openrouter" | "mock"  (default: "openai" in
  *                   production, "mock" in test)
  *   OPENAI_API_KEY
  *   GEMINI_API_KEY / GOOGLE_API_KEY
+ *   OPENROUTER_API_KEY
  *
  * Subsequent calls return the same instance. Use `resetAIClient()` in tests
  * to force re-creation.

@@ -72,7 +72,7 @@ export interface AIClient {
 /**
  * Supported AI provider identifiers.
  */
-export type AIProvider = "openai" | "google" | "mock";
+export type AIProvider = "openai" | "google" | "openrouter" | "mock";
 
 /**
  * Configuration for creating an AIClient instance.

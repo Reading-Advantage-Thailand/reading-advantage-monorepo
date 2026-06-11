@@ -4,6 +4,7 @@ import { ProviderNotConfiguredError } from "./errors.js";
 import { MockProvider } from "./providers/mock.js";
 import { OpenAIProvider } from "./providers/openai.js";
 import { GoogleProvider } from "./providers/google.js";
+import { OpenRouterProvider } from "./providers/openrouter.js";
 
 vi.mock("@ai-sdk/openai", () => ({
   createOpenAI: vi.fn(() => (id: string) => `openai:${id}`),
@@ -64,6 +65,25 @@ describe("createAIClient", () => {
 
     if (origGemini) process.env.GEMINI_API_KEY = origGemini;
     if (origGoogle) process.env.GOOGLE_API_KEY = origGoogle;
+  });
+
+  it("returns OpenRouterProvider when API key is provided", () => {
+    const client = createAIClient({
+      provider: "openrouter",
+      apiKey: "test-key",
+    });
+    expect(client).toBeInstanceOf(OpenRouterProvider);
+  });
+
+  it("throws when OpenRouter key is missing", () => {
+    const original = process.env.OPENROUTER_API_KEY;
+    delete process.env.OPENROUTER_API_KEY;
+
+    expect(() => createAIClient({ provider: "openrouter" })).toThrow(
+      ProviderNotConfiguredError
+    );
+
+    if (original) process.env.OPENROUTER_API_KEY = original;
   });
 });
 

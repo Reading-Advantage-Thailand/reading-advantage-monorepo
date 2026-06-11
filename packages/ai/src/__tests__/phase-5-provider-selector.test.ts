@@ -346,7 +346,7 @@ describe("Phase 5 — AIConfig Zod schema shape (plan task 2)", () => {
     // it fails on a future edit that drops a key, removes the default,
     // or moves the schema to a new file without updating this assertion.
     expect(source).toMatch(/aiConfigSchema\s*=\s*z\.object\(\{/);
-    expect(source).toMatch(/provider:\s*z\.enum\(\[\s*["']openai["']\s*,\s*["']google["']\s*,\s*["']mock["']\s*\]\)/);
+    expect(source).toMatch(/provider:\s*z\.enum\(\[\s*["']openai["']\s*,\s*["']google["']\s*,\s*["']openrouter["']\s*,\s*["']mock["']\s*\]\)/);
     expect(source).toMatch(/provider:[^\n]*\.default\(\s*["']openai["']\s*\)/);
     expect(source).toMatch(/apiKey:\s*z\.string\(\)\.optional\(\)/);
     expect(source).toMatch(/model:\s*z\.string\(\)\.optional\(\)/);

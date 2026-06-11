@@ -18,3 +18,4 @@ export { MockProvider, createTestClient } from "./providers/mock.js";
 export type { MockResponses } from "./providers/mock.js";
 export { OpenAIProvider } from "./providers/openai.js";
 export { GoogleProvider } from "./providers/google.js";
+export { OpenRouterProvider, stripOpenRouterPrefix } from "./providers/openrouter.js";
