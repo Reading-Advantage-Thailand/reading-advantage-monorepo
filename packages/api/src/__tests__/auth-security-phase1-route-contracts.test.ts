@@ -100,13 +100,12 @@ async function loadEnrichModule(): Promise<RouteHandlerModule> {
 
 describe("Phase 1 — Task 6: packages/api/src/routes/auth/reset-password.ts exists", () => {
   it("the route file exists on disk", () => {
-    const barrel = readFileSync(AUTH_BARREL_PATH, "utf8");
     expect(
-      barrel,
-      "Expected the auth barrel to re-export `handleResetPassword` so the " +
-        "consumer apps (science / codecamp / primary) can mount the route " +
-        "without reaching into a deep file path.",
-    ).toMatch(/handleResetPassword/);
+      existsSync(RESET_PASSWORD_PATH),
+      "Expected packages/api/src/routes/auth/reset-password.ts to exist — " +
+        "Task 6 requires the scaffold before the auth barrel can safely " +
+        "re-export handleResetPassword.",
+    ).toBe(true);
   });
 
   it("exports a Zod schema named resetPasswordSchema", async () => {
@@ -288,12 +287,12 @@ describe("Phase 1 — Task 8: login.ts exports a DUMMY_HASH constant", () => {
 
 describe("Phase 1 — Task 33: enrichAuthUser is exported from enrich.ts", () => {
   it("packages/api/src/routes/auth/enrich.ts exists on disk", () => {
-    const barrel = readFileSync(AUTH_BARREL_PATH, "utf8");
     expect(
-      barrel,
-      "Expected the auth barrel to re-export `enrichAuthUser` so the " +
-        "handler files in this directory can call it without deep paths.",
-    ).toMatch(/enrichAuthUser/);
+      existsSync(ENRICH_PATH),
+      "Expected packages/api/src/routes/auth/enrich.ts to exist — Task 33 " +
+        "requires the enrichAuthUser scaffold before the auth barrel can " +
+        "safely re-export it.",
+    ).toBe(true);
   });
 
   it("enrich.ts exports a function called enrichAuthUser", async () => {

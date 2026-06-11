@@ -147,7 +147,7 @@ describe("Phase 1 — Task 2: 0019_session_token_hash is registered in _journal.
     ).toMatch(/ALTER TABLE\s+"?sessions"?\s+ADD COLUMN\s+"?token_hash"?/i);
   });
 
-  it("the 0019 SQL backfills token_hash from the existing token column", () => {
+  it("the 0019 SQL enables pgcrypto and backfills token_hash from token", () => {
     expect(
       existsSync(MIGRATION_0019_PATH),
       "0019_session_token_hash.sql must exist before its body can be " +
@@ -155,10 +155,13 @@ describe("Phase 1 — Task 2: 0019_session_token_hash is registered in _journal.
     ).toBe(true);
 
     const source = readFileSync(MIGRATION_0019_PATH, "utf8");
-    // The plan specifies encode(digest(token, 'sha256'), 'hex') so the
-    // existing rows get sha256 hashes that match the values Phase 3 will
-    // start writing. Without the backfill, FR-1 invalidates every active
-    // session at deploy time.
+    expect(
+      source,
+      "0019_session_token_hash.sql must enable pgcrypto before calling " +
+        "digest(...). Fresh Postgres databases do not expose digest() " +
+        "unless pgcrypto is installed.",
+    ).toMatch(/CREATE\s+EXTENSION\s+IF\s+NOT\s+EXISTS\s+pgcrypto/i);
+
     expect(
       source,
       "0019_session_token_hash.sql must UPDATE sessions SET token_hash = " +
