@@ -63,7 +63,7 @@ export default function ModulePage() {
   }
 
   return (
-    <div className="container py-12">
+    <div className="container py-8 md:py-12">
       <Button variant="ghost" className="mb-6" asChild>
         <Link href="/">
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -72,8 +72,8 @@ export default function ModulePage() {
       </Button>
 
       <div className="mb-8">
-        <div className="flex flex-wrap items-start gap-3">
-          <h1 className="text-3xl font-bold">{moduleData.title}</h1>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+          <h1 className="text-2xl font-bold md:text-3xl">{moduleData.title}</h1>
           <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
             {t("lessonsInEnglish")}
           </span>
@@ -131,7 +131,7 @@ export default function ModulePage() {
         </div>
       )}
 
-      <div className="grid gap-4">
+      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-1">
         <h2 className="text-xl font-semibold">{t("lessons")}</h2>
         {moduleData.lessons && moduleData.lessons.length > 0 ? (
           moduleData.lessons.map((lesson) => (

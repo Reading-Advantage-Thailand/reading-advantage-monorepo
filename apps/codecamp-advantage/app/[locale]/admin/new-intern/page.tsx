@@ -76,7 +76,7 @@ export default function NewInternPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-2xl px-4 py-12">
+    <div className="container mx-auto max-w-2xl px-4 py-8 md:py-12">
       <Button variant="ghost" className="mb-6" asChild>
         <Link href="/admin">
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -87,7 +87,7 @@ export default function NewInternPage() {
       <div className="mb-8">
         <div className="mb-2 flex items-center gap-3">
           <UserPlus className="h-6 w-6 text-primary" />
-          <h1 className="text-3xl font-bold">{t("createIntern")}</h1>
+          <h1 className="text-2xl font-bold md:text-3xl">{t("createIntern")}</h1>
         </div>
         <p className="text-muted-foreground">
           {t("createInternDescription")}
@@ -176,11 +176,11 @@ export default function NewInternPage() {
           </p>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row">
           <Button
             type="submit"
             disabled={createIntern.isPending}
-            className="w-full"
+            className="w-full sm:w-auto"
           >
             {createIntern.isPending ? t("creating") : t("createIntern")}
           </Button>

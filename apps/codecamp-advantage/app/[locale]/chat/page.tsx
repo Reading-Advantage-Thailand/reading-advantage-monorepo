@@ -38,8 +38,8 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="container flex h-[calc(100vh-4rem)] flex-col py-6">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="container flex h-[calc(100vh-4rem)] flex-col py-4 md:py-6">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold">{t("title")}</h1>
         <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
           <Plus className="mr-2 h-4 w-4" />
@@ -79,7 +79,7 @@ export default function ChatPage() {
         )}
       </div>
 
-      <div className="mt-4 flex gap-2">
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row">
         <input
           type="text"
           value={input}

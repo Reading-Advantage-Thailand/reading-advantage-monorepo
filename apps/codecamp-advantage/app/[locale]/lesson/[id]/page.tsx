@@ -51,14 +51,14 @@ export default function LessonPage() {
 
   if (!lesson) {
     return (
-      <div className="container py-12">
-        <Button variant="ghost" className="mb-6" asChild>
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Link>
-        </Button>
-        <h1 className="text-2xl font-bold">Lesson not found</h1>
+    <div className="container py-8 md:py-12">
+      <Button variant="ghost" className="mb-6" asChild>
+        <Link href="/">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Dashboard
+        </Link>
+      </Button>
+      <h1 className="text-2xl font-bold">Lesson not found</h1>
         <p className="mt-2 text-muted-foreground">
           The lesson ID <code>{lessonId}</code> does not exist or is not yet published.
         </p>
@@ -72,7 +72,7 @@ export default function LessonPage() {
     ) ?? [];
 
   return (
-    <div className="container py-12">
+    <div className="container py-8 md:py-12">
       <Button variant="ghost" className="mb-6" asChild>
         <Link href={`/module/${lesson.moduleSlug}`}>
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -85,7 +85,7 @@ export default function LessonPage() {
           <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
             {lesson.type}
           </span>
-          <h1 className="mt-2 text-3xl font-bold">{lesson.title}</h1>
+          <h1 className="mt-2 text-2xl font-bold md:text-3xl">{lesson.title}</h1>
           <p className="mt-2 text-muted-foreground">{lesson.description}</p>
         </div>
 
