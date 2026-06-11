@@ -1,0 +1,16 @@
+{
+  "status": "fail",
+  "summary": "Phase 12 parity machinery exists, but adversarial audit found the local-vs-prod matrix overstates local QA coverage: several P0/P1 rows claim local=pass even though the archived local QA report marks the same areas NOT TESTED. Added an executable guard so these unsupported claims fail the Phase 12 launch gate until corrected or backed by evidence.",
+  "findings": [
+    "apps/codecamp-advantage/lib/__tests__/prod-smoke/local-qa-parity-matrix.json claims local=pass for P0/P1 areas that measure/archive/codecamp_qa_local_20260517/qa-report.md documents as NOT TESTED, including session cookie security, quiz progress dashboard update, chat rate limiting/message persistence/language behavior, responsive coverage, concurrent users, and webhook signature coverage.",
+    "The active local QA track under measure/tracks/codecamp_qa_local_20260517 is a reconstructed summary, while the archived QA report is the concrete evidence artifact; Phase 12 should not pass based on reconstructed pass claims without matching archived PASS evidence."
+  ],
+  "evidence": [
+    "Reviewed measure/tracks/codecamp_qa_prod_20260517/spec.md, plan.md Phase 12, and test-strategy.md.",
+    "Reviewed git diff dfaee7635e5fc9c85f6ed32ecc6d66e2669d99ea..HEAD: Phase 12 test, parity matrix, and reconstructed local QA track were added after the baseline.",
+    "Reviewed measure/archive/codecamp_qa_local_20260517/qa-report.md lines showing NOT TESTED for session cookie security, message persistence, rate limiting, language behavior, progress update dashboard, responsive design, concurrent users, and webhook signature verification.",
+    "Added findUnsupportedLocalPassClaims guard in apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-12-regression-against-local-qa.test.ts to fail unsupported local=pass claims.",
+    "Gate log adversarial-attempt-1/gates.log: npm test passed 27/27 before this continuation.",
+    "Attempted local runtime checks in this shell: node/npm/pnpm unavailable on PATH; targeted vitest could not execute here."
+  ]
+}

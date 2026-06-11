@@ -131,6 +131,10 @@ const MONOREPO_ROOT = resolve(APP_ROOT, "../..");
 
 const LOCAL_QA_TRACK_DIR = resolve(MONOREPO_ROOT, "measure/tracks/codecamp_qa_local_20260517");
 const PROD_QA_TRACK_DIR = resolve(MONOREPO_ROOT, "measure/tracks/codecamp_qa_prod_20260517");
+const ARCHIVED_LOCAL_QA_REPORT_PATH = resolve(
+  MONOREPO_ROOT,
+  "measure/archive/codecamp_qa_local_20260517/qa-report.md",
+);
 const PARITY_MATRIX_PATH = resolve(HERE, "local-qa-parity-matrix.json");
 const CURRICULUM_SEED_PATH = resolve(
   MONOREPO_ROOT,
@@ -193,6 +197,61 @@ export interface ParityMatrix {
   sourceTrackProd: string;
   rows: ParityRow[];
 }
+
+const LOCAL_REPORT_NOT_TESTED_PATTERNS = [
+  /Session cookie security\s*\|\s*NOT TESTED/i,
+  /Message persistence\s*\|\s*NOT TESTED/i,
+  /Rate limiting\s*\|\s*NOT TESTED/i,
+  /Language behavior\s*\|\s*NOT TESTED/i,
+  /Progress update \(dashboard\)\s*\|\s*NOT TESTED/i,
+  /Responsive design\s*\|\s*NOT TESTED/i,
+  /Mobile rendering\s*\|\s*NOT TESTED/i,
+  /Concurrent users\s*\|\s*NOT TESTED/i,
+  /GitHub webhook signature verification\s*\|\s*NOT TESTED/i,
+];
+
+const LOCAL_REPORT_COVERAGE_REQUIREMENTS = [
+  {
+    rowPattern: /Session cookie HttpOnly, Secure, SameSite=Lax/i,
+    reportPattern: /Session cookie security\s*\|\s*PASS/i,
+    description: "session cookie security",
+  },
+  {
+    rowPattern: /Message persistence saves to database/i,
+    reportPattern: /Message persistence\s*\|\s*PASS/i,
+    description: "AI chat message persistence",
+  },
+  {
+    rowPattern: /Chat rate limit/i,
+    reportPattern: /Rate limiting\s*\|\s*PASS/i,
+    description: "AI chat rate limiting",
+  },
+  {
+    rowPattern: /Thai input.*Thai response|English input.*English response/i,
+    reportPattern: /Language behavior\s*\|\s*PASS/i,
+    description: "AI chat language behavior",
+  },
+  {
+    rowPattern: /Progress updates after quiz submission/i,
+    reportPattern: /Progress update \(dashboard\)\s*\|\s*PASS/i,
+    description: "quiz progress dashboard update",
+  },
+  {
+    rowPattern: /Responsive Tailwind coverage/i,
+    reportPattern: /Responsive design\s*\|\s*PASS/i,
+    description: "responsive design local coverage",
+  },
+  {
+    rowPattern: /Multiple simultaneous logins|Multiple users login/i,
+    reportPattern: /Concurrent users\s*\|\s*PASS/i,
+    description: "concurrent user local coverage",
+  },
+  {
+    rowPattern: /Webhook invalid signature|Invalid signature returns 401|Missing signature returns 401/i,
+    reportPattern: /Webhook signature verification\s*\|\s*PASS|Invalid signature returns 401\s*\|\s*PASS|Missing signature returns 401\s*\|\s*PASS/i,
+    description: "webhook signature local coverage",
+  },
+];
 
 /**
  * Compute whether a prod row regressed against the local row.
@@ -291,6 +350,32 @@ export function countCompletedRows(matrix: ParityMatrix): number {
  */
 export function countRegressions(matrix: ParityMatrix): number {
   return matrix.rows.filter((r) => isProdRegression(r.local, r.prod)).length;
+}
+
+/**
+ * Find parity rows that claim a local pass without matching evidence
+ * in the archived local QA report.
+ *
+ * @param matrix The parity matrix under audit.
+ * @param report The archived local QA report text.
+ * @returns Human-readable unsupported local-pass claims.
+ */
+export function findUnsupportedLocalPassClaims(matrix: ParityMatrix, report: string): string[] {
+  if (LOCAL_REPORT_NOT_TESTED_PATTERNS.some((pattern) => pattern.test(report))) {
+    return matrix.rows
+      .filter((row) => row.local === "pass")
+      .flatMap((row) =>
+        LOCAL_REPORT_COVERAGE_REQUIREMENTS.filter(
+          (requirement) =>
+            requirement.rowPattern.test(row.checklistItem) &&
+            !requirement.reportPattern.test(report),
+        ).map(
+          (requirement) =>
+            `[${row.priority}] ${row.phaseId}::${row.checklistItem} claims local=pass but archived local QA report lacks PASS evidence for ${requirement.description}`,
+        ),
+      );
+  }
+  return [];
 }
 
 // ─── Source-seed parsers (unit-tested in Suite 4) ───────────
@@ -590,6 +675,55 @@ describe("Phase 12 — Parity matrix helper unit tests (always run)", () => {
       expect(countRegressions(matrix)).toBe(1);
     });
   });
+
+  describe("findUnsupportedLocalPassClaims()", () => {
+    it("flags local=pass matrix rows when the archived local report says that area was not tested", () => {
+      const matrix: ParityMatrix = {
+        schemaVersion: 1,
+        generatedAt: "x",
+        sourceTrackLocal: "a",
+        sourceTrackProd: "b",
+        rows: [
+          {
+            phaseId: "3-authentication-and-authorization",
+            checklistItem: "Session cookie HttpOnly, Secure, SameSite=Lax",
+            priority: "P0",
+            local: "pass",
+            prod: "pass",
+          },
+        ],
+      };
+      const unsupported = findUnsupportedLocalPassClaims(
+        matrix,
+        "| Session cookie security | NOT TESTED | Requires browser dev tools inspection |",
+      );
+      expect(unsupported).toHaveLength(1);
+      expect(unsupported[0]).toContain("session cookie security");
+    });
+
+    it("does not flag local=pass matrix rows when the archived local report contains PASS evidence", () => {
+      const matrix: ParityMatrix = {
+        schemaVersion: 1,
+        generatedAt: "x",
+        sourceTrackLocal: "a",
+        sourceTrackProd: "b",
+        rows: [
+          {
+            phaseId: "3-authentication-and-authorization",
+            checklistItem: "Session cookie HttpOnly, Secure, SameSite=Lax",
+            priority: "P0",
+            local: "pass",
+            prod: "pass",
+          },
+        ],
+      };
+      const unsupported = findUnsupportedLocalPassClaims(
+        matrix,
+        "| Session cookie security | PASS | Verified in browser dev tools |",
+      );
+      expect(unsupported).toEqual([]);
+    });
+  });
 });
 
 describe("Phase 12 — Parity matrix artifact (filesystem)", () => {
@@ -668,6 +802,24 @@ describe("Phase 12 — Parity matrix artifact (filesystem)", () => {
       regressions.length,
       `parity matrix has ${regressions.length} prod regression(s):\n${lines.join("\n")}`,
     ).toBe(0);
+  });
+
+  it("local=pass claims in the parity matrix are backed by the archived local QA report", () => {
+    if (!existsSync(PARITY_MATRIX_PATH)) {
+      expect.fail(`${PARITY_MATRIX_PATH} does not exist — Suite 2 RED expected`);
+      return;
+    }
+    if (!existsSync(ARCHIVED_LOCAL_QA_REPORT_PATH)) {
+      expect.fail(`${ARCHIVED_LOCAL_QA_REPORT_PATH} does not exist — cannot audit local-pass evidence`);
+      return;
+    }
+    const matrix = JSON.parse(readFileSync(PARITY_MATRIX_PATH, "utf-8")) as ParityMatrix;
+    const report = readFileSync(ARCHIVED_LOCAL_QA_REPORT_PATH, "utf-8");
+    const unsupported = findUnsupportedLocalPassClaims(matrix, report);
+    expect(
+      unsupported,
+      `parity matrix has ${unsupported.length} unsupported local=pass claim(s):\n${unsupported.map((line) => `  - ${line}`).join("\n")}`,
+    ).toEqual([]);
   });
 });
 
@@ -800,7 +952,8 @@ describe("Phase 12 — P0 launch gate (single hard assertion)", () => {
     }
 
     // Sub-task 2: No production-only failures in P0/P1 areas
-    // (encoded as: parity-matrix has no row where local=pass and prod=fail)
+    // (encoded as: parity-matrix has no row where local=pass and prod=fail,
+    // and local=pass claims are backed by archived local QA evidence)
     if (existsSync(PARITY_MATRIX_PATH)) {
       const raw = readFileSync(PARITY_MATRIX_PATH, "utf-8");
       const parsed = JSON.parse(raw) as ParityMatrix;
@@ -815,6 +968,20 @@ describe("Phase 12 — P0 launch gate (single hard assertion)", () => {
           `[P0/known-local-issues] ${p01Failures.length} P0/P1 production-only failure(s): ` +
             p01Failures.map((r) => `${r.phaseId}::${r.checklistItem}`).join(", "),
         );
+      }
+      if (existsSync(ARCHIVED_LOCAL_QA_REPORT_PATH)) {
+        const report = readFileSync(ARCHIVED_LOCAL_QA_REPORT_PATH, "utf-8");
+        const unsupported = findUnsupportedLocalPassClaims(parsed, report).filter((line) =>
+          line.startsWith("[P0]") || line.startsWith("[P1]"),
+        );
+        if (unsupported.length > 0) {
+          failures.push(
+            `[P0/known-local-issues] ${unsupported.length} P0/P1 local=pass claim(s) lack archived local QA PASS evidence: ` +
+              unsupported.join("; "),
+          );
+        }
+      } else {
+        failures.push("[P0/known-local-issues] archived local QA report missing");
       }
     }
 

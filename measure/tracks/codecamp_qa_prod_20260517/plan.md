@@ -2202,6 +2202,18 @@ directory and the parity matrix JSON.
 
 Green-phase commit: `34592879`
 
+### Phase 12 — Adversarial continuation (2026-06-11)
+
+Adversarial audit found the parity matrix was too trusting: it marks several P0/P1 rows as `local=pass` even though the concrete archived local QA report (`measure/archive/codecamp_qa_local_20260517/qa-report.md`) records the same areas as `NOT TESTED`.
+
+Added `findUnsupportedLocalPassClaims()` to `apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-12-regression-against-local-qa.test.ts` and wired it into both the parity-matrix artifact test and the P0 launch gate. The guard fails unsupported local-pass claims for session cookie security, chat persistence/rate-limit/language behavior, quiz dashboard progress update, responsive coverage, concurrent users, and webhook signature coverage until the matrix is corrected or backed by archived PASS evidence.
+
+Audit result written to `measure/runs/20260610T223331Z/codecamp_qa_prod_20260517/phase-5-Phase_12_Regression_Against_Local_QA_P0/adversarial/adversarial-result.json` with `status: fail` because this is a blocking Phase 12 evidence issue.
+
+Verification notes:
+- `measure/runs/.../adversarial-attempt-1/gates.log` shows supervisor-run `npm test` passed (`27 passed`).
+- This continuation attempted targeted Phase 12 Vitest and `npm test`, but this interactive shell has no `node`, `npm`, or `pnpm` on `PATH`; runtime validation must run in the gate environment.
+
 ## Phase 13: Production Readiness Report (P0)
 
 Document findings and sign off on production readiness.
