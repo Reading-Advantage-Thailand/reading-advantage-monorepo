@@ -10,11 +10,13 @@
 > were re-confirmed against the working tree on 2026-06-11.
 
 - [x] Task: `grep -rn "openrouter\|OpenRouter\|generateReview\|OPENROUTER_API_KEY" packages/webhooks packages/api packages/domain` — record the actual current locations of the two review call sites (replaces the stale `github.ts:41` / `codecamp.ts:405`).
+  - Commit: `d4fbf78e`
   - **Call site A (webhook):** `packages/webhooks/src/github.ts:65-99` (`generateReview` declared at module scope; closure passed into `reviewExercise` at line 316 via the `runReview` IIFE at line 302-340).
   - **Call site B (tRPC/API):** `packages/api/src/routers/codecamp.ts:466-489` (`generateReview` declared inside the `adminProcedure` mutation closure; called inline at line 491).
   - **Domain seam:** `packages/domain/src/codecamp/review-exercise.ts:18, 76-125`. Callback signature `(system: string, prompt: string) => Promise<ReviewResult>`, NOT an `AIClient`.
   - **Anonymous copy in API router** is invisible to the graph (confirmed: `build-graph search "generateReview"` returns 1 function hit + 1 param hit; the inline `async function generateReview(...)` at `codecamp.ts:471` is a closure, not a node). Grep is still required to find it.
 - [x] Task: Read both call sites; diff their prompts + model params + error handling. Note every difference.
+  - Commit: `d4fbf78e`
   - **Diff table (verified 2026-06-11):**
 
     | Aspect | A: `packages/webhooks/src/github.ts:65-99` | B: `packages/api/src/routers/codecamp.ts:466-489` | Same/Diff |
@@ -30,20 +32,24 @@
 
   - **Net result:** prompts, model, schema, params are byte-identical; only the *enclosing* error-handling posture differs (A is fire-and-forget via `runReview` IIFE `.catch`; B is synchronous tRPC error-mapping). No prompt reconciliation needed.
 - [x] Task: Read `packages/domain/.../reviewExercise` (the DI seam) and its current client parameter type.
+  - Commit: `d4fbf78e`
   - `ReviewExerciseInput.generateReview: (system: string, prompt: string) => Promise<ReviewResult>` at `packages/domain/src/codecamp/review-exercise.ts:18`.
   - Domain body: build system prompt via `buildSystemPrompt(moduleTitle?, moduleDescription?)` (line 44-63); wrap diff in ` ```diff ... ``` ` fence; call `generateReview(system, prompt)` at line 124.
   - **6 existing tests** at `packages/domain/src/__tests__/review-exercise.test.ts:24-200` cover: success path, `moduleId` lookup, `repoUrl` lookup, non-admin rejection, code-fence wrap, anti-injection system-prompt line. **All 6 must remain green** through Phases 1-4.
   - **Mismatch with `AIClient`:** `AIClient.generateObject<T>({ schema, prompt, model, temperature, maxTokens })` (`packages/ai/src/types.ts:6-17, 52-70`) accepts a Zod schema in-band and returns a parsed object. The current callback is a higher-level wrapper that pre-binds the schema. **Adopting AIClient-shape DI widens the blast radius** to the two call sites + 1 test file (8 incoming `param_flow` edges on `reviewExercise`, 0 outgoing `calls` edges → leaf-like).
 - [x] Task: Inspect `packages/ai/src/providers/` — does an OpenRouter provider exist? Record yes/no.
+  - Commit: `d4fbf78e`
   - `ls packages/ai/src/providers/` → `google.test.ts  google.ts  mock.test.ts  mock.ts  openai.test.ts  openai.ts`. **No `openrouter.ts` / `openrouter.test.ts`.**
   - `AIProvider` union at `packages/ai/src/types.ts:75` is `type AIProvider = "openai" | "google" | "mock"`. `aiConfigSchema` at `packages/ai/src/client.ts:8-13` is `z.enum(["openai", "google", "mock"])`.
   - **Confirmed absent.** Phase 1 (FR-1) is required.
 - [x] Task: Decide + document the unified prompt/params (A, B, or a reconciled version).
+  - Commit: `d4fbf78e`
   - **Decision: "A" wins by default — byte-identical impls need no prompt reconciliation.** The webhook scoping pattern (top-level `generateReview` in `github.ts`) is the cleaner shape; the API router inline pattern is an artifact of being inside a procedure closure and should be extracted to a module-level helper in Phase 4.
   - **DI shape (Phase 1 deliverable):** keep `reviewExercise`'s callback shape `(system, prompt) => Promise<ReviewResult>` (lower blast radius per test-strategy §"DI-shape decision"). Add a single shared adapter factory `aiClientToGenerateReview(client, schema)` in `packages/domain/src/codecamp/` (tested once) that both call sites import. This satisfies FR-2's "All review generation flows through [reviewExercise]" without touching the existing 6 tests' signatures.
   - **Model:** pin to `x-ai/grok-build-0.1` (the only model that has been **live-probed** with the AI SDK `tool_choice` contract from the deployment region). Do **not** rotate to a different model in this track.
   - **Env:** `OPENROUTER_API_KEY` is the only required env var; no other provider-specific env added.
 - [x] Task: Reproduce and record the 2026-06-08 production failure: `xiaomi/mimo-v2.5`
+  - Commit: `d4fbf78e`
   returns no endpoint supporting the required `tool_choice` request from the deployment
   region; record the successful `x-ai/grok-build-0.1` forced-tool probe as evidence, not
   as an unreviewed permanent model decision.
