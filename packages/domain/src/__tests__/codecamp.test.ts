@@ -28,6 +28,8 @@ import {
   getChatContext,
 } from "../codecamp/index.js";
 import { chatMessageInputSchema } from "@reading-advantage/types";
+import type { SQL } from "drizzle-orm";
+import { PgDialect } from "drizzle-orm/pg-core";
 import { createMockDb } from "./mock-db.js";
 import { createTenantDB } from "../db-contract.js";
 import type { DB } from "@reading-advantage/db";
@@ -728,6 +730,37 @@ describe("updateUserProgress", () => {
     expect(result.status).toBe("completed");
     expect(result.score).toBe(100);
     expect(db.insert).toHaveBeenCalled();
+  });
+
+  it("uses a monotonic conflict update that cannot downgrade completed progress", async () => {
+    const lesson = { id: "l1", moduleId: "m1", title: "Lesson 1", description: "Desc", order: 1, type: "exercise" as const, contentJson: {}, createdAt: new Date(), updatedAt: new Date() };
+    const progress = { id: "p1", userId: "st1", moduleId: "m1", lessonId: "l1", status: "completed" as const, score: 100, completedAt: new Date(), createdAt: new Date(), updatedAt: new Date() };
+    const db = createMockDb({ selectResults: [lesson], insertReturning: [progress] });
+    const onConflictDoUpdate = vi.fn().mockReturnValue({
+      returning: vi.fn().mockResolvedValue([progress]),
+    });
+    db.insert.mockReturnValue({
+      values: vi.fn().mockReturnValue({ onConflictDoUpdate }),
+    });
+
+    await updateUserProgress({
+      db: wrapDb(db),
+      user: student,
+      tenant: globalTenant,
+      input: { lessonId: "l1", status: "in_progress" },
+    });
+
+    const conflictConfig = onConflictDoUpdate.mock.calls[0]?.[0] as {
+      set?: { status?: unknown };
+    };
+    const statusExpression = conflictConfig.set?.status as {
+      queryChunks?: unknown[];
+    };
+    const renderedSql = new PgDialect().sqlToQuery(statusExpression as SQL).sql;
+
+    expect(statusExpression).toHaveProperty("queryChunks");
+    expect(renderedSql).toContain("completed");
+    expect(renderedSql).toContain("excluded.status");
   });
 
   it("throws when lesson not found", async () => {

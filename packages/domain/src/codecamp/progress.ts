@@ -8,7 +8,7 @@ import type { TenantDB } from "../db-contract.js";
 import { getModulesWithProgress } from "./modules.js";
 
 /**
- * Updates or inserts user progress for a codecamp lesson.
+ * Updates or inserts user progress while preserving completed status.
  */
 export async function updateUserProgress({
   db, user, tenant, input,
@@ -35,7 +35,9 @@ export async function updateUserProgress({
     .onConflictDoUpdate({
       target: [codecampUserProgress.userId, codecampUserProgress.lessonId],
       set: {
-        status: input.status !== undefined ? input.status : sql`${codecampUserProgress.status}`,
+        status: input.status !== undefined
+          ? sql`CASE WHEN ${codecampUserProgress.status} = 'completed' THEN ${codecampUserProgress.status} ELSE excluded.status END`
+          : sql`${codecampUserProgress.status}`,
         score: input.score !== undefined ? input.score : sql`${codecampUserProgress.score}`,
         completedAt: input.status === "completed" ? sql`COALESCE(${codecampUserProgress.completedAt}, ${nowIso})` : sql`${codecampUserProgress.completedAt}`,
         updatedAt: now,
