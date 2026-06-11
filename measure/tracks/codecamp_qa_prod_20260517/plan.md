@@ -2218,22 +2218,193 @@ Verification notes:
 
 Document findings and sign off on production readiness.
 
-- [ ] Task: Compile results
-  - [ ] Count P0 passes / fails in production
-  - [ ] Count P1 passes / fails in production
-  - [ ] Count P2 passes / fails in production
-  - [ ] Document all production-only issues
-  - [ ] Document performance metrics
-  - [ ] Document integration test results
-- [ ] Task: Blocker assessment
-  - [ ] Identify any P0 failures that must be fixed before public launch
-  - [ ] Identify any P1 failures that should be fixed before public launch
-  - [ ] Create follow-up tickets for each blocker
-- [ ] Task: Sign-off
-  - [ ] Product owner review of QA report
-  - [ ] Engineering lead review of blockers
-  - [ ] Go / no-go decision documented
-  - [ ] Track status updated to complete or deferred
+- [~] Task: Compile results (Red-phase contract: `phase-13-production-readiness-report.test.ts`)
+  - [~] Count P0 passes / fails in production (Red-phase contract: `countByPriority(parityMatrix)` reader in `phase-13-production-readiness-report.test.ts`)
+  - [~] Count P1 passes / fails in production (Red-phase contract: same)
+  - [~] Count P2 passes / fails in production (Red-phase contract: same)
+  - [~] Document all production-only issues (Red-phase contract: `production-only issues` section in `measure/tracks/codecamp_qa_prod_20260517/report.md` + `report-summary.json`)
+  - [~] Document performance metrics (Red-phase contract: `performance metrics` section in `report.md` referencing the Phase 6 perf-contract envelope)
+  - [~] Document integration test results (Red-phase contract: `integration test results` section in `report.md` referencing Phase 5 + Phase 9)
+- [~] Task: Blocker assessment (Red-phase contract: same test file, Suite 2)
+  - [~] Identify any P0 failures that must be fixed before public launch (Red-phase contract: `BLOCKER_SEVERITY` enum in typed reader)
+  - [~] Identify any P1 failures that should be fixed before public launch (Red-phase contract: same)
+  - [~] Create follow-up tickets for each blocker (Red-phase contract: filesystem regression detector for follow-up track directories in `measure/tracks/`)
+- [~] Task: Sign-off (Red-phase contract: same test file, Suite 3)
+  - [~] Product owner review of QA report (Red-phase contract: `signoffs.productOwner` field in `report-summary.json` typed reader)
+  - [~] Engineering lead review of blockers (Red-phase contract: `signoffs.engineeringLead` field)
+  - [~] Go / no-go decision documented (Red-phase contract: `goNoGo` enum field — `go` | `no-go` | `conditional`)
+  - [~] Track status updated to complete or deferred (Red-phase contract: `measure/tracks/codecamp_qa_prod_20260517/metadata.json` `status` field transitions)
+
+### Phase 13 — Red-phase probe results (2026-06-11)
+
+Executable contract lives at
+`apps/codecamp-advantage/lib/__tests__/prod-smoke/phase-13-production-readiness-report.test.ts`.
+Run with
+`node_modules/.bin/vitest run lib/__tests__/prod-smoke/phase-13-production-readiness-report.test.ts`
+from `apps/codecamp-advantage` (or set `PHASE13_SKIP=1` to opt out of the
+signoff presence checks; the filesystem + reader contract still runs unconditionally).
+
+**Test budget:** 41 tests total (1 filesystem regression detector for `report.md`,
+1 for `report-summary.json`, 1 for `report.md` non-empty, 1 for the 10 required sections,
+1 for the Go / No-Go Decision enum, 4 blocker-assessment checks, 5 signoff checks,
+3 cross-reference checks, 1 P0 launch gate, 12 `validateReportSummary` unit tests,
+2 `countByPriority` unit tests, 1 `findOpenBlockers` unit test, 1 `requiresImmediateFix`
+unit test, 1 `extractReportSections` unit test, 3 `extractReportSectionBody` unit
+tests, 2 `listTrackDirs` unit tests, 1 suite-1 `beforeAll`, 1 suite-4 `beforeAll`).
+
+**Symbol map (from build-graph):**
+
+- `local-qa-parity-matrix.json` (Phase 12 contract) — 44 rows / 22 P0 / 16 P1 / 6 P2.
+  Backs the P0/P1/P2 count derivation in `countByPriority` and the
+  P0-prod-fail-to-blocker coverage check in Suite 3.
+- `metadata.json` (`measure/tracks/codecamp_qa_prod_20260517/metadata.json`) —
+  status field is the signoff transition contract (must move from `"new"` to
+  `"complete"` or `"deferred"` for Phase 13 to close).
+- The 3 P1 follow-up track directories filed in Phase 8.5 Task 3
+  (`codecamp_perf_warm_dashboard_20260608`, `codecamp_asset_render_blocking_20260608`,
+  `codecamp_infra_cold_start_20260608`) — Suite 3 filesystem floor asserts the
+  three prefixes still exist; Suite 5 cross-reference asserts `report.md` names
+  them by full id.
+- `tech-debt.md` row tagged with `codecamp_qa_prod_20260517` (per the existing
+  Phase 6/8.5 entry logged at `measure/tech-debt.md:38`) — Suite 5 drift detector
+  asserts the row still mentions the 3 follow-up track prefixes so a future
+  re-write of the row that drops one of the items fails immediately.
+
+**Per-test gating (env vars, never committed):**
+
+- `PHASE13_SKIP=1` — skip the signoff presence checks (Suite 4 productOwner +
+  engineeringLead); the rest of the suite (filesystem + reader + launch gate)
+  still runs unconditionally.
+
+**Test methodology:** mirrors Phases 1–12. The Phase 13 contract has two
+artifacts: a structured JSON summary
+(`apps/codecamp-advantage/lib/__tests__/prod-smoke/report-summary.json`) for
+machine-readable counts and blocker tracking, and a human-readable markdown
+report at the conventional path
+(`measure/tracks/codecamp_qa_prod_20260517/report.md`). The typed reader
+(`validateReportSummary`) is unit-tested in Suite 2; the filesystem regression
+detectors in Suite 1; the parity-matrix-to-blocker coverage check in Suite 3;
+the signoff presence + decision-consistency checks in Suite 4; the
+`report.md` cross-references in Suite 5; and the P0 launch gate in Suite 6.
+The same `expect.soft`-style pattern enumerates per-check gaps in a single run,
+and the aggregated P0 launch gate yields one CI-blocking signal.
+
+**Targeted Red command (filesystem-only — what CI runs to gate the report
+deliverable):**
+
+```bash
+cd apps/codecamp-advantage && node_modules/.bin/vitest run \
+  lib/__tests__/prod-smoke/phase-13-production-readiness-report.test.ts
+```
+
+Result (2026-06-11): **18 failed | 23 passed (41)** in 4.19s wall.
+
+| Sub-check | Initial run (2026-06-11) | Notes |
+|---|---|---|
+| Suite 1: `measure/tracks/codecamp_qa_prod_20260517/report.md` exists | **FAIL (RED)** | Confirmed: `report.md` does not exist at HEAD. Real missing deliverable for Phase 13 sub-task 1. |
+| Suite 1: `lib/__tests__/prod-smoke/report-summary.json` exists | **FAIL (RED)** | Confirmed: `report-summary.json` does not exist at HEAD. Real missing structured deliverable. |
+| Suite 1: `report.md` is non-empty | **FAIL (RED)** | Cascades from missing file. |
+| Suite 1: `report.md` contains all 10 required sections | **FAIL (RED)** | Cascades from missing file. |
+| Suite 1: `report.md` Go / No-Go Decision section documents a recognised decision | **FAIL (RED)** | Cascades from missing file. |
+| Suite 2: 20 helper unit tests (validateReportSummary × 10, countByPriority × 2, findOpenBlockers × 1, requiresImmediateFix × 1, extractReportSections × 1, extractReportSectionBody × 3, listTrackDirs × 2) | PASS | Pure unit tests, no network — regression floor for the typed reader |
+| Suite 3: P0 prod-fail parity-matrix rows are enumerated in `report-summary.json` blockers | **FAIL (RED)** | Cascades from missing `report-summary.json` |
+| Suite 3: every blocker `followUpTrackId` points at a real `measure/tracks/<id>/` directory | **FAIL (RED)** | Cascades from missing `report-summary.json` |
+| Suite 3: the 3 known Phase 8.5 P1 follow-up track prefixes are all filed | PASS | `codecamp_perf_warm_dashboard_`, `codecamp_asset_render_blocking_`, `codecamp_infra_cold_start_` — all 3 directories exist in `measure/tracks/` |
+| Suite 3: `report-summary.json` followUpTracks list is non-empty when a blocker has a followUpTrackId | **FAIL (RED)** | Cascades from missing `report-summary.json` |
+| Suite 4: `metadata.json` `status` is one of the terminal values (`complete` / `deferred`) | **FAIL (RED)** | Confirmed: `status` is still `"new"` at HEAD — Phase 13 sign-off transition has not happened |
+| Suite 4: `signoffs.productOwner` is populated | **FAIL (RED)** | Cascades from missing `report-summary.json` |
+| Suite 4: `signoffs.engineeringLead` is populated | **FAIL (RED)** | Cascades from missing `report-summary.json` |
+| Suite 4: signoff decisions consistent with overall decision (any reject ⇒ no-go) | **FAIL (RED)** | Cascades |
+| Suite 4: `overall=no-go` has at least one open P0 blocker (decision matches the data) | **FAIL (RED)** | Cascades |
+| Suite 4: `overall=go` has zero open P0 blockers (decision matches the data) | **FAIL (RED)** | Cascades |
+| Suite 5: `report.md` mentions the parity matrix artifact path | **FAIL (RED)** | Cascades from missing `report.md` |
+| Suite 5: `report.md` mentions the 3 P1 follow-up tracks (warm dashboard, render-blocking, cold start) | **FAIL (RED)** | Cascades from missing `report.md` |
+| Suite 5: `tech-debt.md` row for `codecamp_qa_prod_20260517` still mentions the 3 P1 follow-up track prefixes (drift detector) | **FAIL (RED)** | Confirmed: the current `tech-debt.md` row for `codecamp_qa_prod_20260517` does not mention the 3 follow-up track prefixes by name; it summarises them as "warm dashboard 1363ms vs 1000ms budget; 1 render-blocking `<script>` in `<head>`; cold start >5s" without the prefix references. A future tech-debt re-write that also includes the prefix references turns this test green and is the durable fix. |
+| **Phase 13 — P0 launch gate** (single hard assertion) | **FAIL (3 critical items)** | Aggregates: `report.md` missing; `report-summary.json` missing; `metadata.json` status is `"new"` (must be `complete` / `deferred`). One CI-blocking signal for the 3 missing deliverables. |
+
+**Findings (Red-phase pass):**
+
+- **3 genuine Red tests for missing deliverables**: `report.md`,
+  `report-summary.json`, and the `metadata.json` status transition. All three
+  are real missing pieces, not stale records.
+- **1 real durable-record drift**: the existing `tech-debt.md` row for
+  `codecamp_qa_prod_20260517` (at `measure/tech-debt.md:38`) summarises the 3
+  P1 follow-up findings in prose ("warm dashboard 1363ms vs 1000ms budget;
+  1 render-blocking `<script>` in `<head>`; cold start >5s") but does not
+  name the follow-up track prefixes. The drift detector (Suite 5) fails
+  until a future doc commit appends the 3 prefix references; this prevents
+  the Phase 13 cross-reference contract from silently drifting on the next
+  re-write.
+- **1 follow-up floor test passes at HEAD**: the 3 P1 follow-up track
+  directories filed in Phase 8.5 Task 3 are all present. A regression that
+  deletes one of the three directories fails the suite immediately.
+- **All 20 helper unit tests pass unconditionally**: regressions in
+  `validateReportSummary`, `countByPriority`, `findOpenBlockers`,
+  `requiresImmediateFix`, `extractReportSections`, `extractReportSectionBody`,
+  or `listTrackDirs` will fail the suite immediately, without needing the
+  report artifacts to exist.
+- **The test file follows the established Phase 5/6/7/8/8.5/9/10/11/12
+  contract pattern**: filesystem regression detectors for missing artifacts,
+  source/reader contracts for typed data, helper unit tests, and a single
+  P0 launch gate that aggregates the per-check failures into one
+  CI-blocking signal.
+
+**Green-phase actions required (not implemented by this Red-phase pass):**
+
+1. **P0 — create `measure/tracks/codecamp_qa_prod_20260517/report.md`** with
+   the 10 required H2 sections (P0 Results, P1 Results, P2 Results,
+   Production-Only Issues, Performance Metrics, Integration Test Results,
+   Blockers, Follow-Up Tracks, Sign-Off, Go / No-Go Decision). The
+   Go / No-Go Decision section must contain one of `**go**`, `**no-go**`,
+   or `**conditional**` (case-insensitive). The Follow-Up Tracks section
+   must mention the 3 P1 follow-up tracks by full id.
+2. **P0 — create `apps/codecamp-advantage/lib/__tests__/prod-smoke/report-summary.json`**
+   with the structured side-by-side report. The matrix must:
+   - `schemaVersion: 1`; `trackId: "codecamp_qa_prod_20260517"`;
+     `prodUrl` is `https://codecamp.reading-advantage.com`.
+   - `overall` is one of `go` | `no-go` | `conditional`.
+   - `counts.{p0,p1,p2}` satisfy `total == pass + fail + skip + pending`.
+   - `blockers` is non-empty; every P0 prod-fail parity-matrix row from
+     Phase 12 is enumerated as a blocker (covered by `followUpTrackId`,
+     `resolved=true`, or a `source`/`description` that names the parity
+     matrix row).
+   - Every blocker `followUpTrackId` points at an existing
+     `measure/tracks/<id>/` directory.
+   - `signoffs.productOwner` and `signoffs.engineeringLead` are populated
+     with `decision: "approve"` (set `PHASE13_SKIP=1` to defer signoff
+     presence checks).
+3. **P0 — update `measure/tracks/codecamp_qa_prod_20260517/metadata.json`
+   `status`** to `complete` (shipped) or `deferred` (postponed). This is
+   the signoff transition contract.
+4. **P1 — durable-record fix**: append the 3 P1 follow-up track prefix
+   references to the `codecamp_qa_prod_20260517` row in `measure/tech-debt.md`.
+   The current row summarises the findings in prose but does not name the
+   follow-up track prefixes; the drift detector (Suite 5) fails until the
+   prefixes appear. A future doc rewrite that drops the prose summary but
+   keeps the prefix references also satisfies the contract.
+5. **(Optional) Re-run with `PHASE13_SKIP=1`** to exercise only the
+   filesystem + reader contract (signoff presence checks are the only
+   skip-gated tests).
+6. **(Optional) Re-run from a network with reliable reach to
+   `codecamp.reading-advantage.com`** to clear any runner-side `ETIMEDOUT`
+   flakiness (the Phase 13 suite is filesystem-only and is not affected by
+   network reachability, but the parity-matrix cross-check assumes the
+   matrix is populated from prior network-bound phases).
+
+**Targeted Red command (filesystem-only — what CI runs to gate the
+report deliverable):**
+
+```bash
+cd apps/codecamp-advantage && node_modules/.bin/vitest run \
+  lib/__tests__/prod-smoke/phase-13-production-readiness-report.test.ts
+```
+
+Result (2026-06-11): **18 failed | 23 passed (41)** in 4.19s wall. The 18
+Red tests map to the 3 missing artifacts + the missing `metadata.json`
+status transition + the missing `tech-debt.md` prefix references + the
+signoff/cross-reference cascades. The 23 passes are the 20 helper unit
+tests, the parity-matrix existence check, the 3 P1 follow-up track
+filing floor, and the suite `beforeAll` invariant checks.
 
 ---
 
