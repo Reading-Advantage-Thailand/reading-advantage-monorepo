@@ -525,3 +525,56 @@ that §9's hypothesis was correct.
 - The cold-start track (`codecamp_infra_cold_start_20260608`)
   remains the source of truth for the cold-start sub-task; the
   mid role did not duplicate its work.
+
+### 11. Phase 3 — Green implementation (2026-06-11, jr role)
+
+> This section documents the implementation of path §10.4 option #1:
+> reduce `<HomePage>` SSR cost by dynamically importing the authenticated
+> dashboard content with `ssr: false`.
+
+#### 11.1 Implementation summary
+
+The warm `/en/` request for unauthenticated users was bottlenecked by
+SSR rendering of the full `HomePage` client component, which imported
+19 lucide-react icons and rendered complex dashboard JSX that unauth
+users never see. The fix extracts the authenticated dashboard content
+into a separate `dashboard-content.tsx` component loaded via
+`next/dynamic` with `{ ssr: false }`.
+
+**Changes:**
+- `apps/codecamp-advantage/app/[locale]/page.tsx`: Removed 18 icon
+  imports (kept only `Lock` for the login wall), extracted dashboard
+  JSX into dynamically imported `DashboardContent` component. The
+  unauth path now renders only the lightweight login form.
+- `apps/codecamp-advantage/app/[locale]/dashboard-content.tsx`: New
+  component containing the authenticated dashboard view with all icon
+  imports, phase sections, module cards, and PR review badges.
+  Loaded client-side only after auth is confirmed.
+
+**Expected impact:** The unauth warm `/en/` SSR payload is significantly
+smaller — the server no longer renders 18 icons + complex dashboard JSX
+for unauthenticated users. The dashboard content loads on the client
+after authentication, which is the correct behavior since the tRPC
+queries are already gated by `enabled: isAuthenticated`.
+
+#### 11.2 Verification
+
+- TypeScript type check: **PASS** (no errors)
+- `dashboard-cache.test.ts` (13 cases): **PASS**
+- `phase-6-performance-and-latency.test.ts` (skip mode): **PASS** (29 passed, 23 skipped)
+- `phase-7-cdn-and-caching.test.ts` (skip mode): **PASS** (25 passed, 13 skipped)
+- `phase-8-5-deployment-gate.test.ts` (skip mode): **PASS** (40 passed, 5 skipped)
+- Full test suite: Network ETIMEDOUT errors (expected in sandbox), local tests pass
+
+**Commit:** `a217242a` — `perf(codecamp): reduce warm /en/ SSR cost with dynamic dashboard import`
+
+#### 11.3 Remaining work
+
+The implementation reduces SSR cost but the actual latency improvement
+must be measured against production. The next step is to:
+1. Deploy to production
+2. Re-run Phase 6 prod-smoke suite from a network with prod reach
+3. Verify warm `GET /en/` < 1000ms passes
+
+If the budget is still not met, additional levers from §4 recommendations
+may be needed (CDN/s-maxage investigation, further bundle optimization).
