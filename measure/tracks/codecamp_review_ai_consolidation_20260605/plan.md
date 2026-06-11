@@ -86,7 +86,7 @@
   - **Green phase (2026-06-11):** Added `AIClientLike` interface + `aiClientToGenerateReview` adapter factory to `packages/domain/src/codecamp/review-exercise.ts`. All 281 tests pass, 0 failures, 5 skip.
 
 ## Phase 3: Repoint Call Site A (webhook) — TDD
-- [ ] Task: Write/extend a webhook test (Mock `AIClient`) asserting the handler persists the same review shape and preserves the fire-and-forget `.catch` posture.
+- [~] Task: Write/extend a webhook test (Mock `AIClient`) asserting the handler persists the same review shape and preserves the fire-and-forget `.catch` posture.
 - [ ] Task: Replace the inline OpenRouter call in the webhook handler with `reviewExercise` + injected `AIClient`.
 - [ ] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/webhooks` green.
 
