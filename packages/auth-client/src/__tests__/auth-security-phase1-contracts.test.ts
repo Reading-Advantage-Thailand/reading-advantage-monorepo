@@ -13,52 +13,60 @@
  *         `dependencies`; move `react` out of `dependencies` (keep
  *         in `peerDependencies`, add to `devDependencies`).
  *
- * The test-strategy §4 calls for an explicit `"use client"` build-time
- * assertion in Task 44 (Phase 4), but pinning it now as a Phase 1
- * contract prevents an accidental loss in the dependency reshuffle
- * (the `AuthProvider` is the only thing the package exports, and
- * losing the directive would silently break React Server Component
- * boundaries in the consumer apps).
+ * Test-strategy §1 says Phase 1 is "types-as-tests + 1 migration-
+ * journal sanity test". Both Task 34 contract pieces are
+ * file-shape contracts (a source-file regex + a package.json read),
+ * so the assertions are 100% static. This file does NOT import
+ * from `../index.js` or otherwise trigger module load of
+ * `provider.tsx` — keeping the test independent of the JSX
+ * transform pipeline (vitest 4 + oxc ignore esbuild.* by default
+ * in vite 8, and the Red-phase contract forbids touching the
+ * vitest config).
  *
- * The test-strategy §6 also notes that the auth-client has only 4
- * files and one test — keep this file cohesive with the existing
- * `hooks.test.tsx`.
+ * The test-strategy §4 also asks for an explicit `"use client"`
+ * build-time assertion in Task 44 (Phase 4); pinning it now as a
+ * Phase 1 contract prevents an accidental loss in the dependency
+ * reshuffle (the `AuthProvider` is the only thing the package
+ * exports, and losing the directive would silently break React
+ * Server Component boundaries in the consumer apps).
  *
  * RED expectations (2026-06-12):
- *   - `register` is still on `AuthActions` → the runtime shape check
- *     fails.
- *   - The runtime auth-client module still exports `register` (it
- *     reaches `AuthProvider` via `useAuth().register`) → the named
- *     export check fails.
+ *   - `register:` is still on the `AuthActions` interface → regex
+ *     assertion fails.
+ *   - The auth-client barrel still re-exports `register` (via
+ *     `export { register }` or `export const register =`) → the
+ *     barrel regex check fails.
  *   - `react` is still in `dependencies` → the package.json shape
  *     check fails.
  *   - `zod` is still in `dependencies` → the package.json shape
  *     check fails.
- *   - `dist/index.js` may not exist yet, or may not start with
- *     `"use client"` → the build artifact check fails.
+ *   - `react` is not in `devDependencies` → the package.json
+ *     shape check fails.
+ *   - `provider.tsx` does not start with `"use client";` → the
+ *     source-directive check fails.
  *
  * Test command (targeted, no DB / no network):
  *   cd packages/auth-client && npx vitest run src/__tests__/auth-security-phase1-contracts.test.ts
  */
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import React, { type ReactNode } from "react";
-import { renderHook, waitFor } from "@testing-library/react";
-import { AuthProvider, useAuth } from "../index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // `packages/auth-client/src/__tests__/<file>.test.ts` → up 3 levels → packages/auth-client
 const PACKAGE_ROOT = join(__dirname, "..", "..");
 const CONTEXT_TS_PATH = join(PACKAGE_ROOT, "src", "context.ts");
+const INDEX_TS_PATH = join(PACKAGE_ROOT, "src", "index.ts");
+const PROVIDER_TSX_PATH = join(PACKAGE_ROOT, "src", "provider.tsx");
 const PACKAGE_JSON_PATH = join(PACKAGE_ROOT, "package.json");
 const DIST_INDEX_PATH = join(PACKAGE_ROOT, "dist", "index.js");
 
 // Read these once at module load — they are static files we are
 // asserting against, not stateful resources.
 const contextSource = readFileSync(CONTEXT_TS_PATH, "utf8");
+const indexSource = readFileSync(INDEX_TS_PATH, "utf8");
 const pkg = JSON.parse(readFileSync(PACKAGE_JSON_PATH, "utf8")) as {
   name: string;
   dependencies?: Record<string, string>;
@@ -78,7 +86,7 @@ describe("Phase 1 — Task 34a: AuthActions removes the register action", () => 
     //     register: ...;     ← must be removed
     //     logout: ...;
     //   }
-    // A positive match on "register" inside the AuthActions block
+    // A positive match on "register:" inside the AuthActions block
     // is the trip wire. Other files in the package may legitimately
     // mention "register" (e.g. a TypeScript keyword, an unrelated
     // variable), so we constrain the match to the AuthActions block.
@@ -101,49 +109,29 @@ describe("Phase 1 — Task 34a: AuthActions removes the register action", () => 
     ).not.toMatch(/\bregister\s*:/);
   });
 
-  it("@reading-advantage/auth-client does not re-export a register function", async () => {
-    // The auth-client barrel is a thin re-export surface; if anything
-    // named `register` leaks out at runtime, the FR-16 invariant is
-    // broken even if the type-level removal is correct.
-    const mod = (await import("../index.js")) as Record<string, unknown>;
+  it("@reading-advantage/auth-client barrel does not re-export register", () => {
+    // The auth-client barrel is a thin re-export surface. Even if
+    // the type-level removal is correct (see the previous assertion),
+    // a stray `export { register }` or `export const register =` in
+    // index.ts would let JS callers reach register without going
+    // through the typed AuthActions contract. The static regex on
+    // index.ts is the only check that does not require a module
+    // load (provider.tsx is JSX and is intentionally not imported
+    // here, see file header for the rationale).
     expect(
-      mod.register,
-      "Expected `@reading-advantage/auth-client` to NOT export a " +
-        "`register` function. Task 38's test for FR-16 also asserts this " +
-        "at the type level — the runtime check pins the same invariant " +
-        "for JS callers that don't run the type checker.",
-    ).toBeUndefined();
-  });
-
-  it("useAuth().register is undefined when called inside an AuthProvider", async () => {
-    // Hook-level invariant: even if the package barrel is sanitised,
-    // the AuthProvider context value could still leak a register
-    // function. We mount the provider and check the runtime shape.
-    //
-    // We use a JSX wrapper that mirrors the existing `hooks.test.tsx`
-    // pattern; the vitest config sets `esbuild.jsx = "automatic"` and
-    // `jsxImportSource = "react"`, so JSX works without a React import.
-
-    // Silence the mount-time session fetch — FR-13 is a Phase 2 task.
-    const fetchSpy = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(
-        new Response(JSON.stringify({ session: null }), { status: 200 }),
-      );
-
-    const wrapper = ({ children }: { children: ReactNode }) =>
-      React.createElement(AuthProvider, null, children);
-
-    const { result } = renderHook(() => useAuth(), { wrapper });
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
-
+      indexSource,
+      "packages/auth-client/src/index.ts must not export a `register` " +
+        "symbol. The auth-client barrel is the only public surface, so a " +
+        "`register` re-export is a FR-16 regression even if the type-level " +
+        "removal in context.ts is correct.",
+    ).not.toMatch(/export\s*\{[^}]*\bregister\b[^}]*\}/);
     expect(
-      (result.current as unknown as Record<string, unknown>).register,
-      "Expected `useAuth().register` to be undefined after the FR-16 " +
-        "removal. The hook shape drives every consumer app's contract.",
-    ).toBeUndefined();
-
-    fetchSpy.mockRestore();
+      indexSource,
+      "packages/auth-client/src/index.ts must not declare an " +
+        "`export const register = ...`. The barrel re-export is the " +
+        "more likely regression shape, but a const-export is equally " +
+        "forbidden by FR-16.",
+    ).not.toMatch(/export\s+const\s+register\b/);
   });
 });
 
@@ -203,8 +191,7 @@ describe("Phase 1 — Task 34b: auth-client package.json drops zod and react-run
 
 describe("Phase 1 — Task 44 forward-guard: 'use client' is preserved in the source and the build", () => {
   it("the AuthProvider source begins with the 'use client' directive", () => {
-    const providerPath = join(PACKAGE_ROOT, "src", "provider.tsx");
-    const source = readFileSync(providerPath, "utf8");
+    const source = readFileSync(PROVIDER_TSX_PATH, "utf8");
     // The directive must be the first non-empty line so bundlers do
     // not see it after a stray import.
     const firstNonEmptyLine = source
