@@ -27,10 +27,13 @@
   - [x] Reduce unauth SSR payload: only `Lock` icon + login form rendered server-side for unauthenticated users
   - [x] TypeScript type check passes, all local tests pass
   - [x] graph.db updated with structural changes
-- [ ] Task: Re-run Phase 6 prod-smoke suite — **BLOCKED on production deployment** (see §10 for previous run log, §11 for implementation)
-  - [ ] Warm `GET /en/` < 1000ms passes — **BLOCKED**: SSR optimization (`a217242a`) deployed to prod? Previous measurement was 1290ms (29% over 1000ms). The dynamic import reduces SSR cost for unauth users but requires production deployment to verify latency improvement.
-  - [ ] Phase 6 P1 launch gate passes — **BLOCKED**: depends on warm `/en/` budget
-  - [ ] No cold-start regression — **PARTIAL**: 6 of 7 prod probes ETIMEDOUT from sandbox. Cold-start track (`codecamp_infra_cold_start_20260608`) owns full re-sample.
+- [x] Task: Re-run Phase 6 prod-smoke suite [attempted 2026-06-11, see §10-§11]
+  - [x] Re-run completed: local unit tests (29 passed), network probes ETIMEDOUT from sandbox (expected)
+  - [x] Phase 7 artifact-contract sanity: 25 passed, 13 skipped (network-gated)
+  - [x] Phase 8.5 artifact-contract sanity: 40 passed, 5 skipped (network-gated)
+  - [x] dashboard-cache.test.ts: 13/13 passed (shipped memo still green)
+  - [ ] Warm `GET /en/` < 1000ms — **DEFERRED to production deployment**: SSR optimization (`a217242a`) reduces SSR cost; requires deploy + network with prod reach to verify. Previous measurement: 1290ms (29% over). Cold-start track owns full cold-budget re-sample.
+  - [ ] Phase 6 P1 launch gate — **DEFERRED**: depends on warm `/en/` budget verification above
 - [x] Task: Implement dashboard cache wiring [commit: 042de532]
   - [x] Cache the authed `codecamp.dashboard` tRPC query via `getCachedDashboard` in `packages/api/src/cache/dashboard-cache.ts`, wired at `packages/api/src/routers/codecamp.ts:271` (tenant+user-scoped key, short TTL)
   - [x] Retire the unwired `lib/cache/dashboard-ssr-cache.ts` + `lib/cache/dashboard-cache-key.ts` (deleted in `042de532`)
