@@ -59,14 +59,14 @@
 
 ## Phase 1: OpenRouter Provider (if absent) — TDD
 - [x] Task: If missing, write `packages/ai/src/providers/openrouter.test.ts` against the Mock-style contract (success + error), expecting an OpenAI-compatible provider keyed by `baseURL` + `OPENROUTER_API_KEY`, with provider-prefix model-ID stripping.
-  - Commit: `54b00ccc`
+  - Commit: `92eeca19`
 - [x] Task: Implement `openrouter.ts` (thin variant of the OpenAI provider with OpenRouter `baseURL`); register in `createAIClient`/`getAIClient`.
-  - Commit: `54b00ccc`
+  - Commit: `92eeca19`
 - [x] Task: Add a bounded, credential-gated OpenRouter capability preflight for the
   configured review model using the exact forced-tool structured-output contract.
-  - Commit: `54b00ccc`
+  - Commit: `92eeca19`
 - [x] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/ai` green.
-  - Commit: `54b00ccc`
+  - Commit: `92eeca19`
 
 ## Phase 2: Confirm/Adapt the `reviewExercise` Seam — TDD
 - [ ] Task: Write/extend a domain test that injects a Mock `AIClient` and asserts `reviewExercise` returns the typed review for a sample diff, and surfaces a model error correctly.
