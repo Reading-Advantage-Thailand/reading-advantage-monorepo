@@ -96,9 +96,10 @@
   - Commit: `aab3471d`
 
 ## Phase 4: Repoint Call Site B (tRPC/API) — TDD
-- [ ] Task: Write/extend a router test (Mock `AIClient`) asserting the procedure returns the unified review and is admin-guarded where required.
+- [~] Task: Write/extend a router test (Mock `AIClient`) asserting the procedure returns the unified review and is admin-guarded where required.
 - [ ] Task: Replace the inline OpenRouter call in the router with `reviewExercise` + injected `AIClient`; use `adminProcedure` where the existing code expects admin.
 - [ ] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/api` green.
+  - **Red phase (2026-06-11):** Added `packages/api/src/__tests__/codecamp-review-router.test.ts` with 6 tests asserting FR-4 (repoint tRPC/API call site to `AIClient` seam) and admin guard. Pattern mirrors `packages/webhooks/src/__tests__/github-review.test.ts`: `vi.hoisted` Mock AIClient, `vi.mock("@reading-advantage/ai", ...)` to inject it through `getAIClient`/`createAIClient`, real `reviewExercise` runs from `@reading-advantage/domain/codecamp` (no domain mock). Tests: (a) `getAIClient`/`createAIClient` invoked, (b) `reviewResultSchema` passed to `generateObject`, (c) procedure returns the Mock fixture (proving the AIClient seam wired through `aiClientToGenerateReview`), (d) procedure returns the Mock fixture for `SYSTEM` user (adminProcedure allows SYSTEM), (e) non-admin (STUDENT) rejected with `FORBIDDEN`/`Admin access required`, (f) AIClient rejection → `INTERNAL_SERVER_ERROR` via `mapDomainError`.
 
 ## Phase 5: Delete Dead Code
 - [ ] Task: Remove both inline OpenRouter implementations and now-unused helpers/imports.
