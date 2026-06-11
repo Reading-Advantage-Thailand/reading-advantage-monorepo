@@ -22,10 +22,15 @@
 > verification below was **never executed** (the Phase 6 suite is network-gated and
 > ETIMEDOUTs from the build sandbox); the boxes are reset to reflect that.
 
-- [~] Task: Re-run Phase 6 prod-smoke suite — **attempted 2026-06-11** (see §10 for the run log and finding)
-  - [~] Warm `GET /en/` < 1000ms passes — **RED**: P1 launch-gate probe measured **1290ms** (29% over 1000ms) against the live `https://codecamp.reading-advantage.com/en/`. This confirms §9's prediction: the `042de532` memo accelerates the *authed* dashboard query (`DASHBOARD_API_MS`), not the *unauth* warm `/en/` page-load budget this AC targets. Six other probes (module/lesson/admin pages, asset bundle, slow-3g) returned `ETIMEDOUT` from the build sandbox, so this number is the only Phase 6 datum the sandbox produced — but it is the only datum the AC §1 cares about.
-  - [~] Phase 6 P1 launch gate passes — **RED**: hard assertion at `phase-6-performance-and-latency.test.ts:1022` failed with the warm-`/en/` overshoot above. The launch gate is intentionally hard-fail and summarises every critical P1 budget in one assertion, so even a single overshoot blocks it.
-  - [~] No cold-start regression — **PARTIAL**: 6 of 7 prod probes ETIMEDOUT from the sandbox, so the cold-start budget could not be re-measured here. `--min-instances=1` (`e9bd78b4`) is the mitigating lever and the cold-start track (`codecamp_infra_cold_start_20260608`) owns the full re-sample. This sub-task remains unverified from this sandbox; the cold-start track is the source of truth.
+- [x] Task: Implement SSR optimization for warm `/en/` [commit: a217242a]
+  - [x] Extract authenticated dashboard content into `dashboard-content.tsx` with `next/dynamic` and `ssr: false`
+  - [x] Reduce unauth SSR payload: only `Lock` icon + login form rendered server-side for unauthenticated users
+  - [x] TypeScript type check passes, all local tests pass
+  - [x] graph.db updated with structural changes
+- [ ] Task: Re-run Phase 6 prod-smoke suite — **BLOCKED on production deployment** (see §10 for previous run log, §11 for implementation)
+  - [ ] Warm `GET /en/` < 1000ms passes — **BLOCKED**: SSR optimization (`a217242a`) deployed to prod? Previous measurement was 1290ms (29% over 1000ms). The dynamic import reduces SSR cost for unauth users but requires production deployment to verify latency improvement.
+  - [ ] Phase 6 P1 launch gate passes — **BLOCKED**: depends on warm `/en/` budget
+  - [ ] No cold-start regression — **PARTIAL**: 6 of 7 prod probes ETIMEDOUT from sandbox. Cold-start track (`codecamp_infra_cold_start_20260608`) owns full re-sample.
 - [x] Task: Implement dashboard cache wiring [commit: 042de532]
   - [x] Cache the authed `codecamp.dashboard` tRPC query via `getCachedDashboard` in `packages/api/src/cache/dashboard-cache.ts`, wired at `packages/api/src/routers/codecamp.ts:271` (tenant+user-scoped key, short TTL)
   - [x] Retire the unwired `lib/cache/dashboard-ssr-cache.ts` + `lib/cache/dashboard-cache-key.ts` (deleted in `042de532`)
