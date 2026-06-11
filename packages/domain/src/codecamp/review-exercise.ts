@@ -7,6 +7,15 @@ import { assertCan } from "@reading-advantage/auth";
 
 // ─── Types ────────────────────────────────────────────────
 
+/**
+ * Structural interface matching the subset of `AIClient` that the adapter
+ * depends on. Keeps the domain package free of `@reading-advantage/ai`
+ * imports (Provider-Neutrality Rule from AGENTS.md).
+ */
+export interface AIClientLike {
+  generateObject: (input: { schema: z.ZodSchema<unknown>; prompt: string }) => Promise<unknown>;
+}
+
 interface ReviewExerciseInput {
   db: TenantDB;
   user: UserContext;
@@ -30,6 +39,29 @@ export const reviewResultSchema = z.object({
 });
 
 export type ReviewResult = z.infer<typeof reviewResultSchema>;
+
+// ─── Adapter ──────────────────────────────────────────────
+
+/**
+ * Adapts an `AIClientLike` into the `(system, prompt) => Promise<ReviewResult>`
+ * callback shape expected by `reviewExercise`. Combines the system and user
+ * prompts into a single prompt string for `generateObject`.
+ *
+ * @param client - An AI client with a `generateObject` method
+ * @param schema - Zod schema the generated output must satisfy
+ * @returns A callback compatible with `ReviewExerciseInput.generateReview`
+ */
+export function aiClientToGenerateReview(
+  client: AIClientLike,
+  schema: z.ZodSchema<ReviewResult>,
+): (system: string, prompt: string) => Promise<ReviewResult> {
+  return async (system, prompt) => {
+    return (await client.generateObject({
+      schema,
+      prompt: `${system}\n\n${prompt}`,
+    })) as ReviewResult;
+  };
+}
 
 // ─── Prompt Builder ───────────────────────────────────────
 
