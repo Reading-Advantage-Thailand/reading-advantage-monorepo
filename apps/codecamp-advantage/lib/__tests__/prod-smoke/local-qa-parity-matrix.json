@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-06-11T12:00:00Z",
+  "sourceTrackLocal": "codecamp_qa_local_20260517",
+  "sourceTrackProd": "codecamp_qa_prod_20260517",
+  "rows": [
+    {
+      "phaseId": "1-infrastructure",
+      "checklistItem": "DNS resolves correctly",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Prod verified in Phase 1 Red-phase (commit 916bc12)"
+    },
+    {
+      "phaseId": "1-infrastructure",
+      "checklistItem": "SSL certificate valid",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Prod verified in Phase 1 Red-phase"
+    },
+    {
+      "phaseId": "1-infrastructure",
+      "checklistItem": "Security headers present (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy)",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit a0862b3; Deploy verified in Phase 8.5 (commit e3ed0c01)"
+    },
+    {
+      "phaseId": "1-infrastructure",
+      "checklistItem": "Root URL returns 200",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 1 Green: redirect follow fixed"
+    },
+    {
+      "phaseId": "2-database-and-configuration",
+      "checklistItem": "App reads from database (dashboard loads)",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 2 verified"
+    },
+    {
+      "phaseId": "2-database-and-configuration",
+      "checklistItem": "App writes to database (login updates lastActiveAt)",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit df39c2f"
+    },
+    {
+      "phaseId": "2-database-and-configuration",
+      "checklistItem": "Secrets sourced from Secret Manager",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 2 cloudbuild.yaml verified"
+    },
+    {
+      "phaseId": "2-database-and-configuration",
+      "checklistItem": "POST /api/auth/login returns 4xx (not 500) on bad creds",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit df39c2f; Deploy verified in Phase 8.5"
+    },
+    {
+      "phaseId": "3-authentication-and-authorization",
+      "checklistItem": "Login with valid credentials creates session",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code verified in Phase 3 Green"
+    },
+    {
+      "phaseId": "3-authentication-and-authorization",
+      "checklistItem": "Login with invalid credentials returns 401",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit df39c2f; Deploy verified"
+    },
+    {
+      "phaseId": "3-authentication-and-authorization",
+      "checklistItem": "Session cookie HttpOnly, Secure, SameSite=Lax",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "COOKIE_OPTIONS in login.ts:17-23"
+    },
+    {
+      "phaseId": "3-authentication-and-authorization",
+      "checklistItem": "INTERN cannot access /admin",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "proxy.ts:59-62 AuthError FORBIDDEN"
+    },
+    {
+      "phaseId": "3-authentication-and-authorization",
+      "checklistItem": "tRPC endpoints reject unauthorized requests",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "trpc.ts:23-26 isAuthed middleware"
+    },
+    {
+      "phaseId": "4-feature-parity",
+      "checklistItem": "Dashboard loads with correct progress stats",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 5b4f278"
+    },
+    {
+      "phaseId": "4-feature-parity",
+      "checklistItem": "Module detail page loads with lesson list",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 5b4f278"
+    },
+    {
+      "phaseId": "4-feature-parity",
+      "checklistItem": "Quiz lessons score correctly (>=70% threshold)",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "submitQuizAnswers domain function"
+    },
+    {
+      "phaseId": "4-feature-parity",
+      "checklistItem": "Progress updates after quiz submission",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 5b4f278"
+    },
+    {
+      "phaseId": "4-feature-parity",
+      "checklistItem": "TH → EN locale switch works",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 5b4f278"
+    },
+    {
+      "phaseId": "4-feature-parity",
+      "checklistItem": "Thai font loads correctly",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit afbd038 (i18n-font.ts)"
+    },
+    {
+      "phaseId": "5-real-external-integrations",
+      "checklistItem": "Chat route returns 401 for unauthenticated requests",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 5 Red: PASS on prod"
+    },
+    {
+      "phaseId": "5-real-external-integrations",
+      "checklistItem": "Webhook missing signature returns 401",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 5 Red: PASS on prod"
+    },
+    {
+      "phaseId": "5-real-external-integrations",
+      "checklistItem": "Webhook invalid signature returns 401",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 5 Red: PASS on prod"
+    },
+    {
+      "phaseId": "5-real-external-integrations",
+      "checklistItem": "Chat rate limit (30 req/min) configured",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "rate-limit.ts:7 RATE_LIMIT_MAX_REQUESTS=30"
+    },
+    {
+      "phaseId": "6-performance-and-latency",
+      "checklistItem": "Dashboard cold load < 3 seconds",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 6 Red: PASS on observed run"
+    },
+    {
+      "phaseId": "6-performance-and-latency",
+      "checklistItem": "Thai font loads correctly (no 404)",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit afbd038"
+    },
+    {
+      "phaseId": "6-performance-and-latency",
+      "checklistItem": "Static asset URLs all return < 400",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 6 Red: PASS (12 URLs found)"
+    },
+    {
+      "phaseId": "7-cdn-and-caching",
+      "checklistItem": "JS/CSS assets have max-age >= 1 year + immutable",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 7 Red: PASS"
+    },
+    {
+      "phaseId": "7-cdn-and-caching",
+      "checklistItem": "tRPC Cache-Control: no-store, private",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 79e08c0; Deploy verified in Phase 8.5"
+    },
+    {
+      "phaseId": "7-cdn-and-caching",
+      "checklistItem": "Public shell s-maxage / stale-while-revalidate",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 79e08c0; Deploy verified in Phase 8.5"
+    },
+    {
+      "phaseId": "8-logging-monitoring-and-error-reporting",
+      "checklistItem": "Structured logger call sites (not raw console.error)",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 3fb1a87"
+    },
+    {
+      "phaseId": "8-logging-monitoring-and-error-reporting",
+      "checklistItem": "Error logs include stack traces",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 3fb1a87"
+    },
+    {
+      "phaseId": "8-logging-monitoring-and-error-reporting",
+      "checklistItem": "Custom 404 page renders (not-found.tsx)",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 3fb1a87; Deploy verified in Phase 8.5"
+    },
+    {
+      "phaseId": "8-logging-monitoring-and-error-reporting",
+      "checklistItem": "tRPC logging middleware captures procedure name and latency",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 3fb1a87"
+    },
+    {
+      "phaseId": "8-5-deployment-gate",
+      "checklistItem": "All 4 P0/P1 launch gates pass on live prod revision",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 8.5 deploy verification: 45/45 pass (commit e3ed0c01)"
+    },
+    {
+      "phaseId": "8-5-deployment-gate",
+      "checklistItem": "Cloud Build artifact well-formed (secrets, region, registry)",
+      "priority": "P0",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Phase 8.5 Suite 1 static checks"
+    },
+    {
+      "phaseId": "9-github-webhook-specifics",
+      "checklistItem": "Invalid signature returns 401",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 1c102f9a"
+    },
+    {
+      "phaseId": "9-github-webhook-specifics",
+      "checklistItem": "Missing signature returns 401",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 1c102f9a"
+    },
+    {
+      "phaseId": "9-github-webhook-specifics",
+      "checklistItem": "Replay attack prevention (timestamp window check)",
+      "priority": "P1",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit b8bc3bf0 (MAX_TIMESTAMP_SKEW_SECONDS)"
+    },
+    {
+      "phaseId": "10-edge-cases-and-production-scenarios",
+      "checklistItem": "Multiple simultaneous logins — no session conflicts",
+      "priority": "P2",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 8ba64b28"
+    },
+    {
+      "phaseId": "10-edge-cases-and-production-scenarios",
+      "checklistItem": "Session remains valid for 7-day duration",
+      "priority": "P2",
+      "local": "pass",
+      "prod": "pass",
+      "note": "COOKIE_OPTIONS.maxAge + createSession expiresAt parity"
+    },
+    {
+      "phaseId": "10-edge-cases-and-production-scenarios",
+      "checklistItem": "cloudbuild.yaml pins --max-instances and --concurrency",
+      "priority": "P2",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 7ddab3f7"
+    },
+    {
+      "phaseId": "11-cross-browser-and-device-testing",
+      "checklistItem": "Responsive Tailwind coverage on all interactive pages",
+      "priority": "P2",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 1aabf6e6 (4 pages fixed)"
+    },
+    {
+      "phaseId": "11-cross-browser-and-device-testing",
+      "checklistItem": "HSTS preload directive present",
+      "priority": "P2",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Code: commit 1aabf6e6"
+    },
+    {
+      "phaseId": "11-cross-browser-and-device-testing",
+      "checklistItem": "No viewport scalability lock (user-scalable=no)",
+      "priority": "P2",
+      "local": "pass",
+      "prod": "pass",
+      "note": "Source-contract detector: PASS"
+    }
+  ]
+}

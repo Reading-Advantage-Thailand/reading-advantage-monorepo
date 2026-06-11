@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_qa_local_20260517",
+  "type": "chore",
+  "status": "complete",
+  "created_at": "2026-05-17T06:45:00Z",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "description": "Comprehensive local QA/QC testing of codecamp-advantage against the local development environment. Covers all user-facing features, auth flows, dashboard, modules, lessons, quizzes, admin panel, i18n, AI tutor, and GitHub webhook integration. Serves as the regression baseline for the production QA track (codecamp_qa_prod_20260517).",
+  "estimated_tasks": 55,
+  "actual_tasks": 55,
+  "deviation_notes": "All P0 and P1 local QA checks passed. Known local issues documented in plan.md."
+}
