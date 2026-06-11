@@ -63,6 +63,7 @@ export const accounts = pgTable("accounts", {
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(),
   token: text("token").notNull().unique(),
+  tokenHash: text("token_hash").notNull().unique(),
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),

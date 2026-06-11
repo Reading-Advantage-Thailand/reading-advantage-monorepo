@@ -27,6 +27,7 @@ export {
   createSession,
   validateSession,
   deleteSession,
+  revokeAllUserSessions,
   type Session,
 } from "./session.js";
 

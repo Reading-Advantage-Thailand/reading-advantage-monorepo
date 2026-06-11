@@ -1,10 +1,15 @@
 
+import { createHash } from "node:crypto";
 import { eq, type PostgresJsDatabase } from "@reading-advantage/db";
 import { sessions, users } from "@reading-advantage/db/schema";
 import type * as schema from "@reading-advantage/db/schema";
 import type { UserContext } from "./tenant.js";
 
 type Db = PostgresJsDatabase<typeof schema>;
+
+function sha256Hex(s: string): string {
+  return createHash("sha256").update(s).digest("hex");
+}
 
 export interface Session {
   id: string;
@@ -18,12 +23,14 @@ export interface Session {
  * Creates a new session for a user.
  * @param db - Database client
  * @param userId - The user ID to create session for
+ * @param opts - Optional metadata (ipAddress, userAgent)
  * @returns The created session object including token (expires in 7 days)
  * @throws {Error} Throws if user not found after creation
  */
 export async function createSession(
   db: Db,
-  userId: string
+  userId: string,
+  opts?: { ipAddress?: string; userAgent?: string }
 ): Promise<Session> {
   const token = Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) => b.toString(16).padStart(2, "0")).join("");
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
@@ -152,4 +159,18 @@ export async function deleteSession(
   } catch {
     // Silently catch — session may already be deleted
   }
+}
+
+/**
+ * Revokes all sessions for a user. Stub — not yet implemented.
+ * @param db - Database client
+ * @param userId - The user ID whose sessions to revoke
+ * @returns Object with count of revoked sessions
+ * @throws {Error} Always throws "not implemented" (Phase 1 stub)
+ */
+export async function revokeAllUserSessions(
+  db: Db,
+  userId: string
+): Promise<{ revoked: number }> {
+  throw new Error("not implemented");
 }

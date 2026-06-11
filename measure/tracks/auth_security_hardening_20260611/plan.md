@@ -2,68 +2,68 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [x] Task 1: Register `0018_audit_events` in the Drizzle migration journal
-    - [x] Red contract test written: `packages/db/src/__tests__/auth-security-phase1-journal.test.ts` (Task 1 group, 4 assertions) — currently red, fails on missing journal entry with `expected undefined to be defined`
-    - [ ] Add missing entry (idx 18, tag `"0018_audit_events"`) to `packages/db/drizzle/meta/_journal.json` — omitted from `audit_log_infrastructure_20260603` due to non-TTY write (per lessons-learned)
-    - [ ] Verify `drizzle-kit status` no longer treats 0018 as unknown
+- [x] Task 1: Register `0018_audit_events` in the Drizzle migration journal — `d2f541bc`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/db/src/__tests__/auth-security-phase1-journal.test.ts` (Task 1 group, 4 assertions) — currently red, fails on missing journal entry with `expected undefined to be defined` — `d2f541bc`
+    - [x] Add missing entry (idx 18, tag `"0018_audit_events"`) to `packages/db/drizzle/meta/_journal.json` — omitted from `audit_log_infrastructure_20260603` due to non-TTY write (per lessons-learned) — `bdf8cdc8`
+    - [x] Verify `drizzle-kit status` no longer treats 0018 as unknown — `bdf8cdc8`
 
-- [x] Task 2: Write migration `0019_session_token_hash.sql`
-    - [x] Red contract test written: `packages/db/src/__tests__/auth-security-phase1-journal.test.ts` (Task 2 group, 6 assertions) — currently red, fails on missing 0019 SQL + missing journal entry
-    - [ ] Create `packages/db/drizzle/0019_session_token_hash.sql`:
+- [x] Task 2: Write migration `0019_session_token_hash.sql` — `d2f541bc`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/db/src/__tests__/auth-security-phase1-journal.test.ts` (Task 2 group, 6 assertions) — currently red, fails on missing 0019 SQL + missing journal entry — `d2f541bc`
+    - [x] Create `packages/db/drizzle/0019_session_token_hash.sql` — `bdf8cdc8`:
       ```sql
       ALTER TABLE sessions ADD COLUMN token_hash TEXT;
       UPDATE sessions SET token_hash = encode(digest(token, 'sha256'), 'hex');
       ALTER TABLE sessions ALTER COLUMN token_hash SET NOT NULL;
       CREATE UNIQUE INDEX sessions_token_hash_unique ON sessions(token_hash);
       ```
-    - [ ] Register entry in `packages/db/drizzle/meta/_journal.json` (idx 19, tag `"0019_session_token_hash"`)
+    - [x] Register entry in `packages/db/drizzle/meta/_journal.json` (idx 19, tag `"0019_session_token_hash"`) — `bdf8cdc8`
 
-- [x] Task 3: Add `tokenHash` field to sessions schema in `packages/db/src/schema/users.ts`
-    - [x] Red contract test written: `packages/db/src/__tests__/auth-security-phase1-schema.test.ts` (4 assertions) — currently red, fails on missing tokenHash column
-    - [ ] Add `tokenHash: text("token_hash").notNull().unique()` to `sessions` table definition
-    - [ ] Keep `token` column (drop deferred — out of scope)
+- [x] Task 3: Add `tokenHash` field to sessions schema in `packages/db/src/schema/users.ts` — `d2f541bc`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/db/src/__tests__/auth-security-phase1-schema.test.ts` (4 assertions) — currently red, fails on missing tokenHash column — `d2f541bc`
+    - [x] Add `tokenHash: text("token_hash").notNull().unique()` to `sessions` table definition — `bdf8cdc8`
+    - [x] Keep `token` column (drop deferred — out of scope) — `bdf8cdc8`
 
-- [x] Task 4: Define `sha256Hex` helper in `packages/auth/src/session.ts`
-    - [x] Red contract test written: `packages/auth/src/__tests__/auth-security-phase1-session-contracts.test.ts` (Task 4 group, 3 assertions) — currently red, fails on missing node:crypto import + missing function declaration
-    - [ ] Add `import { createHash } from "node:crypto";` at top
-    - [ ] Add unexported module-level function:
+- [x] Task 4: Define `sha256Hex` helper in `packages/auth/src/session.ts` — `d2f541bc`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/auth/src/__tests__/auth-security-phase1-session-contracts.test.ts` (Task 4 group, 3 assertions) — currently red, fails on missing node:crypto import + missing function declaration — `d2f541bc`
+    - [x] Add `import { createHash } from "node:crypto";` at top — `bdf8cdc8`
+    - [x] Add unexported module-level function — `bdf8cdc8`:
       ```ts
       function sha256Hex(s: string): string {
         return createHash("sha256").update(s).digest("hex");
       }
       ```
 
-- [x] Task 5: Stub `revokeAllUserSessions` + extend `createSession` signature in `packages/auth/src/session.ts`
-    - [x] Red contract test written: `packages/auth/src/__tests__/auth-security-phase1-session-contracts.test.ts` (Task 5 groups, 5 assertions) — currently red, fails on missing export, missing arity 3, missing `opts?` name
-    - [ ] Add stub `export async function revokeAllUserSessions(db: Db, userId: string): Promise<{ revoked: number }>` (throws `new Error("not implemented")`)
-    - [ ] Extend `createSession` to accept optional third arg `opts?: { ipAddress?: string; userAgent?: string }`
-    - [ ] Export `revokeAllUserSessions` from `packages/auth/src/index.ts`
+- [x] Task 5: Stub `revokeAllUserSessions` + extend `createSession` signature in `packages/auth/src/session.ts` — `d2f541bc`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/auth/src/__tests__/auth-security-phase1-session-contracts.test.ts` (Task 5 groups, 5 assertions) — currently red, fails on missing export, missing arity 3, missing `opts?` name — `d2f541bc`
+    - [x] Add stub `export async function revokeAllUserSessions(db: Db, userId: string): Promise<{ revoked: number }>` (throws `new Error("not implemented")`) — `bdf8cdc8`
+    - [x] Extend `createSession` to accept optional third arg `opts?: { ipAddress?: string; userAgent?: string }` — `bdf8cdc8`
+    - [x] Export `revokeAllUserSessions` from `packages/auth/src/index.ts` — `bdf8cdc8`
 
-- [x] Task 6: Create `packages/api/src/routes/auth/reset-password.ts` scaffold
-    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 6 group, 5 assertions) — currently red, fails on missing scaffold (clean contract violation, not test-infra bug — see commit history for the import.meta.glob → existsSync + dynamic-import fix)
-    - [ ] Define `resetPasswordSchema = z.object({ userId: z.string().min(1), newPassword: z.string().min(8).max(128) })`
-    - [ ] Stub `handleResetPassword` returning `501 Not Implemented`
+- [x] Task 6: Create `packages/api/src/routes/auth/reset-password.ts` scaffold — `d2f541bc`, `316796b7`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 6 group, 5 assertions) — currently red, fails on missing scaffold (clean contract violation, not test-infra bug — see commit history for the import.meta.glob → existsSync + dynamic-import fix) — `d2f541bc`, `316796b7`
+    - [x] Define `resetPasswordSchema = z.object({ userId: z.string().min(1), newPassword: z.string().min(8).max(128) })` — `bdf8cdc8`
+    - [x] Stub `handleResetPassword` returning `501 Not Implemented` — `bdf8cdc8`
 
-- [x] Task 7: Wire `handleResetPassword` into shared API barrel
-    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 7 group, 2 assertions) — currently red, fails on missing barrel re-export (static regex on barrel source + short-circuited runtime check)
-    - [ ] Export `handleResetPassword` from `packages/api/src/routes/auth/index.ts`
+- [x] Task 7: Wire `handleResetPassword` into shared API barrel — `d2f541bc`, `316796b7`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 7 group, 2 assertions) — currently red, fails on missing barrel re-export (static regex on barrel source + short-circuited runtime check) — `d2f541bc`, `316796b7`
+    - [x] Export `handleResetPassword` from `packages/api/src/routes/auth/index.ts` — `bdf8cdc8`
 
-- [x] Task 8: Add `DUMMY_HASH` constant to `packages/api/src/routes/auth/login.ts`
-    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 8 group, 2 assertions) — currently red, fails on missing module-level constant + missing runtime export
-    - [ ] Generate once: a pre-computed Argon2id hash of a static known string; hard-code as module-level const
-    - [ ] Note: used by FR-4 to ensure unknown-username paths pay the same Argon2id cost as wrong-password paths
+- [x] Task 8: Add `DUMMY_HASH` constant to `packages/api/src/routes/auth/login.ts` — `d2f541bc`, `316796b7`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 8 group, 2 assertions) — currently red, fails on missing module-level constant + missing runtime export — `d2f541bc`, `316796b7`
+    - [x] Generate once: a pre-computed Argon2id hash of a static known string; hard-code as module-level const — `bdf8cdc8`
+    - [x] Note: used by FR-4 to ensure unknown-username paths pay the same Argon2id cost as wrong-password paths — `bdf8cdc8`
 
-- [x] Task 33: Extract `enrichAuthUser` helper (FR-12 contract)
-    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 33 group, 3 assertions) — currently red, fails on missing barrel re-export + missing scaffold
-    - [ ] Create `packages/api/src/routes/auth/enrich.ts` exporting `enrichAuthUser(db, user): Promise<AuthUser-shaped object>` — the enrichment query currently inlined in `session.ts:28-39` (xp, level, cefrLevel, email, image, schoolId with the same null-defaults)
+- [x] Task 33: Extract `enrichAuthUser` helper (FR-12 contract) — `d2f541bc`, `316796b7`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 33 group, 3 assertions) — currently red, fails on missing barrel re-export + missing scaffold — `d2f541bc`, `316796b7`
+    - [x] Create `packages/api/src/routes/auth/enrich.ts` exporting `enrichAuthUser(db, user): Promise<AuthUser-shaped object>` — the enrichment query currently inlined in `session.ts:28-39` (xp, level, cefrLevel, email, image, schoolId with the same null-defaults) — `bdf8cdc8`
     - [ ] Refactor `handleSession` to use it (behaviour unchanged)
 
-- [x] Task 34: auth-client contract changes (FR-15, FR-16 contract)
-    - [x] Red contract test written: `packages/auth-client/src/__tests__/auth-security-phase1-contracts.test.ts` (4 contract assertions + 4 forward-guard assertions) — currently red, fails on `register:` still in `AuthActions` + `zod`/`react` still in `dependencies` + `react` not in `devDependencies`
-    - [ ] `packages/auth-client/src/context.ts`: remove `register` from `AuthActions`
-    - [ ] `packages/auth-client/package.json`: remove `zod`; move `react` out of `dependencies` (keep in `peerDependencies`, add to `devDependencies`)
+- [x] Task 34: auth-client contract changes (FR-15, FR-16 contract) — `d2f541bc`, `7b0e6873`, `bdf8cdc8`
+    - [x] Red contract test written: `packages/auth-client/src/__tests__/auth-security-phase1-contracts.test.ts` (4 contract assertions + 4 forward-guard assertions) — currently red, fails on `register:` still in `AuthActions` + `zod`/`react` still in `dependencies` + `react` not in `devDependencies` — `d2f541bc`, `7b0e6873`
+    - [x] `packages/auth-client/src/context.ts`: remove `register` from `AuthActions` — `bdf8cdc8`
+    - [x] `packages/auth-client/package.json`: remove `zod`; move `react` out of `dependencies` (keep in `peerDependencies`, add to `devDependencies`) — `bdf8cdc8`
 
-- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) — `d2f541bc`
     - 43 Red contract assertions across 5 test files committed in `d2f541bc` and `7b0e6873`; test-infrastructure fix (api test) committed in subsequent Phase 1 Red commit. 39 of 43 assertions fail with clean contract violations; 4 are preconditions (file existence / interface existence) that already pass — the Phase 1 implementer can confirm Red state by running `npx vitest run` in `packages/{db,auth,api,auth-client}/src/__tests__/auth-security-phase1-*.test.ts` and reading the failure messages, which all point at the specific Phase 1 task that owns the missing piece.
 
 ---

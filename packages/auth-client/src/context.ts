@@ -21,7 +21,6 @@ export interface AuthState {
 
 export interface AuthActions {
   login: (username: string, password: string) => Promise<void>;
-  register: (username: string, password: string, name: string, schoolId: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 

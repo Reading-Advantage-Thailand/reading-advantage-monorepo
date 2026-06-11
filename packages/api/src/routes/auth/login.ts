@@ -14,6 +14,8 @@ import {
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+export const DUMMY_HASH = "$argon2id$v=19$m=65536,t=3,p=4$c2FsdHNhbHRzYWx0$uTb0iMnAqN7uKjB8Y3N4v7J8k2L5mQwR9tY1xZ3aBcD";
+
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
