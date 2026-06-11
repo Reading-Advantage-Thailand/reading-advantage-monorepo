@@ -317,6 +317,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [ ] **Track: Auth Security Hardening**
   *Link: [./tracks/auth_security_hardening_20260611/](./tracks/auth_security_hardening_20260611/)*
   Close 11 security and correctness gaps identified in the June 2026 `packages/auth` review: session token hashing (FR-1), `assertTenantAccess` order bug (FR-2), `rehashOnLogin` provider filter (FR-3), username-enumeration timing oracle (FR-4), DB-error rate-limit poisoning (FR-5), unauthenticated register endpoint (FR-6), missing password reset + session revocation (FR-7), unpopulated session metadata (FR-8), missing login/reset audit events (FR-9), session cap (FR-10), impersonation env-var gate (FR-11). Scoped to username/password flow only.
+  **Extended 2026-06-11** with the `packages/auth-client` audit: login response missing required `AuthUser` fields hidden by `as` cast (FR-12), mount-session-check/login race (FR-13), logout swallowing server failure (FR-14), state-derivation + dependency hygiene (FR-15), and aligning `register()`/reading-advantage signup with the FR-6 gate (FR-16).
 
 ---
 

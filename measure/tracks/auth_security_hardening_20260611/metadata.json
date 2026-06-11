@@ -3,9 +3,9 @@
   "type": "chore",
   "status": "new",
   "created_at": "2026-06-11T14:10:00Z",
-  "updated_at": "2026-06-11T14:10:00Z",
-  "description": "Auth security hardening — close gaps identified in packages/auth review",
-  "estimated_tasks": 36,
+  "updated_at": "2026-06-11T16:30:00Z",
+  "description": "Auth security hardening — close gaps identified in packages/auth review (FR-1..11) and packages/auth-client review (FR-12..16)",
+  "estimated_tasks": 48,
   "actual_tasks": null,
   "deviation_notes": ""
 }

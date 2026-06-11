@@ -45,6 +45,14 @@
     - [ ] Generate once: a pre-computed Argon2id hash of a static known string; hard-code as module-level const
     - [ ] Note: used by FR-4 to ensure unknown-username paths pay the same Argon2id cost as wrong-password paths
 
+- [ ] Task 33: Extract `enrichAuthUser` helper (FR-12 contract)
+    - [ ] Create `packages/api/src/routes/auth/enrich.ts` exporting `enrichAuthUser(db, user): Promise<AuthUser-shaped object>` — the enrichment query currently inlined in `session.ts:28-39` (xp, level, cefrLevel, email, image, schoolId with the same null-defaults)
+    - [ ] Refactor `handleSession` to use it (behaviour unchanged)
+
+- [ ] Task 34: auth-client contract changes (FR-15, FR-16 contract)
+    - [ ] `packages/auth-client/src/context.ts`: remove `register` from `AuthActions`
+    - [ ] `packages/auth-client/package.json`: remove `zod`; move `react` out of `dependencies` (keep in `peerDependencies`, add to `devDependencies`)
+
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
 
 ---
@@ -98,6 +106,26 @@
     - [ ] Failed login (wrong password) → `recordAuditEvent` called with `action: "auth:login_failed"`
     - [ ] Password reset success → `recordAuditEvent` called with `action: "auth:password_reset"`
     - [ ] Confirm all fail (Red)
+
+- [ ] Task 35: Failing tests — FR-12: login returns full `AuthUser` (`packages/api/src/__tests__/auth-routes.test.ts`)
+    - [ ] Successful `handleLogin` response body `user` includes `xp`, `level`, `cefrLevel`, `email`, `image` (not just id/username/name/role/schoolId)
+    - [ ] Update `packages/auth-client/src/__tests__/hooks.test.tsx` login mocks to the enriched shape; assert `result.current.user?.xp` / `cefrLevel` are defined after login
+    - [ ] Confirm api test fails (Red)
+
+- [ ] Task 36: Failing test — FR-13: mount-session-check race (`packages/auth-client/src/__tests__/hooks.test.tsx`)
+    - [ ] Mock `/api/auth/session` with a deferred promise; call `login()` and resolve it; then resolve the session check with `{ session: null }`; assert state remains authenticated
+    - [ ] Confirm fails (Red)
+
+- [ ] Task 37: Failing tests — FR-14 & FR-15: logout failure + state derivation (`packages/auth-client/src/__tests__/hooks.test.tsx`)
+    - [ ] **FR-14**: logout fetch resolves `ok: false` → `logout()` rejects AND `isAuthenticated` is false / `user` is null
+    - [ ] **FR-14**: logout fetch rejects (network) → same
+    - [ ] **FR-15**: session check returning `{ session: {} }` → `isAuthenticated` is false
+    - [ ] Confirm all fail (Red)
+
+- [ ] Task 38: Failing tests — FR-16: register no longer self-authenticates (`packages/api/src/__tests__/auth-routes.test.ts`)
+    - [ ] Successful (teacher-gated) `handleRegister` returns 201 and does NOT set a `session_token` cookie
+    - [ ] `@reading-advantage/auth-client` has no `register` export (type/import-level assertion)
+    - [ ] Confirm fail (Red)
 
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
 
@@ -164,6 +192,30 @@
     - [ ] Add at top: if `process.env.IMPERSONATION_ENABLED !== "true"` return 404 (in addition to existing `NODE_ENV === "production"` guard)
     - [ ] Verify Task 14 FR-11 test passes (Green)
 
+- [ ] Task 39: Implement FR-12 — enriched login response, no client cast
+    - [ ] `handleLogin` success path: respond with `user: await enrichAuthUser(db, user)`
+    - [ ] `packages/auth-client/src/provider.tsx`: remove both `as AuthUser` casts; set login state from the typed response
+    - [ ] Verify Task 35 tests pass (Green)
+
+- [ ] Task 40: Implement FR-13 — race guard in `AuthProvider`
+    - [ ] Add `authActionCompletedRef`; `login`/`logout` set it; mount session-check discards its result when set
+    - [ ] Verify Task 36 test passes (Green)
+
+- [ ] Task 41: Implement FR-14 & FR-15 in `AuthProvider`
+    - [ ] `logout`: clear local state, then throw on network error or `!res.ok`
+    - [ ] Mount session-check: derive `user` and `isAuthenticated` both from `data.session?.user`
+    - [ ] Verify Task 37 tests pass (Green)
+
+- [ ] Task 42: Implement FR-16 — register is an admin operation
+    - [ ] `packages/api/src/routes/auth/register.ts`: remove `createSession` + cookie set; return 201 with created user
+    - [ ] `packages/auth-client`: remove `register` from `provider.tsx` and the context value
+    - [ ] Verify Task 38 tests pass (Green)
+
+- [ ] Task 43: Remove reading-advantage self-signup (FR-16)
+    - [ ] Remove `apps/reading-advantage/components/user-signup-form.tsx` and the page/route that renders it; replace the signup entry point with a "contact your teacher" notice
+    - [ ] `grep` confirms no remaining `register(` consumers of auth-client across apps
+    - [ ] `pnpm --filter reading-advantage check-types` passes
+
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
 ---
@@ -187,5 +239,11 @@
 - [ ] Task 32: Update `packages/auth/README.md`
     - [ ] Add section on session token hashing (raw token in cookie only, sha256 stored)
     - [ ] Document `revokeAllUserSessions` and session cap behaviour
+
+- [ ] Task 44: auth-client suite, build, and hygiene verification
+    - [ ] `CI=true pnpm --filter @reading-advantage/auth-client test`
+    - [ ] `pnpm --filter @reading-advantage/auth-client check-types`
+    - [ ] `pnpm --filter @reading-advantage/auth-client build` — confirm `dist/index.js` still begins with `"use client"`
+    - [ ] Type-check the four consuming apps (science, codecamp, reading, primary) to confirm the `register` removal breaks nothing else
 
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
