@@ -29,20 +29,23 @@
  * (the body is added in Phase 3 — Task 39).
  *
  * RED expectations (2026-06-12):
- *   - `reset-password.ts` does not exist → all reset-password tests
- *     error on the dynamic import (resolves to a non-importable path).
+ *   - `reset-password.ts` does not exist → the `existsSync` guard in
+ *     `loadResetPasswordModule` throws a "scaffold missing" contract
+ *     violation (not the original `import.meta.glob` "test-
+ *     infrastructure bug" message).
  *   - `handleResetPassword` is not yet in the auth barrel → the
- *     barrel re-export test fails.
+ *     static regex assertion on the barrel source fails.
  *   - `DUMMY_HASH` is not yet exported from login.ts → the import
  *     resolves to `undefined` and the runtime check fails.
- *   - `enrich.ts` does not exist → the dynamic import errors, and the
- *     barrel re-export of `enrichAuthUser` is `undefined`.
+ *   - `enrich.ts` does not exist → the `existsSync` guard in
+ *     `loadEnrichModule` throws a "scaffold missing" contract
+ *     violation.
  *
  * Test command (targeted, no DB / no network):
  *   cd packages/api && npx vitest run src/__tests__/auth-security-phase1-route-contracts.test.ts
  */
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -56,43 +59,39 @@ const LOGIN_TS_PATH = join(ROUTES_AUTH_DIR, "login.ts");
 const ENRICH_PATH = join(ROUTES_AUTH_DIR, "enrich.ts");
 const AUTH_BARREL_PATH = join(ROUTES_AUTH_DIR, "index.ts");
 
-// `import.meta.glob` is Vite's static-import helper, used here to load
-// the route handlers without coupling to the module resolution mode
-// (`./reset-password.js` vs `./reset-password`). Each handler is
-// looked up by file basename so the tests stay readable.
-const handlers = import.meta.glob<Record<string, unknown>>(
-  ["../routes/auth/reset-password.ts", "../routes/auth/enrich.ts"],
-  { eager: false },
-);
-
 interface RouteHandlerModule {
   handleResetPassword?: (...args: unknown[]) => Promise<Response>;
   resetPasswordSchema?: { safeParse: (input: unknown) => { success: boolean } };
   enrichAuthUser?: (...args: unknown[]) => Promise<unknown>;
 }
 
+// `import.meta.glob` with an explicit path array (the original pattern)
+// is evaluated against the filesystem at module-load time: if the
+// target file is absent in the Red state, the glob result is `{}` and
+// a lookup throws "test-infrastructure bug" instead of a clean contract
+// violation. Switch to a direct `existsSync` + dynamic-import pattern
+// so the missing-file case surfaces as the contract message Phase 3
+// readers will recognise.
 async function loadResetPasswordModule(): Promise<RouteHandlerModule> {
-  const loader = handlers["../routes/auth/reset-password.ts"];
-  if (!loader) {
+  if (!existsSync(RESET_PASSWORD_PATH)) {
     throw new Error(
-      "Could not resolve the reset-password module via import.meta.glob. " +
-        "This is a test-infrastructure bug, not a Phase 1 contract " +
-        "violation — fix the test file's glob pattern.",
+      "Expected packages/api/src/routes/auth/reset-password.ts to exist — " +
+        "Task 6 requires the scaffold (resetPasswordSchema + " +
+        "handleResetPassword stub returning 501) by Phase 1 close.",
     );
   }
-  return (await loader()) as RouteHandlerModule;
+  return (await import("../routes/auth/reset-password.js")) as RouteHandlerModule;
 }
 
 async function loadEnrichModule(): Promise<RouteHandlerModule> {
-  const loader = handlers["../routes/auth/enrich.ts"];
-  if (!loader) {
+  if (!existsSync(ENRICH_PATH)) {
     throw new Error(
-      "Could not resolve the enrich module via import.meta.glob. " +
-        "This is a test-infrastructure bug, not a Phase 1 contract " +
-        "violation — fix the test file's glob pattern.",
+      "Expected packages/api/src/routes/auth/enrich.ts to exist — " +
+        "Task 33 requires the enrichAuthUser stub (rejecting with " +
+        "Error('not implemented')) by Phase 1 close.",
     );
   }
-  return (await loader()) as RouteHandlerModule;
+  return (await import("../routes/auth/enrich.js")) as RouteHandlerModule;
 }
 
 // ---------------------------------------------------------------------------
@@ -209,6 +208,21 @@ describe("Phase 1 — Task 7: handleResetPassword is exported from the auth barr
   });
 
   it("the re-exported symbol resolves to a function at runtime", async () => {
+    // The barrel re-export chain (login → db client, session → db
+    // client) is heavy and hangs in test environments without a real
+    // Postgres. Skip the runtime check when the underlying module
+    // doesn't exist yet (Red state) — the static regex check above
+    // already pins the barrel contract, and the runtime check is
+    // belt-and-suspenders for the Green state.
+    if (!existsSync(RESET_PASSWORD_PATH)) {
+      throw new Error(
+        "Expected packages/api/src/routes/auth/reset-password.ts to exist " +
+          "so the auth barrel can re-export handleResetPassword — Task 6 " +
+          "is the contract owner, Task 7 is the barrel wiring. " +
+          "Skipping the runtime check would let a re-export regression " +
+          "slip past the static regex assertion above.",
+      );
+    }
     const barrel = (await import("../routes/auth/index.js")) as {
       handleResetPassword?: (...args: unknown[]) => Promise<Response>;
     };

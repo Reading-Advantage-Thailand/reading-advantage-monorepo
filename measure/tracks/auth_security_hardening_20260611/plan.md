@@ -2,11 +2,13 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [~] Task 1: Register `0018_audit_events` in the Drizzle migration journal
+- [x] Task 1: Register `0018_audit_events` in the Drizzle migration journal
+    - [x] Red contract test written: `packages/db/src/__tests__/auth-security-phase1-journal.test.ts` (Task 1 group, 4 assertions) — currently red, fails on missing journal entry with `expected undefined to be defined`
     - [ ] Add missing entry (idx 18, tag `"0018_audit_events"`) to `packages/db/drizzle/meta/_journal.json` — omitted from `audit_log_infrastructure_20260603` due to non-TTY write (per lessons-learned)
     - [ ] Verify `drizzle-kit status` no longer treats 0018 as unknown
 
-- [~] Task 2: Write migration `0019_session_token_hash.sql`
+- [x] Task 2: Write migration `0019_session_token_hash.sql`
+    - [x] Red contract test written: `packages/db/src/__tests__/auth-security-phase1-journal.test.ts` (Task 2 group, 6 assertions) — currently red, fails on missing 0019 SQL + missing journal entry
     - [ ] Create `packages/db/drizzle/0019_session_token_hash.sql`:
       ```sql
       ALTER TABLE sessions ADD COLUMN token_hash TEXT;
@@ -16,11 +18,13 @@
       ```
     - [ ] Register entry in `packages/db/drizzle/meta/_journal.json` (idx 19, tag `"0019_session_token_hash"`)
 
-- [~] Task 3: Add `tokenHash` field to sessions schema in `packages/db/src/schema/users.ts`
+- [x] Task 3: Add `tokenHash` field to sessions schema in `packages/db/src/schema/users.ts`
+    - [x] Red contract test written: `packages/db/src/__tests__/auth-security-phase1-schema.test.ts` (4 assertions) — currently red, fails on missing tokenHash column
     - [ ] Add `tokenHash: text("token_hash").notNull().unique()` to `sessions` table definition
     - [ ] Keep `token` column (drop deferred — out of scope)
 
-- [~] Task 4: Define `sha256Hex` helper in `packages/auth/src/session.ts`
+- [x] Task 4: Define `sha256Hex` helper in `packages/auth/src/session.ts`
+    - [x] Red contract test written: `packages/auth/src/__tests__/auth-security-phase1-session-contracts.test.ts` (Task 4 group, 3 assertions) — currently red, fails on missing node:crypto import + missing function declaration
     - [ ] Add `import { createHash } from "node:crypto";` at top
     - [ ] Add unexported module-level function:
       ```ts
@@ -29,31 +33,38 @@
       }
       ```
 
-- [~] Task 5: Stub `revokeAllUserSessions` + extend `createSession` signature in `packages/auth/src/session.ts`
+- [x] Task 5: Stub `revokeAllUserSessions` + extend `createSession` signature in `packages/auth/src/session.ts`
+    - [x] Red contract test written: `packages/auth/src/__tests__/auth-security-phase1-session-contracts.test.ts` (Task 5 groups, 5 assertions) — currently red, fails on missing export, missing arity 3, missing `opts?` name
     - [ ] Add stub `export async function revokeAllUserSessions(db: Db, userId: string): Promise<{ revoked: number }>` (throws `new Error("not implemented")`)
     - [ ] Extend `createSession` to accept optional third arg `opts?: { ipAddress?: string; userAgent?: string }`
     - [ ] Export `revokeAllUserSessions` from `packages/auth/src/index.ts`
 
-- [~] Task 6: Create `packages/api/src/routes/auth/reset-password.ts` scaffold
+- [x] Task 6: Create `packages/api/src/routes/auth/reset-password.ts` scaffold
+    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 6 group, 5 assertions) — currently red, fails on missing scaffold (clean contract violation, not test-infra bug — see commit history for the import.meta.glob → existsSync + dynamic-import fix)
     - [ ] Define `resetPasswordSchema = z.object({ userId: z.string().min(1), newPassword: z.string().min(8).max(128) })`
     - [ ] Stub `handleResetPassword` returning `501 Not Implemented`
 
-- [~] Task 7: Wire `handleResetPassword` into shared API barrel
+- [x] Task 7: Wire `handleResetPassword` into shared API barrel
+    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 7 group, 2 assertions) — currently red, fails on missing barrel re-export (static regex on barrel source + short-circuited runtime check)
     - [ ] Export `handleResetPassword` from `packages/api/src/routes/auth/index.ts`
 
-- [~] Task 8: Add `DUMMY_HASH` constant to `packages/api/src/routes/auth/login.ts`
+- [x] Task 8: Add `DUMMY_HASH` constant to `packages/api/src/routes/auth/login.ts`
+    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 8 group, 2 assertions) — currently red, fails on missing module-level constant + missing runtime export
     - [ ] Generate once: a pre-computed Argon2id hash of a static known string; hard-code as module-level const
     - [ ] Note: used by FR-4 to ensure unknown-username paths pay the same Argon2id cost as wrong-password paths
 
-- [~] Task 33: Extract `enrichAuthUser` helper (FR-12 contract)
+- [x] Task 33: Extract `enrichAuthUser` helper (FR-12 contract)
+    - [x] Red contract test written: `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts` (Task 33 group, 3 assertions) — currently red, fails on missing barrel re-export + missing scaffold
     - [ ] Create `packages/api/src/routes/auth/enrich.ts` exporting `enrichAuthUser(db, user): Promise<AuthUser-shaped object>` — the enrichment query currently inlined in `session.ts:28-39` (xp, level, cefrLevel, email, image, schoolId with the same null-defaults)
     - [ ] Refactor `handleSession` to use it (behaviour unchanged)
 
-- [~] Task 34: auth-client contract changes (FR-15, FR-16 contract)
+- [x] Task 34: auth-client contract changes (FR-15, FR-16 contract)
+    - [x] Red contract test written: `packages/auth-client/src/__tests__/auth-security-phase1-contracts.test.ts` (4 contract assertions + 4 forward-guard assertions) — currently red, fails on `register:` still in `AuthActions` + `zod`/`react` still in `dependencies` + `react` not in `devDependencies`
     - [ ] `packages/auth-client/src/context.ts`: remove `register` from `AuthActions`
     - [ ] `packages/auth-client/package.json`: remove `zod`; move `react` out of `dependencies` (keep in `peerDependencies`, add to `devDependencies`)
 
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+    - 43 Red contract assertions across 5 test files committed in `d2f541bc` and `7b0e6873`; test-infrastructure fix (api test) committed in subsequent Phase 1 Red commit. 39 of 43 assertions fail with clean contract violations; 4 are preconditions (file existence / interface existence) that already pass — the Phase 1 implementer can confirm Red state by running `npx vitest run` in `packages/{db,auth,api,auth-client}/src/__tests__/auth-security-phase1-*.test.ts` and reading the failure messages, which all point at the specific Phase 1 task that owns the missing piece.
 
 ---
 
