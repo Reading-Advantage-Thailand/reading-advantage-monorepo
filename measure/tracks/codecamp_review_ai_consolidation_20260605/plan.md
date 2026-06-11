@@ -89,7 +89,8 @@
 - [x] Task: Write/extend a webhook test (Mock `AIClient`) asserting the handler persists the same review shape and preserves the fire-and-forget `.catch` posture.
   - Commit: `24ec7bce`
   - **Red phase (2026-06-11):** Added `packages/webhooks/src/__tests__/github-review.test.ts` with 5 tests. 4 fail today (AIClient seam not yet wired into the webhook — `getAIClient`/`createAIClient` not called; `mockHolder.calls` empty; persisted summary is the inline `[Mock review — LLM not configured]` string, not the AIClient fixture). 1 passes (fire-and-forget regression guard — current `.catch` swallow already preserves the contract). Tests: (a) `getAIClient`/`createAIClient` invoked, (b) `reviewResultSchema` passed to `generateObject`, (c) `updatePrReview` called with fixture summary + `approved`, (d) `updatePrReview` called with `needs_changes` when `passed: false`, (e) AIClient rejection → 200 + `reviewed` + "Review failed" summary.
-- [ ] Task: Replace the inline OpenRouter call in the webhook handler with `reviewExercise` + injected `AIClient`.
+- [~] Task: Replace the inline OpenRouter call in the webhook handler with `reviewExercise` + injected `AIClient`.
+  - **Handoff (mid → Green, 2026-06-11):** Red-phase contract committed at `24ec7bce` (4 of 5 tests in `packages/webhooks/src/__tests__/github-review.test.ts` fail today; 1 passes as the fire-and-forget regression guard). Green-phase implementer owns this task: add `@reading-advantage/ai` to `packages/webhooks/package.json`, replace the module-level `createOpenAI({...})` + inline `generateReview` at `github.ts:65-99` with `aiClientToGenerateReview(getAIClient(), reviewResultSchema)`, drop the now-unused `@ai-sdk/openai`/`ai` imports, and confirm the 4 currently-Red tests flip to green while the 5th stays green.
 - [ ] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/webhooks` green.
 
 ## Phase 4: Repoint Call Site B (tRPC/API) — TDD
