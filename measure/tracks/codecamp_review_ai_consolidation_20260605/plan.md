@@ -86,7 +86,9 @@
   - **Green phase (2026-06-11):** Added `AIClientLike` interface + `aiClientToGenerateReview` adapter factory to `packages/domain/src/codecamp/review-exercise.ts`. All 281 tests pass, 0 failures, 5 skip.
 
 ## Phase 3: Repoint Call Site A (webhook) — TDD
-- [~] Task: Write/extend a webhook test (Mock `AIClient`) asserting the handler persists the same review shape and preserves the fire-and-forget `.catch` posture.
+- [x] Task: Write/extend a webhook test (Mock `AIClient`) asserting the handler persists the same review shape and preserves the fire-and-forget `.catch` posture.
+  - Commit: `24ec7bce`
+  - **Red phase (2026-06-11):** Added `packages/webhooks/src/__tests__/github-review.test.ts` with 5 tests. 4 fail today (AIClient seam not yet wired into the webhook — `getAIClient`/`createAIClient` not called; `mockHolder.calls` empty; persisted summary is the inline `[Mock review — LLM not configured]` string, not the AIClient fixture). 1 passes (fire-and-forget regression guard — current `.catch` swallow already preserves the contract). Tests: (a) `getAIClient`/`createAIClient` invoked, (b) `reviewResultSchema` passed to `generateObject`, (c) `updatePrReview` called with fixture summary + `approved`, (d) `updatePrReview` called with `needs_changes` when `passed: false`, (e) AIClient rejection → 200 + `reviewed` + "Review failed" summary.
 - [ ] Task: Replace the inline OpenRouter call in the webhook handler with `reviewExercise` + injected `AIClient`.
 - [ ] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/webhooks` green.
 
