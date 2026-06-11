@@ -213,7 +213,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [ ] **Track: codecamp-advantage — Warm Dashboard Performance**
   *Link: [./tracks/codecamp_perf_warm_dashboard_20260608/](./tracks/codecamp_perf_warm_dashboard_20260608/)*
   Bring the warm-dashboard page load under the 1000ms P1 budget.
-  Comprehensive manual QA testing on deployed production server. Covers infrastructure (HTTPS, DNS, Cloud Run), real integrations (OpenRouter, GitHub App), performance, caching, monitoring, and cross-browser testing. *Status: NOT STARTED (metadata.json `new`) — plan created, ready for execution. Unarchived 2026-06-07 (had been placed in `archive/` prematurely while still open work; now correctly in `tracks/`).*
 
 - [x] **Track: codecamp-advantage — AI Review Visibility**
   *Link: [./archive/codecamp_ai_review_visibility_20260518/](./archive/codecamp_ai_review_visibility_20260518/)*
