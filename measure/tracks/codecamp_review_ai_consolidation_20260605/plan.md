@@ -76,9 +76,13 @@
 
 ## Phase 2: Confirm/Adapt the `reviewExercise` Seam — TDD
 - [~] Task: Write/extend a domain test that injects a Mock `AIClient` and asserts `reviewExercise` returns the typed review for a sample diff, and surfaces a model error correctly.
+  - Commit: `d5130fd8`
 - [~] Task: If `reviewExercise` does not yet accept an `AIClient`, adapt its DI param (keep the call shape backward-compatible).
+  - Commit: `d5130fd8`
 - [~] Task: Add a regression test for terminal `reviewedAt` stamping (pending re-trigger must not overwrite a prior terminal `reviewedAt`).
+  - Commit: `d5130fd8`
 - [ ] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/domain` green.
+  - **Red phase confirmed (2026-06-11, commit `d5130fd8`):** 4 new adapter tests fail with `TypeError: aiClientToGenerateReview is not a function` (expected — adapter not yet implemented); 1 new `reviewedAt` regression test passes (regression guard for current correct behavior); 276 existing tests remain green. Full gate will turn green after the implementer adds the `aiClientToGenerateReview` factory + the `AIClientLike` structural type to `packages/domain/src/codecamp/review-exercise.ts`.
 
 ## Phase 3: Repoint Call Site A (webhook) — TDD
 - [ ] Task: Write/extend a webhook test (Mock `AIClient`) asserting the handler persists the same review shape and preserves the fire-and-forget `.catch` posture.
