@@ -68,8 +68,7 @@
   - Commit: `92eeca19`
 - [x] Task: Implement `openrouter.ts` (thin variant of the OpenAI provider with OpenRouter `baseURL`); register in `createAIClient`/`getAIClient`.
   - Commit: `92eeca19`
-- [x] Task: Add a bounded, credential-gated OpenRouter capability preflight for the
-  configured review model using the exact forced-tool structured-output contract.
+- [x] Task: Add a bounded, credential-gated OpenRouter capability preflight for the configured review model using the exact forced-tool structured-output contract.
   - Commit: `92eeca19`
 - [x] Task: Verify — `pnpm turbo run test --filter=@reading-advantage/ai` green.
   - Commit: `92eeca19`
