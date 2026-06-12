@@ -64,7 +64,8 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
         5. `pnpm vitest run src/__tests__/env-guards.test.ts` → **4 / 4 failed** (production throw, build-phase exemption, dev warn, privileged fallback warn — all four guards missing in master `client.ts` and `privileged.ts`).
         6. `pnpm vitest run src/__tests__/barrel-hygiene.test.ts` → **4 / 6 failed** (root barrel still re-exports `PORTFOLIO_PROJECTS` and `PortfolioProject`; domain consumer still imports from root; `src/shutdown.ts` still on disk). 2 pass (seed/index.ts already exists, index.ts already omits registerShutdownHandler).
     - Aggregate: **13 failed / 9 passed across 22 tests** in 4 fast files; 4 skipped in 2 DB-gated files (run when `PG_TEST_URL` is set per test-strategy §7). Every Red reason is a real missing-behavior assertion, not a stale-artifact check.
-    - Per-task Red-commit SHA: TBD (see next checkpoint).
+    - **Red-commit SHA: `29d21aba`** (test-only commit; 13 fail on master, 4 DB-gated tests skip until `PG_TEST_URL` is provided, 9 pass; dirty `packages/api/src/__tests__/reset-password.test.ts` preserved unstaged as unrelated user work).
+    - Runtime for all 6 files: ~12s; each file bounded by 30s timeout, no watch mode, no unbounded full-suite smoke.
 
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
 
