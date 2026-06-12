@@ -44,10 +44,32 @@
  * Test command (targeted, no DB / no network):
  *   cd packages/api && npx vitest run src/__tests__/auth-security-phase1-route-contracts.test.ts
  */
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+vi.mock("@reading-advantage/db", () => ({
+  db: { select: vi.fn(), insert: vi.fn(), update: vi.fn(), delete: vi.fn() },
+}));
+
+vi.mock("@reading-advantage/db/schema", () => ({
+  users: { id: "users.id", username: "users.username" },
+  accounts: { userId: "accounts.user_id", providerId: "accounts.provider_id" },
+}));
+
+vi.mock("drizzle-orm", () => ({
+  eq: vi.fn(),
+  and: vi.fn(),
+}));
+
+vi.mock("@reading-advantage/auth", () => ({
+  hashPassword: vi.fn(),
+  requireAuth: vi.fn(),
+  requireRole: vi.fn(),
+  revokeAllUserSessions: vi.fn(),
+  recordAuditEvent: vi.fn(),
+}));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
