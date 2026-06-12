@@ -235,7 +235,7 @@
 > test is not a pure markdown-assertion smoke.
 
 - [x] Red task: Add `packages/webhooks/src/__tests__/phase-7-closeout.test.ts` with 16 tests across 4 `describe` blocks (Task 1 tech-debt.md row 2026-05-15 + Resolved commit refs, Task 2 lessons-learned.md entry with adapter-factory + at-least-one-of three sub-topics, Task 3 tracks.md flip + dir-move + artefact preservation, Task 4 git-notes attached to dir-move commit + track id + resolving commit reference).
-  - Commit: see "Phase 7 Red commit" line below (added after the Red commit is on-branch).
+  - Commit: `0cf850bb` (verified `git merge-base --is-ancestor 0cf850bb HEAD` → OK on 2026-06-12).
   - **Targeted Red command:** `cd packages/webhooks && ./node_modules/.bin/vitest run src/__tests__/phase-7-closeout.test.ts`
   - **Result:** `Test Files  1 failed (1) / Tests  14 failed | 2 passed (16)` in ~1s.
   - **Passing (2) — preconditions that always pass:** "tech-debt.md exists at the expected Measure path", "lessons-learned.md exists at the expected Measure path". These are `existsSync()` preconditions; they are required to gate the substantive assertions and are not Red signals.
@@ -260,4 +260,6 @@
   - **Dirty-worktree classification at MID start:** `packages/api/src/__tests__/reset-password.test.ts` is dirty (cast tightening: `as any` → `as unknown as Awaited<ReturnType<typeof requireAuth>>`, `as unknown as Awaited<ReturnType<typeof requireRole>>`). This is the auth-security track's work (per the Phase 4 attempt-2 supervisor note in plan.md:103), NOT this track's. It is a test file; the MID boundary rule ("Do NOT modify existing source code except test files and Measure docs") allows test-file mods from other tracks to remain in the worktree. The Phase 7 Red test does not touch this file, the dirty diff is preserved in the worktree, and the Phase 7 Red commit will only stage `packages/webhooks/src/__tests__/phase-7-closeout.test.ts` + the plan.md marker flip.
 
 ### Phase 7 Red commit (added after the commit is on-branch)
-
+- Red commit SHA: `0cf850bb` (full: `0cf850bb3d12a047a986b0e071ffb13dd039155a`).
+- Subject: `test(measure): Phase 7 Red — pin closeout deliverables for codecamp_review_ai_consolidation`.
+- 2 files changed, 561 insertions(+), 4 deletions(-).
