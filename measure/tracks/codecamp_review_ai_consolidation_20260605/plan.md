@@ -147,6 +147,7 @@
 ### Phase 5 Green phase (2026-06-12)
 
 - **Green phase (2026-06-12):** Removed 5 dead-code items:
+  - Commit: `3dc3167a`
   1. `vi.mock("@ai-sdk/openai", ...)` block + comment from `github-review.test.ts` (lines 169-175)
   2. Stale "current inline OpenRouter call" comments from `github-review.test.ts` (lines 301-305)
   3. Stale "current inline OpenRouter call" comments from `codecamp-review-router.test.ts` (lines 142-146, 177-180)
