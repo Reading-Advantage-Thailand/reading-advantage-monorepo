@@ -477,7 +477,7 @@ describe("Phase 6: codecamp PR-review path — integration + acceptance", () => 
     // responsibility.
     const planPath = join(
       REPO_ROOT,
-      "measure/tracks/codecamp_review_ai_consolidation_20260605/plan.md"
+      "measure/archive/codecamp_review_ai_consolidation_20260605/plan.md"
     );
     const plan = readFileSync(planPath, "utf8");
 

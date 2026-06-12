@@ -218,10 +218,10 @@
 **Summary:** All track-owned packages pass test + check-types. The two blocking failures (`@reading-advantage/auth#build`, `@reading-advantage/ai` line-cap) are owned by the auth-security and ai_adapter_package tracks respectively — neither is this track's responsibility.
 
 ## Phase 7: Closeout
-- [~] Task: Mark `measure/tech-debt.md` 2026-05-15 "Duplicate `generateReview`" row **Resolved** with the resolving commit.
-- [~] Task: Add a lessons-learned entry if the A/B prompt reconciliation or OpenRouter-as-OpenAI-variant surfaced anything reusable.
-- [~] Task: Update `measure/tracks.md` (mark complete); move track dir to `measure/archive/`.
-- [~] Task: Commit with `git notes`.
+- [x] Task: Mark `measure/tech-debt.md` 2026-05-15 "Duplicate `generateReview`" row **Resolved** with the resolving commit.
+- [x] Task: Add a lessons-learned entry if the A/B prompt reconciliation or OpenRouter-as-OpenAI-variant surfaced anything reusable.
+- [x] Task: Update `measure/tracks.md` (mark complete); move track dir to `measure/archive/`.
+- [x] Task: Commit with `git notes`.
 
 ### Phase 7 Red phase (2026-06-12, MID)
 
