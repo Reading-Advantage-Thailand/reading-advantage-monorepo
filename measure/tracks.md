@@ -219,7 +219,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 > Two sequenced tracks that retire long-standing `tech-debt.md` rows on the LLM PR-review
 > pipeline. Do the consolidation first (it gives the reliability track a single seam).
 
-- [ ] **Track: Consolidate Duplicate `generateReview` onto `packages/ai`** *Link: [./tracks/codecamp_review_ai_consolidation_20260605/](./tracks/codecamp_review_ai_consolidation_20260605/)*
+- [x] **Track: Consolidate Duplicate `generateReview` onto `packages/ai`** *Link: [./archive/codecamp_review_ai_consolidation_20260605/](./archive/codecamp_review_ai_consolidation_20260605/)*
   Collapse the two near-identical OpenRouter `generateReview` implementations onto the shared `AIClient` from `packages/ai` (committed `9c52c8a`); `reviewExercise` becomes the single seam. Adds an OpenRouter provider to `packages/ai` if absent. Resolves `tech-debt.md` 2026-05-15 "Duplicate `generateReview`". Depends on `ai_adapter_package_20260603`. **Do before the reliability track.**
 
 - [ ] **Track: Webhook → LLM Review Reliability (Postgres Retry + DLQ)** *Link: [./tracks/webhook_review_reliability_20260605/](./tracks/webhook_review_reliability_20260605/)*
