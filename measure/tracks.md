@@ -21,6 +21,11 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
+- [ ] **Track: Post-24h Audit Remediation** *Link: [./tracks/post_24h_audit_remediation_20260612/](./tracks/post_24h_audit_remediation_20260612/)*
+  High-priority cleanup of issues found in the 24-hour commit audit: rescue the uncommitted db-migration-ledger Phase-3 Green WIP; harden auth session cap, token typing, audit fire-and-forget, and reset-password logic; remove skipped stub tests and source-level regex tests; stabilize the codecamp_review_ai_consolidation Phase-6 acceptance test and de-brittle closeout bookkeeping tests; verify the warm-dashboard optimization in production; resolve long-lived stashes and generated-artifact hygiene.
+
+---
+
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
 
