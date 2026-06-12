@@ -118,7 +118,7 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
     - [x] Removed stale `dist/__tests__/` (never rebuilt by `tsconfig.build.json`)
     - [x] Removed stale `scripts/sentinels.{d.ts,d.ts.map,js}` build artifacts
 
-- [x] **Phase 3 Red gate — FR-5 snapshot-drift (added 2026-06-13, mid role, attempt 2)** — `packages/db/src/__tests__/snapshot-drift.test.ts` authored for Task 14 / spec §FR-5 (artifact assertion of the snapshot↔journal invariant the implementation must restore).
+- [x] **Phase 3 Red gate — FR-5 snapshot-drift (added 2026-06-13, mid role, attempt 2)** (`9b1a9118`) — `packages/db/src/__tests__/snapshot-drift.test.ts` authored for Task 14 / spec §FR-5 (artifact assertion of the snapshot↔journal invariant the implementation must restore).
     - Targeted Red command (per file, no watch, no full suite): `./node_modules/.bin/vitest run src/__tests__/snapshot-drift.test.ts` (from `packages/db/`).
     - Result: **7 / 7 failed** in 535ms. Red reasons:
         1. `the highest idx in drizzle/meta/NNNN_snapshot.json equals the highest journal idx` → `expected 9 to be 20` (snapshot=0009, journal=0020). The message is the FR-5 spec contract: "drizzle-kit generate will diff the schema against the stale 0009_snapshot and emit duplicate DDL for every migration added since then."
