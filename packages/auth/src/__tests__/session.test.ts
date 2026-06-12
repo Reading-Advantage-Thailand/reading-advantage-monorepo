@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createSession, validateSession, deleteSession } from "../session.js";
 
+vi.mock("@reading-advantage/db", () => ({
+  count: vi.fn(() => ({ type: "count" })),
+  eq: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "eq" })),
+}));
+
 vi.mock("@reading-advantage/db/schema", () => ({
   sessions: {
     id: "id",
@@ -20,6 +25,7 @@ vi.mock("@reading-advantage/db/schema", () => ({
 }));
 
 vi.mock("drizzle-orm", () => ({
+  count: vi.fn(() => ({ type: "count" })),
   eq: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "eq" })),
 }));
 
@@ -249,7 +255,7 @@ describe("Phase 2 — Task 9: FR-1 session token hashing", () => {
   beforeEach(async () => {
     // Reset the shared eq mock call history between Phase 2 tests
     // to avoid cross-test pollution from earlier describe blocks.
-    const eqMod = (await import("drizzle-orm")) as unknown as {
+    const eqMod = (await import("@reading-advantage/db")) as unknown as {
       eq: ReturnType<typeof vi.fn>;
     };
     eqMod.eq.mockClear();
@@ -352,7 +358,7 @@ describe("Phase 2 — Task 9: FR-1 session token hashing", () => {
     // The drizzle-orm mock makes eq() return `{ col, val, type: "eq" }`;
     // for a sha256-lookup the val will be the hex digest. We assert
     // that by intercepting the eq() symbol and reading its call.
-    const eqMod = (await import("drizzle-orm")) as unknown as {
+    const eqMod = (await import("@reading-advantage/db")) as unknown as {
       eq: ReturnType<typeof vi.fn>;
     };
 
@@ -430,7 +436,7 @@ describe("Phase 2 — Task 9: FR-1 session token hashing", () => {
 
     await deleteSession(asSessionDb(db), rawToken);
 
-    const eqMod = (await import("drizzle-orm")) as unknown as {
+    const eqMod = (await import("@reading-advantage/db")) as unknown as {
       eq: ReturnType<typeof vi.fn>;
     };
     const eqCalls = (
@@ -500,10 +506,10 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
     db.select.mockImplementation(() => {
       selectCall++;
       if (selectCall === 1) {
-        // First select: the FR-10 count() — return 10 to trigger eviction.
+        // First select: the FR-10 aggregate count() — return 10 to trigger eviction.
         return {
           from: vi.fn().mockReturnValue({
-            where: vi.fn().mockResolvedValue([{ count: 10 }]),
+            where: vi.fn().mockResolvedValue([{ value: 10 }]),
           }),
         };
       }
@@ -540,6 +546,16 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
     });
 
     await createSession(asSessionDb(db), "u1");
+
+    const dbOperators = (await import("@reading-advantage/db")) as unknown as {
+      count: ReturnType<typeof vi.fn>;
+    };
+    expect(
+      dbOperators.count,
+      "Expected createSession to use Drizzle's aggregate count() for the " +
+        "session cap. Selecting sessions.id as `count` returns an ID-like " +
+        "value in a real database, which coerces to NaN and disables eviction.",
+    ).toHaveBeenCalled();
 
     expect(
       db.delete,

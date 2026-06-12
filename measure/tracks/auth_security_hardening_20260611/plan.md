@@ -236,28 +236,61 @@
 
 ## Phase 4: Generate Docs & Doctor
 
-- [ ] Task 29: Run full test suites and confirm green
+### MID Red-phase notes (attempt 1, 2026-06-12)
+
+**Dirty-worktree classification at MID start**
+- `M packages/auth/src/__tests__/session.test.ts` → **RELEVANT, fold in (test file)**. Prior agent added an assertion to "Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap" that `createSession` must call Drizzle's aggregate `count()` from `@reading-advantage/db` (vs `select({ count: sessions.id })` which would coerce a UUID-like value to NaN in a real Postgres and disable the cap). Currently **Red against HEAD `session.ts`** — verified by `git stash --keep-index -- packages/auth/src/session.ts` then `CI=true vitest run src/__tests__/session.test.ts -t "Task 10"` → 1 failed (Module crashes at user-lookup `.limit(1)` because the cap branch is skipped when `countResult[0]?.count` is `undefined`, which means selectCall counter never reaches the user-lookup chain). This is a legitimate Red signal — the failure mode is brittle but the underlying contract violation (HEAD source uses `select({ count: sessions.id })`) is real.
+- `M packages/auth/src/session.ts` → **RELEVANT, preserve for JR (source file, NOT in this commit)**. Matching Green implementation for the FR-10 hardening test above: imports `count` from `@reading-advantage/db` and rewrites the cap query to `.select({ value: count() })`. The MID role explicitly prohibits source-code edits, so this stays dirty in the worktree for the next JR (or whoever picks up the FR-10 retroactive-hardening Green commit). **JR action**: commit `packages/auth/src/session.ts` with a `fix(auth-security): FR-10 use Drizzle aggregate count() in session cap` message — this makes the folded test Green.
+- `?? graph.db-journal` → **GENERATED, ignorable**. SQLite WAL/journal from an in-flight `build-graph` transaction. `graph.db` is in `.gitignore` (confirmed via `git check-ignore`), so the journal is also untracked. Not included in commit.
+
+**MID Red command (single targeted file, no watch, no full suite)**
+```
+cd packages/auth && CI=true node_modules/.bin/vitest run \
+  src/__tests__/auth-security-phase4-readme.test.ts --reporter=verbose
+```
+**Result (Red, attempt 1)**: `Test Files 1 failed (1)` · `Tests 8 failed | 1 passed (9)`. The 1 pass is the file-exists sanity check (`packages/auth/README.md` was created by the `audit_log_retention_dsar_20260605` track and currently only documents the retention policy). All 8 Task 32 contract assertions fail with concrete "Expected README.md to mention X" messages — none fail on import errors or test infra.
+
+**Per-task Red mapping (MID mandate ⇄ Phase 4 testable contracts)**
+| Task | MID Red coverage | Live-behaviour proof | Owner of next move |
+|------|------------------|----------------------|--------------------|
+| 29 | None (CI gate — runs three test suites). No novel contract to assert; the test suites are themselves the contract. | Phase 2 + Phase 3 tests already green at HEAD per Phase 3 closeout (commit `c23cda62`). | JR runs the three `CI=true pnpm --filter … test` commands. |
+| 30 | None (CI gate — runs three `check-types` commands). | `check-types` baseline already verified by Phase 3 Task 43 sub-bullet for `reading-advantage`. | JR runs the three `check-types` commands. |
+| 31 | None (CI gate — runs two `build` commands). | No prior in-track build gate; the `next-cache-components`-style build break would be a regression, not new feature work. | JR runs the two `build` commands. |
+| 32 | **`packages/auth/src/__tests__/auth-security-phase4-readme.test.ts` (9 assertions, 8 Red at HEAD)** asserts the README documents (a) sha256 + `tokenHash` + raw-token-in-cookie/hash-in-db invariant for FR-1, (b) `revokeAllUserSessions` export name + invocation context for FR-7a, (c) `10` in a session-line + cap/limit/max framing + oldest-row eviction for FR-10. | FR-1 / FR-7a / FR-10 behavioural tests already green at HEAD (Phase 2 + 3 in `session.test.ts`). | JR writes the README sections; the Red test then passes. |
+| 44 | **Already pinned in Phase 1** by `packages/auth-client/src/__tests__/auth-security-phase1-contracts.test.ts` "Phase 1 — Task 44 forward-guard" (asserts `provider.tsx` begins with `"use client";` AND `dist/index.js` begins with `"use client"` after build, skipping the dist check if the file is missing). The consumer-app `register`-removal sub-bullet is covered by `packages/api/src/__tests__/auth-security-phase3-signup-removal.test.ts`. No NEW Phase-4 test needed. | Forward-guard test already green at HEAD per Phase 1 close (`bdf8cdc8`) + Phase 3 (`ca0bc60e`, `3b51bcec`). | JR runs the four `auth-client` commands; the existing forward-guard test runs as part of `pnpm --filter @reading-advantage/auth-client test`. |
+
+**No-novel-Red justification for Tasks 29/30/31/44**
+Per the MID role rule "If the new tests pass at HEAD … mark the task as already satisfied with evidence instead of creating a false Red phase": Tasks 29/30/31 are pure CI gates (no test-shaped Red surface to write — the integration gate IS the command run), and Task 44 is fully covered by the already-Green Phase 1 forward-guard and Phase 3 signup-removal tests. Creating a sham Red for these would violate the rule.
+
+### Tasks
+
+- [~] Task 29: Run full test suites and confirm green — MID: CI gate, no Red test (JR runs the commands)
     - [ ] `CI=true pnpm --filter @reading-advantage/auth test`
     - [ ] `CI=true pnpm --filter @reading-advantage/db test`
     - [ ] `CI=true pnpm --filter @reading-advantage/api test`
 
-- [ ] Task 30: Run type-check for affected packages
+- [~] Task 30: Run type-check for affected packages — MID: CI gate, no Red test (JR runs the commands)
     - [ ] `pnpm --filter @reading-advantage/auth check-types`
     - [ ] `pnpm --filter @reading-advantage/db check-types`
     - [ ] `pnpm --filter @reading-advantage/api check-types`
 
-- [ ] Task 31: Build affected packages
+- [~] Task 31: Build affected packages — MID: CI gate, no Red test (JR runs the commands)
     - [ ] `pnpm --filter @reading-advantage/auth build`
     - [ ] `pnpm --filter @reading-advantage/db build`
 
-- [ ] Task 32: Update `packages/auth/README.md`
+- [~] Task 32: Update `packages/auth/README.md` — MID Red: `packages/auth/src/__tests__/auth-security-phase4-readme.test.ts` (8 Red / 1 pass at HEAD)
     - [ ] Add section on session token hashing (raw token in cookie only, sha256 stored)
     - [ ] Document `revokeAllUserSessions` and session cap behaviour
 
-- [ ] Task 44: auth-client suite, build, and hygiene verification
+- [~] Task 44: auth-client suite, build, and hygiene verification — MID: covered by existing Phase 1 forward-guard + Phase 3 signup-removal tests, no new Red test (JR runs the commands)
     - [ ] `CI=true pnpm --filter @reading-advantage/auth-client test`
     - [ ] `pnpm --filter @reading-advantage/auth-client check-types`
-    - [ ] `pnpm --filter @reading-advantage/auth-client build` — confirm `dist/index.js` still begins with `"use client"`
-    - [ ] Type-check the four consuming apps (science, codecamp, reading, primary) to confirm the `register` removal breaks nothing else
+    - [ ] `pnpm --filter @reading-advantage/auth-client build` — confirm `dist/index.js` still begins with `"use client"` (already asserted by `auth-security-phase1-contracts.test.ts` "Task 44 forward-guard" block)
+    - [ ] Type-check the four consuming apps (science, codecamp, reading, primary) to confirm the `register` removal breaks nothing else (consumer scan already asserted by `auth-security-phase3-signup-removal.test.ts` "no apps/** source destructures `register` from useAuth()" block)
+
+- [~] Task: Bonus FR-10 hardening (folded in from dirty worktree) — MID Red: dirty `packages/auth/src/__tests__/session.test.ts` Phase 2 Task 10 cap test
+    - **Red status**: confirmed failing against HEAD `session.ts` (1 failed) via `git stash --keep-index -- packages/auth/src/session.ts` + `CI=true vitest run src/__tests__/session.test.ts -t "Task 10"`. Failure cascades from skipped eviction → user-lookup mock chain mismatch; root cause is HEAD source using `select({ count: sessions.id })` which yields `undefined` for the mock-DB `value`-keyed return.
+    - **Green plan** (JR): commit `packages/auth/src/session.ts` (currently dirty, NOT in this MID commit) which imports `count` from `@reading-advantage/db` and uses `.select({ value: count() })`. Suggested message: `fix(auth-security): FR-10 use Drizzle aggregate count() in session cap`.
+    - **Why retroactive**: the original Phase 2 Task 10 assertion (committed in `c15181b9` / `c23cda62`) passed against mock-DB but would have silently failed in real Postgres because `Number("<uuid-string>")` is `NaN`. Test-strategy.md §3 lesson "Mock-DB unit tests can pass while real DB constraints are violated" applies. Discovered during Phase 4 prior investigation.
 
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
