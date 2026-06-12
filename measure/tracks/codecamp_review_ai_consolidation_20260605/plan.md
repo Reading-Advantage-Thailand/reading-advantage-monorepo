@@ -120,8 +120,11 @@
 > `packages/api/package.json`.
 
 - [x] Task: Remove both inline OpenRouter implementations and now-unused helpers/imports.
+  - Commit: `3dc3167a`
 - [x] Task: `grep -rn "openrouter\|OPENROUTER_API_KEY\|fetch(" packages/webhooks packages/api` over the review path — confirm zero residual direct model calls.
+  - Commit: `3dc3167a` (verified clean — no residual direct model calls)
 - [x] Task: Verify — type-check passes (no dangling imports).
+  - Commit: `3dc3167a` (webhooks + api check-types clean)
 
 ### Phase 5 Red phase (2026-06-12)
 
