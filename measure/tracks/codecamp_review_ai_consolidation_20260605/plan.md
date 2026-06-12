@@ -119,9 +119,9 @@
 > `@ai-sdk/openai` / `ai` deps in `packages/webhooks/package.json` and
 > `packages/api/package.json`.
 
-- [~] Task: Remove both inline OpenRouter implementations and now-unused helpers/imports.
-- [~] Task: `grep -rn "openrouter\|OPENROUTER_API_KEY\|fetch(" packages/webhooks packages/api` over the review path — confirm zero residual direct model calls.
-- [~] Task: Verify — type-check passes (no dangling imports).
+- [x] Task: Remove both inline OpenRouter implementations and now-unused helpers/imports.
+- [x] Task: `grep -rn "openrouter\|OPENROUTER_API_KEY\|fetch(" packages/webhooks packages/api` over the review path — confirm zero residual direct model calls.
+- [x] Task: Verify — type-check passes (no dangling imports).
 
 ### Phase 5 Red phase (2026-06-12)
 
@@ -143,6 +143,17 @@
     2. `codecamp.ts` has no inline vendor SDK call — proves Phase 4 Green stuck.
   - **Live-behavior gate pairing:** the test-strategy's "no new tests" preference is preserved by making this an artifact (file-content) assertion. The live-behavior proof is the existing `pnpm turbo run {test,check-types,build}` gate that the Green role runs after deleting the dead code — the same test file is re-run and all 7 tests must pass.
   - **Dirty-worktree note:** `packages/api/src/__tests__/reset-password.test.ts` was dirty at MID start (cast tightening: `as any` → `as unknown as Awaited<...>`). Per the supervisor fix in Phase 4 attempt 2, this is a test file from the auth-security track (unrelated to this track). It is **preserved** in the worktree and the Phase 5 Red test does not touch it.
+
+### Phase 5 Green phase (2026-06-12)
+
+- **Green phase (2026-06-12):** Removed 5 dead-code items:
+  1. `vi.mock("@ai-sdk/openai", ...)` block + comment from `github-review.test.ts` (lines 169-175)
+  2. Stale "current inline OpenRouter call" comments from `github-review.test.ts` (lines 301-305)
+  3. Stale "current inline OpenRouter call" comments from `codecamp-review-router.test.ts` (lines 142-146, 177-180)
+  4. `@ai-sdk/openai` + `ai` deps from `packages/webhooks/package.json`
+  5. `@ai-sdk/openai` + `ai` deps from `packages/api/package.json`
+  - **Targeted command:** `cd packages/webhooks && npx vitest run src/__tests__/phase-5-dead-code.test.ts` → **7 passed (7)** in 0.66s.
+  - **Verify gate:** webhooks `pnpm test` → 57 passed. api `pnpm test` → 162 passed, 2 skipped. webhooks `check-types` → clean. api `check-types` → clean. (`@reading-advantage/auth` check-types fails at `session.ts:158` — pre-existing auth-security track issue, unrelated to this track.)
 
 ## Phase 6: Integration + Acceptance
 - [ ] Task: Run the codecamp PR-review path against the Mock provider end-to-end (or `scripts/codecamp-pr-e2e.sh` if it can run with the Mock provider) and confirm identical persisted output to the documented unified version.

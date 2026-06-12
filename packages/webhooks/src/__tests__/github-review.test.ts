@@ -166,14 +166,6 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   };
 });
 
-// Stub the legacy OpenAI SDK so the module load (which currently calls
-// `createOpenAI({...})` at line 65) doesn't fail in the test env. After
-// Phase 3 the implementation should not import `@ai-sdk/openai` at all
-// and this stub becomes dead code.
-vi.mock("@ai-sdk/openai", () => ({
-  createOpenAI: vi.fn(() => () => ({ specifier: "stubbed-model" })),
-}));
-
 vi.mock("../github-client", () => ({
   fetchPrDiff: vi.fn().mockResolvedValue("@@ -1,3 +1,4 @@\n+console.log('hello');\n"),
   postPrComment: vi.fn().mockResolvedValue(undefined),
@@ -298,11 +290,6 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     const res = await githubApp.fetch(req);
 
     expect(res.status).toBe(200);
-    // The webhook must obtain an AIClient through the shared abstraction
-    // (either the lazy singleton `getAIClient` or an explicit
-    // `createAIClient({ provider: "openrouter" })` call). The current inline
-    // implementation calls `createOpenAI` from `@ai-sdk/openai` directly,
-    // so this assertion fails on master today and passes after Phase 3.
     const aiClientCalls = mockGetAIClient.mock.calls.length + mockCreateAIClient.mock.calls.length;
     expect(aiClientCalls).toBeGreaterThanOrEqual(1);
     // The Mock AIClient must have received the request — proves the call

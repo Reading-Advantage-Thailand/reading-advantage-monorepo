@@ -139,11 +139,6 @@ describe("codecamp router — reviewExercise uses the AIClient abstraction", () 
 
     await caller.codecamp.reviewExercise({ prDiff: SAMPLE_DIFF });
 
-    // The procedure must obtain an AIClient through the shared abstraction
-    // (either the lazy singleton `getAIClient` or an explicit
-    // `createAIClient({ provider: "openrouter" })` call). The current inline
-    // implementation calls `createOpenAI` from `@ai-sdk/openai` directly,
-    // so this assertion fails on master today and passes after Phase 4.
     const aiClientCalls = mockGetAIClient.mock.calls.length + mockCreateAIClient.mock.calls.length;
     expect(aiClientCalls).toBeGreaterThanOrEqual(1);
     // The Mock AIClient must have received the request — proves the call
@@ -172,12 +167,6 @@ describe("codecamp router — reviewExercise uses the AIClient abstraction", () 
 
     const result = await caller.codecamp.reviewExercise({ prDiff: SAMPLE_DIFF });
 
-    // The returned review must be the Mock AIClient's fixture — NOT the
-    // hard-coded "[Mock review — LLM not configured]" string from the inline
-    // implementation, and NOT the OpenAI SDK response. This is the regression
-    // guard for FR-4: the procedure must route the LLM call through the
-    // shared `reviewExercise` + `aiClientToGenerateReview(getAIClient(), ...)`
-    // seam, not the inline `createOpenAI({...})` + `generateObject(...)` call.
     expect(result.passed).toBe(true);
     expect(result.summary).toBe(REVIEW_FIXTURE.summary);
     expect(result.summary).not.toContain("LLM not configured");
