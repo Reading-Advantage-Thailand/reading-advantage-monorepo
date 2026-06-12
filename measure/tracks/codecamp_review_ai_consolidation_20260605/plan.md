@@ -126,9 +126,12 @@
 ### Phase 5 Red phase (2026-06-12)
 
 - [x] Red task: Add `packages/webhooks/src/__tests__/phase-5-dead-code.test.ts` with 7 regression guards covering (a) the source files are clean of `createOpenAI` / `@ai-sdk/openai` / `OPENROUTER_API_KEY` / `openrouter` / `generateObject`, (b) the two review tests no longer carry the `vi.mock("@ai-sdk/openai", ...)` block and the stale "current inline" comments, (c) `packages/webhooks/package.json` and `packages/api/package.json` no longer declare `@ai-sdk/openai` or `ai` as dependencies. **This is the only test file created in Phase 5** — it sits in `packages/webhooks` because the package has the most concentrated residual dead code (the `vi.mock` block in `github-review.test.ts:173-175` is webhook-specific; the api test file only carries stale comments).
-  - Commit: `<red-commit-sha>` (pending — see next)
-  - **Targeted Red command:** `cd packages/webhooks && npx vitest run src/__tests__/phase-5-dead-code.test.ts`
-  - **Result:** `Test Files  1 failed (1) / Tests  5 failed | 2 passed (7)` in 1.17s.
+  - Commit: `d4e02a31` (test(measure): Phase 5 Red — assert review path has no dead OpenRouter code)
+  - **Targeted Red command:** `cd packages/webhooks && ./node_modules/.bin/vitest run src/__tests__/phase-5-dead-code.test.ts`
+  - **Result (attempt 1, original):** `Test Files  1 failed (1) / Tests  5 failed | 2 passed (7)` in 1.17s.
+  - **Result (attempt 2, re-verification):** `Test Files  1 failed (1) / Tests  5 failed | 2 passed (7)` in ~1s.
+  - **Result (attempt 3, re-verification):** `Test Files  1 failed (1) / Tests  5 failed | 2 passed (7)` in ~1s.
+    Same 5 fail / 2 pass on every re-run — the Red state is stable; the 5 dead-code items are still on master and only the Green role's deletions will flip them to green.
   - **Failing tests (5) — the dead code is still present:**
     1. `github-review.test.ts no longer mocks @ai-sdk/openai` — the `vi.mock("@ai-sdk/openai", () => ({...}))` block at line 173-175 (Phase 3 dead code: no source file imports `@ai-sdk/openai` anymore).
     2. `github-review.test.ts contains no stale 'current inline OpenRouter call' comments` — the stale comment block at lines 302-310 that describes the (now-gone) inline OpenRouter implementation.
