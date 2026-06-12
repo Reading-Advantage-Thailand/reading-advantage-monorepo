@@ -1,10 +1,10 @@
 import {
   pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, unique,
 } from "drizzle-orm/pg-core";
-import { users } from "./users";
-import { classrooms } from "./classrooms";
-import { articles } from "./content";
-import { assignments } from "./content";
+import { users } from "./users.js";
+import { classrooms } from "./classrooms.js";
+import { articles } from "./content.js";
+import { assignments } from "./content.js";
 
 // ─── Stories ──────────────────────────────────────────────
 

@@ -1,7 +1,7 @@
 import {
   pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, unique,
 } from "drizzle-orm/pg-core";
-import { users } from "./users";
+import { users } from "./users.js";
 
 // ─── XP Logs (reshaped to match Prisma XPLog) ────────────────────────────────
 

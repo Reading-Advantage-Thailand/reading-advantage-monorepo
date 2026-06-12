@@ -3,7 +3,7 @@ import {
   primaryKey, index,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { users, schools } from "./users";
+import { users, schools } from "./users.js";
 
 // ─── Gamification (PORT-AS-IS) ────────────────────────────────────────────────
 

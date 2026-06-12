@@ -1,6 +1,6 @@
 import { pgTable, uuid, text, timestamp, integer, jsonb, boolean, unique } from "drizzle-orm/pg-core";
-import { users } from "./users";
-import { articles } from "./content";
+import { users } from "./users.js";
+import { articles } from "./content.js";
 
 // ─── Question Models ────────────────────────────────────
 

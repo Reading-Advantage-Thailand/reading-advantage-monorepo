@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   buildPostgresOptions,
   normalizePostgresConnectionString,
-} from "../connection-options";
+} from "../connection-options.js";
 
 describe("buildPostgresOptions", () => {
   it("uses the Cloud Run socket path encoded in DATABASE_URL host query", () => {

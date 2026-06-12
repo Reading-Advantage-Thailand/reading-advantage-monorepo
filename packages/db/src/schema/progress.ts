@@ -1,5 +1,5 @@
 import { pgTable, uuid, text, timestamp, integer, jsonb, boolean, real, unique } from "drizzle-orm/pg-core";
-import { users } from "./users";
+import { users } from "./users.js";
 
 // ─── Activity Tracking ────────────────────────────────────
 

@@ -1,6 +1,6 @@
 import { pgTable, uuid, text, timestamp, boolean, integer, unique } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { users, schools } from "./users";
+import { users, schools } from "./users.js";
 
 // ─── Classrooms ───────────────────────────────────────────
 

@@ -1,6 +1,6 @@
 import { pgTable, uuid, text, timestamp, boolean, integer, jsonb, unique, real } from "drizzle-orm/pg-core";
-import { users } from "./users";
-import { classrooms } from "./classrooms";
+import { users } from "./users.js";
+import { classrooms } from "./classrooms.js";
 
 // ─── Content ──────────────────────────────────────────────
 
