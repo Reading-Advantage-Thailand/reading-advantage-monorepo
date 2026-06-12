@@ -2,145 +2,26 @@
   "version": "7",
   "dialect": "postgresql",
   "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1777693836597,
-      "tag": "0000_wide_vengeance",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1777706107275,
-      "tag": "0001_thick_santa_claus",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1777729846648,
-      "tag": "0002_quick_skreet",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1746288000000,
-      "tag": "0003_slow_firebrand",
-      "breakpoints": false
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1746800000000,
-      "tag": "0004_sturdy_forge",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1747129227000,
-      "tag": "0005_codecamp_schema",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1747130000000,
-      "tag": "0006_codecamp_indexes",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1747200000000,
-      "tag": "0007_codecamp_repos_reviews",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1747210000000,
-      "tag": "0008_codecamp_phase",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1778784590315,
-      "tag": "0009_add_github_username",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1779075476967,
-      "tag": "0010_codecamp_uniqueness",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1779075476967,
-      "tag": "0011_codecamp_webhook_events",
-      "breakpoints": true
-    },
-    {
-      "idx": 12,
-      "version": "7",
-      "when": 1779080500000,
-      "tag": "0012_codecamp_intern_role",
-      "breakpoints": true
-    },
-    {
-      "idx": 13,
-      "version": "7",
-      "when": 1748044800000,
-      "tag": "0013_prisma_drizzle_schema_unification",
-      "breakpoints": true
-    },
-    {
-      "idx": 14,
-      "version": "7",
-      "when": 1748131200000,
-      "tag": "0014_users_license_expired_date",
-      "breakpoints": true
-    },
-    {
-      "idx": 15,
-      "version": "7",
-      "when": 1779033600000,
-      "tag": "0015_science_junction_tables",
-      "breakpoints": true
-    },
-    {
-      "idx": 16,
-      "version": "7",
-      "when": 1779120000000,
-      "tag": "0016_users_grade_level",
-      "breakpoints": true
-    },
-    {
-      "idx": 17,
-      "version": "7",
-      "when": 1749081600000,
-      "tag": "0017_science_school_id",
-      "breakpoints": true
-    },
-    {
-      "idx": 18,
-      "version": "7",
-      "when": 1749168000000,
-      "tag": "0018_audit_events",
-      "breakpoints": true
-    },
-    {
-      "idx": 19,
-      "version": "7",
-      "when": 1749254400000,
-      "tag": "0019_session_token_hash",
-      "breakpoints": true
-    }
+    {"idx":0,"version":"7","when":1777693836597,"tag":"0000_wide_vengeance","breakpoints":true},
+    {"idx":1,"version":"7","when":1777706107275,"tag":"0001_thick_santa_claus","breakpoints":true},
+    {"idx":2,"version":"7","when":1777729846648,"tag":"0002_quick_skreet","breakpoints":true},
+    {"idx":3,"version":"7","when":1777880524315,"tag":"0003_slow_firebrand","breakpoints":false},
+    {"idx":4,"version":"7","when":1778031201982,"tag":"0004_sturdy_forge","breakpoints":true},
+    {"idx":5,"version":"7","when":1778181879649,"tag":"0005_codecamp_schema","breakpoints":true},
+    {"idx":6,"version":"7","when":1778332557316,"tag":"0006_codecamp_indexes","breakpoints":true},
+    {"idx":7,"version":"7","when":1778483234983,"tag":"0007_codecamp_repos_reviews","breakpoints":true},
+    {"idx":8,"version":"7","when":1778633912650,"tag":"0008_codecamp_phase","breakpoints":true},
+    {"idx":9,"version":"7","when":1778784590315,"tag":"0009_add_github_username","breakpoints":true},
+    {"idx":10,"version":"7","when":1779075476967,"tag":"0010_codecamp_uniqueness","breakpoints":true},
+    {"idx":11,"version":"7","when":1779077988484,"tag":"0011_codecamp_webhook_events","breakpoints":true},
+    {"idx":12,"version":"7","when":1779080500000,"tag":"0012_codecamp_intern_role","breakpoints":true},
+    {"idx":13,"version":"7","when":1779090375000,"tag":"0013_prisma_drizzle_schema_unification","breakpoints":true},
+    {"idx":14,"version":"7","when":1779100250000,"tag":"0014_users_license_expired_date","breakpoints":true},
+    {"idx":15,"version":"7","when":1779110125000,"tag":"0015_science_junction_tables","breakpoints":true},
+    {"idx":16,"version":"7","when":1779120000000,"tag":"0016_users_grade_level","breakpoints":true},
+    {"idx":17,"version":"7","when":1779120001000,"tag":"0017_science_school_id","breakpoints":true},
+    {"idx":18,"version":"7","when":1779120002000,"tag":"0018_audit_events","breakpoints":true},
+    {"idx":19,"version":"7","when":1779120003000,"tag":"0019_session_token_hash","breakpoints":true},
+    {"idx":20,"version":"7","when":1779120004000,"tag":"0020_sessions_indexes","breakpoints":true}
   ]
 }
