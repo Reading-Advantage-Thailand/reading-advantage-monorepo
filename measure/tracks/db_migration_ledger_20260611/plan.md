@@ -21,7 +21,7 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
     - Targeted Red command: `./node_modules/.bin/vitest run src/__tests__/contract-stubs.test.ts` (from `packages/db/`; equivalent to `pnpm vitest run src/__tests__/contract-stubs.test.ts` per test-strategy §5)
     - Result: **15 / 15 failed** (all missing contract artifacts — exactly the intended Red reason)
     - Failures map to: 6 × `drizzle/meta/README.md` missing, 3 × `scripts/sentinels.ts` missing, 3 × `scripts/migration-ledger-doctor.ts` missing, 1 × `package.json` lacks `scripts.doctor`, 1 × `package.json` lacks `exports["./seed"]`, 1 × `src/schema/users.ts` lacks `sessions_user_id_idx` / `sessions_expires_at_idx`
-    - Red-commit SHA: _to be filled after the test-only commit lands_
+    - Red-commit SHA: `5ef40d4f` (test-only commit; 15 / 15 fail on master, ENOENT + undefined-field reasons)
 
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
 
