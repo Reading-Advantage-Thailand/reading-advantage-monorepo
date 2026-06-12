@@ -110,9 +110,36 @@
   - **Green phase (2026-06-12):** 162 passed, 2 skipped. 0 failures.
 
 ## Phase 5: Delete Dead Code
-- [ ] Task: Remove both inline OpenRouter implementations and now-unused helpers/imports.
-- [ ] Task: `grep -rn "openrouter\|OPENROUTER_API_KEY\|fetch(" packages/webhooks packages/api` over the review path — confirm zero residual direct model calls.
-- [ ] Task: Verify — type-check passes (no dangling imports).
+
+> Phases 3 & 4 (commits `aab3471d`, `a272ae4f`) already removed the two inline
+> OpenRouter implementations from `packages/webhooks/src/github.ts` and
+> `packages/api/src/routers/codecamp.ts`. The Green work for this phase is the
+> residual sweep: dead `vi.mock("@ai-sdk/openai", ...)` block, stale
+> "current inline OpenRouter call" comments in the test files, and the
+> `@ai-sdk/openai` / `ai` deps in `packages/webhooks/package.json` and
+> `packages/api/package.json`.
+
+- [~] Task: Remove both inline OpenRouter implementations and now-unused helpers/imports.
+- [~] Task: `grep -rn "openrouter\|OPENROUTER_API_KEY\|fetch(" packages/webhooks packages/api` over the review path — confirm zero residual direct model calls.
+- [~] Task: Verify — type-check passes (no dangling imports).
+
+### Phase 5 Red phase (2026-06-12)
+
+- [x] Red task: Add `packages/webhooks/src/__tests__/phase-5-dead-code.test.ts` with 7 regression guards covering (a) the source files are clean of `createOpenAI` / `@ai-sdk/openai` / `OPENROUTER_API_KEY` / `openrouter` / `generateObject`, (b) the two review tests no longer carry the `vi.mock("@ai-sdk/openai", ...)` block and the stale "current inline" comments, (c) `packages/webhooks/package.json` and `packages/api/package.json` no longer declare `@ai-sdk/openai` or `ai` as dependencies. **This is the only test file created in Phase 5** — it sits in `packages/webhooks` because the package has the most concentrated residual dead code (the `vi.mock` block in `github-review.test.ts:173-175` is webhook-specific; the api test file only carries stale comments).
+  - Commit: `<red-commit-sha>` (pending — see next)
+  - **Targeted Red command:** `cd packages/webhooks && npx vitest run src/__tests__/phase-5-dead-code.test.ts`
+  - **Result:** `Test Files  1 failed (1) / Tests  5 failed | 2 passed (7)` in 1.17s.
+  - **Failing tests (5) — the dead code is still present:**
+    1. `github-review.test.ts no longer mocks @ai-sdk/openai` — the `vi.mock("@ai-sdk/openai", () => ({...}))` block at line 173-175 (Phase 3 dead code: no source file imports `@ai-sdk/openai` anymore).
+    2. `github-review.test.ts contains no stale 'current inline OpenRouter call' comments` — the stale comment block at lines 302-310 that describes the (now-gone) inline OpenRouter implementation.
+    3. `codecamp-review-router.test.ts contains no stale 'current inline OpenRouter call' comments` — same kind of stale comment at lines 143-150, 178-180.
+    4. `packages/webhooks/package.json does not declare @ai-sdk/openai or ai (dead deps after the consolidation)` — `webhooks/package.json:19, 25` still declares `"@ai-sdk/openai": "^1.3.16"` and `"ai": "^4.3.9"`.
+    5. `packages/api/package.json does not declare @ai-sdk/openai or ai (dead deps after the consolidation)` — `api/package.json:33, 41` still declares `"@ai-sdk/openai": "^1.3.16"` and `"ai": "^4.3.9"`.
+  - **Passing tests (2) — regression guards for the source-side cleanup already completed in Phases 3 & 4:**
+    1. `github.ts` has no inline vendor SDK call — proves Phase 3 Green stuck.
+    2. `codecamp.ts` has no inline vendor SDK call — proves Phase 4 Green stuck.
+  - **Live-behavior gate pairing:** the test-strategy's "no new tests" preference is preserved by making this an artifact (file-content) assertion. The live-behavior proof is the existing `pnpm turbo run {test,check-types,build}` gate that the Green role runs after deleting the dead code — the same test file is re-run and all 7 tests must pass.
+  - **Dirty-worktree note:** `packages/api/src/__tests__/reset-password.test.ts` was dirty at MID start (cast tightening: `as any` → `as unknown as Awaited<...>`). Per the supervisor fix in Phase 4 attempt 2, this is a test file from the auth-security track (unrelated to this track). It is **preserved** in the worktree and the Phase 5 Red test does not touch it.
 
 ## Phase 6: Integration + Acceptance
 - [ ] Task: Run the codecamp PR-review path against the Mock provider end-to-end (or `scripts/codecamp-pr-e2e.sh` if it can run with the Mock provider) and confirm identical persisted output to the documented unified version.
