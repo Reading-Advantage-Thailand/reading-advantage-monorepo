@@ -272,33 +272,34 @@ Per the MID role rule "If the new tests pass at HEAD … mark the task as alread
 
 ### Tasks
 
-- [~] Task 29: Run full test suites and confirm green — MID: CI gate, no Red test (JR runs the commands)
-    - [ ] `CI=true pnpm --filter @reading-advantage/auth test`
-    - [ ] `CI=true pnpm --filter @reading-advantage/db test`
-    - [ ] `CI=true pnpm --filter @reading-advantage/api test`
+- [x] Task 29: Run full test suites and confirm green — MID: CI gate, no Red test (JR runs the commands) — `9a6305e0`, `952626e2`
+    - [x] `CI=true pnpm --filter @reading-advantage/auth test` — auth-security unit tests 26/26 pass; integration tests skip (no DB); pre-existing failures from other tracks
+    - [x] `CI=true pnpm --filter @reading-advantage/db test` — 541/541 pass
+    - [x] `CI=true pnpm --filter @reading-advantage/api test` — auth-security tests pass; pre-existing codecamp-review-router failures from other track
 
-- [~] Task 30: Run type-check for affected packages — MID: CI gate, no Red test (JR runs the commands)
-    - [ ] `pnpm --filter @reading-advantage/auth check-types`
-    - [ ] `pnpm --filter @reading-advantage/db check-types`
-    - [ ] `pnpm --filter @reading-advantage/api check-types`
+- [x] Task 30: Run type-check for affected packages — MID: CI gate, no Red test (JR runs the commands) — `9a6305e0`, `952626e2`
+    - [x] `pnpm --filter @reading-advantage/auth check-types` — clean (requires db build first)
+    - [x] `pnpm --filter @reading-advantage/db check-types` — clean
+    - [x] `pnpm --filter @reading-advantage/api check-types` — clean (requires auth + db build first)
 
-- [~] Task 31: Build affected packages — MID: CI gate, no Red test (JR runs the commands)
-    - [ ] `pnpm --filter @reading-advantage/auth build`
-    - [ ] `pnpm --filter @reading-advantage/db build`
+- [x] Task 31: Build affected packages — MID: CI gate, no Red test (JR runs the commands) — `9a6305e0`, `952626e2`
+    - [x] `pnpm --filter @reading-advantage/auth build` — clean
+    - [x] `pnpm --filter @reading-advantage/db build` — clean
 
-- [~] Task 32: Update `packages/auth/README.md` — MID Red: `packages/auth/src/__tests__/auth-security-phase4-readme.test.ts` (8 Red / 1 pass at HEAD)
-    - [ ] Add section on session token hashing (raw token in cookie only, sha256 stored)
-    - [ ] Document `revokeAllUserSessions` and session cap behaviour
+- [x] Task 32: Update `packages/auth/README.md` — MID Red: `packages/auth/src/__tests__/auth-security-phase4-readme.test.ts` (8 Red / 1 pass at HEAD) — `952626e2`
+    - [x] Add section on session token hashing (raw token in cookie only, sha256 stored)
+    - [x] Document `revokeAllUserSessions` and session cap behaviour
+    - [x] All 9 assertions pass (9/9 Green)
 
-- [~] Task 44: auth-client suite, build, and hygiene verification — MID: covered by existing Phase 1 forward-guard + Phase 3 signup-removal tests, no new Red test (JR runs the commands)
-    - [ ] `CI=true pnpm --filter @reading-advantage/auth-client test`
-    - [ ] `pnpm --filter @reading-advantage/auth-client check-types`
-    - [ ] `pnpm --filter @reading-advantage/auth-client build` — confirm `dist/index.js` still begins with `"use client"` (already asserted by `auth-security-phase1-contracts.test.ts` "Task 44 forward-guard" block)
-    - [ ] Type-check the four consuming apps (science, codecamp, reading, primary) to confirm the `register` removal breaks nothing else (consumer scan already asserted by `auth-security-phase3-signup-removal.test.ts` "no apps/** source destructures `register` from useAuth()" block)
+- [x] Task 44: auth-client suite, build, and hygiene verification — MID: covered by existing Phase 1 forward-guard + Phase 3 signup-removal tests, no new Red test (JR runs the commands) — `9a6305e0`, `952626e2`
+    - [x] `CI=true pnpm --filter @reading-advantage/auth-client test` — 21/21 pass
+    - [x] `pnpm --filter @reading-advantage/auth-client check-types` — clean
+    - [x] `pnpm --filter @reading-advantage/auth-client build` — `dist/index.js` begins with `"use client"` confirmed
+    - [x] Type-check the four consuming apps (science, codecamp, reading, primary) — science + codecamp clean (requires api build first); reading + primary have no check-types script
 
-- [~] Task: Bonus FR-10 hardening (folded in from dirty worktree) — MID Red: dirty `packages/auth/src/__tests__/session.test.ts` Phase 2 Task 10 cap test (committed `b4ac9066`)
+- [x] Task: Bonus FR-10 hardening (folded in from dirty worktree) — MID Red: dirty `packages/auth/src/__tests__/session.test.ts` Phase 2 Task 10 cap test (committed `b4ac9066`) — `9a6305e0`
     - **Red status**: confirmed failing against HEAD `session.ts` (1 failed) via `git stash --keep-index -- packages/auth/src/session.ts` + `CI=true vitest run src/__tests__/session.test.ts -t "Task 10"`. Failure cascades from skipped eviction → user-lookup mock chain mismatch; root cause is HEAD source using `select({ count: sessions.id })` which yields `undefined` for the mock-DB `value`-keyed return. Re-confirmed Red after MID-attempt-1 source-stash cleanup.
-    - **Green plan** (JR): EITHER recover the deferred Green from `stash@{0}` "mid-phase4-fr10-source-hardening-deferred-for-jr" via `git stash pop stash@{0}` (preferred — preserves the prior agent's exact fix), OR re-implement directly from the test message: change `packages/auth/src/session.ts` to import `count` from `@reading-advantage/db` and rewrite the cap query to `.select({ value: count() })` with `Number(countResult[0]?.value ?? 0)`. Commit message: `fix(auth-security): FR-10 use Drizzle aggregate count() in session cap`.
+    - **Green (JR)**: recovered `stash@{0}` via `git stash pop stash@{0}` — imports `count` from `@reading-advantage/db` and rewrites cap query to `.select({ value: count() })`. Committed as `fix(auth-security): FR-10 use Drizzle aggregate count() in session cap` (`9a6305e0`). Task 10 tests 2/2 pass.
     - **Why retroactive**: the original Phase 2 Task 10 assertion (committed in `c15181b9` / `c23cda62`) passed against mock-DB but would have silently failed in real Postgres because `Number("<uuid-string>")` is `NaN`. Test-strategy.md §3 lesson "Mock-DB unit tests can pass while real DB constraints are violated" applies. Discovered during Phase 4 prior investigation.
 
 ### MID Red-phase notes (attempt 2, 2026-06-12 — supervisor feedback fix)
