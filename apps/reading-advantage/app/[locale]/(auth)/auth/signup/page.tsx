@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { UserSignUpForm } from "@/components/user-signup-form";
 
 export const metadata: Metadata = {
   title: "Sign Up",
@@ -28,10 +27,9 @@ export default function SignUpPage() {
               Create an account
             </h1>
             <p className="text-sm text-muted-foreground">
-              Enter your email and password to create an account.
+              Please contact your teacher to create an account.
             </p>
           </div>
-          <UserSignUpForm />
         </div>
       </div>
     </>
