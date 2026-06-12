@@ -110,7 +110,7 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
 
 - [ ] Task 14: Implement FR-5 — snapshot refresh — **BLOCKED**: requires TTY + DB connection for `drizzle-kit generate`; cannot run in non-interactive environment. Also requires moving `drizzle/meta/README.md` → `drizzle/MIGRATION_LEDGER.md` (done in this session) to avoid JSON parse error.
 
-- [x] Additional fixes (jr role, 2026-06-13):
+- [x] Additional fixes (`8d8bb4d9`, jr role, 2026-06-13):
     - [x] Moved `scripts/sentinels.ts` → `src/sentinels.ts` to fix `rootDir` violation (TS6059) in `check-types`
     - [x] Updated imports in `scripts/migration-ledger-doctor.ts`, `src/__tests__/journal-integrity.test.ts`, `src/__tests__/contract-stubs.test.ts`
     - [x] Moved `drizzle/meta/README.md` → `drizzle/MIGRATION_LEDGER.md` to fix `drizzle-kit generate` JSON parse error
@@ -118,9 +118,9 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
     - [x] Removed stale `dist/__tests__/` (never rebuilt by `tsconfig.build.json`)
     - [x] Removed stale `scripts/sentinels.{d.ts,d.ts.map,js}` build artifacts
 
-- [x] **Phase 3 Green gate (jr role, 2026-06-13)**: `pnpm --filter @reading-advantage/db check-types` → pass. `pnpm --filter @reading-advantage/db test` → 19 passed, 2 skipped (42 files; 317 tests passed, 4 skipped). DB-gated tests (stale-ledger, ledger-doctor) skip without `PG_TEST_URL`. Task 14 blocked (TTY required).
+- [x] **Phase 3 Green gate** (`8d8bb4d9`, jr role, 2026-06-13): `pnpm --filter @reading-advantage/db check-types` → pass. `pnpm --filter @reading-advantage/db test` → 19 passed, 2 skipped (42 files; 317 tests passed, 4 skipped). DB-gated tests (stale-ledger, ledger-doctor) skip without `PG_TEST_URL`. Task 14 blocked (TTY required).
 
-- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — verified: check-types pass, 317/321 tests pass (4 DB-gated skip), build clean. Task 14 deferred (TTY + DB required).
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (`8d8bb4d9`, Protocol in workflow.md) — verified: check-types pass, 317/321 tests pass (4 DB-gated skip), build clean. Task 14 deferred (TTY + DB required).
 
 ---
 
