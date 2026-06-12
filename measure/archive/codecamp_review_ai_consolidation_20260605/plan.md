@@ -263,3 +263,21 @@
 - Red commit SHA: `0cf850bb` (full: `0cf850bb3d12a047a986b0e071ffb13dd039155a`).
 - Subject: `test(measure): Phase 7 Red — pin closeout deliverables for codecamp_review_ai_consolidation`.
 - 2 files changed, 561 insertions(+), 4 deletions(-).
+
+### Phase 7 Green phase (2026-06-12, JR)
+
+- **Commit 1:** `7c9bef80` — `chore(measure): Phase 7 closeout — archive track, update tech-debt/lessons-learned/tracks.md`
+  - Flipped tech-debt.md 2026-05-15 Duplicate generateReview row to Resolved (refs `3dc3167a`, `92eeca19`)
+  - Pruned 6 resolved tech-debt rows (55→51 lines)
+  - Added lessons-learned entry for adapter-factory DI-seam pattern, OpenRouter-as-OpenAI-variant, credential-gated preflight
+  - Consolidated older planning-improvement entries (55→36 lines)
+  - Moved track dir from `measure/tracks/` to `measure/archive/`
+  - Flipped tracks.md entry to `[x]` with archive link
+  - Attached `git notes` to closeout commit
+- **Commit 2:** `88053907` — `fix(measure): update plan.md tasks to [x], fix phase-6 path after archive move`
+  - Marked Phase 7 tasks as `[x]` in plan.md
+  - Fixed `phase-6-acceptance.test.ts` path from `tracks/` to `archive/` (broke after dir move)
+  - Attached `git notes` to this commit as well (latest commit touching track dir)
+- **Targeted command:** `cd packages/webhooks && npx vitest run src/__tests__/phase-7-closeout.test.ts` → **16 passed (16)** in 0.67s.
+- **Full suite:** `cd packages/webhooks && npx vitest run` → **78 passed (78)** in 15.97s.
+- **Dirty worktree:** `packages/api/src/__tests__/reset-password.test.ts` (auth-security track cast tightening, unrelated).
