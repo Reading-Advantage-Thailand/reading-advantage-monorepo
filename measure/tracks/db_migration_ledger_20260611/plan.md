@@ -4,24 +4,26 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
 
 ## Phase 1: Contract & Schema Definition
 
-- [~] Task 1: Journal re-stamp design note
-    - [ ] Create `packages/db/drizzle/meta/README.md`: strict-`<` migrator semantics (drizzle-orm 0.44.7 `pg-core/dialect.js:62`), the chosen interpolation stamps for idx 3–8, 11, 13–15, 17 (and 18), and the hand-written-migration protocol (SQL file + journal entry + integrity test)
-    - [ ] Table of old → new `when` per re-stamped entry; entries 0–16 all ≤ 1779120000000, 17+ above
+- [x] Task 1: Journal re-stamp design note
+    - [x] Create `packages/db/drizzle/meta/README.md`: strict-`<` migrator semantics (drizzle-orm 0.44.7 `pg-core/dialect.js:62`), the chosen interpolation stamps for idx 3–8, 11, 13–15, 17 (and 18), and the hand-written-migration protocol (SQL file + journal entry + integrity test)
+    - [x] Table of old → new `when` per re-stamped entry; entries 0–16 all ≤ 1779120000000, 17+ above
 
-- [~] Task 2: Sentinel-probe contract for the doctor
-    - [ ] For each migration 0000–0018, derive one cheap schema sentinel (table or column existence via `information_schema`) from its DDL; record as a typed map in `packages/db/scripts/sentinels.ts`
-    - [ ] Define doctor exit codes: 0 clean, 1 divergence, 2 connection/config error
+- [x] Task 2: Sentinel-probe contract for the doctor
+    - [x] For each migration 0000–0018, derive one cheap schema sentinel (table or column existence via `information_schema`) from its DDL; record as a typed map in `packages/db/scripts/sentinels.ts`
+    - [x] Define doctor exit codes: 0 clean, 1 divergence, 2 connection/config error
 
-- [~] Task 3: Contract stubs
-    - [ ] `scripts/migration-ledger-doctor.ts` scaffold with `--check` / `--repair` arg parsing, exits 2 (not implemented)
-    - [ ] `package.json`: add `"doctor": "tsx scripts/migration-ledger-doctor.ts"` script; add `"./seed"` subpath to `exports` map
-    - [ ] `users.ts` schema: add `sessions_user_id_idx` + `sessions_expires_at_idx` `index()` entries (migration SQL in Phase 3)
+- [x] Task 3: Contract stubs
+    - [x] `scripts/migration-ledger-doctor.ts` scaffold with `--check` / `--repair` arg parsing, exits 2 (not implemented)
+    - [x] `package.json`: add `"doctor": "tsx scripts/migration-ledger-doctor.ts"` script; add `"./seed"` subpath to `exports` map
+    - [x] `users.ts` schema: add `sessions_user_id_idx` + `sessions_expires_at_idx` `index()` entries (migration SQL in Phase 3)
 
 - [x] **Phase 1 Red gate — `src/__tests__/contract-stubs.test.ts`** (added 2026-06-12, mid role)
     - Targeted Red command: `./node_modules/.bin/vitest run src/__tests__/contract-stubs.test.ts` (from `packages/db/`; equivalent to `pnpm vitest run src/__tests__/contract-stubs.test.ts` per test-strategy §5)
     - Result: **15 / 15 failed** (all missing contract artifacts — exactly the intended Red reason)
     - Failures map to: 6 × `drizzle/meta/README.md` missing, 3 × `scripts/sentinels.ts` missing, 3 × `scripts/migration-ledger-doctor.ts` missing, 1 × `package.json` lacks `scripts.doctor`, 1 × `package.json` lacks `exports["./seed"]`, 1 × `src/schema/users.ts` lacks `sessions_user_id_idx` / `sessions_expires_at_idx`
     - Red-commit SHA: `5ef40d4f` (test-only commit; 15 / 15 fail on master, ENOENT + undefined-field reasons)
+    - **Phase 1 Green gate** (2026-06-12, jr role): 15 / 15 passing. Full suite: 575 / 575 passing.
+    - Green-commit SHA: `3cfabb80`
 
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
 
