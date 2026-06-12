@@ -1,6 +1,6 @@
 
 import { createHash } from "node:crypto";
-import { eq, type PostgresJsDatabase } from "@reading-advantage/db";
+import { count, eq, type PostgresJsDatabase } from "@reading-advantage/db";
 import { sessions, users } from "@reading-advantage/db/schema";
 import type * as schema from "@reading-advantage/db/schema";
 import type { UserContext } from "./tenant.js";
@@ -38,10 +38,10 @@ export async function createSession(
 
   // FR-10: Cap active sessions at 10 per user
   const countResult = await db
-    .select({ count: sessions.id })
+    .select({ value: count() })
     .from(sessions)
     .where(eq(sessions.userId, userId));
-  const sessionCount = Number(countResult[0]?.count ?? 0);
+  const sessionCount = Number(countResult[0]?.value ?? 0);
   if (sessionCount >= 10) {
     const oldestRows = await db
       .select({ id: sessions.id })
