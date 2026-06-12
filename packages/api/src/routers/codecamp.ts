@@ -1,12 +1,11 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { generateObject } from "ai";
-import { createOpenAI } from "@ai-sdk/openai";
 import { router, protectedProcedure, adminProcedure } from "../trpc.js";
+import { getAIClient } from "@reading-advantage/ai";
 import { getCachedDashboard } from "../cache/dashboard-cache.js";
 import { AuthError } from "@reading-advantage/auth";
 import * as codecamp from "@reading-advantage/domain/codecamp";
-import { reviewExercise, reviewResultSchema } from "@reading-advantage/domain/codecamp";
+import { reviewExercise, reviewResultSchema, aiClientToGenerateReview } from "@reading-advantage/domain/codecamp";
 import {
   moduleResponseSchema,
   moduleBySlugResponseSchema,
@@ -463,30 +462,7 @@ export const codecampRouter = router({
     .output(reviewResultSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const openrouter = createOpenAI({
-          apiKey: process.env.OPENROUTER_API_KEY,
-          baseURL: "https://openrouter.ai/api/v1",
-        });
-
-        async function generateReview(system: string, prompt: string) {
-          if (!process.env.OPENROUTER_API_KEY) {
-            return {
-              passed: false,
-              summary: "[Mock review — LLM not configured] No automated review available. Please ensure OPENROUTER_API_KEY is set for production reviews.",
-              comments: [],
-            };
-          }
-
-          const { object } = await generateObject({
-            model: openrouter("x-ai/grok-build-0.1"),
-            system,
-            prompt,
-            schema: reviewResultSchema,
-            maxTokens: 2048,
-          });
-
-          return object;
-        }
+        const generateReview = aiClientToGenerateReview(getAIClient(), reviewResultSchema);
 
         return await reviewExercise({
           db: ctx.tenantDb,

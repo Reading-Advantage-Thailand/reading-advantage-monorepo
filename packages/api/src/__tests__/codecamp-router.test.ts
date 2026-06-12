@@ -32,6 +32,12 @@ vi.mock("@reading-advantage/domain/codecamp", () => ({
   getInternProgress: vi.fn(),
   reviewExercise: vi.fn(),
   reviewResultSchema: { parse: (val: unknown) => val } as unknown as import("zod").ZodTypeAny,
+  aiClientToGenerateReview: vi.fn(() => vi.fn()),
+}));
+
+vi.mock("@reading-advantage/ai", () => ({
+  getAIClient: vi.fn(() => ({ generateObject: vi.fn(), generateImage: vi.fn(), generateText: vi.fn() })),
+  createAIClient: vi.fn(() => ({ generateObject: vi.fn(), generateImage: vi.fn(), generateText: vi.fn() })),
 }));
 
 import {

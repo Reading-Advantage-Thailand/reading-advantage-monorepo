@@ -1435,6 +1435,9 @@ importers:
       '@ai-sdk/openai':
         specifier: ^1.3.16
         version: 1.3.24(zod@3.25.76)
+      '@reading-advantage/ai':
+        specifier: workspace:*
+        version: link:../ai
       '@reading-advantage/auth':
         specifier: workspace:*
         version: link:../auth
@@ -1533,12 +1536,6 @@ importers:
       '@reading-advantage/types':
         specifier: workspace:*
         version: link:../types
-      react:
-        specifier: 19.2.5
-        version: 19.2.5
-      zod:
-        specifier: ^3.24.0
-        version: 3.25.76
     devDependencies:
       '@reading-advantage/config':
         specifier: workspace:*
@@ -1558,6 +1555,9 @@ importers:
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
+      react:
+        specifier: 19.2.5
+        version: 19.2.5
       tsup:
         specifier: ^8.4.0
         version: 8.5.1(typescript@5.9.3)
