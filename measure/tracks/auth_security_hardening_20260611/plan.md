@@ -178,9 +178,9 @@
 
 - [x] Task 24: Implement FR-7b — `handleResetPassword` + app route wiring
     - [x] Implement full handler in `packages/api/src/routes/auth/reset-password.ts`
-    - [ ] Create `apps/science-advantage/app/api/auth/reset-password/route.ts`
-    - [ ] Create `apps/codecamp-advantage/app/api/auth/reset-password/route.ts`
-    - [ ] Create `apps/primary-advantage/app/api/auth/reset-password/route.ts`
+    - [~] Create `apps/science-advantage/app/api/auth/reset-password/route.ts`
+    - [~] Create `apps/codecamp-advantage/app/api/auth/reset-password/route.ts`
+    - [~] Create `apps/primary-advantage/app/api/auth/reset-password/route.ts`
     - [x] Verify Task 15 tests pass (Green)
 
 - [x] Task 25: Implement FR-8 — wire `ipAddress`/`userAgent` into `createSession` callers
@@ -221,10 +221,10 @@
     - [x] `packages/auth-client`: remove `register` from `provider.tsx` and the context value
     - [x] Verify Task 38 tests pass (Green)
 
-- [ ] Task 43: Remove reading-advantage self-signup (FR-16)
-    - [ ] Remove `apps/reading-advantage/components/user-signup-form.tsx` and the page/route that renders it; replace the signup entry point with a "contact your teacher" notice
-    - [ ] `grep` confirms no remaining `register(` consumers of auth-client across apps
-    - [ ] `pnpm --filter reading-advantage check-types` passes
+- [~] Task 43: Remove reading-advantage self-signup (FR-16)
+    - [~] Remove `apps/reading-advantage/components/user-signup-form.tsx` and the page/route that renders it; replace the signup entry point with a "contact your teacher" notice
+    - [~] `grep` confirms no remaining `register(` consumers of auth-client across apps
+    - [~] `pnpm --filter reading-advantage check-types` passes
 
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
