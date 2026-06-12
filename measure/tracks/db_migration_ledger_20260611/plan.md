@@ -31,7 +31,7 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
 
 ## Phase 2: Test (Red Phase)
 
-- [x] Task 4: Failing tests — FR-1/FR-2 journal integrity (`packages/db/src/__tests__/journal-integrity.test.ts`) — re-attempt 2026-06-12: parent marker flipped to `[x]`; sub-bullets already verified by `29d21aba` + `9f0ca491`. Sandbox at re-attempt time lacked `node` on PATH so the live `pnpm vitest run` could not be re-executed here; the file is present at 229 lines with 9 `it()` blocks and 10 `expect()` calls (per `git show --stat 29d21aba`), matching the prior mid role's per-file evidence.
+- [~] Task 4: Failing tests — FR-1/FR-2 journal integrity (`packages/db/src/__tests__/journal-integrity.test.ts`) — re-attempt 2026-06-12: parent marker kept `[~]` to signal the Red phase is actively in progress (Green has not begun). Sub-bullets already verified by `29d21aba` + `9f0ca491`. Sandbox at re-attempt time lacked `node` on PATH so the live `pnpm vitest run` could not be re-executed here; the file is present at 229 lines with 9 `it()` blocks and 10 `expect()` calls (per `git show --stat 29d21aba`), matching the prior mid role's per-file evidence.
     - [x] File ↔ journal-entry parity both directions (catches unregistered 0018 today)
     - [x] `idx` contiguous from 0
     - [x] `when` strictly increasing with `idx`, unique (catches 2025-era stamps + 0010/0011 duplicate today)
@@ -39,17 +39,17 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
     - [x] Re-stamp safety invariant: 0–16 ≤ 1779120000000, 17+ > 1779120000000 (per test-strategy §3)
     - [x] Confirm fail against current journal (Red)
 
-- [x] Task 5: Failing test — FR-1 stale-ledger simulation (`packages/db/src/__tests__/stale-ledger.test.ts`, real DB via docker compose) — re-attempt 2026-06-12: file present at 131 lines with 1 `it()` and 2 `expect()` calls. PG_TEST_URL-gated; self-skip at HEAD per test-strategy §7. Earlier mid role confirmed the harness compiles and self-skips in 5.7s; live run deferred to a `PG_TEST_URL`-provisioned environment.
+- [~] Task 5: Failing test — FR-1 stale-ledger simulation (`packages/db/src/__tests__/stale-ledger.test.ts`, real DB via docker compose) — re-attempt 2026-06-12: parent marker kept `[~]` (Red is the live phase). File present at 131 lines with 1 `it()` and 2 `expect()` calls. PG_TEST_URL-gated; self-skip at HEAD per test-strategy §7. Earlier mid role confirmed the harness compiles and self-skips in 5.7s; live run deferred to a `PG_TEST_URL`-provisioned environment.
     - [x] Fresh DB → apply migrations through 0016 → assert `migrate` then applies 0017 (sentinel: `gamification_profiles.school_id`)
     - [x] Confirm fail with the current journal (0017 skipped) (Red) — skipped at HEAD (no `PG_TEST_URL`); activates when `PG_TEST_URL=postgres://...` is set per test-strategy §7. Harness builds the ceiling row, runs `drizzle.migrate()`, and asserts the sentinel column is present. Will fail on master because the journal's idx 17 is stamped 1749081600000 < ceiling 1779120000000 (strict-`<` skip).
 
-- [x] Task 6: Failing tests — FR-3 doctor (`packages/db/src/__tests__/ledger-doctor.test.ts`, real DB) — re-attempt 2026-06-12: file present at 178 lines with 3 `it()` and 4 `expect()` calls. PG_TEST_URL-gated; self-skip at HEAD per test-strategy §7. Earlier mid role confirmed the harness compiles and self-skips in 4.2s.
+- [~] Task 6: Failing tests — FR-3 doctor (`packages/db/src/__tests__/ledger-doctor.test.ts`, real DB) — re-attempt 2026-06-12: parent marker kept `[~]` (Red is the live phase). File present at 178 lines with 3 `it()` and 4 `expect()` calls. PG_TEST_URL-gated; self-skip at HEAD per test-strategy §7. Earlier mid role confirmed the harness compiles and self-skips in 4.2s.
     - [x] Clean DB: `--check` exits 0
     - [x] Hand-patched simulation (apply 0014 SQL directly, no ledger row): report flags it, exits 1; `--repair` inserts exactly that row; re-run exits 0
     - [x] `--repair` never executes DDL (assert via statement log/spy) — Phase 3 will wire a postgres.js statement logger on the privileged client; the integration test exercises the real client so the production gate command is covered by a non-fake path
     - [x] Confirm fail (Red — stub exits 2) — skipped at HEAD (no `PG_TEST_URL`); activates when `PG_TEST_URL` is set. Spawns `tsx scripts/migration-ledger-doctor.ts --check` / `--repair` against a fully-migrated scratch DB and asserts the contract exit codes (0 clean, 1 divergence, 2 config/connection error).
 
-- [x] Task 7: Failing tests — FR-6/FR-7/FR-9 package behavior — re-attempt 2026-06-12: all three files present and substantive. `package-esm-smoke.test.ts` = 125 lines / 3 it / 4 expect; `env-guards.test.ts` = 290 lines / 4 it / 12 expect; `barrel-hygiene.test.ts` = 117 lines / 6 it / 9 expect.
+- [~] Task 7: Failing tests — FR-6/FR-7/FR-9 package behavior — re-attempt 2026-06-12: parent marker kept `[~]` (Red is the live phase). All three files present and substantive. `package-esm-smoke.test.ts` = 125 lines / 3 it / 4 expect; `env-guards.test.ts` = 290 lines / 4 it / 12 expect; `barrel-hygiene.test.ts` = 117 lines / 6 it / 9 expect.
     - [x] Node-ESM smoke: spawn `node --input-type=module -e "import('<dist>/index.js')"` with stub `DATABASE_URL` — currently fails on extensionless `./users` (Red)
     - [x] `connection-options`/client guard: production runtime + missing `DATABASE_URL` → throw; dev → single warn (Red)
     - [x] `privileged`: fallback to `DATABASE_URL` warns once (Red)
