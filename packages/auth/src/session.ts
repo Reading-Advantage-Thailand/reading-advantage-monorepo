@@ -33,16 +33,40 @@ export async function createSession(
   opts?: { ipAddress?: string; userAgent?: string }
 ): Promise<Session> {
   const token = Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) => b.toString(16).padStart(2, "0")).join("");
+  const tokenHash = sha256Hex(token);
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+  // FR-10: Cap active sessions at 10 per user
+  const countResult = await db
+    .select({ count: sessions.id })
+    .from(sessions)
+    .where(eq(sessions.userId, userId));
+  const sessionCount = Number(countResult[0]?.count ?? 0);
+  if (sessionCount >= 10) {
+    const oldestRows = await db
+      .select({ id: sessions.id })
+      .from(sessions)
+      .where(eq(sessions.userId, userId))
+      .orderBy(sessions.createdAt)
+      .limit(1);
+    if (oldestRows[0]) {
+      await db.delete(sessions).where(eq(sessions.id, oldestRows[0].id));
+    }
+  }
+
+  // FR-1: store tokenHash only, not the raw token
+  const insertValues: Record<string, unknown> = {
+    id: crypto.randomUUID(),
+    tokenHash,
+    userId,
+    expiresAt,
+  };
+  if (opts?.ipAddress) insertValues.ipAddress = opts.ipAddress;
+  if (opts?.userAgent) insertValues.userAgent = opts.userAgent;
 
   const [session] = await db
     .insert(sessions)
-    .values({
-      id: crypto.randomUUID(),
-      token,
-      userId,
-      expiresAt,
-    })
+    .values(insertValues as Parameters<typeof db.insert>[0] extends { values: (v: infer V) => unknown } ? V : never)
     .returning();
 
   const [user] = await db
@@ -66,7 +90,7 @@ export async function createSession(
 
   return {
     id: session.id,
-    token: session.token,
+    token,
     userId: session.userId,
     expiresAt: session.expiresAt,
     user: {
@@ -92,10 +116,12 @@ export async function validateSession(
   db: Db,
   token: string
 ): Promise<Session | null> {
+  // FR-1: hash the incoming token before lookup
+  const tokenHash = sha256Hex(token);
   const [session] = await db
     .select()
     .from(sessions)
-    .where(eq(sessions.token, token))
+    .where(eq(sessions.tokenHash, tokenHash))
     .limit(1);
 
   if (!session) {
@@ -155,22 +181,27 @@ export async function deleteSession(
   token: string
 ): Promise<void> {
   try {
-    await db.delete(sessions).where(eq(sessions.token, token));
+    // FR-1: hash the incoming token before deletion
+    const tokenHash = sha256Hex(token);
+    await db.delete(sessions).where(eq(sessions.tokenHash, tokenHash));
   } catch {
     // Silently catch — session may already be deleted
   }
 }
 
 /**
- * Revokes all sessions for a user. Stub — not yet implemented.
+ * Revokes all sessions for a user.
  * @param db - Database client
  * @param userId - The user ID whose sessions to revoke
  * @returns Object with count of revoked sessions
- * @throws {Error} Always throws "not implemented" (Phase 1 stub)
  */
 export async function revokeAllUserSessions(
   db: Db,
   userId: string
 ): Promise<{ revoked: number }> {
-  throw new Error("not implemented");
+  const deleted = await db
+    .delete(sessions)
+    .where(eq(sessions.userId, userId))
+    .returning();
+  return { revoked: deleted.length };
 }

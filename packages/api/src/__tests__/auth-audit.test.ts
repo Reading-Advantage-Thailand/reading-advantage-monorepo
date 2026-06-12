@@ -143,6 +143,9 @@ describe("Phase 2 — Task 16: FR-9 audit events in handleLogin and handleResetP
         selectResult([
           { userId: "u1", providerId: "credential", password: "hash" },
         ])
+      )
+      .mockReturnValueOnce(
+        selectResult([{ xp: 0, level: 1, cefrLevel: "A1-", email: null, image: null }])
       );
 
     const response = await handleLogin(

@@ -4,19 +4,11 @@ import { db } from "@reading-advantage/db";
 import { users, accounts, schools } from "@reading-advantage/db/schema";
 import {
   hashPassword,
-  createSession,
-  SESSION_COOKIE_NAME,
+  requireAuth,
+  requireRole,
 } from "@reading-advantage/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-
-const COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
-  maxAge: 7 * 24 * 60 * 60,
-  path: "/",
-};
 
 const registerSchema = z.object({
   username: z.string().min(1).max(100),
@@ -27,10 +19,11 @@ const registerSchema = z.object({
 
 /**
  * Handles new user registration with username, password, name, and school.
- * Creates the user account and establishes a session.
+ * FR-6: Gated behind TEACHER/ADMIN session.
+ * FR-16: No longer creates a session for the registered user.
  *
  * @param request - The Next.js request object containing registration data in body
- * @returns NextResponse with user data and session cookie on success
+ * @returns NextResponse with created user data on success (no session cookie)
  */
 export async function handleRegister(request: NextRequest) {
   try {
@@ -43,6 +36,14 @@ export async function handleRegister(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // FR-6: Gate behind TEACHER/ADMIN session
+    const cookie = request.cookies.get("session_token")?.value;
+    if (!cookie) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+    const session = await requireAuth(db, cookie);
+    await requireRole(db, cookie, "TEACHER");
 
     const { username, password, name, schoolId } = parsed.data;
     const lowerUsername = username.toLowerCase();
@@ -101,10 +102,8 @@ export async function handleRegister(request: NextRequest) {
       return created;
     });
 
-    // Create session
-    const session = await createSession(db, userId);
-
-    const response = NextResponse.json({
+    // FR-16: No session creation — return 201 with created user
+    return NextResponse.json({
       success: true,
       user: {
         id: user.id,
@@ -113,11 +112,15 @@ export async function handleRegister(request: NextRequest) {
         role: user.role,
         schoolId: user.schoolId,
       },
-    });
-
-    response.cookies.set(SESSION_COOKIE_NAME, session.token, COOKIE_OPTIONS);
-    return response;
+    }, { status: 201 });
   } catch (error) {
+    if (error instanceof Error && error.name === "AuthError") {
+      const code = (error as { code?: string }).code;
+      if (code === "UNAUTHORIZED") {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
     console.error("Register error:", error instanceof Error ? error.message : "Unknown");
     return NextResponse.json(
       { message: "Internal server error" },

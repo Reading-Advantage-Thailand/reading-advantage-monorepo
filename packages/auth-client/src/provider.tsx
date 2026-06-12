@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, type ReactNode } from "react";
+import { useState, useCallback, useEffect, useRef, type ReactNode } from "react";
 import { AuthContext, type AuthState, type AuthUser } from "./context.js";
 
 interface AuthProviderProps {
@@ -9,7 +9,7 @@ interface AuthProviderProps {
 
 /**
  * Provides auth context to the React tree. Checks existing session on mount
- * and exposes login, register, and logout actions.
+ * and exposes login and logout actions.
  * @param props.children - The child components to wrap with the provider.
  * @returns A provider component that supplies auth state and actions.
  */
@@ -19,6 +19,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isAuthenticated: false,
     isLoading: true,
   });
+
+  // FR-13: Track whether an auth action (login/logout) has completed
+  const authActionCompletedRef = useRef(false);
 
   // Check existing session on mount (cookie-based)
   useEffect(() => {
@@ -31,15 +34,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
           throw new Error("Session check failed");
         }
         const data = await res.json();
-        if (!cancelled) {
+        if (!cancelled && !authActionCompletedRef.current) {
+          // FR-15: derive both user and isAuthenticated from data.session?.user
+          const sessionUser = data.session?.user ?? null;
           setState({
-            user: data.session?.user ?? null,
-            isAuthenticated: !!data.session,
+            user: sessionUser,
+            isAuthenticated: !!sessionUser,
             isLoading: false,
           });
         }
       } catch {
-        if (!cancelled) {
+        if (!cancelled && !authActionCompletedRef.current) {
           setState({
             user: null,
             isAuthenticated: false,
@@ -68,6 +73,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     const data = await res.json();
+    // FR-13: mark auth action completed so mount session-check discards its result
+    authActionCompletedRef.current = true;
     setState({
       user: data.user as AuthUser,
       isAuthenticated: true,
@@ -75,43 +82,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
   }, []);
 
-  const register = useCallback(async (
-    username: string,
-    password: string,
-    name: string,
-    schoolId: string
-  ) => {
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password, name, schoolId }),
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ message: "Registration failed" }));
-      throw new Error(err.message ?? "Registration failed");
-    }
-
-    const data = await res.json();
-    setState({
-      user: data.user as AuthUser,
-      isAuthenticated: true,
-      isLoading: false,
-    });
-  }, []);
+  // FR-16: register action removed — registration is now an admin operation
 
   const logout = useCallback(async () => {
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-    } catch {
-      // Logout API call failed, continue with local cleanup
-    }
-
+    // FR-14: clear local state regardless (defense in depth)
     setState({
       user: null,
       isAuthenticated: false,
       isLoading: false,
     });
+
+    try {
+      const res = await fetch("/api/auth/logout", { method: "POST" });
+      if (!res.ok) {
+        throw new Error("Logout may not have completed on the server");
+      }
+    } catch (err) {
+      // FR-14: throw so the UI can warn
+      throw new Error("Logout may not have completed on the server");
+    }
+
+    // FR-13: mark auth action completed
+    authActionCompletedRef.current = true;
   }, []);
 
   return (
@@ -119,7 +111,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       value={{
         ...state,
         login,
-        register,
         logout,
       }}
     >

@@ -1,4 +1,5 @@
 import type { Role } from "./roles.js";
+import { AuthError } from "./assert.js";
 
 export interface Tenant {
   schoolId: string | null;
@@ -26,13 +27,14 @@ export interface AuthContext {
  * Students can only access their own school.
  */
 export function assertTenantAccess(user: UserContext, targetSchoolId: string): void {
-  if (!user.schoolId) {
-    throw new Error("User has no school assignment");
-  }
+  // FR-2: Admin/system bypass must come BEFORE the schoolId check
   if (user.role === "ADMIN" || user.role === "SYSTEM") {
-    return; // Admins and system can access any school
+    return;
+  }
+  if (!user.schoolId) {
+    throw new AuthError("User has no school assignment", "FORBIDDEN");
   }
   if (user.schoolId !== targetSchoolId) {
-    throw new Error("Access denied: user does not belong to this school");
+    throw new AuthError("Access denied: user does not belong to this school", "FORBIDDEN");
   }
 }

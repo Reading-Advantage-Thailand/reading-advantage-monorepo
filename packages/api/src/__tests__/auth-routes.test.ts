@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { handleImpersonate } from "../routes/auth/impersonate.js";
-import { handleLogin } from "../routes/auth/login.js";
+import { handleLogin, DUMMY_HASH } from "../routes/auth/login.js";
 import { handleRegister } from "../routes/auth/register.js";
+import { requireAuth, requireRole } from "@reading-advantage/auth";
 
 const mockDb = vi.hoisted(() => ({
   select: vi.fn(),
@@ -73,22 +74,38 @@ function selectResult(rows: unknown[]) {
 describe("auth route handlers", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockDb.select.mockReset();
+    mockDb.insert.mockReset();
+    mockDb.transaction.mockReset();
     process.env.NODE_ENV = "test";
   });
 
   it("rejects registration with unknown school ID", async () => {
+    // FR-6: registration requires auth — mock teacher session
+    vi.mocked(requireAuth).mockResolvedValueOnce({
+      id: "sess", token: "tok", userId: "t1",
+      expiresAt: new Date(Date.now() + 86400000),
+      user: { id: "t1", username: "t", name: "T", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
+    });
+    vi.mocked(requireRole).mockResolvedValueOnce({
+      id: "sess", token: "tok", userId: "t1",
+      expiresAt: new Date(Date.now() + 86400000),
+      user: { id: "t1", username: "t", name: "T", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
+    });
+
     mockDb.select
       .mockReturnValueOnce(selectResult([]))
       .mockReturnValueOnce(selectResult([]));
 
-    const response = await handleRegister(
-      jsonRequest("/api/auth/register", {
-        username: "student1",
-        password: "Password123!",
-        name: "Student One",
-        schoolId: "550e8400-e29b-41d4-a716-446655440001",
-      })
-    );
+    const request = jsonRequest("/api/auth/register", {
+      username: "student1",
+      password: "Password123!",
+      name: "Student One",
+      schoolId: "550e8400-e29b-41d4-a716-446655440001",
+    });
+    request.cookies.set("session_token", "tok");
+
+    const response = await handleRegister(request);
 
     expect(response.status).toBe(400);
     expect(mockDb.insert).not.toHaveBeenCalled();
@@ -110,6 +127,22 @@ describe("auth route handlers", () => {
   });
 
   it("creates user and account atomically for valid registration", async () => {
+    // FR-6/FR-16: registration is now gated behind TEACHER/ADMIN session
+    vi.mocked(requireAuth).mockResolvedValueOnce({
+      id: "teacher-session",
+      token: "teacher-token",
+      userId: "teacher-1",
+      expiresAt: new Date(Date.now() + 86400000),
+      user: { id: "teacher-1", username: "teacher1", name: "Teacher", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
+    });
+    vi.mocked(requireRole).mockResolvedValueOnce({
+      id: "teacher-session",
+      token: "teacher-token",
+      userId: "teacher-1",
+      expiresAt: new Date(Date.now() + 86400000),
+      user: { id: "teacher-1", username: "teacher1", name: "Teacher", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
+    });
+
     const createdUser = {
       id: "new-user-id",
       username: "student1",
@@ -136,16 +169,18 @@ describe("auth route handlers", () => {
       (fn as (tx: typeof txMock) => Promise<unknown>)(txMock)
     );
 
-    const response = await handleRegister(
-      jsonRequest("/api/auth/register", {
-        username: "student1",
-        password: "Password123!",
-        name: "Student One",
-        schoolId: "550e8400-e29b-41d4-a716-446655440001",
-      })
-    );
+    const request = jsonRequest("/api/auth/register", {
+      username: "student1",
+      password: "Password123!",
+      name: "Student One",
+      schoolId: "550e8400-e29b-41d4-a716-446655440001",
+    });
+    request.cookies.set("session_token", "teacher-token");
 
-    expect(response.status).toBe(200);
+    const response = await handleRegister(request);
+
+    // FR-16: returns 201 (not 200) and no session cookie
+    expect(response.status).toBe(201);
     expect(txInsert).toHaveBeenCalledTimes(2); // user + account insert
 
     const body = await response.json();
@@ -187,6 +222,9 @@ describe("auth route handlers", () => {
             password: "hash",
           },
         ])
+      )
+      .mockReturnValueOnce(
+        selectResult([{ xp: 0, level: 1, cefrLevel: "A1-", email: null, image: null }])
       );
 
     const response = await handleLogin(
@@ -231,6 +269,9 @@ describe("auth route handlers", () => {
             password: "hash",
           },
         ])
+      )
+      .mockReturnValueOnce(
+        selectResult([{ xp: 0, level: 1, cefrLevel: "A1-", email: null, image: null }])
       );
 
     const response = await handleLogin(
@@ -247,7 +288,7 @@ describe("auth route handlers", () => {
     expect(body.user.role).toBe("STUDENT");
   });
 
-  it("returns 401 when user lookup throws a DB error (not 500)", async () => {
+  it("returns 503 when user lookup throws a DB error (FR-5)", async () => {
     mockDb.select.mockReturnValueOnce({
       from: vi.fn().mockReturnValue({
         where: vi.fn().mockReturnValue({
@@ -263,12 +304,13 @@ describe("auth route handlers", () => {
       })
     );
 
-    expect(response.status).toBe(401);
+    // FR-5: DB errors return 503, not 401
+    expect(response.status).toBe(503);
     const body = await response.json();
-    expect(body.message).toBe("Invalid username or password");
+    expect(body.message).toBe("Service temporarily unavailable");
   });
 
-  it("returns 401 when account lookup throws a DB error (not 500)", async () => {
+  it("returns 503 when account lookup throws a DB error (FR-5)", async () => {
     mockDb.select
       .mockReturnValueOnce(
         selectResult([
@@ -296,9 +338,10 @@ describe("auth route handlers", () => {
       })
     );
 
-    expect(response.status).toBe(401);
+    // FR-5: DB errors return 503, not 401
+    expect(response.status).toBe(503);
     const body = await response.json();
-    expect(body.message).toBe("Invalid username or password");
+    expect(body.message).toBe("Service temporarily unavailable");
   });
 
   it("returns 401 when verifyPassword throws (not 500)", async () => {
@@ -379,7 +422,7 @@ describe("auth route handlers", () => {
     expect(createSession).not.toHaveBeenCalled();
   });
 
-  it("returns 401 and does not verify a password when credential password is missing", async () => {
+  it("returns 401 and calls verifyPassword with DUMMY_HASH when credential password is missing (FR-4)", async () => {
     const { createSession, recordFailure, verifyPassword } = await import("@reading-advantage/auth");
 
     mockDb.select
@@ -414,8 +457,9 @@ describe("auth route handlers", () => {
     expect(response.status).toBe(401);
     const body = await response.json();
     expect(body.message).toBe("Invalid username or password");
+    // FR-4: verifyPassword is called with DUMMY_HASH even when password is null
+    expect(verifyPassword).toHaveBeenCalledWith("Password123!", expect.any(String));
     expect(recordFailure).toHaveBeenCalledWith("student1");
-    expect(verifyPassword).not.toHaveBeenCalled();
     expect(createSession).not.toHaveBeenCalled();
   });
 });
@@ -450,13 +494,20 @@ describe("auth route handlers", () => {
 // ---------------------------------------------------------------------------
 
 describe("Phase 2 — Task 14: FR-4/FR-5/FR-6/FR-11 in the auth route handlers", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockDb.select.mockReset();
+    mockDb.insert.mockReset();
+    mockDb.transaction.mockReset();
+    process.env.NODE_ENV = "test";
+  });
+
   describe("FR-4: dummy-hash timing in the unknown-username branch", () => {
     it("calls verifyPassword(password, DUMMY_HASH) when the user is not found", async () => {
       const auth = await import("@reading-advantage/auth");
       const verifyPassword = vi.mocked(auth.verifyPassword);
-      const dummyHash = (auth as { DUMMY_HASH?: string }).DUMMY_HASH;
       expect(
-        dummyHash,
+        DUMMY_HASH,
         "Phase 1 Task 8 requires login.ts to export a `DUMMY_HASH` " +
           "constant. If the constant is missing, the FR-4 timing fix has " +
           "no value to fall back on.",
@@ -484,13 +535,12 @@ describe("Phase 2 — Task 14: FR-4/FR-5/FR-6/FR-11 in the auth route handlers",
           "wrong-password branch. The current implementation skips the " +
           "verify call entirely, leaking a username-enumeration timing " +
           "oracle.",
-      ).toHaveBeenCalledWith("Password123!", dummyHash);
+      ).toHaveBeenCalledWith("Password123!", DUMMY_HASH);
     });
 
     it("calls verifyPassword(password, DUMMY_HASH) when the account row has no password", async () => {
       const auth = await import("@reading-advantage/auth");
       const verifyPassword = vi.mocked(auth.verifyPassword);
-      const dummyHash = (auth as { DUMMY_HASH?: string }).DUMMY_HASH;
 
       // User found, credential account has password: null.
       mockDb.select
@@ -528,7 +578,7 @@ describe("Phase 2 — Task 14: FR-4/FR-5/FR-6/FR-11 in the auth route handlers",
         "Expected handleLogin to call verifyPassword with DUMMY_HASH when " +
           "the credential account has no password (orphaned user), so the " +
           "branch pays the same Argon2id cost as the wrong-password branch.",
-      ).toHaveBeenCalledWith("Password123!", dummyHash);
+      ).toHaveBeenCalledWith("Password123!", DUMMY_HASH);
     });
   });
 
@@ -691,6 +741,14 @@ describe("Phase 2 — Task 14: FR-4/FR-5/FR-6/FR-11 in the auth route handlers",
 // ---------------------------------------------------------------------------
 
 describe("Phase 2 — Task 35: FR-12 handleLogin returns the full AuthUser shape", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockDb.select.mockReset();
+    mockDb.insert.mockReset();
+    mockDb.transaction.mockReset();
+    process.env.NODE_ENV = "test";
+  });
+
   it("the response body's user includes xp, level, cefrLevel, email, image", async () => {
     const auth = await import("@reading-advantage/auth");
     vi.mocked(auth.verifyPassword).mockResolvedValue(true);
@@ -715,6 +773,9 @@ describe("Phase 2 — Task 35: FR-12 handleLogin returns the full AuthUser shape
             password: "hash",
           },
         ])
+      )
+      .mockReturnValueOnce(
+        selectResult([{ xp: 100, level: 5, cefrLevel: "A2", email: "test@example.com", image: null }])
       );
 
     const response = await handleLogin(
@@ -783,6 +844,14 @@ describe("Phase 2 — Task 35: FR-12 handleLogin returns the full AuthUser shape
 // ---------------------------------------------------------------------------
 
 describe("Phase 2 — Task 38: FR-16 register does NOT self-authenticate", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockDb.select.mockReset();
+    mockDb.insert.mockReset();
+    mockDb.transaction.mockReset();
+    process.env.NODE_ENV = "test";
+  });
+
   it("the response status is 201 and no session_token cookie is set", async () => {
     const { createSession } = await import("@reading-advantage/auth");
 

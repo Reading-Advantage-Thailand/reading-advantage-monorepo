@@ -152,6 +152,17 @@ describe("password", () => {
 // ---------------------------------------------------------------------------
 
 describe("Phase 2 — Task 12: FR-3 rehashOnLogin filters UPDATE by providerId = 'credential'", () => {
+  /** Recursively searches an object tree for a string value matching the predicate. */
+  function deepContains(obj: unknown, predicate: (s: string) => boolean, seen = new Set<object>()): boolean {
+    if (typeof obj === "string") return predicate(obj);
+    if (obj && typeof obj === "object") {
+      if (seen.has(obj)) return false;
+      seen.add(obj);
+      return Object.values(obj).some((v) => deepContains(v, predicate, seen));
+    }
+    return false;
+  }
+
   it("the UPDATE .where() includes eq(accounts.providerId, 'credential')", async () => {
     // Track the args passed to the .where(...) call on update.
     const whereMock = vi.fn().mockResolvedValue(undefined);
@@ -165,33 +176,30 @@ describe("Phase 2 — Task 12: FR-3 rehashOnLogin filters UPDATE by providerId =
     const result = await rehashOnLogin(db, "user-1", "testPassword", bcryptHash);
     expect(result.migrated, "precondition: rehash should have run").toBe(true);
 
-    // Inspect the whereMock calls. Drizzle's `and(...)` and `eq(...)`
-    // are tree-shaped in our vi.mock — we use a string check on the
-    // serialised mock call to assert that `providerId = 'credential'`
-    // appears in the WHERE clause.
+    // Inspect the whereMock calls. Drizzle column objects have circular
+    // references, so we use a recursive search instead of JSON.stringify.
     const whereCalls = whereMock.mock.calls;
     expect(whereCalls.length, "rehashOnLogin should call .where() exactly once during a migration").toBeGreaterThan(0);
-    const whereArg = JSON.stringify(whereCalls[0]);
+    const whereArg = whereCalls[0];
     expect(
-      whereArg,
+      deepContains(whereArg, (s) => s.includes("provider_id")),
       "The .where() arg must reference the `provider_id` column " +
         "(accounts.providerId). The current implementation only filters " +
         "on userId, which would overwrite a non-credential provider row " +
         "if one exists for the same user — a destructive cross-provider " +
         "bug.",
-    ).toMatch(/provider_id/);
+    ).toBe(true);
     expect(
-      whereArg,
+      deepContains(whereArg, (s) => s.includes("credential")),
       "The .where() arg must reference the literal `credential`. " +
         "The fix is to add `eq(accounts.providerId, 'credential')` to " +
         "the WHERE clause via and().",
-    ).toMatch(/credential/);
+    ).toBe(true);
   });
 
   it("the WHERE clause restricts to a single user, a single provider", async () => {
     // Stronger assertion: the WHERE clause must reference BOTH the userId
-    // AND the providerId columns. We capture the serialised predicate and
-    // assert both column names appear.
+    // AND the providerId columns.
     const whereMock = vi.fn().mockResolvedValue(undefined);
     const setMock = vi.fn().mockReturnValue({ where: whereMock });
     const updateMock = vi.fn().mockReturnValue({ set: setMock });
@@ -203,18 +211,18 @@ describe("Phase 2 — Task 12: FR-3 rehashOnLogin filters UPDATE by providerId =
 
     const whereCalls = whereMock.mock.calls;
     expect(whereCalls.length, "rehashOnLogin should call .where() exactly once during a migration").toBeGreaterThan(0);
-    const whereArg = JSON.stringify(whereCalls[0]);
+    const whereArg = whereCalls[0];
     expect(
-      whereArg,
+      deepContains(whereArg, (s) => s.includes("user_id")),
       "The .where() arg must reference `user_id` so the migration targets " +
         "the right user.",
-    ).toMatch(/user_id/);
+    ).toBe(true);
     expect(
-      whereArg,
+      deepContains(whereArg, (s) => s.includes("provider_id")),
       "The .where() arg must ALSO reference `provider_id` (the FR-3 fix). " +
         "Without this filter, a non-credential provider row for the same " +
         "userId would be overwritten with the new Argon2id hash — a " +
         "destructive cross-provider bug.",
-    ).toMatch(/provider_id/);
+    ).toBe(true);
   });
 });

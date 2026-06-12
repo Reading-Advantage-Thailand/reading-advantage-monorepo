@@ -10,9 +10,11 @@ import {
   resetLimit,
   SESSION_COOKIE_NAME,
   rehashOnLogin,
+  recordAuditEvent,
 } from "@reading-advantage/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { enrichAuthUser } from "./enrich.js";
 
 export const DUMMY_HASH = "$argon2id$v=19$m=65536,t=3,p=4$c2FsdHNhbHRzYWx0$uTb0iMnAqN7uKjB8Y3N4v7J8k2L5mQwR9tY1xZ3aBcD";
 
@@ -61,9 +63,7 @@ export async function handleLogin(request: NextRequest) {
     }
 
     // Find user by username — wrap DB operations so that connection/query
-    // failures surface as 401 (invalid credentials) rather than 500.
-    // A 5xx on the auth path leaks infrastructure details and breaks
-    // rate-limiting observability (see Phase 2 prod-smoke test).
+    // failures surface as 503 (infrastructure) rather than 401 (credential).
     let user: { id: string; username: string; name: string | null; role: string; schoolId: string | null } | undefined;
     try {
       const result = await db
@@ -73,15 +73,17 @@ export async function handleLogin(request: NextRequest) {
         .limit(1);
       user = result[0];
     } catch (dbErr) {
+      // FR-5: DB errors return 503, do NOT call recordFailure
       console.error("Login DB error (user lookup):", dbErr instanceof Error ? dbErr.message : "Unknown");
-      recordFailure(lowerUsername);
       return NextResponse.json(
-        { message: "Invalid username or password" },
-        { status: 401 }
+        { message: "Service temporarily unavailable" },
+        { status: 503 }
       );
     }
 
+    // FR-4: unknown-username timing fix — call verifyPassword with DUMMY_HASH
     if (!user) {
+      await verifyPassword(password, DUMMY_HASH);
       recordFailure(lowerUsername);
       return NextResponse.json(
         { message: "Invalid username or password" },
@@ -104,15 +106,17 @@ export async function handleLogin(request: NextRequest) {
         .limit(1);
       account = result[0];
     } catch (dbErr) {
+      // FR-5: DB errors return 503, do NOT call recordFailure
       console.error("Login DB error (account lookup):", dbErr instanceof Error ? dbErr.message : "Unknown");
-      recordFailure(lowerUsername);
       return NextResponse.json(
-        { message: "Invalid username or password" },
-        { status: 401 }
+        { message: "Service temporarily unavailable" },
+        { status: 503 }
       );
     }
 
+    // FR-4: account-not-found or no-password timing fix
     if (!account || !account.password) {
+      await verifyPassword(password, DUMMY_HASH);
       recordFailure(lowerUsername);
       return NextResponse.json(
         { message: "Invalid username or password" },
@@ -134,6 +138,13 @@ export async function handleLogin(request: NextRequest) {
     }
 
     if (!valid) {
+      // FR-9: emit auth:login_failed audit event
+      const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
+      const ua = request.headers.get("user-agent") ?? null;
+      recordAuditEvent(
+        { actorUserId: user.id, actorRole: user.role as "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM", ipAddress: ip, userAgent: ua },
+        { action: "auth:login_failed" }
+      ).catch(() => {});
       recordFailure(lowerUsername);
       return NextResponse.json(
         { message: "Invalid username or password" },
@@ -151,17 +162,25 @@ export async function handleLogin(request: NextRequest) {
 
     // Success — create session
     resetLimit(lowerUsername);
-    const session = await createSession(db, user.id);
+    const session = await createSession(db, user.id, {
+      ipAddress: request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? undefined,
+      userAgent: request.headers.get("user-agent") ?? undefined,
+    });
+
+    // FR-9: emit auth:login audit event
+    const auditIp = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
+    const auditUa = request.headers.get("user-agent") ?? null;
+    recordAuditEvent(
+      { actorUserId: user.id, actorRole: user.role as "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM", ipAddress: auditIp, userAgent: auditUa },
+      { action: "auth:login" }
+    ).catch(() => {});
+
+    // FR-12: return full AuthUser shape
+    const enrichedUser = await enrichAuthUser(db, user);
 
     const response = NextResponse.json({
       success: true,
-      user: {
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        role: user.role,
-        schoolId: user.schoolId,
-      },
+      user: enrichedUser,
     });
 
     response.cookies.set(SESSION_COOKIE_NAME, session.token, COOKIE_OPTIONS);

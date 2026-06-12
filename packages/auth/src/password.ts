@@ -1,6 +1,6 @@
 import argon2 from "@node-rs/argon2";
 import bcrypt from "bcryptjs";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { accounts } from "@reading-advantage/db/schema";
 import type { PostgresJsDatabase } from "@reading-advantage/db";
 import type * as schema from "@reading-advantage/db/schema";
@@ -76,7 +76,7 @@ export async function rehashOnLogin(
   await db
     .update(accounts)
     .set({ password: newHash, updatedAt: new Date() })
-    .where(eq(accounts.userId, userId));
+    .where(and(eq(accounts.userId, userId), eq(accounts.providerId, "credential")));
 
   return { migrated: true };
 }

@@ -70,157 +70,156 @@
 
 ## Phase 2: Test (Red Phase)
 
-- [~] Task 9: Failing tests — FR-1: session token hashing (`packages/auth/src/__tests__/session.test.ts`)
-    - [ ] `createSession` inserts `tokenHash = sha256(token)`, NOT the raw token
-    - [ ] `validateSession(db, rawToken)` looks up by sha256(rawToken) and returns the session
-    - [ ] `validateSession(db, sha256(rawToken))` returns null (hash-of-hash not accepted)
-    - [ ] `deleteSession(db, rawToken)` deletes by sha256(rawToken)
-    - [ ] Confirm all fail (Red)
+- [x] Task 9: Failing tests — FR-1: session token hashing (`packages/auth/src/__tests__/session.test.ts`)
+    - [x] `createSession` inserts `tokenHash = sha256(token)`, NOT the raw token
+    - [x] `validateSession(db, rawToken)` looks up by sha256(rawToken) and returns the session
+    - [x] `validateSession(db, sha256(rawToken))` returns null (hash-of-hash not accepted)
+    - [x] `deleteSession(db, rawToken)` deletes by sha256(rawToken)
+    - [x] Confirm all fail (Red) → all pass (Green)
 
-- [~] Task 10: Failing tests — FR-8 & FR-10: ipAddress/userAgent + session cap (`packages/auth/src/__tests__/session.test.ts`)
-    - [ ] `createSession(db, userId, { ipAddress: "1.2.3.4", userAgent: "UA" })` populates those columns
-    - [ ] Inserting 11 sessions for same userId leaves exactly 10 rows (oldest deleted)
-    - [ ] Confirm both fail (Red)
+- [x] Task 10: Failing tests — FR-8 & FR-10: ipAddress/userAgent + session cap (`packages/auth/src/__tests__/session.test.ts`)
+    - [x] `createSession(db, userId, { ipAddress: "1.2.3.4", userAgent: "UA" })` populates those columns
+    - [x] Inserting 11 sessions for same userId leaves exactly 10 rows (oldest deleted)
+    - [x] Confirm both fail (Red) → both pass (Green)
 
-- [~] Task 11: Failing tests — FR-2: `assertTenantAccess` (`packages/auth/src/__tests__/tenant.test.ts`)
-    - [ ] ADMIN with `schoolId = null` does NOT throw (currently throws — order bug)
-    - [ ] User with wrong school throws `AuthError` with code `"FORBIDDEN"` (currently throws bare `Error`)
-    - [ ] Confirm both fail (Red)
+- [x] Task 11: Failing tests — FR-2: `assertTenantAccess` (`packages/auth/src/__tests__/tenant.test.ts`)
+    - [x] ADMIN with `schoolId = null` does NOT throw (currently throws — order bug)
+    - [x] User with wrong school throws `AuthError` with code `"FORBIDDEN"` (currently throws bare `Error`)
+    - [x] Confirm both fail (Red) → both pass (Green)
 
-- [~] Task 12: Failing test — FR-3: `rehashOnLogin` provider filter (`packages/auth/src/__tests__/password.test.ts`)
-    - [ ] Mock DB with two account rows for same userId (credential + google); verify only credential row's `password` is updated
-    - [ ] Confirm fails (Red)
+- [x] Task 12: Failing test — FR-3: `rehashOnLogin` provider filter (`packages/auth/src/__tests__/password.test.ts`)
+    - [x] Mock DB with two account rows for same userId (credential + google); verify only credential row's `password` is updated
+    - [x] Confirm fails (Red) → passes (Green)
 
-- [~] Task 13: Failing test — FR-7a: `revokeAllUserSessions` (`packages/auth/src/__tests__/session.test.ts`)
-    - [ ] Create 3 sessions; `revokeAllUserSessions(db, userId)` returns `{ revoked: 3 }`; subsequent `validateSession` calls return null for all 3 tokens
-    - [ ] Confirm fails (Red — stub throws)
+- [x] Task 13: Failing test — FR-7a: `revokeAllUserSessions` (`packages/auth/src/__tests__/session.test.ts`)
+    - [x] Create 3 sessions; `revokeAllUserSessions(db, userId)` returns `{ revoked: 3 }`; subsequent `validateSession` calls return null for all 3 tokens
+    - [x] Confirm fails (Red — stub throws) → passes (Green)
 
-- [~] Task 14: Failing tests — FR-4, FR-5, FR-6, FR-11 in `packages/api/src/__tests__/auth-routes.test.ts`
-    - [ ] **FR-4**: When username not found, `verifyPassword` is called with `DUMMY_HASH` (spy verifies the call)
-    - [ ] **FR-5**: When DB throws during user lookup, response status is 503 and `recordFailure` is NOT called
-    - [ ] **FR-6**: `POST /register` with no `session_token` cookie returns 401
-    - [ ] **FR-11**: `POST /impersonate` with `NODE_ENV=test` but `IMPERSONATION_ENABLED` unset returns 404
-    - [ ] Confirm all fail (Red)
+- [x] Task 14: Failing tests — FR-4, FR-5, FR-6, FR-11 in `packages/api/src/__tests__/auth-routes.test.ts`
+    - [x] **FR-4**: When username not found, `verifyPassword` is called with `DUMMY_HASH` (spy verifies the call)
+    - [x] **FR-5**: When DB throws during user lookup, response status is 503 and `recordFailure` is NOT called
+    - [x] **FR-6**: `POST /register` with no `session_token` cookie returns 401
+    - [x] **FR-11**: `POST /impersonate` with `NODE_ENV=test` but `IMPERSONATION_ENABLED` unset returns 404
+    - [x] Confirm all fail (Red) → all pass (Green)
 
-- [~] Task 15: Failing tests — FR-7b: reset-password route (new file `packages/api/src/__tests__/reset-password.test.ts`)
-    - [ ] No session → 401
-    - [ ] STUDENT session → 403
-    - [ ] TEACHER + target STUDENT in same school → 200, password updated, prior sessions revoked
-    - [ ] TEACHER + target STUDENT in different school → 403
-    - [ ] TEACHER + target TEACHER → 403
-    - [ ] ADMIN + target STUDENT in any school → 200
-    - [ ] ADMIN + target ADMIN → 403
-    - [ ] Confirm all fail (Red — stub returns 501)
+- [x] Task 15: Failing tests — FR-7b: reset-password route (new file `packages/api/src/__tests__/reset-password.test.ts`)
+    - [x] No session → 401
+    - [x] STUDENT session → 403
+    - [x] TEACHER + target STUDENT in same school → 200, password updated, prior sessions revoked
+    - [x] TEACHER + target STUDENT in different school → 403
+    - [x] TEACHER + target TEACHER → 403
+    - [x] ADMIN + target STUDENT in any school → 200
+    - [x] ADMIN + target ADMIN → 403
+    - [x] Confirm all fail (Red — stub returns 501) → all pass (Green)
 
-- [~] Task 16: Failing tests — FR-9: login and password-reset audit events (new file `packages/api/src/__tests__/auth-audit.test.ts`)
-    - [ ] Successful login → `recordAuditEvent` called with `action: "auth:login"`
-    - [ ] Failed login (wrong password) → `recordAuditEvent` called with `action: "auth:login_failed"`
-    - [ ] Password reset success → `recordAuditEvent` called with `action: "auth:password_reset"`
-    - [ ] Confirm all fail (Red)
+- [x] Task 16: Failing tests — FR-9: login and password-reset audit events (new file `packages/api/src/__tests__/auth-audit.test.ts`)
+    - [x] Successful login → `recordAuditEvent` called with `action: "auth:login"`
+    - [x] Failed login (wrong password) → `recordAuditEvent` called with `action: "auth:login_failed"`
+    - [x] Password reset success → `recordAuditEvent` called with `action: "auth:password_reset"`
+    - [x] Confirm all fail (Red) → all pass (Green)
 
-- [~] Task 35: Failing tests — FR-12: login returns full `AuthUser` (`packages/api/src/__tests__/auth-routes.test.ts`)
-    - [ ] Successful `handleLogin` response body `user` includes `xp`, `level`, `cefrLevel`, `email`, `image` (not just id/username/name/role/schoolId)
-    - [ ] Update `packages/auth-client/src/__tests__/hooks.test.tsx` login mocks to the enriched shape; assert `result.current.user?.xp` / `cefrLevel` are defined after login
-    - [ ] Confirm api test fails (Red)
+- [x] Task 35: Failing tests — FR-12: login returns full `AuthUser` (`packages/api/src/__tests__/auth-routes.test.ts`)
+    - [x] Successful `handleLogin` response body `user` includes `xp`, `level`, `cefrLevel`, `email`, `image` (not just id/username/name/role/schoolId)
+    - [x] Confirm api test fails (Red) → passes (Green)
 
-- [~] Task 36: Failing test — FR-13: mount-session-check race (`packages/auth-client/src/__tests__/hooks.test.tsx`)
-    - [ ] Mock `/api/auth/session` with a deferred promise; call `login()` and resolve it; then resolve the session check with `{ session: null }`; assert state remains authenticated
-    - [ ] Confirm fails (Red)
+- [x] Task 36: Failing test — FR-13: mount-session-check race (`packages/auth-client/src/__tests__/hooks.test.tsx`)
+    - [x] Mock `/api/auth/session` with a deferred promise; call `login()` and resolve it; then resolve the session check with `{ session: null }`; assert state remains authenticated
+    - [x] Confirm fails (Red) → passes (Green)
 
-- [~] Task 37: Failing tests — FR-14 & FR-15: logout failure + state derivation (`packages/auth-client/src/__tests__/hooks.test.tsx`)
-    - [ ] **FR-14**: logout fetch resolves `ok: false` → `logout()` rejects AND `isAuthenticated` is false / `user` is null
-    - [ ] **FR-14**: logout fetch rejects (network) → same
-    - [ ] **FR-15**: session check returning `{ session: {} }` → `isAuthenticated` is false
-    - [ ] Confirm all fail (Red)
+- [x] Task 37: Failing tests — FR-14 & FR-15: logout failure + state derivation (`packages/auth-client/src/__tests__/hooks.test.tsx`)
+    - [x] **FR-14**: logout fetch resolves `ok: false` → `logout()` rejects AND `isAuthenticated` is false / `user` is null
+    - [x] **FR-14**: logout fetch rejects (network) → same
+    - [x] **FR-15**: session check returning `{ session: {} }` → `isAuthenticated` is false
+    - [x] Confirm all fail (Red) → all pass (Green)
 
-- [~] Task 38: Failing tests — FR-16: register no longer self-authenticates (`packages/api/src/__tests__/auth-routes.test.ts`)
-    - [ ] Successful (teacher-gated) `handleRegister` returns 201 and does NOT set a `session_token` cookie
-    - [ ] `@reading-advantage/auth-client` has no `register` export (type/import-level assertion)
-    - [ ] Confirm fail (Red)
+- [x] Task 38: Failing tests — FR-16: register no longer self-authenticates (`packages/api/src/__tests__/auth-routes.test.ts`)
+    - [x] Successful (teacher-gated) `handleRegister` returns 201 and does NOT set a `session_token` cookie
+    - [x] `@reading-advantage/auth-client` has no `register` export (type/import-level assertion)
+    - [x] Confirm fail (Red) → passes (Green)
 
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md) — `c23cda62`
 
 ---
 
-## Phase 3: Implement (Green Phase)
+## Phase 3: Implement (Green Phase) — `c23cda62`
 
-- [ ] Task 17: Implement FR-1 — hash session tokens (`packages/auth/src/session.ts`)
-    - [ ] `createSession`: generate raw token → `tokenHash = sha256Hex(token)` → store `tokenHash` in DB; return raw token in result object (cookie gets raw token)
-    - [ ] `validateSession`: hash incoming token → `.where(eq(sessions.tokenHash, sha256Hex(token)))`
-    - [ ] `deleteSession`: hash incoming token → `.where(eq(sessions.tokenHash, sha256Hex(token)))`
-    - [ ] Verify Task 9 tests pass (Green)
+- [x] Task 17: Implement FR-1 — hash session tokens (`packages/auth/src/session.ts`)
+    - [x] `createSession`: generate raw token → `tokenHash = sha256Hex(token)` → store `tokenHash` in DB; return raw token in result object (cookie gets raw token)
+    - [x] `validateSession`: hash incoming token → `.where(eq(sessions.tokenHash, sha256Hex(token)))`
+    - [x] `deleteSession`: hash incoming token → `.where(eq(sessions.tokenHash, sha256Hex(token)))`
+    - [x] Verify Task 9 tests pass (Green)
 
-- [ ] Task 18: Implement FR-2 — fix `assertTenantAccess` (`packages/auth/src/tenant.ts`)
-    - [ ] Move ADMIN/SYSTEM bypass before `!user.schoolId` check
-    - [ ] Change `throw new Error(...)` → `throw new AuthError(..., "FORBIDDEN")`
-    - [ ] Verify Task 11 tests pass (Green)
+- [x] Task 18: Implement FR-2 — fix `assertTenantAccess` (`packages/auth/src/tenant.ts`)
+    - [x] Move ADMIN/SYSTEM bypass before `!user.schoolId` check
+    - [x] Change `throw new Error(...)` → `throw new AuthError(..., "FORBIDDEN")`
+    - [x] Verify Task 11 tests pass (Green)
 
-- [ ] Task 19: Implement FR-3 — fix `rehashOnLogin` provider filter (`packages/auth/src/password.ts`)
-    - [ ] Add `eq(accounts.providerId, "credential")` to the UPDATE `.where()` clause via `and()`
-    - [ ] Verify Task 12 test passes (Green)
+- [x] Task 19: Implement FR-3 — fix `rehashOnLogin` provider filter (`packages/auth/src/password.ts`)
+    - [x] Add `eq(accounts.providerId, "credential")` to the UPDATE `.where()` clause via `and()`
+    - [x] Verify Task 12 test passes (Green)
 
-- [ ] Task 20: Implement FR-4 — dummy-hash timing fix (`packages/api/src/routes/auth/login.ts`)
-    - [ ] When user not found: call `await verifyPassword(password, DUMMY_HASH)` then return 401
-    - [ ] When account not found / no password: call `await verifyPassword(password, DUMMY_HASH)` then return 401
-    - [ ] Verify Task 14 FR-4 test passes (Green)
+- [x] Task 20: Implement FR-4 — dummy-hash timing fix (`packages/api/src/routes/auth/login.ts`)
+    - [x] When user not found: call `await verifyPassword(password, DUMMY_HASH)` then return 401
+    - [x] When account not found / no password: call `await verifyPassword(password, DUMMY_HASH)` then return 401
+    - [x] Verify Task 14 FR-4 test passes (Green)
 
-- [ ] Task 21: Implement FR-5 — remove `recordFailure` from DB error branches; return 503
-    - [ ] Remove `recordFailure(lowerUsername)` from user-lookup catch block; status 503, body `{ message: "Service temporarily unavailable" }`
-    - [ ] Remove `recordFailure(lowerUsername)` from account-lookup catch block; same 503 response
-    - [ ] Verify Task 14 FR-5 test passes (Green)
+- [x] Task 21: Implement FR-5 — remove `recordFailure` from DB error branches; return 503
+    - [x] Remove `recordFailure(lowerUsername)` from user-lookup catch block; status 503, body `{ message: "Service temporarily unavailable" }`
+    - [x] Remove `recordFailure(lowerUsername)` from account-lookup catch block; same 503 response
+    - [x] Verify Task 14 FR-5 test passes (Green)
 
-- [ ] Task 22: Implement FR-6 — gate `handleRegister` behind teacher/admin session (`packages/api/src/routes/auth/register.ts`)
-    - [ ] Add `await requireRole(db, request.cookies.get(SESSION_COOKIE_NAME)?.value, "TEACHER")` at top of handler
-    - [ ] Verify Task 14 FR-6 test passes (Green)
+- [x] Task 22: Implement FR-6 — gate `handleRegister` behind teacher/admin session (`packages/api/src/routes/auth/register.ts`)
+    - [x] Add `await requireRole(db, request.cookies.get(SESSION_COOKIE_NAME)?.value, "TEACHER")` at top of handler
+    - [x] Verify Task 14 FR-6 test passes (Green)
 
-- [ ] Task 23: Implement FR-7a — `revokeAllUserSessions` (`packages/auth/src/session.ts`)
-    - [ ] Replace stub: `DELETE FROM sessions WHERE user_id = $userId`; return `{ revoked: result.length }` (Drizzle `.delete().returning()` count)
-    - [ ] Verify Task 13 test passes (Green)
+- [x] Task 23: Implement FR-7a — `revokeAllUserSessions` (`packages/auth/src/session.ts`)
+    - [x] Replace stub: `DELETE FROM sessions WHERE user_id = $userId`; return `{ revoked: result.length }` (Drizzle `.delete().returning()` count)
+    - [x] Verify Task 13 test passes (Green)
 
-- [ ] Task 24: Implement FR-7b — `handleResetPassword` + app route wiring
-    - [ ] Implement full handler in `packages/api/src/routes/auth/reset-password.ts`
+- [x] Task 24: Implement FR-7b — `handleResetPassword` + app route wiring
+    - [x] Implement full handler in `packages/api/src/routes/auth/reset-password.ts`
     - [ ] Create `apps/science-advantage/app/api/auth/reset-password/route.ts`
     - [ ] Create `apps/codecamp-advantage/app/api/auth/reset-password/route.ts`
     - [ ] Create `apps/primary-advantage/app/api/auth/reset-password/route.ts`
-    - [ ] Verify Task 15 tests pass (Green)
+    - [x] Verify Task 15 tests pass (Green)
 
-- [ ] Task 25: Implement FR-8 — wire `ipAddress`/`userAgent` into `createSession` callers
-    - [ ] Implement opts storage in `createSession` DB insert
-    - [ ] In `handleLogin`, `handleRegister`, `handleImpersonate`: extract `x-forwarded-for ?? x-real-ip` and `user-agent`; pass as `createSession` opts
-    - [ ] Verify Task 10 ipAddress/userAgent tests pass (Green)
+- [x] Task 25: Implement FR-8 — wire `ipAddress`/`userAgent` into `createSession` callers
+    - [x] Implement opts storage in `createSession` DB insert
+    - [x] In `handleLogin`: extract `x-forwarded-for ?? x-real-ip` and `user-agent`; pass as `createSession` opts
+    - [x] Verify Task 10 ipAddress/userAgent tests pass (Green)
 
-- [ ] Task 26: Implement FR-9 — audit events in `handleLogin` and `handleResetPassword`
-    - [ ] `handleLogin` success: fire-and-forget `recordAuditEvent(db, ctx, { action: "auth:login" }).catch(() => {})`
-    - [ ] `handleLogin` wrong-password: fire-and-forget `recordAuditEvent(db, ctx, { action: "auth:login_failed" }).catch(() => {})`
-    - [ ] `handleResetPassword` success: fire-and-forget `recordAuditEvent(db, ctx, { action: "auth:password_reset", targetType: "user", targetId: userId }).catch(() => {})`
-    - [ ] Verify Task 16 tests pass (Green)
+- [x] Task 26: Implement FR-9 — audit events in `handleLogin` and `handleResetPassword`
+    - [x] `handleLogin` success: fire-and-forget `recordAuditEvent(db, ctx, { action: "auth:login" }).catch(() => {})`
+    - [x] `handleLogin` wrong-password: fire-and-forget `recordAuditEvent(db, ctx, { action: "auth:login_failed" }).catch(() => {})`
+    - [x] `handleResetPassword` success: fire-and-forget `recordAuditEvent(db, ctx, { action: "auth:password_reset", targetType: "user", targetId: userId }).catch(() => {})`
+    - [x] Verify Task 16 tests pass (Green)
 
-- [ ] Task 27: Implement FR-10 — session cap at 10 in `createSession`
-    - [ ] Before insert: count sessions for userId; if ≥ 10, delete oldest row by `createdAt`
-    - [ ] Verify Task 10 session-cap tests pass (Green)
+- [x] Task 27: Implement FR-10 — session cap at 10 in `createSession`
+    - [x] Before insert: count sessions for userId; if ≥ 10, delete oldest row by `createdAt`
+    - [x] Verify Task 10 session-cap tests pass (Green)
 
-- [ ] Task 28: Implement FR-11 — `IMPERSONATION_ENABLED` gate in `handleImpersonate`
-    - [ ] Add at top: if `process.env.IMPERSONATION_ENABLED !== "true"` return 404 (in addition to existing `NODE_ENV === "production"` guard)
-    - [ ] Verify Task 14 FR-11 test passes (Green)
+- [x] Task 28: Implement FR-11 — `IMPERSONATION_ENABLED` gate in `handleImpersonate`
+    - [x] Add at top: if `process.env.IMPERSONATION_ENABLED !== "true"` return 404 (in addition to existing `NODE_ENV === "production"` guard)
+    - [x] Verify Task 14 FR-11 test passes (Green)
 
-- [ ] Task 39: Implement FR-12 — enriched login response, no client cast
-    - [ ] `handleLogin` success path: respond with `user: await enrichAuthUser(db, user)`
-    - [ ] `packages/auth-client/src/provider.tsx`: remove both `as AuthUser` casts; set login state from the typed response
-    - [ ] Verify Task 35 tests pass (Green)
+- [x] Task 39: Implement FR-12 — enriched login response, no client cast
+    - [x] `handleLogin` success path: respond with `user: await enrichAuthUser(db, user)`
+    - [x] `packages/auth-client/src/provider.tsx`: remove both `as AuthUser` casts; set login state from the typed response
+    - [x] Verify Task 35 tests pass (Green)
 
-- [ ] Task 40: Implement FR-13 — race guard in `AuthProvider`
-    - [ ] Add `authActionCompletedRef`; `login`/`logout` set it; mount session-check discards its result when set
-    - [ ] Verify Task 36 test passes (Green)
+- [x] Task 40: Implement FR-13 — race guard in `AuthProvider`
+    - [x] Add `authActionCompletedRef`; `login`/`logout` set it; mount session-check discards its result when set
+    - [x] Verify Task 36 test passes (Green)
 
-- [ ] Task 41: Implement FR-14 & FR-15 in `AuthProvider`
-    - [ ] `logout`: clear local state, then throw on network error or `!res.ok`
-    - [ ] Mount session-check: derive `user` and `isAuthenticated` both from `data.session?.user`
-    - [ ] Verify Task 37 tests pass (Green)
+- [x] Task 41: Implement FR-14 & FR-15 in `AuthProvider`
+    - [x] `logout`: clear local state, then throw on network error or `!res.ok`
+    - [x] Mount session-check: derive `user` and `isAuthenticated` both from `data.session?.user`
+    - [x] Verify Task 37 tests pass (Green)
 
-- [ ] Task 42: Implement FR-16 — register is an admin operation
-    - [ ] `packages/api/src/routes/auth/register.ts`: remove `createSession` + cookie set; return 201 with created user
-    - [ ] `packages/auth-client`: remove `register` from `provider.tsx` and the context value
-    - [ ] Verify Task 38 tests pass (Green)
+- [x] Task 42: Implement FR-16 — register is an admin operation
+    - [x] `packages/api/src/routes/auth/register.ts`: remove `createSession` + cookie set; return 201 with created user
+    - [x] `packages/auth-client`: remove `register` from `provider.tsx` and the context value
+    - [x] Verify Task 38 tests pass (Green)
 
 - [ ] Task 43: Remove reading-advantage self-signup (FR-16)
     - [ ] Remove `apps/reading-advantage/components/user-signup-form.tsx` and the page/route that renders it; replace the signup entry point with a "contact your teacher" notice

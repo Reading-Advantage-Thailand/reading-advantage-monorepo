@@ -1,12 +1,14 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createSession, validateSession, deleteSession } from "../session.js";
 
 vi.mock("@reading-advantage/db/schema", () => ({
   sessions: {
     id: "id",
     token: "token",
+    tokenHash: "token_hash",
     userId: "user_id",
     expiresAt: "expires_at",
+    createdAt: "created_at",
   },
   users: {
     id: "id",
@@ -244,6 +246,15 @@ function captureInsertValuesArg(
 }
 
 describe("Phase 2 — Task 9: FR-1 session token hashing", () => {
+  beforeEach(async () => {
+    // Reset the shared eq mock call history between Phase 2 tests
+    // to avoid cross-test pollution from earlier describe blocks.
+    const eqMod = (await import("drizzle-orm")) as unknown as {
+      eq: ReturnType<typeof vi.fn>;
+    };
+    eqMod.eq.mockClear();
+  });
+
   it("createSession writes tokenHash = sha256(token), NOT the raw token", async () => {
     const db = createMockDb({
       insertReturning: [mockSessionRow],
@@ -320,17 +331,18 @@ describe("Phase 2 — Task 9: FR-1 session token hashing", () => {
     const db = createMockDb();
     db.select.mockReturnValue({
       from: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue({
-          limit: vi.fn().mockImplementation((arg: unknown) => {
-            // If the call receives the raw token, simulate "no row" (lookup
-            // missed). If the call receives the hash, return the row.
+        where: vi.fn().mockImplementation((arg: unknown) => ({
+          limit: vi.fn().mockImplementation(() => {
+            // The eq result is passed to .where(), not .limit().
+            // Inspect the where argument to determine the lookup value.
             const v = (arg as { val: unknown })?.val;
             if (v === expectedHash) {
               return Promise.resolve([hashedRow]);
             }
-            return Promise.resolve([]);
+            // Subsequent selects (e.g. user lookup) return the user row.
+            return Promise.resolve([mockUserRow]);
           }),
-        }),
+        })),
       }),
     });
 
@@ -352,9 +364,17 @@ describe("Phase 2 — Task 9: FR-1 session token hashing", () => {
     const eqCalls = (
       eqMod.eq as unknown as { mock: { calls: unknown[][] } }
     ).mock.calls;
-    const lastEq = eqCalls[eqCalls.length - 1] as unknown[] | undefined;
+    // Find the eq call that uses tokenHash (the session lookup), not the
+    // last eq call (which is the user lookup by users.id).
+    const sessionLookupEq = eqCalls.find((call) => {
+      const col = call[0] as { col?: unknown; type?: string } | string;
+      if (typeof col === "object" && col !== null && "col" in col) {
+        return (col as { col?: string }).col === "token_hash";
+      }
+      return col === "token_hash";
+    });
     expect(
-      lastEq?.[1],
+      sessionLookupEq?.[1],
       "Expected validateSession to call eq(sessions.tokenHash, <hash>) as " +
         "the lookup condition. A raw-token lookup defeats FR-1 — the DB " +
         "has only hashes, so the lookup will never match.",
@@ -375,15 +395,15 @@ describe("Phase 2 — Task 9: FR-1 session token hashing", () => {
     const db = createMockDb();
     db.select.mockReturnValue({
       from: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue({
-          limit: vi.fn().mockImplementation((arg: unknown) => {
+        where: vi.fn().mockImplementation((arg: unknown) => ({
+          limit: vi.fn().mockImplementation(() => {
             // Only return the row when the lookup value is the hash of
             // the raw token (which sha256(preHashed) is NOT).
             const v = (arg as { val: unknown })?.val;
             if (v === expectedStoredHash) return Promise.resolve([mockSessionRow]);
             return Promise.resolve([]);
           }),
-        }),
+        })),
       }),
     });
 

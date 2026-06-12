@@ -44,6 +44,14 @@ export async function handleImpersonate(request: NextRequest) {
     );
   }
 
+  // FR-11: require IMPERSONATION_ENABLED === "true"
+  if (process.env.IMPERSONATION_ENABLED !== "true") {
+    return NextResponse.json(
+      { message: "Not found" },
+      { status: 404 }
+    );
+  }
+
   try {
     const body = await request.json();
     const parsed = impersonateSchema.safeParse(body);

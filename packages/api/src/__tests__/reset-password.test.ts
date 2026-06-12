@@ -28,6 +28,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { handleResetPassword } from "../routes/auth/reset-password.js";
+import { requireAuth, requireRole, hashPassword, revokeAllUserSessions } from "@reading-advantage/auth";
 
 const mockDb = vi.hoisted(() => ({
   select: vi.fn(),
@@ -118,10 +119,6 @@ function setActorSession(
   role: "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM",
   schoolId: string | null
 ) {
-  const auth = require("@reading-advantage/auth") as unknown as {
-    requireAuth: ReturnType<typeof vi.fn>;
-    requireRole: ReturnType<typeof vi.fn>;
-  };
   const session = {
     id: `sess-${userId}`,
     token: "actor-token",
@@ -138,8 +135,8 @@ function setActorSession(
       cefrLevel: "A1",
     },
   };
-  auth.requireAuth.mockResolvedValueOnce(session);
-  auth.requireRole.mockResolvedValueOnce(session);
+  vi.mocked(requireAuth).mockResolvedValueOnce(session as any);
+  vi.mocked(requireRole).mockResolvedValueOnce(session as any);
 }
 
 beforeEach(() => {
@@ -149,10 +146,7 @@ beforeEach(() => {
 
 describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () => {
   it("returns 401 when the request has no session_token cookie", async () => {
-    const auth = require("@reading-advantage/auth") as unknown as {
-      requireAuth: ReturnType<typeof vi.fn>;
-    };
-    auth.requireAuth.mockRejectedValueOnce(
+    vi.mocked(requireAuth).mockRejectedValueOnce(
       Object.assign(new Error("Auth required"), {
         name: "AuthError",
         code: "UNAUTHORIZED",
@@ -196,10 +190,6 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
         ])
       );
 
-    const auth = require("@reading-advantage/auth") as unknown as {
-      hashPassword: ReturnType<typeof vi.fn>;
-      revokeAllUserSessions: ReturnType<typeof vi.fn>;
-    };
     // update() returns the row count via .where().returning() chain
     mockDb.update.mockReturnValueOnce({
       set: vi.fn().mockReturnValue({
@@ -219,7 +209,7 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
 
     expect(response.status, "TEACHER + target STUDENT (same school) → 200").toBe(200);
     expect(
-      auth.revokeAllUserSessions,
+      vi.mocked(revokeAllUserSessions),
       "TEACHER reset must revoke all prior sessions for the target user."
     ).toHaveBeenCalledWith(mockDb, "target-1");
     expect(
