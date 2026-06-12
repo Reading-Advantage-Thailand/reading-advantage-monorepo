@@ -23,7 +23,7 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
     - Failures map to: 6 × `drizzle/meta/README.md` missing, 3 × `scripts/sentinels.ts` missing, 3 × `scripts/migration-ledger-doctor.ts` missing, 1 × `package.json` lacks `scripts.doctor`, 1 × `package.json` lacks `exports["./seed"]`, 1 × `src/schema/users.ts` lacks `sessions_user_id_idx` / `sessions_expires_at_idx`
     - Red-commit SHA: `5ef40d4f` (test-only commit; 15 / 15 fail on master, ENOENT + undefined-field reasons)
     - **Phase 1 Green gate** (2026-06-12, jr role): 15 / 15 passing. Full suite: 575 / 575 passing.
-    - Green-commit SHA: `3cfabb80`
+    - Green-commit SHA: `bf183fb9`
 
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
 
