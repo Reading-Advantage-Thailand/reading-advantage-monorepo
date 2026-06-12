@@ -119,8 +119,8 @@ try {
   // Tight contract: a throw new Error(...) whose message mentions DATABASE_URL.
   // (Loosening to /DATABASE_URL/ would false-positive on the existing
   // process.env.DATABASE_URL read in client.ts.)
-  process.stdout.write("has-throw-guard=" + /throw\s+new\s+Error[^{]*\{[^}]*DATABASE_URL/s.test(text) + "\\n");
-  process.stdout.write("has-dev-warn=" + /console\.warn/.test(text) + "\\n");
+  process.stdout.write("has-throw-guard=" + /throw\\s+new\\s+Error[^{]*\\{[^}]*DATABASE_URL/s.test(text) + "\\n");
+  process.stdout.write("has-dev-warn=" + /console\\.warn/.test(text) + "\\n");
   process.stdout.write("has-next-phase-check=" + /NEXT_PHASE/.test(text) + "\\n");
 } catch (e) {
   process.stdout.write("error=" + (e && e.message ? e.message : String(e)) + "\\n");
