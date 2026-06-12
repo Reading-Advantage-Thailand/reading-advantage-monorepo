@@ -20,8 +20,8 @@ import { fileURLToPath } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "../..");
 
-const README_PATH = join(PACKAGE_ROOT, "drizzle/meta/README.md");
-const SENTINELS_PATH = join(PACKAGE_ROOT, "scripts/sentinels.ts");
+const README_PATH = join(PACKAGE_ROOT, "drizzle/MIGRATION_LEDGER.md");
+const SENTINELS_PATH = join(PACKAGE_ROOT, "src/sentinels.ts");
 const DOCTOR_PATH = join(PACKAGE_ROOT, "scripts/migration-ledger-doctor.ts");
 const PACKAGE_JSON_PATH = join(PACKAGE_ROOT, "package.json");
 const USERS_SCHEMA_PATH = join(PACKAGE_ROOT, "src/schema/users.ts");
@@ -30,11 +30,11 @@ function readPackageJson(): Record<string, unknown> {
   return JSON.parse(readFileSync(PACKAGE_JSON_PATH, "utf8")) as Record<string, unknown>;
 }
 
-describe("Phase 1 — Task 1: journal re-stamp design note (drizzle/meta/README.md)", () => {
-  it("ships drizzle/meta/README.md", () => {
+describe("Phase 1 — Task 1: journal re-stamp design note (drizzle/MIGRATION_LEDGER.md)", () => {
+  it("ships drizzle/MIGRATION_LEDGER.md", () => {
     expect(
       existsSync(README_PATH),
-      "packages/db/drizzle/meta/README.md must exist as the sidecar note (JSON allows no comments)"
+      "packages/db/drizzle/MIGRATION_LEDGER.md must exist as the sidecar note (JSON allows no comments)"
     ).toBe(true);
   });
 
@@ -73,11 +73,11 @@ describe("Phase 1 — Task 1: journal re-stamp design note (drizzle/meta/README.
   });
 });
 
-describe("Phase 1 — Task 2: sentinel-probe map (scripts/sentinels.ts)", () => {
-  it("ships scripts/sentinels.ts", () => {
+describe("Phase 1 — Task 2: sentinel-probe map (src/sentinels.ts)", () => {
+  it("ships src/sentinels.ts", () => {
     expect(
       existsSync(SENTINELS_PATH),
-      "packages/db/scripts/sentinels.ts must exist with the typed sentinel map"
+      "packages/db/src/sentinels.ts must exist with the typed sentinel map"
     ).toBe(true);
   });
 

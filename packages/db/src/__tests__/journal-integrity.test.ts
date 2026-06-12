@@ -213,7 +213,7 @@ describe("journal-integrity — sentinel coverage for FR-3 doctor", () => {
   it("every journal tag is present in scripts/sentinels.ts", async () => {
     // Import dynamically so test-strategy §5 (no module-resolution surprises)
     // and so a missing file is a clear Red reason.
-    const sentinelsModule = await import("../../scripts/sentinels.js");
+    const sentinelsModule = await import("../sentinels.js");
     const probes = sentinelsModule.sentinelProbes as Record<
       string,
       { tag: string; kind: "table" | "column"; target: string }

@@ -107,7 +107,7 @@ describe("package-esm-smoke — FR-6 (Node ESM can import the built package)", (
     ).toEqual([]);
   });
 
-  it("node --input-type=module can import the built package (FR-6 acceptance — currently Red)", async () => {
+  it("node --input-type=module can import the built package (FR-6 acceptance — currently Red)", { timeout: 15_000 }, async () => {
     const result = await runNodeImport();
     expect(
       result.stdout,

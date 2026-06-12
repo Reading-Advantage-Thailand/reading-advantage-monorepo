@@ -4,7 +4,7 @@ import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import postgres from "postgres";
-import { sentinelProbes, type SentinelProbe } from "./sentinels.js";
+import { sentinelProbes, type SentinelProbe } from "../src/sentinels.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "..");
