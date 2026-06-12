@@ -85,7 +85,7 @@ describe("Phase 1 — Task 2: sentinel-probe map (scripts/sentinels.ts)", () => 
     const text = readFileSync(SENTINELS_PATH, "utf8");
     // Single source of truth — must be a named export.
     expect(text).toMatch(/export\s+(?:const|let|var)\s+sentinelProbes/);
-    for (let i = 0; i <= 18; i++) {
+    for (let i = 0; i <= 20; i++) {
       const tag = `${i.toString().padStart(4, "0")}_`;
       expect(text, `sentinels.ts must reference ${tag}*`).toContain(`"${tag}`);
     }

@@ -1,3 +1,12 @@
+/**
+ * Sentinel probes for migration-ledger-doctor.ts.
+ * Each entry maps a journal tag to the schema artifact it creates.
+ *
+ * Doctor exit codes:
+ *   0 — clean (all sentinels match ledger)
+ *   1 — divergence detected
+ *   2 — config/connection error
+ */
 export interface SentinelProbe {
   tag: string;
   kind: "table" | "column";
