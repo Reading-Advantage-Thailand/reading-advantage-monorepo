@@ -2,6 +2,10 @@ import { describe, it, expect, vi } from "vitest";
 import { hashPassword, verifyPassword, rehashOnLogin, ARGON2ID_OPTS } from "../password.js";
 
 describe("password", () => {
+  // Crypto tests involve real Argon2id/bcrypt hashing which is hardware-dependent.
+  // Increase timeout to prevent flaky failures on constrained hardware.
+  vi.setConfig({ testTimeout: 15000 });
+
   describe("Argon2id hashing", () => {
     it("hashes a password with Argon2id", async () => {
       const hash = await hashPassword("mySecretPassword123");

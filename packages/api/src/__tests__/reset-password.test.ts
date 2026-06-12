@@ -28,7 +28,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { handleResetPassword } from "../routes/auth/reset-password.js";
-import { requireAuth, requireRole, hashPassword, revokeAllUserSessions } from "@reading-advantage/auth";
+import { requireAuth, requireRole, hashPassword, revokeAllUserSessions, AuthError } from "@reading-advantage/auth";
 
 const mockDb = vi.hoisted(() => ({
   select: vi.fn(),
@@ -121,7 +121,6 @@ function setActorSession(
 ) {
   const session = {
     id: `sess-${userId}`,
-    token: "actor-token",
     userId,
     expiresAt: new Date(Date.now() + 86400000),
     user: {
@@ -135,8 +134,7 @@ function setActorSession(
       cefrLevel: "A1",
     },
   };
-  vi.mocked(requireAuth).mockResolvedValueOnce(session as any);
-  vi.mocked(requireRole).mockResolvedValueOnce(session as any);
+  vi.mocked(requireRole).mockResolvedValueOnce(session as unknown as Awaited<ReturnType<typeof requireRole>>);
 }
 
 beforeEach(() => {
@@ -146,11 +144,8 @@ beforeEach(() => {
 
 describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () => {
   it("returns 401 when the request has no session_token cookie", async () => {
-    vi.mocked(requireAuth).mockRejectedValueOnce(
-      Object.assign(new Error("Auth required"), {
-        name: "AuthError",
-        code: "UNAUTHORIZED",
-      }),
+    vi.mocked(requireRole).mockRejectedValueOnce(
+      new AuthError("Authentication required", "UNAUTHORIZED"),
     );
 
     const response = await handleResetPassword(
@@ -163,7 +158,9 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
   });
 
   it("returns 403 when a STUDENT actor attempts to reset any password", async () => {
-    setActorSession("student-actor", "STUDENT", "school-1");
+    vi.mocked(requireRole).mockRejectedValueOnce(
+      new AuthError("Requires role TEACHER or higher", "FORBIDDEN"),
+    );
     const response = await handleResetPassword(
       jsonRequest(
         "/api/auth/reset-password",
@@ -176,7 +173,7 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
 
   it("returns 200 for a TEACHER resetting a STUDENT in the same school, with prior sessions revoked", async () => {
     setActorSession("teacher-1", "TEACHER", "school-1");
-    // Target student lookup
+    // Target student lookup (1st select)
     mockDb.select
       .mockReturnValueOnce(
         selectResult([
@@ -188,14 +185,16 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
             schoolId: "school-1",
           },
         ])
+      )
+      // Credential account lookup (2nd select)
+      .mockReturnValueOnce(
+        selectResult([{ id: "target-1_credential" }])
       );
 
-    // update() returns the row count via .where().returning() chain
+    // update() returns the row count via .where() chain
     mockDb.update.mockReturnValueOnce({
       set: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue({
-          returning: vi.fn().mockResolvedValue([{ userId: "target-1" }]),
-        }),
+        where: vi.fn().mockResolvedValue(undefined),
       }),
     });
 
@@ -270,6 +269,7 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
 
   it("returns 200 when an ADMIN resets a STUDENT in any school", async () => {
     setActorSession("admin-1", "ADMIN", null);
+    // Target student lookup (1st select)
     mockDb.select
       .mockReturnValueOnce(
         selectResult([
@@ -281,12 +281,14 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
             schoolId: "school-99",
           },
         ])
+      )
+      // Credential account lookup (2nd select)
+      .mockReturnValueOnce(
+        selectResult([{ id: "target-1_credential" }])
       );
     mockDb.update.mockReturnValueOnce({
       set: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue({
-          returning: vi.fn().mockResolvedValue([{ userId: "target-1" }]),
-        }),
+        where: vi.fn().mockResolvedValue(undefined),
       }),
     });
 

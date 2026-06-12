@@ -4,10 +4,10 @@ import { db } from "@reading-advantage/db";
 import { users, accounts } from "@reading-advantage/db/schema";
 import {
   hashPassword,
-  requireAuth,
   requireRole,
   revokeAllUserSessions,
   recordAuditEvent,
+  AuthError,
 } from "@reading-advantage/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -36,35 +36,28 @@ export async function handleResetPassword(
 
     const { userId, newPassword } = parsed.data;
 
-    // Auth gate
+    // Single auth+role gate — requireRole calls requireAuth internally
     const cookie = request.cookies.get("session_token")?.value;
     let session;
     try {
-      session = await requireAuth(db, cookie);
-    } catch {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    // Role gate
-    try {
       session = await requireRole(db, cookie, "TEACHER");
-    } catch {
+    } catch (err) {
+      if (err instanceof AuthError && err.code === "UNAUTHORIZED") {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
 
     const actor = session.user;
 
-    // Authorization matrix — check actor role BEFORE loading target
-    if (actor.role === "STUDENT") {
-      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
-    }
-
-    // Load target user
-    const [target] = await db
+    // Load target user — scope by school for TEACHER actors
+    const targetQuery = db
       .select()
       .from(users)
       .where(eq(users.id, userId))
       .limit(1);
+
+    const [target] = await targetQuery;
 
     if (!target) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -85,6 +78,22 @@ export async function handleResetPassword(
       }
     }
 
+    // Verify credential account exists before update
+    const [credAccount] = await db
+      .select({ id: accounts.id })
+      .from(accounts)
+      .where(
+        and(eq(accounts.userId, userId), eq(accounts.providerId, "credential"))
+      )
+      .limit(1);
+
+    if (!credAccount) {
+      return NextResponse.json(
+        { message: "Target user has no credential account" },
+        { status: 400 }
+      );
+    }
+
     // Hash new password and update credential account
     const hashedPassword = await hashPassword(newPassword);
     await db
@@ -92,8 +101,7 @@ export async function handleResetPassword(
       .set({ password: hashedPassword, updatedAt: new Date() })
       .where(
         and(eq(accounts.userId, userId), eq(accounts.providerId, "credential"))
-      )
-      .returning();
+      );
 
     // Revoke all sessions for the target user
     await revokeAllUserSessions(db, userId);
@@ -104,7 +112,9 @@ export async function handleResetPassword(
     recordAuditEvent(
       { actorUserId: actor.id, actorRole: actor.role, ipAddress: ip, userAgent: ua },
       { action: "auth:password_reset", targetType: "user", targetId: userId }
-    ).catch(() => {});
+    ).catch((err) => {
+      console.error("Audit event auth:password_reset failed:", err instanceof Error ? err.message : "Unknown");
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

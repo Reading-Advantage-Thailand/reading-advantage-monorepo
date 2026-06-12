@@ -4,6 +4,8 @@ import { createSession, validateSession, deleteSession } from "../session.js";
 vi.mock("@reading-advantage/db", () => ({
   count: vi.fn(() => ({ type: "count" })),
   eq: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "eq" })),
+  and: vi.fn((...args: unknown[]) => ({ type: "and", args })),
+  gt: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "gt" })),
 }));
 
 vi.mock("@reading-advantage/db/schema", () => ({
@@ -14,6 +16,8 @@ vi.mock("@reading-advantage/db/schema", () => ({
     userId: "user_id",
     expiresAt: "expires_at",
     createdAt: "created_at",
+    ipAddress: "ip_address",
+    userAgent: "user_agent",
   },
   users: {
     id: "id",
@@ -21,12 +25,17 @@ vi.mock("@reading-advantage/db/schema", () => ({
     name: "name",
     role: "role",
     schoolId: "school_id",
+    xp: "xp",
+    level: "level",
+    cefrLevel: "cefr_level",
   },
 }));
 
 vi.mock("drizzle-orm", () => ({
   count: vi.fn(() => ({ type: "count" })),
   eq: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "eq" })),
+  and: vi.fn((...args: unknown[]) => ({ type: "and", args })),
+  gt: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "gt" })),
 }));
 
 const mockSessionRow = {
@@ -64,7 +73,9 @@ function createMockDb(overrides: {
       }),
     }),
     delete: vi.fn().mockReturnValue({
-      where: vi.fn().mockResolvedValue(undefined),
+      where: vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([]),
+      }),
     }),
   };
 
@@ -189,10 +200,12 @@ describe("deleteSession", () => {
     expect(db.delete).toHaveBeenCalled();
   });
 
-  it("does not throw when delete fails", async () => {
+  it("does not throw when delete finds no rows", async () => {
     const db = createMockDb();
     db.delete.mockReturnValue({
-      where: vi.fn().mockRejectedValue(new Error("DB error")),
+      where: vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([]),
+      }),
     });
 
     await expect(deleteSession(asSessionDb(db), "some-token")).resolves
@@ -431,7 +444,9 @@ describe("Phase 2 — Task 9: FR-1 session token hashing", () => {
 
     const db = createMockDb();
     db.delete.mockReturnValue({
-      where: vi.fn().mockReturnValue(Promise.resolve(undefined)),
+      where: vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([]),
+      }),
     });
 
     await deleteSession(asSessionDb(db), rawToken);

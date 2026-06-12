@@ -29,6 +29,7 @@ export {
   deleteSession,
   revokeAllUserSessions,
   type Session,
+  type CreateSessionResult,
 } from "./session.js";
 
 // Rate Limiting

@@ -6,6 +6,7 @@ import {
   hashPassword,
   requireAuth,
   requireRole,
+  AuthError,
 } from "@reading-advantage/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -114,9 +115,8 @@ export async function handleRegister(request: NextRequest) {
       },
     }, { status: 201 });
   } catch (error) {
-    if (error instanceof Error && error.name === "AuthError") {
-      const code = (error as { code?: string }).code;
-      if (code === "UNAUTHORIZED") {
+    if (error instanceof AuthError) {
+      if (error.code === "UNAUTHORIZED") {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });

@@ -11,6 +11,7 @@ import {
   SESSION_COOKIE_NAME,
   rehashOnLogin,
   recordAuditEvent,
+  type Role,
 } from "@reading-advantage/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -142,9 +143,11 @@ export async function handleLogin(request: NextRequest) {
       const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
       const ua = request.headers.get("user-agent") ?? null;
       recordAuditEvent(
-        { actorUserId: user.id, actorRole: user.role as "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM", ipAddress: ip, userAgent: ua },
+        { actorUserId: user.id, actorRole: user.role as Role, ipAddress: ip, userAgent: ua },
         { action: "auth:login_failed" }
-      ).catch(() => {});
+      ).catch((err) => {
+        console.error("Audit event auth:login_failed failed:", err instanceof Error ? err.message : "Unknown");
+      });
       recordFailure(lowerUsername);
       return NextResponse.json(
         { message: "Invalid username or password" },
@@ -171,9 +174,11 @@ export async function handleLogin(request: NextRequest) {
     const auditIp = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
     const auditUa = request.headers.get("user-agent") ?? null;
     recordAuditEvent(
-      { actorUserId: user.id, actorRole: user.role as "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM", ipAddress: auditIp, userAgent: auditUa },
+      { actorUserId: user.id, actorRole: user.role as Role, ipAddress: auditIp, userAgent: auditUa },
       { action: "auth:login" }
-    ).catch(() => {});
+    ).catch((err) => {
+      console.error("Audit event auth:login failed:", err instanceof Error ? err.message : "Unknown");
+    });
 
     // FR-12: return full AuthUser shape
     const enrichedUser = await enrichAuthUser(db, user);
