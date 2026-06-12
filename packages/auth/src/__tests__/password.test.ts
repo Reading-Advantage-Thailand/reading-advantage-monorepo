@@ -131,3 +131,90 @@ describe("password", () => {
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 2 — Task 12: FR-3 rehashOnLogin provider filter
+// ---------------------------------------------------------------------------
+//
+// FR-3: rehashOnLogin updates `accounts` by `userId` only, with no filter
+// on `providerId = 'credential'`. If the user has any other provider row
+// (e.g., google) with a non-null `password`, it would be overwritten too.
+// The fix: add `eq(accounts.providerId, "credential")` to the WHERE clause.
+//
+// Test strategy:
+//   - Mock the DB update chain so we capture the .where() arguments.
+//   - Drive rehashOnLogin with a bcrypt hash that verifies (triggers
+//     the migration path).
+//   - Assert that .where() was called with an `and(...)` clause that
+//     includes `eq(accounts.providerId, "credential")`.
+//   - The current implementation only filters on `userId`, so the
+//     .where() is called with the userId alone — the assertion fails.
+// ---------------------------------------------------------------------------
+
+describe("Phase 2 — Task 12: FR-3 rehashOnLogin filters UPDATE by providerId = 'credential'", () => {
+  it("the UPDATE .where() includes eq(accounts.providerId, 'credential')", async () => {
+    // Track the args passed to the .where(...) call on update.
+    const whereMock = vi.fn().mockResolvedValue(undefined);
+    const setMock = vi.fn().mockReturnValue({ where: whereMock });
+    const updateMock = vi.fn().mockReturnValue({ set: setMock });
+    const db = { update: updateMock } as unknown as Parameters<typeof rehashOnLogin>[0];
+
+    const bcrypt = await import("bcryptjs");
+    const bcryptHash = await bcrypt.hash("testPassword", 10);
+
+    const result = await rehashOnLogin(db, "user-1", "testPassword", bcryptHash);
+    expect(result.migrated, "precondition: rehash should have run").toBe(true);
+
+    // Inspect the whereMock calls. Drizzle's `and(...)` and `eq(...)`
+    // are tree-shaped in our vi.mock — we use a string check on the
+    // serialised mock call to assert that `providerId = 'credential'`
+    // appears in the WHERE clause.
+    const whereCalls = whereMock.mock.calls;
+    expect(whereCalls.length, "rehashOnLogin should call .where() exactly once during a migration").toBeGreaterThan(0);
+    const whereArg = JSON.stringify(whereCalls[0]);
+    expect(
+      whereArg,
+      "The .where() arg must reference the `provider_id` column " +
+        "(accounts.providerId). The current implementation only filters " +
+        "on userId, which would overwrite a non-credential provider row " +
+        "if one exists for the same user — a destructive cross-provider " +
+        "bug.",
+    ).toMatch(/provider_id/);
+    expect(
+      whereArg,
+      "The .where() arg must reference the literal `credential`. " +
+        "The fix is to add `eq(accounts.providerId, 'credential')` to " +
+        "the WHERE clause via and().",
+    ).toMatch(/credential/);
+  });
+
+  it("the WHERE clause restricts to a single user, a single provider", async () => {
+    // Stronger assertion: the WHERE clause must reference BOTH the userId
+    // AND the providerId columns. We capture the serialised predicate and
+    // assert both column names appear.
+    const whereMock = vi.fn().mockResolvedValue(undefined);
+    const setMock = vi.fn().mockReturnValue({ where: whereMock });
+    const updateMock = vi.fn().mockReturnValue({ set: setMock });
+    const db = { update: updateMock } as unknown as Parameters<typeof rehashOnLogin>[0];
+
+    const bcrypt = await import("bcryptjs");
+    const bcryptHash = await bcrypt.hash("testPassword", 10);
+    await rehashOnLogin(db, "user-1", "testPassword", bcryptHash);
+
+    const whereCalls = whereMock.mock.calls;
+    expect(whereCalls.length, "rehashOnLogin should call .where() exactly once during a migration").toBeGreaterThan(0);
+    const whereArg = JSON.stringify(whereCalls[0]);
+    expect(
+      whereArg,
+      "The .where() arg must reference `user_id` so the migration targets " +
+        "the right user.",
+    ).toMatch(/user_id/);
+    expect(
+      whereArg,
+      "The .where() arg must ALSO reference `provider_id` (the FR-3 fix). " +
+        "Without this filter, a non-credential provider row for the same " +
+        "userId would be overwritten with the new Argon2id hash — a " +
+        "destructive cross-provider bug.",
+    ).toMatch(/provider_id/);
+  });
+});

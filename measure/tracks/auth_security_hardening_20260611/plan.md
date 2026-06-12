@@ -70,39 +70,39 @@
 
 ## Phase 2: Test (Red Phase)
 
-- [ ] Task 9: Failing tests — FR-1: session token hashing (`packages/auth/src/__tests__/session.test.ts`)
+- [~] Task 9: Failing tests — FR-1: session token hashing (`packages/auth/src/__tests__/session.test.ts`)
     - [ ] `createSession` inserts `tokenHash = sha256(token)`, NOT the raw token
     - [ ] `validateSession(db, rawToken)` looks up by sha256(rawToken) and returns the session
     - [ ] `validateSession(db, sha256(rawToken))` returns null (hash-of-hash not accepted)
     - [ ] `deleteSession(db, rawToken)` deletes by sha256(rawToken)
     - [ ] Confirm all fail (Red)
 
-- [ ] Task 10: Failing tests — FR-8 & FR-10: ipAddress/userAgent + session cap (`packages/auth/src/__tests__/session.test.ts`)
+- [~] Task 10: Failing tests — FR-8 & FR-10: ipAddress/userAgent + session cap (`packages/auth/src/__tests__/session.test.ts`)
     - [ ] `createSession(db, userId, { ipAddress: "1.2.3.4", userAgent: "UA" })` populates those columns
     - [ ] Inserting 11 sessions for same userId leaves exactly 10 rows (oldest deleted)
     - [ ] Confirm both fail (Red)
 
-- [ ] Task 11: Failing tests — FR-2: `assertTenantAccess` (`packages/auth/src/__tests__/tenant.test.ts`)
+- [~] Task 11: Failing tests — FR-2: `assertTenantAccess` (`packages/auth/src/__tests__/tenant.test.ts`)
     - [ ] ADMIN with `schoolId = null` does NOT throw (currently throws — order bug)
     - [ ] User with wrong school throws `AuthError` with code `"FORBIDDEN"` (currently throws bare `Error`)
     - [ ] Confirm both fail (Red)
 
-- [ ] Task 12: Failing test — FR-3: `rehashOnLogin` provider filter (`packages/auth/src/__tests__/password.test.ts`)
+- [~] Task 12: Failing test — FR-3: `rehashOnLogin` provider filter (`packages/auth/src/__tests__/password.test.ts`)
     - [ ] Mock DB with two account rows for same userId (credential + google); verify only credential row's `password` is updated
     - [ ] Confirm fails (Red)
 
-- [ ] Task 13: Failing test — FR-7a: `revokeAllUserSessions` (`packages/auth/src/__tests__/session.test.ts`)
+- [~] Task 13: Failing test — FR-7a: `revokeAllUserSessions` (`packages/auth/src/__tests__/session.test.ts`)
     - [ ] Create 3 sessions; `revokeAllUserSessions(db, userId)` returns `{ revoked: 3 }`; subsequent `validateSession` calls return null for all 3 tokens
     - [ ] Confirm fails (Red — stub throws)
 
-- [ ] Task 14: Failing tests — FR-4, FR-5, FR-6, FR-11 in `packages/api/src/__tests__/auth-routes.test.ts`
+- [~] Task 14: Failing tests — FR-4, FR-5, FR-6, FR-11 in `packages/api/src/__tests__/auth-routes.test.ts`
     - [ ] **FR-4**: When username not found, `verifyPassword` is called with `DUMMY_HASH` (spy verifies the call)
     - [ ] **FR-5**: When DB throws during user lookup, response status is 503 and `recordFailure` is NOT called
     - [ ] **FR-6**: `POST /register` with no `session_token` cookie returns 401
     - [ ] **FR-11**: `POST /impersonate` with `NODE_ENV=test` but `IMPERSONATION_ENABLED` unset returns 404
     - [ ] Confirm all fail (Red)
 
-- [ ] Task 15: Failing tests — FR-7b: reset-password route (new file `packages/api/src/__tests__/reset-password.test.ts`)
+- [~] Task 15: Failing tests — FR-7b: reset-password route (new file `packages/api/src/__tests__/reset-password.test.ts`)
     - [ ] No session → 401
     - [ ] STUDENT session → 403
     - [ ] TEACHER + target STUDENT in same school → 200, password updated, prior sessions revoked
@@ -112,28 +112,28 @@
     - [ ] ADMIN + target ADMIN → 403
     - [ ] Confirm all fail (Red — stub returns 501)
 
-- [ ] Task 16: Failing tests — FR-9: login and password-reset audit events (new file `packages/api/src/__tests__/auth-audit.test.ts`)
+- [~] Task 16: Failing tests — FR-9: login and password-reset audit events (new file `packages/api/src/__tests__/auth-audit.test.ts`)
     - [ ] Successful login → `recordAuditEvent` called with `action: "auth:login"`
     - [ ] Failed login (wrong password) → `recordAuditEvent` called with `action: "auth:login_failed"`
     - [ ] Password reset success → `recordAuditEvent` called with `action: "auth:password_reset"`
     - [ ] Confirm all fail (Red)
 
-- [ ] Task 35: Failing tests — FR-12: login returns full `AuthUser` (`packages/api/src/__tests__/auth-routes.test.ts`)
+- [~] Task 35: Failing tests — FR-12: login returns full `AuthUser` (`packages/api/src/__tests__/auth-routes.test.ts`)
     - [ ] Successful `handleLogin` response body `user` includes `xp`, `level`, `cefrLevel`, `email`, `image` (not just id/username/name/role/schoolId)
     - [ ] Update `packages/auth-client/src/__tests__/hooks.test.tsx` login mocks to the enriched shape; assert `result.current.user?.xp` / `cefrLevel` are defined after login
     - [ ] Confirm api test fails (Red)
 
-- [ ] Task 36: Failing test — FR-13: mount-session-check race (`packages/auth-client/src/__tests__/hooks.test.tsx`)
+- [~] Task 36: Failing test — FR-13: mount-session-check race (`packages/auth-client/src/__tests__/hooks.test.tsx`)
     - [ ] Mock `/api/auth/session` with a deferred promise; call `login()` and resolve it; then resolve the session check with `{ session: null }`; assert state remains authenticated
     - [ ] Confirm fails (Red)
 
-- [ ] Task 37: Failing tests — FR-14 & FR-15: logout failure + state derivation (`packages/auth-client/src/__tests__/hooks.test.tsx`)
+- [~] Task 37: Failing tests — FR-14 & FR-15: logout failure + state derivation (`packages/auth-client/src/__tests__/hooks.test.tsx`)
     - [ ] **FR-14**: logout fetch resolves `ok: false` → `logout()` rejects AND `isAuthenticated` is false / `user` is null
     - [ ] **FR-14**: logout fetch rejects (network) → same
     - [ ] **FR-15**: session check returning `{ session: {} }` → `isAuthenticated` is false
     - [ ] Confirm all fail (Red)
 
-- [ ] Task 38: Failing tests — FR-16: register no longer self-authenticates (`packages/api/src/__tests__/auth-routes.test.ts`)
+- [~] Task 38: Failing tests — FR-16: register no longer self-authenticates (`packages/api/src/__tests__/auth-routes.test.ts`)
     - [ ] Successful (teacher-gated) `handleRegister` returns 201 and does NOT set a `session_token` cookie
     - [ ] `@reading-advantage/auth-client` has no `register` export (type/import-level assertion)
     - [ ] Confirm fail (Red)
