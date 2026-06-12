@@ -40,3 +40,37 @@ AUDIT_RETENTION_DAYS=3653
 
 See [docs/compliance/retention.md](../../docs/compliance/retention.md) for the
 full retention policy rationale and FERPA compliance details.
+
+## Session Management
+
+### Token Hashing (FR-1)
+
+Session tokens are hashed with **SHA-256** before storage. The raw token is
+returned to the caller and set as a cookie; the database stores only the
+SHA-256 hex digest in the `tokenHash` column (`token_hash` in the `sessions`
+table). This means a database dump cannot be used to replay sessions — the
+raw plaintext token never touches the database.
+
+The hashing is performed by the internal `sha256Hex` helper in `session.ts`.
+All session lookups (`validateSession`, `deleteSession`) hash the incoming
+token before querying, so the raw token is never compared against stored
+data.
+
+### Revoking All Sessions (FR-7a)
+
+`revokeAllUserSessions(db, userId)` deletes every active session for a
+given user. It is exported for use by:
+
+- **Admin password reset** — when a teacher or admin resets a target
+  student's password via the reset-password route, all prior sessions are
+  revoked so the old cookie is no longer valid.
+- **DSAR account closure** — when processing a data subject access request
+  that results in account deletion, revoking sessions ensures immediate
+  logout.
+
+### Session Cap (FR-10)
+
+Each user is limited to a maximum of **10 active sessions**. When an 11th
+session is created, the oldest session (by `createdAt`) is evicted
+automatically. This prevents unbounded session accumulation for accounts
+that log in from many devices without explicitly logging out.
