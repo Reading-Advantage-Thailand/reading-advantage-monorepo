@@ -80,32 +80,6 @@ vi.mock("@reading-advantage/ai", () => {
   };
 });
 
-// Stub the legacy OpenAI SDK so the module load (which currently calls
-// `createOpenAI({...})` at the top of the procedure) doesn't fail in the test
-// env. After Phase 4 the implementation should not import `@ai-sdk/openai`
-// at all and this stub becomes dead code.
-vi.mock("@ai-sdk/openai", () => ({
-  createOpenAI: vi.fn(() => () => ({ specifier: "stubbed-model" })),
-}));
-
-// Stub the `ai` SDK's generateObject for the same reason — the current inline
-// implementation calls `generateObject` from the `ai` package. After Phase 4
-// the implementation routes through `aiClientToGenerateReview` and this stub
-// becomes dead code.
-vi.mock("ai", async () => {
-  const actual = await vi.importActual<typeof import("ai")>("ai");
-  return {
-    ...actual,
-    generateObject: vi.fn(async () => ({
-      object: {
-        passed: true,
-        summary: "[InlineStub] should-not-be-used",
-        comments: [],
-      },
-    })),
-  };
-});
-
 // ─── tRPC test setup ───────────────────────────────────────────────────────
 
 const t = initTRPC.context<{
