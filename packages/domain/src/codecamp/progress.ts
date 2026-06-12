@@ -2,7 +2,7 @@ import { eq, sql, desc } from "drizzle-orm";
 import {
   codecampLessons, codecampUserProgress, codecampChatConversations,
 } from "@reading-advantage/db/schema";
-import { PORTFOLIO_PROJECTS } from "@reading-advantage/db";
+import { PORTFOLIO_PROJECTS } from "@reading-advantage/db/seed";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 import { getModulesWithProgress } from "./modules.js";
