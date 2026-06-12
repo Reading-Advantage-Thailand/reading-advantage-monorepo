@@ -1,0 +1,24 @@
+Phase 1 Red (db_migration_ledger_20260611) — contract-stubs.test.ts
+
+Targeted Red command: ./node_modules/.bin/vitest run src/__tests__/contract-stubs.test.ts
+Result: 15/15 fail (all missing contract artifacts)
+
+Files changed:
+  A  packages/db/src/__tests__/contract-stubs.test.ts
+  M  measure/tracks/db_migration_ledger_20260611/plan.md
+
+Coverage:
+  Task 1 (README): 6 tests
+  Task 2 (sentinels.ts): 3 tests
+  Task 3 (doctor stub + package.json + users.ts indexes): 6 tests
+
+Dirty-state disposition:
+  packages/api/src/__tests__/reset-password.test.ts — unrelated user work
+  (any-cast tightening), preserved (not in this commit).
+  measure/tracks/db_migration_ledger_20260611/test-strategy.md — track-level
+  planning doc authored by user, left untracked (not in this commit).
+
+Next role: Phase 3 Implement (Green) — Tasks 8-13 of plan.md, gated by
+Phase 2 Red tests authored in the next mid cycle. Phase 1 closeout requires
+all 15 contract-stubs tests to flip green and the package.json exports map
+to keep the seed subpath resolvable at consumer build time.
