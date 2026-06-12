@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef, type ReactNode } from "react";
-import { AuthContext, type AuthState, type AuthUser } from "./context.js";
+import { AuthContext, type AuthState } from "./context.js";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // FR-13: mark auth action completed so mount session-check discards its result
     authActionCompletedRef.current = true;
     setState({
-      user: data.user as AuthUser,
+      user: data.user,
       isAuthenticated: true,
       isLoading: false,
     });
