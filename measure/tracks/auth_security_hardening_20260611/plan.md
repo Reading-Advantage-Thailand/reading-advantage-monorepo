@@ -312,4 +312,8 @@ Per the MID role rule "If the new tests pass at HEAD … mark the task as alread
 
 **Lesson for future MID attempts**: dirty source files at MID-start that are relevant-but-not-test-or-measure-files are NOT "preserve in worktree" eligible. They must either be (a) reverted with the Red test as the only remaining record, or (b) preserved as a named stash with the recovery instructions written into plan.md for the JR. Option (b) is preferred when the dirty source represents a real fix the JR would otherwise need to re-discover.
 
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) — `3f3a1e89`
+    - Automated gates: auth-security unit tests 26/26, db tests 541/541, auth-client tests 21/21, README tests 9/9, FR-10 cap tests 2/2 — all Green.
+    - Type-checks clean: auth, db, api, auth-client, science-advantage, codecamp-advantage.
+    - Builds clean: db, auth, api, auth-client. `dist/index.js` begins with `"use client"`.
+    - Manual verification: login → reset-password → confirm old cookie 401s — user action, deferred to deployment smoke test.
