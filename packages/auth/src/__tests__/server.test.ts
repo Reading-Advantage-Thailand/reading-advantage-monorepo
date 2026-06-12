@@ -21,7 +21,6 @@ const mockDb = {} as Parameters<typeof getSession>[0];
 
 const mockSession: Session = {
   id: "s1",
-  token: "token123",
   userId: "u1",
   expiresAt: new Date(Date.now() + 86400000),
   user: {
