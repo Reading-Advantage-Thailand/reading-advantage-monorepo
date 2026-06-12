@@ -58,7 +58,9 @@ DESCRIBE("stale-ledger simulation — FR-1 regression for the June 8 incident", 
     if (!PG_TEST_URL) return;
     scratchDbName = `stale_ledger_test_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     const adminUrl = new URL(PG_TEST_URL);
-    await postgres(PG_TEST_URL, { max: 1 })`CREATE DATABASE ${postgres.unsafe(scratchDbName)}`;
+    const adminClient = postgres(PG_TEST_URL, { max: 1 });
+    await adminClient.unsafe(`CREATE DATABASE "${scratchDbName}"`);
+    await adminClient.end();
     scratchBaseUrl = new URL(PG_TEST_URL).toString().replace(/\/[^/]+(\?.*)?$/, `/${scratchDbName}$1`);
     scratchClient = postgres(scratchBaseUrl, { max: 1 });
   }, 60_000);

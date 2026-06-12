@@ -95,7 +95,9 @@ DESCRIBE("ledger-doctor — FR-3 contract (exit codes 0 / 1 / 2)", () => {
     if (!PG_TEST_URL) return;
     scratchDbName = `doctor_test_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     const adminUrl = new URL(PG_TEST_URL);
-    await postgres(PG_TEST_URL, { max: 1 })`CREATE DATABASE ${postgres.unsafe(scratchDbName)}`;
+    const adminClient = postgres(PG_TEST_URL, { max: 1 });
+    await adminClient.unsafe(`CREATE DATABASE "${scratchDbName}"`);
+    await adminClient.end();
     scratchBaseUrl = new URL(PG_TEST_URL).toString().replace(/\/[^/]+(\?.*)?$/, `/${scratchDbName}$1`);
     scratchClient = postgres(scratchBaseUrl, { max: 1 });
 
