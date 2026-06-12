@@ -218,7 +218,46 @@
 **Summary:** All track-owned packages pass test + check-types. The two blocking failures (`@reading-advantage/auth#build`, `@reading-advantage/ai` line-cap) are owned by the auth-security and ai_adapter_package tracks respectively — neither is this track's responsibility.
 
 ## Phase 7: Closeout
-- [ ] Task: Mark `measure/tech-debt.md` 2026-05-15 "Duplicate `generateReview`" row **Resolved** with the resolving commit.
-- [ ] Task: Add a lessons-learned entry if the A/B prompt reconciliation or OpenRouter-as-OpenAI-variant surfaced anything reusable.
-- [ ] Task: Update `measure/tracks.md` (mark complete); move track dir to `measure/archive/`.
-- [ ] Task: Commit with `git notes`.
+- [~] Task: Mark `measure/tech-debt.md` 2026-05-15 "Duplicate `generateReview`" row **Resolved** with the resolving commit.
+- [~] Task: Add a lessons-learned entry if the A/B prompt reconciliation or OpenRouter-as-OpenAI-variant surfaced anything reusable.
+- [~] Task: Update `measure/tracks.md` (mark complete); move track dir to `measure/archive/`.
+- [~] Task: Commit with `git notes`.
+
+### Phase 7 Red phase (2026-06-12, MID)
+
+> **Approach:** Phase 7 is a Measure-bookkeeping closeout. The
+> deliverable is registry-file content + a git-history move +
+> `git notes` attachment; there is no source code, no runtime
+> feature, and no new behaviour to test. Per the supervisor's
+> rule for "phase deliverable is that artifact" tests, each
+> artifact assertion is paired with a live-gate git-state
+> assertion (commit exists, dir moved, notes attached) so the
+> test is not a pure markdown-assertion smoke.
+
+- [x] Red task: Add `packages/webhooks/src/__tests__/phase-7-closeout.test.ts` with 16 tests across 4 `describe` blocks (Task 1 tech-debt.md row 2026-05-15 + Resolved commit refs, Task 2 lessons-learned.md entry with adapter-factory + at-least-one-of three sub-topics, Task 3 tracks.md flip + dir-move + artefact preservation, Task 4 git-notes attached to dir-move commit + track id + resolving commit reference).
+  - Commit: see "Phase 7 Red commit" line below (added after the Red commit is on-branch).
+  - **Targeted Red command:** `cd packages/webhooks && ./node_modules/.bin/vitest run src/__tests__/phase-7-closeout.test.ts`
+  - **Result:** `Test Files  1 failed (1) / Tests  14 failed | 2 passed (16)` in ~1s.
+  - **Passing (2) — preconditions that always pass:** "tech-debt.md exists at the expected Measure path", "lessons-learned.md exists at the expected Measure path". These are `existsSync()` preconditions; they are required to gate the substantive assertions and are not Red signals.
+  - **Failing (14) — the Red contract (one per substantive closeout assertion):**
+    1. Task 1: 2026-05-15 `codecamp_review` "Duplicate `generateReview`" row is still `Open`, not `Resolved`.
+    2. Task 1: same row does not reference `3dc3167a` (Phase 5 Green dead-code deletion — closes the duplicate) or `92eeca19` (Phase 1 preflight — closes the unverified-model half) or the track id.
+    3. Task 1: `tech-debt.md` line cap exceeded (55 lines today, cap 50 per file header).
+    4. Task 2: no entry tagged `(2026-06-12, codecamp_review_ai_consolidation_20260605)` in `lessons-learned.md`.
+    5. Task 2: same entry's body does not mention the adapter-factory / DI-seam pattern (Phase 0 decision).
+    6. Task 2: same entry does not mention any of the three sub-topics (OpenRouter-as-OpenAI-variant, blast-radius discipline, credential-gated preflight).
+    7. Task 2: `lessons-learned.md` line cap exceeded (55 lines today).
+    8. Task 3: `measure/archive/codecamp_review_ai_consolidation_20260605/` does not exist.
+    9. Task 3: `measure/tracks/codecamp_review_ai_consolidation_20260605/` still exists (the move-to-archive has not happened).
+    10. Task 3: archive dir is missing, so the full-artefact-preservation check (plan/spec/metadata/test-strategy) cannot run.
+    11. Task 3: `tracks.md` line for this track is still `- [ ]` with the `./tracks/...` link, not `- [x]` with the `./archive/...` link.
+    12. Task 4: the latest commit touching the track dir (`2700012d`, Phase 6 Green) has no `git notes` note attached.
+    13. Task 4: the (missing) note does not mention the track id.
+    14. Task 4: the (missing) note does not reference the resolving commit `3dc3167a`.
+  - **Live-behavior gate pairing:** every Red assertion has a paired git-state or file-presence assertion (commit SHA must be ancestor of HEAD, dir-move must be on disk, `git notes show <sha>` must be non-empty) so the test is not a pure markdown-assertion smoke. The artifact assertions pin the *content*; the git-state assertions pin the *commit + move + notes* events. A regression that flips the row to "Resolved" in markdown but forgets the dir-move (or vice versa) trips one set without tripping the other, surfacing the gap.
+  - **Line-cap tests (3 and 7) intentionally fail at HEAD:** `tech-debt.md` and `lessons-learned.md` are both at 55 lines today (over the 50-line cap declared in each file's own header). The Phase 7 closeout must prune older entries to fit the new row + entry, matching the precedent set by `audit_log_retention_dsar_20260605`'s phase-7 closeout test (line 184-212) which guards the same cap.
+  - **Path resolution:** this file lives at `packages/webhooks/src/__tests__/phase-7-closeout.test.ts` (matches the Phase 5 / Phase 6 closeout-test pattern in this track). `REPO_ROOT` walks up 4 levels: `__tests__/` → `src/` → `webhooks/` → `packages/` → repo root. No config edit, no vitest include-glob change; the default include picks it up.
+  - **Dirty-worktree classification at MID start:** `packages/api/src/__tests__/reset-password.test.ts` is dirty (cast tightening: `as any` → `as unknown as Awaited<ReturnType<typeof requireAuth>>`, `as unknown as Awaited<ReturnType<typeof requireRole>>`). This is the auth-security track's work (per the Phase 4 attempt-2 supervisor note in plan.md:103), NOT this track's. It is a test file; the MID boundary rule ("Do NOT modify existing source code except test files and Measure docs") allows test-file mods from other tracks to remain in the worktree. The Phase 7 Red test does not touch this file, the dirty diff is preserved in the worktree, and the Phase 7 Red commit will only stage `packages/webhooks/src/__tests__/phase-7-closeout.test.ts` + the plan.md marker flip.
+
+### Phase 7 Red commit (added after the commit is on-branch)
+
