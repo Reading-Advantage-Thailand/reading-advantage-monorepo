@@ -168,7 +168,7 @@ describe("Phase 1 — Task 6: packages/api/src/routes/auth/reset-password.ts exi
     ).toBeTypeOf("function");
   });
 
-  it("the stub handleResetPassword responds with 501 Not Implemented", async () => {
+  it.skip("the stub handleResetPassword responds with 501 Not Implemented — superseded by Phase 3 Task 24", async () => {
     const mod = await loadResetPasswordModule();
     const handler = mod.handleResetPassword;
     if (typeof handler !== "function") {
@@ -306,7 +306,7 @@ describe("Phase 1 — Task 33: enrichAuthUser is exported from enrich.ts", () =>
     ).toBeTypeOf("function");
   });
 
-  it("the stub enrichAuthUser rejects with Error('not implemented')", async () => {
+  it.skip("the stub enrichAuthUser rejects with Error('not implemented') — superseded by Phase 3 Task 39", async () => {
     const mod = await loadEnrichModule();
     const fn = mod.enrichAuthUser;
     if (typeof fn !== "function") {

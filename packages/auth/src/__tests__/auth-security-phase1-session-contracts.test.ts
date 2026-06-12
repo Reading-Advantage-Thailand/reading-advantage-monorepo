@@ -114,7 +114,7 @@ describe("Phase 1 — Task 5: revokeAllUserSessions is exported as a stub", () =
     ).toBeTypeOf("function");
   });
 
-  it("the stub throws Error('not implemented') when called", async () => {
+  it.skip("the stub throws Error('not implemented') when called — superseded by Phase 3 Task 23", async () => {
     const fn = (
       authExports as unknown as {
         revokeAllUserSessions?: (

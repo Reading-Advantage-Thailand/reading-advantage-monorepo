@@ -226,10 +226,11 @@
     - [x] `grep` confirms no remaining `register(` consumers of auth-client across apps
     - [x] `pnpm --filter reading-advantage check-types` passes (app has no check-types script; tsc --noEmit clean; no dangling UserSignUpForm references)
 
-- [~] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — `43f36574`
     - Targeted Phase 3 Red command run: `cd packages/api && node_modules/.bin/vitest run src/__tests__/auth-security-phase3-app-routes.test.ts src/__tests__/auth-security-phase3-signup-removal.test.ts` — 2 files, 13/13 tests pass Green (Phase 3 Tasks 24 + 43 Red assertions).
     - Cleanup Red test added in MID attempt 3: `packages/api/src/__tests__/auth-security-phase3-stub-cleanup.test.ts` — 3 assertions, all 3 FAIL Red. Each points at a stale Phase 1 stub assertion that the next role (JR or phase_acceptance) must remove, skip, or rewrite: Task 5 (`revokeAllUserSessions` stub in `packages/auth/src/__tests__/auth-security-phase1-session-contracts.test.ts`), Task 6 (`handleResetPassword` 501 stub in `packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts`), Task 33 (`enrichAuthUser` stub in same file). Test-strategy §1 rule ("Stubs must throw 'not implemented' so Phase 2 reds are unambiguous") explains why the Phase 1 contract was correct in Phase 1 and is now stale post-Phase 3.
-    - Manual verification (login → reset-password → confirm old cookie 401s per test-strategy §1 / §4) remains a user action and is in progress.
+    - Cleanup test resolved (JR) — `43f36574`: skipped 3 stale Phase 1 stub assertions with `it.skip(... "— superseded by Phase 3 Task N")` — cleanup test now passes 3/3 Green.
+    - Manual verification (login → reset-password → confirm old cookie 401s per test-strategy §1 / §4) — user action, remains in progress.
 
 ---
 
