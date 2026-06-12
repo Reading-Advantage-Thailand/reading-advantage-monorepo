@@ -38,7 +38,7 @@ OPENCODE_SERVER_START_TIMEOUT="${OPENCODE_SERVER_START_TIMEOUT:-30}"
 SR_MODEL="${SR_MODEL:-vocengine-coding/glm-5.1}"
 MID_MODEL="${MID_MODEL:-minimax-cn-coding-plan/MiniMax-M3}"
 JR_MODEL="${JR_MODEL:-xiaomi/mimo-v2.5-pro}"
-REVIEW_MODEL="${REVIEW_MODEL:-kimi-for-coding/k2p6}"
+REVIEW_MODEL="${REVIEW_MODEL:-kimi-for-coding/k2p7}"
 
 SR_AGENT="${SR_AGENT:-}"
 MID_AGENT="${MID_AGENT:-}"
