@@ -240,8 +240,8 @@
 
 **Dirty-worktree classification at MID start**
 - `M packages/auth/src/__tests__/session.test.ts` → **RELEVANT, fold in (test file)**. Prior agent added an assertion to "Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap" that `createSession` must call Drizzle's aggregate `count()` from `@reading-advantage/db` (vs `select({ count: sessions.id })` which would coerce a UUID-like value to NaN in a real Postgres and disable the cap). Currently **Red against HEAD `session.ts`** — verified by `git stash --keep-index -- packages/auth/src/session.ts` then `CI=true vitest run src/__tests__/session.test.ts -t "Task 10"` → 1 failed (Module crashes at user-lookup `.limit(1)` because the cap branch is skipped when `countResult[0]?.count` is `undefined`, which means selectCall counter never reaches the user-lookup chain). This is a legitimate Red signal — the failure mode is brittle but the underlying contract violation (HEAD source uses `select({ count: sessions.id })`) is real.
-- `M packages/auth/src/session.ts` → **RELEVANT, preserve for JR (source file, NOT in this commit)**. Matching Green implementation for the FR-10 hardening test above: imports `count` from `@reading-advantage/db` and rewrites the cap query to `.select({ value: count() })`. The MID role explicitly prohibits source-code edits, so this stays dirty in the worktree for the next JR (or whoever picks up the FR-10 retroactive-hardening Green commit). **JR action**: commit `packages/auth/src/session.ts` with a `fix(auth-security): FR-10 use Drizzle aggregate count() in session cap` message — this makes the folded test Green.
-- `?? graph.db-journal` → **GENERATED, ignorable**. SQLite WAL/journal from an in-flight `build-graph` transaction. `graph.db` is in `.gitignore` (confirmed via `git check-ignore`), so the journal is also untracked. Not included in commit.
+- `M packages/auth/src/session.ts` → **RELEVANT but SOURCE FILE — stashed for JR pickup, NOT preserved in worktree** (attempt-1 supervisor feedback: leaving source-file dirty changes in the worktree at MID-end is itself a Red-phase boundary violation, even when the source change is uncommitted). Stashed as `stash@{0}` "mid-phase4-fr10-source-hardening-deferred-for-jr" via `git stash push -m "..." -- packages/auth/src/session.ts`. The stash contains the matching Green implementation for the FR-10 hardening test: imports `count` from `@reading-advantage/db` and rewrites the cap query to `.select({ value: count() })`. **JR action — either**: (a) recover the prior implementation with `git stash pop stash@{0}` and commit `packages/auth/src/session.ts` with `fix(auth-security): FR-10 use Drizzle aggregate count() in session cap`, OR (b) drop the stash and re-implement directly from the failing Red test in `packages/auth/src/__tests__/session.test.ts` (the test message at line 553–558 already names the required `count()` aggregate from `@reading-advantage/db`).
+- `?? graph.db-journal` → **GENERATED, ignorable**. SQLite WAL/journal from an in-flight `build-graph` transaction. `graph.db` is in `.gitignore` (confirmed via `git check-ignore`), so the journal is also untracked. Cleaned up automatically by SQLite once the transaction settled — not present at MID-end.
 
 **MID Red command (single targeted file, no watch, no full suite)**
 ```
@@ -249,6 +249,14 @@ cd packages/auth && CI=true node_modules/.bin/vitest run \
   src/__tests__/auth-security-phase4-readme.test.ts --reporter=verbose
 ```
 **Result (Red, attempt 1)**: `Test Files 1 failed (1)` · `Tests 8 failed | 1 passed (9)`. The 1 pass is the file-exists sanity check (`packages/auth/README.md` was created by the `audit_log_retention_dsar_20260605` track and currently only documents the retention policy). All 8 Task 32 contract assertions fail with concrete "Expected README.md to mention X" messages — none fail on import errors or test infra.
+
+**Combined Red re-confirmation after stashing source for JR handoff** (single bounded command):
+```
+cd packages/auth && CI=true node_modules/.bin/vitest run \
+  src/__tests__/auth-security-phase4-readme.test.ts \
+  src/__tests__/session.test.ts -t "Task 10|Phase 4"
+```
+**Result**: `Test Files 2 failed (2)` · `Tests 9 failed | 2 passed | 15 skipped (26)`. Both Phase 4 Red test surfaces remain Red after the dirty source stash — confirms the Red contracts are stable against committed HEAD source.
 
 **Per-task Red mapping (MID mandate ⇄ Phase 4 testable contracts)**
 | Task | MID Red coverage | Live-behaviour proof | Owner of next move |
@@ -288,9 +296,19 @@ Per the MID role rule "If the new tests pass at HEAD … mark the task as alread
     - [ ] `pnpm --filter @reading-advantage/auth-client build` — confirm `dist/index.js` still begins with `"use client"` (already asserted by `auth-security-phase1-contracts.test.ts` "Task 44 forward-guard" block)
     - [ ] Type-check the four consuming apps (science, codecamp, reading, primary) to confirm the `register` removal breaks nothing else (consumer scan already asserted by `auth-security-phase3-signup-removal.test.ts` "no apps/** source destructures `register` from useAuth()" block)
 
-- [~] Task: Bonus FR-10 hardening (folded in from dirty worktree) — MID Red: dirty `packages/auth/src/__tests__/session.test.ts` Phase 2 Task 10 cap test
-    - **Red status**: confirmed failing against HEAD `session.ts` (1 failed) via `git stash --keep-index -- packages/auth/src/session.ts` + `CI=true vitest run src/__tests__/session.test.ts -t "Task 10"`. Failure cascades from skipped eviction → user-lookup mock chain mismatch; root cause is HEAD source using `select({ count: sessions.id })` which yields `undefined` for the mock-DB `value`-keyed return.
-    - **Green plan** (JR): commit `packages/auth/src/session.ts` (currently dirty, NOT in this MID commit) which imports `count` from `@reading-advantage/db` and uses `.select({ value: count() })`. Suggested message: `fix(auth-security): FR-10 use Drizzle aggregate count() in session cap`.
+- [~] Task: Bonus FR-10 hardening (folded in from dirty worktree) — MID Red: dirty `packages/auth/src/__tests__/session.test.ts` Phase 2 Task 10 cap test (committed `b4ac9066`)
+    - **Red status**: confirmed failing against HEAD `session.ts` (1 failed) via `git stash --keep-index -- packages/auth/src/session.ts` + `CI=true vitest run src/__tests__/session.test.ts -t "Task 10"`. Failure cascades from skipped eviction → user-lookup mock chain mismatch; root cause is HEAD source using `select({ count: sessions.id })` which yields `undefined` for the mock-DB `value`-keyed return. Re-confirmed Red after MID-attempt-1 source-stash cleanup.
+    - **Green plan** (JR): EITHER recover the deferred Green from `stash@{0}` "mid-phase4-fr10-source-hardening-deferred-for-jr" via `git stash pop stash@{0}` (preferred — preserves the prior agent's exact fix), OR re-implement directly from the test message: change `packages/auth/src/session.ts` to import `count` from `@reading-advantage/db` and rewrite the cap query to `.select({ value: count() })` with `Number(countResult[0]?.value ?? 0)`. Commit message: `fix(auth-security): FR-10 use Drizzle aggregate count() in session cap`.
     - **Why retroactive**: the original Phase 2 Task 10 assertion (committed in `c15181b9` / `c23cda62`) passed against mock-DB but would have silently failed in real Postgres because `Number("<uuid-string>")` is `NaN`. Test-strategy.md §3 lesson "Mock-DB unit tests can pass while real DB constraints are violated" applies. Discovered during Phase 4 prior investigation.
+
+### MID Red-phase notes (attempt 2, 2026-06-12 — supervisor feedback fix)
+
+**Supervisor finding (attempt 1)**: "Mid role changed non-test/non-Measure files, which violates the Red-phase boundary: packages/auth/src/session.ts". The attempt-1 plan classified the dirty source as "preserve in worktree for JR" — the supervisor reads the phase-end worktree state, so any uncommitted source-file change attributed to the MID role is a boundary violation regardless of whether it was committed.
+
+**Fix applied**: `git stash push -m "mid-phase4-fr10-source-hardening-deferred-for-jr" -- packages/auth/src/session.ts`. The Green implementation is preserved as `stash@{0}` (recoverable by the JR with `git stash pop stash@{0}`) instead of as a dirty worktree change. The Red test contract in `packages/auth/src/__tests__/session.test.ts` (committed `b4ac9066`) remains the JR's driver — if the JR drops the stash, the failing test message at lines 553–558 explicitly names the `count()` aggregate from `@reading-advantage/db` so the Green can be reproduced from scratch.
+
+**Phase-end worktree state (clean of source changes)**: `git status --porcelain` returns empty. The graph.db-journal SQLite WAL file that was present at MID-start self-cleared once the transaction settled. The `stash@{0}` handoff is the canonical record of the deferred FR-10 Green.
+
+**Lesson for future MID attempts**: dirty source files at MID-start that are relevant-but-not-test-or-measure-files are NOT "preserve in worktree" eligible. They must either be (a) reverted with the Red test as the only remaining record, or (b) preserved as a named stash with the recovery instructions written into plan.md for the JR. Option (b) is preferred when the dirty source represents a real fix the JR would otherwise need to re-discover.
 
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
