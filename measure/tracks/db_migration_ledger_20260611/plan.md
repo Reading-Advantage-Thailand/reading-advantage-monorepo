@@ -4,15 +4,15 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
 
 ## Phase 1: Contract & Schema Definition
 
-- [x] Task 1: Journal re-stamp design note
+- [x] Task 1: Journal re-stamp design note (`bf183fb9`)
     - [x] Create `packages/db/drizzle/meta/README.md`: strict-`<` migrator semantics (drizzle-orm 0.44.7 `pg-core/dialect.js:62`), the chosen interpolation stamps for idx 3–8, 11, 13–15, 17 (and 18), and the hand-written-migration protocol (SQL file + journal entry + integrity test)
     - [x] Table of old → new `when` per re-stamped entry; entries 0–16 all ≤ 1779120000000, 17+ above
 
-- [x] Task 2: Sentinel-probe contract for the doctor
+- [x] Task 2: Sentinel-probe contract for the doctor (`bf183fb9`)
     - [x] For each migration 0000–0018, derive one cheap schema sentinel (table or column existence via `information_schema`) from its DDL; record as a typed map in `packages/db/scripts/sentinels.ts`
     - [x] Define doctor exit codes: 0 clean, 1 divergence, 2 connection/config error
 
-- [x] Task 3: Contract stubs
+- [x] Task 3: Contract stubs (`bf183fb9`)
     - [x] `scripts/migration-ledger-doctor.ts` scaffold with `--check` / `--repair` arg parsing, exits 2 (not implemented)
     - [x] `package.json`: add `"doctor": "tsx scripts/migration-ledger-doctor.ts"` script; add `"./seed"` subpath to `exports` map
     - [x] `users.ts` schema: add `sessions_user_id_idx` + `sessions_expires_at_idx` `index()` entries (migration SQL in Phase 3)
@@ -25,7 +25,7 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
     - **Phase 1 Green gate** (2026-06-12, jr role): 15 / 15 passing. Full suite: 575 / 575 passing.
     - Green-commit SHA: `bf183fb9`
 
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) — verified: targeted test 15/15 green, full suite 575/575 green
 
 ---
 
