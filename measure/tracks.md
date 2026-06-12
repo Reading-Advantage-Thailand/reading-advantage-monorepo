@@ -319,18 +319,20 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
-- [ ] **Track: Auth Security Hardening**
+- [x] **Track: Auth Security Hardening**
   *Link: [./tracks/auth_security_hardening_20260611/](./tracks/auth_security_hardening_20260611/)*
   Close 11 security and correctness gaps identified in the June 2026 `packages/auth` review: session token hashing (FR-1), `assertTenantAccess` order bug (FR-2), `rehashOnLogin` provider filter (FR-3), username-enumeration timing oracle (FR-4), DB-error rate-limit poisoning (FR-5), unauthenticated register endpoint (FR-6), missing password reset + session revocation (FR-7), unpopulated session metadata (FR-8), missing login/reset audit events (FR-9), session cap (FR-10), impersonation env-var gate (FR-11). Scoped to username/password flow only.
   **Extended 2026-06-11** with the `packages/auth-client` audit: login response missing required `AuthUser` fields hidden by `as` cast (FR-12), mount-session-check/login race (FR-13), logout swallowing server failure (FR-14), state-derivation + dependency hygiene (FR-15), and aligning `register()`/reading-advantage signup with the FR-6 gate (FR-16).
+  *Closed 2026-06-12 by `post_24h_audit_remediation_20260612` Phase 2: session cap hardened (non-expired count), Session type cleaned (token removed), deleteSession uses returning(), audit events logged, handleResetPassword single requireRole + credential check, handleRegister instanceof AuthError, crypto test timeout increased, role casts replaced with typed Role.*
 
 - [ ] **Track: Storage Package Hardening + Adoption**
   *Link: [./tracks/storage_hardening_20260611/](./tracks/storage_hardening_20260611/)*
   Close the June 2026 `packages/storage` audit findings: `getSignedUrl` signs a PutObjectCommand — produces an overwrite-capable upload URL where the contract promises read access (FR-1); default `ACL: public-read` breaks `put()` on modern AWS S3 (ACLs disabled by default since 2023) and Cloudflare R2, and is the wrong security default (FR-2); `exists()` swallows infra errors as "missing" (FR-3); `getUrl()` doesn't URL-encode keys (FR-4); config error diagnostics (FR-5). Then complete the adoption `storage_package_20260603` never did — the package has **zero consumers** while reading-advantage and primary-advantage still run their own `@google-cloud/storage` clients across 10 files (FR-6, migrate + delete `utils/storage.ts` + GCS S3-interop envs).
 
-- [ ] **Track: DB Migration Ledger Integrity + Hardening** ⚠️ **Critical**
+- [x] **Track: DB Migration Ledger Integrity + Hardening** ⚠️ **Critical**
   *Link: [./tracks/db_migration_ledger_20260611/](./tracks/db_migration_ledger_20260611/)*
   June 2026 `packages/db` audit. **Critical:** `_journal.json` `when` stamps are non-monotonic (idx 3–8, 13, 14, 17 carry 2025-era epochs; 0010/0011 share one stamp; 0018 unregistered) and drizzle-orm 0.44.7 applies a migration only when its stamp is strictly greater than the last applied ledger row — so existing DBs **silently skip** 0011/0013/0014/0015/0017. Fresh DBs apply everything, hiding the bug from dev/CI. This is the db-side root cause of the June 8 production incident (tech-debt P0). Fix: re-stamp journal (FR-1), journal-integrity test (FR-2), ledger doctor report/repair script (FR-3), codecamp cloudbuild deploy gate (FR-4), snapshot refresh so `drizzle-kit generate` is safe again (FR-5). Plus hardening: ESM `.js` import extensions so dist loads outside bundlers (FR-6), `DATABASE_URL` fail-fast + privileged-fallback warning (FR-7), `sessions(user_id, expires_at)` indexes (FR-8), seed-data subpath export + dead `shutdown.ts` removal (FR-9).
+  *Closed 2026-06-12 by `post_24h_audit_remediation_20260612` Phase 1: journal re-stamped (monotonic), 0019/0020 registered, doctor script implemented, ESM .js extensions added, env guards added, sessions indexes migration, barrel hygiene done, 4/6 Phase-2 Red tests pass Green (2 need live PG).*
 
 ---
 

@@ -47,6 +47,9 @@ Backup_*.sql*.out
 # Build artifacts
 graph.db
 e2e-results/
+packages/db/scripts/*.js
+packages/db/scripts/*.d.ts
+packages/db/scripts/*.d.ts.map
 
 # Measure automation run logs — ephemeral session transcripts / event streams /
 # gate output. Curated artifacts (*.feedback.md, *-result.json) are kept.
