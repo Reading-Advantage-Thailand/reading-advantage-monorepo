@@ -193,6 +193,23 @@ describe("Phase 1 — Task 2: 0019_session_token_hash is registered in _journal.
     ).toMatch(/CREATE\s+UNIQUE\s+INDEX[^\n;]*"?token_hash"?/i);
   });
 
+  it("the 0019 SQL drops NOT NULL from the legacy token column for hash-only writes", () => {
+    expect(
+      existsSync(MIGRATION_0019_PATH),
+      "0019_session_token_hash.sql must exist before its body can be " +
+        "asserted against.",
+    ).toBe(true);
+
+    const source = readFileSync(MIGRATION_0019_PATH, "utf8");
+    expect(
+      source,
+      "0019_session_token_hash.sql must drop the NOT NULL constraint from " +
+        "the legacy token column. FR-1 keeps the column for zero-downtime " +
+        "compatibility but new createSession writes only token_hash, so " +
+        "Postgres would reject inserts if token remains NOT NULL.",
+    ).toMatch(/ALTER\s+TABLE\s+"?sessions"?\s+ALTER\s+COLUMN\s+"?token"?\s+DROP\s+NOT\s+NULL/i);
+  });
+
   it("the journal contains an entry with tag '0019_session_token_hash'", () => {
     const journal = readJournal();
     const entry = findEntry(journal, "0019_session_token_hash");

@@ -317,3 +317,5 @@ Per the MID role rule "If the new tests pass at HEAD … mark the task as alread
     - Type-checks clean: auth, db, api, auth-client, science-advantage, codecamp-advantage.
     - Builds clean: db, auth, api, auth-client. `dist/index.js` begins with `"use client"`.
     - Manual verification: login → reset-password → confirm old cookie 401s — user action, deferred to deployment smoke test.
+    - Adversarial audit follow-up: found and fixed a live DB compatibility issue where FR-1 hash-only `createSession` inserts would violate the retained legacy `sessions.token NOT NULL` constraint. Added schema and migration assertions, made `sessions.token` nullable in Drizzle schema, and updated `0019_session_token_hash.sql` to `ALTER COLUMN token DROP NOT NULL`.
+    - Attempt-2 local verification limitation: this shell has no `node`, `npm`, or `pnpm` on PATH, so targeted Vitest reruns could not execute here; attempt-1 gate log records `npm test` passing 27/27.

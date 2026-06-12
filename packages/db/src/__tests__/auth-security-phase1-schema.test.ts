@@ -105,4 +105,17 @@ describe("Phase 1 — Task 3: sessions table exposes a tokenHash column", () => 
         "prevents two sessions from sharing a token by construction.",
     ).toBe(true);
   });
+
+  it("keeps the legacy token column nullable so hash-only inserts can succeed", () => {
+    const column = (sessions as unknown as Record<string, { notNull?: boolean }>)
+      .token;
+
+    expect(
+      column.notNull,
+      "sessions.token must be nullable after FR-1. The column is retained " +
+        "for zero-downtime compatibility, but createSession no longer writes " +
+        "raw tokens, so a NOT NULL constraint would reject every new " +
+        "hash-only session insert in Postgres.",
+    ).not.toBe(true);
+  });
 });

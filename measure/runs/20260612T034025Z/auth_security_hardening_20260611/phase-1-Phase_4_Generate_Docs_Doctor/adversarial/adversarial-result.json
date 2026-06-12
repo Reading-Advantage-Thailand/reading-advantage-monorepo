@@ -1,0 +1,18 @@
+{
+  "status": "fail",
+  "summary": "Adversarial audit found and fixed a blocking DB compatibility defect: FR-1 stopped writing raw session tokens, but the retained legacy sessions.token column remained NOT NULL. Added regression assertions and made the legacy column nullable in schema and migration. Local verification is blocked in this shell because node/npm/pnpm are not on PATH; attempt-1 gate log shows npm test passed before this fix.",
+  "findings": [
+    "Verification incomplete after the DB compatibility fix because this shell cannot execute Node-based test commands: node, npm, and pnpm are unavailable on PATH. Rerun npm test plus targeted db/auth checks in a Node-enabled environment before accepting pass."
+  ],
+  "evidence": [
+    "Reviewed measure/tracks/auth_security_hardening_20260611/spec.md, plan.md, and test-strategy.md",
+    "Reviewed diff since 791206b41f98aa6a0240d6371585f8847d245844",
+    "Added packages/db/src/__tests__/auth-security-phase1-schema.test.ts assertion that sessions.token is nullable for hash-only inserts",
+    "Added packages/db/src/__tests__/auth-security-phase1-journal.test.ts assertion that 0019 drops NOT NULL from sessions.token",
+    "Updated packages/db/src/schema/users.ts to make sessions.token nullable while retaining uniqueness",
+    "Updated packages/db/drizzle/0019_session_token_hash.sql with ALTER TABLE sessions ALTER COLUMN token DROP NOT NULL",
+    "Attempted CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/auth-security-phase1-schema.test.ts --reporter=verbose; failed because pnpm was not found",
+    "Attempted CI=true node_modules/vitest/vitest.mjs run src/__tests__/auth-security-phase1-schema.test.ts --reporter=verbose; failed because node was not found",
+    "Read attempt-1 gates log showing npm test passed: 4 files, 27 tests, exit status 0"
+  ]
+}
