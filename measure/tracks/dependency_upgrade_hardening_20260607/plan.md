@@ -243,18 +243,34 @@ single test file and never invokes a full workspace or repo-wide suite.
 
 - **Targeted Red command:**
   `pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage`
-- **Result at HEAD (2026-06-13):** `4 fail / 5 pass / 9 total` (test runtime
-  ~37s — well within Jest's per-file budget and avoids the known
-  full-suite hang). The four failing tests are the high-value behavioral
-  contracts: single-mode date selection, disabled-day click suppression,
-  disabled-day a11y exposure, and range-mode two-click selection.
-- **Why this is a real Red, not a stale-record Red:** the failures surface
-  because `react-day-picker@8` does not expose day cells via the
-  `getByRole("gridcell", { name: /<day>/ })` accessibility query the
-  post-migration v9 contract requires. `react-day-picker@9` produces ARIA
-  consistent with the asserted contract. Batch C (Green) must migrate
-  `apps/reading-advantage/components/ui/calendar.tsx` to the v9 API and prop
-  shape; these tests must exit 0 after the migration.
+- **Result at HEAD (2026-06-13, re-verified 2026-06-13):** `1 fail / 8 pass / 9
+  total` (test runtime ~16–21s — well within Jest's per-file budget and
+  avoids the known full-suite hang). The single failing test is the
+  high-value range-mode behavioral contract: "fires onSelect with a
+  DateRange after two day clicks". The other eight tests pass against the
+  v8 baseline: single-mode date selection, aria-selected marking,
+  disabled-day click suppression, disabled-day a11y exposure, prev/next
+  navigation buttons, next-month advancement, prev-month rewind, and
+  react-day-picker import under the date-fns peer.
+- **Correction from prior recorded count (4 fail / 5 pass):** the v8
+  `react-day-picker` does in fact expose day cells with accessible names
+  for single-mode, disabled-click, and disabled-a11y behaviors; those
+  three tests pass against v8 and only the range-mode test fails because
+  v8's gridcell name includes the weekday prefix in a way that matches
+  multiple cells (e.g. `/5/` matches "Wednesday 5", "Thursday 5", etc.)
+  while v9 exposes the day number alone. The Red proof is still real
+  (1 of 9 = a genuine behavior gap that Batch C must close), but the
+  breadth of the Red signal is narrower than the original draft claimed.
+- **Why this is a real Red, not a stale-record Red:** the failing test
+  surfaces because `react-day-picker@8` wraps day cells in a gridcell
+  whose accessible name conflates the weekday label with the day number
+  when `mode="range"`, so the asserted
+  `getByRole("gridcell", { name: /<day>/ }).querySelector("button")`
+  pattern hits multiple cells. `react-day-picker@9` exposes the day
+  number as the gridcell's accessible name. Batch C (Green) must migrate
+  `apps/reading-advantage/components/ui/calendar.tsx` to the v9 API and
+  prop shape; this test (and the eight currently-passing ones) must exit
+  0 after the migration.
 - **Boundedness:** Jest `--testPathPattern` restricts collection to the one
   new test file. The reading-advantage full Jest suite is known to hang on
   this hardware (per spec.md Constraints and Risks); using `--testPathPattern`
@@ -266,8 +282,12 @@ single test file and never invokes a full workspace or repo-wide suite.
 
 ### Phase 2 Red Gate Aggregate
 
-- **Total Red signal:** 17 failing tests + 1 failing test file (suite-level
-  import failure) across 4 bounded commands.
+- **Total Red signal:** 14 failing tests + 1 failing test file (suite-level
+  import failure) + 1 failing live-behavior test across 4 bounded commands
+  (5 baseline-truth + 8 batch-gates + 1 calendar range-mode + 1
+  ffmpeg-process suite-level = 14 failing tests + 1 failing test file).
+  Previously recorded as 17 failing tests; corrected after re-verification
+  of Task 2 against the actual v8 gridcell ARIA contract.
 - **Files Green must add or modify:** `upgrade-matrix.md` (new section),
   `baseline-truth.md` (new file), `packages/utils/src/ffmpeg-process.ts`
   (new file) + audio-generator refactors,
