@@ -184,9 +184,117 @@
 
 ## Phase 3: Implement
 
-- [ ] Task: Upgrade `@ai-sdk/*` packages in root and workspace manifests.
-- [ ] Task: Update the internal AI adapter for breaking API changes.
-- [ ] Task: Run `check-types`, `lint`, and `test` across affected workspaces.
+- [~] Task: Upgrade `@ai-sdk/*` packages in root and workspace manifests.
+  - Red file: `packages/ai/src/__tests__/phase-11-sdk-version-contract.test.ts`
+    (already on disk from P1; intentionally still Red at P3 start — the
+    adversarial audit at the end of P1 added `@ai-sdk/react` to the
+    target-major contract, and two app manifests still declare
+    `@ai-sdk/react ^1.2.9`. The P1 lockfile assertions also still fail
+    until `pnpm install --no-frozen-lockfile` is re-run after the
+    manifest bumps). See "Red-gate record" below for the exact Task 1
+    failures the P3 implementation must close.
+  - Implementation work owned by P3: bump `@ai-sdk/react` from `^1.2.9`
+    to `^2.x` in `apps/primary-advantage/package.json` and
+    `apps/codecamp-advantage/package.json`; rerun `pnpm install` to
+    collapse the lockfile to a single major per package.
+- [~] Task: Update the internal AI adapter for breaking API changes.
+  - Red file: `packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts`
+    (already on disk from P2; P2 Green flipped the call shape in the
+    adapter so this file is **passing** in P3 — it is now a regression
+    net, not a Red. Any future drift in the providers re-trips it.).
+  - The Phase 3 implementation work in the adapter is residual: add
+    `AIClient.streamText` to the interface + providers OR log a
+    tech-debt entry per test-strategy §3 item 4. Tool-calling is a
+    tech-debt-only path per §3 item 5.
+- [~] Task: Run `check-types`, `lint`, and `test` across affected workspaces.
+  - Gate-only task; no new test files owned by this task.
+- [~] Task: Migrate direct `@ai-sdk/*` usage in apps to the adapter layer.
+  - Red file: `packages/ai/src/__tests__/phase-arch-no-direct-sdk.test.ts`
+    (artifact grep over `apps/**`; intentionally Red until all direct
+    `@ai-sdk/*` imports in app source are routed through
+    `@reading-advantage/ai`). Created in this Red-phase commit per
+    test-strategy §7 ("Must not be created earlier than its owning
+    `[~]`"). At HEAD the test will fire on at least these
+    `apps/**/source` files:
+      - `apps/codecamp-advantage/app/api/chat/route.ts`
+        (`import { streamText } from "ai"` +
+        `import { createOpenAI } from "@ai-sdk/openai"`)
+      - `apps/primary-advantage/app/api/assistant/lesson-chatbot/route.ts`
+        (`import { streamText } from "ai"` +
+        `import { openai, openaiModel } from "@/utils/openai"`)
+      - `apps/primary-advantage/server/utils/genaretors/image-generator.ts`
+        (direct `ai` SDK: `generateObject`, `generateText`,
+        `experimental_generateImage`)
+      - `apps/primary-advantage/utils/{openai,google}.ts`
+        (`@ai-sdk/openai`, `@ai-sdk/google`, `@ai-sdk/google-vertex`)
+      - `apps/reading-advantage/server/controllers/{stories-assistant,level-test}-controller.ts`
+        (`import { generateObject, streamText } from "ai"` +
+        `@/utils/openai`)
+      - `apps/reading-advantage/utils/{openai,google}.ts`
+        (`@ai-sdk/openai`, `@ai-sdk/google`, `@ai-sdk/google-vertex`)
+  - Per-app smoke files (`*-ai-adapter-smoke.test.ts`) per test-strategy
+    §5 P3 are NOT created in this Red-phase commit. The architecture
+    guard is the primary contract; the per-app smokes are added when
+    each per-app migration task starts (to keep each Red commit
+    bounded to one failing file, per the Measure workflow).
+
+### Red-gate record (MID role)
+
+- **Targeted Red command** (test-strategy §6 P3 row, scoped to the
+  files this Red commit creates/owns):
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-version-contract.test.ts src/__tests__/phase-arch-no-direct-sdk.test.ts`
+- **Existing P1 Red at HEAD (Task 1) — `phase-11-sdk-version-contract.test.ts`**:
+  - The P1 adversarial audit extended the contract to cover every direct
+    `@ai-sdk/*` package in affected manifests and the lockfile. At
+    P3 HEAD (no implementation change since P2 Green `73480c0d`), the
+    still-Red Task 1 + Task 3 cases are:
+    - `apps/primary-advantage/package.json` — `@ai-sdk/react ^1.2.9`
+      (contract: `^2.x`).
+    - `apps/codecamp-advantage/package.json` — `@ai-sdk/react ^1.2.9`
+      (contract: `^2.x`).
+    - `pnpm-lock.yaml` — single-major pin fails for `ai`,
+      `@ai-sdk/openai`, `@ai-sdk/google`, `@ai-sdk/google-vertex`,
+      `@ai-sdk/react` (resolution graph still has the v1 entry while
+      a v1 app manifest is present). Two assertions per package →
+      10 failed `it` blocks from the P1 contract alone.
+  - Root + `packages/ai` + DI-shape + zod-single-major: pass at HEAD
+    (regression nets; protect against drift, not missing impl).
+- **New P3 Red at HEAD (final task) — `phase-arch-no-direct-sdk.test.ts`**:
+  - Created in this Red commit. The test greps `apps/**` source for
+    `from "ai"` and `from "@ai-sdk/*"` imports. The walk excludes
+    `node_modules`, `.next`, `dist`, `.turbo`, `build`, `coverage`,
+    `.git`, `.vercel`, and `*.{test,spec,integration.test}.{ts,tsx}`
+    (so existing prod-smoke and per-app test files are out of scope
+    — they `vi.mock` the SDK, not `from`-import it). At HEAD the
+    expected hit count is ≥ 8 source files (listed above). The
+    assertion is `expect(hits).toEqual([])`, so the test fails until
+    every direct `@ai-sdk/*` import in `apps/**` source is replaced
+    with `@reading-advantage/ai`.
+- **Combined targeted Red result at HEAD** (estimated from static
+  analysis — the local shell for this attempt does not have `node`,
+  `pnpm`, or `vitest` on `PATH`, so the same constraint that hit the
+  P1 / P2 adversarial audits applies; the fail count is asserted by
+  reading the test files + the manifests + the lockfile, not by
+  executing `vitest`):
+  - `phase-11-sdk-version-contract.test.ts`: **~10 failed** (Task 1
+    `@ai-sdk/react` × 2 apps + Task 3 single-major × 5 packages +
+    Task 3 no-legacy × 5 packages − regressions that pass = ~10).
+    Exact count will be re-asserted by the JR role with the live
+    test command.
+  - `phase-arch-no-direct-sdk.test.ts`: **1 failed** (single
+    `it` block; the hit list is non-empty until every app
+    migration lands).
+  - Total: **~11 failed** (≥ 1 new test fails for the expected
+    missing behavior, satisfying the Red-phase contract).
+- **Why this Red is real, not stale**: both failing tests are
+  driven by the current state of the manifests / source / lockfile,
+  not by a missing-file or pre-existing-record issue. A Green
+  implementation must:
+  1. Bump the two `@ai-sdk/react` ranges and rerun `pnpm install`
+     → closes the P1 contract failures.
+  2. Migrate every direct `@ai-sdk/*` / `"ai"` import in
+     `apps/**/source` to `@reading-advantage/ai` (or to a
+     `getAIClient()` factory) → closes the new architecture guard.
 
 ## Phase 4: Validate & Close
 
