@@ -426,3 +426,51 @@ test("Batch H Red: pnpm-lock.yaml exists and is older than any of the expected p
     "pnpm-lock.yaml must contain at least one next resolution entry",
   );
 });
+
+// ── Batch C Red: stable manifest-level contract (tightening) ─────────────────
+//
+// The live-behavior Red for Batch C is the `pnpm --filter
+// reading-advantage exec jest` focused run documented in plan.md.
+// That run is flaky across pnpm-lock.yaml states: when the lockfile
+// resolves react-day-picker@8 the migrated `calendar.tsx` (v9 API
+// `getDefaultClassNames`) throws `TypeError: (0 , _reactdaypicker.
+// getDefaultClassNames) is not a function`, and 8 of 9 tests fail;
+// when the lockfile resolves react-day-picker@9 the same tests
+// pass. The prior re-verifications all happened to run the focused
+// Jest command AFTER `pnpm --filter` had auto-updated the lockfile
+// to the post-Green resolution (react-day-picker@9), so they
+// recorded 0 fail / 9 pass; the lockfile at HEAD is the pre-Green
+// state (react-day-picker@8), and the test fails there.
+//
+// This manifest assertion is a stable, lockfile-independent
+// tightening of the Batch C Red contract: the calendar migration
+// is incomplete until `apps/reading-advantage/package.json`
+// declares `react-day-picker` at major version 9. The Phase 2
+// test file (`apps/reading-advantage/components/ui/__tests__/
+// calendar.test.tsx`) remains the live-behavior pair; this
+// manifest assertion is the deterministic contract gate.
+
+test("Batch C Red: apps/reading-advantage declares react-day-picker at major version 9 (stable manifest contract)", () => {
+  const manifest = join(MONOREPO_ROOT, "apps", "reading-advantage", "package.json");
+  assert.ok(existsSync(manifest), `${manifest} must exist`);
+  const body = JSON.parse(readFileSync(manifest, "utf8"));
+  const rdpRaw =
+    body.dependencies?.["react-day-picker"] ??
+    body.devDependencies?.["react-day-picker"];
+  assert.ok(
+    rdpRaw,
+    `apps/reading-advantage must declare react-day-picker as a direct dependency; current dependencies and devDependencies do not contain the key`,
+  );
+  const m = String(rdpRaw)
+    .trim()
+    .match(/^[\^~>=v=]*\s*(\d+)\.(\d+)\.(\d+)/);
+  assert.ok(
+    m,
+    `react-day-picker specifier '${rdpRaw}' must be a parseable semver range`,
+  );
+  const major = Number.parseInt(m[1], 10);
+  assert.ok(
+    major >= 9,
+    `Batch C must upgrade apps/reading-advantage react-day-picker from major 8 to major 9 to match the v9 API migration in calendar.tsx (getDefaultClassNames); current specifier is '${rdpRaw}' which normalises to major ${major}`,
+  );
+});

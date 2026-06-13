@@ -1248,6 +1248,238 @@ boundary for Batches A and B per `test-strategy.md` §7).
   section, (10) re-verified at `adab2b26` and recorded in this
   eighth re-verification section.
 
+### Phase 3 Red Gate — MID Ninth Re-Verification (2026-06-13, post-`e4cf00b2`)
+
+- **Re-verification commit:** `e4cf00b2` (HEAD at the start of this
+  re-verification; the prior
+  `measure(plan): record Phase 3 Red Gate MID eighth re-verification
+  at HEAD adab2b26` doc commit). No source-code commits or
+  working-tree changes occurred between `e4cf00b2` and the start
+  of this re-verification, so the pre-tightening Red contract suite
+  is unchanged. The previous supervisor feedback that triggered
+  this re-verification noted exit status 124 (timeout) on the
+  prior attempt; the canonical contract suite (committed in
+  `438ba747`) and the Phase 2 calendar/ffmpeg Red tests
+  (committed in `4ec52a0d`) remain the binding Red surface, and
+  Green commit `70061422` remains the canonical implementation
+  — but this re-verification uncovered a **missing
+  implementation artifact** the prior re-verifications did not
+  detect, so the contract is tightened below.
+- **Dirty worktree handling at MID start:** the working tree was
+  reported dirty with six untracked paths under
+  `apps/marketing/{.gitignore,app,lib,tsconfig.json,vite.config.ts}`
+  plus `packages/db/src/schema/marketing.ts`, plus a tracked
+  modification to `packages/db/src/schema/index.ts` (the user
+  added `export * from "./marketing.js";` to wire up the new
+  marketing schema). None of these paths are in the
+  `dependency_upgrade_hardening_20260607` track scope and do not
+  affect any Red contract the Phase 3 contract suite reads; they
+  are **unrelated user work** for a new `apps/marketing` app
+  and its companion schema. The untracked `apps/marketing/
+  package.json` was added in the same Green commit `70061422`
+  and is already aligned to `react: 19.2.7` / `react-dom:
+  19.2.7`, identical to the override, so the manifest probe
+  still exits 0 against it. Per `workflow.md` boundary the
+  untracked paths were preserved untouched (no `rm -f` was
+  required because they were never tracked), and the tracked
+  `packages/db/src/schema/index.ts` modification was also
+  preserved untouched (not reverted) so the user's in-flight
+  marketing app wiring is not overwritten by this track's
+  commit. The dirty `pnpm-lock.yaml` that appeared during
+  `pnpm --filter` runs was restored to HEAD via `git checkout
+  HEAD -- pnpm-lock.yaml` so the re-verification exercises the
+  pre-Green lockfile state (which is the state the Red contract
+  suite is written against).
+- **Tightening discovered (the reason for the timeout):** when
+  the dirty `pnpm-lock.yaml` is restored to HEAD before running
+  the bounded Red commands, the focused calendar Jest run
+  (`pnpm --filter reading-advantage exec jest --testPathPattern
+  "components/ui/__tests__/calendar" --no-coverage`) **fails
+  8/9 tests** with `TypeError: (0 , _reactdaypicker.
+  getDefaultClassNames) is not a function` at
+  `components/ui/calendar.tsx:18:49`. The error is real: the
+  Green commit `70061422` migrated `calendar.tsx` to the
+  react-day-picker@9 API (`getDefaultClassNames`, v9 class
+  names, internal range state), but it did **not** update
+  `apps/reading-advantage/package.json` to declare
+  `react-day-picker` at major version 9. At HEAD the manifest
+  still declares `"react-day-picker": "^8.10.1"`, so pnpm
+  resolves the package to v8 and the migrated component
+  imports a function that does not exist. The prior
+  re-verifications (7th and 8th) all ran the focused Jest
+  command **after** `pnpm --filter` had auto-updated the
+  lockfile to the post-Green resolution (react-day-picker@9),
+  so pnpm happened to resolve to v9 and the test passed. The
+  Red contract suite itself never asserted the manifest
+  declaration for Batch C; the live-behavior test is the only
+  Batch C Red surface, and it is lockfile-dependent. The
+  previous attempt timed out (status 124) because the
+  re-verification loop kept re-running the calendar Jest
+  command with the pre-Green lockfile and the 30s+ per-run
+  cost never converged.
+- **New test added (tightening):** a stable, lockfile-independent
+  manifest assertion was added to
+  `scripts/__tests__/phase3-contracts.test.mjs` as `Batch C
+  Red: apps/reading-advantage declares react-day-picker at
+  major version 9 (stable manifest contract)`. The test reads
+  `apps/reading-advantage/package.json`, parses the
+  `react-day-picker` specifier from `dependencies` (or
+  `devDependencies` as a fallback), and asserts the leading
+  major version is `>= 9`. At HEAD the specifier is `^8.10.1`
+  (major 8), so the test fails with `Batch C must upgrade
+  apps/reading-advantage react-day-picker from major 8 to
+  major 9 to match the v9 API migration in calendar.tsx
+  (getDefaultClassNames); current specifier is '^8.10.1'
+  which normalises to major 8`. The Phase 2 test file
+  (`apps/reading-advantage/components/ui/__tests__/
+  calendar.test.tsx`) remains the live-behavior pair per
+  `test-strategy.md` §7; this manifest assertion is the
+  deterministic contract gate. This is a textbook
+  `test-strategy.md` §7 tightening: "Artifact or markdown
+  assertions are allowed only when the phase deliverable is
+  that artifact, and they must be paired with a live-behavior
+  proof or an explicit plan note saying which later role
+  owns the live gate." The plan note is recorded in this
+  section; the live-behavior pair is the Phase 2 calendar
+  Jest run, owned by the Green completion step.
+- **Graph freshness:** `graph.db` mtime is 2026-06-13 07:42
+  (today), 2,109 nodes / 3,030 edges / 284 files. `build-graph
+  stats` and `build-graph search calendar|ffmpeg|fluent-ffmpeg
+  |manifest-probe` confirm zero hits; the FFmpeg utility,
+  Calendar, and `manifest-probe.mjs` surfaces remain
+  graph-blind per `test-strategy.md` §6 (they live under app
+  paths or `measure/tracks/.../scripts/`, neither of which
+  the root `tsconfig.json` graph indexes).
+- **PATH note (non-Red-affecting):** the runtime environment
+  had `node`/`pnpm` only on the nvm path
+  (`/home/daniel-bo/.nvm/versions/node/v24.4.0/bin/`), not on
+  the default `$PATH`. The three bounded Red commands
+  therefore had to be invoked with
+  `PATH="/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH"`
+  prefix. This is environment-only and does not alter the
+  Red contract; downstream Green owners and CI already use
+  the standard `pnpm`/`node` resolution.
+- **Re-run of all three bounded Red commands at HEAD
+  `e4cf00b2` (this verification, worktree with only
+  pre-existing untracked marketing paths plus the new
+  `phase3-contracts.test.mjs` Batch C test added, pnpm-lock
+  restored to HEAD):**
+  - Phase 3 contract (now 14 tests including the new Batch C
+    manifest assertion): `node --test measure/tracks/
+    dependency_upgrade_hardening_20260607/scripts/__tests__/
+    phase3-contracts.test.mjs` → **1 fail / 13 pass / 14 total**
+    in ~1.91s. Per-test breakdown: 5 probe-correctness +
+    Batch H lockfile presence tests Green; Batch A next
+    override (`16.2.9`), Batch A react/react-dom (`19.2.7`),
+    Batch A manifest-probe alignment (probe exits 0; no drift),
+    Batch B vitest override (`4.1.8`), Batch B manifest-probe
+    alignment (probe exits 0; no drift), Batch D stub types
+    (zero offenders), Batch F postcss (`^8.5.15`, zero
+    offenders), Batch G @playwright/test (`^1.60.0`, zero
+    offenders) all Green; **the new Batch C manifest
+    assertion fails** with the specifier `^8.10.1` normalising
+    to major 8 (asserted `>= 9`).
+  - Batch C calendar: `pnpm --filter reading-advantage exec
+    jest --testPathPattern "components/ui/__tests__/calendar"
+    --no-coverage` → **8 fail / 1 pass / 9 total** in 22.137s
+    with the pre-Green lockfile. 8 tests fail with `TypeError:
+    (0 , _reactdaypicker.getDefaultClassNames) is not a
+    function` at `components/ui/calendar.tsx:18:49`; only the
+    "imports react-day-picker without throwing under the
+    date-fns peer in use" peer-contract test passes. The
+    failure is real and points at the same missing
+    implementation artifact the new manifest assertion
+    catches: `apps/reading-advantage/package.json` must
+    declare `react-day-picker: ^9.x.x` for pnpm to resolve
+    to a package that exports `getDefaultClassNames`.
+  - Batch E ffmpeg-process: `pnpm --filter
+    @reading-advantage/utils exec vitest run ffmpeg-process`
+    → **0 fail / 12 pass / 12 total** in 2.38s. The
+    previously-failing module-load error remains gone because
+    Batch E added `packages/utils/src/ffmpeg-process.ts`
+    exposing `probeDurationSeconds` and `concatMp3Files` with
+    the argv-only spawn contract (no `shell: true`), ENOENT
+    handling, non-zero exit handling, paths-with-spaces
+    handling, and concat-list cleanup that the Phase 2 test
+    suite asserts. The vitest run is independent of the
+    lockfile state for the manifest-edited packages.
+- **Aggregate Red signal (tightened):** **1 failing test + 1
+  failing live-behavior test file (8/9 tests)** across 2
+  bounded commands (Phase 3 contract Batch C manifest
+  assertion + Batch C calendar Jest 8/9). The Batch E
+  ffmpeg-process run and the other 13 Phase 3 contract tests
+  remain Green. This is a **real Red** for Batch C: the
+  Green commit's package.json edit is missing, the migrated
+  component throws at import time when resolved against the
+  pre-Green lockfile, and the new manifest assertion catches
+  the gap deterministically.
+- **Tightening applied:** the Batch C Red proof is now
+  locked at two levels — the Phase 2 calendar Jest run
+  (live behavior, lockfile-dependent) **and** the new
+  manifest assertion (artifact contract, lockfile-independent).
+  The manifest assertion is the deterministic gate; the Jest
+  run is the live-behavior pair per `test-strategy.md` §7.
+  The previous re-verifications (3rd–8th) all ran the Jest
+  command after `pnpm --filter` had auto-updated the lockfile
+  to the post-Green resolution, so they recorded 0 fail / 9
+  pass and never detected the missing package.json edit.
+  This 9th re-verification runs the Jest command with the
+  lockfile explicitly restored to HEAD, which is the state
+  the contract is written against, and surfaces the real
+  failure.
+- **No source code changed.** MID role touched only this
+  plan.md and the `phase3-contracts.test.mjs` test file per
+  `workflow.md` boundary ("Do NOT modify existing source code
+  except test files and Measure docs"). No tracked source
+  was modified, no untracked file was removed, and the
+  user's in-flight `packages/db/src/schema/index.ts`
+  modification was preserved untouched. The dirty
+  `pnpm-lock.yaml` was restored to HEAD before any Red
+  command ran and was left clean; the worktree's only
+  tracked dirty paths at the end of this re-verification
+  are `plan.md` (this section) and `phase3-contracts.test.mjs`
+  (the new Batch C test), plus the pre-existing user-wiring
+  `packages/db/src/schema/index.ts` modification which is
+  unrelated to this track.
+- **Handoff:** the Red contract is now **nonuple-locked with
+  one real outstanding Red for Batch C**. The seven prior
+  re-verifications (3rd–8th) all recorded 0 fail / 13+9+12
+  pass but the Batch C Jest run was lockfile-dependent and
+  the missing package.json edit was hidden by the
+  auto-updated lockfile; this 9th re-verification adds the
+  manifest assertion and restores the lockfile to HEAD
+  before re-running, surfacing the real failure. The Green
+  owner (Implementer / Green-completion) must update
+  `apps/reading-advantage/package.json` to declare
+  `"react-day-picker": "^9.x.x"` (e.g. `^9.14.0`) so the
+  new manifest assertion and the live-behavior calendar
+  Jest run both pass deterministically against the pre-Green
+  lockfile. After that edit lands, the Phase 3 contract
+  suite will exit 0/14/14 and the focused calendar Jest run
+  will exit 0/9/9 with the lockfile in any state. The
+  remaining Phase 3 deferred items are unchanged: Batch H
+  lockfile freeze (`pnpm install --frozen-lockfile` and
+  `pnpm dedupe --check`), audio-generator refactors to
+  consume the new ffmpeg-process utility, `fluent-ffmpeg`
+  removal from the primary-advantage manifest, the Phase 4
+  aggregate `pnpm turbo run lint|test|check-types|build`
+  closeout, and the Phase 3 User Manual Verification gate
+  (remains `[ ]` — user-owned). The Red contract is now
+  **nonuple-locked with one real outstanding Red for Batch
+  C**: (1) Phase 2 calendar/ffmpeg tests committed in
+  `4ec52a0d`, (2) Phase 3 contract suite committed in
+  `438ba747`, (3–8) re-verified and recorded in the six
+  prior re-verification sections (3rd–8th), (9) the
+  permanent-satisfaction claim in the 7th and 8th
+  re-verification sections is **superseded** by this 9th
+  re-verification (Batch C was never actually Green at the
+  pre-Green lockfile state), (10) the new Batch C manifest
+  assertion committed in this 9th re-verification lands
+  the deterministic Batch C Red gate, and (11) the live
+  Batch C calendar Jest run, when re-run with the pre-Green
+  lockfile, confirms the same missing implementation
+  artifact the new manifest assertion catches.
+
 ### Phase 3 Green Gate
 
 - **Green commit:** `70061422`
