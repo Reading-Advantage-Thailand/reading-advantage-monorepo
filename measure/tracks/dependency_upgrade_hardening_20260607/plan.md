@@ -6,24 +6,30 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [ ] Task: Capture the pre-change repository and dependency baseline.
+> Red-phase evidence for every task below is captured by
+> `scripts/__tests__/validate-matrix.test.mjs` and the
+> `scripts/validate-matrix.mjs` artifact contract. See
+> [Phase 1 Red gate](#phase-1-red-gate) at the bottom of this file for the
+> exact command, fail count, and SHA-recorded behavior.
+
+- [~] Task: Capture the pre-change repository and dependency baseline.
   - [ ] Record `git status -sb` and identify unrelated in-flight changes.
   - [ ] Save `pnpm outdated -r --format json`, `pnpm list -r --depth 0 --json`,
     `pnpm dedupe --check`, and `pnpm audit --json` results under this track.
   - [ ] Record registry timeouts and incomplete security-audit evidence explicitly.
-- [ ] Task: Create `upgrade-matrix.md`.
+- [~] Task: Create `upgrade-matrix.md`.
   - [ ] Record package, current, wanted, latest, dependents, risk class, decision,
     implementation batch, and validation scope.
   - [ ] Re-check the Next security advisory and select a patched Next 16 release.
   - [ ] Mark Drizzle, AI SDK, Zod, TypeScript, Jest, Zustand, pnpm, and Prisma
     decisions explicitly.
-- [ ] Task: Define version-alignment contracts.
+- [~] Task: Define version-alignment contracts.
   - [ ] Select one Next/`eslint-config-next` patch line.
   - [ ] Select one React/React DOM patch line.
   - [ ] Select one Vitest/UI/coverage patch line.
   - [ ] Document temporary app-specific exceptions with an owner and removal
     condition.
-- [ ] Task: Coordinate overlap with existing tracks.
+- [~] Task: Coordinate overlap with existing tracks.
   - [ ] Preserve `housekeeping_batch_20260603` FR-6 as owner of dependency range
     policy.
   - [ ] Coordinate Zod major work with `zod_boundary_hardening_20260603`.
@@ -93,6 +99,25 @@
   - [ ] Run `pnpm install --frozen-lockfile`.
   - [ ] Run `pnpm dedupe --check`; document intentional residual duplicates.
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+
+## Phase 1 Red Gate
+
+- **Targeted Red command:**
+  `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/validate-matrix.test.mjs`
+- **Result at HEAD (2026-06-13):** `7 fail / 7 total` (validator script absent; every
+  fixture-based assertion ENOENTs on `validate-matrix.mjs`).
+- **Why this is a real Red, not a stale-record Red:** the implementation being
+  asserted (`scripts/validate-matrix.mjs`) does not yet exist on disk; the
+  test contract defines the schema, baseline-presence, decision-cell,
+  happy-path, and incomplete-audit behavior the Green commit must satisfy.
+- **Boundedness:** single-file `node --test` invocation against the Phase 1
+  test file only. No `--watch`, no full-suite, no `pnpm turbo`. The validator
+  itself is exercised as a subprocess with a `--track-dir` argument pointing
+  at a temporary fixture directory under `os.tmpdir()`, never against the
+  real track artifacts.
+- **Fake-harness boundary:** per `test-strategy.md` §7, the matrix validator
+  is the only permitted artifact-only fake harness. Every assertion below
+  pins a concrete exit-code/output contract that Green must reproduce.
 
 ## Phase 4: Generate Docs & Doctor
 
