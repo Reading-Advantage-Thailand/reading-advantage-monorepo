@@ -92,7 +92,7 @@
 
 ## Phase 2: Test
 
-- [x] Task: Add contract tests for the AI adapter layer against the new API.
+- [x] Task: Add contract tests for the AI adapter layer against the new API. (`73480c0d`)
   - Red file: `packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts`
     (Task 1 `describe`: runs `runAIClientContract` against each
     provider; snapshots captured mock call args; asserts v2 call
@@ -113,7 +113,7 @@
   - Owner note: see `measure/tracks/ai_sdk_major_migration/test-strategy.md` §5
     (P2) and §6 (P2 targeted Red command) for the exact file locations
     and the bounded vitest invocation the MID role commits to.
-- [x] Task: Confirm tests fail against the current (pre-migration) baseline.
+- [x] Task: Confirm tests fail against the current (pre-migration) baseline. (`73480c0d`)
 
 ### Red-gate record (MID role)
 
@@ -180,7 +180,7 @@
     when Phase 3 upgrades package versions.
   - `phase-11-sdk-version-contract.test.ts` (7 failures): manifest
     version and lockfile issues owned by Phase 3 package upgrade task.
-- Green commit: `c9706ec5`
+- Green commit: `73480c0d`
 
 ## Phase 3: Implement
 
