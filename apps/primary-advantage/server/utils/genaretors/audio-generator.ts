@@ -5,7 +5,6 @@ import { generateObject } from "ai";
 import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModelLite } from "@/utils/google";
 import z from "zod";
-import ffmpeg from "fluent-ffmpeg";
 import {
   AUDIO_URL,
   AVAILABLE_VOICES,

@@ -13,7 +13,7 @@ import { generateObject } from "ai";
 import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModelAudio } from "@/utils/google";
 import z from "zod";
-import ffmpeg from "fluent-ffmpeg";
+import { probeDurationSeconds, concatMp3Files } from "@reading-advantage/utils";
 import { db, eq } from "@reading-advantage/db";
 import { articles } from "@reading-advantage/db/schema";
 
@@ -109,28 +109,7 @@ async function splitTextIntoChunks(
   return { sentences, chunks };
 }
 
-// Get the duration of an audio file
-function getAudioDuration(filePath: string): Promise<number> {
-  return new Promise((resolve, reject) => {
-    ffmpeg.ffprobe(filePath, (err, metadata) => {
-      if (err) return reject(err);
-      resolve(metadata.format.duration || 0);
-    });
-  });
-}
 
-// Function to merge multiple MP3 files
-function mergeAudioFiles(files: string[], outputPath: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    let command = ffmpeg();
-    files.forEach((file) => command.input(file));
-
-    command
-      .on("end", () => resolve())
-      .on("error", (err) => reject(err))
-      .mergeToFile(outputPath, `${process.cwd()}/data/audios`);
-  });
-}
 
 export async function generateAudio({
   passage,
@@ -212,13 +191,13 @@ export async function generateAudio({
 
       // Update the cumulative time with the duration of the current chunk
       // const chunkDuration = data.timepoints[data.timepoints.length - 1]?.timeSeconds || 0;
-      const chunkDuration = await getAudioDuration(localPath);
+      const chunkDuration = await probeDurationSeconds(localPath);
       cumulativeTime += chunkDuration;
     }
 
     // Combine MP3 files using FFmpeg
     const combinedAudioPath = `${process.cwd()}/data/audios/${articleId}.mp3`;
-    await mergeAudioFiles(audioPaths, combinedAudioPath);
+    await concatMp3Files(audioPaths, combinedAudioPath);
 
     // Cleanup
     audioPaths.forEach((p) => fs.unlinkSync(p));

@@ -112,12 +112,12 @@
   - [x] Align direct `next` and `eslint-config-next` declarations or document tested
     exceptions.
   - [x] Align React and React DOM to the selected React 19 patch.
-  - [~] Install, review the lockfile diff, and run all six app builds plus affected
+  - [x] Install, review the lockfile diff, and run all six app builds plus affected
     tests/check-types.
 - [x] Task: Batch B - align the Vitest family.
   - [x] Align `vitest`, `@vitest/ui`, and `@vitest/coverage-v8`.
-  - [~] Run every Vitest workspace test command.
-  - [~] Confirm the science-advantage Vitest peer conflict is gone.
+  - [x] Run every Vitest workspace test command.
+  - [x] Confirm the science-advantage Vitest peer conflict is gone.
 - [x] Task: Batch C - resolve `react-day-picker` / `date-fns`.
   - [x] Migrate reading-advantage calendar components to the selected compatible
     `react-day-picker` contract.
@@ -125,24 +125,24 @@
     available targeted Jest suites.
 - [x] Task: Batch D - remove deprecated stub type packages.
   - [x] Remove `@types/bcryptjs`, `@types/marked`, `@types/sharp`, and `@types/uuid`.
-  - [~] Run type-check/build gates for each affected app/package.
+  - [x] Run type-check/build gates for each affected app/package.
 - [x] Task: Batch E - replace unsupported `fluent-ffmpeg`.
   - [x] Add one shared internal FFmpeg process utility using argument arrays.
-  - [~] Refactor both audio generators to use the utility.
-  - [~] Remove `fluent-ffmpeg` and `@types/fluent-ffmpeg`.
+  - [x] Refactor both audio generators to use the utility.
+  - [x] Remove `fluent-ffmpeg` and `@types/fluent-ffmpeg`.
   - [x] Run focused unit tests and a local fixture-based FFmpeg smoke test.
 - [x] Task: Batch F - apply the reviewed patch allowlist.
   - [x] Apply only matrix-approved patch releases.
-  - [~] Review lockfile diff and run affected-workspace gates.
+  - [x] Review lockfile diff and run affected-workspace gates.
 - [x] Task: Batch G - apply the reviewed minor allowlist.
   - [x] Apply compatible tooling/runtime minors one bounded group at a time.
-  - [~] Run visual smoke validation before accepting Tailwind minors.
-  - [~] Move any failed or breaking candidate to the follow-up queue.
-- [~] Task: Batch H - deduplicate and freeze the resolved graph.
-  - [~] Run `pnpm dedupe`.
-  - [~] Review removed/changed peer resolutions and platform binaries.
-  - [~] Run `pnpm install --frozen-lockfile`.
-  - [~] Run `pnpm dedupe --check`; document intentional residual duplicates.
+  - [x] Run visual smoke validation before accepting Tailwind minors.
+  - [x] Move any failed or breaking candidate to the follow-up queue.
+- [x] Task: Batch H - deduplicate and freeze the resolved graph.
+  - [x] Run `pnpm dedupe`.
+  - [x] Review removed/changed peer resolutions and platform binaries.
+  - [x] Run `pnpm install --frozen-lockfile`.
+  - [x] Run `pnpm dedupe --check`; document intentional residual duplicates.
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
 ## Phase 1 Red Gate
