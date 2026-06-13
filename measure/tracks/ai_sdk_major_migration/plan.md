@@ -92,8 +92,69 @@
 
 ## Phase 2: Test
 
-- [ ] Task: Add contract tests for the AI adapter layer against the new API.
-- [ ] Task: Confirm tests fail against the current (pre-migration) baseline.
+- [~] Task: Add contract tests for the AI adapter layer against the new API.
+  - Red file: `packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts`
+    (Task 1 `describe`: runs `runAIClientContract` against each
+    provider; snapshots captured mock call args; asserts v2 call
+    shape — `maxOutputTokens` (v5) instead of `maxTokens` (v1),
+    canonical `generateImage` import path, no `maxTokens` reaching
+    the SDK).
+  - Red file extensions: v2-shape assertions appended to
+    `packages/ai/src/__tests__/phase-3-openai-provider.test.ts`,
+    `packages/ai/src/__tests__/phase-4-google-provider.test.ts`, and
+    `packages/ai/src/providers/openrouter.test.ts` (each provider
+    gets a per-provider `describe` block pinning its v5 call shape
+    on the `vi.mock`'d SDK).
+  - `phase-arch-no-direct-sdk.test.ts` is **not** owned by this
+    task — per `test-strategy.md` §7, it is intentionally Red until
+    *all* P3 app tasks land and is owned by the final P3 task
+    ("Migrate `apps/codecamp-advantage` chat route to adapter").
+    Created when that `[~]` task starts, not here.
+  - Owner note: see `measure/tracks/ai_sdk_major_migration/test-strategy.md` §5
+    (P2) and §6 (P2 targeted Red command) for the exact file locations
+    and the bounded vitest invocation the MID role commits to.
+- [~] Task: Confirm tests fail against the current (pre-migration) baseline.
+
+### Red-gate record (MID role)
+
+- Targeted Red command (test-strategy §6 P2):
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-v2-call-shape.test.ts src/__tests__/phase-arch-no-direct-sdk.test.ts src/providers/openai.test.ts src/providers/google.test.ts src/providers/openrouter.test.ts`
+- Targeted Red result at HEAD: **10 failed | 16 passed (26 total)**.
+  - `phase-11-sdk-v2-call-shape.test.ts`: 8 failed — 6
+    `maxTokens → maxOutputTokens` (cross-provider loop, two per
+    provider × 3 providers) + 2 `generateImage canonical v5
+    export` (OpenAI, Google). OpenRouter excluded from the image
+    contract because its `generateImage` throws `AIClientError`
+    (no image support); its image-shape contract lives in
+    `providers/openrouter.test.ts`.
+  - `providers/openrouter.test.ts`: 2 failed — `generateText` and
+    `generateObject` still spread `maxTokens` (v1) into the v5 SDK
+    call instead of `maxOutputTokens`.
+  - `providers/openai.test.ts` / `providers/google.test.ts`: all
+    pass (in-source provider tests were not extended in this
+    phase — extensions live in the matching `phase-3-*` /
+    `phase-4-*` files per test-strategy §5 P2).
+- Extended Red surface (per-provider v2-shape extensions per
+  test-strategy §5 P2 "extend `phase-3-*` and `phase-4-*`"):
+  - `phase-3-openai-provider.test.ts`: 2 failed — `generateText`
+    / `generateObject` v2-shape.
+  - `phase-4-google-provider.test.ts`: 2 failed — `generateText`
+    / `generateObject` v2-shape.
+  - Combined extended run (targeted + phase-3/4 extensions):
+    **14 failed | 45 passed | 2 skipped (61 total)**.
+- All failures are exactly the contract gaps Phase 3 must close:
+  the v1 keyword `maxTokens` leaks into v5 SDK calls and is
+  silently dropped, so token caps do not apply. Phase 3 must
+  rename the kwarg to `maxOutputTokens` (v5 keyword) and switch
+  the image import from the v1 alias `experimental_generateImage`
+  to the canonical v5 `generateImage`.
+- RED fail count and per-test reasons are also recorded in the
+  commit body of the Red-phase test commit.
+- `phase-arch-no-direct-sdk.test.ts` is **not** in the run because
+  it is intentionally Red until *all* P3 app tasks land and is
+  owned by the final P3 task (test-strategy §7); it does not
+  exist on disk yet and the targeted command picks it up
+  gracefully when the owning task lands.
 
 ## Phase 3: Implement
 

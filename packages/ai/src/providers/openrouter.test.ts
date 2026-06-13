@@ -155,4 +155,61 @@ describe("OpenRouterProvider", () => {
       );
     });
   });
+
+  // ─── v2/v5 call shape (Phase 2 Red) ──────────────────────────────────
+  //
+  // See `measure/tracks/ai_sdk_major_migration/test-strategy.md` §5
+  // (P2 — extend `providers/openrouter.test.ts` with v2-shape
+  // assertions; OpenRouter shares `createOpenAI` so v5 kwargs hit it
+  // too). The adapter was bumped to `ai@^5` in Phase 1, but
+  // `openrouter.ts` still spreads the v1 keyword `maxTokens` into the
+  // SDK call. v5 silently drops it. Phase 3 must rename the kwarg to
+  // `maxOutputTokens`.
+  describe("v2/v5 call shape (test-strategy §5 P2)", () => {
+    it("generateText forwards consumer maxTokens as maxOutputTokens (v5 renamed the kwarg)", async () => {
+      vi.mocked(generateText).mockResolvedValueOnce({
+        text: "v2 shape",
+        finishReason: "stop",
+        usage: { promptTokens: 1, completionTokens: 1 },
+      } as unknown as Awaited<ReturnType<typeof generateText>>);
+
+      const provider = new OpenRouterProvider({ apiKey: "test-key" });
+      await provider.generateText({ prompt: "x", maxTokens: 100 });
+
+      expect(generateText).toHaveBeenCalledWith(
+        expect.objectContaining({ maxOutputTokens: 100 }),
+      );
+      const callArgs = generateText.mock.calls[0]?.[0] as
+        | Record<string, unknown>
+        | undefined;
+      expect(
+        callArgs,
+        "OpenRouterProvider.generateText must not pass `maxTokens` to the v5 SDK; " +
+          "v5 silently drops the v1 keyword so token caps do not apply.",
+      ).not.toHaveProperty("maxTokens");
+    });
+
+    it("generateObject forwards consumer maxTokens as maxOutputTokens (v5 renamed the kwarg)", async () => {
+      vi.mocked(generateObject).mockResolvedValueOnce({
+        object: { answer: "ok" },
+        finishReason: "stop",
+        usage: { promptTokens: 1, completionTokens: 1 },
+      } as unknown as Awaited<ReturnType<typeof generateObject>>);
+
+      const provider = new OpenRouterProvider({ apiKey: "test-key" });
+      await provider.generateObject({
+        schema: testSchema,
+        prompt: "x",
+        maxTokens: 200,
+      });
+
+      expect(generateObject).toHaveBeenCalledWith(
+        expect.objectContaining({ maxOutputTokens: 200 }),
+      );
+      const callArgs = generateObject.mock.calls[0]?.[0] as
+        | Record<string, unknown>
+        | undefined;
+      expect(callArgs).not.toHaveProperty("maxTokens");
+    });
+  });
 });

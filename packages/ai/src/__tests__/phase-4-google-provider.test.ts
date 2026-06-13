@@ -345,6 +345,65 @@ describe("GoogleProvider — schema-validation boundary (test-strategy §3.3)", 
   });
 });
 
+// ─── v2/v5 call shape (Phase 2 Red) ──────────────────────────────────
+//
+// See `measure/tracks/ai_sdk_major_migration/test-strategy.md` §5
+// (P2 — extend `phase-4-*` with v2-shape assertions). The adapter was
+// bumped to `ai@^5` in Phase 1, but `google.ts` still spreads the v1
+// keyword `maxTokens` into the SDK call. v5 silently drops it. Phase 3
+// must rename the kwarg to `maxOutputTokens`. These assertions pin
+// the v5 contract on the `vi.mock`'d `generateText` / `generateObject`
+// calls.
+describe("GoogleProvider — v2/v5 call shape (test-strategy §5 P2)", () => {
+  it("generateText forwards consumer maxTokens as maxOutputTokens (v5 renamed the kwarg)", async () => {
+    wireSdkMocks(defaultContractFixtures);
+    mocks.generateText.mockResolvedValueOnce({
+      text: "v2 shape",
+      finishReason: "stop",
+      usage: { promptTokens: 1, completionTokens: 1 },
+    } as never);
+
+    const provider = new GoogleProvider({ apiKey: "test-key" });
+    await provider.generateText({ prompt: "x", maxTokens: 100 });
+
+    expect(mocks.generateText).toHaveBeenCalledWith(
+      expect.objectContaining({ maxOutputTokens: 100 }),
+    );
+    const callArgs = mocks.generateText.mock.calls[0]?.[0] as
+      | Record<string, unknown>
+      | undefined;
+    expect(
+      callArgs,
+      "GoogleProvider.generateText must not pass `maxTokens` to the v5 SDK; " +
+        "v5 silently drops the v1 keyword so token caps do not apply.",
+    ).not.toHaveProperty("maxTokens");
+  });
+
+  it("generateObject forwards consumer maxTokens as maxOutputTokens (v5 renamed the kwarg)", async () => {
+    wireSdkMocks(defaultContractFixtures);
+    mocks.generateObject.mockResolvedValueOnce({
+      object: { answer: "ok" },
+      finishReason: "stop",
+      usage: { promptTokens: 1, completionTokens: 1 },
+    } as never);
+
+    const provider = new GoogleProvider({ apiKey: "test-key" });
+    await provider.generateObject({
+      schema: testSchema,
+      prompt: "x",
+      maxTokens: 200,
+    });
+
+    expect(mocks.generateObject).toHaveBeenCalledWith(
+      expect.objectContaining({ maxOutputTokens: 200 }),
+    );
+    const callArgs = mocks.generateObject.mock.calls[0]?.[0] as
+      | Record<string, unknown>
+      | undefined;
+    expect(callArgs).not.toHaveProperty("maxTokens");
+  });
+});
+
 const itIfGeminiKey = it.skipIf(!process.env.GEMINI_API_KEY);
 
 describe("GoogleProvider — real-network integration (gated, test-strategy §1, §5.7)", () => {
