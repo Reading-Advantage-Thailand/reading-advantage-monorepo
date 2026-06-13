@@ -1776,23 +1776,33 @@ boundary for Batches A and B per `test-strategy.md` §7).
 
 ## Phase 4: Generate Docs & Doctor
 
-- [ ] Task: Create the major-migration backlog.
+> Red-phase evidence for every Phase 4 task below is captured by
+> `scripts/__tests__/phase4-contracts.test.mjs` (artifact-only deterministic
+> gate per `test-strategy.md` §1 and §7). The closeout live-behavior pair is
+> the aggregate `pnpm turbo run lint|test|check-types|build` plus the
+> re-run of `pnpm outdated`/`pnpm audit`; those commands are the Phase 4
+> acceptance gates per spec.md Acceptance Criteria #8–#10 and the live gate
+> that re-validates the Phase 3 per-batch gates at monorepo scope. See the
+> Phase 4 Red gate section at the bottom of this file for the exact command,
+> fail count, and SHA-recorded behavior.
+
+- [~] Task: Create the major-migration backlog.
   - [ ] Create dedicated track proposals for AI SDK, Zod 4, TypeScript 6, Jest 30,
     Zustand 5, Drizzle 0.45, and pnpm 11.
   - [ ] Cross-link Zod work to `zod_boundary_hardening_20260603`.
   - [ ] Record that Prisma 7 is rejected in favor of the primary-advantage
     Prisma-to-Drizzle migration.
-- [ ] Task: Update durable dependency documentation.
+- [~] Task: Update durable dependency documentation.
   - [ ] Update `measure/tech-stack.md` with selected shared versions.
   - [ ] Reconcile the React/React-Konva tech-debt row if resolved.
   - [ ] Add newly discovered unsupported/deferred dependencies to
     `measure/tech-debt.md` without exceeding its line limit.
-- [ ] Task: Refresh generated project facts.
+- [~] Task: Refresh generated project facts.
   - [ ] Run `measure/generate.sh` if present.
   - [ ] Run `measure/doctor.sh` if present and resolve dependency-related findings.
   - [ ] Update `graph.db` only if structural TypeScript files changed during
     deprecated-package replacement.
-- [ ] Task: Run final acceptance gates.
+- [~] Task: Run final acceptance gates.
   - [ ] `pnpm install --frozen-lockfile`
   - [ ] `pnpm dedupe --check`
   - [ ] `pnpm turbo run lint`
@@ -1801,5 +1811,136 @@ boundary for Batches A and B per `test-strategy.md` §7).
   - [ ] `pnpm turbo run build`
   - [ ] Re-run `pnpm outdated -r --format json` and `pnpm audit --json`; compare with
     the baseline and document unresolved items.
-- [ ] Task: Verify no unrelated files entered the track diff.
+- [~] Task: Verify no unrelated files entered the track diff.
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+
+## Phase 4 Red Gate
+
+> Red-phase evidence for every Phase 4 task above is captured by
+> `scripts/__tests__/phase4-contracts.test.mjs` (artifact-only deterministic
+> gate per `test-strategy.md` §1 and §7). The closeout live-behavior pair is
+> the aggregate `pnpm turbo run lint|test|check-types|build` plus the
+> re-run of `pnpm outdated`/`pnpm audit`; those commands are the Phase 4
+> acceptance gates per spec.md Acceptance Criteria #8–#10. This contract
+> test file is the artifact-only gate that lets CI gate the docs / doctor
+> deliverables without invoking the full turbo suite.
+
+- **Targeted Red command:**
+  `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase4-contracts.test.mjs`
+- **Result at HEAD (2026-06-13):** `12 fail / 0 pass / 12 total` in ~2.6s.
+  Every assertion fails because the corresponding Phase 4 artifact has
+  not yet been produced. The per-test breakdown:
+
+  | # | Test | Failure reason |
+  |---|---|---|
+  | 1 | `major-migration backlog exists with seven dedicated track proposals` | No track in `measure/tracks/` matches any of the tightened topic keywords (`@ai-sdk`, `ai sdk major`, `zod 4`, `typescript 6`, `jest 30`, `zustand 5`, `drizzle 0.45`, `pnpm 11`, etc.) — the seven backlog tracks do not yet exist. |
+  | 2 | `every backlog track has metadata.json with required fields` | Aggregated backlog set is empty (same root cause as #1), so the test fails the precondition `backlog.size >= 1`. |
+  | 3 | `every backlog track has a spec.md with a '# Specification' heading` | Aggregated backlog set is empty. |
+  | 4 | `every backlog track has a plan.md with a '# Plan' heading` | Aggregated backlog set is empty. |
+  | 5 | `the Zod 4 backlog track cross-links zod_boundary_hardening_20260603` | No Zod 4 track matches the keyword probes (`zod 4`, `zod v4`, `zod 3 to 4`). |
+  | 6 | `the major-migration backlog explicitly rejects Prisma 7` | No track (excluding `dependency_upgrade_hardening_20260607` itself) contains "Prisma 7" in its spec.md or plan.md. |
+  | 7 | `measure/tech-stack.md records the selected Next 16.2.9 patch line` | `tech-stack.md` does not yet mention Next 16.2.x. |
+  | 8 | `measure/tech-stack.md records the selected React 19.2.7 patch line` | `tech-stack.md` does not yet mention React 19.2.x. |
+  | 9 | `measure/tech-stack.md records the selected Vitest 4.1.8 patch line` | `tech-stack.md` does not yet mention Vitest 4.1.x. |
+  | 10 | `measure/tech-debt.md is at or below the 50-line policy ceiling` | `tech-debt.md` is 52 lines (over the 50-line curated-memory ceiling). |
+  | 11 | `the 2026-04-29 react-konva tech-debt row is reconciled` | The 2026-04-29 row is still `Status: Open` even though Batch A's React 19.2.7 upgrade (commit `70061422`) satisfies the peer. |
+  | 12 | `baseline-final/pnpm-outdated.json exists for the post-upgrade diff` | The `baseline-final/` directory has not yet been written (the post-upgrade `pnpm outdated`/`pnpm audit` re-runs have not been captured). |
+
+- **Why every Red is real, not a stale durable record:** every failing
+  assertion targets an artifact that must be produced by the Phase 4
+  Generator (backlog tracks, `tech-stack.md` edits, `tech-debt.md`
+  reconciliation, `baseline-final/` snapshots). The implementation
+  being asserted is the docs/doctor deliverable itself, not a
+  comment in a markdown file. After the Phase 4 Generator runs,
+  every assertion becomes true and the test exits 0; until then it
+  fails for the missing implementation.
+
+- **Boundedness:** single-file `node --test` invocation against the
+  Phase 4 contract test file only. Never spawns pnpm, vitest, jest,
+  or turbo against the real monorepo. The live-behavior pair is the
+  aggregate `pnpm turbo run lint|test|check-types|build` documented
+  in `upgrade-matrix.md` Batch Quality Gates (Batch H) and Phase 4
+  task 4 of this plan; those are the only legitimate full-suite
+  runs and they belong to the closeout gate.
+
+- **Fake-harness boundary:** per `test-strategy.md` §7, the matrix
+  validator and the manifest probe are the only previously-permitted
+  fake harnesses (artifact-only). The Phase 4 contract test file
+  extends the same pattern: every assertion reads files only and
+  never spawns package-management tooling. The Phase 4 closeout
+  live-behavior pair is the real aggregate gate, not a fake.
+
+### Phase 4 Red Gate — MID Re-Verification (2026-06-13)
+
+- **Re-verification context:** this section records the MID agent's
+  contract-gate work for Phase 4. Prior to the MID attempt the
+  Phase 4 plan was a `[ ]` skeleton; the contract test file did not
+  exist on disk. The MID attempt added the test file, the `[~]`
+  marks on every Phase 4 task, and the Phase 4 Red gate record.
+- **Files added (untracked → tracked in the Red commit):**
+  - `scripts/__tests__/phase4-contracts.test.mjs`
+- **Plan.md updates:** every Phase 4 task flipped from `[ ]` to
+  `[~]`; the Phase 4 Red Gate section (this block) added with
+  per-test Red command, fail count, and live-behavior pair
+  reference.
+- **No source code changed.** MID role touched only this plan.md
+  and the test file per `workflow.md` boundary.
+- **Tightening applied during this re-verification:** the first
+  Red run (timestamp 1781364814) reported 4 false-passing tests
+  because the backlog keyword `ai sdk` matched
+  `codecamp_exercise_repos_20260515` (which mentions "AI SDK" in
+  its AI tutor context) and `dependency_upgrade_hardening_20260607`
+  itself matched `zod 4`, `zod v3`, and `Prisma 7` in its own
+  spec/plan. The contract was tightened to:
+  (1) use the `@ai-sdk` package-name token instead of bare
+  `ai sdk` for the AI-SDK backlog keyword,
+  (2) use the more specific `zod 3 to 4` token in addition to
+  `zod 4`/`zod v4`,
+  (3) add `ts 6.0`/`tsc 6` for the TypeScript 6 backlog,
+  (4) add `drizzle v0.45` for the Drizzle backlog,
+  (5) add `pnpm v11` for the pnpm 11 backlog,
+  (6) accept both `# Specification`/`# Spec` for spec.md and
+  both `# Plan`/`# Implementation Plan` for plan.md (matches the
+  existing track convention),
+  (7) explicitly exclude `dependency_upgrade_hardening_20260607`
+  from the Prisma 7 backlog search so the test cannot pass by
+  pointing at this track's own spec/plan,
+  (8) require `backlog.size >= 1` as a precondition in the
+  schema/heading tests so they fail when no backlog exists
+  rather than vacuously pass.
+  After the tightening, the second Red run reports
+  `12 fail / 0 pass / 12 total` — every assertion fails because
+  the corresponding Phase 4 artifact is genuinely missing.
+
+### Phase 4 Red Gate — Aggregate
+
+- **Total Red signal:** 12 failing assertions across 1 bounded
+  `node --test` invocation (Backlog exists / metadata schema / spec
+  heading / plan heading / Zod 4 cross-link / Prisma 7 rejection /
+  tech-stack.md Next 16.2.9 / tech-stack.md React 19.2.7 /
+  tech-stack.md Vitest 4.1.8 / tech-debt.md line count /
+  react-konva reconciliation / baseline-final snapshots).
+- **Files Red committed:** `scripts/__tests__/phase4-contracts.test.mjs`
+  (new — 12-test contract suite covering all five Phase 4 tasks).
+  No source code was modified.
+- **No bypassed fake-harness rules:** the Phase 4 contract test
+  file is the artifact-only deterministic gate. The live-behavior
+  pair is the aggregate `pnpm turbo run lint|test|check-types|build`
+  documented in `upgrade-matrix.md` Batch Quality Gates (Batch H)
+  and Phase 4 task 4 of this plan. Every Red assertion above
+  pairs with one Phase 4 task whose closeout the Generator will
+  execute.
+- **Handoff:** Green owner is the Phase 4 Generator / Doctor
+  (Implementer or user). They must (a) create the seven backlog
+  tracks with metadata.json/spec.md/plan.md scaffolding and the
+  required cross-links (Zod 4 → `zod_boundary_hardening_20260603`;
+  Prisma 7 exclusion language in at least one backlog track),
+  (b) update `measure/tech-stack.md` with Next 16.2.9 / React
+  19.2.7 / Vitest 4.1.8, (c) reconcile `measure/tech-debt.md`
+  (mark the 2026-04-29 react-konva row Resolved and prune
+  resolved rows to bring the file under 50 lines), (d) write
+  the `baseline-final/` snapshots after re-running
+  `pnpm outdated`/`pnpm audit`, and (e) run the aggregate
+  `pnpm turbo run lint|test|check-types|build` closeout gate.
+  The Phase 3 User Manual Verification gate is the previous
+  remaining closeout gate.
