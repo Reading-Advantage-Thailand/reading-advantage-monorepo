@@ -297,6 +297,44 @@ single test file and never invokes a full workspace or repo-wide suite.
   Phase 4 aggregate closeout). No test in this Red can accidentally trigger
   the reading-advantage full Jest hang or a full pnpm turbo run.
 
+### Phase 2 Red Gate — MID Re-Verification (2026-06-13)
+
+- **Re-verification commit:** `579ccdec` (parent of the MID commit that
+  follows).
+- **Working tree state at MID start:** clean (no unrelated user work).
+- **Test files owned by this Red phase (paths under
+  `apps/reading-advantage/components/ui/__tests__/`,
+  `packages/utils/src/__tests__/`, and
+  `measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/`):**
+  all four test files exist on disk, were committed in `4ec52a0d`, and were
+  not modified by the previous attempt — they remain the canonical
+  Red-phase contract.
+- **Re-run of all four bounded Red commands at HEAD `579ccdec`:**
+  - Task 1 baseline-truth: `node --test …/baseline-truth.test.mjs` → **5
+    fail / 0 pass / 5 total** (real Red; `baseline-truth.md` ENOENT).
+  - Task 2 calendar: `pnpm --filter reading-advantage exec jest
+    --testPathPattern "components/ui/__tests__/calendar" --no-coverage` → **1
+    fail / 8 pass / 9 total** in ~11.6s (real Red; range-mode test fails
+    because v8 gridcell `aria-label` conflates weekday with day number,
+    triggering `getMultipleElementsFoundError` on `getByRole("gridcell",
+    { name: /5/ })`).
+  - Task 3 ffmpeg-process: `pnpm --filter @reading-advantage/utils exec
+    vitest run ffmpeg-process` → **1 failed test file, 0 tests collected**
+    (real Red; `Cannot find module '../ffmpeg-process'` at import time).
+  - Task 4 batch-gates: `node --test …/batch-gates.test.mjs` → **8 fail / 0
+    pass / 8 total** (real Red; `## Batch Quality Gates` section absent from
+    `upgrade-matrix.md`).
+- **Tightening needed:** none. Every Red is caused by a missing
+  implementation artifact (file, module, section, or v9 migration) and not
+  by a stale durable record. No contract change was required.
+- **No source-code changes:** MID role touched only Measure docs per
+  workflow.md boundary; no test file was modified in this re-verification
+  because the existing assertions remain the correct Red contract.
+- **Handoff:** Green owners are Phase 3 Batch C (calendar) and Phase 3
+  Batch E (ffmpeg-process); the two artifact deliverables (baseline-truth
+  artifact and Batch Quality Gates matrix section) are reconciled at Phase 4
+  closeout per `test-strategy.md` §7 and the Green Gate section below.
+
 ## Phase 2 Green Gate
 
 - **Green commit:** (Phase 3 Batch C / Batch E owners — see
