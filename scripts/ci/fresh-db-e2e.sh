@@ -34,7 +34,12 @@ for i in $(seq 1 30); do
   sleep 1
 done
 
+echo "==> Resetting reading_advantage database for a fresh migration run…"
+docker exec "${PG_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -c "DROP DATABASE IF EXISTS reading_advantage WITH (FORCE);"
+docker exec "${PG_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -c "CREATE DATABASE reading_advantage;"
+
 export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/reading_advantage"
+export DIRECT_DATABASE_URL="${DATABASE_URL}"
 
 echo "==> Running pnpm migrate (Drizzle)…"
 cd "${REPO_ROOT}"
