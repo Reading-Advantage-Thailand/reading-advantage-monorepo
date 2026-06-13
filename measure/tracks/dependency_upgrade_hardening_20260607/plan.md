@@ -277,6 +277,36 @@ single test file and never invokes a full workspace or repo-wide suite.
   Phase 4 aggregate closeout). No test in this Red can accidentally trigger
   the reading-advantage full Jest hang or a full pnpm turbo run.
 
+## Phase 2 Green Gate
+
+- **Green commit:** (Phase 3 Batch C / Batch E owners — see
+  `test-strategy.md` §7 and the `## Batch Quality Gates` section that Task 4
+  requires `upgrade-matrix.md` to expose. The Red proof above is owned by
+  Phase 3 Batch C (calendar → react-day-picker@9 contract) and Batch E
+  (shared FFmpeg utility + audio-generator refactor); Phase 4 owns the
+  baseline-truth.md and Batch Quality Gates closeout.)
+- **Targeted Green commands:**
+  - Task 1 baseline-truth: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/baseline-truth.test.mjs`
+    — exits 0 only after `baseline-truth.md` is created with the required
+    sections. Live-gate: Phase 4 aggregate `pnpm turbo run lint|test|check-types|build`
+    reconciles against the recorded baseline SHA.
+  - Task 2 calendar: `pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage`
+    — exits 0 only after Batch C migrates `calendar.tsx` to the v9 contract.
+    Bounded via `--testPathPattern`; never triggers the reading-advantage
+    full Jest hang.
+  - Task 3 ffmpeg-process: `pnpm --filter @reading-advantage/utils exec vitest run ffmpeg-process`
+    — exits 0 only after `packages/utils/src/ffmpeg-process.ts` ships with
+    `probeDurationSeconds` + `concatMp3Files` satisfying every argv contract.
+    Live-gate pair: Batch E's bounded local fixture-driven smoke runs
+    inside 30s.
+  - Task 4 batch-gates: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/batch-gates.test.mjs`
+    — exits 0 only after `upgrade-matrix.md` exposes the new
+    `## Batch Quality Gates` section with `### Batch A`..`### Batch H`
+    subsections. Live-gate owner: Phase 3 batch execution runs each
+    documented gate against the real workspaces.
+- **Result:** the four bounded commands above must each exit 0 in their
+  respective Phase 3 batches before Phase 4 closeout can run.
+
 ## Phase 4: Generate Docs & Doctor
 
 - [ ] Task: Create the major-migration backlog.
