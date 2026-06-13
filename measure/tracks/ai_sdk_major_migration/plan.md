@@ -2,17 +2,17 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [~] Task: Audit current `@ai-sdk/*` versions and identify breaking changes.
+- [x] Task: Audit current `@ai-sdk/*` versions and identify breaking changes.
   - Red file: `packages/ai/src/__tests__/phase-11-sdk-version-contract.test.ts`
     (Task 1 `describe`: manifest-major pins on root + `packages/ai` + 4 affected
     app manifests; lockfile single-major pins on `ai` / `@ai-sdk/openai` /
     `@ai-sdk/google`).
-- [~] Task: Map all AI adapter call sites in `packages/domain/src/ai/`.
+- [x] Task: Map all AI adapter call sites in `packages/domain/src/ai/`.
   - Red file: same `phase-11-sdk-version-contract.test.ts` (Task 2 `describe`:
     `get-recommendation.ts` keeps DI shape — no direct `@ai-sdk/*` import;
     the `packages/ai/src/__tests__/contract-suite.ts` chokepoint remains the
     provider surface).
-- [~] Task: Define version-alignment contracts for the new major.
+- [x] Task: Define version-alignment contracts for the new major.
   - Red file: same `phase-11-sdk-version-contract.test.ts` (Task 3 `describe`:
     "no v1 holdout in any manifest" + "no v1 entry in `pnpm-lock.yaml`" + the
     single `target major` constant that the rest of the track will read).
@@ -47,6 +47,31 @@
     against missing implementation).
 - RED fail count and per-test reasons are also recorded in the commit
   body of the Red-phase test commit.
+
+### Green-gate record (JR role)
+
+- Targeted Green command:
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-version-contract.test.ts`
+- Targeted Green result: **18 passed (18 total)**.
+- Green changes:
+  - Bumped `ai` from `^4.x` to `^5.0.95` in 4 manifests:
+    `packages/reading-advantage-scripts`, `apps/reading-advantage`,
+    `apps/primary-advantage`, `apps/codecamp-advantage`.
+  - Bumped `@ai-sdk/openai` from `^1.x` to `^2.0.68` in same 4 manifests.
+  - Bumped `@ai-sdk/google` from `^1.x` to `^2.0.36` in 3 manifests:
+    `apps/reading-advantage`, `apps/primary-advantage`,
+    `apps/codecamp-advantage`.
+  - Bumped `@ai-sdk/google-vertex` from `^2.x` to `^3.0.142` in 3 manifests:
+    `packages/reading-advantage-scripts`, `apps/reading-advantage`,
+    `apps/primary-advantage`. Required because `@ai-sdk/google-vertex@2.x`
+    has a hard dependency on `@ai-sdk/google@1.x`, which caused the
+    lockfile to resolve both v1 and v2 of `@ai-sdk/google`.
+  - Regenerated `pnpm-lock.yaml` via `pnpm install --no-frozen-lockfile`.
+- Broader gate: `pnpm turbo run test` — all packages pass; the
+  `@reading-advantage/db` ESM smoke test has a timing-related flake
+  (passes in isolation, fails under turbo load with 10s timeout). All
+  `@reading-advantage/ai` tests pass (137 passed, 3 skipped).
+- Green commit: `3278f869`
 
 ## Phase 2: Test
 

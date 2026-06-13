@@ -24,9 +24,9 @@
     "check:teacher": "tsx scripts/check-teacher-classrooms.ts"
   },
   "dependencies": {
-    "@ai-sdk/google": "^1.0.10",
-    "@ai-sdk/google-vertex": "^2.0.12",
-    "@ai-sdk/openai": "^1.0.8",
+    "@ai-sdk/google": "^2.0.36",
+    "@ai-sdk/google-vertex": "^3.0.142",
+    "@ai-sdk/openai": "^2.0.68",
     "@ai-sdk/provider-utils": "^2.0.5",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -74,7 +74,7 @@
     "@trpc/react-query": "^11.1.0",
     "@trpc/server": "^11.1.0",
 
-    "ai": "^4.0.22",
+    "ai": "^5.0.95",
     "animate.css": "^4.1.1",
     "axios": "^1.7.7",
     "base64-js": "^1.5.1",
