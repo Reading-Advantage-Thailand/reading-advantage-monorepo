@@ -15,6 +15,28 @@ steps:
       - "push"
       - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
 
+  - name: "node:20-slim"
+    id: "migrate-db"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "corepack enable && pnpm install --frozen-lockfile && pnpm --filter @reading-advantage/db migrate"
+    secretEnv:
+      - "DIRECT_DATABASE_URL"
+    env:
+      - "DATABASE_URL=$$DIRECT_DATABASE_URL"
+
+  - name: "node:20-slim"
+    id: "doctor-check"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "corepack enable && pnpm install --frozen-lockfile && pnpm --filter @reading-advantage/db doctor --check"
+    secretEnv:
+      - "DIRECT_DATABASE_URL"
+    env:
+      - "DATABASE_URL=$$DIRECT_DATABASE_URL"
+
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-cloudrun"
     args:
@@ -46,6 +68,11 @@ steps:
 
 images:
   - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
+
+secrets:
+  - kmsKeyName: "projects/$PROJECT_ID/locations/global/keyKeys/default/cryptoKeys/DIRECT_DATABASE_URL"
+    secretEnv:
+      DIRECT_DATABASE_URL: "latest"
 
 options:
   logging: CLOUD_LOGGING_ONLY
