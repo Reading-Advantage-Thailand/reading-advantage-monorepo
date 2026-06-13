@@ -45,7 +45,7 @@
  *     SDK silently drops the unrecognized kwarg, so a future Green
  *     rewrite of the providers is required for the tests to pass.
  */
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GoogleProvider } from "../providers/google.js";
 import { OpenAIProvider } from "../providers/openai.js";
@@ -174,6 +174,16 @@ const wireOpenRouterProviderMocks = wireOpenAIProviderMocks;
 
 // ─── Provider factories for the contract harness ─────────────────────
 
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+function latestCallArg(
+  mock: { mock: { calls: unknown[][] } }
+): Record<string, unknown> | undefined {
+  return mock.mock.calls.at(-1)?.[0] as Record<string, unknown> | undefined;
+}
+
 function makeOpenAIClient(fixtures: ContractFixtures): OpenAIProvider {
   wireOpenAIProviderMocks(fixtures);
   return new OpenAIProvider({ apiKey: "test-key-openai-v2" });
@@ -240,9 +250,7 @@ describe("v2/v5 call shape — every provider forwards maxTokens as maxOutputTok
       // Negative pin: v5 silently drops `maxTokens`, so a Red-phase
       // call currently contains the v1 keyword. After Phase 3 it
       // must not.
-      const callArgs = mocks.generateText.mock.calls[0]?.[0] as
-        | Record<string, unknown>
-        | undefined;
+      const callArgs = latestCallArg(mocks.generateText);
       expect(
         callArgs,
         `${label}.generateText must not pass \`maxTokens\` to the v5 SDK. ` +
@@ -275,9 +283,7 @@ describe("v2/v5 call shape — every provider forwards maxTokens as maxOutputTok
       expect(mocks.generateObject).toHaveBeenCalledWith(
         expect.objectContaining({ maxOutputTokens: 200 }),
       );
-      const callArgs = mocks.generateObject.mock.calls[0]?.[0] as
-        | Record<string, unknown>
-        | undefined;
+      const callArgs = latestCallArg(mocks.generateObject);
       expect(callArgs).not.toHaveProperty("maxTokens");
     });
   }

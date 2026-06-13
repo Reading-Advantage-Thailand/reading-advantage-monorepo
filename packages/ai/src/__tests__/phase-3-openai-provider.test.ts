@@ -46,7 +46,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import { AIClientError } from "../errors.js";
@@ -119,6 +119,16 @@ function makeOpenAIClient(fixtures: ContractFixtures): OpenAIProvider {
 }
 
 const testSchema = z.object({ answer: z.string() });
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+function latestCallArg(
+  mock: { mock: { calls: unknown[][] } }
+): Record<string, unknown> | undefined {
+  return mock.mock.calls.at(-1)?.[0] as Record<string, unknown> | undefined;
+}
 
 describe("OpenAIProvider — delegation to AI SDK (test-strategy §1 unit column)", () => {
   it("generateObject delegates to AI SDK generateObject with the configured model", async () => {
@@ -200,7 +210,7 @@ describe("OpenAIProvider — explicit apiKey plumbing (test-strategy §5.1, FR-3
       expect(mocks.createOpenAI).toHaveBeenCalledWith(
         expect.objectContaining({ apiKey: explicitKey })
       );
-      const callArgs = mocks.createOpenAI.mock.calls[0]?.[0] as
+      const callArgs = latestCallArg(mocks.createOpenAI) as
         | { apiKey?: string }
         | undefined;
       expect(callArgs?.apiKey).not.toBe(process.env.OPENAI_API_KEY);
@@ -216,9 +226,7 @@ describe("OpenAIProvider — explicit apiKey plumbing (test-strategy §5.1, FR-3
   it("omits `organization` from the SDK call when not configured (G-3 friendly)", () => {
     mocks.createOpenAI.mockClear();
     new OpenAIProvider({ apiKey: "test-key" });
-    const callArgs = mocks.createOpenAI.mock.calls[0]?.[0] as
-      | Record<string, unknown>
-      | undefined;
+    const callArgs = latestCallArg(mocks.createOpenAI);
     expect(callArgs).not.toHaveProperty("organization");
   });
 
@@ -321,9 +329,7 @@ describe("OpenAIProvider — v2/v5 call shape (test-strategy §5 P2)", () => {
     expect(mocks.generateText).toHaveBeenCalledWith(
       expect.objectContaining({ maxOutputTokens: 100 }),
     );
-    const callArgs = mocks.generateText.mock.calls[0]?.[0] as
-      | Record<string, unknown>
-      | undefined;
+    const callArgs = latestCallArg(mocks.generateText);
     expect(
       callArgs,
       "OpenAIProvider.generateText must not pass `maxTokens` to the v5 SDK; " +
@@ -349,9 +355,7 @@ describe("OpenAIProvider — v2/v5 call shape (test-strategy §5 P2)", () => {
     expect(mocks.generateObject).toHaveBeenCalledWith(
       expect.objectContaining({ maxOutputTokens: 200 }),
     );
-    const callArgs = mocks.generateObject.mock.calls[0]?.[0] as
-      | Record<string, unknown>
-      | undefined;
+    const callArgs = latestCallArg(mocks.generateObject);
     expect(callArgs).not.toHaveProperty("maxTokens");
   });
 });

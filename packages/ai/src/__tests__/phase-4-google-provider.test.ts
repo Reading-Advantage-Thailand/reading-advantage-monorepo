@@ -50,7 +50,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import { AIClientError } from "../errors.js";
@@ -123,6 +123,16 @@ function makeGoogleClient(fixtures: ContractFixtures): GoogleProvider {
 }
 
 const testSchema = z.object({ answer: z.string() });
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+function latestCallArg(
+  mock: { mock: { calls: unknown[][] } }
+): Record<string, unknown> | undefined {
+  return mock.mock.calls.at(-1)?.[0] as Record<string, unknown> | undefined;
+}
 
 describe("GoogleProvider — delegation to AI SDK (test-strategy §1 unit column)", () => {
   it("generateObject delegates to AI SDK generateObject with the configured model", async () => {
@@ -209,7 +219,7 @@ describe("GoogleProvider — explicit apiKey plumbing (test-strategy §5.1, FR-3
       expect(mocks.createGoogleGenerativeAI).toHaveBeenCalledWith(
         expect.objectContaining({ apiKey: explicitKey })
       );
-      const callArgs = mocks.createGoogleGenerativeAI.mock.calls[0]?.[0] as
+      const callArgs = latestCallArg(mocks.createGoogleGenerativeAI) as
         | { apiKey?: string }
         | undefined;
       expect(callArgs?.apiKey).not.toBe(process.env.GOOGLE_API_KEY);
@@ -297,9 +307,7 @@ describe("GoogleProvider — explicit apiKey plumbing (test-strategy §5.1, FR-3
   it("does not forward an `organization` option (Google has no org concept)", () => {
     mocks.createGoogleGenerativeAI.mockClear();
     new GoogleProvider({ apiKey: "test-key" });
-    const callArgs = mocks.createGoogleGenerativeAI.mock.calls[0]?.[0] as
-      | Record<string, unknown>
-      | undefined;
+    const callArgs = latestCallArg(mocks.createGoogleGenerativeAI);
     expect(callArgs).not.toHaveProperty("organization");
   });
 });
@@ -369,9 +377,7 @@ describe("GoogleProvider — v2/v5 call shape (test-strategy §5 P2)", () => {
     expect(mocks.generateText).toHaveBeenCalledWith(
       expect.objectContaining({ maxOutputTokens: 100 }),
     );
-    const callArgs = mocks.generateText.mock.calls[0]?.[0] as
-      | Record<string, unknown>
-      | undefined;
+    const callArgs = latestCallArg(mocks.generateText);
     expect(
       callArgs,
       "GoogleProvider.generateText must not pass `maxTokens` to the v5 SDK; " +
@@ -397,9 +403,7 @@ describe("GoogleProvider — v2/v5 call shape (test-strategy §5 P2)", () => {
     expect(mocks.generateObject).toHaveBeenCalledWith(
       expect.objectContaining({ maxOutputTokens: 200 }),
     );
-    const callArgs = mocks.generateObject.mock.calls[0]?.[0] as
-      | Record<string, unknown>
-      | undefined;
+    const callArgs = latestCallArg(mocks.generateObject);
     expect(callArgs).not.toHaveProperty("maxTokens");
   });
 });

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { OpenRouterProvider } from "./openrouter.js";
 
@@ -19,6 +19,16 @@ vi.mock("@ai-sdk/openai", () => ({
 import { generateObject, generateText } from "ai";
 
 const testSchema = z.object({ answer: z.string() });
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+function latestCallArg(
+  mock: { mock: { calls: unknown[][] } }
+): Record<string, unknown> | undefined {
+  return mock.mock.calls.at(-1)?.[0] as Record<string, unknown> | undefined;
+}
 
 describe("OpenRouterProvider", () => {
   describe("generateObject", () => {
@@ -104,7 +114,7 @@ describe("OpenRouterProvider", () => {
       const mockCreateOpenAI = vi.mocked(
         (await import("@ai-sdk/openai")).createOpenAI
       );
-      const clientFactory = mockCreateOpenAI.mock.results[0]?.value;
+      const clientFactory = mockCreateOpenAI.mock.results.at(-1)?.value;
       expect(clientFactory).toBeDefined();
       // The model ID passed to the SDK should have the openrouter/ prefix stripped
       expect(generateObject).toHaveBeenCalledWith(
@@ -179,9 +189,7 @@ describe("OpenRouterProvider", () => {
       expect(generateText).toHaveBeenCalledWith(
         expect.objectContaining({ maxOutputTokens: 100 }),
       );
-      const callArgs = generateText.mock.calls[0]?.[0] as
-        | Record<string, unknown>
-        | undefined;
+      const callArgs = latestCallArg(generateText);
       expect(
         callArgs,
         "OpenRouterProvider.generateText must not pass `maxTokens` to the v5 SDK; " +
@@ -206,9 +214,7 @@ describe("OpenRouterProvider", () => {
       expect(generateObject).toHaveBeenCalledWith(
         expect.objectContaining({ maxOutputTokens: 200 }),
       );
-      const callArgs = generateObject.mock.calls[0]?.[0] as
-        | Record<string, unknown>
-        | undefined;
+      const callArgs = latestCallArg(generateObject);
       expect(callArgs).not.toHaveProperty("maxTokens");
     });
   });
