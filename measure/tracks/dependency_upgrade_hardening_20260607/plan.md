@@ -107,42 +107,42 @@
 
 ## Phase 3: Implement
 
-- [ ] Task: Batch A - repair the vulnerable framework override.
-  - [ ] Upgrade root Next override to the selected patched Next 16 release.
-  - [ ] Align direct `next` and `eslint-config-next` declarations or document tested
+- [~] Task: Batch A - repair the vulnerable framework override.
+  - [~] Upgrade root Next override to the selected patched Next 16 release.
+  - [~] Align direct `next` and `eslint-config-next` declarations or document tested
     exceptions.
-  - [ ] Align React and React DOM to the selected React 19 patch.
-  - [ ] Install, review the lockfile diff, and run all six app builds plus affected
+  - [~] Align React and React DOM to the selected React 19 patch.
+  - [~] Install, review the lockfile diff, and run all six app builds plus affected
     tests/check-types.
-- [ ] Task: Batch B - align the Vitest family.
-  - [ ] Align `vitest`, `@vitest/ui`, and `@vitest/coverage-v8`.
-  - [ ] Run every Vitest workspace test command.
-  - [ ] Confirm the science-advantage Vitest peer conflict is gone.
-- [ ] Task: Batch C - resolve `react-day-picker` / `date-fns`.
-  - [ ] Migrate reading-advantage calendar components to the selected compatible
+- [~] Task: Batch B - align the Vitest family.
+  - [~] Align `vitest`, `@vitest/ui`, and `@vitest/coverage-v8`.
+  - [~] Run every Vitest workspace test command.
+  - [~] Confirm the science-advantage Vitest peer conflict is gone.
+- [~] Task: Batch C - resolve `react-day-picker` / `date-fns`.
+  - [~] Migrate reading-advantage calendar components to the selected compatible
     `react-day-picker` contract.
-  - [ ] Run focused calendar tests, reading-advantage lint/check-types/build, and
+  - [~] Run focused calendar tests, reading-advantage lint/check-types/build, and
     available targeted Jest suites.
-- [ ] Task: Batch D - remove deprecated stub type packages.
-  - [ ] Remove `@types/bcryptjs`, `@types/marked`, `@types/sharp`, and `@types/uuid`.
-  - [ ] Run type-check/build gates for each affected app/package.
-- [ ] Task: Batch E - replace unsupported `fluent-ffmpeg`.
-  - [ ] Add one shared internal FFmpeg process utility using argument arrays.
-  - [ ] Refactor both audio generators to use the utility.
-  - [ ] Remove `fluent-ffmpeg` and `@types/fluent-ffmpeg`.
-  - [ ] Run focused unit tests and a local fixture-based FFmpeg smoke test.
-- [ ] Task: Batch F - apply the reviewed patch allowlist.
-  - [ ] Apply only matrix-approved patch releases.
-  - [ ] Review lockfile diff and run affected-workspace gates.
-- [ ] Task: Batch G - apply the reviewed minor allowlist.
-  - [ ] Apply compatible tooling/runtime minors one bounded group at a time.
-  - [ ] Run visual smoke validation before accepting Tailwind minors.
-  - [ ] Move any failed or breaking candidate to the follow-up queue.
-- [ ] Task: Batch H - deduplicate and freeze the resolved graph.
-  - [ ] Run `pnpm dedupe`.
-  - [ ] Review removed/changed peer resolutions and platform binaries.
-  - [ ] Run `pnpm install --frozen-lockfile`.
-  - [ ] Run `pnpm dedupe --check`; document intentional residual duplicates.
+- [~] Task: Batch D - remove deprecated stub type packages.
+  - [~] Remove `@types/bcryptjs`, `@types/marked`, `@types/sharp`, and `@types/uuid`.
+  - [~] Run type-check/build gates for each affected app/package.
+- [~] Task: Batch E - replace unsupported `fluent-ffmpeg`.
+  - [~] Add one shared internal FFmpeg process utility using argument arrays.
+  - [~] Refactor both audio generators to use the utility.
+  - [~] Remove `fluent-ffmpeg` and `@types/fluent-ffmpeg`.
+  - [~] Run focused unit tests and a local fixture-based FFmpeg smoke test.
+- [~] Task: Batch F - apply the reviewed patch allowlist.
+  - [~] Apply only matrix-approved patch releases.
+  - [~] Review lockfile diff and run affected-workspace gates.
+- [~] Task: Batch G - apply the reviewed minor allowlist.
+  - [~] Apply compatible tooling/runtime minors one bounded group at a time.
+  - [~] Run visual smoke validation before accepting Tailwind minors.
+  - [~] Move any failed or breaking candidate to the follow-up queue.
+- [~] Task: Batch H - deduplicate and freeze the resolved graph.
+  - [~] Run `pnpm dedupe`.
+  - [~] Review removed/changed peer resolutions and platform binaries.
+  - [~] Run `pnpm install --frozen-lockfile`.
+  - [~] Run `pnpm dedupe --check`; document intentional residual duplicates.
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
 ## Phase 1 Red Gate
@@ -385,6 +385,119 @@ single test file and never invokes a full workspace or repo-wide suite.
 - **Result:** Task 1 and Task 4 artifact gates are green (13 pass / 0 fail).
   Task 2 (calendar) and Task 3 (ffmpeg-process) remain intentionally red,
   owned by Phase 3 Batch C and Batch E respectively.
+
+## Phase 3 Red Gate
+
+> Red-phase evidence for every Phase 3 batch is captured by the
+> `scripts/__tests__/phase3-contracts.test.mjs` contract file plus
+> the existing Phase 2 calendar and ffmpeg Red gates. The targeted
+> Red command for the new contract file is
+> `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase3-contracts.test.mjs`.
+> The calendar and ffmpeg Red commands remain
+> `pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage`
+> and
+> `pnpm --filter @reading-advantage/utils exec vitest run ffmpeg-process`
+> respectively. See [Phase 3 Red gate aggregate](#phase-3-red-gate-aggregate)
+> for the per-batch breakdown, fail count, and re-verification at HEAD.
+
+### Manifest probe (Batches A, B contract gate)
+
+A new script `scripts/manifest-probe.mjs` implements the
+command-construction contract gate described in `test-strategy.md` §2
+and §7. The probe reads the root `package.json` `pnpm.overrides` plus
+every workspace `apps/*/package.json` and `packages/*/package.json`,
+normalises version specifiers (`^`, `~`, `>=`, `=`, `v`, bare), and
+compares them against an expectations JSON supplied via
+`--expectations <path>`. Exits 0 on full alignment, 1 on drift.
+
+The probe is a pure manifest-reading tool: it never spawns `pnpm`,
+`vitest`, `jest`, or `turbo`, and never reads the lockfile. This
+keeps it cheap (sub-second) and deterministic for CI use.
+
+### Phase 3 Red gate — per-batch breakdown
+
+| Batch | Targeted Red Command | Result at HEAD (2026-06-13) | Type | Live-Behavior Pair |
+|---|---|---|---|---|
+| A (next override) | `node --test …/phase3-contracts.test.mjs` → "Batch A Red: root pnpm.overrides declares next at the selected patched release" | **1 fail** (asserted `16.2.9`, observed `16.0.0`) | Manifest assertion | Batch A quality gates: six app `pnpm --filter <app> build` + `check-types` per `upgrade-matrix.md` Batch A subsection |
+| A (react override) | Same → "Batch A Red: root pnpm.overrides declares react and react-dom at 19.2.7" | **1 fail** (asserted `19.2.7`, observed `19.2.5`) | Manifest assertion | Same as above |
+| A (probe) | Same → "Batch A Red: manifest probe exits 0 at HEAD against Batch A expectations" | **1 fail** (probe exited 1; drift on next/react/react-dom/@next/mdx) | Command-construction | Same as above |
+| B (vitest override) | Same → "Batch B Red: root pnpm.overrides declares vitest at 4.1.8" | **1 fail** (asserted `4.1.8`, observed `4.1.5`) | Manifest assertion | Batch B quality gates: every Vitest workspace `pnpm --filter <app> test` per `upgrade-matrix.md` Batch B subsection |
+| B (probe) | Same → "Batch B Red: manifest probe exits 0 at HEAD against Batch B expectations" | **1 fail** (probe exited 1; drift on vitest/@vitest/ui/@vitest/coverage-v8) | Command-construction | Same as above |
+| C (calendar) | `pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage` | **1 fail / 8 pass / 9 total** in ~28s (re-verified 2026-06-13) | Live behavior (RTL render + interaction) | Batch C quality gates: focused calendar Jest + reading-advantage `check-types` + `build` per `upgrade-matrix.md` Batch C subsection |
+| D (deprecated types) | `node --test …/phase3-contracts.test.mjs` → "Batch D Red: deprecated stub type packages are absent from every workspace package.json" | **1 fail** (7 offender declarations: @types/bcryptjs×4, @types/sharp×1, @types/uuid×1, @types/marked×1) | Manifest assertion | Batch D quality gates: `check-types` for primary, www, reading, api, auth per `upgrade-matrix.md` Batch D subsection |
+| E (ffmpeg utility) | `pnpm --filter @reading-advantage/utils exec vitest run ffmpeg-process` | **1 failed test file / 0 tests collected** in ~1.3s (re-verified 2026-06-13; `Error: Cannot find module '/src/ffmpeg-process'` at module-load time) | Live behavior (module-load Red) | Batch E quality gates: vitest unit tests + `node packages/utils/scripts/ffmpeg-smoke.mjs` bounded local fixture smoke per `upgrade-matrix.md` Batch E subsection |
+| F (patch allowlist) | `node --test …/phase3-contracts.test.mjs` → "Batch F Red: postcss is at the matrix-approved patch release across all affected workspaces" | **1 fail** (3 offender declarations: postcss at `^8.5.3`, `^8`, `^8`) | Manifest assertion | Batch F quality gates: full `lint+test+check-types+build` for all six apps per `upgrade-matrix.md` Batch F subsection |
+| G (minor allowlist) | `node --test …/phase3-contracts.test.mjs` → "Batch G Red: @playwright/test is at the matrix-approved minor release across all affected workspaces" | **1 fail** (4 offender declarations: @playwright/test at `^1.51.1`, `^1.59.1`×3) | Manifest assertion | Batch G quality gates: six app `build` + visual smoke for tailwindcss minors per `upgrade-matrix.md` Batch G subsection |
+| H (dedupe) | n/a — proof owned by per-batch gates | n/a (per-batch `pnpm install --frozen-lockfile` and `pnpm dedupe --check` are the only legitimate gates; the contract test file does not assert lockfile dedup state because parsing dedup state without invoking pnpm is brittle) | Command-construction | Batch H quality gates: `pnpm install --frozen-lockfile` and `pnpm dedupe --check` per `upgrade-matrix.md` Batch H subsection |
+
+**Why every Red is real, not a stale durable record:** each failing
+test asserts the post-upgrade expected state of a manifest entry
+that the matrix (`upgrade-matrix.md`) explicitly classifies as a
+target for the corresponding batch. The implementation being asserted
+is the manifest edit (e.g. upgrading `pnpm.overrides.next` from
+`16.0.0` to `16.2.9`), not a comment in a markdown file. After the
+batch lands, the assertion becomes true and the test exits 0; until
+then it fails for the missing implementation.
+
+**Pairing with live-behavior proof per AGENTS.md guidance:** the
+manifest assertions above are paired with the per-batch quality
+gates in `upgrade-matrix.md` Batch Quality Gates (sixth column). The
+Batch H live-behavior pair is `pnpm install --frozen-lockfile` and
+`pnpm dedupe --check` (no `unscoped()`-style escape hatch is needed;
+the `manifest-probe.mjs` script is the only permitted fake-harness
+boundary for Batches A and B per `test-strategy.md` §7).
+
+### Phase 3 Red Gate — Aggregate
+
+- **Targeted Red commands (3 bounded commands, no full suite):**
+  1. `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase3-contracts.test.mjs`
+     → **8 fail / 5 pass / 13 total** in ~2.0s (5 Green = probe
+     correctness and lockfile existence; 8 Red = Batches A, B, D, F, G
+     contract gaps).
+  2. `pnpm --filter reading-advantage exec jest --testPathPattern
+     "components/ui/__tests__/calendar" --no-coverage` → **1 fail /
+     8 pass / 9 total** in ~28.3s (range-mode gridcell failure; same
+     behavior as the `579ccdec` and `8f7870e1` re-verifications).
+  3. `pnpm --filter @reading-advantage/utils exec vitest run
+     ffmpeg-process` → **1 failed test file / 0 tests collected** in
+     ~1.3s (`Cannot find module '/src/ffmpeg-process'` at module-load
+     time; same as prior re-verifications).
+- **Total Red signal:** 10 failing tests + 1 failing test file across
+  3 bounded commands (5 stub-type offenders + 1 postcss offender + 1
+  playwright offender + 1 next override + 2 react overrides + 1
+  vitest override + 1 vitest-probe + 1 next/probe + 1 react/probe =
+  10 failing tests + 1 failing test file).
+- **Files Red committed:** `scripts/manifest-probe.mjs` (new —
+  command-construction contract gate) and
+  `scripts/__tests__/phase3-contracts.test.mjs` (new — 13-test
+  contract suite covering all six manifest-driven batches and the
+  probe API). No source code was modified.
+- **Boundedness:** every Red command is single-file scoped. The
+  reading-advantage full Jest suite, the full pnpm turbo run, and
+  any unbounded smoke are reserved for Phase 4 closeout per
+  `test-strategy.md` §1, §5, and §7.
+- **No bypassed fake-harness rules:** the manifest probe is the
+  only permitted fake-harness boundary (artifact-only, per
+  `test-strategy.md` §7). Every other Red is a live-behavior or
+  manifest assertion that pairs with a per-batch quality gate
+  documented in `upgrade-matrix.md`.
+
+### Phase 3 Red Gate — MID Re-Verification (2026-06-13)
+
+- **Re-verification context:** this section records the MID agent's
+  contract-gate work for the Phase 3 sub-batches. Prior to the MID
+  attempt the Phase 3 plan was a `[ ]` skeleton; the probe and its
+  tests did not exist on disk. The MID attempt added the probe, the
+  tests, and the `[~]` marks on every Phase 3 sub-task.
+- **Files added (untracked → tracked in the Red commit):**
+  - `scripts/manifest-probe.mjs`
+  - `scripts/__tests__/phase3-contracts.test.mjs`
+- **Plan.md updates:** every Phase 3 task and sub-task flipped from
+  `[ ]` to `[~]`; the Phase 3 Red Gate section (this block) added
+  with per-batch Red command, fail count, and live-behavior pair
+  reference.
+- **No source code changed.** The MID role touched only test files
+  and Measure docs per `workflow.md` boundary.
 
 ## Phase 4: Generate Docs & Doctor
 
