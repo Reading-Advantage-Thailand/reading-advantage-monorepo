@@ -242,7 +242,7 @@
 
 - **Targeted Red command** (test-strategy §6 P3 row, scoped to the
   files this Red commit creates/owns):
-  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-version-contract.test.ts src/__tests__/phase-arch-no-direct-sdk.test.ts`
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-version-contract.test.ts src/__tests__/phase-stream-text-contract.test.ts src/__tests__/phase-arch-no-direct-sdk.test.ts`
 - **Existing P1 Red at HEAD (Task 1) — `phase-11-sdk-version-contract.test.ts`**:
   - The P1 adversarial audit extended the contract to cover every direct
     `@ai-sdk/*` package in affected manifests and the lockfile. At
@@ -295,6 +295,55 @@
   2. Migrate every direct `@ai-sdk/*` / `"ai"` import in
      `apps/**/source` to `@reading-advantage/ai` (or to a
      `getAIClient()` factory) → closes the new architecture guard.
+- **New P3 Red at HEAD (Task 2) — `phase-stream-text-contract.test.ts`**:
+  - Created in this Red commit. Pins three contracts Phase 3
+    Task 2 must close (per test-strategy §3 item 4, the JR chose
+    Path A — grow `AIClient.streamText` rather than log a
+    tech-debt entry):
+    1. **Interface surface**: `AIClient.streamText` is declared
+       on the interface and returns a `StreamTextResult` with
+       `textStream` (AsyncIterable<string>) + `toDataStreamResponse()`.
+    2. **MockProvider**: implements `streamText`, records the call
+       on `MockProvider.calls`, and yields the configured string
+       back through `textStream`.
+    3. **v5 call shape** (mirrors the v2-shape contract from P2):
+       `OpenAIProvider`, `GoogleProvider`, `OpenRouterProvider`
+       each forward consumer `maxTokens` to the SDK as
+       `maxOutputTokens` and must NOT pass `maxTokens` (v1 kwarg)
+       to the v5 SDK.
+    4. **Adapter barrel**: `packages/ai/src/index.ts` re-exports
+       `StreamTextInput` from `./types.js`.
+  - At HEAD (`ebcc9719`):
+    - `packages/ai/src/types.ts` does NOT declare `streamText`,
+      `StreamTextInput`, or `StreamTextResult` → the
+      `AIClient.streamText is declared on the interface` runtime
+      assert fires with `"undefined"`, and the
+      `expect(typeof client.streamText).toBe("function")`
+      assertion fires with the documented message.
+    - `MockProvider` has no `streamText` method → the
+      `provider.calls` assert and the stream drain fail.
+    - The three real providers do NOT import `streamText` from
+      `"ai"` → `mocks.streamText` has zero captured calls, so
+      `toHaveBeenCalledTimes(1)` fires on all three.
+    - `packages/ai/src/index.ts` does NOT re-export
+      `StreamTextInput` → the type-export-block regex assertion
+      fires.
+  - **3 failing `it` blocks** across the four contracts above
+    (the type-export-block check lives in the third `describe`
+    and produces exactly one failure). Combined with the P1
+    Task 1 contract Red (~10 failed) and the architecture
+    guard Red (1 failed), the targeted vitest invocation is
+    expected to fail **~14 tests** at HEAD, all for the
+    expected missing behaviour (no streamText in interface, no
+    streamText in providers, no barrel re-export). Verification
+    by static grep + `pnpm check-types` will fail with "Property
+    'streamText' does not exist on type 'AIClient'" because the
+    interface method is missing.
+  - **Toolchain note**: same as the P1 / P2 / arch-guard
+    attempts — the local shell lacks `node` / `pnpm` / `vitest`,
+    so the fail count is asserted by reading the test files +
+    the source files + `git show HEAD:...`, not by executing
+    `vitest`. JR runs the live command.
 
 ## Phase 4: Validate & Close
 
