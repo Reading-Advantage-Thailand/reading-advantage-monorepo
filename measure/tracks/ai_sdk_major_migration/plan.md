@@ -2,17 +2,17 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [x] Task: Audit current `@ai-sdk/*` versions and identify breaking changes.
+- [x] Task: Audit current `@ai-sdk/*` versions and identify breaking changes. (`43c31318`)
   - Red file: `packages/ai/src/__tests__/phase-11-sdk-version-contract.test.ts`
     (Task 1 `describe`: manifest-major pins on root + `packages/ai` + 4 affected
     app manifests; lockfile single-major pins on `ai` / `@ai-sdk/openai` /
     `@ai-sdk/google`).
-- [x] Task: Map all AI adapter call sites in `packages/domain/src/ai/`.
+- [x] Task: Map all AI adapter call sites in `packages/domain/src/ai/`. (`43c31318`)
   - Red file: same `phase-11-sdk-version-contract.test.ts` (Task 2 `describe`:
     `get-recommendation.ts` keeps DI shape — no direct `@ai-sdk/*` import;
     the `packages/ai/src/__tests__/contract-suite.ts` chokepoint remains the
     provider surface).
-- [x] Task: Define version-alignment contracts for the new major.
+- [x] Task: Define version-alignment contracts for the new major. (`43c31318`)
   - Red file: same `phase-11-sdk-version-contract.test.ts` (Task 3 `describe`:
     "no v1 holdout in any manifest" + "no v1 entry in `pnpm-lock.yaml`" + the
     single `target major` constant that the rest of the track will read).
