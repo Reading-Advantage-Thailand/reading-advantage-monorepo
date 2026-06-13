@@ -335,6 +335,25 @@ single test file and never invokes a full workspace or repo-wide suite.
   artifact and Batch Quality Gates matrix section) are reconciled at Phase 4
   closeout per `test-strategy.md` §7 and the Green Gate section below.
 
+### Phase 2 Red Gate — MID Second Re-Verification (2026-06-13)
+
+- **Re-verification commit:** `8f7870e1` (HEAD at the start of this re-verification).
+- **Working tree state at MID start:** clean (no unrelated user work; `git status --porcelain` produced no output; `git ls-files --others --exclude-standard` produced no output).
+- **HEAD line for this re-verification:** `8f7870e1 measure(plan): record Phase 2 Red Gate MID re-verification at HEAD 579ccdec` — the prior MID re-verification. No commits or working-tree changes occurred between `579ccdec` and the start of this second re-verification, so the Red contract is unchanged.
+- **Graph freshness:** `graph.db` mtime is 2026-06-13 07:42 (today), 2,109 nodes / 3,030 edges / 284 files; `build-graph stats` reports zero hits for `ffmpeg`, `ffprobe`, `fluent-ffmpeg`, `DayPicker`, or `Calendar` — confirms the FFmpeg utility and calendar surfaces are still graph-blind per `test-strategy.md` §6 and that no source has been added behind the Red test files.
+- **Re-run of all four bounded Red commands at HEAD `8f7870e1` (this verification):**
+  - Task 1 baseline-truth: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/baseline-truth.test.mjs` → **5 fail / 0 pass / 5 total** (real Red; `baseline-truth.md` ENOENT at
+    `measure/tracks/dependency_upgrade_hardening_20260607/baseline-truth.md`).
+  - Task 2 calendar: `pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage` → **1 fail / 8 pass / 9 total** in 13.265s (real Red; same range-mode failure as the prior re-verification — v8's gridcell `aria-label` is `"Sunday, May 31st, 2026"`, which collides on `/5/` and triggers `getMultipleElementsFoundError` from RTL on line 129).
+  - Task 3 ffmpeg-process: `pnpm --filter @reading-advantage/utils exec vitest run ffmpeg-process` → **1 failed (1) test file, 0 tests collected** in 1.21s (real Red; `Error: Cannot find module '/src/ffmpeg-process'` at
+    `packages/utils/src/__tests__/ffmpeg-process.test.ts:133:1`, exactly the Red-by-design module-load failure).
+  - Task 4 batch-gates: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/batch-gates.test.mjs` → **8 fail / 0 pass / 8 total** (real Red; zero `^## Batch Quality Gates` matches in
+    `upgrade-matrix.md` — confirmed via `grep -c "^## Batch Quality Gates" upgrade-matrix.md` returning `0`).
+- **Aggregate Red signal confirmed:** 14 failing tests + 1 failing test file across 4 bounded commands (5 baseline-truth + 8 batch-gates + 1 calendar range-mode + 1 ffmpeg-process suite-level = 14 failing tests + 1 failing test file). Identical to the `579ccdec` re-verification; no further tightening of the contract was required because no implementation artifact (file, module, section, or v9 migration) has been added since.
+- **Tightening needed:** none. Every Red is caused by a missing implementation artifact (file, module, section, or v9 migration) and not by a stale durable record. No contract change was required.
+- **No source-code changes:** MID role touched only Measure docs per `workflow.md` boundary; no test file was modified in this re-verification because the existing assertions remain the correct Red contract.
+- **Handoff:** Green owners remain Phase 3 Batch C (calendar) and Phase 3 Batch E (ffmpeg-process); the two artifact deliverables (baseline-truth artifact and Batch Quality Gates matrix section) are reconciled at Phase 4 closeout per `test-strategy.md` §7 and the Green Gate section below. The Red contract is now triple-locked: (1) tests committed in `4ec52a0d`, (2) re-verified at `579ccdec` and recorded in `8f7870e1`, (3) re-re-verified at `8f7870e1` and recorded in this section.
+
 ## Phase 2 Green Gate
 
 - **Green commit:** (Phase 3 Batch C / Batch E owners — see
