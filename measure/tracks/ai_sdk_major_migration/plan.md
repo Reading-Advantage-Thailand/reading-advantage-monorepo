@@ -92,7 +92,7 @@
 
 ## Phase 2: Test
 
-- [~] Task: Add contract tests for the AI adapter layer against the new API.
+- [x] Task: Add contract tests for the AI adapter layer against the new API.
   - Red file: `packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts`
     (Task 1 `describe`: runs `runAIClientContract` against each
     provider; snapshots captured mock call args; asserts v2 call
@@ -113,7 +113,7 @@
   - Owner note: see `measure/tracks/ai_sdk_major_migration/test-strategy.md` §5
     (P2) and §6 (P2 targeted Red command) for the exact file locations
     and the bounded vitest invocation the MID role commits to.
-- [~] Task: Confirm tests fail against the current (pre-migration) baseline.
+- [x] Task: Confirm tests fail against the current (pre-migration) baseline.
 
 ### Red-gate record (MID role)
 
@@ -155,6 +155,32 @@
   owned by the final P3 task (test-strategy §7); it does not
   exist on disk yet and the targeted command picks it up
   gracefully when the owning task lands.
+
+### Green-gate record (JR role)
+
+- Targeted Green command:
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-v2-call-shape.test.ts src/__tests__/phase-arch-no-direct-sdk.test.ts src/providers/openai.test.ts src/providers/google.test.ts src/providers/openrouter.test.ts`
+- Targeted Green result: **26 passed (26 total)**.
+- Extended Green command:
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-3-openai-provider.test.ts src/__tests__/phase-4-google-provider.test.ts`
+- Extended Green result: **59 passed | 2 skipped (61 total)**.
+- Green changes:
+  - `packages/ai/src/providers/openai.ts`: changed `import { experimental_generateImage as aiGenerateImage } from "ai"` to `import { generateImage as aiGenerateImage } from "ai"` (canonical v5 export). Changed `maxTokens` to `maxOutputTokens` in `generateText` and `generateObject` SDK calls.
+  - `packages/ai/src/providers/google.ts`: same `experimental_generateImage` → `generateImage` import change and `maxTokens` → `maxOutputTokens` rename.
+  - `packages/ai/src/providers/openrouter.ts`: `maxTokens` → `maxOutputTokens` rename in `generateText` and `generateObject` SDK calls (no image import — OpenRouter throws on `generateImage`).
+  - `packages/ai/src/providers/openai.test.ts`: updated mock from `experimental_generateImage` to `generateImage`.
+  - `packages/ai/src/providers/google.test.ts`: updated mock from `experimental_generateImage` to `generateImage`.
+  - `packages/ai/src/__tests__/phase-3-openai-provider.test.ts`: updated mock and assertions from `experimental_generateImage` to `generateImage`.
+  - `packages/ai/src/__tests__/phase-4-google-provider.test.ts`: updated mock and assertions from `experimental_generateImage` to `generateImage`.
+- Broader gate: `pnpm --filter @reading-advantage/ai exec vitest run` —
+  **151 passed | 8 failed | 3 skipped (162 total)**.
+  The 8 failures are all owned by Phase 3 (not Phase 2):
+  - `phase-0-setup.test.ts` (1 failure): `tsc` fails because
+    `generateImage` is not exported from `ai` v4.x types; resolved
+    when Phase 3 upgrades package versions.
+  - `phase-11-sdk-version-contract.test.ts` (7 failures): manifest
+    version and lockfile issues owned by Phase 3 package upgrade task.
+- Green commit: `c9706ec5`
 
 ## Phase 3: Implement
 

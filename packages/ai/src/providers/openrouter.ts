@@ -66,7 +66,7 @@ export class OpenRouterProvider implements AIClient {
           ? { temperature: input.temperature }
           : {}),
         ...(input.maxTokens !== undefined
-          ? { maxTokens: input.maxTokens }
+          ? { maxOutputTokens: input.maxTokens }
           : {}),
         maxRetries: 1,
       });
@@ -96,7 +96,7 @@ export class OpenRouterProvider implements AIClient {
           ? { temperature: input.temperature }
           : {}),
         ...(input.maxTokens !== undefined
-          ? { maxTokens: input.maxTokens }
+          ? { maxOutputTokens: input.maxTokens }
           : {}),
         maxRetries: 1,
       });

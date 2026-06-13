@@ -1,6 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject as aiGenerateObject } from "ai";
-import { experimental_generateImage as aiGenerateImage } from "ai";
+import { generateImage as aiGenerateImage } from "ai";
 import { generateText as aiGenerateText } from "ai";
 import type {
   AIClient,
@@ -52,7 +52,7 @@ export class OpenAIProvider implements AIClient {
           ? { temperature: input.temperature }
           : {}),
         ...(input.maxTokens !== undefined
-          ? { maxTokens: input.maxTokens }
+          ? { maxOutputTokens: input.maxTokens }
           : {}),
         maxRetries: 1,
       });
@@ -101,7 +101,7 @@ export class OpenAIProvider implements AIClient {
           ? { temperature: input.temperature }
           : {}),
         ...(input.maxTokens !== undefined
-          ? { maxTokens: input.maxTokens }
+          ? { maxOutputTokens: input.maxTokens }
           : {}),
         maxRetries: 1,
       });

@@ -1,6 +1,6 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateObject as aiGenerateObject } from "ai";
-import { experimental_generateImage as aiGenerateImage } from "ai";
+import { generateImage as aiGenerateImage } from "ai";
 import { generateText as aiGenerateText } from "ai";
 import type {
   AIClient,
@@ -47,7 +47,7 @@ export class GoogleProvider implements AIClient {
           ? { temperature: input.temperature }
           : {}),
         ...(input.maxTokens !== undefined
-          ? { maxTokens: input.maxTokens }
+          ? { maxOutputTokens: input.maxTokens }
           : {}),
         maxRetries: 1,
       });
@@ -96,7 +96,7 @@ export class GoogleProvider implements AIClient {
           ? { temperature: input.temperature }
           : {}),
         ...(input.maxTokens !== undefined
-          ? { maxTokens: input.maxTokens }
+          ? { maxOutputTokens: input.maxTokens }
           : {}),
         maxRetries: 1,
       });

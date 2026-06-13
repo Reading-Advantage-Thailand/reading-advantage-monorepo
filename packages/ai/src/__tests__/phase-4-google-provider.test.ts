@@ -70,14 +70,14 @@ import {
 const mocks = vi.hoisted(() => ({
   generateObject: vi.fn(),
   generateText: vi.fn(),
-  experimental_generateImage: vi.fn(),
+  generateImage: vi.fn(),
   createGoogleGenerativeAI: vi.fn(),
 }));
 
 vi.mock("ai", () => ({
   generateObject: mocks.generateObject,
   generateText: mocks.generateText,
-  experimental_generateImage: mocks.experimental_generateImage,
+  generateImage: mocks.generateImage,
 }));
 
 vi.mock("@ai-sdk/google", () => ({
@@ -106,7 +106,7 @@ function wireSdkMocks(fixtures: ContractFixtures): void {
     usage: { promptTokens: 5, completionTokens: 3 },
   }));
 
-  mocks.experimental_generateImage.mockImplementation(async () => ({
+  mocks.generateImage.mockImplementation(async () => ({
     image: {
       base64: fixtures.imageBuffer.toString("base64"),
       uint8Array: new Uint8Array(),
@@ -168,7 +168,7 @@ describe("GoogleProvider — delegation to AI SDK (test-strategy §1 unit column
   it("generateImage returns a Buffer built from the SDK's base64 payload", async () => {
     wireSdkMocks(defaultContractFixtures);
     const imageBase64 = Buffer.from("fake-gemini-bytes").toString("base64");
-    mocks.experimental_generateImage.mockResolvedValueOnce({
+    mocks.generateImage.mockResolvedValueOnce({
       image: {
         base64: imageBase64,
         uint8Array: new Uint8Array(),
@@ -186,7 +186,7 @@ describe("GoogleProvider — delegation to AI SDK (test-strategy §1 unit column
 
     expect(Buffer.isBuffer(result)).toBe(true);
     expect(result.toString()).toBe("fake-gemini-bytes");
-    expect(mocks.experimental_generateImage).toHaveBeenCalledWith(
+    expect(mocks.generateImage).toHaveBeenCalledWith(
       expect.objectContaining({
         model: "google-image:gemini-2.0-flash-preview-image-generation",
       })
@@ -274,7 +274,7 @@ describe("GoogleProvider — explicit apiKey plumbing (test-strategy §5.1, FR-3
   it("defaults image model to gemini-2.0-flash-preview-image-generation when not overridden", async () => {
     wireSdkMocks(defaultContractFixtures);
     const imageBase64 = Buffer.from("test").toString("base64");
-    mocks.experimental_generateImage.mockResolvedValueOnce({
+    mocks.generateImage.mockResolvedValueOnce({
       image: {
         base64: imageBase64,
         uint8Array: new Uint8Array(),
@@ -287,7 +287,7 @@ describe("GoogleProvider — explicit apiKey plumbing (test-strategy §5.1, FR-3
     const provider = new GoogleProvider({ apiKey: "test-key" });
     await provider.generateImage({ prompt: "test" });
 
-    expect(mocks.experimental_generateImage).toHaveBeenCalledWith(
+    expect(mocks.generateImage).toHaveBeenCalledWith(
       expect.objectContaining({
         model: "google-image:gemini-2.0-flash-preview-image-generation",
       })

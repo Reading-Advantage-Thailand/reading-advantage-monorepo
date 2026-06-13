@@ -5,7 +5,7 @@ import { OpenAIProvider } from "./openai.js";
 vi.mock("ai", () => ({
   generateObject: vi.fn(),
   generateText: vi.fn(),
-  experimental_generateImage: vi.fn(),
+  generateImage: vi.fn(),
 }));
 
 vi.mock("@ai-sdk/openai", () => ({
@@ -16,7 +16,7 @@ vi.mock("@ai-sdk/openai", () => ({
   ),
 }));
 
-import { generateObject, generateText, experimental_generateImage } from "ai";
+import { generateObject, generateText, generateImage } from "ai";
 
 const testSchema = z.object({ answer: z.string() });
 
@@ -66,13 +66,13 @@ describe("OpenAIProvider", () => {
   });
 
   describe("generateImage", () => {
-    it("delegates to AI SDK experimental_generateImage", async () => {
+    it("delegates to AI SDK generateImage", async () => {
       const imageBase64 = Buffer.from("fake-image").toString("base64");
-      vi.mocked(experimental_generateImage).mockResolvedValueOnce({
+      vi.mocked(generateImage).mockResolvedValueOnce({
         image: { base64: imageBase64, uint8Array: new Uint8Array(), mediaType: "image/png" },
         images: [],
         warnings: [],
-      } as unknown as Awaited<ReturnType<typeof experimental_generateImage>>);
+      } as unknown as Awaited<ReturnType<typeof generateImage>>);
 
       const provider = new OpenAIProvider({
         apiKey: "test-key",
@@ -87,11 +87,11 @@ describe("OpenAIProvider", () => {
 
     it("resolves model through this.client for credential injection", async () => {
       const imageBase64 = Buffer.from("test").toString("base64");
-      vi.mocked(experimental_generateImage).mockResolvedValueOnce({
+      vi.mocked(generateImage).mockResolvedValueOnce({
         image: { base64: imageBase64, uint8Array: new Uint8Array(), mediaType: "image/png" },
         images: [],
         warnings: [],
-      } as unknown as Awaited<ReturnType<typeof experimental_generateImage>>);
+      } as unknown as Awaited<ReturnType<typeof generateImage>>);
 
       const provider = new OpenAIProvider({
         apiKey: "test-key",
@@ -100,7 +100,7 @@ describe("OpenAIProvider", () => {
 
       await provider.generateImage({ prompt: "test" });
 
-      expect(experimental_generateImage).toHaveBeenCalledWith(
+      expect(generateImage).toHaveBeenCalledWith(
         expect.objectContaining({
           model: "image:dall-e-3",
         })
