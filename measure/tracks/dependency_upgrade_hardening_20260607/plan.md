@@ -38,26 +38,65 @@
 
 ## Phase 2: Test
 
-- [ ] Task: Capture baseline quality-gate truth before dependency changes.
-  - [ ] Run affected package/app lint, test, check-types, and build commands.
-  - [ ] Record pre-existing failures separately from the track's acceptance gates.
-- [ ] Task: Add focused calendar compatibility coverage before the
+> Red-phase evidence for Phase 2 tasks 1–4 is captured by four bounded Red
+> commands recorded in [Phase 2 Red gate](#phase-2-red-gate) at the bottom of
+> this file. Tasks 1 and 4 produce artifact deliverables; their live-behavior
+> proof is owned by Phase 3 per-batch quality gates (Tasks 2/3 Green = Batches
+> C/E) and the Phase 4 aggregate `pnpm turbo run …` closeout, per
+> `test-strategy.md` §1, §7, and §8.
+
+- [~] Task: Capture baseline quality-gate truth before dependency changes.
+  - [~] Run affected package/app lint, test, check-types, and build commands.
+  - [~] Record pre-existing failures separately from the track's acceptance gates.
+  - Red proof: `scripts/__tests__/baseline-truth.test.mjs` asserts the
+    `baseline-truth.md` artifact exists with required sections (Source Commit,
+    Affected Workspaces, Per-Workspace Gate Results, Pre-Existing Failures
+    Carved Out). The artifact does not yet exist on disk → Red.
+  - Live-gate owner: Phase 3 per-batch quality gates record actual command
+    output; Phase 4 aggregate `pnpm turbo run lint|test|check-types|build`
+    closeout reconciles regressions against this baseline.
+- [~] Task: Add focused calendar compatibility coverage before the
   `react-day-picker` migration.
-  - [ ] Cover date selection, date-range selection, disabled dates, and rendered
+  - [~] Cover date selection, date-range selection, disabled dates, and rendered
     navigation for reading-advantage calendar components.
-  - [ ] Confirm tests fail or peer checks remain red against the incompatible
+  - [~] Confirm tests fail or peer checks remain red against the incompatible
     `react-day-picker@8` / `date-fns@4` baseline.
-- [ ] Task: Add focused FFmpeg utility contract tests before replacement.
-  - [ ] Cover duration parsing from `ffprobe` JSON.
-  - [ ] Cover concat-list or argument generation without shell interpolation.
-  - [ ] Cover non-zero process exits, missing binaries, cleanup, and paths with
+  - Red proof: `apps/reading-advantage/components/ui/__tests__/calendar.test.tsx`
+    exercises live `<Calendar>` render + interaction using RTL with the
+    existing `react-day-picker@8` / `date-fns@4` peer-broken install. Bounded
+    via `jest components/ui/calendar` path filter (never the full
+    reading-advantage suite, which is known to hang).
+  - Live-gate owner: Batch C migrates the calendar to the compatible
+    `react-day-picker@9` contract; the same focused Jest command must exit 0
+    after Batch C.
+- [~] Task: Add focused FFmpeg utility contract tests before replacement.
+  - [~] Cover duration parsing from `ffprobe` JSON.
+  - [~] Cover concat-list or argument generation without shell interpolation.
+  - [~] Cover non-zero process exits, missing binaries, cleanup, and paths with
     spaces.
-  - [ ] Confirm the new tests are red before implementation.
-- [ ] Task: Define batch-specific quality gates in `upgrade-matrix.md`.
-  - [ ] Framework batch: all six app builds plus relevant tests/check-types.
-  - [ ] Vitest batch: every Vitest workspace test command.
-  - [ ] Deprecated-type batch: all affected type-check commands.
-  - [ ] Tooling/patch batch: root install, lint, test, check-types, and build.
+  - [~] Confirm the new tests are red before implementation.
+  - Red proof: `packages/utils/src/__tests__/ffmpeg-process.test.ts` imports
+    the not-yet-created `../ffmpeg-process` module → import-time Red. Uses a
+    `mockSpawn` helper (per `test-strategy.md` §2) that captures argv, stdin,
+    exit code, and stderr without touching real child processes. Asserts the
+    utility never passes `shell: true` (architecture guardrail per
+    `test-strategy.md` §4). Test fixtures `silence-1s.mp3` and `silence-2s.mp3`
+    committed under `packages/utils/src/__tests__/fixtures/`.
+  - Live-gate owner: Batch E implements the utility, refactors both audio
+    generators, and runs the bounded local fixture-driven smoke (<30s).
+- [~] Task: Define batch-specific quality gates in `upgrade-matrix.md`.
+  - [~] Framework batch: all six app builds plus relevant tests/check-types.
+  - [~] Vitest batch: every Vitest workspace test command.
+  - [~] Deprecated-type batch: all affected type-check commands.
+  - [~] Tooling/patch batch: root install, lint, test, check-types, and build.
+  - Red proof: `scripts/__tests__/batch-gates.test.mjs` asserts
+    `upgrade-matrix.md` contains a `## Batch Quality Gates` section that
+    enumerates exactly the eight implementation batches (A–H) with the
+    concrete `pnpm` command list each batch must run. The section is absent at
+    HEAD → Red. The existing per-row `validation scope` column does not satisfy
+    this contract because operators cannot execute a column value as a script.
+  - Live-gate owner: Phase 3 batch execution runs each documented gate; the
+    artifact itself is the contract Phase 3 follows.
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
 
 ## Phase 3: Implement
@@ -130,6 +169,113 @@
   to verify the script correctly rejects a nonexistent track directory. This
   preserves the test's purpose (existence gate) while removing the contradictory
   assertion that the script must not exist. Tests 2-7 were not modified.
+
+## Phase 2 Red Gate
+
+Phase 2 splits into two artifact-contract Red commands (Tasks 1 and 4) and two
+live-behavior Red commands (Tasks 2 and 3). Each command is bounded to a
+single test file and never invokes a full workspace or repo-wide suite.
+
+### Task 4 — Batch Quality Gates in upgrade-matrix.md
+
+- **Targeted Red command:**
+  `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/batch-gates.test.mjs`
+- **Result at HEAD (2026-06-13):** `8 fail / 0 pass / 8 total`. The
+  `## Batch Quality Gates` section is absent from `upgrade-matrix.md`; every
+  assertion either fails to locate the section heading or fails to locate its
+  required `### Batch A` … `### Batch H` subsections.
+- **Why this is a real Red, not a stale-record Red:** the contract is that
+  operators have an executable per-batch gate list. The matrix currently has a
+  per-row `validation scope` column, but operators cannot copy-paste a column
+  value as a runnable command. The Green commit must add a new section, not
+  reword existing rows.
+- **Boundedness:** single-file `node --test` invocation; reads
+  `upgrade-matrix.md` from disk; never spawns pnpm, vitest, jest, or turbo.
+- **Fake-harness boundary:** artifact contract per `test-strategy.md` §7. The
+  live-behavior pair is Phase 3 batch execution — each batch literally runs
+  the documented commands against real workspaces.
+
+### Task 1 — Baseline quality-gate truth artifact
+
+- **Targeted Red command:**
+  `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/baseline-truth.test.mjs`
+- **Result at HEAD (2026-06-13):** `5 fail / 0 pass / 5 total`. The artifact
+  `baseline-truth.md` does not exist at the documented path; the first
+  assertion ENOENTs and every subsequent assertion fails on the missing file.
+- **Why this is a real Red, not a stale-record Red:** Phase 3/4 reconciliation
+  requires a recorded SHA + per-workspace gate state to attribute regressions
+  correctly. Without `baseline-truth.md`, Phase 4's "separate baseline
+  failures from upgrade-caused regressions" acceptance criterion (spec.md
+  Acceptance Criteria #10) cannot be satisfied.
+- **Boundedness:** single-file `node --test` invocation; reads
+  `baseline-truth.md` from disk if present; never spawns pnpm or any
+  workspace command.
+- **Fake-harness boundary:** artifact contract per `test-strategy.md` §7. The
+  live-behavior pair is the Phase 3 per-batch gates plus the Phase 4
+  aggregate `pnpm turbo run lint|test|check-types|build` closeout, which
+  actually executes the commands the artifact records.
+
+### Task 3 — Shared FFmpeg process utility contract
+
+- **Targeted Red command:**
+  `pnpm --filter @reading-advantage/utils exec vitest run ffmpeg-process`
+- **Result at HEAD (2026-06-13):** suite-level Red. Vitest reports
+  `1 failed (1)` test file and `Cannot find module '/src/ffmpeg-process'` at
+  `src/__tests__/ffmpeg-process.test.ts` line 133. The Red is at module-load
+  time because the utility does not yet exist on disk.
+- **Why this is a real Red, not a stale-record Red:** the test file declares
+  the utility's API surface (`probeDurationSeconds`, `concatMp3Files`),
+  argv-only spawn contract, ENOENT handling, non-zero-exit handling,
+  paths-with-spaces handling, and concat-list cleanup. Batch E (Green) must
+  ship a `src/ffmpeg-process.ts` that satisfies every assertion; until then
+  no Vitest test inside this file can even collect.
+- **Boundedness:** positional filter `ffmpeg-process` matches one path; vitest
+  loads only this file. The mock `spawn` helper intercepts every
+  `node:child_process` call so no real ffmpeg/ffprobe runs during this Red.
+  Fixture MP3s (`silence-1s.mp3`, `silence-2s.mp3`) live under
+  `packages/utils/src/__tests__/fixtures/` per `test-strategy.md` §2 and are
+  re-used by Batch E's local concat smoke (<30s).
+- **Fake-harness boundary:** live behavior per `test-strategy.md` §7. The
+  unit tests assert argv contracts via the mock; Batch E pairs them with the
+  bounded fixture-driven local smoke that exercises the real binaries once.
+
+### Task 2 — Reading-advantage Calendar compatibility coverage
+
+- **Targeted Red command:**
+  `pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage`
+- **Result at HEAD (2026-06-13):** `4 fail / 5 pass / 9 total` (test runtime
+  ~37s — well within Jest's per-file budget and avoids the known
+  full-suite hang). The four failing tests are the high-value behavioral
+  contracts: single-mode date selection, disabled-day click suppression,
+  disabled-day a11y exposure, and range-mode two-click selection.
+- **Why this is a real Red, not a stale-record Red:** the failures surface
+  because `react-day-picker@8` does not expose day cells via the
+  `getByRole("gridcell", { name: /<day>/ })` accessibility query the
+  post-migration v9 contract requires. `react-day-picker@9` produces ARIA
+  consistent with the asserted contract. Batch C (Green) must migrate
+  `apps/reading-advantage/components/ui/calendar.tsx` to the v9 API and prop
+  shape; these tests must exit 0 after the migration.
+- **Boundedness:** Jest `--testPathPattern` restricts collection to the one
+  new test file. The reading-advantage full Jest suite is known to hang on
+  this hardware (per spec.md Constraints and Risks); using `--testPathPattern`
+  guarantees only this file runs.
+- **Fake-harness boundary:** live behavior. RTL renders the actual
+  `Calendar` component, dispatches real user events via `@testing-library/user-event`,
+  and asserts against the rendered DOM. No mocks are inserted between the
+  test and the component.
+
+### Phase 2 Red Gate Aggregate
+
+- **Total Red signal:** 17 failing tests + 1 failing test file (suite-level
+  import failure) across 4 bounded commands.
+- **Files Green must add or modify:** `upgrade-matrix.md` (new section),
+  `baseline-truth.md` (new file), `packages/utils/src/ffmpeg-process.ts`
+  (new file) + audio-generator refactors,
+  `apps/reading-advantage/components/ui/calendar.tsx` (v9 migration).
+- **No bypassed fake-harness rules:** every artifact contract above is paired
+  with a live-behavior gate in a later phase (Phase 3 per-batch execution and
+  Phase 4 aggregate closeout). No test in this Red can accidentally trigger
+  the reading-advantage full Jest hang or a full pnpm turbo run.
 
 ## Phase 4: Generate Docs & Doctor
 
