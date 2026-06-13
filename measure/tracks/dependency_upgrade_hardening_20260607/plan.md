@@ -1944,3 +1944,25 @@ boundary for Batches A and B per `test-strategy.md` §7).
   `pnpm turbo run lint|test|check-types|build` closeout gate.
   The Phase 3 User Manual Verification gate is the previous
   remaining closeout gate.
+
+## Phase 4 Green Gate
+
+- **Green commit:** `67dfb92d`
+- **Targeted Green command:**
+  `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase4-contracts.test.mjs`
+- **Result:** `12 pass / 0 fail / 12 total` in ~1.5s.
+- **Artifacts produced:**
+  - 7 backlog tracks under `measure/tracks/`: ai_sdk_major_migration,
+    zod4_major_migration, typescript6_major_migration,
+    jest30_major_migration, zustand5_major_migration,
+    drizzle045_major_migration, pnpm11_major_migration — each with
+    metadata.json, spec.md, plan.md.
+  - `measure/tech-stack.md` updated with selected shared versions
+    (Next 16.2.9, React 19.2.7, Vitest 4.1.8).
+  - `measure/tech-debt.md` reconciled: react-konva row marked Resolved,
+    file trimmed to 50 lines (≤50-line policy ceiling).
+  - `baseline-final/pnpm-outdated.json` and `baseline-final/pnpm-audit.json`
+    created for post-upgrade diff against Phase 1 baseline.
+- **No TypeScript files changed.** graph.db update not required.
+- **Remaining closeout gates:** Phase 3 User Manual Verification
+  (user-owned, remains `[ ]`).
