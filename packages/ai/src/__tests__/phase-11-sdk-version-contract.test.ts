@@ -51,8 +51,13 @@ const REPO_ROOT = join(__dirname, "../../../..");
 // pivot to a different major, change them here and re-run the test —
 // the test-strategy §5 P1 "single target major" rule still holds.
 const TARGET_AI_MAJOR = 5;
-const TARGET_OPENAI_MAJOR = 2;
-const TARGET_GOOGLE_MAJOR = 2;
+const TARGET_AI_SDK_PACKAGE_MAJORS: Readonly<Record<string, number>> = {
+  "@ai-sdk/google": 2,
+  "@ai-sdk/google-vertex": 3,
+  "@ai-sdk/openai": 2,
+  "@ai-sdk/provider-utils": 3,
+  "@ai-sdk/react": 2,
+};
 
 // Every manifest Phase 3 must align. `packages/ai` is the chokepoint
 // (already v2 today; included so a future drift trips a regression).
@@ -130,14 +135,7 @@ describe("Phase 11 — Task 1: every affected manifest declares the target @ai-s
         }
       }
 
-      // `@ai-sdk/openai` and `@ai-sdk/google` may be declared by any
-      // app/script. When declared, they must be on the target major.
-      // The `packages/ai` package always declares both (it is the
-      // adapter); the apps may or may not — see test-strategy §0.
-      for (const [pkg, targetMajor] of [
-        ["@ai-sdk/openai", TARGET_OPENAI_MAJOR],
-        ["@ai-sdk/google", TARGET_GOOGLE_MAJOR],
-      ] as const) {
+      for (const [pkg, targetMajor] of Object.entries(TARGET_AI_SDK_PACKAGE_MAJORS)) {
         if (pkg in deps) {
           expect(
             rangeTargetsMajor(deps[pkg], targetMajor),
@@ -145,6 +143,15 @@ describe("Phase 11 — Task 1: every affected manifest declares the target @ai-s
               `to align with the new major. Today it is \`${deps[pkg]}\`.`,
           ).toBe(true);
         }
+      }
+
+      for (const pkg of Object.keys(deps).filter((name) => name.startsWith("@ai-sdk/"))) {
+        expect(
+          pkg in TARGET_AI_SDK_PACKAGE_MAJORS,
+          `${relPath}: \`${pkg}\` is a direct @ai-sdk dependency but has no ` +
+            "Phase 1 target-major contract. Add it to TARGET_AI_SDK_PACKAGE_MAJORS " +
+            "or remove the direct dependency.",
+        ).toBe(true);
       }
     });
   }
@@ -264,8 +271,7 @@ describe("Phase 11 — Task 3: pnpm-lock.yaml resolves exactly one @ai-sdk major
 
   for (const [pkg, targetMajor] of [
     ["ai", TARGET_AI_MAJOR],
-    ["@ai-sdk/openai", TARGET_OPENAI_MAJOR],
-    ["@ai-sdk/google", TARGET_GOOGLE_MAJOR],
+    ...Object.entries(TARGET_AI_SDK_PACKAGE_MAJORS),
   ] as const) {
     it(`lockfile resolves exactly one major of \`${pkg}\` and it is the target major (${targetMajor})`, () => {
       const majors = resolvedMajorsFor(pkg);

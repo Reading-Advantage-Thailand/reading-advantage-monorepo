@@ -1,0 +1,20 @@
+{
+  "status": "fail",
+  "summary": "Phase 1 contract coverage missed direct @ai-sdk/* holdouts beyond openai/google; added a stricter artifact contract that exposes @ai-sdk/react v1 and related lockfile legacy entries. Local shell lacks node/npm/pnpm, but supervisor gate evidence shows npm test passed before this follow-up.",
+  "findings": [
+    "Blocking: apps/primary-advantage and apps/codecamp-advantage still declare @ai-sdk/react ^1.2.9, while test-strategy §3 says ai@5 aligns with @ai-sdk/react ^2.",
+    "Blocking: pnpm-lock.yaml still resolves @ai-sdk/react@1.2.12 and @ai-sdk/ui-utils@1.2.11, leaving legacy @ai-sdk major artifacts in the dependency graph.",
+    "Verification blocked in this shell: npm, pnpm, and node are not available on PATH, so updated tests could not be executed locally by this agent."
+  ],
+  "evidence": [
+    "Read measure/tracks/ai_sdk_major_migration/spec.md acceptance criteria 1 and 5.",
+    "Read measure/tracks/ai_sdk_major_migration/plan.md Phase 1 records.",
+    "Read measure/tracks/ai_sdk_major_migration/test-strategy.md §§3-6, including @ai-sdk/react ^2 edge case.",
+    "Inspected diff since 86cf24c6eeb431055329245e3996b046cf7c25bc.",
+    "Updated packages/ai/src/__tests__/phase-11-sdk-version-contract.test.ts to require explicit target-major contracts for every direct @ai-sdk/* manifest dependency and lockfile package.",
+    "grep package.json showed @ai-sdk/react ^1.2.9 in apps/primary-advantage and apps/codecamp-advantage.",
+    "Read pnpm-lock.yaml entries for @ai-sdk/react@1.2.12 and @ai-sdk/ui-utils@1.2.11.",
+    "npm test: blocked locally with /bin/bash: npm: command not found; supervisor gate log adversarial-attempt-1/gates.log shows npm test exited 0.",
+    "pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-version-contract.test.ts: blocked locally with /bin/bash: pnpm: command not found."
+  ]
+}

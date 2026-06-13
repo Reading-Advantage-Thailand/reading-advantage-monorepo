@@ -71,7 +71,26 @@
   `@reading-advantage/db` ESM smoke test has a timing-related flake
   (passes in isolation, fails under turbo load with 10s timeout). All
   `@reading-advantage/ai` tests pass (137 passed, 3 skipped).
-- Green commit: `3278f869`
+- Green commit: `43c31318`
+
+### Adversarial audit record
+
+- Finding: Phase 1 contract coverage only pinned `@ai-sdk/openai`,
+  `@ai-sdk/google`, and `ai`; it missed direct `@ai-sdk/*` manifest
+  holdouts such as `@ai-sdk/react ^1.2.9` in `apps/primary-advantage`
+  and `apps/codecamp-advantage`.
+- Tight fix: `phase-11-sdk-version-contract.test.ts` now requires every
+  direct `@ai-sdk/*` dependency in affected manifests to have an explicit
+  target-major contract, and the lockfile guard now checks those package
+  names too.
+- Remaining blocker: `@ai-sdk/react` remains on v1 in two app manifests
+  and `pnpm-lock.yaml` still carries legacy `@ai-sdk/react@1.2.12` /
+  `@ai-sdk/ui-utils@1.2.11` entries; Phase 1 audit status is fail until
+  those are aligned or intentionally scoped in a later owning task.
+- Verification note: local shell for this adversarial attempt did not have
+  `node`, `npm`, or `pnpm` on `PATH`; supervisor gate log for attempt 1
+  shows `npm test` exited 0 before this follow-up, but the updated targeted
+  contract test could not be run locally by this role.
 
 ## Phase 2: Test
 
