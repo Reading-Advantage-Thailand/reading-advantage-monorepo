@@ -184,7 +184,7 @@
 
 ## Phase 3: Implement
 
-- [~] Task: Upgrade `@ai-sdk/*` packages in root and workspace manifests.
+- [x] Task: Upgrade `@ai-sdk/*` packages in root and workspace manifests.
   - Red file: `packages/ai/src/__tests__/phase-11-sdk-version-contract.test.ts`
     (already on disk from P1; intentionally still Red at P3 start — the
     adversarial audit at the end of P1 added `@ai-sdk/react` to the
@@ -197,7 +197,7 @@
     to `^2.x` in `apps/primary-advantage/package.json` and
     `apps/codecamp-advantage/package.json`; rerun `pnpm install` to
     collapse the lockfile to a single major per package.
-- [~] Task: Update the internal AI adapter for breaking API changes.
+- [x] Task: Update the internal AI adapter for breaking API changes.
   - Red file: `packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts`
     (already on disk from P2; P2 Green flipped the call shape in the
     adapter so this file is **passing** in P3 — it is now a regression
@@ -206,9 +206,9 @@
     `AIClient.streamText` to the interface + providers OR log a
     tech-debt entry per test-strategy §3 item 4. Tool-calling is a
     tech-debt-only path per §3 item 5.
-- [~] Task: Run `check-types`, `lint`, and `test` across affected workspaces.
+- [x] Task: Run `check-types`, `lint`, and `test` across affected workspaces.
   - Gate-only task; no new test files owned by this task.
-- [~] Task: Migrate direct `@ai-sdk/*` usage in apps to the adapter layer.
+- [x] Task: Migrate direct `@ai-sdk/*` usage in apps to the adapter layer.
   - Red file: `packages/ai/src/__tests__/phase-arch-no-direct-sdk.test.ts`
     (artifact grep over `apps/**`; intentionally Red until all direct
     `@ai-sdk/*` imports in app source are routed through
