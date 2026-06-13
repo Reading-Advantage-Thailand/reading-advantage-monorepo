@@ -4,8 +4,8 @@ import {
   NoImageGeneratedError,
   APICallError,
   generateText,
-} from "ai";
-import { vertex } from "@ai-sdk/google-vertex";
+} from "@reading-advantage/ai";
+import { vertex } from "@reading-advantage/ai";
 import fs from "fs";
 import path from "path";
 import sharp from "sharp";

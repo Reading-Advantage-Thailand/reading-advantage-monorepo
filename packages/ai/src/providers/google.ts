@@ -1,12 +1,15 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateObject as aiGenerateObject } from "ai";
-import { generateImage as aiGenerateImage } from "ai";
+import { experimental_generateImage as aiGenerateImage } from "ai";
 import { generateText as aiGenerateText } from "ai";
+import { streamText as aiStreamText } from "ai";
 import type {
   AIClient,
   GenerateImageInput,
   GenerateObjectInput,
   GenerateTextInput,
+  StreamTextInput,
+  StreamTextResult,
 } from "../types.js";
 import { AIClientError } from "../errors.js";
 
@@ -104,6 +107,36 @@ export class GoogleProvider implements AIClient {
     } catch (error) {
       throw new AIClientError(
         `Google generateText failed: ${error instanceof Error ? error.message : "unknown"}`,
+        "PROVIDER_ERROR",
+        error
+      );
+    }
+  }
+
+  async streamText(input: StreamTextInput): Promise<StreamTextResult> {
+    try {
+      const baseOptions = {
+        model: this.client(input.model ?? this.defaultModel),
+        ...(input.system ? { system: input.system } : {}),
+        ...(input.temperature !== undefined
+          ? { temperature: input.temperature }
+          : {}),
+        ...(input.maxTokens !== undefined
+          ? { maxOutputTokens: input.maxTokens }
+          : {}),
+      };
+      const result = await aiStreamText(
+        input.messages
+          ? { ...baseOptions, messages: input.messages }
+          : { ...baseOptions, prompt: input.prompt ?? "" }
+      );
+      return {
+        textStream: result.textStream,
+        toDataStreamResponse: () => result.toTextStreamResponse(),
+      };
+    } catch (error) {
+      throw new AIClientError(
+        `Google streamText failed: ${error instanceof Error ? error.message : "unknown"}`,
         "PROVIDER_ERROR",
         error
       );

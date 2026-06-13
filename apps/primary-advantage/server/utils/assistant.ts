@@ -9,7 +9,7 @@ import {
 import { LAQFeedback, LAQFeedbackResponse, SAQFeedbackResponse } from "@/types";
 import { ActivityType } from "@/types/enum";
 import { google, googleModel, googleModelLite } from "@/utils/google";
-import { generateObject } from "ai";
+import { generateObject } from "@reading-advantage/ai";
 import fs from "fs";
 import path from "path";
 

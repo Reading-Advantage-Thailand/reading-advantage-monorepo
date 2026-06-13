@@ -19,7 +19,7 @@ import {
   GenerateAudioParams,
   WordListResponse,
 } from "../utils/generators/audio-words-generator";
-import { experimental_generateImage as generateImage } from "ai";
+import { experimental_generateImage as generateImage } from "@reading-advantage/ai";
 import { openai, openaiImages } from "@/utils/openai";
 import { google, googleImages } from "@/utils/google";
 

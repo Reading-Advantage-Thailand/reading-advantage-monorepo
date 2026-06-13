@@ -1,4 +1,4 @@
-import { generateText } from "ai";
+import { generateText } from "@reading-advantage/ai";
 import { openai, openaiModel } from "@/utils/openai";
 import { db, and, eq, gte, lt, desc } from "@reading-advantage/db";
 import {

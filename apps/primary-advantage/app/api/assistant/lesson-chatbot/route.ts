@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import z from "zod";
 import { openai, openaiModel } from "@/utils/openai";
-import { streamText } from "ai";
+import { streamText } from "@reading-advantage/ai";
 
 const createLessonChatbotQuestionSchema = z.object({
   messages: z.array(

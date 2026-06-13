@@ -129,6 +129,14 @@ function findBacklogTrackByKeyword(keyword) {
   return null;
 }
 
+function readJsonArtifact(filePath) {
+  try {
+    return JSON.parse(readFileSync(filePath, "utf8"));
+  } catch (error) {
+    assert.fail(`${filePath} must contain valid JSON: ${error.message}`);
+  }
+}
+
 // ── Phase 4 Red tests ───────────────────────────────────────────────────────
 
 /**
@@ -453,6 +461,40 @@ test("Phase 4 Red: baseline-final/pnpm-outdated.json exists for the post-upgrade
   assert.ok(
     existsSync(auditFinal),
     `Phase 4 must commit ${auditFinal} so the post-upgrade audit snapshot is diffable against baseline/pnpm-audit.json`,
+  );
+});
+
+test("Phase 4 Red: baseline-final/pnpm-outdated.json is parseable JSON without warning prelude", () => {
+  const outdatedFinal = join(BASELINE_FINAL_DIR, "pnpm-outdated.json");
+  const parsed = readJsonArtifact(outdatedFinal);
+  assert.equal(
+    parsed && typeof parsed,
+    "object",
+    `${outdatedFinal} must parse as a JSON object produced by pnpm outdated --format json`,
+  );
+  assert.ok(
+    !Array.isArray(parsed),
+    `${outdatedFinal} must be a JSON object keyed by package name, not an array or warning text`,
+  );
+});
+
+test("Phase 4 Red: baseline-final/pnpm-audit.json explicitly records incomplete audit status", () => {
+  const auditFinal = join(BASELINE_FINAL_DIR, "pnpm-audit.json");
+  const parsed = readJsonArtifact(auditFinal);
+  assert.equal(
+    parsed && typeof parsed,
+    "object",
+    `${auditFinal} must parse as a JSON object`,
+  );
+  assert.equal(
+    parsed.incomplete,
+    true,
+    `${auditFinal} must explicitly set incomplete: true when pnpm audit stalls; absence of audit output must not be treated as a clean security result`,
+  );
+  assert.match(
+    String(parsed.note ?? ""),
+    /(stall|timeout|incomplete|unknown)/i,
+    `${auditFinal} must include a note explaining that final audit results are incomplete/unknown`,
   );
 });
 

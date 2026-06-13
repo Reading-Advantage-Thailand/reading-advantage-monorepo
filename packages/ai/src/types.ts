@@ -1,3 +1,4 @@
+import type { ModelMessage } from "ai";
 import type { z } from "zod";
 
 /**
@@ -45,6 +46,34 @@ export interface GenerateTextInput {
 }
 
 /**
+ * Input for streaming text from a prompt.
+ */
+export interface StreamTextInput {
+  /** Prompt describing the desired text output. */
+  prompt?: string;
+  /** Messages array for multi-turn conversations. */
+  messages?: Array<ModelMessage>;
+  /** Override the default model configured on the client. */
+  model?: string;
+  /** Sampling temperature (0–2). */
+  temperature?: number;
+  /** Maximum tokens to generate. */
+  maxTokens?: number;
+  /** System prompt. */
+  system?: string;
+}
+
+/**
+ * Result of a streaming text generation.
+ */
+export interface StreamTextResult {
+  /** Async iterable text stream. */
+  textStream: AsyncIterable<string>;
+  /** Convert to a data stream Response for Next.js route handlers. */
+  toDataStreamResponse(): Response;
+}
+
+/**
  * Abstract AI client interface. Implementations wrap provider-specific SDKs
  * (OpenAI, Google, etc.) behind a uniform API so application code never
  * depends on a vendor SDK directly.
@@ -67,6 +96,13 @@ export interface AIClient {
    * @returns The generated text string.
    */
   generateText(input: GenerateTextInput): Promise<string>;
+
+  /**
+   * Stream text from a prompt. Returns an async iterable text stream
+   * and a toDataStreamResponse() method for Next.js route handlers.
+   * @returns A StreamTextResult with textStream and toDataStreamResponse.
+   */
+  streamText(input: StreamTextInput): Promise<StreamTextResult>;
 }
 
 /**

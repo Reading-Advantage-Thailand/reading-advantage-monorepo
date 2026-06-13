@@ -1,4 +1,4 @@
-import { generateObject } from "ai";
+import { generateObject } from "@reading-advantage/ai";
 import { google, googleModel } from "@/utils/google";
 import { storyGeneratorSchema } from "@/lib/zod";
 import { z } from "zod";

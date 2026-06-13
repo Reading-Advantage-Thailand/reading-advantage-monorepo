@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { generateObject, streamText } from "ai";
+import { generateObject, streamText } from "@reading-advantage/ai";
 import fs, { stat } from "fs";
 import path from "path";
 import { z } from "zod";

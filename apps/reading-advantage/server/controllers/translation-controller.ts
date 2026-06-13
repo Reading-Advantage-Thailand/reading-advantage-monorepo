@@ -2,7 +2,7 @@ import { db, eq, and, asc } from "@reading-advantage/db";
 import { articles, chapters, stories } from "@reading-advantage/db/schema";
 import { splitTextIntoSentences } from "@/lib/utils";
 import { Translate } from "@google-cloud/translate/build/src/v2";
-import { generateObject } from "ai";
+import { generateObject } from "@reading-advantage/ai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { openai, openaiModel } from "@/utils/openai";

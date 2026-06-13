@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { generateObject } from "ai";
+import { generateObject } from "@reading-advantage/ai";
 import { google, googleModel } from "@/utils/google";
 import { ArticleBaseCefrLevel, ArticleType } from "@/types/enum";
 import { articleGeneratorSchema } from "@/lib/zod";

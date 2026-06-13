@@ -1,7 +1,7 @@
 import z from "zod";
 import path from "path";
 import { readJsonFile } from "../read-json";
-import { generateObject } from "ai";
+import { generateObject } from "@reading-advantage/ai";
 import { ArticleBaseCefrLevel, ArticleType } from "../../models/enum";
 import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModel,googleProPrewiew } from "@/utils/google";

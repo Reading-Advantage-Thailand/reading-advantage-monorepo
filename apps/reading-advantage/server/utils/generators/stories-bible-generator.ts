@@ -1,4 +1,4 @@
-import { generateObject } from "ai";
+import { generateObject } from "@reading-advantage/ai";
 import { openai, openaiModel4o } from "@/utils/openai";
 import { z } from "zod";
 

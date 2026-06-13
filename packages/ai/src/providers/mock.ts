@@ -4,6 +4,8 @@ import type {
   GenerateImageInput,
   GenerateObjectInput,
   GenerateTextInput,
+  StreamTextInput,
+  StreamTextResult,
 } from "../types.js";
 import { ProviderNotConfiguredError, SchemaValidationError } from "../errors.js";
 import { recommendationFixture } from "../__tests__/recommendations.fixture.js";
@@ -17,6 +19,7 @@ export interface MockResponses {
   generateObject?: unknown;
   generateImage?: Buffer;
   generateText?: string;
+  streamText?: string;
 }
 
 /**
@@ -27,7 +30,7 @@ export interface MockResponses {
 export class MockProvider implements AIClient {
   private readonly responses: MockResponses;
   private callLog: Array<{
-    method: "generateObject" | "generateImage" | "generateText";
+    method: "generateObject" | "generateImage" | "generateText" | "streamText";
     input: unknown;
   }> = [];
 
@@ -85,6 +88,24 @@ export class MockProvider implements AIClient {
     }
 
     return this.responses.generateText;
+  }
+
+  async streamText(input: StreamTextInput): Promise<StreamTextResult> {
+    this.callLog.push({ method: "streamText", input });
+
+    const text = this.responses.streamText ?? this.responses.generateText ?? "";
+    async function* generateChunks() {
+      yield text;
+    }
+
+    return {
+      textStream: generateChunks(),
+      toDataStreamResponse() {
+        return new Response(text, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      },
+    };
   }
 }
 

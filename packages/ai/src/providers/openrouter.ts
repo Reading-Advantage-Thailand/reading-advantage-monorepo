@@ -1,11 +1,14 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject as aiGenerateObject } from "ai";
 import { generateText as aiGenerateText } from "ai";
+import { streamText as aiStreamText } from "ai";
 import type {
   AIClient,
   GenerateImageInput,
   GenerateObjectInput,
   GenerateTextInput,
+  StreamTextInput,
+  StreamTextResult,
 } from "../types.js";
 import { AIClientError } from "../errors.js";
 
@@ -104,6 +107,36 @@ export class OpenRouterProvider implements AIClient {
     } catch (error) {
       throw new AIClientError(
         `OpenRouter generateText failed: ${error instanceof Error ? error.message : "unknown"}`,
+        "PROVIDER_ERROR",
+        error
+      );
+    }
+  }
+
+  async streamText(input: StreamTextInput): Promise<StreamTextResult> {
+    try {
+      const baseOptions = {
+        model: this.client(stripOpenRouterPrefix(input.model ?? this.defaultModel)),
+        ...(input.system ? { system: input.system } : {}),
+        ...(input.temperature !== undefined
+          ? { temperature: input.temperature }
+          : {}),
+        ...(input.maxTokens !== undefined
+          ? { maxOutputTokens: input.maxTokens }
+          : {}),
+      };
+      const result = await aiStreamText(
+        input.messages
+          ? { ...baseOptions, messages: input.messages }
+          : { ...baseOptions, prompt: input.prompt ?? "" }
+      );
+      return {
+        textStream: result.textStream,
+        toDataStreamResponse: () => result.toTextStreamResponse(),
+      };
+    } catch (error) {
+      throw new AIClientError(
+        `OpenRouter streamText failed: ${error instanceof Error ? error.message : "unknown"}`,
         "PROVIDER_ERROR",
         error
       );

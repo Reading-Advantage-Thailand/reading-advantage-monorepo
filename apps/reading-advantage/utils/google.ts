@@ -1,5 +1,5 @@
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { createVertex } from "@ai-sdk/google-vertex";
+import { createGoogleGenerativeAI } from "@reading-advantage/ai";
+import { createVertex } from "@reading-advantage/ai";
 
 // const google = createGoogleGenerativeAI({
 //   apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,

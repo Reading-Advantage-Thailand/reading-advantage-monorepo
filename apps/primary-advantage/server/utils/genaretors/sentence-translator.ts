@@ -1,4 +1,4 @@
-import { generateObject } from "ai";
+import { generateObject } from "@reading-advantage/ai";
 import { google, googleModelLite } from "@/utils/google";
 import { prisma } from "@/lib/prisma";
 import { SentenceTimepoint } from "@/types";

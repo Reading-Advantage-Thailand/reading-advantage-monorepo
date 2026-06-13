@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
-import { streamText } from "ai";
-import { createOpenAI } from "@ai-sdk/openai";
+import { streamText } from "@reading-advantage/ai";
+import { createOpenAI } from "@reading-advantage/ai";
 import { db } from "@reading-advantage/db";
 import { requireAuth } from "@reading-advantage/auth";
 import { getAuthToken } from "@reading-advantage/api/context";
