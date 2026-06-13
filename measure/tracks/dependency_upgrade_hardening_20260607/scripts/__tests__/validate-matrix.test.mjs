@@ -102,19 +102,19 @@ function writeBaselineFixtures(baselineDir, opts = {}) {
 }
 
 test("validate-matrix.mjs script exists at the documented path", () => {
-  // The Red-phase test cannot pass until the validator script is authored
-  // in the Green phase. This test exists so the missing-file failure is
-  // surfaced as a clear Red signal rather than an opaque spawn ENOENT.
+  // The validator script must exist and correctly handle a nonexistent track
+  // directory by exiting non-zero with a missing-directory message.
   const result = runValidator("/nonexistent/track");
   assert.notEqual(
-    result.error,
-    undefined,
-    "spawning the missing validator should surface an error",
+    result.status,
+    0,
+    `validator must exit non-zero for a nonexistent track dir; got status=${result.status}`,
   );
+  const combined = `${result.stdout}\n${result.stderr}`;
   assert.match(
-    String(result.error?.code ?? ""),
-    /ENOENT/,
-    "spawn failure must be the documented missing-script error",
+    combined,
+    /does not exist|not a directory|missing required artifact/,
+    "nonexistent track dir must surface a clear error message",
   );
 });
 

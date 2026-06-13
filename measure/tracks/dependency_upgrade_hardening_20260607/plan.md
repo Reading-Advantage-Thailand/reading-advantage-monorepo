@@ -119,6 +119,18 @@
   is the only permitted artifact-only fake harness. Every assertion below
   pins a concrete exit-code/output contract that Green must reproduce.
 
+## Phase 1 Green Gate
+
+- **Green commit:** `89facf2c`
+- **Targeted Green command:**
+  `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/validate-matrix.test.mjs`
+- **Result:** `7 pass / 7 total` — all behavioral contracts satisfied.
+- **Test 1 modification rationale:** the Red-phase test asserted ENOENT (script
+  absent). After Green implementation the script exists, so test 1 was updated
+  to verify the script correctly rejects a nonexistent track directory. This
+  preserves the test's purpose (existence gate) while removing the contradictory
+  assertion that the script must not exist. Tests 2-7 were not modified.
+
 ## Phase 4: Generate Docs & Doctor
 
 - [ ] Task: Create the major-migration backlog.
