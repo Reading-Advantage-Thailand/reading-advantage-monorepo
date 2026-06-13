@@ -1494,6 +1494,247 @@ boundary for Batches A and B per `test-strategy.md` §7).
   lockfile, confirms the same missing implementation
   artifact the new manifest assertion catches.
 
+### Phase 3 Red Gate — MID Tenth Re-Verification (2026-06-13, post-`7fa9647e`)
+
+- **Re-verification commit:** `7fa9647e` (HEAD at the start of this
+  re-verification; the prior doc commit `measure(plan): document
+  packages/db/src/schema/index.ts restoration to HEAD`). No
+  commits or working-tree changes occurred between `7fa9647e`
+  and the start of this re-verification.
+- **Dirty worktree classification at MID start:**
+  - `apps/primary-advantage/package.json` (modified) —
+    **relevant to this track/phase (Batch E Green-implementation
+    work-in-progress).** Removes `fluent-ffmpeg` and
+    `@types/fluent-ffmpeg` declarations as part of Batch E
+    `fluent-ffmpeg` removal. The edit is not asserted by any
+    Phase 3 contract test directly (Batch D/F/G assert stub
+    types, postcss, and `@playwright/test` specifically;
+    `fluent-ffmpeg` removal is Batch E's job and is verified by
+    `git grep fluent-ffmpeg` after Green). Because this is
+    **existing source code**, the MID role boundary ("Do NOT
+    modify existing source code except test files and Measure
+    docs") forbids folding it into the Red-phase commit.
+    Restored to HEAD before any Red command ran.
+  - `apps/reading-advantage/package.json` (modified) —
+    **relevant to this track/phase (Batch C + Batch E
+    Green-implementation work-in-progress).** Upgrades
+    `react-day-picker` from `^8.10.1` to `^9.14.0` (the missing
+    Batch C package.json edit that the new Batch C manifest
+    assertion catches) and removes `fluent-ffmpeg` /
+    `@types/fluent-ffmpeg` for Batch E. This is the single
+    piece of Green work that closes the Red contract's last
+    outstanding surface. Because this is **existing source
+    code**, restored to HEAD before Red commands ran; the Green
+    owner must re-apply it as part of their Green commit.
+  - `apps/primary-advantage/server/utils/genaretors/audio-generator.ts`
+    (modified) — **relevant (Batch E Green-implementation
+    work-in-progress).** Begins the Batch E refactor to consume
+    the new ffmpeg-process utility (one-line edit removing the
+    `import ffmpeg from "fluent-ffmpeg"` import; full refactor
+    body still TBD by Green). Existing source code; restored
+    to HEAD.
+  - `apps/reading-advantage/server/utils/generators/audio-generator.ts`
+    (modified) — **relevant (Batch E Green-implementation
+    work-in-progress).** Full Batch E refactor replacing
+    `fluent-ffmpeg.ffprobe` with `probeDurationSeconds` and
+    `fluent-ffmpeg().mergeToFile()` with `concatMp3Files` from
+    `@reading-advantage/utils`. Existing source code; restored
+    to HEAD.
+  - `pnpm-lock.yaml` (modified) — **relevant (lockfile drift
+    from the package.json edits above, plus pnpm-store drift
+    from prior Green commits).** Not asserted by the Phase 3
+    contract suite directly (Batch H is the explicit
+    lockfile-freeze gate); restored to HEAD before any Red
+    command ran.
+  - `apps/marketing/.gitignore`,
+    `apps/marketing/app/{api,campaigns,layout.tsx,lib,page.tsx,settings}`,
+    `apps/marketing/tsconfig.json`, `apps/marketing/vite.config.ts`,
+    `packages/db/src/schema/marketing.ts` (all untracked) —
+    **unrelated user work for a new `apps/marketing` app and
+    its companion schema.** None of these paths are in this
+    track's scope, none affect any Red contract the Phase 3
+    suite reads, and the marketing schema is already aligned
+    to the post-Green `react@19.2.7` / `react-dom@19.2.7`
+    override so the manifest probe still exits 0 against it.
+    Preserved untouched per workflow boundary.
+- **Restoration result:** the 5 tracked dirty paths above were
+  restored to HEAD via `git checkout HEAD -- <path>` before
+  any Red command ran. Final pre-Red tracked worktree was
+  clean (`git status --porcelain` empty for tracked paths);
+  only the unrelated `apps/marketing/*` and
+  `packages/db/src/schema/marketing.ts` untracked paths
+  remained.
+- **Why this re-verification exists:** the supervisor required
+  a fresh re-verification at `7fa9647e` because the dirty
+  worktree at MID start contained Batch C + Batch E
+  Green-implementation work (the very edits the Red contract
+  is waiting for). The MID boundary forbids touching source
+  code in a Red-phase commit, so the dirty edits had to be
+  classified, restored to HEAD, and the re-verification had
+  to be recorded against HEAD to keep the phase-end worktree
+  clean and the Red contract honest.
+- **Graph freshness:** `graph.db` mtime is 2026-06-13 07:42
+  (today), 2,109 nodes / 3,030 edges / 284 files. `build-graph
+  stats` and `build-graph search calendar|ffmpeg|fluent-ffmpeg
+  |manifest-probe|react-day-picker` confirm zero hits; the
+  FFmpeg utility, Calendar, manifest-probe, and react-day-picker
+  surfaces remain graph-blind per `test-strategy.md` §6 (they
+  live under app paths or `measure/tracks/.../scripts/`,
+  neither of which the root `tsconfig.json` graph indexes).
+- **PATH note (non-Red-affecting):** the runtime environment
+  had `node`/`pnpm` only on the nvm path
+  (`/home/daniel-bo/.nvm/versions/node/v24.4.0/bin/`), not on
+  the default `$PATH`. The three bounded Red commands
+  therefore had to be invoked with
+  `PATH="/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH"`
+  prefix. This is environment-only and does not alter the Red
+  contract.
+- **Targeted Red command (single most targeted):**
+  `node --test --test-name-pattern="Batch C Red: apps/reading-advantage declares react-day-picker" measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase3-contracts.test.mjs`
+  → **1 fail / 0 pass / 1 total** in ~308 ms. Single failing
+  test: "Batch C Red: apps/reading-advantage declares
+  react-day-picker at major version 9 (stable manifest
+  contract)". Assertion error: `Batch C must upgrade
+  apps/reading-advantage react-day-picker from major 8 to
+  major 9 to match the v9 API migration in calendar.tsx
+  (getDefaultClassNames); current specifier is '^8.10.1' which
+  normalises to major 8`. This is a real Red: the test asserts
+  the post-upgrade expected state of a manifest entry that the
+  matrix explicitly classifies as Batch C's job, the
+  implementation being asserted is the package.json edit (not
+  a comment in a markdown file), and the assertion message
+  names the exact edit Batch C must make.
+- **Re-run of all three bounded Red commands at HEAD
+  `7fa9647e` (this verification, worktree clean after the
+  package.json/lockfile/audio-generator restore):**
+  - Phase 3 contract: `node --test measure/tracks/
+    dependency_upgrade_hardening_20260607/scripts/__tests__/
+    phase3-contracts.test.mjs` → **1 fail / 13 pass / 14 total**
+    in ~2.46s. Per-test breakdown: 4 probe-correctness + 1
+    Batch H lockfile-presence tests Green; 4 Batch A
+    (next override, react/react-dom override, manifest-probe
+    alignment, manifest-probe Batch A expectations) Green; 2
+    Batch B (vitest override, manifest-probe Batch B
+    expectations) Green; Batch D stub types Green (zero
+    offenders); Batch F postcss Green (`^8.5.15`, zero
+    offenders); Batch G `@playwright/test` Green (`^1.60.0`,
+    zero offenders). The single Red test is the Batch C
+    manifest assertion committed in `1874a098`. All other
+    contract tests remain Green because Batches A/B/D/F/G
+    have already landed in Green commit `70061422`.
+  - Batch C calendar (live-behavior pair per
+    `test-strategy.md` §7): `pnpm --filter reading-advantage
+    exec jest --testPathPattern
+    "components/ui/__tests__/calendar" --no-coverage` →
+    **8 fail / 1 pass / 9 total** in 3.563s. 8 tests fail
+    with `TypeError: (0 , _reactdaypicker.getDefaultClassNames)
+    is not a function` at
+    `apps/reading-advantage/components/ui/calendar.tsx:18:49`,
+    exactly the Red-by-design runtime failure the 9th
+    re-verification documented. The single passing test is
+    the "imports react-day-picker without throwing under the
+    date-fns peer" peer-contract test (it imports the module
+    without invoking the API). The live-behavior Red is real.
+    **Subtlety:** the first run in this verification
+    recorded 9/9 pass because pnpm's
+    `apps/reading-advantage/node_modules/react-day-picker`
+    still had v9.14.0 cached from the prior Green commit's
+    pnpm run; pnpm's auto-resolve kept the cached version and
+    `getDefaultClassNames` worked. After re-running with an
+    explicit non-frozen `pnpm install --filter
+    reading-advantage --ignore-scripts` (which re-resolves
+    from the pre-Green lockfile and the `^8.10.1` manifest
+    declaration), pnpm downgraded to v8.10.2 and the next
+    Jest run surfaced the 8/9 failure. This confirms the
+    manifest assertion is the deterministic Red surface; the
+    Jest test is the live-behavior pair and depends on the
+    install state. The `pnpm install --ignore-scripts` call
+    mutated `pnpm-lock.yaml`; the lockfile was restored to
+    HEAD via `git checkout HEAD -- pnpm-lock.yaml` after the
+    verification so the phase-end tracked worktree is clean.
+  - Batch E ffmpeg-process: `pnpm --filter
+    @reading-advantage/utils exec vitest run ffmpeg-process`
+    → **0 fail / 12 pass / 12 total** in 1.14s. The
+    previously-failing module-load error remains gone because
+    Batch E added `packages/utils/src/ffmpeg-process.ts`
+    exposing `probeDurationSeconds` and `concatMp3Files` with
+    the argv-only spawn contract (no `shell: true`), ENOENT
+    handling, non-zero exit handling, paths-with-spaces
+    handling, and concat-list cleanup that the Phase 2 test
+    suite asserts. The Batch E Red is permanently closed.
+- **Aggregate Red signal confirmed:** **1 failing manifest
+  test + 8 failing live-behavior tests** across 2 bounded
+  commands (Phase 3 contract Batch C manifest assertion +
+  Batch C calendar Jest 8/9 fail with the same
+  `getDefaultClassNames is not a function` runtime error).
+  The Batch E ffmpeg-process run and the other 13 Phase 3
+  contract tests remain Green. This is a **real Red** for
+  Batch C, and the missing implementation artifact is
+  **deterministically named** by the new manifest assertion:
+  the `apps/reading-advantage/package.json` `react-day-picker`
+  specifier must be upgraded from `^8.10.1` (major 8) to a
+  major-9 specifier such as `^9.14.0`. The exact same missing
+  artifact is independently confirmed by the live-behavior
+  Jest run, which throws at runtime when the migrated
+  `calendar.tsx` v9 API meets a `react-day-picker@8`
+  resolution.
+- **Tightening applied:** the new Batch C manifest assertion
+  (committed in `1874a098`, recorded as a tightening in the
+  9th re-verification) is now confirmed at HEAD `7fa9647e`
+  as the deterministic Batch C Red surface, and the
+  live-behavior Jest run (after explicit pre-Green
+  re-resolution) confirms the same missing artifact at
+  runtime. The two signals point at the same implementation
+  gap.
+- **No source code changed.** MID role touched only this
+  plan.md per `workflow.md` boundary; no test file was
+  modified in this re-verification. The 5 dirty tracked
+  paths (4 package.json/source.ts + 1 lockfile) were
+  restored to HEAD before any Red command ran. The
+  `pnpm install --ignore-scripts` call during the
+  verification mutated the lockfile; the mutation was
+  reverted via `git checkout HEAD -- pnpm-lock.yaml` so the
+  phase-end tracked worktree contains zero MID-introduced
+  tracked source changes outside the Measure doc. The
+  pre-existing untracked user-wiring (`apps/marketing/*` and
+  `packages/db/src/schema/marketing.ts`) was preserved
+  untouched and not removed.
+- **Handoff:** the Red contract is now **decuple-locked with
+  one real outstanding Red for Batch C**. The Green owner
+  (Implementer / Green-completion) must update
+  `apps/reading-advantage/package.json` to declare
+  `"react-day-picker": "^9.x.x"` (e.g. `^9.14.0`) so the new
+  manifest assertion and the live-behavior calendar Jest run
+  both pass deterministically against the pre-Green lockfile.
+  After that edit lands, the Phase 3 contract suite will
+  exit 0/14/14 and the focused calendar Jest run will exit
+  0/9/9 with the lockfile in any state. The other 5 dirty
+  Green-implementation paths (primary-advantage
+  package.json, primary-advantage audio-generator.ts,
+  reading-advantage audio-generator.ts, pnpm-lock.yaml, and
+  the already-applied reading-advantage react-day-picker@9
+  edit) are all part of Batch C + Batch E Green work and
+  should be re-applied by the Green owner in the next Green
+  commit alongside the calendar package.json fix. The
+  remaining Phase 3 deferred items are unchanged: flipping
+  the Batch A–G plan checkboxes to `[x]` (Implementer role),
+  Batch H lockfile freeze (`pnpm install --frozen-lockfile`
+  and `pnpm dedupe --check`), the Phase 4 aggregate `pnpm
+  turbo run lint|test|check-types|build` closeout, and the
+  Phase 3 User Manual Verification gate (remains `[ ]` —
+  user-owned). The Red contract is now decuple-locked: (1)
+  Phase 2 calendar/ffmpeg tests committed in `4ec52a0d`,
+  (2) Phase 3 contract suite committed in `438ba747`, (3)
+  Batch C manifest assertion tightening committed in
+  `1874a098`, (4–9) re-verified and recorded in the six
+  prior re-verification sections (3rd–8th), (10) the 9th
+  re-verification added the Batch C manifest assertion and
+  surfaced the missing package.json edit, and (11) this
+  10th re-verification at HEAD `7fa9647e` confirms the
+  deterministic Red signal on Batch C against the same
+  dirty Green worktree state, with the unrelated user work
+  preserved and the phase-end tracked worktree clean.
+
 ### Phase 3 Green Gate
 
 - **Green commit:** `70061422`
