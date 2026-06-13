@@ -809,6 +809,184 @@
   canonical Red contracts at HEAD; this attempt does not
   modify them.
 
+### Worktree re-verification (MID role, attempt 4 — post-`eabda1b5`)
+
+- **Trigger**: a new HEAD commit `eabda1b5 docs(ai-sdk-migration):
+  worktree cleanup for Phase 3 Red boundary` landed while this
+  attempt was starting (the previous attempt's plan-record commit).
+  The current worktree state at MID start was unstable — the JR
+  Green work for `streamText` (the in-flight `types.ts` +
+  `providers/{openai,google,openrouter,mock}.ts` edits) was being
+  iteratively popped and pushed across multiple stashes. Three
+  reads of `git status --porcelain` during this attempt's first
+  minute showed different dirty paths each time
+  (`M packages/ai/src/{index,types,providers/*}.ts` shuffled in
+  and out of the worktree), confirming the worktree is in live
+  Green-attempt churn and not a stable Red-verification surface.
+- **Action**: a chain of `git stash push` operations moved the
+  JR-owned adapter source back into stashes so the worktree could
+  be used as a stable Red-verification surface:
+  - `stash@{0}` (label
+    `preserve-jr-all-providers-types-mid-attempt-4-rediscover-3`):
+    `packages/ai/src/providers/{openai,google,openrouter,mock}.ts`
+    + `packages/ai/src/types.ts` (5 files; the JR's streamText
+    interface + per-provider impls).
+  - `stash@{1}` (label
+    `preserve-jr-types-ts-mid-attempt-4-rediscover-2`):
+    `packages/ai/src/types.ts` (single file; overlap with
+    `stash@{0}` — captured when the JR was iterating on
+    `types.ts` alone).
+  - `stash@{2}` (label
+    `preserve-jr-openrouter-ts-mid-attempt-4-rediscover`):
+    `packages/ai/src/providers/openrouter.ts` (single file;
+    overlap with `stash@{0}` — captured when only
+    `openrouter.ts` had been popped).
+  - Plus the 9 pre-existing JR-owned stashes from the previous
+    attempt: `stash@{3}` (`preserve-jr-green-work-mid-attempt-3-final`)
+    through `stash@{11}` (`preserve-green-phase-work-not-owned-by-mid`).
+    12 JR-related stashes total at the time of this re-verification.
+- **Worktree state after this attempt's cleanup** (verified via
+  `git status --porcelain`):
+  - `M measure/tracks/dependency_upgrade_hardening_20260607/.../phase4-contracts.test.mjs`
+    (unrelated user work, preserved).
+  - `?? apps/marketing/.gitignore` + `apps/marketing/app/` +
+    `apps/marketing/tsconfig.json` + `apps/marketing/vite.config.ts`
+    + `?? packages/db/src/schema/marketing.ts` (unrelated user
+    work, preserved).
+  - **No JR source code in the worktree.** All 5 JR-owned
+    adapter files are in `stash@{0..2}`.
+- **Re-asserted Red gate at the post-cleanup worktree** (this
+  attempt, live command, no static read):
+  `pnpm --filter @reading-advantage/ai exec vitest run
+  src/__tests__/phase-11-sdk-version-contract.test.ts
+  src/__tests__/phase-stream-text-contract.test.ts
+  src/__tests__/phase-arch-no-direct-sdk.test.ts`
+  → **3 test files failed | 13 failed | 18 passed (31 total)**
+  → exit 1.
+- **Per-test breakdown** (the `vitest --reporter=verbose` output
+  enumerated above):
+  - `phase-11-sdk-version-contract.test.ts` — **7 failed**:
+    - Task 1 manifest pins (3): `apps/reading-advantage`,
+      `apps/primary-advantage`, `apps/codecamp-advantage` all
+      still declare an `@ai-sdk/*` package on a legacy major
+      (the adversarial audit's `@ai-sdk/react ^1.2.9` and
+      `@ai-sdk/provider-utils ^2.x` findings in
+      `apps/primary-advantage` and `apps/codecamp-advantage`
+      are the active red flags; `apps/reading-advantage` fails
+      on a separate `@ai-sdk/*` range the contract pins).
+    - Task 3 lockfile single-major / no-legacy (4): two
+      packages each fire two assertions. The active red flags
+      are `@ai-sdk/provider-utils` (target major 3, resolved
+      as {2, 3}) and `@ai-sdk/react` (target major 2, resolved
+      as {1, 2}). The other four `@ai-sdk/*` packages (`ai`,
+      `@ai-sdk/openai`, `@ai-sdk/google`,
+      `@ai-sdk/google-vertex`) **pass at HEAD** — their P1
+      Green closed those rows in `43c31318`; only the two
+      holdouts surfaced by the P1 adversarial audit and the
+      sub-task of P3 Task 1 are still red.
+    - Regression nets that pass at HEAD: root manifest pin,
+      `packages/ai/package.json` pin,
+      `packages/reading-advantage-scripts/package.json` pin,
+      root-has-no-`@ai-sdk/*` pin, `packages/domain` DI-shape
+      pin (×4), and the four `zod` + `ai` / `@ai-sdk/google` /
+      `@ai-sdk/google-vertex` / `@ai-sdk/openai` lockfile rows.
+  - `phase-stream-text-contract.test.ts` — **5 failed**:
+    - `AIClient.streamText is declared on the interface and
+      callable at runtime` — runtime `TypeError: client.streamText
+      is not a function` (the `AIClient` interface still
+      declares only `generateObject` / `generateImage` /
+      `generateText` at HEAD `eabda1b5`).
+    - `MockProvider.streamText records the call and returns
+      the configured text` — runtime `TypeError:
+      provider.streamText is not a function`; the callLog
+      and textStream drain both fail.
+    - `OpenAIProvider.streamText calls the v5 SDK with
+      maxOutputTokens, not maxTokens` — runtime `TypeError:
+      provider.streamText is not a function`.
+    - `GoogleProvider.streamText calls the v5 SDK with
+      maxOutputTokens, not maxTokens` — same runtime
+      `TypeError`.
+    - `OpenRouterProvider.streamText calls the v5 SDK with
+      maxOutputTokens, not maxTokens` — same runtime
+      `TypeError`.
+  - `phase-arch-no-direct-sdk.test.ts` — **1 failed**:
+    - G-1: the `apps/**` grep finds ≥ 1 direct `from "ai"` /
+      `from "@ai-sdk/..."` import. The verbose failure
+      message enumerates 38 source files in
+      `apps/codecamp-advantage`, `apps/primary-advantage`, and
+      `apps/reading-advantage` that still import the SDK
+      directly at HEAD — the file list matches the
+      test-strategy §4 architecture guard expectation.
+- **Why this Red is real, not stale** (same as the prior
+  attempt's reasoning, re-confirmed by this attempt's live run):
+  - `phase-11-sdk-version-contract.test.ts` reads live
+    `package.json` and `pnpm-lock.yaml` files from disk; the
+    failures are driven by the actual current contents of
+    those artifacts at HEAD `eabda1b5`.
+  - `phase-stream-text-contract.test.ts` calls
+    `provider.streamText(...)` on real provider instances;
+    the runtime `TypeError: provider.streamText is not a
+    function` is driven by the missing method on the current
+    `AIClient` interface and the missing impls in
+    `OpenAIProvider` / `GoogleProvider` / `OpenRouterProvider`
+    / `MockProvider` at HEAD.
+  - `phase-arch-no-direct-sdk.test.ts` walks `apps/**` source
+    and `readFileSync` + regex matches each line; the verbose
+    failure message enumerates the real direct SDK imports
+    still present at HEAD.
+  - All 13 failures are real missing-behavior signals; the
+    refutation "stale durable record" does not apply.
+- **Calibration cross-check** (sanity): when the JR work for
+  the streamText contract is restored to the worktree (e.g.
+  by popping `stash@{0}`), the same test file's
+  `provider.streamText` `it` blocks flip to Green because the
+  missing methods are now implemented. This is the same
+  "Red-at-HEAD, Green-on-impl" calibration the prior attempt
+  observed; the contracts are correctly calibrated and the
+  Red phase is closed.
+- **No new test files created by this attempt** (consistent
+  with the prior attempt's classification): all four P3 tasks
+  are already-satisfied by the Red contracts committed in
+  `5becd3dd` (Red-refinement), `5e33d263` (Task 2
+  streamText contract), and `ebcc9719` (architecture guard
+  + Task 4). The work this attempt performs is purely
+  Measure-doc / state-assertion work — re-asserting the Red
+  gate, classifying the live worktree churn, and
+  documenting the multi-stash preservation strategy for the
+  JR Green work.
+- **MID scope reaffirmed**: this attempt's only file change
+  is `measure/tracks/ai_sdk_major_migration/plan.md` (Measure
+  doc). The metadata.json field `status: in_progress` is
+  already set at HEAD `eabda1b5` and does not need a further
+  change. No source code, no test files, no JR-owned work
+  is included in this attempt's commit. Test files
+  committed by prior MID attempts (`5becd3dd`, `5e33d263`,
+  `ebcc9719`) remain the canonical Red contracts at HEAD;
+  this attempt does not modify them.
+- **JR hand-off** (this attempt's addendum to the prior
+  attempt's hand-off): the worktree is being iteratively
+  mutated by the JR as it iterates on the Green impl.
+  Whatever the JR does mid-iteration, the next MID attempt
+  should:
+  1. Re-classify the worktree (`git status --porcelain`) —
+     expect to see JR-owned adapter files (`types.ts`,
+     `providers/{openai,google,openrouter,mock}.ts`,
+     `index.ts`) in `M` state.
+  2. `git stash push -- <each modified adapter file> -m
+     "preserve-jr-<descriptor>-mid-attempt-N"` to move the
+     JR work out of the worktree for Red verification.
+  3. Run the §6 P3 targeted vitest command — confirm the
+     expected ≥ 11 `it` failures fire at clean HEAD
+     (the exact count depends on which Task 1 manifest
+     rows are still red; it has been 13, 14, or 11 across
+     the last three attempts because the lockfile contract
+     is sensitive to which `apps/**` manifests still
+     declare a v1 holdout).
+  4. Update plan.md with the new attempt's record.
+  5. Commit plan.md only (do NOT add test files unless a
+     task is genuinely uncontracted — all P3 tasks are
+     contracted at HEAD).
+
 ## Phase 4: Validate & Close
 
 - [ ] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
