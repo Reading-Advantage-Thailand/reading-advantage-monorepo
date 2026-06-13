@@ -1,7 +1,3 @@
- WARN  GET https://registry.npmjs.org/superjson error (ERR_SOCKET_TIMEOUT). Will retry in 10 seconds. 2 retries left.
- WARN  GET https://registry.npmjs.org/ts-fsrs error (ERR_SOCKET_TIMEOUT). Will retry in 10 seconds. 2 retries left.
- WARN  GET https://registry.npmjs.org/wink-nlp error (ERR_SOCKET_TIMEOUT). Will retry in 10 seconds. 2 retries left.
- WARN  GET https://registry.npmjs.org/uuid error (ERR_SOCKET_TIMEOUT). Will retry in 10 seconds. 2 retries left.
 {
   "@radix-ui/react-accordion": {
     "current": "1.2.12",

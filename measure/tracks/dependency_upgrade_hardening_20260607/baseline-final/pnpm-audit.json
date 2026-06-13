@@ -1,1 +1,6 @@
-{}
+{
+  "vulnerabilities": {},
+  "incomplete": true,
+  "note": "registry stall — pnpm audit --json returned empty result on 2026-06-13. Security audit results beyond the confirmed Next advisory remain unknown.",
+  "captured_at": "2026-06-13T16:05:47.072Z"
+}
