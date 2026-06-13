@@ -1,0 +1,7 @@
+{
+  "track_id": "typescript6_major_migration",
+  "type": "feature",
+  "status": "backlog",
+  "created_at": "2026-06-13T00:00:00Z",
+  "description": "Major migration to TypeScript 6. Covers new type-checking strictness, decorator metadata, isolated declarations, and tsconfig changes. Affects all apps and packages in the monorepo."
+}

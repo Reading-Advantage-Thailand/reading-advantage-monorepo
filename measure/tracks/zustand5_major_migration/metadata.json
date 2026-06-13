@@ -1,0 +1,7 @@
+{
+  "track_id": "zustand5_major_migration",
+  "type": "feature",
+  "status": "backlog",
+  "created_at": "2026-06-13T00:00:00Z",
+  "description": "Major migration to Zustand 5. Covers new store creation API, middleware changes, and TypeScript type inference updates. Affects reading-advantage (currently v4) and aligns with advantage-games (already v5)."
+}

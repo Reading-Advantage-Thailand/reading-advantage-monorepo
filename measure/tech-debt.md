@@ -9,7 +9,7 @@
 | Date | Track | Item | Severity | Status | Notes |
 |------|-------|------|----------|--------|-------|
 | 2026-04-29 | monorepo-scaffold | advantage-games ESLint 6236 warnings | Low | Open | Pre-existing code has many `prefer-const`, `no-undef`, and `no-explicit-any` warnings. |
-| 2026-04-29 | monorepo-scaffold | react-konva peer dependency warning (wants react 19.2.0, app has 19.1.0) | Low | Open | Doesn't block builds. Consider upgrading React to 19.2.x across the monorepo. |
+| 2026-04-29 | monorepo-scaffold | react-konva peer dependency warning (wants react 19.2.0, app has 19.1.0) | Low | Resolved | Resolved 2026-06-13 by dependency_upgrade_hardening_20260607 Batch A (React 19.2.7 upgrade). |
 | 2026-05-01 | migrate-reading-advantage | reading-advantage `ignoreBuildErrors: true` / `ignoreDuringBuilds: true` | Medium | Open | Temporarily enabled to pass build. Cannot verify removal due to build hanging on resource-constrained hardware. |
 | 2026-05-01 | migrate-reading-advantage | reading-advantage: 26 failed test suites (91 tests), 50 passing | Medium | Open | Pre-existing from original repo. Game component tests fail due to Zustand v4 store mocking patterns. |
 | 2026-05-01 | migrate-reading-advantage | reading-advantage: zustand v4 vs v5 in monorepo | Medium | Open | App uses zustand v4, advantage-games uses v5. Align when reading-advantage is ready for v5 migration. |
@@ -47,5 +47,3 @@
 | 2026-06-10 | storage_package_20260603 | F-102 (no storage adapter) + F-703 (GitHub client in domain) | Low | Resolved | Resolved by `storage_package_20260603`. `packages/storage` + `packages/integrations/github` created. `getPracticeIssues` refactored off inline `fetch`. 18 tests pass. |
 | 2026-06-10 | zod_boundary_hardening_20260603 | F-601 (21 routes skip Zod), F-602 (env.ts covers 5/22+ vars), F-603 (duplicate schemas), F-604 (form schemas app-local), F-704 (body-as casts) | High / Medium | **Resolved** | Resolved 2026-06-10 by `zod_boundary_hardening_20260603` (Track 7). `lib/validations/api-helpers.ts` with `parseBody`/`parseQuery`/`parsePath` + `ValidationError`. 21+ routes migrated to Zod validation. 0 `body as` casts in `app/`. `lib/env.ts` covers 100% of `.env.example` (22+ vars) with `.refine` rules. 17+ raw `process.env.*` reads replaced with validated `env` export. `lib/config/{ai,ai-images,features}.ts`, `proxy.ts`, `lib/auth/session.ts`, `lib/analytics.ts` all use `env`. 43 unit tests pass, type-check clean, lint clean. |
 | 2026-06-05 | agents_md_audit_science_advantage_20260603 | Phase 5: 2 of 95 finding-ID-reference tests RED (Track 0 metadata.json omits F-1003; Track 1 spec.md omits 4 subsumed F-IDs) | Low | Open | Fix: add missing F-IDs to Track 0 metadata.json and Track 1 spec.md. 1-line + 4 F-ID edits. |
-
-

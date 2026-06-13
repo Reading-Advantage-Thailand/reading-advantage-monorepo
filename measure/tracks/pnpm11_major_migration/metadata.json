@@ -1,0 +1,7 @@
+{
+  "track_id": "pnpm11_major_migration",
+  "type": "chore",
+  "status": "backlog",
+  "created_at": "2026-06-13T00:00:00Z",
+  "description": "Major migration to pnpm 11. Covers workspace protocol changes, lockfile format updates, dependency resolution changes, and CI pipeline updates. Affects the entire monorepo's package management."
+}

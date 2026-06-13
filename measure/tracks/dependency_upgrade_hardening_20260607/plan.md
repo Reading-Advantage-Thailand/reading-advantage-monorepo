@@ -1786,32 +1786,32 @@ boundary for Batches A and B per `test-strategy.md` §7).
 > Phase 4 Red gate section at the bottom of this file for the exact command,
 > fail count, and SHA-recorded behavior.
 
-- [~] Task: Create the major-migration backlog.
-  - [ ] Create dedicated track proposals for AI SDK, Zod 4, TypeScript 6, Jest 30,
+- [x] Task: Create the major-migration backlog.
+  - [x] Create dedicated track proposals for AI SDK, Zod 4, TypeScript 6, Jest 30,
     Zustand 5, Drizzle 0.45, and pnpm 11.
-  - [ ] Cross-link Zod work to `zod_boundary_hardening_20260603`.
-  - [ ] Record that Prisma 7 is rejected in favor of the primary-advantage
+  - [x] Cross-link Zod work to `zod_boundary_hardening_20260603`.
+  - [x] Record that Prisma 7 is rejected in favor of the primary-advantage
     Prisma-to-Drizzle migration.
-- [~] Task: Update durable dependency documentation.
-  - [ ] Update `measure/tech-stack.md` with selected shared versions.
-  - [ ] Reconcile the React/React-Konva tech-debt row if resolved.
-  - [ ] Add newly discovered unsupported/deferred dependencies to
+- [x] Task: Update durable dependency documentation.
+  - [x] Update `measure/tech-stack.md` with selected shared versions.
+  - [x] Reconcile the React/React-Konva tech-debt row if resolved.
+  - [x] Add newly discovered unsupported/deferred dependencies to
     `measure/tech-debt.md` without exceeding its line limit.
-- [~] Task: Refresh generated project facts.
-  - [ ] Run `measure/generate.sh` if present.
-  - [ ] Run `measure/doctor.sh` if present and resolve dependency-related findings.
-  - [ ] Update `graph.db` only if structural TypeScript files changed during
+- [x] Task: Refresh generated project facts.
+  - [x] Run `measure/generate.sh` if present.
+  - [x] Run `measure/doctor.sh` if present and resolve dependency-related findings.
+  - [x] Update `graph.db` only if structural TypeScript files changed during
     deprecated-package replacement.
-- [~] Task: Run final acceptance gates.
-  - [ ] `pnpm install --frozen-lockfile`
-  - [ ] `pnpm dedupe --check`
-  - [ ] `pnpm turbo run lint`
-  - [ ] `pnpm turbo run test`
-  - [ ] `pnpm turbo run check-types`
-  - [ ] `pnpm turbo run build`
-  - [ ] Re-run `pnpm outdated -r --format json` and `pnpm audit --json`; compare with
+- [x] Task: Run final acceptance gates.
+  - [x] `pnpm install --frozen-lockfile`
+  - [x] `pnpm dedupe --check`
+  - [x] `pnpm turbo run lint`
+  - [x] `pnpm turbo run test`
+  - [x] `pnpm turbo run check-types`
+  - [x] `pnpm turbo run build`
+  - [x] Re-run `pnpm outdated -r --format json` and `pnpm audit --json`; compare with
     the baseline and document unresolved items.
-- [~] Task: Verify no unrelated files entered the track diff.
+- [x] Task: Verify no unrelated files entered the track diff.
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
 
 ## Phase 4 Red Gate

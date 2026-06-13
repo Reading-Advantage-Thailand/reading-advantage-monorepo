@@ -1,0 +1,7 @@
+{
+  "track_id": "zod4_major_migration",
+  "type": "feature",
+  "status": "backlog",
+  "created_at": "2026-06-13T00:00:00Z",
+  "description": "Major migration from Zod 3 to Zod 4. Coordinated with zod_boundary_hardening_20260603 which owns env/schema validation hardening. This track handles the version bump, API changes (z.string() refinements, .parse vs .safeParse, z.object .strict default), and schema rewrites."
+}
