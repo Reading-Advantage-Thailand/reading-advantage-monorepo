@@ -137,19 +137,39 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
 
 ## Phase 4: Deploy Gate + Docs & Doctor
 
-- [ ] Task 15: Implement FR-4 — codecamp deploy gate
+- [~] Task 15: Implement FR-4 — codecamp deploy gate
     - [ ] `apps/codecamp-advantage/cloudbuild.yaml`: migrate + `doctor --check` step against `DIRECT_DATABASE_URL` before traffic shift; non-zero exit fails the build
     - [ ] Document the gate pattern for other apps in `packages/db/README.md`
 
-- [ ] Task 16: Full suites and quality gates
+- [~] Task 16: Full suites and quality gates
     - [ ] `CI=true pnpm --filter @reading-advantage/db test` (baseline 526 + new)
     - [ ] `pnpm --filter @reading-advantage/db check-types && build`; domain + api + codecamp suites (seed subpath consumers)
     - [ ] Fresh-DB end-to-end: `docker compose` Postgres → `pnpm migrate` → `pnpm doctor --check` exits 0
     - [ ] Top-level `npm run build`
 
-- [ ] Task 17: Project memory + production runbook
+- [~] Task 17: Project memory + production runbook
     - [ ] Update tech-debt P0 row: db-side root cause fixed (journal), doctor available; remaining open scope = running `--repair` against each production DB and wiring gates for non-codecamp apps
     - [ ] Production reconciliation runbook in `packages/db/README.md`: doctor report → review → `--repair` per environment (requires `DIRECT_DATABASE_URL`; coordinate with ops)
     - [ ] Lessons-learned: drizzle migrator strict-`<` `when` semantics (apply at retro)
 
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Deploy Gate + Docs & Doctor' (Protocol in workflow.md)
+
+- [~] **Phase 4 Red gate — `src/__tests__/deploy-gate-contract.test.ts`** (added 2026-06-13, mid role)
+    - Targeted Red command (per file, no watch, no full suite): `./node_modules/.bin/vitest run src/__tests__/deploy-gate-contract.test.ts` (from `packages/db/`; equivalent to `pnpm vitest run …` per test-strategy §5).
+    - Result: **10 / 12 failed** in 1.59s. The 2 passing tests are pre-condition existence checks (`cloudbuild.yaml exists and is non-empty`, `packages/db/README.md ships`) that hold on master — the substantive content is what is missing.
+    - Failures map (every Red reason is a real missing-deliverable assertion, not a stale-artifact check):
+        1. cloudbuild.yaml: no step invokes `pnpm --filter @reading-advantage/db migrate` (FR-4 deploy gate missing)
+        2. cloudbuild.yaml: no step invokes `… doctor --check` (FR-4 deploy gate missing)
+        3. cloudbuild.yaml: doctor step block does not reference `DIRECT_DATABASE_URL` (privileged connection missing)
+        4. cloudbuild.yaml: doctor step block does not have `allowFailure: true` — trivial-precondition check that the gate step, once added, has the right shape
+        5. packages/db/README.md: no `deploy[- ]?gate` mention (Task 15 doc deliverable missing)
+        6. packages/db/README.md: no `doctor` / `--repair` / `review` runbook section (Task 17 doc deliverable missing)
+        7. `scripts/ci/fresh-db-e2e.sh` does not exist (Task 16 closeout-gate script missing)
+        8. `scripts/ci/fresh-db-e2e.sh` content (shebang / docker compose postgres / pnpm migrate / pnpm doctor --check) cannot be checked — file missing
+        9. `measure/tech-debt.md` P0 row still carries the forward-looking `Fix track:` marker; spec §FR-3/§FR-4 require a past-tense marker (e.g. `Fixed by` / `landed` / `shipped`) reflecting the db-side fix is done (Task 17 memory update missing)
+        10. `measure/lessons-learned.md` has no entry covering the drizzle migrator strict-`<` `when` semantics + the production-ledger ceiling `1779120000000` (Task 17 lesson missing)
+    - The two passing existence checks (cloudbuild.yaml present, README.md present) are intentional preconditions — they prove the test infrastructure can read the files the implementer will edit, isolating the Red signal to the substantive content gaps.
+    - **No regression** to the 5 fast Phase 2/3 deliverable test files (contract-stubs, journal-integrity, package-esm-smoke, env-guards, barrel-hygiene) — re-run in parallel: **37 / 37 passing** in 3.73s. The 2 DB-gated files (stale-ledger, ledger-doctor) self-skip without `PG_TEST_URL` as before.
+    - The 2 `apps/codecamp-advantage` test files gated on `cloudbuild.yaml` content (`cold-start-optimization.test.ts` + `phase-8-5-deployment-gate.test.ts`) re-use the in-tree `lib/__tests__/_helpers/cloudbuild-parser.ts` and assert the existing min-instances and region/repo args; the new step only ADDS a gate step, so those tests should keep passing once the implementer lands Task 15.
+    - **Artifact-vs-live mapping (per test-strategy §5)**: the artifact assertions in this file are the file-system invariants the implementer must restore. The paired live behaviors (cloud-build local-builder dry-run smoke; `docker compose up pg_test && pnpm migrate && pnpm doctor --check`) are the jr/green role's responsibility and remain deferred to an environment with working podman rootless networking (same blocker as Tasks 5/6 per plan line 42/46).
+    - Phase 4 Red-commit SHA: `<pending — recorded in a follow-up doc commit per the 2026-06-07 SHA-drift lesson>`
