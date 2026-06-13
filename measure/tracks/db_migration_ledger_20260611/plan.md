@@ -152,9 +152,9 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
     - [x] Production reconciliation runbook in `packages/db/README.md`: doctor report → review → `--repair` per environment (requires `DIRECT_DATABASE_URL`; coordinate with ops)
     - [x] Lessons-learned: drizzle migrator strict-`<` `when` semantics (apply at retro)
 
-- [x] Task: Measure - User Manual Verification 'Phase 4: Deploy Gate + Docs & Doctor' (Protocol in workflow.md) — verified: targeted test 12/12 green, codecamp cloudbuild tests 49/49 green, Phase 2/3 fast tests 49/49 green
+- [x] Task: Measure - User Manual Verification 'Phase 4: Deploy Gate + Docs & Doctor' (Protocol in workflow.md) — verified: targeted test 12/12 green, codecamp cloudbuild tests 49/49 green, Phase 2/3 fast tests 49/49 green (`a53593c5`)
 
-- [x] **Phase 4 Red gate — `src/__tests__/deploy-gate-contract.test.ts`** (added 2026-06-13, mid role)
+- [x] **Phase 4 Red gate — `src/__tests__/deploy-gate-contract.test.ts`** (added 2026-06-13, mid role) (`a00a8179`)
     - Targeted Red command (per file, no watch, no full suite): `./node_modules/.bin/vitest run src/__tests__/deploy-gate-contract.test.ts` (from `packages/db/`; equivalent to `pnpm vitest run …` per test-strategy §5).
     - Result: **10 / 12 failed** in 1.59s. The 2 passing tests are pre-condition existence checks (`cloudbuild.yaml exists and is non-empty`, `packages/db/README.md ships`) that hold on master — the substantive content is what is missing.
     - Failures map (every Red reason is a real missing-deliverable assertion, not a stale-artifact check):
