@@ -55,10 +55,8 @@
   - Live-gate owner: Phase 3 per-batch quality gates record actual command
     output; Phase 4 aggregate `pnpm turbo run lint|test|check-types|build`
     closeout reconciles regressions against this baseline.
-- [~] Task: Add focused calendar compatibility coverage before the
-  `react-day-picker` migration. **Deferred to Phase 3 Batch C** — tests are
-  authored and Red confirmed (1 fail / 8 pass); live-behavior green requires
-  `react-day-picker@9` migration in Batch C.
+- [x] Task: Add focused calendar compatibility coverage before the
+  `react-day-picker` migration. (`4ec52a0d`, re-verified `b02c682e`)
   - [x] Cover date selection, date-range selection, disabled dates, and rendered
     navigation for reading-advantage calendar components. (`4ec52a0d`)
   - [x] Confirm tests fail or peer checks remain red against the incompatible
@@ -72,10 +70,8 @@
   - Live-gate owner: Batch C migrates the calendar to the compatible
     `react-day-picker@9` contract; the same focused Jest command must exit 0
     after Batch C.
-- [~] Task: Add focused FFmpeg utility contract tests before replacement.
-  **Deferred to Phase 3 Batch E** — tests are authored and Red confirmed
-  (1 failed test file, module not found); live-behavior green requires
-  `ffmpeg-process.ts` creation in Batch E.
+- [x] Task: Add focused FFmpeg utility contract tests before replacement.
+  (`4ec52a0d`, re-verified `b02c682e`)
   - [x] Cover duration parsing from `ffprobe` JSON. (`4ec52a0d`)
   - [x] Cover concat-list or argument generation without shell interpolation. (`4ec52a0d`)
   - [x] Cover non-zero process exits, missing binaries, cleanup, and paths with
@@ -104,7 +100,7 @@
     this contract because operators cannot execute a column value as a script.
   - Live-gate owner: Phase 3 batch execution runs each documented gate; the
     artifact itself is the contract Phase 3 follows.
-- [~] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
   - [x] Artifact gates verified: baseline-truth 5/5 pass, batch-gates 8/8 pass.
   - [x] Live-behavior Red confirmed: calendar 1/9 fail, ffmpeg-process 1 failed file.
   - [x] No test files modified; artifacts only.
