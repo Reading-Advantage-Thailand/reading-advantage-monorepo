@@ -5,7 +5,7 @@ import {
   createSession as sharedCreateSession,
   SESSION_COOKIE_NAME,
 } from '@reading-advantage/auth';
-import type { Session } from '@reading-advantage/auth';
+import type { Session, CreateSessionResult } from '@reading-advantage/auth';
 import { env } from '@/lib/env';
 
 const SESSION_DURATION_SECONDS = 7 * 24 * 60 * 60;
@@ -15,7 +15,7 @@ export { SESSION_COOKIE_NAME };
 /**
  * Create a new session for a user (delegates to shared auth with local db)
  */
-export async function createSession(userId: string): Promise<Session> {
+export async function createSession(userId: string): Promise<CreateSessionResult> {
   return sharedCreateSession(db, userId);
 }
 

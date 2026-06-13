@@ -83,12 +83,12 @@ describe("auth route handlers", () => {
   it("rejects registration with unknown school ID", async () => {
     // FR-6: registration requires auth — mock teacher session
     vi.mocked(requireAuth).mockResolvedValueOnce({
-      id: "sess", token: "tok", userId: "t1",
+      id: "sess", userId: "t1",
       expiresAt: new Date(Date.now() + 86400000),
       user: { id: "t1", username: "t", name: "T", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
     });
     vi.mocked(requireRole).mockResolvedValueOnce({
-      id: "sess", token: "tok", userId: "t1",
+      id: "sess", userId: "t1",
       expiresAt: new Date(Date.now() + 86400000),
       user: { id: "t1", username: "t", name: "T", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
     });
@@ -130,14 +130,12 @@ describe("auth route handlers", () => {
     // FR-6/FR-16: registration is now gated behind TEACHER/ADMIN session
     vi.mocked(requireAuth).mockResolvedValueOnce({
       id: "teacher-session",
-      token: "teacher-token",
       userId: "teacher-1",
       expiresAt: new Date(Date.now() + 86400000),
       user: { id: "teacher-1", username: "teacher1", name: "Teacher", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
     });
     vi.mocked(requireRole).mockResolvedValueOnce({
       id: "teacher-session",
-      token: "teacher-token",
       userId: "teacher-1",
       expiresAt: new Date(Date.now() + 86400000),
       user: { id: "teacher-1", username: "teacher1", name: "Teacher", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
@@ -860,7 +858,6 @@ describe("Phase 2 — Task 38: FR-16 register does NOT self-authenticate", () =>
     // successful-gated-register path must not set a session cookie.
     vi.mocked(requireAuth).mockResolvedValueOnce({
       id: "teacher-session",
-      token: "teacher-token",
       userId: "teacher-1",
       expiresAt: new Date(Date.now() + 86400000),
       user: {
@@ -876,7 +873,6 @@ describe("Phase 2 — Task 38: FR-16 register does NOT self-authenticate", () =>
     });
     vi.mocked(requireRole).mockResolvedValueOnce({
       id: "teacher-session",
-      token: "teacher-token",
       userId: "teacher-1",
       expiresAt: new Date(Date.now() + 86400000),
       user: {
