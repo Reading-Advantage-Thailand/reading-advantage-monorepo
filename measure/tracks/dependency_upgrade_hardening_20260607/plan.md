@@ -1786,23 +1786,23 @@ boundary for Batches A and B per `test-strategy.md` §7).
 > Phase 4 Red gate section at the bottom of this file for the exact command,
 > fail count, and SHA-recorded behavior.
 
-- [x] Task: Create the major-migration backlog.
+- [x] Task: Create the major-migration backlog. (`67dfb92d`)
   - [x] Create dedicated track proposals for AI SDK, Zod 4, TypeScript 6, Jest 30,
     Zustand 5, Drizzle 0.45, and pnpm 11.
   - [x] Cross-link Zod work to `zod_boundary_hardening_20260603`.
   - [x] Record that Prisma 7 is rejected in favor of the primary-advantage
     Prisma-to-Drizzle migration.
-- [x] Task: Update durable dependency documentation.
+- [x] Task: Update durable dependency documentation. (`67dfb92d`)
   - [x] Update `measure/tech-stack.md` with selected shared versions.
   - [x] Reconcile the React/React-Konva tech-debt row if resolved.
   - [x] Add newly discovered unsupported/deferred dependencies to
     `measure/tech-debt.md` without exceeding its line limit.
-- [x] Task: Refresh generated project facts.
+- [x] Task: Refresh generated project facts. (`67dfb92d`)
   - [x] Run `measure/generate.sh` if present.
   - [x] Run `measure/doctor.sh` if present and resolve dependency-related findings.
   - [x] Update `graph.db` only if structural TypeScript files changed during
     deprecated-package replacement.
-- [x] Task: Run final acceptance gates.
+- [x] Task: Run final acceptance gates. (`67dfb92d`)
   - [x] `pnpm install --frozen-lockfile`
   - [x] `pnpm dedupe --check`
   - [x] `pnpm turbo run lint`
@@ -1811,8 +1811,8 @@ boundary for Batches A and B per `test-strategy.md` §7).
   - [x] `pnpm turbo run build`
   - [x] Re-run `pnpm outdated -r --format json` and `pnpm audit --json`; compare with
     the baseline and document unresolved items.
-- [x] Task: Verify no unrelated files entered the track diff.
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+- [x] Task: Verify no unrelated files entered the track diff. (`67dfb92d`)
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (`f5e88f03`, Protocol in workflow.md)
 
 ## Phase 4 Red Gate
 
