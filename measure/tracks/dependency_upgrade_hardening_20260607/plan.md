@@ -499,6 +499,94 @@ boundary for Batches A and B per `test-strategy.md` §7).
 - **No source code changed.** The MID role touched only test files
   and Measure docs per `workflow.md` boundary.
 
+### Phase 3 Red Gate — MID Second Re-Verification (2026-06-13, post-`438ba747`)
+
+- **Re-verification commit:** `438ba747` (HEAD at the start of this
+  re-verification; the prior MID Red-gate commit
+  `test(dep-upgrade): add Phase 3 Red gate contract suite for
+  Batches A, B, D, F, G`).
+- **Working tree state at MID start:** clean — `git status
+  --porcelain` produced no output and `git ls-files --others
+  --exclude-standard` produced no output. No unrelated user work to
+  preserve.
+- **HEAD line for this re-verification:** `438ba747 test(dep-upgrade):
+  add Phase 3 Red gate contract suite for Batches A, B, D, F, G` —
+  the prior MID Red-gate commit. No commits or working-tree changes
+  occurred between that commit and the start of this re-verification,
+  so the Red contract is unchanged.
+- **Graph freshness:** `graph.db` mtime is 2026-06-13 07:42 (today),
+  2,109 nodes / 3,030 edges / 284 files; `build-graph stats` reports
+  the root TS project + `packages/*` are indexed but the app-level
+  files (calendar.tsx, audio-generator.ts) and the new track-local
+  probe are still graph-blind per `test-strategy.md` §6. Targeted
+  `build-graph search` confirmed zero hits for `calendar`, `ffmpeg`,
+  `fluent-ffmpeg`, and `manifest-probe` (the latter lives under
+  `measure/tracks/.../scripts/` and is intentionally not part of the
+  root `tsconfig.json` graph).
+- **Re-run of all three bounded Red commands at HEAD `438ba747`
+  (this verification):**
+  - Phase 3 contract: `node --test measure/tracks/
+    dependency_upgrade_hardening_20260607/scripts/__tests__/
+    phase3-contracts.test.mjs` → **8 fail / 5 pass / 13 total** in
+    ~1.97s. Per-test fail breakdown matches the prior
+    re-verification: Batch A next override (asserted 16.2.9,
+    observed 16.0.0), Batch A react/react-dom (asserted 19.2.7,
+    observed 19.2.5), Batch A manifest-probe alignment (probe exits
+    1 with drift on next/react/react-dom/@next/mdx reported to
+    stderr), Batch B vitest override (asserted 4.1.8, observed
+    4.1.5), Batch B manifest-probe alignment (probe exits 1 with
+    drift on vitest/@vitest/ui/@vitest/coverage-v8), Batch D stub
+    types (7 offender declarations across primary-advantage,
+    reading-advantage, www-reading-advantage, api, auth), Batch F
+    postcss (3 offenders: primary-advantage 8.5.3, reading-advantage
+    ^8, www-reading-advantage ^8), Batch G @playwright/test (4
+    offenders: advantage-games 1.51.1, codecamp-advantage 1.59.1,
+    science-advantage 1.59.1, www-reading-advantage 1.59.1). The 5
+    Green tests are probe correctness: script exists, exit 1 on
+    missing/bad args, exit 0 on aligned fake workspace, exit 1 on
+    drifted fake workspace, Batch H lockfile presence.
+  - Batch C calendar: `pnpm --filter reading-advantage exec jest
+    --testPathPattern "components/ui/__tests__/calendar"
+    --no-coverage` → **1 fail / 8 pass / 9 total** in 21.423s (real
+    Red; same range-mode failure as the prior re-verifications —
+    v8's gridcell `aria-label` is `"Monday, June 1st, 2026"` and
+    collides on `/5/`, triggering
+    `getMultipleElementsFoundError` from RTL on line 129 of
+    `components/ui/__tests__/calendar.test.tsx`).
+  - Batch E ffmpeg-process: `pnpm --filter @reading-advantage/utils
+    exec vitest run ffmpeg-process` → **1 failed (1) test file,
+    0 tests collected** in 2.87s (real Red; `Error: Cannot find
+    module '/src/ffmpeg-process'` at
+    `packages/utils/src/__tests__/ffmpeg-process.test.ts:133:1`,
+    exactly the Red-by-design module-load failure).
+- **Aggregate Red signal confirmed:** 10 failing tests + 1 failing
+  test file across 3 bounded commands (2 Batch A + 2 Batch B + 1
+  Batch D + 1 Batch F + 1 Batch G contract tests + 1 calendar
+  range-mode + 1 ffmpeg-process suite-level = 10 failing tests + 1
+  failing test file). Identical to the prior MID re-verification; no
+  further tightening of the contract was required because no
+  implementation artifact (file, module, section, override edit, or
+  workspace declaration) has been added since.
+- **Tightening needed:** none. Every Red is caused by a missing
+  implementation artifact (file, module, section, override edit, or
+  workspace declaration) and not by a stale durable record. No
+  contract change was required.
+- **No source code changed.** MID role touched only Measure docs per
+  `workflow.md` boundary; no test file was modified in this
+  re-verification because the existing assertions remain the correct
+  Red contract.
+- **Handoff:** Green owners remain Phase 3 Batch A (next/react
+  overrides + manifest alignment), Phase 3 Batch B (Vitest family
+  override + manifest alignment), Phase 3 Batch C (calendar
+  migration to v9 contract), Phase 3 Batch D (deprecated stub type
+  removal), Phase 3 Batch E (ffmpeg-process utility creation +
+  audio-generator refactors + fluent-ffmpeg removal), Phase 3
+  Batch F (postcss patch upgrade), Phase 3 Batch G (@playwright/test
+  minor upgrade), and Phase 3 Batch H (`pnpm install
+  --frozen-lockfile` + `pnpm dedupe --check`). The Red contract is
+  now double-locked: (1) tests committed in `438ba747`, (2)
+  re-verified at `438ba747` and recorded in this section.
+
 ## Phase 4: Generate Docs & Doctor
 
 - [ ] Task: Create the major-migration backlog.
