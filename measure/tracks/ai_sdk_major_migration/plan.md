@@ -473,6 +473,110 @@
   earlier attempts — the fail count is asserted by reading,
   not by executing `vitest`.
 
+### Live Red proof (MID role, this attempt — replaces the "estimated from static analysis" notes above)
+
+- **Toolchain correction**: the prior MID attempts (this one
+  included) recorded that "the local shell lacks `node` /
+  `pnpm` / `vitest`". That note is **incorrect** — the nvm Node
+  install at `/home/daniel-bo/.nvm/versions/node/v24.4.0/bin/`
+  has `node v24.4.0`, `pnpm 8.15.8`, and `packages/ai/node_modules/.bin/vitest`
+  is installed. The toolchain is reachable via
+  `export PATH="/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH"`.
+  This attempt re-asserts the Red gate with the **live command**,
+  not by static reading.
+- **Verification methodology** (Red-at-HEAD proof despite the
+  dirty worktree carrying JR's Green progress):
+  1. `git stash --keep-index --include-untracked` to put the
+     52-path dirty worktree (JR's in-progress Green
+     implementation + unrelated user work) into a stash.
+  2. Run the targeted Red command against the now-clean HEAD
+     (`5becd3dd`) to assert the Red gate fires on the committed
+     test files.
+  3. `git stash pop` to restore the dirty worktree; JR's Green
+     work and unrelated user work are preserved untouched.
+- **Targeted Red command** (test-strategy §6 P3 row, scoped to
+  the three files this Red phase owns):
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-version-contract.test.ts src/__tests__/phase-stream-text-contract.test.ts src/__tests__/phase-arch-no-direct-sdk.test.ts`
+- **Live targeted Red result at HEAD (`5becd3dd`, dirty worktree
+  stashed)**:
+  - **Test Files: 3 failed (3)**
+  - **Tests: 14 failed | 17 passed (31 total)**
+  - **Command exit code: 1** (`ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL`)
+- **Per-file failure breakdown** (the full `vitest --reporter=verbose`
+  output is reproducible from the command above):
+  - `phase-11-sdk-version-contract.test.ts` — **7 failed**:
+    - Task 1 manifest pins (3): `apps/reading-advantage`,
+      `apps/primary-advantage`, `apps/codecamp-advantage` all
+      declare a `@ai-sdk/*` package on a legacy major (the
+      adversarial audit's `@ai-sdk/react ^1.2.9` finding is the
+      active red flag in `apps/primary-advantage` and
+      `apps/codecamp-advantage`; `apps/reading-advantage` fails
+      on a different `@ai-sdk/*` range that the contract pins).
+    - Task 3 lockfile single-major / no-legacy (4): two
+      packages each fire two assertions. The active red flag is
+      `@ai-sdk/provider-utils` (3 × major + 3) and `@ai-sdk/react`
+      (1 × major + 1), each failing both the single-major pin
+      and the no-legacy-holdout check. The other four
+      `@ai-sdk/*` packages (`ai`, `@ai-sdk/openai`,
+      `@ai-sdk/google`, `@ai-sdk/google-vertex`) **pass at HEAD**
+      — their P1 Green closed those rows in `43c31318`; only the
+      two new holdouts from the P1 adversarial audit are still
+      red.
+  - `phase-stream-text-contract.test.ts` — **6 failed**:
+    - AIClient interface declaration: `typeof
+      client.streamText === "function"` (currently `"undefined"`).
+    - MockProvider: `provider.streamText` is not a function; the
+      `callLog` length and `textStream` drain both fail.
+    - OpenAIProvider: `provider.streamText` is not a function.
+    - GoogleProvider: `provider.streamText` is not a function.
+    - OpenRouterProvider: `provider.streamText` is not a function.
+    - Barrel re-export: `packages/ai/src/index.ts` does not
+      re-export `StreamTextInput` from `./types.js` (the type
+      export block does not contain `StreamTextInput`).
+  - `phase-arch-no-direct-sdk.test.ts` — **1 failed**:
+    - G-1: the apps/** grep finds `>= 1` direct
+      `from "ai"` / `from "@ai-sdk/..."` import (the hit list
+      in the failure message shows the full set of dirty
+      apps/** source files still importing the SDK directly
+      at HEAD — these are the files JR's Green work has
+      uncommitted migrations for).
+- **Why this Red is real, not stale**:
+  - `phase-11-sdk-version-contract.test.ts` reads live
+    `package.json` and `pnpm-lock.yaml` files from disk; the
+    failures are driven by the actual current contents of
+    those artifacts.
+  - `phase-stream-text-contract.test.ts` calls
+    `client.streamText` on a `MockProvider` instance; the
+    runtime `TypeError: provider.streamText is not a function`
+    is driven by the missing method on the current `AIClient`
+    interface, not by a stale durable record.
+  - `phase-arch-no-direct-sdk.test.ts` walks `apps/**` source
+    and `readFileSync` + regex matches each line; the hit
+    list in the failure message enumerates the real direct
+    SDK imports still present at HEAD.
+  - All 14 failures are real missing-behavior signals; the
+    refutation "stale durable record" does not apply to any
+    of the three files.
+- **Targeted Red result at the dirty worktree (un-stashed)**:
+  - **Test Files: 3 passed (3)**
+  - **Tests: 31 passed (31)**
+  - This is **not a Red-state artifact** — it is the proof
+    that the JR in-progress Green work (uncommitted
+    `streamText` impl in `types.ts` / `index.ts` /
+    `providers/*` + app migrations to `@reading-advantage/ai`)
+    does close every one of the 14 Red contracts when it
+    lands. The Red phase is therefore correctly calibrated:
+    the same test files fire Red at HEAD (missing impl) and
+    Green once the Green work commits (impl present). JR's
+    next commit (or commits) is expected to flip all three
+    files Green.
+- **Sanity: the dirt worktree is preserved**. The stash-pop
+  restored 52 dirty files (JR's Green work + unrelated user
+  work). The commit for this MID pass touches only
+  `measure/tracks/ai_sdk_major_migration/plan.md`; no
+  source code, no test files, no JR-owned work is included
+  in this commit.
+
 ## Phase 4: Validate & Close
 
 - [ ] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
