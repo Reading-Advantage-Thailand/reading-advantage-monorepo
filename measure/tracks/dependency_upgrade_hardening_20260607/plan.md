@@ -45,9 +45,9 @@
 > C/E) and the Phase 4 aggregate `pnpm turbo run …` closeout, per
 > `test-strategy.md` §1, §7, and §8.
 
-- [x] Task: Capture baseline quality-gate truth before dependency changes.
-  - [x] Run affected package/app lint, test, check-types, and build commands.
-  - [x] Record pre-existing failures separately from the track's acceptance gates.
+- [x] Task: Capture baseline quality-gate truth before dependency changes. (`b02c682e`)
+  - [x] Run affected package/app lint, test, check-types, and build commands. (`b02c682e`)
+  - [x] Record pre-existing failures separately from the track's acceptance gates. (`b02c682e`)
   - Red proof: `scripts/__tests__/baseline-truth.test.mjs` asserts the
     `baseline-truth.md` artifact exists with required sections (Source Commit,
     Affected Workspaces, Per-Workspace Gate Results, Pre-Existing Failures
@@ -56,11 +56,14 @@
     output; Phase 4 aggregate `pnpm turbo run lint|test|check-types|build`
     closeout reconciles regressions against this baseline.
 - [~] Task: Add focused calendar compatibility coverage before the
-  `react-day-picker` migration.
-  - [~] Cover date selection, date-range selection, disabled dates, and rendered
-    navigation for reading-advantage calendar components.
-  - [~] Confirm tests fail or peer checks remain red against the incompatible
-    `react-day-picker@8` / `date-fns@4` baseline.
+  `react-day-picker` migration. **Deferred to Phase 3 Batch C** — tests are
+  authored and Red confirmed (1 fail / 8 pass); live-behavior green requires
+  `react-day-picker@9` migration in Batch C.
+  - [x] Cover date selection, date-range selection, disabled dates, and rendered
+    navigation for reading-advantage calendar components. (`4ec52a0d`)
+  - [x] Confirm tests fail or peer checks remain red against the incompatible
+    `react-day-picker@8` / `date-fns@4` baseline. (`4ec52a0d`, re-verified
+    `b02c682e`: 1 fail / 8 pass)
   - Red proof: `apps/reading-advantage/components/ui/__tests__/calendar.test.tsx`
     exercises live `<Calendar>` render + interaction using RTL with the
     existing `react-day-picker@8` / `date-fns@4` peer-broken install. Bounded
@@ -70,11 +73,15 @@
     `react-day-picker@9` contract; the same focused Jest command must exit 0
     after Batch C.
 - [~] Task: Add focused FFmpeg utility contract tests before replacement.
-  - [~] Cover duration parsing from `ffprobe` JSON.
-  - [~] Cover concat-list or argument generation without shell interpolation.
-  - [~] Cover non-zero process exits, missing binaries, cleanup, and paths with
-    spaces.
-  - [~] Confirm the new tests are red before implementation.
+  **Deferred to Phase 3 Batch E** — tests are authored and Red confirmed
+  (1 failed test file, module not found); live-behavior green requires
+  `ffmpeg-process.ts` creation in Batch E.
+  - [x] Cover duration parsing from `ffprobe` JSON. (`4ec52a0d`)
+  - [x] Cover concat-list or argument generation without shell interpolation. (`4ec52a0d`)
+  - [x] Cover non-zero process exits, missing binaries, cleanup, and paths with
+    spaces. (`4ec52a0d`)
+  - [x] Confirm the new tests are red before implementation. (`4ec52a0d`,
+    re-verified `b02c682e`: 1 failed test file)
   - Red proof: `packages/utils/src/__tests__/ffmpeg-process.test.ts` imports
     the not-yet-created `../ffmpeg-process` module → import-time Red. Uses a
     `mockSpawn` helper (per `test-strategy.md` §2) that captures argv, stdin,
@@ -84,11 +91,11 @@
     committed under `packages/utils/src/__tests__/fixtures/`.
   - Live-gate owner: Batch E implements the utility, refactors both audio
     generators, and runs the bounded local fixture-driven smoke (<30s).
-- [x] Task: Define batch-specific quality gates in `upgrade-matrix.md`.
-  - [x] Framework batch: all six app builds plus affected tests/check-types.
-  - [x] Vitest batch: every Vitest workspace test command.
-  - [x] Deprecated-type batch: all affected type-check commands.
-  - [x] Tooling/patch batch: root install, lint, test, check-types, and build.
+- [x] Task: Define batch-specific quality gates in `upgrade-matrix.md`. (`b02c682e`)
+  - [x] Framework batch: all six app builds plus affected tests/check-types. (`b02c682e`)
+  - [x] Vitest batch: every Vitest workspace test command. (`b02c682e`)
+  - [x] Deprecated-type batch: all affected type-check commands. (`b02c682e`)
+  - [x] Tooling/patch batch: root install, lint, test, check-types, and build. (`b02c682e`)
   - Red proof: `scripts/__tests__/batch-gates.test.mjs` asserts
     `upgrade-matrix.md` contains a `## Batch Quality Gates` section that
     enumerates exactly the eight implementation batches (A–H) with the
@@ -97,7 +104,10 @@
     this contract because operators cannot execute a column value as a script.
   - Live-gate owner: Phase 3 batch execution runs each documented gate; the
     artifact itself is the contract Phase 3 follows.
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+- [~] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+  - [x] Artifact gates verified: baseline-truth 5/5 pass, batch-gates 8/8 pass.
+  - [x] Live-behavior Red confirmed: calendar 1/9 fail, ffmpeg-process 1 failed file.
+  - [x] No test files modified; artifacts only.
 
 ## Phase 3: Implement
 
@@ -356,7 +366,7 @@ single test file and never invokes a full workspace or repo-wide suite.
 
 ## Phase 2 Green Gate
 
-- **Artifact Green commit:** (this commit — Task 1 and Task 4 artifacts)
+- **Artifact Green commit:** `b02c682e` (Task 1 and Task 4 artifacts)
 - **Targeted Green commands:**
   - Task 1 baseline-truth: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/baseline-truth.test.mjs`
     — **5 pass / 0 fail** (artifact created with Source Commit, Affected
