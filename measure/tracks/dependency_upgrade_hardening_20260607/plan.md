@@ -1281,13 +1281,21 @@ boundary for Batches A and B per `test-strategy.md` §7).
   19.2.7`, identical to the override, so the manifest probe
   still exits 0 against it. Per `workflow.md` boundary the
   untracked paths were preserved untouched (no `rm -f` was
-  required because they were never tracked), and the tracked
-  `packages/db/src/schema/index.ts` modification was also
-  preserved untouched (not reverted) so the user's in-flight
-  marketing app wiring is not overwritten by this track's
-  commit. The dirty `pnpm-lock.yaml` that appeared during
-  `pnpm --filter` runs was restored to HEAD via `git checkout
-  HEAD -- pnpm-lock.yaml` so the re-verification exercises the
+  required because they were never tracked). The tracked
+  `packages/db/src/schema/index.ts` modification was **restored
+  to HEAD** via `git checkout HEAD --
+  packages/db/src/schema/index.ts` so the phase-end worktree
+  contains no MID-introduced source-code changes outside the
+  test file (`phase3-contracts.test.mjs`) and the Measure doc
+  (`plan.md`). The user's in-flight marketing schema wiring
+  (`export * from "./marketing.js";`) is not part of this
+  track's commit and must be re-applied by the user after this
+  track's work lands; the companion untracked
+  `packages/db/src/schema/marketing.ts` is left in place so
+  the user can re-add the export line and commit both together.
+  The dirty `pnpm-lock.yaml` that appeared during `pnpm
+  --filter` runs was restored to HEAD via `git checkout HEAD
+  -- pnpm-lock.yaml` so the re-verification exercises the
   pre-Green lockfile state (which is the state the Red contract
   suite is written against).
 - **Tightening discovered (the reason for the timeout):** when
@@ -1431,16 +1439,22 @@ boundary for Batches A and B per `test-strategy.md` §7).
   plan.md and the `phase3-contracts.test.mjs` test file per
   `workflow.md` boundary ("Do NOT modify existing source code
   except test files and Measure docs"). No tracked source
-  was modified, no untracked file was removed, and the
-  user's in-flight `packages/db/src/schema/index.ts`
-  modification was preserved untouched. The dirty
+  was modified, no untracked file was removed. The dirty
   `pnpm-lock.yaml` was restored to HEAD before any Red
-  command ran and was left clean; the worktree's only
-  tracked dirty paths at the end of this re-verification
+  command ran and was left clean; the pre-existing user-wiring
+  `packages/db/src/schema/index.ts` modification was
+  **restored to HEAD** in a follow-up commit so the
+  phase-end worktree contains zero MID-introduced tracked
+  source changes outside the test file and the Measure doc.
+  The worktree's only tracked dirty paths at the end of this
+  re-verification
   are `plan.md` (this section) and `phase3-contracts.test.mjs`
-  (the new Batch C test), plus the pre-existing user-wiring
-  `packages/db/src/schema/index.ts` modification which is
-  unrelated to this track.
+  (the new Batch C test). The pre-existing user-wiring
+  `packages/db/src/schema/index.ts` modification was
+  **restored to HEAD** in a follow-up commit so the
+  phase-end worktree contains zero MID-introduced tracked
+  source changes outside the test file and the Measure doc
+  per the `workflow.md` boundary.
 - **Handoff:** the Red contract is now **nonuple-locked with
   one real outstanding Red for Batch C**. The seven prior
   re-verifications (3rd–8th) all recorded 0 fail / 13+9+12
