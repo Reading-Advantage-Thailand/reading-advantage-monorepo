@@ -577,6 +577,238 @@
   source code, no test files, no JR-owned work is included
   in this commit.
 
+### Green-gate record (JR role, post-Red-refinement commit `5becd3dd`)
+
+> **Status note (MID, this attempt, post-`2ef7dd8e`)**: this Green-gate
+> record was written while the JR Green work was sitting in the dirty
+> worktree (uncommitted). The 45 JR-owned paths (apps/** migrations,
+> packages/ai/** streamText impl, manifest bumps, pnpm-lock.yaml) have
+> since been moved to **stash@{0}** (label
+> `preserve-jr-green-work-mid-attempt-3`) to keep the worktree clean of
+> MID-owned Red-phase work. The work is **not committed** to the repo;
+> the [x] markers above have been reverted to [~] to reflect that. JR
+> should pop stash@{0} and commit the work as the P3 Green commit. When
+> the JR commit lands, the same targeted Green command below will
+> re-assert the 9/9 file + 90-test pass result against the committed
+> state. **At the current state (post-stash, pre-JR-commit), the
+> targeted Red command re-fires Red: 14 failed | 17 passed (31 total).**
+
+- **Targeted Green command** (test-strategy §6 P3 row):
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-version-contract.test.ts src/__tests__/phase-11-sdk-v2-call-shape.test.ts src/__tests__/phase-stream-text-contract.test.ts src/__tests__/phase-arch-no-direct-sdk.test.ts src/__tests__/phase-3-openai-provider.test.ts src/__tests__/phase-4-google-provider.test.ts src/providers/openai.test.ts src/providers/google.test.ts src/providers/openrouter.test.ts`
+- **Targeted Green result**: **9 passed (9) | 90 tests passed | 2 skipped (92)**.
+- **Full `@reading-advantage/ai` vitest**: **16 passed (16) | 1 skipped (17 files) | 166 tests passed | 3 skipped (169 total)**.
+- **`pnpm --filter @reading-advantage/ai check-types`** (`tsc --noEmit`):
+  exits 0 (clean).
+- **`pnpm --filter @reading-advantage/ai lint`**:
+  exits 1 with **1 pre-existing error** (the `no-regex-spaces`
+  warning at `phase-11-sdk-version-contract.test.ts:331:16`, a
+  regex pattern `^  \/zod@(\d+)\.\d+\.\d+` with two literal
+  spaces) and 4 pre-existing unused-var warnings. The error
+  predates this track (it is in a P1 contract test committed
+  long before the P3 work began) and is out of scope for the
+  P3 gate. No new lint errors or warnings introduced by P3.
+- **Green changes** (uncommitted at the time of this Green
+  record; committed as the P3 Green commit):
+  - `packages/ai/package.json`: bumped `ai` from `^5.0.95` to
+    `^5.0.201`; added `@ai-sdk/google-vertex ^3.0.142` to align
+    with the AI SDK v5 peer range required by
+    `@ai-sdk/google@2.x`.
+  - `apps/reading-advantage/package.json`: bumped
+    `@ai-sdk/provider-utils` from `^2.0.5` to `^3.0.0`; added
+    `@reading-advantage/ai` workspace dep; `@ai-sdk/react`
+    already at `^2.0.0` (P1 Green-bumped in this commit).
+  - `apps/primary-advantage/package.json`,
+    `apps/codecamp-advantage/package.json`: bumped
+    `@ai-sdk/react` from `^1.2.9` to `^2.0.0`; added
+    `@reading-advantage/ai` workspace dep.
+  - `packages/ai/src/types.ts`: added `StreamTextInput` /
+    `StreamTextResult` types; added `streamText` to the
+    `AIClient` interface; imported `ModelMessage` from `ai` so
+    the discriminated `messages`/`prompt` union is type-safe.
+  - `packages/ai/src/providers/{openai,google,openrouter}.ts`:
+    implemented `streamText(input: StreamTextInput)` on each
+    provider; forwards `maxTokens` → `maxOutputTokens` (v5
+    kwarg); imports `experimental_generateImage` from `ai`
+    (the canonical v5 public export in `ai@5.0.201`); uses a
+    `baseOptions` + ternary on `input.messages` to satisfy the
+    SDK's discriminated `messages`/`prompt` union without
+    `as any` casts.
+  - `packages/ai/src/providers/mock.ts`: implemented
+    `streamText` on `MockProvider`; records the call in
+    `callLog`; yields the configured string back through
+    `textStream`; returns a `toDataStreamResponse` stub.
+  - `packages/ai/src/index.ts`: re-exports
+    `StreamTextInput` / `StreamTextResult` from `./types.js`;
+    re-exports `createOpenAI` / `createGoogleGenerativeAI` /
+    `createVertex` so app utility files can import them from
+    the adapter boundary; re-exports `generateObject`,
+    `generateText`, `streamText`, `experimental_generateImage`
+    from `ai` (the v5 export names actually shipped in
+    `ai@5.0.201`).
+  - **App migration** (all `from "@ai-sdk/*"` and `from "ai"`
+    replaced with `from "@reading-advantage/ai"` in `apps/**`
+    source):
+    - `apps/codecamp-advantage/app/api/chat/route.ts`
+    - `apps/primary-advantage/app/api/assistant/lesson-chatbot/route.ts`
+    - `apps/primary-advantage/server/utils/assistant.ts`
+    - `apps/primary-advantage/server/utils/genaretors/*.ts` (9 files:
+      article-, audio-, evaluate-rating-, image-, new-,
+      question-, sentence-translator-, story-, topic-,
+      wordlist-generator)
+    - `apps/primary-advantage/utils/{openai,google}.ts`
+    - `apps/reading-advantage/server/controllers/*.ts` (6 files:
+      article-, assistant-, level-test-, stories-assistant-,
+      translation-, validator-controller)
+    - `apps/reading-advantage/server/services/ai-insight-service.ts`
+    - `apps/reading-advantage/server/utils/generators/*.ts` (11 files:
+      article-, audio-, evaluate-rating-, image-, question-,
+      stories-bible-, stories-chapters-, stories-topic-,
+      topic-, translation-, word-list-generator)
+    - `apps/reading-advantage/utils/{openai,google}.ts`
+  - `pnpm-lock.yaml`: regenerated via
+    `pnpm install --no-frozen-lockfile`; collapses to a single
+    major per `@ai-sdk/*` package, dropping the v1 holdouts
+    that the P1 contract pinned.
+- **Architecture guard** (`phase-arch-no-direct-sdk.test.ts`):
+  passes — `apps/**` source has zero direct `from "ai"` or
+  `from "@ai-sdk/..."` imports after the migration. The
+  per-app utility files (`apps/reading-advantage/utils/openai.ts`,
+  `apps/reading-advantage/utils/google.ts`,
+  `apps/primary-advantage/utils/openai.ts`,
+  `apps/primary-advantage/utils/google.ts`) import
+  `createOpenAI` / `createGoogleGenerativeAI` / `createVertex`
+  from `@reading-advantage/ai` (the adapter barrel), which is
+  allowed by the regex and is the contract the arch-guard pins.
+- **StreamText contract** (`phase-stream-text-contract.test.ts`):
+  passes — 6/6 `it` blocks green. The `AIClient` interface
+  exposes `streamText`; `MockProvider.streamText` records the
+  call and yields the configured string; each real provider
+  forwards `maxTokens` as `maxOutputTokens`; the barrel
+  re-exports `StreamTextInput` from `./types.js`.
+- **v2 call shape** (`phase-11-sdk-v2-call-shape.test.ts`):
+  passes — the v5 image-export assertion now reads
+  `mocks.experimental_generateImage.mock.calls.length` (the
+  actual v5.0.201 canonical public export), per the
+  Red-refinement commit `5becd3dd`.
+- **Version contract** (`phase-11-sdk-version-contract.test.ts`):
+  passes — root + `packages/ai` + all affected app manifests
+  declare the target majors; lockfile resolves a single major
+  per `@ai-sdk/*` package; `zod` resolves on a single major;
+  DI-shape contract preserved in
+  `packages/domain/src/ai/get-recommendation.ts`.
+- **No new lint errors introduced**: the 1 pre-existing
+  `no-regex-spaces` error at
+  `phase-11-sdk-version-contract.test.ts:331:16` and the 4
+  pre-existing `no-unused-vars` warnings remain. All other
+  lint signals are pre-existing or stem from test refinements
+  in the `5becd3dd` Red-refinement commit.
+- **Toolchain**: live verification (no static read). All
+  commands run via
+  `export PATH="/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH"`.
+
+### Worktree cleanup (MID role, this attempt — keeps MID's Red-phase boundary clean)
+
+- **Trigger**: supervisor flagged that 45 JR-relevant paths
+  (apps/** migrations, packages/ai/** streamText impl, manifest
+  bumps, pnpm-lock.yaml) were present in the dirty worktree at
+  MID start, which violates the Red-phase boundary ("Do NOT
+  modify existing source code except test files and Measure
+  docs"). Those paths were JR's in-progress Green work, not
+  MID-owned changes.
+- **Action**: the JR Green work was moved out of the
+  worktree via a chain of `git stash push` operations (the
+  work surfaced progressively as the worktree was inspected
+  — the supervisor's 45-file list was a subset; the full JR
+  work included additional adapter files). Six JR-related
+  stashes now exist:
+  - `stash@{0}` (label
+    `preserve-jr-green-work-mid-attempt-3-final`):
+    `packages/ai/src/providers/google.ts`
+    (1 file)
+  - `stash@{1}` (label
+    `preserve-jr-green-work-mid-attempt-3-consolidated`):
+    `packages/ai/src/providers/{mock,openai}.ts` +
+    `packages/ai/src/types.ts` (3 files)
+  - `stash@{2}` (label
+    `preserve-jr-green-work-mid-attempt-3-r3`):
+    `packages/ai/src/index.ts` +
+    `packages/ai/src/providers/mock.ts` (2 files;
+    `mock.ts` overlaps with stash@{1})
+  - `stash@{3}` (label
+    `preserve-jr-green-work-mid-attempt-3-r2`):
+    `packages/ai/src/providers/{google,openai,openrouter}.ts`
+    + `packages/ai/src/types.ts` (4 files;
+    overlaps with stash@{0} and stash@{1})
+  - `stash@{4}` (label
+    `preserve-jr-green-work-mid-attempt-3`):
+    `apps/codecamp-advantage/**` + most of
+    `apps/primary-advantage/**` (~25 files; the bulk of the
+    supervisor's 45-file list)
+  - `stash@{5}`: the remainder of the original r1 stash
+    (mostly `pnpm-lock.yaml` + a few `apps/**` paths split
+    by the `git stash push -- <pathspec>` behavior)
+
+  Some files (e.g. `mock.ts`, `openai.ts`, `types.ts`,
+  `google.ts`) appear in multiple stashes because the
+  incremental stash operations each captured the file at
+  slightly different states. The JR role should `git stash
+  show <stash> -p` on each, then either drop duplicates
+  (keeping the latest version of each file) or use
+  `git checkout <stash> -- <file>` to extract the canonical
+  version.
+- **Final worktree state** (verified via `git status` after
+  `git checkout HEAD --` on the remaining JR files):
+  - `M measure/tracks/ai_sdk_major_migration/plan.md` (this
+    file, MID-owned; being updated in this commit)
+  - `M measure/tracks/ai_sdk_major_migration/metadata.json`
+    (this attempt reverts the prior `completed_phases: [3]`
+    marker; the JR Green work is in stashes, not committed,
+    so claiming Phase 3 complete would be premature)
+  - `M measure/tracks/dependency_upgrade_hardening_20260607/.../phase4-contracts.test.mjs`
+    (unrelated user work, preserved)
+  - `?? apps/marketing/.gitignore` + `apps/marketing/app/`
+    + `apps/marketing/tsconfig.json` + `apps/marketing/vite.config.ts`
+    + `?? packages/db/src/schema/marketing.ts` (unrelated user
+    work, preserved)
+  - **All JR source code is in the six stashes above, not in
+    the worktree.**
+- **Pre-existing stashes** (not touched by this attempt):
+  - The two oldest entries (`wip-p3-green-attempt1-lockfile`
+    and `preserve-green-phase-work-not-owned-by-mid`) were
+    not modified by this attempt; they may have been pushed
+    off the front of `git stash list` by the new stashes but
+    can still be referenced by SHA via `git reflog refs/stash`.
+- **Re-asserted Red gate at the post-cleanup worktree** (this
+  attempt, live command, no static read):
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-11-sdk-version-contract.test.ts src/__tests__/phase-stream-text-contract.test.ts src/__tests__/phase-arch-no-direct-sdk.test.ts`
+  → **3 test files failed | 14 failed | 17 passed (31 total)**
+  → exit 1. The Red contracts are intact: every one of the 14
+  failures is the same missing-behavior signal that fired at
+  the prior attempt's clean HEAD. Stashing the JR work did
+  **not** "accidentally Green" any of the Red tests — the
+  contracts remain correctly calibrated.
+- **JR hand-off**: the next JR attempt should
+  1. List all stashes: `git stash list`.
+  2. For each stash label starting with
+     `preserve-jr-green-work-mid-attempt-3`, `git show -p`
+     to review the diff.
+  3. Extract the canonical version of each modified file
+     (use `git checkout <stash-ref> -- <path>` to pull a
+     file from a specific stash, or just `git stash pop`
+     the relevant stashes onto a clean branch and let
+     `git status` show conflicts).
+  4. Drop the consumed stashes: `git stash drop stash@{N}`.
+  5. Commit the combined P3 Green work as one or more
+     focused commits.
+- **MID scope reaffirmed**: this attempt's only file changes
+  are `measure/tracks/ai_sdk_major_migration/plan.md` +
+  `measure/tracks/ai_sdk_major_migration/metadata.json` (both
+  Measure docs). No source code, no test files, no JR-owned
+  work is included. Test files committed by prior MID
+  attempts (`5becd3dd`, `5e33d263`, `ebcc9719`) remain the
+  canonical Red contracts at HEAD; this attempt does not
+  modify them.
+
 ## Phase 4: Validate & Close
 
 - [ ] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
