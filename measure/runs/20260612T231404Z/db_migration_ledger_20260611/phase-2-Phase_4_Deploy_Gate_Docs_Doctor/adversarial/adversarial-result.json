@@ -1,0 +1,24 @@
+{
+  "status": "fail",
+  "summary": "Adversarial audit found and fixed Phase 4 deploy-gate weaknesses in Cloud Build secret wiring and fresh-DB E2E proof. Remaining blockers are pre-existing/unrelated global gates: @reading-advantage/api type/build errors in auth-routes.test.ts and a codecamp live prod-smoke network fetch failure.",
+  "findings": [
+    "Full repo check-types and build fail in @reading-advantage/api src/__tests__/auth-routes.test.ts because mocked Session objects include token, which is not in type Session.",
+    "codecamp-advantage prod-smoke phase-8-5-deployment-gate.test.ts fails on a live network fetch failure unrelated to the Cloud Build artifact assertions."
+  ],
+  "evidence": [
+    "Reviewed measure/tracks/db_migration_ledger_20260611/spec.md, plan.md, test-strategy.md",
+    "Inspected diff since f8c763670fe89bbf12f2152a654f04e7715d067b",
+    "Commit 4493efd4 fixes apps/codecamp-advantage/cloudbuild.yaml secret wiring to availableSecrets.secretManager and exports DATABASE_URL from DIRECT_DATABASE_URL in gate steps",
+    "Commit 4493efd4 hardens scripts/ci/fresh-db-e2e.sh to reset reading_advantage and export DIRECT_DATABASE_URL before doctor --check",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH ./node_modules/.bin/vitest run src/__tests__/deploy-gate-contract.test.ts from packages/db: 13 passed",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH npm run test --workspace=@reading-advantage/db: 338 passed, 4 skipped",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH npm test: 27 passed",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH npm run lint -- --filter=@reading-advantage/db: pass with 6 warnings",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH npm run check-types -- --filter=@reading-advantage/db: pass",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH npm run build -- --filter=@reading-advantage/db: pass",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH npm run lint: pass with existing warnings",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH npm run check-types: fail in @reading-advantage/api auth-routes.test.ts token property errors",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH npm run build: fail in @reading-advantage/api auth-routes.test.ts token property errors",
+    "PATH=/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH npm test --workspace=codecamp-advantage -- lib/__tests__/prod-smoke/phase-8-5-deployment-gate.test.ts lib/__tests__/cold-start-optimization.test.ts: 48 passed, 1 failed due live network fetch"
+  ]
+}
