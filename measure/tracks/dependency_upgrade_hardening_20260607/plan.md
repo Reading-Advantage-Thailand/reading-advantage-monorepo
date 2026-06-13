@@ -793,6 +793,80 @@ boundary for Batches A and B per `test-strategy.md` §7).
   `a7de3fec`, (5) re-re-re-verified at `103200bc` and recorded in
   this section.
 
+### Phase 3 Red Gate — MID Sixth Re-Verification (2026-06-13, post-`01ebc143`)
+
+- **Re-verification commit:** `01ebc143` (HEAD at the start of this re-verification; the prior MID Red-gate doc commit
+  `measure(plan): record Phase 3 Red Gate MID fifth re-verification at HEAD 140d4241`). No commits or
+  working-tree changes occurred between `01ebc143` and the start of this re-verification, so the Red
+  contract is unchanged.
+- **Dirty worktree handling at MID start:** the working tree was reported dirty with a single modification to
+  `apps/reading-advantage/components/ui/__tests__/calendar.test.tsx` that rewrote the range-mode selector
+  from `getByRole("gridcell", { name: /5/ })` and `/10/` to a `container.querySelector('button[aria-label="Friday, June 5th, 2026"]')` /
+  `button[aria-label="Wednesday, June 10th, 2026"]'` selector pair (a v9-specific selector). This is the
+  same stale modification pattern documented in the fourth and fifth re-verifications, left over from a
+  prior timed-out MID attempt that violates the workflow boundary: MID must NOT modify test files; the
+  proper fix for the calendar Red is the Phase 3 Batch C implementation migration of `calendar.tsx`, not a
+  test-rewrite that bypasses the peer-broken baseline. The dirty test file was therefore restored to HEAD
+  via `git checkout HEAD -- <path>` before any Red command ran, so the re-verification exercises the same
+  `01ebc143` HEAD the Red contract is written against. The restore produced a clean worktree
+  (`git status --porcelain` empty) before any Red command ran; no source-code modification occurred.
+- **Graph freshness:** `graph.db` mtime is 2026-06-13 07:42 (today), 2,109 nodes / 3,030 edges / 284 files.
+  `build-graph stats` and `build-graph search calendar|ffmpeg|fluent-ffmpeg|manifest-probe` confirm the
+  FFmpeg utility, Calendar, and `manifest-probe.mjs` surfaces remain graph-blind per `test-strategy.md`
+  §6 (they live under app paths or `measure/tracks/.../scripts/`, neither of which the root
+  `tsconfig.json` graph indexes).
+- **PATH note (non-Red-affecting):** the runtime environment had `node`/`pnpm` only on the nvm path
+  (`/home/daniel-bo/.nvm/versions/node/v24.4.0/bin/`), not on the default `$PATH`. The three bounded Red
+  commands therefore had to be invoked with `PATH="/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH"`
+  prefix. This is environment-only and does not alter the Red contract; downstream Green owners and CI
+  already use the standard `pnpm`/`node` resolution.
+- **Re-run of all three bounded Red commands at HEAD `01ebc143` (this verification, worktree clean after
+  the calendar.test.tsx restore):**
+  - Phase 3 contract: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase3-contracts.test.mjs`
+    → **8 fail / 5 pass / 13 total** in ~2.77s. Per-test fail breakdown is identical to the `438ba747`,
+    `8f7870e1`, `a7de3fec`, `103200bc`, and `140d4241` re-verifications: Batch A next override (asserted
+    `16.2.9`, observed `16.0.0`), Batch A react/react-dom (asserted `19.2.7`, observed `19.2.5`), Batch A
+    manifest-probe alignment (probe exits 1 with drift on next/react/react-dom/@next/mdx reported to
+    stderr), Batch B vitest override (asserted `4.1.8`, observed `4.1.5`), Batch B manifest-probe
+    alignment (probe exits 1 with drift on vitest/@vitest/ui/@vitest/coverage-v8), Batch D stub types
+    (7 offender declarations: `@types/bcryptjs@^2.4.6`×4 in primary-advantage/reading-advantage/api/auth,
+    `@types/sharp@^0.31.1`×1 in primary-advantage, `@types/uuid@^10.0.0`×1 in reading-advantage,
+    `@types/marked@^6.0.0`×1 in www-reading-advantage), Batch F postcss (3 offenders:
+    primary-advantage `^8.5.3`, reading-advantage `^8`, www-reading-advantage `^8`), Batch G
+    `@playwright/test` (4 offenders: advantage-games `^1.51.1`, codecamp-advantage `^1.59.1`,
+    science-advantage `^1.59.1`, www-reading-advantage `^1.59.1`). The 5 Green tests are probe
+    correctness + Batch H lockfile presence.
+  - Batch C calendar: `pnpm --filter reading-advantage exec jest --testPathPattern
+    "components/ui/__tests__/calendar" --no-coverage` → **1 fail / 8 pass / 9 total** in 28.33s (real Red;
+    same range-mode failure as the prior re-verifications — v8's gridcell `aria-label` is
+    `"Monday, June 1st, 2026"` and collides on `/5/`, triggering `getMultipleElementsFoundError` from RTL
+    on line 129 of `apps/reading-advantage/components/ui/__tests__/calendar.test.tsx`).
+  - Batch E ffmpeg-process: `pnpm --filter @reading-advantage/utils exec vitest run ffmpeg-process` →
+    **1 failed (1) test file, 0 tests collected** in 2.47s (real Red; `Error: Cannot find module
+    '/src/ffmpeg-process'` at `packages/utils/src/__tests__/ffmpeg-process.test.ts:133:1`, exactly the
+    Red-by-design module-load failure).
+- **Aggregate Red signal confirmed:** 10 failing tests + 1 failing test file across 3 bounded commands.
+  Identical to the `438ba747`, `8f7870e1`, `a7de3fec`, `103200bc`, and `140d4241` re-verifications; no
+  further tightening of the contract was required because no implementation artifact (file, module,
+  section, override edit, or workspace declaration) has been added since.
+- **Tightening needed:** none. Every Red is caused by a missing implementation artifact (file, module,
+  section, override edit, or workspace declaration) and not by a stale durable record. No contract change
+  was required.
+- **No source code changed.** MID role touched only this plan.md per `workflow.md` boundary; no test
+  file was modified in this re-verification because the existing assertions remain the correct Red
+  contract. The dirty `calendar.test.tsx` modification left by the timed-out prior attempt was restored
+  to HEAD before any Red command ran, so no source-code modification occurred.
+- **Handoff:** Green owners remain Phase 3 Batch A (next/react overrides + manifest alignment), Phase 3
+  Batch B (Vitest family override + manifest alignment), Phase 3 Batch C (calendar migration to v9
+  contract), Phase 3 Batch D (deprecated stub type removal), Phase 3 Batch E (ffmpeg-process utility
+  creation + audio-generator refactors + fluent-ffmpeg removal), Phase 3 Batch F (postcss patch
+  upgrade), Phase 3 Batch G (@playwright/test minor upgrade), and Phase 3 Batch H (`pnpm install
+  --frozen-lockfile` + `pnpm dedupe --check`). The Red contract is now sextuple-locked: (1) tests
+  committed in `438ba747`, (2) re-verified at `438ba747` and recorded at `a7de3fec`, (3) re-re-verified
+  at `8f7870e1`, (4) re-re-re-verified at `a7de3fec`, (5) re-re-re-re-verified at `103200bc`, (6)
+  re-re-re-re-re-verified at `140d4241`, (7) re-re-re-re-re-re-verified at `01ebc143` and recorded in
+  this section.
+
 ### Phase 3 Red Gate — MID Fifth Re-Verification (2026-06-13, post-`140d4241`)
 
 - **Re-verification commit:** `140d4241` (HEAD at the start of this
