@@ -1,0 +1,30 @@
+{
+  "name": "marketing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vinext dev",
+    "build": "vinext build",
+    "start": "vinext start",
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@reading-advantage/api": "workspace:*",
+    "@reading-advantage/auth": "workspace:*",
+    "@reading-advantage/auth-client": "workspace:*",
+    "@reading-advantage/db": "workspace:*",
+    "@reading-advantage/storage": "workspace:*",
+    "@reading-advantage/ai": "workspace:*",
+    "vinext": "latest",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.0.0"
+  }
+}

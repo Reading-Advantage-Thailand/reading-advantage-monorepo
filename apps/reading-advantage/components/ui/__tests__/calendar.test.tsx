@@ -126,10 +126,10 @@ describe("Calendar (range mode) – range-selection contract", () => {
     );
 
     const start =
-      screen.getByRole("gridcell", { name: /5/ }).querySelector("button") ??
+      screen.getByRole("gridcell", { name: /^5$/ }).querySelector("button") ??
       screen.getByRole("button", { name: /^5$/ });
     const end =
-      screen.getByRole("gridcell", { name: /10/ }).querySelector("button") ??
+      screen.getByRole("gridcell", { name: /^10$/ }).querySelector("button") ??
       screen.getByRole("button", { name: /^10$/ });
 
     await user.click(start as HTMLElement);

@@ -25,9 +25,9 @@
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
-    "@types/bcryptjs": "^2.4.6",
+
     "@types/node": "^20.0.0",
     "typescript": "^5.8.0",
-    "vitest": "^3.1.0"
+    "vitest": "^4.1.8"
   }
 }

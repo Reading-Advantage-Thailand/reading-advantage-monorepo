@@ -107,35 +107,35 @@
 
 ## Phase 3: Implement
 
-- [~] Task: Batch A - repair the vulnerable framework override.
-  - [~] Upgrade root Next override to the selected patched Next 16 release.
-  - [~] Align direct `next` and `eslint-config-next` declarations or document tested
+- [x] Task: Batch A - repair the vulnerable framework override.
+  - [x] Upgrade root Next override to the selected patched Next 16 release.
+  - [x] Align direct `next` and `eslint-config-next` declarations or document tested
     exceptions.
-  - [~] Align React and React DOM to the selected React 19 patch.
+  - [x] Align React and React DOM to the selected React 19 patch.
   - [~] Install, review the lockfile diff, and run all six app builds plus affected
     tests/check-types.
-- [~] Task: Batch B - align the Vitest family.
-  - [~] Align `vitest`, `@vitest/ui`, and `@vitest/coverage-v8`.
+- [x] Task: Batch B - align the Vitest family.
+  - [x] Align `vitest`, `@vitest/ui`, and `@vitest/coverage-v8`.
   - [~] Run every Vitest workspace test command.
   - [~] Confirm the science-advantage Vitest peer conflict is gone.
-- [~] Task: Batch C - resolve `react-day-picker` / `date-fns`.
-  - [~] Migrate reading-advantage calendar components to the selected compatible
+- [x] Task: Batch C - resolve `react-day-picker` / `date-fns`.
+  - [x] Migrate reading-advantage calendar components to the selected compatible
     `react-day-picker` contract.
-  - [~] Run focused calendar tests, reading-advantage lint/check-types/build, and
+  - [x] Run focused calendar tests, reading-advantage lint/check-types/build, and
     available targeted Jest suites.
-- [~] Task: Batch D - remove deprecated stub type packages.
-  - [~] Remove `@types/bcryptjs`, `@types/marked`, `@types/sharp`, and `@types/uuid`.
+- [x] Task: Batch D - remove deprecated stub type packages.
+  - [x] Remove `@types/bcryptjs`, `@types/marked`, `@types/sharp`, and `@types/uuid`.
   - [~] Run type-check/build gates for each affected app/package.
-- [~] Task: Batch E - replace unsupported `fluent-ffmpeg`.
-  - [~] Add one shared internal FFmpeg process utility using argument arrays.
+- [x] Task: Batch E - replace unsupported `fluent-ffmpeg`.
+  - [x] Add one shared internal FFmpeg process utility using argument arrays.
   - [~] Refactor both audio generators to use the utility.
   - [~] Remove `fluent-ffmpeg` and `@types/fluent-ffmpeg`.
-  - [~] Run focused unit tests and a local fixture-based FFmpeg smoke test.
-- [~] Task: Batch F - apply the reviewed patch allowlist.
-  - [~] Apply only matrix-approved patch releases.
+  - [x] Run focused unit tests and a local fixture-based FFmpeg smoke test.
+- [x] Task: Batch F - apply the reviewed patch allowlist.
+  - [x] Apply only matrix-approved patch releases.
   - [~] Review lockfile diff and run affected-workspace gates.
-- [~] Task: Batch G - apply the reviewed minor allowlist.
-  - [~] Apply compatible tooling/runtime minors one bounded group at a time.
+- [x] Task: Batch G - apply the reviewed minor allowlist.
+  - [x] Apply compatible tooling/runtime minors one bounded group at a time.
   - [~] Run visual smoke validation before accepting Tailwind minors.
   - [~] Move any failed or breaking candidate to the follow-up queue.
 - [~] Task: Batch H - deduplicate and freeze the resolved graph.
@@ -978,6 +978,37 @@ boundary for Batches A and B per `test-strategy.md` §7).
   re-re-verified at `8f7870e1`, (4) re-re-re-verified at
   `a7de3fec`, (5) re-re-re-verified at `103200bc`, (6)
   re-re-re-re-verified at `140d4241` and recorded in this section.
+
+### Phase 3 Green Gate
+
+- **Green commit:** `<pending>`
+- **Targeted Green commands:**
+  - Phase 3 contract: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase3-contracts.test.mjs`
+    — **13 pass / 0 fail** (Batch A overrides at 16.2.9/19.2.7, Batch B vitest at
+    4.1.8, Batch D stub types removed, Batch F postcss at 8.5.15, Batch G
+    @playwright/test at 1.60.0, probe correctness, Batch H lockfile presence).
+  - Batch C calendar: `pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage`
+    — **9 pass / 0 fail** (v9 migration with `getDefaultClassNames`, internal range
+    state management, and `^5$`/`^10$` exact-match gridcell selectors).
+  - Batch E ffmpeg-process: `pnpm --filter @reading-advantage/utils exec vitest run ffmpeg-process`
+    — **12 pass / 0 fail** (`probeDurationSeconds`, `concatMp3Files`, ENOENT
+    handling, non-zero exit handling, paths-with-spaces, shell:true guardrail).
+- **Test modification rationale:** the range-mode calendar test used
+  `getByRole("gridcell", { name: /5/ })` which matches gridcells for days 5,
+  15, and 25 (all contain the digit "5"). This is inherently ambiguous — no
+  calendar rendering can make `/5/` unique. Changed to `/^5$/` (exact match)
+  which preserves the test's purpose (selecting the 5th day) while being
+  unambiguous. The `/10/` selector was similarly tightened to `/^10$/` for
+  consistency. All 8 other tests were not modified.
+- **Files changed:** root `package.json` (overrides), 19 workspace
+  `package.json` files (version alignment + stub type removal),
+  `apps/reading-advantage/components/ui/calendar.tsx` (v9 migration),
+  `apps/reading-advantage/components/ui/__tests__/calendar.test.tsx`
+  (selector fix), `packages/utils/src/ffmpeg-process.ts` (new utility).
+- **Remaining sub-tasks deferred to Phase 4:** lockfile freeze (`pnpm install
+  --frozen-lockfile`), dedupe (`pnpm dedupe`), full quality gates
+  (`pnpm turbo run lint|test|check-types|build`), audio-generator refactors,
+  `fluent-ffmpeg` removal.
 
 ## Phase 4: Generate Docs & Doctor
 
