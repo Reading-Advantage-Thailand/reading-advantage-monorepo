@@ -137,17 +137,17 @@ _Blast radius: `db`/`client` (imported by every package and app — FR-6/FR-7 to
 
 ## Phase 4: Deploy Gate + Docs & Doctor
 
-- [x] Task 15: Implement FR-4 — codecamp deploy gate
+- [x] Task 15: Implement FR-4 — codecamp deploy gate (`a53593c5`)
     - [x] `apps/codecamp-advantage/cloudbuild.yaml`: migrate + `doctor --check` step against `DIRECT_DATABASE_URL` before traffic shift; non-zero exit fails the build
     - [x] Document the gate pattern for other apps in `packages/db/README.md`
 
-- [x] Task 16: Full suites and quality gates
+- [x] Task 16: Full suites and quality gates (`a53593c5`)
     - [x] `CI=true pnpm --filter @reading-advantage/db test` (baseline 526 + new)
     - [x] `pnpm --filter @reading-advantage/db check-types && build`; domain + api + codecamp suites (seed subpath consumers)
     - [x] Fresh-DB end-to-end: `docker compose` Postgres → `pnpm migrate` → `pnpm doctor --check` exits 0
     - [x] Top-level `npm run build`
 
-- [x] Task 17: Project memory + production runbook
+- [x] Task 17: Project memory + production runbook (`a53593c5`)
     - [x] Update tech-debt P0 row: db-side root cause fixed (journal), doctor available; remaining open scope = running `--repair` against each production DB and wiring gates for non-codecamp apps
     - [x] Production reconciliation runbook in `packages/db/README.md`: doctor report → review → `--repair` per environment (requires `DIRECT_DATABASE_URL`; coordinate with ops)
     - [x] Lessons-learned: drizzle migrator strict-`<` `when` semantics (apply at retro)
