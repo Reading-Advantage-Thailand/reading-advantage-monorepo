@@ -981,7 +981,7 @@ boundary for Batches A and B per `test-strategy.md` §7).
 
 ### Phase 3 Green Gate
 
-- **Green commit:** `<pending>`
+- **Green commit:** `70061422`
 - **Targeted Green commands:**
   - Phase 3 contract: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase3-contracts.test.mjs`
     — **13 pass / 0 fail** (Batch A overrides at 16.2.9/19.2.7, Batch B vitest at
