@@ -50,12 +50,24 @@ interface Journal {
   entries: JournalEntry[];
 }
 
+interface SnapshotTableIndexColumn {
+  expression: string;
+}
+
+interface SnapshotTableIndex {
+  columns: SnapshotTableIndexColumn[];
+}
+
+interface SnapshotTable {
+  indexes?: Record<string, SnapshotTableIndex>;
+}
+
 interface Snapshot {
   id: string;
   prevId: string;
   version: string;
   dialect: string;
-  tables: Record<string, unknown>;
+  tables: Record<string, SnapshotTable>;
 }
 
 let journal: Journal;
@@ -267,5 +279,32 @@ describe("snapshot-drift — schema coverage (FR-5)", () => {
         "Tables in snapshot: " +
         tableNames.join(", "),
     ).toContain("sessions");
+  });
+
+  it("the latest snapshot contains the FR-8 sessions indexes with expected columns", () => {
+    const journalMax = Math.max(...journal.entries.map((e) => e.idx));
+    const latest = snapshotsByIdx.get(journalMax);
+    expect(
+      latest,
+      "Missing latest snapshot for journal idx " + journalMax,
+    ).toBeDefined();
+    const sessionsTable = (latest as Snapshot).tables["public.sessions"];
+    expect(
+      sessionsTable,
+      "Latest snapshot is missing public.sessions, so it cannot prove the " +
+        "0020_sessions_indexes migration is represented in drizzle metadata.",
+    ).toBeDefined();
+
+    const indexes = sessionsTable.indexes ?? {};
+    expect(
+      Object.keys(indexes),
+      "Latest snapshot must include both FR-8 indexes from 0020_sessions_indexes.",
+    ).toEqual(expect.arrayContaining(["sessions_user_id_idx", "sessions_expires_at_idx"]));
+    expect(indexes.sessions_user_id_idx?.columns.map((column) => column.expression)).toEqual([
+      "user_id",
+    ]);
+    expect(indexes.sessions_expires_at_idx?.columns.map((column) => column.expression)).toEqual([
+      "expires_at",
+    ]);
   });
 });

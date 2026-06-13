@@ -22,23 +22,23 @@ relative to their position in the journal.
 
 ## Re-Stamp Strategy
 
-The chosen interpolation stamps place all re-stamped entries above the production
-ceiling while preserving strict-`<` ordering by `idx`:
+The chosen interpolation stamps keep entries 0–16 at or below the production
+ceiling while placing entries 17+ above it, preserving strict-`<` ordering by `idx`:
 
 | idx | Tag | Old `when` | New `when` |
 |-----|-----|-----------|-----------|
-| 3 | `0003_slow_firebrand` | 1746288000000 | 1779120001000 |
-| 4 | `0004_sturdy_forge` | 1746800000000 | 1779120002000 |
-| 5 | `0005_codecamp_schema` | 1747129227000 | 1779120003000 |
-| 6 | `0006_codecamp_indexes` | 1747130000000 | 1779120004000 |
-| 7 | `0007_codecamp_repos_reviews` | 1747200000000 | 1779120005000 |
-| 8 | `0008_codecamp_phase` | 1747210000000 | 1779120006000 |
-| 11 | `0011_codecamp_webhook_events` | 1779075476967 | 1779120007000 |
-| 13 | `0013_prisma_drizzle_schema_unification` | 1748044800000 | 1779120008000 |
-| 14 | `0014_users_license_expired_date` | 1748131200000 | 1779120009000 |
-| 15 | `0015_science_junction_tables` | 1779033600000 | 1779120010000 |
-| 17 | `0017_science_school_id` | 1749081600000 | 1779120011000 |
-| 18 | `0018_audit_events` | 1749168000000 | 1779120012000 |
+| 3 | `0003_slow_firebrand` | 1746288000000 | 1777880524315 |
+| 4 | `0004_sturdy_forge` | 1746800000000 | 1778031201982 |
+| 5 | `0005_codecamp_schema` | 1747129227000 | 1778181879649 |
+| 6 | `0006_codecamp_indexes` | 1747130000000 | 1778332557316 |
+| 7 | `0007_codecamp_repos_reviews` | 1747200000000 | 1778483234983 |
+| 8 | `0008_codecamp_phase` | 1747210000000 | 1778633912650 |
+| 11 | `0011_codecamp_webhook_events` | 1779075476967 | 1779077988484 |
+| 13 | `0013_prisma_drizzle_schema_unification` | 1748044800000 | 1779090375000 |
+| 14 | `0014_users_license_expired_date` | 1748131200000 | 1779100250000 |
+| 15 | `0015_science_junction_tables` | 1779033600000 | 1779110125000 |
+| 17 | `0017_science_school_id` | 1749081600000 | 1779120001000 |
+| 18 | `0018_audit_events` | 1749168000000 | 1779120002000 |
 
 ## Invariant
 
