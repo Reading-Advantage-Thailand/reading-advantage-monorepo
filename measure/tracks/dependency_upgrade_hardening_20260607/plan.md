@@ -45,9 +45,9 @@
 > C/E) and the Phase 4 aggregate `pnpm turbo run …` closeout, per
 > `test-strategy.md` §1, §7, and §8.
 
-- [~] Task: Capture baseline quality-gate truth before dependency changes.
-  - [~] Run affected package/app lint, test, check-types, and build commands.
-  - [~] Record pre-existing failures separately from the track's acceptance gates.
+- [x] Task: Capture baseline quality-gate truth before dependency changes.
+  - [x] Run affected package/app lint, test, check-types, and build commands.
+  - [x] Record pre-existing failures separately from the track's acceptance gates.
   - Red proof: `scripts/__tests__/baseline-truth.test.mjs` asserts the
     `baseline-truth.md` artifact exists with required sections (Source Commit,
     Affected Workspaces, Per-Workspace Gate Results, Pre-Existing Failures
@@ -84,11 +84,11 @@
     committed under `packages/utils/src/__tests__/fixtures/`.
   - Live-gate owner: Batch E implements the utility, refactors both audio
     generators, and runs the bounded local fixture-driven smoke (<30s).
-- [~] Task: Define batch-specific quality gates in `upgrade-matrix.md`.
-  - [~] Framework batch: all six app builds plus relevant tests/check-types.
-  - [~] Vitest batch: every Vitest workspace test command.
-  - [~] Deprecated-type batch: all affected type-check commands.
-  - [~] Tooling/patch batch: root install, lint, test, check-types, and build.
+- [x] Task: Define batch-specific quality gates in `upgrade-matrix.md`.
+  - [x] Framework batch: all six app builds plus affected tests/check-types.
+  - [x] Vitest batch: every Vitest workspace test command.
+  - [x] Deprecated-type batch: all affected type-check commands.
+  - [x] Tooling/patch batch: root install, lint, test, check-types, and build.
   - Red proof: `scripts/__tests__/batch-gates.test.mjs` asserts
     `upgrade-matrix.md` contains a `## Batch Quality Gates` section that
     enumerates exactly the eight implementation batches (A–H) with the
@@ -356,33 +356,29 @@ single test file and never invokes a full workspace or repo-wide suite.
 
 ## Phase 2 Green Gate
 
-- **Green commit:** (Phase 3 Batch C / Batch E owners — see
-  `test-strategy.md` §7 and the `## Batch Quality Gates` section that Task 4
-  requires `upgrade-matrix.md` to expose. The Red proof above is owned by
-  Phase 3 Batch C (calendar → react-day-picker@9 contract) and Batch E
-  (shared FFmpeg utility + audio-generator refactor); Phase 4 owns the
-  baseline-truth.md and Batch Quality Gates closeout.)
+- **Artifact Green commit:** (this commit — Task 1 and Task 4 artifacts)
 - **Targeted Green commands:**
   - Task 1 baseline-truth: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/baseline-truth.test.mjs`
-    — exits 0 only after `baseline-truth.md` is created with the required
-    sections. Live-gate: Phase 4 aggregate `pnpm turbo run lint|test|check-types|build`
+    — **5 pass / 0 fail** (artifact created with Source Commit, Affected
+    Workspaces, Per-Workspace Gate Results, and Pre-Existing Failures Carved
+    Out sections). Live-gate: Phase 4 aggregate `pnpm turbo run lint|test|check-types|build`
     reconciles against the recorded baseline SHA.
   - Task 2 calendar: `pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage`
-    — exits 0 only after Batch C migrates `calendar.tsx` to the v9 contract.
-    Bounded via `--testPathPattern`; never triggers the reading-advantage
-    full Jest hang.
+    — **1 fail / 8 pass** (still Red; owned by Phase 3 Batch C, which migrates
+    `calendar.tsx` to the v9 contract). Bounded via `--testPathPattern`; never
+    triggers the reading-advantage full Jest hang.
   - Task 3 ffmpeg-process: `pnpm --filter @reading-advantage/utils exec vitest run ffmpeg-process`
-    — exits 0 only after `packages/utils/src/ffmpeg-process.ts` ships with
-    `probeDurationSeconds` + `concatMp3Files` satisfying every argv contract.
-    Live-gate pair: Batch E's bounded local fixture-driven smoke runs
-    inside 30s.
+    — **1 failed test file** (still Red; owned by Phase 3 Batch E, which
+    creates `packages/utils/src/ffmpeg-process.ts`). Live-gate pair: Batch E's
+    bounded local fixture-driven smoke runs inside 30s.
   - Task 4 batch-gates: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/batch-gates.test.mjs`
-    — exits 0 only after `upgrade-matrix.md` exposes the new
-    `## Batch Quality Gates` section with `### Batch A`..`### Batch H`
-    subsections. Live-gate owner: Phase 3 batch execution runs each
-    documented gate against the real workspaces.
-- **Result:** the four bounded commands above must each exit 0 in their
-  respective Phase 3 batches before Phase 4 closeout can run.
+    — **8 pass / 0 fail** (Batch Quality Gates section added to
+    `upgrade-matrix.md` with ### Batch A…### Batch H subsections). Live-gate
+    owner: Phase 3 batch execution runs each documented gate against the real
+    workspaces.
+- **Result:** Task 1 and Task 4 artifact gates are green (13 pass / 0 fail).
+  Task 2 (calendar) and Task 3 (ffmpeg-process) remain intentionally red,
+  owned by Phase 3 Batch C and Batch E respectively.
 
 ## Phase 4: Generate Docs & Doctor
 

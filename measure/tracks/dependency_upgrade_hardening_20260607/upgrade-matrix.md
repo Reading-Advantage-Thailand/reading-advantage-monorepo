@@ -149,6 +149,142 @@
 | uuid | 10.0.0 | 10.0.0 | 14.0.0 | reading-advantage | medium | defer | — | — |
 | @jest/environment-jsdom | 29.7.0 | 29.7.0 | 30.4.1 | reading-advantage | low | hold | — | — |
 
+## Batch Quality Gates
+
+> Operators: run every command in the relevant batch subsection after applying
+> that batch's changes. These are the same gates the plan references as
+> "affected-workspace gates" and "per-batch quality gates". See
+> `test-strategy.md` §7 for the Red→Green→Closeout mapping.
+
+### Batch A
+
+Repair the vulnerable framework override (Next `16.0.0` → `16.2.9`, React
+`19.2.5` → `19.2.7`, `@next/mdx` → `16.2.9`).
+
+```bash
+pnpm --filter reading-advantage build
+pnpm --filter primary-advantage build
+pnpm --filter science-advantage build
+pnpm --filter codecamp-advantage build
+pnpm --filter www-reading-advantage build
+pnpm --filter vocabulary-games build
+pnpm --filter reading-advantage check-types
+pnpm --filter primary-advantage check-types
+pnpm --filter science-advantage check-types
+pnpm --filter codecamp-advantage check-types
+pnpm --filter www-reading-advantage check-types
+pnpm --filter vocabulary-games check-types
+```
+
+### Batch B
+
+Align the Vitest family (`vitest`, `@vitest/ui`, `@vitest/coverage-v8` to
+`4.1.8`).
+
+```bash
+pnpm --filter reading-advantage test
+pnpm --filter primary-advantage test
+pnpm --filter science-advantage test
+pnpm --filter codecamp-advantage test
+pnpm --filter www-reading-advantage test
+pnpm --filter vocabulary-games test
+```
+
+### Batch C
+
+Resolve `react-day-picker` / `date-fns` peer incompatibility in
+reading-advantage. Migrate Calendar component to the `react-day-picker@9`
+contract.
+
+```bash
+pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage
+pnpm --filter reading-advantage check-types
+pnpm --filter reading-advantage build
+```
+
+### Batch D
+
+Remove deprecated stub type packages (`@types/bcryptjs`, `@types/marked`,
+`@types/sharp`, `@types/uuid`).
+
+```bash
+pnpm --filter primary-advantage check-types
+pnpm --filter www-reading-advantage check-types
+pnpm --filter reading-advantage check-types
+pnpm --filter api check-types
+pnpm --filter auth check-types
+```
+
+### Batch E
+
+Replace unsupported `fluent-ffmpeg` with a shared FFmpeg process utility
+under `packages/utils`. Refactor both audio generators.
+
+```bash
+pnpm --filter @reading-advantage/utils exec vitest run ffmpeg-process
+# Bounded local fixture-driven FFmpeg smoke (< 30s)
+node packages/utils/scripts/ffmpeg-smoke.mjs
+```
+
+### Batch F
+
+Apply the reviewed patch allowlist (postcss, prettier, react-konva, ts-jest,
+turbo, sharp, Radix UI, AWS SDK, Google Cloud Storage, prettier-plugin-tailwindcss).
+
+```bash
+pnpm --filter reading-advantage lint
+pnpm --filter reading-advantage test
+pnpm --filter reading-advantage check-types
+pnpm --filter reading-advantage build
+pnpm --filter primary-advantage lint
+pnpm --filter primary-advantage test
+pnpm --filter primary-advantage check-types
+pnpm --filter primary-advantage build
+pnpm --filter science-advantage lint
+pnpm --filter science-advantage test
+pnpm --filter science-advantage check-types
+pnpm --filter science-advantage build
+pnpm --filter codecamp-advantage lint
+pnpm --filter codecamp-advantage test
+pnpm --filter codecamp-advantage check-types
+pnpm --filter codecamp-advantage build
+pnpm --filter www-reading-advantage lint
+pnpm --filter www-reading-advantage test
+pnpm --filter www-reading-advantage check-types
+pnpm --filter www-reading-advantage build
+pnpm --filter vocabulary-games lint
+pnpm --filter vocabulary-games test
+pnpm --filter vocabulary-games check-types
+pnpm --filter vocabulary-games build
+```
+
+### Batch G
+
+Apply the reviewed minor allowlist (@playwright/test, @tanstack/react-query,
+axios, date-fns, framer-motion, jotai, pg, react-hook-form, tailwindcss,
+@tailwindcss/postcss, tsx, typescript-eslint, ws). Tailwind minors require
+visual smoke validation.
+
+```bash
+pnpm --filter reading-advantage build
+pnpm --filter primary-advantage build
+pnpm --filter science-advantage build
+pnpm --filter codecamp-advantage build
+pnpm --filter www-reading-advantage build
+pnpm --filter vocabulary-games build
+# Visual smoke for tailwindcss / @tailwindcss/postcss minors
+# (manual review — check key pages render correctly)
+```
+
+### Batch H
+
+Deduplicate and freeze the resolved dependency graph.
+
+```bash
+pnpm install --frozen-lockfile
+pnpm dedupe --check
+```
+
 ## Summary by Decision
 
 | Decision | Count |
