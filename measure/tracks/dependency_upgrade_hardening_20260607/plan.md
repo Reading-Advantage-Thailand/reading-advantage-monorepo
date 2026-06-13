@@ -12,29 +12,29 @@
 > [Phase 1 Red gate](#phase-1-red-gate) at the bottom of this file for the
 > exact command, fail count, and SHA-recorded behavior.
 
-- [~] Task: Capture the pre-change repository and dependency baseline.
-  - [ ] Record `git status -sb` and identify unrelated in-flight changes.
-  - [ ] Save `pnpm outdated -r --format json`, `pnpm list -r --depth 0 --json`,
+- [x] Task: Capture the pre-change repository and dependency baseline.
+  - [x] Record `git status -sb` and identify unrelated in-flight changes.
+  - [x] Save `pnpm outdated -r --format json`, `pnpm list -r --depth 0 --json`,
     `pnpm dedupe --check`, and `pnpm audit --json` results under this track.
-  - [ ] Record registry timeouts and incomplete security-audit evidence explicitly.
-- [~] Task: Create `upgrade-matrix.md`.
-  - [ ] Record package, current, wanted, latest, dependents, risk class, decision,
+  - [x] Record registry timeouts and incomplete security-audit evidence explicitly.
+- [x] Task: Create `upgrade-matrix.md`.
+  - [x] Record package, current, wanted, latest, dependents, risk class, decision,
     implementation batch, and validation scope.
-  - [ ] Re-check the Next security advisory and select a patched Next 16 release.
-  - [ ] Mark Drizzle, AI SDK, Zod, TypeScript, Jest, Zustand, pnpm, and Prisma
+  - [x] Re-check the Next security advisory and select a patched Next 16 release.
+  - [x] Mark Drizzle, AI SDK, Zod, TypeScript, Jest, Zustand, pnpm, and Prisma
     decisions explicitly.
-- [~] Task: Define version-alignment contracts.
-  - [ ] Select one Next/`eslint-config-next` patch line.
-  - [ ] Select one React/React DOM patch line.
-  - [ ] Select one Vitest/UI/coverage patch line.
-  - [ ] Document temporary app-specific exceptions with an owner and removal
+- [x] Task: Define version-alignment contracts.
+  - [x] Select one Next/`eslint-config-next` patch line.
+  - [x] Select one React/React DOM patch line.
+  - [x] Select one Vitest/UI/coverage patch line.
+  - [x] Document temporary app-specific exceptions with an owner and removal
     condition.
-- [~] Task: Coordinate overlap with existing tracks.
-  - [ ] Preserve `housekeeping_batch_20260603` FR-6 as owner of dependency range
+- [x] Task: Coordinate overlap with existing tracks.
+  - [x] Preserve `housekeeping_batch_20260603` FR-6 as owner of dependency range
     policy.
-  - [ ] Coordinate Zod major work with `zod_boundary_hardening_20260603`.
-  - [ ] Confirm primary-advantage Prisma removal direction; prohibit Prisma 7.
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+  - [x] Coordinate Zod major work with `zod_boundary_hardening_20260603`.
+  - [x] Confirm primary-advantage Prisma removal direction; prohibit Prisma 7.
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
 
 ## Phase 2: Test
 

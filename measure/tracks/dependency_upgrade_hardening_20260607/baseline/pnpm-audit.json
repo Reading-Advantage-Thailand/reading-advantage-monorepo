@@ -1,0 +1,6 @@
+{
+  "vulnerabilities": {},
+  "incomplete": true,
+  "note": "registry stall — pnpm audit --json timed out after 60s on 2026-06-13. Security audit results beyond the confirmed Next advisory remain unknown.",
+  "captured_at": "2026-06-13T01:30:00Z"
+}

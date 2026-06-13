@@ -117,9 +117,16 @@ function validateBaselines(trackDir) {
  */
 function parseMarkdownTable(matrixContent) {
   const lines = matrixContent.split("\n");
-  const headerIdx = lines.findIndex(
-    (l) => l.trim().startsWith("|") && l.toLowerCase().includes("package"),
-  );
+  // Find the table whose first column is "package" (the main upgrade matrix),
+  // skipping other tables like "Temporary Exceptions" that also mention "package".
+  const headerIdx = lines.findIndex((l) => {
+    if (!l.trim().startsWith("|")) return false;
+    const cols = l
+      .split("|")
+      .slice(1, -1)
+      .map((c) => c.trim().toLowerCase());
+    return cols[0] === "package";
+  });
   if (headerIdx === -1) {
     return { headerColumns: [], headerLine: "", dataLines: [] };
   }
@@ -186,8 +193,8 @@ function checkDecisionCells(dataLines, headerColumns) {
     const batch = row["implementation batch"];
     const scope = row["validation scope"];
 
-    // Only validate rows that have a non-empty decision and are not "hold"
-    if (decision === "hold" || decision === "defer") continue;
+    // Only validate rows that have a non-empty decision and require batch/scope
+    if (decision.startsWith("hold") || decision === "defer") continue;
 
     if (!batch || batch === "" || batch === "—") {
       missing.push("batch");

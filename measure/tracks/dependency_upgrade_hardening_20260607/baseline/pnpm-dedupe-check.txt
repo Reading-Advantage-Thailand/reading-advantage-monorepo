@@ -1,0 +1,3 @@
+pnpm dedupe --check timed out after 180s on 2026-06-13.
+Registry resolution was still in progress when the command was killed.
+Deduplication opportunities are unknown; re-run during Phase 3 Batch H.
