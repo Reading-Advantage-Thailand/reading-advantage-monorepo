@@ -189,7 +189,7 @@ describe("OpenRouterProvider", () => {
       expect(generateText).toHaveBeenCalledWith(
         expect.objectContaining({ maxOutputTokens: 100 }),
       );
-      const callArgs = latestCallArg(generateText);
+      const callArgs = latestCallArg(generateText as unknown as { mock: { calls: unknown[][] } });
       expect(
         callArgs,
         "OpenRouterProvider.generateText must not pass `maxTokens` to the v5 SDK; " +
@@ -214,7 +214,7 @@ describe("OpenRouterProvider", () => {
       expect(generateObject).toHaveBeenCalledWith(
         expect.objectContaining({ maxOutputTokens: 200 }),
       );
-      const callArgs = latestCallArg(generateObject);
+      const callArgs = latestCallArg(generateObject as unknown as { mock: { calls: unknown[][] } });
       expect(callArgs).not.toHaveProperty("maxTokens");
     });
   });

@@ -23,6 +23,8 @@ import type {
   GenerateImageInput,
   GenerateObjectInput,
   GenerateTextInput,
+  StreamTextInput,
+  StreamTextResult,
 } from "../types.js";
 
 import {
@@ -63,6 +65,7 @@ type ExpectedAIClient = {
   generateObject: <T>(input: GenerateObjectInput<T>) => Promise<T>;
   generateImage: (input: GenerateImageInput) => Promise<Buffer>;
   generateText: (input: GenerateTextInput) => Promise<string>;
+  streamText: (input: StreamTextInput) => Promise<StreamTextResult>;
 };
 
 type ExpectedAIConfig = {
@@ -110,10 +113,10 @@ expectTypeOf<GenerateTextInput["temperature"]>().toEqualTypeOf<
 // FR-1 + FR-2 + FR-3: AIClient, AIProvider, AIConfig
 // ---------------------------------------------------------------------------
 
-// Exactly three methods on AIClient, with the right call signatures.
+// Exactly four methods on AIClient, with the right call signatures.
 expectTypeOf<AIClient>().toEqualTypeOf<ExpectedAIClient>();
 expectTypeOf<keyof AIClient>().toEqualTypeOf<
-  "generateObject" | "generateImage" | "generateText"
+  "generateObject" | "generateImage" | "generateText" | "streamText"
 >();
 
 // Callability checks (FR-1 inputs are accepted by the method).

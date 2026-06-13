@@ -345,6 +345,134 @@
     the source files + `git show HEAD:...`, not by executing
     `vitest`. JR runs the live command.
 
+### Red-gate refinement (MID role, post-`5e33d263` worktree review)
+
+- **Worktree classification at MID start** (per the task brief's
+  dirty-worktree protocol):
+  - **In-scope for MID (folded into this Red-phase commit)**:
+    test-only files + `plan.md`. All are test refinements —
+    mock alignment to the actual `ai@5.0.201` export shape, a
+    type-level Red-contract addition for `streamText`, and doc
+    tightening on the architecture guard test.
+  - **Out of scope for MID (left untouched in the worktree)**:
+    Green-attempt source edits in
+    `packages/ai/src/{types,index}.ts`,
+    `packages/ai/src/providers/{openai,google,openrouter,mock}.ts`,
+    all `apps/**` source files, manifest bumps in
+    `packages/ai/package.json` + `apps/*/package.json`, and
+    `pnpm-lock.yaml`. These belong to the JR Green role and the
+    manifest bump subtask of Task 1, both of which are downstream
+    of the Red phase this commit lands.
+  - **Unrelated user work (preserved, not touched)**:
+    `apps/marketing/**` and `packages/db/src/schema/marketing.ts`
+    (new marketing app surface from another track), plus
+    `measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase4-contracts.test.mjs`
+    (different track's Phase 4 contract tests). These stay in the
+    worktree untouched and are not part of this commit.
+- **Tasks already-satisfied by Red-phase tests on disk** (no new
+  Red files needed; the existing committed Red contracts cover
+  every currently-incomplete non-deferred P3 task):
+  - Task 1 (Upgrade `@ai-sdk/*` packages): covered by
+    `phase-11-sdk-version-contract.test.ts` (P1 origin,
+    intentionally still Red at P3 start per the adversarial audit
+    that added `@ai-sdk/react` to the contract).
+  - Task 2 (Update internal AI adapter for breaking API
+    changes — `streamText`): covered by
+    `phase-stream-text-contract.test.ts` (committed in `5e33d263`).
+  - Task 3 (Run `check-types`/`lint`/`test`): gate-only, no new
+    test files owned (test-strategy §5 P3).
+  - Task 4 (Migrate direct `@ai-sdk/*` usage in apps to
+    adapter): covered by `phase-arch-no-direct-sdk.test.ts`
+    (committed in `ebcc9719`).
+- **New Red-contract value this MID pass adds** (folding the
+  dirty test-file modifications into a Red-phase refinement
+  commit):
+  - `packages/ai/src/__tests__/phase-1-interface.test-d.ts`:
+    type-level Red contract added — `ExpectedAIClient` now
+    declares a `streamText` method, and `keyof AIClient` is
+    asserted to equal `"generateObject" | "generateImage" |
+    "generateText" | "streamText"`. At HEAD, `types.ts` does not
+    declare `streamText` on `AIClient`, so this type-level
+    assertion fires (real Red).
+  - `packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts`:
+    mock-shape correction — the v5 image-export assertion was
+    checking `mocks.generateImage.mock.calls.length`, but in the
+    installed `ai@5.0.201` SDK the canonical public export for
+    image generation is `experimental_generateImage` (the plain
+    `generateImage` symbol is not a public export). The assertion
+    now checks `mocks.experimental_generateImage.mock.calls.length`
+    so the v5 call-path contract fires against the real SDK shape.
+    The Red signal for the broader v5 call shape (maxTokens →
+    maxOutputTokens across all three providers) is preserved by
+    the remaining `expect(mocks.generateText).toHaveBeenCalledWith(
+    expect.objectContaining({ maxOutputTokens: ... }))` family of
+    assertions, which still fails at HEAD where providers spread
+    `maxTokens` (v1 kwarg) into the SDK call.
+  - `packages/ai/src/__tests__/phase-3-openai-provider.test.ts`,
+    `packages/ai/src/__tests__/phase-4-google-provider.test.ts`:
+    matching `vi.mock("ai", ...)` rename — both mocks now expose
+    `experimental_generateImage` instead of `generateImage`,
+    matching the actual `ai@5.0.201` export shape so the
+    per-provider v5 image-pipeline assertions reach the right
+    mock surface.
+  - `packages/ai/src/providers/openai.test.ts`,
+    `packages/ai/src/providers/google.test.ts`: import rename from
+    `generateImage` to `experimental_generateImage` (matches the
+    provider source's import path and the v5 export shape).
+  - `packages/ai/src/providers/openrouter.test.ts`: minor type
+    cast on `latestCallArg(...)` for the `generateText` /
+    `generateObject` v5-call-shape assertions (TypeScript strict
+    narrowing).
+  - `packages/ai/src/__tests__/phase-arch-no-direct-sdk.test.ts`:
+    docstring tightening (escaping fix for the "RED expectations
+    at HEAD" note).
+- **Combined targeted Red result at HEAD** (the previous MID
+  record's estimate plus this refinement's confirmation by static
+  reading of the test files, source files, and `git show HEAD:...`):
+  - `phase-11-sdk-version-contract.test.ts`: ~10 failed (per the
+    prior MID record at lines 246–261).
+  - `phase-stream-text-contract.test.ts`: 3 failed at HEAD per
+    the prior MID record at lines 298–341 (`streamText is not a
+    function`, `provider.calls` length, three providers' mock
+    zero-call asserts, `index.ts` regex assert — 5 expected
+    failures collapsed to the documented 3 `it` blocks).
+  - `phase-arch-no-direct-sdk.test.ts`: 1 failed (the G-1 hit
+    list is non-empty until every app migration lands).
+  - `phase-1-interface.test-d.ts`: 1 type-level failure (the new
+    `streamText` row in `ExpectedAIClient` does not match the
+    HEAD `AIClient` interface, which has only three methods).
+  - `phase-11-sdk-v2-call-shape.test.ts`: at least 6 failed
+    preserved (maxTokens/maxOutputTokens across the three
+    providers × 2 methods each); the image-export `it` block
+    now reads as a v5 path-name assertion instead of a missing-
+    import assertion, which is the correct contract for the
+    actual `ai@5.0.201` shape.
+  - Per-provider test files: remaining v5-call-shape failures
+    preserved (maxTokens → maxOutputTokens).
+  - Total combined targeted Red at HEAD (estimated, since the
+    local shell lacks `node`/`pnpm`/`vitest` per the prior
+    toolchain note): **≥ 21 failed** across the targeted set,
+    every failure driven by the current state of the
+    manifests / source / lockfile (not by a stale durable
+    record). JR runs the live command to re-assert exact
+    counts.
+- **Verification path used**: static read of
+  `git show HEAD:packages/ai/src/{types,index}.ts`,
+  `git show HEAD:packages/ai/src/providers/{openai,google,
+  openrouter,mock}.ts`,
+  `git show HEAD:apps/{codecamp,primary,reading}-advantage/...`
+  (direct SDK imports confirmed), plus the existing
+  `phase-stream-text-contract.test.ts` and
+  `phase-arch-no-direct-sdk.test.ts` files (committed at
+  `5e33d263` and `ebcc9719` respectively). The new
+  type-level Red row in
+  `phase-1-interface.test-d.ts` was verified against
+  `git show HEAD:packages/ai/src/types.ts` (which has only
+  `generateObject`, `generateImage`, `generateText` on
+  `AIClient`, no `streamText`). Same constraint as the
+  earlier attempts — the fail count is asserted by reading,
+  not by executing `vitest`.
+
 ## Phase 4: Validate & Close
 
 - [ ] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.

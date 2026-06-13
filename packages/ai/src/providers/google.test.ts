@@ -5,7 +5,7 @@ import { GoogleProvider } from "./google.js";
 vi.mock("ai", () => ({
   generateObject: vi.fn(),
   generateText: vi.fn(),
-  generateImage: vi.fn(),
+  experimental_generateImage: vi.fn(),
 }));
 
 vi.mock("@ai-sdk/google", () => ({
@@ -16,7 +16,7 @@ vi.mock("@ai-sdk/google", () => ({
   ),
 }));
 
-import { generateObject, generateText, generateImage } from "ai";
+import { generateObject, generateText, experimental_generateImage } from "ai";
 
 const testSchema = z.object({ answer: z.string() });
 
@@ -62,11 +62,11 @@ describe("GoogleProvider", () => {
   describe("generateImage", () => {
     it("delegates to AI SDK generateImage", async () => {
       const imageBase64 = Buffer.from("fake-google-image").toString("base64");
-      vi.mocked(generateImage).mockResolvedValueOnce({
+      vi.mocked(experimental_generateImage).mockResolvedValueOnce({
         image: { base64: imageBase64, uint8Array: new Uint8Array(), mediaType: "image/png" },
         images: [],
         warnings: [],
-      } as unknown as Awaited<ReturnType<typeof generateImage>>);
+      } as unknown as Awaited<ReturnType<typeof experimental_generateImage>>);
 
       const provider = new GoogleProvider({ apiKey: "test-key" });
 
@@ -78,17 +78,17 @@ describe("GoogleProvider", () => {
 
     it("resolves model through this.client for credential injection", async () => {
       const imageBase64 = Buffer.from("test").toString("base64");
-      vi.mocked(generateImage).mockResolvedValueOnce({
+      vi.mocked(experimental_generateImage).mockResolvedValueOnce({
         image: { base64: imageBase64, uint8Array: new Uint8Array(), mediaType: "image/png" },
         images: [],
         warnings: [],
-      } as unknown as Awaited<ReturnType<typeof generateImage>>);
+      } as unknown as Awaited<ReturnType<typeof experimental_generateImage>>);
 
       const provider = new GoogleProvider({ apiKey: "test-key" });
 
       await provider.generateImage({ prompt: "test" });
 
-      expect(generateImage).toHaveBeenCalledWith(
+      expect(experimental_generateImage).toHaveBeenCalledWith(
         expect.objectContaining({
           model: "image:gemini-2.0-flash-preview-image-generation",
         })

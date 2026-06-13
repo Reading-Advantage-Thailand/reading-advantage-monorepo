@@ -73,7 +73,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("ai", () => ({
   generateObject: mocks.generateObject,
   generateText: mocks.generateText,
-  generateImage: mocks.generateImage,
+  experimental_generateImage: mocks.generateImage,
 }));
 
 vi.mock("@ai-sdk/openai", () => ({

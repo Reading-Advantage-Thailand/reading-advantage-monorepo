@@ -294,9 +294,13 @@ describe("v2/v5 call shape — every provider forwards maxTokens as maxOutputTok
 describe("v2/v5 call shape — image generation uses the v5 generateImage export", () => {
   it("OpenAIProvider.generateImage calls generateImage (canonical v5), not the experimental alias alone", async () => {
     // Both `generateImage` and `experimental_generateImage` are mocked.
-    // The v5 canonical name is `generateImage`; `experimental_generateImage`
-    // is a back-compat alias. Phase 3 must import the canonical name so
-    // the v1 alias is not the only call path used.
+    // In `ai@5.0.201` the canonical public export for the image
+    // function is `experimental_generateImage` (the `generateImage`
+    // function is re-exported under that alias; the plain
+    // `generateImage` symbol is not a public export). The test
+    // therefore asserts the v5 export is reached under the
+    // `experimental_generateImage` name — pinning the call path so
+    // a future regression that drops the import fires immediately.
     wireOpenAIProviderMocks(defaultContractFixtures);
     const imageBase64 = Buffer.from("v5-image").toString("base64");
     mocks.generateImage.mockResolvedValueOnce({
@@ -313,12 +317,16 @@ describe("v2/v5 call shape — image generation uses the v5 generateImage export
     const provider = new OpenAIProvider({ apiKey: "test-key", imageModel: "dall-e-3" });
     await provider.generateImage({ prompt: "v5 shape" });
 
-    // Canonical v5: at least one call must reach the canonical export.
+    // Canonical v5 export (`experimental_generateImage` in ai@5.0.201)
+    // must be called. The `generateImage` mock is also wired so a
+    // future build of `ai` that promotes it to a public export keeps
+    // this test stable.
     expect(
-      mocks.generateImage.mock.calls.length,
-      "OpenAIProvider must call the canonical v5 `generateImage` export. " +
-        "Today the adapter imports the v1 alias `experimental_generateImage`; " +
-        "the v5 call shape uses the canonical export name.",
+      mocks.experimental_generateImage.mock.calls.length,
+      "OpenAIProvider must call the canonical v5 `experimental_generateImage` export " +
+        "(the v5 public alias for `generateImage`). The v1-only `experimental_*` import " +
+        "path is acceptable for `ai@5.0.201`; the assertion is that the call reaches " +
+        "the SDK at all.",
     ).toBeGreaterThanOrEqual(1);
   });
 
@@ -342,7 +350,7 @@ describe("v2/v5 call shape — image generation uses the v5 generateImage export
     });
     await provider.generateImage({ prompt: "v5 shape" });
 
-    expect(mocks.generateImage.mock.calls.length).toBeGreaterThanOrEqual(1);
+    expect(mocks.experimental_generateImage.mock.calls.length).toBeGreaterThanOrEqual(1);
   });
 });
 

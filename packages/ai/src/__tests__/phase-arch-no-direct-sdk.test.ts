@@ -19,8 +19,8 @@
  *     src/__tests__/phase-arch-no-direct-sdk.test.ts
  *
  * RED expectations at HEAD (recorded in the commit body):
- *   - At least 8 `apps/**/source` files import from `"ai"` or
- *     `@ai-sdk/*` directly, including:
+ *   - At least 8 app source files import from 'ai' or
+ *     '@ai-sdk/*' directly, including:
  *       - `apps/codecamp-advantage/app/api/chat/route.ts`
  *       - `apps/primary-advantage/app/api/assistant/lesson-chatbot/route.ts`
  *       - `apps/primary-advantage/server/utils/genaretors/image-generator.ts`
@@ -134,7 +134,7 @@ describe("Phase 3 — architecture guardrail (test-strategy §4)", () => {
         `Use '@reading-advantage/ai' (or a getAIClient() factory that returns it) ` +
         `instead. Found ${hits.length} hit(s):\n` +
         (hits.length ? hits.join("\n") + "\n" : "") +
-        `Run \`rg "from [\\\\\\'\\\\\"](ai|@ai-sdk/)" apps/\` to inspect.`,
+        `Run \`rg "from [\\\\'\\"](ai|@ai-sdk/)" apps/\` to inspect.`,
     ).toEqual([]);
   });
 });
