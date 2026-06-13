@@ -1737,11 +1737,12 @@ boundary for Batches A and B per `test-strategy.md` §7).
 
 ### Phase 3 Green Gate
 
-- **Green commit:** `70061422`
+- **Green commit (initial):** `70061422` (Batches A, B, D, F, G + Batch C calendar v9 migration + Batch E ffmpeg-process utility)
+- **Green commit (completion):** `2c4aa26c` (Batch C react-day-picker manifest fix + Batch E audio-generator refactors + Batch H lockfile freeze)
 - **Targeted Green commands:**
   - Phase 3 contract: `node --test measure/tracks/dependency_upgrade_hardening_20260607/scripts/__tests__/phase3-contracts.test.mjs`
-    — **13 pass / 0 fail** (Batch A overrides at 16.2.9/19.2.7, Batch B vitest at
-    4.1.8, Batch D stub types removed, Batch F postcss at 8.5.15, Batch G
+    — **14 pass / 0 fail** (Batch A overrides at 16.2.9/19.2.7, Batch B vitest at
+    4.1.8, Batch C react-day-picker at ^9.14.0, Batch D stub types removed, Batch F postcss at 8.5.15, Batch G
     @playwright/test at 1.60.0, probe correctness, Batch H lockfile presence).
   - Batch C calendar: `pnpm --filter reading-advantage exec jest --testPathPattern "components/ui/__tests__/calendar" --no-coverage`
     — **9 pass / 0 fail** (v9 migration with `getDefaultClassNames`, internal range
@@ -1756,15 +1757,22 @@ boundary for Batches A and B per `test-strategy.md` §7).
   which preserves the test's purpose (selecting the 5th day) while being
   unambiguous. The `/10/` selector was similarly tightened to `/^10$/` for
   consistency. All 8 other tests were not modified.
-- **Files changed:** root `package.json` (overrides), 19 workspace
+- **Files changed (70061422):** root `package.json` (overrides), 19 workspace
   `package.json` files (version alignment + stub type removal),
   `apps/reading-advantage/components/ui/calendar.tsx` (v9 migration),
   `apps/reading-advantage/components/ui/__tests__/calendar.test.tsx`
   (selector fix), `packages/utils/src/ffmpeg-process.ts` (new utility).
-- **Remaining sub-tasks deferred to Phase 4:** lockfile freeze (`pnpm install
-  --frozen-lockfile`), dedupe (`pnpm dedupe`), full quality gates
-  (`pnpm turbo run lint|test|check-types|build`), audio-generator refactors,
-  `fluent-ffmpeg` removal.
+- **Files changed (2c4aa26c):** `apps/reading-advantage/package.json` (react-day-picker
+  ^8.10.1 → ^9.14.0, remove fluent-ffmpeg/@types/fluent-ffmpeg),
+  `apps/reading-advantage/server/utils/generators/audio-generator.ts` (refactor to use
+  probeDurationSeconds/concatMp3Files from @reading-advantage/utils),
+  `apps/primary-advantage/package.json` (remove fluent-ffmpeg/@types/fluent-ffmpeg),
+  `apps/primary-advantage/server/utils/genaretors/audio-generator.ts` (remove unused
+  fluent-ffmpeg import), `packages/utils/package.json` (add @types/node devDep),
+  `packages/utils/src/index.ts` (re-export ffmpeg-process functions), `pnpm-lock.yaml`
+  (deduplicated and frozen).
+- **Remaining sub-tasks deferred to Phase 4:** full quality gates
+  (`pnpm turbo run lint|test|check-types|build`).
 
 ## Phase 4: Generate Docs & Doctor
 
