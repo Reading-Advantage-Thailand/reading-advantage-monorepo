@@ -34,7 +34,7 @@
     policy.
   - [x] Coordinate Zod major work with `zod_boundary_hardening_20260603`.
   - [x] Confirm primary-advantage Prisma removal direction; prohibit Prisma 7.
-- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (`e07837fe`, Protocol in workflow.md)
 
 ## Phase 2: Test
 
@@ -100,7 +100,7 @@
     this contract because operators cannot execute a column value as a script.
   - Live-gate owner: Phase 3 batch execution runs each documented gate; the
     artifact itself is the contract Phase 3 follows.
-- [x] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 2: Test' (`b02c682e`, `553df28b`, Protocol in workflow.md)
   - [x] Artifact gates verified: baseline-truth 5/5 pass, batch-gates 8/8 pass.
   - [x] Live-behavior Red confirmed: calendar 1/9 fail, ffmpeg-process 1 failed file.
   - [x] No test files modified; artifacts only.
@@ -143,7 +143,7 @@
   - [x] Review removed/changed peer resolutions and platform binaries.
   - [x] Run `pnpm install --frozen-lockfile`.
   - [x] Run `pnpm dedupe --check`; document intentional residual duplicates.
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (`2c4aa26c`, Protocol in workflow.md) — verified: all three Phase 3 Red commands pass (phase3-contracts 14/14, calendar Jest 9/9, ffmpeg-process vitest 12/12), lockfile frozen, dedupe clean. Automated verification complete; no user action required.
 
 ## Phase 1 Red Gate
 
