@@ -38,7 +38,7 @@
 | PostgreSQL | Unified database (local Docker for dev, VPS for production). See "Database Connections" below for the pool/direct split. |
 | Sessions | Cookie-based DB sessions via `@reading-advantage/auth` (username/password) |
 | Firebase Functions | reading-advantage (legacy, being deprecated) |
-| AI SDK | Google + OpenAI providers across all apps |
+| AI SDK (`ai ^5.x`, `@ai-sdk/openai ^2.x`, `@ai-sdk/google ^2.x`, `@ai-sdk/google-vertex ^3.x`) | Selected in `ai_sdk_major_migration` track. `Google + OpenAI providers across all apps`, all routed through the internal adapter `@reading-advantage/ai` (no direct `@ai-sdk/*` imports in `apps/**` source — enforced by `packages/ai/src/__tests__/phase-arch-no-direct-sdk.test.ts`). See `measure/tracks/ai_sdk_major_migration/` for the spec, plan, and test strategy. |
 | `@reading-advantage/storage` | S3-compatible storage adapter (GCS S3 interop, R2, MinIO, S3) |
 | `@reading-advantage/integrations-github` | GitHub App REST client (issues, installation tokens, repos) |
 

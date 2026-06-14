@@ -1166,3 +1166,157 @@
      the Green flip:
      `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-12-closeout-artifacts.test.ts`
      → 13 passed (13 total). Commit the P4 Green work.
+
+### Green-gate record (JR role, attempt 2 — supervisor-restarted after attempt-1 timeout)
+
+- **Targeted Red/Green command** (test-strategy §6 P4 row, exact same
+  as the MID-attempt Red command):
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-12-closeout-artifacts.test.ts`
+- **Live targeted result at JR attempt 2 (this commit)**:
+  - **Test Files: 1 failed (1)**
+  - **Tests: 2 failed | 11 passed (13 total)**
+  - **Command exit code: 1** (`ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL`)
+  - Down from **8 failed | 5 passed (13 total)** at MID Red —
+    JR's Green work flipped 6 tests Green; 2 remain Red for
+    documented reasons below.
+- **11 PASSED tests** (the JR's Green work landed correctly):
+  - `Task 1 — artifacts/ directory exists at the expected track-relative path`
+  - `Task 1 — gate-result.json exists and parses as JSON`
+  - `Task 2 — outdated.json exists in the artifacts directory`
+  - `Task 2 — outdated.json parses as JSON (pnpm's array-of-package-objects shape)`
+  - `Task 2 — outdated.json contains zero @ai-sdk/* rows (closeout invariant)` — **NOTE**: this test fails; see below.
+  - `Task 2 — audit.json exists in the artifacts directory`
+  - `Task 2 — audit.json parses as JSON`
+  - `Task 3 — tech-stack.md exists at the expected Measure path`
+  - `Task 3 — tech-stack.md declares the selected \`ai\` major (^5.x)`
+  - `Task 3 — tech-stack.md declares the selected \`@ai-sdk/openai\` major (^2.x)`
+  - `Task 3 — tech-stack.md declares the selected \`@ai-sdk/google\` major (^2.x)`
+  - `Task 3 — tech-stack.md is tagged with the AI SDK migration track reference`
+- **2 FAILED tests** (documented honestly; both are NOT owned by
+  this track — see "Why the gate is genuinely red, not stale" below):
+  1. **`Task 1 — gate-result.json records exitCode: 0 (the live gate was green)`** (line 137):
+     the live aggregate gate `pnpm turbo run lint test check-types build`
+     exits 1 because of two pre-existing failures that PRE-DATE the
+     ai_sdk_major_migration track and are NOT introduced by this
+     track's Phase 4 work:
+       - `@reading-advantage/db#test` — flake in
+         `src/__tests__/package-esm-smoke.test.ts > node --input-type=module can import the built package`,
+         times out at 10s under turbo load (passes in isolation
+         with `pnpm --filter @reading-advantage/db exec vitest run`,
+         3/3 passed at this attempt's start). Owned by the
+         archived `db_migration_ledger_20260611` track (FR-6).
+         The P1 Green record (line 70–73) explicitly acknowledged
+         this flake as pre-existing.
+       - `@reading-advantage/ai#lint` — pre-existing
+         `no-regex-spaces` ESLint error at
+         `src/__tests__/phase-11-sdk-version-contract.test.ts:331:16`.
+         The P3 Green record (line 698–704) explicitly noted this
+         as "1 pre-existing error that predates this track and is
+         out of scope for the P3 gate."
+     Neither failure is caused by ai_sdk_major_migration; both are
+     pre-existing in their respective owning tracks/packages.
+  2. **`Task 2 — outdated.json contains zero @ai-sdk/* rows (closeout invariant)`** (line 197):
+     pnpm 8.15.8 reports 6 `@ai-sdk/*` / `ai` rows as outdated —
+     every one is on the migration-selected major (`ai 5.0.201`,
+     `@ai-sdk/openai 2.0.106`, `@ai-sdk/google 2.0.72`,
+     `@ai-sdk/google-vertex 3.0.142`, `@ai-sdk/provider-utils 3.0.26`,
+     `@ai-sdk/react 2.0.203`); each row's `latest` is a NEWER major
+     not selected by this migration (`ai 6.0.205`,
+     `@ai-sdk/openai 3.0.71`, `@ai-sdk/google 3.0.82`,
+     `@ai-sdk/google-vertex 4.0.145`, `@ai-sdk/provider-utils 4.0.29`,
+     `@ai-sdk/react 3.0.207`). This is normal `pnpm outdated`
+     behavior in any healthy monorepo that has ever bumped a major
+     — the test's logic conflates "outdated" with "legacy major
+     holdout" and asserts an invariant that pnpm 8.x cannot satisfy
+     for any migration where newer majors exist on the registry.
+     The spec's actual closeout invariant (per the test file's
+     own docstring, line 33–36) is "no v1 / unselected-major AI SDK
+     package is still in the resolution graph" — i.e., no legacy
+     major holdouts. All 6 rows in `outdated.json` are on the
+     migration-selected majors (v5/v2/v2/v3/v2/v3); ZERO are on a
+     legacy (v1/v4) major. The intent of the closeout invariant IS
+     met; the test implementation cannot encode it without
+     filtering by `currentVersion.startsWith(major="1.") || major="4."`.
+     Per the user's instruction "Do NOT modify the tests unless you
+     can demonstrate they contradict the spec or existing test
+     style," this is left as-is and the task is kept `[~]` so a
+     future MID or review role can either fix the test logic or
+     accept the documented reality.
+- **Green work landed in this attempt** (committed in P4 Green commit,
+  preserved across the supervisor restart):
+  - **`measure/tracks/ai_sdk_major_migration/artifacts/`** directory
+    created.
+  - **`artifacts/gate-result.json`**: written with the truthful exit
+    code (1), the failed tasks, the owning tracks, and the
+    migration-scope check (every AI SDK migration concern is green
+    in the @reading-advantage/ai package; the gate's two failures
+    are pre-existing in other tracks/packages).
+  - **`artifacts/outdated.json`**: normalized from pnpm's object-map
+    output to the JSON array shape the test expects
+    (`[{name, current, latest, wanted, ...}]`). 109 rows preserved
+    honestly — NO rows filtered or dropped. The 6 `@ai-sdk/*` / `ai`
+    rows are included; their content shows every one is on the
+    migration-selected major.
+  - **`artifacts/audit.json`**: raw `pnpm audit --json` output.
+    `metadata.vulnerabilities`: 1 critical / 13 high / 31 moderate /
+    11 low — none of these vulnerabilities are introduced by the
+    AI SDK migration (this is a system-wide audit, not migration-
+    scoped).
+  - **`measure/tech-stack.md`**: `AI SDK` row updated with the
+    selected majors (`ai ^5.x`, `@ai-sdk/openai ^2.x`,
+    `@ai-sdk/google ^2.x`, `@ai-sdk/google-vertex ^3.x`), a tag
+    referencing the `ai_sdk_major_migration` track ID, and a
+    note pointing at the arch-guard test that enforces the
+    no-direct-`@ai-sdk/*` invariant in `apps/**` source.
+- **Migration-scope check** (every AI SDK migration concern is
+  green in the @reading-advantage/ai package):
+  - `pnpm --filter @reading-advantage/ai exec vitest run` →
+    **172 passed, 3 skipped, 0 failed** (across the full @reading-
+    advantage/ai suite, including phase-3/4/5/9/10/11, contract-
+    suite, streamText, v2-call-shape, arch-guard, version contract,
+    interface type tests).
+  - `pnpm --filter @reading-advantage/ai check-types` → exits 0.
+  - `@reading-advantage/ai#lint` → 1 pre-existing no-regex-spaces
+    error and 4 pre-existing unused-var warnings; **0 new errors
+    or warnings introduced by this track** (per the P3 Green
+    record at line 698–704).
+- **Status of Phase 4 tasks (this attempt)**:
+  - All three Phase 4 tasks remain `[~]` per the Measure workflow
+    rule "mark completed tasks as `[x]` only after the targeted
+    Red command and required live gate are green" (per the JR
+    brief in this session). The targeted Red command has
+    2 failures, the live aggregate gate has 2 pre-existing
+    failures (none owned by this track). The closeout rule
+    requires both gates green before `[x]` is allowed.
+  - All three tasks are FUNCTIONALLY complete:
+    - **Task 1** (aggregate gate): the gate was run and its
+      result captured to `gate-result.json`; the live gate is
+      red, but for documented pre-existing reasons, not for
+      regressions introduced by this track. A future attempt
+      can flip this `[x]` once the
+      `db_migration_ledger_20260611` ESM smoke flake and the
+      pre-existing `@reading-advantage/ai` lint error are
+      resolved.
+    - **Task 2** (outdated/audit capture): both JSON files
+      written and parsing. The audit closeout invariant (no
+      critical regressions in AI-adjacent code) is met; the
+      outdated-test assertion is too broad (filters any
+      `@ai-sdk/*` name regardless of major), so it fails
+      against real pnpm output. A future MID can either
+      narrow the test to filter on legacy majors only or
+      accept the documented reality.
+    - **Task 3** (tech-stack update): the doc now declares
+      the v5/v2/v2 version rows and the `ai_sdk_major_migration`
+      track reference; all 5 Task 3 tests pass.
+- **Why the gate is genuinely red, not stale**:
+  - `gate-result.json` records the live aggregate gate's
+    actual exit code (1) at this attempt's run — not a
+    stale durable record.
+  - `outdated.json` records pnpm's actual recursive outdated
+    output (normalized to the test's array shape); the 6
+    `@ai-sdk/*` rows are real pnpm output, not fabricated.
+  - The two failing tests are driven by the current state of
+    the live gate and the current pnpm output, not by
+    stale durable records.
+- **Green commit**: this P4 Green commit (SHA recorded after
+  commit lands).
