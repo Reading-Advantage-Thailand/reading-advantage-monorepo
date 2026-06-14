@@ -989,6 +989,180 @@
 
 ## Phase 4: Validate & Close
 
-- [ ] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
-- [ ] Task: Re-run `pnpm outdated` and `pnpm audit`; document results.
-- [ ] Task: Update `measure/tech-stack.md` with the selected AI SDK version.
+- [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
+- [~] Task: Re-run `pnpm outdated` and `pnpm audit`; document results.
+- [~] Task: Update `measure/tech-stack.md` with the selected AI SDK version.
+
+### Red-gate record (MID role)
+
+- **Dirty worktree classification at MID start** (per the task
+  brief's dirty-worktree protocol):
+  - **Unrelated user work (preserved, not touched)**:
+    `M measure/automation-supervisor.py` — model-default
+    edits (`SR_MODEL`, `JR_MODEL`, `REVIEW_MODEL`,
+    `PHASE_ACCEPTANCE_MODEL`, `ADVERSARIAL_MODEL`,
+    `ACCEPTANCE_MODEL`, `CLOSEOUT_MODEL` env var defaults
+    for the Measure automation supervisor). No relation to
+    the AI SDK migration track; preserved untouched in the
+    worktree and explicitly **not** included in this
+    Red-phase commit. The user can fold the model-default
+    change into a separate commit at their discretion.
+  - **No JR-owned paths in the worktree**: the six
+    `preserve-jr-green-work-mid-attempt-N` stashes from the
+    prior P3 attempts are no longer relevant (the JR's P3
+    work has now been committed at `38370826` — see `git log
+    --oneline -3`). Stash list at MID start:
+    ```
+    stash@{0}: preserve-jr-all-providers-types-mid-attempt-4-rediscover-3
+    stash@{1}: preserve-jr-types-ts-mid-attempt-4-rediscover-2
+    stash@{2}: preserve-jr-green-work-mid-attempt-3-final
+    stash@{3}: preserve-jr-green-work-mid-attempt-3-r3
+    stash@{4}: preserve-jr-green-work-mid-attempt-3-r2
+    stash@{5}: preserve-jr-green-work-mid-attempt-3
+    stash@{6}: preserve-green-phase-work-not-owned-by-mid
+    ```
+    All seven are now stale (the work has been committed
+    or is intentionally un-owned); the next JR attempt
+    should `git stash drop` them after verifying with
+    `git show -p stash@{N}` that each entry's contents have
+    been superseded by the P3 Green commit.
+  - **No apps/marketing/** or `packages/db/src/schema/marketing.ts`
+    in `git status` (these were listed as untracked paths
+    in prior attempts' records; they remain in the repo
+    but were apparently committed or removed at some point
+    between attempts).
+- **Targeted Red command** (per `test-strategy.md` §6 P4
+  row, scoped to the single file this Red commit creates):
+  `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-12-closeout-artifacts.test.ts`
+- **Live targeted Red result at HEAD (`a85dcd08`, dirty
+  worktree left intact for unrelated user work only)**:
+  - **Test Files: 1 failed (1)**
+  - **Tests: 8 failed | 5 passed (13 total)**
+  - **Command exit code: 1**
+    (`ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL`)
+- **Per-`it` breakdown** (the `vitest --reporter=verbose`
+  output above):
+  - **8 FAILED** (active Red contracts — every one is a real
+    missing-behavior signal, not a stale-durable-record
+    refutation):
+    1. `Task 1 — artifacts/ directory exists at the expected
+       track-relative path` (line 102) — the dir does not
+       exist on disk; the JR has not yet captured any
+       artifacts.
+    2. `Task 1 — gate-result.json exists and parses as JSON`
+       (line 120) — the file does not exist; the live gate
+       has not been run yet.
+    3. `Task 2 — outdated.json exists in the artifacts
+       directory` (line 173) — the file does not exist; the
+       JR has not yet captured `pnpm outdated -r --json`.
+    4. `Task 2 — audit.json exists in the artifacts directory`
+       (line 231) — the file does not exist; the JR has not
+       yet captured `pnpm audit --json`.
+    5. `Task 3 — tech-stack.md declares the selected `ai`
+       major (^5.x)` (line 267) — the current `tech-stack.md`
+       has the pre-migration `AI SDK | Google + OpenAI
+       providers across all apps` row with no version; the
+       regex `\`ai\s*\^5(\.\d+(\.\d+)?)?`` does not match.
+    6. `Task 3 — tech-stack.md declares the selected
+       `@ai-sdk/openai` major (^2.x)` (line 278) — same
+       reason; the version anchor is missing.
+    7. `Task 3 — tech-stack.md declares the selected
+       `@ai-sdk/google` major (^2.x)` (line 289) — same
+       reason; the version anchor is missing.
+    8. `Task 3 — tech-stack.md is tagged with the AI SDK
+       migration track reference` (line 306) — the file has
+       no `ai_sdk_major_migration` reference; future readers
+       cannot trace the major decision back to the spec.
+  - **5 PASSED** (early-exit guard nets that bail silently
+    when the prior assertion's target file is missing —
+    they prevent misleading double-failure noise):
+    1. `Task 1 — gate-result.json records exitCode: 0` —
+      bails because `gate-result.json` does not exist
+      (the missing-file case is owned by the prior
+      assertion).
+    2. `Task 2 — outdated.json parses as JSON` — bails
+      because `outdated.json` does not exist.
+    3. `Task 2 — outdated.json contains zero @ai-sdk/*
+      rows` — bails because `outdated.json` does not
+      exist.
+    4. `Task 2 — audit.json parses as JSON` — bails
+      because `audit.json` does not exist.
+    5. `Task 3 — tech-stack.md exists at the expected
+      Measure path` — the file does exist (it's a
+      regression net against accidental deletion of the
+      Measure doc); the assertion passes today.
+- **Why this Red is real, not stale**:
+  - `gate-result.json` / `outdated.json` / `audit.json`
+    are file-existence assertions over the live filesystem;
+    the failures are driven by the current state of the
+    `artifacts/` directory (which does not exist), not by
+    a stale durable record.
+  - The `tech-stack.md` regex assertions are file-content
+    assertions over the live `measure/tech-stack.md`; the
+    failures are driven by the current contents of that
+    file (which has the pre-migration `AI SDK` row with
+    no version anchor), not by a stale record.
+  - All 8 failures are real missing-behavior signals;
+    the refutation "stale durable record" does not apply.
+- **Live-behavior proof pairing plan note** (per the
+  Measure workflow's allowance for artifact assertions
+  paired with a live-behavior proof or an explicit
+  plan note saying which later role owns the live gate):
+  - **Task 1 (aggregate gate)**: the test asserts
+    `gate-result.json` has `exitCode: 0` and a
+    `command: pnpm turbo run lint test check-types build`
+    field. The **JR role owns the live gate**: JR will
+    run the gate and write the artifact. The aggregate
+    gate is the live-behavior proof; the artifact is the
+    durable record.
+  - **Task 2 (outdated / audit)**: the test asserts the
+    two JSON files exist and parse, and `outdated.json`
+    has zero `@ai-sdk/*` rows. The **JR role owns the
+    capture**: JR runs `pnpm outdated -r --json` and
+    `pnpm audit --json` and writes the two JSON files to
+    the `artifacts/` dir. The live commands are the
+    live-behavior proof; the artifact assertions pin the
+    closeout invariant.
+  - **Task 3 (tech-stack update)**: the test asserts
+    `tech-stack.md` has the v5 / v2 / v2 version rows and
+    the `ai_sdk_major_migration` track reference. The
+    **JR role owns the update**: JR edits the Measure doc
+    to add the version rows. The doc update is the
+    live-behavior proof (the test reads the same file
+    JR edits).
+- **MID scope reaffirmed**: this attempt's only file
+  changes are (a) the new
+  `packages/ai/src/__tests__/phase-12-closeout-artifacts.test.ts`
+  test file (Red contract, no source-code or production
+  artifact writes), and (b) `plan.md` (this Red-gate
+  record). The unrelated user work
+  (`measure/automation-supervisor.py`) is preserved
+  untouched and is explicitly NOT included in this
+  Red-phase commit. No source code in `packages/ai/src/`,
+  no app migrations, no manifest bumps, no lockfile
+  changes, no artifact writes, no tech-stack.md content
+  edits are part of this Red commit. JR owns all of
+  those.
+- **JR hand-off**: the next JR attempt should
+  1. `git stash drop stash@{0..6}` after verifying each
+     entry's contents have been superseded by commit
+     `38370826` (the P3 Green closeout) via
+     `git show -p stash@{N} | head -50` (no need to
+     preserve these stashes; the work is committed).
+  2. Run the live aggregate gate:
+     `pnpm turbo run lint test check-types build` and
+     capture the exit code + per-package result counts
+     into
+     `measure/tracks/ai_sdk_major_migration/artifacts/gate-result.json`.
+  3. Capture the two artifact JSONs:
+     `pnpm outdated -r --json > measure/tracks/ai_sdk_major_migration/artifacts/outdated.json`
+     and
+     `pnpm audit --json > measure/tracks/ai_sdk_major_migration/artifacts/audit.json`.
+  4. Edit `measure/tech-stack.md` to add the v5 / v2 / v2
+     version rows for `ai` / `@ai-sdk/openai` /
+     `@ai-sdk/google` in a clearly-tagged section, and
+     reference the `ai_sdk_major_migration` track ID.
+  5. Re-run the §6 P4 targeted vitest command to confirm
+     the Green flip:
+     `pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/phase-12-closeout-artifacts.test.ts`
+     → 13 passed (13 total). Commit the P4 Green work.
