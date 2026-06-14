@@ -328,7 +328,7 @@ describe("Phase 11 — Task 3: pnpm-lock.yaml resolves exactly one @ai-sdk major
     // `^3.25.x` and `^4.x.y` peer ranges; we pin the resolved major
     // is a single value to catch a future split.
     const source = readFileSync(LOCKFILE, "utf8");
-    const re = /^  \/zod@(\d+)\.\d+\.\d+/gm;
+    const re = /^ {2}\/zod@(\d+)\.\d+\.\d+/gm;
     const majors = new Set<number>();
     let match: RegExpExecArray | null;
     while ((match = re.exec(source)) !== null) {
