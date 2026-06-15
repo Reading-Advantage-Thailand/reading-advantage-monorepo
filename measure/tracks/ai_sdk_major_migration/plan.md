@@ -2606,3 +2606,319 @@
   artifacts for audit_log_retention_dsar_20260605).
   The test-contract alignment from attempt 4
   (`ed6716ac` + `aa193f58`) is preserved.
+
+### Worktree re-verification (MID role, attempt 7 — post-`d143ba62`)
+
+- **Trigger**: supervisor restarted the MID role for
+  Phase 4 after the JR P4 Green attempt-5 commit
+  `d143ba62` (audit_log_retention_dsar_20260605
+  closeout artifacts) landed. The current worktree
+  state at MID start is HEAD `d143ba62` plus one
+  unrelated dirty path; the closeout artifacts
+  (`gate-result.json`, `outdated.json`, `audit.json`)
+  and the closeout test (`phase-12-closeout-artifacts.
+  test.ts`) are intact on disk.
+- **Dirty worktree classification at MID start**:
+  - **Unrelated user work (preserved, not touched)**:
+    `M measure/automation-supervisor.py` — model-default
+    edits to the Measure automation supervisor's
+    `SR_MODEL` / `JR_MODEL` / `REVIEW_MODEL` /
+    `PHASE_ACCEPTANCE_MODEL` / `ADVERSARIAL_MODEL` /
+    `ACCEPTANCE_MODEL` / `CLOSEOUT_MODEL` env var
+    defaults. Zero relation to the AI SDK migration
+    track. Preserved untouched in the worktree and
+    explicitly **not** included in this Red-phase
+    commit.
+  - **No JR-owned paths in the worktree**: all JR
+    P3 + P4 Green work has been committed
+    (`38370826`, `512f834f`, `52e3c900`,
+    `ed6716ac`, `aa193f58`, `73e38bc1`, `5891867c`,
+    `d143ba62`).
+  - **7 stale stashes** at `stash@{0..6}` from prior
+    MID attempts; all contents superseded by the
+    committed JR work above. Left untouched; a
+    future attempt can `git stash drop` them after
+    `git show -p stash@{N}` verification.
+- **Build-graph baseline at MID start**:
+  - `build-graph stats ./graph.db` → 2,157 nodes /
+    3,085 edges / 289 files (up from 2,153/3,081/
+    288 at attempt 5 — the new packages/auth
+    changes from `73e38bc1` and the
+    `apps/marketing/eslint.config.mjs` from
+    `5891867c` added new file/function nodes).
+  - `build-graph inspect ./graph.db
+    phase-12-closeout-artifacts.test.ts` → 1 file
+    node + 1 contained function node
+    (`isOnSelectedMajor`); incoming edges: 0
+    (test file is consumed by the vitest runner, not
+    by application code). Graph is fresh; no update
+    needed for this attempt.
+- **Targeted Red command** (per `test-strategy.md`
+  §6 P4 row, scoped to the single file this Red
+  phase owns):
+  `pnpm --filter @reading-advantage/ai exec vitest
+  run src/__tests__/phase-12-closeout-artifacts.test.ts
+  --reporter=verbose`
+- **Live targeted Red result at HEAD (`d143ba62`,
+  dirty worktree left intact for unrelated user
+  work only)**:
+  - **Test Files: 1 passed (1)**
+  - **Tests: 13 passed (13 total)**
+  - **Command exit code: 0**.
+  - The same Red result as the JR P4 Green
+    attempt-4 / attempt-5 records at lines
+    1775–1780 (attempts 5 and 6 saw the same 13/13
+    GREEN). The test-contract alignment in commit
+    `ed6716ac` + `aa193f58` (attempt 4) brought the
+    file to Green; the subsequent JR attempts 4 and
+    5 closed pre-existing gate blockers and
+    preserved the Green state of the closeout test.
+- **Per-`it` breakdown** (the `vitest
+  --reporter=verbose` output above, re-confirmed
+  by this attempt's live run): all 13 it blocks
+  pass:
+  - Task 1 (3 it blocks): artifacts/ dir exists,
+    gate-result.json exists + parses, migration-
+    scope check is green.
+  - Task 2 (5 it blocks): outdated.json exists +
+    parses, zero legacy major holdouts (all 6
+    @ai-sdk/* / ai rows are on migration-selected
+    majors v5/v2/v2/v3/v3/v2), audit.json exists +
+    parses.
+  - Task 3 (5 it blocks): tech-stack.md exists +
+    declares ai/openai/google v5/v2/v2 majors +
+    has the ai_sdk_major_migration track reference.
+- **Why no new Red tests were created** (per the
+  Measure workflow rule cited by the prior MID
+  attempts: "If the new tests pass at HEAD, tighten
+  the contract until at least one new test fails or
+  mark the task as already satisfied with evidence
+  instead of creating a false Red phase"):
+  - Every candidate Phase 4 contract tightening
+    was reviewed against HEAD `d143ba62` for genuine
+    missing-behavior signals:
+    - **`gate-result.json.failedTasks` array is
+      empty (aggregate gate green)**: would fire
+      RED, but the failure is the documented
+      pre-existing `@reading-advantage/auth#test`
+      blocker (owned by `audit_log_retention_dsar_20260605`
+      + `auth_security_hardening_20260611` archived
+      tracks). The test file already encodes the
+      spec-aligned migration-scope check (via
+      `ed6716ac`); re-introducing the
+      `exitCode === 0` assertion would resurrect
+      the spec-contradiction the JR explicitly
+      demonstrated and removed in attempt 4
+      (lines 1945–2004 of the JR attempt-4
+      Green-gate record). Per the brief's
+      "Do NOT modify the tests unless you can
+      demonstrate they contradict the spec" rule,
+      the spec-aligned contract stays.
+    - **`tech-stack.md` declares
+      `@ai-sdk/google-vertex ^3.x` and
+      `@ai-sdk/react ^2.x`**: line 41 of
+      `measure/tech-stack.md` already pins these
+      two majors in the AI SDK row → test would
+      pass (GREEN at HEAD).
+    - **`outdated.json` has rows for ALL 6
+      migration-selected packages**: verified at
+      HEAD — the file has exactly 6 AI SDK rows
+      (`@ai-sdk/google 2.0.72`,
+      `@ai-sdk/google-vertex 3.0.142`,
+      `@ai-sdk/openai 2.0.106`,
+      `@ai-sdk/provider-utils 3.0.26`,
+      `@ai-sdk/react 2.0.203`, `ai 5.0.201`),
+      every one on the migration-selected major
+      → test would pass (GREEN at HEAD).
+    - **`audit.json` has zero `@ai-sdk/*`
+      advisories**: verified at HEAD — the audit
+      has 49 total advisories across 2,263
+      dependencies; zero are `@ai-sdk/*` or
+      AI-adjacent packages (the migration did not
+      introduce any new vulnerabilities) → test
+      would pass (GREEN at HEAD).
+    - **`gate-result.json.migrationScopeCheck`
+      has all required fields**: the artifact at
+      HEAD has 9 fields including the closeout
+      contract check
+      (`closeoutArtifactsContract: "13/13 it
+      blocks green"`) → test would pass (GREEN
+      at HEAD).
+    - **`outdated.json` is normalized to the
+      JSON-array shape (the test expects
+      `Array.isArray(parsed) === true`)**: the
+      JR attempt 2 already normalized the file
+      → test would pass (GREEN at HEAD).
+  - None of the candidate tightenings would fire
+    RED at HEAD without either (a) reintroducing
+    the spec-contradicting assertions the JR
+    explicitly removed in attempt 4 or (b)
+    testing behavior already satisfied by the
+    JR P3/P4 Green work. Per the Measure
+    workflow rule, all three Phase 4 tasks are
+    marked **already-satisfied by Red contracts
+    with evidence** (the 13-test file at
+    `6580970c` + the spec-aligned contract at
+    `ed6716ac`/`aa193f58`).
+- **Why the gate is genuinely red, not stale**
+  (the same documented reasoning as attempts 5
+  and 6):
+  - `gate-result.json` records the live
+    aggregate gate's actual `exitCode: 1` at
+    the JR P4 Green attempt-5 run, not a stale
+    durable record. The single remaining
+    failure is a pre-existing test failure in
+    `@reading-advantage/auth#test` (20+
+    pre-existing failing tests: integration
+    tests needing `DIRECT_DATABASE_URL`,
+    quality-gate tests referencing the archived
+    `audit_log_retention_dsar_20260605` plan.md
+    at the old `tracks/` path, and a token test
+    owned by `auth_security_hardening_20260611`).
+    Not fixable from this track without
+    modifying another track's test file (which
+    violates the JR brief's "preserve valid
+    work; do not modify other tracks' tests"
+    rule) or setting up a real PostgreSQL
+    database in the aggregate-gate environment
+    (which is out of scope for the AI SDK
+    migration).
+  - `outdated.json` records pnpm's actual
+    recursive outdated output (normalized to
+    the test's array shape) at the JR P4 Green
+    attempt-2 run; the 6 `@ai-sdk/*` rows are
+    real pnpm output, not fabricated, and every
+    one is on the migration-selected major.
+  - Both the targeted Red test (now GREEN) and
+    the live aggregate gate (still RED for
+    documented pre-existing reasons) are driven
+    by the current state of the artifacts and
+    the live repo, not by stale durable
+    records.
+- **Status of Phase 4 tasks (this attempt)**:
+  - All three Phase 4 tasks remain `[~]` per
+    the closeout rule ("mark completed tasks
+    as `[x]` only after the targeted Red
+    command and required live gate are green"):
+    - **Targeted Red command**: **green**
+      (13/13 passed) — the spec-aligned
+      contracts in `ed6716ac` correctly
+      capture the Phase 4 closeout invariants.
+    - **Required live gate** (`pnpm turbo run
+      lint test check-types build`): **red**
+      (exit 1, single pre-existing
+      `@reading-advantage/auth#test` failure
+      with 20+ pre-existing test failures owned
+      by `audit_log_retention_dsar_20260605` +
+      `auth_security_hardening_20260611`
+      archived tracks).
+    - **Closeout rule**: requires BOTH gates
+      green. Tasks remain `[~]` per the rule.
+  - All three tasks are FUNCTIONALLY complete:
+    - **Task 1** (aggregate gate): the gate
+      was run and its result captured to
+      `gate-result.json`; the live gate is red
+      for documented pre-existing reasons, not
+      for regressions introduced by this track.
+    - **Task 2** (outdated/audit capture):
+      both JSON files written and parse
+      correctly; the migration-scope audit
+      invariant is met (no AI-adjacent
+      advisories introduced by the migration);
+      the no-legacy-major-holdouts invariant is
+      met (all 6 @ai-sdk/* / ai rows are on
+      migration-selected majors).
+    - **Task 3** (tech-stack update): the doc
+      declares the v5/v2/v2/v3 version rows and
+      the `ai_sdk_major_migration` track
+      reference; all 5 Task 3 tests pass.
+  - **Migration-scope check is fully green** at
+    this attempt's HEAD:
+    - `pnpm --filter @reading-advantage/ai exec
+      vitest run` → **179 passed, 3 skipped, 0
+      failed** (full suite, including the
+      closeout-artifacts contract at
+      `6580970c` + `ed6716ac` + `aa193f58`).
+    - `pnpm --filter @reading-advantage/ai
+      check-types` → exits 0 (clean).
+    - `pnpm --filter @reading-advantage/ai
+      lint` → exits 0 (4 pre-existing unused-var
+      warnings; 0 errors). The pre-existing
+      `no-regex-spaces` error at
+      `phase-11-sdk-version-contract.test.ts:331:16`
+      was resolved by JR P4 Green attempt-3
+      commit `52e3c900`.
+    - `pnpm --filter @reading-advantage/auth
+      check-types` → exits 0 (clean) — closed
+      by JR P4 Green attempt-5 commit
+      `73e38bc1` (added `@types/bcryptjs
+      ^2.4.6`).
+    - `pnpm --filter marketing lint` → exits
+      0 (8 pre-existing no-unused-vars warnings;
+      0 errors) — closed by JR P4 Green
+      attempt-5 commit `5891867c` (added
+      eslint flat config).
+    - `pnpm --filter @reading-advantage/auth
+      test src/__tests__/phase-7-closeout.
+      test.ts` → 13/13 passed — closed by JR
+      P4 Green attempt-5 commit `d143ba62`
+      (added audit_log_retention_dsar_20260605
+      closeout artifacts).
+    - `phase-arch-no-direct-sdk.test.ts` →
+      passes (zero `from "ai"` or
+      `from "@ai-sdk/..."` imports in `apps/**`
+      source).
+    - `phase-stream-text-contract.test.ts` →
+      6/6 it blocks green.
+    - `phase-11-sdk-version-contract.test.ts` →
+      passes.
+    - `phase-12-closeout-artifacts.test.ts` →
+      13/13 it blocks green.
+- **MID scope reaffirmed**: this attempt's only
+  file change is
+  `measure/tracks/ai_sdk_major_migration/plan.md`
+  (Measure doc). The unrelated user work
+  (`measure/automation-supervisor.py`) is
+  preserved untouched and is explicitly NOT
+  included in this Red-phase commit. No source
+  code, no test files, no JR-owned work, no
+  artifact writes, no tech-stack.md content
+  edits are part of this commit. The Red
+  contracts committed at `6580970c` (Red) and
+  spec-aligned at `ed6716ac` + `aa193f58`
+  (Green attempt 4) remain the canonical
+  Phase 4 Red contracts at HEAD; this attempt
+  does not modify them.
+- **JR / supervisor hand-off** (this attempt's
+  addendum to the prior attempts' hand-offs):
+  1. The Phase 4 Red contracts are correctly
+     calibrated and committed (13/13 GREEN).
+     The remaining live-gate failure is a
+     pre-existing blocker owned by the
+     `audit_log_retention_dsar_20260605` +
+     `auth_security_hardening_20260611` archived
+     tracks and is not fixable from this
+     track without violating the JR brief's
+     "do not modify other tracks' tests" rule.
+  2. The supervisor's role (Review / Acceptance
+     / Closeout) can either:
+     - Flip Task 1 / Task 2 / Task 3 to `[x]`
+       once the pre-existing auth#test failures
+       are resolved by their owning archived
+       tracks; OR
+     - Accept the documented reality and archive
+       Phase 4 with all three tasks `[~]` (the
+       migration-scope gate is fully green; the
+       remaining failures are owned by other
+       tracks). The standard Measure workflow
+       interpretation when a track's scope is
+       green and other tracks own the remaining
+       pre-existing failures.
+  3. The 7 stashes at `stash@{0..6}` remain
+     stale; a future attempt should
+     `git stash drop` them after verifying each
+     entry's contents have been superseded by
+     the committed JR work (`38370826`,
+     `512f834f`, `52e3c900`, `ed6716ac`,
+     `aa193f58`, `73e38bc1`, `5891867c`,
+     `d143ba62`).
