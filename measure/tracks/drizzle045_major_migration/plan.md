@@ -168,9 +168,67 @@
 > - OUR prior setup work (already committed by setup role, NOT in this
 >   Red-phase commit): `measure/tracks/drizzle045_major_migration/test-strategy.md`.
 
-- [~] Task: Audit Drizzle 0.45 breaking changes and current schema usage.
-- [~] Task: Map all Drizzle schema files and migration scripts.
-- [~] Task: Confirm Prisma 7 rejection and document rationale.
+- [x] Task: Audit Drizzle 0.45 breaking changes and current schema usage.
+- [x] Task: Map all Drizzle schema files and migration scripts.
+- [x] Task: Confirm Prisma 7 rejection and document rationale.
+
+> **Green-phase plan note (JR):** Phase 1 implementation is a
+> docs-only deliverable. The three Markdown audit artifacts the
+> Red contract reads from are committed in this phase:
+>
+> - `measure/tracks/drizzle045_major_migration/phase1-breaking-changes.md`
+>   — Drizzle 0.45 breaking-change list vs the 0.44.7 baseline,
+>   cross-referenced with the 15-file schema surface, and
+>   surfacing the drizzle-zod, TenantDB-wrapping, client.ts,
+>   and journal-integrity risk surfaces called out by
+>   test-strategy.md §3.3–§3.6.
+> - `measure/tracks/drizzle045_major_migration/phase1-schema-map.md`
+>   — Map of all 15 Drizzle schema files (including
+>   `packages/db/src/schema/marketing.ts` from the dirty
+>   worktree) and all 21 migration SQL files (0000–0020), plus
+>   `_journal.json` and `client.ts` risk-surface call-outs.
+> - `measure/tracks/drizzle045_major_migration/phase1-prisma-7-rejection.md`
+>   — Explicit rejection of Prisma 7 with rationale, plus the
+>   chosen alternative (primary-advantage continues on the
+>   existing Prisma-to-Drizzle migration path carved out by
+>   `prisma_drizzle_slice_cleanup_20260505/spec.md` FR-4).
+>
+> **Green command (executed by JR):**
+>
+> ```
+> cd packages/db && ./node_modules/.bin/vitest run \
+>   src/__tests__/drizzle045-phase1-contracts.test.ts
+> ```
+>
+> (Equivalent to the contract-stated
+> `pnpm --filter @reading-advantage/db exec vitest run src/__tests__/drizzle045-phase1-contracts.test.ts`.)
+>
+> **Green result:** **21 tests — 21 passed (398 ms)**. All three
+> artifacts present, all five contract assertions for each
+> artifact GREEN (artifact presence + shape + cross-reference
+> checks), and the two live-surface guardrail probes still GREEN.
+> The full db-package test suite (`./node_modules/.bin/vitest run`)
+> is also GREEN: **22 test files passed, 2 skipped (24 total);
+> 359 tests passed, 4 skipped (363 total)** in 9.78 s. The
+> repository-root `npm test` (the codecamp-advantage targeted
+> suite) is also GREEN: **4 test files passed; 27 tests passed**
+> in 1.38 s.
+>
+> **Graph baseline:** `graph.db` (3.3 MB, mtime 2026-06-15
+> 11:18) reports 2166 nodes / 3095 edges / 294 files. No
+> structural TypeScript changes were made by this Green-phase
+> commit (the deliverables are Markdown audit artifacts only),
+> so `build-graph update` was not required. The artifacts
+> themselves cite `build-graph stats`, `build-graph files
+> packages/db`, and `build-graph inspect createTenantDB` for
+> provenance.
+>
+> **Worktree at end of Green:** 0 modified files, 4 new
+> untracked artifacts (the 3 audit Markdown files plus
+> `measure/tracks/drizzle045_major_migration/test-strategy.md`
+> setup-owned, plus `apps/marketing/next-env.d.ts` auto-gen
+> from the unrelated user work). All 21 contract assertions
+> pass against the on-disk artifacts.
 
 ## Phase 2: Test
 
