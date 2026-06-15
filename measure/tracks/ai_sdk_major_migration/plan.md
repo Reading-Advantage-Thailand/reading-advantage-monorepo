@@ -989,7 +989,7 @@
 
 ## Phase 4: Validate & Close
 
-- [x] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. (`17604323`, `vitest.config.ts`)
+- [x] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. (`17604323`, `85e1be2b`) (`vitest.config.ts`)
   - Red file: `packages/ai/src/__tests__/phase-12-closeout-artifacts.test.ts`
     (Task 1 `describe`: artifacts/ dir exists, gate-result.json
     exists + parses, `migrationScopeCheck` is green per spec AC
@@ -3582,5 +3582,4 @@
   config file, not a TypeScript source file,
   so it's not in the graph's scope. No graph
   update needed for this attempt.
-- **Green commit**: this P4 Green attempt-7
-  commit (SHA recorded after commit lands).
+- **Green commit**: `85e1be2b` (this P4 Green attempt-7 commit).

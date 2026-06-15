@@ -2,7 +2,7 @@
   "command": "pnpm turbo run lint test check-types build",
   "commandSource": "measure/tracks/ai_sdk_major_migration/test-strategy.md §6 P4 row",
   "exitCode": 1,
-  "capturedAt": "2026-06-15T09:32:00Z",
+  "capturedAt": "2026-06-15T01:49:08Z",
   "host": "linux x64, node v24.4.0, pnpm 8.15.8",
   "turboSummary": {
     "tasks": 45,
