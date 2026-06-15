@@ -55,7 +55,7 @@
 >   test-strategy §3.3-§3.6. Stash `preserve-pre-mid-dirty-upstream-work-drizzle045-phase1`
 >   from attempt-2 was popped to restore the 4 pre-existing dirty
 >   files (preserved, not committed by MID).
-> - Attempt-4 (this commit, docs-only): Re-ran the targeted Red
+> - Attempt-4 (commit `a1bdd1d8`, docs-only): Re-ran the targeted Red
 >   command at HEAD `6d4163b1` to confirm the Red profile is
 >   stable. Result: **21 tests, 19 failed / 2 passed (462 ms)** —
 >   the 2 passes are the live-surface guardrail probes
@@ -72,6 +72,41 @@
 >   verification; no test file changes were needed because the
 >   test file already committed at `6d4163b1` is the correct
 >   Red contract for this phase.
+> - Attempt-5 (this commit, docs-only): Re-ran the targeted Red
+>   command at HEAD `a1bdd1d8` (the new HEAD after the attempt-4
+>   docs commit). Result: **21 tests, 19 failed / 2 passed (463 ms)** —
+>   identical to attempt-4 (drift = +1 ms, well within Vitest
+>   setup-variance). The 19 failures are still the
+>   artifact-content assertions for the three missing Markdown
+>   deliverables; the 2 passes are still the live-surface
+>   guardrail probes. No new tightening was attempted because
+>   the contract at HEAD `6d4163b1` already asserts every
+>   test-strategy §3 risk surface that the Phase 1 audit must
+>   document, and tightening further would risk breaking the
+>   Green implementation path (Phase 1 Implement writes exactly
+>   the three Markdown artifacts the contract reads from).
+>   Build-graph baseline confirmed: `graph.db` (3.3 MB, mtime
+>   2026-06-15 11:18) reports 2166 nodes / 3095 edges / 294
+>   files; `createTenantDB` indexed at
+>   `packages/domain/src/db-contract.ts` (the TenantDB-wrapping
+>   risk-surface assertion in the contract is therefore
+>   cross-referenced against a real symbol, not a guess).
+>   Dirty worktree re-classified at attempt-5 start (unchanged
+>   from attempt-4): RELEVANT folded into the contract is
+>   `packages/db/src/schema/index.ts` (adds
+>   `export * from "./marketing.js"`); IGNORABLE is
+>   `apps/marketing/next-env.d.ts` (auto-generated Next.js);
+>   UNRELATED user work preserved untouched:
+>   `apps/marketing/package.json`,
+>   `apps/marketing/vite.config.ts` (Next.js 16 / vinext
+>   migration), `measure/automation-supervisor.py` (supervisor
+>   model defaults), and `pnpm-lock.yaml` (derived from
+>   apps/marketing edits). The setup-owned
+>   `measure/tracks/drizzle045_major_migration/test-strategy.md`
+>   remains untracked at the repo root (not a MID commit
+>   concern). This attempt is docs-only: only plan.md is
+>   modified to record attempt-5 verification; the Red contract
+>   test file is unchanged from attempt-3.
 >
 > **Dirty worktree classification at Red start:**
 >
