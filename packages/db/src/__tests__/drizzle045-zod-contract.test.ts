@@ -56,6 +56,15 @@ interface PkgJson {
   devDependencies?: Record<string, string>;
 }
 
+interface ParseResult {
+  success: boolean;
+}
+
+interface RuntimeSchema {
+  parse: (data: unknown) => unknown;
+  safeParse: (data: unknown) => ParseResult;
+}
+
 // ---------------------------------------------------------------------------
 // drizzle-zod install: package.json must declare it (RED today).
 // ---------------------------------------------------------------------------
@@ -147,9 +156,7 @@ describe("drizzle045-zod-contract — Zod round-trip on users (FR-2, Phase 3 own
       mod = null;
     }
     expect(mod, "drizzle-zod must be importable for this check").not.toBeNull();
-    const createInsertSchema = mod!.createInsertSchema as (table: unknown) => {
-      parse: (data: unknown) => unknown;
-    };
+    const createInsertSchema = mod!.createInsertSchema as (table: unknown) => RuntimeSchema;
 
     const { users } = await import("../schema/users.js");
     const insertSchema = createInsertSchema(users);
@@ -169,5 +176,38 @@ describe("drizzle045-zod-contract — Zod round-trip on users (FR-2, Phase 3 own
     ).toMatchObject({
       username: "rt_user",
     });
+  });
+
+  it("createInsertSchema(users) rejects invalid enum and required-field payloads", async () => {
+    let mod: Record<string, unknown> | null = null;
+    try {
+      mod = require("drizzle-zod") as Record<string, unknown>;
+    } catch {
+      mod = null;
+    }
+    expect(mod, "drizzle-zod must be importable for this check").not.toBeNull();
+    const createInsertSchema = mod!.createInsertSchema as (table: unknown) => RuntimeSchema;
+
+    const { users } = await import("../schema/users.js");
+    const insertSchema = createInsertSchema(users);
+
+    expect(
+      insertSchema.safeParse({
+        id: "u_invalid_role",
+        username: "bad_role_user",
+        displayUsername: "bad_role_user",
+        role: "SUPERADMIN",
+      }).success,
+      "role must be constrained to the Drizzle roleEnum values, not any string.",
+    ).toBe(false);
+
+    expect(
+      insertSchema.safeParse({
+        id: "u_missing_display_username",
+        username: "missing_display",
+        role: "STUDENT",
+      }).success,
+      "displayUsername is notNull in Drizzle and must be required by drizzle-zod.",
+    ).toBe(false);
   });
 });
