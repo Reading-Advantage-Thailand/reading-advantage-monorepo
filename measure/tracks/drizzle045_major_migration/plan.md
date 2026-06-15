@@ -168,9 +168,9 @@
 > - OUR prior setup work (already committed by setup role, NOT in this
 >   Red-phase commit): `measure/tracks/drizzle045_major_migration/test-strategy.md`.
 
-- [x] Task: Audit Drizzle 0.45 breaking changes and current schema usage.
-- [x] Task: Map all Drizzle schema files and migration scripts.
-- [x] Task: Confirm Prisma 7 rejection and document rationale.
+- [x] Task: Audit Drizzle 0.45 breaking changes and current schema usage. (`e942958e`)
+- [x] Task: Map all Drizzle schema files and migration scripts. (`e942958e`)
+- [x] Task: Confirm Prisma 7 rejection and document rationale. (`e942958e`)
 
 > **Green-phase plan note (JR):** Phase 1 implementation is a
 > docs-only deliverable. The three Markdown audit artifacts the
