@@ -1024,6 +1024,110 @@
 > 0 modified non-Measure files. 0 staged files. 2 untracked files
 > preserved untouched (`apps/marketing/next-env.d.ts` auto-gen,
 > `test-strategy.md` setup-owned).
+>
+> > **Attempt-2 stability verification (this commit, docs-only):**
+> > Re-ran the targeted Red gate at HEAD `50060bb4` with the
+> > node runtime available at
+> > `/opt/codex-desktop/resources/node-runtime/bin/node` (the prior
+> > attempt hit exit 127 because `node`/`pnpm`/`npm` are not on the
+> > default sandbox PATH). Confirmed Red profile live:
+> >
+> > ```
+> > /opt/codex-desktop/resources/node-runtime/bin/node \
+> >   ./packages/db/node_modules/vitest/vitest.mjs run \
+> >   packages/db/src/__tests__/drizzle045-phase4-closure-gates.test.ts
+> > ```
+> >
+> > **Red result (attempt-2, HEAD `50060bb4`):** **12 tests —
+> > 10 failed | 2 passed (986 ms).**
+> >
+> > Failures (all genuine Phase 4 implementation gaps, not
+> > stale-record artifacts):
+> >
+> > - `tech-stack.md Drizzle row (Task 3 / AC 8)`: 3 RED — the
+> >   "Selected Shared Versions" table currently has rows for
+> >   Next.js / React / Vitest / Layer / Language / Frontend
+> >   Framework / Meta-Framework / Styling / UI Components / State
+> >   Management / Animation / Database / Database Pooling /
+> >   postgres Connection / pgbouncer Connection / Connection
+> >   Setting, but NO Drizzle row. Phase 4 must add the row.
+> > - `phase4-aggregate-gate.md (Task 1)`: 4 RED — the closure
+> >   record file does not exist at
+> >   `measure/tracks/drizzle045_major_migration/phase4-aggregate-gate.md`.
+> >   Phase 4 must author it with the `pnpm turbo run lint test
+> >   check-types build` invocation + positive-pass context for
+> >   each task + track-id cross-reference.
+> > - `phase4-outdated-audit.md (Task 2)`: 3 RED — the closure
+> >   record file does not exist at
+> >   `measure/tracks/drizzle045_major_migration/phase4-outdated-audit.md`.
+> >   Phase 4 must author it with the `pnpm outdated -r drizzle-orm`
+> >   0.45.x report + `pnpm audit` clean report.
+> >
+> > Passes (2 — regression guards pinning preconditions):
+> >
+> > - `tech-stack.md table exists (Task 3 guard)`: 1 GREEN —
+> >   `measure/tech-stack.md` is present and exposes the "Selected
+> >   Shared Versions" table (just no Drizzle row yet).
+> > - `lockfile drizzle-orm 0.45.x (regression guard)`: 1 GREEN —
+> >   `pnpm-lock.yaml` resolves `/drizzle-orm@0.45.2` (matches
+> >   Phase 3 integration-gates regression guard, which is the
+> >   precondition for the JR role's closure-record `pnpm outdated`
+> >   report).
+> >
+> > **Build-graph baseline (attempt-2):** `graph.db` (3.5 MB, mtime
+> > 2026-06-15 14:16) reports 2177 nodes / 3104 edges / 298 files.
+> > Confirmed via `build-graph stats graph.db`. The Phase 4 test
+> > file (`drizzle045-phase4-closure-gates.test.ts`, committed at
+> > `c7ba3476`) is not yet in the graph because it post-dates the
+> > last graph update; it is a leaf file node with no meaningful
+> > structural edges to scan, so no `build-graph update` is required
+> > for this docs-only verification commit.
+> >
+> > **Dirty worktree at start of attempt-2:**
+> > - IGNORABLE: `apps/marketing/next-env.d.ts` (auto-generated
+> >   Next.js; not committed).
+> > - SETUP-OWNED untracked (not in this commit):
+> >   `measure/tracks/drizzle045_major_migration/test-strategy.md`.
+> > - 0 modified files. 0 staged files. 0 modified non-Measure
+> >   files. Worktree is at clean HEAD `50060bb4`.
+> >
+> > **No new test file changes:** the Red contract test file
+> > committed at `c7ba3476` and corrected at `50060bb4` is
+> > unchanged. This attempt is docs-only — plan.md records the
+> > live Red profile that the prior attempt could not run due to
+> > the sandbox `node`-PATH limitation. The Red contract is
+> > confirmed stable: 10 fail / 2 pass at HEAD `50060bb4`,
+> > matching the prior static-analysis prediction exactly.
+> >
+> > **Attempt-3 stability verification (this commit, docs-only):**
+> > Per the Phase 3 attempt-2 → attempt-3 docs-only verification
+> > pattern (`87a6b42f`), re-ran the targeted Red gate at HEAD
+> > `50060bb4` (the new HEAD after the attempt-2 docs commit) to
+> > confirm the Red profile is stable across commits. Same node
+> > runtime invocation:
+> >
+> > ```
+> > /opt/codex-desktop/resources/node-runtime/bin/node \
+> >   ./packages/db/node_modules/vitest/vitest.mjs run \
+> >   packages/db/src/__tests__/drizzle045-phase4-closure-gates.test.ts
+> > ```
+> >
+> > **Red result (attempt-3, HEAD `50060bb4`):** **12 tests —
+> > 10 failed | 2 passed (~1.0 s).** Identical profile to
+> > attempt-2 (10 fail / 2 pass, drift within Vitest setup
+> > variance). The 10 RED failures remain the artifact-content
+> > assertions for the three Phase 4 deliverables (Task 3
+> > tech-stack.md Drizzle row, Task 1 phase4-aggregate-gate.md,
+> > Task 2 phase4-outdated-audit.md); the 2 GREEN passes remain
+> > the regression guards (tech-stack.md table exists +
+> > pnpm-lock.yaml drizzle-orm 0.45.x). No new tightening
+> > attempted because the contract at HEAD `c7ba3476` /
+> > `50060bb4` already asserts every Phase 4 deliverable that the
+> > JR Green phase must close (artifact presence +
+> > command-string cross-reference + positive-context
+> > pass-context for each turbo task + track-id cross-reference).
+> > This attempt is docs-only; the Red contract test file is
+> > unchanged from attempt-1.
 
 - [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
 - [~] Task: Re-run `pnpm outdated` and `pnpm audit`; document results.
