@@ -348,6 +348,9 @@ importers:
         specifier: latest
         version: 0.1.2(@vitejs/plugin-react@6.0.1)(react-dom@19.2.7)(react@19.2.7)(typescript@5.9.3)(vite@6.4.3)
     devDependencies:
+      '@reading-advantage/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.2
@@ -1528,6 +1531,9 @@ importers:
       '@reading-advantage/config':
         specifier: workspace:*
         version: link:../config
+      '@types/bcryptjs':
+        specifier: ^2.4.6
+        version: 2.4.6
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.39
@@ -9274,6 +9280,10 @@ packages:
     resolution: {integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==}
     dependencies:
       '@babel/types': 7.29.0
+    dev: true
+
+  /@types/bcryptjs@2.4.6:
+    resolution: {integrity: sha512-9xlo6R2qDs5uixm0bcIqCeMCE6HiQsIyel9KQySStiyqNl2tnj2mP3DX1Nf56MD6KMenNNlBBsy3LJ7gUEQPXQ==}
     dev: true
 
   /@types/canvas-confetti@1.9.0:
