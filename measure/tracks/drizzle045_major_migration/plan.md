@@ -230,6 +230,67 @@
 > from the unrelated user work). All 21 contract assertions
 > pass against the on-disk artifacts.
 
+> **Adversarial-audit plan note (this attempt, commit `fdd9bcfc`):**
+> The Red contract test at `6d4163b1` is the Phase 1 minimum bar
+> (artifact presence + 5-contract shape). Several of its assertions
+> are substring-based and can be satisfied by negated text, partial
+> cross-references, or single-keyword mentions. This attempt adds
+> a complementary adversarial contract file
+> `packages/db/src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts`
+> (586 lines, 30 tests) that closes the assertion gaps:
+>
+> 1. Negated-context false positives — `appearsInPositiveContext()`
+>    helper requires the version keyword (0.45, 0.44.7) to appear
+>    in positive-target/baseline context, not negated (e.g. "we
+>    will not adopt 0.45" or "0.45 is the bug" both fail).
+> 2. Single-keyword cross-references — the breaking-changes
+>    contract now requires ≥5 of 15 schema files cross-referenced,
+>    plus at least one of {science.ts, marketing.ts} (highest-risk
+>    files). Red contract only required ONE of 15.
+> 3. Keyword-without-risk-context — drizzle-zod must be surfaced
+>    with a risk/discussion context ("not installed", "Phase 3 must
+>    add", `createInsertSchema`, etc.), not just mentioned once.
+> 4. Loose tenant catch-all — tenant risk now requires the
+>    `createTenantDB` symbol specifically, not the `/\\btenant\\b/`
+>    fall-back.
+> 5. Negated rejection — the rejection keyword must appear in
+>    positive-decision context ("rejected", "not adopt", "declined"
+>    all require positive context, not "we will not reject").
+> 6. Cross-reference vs filesystem drift — any schema file
+>    mentioned in a doc must exist on disk; the doc surface and
+>    filesystem surface must be in lockstep (15↔15 schema,
+>    21↔21 migrations).
+> 7. Content-density traps — minimum line counts (100/100/80)
+>    reject keyword-stuffed stubs.
+> 8. Structural-section absence — required section headers
+>    (`## 1.`, `## 6. Provenance`, etc.) must exist.
+> 9. TODO/FIXME/TBD marker detection — the audit must be complete.
+>
+> **Adversarial command:**
+>
+> ```
+> cd packages/db && ./node_modules/.bin/vitest run \
+>   src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts
+> ```
+>
+> **Adversarial result:** 30/30 tests pass (411 ms). All 30
+> assertions are GREEN against the current well-authored
+> artifacts. The full db-package suite (`./node_modules/.bin/vitest
+> run`) is also GREEN: 23 files passed, 2 skipped; 389 tests
+> passed, 4 skipped in 7.45 s — no regressions from adding 30
+> tests. The root `npm test` is GREEN: 4 files passed; 27 tests
+> passed in 1.38 s. The Red contract test (6d4163b1) is unchanged
+> (21/21 GREEN) — the adversarial file is strictly additive.
+>
+> **Adversarial-result JSON:**
+> `measure/runs/20260615T035039Z/drizzle045_major_migration/phase-1-Phase_1_Contract_Schema_Definition/adversarial/adversarial-result.json`
+> (status: pass, 5 findings, 12 evidence items).
+>
+> **Phase 1 status: GREEN with adversarial hardening.** The Red
+> contract (6d4163b1) remains the minimum bar; the adversarial
+> file (fdd9bcfc) is the no-shortcuts bar. Both files remain as
+> complementary contract tests for Phase 1.
+
 ## Phase 2: Test
 
 - [ ] Task: Add schema compatibility tests for Drizzle 0.45 API.
