@@ -47,10 +47,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "../..");
 const REPO_ROOT = resolve(PACKAGE_ROOT, "../..");
 
-const TRACK_DIR = join(
-  REPO_ROOT,
-  "measure/tracks/drizzle045_major_migration",
-);
+const TRACK_DIR = join(REPO_ROOT, "measure/tracks/drizzle045_major_migration");
 
 const BREAKING_CHANGES_PATH = join(TRACK_DIR, "phase1-breaking-changes.md");
 const SCHEMA_MAP_PATH = join(TRACK_DIR, "phase1-schema-map.md");
@@ -210,7 +207,9 @@ describe("Phase 1 — Task 2: schema-file + migration-script map", () => {
     // not list it, the map is stale. This proves the artifact is
     // generated against the live surface, not a snapshot.
     const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
-    const missing = EXPECTED_SCHEMA_FILES.filter((name) => !text.includes(name));
+    const missing = EXPECTED_SCHEMA_FILES.filter(
+      (name) => !text.includes(name),
+    );
     expect(
       missing,
       `phase1-schema-map.md is missing schema files: ${missing.join(", ")}`,
@@ -301,7 +300,9 @@ describe("Phase 1 — live-surface guardrail (filesystem probe)", () => {
     const onDisk = readdirSync(DRIZZLE_DIR);
     for (const idx of EXPECTED_MIGRATION_INDICES) {
       const prefix = `${idx}_`;
-      const hit = onDisk.find((entry) => entry.startsWith(prefix) && entry.endsWith(".sql"));
+      const hit = onDisk.find(
+        (entry) => entry.startsWith(prefix) && entry.endsWith(".sql"),
+      );
       expect(
         hit,
         `packages/db/drizzle/${prefix}*.sql must exist on disk`,

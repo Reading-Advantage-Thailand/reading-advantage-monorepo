@@ -56,6 +56,7 @@ const REPO_ROOT = resolve(PACKAGE_ROOT, "../..");
 const SCHEMA_DIR = join(PACKAGE_ROOT, "src/schema");
 const PACKAGE_JSON_PATH = join(PACKAGE_ROOT, "package.json");
 const ROOT_PKG_JSON_PATH = join(REPO_ROOT, "package.json");
+const LOCKFILE_PATH = join(REPO_ROOT, "pnpm-lock.yaml");
 
 interface PkgJson {
   name?: string;
@@ -117,6 +118,10 @@ const EXPECTED_SCHEMA_FILES = [
 // Table-name → source-file mapping. drizzle() in client.ts resolves the
 // schema barrel; the barrel currently does not re-export marketing.js
 // (RED contract below), so we import from the source files directly.
+// NOTE: Vite emits a dynamic-import-vars warning here because the entire
+// filename (including .js) is in the variable. The warning is harmless;
+// using `../schema/${base}.js` causes Vite to fail the runtime import in
+// SSR mode, so we keep the opaque variable pattern.
 const TABLE_TO_SOURCE: Readonly<Record<string, string>> = {
   users: "users.js",
   schools: "users.js",
@@ -159,7 +164,7 @@ describe("drizzle045-schema-compile — schema barrel re-exports marketing.js (F
     expect(
       text,
       "schema/index.ts must re-export ./marketing.js — drizzle() in client.ts only sees tables that the schema barrel re-exports. " +
-        "Phase 3 schema-update step must add `export * from \"./marketing.js\"` to the barrel.",
+        'Phase 3 schema-update step must add `export * from "./marketing.js"` to the barrel.',
     ).toMatch(/export\s*\*\s*from\s*["']\.\/marketing\.js["']/);
   });
 });
@@ -228,6 +233,72 @@ describe("drizzle045-schema-compile — version-pinning (0.45 target)", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Lockfile consistency: pnpm-lock.yaml must match the declared override so
+// the upgrade is reproducible on a fresh install (regression audit fix).
+// ---------------------------------------------------------------------------
+
+function readLockfileOverride(pkgName: string): string | null {
+  if (!existsSync(LOCKFILE_PATH)) return null;
+  const lines = readFileSync(LOCKFILE_PATH, "utf8").split("\n");
+  let inOverrides = false;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^overrides:\s*$/.test(line)) {
+      inOverrides = true;
+      continue;
+    }
+    if (!inOverrides) continue;
+    // End of the overrides block when a de-dented top-level key appears.
+    if (/^\S/.test(line)) {
+      break;
+    }
+    const m = new RegExp(`^\\s+${pkgName}:\\s*(.+)$`).exec(line);
+    if (m) return m[1].trim();
+  }
+  return null;
+}
+
+describe("drizzle045-schema-compile — lockfile consistency (regression)", () => {
+  it("pnpm-lock.yaml overrides drizzle-orm to 0.45.x (not 0.44.x)", () => {
+    const override = readLockfileOverride("drizzle-orm");
+    expect(
+      override,
+      "pnpm-lock.yaml must contain a drizzle-orm override entry",
+    ).not.toBeNull();
+    const m = /\^?(\d+)\.(\d+)\.?(\d+)?/.exec(override!);
+    expect(
+      m,
+      `pnpm-lock.yaml drizzle-orm override must be a version. Got: ${override}`,
+    ).not.toBeNull();
+    const major = Number(m![1]);
+    const minor = Number(m![2]);
+    expect(
+      [major, minor],
+      `pnpm-lock.yaml drizzle-orm override must be 0.45.x. Got: ${override}. ` +
+        `Run pnpm install after bumping the root override.`,
+    ).toEqual([0, 45]);
+  });
+
+  it("pnpm-lock.yaml override matches root package.json pnpm.overrides", () => {
+    const lockfileOverride = readLockfileOverride("drizzle-orm");
+    const declaredOverride = rootPkg.pnpm?.overrides?.["drizzle-orm"] ?? "";
+    expect(
+      lockfileOverride,
+      "pnpm-lock.yaml must contain a drizzle-orm override entry",
+    ).not.toBeNull();
+    expect(
+      declaredOverride,
+      "root package.json must declare a pnpm.overrides drizzle-orm entry",
+    ).not.toBe("");
+    expect(
+      lockfileOverride,
+      `pnpm-lock.yaml override (${lockfileOverride}) must match root package.json override (${declaredOverride}). ` +
+        `Run pnpm install to resync.`,
+    ).toBe(declaredOverride);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Compile gate: every schema file is importable under the 0.45 surface.
 // ---------------------------------------------------------------------------
 
@@ -235,7 +306,9 @@ describe("drizzle045-schema-compile — every schema file imports (FR-2)", () =>
   for (const [tableName, sourceFile] of Object.entries(TABLE_TO_SOURCE)) {
     it(`${tableName} imports from ${sourceFile} under the 0.45 surface`, async () => {
       const mod = await import(`../schema/${sourceFile}`);
-      const table = (mod as Record<string, { [k: string]: unknown }>)[tableName];
+      const table = (mod as Record<string, { [k: string]: unknown }>)[
+        tableName
+      ];
       expect(
         table,
         `${tableName} must be exported from ${sourceFile} (regression guard against accidental removal during the 0.45 upgrade)`,
@@ -253,8 +326,13 @@ describe("drizzle045-schema-compile — column presence (FR-2)", () => {
     const sourceFile = TABLE_TO_SOURCE[tableName] ?? `${tableName}.js`;
     it(`${tableName} table exposes the expected columns (0.45 surface)`, async () => {
       const mod = await import(`../schema/${sourceFile}`);
-      const table = (mod as Record<string, { [k: string]: unknown }>)[tableName];
-      expect(table, `${tableName} must be exported from ${sourceFile}`).toBeDefined();
+      const table = (mod as Record<string, { [k: string]: unknown }>)[
+        tableName
+      ];
+      expect(
+        table,
+        `${tableName} must be exported from ${sourceFile}`,
+      ).toBeDefined();
       const colKeys = Object.keys(table).filter(
         (k) => !k.startsWith("_") && !k.startsWith("["),
       );
@@ -275,7 +353,8 @@ describe("drizzle045-schema-compile — column presence (FR-2)", () => {
 describe("drizzle045-schema-compile — column metadata exposes 0.45-era `columnType` (FR-2)", () => {
   it("users.id has columnType='PgText' for the text primary key (0.45-era)", async () => {
     const { users } = await import("../schema/users.js");
-    const id = (users as Record<string, { columnType?: string; name?: string }>).id;
+    const id = (users as Record<string, { columnType?: string; name?: string }>)
+      .id;
     expect(id, "users.id must be defined").toBeDefined();
     expect(
       typeof id.columnType,
@@ -303,7 +382,8 @@ describe("drizzle045-schema-compile — column metadata exposes 0.45-era `column
 
   it("users.createdAt has columnType='PgTimestamp' for the timestamp column (0.45-era)", async () => {
     const { users } = await import("../schema/users.js");
-    const createdAt = (users as Record<string, { columnType?: string }>).createdAt;
+    const createdAt = (users as Record<string, { columnType?: string }>)
+      .createdAt;
     expect(createdAt, "users.createdAt must be defined").toBeDefined();
     expect(
       createdAt.columnType,
@@ -313,7 +393,8 @@ describe("drizzle045-schema-compile — column metadata exposes 0.45-era `column
 
   it("articles.content has columnType='PgText' for the text content column (0.45-era)", async () => {
     const { articles } = await import("../schema/content.js");
-    const content = (articles as Record<string, { columnType?: string }>).content;
+    const content = (articles as Record<string, { columnType?: string }>)
+      .content;
     expect(content, "articles.content must be defined").toBeDefined();
     expect(
       content.columnType,
@@ -338,9 +419,10 @@ describe("drizzle045-schema-compile — pgEnum carries 0.45-era runtime surface 
       Array.isArray(e.enumValues),
       "roleEnum.enumValues must be an array (0.45-era)",
     ).toBe(true);
-    expect(e.enumValues, "roleEnum.enumValues must contain canonical role values").toEqual(
-      expect.arrayContaining(["STUDENT", "TEACHER", "ADMIN"]),
-    );
+    expect(
+      e.enumValues,
+      "roleEnum.enumValues must contain canonical role values",
+    ).toEqual(expect.arrayContaining(["STUDENT", "TEACHER", "ADMIN"]));
   });
 
   it("marketing.campaignTypeEnum has the 0.45-era enumValues contract", async () => {

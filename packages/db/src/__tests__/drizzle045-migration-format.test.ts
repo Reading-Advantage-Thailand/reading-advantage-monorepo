@@ -111,10 +111,7 @@ describe("drizzle045-migration-format — every expected migration is on disk (F
   for (const name of EXPECTED_MIGRATION_FILES) {
     it(`${name} exists in packages/db/drizzle/`, () => {
       const onDisk = readdirSync(DRIZZLE_DIR);
-      expect(
-        onDisk,
-        `Migration ${name} must exist on disk`,
-      ).toContain(name);
+      expect(onDisk, `Migration ${name} must exist on disk`).toContain(name);
     });
   }
 });
@@ -127,8 +124,11 @@ describe("drizzle045-migration-format — every expected migration is on disk (F
 describe("drizzle045-migration-format — statement separator (FR-3)", () => {
   for (const { name, text } of migrations) {
     it(`${name} uses the 0.45-era statement separator`, () => {
-      const statementCount = (text.match(/--> statement-breakpoint/g) || []).length;
-      const lineCount = text.split("\n").filter((l) => l.trim().length > 0).length;
+      const statementCount = (text.match(/--> statement-breakpoint/g) || [])
+        .length;
+      const lineCount = text
+        .split("\n")
+        .filter((l) => l.trim().length > 0).length;
       // Multi-statement migrations (>=10 non-empty lines) must use the
       // separator. drizzle-orm 0.45 emits this on regenerate. Some
       // hand-authored 0.44.7-era migrations skip it — Phase 3 must
@@ -183,7 +183,10 @@ describe("drizzle045-migration-format — enum format (FR-3)", () => {
   });
 
   it("0000 role enum is defined with the canonical 4-value list", () => {
-    const text = readFileSync(join(DRIZZLE_DIR, "0000_wide_vengeance.sql"), "utf8");
+    const text = readFileSync(
+      join(DRIZZLE_DIR, "0000_wide_vengeance.sql"),
+      "utf8",
+    );
     expect(text).toMatch(
       /CREATE TYPE\s+(?:"public"\.)?"role"\s+AS ENUM\('STUDENT',\s*'USER',\s*'TEACHER',\s*'ADMIN'\)/,
     );
@@ -197,7 +200,8 @@ describe("drizzle045-migration-format — enum format (FR-3)", () => {
 describe("drizzle045-migration-format — foreign-key constraint format (FR-3)", () => {
   it("every FK constraint uses double-quoted column and table names (0.45-era)", () => {
     for (const { name, text } of migrations) {
-      const fkStatements = text.match(/ADD CONSTRAINT[^;]+FOREIGN KEY[^;]+;/g) || [];
+      const fkStatements =
+        text.match(/ADD CONSTRAINT[^;]+FOREIGN KEY[^;]+;/g) || [];
       for (const stmt of fkStatements) {
         expect(
           /FOREIGN KEY\s*\(\s*"[^"]+"/.test(stmt),
@@ -212,9 +216,15 @@ describe("drizzle045-migration-format — foreign-key constraint format (FR-3)",
   });
 
   it("0015 cascade-on-delete count remains at 8 (4 tables × 2 FKs)", () => {
-    const text = readFileSync(join(DRIZZLE_DIR, "0015_science_junction_tables.sql"), "utf8");
+    const text = readFileSync(
+      join(DRIZZLE_DIR, "0015_science_junction_tables.sql"),
+      "utf8",
+    );
     const cascadeCount = (text.match(/ON DELETE CASCADE/g) || []).length;
-    expect(cascadeCount, "0015 must have 8 ON DELETE CASCADE (4 junction tables × 2 FKs)").toBe(8);
+    expect(
+      cascadeCount,
+      "0015 must have 8 ON DELETE CASCADE (4 junction tables × 2 FKs)",
+    ).toBe(8);
   });
 });
 
@@ -285,17 +295,16 @@ describe("drizzle045-migration-format — migration header comment (FR-3)", () =
   it("every non-trivial migration file starts with a `--` comment block", () => {
     for (const { name, text } of migrations) {
       const firstNonBlank = text.split("\n").find((l) => l.trim().length > 0);
-      expect(
-        firstNonBlank,
-        `${name} must not be empty`,
-      ).toBeDefined();
+      expect(firstNonBlank, `${name} must not be empty`).toBeDefined();
       // drizzle-orm 0.45 emits a leading `--` comment block describing
       // the change. The 0.44.7 generator does this for some migrations
       // (0000, 0005) but not for hand-authored ones (0009, 0018). Phase 3
       // must add headers to all migrations.
       // Only enforce this on migrations with >= 5 non-empty lines; tiny
       // single-statement files (e.g. 0019) are exempt.
-      const lineCount = text.split("\n").filter((l) => l.trim().length > 0).length;
+      const lineCount = text
+        .split("\n")
+        .filter((l) => l.trim().length > 0).length;
       if (lineCount >= 5) {
         expect(
           firstNonBlank!.trim().startsWith("--"),

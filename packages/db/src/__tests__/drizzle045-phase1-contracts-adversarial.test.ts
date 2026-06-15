@@ -51,10 +51,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "../..");
 const REPO_ROOT = resolve(PACKAGE_ROOT, "../..");
 
-const TRACK_DIR = join(
-  REPO_ROOT,
-  "measure/tracks/drizzle045_major_migration",
-);
+const TRACK_DIR = join(REPO_ROOT, "measure/tracks/drizzle045_major_migration");
 
 const BREAKING_CHANGES_PATH = join(TRACK_DIR, "phase1-breaking-changes.md");
 const SCHEMA_MAP_PATH = join(TRACK_DIR, "phase1-schema-map.md");
@@ -110,9 +107,10 @@ function appearsInPositiveContext(text: string, keyword: string): boolean {
       /\b(not|no|never|without|won'?t|don'?t|doesn'?t|isn'?t|aren'?t|shouldn'?t|is\s+not|are\s+not|prior\s+to|before)\b\s*$/i.test(
         before,
       );
-    const negativeAfter = /^\s*(is\s+the\s+)?(bug|issue|problem|regression|broken|missing|wrong)/i.test(
-      after,
-    );
+    const negativeAfter =
+      /^\s*(is\s+the\s+)?(bug|issue|problem|regression|broken|missing|wrong)/i.test(
+        after,
+      );
     if (!negatedBefore && !negativeAfter) {
       return true;
     }
@@ -190,7 +188,8 @@ describe("Adversarial: phase1-breaking-changes.md — negated-context traps", ()
       mentioned.length,
       `at least 5 of 15 schema files must be cross-referenced; saw ${mentioned.length} (${mentioned.join(", ")}).`,
     ).toBeGreaterThanOrEqual(5);
-    const hasHighRisk = text.includes("science.ts") || text.includes("marketing.ts");
+    const hasHighRisk =
+      text.includes("science.ts") || text.includes("marketing.ts");
     expect(
       hasHighRisk,
       "at least one of {science.ts (largest), marketing.ts (newest)} must be cross-referenced.",
@@ -332,10 +331,9 @@ describe("Adversarial: phase1-schema-map.md — coverage and integrity traps", (
       /^## 7\.\s*Provenance/m,
     ];
     for (const re of requiredSections) {
-      expect(
-        re.test(text),
-        `schema map must have section matching ${re}`,
-      ).toBe(true);
+      expect(re.test(text), `schema map must have section matching ${re}`).toBe(
+        true,
+      );
     }
   });
 
@@ -382,18 +380,29 @@ describe("Adversarial: phase1-schema-map.md — coverage and integrity traps", (
   });
 });
 
-
-  it("DEBUG: see what file content is", () => {
-    const text = readFileSync(PRISMA7_REJECTION_PATH, "utf8");
-    console.log("=== FILE CONTENT FIRST 1000 CHARS ===");
-    console.log(text.slice(0, 1000));
-    console.log("=== 'rejected' count:", text.split("rejected").length - 1);
-    console.log("=== 'NOT rejected' count:", text.split("NOT rejected").length - 1);
-    console.log("=== hasPositiveRejection:", appearsInPositiveContext(text, "rejected"));
-    console.log("=== hasPositiveAdopt:", appearsInPositiveContext(text, "not adopt"));
-    console.log("=== hasPositiveDecline:", appearsInPositiveContext(text, "declined"));
-    expect(true).toBe(true);
-  });
+it("DEBUG: see what file content is", () => {
+  const text = readFileSync(PRISMA7_REJECTION_PATH, "utf8");
+  console.log("=== FILE CONTENT FIRST 1000 CHARS ===");
+  console.log(text.slice(0, 1000));
+  console.log("=== 'rejected' count:", text.split("rejected").length - 1);
+  console.log(
+    "=== 'NOT rejected' count:",
+    text.split("NOT rejected").length - 1,
+  );
+  console.log(
+    "=== hasPositiveRejection:",
+    appearsInPositiveContext(text, "rejected"),
+  );
+  console.log(
+    "=== hasPositiveAdopt:",
+    appearsInPositiveContext(text, "not adopt"),
+  );
+  console.log(
+    "=== hasPositiveDecline:",
+    appearsInPositiveContext(text, "declined"),
+  );
+  expect(true).toBe(true);
+});
 
 describe("Adversarial: phase1-prisma-7-rejection.md — decision-strength traps", () => {
   it("the rejection is in a positive-decision context (not 'we will not reject')", () => {
@@ -550,7 +559,11 @@ describe("Adversarial: failure-path probes (boundary conditions)", () => {
     // A zero-byte or missing artifact would cause readFileSync to
     // throw on subsequent reads; this guard ensures the file is at
     // least readable and has content.
-    for (const path of [BREAKING_CHANGES_PATH, SCHEMA_MAP_PATH, PRISMA7_REJECTION_PATH]) {
+    for (const path of [
+      BREAKING_CHANGES_PATH,
+      SCHEMA_MAP_PATH,
+      PRISMA7_REJECTION_PATH,
+    ]) {
       const text = readFileSync(path, "utf8");
       expect(
         text.length,
@@ -561,7 +574,11 @@ describe("Adversarial: failure-path probes (boundary conditions)", () => {
 
   it("all three artifacts are real Markdown (have at least 5 H2 sections)", () => {
     // A doc with no H2 sections is not real Markdown structure.
-    for (const path of [BREAKING_CHANGES_PATH, SCHEMA_MAP_PATH, PRISMA7_REJECTION_PATH]) {
+    for (const path of [
+      BREAKING_CHANGES_PATH,
+      SCHEMA_MAP_PATH,
+      PRISMA7_REJECTION_PATH,
+    ]) {
       const text = readFileSync(path, "utf8");
       const h2Count = (text.match(/^##\s/gm) ?? []).length;
       expect(
@@ -574,7 +591,11 @@ describe("Adversarial: failure-path probes (boundary conditions)", () => {
   it("no artifact contains TODO / FIXME / TBD markers (audit must be complete)", () => {
     // An audit that says "TODO: complete this section" is not a
     // complete audit. This catches incomplete drafts.
-    for (const path of [BREAKING_CHANGES_PATH, SCHEMA_MAP_PATH, PRISMA7_REJECTION_PATH]) {
+    for (const path of [
+      BREAKING_CHANGES_PATH,
+      SCHEMA_MAP_PATH,
+      PRISMA7_REJECTION_PATH,
+    ]) {
       const text = readFileSync(path, "utf8");
       const hasIncompleteMarker = /\b(TODO|FIXME|TBD|XXX|HACK)\b/i.test(text);
       expect(

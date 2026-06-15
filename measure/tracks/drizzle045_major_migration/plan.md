@@ -534,9 +534,50 @@
 > strictly required (no signature/import change), but the next
 > Phase 3 commit (drizzle-zod install) will trigger an update.
 
-- [x] Task: Add schema compatibility tests for Drizzle 0.45 API. (`8be48308`, `d1f00ed7`)
-- [x] Task: Add migration smoke tests against a fresh database. (`8be48308`, `d1f00ed7`)
-- [x] Task: Confirm tests fail against the current Drizzle baseline. (`8be48308`, `d1f00ed7`)
+> **Phase-acceptance audit note (this attempt):** The Phase 2
+> acceptance auditor re-ran the targeted Red/Green gate and found
+> three blocking issues in the Green commit (`5284e0bf`):
+>
+> 1. **Lockfile drift:** `pnpm-lock.yaml` still pinned `drizzle-orm`
+>    to `0.44.7` while `package.json` declared `0.45.2`. A fresh
+>    `pnpm install` would have reverted the runtime to `0.44.7` and
+>    failed the version-pinning tests. Fixed by running `pnpm install`
+>    to resync the lockfile.
+> 2. **Root `package.json` formatting:** the devDependency and
+>    `pnpm.overrides` entries for `drizzle-orm` had inconsistent
+>    indentation (6-space / 4-space). Prettier check failed. Fixed
+>    by running `pnpm exec prettier --write package.json ...`.
+> 3. **Lockfile regression test gap:** no test asserted that the
+>    lockfile override matched the declared root override. Added a
+>    focused regression describe block to
+>    `drizzle045-schema-compile.test.ts` with two tests that parse
+>    `pnpm-lock.yaml` and assert the override is `0.45.x` and matches
+>    `package.json`.
+>
+> Post-fix verification:
+> - Targeted Phase 2 gate:
+>   `pnpm --filter @reading-advantage/db exec vitest run \
+>   src/__tests__/drizzle045-schema-compile.test.ts \
+>   src/__tests__/drizzle045-migration-format.test.ts` → **88 tests
+>   passed, 0 failed (88 total)**.
+> - Full `packages/db` suite excluding intentionally-RED
+>   `drizzle045-zod-contract.test.ts` → **25 test files passed,
+>   2 skipped; 477 tests passed, 4 skipped (481 total)**.
+> - Root `npm test` → **4 test files passed; 27 tests passed**.
+> - Prettier check on changed files → clean.
+>
+> The dynamic-import-vars warning on
+> `drizzle045-schema-compile.test.ts` remains (Vite SSR cannot
+> statically analyze `import(\`../schema/${sourceFile}\`)` where the
+> variable includes the extension). The warning is harmless; the
+> alternative pattern `import(\`../schema/${base}.js\`)` causes a
+> runtime "Unknown variable dynamic import" failure in SSR mode, so
+> the opaque variable pattern is preserved with an explanatory
+> comment.
+
+- [x] Task: Add schema compatibility tests for Drizzle 0.45 API. (`8be48308`)
+- [x] Task: Add migration smoke tests against a fresh database. (`8be48308`)
+- [x] Task: Confirm tests fail against the current Drizzle baseline. (`8be48308`)
 
 ## Phase 3: Implement
 

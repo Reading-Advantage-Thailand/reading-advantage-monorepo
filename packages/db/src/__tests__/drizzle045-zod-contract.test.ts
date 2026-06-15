@@ -97,7 +97,10 @@ describe("drizzle045-zod-contract — drizzle-zod install (FR-2)", () => {
       `drizzle-zod must be importable from packages/db. Got error: ` +
         `${importError?.message ?? "(none)"}. Phase 3 installs it.`,
     ).toBeNull();
-    expect(imported, "drizzle-zod module must export a non-null surface").not.toBeNull();
+    expect(
+      imported,
+      "drizzle-zod module must export a non-null surface",
+    ).not.toBeNull();
   });
 });
 
@@ -144,9 +147,9 @@ describe("drizzle045-zod-contract — Zod round-trip on users (FR-2, Phase 3 own
       mod = null;
     }
     expect(mod, "drizzle-zod must be importable for this check").not.toBeNull();
-    const createInsertSchema = mod!.createInsertSchema as (
-      table: unknown,
-    ) => { parse: (data: unknown) => unknown };
+    const createInsertSchema = mod!.createInsertSchema as (table: unknown) => {
+      parse: (data: unknown) => unknown;
+    };
 
     const { users } = await import("../schema/users.js");
     const insertSchema = createInsertSchema(users);
@@ -160,7 +163,10 @@ describe("drizzle045-zod-contract — Zod round-trip on users (FR-2, Phase 3 own
       displayUsername: "rt_user",
       role: "STUDENT",
     });
-    expect(parsed, "parsed payload must include the username field").toMatchObject({
+    expect(
+      parsed,
+      "parsed payload must include the username field",
+    ).toMatchObject({
       username: "rt_user",
     });
   });
