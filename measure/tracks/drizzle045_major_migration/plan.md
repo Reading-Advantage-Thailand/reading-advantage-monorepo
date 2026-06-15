@@ -581,11 +581,168 @@
 
 ## Phase 3: Implement
 
-- [ ] Task: Upgrade Drizzle to 0.45 across all workspaces.
-- [ ] Task: Update schema definitions for the new API.
-- [ ] Task: Update migration scripts for the new format.
-- [ ] Task: Update `drizzle-zod` integration.
-- [ ] Task: Run `check-types`, `lint`, `test`, and migration gates.
+- [~] Task: Upgrade Drizzle to 0.45 across all workspaces.
+- [~] Task: Update schema definitions for the new API.
+- [~] Task: Update migration scripts for the new format.
+- [~] Task: Update `drizzle-zod` integration.
+- [~] Task: Run `check-types`, `lint`, `test`, and migration gates.
+
+> **Red-phase plan note (MID, this attempt):** Phase 3 Mid role
+> writes Red tests for the Phase 3 implementation tasks. Per
+> test-strategy.md §5, Phase 3 deliverables are:
+>
+> 1. `drizzle-kit generate` diff against baseline → zero diff
+> 2. `drizzle-kit migrate` against fresh Docker DB → all 21 migrations apply
+> 3. drizzle-zod `createInsertSchema(users)` → Zod parse round-trip
+> 4. Cross-package tests (domain, api, auth)
+>
+> Existing Phase 2 contract tests (8be48308 / 5284e0bf / 23779af0 /
+> 162098e4) already cover Tasks 2 (schema API) and 3 (migration
+> format) and are GREEN at HEAD — those tasks are recorded as
+> "already satisfied with evidence" rather than creating false Red
+> tests. The intentionally-RED `drizzle045-zod-contract.test.ts`
+> (8be48308) already covers Task 4 (drizzle-zod install + exports +
+> Zod round-trip) and is RED at HEAD.
+>
+> This attempt adds a NEW Phase 3 Red contract file
+> `packages/db/src/__tests__/drizzle045-phase3-integration-gates.test.ts`
+> that closes the Phase 3 integration-gap assertions that Phase 2
+> did not own:
+>
+> - **Task 1 (Upgrade Drizzle 0.45 across all workspaces)** — assert
+>   that the installed `drizzle-kit` resolves to `>=0.32` (0.45-era
+>   companion). Currently 0.31.10 → RED.
+> - **Task 5 (Migration gate contracts)** — assert that
+>   `packages/db/drizzle.config.ts` references the 0.45-era schema
+>   barrel, that `packages/db/package.json` exposes the
+>   `generate` / `migrate` scripts the test-strategy §5 calls out,
+>   that the `_journal.json` exposes all 21 entries in idx order
+>   (the precondition for `drizzle-kit migrate` to apply all 21),
+>   and that the root `pnpm.overrides` pins `drizzle-orm` at the
+>   0.45.x range so that every workspace resolves to the same
+>   runtime version (the precondition for cross-package tests).
+>
+> **Targeted Red command (Phase 3 Mid, bounded):**
+>
+> ```
+> cd packages/db && ./node_modules/.bin/vitest run \
+>   src/__tests__/drizzle045-phase3-integration-gates.test.ts
+> ```
+>
+> (Excludes the Phase 2 `drizzle045-zod-contract.test.ts` from this
+> run per test-strategy.md §5/§7 — the zod test is owned by Phase 3
+> Task 4 but its RED baseline is verified separately; see plan note
+> below.)
+>
+> **Build-graph baseline:** `graph.db` (~3.5 MB, mtime 2026-06-15)
+> reports 2177 nodes / 3104 edges / 298 files. drizzle-zod has zero
+> graph entries (confirmed by `build-graph search drizzle-zod` →
+> no results). `createTenantDB` indexed at
+> `packages/domain/src/db-contract.ts`. `drizzle045-zod-contract.test.ts`
+> file node has 1 contains edge → interface `PkgJson` and zero
+> incoming caller edges (no production code imports it yet).
+>
+> **Dirty worktree classification at Red start:**
+>
+> - IGNORABLE: `apps/marketing/next-env.d.ts` (auto-generated Next.js).
+> - SETUP-OWNED (untracked, not in this commit):
+>   `measure/tracks/drizzle045_major_migration/test-strategy.md`.
+> - 0 modified non-Measure files. 0 staged files.
+>
+> **Red command (executed by MID, this attempt):**
+>
+> ```
+> cd packages/db && node ./node_modules/vitest/vitest.mjs run \
+>   src/__tests__/drizzle045-phase3-integration-gates.test.ts
+> ```
+>
+> (Equivalent to the contract-stated
+> `pnpm --filter @reading-advantage/db exec vitest run src/__tests__/drizzle045-phase3-integration-gates.test.ts`;
+> the wrapper is `node ./node_modules/vitest/vitest.mjs` because
+> the pnpm binary is not on PATH in this sandbox.)
+>
+> **Red result (this attempt):** **12 tests — 2 failed | 10 passed (1.03 s).**
+>
+> Failures (both expected, both Task 1 RED):
+>
+> - `drizzle045-phase3-integration-gates — drizzle-kit version (Task 1)`:
+>   2 failures:
+>   - `packages/db/package.json declares drizzle-kit at a >=0.32 range`
+>     — declared as `^0.31.0`. Phase 3 must bump to `>=0.32`
+>     (drizzle-orm 0.45-era companion).
+>   - `the installed drizzle-kit in packages/db resolves to >=0.32`
+>     — installed at `0.31.10` (pnpm store entry). Phase 3 install
+>     will resolve to the bumped range.
+>
+> Passes (10 — Task 5 regression-guard GREEN preconditions, all
+> honest GREEN because Phase 2 Green + audit already closed them):
+>
+> - `drizzle045-phase3-integration-gates — drizzle-kit generate command path`:
+>   3 GREEN — `generate` script invokes `drizzle-kit generate`;
+>   `drizzle.config.ts` references the 0.45-era barrel
+>   (`src/schema/index.ts`); `dialect: "postgresql"` + `out: "./drizzle"`.
+> - `drizzle045-phase3-integration-gates — drizzle-kit migrate command path`:
+>   2 GREEN — `migrate` script invokes `drizzle-kit migrate`;
+>   `DIRECT_DATABASE_URL` preferred per connection_pooling_20260522 FR-3.
+> - `drizzle045-phase3-integration-gates — Journal entries for full migration apply`:
+>   3 GREEN — `_journal.json` exposes exactly 21 entries; idx
+>   contiguous 0..20; every `tag` matches an on-disk
+>   `NNNN_*.sql` file.
+> - `drizzle045-phase3-integration-gates — Root pnpm.overrides pins drizzle-orm 0.45.x`:
+>   3 GREEN — root devDependencies declare `^0.45.x`; root
+>   `pnpm.overrides` pin `0.45.2`; lockfile resolves
+>   `/drizzle-orm@0.45.2`.
+>
+> **Task 4 (Update drizzle-zod integration) RED verification
+> (separate run, not part of the targeted Phase 3 gate):**
+>
+> ```
+> cd packages/db && node ./node_modules/vitest/vitest.mjs run \
+>   src/__tests__/drizzle045-zod-contract.test.ts
+> ```
+>
+> Result: **4 tests — 4 failed (686 ms)** at HEAD `162098e4`.
+> Confirms `drizzle-zod` is not installed (test-strategy §3.4 / §6);
+> Phase 3 must `pnpm add drizzle-zod` in `packages/db`. This file
+> is owned by Phase 3 Task 4 and excluded from the Phase 3
+> integration-gate Red command by targeted file list per
+> test-strategy §7.
+>
+> **Tasks 2 & 3 — already satisfied with evidence (no false Red
+> created):**
+>
+> - Task 2 (Update schema definitions for the new API): Phase 2
+>   Green (5284e0bf) bumped `packages/db/package.json` `drizzle-orm`
+>   to `^0.45.0`, exported `./marketing.js` from
+>   `packages/db/src/schema/index.ts`, and verified all 14 schema
+>   files compile under 0.45. Phase 2 Red contracts
+>   (`drizzle045-schema-compile.test.ts`,
+>   `drizzle045-phase2-contracts-adversarial.test.ts`) are GREEN
+>   at HEAD. Task 2 is already implemented — no Red tests needed.
+> - Task 3 (Update migration scripts for the new format): Phase 2
+>   Green (5284e0bf) added `--> statement-breakpoint` separators
+>   to 9 hand-authored migrations; Phase 2 adversarial (162098e4)
+>   added 6 more separators + 2 stub-header replacements +
+>   identifier double-quoting on 0019. Phase 2 Red contracts
+>   (`drizzle045-migration-format.test.ts`,
+>   `drizzle045-phase2-contracts-adversarial.test.ts`) are GREEN
+>   at HEAD. Task 3 is already implemented — no Red tests needed.
+>
+> **Build-graph baseline:** `graph.db` (~3.5 MB, mtime 2026-06-15)
+> reports 2177 nodes / 3104 edges / 298 files. drizzle-zod has
+> zero graph entries (confirmed by `build-graph search drizzle-zod`
+> → no results — install gap is real). The new test file
+> `drizzle045-phase3-integration-gates.test.ts` (file node, 12
+> functions, 5 describe blocks) is not yet in the graph; the next
+> Phase 3 commit will trigger `build-graph update`.
+>
+> **Worktree at end of Red (this attempt):** 1 modified Measure
+> file (`plan.md` — this note), 1 new untracked test file
+> (`packages/db/src/__tests__/drizzle045-phase3-integration-gates.test.ts`,
+> 405 lines, 12 tests, 5 describe blocks). 0 modified non-Measure
+> files. 0 staged files. 2 untracked files preserved untouched
+> (`apps/marketing/next-env.d.ts` auto-gen,
+> `test-strategy.md` setup-owned).
 
 ## Phase 4: Validate & Close
 
