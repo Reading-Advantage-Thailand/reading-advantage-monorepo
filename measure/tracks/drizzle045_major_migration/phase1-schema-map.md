@@ -43,7 +43,7 @@ can verify the map is current.
 | 14 | `taxonomy.ts` | 24 | taxonomy (subjects, topics) | Shared taxonomy |
 | 15 | `users.ts` | 93 | `schools`, `users`, `accounts`, `sessions`, `usersRelations`, `accountsRelations`, `sessionsRelations`, `roleEnum` | Auth + tenancy primitives |
 
-**Total schema lines:** 1,556.
+**Total schema lines:** 1,529.
 
 ### 1.1 marketing.ts (dirty-worktree addition)
 
