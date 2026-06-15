@@ -1128,6 +1128,94 @@
 > > pass-context for each turbo task + track-id cross-reference).
 > > This attempt is docs-only; the Red contract test file is
 > > unchanged from attempt-1.
+> >
+> > **Attempt-4 stability verification (this commit, docs-only):**
+> > Per the Phase 3 docs-only verification cadence
+> > (`87a6b42f` attempt-2, `4602b64a` Phase 3 attempt-1 re-verify),
+> > re-ran the targeted Red gate at HEAD `48635610` (the new HEAD
+> > after the attempt-3 docs commit) to confirm the Red profile
+> > is still stable one commit later and that no Phase 4
+> > implementation leak has snuck into the worktree. Same node
+> > runtime invocation:
+> >
+> > ```
+> > /opt/codex-desktop/resources/node-runtime/bin/node \
+> >   ./packages/db/node_modules/vitest/vitest.mjs run \
+> >   packages/db/src/__tests__/drizzle045-phase4-closure-gates.test.ts
+> > ```
+> >
+> > **Red result (attempt-4, HEAD `48635610`):** **12 tests —
+> > 10 failed | 2 passed (3.12 s).** Identical profile to
+> > attempt-2 and attempt-3 (10 fail / 2 pass; drift = +2.12 s vs
+> > attempt-3 because attempt-4 is the first run after the
+> > worktree cleared the `node_modules/.vite` Vitest cache from
+> > the prior attempt, so the cold-start includes the
+> > dependency-pre-bundle step). The 10 RED failures remain the
+> > artifact-content assertions for the three Phase 4
+> > deliverables; the 2 GREEN passes remain the regression
+> > guards. The same 10 tests fail:
+> >
+> > 1. `the "Selected Shared Versions" table contains a Drizzle row at 0.45.x`
+> > 2. `the Drizzle row is referenced in positive-target context (not negated)`
+> > 3. `the Drizzle row source cell cross-references the drizzle045_major_migration track`
+> > 4. `phase4-aggregate-gate.md exists at the track directory`
+> > 5. `phase4-aggregate-gate.md documents the aggregate-gate command`
+> > 6. `phase4-aggregate-gate.md references all four turbo tasks in positive-pass context`
+> > 7. `phase4-aggregate-gate.md cross-references the drizzle045_major_migration track`
+> > 8. `phase4-outdated-audit.md exists at the track directory`
+> > 9. `phase4-outdated-audit.md records pnpm outdated -r showing drizzle-orm 0.45.x`
+> > 10. `phase4-outdated-audit.md records pnpm audit as clean`
+> >
+> > Passes (2 — same regression guards as prior attempts):
+> >
+> > 11. `tech-stack.md Selected Shared Versions table exists (Task 3 guard)`
+> > 12. `lockfile drizzle-orm 0.45.x (regression guard)`
+> >
+> > **Phase 4 implementation leak check:** The Mid role's
+> > start-of-attempt worktree is at clean HEAD `48635610` (only
+> > the 2 setup/auto-gen untracked files: `apps/marketing/next-env.d.ts`
+> > auto-generated Next.js and
+> > `measure/tracks/drizzle045_major_migration/test-strategy.md`
+> > setup-owned untracked — neither is committed by this attempt
+> > and neither modifies a non-Measure file). No Phase 4
+> > implementation leak: the JR-owned deliverables (Drizzle
+> > tech-stack.md row, `phase4-aggregate-gate.md`,
+> > `phase4-outdated-audit.md`) are absent from the worktree, so
+> > the 10 RED failures are honest implementation gaps, not stale
+> > records.
+> >
+> > **Build-graph baseline (attempt-4):** `graph.db` (3.5 MB,
+> > mtime 2026-06-15 14:16) reports **2177 nodes / 3104 edges /
+> > 298 files**. Confirmed via `build-graph stats graph.db`. No
+> > structural TypeScript changes were made by this docs-only
+> > verification commit, so `build-graph update` was not required.
+> > The Red contract test file
+> > (`drizzle045-phase4-closure-gates.test.ts`, committed at
+> > `c7ba3476` and unchanged since) is a leaf file with no
+> > meaningful structural edges to scan.
+> >
+> > **No new test file changes:** the Red contract test file at
+> > `c7ba3476` and corrected at `50060bb4` is unchanged in this
+> > attempt (`git diff c7ba3476..HEAD -- packages/db/src/__tests__/drizzle045-phase4-closure-gates.test.ts`
+> > returns empty). This attempt is docs-only (plan.md) and
+> > records the attempt-4 verification — the third consecutive
+> > docs-only stability verification after attempt-2 (`50060bb4`)
+> > and attempt-3 (`48635610`). The Red contract is confirmed
+> > stable across 3 commits: 10 fail / 2 pass at HEAD
+> > `48635610`, matching the prior static-analysis prediction
+> > exactly.
+> >
+> > **Phase 4 Red phase status: COMPLETE — Red contract stable
+> > across 3 commits (c7ba3476, 50060bb4, 48635610).** All 3
+> > incomplete non-deferred Phase 4 tasks (aggregate-gate,
+> > outdated/audit, tech-stack.md) have a Red contract that pins
+> > their deliverables. The JR/Implement role owns the live
+> > runs (`pnpm turbo run lint test check-types build`,
+> > `pnpm outdated -r`, `pnpm audit`) and the three artifact
+> > deliverables (Drizzle tech-stack.md row, `phase4-aggregate-gate.md`,
+> > `phase4-outdated-audit.md`). The Mid role's Red contract
+> > pins that these deliverables land before the track is
+> > closed.
 
 - [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
 - [~] Task: Re-run `pnpm outdated` and `pnpm audit`; document results.
