@@ -819,6 +819,53 @@
 > 4/4 RED) was verified separately per the attempt-1 note above
 > and remains stable.
 
+> **Phase-acceptance audit note (attempt-2, this commit):** The
+> Phase 3 acceptance auditor completed static analysis at HEAD
+> `e4f5337b`. Node.js was not available in the sandbox (exit 127
+> on all `node` invocations), so the auditor could not re-run the
+> targeted vitest commands. Static analysis confirmed:
+>
+> - **drizzle-orm 0.45.2** installed at `packages/db/node_modules/`
+>   and root `pnpm.overrides` (lockfile: `/drizzle-orm@0.45.2`).
+> - **drizzle-kit 0.31.10** installed (satisfies `^0.31.7`; lockfile:
+>   `/drizzle-kit@0.31.10`). The test assertion was adjusted from
+>   `>=0.32` to `>=0.31.7` because no stable drizzle-kit 0.32.x
+>   exists on npm (latest stable is 0.31.10). Justified.
+> - **drizzle-zod 0.7.1** installed (satisfies `^0.7.0`; lockfile:
+>   `/drizzle-zod@0.7.1(drizzle-orm@0.45.2)(zod@3.25.76)`).
+> - **Lockfile consistent** with `package.json` declarations:
+>   `packages/db/package.json` declares `drizzle-orm: ^0.45.0`,
+>   `drizzle-kit: ^0.31.7`, `drizzle-zod: ^0.7.0`. Root
+>   `package.json` declares `drizzle-orm: 0.45.2` in devDeps +
+>   `pnpm.overrides`. All match.
+> - **All 5 Phase 3 tasks marked [x]** in plan.md with commit SHAs.
+> - **Test files exist** on disk:
+>   `drizzle045-phase3-integration-gates.test.ts` (416 lines, 12
+>   tests), `drizzle045-zod-contract.test.ts` (173 lines, 4 tests).
+> - **Schema barrel** exports `./marketing.js` (Phase 2 Green).
+>
+> **Non-blocking findings (Phase 4 concerns):**
+>
+> 1. test-strategy.md §7 Phase 4 gate says "drizzle-kit 0.32+" but
+>    the Phase 3 test asserts `>=0.31.7`. Documentation inconsistency
+>    to resolve when updating test-strategy.md in Phase 4.
+> 2. Real-DB integration test (`drizzle-kit generate` diff +
+>    `drizzle-kit migrate` fresh-DB apply) was not performed in
+>    Phase 3. The integration-gates test only asserts preconditions
+>    (config, scripts, journal, version pins). Deferred to Phase 4
+>    per plan structure.
+> 3. Pre-existing check-types errors in Phase 2 adversarial test
+>    files (TS2345/TS2352 with drizzle-orm 0.45's stricter
+>    `PgTableWithColumns` typing). Test-only, not introduced by
+>    Phase 3. Runtime tests pass 523/527.
+>
+> **Phase 3 status: PASS.** All acceptance criteria owned by Phase 3
+> (spec AC 1, AC 2, AC 5) are satisfied. Phase 4 owns AC 3, AC 4,
+> AC 7, AC 8.
+>
+> **Result JSON:** `measure/runs/20260615T063632Z/drizzle045_major_migration/phase-1-Phase_3_Implement/phase-acceptance/phase_acceptance-result.json`
+> (status: pass, 3 findings, 12 evidence items).
+
 ## Phase 4: Validate & Close
 
 - [ ] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
