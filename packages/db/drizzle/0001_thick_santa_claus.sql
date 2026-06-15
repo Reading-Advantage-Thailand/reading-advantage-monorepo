@@ -1,4 +1,4 @@
--- drizzle-orm 0.45-era header: regenerated migration
+-- Initial schema: flashcard_cards + flashcard_decks for spaced-repetition learning
 CREATE TABLE "flashcard_cards" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"deck_id" uuid NOT NULL,

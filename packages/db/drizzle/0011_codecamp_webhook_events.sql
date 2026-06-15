@@ -1,4 +1,4 @@
--- drizzle-orm 0.45-era header: regenerated migration
+-- Create codecamp_webhook_events table for inbound GitHub webhook deduplication
 CREATE TABLE IF NOT EXISTS "codecamp_webhook_events" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   "delivery_id" text,

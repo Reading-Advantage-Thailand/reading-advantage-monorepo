@@ -4,7 +4,6 @@
 -- Run this migration before redeploying to ensure data integrity.
 
 CREATE UNIQUE INDEX IF NOT EXISTS "codecamp_exercise_repos_repo_url_unique"
-  ON "codecamp_exercise_repos" ("repo_url");
-
+  ON "codecamp_exercise_repos" ("repo_url");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "codecamp_pr_reviews_pr_url_unique"
   ON "codecamp_pr_reviews" ("pr_url");
