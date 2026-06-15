@@ -743,6 +743,22 @@
 > files. 0 staged files. 2 untracked files preserved untouched
 > (`apps/marketing/next-env.d.ts` auto-gen,
 > `test-strategy.md` setup-owned).
+>
+> **Attempt-2 stability verification (this commit, docs-only):**
+> Re-ran the targeted Red command at HEAD `4602b64a` to confirm
+> the Red profile is stable. Result: **12 tests, 2 failed | 10
+> passed (682 ms)** — identical profile to attempt-1
+> (drift = −348 ms, well within Vitest setup-variance). The 2
+> failures remain the Task 1 `drizzle-kit` version assertions
+> (`^0.31.0` declared, `0.31.10` installed); the 10 passes remain
+> the Task 5 regression-guard GREEN preconditions. No new
+> tightening was attempted because the contract at HEAD
+> `4602b64a` already asserts every Phase 3 Task 1 / Task 5 gap
+> that the JR Green phase must close. This attempt is docs-only
+> (plan.md); the Red contract test file is unchanged from
+> attempt-1. Task 4 RED (`drizzle045-zod-contract.test.ts`,
+> 4/4 RED) was verified separately per the attempt-1 note above
+> and remains stable.
 
 ## Phase 4: Validate & Close
 
