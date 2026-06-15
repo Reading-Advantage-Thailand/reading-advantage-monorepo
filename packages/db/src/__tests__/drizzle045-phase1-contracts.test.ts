@@ -134,6 +134,35 @@ describe("Phase 1 — Task 1: Drizzle 0.45 breaking-change audit", () => {
       "breaking-change audit must reference at least one real schema file (e.g. users.ts, marketing.ts)",
     ).toBeDefined();
   });
+
+  it("surfaces the drizzle-zod risk called out in test-strategy §3.4", () => {
+    // Per measure/tracks/drizzle045_major_migration/test-strategy.md
+    // §3.4, drizzle-zod is NOT installed at the 0.44.7 baseline and
+    // Phase 3 must add it. The breaking-change audit must surface
+    // this risk so Phase 3 doesn't lose track of it.
+    const text = readFileSync(BREAKING_CHANGES_PATH, "utf8");
+    expect(
+      text,
+      "breaking-change audit must mention drizzle-zod as a 0.45-era risk",
+    ).toMatch(/drizzle[- ]?zod/i);
+  });
+
+  it("surfaces the TenantDB-wrapping risk called out in test-strategy §3.5", () => {
+    // Per measure/tracks/drizzle045_major_migration/test-strategy.md
+    // §3.5, createTenantDB wraps Drizzle query builders; if 0.45
+    // changes the builder API, the wrapping breaks. The audit must
+    // surface this so Phase 3 plans to re-run tenant-coverage tests.
+    const text = readFileSync(BREAKING_CHANGES_PATH, "utf8");
+    const mentionsTenant =
+      /createTenantDB/.test(text) ||
+      /tenant[- ]?registry/i.test(text) ||
+      /tenant[- ]?scope/i.test(text) ||
+      /\btenant\b/i.test(text);
+    expect(
+      mentionsTenant,
+      "breaking-change audit must mention TenantDB / tenant-scope risk",
+    ).toBe(true);
+  });
 });
 
 describe("Phase 1 — Task 2: schema-file + migration-script map", () => {
@@ -186,6 +215,31 @@ describe("Phase 1 — Task 2: schema-file + migration-script map", () => {
       missing,
       `phase1-schema-map.md is missing schema files: ${missing.join(", ")}`,
     ).toEqual([]);
+  });
+
+  it("surfaces the client-construction risk called out in test-strategy §3.6", () => {
+    // Per measure/tracks/drizzle045_major_migration/test-strategy.md
+    // §3.6, packages/db/src/client.ts uses `drizzle(client, { schema })`
+    // and is a single point of failure if 0.45 changes the factory
+    // signature. The schema map must surface client.ts so Phase 3
+    // revisits it before bumping.
+    const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
+    expect(
+      text,
+      "schema map must mention packages/db/src/client.ts as a 0.45 risk surface",
+    ).toMatch(/client\.ts/);
+  });
+
+  it("surfaces the journal-integrity risk called out in test-strategy §3.3", () => {
+    // Per measure/tracks/drizzle045_major_migration/test-strategy.md
+    // §3.3, the journal `when` re-stamp invariant (idx 0-16 <=
+    // 1779120000000, idx 17+ > 1779120000000) must survive. The
+    // schema map must reference _journal.json so Phase 3 protects it.
+    const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
+    expect(
+      text,
+      "schema map must mention _journal.json as a 0.45 risk surface",
+    ).toMatch(/_journal\.json/);
   });
 });
 

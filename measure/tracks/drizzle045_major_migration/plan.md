@@ -31,15 +31,30 @@
 >   src/__tests__/drizzle045-phase1-contracts.test.ts
 > ```
 >
-> **Red result:** 17 tests — **15 failed, 2 passed**.
-> Failures: every contract assertion for the three missing Markdown
-> artifacts (5 each). Passes: the two live-surface guardrail probes
-> that confirm `packages/db/src/schema/` contains all 15 expected
-> schema files (including the dirty-worktree `marketing.ts`) and
+> **Red result (attempt-3, HEAD):** 21 tests — **19 failed, 2 passed**.
+> Failures: 5 contract assertions for each of the three missing
+> Markdown artifacts (15) + 4 strengthened risk-surface assertions
+> that cross-reference test-strategy.md §3.4 (drizzle-zod),
+> §3.5 (TenantDB wrapping), §3.6 (client.ts), and §3.3
+> (journal-integrity / `_journal.json`). Passes: the two
+> live-surface guardrail probes that confirm
+> `packages/db/src/schema/` contains all 15 expected schema files
+> (including the dirty-worktree `marketing.ts`) and
 > `packages/db/drizzle/` contains all 21 expected migration SQL
-> files (0000–0020). These probes prove the filesystem surface the
-> audit must cover; the artifact-content assertions fail because the
-> Markdown deliverables have not been written yet.
+> files (0000–0020). The artifact-content assertions fail because
+> the Markdown deliverables have not been written yet.
+>
+> **Red profile history:**
+>
+> - Attempt-1 (commit `b11aa84f`): 17 tests, 15 fail / 2 pass.
+> - Attempt-2 (no commit, stash-only): same profile, but HEAD did
+>   not advance — supervisor rejected with "Expected a committed
+>   Red-phase test change, but HEAD did not advance."
+> - Attempt-3 (this commit): 21 tests, 19 fail / 2 pass — Red
+>   contract strengthened with 4 risk-surface assertions tied to
+>   test-strategy §3.3-§3.6. Stash `preserve-pre-mid-dirty-upstream-work-drizzle045-phase1`
+>   from attempt-2 was popped to restore the 4 pre-existing dirty
+>   files (preserved, not committed by MID).
 >
 > **Dirty worktree classification at Red start:**
 >
