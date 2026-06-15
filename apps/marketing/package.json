@@ -22,6 +22,7 @@
     "react-dom": "19.2.7"
   },
   "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.8.3",
