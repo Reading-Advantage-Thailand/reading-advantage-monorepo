@@ -534,7 +534,7 @@
 > strictly required (no signature/import change), but the next
 > Phase 3 commit (drizzle-zod install) will trigger an update.
 
-> **Phase-acceptance audit note (this attempt):** The Phase 2
+> **Phase-acceptance audit note (commit `23779af0`):** The Phase 2
 > acceptance auditor re-ran the targeted Red/Green gate and found
 > three blocking issues in the Green commit (`5284e0bf`):
 >
@@ -575,9 +575,9 @@
 > the opaque variable pattern is preserved with an explanatory
 > comment.
 
-- [x] Task: Add schema compatibility tests for Drizzle 0.45 API. (`8be48308`)
-- [x] Task: Add migration smoke tests against a fresh database. (`8be48308`)
-- [x] Task: Confirm tests fail against the current Drizzle baseline. (`8be48308`)
+- [x] Task: Add schema compatibility tests for Drizzle 0.45 API. (`8be48308`, `5284e0bf`, `23779af0`)
+- [x] Task: Add migration smoke tests against a fresh database. (`8be48308`, `5284e0bf`, `23779af0`)
+- [x] Task: Confirm tests fail against the current Drizzle baseline. (`8be48308`, `5284e0bf`, `23779af0`)
 
 ## Phase 3: Implement
 
