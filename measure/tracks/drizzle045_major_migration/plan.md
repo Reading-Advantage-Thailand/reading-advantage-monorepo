@@ -581,11 +581,11 @@
 
 ## Phase 3: Implement
 
-- [x] Task: Upgrade Drizzle to 0.45 across all workspaces. (`TBD`)
+- [x] Task: Upgrade Drizzle to 0.45 across all workspaces. (`d41aa096`)
 - [x] Task: Update schema definitions for the new API. (already satisfied — `5284e0bf`)
 - [x] Task: Update migration scripts for the new format. (already satisfied — `5284e0bf`, `162098e4`)
-- [x] Task: Update `drizzle-zod` integration. (`TBD`)
-- [x] Task: Run `check-types`, `lint`, `test`, and migration gates. (`TBD`)
+- [x] Task: Update `drizzle-zod` integration. (`d41aa096`)
+- [x] Task: Run `check-types`, `lint`, `test`, and migration gates. (`d41aa096`)
 
 > **Green-phase plan note (JR, this attempt):** Phase 3 Green
 > implementation. The 6 failing tests at the Red baseline (2
