@@ -1734,3 +1734,163 @@
   "stale durable record" does not apply. The Phase 4
   Red contracts are correctly calibrated and the Red
   phase is closed.
+
+### Worktree re-verification (MID role, attempt 6 — supervisor-restarted after attempt-1 timeout)
+
+- **Trigger**: supervisor restarted the MID role after
+  attempt 1 exited with status 124 (timeout). The
+  previous attempt had loaded the measure + build-graph
+  skills, read `measure/index.md`,
+  `measure/tracks/ai_sdk_major_migration/test-strategy.md`,
+  and `measure/tracks/ai_sdk_major_migration/plan.md`,
+  re-classified the dirty worktree, and was about to
+  update plan.md when the supervisor timeout fired. No
+  uncommitted file changes were left behind by the
+  timed-out attempt — `git status --porcelain` at this
+  attempt's start shows only the single unrelated
+  user-work path:
+  - `M measure/automation-supervisor.py` (model-default
+    edits to the Measure automation supervisor's
+    `SR_MODEL` / `JR_MODEL` / `REVIEW_MODEL` /
+    `PHASE_ACCEPTANCE_MODEL` / `ADVERSARIAL_MODEL` /
+    `ACCEPTANCE_MODEL` / `CLOSEOUT_MODEL` env var
+    defaults — zero relation to the AI SDK migration
+    track; preserved untouched and explicitly NOT
+    included in this Red-phase commit).
+  - No JR-owned paths in the worktree (all JR P3 +
+    P4 Green work has been committed at `38370826`,
+    `512f834f`, and `52e3c900`).
+  - No `apps/marketing/**` or
+    `packages/db/src/schema/marketing.ts` in
+    `git status` (the prior MID records noted these as
+    untracked paths; they were committed or removed
+    between attempts).
+- **Verification methodology** (Red-at-HEAD proof):
+  1. `build-graph stats ./graph.db` → 2,153 nodes /
+     3,081 edges / 288 files; the Phase 4 test file's
+     structural fingerprint is small (no exported
+     functions or schemas, just `it`/`describe` blocks)
+     so it is not in the graph. Same baseline as the
+     prior MID attempt.
+  2. Re-ran the §6 P4 targeted vitest invocation
+     directly (no static read):
+     `pnpm --filter @reading-advantage/ai exec vitest
+     run src/__tests__/phase-12-closeout-artifacts.test.ts
+     --reporter=verbose` → **Test Files: 1 failed (1)
+     | Tests: 2 failed | 11 passed (13 total) | exit 1**.
+     Unchanged from the JR P4 Green attempt-3 record
+     at lines 1358–1364 and the prior MID attempt 5
+     record at lines 1461–1465.
+- **Why no new test files were created**: per the
+  Measure workflow rule cited by the prior attempts
+  ("If the new tests pass at HEAD, tighten the
+  contract until at least one new test fails or mark
+  the task as already satisfied with evidence instead
+  of creating a false Red phase"), every candidate
+  Phase 4 contract tightening was reviewed against
+  HEAD `265a3029`:
+  - **AC #9 audit.json AI-adjacent advisories**:
+    zero `@ai-sdk/*` packages have advisories at HEAD
+    → test would pass (GREEN at HEAD).
+  - **`gate-result.json` records per-package
+    success/failure counts correctly**: existing test
+    asserts `exitCode: 0`; a tighter assertion on
+    `turboSummary.failed === 0` would fire RED for
+    the same root cause as the existing failure
+    (pre-existing db ESM smoke flake, owned by another
+    track) — redundant Red noise, not new Red signal.
+  - **`tech-stack.md` declares `@ai-sdk/google-vertex
+    ^3.x` and `@ai-sdk/react ^2.x`**: line 41 of
+    `measure/tech-stack.md` already pins the four
+    selected majors including these two → test would
+    pass (GREEN at HEAD).
+  - **`outdated.json` rows are on migration-selected
+    majors**: the 6 `@ai-sdk/*` / `ai` rows at HEAD are
+    all on v5/v2/v2/v3/v2/v3 → test would pass (GREEN
+    at HEAD). (Tightening this assertion is GREEN
+    work, not Red work — out of scope for MID.)
+  None of the candidate tightenings would fire RED
+  at HEAD without either (a) duplicating the existing
+  root-cause failures or (b) testing behavior already
+  satisfied by the JR P3/P4 Green work. Per the
+  Measure workflow rule, all three Phase 4 tasks are
+  marked **already-satisfied by Red contracts with
+  evidence** (the 13-test file at `6580970c`).
+- **Status of Phase 4 tasks (this attempt)**:
+  - **Task 1** (aggregate gate): `[~]` — gate captured
+    at `512f834f` (`exitCode: 1` because of a single
+    pre-existing `@reading-advantage/db#test` flake
+    owned by the archived `db_migration_ledger_20260611`
+    track; migration-scope check is fully green).
+  - **Task 2** (outdated/audit capture): `[~]` —
+    `outdated.json` + `audit.json` written and parse
+    correctly. The audit closeout invariant (no
+    critical AI-adjacent advisories introduced by the
+    migration) is met; the
+    `outdated.json contains zero @ai-sdk/* rows`
+    assertion is too broad (filters by name regardless
+    of major) and fails against any healthy pnpm 8.x
+    output where newer majors exist on the registry.
+    All 6 `@ai-sdk/*` / `ai` rows are on the
+    migration-selected majors; zero are on legacy
+    (v1/v4) majors — the spec's actual intent.
+  - **Task 3** (tech-stack update): `[~]` per the
+    strict closeout rule, but the underlying work is
+    complete: the doc declares the v5/v2/v2/v3 version
+    rows and the `ai_sdk_major_migration` track
+    reference; all 5 Task 3 tests pass at HEAD.
+- **Why the gate is genuinely red, not stale** (same
+  reasoning as the prior attempts):
+  - `gate-result.json` records the live aggregate
+    gate's actual `exitCode: 1` at the JR P4 Green
+    attempt-3 run, not a stale durable record.
+  - `outdated.json` records pnpm's actual recursive
+    outdated output at the JR P4 Green attempt-2 run;
+    the 6 `@ai-sdk/*` rows are real pnpm output, not
+    fabricated, and every one is on the
+    migration-selected major.
+  - Both failing tests are driven by the current
+    state of the live gate and the current pnpm
+    output, not by stale durable records.
+- **MID scope reaffirmed**: this attempt's only file
+  change is `measure/tracks/ai_sdk_major_migration/plan.md`
+  (Measure doc). The unrelated user work
+  (`measure/automation-supervisor.py`) is preserved
+  untouched and is explicitly NOT included in this
+  Red-phase commit. No source code in
+  `packages/ai/src/`, no app migrations, no manifest
+  bumps, no lockfile changes, no artifact writes,
+  no tech-stack.md content edits, no test file
+  modifications are part of this commit. The Red
+  contracts committed at `6580970c` remain the
+  canonical Phase 4 Red contracts at HEAD.
+- **JR / supervisor hand-off** (this attempt's
+  addendum to the prior attempts' hand-offs):
+  1. The Phase 4 Red contracts are correctly
+     calibrated and committed. The 2 remaining failures
+     are documented as not fixable from this track
+     without modifying either another track's test
+     file (`db_migration_ledger_20260611`) or this
+     track's Red-contract test logic (the zero-`@ai-sdk/*`
+     rows assertion).
+  2. The supervisor's role (Review / Acceptance /
+     Closeout) can either:
+     - Flip Task 1 / Task 2 to `[x]` once the
+       `db_migration_ledger_20260611` ESM smoke flake
+       is resolved AND a future MID narrows the
+       outdated-test assertion to legacy majors only;
+       OR
+     - Accept the documented reality and archive
+       Phase 4 with all three tasks `[~]` (the
+       migration-scope gate is fully green; the
+       remaining failures are owned by other tracks).
+  3. Task 3 can be flipped to `[x]` independently if
+     the closeout rule is relaxed to allow per-task
+     `[x]` markers when the underlying work is
+     complete and the remaining failures are
+     documented as not-owned-by-this-track.
+  4. The 7 stashes at `stash@{0..6}` remain stale; a
+     future attempt should `git stash drop` them
+     after verifying each entry's contents have been
+     superseded by the P3 Green commit `38370826` or
+     the P4 Green commit `52e3c900`.
