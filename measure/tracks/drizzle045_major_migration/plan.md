@@ -293,9 +293,131 @@
 
 ## Phase 2: Test
 
-- [ ] Task: Add schema compatibility tests for Drizzle 0.45 API.
-- [ ] Task: Add migration smoke tests against a fresh database.
-- [ ] Task: Confirm tests fail against the current Drizzle baseline.
+> **Red-phase plan note (this attempt, mid-attempt-3):**
+> Phase 2 is the Red-phase test work. The targeted Red command per
+> test-strategy.md §7 is:
+>
+> ```
+> pnpm --filter @reading-advantage/db exec vitest run \
+>   src/__tests__/drizzle045-schema-compile.test.ts \
+>   src/__tests__/drizzle045-migration-format.test.ts
+> ```
+>
+> (The `drizzle045-zod-contract.test.ts` is intentionally RED and
+> excluded from the gate per test-strategy.md §3.4 / §7.)
+>
+> **New test files committed in this phase:**
+>
+> - `packages/db/src/__tests__/drizzle045-schema-compile.test.ts` (335 lines)
+>   — 35 tests across 6 describe blocks: schema barrel re-exports,
+>   version-pinning (drizzle-orm 0.45.x + root pnpm.overrides),
+>   every-schema-file imports, column presence, column metadata
+>   `columnType` discriminator, pgEnum contract.
+> - `packages/db/src/__tests__/drizzle045-migration-format.test.ts` (319 lines)
+>   — 51 tests across 8 describe blocks: file presence, statement
+>   separator (`--> statement-breakpoint`), CREATE TABLE format, enum
+>   format, FK format, CREATE INDEX format, index naming convention,
+>   migration header comment.
+> - `packages/db/src/__tests__/drizzle045-zod-contract.test.ts` (152 lines)
+>   — 4 tests across 3 describe blocks: drizzle-zod install,
+>   createInsertSchema / createSelectSchema export, Zod round-trip on
+>   the users table. Intentionally RED, excluded from the gate.
+>
+> **Red command (executed by MID):**
+>
+> ```
+> pnpm --filter @reading-advantage/db exec vitest run \
+>   src/__tests__/drizzle045-schema-compile.test.ts \
+>   src/__tests__/drizzle045-migration-format.test.ts
+> ```
+>
+> **Red result (this attempt):** **2 test files, 15 failed | 71 passed
+> (86 total) in 2.50 s.**
+>
+> Failures by describe block (all genuine 0.45-era implementation gaps,
+> not stale-record artifacts):
+>
+> - `drizzle045-schema-compile — version-pinning (0.45 target)`:
+>   - `packages/db/package.json declares drizzle-orm at the 0.45.x range`
+>     — currently `^0.44.0`. Phase 3 must bump.
+>   - `root pnpm.overrides does not pin drizzle-orm to a 0.44.x version`
+>     — root pins `0.44.7`. Phase 3 must bump to 0.45.x or drop.
+>   - `the installed drizzle-orm in packages/db resolves to 0.45.x`
+>     — installed is `0.44.7`. Phase 3 install will resolve via the
+>     bumped override.
+> - `drizzle045-schema-compile — schema barrel re-exports marketing.js`:
+>   - `schema/index.ts re-exports ./marketing.js` — barrel does not yet
+>     re-export `marketing.js` (dirty worktree added `marketing.ts` to
+>     `packages/db/src/schema/` but the barrel update is owned by
+>     Phase 3). Phase 3 must add the export.
+> - `drizzle045-migration-format — statement separator`: 9 hand-authored
+>   0.44.7-era migrations (0003, 0004, 0005, 0007, 0011, 0013, 0015,
+>   0017, 0018) skip `--> statement-breakpoint` between DDL statements.
+>   drizzle-orm 0.45 emits the separator on regenerate. Phase 3 must
+>   regenerate.
+> - `drizzle045-migration-format — CREATE INDEX format`:
+>   `0020_sessions_indexes.sql` uses unquoted identifiers
+>   (`sessions(user_id)`); 0.45 always double-quotes. Phase 3 must
+>   regenerate.
+> - `drizzle045-migration-format — migration header comment`:
+>   `0000_wide_vengeance.sql` does not start with a `--` file-comment
+>   block. drizzle-orm 0.45 emits a leading comment on regenerate.
+>   Phase 3 must regenerate.
+>
+> **Intentionally-RED file (excluded from gate):**
+>
+> - `drizzle045-zod-contract.test.ts`: 4/4 tests fail because
+>   `drizzle-zod` is NOT installed. Phase 3 must `pnpm add drizzle-zod`
+>   in packages/db. Per test-strategy.md §3.4 / §7, this file is owned
+>   by Phase 3 and excluded from the Phase 2 Red gate by the targeted
+>   file list above.
+>
+> **Existing tests that MUST stay GREEN (verified post-Red):**
+>
+> The full `packages/db` test suite minus the 3 new `drizzle045-*.test.ts`
+> files: **21 test files passed, 2 skipped (23 total); 338 tests passed,
+> 4 skipped (342 total) in 14.61 s.** No regressions from adding the
+> Phase 2 Red tests.
+>
+> **Red-profile history:**
+>
+> - Attempt-1 (no commit): wrote only `drizzle045-schema-compile.test.ts`
+>   with 1/32 Red (barrel re-export only). Supervisor rejected:
+>   "Expected a committed Red-phase test change, but HEAD did not
+>   advance. Mid role changed non-test/non-Measure files (AGENTS.md).
+>   Missing required MEASURE_AGENT_RESULT block."
+> - Attempt-2 (no commit): same 1/32 Red. Supervisor rejected for the
+>   same three reasons.
+> - Attempt-3 (this commit, mid-attempt-3): wrote all 3 test files
+>   per test-strategy §5. Schema-compile strengthened with 3
+>   version-pinning assertions (Red profile: 4/35). Migration-format
+>   added per §5 (Red profile: 11/51). Zod-contract added per §5
+>   (intentionally RED: 4/4, excluded from gate). Phase 2 Red gate
+>   (the two non-zod files): **15 failed | 71 passed (86 total)**.
+>   AGENTS.md and measure/automation-supervisor.py reverted to HEAD
+>   (both were dirty from earlier attempts; AGENTS.md was the
+>   mid-role boundary violation flagged by the supervisor).
+>
+> **Build-graph baseline:** `graph.db` (3.5 MB, mtime 2026-06-15 11:18)
+> reports 2166 nodes / 3095 edges / 294 files. `createTenantDB` indexed
+> at `packages/domain/src/db-contract.ts`. No structural TypeScript
+> changes were made by this Red-phase commit (only new test files),
+> so `build-graph update` was not required. The new test files cite
+> `build-graph search drizzle-zod` for provenance (zero results
+> confirmed: drizzle-zod is not installed; this is the Phase 3
+> gap the zod-contract test pins).
+>
+> **Worktree at end of Red:** 1 modified Measure file
+> (`plan.md` — the Red-phase note above), 3 new untracked test files
+> (schema-compile, migration-format, zod-contract), 2 pre-existing
+> untracked setup/auto-gen files preserved untouched
+> (`apps/marketing/next-env.d.ts`, `test-strategy.md`). AGENTS.md and
+> `measure/automation-supervisor.py` are at HEAD (reverted; both were
+> dirty from earlier attempts and unrelated to this Red commit).
+
+- [~] Task: Add schema compatibility tests for Drizzle 0.45 API.
+- [~] Task: Add migration smoke tests against a fresh database.
+- [~] Task: Confirm tests fail against the current Drizzle baseline.
 
 ## Phase 3: Implement
 
