@@ -414,6 +414,62 @@
 > (`apps/marketing/next-env.d.ts`, `test-strategy.md`). AGENTS.md and
 > `measure/automation-supervisor.py` are at HEAD (reverted; both were
 > dirty from earlier attempts and unrelated to this Red commit).
+>
+> - Attempt-4 (mid-attempt-2 of this run, this commit): Re-ran the
+>   targeted Red gate at HEAD `8be48308` to confirm the Red profile is
+>   stable and that no Phase 3 implementation leak has snuck into the
+>   Phase 2 Red worktree. Result: **13 failed | 73 passed (86 total)
+>   in 2.29 s**. The 13 failures are the documented Phase 1/2
+>   implementation gaps that Phase 3 must close:
+>
+>   - `drizzle045-schema-compile — version-pinning (0.45 target)`:
+>     2 failures — `packages/db/package.json` declares `^0.44.0` and
+>     root `pnpm.overrides` pins `0.44.7`. Phase 3 must bump to
+>     `^0.45.0` and `0.45.x` respectively.
+>   - `drizzle045-schema-compile — schema barrel re-exports marketing.js`:
+>     1 failure — barrel does not yet re-export `./marketing.js`.
+>     Phase 3 must add the export.
+>   - `drizzle045-migration-format — statement separator`: 9 failures —
+>     migrations 0003, 0004, 0005, 0007, 0011, 0013, 0015, 0017, 0018
+>     are missing `--> statement-breakpoint` separators between DDL
+>     statements. Phase 3 must regenerate.
+>   - `drizzle045-migration-format — migration header comment`:
+>     1 failure — `0000_wide_vengeance.sql` does not start with a
+>     `--` file-comment block. Phase 3 must add the header.
+>
+>   The intentionally-RED `drizzle045-zod-contract.test.ts` (excluded
+>   from this gate) is **4/4 RED** at HEAD — confirmed via a separate
+>   vitest run; drizzle-zod is not installed (test-strategy §6).
+>
+>   **Regression guard intact:** full `packages/db` suite minus the 3
+>   new `drizzle045-*.test.ts` files: **21 test files passed | 2 skipped
+>   (23 total); 338 tests passed | 4 skipped (342 total).** No
+>   regressions from the Phase 2 Red contract.
+>
+>   **Phase 3 implementation leak reverted:** the Mid role's start-of-
+>   attempt worktree contained 13 modified non-test/non-Measure files
+>   (root `package.json`, `packages/db/package.json`,
+>   `packages/db/src/schema/index.ts`, and 10 migration SQL files)
+>   that implemented the 0.45 upgrade (drizzle-orm 0.45.2 pin,
+>   `marketing.js` barrel export, `--> statement-breakpoint` migration
+>   regeneration). These belong to Phase 3 and were reverted with
+>   `git checkout HEAD -- <file>` per the Mid role's "no source-code
+>   modification" boundary. The reverts do NOT change the Red contract
+>   profile because the Red assertions read from these source files —
+>   the tests re-run against the now-reverted HEAD content and the
+>   Red profile is unchanged (13 fail / 73 pass).
+>
+>   **Build-graph baseline:** `graph.db` (3.5 MB, mtime 2026-06-15
+>   13:30) reports 2166 nodes / 3095 edges / 294 files. No structural
+>   TypeScript changes were made by this docs-only Red verification
+>   commit, so `build-graph update` was not required.
+>
+>   **Dirty worktree at end of attempt-4:** 1 modified Measure file
+>   (`plan.md` — this note). 2 untracked files preserved untouched
+>   (`apps/marketing/next-env.d.ts` auto-generated Next.js;
+>   `measure/tracks/drizzle045_major_migration/test-strategy.md`
+>   setup-owned untracked). 0 modified non-Measure files. Phase 3
+>   implementation leak fully reverted.
 
 - [~] Task: Add schema compatibility tests for Drizzle 0.45 API.
 - [~] Task: Add migration smoke tests against a fresh database.
