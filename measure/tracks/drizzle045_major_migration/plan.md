@@ -920,7 +920,7 @@
 > **New test file (this commit):**
 >
 > - `packages/db/src/__tests__/drizzle045-phase4-closure-gates.test.ts`
->   (new file, 11 tests across 3 describe blocks):
+>   (new file, 12 tests across 4 describe blocks):
 >
 >   1. `tech-stack.md Drizzle version (Task 3 / AC 8)` — 4 tests:
 >      the "Selected Shared Versions (post dependency_upgrade_hardening_20260607)"
@@ -929,29 +929,40 @@
 >      (not "we will not adopt 0.45"); the package column must name
 >      `Drizzle` or `drizzle-orm`; the version must align with the
 >      lockfile (0.45.x); and the source column must cross-reference
->      the `drizzle045_major_migration` track.
+>      the `drizzle045_major_migration` track. (1 GREEN regression
+>      guard: tech-stack.md exists + table present; 3 RED.)
 >   2. `Task 1 — aggregate-gate closure record` — 4 tests: a Phase 4
 >      closure artifact must exist at
 >      `measure/tracks/drizzle045_major_migration/phase4-aggregate-gate.md`,
 >      must document the `pnpm turbo run lint test check-types build`
 >      invocation, must reference all four turbo tasks (lint, test,
 >      check-types, build) in positive-pass context, and must
->      cross-reference the track ID.
+>      cross-reference the track ID. (4 RED.)
 >   3. `Task 2 — pnpm outdated / audit closure record` — 3 tests: a
 >      Phase 4 closure artifact must exist at
 >      `measure/tracks/drizzle045_major_migration/phase4-outdated-audit.md`,
 >      must record `pnpm outdated -r drizzle-orm` showing 0.45.x in
 >      positive-pass context, and must record `pnpm audit` clean.
+>      (3 RED.)
+>   4. `lockfile cross-reference (regression guard)` — 1 test:
+>      pnpm-lock.yaml resolves drizzle-orm to a 0.45.x version
+>      (matches the closure record's outdated report). (1 GREEN
+>      regression guard — pins the precondition the JR role's
+>      closure record will assert.)
 >
 > **Red rationale:**
 >
-> All 11 assertions fail at HEAD because:
+> 10 of 12 assertions fail at HEAD because:
 > - `measure/tech-stack.md` "Selected Shared Versions" table has rows
->   for Next.js / React / Vitest but no Drizzle row.
+>   for Next.js / React / Vitest but no Drizzle row (3 RED in Block 1).
 > - `measure/tracks/drizzle045_major_migration/phase4-aggregate-gate.md`
->   does not exist.
+>   does not exist (4 RED in Block 2).
 > - `measure/tracks/drizzle045_major_migration/phase4-outdated-audit.md`
->   does not exist.
+>   does not exist (3 RED in Block 3).
+>
+> 2 assertions are GREEN regression guards (Block 1 "table exists" +
+> Block 4 "lockfile 0.45.x"), pinning the preconditions that the
+> JR role's closure record and tech-stack.md update will rely on.
 >
 > **Live-run ownership (plan note):** Per the Phase 3 attempt-2
 > audit pattern (the JR role owns the live-DB `drizzle-kit generate`
