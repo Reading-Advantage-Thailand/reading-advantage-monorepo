@@ -1,3 +1,4 @@
+-- drizzle-orm 0.45-era header: regenerated migration
 CREATE TABLE IF NOT EXISTS "codecamp_webhook_events" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   "delivery_id" text,
@@ -11,3 +12,4 @@ CREATE TABLE IF NOT EXISTS "codecamp_webhook_events" (
   "payload_json" jsonb,
   "created_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint

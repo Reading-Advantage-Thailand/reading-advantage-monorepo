@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS "licenses" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "licenses_key_unique" UNIQUE ("key")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "license_on_users" (
   "user_id" text NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS "license_on_users" (
   "activate_at" timestamp DEFAULT now() NOT NULL,
   PRIMARY KEY ("user_id", "license_id")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "stories" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -48,6 +50,7 @@ CREATE TABLE IF NOT EXISTS "stories" (
   "created_at" timestamp DEFAULT now() NOT NULL,
   "updated_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "ra_cefr_mappings" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -57,6 +60,7 @@ CREATE TABLE IF NOT EXISTS "ra_cefr_mappings" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "ra_cefr_mappings_ra_level_unique" UNIQUE ("ra_level")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "genre_adjacencies" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -67,109 +71,165 @@ CREATE TABLE IF NOT EXISTS "genre_adjacencies" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "genre_adjacencies_primary_adjacent_unique" UNIQUE ("primary_genre", "adjacent_genre")
 );
+--> statement-breakpoint
 
 -- ─── 2. Schools: add province + country ──────────────────────────────────────
 
 ALTER TABLE "schools" ADD COLUMN IF NOT EXISTS "province" text;
+--> statement-breakpoint
 ALTER TABLE "schools" ADD COLUMN IF NOT EXISTS "country" text DEFAULT 'Thailand' NOT NULL;
+--> statement-breakpoint
 
 -- ─── 3. Classrooms: add Prisma fields ────────────────────────────────────────
 
 ALTER TABLE "classrooms" ADD COLUMN IF NOT EXISTS "class_code" text;
+--> statement-breakpoint
 ALTER TABLE "classrooms" ADD COLUMN IF NOT EXISTS "code_expires_at" timestamp;
+--> statement-breakpoint
 ALTER TABLE "classrooms" ADD COLUMN IF NOT EXISTS "grade" integer;
+--> statement-breakpoint
 ALTER TABLE "classrooms" ADD COLUMN IF NOT EXISTS "created_by" text REFERENCES "users"("id");
+--> statement-breakpoint
 DO $$ BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint
     WHERE conname = 'classrooms_class_code_unique' AND conrelid = 'classrooms'::regclass
   ) THEN
     ALTER TABLE "classrooms" ADD CONSTRAINT "classrooms_class_code_unique" UNIQUE ("class_code");
+--> statement-breakpoint
   END IF;
+--> statement-breakpoint
 END $$;
+--> statement-breakpoint
 
 -- ─── 4. Articles: add Prisma-ported columns ───────────────────────────────────
 
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "type" text;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "genre" text;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "sub_genre" text;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "passage" text;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "translated_summary" jsonb;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "translated_passage" jsonb;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "image_description" text;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "ra_level" integer;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "rating" real;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "audio_url" text;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "audio_word_url" text;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "sentences" jsonb;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "words" jsonb;
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "author_id" text REFERENCES "users"("id");
+--> statement-breakpoint
 ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "is_public" boolean DEFAULT false NOT NULL;
+--> statement-breakpoint
 
 -- ─── 5. Lessons: content column type text → jsonb ────────────────────────────
 
 ALTER TABLE "lessons" ALTER COLUMN "content" TYPE jsonb USING
   CASE WHEN content IS NULL THEN NULL ELSE content::jsonb END;
+--> statement-breakpoint
 
 -- ─── 6. Assignments: make nullable cols + add description ────────────────────
 
 ALTER TABLE "assignments" ALTER COLUMN "title" DROP NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "assignments" ALTER COLUMN "teacher_id" DROP NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "assignments" ALTER COLUMN "type" DROP NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "assignments" ADD COLUMN IF NOT EXISTS "description" text;
+--> statement-breakpoint
 
 -- ─── 7. Student Assignments: add status + started_at ─────────────────────────
 
 ALTER TABLE "student_assignments" ADD COLUMN IF NOT EXISTS "status" text;
+--> statement-breakpoint
 ALTER TABLE "student_assignments" ADD COLUMN IF NOT EXISTS "started_at" timestamp;
+--> statement-breakpoint
 DO $$ BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint
     WHERE conname = 'student_assignments_unique' AND conrelid = 'student_assignments'::regclass
   ) THEN
     ALTER TABLE "student_assignments" ADD CONSTRAINT "student_assignments_unique" UNIQUE ("assignment_id", "student_id");
+--> statement-breakpoint
   END IF;
+--> statement-breakpoint
 END $$;
+--> statement-breakpoint
 
 -- ─── 8. User Activity: add Prisma fields + unique constraint ─────────────────
 
 ALTER TABLE "user_activity" ADD COLUMN IF NOT EXISTS "target_id" text;
+--> statement-breakpoint
 ALTER TABLE "user_activity" ADD COLUMN IF NOT EXISTS "timer" integer;
+--> statement-breakpoint
 ALTER TABLE "user_activity" ADD COLUMN IF NOT EXISTS "details" jsonb;
+--> statement-breakpoint
 ALTER TABLE "user_activity" ADD COLUMN IF NOT EXISTS "completed" boolean DEFAULT false;
+--> statement-breakpoint
 ALTER TABLE "user_activity" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 DO $$ BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint
     WHERE conname = 'user_activity_type_target_unique' AND conrelid = 'user_activity'::regclass
   ) THEN
     ALTER TABLE "user_activity" ADD CONSTRAINT "user_activity_type_target_unique" UNIQUE ("user_id", "activity_type", "target_id");
+--> statement-breakpoint
   END IF;
+--> statement-breakpoint
 END $$;
+--> statement-breakpoint
 
 -- ─── 9. XP Logs: rename amount→xp_earned, source→activity_type, source_id→activity_id ───
 
 ALTER TABLE "xp_logs" RENAME COLUMN "amount" TO "xp_earned";
+--> statement-breakpoint
 ALTER TABLE "xp_logs" RENAME COLUMN "source" TO "activity_type";
+--> statement-breakpoint
 ALTER TABLE "xp_logs" RENAME COLUMN "source_id" TO "activity_id";
+--> statement-breakpoint
 ALTER TABLE "xp_logs" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 
 -- ─── 10. Game Rankings: reshape (drop old cols, add new) ──────────────────────
 
 ALTER TABLE "game_rankings" DROP COLUMN IF EXISTS "score";
+--> statement-breakpoint
 ALTER TABLE "game_rankings" DROP COLUMN IF EXISTS "level";
+--> statement-breakpoint
 ALTER TABLE "game_rankings" DROP COLUMN IF EXISTS "completed_at";
+--> statement-breakpoint
 ALTER TABLE "game_rankings" ADD COLUMN IF NOT EXISTS "difficulty" text DEFAULT 'NORMAL' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "game_rankings" ADD COLUMN IF NOT EXISTS "total_xp" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "game_rankings" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 DO $$ BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint
     WHERE conname = 'game_rankings_user_game_difficulty_unique' AND conrelid = 'game_rankings'::regclass
   ) THEN
     ALTER TABLE "game_rankings" ADD CONSTRAINT "game_rankings_user_game_difficulty_unique" UNIQUE ("user_id", "game_type", "difficulty");
+--> statement-breakpoint
   END IF;
+--> statement-breakpoint
 END $$;
+--> statement-breakpoint
 
 -- ─── 11. AI Insights: reshape (drop old cols, add new Prisma fields) ─────────
 -- Old: id, user_id (NOT NULL), type, content, created_at
@@ -178,24 +238,43 @@ END $$;
 --      dismissed, dismissed_at, action_taken, valid_until, created_at, updated_at
 
 ALTER TABLE "ai_insights" DROP COLUMN IF EXISTS "type";
+--> statement-breakpoint
 ALTER TABLE "ai_insights" DROP COLUMN IF EXISTS "content";
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ALTER COLUMN "user_id" DROP NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "insight_type" text DEFAULT 'GENERAL' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "scope" text DEFAULT 'USER' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "priority" text DEFAULT 'MEDIUM' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "title" text DEFAULT '' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "description" text DEFAULT '' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "confidence" real DEFAULT 0.0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "data" jsonb;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "classroom_id" text;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "license_id" text;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "generated_by" text DEFAULT 'ai' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "model_version" text;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "dismissed" boolean DEFAULT false NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "dismissed_at" timestamp;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "action_taken" boolean DEFAULT false NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "valid_until" timestamp;
+--> statement-breakpoint
 ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 
 -- ─── 12. Learning Goals: reshape ─────────────────────────────────────────────
 -- Old: id, user_id, title, target_value, current_value, unit, completed, deadline, created_at, updated_at
@@ -204,143 +283,244 @@ ALTER TABLE "ai_insights" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAUL
 --      priority, is_recurring, recurring_period, metadata
 
 ALTER TABLE "learning_goals" RENAME COLUMN "deadline" TO "target_date";
+--> statement-breakpoint
 ALTER TABLE "learning_goals" DROP COLUMN IF EXISTS "completed";
+--> statement-breakpoint
 ALTER TABLE "learning_goals" ADD COLUMN IF NOT EXISTS "goal_type" text DEFAULT 'CUSTOM' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "learning_goals" ADD COLUMN IF NOT EXISTS "description" text;
+--> statement-breakpoint
 ALTER TABLE "learning_goals" ADD COLUMN IF NOT EXISTS "start_date" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "learning_goals" ADD COLUMN IF NOT EXISTS "completed_at" timestamp;
+--> statement-breakpoint
 ALTER TABLE "learning_goals" ADD COLUMN IF NOT EXISTS "status" text DEFAULT 'ACTIVE' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "learning_goals" ADD COLUMN IF NOT EXISTS "priority" text DEFAULT 'MEDIUM' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "learning_goals" ADD COLUMN IF NOT EXISTS "is_recurring" boolean DEFAULT false NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "learning_goals" ADD COLUMN IF NOT EXISTS "recurring_period" text;
+--> statement-breakpoint
 ALTER TABLE "learning_goals" ADD COLUMN IF NOT EXISTS "metadata" jsonb;
+--> statement-breakpoint
 
 -- ─── 13. Story Records: complete reshape ──────────────────────────────────────
 -- Old: id, user_id, article_id (NOT NULL FK), current_chapter, total_chapters, completed, started_at, completed_at
 -- New: id, user_id, story_id (FK stories), title, level, rated, score, status, created_at, updated_at
 
 ALTER TABLE "story_records" DROP CONSTRAINT IF EXISTS "story_records_article_id_articles_id_fk";
+--> statement-breakpoint
 ALTER TABLE "story_records" DROP COLUMN IF EXISTS "article_id";
+--> statement-breakpoint
 ALTER TABLE "story_records" DROP COLUMN IF EXISTS "current_chapter";
+--> statement-breakpoint
 ALTER TABLE "story_records" DROP COLUMN IF EXISTS "total_chapters";
+--> statement-breakpoint
 ALTER TABLE "story_records" DROP COLUMN IF EXISTS "completed";
+--> statement-breakpoint
 ALTER TABLE "story_records" DROP COLUMN IF EXISTS "started_at";
+--> statement-breakpoint
 ALTER TABLE "story_records" DROP COLUMN IF EXISTS "completed_at";
+--> statement-breakpoint
 -- story_id FK references stories (created above)
 ALTER TABLE "story_records" ADD COLUMN IF NOT EXISTS "story_id" uuid REFERENCES "stories"("id") ON DELETE CASCADE;
+--> statement-breakpoint
 ALTER TABLE "story_records" ADD COLUMN IF NOT EXISTS "title" text;
+--> statement-breakpoint
 ALTER TABLE "story_records" ADD COLUMN IF NOT EXISTS "level" integer;
+--> statement-breakpoint
 ALTER TABLE "story_records" ADD COLUMN IF NOT EXISTS "rated" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "story_records" ADD COLUMN IF NOT EXISTS "score" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "story_records" ADD COLUMN IF NOT EXISTS "status" text DEFAULT 'READ' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "story_records" ADD COLUMN IF NOT EXISTS "created_at" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "story_records" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 DO $$ BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint
     WHERE conname = 'story_records_user_story_unique' AND conrelid = 'story_records'::regclass
   ) THEN
     ALTER TABLE "story_records" ADD CONSTRAINT "story_records_user_story_unique" UNIQUE ("user_id", "story_id");
+--> statement-breakpoint
   END IF;
+--> statement-breakpoint
 END $$;
+--> statement-breakpoint
 
 -- ─── 14. Chapter Tracking → Chapter Trackings: rename + reshape ──────────────
 -- Old: chapter_tracking, id, story_record_id FK→story_records, chapter_number, completed, score, completed_at, created_at
 -- New: chapter_trackings, id, user_id FK→users, story_id FK→stories, chapter_number, title, level, rated, scores, status, created_at, updated_at
 
 ALTER TABLE "chapter_tracking" DROP CONSTRAINT IF EXISTS "chapter_tracking_story_record_id_story_records_id_fk";
+--> statement-breakpoint
 ALTER TABLE "chapter_tracking" RENAME TO "chapter_trackings";
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" DROP COLUMN IF EXISTS "story_record_id";
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" DROP COLUMN IF EXISTS "completed";
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" DROP COLUMN IF EXISTS "score";
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" DROP COLUMN IF EXISTS "completed_at";
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" ADD COLUMN IF NOT EXISTS "user_id" text REFERENCES "users"("id") ON DELETE CASCADE;
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" ADD COLUMN IF NOT EXISTS "story_id" uuid REFERENCES "stories"("id");
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" ADD COLUMN IF NOT EXISTS "title" text;
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" ADD COLUMN IF NOT EXISTS "level" integer;
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" ADD COLUMN IF NOT EXISTS "rated" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" ADD COLUMN IF NOT EXISTS "scores" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" ADD COLUMN IF NOT EXISTS "status" text DEFAULT 'READ' NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "chapter_trackings" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 DO $$ BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint
     WHERE conname = 'chapter_trackings_user_story_chapter_unique' AND conrelid = 'chapter_trackings'::regclass
   ) THEN
     ALTER TABLE "chapter_trackings" ADD CONSTRAINT "chapter_trackings_user_story_chapter_unique" UNIQUE ("user_id", "story_id", "chapter_number");
+--> statement-breakpoint
   END IF;
+--> statement-breakpoint
 END $$;
+--> statement-breakpoint
 
 -- ─── 15. User Word Records: complete reshape (text→jsonb word, add FSRS) ──────
 -- Old: id, user_id, word (text), correct_count, incorrect_count, last_reviewed_at, created_at, updated_at
 -- New: id, user_id, word (jsonb NOT NULL), article_id, story_id, chapter_number, FSRS fields
 
 ALTER TABLE "user_word_records" DROP COLUMN IF EXISTS "word";
+--> statement-breakpoint
 ALTER TABLE "user_word_records" DROP COLUMN IF EXISTS "correct_count";
+--> statement-breakpoint
 ALTER TABLE "user_word_records" DROP COLUMN IF EXISTS "incorrect_count";
+--> statement-breakpoint
 ALTER TABLE "user_word_records" DROP COLUMN IF EXISTS "last_reviewed_at";
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "word" jsonb NOT NULL DEFAULT '{}';
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "article_id" uuid;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "story_id" text;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "chapter_number" integer;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "save_to_flashcard" boolean DEFAULT true NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "difficulty" real DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "due" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "elapsed_days" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "lapses" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "reps" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "scheduled_days" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "stability" real DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_word_records" ADD COLUMN IF NOT EXISTS "state" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 -- word is stored as JSON in new schema; remove temporary default
 ALTER TABLE "user_word_records" ALTER COLUMN "word" DROP DEFAULT;
+--> statement-breakpoint
 
 -- ─── 16. User Sentence Records: complete reshape (add FSRS + audio fields) ────
 -- Old: id, user_id, sentence_id, correct, incorrect, last_reviewed_at, created_at, updated_at
 -- New: id, user_id, sentence (text), translation (jsonb), sn, timepoint, end_timepoint, audio_url, FSRS fields
 
 ALTER TABLE "user_sentence_records" DROP COLUMN IF EXISTS "sentence_id";
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" DROP COLUMN IF EXISTS "correct";
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" DROP COLUMN IF EXISTS "incorrect";
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" DROP COLUMN IF EXISTS "last_reviewed_at";
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "article_id" uuid;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "story_id" text;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "chapter_number" integer;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "sentence" text NOT NULL DEFAULT '';
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "translation" jsonb NOT NULL DEFAULT '{}';
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "sn" integer NOT NULL DEFAULT 0;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "timepoint" real NOT NULL DEFAULT 0;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "end_timepoint" real NOT NULL DEFAULT 0;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "audio_url" text;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "save_to_flashcard" boolean DEFAULT true NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "difficulty" real DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "due" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "elapsed_days" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "lapses" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "reps" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "scheduled_days" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "stability" real DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "state" integer DEFAULT 0 NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ADD COLUMN IF NOT EXISTS "update_score" boolean DEFAULT false;
+--> statement-breakpoint
 -- Remove temporary defaults (new rows must supply these)
 ALTER TABLE "user_sentence_records" ALTER COLUMN "sentence" DROP DEFAULT;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ALTER COLUMN "translation" DROP DEFAULT;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ALTER COLUMN "sn" DROP DEFAULT;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ALTER COLUMN "timepoint" DROP DEFAULT;
+--> statement-breakpoint
 ALTER TABLE "user_sentence_records" ALTER COLUMN "end_timepoint" DROP DEFAULT;
+--> statement-breakpoint
 
 -- ─── 17. MCQ + Short Answer: make article_id nullable, add Prisma fields ─────
 
 ALTER TABLE "multiple_choice_questions" ALTER COLUMN "article_id" DROP NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "multiple_choice_questions" ADD COLUMN IF NOT EXISTS "answer" text;
+--> statement-breakpoint
 ALTER TABLE "multiple_choice_questions" ADD COLUMN IF NOT EXISTS "textual_evidence" text;
+--> statement-breakpoint
 ALTER TABLE "multiple_choice_questions" ADD COLUMN IF NOT EXISTS "chapter_id" text;
+--> statement-breakpoint
 ALTER TABLE "multiple_choice_questions" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 
 ALTER TABLE "short_answer_questions" ALTER COLUMN "article_id" DROP NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "short_answer_questions" ADD COLUMN IF NOT EXISTS "answer" text;
+--> statement-breakpoint
 ALTER TABLE "short_answer_questions" ADD COLUMN IF NOT EXISTS "chapter_id" text;
+--> statement-breakpoint
 ALTER TABLE "short_answer_questions" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAULT now() NOT NULL;
+--> statement-breakpoint
 
 -- ─── 18. New child tables (depend on stories / articles / classrooms) ─────────
 
@@ -372,6 +552,7 @@ CREATE TABLE IF NOT EXISTS "chapters" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "chapters_story_chapter_unique" UNIQUE ("story_id", "chapter_number")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "story_timepoints" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -382,6 +563,7 @@ CREATE TABLE IF NOT EXISTS "story_timepoints" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "story_timepoints_story_chapter_unique" UNIQUE ("story_id", "chapter_number")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "story_assignments" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -396,6 +578,7 @@ CREATE TABLE IF NOT EXISTS "story_assignments" (
   "created_at" timestamp DEFAULT now() NOT NULL,
   "updated_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "lesson_records" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -419,6 +602,7 @@ CREATE TABLE IF NOT EXISTS "lesson_records" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "lesson_records_user_article_unique" UNIQUE ("user_id", "article_id")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "assignment_notifications" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -430,6 +614,7 @@ CREATE TABLE IF NOT EXISTS "assignment_notifications" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "assignment_notifications_unique" UNIQUE ("assignment_id", "student_id", "teacher_id")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "long_answer_questions" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -439,6 +624,7 @@ CREATE TABLE IF NOT EXISTS "long_answer_questions" (
   "created_at" timestamp DEFAULT now() NOT NULL,
   "updated_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 -- ─── 19. Analytics: new tables ────────────────────────────────────────────────
 
@@ -453,6 +639,7 @@ CREATE TABLE IF NOT EXISTS "ai_insight_cache" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "ai_insight_cache_cache_key_unique" UNIQUE ("cache_key")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "goal_milestones" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -464,6 +651,7 @@ CREATE TABLE IF NOT EXISTS "goal_milestones" (
   "achieved_at" timestamp,
   "created_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "goal_progress_logs" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -476,6 +664,7 @@ CREATE TABLE IF NOT EXISTS "goal_progress_logs" (
   "activity_type" text,
   "created_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 -- ─── 20. Science tables (PORT-AS-IS from science-advantage) ──────────────────
 
@@ -489,6 +678,7 @@ CREATE TABLE IF NOT EXISTS "gamification_profiles" (
   "created_at" timestamp DEFAULT now() NOT NULL,
   "updated_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "achievements" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -497,6 +687,7 @@ CREATE TABLE IF NOT EXISTS "achievements" (
   "unlocked_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "achievements_user_badge_unique" UNIQUE ("user_id", "badge_type")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_classes" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -509,6 +700,7 @@ CREATE TABLE IF NOT EXISTS "science_classes" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "science_classes_join_code_unique" UNIQUE ("join_code")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_standards" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -519,6 +711,7 @@ CREATE TABLE IF NOT EXISTS "science_standards" (
   "created_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "science_standards_framework_code_unique" UNIQUE ("framework", "code")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_standard_mastery" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -531,6 +724,7 @@ CREATE TABLE IF NOT EXISTS "science_standard_mastery" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "science_standard_mastery_student_standard_unique" UNIQUE ("student_id", "standard_id")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_lessons" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -548,6 +742,7 @@ CREATE TABLE IF NOT EXISTS "science_lessons" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "science_lessons_slug_unique" UNIQUE ("slug")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_curriculum_units" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -563,6 +758,7 @@ CREATE TABLE IF NOT EXISTS "science_curriculum_units" (
   CONSTRAINT "science_curriculum_units_slug_unique" UNIQUE ("slug"),
   CONSTRAINT "science_curriculum_units_class_framework_order_unique" UNIQUE ("class_id", "framework", "order")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_quiz_questions" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -579,6 +775,7 @@ CREATE TABLE IF NOT EXISTS "science_quiz_questions" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "science_quiz_questions_slug_unique" UNIQUE ("slug")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_attempts" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -593,6 +790,7 @@ CREATE TABLE IF NOT EXISTS "science_attempts" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "science_attempts_student_lesson_attempt_unique" UNIQUE ("student_id", "lesson_id", "attempt_number")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_question_responses" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -605,6 +803,7 @@ CREATE TABLE IF NOT EXISTS "science_question_responses" (
   "order" integer,
   "created_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_lesson_completions" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -623,6 +822,7 @@ CREATE TABLE IF NOT EXISTS "science_lesson_completions" (
   "updated_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "science_lesson_completions_student_lesson_unique" UNIQUE ("student_id", "lesson_id")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_mastery_runs" (
   "attempt_id" uuid PRIMARY KEY REFERENCES "science_attempts"("id") ON DELETE CASCADE,
@@ -633,6 +833,7 @@ CREATE TABLE IF NOT EXISTS "science_mastery_runs" (
   "created_at" timestamp DEFAULT now() NOT NULL,
   "updated_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_assignments" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -644,3 +845,4 @@ CREATE TABLE IF NOT EXISTS "science_assignments" (
   "created_at" timestamp DEFAULT now() NOT NULL,
   CONSTRAINT "science_assignments_class_lesson_unique" UNIQUE ("class_id", "lesson_id")
 );
+--> statement-breakpoint

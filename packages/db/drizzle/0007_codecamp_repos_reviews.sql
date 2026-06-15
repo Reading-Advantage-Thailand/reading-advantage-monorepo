@@ -2,6 +2,7 @@
 -- Created for codecamp-advantage track (Phase 1)
 
 CREATE TYPE "codecamp_review_status" AS ENUM ('pending', 'reviewed', 'needs_changes', 'approved');
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "codecamp_exercise_repos" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -11,6 +12,7 @@ CREATE TABLE IF NOT EXISTS "codecamp_exercise_repos" (
 	"order" integer NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "codecamp_pr_reviews" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -22,7 +24,11 @@ CREATE TABLE IF NOT EXISTS "codecamp_pr_reviews" (
 	"reviewed_at" timestamp,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 ALTER TABLE "codecamp_exercise_repos" ADD CONSTRAINT "codecamp_exercise_repos_module_id_codecamp_modules_id_fk" FOREIGN KEY ("module_id") REFERENCES "public"."codecamp_modules"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_pr_reviews" ADD CONSTRAINT "codecamp_pr_reviews_exercise_repo_id_codecamp_exercise_repos_id_fk" FOREIGN KEY ("exercise_repo_id") REFERENCES "public"."codecamp_exercise_repos"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_pr_reviews" ADD CONSTRAINT "codecamp_pr_reviews_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint

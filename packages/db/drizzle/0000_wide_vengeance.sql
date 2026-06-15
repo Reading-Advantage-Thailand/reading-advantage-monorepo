@@ -1,3 +1,4 @@
+-- Initial schema: role enum, accounts, sessions, users, schools, classrooms
 CREATE TYPE "public"."role" AS ENUM('STUDENT', 'USER', 'TEACHER', 'ADMIN');--> statement-breakpoint
 CREATE TABLE "accounts" (
 	"id" text PRIMARY KEY NOT NULL,

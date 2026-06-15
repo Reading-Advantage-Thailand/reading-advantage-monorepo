@@ -1,6 +1,8 @@
 -- Create codecamp enums
 CREATE TYPE "codecamp_lesson_type" AS ENUM ('theory', 'exercise', 'quiz');
+--> statement-breakpoint
 CREATE TYPE "codecamp_progress_status" AS ENUM ('not_started', 'in_progress', 'completed');
+--> statement-breakpoint
 
 -- Create codecamp modules table
 CREATE TABLE IF NOT EXISTS "codecamp_modules" (
@@ -14,6 +16,7 @@ CREATE TABLE IF NOT EXISTS "codecamp_modules" (
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "codecamp_modules_slug_unique" UNIQUE("slug")
 );
+--> statement-breakpoint
 
 -- Create codecamp lessons table
 CREATE TABLE IF NOT EXISTS "codecamp_lessons" (
@@ -27,6 +30,7 @@ CREATE TABLE IF NOT EXISTS "codecamp_lessons" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 -- Create codecamp exercises table
 CREATE TABLE IF NOT EXISTS "codecamp_exercises" (
@@ -41,6 +45,7 @@ CREATE TABLE IF NOT EXISTS "codecamp_exercises" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 -- Create codecamp quiz questions table
 CREATE TABLE IF NOT EXISTS "codecamp_quiz_questions" (
@@ -54,6 +59,7 @@ CREATE TABLE IF NOT EXISTS "codecamp_quiz_questions" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 -- Create codecamp user progress table
 CREATE TABLE IF NOT EXISTS "codecamp_user_progress" (
@@ -68,6 +74,7 @@ CREATE TABLE IF NOT EXISTS "codecamp_user_progress" (
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "codecamp_user_progress_user_lesson_unique" UNIQUE("user_id","lesson_id")
 );
+--> statement-breakpoint
 
 -- Create codecamp chat conversations table
 CREATE TABLE IF NOT EXISTS "codecamp_chat_conversations" (
@@ -79,6 +86,7 @@ CREATE TABLE IF NOT EXISTS "codecamp_chat_conversations" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 -- Create codecamp chat messages table
 CREATE TABLE IF NOT EXISTS "codecamp_chat_messages" (
@@ -88,15 +96,26 @@ CREATE TABLE IF NOT EXISTS "codecamp_chat_messages" (
 	"content" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
+--> statement-breakpoint
 
 -- Add foreign key constraints
 ALTER TABLE "codecamp_lessons" ADD CONSTRAINT "codecamp_lessons_module_id_codecamp_modules_id_fk" FOREIGN KEY ("module_id") REFERENCES "public"."codecamp_modules"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_exercises" ADD CONSTRAINT "codecamp_exercises_lesson_id_codecamp_lessons_id_fk" FOREIGN KEY ("lesson_id") REFERENCES "public"."codecamp_lessons"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_quiz_questions" ADD CONSTRAINT "codecamp_quiz_questions_lesson_id_codecamp_lessons_id_fk" FOREIGN KEY ("lesson_id") REFERENCES "public"."codecamp_lessons"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_user_progress" ADD CONSTRAINT "codecamp_user_progress_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_user_progress" ADD CONSTRAINT "codecamp_user_progress_module_id_codecamp_modules_id_fk" FOREIGN KEY ("module_id") REFERENCES "public"."codecamp_modules"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_user_progress" ADD CONSTRAINT "codecamp_user_progress_lesson_id_codecamp_lessons_id_fk" FOREIGN KEY ("lesson_id") REFERENCES "public"."codecamp_lessons"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_chat_conversations" ADD CONSTRAINT "codecamp_chat_conversations_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_chat_conversations" ADD CONSTRAINT "codecamp_chat_conversations_module_id_codecamp_modules_id_fk" FOREIGN KEY ("module_id") REFERENCES "public"."codecamp_modules"("id") ON DELETE set null ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_chat_conversations" ADD CONSTRAINT "codecamp_chat_conversations_lesson_id_codecamp_lessons_id_fk" FOREIGN KEY ("lesson_id") REFERENCES "public"."codecamp_lessons"("id") ON DELETE set null ON UPDATE no action;
+--> statement-breakpoint
 ALTER TABLE "codecamp_chat_messages" ADD CONSTRAINT "codecamp_chat_messages_conversation_id_codecamp_chat_conversations_id_fk" FOREIGN KEY ("conversation_id") REFERENCES "public"."codecamp_chat_conversations"("id") ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint

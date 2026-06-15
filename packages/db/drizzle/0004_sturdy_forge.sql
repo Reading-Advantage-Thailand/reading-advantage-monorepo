@@ -9,6 +9,7 @@ SET "username" = COALESCE(
   END
 )
 WHERE "username" IS NULL;
+--> statement-breakpoint
 
 UPDATE "users"
 SET "display_username" = COALESCE(
@@ -16,8 +17,11 @@ SET "display_username" = COALESCE(
   "username"
 )
 WHERE "display_username" IS NULL;
+--> statement-breakpoint
 
 -- Enforce NOT NULL constraints to match Drizzle schema contract
 -- (schema/users.ts requires username/displayUsername to be non-null)
 ALTER TABLE "users" ALTER COLUMN "username" SET NOT NULL;
+--> statement-breakpoint
 ALTER TABLE "users" ALTER COLUMN "display_username" SET NOT NULL;
+--> statement-breakpoint

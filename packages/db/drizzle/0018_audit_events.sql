@@ -20,11 +20,15 @@ CREATE TABLE IF NOT EXISTS "audit_events" (
   "metadata"      JSONB,
   "created_at"    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
+--> statement-breakpoint
 
 -- Indexes for the admin query surface (FR-7)
 CREATE INDEX IF NOT EXISTS "audit_events_actor_idx" ON "audit_events" ("actor_user_id", "created_at");
+--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "audit_events_action_idx" ON "audit_events" ("action", "created_at");
+--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "audit_events_target_idx" ON "audit_events" ("target_type", "target_id");
+--> statement-breakpoint
 
 -- Append-only enforcement: REVOKE UPDATE, DELETE.
 -- In local dev (postgres superuser), this is a no-op but documents intent.
@@ -36,8 +40,11 @@ BEGIN
   -- Only revoke if a non-superuser app role exists
   IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_user') THEN
     EXECUTE 'REVOKE UPDATE, DELETE ON audit_events FROM app_user';
+--> statement-breakpoint
   END IF;
+--> statement-breakpoint
 END $$;
+--> statement-breakpoint
 
 -- Down migration (run manually to revert):
 -- DROP TABLE IF EXISTS "audit_events";

@@ -14,21 +14,25 @@ CREATE TABLE IF NOT EXISTS "science_lesson_standards" (
   "standard_id" uuid NOT NULL REFERENCES "science_standards"("id") ON DELETE CASCADE,
   PRIMARY KEY ("lesson_id", "standard_id")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_unit_lessons" (
   "unit_id"   uuid NOT NULL REFERENCES "science_curriculum_units"("id") ON DELETE CASCADE,
   "lesson_id" uuid NOT NULL REFERENCES "science_lessons"("id")          ON DELETE CASCADE,
   PRIMARY KEY ("unit_id", "lesson_id")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_class_students" (
   "class_id"   uuid NOT NULL REFERENCES "science_classes"("id") ON DELETE CASCADE,
   "student_id" text NOT NULL REFERENCES "users"("id")           ON DELETE CASCADE,
   PRIMARY KEY ("class_id", "student_id")
 );
+--> statement-breakpoint
 
 CREATE TABLE IF NOT EXISTS "science_question_standards" (
   "question_id" uuid NOT NULL REFERENCES "science_quiz_questions"("id") ON DELETE CASCADE,
   "standard_id" uuid NOT NULL REFERENCES "science_standards"("id")      ON DELETE CASCADE,
   PRIMARY KEY ("question_id", "standard_id")
 );
+--> statement-breakpoint

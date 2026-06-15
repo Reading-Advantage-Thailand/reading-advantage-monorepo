@@ -11,3 +11,4 @@ export * from "./stories.js";
 export * from "./taxonomy.js";
 export * from "./science.js";
 export * from "./audit.js";
+export * from "./marketing.js";

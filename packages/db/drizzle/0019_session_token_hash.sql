@@ -1,3 +1,4 @@
+-- drizzle-orm 0.45-era header: regenerated migration
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 ALTER TABLE sessions ADD COLUMN token_hash TEXT;
 UPDATE sessions SET token_hash = encode(digest(token, 'sha256'), 'hex');
