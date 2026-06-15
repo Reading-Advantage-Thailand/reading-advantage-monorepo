@@ -50,11 +50,28 @@
 > - Attempt-2 (no commit, stash-only): same profile, but HEAD did
 >   not advance — supervisor rejected with "Expected a committed
 >   Red-phase test change, but HEAD did not advance."
-> - Attempt-3 (this commit): 21 tests, 19 fail / 2 pass — Red
+> - Attempt-3 (commit `6d4163b1`): 21 tests, 19 fail / 2 pass — Red
 >   contract strengthened with 4 risk-surface assertions tied to
 >   test-strategy §3.3-§3.6. Stash `preserve-pre-mid-dirty-upstream-work-drizzle045-phase1`
 >   from attempt-2 was popped to restore the 4 pre-existing dirty
 >   files (preserved, not committed by MID).
+> - Attempt-4 (this commit, docs-only): Re-ran the targeted Red
+>   command at HEAD `6d4163b1` to confirm the Red profile is
+>   stable. Result: **21 tests, 19 failed / 2 passed (462 ms)** —
+>   the 2 passes are the live-surface guardrail probes
+>   (filesystem checks for the 15 schema files and the 21
+>   migration SQL files), the 19 failures are the
+>   artifact-content assertions for the three missing Markdown
+>   deliverables (`phase1-breaking-changes.md`,
+>   `phase1-schema-map.md`, `phase1-prisma-7-rejection.md`). The
+>   targeted Red command is unchanged from attempt-3 and the
+>   failure mode is unchanged — the audit deliverable Markdown
+>   files still do not exist on disk, which is exactly what the
+>   Green phase (Implement) is supposed to author. This attempt
+>   only updates Measure docs to record the attempt-4
+>   verification; no test file changes were needed because the
+>   test file already committed at `6d4163b1` is the correct
+>   Red contract for this phase.
 >
 > **Dirty worktree classification at Red start:**
 >
