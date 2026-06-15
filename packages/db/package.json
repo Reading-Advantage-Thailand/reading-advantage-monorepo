@@ -35,12 +35,13 @@
   },
   "dependencies": {
     "drizzle-orm": "^0.45.0",
+    "drizzle-zod": "^0.7.0",
     "postgres": "^3.4.5"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
     "@types/node": "^20.0.0",
-    "drizzle-kit": "^0.31.0",
+    "drizzle-kit": "^0.31.7",
     "tsx": "^4.22.0",
     "typescript": "^5.8.0",
     "vitest": "^4.1.8"

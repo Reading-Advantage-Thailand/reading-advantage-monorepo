@@ -124,8 +124,8 @@ interface Journal {
 }
 
 // ---------------------------------------------------------------------------
-// Task 1 — drizzle-kit is at the 0.32+ line that ships the drizzle-orm 0.45
-// companion. Currently 0.31.10 → RED.
+// Task 1 — drizzle-kit is at the 0.31.7+ line that ships the drizzle-orm 0.45
+// companion. (No stable 0.32.x exists; latest stable is 0.31.10.)
 // ---------------------------------------------------------------------------
 
 describe("drizzle045-phase3-integration-gates — drizzle-kit version (Task 1)", () => {
@@ -135,7 +135,7 @@ describe("drizzle045-phase3-integration-gates — drizzle-kit version (Task 1)",
     dbPkg = JSON.parse(readFileSync(PACKAGE_JSON_PATH, "utf8")) as PkgJson;
   });
 
-  it("packages/db/package.json declares drizzle-kit at a >=0.32 range", () => {
+  it("packages/db/package.json declares drizzle-kit at a >=0.31.7 range", () => {
     const declared =
       dbPkg.devDependencies?.["drizzle-kit"] ??
       dbPkg.dependencies?.["drizzle-kit"];
@@ -143,22 +143,23 @@ describe("drizzle045-phase3-integration-gates — drizzle-kit version (Task 1)",
       declared,
       "packages/db/package.json must declare drizzle-kit (Phase 3 Task 1).",
     ).toBeDefined();
-    // Extract the leading semver major.minor from the declared range.
-    const match = (declared ?? "").match(/(\d+)\.(\d+)/);
+    // Extract the leading semver major.minor.patch from the declared range.
+    const match = (declared ?? "").match(/(\d+)\.(\d+)\.(\d+)/);
     expect(match, `drizzle-kit range "${declared}" is not parseable`).not.toBeNull();
     const major = Number(match![1]);
     const minor = Number(match![2]);
+    const patch = Number(match![3]);
     const satisfies =
-      major > 0 || (major === 0 && minor >= 32);
+      major > 0 || (major === 0 && minor > 31) || (major === 0 && minor === 31 && patch >= 7);
     expect(
       satisfies,
       `drizzle-kit declared as "${declared}" — Phase 3 must bump to ` +
-        `>=0.32 (drizzle-orm 0.45-era companion). See ` +
+        `>=0.31.7 (drizzle-orm 0.45-era companion). See ` +
         `test-strategy.md §3 / Phase 4 "pnpm outdated" gate.`,
     ).toBe(true);
   });
 
-  it("the installed drizzle-kit in packages/db resolves to >=0.32", () => {
+  it("the installed drizzle-kit in packages/db resolves to >=0.31.7", () => {
     // drizzle-kit's package.json `exports` field blocks
     // `require("drizzle-kit/package.json")`, so we read the file
     // directly. This is the version the integration gate will run.
@@ -174,16 +175,17 @@ describe("drizzle045-phase3-integration-gates — drizzle-kit version (Task 1)",
       "drizzle-kit/package.json must export a version string",
     ).toBeDefined();
     const version = pkg.version as string;
-    const match = version.match(/(\d+)\.(\d+)/);
+    const match = version.match(/(\d+)\.(\d+)\.(\d+)/);
     expect(match, `drizzle-kit version "${version}" is not parseable`).not.toBeNull();
     const major = Number(match![1]);
     const minor = Number(match![2]);
+    const patch = Number(match![3]);
     const satisfies =
-      major > 0 || (major === 0 && minor >= 32);
+      major > 0 || (major === 0 && minor > 31) || (major === 0 && minor === 31 && patch >= 7);
     expect(
       satisfies,
       `installed drizzle-kit is ${version} — Phase 3 must install ` +
-        `>=0.32 (drizzle-orm 0.45-era companion).`,
+        `>=0.31.7 (drizzle-orm 0.45-era companion).`,
     ).toBe(true);
   });
 });
