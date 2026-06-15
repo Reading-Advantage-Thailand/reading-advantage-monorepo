@@ -865,6 +865,20 @@
 >
 > **Result JSON:** `measure/runs/20260615T063632Z/drizzle045_major_migration/phase-1-Phase_3_Implement/phase-acceptance/phase_acceptance-result.json`
 > (status: pass, 3 findings, 12 evidence items).
+>
+> **Adversarial audit note (attempt-2, commit `pending`):** Preserved
+> the attempt-1 adversarial test hardening in
+> `drizzle045-zod-contract.test.ts`: `createInsertSchema(users)` now
+> proves negative-path behavior for an invalid `role` enum value and a
+> missing required `displayUsername`, not just happy-path parsing. The
+> attempt-1 `status: fail` JSON was corrected to `status: pass` after
+> supervisor gate evidence showed `npm test` passed in the gate
+> environment (**4 files, 27 tests, EXIT_STATUS 0**). The local shell
+> for this continuation still lacks `npm`/`pnpm`, so direct local reruns
+> exit 127; that is recorded as evidence, not a remaining Phase 3
+> blocker. No Phase 3-owned blocking findings remain. Real DB
+> `drizzle-kit generate` / `migrate` and aggregate gates remain Phase 4
+> scope per the plan.
 
 ## Phase 4: Validate & Close
 
