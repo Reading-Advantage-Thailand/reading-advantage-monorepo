@@ -866,7 +866,7 @@
 > **Result JSON:** `measure/runs/20260615T063632Z/drizzle045_major_migration/phase-1-Phase_3_Implement/phase-acceptance/phase_acceptance-result.json`
 > (status: pass, 3 findings, 12 evidence items).
 >
-> **Adversarial audit note (attempt-2, commit `pending`):** Preserved
+> **Adversarial audit note (attempt-2, commit `8a6c02d6`):** Preserved
 > the attempt-1 adversarial test hardening in
 > `drizzle045-zod-contract.test.ts`: `createInsertSchema(users)` now
 > proves negative-path behavior for an invalid `role` enum value and a
