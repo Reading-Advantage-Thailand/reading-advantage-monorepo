@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
 
     const systemPrompt = buildSystemPrompt(locale ?? "th") + contextAddition;
 
-    const result = streamText({
+    const result = await streamText({
       model: openrouter("xiaomi/mimo-v2.5"),
       system: systemPrompt,
       prompt: message,

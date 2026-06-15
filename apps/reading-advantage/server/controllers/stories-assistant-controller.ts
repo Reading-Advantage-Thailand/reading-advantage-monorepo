@@ -273,7 +273,7 @@ export async function chatBot(req: ExtendedNextRequest) {
   try {
     const param = await req.json();
     const validatedData = createChatbotSchema.parse(param);
-    const { textStream } = streamText({
+    const { textStream } = await streamText({
       model: openai(openaiModel),
       messages: [
         {

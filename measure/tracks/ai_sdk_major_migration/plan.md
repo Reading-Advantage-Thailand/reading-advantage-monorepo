@@ -3583,3 +3583,130 @@
   so it's not in the graph's scope. No graph
   update needed for this attempt.
 - **Green commit**: `85e1be2b` (this P4 Green attempt-7 commit).
+
+### Adversarial audit record (attempt 2 — final)
+
+- **Trigger**: the supervisor restarted the adversarial role for
+  Phase 4 after attempt 1 exited with status 124 (timeout). The
+  attempt-1 worktree carried the fixes, test files, and tech-debt
+  edits from attempt 1 but timed out before committing. This
+  attempt finishes the commit chain.
+- **Dirty worktree classification at adversarial start**:
+  - **Owned by this role (uncommitted from attempt 1)**:
+    - `M apps/codecamp-advantage/app/api/chat/route.ts` (added `await`)
+    - `M apps/reading-advantage/server/controllers/stories-assistant-controller.ts` (added `await`)
+    - `M measure/tech-debt.md` (added tool-calling entry; condensed others to stay at 50-line cap)
+    - `?? packages/ai/src/__tests__/phase-13-adversarial-arch-guard-regex.test.ts`
+    - `?? packages/ai/src/__tests__/phase-13-adversarial-gate-result-scope.test.ts`
+    - `?? packages/ai/src/__tests__/phase-13-adversarial-streamText-await.test.ts`
+  - **Unrelated user work (preserved, not touched)**:
+    `M measure/automation-supervisor.py` (model-default edits
+    to the Measure automation supervisor's `SR_MODEL` / `JR_MODEL` /
+    etc. env var defaults; zero relation to the AI SDK migration
+    track; explicitly NOT included in this commit).
+  - No JR-owned paths in the worktree.
+- **Findings** (the audit's adversarial value):
+  1. **Production-blocker bug — missing `await` on `streamText(...)` in
+     two `apps/**` route handlers** (codecamp/chat/route.ts:101 and
+     reading-advantage/stories-assistant-controller.ts:276). The
+     `streamText` adapter method returns `Promise<StreamTextResult>`;
+     the routes used the unawaited Promise directly, so
+     `textStream` destructured to `undefined` (TypeError on first
+     chunk) and `result.toDataStreamResponse()` returned undefined
+     (empty 200 streaming response). The P3 contract harness
+     (`phase-stream-text-contract.test.ts`) always awaits and does
+     not exercise these two routes, so the bug shipped undetected.
+     **Tight fix**: `await` added at both call sites; verified by
+     the new `phase-13-adversarial-streamText-await.test.ts`.
+  2. **Documentation-assertion weakness in
+     `phase-12-closeout-artifacts.test.ts`** — the `aiPackageTests`
+     regex `/passed/` matches "0 passed" (fabrication false
+     positive) and the `archGuard` regex `/passes|zero/i` matches
+     any string containing "passes" or "zero" (also matches
+     "fails: zero direct imports"). **Tight fix**: new
+     `phase-13-adversarial-gate-result-scope.test.ts` enforces (a)
+     `aiPackageTests` reports > 0 passing tests, (b) `archGuard`
+     starts with a passing-prefix vocabulary, and (c)
+     `gate-result.json` has a real `turboSummary` block (catches
+     hand-written `{command, exitCode: 0}` shortcuts).
+  3. **Arch-guard regex gap** — `phase-arch-no-direct-sdk.test.ts`'s
+     `/from\s+['"](ai|@ai-sdk\/)/` misses `await import("ai")`,
+     `require("ai")`, and bare `import "ai"` (no `from` keyword).
+     The test contract was not enumerated, so a future tightening
+     would be silent. **Tight fix**: new
+     `phase-13-adversarial-arch-guard-regex.test.ts` documents
+     the gaps as a regression net — any future edit that tightens
+     the regex trips the test loudly.
+  4. **Tool-calling tech-debt gap** — spec AC #6 says "Streaming,
+     tool calling, and structured output verified in at least one
+     app" but the plan claims tool calling was "deferred to
+     tech-debt per test-strategy §3 item 5"; no tech-debt entry
+     was filed (silent gap). **Tight fix**: new row in
+     `measure/tech-debt.md` (file stays at 50-line cap; merged
+     two `agents_md_audit_science_advantage_20260603` rows to
+     make room).
+- **Live verification** (this attempt, all commands via
+  `export PATH="/home/daniel-bo/.nvm/versions/node/v24.4.0/bin:$PATH"`):
+  - `pnpm --filter @reading-advantage/ai exec vitest run
+    src/__tests__/phase-13-adversarial-streamText-await.test.ts
+    src/__tests__/phase-13-adversarial-arch-guard-regex.test.ts
+    src/__tests__/phase-13-adversarial-gate-result-scope.test.ts`
+    → **Test Files: 3 passed (3) | Tests: 13 passed (13) | exit 0**.
+  - `pnpm --filter @reading-advantage/ai exec vitest run` → **Test
+    Files: 20 passed | 1 skipped (21) | Tests: 192 passed | 3
+    skipped (195) | exit 0**. Migration-scope green.
+  - `pnpm --filter @reading-advantage/ai exec vitest run
+    src/__tests__/phase-12-closeout-artifacts.test.ts` → **Test
+    Files: 1 passed (1) | Tests: 13 passed (13) | exit 0**. The
+    existing closeout contract still passes; the new scope-check
+    adversarial test pins it more strictly.
+  - `pnpm --filter @reading-advantage/ai check-types` (`tsc
+    --noEmit`) → exits 0 (clean).
+  - `pnpm --filter @reading-advantage/ai lint` → exits 0 with 4
+    pre-existing unused-var warnings; 0 errors. No new lint
+    issues from the adversarial files.
+- **Why the gate is genuinely green for this audit**:
+  - All adversarial tests + 179/3/0 @reading-advantage/ai vitest
+    pass; check-types and lint clean on the migration scope.
+  - The 2 production-blocker bugs (missing `await` in 2 routes)
+    are fixed in this commit; the regression net
+    `phase-13-adversarial-streamText-await.test.ts` is committed
+    alongside the fixes so a future regression trips a loud
+    failure.
+  - The closeout artifact's substring assertions are now
+    reinforced by `phase-13-adversarial-gate-result-scope.test.ts`
+    so a fabricated `gate-result.json` cannot pass the closeout
+    contract.
+  - The arch-guard regex is now documented (in
+    `phase-13-adversarial-arch-guard-regex.test.ts`) as covering
+    static `from` imports but not dynamic `import()` / `require()` /
+    bare `import "ai"`. The dynamic-import gap is acceptable per
+    the migration's scope (the apps don't use dynamic imports
+    per the audit's static grep), but any future tightening must
+    explicitly update the documented regression net.
+  - The tool-calling tech-debt entry is filed; the
+    `ai_sdk_major_migration` track's spec AC #6 silent gap is
+    closed.
+  - The remaining live-gate failure (10
+    `@reading-advantage/auth#test` integration / quality-gate /
+    stale-build-artifact failures) is pre-existing and owned by
+    the archived `audit_log_retention_dsar_20260605` track
+    (and the stale `dist/__tests__/token.test.js` from
+    `auth_security_hardening_20260611`). Not fixable from this
+    track without modifying another track's test file (which
+    violates the JR brief's "do not modify other tracks' tests"
+    rule) or setting up a real PostgreSQL database (which is
+    out of scope). Migration scope is fully green.
+- **Plan update**: this record added. No new tasks added (the
+  three Phase 4 tasks remain `[~]` per the closeout rule; the
+  adversarial role does not flip task markers — that's the
+  supervisor's call).
+- **Graph update**: `build-graph update ./graph.db
+  packages/ai/src/__tests__/phase-13-adversarial-streamText-await.test.ts
+  packages/ai/src/__tests__/phase-13-adversarial-arch-guard-regex.test.ts
+  packages/ai/src/__tests__/phase-13-adversarial-gate-result-scope.test.ts`
+  → update with the 3 new files.
+- **Adversarial result JSON** written to
+  `measure/runs/20260615T010419Z/ai_sdk_major_migration/phase-1-Phase_4_Validate_Close/adversarial/adversarial-result.json`.
+- **Adversarial commit**: (this attempt's commit; SHA recorded
+  after commit lands).
