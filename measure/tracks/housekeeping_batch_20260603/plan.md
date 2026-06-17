@@ -225,10 +225,35 @@ The Red phase was previously recorded in commit `08ebf5c1` (`test(housekeeping):
 
 ## Phase 4: Add `*.log` to `.gitignore`
 
-- [ ] Task: Open `apps/science-advantage/.gitignore`.
-- [ ] Task: Add `*.log` to the patterns (or a more specific pattern if other `*.log` files are intentional).
-- [ ] Task: `git clean -f apps/science-advantage/{gemini_design_update,visual_refresh_track}.log`.
-- [ ] Task: Verify: `ls apps/science-advantage/*.log` returns no files (or only intentional ones).
+- [~] Task: Open `apps/science-advantage/.gitignore`.
+- [~] Task: Add `*.log` to the patterns (or a more specific pattern if other `*.log` files are intentional).
+- [~] Task: `git clean -f apps/science-advantage/{gemini_design_update,visual_refresh_track}.log`.
+- [~] Task: Verify: `ls apps/science-advantage/*.log` returns no files (or only intentional ones).
+
+### Red Phase Recording
+
+> **Red phase (MID) recorded 2026-06-18.** Pre-implementation state captured. Tests fail as expected for the contract violation (app-local `.gitignore` has no `*.log` rule).
+
+- **Targeted Red command**:
+  `cd apps/science-advantage && ./node_modules/.bin/vitest run --config vitest.unit.config.ts lib/__tests__/housekeeping-phase4-gitignore-log.test.ts`
+- **Red fail count**: 2 failed / 2 passed (4 total assertions). The 2 failures are the targeted contract assertions; the 2 passes are the regression-guards (§2.1 no tracked `*.log` and §3.1 probe path hermeticity) which already hold at HEAD and protect against the Implementer accidentally introducing a regression.
+- **Test file**: `apps/science-advantage/lib/__tests__/housekeeping-phase4-gitignore-log.test.ts` (147 lines, 4 assertions in 3 describe blocks)
+- **Red failures (assertions, not stale state):**
+  - **§1.1**: `apps/science-advantage/.gitignore` does not contain any `*.log` (or more specific) rule. The current `apps/science-advantage/.gitignore` has 41 non-comment lines, none matching `/\*\.log(?:$|\*)/`.
+  - **§1.2**: `git check-ignore --no-index -v apps/science-advantage/.housekeeping-phase4-probe.log` returns the source as the monorepo-root `.gitignore` (line 32: `*.log`), NOT `apps/science-advantage/.gitignore`. The contract is that the app-local gitignore must own the rule (per-app isolation); the root fallback is incidental and not authoritative.
+- **Red passes (regression guards — already satisfied at HEAD):**
+  - **§2.1**: `git ls-files apps/science-advantage/*.log` returns 0 files. The two on-disk `.log` files (`gemini_design_update.log`, `visual_refresh_track.log`) are untracked, not committed. Pinning this prevents the Implementer from accidentally committing them.
+  - **§3.1**: Probe path is hermetic (no probe file is created on disk by the test).
+- **Test framework**: vitest 4.1.8 (DB-free via `vitest.unit.config.ts`; `pnpm test` is DB-coupled and out of scope for the contract). The test uses `fs.readFile`, `git ls-files`, and `git check-ignore --no-index` for ground truth.
+- **Context discovered during Red**:
+  - The monorepo-root `.gitignore` (`.gitignore:32`) already declares `*.log`. So at HEAD, `git check-ignore` for `apps/science-advantage/foo.log` exits 0 — but the source is `.gitignore:32` (root), not the app-local file. The Phase 4 contract requires the rule to live in the app-local gitignore (each app owns its ignore rules). The §1.2 test pins this exactly.
+  - Two untracked `.log` files exist on disk under `apps/science-advantage/`:
+    - `apps/science-advantage/gemini_design_update.log` (3885 bytes, dated 2026-04-25)
+    - `apps/science-advantage/visual_refresh_track.log` (2258 bytes, dated 2026-04-25)
+  - Once the `*.log` rule is added to the app-local gitignore, both files will be ignored and the Implementer may `git clean -f` them. They are not in the index, so cleaning them is safe.
+- **Dirty worktree at MID start**: 3 entries — `M measure/automation-supervisor.py` (orchestrator prompt edit, unrelated to Phase 4), `?? apps/marketing/next-env.d.ts` (auto-generated, ignorable), `?? measure/tracks/agents_md_audit_science_advantage_20260603/` (different track, unrelated). All 3 are unrelated user work and are preserved; the test commit will only touch the new test file and the plan.md Red-phase recording.
+- **Graph state**: `build-graph stats ./graph.db` → 2,243 nodes / 3,184 edges / 313 files (unchanged since Phase 1 closeout). No symbol/schema/route/component is touched by Phase 4 — pure doc/file artifact work — so no graph update is required.
+- **Handoff**: Implementer should: (1) read the test file header for the contract; (2) append `*.log` (or a more specific pattern) to `apps/science-advantage/.gitignore` so the §1.1 and §1.2 assertions pass; (3) `git clean -f apps/science-advantage/{gemini_design_update,visual_refresh_track}.log` to remove the two untracked log files; (4) re-run the targeted Red command and confirm 4/4 pass; (5) commit with `chore(science): add *.log to .gitignore (F-1202)`.
 
 ## Phase 5: Backfill 5 Orphan In-Code TODOs
 
