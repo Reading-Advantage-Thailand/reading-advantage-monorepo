@@ -1545,6 +1545,19 @@
 > - `package-esm-smoke.test.ts` (1 test) — `spawn node ENOENT` because
 >   the sandbox `node` binary is not on PATH for the test's spawned
 >   subprocess.
+> - `apps/marketing` build — pre-existing `vinext` failure
+>   (`parseSync` is not exported from `vite`). This is unrelated to the
+>   Drizzle 0.45 upgrade and was present in the supervisor's aggregate
+>   gate before this track's changes.
+>
+> **Reviewer A follow-up (attempt-2):** Supervisor gate flagged lint
+> errors in `drizzle045-phase2-contracts-adversarial.test.ts` (2
+> `no-useless-escape` errors) and an unused `text` variable in
+> `drizzle045-phase1-contracts-adversarial.test.ts`. Fixed in commit
+> `9b802a55`. Re-ran `@reading-advantage/db` lint → **0 errors, 7
+> warnings** (all pre-existing warnings in unrelated files). Re-ran
+> the targeted verification suite → **128 tests passed, 0 failed**.
+> `check-types` on `@reading-advantage/db` → **0 errors**.
 >
 > **Worktree note:** All other modified/untracked files
 > (`measure/lessons-learned.md`, `measure/tech-debt.md`,
