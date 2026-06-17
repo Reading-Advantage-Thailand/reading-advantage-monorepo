@@ -225,10 +225,10 @@ The Red phase was previously recorded in commit `08ebf5c1` (`test(housekeeping):
 
 ## Phase 4: Add `*.log` to `.gitignore`
 
-- [~] Task: Open `apps/science-advantage/.gitignore`.
-- [~] Task: Add `*.log` to the patterns (or a more specific pattern if other `*.log` files are intentional).
-- [~] Task: `git clean -f apps/science-advantage/{gemini_design_update,visual_refresh_track}.log`.
-- [~] Task: Verify: `ls apps/science-advantage/*.log` returns no files (or only intentional ones).
+- [x] (314cd0e7) Task: Open `apps/science-advantage/.gitignore`.
+- [x] (314cd0e7) Task: Add `*.log` to the patterns (or a more specific pattern if other `*.log` files are intentional).
+- [x] (314cd0e7) Task: `git clean -f apps/science-advantage/{gemini_design_update,visual_refresh_track}.log`.
+- [x] (314cd0e7) Task: Verify: `ls apps/science-advantage/*.log` returns no files (or only intentional ones).
 
 ### Red Phase Recording
 
@@ -254,6 +254,29 @@ The Red phase was previously recorded in commit `08ebf5c1` (`test(housekeeping):
 - **Dirty worktree at MID start**: 3 entries — `M measure/automation-supervisor.py` (orchestrator prompt edit, unrelated to Phase 4), `?? apps/marketing/next-env.d.ts` (auto-generated, ignorable), `?? measure/tracks/agents_md_audit_science_advantage_20260603/` (different track, unrelated). All 3 are unrelated user work and are preserved; the test commit will only touch the new test file and the plan.md Red-phase recording.
 - **Graph state**: `build-graph stats ./graph.db` → 2,243 nodes / 3,184 edges / 313 files (unchanged since Phase 1 closeout). No symbol/schema/route/component is touched by Phase 4 — pure doc/file artifact work — so no graph update is required.
 - **Handoff**: Implementer should: (1) read the test file header for the contract; (2) append `*.log` (or a more specific pattern) to `apps/science-advantage/.gitignore` so the §1.1 and §1.2 assertions pass; (3) `git clean -f apps/science-advantage/{gemini_design_update,visual_refresh_track}.log` to remove the two untracked log files; (4) re-run the targeted Red command and confirm 4/4 pass; (5) commit with `chore(science): add *.log to .gitignore (F-1202)`.
+
+### Green Phase Notes (Jr 2026-06-18)
+
+**Commit:** `314cd0e7` (`chore(science): add *.log to .gitignore (F-1202)`)
+
+**Red→Green contract verification (Phase 4 / F-1202):**
+- Added `*.log` at line 7 of `apps/science-advantage/.gitignore`, grouped with existing log patterns (`npm-debug.log*`, `yarn-debug.log*`, `yarn-error.log*`, `pnpm-debug.log*`).
+- §1.1: `rg -n '\*\.log' apps/science-advantage/.gitignore` → line 7: `*.log`. Green.
+- §1.2: `git check-ignore -v --no-index apps/science-advantage/.housekeeping-phase4-probe.log` → `apps/science-advantage/.gitignore:7:*.log`. Rule sourced from app-local file, not root. Green.
+- §2.1: `git ls-files apps/science-advantage/*.log` → no output (0 tracked log files). Green.
+- §3.1: Probe path is hermetic (no file created). Green.
+- Untracked `.log` files (`gemini_design_update.log`, `visual_refresh_track.log`) removed with `rm`.
+- All 4/4 assertions pass in the targeted vitest run.
+
+**Targeted test command (Green):**
+```
+/opt/codex-desktop/resources/node-runtime/bin/node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/__tests__/housekeeping-phase4-gitignore-log.test.ts
+```
+Result: 1 test file passed, 4 tests passed.
+
+**Live gate:** Phase 11 final acceptance owns the full `pnpm turbo run test --filter=science-advantage` gate. Contract-level Green evidence (all 4 targeted assertions pass) is the Phase 4 deliverable.
+
+**Build-graph:** No graph update needed — Phase 4 is pure file artifact work (no symbol/schema/route/component changes).
 
 ## Phase 5: Backfill 5 Orphan In-Code TODOs
 
