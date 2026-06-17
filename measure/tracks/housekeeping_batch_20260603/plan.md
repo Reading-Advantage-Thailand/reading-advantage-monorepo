@@ -11,7 +11,7 @@
 
 | FR | Severity | Title | Phase | Status |
 |----|----------|-------|-------|--------|
-| F-205 | Medium | Relocate legacy `prisma/` seed-data | Phase 1 | [ ] |
+| F-205 | Medium | Relocate legacy `prisma/` seed-data | Phase 1 | [~] |
 | F-705 | Low | Verify/delete 4 auth `route.ts` stubs | Phase 2 | [ ] |
 | F-1102 | Low | Update `AGENTS.md` (remove Prisma/npm refs) | Phase 3 | [ ] |
 | F-1202 | Low | Add `*.log` to `.gitignore` | Phase 4 | [ ] |
@@ -34,15 +34,27 @@
 
 ## Phase 1: Relocate Legacy `prisma/` Seed-Data
 
-- [ ] Task: Create `apps/science-advantage/scripts/seed-data/{grade-4/{lessons,questions},curriculum-units,lessons,questions,standards}/` directories.
-- [ ] Task: `git mv` the JSON files from `prisma/` to `scripts/seed-data/` (preserves history).
-- [ ] Task: Move `prisma/seed-data/README.md` → `scripts/seed-data/README.md`.
-- [ ] Task: Move `prisma/seed-functions/update-seed-files.ts` → `scripts/seed/update-seed-files.ts`.
-- [ ] Task: `grep -rl "prisma/data\|prisma/seed-data\|prisma/seed-functions" apps/science-advantage/scripts/` — enumerate import paths to update.
-- [ ] Task: Update import paths in the 7 seed scripts.
-- [ ] Task: Run `pnpm db:seed` end-to-end; confirm the resulting data shape is unchanged.
-- [ ] Task: `rm -rf apps/science-advantage/prisma/`.
-- [ ] Task: Add a note to `apps/science-advantage/AGENTS.md`: "The `prisma/` directory must not exist at the app root. If you see it, it is a regression."
+> **Red phase (MID) completed 2026-06-17.** Pre-move hash snapshot captured. Red state confirmed.
+
+### Red Phase Recording
+
+- **Red command**: `test -d apps/science-advantage/scripts/seed-data` (exit 1 — target absent, relocation not done)
+- **Red fail count**: 1 targeted check failed (target directory `scripts/seed-data/` does not exist)
+- **Pre-snapshot fixture**: `measure/tracks/housekeeping_batch_20260603/pre-snapshot.sha` (53 JSON files, SHA-256)
+- **Seed scripts referencing `prisma/` paths**: 4 confirmed (`seed-lessons.ts`, `seed-questions.ts`, `seed-standards.ts`, `seed-curriculum-units.ts`) + `validate-content.ts` (`prisma/data/content`) + `prisma/seed-functions/update-seed-files.ts` = 6 total paths to update
+- **DB seed baseline**: Not runnable from host (podman networking: ECONNREFUSED 127.0.0.1:5432). Container Postgres is reachable via `docker exec`. Implementer should run from within the dev environment.
+- **Graph state**: `build-graph stats` shows 2,199 nodes / 3,125 edges / 303 files. Zero code-level imports from `prisma/` directory — path references are all `__dirname`-relative string paths. No graph update needed until files are moved.
+- **Handoff**: Implementer should: (1) git mv files → (2) update 6 path references → (3) run `pnpm seed` → (4) run `find scripts/seed-data -name '*.json' -exec sha256sum {} \; | sort | diff /tmp/pre.sha -` to verify hash identity → (5) rm -rf prisma/
+
+- [~] Task: Create `apps/science-advantage/scripts/seed-data/{grade-4/{lessons,questions},curriculum-units,lessons,questions,standards}/` directories.
+- [~] Task: `git mv` the JSON files from `prisma/` to `scripts/seed-data/` (preserves history).
+- [~] Task: Move `prisma/seed-data/README.md` → `scripts/seed-data/README.md`.
+- [~] Task: Move `prisma/seed-functions/update-seed-files.ts` → `scripts/seed/update-seed-files.ts`.
+- [~] Task: `grep -rl "prisma/data\|prisma/seed-data\|prisma/seed-functions" apps/science-advantage/scripts/` — enumerate import paths to update.
+- [~] Task: Update import paths in the 6 seed scripts.
+- [~] Task: Run `pnpm seed` end-to-end; confirm the resulting data shape is unchanged.
+- [~] Task: `rm -rf apps/science-advantage/prisma/`.
+- [~] Task: Add a note to `apps/science-advantage/AGENTS.md`: "The `prisma/` directory must not exist at the app root. If you see it, it is a regression."
 
 ## Phase 2: Verify or Delete 4 Auth `route.ts` Stubs
 
