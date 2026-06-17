@@ -272,8 +272,8 @@ describe("drizzle045-phase3-integration-gates — drizzle-kit migrate command pa
 });
 
 // ---------------------------------------------------------------------------
-// Task 5 — the journal must expose all 21 entries in idx order; this is
-// the precondition for `drizzle-kit migrate` to apply all 21 migrations
+// Task 5 — the journal must expose all 22 entries in idx order; this is
+// the precondition for `drizzle-kit migrate` to apply all 22 migrations
 // against a fresh DB. GREEN today (regression guard).
 // ---------------------------------------------------------------------------
 
@@ -284,16 +284,16 @@ describe("drizzle045-phase3-integration-gates — Journal entries for full migra
     journal = JSON.parse(readFileSync(JOURNAL_PATH, "utf8")) as Journal;
   });
 
-  it("_journal.json exposes exactly 21 entries", () => {
+  it("_journal.json exposes exactly 22 entries", () => {
     expect(
       journal.entries.length,
-      "_journal.json must expose exactly 21 entries (one per committed migration).",
-    ).toBe(21);
+      "_journal.json must expose exactly 22 entries (one per committed migration).",
+    ).toBe(22);
   });
 
-  it("journal entries are contiguous in idx from 0 to 20", () => {
+  it("journal entries are contiguous in idx from 0 to 21", () => {
     const idxs = journal.entries.map((e) => e.idx);
-    for (let i = 0; i < 21; i++) {
+    for (let i = 0; i < 22; i++) {
       expect(
         idxs[i],
         `journal entry at position ${i} must have idx=${i}.`,
@@ -324,6 +324,7 @@ describe("drizzle045-phase3-integration-gates — Journal entries for full migra
       "0018_audit_events",
       "0019_session_token_hash",
       "0020_sessions_indexes",
+      "0021_marketing_tables",
     ];
     for (let i = 0; i < expectedTags.length; i++) {
       const sqlPath = join(

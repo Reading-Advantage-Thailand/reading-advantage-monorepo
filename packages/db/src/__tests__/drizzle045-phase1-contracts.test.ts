@@ -77,8 +77,8 @@ const EXPECTED_SCHEMA_FILES = [
   "users.ts",
 ] as const;
 
-// Migration SQL surface: 0000 through 0020 inclusive (21 files).
-const EXPECTED_MIGRATION_INDICES = Array.from({ length: 21 }, (_, i) =>
+// Migration SQL surface: 0000 through 0021 inclusive (22 files).
+const EXPECTED_MIGRATION_INDICES = Array.from({ length: 22 }, (_, i) =>
   i.toString().padStart(4, "0"),
 );
 
@@ -296,7 +296,7 @@ describe("Phase 1 — live-surface guardrail (filesystem probe)", () => {
     }
   });
 
-  it("packages/db/drizzle/ contains the 21 expected migration SQL files", () => {
+  it("packages/db/drizzle/ contains the 22 expected migration SQL files", () => {
     const onDisk = readdirSync(DRIZZLE_DIR);
     for (const idx of EXPECTED_MIGRATION_INDICES) {
       const prefix = `${idx}_`;

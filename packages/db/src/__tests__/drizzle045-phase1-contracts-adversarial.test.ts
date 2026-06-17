@@ -78,7 +78,7 @@ const EXPECTED_SCHEMA_FILES = [
   "users.ts",
 ] as const;
 
-const EXPECTED_MIGRATION_INDICES = Array.from({ length: 21 }, (_, i) =>
+const EXPECTED_MIGRATION_INDICES = Array.from({ length: 22 }, (_, i) =>
   i.toString().padStart(4, "0"),
 );
 
@@ -505,14 +505,14 @@ describe("Adversarial: cross-artifact consistency (between the 3 documents)", ()
   it("the migration count is consistent between the schema map and the live filesystem", () => {
     const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
     const onDisk = readdirSync(DRIZZLE_DIR).filter((f) => f.endsWith(".sql"));
-    const claims21 =
-      /\b21\b[\s\S]{0,200}(migration|sql|files)/i.test(text) ||
-      /(migration|sql|files)[\s\S]{0,200}\b21\b/i.test(text);
-    expect(claims21, "schema map must claim 21 migration files").toBe(true);
+    const claims22 =
+      /\b22\b[\s\S]{0,200}(migration|sql|files)/i.test(text) ||
+      /(migration|sql|files)[\s\S]{0,200}\b22\b/i.test(text);
+    expect(claims22, "schema map must claim 22 migration files").toBe(true);
     expect(
       onDisk.length,
-      `filesystem must have 21 migration SQL files; saw ${onDisk.length}.`,
-    ).toBe(21);
+      `filesystem must have 22 migration SQL files; saw ${onDisk.length}.`,
+    ).toBe(22);
   });
 
   it("the breaking-changes audit and the schema map agree on the highest-risk file", () => {

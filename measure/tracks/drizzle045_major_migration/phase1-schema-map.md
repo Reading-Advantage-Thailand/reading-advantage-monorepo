@@ -4,14 +4,14 @@
 > **Phase:** 1 (Contract & Schema Definition)
 > **Source of truth:** live filesystem under `packages/db/src/schema/`
 > and `packages/db/drizzle/`.
-> **Build-graph baseline:** `graph.db` mtime 2026-06-15 11:18,
-> 2166 nodes / 3095 edges / 294 files.
+> **Build-graph baseline:** `graph.db` mtime 2026-06-17 13:17,
+> 2177 nodes / 3104 edges / 298 files.
 
 This map is the deliverable for Phase 1 Task 2 of the
 `drizzle045_major_migration` track. It enumerates every file in
 `packages/db/src/schema/` (15 files including `marketing.ts`, the
 dirty-worktree addition) and every migration SQL file in
-`packages/db/drizzle/` (21 files: 0000 through 0020 inclusive), plus
+`packages/db/drizzle/` (22 files: 0000 through 0021 inclusive), plus
 the meta sidecars (`_journal.json`, per-idx `*_snapshot.json`) that
 the journal-integrity invariant relies on. It also surfaces
 `packages/db/src/client.ts` and `_journal.json` as Phase 3 risk
@@ -70,10 +70,10 @@ Phase 1.
 
 ---
 
-## 2. Migration SQL files (21)
+## 2. Migration SQL files (22)
 
-`packages/db/drizzle/` contains **21** SQL migration files indexed
-0000 through 0020 inclusive. Every index below is referenced in this
+`packages/db/drizzle/` contains **22** SQL migration files indexed
+0000 through 0021 inclusive. Every index below is referenced in this
 artifact so the migration-surface guardrail test can verify the map
 covers the full set.
 
@@ -100,8 +100,9 @@ covers the full set.
 | 18 | 0018 | `0018_audit_events.sql` | 1,932 B | Post-production ceiling | audit_events table |
 | 19 | 0019 | `0019_session_token_hash.sql` | 349 B | Post-production ceiling | sessions.tokenHash |
 | 20 | 0020 | `0020_sessions_indexes.sql` | 146 B | Post-production ceiling | sessions indexes |
+| 21 | 0021 | `0021_marketing_tables.sql` | 3,150 B | Post-production ceiling | marketing campaigns, video projects/assets, past topics, settings |
 
-**Total migration SQL bytes:** ~72 KB across 21 files.
+**Total migration SQL bytes:** ~75 KB across 22 files.
 
 ### 2.1 Re-stamp invariant
 
@@ -129,8 +130,8 @@ not break them.
 
 | File | Role |
 |------|------|
-| `_journal.json` | Migration journal (21 entries, see §3) |
-| `0000_snapshot.json` … `0020_snapshot.json` | Per-migration schema snapshots |
+| `_journal.json` | Migration journal (22 entries, see §3) |
+| `0000_snapshot.json` … `0021_snapshot.json` | Per-migration schema snapshots |
 | `README.md` | Drizzle-kit auto-generated readme |
 
 ---
@@ -142,7 +143,7 @@ called out by `test-strategy.md` §3.3. Phase 3 must preserve the
 re-stamp invariant (§2.1) and the `version: "7"` field, OR
 `journal-integrity.test.ts` must be updated to accept the new version.
 
-The journal's `entries[]` is 21 rows, indexed 0 through 20. Every
+The journal's `entries[]` is 22 rows, indexed 0 through 21. Every
 entry pairs a tag (matching the `*.sql` filename in `packages/db/drizzle/`)
 with a `when` timestamp and a `breakpoints` flag.
 
@@ -182,7 +183,7 @@ asserts:
 1. `packages/db/src/schema/` contains every expected schema file
    (15 names, including `marketing.ts`).
 2. `packages/db/drizzle/` contains every expected migration SQL file
-   (21 indices, 0000_ through 0020_).
+   (22 indices, 0000_ through 0021_).
 3. This artifact mentions every schema file name above (proving the
    artifact was generated against the live surface, not a snapshot).
 4. This artifact references every migration index (proving no
@@ -213,8 +214,8 @@ guardrail will fail and force Phase 3 to re-baseline the artifact.
 
 - Schema file list: `ls packages/db/src/schema/` (15 files).
 - Schema line counts: `wc -l packages/db/src/schema/*.ts`.
-- Migration SQL list: `ls packages/db/drizzle/*.sql` (21 files).
+- Migration SQL list: `ls packages/db/drizzle/*.sql` (22 files).
 - Migration SQL sizes: `ls -la packages/db/drizzle/`.
 - Journal entries: `cat packages/db/drizzle/meta/_journal.json`.
 - `client.ts` call site: `grep -n 'drizzle(' packages/db/src/client.ts` (line 26).
-- Build-graph: `build-graph stats ./graph.db` (2166 nodes / 3095 edges / 294 files).
+- Build-graph: `build-graph stats ./graph.db` (2177 nodes / 3104 edges / 298 files).

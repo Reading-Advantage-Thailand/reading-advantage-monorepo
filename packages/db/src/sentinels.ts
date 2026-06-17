@@ -35,4 +35,5 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
   "0018_audit_events": { tag: "0018_audit_events", kind: "table", target: "audit_events" },
   "0019_session_token_hash": { tag: "0019_session_token_hash", kind: "column", target: "sessions.token_hash" },
   "0020_sessions_indexes": { tag: "0020_sessions_indexes", kind: "table", target: "sessions" },
+  "0021_marketing_tables": { tag: "0021_marketing_tables", kind: "table", target: "campaigns" },
 };

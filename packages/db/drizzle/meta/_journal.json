@@ -22,6 +22,7 @@
     {"idx":17,"version":"7","when":1779120001000,"tag":"0017_science_school_id","breakpoints":true},
     {"idx":18,"version":"7","when":1779120002000,"tag":"0018_audit_events","breakpoints":true},
     {"idx":19,"version":"7","when":1779120003000,"tag":"0019_session_token_hash","breakpoints":true},
-    {"idx":20,"version":"7","when":1779120004000,"tag":"0020_sessions_indexes","breakpoints":true}
+    {"idx":20,"version":"7","when":1779120004000,"tag":"0020_sessions_indexes","breakpoints":true},
+    {"idx":21,"version":"7","when":1779120005000,"tag":"0021_marketing_tables","breakpoints":true}
   ]
 }

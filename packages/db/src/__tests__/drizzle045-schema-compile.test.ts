@@ -353,7 +353,7 @@ describe("drizzle045-schema-compile — column presence (FR-2)", () => {
 describe("drizzle045-schema-compile — column metadata exposes 0.45-era `columnType` (FR-2)", () => {
   it("users.id has columnType='PgText' for the text primary key (0.45-era)", async () => {
     const { users } = await import("../schema/users.js");
-    const id = (users as Record<string, { columnType?: string; name?: string }>)
+    const id = (users as unknown as Record<string, { columnType?: string; name?: string }>)
       .id;
     expect(id, "users.id must be defined").toBeDefined();
     expect(
@@ -368,7 +368,7 @@ describe("drizzle045-schema-compile — column metadata exposes 0.45-era `column
 
   it("users.role has columnType='PgEnumColumn' for the pgEnum column (0.45-era)", async () => {
     const { users } = await import("../schema/users.js");
-    const role = (users as Record<string, { columnType?: string }>).role;
+    const role = (users as unknown as Record<string, { columnType?: string }>).role;
     expect(role, "users.role must be defined").toBeDefined();
     expect(
       typeof role.columnType,
@@ -382,7 +382,7 @@ describe("drizzle045-schema-compile — column metadata exposes 0.45-era `column
 
   it("users.createdAt has columnType='PgTimestamp' for the timestamp column (0.45-era)", async () => {
     const { users } = await import("../schema/users.js");
-    const createdAt = (users as Record<string, { columnType?: string }>)
+    const createdAt = (users as unknown as Record<string, { columnType?: string }>)
       .createdAt;
     expect(createdAt, "users.createdAt must be defined").toBeDefined();
     expect(
@@ -393,7 +393,7 @@ describe("drizzle045-schema-compile — column metadata exposes 0.45-era `column
 
   it("articles.content has columnType='PgText' for the text content column (0.45-era)", async () => {
     const { articles } = await import("../schema/content.js");
-    const content = (articles as Record<string, { columnType?: string }>)
+    const content = (articles as unknown as Record<string, { columnType?: string }>)
       .content;
     expect(content, "articles.content must be defined").toBeDefined();
     expect(

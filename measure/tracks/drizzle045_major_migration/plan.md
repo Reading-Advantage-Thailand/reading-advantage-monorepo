@@ -1484,3 +1484,70 @@
 - [x] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. (`a630a9ac`)
 - [x] Task: Re-run `pnpm outdated` and `pnpm audit`; document results. (`a630a9ac`)
 - [x] Task: Update `measure/tech-stack.md` with the selected Drizzle version. (already satisfied — tech-stack.md dirty worktree has Drizzle 0.45.2 row) (`a630a9ac`)
+
+## Phase 4: Reviewer A Correction
+
+> **Reviewer A note (this attempt):** The first Reviewer A attempt
+> timed out at the 900 s supervisor wall-clock while making
+> correctness fixes. This continuation completes those fixes and
+> verifies the targeted gates.
+>
+> **Blocking correctness issues found and fixed:**
+>
+> 1. **0021 marketing migration was untracked.** The committed
+>    `packages/db/src/schema/marketing.ts` and the schema barrel
+>    export added in Phase 2 (`5284e0bf`) exposed marketing tables,
+>    but the matching migration (`0021_marketing_tables.sql`) and
+>    snapshot (`0021_snapshot.json`) were untracked and
+>    `_journal.json` had no entry. This broke `journal-integrity`,
+>    `snapshot-drift`, and the Phase 1/2 adversarial contracts.
+>    Fixed by:
+>    - Adding `0021_marketing_tables` to `_journal.json`.
+>    - Committing `0021_marketing_tables.sql` and
+>      `0021_snapshot.json`.
+>    - Adding a sentinel probe in `packages/db/src/sentinels.ts`.
+>    - Updating `phase1-schema-map.md` to the 22-migration surface.
+>
+> 2. **Phase 1/2/3 contract tests still asserted 21 migrations.**
+>    Updated `drizzle045-phase1-contracts.test.ts`,
+>    `drizzle045-phase1-contracts-adversarial.test.ts`,
+>    `drizzle045-phase2-contracts-adversarial.test.ts`, and
+>    `drizzle045-phase3-integration-gates.test.ts` to expect 22
+>    migrations (0000–0021).
+>
+> 3. **Pre-existing TypeScript cast errors in Phase 2 test files.**
+>    The worktree already carried `as unknown as` casts in
+>    `drizzle045-schema-compile.test.ts` and
+>    `drizzle045-phase2-contracts-adversarial.test.ts` to satisfy
+>    drizzle-orm 0.45's stricter `PgTableWithColumns` typing.
+>    Committed those fixes so `check-types` passes.
+>
+> **Targeted verification (Reviewer A):**
+>
+> - Phase 4 closure-gates:
+>   `cd packages/db && node ./node_modules/vitest/vitest.mjs run src/__tests__/drizzle045-phase4-closure-gates.test.ts`
+>   → **13 tests passed, 0 failed**.
+> - Combined Phase 3 + Phase 4 gate:
+>   `cd packages/db && node ./node_modules/vitest/vitest.mjs run src/__tests__/drizzle045-phase3-integration-gates.test.ts src/__tests__/drizzle045-zod-contract.test.ts src/__tests__/drizzle045-phase4-closure-gates.test.ts`
+>   → **30 tests passed, 0 failed**.
+> - Migration-integrity gate:
+>   `cd packages/db && node ./node_modules/vitest/vitest.mjs run src/__tests__/drizzle045-phase1-contracts.test.ts src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts src/__tests__/journal-integrity.test.ts src/__tests__/snapshot-drift.test.ts`
+>   → **98 tests passed, 0 failed**.
+> - `check-types` on `@reading-advantage/db`:
+>   `node ./node_modules/typescript/bin/tsc --noEmit --project tsconfig.json`
+>   → **0 errors**.
+>
+> **Remaining known failures (not Phase 4-owned, not introduced by
+> this track):**
+>
+> - `env-guards.test.ts` (4 tests) — intentionally RED guardrails for
+>   a future `client.ts` / `privileged.ts` fail-fast/warn-once fix.
+> - `package-esm-smoke.test.ts` (1 test) — `spawn node ENOENT` because
+>   the sandbox `node` binary is not on PATH for the test's spawned
+>   subprocess.
+>
+> **Worktree note:** All other modified/untracked files
+> (`measure/lessons-learned.md`, `measure/tech-debt.md`,
+> `measure/tech-stack.md`, `apps/marketing/*`, etc.) are pre-existing
+> user work from other tracks and were preserved untouched by this
+> Reviewer A commit.

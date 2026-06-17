@@ -106,6 +106,7 @@ const EXPECTED_MIGRATION_FILES = [
   "0018_audit_events.sql",
   "0019_session_token_hash.sql",
   "0020_sessions_indexes.sql",
+  "0021_marketing_tables.sql",
 ] as const;
 
 /**
@@ -572,8 +573,9 @@ describe("Adversarial: column-coverage gaps (Phase 2 schema-compile)", () => {
     // drops a column (e.g. `xp`, `level`, `cefrLevel`,
     // `githubUsername`) would still pass the contract.
     return import("../schema/users.js").then(
-      (mod: { users: Record<string, unknown> }) => {
-        const keys = Object.keys(mod.users).filter(
+      (mod) => {
+        const users = mod.users as unknown as Record<string, unknown>;
+        const keys = Object.keys(users).filter(
           (k) => !k.startsWith("_") && !k.startsWith("["),
         );
         const expectedColumns = [
@@ -675,25 +677,25 @@ describe("Adversarial: cross-file consistency (Phase 2 schema-compile + migratio
     }
   });
 
-  it("all 21 expected migration files are present on disk", () => {
+  it("all 22 expected migration files are present on disk", () => {
     const onDisk = readdirSync(DRIZZLE_DIR)
       .filter((f) => f.endsWith(".sql"))
       .map((f) => f.slice(0, 4))
       .sort();
     expect(
       onDisk.length,
-      `expected 21 migration SQL files; found ${onDisk.length}. ` +
-        `Missing: ${Array.from({ length: 21 }, (_, i) =>
+      `expected 22 migration SQL files; found ${onDisk.length}. ` +
+        `Missing: ${Array.from({ length: 22 }, (_, i) =>
           i.toString().padStart(4, "0"),
         )
           .filter((idx) => !onDisk.includes(idx))
           .join(", ")}.`,
-    ).toBe(21);
+    ).toBe(22);
   });
 
   it("every migration file in the directory is in the EXPECTED_MIGRATION_FILES allowlist", () => {
-    // Phase 2 contract's EXPECTED_MIGRATION_FILES is a 21-entry
-    // hardcoded list. If a 22nd migration is added without
+    // Phase 2 contract's EXPECTED_MIGRATION_FILES is a 22-entry
+    // hardcoded list. If a 23rd migration is added without
     // updating the contract, the contract silently ignores it.
     // Adversarial: assert the on-disk set matches the
     // allowlist exactly.
