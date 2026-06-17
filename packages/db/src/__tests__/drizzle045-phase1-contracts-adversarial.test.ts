@@ -354,7 +354,6 @@ describe("Adversarial: phase1-schema-map.md — coverage and integrity traps", (
     // The Red contract asserts every expected name is in the doc.
     // Adversarial: also assert the doc doesn't mention any schema
     // file that is NOT on disk (e.g. a hallucinated file name).
-    const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
     const onDisk = readdirSync(SCHEMA_DIR)
       .filter((f) => f.endsWith(".ts"))
       .sort();
@@ -367,7 +366,6 @@ describe("Adversarial: phase1-schema-map.md — coverage and integrity traps", (
   });
 
   it("filesystem surface and doc surface are in lockstep for migration SQL files", () => {
-    const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
     const onDisk = readdirSync(DRIZZLE_DIR)
       .filter((f) => f.endsWith(".sql"))
       .map((f) => f.slice(0, 4))

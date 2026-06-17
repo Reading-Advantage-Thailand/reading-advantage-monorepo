@@ -379,7 +379,7 @@ describe("Adversarial: substring-assertion negation traps (Phase 2 schema-compil
     expect(
       appearsInPositiveContext(text, 'export * from "./marketing.js"'),
       "schema/index.ts must re-export ./marketing.js in a positive context. " +
-        'A negated comment like "// we will not export * from \"./marketing.js\"" must fail.',
+        'A negated comment like "// we will not export * from "./marketing.js"" must fail.',
     ).toBe(true);
   });
 
