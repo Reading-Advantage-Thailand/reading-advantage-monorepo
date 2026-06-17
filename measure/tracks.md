@@ -72,7 +72,7 @@ Two parallel programs are in flight; priority order when picking the next track:
 ### Pending Tracks
 
 - [x] **Track: AGENTS.md Compliance Audit — science-advantage (pilot)** *Link: [./archive/agents_md_audit_science_advantage_20260603/](./archive/agents_md_audit_science_advantage_20260603/)*
-  Pilot run of the audit protocol. Produces baseline checklist, findings classified by severity, and migration track proposals. Refines the protocol for the next-app rollout.
+  Pilot run of the audit protocol. Produces baseline checklist, findings classified by severity, and migration track proposals. Refines the protocol for the next-app rollout. *Status: COMPLETE — pilot finished, artifacts in `measure/audit-reports/science-advantage_20260603/`. Archived 2026-06-18.*
 
 #### Pending Tracks — Audit Findings (science-advantage, 2026-06-03)
 
@@ -260,6 +260,12 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: JSDoc Comments for Shared Packages** (153 functions documented) [commit: 144b161]
   *Link: [./archive/jsdoc_shared_packages_20260530/](./archive/jsdoc_shared_packages_20260530/)*
   Add JSDoc comments to all 154 exported functions across 8 shared packages (domain, api, auth, db, webhooks, ui, auth-client, utils). Uses build-graph to track progress and verify completion. Exported functions first, bottom-up dependency order. *Status: COMPLETE — All 8 phases done. 153 functions documented. All tests pass (domain: 239, auth: 64, api: 94, db: 232). Verification script at scripts/verify-jsdoc.sh. build-graph scan timed out; use `build-graph scan . ./graph.db` to refresh summaries.*
+- [x] **Track: AI SDK Major Migration** *(ai_sdk_major_migration)*
+  *Link: [./archive/ai_sdk_major_migration/](./archive/ai_sdk_major_migration/)*
+  Major migration of `@ai-sdk` packages to the next major version. Covers `generateText`, `streamText`, `embed`, tool calling, structured output, and provider adapters. Coordinated with the internal AI adapter layer in `packages/domain`. *Status: COMPLETE — metadata, tech-stack.md, and review findings from 2026-06-16 resolved. Archived 2026-06-18.*
+- [x] **Track: Drizzle 0.45 Major Migration** *(drizzle045_major_migration)*
+  *Link: [./archive/drizzle045_major_migration/](./archive/drizzle045_major_migration/)*
+  Upgrade Drizzle ORM to 0.45 across the monorepo, update schema definitions and migration format, integrate `drizzle-zod`, generate the marketing tables migration (0021), and reject Prisma 7 in favor of the existing Prisma→Drizzle path. *Status: COMPLETE — Phases 1–4 done; closure records authored; review findings from 2026-06-16 resolved. Archived 2026-06-18.*
 
 ---
 
@@ -277,9 +283,13 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: science-advantage Test Infra — Prisma → Drizzle Migration**
   *Link: [./archive/science_test_infra_drizzle_migration_20260523/](./archive/science_test_infra_drizzle_migration_20260523/)*
   Sub-track of Track 3. Replaces `prisma db push --force-reset` in `vitest.setup.ts` with `drizzle-kit migrate` against a dedicated `science_advantage_test` DB; splits unit/integration setup files. Unblocks runtime verification for Track 3 Phases 1+.
-- [ ] **Track: Prisma → Drizzle Per-Feature Slice Cleanup**
-  *Link: [./tracks/prisma_drizzle_slice_cleanup_20260505/](./tracks/prisma_drizzle_slice_cleanup_20260505/)*
-  Track 4 of 4. **Unblocked 2026-05-26** (Tracks 2 & 3 archived). Scope narrowed: cleans up comment-only Prisma references in reading- and science-advantage `lib/enums.ts`, corrects AGENTS.md doc drift, distills program lessons, and carves out primary-advantage migration as separate follow-up track.
+- [x] **Track: Prisma → Drizzle Per-Feature Slice Cleanup**
+  *Link: [./archive/prisma_drizzle_slice_cleanup_20260505/](./archive/prisma_drizzle_slice_cleanup_20260505/)*
+  Track 4 of 4. **Unblocked 2026-05-26** (Tracks 2 & 3 archived). Scope narrowed: cleaned up comment-only Prisma references in reading- and science-advantage `lib/enums.ts`, corrected AGENTS.md doc drift, distilled program lessons, and carved out primary-advantage migration as separate follow-up track. *Status: COMPLETE — FR-1 enums cleaned, FR-2 AGENTS.md corrected, FR-3 tech-debt/lessons-learned updated, FR-4 primary-advantage track created.*
+
+- [ ] **Track: primary-advantage Prisma → Drizzle Migration**
+  *Link: [./tracks/primary_advantage_drizzle_migration_20260526/](./tracks/primary_advantage_drizzle_migration_20260526/)*
+  Carved out from Track 4. Migrate 56 Prisma-touching files in primary-advantage to Drizzle. Delete `prisma/` directory, `lib/prisma.ts`, and Prisma deps. Port schema to `packages/db/`. Inherits Track 2 shape. Also removes root `package.json` `onlyBuiltDependencies` Prisma entries and lockfile `@prisma/*` on closeout.
 
 ---
 
@@ -310,6 +320,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: Codecamp Review Remediation**
   *Link: [./archive/codecamp_review_remediation_20260515/](./archive/codecamp_review_remediation_20260515/)*
   *Status: COMPLETE — All 5 High, 10 Medium, 12 Low findings resolved. Security (adminProcedure, prompt injection hardening, role stripping), architecture (domain chat context, bounded rate limiter), data integrity (JSONB guards, duplicate prevention, prerequisite gap handling), UI/UX (ARIA labels, disabled Link, HTTPS clone), and test coverage (github-client tests, SSRF defense).*
+- [x] **Track: Migration Review Remediation** *(migration_review_remediation_20260616)*
+  *Link: [./archive/migration_review_remediation_20260616/](./archive/migration_review_remediation_20260616/)*
+  Chore track that addresses the open items from the 2026-06-16 reviews of `ai_sdk_major_migration` and `drizzle045_major_migration`: metadata status fixes, stale stash cleanup, version-pin normalization, marketing migration generation, check-types fixes, tech-stack.md rows, and Phase 4 closure records. *Status: COMPLETE — all 6 phases done. Archived 2026-06-18.*
 
 ---
 

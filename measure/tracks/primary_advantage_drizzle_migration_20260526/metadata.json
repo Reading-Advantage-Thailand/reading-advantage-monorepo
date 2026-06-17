@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_advantage_drizzle_migration_20260526",
+  "type": "chore",
+  "status": "ready",
+  "created_at": "2026-05-26T00:00:00Z",
+  "updated_at": "2026-05-26T00:00:00Z",
+  "description": "Migrate primary-advantage from Prisma to Drizzle ORM. Carved out from prisma_drizzle_slice_cleanup_20260505 (Track 4 of the Prisma→Drizzle program). 56 Prisma-touching files, active prisma/ schema+migrations, NextAuth dependency.",
+  "estimated_tasks": 40,
+  "actual_tasks": null,
+  "deviation_notes": "Carved out from Track 4 (slice cleanup) because primary-advantage has a full Prisma surface (56 files, schema.prisma, migrations, lib/prisma.ts) — not a comment-only cleanup. Inherits Track 2 shape (per-controller phases, schema unification, test parity). Also removes root package.json onlyBuiltDependencies for prisma/@prisma/client and lockfile @prisma/* entries on closeout."
+}

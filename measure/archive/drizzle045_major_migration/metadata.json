@@ -1,7 +1,7 @@
 {
   "track_id": "drizzle045_major_migration",
   "type": "feature",
-  "status": "backlog",
+  "status": "completed",
   "created_at": "2026-06-13T00:00:00Z",
   "description": "Major migration to Drizzle ORM 0.45. Covers schema definition changes, migration format updates, query builder API changes, and drizzle-zod integration. Prisma 7 is explicitly rejected — primary-advantage will migrate off Prisma to Drizzle, not to Prisma 7."
 }

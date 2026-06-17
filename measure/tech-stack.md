@@ -13,6 +13,13 @@
 | Next.js | 16.2.9 | Batch A (framework override) |
 | React / React DOM | 19.2.7 | Batch A (framework override) |
 | Vitest / @vitest/ui / @vitest/coverage-v8 | 4.1.8 | Batch B (Vitest family alignment) |
+| drizzle-orm | 0.45.2 | drizzle045_major_migration |
+| drizzle-kit | ^0.31.7 | drizzle045_major_migration |
+| drizzle-zod | ^0.7.0 | drizzle045_major_migration |
+| ai | ^5.x | ai_sdk_major_migration |
+| @ai-sdk/openai | ^2.x | ai_sdk_major_migration |
+| @ai-sdk/google | ^2.x | ai_sdk_major_migration |
+| @ai-sdk/google-vertex | ^3.x | ai_sdk_major_migration |
 
 ## Core Technologies
 

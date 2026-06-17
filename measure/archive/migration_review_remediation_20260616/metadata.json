@@ -1,0 +1,8 @@
+{
+  "track_id": "migration_review_remediation_20260616",
+  "type": "chore",
+  "status": "in_progress",
+  "created_at": "2026-06-16T00:00:00Z",
+  "description": "Remediate issues found in the 2026-06-16 reviews of ai_sdk_major_migration and drizzle045_major_migration tracks. Closes metadata drift, stale stashes, missing marketing migration, check-types failures, version inconsistencies, and tech-stack.md gaps.",
+  "depends_on": ["ai_sdk_major_migration", "drizzle045_major_migration"]
+}
