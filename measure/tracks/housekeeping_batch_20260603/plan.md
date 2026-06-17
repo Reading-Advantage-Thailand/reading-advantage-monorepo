@@ -80,7 +80,7 @@
 
 ### Green Phase Notes (Jr 2026-06-17)
 
-**Commit:** `<pending — recorded after commit>`
+**Commit:** `1f8c2a01` (`refactor(science): relocate legacy prisma/ seed-data to scripts/seed-data/`)
 
 **Red→Green contract verification (Phase 1 / F-205):**
 - `test -d apps/science-advantage/scripts/seed-data` → exit 0 (Green: target present)
