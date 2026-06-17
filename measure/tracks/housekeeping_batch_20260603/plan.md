@@ -161,11 +161,36 @@ The Red phase was previously recorded in commit `08ebf5c1` (`test(housekeeping):
 
 ## Phase 3: Update `apps/science-advantage/AGENTS.md`
 
-- [ ] Task: Read the current `AGENTS.md`.
-- [ ] Task: Remove all references to `prisma`, `next-auth`, `npx prisma ...`, `npm install`, `npm run ...`.
-- [ ] Task: Add a header note: "This file documents app-specific deviations from the monorepo `AGENTS.md`. For shared conventions (auth, packages, CI), see the monorepo root."
-- [ ] Task: Update the test section to reference `pnpm test` (not `npm run test`).
-- [ ] Task: Verify the file is consistent with the actual `package.json` scripts.
+> **Red phase (MID) recorded 2026-06-18.** Pre-implementation state captured. Red command fails as expected. Test file written and ready for Implementer.
+
+### Red Phase Recording
+
+- **Targeted Red command** (per test-strategy.md "Live-Proof Plan" Phase 3):
+  `rg -n 'prisma|next-auth|npx prisma|npm install' apps/science-advantage/AGENTS.md`
+- **Red command fail count**: 4 lines (matches: 3 = regression-guard, 32 = build/dev/prisma block, 70 = prisma db push, 78 = NextAuth). The test-strategy command is broader than the F-1102 contract (it also matches the Phase-1 regression-guard note, which must be preserved); the more precise command below is what the tests pin.
+- **Targeted Red commands used in tests** (one per assertion in `housekeeping-phase3-agents-md.test.ts`):
+  - `rg -n '\bprisma\b' apps/science-advantage/AGENTS.md` → 4 lines (3 in body, 1 in regression-guard)
+  - `rg -ni 'next-auth|NextAuth' apps/science-advantage/AGENTS.md` → 1 line (78)
+  - `rg -n 'npx prisma' apps/science-advantage/AGENTS.md` → 1 line (32)
+  - `rg -n 'npm install' apps/science-advantage/AGENTS.md` → 1 line (32)
+  - `rg -n 'npm run' apps/science-advantage/AGENTS.md` → 2 lines (32, 36)
+  - `rg -n 'deploy:staging|deploy:production' apps/science-advantage/AGENTS.md` → 1 line (32)
+  - body-prisma sweep (excluding line 3) → 11 hits
+  - script-validity sweep → 2 bad refs (deploy:staging, deploy:production)
+  - deviation-note presence check → not present
+  - **Total Red failures at HEAD: 10** (10 Red assertions + 1 Phase-1 regression-guard test that already passes at HEAD)
+- **Test file**: `apps/science-advantage/lib/__tests__/housekeeping-phase3-agents-md.test.ts` (292 lines, 10 assertions in 8 describe blocks)
+- **Coordination with Phase 1 (F-205)**: The Phase 1 regression-guard note (line 3) intentionally references `prisma/` to forbid re-emergence. The Phase 3 contract says "remove all prisma references" but §1.1/§1.2/§8.1 pin the contract that the regression-guard note is allowed and preserved. The implementer should leave line 3 untouched and clean up lines 26, 32, 36, 70, 78.
+- **Already-satisfied task (no Red test)**: Spec task "Update the test section to reference `pnpm test` (not `npm run test`)" — the Testing Guidelines section (line 40) already uses `pnpm test`. Documented in `housekeeping-phase3-agents-md.test.ts` header as "already satisfied at HEAD". No Red test created to avoid a false Red phase.
+- **Dirty worktree**: Both dirty paths (`M measure/automation-supervisor.py`, `?? apps/marketing/next-env.d.ts`) are unrelated to Phase 3. They are preserved in the worktree and not folded into this track's commit. `measure/automation-supervisor.py` is an orchestrator change touching the prompts sent to role sub-agents; `apps/marketing/next-env.d.ts` is an auto-generated Next.js types file for the marketing app.
+- **Graph state**: `build-graph stats ./graph.db` → 2,243 nodes / 3,184 edges / 313 files (fresh, unchanged since Phase 1 closeout). `build-graph search AGENTS.md` returns only the file node; no symbol blast radius (Phase 3 is pure doc work).
+- **Handoff**: Implementer should: (1) read the test file header for the contract; (2) edit `apps/science-advantage/AGENTS.md` to satisfy all 10 Red assertions (body prisma → 0, total prisma → 1, next-auth → 0, npx prisma → 0, npm install → 0, npm run → 0, deploy:staging/deploy:production → 0, deviation note → present, all script refs valid, regression-guard note preserved); (3) leave line 3 untouched; (4) run `pnpm turbo run test --filter=science-advantage -- housekeeping-phase3-agents-md.test.ts` (live gate owned by Phase 11 final acceptance if dev env is unavailable); (5) commit with `docs(science): remove stale prisma/npm references from AGENTS.md (F-1102)`.
+
+- [~] (pending) Task: Read the current `AGENTS.md`.
+- [~] (pending) Task: Remove all references to `prisma`, `next-auth`, `npx prisma ...`, `npm install`, `npm run ...` from the body of AGENTS.md (line 3 regression-guard is preserved per Phase 1 §5.2).
+- [~] (pending) Task: Add a header note: "This file documents app-specific deviations from the monorepo `AGENTS.md`. For shared conventions (auth, packages, CI), see the monorepo root."
+- [~] (pending) Task: **Already satisfied at HEAD** — the Testing Guidelines section (line 40) already references `pnpm test`. No test created; contract is documented in the test file header.
+- [~] (pending) Task: Verify the file is consistent with the actual `package.json` scripts (no `deploy:staging`/`deploy:production` references; all `pnpm <script>` and `npm run <script>` invocations name a real script).
 
 ## Phase 4: Add `*.log` to `.gitignore`
 
