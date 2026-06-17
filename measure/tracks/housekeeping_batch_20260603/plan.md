@@ -46,6 +46,28 @@
 - **Graph state**: `build-graph stats` shows 2,199 nodes / 3,125 edges / 303 files. Zero code-level imports from `prisma/` directory — path references are all `__dirname`-relative string paths. No graph update needed until files are moved.
 - **Handoff**: Implementer should: (1) git mv files → (2) update 6 path references → (3) run `pnpm seed` → (4) run `find scripts/seed-data -name '*.json' -exec sha256sum {} \; | sort | diff /tmp/pre.sha -` to verify hash identity → (5) rm -rf prisma/
 
+### Red Phase Re-Verification (MID 2026-06-17 second pass)
+
+- **Pre-snapshot integrity**: `diff measure/tracks/housekeeping_batch_20260603/pre-snapshot.sha /tmp/current.sha` — empty diff; all 53 JSON files match. Fixture valid.
+- **Red state confirmed**:
+  - `test -d apps/science-advantage/scripts/seed-data` → exit 1 (target absent)
+  - `test -d apps/science-advantage/prisma` → exit 0 (source still present)
+  - `prisma/seed-data/`: 32 JSON files; `prisma/data/`: 21 JSON files → 53 total (matches fixture)
+- **Build-graph re-check**: `build-graph stats` → 2,199 nodes / 3,125 edges / 303 files. `build-graph search prisma` → only 2 sentinel-probe field refs. Zero code-level imports from `prisma/` directory. Confirmed: relocation is purely file-system + string-path work.
+- **Targeted Red commands** (from test-strategy.md):
+  - `pnpm --filter science-advantage db:seed` — **could not run**: pnpm/node unavailable on host (noted in original recording). The `db:seed` script does not exist in `package.json`; the actual script is `pnpm --filter science-advantage seed`. This does not affect Red-phase validity — the directory-absence test (`test -d scripts/seed-data`) is the contract-level Red gate.
+- **Path dependency audit**: 8 path references across 6 files confirmed still pointing to `prisma/`:
+  1. `scripts/seed/seed-lessons.ts:48` → `prisma/seed-data/lessons`
+  2. `scripts/seed/seed-lessons.ts:60` → `data/content/grade-4/lessons` (resolves to `apps/science-advantage/data/` — NOT prisma; note: `data/` at app root contains only 1 file, while `prisma/data/` has 21. Seed scripts may already be broken for this path.)
+  3. `scripts/seed/seed-questions.ts:45` → `prisma/seed-data/questions`
+  4. `scripts/seed/seed-questions.ts:57` → `data/content/grade-4/questions` (same `data/` vs `prisma/data/` issue)
+  5. `scripts/seed/seed-standards.ts:38` → `prisma/seed-data/standards`
+  6. `scripts/seed/seed-curriculum-units.ts:52` → `prisma/seed-data/curriculum-units`
+  7. `scripts/validate-content.ts:24` → string `'prisma/data/content'`
+  8. `prisma/seed-functions/update-seed-files.ts:5` → `seed-data/lessons` (relative to `prisma/seed-functions/`)
+- **Warning for Implementer**: Seed scripts reference `data/content/grade-4/` via `__dirname`-relative paths that resolve to `apps/science-advantage/data/content/` (NOT `prisma/data/content/`). The app-root `data/` directory has only `standards-mapping.json`. The actual content lives under `prisma/data/content/`. The `prisma/data/` content must be relocated to `apps/science-advantage/data/content/` or the scripts' contentDir paths must be updated to point to the new location. See plan note above: the 6 path references counted here include the `data/` paths that resolve outside `prisma/` — the `prisma/data/content/` files (21 JSON) need additional handling beyond the `prisma/seed-data/` files (32 JSON).
+- **Dirty worktree**: No dirty paths are relevant to Phase 1. All 14 dirty entries are other-track work, auto-generated files, or archival operations. Phase 1 commit will be clean.
+
 - [~] Task: Create `apps/science-advantage/scripts/seed-data/{grade-4/{lessons,questions},curriculum-units,lessons,questions,standards}/` directories.
 - [~] Task: `git mv` the JSON files from `prisma/` to `scripts/seed-data/` (preserves history).
 - [~] Task: Move `prisma/seed-data/README.md` → `scripts/seed-data/README.md`.
