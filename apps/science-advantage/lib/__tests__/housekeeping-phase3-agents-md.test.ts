@@ -165,11 +165,14 @@ describe('housekeeping_batch_20260603 / Phase 3 — Update apps/science-advantag
      * Spec FR-2 / F-1102: "Remove all references to `npm install`".
      * The monorepo uses pnpm; `npm install` is the wrong tool.
      */
-    it('§4.1 — `rg -n "npm install" apps/science-advantage/AGENTS.md` returns 0 matches', () => {
-      const lines = rgHits('npm install', AGENTS_MD);
+    it('§4.1 — `rg -n "\\bnpm install" apps/science-advantage/AGENTS.md` returns 0 matches', () => {
+      // Word-boundary anchor on `npm` so we do NOT match `pnpm install`
+      // (the substring `npm install` is a legitimate part of `pnpm install`).
+      // The contract is about the npm CLI, not the pnpm CLI.
+      const lines = rgHits('\\bnpm install', AGENTS_MD);
       expect(
         lines,
-        `expected 0 \`npm install\` references in AGENTS.md; found ${lines.length}: ${lines.join(', ')}`,
+        `expected 0 npm-CLI \`npm install\` references in AGENTS.md (pnpm install is allowed); found ${lines.length}: ${lines.join(', ')}`,
       ).toEqual([]);
     });
   });
@@ -179,11 +182,14 @@ describe('housekeeping_batch_20260603 / Phase 3 — Update apps/science-advantag
      * Spec FR-2 / F-1102: "Remove all references to `npm run …`".
      * The monorepo uses pnpm; `npm run <script>` is the wrong tool.
      */
-    it('§5.1 — `rg -n "npm run" apps/science-advantage/AGENTS.md` returns 0 matches', () => {
-      const lines = rgHits('npm run', AGENTS_MD);
+    it('§5.1 — `rg -n "\\bnpm run" apps/science-advantage/AGENTS.md` returns 0 matches', () => {
+      // Word-boundary anchor on `npm` so we do NOT accidentally match
+      // a hypothetical `pnpm run` (which is also valid in pnpm-land).
+      // The contract is about the npm CLI, not pnpm.
+      const lines = rgHits('\\bnpm run', AGENTS_MD);
       expect(
         lines,
-        `expected 0 \`npm run\` references in AGENTS.md; found ${lines.length}: ${lines.join(', ')}`,
+        `expected 0 npm-CLI \`npm run\` references in AGENTS.md (pnpm run is allowed); found ${lines.length}: ${lines.join(', ')}`,
       ).toEqual([]);
     });
   });
