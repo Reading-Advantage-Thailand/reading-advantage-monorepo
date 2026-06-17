@@ -180,7 +180,7 @@ npx tsx scripts/seed.ts --skip-demo
 
 ## Validation
 
-All JSON files are validated during seeding using `seed-functions/validate-json.ts`.
+All JSON files are validated during seeding using `scripts/seed/validate-json.ts`.
 
 Validation checks:
 - Required fields are present

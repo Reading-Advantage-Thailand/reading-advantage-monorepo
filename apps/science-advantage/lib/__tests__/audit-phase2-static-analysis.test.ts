@@ -291,16 +291,26 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 2: Static Anal
       expect(files).toEqual([]);
     });
 
-    it('§2.8 — apps/science-advantage/prisma/ directory still exists with seed data (FAIL per audit F-205)', async () => {
-      const stat = await fs.stat(path.join(APP_DIR, 'prisma'));
+    it('§2.8 — no active script references legacy prisma/seed-data paths (housekeeping_batch_20260603 Phase 1)', () => {
+      const files = rgFiles([
+        'prisma/seed-data|prisma/data/content|prisma/seed-functions',
+        'apps/science-advantage/scripts/',
+        '-g',
+        '*.ts',
+        '-g',
+        '!*.test.*',
+      ]);
+      expect(files).toEqual([]);
+    });
+
+    it('§2.8 — apps/science-advantage/prisma/ directory removed and seed data relocated (FIXED by housekeeping_batch_20260603 Phase 1 / F-205)', async () => {
+      await expect(fs.stat(path.join(APP_DIR, 'prisma'))).rejects.toThrow();
+      const seedDataDir = path.join(APP_DIR, 'scripts', 'seed-data');
+      const stat = await fs.stat(seedDataDir);
       expect(stat.isDirectory()).toBe(true);
-      // 56 files (44 .json + 1 .ts + 1 .md + 1 .gitkeep + nested
-      // empty __tests__/ — pin lower bound, not exact, to tolerate
-      // the planned housekeeping batch).
-      const entries = await fs.readdir(path.join(APP_DIR, 'prisma'), {
-        recursive: true,
-      });
-      expect(entries.length, 'prisma/ should still contain legacy seed data').toBeGreaterThan(10);
+      const entries = await fs.readdir(seedDataDir, { recursive: true });
+      const jsonFiles = entries.filter((e) => e.endsWith('.json'));
+      expect(jsonFiles.length, 'scripts/seed-data/ should contain relocated JSON').toBeGreaterThan(50);
     });
 
     it('§2.8 — no schema.prisma file in apps/science-advantage/prisma/ (Prisma fully removed)', () => {

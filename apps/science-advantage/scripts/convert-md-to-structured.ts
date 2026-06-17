@@ -311,7 +311,7 @@ function convertToStructuredContent(markdownContent: string, isLab: boolean): Le
 }
 
 async function main() {
-  const inputPath = path.join(__dirname, '..', 'prisma', 'seed-data', 'lessons', 'thai-g3-unit-1.json');
+  const inputPath = path.join(__dirname, '..', 'scripts', 'seed-data', 'lessons', 'thai-g3-unit-1.json');
   const outputPath = inputPath; // Overwrite in place
 
   console.log('Reading Grade 3 lessons file...');

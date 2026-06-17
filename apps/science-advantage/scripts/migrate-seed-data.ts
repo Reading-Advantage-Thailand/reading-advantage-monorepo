@@ -166,7 +166,7 @@ function main() {
     console.log('⚠ LIVE MODE - Files will be modified (backups will be created)\n');
   }
 
-  const seedDataPath = path.join(__dirname, '..', 'prisma', 'seed-data');
+  const seedDataPath = path.join(__dirname, '..', 'scripts', 'seed-data');
 
   const directories = {
     standards: path.join(seedDataPath, 'standards'),
