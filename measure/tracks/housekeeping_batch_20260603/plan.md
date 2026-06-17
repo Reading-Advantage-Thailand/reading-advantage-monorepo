@@ -4,8 +4,33 @@
 
 ## Phase 0: Setup
 
-- [ ] Task: Create a checklist of the 10 items; mark off as each completes.
-- [ ] Task: Coordinate with Track 11 (CI Alignment) — F-1306 (app-local CI) is also addressed there. Pick one track to do the deletion (Track 11's PR); this track's PR skips FR-10.
+- [x] Task: Create a checklist of the 10 items; mark off as each completes.
+- [x] Task: Coordinate with Track 11 (CI Alignment) — F-1306 (app-local CI) is also addressed there. Pick one track to do the deletion (Track 11's PR); this track's PR skips FR-10.
+
+### FR → Phase Checklist
+
+| FR | Severity | Title | Phase | Status |
+|----|----------|-------|-------|--------|
+| F-205 | Medium | Relocate legacy `prisma/` seed-data | Phase 1 | [ ] |
+| F-705 | Low | Verify/delete 4 auth `route.ts` stubs | Phase 2 | [ ] |
+| F-1102 | Low | Update `AGENTS.md` (remove Prisma/npm refs) | Phase 3 | [ ] |
+| F-1202 | Low | Add `*.log` to `.gitignore` | Phase 4 | [ ] |
+| F-1305 | Low | Backfill 5 orphan in-code TODOs | Phase 5 | [ ] |
+| F-1201 | Medium | Re-pin 51 `^`-ranged deps (or doc deviation) | Phase 6 | [ ] |
+| F-1207 | Medium | Add `git notes` to 24 refactor commits | Phase 7 | [ ] |
+| F-1301 | Medium | |
+| F-503 | Medium | Add `docs/adr/` + SQL-ADR guard lint | Phase 8 | [ ] |
+| F-1301 | Medium | Add `commitlint` config (subject-line track ref) | Phase 9 | [ ] |
+| F-1306 | Medium | App-local CI workflow deletion | Phase 10 | [x] Deferred |
+
+> **Track 11 coordination**: `ci_typecheck_alignment_20260603` is complete (`apps/science-advantage/.github/workflows/ci.yml` already absent). Phase 10 deferred — F-1306 resolved by Track 11. This track handles the remaining 9 findings.
+
+### Graph Baseline (build-graph)
+
+- `graph.db`: 2,199 nodes / 3,125 edges / 303 files (fresh)
+- `prisma/`: Only 2 sentinel-probe field refs (string `"0013_prisma_drizzle_schema_unification"`) — zero code imports from `prisma/` directory; dead code confirmed.
+- Auth stubs: `POST /api/auth/login` (science), `POST /api/auth/logout`, `GET /api/auth/session`, `POST /api/auth/impersonate` — all 4 have **zero graph callers**. Still confirm with `rg` (route handlers can be string-loaded).
+- `badges.ts`: 27 entities; orphan TODO at line 115 is internal — no external consumer of language-preference state.
 
 ## Phase 1: Relocate Legacy `prisma/` Seed-Data
 
@@ -89,10 +114,9 @@
 - [ ] Task: Test: `git commit -m "feat(science): add a new feature (track_id: mytrack_20260603)"` — accepted.
 - [ ] Task: Document in `AGENTS.md` that the rule applies to new commits; historical commits are not affected.
 
-## Phase 10: App-Local CI Workflow (F-1306, also Track 11 FR-9)
+## Phase 10: App-Local CI Workflow (F-1306, also Track 11 FR-9) — DEFERRED
 
-- [ ] Task: **Skip this phase** if Track 11 has completed the deletion.
-- [ ] Task: If Track 11 has not completed: delete `apps/science-advantage/.github/workflows/ci.yml`; verify the monorepo root CI has a `path-filter: apps/science-advantage/**` (Track 11 FR-10).
+- [x] Task: **Skipped** — Track 11 (`ci_typecheck_alignment_20260603`) completed the deletion. `apps/science-advantage/.github/workflows/ci.yml` is already absent. F-1306 resolved by Track 11.
 
 ## Phase 11: Final Acceptance
 
