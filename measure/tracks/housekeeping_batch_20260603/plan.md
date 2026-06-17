@@ -13,7 +13,7 @@
 |----|----------|-------|-------|--------|
 | F-205 | Medium | Relocate legacy `prisma/` seed-data | Phase 1 | [x] |
 | F-705 | Low | Verify/delete 4 auth `route.ts` stubs | Phase 2 | [ ] |
-| F-1102 | Low | Update `AGENTS.md` (remove Prisma/npm refs) | Phase 3 | [ ] |
+| F-1102 | Low | Update `AGENTS.md` (remove Prisma/npm refs) | Phase 3 | [x] |
 | F-1202 | Low | Add `*.log` to `.gitignore` | Phase 4 | [ ] |
 | F-1305 | Low | Backfill 5 orphan in-code TODOs | Phase 5 | [ ] |
 | F-1201 | Medium | Re-pin 51 `^`-ranged deps (or doc deviation) | Phase 6 | [ ] |
@@ -186,11 +186,42 @@ The Red phase was previously recorded in commit `08ebf5c1` (`test(housekeeping):
 - **Graph state**: `build-graph stats ./graph.db` → 2,243 nodes / 3,184 edges / 313 files (fresh, unchanged since Phase 1 closeout). `build-graph search AGENTS.md` returns only the file node; no symbol blast radius (Phase 3 is pure doc work).
 - **Handoff**: Implementer should: (1) read the test file header for the contract; (2) edit `apps/science-advantage/AGENTS.md` to satisfy all 10 Red assertions (body prisma → 0, total prisma → 1, next-auth → 0, npx prisma → 0, npm install → 0, npm run → 0, deploy:staging/deploy:production → 0, deviation note → present, all script refs valid, regression-guard note preserved); (3) leave line 3 untouched; (4) run `pnpm turbo run test --filter=science-advantage -- housekeeping-phase3-agents-md.test.ts` (live gate owned by Phase 11 final acceptance if dev env is unavailable); (5) commit with `docs(science): remove stale prisma/npm references from AGENTS.md (F-1102)`.
 
-- [~] (pending) Task: Read the current `AGENTS.md`.
-- [~] (pending) Task: Remove all references to `prisma`, `next-auth`, `npx prisma ...`, `npm install`, `npm run ...` from the body of AGENTS.md (line 3 regression-guard is preserved per Phase 1 §5.2).
-- [~] (pending) Task: Add a header note: "This file documents app-specific deviations from the monorepo `AGENTS.md`. For shared conventions (auth, packages, CI), see the monorepo root."
-- [~] (pending) Task: **Already satisfied at HEAD** — the Testing Guidelines section (line 40) already references `pnpm test`. No test created; contract is documented in the test file header.
-- [~] (pending) Task: Verify the file is consistent with the actual `package.json` scripts (no `deploy:staging`/`deploy:production` references; all `pnpm <script>` and `npm run <script>` invocations name a real script).
+- [x] (10e34788) Task: Read the current `AGENTS.md`.
+- [x] (10e34788) Task: Remove all references to `prisma`, `next-auth`, `npx prisma ...`, `npm install`, `npm run ...` from the body of AGENTS.md (line 3 regression-guard is preserved per Phase 1 §5.2).
+- [x] (10e34788) Task: Add a header note: "This file documents app-specific deviations from the monorepo `AGENTS.md`. For shared conventions (auth, packages, CI), see the monorepo root."
+- [x] (10e34788) Task: **Already satisfied at HEAD** — the Testing Guidelines section (line 40) already references `pnpm test`. No test created; contract is documented in the test file header.
+- [x] (10e34788) Task: Verify the file is consistent with the actual `package.json` scripts (no `deploy:staging`/`deploy:production` references; all `pnpm <script>` and `npm run <script>` invocations name a real script).
+
+### Green Phase Notes (Jr 2026-06-18)
+
+**Commit:** `10e34788` (`docs(science): remove stale prisma/npm/references from AGENTS.md (F-1102)`)
+
+**Red→Green contract verification (Phase 3 / F-1102):**
+- `rg -in '\bprisma\b' apps/science-advantage/AGENTS.md` → only line 3 (regression-guard note; §1.1/§1.2 Green)
+- `rg -ni 'next-auth|NextAuth' apps/science-advantage/AGENTS.md` → 0 matches (§2.1 Green)
+- `rg -n 'npx prisma' apps/science-advantage/AGENTS.md` → 0 matches (§3.1 Green)
+- `rg -n 'npm install' apps/science-advantage/AGENTS.md` → 0 matches (§4.1 Green)
+- `rg -n 'npm run' apps/science-advantage/AGENTS.md` → 0 matches (§5.1 Green)
+- `rg -n 'deploy:staging|deploy:production' apps/science-advantage/AGENTS.md` → 0 matches (§7.2 Green)
+- Deviation note present at line 5: "This file documents app-specific deviations from the monorepo `AGENTS.md`. For shared conventions (auth, packages, CI), see the monorepo root." (§6.1/§6.2 Green)
+- Phase 1 regression-guard note preserved at line 3 (§8.1 Green)
+- All `pnpm <script>` refs verified against `package.json` scripts: `dev`, `build`, `seed`, `seed:demo-users`, `lint`, `test`, `test:integration`, `test:e2e` — all valid (§7.1 Green)
+- "Already satisfied at HEAD" task: Testing Guidelines section already uses `pnpm test` — no change needed.
+- All 10 Red→Green assertions satisfied at contract level.
+
+**Changes made:**
+- Added deviation-from-monorepo header note (blockquote before first `##` heading).
+- Rewrote "Project Structure & Module Organization": replaced `prisma/` dir reference with `packages/db/` (Drizzle) and `scripts/seed/` / `scripts/seed-data/`.
+- Rewrote "Build, Test, and Development Commands": replaced `npm install`, `npm run dev`, `npm run build`, `npx prisma *` with `pnpm install`, `pnpm dev`, `pnpm seed`, `pnpm seed:demo-users`, `pnpm build`. Removed `deploy:staging` and `deploy:production`.
+- Updated "Coding Style": `npm run lint` → `pnpm lint`; `Prisma fields` → `database fields`.
+- Updated "Local Test Database": removed ` — Prisma is no longer involved in test-DB provisioning` (stale reference).
+- Updated "Troubleshooting": removed `prisma db push` references; replaced with Drizzle-centric wording.
+- Updated "Environment & Security Tips": removed `NextAuth, Google OAuth`; `Prisma migrations` → `Drizzle migrations`.
+- Line 3 regression-guard note preserved untouched.
+
+**Live test gate:** `pnpm turbo run test --filter=science-advantage -- housekeeping-phase3-agents-md.test.ts` cannot run from this host (pnpm/node unavailable). Owned by Phase 11 final acceptance. All 10 contract-level Red→Green assertions are satisfied.
+
+**Build-graph:** No graph update needed — Phase 3 is pure doc work (no symbol/schema/route/component changes). `graph.db` unchanged at 2,243 nodes / 3,184 edges / 313 files.
 
 ## Phase 4: Add `*.log` to `.gitignore`
 
