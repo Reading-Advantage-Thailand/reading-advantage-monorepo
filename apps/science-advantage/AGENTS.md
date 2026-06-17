@@ -2,6 +2,8 @@
 
 > **Regression guard (housekeeping_batch_20260603, Phase 1, F-205):** The `prisma/` directory at the app root must not exist. If you see `apps/science-advantage/prisma/`, it is a regression — the legacy `prisma/seed-data`, `prisma/data/content`, and `prisma/seed-functions` contents were relocated to `apps/science-advantage/scripts/seed-data/` and `apps/science-advantage/scripts/seed/`. Drizzle is the source of truth; no Prisma runtime artifacts belong at the app root.
 
+> **Deviation note:** This file documents app-specific deviations from the monorepo `AGENTS.md`. For shared conventions (auth, packages, CI), see the monorepo root.
+
 ## Measure Workflow
 
 All development runs through the **Measure** spec-driven development framework exclusively. At the start of every session:
@@ -23,17 +25,17 @@ Never start significant work without an active track. Always update `measure/tra
 
 ## Project Structure & Module Organization
 
-Core application logic lives in `app/`, which follows the Next.js App Router layout with feature groups such as `(auth)` and `(dashboard)` plus API handlers under `app/api/`. Shared UI lives in `components/`, with `components/ui/` mirroring shadcn/ui primitives and `components/features/` collecting higher-level widgets. Cross-cutting utilities reside in `lib/` (auth, database client, helpers). Database schema, migrations, and seed scripts are maintained in `prisma/`, while static assets live in `public/` and extended documentation belongs in `docs/`.
+Core application logic lives in `app/`, which follows the Next.js App Router layout with feature groups such as `(auth)` and `(dashboard)` plus API handlers under `app/api/`. Shared UI lives in `components/`, with `components/ui/` mirroring shadcn/ui primitives and `components/features/` collecting higher-level widgets. Cross-cutting utilities reside in `lib/` (auth, database client, helpers). Database schema and migrations are maintained via Drizzle in `packages/db/`. Seed scripts and data live in `scripts/seed/` and `scripts/seed-data/`. Static assets live in `public/` and extended documentation belongs in `docs/`.
 
 The first thing the agent should do in any session is to run the .claude/skills/doc-indexer/scripts/scan-docs.sh script to get document context.
 
 ## Build, Test, and Development Commands
 
-Install dependencies with `npm install`. Use `npm run dev` for the local Next.js server. Database tasks rely on Prisma: `npx prisma generate` to refresh the client, `npx prisma db push` to sync schema, and `npx prisma db seed` for baseline content. For production artifacts run `npm run build`; staging and production deploys use `npm run deploy:staging` and `npm run deploy:production`.
+Install dependencies with `pnpm install`. Use `pnpm dev` for the local Next.js server. Database tasks rely on Drizzle: `pnpm seed` for baseline content and `pnpm seed:demo-users` for local dev accounts. For production artifacts run `pnpm build`.
 
 ## Coding Style & Naming Conventions
 
-Write all components and modules in TypeScript with 2-space indentation. ESLint and Prettier configurations ship with the repo—run `npm run lint` before opening a PR. Prefer PascalCase for components (`LessonOverviewCard`) and camelCase for functions, variables, and Prisma fields. Keep files focused; collocate component-specific hooks or styles alongside the component.
+Write all components and modules in TypeScript with 2-space indentation. ESLint and Prettier configurations ship with the repo—run `pnpm lint` before opening a PR. Prefer PascalCase for components (`LessonOverviewCard`) and camelCase for functions, variables, and database fields. Keep files focused; collocate component-specific hooks or styles alongside the component.
 
 ## Testing Guidelines
 
@@ -41,7 +43,7 @@ Tests are organized by scope. Execute `pnpm test` for the full suite, `pnpm test
 
 ## Local Test Database
 
-Integration tests run against an isolated Postgres database `science_advantage_test` on the same container the rest of the monorepo uses (port 5432). The schema is applied via Drizzle migrations — Prisma is no longer involved in test-DB provisioning.
+Integration tests run against an isolated Postgres database `science_advantage_test` on the same container the rest of the monorepo uses (port 5432). The schema is applied via Drizzle migrations.
 
 **One-time setup:**
 
@@ -67,7 +69,7 @@ Resolution order (see `lib/test/resolve-test-database-url.ts`):
 2. `DATABASE_URL` with `_test` appended to the pathname.
 3. Built-in default: `postgresql://postgres:postgres@localhost:5432/science_advantage_test`.
 
-**Troubleshooting `ERROR: type "StandardsAlignment" already exists`:** this means something tried to run `prisma db push` against a database that already has Drizzle migrations applied (e.g. the dev DB). The fix is *never* point Prisma at the test DB — Track 3 moved test-DB provisioning entirely to Drizzle. Use the commands above, not `prisma db push`.
+**Troubleshooting `ERROR: type "StandardsAlignment" already exists`:** this means something tried to apply duplicate schema changes against a database that already has Drizzle migrations applied (e.g. the dev DB). The fix is always use Drizzle — Track 3 moved test-DB provisioning entirely to Drizzle. Use the commands above.
 
 ## Commit & Pull Request Guidelines
 
@@ -75,7 +77,7 @@ Follow Conventional Commits (`feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `t
 
 ## Environment & Security Tips
 
-Duplicate `.env.example` into `.env.local` before development and populate credentials for PostgreSQL, NextAuth, Google OAuth, OpenAI, Google Cloud Storage, and Redis. Never commit `.env*` files or production secrets. Rotate keys whenever rotating cloud resources, and confirm that Prisma migrations run cleanly in staging before tagging a release.
+Duplicate `.env.example` into `.env.local` before development and populate credentials for PostgreSQL, OpenAI, Google Cloud Storage, and Redis. Never commit `.env*` files or production secrets. Rotate keys whenever rotating cloud resources, and confirm that Drizzle migrations run cleanly in staging before tagging a release.
 
 ### Local Auth Configuration Reminder
 
