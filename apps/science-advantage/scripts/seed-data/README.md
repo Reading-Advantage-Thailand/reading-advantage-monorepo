@@ -131,29 +131,29 @@ Format to be defined when question schema is implemented.
 
 Run all seed data:
 ```bash
-npm run db:seed
+pnpm seed
 ```
 
 ### Selective Seeding
 
 Seed specific framework:
 ```bash
-npx tsx prisma/seed.ts --framework=THAI
+npx tsx scripts/seed.ts --framework=THAI
 ```
 
 Seed specific grade:
 ```bash
-npx tsx prisma/seed.ts --grade=3
+npx tsx scripts/seed.ts --grade=3
 ```
 
 Seed specific framework and grade:
 ```bash
-npx tsx prisma/seed.ts --framework=THAI --grade=3
+npx tsx scripts/seed.ts --framework=THAI --grade=3
 ```
 
 Skip demo data:
 ```bash
-npx tsx prisma/seed.ts --skip-demo
+npx tsx scripts/seed.ts --skip-demo
 ```
 
 ## Adding New Content
@@ -252,8 +252,8 @@ If lessons reference standards that don't exist:
 
 ## Related Files
 
-- `prisma/seed.ts` - Main orchestration script
-- `prisma/seed-functions/` - Modular seed functions
+- `scripts/seed.ts` - Main orchestration script
+- `scripts/seed/` - Modular seed functions
   - `seed-standards.ts`
   - `seed-lessons.ts`
   - `seed-questions.ts`

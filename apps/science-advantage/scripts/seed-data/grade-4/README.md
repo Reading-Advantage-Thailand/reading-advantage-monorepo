@@ -239,4 +239,4 @@ Examples:
 
 - Schema: `lib/schemas/lesson-content.schema.ts`
 - Validation: `scripts/validate-content.ts`
-- Existing G3 content: `prisma/seed-data/lessons/thai-g3-unit-1.json`
+- Existing G3 content: `scripts/seed-data/lessons/thai-g3-unit-1.json`
