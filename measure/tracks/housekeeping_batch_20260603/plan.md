@@ -68,15 +68,15 @@
 - **Warning for Implementer**: Seed scripts reference `data/content/grade-4/` via `__dirname`-relative paths that resolve to `apps/science-advantage/data/content/` (NOT `prisma/data/content/`). The app-root `data/` directory has only `standards-mapping.json`. The actual content lives under `prisma/data/content/`. The `prisma/data/` content must be relocated to `apps/science-advantage/data/content/` or the scripts' contentDir paths must be updated to point to the new location. See plan note above: the 6 path references counted here include the `data/` paths that resolve outside `prisma/` — the `prisma/data/content/` files (21 JSON) need additional handling beyond the `prisma/seed-data/` files (32 JSON).
 - **Dirty worktree**: No dirty paths are relevant to Phase 1. All 14 dirty entries are other-track work, auto-generated files, or archival operations. Phase 1 commit will be clean.
 
-- [x] Task: Create `apps/science-advantage/scripts/seed-data/{grade-4/{lessons,questions},curriculum-units,lessons,questions,standards}/` directories.
-- [x] Task: `git mv` the JSON files from `prisma/` to `scripts/seed-data/` (preserves history).
-- [x] Task: Move `prisma/seed-data/README.md` → `scripts/seed-data/README.md`.
-- [x] Task: Move `prisma/seed-functions/update-seed-files.ts` → `scripts/seed/update-seed-files.ts`.
-- [x] Task: `grep -rl "prisma/data\|prisma/seed-data\|prisma/seed-functions" apps/science-advantage/scripts/` — enumerate import paths to update.
-- [x] Task: Update import paths in the 6 seed scripts.
-- [x] Task: Run `pnpm seed` end-to-end; confirm the resulting data shape is unchanged. **Live gate deferred to Phase 11 final acceptance** — host cannot reach `127.0.0.1:5432` (podman networking). Contract-level Green evidence (53/53 hash match, tsc clean, schema tests pass, all 4 seed scripts import cleanly) is the Phase 1 deliverable. Phase 11 must re-run from dev environment.
-- [x] Task: `rm -rf apps/science-advantage/prisma/`.
-- [x] Task: Add a note to `apps/science-advantage/AGENTS.md`: "The `prisma/` directory must not exist at the app root. If you see it, it is a regression."
+- [x] (1f8c2a01) Task: Create `apps/science-advantage/scripts/seed-data/{grade-4/{lessons,questions},curriculum-units,lessons,questions,standards}/` directories.
+- [x] (1f8c2a01) Task: `git mv` the JSON files from `prisma/` to `scripts/seed-data/` (preserves history).
+- [x] (1f8c2a01) Task: Move `prisma/seed-data/README.md` → `scripts/seed-data/README.md`.
+- [x] (1f8c2a01) Task: Move `prisma/seed-functions/update-seed-files.ts` → `scripts/seed/update-seed-files.ts`.
+- [x] (1f8c2a01) Task: `grep -rl "prisma/data\|prisma/seed-data\|prisma/seed-functions" apps/science-advantage/scripts/` — enumerate import paths to update.
+- [x] (1f8c2a01) Task: Update import paths in the 6 seed scripts.
+- [x] (1f8c2a01) Task: Run `pnpm seed` end-to-end; confirm the resulting data shape is unchanged. **Live gate deferred to Phase 11 final acceptance** — host cannot reach `127.0.0.1:5432` (podman networking). Contract-level Green evidence (53/53 hash match, tsc clean, schema tests pass, all 4 seed scripts import cleanly) is the Phase 1 deliverable. Phase 11 must re-run from dev environment.
+- [x] (1f8c2a01) Task: `rm -rf apps/science-advantage/prisma/`.
+- [x] (1f8c2a01) Task: Add a note to `apps/science-advantage/AGENTS.md`: "The `prisma/` directory must not exist at the app root. If you see it, it is a regression."
 
 ### Mid 2026-06-17 third pass (Re-verification & closeout)
 
@@ -124,10 +124,10 @@ The Red phase was previously recorded in commit `08ebf5c1` (`test(housekeeping):
 
 ## Phase 2: Verify or Delete 4 Auth `route.ts` Stubs
 
-- [x] Task: `rg 'app/api/auth/(login|logout|session|impersonate)' apps/science-advantage/` — enumerate all references.
-- [x] Task: If 0 references: `rm apps/science-advantage/app/api/auth/{impersonate,login,logout,session}/route.ts`. Delete the empty `app/api/auth/` directory if no other files remain.
-- [x] Task: If references exist: add a comment to each stub explaining the delegation + the test that covers it.
-- [x] Task: Run `pnpm turbo run test --filter=science-advantage`; confirm green. **Live gate deferred to Phase 11 final acceptance** — host cannot reach `127.0.0.1:5432` (podman networking). Contract-level Green evidence (JSDoc comments on all 4 stubs, reference enumeration shows active delegation to `@reading-advantage/api/routes/auth`) is the Phase 2 deliverable.
+- [x] (96de2e30) Task: `rg 'app/api/auth/(login|logout|session|impersonate)' apps/science-advantage/` — enumerate all references.
+- [x] (96de2e30) Task: If 0 references: `rm apps/science-advantage/app/api/auth/{impersonate,login,logout,session}/route.ts`. Delete the empty `app/api/auth/` directory if no other files remain.
+- [x] (96de2e30) Task: If references exist: add a comment to each stub explaining the delegation + the test that covers it.
+- [x] (96de2e30) Task: Run `pnpm turbo run test --filter=science-advantage`; confirm green. **Live gate deferred to Phase 11 final acceptance** — host cannot reach `127.0.0.1:5432` (podman networking). Contract-level Green evidence (JSDoc comments on all 4 stubs, reference enumeration shows active delegation to `@reading-advantage/api/routes/auth`) is the Phase 2 deliverable.
 
 ### Green Phase Notes (Jr 2026-06-17)
 
