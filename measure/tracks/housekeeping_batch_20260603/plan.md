@@ -122,6 +122,23 @@ The Red phase was previously recorded in commit `08ebf5c1` (`test(housekeeping):
 
 **Build-graph update:** `graph.db` refreshed — 2,243 nodes / 3,184 edges / 313 files (was 2,199 / 3,125 / 303).
 
+## Phase 1 Review A Findings (2026-06-17)
+
+- **Status:** Reviewed, two missed active-code references found and fixed, stale audit assertion updated, hash identity verified.
+- **Commit:** `d7231a70` (`fix(science): relocate two missed prisma/seed-data path refs and update stale audit assertion`)
+- **Missed path references (now fixed):**
+  - `scripts/migrate-seed-data.ts:169` still pointed to `prisma/seed-data`; updated to `scripts/seed-data`.
+  - `scripts/convert-md-to-structured.ts:314` still pointed to `prisma/seed-data/lessons/thai-g3-unit-1.json`; updated to `scripts/seed-data/...`.
+  - `scripts/seed-data/README.md` still referenced `seed-functions/validate-json.ts`; updated to `scripts/seed/validate-json.ts`.
+- **Stale audit test updated:** `lib/__tests__/audit-phase2-static-analysis.test.ts` §2.8 previously asserted `prisma/` existed; inverted to assert `prisma/` is removed and `scripts/seed-data/` contains >50 JSON files. Added new §2.8 test to guard against active script references to legacy `prisma/seed-data|data|seed-functions` paths.
+- **Verification:**
+  - `test -d apps/science-advantage/prisma` → exit 1
+  - `test -d apps/science-advantage/scripts/seed-data` → exit 0
+  - `find apps/science-advantage/scripts/seed-data -name '*.json' | wc -l` → 53
+  - `diff <(awk '{print $1}' pre-snapshot.sha | sort) <(find apps/science-advantage/scripts/seed-data -name '*.json' -exec sha256sum {} \; | awk '{print $1}' | sort)` → empty
+  - `rg -n "prisma/seed-data|prisma/data|prisma/seed-functions" apps/science-advantage/scripts/ -g '*.ts' -g '!*.test.*'` → no matches
+- **Live gate:** `pnpm seed` remains environment-blocked on this host (no Node/pnpm); still owned by Phase 11 final acceptance.
+
 ## Phase 2: Verify or Delete 4 Auth `route.ts` Stubs
 
 - [x] (96de2e30) Task: `rg 'app/api/auth/(login|logout|session|impersonate)' apps/science-advantage/` — enumerate all references.
