@@ -1481,6 +1481,6 @@
 > non-Measure files. No source-code or test-file changes
 > in this commit.
 
-- [x] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. (`<jr-attempt-2-sha>`)
-- [x] Task: Re-run `pnpm outdated` and `pnpm audit`; document results. (`<jr-attempt-2-sha>`)
-- [x] Task: Update `measure/tech-stack.md` with the selected Drizzle version. (already satisfied — tech-stack.md dirty worktree has Drizzle 0.45.2 row) (`<jr-attempt-2-sha>`)
+- [x] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. (`a630a9ac`)
+- [x] Task: Re-run `pnpm outdated` and `pnpm audit`; document results. (`a630a9ac`)
+- [x] Task: Update `measure/tech-stack.md` with the selected Drizzle version. (already satisfied — tech-stack.md dirty worktree has Drizzle 0.45.2 row) (`a630a9ac`)
