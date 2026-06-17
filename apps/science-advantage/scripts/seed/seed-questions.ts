@@ -42,7 +42,7 @@ interface QuestionsFile {
 }
 
 function collectQuestionFiles(gradeLevel?: number): string[] {
-  const seedDataDir = path.join(__dirname, '..', '..', 'prisma', 'seed-data', 'questions');
+  const seedDataDir = path.join(__dirname, '..', 'seed-data', 'questions');
   const files: string[] = [];
 
   if (fs.existsSync(seedDataDir)) {
@@ -54,7 +54,7 @@ function collectQuestionFiles(gradeLevel?: number): string[] {
   }
 
   if (gradeLevel === 4) {
-    const contentDir = path.join(__dirname, '..', '..', 'data', 'content', 'grade-4', 'questions');
+    const contentDir = path.join(__dirname, '..', 'seed-data', 'grade-4', 'questions');
     if (fs.existsSync(contentDir)) {
       files.push(
         ...fs.readdirSync(contentDir)

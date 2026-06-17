@@ -45,7 +45,7 @@ interface LessonsFile {
 }
 
 function collectLessonFiles(gradeLevel?: number): string[] {
-  const seedDataDir = path.join(__dirname, '..', '..', 'prisma', 'seed-data', 'lessons');
+  const seedDataDir = path.join(__dirname, '..', 'seed-data', 'lessons');
   const files: string[] = [];
 
   if (fs.existsSync(seedDataDir)) {
@@ -57,7 +57,7 @@ function collectLessonFiles(gradeLevel?: number): string[] {
   }
 
   if (gradeLevel === 4) {
-    const contentDir = path.join(__dirname, '..', '..', 'data', 'content', 'grade-4', 'lessons');
+    const contentDir = path.join(__dirname, '..', 'seed-data', 'grade-4', 'lessons');
     if (fs.existsSync(contentDir)) {
       files.push(
         ...fs.readdirSync(contentDir)

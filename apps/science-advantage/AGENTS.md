@@ -1,5 +1,7 @@
 # Repository Guidelines
 
+> **Regression guard (housekeeping_batch_20260603, Phase 1, F-205):** The `prisma/` directory at the app root must not exist. If you see `apps/science-advantage/prisma/`, it is a regression — the legacy `prisma/seed-data`, `prisma/data/content`, and `prisma/seed-functions` contents were relocated to `apps/science-advantage/scripts/seed-data/` and `apps/science-advantage/scripts/seed/`. Drizzle is the source of truth; no Prisma runtime artifacts belong at the app root.
+
 ## Measure Workflow
 
 All development runs through the **Measure** spec-driven development framework exclusively. At the start of every session:

@@ -35,7 +35,7 @@ export async function seedStandards(
 
   await db.insert(schools).values({ id: SEED_SCHOOL_ID, name: 'Seed School' }).onConflictDoNothing();
 
-  const dataDir = path.join(__dirname, '..', '..', 'prisma', 'seed-data', 'standards');
+  const dataDir = path.join(__dirname, '..', 'seed-data', 'standards');
   const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
 
   let standardsCount = 0;

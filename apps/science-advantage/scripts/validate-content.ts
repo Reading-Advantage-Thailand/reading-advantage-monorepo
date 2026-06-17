@@ -21,7 +21,7 @@ import { LessonContentSchema, type LessonContent } from '@/lib/schemas/lesson-co
 import { ZodError } from 'zod';
 
 // Configuration
-const CONTENT_BASE_PATH = 'prisma/data/content';
+const CONTENT_BASE_PATH = 'scripts/seed-data';
 const MIN_READING_PASSAGE_WORDS = 300;
 const MAX_READING_PASSAGE_WORDS = 500;
 const MIN_VOCAB_TERMS = 8;

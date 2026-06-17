@@ -588,7 +588,7 @@ describe('Seed Data Validation', () => {
     it('should have 10 curriculum units for Grade 3', async () => {
       const { validateCurriculumUnitsFile } = await import('@/lib/schemas/validate-json');
 
-      const filePath = path.join(process.cwd(), 'prisma', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
+      const filePath = path.join(process.cwd(), 'scripts', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
       expect(() => validateCurriculumUnitsFile(data)).not.toThrow();
@@ -596,7 +596,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have 9 lessons in Unit 1 (intro to science)', async () => {
-      const filePath = path.join(process.cwd(), 'prisma', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
+      const filePath = path.join(process.cwd(), 'scripts', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
       const unit1 = data.units.find((u: any) => u.order === 1);
@@ -605,7 +605,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have 12 lessons in Unit 2 (environments & habitats)', async () => {
-      const filePath = path.join(process.cwd(), 'prisma', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
+      const filePath = path.join(process.cwd(), 'scripts', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
       const unit2 = data.units.find((u: any) => u.order === 2);
@@ -614,7 +614,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have 12 lessons in Unit 4 (forces & motion)', async () => {
-      const filePath = path.join(process.cwd(), 'prisma', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
+      const filePath = path.join(process.cwd(), 'scripts', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
       const unit4 = data.units.find((u: any) => u.order === 4);
@@ -623,7 +623,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have slug field on all curriculum units', async () => {
-      const filePath = path.join(process.cwd(), 'prisma', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
+      const filePath = path.join(process.cwd(), 'scripts', 'seed-data', 'curriculum-units', 'thai-grade-3.json');
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
       for (const unit of data.units) {
@@ -634,7 +634,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have slug field on all Grade 3 lessons', async () => {
-      const lessonsDir = path.join(process.cwd(), 'prisma', 'seed-data', 'lessons');
+      const lessonsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'lessons');
       const files = fs.readdirSync(lessonsDir).filter(f => f.startsWith('thai-g3-unit') && f.endsWith('.json'));
 
       for (const file of files) {
@@ -651,7 +651,7 @@ describe('Seed Data Validation', () => {
 
     it('should have valid lessonType for all Grade 3 lessons', async () => {
       const { LessonType } = await import('@/lib/enums');
-      const lessonsDir = path.join(process.cwd(), 'prisma', 'seed-data', 'lessons');
+      const lessonsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'lessons');
       const files = fs.readdirSync(lessonsDir).filter(f => f.startsWith('thai-g3-unit') && f.endsWith('.json'));
 
       for (const file of files) {
@@ -667,14 +667,14 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have question bank files for Grade 3 lessons', async () => {
-      const questionsDir = path.join(process.cwd(), 'prisma', 'seed-data', 'questions');
+      const questionsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'questions');
       const files = fs.readdirSync(questionsDir).filter(f => f.startsWith('g3-') && f.endsWith('.json'));
 
       expect(files.length).toBeGreaterThan(0);
     });
 
     it('should have standards mapping for Grade 3', async () => {
-      const filePath = path.join(process.cwd(), 'prisma', 'seed-data', 'standards', 'thai-grade-3.json');
+      const filePath = path.join(process.cwd(), 'scripts', 'seed-data', 'standards', 'thai-grade-3.json');
       expect(fs.existsSync(filePath)).toBe(true);
 
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
@@ -685,7 +685,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have structuredContent with blocks for Grade 3 Unit 1 lessons', async () => {
-      const filePath = path.join(process.cwd(), 'prisma', 'seed-data', 'lessons', 'thai-g3-unit-1.json');
+      const filePath = path.join(process.cwd(), 'scripts', 'seed-data', 'lessons', 'thai-g3-unit-1.json');
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
       for (const lesson of data.lessons) {
@@ -698,7 +698,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have bilingual content (Thai) for Grade 3 lessons with structuredContent', async () => {
-      const filePath = path.join(process.cwd(), 'prisma', 'seed-data', 'lessons', 'thai-g3-unit-1.json');
+      const filePath = path.join(process.cwd(), 'scripts', 'seed-data', 'lessons', 'thai-g3-unit-1.json');
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
       const lesson1 = data.lessons[0];
@@ -718,16 +718,16 @@ describe('Seed Data Validation', () => {
   });
 
   describe('Grade 4 Rich Content Normalization (Phase 2)', () => {
-    it('should have lesson files for Grade 4 in prisma/data/content/grade-4/lessons/', async () => {
-      const lessonsDir = path.join(process.cwd(), 'prisma', 'data', 'content', 'grade-4', 'lessons');
+    it('should have lesson files for Grade 4 in scripts/seed-data/grade-4/lessons/', async () => {
+      const lessonsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'lessons');
       expect(fs.existsSync(lessonsDir)).toBe(true);
 
       const files = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.json'));
       expect(files.length).toBeGreaterThan(0);
     });
 
-    it('should have question bank files for Grade 4 in prisma/data/content/grade-4/questions/', async () => {
-      const questionsDir = path.join(process.cwd(), 'prisma', 'data', 'content', 'grade-4', 'questions');
+    it('should have question bank files for Grade 4 in scripts/seed-data/grade-4/questions/', async () => {
+      const questionsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'questions');
       expect(fs.existsSync(questionsDir)).toBe(true);
 
       const files = fs.readdirSync(questionsDir).filter(f => f.endsWith('.json'));
@@ -735,7 +735,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have standards mapping for Grade 4', async () => {
-      const filePath = path.join(process.cwd(), 'prisma', 'data', 'content', 'grade-4', 'standards-mapping.json');
+      const filePath = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'standards-mapping.json');
       expect(fs.existsSync(filePath)).toBe(true);
 
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
@@ -746,7 +746,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have slug field on Grade 4 lesson file names', async () => {
-      const lessonsDir = path.join(process.cwd(), 'prisma', 'data', 'content', 'grade-4', 'lessons');
+      const lessonsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'lessons');
       const files = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.json'));
 
       for (const file of files) {
@@ -755,7 +755,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have structuredContent with blocks for Grade 4 lessons', async () => {
-      const lessonsDir = path.join(process.cwd(), 'prisma', 'data', 'content', 'grade-4', 'lessons');
+      const lessonsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'lessons');
       const files = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.json'));
 
       for (const file of files) {
@@ -770,8 +770,8 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have question banks with 20 questions per Grade 4 lesson', async () => {
-      const lessonsDir = path.join(process.cwd(), 'prisma', 'data', 'content', 'grade-4', 'lessons');
-      const questionsDir = path.join(process.cwd(), 'prisma', 'data', 'content', 'grade-4', 'questions');
+      const lessonsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'lessons');
+      const questionsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'questions');
       const lessonFiles = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.json'));
 
       for (const lessonFile of lessonFiles) {
@@ -785,7 +785,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have bilingual vocabulary terms in Grade 4 structuredContent', async () => {
-      const lessonsDir = path.join(process.cwd(), 'prisma', 'data', 'content', 'grade-4', 'lessons');
+      const lessonsDir = path.join(process.cwd(), 'scripts', 'seed-data', 'grade-4', 'lessons');
       const files = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.json'));
 
       for (const file of files) {

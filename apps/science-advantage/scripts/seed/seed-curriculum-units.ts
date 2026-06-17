@@ -49,7 +49,7 @@ export async function seedCurriculumUnits(
 
   await db.insert(schools).values({ id: SEED_SCHOOL_ID, name: 'Seed School' }).onConflictDoNothing();
 
-  const dataDir = path.join(__dirname, '..', '..', 'prisma', 'seed-data', 'curriculum-units');
+  const dataDir = path.join(__dirname, '..', 'seed-data', 'curriculum-units');
   const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
 
   let unitsCount = 0;

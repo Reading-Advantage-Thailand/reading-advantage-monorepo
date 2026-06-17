@@ -5,7 +5,7 @@ import { LessonType, StandardsAlignment } from '@/lib/enums';
 describe('Content Migration Validation - Grade 4', () => {
   describe('Lesson slug requirements', () => {
     it('should have proper lesson slugs in content files', async () => {
-      const content = await import('@/prisma/data/content/grade-4/lessons/g4-weather-patterns.json');
+      const content = await import('@/scripts/seed-data/grade-4/lessons/g4-weather-patterns.json');
 
       expect(content.slug).toBeDefined();
       expect(isValidLessonSlug(content.slug)).toBe(true);
@@ -35,7 +35,7 @@ describe('Content Migration Validation - Grade 4', () => {
 
   describe('Standards mapping slug requirements', () => {
     it('should reference lessons by slug not ID in standards mapping', async () => {
-      const standardsMapping = await import('@/prisma/data/content/grade-4/standards-mapping.json');
+      const standardsMapping = await import('@/scripts/seed-data/grade-4/standards-mapping.json');
 
       for (const lesson of standardsMapping.lessons) {
         expect(lesson.slug).toBeDefined();
@@ -44,7 +44,7 @@ describe('Content Migration Validation - Grade 4', () => {
     });
 
     it('should have 10 Grade 4 science lessons with proper standards', async () => {
-      const standardsMapping = await import('@/prisma/data/content/grade-4/standards-mapping.json');
+      const standardsMapping = await import('@/scripts/seed-data/grade-4/standards-mapping.json');
 
       expect(standardsMapping.lessons).toHaveLength(10);
 
@@ -68,7 +68,7 @@ describe('Content Migration Validation - Grade 4', () => {
     });
 
     it('should have THAI framework and gradeLevel 4 in standards mapping', async () => {
-      const standardsMapping = await import('@/prisma/data/content/grade-4/standards-mapping.json');
+      const standardsMapping = await import('@/scripts/seed-data/grade-4/standards-mapping.json');
 
       expect(standardsMapping.framework).toBe(StandardsAlignment.THAI);
       expect(standardsMapping.gradeLevel).toBe(4);
@@ -77,7 +77,7 @@ describe('Content Migration Validation - Grade 4', () => {
 
   describe('Question bank slug requirements', () => {
     it('should reference lesson by slug not lessonId in question files', async () => {
-      const questions = await import('@/prisma/data/content/grade-4/questions/g4-weather-patterns.json');
+      const questions = await import('@/scripts/seed-data/grade-4/questions/g4-weather-patterns.json');
 
       expect(questions.slug).toBeDefined();
       expect(isValidLessonSlug(questions.slug)).toBe(true);
@@ -85,7 +85,7 @@ describe('Content Migration Validation - Grade 4', () => {
     });
 
     it('should have question slugs in proper format', async () => {
-      const questions = await import('@/prisma/data/content/grade-4/questions/g4-weather-patterns.json');
+      const questions = await import('@/scripts/seed-data/grade-4/questions/g4-weather-patterns.json');
 
       for (const q of questions.questions) {
         expect(q.slug).toBeDefined();
@@ -94,7 +94,7 @@ describe('Content Migration Validation - Grade 4', () => {
     });
 
     it('should have 20 questions for weather patterns lesson', async () => {
-      const questions = await import('@/prisma/data/content/grade-4/questions/g4-weather-patterns.json');
+      const questions = await import('@/scripts/seed-data/grade-4/questions/g4-weather-patterns.json');
 
       expect(questions.questions).toHaveLength(20);
     });

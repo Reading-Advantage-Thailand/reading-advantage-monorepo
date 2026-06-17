@@ -22,7 +22,6 @@ const eslintConfig = [{
   },
 }, {
   files: [
-    "prisma/seed-functions/**",
     "scripts/**",
   ],
   rules: {
