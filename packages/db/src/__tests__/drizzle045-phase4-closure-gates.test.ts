@@ -82,7 +82,7 @@
  *      ID. The actual live run of the aggregate gate is owned by
  *      the JR role per the plan note above.
  *
- *   3. "Task 2 — pnpm outdated / audit closure record" — 3 tests.
+ *   3. "Task 2 — pnpm outdated / audit closure record" — 4 tests.
  *      A closure artifact must exist at
  *      `measure/tracks/drizzle045_major_migration/phase4-outdated-audit.md`,
  *      must record `pnpm outdated -r drizzle-orm` showing a 0.45.x
@@ -443,6 +443,35 @@ describe("drizzle045-phase4-closure-gates — pnpm outdated / audit closure reco
       `drizzle-orm version "${version}" must appear in positive ` +
         `context (not negated by "not adopt", "rejected", "downgrade", ` +
         `"vulnerable", "CVE-", etc.).`,
+    ).toBe(true);
+  });
+
+  it("phase4-outdated-audit.md records pnpm outdated -r showing drizzle-kit >=0.31.7", () => {
+    expect(closure, "closure record must be non-empty").not.toBe("");
+    // The closure record must also capture the companion drizzle-kit
+    // version from `pnpm outdated -r`.  Per Phase 3 audit
+    // (test-strategy §7 note), no stable drizzle-kit 0.32.x exists on
+    // npm (latest stable is 0.31.10); the Phase 3 integration-gates
+    // test was adjusted from >=0.32 to >=0.31.7.  This assertion
+    // follows the same >=0.31.7 floor.
+    expect(
+      closure,
+      "closure record must reference drizzle-kit in the `pnpm outdated` report.",
+    ).toMatch(/drizzle-kit\b/);
+    const kitVersionMatch = closure.match(
+      /drizzle-kit[@\s]+v?(\d+\.\d+\.\d+)/,
+    );
+    expect(
+      kitVersionMatch,
+      "closure record must include a drizzle-kit version number " +
+        "(e.g., drizzle-kit 0.31.10).",
+    ).not.toBeNull();
+    const [, kitVersion] = kitVersionMatch!;
+    const [kitMajor, kitMinor] = kitVersion.split(".").map(Number);
+    expect(
+      kitMajor === 0 && kitMinor >= 31,
+      `closure record must show drizzle-kit at >=0.31.7; ` +
+        `got ${kitVersion}.`,
     ).toBe(true);
   });
 

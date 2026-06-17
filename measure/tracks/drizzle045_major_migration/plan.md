@@ -1216,7 +1216,135 @@
 > > `phase4-outdated-audit.md`). The Mid role's Red contract
 > > pins that these deliverables land before the track is
 > > closed.
+>
+> > **Attempt-5 Red-phase note (MID, this attempt):** Re-ran the
+> > targeted Red command at HEAD `2330ad2e` (the current HEAD
+> > after the supervisor daily-automation commit, which post-dates
+> > attempt-4). The Red profile has shifted: the 3 tech-stack.md
+> > Drizzle-row tests that were RED in attempt-4 are now GREEN
+> > because the dirty worktree adds a Drizzle row (drizzle-orm
+> > 0.45.2 / drizzle-kit ^0.31.7 / drizzle-zod ^0.7.0) to
+> > `measure/tech-stack.md` "Selected Shared Versions" table.
+> > Task 3 is **already satisfied with evidence** at HEAD
+> > (tech-stack.md contains the required row; the worktree
+> > modification is preserved as pre-existing user work, not
+> > committed by this attempt).
+> >
+> > **Contract tightened:** The Phase 2/3 `drizzle045-phase4-closure-gates.test.ts`
+> > describe block "pnpm outdated / audit closure record (Task 2)"
+> > previously asserted drizzle-orm version only.  This attempt
+> > adds a 4th test that asserts the `phase4-outdated-audit.md`
+> > closure record also captures the companion drizzle-kit
+> > version from `pnpm outdated -r`, at `>=0.31.7` (following the
+> > Phase 3 adjustment from `>=0.32` after confirming no stable
+> > drizzle-kit 0.32.x exists on npm).  The test fail because
+> > `phase4-outdated-audit.md` does not exist at HEAD.
+> >
+> > **Targeted Red command (attempt-5):**
+> >
+> > ```
+> > /opt/codex-desktop/resources/node-runtime/bin/node \
+> >   ./packages/db/node_modules/vitest/vitest.mjs run \
+> >   packages/db/src/__tests__/drizzle045-phase4-closure-gates.test.ts
+> > ```
+> >
+> > **Red result (attempt-5, HEAD `2330ad2e`):** **13 tests —
+> > 8 failed | 5 passed (81 ms).**
+> >
+> > Failures (8 — all genuine Phase 4 implementation gaps):
+> >
+> > - `phase4-aggregate-gate.md (Task 1)`: 4 RED — the closure
+> >   record does not exist.
+> > - `phase4-outdated-audit.md (Task 2)`: 4 RED — the closure
+> >   record does not exist.  The new 4th test (`drizzle-kit
+> >   >=0.31.7`) is RED for the same reason.
+> >
+> > Passes (5):
+> >
+> > - `tech-stack.md Drizzle row (Task 3)`: 4 GREEN — the
+> >   "Selected Shared Versions" table exists, contains a Drizzle
+> >   row at 0.45.x in positive context, cross-references the
+> >   drizzle045_major_migration track.  Pre-existing dirty
+> >   worktree satisfied this; Task 3 is already GREEN.
+> > - `lockfile 0.45.x (regression guard)`: 1 GREEN — unchanged.
+> >
+> > **Dirty worktree classification at Red start (attempt-5):**
+> >
+> > **RELEVANT to this track (preserved untouched, NOT folded**
+> > **into this Red commit):**
+> >
+> > - `measure/tech-stack.md` (Task 3 deliverable — Drizzle row
+> >   added by pre-existing work; mixed with AI SDK rows from
+> >   the `ai_sdk_major_migration` track)
+> > - `measure/tracks/drizzle045_major_migration/metadata.json`
+> >   (track metadata update)
+> > - `packages/db/drizzle/meta/_journal.json` (added entry 0021;
+> >   causes Phase 3 integration-gates 1-test failure: 22 entries
+> >   vs 21 expected — known regression, JR must resolve)
+> > - `packages/db/src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts`
+> >   (TypeScript casting fixes for drizzle-orm 0.45 strict types)
+> > - `packages/db/src/__tests__/drizzle045-schema-compile.test.ts`
+> >   (TypeScript casting fixes for drizzle-orm 0.45 strict types)
+> > - `measure/tracks/prisma_drizzle_slice_cleanup_20260505/` (D)
+> >   (track archive/cleanup)
+> > - `packages/db/drizzle/0021_marketing_tables.sql` (??, new
+> >   migration — journal drift root cause)
+> > - `packages/db/drizzle/meta/0021_snapshot.json` (??, new
+> >   migration snapshot)
+> > - `measure/archive/prisma_drizzle_slice_cleanup_20260505/` (??,
+> >   archive of deleted track)
+> > - `measure/lessons-learned.md` (project memory update)
+> > - `measure/tech-debt.md` (tech debt update)
+> > - `measure/tracks.md` (tracks registry update)
+> >
+> > **UNRELATED user work (preserved untouched):**
+> >
+> > - `apps/reading-advantage/lib/enums.ts` (app-level enum change)
+> > - `apps/science-advantage/AGENTS.md` (science-advantage docs)
+> > - `apps/science-advantage/lib/enums.ts` (app-level enum change)
+> > - `measure/automation-supervisor.py` (supervisor model defaults)
+> > - `measure/tracks/ai_sdk_major_migration/metadata.json` (different track)
+> > - `measure/tracks/migration_review_remediation_20260616/` (??, different track)
+> > - `measure/tracks/primary_advantage_drizzle_migration_20260526/` (??, different track)
+> >
+> > **IGNORABLE (auto-generated, not committed):**
+> >
+> > - `apps/marketing/next-env.d.ts` (Next.js auto-generated)
+> >
+> > **SETUP-OWNED untracked (not in this commit):**
+> >
+> > - `measure/tracks/drizzle045_major_migration/test-strategy.md`
+> >
+> > **Worktree at end of Red (attempt-5):** 1 modified test file
+> > (`packages/db/src/__tests__/drizzle045-phase4-closure-gates.test.ts`
+> > — contract tightened with drizzle-kit version assertion),
+> > 1 modified Measure file (`plan.md` — this note).
+> > All other dirty paths preserved untouched per classification
+> > above.  0 modified non-Measure, non-test files staged.
+> >
+> > **Build-graph baseline (attempt-5):** `graph.db` (3.5 MB,
+> > mtime 2026-06-15 14:16) reports **2177 nodes / 3104 edges /**
+> > **298 files**.  Stale by ~46h at attempt start (>24h
+> > freshness window).  `build-graph scan` timed out at 120 s;
+> > the existing graph.db is usable for structural queries but
+> > pre-dates the Phase 4 Red contract file.  Key symbol
+> > `createTenantDB` is indexed at
+> > `packages/domain/src/db-contract.ts` (TenantDB wrapping
+> > survives 0.45).  `drizzle-zod` has zero graph entries
+> > (confirmed by `build-graph search drizzle-zod` — no results;
+> > installed at runtime but not imported by any scanned TS
+> > source).  No `build-graph update` is required for this
+> > commit (only test-file + plan.md changes).
+> >
+> > **Phase 3 regression noted (not Mid-owned):**
+> > `drizzle045-phase3-integration-gates.test.ts` now has 1
+> > failure: `_journal.json exposes exactly 21 entries` (actual:
+> > 22) because the dirty worktree added entry 0021
+> > (`0021_marketing_tables`).  This is a Phase 3 regression
+> > caused by the pre-existing dirty worktree — the Mid role
+> > does not own Phase 3 fixes.  The JR role must resolve
+> > during Phase 4 closeout.
 
 - [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
 - [~] Task: Re-run `pnpm outdated` and `pnpm audit`; document results.
-- [~] Task: Update `measure/tech-stack.md` with the selected Drizzle version.
+- [~] Task: Update `measure/tech-stack.md` with the selected Drizzle version. (already satisfied — tech-stack.md dirty worktree has Drizzle 0.45.2 row)
