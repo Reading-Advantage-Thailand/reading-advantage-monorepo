@@ -523,11 +523,73 @@ Fix applied: §6.1 inverted to assert the post-Green contract directly — (1) a
 
 ## Phase 8: Add `docs/adr/` Directory
 
-- [ ] Task: Create `packages/db/docs/adr/0001-use-drizzle-not-prisma.md` — reverse-engineer from the `prisma_drizzle_*` track plans.
-- [ ] Task: Create `packages/db/docs/adr/0002-drop-jwt-era-accounts-columns.md` — explain the destructive `0003_slow_firebrand.sql` migration.
-- [ ] Task: Create `packages/db/docs/adr/0003-add-intern-role.md` — explain the `0012_codecamp_intern_role.sql` migration.
-- [ ] Task: Update `0012_codecamp_intern_role.sql` with a header comment referencing the ADR.
-- [ ] Task: Add a CI lint: a script that grep-fails on `DROP TABLE` / `DROP COLUMN` lines not followed by an ADR reference within 10 lines. Wire into `scripts/ci/`.
+> **Red phase (MID) recorded 2026-06-18.** Pre-implementation state captured. Tests fail as expected for missing implementation (no `packages/db/docs/adr/` directory, no ADR files, no `scripts/ci/sql-adr-guard.sh`, no header comment on `0012_codecamp_intern_role.sql`).
+
+### Red Phase Recording (2026-06-18)
+
+- **Targeted Red command** (per test-strategy.md "Live-Proof Plan" Phase 8, bounded vitest run):
+  `/opt/codex-desktop/resources/node-runtime/bin/node ./node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/__tests__/housekeeping-phase8-adr-directory.test.ts`
+- **Pre-state at HEAD** (commit `a231539a`):
+  - `test -d packages/db/docs/adr` → exit 1 (target absent; ADR directory does not exist).
+  - `test -f packages/db/docs/adr/0001-use-drizzle-not-prisma.md` → exit 1.
+  - `test -f packages/db/docs/adr/0002-drop-jwt-era-accounts-columns.md` → exit 1.
+  - `test -f packages/db/docs/adr/0003-add-intern-role.md` → exit 1.
+  - `test -f scripts/ci/sql-adr-guard.sh` → exit 1 (lint script absent).
+  - `head -1 packages/db/drizzle/0012_codecamp_intern_role.sql` → `ALTER TYPE "role" ADD VALUE IF NOT EXISTS 'INTERN';` (no header comment, no ADR reference).
+- **Test file**: `apps/science-advantage/lib/__tests__/housekeeping-phase8-adr-directory.test.ts` (~520 lines, 17 assertions in 9 describe blocks).
+- **Red command result at HEAD** (commit `a231539a`):
+  ```
+  ❯ lib/__tests__/housekeeping-phase8-adr-directory.test.ts (17 tests | 15 failed) 449ms
+       × §1.1 — packages/db/docs/adr/ is a directory 55ms
+       × §2.1 — packages/db/docs/adr/0001-use-drizzle-not-prisma.md exists 6ms
+       × §2.2 — ADR 0001 mentions Drizzle, Prisma, and migration 0013 4ms
+       × §3.1 — packages/db/docs/adr/0002-drop-jwt-era-accounts-columns.md exists 4ms
+       × §3.2 — ADR 0002 references migration 0003_slow_firebrand.sql 5ms
+       × §4.1 — packages/db/docs/adr/0003-add-intern-role.md exists 5ms
+       × §4.2 — ADR 0003 references migration 0012_codecamp_intern_role.sql 2ms
+       × §5.1 — first 10 lines of 0012_codecamp_intern_role.sql reference ADR 0003 53ms
+       × §6.1 — scripts/ci/sql-adr-guard.sh exists 11ms
+       × §6.2 — scripts/ci/sql-adr-guard.sh is executable (owner-execute bit set) 9ms
+       × §7.2 — script exits 0 on the passing fixture (DROP with ADR within 10 lines) 34ms
+       × §7.3 — script exits 0 on the annotated 0012_codecamp_intern_role.sql (header references ADR 0003) 44ms
+       × §8.1 — script help mentions an allowlist flag or config file 35ms
+       × §8.2 — script allows grandfathering a pre-existing DROP-only migration 31ms
+       × §9.1 — `rg -l "^" packages/db/docs/adr/` returns ≥ 3 files (3 ADRs present) 40ms
+  Test Files  1 failed (1)
+       Tests  15 failed | 2 passed (17)
+  ```
+- **Red fail count at HEAD**: **15 failed / 2 passed (17 total)**. The 15 failures are exactly the contract assertions: file presence for the ADR directory + 3 ADR files (§1, §2.1, §3.1, §4.1), ADR content references (§2.2, §3.2, §4.2), `0012_codecamp_intern_role.sql` header comment (§5.1), lint script presence + executability (§6.1, §6.2), lint script wiring on passing fixture and annotated `0012` (§7.2, §7.3), allowlist mechanism in `--help` output and functional test (§8.1, §8.2), and live-proof rg sweep for ADR directory (§9.1). The 2 passes are regression guards that already hold at HEAD: **§7.1** (script exits non-zero on the failing fixture — passes because the script returns 127 from `bash: ...: No such file or directory`, which trivially satisfies `status !== 0`) and **§9.2** (migration 0013 already references `measure/tracks/...` for ADR provenance, satisfying the permissive rg check). All 15 failures are caused by **missing implementation** (no `packages/db/docs/adr/`, no ADR files, no lint script, no annotation header), not stale fixtures. The fixture files were created and cleaned by `beforeAll`/`afterAll` (verified `/tmp/.housekeeping-phase8-*` is absent post-run).
+- **Build-graph baseline**: `build-graph stats ./graph.db` → 2,269 nodes / 3,210 edges / 317 files (fresh). `build-graph search "ADR"`, `docs/adr`, `sql-adr-guard` all return no results — confirms Phase 8 is purely additive (no symbol blast radius, no schema/route/component impact).
+- **Pre-existing migration audit (for §7 fixture design)**:
+  - DROP statements in `packages/db/drizzle/`: 3 files (`0003_slow_firebrand.sql` lines 2, 4, 31, 33, 35, 40-54, 77, 79; `0013_prisma_drizzle_schema_unification.sql` lines 210-451; `0018_audit_events.sql` line 50 is a commented-out DROP).
+  - Per test-strategy.md cross-phase edge case #5: "Phase 8 ADR lint must allow-list pre-existing migrations until they are annotated, or ratchet only on new SQL files." The Implementer's design choice: provide an allowlist mechanism (flag, config file, or per-file invocation). The test pins the EXISTENCE of an allowlist mechanism, not its exact form.
+- **Fixture design (per test-strategy.md Phase 8)**:
+  - Failing fixture: `/tmp/.housekeeping-phase8-failing-fixture.sql` — contains `ALTER TABLE "users" DROP COLUMN "foo";` with NO ADR reference within 10 lines. Script must exit non-zero.
+  - Passing fixture: `/tmp/.housekeeping-phase8-passing-fixture.sql` — contains `ALTER TABLE "users" DROP COLUMN "foo";` followed by `-- ADR: 9999 — fixture` within 10 lines. Script must exit 0.
+  - Both fixtures are hermetic (created and cleaned by the test, in `/tmp`).
+- **Live-proof gate (test-strategy Phase 8 row)**:
+  - Red command exit codes:
+    - Failing fixture → non-zero (script absent, test fails on script-presence check).
+    - `0012_codecamp_intern_role.sql` before annotation → non-zero (script absent AND no header comment).
+  - Green gate exit codes:
+    - Passing fixture → 0.
+    - Annotated `0012_codecamp_intern_role.sql` → 0.
+  - Do NOT run guard against the entire `drizzle/` tree this track (test-strategy cross-phase edge case #5).
+- **Test framework**: vitest 4.1.8 (DB-free via `vitest.unit.config.ts`). Tests shell out to a bash script and use `fs.readFile` / `fs.stat` for content assertions. No DB, no Next.js server. Hermetic — fixtures are created and cleaned in `/tmp`.
+- **Conventions pinned by the test**:
+  - The 3 ADR files exist at `packages/db/docs/adr/000{1,2,3}-<kebab-name>.md`.
+  - Each ADR's content references its corresponding migration file (`0013_prisma_drizzle_schema_unification.sql`, `0003_slow_firebrand.sql`, `0012_codecamp_intern_role.sql`).
+  - The lint script is at `scripts/ci/sql-adr-guard.sh` and is executable.
+  - The lint script supports an allowlist mechanism (flag or config file) for pre-existing migrations.
+  - `0012_codecamp_intern_role.sql` has a header comment that references ADR 0003.
+- **Dirty worktree at MID start**: 4 entries — `M apps/science-advantage/lib/__tests__/housekeeping-phase7-git-notes.test.ts` (Phase 7 §7.1/§7.2 adversarial regression guards added but uncommitted; unrelated to Phase 8), `M measure/automation-supervisor.py` (orchestrator prompt edit; unrelated), `?? apps/marketing/next-env.d.ts` (auto-generated; generated/ignorable), `?? measure/tracks/agents_md_audit_science_advantage_20260603/` (different track; unrelated). All 4 are unrelated user work and are preserved (not folded into the Phase 8 Red commit). The Red commit touches only the new test file and `plan.md`.
+- **Handoff**: Implementer should: (1) read the test file header for the contract; (2) create the 3 ADR files at `packages/db/docs/adr/`; (3) add a header comment to `0012_codecamp_intern_role.sql` referencing ADR 0003; (4) create `scripts/ci/sql-adr-guard.sh` (executable) that grep-fails on `DROP TABLE` / `DROP COLUMN` without an ADR reference within 10 lines, AND supports an allowlist mechanism for pre-existing migrations; (5) re-run the targeted Red command and confirm all assertions pass; (6) commit with `docs(db): add ADR directory, intern-role annotation, and SQL-ADR guard lint (F-503)`.
+
+- [~] Task: Create `packages/db/docs/adr/0001-use-drizzle-not-prisma.md` — reverse-engineer from the `prisma_drizzle_*` track plans.
+- [~] Task: Create `packages/db/docs/adr/0002-drop-jwt-era-accounts-columns.md` — explain the destructive `0003_slow_firebrand.sql` migration.
+- [~] Task: Create `packages/db/docs/adr/0003-add-intern-role.md` — explain the `0012_codecamp_intern_role.sql` migration.
+- [~] Task: Update `0012_codecamp_intern_role.sql` with a header comment referencing the ADR.
+- [~] Task: Add a CI lint: a script that grep-fails on `DROP TABLE` / `DROP COLUMN` lines not followed by an ADR reference within 10 lines. Wire into `scripts/ci/`.
 
 ## Phase 9: Add `commitlint` Config
 
