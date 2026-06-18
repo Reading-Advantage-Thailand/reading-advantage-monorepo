@@ -734,6 +734,8 @@ Follow Conventional Commits:
 
 Keep commits scoped to a single concern. Reference track IDs when relevant.
 
+A `commitlint` hook (via husky) validates every new commit against the conventional-commit format. Non-chore commit subjects must include a `track_id` reference in the form `(track_id: <name>_<YYYYMMDD>)`. This rule applies to **new commits** only; historical commits are not affected.
+
 ---
 
 ## Codebase Graph

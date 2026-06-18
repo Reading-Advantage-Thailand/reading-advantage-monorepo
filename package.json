@@ -14,10 +14,14 @@
     "db:stop": "docker compose down",
     "db:reset": "docker compose down -v && docker compose up -d",
     "config-drift": "pnpm --filter @reading-advantage/config test",
+    "prepare": "husky",
     "validate": "pnpm config-drift && turbo run lint test build"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "drizzle-orm": "0.45.2",
+    "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "turbo": "^2.5.2",
     "typescript": "^5.8.3"
