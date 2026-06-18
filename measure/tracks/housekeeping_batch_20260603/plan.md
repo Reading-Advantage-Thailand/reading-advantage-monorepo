@@ -1069,6 +1069,60 @@ Result: 1 test file passed, 16 tests passed.
 
 ## Phase 12: Closeout
 
-- [ ] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to `Resolved`. (F-1306 resolves to Track 11; this track resolves the other 9.)
-- [ ] Task: Add a lessons-learned entry: "Batched housekeeping is the right pattern for Low/Medium findings — one PR with 10 small fixes is cheaper to review than 10 PRs."
-- [ ] Task: Move track to `measure/archive/housekeeping_batch_20260603/` and update `measure/tracks.md`.
+- [~] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to `Resolved`. (F-1306 resolves to Track 11; this track resolves the other 9.)
+- [~] Task: Add a lessons-learned entry: "Batched housekeeping is the right pattern for Low/Medium findings — one PR with 10 small fixes is cheaper to review than 10 PRs."
+- [~] Task: Move track to `measure/archive/housekeeping_batch_20260603/` and update `measure/tracks.md`.
+
+### Red Phase Recording (2026-06-19, MID)
+
+- **Targeted Red command** (per test-strategy.md "Live-Proof Plan" Phase 12, bounded vitest unit run):
+  ```
+  cd apps/science-advantage && \
+    /opt/codex-desktop/resources/node-runtime/bin/node \
+      ./node_modules/vitest/vitest.mjs run \
+        --config vitest.unit.config.ts \
+        lib/__tests__/housekeeping-phase12-closeout.test.ts
+  ```
+- **Pre-state at HEAD** (`a6c3cb7a`):
+  - `measure/tech-debt.md:41` row `audit_20260603_housekeeping_batch` has status `Open`. Contract violation: Phase 12 task 1 expects `Resolved`.
+  - `measure/lessons-learned.md` contains an entry dated `2026-06-18` about "Git notes backfill" (F-1207), but no entry about the **batched-housekeeping pattern** (Phase 12 task 2 contract).
+  - `measure/tracks/housekeeping_batch_20260603/` still in `tracks/`, NOT moved to `measure/archive/`.
+  - `measure/tracks.md:121` lists the track as `[ ]` with link `./tracks/housekeeping_batch_20260603/`. No archive-section `[x]` entry.
+  - `measure/tracks/housekeeping_batch_20260603/metadata.json` has `"status": "new"`. Archived tracks use `"status": "completed"` (see `measure/archive/codecamp_progress_monotonicity_20260611/metadata.json`).
+- **Red command result at HEAD** (`a6c3cb7a`):
+  ```
+  ❯ lib/__tests__/housekeeping-phase12-closeout.test.ts (10 tests | 7 failed) ~3.5s
+       × §1.1 — audit_20260603_housekeeping_batch row status is "Resolved" (closeout gate) 60ms
+       × §2.1 — lessons-learned.md contains a batched-housekeeping entry referencing the track ID 7ms
+       × §3.1 — measure/archive/housekeeping_batch_20260603/ exists 20ms
+       × §3.2 — measure/tracks/housekeeping_batch_20260603/ does NOT exist (move complete) 9ms
+       × §3.3 — measure/tracks.md does NOT contain an active ./tracks/housekeeping_batch_20260603/ link 12ms
+       × §3.4 — measure/tracks.md HAS an [x] archive-section entry pointing to ./archive/housekeeping_batch_20260603/ 7ms
+       × §3.5 — metadata.json status is a terminal value (completed | complete) 13ms
+  Test Files  1 failed (1)
+       Tests  7 failed | 3 passed (10)
+  ```
+- **Red fail count at HEAD**: **7 failed / 3 passed (10 total)**. All 7 failures are caused by **missing closeout behavior** (stale `Open` status, missing batched-housekeeping entry, un-archived track directory, no archive link in `tracks.md`, non-terminal `metadata.json` status) — not stale fixtures. The 3 passes are regression guards that already hold at HEAD (§1.2 exactly one `audit_20260603_housekeeping_batch` row exists; §1.3 tech-debt.md ≤50 lines; §2.2 lessons-learned.md ≤50 lines).
+- **Targeted Red command** (per test-strategy.md "Live-Proof Plan" Phase 12):
+  ```
+  cd apps/science-advantage && \
+    /opt/codex-desktop/resources/node-runtime/bin/node \
+      ./node_modules/vitest/vitest.mjs run \
+        --config vitest.unit.config.ts \
+        lib/__tests__/housekeeping-phase12-closeout.test.ts
+  ```
+  Recorded fail count: **7 failed / 3 passed (10 total)**.
+- **Test file**: `apps/science-advantage/lib/__tests__/housekeeping-phase12-closeout.test.ts` (~280 lines, 10 assertions in 3 describe blocks).
+- **Test contract** (Implementer's Green deliverable):
+  - **§1** — `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` has status `Resolved` (§1.1); no duplicate row (§1.2); file length ≤ 50 lines (§1.3).
+  - **§2** — `measure/lessons-learned.md` contains a batched-housekeeping entry dated on/after 2026-06-03 referencing `housekeeping_batch_20260603` AND the phrase "batched housekeeping" / "10 small fixes" / "cheaper to review" (§2.1); file length ≤ 50 lines (§2.2).
+  - **§3** — `measure/archive/housekeeping_batch_20260603/` exists (§3.1); `measure/tracks/housekeeping_batch_20260603/` does NOT exist (§3.2); `measure/tracks.md` does NOT contain active `./tracks/housekeeping_batch_20260603/` link (§3.3); `measure/tracks.md` HAS an `[x]` archive-section entry pointing to `./archive/housekeeping_batch_20260603/` (§3.4); `metadata.json` status is `completed` (§3.5).
+- **Test framework**: vitest 4.1.8 (DB-free via `vitest.unit.config.ts`). Tests use `fs.readFileSync`, `fs.statSync`, and `execFileSync('git', ...)` for ground truth. No DB, no Next.js server, hermetic — no files are created or modified.
+- **Test approach (artifact/markdown assertions, paired with plan note)**:
+  - Per the prompt's policy: "Artifact or markdown assertions are allowed only when the phase deliverable is that artifact, and they must be paired with a live-behavior proof or an explicit plan note saying which later role owns the live gate."
+  - Phase 12's deliverable IS these artifacts (tech-debt row, lessons-learned entry, archive move + tracks.md update). The test-strategy.md "Live-Proof Plan" row for Phase 12 marks this phase as `static | tech-debt + tracks.md updated | contract` — i.e. contract-level only, no live behavior.
+  - The Implementer / closeout role owns the live gate: actual `git mv`, actual `edit` of `measure/tracks.md`, actual `edit` of `measure/lessons-learned.md`, etc. The test only asserts the post-Green artifact state.
+  - Regression guards (§1.3, §2.2, plus the no-active-link §3.3 paired with has-archive-link §3.4) ensure the Implementer cannot accidentally regress the curated-memory line cap or leave dangling active-track references.
+- **Build-graph baseline**: `build-graph stats ./graph.db` → 2,277 nodes / 3,210 edges / 325 files (fresh, unchanged since Phase 11 closeout). Phase 12 is pure doc/file-system work — no symbol/schema/route/component is touched, so no graph update is required.
+- **Dirty worktree at MID start**: 3 entries — `M measure/automation-supervisor.py` (orchestrator prompt edit; UNRELATED user work), `?? apps/marketing/next-env.d.ts` (auto-generated Next.js types for marketing app; generated/ignorable), `?? measure/tracks/agents_md_audit_science_advantage_20260603/` (different track; UNRELATED user work). All 3 are unrelated to Phase 12 and are preserved (not folded into the Red commit). The Red commit touches only the new test file and `plan.md`.
+- **Handoff**: Implementer / closeout role should: (1) read the test file header for the full contract; (2) update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` status from `Open` to `Resolved` (line 41); (3) append a lessons-learned entry under `## Planning Improvements` referencing `housekeeping_batch_20260603` and the batched-housekeeping pattern (current date 2026-06-19); (4) `git mv measure/tracks/housekeeping_batch_20260603/ measure/archive/housekeeping_batch_20260603/`; (5) update `measure/tracks.md` to move the track entry from the active section to the `## Archived Tracks` section (link `./archive/housekeeping_batch_20260603/`, mark `[x]`); (6) update `metadata.json` status to `completed`; (7) re-run the targeted Red command and confirm 10/10 pass; (8) commit with `docs(measure): Phase 12 closeout — tech-debt resolved, lessons-learned entry, archive track (track_id: housekeeping_batch_20260603)`.
