@@ -19,7 +19,7 @@
 | F-1201 | Medium | Re-pin 51 `^`-ranged deps (or doc deviation) | Phase 6 | [x] |
 | F-1207 | Medium | Add `git notes` to 24 refactor commits | Phase 7 | [x] |
 | F-1301 | Medium | |
-| F-503 | Medium | Add `docs/adr/` + SQL-ADR guard lint | Phase 8 | [ ] |
+| F-503 | Medium | Add `docs/adr/` + SQL-ADR guard lint | Phase 8 | [x] |
 | F-1301 | Medium | Add `commitlint` config (subject-line track ref) | Phase 9 | [ ] |
 | F-1306 | Medium | App-local CI workflow deletion | Phase 10 | [x] Deferred |
 

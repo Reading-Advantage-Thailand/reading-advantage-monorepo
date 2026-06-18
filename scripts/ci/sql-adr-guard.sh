@@ -102,7 +102,7 @@ if [[ -n "$ALLOWED" ]]; then
 fi
 
 # Find all DROP TABLE / DROP COLUMN line numbers
-DROP_LINES=$(grep -Ein '(DROP\s+TABLE|DROP\s+COLUMN)' "$SQL_FILE" | grep -v '^\s*--' || true)
+DROP_LINES=$(grep -Ein '(DROP\s+TABLE|DROP\s+COLUMN)' "$SQL_FILE" | grep -Ev '^[0-9]+:[[:space:]]*--' || true)
 
 if [[ -z "$DROP_LINES" ]]; then
   # No DROP statements — file passes.

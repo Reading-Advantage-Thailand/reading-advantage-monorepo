@@ -416,6 +416,27 @@ describe('housekeeping_batch_20260603 / Phase 8 — Add `docs/adr/` Directory (F
         `expected ${LINT_SCRIPT} to exit 0 on the annotated 0012_codecamp_intern_role.sql (header references ADR 0003); got status=${result.status}. stderr: ${result.stderr}`,
       ).toBe(0);
     });
+
+    it('§7.4 — script ignores commented-out DROP statements (0018_audit_events.sql line 50)', () => {
+      // Regression for a Phase Acceptance audit finding (2026-06-18):
+      // the committed script used `grep -v '^\s*--'` to filter
+      // commented DROP lines, but `grep -in` prefixes each line with
+      // `<line>:`, so the filter never matched and commented DROP
+      // lines were incorrectly flagged as violations. The plan's
+      // pre-existing migration audit explicitly lists
+      // `0018_audit_events.sql:50` as a commented-out DROP that the
+      // script must NOT flag. This test pins that contract directly
+      // on the real migration file (no fixture).
+      const MIGRATION_0018 = path.join(
+        MONOREPO_ROOT,
+        'packages/db/drizzle/0018_audit_events.sql',
+      );
+      const result = runCaptured('bash', [LINT_SCRIPT, MIGRATION_0018]);
+      expect(
+        result.status,
+        `expected ${LINT_SCRIPT} to exit 0 on 0018_audit_events.sql (the only DROP is in a comment on line 50, "-- DROP TABLE IF EXISTS \\"audit_events\\";"); got status=${result.status}. stderr: ${result.stderr}`,
+      ).toBe(0);
+    });
   });
 
   describe('§8 — Lint script has an allowlist mechanism for pre-existing migrations', () => {
