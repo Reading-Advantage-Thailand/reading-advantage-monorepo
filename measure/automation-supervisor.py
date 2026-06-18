@@ -484,7 +484,7 @@ def load_config() -> Config:
         phase_acceptance_model=model_env("PHASE_ACCEPTANCE_MODEL", "vocengine-coding/glm-5.2"),
         adversarial_model=model_env("ADVERSARIAL_MODEL", "minimax-cn-coding-plan/MiniMax-M3"),
         ux_model=model_env("UX_MODEL", "kimi-for-coding/k2p7"),
-        acceptance_model=model_env("ACCEPTANCE_MODEL", "opencode-go/qwen3.7-max"),
+        acceptance_model=model_env("ACCEPTANCE_MODEL", "openai/gpt-5.5"),
         closeout_model=model_env("CLOSEOUT_MODEL", "deepseek/deepseek-v4-flash"),
         sr_agent=os.environ.get("SR_AGENT", ""),
         mid_agent=os.environ.get("MID_AGENT", ""),
@@ -1370,7 +1370,7 @@ def main() -> int:
         supervise_role(config, RoleContext(roles["mid"], phase.track_id, phase.heading, plan_file, strategy_file, phase_dir), mid_prompt)
 
         jr_prompt = (
-            f"Load the measure skill and the build-graph skill. Read {plan_file} and the tests just written for phase "
+            f"/goal Load the measure skill and the build-graph skill. Read {plan_file} and the tests just written for phase "
             f"{phase.heading}. Use build-graph before implementation: run build-graph stats ./graph.db when available, "
             "inspect the symbols/files touched by the failing tests, and use build-graph callers/deps to understand blast "
             "radius before changing exported functions, schemas, routes, or components. If graph.db is missing or stale "
@@ -1464,7 +1464,7 @@ def main() -> int:
             baseline_sha=phase_base_sha,
         )
         phase_acceptance_prompt = (
-            f"Load the measure skill and build-graph skill. You are the independent Phase Acceptance Auditor for "
+            f"/goal Load the measure skill and build-graph skill. You are the independent Phase Acceptance Auditor for "
             f"{phase.track_id}, {phase.heading}. Read measure/index.md, the track spec, {plan_file}, and {strategy_file} "
             "if it exists. Compare every phase task and applicable acceptance criterion against the implementation, tests, "
             f"and git changes since {phase_base_sha}. Use build-graph callers/deps for changed exported contracts. Look for "
@@ -1487,9 +1487,10 @@ def main() -> int:
             baseline_sha=phase_base_sha,
         )
         adversarial_prompt = (
-            f"Load the measure skill. You are the Adversarial Test Auditor for {phase.track_id}, {phase.heading}. "
-            f"Read the spec, {plan_file}, {strategy_file} if present, and inspect changes since {phase_base_sha}. Try to "
-            "disprove correctness with boundary, failure-path, integration, concurrency, and regression tests. Inspect existing "
+            f"/goal Load the measure skill and the build-graph skill. You are the Adversarial Test Auditor for {phase.track_id}, {phase.heading}. "
+            f"Read the spec, {plan_file}, {strategy_file} if present, and inspect changes since {phase_base_sha}. Use "
+            "build-graph to inspect changed symbols, callers, dependencies, and exported contracts. Try to disprove "
+            "correctness with boundary, failure-path, integration, concurrency, and regression tests. Inspect existing "
             "tests for weak assertions, excessive mocking, substring assertions that match negated text, fake harnesses that do "
             "not intercept the real command, and documentation assertions standing in for live gate proof. When browser behavior "
             "is applicable, own durable Playwright E2E coverage and run it. Add and commit valuable tests and any tightly scoped fixes they expose. Run the relevant "
@@ -1510,7 +1511,7 @@ def main() -> int:
                 baseline_sha=phase_base_sha,
             )
             ux_prompt = (
-                f"Load the kimi-webbridge skill and follow it exactly. You are the multimodal UI/UX Auditor for "
+                f"Load the measure skill and the kimi-webbridge skill and follow both exactly. You are the multimodal UI/UX Auditor for "
                 f"{phase.track_id}, {phase.heading}. First run the required Kimi WebBridge health check. Use the real browser "
                 f"to inspect and exercise the changed user-facing flows at {config.project_dev_url}. Review relevant spec "
                 "acceptance criteria, visual hierarchy, spacing, responsiveness, loading/empty/error states, labels, keyboard "
@@ -1535,7 +1536,7 @@ def main() -> int:
                 baseline_sha=phase_base_sha,
             )
             acceptance_prompt = (
-                f"Load the measure skill and build-graph skill. You are the Final Acceptance Auditor for track "
+                f"/goal Load the measure skill and build-graph skill. You are the Final Acceptance Auditor for track "
                 f"{phase.track_id}. Read measure/index.md, the complete spec, {plan_file}, {strategy_file} if it exists, "
                 "measure/lessons-learned.md, and measure/tech-debt.md. Independently verify every non-deferred acceptance "
                 "criterion and task, changed callers and contracts, test quality, and the complete track outcome. Treat recorded "
@@ -1559,8 +1560,9 @@ def main() -> int:
                 baseline_sha=phase_base_sha,
             )
             closeout_prompt = (
-                f"Load the measure skill. You are the Measure Closeout Steward for {phase.track_id}. The final acceptance "
+                f"/goal Load the measure skill and the build-graph skill. You are the Measure Closeout Steward for {phase.track_id}. The final acceptance "
                 "audit has passed. Verify all tasks and phase headings are complete with required commit/checkpoint evidence. "
+                "Use build-graph when closeout touches generated graph artifacts, exported contracts, or changed TypeScript structure. "
                 "Before archiving, rerun the required closeout gates in real mode (for example, use env -u VERIFY_FAKE_GATE_DIR "
                 "for verify-style commands) and do not rely only on closeout-verification.md or plan.md PASS text. Confirm there "
                 "are no intentionally-red test files in aggregate suites unless the track remains active and the plan names the "
