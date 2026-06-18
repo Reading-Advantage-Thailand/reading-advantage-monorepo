@@ -585,11 +585,52 @@ Fix applied: §6.1 inverted to assert the post-Green contract directly — (1) a
 - **Dirty worktree at MID start**: 4 entries — `M apps/science-advantage/lib/__tests__/housekeeping-phase7-git-notes.test.ts` (Phase 7 §7.1/§7.2 adversarial regression guards added but uncommitted; unrelated to Phase 8), `M measure/automation-supervisor.py` (orchestrator prompt edit; unrelated), `?? apps/marketing/next-env.d.ts` (auto-generated; generated/ignorable), `?? measure/tracks/agents_md_audit_science_advantage_20260603/` (different track; unrelated). All 4 are unrelated user work and are preserved (not folded into the Phase 8 Red commit). The Red commit touches only the new test file and `plan.md`.
 - **Handoff**: Implementer should: (1) read the test file header for the contract; (2) create the 3 ADR files at `packages/db/docs/adr/`; (3) add a header comment to `0012_codecamp_intern_role.sql` referencing ADR 0003; (4) create `scripts/ci/sql-adr-guard.sh` (executable) that grep-fails on `DROP TABLE` / `DROP COLUMN` without an ADR reference within 10 lines, AND supports an allowlist mechanism for pre-existing migrations; (5) re-run the targeted Red command and confirm all assertions pass; (6) commit with `docs(db): add ADR directory, intern-role annotation, and SQL-ADR guard lint (F-503)`.
 
-- [~] Task: Create `packages/db/docs/adr/0001-use-drizzle-not-prisma.md` — reverse-engineer from the `prisma_drizzle_*` track plans.
-- [~] Task: Create `packages/db/docs/adr/0002-drop-jwt-era-accounts-columns.md` — explain the destructive `0003_slow_firebrand.sql` migration.
-- [~] Task: Create `packages/db/docs/adr/0003-add-intern-role.md` — explain the `0012_codecamp_intern_role.sql` migration.
-- [~] Task: Update `0012_codecamp_intern_role.sql` with a header comment referencing the ADR.
-- [~] Task: Add a CI lint: a script that grep-fails on `DROP TABLE` / `DROP COLUMN` lines not followed by an ADR reference within 10 lines. Wire into `scripts/ci/`.
+- [x] (b94f900a) Task: Create `packages/db/docs/adr/0001-use-drizzle-not-prisma.md` — reverse-engineer from the `prisma_drizzle_*` track plans.
+- [x] (b94f900a) Task: Create `packages/db/docs/adr/0002-drop-jwt-era-accounts-columns.md` — explain the destructive `0003_slow_firebrand.sql` migration.
+- [x] (b94f900a) Task: Create `packages/db/docs/adr/0003-add-intern-role.md` — explain the `0012_codecamp_intern_role.sql` migration.
+- [x] (b94f900a) Task: Update `0012_codecamp_intern_role.sql` with a header comment referencing the ADR.
+- [x] (b94f900a) Task: Add a CI lint: a script that grep-fails on `DROP TABLE` / `DROP COLUMN` lines not followed by an ADR reference within 10 lines. Wire into `scripts/ci/`.
+
+### Green Phase Notes (Jr 2026-06-18)
+
+**Commit:** `b94f900a` (`docs(db): add ADR directory, intern-role annotation, and SQL-ADR guard lint (F-503)`)
+
+**Red→Green contract verification (Phase 8 / F-503):**
+- §1.1: `packages/db/docs/adr/` is a directory. Green.
+- §2.1–§2.2: ADR 0001 exists at `packages/db/docs/adr/0001-use-drizzle-not-prisma.md`, mentions Drizzle, Prisma, and migration 0013. Green.
+- §3.1–§3.2: ADR 0002 exists at `packages/db/docs/adr/0002-drop-jwt-era-accounts-columns.md`, references `0003_slow_firebrand.sql`. Green.
+- §4.1–§4.2: ADR 0003 exists at `packages/db/docs/adr/0003-add-intern-role.md`, references `0012_codecamp_intern_role.sql`. Green.
+- §5.1: First 10 lines of `0012_codecamp_intern_role.sql` reference ADR 0003 via header comment (`-- See ADR 0003: docs/adr/0003-add-intern-role.md`). Green.
+- §6.1–§6.2: `scripts/ci/sql-adr-guard.sh` exists and is executable (mode 100755). Green.
+- §7.1: Script exits non-zero on failing fixture (DROP without ADR). Green.
+- §7.2: Script exits 0 on passing fixture (DROP with `-- ADR:` within 10 lines). Green.
+- §7.3: Script exits 0 on annotated `0012_codecamp_intern_role.sql` (no DROP statements). Green.
+- §8.1: `--help` output mentions allowlist mechanism (`--allow`, grandfathering). Green.
+- §8.2: `--allow <path>` grandfathers `0003_slow_firebrand.sql` (exits 0). Green.
+- §9.1: `rg -l "^" packages/db/docs/adr/` returns 3 files. Green.
+- §9.2: Migration 0013 header already references `measure/tracks/...` for ADR provenance. Green (unchanged).
+- All 17/17 targeted assertions pass.
+
+**Targeted test command (Green):**
+```
+/opt/codex-desktop/resources/node-runtime/bin/node ./node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/__tests__/housekeeping-phase8-adr-directory.test.ts
+```
+Result: 1 test file passed, 17 tests passed.
+
+**Changes made:**
+- Created `packages/db/docs/adr/0001-use-drizzle-not-prisma.md` documenting the decision to adopt Drizzle over Prisma, referencing migration 0013 and the `prisma_drizzle_*` track archives.
+- Created `packages/db/docs/adr/0002-drop-jwt-era-accounts-columns.md` explaining the destructive `0003_slow_firebrand.sql` migration (DROP TABLE + DROP COLUMN for JWT-era schema).
+- Created `packages/db/docs/adr/0003-add-intern-role.md` explaining the `0012_codecamp_intern_role.sql` migration (adding INTERN to the role enum for CodeCamp Advantage).
+- Added header comment to `packages/db/drizzle/0012_codecamp_intern_role.sql` referencing ADR 0003.
+- Created `scripts/ci/sql-adr-guard.sh` — a bash script that exits non-zero when a SQL file contains `DROP TABLE` / `DROP COLUMN` without an `-- ADR:` or `-- Why:` reference within 10 lines. Supports `--allow <path>` for grandfathering pre-existing migrations.
+
+**Build-graph:** `build-graph update` ran for the 5 new/changed files — 5 file nodes added to `graph.db`. No symbol, schema, route, or component changes.
+
+**FR status update:**
+
+| FR | Severity | Title | Phase | Status |
+|----|----------|-------|-------|--------|
+| F-503 | Medium | Add `docs/adr/` + SQL-ADR guard lint | Phase 8 | [x] |
 
 ## Phase 9: Add `commitlint` Config
 
