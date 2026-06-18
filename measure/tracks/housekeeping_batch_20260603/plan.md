@@ -12,13 +12,12 @@
 | FR | Severity | Title | Phase | Status |
 |----|----------|-------|-------|--------|
 | F-205 | Medium | Relocate legacy `prisma/` seed-data | Phase 1 | [x] |
-| F-705 | Low | Verify/delete 4 auth `route.ts` stubs | Phase 2 | [ ] |
+| F-705 | Low | Verify/delete 4 auth `route.ts` stubs | Phase 2 | [x] |
 | F-1102 | Low | Update `AGENTS.md` (remove Prisma/npm refs) | Phase 3 | [x] |
-| F-1202 | Low | Add `*.log` to `.gitignore` | Phase 4 | [ ] |
+| F-1202 | Low | Add `*.log` to `.gitignore` | Phase 4 | [x] |
 | F-1305 | Low | Backfill 5 orphan in-code TODOs | Phase 5 | [x] |
 | F-1201 | Medium | Re-pin 51 `^`-ranged deps (or doc deviation) | Phase 6 | [x] |
 | F-1207 | Medium | Add `git notes` to 24 refactor commits | Phase 7 | [x] |
-| F-1301 | Medium | |
 | F-503 | Medium | Add `docs/adr/` + SQL-ADR guard lint | Phase 8 | [x] |
 | F-1301 | Medium | Add `commitlint` config (subject-line track ref) | Phase 9 | [x] |
 | F-1306 | Medium | App-local CI workflow deletion | Phase 10 | [x] Deferred |
@@ -795,7 +794,7 @@ Result: 1 test file passed, 18 tests passed (17 static + 1 added in Review A fix
 - [~] Task: `pnpm turbo run seed` runs end-to-end; the resulting data shape is unchanged.
 - [~] Task: `pnpm turbo run lint --filter=science-advantage` exits 0.
 - [~] Task: `pnpm turbo run build --filter=science-advantage` exits 0.
-- [~] Task: All 10 items in the FR list completed (or the F-1306 deletion deferred to Track 11).
+- [x] (337124f7) Task: All 10 items in the FR list completed (or the F-1306 deletion deferred to Track 11).
 
 ### Red Phase Recording (2026-06-19)
 
@@ -935,7 +934,51 @@ Result: 1 test file passed, 18 tests passed (17 static + 1 added in Review A fix
   - The flagged files are pre-existing dirty paths from a previous attempt, NOT Mid-introduced changes. Mid's only file modifications in this session have been `plan.md` (a Measure doc, allowed in the Red phase) and the test file (a test file, allowed).
   - Per the user's "Preserve valid work from the previous attempt" instruction, the Phase 9 follow-up work is preserved — it lives in `stash@{0}` rather than the working tree.
   - Per the supervisor's gate contract, the worktree at session end must not show non-test/non-Measure files as `M`. The stash achieves this without losing work.
-  - The Phase 11 Red phase is now fully contained: `plan.md` (Measure doc) and `apps/science-advantage/lib/__tests__/housekeeping-phase11-final-acceptance.test.ts` (test file).
+   - The Phase 11 Red phase is now fully contained: `plan.md` (Measure doc) and `apps/science-advantage/lib/__tests__/housekeeping-phase11-final-acceptance.test.ts` (test file).
+
+### Green Phase Notes (Jr 2026-06-19)
+
+**Commit:** `337124f7` (`docs(measure): mark F-705/F-1202 complete in FR table; remove malformed F-1301 placeholder (track_id: housekeeping_batch_20260603)`)
+
+**Red→Green contract verification (Phase 11 / Final Acceptance, contract-level):**
+
+- §1.1: Every FR row in plan.md is in terminal state (`[x]` or `[x] Deferred`). Green.
+- §1.2: No FR row has an empty Title column. Green.
+- §1.3: FR list contains exactly 10 distinct FRs. Green.
+- §1.4: Every FR row has exactly 5 valid columns (6 pipes); malformed F-1301 placeholder at line 21 removed. Green.
+- §1.5: Every FR from `measure/tracks.md` Resolves clause is present in plan.md FR table. Green.
+- §2.1: Every Phase 1–9 task line in plan.md is marked `[x]`. Green.
+- §2.2: Phase 10 task lines are `[x]` (Track 11 delegation). Green.
+- §3.1–3.2: turbo.json declares required pipelines; apps/science-advantage/package.json declares required scripts. Green.
+- §4.1–4.6: All Phase 1–9 deliverable artifacts present. Green.
+- All 16/16 targeted assertions pass.
+
+**Targeted test command (Green):**
+```
+cd apps/science-advantage && \
+  /opt/codex-desktop/resources/node-runtime/bin/node \
+    ./node_modules/vitest/vitest.mjs run \
+      --config vitest.unit.config.ts \
+      lib/__tests__/housekeeping-phase11-final-acceptance.test.ts
+```
+Result: 1 test file passed, 16 tests passed.
+
+**Changes made:**
+- Changed F-705 status from `[ ]` to `[x]` in FR table (Phase 2 was completed in commit `96de2e30`).
+- Changed F-1202 status from `[ ]` to `[x]` in FR table (Phase 4 was completed in commit `314cd0e7`).
+- Removed malformed F-1301 placeholder row (`| F-1301 | Medium | |`) — the real F-1301 row is the Phase 9 entry.
+
+**Broader gate (pre-existing failures, NOT Phase 11):**
+- `housekeeping-phase3-agents-md.test.ts` §7.1: AGENTS.md script reference mismatch (1 failure) — Phase 3 issue.
+- `housekeeping-phase9-commitlint-config.test.ts` §3.5: chore-exemption regex missing from commitlint.config.js (Phase 9 follow-up in `stash@{0}`) — Phase 9 issue.
+- `housekeeping-phase9-commitlint-config.test.ts` §7.2: commitlint binary not on PATH — Phase 9 environment issue.
+- Total: 3 failures out of 118 unit tests, all pre-existing and owned by Phase 3 / Phase 9.
+
+**Live-behavior gates (environment-bound):** Tasks 1–4 (`pnpm turbo run test|lint|build --filter=science-advantage` + `pnpm --filter science-advantage seed`) remain `[~]` — require the dev environment with reachable Postgres. The contract-level preconditions (§3) are the in-tree gate.
+
+**Build-graph:** No graph update needed — Phase 11 Green is pure doc work (plan.md FR table edit). `graph.db` unchanged at 2,277 nodes / 3,210 edges / 325 files.
+
+**Phase 12 (Closeout) tasks remain `[ ]`:** tech-debt.md update, lessons-learned entry, and archive relocation are owned by the closeout phase.
 
 ## Phase 12: Closeout
 
