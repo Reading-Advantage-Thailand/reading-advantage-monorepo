@@ -28,3 +28,5 @@ Runtime verification deferred to whichever phase resolves the test-infra blocker
 (candidate: Phase 6 Seeds/Scripts when the prisma push is replaced with drizzle migrate).
 
 — PAUSE HERE per plan instruction: "confirm the loop with the reviewer before continuing."
+
+Track: prisma_drizzle_science_controllers_20260505
