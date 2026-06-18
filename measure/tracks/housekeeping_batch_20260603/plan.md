@@ -429,11 +429,57 @@ Result: 1 test file passed, 7 tests passed.
 
 ## Phase 7: Add `git notes` to 24 `refactor(science):` Ports
 
-- [ ] Task: Enumerate the 24 `refactor(science):` commits in the last 100 commits: `git log --oneline -100 -- apps/science-advantage/ | rg "refactor\(science\)"`.
-- [ ] Task: For each commit, check the body to confirm it belongs to `prisma_drizzle_science_controllers_20260505`. (Most do; a few are independent refactors.)
-- [ ] Task: For each confirmed commit: `git notes add -m "prisma_drizzle_science_controllers_20260505" <sha>`.
+> **Red phase (MID) re-recorded 2026-06-18 (third pass).** The previous MID pass recorded a body-content membership filter that turned out to be too narrow — it captured only 22 of 52 actual track members and produced false-positive failures in the negative control (§1.3). This pass re-grounds the Red phase in **explicit SHA lists** for the 5 known-failing commits and the 2 negative-control commits, with corrected live-proof baselines (52 refactor / 73 total). Tests fail as expected for the contract violation; the Red commit captures the corrected test file.
+
+- [~] Task: Enumerate the 24 `refactor(science):` commits in the last 100 commits: `git log --oneline -100 -- apps/science-advantage/ | rg "refactor\(science\)"`.
+- [~] Task: For each commit, check the body to confirm it belongs to `prisma_drizzle_science_controllers_20260505`. (Most do; a few are independent refactors.)
+- [~] Task: For each confirmed commit: `git notes add -m "prisma_drizzle_science_controllers_20260505" <sha>`.
 - [ ] Task: Verify: `git log --grep "prisma_drizzle_science_controllers" --notes -50` returns the 24 commits with the note attached.
 - [ ] Task: Document the backfill in `measure/lessons-learned.md`.
+
+### Red Phase Recording (corrected third pass, 2026-06-18)
+
+- **Targeted Red command** (per test-strategy.md "Live-Proof Plan" Phase 7, bounded vitest run):
+  `cd apps/science-advantage && ./node_modules/.bin/vitest run --config vitest.unit.config.ts lib/__tests__/housekeeping-phase7-git-notes.test.ts`
+  (use `/opt/codex-desktop/resources/node-runtime/bin/node ./node_modules/vitest/vitest.mjs run ...` when `node` is not on PATH).
+- **Audit drift (corrected)**: The 2026-06-03 audit cited **24** `refactor(science):` ports under `prisma_drizzle_science_controllers_20260505` as the rough count from the last 50 commits touching `apps/science-advantage/`. The HEAD-actual count is **52** `refactor(science):` commits whose git note currently contains the track ID (`prisma_drizzle_science_controllers_20260505`). The "24" was a snapshot at audit time; the track has accumulated more commits since. The previous MID pass claimed **55** track-member commits using a body-content filter (`body.includes("prisma") || body.includes("Drizzle")`) — this count was **incorrect**: the body-content filter captured only 22 of the 52 actual members and produced false-positive failures in the §1.3 negative control (37 non-members matched the body-content rule). The corrected Phase 7 contract uses an **explicit SHA list** for the 5 known-failing commits (the Implementer's backlog) and an explicit SHA list for the 2 negative-control commits. The body-content filter is NOT used.
+- **Pre-state at HEAD** (commit `4c0d4d7f`):
+  - **59** total `refactor(science):` commits in repo history.
+  - **52** of 59 have a git note containing `prisma_drizzle_science_controllers_20260505` (satisfy the contract).
+  - **7** of 59 do NOT have the track ID in their note:
+    - **5 commits have a git note but lack the track ID** (Red state — Implementer's backlog):
+      - `9d40a9e2e033a438a7348d8564f26089659b066e` — Phase 0 pilot (`refactor(science): migrate app/api/lessons/[lessonSlug]/route.ts off Prisma`)
+      - `3312144449c7d3e174a20e4b32dd6ecd48f0afe5` — Phase 1/Task 1 (`refactor(science): migrate get-class-detail.ts off Prisma + add lib/enums.ts`)
+      - `33a4d731ed410e5d758fe3e63ae4a84c49e42419` — Phase 1/Task 2 (`refactor(science): migrate recommendation-context.ts off Prisma`)
+      - `6b29adf9f793f192b148d3fff1ed14000c8876ec` — Phase 1/Task 3 (`refactor(science): swap StandardsAlignment import in validate-json.ts`)
+      - `b831558cdbadd8238c5d6d5b0c537a7715dfd3d8` — Phase 5 catch-all (`refactor(science): retire legacy vitest.setup.ts; default config uses Drizzle setup`)
+    - **2 commits have NO git note at all** (negative control — correctly belong to other tracks):
+      - `1f8c2a013723e717564bf780030f5603a28da025` — Phase 1 of THIS housekeeping track (belongs to `housekeeping_batch_20260603`, not `prisma_drizzle_science_controllers_20260505`). Body contains the word "prisma" many times (the commit relocates `prisma/` files), which is why the previous MID's body-content filter incorrectly matched it.
+      - `3d3528e581547504cb55cbb0af19a92e0904e49f` — Flatten auth adapter (F-401, not `prisma_drizzle_science_controllers_20260505`).
+  - **73** total commits (across all commit types) have the track ID in their git note — the 52 refactor(science) subset plus 21 other commits (chore(measure) tracking commits and other track members).
+- **Red fail count at HEAD**: **5 failed / 7 passed (12 total assertions)** in the targeted vitest run. The 5 failures are exactly the 5 known-failing commits (§1.1–§1.5). The 7 passes are: §2.1–§2.2 (negative control), §3.1–§3.2 (live-proof baseline: 52 refactor / 73 total), §4.1 (precondition: all 5 have notes), §5.1 (note shape preservation: avg length ≥ 100 chars), §6.1 (audit SHA enumeration: the 5 SHAs are stable).
+- **Sanity check (Green behavior verified)**: When the Implementer's contract is applied to a single commit (e.g., `git notes append -m "Track: prisma_drizzle_science_controllers_20260505" 9d40a9e`), the corresponding §1.x test transitions from FAIL → PASS and §6.1 transitions from PASS → FAIL with the message "known-failing SHA 9d40a9e now has the track ID — update KNOWN_FAILING_SHAS list". This confirms the test correctly detects both Red and partial-Green states. The MID pass restored the test commit's note to its original content after the sanity check.
+- **Test file**: `apps/science-advantage/lib/__tests__/housekeeping-phase7-git-notes.test.ts` (12 assertions in 6 describe blocks: §1 main Red gate, §2 negative control, §3 live-proof gate, §4 precondition, §5 note shape preservation, §6 audit SHA enumeration).
+- **Test framework**: vitest 4.1.8 (DB-free via `vitest.unit.config.ts`). The test shells out to `git log` and `git notes show` for ground-truth introspection. No DB, no Next.js server, hermetic — no files are created or modified, no git notes are added/removed by the test itself.
+- **Context discovered during Red**:
+  - The `git notes` ref is `refs/notes/commits` (default), confirmed via `git notes list` returning 171 entries at HEAD. The notes are stored as a separate ref and do not affect commit SHAs.
+  - `git notes add -m "..."` fails with `Cannot add notes. Found existing notes for object ...` when a note already exists; `-f` flag would force-replace. The spec command in plan.md task 3 (`git notes add -m "..."`) would fail on the 5 known-failing commits (they already have notes). The Implementer should use `-f` (force) OR append (`git notes append -m "..."`) rather than the spec's plain `add`.
+  - The existing notes have rich task descriptions (Task: / Decision: / Track: / Phase N / etc.); replacing them with `-m "prisma_drizzle_science_controllers_20260505"` would lose information. The recommended Implementer approach is `git notes append -m "\nTrack: prisma_drizzle_science_controllers_20260505" <sha>` to preserve the rich content while ensuring the track ref is present.
+  - **Previous MID analysis correction**: The previous MID pass claimed `1f8c2a0` would NOT match the body-content filter (because the body says "F-205 (Phase 1 / housekeeping_batch_20260603)"). This was incorrect — the commit's body is multi-paragraph and contains the word "prisma" many times (it's a relocation commit that moves `prisma/` files). The body-content filter matches it. The corrected negative control uses an explicit SHA list (`1f8c2a0` and `3d3528e`) rather than a heuristic, so this kind of analysis error cannot recur.
+- **Test contract** (what the Implementer must satisfy):
+  - For each of the 5 SHA-listed known-failing commits in §1.1–§1.5, `git notes show <sha>` must contain the string `prisma_drizzle_science_controllers_20260505`.
+  - The grep `git log --notes --grep prisma_drizzle_science_controllers_20260505 --format="%H"` must return ≥ 52 refactor(science) commits (§3.1) and ≥ 73 total commits (§3.2). The Implementer's append-only strategy keeps the aggregate count stable.
+  - The 2 negative-control commits (`3d3528e`, `1f8c2a0`) must NOT have the track ID in their note (§2.1, §2.2). Pinning this prevents the Implementer from over-attaching the track ref to unrelated commits.
+- **Already-satisfied regression guards**:
+  - §2.1–§2.2: 2 negative-control commits correctly lack the track ID.
+  - §3.1: `git log --notes --grep prisma_drizzle_science_controllers_20260505` returns ≥ 52 refactor(science) commits at HEAD.
+  - §3.2: Same grep returns ≥ 73 commits total at HEAD.
+  - §4.1: All 5 known-failing commits have a git note (precondition for the Implementer's `git notes append` operation).
+  - §5.1: Average note length across all `refactor(science):` commits with the track ID is ≥ 100 chars (notes retain rich Task/Decision content; protect against the Implementer replacing rich notes with the bare track ID).
+  - §6.1: The 5 SHA-listed known-failing SHAs are exactly the Implementer's backlog (audit-stable). Transitions to FAIL when the Implementer fixes a commit (detects partial-Green state).
+- **Dirty worktree at MID start (corrected)**: 5 entries — `M measure/automation-supervisor.py` (orchestrator model-name change, unrelated to Phase 7), `M measure/tracks/housekeeping_batch_20260603/plan.md` (previous MID's Red-phase recording — superseded by this pass; folded into the Red commit), `?? apps/marketing/next-env.d.ts` (auto-generated Next.js types for marketing app, generated/ignorable), `?? apps/science-advantage/lib/__tests__/housekeeping-phase7-git-notes.test.ts` (the test file from the previous MID pass; rewritten by this pass; folded into the Red commit), `?? measure/tracks/agents_md_audit_science_advantage_20260603/` (different track, unrelated). The relevant dirty entries (plan.md modification and untracked test file) are folded into the Red commit with explicit plan notes; the other 3 entries are unrelated user work and are preserved (not in this track's commit).
+- **Graph state**: `build-graph stats ./graph.db` → 2,261 nodes / 3,202 edges / 316 files (fresh, unchanged since Phase 6 closeout). Phase 7 is `git notes` work — no TypeScript files are touched, so no graph update is required.
+- **Handoff**: Implementer should: (1) read the test file header for the contract; (2) for each of the 5 failing commits (`9d40a9e`, `3312144`, `33a4d73`, `6b29adf`, `b831558`), run `git notes append -m "\nTrack: prisma_drizzle_science_controllers_20260505" <sha>` (preserves the existing rich content while adding the track ref); (3) re-run the targeted Red command and confirm all 12 assertions pass; (4) commit with `chore(science): add prisma_drizzle_science_controllers_20260505 track refs to 5 refactor commits (F-1207)`. The Green phase should also document the backfill in `measure/lessons-learned.md` (Phase 7 task 5).
 
 ## Phase 8: Add `docs/adr/` Directory
 
