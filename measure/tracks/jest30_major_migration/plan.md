@@ -54,8 +54,62 @@ Tests:       6 passed, 6 total
 
 ## Phase 2: Test
 
-- [ ] Task: Add focused test verifying Jest 30 compatibility.
-- [ ] Task: Confirm tests fail under the current Jest 29 baseline with Jest 30 config.
+- [~] Task: Add focused test verifying Jest 30 compatibility.
+- [~] Task: Confirm tests fail under the current Jest 29 baseline with Jest 30 config.
+
+### Phase 2 — Red proof (live-behavior test)
+
+Targeted Red command (bounded to a single new file, no watch, no full
+suite; the `jest.config.ts` already applied in Phase 1 — commit
+`04c76fc7` — drives the contract test green, so this Red proof is the
+**runtime** companion to the Phase 1 **config-shape** proof):
+
+```
+cd apps/reading-advantage && ../../node_modules/.bin/jest __test__/jest30-red.test.ts --no-coverage
+```
+
+(Falls back to `./node_modules/.bin/jest` in apps/reading-advantage;
+the absolute path above is used by the track's CI script. Both are
+equivalent — the test path is the single source of truth for
+"bounded".)
+
+Red proof (added at the START of Phase 2, before any Phase 3 bump):
+
+```
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 1 passed, 4 total
+```
+
+The 3 failing tests fail **for the right reason** — the installed
+`jest` runtime is on the 29.x release line, which is exactly the
+missing-behavior Phase 3 will remediate. The 1 passing test
+(`expect.getState() returns an object with a `testPath` field`) is a
+sentinel that the test harness itself is healthy; it passes on both
+Jest 29 and Jest 30 and is documented as such inline so reviewers
+cannot mistake it for a false-positive Red.
+
+Cross-app sanity (advantage-games is already on Jest 30.x — the
+post-condition):
+
+```
+cd apps/advantage-games && ../../node_modules/.bin/jest __test__/jest30-red.test.ts --no-coverage
+```
+
+```
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+```
+
+The same test file is copied into `apps/advantage-games/__test__/` so
+the cross-app check uses the **identical** source (no parallel
+maintenance). The copy is owned by this track and is folded into the
+same Red commit; both copies are deleted when Phase 3 lands the
+runtime bump (the file's value disappears once the migration is
+green).
+
+See `jest30-red.test.ts` inline header for the design rationale
+(version-resolved runtime check, bounded scope, no full-suite
+hazard).
 
 ## Phase 3: Implement
 
