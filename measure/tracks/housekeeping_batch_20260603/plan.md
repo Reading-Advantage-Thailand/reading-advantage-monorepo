@@ -634,8 +634,10 @@ Result: 1 test file passed, 17 tests passed.
 
 ## Phase 9: Add `commitlint` Config
 
-- [ ] Task: Add `commitlint` + `@commitlint/config-conventional` + `husky` to the monorepo root `devDependencies`.
-- [ ] Task: Create `commitlint.config.js`:
+> **Red phase (MID) in progress.** All 6 tasks marked `[~]` below; Red test file written; targeted Red command run; failures recorded in `### Red Phase Recording` further down.
+
+- [~] Task: Add `commitlint` + `@commitlint/config-conventional` + `husky` to the monorepo root `devDependencies`.
+- [~] Task: Create `commitlint.config.js`:
   ```js
   module.exports = {
     extends: ['@commitlint/config-conventional'],
@@ -645,10 +647,68 @@ Result: 1 test file passed, 17 tests passed.
   };
   ```
   (The exact regex enforces subject-line track reference for non-chore commits.)
-- [ ] Task: Wire into a `commit-msg` husky hook in `.husky/commit-msg`.
-- [ ] Task: Test: `git commit -m "feat(science): add a new feature"` (no track ID) — the commit is rejected.
-- [ ] Task: Test: `git commit -m "feat(science): add a new feature (track_id: mytrack_20260603)"` — accepted.
-- [ ] Task: Document in `AGENTS.md` that the rule applies to new commits; historical commits are not affected.
+- [~] Task: Wire into a `commit-msg` husky hook in `.husky/commit-msg`.
+- [~] Task: Test: `git commit -m "feat(science): add a new feature"` (no track ID) — the commit is rejected.
+- [~] Task: Test: `git commit -m "feat(science): add a new feature (track_id: mytrack_20260603)"` — accepted.
+- [~] Task: Document in `AGENTS.md` that the rule applies to new commits; historical commits are not affected.
+
+### Red Phase Recording (2026-06-18)
+
+> **Red phase (MID) recorded 2026-06-18.** Pre-implementation state captured. All 6 tasks marked `[~]`; Red test file written; targeted Red command run; failures recorded below.
+
+- **Targeted Red command** (per test-strategy.md "Live-Proof Plan" Phase 9, bounded vitest unit run):
+  ```
+  cd apps/science-advantage && \
+    /opt/codex-desktop/resources/node-runtime/bin/node \
+      ./node_modules/vitest/vitest.mjs run \
+        --config vitest.unit.config.ts \
+        lib/__tests__/housekeeping-phase9-commitlint-config.test.ts
+  ```
+- **Red command result at HEAD** (commit `b94f900a`):
+  ```
+  ❯ lib/__tests__/housekeeping-phase9-commitlint-config.test.ts (17 tests | 15 failed) 155ms
+       × §1.1 — commitlint.config.js (or .cjs) exists at the monorepo root
+       × §2.1 — extends `@commitlint/config-conventional`
+       × §2.2 — defines a `subject-pattern` rule at level 2 with applicability `always`
+       × §3.1 — config file exposes an extractable subject-pattern regex
+       × §3.2 — subject-pattern regex REJECTS a non-chore commit without track_id
+       × §3.3 — subject-pattern regex ACCEPTS a non-chore commit WITH track_id
+       × §3.4 — subject-pattern regex still accepts the ten conventional types
+       × §4.1 — `.husky/commit-msg` exists as a regular file
+       × §4.2 — `.husky/commit-msg` has the owner-execute bit set (mode & 0o100)
+       × §4.3 — `.husky/commit-msg` invokes commitlint on the commit message file
+       × §5.1 — root package.json includes @commitlint/cli in devDependencies
+       × §5.2 — root package.json includes @commitlint/config-conventional in devDependencies
+       × §5.3 — root package.json includes husky in devDependencies
+       × §5.4 — root package.json has a `prepare` script invoking husky
+       × §6.1 — root AGENTS.md mentions commitlint and the new-commits-only scope
+  Test Files  1 failed (1)
+       Tests  15 failed | 2 skipped (17)
+  ```
+- **Red fail count at HEAD**: **15 failed / 2 skipped (17 total)**. All 15 failures are caused by **missing implementation** (no `commitlint.config.js`, no `.husky/commit-msg`, no commitlint/husky devDependencies, no `prepare` script, no root `AGENTS.md` commitlint note). Failures are caused by missing behavior, not stale fixtures. The 2 §7 live-behavior tests are reported as **skipped** (not "passed") via `describe.runIf` because the commitlint binary is not installed at HEAD — this is the deliberate "no fake harness" design choice from test-strategy.md §Fake Harness Policy. The static §3 contract (regex extraction + JS evaluation in §3.2–§3.4) is the authoritative Red→Green gate that proves the Implementer wired the regex correctly even without the binary.
+- **Test file**: `apps/science-advantage/lib/__tests__/housekeeping-phase9-commitlint-config.test.ts` (~500 lines, 17 assertions in 7 describe blocks).
+- **Test contract** (what the Implementer must satisfy):
+  - **§1** — `commitlint.config.js` (or `.cjs`) exists at the monorepo root.
+  - **§2** — Config extends `@commitlint/config-conventional` and defines a `subject-pattern` rule at level 2 with applicability `'always'`.
+  - **§3** — The extracted `subject-pattern` regex REJECTS a non-chore commit without `track_id` (§3.2), ACCEPTS one WITH `track_id: mytrack_20260603` (§3.3), and still ACCEPTS all 10 conventional types with the required suffix (§3.4).
+  - **§4** — `.husky/commit-msg` exists, has owner-execute bit set (mode 100755 or similar), and invokes commitlint on the staged commit-message file (`--edit "$1"` or equivalent).
+  - **§5** — Root `package.json` `devDependencies` includes `@commitlint/cli`, `@commitlint/config-conventional`, `husky`; `scripts.prepare` invokes `husky`.
+  - **§6** — Root `AGENTS.md` mentions `commitlint` and clarifies that the rule applies to **new commits only** (not historical commits).
+  - **§7** (optional) — When commitlint is installed, the live CLI rejects `'feat(science): no track ref'` and accepts `'feat(science): x (track_id: housekeeping_batch_20260603)'`.
+- **Static vs live-behavior design (per test-strategy.md §Fake Harness Policy)**:
+  The §3 regex extraction uses **text scraping**, not `require()` or `eval()`, so the test does not depend on commitlint being installed at HEAD. The Implementer can install commitlint via `pnpm install` (root `package.json` `devDependencies` updates in §5.1–§5.3) before re-running; the §3 assertions will continue to pass once the config is wired correctly. The §7 live-behavior gate uses `describe.runIf` so it skips cleanly when the binary is absent and activates as a real assertion once commitlint is installed.
+- **Plan.md regex caveat**: The plan.md example regex literal
+  `/^(feat|fix|chore|docs|refactor|test|perf|build|ci|style)\([^)]+\)!?:\s.+\s\(?(?:track[_-]?id:?\s)?([a-z_]+_20260\d{4})?\)?/`
+  has `?` quantifiers on the track-id capture group, making the rule permissive (both messages would match). If the Implementer ships this regex verbatim, **§3.2 will fail** (the no-track-id message will incorrectly match), forcing them to tighten the regex (e.g., remove the `?` on the final capture group, or anchor the track-id as mandatory). The Implementer should also tighten `chore` handling if desired — the spec narrative (tasks 4–5) implies the rule applies to non-chore commits.
+- **Already-satisfied regression guards at HEAD**: None — every assertion fails at HEAD because the implementation is missing. No false Red phase created.
+- **Test framework**: vitest 4.1.8 (DB-free via `vitest.unit.config.ts`). The test shells out via `spawnSync` for live commitlint (when binary present) and uses `fs.readFile`/`fsp.stat` for content/permission assertions. Hermetic — no files are created or modified.
+- **Context discovered during Red**:
+  - `commitlint` v17+ requires `--stdin` to read commit messages from stdin (legacy behavior of reading from stdin without the flag was deprecated). The §7 helper passes `--stdin` to match current commitlint behavior.
+  - `husky` v9 uses `husky init` which writes `.husky/commit-msg` and adds a `prepare: "husky"` script to `package.json`. The §4 and §5 tests pin both halves of this contract.
+  - Root `AGENTS.md` currently mentions `track_id` in only one place (a Measure doc reference for track identifiers) — not the commit-message rule. §6.1 tests for the commitlint-specific note.
+- **Build-graph baseline**: `build-graph stats ./graph.db` → 2,274 nodes / 3,210 edges / 322 files (fresh, unchanged since Phase 8 closeout). `build-graph search "commitlint"` and `build-graph search "husky"` return no results — confirms Phase 9 is purely additive (no symbol blast radius from prior phases). No graph update needed until the Implementer's Green commit lands TS changes (likely only `package.json` updates + `.husky/commit-msg` shell script + the `commitlint.config.js` file).
+- **Dirty worktree at MID start**: 4 entries — `M apps/science-advantage/lib/__tests__/housekeeping-phase7-git-notes.test.ts` (Phase 7 follow-up; unrelated), `M measure/automation-supervisor.py` (orchestrator prompt; unrelated), `?? apps/marketing/next-env.d.ts` (auto-generated; generated/ignorable), `?? measure/tracks/agents_md_audit_science_advantage_20260603/` (different track; unrelated). All 4 are unrelated to Phase 9 and are preserved (not folded into the Red commit). The Red commit touches only the new test file and `plan.md` Red-phase recording.
+- **Handoff**: Implementer should: (1) read the test file header for the full contract; (2) install `@commitlint/cli`, `@commitlint/config-conventional`, `husky` as devDependencies in root `package.json` and add `scripts.prepare = "husky"`; (3) run `pnpm install` and `pnpm exec husky init` (or manually create `.husky/commit-msg` with `pnpm exec commitlint --edit "$1"` and `chmod +x` it); (4) create `commitlint.config.js` extending `@commitlint/config-conventional` and defining a TIGHTENED `subject-pattern` rule (the plan.md example regex as written is too permissive — tighten it so the track-id capture is mandatory for non-chore commits; the §3.2 test will catch a permissive rule); (5) append a note to root `AGENTS.md` documenting the new-commits-only scope; (6) re-run the targeted Red command and confirm all 17/17 pass (the §7 live-behavior tests will activate once the commitlint binary is installed); (7) commit with `ci(root): add commitlint + husky config enforcing subject-line track_id reference (F-1301)`.
 
 ## Phase 10: App-Local CI Workflow (F-1306, also Track 11 FR-9) — DEFERRED
 
