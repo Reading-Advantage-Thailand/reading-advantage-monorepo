@@ -2,8 +2,8 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [~] Task: Audit Jest 30 breaking changes relevant to the monorepo.
-- [~] Task: Identify configuration and API changes needed.
+- [x] Task: Audit Jest 30 breaking changes relevant to the monorepo.
+- [x] Task: Identify configuration and API changes needed.
 
 ### Phase 1 — Red proof (contract test)
 
