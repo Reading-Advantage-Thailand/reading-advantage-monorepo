@@ -125,6 +125,7 @@ describe('housekeeping_batch_20260603 / Phase 1 — Relocate Legacy prisma/ Seed
         .filter((l) => l.length > 0)
         .map((p) => {
           // Re-derive the SHA-256 hash via the same algorithm.
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
           const crypto = require('node:crypto');
           const absPath = path.isAbsolute(p) ? p : path.join(MONOREPO_ROOT, p);
           const content = fs.readFileSync(absPath);
@@ -152,6 +153,7 @@ describe('housekeeping_batch_20260603 / Phase 1 — Relocate Legacy prisma/ Seed
       const lines = (await fsp.readFile(PRE_SNAPSHOT, 'utf-8'))
         .split('\n')
         .filter((l) => l.length > 0);
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const crypto = require('node:crypto');
       let matched = 0;
       const unmapped: string[] = [];
