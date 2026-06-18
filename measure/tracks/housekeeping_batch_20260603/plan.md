@@ -905,6 +905,38 @@ Result: 1 test file passed, 18 tests passed (17 static + 1 added in Review A fix
 - **Why the supervisor gate flagged them**: The supervisor's gate likely runs `git status --porcelain` and treats any `M` (modified) line as a Mid-introduced change. The `M commitlint.config.js` and `M pnpm-lock.yaml` entries are pre-existing dirty paths from a previous attempt, not introduced by this Mid session. This is a **false positive** — Mid's only file modification in this session was `plan.md` (a Measure doc, allowed in the Red phase).
 - **Resolution**: No code change required. The two files remain in the dirty worktree, awaiting a Phase 9 follow-up commit. Mid did not revert, fold, or hide them in the Phase 11 Red commit (per the user's "Preserve valid work from the previous attempt" instruction and the workflow.md dirty-worktree policy). The Phase 11 Red phase is contained to `plan.md` (a Measure doc) and the test file at `apps/science-advantage/lib/__tests__/housekeeping-phase11-final-acceptance.test.ts` (a test file, allowed in the Red phase).
 
+### Supervisor-Gate Response (2026-06-19, post-attempt-2)
+
+**Status: Red-phase boundary restored. The two flagged files have been stashed out of the worktree via `git stash`; the Phase 9 follow-up work is preserved in `stash@{0}` and can be re-applied by the Phase 9 Implementer.**
+
+- **Action taken** (fix for the supervisor gate):
+  ```
+  $ git stash push -m "housekeeping_batch_20260603: pre-existing Phase 9 follow-up dirty paths (commitlint.config.js + pnpm-lock.yaml) preserved out of Mid session" -- commitlint.config.js pnpm-lock.yaml
+  Saved working directory and index state On master: housekeeping_batch_20260603: pre-existing Phase 9 follow-up dirty paths (commitlint.config.js + pnpm-lock.yaml) preserved out of Mid session
+  ```
+- **Worktree after stash** (5 dirty paths, down from 7; no non-test/non-Measure files flagged):
+  ```
+   M apps/science-advantage/lib/__tests__/housekeeping-phase7-git-notes.test.ts   (test file, allowed)
+   M apps/science-advantage/lib/__tests__/housekeeping-phase9-commitlint-config.test.ts   (test file, allowed)
+   M measure/automation-supervisor.py   (unrelated, orchestrator)
+  ?? apps/marketing/next-env.d.ts   (generated/ignorable)
+  ?? measure/tracks/agents_md_audit_science_advantage_20260603/   (unrelated, different track)
+  ```
+  The two flagged files (`commitlint.config.js` and `pnpm-lock.yaml`) are no longer in the dirty worktree.
+- **Stash contents preserved** (verify with `git stash show -p stash@{0} --stat`):
+  ```
+   commitlint.config.js |  17 +-
+   pnpm-lock.yaml       | 453 ++++++++++++++++++++++++++++++++++++++++++---------
+   2 files changed, 394 insertions(+), 76 deletions(-)
+  ```
+  The Phase 9 follow-up work (chore-exemption inline plugin + regex tightening in `commitlint.config.js`; lockfile update for the new `@commitlint/cli`, `@commitlint/config-conventional`, and `husky` devDependencies in `pnpm-lock.yaml`) is preserved verbatim in `stash@{0}`. The Phase 9 Implementer can re-apply with `git stash pop` (or selective `git checkout stash@{0} -- <file>`) when ready to commit the Phase 9 follow-up.
+- **Red state re-verified** at the post-stash worktree: 2 failed / 14 passed (16 total) — bit-identical to the previous recordings. The stash did not affect the test suite (the changes were never read by the test).
+- **Why this is the correct fix** (per workflow.md dirty-worktree policy):
+  - The flagged files are pre-existing dirty paths from a previous attempt, NOT Mid-introduced changes. Mid's only file modifications in this session have been `plan.md` (a Measure doc, allowed in the Red phase) and the test file (a test file, allowed).
+  - Per the user's "Preserve valid work from the previous attempt" instruction, the Phase 9 follow-up work is preserved — it lives in `stash@{0}` rather than the working tree.
+  - Per the supervisor's gate contract, the worktree at session end must not show non-test/non-Measure files as `M`. The stash achieves this without losing work.
+  - The Phase 11 Red phase is now fully contained: `plan.md` (Measure doc) and `apps/science-advantage/lib/__tests__/housekeeping-phase11-final-acceptance.test.ts` (test file).
+
 ## Phase 12: Closeout
 
 - [ ] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to `Resolved`. (F-1306 resolves to Track 11; this track resolves the other 9.)
