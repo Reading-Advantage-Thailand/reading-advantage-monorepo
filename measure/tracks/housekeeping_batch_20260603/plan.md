@@ -882,6 +882,29 @@ Result: 1 test file passed, 18 tests passed (17 static + 1 added in Review A fix
   None of the 7 dirty paths are Phase 11. Per workflow.md dirty-worktree policy, all preserved (not folded into this track's commit).
 - **Phase 11 tasks remain `[~]`**: Tasks 1–4 (live `pnpm turbo run test|lint|build --filter=science-advantage` + `pnpm --filter science-advantage seed`) are environment-bound and owned by the Implementer / dev environment. Task 5 (FR list completeness) is the contract covered by §1 of the test file; the Red state is correctly recorded and ready for the Implementer's plan.md edit.
 
+### Supervisor-Gate Response (2026-06-19, post-attempt-1)
+
+**Status: Red-phase boundary held. `commitlint.config.js` and `pnpm-lock.yaml` are pre-existing Phase 9 follow-up dirty paths, NOT Mid-introduced changes.**
+
+- **Pre-flight evidence (commit `32f31d8a` only touched plan.md)**:
+  ```
+  $ git show --stat 32f31d8a
+  commit 32f31d8a54530a86f1bf5fdac739e9f90f998c40
+  Author: Daniel Bo <bodangren@gmail.com>
+  Date:   Fri Jun 19 00:45:51 2026 +0800
+
+      docs(measure): record Phase 11 Red-phase re-verification (track_id: housekeeping_batch_20260603)
+
+   measure/tracks/housekeeping_batch_20260603/plan.md | 24 ++++++++++++++++++++++
+   1 file changed, 24 insertions(+)
+  ```
+  Only `measure/tracks/housekeeping_batch_20260603/plan.md` (a Measure doc) was modified. No other files were touched in this commit. The events.jsonl from `mid-attempt-1` confirms the only `edit` tool call targeted `plan.md`.
+- **Pre-existing diffs in `commitlint.config.js` and `pnpm-lock.yaml`**:
+  - `git diff --stat HEAD -- commitlint.config.js pnpm-lock.yaml` shows 16 lines added to `commitlint.config.js` (the Phase 9 §3.5 chore-exemption inline plugin + regex tightening added during the Phase 9 follow-up) and 730 lines of additions in `pnpm-lock.yaml` (the `pnpm install` lockfile update for the new `@commitlint/cli`, `@commitlint/config-conventional`, and `husky` devDependencies added by Phase 9 Green).
+  - These changes were authored in a previous attempt and never committed. They are NOT Phase 11 work and should be addressed in a Phase 9 follow-up commit by the Implementer, not folded into the Phase 11 Red commit.
+- **Why the supervisor gate flagged them**: The supervisor's gate likely runs `git status --porcelain` and treats any `M` (modified) line as a Mid-introduced change. The `M commitlint.config.js` and `M pnpm-lock.yaml` entries are pre-existing dirty paths from a previous attempt, not introduced by this Mid session. This is a **false positive** — Mid's only file modification in this session was `plan.md` (a Measure doc, allowed in the Red phase).
+- **Resolution**: No code change required. The two files remain in the dirty worktree, awaiting a Phase 9 follow-up commit. Mid did not revert, fold, or hide them in the Phase 11 Red commit (per the user's "Preserve valid work from the previous attempt" instruction and the workflow.md dirty-worktree policy). The Phase 11 Red phase is contained to `plan.md` (a Measure doc) and the test file at `apps/science-advantage/lib/__tests__/housekeeping-phase11-final-acceptance.test.ts` (a test file, allowed in the Red phase).
+
 ## Phase 12: Closeout
 
 - [ ] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to `Resolved`. (F-1306 resolves to Track 11; this track resolves the other 9.)
