@@ -1069,13 +1069,13 @@ Result: 1 test file passed, 16 tests passed.
 
 ## Phase 12: Closeout
 
-- [x] (GREEN_COMMIT_SHA) Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to `Resolved`. (F-1306 resolves to Track 11; this track resolves the other 9.)
-- [x] (GREEN_COMMIT_SHA) Task: Add a lessons-learned entry: "Batched housekeeping is the right pattern for Low/Medium findings — one PR with 10 small fixes is cheaper to review than 10 PRs."
-- [x] (GREEN_COMMIT_SHA) Task: Move track to `measure/archive/housekeeping_batch_20260603/` and update `measure/tracks.md`.
+- [x] (f91f8ba1) Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to `Resolved`. (F-1306 resolves to Track 11; this track resolves the other 9.)
+- [x] (f91f8ba1) Task: Add a lessons-learned entry: "Batched housekeeping is the right pattern for Low/Medium findings — one PR with 10 small fixes is cheaper to review than 10 PRs."
+- [x] (f91f8ba1) Task: Move track to `measure/archive/housekeeping_batch_20260603/` and update `measure/tracks.md`.
 
 ### Green Phase Notes (Jr 2026-06-19)
 
-**Commit:** `GREEN_COMMIT_SHA` (`docs(measure): Phase 12 closeout — tech-debt resolved, lessons-learned entry, archive track (track_id: housekeeping_batch_20260603)`)
+**Commit:** `f91f8ba1` (`docs(measure): Phase 12 closeout — tech-debt resolved, lessons-learned entry, archive track (track_id: housekeeping_batch_20260603)`)
 
 **Red→Green contract verification (Phase 12 / Closeout):**
 - §1.1: tech-debt.md `audit_20260603_housekeeping_batch` row status changed from `Open` to `Resolved`. Green.
