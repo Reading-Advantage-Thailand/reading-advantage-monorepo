@@ -29,3 +29,5 @@ Architectural choices:
 
 Tech debt potentially introduced:
   - None \u2014 the route.ts:210 patch is local and reversible.
+
+Track: prisma_drizzle_science_controllers_20260505
