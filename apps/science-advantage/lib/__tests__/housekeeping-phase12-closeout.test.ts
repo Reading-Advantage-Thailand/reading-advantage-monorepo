@@ -119,10 +119,10 @@ function parseTechDebtRow(content: string): {
     // After split on `|`, the line `| a | b | c |` becomes `['', 'a', 'b', 'c', '']`.
     // Trim outer empties and pick the Status field by position from the Track column.
     const trackIdx = cells.findIndex((cell) => cell === TECH_DEBT_TRACK_KEY);
-    if (trackIdx < 0 || trackIdx + 2 >= cells.length) {
+    if (trackIdx < 0 || trackIdx + 3 >= cells.length) {
       return { row: line, status: null };
     }
-    return { row: line, status: cells[trackIdx + 2] };
+    return { row: line, status: cells[trackIdx + 3] };
   }
   return { row: null, status: null };
 }

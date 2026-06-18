@@ -1069,11 +1069,62 @@ Result: 1 test file passed, 16 tests passed.
 
 ## Phase 12: Closeout
 
-- [~] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to `Resolved`. (F-1306 resolves to Track 11; this track resolves the other 9.)
-- [~] Task: Add a lessons-learned entry: "Batched housekeeping is the right pattern for Low/Medium findings — one PR with 10 small fixes is cheaper to review than 10 PRs."
-- [~] Task: Move track to `measure/archive/housekeeping_batch_20260603/` and update `measure/tracks.md`.
+- [x] (GREEN_COMMIT_SHA) Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to `Resolved`. (F-1306 resolves to Track 11; this track resolves the other 9.)
+- [x] (GREEN_COMMIT_SHA) Task: Add a lessons-learned entry: "Batched housekeeping is the right pattern for Low/Medium findings — one PR with 10 small fixes is cheaper to review than 10 PRs."
+- [x] (GREEN_COMMIT_SHA) Task: Move track to `measure/archive/housekeeping_batch_20260603/` and update `measure/tracks.md`.
 
-### Red Phase Recording (2026-06-19, MID)
+### Green Phase Notes (Jr 2026-06-19)
+
+**Commit:** `GREEN_COMMIT_SHA` (`docs(measure): Phase 12 closeout — tech-debt resolved, lessons-learned entry, archive track (track_id: housekeeping_batch_20260603)`)
+
+**Red→Green contract verification (Phase 12 / Closeout):**
+- §1.1: tech-debt.md `audit_20260603_housekeeping_batch` row status changed from `Open` to `Resolved`. Green.
+- §1.2: Exactly one `audit_20260603_housekeeping_batch` row exists. Green.
+- §1.3: tech-debt.md ≤ 50 lines (50 lines at closeout). Green.
+- §2.1: lessons-learned.md contains batched-housekeeping entry dated 2026-06-19 referencing `housekeeping_batch_20260603`. Green.
+- §2.2: lessons-learned.md ≤ 50 lines (37 lines at closeout). Green.
+- §3.1: `measure/archive/housekeeping_batch_20260603/` exists. Green.
+- §3.2: `measure/tracks/housekeeping_batch_20260603/` does NOT exist (move complete). Green.
+- §3.3: tracks.md has no active `./tracks/housekeeping_batch_20260603/` link. Green.
+- §3.4: tracks.md has `[x]` archive entry pointing to `./archive/housekeeping_batch_20260603/`. Green.
+- §3.5: metadata.json status is `completed`. Green.
+- All 10/10 targeted assertions pass.
+
+**Targeted test command (Green):**
+```
+cd apps/science-advantage && \
+  /opt/codex-desktop/resources/node-runtime/bin/node \
+    ./node_modules/vitest/vitest.mjs run \
+      --config vitest.unit.config.ts \
+      lib/__tests__/housekeeping-phase12-closeout.test.ts
+```
+Result: 1 test file passed, 10 tests passed.
+
+**Changes made:**
+- `measure/tech-debt.md:41`: Status changed from `Open` → `Resolved`; closure date `2026-06-19` appended to Notes.
+- `measure/lessons-learned.md`: Added batched-housekeeping entry under `## Planning Improvements` (2026-06-19).
+- `git mv measure/tracks/housekeeping_batch_20260603/ → measure/archive/housekeeping_batch_20260603/`.
+- `measure/tracks.md:121`: Track entry updated from `[ ]` → `[x]`, link changed from `./tracks/` → `./archive/`, `Archived 2026-06-19.` appended.
+- `metadata.json`: status `new` → `completed`.
+- **Test bug fix:** `housekeeping-phase12-closeout.test.ts` `parseTechDebtRow` had an off-by-one indexing error reading `cells[trackIdx + 2]` (Severity column) instead of `cells[trackIdx + 3]` (Status column). Fixed.
+- **Cross-phase path updates:** `housekeeping-phase11-final-acceptance.test.ts` PLAN_FILE and `housekeeping-phase1-relocate-prisma.test.ts` PRE_SNAPSHOT paths updated from `measure/tracks/` to `measure/archive/` to match the relocated track.
+
+**Verification:**
+- Phase 12: 10/10 pass
+- Phase 11: 16/16 pass (archive-path update)
+- Phase 1: 23/23 pass (archive-path update)
+- Phase 1+11+12 aggregate: 49/49 pass
+- ESLint: clean on changed test files
+
+**Build-graph:** No graph update needed — Phase 12 is pure doc/file-system work. `graph.db` unchanged at 2,277 nodes / 3,210 edges / 325 files.
+
+**FR status update:**
+
+| FR | Severity | Title | Phase | Status |
+|----|----------|-------|-------|--------|
+| All 10 | — | All housekeeping findings | Phase 12 | [x] Deferred (F-1306) or [x] (remaining 9) |
+
+**Track closeout complete.** All 10 FRs resolved. Track archived to `measure/archive/housekeeping_batch_20260603/`.
 
 - **Targeted Red command** (per test-strategy.md "Live-Proof Plan" Phase 12, bounded vitest unit run):
   ```

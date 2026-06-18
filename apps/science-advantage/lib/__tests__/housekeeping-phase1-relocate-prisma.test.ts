@@ -68,7 +68,7 @@ const SEED_DATA_DIR = path.join(APP_DIR, 'scripts', 'seed-data');
 const SEED_DIR = path.join(APP_DIR, 'scripts', 'seed');
 const PRE_SNAPSHOT = path.join(
   MONOREPO_ROOT,
-  'measure/tracks/housekeeping_batch_20260603',
+  'measure/archive/housekeeping_batch_20260603',
   'pre-snapshot.sha',
 );
 

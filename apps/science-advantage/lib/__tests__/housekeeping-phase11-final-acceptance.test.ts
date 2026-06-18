@@ -63,7 +63,7 @@ const MONOREPO_ROOT = execFileSync('git', ['rev-parse', '--show-toplevel'], {
 }).trim();
 const PLAN_FILE = path.join(
   MONOREPO_ROOT,
-  'measure/tracks/housekeeping_batch_20260603/plan.md'
+  'measure/archive/housekeeping_batch_20260603/plan.md'
 );
 const TURBO_JSON = path.join(MONOREPO_ROOT, 'turbo.json');
 const APP_DIR = path.join(MONOREPO_ROOT, 'apps/science-advantage');

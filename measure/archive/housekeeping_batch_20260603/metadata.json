@@ -1,7 +1,7 @@
 {
   "track_id": "housekeeping_batch_20260603",
   "type": "chore",
-  "status": "new",
+  "status": "completed",
   "created_at": "2026-06-03T00:00:00Z",
   "updated_at": "2026-06-03T00:00:00Z",
   "description": "Batched Low-priority cleanup: relocate prisma/ legacy seed-data to scripts/seed-data/ and delete prisma/. Verify or delete 4 auth route.ts stubs. Update apps/science-advantage/AGENTS.md to remove Prisma + npm references. Add *.log to .gitignore. Backfill 5 orphan in-code TODOs with GH issues. Re-pin 51 ^-ranged deps. Add git notes to 24 refactor(science): ports. Add docs/adr/ directory with 3 ADRs. Add commitlint config to enforce subject-line track reference. Resolves F-205, F-503, F-705, F-1102, F-1201, F-1202, F-1207, F-1301, F-1305, F-1306. 1-2 days. Low.",
