@@ -858,6 +858,30 @@ Result: 1 test file passed, 18 tests passed (17 static + 1 added in Review A fix
   Per workflow.md dirty-worktree policy, unrelated and non-Phase-11-relevant user work is preserved (not folded into this track's commit).
 - **Handoff**: Implementer should: (1) read the test file header for the full contract; (2) edit `measure/tracks/housekeeping_batch_20260603/plan.md` to fix the §1.1 Red state — change F-705 row status from `[ ]` to `[x]` and F-1202 row status from `[ ]` to `[x]`; (3) remove the malformed F-1301 placeholder row at line 21 (`| F-1301 | Medium | |`); (4) re-run the targeted Red command and confirm 16/16 pass; (5) commit with `docs(measure): mark Phase 2 / F-705 and Phase 4 / F-1202 complete in FR table; remove malformed F-1301 placeholder (Phase 11)`. Then the dev environment must re-run the live `pnpm turbo run test|lint|build --filter=science-advantage` + `pnpm --filter science-advantage seed` gates to close Phase 11.
 
+### Mid 2026-06-19 Re-Verification
+
+**Status: Red state re-verified at HEAD `07333284`. No new Red tests written — would create a false Red phase. The 16 assertions in `housekeeping-phase11-final-acceptance.test.ts` are the authoritative Phase 11 contract.**
+
+- **Re-verified Red command**:
+  ```
+  cd apps/science-advantage && \
+    /opt/codex-desktop/resources/node-runtime/bin/node \
+      ./node_modules/vitest/vitest.mjs run \
+        --config vitest.unit.config.ts \
+        lib/__tests__/housekeeping-phase11-final-acceptance.test.ts
+  ```
+- **Re-verified Red fail count**: **2 failed / 14 passed (16 total)**. Bit-identical to the previous MID pass's recording — the failing tests are the §1.1 FR-status check (F-705 and F-1202 still `[ ]`) and the §1.4 FR-row column count check (line 21 still has 4 pipes). Failures are caused by **missing implementation in the FR table** (stale status markers + malformed placeholder row), not stale fixtures. Per workflow.md §Red Phase "mark the task as already satisfied with evidence instead of creating a false Red phase", no new tests written.
+- **Dirty worktree classification at this MID pass**:
+  - `M apps/science-advantage/lib/__tests__/housekeeping-phase7-git-notes.test.ts` — Phase 7 §7.1/§7.2 adversarial regression guards; RELEVANT to track but NOT Phase 11. Preserved.
+  - `M apps/science-advantage/lib/__tests__/housekeeping-phase9-commitlint-config.test.ts` — Phase 9 §3.5 chore-exemption test + invocation fix; RELEVANT to track but NOT Phase 11. Preserved.
+  - `M commitlint.config.js` — Phase 9 follow-up (chore exemption regex + inline plugin); RELEVANT to track but NOT Phase 11. Preserved.
+  - `M measure/automation-supervisor.py` — Orchestrator model-name and prompt edits (`ACCEPTANCE_MODEL` change + `/goal` prefix additions to JR/PA/Adversarial prompts); UNRELATED user work. Preserved.
+  - `M pnpm-lock.yaml` — Phase 9 follow-up lockfile updates from `pnpm install`; RELEVANT to track but NOT Phase 11. Preserved.
+  - `?? apps/marketing/next-env.d.ts` — Auto-generated Next.js types for marketing app; generated/ignorable. Preserved.
+  - `?? measure/tracks/agents_md_audit_science_advantage_20260603/` — Different track (`agents_md_audit_science_advantage_20260603`); UNRELATED user work. Preserved.
+  None of the 7 dirty paths are Phase 11. Per workflow.md dirty-worktree policy, all preserved (not folded into this track's commit).
+- **Phase 11 tasks remain `[~]`**: Tasks 1–4 (live `pnpm turbo run test|lint|build --filter=science-advantage` + `pnpm --filter science-advantage seed`) are environment-bound and owned by the Implementer / dev environment. Task 5 (FR list completeness) is the contract covered by §1 of the test file; the Red state is correctly recorded and ready for the Implementer's plan.md edit.
+
 ## Phase 12: Closeout
 
 - [ ] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to `Resolved`. (F-1306 resolves to Track 11; this track resolves the other 9.)
