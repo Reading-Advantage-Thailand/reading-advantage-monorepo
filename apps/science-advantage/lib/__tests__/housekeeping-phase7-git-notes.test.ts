@@ -87,9 +87,11 @@
  *   rich Task/Decision/Phase content). Pass at HEAD; protects
  *   against the Implementer replacing rich notes with the bare
  *   track ID.
- * - **§6 — Audit SHA enumeration**: The 5 known-failing SHAs are
- *   stable (informational; documents the Implementer's backlog).
- *   Pass at HEAD.
+ * - **§6 — Audit SHA enumeration (post-Green)**: The 5 originally-
+ *   failing SHAs are stable in history AND each now contains the
+ *   track ID in its note. Fails at HEAD (Red); passes after the
+ *   Implementer attaches the track ID to all 5. Acts as a single-
+ *   commit regression guard for any future note-stripping event.
  *
  * ## Test Framework & SUT
  *
@@ -405,16 +407,22 @@ describe(
       });
     });
 
-    describe('§6 — Audit SHA enumeration: the 5 known-failing SHAs are stable', () => {
+    describe('§6 — Audit SHA enumeration: the 5 originally-failing SHAs are stable and now annotated', () => {
       /**
-       * Pin the 5 known-failing SHAs as the Implementer's backlog.
-       * If new commits are added that lack the track ID (e.g., a
-       * regression in a future commit), this assertion fails — but
-       * at HEAD it documents the current backlog.
+       * Pin the 5 originally-failing SHAs as audit-stable members of
+       * the Implementer's backlog. Asserts:
+       *   1. All 5 SHAs are still present as `refactor(science):`
+       *      commits (rebase / history-rewrite regression guard).
+       *   2. Each now has the track ID in its git note (post-Green
+       *      contract — duplicates §1.1–§1.5 to keep §6 self-contained
+       *      and to flag any single-commit regression where a note is
+       *      stripped after Phase 7 closes).
        *
-       * Informational; passes at HEAD and Green.
+       * Passes at Green; would fail if any of the 5 SHAs were
+       * dropped from history or had its note unrelated to the track
+       * stripped.
        */
-      it('§6.1 — the 5 known-failing SHAs are exactly the Implementer\'s backlog (audit-stable)', () => {
+      it('§6.1 — the 5 originally-failing SHAs are stable and now contain the track ID (post-Green)', () => {
         const result = runCaptured('git', [
           'log',
           '--format=%H %s',
@@ -430,20 +438,26 @@ describe(
             .filter((l) => /^([0-9a-f]{40}) refactor\(science\):/.test(l))
             .map((l) => l.split(' ')[0])
         );
-        const failing = KNOWN_FAILING_SHAS.filter((s) => refactorShas.has(s));
+        const stillPresent = KNOWN_FAILING_SHAS.filter((s) =>
+          refactorShas.has(s)
+        );
         expect(
-          failing.length,
-          `expected all 5 known-failing SHAs to be present as \`refactor(science):\` commits; found ${failing.length}/5`
+          stillPresent.length,
+          `expected all 5 originally-failing SHAs to still be present as \`refactor(science):\` commits (history-rewrite regression guard); found ${stillPresent.length}/5`
         ).toBe(5);
-        // Sanity check: each known-failing SHA lacks the track ID.
+        // Post-Green contract: each originally-failing SHA must now
+        // contain the track ID in its git note.
+        const missing: string[] = [];
         for (const sha of KNOWN_FAILING_SHAS) {
           const note = getNoteForSha(sha);
-          if (note !== null && note.includes(TRACK_ID)) {
-            throw new Error(
-              `known-failing SHA ${sha.slice(0, 7)} now has the track ID — update KNOWN_FAILING_SHAS list`
-            );
+          if (note === null || !note.includes(TRACK_ID)) {
+            missing.push(sha.slice(0, 7));
           }
         }
+        expect(
+          missing,
+          `expected all 5 originally-failing SHAs to have the track ID in their note post-Green; missing: ${missing.join(', ') || 'none'}`
+        ).toEqual([]);
       });
     });
   }

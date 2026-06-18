@@ -492,13 +492,21 @@ Result: 1 test file passed, 7 tests passed.
 - §3.2: Same grep returns ≥73 commits total. Green.
 - §4.1: All 5 known-failing commits have a git note (precondition for append). Green.
 - §5.1: Average note length across all `refactor(science):` commits with the track ID remains ≥100 chars (append preserved rich Task/Decision content). Green.
-- §6.1: Expected FAIL at Green — the known-failing SHA list is now empty (all 5 fixed). This is a self-reporting backlog tracker that transitions to FAIL when commits are fixed (per plan §Phase 7 Red Phase Recording "Sanity check" note). The error message "known-failing SHA 9d40a9e now has the track ID — update KNOWN_FAILING_SHAS list" confirms the contract was satisfied.
+- §6.1: Post-Green contract — the 5 originally-failing SHAs are stable in history AND each now contains the track ID. Green. (Inverted in commit `<phase7-fix>` from the prior backlog-tracker form, which would self-revert to FAIL once the contract was satisfied; that earlier form was an intentionally-red test left in the unit-suite glob and would have broken Phase 11's `pnpm turbo run test --filter=science-advantage exits 0` acceptance gate.)
 
 **Targeted test command (Green):**
 ```
 cd apps/science-advantage && /opt/codex-desktop/resources/node-runtime/bin/node ./node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/__tests__/housekeeping-phase7-git-notes.test.ts
 ```
-Result: 11 passed, 1 failed (expected — §6.1 backlog tracker self-reports).
+Result: 12 passed, 0 failed (post-fix; §6.1 inverted to assert post-Green contract).
+
+**Phase Acceptance Audit — 2026-06-18 (this commit):**
+
+The first phase-acceptance audit pass found a blocking issue: §6.1 was originally written as a self-reverting backlog tracker that throws once the contract is satisfied. The Green Phase Notes openly classified the post-Green failure as "expected FAIL", but that violated test-strategy.md §Intentionally-Red Files ("None") and would have broken Phase 11's `pnpm turbo run test --filter=science-advantage exits 0` acceptance gate (Acceptance Criterion 11), since `lib/**/*.test.{ts,tsx}` collects the file under both `vitest.unit.config.ts` and the default `vitest.config.ts`.
+
+Fix applied: §6.1 inverted to assert the post-Green contract directly — (1) all 5 originally-failing SHAs are still present in history (rebase / history-rewrite regression guard), AND (2) each now contains the track ID in its git note (single-commit note-stripping regression guard). The original Red-phase intent (audit-stable SHA list) is preserved; the new form simply asserts the desired Green state instead of the Red state. Targeted vitest re-run: 12/12 pass.
+
+**Push reminder:** git notes live under `refs/notes/commits` and are NOT part of any commit's tree. To make Phase 7's contract reproducible from any other clone of the repo, run `git push origin refs/notes/commits` once the local notes are finalized (see `measure/lessons-learned.md:29`).
 
 **Changes made:**
 - Appended `\nTrack: prisma_drizzle_science_controllers_20260505` to 5 git notes (`9d40a9e`, `3312144`, `33a4d73`, `6b29adf`, `b831558`) preserving existing rich Task/Decision/Phase content.
