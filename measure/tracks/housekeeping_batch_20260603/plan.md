@@ -431,11 +431,11 @@ Result: 1 test file passed, 7 tests passed.
 
 > **Red phase (MID) re-recorded 2026-06-18 (third pass).** The previous MID pass recorded a body-content membership filter that turned out to be too narrow — it captured only 22 of 52 actual track members and produced false-positive failures in the negative control (§1.3). This pass re-grounds the Red phase in **explicit SHA lists** for the 5 known-failing commits and the 2 negative-control commits, with corrected live-proof baselines (52 refactor / 73 total). Tests fail as expected for the contract violation; the Red commit captures the corrected test file.
 
-- [x] (TBD) Task: Enumerate the 24 `refactor(science):` commits in the last 100 commits: `git log --oneline -100 -- apps/science-advantage/ | rg "refactor\(science\)"`.
-- [x] (TBD) Task: For each commit, check the body to confirm it belongs to `prisma_drizzle_science_controllers_20260505`. (Most do; a few are independent refactors.)
-- [x] (TBD) Task: For each confirmed commit: `git notes add -m "prisma_drizzle_science_controllers_20260505" <sha>`.
-- [x] (TBD) Task: Verify: `git log --grep "prisma_drizzle_science_controllers" --notes -50` returns the 24 commits with the note attached.
-- [x] (TBD) Task: Document the backfill in `measure/lessons-learned.md`.
+- [x] (f5d36392) Task: Enumerate the 24 `refactor(science):` commits in the last 100 commits: `git log --oneline -100 -- apps/science-advantage/ | rg "refactor\(science\)"`.
+- [x] (f5d36392) Task: For each commit, check the body to confirm it belongs to `prisma_drizzle_science_controllers_20260505`. (Most do; a few are independent refactors.)
+- [x] (f5d36392) Task: For each confirmed commit: `git notes add -m "prisma_drizzle_science_controllers_20260505" <sha>`.
+- [x] (f5d36392) Task: Verify: `git log --grep "prisma_drizzle_science_controllers" --notes -50` returns the 24 commits with the note attached.
+- [x] (f5d36392) Task: Document the backfill in `measure/lessons-learned.md`.
 
 ### Red Phase Recording (corrected third pass, 2026-06-18)
 
@@ -483,7 +483,7 @@ Result: 1 test file passed, 7 tests passed.
 
 ### Green Phase Notes (Jr 2026-06-18)
 
-**Commit:** `TBD` (`chore(science): add prisma_drizzle_science_controllers_20260505 track refs to 5 refactor commits (F-1207)`)
+**Commit:** `f5d36392` (`chore(science): add prisma_drizzle_science_controllers_20260505 track refs to 5 refactor commits (F-1207)`)
 
 **Red→Green contract verification (Phase 7 / F-1207):**
 - §1.1–§1.5: All 5 known-failing commits now have `prisma_drizzle_science_controllers_20260505` in their git notes (appended via `git notes append`). Green.
