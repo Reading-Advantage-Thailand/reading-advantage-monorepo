@@ -460,5 +460,90 @@ describe(
         ).toEqual([]);
       });
     });
+
+    describe('§7 — Adversarial regression guards (new-commit + format)', () => {
+      /**
+       * §7.1 — Every `refactor(science):` commit is either a track
+       * member (note contains the track ID) or a named negative
+       * control. Catches regressions where a new `refactor(science):`
+       * commit is added without the track ID — §1.x only covers the 5
+       * known-failing SHAs, and §3.1 only asserts a ≥52 lower bound,
+       * so neither detects a NEW commit slipping through. Without this
+       * guard, a future Implementer adding (say) `refactor(science):
+       * something unrelated` would leave the suite green despite the
+       * new commit violating the contract.
+       *
+       * The expected non-track set is exactly {3d3528e, 1f8c2a0}. Any
+       * other `refactor(science):` commit without the track ID is a
+       * contract violation.
+       */
+      it('§7.1 — every `refactor(science):` commit is either a track member or in the named negative-control set', () => {
+        const result = runCaptured('git', [
+          'log',
+          '--format=%H %s',
+          '--all',
+        ]);
+        if (result.status !== 0) {
+          throw new Error(`git log failed: ${result.stderr}`);
+        }
+        const refactorShas = result.stdout
+          .trim()
+          .split('\n')
+          .filter((l) => /^[0-9a-f]{40} refactor\(science\):/.test(l))
+          .map((l) => l.split(' ')[0]);
+        const negativeControl = new Set(NON_TRACK_SHAS);
+        const violations: string[] = [];
+        for (const sha of refactorShas) {
+          if (negativeControl.has(sha)) continue;
+          const note = getNoteForSha(sha);
+          if (note === null || !note.includes(TRACK_ID)) {
+            const subject = getCommitSubject(sha);
+            violations.push(`${sha.slice(0, 7)}: ${subject}`);
+          }
+        }
+        expect(
+          violations,
+          `expected every \`refactor(science):\` commit to either have the track ID in its git note or be in the named negative-control set; found ${violations.length} violation(s):\n` +
+            violations.map((v) => `  - ${v}`).join('\n')
+        ).toEqual([]);
+      });
+
+      /**
+       * §7.2 — Each of the 5 known-failing SHAs has its track ID
+       * appended in the canonical `Track: <id>` line format used by
+       * the rest of the codebase (verified via sample d596dfb at
+       * HEAD). Catches regressions where the Implementer attached
+       * the track ID in a non-canonical form (e.g., bare token
+       * without `Track:` prefix, or only as a subject-line footnote).
+       * The existing §1.x tests pass on any substring match; this
+       * guard enforces the convention documented in
+       * `measure/lessons-learned.md`.
+       */
+      it('§7.2 — each originally-failing SHA has the canonical `Track: <id>` line in its note', () => {
+        const canonicalPattern = new RegExp(
+          `^Track:\\s+${TRACK_ID}\\s*$`,
+          'm'
+        );
+        const violations: string[] = [];
+        for (const sha of KNOWN_FAILING_SHAS) {
+          const note = getNoteForSha(sha);
+          const short = sha.slice(0, 7);
+          if (note === null) {
+            violations.push(`${short}: no note at all`);
+            continue;
+          }
+          if (!canonicalPattern.test(note)) {
+            violations.push(
+              `${short}: missing canonical \`Track: ${TRACK_ID}\` line`
+            );
+          }
+        }
+        expect(
+          violations,
+          `expected each originally-failing SHA to have the canonical \`Track: ${TRACK_ID}\` line; violations:\n` +
+            violations.map((v) => `  - ${v}`).join('\n')
+        ).toEqual([]);
+      });
+    });
   }
 );

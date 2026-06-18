@@ -375,6 +375,17 @@ describe('housekeeping_batch_20260603 / Phase 9 — Add `commitlint` Config (F-1
         ).toBe(true);
       }
     });
+
+    it('§3.5 — subject-pattern regex ALLOWS a chore commit WITHOUT track_id', async () => {
+      const text = await readCommitlintConfig();
+      const regex = extractSubjectPatternRegex(text);
+      const choreNoTrackId = 'chore(root): update tooling';
+      expect(
+        regex.test(choreNoTrackId),
+        `expected subject-pattern regex to ALLOW '${choreNoTrackId}' (chore is exempt per FR-9); ` +
+          `it did not match. Regex source: ${regex.source}`,
+      ).toBe(true);
+    });
   });
 
   describe('§4 — `.husky/commit-msg` hook exists, is executable, and invokes commitlint', () => {
@@ -585,20 +596,15 @@ describe('housekeeping_batch_20260603 / Phase 9 — Add `commitlint` Config (F-1
           `commitlint binary not available; cannot run live-behavior gate`,
         );
       }
-      // commitlint reads the message from stdin when given no
-      // positional file arg, but v17+ requires `--stdin` for the
-      // modern default behavior. Pass both as args: stdin provides
-      // the message body either way.
-      const result = spawnSync(
-        inv.command,
-        [...inv.argsPrefix, '--stdin'],
-        {
-          cwd: MONOREPO_ROOT,
-          encoding: 'utf-8',
-          input: message,
-          maxBuffer: 16 * 1024 * 1024,
-        },
-      );
+      // commitlint v19 reads the message from stdin when no file/edit
+      // flag is provided; the deprecated `--stdin` flag is no longer
+      // accepted. Pass the message via `input` only.
+      const result = spawnSync(inv.command, inv.argsPrefix, {
+        cwd: MONOREPO_ROOT,
+        encoding: 'utf-8',
+        input: message,
+        maxBuffer: 16 * 1024 * 1024,
+      });
       if (result.error) throw result.error;
       return {
         status: result.status ?? -1,
