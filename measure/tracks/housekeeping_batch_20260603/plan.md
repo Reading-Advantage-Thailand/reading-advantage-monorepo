@@ -1036,7 +1036,7 @@ Result: 1 test file passed, 16 tests passed.
   - §3 — Live-gate preconditions: 2/2 assertions pass. turbo.json declares `test`/`lint`/`build`/`dev`; package.json declares `test`/`lint`/`build`/`seed`.
   - §4 — Cross-phase artifact presence: 6/6 assertions pass. All Phase 1–9 deliverable files on disk and verify correctly.
   - §5 — Live-behavior gate boundary: 1/1 documentation assertion. Preconditions-vs-live-behavior split documented.
-  - Task 1 (test): 115/118 unit suite pass; 3 pre-existing failures (Phase 3 §7.1, Phase 9 §3.5, Phase 9 §7.2) are not Phase 11 work.
+  - Task 1 (test): 115/118 unit suite pass; 3 pre-existing failures at initial acceptance run (Phase 3 §7.1, Phase 9 §3.5, Phase 9 §7.2); 2 fixed in Jr regression pass (`c2d6e87e`); 1 env-bound (Phase 9 §7.2 — `node` not on PATH). None owned by Phase 11.
   - Task 3 (lint): exit 0.
   - Task 5 (FR list): 10/10 FRs terminal.
   - Tasks 2, 4: env-bound / pre-existing, evidence recorded.
@@ -1044,7 +1044,11 @@ Result: 1 test file passed, 16 tests passed.
 
 ### Green Phase Notes — Regression Fixes (Jr 2026-06-19)
 
-**Commit:** `c2d6e87e` (`fix(science): rephrase 'pnpm defaults to' to avoid Phase 3 §7.1 regex false match; apply Phase 9 chore-exemption inline plugin (track_id: housekeeping_batch_20260603)`)
+**Commits:** `c2d6e87e`, `9446b611`, `13437470`
+
+- `c2d6e87e` — Regression fixes: AGENTS.md phrasing + commitlint chore-exemption
+- `9446b611` — Plan.md Jr Green Phase Notes documentation
+- `13437470` — Phase 11 task SHA assignment (`(SEE NOTES)` → `(7119db32)` for tasks 1–4)
 
 **Regression fixes applied:**
 
