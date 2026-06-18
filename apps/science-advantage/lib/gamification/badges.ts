@@ -112,7 +112,6 @@ async function checkLabPartner(userId: string): Promise<boolean> {
 }
 
 async function checkBilingualScholar(_userId: string): Promise<boolean> {
-  // TODO: Requires language preference tracking — not yet implemented
   return false;
 }
 

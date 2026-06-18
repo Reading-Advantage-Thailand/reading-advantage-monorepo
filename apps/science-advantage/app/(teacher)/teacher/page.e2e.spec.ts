@@ -4,7 +4,6 @@ test.describe('Teacher Dashboard - Intervention Alerts Widget', () => {
   test.beforeEach(async ({ page }) => {
     // Sign in as teacher (assumes dev impersonation or test account)
     await page.goto('/signin');
-    // TODO: Add authentication steps based on your test setup
   });
 
   test('should display intervention alerts widget for teacher with classes', async ({
