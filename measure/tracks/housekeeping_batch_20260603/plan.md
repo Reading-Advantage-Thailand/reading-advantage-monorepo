@@ -16,7 +16,7 @@
 | F-1102 | Low | Update `AGENTS.md` (remove Prisma/npm refs) | Phase 3 | [x] |
 | F-1202 | Low | Add `*.log` to `.gitignore` | Phase 4 | [ ] |
 | F-1305 | Low | Backfill 5 orphan in-code TODOs | Phase 5 | [x] |
-| F-1201 | Medium | Re-pin 51 `^`-ranged deps (or doc deviation) | Phase 6 | [ ] |
+| F-1201 | Medium | Re-pin 51 `^`-ranged deps (or doc deviation) | Phase 6 | [x] |
 | F-1207 | Medium | Add `git notes` to 24 refactor commits | Phase 7 | [ ] |
 | F-1301 | Medium | |
 | F-503 | Medium | Add `docs/adr/` + SQL-ADR guard lint | Phase 8 | [ ] |
@@ -396,10 +396,36 @@ Result: 1 test file passed, 4 tests passed.
 - **Graph state**: `build-graph stats ./graph.db` → 2,261 nodes / 3,202 edges / 316 files (fresh; Phase 5 closeout was 2,249 / 3,190 / 314; +12 nodes / +12 edges / +2 files is incidental drift from the `automation-supervisor.py` edits which the indexer picks up). Phase 6 is pure doc work — no symbol/schema/route/component is touched, so no graph update is required after Phase 6 lands.
 - **Handoff**: Implementer should: (1) read the test file header for the contract; (2) append a deviation note to `apps/science-advantage/AGENTS.md` that satisfies §1, §2, §3 (mentions `^` ranges, mentions `pnpm-lock.yaml` as source of truth, references `save-exact=false` or equivalent deviation language); (3) leave lines 3 and 5 untouched (Phase 1 regression-guard and Phase 3 deviation note); (4) re-run the targeted Red command and confirm all assertions pass; (5) commit with `docs(science): document ^-range dependency deviation in AGENTS.md (F-1201)`.
 
-- [~] Task: Decide a pnpm `save-exact` policy: add `save-exact=false` to `.npmrc` (existing behavior; the 51 `^` ranges are grandfathered).
-- [~] Task: Document the decision in `apps/science-advantage/AGENTS.md`: "Dependencies use `^` ranges for flexibility. The pnpm-lock.yaml is the source of truth at install time."
-- [~] Task: If the maintainer wants strict pinning: run `pnpm --filter science-advantage add <pkg>@latest --save-exact` for each of the 51 deps. Verify `pnpm install --frozen-lockfile` still resolves.
-- [~] Task: For this track, default to the documented deviation; strict pinning is a follow-up.
+- [x] (4c0d4d7f) Task: Decide a pnpm `save-exact` policy: add `save-exact=false` to `.npmrc` (existing behavior; the 51 `^` ranges are grandfathered).
+- [x] (4c0d4d7f) Task: Document the decision in `apps/science-advantage/AGENTS.md`: "Dependencies use `^` ranges for flexibility. The pnpm-lock.yaml is the source of truth at install time."
+- [x] (4c0d4d7f) Task: If the maintainer wants strict pinning: run `pnpm --filter science-advantage add <pkg>@latest --save-exact` for each of the 51 deps. Verify `pnpm install --frozen-lockfile` still resolves. (Not triggered — doc deviation path chosen.)
+- [x] (4c0d4d7f) Task: For this track, default to the documented deviation; strict pinning is a follow-up.
+
+### Green Phase Notes (Jr 2026-06-18)
+
+**Commit:** `4c0d4d7f` (`docs(science): document ^-range dependency deviation in AGENTS.md (F-1201)`)
+
+**Red→Green contract verification (Phase 6 / F-1201):**
+- §1.1: `hasCaretRangePhrase` returns true — the deviation note uses `` `^` `` (literal caret) and `caret` (word) + `dependencies`/`range`/`ranges` context words. Green.
+- §2.1: `pnpm-lock.yaml` present + `authoritative` phrasing — the `pnpm-lock.yaml` is identified as the authoritative source of truth at install time. Green.
+- §3.1: 56 `^`-ranged deps in `package.json` (≥51 audit threshold). Green (unchanged).
+- §3.2: No `.npmrc` files in repo — pnpm default `save-exact=false` holds. Green (unchanged).
+- §4.1: Phase 1 regression-guard note (line 3) preserved intact. Green (unchanged).
+- §4.2: Phase 3 deviation-from-monorepo header (line 5) preserved intact. Green (unchanged).
+- §5.1: `rg -in 'pnpm-lock|save-exact|caret|^ ranges|re-pin' apps/science-advantage/AGENTS.md` → 1 match at line 7. Green.
+
+**Targeted test command (Green):**
+```
+cd apps/science-advantage && /opt/codex-desktop/resources/node-runtime/bin/node ./node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/__tests__/housekeeping-phase6-repin-deps.test.ts
+```
+Result: 1 test file passed, 7 tests passed.
+
+**Changes made:**
+- Appended a `> **Dependency deviation:**` blockquote at line 7 of `apps/science-advantage/AGENTS.md` (between the Phase 3 deviation header and the first `## Measure Workflow` heading).
+- The note states: Dependencies use `` `^` `` (caret) ranges for flexibility; 56 `^`-ranged deps are grandfathered; `pnpm-lock.yaml` is the authoritative source of truth; pnpm defaults to `save-exact=false`; strict pinning is deferred.
+- Lines 3 (Phase 1 regression-guard) and 5 (Phase 3 deviation header) are preserved untouched.
+
+**Build-graph:** No graph update needed — Phase 6 is pure doc work (`AGENTS.md` is not TypeScript; no symbol/schema/route/component changes). `graph.db` unchanged at 2,261 nodes / 3,202 edges / 316 files.
 
 ## Phase 7: Add `git notes` to 24 `refactor(science):` Ports
 
