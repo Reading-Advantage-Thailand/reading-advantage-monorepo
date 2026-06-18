@@ -794,7 +794,7 @@ Result: 1 test file passed, 18 tests passed (17 static + 1 added in Review A fix
 - [~] Task: `pnpm turbo run seed` runs end-to-end; the resulting data shape is unchanged.
 - [~] Task: `pnpm turbo run lint --filter=science-advantage` exits 0.
 - [~] Task: `pnpm turbo run build --filter=science-advantage` exits 0.
-- [x] (337124f7) Task: All 10 items in the FR list completed (or the F-1306 deletion deferred to Track 11).
+- [x] (a773dc7f) Task: All 10 items in the FR list completed (or the F-1306 deletion deferred to Track 11).
 
 ### Red Phase Recording (2026-06-19)
 
@@ -938,7 +938,7 @@ Result: 1 test file passed, 18 tests passed (17 static + 1 added in Review A fix
 
 ### Green Phase Notes (Jr 2026-06-19)
 
-**Commit:** `337124f7` (`docs(measure): mark F-705/F-1202 complete in FR table; remove malformed F-1301 placeholder (track_id: housekeeping_batch_20260603)`)
+**Commit:** `a773dc7f` (`docs(measure): mark F-705/F-1202 complete in FR table; remove malformed F-1301 placeholder (track_id: housekeeping_batch_20260603)`)
 
 **Red→Green contract verification (Phase 11 / Final Acceptance, contract-level):**
 
