@@ -234,9 +234,9 @@ HEAD before closing.
 
 ## Phase 3: Implement
 
-- [x] Task: Upgrade Jest to 30.x in reading-advantage and advantage-games. _Red proof: `f7dea19d`, re-canonicalized at `6de99064` and re-verified at this mid pass._
-- [x] Task: Update Jest configuration for the new schema. _Red proof: `ee707dfd` (audit + contract test); schema applied at `04c76fc7`; contract test passes 6/6 at this mid._
-- [x] Task: Fix any snapshot or mocking API changes. _Already-satisfied with evidence: 9 canary files (see inventory below); no new test needed because Jest 30 keeps `requireActual` and `useFakeTimers` APIs (audit §2 rows 5–6)._
+- [~] Task: Upgrade Jest to 30.x in reading-advantage and advantage-games. _Red proof: `f7dea19d`, re-canonicalized at `6de99064` and re-verified at this mid pass. **Green pending** — owned by Phase 3 implementer (bump `apps/reading-advantage/package.json` deps + regenerate `pnpm-lock.yaml`)._
+- [~] Task: Update Jest configuration for the new schema. _Red proof: `ee707dfd` (audit + contract test); schema applied at `04c76fc7`; contract test passes 6/6 at this mid. **Green partial** — schema already applied at `04c76fc7`; this task's Red side is the canary proof that the applied schema is the post-condition shape. advantage-games already has the schema (no Green change needed there)._
+- [~] Task: Fix any snapshot or mocking API changes. _Red proof: already-satisfied with evidence: 9 canary files (see inventory below); no new test needed because Jest 30 keeps `requireActual` and `useFakeTimers` APIs (audit §2 rows 5–6). **Green pending** — the Phase 3 implementer must re-run the 9 canary files individually to confirm no fix is required (per `test-strategy.md` §6 row "Phase 3" hot-spot list)._
 - [ ] Task: Run test suites in both affected apps. _(Green-phase gate, owned by Phase 3 implementer.)_
 
 ### Phase 3 — Red proof at HEAD (post-Phase 2 supervisor-fix)
@@ -286,15 +286,26 @@ states that Phase 3 must **not invent new tests** — the existing test
 pyramid is the verification gate, and the migration keeps the pyramid
 green rather than re-authoring it. The mid role's job is therefore to
 **classify each task against the existing Red/contract proofs** and
-mark tasks as already-satisfied with evidence (or escalate if the
-existing proofs are missing or wrong).
+mark tasks as `[~]` (Red done, Green pending — owned by the Phase 3
+implementer) when the Red proof holds. The four Phase 3 tasks
+correspond to: bump Jest, schema, snapshot/mocking API, run suites.
+Tasks 1, 2, 3 each have a Red proof (existing test or existing
+canary files). Task 4 is a Green-only verification gate.
 
-| Phase 3 task | Red proof location | Status | Evidence |
-|---|---|---|---|
-| Upgrade Jest to 30.x in reading-advantage and advantage-games | `__test__/jest30-red.test.ts` (Phase 2) | **Red proof holds** | Re-confirmed 3-fail/1-pass at this HEAD. advantage-games is already on Jest 30.3.0 (post-condition) — no new test needed. |
-| Update Jest configuration for the new schema | `__test__/jest30-config.contract.test.ts` (Phase 1) | **Contract proof holds** (Green at HEAD) | 6/6 pass; the schema was already applied at `04c76fc7` per the audit §3. |
-| Fix any snapshot or mocking API changes | 9 canary files in `apps/reading-advantage` | **Already-satisfied with evidence** (no new test needed) | Per `test-strategy.md` §3 and `jest30-audit.md` §2 rows 5–6, Jest 30 keeps `jest.requireActual` and `useFakeTimers` APIs. Snapshot format is vacuously satisfied (no `toMatchSnapshot` callers). 9 canary files are the existing regression guard: 3 unit tests use `jest.requireActual("@reading-advantage/db")`; 3 game tests use `jest.requireActual("react")`; 3 game tests + 3 hook/store tests use `useFakeTimers` (3 overlap). |
-| Run test suites in both affected apps | The existing test pyramid itself | **Verification gate, not a new test** | Deferred to the Phase 3 implementer's Green phase. The smoke proof is `pnpm --filter reading-advantage exec jest <each of 9 canary files>` followed by `pnpm --filter reading-advantage exec jest --testPathPattern="__test__"` (per `test-strategy.md` §6 row "Phase 3"). |
+The `[~]` marker is the correct Measure status for "Red work done,
+Green work pending" — it tells the next implementer that the Red side
+is satisfied (no new test needed) and they only need to land the
+Green side to flip to `[x]`. A previous mid pass (`aa120ba9`) marked
+these tasks `[x]`; supervisor flagged this as incorrect because
+the Green implementation (package.json bump, canary re-run, suite
+smoke) is still outstanding.
+
+| Phase 3 task | Marker | Red proof location | Red status | Green status |
+|---|---|---|---|---|
+| Upgrade Jest to 30.x in reading-advantage and advantage-games | `[~]` | `__test__/jest30-red.test.ts` (Phase 2) | **Red proof holds** — re-confirmed 3-fail/1-pass at this HEAD; advantage-games is already on Jest 30.3.0 (post-condition) | **Pending** — Phase 3 implementer must bump `apps/reading-advantage/package.json` and regenerate `pnpm-lock.yaml` |
+| Update Jest configuration for the new schema | `[~]` | `__test__/jest30-config.contract.test.ts` (Phase 1) | **Contract proof holds** — 6/6 pass; schema already applied at `04c76fc7` per the audit §3 | **Done** (for reading-advantage); advantage-games already has the schema (no Green change needed there). Task stays `[~]` because the wider Phase 3 closeout is not yet complete. |
+| Fix any snapshot or mocking API changes | `[~]` | 9 canary files in `apps/reading-advantage` | **Already-satisfied with evidence** — per `test-strategy.md` §3 and `jest30-audit.md` §2 rows 5–6, Jest 30 keeps `jest.requireActual` and `useFakeTimers` APIs. Snapshot format is vacuously satisfied (no `toMatchSnapshot` callers). 9 canary files are the existing regression guard: 3 unit tests use `jest.requireActual("@reading-advantage/db")`; 3 game tests use `jest.requireActual("react")`; 3 game tests + 3 hook/store tests use `useFakeTimers` (3 overlap). | **Pending** — Phase 3 implementer must re-run the 9 canary files individually under Jest 30 to confirm no fix is required (per `test-strategy.md` §6 row "Phase 3") |
+| Run test suites in both affected apps | `[ ]` | The existing test pyramid itself | N/A (Green-only gate) | **Pending** — Phase 3 implementer must run the 9 canary files individually, then `pnpm --filter reading-advantage exec jest --testPathPattern="__test__"`, then `pnpm --filter advantage-games test` (per `test-strategy.md` §6 row "Phase 3") |
 
 #### Canary file inventory (reading-advantage)
 
@@ -341,6 +352,7 @@ files / 12 call sites).
 - **Re-ran** the Phase 1 contract test at the post-revert HEAD; 6/6 pass. **No new test file was written** — the Phase 1 contract test is the canonical shape proof for Phase 3 Task 2, and it already passes because the schema was applied in `04c76fc7`.
 - **Catalogued** the 9 canary files (requireActual + useFakeTimers) into the per-file inventory above. **No new test file was written** — the canary files are the existing regression guard, and Jest 30 keeps these APIs per `jest30-audit.md` §2 rows 5–6.
 - **Did NOT** write a false-Red test that passes on Jest 29 (e.g., a "canary" test that exercises `requireActual` / `useFakeTimers` and asserts they work — such a test would pass on Jest 29 because Jest 30 keeps the API, creating a false-Red phase).
+- **Marker correction (this commit):** previous mid pass (`aa120ba9`) marked Phase 3 tasks 1, 2, 3 as `[x]` (completed). Supervisor flagged this as incorrect — Red work is done, but the Green implementation is still outstanding (package.json bump, canary re-run, suite smoke). This commit re-marks tasks 1, 2, 3 as `[~]` (Red done, Green pending — owned by the Phase 3 implementer) and updates the per-task classification table to match. Task 4 stays `[ ]` (Green-only gate, no Red side).
 
 #### Build-graph probe at this mid
 
