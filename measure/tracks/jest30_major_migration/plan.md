@@ -65,15 +65,11 @@ suite; the `jest.config.ts` already applied in Phase 1 — commit
 **runtime** companion to the Phase 1 **config-shape** proof):
 
 ```
-cd apps/reading-advantage && ../../node_modules/.bin/jest __test__/jest30-red.test.ts --no-coverage
+cd apps/reading-advantage && ./node_modules/.bin/jest __test__/jest30-red.test.ts --no-coverage
 ```
 
-(Falls back to `./node_modules/.bin/jest` in apps/reading-advantage;
-the absolute path above is used by the track's CI script. Both are
-equivalent — the test path is the single source of truth for
-"bounded".)
-
-Red proof (added at the START of Phase 2, before any Phase 3 bump):
+Red proof — recorded at the START of Phase 2, before any Phase 3
+bump (commit `f7dea19d`):
 
 ```
 Test Suites: 1 failed, 1 total
@@ -89,10 +85,12 @@ Jest 29 and Jest 30 and is documented as such inline so reviewers
 cannot mistake it for a false-positive Red.
 
 Cross-app sanity (advantage-games is already on Jest 30.x — the
-post-condition):
+post-condition). Verified by placing a temporary copy of the same
+test file at `apps/advantage-games/src/lib/` and running through
+advantage-games' own jest config (Jest 30.3.0):
 
 ```
-cd apps/advantage-games && ../../node_modules/.bin/jest __test__/jest30-red.test.ts --no-coverage
+cd apps/advantage-games && ./node_modules/.bin/jest src/lib/jest30-red.cross-app-verify.test.ts --no-coverage
 ```
 
 ```
@@ -100,12 +98,25 @@ Test Suites: 1 passed, 1 total
 Tests:       4 passed, 4 total
 ```
 
-The same test file is copied into `apps/advantage-games/__test__/` so
-the cross-app check uses the **identical** source (no parallel
-maintenance). The copy is owned by this track and is folded into the
-same Red commit; both copies are deleted when Phase 3 lands the
-runtime bump (the file's value disappears once the migration is
-green).
+The cross-app verify copy is deleted before commit (the strategy
+specifies **one** test file in `apps/reading-advantage/`); the
+"passes on advantage-games" half is therefore a *runtime* proof, not
+just a logical one. The two halves are:
+
+| App | Jest | Red result | Bound check |
+|---|---|---|---|
+| `apps/reading-advantage` | 29.7.0 | 3 fail / 1 pass (gate enforced) | `__test__/jest30-red.test.ts` |
+| `apps/advantage-games` | 30.3.0 | 4 pass / 0 fail (gate satisfied) | `src/lib/jest30-red.cross-app-verify.test.ts` (temp) |
+
+Node-level `require.resolve` from the advantage-games paths also
+resolves `jest/package.json` to `jest@30.3.0` (major 30), confirming
+the resolution path the test relies on is correct in the post-
+condition environment.
+
+The test file's value disappears once Phase 3 lands the runtime
+bump; Phase 3 will re-run this Red command and expect 4 pass / 0
+fail, after which the file can be retired (or kept as a permanent
+regression test — to be decided at Phase 3 closeout).
 
 See `jest30-red.test.ts` inline header for the design rationale
 (version-resolved runtime check, bounded scope, no full-suite
