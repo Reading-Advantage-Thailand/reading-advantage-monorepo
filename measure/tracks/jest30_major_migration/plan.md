@@ -40,6 +40,18 @@ declarations (per `jest30-audit.md` §3), those 4 tests must continue
 to pass — they are not false-positive Red and are not a contract
 loophole.
 
+### Phase 1 — Green proof (config shape applied)
+
+Commit `04c76fc7` applied the §3 changes from `jest30-audit.md`:
+removed `preset: "ts-jest"`, replaced `testEnvironment:
+"jest-environment-jsdom"` with `"jsdom"`, and activated
+`coverageProvider: "v8"`.
+
+```
+Test Suites: 1 passed, 1 total
+Tests:       6 passed, 6 total
+```
+
 ## Phase 2: Test
 
 - [ ] Task: Add focused test verifying Jest 30 compatibility.
