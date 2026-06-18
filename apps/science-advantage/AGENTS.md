@@ -4,6 +4,8 @@
 
 > **Deviation note:** This file documents app-specific deviations from the monorepo `AGENTS.md`. For shared conventions (auth, packages, CI), see the monorepo root.
 
+> **Dependency deviation:** Dependencies use `^` (caret) ranges for flexibility (56 `^`-ranged deps, grandfathered). The `pnpm-lock.yaml` is the authoritative source of truth at install time — pnpm defaults to `save-exact=false`, so `^` ranges are the current behavior. Strict pinning is deferred to a follow-up track.
+
 ## Measure Workflow
 
 All development runs through the **Measure** spec-driven development framework exclusively. At the start of every session:
