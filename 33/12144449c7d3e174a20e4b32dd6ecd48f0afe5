@@ -35,3 +35,5 @@ Tech-debt potentially introduced:
   - LessonType not yet wired anywhere (added to lib/enums.ts speculatively for
     upcoming Phase 1+ files). If no file consumes it by Phase 5, remove or
     leave as a forward-compatibility export.
+
+Track: prisma_drizzle_science_controllers_20260505
