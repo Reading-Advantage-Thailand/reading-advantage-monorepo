@@ -280,10 +280,52 @@ Result: 1 test file passed, 4 tests passed.
 
 ## Phase 5: Backfill 5 Orphan In-Code TODOs
 
-- [ ] Task: File 1 GH issue for the language-preference tracking in `lib/gamification/badges.ts:115`.
-- [ ] Task: File 1 GH issue for the i18n + lesson-slug TODOs (covers 4 in-code TODOs in `app/api/lessons/[lessonSlug]/route.ts` and `app/api/classes/[classId]/curriculum/route.ts`).
-- [ ] Task: Update each in-code TODO with `// TODO(#<issue-number>): ...` reference.
-- [ ] Task: Verify: `rg "TODO" apps/science-advantage/{app,lib,components}/ -g '!**/*.test.*' -g '!**/__tests__/**'` returns 0 orphan comments (or only intentionally-tracked ones).
+> **Red phase (MID) recorded 2026-06-18.** Pre-implementation state captured. Tests fail as expected for the contract violation (2 orphan TODO comments at HEAD; 5 cited in the audit were partially resolved by `app_domain_migration_20260603` between the audit and HEAD).
+
+### Red Phase Recording
+
+- **Audit drift (post-migration context):** The 2026-06-03 audit (F-1305) cited 5 orphan TODOs at specific lines:
+  - `lib/gamification/badges.ts:115` (still present)
+  - `app/api/lessons/[lessonSlug]/route.ts:125,144` (REMOVED in commit `90abb4fc` by `app_domain_migration_20260603`)
+  - `app/api/classes/[classId]/curriculum/route.ts:135,142` (REMOVED in commit `90abb4fc`)
+  The two route.ts files were rewritten end-to-end by the app-domain migration; the cited TODOs no longer exist. Only the badges.ts orphan remains from the audit's named lines.
+- **HEAD-actual orphan TODOs in scope** (per test-strategy.md Phase 5 live-proof rg command):
+  - `apps/science-advantage/lib/gamification/badges.ts:115` — `// TODO: Requires language preference tracking — not yet implemented` (in `lib/gamification/badges.ts`, an active code path).
+  - `apps/science-advantage/app/(teacher)/teacher/page.e2e.spec.ts:7` — `// TODO: Add authentication steps based on your test setup` (Playwright e2e test, audit-flagged as lower severity).
+- **Targeted Red command** (per test-strategy.md Phase 5 "Live-Proof Plan"):
+  `rg --pcre2 -n 'TODO(?!\(#)' apps/science-advantage/{app,lib,components} -g '!**/*.test.*'`
+  Currently returns 2 matches (Red state).
+- **Targeted Red command (count)**: 2 matches (badges.ts:115 + page.e2e.spec.ts:7).
+- **Test file**: `apps/science-advantage/lib/__tests__/housekeeping-phase5-orphan-todos.test.ts` (7 assertions in 5 describe blocks).
+- **Red fail count at HEAD**: 5 failed / 2 passed (7 total assertions).
+- **Red failures** (assertions, not stale state):
+  - **§1.1**: rg `TODO(?!\()` returns 2 matches in app/, lib/, components/ excluding `*.test.*`. Live-proof gate fails (matches expected).
+  - **§2.1**: rg `TODO(?!\()` returns 1 match (badges.ts:115) when also excluding `*.spec.*`. Tighter scope still fails.
+  - **§3.1**: `lib/gamification/badges.ts` lines 113-118 contain an untracked `TODO:` comment (no `TODO(#…)` form). Specific known-orphan pin.
+  - **§3.2**: The orphan TODO at badges.ts ~line 115 is in untracked form (`TODO: Requires language preference tracking…`), not in `TODO(#NNN)` form. Tracked-form pin.
+  - **§5.1**: rg exit code = 0 (matches found), expected 1 (no matches) at Green. Live-proof rg command verbatim fails.
+- **Red passes (regression guards — already satisfied at HEAD):**
+  - **§4.1**: Orphan and tracked TODO sets are disjoint (vacuously true at HEAD: zero tracked TODOs exist anywhere in `apps/science-advantage/`).
+  - **§4.2**: All tracked `TODO(#…)` patterns are well-formed `TODO(#NNN)` (vacuously true at HEAD: zero tracked TODOs exist; the malformed-set assertion is empty).
+  These regression guards would still pass at Green, protecting against the Implementer accidentally introducing overlap or malformed tracked forms.
+- **Test framework**: vitest 4.1.8 (DB-free via `vitest.unit.config.ts`; `pnpm test` is DB-coupled and out of scope for the contract). The test uses `rg --pcre2` for ground-truth text searches and `fs.readFile` for content assertions. The test is hermetic — no files are created or modified.
+- **Convention introduced by Phase 5**: `TODO(#NNN)` (TODO followed by an open-paren, hash, and a digit sequence). The codebase currently has ZERO such patterns anywhere in `apps/science-advantage/` (verified by `rg --pcre2 'TODO\(' apps/science-advantage/` returning no matches). Phase 5 introduces this convention for the first time.
+- **Resolution paths accepted by the contract**:
+  - **Replacement**: change `// TODO: Requires language preference tracking` → `// TODO(#<issue>): Requires language preference tracking` (preferred — links to a tracking issue).
+  - **Removal**: delete the TODO comment entirely (acceptable — the function `checkBilingualScholar` is a stub returning `false`, so the comment is not load-bearing).
+  - Both paths satisfy §1, §2, §3, §5 simultaneously.
+- **Context discovered during Red**:
+  - `rg "TODO" apps/science-advantage/{app,lib,components}/ -g '!**/*.test.*'` (per plan task 4 verbatim) without PCRE2 would only match `TODO` literally (no negative lookahead support in default rg). The test-strategy.md Phase 5 command uses the negative-lookahead regex `TODO(?!\(#)`, which requires `rg --pcre2` on this host. The Red tests use `--pcre2` to match the test-strategy command shape exactly.
+  - `lib/gamification/badges.ts:115` is inside the `checkBilingualScholar` stub function (a stub returning `false`). The function is referenced via the `BILINGUAL_SCHOLAR` entry in the `BADGE_CHECKS` map at line 179 — i.e. it is wired into the badge-evaluation pipeline, but currently always returns `false`. Replacing or removing the TODO does not affect runtime behavior.
+  - `app/(teacher)/teacher/page.e2e.spec.ts:7` is a Playwright e2e test fixture. The TODO is a stub for future auth-setup work, not a contract violation per se. The Phase 5 audit listed it as "lower severity"; the Implementer may choose to track or remove it. Either resolution satisfies §1.
+- **Graph state**: `build-graph stats ./graph.db` → 2,249 nodes / 3,190 edges / 314 files (fresh; phase 1 closeout was 2,243 / 3,184 / 313; +6 nodes / +6 edges / +1 file is incidental drift from the audit-track fixture). `build-graph search "checkBilingualScholar"` returns the function node at `lib/gamification/badges.ts`; the orphan TODO is internal (not a public surface). No symbol blast radius — Phase 5 is pure source-text work.
+- **Dirty worktree at MID start**: 3 entries — `M measure/automation-supervisor.py` (orchestrator prompt edit, unrelated to Phase 5), `?? apps/marketing/next-env.d.ts` (auto-generated Next.js types for marketing app, generated/ignorable), `?? measure/tracks/agents_md_audit_science_advantage_20260603/` (different track, unrelated). All 3 are unrelated user work and are preserved; the Red commit touches only the new test file and `plan.md`.
+- **Handoff**: Implementer should: (1) read the test file header for the contract; (2) either file 1 GH issue and replace `// TODO: Requires language preference tracking` with `// TODO(#<issue>): …`, OR delete the TODO comment entirely (the function is a stub returning `false`); (3) either file 1 GH issue and replace `// TODO: Add authentication steps` in `page.e2e.spec.ts` with `// TODO(#<issue>): …`, OR delete the TODO comment (it's a Playwright stub); (4) re-run the targeted Red command (live-proof command at §5.1) and confirm 7/7 tests pass; (5) commit with `docs(science): backfill orphan in-code TODOs with issue references (F-1305)`.
+
+- [~] Task: File 1 GH issue for the language-preference tracking in `lib/gamification/badges.ts:115`.
+- [~] Task: File 1 GH issue for the i18n + lesson-slug TODOs (covers 4 in-code TODOs in `app/api/lessons/[lessonSlug]/route.ts` and `app/api/classes/[classId]/curriculum/route.ts`). **Partially resolved at HEAD** by `app_domain_migration_20260603` (commit `90abb4fc`); the cited TODOs no longer exist. Only the e2e-spec TODO at `page.e2e.spec.ts:7` remains in this category.
+- [~] Task: Update each in-code TODO with `// TODO(#<issue-number>): ...` reference.
+- [~] Task: Verify: `rg "TODO" apps/science-advantage/{app,lib,components}/ -g '!**/*.test.*' -g '!**/__tests__/**'` returns 0 orphan comments (or only intentionally-tracked ones).
 
 ## Phase 6: Re-Pin 51 `^`-Ranged Deps
 
