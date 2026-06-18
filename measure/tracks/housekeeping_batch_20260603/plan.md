@@ -982,7 +982,7 @@ Result: 1 test file passed, 16 tests passed.
 
 ### Green Phase Notes — Live-Gate Pass (Jr 2026-06-19, second attempt)
 
-**Commit:** `<sha>` (`fix(science): add eslint-disable for require() in Phase 1 test file (track_id: housekeeping_batch_20260603)`)
+**Commit:** `7119db32` (`fix(science): add eslint-disable for require() in Phase 1 test; update P11 live-gate results (track_id: housekeeping_batch_20260603)`)
 
 **Live-gate verification (tasks 1–4, run from codex runtime with `/opt/codex-desktop/resources/node-runtime/bin/node`):**
 
