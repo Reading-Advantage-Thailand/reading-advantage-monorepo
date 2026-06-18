@@ -9,3 +9,5 @@ qualifier for clarity.
 Tested via existing curriculum-identifiers.test.ts (70/70 green) which
 dynamically imports every public function in validate-json.ts \u2014 if the
 swap broke the module's load surface, those imports would throw.
+
+Track: prisma_drizzle_science_controllers_20260505
