@@ -375,7 +375,7 @@
 > one). **Unrelated; preserve.** No overlap with this track's commit.
 
 - [x] Task: Create `lib/observability/context.ts` with `RequestContext` interface, `AsyncLocalStorage<RequestContext>`, `getRequestContext`, `runWithRequestContext` (FR-3). [5acef91d]
-- [x] Task: Write failing tests:
+- [x] Task: Write failing tests: [2957d85c]
   - `runWithRequestContext(ctx, () => getRequestContext())` returns `ctx`.
   - `getRequestContext()` outside `runWithRequestContext` returns `undefined`.
   - Nested `runWithRequestContext` calls return the inner context.
