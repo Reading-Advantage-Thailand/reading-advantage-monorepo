@@ -477,18 +477,119 @@
 ## Phase 5: Migrate 5 Largest `route.ts` Files
 
 For each of the 5 files:
-- [ ] Task: Wrap the top-level handler in `runWithRequestContext({ requestId: ulid(), route: req.url, method: req.method, startedAt: Date.now() }, async () => { ... })`. The `userId` is set after `requireAuth` returns.
-- [ ] Task: Replace each `console.error` catch block with `logger.error(event, { error, ...otherContext })`.
-- [ ] Task: Replace each `console.log` / `console.info` with `logger.info` / `logger.warn`.
-- [ ] Task: Write a test that calls the route handler; capture the log line; assert `requestId`/`route`/`method`/`latencyMs` are present and the log line is valid JSON.
+- [~] Task: Wrap the top-level handler in `runWithRequestContext({ requestId: ulid(), route: req.url, method: req.method, startedAt: Date.now() }, async () => { ... })`. The `userId` is set after `requireAuth` returns.
+- [~] Task: Replace each `console.error` catch block with `logger.error(event, { error, ...otherContext })`.
+- [~] Task: Replace each `console.log` / `console.info` with `logger.info` / `logger.warn`.
+- [~] Task: Write a test that calls the route handler; capture the log line; assert `requestId`/`route`/`method`/`latencyMs` are present and the log line is valid JSON.
 - [ ] Task: Run the existing test suite; confirm green.
 
 Files (in priority order):
-- [ ] `app/api/ai/update-mastery/route.ts` (624 lines)
-- [ ] `app/api/lessons/[lessonSlug]/quiz/route.ts` (519 lines)
-- [ ] `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (412 lines)
-- [ ] `app/api/ai/recommendations/route.ts` (400 lines)
-- [ ] `app/api/classes/[classId]/assignments/route.ts` (364 lines)
+- [~] `app/api/ai/update-mastery/route.ts` (624 lines)
+- [~] `app/api/lessons/[lessonSlug]/quiz/route.ts` (519 lines)
+- [~] `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (412 lines)
+- [~] `app/api/ai/recommendations/route.ts` (400 lines)
+- [~] `app/api/classes/[classId]/assignments/route.ts` (364 lines)
+
+> **Mid-Red evidence (this phase, 2026-06-19):** Phase 5 Red tests are
+> committed intentionally red. Per the plan, the test contract for
+> each of the 5 route files is: invoke the route handler; capture
+> the log line; assert `requestId`/`route`/`method`/`latencyMs` are
+> present and the log line is valid JSON; assert the response status
+> is unchanged from the pre-migration baseline; assert the
+> `console.error` catch block has been replaced with `logger.error`
+> (per spec.md FR-6 / plan Phase 5 task 2).
+>
+> The 5 Red tests live colocated with each `route.ts`:
+> - `app/api/ai/update-mastery/route.test.ts`
+> - `app/api/lessons/[lessonSlug]/quiz/route.test.ts`
+> - `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.test.ts`
+> - `app/api/ai/recommendations/route.test.ts`
+> - `app/api/classes/[classId]/assignments/route.test.ts`
+>
+> Tests use the `vitest.unit.config.ts` hermetic, DB-free subset per
+> `apps/science-advantage/AGENTS.md` Testing Guidelines; all DB /
+> cookie / domain-function dependencies are `vi.mock`-ed at the top
+> of each test file. Tests trigger the route's error path (either by
+> mocking the domain function to throw, or by passing an invalid
+> body) so the catch block fires and the log line is observable
+> without a real DB.
+>
+> Tests fail at HEAD because (a) the route handler is not wrapped
+> in `runWithRequestContext`, so even if the logger fires the log
+> line will not carry `requestId`/`route`/`method`/`latencyMs`; and
+> (b) the `console.error` catch-block site in
+> `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts:29`
+> is still raw `console.error` (per the test-strategy.md §6 Phase 5
+> "no `console.error` directly" assertion). After the FR-6
+> implementation lands (wrap + replace), all 5 tests will pass.
+>
+> **Targeted Red command actually executed at MID** (rootless-podman
+> host cannot reach `localhost:5432` so the default `vitest.config.ts`
+> integration globalSetup hangs on `drizzle-kit migrate`; the hermetic
+> `vitest.unit.config.ts` is the app-AGENTS-canonical DB-free subset;
+> this host has only `bun` on PATH — `pnpm` is not installed — so
+> `bun node_modules/vitest/vitest.mjs` is the host-environment
+> substitution that exercises the exact same `vitest.unit.config.ts`
+> + test file path; the prior phases' mid-handoffs use the same
+> substitution):
+>
+> ```
+> bun node_modules/vitest/vitest.mjs run \
+>   --config vitest.unit.config.ts \
+>   app/api/ai/update-mastery/route.test.ts \
+>   app/api/lessons/\[lessonSlug\]/quiz/route.test.ts \
+>   app/api/classes/\[classId\]/lessons/\[lessonId\]/analytics/route.test.ts \
+>   app/api/ai/recommendations/route.test.ts \
+>   app/api/classes/\[classId\]/assignments/route.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 5 failed (5) | Tests 6 failed | 14 passed (20)`.
+> The 6 Reds are the expected missing-behavior Reds for FR-6, one per
+> route plus the extra `console.error` regression in analytics:
+>
+> 1. `app/api/ai/update-mastery/route.test.ts > FR-6 update-mastery route (POST) > emits a JSON log line carrying requestId / route / method / latencyMs from inside the log dep` — `TypeError: .toMatch() expects to receive a string, but got undefined`. The mocked `recordRun` invokes `deps.log('phase5.recordRun.invoked', ...)` and the logger emits a JSON line, but at HEAD the route is not wrapped in `runWithRequestContext` so the captured line has no `requestId`. After the wrap lands, the line carries ctx.
+> 2. `app/api/ai/recommendations/route.test.ts > FR-6 recommendations route (POST) > emits the catch-block error log as a JSON line carrying requestId / route / method / latencyMs` — `expected undefined to be defined`. The catch block fires `logger.error('ai.recommendation.error', { traceId })` at HEAD, but the route is not wrapped, so the line has no `requestId` and the find-returns-undefined assertion fails. After the wrap lands, the line carries ctx.
+> 3. `app/api/classes/[classId]/assignments/route.test.ts > FR-6 assignments route (GET) > emits the catch-block error log as a JSON line carrying requestId / route / method / latencyMs` — `expected undefined to be defined`. The assignments route's catch block has no logger call at all at HEAD, so the captured console-call list is empty and the find-returns-undefined assertion fails. After the wrap + `logger.error` lands, a JSON line with ctx is emitted.
+> 4. `app/api/lessons/[lessonSlug]/quiz/route.test.ts > FR-6 quiz route (GET) > emits the catch-block error log as a JSON line carrying requestId / route / method / latencyMs` — `expected undefined to be defined`. Same shape as assignments: the quiz route's catch block has no logger call at HEAD, so no JSON line is emitted. After the wrap + `logger.error` lands, the line is emitted with ctx.
+> 5. `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.test.ts > FR-6 analytics route > emits the catch-block error log as a JSON line carrying requestId / route / method / latencyMs` — `expected undefined to be defined`. The analytics catch block fires raw `console.error('Error fetching lesson analytics:', error)` at HEAD; the captured arg list contains a non-JSON string prefix, so `findJsonLogStrings` returns `[]`. After the wrap + `logger.error` lands, the line is JSON with ctx.
+> 6. `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.test.ts > FR-6 analytics route > does NOT call raw console.error from the catch block (replaced with logger.error per FR-6)` — `expected [ 'Error fetching lesson analytics:' ] to have a length of +0 but got 1`. The legacy prefix string is still present in the captured console.error args at HEAD. After the `console.error` → `logger.error` replacement lands, the prefix is gone.
+>
+> The 14 passing tests are: 5 × sanity (`logger` + `runWithRequestContext` module exports, 2 per route) + 4 × status-regression guards (`expect(res.status).toBe(<baseline>)` for the 4 catch-block routes — 500 for analytics, assignments, quiz; 202 for the catch path is not exercised here, and 200 for the update-mastery happy path which returns 200). The recommendations and assignments routes have 1 status guard each; the quiz route has 1; the analytics route has 1; the update-mastery route has 1 (assertion is in the same `it` block as the ctx assertion, so 200-status regression is implicit in that test).
+>
+> **Per-route Red verification (each test file in isolation, bounded to
+> the test file under test):**
+>
+> - `bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts 'app/api/ai/update-mastery/route.test.ts'` → `Test Files 1 failed (1) | Tests 1 failed | 2 passed (3)`. The 1 Red is the `log` dep ctx assertion. The 2 passes are the 2 sanity tests.
+> - `bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts 'app/api/ai/recommendations/route.test.ts'` → `Test Files 1 failed (1) | Tests 1 failed | 3 passed (4)`. The 1 Red is the wrap ctx assertion. The 3 passes are the status guard + 2 sanity.
+> - `bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts 'app/api/classes/[classId]/assignments/route.test.ts'` → `Test Files 1 failed (1) | Tests 1 failed | 3 passed (4)`. The 1 Red is the catch-block ctx assertion. The 3 passes are the status guard + 2 sanity.
+> - `bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts 'app/api/lessons/[lessonSlug]/quiz/route.test.ts'` → `Test Files 1 failed (1) | Tests 1 failed | 3 passed (4)`. The 1 Red is the catch-block ctx assertion. The 3 passes are the status guard + 2 sanity.
+> - `bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts 'app/api/classes/[classId]/lessons/[lessonId]/analytics/route.test.ts'` → `Test Files 1 failed (1) | Tests 2 failed | 3 passed (5)`. The 2 Reds are the catch-block ctx assertion and the `console.error`-replacement assertion. The 3 passes are the status guard + 2 sanity.
+>
+> **Regression check on the rest of the observability test suite at the
+> same HEAD** (same command, same `--config`):
+> `bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/observability/__tests__/`
+> → `Test Files 7 passed (7) | Tests 48 passed (48)`. No regression in
+> Phases 1-4 + adversarial FR-4 test surface; only the 5 new Phase 5
+> test files introduce the 6 Reds above.
+>
+> **Worktree hygiene at MID start (2026-06-19 this pass):**
+> `git status --porcelain` shows one untracked path:
+> `measure/tracks/agents_md_audit_science_advantage_20260603/` —
+> the untracked fixtures dir for a different track. **Unrelated;
+> preserve.** No overlap with this track's commit. This MID commit
+> touches only the 5 new test files plus
+> `measure/tracks/observability_stack_20260603/plan.md` (a Measure
+> doc, allowed by the MID scope rule).
+>
+> **Live-behavior proof:** every test invokes the real exported
+> handler from the `route.ts` file under test (no fake harness)
+> with all external dependencies mocked; the captured log line is
+> the real `console.{info,warn,error}` call from the real logger
+> (per `test-strategy.md` §5 "Fake harnesses are forbidden for
+> production gates"). Strategy §6 Phase 5 regression guard ("the
+> response status is unchanged from pre-migration") is honored by
+> the `expect(res.status).toBe(<baseline>)` assertion in each
+> test.
 
 ## Phase 6: Wrap `generateObject` Calls in OTel Spans
 
