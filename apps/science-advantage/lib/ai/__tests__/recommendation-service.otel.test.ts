@@ -434,4 +434,315 @@ describe('Phase 6 — FR-5 OTel span wrapping around generateObject', () => {
     ).toBe(parentTraceId);
     expect(logTraceId).not.toBe(baseContext.traceId);
   });
+
+  /**
+   * Adversarial: cache-hit path.
+   *
+   * The Phase 6 refactor only wraps `generateObject` in a span. The
+   * cache-hit branch returns before `generateObject` is called and
+   * logs `ai.recommendation.cache_hit` with `traceId` drawn from the
+   * active OTel context (per the FR-5 "replace ad-hoc traceId" rule).
+   * This test pins three things:
+   *   1. `generateObject` is NOT called on a cache hit (regression
+   *      guard: no span is created and no provider call is made).
+   *   2. The `cache_hit` log is emitted exactly once.
+   *   3. The `traceId` field on that log equals the parent OTel
+   *      span's traceId, NOT the input `RecommendationContext.traceId`.
+   *
+   * Failure modes this catches:
+   *   - Regression where a future change moves `logger.info` inside
+   *     a span (which would change `trace.getSpan(active())` to a
+   *     span that should not exist on the cache-hit path).
+   *   - Regression where the cache-hit path re-introduces
+   *     `traceId: context.traceId` (the pre-Phase-6 bug).
+   *   - Regression where `generateObject` is called even on a cache
+   *     hit (cost / latency bug).
+   */
+  it('cache-hit path logs with active-span traceId and skips generateObject', async () => {
+    // Pre-populate the in-memory Redis cache so the service takes the
+    // cache-hit branch. The cached payload mirrors the shape the
+    // service produces on a successful generate.
+    const cacheKey = (() => {
+      // Mirror the service's `buildCacheKey` shape: sha256 of the
+      // sorted candidate IDs + studentId + masteryVersion, first 16
+      // hex chars. We don't recompute the hash; we populate the
+      // redis mock with a wildcard-keyed entry and let the service
+      // look it up by its own key. Simpler: spy on the cache to
+      // return a hit regardless of key.
+      return 'cache-key-irrelevant-for-this-test';
+    })();
+
+    // The service calls `recommendationCache.get(cacheKey)`. The
+    // mock returns `null` for unknown keys. To force a hit we use
+    // a key that matches: build the deterministic key the service
+    // would compute for `baseContext`.
+    const { createHash } = await import('crypto');
+    const candidateIds = baseContext.candidateLessons
+      .map((l) => l.id)
+      .sort()
+      .join(',');
+    const keyData = `${baseContext.studentId}:${baseContext.masteryVersion}:${candidateIds}`;
+    const expectedKey = createHash('sha256')
+      .update(keyData)
+      .digest('hex')
+      .slice(0, 16);
+
+    const cachedResult = {
+      recommendation: {
+        recommendedLessonId: 'lesson_cached',
+        recommendedLessonSlug: 'cached-lesson',
+        lessonTitle: 'Cached Lesson',
+        focusStandards: ['MS-PS1-1'],
+        reasoning:
+          'Cached reasoning string of sufficient length to satisfy the recommendation schema minimum of 10 characters.',
+        confidence: 'high' as const,
+        nextBestAlternatives: [],
+      },
+      modelUsed: 'gemini-2.5-flash',
+      fallbackUsed: false,
+    };
+    // The `RedisCacheAdapter` prepends `'rec:'` to every key (see
+    // `lib/platform/cache-adapter.ts:35` and
+    // `recommendation-service.ts:43`). The test redis mock stores
+    // entries under the FULL key the adapter looks up, so we must
+    // match that key here — populating the raw hash would miss.
+    inMemoryRedis.set(`rec:${expectedKey}`, {
+      value: JSON.stringify(cachedResult),
+      expiresAt: Date.now() + 60_000,
+    });
+
+    const stub = new StubAIClient();
+    const service = new RecommendationService(stub as never);
+
+    const ctx = makeRequestContext({
+      requestId: '01HZ_OTEL_CACHE',
+      route: '/api/ai/recommendations',
+      method: 'POST',
+      startedAt: FIXTURE_STARTED_AT_MS,
+    });
+
+    const { parentTraceId, result } = await withParentSpan(
+      'test-parent',
+      () =>
+        runWithRequestContext(ctx, () =>
+          service.getRecommendation(baseContext),
+        ),
+    );
+
+    // 1. generateObject was NOT called (cache hit short-circuits).
+    expect(
+      stub.generateObjectCalls.length,
+      'cache-hit path must not call `client.generateObject`. ' +
+        'If this fires, the cache branch is broken or the test ' +
+        'fixture did not match the service cache key.',
+    ).toBe(0);
+
+    // 2. The service returned the cached result.
+    expect(result.recommendation.recommendedLessonId).toBe('lesson_cached');
+    expect(result.modelUsed).toBe('gemini-2.5-flash');
+    expect(result.fallbackUsed).toBe(false);
+
+    // 3. Exactly one cache_hit log was emitted.
+    const cacheHitLogs = consoleSpies.captured.filter(
+      (l) => l.line['event'] === 'ai.recommendation.cache_hit',
+    );
+    expect(
+      cacheHitLogs.length,
+      'expected exactly one `ai.recommendation.cache_hit` log on a cache hit.',
+    ).toBe(1);
+
+    // 4. The cache_hit log's traceId equals the parent span's traceId,
+    //    NOT the input context's traceId.
+    const logTraceId = cacheHitLogs[0].line['traceId'];
+    expect(
+      logTraceId,
+      'cache_hit log `traceId` must equal the active OTel span traceId ' +
+        '(per spec FR-5). The cache-hit path must NOT regress to the ' +
+        'pre-Phase-6 ad-hoc `context.traceId` value.',
+    ).toBe(parentTraceId);
+    expect(logTraceId).not.toBe(baseContext.traceId);
+
+    // 5. No `ai.generateObject` span was created on a cache hit
+    //    (regression guard: the span wrap must not fire on the
+    //    cache-hit branch).
+    const aiSpans = handle
+      .getSpans()
+      .filter((s) => s.name === 'ai.generateObject');
+    expect(
+      aiSpans.length,
+      'cache-hit path must not record an `ai.generateObject` span.',
+    ).toBe(0);
+  });
+
+  /**
+   * Adversarial: multiple-model fallback.
+   *
+   * `modelsToTry` is `[primaryModel, secondaryModel]`. The local
+   * `.env.local` happens to set both models to `'gemini-2.5-flash'`,
+   * which the dedup filter collapses to a single-element array —
+   * so the pre-Phase-6 test could never exercise the secondary-model
+   * fallback path under this environment.
+   *
+   * This test mocks `@/lib/config/ai` to expose two distinct models
+   * (`primary = 'gemini-2.5-flash'`, `secondary = 'gpt-5-mini'`) and
+   * asserts:
+   *   1. Both models are attempted when the primary throws.
+   *   2. Two `ai.generateObject` error spans are recorded (one per
+   *      model attempt) — the pre-Phase-6 test only used `>= 1`
+   *      which would pass even if the secondary-model fallback were
+   *      silently broken.
+   *   3. After both fail, the service falls through to
+   *      `generateFallbackRecommendation` (`fallbackUsed: true`,
+   *      `modelUsed: 'rules-engine'`).
+   *   4. The `fallback_rules` log carries the parent span's traceId,
+   *      NOT the input `RecommendationContext.traceId`.
+   *
+   * The mock is scoped to this `it` block via `vi.doMock` (not the
+   * file-level `vi.mock` at the top of this file) so it doesn't
+   * pollute sibling tests that depend on the real `aiConfig`.
+   */
+  it('records a separate `ai.generateObject` span per model attempt and falls back when all fail', async () => {
+    vi.doMock('@/lib/config/ai', () => ({
+      aiConfig: {
+        primaryModel: 'gemini-2.5-flash',
+        secondaryModel: 'gpt-5-mini',
+        timeoutMs: 10_000,
+        cacheTtlMs: 900_000,
+        hashSecret: 'science-advantage',
+        maxRequestsPerWindow: 3,
+        rateLimitWindowMs: 60_000,
+      },
+    }));
+    // Re-import the service with the mocked config. `vi.doMock` is
+    // NOT hoisted (unlike `vi.mock`), so the re-import sees the mock.
+    const { RecommendationService: ServiceWithFallback } = await import(
+      '../recommendation-service?fallback-test'
+    );
+
+    const stub = new StubAIClient();
+    stub.shouldThrow = true;
+    const service = new ServiceWithFallback(stub as never);
+
+    const ctx = makeRequestContext({
+      requestId: '01HZ_OTEL_FALLBACK',
+      route: '/api/ai/recommendations',
+      method: 'POST',
+      startedAt: FIXTURE_STARTED_AT_MS,
+    });
+
+    const { parentTraceId, result } = await withParentSpan(
+      'test-parent',
+      () =>
+        runWithRequestContext(ctx, () =>
+          service.getRecommendation(baseContext),
+        ),
+    );
+
+    // Both models were attempted (primary + secondary).
+    expect(
+      stub.generateObjectCalls.length,
+      'expected both primary and secondary models to be attempted.',
+    ).toBe(2);
+
+    // Two error spans (one per model attempt).
+    const errorSpans = handle
+      .getSpans()
+      .filter(
+        (s) =>
+          s.name === 'ai.generateObject' &&
+          s.status.code === SpanStatusCode.ERROR,
+      );
+    expect(
+      errorSpans.length,
+      'expected 2 `ai.generateObject` error spans (one per failed ' +
+        'model attempt). The pre-Phase-6 test used `>= 1` which ' +
+        'would pass even if the secondary-model fallback were ' +
+        'silently broken.',
+    ).toBe(2);
+
+    // The secondary-model `model_error` log was also emitted.
+    const modelErrorLogs = consoleSpies.captured.filter(
+      (l) => l.line['event'] === 'ai.recommendation.model_error',
+    );
+    expect(
+      modelErrorLogs.length,
+      'expected 2 `ai.recommendation.model_error` logs (one per ' +
+        'failed model attempt).',
+    ).toBe(2);
+
+    // The fallback result was used.
+    expect(
+      result.fallbackUsed,
+      'expected `fallbackUsed: true` when all models fail.',
+    ).toBe(true);
+    expect(result.modelUsed).toBe('rules-engine');
+
+    // The fallback_rules log was emitted with the parent's traceId.
+    const fallbackLogs = consoleSpies.captured.filter(
+      (l) => l.line['event'] === 'ai.recommendation.fallback_rules',
+    );
+    expect(
+      fallbackLogs.length,
+      'expected one `ai.recommendation.fallback_rules` log when ' +
+        'all models fail.',
+    ).toBe(1);
+    expect(fallbackLogs[0].line['traceId']).toBe(parentTraceId);
+    expect(fallbackLogs[0].line['traceId']).not.toBe(baseContext.traceId);
+
+    // Clean up the scoped mock so it doesn't leak into sibling tests.
+    vi.doUnmock('@/lib/config/ai');
+    vi.resetModules();
+  });
+
+  /**
+   * Adversarial: span parent-child relationship.
+   *
+   * The implementation uses `tracer.startActiveSpan('ai.generateObject',
+   * {}, otelContext.active(), ...)`. The third argument is the parent
+   * context — it must be the active context at call time so the
+   * resulting span is a child of whatever span wraps the service call.
+   *
+   * If a future change drops the third argument (e.g., switches to
+   * `tracer.startActiveSpan('ai.generateObject', cb)`), the span
+   * becomes a root span instead of a child of `test-parent`. This
+   * test pins the parent-child relationship.
+   */
+  it('records the `ai.generateObject` span as a child of the active parent context', async () => {
+    const stub = new StubAIClient();
+    const service = new RecommendationService(stub as never);
+
+    const ctx = makeRequestContext({
+      requestId: '01HZ_OTEL_PARENT',
+      route: '/api/ai/recommendations',
+      method: 'POST',
+      startedAt: FIXTURE_STARTED_AT_MS,
+    });
+
+    let parentSpanId = '';
+    await withParentSpan('test-parent', () => {
+      const active = trace.getSpan(otelContext.active());
+      parentSpanId = active?.spanContext().spanId ?? '';
+      return runWithRequestContext(ctx, () =>
+        service.getRecommendation(baseContext),
+      );
+    });
+
+    const aiSpan = handle
+      .getSpans()
+      .find((s) => s.name === 'ai.generateObject');
+
+    expect(aiSpan, 'expected an `ai.generateObject` span.').toBeDefined();
+
+    // In `@opentelemetry/sdk-trace-base@^2.x` the parent reference
+    // lives on `parentSpanContext.spanId` (not `parentSpanId` —
+    // that's the v1.x shape). If the implementation correctly
+    // passes `otelContext.active()` to `startActiveSpan`, this
+    // must equal the test-parent span's ID.
+    expect(
+      aiSpan?.parentSpanContext?.spanId,
+      'expected `ai.generateObject` span\'s parentSpanContext.spanId ' +
+        'to equal the test-parent spanId (proving the span is a ' +
+        'child of the active context, not a root span).',
+    ).toBe(parentSpanId);
+  });
 });
