@@ -5,3 +5,6 @@
  * drizzle-kit migrate). Keep this file DB-free.
  */
 import '@testing-library/jest-dom/vitest';
+
+delete process.env.AI_RECOMMENDER_MODEL;
+delete process.env.AI_RECOMMENDER_MODEL_PRIMARY;

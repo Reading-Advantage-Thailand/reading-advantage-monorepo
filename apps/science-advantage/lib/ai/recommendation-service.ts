@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createHash } from 'crypto';
 import type { AIClient } from '@reading-advantage/ai';
+import { context as otelContext, trace, SpanStatusCode } from '@opentelemetry/api';
 
 import { aiConfig } from '@/lib/config/ai';
 import { logger } from '@/lib/observability/logger';
@@ -10,6 +11,10 @@ import { RedisCacheAdapter } from '@/lib/platform/cache-adapter';
 import { buildRecommendationPrompt } from './prompts/recommendation';
 import { generateFallbackRecommendation } from './rules-engine';
 import type { RecommendationContext, RecommendationRecord } from './types';
+
+function getOtelTracer() {
+  return trace.getTracer('science-advantage');
+}
 
 const recommendationSchema = z.object({
   recommendedLessonId: z.string().min(1),
@@ -62,7 +67,7 @@ export class RecommendationService {
       try {
         const parsed = JSON.parse(cached) as GenerateResult;
         logger.info('ai.recommendation.cache_hit', {
-          traceId: context.traceId,
+          traceId: trace.getSpan(otelContext.active())?.spanContext().traceId,
           cacheKey,
         });
         return parsed;
@@ -81,6 +86,9 @@ export class RecommendationService {
     );
 
     for (const modelId of modelsToTry) {
+      const span = getOtelTracer().startSpan('ai.generateObject', {}, otelContext.active());
+      span.setAttribute('ai.model', modelId);
+      span.setAttribute('ai.schema', recommendationSchema.description ?? 'unknown');
       try {
         const response = await this.client.generateObject({
           schema: recommendationSchema,
@@ -97,9 +105,12 @@ export class RecommendationService {
           nextBestAlternatives: response.nextBestAlternatives ?? [],
         };
 
+        span.setStatus({ code: SpanStatusCode.OK });
+        span.end();
+
         if (modelId !== aiConfig.primaryModel) {
           logger.warn('ai.recommendation.secondary_model_used', {
-            traceId: context.traceId,
+            traceId: span.spanContext().traceId,
             model: modelId,
           });
         }
@@ -116,8 +127,12 @@ export class RecommendationService {
 
         return result;
       } catch (error) {
+        span.recordException(error as Error);
+        span.setStatus({ code: SpanStatusCode.ERROR, message: String(error) });
+        span.end();
+
         logger.warn('ai.recommendation.model_error', {
-          traceId: context.traceId,
+          traceId: span.spanContext().traceId,
           model: modelId,
           error: error instanceof Error ? error.message : 'unknown',
         });
@@ -126,7 +141,7 @@ export class RecommendationService {
 
     const fallback = generateFallbackRecommendation(context);
     logger.warn('ai.recommendation.fallback_rules', {
-      traceId: context.traceId,
+      traceId: trace.getSpan(otelContext.active())?.spanContext().traceId,
     });
 
     const result: GenerateResult = {

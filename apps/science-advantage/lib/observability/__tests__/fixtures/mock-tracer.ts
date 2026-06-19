@@ -30,7 +30,8 @@ import {
   type ReadableSpan,
   SimpleSpanProcessor,
 } from '@opentelemetry/sdk-trace-base';
-import { type Tracer, trace } from '@opentelemetry/api';
+import { type Tracer, trace, context } from '@opentelemetry/api';
+import { AsyncLocalStorageContextManager } from '@opentelemetry/context-async-hooks';
 
 /**
  * Lifecycle handle returned by {@link createMockTracer}.
@@ -72,15 +73,15 @@ export interface MockTracerHandle {
  */
 export function createMockTracer(): MockTracerHandle {
   const exporter = new InMemorySpanExporter();
-  // SimpleSpanProcessor flushes synchronously on span.end(), which
-  // is what tests want — BatchSpanProcessor buffers and only flushes
-  // on its own schedule. Pass it through the constructor's
-  // `spanProcessors` array; `BasicTracerProvider` (in `@opentelemetry/sdk-trace-base`
-  // v2.x) does not expose a public `addSpanProcessor` setter.
   const provider = new BasicTracerProvider({
     spanProcessors: [new SimpleSpanProcessor(exporter)],
   });
+  trace.disable();
   trace.setGlobalTracerProvider(provider);
+
+  const ctxManager = new AsyncLocalStorageContextManager();
+  ctxManager.enable();
+  context.setGlobalContextManager(ctxManager);
 
   const tracer = trace.getTracer('science-advantage');
 
