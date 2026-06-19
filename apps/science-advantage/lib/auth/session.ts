@@ -7,6 +7,7 @@ import {
 } from '@reading-advantage/auth';
 import type { Session, CreateSessionResult } from '@reading-advantage/auth';
 import { env } from '@/lib/env';
+import { setRequestContextUserId } from '@/lib/observability/context';
 
 const SESSION_DURATION_SECONDS = 7 * 24 * 60 * 60;
 
@@ -54,5 +55,9 @@ export async function deleteSessionCookie(): Promise<void> {
  */
 export async function getCurrentSession(): Promise<Session | null> {
   const token = await getSessionToken();
-  return sharedGetSession(db, token ?? undefined);
+  const session = await sharedGetSession(db, token ?? undefined);
+  if (session) {
+    setRequestContextUserId(session.user.id);
+  }
+  return session;
 }

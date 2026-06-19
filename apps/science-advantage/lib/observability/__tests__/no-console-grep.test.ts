@@ -109,6 +109,7 @@ const PRODUCTION_EXCLUDES = [
   '!**/fixtures/**',
   '!**/*.md',
   '!lib/observability/logger.ts',
+  '!components/client-logger.ts',
   '!lib/schemas/lesson-content.schema.ts',
 ];
 

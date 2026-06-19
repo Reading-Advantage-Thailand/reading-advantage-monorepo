@@ -25,8 +25,8 @@ import {
   joinClassSchema,
   type JoinClassInput,
 } from "@/lib/validations/class"
-import {
 import * as clientLogger from '@/components/client-logger';
+import {
   JOIN_CODE_LENGTH,
   JOIN_CODE_PATTERN,
   sanitizeJoinCodeInput,

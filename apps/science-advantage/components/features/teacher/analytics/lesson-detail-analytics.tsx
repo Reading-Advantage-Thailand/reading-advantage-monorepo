@@ -21,8 +21,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import {
 import * as clientLogger from '@/components/client-logger';
+import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,

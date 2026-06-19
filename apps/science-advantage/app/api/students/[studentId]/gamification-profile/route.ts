@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { runWithRequestContext } from '@/lib/observability/context';
+import { randomUUID } from 'crypto';
 import { getCurrentSession } from '@/lib/auth/session';
 import { AuthError } from '@reading-advantage/auth';
 import { getStudentGamificationProfile } from '@reading-advantage/domain/students';
@@ -11,18 +13,27 @@ import { logger } from '@/lib/observability/logger';
  * Returns a student's gamification profile with XP progress.
  */
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ studentId: string }> }) {
-  try {
-    const session = await getCurrentSession();
-    if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  return runWithRequestContext({
+    requestId: randomUUID(),
+    route: _request.url,
+    method: 'GET',
+    startedAt: Date.now(),
+  }, async () => {
 
-    const { studentId } = parsePath(await params, studentIdParamSchema);
-    const result = await getStudentGamificationProfile({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { studentId } });
+    try {
+      const session = await getCurrentSession();
+      if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
 
-    return NextResponse.json(result);
-  } catch (error) {
-    if (error instanceof ValidationError) return NextResponse.json({ success: false, ...error.toJSON() }, { status: 400 });
-    if (error instanceof AuthError) return NextResponse.json({ success: false, error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
-    logger.error('gamification-profile.route.gamification.profile.error', { error: error instanceof Error ? error.message : String(error) });
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
-  }
+      const { studentId } = parsePath(await params, studentIdParamSchema);
+      const result = await getStudentGamificationProfile({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { studentId } });
+
+      return NextResponse.json(result);
+    } catch (error) {
+      if (error instanceof ValidationError) return NextResponse.json({ success: false, ...error.toJSON() }, { status: 400 });
+      if (error instanceof AuthError) return NextResponse.json({ success: false, error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
+      logger.error('gamification-profile.route.gamification.profile.error', { error: error instanceof Error ? error.message : String(error) });
+      return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
+    }
+
+  });
 }

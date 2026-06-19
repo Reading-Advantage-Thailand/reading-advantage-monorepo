@@ -4,8 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
-import {
 import * as clientLogger from '@/components/client-logger';
+import {
   Card,
   CardContent,
   CardDescription,

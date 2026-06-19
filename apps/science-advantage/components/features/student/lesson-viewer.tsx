@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LessonPlayer } from '@/components/features/lesson';
-import {
 import * as clientLogger from '@/components/client-logger';
+import {
   LessonContentSchema,
   type LessonContent,
 } from '@/lib/schemas/lesson-content.schema';

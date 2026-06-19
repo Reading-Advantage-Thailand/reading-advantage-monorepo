@@ -5,9 +5,10 @@ import nextTypescript from "eslint-config-next/typescript";
  * ESLint flat config for science-advantage.
  *
  * Phase 7 (FR-7): adds the `no-console` rule to prevent raw `console.*`
- * calls in production code. The logger sink (`lib/observability/logger.ts`)
- * is the only file permitted to use `console.{error,warn,info}` — all other
- * source files must use the {@link logger} API.
+ * calls in production code. The logger sinks (`lib/observability/logger.ts`
+ * for server logs and `components/client-logger.ts` for dev-only client logs)
+ * are the only files permitted to use `console.{error,warn,info,debug}` —
+ * all other source files must use the {@link logger} or {@link clientLogger} APIs.
  *
  * @see measure/tracks/observability_stack_20260603/spec.md FR-7
  */
@@ -31,10 +32,17 @@ const eslintConfig = [{
     "no-console": ["error", { allow: ["error", "warn"] }],
   },
 }, {
-  // Phase 7 (FR-7): `lib/observability/logger.ts` is the single
-  // file in the app permitted to use `console.info` — its `emit()`
-  // function routes `logger.info(...)` → `console.info(line)`.
+  // Phase 7 (FR-7): `lib/observability/logger.ts` is the server-side
+  // sink — its `emit()` function routes `logger.info(...)` →
+  // `console.info(line)`.
   files: ["lib/observability/logger.ts"],
+  rules: {
+    "no-console": "off",
+  },
+}, {
+  // Phase 8 (FR-8): `components/client-logger.ts` is the browser-side
+  // sink — it no-ops in production and emits to `console.*` in development.
+  files: ["components/client-logger.ts"],
   rules: {
     "no-console": "off",
   },

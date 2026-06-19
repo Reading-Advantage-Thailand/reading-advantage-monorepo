@@ -3,8 +3,8 @@
 import * as React from "react";
 import { BookOpen, Users, TrendingUp, RefreshCw } from "lucide-react";
 
-import {
 import * as clientLogger from '@/components/client-logger';
+import {
   Card,
   CardContent,
   CardDescription,

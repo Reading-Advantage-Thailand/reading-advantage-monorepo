@@ -1,4 +1,6 @@
 import { handleImpersonate } from "@reading-advantage/api/routes/auth";
+import { runWithRequestContext } from '@/lib/observability/context';
+import { randomUUID } from 'crypto';
 import type { NextRequest } from "next/server";
 
 /**
@@ -12,5 +14,14 @@ import type { NextRequest } from "next/server";
  * @see packages/api/src/__tests__/auth-routes.test.ts
  */
 export async function POST(request: NextRequest) {
-  return handleImpersonate(request);
+  return runWithRequestContext({
+    requestId: randomUUID(),
+    route: request.url,
+    method: 'POST',
+    startedAt: Date.now(),
+  }, async () => {
+
+    return handleImpersonate(request as unknown as Parameters<typeof handleImpersonate>[0]);
+
+  });
 }

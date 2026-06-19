@@ -226,7 +226,7 @@ export interface LessonPlayerProps {
  *   content={lessonContent}
  *   showThai={false}
  *   onBlockView={(index, id) => {
- *     /* handle block view */
+ *     // handle block view
  *   }}
  * />
  * ```

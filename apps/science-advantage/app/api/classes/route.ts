@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { runWithRequestContext } from '@/lib/observability/context';
+import { randomUUID } from 'crypto';
 import { ZodError } from 'zod';
 import { getCurrentSession } from '@/lib/auth/session';
 import { createClassSchema, type CreateClassInput } from '@/lib/validations/class';
@@ -18,56 +20,65 @@ const listClassesQuerySchema = z.object({
  * Create a new class with auto-generated join code and curriculum units.
  */
 export async function POST(request: NextRequest) {
-  try {
-    const session = await getCurrentSession();
-    if (!session) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  return runWithRequestContext({
+    requestId: randomUUID(),
+    route: request.url,
+    method: 'POST',
+    startedAt: Date.now(),
+  }, async () => {
+
+    try {
+      const session = await getCurrentSession();
+      if (!session) {
+        return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+      }
+
+      const validatedData: CreateClassInput = await parseBody(request, createClassSchema);
+
+      const result = await createScienceClass({
+        user: session.user,
+        tenant: { schoolId: session.user.schoolId },
+        input: validatedData,
+      });
+
+      return NextResponse.json(result, { status: 201 });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json(
+          { success: false, error: error.message },
+          { status: error.code === 'UNAUTHORIZED' ? 401 : 403 }
+        );
+      }
+      if (error instanceof ValidationError) {
+        return NextResponse.json(
+          { success: false, ...error.toJSON() },
+          { status: 400 }
+        );
+      }
+      if (error instanceof ZodError) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Validation failed',
+            details: error.errors.map((err) => ({ field: err.path.join('.'), message: err.message })),
+          },
+          { status: 400 }
+        );
+      }
+      if (error instanceof Error && error.message.includes('join code')) {
+        return NextResponse.json(
+          { success: false, error: 'Failed to generate unique join code. Please try again.' },
+          { status: 409 }
+        );
+      }
+      logger.error('classes.route.create.class.error', { error: error instanceof Error ? error.message : String(error) });
+      return NextResponse.json(
+        { success: false, error: 'An error occurred while creating the class' },
+        { status: 500 }
+      );
     }
 
-    const validatedData: CreateClassInput = await parseBody(request, createClassSchema);
-
-    const result = await createScienceClass({
-      user: session.user,
-      tenant: { schoolId: session.user.schoolId },
-      input: validatedData,
-    });
-
-    return NextResponse.json(result, { status: 201 });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      return NextResponse.json(
-        { success: false, error: error.message },
-        { status: error.code === 'UNAUTHORIZED' ? 401 : 403 }
-      );
-    }
-    if (error instanceof ValidationError) {
-      return NextResponse.json(
-        { success: false, ...error.toJSON() },
-        { status: 400 }
-      );
-    }
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Validation failed',
-          details: error.errors.map((err) => ({ field: err.path.join('.'), message: err.message })),
-        },
-        { status: 400 }
-      );
-    }
-    if (error instanceof Error && error.message.includes('join code')) {
-      return NextResponse.json(
-        { success: false, error: 'Failed to generate unique join code. Please try again.' },
-        { status: 409 }
-      );
-    }
-    logger.error('classes.route.create.class.error', { error: error instanceof Error ? error.message : String(error) });
-    return NextResponse.json(
-      { success: false, error: 'An error occurred while creating the class' },
-      { status: 500 }
-    );
-  }
+  });
 }
 
 /**
@@ -75,35 +86,44 @@ export async function POST(request: NextRequest) {
  * List all classes for the authenticated teacher.
  */
 export async function GET(request: NextRequest) {
-  try {
-    const session = await getCurrentSession();
-    if (!session) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
-    }
+  return runWithRequestContext({
+    requestId: randomUUID(),
+    route: request.url,
+    method: 'GET',
+    startedAt: Date.now(),
+  }, async () => {
 
-    const { page, limit } = parseQuery(request, listClassesQuerySchema);
+    try {
+      const session = await getCurrentSession();
+      if (!session) {
+        return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+      }
 
-    const result = await listClassesWithCounts({
-      user: session.user,
-      tenant: { schoolId: session.user.schoolId },
-      input: { page, limit },
-    });
+      const { page, limit } = parseQuery(request, listClassesQuerySchema);
 
-    return NextResponse.json(result);
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return NextResponse.json({ success: false, ...error.toJSON() }, { status: 400 });
-    }
-    if (error instanceof AuthError) {
+      const result = await listClassesWithCounts({
+        user: session.user,
+        tenant: { schoolId: session.user.schoolId },
+        input: { page, limit },
+      });
+
+      return NextResponse.json(result);
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        return NextResponse.json({ success: false, ...error.toJSON() }, { status: 400 });
+      }
+      if (error instanceof AuthError) {
+        return NextResponse.json(
+          { success: false, error: error.message },
+          { status: error.code === 'UNAUTHORIZED' ? 401 : 403 }
+        );
+      }
+      logger.error('classes.route.list.classes.error', { error: error instanceof Error ? error.message : String(error) });
       return NextResponse.json(
-        { success: false, error: error.message },
-        { status: error.code === 'UNAUTHORIZED' ? 401 : 403 }
+        { success: false, error: 'An error occurred while fetching classes' },
+        { status: 500 }
       );
     }
-    logger.error('classes.route.list.classes.error', { error: error instanceof Error ? error.message : String(error) });
-    return NextResponse.json(
-      { success: false, error: 'An error occurred while fetching classes' },
-      { status: 500 }
-    );
-  }
+
+  });
 }

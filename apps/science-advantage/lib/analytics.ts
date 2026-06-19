@@ -16,6 +16,6 @@ export function track(event: string, data?: AnalyticsPayload) {
   }
 
   if (typeof process !== 'undefined' && process.env?.NODE_ENV !== "production") {
-    clientLogger.info('lib.analytics', { payload: `[analytics] ${event}`, data ?? {} });
+    clientLogger.info('lib.analytics', { payload: `[analytics] ${event}`, data: data ?? {} });
   }
 }

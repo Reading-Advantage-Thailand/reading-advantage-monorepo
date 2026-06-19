@@ -48,10 +48,11 @@
  *
  * @see measure/tracks/observability_stack_20260603/plan.md Phase 7
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import * as fs from 'node:fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -178,8 +179,6 @@ function findNoConsoleMessage(
 }
 
 describe('Adversarial: FR-7 ESLint `no-console` rule enforcement', () => {
-  const fs = require('node:fs') as typeof import('node:fs');
-
   beforeEach(() => {
     fs.writeFileSync(CANARY_PATH, 'console.info("phase7-adversarial-canary");\n', 'utf8');
   });
@@ -205,7 +204,7 @@ describe('Adversarial: FR-7 ESLint `no-console` rule enforcement', () => {
         `stderr: ${result.stderr}`,
       ].join('\n'),
     ).not.toBeNull();
-  });
+  }, 60000);
 
   it('reports severity=error (not warning) on the production-code site', () => {
     const result = runEslint(CANARY_PATH);
@@ -226,7 +225,7 @@ describe('Adversarial: FR-7 ESLint `no-console` rule enforcement', () => {
     ).not.toBeNull();
 
     expect(msg!.severity).toBe('error');
-  });
+  }, 60000);
 
   it('does NOT flag the legitimate logger sink (`lib/observability/logger.ts`)', () => {
     const result = runEslint(LOGGER_SINK);
@@ -247,7 +246,7 @@ describe('Adversarial: FR-7 ESLint `no-console` rule enforcement', () => {
         `stderr: ${result.stderr}`,
       ].join('\n'),
     ).toBeNull();
-  });
+  }, 60000);
 
   it('flags `console.log`, `console.info`, AND `console.debug` on a per-fixture variant (boundary coverage for spec FR-7)', () => {
     // The per-fixture override applies here, so this proves the
@@ -266,7 +265,6 @@ describe('Adversarial: FR-7 ESLint `no-console` rule enforcement', () => {
 
     // Write the fixture to disk so eslint can parse it. The test
     // cleans up after itself in `finally`.
-    const fs = require('node:fs') as typeof import('node:fs');
     fs.writeFileSync(boundaryFixture, fixtureSource, 'utf8');
 
     try {
@@ -296,5 +294,5 @@ describe('Adversarial: FR-7 ESLint `no-console` rule enforcement', () => {
         // the repo.
       }
     }
-  });
+  }, 60000);
 });

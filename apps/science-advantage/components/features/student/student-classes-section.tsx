@@ -7,8 +7,8 @@ import { ZodError } from "zod"
 import { Button } from "@/components/ui/button"
 import { StudentClassCard } from "@/components/features/student/student-class-card"
 import { StudentClassCardSkeleton } from "@/components/features/student/student-class-card-skeleton"
-import {
 import * as clientLogger from '@/components/client-logger';
+import {
   type StudentEnrolledClass,
   studentEnrolledClassesResponseSchema,
 } from "@/lib/validations/student-classes"
