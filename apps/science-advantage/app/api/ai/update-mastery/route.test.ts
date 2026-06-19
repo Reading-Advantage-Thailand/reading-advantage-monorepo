@@ -222,6 +222,7 @@ describe('FR-6 update-mastery route (POST) — wrap propagates ctx into the `log
     const withCtx = allParsed.find((p) => p.event === 'phase5.recordRun.invoked');
     expect(withCtx, 'expected the `log` dep to emit a JSON line carrying ctx').toBeDefined();
     expect(withCtx!.requestId).toMatch(/\S+/);
+    expect(withCtx!.userId).toBe('phase5-mastery-user');
     expect(withCtx!.route).toContain('/api/ai/update-mastery');
     expect(withCtx!.method).toBe('POST');
     expect(typeof withCtx!.latencyMs).toBe('number');

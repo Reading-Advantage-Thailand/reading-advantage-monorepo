@@ -197,6 +197,7 @@ describe('FR-6 analytics route — wrap + structured-logger catch block', () => 
     const withCtx = allParsed.find((p) => typeof p.requestId === 'string');
     expect(withCtx, 'expected at least one JSON log line carrying requestId').toBeDefined();
     expect(withCtx!.requestId).toMatch(/\S+/);
+    expect(withCtx!.userId).toBe('phase5-analytics-user');
     expect(withCtx!.route).toContain('/api/classes/c-1/lessons/l-1/analytics');
     expect(withCtx!.method).toBe('GET');
     expect(typeof withCtx!.latencyMs).toBe('number');

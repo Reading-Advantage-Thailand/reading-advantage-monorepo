@@ -11,7 +11,7 @@ import { startQuiz, submitAttempt } from '@reading-advantage/domain/quiz';
 import { parseBody, parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { submitQuizAttemptSchema } from '@/lib/validations/quiz';
 import { lessonSlugParamSchema } from '@/lib/validations/params';
-import { runWithRequestContext } from '@/lib/observability/context';
+import { runWithRequestContext, setRequestContextUserId } from '@/lib/observability/context';
 import { logger } from '@/lib/observability/logger';
 
 /**
@@ -31,6 +31,7 @@ export async function GET(
   try {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    setRequestContextUserId(session.user.id);
     const { lessonSlug } = parsePath(await context.params, lessonSlugParamSchema);
     const result = await startQuiz({ user: session.user, tenant: { schoolId: session.user.schoolId }, lessonSlug });
     return NextResponse.json(result.body, { status: result.status });
@@ -61,6 +62,7 @@ export async function POST(
     void context;
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    setRequestContextUserId(session.user.id);
     const body = await parseBody(request, submitQuizAttemptSchema);
     const result = await submitAttempt({
       user: session.user, tenant: { schoolId: session.user.schoolId },

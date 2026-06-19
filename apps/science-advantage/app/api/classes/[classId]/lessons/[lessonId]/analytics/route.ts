@@ -5,7 +5,7 @@ import { AuthError } from '@reading-advantage/auth';
 import { getClassLessonAnalytics } from '@reading-advantage/domain/classes';
 import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { classIdLessonIdParamSchema } from '@/lib/validations/params';
-import { runWithRequestContext } from '@/lib/observability/context';
+import { runWithRequestContext, setRequestContextUserId } from '@/lib/observability/context';
 import { logger } from '@/lib/observability/logger';
 
 /**
@@ -22,6 +22,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ cla
   try {
     const session = await requireAuth();
     if (!session || !session.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    setRequestContextUserId(session.user.id);
 
     const { classId, lessonId } = parsePath(await params, classIdLessonIdParamSchema);
     const result = await getClassLessonAnalytics({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { classId, lessonId } });

@@ -39,6 +39,7 @@ const CONTEXT_MODULE_PATH = '../context';
 interface ContextModule {
   getRequestContext: () => unknown;
   runWithRequestContext: <T>(ctx: unknown, fn: () => T) => T;
+  setRequestContextUserId: (userId: string) => void;
 }
 
 interface LoadResult {
@@ -209,6 +210,28 @@ describe('FR-3 nested `runWithRequestContext` calls', () => {
       observed = result.mod!.getRequestContext();
     });
     expect(observed).toBe(outer);
+  });
+});
+
+describe('FR-3 `setRequestContextUserId` mutates the active context', () => {
+  let result: LoadResult;
+
+  beforeAll(async () => {
+    result = await loadContextModule();
+  });
+
+  it('sets userId on the current context so the logger can emit it', () => {
+    expect(result.loadError).toBeUndefined();
+    const ctx = makeRequestContext();
+    result.mod!.runWithRequestContext(ctx, () => {
+      result.mod!.setRequestContextUserId('user-123');
+    });
+    expect(ctx.userId).toBe('user-123');
+  });
+
+  it('does nothing when called outside a `runWithRequestContext` scope', () => {
+    expect(result.loadError).toBeUndefined();
+    expect(() => result.mod!.setRequestContextUserId('user-456')).not.toThrow();
   });
 });
 

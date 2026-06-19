@@ -5,7 +5,7 @@ import { getCurrentSession } from '@/lib/auth/session';
 import { listAssignments, createAssignment, deleteAssignment } from '@reading-advantage/domain/classes';
 import { parseBody, ValidationError } from '@/lib/validations/api-helpers';
 import { createAssignmentSchema, deleteAssignmentSchema } from '@/lib/validations/assignments';
-import { runWithRequestContext } from '@/lib/observability/context';
+import { runWithRequestContext, setRequestContextUserId } from '@/lib/observability/context';
 import { logger } from '@/lib/observability/logger';
 
 /**
@@ -25,6 +25,7 @@ export async function GET(
   try {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    setRequestContextUserId(session.user.id);
     const { classId } = await context.params;
     const result = await listAssignments({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { classId } });
     if ('error' in result) return NextResponse.json({ success: false, error: result.error }, { status: result.status });
@@ -54,6 +55,7 @@ export async function POST(
   try {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    setRequestContextUserId(session.user.id);
     const { classId } = await context.params;
     const body = await parseBody(request, createAssignmentSchema);
     const result = await createAssignment({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { classId, lessonId: body.lessonId, dueAt: body.dueAt } });
@@ -85,6 +87,7 @@ export async function DELETE(
   try {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    setRequestContextUserId(session.user.id);
     const { classId } = await context.params;
     const body = await parseBody(request, deleteAssignmentSchema);
     const result = await deleteAssignment({ user: session.user, tenant: { schoolId: session.user.schoolId }, input: { classId, assignmentId: body.assignmentId } });

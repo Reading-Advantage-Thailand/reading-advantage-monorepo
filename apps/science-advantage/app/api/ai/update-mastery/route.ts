@@ -7,7 +7,7 @@ import { calculateMasteryUpdates, buildResponseInput } from '@/lib/ai/mastery-ca
 import { env } from '@/lib/env';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
-import { runWithRequestContext } from '@/lib/observability/context';
+import { runWithRequestContext, setRequestContextUserId } from '@/lib/observability/context';
 import { recordRun, recordRunFailure, RateLimitError } from '@reading-advantage/domain/mastery';
 
 /**
@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    setRequestContextUserId(session.user.id);
 
     const result = await recordRun({
       user: session.user,

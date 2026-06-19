@@ -226,6 +226,7 @@ describe('FR-6 quiz route (GET) — wrap + structured-logger catch block', () =>
     const withCtx = allParsed.find((p) => typeof p.requestId === 'string');
     expect(withCtx, 'expected at least one JSON log line carrying requestId').toBeDefined();
     expect(withCtx!.requestId).toMatch(/\S+/);
+    expect(withCtx!.userId).toBe('phase5-quiz-user');
     expect(withCtx!.route).toContain('/api/lessons/ls-1/quiz');
     expect(withCtx!.method).toBe('GET');
     expect(typeof withCtx!.latencyMs).toBe('number');

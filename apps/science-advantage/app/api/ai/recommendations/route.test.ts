@@ -240,6 +240,7 @@ describe('FR-6 recommendations route (POST) — wrap + structured-logger catch b
     const withCtx = allParsed.find((p) => typeof p.requestId === 'string');
     expect(withCtx, 'expected at least one JSON log line carrying requestId').toBeDefined();
     expect(withCtx!.requestId).toMatch(/\S+/);
+    expect(withCtx!.userId).toBe('phase5-recs-user');
     expect(withCtx!.route).toContain('/api/ai/recommendations');
     expect(withCtx!.method).toBe('POST');
     expect(typeof withCtx!.latencyMs).toBe('number');

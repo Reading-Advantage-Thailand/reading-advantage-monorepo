@@ -8,7 +8,7 @@ import { aiConfig } from '@/lib/config/ai';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
-import { runWithRequestContext } from '@/lib/observability/context';
+import { runWithRequestContext, setRequestContextUserId } from '@/lib/observability/context';
 import { getRecommendation } from '@reading-advantage/domain/ai';
 import { requestSchema, recommendationCache, rateLimitStore, RateLimitError } from '@/lib/config/recommendations';
 
@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    setRequestContextUserId(session.user.id);
     let body: unknown;
     try { body = await request.json(); } catch { return NextResponse.json({ success: false, error: 'INVALID_JSON' }, { status: 400 }); }
     const parse = requestSchema.safeParse(body);

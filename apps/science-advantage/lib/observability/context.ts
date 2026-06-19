@@ -26,3 +26,14 @@ export function getRequestContext(): RequestContext | undefined {
 export function runWithRequestContext<T>(ctx: RequestContext, fn: () => T): T {
   return storage.run(ctx, fn);
 }
+
+/**
+ * Sets the authenticated user id on the current request context.
+ * No-op when called outside a `runWithRequestContext` scope.
+ */
+export function setRequestContextUserId(userId: string): void {
+  const ctx = storage.getStore();
+  if (ctx) {
+    ctx.userId = userId;
+  }
+}
