@@ -260,12 +260,14 @@
 
 ## Phase 2: OpenTelemetry Installation + Configuration
 
-- [ ] Task: Add `@opentelemetry/api`, `@opentelemetry/sdk-node`, `@opentelemetry/exporter-trace-otlp-http`, `@opentelemetry/resources`, `@opentelemetry/semantic-conventions` to `apps/science-advantage/package.json`.
-- [ ] Task: `pnpm install`; verify install.
-- [ ] Task: Create `apps/science-advantage/instrumentation.ts` with the `register()` entry point.
-- [ ] Task: Create `apps/science-advantage/instrumentation.node.ts` that registers the NodeSDK with the OTLP exporter (or console exporter if `OTEL_EXPORTER_OTLP_ENDPOINT` is unset).
-- [ ] Task: Add `OTEL_EXPORTER_OTLP_ENDPOINT` (optional) and `OTEL_SERVICE_NAME` to `.env.example`.
-- [ ] Task: Build; confirm the instrumentation file is picked up by Next.js.
+> Mid-Red (2026-06-19): Phase 2 Red surface is in `apps/science-advantage/lib/observability/__tests__/instrumentation.contract.test.ts` + `apps/science-advantage/lib/observability/__tests__/env-example-otel.contract.test.ts`. Both files are committed intentionally red. Implementation files (`instrumentation.ts`, `instrumentation.node.ts`, OTel deps in `package.json`, OTel env vars in `.env.example`) are missing — the expected Red. See per-task Red evidence below once the test commit lands.
+
+- [~] Task: Add `@opentelemetry/api`, `@opentelemetry/sdk-node`, `@opentelemetry/exporter-trace-otlp-http`, `@opentelemetry/resources`, `@opentelemetry/semantic-conventions` to `apps/science-advantage/package.json`.
+- [~] Task: `pnpm install`; verify install.
+- [~] Task: Create `apps/science-advantage/instrumentation.ts` with the `register()` entry point.
+- [~] Task: Create `apps/science-advantage/instrumentation.node.ts` that registers the NodeSDK with the OTLP exporter (or console exporter if `OTEL_EXPORTER_OTLP_ENDPOINT` is unset).
+- [~] Task: Add `OTEL_EXPORTER_OTLP_ENDPOINT` (optional) and `OTEL_SERVICE_NAME` to `.env.example`.
+- [~] Task: Build; confirm the instrumentation file is picked up by Next.js.
 
 ## Phase 3: `AsyncLocalStorage<RequestContext>`
 
