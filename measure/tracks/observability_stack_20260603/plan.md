@@ -1055,8 +1055,8 @@ For each site (Phase 8a–8e):
 
 ### Phase 8c: 8 in `lib/`
 - [x] Task: For each `console.*` in `lib/` (other than the logger sink): replace with `logger.*`. [97735502]
-- [x] Task: The 3 in `lib/observability/logger.ts` are the sink itself — keep.
-- [x] Task: The 2 in `lib/schemas/lesson-content.schema.ts` are JSDoc examples — keep.
+- [x] Task: The 3 in `lib/observability/logger.ts` are the sink itself — keep. [97735502]
+- [x] Task: The 2 in `lib/schemas/lesson-content.schema.ts` are JSDoc examples — keep. [97735502]
 - [x] Task: The 1 in `lib/observability/metrics.ts` — replace with `logger.info` (the metrics sink upgrades to a no-op if Sentry is wired). [97735502]
 - [x] Task: The 1 in `lib/utils/clipboard.ts` — replace. [97735502]
 - [x] Task: The 1 in `lib/analytics.ts:18` — replace. [97735502]
