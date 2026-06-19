@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { settings } from "@reading-advantage/db/schema";
-import { eq } from "drizzle-orm";
+import { encrypt } from "@/lib/encryption";
+
+const SECRET_KEY_PATTERNS = [/apiKey/i, /secret/i, /token/i];
+
+function isSecretKey(key: string): boolean {
+  return SECRET_KEY_PATTERNS.some((pattern) => pattern.test(key));
+}
 
 export async function GET() {
   try {
@@ -24,12 +30,15 @@ export async function POST(request: Request) {
     const entries = Object.entries(body) as [string, string][];
 
     for (const [key, value] of entries) {
+      const storedValue = isSecretKey(key)
+        ? encrypt(String(value))
+        : String(value);
       await db
         .insert(settings)
-        .values({ key, value: String(value) })
+        .values({ key, value: storedValue })
         .onConflictDoUpdate({
           target: settings.key,
-          set: { value: String(value) },
+          set: { value: storedValue },
         });
     }
 
