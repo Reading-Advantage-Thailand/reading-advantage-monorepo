@@ -4,6 +4,29 @@ type LogPayload = Record<string, unknown>;
 
 type LogLevel = 'info' | 'warn' | 'error';
 
+function safeStringify(entry: Record<string, unknown>): string {
+  try {
+    return JSON.stringify(entry, (_key, value) => {
+      if (typeof value === 'bigint') return `[BigInt:${value.toString()}]`;
+      if (typeof value === 'function') return '[Function]';
+      if (typeof value === 'symbol') return value.toString();
+      return value;
+    });
+  } catch {
+    return JSON.stringify({
+      event: entry.event,
+      level: entry.level,
+      timestamp: entry.timestamp,
+      requestId: entry.requestId,
+      userId: entry.userId,
+      route: entry.route,
+      method: entry.method,
+      latencyMs: entry.latencyMs,
+      serializationError: 'payload contained unserializable structure (e.g. circular reference)',
+    });
+  }
+}
+
 function emit(level: LogLevel, event: string, payload: LogPayload = {}) {
   const ctx = getRequestContext();
 
@@ -24,17 +47,19 @@ function emit(level: LogLevel, event: string, payload: LogPayload = {}) {
     entry.latencyMs = Date.now() - ctx.startedAt;
   }
 
+  const line = safeStringify(entry);
+
   if (level === 'error') {
-    console.error(JSON.stringify(entry));
+    console.error(line);
     return;
   }
 
   if (level === 'warn') {
-    console.warn(JSON.stringify(entry));
+    console.warn(line);
     return;
   }
 
-  console.info(JSON.stringify(entry));
+  console.info(line);
 }
 
 export const logger = {
