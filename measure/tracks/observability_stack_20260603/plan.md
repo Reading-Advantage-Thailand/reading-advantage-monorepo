@@ -307,11 +307,11 @@
 > (a Measure doc, allowed by the MID scope rule). No overlap with the
 > unrelated dirty paths above.
 
-- [x] Task: Add `@opentelemetry/api`, `@opentelemetry/sdk-node`, `@opentelemetry/exporter-trace-otlp-http`, `@opentelemetry/resources`, `@opentelemetry/semantic-conventions` to `apps/science-advantage/package.json`. [jr-green-commit]
-- [x] Task: `pnpm install`; verify install. [jr-green-commit]
-- [x] Task: Create `apps/science-advantage/lib/instrumentation.ts` with the `register()` entry point. (Note: placed in `lib/` to match test import path `../../instrumentation`.) [jr-green-commit]
-- [x] Task: Create `apps/science-advantage/lib/instrumentation.node.ts` that registers the NodeSDK with the OTLP exporter (or console exporter if `OTEL_EXPORTER_OTLP_ENDPOINT` is unset). [jr-green-commit]
-- [x] Task: Add `OTEL_EXPORTER_OTLP_ENDPOINT` (optional) and `OTEL_SERVICE_NAME` to `.env.example`. [jr-green-commit]
+- [x] Task: Add `@opentelemetry/api`, `@opentelemetry/sdk-node`, `@opentelemetry/exporter-trace-otlp-http`, `@opentelemetry/resources`, `@opentelemetry/semantic-conventions` to `apps/science-advantage/package.json`. [bcb1ffeb]
+- [x] Task: `pnpm install`; verify install. [bcb1ffeb]
+- [x] Task: Create `apps/science-advantage/lib/instrumentation.ts` with the `register()` entry point. (Note: placed in `lib/` to match test import path `../../instrumentation`.) [bcb1ffeb]
+- [x] Task: Create `apps/science-advantage/lib/instrumentation.node.ts` that registers the NodeSDK with the OTLP exporter (or console exporter if `OTEL_EXPORTER_OTLP_ENDPOINT` is unset). [bcb1ffeb]
+- [x] Task: Add `OTEL_EXPORTER_OTLP_ENDPOINT` (optional) and `OTEL_SERVICE_NAME` to `.env.example`. [bcb1ffeb]
 - [~] Task: Build; confirm the instrumentation file is picked up by Next.js.
   - Note: build times out (pre-existing issue per Phase 1 note). Phase 2 targeted contract tests pass (5/5, exit 0). Live-behavior throw-in-route gate for FR-2 remains Phase 9 per `test-strategy.md` §6 / §7.
 
