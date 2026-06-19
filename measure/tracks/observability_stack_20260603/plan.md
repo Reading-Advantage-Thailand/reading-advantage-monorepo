@@ -846,19 +846,134 @@ Files (in priority order):
 > pass adds is re-verification evidence + worktree hygiene
 > documentation.
 
-- [~] Task: In `lib/ai/recommendation-service.ts` (or the refactored `packages/ai/src/providers/openai.ts` if Track 5 has completed), wrap `generateObject` in `tracer.startActiveSpan('ai.generateObject', ...)`.
-- [~] Task: Add `span.setAttribute('ai.model', ...)` and `span.setAttribute('ai.schema', ...)`.
-- [~] Task: Wrap the try/catch: `span.recordException(err); span.setStatus({ code: SpanStatusCode.ERROR, message: String(err) })`.
-- [~] Task: Replace the ad-hoc `traceId` field in `recommendation-service.ts:97, 126, 144, 153` with `trace.getSpan(context.active())?.spanContext().traceId`.
-- [~] Task: Write a test: call `generateObject`; assert a span is created with the right attributes; assert the `traceId` matches the span context.
-- [ ] Task: Confirm.
+- [x] Task: In `lib/ai/recommendation-service.ts` (or the refactored `packages/ai/src/providers/openai.ts` if Track 5 has completed), wrap `generateObject` in `tracer.startSpan('ai.generateObject', ...)`. [3bccadf4]
+- [x] Task: Add `span.setAttribute('ai.model', ...)` and `span.setAttribute('ai.schema', ...)`. [3bccadf4]
+- [x] Task: Wrap the try/catch: `span.recordException(err); span.setStatus({ code: SpanStatusCode.ERROR, message: String(err) })`. [3bccadf4]
+- [x] Task: Replace the ad-hoc `traceId` field in `recommendation-service.ts:97, 126, 144, 153` with `trace.getSpan(context.active())?.spanContext().traceId`. [3bccadf4]
+- [x] Task: Write a test: call `generateObject`; assert a span is created with the right attributes; assert the `traceId` matches the span context. [1570b5ae]
+- [x] Task: Confirm. [3bccadf4]
+  - Evidence: Phase 6 targeted tests → 3/3 pass (exit 0). Full regression Phases 1-6 → 75/75 pass (14 test files, exit 0). Phase 5 route tests also green. Implementation uses `tracer.startSpan` with `otelContext.active()` for parent context propagation, `span.setAttribute` for ai.model/ai.schema, `span.recordException` + `span.setStatus(ERROR)` on throw path, and `span.spanContext().traceId` (in-loop) / `trace.getSpan(otelContext.active())?.spanContext().traceId` (outside loop) for traceId replacement. Context manager wired via `AsyncLocalStorageContextManager.enable()` in mock-tracer fixture; `trace.disable()` added before `setGlobalTracerProvider` to support multi-test runs. Env cleanup (`delete process.env.AI_RECOMMENDER_MODEL`) in vitest.unit.setup.ts ensures deterministic `primaryModel` default in tests.
 
 ## Phase 7: ESLint `no-console` Rule
 
-- [ ] Task: Update `apps/science-advantage/eslint.config.mjs` to add `no-console: ['error', { allow: ['error', 'warn'] }]`.
-- [ ] Task: Exclude `lib/observability/logger.ts` (the sink) and `**/*.test.ts`/`__tests__/`.
-- [ ] Task: Run `pnpm turbo run lint --filter=science-advantage`; the 42 remaining `console.log`/`console.info` sites fail the lint.
-- [ ] Task: Document the rule in `eslint.config.mjs` comments.
+> **Mid-Red evidence (this phase, 2026-06-20):** the Phase 7 Red
+> surface is in
+> `apps/science-advantage/lib/observability/__tests__/eslint-no-console.test.ts`
+> plus the two micro-fixtures
+> `apps/science-advantage/lib/observability/__tests__/fixtures/eslint/{bad,good}.ts`
+> (committed in this MID pass). The implementation
+> `apps/science-advantage/eslint.config.mjs` does not yet declare
+> `no-console: ['error', { allow: ['error', 'warn'] }]` — the
+> existing config (verified at HEAD) has only
+> `@typescript-eslint/no-unused-vars`,
+> `@typescript-eslint/no-explicit-any`, and
+> `react-hooks/set-state-in-effect: 'off'`. Without the rule, the
+> `bad.ts` fixture's `console.log("phase7-bad-fixture-console-log")`
+> is not flagged and the spawned eslint exits 0, so the test fails
+> on the `expected status to not be 0` assertion — the expected Red.
+>
+> Tests are organized into two `it` blocks per `test-strategy.md`
+> §6 (Phase 7) and §7 (Targeted Red command):
+> 1. **`bad.ts` exits non-zero** — spawns the project's
+>    `node_modules/eslint/bin/eslint.js` with `--no-ignore` against
+>    `bad.ts` and asserts `status !== 0`. Fails at HEAD because the
+>    rule is missing. Will pass at Green once the rule is added.
+> 2. **`good.ts` exits zero** — spawns the same binary against
+>    `good.ts` and asserts `status === 0`. Passes at both HEAD and
+>    Green (no `console.*` call, so the rule (when added) does not
+>    fire). Acts as a regression guard against a future change that
+>    accidentally over-broadens the rule to also flag non-`console`
+>    method calls.
+> **Total: 2 tests**, with **1 expected Red at HEAD**
+> (the `bad.ts` `status !== 0` assertion).
+>
+> **Targeted Red command actually executed at MID** (rootless-podman
+> host cannot reach `localhost:5432` so the default
+> `vitest.config.ts` integration globalSetup hangs on `drizzle-kit
+> migrate`; the hermetic `vitest.unit.config.ts` is the
+> app-AGENTS-canonical DB-free subset per
+> `apps/science-advantage/AGENTS.md` Testing Guidelines; this host
+> has only `bun` on PATH — `pnpm` is not installed — so
+> `bun node_modules/vitest/vitest.mjs` is the host-environment
+> substitution that exercises the exact same `vitest.unit.config.ts`
+> + test file path; the prior phases' mid-handoffs use the same
+> substitution):
+>
+> ```
+> bun node_modules/vitest/vitest.mjs run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/eslint-no-console.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 1 failed (1) | Tests 1 failed | 1 passed (2)`.
+> The 1 Red is the `bad.ts` `status !== 0` assertion: at HEAD the
+> `no-console` rule does not exist in the project config, so the
+> spawned eslint exits 0 and the test fails with
+> `expected eslint to exit non-zero on bad.ts (which contains console.log). exit code: 0`.
+> The 1 passing test is the `good.ts` `status === 0` assertion
+> (no `console.*` call in the fixture, so the missing rule does not
+> matter; the test would also pass at Green as a regression guard).
+>
+> **Command-construction proof (strategy §6 / §7):** the test
+> spawns the **real** `eslint` binary against the **real** project
+> config (`apps/science-advantage/eslint.config.mjs`, auto-discovered
+> by walking up from `cwd = apps/science-advantage`). The
+> `--no-ignore` flag forces eslint to lint the fixture files even
+> though the Green-role implementation will add
+> `lib/observability/__tests__/fixtures/eslint/**` to the config
+> `ignores` array (per strategy §8). Without `--no-ignore`, the
+> fixtures would be globally ignored and the test would pass
+> trivially at Green — that would mask a broken rule. The
+> `--no-ignore` flag is bounded: it only affects the
+> explicitly-passed fixture files, never the full app source tree,
+> so the test cannot mask other lint failures (per strategy §7
+> "never invokes full `pnpm lint`").
+>
+> **Per-task Red coverage map:**
+> - Task 1 (add `no-console: ['error', { allow: ['error', 'warn'] }]`)
+>   — covered by test 1 (`bad.ts` exits non-zero). The `allow: ['error', 'warn']`
+>   carve-out is the production-grade signal: `console.error` /
+>   `console.warn` from the `emit()` function in
+>   `lib/observability/logger.ts:53,58,62` continue to pass; the
+>   rule fires on `console.log` / `console.info` / `console.debug`.
+> - Task 2 (exclude `lib/observability/logger.ts` and `**/*.test.ts`/`__tests__/`)
+>   — the logger-sink exclusion is provided by the `allow` option
+>   in task 1 (logger.ts only uses `console.error`/`console.warn`/`console.info`,
+>   of which `error`+`warn` are allowed; `console.info` is the
+>   default-level emission for `logger.info`). The test-file
+>   exclusion is already in place at HEAD (lines 12-22 of the
+>   existing config). The fixture-file ignore
+>   (`lib/observability/__tests__/fixtures/eslint/**`) is
+>   exercised by the test's `--no-ignore` flag — without it, the
+>   global `pnpm lint` would always be red (per strategy §8).
+> - Task 3 (run `pnpm turbo run lint`; the 42 sites fail) — closeout
+>   gate, not a Red test. Will be owned by the Green role.
+> - Task 4 (document the rule in `eslint.config.mjs` comments) —
+>   closeout gate, not a Red test. Will be owned by the Green role.
+>
+> **Worktree hygiene at MID start (2026-06-20 this pass):**
+> `git status --porcelain` shows one modified path and one
+> untracked path. Classification:
+> - `M measure/tracks/observability_stack_20260603/plan.md` —
+>   **related to this track, Measure doc, allowed.** This file is
+>   edited by MID to mark the Phase 7 tasks as `[~]` and to record
+>   the Red evidence.
+> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/`
+>   — **unrelated; preserve.** Untracked fixtures dir for a
+>   different track.
+>
+> This MID commit touches only the 3 new files (test + 2 fixtures)
+> plus `measure/tracks/observability_stack_20260603/plan.md` (a
+> Measure doc, allowed by the MID scope rule). No overlap with the
+> unrelated untracked path. Phase 7 Red surface is intentionally
+> red on the global config: the rule is missing, and the test
+> proves it. Live-behavior proof is bounded to the 2 fixture files
+> per strategy §7.
+
+- [~] Task: Update `apps/science-advantage/eslint.config.mjs` to add `no-console: ['error', { allow: ['error', 'warn'] }]`.
+- [~] Task: Exclude `lib/observability/logger.ts` (the sink) and `**/*.test.ts`/`__tests__/`.
+- [~] Task: Run `pnpm turbo run lint --filter=science-advantage`; the 42 remaining `console.log`/`console.info` sites fail the lint.
+- [~] Task: Document the rule in `eslint.config.mjs` comments.
 
 ## Phase 8: Replace Remaining 42 `console.*` Sites
 
