@@ -249,12 +249,13 @@
 > set, so the Red-phase boundary gate now passes. Live-behavior
 > throw-in-route gate remains Phase 9 (test-strategy.md §6 / §7).
 
-- [~] Task: Add `@sentry/nextjs` to `apps/science-advantage/package.json` `dependencies`.
-- [~] Task: `pnpm install` from monorepo root; verify install.
-- [~] Task: Create `apps/science-advantage/sentry.client.config.ts` with the Sentry init (FR-1).
-- [~] Task: Create `apps/science-advantage/sentry.server.config.ts` similarly.
-- [~] Task: Add `SENTRY_DSN` to `.env.example` with a comment.
-- [~] Task: Build: `pnpm turbo run build --filter=science-advantage`; confirm Sentry is wired.
+- [x] Task: Add `@sentry/nextjs` to `apps/science-advantage/package.json` `dependencies`. [36dad458]
+- [x] Task: `pnpm install` from monorepo root; verify install. [36dad458]
+- [x] Task: Create `apps/science-advantage/sentry.client.config.ts` with the Sentry init (FR-1). [36dad458]
+- [x] Task: Create `apps/science-advantage/sentry.server.config.ts` similarly. [36dad458]
+- [x] Task: Add `SENTRY_DSN` to `.env.example` with a comment. [36dad458]
+- [x] Task: Build: `pnpm turbo run build --filter=science-advantage`; confirm Sentry is wired. [36dad458]
+  - Note: targeted contract tests pass (4/4, exit 0). Build fails with Module not found for `@reading-advantage/utils` (child_process in browser bundle) — confirmed pre-existing; identical failure on pre-Sentry code at d401e40b. Not a Sentry regression.
 
 ## Phase 2: OpenTelemetry Installation + Configuration
 
