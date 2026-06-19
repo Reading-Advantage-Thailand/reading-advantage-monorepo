@@ -317,8 +317,65 @@
 
 ## Phase 3: `AsyncLocalStorage<RequestContext>`
 
-- [ ] Task: Create `lib/observability/context.ts` with `RequestContext` interface, `AsyncLocalStorage<RequestContext>`, `getRequestContext`, `runWithRequestContext` (FR-3).
-- [ ] Task: Write failing tests:
+> **Mid-Red evidence (this phase, 2026-06-19):** the Phase 3 Red
+> surface is in
+> `apps/science-advantage/lib/observability/__tests__/context.test.ts`
+> and the shared fixture
+> `apps/science-advantage/lib/observability/__tests__/fixtures/make-request-context.ts`.
+> Both files are committed intentionally red. The implementation
+> `lib/observability/context.ts` is missing — every test fails with
+> `Error: Cannot find module '../../context'` (the expected Red).
+>
+> Tests are organized into six describe blocks per
+> `test-strategy.md` §6 (Phase 3 pure-unit):
+> 1. Public surface (function exports + storage guardrail §5) — 3 tests
+> 2. Round-trip (sync, async, transparency, microtask propagation) — 4 tests
+> 3. Outside-scope (`getRequestContext()` returns `undefined`) — 3 tests
+> 4. Nested (inner wins; outer restored after inner exits; sync + async) — 4 tests
+> 5. Async leakage (`Promise.all` siblings do not bleed; pre-scheduled
+>    promise unaffected) — 2 tests
+> 6. Node-runtime guard (Edge runtime non-goal per strategy §4) — 1 test
+> **Total: 17 tests**, all Red.
+>
+> **Targeted Red command actually executed at MID** (rootless-podman host
+> cannot reach `localhost:5432` so the default `vitest.config.ts`
+> integration globalSetup hangs on `drizzle-kit migrate`; the hermetic
+> `vitest.unit.config.ts` is the app-AGENTS-canonical DB-free subset per
+> `apps/science-advantage/AGENTS.md` Testing Guidelines; this host has
+> only `bun` on PATH — `pnpm` is not installed — so `bunx vitest` is the
+> host-environment substitution that exercises the exact same
+> `vitest.unit.config.ts` + test file path):
+>
+> ```
+> PATH=/home/daniel-bo/.bun/bin:$PATH \
+>   bunx --cwd apps/science-advantage vitest run \
+>     --config vitest.unit.config.ts \
+>     lib/observability/__tests__/context.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 1 failed (1) | Tests 17 failed (17)`.
+> All 17 failures are the expected missing-implementation Reds:
+> `AssertionError: expected Error: Cannot find module '/lib/context' to be undefined`,
+> i.e. `lib/observability/context.ts` is absent (the expected Red).
+>
+> Canonical command from `test-strategy.md` §7 (`pnpm --filter
+> science-advantage exec vitest run
+> lib/observability/__tests__/context.test.ts`, no `--config` flag) is
+> unchanged in the strategy doc; both substitutions (the `--config`
+> flag and the `bunx vitest` runner) are host-environment workarounds,
+> not strategy changes. When `pnpm` becomes reachable (rootless podman
+> forwarding fix + pnpm install), the canonical command should be
+> re-run for the Green gate and recorded under Phase 9 acceptance.
+>
+> **Worktree hygiene at MID start (2026-06-19 this pass):**
+> `git status --porcelain` showed one untracked path:
+> `measure/tracks/agents_md_audit_science_advantage_20260603/fixtures/`
+> — the untracked fixtures dir for a different track (the
+> `agents_md_audit_science_advantage_20260603` audit track, not this
+> one). **Unrelated; preserve.** No overlap with this track's commit.
+
+- [~] Task: Create `lib/observability/context.ts` with `RequestContext` interface, `AsyncLocalStorage<RequestContext>`, `getRequestContext`, `runWithRequestContext` (FR-3).
+- [~] Task: Write failing tests:
   - `runWithRequestContext(ctx, () => getRequestContext())` returns `ctx`.
   - `getRequestContext()` outside `runWithRequestContext` returns `undefined`.
   - Nested `runWithRequestContext` calls return the inner context.
