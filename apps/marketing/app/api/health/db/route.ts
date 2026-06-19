@@ -6,10 +6,11 @@ export async function GET() {
     await db.execute(sql`SELECT 1`);
     return NextResponse.json({ status: "ok" });
   } catch (error) {
+    console.error("DB health check failed:", error instanceof Error ? error.message : String(error));
     return NextResponse.json(
       {
         status: "error",
-        message: error instanceof Error ? error.message : "Database ping failed",
+        message: "Database ping failed",
       },
       { status: 500 },
     );

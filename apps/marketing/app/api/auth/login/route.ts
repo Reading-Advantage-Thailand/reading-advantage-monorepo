@@ -11,8 +11,6 @@ export async function POST(request: NextRequest) {
         level: "error",
         event: "login_error",
         message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        cause: error instanceof Error && "cause" in error ? String(error.cause) : undefined,
       }),
     );
     return NextResponse.json(

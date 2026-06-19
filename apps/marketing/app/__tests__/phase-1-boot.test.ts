@@ -195,7 +195,7 @@ describe("Phase 1: Vinext Scaffold + Monorepo Integration boot smoke", () => {
       expect(response.status).toBe(500);
       const body = await response.json();
       expect(body.status).toBe("error");
-      expect(body.message).toBe("connection refused");
+      expect(body.message).toBe("Database ping failed");
     });
   });
 });
