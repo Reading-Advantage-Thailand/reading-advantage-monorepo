@@ -68,6 +68,19 @@ const eslintConfig = [{
   rules: {
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-explicit-any": "off",
+    // Phase 8: scripts are CLI tools that legitimately use console.*
+    // for user-facing output. FR-8 scope is app/ + lib/ + components/ +
+    // proxy.ts only; scripts/ is out of scope per spec line 199.
+    "no-console": "off",
+  },
+}, {
+  // Phase 8: test infrastructure files (not matched by *.test.ts
+  // patterns) that legitimately use console.log for setup diagnostics.
+  files: [
+    "vitest.integration.global-setup.ts",
+  ],
+  rules: {
+    "no-console": "off",
   },
 }, {
   // Phase 7 (FR-7): re-enable `no-console` for the ESLint
