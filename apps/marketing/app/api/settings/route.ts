@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { settings } from "@reading-advantage/db/schema";
-import { encrypt } from "@/lib/encryption";
+import { decrypt, encrypt } from "@/lib/encryption";
 
 const SECRET_KEY_PATTERNS = [/apiKey/i, /secret/i, /token/i];
 
@@ -13,7 +13,10 @@ export async function GET() {
   try {
     const allSettings = await db.select().from(settings);
     const settingsMap = Object.fromEntries(
-      allSettings.map((s: { key: string; value: string }) => [s.key, s.value])
+      allSettings.map((s: { key: string; value: string }) => [
+        s.key,
+        isSecretKey(s.key) ? decrypt(s.value) : s.value,
+      ])
     );
     return NextResponse.json(settingsMap);
   } catch (error) {

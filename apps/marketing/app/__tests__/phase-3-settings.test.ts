@@ -59,6 +59,12 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+// A deterministic 32-byte key for the test suite. This is NOT a real
+// secret; it only exists to make the encryption round-trip reproducible
+// under test. Production deployments MUST provide their own ENCRYPTION_KEY.
+process.env.ENCRYPTION_KEY ??=
+  "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456";
+
 // ─────────────────────────────────────────────────────────────────────
 // Mock the Drizzle client. The mock factory's spread order matters:
 //   { ...actual, ..., db: { insert: vi.fn(), select: vi.fn() } }
@@ -219,6 +225,17 @@ describe("Phase 3: Settings Page — encryption at rest (task 3, RED)", () => {
         );
       }
     });
+
+    it("refuses to encrypt when ENCRYPTION_KEY is missing", async () => {
+      const originalKey = process.env.ENCRYPTION_KEY;
+      delete process.env.ENCRYPTION_KEY;
+      // Re-import to ensure the module sees the cleared env var. ESM cache
+      // means the same module instance is returned, but getKey() is evaluated
+      // at call time so the missing-key check still fires.
+      const { encrypt } = await import("../lib/encryption.js");
+      expect(() => encrypt("secret")).toThrow("ENCRYPTION_KEY environment variable");
+      process.env.ENCRYPTION_KEY = originalKey;
+    });
   });
 });
 
@@ -331,6 +348,34 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     expect(onConflictDoUpdateMock).toHaveBeenCalledTimes(1);
     // And the insert mock was called with the settings table.
     expect(insertMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("GET /api/settings decrypts secret values before returning them", async () => {
+    const { encrypt } = await import("../lib/encryption.js");
+    const { db } = await import("@reading-advantage/db");
+    const plaintextApiKey = "sk-test-secret-api-key-12345";
+    const ciphertextApiKey = encrypt(plaintextApiKey);
+
+    const selectFromMock = vi.fn().mockResolvedValue([
+      { key: "llm.provider", value: "google" },
+      { key: "llm.model", value: "gemini-pro" },
+      { key: "llm.apiKey", value: ciphertextApiKey },
+      { key: "tools.mmxPath", value: "/usr/local/bin/mmx" },
+    ]);
+    (db.select as Mock).mockImplementation(() => ({ from: selectFromMock }));
+
+    const { GET } = await import("@/api/settings/route");
+    const response = await GET();
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as Record<string, string>;
+
+    // Non-secret values are returned as-is.
+    expect(body["llm.provider"]).toBe("google");
+    expect(body["llm.model"]).toBe("gemini-pro");
+    expect(body["tools.mmxPath"]).toBe("/usr/local/bin/mmx");
+    // The secret apiKey must be decrypted, not returned as ciphertext.
+    expect(body["llm.apiKey"]).toBe(plaintextApiKey);
+    expect(body["llm.apiKey"]).not.toBe(ciphertextApiKey);
   });
 });
 
