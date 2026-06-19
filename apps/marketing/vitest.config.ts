@@ -21,9 +21,6 @@ export default defineConfig({
       "node_modules/**",
       "dist/**",
       ".next/**",
-      // owned by measure/tracks/video_pipeline_20260613/plan.md:11 (Phase 1 verification, [~])
-      // Re-include on task flip to [x] per test-strategy.md §8.
-      "app/**/__tests__/phase-1-boot.test.ts",
     ],
   },
 });

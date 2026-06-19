@@ -48,7 +48,7 @@ function readText(p: string): string {
 // Per test-strategy.md §8: while the owning task is [~], describe.skip + vitest
 // exclude (see apps/marketing/vitest.config.ts) keep this file out of CI.
 // Flip both when transitioning to [x].
-describe.skip("Phase 1: Vinext Scaffold + Monorepo Integration boot smoke", () => {
+describe("Phase 1: Vinext Scaffold + Monorepo Integration boot smoke", () => {
   describe("Scaffold invariants (Phase 1 tasks 1-2)", () => {
     it("apps/marketing/package.json names the workspace package 'marketing'", () => {
       const pkg = readJson(resolve(APP_ROOT, "package.json"));
