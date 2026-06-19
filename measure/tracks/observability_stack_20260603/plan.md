@@ -467,12 +467,12 @@
 > `measure/tracks/observability_stack_20260603/plan.md` (a Measure doc,
 > allowed by the MID scope rule).
 
-- [~] Task: Update `lib/observability/logger.ts` per FR-4. The `log()` function reads `getRequestContext()` and includes `requestId`/`userId`/`route`/`method`/`latencyMs` in the log line. (in progress: Green role owns this — the FR-4 implementation file is still the pre-FR-4 console-sink; Red commit `5a8974cf` has the failing contract tests pinned and the impl is the next pending step.)
-- [~] Task: Write failing tests: [5a8974cf] (Red surface landed in commit `5a8974cf`; held `[~]` — not `[x]` — until the Green role's `Implement. Confirm` re-runs the same targeted command and the 8/8 tests turn green, at which point this task closes to `[x] [green-sha]`.)
+- [x] Task: Update `lib/observability/logger.ts` per FR-4. The `log()` function reads `getRequestContext()` and includes `requestId`/`userId`/`route`/`method`/`latencyMs` in the log line. [9f1c34af]
+- [x] Task: Write failing tests: [5a8974cf] [9f1c34af]
   - `logger.info('test', {})` outside a `runWithRequestContext` emits a line without `requestId`/`userId`.
   - `runWithRequestContext(ctx, () => logger.info('test', {}))` emits a line with `requestId: ctx.requestId`, `latencyMs: ...` (non-zero, < 1000ms).
   - The log line is valid JSON.
-- [~] Task: Implement. Confirm. (in progress: Green role — once the FR-4 `lib/observability/logger.ts` lands, this task runs the targeted Red command (`bunx vitest run --config vitest.unit.config.ts lib/observability/__tests__/logger.test.ts` host-substitution; canonical `pnpm --filter science-advantage exec vitest run lib/observability/__tests__/logger.test.ts` from `test-strategy.md` §7) and confirms 8/8 pass; then marks all three Phase 4 tasks `[x] [green-sha]`.)
+- [x] Task: Implement. Confirm. — Green sha `9f1c34af`. Targeted command: `bun run --cwd apps/science-advantage vitest run --config vitest.unit.config.ts lib/observability/__tests__/logger.test.ts` → 8/8 pass (exit 0). Full Phase 1-4 regression: `lib/observability/__tests__/` → 34/34 pass (6 files, exit 0). [9f1c34af]
 
 ## Phase 5: Migrate 5 Largest `route.ts` Files
 
