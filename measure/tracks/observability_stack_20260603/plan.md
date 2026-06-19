@@ -970,10 +970,11 @@ Files (in priority order):
 > proves it. Live-behavior proof is bounded to the 2 fixture files
 > per strategy §7.
 
-- [~] Task: Update `apps/science-advantage/eslint.config.mjs` to add `no-console: ['error', { allow: ['error', 'warn'] }]`.
-- [~] Task: Exclude `lib/observability/logger.ts` (the sink) and `**/*.test.ts`/`__tests__/`.
-- [~] Task: Run `pnpm turbo run lint --filter=science-advantage`; the 42 remaining `console.log`/`console.info` sites fail the lint.
-- [~] Task: Document the rule in `eslint.config.mjs` comments.
+- [x] Task: Update `apps/science-advantage/eslint.config.mjs` to add `no-console: ['error', { allow: ['error', 'warn'] }]`. [855ed62e]
+- [x] Task: Exclude `lib/observability/logger.ts` (the sink) and `**/*.test.ts`/`__tests__/`. [855ed62e]
+- [x] Task: Run `pnpm turbo run lint --filter=science-advantage`; the 42 remaining `console.log`/`console.info` sites fail the lint. [855ed62e]
+  - Evidence: `pnpm` unavailable on host; `bun node_modules/eslint/bin/eslint.js app/ lib/ components/` → 7 `no-console` errors across `ai-recommendation-card.tsx:226`, `intervention-alerts-widget.tsx:301,320,347,360`, `analytics.ts:18`, `metrics.ts:15`. Phase 5 already migrated the 5 largest route files; remaining sites belong to Phase 8. Lint flags them as expected.
+- [x] Task: Document the rule in `eslint.config.mjs` comments. [855ed62e]
 
 ## Phase 8: Replace Remaining 42 `console.*` Sites
 
