@@ -1045,28 +1045,76 @@ Files (in priority order):
 For each site (Phase 8a–8e):
 
 ### Phase 8a: 25 in `app/` (other route handlers)
-- [~] Task: For each non-test `console.log/error/warn/info` in `app/api/**/route.ts` (other than the 5 in Phase 5): replace with `logger.*`.
-- [~] Task: Add a `runWithRequestContext` wrapper at the top of each handler (if not already wrapped by Phase 5).
+- [x] Task: For each non-test `console.log/error/warn/info` in `app/api/**/route.ts` (other than the 5 in Phase 5): replace with `logger.*`. [97735502]
+- [x] Task: Add a `runWithRequestContext` wrapper at the top of each handler (if not already wrapped by Phase 5). [97735502]
 
 ### Phase 8b: 30 in `components/` (client-side)
-- [~] Task: Create `components/client-logger.ts` with a `clientLogger` that uses `console.*` in dev (`process.env.NODE_ENV === 'development'`) and no-ops in prod. Optionally sends to Sentry's browser SDK in prod.
-- [~] Task: For each `console.*` in `components/`, replace with `clientLogger.*`.
-- [~] Task: Special handling for `console.log("[Telemetry] ...")` in `intervention-alerts-widget.tsx` — the maintainer decides whether to keep as a real telemetry shim (behind a feature flag) or replace with `clientLogger.debug`.
+- [x] Task: Create `components/client-logger.ts` with a `clientLogger` that uses `console.*` in dev (`process.env.NODE_ENV === 'development'`) and no-ops in prod. Optionally sends to Sentry's browser SDK in prod. [97735502]
+- [x] Task: For each `console.*` in `components/`, replace with `clientLogger.*`. [97735502]
+- [x] Task: Special handling for `console.log("[Telemetry] ...")` in `intervention-alerts-widget.tsx` — the maintainer decides whether to keep as a real telemetry shim (behind a feature flag) or replace with `clientLogger.debug`. [97735502]
 
 ### Phase 8c: 8 in `lib/`
-- [~] Task: For each `console.*` in `lib/` (other than the logger sink): replace with `logger.*`.
+- [x] Task: For each `console.*` in `lib/` (other than the logger sink): replace with `logger.*`. [97735502]
 - [x] Task: The 3 in `lib/observability/logger.ts` are the sink itself — keep.
 - [x] Task: The 2 in `lib/schemas/lesson-content.schema.ts` are JSDoc examples — keep.
-- [~] Task: The 1 in `lib/observability/metrics.ts` — replace with `logger.info` (the metrics sink upgrades to a no-op if Sentry is wired).
-- [~] Task: The 1 in `lib/utils/clipboard.ts` — replace.
-- [~] Task: The 1 in `lib/analytics.ts:18` — replace.
+- [x] Task: The 1 in `lib/observability/metrics.ts` — replace with `logger.info` (the metrics sink upgrades to a no-op if Sentry is wired). [97735502]
+- [x] Task: The 1 in `lib/utils/clipboard.ts` — replace. [97735502]
+- [x] Task: The 1 in `lib/analytics.ts:18` — replace. [97735502]
 
 ### Phase 8d: 3 in `proxy.ts`
-- [~] Task: Replace `console.error` in `proxy.ts:25, 55, 72, 102` with `logger.error`.
+- [x] Task: Replace `console.error` in `proxy.ts:25, 55, 72, 102` with `logger.error`. [97735502]
 
 ### Phase 8e: Grep gate
-- [~] Task: `rg "console\.(log|info)" apps/science-advantage/{app,lib,components}/ proxy.ts` returns 0 hits (modulo the logger sink + JSDoc examples).
-- [~] Task: `rg "console\.(error|warn)" apps/science-advantage/{app,lib,components}/ proxy.ts` returns only the logger sink.
+- [x] Task: `rg "console\.(log|info)" apps/science-advantage/{app,lib,components}/ proxy.ts` returns 0 hits (modulo the logger sink + JSDoc examples). [97735502]
+- [x] Task: `rg "console\.(error|warn)" apps/science-advantage/{app,lib,components}/ proxy.ts` returns only the logger sink. [97735502]
+
+> **Green evidence (this phase, 2026-06-20, sha `97735502`):**
+> All Phase 8 tasks implemented. Zero `console.*` hits remain in production
+> code outside the designated sinks (`lib/observability/logger.ts`,
+> `components/client-logger.ts`, JSDoc examples in
+> `lib/schemas/lesson-content.schema.ts`).
+>
+> **Targeted Green command executed:**
+> ```
+> bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts \
+>   lib/observability/__tests__/client-logger.test.ts \
+>   lib/observability/__tests__/no-console-grep.test.ts
+> ```
+> **Result:** `Test Files 2 passed (2) | Tests 14 passed (14)` (exit 0).
+>
+> **Full regression (Phases 1-8):**
+> ```
+> bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts \
+>   lib/observability/__tests__/ \
+>   lib/ai/__tests__/architecture.test.ts \
+>   lib/ai/__tests__/recommendation-service.otel.test.ts \
+>   app/api/ai/update-mastery/route.test.ts \
+>   'app/api/lessons/[lessonSlug]/quiz/route.test.ts' \
+>   'app/api/classes/[classId]/lessons/[lessonId]/analytics/route.test.ts' \
+>   app/api/ai/recommendations/route.test.ts \
+>   'app/api/classes/[classId]/assignments/route.test.ts'
+> ```
+> **Result:** `18 passed | 98 passed` (exit 0).
+>
+> **Phase 7 ESLint regression:**
+> ```
+> bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts \
+>   lib/observability/__tests__/eslint-no-console.test.ts \
+>   lib/observability/__tests__/eslint-no-console.adversarial.test.ts
+> ```
+> **Result:** `2 passed | 6 passed` (exit 0).
+>
+> **Test fixes required for Phase 8 completion:**
+> - `eslint-no-console.adversarial.test.ts`: Updated to use a canary file
+>   (`lib/observability/.eslint-adversarial-canary.ts`) created/deleted in
+>   `beforeEach`/`afterEach` instead of the now-clean `metrics.ts`.
+>   Phase 8 removed all production `console.info` sites, so the
+>   adversarial test's original production-rule enforcement target
+>   (`metrics.ts`) no longer exists.
+> - `no-console-grep.test.ts`: Added `-g` flag prefix to ripgrep glob
+>   exclude patterns (e.g., `-g '!**/__tests__/**'`). Without the `-g`
+>   flag, ripgrep treated the glob patterns as file paths and could not
+>   exclude test files, fixtures, or the logger sink.
 
 > **Mid-Red evidence (this phase, 2026-06-20):** the Phase 8 Red
 > surface is in two new test files:
