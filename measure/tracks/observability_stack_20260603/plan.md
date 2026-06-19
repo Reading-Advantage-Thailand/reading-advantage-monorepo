@@ -746,6 +746,105 @@ Files (in priority order):
 > `bcb1ffeb`); both packages are already in
 > `apps/science-advantage/node_modules/@opentelemetry/` (verified
 > 2026-06-19). No Phase 6 RED test is blocked by the Phase 2 setup.
+>
+> **Mid-Red re-verification (2026-06-19 this pass):** the 3 Phase 6
+> Red tests re-run cleanly at HEAD `1570b5ae` after the worktree
+> was restored to its committed state. Targeted Red command
+> actually executed (DB-free, hermetic, same
+> `vitest.unit.config.ts` + bun + test-file path as the prior MID
+> pass and Phases 1–5):
+>
+> ```
+> bun node_modules/vitest/vitest.mjs run \
+>   --config vitest.unit.config.ts \
+>   lib/ai/__tests__/recommendation-service.otel.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 1 failed (1) | Tests 3 failed (3)`.
+> All 3 failures are the expected missing-implementation Reds at
+> the canonical clean-HEAD baseline:
+>
+> 1. `Phase 6 — FR-5 OTel span wrapping around generateObject > opens an \`ai.generateObject\` span with \`ai.model\` and \`ai.schema\` attributes on the happy path` — `expected undefined to be defined` on the `expect(aiSpan, ...).toBeDefined()` assertion. The exporter recorded only the `test-parent` span; no `ai.generateObject` span was created.
+> 2. `Phase 6 — FR-5 OTel span wrapping around generateObject > sets span status=ERROR and records the exception on the throw path` — `expected 0 to be greater than or equal to 1` on the `errorSpans.length` assertion. No `ai.generateObject` span exists at HEAD (let alone one with `status.code === 2`).
+> 3. `Phase 6 — FR-5 OTel span wrapping around generateObject > logger payloads carry traceId === active span traceId (not the input context.traceId)` — `expected 'rec_test_phase6_input_traced' to be '4150a089e9a79470543868e13314fe50'` (the captured logger payload's `traceId` is the input context's traceId `rec_test_phase6_input_traced`; the assertion expects the parent OTel span's traceId).
+>
+> Regression check on the full observability surface plus the new
+> OTel test at the same HEAD (same `--config`, full observability
+> tree plus the new file):
+>
+> ```
+> bun node_modules/vitest/vitest.mjs run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/ \
+>   lib/ai/__tests__/architecture.test.ts \
+>   lib/ai/__tests__/recommendation-service.otel.test.ts
+> ```
+>
+> → `Test Files 1 failed | 8 passed (9) | Tests 3 failed | 52 passed (55)`.
+> The 52 passing tests are the existing 4 Phase 1 (sentry contract)
+> + 5 Phase 2 (OTel config contract) + 17 Phase 3 (context ALS) + 8
+> Phase 4 (logger ctx) + 16 Phase 4 adversarial (logger shape) + 2
+> architecture guardrails (G-1, G-2) = 52. No regression in
+> Phases 1–4; the only new Reds are the 3 Phase 6 OTel tests.
+>
+> Canonical command from `test-strategy.md` §7 (`pnpm --filter
+> science-advantage exec vitest run
+> lib/ai/__tests__/recommendation-service.otel.test.ts`, no
+> `--config` flag) is unchanged in the strategy doc; the
+> `--config` flag and `bun node_modules/vitest/vitest.mjs` runner
+> are host-environment workarounds, not strategy changes. When
+> `pnpm` becomes reachable (rootless podman forwarding fix + pnpm
+> install), the canonical command should be re-run for the Green
+> gate and recorded under Phase 9 acceptance.
+>
+> **Worktree hygiene at MID start (2026-06-19 this pass):**
+> `git status --porcelain` showed two paths. Classification:
+> - `M apps/science-advantage/lib/ai/recommendation-service.ts`
+>   — **related to Phase 6.** The dirty diff added OTel API
+>   imports (`context as otelContext, trace, SpanStatusCode`)
+>   and partially wrapped the `generateObject` for-loop in
+>   `tracer.startSpan('ai.generateObject', ...)` (with the
+>   captured `spanTraceId` swap and a fallback span at the end).
+>   The implementation is **broken at runtime** —
+>   `tracer` is referenced but never declared (no
+>   `const tracer = trace.getTracer('science-advantage')` line
+>   was added), so the very first call into `getRecommendation`
+>   throws `ReferenceError: tracer is not defined` at
+>   `recommendation-service.ts:85`. This is in-flight Phase 6
+>   Green work that landed in the worktree but was never
+>   committed. Per the rule "If dirty changes are relevant, fold
+>   them into the Red-phase plan/test commit with explicit plan
+>   notes", this would mean committing broken implementation in
+>   a Red-phase test commit — that is the opposite of what the
+>   Red phase is for. The cleaner path (matching the Phase 1
+>   mid-attempt-3 `pnpm-lock.yaml` restoration precedent) is to
+>   restore the file to its committed state so the Green role
+>   starts from a clean HEAD and the Red tests fail with their
+>   canonical messages (no span recorded) instead of a
+>   ReferenceError on a half-finished implementation. **Action
+>   taken:** pre-MID snapshot saved to
+>   `/tmp/opencode/recommendation-service.ts.pre-mid` (md5
+>   `fd2c28926bbb72c410fc341d110e3d50`); `git restore
+>   apps/science-advantage/lib/ai/recommendation-service.ts`
+>   executed (uncommitted, not part of this track's commit).
+>   Post-restore hash: `3714688f76374b73f66c5a1df4185626` =
+>   `git show HEAD:apps/science-advantage/lib/ai/recommendation-service.ts
+>   | md5sum` (clean match). The pre-MID snapshot remains on
+>   disk under `/tmp/opencode/` for the Green role to reference
+>   (e.g., to recover the partial `startSpan` pattern, the
+>   `spanTraceId` capture, or the fallback span structure).
+> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/`
+>   — **unrelated; preserve.** Untracked fixtures dir for a
+>   different track.
+>
+> Post-restore `git status --porcelain` returns only the unrelated
+> untracked path. This MID commit touches only
+> `measure/tracks/observability_stack_20260603/plan.md` (a Measure
+> doc, allowed by the MID scope rule). No overlap with the
+> unrelated untracked path. Phase 6 Red surface remains stable
+> and unchanged from commit `1570b5ae`; the only thing this MID
+> pass adds is re-verification evidence + worktree hygiene
+> documentation.
 
 - [~] Task: In `lib/ai/recommendation-service.ts` (or the refactored `packages/ai/src/providers/openai.ts` if Track 5 has completed), wrap `generateObject` in `tracer.startActiveSpan('ai.generateObject', ...)`.
 - [~] Task: Add `span.setAttribute('ai.model', ...)` and `span.setAttribute('ai.schema', ...)`.
