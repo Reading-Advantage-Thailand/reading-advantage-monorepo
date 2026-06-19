@@ -1116,7 +1116,7 @@ For each site (Phase 8a–8e):
 >   flag, ripgrep treated the glob patterns as file paths and could not
 >   exclude test files, fixtures, or the logger sink.
 
-> **Phase Acceptance Audit (2026-06-20, sha `d33dc1e8`):**
+> **Phase Acceptance Audit (2026-06-20, sha `46fc963b`):**
 > The independent Phase Acceptance Auditor found and fixed one blocking
 > issue: `pnpm turbo run lint --filter=science-advantage` exited 1 with
 > 205 `no-console` errors in `scripts/` CLI tools and
