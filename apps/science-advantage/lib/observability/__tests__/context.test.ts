@@ -34,7 +34,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 
 import { makeRequestContext } from './fixtures/make-request-context';
 
-const CONTEXT_MODULE_PATH = '../../context';
+const CONTEXT_MODULE_PATH = '../context';
 
 interface ContextModule {
   getRequestContext: () => unknown;
