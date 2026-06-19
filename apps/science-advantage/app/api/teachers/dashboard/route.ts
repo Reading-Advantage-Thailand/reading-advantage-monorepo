@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireRole } from '@/lib/auth/server';
 import { AuthError } from '@reading-advantage/auth';
 import { getTeacherDashboard } from '@reading-advantage/domain/teachers';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * GET /api/teachers/dashboard
@@ -17,7 +18,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     if (error instanceof Error && error.message === 'Unauthorized') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    console.error('Failed to load teacher dashboard data', error);
+    logger.error('dashboard.route.failed.to.load.teacher.dashboard.data', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ error: 'Unable to load dashboard data' }, { status: 500 });
   }
 }

@@ -1,3 +1,5 @@
+import { logger } from '@/lib/observability/logger';
+
 type MetricTags = Record<string, string | number | boolean | undefined>;
 
 function serializeTags(tags?: MetricTags) {
@@ -12,7 +14,7 @@ function serializeTags(tags?: MetricTags) {
 
 function log(metric: string, value: number, tags?: MetricTags) {
   const timestamp = new Date().toISOString();
-  console.info('[metrics]', {
+  logger.info('metrics', {
     metric,
     value,
     tags: serializeTags(tags),

@@ -3,6 +3,7 @@ import { assertCan, AuthError } from '@reading-advantage/auth';
 import type { UserContext } from '@reading-advantage/auth';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getStudentEnrolledClasses } from '@/lib/services/classes/get-student-classes';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * GET /api/student/classes
@@ -34,7 +35,7 @@ export async function GET() {
         { status: error.code === 'UNAUTHORIZED' ? 401 : 403 }
       );
     }
-    console.error('Failed to fetch student classes:', error);
+    logger.error('classes.route.failed.to.fetch.student.classes', { error: error instanceof Error ? error.message : String(error) });
 
     return NextResponse.json(
       { error: 'An unexpected error occurred while fetching enrolled classes' },

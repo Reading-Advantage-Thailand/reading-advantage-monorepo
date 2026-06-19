@@ -7,6 +7,7 @@ import { ArrowRight, Flame, Trophy, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import * as clientLogger from '@/components/client-logger';
 
 type RecentAchievement = {
   badgeType: string;
@@ -101,7 +102,7 @@ export function GamificationDashboardCard({
         setData(result);
         setIsLoading(false);
       } catch (err) {
-        console.error('Error fetching gamification data:', err);
+        clientLogger.error('student.gamification-dashboard-card.error.fetching.gamification.data', { error: err });
         setError(true);
         setIsLoading(false);
       }

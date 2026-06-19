@@ -28,6 +28,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { StudentAnswer } from '@/components/features/student/quiz-questions/types';
+import * as clientLogger from '@/components/client-logger';
 
 type QuestionBreakdown = {
   questionId: string;
@@ -170,7 +171,7 @@ export function StudentLessonDetailAnalytics({
       const analyticsData: StudentLessonAnalyticsData = await response.json();
       setData(analyticsData);
     } catch (err) {
-      console.error('Error fetching student-lesson analytics:', err);
+      clientLogger.error('analytics.student-lesson-detail-analytics.error.fetching.student.lesson.analytics', { error: err });
       setError('An unexpected error occurred while loading analytics.');
     } finally {
       setLoading(false);

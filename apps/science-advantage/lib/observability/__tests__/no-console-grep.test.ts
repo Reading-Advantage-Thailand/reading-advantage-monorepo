@@ -151,7 +151,7 @@ function runRg(
     '--count-matches',
     '--with-filename',
     pattern,
-    ...extraArgs,
+    ...extraArgs.flatMap((g) => ['-g', g]),
     ...searchRoots,
   ];
 

@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
+import * as clientLogger from '@/components/client-logger';
 
 export default function Error({
   error,
@@ -12,7 +13,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error('Class detail page error:', error);
+    clientLogger.error('classId.error.class.detail.page.error', { error: error });
   }, [error]);
 
   return (

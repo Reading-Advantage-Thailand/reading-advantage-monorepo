@@ -5,6 +5,7 @@ import { getClassDetail, updateClass, archiveClass } from '@reading-advantage/do
 import { parseBody, parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { updateClassSchema } from '@/lib/validations/class';
 import { z } from 'zod';
+import { logger } from '@/lib/observability/logger';
 
 const classIdParamSchema = z.object({
   classId: z.string().uuid('classId must be a valid UUID'),
@@ -30,7 +31,7 @@ export async function GET(_request: NextRequest, context: { params: Promise<{ cl
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     if (error instanceof AuthError) return NextResponse.json({ success: false, error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
-    console.error('Error fetching class detail:', error);
+    logger.error('classId.route.error.fetching.class.detail', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
   }
 }
@@ -63,7 +64,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ c
       if (error.message.includes('Name must be')) return NextResponse.json({ success: false, error: error.message }, { status: 400 });
       if (error.message === 'No valid fields to update') return NextResponse.json({ success: false, error: error.message }, { status: 400 });
     }
-    console.error('Error updating class:', error);
+    logger.error('classId.route.error.updating.class', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
   }
 }
@@ -87,7 +88,7 @@ export async function DELETE(_request: NextRequest, context: { params: Promise<{
       if (error.message === 'Class not found') return NextResponse.json({ success: false, error: 'Class not found' }, { status: 404 });
       if (error.message === 'Forbidden') return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
     }
-    console.error('Error deleting class:', error);
+    logger.error('classId.route.error.deleting.class', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
   }
 }

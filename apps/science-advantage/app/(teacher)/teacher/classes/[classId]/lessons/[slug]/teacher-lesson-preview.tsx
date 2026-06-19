@@ -14,6 +14,7 @@ import {
 } from '@/lib/schemas/lesson-content.schema';
 import { DisplayPreferenceProvider, useDisplayPreference } from '@/contexts/display-preference-context';
 import { DisplayPreferenceSelector } from '@/components/features/lesson/display-preference-selector';
+import * as clientLogger from '@/components/client-logger';
 
 interface Standard {
   id: string;
@@ -71,7 +72,7 @@ function validateStructuredContent(data: unknown): LessonContent | null {
   if (result.success) {
     return result.data;
   }
-  console.warn('[TeacherLessonPreview] Structured content validation failed:', result.error);
+  clientLogger.warn('slug.teacher-lesson-preview.teacherlessonpreview.structured.content.validation.failed', { detail: result.error });
   return null;
 }
 

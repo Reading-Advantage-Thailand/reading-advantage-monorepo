@@ -4,6 +4,7 @@ import { AuthError } from '@reading-advantage/auth';
 import { getClassCurriculum } from '@reading-advantage/domain/classes';
 import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { classIdParamSchema } from '@/lib/validations/params';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * GET /api/classes/{classId}/curriculum
@@ -23,7 +24,7 @@ export async function GET(_request: NextRequest, context: { params: Promise<{ cl
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     if (error instanceof Error && error.message === 'Class not found') return NextResponse.json({ error: 'Class not found' }, { status: 404 });
     if (error instanceof Error && error.message === 'Not enrolled in this class') return NextResponse.json({ error: 'Not enrolled in this class' }, { status: 403 });
-    console.error('Failed to fetch curriculum:', error);
+    logger.error('curriculum.route.failed.to.fetch.curriculum', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ error: 'An unexpected error occurred while fetching the curriculum' }, { status: 500 });
   }
 }

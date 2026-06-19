@@ -12,6 +12,7 @@ import { MasteryStrandsList } from './mastery-strands-list';
 import { MasteryProfileHero } from './mastery-profile-hero';
 import { MasteryProfileSkeleton } from './mastery-profile-skeleton';
 import { StudentBadgesSection } from './student-badges-section';
+import * as clientLogger from '@/components/client-logger';
 
 type MasteryStatus = 'READY' | 'CALCULATING';
 
@@ -121,7 +122,7 @@ export function StudentMasteryProfile({
         setPollingInterval(null);
       }
     } catch (err) {
-      console.error('Error fetching mastery profile:', err);
+      clientLogger.error('mastery-profile.student-mastery-profile.error.fetching.mastery.profile', { error: err });
       setError(
         'Failed to load your learning profile. Please try again later.'
       );

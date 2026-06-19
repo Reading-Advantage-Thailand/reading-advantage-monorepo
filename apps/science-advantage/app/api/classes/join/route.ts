@@ -4,6 +4,7 @@ import { joinClassSchema } from '@/lib/validations/class';
 import { AuthError } from '@reading-advantage/auth';
 import { joinClass, AlreadyEnrolledError } from '@reading-advantage/domain/classes';
 import { parseBody, ValidationError } from '@/lib/validations/api-helpers';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * POST /api/classes/join
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
     if (error && typeof error === 'object' && 'code' in error && (error as any).code === '23505') {
       return NextResponse.json({ success: false, error: 'Already enrolled in this class' }, { status: 409 });
     }
-    console.error('Join class error:', error);
+    logger.error('join.route.join.class.error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ success: false, error: 'An unexpected error occurred while joining the class' }, { status: 500 });
   }
 }

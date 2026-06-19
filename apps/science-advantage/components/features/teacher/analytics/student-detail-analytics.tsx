@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ArrowUpDown, ArrowUp, ArrowDown, AlertTriangle, ChevronLeft } from 'lucide-react';
+import * as clientLogger from '@/components/client-logger';
 
 type LessonPerformance = {
   lessonId: string;
@@ -162,7 +163,7 @@ export function StudentDetailAnalytics({
       const analyticsData = await response.json();
       setData(analyticsData);
     } catch (err) {
-      console.error('Error fetching student analytics:', err);
+      clientLogger.error('analytics.student-detail-analytics.error.fetching.student.analytics', { error: err });
       setError('An unexpected error occurred while loading analytics.');
     } finally {
       setLoading(false);

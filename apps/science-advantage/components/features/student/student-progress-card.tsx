@@ -6,6 +6,7 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { MasteryProgressDisplay } from './mastery-profile/mastery-progress-display';
+import * as clientLogger from '@/components/client-logger';
 
 type StudentProgressCardProps = {
   studentId: string;
@@ -55,7 +56,7 @@ export function StudentProgressCard({ studentId }: StudentProgressCardProps) {
 
         setIsLoading(false);
       } catch (err) {
-        console.error('Error fetching mastery data:', err);
+        clientLogger.error('student.student-progress-card.error.fetching.mastery.data', { error: err });
         setError(true);
         setIsLoading(false);
       }

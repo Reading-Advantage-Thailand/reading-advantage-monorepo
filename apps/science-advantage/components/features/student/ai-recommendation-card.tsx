@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
+import * as clientLogger from '@/components/client-logger';
 
 import en from '@/i18n/ai-recommendation.en.json';
 import th from '@/i18n/ai-recommendation.th.json';
@@ -222,12 +223,10 @@ export function AiRecommendationCard({
             confidence: response.recommendation.confidence,
           };
 
-          if (process.env.NODE_ENV !== 'production') {
-            console.info('[ai-recommendation]', {
-              traceId: viewModel.traceId,
-              attemptId,
-            });
-          }
+          clientLogger.info('ai-recommendation', {
+            traceId: viewModel.traceId,
+            attemptId,
+          });
 
           setState({ status: 'success', data: viewModel });
         })

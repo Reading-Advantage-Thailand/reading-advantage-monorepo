@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LessonPlayer } from '@/components/features/lesson';
 import {
+import * as clientLogger from '@/components/client-logger';
   LessonContentSchema,
   type LessonContent,
 } from '@/lib/schemas/lesson-content.schema';
@@ -115,7 +116,7 @@ function validateStructuredContent(data: unknown): LessonContent | null {
   if (result.success) {
     return result.data;
   }
-  console.warn('[LessonContentRenderer] Structured content validation failed:', result.error);
+  clientLogger.warn('student.lesson-viewer.lessoncontentrenderer.structured.content.validation.failed', { detail: result.error });
   return null;
 }
 

@@ -4,6 +4,7 @@ import * as React from "react";
 import { Clock, RefreshCw, CheckCircle } from "lucide-react";
 
 import {
+import * as clientLogger from '@/components/client-logger';
   Card,
   CardContent,
   CardDescription,
@@ -124,7 +125,7 @@ export function RecentCompletionsFeed() {
       const payload = await response.json();
       setCompletions(payload.recentCompletions);
     } catch (err) {
-      console.error("Failed to load completions", err);
+      clientLogger.error('teacher.recent-completions-feed.failed.to.load.completions', { error: err });
       const message =
         err instanceof Error ? err.message : "Unable to load completions";
       setError(message);

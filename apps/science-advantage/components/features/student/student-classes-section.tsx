@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { StudentClassCard } from "@/components/features/student/student-class-card"
 import { StudentClassCardSkeleton } from "@/components/features/student/student-class-card-skeleton"
 import {
+import * as clientLogger from '@/components/client-logger';
   type StudentEnrolledClass,
   studentEnrolledClassesResponseSchema,
 } from "@/lib/validations/student-classes"
@@ -74,7 +75,7 @@ export function StudentClassesSection() {
           return
         }
 
-        console.error("Failed to load student classes", err)
+        clientLogger.error('student.student-classes-section.failed.to.load.student.classes', { error: err });
 
         if (err instanceof ZodError) {
           setError("Received an unexpected response from the server.")

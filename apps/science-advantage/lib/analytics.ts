@@ -1,3 +1,4 @@
+import * as clientLogger from '@/components/client-logger';
 type AnalyticsPayload = Record<string, unknown>;
 
 declare global {
@@ -15,6 +16,6 @@ export function track(event: string, data?: AnalyticsPayload) {
   }
 
   if (typeof process !== 'undefined' && process.env?.NODE_ENV !== "production") {
-    console.info(`[analytics] ${event}`, data ?? {});
+    clientLogger.info('lib.analytics', { payload: `[analytics] ${event}`, data ?? {} });
   }
 }

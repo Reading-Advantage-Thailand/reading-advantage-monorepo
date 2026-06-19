@@ -4,6 +4,7 @@ import * as React from "react";
 import { BookOpen, Users, TrendingUp, RefreshCw } from "lucide-react";
 
 import {
+import * as clientLogger from '@/components/client-logger';
   Card,
   CardContent,
   CardDescription,
@@ -128,7 +129,7 @@ export function ClassProgressCard() {
       const payload = (await response.json()) as DashboardResponse;
       setData(payload.classProgress);
     } catch (err) {
-      console.error("Failed to load class progress", err);
+      clientLogger.error('teacher.class-progress-card.failed.to.load.class.progress', { error: err });
       const message =
         err instanceof Error ? err.message : "Unable to load class progress";
       setError(message);

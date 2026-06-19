@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, Component, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import * as clientLogger from '@/components/client-logger';
 import {
   TextBlock,
   VocabularyBlock,
@@ -47,11 +48,11 @@ class BlockErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryStat
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error(
-      `[LessonPlayer] Error in block ${this.props.blockIndex}:`,
-      error,
-      errorInfo.componentStack
-    );
+    clientLogger.error('lessonPlayer.blockError', {
+      blockIndex: this.props.blockIndex,
+      error: error.message,
+      componentStack: errorInfo.componentStack,
+    });
   }
 
   render() {
@@ -167,9 +168,10 @@ function BlockRenderer({ block, index, showThai, displayPreference, onBlockView 
       default: {
         // Handle unknown block types gracefully
         const unknownBlock = block as { type: string };
-        console.warn(
-          `[LessonPlayer] Unknown block type "${unknownBlock.type}" at index ${index}`
-        );
+        clientLogger.warn('lessonPlayer.unknownBlockType', {
+          blockType: unknownBlock.type,
+          index,
+        });
         return (
           <div
             className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400"
@@ -223,7 +225,9 @@ export interface LessonPlayerProps {
  * <LessonPlayer
  *   content={lessonContent}
  *   showThai={false}
- *   onBlockView={(index, id) => console.log(`Block ${index} viewed`)}
+ *   onBlockView={(index, id) => {
+ *     /* handle block view */
+ *   }}
  * />
  * ```
  */

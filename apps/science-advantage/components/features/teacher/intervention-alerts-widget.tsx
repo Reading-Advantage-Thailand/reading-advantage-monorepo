@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import * as clientLogger from '@/components/client-logger';
 import {
   Select,
   SelectContent,
@@ -292,13 +293,11 @@ export function InterventionAlertsWidget({
         // Telemetry: widget_impression
         const latency = Date.now() - startTime;
         if (latency > 1000) {
-          console.warn(
-            `[InterventionAlerts] API latency exceeded 1s: ${latency}ms`
-          );
+          clientLogger.warn('teacher.intervention-alerts-widget.api.latency', { latencyMs: latency });
         }
 
         // Track impression
-        console.log("[Telemetry] intervention_alerts.widget_impression", {
+        clientLogger.info('teacher.intervention-alerts-widget.widget.impression', {
           classId: selectedClassId,
           alertCount: data.alerts.length,
           totalAlerts: data.totalAlerts,
@@ -311,13 +310,13 @@ export function InterventionAlertsWidget({
           ),
         });
       } catch (err) {
-        console.error("Failed to load intervention alerts", err);
+        clientLogger.error('teacher.intervention-alerts-widget.failed.to.load.intervention.alerts', { error: err });
         const message =
           err instanceof Error ? err.message : "Unable to load alerts";
         setError(message);
 
         // Track error
-        console.log("[Telemetry] intervention_alerts.fetch_error", {
+        clientLogger.info('teacher.intervention-alerts-widget.fetch.error', {
           classId: selectedClassId,
           error: message,
         });
@@ -344,7 +343,7 @@ export function InterventionAlertsWidget({
 
   const handleRefresh = React.useCallback(() => {
     // Track refresh click
-    console.log("[Telemetry] intervention_alerts.refresh_clicked", {
+    clientLogger.info('teacher.intervention-alerts-widget.refresh.clicked', {
       classId: selectedClassId,
     });
     void fetchAlerts(true);
@@ -357,7 +356,7 @@ export function InterventionAlertsWidget({
   const handleAlertClick = React.useCallback(
     (alert: Alert) => {
       // Track alert row click
-      console.log("[Telemetry] intervention_alerts.alert_row_clicked", {
+      clientLogger.info('teacher.intervention-alerts-widget.alert.row.clicked', {
         classId: selectedClassId,
         studentId: alert.studentId,
         severity: alert.alertSeverity,

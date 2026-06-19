@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, FileQuestion } from 'lucide-react';
 import { DisplayPreferenceProvider, useDisplayPreference } from '@/contexts/display-preference-context';
 import { DisplayPreferenceSelector } from '@/components/features/lesson/display-preference-selector';
+import * as clientLogger from '@/components/client-logger';
 
 interface PageProps {
   params: Promise<{
@@ -63,7 +64,7 @@ function LessonPageContent({
       const data = (await response.json()) as LessonProgressResponse;
       setProgress(data);
     } catch (error) {
-      console.error(error);
+      clientLogger.error('lessonSlug.page.error', { error: error });
       setProgress(null);
     } finally {
       setProgressLoading(false);

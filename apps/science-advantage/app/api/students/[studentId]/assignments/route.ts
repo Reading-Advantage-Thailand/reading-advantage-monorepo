@@ -4,6 +4,7 @@ import { AuthError } from '@reading-advantage/auth';
 import { getStudentAssignments } from '@reading-advantage/domain/students';
 import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { studentIdParamSchema } from '@/lib/validations/params';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * GET /api/students/{studentId}/assignments
@@ -21,7 +22,7 @@ export async function GET(_request: NextRequest, context: { params: Promise<{ st
   } catch (error) {
     if (error instanceof ValidationError) return NextResponse.json({ success: false, ...error.toJSON() }, { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ success: false, error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
-    console.error('Error fetching student assignments:', error);
+    logger.error('assignments.route.error.fetching.student.assignments', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
   }
 }

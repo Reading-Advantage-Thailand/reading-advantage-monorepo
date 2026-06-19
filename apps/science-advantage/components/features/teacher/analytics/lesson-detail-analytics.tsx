@@ -22,6 +22,7 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import {
+import * as clientLogger from '@/components/client-logger';
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
@@ -174,7 +175,7 @@ export function LessonDetailAnalytics({
       const analyticsData = await response.json();
       setData(analyticsData);
     } catch (err) {
-      console.error('Error fetching lesson analytics:', err);
+      clientLogger.error('analytics.lesson-detail-analytics.error.fetching.lesson.analytics', { error: err });
       setError('An unexpected error occurred while loading analytics.');
     } finally {
       setLoading(false);

@@ -1,3 +1,4 @@
+import * as clientLogger from '@/components/client-logger';
 export async function copyToClipboard(text: string): Promise<boolean> {
   try {
     if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
@@ -22,7 +23,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 
     return successful;
   } catch (error) {
-    console.error("Failed to copy to clipboard", error);
+    clientLogger.error('utils.clipboard.failed.to.copy.to.clipboard', { error: error });
     return false;
   }
 }

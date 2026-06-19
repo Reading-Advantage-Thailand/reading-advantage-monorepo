@@ -4,6 +4,7 @@ import { AuthError } from '@reading-advantage/auth';
 import { getStudentClassAnalytics } from '@reading-advantage/domain/students';
 import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { studentIdClassIdParamSchema } from '@/lib/validations/params';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * GET /api/students/{studentId}/classes/{classId}/analytics
@@ -25,7 +26,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ stu
       if (error.message === 'Unauthorized') return NextResponse.json({ error: 'Unauthorized access to student analytics' }, { status: 403 });
       if (error.message === 'Student is not enrolled in this class') return NextResponse.json({ error: 'Student is not enrolled in this class' }, { status: 403 });
     }
-    console.error('Error fetching student class analytics:', error);
+    logger.error('analytics.route.error.fetching.student.class.analytics', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

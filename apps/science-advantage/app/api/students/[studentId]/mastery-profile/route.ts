@@ -5,6 +5,7 @@ import { getStudentMasteryProfile } from '@reading-advantage/domain/students';
 import { parsePath, parseQuery, ValidationError } from '@/lib/validations/api-helpers';
 import { studentIdParamSchema } from '@/lib/validations/params';
 import { z } from 'zod';
+import { logger } from '@/lib/observability/logger';
 
 const masteryQuerySchema = z.object({
   strand: z.string().optional(),
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (error instanceof ValidationError) return NextResponse.json({ success: false, ...error.toJSON() }, { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ success: false, error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     if (error instanceof Error && error.message === 'Student not found') return NextResponse.json({ success: false, error: 'Student not found' }, { status: 404 });
-    console.error('Mastery profile error:', error);
+    logger.error('mastery-profile.route.mastery.profile.error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }

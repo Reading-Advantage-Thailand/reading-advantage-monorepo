@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
 import {
+import * as clientLogger from '@/components/client-logger';
   Card,
   CardContent,
   CardDescription,
@@ -95,7 +96,7 @@ export function StudentsNeedAttentionCard() {
       const payload = await response.json();
       setCount(payload.studentsNeedingAttention);
     } catch (err) {
-      console.error("Failed to load attention data", err);
+      clientLogger.error('teacher.students-need-attention-card.failed.to.load.attention.data', { error: err });
       const message =
         err instanceof Error ? err.message : "Unable to load attention data";
       setError(message);

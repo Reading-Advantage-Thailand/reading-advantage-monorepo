@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select"
 import { buildFormFields, type GeneratedFormField, type SelectOption } from "@/lib/forms/from-zod"
 import { createClassFormSchema, type CreateClassFormInput } from "@/lib/validations/class"
+import * as clientLogger from '@/components/client-logger';
 
 const GRADE_LEVEL_OPTIONS: SelectOption[] = [
   { label: "Grade 3", value: 3 },
@@ -141,7 +142,7 @@ export function CreateClassForm() {
           form.reset()
           router.refresh()
         } catch (error) {
-          console.error("Failed to create class", error)
+          clientLogger.error('classes.create-class-form.failed.to.create.class', { error: error });
           toast.error("Unable to create class", {
             description: "Please try again. If the issue persists, contact support.",
           })

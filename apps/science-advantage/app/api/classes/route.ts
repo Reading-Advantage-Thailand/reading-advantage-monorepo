@@ -6,6 +6,7 @@ import { AuthError } from '@reading-advantage/auth';
 import { createScienceClass, listClassesWithCounts } from '@reading-advantage/domain/classes';
 import { parseBody, parseQuery, ValidationError } from '@/lib/validations/api-helpers';
 import { z } from 'zod';
+import { logger } from '@/lib/observability/logger';
 
 const listClassesQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
@@ -61,7 +62,7 @@ export async function POST(request: NextRequest) {
         { status: 409 }
       );
     }
-    console.error('Create class error:', error);
+    logger.error('classes.route.create.class.error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { success: false, error: 'An error occurred while creating the class' },
       { status: 500 }
@@ -99,7 +100,7 @@ export async function GET(request: NextRequest) {
         { status: error.code === 'UNAUTHORIZED' ? 401 : 403 }
       );
     }
-    console.error('List classes error:', error);
+    logger.error('classes.route.list.classes.error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { success: false, error: 'An error occurred while fetching classes' },
       { status: 500 }

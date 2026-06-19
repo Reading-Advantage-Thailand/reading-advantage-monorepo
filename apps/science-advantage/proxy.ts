@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AuthError, SESSION_COOKIE_NAME, getSession, requireRole, type Role } from '@reading-advantage/auth';
 import { db } from '@reading-advantage/db';
 import { env } from '@/lib/env';
+import { logger } from '@/lib/observability/logger';
 
 const DEV_AUTH_ENABLED = env.DEV_AUTH_ENABLED;
 
@@ -53,7 +54,7 @@ export async function proxy(request: NextRequest) {
       }
       return clearSessionCookie(NextResponse.next());
     } catch (err) {
-      console.error('[proxy] /signin session check failed', err);
+      logger.error('proxy.proxy.signin.session.check.failed', { error: err instanceof Error ? err.message : String(err) });
       return NextResponse.next();
     }
   }
@@ -70,7 +71,7 @@ export async function proxy(request: NextRequest) {
       }
       return NextResponse.next();
     } catch (err) {
-      console.error('[proxy] /dashboard session check failed', err);
+      logger.error('proxy.proxy.dashboard.session.check.failed', { error: err instanceof Error ? err.message : String(err) });
       return redirect(request, '/signin', { error: 'session_check_failed' });
     }
   }
@@ -100,7 +101,7 @@ export async function proxy(request: NextRequest) {
     if (err instanceof AuthError && err.code === 'UNAUTHORIZED') {
       return clearSessionCookie(redirect(request, '/signin'));
     }
-    console.error('[proxy] session check failed', err);
+    logger.error('proxy.proxy.session.check.failed', { error: err instanceof Error ? err.message : String(err) });
     return redirect(request, '/signin', { error: 'session_check_failed' });
   }
 }

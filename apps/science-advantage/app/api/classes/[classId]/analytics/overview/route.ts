@@ -4,6 +4,7 @@ import { AuthError } from '@reading-advantage/auth';
 import { getClassAnalyticsOverview } from '@reading-advantage/domain/classes';
 import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { classIdParamSchema } from '@/lib/validations/params';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * GET /api/classes/{classId}/analytics/overview
@@ -22,7 +23,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ cla
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
     if (error instanceof Error && error.message === 'Class not found') return NextResponse.json({ error: 'Class not found' }, { status: 404 });
     if (error instanceof Error && error.message === 'Unauthorized access to class analytics') return NextResponse.json({ error: 'Unauthorized access to class analytics' }, { status: 403 });
-    console.error('Error fetching class analytics overview:', error);
+    logger.error('overview.route.error.fetching.class.analytics.overview', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

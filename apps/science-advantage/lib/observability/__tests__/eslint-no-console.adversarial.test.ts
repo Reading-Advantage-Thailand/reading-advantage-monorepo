@@ -60,11 +60,16 @@ const APP_ROOT = resolve(__dirname, '../../..');
 const ESLINT_BIN = resolve(APP_ROOT, 'node_modules/eslint/bin/eslint.js');
 
 /**
- * Absolute path to the production file with a known `console.info`
- * site that the rule MUST flag. This file is the boundary-test
- * target for production-rule enforcement.
+ * Absolute path to a temporary production-scoped file with a
+ * known `console.info` site.  Phase 8 (FR-8) removes all
+ * `console.*` calls from production code, so the adversarial
+ * test writes a canary file into `lib/observability/` (outside
+ * any eslint exclusion scope) to prove the global no-console
+ * rule is active.  The file is created in `beforeEach` and
+ * deleted in `afterEach` so the grep gate (Phase 8e) never
+ * sees it.
  */
-const METRICS_SOURCE = resolve(APP_ROOT, 'lib/observability/metrics.ts');
+const CANARY_PATH = resolve(APP_ROOT, 'lib/observability/.eslint-adversarial-canary.ts');
 
 /**
  * Absolute path to the legitimate logger sink. This file uses
@@ -173,18 +178,28 @@ function findNoConsoleMessage(
 }
 
 describe('Adversarial: FR-7 ESLint `no-console` rule enforcement', () => {
-  it('flags a known production-code `console.info` site (proves the main rule is active, not just the fixture override)', () => {
-    const result = runEslint(METRICS_SOURCE);
+  const fs = require('node:fs') as typeof import('node:fs');
 
-    const msg = findNoConsoleMessage(result.stdout, METRICS_SOURCE)
-      ?? findNoConsoleMessage(result.stderr, METRICS_SOURCE);
+  beforeEach(() => {
+    fs.writeFileSync(CANARY_PATH, 'console.info("phase7-adversarial-canary");\n', 'utf8');
+  });
+
+  afterEach(() => {
+    try { fs.unlinkSync(CANARY_PATH); } catch { /* best-effort */ }
+  });
+
+  it('flags a known production-code `console.info` site (proves the main rule is active, not just the fixture override)', () => {
+    const result = runEslint(CANARY_PATH);
+
+    const msg = findNoConsoleMessage(result.stdout, CANARY_PATH)
+      ?? findNoConsoleMessage(result.stderr, CANARY_PATH);
 
     expect(
       msg,
       [
         `expected the main no-console rule to fire on a production source file`,
         `to prove the rule is active globally, not just inside the per-fixture`,
-        `override. file: ${METRICS_SOURCE}`,
+        `override. file: ${CANARY_PATH}`,
         `exit code: ${result.status}`,
         `stdout: ${result.stdout}`,
         `stderr: ${result.stderr}`,
@@ -193,10 +208,10 @@ describe('Adversarial: FR-7 ESLint `no-console` rule enforcement', () => {
   });
 
   it('reports severity=error (not warning) on the production-code site', () => {
-    const result = runEslint(METRICS_SOURCE);
+    const result = runEslint(CANARY_PATH);
 
-    const msg = findNoConsoleMessage(result.stdout, METRICS_SOURCE)
-      ?? findNoConsoleMessage(result.stderr, METRICS_SOURCE);
+    const msg = findNoConsoleMessage(result.stdout, CANARY_PATH)
+      ?? findNoConsoleMessage(result.stderr, CANARY_PATH);
 
     expect(
       msg,
@@ -204,7 +219,7 @@ describe('Adversarial: FR-7 ESLint `no-console` rule enforcement', () => {
         `expected no-console to be reported with severity=error, not warning.`,
         `a warn-level rule does not fail the lint gate (eslint exits 0 on warnings`,
         `unless --max-warnings 0 is set), so the production code would be unprotected.`,
-        `file: ${METRICS_SOURCE}`,
+        `file: ${CANARY_PATH}`,
         `stdout: ${result.stdout}`,
         `stderr: ${result.stderr}`,
       ].join('\n'),

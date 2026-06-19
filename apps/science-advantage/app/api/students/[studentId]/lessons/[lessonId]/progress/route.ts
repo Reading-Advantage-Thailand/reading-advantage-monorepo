@@ -4,6 +4,7 @@ import { AuthError } from '@reading-advantage/auth';
 import { getStudentLessonProgress } from '@reading-advantage/domain/students';
 import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { studentIdLessonIdParamSchema } from '@/lib/validations/params';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * GET /api/students/{studentId}/lessons/{lessonId}/progress
@@ -26,7 +27,7 @@ export async function GET(_request: NextRequest, context: { params: Promise<{ st
       if (error.message === 'Lesson not found') return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
       if (error.message === 'Not authorized to view progress') return NextResponse.json({ error: 'Not authorized to view progress' }, { status: 403 });
     }
-    console.error('Failed to fetch lesson progress:', error);
+    logger.error('progress.route.failed.to.fetch.lesson.progress', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ error: 'An unexpected error occurred while fetching progress' }, { status: 500 });
   }
 }

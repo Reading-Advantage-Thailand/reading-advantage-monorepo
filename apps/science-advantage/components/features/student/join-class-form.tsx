@@ -26,6 +26,7 @@ import {
   type JoinClassInput,
 } from "@/lib/validations/class"
 import {
+import * as clientLogger from '@/components/client-logger';
   JOIN_CODE_LENGTH,
   JOIN_CODE_PATTERN,
   sanitizeJoinCodeInput,
@@ -96,7 +97,7 @@ export function JoinClassForm() {
           try {
             body = (await response.json()) as JoinClassResponse
           } catch (parseError) {
-            console.error("Failed to parse join class response", parseError)
+            clientLogger.error('student.join-class-form.failed.to.parse.join.class.response', { error: parseError });
             toast.error("Unexpected response from server")
             return
           }
@@ -129,7 +130,7 @@ export function JoinClassForm() {
           form.reset()
           router.refresh()
         } catch (error) {
-          console.error("Unable to join class", error)
+          clientLogger.error('student.join-class-form.unable.to.join.class', { error: error });
           toast.error("Unable to join class", {
             description:
               "Something went wrong. Please check your connection and try again.",

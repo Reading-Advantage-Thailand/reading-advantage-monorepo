@@ -4,6 +4,7 @@ import { AuthError } from '@reading-advantage/auth';
 import { getLessonBySlug } from '@reading-advantage/domain/curriculum';
 import { parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { lessonSlugParamSchema } from '@/lib/validations/params';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * GET /api/lessons/{lessonSlug}
@@ -24,7 +25,7 @@ export async function GET(_request: NextRequest, context: { params: Promise<{ le
   } catch (error) {
     if (error instanceof ValidationError) return NextResponse.json(error.toJSON(), { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
-    console.error('Failed to fetch lesson:', error);
+    logger.error('lessonSlug.route.failed.to.fetch.lesson', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ error: 'An unexpected error occurred while fetching the lesson' }, { status: 500 });
   }
 }

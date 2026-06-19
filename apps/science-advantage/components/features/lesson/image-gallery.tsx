@@ -12,6 +12,7 @@ import {
 
 import { cn } from '@/lib/utils';
 import type { ImageBlock } from '@/lib/schemas/lesson-content.schema';
+import * as clientLogger from '@/components/client-logger';
 
 export type ImageGalleryLayout = 'single' | 'grid' | 'carousel';
 
@@ -279,7 +280,7 @@ export function ImageGallery({
   function handleImageError(index: number) {
     setFailedImages((prev) => new Set(prev).add(index));
     // Avoid broken icon flash by logging and swapping to placeholder
-    console.warn('Image failed to load', { src: images[index]?.src });
+    clientLogger.warn('lesson.image-gallery.image.failed.to.load', { detail: { src: images[index]?.src } });
   }
 
   function handleImageLoad(index: number) {

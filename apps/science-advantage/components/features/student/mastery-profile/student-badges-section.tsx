@@ -19,6 +19,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BADGE_DEFINITIONS } from '@/lib/gamification/badges.constants';
+import * as clientLogger from '@/components/client-logger';
 
 type Achievement = {
   badgeType: string;
@@ -63,7 +64,7 @@ export function StudentBadgesSection({ studentId }: StudentBadgesSectionProps) {
           setAchievements(data.achievements);
         }
       } catch (err) {
-        console.error('Error fetching achievements:', err);
+        clientLogger.error('mastery-profile.student-badges-section.error.fetching.achievements', { error: err });
       } finally {
         setIsLoading(false);
       }

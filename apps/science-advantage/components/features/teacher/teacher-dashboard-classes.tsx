@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card"
 import { ClassCard } from "@/components/features/classes/class-card"
 import { ClassCardSkeleton } from "@/components/features/classes/class-card-skeleton"
+import * as clientLogger from '@/components/client-logger';
 
 const PAGE_LIMIT = 20
 const MIN_SKELETON_CARDS = 3
@@ -149,7 +150,7 @@ export function TeacherDashboardClasses() {
         )
         setPagination(payload.pagination)
       } catch (err) {
-        console.error("Failed to load classes", err)
+        clientLogger.error('teacher.teacher-dashboard-classes.failed.to.load.classes', { error: err });
         const message =
           err instanceof Error ? err.message : "Unable to load classes"
         setError(message)

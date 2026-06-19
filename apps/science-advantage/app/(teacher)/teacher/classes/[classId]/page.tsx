@@ -2,6 +2,7 @@ import { cache } from 'react';
 import { notFound, redirect } from 'next/navigation';
 
 import { hasRole, requireAuth } from '@/lib/auth/server';
+import { logger } from '@/lib/observability/logger';
 import { getClassDetailWithCurriculum } from '@/lib/services/classes/get-class-detail';
 import { ClassDetailHeader } from '@/components/features/teacher/class-detail/class-detail-header';
 import { ClassTabs } from '@/components/features/teacher/class-detail/class-tabs';
@@ -47,7 +48,7 @@ export default async function TeacherClassDetailPage({ params }: { params: Route
   const isAdmin = hasRole(session, 'ADMIN');
 
   if (!isTeacherOwner && !isAdmin) {
-    console.warn('Unauthorized class detail access attempt', {
+    logger.warn('class.detail.access.unauthorized', {
       classId,
       viewerId: session.user.id,
       viewerRole: session.user.role,
