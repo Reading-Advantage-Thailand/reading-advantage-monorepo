@@ -23,12 +23,47 @@
 
 ## Phase 1: Sentry Installation + Configuration
 
-- [ ] Task: Add `@sentry/nextjs` to `apps/science-advantage/package.json` `dependencies`.
-- [ ] Task: `pnpm install` from monorepo root; verify install.
-- [ ] Task: Create `apps/science-advantage/sentry.client.config.ts` with the Sentry init (FR-1).
-- [ ] Task: Create `apps/science-advantage/sentry.server.config.ts` similarly.
-- [ ] Task: Add `SENTRY_DSN` to `.env.example` with a comment.
-- [ ] Task: Build: `pnpm turbo run build --filter=science-advantage`; confirm Sentry is wired.
+> Mid-Red evidence (this phase): the Phase 1 contract test
+> `apps/science-advantage/lib/observability/__tests__/sentry-config.contract.test.ts`
+> is intentionally red at MID handoff. It mocks `@sentry/nextjs`, imports
+> `sentry.client.config.ts` and `sentry.server.config.ts`, and asserts
+> `Sentry.init` was called once with the FR-1 shape. Both source files are
+> missing, so the import fails (the expected Red). The Green/closeout gate is
+> the same command exiting 0; the live-behavior throw-in-route gate is owned
+> by Phase 9 per `test-strategy.md` §6 (Phase 1 notes) and §7.
+>
+> **Targeted Red command actually executed at MID** (run on 2026-06-19,
+> rootless-podman host cannot reach `localhost:5432` so the default
+> `vitest.config.ts` integration globalSetup hangs on `drizzle-kit migrate`;
+> the hermetic `vitest.unit.config.ts` is the app-AGENTS-canonical
+> DB-free subset per `apps/science-advantage/AGENTS.md` Testing Guidelines,
+> so the unit config is the bounded Red proof here):
+>
+> ```
+> pnpm --filter science-advantage exec vitest run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/sentry-config.contract.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 1 failed (1) | Tests 2 failed (2)`.
+> Both failures are `Error: Cannot find module '/sentry.{client,server}.config'`,
+> i.e. the FR-1 implementation files are missing — the **expected Red**.
+> Live-behavior throw-in-route gate remains Phase 9 (test-strategy.md §6).
+>
+> Canonical command from `test-strategy.md` §7 (`pnpm --filter science-advantage
+> exec vitest run lib/observability/__tests__/sentry-config.contract.test.ts`,
+> no `--config` flag) is unchanged in the strategy doc; the unit-config variant
+> here is a host-environment substitution, not a strategy change. When the
+> Postgres port is reachable again (rootless podman forwarding fix), the
+> canonical command should be re-run for the Green gate and recorded under
+> Phase 9 acceptance.
+
+- [~] Task: Add `@sentry/nextjs` to `apps/science-advantage/package.json` `dependencies`.
+- [~] Task: `pnpm install` from monorepo root; verify install.
+- [~] Task: Create `apps/science-advantage/sentry.client.config.ts` with the Sentry init (FR-1).
+- [~] Task: Create `apps/science-advantage/sentry.server.config.ts` similarly.
+- [~] Task: Add `SENTRY_DSN` to `.env.example` with a comment.
+- [~] Task: Build: `pnpm turbo run build --filter=science-advantage`; confirm Sentry is wired.
 
 ## Phase 2: OpenTelemetry Installation + Configuration
 
