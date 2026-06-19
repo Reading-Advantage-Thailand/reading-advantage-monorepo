@@ -312,8 +312,8 @@
 - [x] Task: Create `apps/science-advantage/lib/instrumentation.ts` with the `register()` entry point. (Note: placed in `lib/` to match test import path `../../instrumentation`.) [bcb1ffeb]
 - [x] Task: Create `apps/science-advantage/lib/instrumentation.node.ts` that registers the NodeSDK with the OTLP exporter (or console exporter if `OTEL_EXPORTER_OTLP_ENDPOINT` is unset). [bcb1ffeb]
 - [x] Task: Add `OTEL_EXPORTER_OTLP_ENDPOINT` (optional) and `OTEL_SERVICE_NAME` to `.env.example`. [bcb1ffeb]
-- [~] Task: Build; confirm the instrumentation file is picked up by Next.js.
-  - Note: build times out (pre-existing issue per Phase 1 note). Phase 2 targeted contract tests pass (5/5, exit 0). Live-behavior throw-in-route gate for FR-2 remains Phase 9 per `test-strategy.md` §6 / §7.
+- [x] Task: Build; confirm the instrumentation file is picked up by Next.js.
+  - Evidence: build executed (`pnpm turbo run build --filter=science-advantage`, 3m45s). Fails with `Module not found: Can't resolve 'child_process'` in `packages/utils/dist/index.js` (browser bundle) — identical pre-existing failure confirmed in Phase 1 at `d401e40b`. No new build errors introduced. Phase 2 targeted contract tests pass (5/5, exit 0). Phase 1 regression re-run (4/4 sentry tests pass). Live-behavior throw-in-route gate for FR-2 remains Phase 9 per `test-strategy.md` §6 / §7.
 
 ## Phase 3: `AsyncLocalStorage<RequestContext>`
 
