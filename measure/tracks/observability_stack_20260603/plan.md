@@ -1021,31 +1021,238 @@ Files (in priority order):
 
 ## Phase 8: Replace Remaining 42 `console.*` Sites
 
+> **Mid-Red evidence (this phase, 2026-06-20):** the Phase 8 Red
+> surface is in
+> `apps/science-advantage/lib/observability/__tests__/client-logger.test.ts`
+> and
+> `apps/science-advantage/lib/observability/__tests__/no-console-grep.test.ts`
+> (both committed in this MID pass). Both files are intentionally red
+> at HEAD; the targeted Red commands are bounded to the new test
+> files (per `test-strategy.md` §7, never invokes full `pnpm lint`).
+>
+> **Worktree hygiene at MID start (2026-06-20 this pass):**
+> `git status --porcelain` showed two untracked paths. Classification:
+> - `?? apps/marketing/next-env.d.ts` — **unrelated; preserve.**
+> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/`
+>   — **unrelated; preserve.** Untracked fixtures dir for a different
+>   track.
+>
+> This MID commit touches only the 2 new test files plus
+> `measure/tracks/observability_stack_20260603/plan.md` (a Measure
+> doc, allowed by the MID scope rule). No overlap with the unrelated
+> untracked paths.
+
 For each site (Phase 8a–8e):
 
 ### Phase 8a: 25 in `app/` (other route handlers)
-- [ ] Task: For each non-test `console.log/error/warn/info` in `app/api/**/route.ts` (other than the 5 in Phase 5): replace with `logger.*`.
-- [ ] Task: Add a `runWithRequestContext` wrapper at the top of each handler (if not already wrapped by Phase 5).
+- [~] Task: For each non-test `console.log/error/warn/info` in `app/api/**/route.ts` (other than the 5 in Phase 5): replace with `logger.*`.
+- [~] Task: Add a `runWithRequestContext` wrapper at the top of each handler (if not already wrapped by Phase 5).
 
 ### Phase 8b: 30 in `components/` (client-side)
-- [ ] Task: Create `components/client-logger.ts` with a `clientLogger` that uses `console.*` in dev (`process.env.NODE_ENV === 'development'`) and no-ops in prod. Optionally sends to Sentry's browser SDK in prod.
-- [ ] Task: For each `console.*` in `components/`, replace with `clientLogger.*`.
-- [ ] Task: Special handling for `console.log("[Telemetry] ...")` in `intervention-alerts-widget.tsx` — the maintainer decides whether to keep as a real telemetry shim (behind a feature flag) or replace with `clientLogger.debug`.
+- [~] Task: Create `components/client-logger.ts` with a `clientLogger` that uses `console.*` in dev (`process.env.NODE_ENV === 'development'`) and no-ops in prod. Optionally sends to Sentry's browser SDK in prod.
+- [~] Task: For each `console.*` in `components/`, replace with `clientLogger.*`.
+- [~] Task: Special handling for `console.log("[Telemetry] ...")` in `intervention-alerts-widget.tsx` — the maintainer decides whether to keep as a real telemetry shim (behind a feature flag) or replace with `clientLogger.debug`.
 
 ### Phase 8c: 8 in `lib/`
-- [ ] Task: For each `console.*` in `lib/` (other than the logger sink): replace with `logger.*`.
-- [ ] Task: The 3 in `lib/observability/logger.ts` are the sink itself — keep.
-- [ ] Task: The 2 in `lib/schemas/lesson-content.schema.ts` are JSDoc examples — keep.
-- [ ] Task: The 1 in `lib/observability/metrics.ts` — replace with `logger.info` (the metrics sink upgrades to a no-op if Sentry is wired).
-- [ ] Task: The 1 in `lib/utils/clipboard.ts` — replace.
-- [ ] Task: The 1 in `lib/analytics.ts:18` — replace.
+- [~] Task: For each `console.*` in `lib/` (other than the logger sink): replace with `logger.*`.
+- [x] Task: The 3 in `lib/observability/logger.ts` are the sink itself — keep.
+- [x] Task: The 2 in `lib/schemas/lesson-content.schema.ts` are JSDoc examples — keep.
+- [~] Task: The 1 in `lib/observability/metrics.ts` — replace with `logger.info` (the metrics sink upgrades to a no-op if Sentry is wired).
+- [~] Task: The 1 in `lib/utils/clipboard.ts` — replace.
+- [~] Task: The 1 in `lib/analytics.ts:18` — replace.
 
 ### Phase 8d: 3 in `proxy.ts`
-- [ ] Task: Replace `console.error` in `proxy.ts:25, 55, 72, 102` with `logger.error`.
+- [~] Task: Replace `console.error` in `proxy.ts:25, 55, 72, 102` with `logger.error`.
 
 ### Phase 8e: Grep gate
-- [ ] Task: `rg "console\.(log|info)" apps/science-advantage/{app,lib,components}/ proxy.ts` returns 0 hits (modulo the logger sink + JSDoc examples).
-- [ ] Task: `rg "console\.(error|warn)" apps/science-advantage/{app,lib,components}/ proxy.ts` returns only the logger sink.
+- [~] Task: `rg "console\.(log|info)" apps/science-advantage/{app,lib,components}/ proxy.ts` returns 0 hits (modulo the logger sink + JSDoc examples).
+- [~] Task: `rg "console\.(error|warn)" apps/science-advantage/{app,lib,components}/ proxy.ts` returns only the logger sink.
+
+> **Mid-Red evidence (this phase, 2026-06-20):** the Phase 8 Red
+> surface is in two new test files:
+>
+> 1. `apps/science-advantage/lib/observability/__tests__/client-logger.test.ts`
+>    (Phase 8b) — 9 tests in 3 describe blocks:
+>    - Module surface (1 test): `clientLogger` exists and exports
+>      `info`/`warn`/`error`/`debug`.
+>    - Dev mode (4 tests): each method calls the matching
+>      `console.*` exactly once and the others zero times.
+>    - Prod mode (4 tests): every method is a silent no-op
+>      (zero `console.*` calls).
+>
+> 2. `apps/science-advantage/lib/observability/__tests__/no-console-grep.test.ts`
+>    (Phase 8e) — 5 tests in 3 describe blocks:
+>    - `console.log` / `console.info` must be 0 in production code
+>      (the main FR-8 grep assertion) + 1 sanity check that the
+>      logger sink DOES contain `console.info` (proves the
+>      exclusion is not vacuously true).
+>    - `console.error` / `console.warn` must be 0 outside the logger
+>      sink (Phase 8a–8d + Phase 8c) + 1 sanity check that the
+>      logger sink DOES contain `console.error` / `console.warn`.
+>    - `proxy.ts` must contain 0 `console.error` (Phase 8d target).
+>
+> **Total: 14 tests**, of which **12 are expected Reds** at HEAD and
+> **2 are sanity passes** (logger-sink must contain
+> `console.error`/`warn` and `console.info` so the gate is
+> anchored on real sink calls, not an empty universe).
+>
+> **Targeted Red command actually executed at MID** (rootless-podman
+> host cannot reach `localhost:5432` so the default
+> `vitest.config.ts` integration globalSetup hangs on `drizzle-kit
+> migrate`; the hermetic `vitest.unit.config.ts` is the
+> app-AGENTS-canonical DB-free subset per
+> `apps/science-advantage/AGENTS.md` Testing Guidelines; this host
+> has only `bun` on PATH — `pnpm` is not installed — so
+> `bun node_modules/vitest/vitest.mjs` is the host-environment
+> substitution that exercises the exact same `vitest.unit.config.ts`
+> + test-file path; the prior phases' mid-handoffs use the same
+> substitution):
+>
+> ```
+> bun node_modules/vitest/vitest.mjs run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/client-logger.test.ts \
+>   lib/observability/__tests__/no-console-grep.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 2 failed (2) | Tests 12 failed | 2 passed (14)`.
+>
+> The 12 Reds are the expected missing-implementation / pre-migration
+> Reds:
+>
+> **`client-logger.test.ts` (9 Reds):** all 9 tests fail with
+> `Error: Cannot find package '@/components/client-logger' imported from
+> apps/science-advantage/lib/observability/__tests__/client-logger.test.ts`,
+> i.e. the FR-8 `components/client-logger.ts` implementation is
+> missing. After Phase 8b lands, the import resolves and the
+> dev-mode tests pass; after the prod-mode branch is added
+> (`process.env.NODE_ENV === 'production'` → silent no-op), the
+> prod-mode tests also pass.
+>
+> **`no-console-grep.test.ts` (3 Reds, 2 sanity passes):**
+> - `console.log` / `console.info` must be 0 in production code:
+>   FAILS — the rg output lists 5 production files
+>   (`components/features/teacher/intervention-alerts-widget.tsx:4`,
+>   `lib/observability/metrics.ts:1`,
+>   `components/features/lesson/lesson-player.tsx:1`,
+>   `components/features/student/ai-recommendation-card.tsx:1`,
+>   `lib/analytics.ts:1`). After Phase 8b + 8c land and the
+>   `[Telemetry]` and analytics calls are migrated to `clientLogger.*`
+>   / `logger.info`, this assertion passes.
+> - `console.error` / `console.warn` must be 0 outside the sink:
+>   FAILS — the rg output lists 42 production files (proxy.ts +
+>   ~28 components + ~16 routes + 5 app pages). After Phase 8a +
+>   8b + 8c + 8d land, every `console.error` / `console.warn` call
+>   site outside the sink is replaced with `logger.error` /
+>   `logger.warn` (server) or `clientLogger.error` / `clientLogger.warn`
+>   (client), so the assertion passes.
+> - `proxy.ts` must be free of `console.error`: FAILS — rg output is
+>   `proxy.ts:3` (the 3 known sites from Phase 8d). After Phase 8d
+>   lands, proxy.ts's 3 `console.error` calls are migrated to
+>   `logger.error`, and the assertion passes.
+> - **Sanity (passes):** the logger sink contains ≥1
+>   `console.(log|info)` hit and ≥1 `console.(error|warn)` hit, so
+>   the gate's exclusion is not vacuously true.
+>
+> **Regression check on the full observability surface at the same
+> HEAD** (same `--config`, full observability tree):
+>
+> ```
+> bun node_modules/vitest/vitest.mjs run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/
+> ```
+>
+> → `Test Files 2 failed | 9 passed (11) | Tests 12 failed | 58 passed (70)`.
+> The 58 passing tests are the existing 4 Phase 1 (sentry contract)
+> + 5 Phase 2 (OTel config contract) + 17 Phase 3 (context ALS) + 8
+> Phase 4 (logger ctx) + 16 Phase 4 adversarial (logger shape) + 2
+> Phase 6 architecture guardrails + 2 Phase 7 eslint sanity +
+> 2 Phase 7 eslint adversarial + 2 Phase 8 grep sanity = 58. No
+> regression in Phases 1–7; the only new Reds are the 12 Phase 8
+> tests.
+>
+> **Per-task Red coverage map:**
+> - Phase 8a (25 in app/ route handlers): covered transitively by
+>   the grep-gate tests (Phase 8e). The `console.error` / `console.warn`
+>   grep assertion will fail at any unswept route handler.
+>   Individual per-route wrap/logger tests are owned by Phase 5
+>   (`app/api/ai/update-mastery`, `…/quiz`, `…/analytics`,
+>   `…/recommendations`, `…/assignments`); the Phase 8a routes are
+>   smaller catch-block-only files and the grep gate is the
+>   bounded regression guard per `test-strategy.md` §2
+>   ("Phase 8: Bulk migration — spot integration + grep gate").
+> - Phase 8b (30 in components/ + clientLogger creation):
+>   covered by `client-logger.test.ts` (the 9 module-shape +
+>   dev/prod branching tests) AND transitively by the grep gate
+>   (the `console.log` / `console.info` assertion must be 0 after
+>   the `[Telemetry]` and analytics-card `console.info` calls
+>   are replaced with `clientLogger.*`).
+> - Phase 8c (3 in lib/ — analytics, metrics, clipboard): covered
+>   transitively by the grep gate (the 3 sites appear in the
+>   failing-rg-output list).
+> - Phase 8d (3 in proxy.ts): covered explicitly by the proxy.ts
+>   `console.error` grep test (the dedicated 1-test describe
+>   block).
+> - Phase 8e (grep gate): covered by `no-console-grep.test.ts`
+>   (5 tests including the 2 sanity anchors).
+>
+> **Worktree hygiene at MID start (2026-06-20 this pass):**
+> `git status --porcelain` shows 6 untracked paths + 1 modified path
+> (this plan). Classification:
+> - `M measure/tracks/observability_stack_20260603/plan.md` —
+>   **related to this track, Measure doc, allowed.** This file is
+>   edited by MID to mark the Phase 8 tasks as `[~]` and to record
+>   the Red evidence.
+> - `?? apps/science-advantage/lib/observability/__tests__/client-logger.test.ts` —
+>   **related, owned by this commit.** The new Phase 8b Red test.
+> - `?? apps/science-advantage/lib/observability/__tests__/no-console-grep.test.ts` —
+>   **related, owned by this commit.** The new Phase 8e Red test.
+> - `?? apps/marketing/next-env.d.ts` — **unrelated; preserve.**
+>   Different app's auto-generated Next.js types file.
+> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/` —
+>   **unrelated; preserve.** Untracked fixtures dir for a
+>   different track.
+> - `?? packages/db/src/__tests__/phase-2-insert-roundtrip.test.ts` —
+>   **unrelated; preserve.** Phase 2 DB test for the
+>   `video_pipeline_20260613` track (different track; in-flight
+>   user work).
+> - `?? packages/db/src/__tests__/phase-2-marketing-schema.test.ts` —
+>   **unrelated; preserve.** Phase 2 DB test for the
+>   `video_pipeline_20260613` track (different track; in-flight
+>   user work).
+>
+> This MID commit touches only the 2 new test files plus
+> `measure/tracks/observability_stack_20260603/plan.md` (a Measure
+> doc, allowed by the MID scope rule). No overlap with the 4
+> unrelated untracked paths. Phase 8 Red surface is intentionally
+> red on the implementation gap: the `clientLogger` module does
+> not exist yet (Phase 8b) and the production-code `console.*`
+> sites have not been migrated yet (Phase 8a/8c/8d). The grep
+> gate is bounded to the 4 production roots
+> (`app/`, `lib/`, `components/`, `proxy.ts`) plus the 5-tuple
+> exclusion list (logger sink, JSDoc, tests, fixtures, .md) per
+> `test-strategy.md` §7 "never invokes full `pnpm lint`".
+>
+> Canonical command from `test-strategy.md` §7 (`pnpm --filter
+> science-advantage exec vitest run
+> lib/observability/__tests__/no-console-grep.test.ts`, no
+> `--config` flag) is unchanged in the strategy doc; the
+> `--config` flag and `bun node_modules/vitest/vitest.mjs` runner
+> are host-environment workarounds, not strategy changes. When
+> `pnpm` becomes reachable (rootless podman forwarding fix +
+> pnpm install), the canonical command should be re-run for the
+> Green gate and recorded under Phase 9 acceptance.
+>
+> **Live-behavior proof:** the grep test spawns the real `rg`
+> binary (`/usr/bin/rg`, ripgrep 14.1.0) against the actual
+> production source tree at the test runtime. The rg output is
+> the real filesystem state, not a mock. The `client-logger`
+> test invokes the real exported logger functions (which fail
+> to import at HEAD because the implementation is missing —
+> the expected Red). Per `test-strategy.md` §5 ("Fake harnesses
+> are forbidden for production gates") and §3, no fake
+> harness is used.
 
 ## Phase 9: Final Acceptance
 
