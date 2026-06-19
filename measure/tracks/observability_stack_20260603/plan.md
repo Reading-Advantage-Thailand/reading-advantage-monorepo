@@ -385,8 +385,90 @@
 
 ## Phase 4: Logger Auto-Attaches Context
 
+> **Mid-Red evidence (this phase, 2026-06-19):** the Phase 4 Red
+> surface is in
+> `apps/science-advantage/lib/observability/__tests__/logger.test.ts`
+> (committed intentionally red). The implementation
+> `lib/observability/logger.ts` does not yet read `getRequestContext()`
+> nor emit `JSON.stringify(line)` — the current sink is
+> `console.info('[observability]', entry)` which passes the entry
+> object as the second arg and a non-JSON prefix string as the first.
+> Every test in the new file fails because `findJsonLogString`
+> (a JSON-string-arg walker, per spec FR-4) cannot find a JSON-string
+> arg — the expected Red.
+>
+> Tests are organized into three describe blocks per
+> `test-strategy.md` §6 (Phase 4) plus the §4 cross-phase
+> async-leakage re-check:
+> 1. JSON line shape (outside scope) — 3 tests: parseable JSON, payload
+>    preservation, context-field omission outside a scope.
+> 2. Inside `runWithRequestContext` — 5 tests: full context attachment
+>    (info), deterministic `latencyMs` via `vi.useFakeTimers()`,
+>    `warn` level, `error` level, and the JSON line shape under all
+>    three levels.
+> 3. Async-leakage cross-check — 1 test: `Promise.all` over two sibling
+>    `runWithRequestContext` calls; each `logger.info` carries its own
+>    `requestId`, never the sibling's.
+> **Total: 8 tests**, all Red.
+>
+> **Targeted Red command actually executed at MID** (rootless-podman
+> host cannot reach `localhost:5432` so the default `vitest.config.ts`
+> integration globalSetup hangs on `drizzle-kit migrate`; the hermetic
+> `vitest.unit.config.ts` is the app-AGENTS-canonical DB-free subset
+> per `apps/science-advantage/AGENTS.md` Testing Guidelines; this host
+> has only `bun` on PATH — `pnpm` is not installed — so `bunx vitest`
+> is the host-environment substitution that exercises the exact same
+> `vitest.unit.config.ts` + test file path):
+>
+> ```
+> PATH=/home/daniel-bo/.bun/bin:$PATH \
+>   bunx --cwd apps/science-advantage vitest run \
+>     --config vitest.unit.config.ts \
+>     lib/observability/__tests__/logger.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 1 failed (1) | Tests 8 failed (8)`.
+> All 8 failures are the expected missing-implementation Reds:
+> `AssertionError: expected undefined to be defined` on every
+> `findJsonLogString(...)` result, i.e. the current logger emits no
+> JSON-string arg (it emits `console.*('[observability]', entry)`
+> with a non-JSON prefix string and an object second arg). After the
+> FR-4 implementation lands and the logger emits
+> `console.*(JSON.stringify(line))`, all 8 tests will pass.
+>
+> Regression check on the rest of the observability test suite at the
+> same HEAD (same command, same `--config`):
+>
+> ```
+> Tests  8 failed | 26 passed (34)
+> Test Files  1 failed | 5 passed (6)
+> ```
+>
+> The 26 passing tests are the 4 Phase 1 sentry tests, 5 Phase 2 OTel
+> tests, 17 Phase 3 context tests — no regressions; the only new Reds
+> are the 8 Phase 4 logger tests.
+>
+> Canonical command from `test-strategy.md` §7 (`pnpm --filter
+> science-advantage exec vitest run
+> lib/observability/__tests__/logger.test.ts`, no `--config` flag) is
+> unchanged in the strategy doc; both substitutions (the `--config`
+> flag and the `bunx vitest` runner) are host-environment workarounds,
+> not strategy changes. When `pnpm` becomes reachable (rootless podman
+> forwarding fix + pnpm install), the canonical command should be
+> re-run for the Green gate and recorded under Phase 9 acceptance.
+>
+> **Worktree hygiene at MID start (2026-06-19 this pass):**
+> `git status --porcelain` shows one untracked path:
+> `measure/tracks/agents_md_audit_science_advantage_20260603/` — the
+> untracked fixtures dir for a different track (the
+> `agents_md_audit_science_advantage_20260603` audit track, not this
+> one). **Unrelated; preserve.** No overlap with this track's commit.
+> This MID commit touches only the new test file plus
+> `measure/tracks/observability_stack_20260603/plan.md` (a Measure doc,
+> allowed by the MID scope rule).
+
 - [ ] Task: Update `lib/observability/logger.ts` per FR-4. The `log()` function reads `getRequestContext()` and includes `requestId`/`userId`/`route`/`method`/`latencyMs` in the log line.
-- [ ] Task: Write failing tests:
+- [x] Task: Write failing tests: [<pending-red-sha>]
   - `logger.info('test', {})` outside a `runWithRequestContext` emits a line without `requestId`/`userId`.
   - `runWithRequestContext(ctx, () => logger.info('test', {}))` emits a line with `requestId: ctx.requestId`, `latencyMs: ...` (non-zero, < 1000ms).
   - The log line is valid JSON.
