@@ -67,10 +67,13 @@ interface GenerateObjectCall {
 
 class StubAIClient {
   public readonly generateObjectCalls: GenerateObjectCall[] = [];
+  public readonly activeSpanIds: (string | undefined)[] = [];
   public shouldThrow = false;
 
   async generateObject<T>(input: GenerateObjectCall): Promise<T> {
     this.generateObjectCalls.push(input);
+    const activeSpan = trace.getSpan(otelContext.active());
+    this.activeSpanIds.push(activeSpan?.spanContext().spanId);
     if (this.shouldThrow) {
       throw new Error('Phase 6 RED: stub forced throw to exercise error path');
     }
@@ -336,6 +339,10 @@ describe('Phase 6 — FR-5 OTel span wrapping around generateObject', () => {
 
     // Status === SpanStatusCode.OK on happy path.
     expect(aiSpan?.status.code).toBe(SpanStatusCode.OK);
+
+    // The span must be active during `client.generateObject` so nested
+    // telemetry inside the AI client sees `ai.generateObject` as parent.
+    expect(stub.activeSpanIds).toContain(aiSpan?.spanContext().spanId);
   });
 
   it('sets span status=ERROR and records the exception on the throw path', async () => {

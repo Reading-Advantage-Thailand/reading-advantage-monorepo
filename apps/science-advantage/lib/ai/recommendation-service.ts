@@ -86,56 +86,77 @@ export class RecommendationService {
     );
 
     for (const modelId of modelsToTry) {
-      const span = getOtelTracer().startSpan('ai.generateObject', {}, otelContext.active());
-      span.setAttribute('ai.model', modelId);
-      span.setAttribute('ai.schema', recommendationSchema.description ?? 'unknown');
       try {
-        const response = await this.client.generateObject({
-          schema: recommendationSchema,
-          prompt,
-          model: modelId,
-        });
-        const recommendation: RecommendationRecord = {
-          recommendedLessonId: response.recommendedLessonId,
-          recommendedLessonSlug: response.recommendedLessonSlug,
-          lessonTitle: response.lessonTitle,
-          focusStandards: response.focusStandards,
-          reasoning: response.reasoning,
-          confidence: response.confidence ?? 'medium',
-          nextBestAlternatives: response.nextBestAlternatives ?? [],
-        };
+        const result = await getOtelTracer().startActiveSpan(
+          'ai.generateObject',
+          {},
+          otelContext.active(),
+          async (span) => {
+            span.setAttribute('ai.model', modelId);
+            span.setAttribute(
+              'ai.schema',
+              recommendationSchema.description ?? 'unknown',
+            );
+            try {
+              const response = await this.client.generateObject({
+                schema: recommendationSchema,
+                prompt,
+                model: modelId,
+              });
+              const recommendation: RecommendationRecord = {
+                recommendedLessonId: response.recommendedLessonId,
+                recommendedLessonSlug: response.recommendedLessonSlug,
+                lessonTitle: response.lessonTitle,
+                focusStandards: response.focusStandards,
+                reasoning: response.reasoning,
+                confidence: response.confidence ?? 'medium',
+                nextBestAlternatives: response.nextBestAlternatives ?? [],
+              };
 
-        span.setStatus({ code: SpanStatusCode.OK });
-        span.end();
+              span.setStatus({ code: SpanStatusCode.OK });
+              span.end();
 
-        if (modelId !== aiConfig.primaryModel) {
-          logger.warn('ai.recommendation.secondary_model_used', {
-            traceId: span.spanContext().traceId,
-            model: modelId,
-          });
-        }
+              if (modelId !== aiConfig.primaryModel) {
+                logger.warn('ai.recommendation.secondary_model_used', {
+                  traceId: trace
+                    .getSpan(otelContext.active())
+                    ?.spanContext().traceId,
+                  model: modelId,
+                });
+              }
 
-        const result: GenerateResult = {
-          recommendation,
-          modelUsed: modelId,
-          fallbackUsed: false,
-        };
+              return {
+                recommendation,
+                modelUsed: modelId,
+                fallbackUsed: false,
+              };
+            } catch (error) {
+              span.recordException(error as Error);
+              span.setStatus({
+                code: SpanStatusCode.ERROR,
+                message: String(error),
+              });
+              span.end();
+
+              logger.warn('ai.recommendation.model_error', {
+                traceId: trace
+                  .getSpan(otelContext.active())
+                  ?.spanContext().traceId,
+                model: modelId,
+                error: error instanceof Error ? error.message : 'unknown',
+              });
+              throw error;
+            }
+          },
+        );
 
         await recommendationCache
           .set(cacheKey, JSON.stringify(result))
           .catch(() => {});
 
         return result;
-      } catch (error) {
-        span.recordException(error as Error);
-        span.setStatus({ code: SpanStatusCode.ERROR, message: String(error) });
-        span.end();
-
-        logger.warn('ai.recommendation.model_error', {
-          traceId: span.spanContext().traceId,
-          model: modelId,
-          error: error instanceof Error ? error.message : 'unknown',
-        });
+      } catch {
+        // Continue to the next model.
       }
     }
 
