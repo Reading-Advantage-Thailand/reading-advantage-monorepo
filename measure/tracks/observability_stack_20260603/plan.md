@@ -4,9 +4,25 @@
 
 ## Phase 0: Setup
 
-- [ ] Task: Read `lib/observability/logger.ts` and `lib/observability/metrics.ts`; understand the current surface.
-- [ ] Task: Coordinate with Track 4 (Audit Log) — the audit event will be enriched with the request context automatically once `runWithRequestContext` is in place.
-- [ ] Task: Coordinate with Track 5 (AI Adapter) — the OTel span wrapping for `generateObject` lands in `packages/ai/src/providers/openai.ts` (or `google.ts`), not in `lib/ai/`. If Track 5 has completed, the wrapping is in the new client; if not, wrap in `lib/ai/recommendation-service.ts` for now and migrate later.
+> Mid-Red evidence: Phase 0 is coordination + surface-mapping. Per `test-strategy.md` §2 the
+> testing pyramid starts at Phase 1; there is no functional behavior in Phase 0 to pin a Red
+> contract against. Marked complete with evidence below rather than a false Red. See
+> `test-strategy.md` for the binding Phase 1–9 contract pipeline.
+>
+> **Commit-blocked at MID handoff:** the unrelated worktree has `pnpm-lock.yaml` in
+> unmerged state (3 stages: base / ours / theirs) from a prior merge that was never
+> resolved. Git refuses all commits while any file is in `U` (unmerged) state. The
+> Phase 0 deliverables (`test-strategy.md` + `plan.md` updates) ARE staged
+> (`git diff --cached --stat` shows them), but the commit cannot land until the
+> unrelated `pnpm-lock.yaml` merge is resolved by the owner of that work. Preserving
+> the unrelated work per protocol — see handoff section in the mid report.
+
+- [x] Task: Read `lib/observability/logger.ts` and `lib/observability/metrics.ts`; understand the current surface. [track_id: observability_stack_20260603]
+  - Evidence: `apps/science-advantage/lib/observability/logger.ts:1-37` — current shape is a `LogPayload = Record<string, unknown>` sink that emits to `console.{info,warn,error}` with a `'[observability]'` prefix; no request-context reading, no JSON serialization of the full line. `apps/science-advantage/lib/observability/metrics.ts:1-32` — uses `console.info('[metrics]', {...})` with the same console-sink pattern; the 1 `console.*` site to migrate in Phase 8c is `lib/observability/metrics.ts:15`. Tests in Phase 4 will replace these sinks; current behavior is the Red baseline.
+- [x] Task: Coordinate with Track 4 (Audit Log) — the audit event will be enriched with the request context automatically once `runWithRequestContext` is in place. [track_id: observability_stack_20260603]
+  - Evidence: `test-strategy.md` §4 (Cross-Phase Edge Cases & Dependencies) — Track 4 coupling captured as a shared fixture note (Phase 4 tests re-run the async-leakage assertion once the logger reads the store). `test-strategy.md` §6 (Phase 9) — Sentry throw-in-route + OTel generateObject-span are the FR-1/FR-5 live gates that also exercise the audit-event enrichment path. No code coupling required in Phase 0.
+- [x] Task: Coordinate with Track 5 (AI Adapter) — the OTel span wrapping for `generateObject` lands in `packages/ai/src/providers/openai.ts` (or `google.ts`), not in `lib/ai/`. If Track 5 has completed, the wrapping is in the new client; if not, wrap in `lib/ai/recommendation-service.ts` for now and migrate later. [track_id: observability_stack_20260603]
+  - Evidence: `test-strategy.md` §1 (Build-Graph Findings That Shape This Strategy) — `build-graph search generateObject` confirms call sites in `packages/ai/*` and `packages/domain/codecamp/review-exercise.ts`; Phase 6 must stay inside `apps/science-advantage/lib/ai/recommendation-service.ts` (or Track-5's OpenAI provider) and **not** alter `packages/ai` signatures. Track 5 (`ai_adapter_package_20260603`) is **archived** per `measure/tracks.md:100`, so Phase 6 wraps inside the new `packages/ai` provider; if that boundary proves too tight during Phase 6, the fallback is `apps/science-advantage/lib/ai/recommendation-service.ts` per the original task wording.
 
 ## Phase 1: Sentry Installation + Configuration
 
