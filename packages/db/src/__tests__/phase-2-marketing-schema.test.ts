@@ -195,6 +195,19 @@ describe("Phase 2 marketing: migration 0021 SQL contract", () => {
       );
       expect(sentinelsSrc).toContain('"0021_marketing_tables"');
     });
+
+    it("has a valid UUID id (not a placeholder)", () => {
+      const snapshot = JSON.parse(
+        readFileSync(
+          join(process.cwd(), "drizzle/meta/0021_snapshot.json"),
+          "utf8",
+        ),
+      ) as { id: string };
+      expect(snapshot.id).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+      );
+      expect(snapshot.id).not.toBe("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+    });
   });
 });
 
