@@ -974,7 +974,50 @@ Files (in priority order):
 - [x] Task: Exclude `lib/observability/logger.ts` (the sink) and `**/*.test.ts`/`__tests__/`. [855ed62e]
 - [x] Task: Run `pnpm turbo run lint --filter=science-advantage`; the 42 remaining `console.log`/`console.info` sites fail the lint. [855ed62e]
   - Evidence: `pnpm` unavailable on host; `bun node_modules/eslint/bin/eslint.js app/ lib/ components/` → 7 `no-console` errors across `ai-recommendation-card.tsx:226`, `intervention-alerts-widget.tsx:301,320,347,360`, `analytics.ts:18`, `metrics.ts:15`. Phase 5 already migrated the 5 largest route files; remaining sites belong to Phase 8. Lint flags them as expected.
-- [x] Task: Document the rule in `eslint.config.mjs` comments. [855ed62e]
+- [x] Task: Document the rule in `eslint.config.mjs` comments. [855ed62e] [bad99fce] (adversarial)
+
+> **Adversarial evidence (this phase, 2026-06-20, sha `bad99fce`):**
+> The MID Red-only evidence above is necessary but not sufficient — a
+> fixture-based exit-code test is satisfied by the per-fixture override
+> at the bottom of `eslint.config.mjs`
+> (`files: ["lib/observability/__tests__/fixtures/eslint/**"]`) which
+> re-enables `no-console: ['error', { allow: ['error', 'warn'] }]`
+> regardless of whether the main production rule is configured. The
+> adversarial role committed a complementary test file
+> `apps/science-advantage/lib/observability/__tests__/eslint-no-console.adversarial.test.ts`
+> (4 tests, sha `bad99fce`) that closes the following gaps:
+>
+> 1. **Production-rule enforcement** — lints
+>    `lib/observability/metrics.ts` (a real production source file
+>    with `console.info` on line 15) and asserts a `no-console`
+>    message exists. Removing the main rule from the production
+>    block causes this test to fail (verified by adversarial mutation
+>    test: 2 tests fail with `expected null not to be null`).
+> 2. **Severity regression** — parses the eslint output and asserts
+>    the rule's severity token is exactly `error` (not `warning`).
+>    Downgrading `error` → `warn` does not change eslint's exit code
+>    (warnings exit 0 unless `--max-warnings 0` is set), so the
+>    fixture-based test cannot distinguish the two. Adversarial
+>    mutation verified: downgrading to `warn` causes this test to
+>    fail with `expected 'warning' to be 'error'`.
+> 3. **Logger-sink exclusion** — lints `lib/observability/logger.ts`
+>    (the legitimate `console.info` sink) and asserts no `no-console`
+>    message. The per-file `files: ["lib/observability/logger.ts"]`
+>    override must be honored; this test would catch an over-broad
+>    rule that forbids ALL `console.*` calls.
+> 4. **Boundary coverage** — writes a per-fixture variant exercising
+>    `console.log` + `console.info` + `console.debug` and asserts
+>    all three produce `no-console` messages. The fixture-based test
+>    only covers `console.log`; this closes the spec FR-7 coverage
+>    gap on `info` and `debug`.
+>
+> **Adversarial Green verification at HEAD `bad99fce`:**
+> `bunx --bun vitest run --config vitest.unit.config.ts
+> lib/observability/__tests__/eslint-no-console.test.ts
+> lib/observability/__tests__/eslint-no-console.adversarial.test.ts`
+> → `Test Files 2 passed (2) | Tests 6 passed (6)` (exit 0,
+> 59 s). No regression in Phases 1–6 (observability surface 56/56,
+> AI surface 15/15, Phase 5 routes 20/20).
 
 ## Phase 8: Replace Remaining 42 `console.*` Sites
 
