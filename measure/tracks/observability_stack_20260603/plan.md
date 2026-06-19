@@ -374,13 +374,14 @@
 > `agents_md_audit_science_advantage_20260603` audit track, not this
 > one). **Unrelated; preserve.** No overlap with this track's commit.
 
-- [~] Task: Create `lib/observability/context.ts` with `RequestContext` interface, `AsyncLocalStorage<RequestContext>`, `getRequestContext`, `runWithRequestContext` (FR-3).
-- [~] Task: Write failing tests:
+- [x] Task: Create `lib/observability/context.ts` with `RequestContext` interface, `AsyncLocalStorage<RequestContext>`, `getRequestContext`, `runWithRequestContext` (FR-3). [5acef91d]
+- [x] Task: Write failing tests:
   - `runWithRequestContext(ctx, () => getRequestContext())` returns `ctx`.
   - `getRequestContext()` outside `runWithRequestContext` returns `undefined`.
   - Nested `runWithRequestContext` calls return the inner context.
   - `runWithRequestContext` does not leak context to sibling async work.
-- [ ] Task: Implement. Confirm.
+- [x] Task: Implement. Confirm. [5acef91d]
+  - Evidence: targeted contract tests pass (17/17, exit 0). Phase 1 regression (4/4 sentry tests pass), Phase 2 regression (5/5 OTel tests pass), lint clean. Test import path fixed from `../../context` to `../context` to align with spec location `lib/observability/context.ts` (the original path resolved to `lib/context.ts`, contradicting FR-3).
 
 ## Phase 4: Logger Auto-Attaches Context
 
