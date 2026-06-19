@@ -256,6 +256,7 @@
 - [x] Task: Add `SENTRY_DSN` to `.env.example` with a comment. [36dad458]
 - [x] Task: Build: `pnpm turbo run build --filter=science-advantage`; confirm Sentry is wired. [36dad458]
   - Note: targeted contract tests pass (4/4, exit 0). Build fails with Module not found for `@reading-advantage/utils` (child_process in browser bundle) — confirmed pre-existing; identical failure on pre-Sentry code at d401e40b. Not a Sentry regression.
+  - Review C fix (2026-06-19): client-side Sentry config updated to use `NEXT_PUBLIC_SENTRY_DSN` (Next.js requires `NEXT_PUBLIC_` prefix for client-exposed env vars). Added `NEXT_PUBLIC_SENTRY_DSN` to `.env.example`. Updated contract test accordingly.
 
 ## Phase 2: OpenTelemetry Installation + Configuration
 
