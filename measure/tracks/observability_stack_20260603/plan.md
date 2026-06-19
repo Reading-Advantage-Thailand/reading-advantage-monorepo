@@ -468,7 +468,7 @@
 > allowed by the MID scope rule).
 
 - [ ] Task: Update `lib/observability/logger.ts` per FR-4. The `log()` function reads `getRequestContext()` and includes `requestId`/`userId`/`route`/`method`/`latencyMs` in the log line.
-- [x] Task: Write failing tests: [<pending-red-sha>]
+- [x] Task: Write failing tests: [5a8974cf]
   - `logger.info('test', {})` outside a `runWithRequestContext` emits a line without `requestId`/`userId`.
   - `runWithRequestContext(ctx, () => logger.info('test', {}))` emits a line with `requestId: ctx.requestId`, `latencyMs: ...` (non-zero, < 1000ms).
   - The log line is valid JSON.
