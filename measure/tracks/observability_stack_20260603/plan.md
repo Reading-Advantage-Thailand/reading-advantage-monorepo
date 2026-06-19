@@ -57,6 +57,49 @@
 > Postgres port is reachable again (rootless podman forwarding fix), the
 > canonical command should be re-run for the Green gate and recorded under
 > Phase 9 acceptance.
+>
+> **Mid-Red evidence (Phase 1 task 5, this MID pass — `env-example.contract.test.ts`):**
+> Phase 1 task 5 ("Add `SENTRY_DSN` to `.env.example` with a comment.") had
+> no Red contract test in commit `792469ca` because `test-strategy.md` §6
+> names only the two `sentry.{client,server}.config` import-contract tests.
+> Re-reading `spec.md` FR-1 line 51: spec FR-1 requires `SENTRY_DSN` in
+> `.env.example` with the comment "required in production; omit in
+> development" — that is a real, independently-testable contract that the
+> existing sentry-config tests do not exercise (they never read `.env.example`).
+> Adding a contract test here is **not feature creep** — it pins Phase 1
+> task 5 to the spec wording. Live-behavior throw-in-route proof remains
+> owned by Phase 9 per `test-strategy.md` §6.
+>
+> Targeted Red command for task 5 (DB-free, hermetic, matches the
+> unit-config variant above):
+>
+> ```
+> pnpm --filter science-advantage exec vitest run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/env-example.contract.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 1 failed (1) | Tests 2 failed (2)`.
+> Both failures are the missing `SENTRY_DSN=` entry in `.env.example`
+> (first test) and the consequent precondition failure on the
+> "required in production" comment (second test) — the **expected Red**.
+> Combined Phase 1 run (sentry-config + env-example contract tests):
+> `Test Files 2 failed (2) | Tests 4 failed (4)` — all 4 expected Reds.
+>
+> Scope of Phase 1 Red surface, post-this-commit:
+> - Task 1 (`@sentry/nextjs` dep) — covered transitively by `sentry-config.contract.test.ts`
+>   (the `vi.mock('@sentry/nextjs', ...)` would still pass if the package is
+>   missing because `vi.mock` is hoisted before the import, but the *runtime*
+>   `await import(CLIENT_CONFIG_PATH)` resolves only if a real
+>   `sentry.client.config.ts` exists and that file's static `import * as
+>   Sentry from '@sentry/nextjs'` would fail compilation if the dep is
+>   absent). Acceptable as indirect coverage.
+> - Tasks 3 + 4 (config files) — explicit Red tests in commit `792469ca`.
+> - Task 5 (`.env.example`) — explicit Red test in this commit.
+> - Task 6 (build green) — closeout gate per `test-strategy.md` §2 / §7,
+>   not a Red test.
+> Tasks 1, 2 (pnpm install), and 6 are setup/closeout and do not need
+> their own Red contract per §6.
 
 - [~] Task: Add `@sentry/nextjs` to `apps/science-advantage/package.json` `dependencies`.
 - [~] Task: `pnpm install` from monorepo root; verify install.
