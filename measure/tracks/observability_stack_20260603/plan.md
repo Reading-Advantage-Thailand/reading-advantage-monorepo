@@ -260,7 +260,52 @@
 
 ## Phase 2: OpenTelemetry Installation + Configuration
 
-> Mid-Red (2026-06-19): Phase 2 Red surface is in `apps/science-advantage/lib/observability/__tests__/instrumentation.contract.test.ts` + `apps/science-advantage/lib/observability/__tests__/env-example-otel.contract.test.ts`. Both files are committed intentionally red. Implementation files (`instrumentation.ts`, `instrumentation.node.ts`, OTel deps in `package.json`, OTel env vars in `.env.example`) are missing — the expected Red. See per-task Red evidence below once the test commit lands.
+> **Mid-Red evidence (this phase):** the Phase 2 Red surface is in
+> `apps/science-advantage/lib/observability/__tests__/instrumentation.contract.test.ts`
+> and `apps/science-advantage/lib/observability/__tests__/env-example-otel.contract.test.ts`
+> (commit `a4f1c218`). Both files are committed intentionally red.
+> Implementation files (`instrumentation.ts`, `instrumentation.node.ts`,
+> OTel deps in `package.json`, OTel env vars in `.env.example`) are
+> missing — the expected Red.
+>
+> **Targeted Red command actually executed at MID** (rootless-podman host
+> cannot reach `localhost:5432` so the default `vitest.config.ts`
+> integration globalSetup hangs on `drizzle-kit migrate`; the hermetic
+> `vitest.unit.config.ts` is the app-AGENTS-canonical DB-free subset per
+> `apps/science-advantage/AGENTS.md` Testing Guidelines):
+>
+> ```
+> pnpm --filter science-advantage exec vitest run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/instrumentation.contract.test.ts \
+>   lib/observability/__tests__/env-example-otel.contract.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 2 failed (2) | Tests 5 failed (5)`.
+> All 5 failures are the expected missing-implementation Reds:
+> - `instrumentation.ts` not found → `Error: Cannot find module '/lib/instrumentation'` (x3, the three contract / live-behavior tests in `instrumentation.contract.test.ts`)
+> - `.env.example` missing `OTEL_SERVICE_NAME=` line → `expected undefined to be defined` (1)
+> - `.env.example` missing `OTEL_EXPORTER_OTLP_ENDPOINT=` line → `expected undefined to be defined` (1)
+>
+> Live-behavior throw-in-route gate for FR-2 remains Phase 9 (`test-strategy.md` §6 / §7).
+>
+> **Scope of Phase 2 Red surface, post-this-commit:**
+> - Tasks 3 + 4 (instrumentation.ts + instrumentation.node.ts) — explicit Red tests in commit `a4f1c218` (3 tests in `instrumentation.contract.test.ts`: `register` is async, `NodeSDK` resource has `service.name='science-advantage'`, console-exporter fallback when `OTEL_EXPORTER_OTLP_ENDPOINT=''`).
+> - Task 5 (`.env.example` OTEL entries) — explicit Red test in commit `a4f1c218` (2 tests in `env-example-otel.contract.test.ts`).
+> - Task 1 (OTel deps) — covered transitively: the implementation `instrumentation.node.ts` will static-import the SDK modules; the contract test mocks them, so the absence of a real `package.json` dep is masked at *test time*. The Green-role build (`pnpm turbo run build --filter=science-advantage`) is the closeout gate for task 1; not a Red test per `test-strategy.md` §2.
+> - Task 2 (`pnpm install`) and task 6 (build) are setup/closeout, not Red tests per `test-strategy.md` §6.
+>
+> **Worktree hygiene at MID start (2026-06-19 this pass):**
+> `git status --porcelain` was clean. The Phase 1 unresolved pnpm-lock.yaml
+> state from `7cf3884` / `27009533` / `d401e40b` was already restored to
+> HEAD in commit `d401e40b` (Phase 1 mid-attempt-3 lockfile restore). The
+> remaining unrelated dirty paths carried into this worktree
+> (`measure/automation-supervisor.py`, `apps/marketing/next-env.d.ts`,
+> `measure/tracks/agents_md_audit_science_advantage_20260603/`) are
+> preserved per the MID scope rule. This MID commit touches only the two
+> new test files plus `measure/tracks/observability_stack_20260603/plan.md`
+> (a Measure doc, allowed by the MID scope rule). No overlap with the
+> unrelated dirty paths above.
 
 - [~] Task: Add `@opentelemetry/api`, `@opentelemetry/sdk-node`, `@opentelemetry/exporter-trace-otlp-http`, `@opentelemetry/resources`, `@opentelemetry/semantic-conventions` to `apps/science-advantage/package.json`.
 - [~] Task: `pnpm install`; verify install.
