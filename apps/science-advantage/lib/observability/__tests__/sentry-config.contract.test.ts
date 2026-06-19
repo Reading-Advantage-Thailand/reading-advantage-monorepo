@@ -49,7 +49,7 @@ describe('FR-1 sentry.client.config.ts contract', () => {
     initMock.mockReset();
     captureExceptionMock.mockReset();
     captureMessageMock.mockReset();
-    process.env.SENTRY_DSN = 'https://public@example.ingest.sentry.io/1';
+    process.env.NEXT_PUBLIC_SENTRY_DSN = 'https://public@example.ingest.sentry.io/1';
     process.env.NODE_ENV = 'test';
   });
 
