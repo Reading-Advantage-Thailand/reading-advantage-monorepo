@@ -145,6 +145,53 @@
 > (a Measure doc, allowed by the MID scope rule). No overlap with the
 > unrelated dirty paths above. Phase 1 Red surface remains stable and
 > unchanged from commits `792469ca` + `b9555b90`.
+>
+> **Mid-attempt-2 blocked rationale (2026-06-19):** supervisor gate fired
+> on the pre-existing `pnpm-lock.yaml` dirty state carried over from
+> before the MID run began. Verified at the start of this attempt-2:
+> - HEAD = `73473143` (the previous attempt's plan.md-only commit).
+> - `git show --stat HEAD` lists exactly one file: `measure/tracks/
+>   observability_stack_20260603/plan.md`. MID did not edit `pnpm-lock.yaml`.
+> - `md5sum pnpm-lock.yaml` = `abf8aebe31071d1b0384ee0e95c85fa0` —
+>   byte-identical to the hash recorded in the Phase 0 MID handoff
+>   (commit `7cf38840`); the file has not been modified by this track.
+> - `git ls-files --unmerged` is empty.
+> - The dirty delta is unresolved merge markers
+>   (`<<<<<<< Updated upstream` / `=======` / `>>>>>>> Stashed changes`),
+>   which require product judgment to resolve (which side wins: the
+>   upstream update or the stashed local edits) and cannot be safely
+>   auto-reverted without destroying unrelated user work.
+>
+> Per the retry/escalation policy, the gate failure here is not a
+> test/implementation gap and not an audit-evidence gap — it is a
+> pre-existing dirty-state flag that requires human product judgment
+> to resolve (which lockfile side to keep) or to defer (track-level
+> decision to gate Phase 1 on a separate lockfile-cleanup task).
+> **MID cannot satisfy the gate without either overwriting unrelated
+> user work (revert `pnpm-lock.yaml` to HEAD) or making a product
+> judgment about the merge conflict (which side wins) — neither is
+> in the MID scope.** Recommendation: open a remediation track
+> `pnpm_lockfile_conflict_resolution_20260619` to resolve the
+> conflict markers, then re-run this MID attempt. Phase 1 Red
+> verification is otherwise complete and stable (re-run result:
+> exit 1, 4 expected Reds at HEAD — see attempt-2 evidence below).
+>
+> **Mid-attempt-2 re-verification (2026-06-19):** the 4 Phase 1 Red
+> tests re-run cleanly at HEAD `73473143` with the bounded
+> unit-config variant. Targeted Red command actually executed:
+>
+> ```
+> pnpm --filter science-advantage exec vitest run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/sentry-config.contract.test.ts \
+>   lib/observability/__tests__/env-example.contract.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 2 failed (2) | Tests 4 failed (4)`.
+> All 4 failures are the expected missing-implementation Reds (same
+> as attempt-1; pre-existing implementation gap, not caused by
+> this track's commits). Live-behavior throw-in-route gate remains
+> Phase 9 (test-strategy.md §6 / §7).
 
 - [~] Task: Add `@sentry/nextjs` to `apps/science-advantage/package.json` `dependencies`.
 - [~] Task: `pnpm install` from monorepo root; verify install.
