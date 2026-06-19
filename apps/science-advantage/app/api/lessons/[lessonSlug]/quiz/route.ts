@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthError } from '@reading-advantage/auth';
 import { getCurrentSession } from '@/lib/auth/session';
@@ -10,6 +11,8 @@ import { startQuiz, submitAttempt } from '@reading-advantage/domain/quiz';
 import { parseBody, parsePath, ValidationError } from '@/lib/validations/api-helpers';
 import { submitQuizAttemptSchema } from '@/lib/validations/quiz';
 import { lessonSlugParamSchema } from '@/lib/validations/params';
+import { runWithRequestContext } from '@/lib/observability/context';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * GET /api/lessons/{lessonSlug}/quiz
@@ -19,6 +22,12 @@ export async function GET(
   _request: NextRequest,
   context: { params: Promise<{ lessonSlug: string }> }
 ) {
+  return runWithRequestContext({
+    requestId: randomUUID(),
+    route: _request.url,
+    method: 'GET',
+    startedAt: Date.now(),
+  }, async () => {
   try {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
@@ -28,8 +37,10 @@ export async function GET(
   } catch (error) {
     if (error instanceof ValidationError) return NextResponse.json(error.toJSON(), { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
+    logger.error('quiz.fetch.error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ error: 'An unexpected error occurred while fetching the quiz' }, { status: 500 });
   }
+  });
 }
 
 /**
@@ -40,6 +51,12 @@ export async function POST(
   request: NextRequest,
   context: { params: Promise<{ lessonSlug: string }> }
 ) {
+  return runWithRequestContext({
+    requestId: randomUUID(),
+    route: request.url,
+    method: 'POST',
+    startedAt: Date.now(),
+  }, async () => {
   try {
     void context;
     const session = await getCurrentSession();
@@ -54,6 +71,8 @@ export async function POST(
   } catch (error) {
     if (error instanceof ValidationError) return NextResponse.json(error.toJSON(), { status: 400 });
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
+    logger.error('quiz.submit.error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ error: 'An unexpected error occurred while submitting the quiz' }, { status: 500 });
   }
+  });
 }

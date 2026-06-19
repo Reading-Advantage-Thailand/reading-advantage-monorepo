@@ -8,6 +8,7 @@ import { aiConfig } from '@/lib/config/ai';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
+import { runWithRequestContext } from '@/lib/observability/context';
 import { getRecommendation } from '@reading-advantage/domain/ai';
 import { requestSchema, recommendationCache, rateLimitStore, RateLimitError } from '@/lib/config/recommendations';
 
@@ -16,6 +17,12 @@ import { requestSchema, recommendationCache, rateLimitStore, RateLimitError } fr
  * Generates an AI recommendation for a completed quiz attempt.
  */
 export async function POST(request: NextRequest) {
+  return runWithRequestContext({
+    requestId: randomUUID(),
+    route: request.url,
+    method: 'POST',
+    startedAt: Date.now(),
+  }, async () => {
   const startedAt = Date.now();
   const traceId = `rec_${randomUUID()}`;
   try {
@@ -45,6 +52,7 @@ export async function POST(request: NextRequest) {
     logger.error('ai.recommendation.error', { traceId }); metrics.increment('ai_recommendation_errors');
     return NextResponse.json({ success: false, error: 'INTERNAL_ERROR', traceId }, { status: 500 });
   }
+  });
 }
 
 export const unstable_recommendationTestkit = { reset() { recommendationCache.clear(); rateLimitStore.reset(); } };

@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { z, ZodError } from 'zod';
 import { AuthError } from '@reading-advantage/auth';
@@ -6,6 +7,7 @@ import { calculateMasteryUpdates, buildResponseInput } from '@/lib/ai/mastery-ca
 import { env } from '@/lib/env';
 import { logger } from '@/lib/observability/logger';
 import { metrics } from '@/lib/observability/metrics';
+import { runWithRequestContext } from '@/lib/observability/context';
 import { recordRun, recordRunFailure, RateLimitError } from '@reading-advantage/domain/mastery';
 
 /**
@@ -13,6 +15,12 @@ import { recordRun, recordRunFailure, RateLimitError } from '@reading-advantage/
  * Processes a mastery run for a completed quiz attempt.
  */
 export async function POST(request: NextRequest) {
+  return runWithRequestContext({
+    requestId: randomUUID(),
+    route: request.url,
+    method: 'POST',
+    startedAt: Date.now(),
+  }, async () => {
   const requestClone = request.clone();
   try {
     const session = await getCurrentSession();
@@ -44,4 +52,5 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: false, reason: 'QUEUED' }, { status: 202, headers: { 'retry-after': '30' } });
   }
+  });
 }
