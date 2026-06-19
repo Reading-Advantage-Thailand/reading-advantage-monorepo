@@ -20,6 +20,9 @@
 | @ai-sdk/openai | ^2.x | ai_sdk_major_migration |
 | @ai-sdk/google | ^2.x | ai_sdk_major_migration |
 | @ai-sdk/google-vertex | ^3.x | ai_sdk_major_migration |
+| jest | ^30.2.0 | jest30_major_migration |
+| jest-environment-jsdom | ^30.2.0 | jest30_major_migration |
+| @types/jest | ^30.0.0 | jest30_major_migration |
 
 ## Core Technologies
 
@@ -54,7 +57,7 @@
 | Tool | Purpose |
 |------|---------|
 | Vitest 4.1.8 | Unit tests (science-advantage, www-reading-advantage, codecamp-advantage) |
-| Jest | Unit tests (advantage-games, reading-advantage) |
+| Jest 30.x | Unit tests (advantage-games, reading-advantage). Out of scope: `@reading-advantage/scripts` (jest@^29.7.0, legacy scripts package; see `jest30-audit.md` §1). |
 | Playwright | E2E tests (all apps) |
 
 ## DevOps
