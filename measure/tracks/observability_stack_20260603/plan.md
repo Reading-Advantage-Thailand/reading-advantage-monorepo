@@ -477,18 +477,19 @@
 ## Phase 5: Migrate 5 Largest `route.ts` Files
 
 For each of the 5 files:
-- [~] Task: Wrap the top-level handler in `runWithRequestContext({ requestId: ulid(), route: req.url, method: req.method, startedAt: Date.now() }, async () => { ... })`. The `userId` is set after `requireAuth` returns.
-- [~] Task: Replace each `console.error` catch block with `logger.error(event, { error, ...otherContext })`.
-- [~] Task: Replace each `console.log` / `console.info` with `logger.info` / `logger.warn`.
-- [~] Task: Write a test that calls the route handler; capture the log line; assert `requestId`/`route`/`method`/`latencyMs` are present and the log line is valid JSON.
-- [ ] Task: Run the existing test suite; confirm green.
+- [x] Task: Wrap the top-level handler in `runWithRequestContext({ requestId: ulid(), route: req.url, method: req.method, startedAt: Date.now() }, async () => { ... })`. The `userId` is set after `requireAuth` returns. [6d562418]
+- [x] Task: Replace each `console.error` catch block with `logger.error(event, { error, ...otherContext })`. [6d562418]
+- [x] Task: Replace each `console.log` / `console.info` with `logger.info` / `logger.warn`. [6d562418]
+- [x] Task: Write a test that calls the route handler; capture the log line; assert `requestId`/`route`/`method`/`latencyMs` are present and the log line is valid JSON. (Tests written by MID in prior commit; Green verified at 6d562418.) [6d562418]
+- [x] Task: Run the existing test suite; confirm green. [6d562418]
+  - Evidence: Phase 5 targeted command (`bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts <5 route test files>`) → 20/20 pass (5 test files, exit 0). Full regression Phases 1-5 (`lib/observability/__tests__/`) → 48/48 pass (7 test files, exit 0). Lint: 0 new errors (1 pre-existing `z` unused-var warning).
 
 Files (in priority order):
-- [~] `app/api/ai/update-mastery/route.ts` (624 lines)
-- [~] `app/api/lessons/[lessonSlug]/quiz/route.ts` (519 lines)
-- [~] `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (412 lines)
-- [~] `app/api/ai/recommendations/route.ts` (400 lines)
-- [~] `app/api/classes/[classId]/assignments/route.ts` (364 lines)
+- [x] `app/api/ai/update-mastery/route.ts` (47 lines) — wrap POST handler, `randomUUID` import. Logger already wired. [6d562418]
+- [x] `app/api/lessons/[lessonSlug]/quiz/route.ts` (59 lines) — wrap GET + POST handlers, add `logger` import, `logger.error` in catch blocks. [6d562418]
+- [x] `app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts` (32 lines) — wrap GET handler, add `logger` import, replace `console.error('Error fetching lesson analytics:', error)` with `logger.error('lesson.analytics.error', { error })`. [6d562418]
+- [x] `app/api/ai/recommendations/route.ts` (50 lines) — wrap POST handler. Logger already wired. [6d562418]
+- [x] `app/api/classes/[classId]/assignments/route.ts` (73 lines) — wrap GET + POST + DELETE handlers, add `logger` import, `logger.error` in catch blocks. [6d562418]
 
 > **Mid-Red evidence (this phase, 2026-06-19):** Phase 5 Red tests are
 > committed intentionally red. Per the plan, the test contract for
