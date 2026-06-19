@@ -608,11 +608,150 @@ Files (in priority order):
 
 ## Phase 6: Wrap `generateObject` Calls in OTel Spans
 
-- [ ] Task: In `lib/ai/recommendation-service.ts` (or the refactored `packages/ai/src/providers/openai.ts` if Track 5 has completed), wrap `generateObject` in `tracer.startActiveSpan('ai.generateObject', ...)`.
-- [ ] Task: Add `span.setAttribute('ai.model', ...)` and `span.setAttribute('ai.schema', ...)`.
-- [ ] Task: Wrap the try/catch: `span.recordException(err); span.setStatus({ code: SpanStatusCode.ERROR, message: String(err) })`.
-- [ ] Task: Replace the ad-hoc `traceId` field in `recommendation-service.ts:97, 126, 144, 153` with `trace.getSpan(context.active())?.spanContext().traceId`.
-- [ ] Task: Write a test: call `generateObject`; assert a span is created with the right attributes; assert the `traceId` matches the span context.
+> **Mid-Red evidence (this phase, 2026-06-19):** the Phase 6 Red
+> surface is in
+> `apps/science-advantage/lib/ai/__tests__/recommendation-service.otel.test.ts`
+> plus the shared fixture
+> `apps/science-advantage/lib/observability/__tests__/fixtures/mock-tracer.ts`
+> (committed in this MID pass). The implementation
+> `lib/ai/recommendation-service.ts` does not yet import
+> `@opentelemetry/api`, does not call `tracer.startActiveSpan`, and
+> still emits `traceId: context.traceId` at the four logger sites
+> (lines 65, 102, 120, 129 in the current file; the spec's
+> `:97, 126, 144, 153` line numbers predate the Phase 6 refactor
+> that added the `RecommendationService` class). The Red tests fail
+> at HEAD because (a) no `ai.generateObject` span is recorded by the
+> `InMemorySpanExporter`, and (b) the logger payloads carry the
+> input `context.traceId` instead of the active OTel span's traceId.
+>
+> Tests are organized into three `it` blocks per `test-strategy.md`
+> §6 (Phase 6) and §7 (Targeted Red command):
+> 1. **Happy path** — `client.generateObject` succeeds; one span
+>    recorded with `name='ai.generateObject'`,
+>    `attributes['ai.model']='gemini-2.5-flash'` (the primary model
+>    from `aiConfig.primaryModel`),
+>    `attributes['ai.schema']='unknown'` (the schema has no
+>    `.description`), `status.code === SpanStatusCode.OK (1)`.
+> 2. **Throw path** — `client.generateObject` throws; the span's
+>    `status.code === SpanStatusCode.ERROR (2)` and an `'exception'`
+>    event is recorded (verifying `span.recordException(err)`).
+> 3. **traceId field** — on the throw path, the
+>    `ai.recommendation.model_error` logger payload's `traceId`
+>    field equals the parent span's `traceId` (NOT the input
+>    `context.traceId`). The test sets up a parent OTel span
+>    (`test-parent`) wrapping the service call so the active-span
+>    lookup at the logger site returns a real span context.
+> **Total: 3 tests**, all Red.
+>
+> **Targeted Red command actually executed at MID** (rootless-podman
+> host cannot reach `localhost:5432` so the default
+> `vitest.config.ts` integration globalSetup hangs on `drizzle-kit
+> migrate`; the hermetic `vitest.unit.config.ts` is the
+> app-AGENTS-canonical DB-free subset per
+> `apps/science-advantage/AGENTS.md` Testing Guidelines; this host
+> has only `bun` on PATH — `pnpm` is not installed — so
+> `bun node_modules/vitest/vitest.mjs` is the host-environment
+> substitution that exercises the exact same `vitest.unit.config.ts`
+> + test file path; the prior phases' mid-handoffs use the same
+> substitution):
+>
+> ```
+> bun node_modules/vitest/vitest.mjs run \
+>   --config vitest.unit.config.ts \
+>   lib/ai/__tests__/recommendation-service.otel.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 1 failed (1) | Tests 3 failed (3)`.
+> All 3 failures are the expected missing-implementation Reds:
+>
+> 1. `Phase 6 — FR-5 OTel span wrapping around generateObject > opens an \`ai.generateObject\` span with \`ai.model\` and \`ai.schema\` attributes on the happy path` — `expected undefined to be defined` on the `expect(aiSpan, ...).toBeDefined()` assertion. The exporter recorded only the `test-parent` span; no `ai.generateObject` span was created (the implementation never calls `tracer.startActiveSpan`). After FR-5 lands, the span will be recorded.
+> 2. `Phase 6 — FR-5 OTel span wrapping around generateObject > sets span status=ERROR and records the exception on the throw path` — `expected 0 to be greater than or equal to 1` on the `errorSpans.length` assertion. No `ai.generateObject` span exists at HEAD (let alone one with `status.code === 2`). After FR-5 lands, the recorded exception will satisfy the assertion.
+> 3. `Phase 6 — FR-5 OTel span wrapping around generateObject > logger payloads carry traceId === active span traceId (not the input context.traceId)` — `expected 'rec_test_phase6_input_traced' to be '12b9d5ad8993f78b3d0287816bdcce77'` (the captured logger payload's `traceId` is the input context's traceId `rec_test_phase6_input_traced`; the assertion expects the parent OTel span's traceId `12b9d5ad8993f78b3d0287816bdcce77`). After FR-5 lands, the model_error log's `traceId` field will equal the parent span's `traceId`.
+>
+> **Regression check on the observability surface plus the new OTel
+> test at the same HEAD** (same `--config`, full observability tree
+> plus the new file):
+>
+> ```
+> bun node_modules/vitest/vitest.mjs run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/ \
+>   lib/ai/__tests__/architecture.test.ts \
+>   lib/ai/__tests__/recommendation-service.otel.test.ts
+> ```
+>
+> → `Test Files 1 failed | 8 passed (9) | Tests 3 failed | 52 passed (55)`.
+> The 52 passing tests are the existing 4 Phase 1 (sentry contract) +
+> 5 Phase 2 (OTel config contract) + 17 Phase 3 (context ALS) + 8
+> Phase 4 (logger ctx) + 16 Phase 4 adversarial (logger shape) + 2
+> architecture guardrails (G-1, G-2) = 52. No regression in
+> Phases 1-4; the only new Reds are the 3 Phase 6 OTel tests.
+>
+> **Worktree hygiene at MID start (2026-06-19 this pass):**
+> `git status --porcelain` shows one untracked path:
+> `measure/tracks/agents_md_audit_science_advantage_20260603/` — the
+> untracked fixtures dir for a different track (the
+> `agents_md_audit_science_advantage_20260603` audit track, not this
+> one). **Unrelated; preserve.** No overlap with this track's commit.
+> This MID commit touches only the new test file, the new shared
+> fixture, and `measure/tracks/observability_stack_20260603/plan.md`
+> (a Measure doc, allowed by the MID scope rule).
+>
+> Canonical command from `test-strategy.md` §7 (`pnpm --filter
+> science-advantage exec vitest run
+> lib/ai/__tests__/recommendation-service.otel.test.ts`, no `--config`
+> flag) is unchanged in the strategy doc; the `--config` flag and
+> `bun node_modules/vitest/vitest.mjs` runner are host-environment
+> workarounds, not strategy changes. When `pnpm` becomes reachable
+> (rootless podman forwarding fix + pnpm install), the canonical
+> command should be re-run for the Green gate and recorded under
+> Phase 9 acceptance.
+>
+> **Per-task Red coverage map:**
+> - Tasks 1 + 2 (`startActiveSpan` + `setAttribute`) — covered by
+>   test 1 (happy path).
+> - Task 3 (try/catch + `recordException` + ERROR status) — covered
+>   by test 2 (throw path).
+> - Task 4 (`traceId` field swap) — covered by test 3 (logger
+>   payload traceId).
+> - Task 5 (the test file itself) — this commit.
+> - Task 6 (confirm/Green) — closeout gate, not a Red test.
+>
+> **Live-behavior proof:** every test invokes the real
+> `RecommendationService.getRecommendation()` method (no fake
+> harness) with a stub `AIClient` (the implementation under test
+> accepts any `AIClient` via its constructor per Phase 6 refactor
+> from the `ai_adapter_package_20260603` track) and a real OTel
+> SDK (`BasicTracerProvider` + `InMemorySpanExporter` +
+> `SimpleSpanProcessor`) wired via the `mock-tracer` fixture. The
+> `ai.generateObject` span recorded by the exporter is a real OTel
+> span, not a mock. Per `test-strategy.md` §5 ("Fake harnesses are
+> forbidden for production gates") and §3 mock-tracer note
+> ("Do not mock `@opentelemetry/api` directly — wire a real
+> provider so `trace.getSpan(context.active())` returns a real
+> context").
+>
+> **Worktree hygiene at MID start (2026-06-19 this pass):**
+> `git status --porcelain` shows one untracked path:
+> `measure/tracks/agents_md_audit_science_advantage_20260603/` —
+> the untracked fixtures dir for a different track. **Unrelated;
+> preserve.** No overlap with this track's commit. This MID commit
+> touches only the new test file, the new shared fixture, and
+> `measure/tracks/observability_stack_20260603/plan.md` (a Measure
+> doc, allowed by the MID scope rule).
+>
+> **Per-strategy §4 Phase 5 ↔ Phase 6 ordering note:** the
+> `InMemorySpanExporter` + `BasicTracerProvider` used by the
+> Phase 6 tests depend on the OTel SDK installed in Phase 2 (commit
+> `bcb1ffeb`); both packages are already in
+> `apps/science-advantage/node_modules/@opentelemetry/` (verified
+> 2026-06-19). No Phase 6 RED test is blocked by the Phase 2 setup.
+
+- [~] Task: In `lib/ai/recommendation-service.ts` (or the refactored `packages/ai/src/providers/openai.ts` if Track 5 has completed), wrap `generateObject` in `tracer.startActiveSpan('ai.generateObject', ...)`.
+- [~] Task: Add `span.setAttribute('ai.model', ...)` and `span.setAttribute('ai.schema', ...)`.
+- [~] Task: Wrap the try/catch: `span.recordException(err); span.setStatus({ code: SpanStatusCode.ERROR, message: String(err) })`.
+- [~] Task: Replace the ad-hoc `traceId` field in `recommendation-service.ts:97, 126, 144, 153` with `trace.getSpan(context.active())?.spanContext().traceId`.
+- [~] Task: Write a test: call `generateObject`; assert a span is created with the right attributes; assert the `traceId` matches the span context.
 - [ ] Task: Confirm.
 
 ## Phase 7: ESLint `no-console` Rule
