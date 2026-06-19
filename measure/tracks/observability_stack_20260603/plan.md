@@ -1339,12 +1339,148 @@ For each site (Phase 8a–8e):
 
 ## Phase 9: Final Acceptance
 
-- [ ] Task: Sentry test: write a route handler that throws; assert Sentry's mock `captureException` is called with the right error.
-- [ ] Task: OTel test: write a route handler that calls `generateObject`; assert a span is created with the right attributes.
-- [ ] Task: `pnpm turbo run test --filter=science-advantage` exits 0.
-- [ ] Task: `pnpm turbo run lint --filter=science-advantage` exits 0.
-- [ ] Task: `pnpm turbo run build --filter=science-advantage` exits 0.
-- [ ] Task: Grep gate: 0 `console.log`/`console.info` in production code.
+> **Mid-Red evidence (this phase, 2026-06-20):** the Phase 9 Red
+> surface is in two new test files (committed in this MID pass):
+>
+> 1. `apps/science-advantage/app/api/ai/recommendations/sentry-throw-in-route.test.ts`
+>    — 3 tests for FR-1 Sentry capture-on-route-throw (AC #9):
+>    - **`captureException called once with the thrown error`** —
+>      **RED at HEAD** (`expected +0 to be 1`). The route's catch
+>      block at `app/api/ai/recommendations/route.ts:50-55` calls
+>      `logger.error('ai.recommendation.error', { traceId })` but
+>      does NOT forward the error to `Sentry.captureException`.
+>      This is a real implementation gap that satisfies the
+>      Phase 9 task 1 contract per spec.md AC #9 / AC #187.
+>    - **`captureMessage` NOT called** — passes at HEAD (regression
+>      guard: catches a future change that swaps `captureException`
+>      for `captureMessage`, which would lose the error stack).
+>    - **`logger.error` structured line still emitted** — passes at
+>      HEAD (regression guard: Sentry is additive per Phase 0
+>      coordination with Track 4 audit log; logger must remain).
+>
+> 2. `apps/science-advantage/app/api/ai/recommendations/otel-route-span.test.ts`
+>    — 1 test for FR-5 route-level OTel span recording (AC #10):
+>    - **`ai.generateObject` span recorded end-to-end via the route**
+>      — **passes at HEAD** (Phase 6 commit `3bccadf4` already wires
+>      the OTel wrapping in `RecommendationService.getRecommendation`;
+>      the test confirms the route → service → span integration is
+>      correct end-to-end). Per the Red-phase contract, this is
+>      marked **already satisfied with evidence** rather than forced
+>      into a false Red. The test is preserved as a regression
+>      guard: a future change that breaks the route-level integration
+>      (e.g., a refactor that routes `generateRecommendation` through
+>      a code path that doesn't go through `tracer.startActiveSpan`)
+>      would fail this test.
+>
+> **Targeted Red commands actually executed at MID** (rootless-podman
+> host cannot reach `localhost:5432` so the default `vitest.config.ts`
+> integration globalSetup hangs on `drizzle-kit migrate`; the hermetic
+> `vitest.unit.config.ts` is the app-AGENTS-canonical DB-free subset
+> per `apps/science-advantage/AGENTS.md` Testing Guidelines; this host
+> has only `bun` on PATH — `pnpm` is not installed — so
+> `bun node_modules/vitest/vitest.mjs` is the host-environment
+> substitution that exercises the exact same `vitest.unit.config.ts`
+> + test-file path; the prior phases' mid-handoffs use the same
+> substitution):
+>
+> Sentry test (1 expected Red + 2 regression guards):
+> ```
+> bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts \
+>   app/api/ai/recommendations/sentry-throw-in-route.test.ts
+> ```
+> **Result:** exit 1 — `Test Files 1 failed (1) | Tests 1 failed | 2 passed (3)`.
+> The 1 Red is the `captureException` was-called assertion
+> (`expected +0 to be 1`).
+>
+> OTel route-span test (acceptance gate, passes at HEAD per Phase 6):
+> ```
+> bun node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts \
+>   app/api/ai/recommendations/otel-route-span.test.ts
+> ```
+> **Result:** exit 0 — `Test Files 1 passed (1) | Tests 1 passed (1)`.
+> The single test asserts the `ai.generateObject` span is recorded
+> with `ai.model='gemini-2.5-flash'`, `ai.schema='unknown'`,
+> `status.code === SpanStatusCode.OK`. All assertions pass at HEAD
+> because Phase 6 already wraps the `client.generateObject` call in
+> `tracer.startActiveSpan('ai.generateObject', ...)` (commit
+> `3bccadf4`); this acceptance-gate test confirms the integration
+> from the route level is wired correctly.
+>
+> Combined Phase 9 run (Sentry + OTel):
+> `Test Files 1 failed | 1 passed (2) | Tests 1 failed | 3 passed (4)`
+> — the 1 Red is the expected Phase 9 task 1 (Sentry); the 3
+> passes are the 2 Sentry regression guards + 1 OTel acceptance gate.
+>
+> **Regression checks (no regressions introduced):**
+> - Full observability surface: `lib/observability/__tests__/`
+>   → `Test Files 13 passed (13) | Tests 85 passed (85)` (exit 0).
+> - Phase 5 route tests (5 files):
+>   → `Test Files 5 passed (5) | Tests 20 passed (20)` (exit 0).
+> - Phase 6 OTel test:
+>   → `Test Files 1 passed (1) | Tests 6 passed (6)` (exit 0).
+>
+> **Per-task Red coverage map:**
+> - Task 1 (Sentry test) — explicit Red test in this commit. The
+>   test's 1 failing assertion is the binding contract; the 2
+>   passing assertions are forward-looking regression guards that
+>   will continue to pass once the Green role wires
+>   `Sentry.captureException(error)` into the route catch block.
+> - Task 2 (OTel test) — explicit acceptance-gate test in this
+>   commit. **Already satisfied at HEAD** (Phase 6 wired it). Test
+>   preserved as a regression guard for future integration breaks.
+> - Tasks 3–6 (full turbo test/lint/build + grep gate) — closeout
+>   gates per `test-strategy.md` §7. Not Red tests per §6.
+>
+> **Live-behavior proof (Sentry):** the test invokes the real
+> exported `POST` handler from `app/api/ai/recommendations/route.ts`
+> with all external dependencies mocked (`@sentry/nextjs`,
+> `@reading-advantage/domain/ai`, `next/headers`,
+> `@reading-advantage/auth`, `@/lib/auth/session`,
+> `@/lib/ai/recommendation-context`,
+> `@/lib/ai/recommendation-service`, `@/lib/config/ai`, `@/lib/env`,
+> `@/lib/observability/metrics`, `@/lib/config/recommendations`).
+> The forced throw propagates through the route's real try/catch
+> and would call `Sentry.captureException(error)` if the catch
+> block wired it. The `@sentry/nextjs` module is the only mocked
+> SDK surface — it is the SDK under test (per §5 "Fake harnesses
+> are forbidden for production gates").
+>
+> **Live-behavior proof (OTel):** the test invokes the real
+> exported `POST` handler with the same dependency mocks as the
+> Sentry test, plus `vi.mock('@reading-advantage/ai')` providing a
+> `StubAIClient` and a passthrough mock of the domain
+> `getRecommendation` that calls `deps.generateRecommendation(context)`
+> directly (so the real `RecommendationService` runs). The OTel
+> span is recorded by a real `BasicTracerProvider` +
+> `InMemorySpanExporter` wired via the Phase 6 `mock-tracer`
+> fixture (per §3 mock-tracer note "Do **not** mock
+> `@opentelemetry/api` directly").
+>
+> **Worktree hygiene at MID start (2026-06-20 this pass):**
+> `git status --porcelain` showed seven untracked paths. All seven
+> are unrelated to this track (different apps or different
+> tracks). **All preserve, no overlap.** This MID commit touches
+> only the 2 new test files plus
+> `measure/tracks/observability_stack_20260603/plan.md` (a Measure
+> doc, allowed by the MID scope rule).
+>
+> Canonical commands from `test-strategy.md` §7 (the targeted Red
+> for Phase 9 would be the full `pnpm turbo run test --filter=
+> science-advantage`; here we use the bounded per-file variant per
+> the strategy's "no watch mode, no unbounded full-suite smoke"
+> rule from the MID prompt). When `pnpm` becomes reachable
+> (rootless podman forwarding fix + pnpm install), the canonical
+> commands should be re-run for the Green gate and recorded under
+> Phase 9 acceptance.
+
+- [x] Task: Sentry test: write a route handler that throws; assert Sentry's mock `captureException` is called with the right error. [track_id: observability_stack_20260603]
+  - Evidence: `apps/science-advantage/app/api/ai/recommendations/sentry-throw-in-route.test.ts` (3 tests, commit pending). 1 test fails at HEAD with `expected +0 to be 1` — the route's catch block at `route.ts:50-55` does not call `Sentry.captureException`. 2 tests pass (regression guards: `captureMessage` not called; `logger.error` structured line still emitted).
+- [x] Task: OTel test: write a route handler that calls `generateObject`; assert a span is created with the right attributes. [track_id: observability_stack_20260603]
+  - Evidence: `apps/science-advantage/app/api/ai/recommendations/otel-route-span.test.ts` (1 test, commit pending). Test passes at HEAD (`Test Files 1 passed (1) | Tests 1 passed (1)`, exit 0). **Already satisfied at HEAD** — Phase 6 commit `3bccadf4` already wraps `client.generateObject` in `tracer.startActiveSpan('ai.generateObject', ...)`; this acceptance-gate test confirms the route → service → span integration is correct end-to-end. Test preserved as a regression guard for future integration breaks.
+- [ ] Task: `pnpm turbo run test --filter=science-advantage` exits 0. (Closeout gate per `test-strategy.md` §7; not a Red test. Owned by Green role.)
+- [ ] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. (Closeout gate; not a Red test. Per Phase 8 audit (`46fc963b`), green at HEAD after the `scripts/**` exclusion fix.)
+- [ ] Task: `pnpm turbo run build --filter=science-advantage` exits 0. (Closeout gate; not a Red test. Per Phase 1 review C note + Phase 2 evidence, blocked by pre-existing `child_process` browser-bundle failure unrelated to this track.)
+- [ ] Task: Grep gate: 0 `console.log`/`console.info` in production code. (Covered by `lib/observability/__tests__/no-console-grep.test.ts` per Phase 8 — passes at HEAD.)
 
 ## Phase 10: Closeout
 
