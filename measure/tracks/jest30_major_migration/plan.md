@@ -467,6 +467,320 @@ guard (4/4 pass confirms the installed Jest runtime stays on major 30).
 
 ## Phase 4: Validate & Close
 
-- [ ] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
-- [ ] Task: Re-run `pnpm outdated` and `pnpm audit`; document results.
-- [ ] Task: Update `measure/tech-stack.md` with the selected Jest version.
+- [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. _Red proof: `__test__/jest30-tech-stack-doc.test.ts` is the live-behavior companion; the targeted aggregate (RA `__test__` + vocabulary-games smoke) at this HEAD shows 13 suites / 204 tests pass (post-Phase-3 baseline at `dc246e79` holds), plus 1 new suite / 4 new test failures from the Phase 4 doc-contract test. Full-monorepo `pnpm turbo run lint` attempted at this mid exceeded the 120s shell timeout — implementer may retry in CI._
+- [~] Task: Re-run `pnpm outdated` and `pnpm audit`; document results. _Red proof: `pnpm outdated -r --filter reading-advantage --filter vocabulary-games` confirms jest 30.3.0 / jest-environment-jsdom 30.3.0 (both at major 30, AC#6 partial ✓ for in-scope apps). `pnpm outdated -r` (full repo) reveals `@reading-advantage/scripts` still on jest 29.7.0 — out of scope per `jest30-audit.md` §1 but creates a tension with spec.md AC#6 (literal reading) that the implementer must resolve (extend scope vs document exclusion). `pnpm audit` timed out at this mid; implementer should retry with longer timeout or `--offline`._
+- [~] Task: Update `measure/tech-stack.md` with the selected Jest version. _Red proof: new artifact-assertion test `__test__/jest30-tech-stack-doc.test.ts` (4/4 fail) proves the doc doesn't yet mention Jest 30, jest-environment-jsdom 30.x, or @types/jest 30.x — implementing the doc update is the implementer's closeout action._
+
+### Phase 4 — Red proof at HEAD (post-Phase-3 Green)
+
+#### Targeted-vs-full gate decision (per test-strategy.md §3.3)
+
+Phase 4 Task 1 specifies `pnpm turbo run lint|test|check-types|build`.
+Per test-strategy.md §3.3, Phase 4 **must explicitly declare** whether
+the gate uses targeted `--testPathPattern="__test__"` (≈194 tests,
+known-passing baseline) or a CI-only full run, and not silently
+downgrade. Phase 4 mid declares **targeted** for reading-advantage
+(post-Phase-3 baseline: 13 suites / 204 tests at `dc246e79`) and
+vocabulary-games smoke (post-Phase-3 baseline: 183 suites / 1745 tests
+with 28 pre-existing failures in performance-benchmark and
+griffinSkyJoust). The full-monorepo aggregate (`pnpm turbo run lint`)
+was attempted at this mid pass and exceeded the 120s shell timeout —
+confirming the test-strategy.md §6 row 3 risk that the full aggregate
+is impractical as a Red command under the local shell environment.
+The implementer at Phase 4 closeout may retry in CI (which has a
+different cache state) and record the result; this mid pass owns only
+the bounded gate, per the user prompt's "single most targeted Red
+command" guidance.
+
+Note: Jest 30 deprecated `--testPathPattern` in favor of
+`--testPathPatterns`. The Phase 3 closeout at `dc246e79` used the
+pre-30 flag — it still passed at that HEAD because `dc246e79` ran
+directly via `apps/reading-advantage/node_modules/.bin/jest` with the
+Jest 29 binary that was still resolved at the lockfile from the prior
+commit. This mid pass (post-`dc246e79`) resolves the Jest 30 binary,
+so the flag must be `--testPathPatterns` (plural) to avoid the
+`Option "testPathPattern" was replaced by "--testPathPatterns"` error
+observed at this mid.
+
+#### Worktree-classification table (at mid start)
+
+| Path | Status at end of mid | Classification | Action by Phase 4 mid |
+|---|---|---|---|
+| `measure/automation-supervisor.py` | modified (+272/-33) | **Unrelated user work** — supervisor hardening (audit-result schema validation, closeout-manifest logic, plan/metadata closeout feedback requiring `[checkpoint:]` / `[final-verification:]` markers, retry policy text, `ux_auto_*` path filters, artifact cleanup). Not part of this track. The supervisor changes affect how Phase 4 closeout is **gated** (e.g., `plan_closeout_feedback` will require the Phase 4 heading to carry a `[checkpoint:…]` or `[final-verification:…]` marker) but the changes themselves are owned by another track (likely `housekeeping_batch_20260603` per the supervisor's own Phase 4 closeout text). | **Leave modified.** Do not commit in this track. Do not revert. |
+| `apps/marketing/next-env.d.ts` | untracked | **Generated / ignorable** — Next.js auto-generated types file (content begins with `/// <reference types="next" />` and ends with the standard "should not be edited" comment from the Next.js docs) | Leave untracked. |
+| `measure/tracks/agents_md_audit_science_advantage_20260603/` | untracked (fixtures only) | **Unrelated user work** — different track (`agents_md_audit_science_advantage_20260603`); the directory contains only a `fixtures/` subdirectory with sample docs used by that track's audit | Leave untouched, do not commit. |
+
+#### Red proof — Task 1 (aggregate gate, targeted)
+
+Targeted Red command (bounded to the RA `__test__` pattern + the
+vocabulary-games smoke; no full-monorepo, no watch, no `testPathPattern`
+widening):
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest --testPathPatterns="__test__" --no-coverage
+```
+
+Result at HEAD (post-Phase-3 Green at `dc246e79`,
+`apps/reading-advantage/package.json` at `jest@^30.2.0`,
+`jest-environment-jsdom@^30.2.0`, `@types/jest@^30.0.0`,
+`ts-jest` removed):
+
+```
+Test Suites: 1 failed, 13 passed, 14 total
+Tests:       4 failed, 204 passed, 208 total
+```
+
+The 1 failed suite / 4 failed tests are the **new** Phase 4
+artifact-assertion test (`__test__/jest30-tech-stack-doc.test.ts`) —
+see Task 3 below. The existing 13 suites / 204 tests still pass,
+matching the post-Phase-3 baseline recorded at `dc246e79` ("reading-
+advantage `__test__` suite 13 suites / 204 tests pass"). No
+Jest-30-caused regression.
+
+The Phase 1 contract test and Phase 2 runtime test at this HEAD
+(sanity check that the schema from `04c76fc7` and the runtime bump
+from `dc246e79` are still in effect):
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-config.contract.test.ts --no-coverage
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-red.test.ts --no-coverage
+```
+
+```
+Test Suites: 1 passed, 1 total
+Tests:       6 passed, 6 total
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+```
+
+vocabulary-games smoke at HEAD:
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter vocabulary-games test
+```
+
+```
+Test Suites: 7 failed, 176 passed, 183 total
+Tests:       24 failed, 1721 passed, 1745 total
+```
+
+24 failures (down from 28 at `dc246e79`; non-deterministic in the
+affected suites) are pre-existing (performance-benchmark,
+griffinSkyJoust) and unrelated to Jest 30. advantage-games was already
+on Jest 30.3.0 at HEAD — this is verification, not migration.
+
+#### Red proof — Task 2 (`pnpm outdated` and `pnpm audit`)
+
+`pnpm outdated -r --filter reading-advantage --filter vocabulary-games
+--json` at HEAD (parse of the JSON output):
+
+| Package | Current | Latest | Wanted | Dependent |
+|---|---|---|---|---|
+| `jest` | 30.3.0 | 30.4.2 | 30.3.0 | reading-advantage, vocabulary-games |
+| `jest-environment-jsdom` | 30.3.0 | 30.4.1 | 30.3.0 | reading-advantage, vocabulary-games |
+
+For the two in-scope apps per `jest30-audit.md` §1, Jest is at major
+30.x ✓ — spec.md AC#6 satisfied **for the in-scope apps**.
+
+`pnpm outdated -r` (full monorepo, including
+`@reading-advantage/scripts`) at HEAD:
+
+| Package | Current | Latest | Wanted | Dependent |
+|---|---|---|---|---|
+| `jest` | 29.7.0 | 30.4.2 | 29.7.0 | `@reading-advantage/scripts` |
+| `jest-environment-jsdom` | 30.3.0 | 30.4.1 | 30.3.0 | reading-advantage, vocabulary-games |
+
+`@reading-advantage/scripts` (legacy scripts package at
+`packages/reading-advantage-scripts/`) still pins
+`jest@^29.7.0` in its `devDependencies`. The package's only jest
+usage is `jest --passWithNoTests` in its `test` script. This is
+**out of scope** per `jest30-audit.md` §1 (the audit's inventory
+table only lists `apps/reading-advantage` and `apps/advantage-games`;
+the scripts package is not in the migration scope). However, this
+creates a tension with spec.md AC#6 (which reads literally as
+"`pnpm outdated -r` shows Jest at the target major version") and
+spec.md AC#1 ("Jest upgraded from 29.x to 30.x in reading-advantage
+and advantage-games" — the literal reading limits the upgrade scope
+to those two apps, but the spec does not anticipate a third Jest
+consumer outside the migration). The implementer at Phase 4 closeout
+must decide:
+
+1. **Extend scope** — migrate `@reading-advantage/scripts` to
+   `jest@^30.2.0` (the package has no `jest.config.ts` and uses
+   `jest --passWithNoTests`; the migration is trivial). This makes
+   AC#6 literally true across the whole monorepo.
+2. **Document exclusion** — record the scripts package as an explicit
+   exclusion in the Phase 4 closeout entry AND in `tech-stack.md`,
+   citing `jest30-audit.md` §1 as the scope authority. AC#6 is then
+   satisfied "for the apps in the migration scope" rather than
+   "for the entire monorepo".
+
+Both decisions satisfy the migration's substantive intent; the choice
+is a policy decision the implementer owns.
+
+`pnpm audit` was attempted at this mid pass but timed out at 120s
+(network-bound vulnerability-database fetch against npm/pnpm's online
+registry). This is an **infrastructure failure unrelated to Jest 30**.
+The audit re-run is owned by the implementer at Phase 4 closeout —
+recommended invocation with a longer timeout:
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm audit --json 2>&1 | tee /tmp/jest30-pnpm-audit.json
+```
+
+or, if the network is constrained:
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm audit --offline 2>&1 | tee /tmp/jest30-pnpm-audit-offline.txt
+```
+
+#### Red proof — Task 3 (tech-stack.md update)
+
+A new artifact-assertion test was written at
+`apps/reading-advantage/__test__/jest30-tech-stack-doc.test.ts`.
+Per test-strategy.md §4 ("No new test framework is introduced") and
+per the user prompt's allowance for markdown assertions when the
+phase deliverable IS the artifact, this test is the Phase 4 closeout
+gate for the doc update.
+
+The test asserts four shape facts the doc must record after Phase 4
+closeout (matching `dc246e79`'s package.json bump + `jest30-audit.md`
+§3 row 2 @types/jest lockstep):
+
+1. The doc mentions "Jest 30" (or "Jest 30.x", "Jest ^30", "jest@^30")
+   somewhere — proves the migration was actually recorded as Jest 30
+   and not left as a generic "Jest" mention.
+2. The doc records `jest` at a 30.x version in the selected-versions
+   table — covers AC#6 for the package itself.
+3. The doc records `jest-environment-jsdom` at a 30.x version —
+   covers `jest30-audit.md` §1 and §3 row 10 lockstep requirement.
+4. The doc records `@types/jest` at a 30.x version — covers
+   `jest30-audit.md` §3 row 2 TS-drift guard.
+
+Targeted Red command (bounded to the single new test file, no watch,
+no full-suite):
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-tech-stack-doc.test.ts --no-coverage
+```
+
+Result at HEAD (current `measure/tech-stack.md` mentions "Jest"
+exactly once at line 57 — `| Jest | Unit tests
+(advantage-games, reading-advantage) |` — without a 30.x version
+specification; AC#7 unfulfilled):
+
+```
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 4 total
+```
+
+All 4 tests fail for the right reason — the doc doesn't yet record
+the Jest 30 selection. The failures are paired with the
+live-behavior gate from Task 1 (the implementer must run the
+aggregate gate AND have the doc assertion passing together; one
+without the other is incomplete per `test-strategy.md` §4
+architecture guardrails). The pairing is declared as the plan note
+explicitly per the user prompt's allowance: the live-behavior gate
+is owned by the Phase 4 implementer; this Red phase only verifies
+the doc contract.
+
+#### Phase 4 mid pass — what was done vs. what was NOT done
+
+- **Wrote** `apps/reading-advantage/__test__/jest30-tech-stack-doc.test.ts`
+  as the artifact-assertion Red proof for Task 3. This is the only
+  new test file produced at this mid. The Phase 1 contract test and
+  Phase 2 runtime test are re-used as the live-behavior companions
+  (both still pass at this HEAD).
+- **Ran** the targeted aggregate gate (RA `__test__` +
+  vocabulary-games smoke) to observe the post-Phase-3 Green state.
+  **Did NOT** run the full-monorepo `pnpm turbo run lint|test|...`
+  (exceeded 120s shell timeout at the first attempt; the
+  implementer may retry in CI).
+- **Ran** `pnpm outdated -r --filter reading-advantage --filter
+  vocabulary-games` and `pnpm outdated -r` (full monorepo) to
+  capture Task 2's Red state. Documented the
+  `@reading-advantage/scripts` scope question for the implementer.
+- **Attempted** `pnpm audit` but it timed out at 120s (network).
+  Documented the recommended retry invocation.
+- **Did NOT** modify `measure/tech-stack.md` — that's the
+  implementer's closeout action; this mid only writes the test that
+  asserts the deliverable.
+- **Did NOT** mark any Phase 4 task `[x]` — only `[~]` (Red done,
+  Green pending).
+- **Did NOT** modify `measure/automation-supervisor.py`,
+  `apps/marketing/next-env.d.ts`, or
+  `measure/tracks/agents_md_audit_science_advantage_20260603/`.
+  All three are classified above as out-of-scope for this track.
+
+#### Build-graph probe at this mid
+
+`graph.db` mtime 2026-06-19 (fresh, +1 minute from the Phase 3 mid
+probe). Run for context, not for new test authoring:
+
+- `build-graph stats ./graph.db` → 2286 nodes / 3215 edges / 331
+  files (delta +1/0/+1 vs. the `2285/3215/330` Phase 3 mid
+  baseline — the +1 file is the new
+  `jest30-tech-stack-doc.test.ts`).
+- `build-graph search ./graph.db jest30` → 4 jest30 artifacts
+  (audit md, contract test, red test, **tech-stack doc test**).
+  No symbol-level callers (Jest is infrastructure, not a graphed
+  symbol).
+
+#### Phase 4 implementer hand-off
+
+The Phase 4 implementer must:
+
+1. **Decide targeted-vs-full gate** (declared above as "targeted";
+   reverse if CI shows full is feasible). If full: re-run
+   `pnpm turbo run lint test check-types build` and record results
+   in the Phase 4 closeout entry. If targeted: keep the targeted
+   RA `__test__` + vocabulary-games smoke as the closeout gate and
+   add a `[checkpoint: targeted-gate]` marker to the Phase 4
+   heading to satisfy `measure/automation-supervisor.py:
+   plan_closeout_feedback`.
+2. **Resolve the `@reading-advantage/scripts` scope question**
+   (extend scope vs. document exclusion). See the Task 2 section
+   above for the trade-off. The chosen decision must be recorded in
+   the Phase 4 closeout entry AND in `measure/tech-stack.md`.
+3. **Re-run `pnpm audit`** (timed out at this mid pass; the
+   implementer should retry with a longer timeout or `--offline`).
+   Document the audit result in the Phase 4 closeout entry.
+4. **Update `measure/tech-stack.md`**:
+   - Add `jest`, `jest-environment-jsdom`, `@types/jest` to the
+     "Selected Shared Versions" table at line 9 (header is
+     "post dependency_upgrade_hardening_20260607"; the implementer
+     may keep that header or add a "jest30_major_migration" sub-row
+     beneath) with versions `^30.2.0`, `^30.2.0`, `^30.0.0`
+     respectively, matching `dc246e79`.
+   - If the implementer chooses the document-exclusion path for
+     Task 2, add an explicit "Out-of-scope: `@reading-advantage/scripts`
+     (jest@^29.7.0, legacy scripts package; see
+     `jest30-audit.md` §1)" note under the "Testing" section
+     (line 52) or in the "Selected Shared Versions" table.
+   - Verify all 4 assertions in
+     `__test__/jest30-tech-stack-doc.test.ts` pass after the
+     update by re-running the targeted Red command.
+5. **Add a Phase 4 closeout entry** below this Red proof section
+   with:
+   - A `[final-verification: jest30-green-and-documented]` marker on
+     the Phase 4 heading (required by the supervisor's
+     `plan_closeout_feedback` — every phase heading must carry a
+     `[checkpoint:…]` or `[final-verification:…]` marker).
+   - A summary table of the aggregate-gate decision, the
+     outdated/audit results, and the tech-stack.md update
+     verification.
+   - Commit SHAs for the three Phase 4 tasks (the doc update
+     commit, the gate re-run if applicable, and any scope-change
+     commit).
+6. **Mark all 3 Phase 4 tasks as `[x]`** with the corresponding
+   commit SHA in parens, per the supervisor's `plan_closeout_feedback`
+   ("Completed closeout plan task lacks commit SHA" failure mode).
+7. **Run `pnpm turbo run lint test check-types build`** as the
+   final closeout gate (whether targeted or full, as decided in
+   step 1). The Phase 4 closeout entry must record the exit code
+   and the total test count.
+8. **Update `metadata.json`** `status` to `"done"` with today's
+   date (per the supervisor's `metadata_closeout_feedback`) — this
+   is owned by the closeout role, not the implementer; the
+   implementer does not touch `metadata.json`.
