@@ -27,8 +27,10 @@ const eslintConfig = [{
     "react-hooks/set-state-in-effect": "off",
     // Phase 7 (FR-7): forbid raw `console.log` / `console.info` /
     // `console.debug`.  `console.error` and `console.warn` are
-    // permitted so the logger sink (`lib/observability/logger.ts`)
-    // and emergency calls in proxy.ts (Phase 8d) are not flagged.
+    // permitted so the logger sinks (`lib/observability/logger.ts`
+    // and `components/client-logger.ts`) are not flagged.  Phase 8d
+    // migrated proxy.ts to `logger.error`; the grep gate enforces
+    // zero `console.*` outside the sinks.
     "no-console": ["error", { allow: ["error", "warn"] }],
   },
 }, {

@@ -1116,6 +1116,41 @@ For each site (Phase 8a–8e):
 >   flag, ripgrep treated the glob patterns as file paths and could not
 >   exclude test files, fixtures, or the logger sink.
 
+> **Phase Acceptance Audit (2026-06-20, sha `d33dc1e8`):**
+> The independent Phase Acceptance Auditor found and fixed one blocking
+> issue: `pnpm turbo run lint --filter=science-advantage` exited 1 with
+> 205 `no-console` errors in `scripts/` CLI tools and
+> `vitest.integration.global-setup.ts`. The Phase 8 Green gate
+> (test-strategy §7) requires lint exit 0. Fix: added `no-console: off`
+> to the `scripts/**` ESLint config block and a new exclusion for
+> `vitest.integration.global-setup.ts` (both outside FR-8 production
+> scope per spec line 199). Added `eslint-no-console.exclusions.test.ts`
+> regression test. Also fixed stale ESLint config comment referencing
+> proxy.ts console.error (Phase 8d migrated proxy.ts to logger.error).
+>
+> **Re-audit Green commands (all exit 0):**
+> - `pnpm --filter science-advantage exec vitest run --config
+>   vitest.unit.config.ts lib/observability/__tests__/` → 12 files,
+>   72 tests passed.
+> - `pnpm --filter science-advantage exec vitest run --config
+>   vitest.unit.config.ts lib/ai/__tests__/architecture.test.ts
+>   lib/ai/__tests__/recommendation-service.otel.test.ts
+>   app/api/ai/update-mastery/route.test.ts
+>   'app/api/lessons/[lessonSlug]/quiz/route.test.ts'
+>   'app/api/classes/[classId]/lessons/[lessonId]/analytics/route.test.ts'
+>   app/api/ai/recommendations/route.test.ts
+>   'app/api/classes/[classId]/assignments/route.test.ts'` → 7 files,
+>   28 tests passed.
+> - `pnpm turbo run lint --filter=science-advantage` → 11/11 tasks
+>   successful, 0 errors, 13 pre-existing warnings.
+>
+> **Non-blocking findings noted:**
+> - Adversarial test canary file (`lib/observability/.eslint-adversarial-canary.ts`)
+>   can cause a transient ENOENT if lint runs in parallel with tests
+>   (pre-existing Phase 7 test isolation issue).
+> - ESLint `no-console` allows `console.warn` globally (spec FR-7 says
+>   `warn` level); grep gate compensates (Phase 7 deviation).
+
 > **Mid-Red evidence (this phase, 2026-06-20):** the Phase 8 Red
 > surface is in two new test files:
 >
