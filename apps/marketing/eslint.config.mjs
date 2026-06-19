@@ -1,4 +1,4 @@
-import { baseConfig, plugins } from "@reading-advantage/config/eslint";
+import { baseConfig, ignores } from "@reading-advantage/config/eslint";
 
 /**
  * ESLint flat config for the marketing app.
@@ -12,34 +12,18 @@ import { baseConfig, plugins } from "@reading-advantage/config/eslint";
  * find an eslint.config.(js|mjs|cjs) file."
  */
 const config = [
+  {
+    ignores: [...ignores, ".next/", "dist/", "build/", "coverage/"],
+  },
   ...baseConfig,
   {
-    plugins,
-    ignores: [
-      "node_modules/",
-      ".next/",
-      "dist/",
-      "build/",
-      "coverage/",
-    ],
-  },
-  {
-    // The marketing app is still in active development and has
-    // pre-existing `any` types and unused-error-catch variables
-    // in its route handlers. These are code-quality issues that
-    // the marketing app's owning track should address. They are
-    // not introduced by the ai_sdk_major_migration track. The
-    // AI SDK migration needs the aggregate live gate to be green
-    // for the closeout, and the marketing app's lint failure is
-    // one of the remaining blockers. This override is a pragmatic
-    // closeout decision; the marketing app's owning track should
-    // tighten the types and remove unused catches in a follow-up.
+    // Tech debt: Phases 2+ (campaigns, settings, video production)
+    // were scaffolded ahead of their review gates and contain
+    // pre-existing `any` types. This file-level override pins the
+    // debt to the one known file; remove when Phase 5 is reviewed.
+    files: ["app/campaigns/\\[id\\]/video/page.tsx"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-      ],
     },
   },
 ];
