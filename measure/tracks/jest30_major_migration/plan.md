@@ -507,6 +507,7 @@ observed at this mid.
 | Path | Status at end of mid | Classification | Action by Phase 4 mid |
 |---|---|---|---|
 | `measure/automation-supervisor.py` | modified (+272/-33) | **Unrelated user work** — supervisor hardening (audit-result schema validation, closeout-manifest logic, plan/metadata closeout feedback requiring `[checkpoint:]` / `[final-verification:]` markers, retry policy text, `ux_auto_*` path filters, artifact cleanup). Not part of this track. The supervisor changes affect how Phase 4 closeout is **gated** (e.g., `plan_closeout_feedback` will require the Phase 4 heading to carry a `[checkpoint:…]` or `[final-verification:…]` marker) but the changes themselves are owned by another track (likely `housekeeping_batch_20260603` per the supervisor's own Phase 4 closeout text). | **Leave modified.** Do not commit in this track. Do not revert. |
+| `measure/tech-stack.md` | modified (+6/-1, this mid pass) | **Relevant to this track/phase but is GREEN-side work-in-progress** — the dirty state shows the Phase 4 Task 3 doc update (jest 30.2.0 / jest-environment-jsdom 30.2.0 / @types/jest 30.0.0 entries in the Selected Shared Versions table + Jest 30.x mention in the Testing table + out-of-scope `@reading-advantage/scripts` note). The previous mid (`bfa3133a`) deliberately did NOT modify `tech-stack.md`; the current dirty state represents the implementer's Green-side deliverable that has been applied to the worktree but not yet committed. | **Leave modified.** Do NOT commit by mid — Green work is owned by the Phase 4 implementer. Folding Green-side implementation into a Red-phase commit would violate Red/Green discipline. The implementer at Phase 4 closeout owns the commit that lands the doc update (after the live-behavior aggregate gate from Task 1 also passes). |
 | `apps/marketing/next-env.d.ts` | untracked | **Generated / ignorable** — Next.js auto-generated types file (content begins with `/// <reference types="next" />` and ends with the standard "should not be edited" comment from the Next.js docs) | Leave untracked. |
 | `measure/tracks/agents_md_audit_science_advantage_20260603/` | untracked (fixtures only) | **Unrelated user work** — different track (`agents_md_audit_science_advantage_20260603`); the directory contains only a `fixtures/` subdirectory with sample docs used by that track's audit | Leave untouched, do not commit. |
 
@@ -726,6 +727,121 @@ probe). Run for context, not for new test authoring:
   (audit md, contract test, red test, **tech-stack doc test**).
   No symbol-level callers (Jest is infrastructure, not a graphed
   symbol).
+
+#### Phase 4 mid pass — Red verification at HEAD (post-bfa3133a)
+
+This mid pass follows the Red proof committed at `bfa3133a`. The
+Red work for Phase 4 was already authored (the artifact-assertion
+test `__test__/jest30-tech-stack-doc.test.ts` and the plan.md Red
+proof section) and committed; this mid pass verifies that the Red
+proof still holds at HEAD with the current worktree state, and
+classifies a new dirty path that appeared between the previous mid
+(`bfa3133a`) and this one.
+
+**Worktree state at this mid start** — the dirty paths are:
+
+- `M measure/automation-supervisor.py` — unrelated user work
+  (unchanged from the previous mid).
+- `M measure/tech-stack.md` — **new since the previous mid**;
+  classified in the updated worktree-classification table above as
+  Green-side work-in-progress for Phase 4 Task 3.
+- `?? apps/marketing/next-env.d.ts` — generated/ignorable.
+- `?? measure/tracks/agents_md_audit_science_advantage_20260603/`
+  — unrelated user work.
+
+**Targeted Red command (re-verified at HEAD):**
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-tech-stack-doc.test.ts --no-coverage
+```
+
+Verification approach: temporarily stashed `measure/tech-stack.md`
+to expose HEAD's doc (which doesn't have Jest 30 entries), ran the
+test, then restored the stash. This is non-destructive — the
+unrelated/ignorable dirty paths were not touched.
+
+Result at HEAD (post-`bfa3133a`, `measure/tech-stack.md` reverted
+to HEAD's pre-Phase-4-closeout state):
+
+```
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 4 total
+```
+
+This matches the `bfa3133a` Red proof exactly — 4 failures on the
+load-bearing shape assertions (Jest 30 mention, jest@30.x in table,
+jest-environment-jsdom@30.x in table, @types/jest@30.x in table).
+The Red proof still holds.
+
+**Companion live-behavior proofs re-verified at HEAD:**
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-config.contract.test.ts --no-coverage
+```
+
+```
+Test Suites: 1 passed, 1 total
+Tests:       6 passed, 6 total
+```
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-red.test.ts --no-coverage
+```
+
+```
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+```
+
+Both companions still green — the Phase 1 contract (`04c76fc7`)
+and Phase 2 runtime (`f7dea19d` / `dc246e79`) gates are unchanged
+at HEAD.
+
+**In dirty state (no stash), the doc test passes:**
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-tech-stack-doc.test.ts --no-coverage
+```
+
+```
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+```
+
+This is **expected and correct** — the dirty `tech-stack.md`
+implements the deliverable that the test asserts on, so the test
+flips green in the dirty state. This is the Green-side deliverable
+in flight, not a missing-behavior Red proof at HEAD. The HEAD
+Red proof still holds (4 fail / 4 total).
+
+**Phase 4 mid pass — what was done vs. what was NOT done:**
+
+- **Verified** the Red proof holds at HEAD (4 fail / 4 total for
+  the doc contract test, 6/6 for the Phase 1 contract test, 4/4
+  for the Phase 2 runtime test).
+- **Classified** the new dirty path `measure/tech-stack.md` as
+  Green-side work-in-progress (Phase 4 Task 3 deliverable) in the
+  updated worktree-classification table above.
+- **Confirmed** the existing 3 Phase 4 task markers (`[~]` —
+  Red done, Green pending) are correct; no marker changes needed.
+- **Did NOT** write any new Red test — the Red proof was authored
+  at `bfa3133a` and the failing assertions still fail at HEAD.
+  Writing a duplicate would be a false-Red.
+- **Did NOT** commit the dirty `measure/tech-stack.md` — Green
+  work is owned by the Phase 4 implementer; folding it into a
+  Red-phase commit would violate Red/Green discipline.
+- **Did NOT** revert, modify, or hide the unrelated user work
+  (`measure/automation-supervisor.py`,
+  `apps/marketing/next-env.d.ts`,
+  `measure/tracks/agents_md_audit_science_advantage_20260603/`).
+- **Did NOT** run the full-monorepo aggregate gate
+  (`pnpm turbo run lint|test|check-types|build`) — already
+  attempted at the previous mid and exceeded the 120s shell
+  timeout; the implementer at closeout may retry in CI per the
+  hand-off below.
+- **Did NOT** re-run `pnpm audit` — the previous mid documented
+  the timeout; the implementer owns the retry per the hand-off
+  below.
 
 #### Phase 4 implementer hand-off
 
