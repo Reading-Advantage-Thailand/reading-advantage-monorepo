@@ -100,6 +100,51 @@
 >   not a Red test.
 > Tasks 1, 2 (pnpm install), and 6 are setup/closeout and do not need
 > their own Red contract per §6.
+>
+> **MID re-verification 2026-06-19** (this pass): the 4 Phase 1 Red tests
+> re-run cleanly at HEAD with the bounded unit-config variant. Targeted
+> Red command actually executed:
+>
+> ```
+> pnpm --filter science-advantage exec vitest run \
+>   --config vitest.unit.config.ts \
+>   lib/observability/__tests__/sentry-config.contract.test.ts \
+>   lib/observability/__tests__/env-example.contract.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 2 failed (2) | Tests 4 failed (4)`.
+> All 4 failures are the expected missing-implementation Reds:
+> - `sentry.client.config.ts` not found → `Error: Cannot find module '/sentry.client.config'`
+> - `sentry.server.config.ts` not found → `Error: Cannot find module '/sentry.server.config'`
+> - `.env.example` missing `SENTRY_DSN=` line → `expected undefined to be defined`
+> - consequent "required in production" comment precondition → `expected -1 to be greater than or equal to 0`
+>
+> Live-behavior throw-in-route gate remains Phase 9 (test-strategy.md §6 / §7).
+>
+> **Worktree hygiene at MID start (2026-06-19 this pass):**
+> `git status --porcelain` shows four dirty paths. Classification:
+> - `M measure/automation-supervisor.py` — automation-supervisor self-update
+>   (adds `AUDIT_RESULT_SCHEMA_VERSION`, `UX_AUTO_INCLUDE_*` allow-lists,
+>   `ux_auto_relevant_path`, etc.). **Unrelated user work; preserve.**
+> - `M pnpm-lock.yaml` — contains unresolved merge-conflict markers
+>   (`<<<<<<< Updated upstream` / `=======` / `>>>>>>> Stashed changes`).
+>   Byte-identical to `abf8aebe31071d1b0384ee0e95c85fa0` on disk per the
+>   prior MID handoff; the diff is the embedded markers only.
+>   **Unrelated to this track; not touched.** Flagged as a known stale
+>   state that does not block the Phase 1 Red verification (the targeted
+>   unit-config `vitest run` does not exercise the integration globalSetup
+>   that reads `pnpm-lock.yaml`).
+> - `?? apps/marketing/next-env.d.ts` — untracked file in a different app.
+>   **Unrelated user work; preserve.**
+> - `?? measure/tracks/agents_md_audit_science_advantage_20260603/` —
+>   untracked fixtures dir for a different track (the
+>   `agents_md_audit_science_advantage_20260603` audit track, not this one).
+>   **Unrelated; preserve.**
+>
+> This MID commit touches only `measure/tracks/observability_stack_20260603/plan.md`
+> (a Measure doc, allowed by the MID scope rule). No overlap with the
+> unrelated dirty paths above. Phase 1 Red surface remains stable and
+> unchanged from commits `792469ca` + `b9555b90`.
 
 - [~] Task: Add `@sentry/nextjs` to `apps/science-advantage/package.json` `dependencies`.
 - [~] Task: `pnpm install` from monorepo root; verify install.
