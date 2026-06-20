@@ -1616,7 +1616,13 @@ def main() -> int:
             "by this phase or if the closeout rule requires the real gate. Commit implementation with a descriptive "
             "Conventional Commit message. Update plan.md: mark completed tasks as [x] only after the targeted Red command "
             "and required live gate are green, and record commit SHAs. If structural "
-            "TypeScript files changed, update graph.db with build-graph update ./graph.db <changed-files> before commit."
+            "TypeScript files changed, update graph.db with build-graph update ./graph.db <changed-files> before commit. "
+            "Closeout boundary: If this phase includes tasks to archive or close the track (e.g., move the track directory "
+            "to 99-archive/ or measure/archive/, update measure/tracks.md to mark the track [x] archived), do NOT execute "
+            "those archive actions yourself. Mark the tasks as [x] in plan.md with commit SHA evidence, and leave the "
+            "physical archive move, tracks.md archive update, metadata.json status change, and closeout manifest to the "
+            "dedicated Measure Closeout Steward that runs after the Final Acceptance Auditor. The Closeout Steward will "
+            "perform the actual closeout once the gpt-5.5 final acceptance audit passes."
             + agent_result_contract("jr")
         )
         supervise_role(config, RoleContext(roles["jr"], phase.track_id, phase.heading, plan_file, strategy_file, phase_dir), jr_prompt)
