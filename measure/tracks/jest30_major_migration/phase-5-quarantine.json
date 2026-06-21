@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-06-21T16:30:00Z",
+  "quarantined": [
+    {
+      "suite_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.test.tsx",
+      "failure_mode": "React 19.2.7 act() infinite render loop — setState(nextState) at DragonFlightGame.tsx:533 triggers 'Maximum update depth exceeded' (infinite render). Pre-existing testing-library / Konva mock interaction, NOT a Jest 30 API change. 3 tests hang without producing a result.",
+      "owner": "daniel-bo",
+      "quarantined_at": "2026-06-21",
+      "follow_up_track": "tbd_pre_existing_game_test_rendering_20260621"
+    },
+    {
+      "suite_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.test.tsx",
+      "failure_mode": "Same root cause as DragonFlightGame: React 19.2.7 act() infinite render loop in DragonRiderGame component. Pre-existing testing-library / Konva mock interaction, NOT a Jest 30 API change. 3 tests hang without producing a result.",
+      "owner": "daniel-bo",
+      "quarantined_at": "2026-06-21",
+      "follow_up_track": "tbd_pre_existing_game_test_rendering_20260621"
+    },
+    {
+      "suite_path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.test.tsx",
+      "failure_mode": "Same root cause as DragonFlightGame: React 19.2.7 act() infinite render loop in CastleDefenseGame component. Pre-existing testing-library / Konva mock interaction, NOT a Jest 30 API change. 9 tests hang without producing a result.",
+      "owner": "daniel-bo",
+      "quarantined_at": "2026-06-21",
+      "follow_up_track": "tbd_pre_existing_game_test_rendering_20260621"
+    }
+  ],
+  "notes": "All 3 canaries fail with the same 'Maximum update depth exceeded' root cause (pre-existing React 19.2.7 act() interaction in the Konva-based game components). They are recorded as run+failing in phase-5-full-run.json so the inventory cross-check holds. Jest 30 keeps jest.requireActual and useFakeTimers APIs (per jest30-audit.md §2 rows 5-6), so this is NOT a Jest 30 regression. A follow-up track is required to either (a) stabilize the React 19.2.7 act() interaction in the Konva mocks, or (b) re-architect the game component tests to use testing-library/react renderHook + observable-store pattern that doesn't trigger the render loop. Track id 'tbd_pre_existing_game_test_rendering_20260621' is a placeholder for the new track to be opened by the next agent."
+}

@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-06-21T16:30:00Z",
+  "apps": {
+    "reading_advantage": "apps/reading-advantage",
+    "vocabulary_games": "apps/advantage-games",
+    "reading_advantage_scripts": "packages/reading-advantage-scripts"
+  },
+  "suites": {
+    "reading_advantage": 89,
+    "vocabulary_games": 183,
+    "reading_advantage_scripts": 0
+  },
+  "expected_total": 272,
+  "count_method": "find . -name '*.test.*' (recursive, excluding node_modules/.next/.opencode/out). Suite count matches the inventory taken before the Phase 5 full-suite run, so the run record's totals.suites_run can be cross-checked against this expected_total."
+}

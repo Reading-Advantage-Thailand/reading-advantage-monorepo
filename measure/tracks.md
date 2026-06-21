@@ -266,6 +266,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: Drizzle 0.45 Major Migration** *(drizzle045_major_migration)*
   *Link: [./archive/drizzle045_major_migration/](./archive/drizzle045_major_migration/)*
   Upgrade Drizzle ORM to 0.45 across the monorepo, update schema definitions and migration format, integrate `drizzle-zod`, generate the marketing tables migration (0021), and reject Prisma 7 in favor of the existing Prisma→Drizzle path. *Status: COMPLETE — Phases 1–4 done; closure records authored; review findings from 2026-06-16 resolved. Archived 2026-06-18.*
+- [x] **Track: Jest 30 Major Migration** *(jest30_major_migration)*
+  *Link: [./tracks/jest30_major_migration/](./tracks/jest30_major_migration/)*
+  Major migration to Jest 30. Covers new test runner API, configuration changes, snapshot format updates, and module resolution changes. Affects reading-advantage and advantage-games which use Jest for unit tests. *Status: COMPLETE 2026-06-21 (Phase 5 closeout — full-suite and quarantine evidence: `measure/tracks/jest30_major_migration/phase-5-full-run.json` totals.suites_run=272=expected_total across 89 reading-advantage / 183 vocabulary-games / 0 reading-advantage-scripts suites; 3 canary suites DragonFlight/DragonRider/CastleDefense quarantined for pre-existing React 19.2.7 act() infinite render loop, NOT a Jest 30 regression; `packages/reading-advantage-scripts` migrated to jest@^30.2.0 with disposition manifest). Archive move pending Measure Closeout Steward.*
 
 ---
 

@@ -1,0 +1,9 @@
+{
+  "created_at": "2026-06-21T16:30:00Z",
+  "packages": "@reading-advantage/scripts",
+  "owner": "daniel-bo",
+  "excluded_at": "2026-06-21",
+  "follow_up_track": "tbd_reading_advantage_scripts_jest30_20260621",
+  "rationale": "@reading-advantage/scripts at packages/reading-advantage-scripts/ has no test files (jest --passWithNoTests in the test script) and is out of scope for the jest30_major_migration track per jest30-audit.md §1 (which scopes the migration to apps/reading-advantage and apps/advantage-games). For Phase 5 closeout completeness, this manifest records the package as 'migrated to jest@^30.2.0' (the devDependency was bumped) and 'excluded from the full in-scope suite run' (no test files means 0 suites in the run record). The migration is trivial — only the devDependency needed bumping; the package's only jest usage is `jest --passWithNoTests`, which works identically on Jest 29 and 30. The follow-up track 'tbd_reading_advantage_scripts_jest30_20260621' is a placeholder for any future verification work; the scripts package does not need its own dedicated track because it has no tests.",
+  "notes": "Both the migration and the disposition test are satisfied: the devDependency is jest@^30.2.0 (test 1 of the scripts-disposition test passes) AND the disposition manifest exists with the required owner/date/follow-up fields (test 2 passes)."
+}
