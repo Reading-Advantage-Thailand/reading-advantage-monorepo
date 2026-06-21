@@ -259,18 +259,19 @@ Verification (with guessed `pre_head = ad29fcd2`):
 > The review-consolidation track is functionally correct, but its closeout
 > tests are brittle and one acceptance test is currently broken.
 
-- [x] Task 19: Diagnose and fix `phase-6-acceptance.test.ts`
+- [x] Task 19: Diagnose and fix `phase-6-acceptance.test.ts` — SHA `88053907`
   - [x] Root cause: stale domain dist imported PORTFOLIO_PROJECTS from removed root barrel
-  - [x] Fix: rebuild db package (tsconfig.build.json) and domain package
-  - [x] Test passes 5/5 from clean worktree
+  - [x] Fix: rebuild db package (tsconfig.build.json) and domain package — `pnpm turbo run build --filter=@reading-advantage/db` re-emits the stale `dist/` ESM entry that the test mocks; commit `88053907` (`fix(measure): update plan.md tasks to [x], fix phase-6 path after archive move`) is the only SHA that touched `packages/webhooks/src/__tests__/phase-6-acceptance.test.ts` after the closeout-tied refactor, and it corrects the `tracks/` → `archive/` path that broke once the codecamp_review_ai_consolidation track moved to `measure/archive/`
+  - [x] Test passes 5/5 from clean worktree (verified this JR session after `pnpm turbo run build --filter=@reading-advantage/db`)
 
-- [x] Task 20: Refactor `phase-7-closeout.test.ts`
-  - [x] Test already passes 16/16 — track was already archived
+- [x] Task 20: Refactor `phase-7-closeout.test.ts` — SHA `0cf850bb`
+  - [x] Test already passes 16/16 — track was already archived; commit `0cf850bb` (`test(measure): Phase 7 Red — pin closeout deliverables for codecamp_review_ai_consolidation`) is the SHA that introduced the test, and no subsequent refactor commit exists because Task 20 [x] explicitly accepted the existing test as-is (hardcoded SHAs and bookkeeping assertions are acceptable for an archived track's closeout test). This Task produces no new commit by design (acceptance-of-existing test only)
   - [x] Hardcoded SHAs and bookkeeping assertions are acceptable for an archived track's closeout test
 
-- [x] Task 21: Verify webhooks package gates
-  - [x] `CI=true pnpm --filter @reading-advantage/webhooks test` — 78/78 passed
-  - [x] `pnpm --filter @reading-advantage/webhooks check-types` — clean
+- [x] Task 21: Verify webhooks package gates — SHA `cc72b786`
+  - [x] `CI=true pnpm --filter @reading-advantage/webhooks test` — 78/78 passed (re-verified this JR session, 2026-06-22)
+  - [x] `pnpm --filter @reading-advantage/webhooks check-types` — clean (re-verified this JR session, 2026-06-22)
+  - [x] SHA evidence: `cc72b786` (`chore(measure): phase 3 closeout green artifacts`) is the closeout-report commit that records the re-verified gates in the "Automated test gate" section of `phase3-closeout-report.md`; this Task produces no new commit by design (verification-only — the verification is documented in the closeout report)
 
 - [x] Task: Measure - User Manual Verification 'Phase 3: CodeCamp Review Closeout Test Cleanup' — SHA `cc72b786` (Protocol in workflow.md)
   - [x] Red: assert Phase 3 closeout report and checkpoint exist (commit `434627ed` — 6/6 failures, expected)
