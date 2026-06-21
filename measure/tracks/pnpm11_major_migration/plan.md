@@ -300,6 +300,13 @@
 
 ### Phase 3 Red Gate (MID-authored)
 
+> **Fresh authorship note:** The commits cited in earlier plan revisions
+> (`253d2497`, `cee679f0`, `a8612896`, etc.) are **not ancestors of HEAD**
+> (`1eead8f6`). The contract test files did not exist in the worktree at
+> session start. Per `test-strategy.md` §1, the Red phase must be
+> (re)authored fresh at HEAD. The three `.mjs` contract files below were
+> created in this session and are committed together with this plan update.
+
 - **Deliverable:** `pnpm11-workspace-config.test.mjs` under
   `measure/tracks/pnpm11_major_migration/__tests__/` — nine assertions
   pinning the post-migration `pnpm-workspace.yaml` config and
@@ -330,10 +337,9 @@
      the Phase 2 red test if the pin is ever reverted).
 - **Targeted Red command:**
   `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-workspace-config.test.mjs`
-- **Result at HEAD (`0678c233` + `253d2497`, 2026-06-20, clean
-  worktree, no source files modified by MID):** `1 pass / 8 fail /
-  9 total` in ~0.61s. The 1 passing assertion is the Phase 1
-  baseline guard (3 standard globs are present at both HEAD and
+- **Result at HEAD (`1eead8f6`, 2026-06-21, clean source boundary):**
+  `1 pass / 8 fail / 9 total` in ~0.26s. The 1 passing assertion is the
+  Phase 1 baseline guard (3 standard globs are present at both HEAD and
   the post-migration state). The 8 failing assertions fail with
   diagnostics naming the actual pre-migration values:
   - `overrides:` block absent from `pnpm-workspace.yaml`
@@ -346,6 +352,11 @@
   - `package.json` `pnpm` field present (still has overrides /
     peerDependencyRules / resolvePeersFromWorkspaceRoot inline)
   - `packageManager` is `'pnpm@8.15.8'`, expected `/^pnpm@11\./`
+- **Fresh Phase 1 + Phase 2 verification (bounded, same session):**
+  - `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm-lock-baseline.test.mjs`
+    → `6 pass / 0 fail / 6 total` (baseline pin GREEN at HEAD)
+  - `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-lockfile-contract.test.mjs`
+    → `0 pass / 3 fail / 3 total` (lockfile contract RED at HEAD)
 - **Boundedness:** single-file `node --test` invocation against the
   Phase 3 test file only. No `--watch`, no full-suite, no `pnpm
   turbo`. The script reads `package.json` and `pnpm-workspace.yaml`
@@ -392,211 +403,31 @@
   test is plain `node --test` mjs — not a TS module, not part of
   the graph's source surface, no `build-graph update` required
   post-impl.
-- **Worktree hygiene (dirty paths at MID start, classified; rollback
-  applied mid-attempt-2):**
+- **Worktree hygiene (dirty paths at MID start, classified; source boundary
+  preserved):**
 
-  | Status   | Path                                                            | Classification                                       | End-of-attempt-2 state                              |
-  | -------- | --------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------- |
-  | `M`      | `package.json`                                                  | **Relevant (Phase 3)** — pin + overrides move        | **Reverted to HEAD** (clean) — see rollback note    |
-  | `M`      | `pnpm-lock.yaml`                                                | **Relevant (Phase 3)** — regenerated under pnpm 11   | **Reverted to HEAD** (clean) — see rollback note    |
-  | `M`      | `pnpm-workspace.yaml`                                           | **Relevant (Phase 3)** — pnpm 11 config block added   | **Reverted to HEAD** (clean) — see rollback note    |
-  | `M`      | `measure/automation-supervisor.py`                              | **Unrelated** — supervisor closeout-boundary comment | Preserved untouched (owning supervisor)             |
-  | `D`      | `measure/automation-script.sh`                                  | **Unrelated** — supervisor refactor                  | Preserved untouched (owning supervisor)             |
-  | `??`     | `apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts` | **Unrelated** — different app, different track      | Preserved untouched (owning track)                  |
-  | `??`     | `apps/marketing/next-env.d.ts`                                  | **Generated / ignorable** — Next.js auto-emitted     | Preserved untouched (Next.js auto)                  |
-  | `??`     | `measure/tracks/agents_md_audit_science_advantage_20260603/`    | **Unrelated** — different track directory            | Preserved untouched (owning track)                  |
+  | Status   | Path                                                            | Classification                                       |
+  | -------- | --------------------------------------------------------------- | ---------------------------------------------------- |
+  | `M`      | `measure/automation-supervisor.py`                              | **Unrelated** — supervisor gate refactor             |
+  | `??`     | `measure/tracks/pnpm11_major_migration/test-strategy.md`        | **Relevant** — track test strategy, folded into commit |
 
-- **Mid-attempt-2 boundary rollback (this commit):** supervisor
-  feedback on attempt 1 flagged `package.json`, `pnpm-lock.yaml`,
-  and `pnpm-workspace.yaml` as non-test/non-Measure files that
-  appeared modified at session-end and violated the Mid Red-phase
-  boundary. Investigation confirmed that my MID commit
-  (`253d2497`) contains ONLY the test file and `plan.md` (verified
-  via `git show 253d2497 --name-only`: 2 files, both test+Measure
-  doc). The three source paths were dirty at session-start
-  (pre-existing uncommitted Phase 3 implementation work from a
-  prior Implementer attempt) and were preserved in the working
-  tree per the user prompt's "preserve unrelated user work" rule.
-  However, the supervisor gate inspects the final worktree state
-  and cannot distinguish "MID introduced the dirty state" from
-  "MID preserved a pre-existing dirty state across the session
-  boundary." Per the retry-policy directive "If the failure is a
-  clear audit-evidence/schema gap, rewrite the audit result without
-  changing product code" applied here as a boundary-cleanup gap,
-  the cleanest fix is to revert the three pre-existing dirty
-  Phase 3 paths to HEAD so the Mid boundary is unambiguously clean.
-  This rollback discards the uncommitted Phase 3 implementation
-  work (`pnpm@8.15.8 → pnpm@11.8.0` pin, lockfile regeneration to
-  `lockfileVersion: '9.0'`, workspace.yaml pnpm 11 config block).
-  The Phase 3 Implementer will redo this work in a fresh session.
-  The Red contract test (`pnpm11-workspace-config.test.mjs`) is
-  preserved and continues to fail at the now-clean HEAD state
-  (1 pass / 8 fail / 9 total), proving the contract is intact.
+  No `package.json`, `pnpm-lock.yaml`, or `pnpm-workspace.yaml` changes are
+  introduced by MID. The three source files remain at HEAD; their migration
+  is the Implementer's Green-phase work. The unrelated supervisor path is
+  preserved untouched. The new `test-strategy.md` is treated as a Measure
+  doc and committed with the Red-phase tests + plan update.
 
-- **Re-verification at the clean HEAD state (post-rollback):**
-  - Phase 3 contract: `1 pass / 8 fail / 9 total` (RED confirmed;
-    1 baseline guard passes at both states, 8 new pnpm-11
-    assertions fail at HEAD as designed)
-  - Phase 2 contract: `0 pass / 3 fail / 3 total` (RED confirmed,
-    unchanged from Phase 2 close `cee679f0`)
-  - Phase 1 baseline: `6 pass / 0 fail / 6 total` (GREEN; the
-    post-rollback worktree IS the pre-migration baseline state the
-    Phase 1 test pins)
-
-- **Mid-attempt-3 re-verification (supervisor re-prompt after status 70):**
-  - Worktree state: `package.json`, `pnpm-lock.yaml`,
-    `pnpm-workspace.yaml` confirmed clean against HEAD (no diff;
-    `git diff HEAD -- <paths>` returns empty). Phase 3 source
-    files are NOT modified by MID per the boundary contract.
-  - Untracked / unrelated dirty paths still classified per
-    boundary-rollback table (preserved untouched):
-    `D measure/automation-script.sh`, `M measure/automation-supervisor.py`,
-    `?? apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts`,
-    `?? apps/marketing/next-env.d.ts`,
-    `?? measure/tracks/agents_md_audit_science_advantage_20260603/`.
-    None belong to this track.
-  - Re-ran all three contract suites under `node --test` against the
-    single combined invocation
-    (`pnpm-lock-baseline.test.mjs` +
-    `pnpm11-lockfile-contract.test.mjs` +
-    `pnpm11-workspace-config.test.mjs`):
-    `18 tests / 7 pass / 11 fail / 0 skipped` in ~0.63s. Breakdown:
-    - Phase 1 baseline: 6/6 pass (GREEN)
-    - Phase 2 contract: 0/3 pass (RED; lockfile still v6.0)
-    - Phase 3 contract: 1/9 pass (RED; 8 pnpm-11 assertions still
-      fail at clean HEAD as designed — proves contract is intact and
-      the post-rollback state is the documented pre-migration state)
-  - Diagnosis of prior supervisor status 70: the harness exit code
-    was triggered by mid-attempt-1 producing no measurable work
-    output (the prior `output.log` is a single `STARTED_AT:` line
-    with no body). This attempt treats the prior failure as an
-    audit-evidence / harness-output gap (per retry-policy clause 2),
-    not a product-code gap — no Phase 3 source files were modified.
-  - No new commit was required from this attempt: the
-    boundary-rollback commit (`9cc40054`) already produced the
-    correct clean-HEAD state, and the contract tests already
-    confirm the RED state. plan.md is updated with this
-    attempt-3 re-verification block; no source files change.
-
-- **Mid-attempt-4 (supervisor status 124 = harness timeout):**
-  - Same blocking class as mid-attempt-1 (status 70 = no-output
-    crash) and mid-attempt-3 (status 124 = timeout). Three MID
-    harness failures on this same phase, none caused by product
-    code or test gaps.
-  - State preservation confirmed via a single combined check
-    (`git log -1` + combined `node --test` of all three suites):
-    HEAD = `05ccc7e2`; result = `18 tests / 7 pass / 11 fail /
-    0 skipped in ~0.60s` — matches Phase 3 Red Gate expectation.
-  - Per retry-policy clause 4 ("If the same blocking class recurs
-    after bounded retries, preserve evidence and recommend a
-    remediation track instead of looping"), this attempt does NOT
-    re-do the re-verification. The valid work from mid-attempt-3
-    (`05ccc7e2` plan.md re-stamp) is preserved; the Phase 3 Red
-    Gate deliverable (`253d2497` contract test) is preserved; the
-    boundary rollback (`9cc40054`) is preserved.
-  - Recommendation (logged here for the next supervisor cycle):
-    open a remediation track `measure/tracks/mid_harness_timeout_*/`
-    to (a) raise the supervisor `timeout` budget for MID roles on
-    config-only tracks where the work is `< 5 git operations` and
-    the test execution is bounded, OR (b) split the MID harness
-    into a fast-path that emits `MEASURE_AGENT_RESULT` immediately
-    after a state-check hash and a slow-path for full re-verification.
-    The Phase 3 Red Gate itself does not require remediation — it
-    is correctly RED and ready to flip GREEN when the Implementer
-    ships the pnpm 11 source-file migration.
-
-- **Mid-attempt-5 (supervisor re-prompt after status 124, fresh
-  invocation):**
-  - Phase 3 tasks 1–5 all marked `[~]` above per the user directive
-    "Mark tasks as [~] before starting." Tasks remain `[~]` (not
-    `[x]`) because the Green phase is owned by the Implementer; the
-    MID role only owns Red.
-  - Targeted Red command re-run against the clean track worktree:
-    `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-workspace-config.test.mjs`
-    → `1 pass / 8 fail / 9 total` in ~0.34s. Same fail count as
-    `253d2497` + `9cc40054` closeout. Each of the 8 failing
-    assertions names the actual pre-migration value (good
-    diagnostic surface; see `git show 253d2497 --stat` for the
-    authored test body).
-  - Track worktree clean (`git diff HEAD -- measure/tracks/pnpm11_major_migration/`
-    returns empty; `git status --porcelain measure/tracks/pnpm11_major_migration/`
-    returns empty). No Phase 3 source files modified by MID per the
-    boundary contract.
-  - Dirty worktree classified per `9cc40054` boundary-rollback
-    table; all 5 paths preserved untouched:
-    - `D measure/automation-script.sh` — unrelated supervisor work
-    - `M measure/automation-supervisor.py` — unrelated supervisor work
-      (closeout-boundary comment, 8-line diff)
-    - `?? apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts` —
-      unrelated marketing app adversarial test
-    - `?? apps/marketing/next-env.d.ts` — Next.js auto-emitted, ignorable
-    - `?? measure/tracks/agents_md_audit_science_advantage_20260603/` —
-      unrelated audit track
-    None belong to `pnpm11_major_migration` and none are folded into
-    this commit per the user directive "preserve unrelated user work.
-    Do NOT modify existing source code except test files and
-    Measure docs."
-  - Live pnpm 8.15.8 environment corroborates Phase 3 assertion #8
-    (`package.json` should NOT carry a `pnpm` field): `pnpm --version`
-    prints `[WARN] The "pnpm" field in package.json is no longer read
-    by pnpm. The following keys were ignored: "pnpm.overrides",
-    "pnpm.peerDependencyRules"` — direct evidence that the
-    `package.json#pnpm` block IS deprecated, even at pnpm 8.15.8,
-    supporting the Phase 3 contract test's claim that the field
-    should be empty post-migration. Captured here as run-time
-    evidence, not committed as a new test file (the artifact
-    contract at `253d2497` is the canonical proof).
-  - **No new tests written this attempt** — Red phase deliverable
-    is already owned by `253d2497` (Phase 3 workspace config) +
-    `cee679f0` (Phase 2 lockfile contract) + `a8612896` / `20756d3b`
-    (Phase 1 baseline + CI SSOT). Per workflow.md "If the new tests
-    pass at HEAD, tighten the contract until at least one new test
-    fails or mark the task as already satisfied with evidence
-    instead of creating a false Red phase" — the Phase 3 Red
-    contract IS RED (8 fail) and IS already satisfied with
-    evidence; no false Red phase is created. Per task 5 (live gate)
-    the artifact-only tests are sufficient and the live smoke is
-    the Implementer's gate by strategy.
-  - **Single commit this attempt** — plan.md only (Measure doc,
-    explicitly allowed). Test files unchanged. Source files
-    unchanged. Commit message:
-    `chore(test): mid-attempt-5 mark phase 3 [~] and re-verify red state`.
-
-- **Mid-attempt-6 (supervisor re-prompt after attempt-5 close):**
-  - HEAD at attempt start = `6ed26df0` (attempt-5 plan re-stamp).
-    Phase 3 tasks 1–5 remain `[~]` per the directive "Mark tasks as
-    [~] before starting"; the Green flip is the Implementer's gate.
-  - Targeted Red command re-run against the clean track worktree:
-    `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-workspace-config.test.mjs`
-    → `1 pass / 8 fail / 9 total` in ~0.16s. The 1 passing assertion
-    is the Phase 1 baseline guard (3 standard workspace globs,
-    unchanged at HEAD and post-migration); the 8 failing assertions
-    each name the actual pre-migration value (see `git show
-    253d2497 -- pnpm11-workspace-config.test.mjs` for authored
-    diagnostics). The 8 RED assertions cover: `overrides:` block,
-    `peerDependencyRules:` block, `allowBuilds:` block, `nodeLinker:
-    hoisted`, `resolvePeersFromWorkspaceRoot: true`, the 5 monorepo
-    override pins (`drizzle-orm`, `next`, `react`, `react-dom`,
-    `vitest`), the `package.json#pnpm` removal, and the
-    `packageManager` pin (cross-link to Phase 2 contract).
-  - Combined check across all three contract suites:
-    `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm-lock-baseline.test.mjs measure/tracks/pnpm11_major_migration/__tests__/pnpm11-lockfile-contract.test.mjs measure/tracks/pnpm11_major_migration/__tests__/pnpm11-workspace-config.test.mjs`
-    → `18 tests / 7 pass / 11 fail / 0 skipped` in ~0.21s. Breakdown:
-    Phase 1 baseline 6/6 GREEN, Phase 2 contract 0/3 RED, Phase 3
-    contract 1/9 RED. Identical signature to attempt-3
-    (`05ccc7e2`) and attempt-5 (`6ed26df0`) — Phase 3 Red Gate is
-    stably RED at clean HEAD.
-  - Build-graph probe (per `test-strategy.md` §6 + workflow.md
-    Graph-Aware §3.2): `build-graph stats ./graph.db` returns 2511
-    nodes / 3476 edges / 385 files (mtime 2026-06-20 10:36, <24h
-    fresh; no `build-graph scan` needed). `build-graph search pnpm`
-    returns only `resolveTestDatabaseUrl` (integration suite,
-    already flagged in `test-strategy.md` §3). The Phase 3
-    contract test is plain `node --test` mjs — not a TS module —
-    so it is invisible to the graph scanner and no
-    `build-graph update` is required post-impl. The graph
-    continues to provide only negative confirmation that the
-    migration blast radius is config/CI, not TS source.
+- **Build-graph note (per `test-strategy.md` §6 + workflow.md
+  Graph-Aware §3.2):** `build-graph stats ./graph.db` returns
+  2553 nodes / 3510 edges / 401 files (mtime 2026-06-21, <24h
+  fresh; no `build-graph scan` needed). `build-graph search pnpm`
+  returns only `resolveTestDatabaseUrl` (integration suite,
+  already flagged in `test-strategy.md` §3). The contract tests
+  are plain `node --test` mjs — not TS modules — so they are
+  invisible to the graph scanner and no `build-graph update` is
+  required post-impl. The graph continues to provide only negative
+  confirmation that the migration blast radius is config/CI, not
+  TS source.
   - Worktree hygiene: track worktree is clean against HEAD
     (`git status --porcelain -- measure/tracks/pnpm11_major_migration/`
     returns empty; `git diff HEAD -- package.json pnpm-lock.yaml
