@@ -578,6 +578,65 @@
   pnpm-lock.yaml) plus this plan.md update is staged separately as a
   docs commit to follow.
 
+### Phase 3 Red Re-verify (current MID session)
+
+- **Pre-start task markers:** Phase 3 task 2 (Regenerate lockfile) and task 5
+  (live gate) were already marked `[~]` at session start. No new `[~]` marks
+  were required.
+- **Dirty worktree classification at session start:**
+
+  | Status | Path | Classification | Rationale |
+  |--------|------|----------------|-----------|
+  | `M` | `measure/automation-supervisor.py` | **Unrelated** | Supervisor gate refactor (`committed_changes_since` / `non_test_committed_changes_since` helpers); no pnpm11 track references. Preserved untouched. |
+  | `M` | `pnpm-lock.yaml` | **Relevant Green-phase work** | Full lockfile body regeneration under pnpm 11 (`+15515 / -14610` lines, pnpm 9 format with `pnpmfileChecksum:` and un-prefixed `packages:` keys). This is Implementer output for task 2 / task 5, not MID Red-phase source. **Not committed by MID.** |
+
+- **Targeted Red command (bounded, single-file artifact tests):**
+  `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-lockfile-contract.test.mjs`
+- **Result at HEAD (committed source boundary, 2026-06-21):** `3 pass / 1 fail / 4 total`
+  in ~0.43s. The Phase 2 contract header assertions pass, but the newly added
+  body-format assertion fails because the committed `pnpm-lock.yaml` still
+  carries pnpm 8 `packages:` keys with leading `/`. This is the real Red gate
+  for task 2 (full lockfile regeneration).
+- **Phase 3 workspace config contract re-verification (bounded):**
+  `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-workspace-config.test.mjs`
+  → `9 pass / 0 fail / 9 total` in ~0.17s. The Phase 3 Red contract is **GREEN**
+  because the Green implementation (`package.json`, `pnpm-workspace.yaml`) is
+  already committed at `6d197f79`.
+- **Phase 1 baseline re-verification (bounded):**
+  `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm-lock-baseline.test.mjs`
+  → `4 pass / 2 fail / 6 total` in ~0.22s. The 2 expected stale-baseline failures
+  are `packageManager` (`pnpm@11.8.0` ≠ `pnpm@8.15.8`) and `lockfileVersion`
+  (`'9.0'` ≠ `'6.0'`), exactly the post-migration diagnostic this baseline
+  pin is designed to surface.
+- **New Red test added:** `pnpm11-lockfile-contract.test.mjs` now asserts that
+  the `packages:` section uses pnpm 9 format (first package key does not start
+  with `/`). This tightens the Phase 2 contract to cover the full lockfile body
+  regeneration owned by task 2. At HEAD it fails with:
+  `first package key "/@acemir/cssom@0.9.31" must not start with '/' (pnpm 8 format)`.
+  Against the dirty regenerated lockfile it passes (`4 pass / 0 fail`).
+- **Task 2 status:** `[~]` — the regenerated lockfile body is present in the
+  dirty worktree but uncommitted. The Phase 2 artifact contract passes at
+  HEAD on the header, and the full body diff confirms the Implementer has
+  performed the regeneration. The task flips `[x]` once `pnpm-lock.yaml` is
+  committed by the Implementer.
+- **Task 5 status:** `[~]` — `pnpm` on PATH is now `11.8.0`
+  (`/home/daniel-bo/.local/bin/pnpm`), so the live gate is runnable. MID does
+  not execute it because it mutates `node_modules` (currently 2.0 GB) and is
+  the Implementer's Green-phase gate per `test-strategy.md` §7. After the
+  lockfile is committed, the Implementer should run:
+  - `pnpm install --frozen-lockfile`
+  - `pnpm dedupe --check`
+- **Build-graph note:** `build-graph stats ./graph.db` reports 2553 nodes /
+  3510 edges / 401 files (fresh, <24h). `build-graph search pnpm|lockfile|workspace`
+  returns only `resolveTestDatabaseUrl` and `readLockfileOverride`, both
+  unrelated to the migration per `test-strategy.md` §6. No TS source surface
+  changes; no `build-graph update` required.
+- **Commit boundary:** this MID session commits the tightened Phase 2 lockfile
+  contract test (`pnpm11-lockfile-contract.test.mjs`) plus Measure
+  documentation (`plan.md`). The relevant `pnpm-lock.yaml` Green work and the
+  unrelated `measure/automation-supervisor.py` refactor remain in the working
+  tree.
+
 ## Phase 4: Validate & Close
 
 - [ ] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.

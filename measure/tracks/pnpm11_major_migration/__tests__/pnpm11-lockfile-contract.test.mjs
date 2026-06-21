@@ -25,6 +25,24 @@ function parseLockfileSetting(lines, key) {
   return undefined;
 }
 
+function getFirstPackageKey(lockfileText) {
+  const lines = lockfileText.split("\n");
+  let inPackages = false;
+  for (const line of lines) {
+    if (line.match(/^packages:\s*$/)) {
+      inPackages = true;
+      continue;
+    }
+    if (inPackages) {
+      if (line.trim() === "") continue;
+      const match = line.match(/^\s+(.+):\s*$/);
+      if (match) return match[1];
+      break;
+    }
+  }
+  return undefined;
+}
+
 describe("Phase 2 pnpm 11 lockfile contract", () => {
   it("package.json#packageManager matches /^pnpm@11\\./", () => {
     const pkg = readJson("package.json");
@@ -46,5 +64,16 @@ describe("Phase 2 pnpm 11 lockfile contract", () => {
     const head = readLockfileHead("pnpm-lock.yaml");
     const raw = parseLockfileSetting(head, "lockfileVersion");
     assert.notEqual(raw, "'6.0'");
+  });
+
+  it("pnpm-lock.yaml packages: section uses pnpm 9 format (no leading slash)", () => {
+    const text = readText("pnpm-lock.yaml");
+    const firstKey = getFirstPackageKey(text);
+    assert.ok(firstKey, "packages: section must contain at least one package key");
+    assert.equal(
+      firstKey.startsWith("/"),
+      false,
+      `first package key ${JSON.stringify(firstKey)} must not start with '/' (pnpm 8 format)`
+    );
   });
 });
