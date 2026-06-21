@@ -761,6 +761,87 @@
 
 ## Phase 4: Validate & Close
 
-- [ ] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
-- [ ] Task: Re-run `pnpm outdated` and `pnpm audit`; document results.
-- [ ] Task: Update `measure/tech-stack.md` with the selected pnpm version.
+- [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
+- [~] Task: Re-run `pnpm outdated` and `pnpm audit`; document results.
+- [~] Task: Update `measure/tech-stack.md` with the selected pnpm version.
+
+### Phase 4 Red Gate (MID-authored)
+
+> **Fresh authorship note:** The prior Phase 4 tasks were pending at session
+> start. This Red phase introduces a bounded artifact-only contract test for
+> the three closeout deliverables. The live aggregate gate (`pnpm turbo run
+> lint test check-types build`) and the live `pnpm outdated` / `pnpm audit`
+> scans are intentionally NOT executed in the Red phase; they are owned by the
+> Implementer/Validator as the Green-phase live proof per `test-strategy.md`
+> §7 Phase 4 row.
+
+- **Deliverable:** `pnpm11-phase4-closeout.test.mjs` under
+  `measure/tracks/pnpm11_major_migration/__tests__/` — five assertions
+  pinning the Phase 4 closeout artifacts:
+  1. `measure/tech-stack.md` documents the selected pnpm version
+     (`pnpm@11.8.0`).
+  2. A `closeout-report.md` exists under
+     `measure/tracks/pnpm11_major_migration/` and documents the canonical
+     aggregate gate command (`pnpm turbo run lint test check-types build`)
+     with a passing result.
+  3. The closeout report contains a `pnpm outdated` section with results.
+  4. The closeout report contains a `pnpm audit` section with results.
+  5. The Phase 1 baseline test (`pnpm-lock-baseline.test.mjs`) is updated or
+     archived for the post-migration state (does not assert stale
+     `pnpm@8.15.8` or `lockfileVersion === '6.0'`).
+- **Targeted Red command (bounded, single-file artifact test):**
+  `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-phase4-closeout.test.mjs`
+- **Result at HEAD (clean source boundary, 2026-06-22):** `0 pass / 5 fail / 5 total`
+  in ~0.27s. All five assertions fail because the closeout artifacts and
+  baseline update have not been produced yet:
+  - `measure/tech-stack.md` does not contain `pnpm@11.8.0`.
+  - `closeout-report.md` does not exist.
+  - `pnpm outdated` section is missing (report does not exist).
+  - `pnpm audit` section is missing (report does not exist).
+  - `pnpm-lock-baseline.test.mjs` still asserts the stale pre-migration
+    `pnpm@8.15.8` and `lockfileVersion === '6.0'` values.
+- **Boundedness:** single-file `node --test` invocation against the Phase 4
+  test file only. No `--watch`, no full-suite, no `pnpm turbo`, no `pnpm
+  outdated`, no `pnpm audit`. The script reads four text files from disk
+  (`measure/tech-stack.md`, the closeout report, and the Phase 1 baseline
+  test) and never spawns pnpm, turbo, vitest, jest, or any workspace command.
+- **Excluded from `turbo run test` by location:** the file lives under
+  `measure/tracks/pnpm11_major_migration/__tests__/`, which is not discovered
+  by any vitest config in the monorepo (root vitest config gap recorded in
+  `measure/tech-debt.md`). Verified: `grep -r measure
+  packages/*/vitest.config.ts apps/*/vitest.config.ts
+  apps/*/vitest.config.mts` returns no matches. Same exclusion mechanism as
+  Phase 1–3.
+- **Live-behavior pair owners (tasks 1 and 2):** the Implementer/Validator
+  runs the real `pnpm turbo run lint test check-types build` aggregate gate
+  and the real `pnpm outdated` / `pnpm audit` scans under pnpm 11.8.0, then
+  writes the results into `closeout-report.md`. These commands are not
+  executed by MID because they mutate `node_modules` / `pnpm-lock.yaml` and
+  require the full toolchain; the artifact assertions above merely prove the
+  documentation exists after the live gate passes.
+- **Artifact-vs-live note:** the Phase 4 deliverables are themselves
+  documentation artifacts (`measure/tech-stack.md` update and
+  `closeout-report.md`), so artifact assertions are the appropriate bounded
+  Red test. They are paired with explicit plan notes assigning the live
+  behavior to the Implementer/Validator role.
+- **Build-graph note (per `test-strategy.md` §6 + workflow.md Graph-Aware
+  §3.2):** `build-graph stats ./graph.db` returns 2553 nodes / 3510 edges /
+  401 files (mtime 2026-06-21, <24h fresh; no `build-graph scan` needed).
+  `build-graph search pnpm|lockfile|workspace|turbo|lint|audit` returns only
+  `resolveTestDatabaseUrl` and `readLockfileOverride`, both unrelated to the
+  migration per `test-strategy.md` §3 / §6. The Phase 4 contract test is
+  plain `node --test` mjs — not a TS module — so it is invisible to the graph
+  scanner and no `build-graph update` is required post-impl. The graph
+  continues to provide only negative confirmation that the migration blast
+  radius is config/CI/documentation, not TS source.
+- **Worktree hygiene (dirty paths at MID start, classified; source boundary
+  preserved):**
+
+  | Status | Path | Classification | Rationale |
+  |--------|------|----------------|-----------|
+  | `M` | `measure/automation-supervisor.py` | **Unrelated** | Supervisor gate refactor (`committed_changes_since` / `non_test_committed_changes_since` helpers); no pnpm11 track references. Preserved untouched. |
+
+  No `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, or source-code
+  changes are introduced by MID. The unrelated supervisor path is preserved
+  untouched per the user directive "preserve unrelated user work. Do NOT
+  modify existing source code except test files and Measure docs."
