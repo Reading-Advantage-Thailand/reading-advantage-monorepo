@@ -8,12 +8,12 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: "@", replacement: path.resolve(__dirname, "app") },
-      { find: "next/server", replacement: path.resolve(__dirname, "node_modules/vinext/dist/shims/server.js") },
-      { find: "next/headers", replacement: path.resolve(__dirname, "node_modules/vinext/dist/shims/headers.js") },
-      { find: "next/navigation", replacement: path.resolve(__dirname, "node_modules/vinext/dist/shims/navigation.js") },
-      { find: "next/link", replacement: path.resolve(__dirname, "node_modules/vinext/dist/shims/link.js") },
-      { find: "next/image", replacement: path.resolve(__dirname, "node_modules/vinext/dist/shims/image.js") },
-      { find: /^next$/, replacement: path.resolve(__dirname, "node_modules/vinext/dist/shims/metadata") },
+      { find: "next/server", replacement: path.resolve(__dirname, "../../node_modules/vinext/dist/shims/server.js") },
+      { find: "next/headers", replacement: path.resolve(__dirname, "../../node_modules/vinext/dist/shims/headers.js") },
+      { find: "next/navigation", replacement: path.resolve(__dirname, "../../node_modules/vinext/dist/shims/navigation.js") },
+      { find: "next/link", replacement: path.resolve(__dirname, "../../node_modules/vinext/dist/shims/link.js") },
+      { find: "next/image", replacement: path.resolve(__dirname, "../../node_modules/vinext/dist/shims/image.js") },
+      { find: /^next$/, replacement: path.resolve(__dirname, "../../node_modules/vinext/dist/shims/metadata") },
     ],
   },
   test: {
