@@ -11,10 +11,10 @@ overrides:
   vitest: 4.1.8
 
 peerDependencyRules:
-  ignoreMissing: ["@prisma/client", prisma]
-  allowAny: ["@prisma/client", prisma]
+  ignoreMissing: [ "@prisma/client", prisma ]
+  allowAny: [ "@prisma/client", prisma ]
 
-allowBuilds: {}
+allowBuilds: { '@ffmpeg-installer/linux-x64': set this to true or false, '@ffprobe-installer/linux-x64': set this to true or false, '@firebase/util': set this to true or false, '@parcel/watcher': set this to true or false, '@prisma/client': set this to true or false, '@prisma/engines': set this to true or false, '@revideo/telemetry': set this to true or false, '@sentry/cli': set this to true or false, '@swc/core': set this to true or false, esbuild: set this to true or false, prisma: set this to true or false, protobufjs: set this to true or false, puppeteer: set this to true or false, sharp: set this to true or false, unrs-resolver: set this to true or false }
 
 nodeLinker: hoisted
 
