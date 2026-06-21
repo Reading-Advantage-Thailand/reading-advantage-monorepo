@@ -2095,11 +2095,28 @@ For each site (Phase 8a–8e):
 > **Graph update:** `build-graph update ./graph.db apps/science-advantage/app/api/ai/recommendations/route.ts`
 > → 5 nodes, 8 edges (+1 import edge for `@sentry/nextjs`).
 >
+> **Supervisor retry (2026-06-21, jr-attempt-2):**
+> Gate `GREEN_TEST_COMMAND` (`npm test`) failed because
+> `apps/codecamp-advantage/node_modules/vitest/vitest.mjs` was missing
+> (pnpm 11 migration left node_modules incomplete; vitest installed in
+> `.pnpm/store` but not symlinked to app-level `node_modules/`).
+> Fixed by symlinking:
+> `ln -sf node_modules/.pnpm/vitest@4.1.8_.../node_modules/vitest apps/codecamp-advantage/node_modules/vitest`.
+> `npm test` → `Test Files 4 passed (4) | Tests 27 passed (27)`, exit 0.
+> No product code changed; infrastructure-only fix.
+>
+> **Phase 9 tests re-verified at `ad6e493a`:**
+> `cd apps/science-advantage && node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts app/api/ai/recommendations/sentry-throw-in-route.test.ts app/api/ai/recommendations/otel-route-span.test.ts`
+> → `Test Files 2 passed (2) | Tests 4 passed (4)`, exit 0.
+>
 > **Closeout gates (Tasks 3-6) owned by Closeout Steward:**
-> - Task 3 (`turbo test`): blocked by Phase 7 eslint pnpm11 regression.
+> - Task 3 (`turbo test`): non-eslint science-advantage tests pass (73/73);
+>   Phase 7 eslint tests blocked by pnpm11 migration (eslint binary path).
 > - Task 4 (`turbo lint`): blocked by pnpm11 (`pnpm exec` unavailable).
-> - Task 5 (`turbo build`): blocked by pre-existing `child_process` failure.
-> - Task 6 (grep gate): covered by Phase 8 — passes at HEAD.
+> - Task 5 (`turbo build`): blocked by pre-existing `child_process` failure
+>   in `packages/utils/dist/index.js` (unrelated to observability track).
+> - Task 6 (grep gate): covered by Phase 8 `no-console-grep.test.ts` — 5/5
+>   tests pass at HEAD `ad6e493a`.
 >
 > - [x] Task: Sentry test: write a route handler that throws; assert Sentry's mock `captureException` is called with the right error. [track_id: observability_stack_20260603] [ad6e493a]
   - Evidence: `apps/science-advantage/app/api/ai/recommendations/sentry-throw-in-route.test.ts` (3 tests, committed in `80705dff`). Green at `ad6e493a`: `node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts app/api/ai/recommendations/sentry-throw-in-route.test.ts` → `Test Files 1 passed (1) | Tests 3 passed (3)`, exit 0. Implementation: added `import * as Sentry from '@sentry/nextjs'` (line 3) and `Sentry.captureException(error)` in the catch-all block (line 54) before `logger.error`. All 3 tests pass: `captureException` called once with the thrown error, `captureMessage` not called (regression guard), `logger.error` structured line still emitted (regression guard).
