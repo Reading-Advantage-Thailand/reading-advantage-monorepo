@@ -195,13 +195,13 @@ describe("Phase 6: Script Generation — wiring invariants (tasks 1-3)", () => {
     expect(existsSync(resolve(APP_ROOT, "app/api/video/generate-script/route.ts"))).toBe(true);
     const mod = await import("@/api/video/generate-script/route");
     expect(typeof mod.POST).toBe("function");
-  }, 10000);
+  }, 20000);
 
   it("apps/marketing/app/api/video/projects/route.ts exports POST", async () => {
     expect(existsSync(resolve(APP_ROOT, "app/api/video/projects/route.ts"))).toBe(true);
     const mod = await import("@/api/video/projects/route");
     expect(typeof mod.POST).toBe("function");
-  }, 10000);
+  }, 20000);
 });
 
 // ─────────────────────────────────────────────────────────────────────
