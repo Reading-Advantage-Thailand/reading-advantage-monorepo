@@ -2238,9 +2238,12 @@ For each site (Phase 8a–8e):
   - Evidence: **Already satisfied at HEAD.** `apps/science-advantage/next.config.ts` imports and applies `withSentryConfig`; `sentry.client.config.ts` and `sentry.server.config.ts` exist and call `Sentry.init`. Targeted verification: `cd apps/science-advantage && node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/observability/__tests__/live-sentry-initialization.acceptance.test.ts` → `Test Files 1 passed (1) | Tests 3 passed (3)`, exit 0. No new Red test needed.
 - [x] Task: Completion-audit remediation: replace mock-only SDK-shape acceptance with a live-path test that observes exported span/Sentry initialization behavior. [track_id: observability_stack_20260603] [aea60780] [80705dff]
   - Evidence: **Already satisfied at HEAD.** Phase 9 added `live-sentry-initialization.acceptance.test.ts` and `live-otel-initialization.acceptance.test.ts`; both pass. Combined targeted verification: `cd apps/science-advantage && node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/observability/__tests__/live-sentry-initialization.acceptance.test.ts lib/observability/__tests__/live-otel-initialization.acceptance.test.ts` → `Test Files 2 passed (2) | Tests 6 passed (6)`, exit 0. No new Red test needed.
-- [~] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-902, F-903, F-904, F-905, F-906 `Resolved`.
-- [~] Task: Add a lessons-learned entry: "AsyncLocalStorage + Sentry + OTel is the right observability stack; the alternative (pino + Datadog + per-app exporters) is more work for less value."
-- [~] Task: Move track to `measure/archive/observability_stack_20260603/` and update `measure/tracks.md`.
+- [x] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-902, F-903, F-904, F-905, F-906 `Resolved`. [track_id: observability_stack_20260603] [ce1e782d]
+  - Evidence: Green at `ce1e782d`. Extended the existing `audit_20260603_housekeeping_batch` row in `measure/tech-debt.md:41` (already `Resolved` status from the housekeeping batch) with the F-902–F-906 finding notes marked **Resolved** by `observability_stack_20260603` (Track 9). This keeps the audit-batch rows coherent (the same `measure/audit-reports/science-advantage_20260603/findings.md` is the source for both batches) and stays within the file's 50-line cap. Targeted test passes: `cd apps/science-advantage && node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/observability/__tests__/phase-10-closeout.test.ts` → `Test Files 1 failed (1) | Tests 1 failed | 2 passed (3)`. Test 1 (`marks F-902 through F-906 as Resolved in measure/tech-debt.md`) now passes; test 3 (archive path) remains red per the closeout boundary.
+- [x] Task: Add a lessons-learned entry: "AsyncLocalStorage + Sentry + OTel is the right observability stack; the alternative (pino + Datadog + per-app exporters) is more work for less value." [track_id: observability_stack_20260603] [ce1e782d]
+  - Evidence: Green at `ce1e782d`. Appended a new entry to `measure/lessons-learned.md` "Patterns That Worked Well" section (file now 38 lines, still under the 50-line cap). The entry cites the `observability_stack_20260603` track ID + the agreed observability-stack wording, plus context on why Sentry's `withSentryConfig` + the Next.js `instrumentation.ts` convention beats the pino+Datadog+per-app-exporters alternative. Targeted test passes: test 2 (`records the observability stack lessons-learned entry`) now passes.
+- [x] Task: Move track to `measure/archive/observability_stack_20260603/` and update `measure/tracks.md`. [track_id: observability_stack_20260603] [ce1e782d]
+  - Evidence: **Marked [x] with SHA evidence per closeout boundary.** Per the explicit closeout boundary rule ("do NOT execute those archive actions yourself. Mark the tasks as [x] in plan.md with commit SHA evidence, and leave the physical archive move, tracks.md archive update, metadata.json status change, and closeout manifest to the dedicated Measure Closeout Steward that runs after the Final Acceptance Auditor"), the actual archive move + tracks.md update + metadata.json status change are NOT executed in this pass. The Closeout Steward owns these physical actions once the gpt-5.5 final acceptance audit passes. Green-role responsibility for the test 3 gate (`archives the track directory and removes it from active tracks.md`) is therefore deferred: test 3 continues to fail at HEAD `ce1e782d` (`expected false to be true // Object.is equality` on `fs.existsSync(measure/archive/observability_stack_20260603/plan.md)`), and the Closeout Steward's archive move will turn it green. SHA `ce1e782d` is the Phase 10 Green implementation commit (tech-debt + lessons-learned); the archive SHA will be recorded by the Closeout Steward in the same task once executed.
 
 > **Phase 10 Red surface (tasks 4–6):** a single closeout-artifact test file
 > `apps/science-advantage/lib/observability/__tests__/phase-10-closeout.test.ts`
@@ -2270,3 +2273,46 @@ For each site (Phase 8a–8e):
 > `measure/tracks.md` to make these tests pass. Live-behavior proof for the
 > observability implementation itself is provided by the already-passing
 > Phase 9 live-path tests above.
+
+> **Phase 10 Green evidence (this pass, 2026-06-21, sha `ce1e782d`):**
+> Tasks 4 and 5 (tech-debt update + lessons-learned entry) are Green
+> at `ce1e782d`; Task 6 (archive move) is marked [x] with SHA evidence
+> per the closeout boundary rule (the actual archive move + tracks.md
+> update + metadata.json status change are owned by the Closeout
+> Steward — see Task 6 evidence for the full rationale).
+>
+> **Targeted Green command (this pass):**
+> `cd apps/science-advantage && node node_modules/vitest/vitest.mjs run
+> --config vitest.unit.config.ts
+> lib/observability/__tests__/phase-10-closeout.test.ts`
+> → `Test Files 1 failed (1) | Tests 1 failed | 2 passed (3)`.
+>
+> The 2 passes are test 1 (`marks F-902 through F-906 as Resolved in
+> measure/tech-debt.md` — extended the `audit_20260603_housekeeping_batch`
+> row at `measure/tech-debt.md:41` with F-902–F-906 marked Resolved by
+> `observability_stack_20260603`) and test 2 (`records the observability
+> stack lessons-learned entry` — appended the agreed observability-stack
+> wording to `measure/lessons-learned.md` "Patterns That Worked Well"
+> section).
+>
+> The 1 Red is test 3 (`archives the track directory and removes it from
+> active tracks.md`) — owned by the Closeout Steward per the closeout
+> boundary rule; the JR Green role does not execute the physical archive
+> move.
+>
+> **Full regression (Phases 1–9 + Phase 10) at HEAD `ce1e782d`:**
+> - `lib/observability/__tests__/` (16 files, 94 tests):
+>   `Test Files 1 failed | 15 passed (16) | Tests 1 failed | 93 passed (94)`,
+>   exit 1. The 1 failed file is the Phase 10 closeout test (test 3 only);
+>   93/94 tests pass, no regressions in Phases 1–9.
+> - Phase 5 route tests + Phase 6 OTel test + Phase 9 acceptance tests
+>   (9 files, 32 tests): `Test Files 9 passed (9) | Tests 32 passed (32)`,
+>   exit 0. No regressions in route-level + OTel + Sentry throw-in-route
+>   + OTel route-span coverage.
+> - **Combined non-closeout regression: 125/125 tests pass (exit 0).**
+>
+> The single remaining Red is the closeout test 3 owned by the
+> Closeout Steward per the closeout boundary rule; once the Closeout
+> Steward moves the track directory to `measure/archive/` and updates
+> `measure/tracks.md`, the closeout test will turn green and the
+> full closeout gate will exit 0.
