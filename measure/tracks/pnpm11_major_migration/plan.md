@@ -761,7 +761,7 @@
 
 ## Phase 4: Validate & Close
 
-- [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. **(env-blocked; deferred to remediation track — see Phase 4 Green Gate JR-attempt-2 below)**
+- [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. **(pnpm11-specific blocker resolved: `allowBuilds` placeholders replaced with explicit booleans; gate now executes but fails on unrelated `ai_sdk_major_migration` closeout-artifact tests — see closeout-report.md §Aggregate gate and Reviewer A findings below)**
 - [x] Task: Re-run `pnpm outdated` and `pnpm audit`; document results. (`c6c8f626`, `ec9850b0`) — `pnpm outdated` exit 0 → 3 dev-dep upgrades documented; `pnpm audit` exit 0 → 37 advisories documented; both captured in `closeout-report.md` §2, §3.
 - [x] Task: Update `measure/tech-stack.md` with the selected pnpm version. (`c6c8f626`) — `measure/tech-stack.md` line 5: "Package Manager: pnpm@11.8.0 (with `pnpm-workspace.yaml`) — selected in `pnpm11_major_migration` (post-migration state; pre-migration baseline was `pnpm@8.15.8`)."
 
@@ -987,3 +987,50 @@
     `docs(measure): phase 4 closeout artifacts + baseline rewrite (track_id: pnpm11_major_migration_20260622)`
   - Plan update commit (1 file):
     `docs(measure): phase 4 green evidence — task 1 [~] env-blocked, tasks 2-3 [x] (track_id: pnpm11_major_migration_20260622)`
+
+### Phase 4 Reviewer A Findings — `20260622T161600Z`
+
+> **Role:** Reviewer A (correctness + architecture).  
+> **Scope:** Phase 4 Validate & Close only. Older phase history was not
+> re-read; evidence was gathered from the current phase section of this
+> plan, the track spec, `test-strategy.md`, the committed artifacts, and
+> live re-runs.
+
+- **Artifact contract:** `node --test measure/tracks/pnpm11_major_migration/__tests__/*.test.mjs`
+  → **`24 pass / 0 fail / 24 total`** in ~0.6s. **GREEN.** All four
+  contract suites (Phase 1 post-migration baseline, Phase 2 lockfile,
+  Phase 3 workspace config, Phase 4 closeout) pass.
+- **Initial live gate diagnosis was incorrect:** the closeout report
+  claimed the aggregate gate was blocked by optional native-binary fetch
+  failures (`EPIPE` / `UND_ERR_SOCKET`). Reviewer A re-ran the gate and
+  found the actual initial failure was `[ERR_PNPM_IGNORED_BUILDS]` caused
+  by the `allowBuilds:` placeholder values (`'set this to true or false'`)
+  in `pnpm-workspace.yaml`. pnpm 11 rejects these placeholders on install.
+- **Fix applied:** `pnpm approve-builds --all` replaced the placeholders
+  with explicit boolean `true` values and ran the pending post-install
+  scripts. The `pnpm-workspace.yaml` change is part of the pnpm 11
+  migration deliverable.
+- **Post-fix live gate:**
+  - `pnpm turbo run lint --no-daemon` → **19 successful, 0 errors** in
+    ~3m20s. **GREEN.**
+  - `pnpm turbo run lint test check-types build --no-daemon` → **fails**
+    on `@reading-advantage/ai#test` (`packages/ai/src/__tests__/phase-12-closeout-artifacts.test.ts`).
+    The failures require `measure/tracks/ai_sdk_major_migration/artifacts/`
+    files that do not exist. This directory/track is unrelated to
+    `pnpm11_major_migration`; the failures are pre-existing and would
+    occur under any pnpm version.
+- **Aggregate gate status:** the pnpm 11 migration-specific blockers are
+  resolved, but the canonical aggregate gate cannot exit 0 because of the
+  unrelated `ai_sdk_major_migration` closeout-artifact gap. Task 1 stays
+  `[~]`; completion requires either (a) producing the missing
+  `ai_sdk_major_migration` artifacts or (b) excluding those tests from the
+  default test run, followed by a re-run of the aggregate gate.
+- **Build-graph note:** `build-graph stats ./graph.db` reports 2553 nodes /
+  3510 edges / 401 files (fresh, <24h). No TS source surface changes in
+  Phase 4; the only source-adjacent change is the `pnpm-workspace.yaml`
+  `allowBuilds` values. No `build-graph update` required.
+- **Changed files by Reviewer A:**
+  - `pnpm-workspace.yaml` — `allowBuilds` placeholders → explicit booleans.
+  - `measure/tracks/pnpm11_major_migration/closeout-report.md` — corrected
+    aggregate-gate diagnosis and result.
+  - `measure/tracks/pnpm11_major_migration/plan.md` — this section.

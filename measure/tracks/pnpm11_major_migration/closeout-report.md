@@ -24,86 +24,79 @@ tasks against all 22 workspace projects (21 in scope plus the workspace root).
 
 **Result**
 
-The aggregate gate **does not pass** in this worktree. The gate must pass
-on a clean `pnpm install` invocation against a populated pnpm 11 store
-before this section can be marked successful. The failure mode is
-environmental and reproducible — see the bounded-retry note in `plan.md`
-Phase 4 attempts 1-N — not a code regression introduced by this commit.
-This report records the gate as inconclusive and recommends a remediation
-track per the supervisor's retry-and-escalation policy ("If infrastructure,
-network, or tool instability prevents a reliable result, mark the audit
-inconclusive; do not archive the track").
+The aggregate gate **executes under pnpm 11.8.0 but does not exit 0**.
+`pnpm turbo run lint` completes successfully (19 tasks, 0 errors, only
+warnings). The full `lint test check-types build` pipeline fails during
+the `test` task because of pre-existing failures in the unrelated
+`ai_sdk_major_migration` track's closeout-artifact tests; see
+"Post-fix gate failure" below. This is not a pnpm 11 regression — the
+failing tests expect artifacts in `measure/tracks/ai_sdk_major_migration/`
+which do not exist in the repository.
 
-**Why the gate does not pass**
+**Initial blocker found by Reviewer A (allowBuilds placeholders)**
 
-pnpm 11.8.0 with `nodeLinker: hoisted` calls `runDepsStatusCheck` before
-each `pnpm run <task>` invocation (via Turbo). `runDepsStatusCheck`
-determines the lockfile-vs-node_modules sync state and, by default, runs
-`pnpm install` to repair it. The repair attempt itself fails in this
-environment for three reasons:
+The original closeout report diagnosed the gate as "environment-blocked"
+by optional native-binary fetch errors. Re-running the gate in the Reviewer
+A session showed the actual initial failure was `[ERR_PNPM_IGNORED_BUILDS]`:
+pnpm 11 refuses to install while `pnpm-workspace.yaml#allowBuilds` contains
+literal `"set this to true or false"` placeholders. The placeholder form
+written by pnpm 11 is not accepted by subsequent `pnpm install` invocations
+(including the one Turbo's `runDepsStatusCheck` spawns).
 
-1. **Workspace state file is not created.** pnpm 11 with `nodeLinker:
-   hoisted` does not write `node_modules/.pnpm-workspace-state-v1.json`,
-   so `loadWorkspaceState()` returns `null` and `_checkDepsStatus()` reports
-   "out of sync" on every Turbo task invocation. Verified via `grep -B5 -A30
-   "updateWorkspaceState" /home/daniel-bo/.local/lib/node_modules/pnpm/dist/pnpm.mjs`:
-   the state-writer is only reachable from
-   `recursiveInstallThenUpdateWorkspaceState` (recursive `-r install`),
-   and the recursive form also reports `Packages: -328` (see point 2).
+Reviewer A resolved this by running `pnpm approve-builds --all`, which
+replaced the placeholders with explicit boolean values and executed the
+pending post-install scripts. After the fix:
 
-2. **Optional native binaries are unreachable.** The lockfile lists 328
-   optional native packages for non-current platforms (darwin, win32,
-   freebsd, netbsd, sunos, openbsd, openharmony, aix, android, linux-arm
-   variants). On linux/x64 the running pnpm marks them `skipped` in
-   `node_modules/.modules.yaml`. The verify check sees the lockfile-modules
-   delta and triggers `pnpm install`, which retries fetching those binaries
-   from `registry.npmjs.org` and fails with `error (23)` (EPIPE) or
-   `UND_ERR_SOCKET` against the upstream registry. This is observable in
-   the `runDepsStatusCheck` trace under every Turbo task invocation:
-   `@reading-advantage/<pkg>:lint: [WARN] GET https://registry.npmjs.org/@esbuild/darwin-x64/...tgz error (23). Will retry...` followed by
-   `@reading-advantage/<pkg>:lint: [ERROR] Command failed with exit code 1: pnpm install`.
+- `pnpm install` no longer fails with `[ERR_PNPM_IGNORED_BUILDS]`.
+- `pnpm turbo run lint` passes (19 successful, 0 errors).
+- The workspace state file (`node_modules/.pnpm-workspace-state-v1.json`)
+  is still not created under `nodeLinker: hoisted`, but the absence no
+  longer blocks Turbo task execution once the builds are approved.
 
-3. **`verify-deps-before-run` cannot be cleanly disabled in this layout.**
-   The setting is rejected from `pnpm-workspace.yaml` (it is in the
-   `excludedPnpmKeys` list inside
-   `config/reader/lib/configFileKey.js`), rejected from `.npmrc` because
-   the Phase 1 baseline test #5 (`no .npmrc at the repo root`) must continue
-   to pass, and the env-var override
-   `pnpm_config_verify_deps_before_run=warn` works at the `pnpm run`
-   boundary but Turbo re-spawns `pnpm run` per package, and the warning
-   path still falls through to `pnpm install` in this pnpm 11.8.0 build
-   (verified: the warn branch fires, but the subsequent `pnpm install`
-   spawned by `runDepsStatusCheck` is the same failing call).
+The `pnpm-workspace.yaml` change (explicit `true` values in `allowBuilds`)
+is part of the pnpm 11 migration deliverable and must be committed.
 
 **What was attempted (bounded retries)**
 
 | Attempt | Command | Outcome |
 |---|---|---|
-| 1 | `node_modules/.bin/turbo run lint test check-types build` (default) | RED — `runDepsStatusCheck` failure on every task |
-| 2 | `pnpm install --frozen-lockfile` then re-run gate | RED — same failure mode |
-| 3 | `rm -rf node_modules packages/*/node_modules apps/*/node_modules && pnpm install --frozen-lockfile` | RED — same failure mode |
-| 4 | `pnpm_config_verify_deps_before_run=warn` env override | RED — `warn` path fires but subsequent `pnpm install` still fails |
-| 5 | `pnpm_config_verify_deps_before_run=warn` env + per-package `lint` only | RED — same failure mode |
+| 1 | `pnpm turbo run lint` after fresh Reviewer A start | RED — `[ERR_PNPM_IGNORED_BUILDS]` caused by `allowBuilds` placeholders |
+| 2 | `pnpm approve-builds --all` | GREEN — builds approved, post-install scripts ran |
+| 3 | `pnpm turbo run lint` after approve-builds | GREEN — 19 successful, 0 errors |
+| 4 | `pnpm turbo run lint test check-types build` after approve-builds | RED — fails on `@reading-advantage/ai#test` (unrelated `ai_sdk_major_migration` artifacts) |
 
-**Remediation recommendation (per supervisor directive)**
+**Post-fix gate failure**
 
-Per the JR supervisor's retry-and-escalation policy, this Phase 4 task 1
-is marked `[~]` (in-progress) and the track closeout is **deferred**. The
-recommended remediation track is a follow-up that either pre-populates the
-local pnpm 11 store with all 328 platform binaries (`pnpm fetch --store-dir
-<path>` from a network-connected seed node), or adds `--ignore-optional`
-to the `runDepsStatusCheck` install command for this workspace via an
-upstream pnpm 11 patch, or pins the aggregate gate to run only against the
-linux/x64 platform slice via a lockfile `ignoredOptionalDependencies` block
-that suppresses the 328 optional packages from being treated as "missing"
-by the verify check.
+After the `allowBuilds` fix, the full aggregate gate fails in
+`@reading-advantage/ai#test` (`packages/ai/src/__tests__/phase-12-closeout-artifacts.test.ts`).
+The failing assertions require:
 
-Until one of those lands, the aggregate gate is inconclusive in this
-worktree. The post-migration contract tests
-(`pnpm11-lockfile-contract.test.mjs` and `pnpm11-workspace-config.test.mjs`)
-remain GREEN at the artifact level — the migration artifacts (lockfile,
-workspace yaml, package.json) are correct, but the full toolchain cannot
-be proven green from this worktree.
+- `measure/tracks/ai_sdk_major_migration/artifacts/` directory
+- `measure/tracks/ai_sdk_major_migration/artifacts/gate-result.json`
+- `measure/tracks/ai_sdk_major_migration/artifacts/outdated.json`
+- `measure/tracks/ai_sdk_major_migration/artifacts/audit.json`
+
+None of these exist; the `ai_sdk_major_migration` track directory is not
+present in the repository. These failures are unrelated to the pnpm 11
+migration and would fail under any pnpm version. They prevent the
+aggregate gate from exiting 0, so spec AC#6 ("All apps build and test
+correctly under pnpm 11") cannot be declared satisfied until the
+`ai_sdk_major_migration` closeout artifacts are produced or its tests are
+excluded from the default test run.
+
+**Remediation recommendation**
+
+The pnpm 11 migration-specific blockers are resolved. The remaining gate
+failure is owned by the `ai_sdk_major_migration` track. Recommended next
+steps:
+
+1. Commit the `pnpm-workspace.yaml` `allowBuilds` fix.
+2. Complete or defer the `ai_sdk_major_migration` closeout artifacts.
+3. Re-run `pnpm turbo run lint test check-types build` under pnpm 11.8.0
+   and verify exit 0.
+
+Until step 2 lands, the aggregate gate is blocked by an external track,
+not by pnpm 11 configuration.
 
 ## pnpm outdated
 
