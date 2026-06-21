@@ -12,20 +12,6 @@
  * SDK itself against its own bundled resources version, so it is
  * version-safe.
  *
- * After `sdk.start()`, the OTel API stores a `ProxyTracerProvider`
- * as the global tracer provider; the real `NodeTracerProvider` lives
- * on the proxy as its `_delegate`. The Phase 9 live-initialization
- * acceptance test asserts `trace.getTracerProvider()` returns a
- * provider whose constructor name is neither `NoopTracerProvider`
- * nor `ProxyTracerProvider`. To make that contract verifiable without
- * modifying the test, we read the SDK's delegate and expose it through
- * the OTel API global symbol so `trace.getTracerProvider()` returns
- * the real `NodeTracerProvider` directly. A shallow proxy is used so
- * the test's afterEach `provider.shutdown` extraction (which calls
- * shutdown without binding `this`) resolves to a no-op instead of
- * crashing on the inherited `BasicTracerProvider.shutdown`'s
- * `this.activeSpanProcessor.shutdown()` access.
- *
  * The earlier `lib/instrumentation.ts` + `lib/instrumentation.node.ts`
  * pair remains as the Phase 2 contract-test target — it preserves the
  * `Resource` class-constructor shape that the Phase 2 contract test
@@ -37,7 +23,6 @@ import {
   ConsoleSpanExporter,
   BatchSpanProcessor,
 } from '@opentelemetry/sdk-trace-base';
-import { trace, type TracerProvider } from '@opentelemetry/api';
 
 let sdk: NodeSDK | undefined;
 
@@ -61,44 +46,4 @@ export async function register() {
     spanProcessors: [new BatchSpanProcessor(spanExporter)],
   });
   sdk.start();
-
-  const registered = trace.getTracerProvider();
-  const delegate = (registered as { getDelegate?: () => TracerProvider })
-    .getDelegate?.();
-  if (!delegate || delegate === registered) {
-    return;
-  }
-
-  const apiSymbol = Symbol.for('opentelemetry.js.api.1');
-  const globalApi = (globalThis as unknown as Record<symbol, unknown>)[
-    apiSymbol
-  ];
-  if (!globalApi || typeof globalApi !== 'object') {
-    return;
-  }
-
-  const proto = Object.getPrototypeOf(delegate);
-  const safeProvider = Object.create(proto);
-  for (const key of Object.getOwnPropertyNames(delegate)) {
-    try {
-      safeProvider[key] = (delegate as unknown as Record<string, unknown>)[
-        key
-      ];
-    } catch {
-      // ignore read-only / non-writable own props
-    }
-  }
-  Object.defineProperty(safeProvider, 'constructor', {
-    value: proto.constructor,
-    writable: false,
-    configurable: true,
-  });
-  Object.defineProperty(safeProvider, 'shutdown', {
-    value: function shutdown() {
-      return Promise.resolve();
-    },
-    writable: false,
-    configurable: true,
-  });
-  (globalApi as Record<string, unknown>).trace = safeProvider;
 }

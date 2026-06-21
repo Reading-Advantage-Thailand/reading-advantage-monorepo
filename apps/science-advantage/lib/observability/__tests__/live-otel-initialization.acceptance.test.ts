@@ -73,7 +73,7 @@ describe('Phase 9 — FR-2 live-path OTel initialization', () => {
     const { register } = await import(ROOT_INSTRUMENTATION_PATH);
     await register();
 
-    const provider = trace.getTracerProvider();
+    let provider = trace.getTracerProvider();
     const providerName = (
       provider as { constructor?: { name: string } }
     ).constructor?.name;
@@ -82,7 +82,20 @@ describe('Phase 9 — FR-2 live-path OTel initialization', () => {
       providerName,
       'register() must delegate to instrumentation.node.ts so the NodeSDK starts a real tracer provider.',
     ).not.toBe('NoopTracerProvider');
-    expect(providerName).not.toBe('ProxyTracerProvider');
+
+    // NodeSDK registers the real provider through a ProxyTracerProvider.
+    // If we see the proxy, unwrap it and assert the delegate is real.
+    if (providerName === 'ProxyTracerProvider') {
+      const delegate = (
+        provider as { getDelegate?: () => unknown }
+      ).getDelegate?.();
+      expect(delegate).toBeDefined();
+      const delegateName = (
+        delegate as { constructor?: { name: string } } | undefined
+      )?.constructor?.name;
+      expect(delegateName).not.toBe('NoopTracerProvider');
+      provider = delegate as typeof provider;
+    }
 
     const tracer = trace.getTracer('phase9-live-otel');
     const span = tracer.startSpan('live-otel-proof');
