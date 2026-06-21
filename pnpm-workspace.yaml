@@ -2,3 +2,20 @@ packages:
   - "apps/*"
   - "packages/*"
   - "packages/integrations/*"
+
+overrides:
+  drizzle-orm: 0.45.2
+  next: 16.2.9
+  react: 19.2.7
+  react-dom: 19.2.7
+  vitest: 4.1.8
+
+peerDependencyRules:
+  ignoreMissing: ["@prisma/client", prisma]
+  allowAny: ["@prisma/client", prisma]
+
+allowBuilds: {}
+
+nodeLinker: hoisted
+
+resolvePeersFromWorkspaceRoot: true

@@ -2,7 +2,7 @@
   "name": "reading-advantage-monorepo",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@8.15.8",
+  "packageManager": "pnpm@11.8.0",
   "scripts": {
     "build": "turbo run build",
     "dev": "docker compose up -d && turbo run dev",
@@ -29,25 +29,5 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ],
-  "pnpm": {
-    "overrides": {
-      "drizzle-orm": "0.45.2",
-      "next": "16.2.9",
-      "react": "19.2.7",
-      "react-dom": "19.2.7",
-      "vitest": "4.1.8"
-    },
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "@prisma/client",
-        "prisma"
-      ],
-      "allowAny": [
-        "@prisma/client",
-        "prisma"
-      ]
-    },
-    "resolvePeersFromWorkspaceRoot": true
-  }
+  ]
 }
