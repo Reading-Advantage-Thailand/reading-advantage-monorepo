@@ -6,7 +6,7 @@
 > only in `stash@{0}`. Losing the stash would restore the non-monotonic journal
 > that silently skips migrations in production.
 
-- [x] Task 1: Inspect `stash@{0}` contents and separate auth-security changes
+- [x] Task 1: Inspect `stash@{0}` contents and separate auth-security changes — SHA `5f23a9cb`
   - [x] `git stash show -p stash@{0}` to list files
   - [x] Identify and isolate `packages/api/src/__tests__/reset-password.test.ts`
         cast fix (belongs to auth-security track, not db-ledger) — already committed
@@ -17,7 +17,7 @@
         the reset-password cast fix); this Task produces no new commit by design
         (separation-only verification)
 
-- [x] Task 2: Land journal re-stamp and doctor implementation
+- [x] Task 2: Land journal re-stamp and doctor implementation — SHA `4d73a926`
   - [x] Pop the db-ledger portion of the stash (or apply selectively) — stash@{0} already applied to worktree
   - [x] Verify `packages/db/drizzle/meta/_journal.json` is strictly monotonic
         and `0018_audit_events` / `0019_session_token_hash` are registered
@@ -25,30 +25,30 @@
         `--check` and `--repair` with correct exit codes
   - [x] Commit 4d73a926
 
-- [x] Task 3: Land ESM `.js` extension fix
+- [x] Task 3: Land ESM `.js` extension fix — SHA `6891639e`
   - [x] Verify all relative imports/exports in `packages/db/src` use `.js`
   - [x] Rebuild `packages/db`
   - [x] Verify `node --input-type=module -e "import('./dist/index.js')"` resolves
   - [x] Commit 6891639e
 
-- [x] Task 4: Land client / privileged env guards
+- [x] Task 4: Land client / privileged env guards — SHA `5215d944`
   - [x] Verify `client.ts` throws in production runtime without `DATABASE_URL`
         and warns in dev/build
   - [x] Verify `privileged.ts` warns on `DATABASE_URL` fallback
   - [x] Commit 5215d944
 
-- [x] Task 5: Land sessions indexes migration
+- [x] Task 5: Land sessions indexes migration — SHA `c080e2c2`
   - [x] Verify `drizzle/0020_sessions_indexes.sql` exists and is registered
   - [x] Verify matching `index()` entries in `packages/db/src/schema/users.ts`
   - [x] Commit c080e2c2
 
-- [x] Task 6: Land barrel hygiene
+- [x] Task 6: Land barrel hygiene — SHA `b3f6324a`
   - [x] Verify `src/index.ts` no longer exports `PORTFOLIO_PROJECTS`
   - [x] Verify `src/seed/index.ts` exports `PORTFOLIO_PROJECTS`
   - [x] Verify `src/shutdown.ts` is deleted
   - [x] Commit b3f6324a
 
-- [x] Task 7: Verify Phase-2 Red tests are now Green
+- [x] Task 7: Verify Phase-2 Red tests are now Green — SHA `ccad56d7`
   - [x] `pnpm vitest run src/__tests__/journal-integrity.test.ts` — 9/9 passed
   - [x] `pnpm vitest run src/__tests__/barrel-hygiene.test.ts` — 6/6 passed
   - [x] `pnpm vitest run src/__tests__/env-guards.test.ts` — 4/4 passed
@@ -61,7 +61,7 @@
         `5215d944` (env guards), `b3f6324a` (barrel hygiene). This Task
         produces no new commit by design (verification-only).
 
-- [x] Task: Measure - User Manual Verification 'Phase 1: Rescue DB Migration Ledger Phase-3 Green WIP' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 1: Rescue DB Migration Ledger Phase-3 Green WIP' — SHA `b9b51351` (Protocol in workflow.md)
   - [x] Red: assert Phase 1 closeout report and checkpoint exist (commit `a7a78ce5` — 6/6 failures, expected)
   - [x] Green: author closeout report, run manual verification, create checkpoint (commits `e2384cab` + `6e362497` + `ccad56d7`)
   - **Red command:** `node --test measure/tracks/post_24h_audit_remediation_20260612/__tests__/phase1-closeout.test.mjs`
