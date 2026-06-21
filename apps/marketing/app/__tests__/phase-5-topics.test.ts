@@ -304,6 +304,10 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
 
   it("POST /api/video/save-topics skips duplicates before inserting", async () => {
     const { db } = await import("@reading-advantage/db");
+    const { selectMock, whereMock } = makeSelectChainMock();
+    whereMock.mockResolvedValueOnce([]);
+    (db.select as Mock).mockImplementation(selectMock);
+
     const { insertMock, valuesMock } = makeInsertChainMock();
     (db.insert as Mock).mockImplementation(insertMock);
 
@@ -329,6 +333,10 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
 
   it("POST /api/video/save-topics normalizes Thai/Latin duplicates", async () => {
     const { db } = await import("@reading-advantage/db");
+    const { selectMock, whereMock } = makeSelectChainMock();
+    whereMock.mockResolvedValueOnce([]);
+    (db.select as Mock).mockImplementation(selectMock);
+
     const { insertMock, valuesMock } = makeInsertChainMock();
     (db.insert as Mock).mockImplementation(insertMock);
 
@@ -348,6 +356,36 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
     const insertedTopics = valuesMock.mock.calls.map(
       (call) => (call[0] as { topic: string }).topic,
     );
+    expect(insertedTopics).toHaveLength(1);
+  });
+
+  it("POST /api/video/save-topics skips topics already in past_topics for the same app", async () => {
+    const { db } = await import("@reading-advantage/db");
+    const { selectMock, whereMock } = makeSelectChainMock();
+    whereMock.mockResolvedValueOnce([{ topic: "Existing Topic" }]);
+    (db.select as Mock).mockImplementation(selectMock);
+
+    const { insertMock, valuesMock } = makeInsertChainMock();
+    (db.insert as Mock).mockImplementation(insertMock);
+
+    const { POST } = await import("@/api/video/save-topics/route");
+    const response = await POST(
+      new Request("http://localhost/api/video/save-topics", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          app: "reading-advantage",
+          topics: ["Existing Topic", "Brand New Topic"],
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const insertedTopics = valuesMock.mock.calls.map(
+      (call) => (call[0] as { topic: string }).topic,
+    );
+    expect(insertedTopics).not.toContain("Existing Topic");
+    expect(insertedTopics).toContain("Brand New Topic");
     expect(insertedTopics).toHaveLength(1);
   });
 });
