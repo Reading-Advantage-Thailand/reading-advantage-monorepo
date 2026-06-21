@@ -272,7 +272,23 @@ Verification (with guessed `pre_head = ad29fcd2`):
   - [x] `CI=true pnpm --filter @reading-advantage/webhooks test` — 78/78 passed
   - [x] `pnpm --filter @reading-advantage/webhooks check-types` — clean
 
-- [ ] Task: Measure - User Manual Verification 'Phase 3: CodeCamp Review Closeout Test Cleanup' (Protocol in workflow.md)
+- [~] Task: Measure - User Manual Verification 'Phase 3: CodeCamp Review Closeout Test Cleanup' (Protocol in workflow.md)
+
+### Phase 3 Red-phase results (this MID session)
+
+Targeted Red command:
+```bash
+node --test measure/tracks/post_24h_audit_remediation_20260612/__tests__/phase3-closeout.test.mjs
+```
+
+Result: **6 failed, 1 passed (7 tests)** — failures are the expected missing closeout artifacts:
+- Phase 3 heading in `plan.md` does not yet include a `[checkpoint: <sha>]` marker.
+- `phase3-closeout-report.md` does not exist.
+- The closeout report sections (automated test gate, manual verification steps, code review findings, live-gate owner) are therefore absent.
+
+The single passing test is the live-behavior proof: `packages/webhooks/src/__tests__/phase-7-closeout.test.ts` passes in isolation (16/16 tests), confirming the webhooks closeout artifact test is healthy and the test harness works.
+
+Live-behavior gate owner (Green role): run `pnpm turbo run build --filter=@reading-advantage/db && pnpm --filter @reading-advantage/webhooks vitest run src/__tests__/phase-6-acceptance.test.ts` and confirm 5/5 pass.
 
 ---
 
