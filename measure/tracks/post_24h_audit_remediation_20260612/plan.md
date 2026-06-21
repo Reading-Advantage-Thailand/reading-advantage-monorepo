@@ -1,6 +1,6 @@
 # Implementation Plan: Post-24h Audit Remediation
 
-## Phase 1: Rescue DB Migration Ledger Phase-3 Green WIP
+## Phase 1: Rescue DB Migration Ledger Phase-3 Green WIP [checkpoint: e2384cab]
 
 > This phase is first because the db-ledger fix is Critical and currently lives
 > only in `stash@{0}`. Losing the stash would restore the non-monotonic journal
