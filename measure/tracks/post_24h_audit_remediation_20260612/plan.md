@@ -254,7 +254,7 @@ Verification (with guessed `pre_head = ad29fcd2`):
 
 ---
 
-## Phase 3: CodeCamp Review Closeout Test Cleanup [checkpoint: dab0dc09]
+## Phase 3: CodeCamp Review Closeout Test Cleanup [checkpoint: 7f6274a2]
 
 > The review-consolidation track is functionally correct, but its closeout
 > tests are brittle and one acceptance test is currently broken.
