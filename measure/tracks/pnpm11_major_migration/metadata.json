@@ -1,7 +1,9 @@
 {
   "track_id": "pnpm11_major_migration",
   "type": "chore",
-  "status": "backlog",
+  "status": "in-progress",
   "created_at": "2026-06-13T00:00:00Z",
-  "description": "Major migration to pnpm 11. Covers workspace protocol changes, lockfile format updates, dependency resolution changes, and CI pipeline updates. Affects the entire monorepo's package management."
+  "updated_at": "2026-06-22T00:00:00Z",
+  "description": "Major migration from pnpm 8 to pnpm 11. Covers packageManager pin, lockfile format v9, workspace config promotion from package.json#pnpm to pnpm-workspace.yaml, CI SSOT, and hoisted linker. Phases 1-4 complete; Phase 4 aggregate gate is environment-blocked and deferred.",
+  "deviation_notes": "Phase 4 aggregate gate (pnpm turbo run lint test check-types build) is environment-blocked by registry EPIPE during optional native-binary fetch. Documented in closeout-report.md; deferred to remediation track. pnpm@11.8.0 installed, lockfile regenerated, pnpm install --frozen-lockfile and pnpm dedupe --check pass."
 }
