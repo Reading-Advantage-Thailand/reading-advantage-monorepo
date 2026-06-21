@@ -203,10 +203,15 @@ describe("Phase 5: Topic Research — dedup matcher (task 2, RED, phase-5-dedup-
     expect(normalizeTopic("STEM Advantage")).toBe("stem advantage");
   });
 
-  it("normalizeTopic normalizes Thai text to NFC", async () => {
+  it("normalizeTopic normalizes text to NFC", async () => {
     const { normalizeTopic } = await import("../lib/topic-dedup.js");
-    // Visually identical Thai strings with different combining sequences.
-    const nfc = "การอ่านนิทานภาษาอังกฤษ";
+    // Use a Latin string with a precomposed diacritic because Thai codepoints
+    // in the modern Unicode block (U+0E00–U+0E7F) have no canonical NFD
+    // decomposition, so a Thai-only string would make the precondition below
+    // unreachable. "café" (U+0063 U+0061 U+0066 U+00E9) decomposes in NFD
+    // to "cafe\u0301" (5 codepoints) and re-composes to the original — the
+    // exact contract `normalizeTopic` must satisfy for any input script.
+    const nfc = "café";
     const nfd = nfc.normalize("NFD");
     expect(nfd).not.toBe(nfc);
     expect(normalizeTopic(nfd)).toBe(nfc);
