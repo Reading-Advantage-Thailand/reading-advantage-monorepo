@@ -51,12 +51,12 @@
   - [ ] `PG_TEST_URL=… pnpm vitest run src/__tests__/stale-ledger.test.ts` — needs live PG (podman rootless networking blocks host access)
   - [ ] `PG_TEST_URL=… pnpm vitest run src/__tests__/ledger-doctor.test.ts` — needs live PG (podman rootless networking blocks host access)
 
-- [~] Task: Measure - User Manual Verification 'Phase 1: Rescue DB Migration Ledger Phase-3 Green WIP' (Protocol in workflow.md)
-  - [~] Red: assert Phase 1 closeout report and checkpoint exist
-  - [ ] Green: author closeout report, run manual verification, create checkpoint
+- [x] Task: Measure - User Manual Verification 'Phase 1: Rescue DB Migration Ledger Phase-3 Green WIP' (Protocol in workflow.md)
+  - [x] Red: assert Phase 1 closeout report and checkpoint exist (commit `a7a78ce5` — 6/6 failures, expected)
+  - [x] Green: author closeout report, run manual verification, create checkpoint (commits `e2384cab` + `6e362497`)
   - **Red command:** `node --test measure/tracks/post_24h_audit_remediation_20260612/__tests__/phase1-closeout.test.mjs`
-  - **Red result:** 6/6 failures — Phase 1 heading lacks `[checkpoint: <sha>]` and `phase1-closeout-report.md` does not exist (expected: closeout not yet performed).
-  - **Live-behavior gate owner:** Green role / manual verifier must run `PG_TEST_URL=… pnpm --filter @reading-advantage/db vitest run src/__tests__/stale-ledger.test.ts src/__tests__/ledger-doctor.test.ts` when infrastructure permits; this is the opt-in live proof referenced in test-strategy.md §7 Phase 1 (live-PG) row.
+  - **Green result (this JR session, 2026-06-22):** 6/6 pass. The targeted Red command exits 0; the 4 Phase 1 unit tests `journal-integrity` (9/9), `env-guards` (4/4), `barrel-hygiene` (6/6), `package-esm-smoke` (3/3) total 22/22 in `pnpm --filter @reading-advantage/db vitest run …`.
+  - **Live-behavior gate owner:** Green role / manual verifier must run `PG_TEST_URL=… pnpm --filter @reading-advantage/db vitest run src/__tests__/stale-ledger.test.ts src/__tests__/ledger-doctor.test.ts` when infrastructure permits; this is the opt-in live proof referenced in test-strategy.md §7 Phase 1 (live-PG) row. Owned by the Final Acceptance Auditor + Closeout Steward.
 
 ---
 
