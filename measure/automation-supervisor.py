@@ -443,6 +443,59 @@ def non_test_source_changes_since(config: Config, base_sha: str) -> list[str]:
     return result
 
 
+def committed_changes_since(config: Config, base_sha: str, track_id: str = "") -> list[str]:
+    """Files actually committed between base_sha and HEAD for a given track.
+
+    Differs from changed_files_since by ignoring the working tree and the
+    index. When track_id is provided, only commits whose message contains
+    `track_id: <track_id>` are considered; this isolates what the agent
+    committed for the current track from unrelated concurrent work that
+    may have landed between base_sha and HEAD.
+    """
+    if not base_sha:
+        return []
+    if track_id:
+        result = git(
+            config,
+            "log",
+            f"{base_sha}..HEAD",
+            "--grep",
+            f"track_id: {track_id}",
+            "--name-only",
+            "--pretty=format:",
+        )
+    else:
+        result = git(config, "diff", "--name-only", f"{base_sha}..HEAD")
+    if result.returncode != 0:
+        return []
+    return sorted({line.strip() for line in result.stdout.splitlines() if line.strip()})
+
+
+def non_test_committed_changes_since(config: Config, base_sha: str, track_id: str = "") -> list[str]:
+    """Non-test, non-Measure files the agent committed since base_sha.
+
+    Used by gate_mid to enforce the Red-phase boundary: it inspects the
+    agent's actual commits for the current track, not the working tree.
+    This avoids false positives from pre-existing dirty work and from
+    unrelated tracks that landed between base_sha and HEAD.
+    """
+    allowed_suffixes = (
+        ".test.ts", ".test.tsx", ".spec.ts", ".spec.tsx",
+        ".test.js", ".test.jsx", ".spec.js", ".spec.jsx",
+        "_test.go", ".bats",
+    )
+    result = []
+    for path in committed_changes_since(config, base_sha, track_id):
+        if path.startswith("measure/"):
+            continue
+        if path.endswith(allowed_suffixes):
+            continue
+        if "/__tests__/" in path or "/tests/" in path or path.startswith("tests/"):
+            continue
+        result.append(path)
+    return result
+
+
 def normalize_repo_path(path: str) -> str:
     return path.replace("\\", "/").lstrip("./")
 
@@ -1191,7 +1244,7 @@ def gate_mid(config: Config, ctx: RoleContext) -> GateResult:
     elif in_progress == 0 and incomplete > 0:
         feedback.append("Expected at least one current phase task to be marked [~] after Red work.")
 
-    non_test_changes = non_test_source_changes_since(config, ctx.pre_head)
+    non_test_changes = non_test_committed_changes_since(config, ctx.pre_head, ctx.track_id)
     if non_test_changes:
         feedback.append("Mid role changed non-test/non-Measure files, which violates the Red-phase boundary:")
         feedback.extend(f"- {path}" for path in non_test_changes)
