@@ -693,6 +693,73 @@ gates.
   artifact exists, not that the run was performed by the
   mid agent).
 
+### Phase 5 — Red proof at HEAD (mid attempt-2, 2026-06-21)
+
+This mid pass re-verifies the Phase 5 Red state at the current HEAD
+(`d3cc8598`). The five Red-proof test files and the plan.md/metadata
+updates from mid attempt-1 are already committed; this pass only adds
+an updated worktree-classification note and a fresh Red-command re-run.
+
+#### Worktree-classification table (mid attempt-2)
+
+| Path | Status at mid start | Classification | Action by Phase 5 mid |
+|---|---|---|---|
+| `measure/automation-supervisor.py` | modified | **Unrelated user work** — supervisor hardening (audit-result schema validation, closeout-manifest logic). Not part of this track. | **Leave modified.** Do not commit in this track. |
+| `measure/tracks.md` | modified | **Unrelated user work** — broader registry edits (Current Focus rewrite, observability/rate-limiter status). The jest30-specific lines are unchanged in intent. | **Leave modified.** Do not commit in this track. |
+| `measure/tracks/observability_stack_20260603/metadata.json` | modified | **Unrelated user work** — different track (Observability Stack #9). | **Leave modified.** Do not commit in this track. |
+| `measure/tracks/observability_stack_20260603/plan.md` | modified | **Unrelated user work** — different track (Observability Stack #9). | **Leave modified.** Do not commit in this track. |
+| `measure/tracks/jest30_major_migration/phase-5-inventory.json` | untracked | **Green-side artifact created prematurely** — the inventory is the Task 1 deliverable owned by the Phase 5 implementer. Its presence would make the Task 1 Red test pass in the worktree while failing at committed HEAD, creating a false-Red state. | **Removed** (`rm measure/tracks/jest30_major_migration/phase-5-inventory.json`) to preserve Red discipline. It must be re-created by the implementer as part of Task 1 Green work. |
+| `apps/reading-advantage/__test__/jest30-phase5-*.test.ts` | committed at `d3cc8598` | **Relevant to this track/phase** — Red-proof tests (already committed). | No changes; re-run confirms they still fail at HEAD. |
+| `measure/tracks/jest30_major_migration/metadata.json` | committed at `d3cc8598` | **Relevant to this track/phase** — track reopened with Phase 5 deviation note (already committed). | No changes. |
+| `measure/tracks/jest30_major_migration/plan.md` | committed at `d3cc8598` | **Relevant to this track/phase** — Phase 5 plan and Red proof section (already committed). | Updated by this mid pass with the current Red verification note. |
+
+#### Targeted Red command (re-verified at HEAD)
+
+Aggregate bounded command for all five Phase 5 Red-proof files (no
+watch, no `--testPathPattern` widening, no full-suite smoke):
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest \
+  __test__/jest30-phase5-inventory.test.ts \
+  __test__/jest30-phase5-full-run.test.ts \
+  __test__/jest30-phase5-quarantine.test.ts \
+  __test__/jest30-phase5-scripts-disposition.test.ts \
+  __test__/jest30-phase5-metadata-consistency.test.ts \
+  --no-coverage
+```
+
+**Result at HEAD (2026-06-21, after removing the premature inventory artifact):**
+
+```
+Test Suites: 5 failed, 5 total
+Tests:       16 failed, 16 total
+```
+
+The 16 failing tests fail **for the right reason** — the Phase 5
+artifacts are missing or the closeout has not happened:
+
+- **Task 1 (inventory, 4 fail):** `phase-5-inventory.json` does not exist.
+- **Task 2 (full-run record, 4 fail):** `phase-5-full-run.json` does not exist.
+- **Task 3 (quarantine, 4 fail):** `phase-5-quarantine.json` does not exist and the 3 canary suites have no run-record or quarantine entry.
+- **Task 4 (scripts disposition, 2 fail):** `packages/reading-advantage-scripts/package.json` still pins `jest@^29.7.0` and the disposition manifest does not exist.
+- **Task 5 (metadata consistency, 2 fail):** `metadata.json` `deviation_notes` does not mention "Phase 5" and `measure/tracks.md` still carries the "keep active/reopened" qualifier.
+
+#### Mid attempt-2 — what was done vs. what was NOT done
+
+- **Verified** the five Phase 5 Red-proof test files are committed and fail at HEAD (16/16 fail for the right reason).
+- **Removed** the premature untracked `phase-5-inventory.json` artifact so the Task 1 Red test fails as designed. The artifact is the implementer's Green-side deliverable and will be re-created in Task 1.
+- **Did NOT** write any new test file — the Red proofs were authored at `d3cc8598` and still hold at HEAD.
+- **Did NOT** create any Phase 5 artifact (`phase-5-inventory.json`, `phase-5-full-run.json`, `phase-5-quarantine.json`, `phase-5-scripts-disposition.json`). Those are Green-side deliverables.
+- **Did NOT** modify `apps/reading-advantage/package.json`, `pnpm-lock.yaml`, or any production source.
+- **Did NOT** modify `metadata.json` status or `measure/tracks.md` (the tracks.md change is unrelated user work).
+- **Did NOT** run the full in-scope Jest suite — that is the implementer's Green-side work.
+
+#### Build-graph probe at mid attempt-2
+
+- `build-graph stats ./graph.db` → 2538 nodes / 3498 edges / 390 files.
+- `build-graph search ./graph.db jest30-phase5` → 5 Phase 5 test files.
+- `build-graph inspect ./graph.db jest30-phase5-inventory.test.ts` → file node with 2 outgoing edges, 0 incoming edges (leaf test file, as expected).
+
 #### Phase 5 implementer hand-off
 
 The Phase 5 implementer must:
