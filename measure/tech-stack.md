@@ -2,7 +2,7 @@
 
 ## Monorepo Orchestration
 
-- **Package Manager:** pnpm (with `pnpm-workspace.yaml`)
+- **Package Manager:** pnpm@11.8.0 (with `pnpm-workspace.yaml`) — selected in `pnpm11_major_migration` (post-migration state; pre-migration baseline was `pnpm@8.15.8`)
 - **Task Runner / Caching:** Turborepo (`turbo.json` pipeline)
 - **Build System:** Next.js (per-app, various versions consolidated during migration)
 

@@ -25,16 +25,30 @@ function parseLockfileSetting(lines, key) {
   return undefined;
 }
 
-describe("Phase 1 baseline pin", () => {
-  it("package.json#packageManager is pnpm@8.15.8", () => {
+describe("Post-migration invariant pin (pnpm 11)", () => {
+  it("package.json#packageManager matches the pnpm 11 major", () => {
     const pkg = readJson("package.json");
-    assert.equal(pkg.packageManager, "pnpm@8.15.8");
+    assert.match(
+      pkg.packageManager,
+      /^pnpm@1[1-9]\./,
+      `package.json#packageManager must be on the pnpm 11 major (got "${pkg.packageManager}")`
+    );
   });
 
-  it("pnpm-lock.yaml lockfileVersion is '6.0'", () => {
+  it("pnpm-lock.yaml lockfileVersion is on the pnpm 9+ family", () => {
     const head = readLockfileHead("pnpm-lock.yaml");
     const version = parseLockfileSetting(head, "lockfileVersion");
-    assert.equal(version, "'6.0'");
+    assert.ok(version, "pnpm-lock.yaml must declare a lockfileVersion");
+    const numericMatch = version.match(/^'?(\d+)\.(\d+)'?$/);
+    assert.ok(
+      numericMatch,
+      `lockfileVersion must be of the form MAJOR.MINOR (got "${version}")`
+    );
+    const major = Number(numericMatch[1]);
+    assert.ok(
+      major >= 9,
+      `lockfileVersion major must be >= 9 for pnpm 11 compat (got "${version}")`
+    );
   });
 
   it("pnpm-lock.yaml settings.autoInstallPeers is true", () => {
