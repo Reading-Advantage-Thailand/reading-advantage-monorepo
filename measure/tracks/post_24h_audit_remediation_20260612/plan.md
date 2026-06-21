@@ -9,8 +9,13 @@
 - [x] Task 1: Inspect `stash@{0}` contents and separate auth-security changes
   - [x] `git stash show -p stash@{0}` to list files
   - [x] Identify and isolate `packages/api/src/__tests__/reset-password.test.ts`
-        cast fix (belongs to auth-security track, not db-ledger) — already committed by auth-security track
+        cast fix (belongs to auth-security track, not db-ledger) — already committed
+        by auth-security track as part of `5f23a9cb` (feat(auth): harden session
+        cap, token type, deleteSession, audit, reset-password, register)
   - [x] Identify and isolate any other non-db changes — all stash changes are db-ledger or db-related
+  - [x] SHA evidence: `5f23a9cb` (auth-security Green phase that already absorbed
+        the reset-password cast fix); this Task produces no new commit by design
+        (separation-only verification)
 
 - [x] Task 2: Land journal re-stamp and doctor implementation
   - [x] Pop the db-ledger portion of the stash (or apply selectively) — stash@{0} already applied to worktree
@@ -50,10 +55,15 @@
   - [x] `pnpm vitest run src/__tests__/package-esm-smoke.test.ts` — 3/3 passed
   - [ ] `PG_TEST_URL=… pnpm vitest run src/__tests__/stale-ledger.test.ts` — needs live PG (podman rootless networking blocks host access)
   - [ ] `PG_TEST_URL=… pnpm vitest run src/__tests__/ledger-doctor.test.ts` — needs live PG (podman rootless networking blocks host access)
+  - [x] SHA evidence: re-verified in `ccad56d7` (this JR session, 22/22 across the
+        four named regression files). The work being verified was produced by
+        `4d73a926` (journal re-stamp), `6891639e` (ESM `.js` extensions),
+        `5215d944` (env guards), `b3f6324a` (barrel hygiene). This Task
+        produces no new commit by design (verification-only).
 
 - [x] Task: Measure - User Manual Verification 'Phase 1: Rescue DB Migration Ledger Phase-3 Green WIP' (Protocol in workflow.md)
   - [x] Red: assert Phase 1 closeout report and checkpoint exist (commit `a7a78ce5` — 6/6 failures, expected)
-  - [x] Green: author closeout report, run manual verification, create checkpoint (commits `e2384cab` + `6e362497`)
+  - [x] Green: author closeout report, run manual verification, create checkpoint (commits `e2384cab` + `6e362497` + `ccad56d7`)
   - **Red command:** `node --test measure/tracks/post_24h_audit_remediation_20260612/__tests__/phase1-closeout.test.mjs`
   - **Green result (this JR session, 2026-06-22):** 6/6 pass. The targeted Red command exits 0; the 4 Phase 1 unit tests `journal-integrity` (9/9), `env-guards` (4/4), `barrel-hygiene` (6/6), `package-esm-smoke` (3/3) total 22/22 in `pnpm --filter @reading-advantage/db vitest run …`.
   - **Live-behavior gate owner:** Green role / manual verifier must run `PG_TEST_URL=… pnpm --filter @reading-advantage/db vitest run src/__tests__/stale-ledger.test.ts src/__tests__/ledger-doctor.test.ts` when infrastructure permits; this is the opt-in live proof referenced in test-strategy.md §7 Phase 1 (live-PG) row. Owned by the Final Acceptance Auditor + Closeout Steward.
