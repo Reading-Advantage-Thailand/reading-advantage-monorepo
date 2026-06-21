@@ -2221,9 +2221,52 @@ For each site (Phase 8a–8e):
 
 ## Phase 10: Closeout
 
-- [ ] Task: Completion-audit remediation: move `instrumentation.ts` to a Next.js-loaded root or `src/` location and prove `register()` runs on the live app path.
-- [ ] Task: Completion-audit remediation: wrap the app's Next config with Sentry config and add the required client/server init files for the live runtime.
-- [ ] Task: Completion-audit remediation: replace mock-only SDK-shape acceptance with a live-path test that observes exported span/Sentry initialization behavior.
-- [ ] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-902, F-903, F-904, F-905, F-906 `Resolved`.
-- [ ] Task: Add a lessons-learned entry: "AsyncLocalStorage + Sentry + OTel is the right observability stack; the alternative (pino + Datadog + per-app exporters) is more work for less value."
-- [ ] Task: Move track to `measure/archive/observability_stack_20260603/` and update `measure/tracks.md`.
+> **Mid-Red evidence (this phase, 2026-06-21):** the prior MID attempt timed out
+> (exit 124) after choosing an invalid vitest path
+> (`../../node_modules/vitest/vitest.mjs` from `apps/science-advantage`), which
+> does not exist under the in-progress pnpm 11 migration layout. This attempt
+> uses the app-local binary (`node node_modules/vitest/vitest.mjs` from
+> `apps/science-advantage`) and proceeds directly to the bounded Red proof.
+>
+> **Worktree hygiene at MID start:** `M measure/automation-supervisor.py` is an
+> unrelated supervisor gate-logic improvement; **preserve**, do not commit in
+> this track's Red-phase commit.
+
+- [x] Task: Completion-audit remediation: move `instrumentation.ts` to a Next.js-loaded root or `src/` location and prove `register()` runs on the live app path. [track_id: observability_stack_20260603] [aea60780]
+  - Evidence: **Already satisfied at HEAD.** `apps/science-advantage/instrumentation.ts` exists at the Next.js-loaded app root and `register()` starts a real `NodeTracerProvider`. Targeted verification: `cd apps/science-advantage && node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/observability/__tests__/live-otel-initialization.acceptance.test.ts` → `Test Files 1 passed (1) | Tests 3 passed (3)`, exit 0. No new Red test needed per the "already satisfied with evidence" rule.
+- [x] Task: Completion-audit remediation: wrap the app's Next config with Sentry config and add the required client/server init files for the live runtime. [track_id: observability_stack_20260603] [aea60780]
+  - Evidence: **Already satisfied at HEAD.** `apps/science-advantage/next.config.ts` imports and applies `withSentryConfig`; `sentry.client.config.ts` and `sentry.server.config.ts` exist and call `Sentry.init`. Targeted verification: `cd apps/science-advantage && node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/observability/__tests__/live-sentry-initialization.acceptance.test.ts` → `Test Files 1 passed (1) | Tests 3 passed (3)`, exit 0. No new Red test needed.
+- [x] Task: Completion-audit remediation: replace mock-only SDK-shape acceptance with a live-path test that observes exported span/Sentry initialization behavior. [track_id: observability_stack_20260603] [aea60780] [80705dff]
+  - Evidence: **Already satisfied at HEAD.** Phase 9 added `live-sentry-initialization.acceptance.test.ts` and `live-otel-initialization.acceptance.test.ts`; both pass. Combined targeted verification: `cd apps/science-advantage && node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts lib/observability/__tests__/live-sentry-initialization.acceptance.test.ts lib/observability/__tests__/live-otel-initialization.acceptance.test.ts` → `Test Files 2 passed (2) | Tests 6 passed (6)`, exit 0. No new Red test needed.
+- [~] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-902, F-903, F-904, F-905, F-906 `Resolved`.
+- [~] Task: Add a lessons-learned entry: "AsyncLocalStorage + Sentry + OTel is the right observability stack; the alternative (pino + Datadog + per-app exporters) is more work for less value."
+- [~] Task: Move track to `measure/archive/observability_stack_20260603/` and update `measure/tracks.md`.
+
+> **Phase 10 Red surface (tasks 4–6):** a single closeout-artifact test file
+> `apps/science-advantage/lib/observability/__tests__/phase-10-closeout.test.ts`
+> (3 tests) is committed intentionally red. The tests assert:
+> 1. `measure/tech-debt.md` contains a `Resolved` row for each of F-902–F-906.
+> 2. `measure/lessons-learned.md` contains the `observability_stack_20260603`
+>    entry with the agreed observability-stack wording.
+> 3. `measure/archive/observability_stack_20260603/plan.md` exists and the track
+>    entry no longer appears in the active section of `measure/tracks.md`.
+>
+> **Targeted Red command actually executed at MID:**
+> ```
+> cd apps/science-advantage && \
+>   node node_modules/vitest/vitest.mjs run \
+>     --config vitest.unit.config.ts \
+>     lib/observability/__tests__/phase-10-closeout.test.ts
+> ```
+> **Result:** exit 1 — `Test Files 1 failed (1) | Tests 3 failed (3)`.
+> All 3 failures are the expected missing-artifact Reds:
+> - `marks F-902 through F-906 as Resolved in measure/tech-debt.md` — `expected F-902 to be marked Resolved ...: expected undefined to be defined`.
+> - `records the observability stack lessons-learned entry` — `expected ... to contain 'observability_stack_20260603'`.
+> - `archives the track directory and removes it from active tracks.md` — `expected false to be true` (archive path missing).
+>
+> Tasks 4–6 are artifact-only closeout tasks; the Red test is the contract.
+> Green role will update `measure/tech-debt.md`, `measure/lessons-learned.md`,
+> and move the track directory to `measure/archive/` + update
+> `measure/tracks.md` to make these tests pass. Live-behavior proof for the
+> observability implementation itself is provided by the already-passing
+> Phase 9 live-path tests above.
