@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { campaigns } from "@reading-advantage/db/schema";
 import { eq } from "drizzle-orm";
+import {
+  type CampaignStatus,
+  isValidCampaignStatusTransition,
+} from "@/lib/campaign-status";
 
 export async function GET(
   request: Request,
@@ -35,10 +39,33 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json();
+    const nextStatus = body.status as CampaignStatus;
+
+    const [existing] = await db
+      .select()
+      .from(campaigns)
+      .where(eq(campaigns.id, params.id));
+
+    if (!existing) {
+      return NextResponse.json(
+        { message: "Campaign not found" },
+        { status: 404 }
+      );
+    }
+
+    if (!isValidCampaignStatusTransition(existing.status, nextStatus)) {
+      return NextResponse.json(
+        {
+          message: `Invalid status transition: cannot transition from ${existing.status} to ${nextStatus}`,
+        },
+        { status: 400 }
+      );
+    }
+
     const [updated] = await db
       .update(campaigns)
       .set({
-        status: body.status,
+        status: nextStatus,
         updatedAt: new Date(),
       })
       .where(eq(campaigns.id, params.id))
