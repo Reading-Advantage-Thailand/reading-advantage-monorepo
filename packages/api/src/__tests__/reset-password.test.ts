@@ -326,4 +326,60 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
     );
     expect(response.status, "ADMIN + target ADMIN → 403").toBe(403);
   });
+
+  it("scopes the target-user query by schoolId when the actor is TEACHER", async () => {
+    setActorSession("teacher-1", "TEACHER", "school-1");
+
+    // Capture the WHERE clause passed to the first select (target-user lookup).
+    const whereMock = vi.fn().mockReturnValue({
+      limit: vi.fn().mockResolvedValue([]),
+    });
+    mockDb.select.mockReturnValueOnce({
+      from: vi.fn().mockReturnValue({ where: whereMock }),
+    });
+
+    await handleResetPassword(
+      jsonRequest(
+        "/api/auth/reset-password",
+        { userId: "target-1", newPassword: "NewPassword123!" },
+        "teacher-1-token"
+      )
+    );
+
+    expect(
+      whereMock,
+      "TEACHER actors must filter the target-user lookup by schoolId at the query layer, " +
+        "not only in post-fetch authorization checks.",
+    ).toHaveBeenCalled();
+
+    const whereArg = whereMock.mock.calls[0]?.[0];
+
+    /** Recursively searches an object tree for a string value matching the predicate. */
+    function deepContains(
+      obj: unknown,
+      predicate: (s: string) => boolean,
+      seen = new Set<object>()
+    ): boolean {
+      if (typeof obj === "string") return predicate(obj);
+      if (obj && typeof obj === "object") {
+        if (seen.has(obj)) return false;
+        seen.add(obj);
+        return Object.values(obj).some((v) => deepContains(v, predicate, seen));
+      }
+      return false;
+    }
+
+    expect(
+      deepContains(whereArg, (s) => s.includes("school_id")),
+      "The target-user WHERE clause must reference users.schoolId for TEACHER actors.",
+    ).toBe(true);
+    expect(
+      deepContains(whereArg, (s) => s.includes("school-1")),
+      "The target-user WHERE clause must constrain schoolId to the TEACHER actor's school.",
+    ).toBe(true);
+    expect(
+      deepContains(whereArg, (s) => s.includes("user_id")),
+      "The target-user WHERE clause must still reference the target userId.",
+    ).toBe(true);
+  });
 });
