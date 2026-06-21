@@ -762,8 +762,8 @@
 ## Phase 4: Validate & Close
 
 - [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. **(env-blocked; deferred to remediation track — see Phase 4 Green Gate JR-attempt-2 below)**
-- [x] Task: Re-run `pnpm outdated` and `pnpm audit`; document results. (`pnpm outdated` exit 0 → 3 dev-dep upgrades documented; `pnpm audit` exit 0 → 37 advisories documented; both captured in `closeout-report.md` §2, §3.)
-- [x] Task: Update `measure/tech-stack.md` with the selected pnpm version. (`measure/tech-stack.md` line 5: "Package Manager: pnpm@11.8.0 (with `pnpm-workspace.yaml`) — selected in `pnpm11_major_migration` (post-migration state; pre-migration baseline was `pnpm@8.15.8`).")
+- [x] Task: Re-run `pnpm outdated` and `pnpm audit`; document results. (`c6c8f626`, `ec9850b0`) — `pnpm outdated` exit 0 → 3 dev-dep upgrades documented; `pnpm audit` exit 0 → 37 advisories documented; both captured in `closeout-report.md` §2, §3.
+- [x] Task: Update `measure/tech-stack.md` with the selected pnpm version. (`c6c8f626`) — `measure/tech-stack.md` line 5: "Package Manager: pnpm@11.8.0 (with `pnpm-workspace.yaml`) — selected in `pnpm11_major_migration` (post-migration state; pre-migration baseline was `pnpm@8.15.8`)."
 
 ### Phase 4 Red Gate (MID-authored)
 
