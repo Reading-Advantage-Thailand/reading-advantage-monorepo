@@ -761,9 +761,9 @@
 
 ## Phase 4: Validate & Close
 
-- [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate.
-- [~] Task: Re-run `pnpm outdated` and `pnpm audit`; document results.
-- [~] Task: Update `measure/tech-stack.md` with the selected pnpm version.
+- [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. **(env-blocked; deferred to remediation track — see Phase 4 Green Gate JR-attempt-2 below)**
+- [x] Task: Re-run `pnpm outdated` and `pnpm audit`; document results. (`pnpm outdated` exit 0 → 3 dev-dep upgrades documented; `pnpm audit` exit 0 → 37 advisories documented; both captured in `closeout-report.md` §2, §3.)
+- [x] Task: Update `measure/tech-stack.md` with the selected pnpm version. (`measure/tech-stack.md` line 5: "Package Manager: pnpm@11.8.0 (with `pnpm-workspace.yaml`) — selected in `pnpm11_major_migration` (post-migration state; pre-migration baseline was `pnpm@8.15.8`).")
 
 ### Phase 4 Red Gate (MID-authored)
 
@@ -845,3 +845,145 @@
   changes are introduced by MID. The unrelated supervisor path is preserved
   untouched per the user directive "preserve unrelated user work. Do NOT
   modify existing source code except test files and Measure docs."
+
+### Phase 4 Green Gate (JR-authored) — attempt-2
+
+> **Inconclusive gate, complete documentation.** This Green phase completes
+> the documentation deliverables (tasks 2, 3) and the Phase 1 baseline
+> reconciliation (Phase 4 closeout test assertion #5). The live aggregate
+> gate (task 1) is **environment-blocked** and is deferred to a remediation
+> track per the supervisor's retry-and-escalation policy ("If infrastructure,
+> network, or tool instability prevents a reliable result, mark the audit
+> inconclusive; do not archive the track").
+
+- **Deliverable:** Green-phase documentation commit ships
+  `measure/tech-stack.md` (pnpm 11.8.0 pin),
+  `measure/tracks/pnpm11_major_migration/closeout-report.md` (Phase 4
+  closeout artifact), and the Phase 1 baseline test rewrite to assert the
+  post-migration invariant instead of the stale pre-migration baseline.
+  No source-code surface change in this commit.
+
+- **Targeted Red command re-run (artifact, bounded):**
+  `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-phase4-closeout.test.mjs`
+  → **`5 pass / 0 fail / 5 total`** in ~0.20s. **GREEN.** All five assertions
+  pass: tech-stack documents `pnpm@11.8.0`, closeout report has the
+  aggregate gate section containing `pnpm turbo run lint test check-types
+  build` plus the "must pass" / "needs to pass" language that the regex
+  matches honestly (the gate is documented as env-blocked, not faked-pass),
+  closeout report has the `pnpm outdated` and `pnpm audit` sections with
+  results, and the Phase 1 baseline test no longer asserts the stale
+  `pnpm@8.15.8` / `lockfileVersion === '6.0'` values.
+
+- **Phase 1 baseline re-run (artifact, bounded):**
+  `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm-lock-baseline.test.mjs`
+  → **`6 pass / 0 fail / 6 total`** in ~0.14s. **GREEN.** The test was
+  rewritten from "Phase 1 baseline pin" (pre-migration baseline) to "Post-
+  migration invariant pin (pnpm 11)" (post-migration SSOT invariants). The
+  new assertions check:
+  1. `package.json#packageManager` matches `/^pnpm@1[1-9]\./` (any 11+ major).
+  2. `pnpm-lock.yaml` `lockfileVersion` is on the pnpm 9+ family
+     (parses `MAJOR.MINOR`, asserts `MAJOR >= 9`).
+  3. `pnpm-lock.yaml` `settings.autoInstallPeers` is `true`.
+  4. `pnpm-workspace.yaml` declares exactly the 3 standard workspace globs
+     (`apps/*`, `packages/*`, `packages/integrations/*`).
+  5. No `.npmrc` exists at the repo root.
+  6. CI `pnpm/action-setup@v4` has no `version:` key (SSOT for the runner
+     pnpm version = `packageManager`).
+
+- **Phase 2 contract re-run (artifact, bounded):**
+  `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-lockfile-contract.test.mjs`
+  → **`4 pass / 0 fail / 4 total`** in ~0.20s. **GREEN.** All 4 post-migration
+  lockfile assertions hold (`packageManager /^pnpm@11\./`,
+  `lockfileVersion >= '9.0'`, `lockfileVersion !== '6.0'`, packages first-key
+  pnpm 9 format).
+
+- **Phase 3 workspace config re-run (artifact, bounded):**
+  `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-workspace-config.test.mjs`
+  → **`9 pass / 0 fail / 9 total`** in ~0.20s. **GREEN.** All 9 post-migration
+  workspace config assertions hold (5 monorepo override pins, `nodeLinker:
+  hoisted`, `resolvePeersFromWorkspaceRoot: true`, `allowBuilds:` block
+  present, `peerDependencyRules:` block present, 3 standard workspace
+  globs, `package.json` has no `pnpm` field, `packageManager` matches
+  `/^pnpm@11\./`).
+
+- **Combined Phase 1+2+3+4 artifact suites:**
+  `node --test measure/tracks/pnpm11_major_migration/__tests__/*.test.mjs`
+  → **`24 pass / 0 fail / 24 total`** in ~0.6s. **GREEN.** All four
+  artifact-only contract suites pass at the bounded artifact level.
+
+- **`pnpm outdated` (live, task 2):** exit 0. 3 dev-dep upgrades surfaced
+  (`@commitlint/cli` 19.8.1→21.0.2, `@commitlint/config-conventional`
+  19.8.1→21.0.2, `typescript` 5.9.3→6.0.3). All 3 are dev-only and out of
+  scope for `pnpm11_major_migration`; deferred to existing tracks
+  (`dependency_upgrade_hardening_20260607` and `typescript6_major_migration`).
+  Output captured in `closeout-report.md` §2.
+
+- **`pnpm audit` (live, task 2):** exit 0. 37 advisories surfaced (6 low,
+  23 moderate, 8 high, 0 critical). All 37 are pre-existing on the
+  dependency tree at the pre-migration commit; the pnpm 11 migration does
+  not introduce or resolve any of them (the migration's blast radius is
+  config / CI / YAML / JSON, not runtime deps). Remediation deferred to
+  per-advisory tracks. Output captured in `closeout-report.md` §3.
+
+- **`pnpm turbo run lint test check-types build` (live, task 1) — RED,
+  environment-blocked, deferred to remediation track:** Five bounded retries
+  attempted (default, `--frozen-lockfile` repair, full clean reinstall,
+  `verify-deps-before-run=warn` env override, per-package `lint` only).
+  Every retry hits the same failure mode: pnpm 11.8.0's
+  `runDepsStatusCheck` triggers `pnpm install` to repair the lockfile-
+  vs-`node_modules/.pnpm-workspace-state-v1.json` delta, and that install
+  fails with `error (23)` (EPIPE) / `UND_ERR_SOCKET` against
+  `registry.npmjs.org` when trying to fetch 328 optional native binaries
+  for non-current platforms (`@esbuild/darwin-x64`, `@esbuild/freebsd-x64`,
+  `@swc/core-darwin-arm64`, `sharp-libvips-linux-ppc64`,
+  `@next/swc-linux-arm64-gnu`, `@turbo/darwin-arm64`, etc.). The
+  workspace-state file is not created because pnpm 11 with
+  `nodeLinker: hoisted` skips `updateWorkspaceState` in the non-recursive
+  install path. `verify-deps-before-run` cannot be cleanly disabled: the
+  setting is in `excludedPnpmKeys` (rejected from `pnpm-workspace.yaml`),
+  `.npmrc` would break Phase 1 baseline test #5, and the env-var override
+  fires the `warn` branch but `runDepsStatusCheck` still falls through to
+  `pnpm install` in this pnpm 11.8.0 build (verified in source: the
+  warn branch in `runDepsStatusCheck` only suppresses the `install2()`
+  call, not the verify-check's upstream state lookup). Full failure-mode
+  analysis with retry matrix in `closeout-report.md` §1.
+
+- **Build-graph note (per `test-strategy.md` §6 + workflow.md Graph-Aware
+  §3.2):** `build-graph stats ./graph.db` returns 2553 nodes / 3510 edges /
+  401 files (mtime 2026-06-21, <24h fresh; no `build-graph scan` needed).
+  `build-graph search pnpm|lockfile|workspace|turbo|lint|audit` returns
+  only `resolveTestDatabaseUrl` and `readLockfileOverride`, both unrelated
+  to the migration per `test-strategy.md` §3 / §6. The Phase 4 deliverable
+  files (`measure/tech-stack.md`, `closeout-report.md`) are Markdown, not
+  TypeScript; they are invisible to the graph scanner and no
+  `build-graph update` is required post-impl. The rewritten
+  `pnpm-lock-baseline.test.mjs` is plain `node --test` mjs — not TS — so
+  no graph update is required for it either. The graph continues to
+  provide only negative confirmation that the Phase 4 blast radius is
+  documentation / artifact-tests, not TS source.
+
+- **Worktree hygiene:** the only dirty path at session start was the
+  unrelated `M measure/automation-supervisor.py` refactor (supervisor gate
+  helpers; no pnpm11 track references). It is preserved untouched per the
+  user directive "preserve unrelated user work. Do NOT modify existing
+  source code except test files and Measure docs." It is not staged in
+  this commit. The 3 relevant changes (tech-stack.md, closeout-report.md,
+  pnpm-lock-baseline.test.mjs) are all Measure docs and contract tests
+  — no source-code surface modified.
+
+- **Closeout boundary (per JR supervisor directive):** This JR session
+  produces 2 commits — one for the implementation files
+  (tech-stack.md / closeout-report.md / pnpm-lock-baseline.test.mjs) and
+  one for this plan.md update. The track archive actions
+  (`pnpm11_major_migration` → `99-archive/` or `measure/archive/`,
+  `measure/tracks.md` archive update, `metadata.json` status change,
+  closeout manifest) are **deferred to the dedicated Measure Closeout
+  Steward** that runs after the Final Acceptance Auditor passes. The
+  aggregate gate task stays `[~]` in `plan.md` and the track is
+  intentionally not archived in this commit.
+
+- **Commit messages:**
+  - Implementation commit (3 files):
+    `docs(measure): phase 4 closeout artifacts + baseline rewrite (track_id: pnpm11_major_migration_20260622)`
+  - Plan update commit (1 file):
+    `docs(measure): phase 4 green evidence — task 1 [~] env-blocked, tasks 2-3 [x] (track_id: pnpm11_major_migration_20260622)`
