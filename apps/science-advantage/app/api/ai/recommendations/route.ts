@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { AuthError } from '@reading-advantage/auth';
 import { getCurrentSession } from '@/lib/auth/session';
 import { buildRecommendationContext } from '@/lib/ai/recommendation-context';
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof RateLimitError) return NextResponse.json({ success: false, error: 'RATE_LIMITED', retryAfter: error.retryAfter }, { status: 429, headers: { 'retry-after': String(error.retryAfter) } });
     if (error instanceof AuthError) return NextResponse.json({ success: false, error: error.message }, { status: error.code === 'UNAUTHORIZED' ? 401 : 403 });
+    Sentry.captureException(error);
     logger.error('ai.recommendation.error', { traceId }); metrics.increment('ai_recommendation_errors');
     return NextResponse.json({ success: false, error: 'INTERNAL_ERROR', traceId }, { status: 500 });
   }
