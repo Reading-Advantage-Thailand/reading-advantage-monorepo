@@ -1,11 +1,11 @@
 {
   "track_id": "observability_stack_20260603",
   "type": "feature",
-  "status": "new",
+  "status": "reopened",
   "created_at": "2026-06-03T00:00:00Z",
-  "updated_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-06-21T00:00:00Z",
   "description": "Add @sentry/nextjs; create sentry.client.config.ts and sentry.server.config.ts. Add instrumentation.ts registering Sentry + @opentelemetry/sdk-node + @opentelemetry/exporter-trace-otlp-http. Introduce AsyncLocalStorage<RequestContext> to auto-attach requestId/userId/latencyMs. Migrate 5 largest route.ts files' catch blocks from console.error to logger.error. Wrap generateObject calls in real OTel spans. Resolves F-902, F-903, F-904, F-905, F-906. 1 week. Medium.",
   "estimated_tasks": 16,
   "actual_tasks": null,
-  "deviation_notes": ""
+  "deviation_notes": "Reopened after the 2026-06-21 fleet completion audit rejected the closeout: Next.js never loaded the OTel instrumentation because instrumentation.ts was under lib/ instead of the app root/src, Sentry was not initialized on the live path, and prior FR-1/FR-2 gates were mock-only SDK-shape tests. Keep active until live-path instrumentation and Sentry init are verified."
 }

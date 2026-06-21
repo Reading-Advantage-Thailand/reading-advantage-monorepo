@@ -1339,6 +1339,85 @@ For each site (Phase 8a–8e):
 
 ## Phase 9: Final Acceptance
 
+> **Mid-Red evidence (this phase, 2026-06-21):** the track was reopened by the
+> 2026-06-21 fleet completion audit (`metadata.json` deviation_notes). The
+> audit rejected the prior closeout because the acceptance tests verified
+> SDK shape and route-level behavior but did not verify the **live app path**
+> for initialization: Next.js never loaded the OTel instrumentation file
+> (it lived under `lib/` instead of the app root or `src/`) and Sentry was
+> not initialized on the live path (the Next.js config was not wrapped with
+> `withSentryConfig`). This MID pass adds two new live-path Red tests to
+> Phase 9 and marks the closeout gates `[~]` until the Green role resolves
+> the implementation gaps.
+>
+> New Red surface (this pass):
+> 1. `apps/science-advantage/lib/observability/__tests__/live-sentry-initialization.acceptance.test.ts`
+>    — 3 tests for FR-1 live-path Sentry initialization:
+>    - **`next.config.ts` is wrapped with `withSentryConfig`** — **RED at HEAD**
+>      (`expected source to include withSentryConfig`). The current
+>      `apps/science-advantage/next.config.ts` exports a plain `NextConfig`
+>      object and does not import or apply Sentry's config wrapper, so
+>      Next.js never loads `sentry.client.config.ts` / `sentry.server.config.ts`
+>      on the live runtime path.
+>    - **`sentry.client.config.ts` calls `Sentry.init` on import** — would pass
+>      if reached; kept as a live-behavior proof paired with the artifact check.
+>    - **`sentry.server.config.ts` calls `Sentry.init` on import** — would pass
+>      if reached; kept as a live-behavior proof paired with the artifact check.
+>
+> 2. `apps/science-advantage/lib/observability/__tests__/live-otel-initialization.acceptance.test.ts`
+>    — 3 tests for FR-2 live-path OTel initialization:
+>    - **`instrumentation.ts` exists at the Next.js-loaded app root** — **RED at HEAD**
+>      (`expected instrumentation.ts to exist at the app root`). Only
+>      `apps/science-advantage/lib/instrumentation.ts` exists; Next.js expects
+>      `apps/science-advantage/instrumentation.ts` (or `src/instrumentation.ts`).
+>    - **`register()` is an async function exported by the root file** — would
+>      pass once the root file exists and re-exports the implementation.
+>    - **Calling `register()` registers a real tracer provider** — would pass once
+>      the root file delegates to the live `instrumentation.node.ts` SDK startup;
+>      the test observes `trace.getTracerProvider()` is not the OTel noop provider
+>      and that an active span has a valid span context.
+>
+> **Targeted Red command actually executed at MID:**
+>
+> ```
+> cd apps/science-advantage && \
+>   node node_modules/vitest/vitest.mjs run \
+>     --config vitest.unit.config.ts \
+>     lib/observability/__tests__/live-sentry-initialization.acceptance.test.ts \
+>     lib/observability/__tests__/live-otel-initialization.acceptance.test.ts
+> ```
+>
+> **Result:** exit 1 — `Test Files 2 failed (2) | Tests 4 failed | 2 passed (6)`.
+> The 4 Reds are the expected missing-behavior Reds for the audit findings:
+> - `live-sentry-initialization.acceptance.test.ts > next.config.ts is wrapped with withSentryConfig` —
+>   `expected source to include withSentryConfig` (plain `NextConfig` object at root).
+> - `live-otel-initialization.acceptance.test.ts > instrumentation.ts exists at the Next.js-loaded app root` —
+>   `expected false to be true` (file missing at app root).
+> - `live-otel-initialization.acceptance.test.ts > root instrumentation.ts exports register() as an async function` —
+>   `Cannot find module .../instrumentation.ts` (root file missing).
+> - `live-otel-initialization.acceptance.test.ts > register() starts a real tracer provider...` —
+>   `Cannot find module .../instrumentation.ts` (root file missing).
+>
+> The 2 passing tests are the live-behavior proofs that the existing
+> `sentry.client.config.ts` and `sentry.server.config.ts` files call
+> `Sentry.init` when imported.
+>
+> **Worktree hygiene at MID start (2026-06-21 this pass):**
+> `git status --porcelain` shows 3 modified paths. Classification:
+> - `M measure/automation-supervisor.py` — **unrelated user work; preserve.**
+>   Gate-logic improvement adding `committed_changes_since` /
+>   `non_test_committed_changes_since`; no overlap with this track's
+>   plan.md / test files.
+> - ` M measure/tracks/observability_stack_20260603/metadata.json` — **relevant
+>   to this track; fold into Red-phase commit.** Contains the audit finding
+>   that reopened the track (`status: reopened`, `deviation_notes`).
+> - ` M measure/tracks/observability_stack_20260603/plan.md` — **related; owned
+>   by this pass.** Updated to add the two live-path Red tasks and mark
+>   Phase 9 closeout gates `[~]`.
+>
+> This MID pass commits only Measure docs (plan.md + metadata.json) and the
+> two new test files. No existing source code is modified.
+
 > **Mid-Red evidence (this phase, 2026-06-20):** the Phase 9 Red
 > surface is in two new test files (committed in this MID pass):
 >
@@ -2118,17 +2197,24 @@ For each site (Phase 8a–8e):
 > - Task 6 (grep gate): covered by Phase 8 `no-console-grep.test.ts` — 5/5
 >   tests pass at HEAD `ad6e493a`.
 >
-> - [x] Task: Sentry test: write a route handler that throws; assert Sentry's mock `captureException` is called with the right error. [track_id: observability_stack_20260603] [ad6e493a]
+> - [x] Task: Sentry route-throw test: write a route handler that throws; assert Sentry's mock `captureException` is called with the right error. [track_id: observability_stack_20260603] [ad6e493a]
   - Evidence: `apps/science-advantage/app/api/ai/recommendations/sentry-throw-in-route.test.ts` (3 tests, committed in `80705dff`). Green at `ad6e493a`: `node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts app/api/ai/recommendations/sentry-throw-in-route.test.ts` → `Test Files 1 passed (1) | Tests 3 passed (3)`, exit 0. Implementation: added `import * as Sentry from '@sentry/nextjs'` (line 3) and `Sentry.captureException(error)` in the catch-all block (line 54) before `logger.error`. All 3 tests pass: `captureException` called once with the thrown error, `captureMessage` not called (regression guard), `logger.error` structured line still emitted (regression guard).
-- [x] Task: OTel test: write a route handler that calls `generateObject`; assert a span is created with the right attributes. [track_id: observability_stack_20260603] [ad6e493a]
+- [x] Task: OTel route-span test: write a route handler that calls `generateObject`; assert a span is created with the right attributes. [track_id: observability_stack_20260603] [ad6e493a]
   - Evidence: `apps/science-advantage/app/api/ai/recommendations/otel-route-span.test.ts` (1 test, committed in `80705dff`). Green at HEAD `3a3736d7` and re-verified at `ad6e493a`: `node node_modules/vitest/vitest.mjs run --config vitest.unit.config.ts app/api/ai/recommendations/otel-route-span.test.ts` → `Test Files 1 passed (1) | Tests 1 passed (1)`, exit 0. **Already satisfied at HEAD** — Phase 6 commit `3bccadf4` already wraps `client.generateObject` in `tracer.startActiveSpan('ai.generateObject', ...)`; this acceptance-gate test confirms the route → service → span integration is correct end-to-end. Test preserved as a regression guard for future integration breaks. No Phase 9 implementation needed.
-- [ ] Task: `pnpm turbo run test --filter=science-advantage` exits 0. (Closeout gate per `test-strategy.md` §7; not a Red test. Owned by Green role.)
-- [ ] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. (Closeout gate; not a Red test. Per Phase 8 audit (`46fc963b`), green at HEAD after the `scripts/**` exclusion fix.)
-- [ ] Task: `pnpm turbo run build --filter=science-advantage` exits 0. (Closeout gate; not a Red test. Per Phase 1 review C note + Phase 2 evidence, blocked by pre-existing `child_process` browser-bundle failure unrelated to this track.)
-- [ ] Task: Grep gate: 0 `console.log`/`console.info` in production code. (Covered by `lib/observability/__tests__/no-console-grep.test.ts` per Phase 8 — passes at HEAD.)
+- [~] Task: Live-path Sentry initialization test: assert `next.config.ts` is wrapped with `withSentryConfig` and that importing `sentry.client.config.ts` / `sentry.server.config.ts` calls `Sentry.init` on the live path. [track_id: observability_stack_20260603]
+  - Audit context: `measure/tracks/observability_stack_20260603/metadata.json` deviation_notes (2026-06-21) — "Sentry was not initialized on the live path". Prior FR-1 acceptance verified the route catch block calls `captureException` but did not verify Next.js loads the Sentry SDK via `withSentryConfig`. This Red test closes the gap.
+- [~] Task: Live-path OTel initialization test: assert `instrumentation.ts` exists at the Next.js-loaded app root (not only under `lib/`) and that `register()` starts a real tracer provider. [track_id: observability_stack_20260603]
+  - Audit context: `measure/tracks/observability_stack_20260603/metadata.json` deviation_notes (2026-06-21) — "Next.js never loaded the OTel instrumentation because instrumentation.ts was under lib/ instead of the app root/src". Prior FR-2 acceptance verified `lib/instrumentation.ts` shape via mocks; this Red test verifies the live-path location and real provider registration.
+- [~] Task: `pnpm turbo run test --filter=science-advantage` exits 0. (Closeout gate per `test-strategy.md` §7; owned by Green role once the live-path Red tests are Green.)
+- [~] Task: `pnpm turbo run lint --filter=science-advantage` exits 0. (Closeout gate; owned by Green role.)
+- [~] Task: `pnpm turbo run build --filter=science-advantage` exits 0. (Closeout gate; owned by Green role.)
+- [~] Task: Grep gate: 0 `console.log`/`console.info` in production code. (Covered by `lib/observability/__tests__/no-console-grep.test.ts` per Phase 8 — passes at HEAD.)
 
 ## Phase 10: Closeout
 
+- [ ] Task: Completion-audit remediation: move `instrumentation.ts` to a Next.js-loaded root or `src/` location and prove `register()` runs on the live app path.
+- [ ] Task: Completion-audit remediation: wrap the app's Next config with Sentry config and add the required client/server init files for the live runtime.
+- [ ] Task: Completion-audit remediation: replace mock-only SDK-shape acceptance with a live-path test that observes exported span/Sentry initialization behavior.
 - [ ] Task: Update `measure/tech-debt.md` row `audit_20260603_housekeeping_batch` to mark F-902, F-903, F-904, F-905, F-906 `Resolved`.
 - [ ] Task: Add a lessons-learned entry: "AsyncLocalStorage + Sentry + OTel is the right observability stack; the alternative (pino + Datadog + per-app exporters) is more work for less value."
 - [ ] Task: Move track to `measure/archive/observability_stack_20260603/` and update `measure/tracks.md`.
