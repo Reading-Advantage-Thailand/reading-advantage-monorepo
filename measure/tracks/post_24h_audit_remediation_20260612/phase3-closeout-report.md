@@ -49,7 +49,7 @@ The seven assertions of the Red contract (per `phase3-closeout.test.mjs`):
 
 ```bash
 pnpm turbo run build --filter=@reading-advantage/db \
-  && pnpm --filter @reading-advantage/webhooks vitest run src/__tests__/phase-6-acceptance.test.ts
+  && cd packages/webhooks && npx vitest run src/__tests__/phase-6-acceptance.test.ts
 ```
 
 **Result (this JR session, 2026-06-22):**
@@ -99,7 +99,7 @@ visible artifact.
    - Command:
      ```bash
      pnpm turbo run build --filter=@reading-advantage/db \
-       && pnpm --filter @reading-advantage/webhooks vitest run src/__tests__/phase-6-acceptance.test.ts
+       && cd packages/webhooks && npx vitest run src/__tests__/phase-6-acceptance.test.ts
      ```
    - Confirm: `phase-6-acceptance.test.ts` reports `1 passed` / `5 passed`.
    - Result observed in this JR session: 5/5 pass after the `tsc
@@ -210,7 +210,7 @@ follow-up; documented in `measure/tech-debt.md`. Not a Phase 3 blocker.
 
 ## Live-gate owner
 
-**Live-behavior gate:** `pnpm --filter @reading-advantage/webhooks vitest run src/__tests__/phase-6-acceptance.test.ts` (requires `pnpm turbo run build --filter=@reading-advantage/db` first).
+**Live-behavior gate:** `cd packages/webhooks && npx vitest run src/__tests__/phase-6-acceptance.test.ts` (requires `pnpm turbo run build --filter=@reading-advantage/db` first).
 
 **Owner:** Green role / Final Acceptance Auditor. This is the live
 behavior proof for FR-14; the build-graph shows `phase-6-acceptance.test.ts`

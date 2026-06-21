@@ -277,7 +277,7 @@ Verification (with guessed `pre_head = ad29fcd2`):
   - [x] Red: assert Phase 3 closeout report and checkpoint exist (commit `434627ed` — 6/6 failures, expected)
   - [x] Green: author closeout report, run manual verification, create checkpoint (commit `cc72b786` for the closeout report; commit `3168b543` appends the checkpoint marker to the Phase 3 heading and flips the manual verification task to [x])
   - **Red command:** `node --test measure/tracks/post_24h_audit_remediation_20260612/__tests__/phase3-closeout.test.mjs`
-  - **Green result (this JR session, 2026-06-22):** 7/7 pass. The targeted Red command exits 0. The live-behavior proof (test 7) spawns `cd packages/webhooks && npx vitest run src/__tests__/phase-7-closeout.test.ts` and confirms 1 file passed / 16 tests passed. The aggregate live-behavior gate `pnpm turbo run build --filter=@reading-advantage/db && pnpm --filter @reading-advantage/webhooks vitest run src/__tests__/phase-6-acceptance.test.ts` reports 1 file passed / 5 tests passed; the webhooks full suite `CI=true pnpm --filter @reading-advantage/webhooks test` reports 6 files / 78/78 passed.
+  - **Green result (this JR session, 2026-06-22):** 7/7 pass. The targeted Red command exits 0. The live-behavior proof (test 7) spawns `cd packages/webhooks && npx vitest run src/__tests__/phase-7-closeout.test.ts` and confirms 1 file passed / 16 tests passed. The aggregate live-behavior gate `pnpm turbo run build --filter=@reading-advantage/db && cd packages/webhooks && npx vitest run src/__tests__/phase-6-acceptance.test.ts` reports 1 file passed / 5 tests passed; the webhooks full suite `CI=true pnpm --filter @reading-advantage/webhooks test` reports 6 files / 78/78 passed.
   - **Live-behavior gate owner:** Green role / Final Acceptance Auditor must independently re-run the aggregate live-behavior gate (db build + phase-6-acceptance.test.ts) from a clean worktree to confirm FR-14 acceptance; the rebuild is required because stale `packages/db/dist/` artifacts were the original FR-14 failure mode. No `PG_TEST_URL` is required for this gate.
 
 ### Phase 3 Red-phase results (this MID session)
@@ -294,7 +294,7 @@ Result: **6 failed, 1 passed (7 tests)** — failures are the expected missing c
 
 The single passing test is the live-behavior proof: `packages/webhooks/src/__tests__/phase-7-closeout.test.ts` passes in isolation (16/16 tests), confirming the webhooks closeout artifact test is healthy and the test harness works.
 
-Live-behavior gate owner (Green role): run `pnpm turbo run build --filter=@reading-advantage/db && pnpm --filter @reading-advantage/webhooks vitest run src/__tests__/phase-6-acceptance.test.ts` and confirm 5/5 pass.
+Live-behavior gate owner (Green role): run `pnpm turbo run build --filter=@reading-advantage/db && cd packages/webhooks && npx vitest run src/__tests__/phase-6-acceptance.test.ts` and confirm 5/5 pass.
 
 ---
 
