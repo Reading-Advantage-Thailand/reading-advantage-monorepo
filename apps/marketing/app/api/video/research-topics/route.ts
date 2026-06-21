@@ -3,12 +3,13 @@ import { createAIClient } from "@/lib/ai";
 import { db } from "@/lib/db";
 import { pastTopics, settings } from "@reading-advantage/db/schema";
 import { eq, or } from "drizzle-orm";
+import { buildTopicResearchPrompt } from "@/lib/topic-research";
+import { deduplicateTopics } from "@/lib/topic-dedup";
 
 export async function POST(request: Request) {
   try {
     const { app } = await request.json();
 
-    // Load LLM settings
     const llmSettings = await db
       .select()
       .from(settings)
@@ -31,15 +32,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get past topics for dedup
     const existingTopics = await db
       .select()
       .from(pastTopics)
       .where(eq(pastTopics.app, app));
 
-    const pastTopicsList = existingTopics
-      .map((t: { topic: string }) => t.topic)
-      .join(", ");
+    const pastTopicsList = existingTopics.map(
+      (t: { topic: string }) => t.topic
+    );
+
+    const prompt = buildTopicResearchPrompt(app, pastTopicsList);
 
     const aiClient = createAIClient({
       provider: (settingsMap["llm.provider"] as "google" | "openai") || "google",
@@ -47,28 +49,29 @@ export async function POST(request: Request) {
       apiKey: settingsMap["llm.apiKey"],
     });
 
-    const prompt = `You are a Thai marketing expert for K-12 education.
-    
-App: ${app.replace(/-/g, " ")}
-${pastTopicsList ? `Past topics (avoid these): ${pastTopicsList}` : ""}
-
-Propose 5 distinct marketing video topics for Thai school directors, parents, and teachers.
-Each topic should be compelling and relevant to the app's audience.
-
-Return ONLY a JSON array of 5 strings, nothing else.`;
-
     const result = await aiClient.generateText({
       prompt,
       maxTokens: 500,
     });
 
-    // Parse the JSON array from the response
-    const topics = JSON.parse(result);
+    const parsed = JSON.parse(result);
+    if (!Array.isArray(parsed)) {
+      return NextResponse.json(
+        { message: "LLM did not return a valid topic list" },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json({ topics });
+    const capped = parsed.slice(0, 5).map(String);
+    const filtered = deduplicateTopics(capped, pastTopicsList);
+
+    return NextResponse.json({ topics: filtered });
   } catch (error) {
     return NextResponse.json(
-      { message: error instanceof Error ? error.message : "Failed to research topics" },
+      {
+        message:
+          error instanceof Error ? error.message : "Failed to research topics",
+      },
       { status: 500 }
     );
   }
