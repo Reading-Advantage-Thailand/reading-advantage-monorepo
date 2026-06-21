@@ -4,7 +4,6 @@ import { count, eq, and, gt, type PostgresJsDatabase } from "@reading-advantage/
 import { sessions, users } from "@reading-advantage/db/schema";
 import type * as schema from "@reading-advantage/db/schema";
 import type { UserContext } from "./tenant.js";
-import type { Role } from "./roles.js";
 
 type Db = PostgresJsDatabase<typeof schema>;
 
@@ -41,37 +40,43 @@ export async function createSession(
   const tokenHash = sha256Hex(token);
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-  // FR-10: Cap active sessions at 10 per user (count only non-expired)
-  const now = new Date();
-  const countResult = await db
-    .select({ value: count() })
-    .from(sessions)
-    .where(and(eq(sessions.userId, userId), gt(sessions.expiresAt, now)));
-  const sessionCount = Number(countResult[0]?.value ?? 0);
-  if (sessionCount >= 10) {
-    const oldestRows = await db
-      .select({ id: sessions.id })
+  // FR-10: Cap active sessions at 10 per user (count only non-expired).
+  // The count, eviction, and insert are wrapped in a transaction so
+  // concurrent logins cannot race past the cap.
+  const session = await db.transaction(async (tx) => {
+    const now = new Date();
+    const countResult = await tx
+      .select({ value: count() })
       .from(sessions)
-      .where(and(eq(sessions.userId, userId), gt(sessions.expiresAt, now)))
-      .orderBy(sessions.createdAt)
-      .limit(1);
-    if (oldestRows[0]) {
-      await db.delete(sessions).where(eq(sessions.id, oldestRows[0].id));
+      .where(and(eq(sessions.userId, userId), gt(sessions.expiresAt, now)));
+    const sessionCount = Number(countResult[0]?.value ?? 0);
+    if (sessionCount >= 10) {
+      const oldestRows = await tx
+        .select({ id: sessions.id })
+        .from(sessions)
+        .where(and(eq(sessions.userId, userId), gt(sessions.expiresAt, now)))
+        .orderBy(sessions.createdAt)
+        .limit(1);
+      if (oldestRows[0]) {
+        await tx.delete(sessions).where(eq(sessions.id, oldestRows[0].id));
+      }
     }
-  }
 
-  // FR-1: store tokenHash only, not the raw token
-  const [session] = await db
-    .insert(sessions)
-    .values({
-      id: crypto.randomUUID(),
-      tokenHash,
-      userId,
-      expiresAt,
-      ...(opts?.ipAddress ? { ipAddress: opts.ipAddress } : {}),
-      ...(opts?.userAgent ? { userAgent: opts.userAgent } : {}),
-    })
-    .returning();
+    // FR-1: store tokenHash only, not the raw token
+    const [inserted] = await tx
+      .insert(sessions)
+      .values({
+        id: crypto.randomUUID(),
+        tokenHash,
+        userId,
+        expiresAt,
+        ...(opts?.ipAddress ? { ipAddress: opts.ipAddress } : {}),
+        ...(opts?.userAgent ? { userAgent: opts.userAgent } : {}),
+      })
+      .returning();
+
+    return inserted;
+  });
 
   const [user] = await db
     .select({
@@ -101,7 +106,7 @@ export async function createSession(
       id: user.id,
       username: user.username,
       name: user.name,
-      role: user.role as Role,
+      role: user.role,
       schoolId: user.schoolId,
       xp: user.xp,
       level: user.level,
@@ -114,6 +119,7 @@ export async function createSession(
  * Deletes a session by token.
  * @param db - Database client
  * @param token - The session token to delete
+ * @returns Resolves when the deletion attempt is complete
  */
 export async function deleteSession(
   db: Db,
@@ -184,7 +190,7 @@ export async function validateSession(
       id: user.id,
       username: user.username,
       name: user.name,
-      role: user.role as Role,
+      role: user.role,
       schoolId: user.schoolId,
       xp: user.xp,
       level: user.level,

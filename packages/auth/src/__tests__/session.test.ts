@@ -77,6 +77,7 @@ function createMockDb(overrides: {
         returning: vi.fn().mockResolvedValue([]),
       }),
     }),
+    transaction: vi.fn((fn: (tx: unknown) => Promise<unknown>) => fn(mockDb)),
   };
 
   return mockDb;

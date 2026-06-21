@@ -378,8 +378,8 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
       "The target-user WHERE clause must constrain schoolId to the TEACHER actor's school.",
     ).toBe(true);
     expect(
-      deepContains(whereArg, (s) => s.includes("user_id")),
-      "The target-user WHERE clause must still reference the target userId.",
+      deepContains(whereArg, (s) => s === "target-1"),
+      "The target-user WHERE clause must still constrain the target userId.",
     ).toBe(true);
   });
 });

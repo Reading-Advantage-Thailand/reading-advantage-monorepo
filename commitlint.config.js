@@ -19,7 +19,7 @@ module.exports = {
     'subject-pattern': [
       2,
       'always',
-      /^(?:(?:chore)\([^)]+\)!?:\s.+|(?:feat|fix|docs|refactor|test|perf|build|ci|style)\([^)]+\)!?:\s.+\s\(track_id:\s[a-z_]+_2026\d{4}\))$/,
+      /^(?:(?:chore)\([^)]+\)!?:\s.+|(?:feat|fix|docs|refactor|test|perf|build|ci|style)\([^)]+\)!?:\s.+\s\(track_id:\s[a-z0-9_]+_2026\d{4}\))$/,
     ],
   },
 };

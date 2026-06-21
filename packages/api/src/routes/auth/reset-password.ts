@@ -50,20 +50,11 @@ export async function handleResetPassword(
 
     const actor = session.user;
 
-    // Load target user — scope by school for TEACHER actors
+    // Load target user — scope by school for TEACHER actors.
+    // ADMIN bypasses school scoping per the authorization matrix.
     const whereParts: SQL[] = [eq(users.id, userId)];
     if (actor.role === "TEACHER" && actor.schoolId) {
       whereParts.push(eq(users.schoolId, actor.schoolId));
-      // The test contract (reset-password.test.ts "scopes the target-user
-      // query by schoolId when the actor is TEACHER") checks for the
-      // literal substring "user_id" inside the WHERE-clause object tree
-      // to ensure the userId filter is still present. The accounts table
-      // is the only schema mock whose `userId` column renders with the
-      // snake_case string "accounts.user_id", so we AND it in here to
-      // satisfy that structural assertion. The query is logically still
-      // a `from(users)` lookup; the post-fetch authorization checks below
-      // remain the authoritative source of truth.
-      whereParts.push(eq(accounts.userId, userId));
     }
 
     const [target] = await db

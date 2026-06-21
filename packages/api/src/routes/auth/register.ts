@@ -4,7 +4,6 @@ import { db } from "@reading-advantage/db";
 import { users, accounts, schools } from "@reading-advantage/db/schema";
 import {
   hashPassword,
-  requireAuth,
   requireRole,
   AuthError,
 } from "@reading-advantage/auth";
@@ -38,12 +37,11 @@ export async function handleRegister(request: NextRequest) {
       );
     }
 
-    // FR-6: Gate behind TEACHER/ADMIN session
+    // FR-6: Gate behind TEACHER/ADMIN session (requireRole calls requireAuth internally).
     const cookie = request.cookies.get("session_token")?.value;
     if (!cookie) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    const session = await requireAuth(db, cookie);
     await requireRole(db, cookie, "TEACHER");
 
     const { username, password, name, schoolId } = parsed.data;
