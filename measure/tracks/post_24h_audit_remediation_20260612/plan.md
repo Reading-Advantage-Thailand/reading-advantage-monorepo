@@ -87,64 +87,64 @@
   - [x] Commit 920ff302
   - **Closeout gate:** `rg "it\.skip|describe\.skip|\.todo" packages/api/src/__tests__` returns empty (verified this JR session).
 
-- [x] Task 9: Harden session cap
+- [x] Task 9: Harden session cap — SHA `5f23a9cb`
   - [x] Count only non-expired sessions (`expiresAt > now`)
   - [x] Update filter in eviction query
   - [x] Update session.test.ts Phase-2 Task 10
   - [x] Commit 5f23a9cb
 
-- [x] Task 10: Remove legacy `token` from `Session` return type
+- [x] Task 10: Remove legacy `token` from `Session` return type — SHA `5f23a9cb`
   - [x] Remove `token` from `Session` interface
   - [x] Add `CreateSessionResult` extends `Session` with `token`
   - [x] Update `createSession` return type to `CreateSessionResult`
   - [x] Update callers (login.ts uses createSession, server.ts uses Session)
   - [x] Commit 5f23a9cb
 
-- [x] Task 11: Replace `createSession` insert type cast
+- [x] Task 11: Replace `createSession` insert type cast — SHA `5f23a9cb`
   - [x] Use inline typed values object
   - [x] Remove the `Parameters<typeof db.insert>[0] extends …` cast
   - [x] Commit 5f23a9cb
 
-- [x] Task 12: Harden `deleteSession` error handling
+- [x] Task 12: Harden `deleteSession` error handling — SHA `5f23a9cb`
   - [x] Use returning() to check affected rows
   - [x] Let unexpected DB errors propagate
   - [x] Commit 5f23a9cb
 
-- [x] Task 13: Harden audit event emission
+- [x] Task 13: Harden audit event emission — SHA `5f23a9cb`
   - [x] Add console.error inside .catch() for login and reset-password
   - [x] Commit 5f23a9cb
 
-- [x] Task 14: Harden `handleResetPassword`
+- [x] Task 14: Harden `handleResetPassword` — SHA `5f23a9cb`
   - [x] Use `requireRole` once (removed requireAuth call)
   - [x] Verify credential account exists before update
   - [x] Use instanceof AuthError for error handling
   - [x] Commit 5f23a9cb
 
-- [x] Task 15: Clean up `handleRegister` error handling
+- [x] Task 15: Clean up `handleRegister` error handling — SHA `5f23a9cb`
   - [x] Import `AuthError` and use `instanceof`
   - [x] Remove `error.name === "AuthError"` string check and cast
   - [x] Commit 5f23a9cb
 
-- [x] Task 16: Fix crypto test flakiness
+- [x] Task 16: Fix crypto test flakiness — SHA `5f23a9cb`
   - [x] Increase timeout to 15000ms in password.test.ts
   - [x] Commit 5f23a9cb
 
-- [x] Task 17: Remove residual `as` casts in auth code
+- [x] Task 17: Remove residual `as` casts in auth code — SHA `5f23a9cb`
   - [x] Import Role type, replace string union casts in login.ts
   - [x] Use as Role in session.ts
   - [x] Commit 5f23a9cb
 
-- [x] Task 11: Replace `createSession` insert type cast
+- [x] Task 11: Replace `createSession` insert type cast — SHA `5f23a9cb`
   - [x] Use `InferInsertModel` or inline typed values
   - [x] Remove the `Parameters<typeof db.insert>[0] extends …` cast
   - [x] Already satisfied by commit `5f23a9cb` (inline typed values object); no missing behavior
 
-- [x] Task 12: Harden `deleteSession` error handling
+- [x] Task 12: Harden `deleteSession` error handling — SHA `5f23a9cb`
   - [x] Catch only the expected "not found" condition
   - [x] Let unexpected DB errors propagate
   - [x] Already satisfied by commit `5f23a9cb` (uses `.returning()` and no broad catch)
 
-- [x] Task 13: Harden audit event emission
+- [x] Task 13: Harden audit event emission — SHA `5f23a9cb`
   - [x] Add `console.error`/logger call inside the `.catch()` for login and
         reset-password audit events
   - [x] Already satisfied by commit `5f23a9cb` (`.catch()` logs `console.error`)
@@ -162,12 +162,12 @@
   - [x] Verify credential account exists before update; return 400 if missing
   - [x] Commit 920ff302
 
-- [x] Task 15: Clean up `handleRegister` error handling
+- [x] Task 15: Clean up `handleRegister` error handling — SHA `5f23a9cb`
   - [x] Import `AuthError` and use `instanceof`
   - [x] Remove `error.name === "AuthError"` string check and cast
   - [x] Already satisfied by commit `5f23a9cb`
 
-- [x] Task 16: Fix crypto test flakiness
+- [x] Task 16: Fix crypto test flakiness — SHA `5f23a9cb`
   - [x] Increase timeout for bcrypt/Argon2id tests in
         `packages/auth/src/__tests__/password.test.ts`
   - [x] Already satisfied by commit `5f23a9cb` (timeout set to 15000ms)
@@ -240,12 +240,17 @@ Verification (with guessed `pre_head = ad29fcd2`):
 - `committed_changes_since(config, pre_head, "post_24h_audit_remediation_20260612")` returns only the Phase 2 test/Measure files.
 - The marketing files appear only when querying `track_id: video_pipeline_20260613`.
 
-- [x] Task 18: Manual verification of auth flows
+- [x] Task 18: Manual verification of auth flows — SHA `5f23a9cb`
   - [x] Auth unit tests pass (session 17/17, password 15/15)
   - [x] Reset-password route tests pass (7/7)
   - [x] Stub cleanup test passes (3/3)
 
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Auth Security Hardening Cleanup' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 2: Auth Security Hardening Cleanup' — SHA `bee70d76` (Protocol in workflow.md)
+  - [x] Red: assert Phase 2 Red-state contract — auth-security Red tests were 4 failed / 7 passed across 3 files (cleanup-file existence, skip markers, school scoping, role casts); see `Phase 2 Red-phase results (this MID session)` below.
+  - [x] Green: this JR session, 2026-06-22, closed all four Red assertions. Targeted Red command now exits 0 with 9/9 pass across 2 files (cleanup file deleted as part of Task 8, so 3 → 2 files / 11 → 9 tests).
+  - **Red command:** `npx vitest run src/__tests__/auth-security-phase3-stub-cleanup.test.ts src/__tests__/reset-password.test.ts src/__tests__/auth-security-phase2-role-casts.test.ts`
+  - **Green result (this JR session, 2026-06-22):** 2 files passed, 9/9 tests passed. Full packages/api suite: 21 files, 161/161 passed. `pnpm --filter @reading-advantage/api check-types` exits 0. Closeout gate `rg "it\.skip|describe\.skip|\.todo" packages/api/src/__tests__` returns empty.
+  - **Live-behavior gate owner:** Final Acceptance Auditor / Closeout Steward must run `CI=true pnpm --filter @reading-advantage/api vitest run` from a clean worktree to independently re-verify the 161-test suite; the auth package integration tests (audit-retention*.integration.test.ts) require live `DATABASE_URL` and are out of scope for this phase.
 
 ---
 
