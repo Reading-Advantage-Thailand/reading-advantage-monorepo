@@ -114,31 +114,6 @@ describe("Phase 1 — Task 5: revokeAllUserSessions is exported as a stub", () =
     ).toBeTypeOf("function");
   });
 
-  it.skip("the stub throws Error('not implemented') when called — superseded by Phase 3 Task 23", async () => {
-    const fn = (
-      authExports as unknown as {
-        revokeAllUserSessions?: (
-          db: unknown,
-          userId: string,
-        ) => Promise<{ revoked: number }>;
-      }
-    ).revokeAllUserSessions;
-
-    if (typeof fn !== "function") {
-      throw new Error(
-        "revokeAllUserSessions is not exported — see the previous " +
-          "assertion. The 'not implemented' check is moot until the " +
-          "symbol exists.",
-      );
-    }
-
-    await expect(
-      fn({}, "u1"),
-      "Phase 1 requires the stub to throw `new Error('not implemented')` " +
-        "so Phase 2 reds are unambiguous (per test-strategy §1).",
-    ).rejects.toThrow(/not implemented/);
-  });
-
   it("the stub signature is (db, userId) => Promise<{ revoked: number }>", () => {
     // Pinning arity guards against accidental param drift: Phase 2
     // must not extend the signature without updating callers in

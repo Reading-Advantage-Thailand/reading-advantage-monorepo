@@ -65,7 +65,7 @@ export async function handleLogin(request: NextRequest) {
 
     // Find user by username — wrap DB operations so that connection/query
     // failures surface as 503 (infrastructure) rather than 401 (credential).
-    let user: { id: string; username: string; name: string | null; role: string; schoolId: string | null } | undefined;
+    let user: { id: string; username: string; name: string | null; role: Role; schoolId: string | null } | undefined;
     try {
       const result = await db
         .select()
@@ -143,7 +143,7 @@ export async function handleLogin(request: NextRequest) {
       const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
       const ua = request.headers.get("user-agent") ?? null;
       recordAuditEvent(
-        { actorUserId: user.id, actorRole: user.role as Role, ipAddress: ip, userAgent: ua },
+        { actorUserId: user.id, actorRole: user.role, ipAddress: ip, userAgent: ua },
         { action: "auth:login_failed" }
       ).catch((err) => {
         console.error("Audit event auth:login_failed failed:", err instanceof Error ? err.message : "Unknown");
@@ -174,7 +174,7 @@ export async function handleLogin(request: NextRequest) {
     const auditIp = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
     const auditUa = request.headers.get("user-agent") ?? null;
     recordAuditEvent(
-      { actorUserId: user.id, actorRole: user.role as Role, ipAddress: auditIp, userAgent: auditUa },
+      { actorUserId: user.id, actorRole: user.role, ipAddress: auditIp, userAgent: auditUa },
       { action: "auth:login" }
     ).catch((err) => {
       console.error("Audit event auth:login failed:", err instanceof Error ? err.message : "Unknown");

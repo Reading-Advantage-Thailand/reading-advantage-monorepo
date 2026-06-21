@@ -190,27 +190,6 @@ describe("Phase 1 — Task 6: packages/api/src/routes/auth/reset-password.ts exi
     ).toBeTypeOf("function");
   });
 
-  it.skip("the stub handleResetPassword responds with 501 Not Implemented — superseded by Phase 3 Task 24", async () => {
-    const mod = await loadResetPasswordModule();
-    const handler = mod.handleResetPassword;
-    if (typeof handler !== "function") {
-      throw new Error(
-        "handleResetPassword is missing — see the previous assertion.",
-      );
-    }
-
-    // The handler signature for Phase 1 is `(request) => Promise<Response>`.
-    // We pass `undefined` to assert the 501 path doesn't read the body —
-    // if a future Green-phase implementer adds body parsing before the
-    // guard, this test stays informative.
-    const response = (await handler(undefined)) as Response;
-    expect(
-      response.status,
-      "Phase 1 stub must respond with 501 Not Implemented so the route " +
-        "is wired up but every caller sees a clear 'not yet implemented' " +
-        "until Phase 3 Task 24 lands.",
-    ).toBe(501);
-  });
 });
 
 // ---------------------------------------------------------------------------
@@ -328,22 +307,4 @@ describe("Phase 1 — Task 33: enrichAuthUser is exported from enrich.ts", () =>
     ).toBeTypeOf("function");
   });
 
-  it.skip("the stub enrichAuthUser rejects with Error('not implemented') — superseded by Phase 3 Task 39", async () => {
-    const mod = await loadEnrichModule();
-    const fn = mod.enrichAuthUser;
-    if (typeof fn !== "function") {
-      throw new Error(
-        "enrichAuthUser is missing — see the previous assertion.",
-      );
-    }
-
-    // The signature is `(db, user)` per the plan. Pass placeholders —
-    // the stub never reads them.
-    await expect(
-      fn({}, { id: "u1" }),
-      "Phase 1 requires the enrichAuthUser stub to reject with " +
-        "`Error('not implemented')` (test-strategy §1) so Phase 2 reds " +
-        "are unambiguous.",
-    ).rejects.toThrow(/not implemented/);
-  });
 });
