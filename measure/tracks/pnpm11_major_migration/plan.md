@@ -136,10 +136,10 @@
 ## Phase 3: Implement
 
 - [x] Task: Upgrade pnpm to 11.x. (`6d197f79` — Phase 2 contract GREEN: `package.json#packageManager` = `pnpm@11.8.0` matches `/^pnpm@11\./`; Phase 3 contract #9 GREEN cross-link.)
-- [x] Task: Regenerate lockfile under pnpm 11. (Header bumped to `'9.0'` at `6d197f79`; full body regenerated under pnpm 11.8.0 at `JR-GREEN-<sha>` — lockfileVersion 9.0, pnpmfileChecksum added, `packages:` keys un-prefixed (pnpm 9 format), `importers:` block re-emitted. Phase 2 contract: **4 pass / 0 fail / 4 total** in ~0.32s at `JR-GREEN-<sha>`.)
+- [x] Task: Regenerate lockfile under pnpm 11. (Header bumped to `'9.0'` at `6d197f79`; full body regenerated under pnpm 11.8.0 at `0e0368af` — lockfileVersion 9.0, pnpmfileChecksum added, `packages:` keys un-prefixed (pnpm 9 format), `importers:` block re-emitted. Phase 2 contract: **4 pass / 0 fail / 4 total** in ~0.32s at `0e0368af`.)
 - [x] Task: Update `pnpm-workspace.yaml` for any protocol changes. (`6d197f79` — Phase 3 contract 9/9 GREEN: `overrides` / `peerDependencyRules` / `allowBuilds` / `nodeLinker: hoisted` / `resolvePeersFromWorkspaceRoot: true` + 5 monorepo override pins present; `package.json` no longer carries the deprecated `pnpm` field.)
 - [x] Task: Update CI pipelines for pnpm 11. (No source change required; Phase 1 baseline #6 still GREEN — `pnpm/action-setup@v4` has no `version:` key, SSOT = `packageManager`. Pre-migration CI is already pnpm 11-compatible per `test-strategy.md` §0.)
-- [x] Task: Run `pnpm install --frozen-lockfile` and `pnpm dedupe --check`. (Live gate **GREEN at `JR-GREEN-<sha>`** under pnpm 11.8.0 (`/home/daniel-bo/.local/bin/pnpm`): `pnpm install --frozen-lockfile` → exit 0 (lockfile idempotent); `pnpm dedupe --check` → exit 0 (one transitive chalk 5.0.1 → 5.6.2 dedup applied via `pnpm dedupe`; pre-dedupe the check reported `boxen@7.0.0: chalk 5.0.1 → 5.6.2`, post-dedupe no changes remain). See "Phase 3 Green Gate (JR-authored) — `JR-GREEN-<sha>`" below.)
+- [x] Task: Run `pnpm install --frozen-lockfile` and `pnpm dedupe --check`. (Live gate **GREEN at `0e0368af`** under pnpm 11.8.0 (`/home/daniel-bo/.local/bin/pnpm`): `pnpm install --frozen-lockfile` → exit 0 (lockfile idempotent); `pnpm dedupe --check` → exit 0 (one transitive chalk 5.0.1 → 5.6.2 dedup applied via `pnpm dedupe`; pre-dedupe the check reported `boxen@7.0.0: chalk 5.0.1 → 5.6.2`, post-dedupe no changes remain). See "Phase 3 Green Gate (JR-authored) — `0e0368af`" below.)
 
 - **Mid-attempt-7 (supervisor re-prompt after attempt-6 close):**
   - Worktree at attempt start was dirty with the **same 8 paths**
@@ -649,7 +649,7 @@
   re-emitted) plus a 1-line `package.json#scripts.test` path fix (hoisted
   linker compatibility) and a `pnpm-workspace.yaml` `allowBuilds:` /
   `peerDependencyRules` reformat applied by pnpm 11 install. Source-code
-  surface unchanged. (See commit `JR-GREEN-<sha>` for the exact diff.)
+  surface unchanged. (See commit `0e0368af` for the exact diff.)
 
 - **Targeted Red command re-run (artifact, bounded):**
   `node --test measure/tracks/pnpm11_major_migration/__tests__/pnpm11-lockfile-contract.test.mjs`
@@ -756,8 +756,8 @@
   `allowBuilds` auto-population), `package.json` (1-line
   `scripts.test` hoisted-linker path fix), and this `plan.md` update.
   Commit message:
-  `chore(pnpm): regenerate lockfile body and fix npm test path under pnpm 11 (track_id: pnpm11_major_migration)`.
-  See commit `JR-GREEN-<sha>` for the exact SHA.
+  `chore(pnpm): regenerate lockfile body + fix npm test path (track_id: pnpm11_major_migration)`.
+  See commit `0e0368af` for the exact SHA.
 
 ## Phase 4: Validate & Close
 
