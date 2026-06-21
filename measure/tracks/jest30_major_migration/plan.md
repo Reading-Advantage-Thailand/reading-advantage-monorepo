@@ -465,6 +465,374 @@ reading-advantage `__test__` and advantage-games smoke suites pass.
 The `jest30-red.test.ts` file is retained as a permanent regression
 guard (4/4 pass confirms the installed Jest runtime stays on major 30).
 
+## Phase 5: Completion-Audit Remediation
+
+> Reopened 2026-06-21 after the fleet completion audit rejected the prior closeout.
+> The migration cannot close from a 14-suite targeted gate when the repo has 84
+> relevant suites and un-gated failures include migration canaries.
+
+- [~] Task: Inventory the full Jest suite set for `reading-advantage`, `vocabulary-games`, and `@reading-advantage/scripts`; record the expected total suite count before running gates. _Red proof: `__test__/jest30-phase5-inventory.test.ts` — asserts `phase-5-inventory.json` exists at `measure/tracks/jest30_major_migration/` with positive-integer suite counts for the three in-scope apps plus an `expected_total` that sums them. Fails at HEAD because the inventory artifact does not exist._
+- [~] Task: Run the full in-scope Jest 30 suite set, not only `__test__` or canary subsets. _Red proof: `__test__/jest30-phase5-full-run.test.ts` — asserts `phase-5-full-run.json` exists with command, timestamp, and per-app suite/test counts from a full in-scope run; cross-checks the inventory's `expected_total` against the recorded run. Fails at HEAD because the run record does not exist. Pair note: the live-behavior full-suite run is owned by the Phase 5 implementer; this Red phase only verifies the run record contract._
+- [~] Task: Fix or formally quarantine every real Jest-30-related failure, including DragonFlight, DragonRider, and CastleDefense canaries called out by the completion audit. _Red proof: `__test__/jest30-phase5-quarantine.test.ts` — enumerates the 3 canary suites, asserts each is either (a) passing in the latest run record, or (b) listed in `phase-5-quarantine.json` with owner, date, and follow-up track id. Fails at HEAD because the canaries are failing in un-gated runs AND no quarantine manifest exists._
+- [~] Task: Decide and implement the migration plan for `packages/reading-advantage-scripts`, or document a formal exclusion with owner/date and a separate follow-up track. _Red proof: `__test__/jest30-phase5-scripts-disposition.test.ts` — asserts one of two outcomes: (a) `packages/reading-advantage-scripts/package.json` has `jest@^30.x` in devDependencies (migrated), or (b) `phase-5-scripts-disposition.json` exists with owner, date, and follow-up track id (formal exclusion). Fails at HEAD because the scripts package is at `jest@^29.7.0` AND no disposition manifest exists._
+- [~] Task: Update `metadata.json` and `measure/tracks.md` only after the full-suite/quarantine evidence is recorded. _Red proof: `__test__/jest30-phase5-metadata-consistency.test.ts` — asserts that the `metadata.json` closeout state (`status: "done"` with a non-null `completed_at` and Phase-5-related `deviation_notes`) is consistent with the existence of all Phase 5 evidence artifacts (inventory, run record, quarantine/disposition). Also asserts the `measure/tracks.md` jest30 entry has been reconciled to its post-Phase-5 state. Fails at HEAD because metadata is `reopened` and the evidence artifacts are missing._
+
+### Phase 5 — Red proof at HEAD (mid attempt-1)
+
+#### Worktree-classification table (post-supervisor-fix)
+
+| Path | Status at mid start | Classification | Action by Phase 5 mid |
+|---|---|---|---|
+| `measure/automation-supervisor.py` | modified (+272/-33) | **Unrelated user work** — supervisor hardening (audit-result schema validation, closeout-manifest logic, plan/metadata closeout feedback requiring `[checkpoint:]` / `[final-verification:]` markers, retry policy text, `ux_auto_*` path filters, artifact cleanup). Not part of this track. | **Leave modified.** Do not commit in this track. Do not revert. |
+| `measure/tracks.md` | modified (large rewrite of "Current Focus" section + Observability status update + new Rate-limiter #10 entry + Post-24h status update) | **Unrelated user work** — broader registry edits not specific to jest30. None of the jest30-specific lines were touched (jest30 is mentioned only in the carved-out migrations paragraph as a status reference, which is unchanged in intent). | **Leave modified.** Do not commit in this track. Do not revert. |
+| `measure/tracks/jest30_major_migration/metadata.json` | modified (status: done → reopened, completed_at removed, deviation_notes added) | **Relevant to this track/phase** — the metadata was reset to `reopened` with the Phase 5 deviation note as the **track setup** action that opens Phase 5. This was the previous mid's work, not yet committed. | **Fold into this Red-phase commit** along with the plan.md edits and new test files. Per the user prompt: "If dirty changes are relevant, fold them into the Red-phase plan/test commit with explicit plan notes." |
+| `measure/tracks/jest30_major_migration/plan.md` | modified (Phase 5 added with 5 `[ ]` tasks, this mid pass flips to `[~]`) | **Relevant to this track/phase** — the plan.md was updated to add the Phase 5 heading and 5 task lines as the **track setup** action. The 5 `[ ]` markers are flipped to `[~]` in this mid pass per the user prompt: "Mark tasks as `[~]` before starting." | **Fold into this Red-phase commit** along with the metadata.json and new test files. The `[~]` markers and the Red proof sections below are this mid's contributions. |
+| `measure/tracks/observability_stack_20260603/metadata.json` | modified | **Unrelated user work** — different track (Observability Stack #9). | **Leave modified.** Do not commit in this track. |
+| `measure/tracks/observability_stack_20260603/plan.md` | modified | **Unrelated user work** — different track (Observability Stack #9). | **Leave modified.** Do not commit in this track. |
+| `pnpm-lock.yaml` | clean at mid start, dirtied + then **reverted** by this mid | **Generated / ignorable side effect** — `pnpm install --filter reading-advantage` (run once at mid start to populate `apps/reading-advantage/node_modules/.bin/jest`) regenerated the lockfile with vitest/OTel drift unrelated to jest30. The drift was reverted via `git checkout HEAD -- pnpm-lock.yaml`; the `node_modules/` state remains populated so the tests can still run. | **Reverted to HEAD.** No jest30 source boundary is touched. |
+| `apps/reading-advantage/__test__/jest30-phase5-inventory.test.ts` | untracked (new, this mid) | **Relevant to this track/phase** — Task 1 Red proof (this mid's contribution). | **Add to the Red-phase commit.** |
+| `apps/reading-advantage/__test__/jest30-phase5-full-run.test.ts` | untracked (new, this mid) | **Relevant to this track/phase** — Task 2 Red proof (this mid's contribution). | **Add to the Red-phase commit.** |
+| `apps/reading-advantage/__test__/jest30-phase5-quarantine.test.ts` | untracked (new, this mid) | **Relevant to this track/phase** — Task 3 Red proof (this mid's contribution). | **Add to the Red-phase commit.** |
+| `apps/reading-advantage/__test__/jest30-phase5-scripts-disposition.test.ts` | untracked (new, this mid) | **Relevant to this track/phase** — Task 4 Red proof (this mid's contribution). | **Add to the Red-phase commit.** |
+| `apps/reading-advantage/__test__/jest30-phase5-metadata-consistency.test.ts` | untracked (new, this mid) | **Relevant to this track/phase** — Task 5 Red proof (this mid's contribution). | **Add to the Red-phase commit.** |
+
+The 7 relevant jest30 paths (2 dirty + 5 new test files + this plan.md Red-proof section) form a single coherent Red-phase commit. The 4 unrelated dirty paths are preserved untouched and will be committed by their owning tracks (supervisor hardening, tracks.md registry, observability track).
+
+#### Build-graph probe at this mid
+
+`graph.db` mtime 2026-06-21 12:07 (fresh). Run for context, then
+incremental update for the 5 new test files:
+
+- `build-graph stats ./graph.db` (pre-update) → 2511 nodes /
+  3476 edges / 385 files (delta +226/+261/+54 vs. the
+  2286/3215/331 Phase 4 mid baseline — the deltas reflect
+  post-Phase-4 graph updates from other tracks, not from this
+  Red-phase work).
+- `build-graph update ./graph.db apps/reading-advantage/__test__/jest30-phase5-*.test.ts` →
+  5 files updated (0 → 27 nodes, 0 → 22 edges).
+- `build-graph search ./graph.db jest30-phase5` → 5 Phase 5
+  test files (inventory, full-run, quarantine,
+  scripts-disposition, metadata-consistency).
+- `build-graph search ./graph.db jest30` → 4 jest30 artifacts
+  (audit md, contract test, red test, tech-stack doc test) +
+  5 Phase 5 test files (above) = 9 jest30-named artifacts
+  total. No symbol-level callers (Jest is infrastructure, not a
+  graphed symbol).
+
+#### Targeted Red command set
+
+Each Phase 5 task has a single bounded Red command (no watch, no
+full-suite, no `--testPathPattern` widening). The implementer at
+Phase 5 closeout will re-run each command and confirm the test
+flips from failing to passing once the corresponding artifact is
+in place.
+
+**Task 1 — Inventory Red command:**
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-phase5-inventory.test.ts --no-coverage
+```
+
+**Result at HEAD (observed at this mid pass, 2026-06-21):**
+
+```
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 4 total
+```
+
+The 4 failing tests fail **for the right reason** — the
+`phase-5-inventory.json` artifact does not exist. All 4 tests
+fail with `expect(received).not.toBeNull() / Received: null`,
+proving the current implementation is missing the deliverable,
+not a stale-record problem.
+
+**Task 2 — Full-suite run Red command:**
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-phase5-full-run.test.ts --no-coverage
+```
+
+**Result at HEAD (observed at this mid pass, 2026-06-21):**
+
+```
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 4 total
+```
+
+The 4 failing tests fail **for the right reason** — the
+`phase-5-full-run.json` artifact does not exist. All 4 tests
+fail with `expect(received).not.toBeNull() / Received: null`,
+proving the current implementation is missing the deliverable.
+
+**Task 3 — Quarantine Red command:**
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-phase5-quarantine.test.ts --no-coverage
+```
+
+**Result at HEAD (observed at this mid pass, 2026-06-21):**
+
+```
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 4 total
+```
+
+The 4 failing tests fail **for the right reason** — the
+`phase-5-quarantine.json` artifact does not exist AND the
+3 canary suites are not in any manifest. The first test
+fails with `Received: undefined` on the manifest-existence
+check; the 3 canary-specific tests fail with
+`expect(received).toBeDefined() / Received: undefined` on the
+`findQuarantineEntry()` lookups.
+
+**Task 4 — Scripts disposition Red command:**
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-phase5-scripts-disposition.test.ts --no-coverage
+```
+
+**Result at HEAD (observed at this mid pass, 2026-06-21):**
+
+```
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 2 total
+```
+
+The 2 failing tests fail **for the right reason** — (1) the
+scripts package is at `jest@^29.7.0` (test 1 fails with
+`Expected pattern: /^\^?30\./ / Received string: "^29.7.0"`),
+and (2) the disposition manifest does not exist (test 2 fails
+with `expect(received).not.toBeNull() / Received: null`).
+
+**Task 5 — Metadata consistency Red command:**
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest __test__/jest30-phase5-metadata-consistency.test.ts --no-coverage
+```
+
+**Result at HEAD (observed at this mid pass, 2026-06-21):**
+
+```
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 2 total
+```
+
+The 2 failing tests fail **for the right reason** — (1) the
+`metadata.json` `deviation_notes` does not mention "Phase 5"
+(test 1 fails with the long pre-Phase-5 notes that talk about
+the completion audit), and (2) the `jest30_major_migration`
+entry in `tracks.md` still carries the pre-Phase-5 "keep
+active/reopened" qualifier (test 2 fails with
+`expect(received).not.toMatch(...)` on the
+`/keep\s+active\s*\/\s*reopened/i` pattern).
+
+**Aggregate Red result for the 5 new test files:**
+
+```
+PATH="/tmp/opencode/bin:$PATH" pnpm --filter reading-advantage exec jest \
+  __test__/jest30-phase5-inventory.test.ts \
+  __test__/jest30-phase5-full-run.test.ts \
+  __test__/jest30-phase5-quarantine.test.ts \
+  __test__/jest30-phase5-scripts-disposition.test.ts \
+  __test__/jest30-phase5-metadata-consistency.test.ts \
+  --no-coverage
+```
+
+```
+Test Suites: 5 failed, 5 total
+Tests:       16 failed, 16 total
+```
+
+16/16 new tests fail at HEAD, all for the right reason
+(artifact is missing or closeout hasn't happened). The
+existing 3 jest30 test suites
+(`jest30-config.contract.test.ts`, `jest30-red.test.ts`,
+`jest30-tech-stack-doc.test.ts`) still pass (14/14), proving
+this mid's new test files do not regress the prior phases'
+gates.
+
+#### Phase 5 mid pass — what was done vs. what was NOT done
+
+- **Marked** all 5 Phase 5 tasks as `[~]` (Red done, Green
+  pending) in this plan.md update.
+- **Wrote** 5 bounded Red-proof test files (one per task) under
+  `apps/reading-advantage/__test__/`. Each test asserts a specific
+  artifact contract that the Phase 5 implementer must produce.
+- **Confirmed** each new test fails at HEAD for the right reason
+  (artifact does not exist; current implementation is missing the
+  deliverable, not a stale-durable-record problem).
+- **Did NOT** create any of the Phase 5 artifacts
+  (`phase-5-inventory.json`, `phase-5-full-run.json`,
+  `phase-5-quarantine.json`,
+  `phase-5-scripts-disposition.json`). Those are the
+  implementer's Green-side deliverables; writing them at the Red
+  pass would be a false-Green.
+- **Did NOT** fix any of the 3 canary test suites
+  (DragonFlight, DragonRider, CastleDefense). The closeout
+  plan option is either (a) fix the rendering issue (out of
+  scope for a Jest 30 track — it is a pre-existing
+  testing-library / Konva mock interaction, not a Jest 30
+  API change), or (b) formally quarantine with a follow-up
+  track. The Red proof requires the manifest regardless of
+  which path the implementer takes.
+- **Did NOT** migrate `@reading-advantage/scripts` to Jest 30.
+  The Red proof allows the implementer to choose either path
+  (migrate OR document exclusion).
+- **Did NOT** modify `metadata.json` status (the
+  track-reopening work was already in the dirty state; the
+  final closeout update to `status: "done"` is the
+  implementer's action).
+- **Did NOT** modify `measure/tracks.md` (unrelated user work).
+- **Did NOT** modify `measure/automation-supervisor.py`,
+  `apps/marketing/next-env.d.ts`, or
+  `measure/tracks/observability_stack_20260603/`. All four
+  unrelated dirty paths are preserved untouched.
+- **Did NOT** run the full in-scope Jest suite (this is the
+  implementer's Green-side work; running it at the Red pass
+  would be premature — the test file asserts the run-record
+  artifact exists, not that the run was performed by the
+  mid agent).
+
+#### Phase 5 implementer hand-off
+
+The Phase 5 implementer must:
+
+1. **Task 1 — Create the inventory**:
+   - Run a `find` over the three in-scope app directories to
+     count `*.test.*` files. Save the result as
+     `measure/tracks/jest30_major_migration/phase-5-inventory.json`
+     with the schema:
+     ```json
+     {
+       "created_at": "<ISO timestamp>",
+       "apps": {
+         "reading_advantage": "<glob path>",
+         "vocabulary_games": "<glob path>",
+         "reading_advantage_scripts": "<glob path>"
+       },
+       "suites": {
+         "reading_advantage": <int>,
+         "vocabulary_games": <int>,
+         "reading_advantage_scripts": <int>
+       },
+       "expected_total": <int sum of suites>
+     }
+     ```
+   - Verify all 4 assertions of
+     `__test__/jest30-phase5-inventory.test.ts` pass.
+
+2. **Task 2 — Run the full in-scope suite**:
+   - For each of the 3 in-scope apps, run the full Jest suite
+     (not just `__test__` or canary subsets). Save the result
+     as `measure/tracks/jest30_major_migration/phase-5-full-run.json`
+     with the schema:
+     ```json
+     {
+       "started_at": "<ISO timestamp>",
+       "completed_at": "<ISO timestamp>",
+       "command": "<exact command run per app>",
+       "per_app": {
+         "reading_advantage": {
+           "suites_run": <int>,
+           "tests_run": <int>,
+           "suites_passed": <int>,
+           "tests_passed": <int>,
+           "suites_failed": <int>,
+           "tests_failed": <int>,
+           "duration_seconds": <number>
+         },
+         "vocabulary_games": { ... },
+         "reading_advantage_scripts": { ... }
+       },
+       "totals": {
+         "suites_run": <int>,
+         "tests_run": <int>,
+         "expected_total_suites": <int from inventory>
+       }
+     }
+     ```
+   - The `totals.suites_run` MUST equal the inventory's
+     `expected_total`. The `totals.tests_run` MUST equal the
+     sum of the per-app test counts.
+   - Verify all 4 assertions of
+     `__test__/jest30-phase5-full-run.test.ts` pass.
+
+3. **Task 3 — Fix or quarantine**:
+   - For each of the 3 canary suites
+     (DragonFlight, DragonRider, CastleDefense) that is
+     failing in the full run record from Task 2, choose one
+     of:
+     - **(a) Fix**: make the canary pass. Update the
+       run record and re-run.
+     - **(b) Quarantine**: create
+       `measure/tracks/jest30_major_migration/phase-5-quarantine.json`
+       with each canary's path, owner, date, and follow-up
+       track id:
+       ```json
+       {
+         "created_at": "<ISO timestamp>",
+         "quarantined": [
+           {
+             "suite_path": "<absolute path>",
+             "failure_mode": "<short label>",
+             "owner": "<github handle>",
+             "quarantined_at": "<ISO date>",
+             "follow_up_track": "<track id>"
+           }
+         ]
+       }
+       ```
+   - Verify all 3 canary assertions of
+     `__test__/jest30-phase5-quarantine.test.ts` pass.
+
+4. **Task 4 — Scripts disposition**:
+   - Choose one of:
+     - **(a) Migrate**: bump
+       `packages/reading-advantage-scripts/package.json` to
+       `jest@^30.2.0` (or compatible) and regenerate
+       `pnpm-lock.yaml`. The test reads the devDependency
+       and asserts it starts with `^30.`.
+     - **(b) Exclude**: create
+       `measure/tracks/jest30_major_migration/phase-5-scripts-disposition.json`
+       with the same schema as the quarantine manifest
+       (`owner`, `quarantined_at`, `follow_up_track`).
+   - Verify all 2 assertions of
+     `__test__/jest30-phase5-scripts-disposition.test.ts`
+     pass.
+
+5. **Task 5 — Metadata closeout**:
+   - Only after Tasks 1–4 evidence is recorded, update
+     `metadata.json`:
+     - Set `status` to `"done"`.
+     - Set `completed_at` to today's ISO timestamp.
+     - Update `deviation_notes` to reference the Phase 5
+       remediation (e.g., "Reopened for completion-audit
+       remediation; closed at <sha> with full-suite and
+       quarantine evidence — see phase-5-*.json
+       artifacts.").
+   - Update `measure/tracks.md` to reconcile the jest30
+     entry to the post-Phase-5 state (this is a Measure
+     doc, not application code, so the implementer
+     may edit it).
+   - Verify all assertions of
+     `__test__/jest30-phase5-metadata-consistency.test.ts`
+     pass.
+
+6. **Phase 5 closeout**:
+   - Mark all 5 Phase 5 tasks as `[x]` with the
+     corresponding commit SHA in parens, per the
+     supervisor's `plan_closeout_feedback` ("Completed
+     closeout plan task lacks commit SHA" failure mode).
+   - Add a `[final-verification: jest30-phase5-remediated]`
+     marker to the Phase 5 heading, per the supervisor's
+     `plan_closeout_feedback` (every phase heading must
+     carry a `[checkpoint:…]` or `[final-verification:…]`
+     marker).
+   - The closeout role owns the `metadata.json` status
+     reset to `done` (the implementer may set the
+     content; the closeout role stamps the final
+     status).
+
 ## Phase 4: Validate & Close [final-verification: jest30-green-and-documented]
 
 - [x] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. _Green done — `36c227e1`: targeted aggregate (RA `__test__` 14 suites / 208 tests pass incl. new doc test; vocabulary-games smoke 175 pass / 8 pre-existing failures unrelated to Jest 30). Full-monorepo `pnpm turbo run lint|test|check-types|build` gate deferred to CI (shell timeout constraint) — post-Phase-3 baseline at `dc246e79` holds. See closeout entry for decision._

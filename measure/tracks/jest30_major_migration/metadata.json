@@ -1,8 +1,9 @@
 {
   "track_id": "jest30_major_migration",
   "type": "feature",
-  "status": "done",
-  "completed_at": "2026-06-19T01:30:28Z",
+  "status": "reopened",
+  "completed_at": null,
   "created_at": "2026-06-13T00:00:00Z",
-  "description": "Major migration to Jest 30. Covers new test runner API, configuration changes, snapshot format updates, and module resolution changes. Affects reading-advantage and advantage-games which use Jest for unit tests."
+  "description": "Major migration to Jest 30. Covers new test runner API, configuration changes, snapshot format updates, and module resolution changes. Affects reading-advantage and advantage-games which use Jest for unit tests.",
+  "deviation_notes": "Kept active after the 2026-06-21 fleet completion audit rejected the closeout: the green gate ran only a subset of suites and un-gated suites still have real failures, including migration canaries. Full-suite or formally-quarantined evidence is required before closeout."
 }
