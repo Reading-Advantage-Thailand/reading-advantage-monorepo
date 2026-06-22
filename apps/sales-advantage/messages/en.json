@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "title": "Sales Advantage",
+    "description": "Sales coaching with AI-powered audio roleplay"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "modules": "Modules",
+    "admin": "Admin",
+    "logout": "Logout",
+    "login": "Login",
+    "chat": "Chat"
+  },
+  "login": {
+    "title": "Sign In",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign In",
+    "error": "Invalid username or password"
+  },
+  "dashboard": {
+    "title": "Your Dashboard",
+    "resume": "Resume",
+    "moduleProgress": "Progress",
+    "bestScore": "Best Score",
+    "quizScore": "Quiz Score",
+    "noProgress": "No progress yet"
+  },
+  "lesson": {
+    "markComplete": "Mark Complete",
+    "completed": "Completed",
+    "theory": "Theory",
+    "roleplay": "Roleplay",
+    "quiz": "Quiz",
+    "backToModule": "Back to Module"
+  },
+  "roleplay": {
+    "record": "Start Recording",
+    "stop": "Stop",
+    "listen": "Listen Back",
+    "submit": "Submit for Evaluation",
+    "recording": "Recording...",
+    "uploading": "Uploading...",
+    "evaluating": "Evaluating...",
+    "retry": "Try Again",
+    "micDenied": "Please allow microphone access",
+    "errors": {
+      "uploadFailed": "Failed to upload audio",
+      "evaluationFailed": "Evaluation failed. Try again."
+    }
+  },
+  "result": {
+    "score": "Score",
+    "passed": "Passed",
+    "failed": "Failed",
+    "summary": "Summary",
+    "strengths": "Strengths",
+    "weaknesses": "Areas to Improve",
+    "suggestedAction": "Suggested Action",
+    "criteria": "Evaluation Criteria",
+    "transcript": "Transcript",
+    "attempts": "Attempt History"
+  },
+  "quiz": {
+    "submit": "Submit",
+    "score": "Score",
+    "passThreshold": "Pass Threshold",
+    "passed": "Passed!",
+    "failed": "Not passed. Try again.",
+    "explanation": "Explanation"
+  },
+  "chat": {
+    "placeholder": "Ask a question...",
+    "title": "Sales Coach AI",
+    "send": "Send",
+    "systemPrompt": "You are a sales coaching expert for Reading Advantage. Answer questions about sales techniques, objection handling, and product positioning."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "createRep": "Create Rep Account",
+    "curriculum": "Manage Curriculum",
+    "cohort": "Cohort Overview",
+    "repDetail": "Rep Detail",
+    "modulesCompleted": "Modules Completed",
+    "avgRoleplayScore": "Avg Roleplay Score",
+    "avgQuizScore": "Avg Quiz Score",
+    "lastActive": "Last Active",
+    "approve": "Approve",
+    "draft": "Draft",
+    "approved": "Approved"
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "title": "Sales Advantage",
+    "description": "ฝึกทักษะการขายด้วย AI"
+  },
+  "navigation": {
+    "dashboard": "แดชบอร์ด",
+    "modules": "บทเรียน",
+    "admin": "ผู้ดูแลระบบ",
+    "logout": "ออกจากระบบ",
+    "login": "เข้าสู่ระบบ",
+    "chat": "สอบถาม AI"
+  },
+  "login": {
+    "title": "เข้าสู่ระบบ",
+    "username": "ชื่อผู้ใช้",
+    "password": "รหัสผ่าน",
+    "submit": "เข้าสู่ระบบ",
+    "error": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง"
+  },
+  "dashboard": {
+    "title": "แดชบอร์ดของคุณ",
+    "resume": "เรียนต่อ",
+    "moduleProgress": "ความคืบหน้า",
+    "bestScore": "คะแนนดีที่สุด",
+    "quizScore": "คะแนนแบบทดสอบ",
+    "noProgress": "ยังไม่มีประวัติการเรียน"
+  },
+  "lesson": {
+    "markComplete": "ทำเครื่องหมายว่าเรียนเสร็จ",
+    "completed": "เรียนเสร็จแล้ว",
+    "theory": "เนื้อหาทฤษฎี",
+    "roleplay": "ฝึกบทบาทสมมติ",
+    "quiz": "แบบทดสอบ",
+    "backToModule": "กลับไปยังบทเรียน"
+  },
+  "roleplay": {
+    "record": "เริ่มบันทึก",
+    "stop": "หยุดบันทึก",
+    "listen": "ฟังซ้ำ",
+    "submit": "ส่งประเมิน",
+    "recording": "กำลังบันทึก...",
+    "uploading": "กำลังส่ง...",
+    "evaluating": "กำลังประเมิน...",
+    "retry": "ลองใหม่",
+    "micDenied": "กรุณาอนุญาตให้ใช้ไมโครโฟน",
+    "errors": {
+      "uploadFailed": "ไม่สามารถอัปโหลดไฟล์เสียงได้",
+      "evaluationFailed": "การประเมินล้มเหลว กรุณาลองใหม่"
+    }
+  },
+  "result": {
+    "score": "คะแนน",
+    "passed": "ผ่าน",
+    "failed": "ไม่ผ่าน",
+    "summary": "สรุป",
+    "strengths": "จุดแข็ง",
+    "weaknesses": "จุดที่ต้องปรับปรุง",
+    "suggestedAction": "คำแนะนำ",
+    "criteria": "เกณฑ์การประเมิน",
+    "transcript": "บทสนทนา",
+    "attempts": "ประวัติการฝึก"
+  },
+  "quiz": {
+    "submit": "ส่งคำตอบ",
+    "score": "คะแนน",
+    "passThreshold": "เกณฑ์ผ่าน",
+    "passed": "ผ่าน!",
+    "failed": "ไม่ผ่าน กรุณาลองใหม่",
+    "explanation": "คำอธิบาย"
+  },
+  "chat": {
+    "placeholder": "พิมพ์คำถามของคุณ...",
+    "title": "สอบถาม AI ผู้ช่วยการขาย",
+    "send": "ส่ง",
+    "systemPrompt": "คุณคือผู้เชี่ยวชาญด้านการขายการศึกษาสำหรับ Reading Advantage ตอบคำถามเกี่ยวกับเทคนิคการขาย การจัดการข้อโต้แย้ง และการใช้ผลิตภัณฑ์ กรุณาตอบเป็นภาษาไทย"
+  },
+  "admin": {
+    "title": "แดชบอร์ดผู้ดูแล",
+    "createRep": "สร้างบัญชีพนักงานขาย",
+    "curriculum": "จัดการหลักสูตร",
+    "cohort": "ภาพรวมทีม",
+    "repDetail": "รายละเอียดพนักงาน",
+    "modulesCompleted": "บทเรียนที่ทำเสร็จ",
+    "avgRoleplayScore": "คะแนนเฉลี่ย Roleplay",
+    "avgQuizScore": "คะแนนเฉลี่ยแบบทดสอบ",
+    "lastActive": "ใช้งานล่าสุด",
+    "approve": "อนุมัติ",
+    "draft": "ร่าง",
+    "approved": "อนุมัติแล้ว"
+  }
+}
