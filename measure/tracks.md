@@ -168,6 +168,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: www-reading-advantage i18n/l10n Remediation** (6/6 phases) *Link: [./archive/www_i18n_l10n_remediation_20260527/](./archive/www_i18n_l10n_remediation_20260527/)*
   Remedy 12 missing translation keys (header nav) and 183 hardcoded English strings across 19 page/component files. *Status: COMPLETE — All 6 phases done. Audit gate passes: 0 missing keys, 0 hardcoded strings. Build passes. 1198 tests pass (11 test files have pre-existing next-intl module resolution failures). ESLint clean.*
 
+- [~] **Track: Marketing Video Production Pipeline** *Link: [./tracks/video_pipeline_20260613/](./tracks/video_pipeline_20260613/)*
+  In-flight marketing video pipeline for `apps/marketing`: topic research + deduplication, LLM-generated Thai marketing scripts with 5–7 scenes, scene editor, and project persistence. Formalized 2026-06-23; Phase 1–6 implementation committed, Phase 7 build/QA pending.
+
 ---
 
 - [x] **Track: codecamp-advantage — Full-Stack Web Dev Intern Bootcamp**
