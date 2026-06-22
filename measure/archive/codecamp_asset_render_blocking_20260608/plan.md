@@ -2,9 +2,9 @@
 
 ## Phase 1: Identification (P0)
 
-- [x] Task: Identify the render-blocking script
-  - [x] Run `countRenderBlockingScripts` on the prod HTML to locate the exact `<script>` tag
-  - [x] Determine if it is a Next.js internal script, a third-party script, or a misconfiguration
+- [x] Task: Identify the render-blocking script (`c5a4d7a7`)
+  - [x] Run `countRenderBlockingScripts` on the prod HTML to locate the exact `<script>` tag (`c5a4d7a7`)
+  - [x] Determine if it is a Next.js internal script, a third-party script, or a misconfiguration (`c5a4d7a7`)
 
 ### Phase 1 Red command + identification evidence
 
@@ -398,9 +398,9 @@ the same prod HTML, with no Node TLS or redirect logic to debug.
 
 ## Phase 3: Verification (P0)
 
-- [x] Task: Re-run Phase 6 asset-loading probes
-  - [x] Zero render-blocking scripts in `<head>` for `/en/` and `/th/`
-  - [x] Page functionality regression check
+- [x] Task: Re-run Phase 6 asset-loading probes (`917440db`)
+  - [x] Zero render-blocking scripts in `<head>` for `/en/` and `/th/` (`917440db`)
+  - [x] Page functionality regression check (`917440db`)
 
 ### Phase 3 Red-phase disposition (2026-06-08, MID attempt-1)
 

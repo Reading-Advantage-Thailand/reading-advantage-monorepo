@@ -206,10 +206,6 @@ Two parallel programs are in flight; priority order when picking the next track:
   *Link: [./archive/codecamp_qa_local_20260517/](./archive/codecamp_qa_local_20260517/)*
   Comprehensive manual QA testing on local dev server. Covers auth, i18n, dashboard, lessons, quizzes, AI chat, PR workflow, admin panel, edge cases, and performance. *Status: COMPLETE — 41 tests passed, 0 failed, 0 partial. All 5 issues fixed: Chat AI (API key rotated), Quiz progress save (Date→ISO string), PR form (verified working), Locked module UX (tooltip added), Dashboard ARIA (role=progressbar added). Full report at measure/archive/codecamp_qa_local_20260517/qa-report.md*
 
-- [x] **Track: codecamp-advantage — Asset Render-Blocking Fix**
-  *Link: [./archive/codecamp_asset_render_blocking_20260608/](./archive/codecamp_asset_render_blocking_20260608/)*
-  *Status: COMPLETE — Post-build manifest patch strips Next.js 16's unconditional nomodule polyfill from build-manifest.json. 9 commits. Live prod probe confirms 0 render-blocking scripts on /en/ and /th/. Archived 2026-06-23.*
-
 - [ ] **Track: codecamp-advantage — Cloud Run Cold-Start Fix**
   *Link: [./tracks/codecamp_infra_cold_start_20260608/](./tracks/codecamp_infra_cold_start_20260608/)*
   Fix Cloud Run cold-start time exceeding the 5-second P0 budget.
