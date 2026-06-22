@@ -18,6 +18,56 @@ export interface GenerateObjectInput<T> {
 }
 
 /**
+ * Media payload sent alongside a prompt for multimodal generation.
+ */
+export interface MediaInput {
+  /** Raw media bytes (audio, image, or video). */
+  buffer: Buffer;
+  /** MIME type of the media (e.g. `audio/webm`, `audio/wav`). */
+  mimeType: string;
+}
+
+/**
+ * Input for generating a structured object from a media payload (audio/image/video)
+ * plus a text prompt. The provider sends both parts to a multimodal model in one
+ * call and parses the response against the supplied Zod schema.
+ */
+export interface GenerateObjectFromMediaInput<T> {
+  /** Zod schema the generated JSON must satisfy. */
+  schema: z.ZodSchema<T>;
+  /** Prompt describing the desired output (e.g. rubric instructions). */
+  prompt: string;
+  /** Media payload sent to the multimodal model. */
+  media: MediaInput;
+  /** Override the default model configured on the client. */
+  model?: string;
+  /** Sampling temperature (0–2). */
+  temperature?: number;
+}
+
+/**
+ * Input for transcribing audio to text via a speech-to-text (ASR) model.
+ */
+export interface TranscribeAudioInput {
+  /** Audio payload (e.g. webm/opus or wav). */
+  media: MediaInput;
+  /** Override the default ASR model configured on the client. */
+  model?: string;
+  /** Optional language hint (ISO 639-1, e.g. "en", "th"). */
+  language?: string;
+}
+
+/**
+ * Result of a transcribeAudio call.
+ */
+export interface TranscribeAudioResult {
+  /** Full transcribed text. */
+  text: string;
+  /** Optional per-segment timestamps when the model supplies them. */
+  segments?: Array<{ start: number; end: number; text: string }>;
+}
+
+/**
  * Input for generating an image from a text prompt.
  */
 export interface GenerateImageInput {
@@ -86,6 +136,15 @@ export interface AIClient {
   generateObject<T>(input: GenerateObjectInput<T>): Promise<T>;
 
   /**
+   * Generate a structured object from a media payload (audio/image/video) plus a
+   * text prompt, using a multimodal model. The media is sent directly to the
+   * model alongside the prompt in a single call — no separate transcription step.
+   * @returns The parsed and validated object.
+   * @throws {UnsupportedError} when the configured provider has no multimodal model.
+   */
+  generateObjectFromMedia<T>(input: GenerateObjectFromMediaInput<T>): Promise<T>;
+
+  /**
    * Generate an image from a text prompt.
    * @returns The raw image bytes as a Buffer.
    */
@@ -96,6 +155,13 @@ export interface AIClient {
    * @returns The generated text string.
    */
   generateText(input: GenerateTextInput): Promise<string>;
+
+  /**
+   * Transcribe audio to text using a speech-to-text (ASR) model.
+   * @returns The transcribed text and optional segment timestamps.
+   * @throws UnsupportedError when the provider has no ASR model.
+   */
+  transcribeAudio(input: TranscribeAudioInput): Promise<TranscribeAudioResult>;
 
   /**
    * Stream text from a prompt. Returns an async iterable text stream

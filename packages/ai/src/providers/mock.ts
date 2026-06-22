@@ -1,11 +1,13 @@
-import type { z } from "zod";
 import type {
   AIClient,
   GenerateImageInput,
+  GenerateObjectFromMediaInput,
   GenerateObjectInput,
   GenerateTextInput,
   StreamTextInput,
   StreamTextResult,
+  TranscribeAudioInput,
+  TranscribeAudioResult,
 } from "../types.js";
 import { ProviderNotConfiguredError, SchemaValidationError } from "../errors.js";
 import { recommendationFixture } from "../__tests__/recommendations.fixture.js";
@@ -17,9 +19,11 @@ import { diagramBuffer } from "../__tests__/diagram.fixture.js";
  */
 export interface MockResponses {
   generateObject?: unknown;
+  generateObjectFromMedia?: unknown;
   generateImage?: Buffer;
   generateText?: string;
   streamText?: string;
+  transcribeAudio?: TranscribeAudioResult;
 }
 
 /**
@@ -30,7 +34,13 @@ export interface MockResponses {
 export class MockProvider implements AIClient {
   private readonly responses: MockResponses;
   private callLog: Array<{
-    method: "generateObject" | "generateImage" | "generateText" | "streamText";
+    method:
+      | "generateObject"
+      | "generateObjectFromMedia"
+      | "generateImage"
+      | "generateText"
+      | "streamText"
+      | "transcribeAudio";
     input: unknown;
   }> = [];
 
@@ -54,6 +64,29 @@ export class MockProvider implements AIClient {
     }
 
     const parsed = input.schema.safeParse(this.responses.generateObject);
+    if (!parsed.success) {
+      throw new SchemaValidationError(
+        input.schema.description ?? "unknown",
+        parsed.error.issues
+      );
+    }
+
+    return parsed.data;
+  }
+
+  async generateObjectFromMedia<T>(
+    input: GenerateObjectFromMediaInput<T>
+  ): Promise<T> {
+    this.callLog.push({ method: "generateObjectFromMedia", input });
+
+    if (this.responses.generateObjectFromMedia === undefined) {
+      throw new ProviderNotConfiguredError(
+        "mock",
+        "generateObjectFromMedia response not configured"
+      );
+    }
+
+    const parsed = input.schema.safeParse(this.responses.generateObjectFromMedia);
     if (!parsed.success) {
       throw new SchemaValidationError(
         input.schema.description ?? "unknown",
@@ -106,6 +139,18 @@ export class MockProvider implements AIClient {
         });
       },
     };
+  }
+
+  async transcribeAudio(
+    input: TranscribeAudioInput
+  ): Promise<TranscribeAudioResult> {
+    this.callLog.push({ method: "transcribeAudio", input });
+
+    if (this.responses.transcribeAudio === undefined) {
+      return { text: "[mock transcript]" };
+    }
+
+    return this.responses.transcribeAudio;
   }
 }
 

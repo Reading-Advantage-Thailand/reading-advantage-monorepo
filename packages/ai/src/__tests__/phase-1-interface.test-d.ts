@@ -21,16 +21,20 @@ import type {
   AIConfig,
   AIProvider,
   GenerateImageInput,
+  GenerateObjectFromMediaInput,
   GenerateObjectInput,
   GenerateTextInput,
   StreamTextInput,
   StreamTextResult,
+  TranscribeAudioInput,
+  TranscribeAudioResult,
 } from "../types.js";
 
 import {
   AIClientError,
   ProviderNotConfiguredError,
   SchemaValidationError,
+  UnsupportedError,
 } from "../errors.js";
 
 // ---------------------------------------------------------------------------
@@ -63,8 +67,12 @@ type ExpectedGenerateTextInput = {
 
 type ExpectedAIClient = {
   generateObject: <T>(input: GenerateObjectInput<T>) => Promise<T>;
+  generateObjectFromMedia: <T>(
+    input: GenerateObjectFromMediaInput<T>
+  ) => Promise<T>;
   generateImage: (input: GenerateImageInput) => Promise<Buffer>;
   generateText: (input: GenerateTextInput) => Promise<string>;
+  transcribeAudio: (input: TranscribeAudioInput) => Promise<TranscribeAudioResult>;
   streamText: (input: StreamTextInput) => Promise<StreamTextResult>;
 };
 
@@ -113,10 +121,15 @@ expectTypeOf<GenerateTextInput["temperature"]>().toEqualTypeOf<
 // FR-1 + FR-2 + FR-3: AIClient, AIProvider, AIConfig
 // ---------------------------------------------------------------------------
 
-// Exactly four methods on AIClient, with the right call signatures.
+// Exactly six methods on AIClient, with the right call signatures.
 expectTypeOf<AIClient>().toEqualTypeOf<ExpectedAIClient>();
 expectTypeOf<keyof AIClient>().toEqualTypeOf<
-  "generateObject" | "generateImage" | "generateText" | "streamText"
+  | "generateObject"
+  | "generateObjectFromMedia"
+  | "generateImage"
+  | "generateText"
+  | "transcribeAudio"
+  | "streamText"
 >();
 
 // Callability checks (FR-1 inputs are accepted by the method).
@@ -131,6 +144,11 @@ expectTypeOf<AIClient["generateImage"]>().toBeCallableWith({
   seed: 42,
 });
 expectTypeOf<AIClient["generateText"]>().toBeCallableWith({ prompt: "txt" });
+expectTypeOf<AIClient["generateObjectFromMedia"]>().toBeCallableWith({
+  schema: z.object({ foo: z.string() }),
+  prompt: "evaluate",
+  media: { buffer: Buffer.from("audio"), mimeType: "audio/webm" },
+});
 
 expectTypeOf<AIProvider>().toEqualTypeOf<"openai" | "google" | "openrouter" | "mock">();
 expectTypeOf<AIConfig>().toEqualTypeOf<ExpectedAIConfig>();
@@ -140,9 +158,10 @@ expectTypeOf<AIConfig["provider"]>().toEqualTypeOf<AIProvider>();
 // Error class hierarchy (Phase 1 task 2)
 // ---------------------------------------------------------------------------
 
-// All three error classes extend AIClientError.
+// All four error classes extend AIClientError.
 expectTypeOf<ProviderNotConfiguredError>().toMatchTypeOf<AIClientError>();
 expectTypeOf<SchemaValidationError>().toMatchTypeOf<AIClientError>();
+expectTypeOf<UnsupportedError>().toMatchTypeOf<AIClientError>();
 
 // AIClientError carries a `code` string and an optional `cause`.
 expectTypeOf<AIClientError["code"]>().toEqualTypeOf<string>();

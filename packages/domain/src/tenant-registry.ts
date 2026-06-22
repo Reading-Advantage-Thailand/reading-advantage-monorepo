@@ -156,6 +156,20 @@ import {
   assignmentNotifications,
   raCefrMappings,
   genreAdjacencies,
+  salesModules,
+  salesLessons,
+  salesRubrics,
+  salesRoleplayScenarios,
+  salesQuizQuestions,
+  salesRoleplayAttempts,
+  salesProgress,
+  salesConversations,
+  salesChatMessages,
+  campaigns,
+  videoProjects,
+  videoAssets,
+  pastTopics,
+  settings,
 } from "@reading-advantage/db";
 
 register(xpLogs, "REFERENTIAL");
@@ -203,3 +217,24 @@ register(lessonRecords, "REFERENTIAL");
 register(assignmentNotifications, "REFERENTIAL");
 register(raCefrMappings, "REFERENTIAL");
 register(genreAdjacencies, "REFERENTIAL");
+
+// sales-advantage: single-tenant/global — tables have no schoolId; user-scoped by userId.
+// Accessed via tenantDb.unscoped("sales-advantage tables have no schoolId").
+register(salesModules, "REFERENTIAL");
+register(salesLessons, "REFERENTIAL");
+register(salesRubrics, "REFERENTIAL");
+register(salesRoleplayScenarios, "REFERENTIAL");
+register(salesQuizQuestions, "REFERENTIAL");
+register(salesRoleplayAttempts, "REFERENTIAL");
+register(salesProgress, "REFERENTIAL");
+register(salesConversations, "REFERENTIAL");
+register(salesChatMessages, "REFERENTIAL");
+
+// marketing-advantage: single-tenant/global — tables have no schoolId.
+// Pre-existing gap from the marketing_tables migration (0021); registered here
+// so the tenant-coverage gate passes. Accessed via tenantDb.unscoped().
+register(campaigns, "REFERENTIAL");
+register(videoProjects, "REFERENTIAL");
+register(videoAssets, "REFERENTIAL");
+register(pastTopics, "REFERENTIAL");
+register(settings, "REFERENTIAL");

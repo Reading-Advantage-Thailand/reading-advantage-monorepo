@@ -52,6 +52,10 @@
       "types": "./dist/interventions/index.d.ts",
       "import": "./dist/interventions/index.js"
     },
+    "./sales": {
+      "types": "./dist/sales/index.d.ts",
+      "import": "./dist/sales/index.js"
+    },
     "./curriculum": {
       "types": "./dist/curriculum/index.d.ts",
       "import": "./dist/curriculum/index.js"

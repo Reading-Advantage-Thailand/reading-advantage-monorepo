@@ -4,6 +4,8 @@ export const ROLES = {
   TEACHER: "TEACHER",
   ADMIN: "ADMIN",
   SYSTEM: "SYSTEM",
+  SALES_REP: "SALES_REP",
+  SALES_ADMIN: "SALES_ADMIN",
 } as const;
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
@@ -14,6 +16,8 @@ export const ROLE_HIERARCHY: Record<Role, number> = {
   TEACHER: 2,
   ADMIN: 3,
   SYSTEM: 4,
+  SALES_REP: 1,
+  SALES_ADMIN: 3,
 };
 
 export const ROLE_ROUTES: Record<Role, string> = {
@@ -22,6 +26,8 @@ export const ROLE_ROUTES: Record<Role, string> = {
   TEACHER: "/teacher",
   ADMIN: "/admin",
   SYSTEM: "/system",
+  SALES_REP: "/dashboard",
+  SALES_ADMIN: "/admin",
 };
 
 /**

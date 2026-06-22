@@ -6,10 +6,13 @@ import { streamText as aiStreamText } from "ai";
 import type {
   AIClient,
   GenerateImageInput,
+  GenerateObjectFromMediaInput,
   GenerateObjectInput,
   GenerateTextInput,
   StreamTextInput,
   StreamTextResult,
+  TranscribeAudioInput,
+  TranscribeAudioResult,
 } from "../types.js";
 import { AIClientError } from "../errors.js";
 
@@ -90,6 +93,41 @@ export class GoogleProvider implements AIClient {
     }
   }
 
+  async generateObjectFromMedia<T>(
+    input: GenerateObjectFromMediaInput<T>
+  ): Promise<T> {
+    try {
+      const { object } = await aiGenerateObject({
+        model: this.client(input.model ?? this.defaultModel),
+        schema: input.schema,
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "file",
+                data: input.media.buffer.toString("base64"),
+                mediaType: input.media.mimeType,
+              },
+              { type: "text", text: input.prompt },
+            ],
+          },
+        ],
+        ...(input.temperature !== undefined
+          ? { temperature: input.temperature }
+          : {}),
+        maxRetries: 1,
+      });
+      return object;
+    } catch (error) {
+      throw new AIClientError(
+        `Google generateObjectFromMedia failed: ${error instanceof Error ? error.message : "unknown"}`,
+        "PROVIDER_ERROR",
+        error
+      );
+    }
+  }
+
   async generateText(input: GenerateTextInput): Promise<string> {
     try {
       const { text } = await aiGenerateText({
@@ -137,6 +175,43 @@ export class GoogleProvider implements AIClient {
     } catch (error) {
       throw new AIClientError(
         `Google streamText failed: ${error instanceof Error ? error.message : "unknown"}`,
+        "PROVIDER_ERROR",
+        error
+      );
+    }
+  }
+
+  async transcribeAudio(
+    input: TranscribeAudioInput
+  ): Promise<TranscribeAudioResult> {
+    try {
+      const modelId = input.model ?? this.defaultModel;
+      const { text } = await aiGenerateText({
+        model: this.client(modelId),
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "file",
+                data: input.media.buffer.toString("base64"),
+                mediaType: input.media.mimeType,
+              },
+              {
+                type: "text",
+                text: input.language
+                  ? `Transcribe this audio to text. Language: ${input.language}`
+                  : "Transcribe this audio to text.",
+              },
+            ],
+          },
+        ],
+        maxRetries: 1,
+      });
+      return { text };
+    } catch (error) {
+      throw new AIClientError(
+        `Google transcribeAudio failed: ${error instanceof Error ? error.message : "unknown"}`,
         "PROVIDER_ERROR",
         error
       );

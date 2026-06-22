@@ -1,5 +1,5 @@
 {
-  "id": "dd780ce0-b3b8-4185-9b32-bf9bd9304f9d",
+  "id": "857298cf-ba4b-4ad1-af47-2075d92ea46e",
   "prevId": "ed6b6066-5c4a-491c-833c-aac0a37c0ff2",
   "version": "7",
   "dialect": "postgresql",
@@ -7554,33 +7554,42 @@
         "type": {
           "name": "type",
           "type": "campaign_type",
+          "typeSchema": "public",
+          "primaryKey": false,
           "notNull": true
         },
         "app": {
           "name": "app",
           "type": "app",
+          "typeSchema": "public",
+          "primaryKey": false,
           "notNull": true
         },
         "name": {
           "name": "name",
           "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
         "status": {
           "name": "status",
           "type": "campaign_status",
+          "typeSchema": "public",
+          "primaryKey": false,
           "notNull": true,
           "default": "'draft'"
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
+          "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp",
+          "primaryKey": false,
           "notNull": true,
           "default": "now()"
         }
@@ -7589,24 +7598,43 @@
         "campaigns_app_idx": {
           "name": "campaigns_app_idx",
           "columns": [
-            "app"
+            {
+              "expression": "app",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         },
         "campaigns_status_idx": {
           "name": "campaigns_status_idx",
           "columns": [
-            "status"
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
-    "public.video_projects": {
-      "name": "video_projects",
+    "public.past_topics": {
+      "name": "past_topics",
       "schema": "",
       "columns": {
         "id": {
@@ -7616,60 +7644,75 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "campaign_id": {
-          "name": "campaign_id",
-          "type": "uuid",
+        "app": {
+          "name": "app",
+          "type": "app",
+          "typeSchema": "public",
+          "primaryKey": false,
           "notNull": true
         },
         "topic": {
           "name": "topic",
           "type": "text",
+          "primaryKey": false,
           "notNull": true
-        },
-        "script": {
-          "name": "script",
-          "type": "jsonb",
-          "notNull": false
-        },
-        "status": {
-          "name": "status",
-          "type": "video_project_status",
-          "notNull": true,
-          "default": "'draft'"
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
+          "primaryKey": false,
           "notNull": true,
           "default": "now()"
         }
       },
       "indexes": {
-        "video_projects_campaign_idx": {
-          "name": "video_projects_campaign_idx",
+        "past_topics_app_idx": {
+          "name": "past_topics_app_idx",
           "columns": [
-            "campaign_id"
+            {
+              "expression": "app",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
-      "foreignKeys": {
-        "video_projects_campaign_id_campaigns_id_fk": {
-          "name": "video_projects_campaign_id_campaigns_id_fk",
-          "tableFrom": "video_projects",
-          "tableTo": "campaigns",
-          "columnsFrom": [
-            "campaign_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.settings": {
+      "name": "settings",
+      "schema": "",
+      "columns": {
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.video_assets": {
       "name": "video_assets",
@@ -7685,37 +7728,46 @@
         "project_id": {
           "name": "project_id",
           "type": "uuid",
+          "primaryKey": false,
           "notNull": true
         },
         "scene_index": {
           "name": "scene_index",
           "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
         "type": {
           "name": "type",
           "type": "asset_type",
+          "typeSchema": "public",
+          "primaryKey": false,
           "notNull": true
         },
         "url": {
           "name": "url",
           "type": "text",
+          "primaryKey": false,
           "notNull": false
         },
         "prompt": {
           "name": "prompt",
           "type": "text",
+          "primaryKey": false,
           "notNull": false
         },
         "status": {
           "name": "status",
           "type": "asset_status",
+          "typeSchema": "public",
+          "primaryKey": false,
           "notNull": true,
           "default": "'pending'"
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
+          "primaryKey": false,
           "notNull": true,
           "default": "now()"
         }
@@ -7724,9 +7776,17 @@
         "video_assets_project_idx": {
           "name": "video_assets_project_idx",
           "columns": [
-            "project_id"
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -7745,10 +7805,13 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
-    "public.past_topics": {
-      "name": "past_topics",
+    "public.video_projects": {
+      "name": "video_projects",
       "schema": "",
       "columns": {
         "id": {
@@ -7758,56 +7821,806 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "app": {
-          "name": "app",
-          "type": "app",
+        "campaign_id": {
+          "name": "campaign_id",
+          "type": "uuid",
+          "primaryKey": false,
           "notNull": true
         },
         "topic": {
           "name": "topic",
           "type": "text",
+          "primaryKey": false,
           "notNull": true
+        },
+        "script": {
+          "name": "script",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "video_project_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
+          "primaryKey": false,
           "notNull": true,
           "default": "now()"
         }
       },
       "indexes": {
-        "past_topics_app_idx": {
-          "name": "past_topics_app_idx",
+        "video_projects_campaign_idx": {
+          "name": "video_projects_campaign_idx",
           "columns": [
-            "app"
+            {
+              "expression": "campaign_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "video_projects_campaign_id_campaigns_id_fk": {
+          "name": "video_projects_campaign_id_campaigns_id_fk",
+          "tableFrom": "video_projects",
+          "tableTo": "campaigns",
+          "columnsFrom": [
+            "campaign_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
-    "public.settings": {
-      "name": "settings",
+    "public.sales_chat_messages": {
+      "name": "sales_chat_messages",
       "schema": "",
       "columns": {
-        "key": {
-          "name": "key",
-          "type": "text",
+        "id": {
+          "name": "id",
+          "type": "uuid",
           "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "conversation_id": {
+          "name": "conversation_id",
+          "type": "uuid",
+          "primaryKey": false,
           "notNull": true
         },
-        "value": {
-          "name": "value",
+        "role": {
+          "name": "role",
           "type": "text",
+          "primaryKey": false,
           "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sales_chat_messages_conversation_id_sales_conversations_id_fk": {
+          "name": "sales_chat_messages_conversation_id_sales_conversations_id_fk",
+          "tableFrom": "sales_chat_messages",
+          "tableTo": "sales_conversations",
+          "columnsFrom": [
+            "conversation_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sales_conversations": {
+      "name": "sales_conversations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lesson_id": {
+          "name": "lesson_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "module_id": {
+          "name": "module_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sales_conversations_user_id_users_id_fk": {
+          "name": "sales_conversations_user_id_users_id_fk",
+          "tableFrom": "sales_conversations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "sales_conversations_lesson_id_sales_lessons_id_fk": {
+          "name": "sales_conversations_lesson_id_sales_lessons_id_fk",
+          "tableFrom": "sales_conversations",
+          "tableTo": "sales_lessons",
+          "columnsFrom": [
+            "lesson_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "sales_conversations_module_id_sales_modules_id_fk": {
+          "name": "sales_conversations_module_id_sales_modules_id_fk",
+          "tableFrom": "sales_conversations",
+          "tableTo": "sales_modules",
+          "columnsFrom": [
+            "module_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sales_lessons": {
+      "name": "sales_lessons",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "module_id": {
+          "name": "module_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "sales_lesson_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "review_status": {
+          "name": "review_status",
+          "type": "sales_review_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sales_lessons_module_id_sales_modules_id_fk": {
+          "name": "sales_lessons_module_id_sales_modules_id_fk",
+          "tableFrom": "sales_lessons",
+          "tableTo": "sales_modules",
+          "columnsFrom": [
+            "module_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sales_modules": {
+      "name": "sales_modules",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phase": {
+          "name": "phase",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Foundations'"
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "sales_modules_slug_unique": {
+          "name": "sales_modules_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sales_progress": {
+      "name": "sales_progress",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lesson_id": {
+          "name": "lesson_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "sales_progress_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'not_started'"
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "score": {
+          "name": "score",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sales_progress_user_id_users_id_fk": {
+          "name": "sales_progress_user_id_users_id_fk",
+          "tableFrom": "sales_progress",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "sales_progress_lesson_id_sales_lessons_id_fk": {
+          "name": "sales_progress_lesson_id_sales_lessons_id_fk",
+          "tableFrom": "sales_progress",
+          "tableTo": "sales_lessons",
+          "columnsFrom": [
+            "lesson_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "sales_progress_user_lesson_unique": {
+          "name": "sales_progress_user_lesson_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "lesson_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sales_quiz_questions": {
+      "name": "sales_quiz_questions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "lesson_id": {
+          "name": "lesson_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "question": {
+          "name": "question",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "options_json": {
+          "name": "options_json",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "correct_answer": {
+          "name": "correct_answer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "explanation": {
+          "name": "explanation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sales_quiz_questions_lesson_id_sales_lessons_id_fk": {
+          "name": "sales_quiz_questions_lesson_id_sales_lessons_id_fk",
+          "tableFrom": "sales_quiz_questions",
+          "tableTo": "sales_lessons",
+          "columnsFrom": [
+            "lesson_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sales_roleplay_attempts": {
+      "name": "sales_roleplay_attempts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "scenario_id": {
+          "name": "scenario_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "audio_storage_key": {
+          "name": "audio_storage_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "duration_ms": {
+          "name": "duration_ms",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "transcript_excerpt": {
+          "name": "transcript_excerpt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "llm_score_json": {
+          "name": "llm_score_json",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "overall_score": {
+          "name": "overall_score",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "passed": {
+          "name": "passed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "llm_feedback": {
+          "name": "llm_feedback",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attempt_number": {
+          "name": "attempt_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sales_roleplay_attempts_scenario_id_sales_roleplay_scenarios_id_fk": {
+          "name": "sales_roleplay_attempts_scenario_id_sales_roleplay_scenarios_id_fk",
+          "tableFrom": "sales_roleplay_attempts",
+          "tableTo": "sales_roleplay_scenarios",
+          "columnsFrom": [
+            "scenario_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "sales_roleplay_attempts_user_id_users_id_fk": {
+          "name": "sales_roleplay_attempts_user_id_users_id_fk",
+          "tableFrom": "sales_roleplay_attempts",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sales_roleplay_scenarios": {
+      "name": "sales_roleplay_scenarios",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "lesson_id": {
+          "name": "lesson_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "persona_name": {
+          "name": "persona_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "persona_role": {
+          "name": "persona_role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "situation": {
+          "name": "situation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "objective": {
+          "name": "objective",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prospect_context_json": {
+          "name": "prospect_context_json",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        },
+        "rubric_id": {
+          "name": "rubric_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sales_roleplay_scenarios_lesson_id_sales_lessons_id_fk": {
+          "name": "sales_roleplay_scenarios_lesson_id_sales_lessons_id_fk",
+          "tableFrom": "sales_roleplay_scenarios",
+          "tableTo": "sales_lessons",
+          "columnsFrom": [
+            "lesson_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "sales_roleplay_scenarios_rubric_id_sales_rubrics_id_fk": {
+          "name": "sales_roleplay_scenarios_rubric_id_sales_rubrics_id_fk",
+          "tableFrom": "sales_roleplay_scenarios",
+          "tableTo": "sales_rubrics",
+          "columnsFrom": [
+            "rubric_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sales_rubrics": {
+      "name": "sales_rubrics",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criteria_json": {
+          "name": "criteria_json",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "review_status": {
+          "name": "review_status",
+          "type": "sales_review_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -7819,7 +8632,9 @@
         "STUDENT",
         "TEACHER",
         "ADMIN",
-        "SYSTEM"
+        "SYSTEM",
+        "SALES_REP",
+        "SALES_ADMIN"
       ]
     },
     "public.codecamp_review_status": {
@@ -7850,59 +8665,92 @@
         "completed"
       ]
     },
-    "campaign_type": {
-      "name": "campaign_type",
-      "values": {
-        "video": "video",
-        "infocard": "infocard"
-      }
-    },
-    "campaign_status": {
-      "name": "campaign_status",
-      "values": {
-        "draft": "draft",
-        "in-progress": "in-progress",
-        "complete": "complete",
-        "archived": "archived"
-      }
-    },
-    "app": {
+    "public.app": {
       "name": "app",
-      "values": {
-        "reading-advantage": "reading-advantage",
-        "primary-advantage": "primary-advantage",
-        "storytime": "storytime",
-        "math-advantage": "math-advantage",
-        "science-advantage": "science-advantage",
-        "stem-advantage": "stem-advantage",
-        "zhongwen-advantage": "zhongwen-advantage",
-        "tutor-advantage": "tutor-advantage"
-      }
+      "schema": "public",
+      "values": [
+        "reading-advantage",
+        "primary-advantage",
+        "storytime",
+        "math-advantage",
+        "science-advantage",
+        "stem-advantage",
+        "zhongwen-advantage",
+        "tutor-advantage"
+      ]
     },
-    "asset_type": {
-      "name": "asset_type",
-      "values": {
-        "image": "image",
-        "voiceover": "voiceover",
-        "clip": "clip"
-      }
-    },
-    "asset_status": {
+    "public.asset_status": {
       "name": "asset_status",
-      "values": {
-        "pending": "pending",
-        "generated": "generated",
-        "approved": "approved",
-        "rejected": "rejected"
-      }
+      "schema": "public",
+      "values": [
+        "pending",
+        "generated",
+        "approved",
+        "rejected"
+      ]
     },
-    "video_project_status": {
+    "public.asset_type": {
+      "name": "asset_type",
+      "schema": "public",
+      "values": [
+        "image",
+        "voiceover",
+        "clip"
+      ]
+    },
+    "public.campaign_status": {
+      "name": "campaign_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "in-progress",
+        "complete",
+        "archived"
+      ]
+    },
+    "public.campaign_type": {
+      "name": "campaign_type",
+      "schema": "public",
+      "values": [
+        "video",
+        "infocard"
+      ]
+    },
+    "public.video_project_status": {
       "name": "video_project_status",
-      "values": {
-        "draft": "draft",
-        "in-progress": "in-progress",
-        "complete": "complete"
-      }
+      "schema": "public",
+      "values": [
+        "draft",
+        "in-progress",
+        "complete"
+      ]
+    },
+    "public.sales_lesson_type": {
+      "name": "sales_lesson_type",
+      "schema": "public",
+      "values": [
+        "theory",
+        "roleplay",
+        "quiz"
+      ]
+    },
+    "public.sales_progress_status": {
+      "name": "sales_progress_status",
+      "schema": "public",
+      "values": [
+        "not_started",
+        "in_progress",
+        "completed"
+      ]
+    },
+    "public.sales_review_status": {
+      "name": "sales_review_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "reviewed",
+        "approved"
+      ]
     }
   },
   "schemas": {},

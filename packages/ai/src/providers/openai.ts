@@ -6,12 +6,15 @@ import { streamText as aiStreamText } from "ai";
 import type {
   AIClient,
   GenerateImageInput,
+  GenerateObjectFromMediaInput,
   GenerateObjectInput,
   GenerateTextInput,
   StreamTextInput,
   StreamTextResult,
+  TranscribeAudioInput,
+  TranscribeAudioResult,
 } from "../types.js";
-import { AIClientError } from "../errors.js";
+import { AIClientError, UnsupportedError } from "../errors.js";
 
 /**
  * Configuration for the OpenAI provider.
@@ -93,6 +96,22 @@ export class OpenAIProvider implements AIClient {
         error
       );
     }
+  }
+
+  async generateObjectFromMedia<T>(
+    _input: GenerateObjectFromMediaInput<T>
+  ): Promise<T> {
+    throw new UnsupportedError(
+      "generateObjectFromMedia requires the openrouter or google provider — set AI_PROVIDER=openrouter or AI_PROVIDER=google"
+    );
+  }
+
+  async transcribeAudio(
+    _input: TranscribeAudioInput
+  ): Promise<TranscribeAudioResult> {
+    throw new UnsupportedError(
+      "transcribeAudio requires the openrouter or google provider — set AI_PROVIDER=openrouter or AI_PROVIDER=google"
+    );
   }
 
   async generateText(input: GenerateTextInput): Promise<string> {

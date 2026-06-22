@@ -4,7 +4,7 @@ export interface AuthUser {
   id: string;
   username: string;
   name: string | null;
-  role: "INTERN" | "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM";
+  role: "INTERN" | "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM" | "SALES_REP" | "SALES_ADMIN";
   schoolId: string | null;
   xp: number;
   level: number;

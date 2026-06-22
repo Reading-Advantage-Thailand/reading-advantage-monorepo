@@ -232,6 +232,13 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
+### sales-advantage (new app — planned 2026-06-22)
+
+- [~] **Track: sales-advantage MVP** *Link: [./tracks/sales_advantage_mvp_20260622/](./tracks/sales_advantage_mvp_20260622/)*
+  Internal sales-coaching app for the Reading Advantage sales team + distributor reps. Mirrors codecamp-advantage's learn → practice → LLM-evaluates loop, replacing the git commit + GitHub webhook with **audio roleplay** + a direct upload route. Learner records themselves in a sales scenario (cold call, discovery, demo, objection, close); an **OpenRouter-hosted multimodal model** evaluates the audio directly (single-pass, no separate transcription step) against a rubric grounded in `advantage-pr/09-sales-enablement/` (battle cards, demo scripts, objection guide, ROI calculator, distributor rep onboarding). Primary model `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` (free, audio→text reasoning); fallback `google/gemini-2.5-flash-lite` (both via OpenRouter, single `OPENROUTER_API_KEY`). Linear curriculum (no Mastery Advantage KST/SRS engine in v1 — deferred to a follow-up track gated on the shared-package governance question). LLM-generated then human-reviewed curriculum. New `SALES_REP` + `SALES_ADMIN` roles. Single-tenant/global (EXEMPT in tenant-registry, like codecamp). Phase 0 extends `AIClient` with `generateObjectFromMedia` (OpenRouterProvider primary + GoogleProvider + MockProvider; OpenAIProvider throws). 9 phases (0–8). Depends on nothing in flight; the storage hardening track is independent.
+
+---
+
 - [x] **Track: Import www-reading-advantage Content & Video Pipeline** *[ARCHIVED]*
   *Link: [./archive/www_content_video_import_20260514/](./archive/www_content_video_import_20260514/)*
   Import blog posts (13 EN + 13 TH), cover images, Thai TikTok videos, and extract the video generation pipeline into a new `@reading-advantage/video-pipeline` monorepo package. Framework code (next-intl, React 19, Tailwind v4) preserved; only content/assets/scripts ported. *Superseded by tracks based on actual app implementation.*

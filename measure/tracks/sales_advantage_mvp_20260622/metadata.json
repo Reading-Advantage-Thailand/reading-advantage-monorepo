@@ -1,0 +1,11 @@
+{
+  "track_id": "sales_advantage_mvp_20260622",
+  "type": "feature",
+  "status": "in-progress",
+  "created_at": "2026-06-22T13:00:00Z",
+  "updated_at": "2026-06-22T14:00:00Z",
+  "description": "sales-advantage: internal sales-coaching app for the Reading Advantage sales team and distributor reps. Audio roleplay practice — learner records themselves in a sales scenario (cold call, discovery, demo, objection, close), an OpenRouter-hosted multimodal model evaluates the audio directly (single-pass, no separate transcription) against a rubric grounded in advantage-pr/09-sales-enablement. Primary model nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free (free, audio→text reasoning), fallback google/gemini-2.5-flash-lite, both via OpenRouter. Linear curriculum (no Mastery Advantage KST/SRS engine in v1), LLM-generated then human-reviewed, sourced from the existing battle cards, demo scripts, objection guide, ROI calculator, and distributor rep onboarding pack.",
+  "estimated_tasks": 60,
+  "actual_tasks": 0,
+  "deviation_notes": ""
+}

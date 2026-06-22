@@ -1,10 +1,14 @@
 export type {
   AIClient,
   GenerateObjectInput,
+  GenerateObjectFromMediaInput,
+  MediaInput,
   GenerateImageInput,
   GenerateTextInput,
   StreamTextInput,
   StreamTextResult,
+  TranscribeAudioInput,
+  TranscribeAudioResult,
   AIConfig,
 } from "./types.js";
 
@@ -23,6 +27,7 @@ export {
   AIClientError,
   ProviderNotConfiguredError,
   SchemaValidationError,
+  UnsupportedError,
 } from "./errors.js";
 
 export { createAIClient, getAIClient, resetAIClient } from "./client.js";

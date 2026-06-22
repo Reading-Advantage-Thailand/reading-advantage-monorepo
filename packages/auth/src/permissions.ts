@@ -91,6 +91,17 @@ export const PERMISSIONS = {
   "codecamp:submit": [ROLES.INTERN, ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "codecamp:chat": [ROLES.INTERN, ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
 
+  // Sales-advantage
+  "sales:read": [ROLES.SALES_REP, ROLES.SALES_ADMIN],
+  "sales:attempt:create": [ROLES.SALES_REP, ROLES.SALES_ADMIN],
+  "sales:progress:read": [ROLES.SALES_REP, ROLES.SALES_ADMIN],
+  "sales:chat": [ROLES.SALES_REP, ROLES.SALES_ADMIN],
+  "sales:quiz:submit": [ROLES.SALES_REP, ROLES.SALES_ADMIN],
+  "sales:admin:cohort": [ROLES.SALES_ADMIN],
+  "sales:admin:create-rep": [ROLES.SALES_ADMIN],
+  "sales:admin:reps": [ROLES.SALES_ADMIN],
+  "sales:curriculum:approve": [ROLES.SALES_ADMIN],
+
   // Licenses
   "license:create": [ROLES.ADMIN, ROLES.SYSTEM],
   "license:manage": [ROLES.ADMIN, ROLES.SYSTEM],

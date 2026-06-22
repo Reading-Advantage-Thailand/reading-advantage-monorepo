@@ -96,6 +96,7 @@ export function createMockDb(overrides: {
           // Support queries without .where() (e.g. .from(t).limit(n).offset(n))
           limit: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
           offset: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
+          orderBy: vi.fn().mockReturnValue(createQueryBuilder(resolvedValue)),
           then(
             onFulfilled?: (value: unknown) => unknown,
             onRejected?: (reason: unknown) => unknown

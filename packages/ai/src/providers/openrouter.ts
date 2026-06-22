@@ -5,15 +5,28 @@ import { streamText as aiStreamText } from "ai";
 import type {
   AIClient,
   GenerateImageInput,
+  GenerateObjectFromMediaInput,
   GenerateObjectInput,
   GenerateTextInput,
   StreamTextInput,
   StreamTextResult,
+  TranscribeAudioInput,
+  TranscribeAudioResult,
 } from "../types.js";
 import { AIClientError } from "../errors.js";
 
 const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 const OPENROUTER_PREFIX = "openrouter/";
+
+/**
+ * Default multimodal model used by `generateObjectFromMedia` when no model is
+ * supplied per-call. NVIDIA Nemotron 3 Nano Omni is a free, open multimodal
+ * model on OpenRouter that accepts audio input and reasons over it.
+ */
+const DEFAULT_MEDIA_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
+
+/** Default ASR model for transcribeAudio (OpenRouter, $0.0015/min). */
+const DEFAULT_ASR_MODEL = "nvidia/parakeet-tdt-0.6b-v3";
 
 /**
  * Configuration for the OpenRouter provider.
@@ -90,6 +103,42 @@ export class OpenRouterProvider implements AIClient {
     );
   }
 
+  async generateObjectFromMedia<T>(
+    input: GenerateObjectFromMediaInput<T>
+  ): Promise<T> {
+    try {
+      const modelId = input.model ?? DEFAULT_MEDIA_MODEL;
+      const { object } = await aiGenerateObject({
+        model: this.client(stripOpenRouterPrefix(modelId)),
+        schema: input.schema,
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "file",
+                data: input.media.buffer.toString("base64"),
+                mediaType: input.media.mimeType,
+              },
+              { type: "text", text: input.prompt },
+            ],
+          },
+        ],
+        ...(input.temperature !== undefined
+          ? { temperature: input.temperature }
+          : {}),
+        maxRetries: 1,
+      });
+      return object;
+    } catch (error) {
+      throw new AIClientError(
+        `OpenRouter generateObjectFromMedia failed: ${error instanceof Error ? error.message : "unknown"}`,
+        "PROVIDER_ERROR",
+        error
+      );
+    }
+  }
+
   async generateText(input: GenerateTextInput): Promise<string> {
     try {
       const { text } = await aiGenerateText({
@@ -137,6 +186,43 @@ export class OpenRouterProvider implements AIClient {
     } catch (error) {
       throw new AIClientError(
         `OpenRouter streamText failed: ${error instanceof Error ? error.message : "unknown"}`,
+        "PROVIDER_ERROR",
+        error
+      );
+    }
+  }
+
+  async transcribeAudio(
+    input: TranscribeAudioInput
+  ): Promise<TranscribeAudioResult> {
+    try {
+      const modelId = input.model ?? DEFAULT_ASR_MODEL;
+      const { text } = await aiGenerateText({
+        model: this.client(stripOpenRouterPrefix(modelId)),
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "file",
+                data: input.media.buffer.toString("base64"),
+                mediaType: input.media.mimeType,
+              },
+              {
+                type: "text",
+                text: input.language
+                  ? `Transcribe this audio to text. Language: ${input.language}`
+                  : "Transcribe this audio to text.",
+              },
+            ],
+          },
+        ],
+        maxRetries: 1,
+      });
+      return { text };
+    } catch (error) {
+      throw new AIClientError(
+        `OpenRouter transcribeAudio failed: ${error instanceof Error ? error.message : "unknown"}`,
         "PROVIDER_ERROR",
         error
       );

@@ -225,7 +225,7 @@ export const sessionResponseSchema = z.object({
     id: z.string(),
     username: z.string(),
     name: z.string().nullable(),
-    role: z.enum(["INTERN", "STUDENT", "USER", "TEACHER", "ADMIN", "SYSTEM"]),
+    role: z.enum(["INTERN", "STUDENT", "USER", "TEACHER", "ADMIN", "SYSTEM", "SALES_REP", "SALES_ADMIN"]),
     schoolId: z.string().nullable(),
   }),
   tenant: z.object({

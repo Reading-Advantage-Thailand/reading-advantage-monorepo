@@ -43,3 +43,15 @@ export class SchemaValidationError extends AIClientError {
     this.name = "SchemaValidationError";
   }
 }
+
+/**
+ * Thrown when a method is not supported by the configured provider
+ * (e.g. `generateObjectFromMedia` on a text-only provider). Callers can
+ * branch on the `UNSUPPORTED` code to surface a configuration hint.
+ */
+export class UnsupportedError extends AIClientError {
+  constructor(message: string) {
+    super(message, "UNSUPPORTED");
+    this.name = "UnsupportedError";
+  }
+}
