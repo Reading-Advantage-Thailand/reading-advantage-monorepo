@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "track_id": "codecamp_asset_render_blocking_20260608",
+  "closeout_date": "2026-06-23T05:35:00Z",
+  "baseline_sha": "bf7fced001bb4ed363a21689a47ab73ae65c81a1",
+  "status": "done",
+  "tasks_total": 9,
+  "tasks_completed": 9,
+  "tasks_deferred": 0,
+  "acceptance_criteria": {
+    "ac1_zero_render_blocking_en": {
+      "status": "passed",
+      "evidence": "Live prod probe on /en/: blockingCount=0 (curl, 2026-06-23)"
+    },
+    "ac2_zero_render_blocking_th": {
+      "status": "passed",
+      "evidence": "Live prod probe on /th/: blockingCount=0 (curl, 2026-06-23)"
+    },
+    "ac3_phase6_probes_pass": {
+      "status": "passed",
+      "evidence": "Orchestrator confirmed live prod probe earlier today: 0 render-blocking external scripts in <head>"
+    },
+    "ac4_no_regression": {
+      "status": "passed",
+      "evidence": "GET /en/ and /th/ return 200; page functionality preserved"
+    }
+  },
+  "commits": [
+    "4bf93811",
+    "fd1e1c3a",
+    "917440db",
+    "e3542911",
+    "7f5e93df",
+    "fe4a1be1",
+    "04c1a065",
+    "7b7f8152",
+    "172337e4"
+  ],
+  "gate_results": {
+    "lint": "passed (0 errors, 5 pre-existing warnings)",
+    "check_types": "passed (2 pre-existing module-resolution errors for @reading-advantage/ai, unrelated to this track)",
+    "test_strip_nomodule_polyfill": "passed (2/2)",
+    "test_countRenderBlockingScripts_harness": "passed (5/5)",
+    "live_prod_probe_en": "blockingCount=0",
+    "live_prod_probe_th": "blockingCount=0"
+  },
+  "artifacts_created": [
+    "apps/codecamp-advantage/scripts/strip-nomodule-polyfill.mjs",
+    "apps/codecamp-advantage/.browserslistrc",
+    "apps/codecamp-advantage/lib/__tests__/strip-nomodule-polyfill.test.ts"
+  ],
+  "artifacts_modified": [
+    "apps/codecamp-advantage/package.json (postbuild script)",
+    "apps/codecamp-advantage/eslint.config.mjs (Node-globals block)"
+  ],
+  "notes": "Fix: post-build manifest patch strips Next.js 16's unconditional nomodule polyfill from build-manifest.json. .browserslistrc kept as defensive future-proofing. Track archived."
+}

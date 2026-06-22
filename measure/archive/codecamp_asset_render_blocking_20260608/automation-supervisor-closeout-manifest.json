@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "track_id": "codecamp_asset_render_blocking_20260608",
+  "closeout_date": "2026-06-23T05:35:00Z",
+  "archived_path": "measure/archive/codecamp_asset_render_blocking_20260608",
+  "baseline_sha": "bf7fced001bb4ed363a21689a47ab73ae65c81a1",
+  "closeout_sha": "bf7fced001bb4ed363a21689a47ab73ae65c81a1",
+  "status": "done",
+  "audit_summary": {
+    "tasks_total": 9,
+    "tasks_completed": 9,
+    "tasks_deferred": 0,
+    "acceptance_criteria": {
+      "ac1": "passed — /en/ blockingCount=0 (live prod probe)",
+      "ac2": "passed — /th/ blockingCount=0 (live prod probe)",
+      "ac3": "passed — Phase 6 render-blocking probes pass on prod",
+      "ac4": "passed — page functionality preserved (200 status)"
+    }
+  },
+  "gate_commands_executed": [
+    {
+      "command": "eslint . (apps/codecamp-advantage)",
+      "result": "0 errors, 5 pre-existing warnings"
+    },
+    {
+      "command": "tsc --noEmit (apps/codecamp-advantage)",
+      "result": "2 pre-existing module-resolution errors for @reading-advantage/ai (unrelated)"
+    },
+    {
+      "command": "vitest run strip-nomodule-polyfill.test.ts",
+      "result": "2/2 passed"
+    },
+    {
+      "command": "vitest run -t countRenderBlockingScripts",
+      "result": "5/5 passed"
+    },
+    {
+      "command": "curl live prod probe /en/",
+      "result": "blockingCount=0"
+    },
+    {
+      "command": "curl live prod probe /th/",
+      "result": "blockingCount=0"
+    }
+  ],
+  "commits": [
+    "4bf93811",
+    "fd1e1c3a",
+    "917440db",
+    "e3542911",
+    "7f5e93df",
+    "fe4a1be1",
+    "04c1a065",
+    "7b7f8152",
+    "172337e4"
+  ],
+  "retained_evidence": [
+    "measure/archive/codecamp_asset_render_blocking_20260608/closeout-result.json",
+    "measure/archive/codecamp_asset_render_blocking_20260608/metadata.json",
+    "measure/archive/codecamp_asset_render_blocking_20260608/plan.md",
+    "measure/archive/codecamp_asset_render_blocking_20260608/spec.md",
+    "measure/archive/codecamp_asset_render_blocking_20260608/test-strategy.md"
+  ],
+  "artifact_cleanup": {
+    "generated_run_logs": "Not explicitly cleaned — orchestrator did not identify specific bulky artifacts to delete. measure/runs/20260608T* directories are ephemeral automation session logs."
+  },
+  "lessons_learned_updates": false,
+  "tech_debt_updates": false
+}

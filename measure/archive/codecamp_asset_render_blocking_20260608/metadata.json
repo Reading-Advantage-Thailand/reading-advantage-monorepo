@@ -1,0 +1,13 @@
+{
+  "track_id": "codecamp_asset_render_blocking_20260608",
+  "type": "feature",
+  "status": "done",
+  "created_at": "2026-06-08T00:00:00Z",
+  "updated_at": "2026-06-23T05:35:00Z",
+  "completed_at": "2026-06-23T05:35:00Z",
+  "description": "Remove the 1 render-blocking <script> tag found in <head> by the Phase 6 asset-loading probes. A synchronous external script in <head> blocks the critical rendering path and delays first contentful paint.",
+  "estimated_tasks": 9,
+  "deviation_notes": "9 tasks completed (plan.md records 18 [x] lines across all phases). Fix required a post-build manifest patch (strip-nomodule-polyfill.mjs) because Next.js 16 unconditionally emits the nomodule polyfill regardless of browserslist.",
+  "depends_on": ["codecamp_qa_prod_20260517"],
+  "notes": "Follow-up from codecamp_qa_prod_20260517 Phase 6 (P1 asset finding). Filed per plan.md Phase 8.5 Task 3. Closed 2026-06-23: live prod probe confirms 0 render-blocking scripts on /en/ and /th/."
+}
