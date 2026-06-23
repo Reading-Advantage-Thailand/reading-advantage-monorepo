@@ -4,7 +4,7 @@ import { currentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import React from "react";
 import { getTranslations } from "next-intl/server";
-import { db } from '@reading-advantage/db';
+import { db, assignments, eq } from "@reading-advantage/db";
 
 export async function generateMetadata({
   params,
@@ -46,11 +46,14 @@ export default async function LessonPage({
     );
   }
 
-  // Otherwise, check if it's an assignment
-  const assignment = await db.assignment.findUnique({
-    where: { id },
-    select: { id: true },
-  });
+  // Otherwise, check if it's an assignment.
+  // Drizzle equivalent of the legacy Prisma
+  // `db.assignment.findUnique({ where: { id }, select: { id: true } })` call.
+  const [assignment] = await db
+    .select({ id: assignments.id })
+    .from(assignments)
+    .where(eq(assignments.id, id))
+    .limit(1);
 
   // If it's an assignment, use the assignment-based lesson
   if (assignment) {

@@ -6,7 +6,13 @@ import path from "path";
 import fs from "fs";
 import { ArticleBaseCefrLevel, ArticleType } from "@/types/enum";
 import { evaluateRating } from "./evaluate-rating-generator";
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  articles,
+  longAnswerQuestions,
+  shortAnswerQuestions,
+  multipleChoiceQuestions,
+} from "@reading-advantage/db";
 import { convertCefrLevel } from "@/lib/utils";
 import { generateImage } from "./image-generator";
 import { generateAudio } from "./audio-generator";
@@ -85,9 +91,13 @@ export const generateArticleNew = async (
         });
 
         if (rating >= 2) {
-          db.$transaction(async (tx) => {
-            const createdArticle = await tx.article.create({
-              data: {
+          // Drizzle equivalent of the legacy Prisma `db.$transaction(async (tx) => {...})` block.
+          // Each `tx.<model>.create/createMany(...)` call is replaced with
+          // `tx.insert(<table>).values(...).returning()` / `tx.insert(<table>).values([...])`.
+          db.transaction(async (tx) => {
+            const [createdArticle] = await tx
+              .insert(articles)
+              .values({
                 title: article.title,
                 passage: article.passage,
                 summary: article.summary,
@@ -101,32 +111,42 @@ export const generateArticleNew = async (
                 brainstorming: article.brainstorming,
                 planning: article.planning,
                 topic: data.description,
-              },
-            });
+                // `content` is NOT NULL in the Drizzle schema; mirror the
+                // passage into it for parity with the legacy Prisma row shape.
+                content: article.passage,
+              })
+              .returning({ id: articles.id });
 
-            await tx.longAnswerQuestion.createMany({
-              data: article.longAnswerQuestions.map((question) => ({
+            await tx.insert(longAnswerQuestions).values(
+              article.longAnswerQuestions.map((question) => ({
                 question: question.question,
                 articleId: createdArticle.id,
               })),
-            });
+            );
 
-            await tx.shortAnswerQuestion.createMany({
-              data: article.shortAnswerQuestions.map((question) => ({
+            await tx.insert(shortAnswerQuestions).values(
+              article.shortAnswerQuestions.map((question) => ({
                 question: question.question,
                 answer: question.answer,
                 articleId: createdArticle.id,
               })),
-            });
+            );
 
-            await tx.multipleChoiceQuestion.createMany({
-              data: article.multipleChoiceQuestions.map((question) => ({
+            await tx.insert(multipleChoiceQuestions).values(
+              article.multipleChoiceQuestions.map((question) => ({
                 question: question.question,
                 options: question.options,
                 answer: question.answer,
                 articleId: createdArticle.id,
+                // `correctAnswer` is NOT NULL in the Drizzle schema; derive
+                // it from the answer's index when possible, otherwise 0.
+                correctAnswer:
+                  Array.isArray(question.options) &&
+                  question.options.indexOf(question.answer) >= 0
+                    ? question.options.indexOf(question.answer)
+                    : 0,
               })),
-            });
+            );
 
             Promise.all([
               generateImage({
