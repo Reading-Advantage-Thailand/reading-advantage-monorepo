@@ -148,6 +148,19 @@
 - [~] Task: Update `types/index.d.ts` to remove Prisma type references.
 - [~] Task: Migrate `prisma/seed.ts` to Drizzle seed script.
 
+> **Phase 7 Red evidence** (commit `44ae15dc`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase7-utils.test.mjs`
+> Result: 1/9 passed, 8/9 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 7 heading;
+> missing `audit/phase7-utils-report.md` and required sections (Summary, grouped-by-subdirectory,
+> Drizzle API Patterns Used, Deferred Items); Prisma-shaped `db.<table>.<method>` calls remain in 6 target
+> files (`server/utils/auth.ts`, `server/utils/assistant.ts`, `server/utils/genaretors/audio-flashcard-generator.ts`,
+> `server/utils/genaretors/audio-generator.ts`, `server/utils/genaretors/audio-word-generator.ts`,
+> `server/utils/genaretors/sentence-translator.ts`); `@prisma/client` imports remain in 4 target files
+> (`lib/fsrs-service.ts`, `prisma/seed.ts`, `server/utils/genaretors/audio-generator.ts`, `types/index.d.ts`);
+> 3 target files lack Drizzle patterns or pure-types status; Phase 7 tasks still `[~]` without SHA evidence;
+> live proof confirms 19 Prisma-shaped calls and 5 `@prisma/client` imports remain across Phase 7 directories.
+> Passing assertion: all 9 dynamic target files exist and are non-empty.
+
 ## Phase 8: Cleanup & Dependency Removal (FR-4)
 
 - [ ] Task: Delete `apps/primary-advantage/prisma/` directory.
