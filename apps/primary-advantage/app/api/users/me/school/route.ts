@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { z } from "zod";
 
 const schoolSchema = z.object({
@@ -18,7 +18,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: { id: currentUser.id },
       include: {
         School: {
@@ -66,7 +66,7 @@ export async function GET() {
       ? {
           ...user.School,
           owner: user.School.ownerId
-            ? await prisma.user.findUnique({
+            ? await db.user.findUnique({
                 where: { id: user.School.ownerId },
                 select: { id: true, name: true, email: true },
               })
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     const validatedData = schoolSchema.parse(body);
 
     // Check if user already has a school
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await db.user.findUnique({
       where: { id: authUser.id },
       include: { School: true },
     });
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if school with same name already exists
-    const existingSchool = await prisma.school.findFirst({
+    const existingSchool = await db.school.findFirst({
       where: {
         name: validatedData.name,
       },
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check current user's roles to see if they need to be upgraded to Admin
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await db.user.findUnique({
       where: { id: authUser.id },
       include: {
         roles: {
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Check what roles exist in the database
-    const allRoles = await prisma.role.findMany();
+    const allRoles = await db.role.findMany();
 
     // If user doesn't have Admin role and is currently User or Teacher, upgrade them
     if (!hasAdminRole) {
@@ -161,23 +161,23 @@ export async function POST(request: NextRequest) {
 
       if (currentRoles.includes("user") || currentRoles.includes("teacher")) {
         // Find or create Admin role
-        let adminRole = await prisma.role.findFirst({
+        let adminRole = await db.role.findFirst({
           where: { name: "admin" },
         });
 
         if (!adminRole) {
-          adminRole = await prisma.role.create({
+          adminRole = await db.role.create({
             data: { name: "admin" },
           });
         }
 
         // Remove all existing roles and set Admin role only
-        await prisma.userRole.deleteMany({
+        await db.userRole.deleteMany({
           where: { userId: currentUser.id },
         });
 
         // Create new Admin role for user
-        await prisma.userRole.create({
+        await db.userRole.create({
           data: {
             userId: currentUser.id,
             roleId: adminRole.id,
@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create school and associate with user as owner, member, and admin
-    const school = await prisma.school.create({
+    const school = await db.school.create({
       data: {
         name: validatedData.name,
         contactName: validatedData.contactName,
@@ -238,7 +238,7 @@ export async function POST(request: NextRequest) {
     // Add owner information manually
     const schoolWithOwner = {
       ...school,
-      owner: await prisma.user.findUnique({
+      owner: await db.user.findUnique({
         where: { id: currentUser.id },
         select: { id: true, name: true, email: true },
       }),
@@ -291,7 +291,7 @@ export async function PATCH(request: NextRequest) {
     const validatedData = schoolSchema.parse(body);
 
     // Get user's school
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: { id: currentUser.id },
       include: { School: true },
     });
@@ -308,7 +308,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Check if another school with the same name exists (excluding current school)
-    const existingSchool = await prisma.school.findFirst({
+    const existingSchool = await db.school.findFirst({
       where: {
         name: validatedData.name,
         id: { not: user.School.id },
@@ -323,7 +323,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Update school
-    const updatedSchool = await prisma.school.update({
+    const updatedSchool = await db.school.update({
       where: { id: user.School.id },
       data: {
         name: validatedData.name,
@@ -367,7 +367,7 @@ export async function PATCH(request: NextRequest) {
     const schoolWithOwner = {
       ...updatedSchool,
       owner: updatedSchool.ownerId
-        ? await prisma.user.findUnique({
+        ? await db.user.findUnique({
             where: { id: updatedSchool.ownerId },
             select: { id: true, name: true, email: true },
           })
@@ -406,7 +406,7 @@ export async function DELETE() {
     }
 
     // Get user's school
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: { id: currentUser.id },
       include: { School: true },
     });
@@ -431,7 +431,7 @@ export async function DELETE() {
     }
 
     // Get owner's current roles before deleting school
-    const ownerWithRoles = await prisma.user.findUnique({
+    const ownerWithRoles = await db.user.findUnique({
       where: { id: currentUser.id },
       include: {
         roles: {
@@ -443,7 +443,7 @@ export async function DELETE() {
     });
 
     // Delete the school (this will cascade delete related records)
-    await prisma.school.delete({
+    await db.school.delete({
       where: { id: user.School.id },
     });
 
@@ -455,22 +455,22 @@ export async function DELETE() {
 
       if (hasAdminRole) {
         // Find or create User role
-        let userRole = await prisma.role.findFirst({
+        let userRole = await db.role.findFirst({
           where: { name: "user" },
         });
 
         if (!userRole) {
-          userRole = await prisma.role.create({
+          userRole = await db.role.create({
             data: { name: "user" },
           });
         }
 
         // Remove all existing roles and set User role
-        await prisma.userRole.deleteMany({
+        await db.userRole.deleteMany({
           where: { userId: currentUser.id },
         });
 
-        await prisma.userRole.create({
+        await db.userRole.create({
           data: {
             userId: currentUser.id,
             roleId: userRole.id,
@@ -478,7 +478,7 @@ export async function DELETE() {
         });
 
         // Remove school association
-        await prisma.user.update({
+        await db.user.update({
           where: { id: currentUser.id },
           data: { schoolId: null },
         });

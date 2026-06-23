@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { z } from "zod";
 
 const createSchoolSchema = z.object({
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     const validatedData = createSchoolSchema.parse(body);
 
     // Check if school with same name already exists
-    const existingSchool = await prisma.school.findFirst({
+    const existingSchool = await db.school.findFirst({
       where: {
         name: validatedData.name,
       },
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the school
-    const school = await prisma.school.create({
+    const school = await db.school.create({
       data: {
         name: validatedData.name,
         contactName: validatedData.contactName,
@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const schools = await prisma.school.findMany({
+    const schools = await db.school.findMany({
       include: {
         _count: {
           select: {

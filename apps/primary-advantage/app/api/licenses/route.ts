@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { z } from "zod";
 import { randomBytes } from "crypto";
 import { currentUser } from "@/lib/session";
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create license in database
-    const license = await prisma.license.create({
+    const license = await db.license.create({
       data: {
         key: licenseKey,
         name: validatedData.name,
@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
 
     // Get licenses with pagination
     const [licenses, total] = await Promise.all([
-      prisma.license.findMany({
+      db.license.findMany({
         where,
         skip,
         take: limit,
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
           },
         },
       }),
-      prisma.license.count({ where }),
+      db.license.count({ where }),
     ]);
 
     return NextResponse.json(licenses);
@@ -180,7 +180,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const license = await prisma.license.delete({
+    const license = await db.license.delete({
       where: { id },
     });
 

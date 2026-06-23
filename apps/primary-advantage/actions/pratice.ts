@@ -1,7 +1,7 @@
 "use server";
 
 import { currentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 interface OrderSentenceGameData {
   id: string;
@@ -41,7 +41,7 @@ export async function getSentencesForOrderingGame(): Promise<{
     }
 
     // Find user's sentence flashcard deck
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         userId: user.id,
         type: "SENTENCE",
@@ -100,7 +100,7 @@ export async function getFlashcardDeckId(): Promise<{
     }
 
     // Find user's sentence flashcard deck
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         userId: user.id,
         type: "SENTENCE",

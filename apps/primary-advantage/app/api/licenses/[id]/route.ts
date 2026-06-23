@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { z } from "zod";
 import { SubscriptionType } from "@prisma/client";
 
@@ -33,7 +33,7 @@ export async function GET(
     const { id } = await params;
 
     // Get license by ID
-    const license = await prisma.license.findUnique({
+    const license = await db.license.findUnique({
       where: { id },
       include: {
         School: {
@@ -81,7 +81,7 @@ export async function PUT(
     const validatedData = UpdateLicenseSchema.parse(body);
 
     // Check if license exists
-    const existingLicense = await prisma.license.findUnique({
+    const existingLicense = await db.license.findUnique({
       where: { id },
     });
 
@@ -99,7 +99,7 @@ export async function PUT(
     }
 
     // Update license in database
-    const updatedLicense = await prisma.license.update({
+    const updatedLicense = await db.license.update({
       where: { id },
       data: {
         name: validatedData.name,
@@ -178,7 +178,7 @@ export async function DELETE(
     const { id } = await params;
 
     // Check if license exists
-    const existingLicense = await prisma.license.findUnique({
+    const existingLicense = await db.license.findUnique({
       where: { id },
     });
 
@@ -187,7 +187,7 @@ export async function DELETE(
     }
 
     // Delete license
-    await prisma.license.delete({
+    await db.license.delete({
       where: { id },
     });
 

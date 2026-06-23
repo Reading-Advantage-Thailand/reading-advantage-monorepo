@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 export async function POST(
   req: Request,
@@ -14,7 +14,7 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const article = await prisma.article.findUnique({
+  const article = await db.article.findUnique({
     where: { id },
   });
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { ActivityType, FlashcardType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
@@ -18,7 +18,7 @@ export async function GET(
     const { deckId } = await params;
 
     // Get sentence flashcards that are due
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         id: deckId,
         userId: user.id,
@@ -57,7 +57,7 @@ export async function GET(
 
     for (const flashcardCard of deck.cards) {
       // Get the full article with sentences
-      const article = await prisma.article.findUnique({
+      const article = await db.article.findUnique({
         where: { id: flashcardCard.articleId! },
         select: {
           id: true,
@@ -177,7 +177,7 @@ export async function POST(
 
   const xpEarned = Math.floor(score * 2);
 
-  const userActivity = await prisma.userActivity.create({
+  const userActivity = await db.userActivity.create({
     data: {
       userId: user.id as string,
       activityType: ActivityType.SENTENCE_ORDERING,
@@ -192,7 +192,7 @@ export async function POST(
     },
   });
 
-  await prisma.xPLogs.create({
+  await db.xPLogs.create({
     data: {
       userId: user.id as string,
       xpEarned: xpEarned,
@@ -201,7 +201,7 @@ export async function POST(
     },
   });
 
-  await prisma.user.update({
+  await db.user.update({
     where: { id: user.id as string },
     data: { xp: { increment: xpEarned } },
   });

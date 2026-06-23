@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { getArticleById } from "@/server/models/articleModel";
 import { generateAudio } from "@/server/utils/genaretors/audio-generator";
 import { generateWordLists } from "@/server/utils/genaretors/audio-word-generator";
@@ -51,7 +51,7 @@ export async function deleteArticleFile(articleId: string) {
 export async function deleteAllArticles() {
   try {
     // Get all article IDs first (we need them to delete associated files)
-    const articles = await prisma.article.findMany({
+    const articles = await db.article.findMany({
       select: { id: true },
     });
 
@@ -82,7 +82,7 @@ export async function deleteAllArticles() {
     );
 
     // Delete all article records in a single operation (much more efficient)
-    const deleteResult = await prisma.article.deleteMany({});
+    const deleteResult = await db.article.deleteMany({});
 
     console.log(`Successfully deleted ${deleteResult.count} article records`);
 
@@ -102,7 +102,7 @@ export async function deleteAllArticles() {
 
 export async function generateImages(articleId: string) {
   try {
-    const articles = await prisma.article.findUnique({
+    const articles = await db.article.findUnique({
       where: { id: articleId },
       select: { id: true, passage: true, imageDescription: true },
     });

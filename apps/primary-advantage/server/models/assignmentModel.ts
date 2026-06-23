@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { AssignmentStatus } from "@prisma/client";
 import { endOfDay } from "date-fns";
@@ -23,7 +23,7 @@ export async function createAssignment(data: createAssignmentData) {
     const { classroomId, articleId, students, name, description, dueDate } =
       data;
     // Check if classroom exists
-    const classroom = await prisma.classroom.findUnique({
+    const classroom = await db.classroom.findUnique({
       where: { id: classroomId },
     });
 
@@ -32,7 +32,7 @@ export async function createAssignment(data: createAssignmentData) {
     }
 
     // Check if article exists
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: { id: articleId },
     });
 
@@ -41,7 +41,7 @@ export async function createAssignment(data: createAssignmentData) {
     }
 
     // Check if assignment already exists for this classroom and article
-    const existingAssignment = await prisma.assignment.findFirst({
+    const existingAssignment = await db.assignment.findFirst({
       where: {
         classroomId,
         articleId,
@@ -55,7 +55,7 @@ export async function createAssignment(data: createAssignmentData) {
 
     // Create assignment if it doesn't exist
     if (!existingAssignment) {
-      await prisma.$transaction(async (tx) => {
+      await db.$transaction(async (tx) => {
         const assignment = await tx.assignment.create({
           data: {
             classroomId,
@@ -131,12 +131,12 @@ export async function getStudentAssignments(
     }
 
     // Get total count
-    const totalCount = await prisma.assignmentStudent.count({
+    const totalCount = await db.assignmentStudent.count({
       where: whereClause,
     });
 
     // Get paginated assignments
-    let assignments = await prisma.assignmentStudent.findMany({
+    let assignments = await db.assignmentStudent.findMany({
       where: whereClause,
       include: {
         assignment: true,
@@ -199,7 +199,7 @@ export default async function getAssignmentById(id: string) {
       throw new Error("User is not authenticated");
     }
 
-    const assignment = await prisma.assignment.findUnique({
+    const assignment = await db.assignment.findUnique({
       where: { id },
       include: {
         article: {
@@ -234,13 +234,13 @@ export async function updateUserLessonProgress(
 ) {
   try {
     const existingUserLessonProgress =
-      await prisma.userLessonProgress.findFirst({
+      await db.userLessonProgress.findFirst({
         where: { userId, articleId, assignmentId },
       });
 
     if (existingUserLessonProgress) {
       if (progress !== 100) {
-        await prisma.userLessonProgress.update({
+        await db.userLessonProgress.update({
           where: { id: existingUserLessonProgress.id },
           data: {
             progress,
@@ -248,7 +248,7 @@ export async function updateUserLessonProgress(
           },
         });
       } else {
-        await prisma.$transaction(async (tx) => {
+        await db.$transaction(async (tx) => {
           await tx.userLessonProgress.update({
             where: { id: existingUserLessonProgress.id },
             data: {
@@ -268,7 +268,7 @@ export async function updateUserLessonProgress(
         });
       }
     } else {
-      await prisma.$transaction(async (tx) => {
+      await db.$transaction(async (tx) => {
         await tx.userLessonProgress.create({
           data: {
             userId,
@@ -312,7 +312,7 @@ export async function getUserLessonProgress(
   assignmentId: string,
 ) {
   try {
-    const userLessonProgress = await prisma.userLessonProgress.findFirst({
+    const userLessonProgress = await db.userLessonProgress.findFirst({
       where: { userId, assignmentId },
     });
 
@@ -331,7 +331,7 @@ export async function getUserLessonProgress(
 
 export async function getAssignmentActivityById(id: string, userId: string) {
   try {
-    const assignmentActivity = await prisma.articleActivityLog.findFirst({
+    const assignmentActivity = await db.articleActivityLog.findFirst({
       where: { articleId: id, userId },
       select: {
         isSentenceMatchingCompleted: true,

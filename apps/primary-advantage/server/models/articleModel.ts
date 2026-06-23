@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { randomSelectGenre } from "../utils/genaretors/random-select-genre";
 import {
   ActivityType,
@@ -164,7 +164,7 @@ export async function saveArticleContent(
     ...articleData
   } = article;
 
-  const createdArticle = await prisma.article.create({
+  const createdArticle = await db.article.create({
     data: {
       ...articleData,
       imageDescription: imageDesc || "",
@@ -190,7 +190,7 @@ export async function saveArticleContent(
     }),
 
     // Save questions
-    prisma.longAnswerQuestion.create({
+    db.longAnswerQuestion.create({
       data: {
         question: laq.question,
         articleId,
@@ -199,7 +199,7 @@ export async function saveArticleContent(
 
     // Save short answer questions
     ...saq.questions.map((question) =>
-      prisma.shortAnswerQuestion.create({
+      db.shortAnswerQuestion.create({
         data: {
           question: question.question,
           answer: question.answer,
@@ -210,7 +210,7 @@ export async function saveArticleContent(
 
     // Save multiple choice questions
     ...mcq.questions.map((mcq) =>
-      prisma.multipleChoiceQuestion.create({
+      db.multipleChoiceQuestion.create({
         data: {
           question: mcq.question,
           options: mcq.options,
@@ -354,7 +354,7 @@ export const getArticlesWithParams = async (params: {
     ...{ isDraft: false },
   };
 
-  const articles = await prisma.article.findMany({
+  const articles = await db.article.findMany({
     where: whereClause,
     skip: offset,
     take: limit,
@@ -363,7 +363,7 @@ export const getArticlesWithParams = async (params: {
     },
   });
 
-  const totalArticles = await prisma.article.count({
+  const totalArticles = await db.article.count({
     where: whereClause,
   });
 
@@ -374,7 +374,7 @@ export const getArticlesWithParams = async (params: {
 };
 
 export const getArticleById = async (articleId: string) => {
-  const article = await prisma.article.findUnique({
+  const article = await db.article.findUnique({
     where: { id: articleId },
     include: {
       sentencsAndWordsForFlashcard: true,
@@ -418,7 +418,7 @@ export const getQuestionsByArticleId = async (
 
   try {
     // Check if questions are already completed
-    const activities = await prisma.userActivity.findMany({
+    const activities = await db.userActivity.findMany({
       where: {
         userId: userId.id,
         targetId: articleId,
@@ -445,7 +445,7 @@ export const getQuestionsByArticleId = async (
     // Get questions based on type
     switch (type) {
       case ActivityType.MC_QUESTION:
-        const mcQuestions = await prisma.multipleChoiceQuestion.findMany({
+        const mcQuestions = await db.multipleChoiceQuestion.findMany({
           where: { articleId },
         });
         questions = mcQuestions
@@ -458,7 +458,7 @@ export const getQuestionsByArticleId = async (
         break;
 
       case ActivityType.SA_QUESTION:
-        const saQuestions = await prisma.shortAnswerQuestion.findMany({
+        const saQuestions = await db.shortAnswerQuestion.findMany({
           where: { articleId },
         });
         if (saQuestions.length === 0) {
@@ -468,7 +468,7 @@ export const getQuestionsByArticleId = async (
         break;
 
       case ActivityType.LA_QUESTION:
-        const laQuestions = await prisma.longAnswerQuestion.findMany({
+        const laQuestions = await db.longAnswerQuestion.findMany({
           where: { articleId },
         });
         if (laQuestions.length === 0) {
@@ -497,7 +497,7 @@ export const getQuestionsByArticleId = async (
 
 export const deleteArticleByIdModel = async (articleId: string) => {
   try {
-    await prisma.$transaction(async (tx) => {
+    await db.$transaction(async (tx) => {
       await tx.article.delete({
         where: { id: articleId },
       });
@@ -517,7 +517,7 @@ export const deleteArticleByIdModel = async (articleId: string) => {
 };
 
 export const getAllFlashcards = async (userId: string) => {
-  return await prisma.flashcardDeck.findFirst({
+  return await db.flashcardDeck.findFirst({
     where: {
       userId: userId,
       type: FlashcardType.SENTENCE,
@@ -529,7 +529,7 @@ export const getAllFlashcards = async (userId: string) => {
 };
 
 export const deleteFlashcardById = async (flashcardId: string) => {
-  return await prisma.flashcardCard.delete({
+  return await db.flashcardCard.delete({
     where: {
       id: flashcardId,
     },
@@ -545,7 +545,7 @@ export const getArticleActivity = async (articleId: string) => {
     }
 
     // Check if already exists
-    const existingActivity = await prisma.userActivity.findFirst({
+    const existingActivity = await db.userActivity.findFirst({
       where: {
         userId: user.id as string,
         targetId: articleId,
@@ -553,7 +553,7 @@ export const getArticleActivity = async (articleId: string) => {
       },
     });
 
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: {
         id: articleId,
       },
@@ -566,7 +566,7 @@ export const getArticleActivity = async (articleId: string) => {
 
     if (!existingActivity) {
       // Create new article read activity
-      await prisma.userActivity.create({
+      await db.userActivity.create({
         data: {
           userId: user.id as string,
           activityType: ActivityType.ARTICLE_READ,
@@ -603,7 +603,7 @@ export const saveArticleAsDraftModel = async (
       throw new Error("User not found");
     }
 
-    await prisma.article.create({
+    await db.article.create({
       data: {
         title: article.title,
         passage: article.passage,
@@ -633,7 +633,7 @@ export const saveArticleAsDraftModel = async (
 
 export const getCustomArticle = async (userId: string) => {
   try {
-    return await prisma.article.findMany({
+    return await db.article.findMany({
       where: {
         authorId: userId,
       },
@@ -697,7 +697,7 @@ export const createdArticleCustom = async (
 
 export const updateAprovedCustomArticle = async (articleId: string) => {
   try {
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: { id: articleId },
     });
 
@@ -723,7 +723,7 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
       }),
 
       // Save questions
-      prisma.longAnswerQuestion.create({
+      db.longAnswerQuestion.create({
         data: {
           question: laq.question,
           articleId,
@@ -732,7 +732,7 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
 
       // Save short answer questions
       ...saq.questions.map((question) =>
-        prisma.shortAnswerQuestion.create({
+        db.shortAnswerQuestion.create({
           data: {
             question: question.question,
             answer: question.answer,
@@ -743,7 +743,7 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
 
       // Save multiple choice questions
       ...mcq.questions.map((mcq) =>
-        prisma.multipleChoiceQuestion.create({
+        db.multipleChoiceQuestion.create({
           data: {
             question: mcq.question,
             options: mcq.options,
@@ -764,7 +764,7 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
       generateWordLists(articleId),
     ]);
 
-    await prisma.article.update({
+    await db.article.update({
       where: { id: articleId },
       data: {
         isDraft: false,
@@ -782,7 +782,7 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
 
 export const checkExistingArticle = async (articleId: string) => {
   try {
-    return await prisma.article.findUnique({ where: { id: articleId } });
+    return await db.article.findUnique({ where: { id: articleId } });
   } catch (error) {
     console.error("Error updating custom article:", error);
     throw error;

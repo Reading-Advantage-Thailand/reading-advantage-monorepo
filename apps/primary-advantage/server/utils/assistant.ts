@@ -1,5 +1,5 @@
 import { laquestion_system, saqeution_system } from "@/data/prompts-ai";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import {
   laqFeedbackInputSchema,
   laqFeedbackOutputSchema,
@@ -26,7 +26,7 @@ export async function getSaqFeedback(req: {
   try {
     let prompt: string | undefined;
 
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: {
         id: req.data.articleId,
       },
@@ -90,7 +90,7 @@ export async function getLaqFeedback(req: {
   try {
     let prompt: string | undefined;
 
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: {
         id: req.data.articleId,
       },

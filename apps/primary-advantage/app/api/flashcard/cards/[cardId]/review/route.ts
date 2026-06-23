@@ -1,6 +1,6 @@
 // app/api/flashcards/cards/[cardId]/review/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { fsrsService } from "@/lib/fsrs-service";
 import { Rating } from "ts-fsrs";
@@ -26,7 +26,7 @@ export async function POST(
     }
 
     // Get the card
-    const card = await prisma.flashcardCard.findFirst({
+    const card = await db.flashcardCard.findFirst({
       where: {
         id: cardId,
         deck: { userId: user.id },
@@ -48,7 +48,7 @@ export async function POST(
     );
 
     // Update card and create review record in transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await db.$transaction(async (tx) => {
       // Update the card
       const updated = await tx.flashcardCard.update({
         where: { id: cardId },

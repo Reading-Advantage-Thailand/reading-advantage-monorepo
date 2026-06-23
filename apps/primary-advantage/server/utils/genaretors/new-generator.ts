@@ -6,7 +6,7 @@ import path from "path";
 import fs from "fs";
 import { ArticleBaseCefrLevel, ArticleType } from "@/types/enum";
 import { evaluateRating } from "./evaluate-rating-generator";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { convertCefrLevel } from "@/lib/utils";
 import { generateImage } from "./image-generator";
 import { generateAudio } from "./audio-generator";
@@ -85,7 +85,7 @@ export const generateArticleNew = async (
         });
 
         if (rating >= 2) {
-          prisma.$transaction(async (tx) => {
+          db.$transaction(async (tx) => {
             const createdArticle = await tx.article.create({
               data: {
                 title: article.title,
@@ -462,7 +462,7 @@ export const generateArticleNew = async (
 //   content: GeneratedContent,
 //   job: GenerationJob,
 // ): Promise<string> {
-//   const transaction = await prisma.$transaction(async (tx) => {
+//   const transaction = await db.$transaction(async (tx) => {
 //     // Create article
 //     const article = await tx.article.create({
 //       data: {

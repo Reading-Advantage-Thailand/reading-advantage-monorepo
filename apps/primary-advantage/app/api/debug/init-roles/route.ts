@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 // Initialize required roles in the database
 export async function POST(request: NextRequest) {
@@ -9,12 +9,12 @@ export async function POST(request: NextRequest) {
     const createdRoles = [];
 
     for (const roleName of requiredRoles) {
-      const existingRole = await prisma.role.findFirst({
+      const existingRole = await db.role.findFirst({
         where: { name: roleName },
       });
 
       if (!existingRole) {
-        const newRole = await prisma.role.create({
+        const newRole = await db.role.create({
           data: { name: roleName },
         });
         createdRoles.push(newRole);
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check all roles in database
-    const allRoles = await prisma.role.findMany();
+    const allRoles = await db.role.findMany();
     console.log(
       "All roles in database:",
       allRoles.map((r) => r.name),
@@ -48,10 +48,10 @@ export async function POST(request: NextRequest) {
 // Get all roles for debugging
 export async function GET(request: NextRequest) {
   try {
-    const allRoles = await prisma.role.findMany();
+    const allRoles = await db.role.findMany();
 
     // Also check some users and their roles
-    const usersWithRoles = await prisma.user.findMany({
+    const usersWithRoles = await db.user.findMany({
       take: 5,
       include: {
         roles: {

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 
 /**
@@ -11,7 +11,7 @@ export async function getArticleForLesson(articleId: string) {
       throw new Error("User is not authenticated");
     }
 
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: { id: articleId },
       include: {
         sentencsAndWordsForFlashcard: true,
@@ -45,7 +45,7 @@ export async function updateStandaloneLessonProgress(
   timeSpent: number,
 ) {
   try {
-    const existingProgress = await prisma.userLessonProgress.findFirst({
+    const existingProgress = await db.userLessonProgress.findFirst({
       where: {
         userId,
         articleId,
@@ -55,7 +55,7 @@ export async function updateStandaloneLessonProgress(
 
     if (existingProgress) {
       // Update existing progress
-      await prisma.userLessonProgress.update({
+      await db.userLessonProgress.update({
         where: { id: existingProgress.id },
         data: {
           progress,
@@ -65,7 +65,7 @@ export async function updateStandaloneLessonProgress(
       });
     } else {
       // Create new progress record
-      await prisma.$transaction(async (tx) => {
+      await db.$transaction(async (tx) => {
         await tx.userLessonProgress.create({
           data: {
             userId,
@@ -112,7 +112,7 @@ export async function getStandaloneLessonProgress(
   articleId: string,
 ) {
   try {
-    const progress = await prisma.userLessonProgress.findFirst({
+    const progress = await db.userLessonProgress.findFirst({
       where: {
         userId,
         articleId,
@@ -144,7 +144,7 @@ export async function getStandaloneLessonProgress(
  */
 export async function getArticleActivity(articleId: string, userId: string) {
   try {
-    const activity = await prisma.articleActivityLog.findFirst({
+    const activity = await db.articleActivityLog.findFirst({
       where: { articleId, userId },
       select: {
         isSentenceMatchingCompleted: true,

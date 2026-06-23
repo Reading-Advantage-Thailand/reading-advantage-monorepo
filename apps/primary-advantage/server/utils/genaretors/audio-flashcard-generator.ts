@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import {
   AUDIO_WORDS_URL,
   AVAILABLE_VOICES,
@@ -196,7 +196,7 @@ export async function generateAudioForFlashcard({
     }
 
     // Store both sentence and word data with their respective audio URLs
-    await prisma.sentencsAndWordsForFlashcard.create({
+    await db.sentencsAndWordsForFlashcard.create({
       data: {
         sentence:
           sentenceTimePoints.length > 0

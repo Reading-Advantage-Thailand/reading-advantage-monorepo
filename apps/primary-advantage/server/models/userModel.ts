@@ -1,5 +1,5 @@
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { ActivityType } from "@/types/enum";
 import bcrypt from "bcryptjs";
 
@@ -20,7 +20,7 @@ export const createUser = async (data: {
     const hashedPassword = bcrypt.hashSync(data.password, 10);
 
     // Find the User role
-    const userRole = await prisma.role.findFirst({
+    const userRole = await db.role.findFirst({
       where: { name: "user" },
     });
 
@@ -31,7 +31,7 @@ export const createUser = async (data: {
     }
 
     // Create user with transaction to ensure role assignment
-    const newUser = await prisma.$transaction(async (tx) => {
+    const newUser = await db.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
           name: data.name,
@@ -81,7 +81,7 @@ export const updateUserActivity = async (
     }
     const userId = user.id;
 
-    return await prisma.userActivity.create({
+    return await db.userActivity.create({
       data: {
         userId: userId,
         activityType,
@@ -97,7 +97,7 @@ export const updateUserActivity = async (
 
 export const getUserByEmail = async (email: string) => {
   try {
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         email: email,
       },
@@ -111,7 +111,7 @@ export const getUserByEmail = async (email: string) => {
     });
 
     if (user?.roles.length === 0) {
-      return await prisma.$transaction(async (tx) => {
+      return await db.$transaction(async (tx) => {
         const role = await tx.role.findFirst({
           where: { name: "user" },
         });
@@ -145,7 +145,7 @@ export const getUserByEmail = async (email: string) => {
 };
 export const getUserById = async (id: string) => {
   try {
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         id: id,
       },
@@ -164,7 +164,7 @@ export const getUserActivity = async (id: string) => {
       throw new Error("User not found");
     }
 
-    const activity = await prisma.userActivity.findMany({
+    const activity = await db.userActivity.findMany({
       where: {
         userId: id,
       },
@@ -173,7 +173,7 @@ export const getUserActivity = async (id: string) => {
       },
     });
 
-    const xpLogs = await prisma.xPLogs.findMany({
+    const xpLogs = await db.xPLogs.findMany({
       where: {
         userId: id,
       },
@@ -195,7 +195,7 @@ export const getUserArticleRecords = async (
     const offset = (page - 1) * limit;
 
     // Get all article activities for the user
-    const articleActivities = await prisma.userActivity.findMany({
+    const articleActivities = await db.userActivity.findMany({
       where: {
         userId: userId,
         activityType: {
@@ -251,7 +251,7 @@ export const getUserArticleRecords = async (
 
     // Get article details for each unique article
     const articleIds = Array.from(articleMap.keys());
-    const articles = await prisma.article.findMany({
+    const articles = await db.article.findMany({
       where: {
         id: {
           in: articleIds,
@@ -377,7 +377,7 @@ export const getUserArticleRecords = async (
 export const getUserReminderReread = async (userId: string) => {
   try {
     // Get all article activities for the user
-    const articleActivities = await prisma.userActivity.findMany({
+    const articleActivities = await db.userActivity.findMany({
       where: {
         userId: userId,
         activityType: {
@@ -478,7 +478,7 @@ export const getUserReminderReread = async (userId: string) => {
     });
 
     // Get article details for reminder articles
-    const articles = await prisma.article.findMany({
+    const articles = await db.article.findMany({
       where: {
         id: {
           in: reminderArticleIds,

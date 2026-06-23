@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { calculateLevelAndCefrLevel } from "@/lib/utils";
 import { getLaqFeedback, getSaqFeedback } from "@/server/utils/assistant";
@@ -14,7 +14,7 @@ export async function retakeQuiz(articleId: string, type: ActivityType) {
       return { error: "User not found" };
     }
 
-    const userActivity = await prisma.userActivity.findFirst({
+    const userActivity = await db.userActivity.findFirst({
       where: { targetId: articleId, activityType: type, userId: user.id },
       select: {
         id: true,
@@ -25,7 +25,7 @@ export async function retakeQuiz(articleId: string, type: ActivityType) {
       return { error: "User activity not found" };
     }
 
-    const deleted = await prisma.userActivity.delete({
+    const deleted = await db.userActivity.delete({
       where: { id: userActivity.id },
     });
 
@@ -59,7 +59,7 @@ export async function finishQuiz(
     return { error: "User not found" };
   }
 
-  const userData = await prisma.user.findUnique({
+  const userData = await db.user.findUnique({
     where: { id: user.id as string },
     select: {
       xp: true,
@@ -74,7 +74,7 @@ export async function finishQuiz(
   let isCompleted = {};
 
   // Create user activity first
-  const userActivity = await prisma.userActivity.create({
+  const userActivity = await db.userActivity.create({
     data: {
       userId: user.id as string,
       activityType: type,
@@ -115,7 +115,7 @@ export async function finishQuiz(
     userData.xp as number,
   );
 
-  const activityLog = await prisma.articleActivityLog.findFirst({
+  const activityLog = await db.articleActivityLog.findFirst({
     where: { articleId: articleId as string, userId: user.id as string },
     select: {
       id: true,
@@ -123,14 +123,14 @@ export async function finishQuiz(
   });
 
   if (activityLog) {
-    await prisma.articleActivityLog.update({
+    await db.articleActivityLog.update({
       where: { id: activityLog.id },
       data: {
         ...isCompleted,
       },
     });
   } else {
-    await prisma.articleActivityLog.create({
+    await db.articleActivityLog.create({
       data: {
         articleId: articleId as string,
         userId: user.id as string,
@@ -139,8 +139,8 @@ export async function finishQuiz(
     });
   }
 
-  await prisma.$transaction([
-    prisma.xPLogs.create({
+  await db.$transaction([
+    db.xPLogs.create({
       data: {
         userId: user.id as string,
         xpEarned: xpEarned,
@@ -148,7 +148,7 @@ export async function finishQuiz(
         activityType: type,
       },
     }),
-    prisma.user.update({
+    db.user.update({
       where: { id: user.id as string },
       data: {
         xp: newXp,

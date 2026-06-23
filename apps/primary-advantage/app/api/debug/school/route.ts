@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 // Debug endpoint to check school data
 export async function GET() {
@@ -11,7 +11,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: { id: currentUser.id },
       include: {
         School: {
@@ -27,7 +27,7 @@ export async function GET() {
     }
 
     // Also check all licenses in the system
-    const allLicenses = await prisma.license.findMany({
+    const allLicenses = await db.license.findMany({
       select: {
         id: true,
         name: true,

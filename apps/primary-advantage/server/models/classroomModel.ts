@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { NextResponse } from "next/server";
 import { addDays } from "date-fns";
 import { currentUser } from "@/lib/session";
@@ -11,7 +11,7 @@ export const createClassCode = async (
   try {
     const expiresAt = addDays(new Date(), 1);
 
-    const classroom = await prisma.classroom.findUnique({
+    const classroom = await db.classroom.findUnique({
       where: { id: classrooomId },
       select: { id: true, name: true },
     });
@@ -25,7 +25,7 @@ export const createClassCode = async (
 
     if (classroom) {
       // Update the existing classroom's expiration date
-      return await prisma.classroom.update({
+      return await db.classroom.update({
         where: { id: classrooomId },
         data: { classCode, codeExpiresAt: expiresAt },
       });
@@ -44,7 +44,7 @@ export const createClassroom = async (data: {
 }) => {
   try {
     let created = false;
-    await prisma.$transaction(async (tx) => {
+    await db.$transaction(async (tx) => {
       const user = await tx.user.findUnique({
         where: { id: data.teacherId },
         select: { schoolId: true },
@@ -110,7 +110,7 @@ export const enrollStudentInClassroom = async (
 ) => {
   try {
     // Check if the student is already enrolled
-    const existingEnrollment = await prisma.classroomStudent.findUnique({
+    const existingEnrollment = await db.classroomStudent.findUnique({
       where: {
         classroomId_studentId: {
           classroomId,
@@ -124,7 +124,7 @@ export const enrollStudentInClassroom = async (
     }
 
     // Check if classroom exists
-    const classroom = await prisma.classroom.findUnique({
+    const classroom = await db.classroom.findUnique({
       where: { id: classroomId },
     });
 
@@ -133,7 +133,7 @@ export const enrollStudentInClassroom = async (
     }
 
     // Check if student exists and has STUDENT role
-    const student = await prisma.user.findFirst({
+    const student = await db.user.findFirst({
       where: {
         id: studentId,
         roles: {
@@ -151,7 +151,7 @@ export const enrollStudentInClassroom = async (
     }
 
     // Create the enrollment
-    const enrollment = await prisma.classroomStudent.create({
+    const enrollment = await db.classroomStudent.create({
       data: {
         studentId,
         classroomId,
@@ -189,7 +189,7 @@ export const unenrollStudentFromClassroom = async (
   try {
     // If teacherId is provided, verify the teacher owns the classroom
     if (teacherId) {
-      const classroom = await prisma.classroom.findFirst({
+      const classroom = await db.classroom.findFirst({
         where: {
           id: classroomId,
           teachers: {
@@ -206,7 +206,7 @@ export const unenrollStudentFromClassroom = async (
     }
 
     // Check if the enrollment exists
-    const enrollment = await prisma.classroomStudent.findUnique({
+    const enrollment = await db.classroomStudent.findUnique({
       where: {
         classroomId_studentId: {
           classroomId,
@@ -235,7 +235,7 @@ export const unenrollStudentFromClassroom = async (
     }
 
     // Delete the enrollment
-    await prisma.classroomStudent.delete({
+    await db.classroomStudent.delete({
       where: {
         classroomId_studentId: {
           classroomId,
@@ -259,7 +259,7 @@ export const getAvailableStudentsForClassroom = async (
   try {
     // If teacherId is provided, verify the teacher owns the classroom
     if (teacherId) {
-      const classroom = await prisma.classroom.findFirst({
+      const classroom = await db.classroom.findFirst({
         where: {
           id: classroomId,
           teachers: {
@@ -276,7 +276,7 @@ export const getAvailableStudentsForClassroom = async (
     }
 
     // Get all students who are not enrolled in this classroom
-    const availableStudents = await prisma.user.findMany({
+    const availableStudents = await db.user.findMany({
       where: {
         roles: {
           some: {
@@ -353,7 +353,7 @@ export const getAllClassrooms = async (userWithRoles: UserWithRoles) => {
     }
 
     // Fetch classrooms with basic information first
-    const classrooms = await prisma.classroom.findMany({
+    const classrooms = await db.classroom.findMany({
       where: whereClause,
       select: {
         id: true,
@@ -377,7 +377,7 @@ export const getAllClassrooms = async (userWithRoles: UserWithRoles) => {
     const classroomsWithDetails = await Promise.all(
       classrooms.map(async (classroom) => {
         const [teachers, students] = await Promise.all([
-          prisma.classroomTeachers.findMany({
+          db.classroomTeachers.findMany({
             where: { classroomId: classroom.id },
             select: {
               user: {
@@ -385,7 +385,7 @@ export const getAllClassrooms = async (userWithRoles: UserWithRoles) => {
               },
             },
           }),
-          prisma.classroomStudent.findMany({
+          db.classroomStudent.findMany({
             where: { classroomId: classroom.id },
             select: {
               student: {
@@ -420,7 +420,7 @@ export const updateClassroom = async (
   },
 ) => {
   try {
-    return await prisma.classroom.update({
+    return await db.classroom.update({
       where: { id },
       data: {
         name: data.name,
@@ -460,7 +460,7 @@ export const deleteClassroom = async (
   try {
     if (role === "teacher") {
       // First, verify the teacher is part of the classroom
-      const classroom = await prisma.classroom.findFirst({
+      const classroom = await db.classroom.findFirst({
         where: {
           id: classroomId,
         },
@@ -482,7 +482,7 @@ export const deleteClassroom = async (
 
       if (teacherCount > 1) {
         // Multiple teachers: only remove the current teacher from the classroom
-        await prisma.classroomTeachers.deleteMany({
+        await db.classroomTeachers.deleteMany({
           where: {
             classroomId: classroomId,
             userId: teacherId,
@@ -491,7 +491,7 @@ export const deleteClassroom = async (
         return { success: true, message: "Removed from classroom" };
       } else {
         // Only one teacher: delete the entire classroom
-        await prisma.classroom.delete({
+        await db.classroom.delete({
           where: { id: classroomId },
         });
         return { success: true, message: "Classroom deleted" };
@@ -499,7 +499,7 @@ export const deleteClassroom = async (
     }
 
     if (role === "admin" || role === "system") {
-      await prisma.classroom.delete({
+      await db.classroom.delete({
         where: { id: classroomId },
       });
       return { success: true };
@@ -519,7 +519,7 @@ export const deleteClassroom = async (
 export const getAllStudentsByTeacher = async (teacherId: string) => {
   try {
     // Get all classrooms for the teacher
-    const classrooms = await prisma.classroom.findMany({
+    const classrooms = await db.classroom.findMany({
       where: { teachers: { some: { userId: teacherId } } },
       include: {
         students: {
@@ -581,7 +581,7 @@ export const getAllStudentsByTeacher = async (teacherId: string) => {
 // Get all students by admin
 export const getAllStudentsByAdmin = async (adminId: string) => {
   try {
-    const schoolId = await prisma.schoolAdmins.findFirst({
+    const schoolId = await db.schoolAdmins.findFirst({
       where: { userId: adminId },
       select: { schoolId: true },
     });
@@ -591,7 +591,7 @@ export const getAllStudentsByAdmin = async (adminId: string) => {
     }
 
     // Get all classrooms for the teacher
-    const classrooms = await prisma.classroom.findMany({
+    const classrooms = await db.classroom.findMany({
       where: { schoolId: schoolId.schoolId },
       include: {
         students: {
@@ -654,7 +654,7 @@ export const getAllStudentsByAdmin = async (adminId: string) => {
 export const getAllStudentsInSystem = async () => {
   try {
     // Get all users with STUDENT role
-    const students = await prisma.user.findMany({
+    const students = await db.user.findMany({
       where: {
         roles: {
           some: {
@@ -737,7 +737,7 @@ export const getClassroomWithStudents = async (
       whereClause.teacherId = teacherId;
     }
 
-    const classroom = await prisma.classroom.findFirst({
+    const classroom = await db.classroom.findFirst({
       where: { id: classroomId },
       include: {
         teachers: {
@@ -812,7 +812,7 @@ export const getClassroomWithStudents = async (
 export const getClassroomStudentForLogin = async (code: string) => {
   try {
     //check code
-    const checkCode = await prisma.classroom.findFirst({
+    const checkCode = await db.classroom.findFirst({
       where: {
         passwordStudents: code,
       },
@@ -833,7 +833,7 @@ export const getClassroomStudentForLogin = async (code: string) => {
       );
     }
 
-    const studentInClass = await prisma.classroomStudent.findMany({
+    const studentInClass = await db.classroomStudent.findMany({
       where: {
         classroomId: checkCode?.id,
       },
@@ -857,7 +857,7 @@ export const generateClassCode = async (
 ) => {
   try {
     // Get classroom with existing password
-    const classroom = await prisma.classroom.findUnique({
+    const classroom = await db.classroom.findUnique({
       where: { id: classroomId },
       select: {
         id: true,
@@ -885,7 +885,7 @@ export const generateClassCode = async (
 
     // Function to check if password exists in database
     const isPasswordUnique = async (password: string): Promise<boolean> => {
-      const existing = await prisma.classroom.findFirst({
+      const existing = await db.classroom.findFirst({
         where: {
           passwordStudents: password,
         },
@@ -922,7 +922,7 @@ export const generateClassCode = async (
     const expiresAt = addDays(new Date(), 7);
 
     // Update the classroom with the new password and expiration date
-    const updatedClassroom = await prisma.classroom.update({
+    const updatedClassroom = await db.classroom.update({
       where: { id: classroomId },
       data: {
         passwordStudents: newPassword,

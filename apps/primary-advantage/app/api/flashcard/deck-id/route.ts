@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 export async function GET() {
   try {
@@ -17,7 +17,7 @@ export async function GET() {
     }
 
     // Find user's sentence flashcard deck
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         userId: user.id,
         type: "SENTENCE",

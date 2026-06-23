@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 interface LeaderboardResult {
   classroom: string;
@@ -29,7 +29,7 @@ export const updateSchoolRankingModel = async () => {
     );
 
     // Fetch all schools
-    const schools = await prisma.school.findMany({
+    const schools = await db.school.findMany({
       select: {
         id: true,
         name: true,
@@ -40,7 +40,7 @@ export const updateSchoolRankingModel = async () => {
     const leaderboardUpdates = await Promise.all(
       schools.map(async (school) => {
         // Get XP logs for current month for students in this school
-        const xpLogs = await prisma.xPLogs.findMany({
+        const xpLogs = await db.xPLogs.findMany({
           where: {
             createdAt: {
               gte: startOfMonth,
@@ -119,7 +119,7 @@ export const updateSchoolRankingModel = async () => {
 
         // If no data, randomly select 5 students from the school
         if (sortedUsers.length === 0) {
-          const randomStudents = await prisma.user.findMany({
+          const randomStudents = await db.user.findMany({
             where: {
               schoolId: school.id,
               roles: {
@@ -176,13 +176,13 @@ export const updateSchoolRankingModel = async () => {
         };
 
         // Check if leaderboard entry exists for this school
-        const existingLeaderboard = await prisma.leaderboard.findFirst({
+        const existingLeaderboard = await db.leaderboard.findFirst({
           where: { schoolId: school.id },
         });
 
         if (existingLeaderboard) {
           // Update existing leaderboard
-          return await prisma.leaderboard.update({
+          return await db.leaderboard.update({
             where: { id: existingLeaderboard.id },
             data: {
               details: leaderboardData as any,
@@ -191,7 +191,7 @@ export const updateSchoolRankingModel = async () => {
           });
         } else {
           // Create new leaderboard entry
-          return await prisma.leaderboard.create({
+          return await db.leaderboard.create({
             data: {
               schoolId: school.id,
               details: leaderboardData as any,
@@ -213,7 +213,7 @@ export const getSchoolLeaderboardModel = async (
   userId?: string,
 ) => {
   try {
-    const leaderboard = await prisma.leaderboard.findFirst({
+    const leaderboard = await db.leaderboard.findFirst({
       where: { schoolId },
       select: {
         id: true,
@@ -251,7 +251,7 @@ export const getSchoolLeaderboardModel = async (
         );
 
         // Get all students' XP for current month in this school
-        const xpLogs = await prisma.xPLogs.findMany({
+        const xpLogs = await db.xPLogs.findMany({
           where: {
             createdAt: {
               gte: startOfMonth,
@@ -293,7 +293,7 @@ export const getSchoolLeaderboardModel = async (
 
         if (studentRank > 0) {
           // Get student's details
-          const student = await prisma.user.findUnique({
+          const student = await db.user.findUnique({
             where: { id: userId },
             select: {
               name: true,

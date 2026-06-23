@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 interface ClassroomData {
   id: string;
@@ -21,7 +21,7 @@ export async function GET(
     }
 
     // Check if user has admin permissions
-    const userWithRoles = await prisma.user.findUnique({
+    const userWithRoles = await db.user.findUnique({
       where: { id: user.id },
       include: {
         roles: {
@@ -61,7 +61,7 @@ export async function GET(
     }
 
     // Fetch classrooms with student count
-    const classrooms = await prisma.classroom.findMany({
+    const classrooms = await db.classroom.findMany({
       where: whereClause,
       include: {
         students: {

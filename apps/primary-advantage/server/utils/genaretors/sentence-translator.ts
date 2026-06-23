@@ -1,6 +1,6 @@
 import { generateObject } from "@reading-advantage/ai";
 import { google, googleModelLite } from "@/utils/google";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { SentenceTimepoint } from "@/types";
 import z from "zod";
 
@@ -98,7 +98,7 @@ export async function translateAndStoreSentences({
 }: TranslateSentencesParams): Promise<void> {
   try {
     // Get the article with current sentences and translations
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: { id: articleId },
       select: {
         sentences: true,
@@ -166,7 +166,7 @@ export async function translateAndStoreSentences({
     }
 
     // Store translations in database
-    await prisma.article.update({
+    await db.article.update({
       where: { id: articleId },
       data: {
         translatedPassage: JSON.parse(JSON.stringify(translatedSentences)),
@@ -192,7 +192,7 @@ export async function translateAndStoreSentences({
 //   articleId: string,
 //   language: "th" | "cn" | "tw" | "vi",
 // ): Promise<string[]> {
-//   const article = await prisma.article.findUnique({
+//   const article = await db.article.findUnique({
 //     where: { id: articleId },
 //     select: {
 //       translatedSentences: true,

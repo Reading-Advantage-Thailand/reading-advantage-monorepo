@@ -4,7 +4,7 @@ import {
   getSchoolLeaderboardController,
 } from "@/server/controllers/schoolController";
 import { currentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 
     if (!schoolId) {
       // If no schoolId provided, use user's school
-      const userData = await prisma.user.findUnique({
+      const userData = await db.user.findUnique({
         where: { id: user.id },
         select: { schoolId: true },
       });

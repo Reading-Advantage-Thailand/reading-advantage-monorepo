@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { z } from "zod";
 
 const addAdminSchema = z.object({
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const { userId } = addAdminSchema.parse(body);
 
     // Get current user's school and verify they are the owner
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await db.user.findUnique({
       where: { id: authUser.id },
       include: {
         School: true,
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if the target user exists
-    const targetUser = await prisma.user.findUnique({
+    const targetUser = await db.user.findUnique({
       where: { id: userId },
       include: {
         roles: {
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Add user as school admin
-    await prisma.schoolAdmins.create({
+    await db.schoolAdmins.create({
       data: {
         schoolId: currentUser.School.id,
         userId: userId,
@@ -95,23 +95,23 @@ export async function POST(request: NextRequest) {
       const currentRoles = targetUser.roles.map((ur) => ur.role.name);
       if (currentRoles.includes("user") || currentRoles.includes("teacher")) {
         // Find or create Admin role
-        let adminRole = await prisma.role.findFirst({
+        let adminRole = await db.role.findFirst({
           where: { name: "admin" },
         });
 
         if (!adminRole) {
-          adminRole = await prisma.role.create({
+          adminRole = await db.role.create({
             data: { name: "admin" },
           });
         }
 
         // Remove all existing roles and set Admin role only
-        await prisma.userRole.deleteMany({
+        await db.userRole.deleteMany({
           where: { userId: userId },
         });
 
         // Create new Admin role for user
-        await prisma.userRole.create({
+        await db.userRole.create({
           data: {
             userId: userId,
             roleId: adminRole.id,
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
 
     // Associate user with the school if not already associated
     if (targetUser.schoolId !== currentUser.School.id) {
-      await prisma.user.update({
+      await db.user.update({
         where: { id: userId },
         data: { schoolId: currentUser.School.id },
       });

@@ -4,7 +4,7 @@ import { existsSync, unlink } from "fs";
 import path from "path";
 import { parse } from "csv/sync";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { getCurrentUser } from "@/lib/session";
 import { generateRandomClassCode } from "@/lib/utils";
 
@@ -98,7 +98,7 @@ const validateClassroomNames = async (
   }
 
   // Batch fetch all classrooms at once instead of individual queries
-  const existingClassrooms = await prisma.classroom.findMany({
+  const existingClassrooms = await db.classroom.findMany({
     where: {
       name: { in: classroomNames },
       schoolId: schoolId,
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get current user with school information
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await db.user.findUnique({
       where: { id: authUser.id },
       include: {
         School: true,
@@ -415,7 +415,7 @@ export async function POST(request: NextRequest) {
 
       let existingUsers: Array<{ email: string | null }> = [];
       if (validEmails.length > 0) {
-        existingUsers = await prisma.user.findMany({
+        existingUsers = await db.user.findMany({
           where: { email: { in: validEmails } },
           select: { email: true },
         });
@@ -625,7 +625,7 @@ export async function POST(request: NextRequest) {
 
       let existingClassrooms: Array<{ name: string }> = [];
       if (validClassroomNames.length > 0) {
-        existingClassrooms = await prisma.classroom.findMany({
+        existingClassrooms = await db.classroom.findMany({
           where: {
             name: { in: validClassroomNames },
             schoolId: currentUser.schoolId,
@@ -712,7 +712,7 @@ export async function POST(request: NextRequest) {
     if (filename === "students.csv" || filename === "teachers.csv") {
       console.log("👥 Starting user creation and assignment processes...");
       // Get all roles from database
-      const roles = await prisma.role.findMany();
+      const roles = await db.role.findMany();
       const roleMap = new Map(roles.map((role) => [role.name, role.id]));
       dbTimer.log(
         "Roles fetched from database",
@@ -736,7 +736,7 @@ export async function POST(request: NextRequest) {
         if (batch.length >= max) {
           // Create users in batches
           const batchTimer = createTimer("USER_BATCH_CREATE");
-          await prisma.user.createMany({
+          await db.user.createMany({
             data: batch,
             skipDuplicates: true, // Skip users with duplicate emails
           });
@@ -744,7 +744,7 @@ export async function POST(request: NextRequest) {
 
           // Get the created users to assign roles and classrooms
           const emails = batch.map((u) => u.email);
-          const users = await prisma.user.findMany({
+          const users = await db.user.findMany({
             where: { email: { in: emails } },
             select: { id: true, email: true },
           });
@@ -757,14 +757,14 @@ export async function POST(request: NextRequest) {
       // Process remaining batch
       if (batch.length > 0) {
         const finalBatchTimer = createTimer("FINAL_USER_BATCH");
-        await prisma.user.createMany({
+        await db.user.createMany({
           data: batch,
           skipDuplicates: true,
         });
 
         // Get the created users to assign roles and classrooms
         const emails = batch.map((u) => u.email);
-        const users = await prisma.user.findMany({
+        const users = await db.user.findMany({
           where: { email: { in: emails } },
           select: { id: true, email: true },
         });
@@ -800,7 +800,7 @@ export async function POST(request: NextRequest) {
       // Create role assignments in batches
       if (roleAssignments.length > 0) {
         const roleTimer = createTimer("ROLE_ASSIGNMENTS");
-        await prisma.userRole.createMany({
+        await db.userRole.createMany({
           data: roleAssignments,
           skipDuplicates: true,
         });
@@ -838,7 +838,7 @@ export async function POST(request: NextRequest) {
 
       // Batch fetch all classrooms at once
       if (uniqueClassroomNames.size > 0) {
-        const classrooms = await prisma.classroom.findMany({
+        const classrooms = await db.classroom.findMany({
           where: {
             name: { in: Array.from(uniqueClassroomNames) },
             schoolId: currentUser.schoolId,
@@ -897,7 +897,7 @@ export async function POST(request: NextRequest) {
 
       // Batch check existing teacher assignments
       if (existingTeacherChecks.length > 0) {
-        const existingTeachers = await prisma.classroomTeachers.findMany({
+        const existingTeachers = await db.classroomTeachers.findMany({
           where: {
             OR: existingTeacherChecks.map((check) => ({
               classroomId: check.classroomId,
@@ -923,7 +923,7 @@ export async function POST(request: NextRequest) {
       if (studentAssignmentsToCreate.length > 0) {
         // Use createMany with skipDuplicates for better performance
         try {
-          await prisma.classroomStudent.createMany({
+          await db.classroomStudent.createMany({
             data: studentAssignmentsToCreate,
             skipDuplicates: true,
           });
@@ -932,7 +932,7 @@ export async function POST(request: NextRequest) {
           // Fallback to individual upserts if createMany fails
           console.log("Falling back to individual student upserts...");
           for (const assignment of studentAssignmentsToCreate) {
-            await prisma.classroomStudent.upsert({
+            await db.classroomStudent.upsert({
               where: {
                 classroomId_studentId: {
                   classroomId: assignment.classroomId,
@@ -949,7 +949,7 @@ export async function POST(request: NextRequest) {
 
       // Batch create teacher assignments
       if (teacherAssignmentsToCreate.length > 0) {
-        await prisma.classroomTeachers.createMany({
+        await db.classroomTeachers.createMany({
           data: teacherAssignmentsToCreate,
           skipDuplicates: true,
         });
@@ -969,7 +969,7 @@ export async function POST(request: NextRequest) {
     if (filename === "classes.csv") {
       console.log("🏫 Creating classroom records...");
       const classCreationTimer = createTimer("CLASS_CREATION");
-      await prisma.classroom.createMany({
+      await db.classroom.createMany({
         data: processedClasses,
         skipDuplicates: true,
       });

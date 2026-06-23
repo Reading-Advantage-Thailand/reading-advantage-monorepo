@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import bcrypt from "bcryptjs";
 import {
   TeacherData,
@@ -60,7 +60,7 @@ export const getTeachers = async (
 
     // Fetch teachers with pagination
     const [teachers, totalCount] = await Promise.all([
-      prisma.user.findMany({
+      db.user.findMany({
         where: whereClause,
         include: {
           roles: {
@@ -90,7 +90,7 @@ export const getTeachers = async (
           createdAt: "desc",
         },
       }),
-      prisma.user.count({
+      db.user.count({
         where: whereClause,
       }),
     ]);
@@ -149,7 +149,7 @@ export const getTeacherById = async (
       schoolFilter = { schoolId: userWithRoles.schoolId };
     }
 
-    const teacher = await prisma.user.findFirst({
+    const teacher = await db.user.findFirst({
       where: {
         id,
         ...schoolFilter,
@@ -249,7 +249,7 @@ export const createTeacher = async (params: {
 
   try {
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await db.user.findUnique({
       where: { email },
       include: {
         School: {
@@ -317,7 +317,7 @@ export const createTeacher = async (params: {
     }
 
     // Get the role ID
-    const roleRecord = await prisma.role.findFirst({
+    const roleRecord = await db.role.findFirst({
       where: { name: role },
     });
 
@@ -332,7 +332,7 @@ export const createTeacher = async (params: {
 
     // Validate classroom IDs if provided
     if (classroomIds && classroomIds.length > 0) {
-      const validClassrooms = await prisma.classroom.findMany({
+      const validClassrooms = await db.classroom.findMany({
         where: {
           id: { in: classroomIds },
           schoolId: schoolId, // Ensure classrooms belong to the same school
@@ -348,7 +348,7 @@ export const createTeacher = async (params: {
     }
 
     // Create the new teacher and assign classrooms in a transaction
-    const newTeacher = await prisma.$transaction(async (tx) => {
+    const newTeacher = await db.$transaction(async (tx) => {
       // Create the user
       const user = await tx.user.create({
         data: {
@@ -470,7 +470,7 @@ async function updateExistingTeacherToSchool(params: {
 
   try {
     // Get the role ID
-    const roleRecord = await prisma.role.findFirst({
+    const roleRecord = await db.role.findFirst({
       where: { name: role },
     });
 
@@ -480,7 +480,7 @@ async function updateExistingTeacherToSchool(params: {
 
     // Validate classroom IDs if provided
     if (classroomIds && classroomIds.length > 0) {
-      const validClassrooms = await prisma.classroom.findMany({
+      const validClassrooms = await db.classroom.findMany({
         where: {
           id: { in: classroomIds },
           schoolId: schoolId, // Ensure classrooms belong to the same school
@@ -496,7 +496,7 @@ async function updateExistingTeacherToSchool(params: {
     }
 
     // Update the existing teacher in a transaction
-    const updatedTeacher = await prisma.$transaction(async (tx) => {
+    const updatedTeacher = await db.$transaction(async (tx) => {
       // Prepare update data
       const updateData: any = {
         name,
@@ -677,7 +677,7 @@ export const updateTeacher = async (
     }
 
     // Check if teacher exists and user has permission to update
-    const existingTeacher = await prisma.user.findFirst({
+    const existingTeacher = await db.user.findFirst({
       where: {
         id,
         ...schoolFilter,
@@ -699,7 +699,7 @@ export const updateTeacher = async (
 
     // Check if email is being updated and doesn't conflict
     if (updateData.email && updateData.email !== existingTeacher.email) {
-      const emailExists = await prisma.user.findUnique({
+      const emailExists = await db.user.findUnique({
         where: { email: updateData.email },
       });
 
@@ -710,7 +710,7 @@ export const updateTeacher = async (
 
     // Validate classroom IDs if provided
     if (updateData.classroomIds) {
-      const validClassrooms = await prisma.classroom.findMany({
+      const validClassrooms = await db.classroom.findMany({
         where: {
           id: { in: updateData.classroomIds },
           schoolId: existingTeacher.schoolId, // Ensure classrooms belong to the same school
@@ -735,7 +735,7 @@ export const updateTeacher = async (
     }
 
     // Update the teacher and handle classroom assignments in a transaction
-    const updatedTeacher = await prisma.$transaction(async (tx) => {
+    const updatedTeacher = await db.$transaction(async (tx) => {
       // Update user data
       const user = await tx.user.update({
         where: { id },
@@ -867,7 +867,7 @@ export const deleteTeacher = async (
     }
 
     // Check if teacher exists and user has permission to delete
-    const existingTeacher = await prisma.user.findFirst({
+    const existingTeacher = await db.user.findFirst({
       where: {
         id,
         ...schoolFilter,
@@ -888,16 +888,16 @@ export const deleteTeacher = async (
     }
 
     // Delete related records first
-    await prisma.userRole.deleteMany({
+    await db.userRole.deleteMany({
       where: { userId: id },
     });
 
-    await prisma.classroomTeachers.deleteMany({
+    await db.classroomTeachers.deleteMany({
       where: { userId: id },
     });
 
     // Delete the teacher
-    await prisma.user.delete({
+    await db.user.delete({
       where: { id },
     });
 
@@ -931,7 +931,7 @@ export const getTeacherStatistics = async (userWithRoles: UserWithRoles) => {
     };
 
     // Get all teachers for statistics
-    const allTeachers = await prisma.user.findMany({
+    const allTeachers = await db.user.findMany({
       where: whereClause,
       include: {
         ClassroomTeachers: {

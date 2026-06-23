@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 // GET /api/users/search - Search for users by name or email
 export async function GET(request: NextRequest) {
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Search for users by name or email
-    const users = await prisma.user.findMany({
+    const users = await db.user.findMany({
       where: {
         OR: [
           {

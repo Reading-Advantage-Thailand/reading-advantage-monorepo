@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import {
   AUDIO_WORDS_URL,
   AVAILABLE_VOICES,
@@ -50,7 +50,7 @@ function contentToSSML(content: string[]): string {
 }
 
 export async function generateWordLists(articleId: string) {
-  const article = await prisma.article.findUnique({
+  const article = await db.article.findUnique({
     where: {
       id: articleId,
     },
@@ -139,7 +139,7 @@ export async function generateAudioForWord({
 
       fs.unlinkSync(localPath);
 
-      await prisma.article.update({
+      await db.article.update({
         where: {
           id: articleId,
         },

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { ActivityType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
@@ -22,7 +22,7 @@ export async function GET(
       (searchParams.get("language") as "th" | "vi" | "cn" | "tw") || "th";
 
     // Get both sentence and vocabulary flashcards that are due
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         id: deckId,
         userId: user.id,
@@ -124,7 +124,7 @@ export async function POST(
 
   const xpEarned = Math.floor(score * 2);
 
-  const userActivity = await prisma.userActivity.create({
+  const userActivity = await db.userActivity.create({
     data: {
       userId: user.id as string,
       activityType: ActivityType.SENTENCE_MATCHING,
@@ -139,7 +139,7 @@ export async function POST(
     },
   });
 
-  await prisma.xPLogs.create({
+  await db.xPLogs.create({
     data: {
       userId: user.id as string,
       xpEarned: xpEarned,
@@ -148,7 +148,7 @@ export async function POST(
     },
   });
 
-  await prisma.user.update({
+  await db.user.update({
     where: { id: user.id as string },
     data: { xp: { increment: xpEarned } },
   });
@@ -167,7 +167,7 @@ async function createVocabularyPairs(
     if (!card.word || !card.definition) continue;
 
     // Get the article for audio data
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: { id: card.articleId },
       select: {
         id: true,
@@ -235,7 +235,7 @@ async function createTranslationPairs(
     if (!card.sentence) continue;
 
     // Get the article for translation data
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: { id: card.articleId },
       select: {
         id: true,

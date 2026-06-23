@@ -1,6 +1,6 @@
 // app/api/flashcards/decks/[deckId]/due/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { fsrsService } from "@/lib/fsrs-service";
 
@@ -21,7 +21,7 @@ export async function GET(
       ? parseInt(searchParams.get("limit")!)
       : undefined;
 
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         id: deckId,
         userId: user.id,

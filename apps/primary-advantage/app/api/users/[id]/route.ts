@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import bcrypt from "bcryptjs";
 
@@ -16,7 +16,7 @@ export async function PATCH(
     }
 
     // Check user permissions based on UserRole table
-    // const userWithRoles = await prisma.user.findUnique({
+    // const userWithRoles = await db.user.findUnique({
     //   where: { id: currentUserData.id },
     //   include: {
     //     roles: { include: { role: true } },
@@ -56,7 +56,7 @@ export async function PATCH(
     }
 
     // Use transaction to handle both user data and role updates
-    const updatedUser = await prisma.$transaction(async (tx) => {
+    const updatedUser = await db.$transaction(async (tx) => {
       // Update user data
       const user = await tx.user.update({
         where: { id: userId },

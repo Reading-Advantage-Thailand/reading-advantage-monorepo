@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 // Type definitions for user with roles
 export interface UserWithRoles {
@@ -25,7 +25,7 @@ export const validateUser = async (
   try {
     // console.log("Auth Utils: Validating user:", userId);
 
-    const userWithRoles = await prisma.user.findUnique({
+    const userWithRoles = await db.user.findUnique({
       where: { id: userId },
       select: {
         id: true,
@@ -151,7 +151,7 @@ export const getUserSchoolIds = async (
     );
 
     if (isSystemAdmin) {
-      const allSchools = await prisma.school.findMany({
+      const allSchools = await db.school.findMany({
         select: { id: true },
       });
       const schoolIds = allSchools.map((school) => school.id);
@@ -200,7 +200,7 @@ export const canAccessSchool = async (
 };
 
 export const getUserRoles = async (userId: string): Promise<string[]> => {
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: { id: userId },
     select: { roles: { include: { role: true } } },
   });

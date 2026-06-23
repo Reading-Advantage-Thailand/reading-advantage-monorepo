@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { NextRequest, NextResponse } from "next/server";
 import { AssignmentStatus } from "@prisma/client";
 import getAssignmentById, {
@@ -30,7 +30,7 @@ export async function fetchAssignments(req: NextRequest) {
     if (articleId || assignmentId) {
       // Get assignment for specific article and classroom
       console.log("Do we get here?");
-      const assignment = await prisma.assignment.findFirst({
+      const assignment = await db.assignment.findFirst({
         where: {
           classroomId: classroomId || undefined,
           articleId: articleId || undefined,
@@ -109,11 +109,11 @@ export async function fetchAssignments(req: NextRequest) {
         ];
       }
 
-      const totalCount = await prisma.assignment.count({
+      const totalCount = await db.assignment.count({
         where: whereClause,
       });
 
-      const assignments = await prisma.assignment.findMany({
+      const assignments = await db.assignment.findMany({
         where: whereClause,
         include: {
           article: {

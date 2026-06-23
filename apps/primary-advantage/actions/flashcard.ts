@@ -2,7 +2,7 @@
 
 import { currentUser } from "@/lib/session";
 import { createEmptyCard, Card, State, Rating } from "ts-fsrs";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { ActivityType, FlashcardType } from "@/types/enum";
 import { FlashcardCard, SentenceTimepoint, WordListTimestamp } from "@/types";
 import { CardState } from "@prisma/client";
@@ -181,7 +181,7 @@ export async function saveFlashcard(
     const items = words?.length ? words : sentences || [];
 
     // Check if user already has a deck of this type for this article
-    let deck = await prisma.flashcardDeck.findFirst({
+    let deck = await db.flashcardDeck.findFirst({
       where: {
         userId: user.id,
         type: type as FlashcardType,
@@ -193,7 +193,7 @@ export async function saveFlashcard(
 
     // Create deck if it doesn't exist
     if (!deck) {
-      deck = await prisma.flashcardDeck.create({
+      deck = await db.flashcardDeck.create({
         data: {
           userId: user.id as string,
           type: type as FlashcardType,
@@ -273,7 +273,7 @@ export async function saveFlashcard(
       }
     });
 
-    await prisma.flashcardCard.createMany({
+    await db.flashcardCard.createMany({
       data: cardData,
     });
 
@@ -307,7 +307,7 @@ export async function getUserFlashcardDecks(userId?: string) {
       };
     }
 
-    const decks = await prisma.flashcardDeck.findMany({
+    const decks = await db.flashcardDeck.findMany({
       where: { userId: user.id },
       include: {
         cards: {
@@ -363,7 +363,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
     }
 
     // Fetch user's flashcard decks with optional type filter
-    const decks = await prisma.flashcardDeck.findMany({
+    const decks = await db.flashcardDeck.findMany({
       where: whereClause,
       include: {
         cards: {
@@ -431,7 +431,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
       : [ActivityType.VOCABULARY_FLASHCARDS, ActivityType.SENTENCE_FLASHCARDS];
 
     const [todayActivity, totalXP] = await Promise.all([
-      prisma.userActivity.count({
+      db.userActivity.count({
         where: {
           userId: user.id,
           createdAt: { gte: today },
@@ -440,7 +440,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
           },
         },
       }),
-      prisma.xPLogs.aggregate({
+      db.xPLogs.aggregate({
         where: {
           userId: user.id,
           activityType: {
@@ -487,7 +487,7 @@ export async function getDeckCards(deckId: string) {
       throw new Error("Unauthorized");
     }
 
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         id: deckId,
         userId: user.id,
@@ -538,7 +538,7 @@ export async function getAllSentenceCards() {
       };
     }
 
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         userId: user.id,
         type: FlashcardType.SENTENCE,
@@ -580,7 +580,7 @@ export async function deleteFlashcardCard(cardId: string) {
     }
 
     // Verify the card belongs to the user before deleting
-    const card = await prisma.flashcardCard.findFirst({
+    const card = await db.flashcardCard.findFirst({
       where: {
         id: cardId,
         deck: {
@@ -596,7 +596,7 @@ export async function deleteFlashcardCard(cardId: string) {
       };
     }
 
-    await prisma.flashcardCard.delete({
+    await db.flashcardCard.delete({
       where: { id: cardId },
     });
 
@@ -634,7 +634,7 @@ export async function reviewCard(
     }
 
     // Get the card
-    const card = await prisma.flashcardCard.findFirst({
+    const card = await db.flashcardCard.findFirst({
       where: {
         id: cardId,
         deck: { userId: user.id },
@@ -654,7 +654,7 @@ export async function reviewCard(
     );
 
     // Update card and create review record in transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await db.$transaction(async (tx) => {
       const updated = await tx.flashcardCard.update({
         where: { id: cardId },
         data: {
@@ -728,7 +728,7 @@ export async function saveArticleToFlashcard(
       throw new Error("Unauthorized");
     }
 
-    const article = await prisma.article.findUnique({
+    const article = await db.article.findUnique({
       where: { id: articleId },
       select: {
         sentencsAndWordsForFlashcard: true,
@@ -789,7 +789,7 @@ export async function saveArticleToFlashcard(
     ]);
 
     if (ArticleActivityLogId) {
-      await prisma.articleActivityLog.update({
+      await db.articleActivityLog.update({
         where: {
           id: ArticleActivityLogId,
         },
@@ -820,14 +820,14 @@ export async function getLessonFlashcards(
       throw new Error("Unauthorized");
     }
 
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         userId: user.id,
         type,
       },
     });
 
-    const flashcards = await prisma.flashcardCard.findMany({
+    const flashcards = await db.flashcardCard.findMany({
       where: {
         deckId: deck?.id,
         articleId,
@@ -857,14 +857,14 @@ export async function getLessonOrderingSentences(articleId: string) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         userId: user.id,
         type: FlashcardType.SENTENCE,
       },
     });
 
-    const flashcards = await prisma.flashcardCard.findMany({
+    const flashcards = await db.flashcardCard.findMany({
       where: {
         deckId: deck?.id,
         articleId,
@@ -877,7 +877,7 @@ export async function getLessonOrderingSentences(articleId: string) {
 
     for (const flashcardCard of flashcards) {
       // Get the full article with sentences
-      const article = await prisma.article.findUnique({
+      const article = await db.article.findUnique({
         where: { id: flashcardCard.articleId! },
         select: {
           id: true,
@@ -995,14 +995,14 @@ export async function getLessonClozeTestSentences(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         userId: user.id,
         type: FlashcardType.SENTENCE,
       },
     });
 
-    const flashcards = await prisma.flashcardCard.findMany({
+    const flashcards = await db.flashcardCard.findMany({
       where: {
         deckId: deck?.id,
         articleId,
@@ -1015,7 +1015,7 @@ export async function getLessonClozeTestSentences(
 
     for (const flashcardCard of flashcards) {
       // Get the full article with sentences
-      const article = await prisma.article.findUnique({
+      const article = await db.article.findUnique({
         where: { id: flashcardCard.articleId! },
         select: {
           id: true,
@@ -1068,14 +1068,14 @@ export async function getLessonOrderingWords(articleId: string) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const deck = await prisma.flashcardDeck.findFirst({
+    const deck = await db.flashcardDeck.findFirst({
       where: {
         userId: user.id,
         type: FlashcardType.SENTENCE,
       },
     });
 
-    const flashcards = await prisma.flashcardCard.findMany({
+    const flashcards = await db.flashcardCard.findMany({
       where: {
         deckId: deck?.id,
         articleId,
@@ -1088,7 +1088,7 @@ export async function getLessonOrderingWords(articleId: string) {
 
     for (const flashcardCard of flashcards) {
       // Get the article for context and translations
-      const article = await prisma.article.findUnique({
+      const article = await db.article.findUnique({
         where: { id: flashcardCard.articleId! },
         select: {
           id: true,
@@ -1213,7 +1213,7 @@ export async function getLessonOrderingWords(articleId: string) {
 //       throw new Error("Unauthorized");
 //     }
 
-//     const deck = await prisma.flashcardDeck.findFirst({
+//     const deck = await db.flashcardDeck.findFirst({
 //       where: {
 //         id: deckId,
 //         userId: user.id,
@@ -1230,7 +1230,7 @@ export async function getLessonOrderingWords(articleId: string) {
 //     const totalXP = baseXP + bonusXP;
 
 //     // Award XP in transaction
-//     await prisma.$transaction(async (tx) => {
+//     await db.$transaction(async (tx) => {
 //       await tx.xPLogs.create({
 //         data: {
 //           userId: user.id,

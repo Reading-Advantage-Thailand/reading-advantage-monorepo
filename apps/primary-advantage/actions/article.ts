@@ -8,7 +8,7 @@ import {
   deleteArticleByIdModel,
   getArticleActivity,
 } from "@/server/models/articleModel";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { ActivityType } from "@/types/enum";
 
@@ -50,7 +50,7 @@ export async function getLessonSummaryData(articleId: string) {
     }
 
     // Fetch user activities for this article
-    const activities = await prisma.userActivity.findMany({
+    const activities = await db.userActivity.findMany({
       where: {
         userId: user.id as string,
         targetId: articleId,
@@ -100,7 +100,7 @@ export async function getLessonSummaryData(articleId: string) {
     }
 
     // Calculate total XP earned from all activities for this article
-    const xpLogs = await prisma.xPLogs.findMany({
+    const xpLogs = await db.xPLogs.findMany({
       where: {
         userId: user.id as string,
         activityId: {

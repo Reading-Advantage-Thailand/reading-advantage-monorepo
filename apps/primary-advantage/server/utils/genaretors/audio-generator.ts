@@ -11,7 +11,7 @@ import {
   BASE_TEXT_TO_SPEECH_URL,
   VOICES_AI,
 } from "../constants";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 import { Prisma } from "@prisma/client";
 import { SentenceTimepoint, WordTimestamp } from "@/types";
 import { translateAndStoreSentences } from "./sentence-translator";
@@ -471,7 +471,7 @@ export async function generateAudio({
     );
 
     // // Update the database with sentence timepoints
-    await prisma.article.update({
+    await db.article.update({
       where: { id: articleId },
       data: {
         sentences: JSON.parse(JSON.stringify(sentenceTimepoints)),

@@ -4,7 +4,7 @@ import { currentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import React from "react";
 import { getTranslations } from "next-intl/server";
-import { prisma } from "@/lib/prisma";
+import { db } from '@reading-advantage/db';
 
 export async function generateMetadata({
   params,
@@ -47,7 +47,7 @@ export default async function LessonPage({
   }
 
   // Otherwise, check if it's an assignment
-  const assignment = await prisma.assignment.findUnique({
+  const assignment = await db.assignment.findUnique({
     where: { id },
     select: { id: true },
   });
