@@ -19,10 +19,21 @@
 
 ## Phase 1: Schema Port (FR-1)
 
-- [ ] Task: Add primary-advantage-specific tables to `packages/db/src/schema/` (or a new `primary.ts` file).
-- [ ] Task: Generate Drizzle migration for new tables.
-- [ ] Task: Verify fresh-DB migration applies cleanly.
-- [ ] Task: Update `packages/db/src/schema/index.ts` barrel exports.
+- [~] Task: Add primary-advantage-specific tables to `packages/db/src/schema/` (or a new `primary.ts` file).
+- [~] Task: Generate Drizzle migration for new tables.
+- [~] Task: Verify fresh-DB migration applies cleanly.
+- [~] Task: Update `packages/db/src/schema/index.ts` barrel exports.
+
+> **Phase 1 Red evidence** (commit `ae5f3c7f`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase1-schema-port.test.mjs`
+> Result: 1/9 passed, 8/9 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 1 heading;
+> missing `audit/phase1-schema-port-report.md` and its required sections; missing new table definitions
+> for 8 needs-porting models (VerificationToken, UserRole, ArticleActivityLog,
+> SentencsAndWordsForFlashcard, CardReview, ClozeTestGame, SchoolAdmins, Leaderboard); missing new
+> pgEnum definitions for 4 enums (activityType, flashcardType, cardState, subscriptionType); missing
+> `./primary.js` re-export in `packages/db/src/schema/index.ts`; Phase 1 tasks still `[~]` without
+> SHA evidence; missing `packages/db/src/schema/primary.ts`. Live proof passed: existing Drizzle
+> migrations already reference table names covered by this phase.
 
 ## Phase 2: lib/prisma.ts Replacement (FR-4)
 
