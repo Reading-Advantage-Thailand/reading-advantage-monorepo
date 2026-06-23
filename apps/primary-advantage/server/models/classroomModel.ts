@@ -1,4 +1,22 @@
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  eq,
+  and,
+  desc,
+  asc,
+  inArray,
+} from '@reading-advantage/db';
+import {
+  classrooms,
+  classroomStudents,
+  classroomTeachers,
+  users,
+  userRoles,
+  roles,
+  schools,
+  schoolAdmins,
+  userActivity,
+} from '@reading-advantage/db';
 import { NextResponse } from "next/server";
 import { addDays } from "date-fns";
 import { currentUser } from "@/lib/session";
@@ -11,10 +29,10 @@ export const createClassCode = async (
   try {
     const expiresAt = addDays(new Date(), 1);
 
-    const classroom = await db.classroom.findUnique({
-      where: { id: classrooomId },
-      select: { id: true, name: true },
-    });
+    const [classroom] = await db.select({ id: classrooms.id, name: classrooms.name })
+      .from(classrooms)
+      .where(eq(classrooms.id, classrooomId))
+      .limit(1);
 
     if (!classroom) {
       return NextResponse.json(
@@ -25,10 +43,11 @@ export const createClassCode = async (
 
     if (classroom) {
       // Update the existing classroom's expiration date
-      return await db.classroom.update({
-        where: { id: classrooomId },
-        data: { classCode, codeExpiresAt: expiresAt },
-      });
+      const [updated] = await db.update(classrooms)
+        .set({ classCode, codeExpiresAt: expiresAt, updatedAt: new Date() })
+        .where(eq(classrooms.id, classrooomId))
+        .returning();
+      return updated;
     }
   } catch (error) {
     throw new Error("Failed to generate or update classroom code");
@@ -44,54 +63,46 @@ export const createClassroom = async (data: {
 }) => {
   try {
     let created = false;
-    await db.$transaction(async (tx) => {
-      const user = await tx.user.findUnique({
-        where: { id: data.teacherId },
-        select: { schoolId: true },
-      });
+    await db.transaction(async (tx) => {
+      const [user] = await tx.select({ schoolId: users.schoolId })
+        .from(users)
+        .where(eq(users.id, data.teacherId as string))
+        .limit(1);
 
       let schoolId = user?.schoolId ?? null;
 
       if (data.role === "teacher" && data.teacherId) {
-        const classroom = await tx.classroom.create({
-          data: {
-            name: data.name,
-            classCode: data.classCode || null,
-            grade: data.grade || null,
-            schoolId: schoolId,
-          },
-        });
+        const [classroom] = await tx.insert(classrooms).values({
+          name: data.name,
+          classCode: data.classCode || null,
+          grade: data.grade ? parseInt(data.grade) : null,
+          schoolId: schoolId,
+        }).returning();
 
-        await tx.classroomTeachers.create({
-          data: {
-            classroomId: classroom.id,
-            userId: data.teacherId,
-          },
+        await tx.insert(classroomTeachers).values({
+          classroomId: classroom.id,
+          teacherId: data.teacherId,
         });
         created = true;
         return;
       }
 
       if (data.role === "admin") {
-        await tx.classroom.create({
-          data: {
-            name: data.name,
-            classCode: data.classCode || null,
-            grade: data.grade || null,
-            schoolId: schoolId,
-          },
+        await tx.insert(classrooms).values({
+          name: data.name,
+          classCode: data.classCode || null,
+          grade: data.grade ? parseInt(data.grade) : null,
+          schoolId: schoolId,
         });
         created = true;
         return;
       }
 
       // system or other elevated roles: create without owner assignment; school optional
-      await tx.classroom.create({
-        data: {
-          name: data.name,
-          classCode: data.classCode || null,
-          grade: data.grade || null,
-        },
+      await tx.insert(classrooms).values({
+        name: data.name,
+        classCode: data.classCode || null,
+        grade: data.grade ? parseInt(data.grade) : null,
       });
       created = true;
     });
@@ -110,70 +121,63 @@ export const enrollStudentInClassroom = async (
 ) => {
   try {
     // Check if the student is already enrolled
-    const existingEnrollment = await db.classroomStudent.findUnique({
-      where: {
-        classroomId_studentId: {
-          classroomId,
-          studentId,
-        },
-      },
-    });
+    const [existingEnrollment] = await db.select().from(classroomStudents)
+      .where(
+        and(
+          eq(classroomStudents.classroomId, classroomId),
+          eq(classroomStudents.studentId, studentId),
+        ),
+      )
+      .limit(1);
 
     if (existingEnrollment) {
       throw new Error("Student is already enrolled in this classroom");
     }
 
     // Check if classroom exists
-    const classroom = await db.classroom.findUnique({
-      where: { id: classroomId },
-    });
+    const [classroom] = await db.select().from(classrooms)
+      .where(eq(classrooms.id, classroomId))
+      .limit(1);
 
     if (!classroom) {
       throw new Error("Classroom not found");
     }
 
     // Check if student exists and has STUDENT role
-    const student = await db.user.findFirst({
-      where: {
-        id: studentId,
-        roles: {
-          some: {
-            role: {
-              name: "student",
-            },
-          },
-        },
-      },
-    });
+    const [student] = await db.select().from(users)
+      .innerJoin(userRoles, eq(userRoles.userId, users.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(
+        and(
+          eq(users.id, studentId),
+          eq(roles.name, "student"),
+        ),
+      )
+      .limit(1);
 
     if (!student) {
       throw new Error("Student not found or invalid role");
     }
 
     // Create the enrollment
-    const enrollment = await db.classroomStudent.create({
-      data: {
-        studentId,
-        classroomId,
-      },
-      include: {
-        student: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        classroom: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+    const [enrollment] = await db.insert(classroomStudents).values({
+      studentId,
+      classroomId,
+    }).returning();
 
-    return enrollment;
+    // Stitch the nested student + classroom shape that the Prisma `include` produced.
+    return {
+      ...enrollment,
+      student: {
+        id: student.users?.id ?? student.id,
+        name: student.users?.name,
+        email: student.users?.email,
+      },
+      classroom: {
+        id: classroom.id,
+        name: classroom.name,
+      },
+    };
   } catch (error) {
     console.error("Error enrolling student:", error);
     throw error;
@@ -189,16 +193,16 @@ export const unenrollStudentFromClassroom = async (
   try {
     // If teacherId is provided, verify the teacher owns the classroom
     if (teacherId) {
-      const classroom = await db.classroom.findFirst({
-        where: {
-          id: classroomId,
-          teachers: {
-            some: {
-              userId: teacherId,
-            },
-          },
-        },
-      });
+      const [classroom] = await db.select({ id: classrooms.id })
+        .from(classrooms)
+        .innerJoin(classroomTeachers, eq(classroomTeachers.classroomId, classrooms.id))
+        .where(
+          and(
+            eq(classrooms.id, classroomId),
+            eq(classroomTeachers.teacherId, teacherId),
+          ),
+        )
+        .limit(1);
 
       if (!classroom) {
         throw new Error("Classroom not found or access denied");
@@ -206,45 +210,51 @@ export const unenrollStudentFromClassroom = async (
     }
 
     // Check if the enrollment exists
-    const enrollment = await db.classroomStudent.findUnique({
-      where: {
-        classroomId_studentId: {
-          classroomId,
-          studentId,
-        },
-      },
-      include: {
-        student: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        classroom: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+    const [enrollment] = await db.select().from(classroomStudents)
+      .where(
+        and(
+          eq(classroomStudents.classroomId, classroomId),
+          eq(classroomStudents.studentId, studentId),
+        ),
+      )
+      .limit(1);
 
     if (!enrollment) {
       throw new Error("Student is not enrolled in this classroom");
     }
 
-    // Delete the enrollment
-    await db.classroomStudent.delete({
-      where: {
-        classroomId_studentId: {
-          classroomId,
-          studentId,
-        },
-      },
-    });
+    // Look up the related student + classroom rows for the return shape.
+    const [student] = await db.select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+    })
+      .from(users)
+      .where(eq(users.id, studentId))
+      .limit(1);
 
-    return enrollment;
+    const [classroom] = await db.select({
+      id: classrooms.id,
+      name: classrooms.name,
+    })
+      .from(classrooms)
+      .where(eq(classrooms.id, classroomId))
+      .limit(1);
+
+    // Delete the enrollment
+    await db.delete(classroomStudents)
+      .where(
+        and(
+          eq(classroomStudents.classroomId, classroomId),
+          eq(classroomStudents.studentId, studentId),
+        ),
+      );
+
+    return {
+      ...enrollment,
+      student: student ?? null,
+      classroom: classroom ?? null,
+    };
   } catch (error) {
     console.error("Error unenrolling student:", error);
     throw error;
@@ -259,50 +269,79 @@ export const getAvailableStudentsForClassroom = async (
   try {
     // If teacherId is provided, verify the teacher owns the classroom
     if (teacherId) {
-      const classroom = await db.classroom.findFirst({
-        where: {
-          id: classroomId,
-          teachers: {
-            some: {
-              userId: teacherId,
-            },
-          },
-        },
-      });
+      const [classroom] = await db.select({ id: classrooms.id })
+        .from(classrooms)
+        .innerJoin(classroomTeachers, eq(classroomTeachers.classroomId, classrooms.id))
+        .where(
+          and(
+            eq(classrooms.id, classroomId),
+            eq(classroomTeachers.teacherId, teacherId),
+          ),
+        )
+        .limit(1);
 
       if (!classroom) {
         throw new Error("Classroom not found or access denied");
       }
     }
 
-    // Get all students who are not enrolled in this classroom
-    const availableStudents = await db.user.findMany({
-      where: {
-        roles: {
-          some: {
-            role: {
-              name: "student",
-            },
-          },
-        },
-        studentClassroom: {
-          none: {
-            classroomId,
-          },
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        cefrLevel: true,
-        level: true,
-        xp: true,
-      },
-      orderBy: {
-        name: "asc",
-      },
-    });
+    // Get all students who are not enrolled in this classroom.
+    // We use a NOT IN subquery (anti-join) to mirror Prisma's
+    // `studentClassroom: { none: { classroomId } }`.
+    const enrolledStudentIds = await db
+      .select({ id: classroomStudents.studentId })
+      .from(classroomStudents)
+      .where(eq(classroomStudents.classroomId, classroomId));
+
+    const enrolledIds = enrolledStudentIds.map((row) => row.id);
+
+    const conditions: any[] = [
+      // join student role
+    ];
+
+    // Build the user query: users INNER JOIN userRoles INNER JOIN roles
+    // WHERE role.name = 'student' AND id NOT IN (enrolled)
+    let baseQuery = db.select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      cefrLevel: users.cefrLevel,
+      level: users.level,
+      xp: users.xp,
+    })
+      .from(users)
+      .innerJoin(userRoles, eq(userRoles.userId, users.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId));
+
+    const whereConditions: any[] = [eq(roles.name, "student")];
+    if (enrolledIds.length) {
+      // Exclude enrolled students
+      whereConditions.push(
+        // use sql template for NOT IN
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // drizzle's `notInArray` operator
+        // import notInArray from drizzle-orm in production
+        // keep simple: use sql
+        // @ts-ignore - drizzle import shape
+        // we already imported `inArray` but need `notInArray`
+        // use raw sql template
+        // NOTE: this preserves Prisma's `none` semantics
+        // The condition is "users.id NOT IN (...)"
+        // We import notInArray lazily inline.
+        // Since `notInArray` is in `@reading-advantage/db` barrel, call it
+        // via a dynamic re-import would be overkill — use sql template literal.
+        // Use a sql`` with the inlined IDs (validated as strings above).
+        // @ts-ignore
+        // safer: notInArray is exported, use it directly
+        // we need to add it to imports — let's import it
+        // We import via a separate import at the top of the file
+        notInArrayFn(users.id, enrolledIds),
+      );
+    }
+
+    const availableStudents = await baseQuery
+      .where(and(...whereConditions))
+      .orderBy(asc(users.name));
 
     return availableStudents;
   } catch (error) {
@@ -310,6 +349,10 @@ export const getAvailableStudentsForClassroom = async (
     throw error;
   }
 };
+
+// Local alias for the notInArray operator — kept as a small helper to avoid
+// growing the top-level import block in this file.
+import { notInArray as notInArrayFn } from '@reading-advantage/db';
 
 // Get all classrooms based on user role
 export const getAllClassrooms = async (userWithRoles: UserWithRoles) => {
@@ -330,7 +373,7 @@ export const getAllClassrooms = async (userWithRoles: UserWithRoles) => {
     const isSchoolAdmin = userWithRoles.SchoolAdmins.length > 0;
 
     // Build where clause based on user role
-    let whereClause: any = {};
+    const whereConditions: any[] = [];
 
     if (isSystemAdmin) {
       // System admins can see all classrooms across all schools
@@ -338,67 +381,85 @@ export const getAllClassrooms = async (userWithRoles: UserWithRoles) => {
     } else if (isAdmin || isSchoolAdmin) {
       // Admins and school admins can see all classrooms in their school
       if (userWithRoles.schoolId) {
-        whereClause.schoolId = userWithRoles.schoolId;
+        whereConditions.push(eq(classrooms.schoolId, userWithRoles.schoolId));
       }
     } else if (isTeacher) {
       // Teachers can only see classrooms they teach in
-      whereClause.teachers = {
-        some: {
-          userId: userWithRoles.id,
-        },
-      };
+      const teacherClassroomIds = await db
+        .select({ classroomId: classroomTeachers.classroomId })
+        .from(classroomTeachers)
+        .where(eq(classroomTeachers.teacherId, userWithRoles.id));
+      const classroomIds = teacherClassroomIds.map((row) => row.classroomId);
+      if (classroomIds.length) {
+        whereConditions.push(inArray(classrooms.id, classroomIds));
+      } else {
+        // No classrooms assigned; return nothing.
+        whereConditions.push(eq(classrooms.id, "__never__"));
+      }
     } else {
       // Other roles (like students) cannot access classroom lists
       throw new Error("Insufficient permissions to view classrooms");
     }
 
     // Fetch classrooms with basic information first
-    const classrooms = await db.classroom.findMany({
-      where: whereClause,
-      select: {
-        id: true,
-        name: true,
-        grade: true,
-        classCode: true,
-        createdAt: true,
-        updatedAt: true,
-        schoolId: true,
-        school: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+    const classroomsRows = await db.select({
+      id: classrooms.id,
+      name: classrooms.name,
+      grade: classrooms.grade,
+      classCode: classrooms.classCode,
+      createdAt: classrooms.createdAt,
+      updatedAt: classrooms.updatedAt,
+      schoolId: classrooms.schoolId,
+      schoolName: schools.name,
+    })
+      .from(classrooms)
+      .leftJoin(schools, eq(schools.id, classrooms.schoolId))
+      .where(whereConditions.length ? and(...whereConditions) : undefined)
+      .orderBy(desc(classrooms.createdAt));
 
     // For each classroom, fetch teachers and students separately to avoid type issues
     const classroomsWithDetails = await Promise.all(
-      classrooms.map(async (classroom) => {
-        const [teachers, students] = await Promise.all([
-          db.classroomTeachers.findMany({
-            where: { classroomId: classroom.id },
-            select: {
-              user: {
-                select: { id: true, name: true, email: true },
-              },
-            },
-          }),
-          db.classroomStudent.findMany({
-            where: { classroomId: classroom.id },
-            select: {
-              student: {
-                select: { id: true, name: true, email: true },
-              },
-            },
-          }),
-        ]);
+      classroomsRows.map(async (classroom) => {
+        const teacherRows = await db.select({
+          userId: users.id,
+          name: users.name,
+          email: users.email,
+        })
+          .from(classroomTeachers)
+          .innerJoin(users, eq(users.id, classroomTeachers.teacherId))
+          .where(eq(classroomTeachers.classroomId, classroom.id));
+
+        const studentRows = await db.select({
+          studentId: users.id,
+          name: users.name,
+          email: users.email,
+        })
+          .from(classroomStudents)
+          .innerJoin(users, eq(users.id, classroomStudents.studentId))
+          .where(eq(classroomStudents.classroomId, classroom.id));
 
         return {
-          ...classroom,
-          teachers: teachers.map((teacher) => teacher.user),
-          students: students.map((student) => student.student),
+          id: classroom.id,
+          name: classroom.name,
+          grade: classroom.grade,
+          classCode: classroom.classCode,
+          createdAt: classroom.createdAt,
+          updatedAt: classroom.updatedAt,
+          schoolId: classroom.schoolId,
+          school: {
+            id: classroom.schoolId,
+            name: classroom.schoolName,
+          },
+          teachers: teacherRows.map((t) => ({
+            id: t.userId,
+            name: t.name,
+            email: t.email,
+          })),
+          students: studentRows.map((s) => ({
+            id: s.studentId,
+            name: s.name,
+            email: s.email,
+          })),
         };
       }),
     );
@@ -420,31 +481,51 @@ export const updateClassroom = async (
   },
 ) => {
   try {
-    return await db.classroom.update({
-      where: { id },
-      data: {
+    const [updatedClassroom] = await db.update(classrooms)
+      .set({
         name: data.name,
-        grade: data.grade,
-        // Note: grade and description are not in the current schema
-        // If needed, they should be added to the Prisma schema first
+        grade: data.grade ? parseInt(data.grade) : undefined,
         updatedAt: new Date(),
-      },
-      include: {
-        teachers: {
-          select: {
-            id: true,
-            user: { select: { id: true, name: true, email: true } },
-          },
-        },
-        students: {
-          include: {
-            student: {
-              select: { id: true, name: true, email: true },
-            },
-          },
-        },
-      },
-    });
+      })
+      .where(eq(classrooms.id, id))
+      .returning();
+
+    if (!updatedClassroom) {
+      return null;
+    }
+
+    // Stitch teachers + students for the include shape.
+    const teacherRows = await db.select({
+      id: classroomTeachers.id,
+      userId: users.id,
+      name: users.name,
+      email: users.email,
+    })
+      .from(classroomTeachers)
+      .innerJoin(users, eq(users.id, classroomTeachers.teacherId))
+      .where(eq(classroomTeachers.classroomId, id));
+
+    const studentRows = await db.select({
+      id: classroomStudents.id,
+      studentId: users.id,
+      name: users.name,
+      email: users.email,
+    })
+      .from(classroomStudents)
+      .innerJoin(users, eq(users.id, classroomStudents.studentId))
+      .where(eq(classroomStudents.classroomId, id));
+
+    return {
+      ...updatedClassroom,
+      teachers: teacherRows.map((t) => ({
+        id: t.id,
+        user: { id: t.userId, name: t.name, email: t.email },
+      })),
+      students: studentRows.map((s) => ({
+        id: s.id,
+        student: { id: s.studentId, name: s.name, email: s.email },
+      })),
+    };
   } catch (error) {
     console.error("Error updating classroom:", error);
     return null;
@@ -460,48 +541,43 @@ export const deleteClassroom = async (
   try {
     if (role === "teacher") {
       // First, verify the teacher is part of the classroom
-      const classroom = await db.classroom.findFirst({
-        where: {
-          id: classroomId,
-        },
-        include: {
-          teachers: {
-            select: {
-              userId: true,
-            },
-          },
-        },
-      });
+      const teacherRows = await db.select({
+        userId: classroomTeachers.teacherId,
+      })
+        .from(classroomTeachers)
+        .where(eq(classroomTeachers.classroomId, classroomId));
+
+      const [classroom] = await db.select({ id: classrooms.id })
+        .from(classrooms)
+        .where(eq(classrooms.id, classroomId))
+        .limit(1);
 
       if (!classroom) {
         return { success: false, error: "Classroom not found" };
       }
 
       // Count how many teachers are in the classroom
-      const teacherCount = classroom.teachers.length;
+      const teacherCount = teacherRows.length;
 
       if (teacherCount > 1) {
         // Multiple teachers: only remove the current teacher from the classroom
-        await db.classroomTeachers.deleteMany({
-          where: {
-            classroomId: classroomId,
-            userId: teacherId,
-          },
-        });
+        await db.delete(classroomTeachers)
+          .where(
+            and(
+              eq(classroomTeachers.classroomId, classroomId),
+              eq(classroomTeachers.teacherId, teacherId),
+            ),
+          );
         return { success: true, message: "Removed from classroom" };
       } else {
         // Only one teacher: delete the entire classroom
-        await db.classroom.delete({
-          where: { id: classroomId },
-        });
+        await db.delete(classrooms).where(eq(classrooms.id, classroomId));
         return { success: true, message: "Classroom deleted" };
       }
     }
 
     if (role === "admin" || role === "system") {
-      await db.classroom.delete({
-        where: { id: classroomId },
-      });
+      await db.delete(classrooms).where(eq(classrooms.id, classroomId));
       return { success: true };
     }
 
@@ -519,52 +595,48 @@ export const deleteClassroom = async (
 export const getAllStudentsByTeacher = async (teacherId: string) => {
   try {
     // Get all classrooms for the teacher
-    const classrooms = await db.classroom.findMany({
-      where: { teachers: { some: { userId: teacherId } } },
-      include: {
-        students: {
-          include: {
-            student: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                xp: true,
-                level: true,
-                cefrLevel: true,
-                createdAt: true,
-                updatedAt: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const teacherClassrooms = await db.select({
+      classroomId: classroomTeachers.classroomId,
+      classroomName: classrooms.name,
+      studentId: classroomStudents.studentId,
+      studentUserId: users.id,
+      studentName: users.name,
+      studentEmail: users.email,
+      studentXp: users.xp,
+      studentLevel: users.level,
+      studentCefrLevel: users.cefrLevel,
+      studentCreatedAt: users.createdAt,
+      studentUpdatedAt: users.updatedAt,
+    })
+      .from(classroomTeachers)
+      .innerJoin(classrooms, eq(classrooms.id, classroomTeachers.classroomId))
+      .leftJoin(classroomStudents, eq(classroomStudents.classroomId, classrooms.id))
+      .leftJoin(users, eq(users.id, classroomStudents.studentId))
+      .where(eq(classroomTeachers.teacherId, teacherId));
 
     // Extract unique students across all classrooms
     const studentMap = new Map();
 
-    classrooms.forEach((classroom) => {
-      classroom.students.forEach((classroomStudent) => {
-        const student = classroomStudent.student;
-        if (!studentMap.has(student.id)) {
-          studentMap.set(student.id, {
-            id: student.id,
-            display_name: student.name,
-            email: student.email,
-            xp: student.xp,
-            level: student.level,
-            cefrLevel: student.cefrLevel,
-            createdAt: student.createdAt,
-            updatedAt: student.updatedAt,
-            classrooms: [],
-          });
-        }
-        // Add classroom info to student
-        studentMap.get(student.id).classrooms.push({
-          id: classroom.id,
-          name: classroom.name,
+    teacherClassrooms.forEach((row) => {
+      if (!row.studentUserId) return;
+      const studentId = row.studentUserId;
+      if (!studentMap.has(studentId)) {
+        studentMap.set(studentId, {
+          id: studentId,
+          display_name: row.studentName,
+          email: row.studentEmail,
+          xp: row.studentXp,
+          level: row.studentLevel,
+          cefrLevel: row.studentCefrLevel,
+          createdAt: row.studentCreatedAt,
+          updatedAt: row.studentUpdatedAt,
+          classrooms: [],
         });
+      }
+      // Add classroom info to student
+      studentMap.get(studentId).classrooms.push({
+        id: row.classroomId,
+        name: row.classroomName,
       });
     });
 
@@ -581,62 +653,56 @@ export const getAllStudentsByTeacher = async (teacherId: string) => {
 // Get all students by admin
 export const getAllStudentsByAdmin = async (adminId: string) => {
   try {
-    const schoolId = await db.schoolAdmins.findFirst({
-      where: { userId: adminId },
-      select: { schoolId: true },
-    });
+    const [schoolAdmin] = await db.select({ schoolId: schoolAdmins.schoolId })
+      .from(schoolAdmins)
+      .where(eq(schoolAdmins.userId, adminId))
+      .limit(1);
 
-    if (!schoolId) {
+    if (!schoolAdmin) {
       return [];
     }
 
-    // Get all classrooms for the teacher
-    const classrooms = await db.classroom.findMany({
-      where: { schoolId: schoolId.schoolId },
-      include: {
-        students: {
-          include: {
-            student: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                xp: true,
-                level: true,
-                cefrLevel: true,
-                createdAt: true,
-                updatedAt: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    // Get all classrooms for the school
+    const adminClassrooms = await db.select({
+      classroomId: classrooms.id,
+      classroomName: classrooms.name,
+      studentUserId: users.id,
+      studentName: users.name,
+      studentEmail: users.email,
+      studentXp: users.xp,
+      studentLevel: users.level,
+      studentCefrLevel: users.cefrLevel,
+      studentCreatedAt: users.createdAt,
+      studentUpdatedAt: users.updatedAt,
+    })
+      .from(classrooms)
+      .leftJoin(classroomStudents, eq(classroomStudents.classroomId, classrooms.id))
+      .leftJoin(users, eq(users.id, classroomStudents.studentId))
+      .where(eq(classrooms.schoolId, schoolAdmin.schoolId));
 
     // Extract unique students across all classrooms
     const studentMap = new Map();
 
-    classrooms.forEach((classroom) => {
-      classroom.students.forEach((classroomStudent) => {
-        const student = classroomStudent.student;
-        if (!studentMap.has(student.id)) {
-          studentMap.set(student.id, {
-            id: student.id,
-            display_name: student.name,
-            email: student.email,
-            xp: student.xp,
-            level: student.level,
-            cefrLevel: student.cefrLevel,
-            createdAt: student.createdAt,
-            updatedAt: student.updatedAt,
-            classrooms: [],
-          });
-        }
-        // Add classroom info to student
-        studentMap.get(student.id).classrooms.push({
-          id: classroom.id,
-          name: classroom.name,
+    adminClassrooms.forEach((row) => {
+      if (!row.studentUserId) return;
+      const studentId = row.studentUserId;
+      if (!studentMap.has(studentId)) {
+        studentMap.set(studentId, {
+          id: studentId,
+          display_name: row.studentName,
+          email: row.studentEmail,
+          xp: row.studentXp,
+          level: row.studentLevel,
+          cefrLevel: row.studentCefrLevel,
+          createdAt: row.studentCreatedAt,
+          updatedAt: row.studentUpdatedAt,
+          classrooms: [],
         });
+      }
+      // Add classroom info to student
+      studentMap.get(studentId).classrooms.push({
+        id: row.classroomId,
+        name: row.classroomName,
       });
     });
 
@@ -653,72 +719,88 @@ export const getAllStudentsByAdmin = async (adminId: string) => {
 // Get all students in the system (for system role)
 export const getAllStudentsInSystem = async () => {
   try {
-    // Get all users with STUDENT role
-    const students = await db.user.findMany({
-      where: {
-        roles: {
-          some: {
-            role: {
-              name: "student",
-            },
-          },
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        xp: true,
-        level: true,
-        cefrLevel: true,
-        createdAt: true,
-        updatedAt: true,
-        studentClassroom: {
-          include: {
-            classroom: {
-              select: {
-                id: true,
-                name: true,
-                teachers: {
-                  select: {
-                    id: true,
-                    user: {
-                      select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    // Get all users with STUDENT role, plus their classroom memberships and
+    // each classroom's teachers. We stitch the include shape in memory.
+    const studentRows = await db.select({
+      studentId: users.id,
+      studentName: users.name,
+      studentEmail: users.email,
+      studentXp: users.xp,
+      studentLevel: users.level,
+      studentCefrLevel: users.cefrLevel,
+      studentCreatedAt: users.createdAt,
+      studentUpdatedAt: users.updatedAt,
+      classroomId: classrooms.id,
+      classroomName: classrooms.name,
+    })
+      .from(users)
+      .innerJoin(userRoles, eq(userRoles.userId, users.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .leftJoin(classroomStudents, eq(classroomStudents.studentId, users.id))
+      .leftJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
+      .where(eq(roles.name, "student"))
+      .orderBy(desc(users.createdAt));
 
-    // Format the data to match the expected structure
-    const formattedStudents = students.map((student) => ({
-      id: student.id,
-      display_name: student.name,
-      email: student.email,
-      xp: student.xp,
-      level: student.level,
-      cefrLevel: student.cefrLevel,
-      createdAt: student.createdAt,
-      updatedAt: student.updatedAt,
-      classrooms: student.studentClassroom.map((sc) => ({
-        id: sc.classroom.id,
-        name: sc.classroom.name,
-        teacher: sc.classroom.teachers[0].user,
-      })),
-    }));
+    // For each (student, classroom) row, fetch the classroom's teachers.
+    const classroomIds = Array.from(
+      new Set(
+        studentRows
+          .map((r) => r.classroomId)
+          .filter((id): id is string => !!id),
+      ),
+    );
 
-    return formattedStudents;
+    const teacherByClassroom = new Map<string, any[]>();
+    if (classroomIds.length) {
+      const teacherRows = await db.select({
+        classroomId: classroomTeachers.classroomId,
+        teacherRelId: classroomTeachers.id,
+        userId: users.id,
+        name: users.name,
+        email: users.email,
+      })
+        .from(classroomTeachers)
+        .innerJoin(users, eq(users.id, classroomTeachers.teacherId))
+        .where(inArray(classroomTeachers.classroomId, classroomIds));
+      for (const row of teacherRows) {
+        if (!teacherByClassroom.has(row.classroomId)) {
+          teacherByClassroom.set(row.classroomId, []);
+        }
+        teacherByClassroom.get(row.classroomId)!.push({
+          id: row.teacherRelId,
+          user: { id: row.userId, name: row.name, email: row.email },
+        });
+      }
+    }
+
+    // Group by student
+    const groupedByStudent = new Map<string, any>();
+    for (const row of studentRows) {
+      const sid = row.studentId;
+      if (!groupedByStudent.has(sid)) {
+        groupedByStudent.set(sid, {
+          id: sid,
+          display_name: row.studentName,
+          email: row.studentEmail,
+          xp: row.studentXp,
+          level: row.studentLevel,
+          cefrLevel: row.studentCefrLevel,
+          createdAt: row.studentCreatedAt,
+          updatedAt: row.studentUpdatedAt,
+          classrooms: [],
+        });
+      }
+      if (row.classroomId) {
+        const teacherList = teacherByClassroom.get(row.classroomId) ?? [];
+        groupedByStudent.get(sid).classrooms.push({
+          id: row.classroomId,
+          name: row.classroomName,
+          teacher: teacherList[0]?.user,
+        });
+      }
+    }
+
+    return Array.from(groupedByStudent.values());
   } catch (error) {
     console.error("Error fetching all students in system:", error);
     throw new Error("Failed to fetch students");
@@ -732,60 +814,75 @@ export const getClassroomWithStudents = async (
 ) => {
   try {
     // If teacherId is provided, verify the teacher owns the classroom
-    const whereClause: any = { id: classroomId };
+    const whereConditions: any[] = [eq(classrooms.id, classroomId)];
     if (teacherId) {
-      whereClause.teacherId = teacherId;
+      whereConditions.push(eq(classrooms.teacherId, teacherId));
     }
 
-    const classroom = await db.classroom.findFirst({
-      where: { id: classroomId },
-      include: {
-        teachers: {
-          select: {
-            id: true,
-            user: { select: { id: true, name: true, email: true } },
-          },
-        },
-        students: {
-          include: {
-            student: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                xp: true,
-                level: true,
-                cefrLevel: true,
-                createdAt: true,
-                updatedAt: true,
-                // Get the latest activity from UserActivity
-                userActivity: {
-                  orderBy: { createdAt: "desc" },
-                  take: 1,
-                  select: { createdAt: true },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
+    const [classroom] = await db.select().from(classrooms)
+      .where(and(...whereConditions))
+      .limit(1);
 
     if (!classroom) {
       return null;
     }
 
-    // Format the response to match the expected structure
-    const studentInClass = classroom.students.map((cs) => ({
-      id: cs.student.id,
-      display_name: cs.student.name,
-      email: cs.student.email,
-      last_activity:
-        cs.student.userActivity[0]?.createdAt?.toISOString() || null,
-      level: cs.student.level,
-      xp: cs.student.xp,
-      cefrLevel: cs.student.cefrLevel,
+    // Stitch students + their latest activity for the include shape.
+    const studentRows = await db.select({
+      classroomStudentId: classroomStudents.id,
+      studentId: users.id,
+      studentName: users.name,
+      studentEmail: users.email,
+      studentXp: users.xp,
+      studentLevel: users.level,
+      studentCefrLevel: users.cefrLevel,
+      studentCreatedAt: users.createdAt,
+      studentUpdatedAt: users.updatedAt,
+    })
+      .from(classroomStudents)
+      .innerJoin(users, eq(users.id, classroomStudents.studentId))
+      .where(eq(classroomStudents.classroomId, classroomId));
+
+    // For each student, fetch the latest userActivity row.
+    const studentIds = studentRows.map((s) => s.studentId);
+    const latestActivityByStudent = new Map<string, Date | null>();
+    if (studentIds.length) {
+      const activityRows = await db.select({
+        userId: userActivity.userId,
+        createdAt: userActivity.createdAt,
+      })
+        .from(userActivity)
+        .where(inArray(userActivity.userId, studentIds))
+        .orderBy(desc(userActivity.createdAt));
+      for (const row of activityRows) {
+        if (!latestActivityByStudent.has(row.userId)) {
+          latestActivityByStudent.set(row.userId, row.createdAt);
+        }
+      }
+    }
+
+    const studentInClass = studentRows.map((cs) => ({
+      id: cs.studentId,
+      display_name: cs.studentName,
+      email: cs.studentEmail,
+      last_activity: (latestActivityByStudent.get(cs.studentId) ?? null)?.toISOString() ?? null,
+      level: cs.studentLevel,
+      xp: cs.studentXp,
+      cefrLevel: cs.studentCefrLevel,
     }));
+
+    // Fetch the classroom's teachers (id, user-id).
+    const teacherRows = await db.select({
+      id: classroomTeachers.id,
+      userId: users.id,
+      name: users.name,
+      email: users.email,
+    })
+      .from(classroomTeachers)
+      .innerJoin(users, eq(users.id, classroomTeachers.teacherId))
+      .where(eq(classroomTeachers.classroomId, classroomId));
+
+    const primaryTeacher = teacherRows[0]?.user;
 
     const formattedClassroom = {
       id: classroom.id,
@@ -794,9 +891,9 @@ export const getClassroomWithStudents = async (
       passwordStudents: classroom.passwordStudents,
       codeExpiresAt: classroom.codeExpiresAt?.toISOString() || null,
       grade: classroom.grade,
-      teacherId: classroom.teachers[0].user.id,
+      teacherId: primaryTeacher?.id,
       archived: false, // Add this field based on your schema
-      noOfStudents: classroom.students.length,
+      noOfStudents: studentRows.length,
     };
 
     return {
@@ -812,12 +909,14 @@ export const getClassroomWithStudents = async (
 export const getClassroomStudentForLogin = async (code: string) => {
   try {
     //check code
-    const checkCode = await db.classroom.findFirst({
-      where: {
-        passwordStudents: code,
-      },
-      select: { id: true, passwordStudents: true, codeExpiresAt: true },
-    });
+    const [checkCode] = await db.select({
+      id: classrooms.id,
+      passwordStudents: classrooms.passwordStudents,
+      codeExpiresAt: classrooms.codeExpiresAt,
+    })
+      .from(classrooms)
+      .where(eq(classrooms.passwordStudents, code))
+      .limit(1);
 
     if (!checkCode) {
       return NextResponse.json(
@@ -833,16 +932,18 @@ export const getClassroomStudentForLogin = async (code: string) => {
       );
     }
 
-    const studentInClass = await db.classroomStudent.findMany({
-      where: {
-        classroomId: checkCode?.id,
-      },
-      include: {
-        student: {
-          select: { id: true, email: true, name: true },
-        },
-      },
-    });
+    const studentInClass = await db.select({
+      id: classroomStudents.id,
+      classroomId: classroomStudents.classroomId,
+      studentId: classroomStudents.studentId,
+      joinedAt: classroomStudents.joinedAt,
+      studentUserId: users.id,
+      studentEmail: users.email,
+      studentName: users.name,
+    })
+      .from(classroomStudents)
+      .innerJoin(users, eq(users.id, classroomStudents.studentId))
+      .where(eq(classroomStudents.classroomId, checkCode.id));
 
     return NextResponse.json({ students: studentInClass }, { status: 200 });
   } catch (error) {
@@ -857,15 +958,15 @@ export const generateClassCode = async (
 ) => {
   try {
     // Get classroom with existing password
-    const classroom = await db.classroom.findUnique({
-      where: { id: classroomId },
-      select: {
-        id: true,
-        name: true,
-        passwordStudents: true,
-        codeExpiresAt: true,
-      },
-    });
+    const [classroom] = await db.select({
+      id: classrooms.id,
+      name: classrooms.name,
+      passwordStudents: classrooms.passwordStudents,
+      codeExpiresAt: classrooms.codeExpiresAt,
+    })
+      .from(classrooms)
+      .where(eq(classrooms.id, classroomId))
+      .limit(1);
 
     if (!classroom) {
       return null;
@@ -885,11 +986,10 @@ export const generateClassCode = async (
 
     // Function to check if password exists in database
     const isPasswordUnique = async (password: string): Promise<boolean> => {
-      const existing = await db.classroom.findFirst({
-        where: {
-          passwordStudents: password,
-        },
-      });
+      const [existing] = await db.select({ id: classrooms.id })
+        .from(classrooms)
+        .where(eq(classrooms.passwordStudents, password))
+        .limit(1);
       return !existing;
     };
 
@@ -922,19 +1022,19 @@ export const generateClassCode = async (
     const expiresAt = addDays(new Date(), 7);
 
     // Update the classroom with the new password and expiration date
-    const updatedClassroom = await db.classroom.update({
-      where: { id: classroomId },
-      data: {
+    const [updatedClassroom] = await db.update(classrooms)
+      .set({
         passwordStudents: newPassword,
         codeExpiresAt: expiresAt,
-      },
-      select: {
-        id: true,
-        name: true,
-        passwordStudents: true,
-        codeExpiresAt: true,
-      },
-    });
+        updatedAt: new Date(),
+      })
+      .where(eq(classrooms.id, classroomId))
+      .returning({
+        id: classrooms.id,
+        name: classrooms.name,
+        passwordStudents: classrooms.passwordStudents,
+        codeExpiresAt: classrooms.codeExpiresAt,
+      });
 
     return updatedClassroom;
   } catch (error) {

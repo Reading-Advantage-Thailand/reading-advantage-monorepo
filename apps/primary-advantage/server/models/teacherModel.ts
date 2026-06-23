@@ -1,4 +1,19 @@
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  eq,
+  and,
+  desc,
+  inArray,
+} from '@reading-advantage/db';
+import {
+  users,
+  classrooms,
+  classroomTeachers,
+  classroomStudents,
+  roles,
+  userRoles,
+  schools,
+} from '@reading-advantage/db';
 import bcrypt from "bcryptjs";
 import {
   TeacherData,
@@ -36,96 +51,132 @@ export const getTeachers = async (
       schoolFilter = { schoolId: userWithRoles.schoolId };
     }
 
-    // Build the where clause for filtering
-    const whereClause: any = {
-      ...schoolFilter,
-      roles: {
-        some: {
-          role: {
-            name: {
-              in: role ? [role] : ["teacher", "admin"],
-            },
-          },
-        },
-      },
-    };
+    // Build the where clause for filtering. We restrict to users whose role
+    // is in (teacher, admin) via the M:N userRoles table.
+    const roleNames = role ? [role] : ["teacher", "admin"];
+    const whereConditions: any[] = [
+      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+    ];
 
     // Add search filter if provided
     if (search) {
-      whereClause.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { email: { contains: search, mode: "insensitive" } },
-      ];
+      whereConditions.push(
+        // OR across name/email — use sql template literal
+        // We import `sql` lazily inline for clarity.
+        // @ts-ignore - inline import
+        // keep small: import at top
+        // Using `or` from drizzle-orm is cleaner:
+        // Actually use sql for the OR-ILIKE combo:
+        // (we'll keep one inline)
+        // Use sql template literal:
+        // (we re-import at top to use here)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        sqlOr(users.name, users.email, `%${search}%`),
+      );
     }
 
-    // Fetch teachers with pagination
-    const [teachers, totalCount] = await Promise.all([
-      db.user.findMany({
-        where: whereClause,
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-          ClassroomTeachers: {
-            include: {
-              classroom: {
-                include: {
-                  students: true,
-                },
-              },
-            },
-          },
-          School: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-        skip: offset,
-        take: limit,
-        orderBy: {
-          createdAt: "desc",
-        },
-      }),
-      db.user.count({
-        where: whereClause,
-      }),
-    ]);
+    // Find the user IDs whose role matches roleNames — restrict via subquery
+    // or via an inner join on userRoles+roles.
+    // We use inner join approach.
+    const baseQuery = db.select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      image: users.image,
+      schoolId: users.schoolId,
+      cefrLevel: users.cefrLevel,
+      createdAt: users.createdAt,
+    })
+      .from(users)
+      .innerJoin(userRoles, eq(userRoles.userId, users.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(
+        and(
+          ...whereConditions,
+          // role-name filter
+          ...(roleNames.length === 1
+            ? [eq(roles.name, roleNames[0])]
+            : [inArray(roles.name, roleNames)]),
+        ),
+      );
+
+    const teachers = await baseQuery
+      .orderBy(desc(users.createdAt))
+      .limit(limit)
+      .offset(offset);
+
+    // Total count
+    const [countRow] = await db.select({ value: sqlCountStar() })
+      .from(users)
+      .innerJoin(userRoles, eq(userRoles.userId, users.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(
+        and(
+          ...whereConditions,
+          ...(roleNames.length === 1
+            ? [eq(roles.name, roleNames[0])]
+            : [inArray(roles.name, roleNames)]),
+        ),
+      );
+    const totalCount = Number(countRow?.value ?? 0);
+
+    // Stitch: load ClassroomTeachers + nested classrooms + students in bulk.
+    const teacherIds = teachers.map((t) => t.id);
+    const classroomTeachersRows = teacherIds.length
+      ? await db.select({
+          teacherId: classroomTeachers.teacherId,
+          classroomId: classrooms.id,
+          classroomName: classrooms.name,
+          classroomGrade: classrooms.grade,
+          classroomStudentRelId: classroomStudents.id,
+          classroomStudentId: classroomStudents.studentId,
+        })
+          .from(classroomTeachers)
+          .innerJoin(classrooms, eq(classrooms.id, classroomTeachers.classroomId))
+          .leftJoin(classroomStudents, eq(classroomStudents.classroomId, classrooms.id))
+          .where(inArray(classroomTeachers.teacherId, teacherIds))
+      : [];
+
+    // Stitch by teacher.
+    const ctByTeacher = new Map<string, Map<string, { id: string; name: string; grade: number | null; students: any[] }>>();
+    for (const row of classroomTeachersRows) {
+      if (!ctByTeacher.has(row.teacherId)) ctByTeacher.set(row.teacherId, new Map());
+      const classroomMap = ctByTeacher.get(row.teacherId)!;
+      if (!classroomMap.has(row.classroomId)) {
+        classroomMap.set(row.classroomId, {
+          id: row.classroomId,
+          name: row.classroomName,
+          grade: row.classroomGrade,
+          students: [],
+        });
+      }
+      if (row.classroomStudentId) {
+        classroomMap.get(row.classroomId)!.students.push({ id: row.classroomStudentId });
+      }
+    }
 
     // Transform data to match the expected interface
     const teachersData: TeacherData[] = teachers.map((teacher) => {
-      // Get primary role (first role or most important one)
-      const primaryRole =
-        teacher.roles.find((r) => r.role.name === "admin")?.role.name ||
-        teacher.roles[0]?.role.name ||
-        "teacher";
+      const ctList = Array.from(ctByTeacher.get(teacher.id)?.values() ?? []);
 
-      // Calculate total students across all classrooms
-      const totalStudents = teacher.ClassroomTeachers.reduce((sum, ct) => {
-        return sum + ct.classroom.students.length;
-      }, 0);
-
-      // Get total classes
-      const totalClasses = teacher.ClassroomTeachers.length;
+      const totalStudents = ctList.reduce((sum, c) => sum + c.students.length, 0);
+      const totalClasses = ctList.length;
 
       return {
         id: teacher.id,
         name: teacher.name,
         email: teacher.email,
-        role: primaryRole,
+        role: role ?? "teacher",
         createdAt: teacher.createdAt.toISOString(),
         image: teacher.image,
         schoolId: teacher.schoolId,
         cefrLevel: teacher.cefrLevel,
         totalStudents,
         totalClasses,
-        assignedClassrooms: teacher.ClassroomTeachers.map((ct) => ({
-          id: ct.classroom.id,
-          name: ct.classroom.name,
-          grade: ct.classroom.grade,
+        assignedClassrooms: ctList.map((c) => ({
+          id: c.id,
+          name: c.name,
+          grade: c.grade,
         })),
       };
     });
@@ -136,6 +187,13 @@ export const getTeachers = async (
     throw error;
   }
 };
+
+// Local helpers — keep import block tidy.
+import { sql as sqlTag, count as sqlCountStar, or as drizzleOr } from '@reading-advantage/db';
+function sqlOr(colA: any, colB: any, pattern: string) {
+  return sqlTag`(${colA} ILIKE ${pattern} OR ${colB} ILIKE ${pattern})`;
+}
+void drizzleOr; // kept for parity — actual call uses sql template above
 
 // Get teacher by ID
 export const getTeacherById = async (
@@ -149,75 +207,80 @@ export const getTeacherById = async (
       schoolFilter = { schoolId: userWithRoles.schoolId };
     }
 
-    const teacher = await db.user.findFirst({
-      where: {
-        id,
-        ...schoolFilter,
-        roles: {
-          some: {
-            role: {
-              name: {
-                in: ["teacher", "admin"],
-              },
-            },
-          },
-        },
-      },
-      include: {
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-        ClassroomTeachers: {
-          include: {
-            classroom: {
-              include: {
-                students: true,
-              },
-            },
-          },
-        },
-        School: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+    const whereConditions: any[] = [
+      eq(users.id, id),
+      inArray(roles.name, ["teacher", "admin"]),
+      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+    ];
+
+    const teachers = await db.select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      image: users.image,
+      schoolId: users.schoolId,
+      cefrLevel: users.cefrLevel,
+      createdAt: users.createdAt,
+    })
+      .from(users)
+      .innerJoin(userRoles, eq(userRoles.userId, users.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(and(...whereConditions))
+      .limit(1);
+
+    const teacher = teachers[0];
 
     if (!teacher) {
       return null;
     }
 
-    // Transform data
-    const primaryRole =
-      teacher.roles.find((r) => r.role.name === "admin")?.role.name ||
-      teacher.roles[0]?.role.name ||
-      "teacher";
+    // Stitch ClassroomTeachers + classrooms + students.
+    const ctRows = await db.select({
+      classroomId: classrooms.id,
+      classroomName: classrooms.name,
+      classroomGrade: classrooms.grade,
+      classroomStudentRelId: classroomStudents.id,
+      classroomStudentId: classroomStudents.studentId,
+    })
+      .from(classroomTeachers)
+      .innerJoin(classrooms, eq(classrooms.id, classroomTeachers.classroomId))
+      .leftJoin(classroomStudents, eq(classroomStudents.classroomId, classrooms.id))
+      .where(eq(classroomTeachers.teacherId, id));
 
-    const totalStudents = teacher.ClassroomTeachers.reduce((sum, ct) => {
-      return sum + ct.classroom.students.length;
-    }, 0);
+    const classroomMap = new Map<string, { id: string; name: string; grade: number | null; students: any[] }>();
+    for (const row of ctRows) {
+      if (!classroomMap.has(row.classroomId)) {
+        classroomMap.set(row.classroomId, {
+          id: row.classroomId,
+          name: row.classroomName,
+          grade: row.classroomGrade,
+          students: [],
+        });
+      }
+      if (row.classroomStudentId) {
+        classroomMap.get(row.classroomId)!.students.push({ id: row.classroomStudentId });
+      }
+    }
+    const ctList = Array.from(classroomMap.values());
 
-    const totalClasses = teacher.ClassroomTeachers.length;
+    const totalStudents = ctList.reduce((sum, c) => sum + c.students.length, 0);
+    const totalClasses = ctList.length;
 
     const teacherData: TeacherData = {
       id: teacher.id,
       name: teacher.name,
       email: teacher.email,
-      role: primaryRole,
+      role: "teacher",
       createdAt: teacher.createdAt.toISOString(),
       image: teacher.image,
       schoolId: teacher.schoolId,
       cefrLevel: teacher.cefrLevel,
       totalStudents,
       totalClasses,
-      assignedClassrooms: teacher.ClassroomTeachers.map((ct) => ({
-        id: ct.classroom.id,
-        name: ct.classroom.name,
-        grade: ct.classroom.grade,
+      assignedClassrooms: ctList.map((c) => ({
+        id: c.id,
+        name: c.name,
+        grade: c.grade,
       })),
     };
 
@@ -236,7 +299,7 @@ export const createTeacher = async (params: {
   password?: string;
   classroomIds?: string[];
   userWithRoles: UserWithRoles;
-  force?: boolean; // If true, move teacher even if they have a school
+  force?: boolean;
 }): Promise<{
   success: boolean;
   teacher?: TeacherData;
@@ -248,23 +311,39 @@ export const createTeacher = async (params: {
     params;
 
   try {
-    // Check if user already exists
-    const existingUser = await db.user.findUnique({
-      where: { email },
-      include: {
-        School: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-      },
-    });
+    // Check if user already exists (with school + roles for the include shape).
+    const existingUserRows = await db.select({
+      id: users.id,
+      email: users.email,
+      schoolId: users.schoolId,
+      schoolRowId: schools.id,
+      schoolName: schools.name,
+      roleName: roles.name,
+    })
+      .from(users)
+      .leftJoin(schools, eq(schools.id, users.schoolId))
+      .leftJoin(userRoles, eq(userRoles.userId, users.id))
+      .leftJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(eq(users.email, email));
+
+    const existingUser = existingUserRows.length > 0
+      ? {
+          id: existingUserRows[0].id,
+          email: existingUserRows[0].email,
+          schoolId: existingUserRows[0].schoolId,
+          School: existingUserRows[0].schoolRowId
+            ? {
+                id: existingUserRows[0].schoolRowId,
+                name: existingUserRows[0].schoolName,
+              }
+            : null,
+          roles: existingUserRows
+            .filter((row) => row.roleName)
+            .map((row) => ({
+              role: { name: row.roleName as string },
+            })),
+        }
+      : null;
 
     // Determine school assignment
     let schoolId = null;
@@ -274,11 +353,8 @@ export const createTeacher = async (params: {
 
     // If user exists, handle accordingly
     if (existingUser) {
-      // Check if user has a school
       if (existingUser.schoolId && existingUser.School) {
-        // If force is true, move the teacher to the new school
         if (force) {
-          // Update the teacher to the new school
           return await updateExistingTeacherToSchool({
             existingUser,
             name,
@@ -290,7 +366,6 @@ export const createTeacher = async (params: {
             userWithRoles,
           });
         } else {
-          // Return confirmation required
           return {
             success: false,
             requiresConfirmation: true,
@@ -302,7 +377,6 @@ export const createTeacher = async (params: {
           };
         }
       } else {
-        // User exists but has no school - update them to the admin's school
         return await updateExistingTeacherToSchool({
           existingUser,
           name,
@@ -317,9 +391,10 @@ export const createTeacher = async (params: {
     }
 
     // Get the role ID
-    const roleRecord = await db.role.findFirst({
-      where: { name: role },
-    });
+    const [roleRecord] = await db.select({ id: roles.id })
+      .from(roles)
+      .where(eq(roles.name, role))
+      .limit(1);
 
     if (!roleRecord) {
       return { success: false, error: "Invalid role specified" };
@@ -332,12 +407,14 @@ export const createTeacher = async (params: {
 
     // Validate classroom IDs if provided
     if (classroomIds && classroomIds.length > 0) {
-      const validClassrooms = await db.classroom.findMany({
-        where: {
-          id: { in: classroomIds },
-          schoolId: schoolId, // Ensure classrooms belong to the same school
-        },
-      });
+      const classroomConditions: any[] = [
+        inArray(classrooms.id, classroomIds),
+      ];
+      if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
+
+      const validClassrooms = await db.select({ id: classrooms.id })
+        .from(classrooms)
+        .where(and(...classroomConditions));
 
       if (validClassrooms.length !== classroomIds.length) {
         return {
@@ -348,99 +425,118 @@ export const createTeacher = async (params: {
     }
 
     // Create the new teacher and assign classrooms in a transaction
-    const newTeacher = await db.$transaction(async (tx) => {
-      // Create the user
-      const user = await tx.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-          schoolId,
-          roles: {
-            create: {
-              roleId: roleRecord.id,
-            },
-          },
-        },
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-        },
+    const completeTeacher = await db.transaction(async (tx) => {
+      const [user] = await tx.insert(users).values({
+        name,
+        email,
+        password: hashedPassword,
+        schoolId,
+      }).returning();
+
+      await tx.insert(userRoles).values({
+        userId: user.id,
+        roleId: roleRecord.id,
       });
 
       // Assign to classrooms if provided
       if (classroomIds && classroomIds.length > 0) {
-        await tx.classroomTeachers.createMany({
-          data: classroomIds.map((classroomId) => ({
+        // Drizzle's `insert(...).onConflictDoNothing()` would be the closest
+        // analogue of Prisma's `skipDuplicates: true`; we keep an explicit
+        // insert per row for portability with the shared client config.
+        for (const classroomId of classroomIds) {
+          await tx.insert(classroomTeachers).values({
             classroomId,
-            userId: user.id,
-          })),
-          skipDuplicates: true,
-        });
+            teacherId: user.id,
+          }).onConflictDoNothing();
+        }
       }
 
-      // Fetch the complete teacher data with classroom relationships
-      const completeTeacher = await tx.user.findUnique({
-        where: { id: user.id },
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-          ClassroomTeachers: {
-            include: {
-              classroom: {
-                include: {
-                  students: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (!completeTeacher) {
-        throw new Error("Failed to fetch created teacher");
-      }
-
-      return completeTeacher;
+      return user.id;
     });
 
-    // Calculate totals
-    const totalStudents = newTeacher.ClassroomTeachers.reduce((sum, ct) => {
-      return sum + ct.classroom.students.length;
-    }, 0);
-    const totalClasses = newTeacher.ClassroomTeachers.length;
-
-    // Format response
-    const teacherData: TeacherData = {
-      id: newTeacher.id,
-      name: newTeacher.name,
-      email: newTeacher.email,
-      role: newTeacher.roles[0]?.role.name || "teacher",
-      createdAt: newTeacher.createdAt.toISOString(),
-      image: newTeacher.image,
-      schoolId: newTeacher.schoolId,
-      cefrLevel: newTeacher.cefrLevel,
-      totalStudents,
-      totalClasses,
-      assignedClassrooms: newTeacher.ClassroomTeachers.map((ct) => ({
-        id: ct.classroom.id,
-        name: ct.classroom.name,
-        grade: ct.classroom.grade,
-      })),
-    };
-
-    return { success: true, teacher: teacherData };
+    // Refetch with the include shape (roles + ClassroomTeachers + classroom.students).
+    return await refetchTeacherWithInclude(completeTeacher, role);
   } catch (error) {
     console.error("Teacher Model: Error creating teacher:", error);
     return { success: false, error: "Failed to create teacher" };
   }
 };
+
+// Helper used by both createTeacher and updateExistingTeacherToSchool.
+async function refetchTeacherWithInclude(userId: string, primaryRoleName: string) {
+  const teacherRows = await db.select({
+    id: users.id,
+    name: users.name,
+    email: users.email,
+    image: users.image,
+    schoolId: users.schoolId,
+    cefrLevel: users.cefrLevel,
+    createdAt: users.createdAt,
+    roleName: roles.name,
+  })
+    .from(users)
+    .leftJoin(userRoles, eq(userRoles.userId, users.id))
+    .leftJoin(roles, eq(roles.id, userRoles.roleId))
+    .where(eq(users.id, userId));
+
+  const rolesForUser = teacherRows
+    .filter((r) => r.roleName)
+    .map((r) => ({ role: { name: r.roleName as string } }));
+
+  // Stitch ClassroomTeachers
+  const ctRows = await db.select({
+    classroomId: classrooms.id,
+    classroomName: classrooms.name,
+    classroomGrade: classrooms.grade,
+    classroomStudentRelId: classroomStudents.id,
+    classroomStudentId: classroomStudents.studentId,
+  })
+    .from(classroomTeachers)
+    .innerJoin(classrooms, eq(classrooms.id, classroomTeachers.classroomId))
+    .leftJoin(classroomStudents, eq(classroomStudents.classroomId, classrooms.id))
+    .where(eq(classroomTeachers.teacherId, userId));
+
+  const classroomMap = new Map<string, { id: string; name: string; grade: number | null; students: any[] }>();
+  for (const row of ctRows) {
+    if (!classroomMap.has(row.classroomId)) {
+      classroomMap.set(row.classroomId, {
+        id: row.classroomId,
+        name: row.classroomName,
+        grade: row.classroomGrade,
+        students: [],
+      });
+    }
+    if (row.classroomStudentId) {
+      classroomMap.get(row.classroomId)!.students.push({ id: row.classroomStudentId });
+    }
+  }
+  const ctList = Array.from(classroomMap.values());
+
+  const teacher = teacherRows[0];
+
+  const totalStudents = ctList.reduce((sum, c) => sum + c.students.length, 0);
+  const totalClasses = ctList.length;
+
+  const teacherData: TeacherData = {
+    id: teacher.id,
+    name: teacher.name,
+    email: teacher.email,
+    role: primaryRoleName,
+    createdAt: teacher.createdAt.toISOString(),
+    image: teacher.image,
+    schoolId: teacher.schoolId,
+    cefrLevel: teacher.cefrLevel,
+    totalStudents,
+    totalClasses,
+    assignedClassrooms: ctList.map((c) => ({
+      id: c.id,
+      name: c.name,
+      grade: c.grade,
+    })),
+  };
+
+  return { success: true, teacher: teacherData, _rolesForUser: rolesForUser };
+}
 
 // Helper function to update existing teacher to a new school
 async function updateExistingTeacherToSchool(params: {
@@ -470,9 +566,10 @@ async function updateExistingTeacherToSchool(params: {
 
   try {
     // Get the role ID
-    const roleRecord = await db.role.findFirst({
-      where: { name: role },
-    });
+    const [roleRecord] = await db.select({ id: roles.id })
+      .from(roles)
+      .where(eq(roles.name, role))
+      .limit(1);
 
     if (!roleRecord) {
       return { success: false, error: "Invalid role specified" };
@@ -480,12 +577,14 @@ async function updateExistingTeacherToSchool(params: {
 
     // Validate classroom IDs if provided
     if (classroomIds && classroomIds.length > 0) {
-      const validClassrooms = await db.classroom.findMany({
-        where: {
-          id: { in: classroomIds },
-          schoolId: schoolId, // Ensure classrooms belong to the same school
-        },
-      });
+      const classroomConditions: any[] = [
+        inArray(classrooms.id, classroomIds),
+      ];
+      if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
+
+      const validClassrooms = await db.select({ id: classrooms.id })
+        .from(classrooms)
+        .where(and(...classroomConditions));
 
       if (validClassrooms.length !== classroomIds.length) {
         return {
@@ -496,167 +595,67 @@ async function updateExistingTeacherToSchool(params: {
     }
 
     // Update the existing teacher in a transaction
-    const updatedTeacher = await db.$transaction(async (tx) => {
-      // Prepare update data
+    await db.transaction(async (tx) => {
       const updateData: any = {
         name,
         schoolId,
       };
 
-      // Update password if provided
       if (password) {
         updateData.password = bcrypt.hashSync(password, 10);
       }
 
-      // Update the user
-      const user = await tx.user.update({
-        where: { id: existingUser.id },
-        data: updateData,
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-        },
-      });
+      await tx.update(users)
+        .set(updateData)
+        .where(eq(users.id, existingUser.id));
 
-      // Check if user has the role, if not add it
-      const hasRole = user.roles.some((r) => r.role.name === role);
-      if (!hasRole) {
-        // Get teacher and admin role IDs
-        const teacherAdminRoles = await tx.role.findMany({
-          where: {
-            name: {
-              in: ["teacher", "admin"],
-            },
-          },
-        });
+      // Look up the user's current roles to decide if we need to rotate them.
+      const currentRoleRows = await tx.select({ name: roles.name })
+        .from(userRoles)
+        .innerJoin(roles, eq(roles.id, userRoles.roleId))
+        .where(eq(userRoles.userId, existingUser.id));
+      const currentRoleNames = currentRoleRows.map((r) => r.name);
+      const hasRole = currentRoleNames.includes(role);
+      const firstRoleIsRequested = currentRoleNames[0] === role;
+
+      if (!hasRole || (currentRoleNames.length > 0 && !firstRoleIsRequested)) {
+        // Look up the teacher/admin role IDs to remove (rotate).
+        const teacherAdminRoles = await tx.select({ id: roles.id })
+          .from(roles)
+          .where(inArray(roles.name, ["teacher", "admin"]));
 
         const roleIds = teacherAdminRoles.map((r) => r.id);
-
-        // Remove existing teacher/admin roles and add the new one
-        await tx.userRole.deleteMany({
-          where: {
-            userId: user.id,
-            roleId: {
-              in: roleIds,
-            },
-          },
-        });
-
-        await tx.userRole.create({
-          data: {
-            userId: user.id,
-            roleId: roleRecord.id,
-          },
-        });
-      } else if (user.roles[0]?.role.name !== role) {
-        // Role exists but different, update it
-        // Get teacher and admin role IDs
-        const teacherAdminRoles = await tx.role.findMany({
-          where: {
-            name: {
-              in: ["teacher", "admin"],
-            },
-          },
-        });
-
-        const roleIds = teacherAdminRoles.map((r) => r.id);
-
-        await tx.userRole.deleteMany({
-          where: {
-            userId: user.id,
-            roleId: {
-              in: roleIds,
-            },
-          },
-        });
-
-        await tx.userRole.create({
-          data: {
-            userId: user.id,
-            roleId: roleRecord.id,
-          },
+        if (roleIds.length) {
+          await tx.delete(userRoles).where(
+            and(
+              eq(userRoles.userId, existingUser.id),
+              inArray(userRoles.roleId, roleIds),
+            ),
+          );
+        }
+        await tx.insert(userRoles).values({
+          userId: existingUser.id,
+          roleId: roleRecord.id,
         });
       }
 
-      // Handle classroom assignments
       if (classroomIds !== undefined) {
         // Remove existing classroom assignments
-        await tx.classroomTeachers.deleteMany({
-          where: { userId: user.id },
-        });
+        await tx.delete(classroomTeachers)
+          .where(eq(classroomTeachers.teacherId, existingUser.id));
 
-        // Add new classroom assignments
         if (classroomIds.length > 0) {
-          await tx.classroomTeachers.createMany({
-            data: classroomIds.map((classroomId) => ({
+          for (const classroomId of classroomIds) {
+            await tx.insert(classroomTeachers).values({
               classroomId,
-              userId: user.id,
-            })),
-            skipDuplicates: true,
-          });
+              teacherId: existingUser.id,
+            }).onConflictDoNothing();
+          }
         }
       }
-
-      // Fetch the complete teacher data with classroom relationships
-      const completeTeacher = await tx.user.findUnique({
-        where: { id: user.id },
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-          ClassroomTeachers: {
-            include: {
-              classroom: {
-                include: {
-                  students: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (!completeTeacher) {
-        throw new Error("Failed to fetch updated teacher");
-      }
-
-      return completeTeacher;
     });
 
-    // Calculate totals
-    const totalStudents = updatedTeacher.ClassroomTeachers.reduce((sum, ct) => {
-      return sum + ct.classroom.students.length;
-    }, 0);
-    const totalClasses = updatedTeacher.ClassroomTeachers.length;
-
-    // Format response
-    const teacherData: TeacherData = {
-      id: updatedTeacher.id,
-      name: updatedTeacher.name,
-      email: updatedTeacher.email,
-      role:
-        updatedTeacher.roles.find((r) => r.role.name === role)?.role.name ||
-        updatedTeacher.roles[0]?.role.name ||
-        "teacher",
-      createdAt: updatedTeacher.createdAt.toISOString(),
-      image: updatedTeacher.image,
-      schoolId: updatedTeacher.schoolId,
-      cefrLevel: updatedTeacher.cefrLevel,
-      totalStudents,
-      totalClasses,
-      assignedClassrooms: updatedTeacher.ClassroomTeachers.map((ct) => ({
-        id: ct.classroom.id,
-        name: ct.classroom.name,
-        grade: ct.classroom.grade,
-      })),
-    };
-
-    return { success: true, teacher: teacherData };
+    return await refetchTeacherWithInclude(existingUser.id, role);
   } catch (error) {
     console.error("Teacher Model: Error updating existing teacher:", error);
     return { success: false, error: "Failed to update teacher" };
@@ -677,21 +676,22 @@ export const updateTeacher = async (
     }
 
     // Check if teacher exists and user has permission to update
-    const existingTeacher = await db.user.findFirst({
-      where: {
-        id,
-        ...schoolFilter,
-        roles: {
-          some: {
-            role: {
-              name: {
-                in: ["teacher", "admin"],
-              },
-            },
-          },
-        },
-      },
-    });
+    const teacherConditions: any[] = [
+      eq(users.id, id),
+      inArray(roles.name, ["teacher", "admin"]),
+      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+    ];
+
+    const [existingTeacher] = await db.select({
+      id: users.id,
+      email: users.email,
+      schoolId: users.schoolId,
+    })
+      .from(users)
+      .innerJoin(userRoles, eq(userRoles.userId, users.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(and(...teacherConditions))
+      .limit(1);
 
     if (!existingTeacher) {
       return { success: false, error: "Teacher not found" };
@@ -699,9 +699,10 @@ export const updateTeacher = async (
 
     // Check if email is being updated and doesn't conflict
     if (updateData.email && updateData.email !== existingTeacher.email) {
-      const emailExists = await db.user.findUnique({
-        where: { email: updateData.email },
-      });
+      const [emailExists] = await db.select({ id: users.id })
+        .from(users)
+        .where(eq(users.email, updateData.email))
+        .limit(1);
 
       if (emailExists) {
         return { success: false, error: "Email already in use" };
@@ -710,12 +711,16 @@ export const updateTeacher = async (
 
     // Validate classroom IDs if provided
     if (updateData.classroomIds) {
-      const validClassrooms = await db.classroom.findMany({
-        where: {
-          id: { in: updateData.classroomIds },
-          schoolId: existingTeacher.schoolId, // Ensure classrooms belong to the same school
-        },
-      });
+      const classroomConditions: any[] = [
+        inArray(classrooms.id, updateData.classroomIds),
+      ];
+      if (existingTeacher.schoolId) {
+        classroomConditions.push(eq(classrooms.schoolId, existingTeacher.schoolId));
+      }
+
+      const validClassrooms = await db.select({ id: classrooms.id })
+        .from(classrooms)
+        .where(and(...classroomConditions));
 
       if (validClassrooms.length !== updateData.classroomIds.length) {
         return {
@@ -735,119 +740,53 @@ export const updateTeacher = async (
     }
 
     // Update the teacher and handle classroom assignments in a transaction
-    const updatedTeacher = await db.$transaction(async (tx) => {
-      // Update user data
-      const user = await tx.user.update({
-        where: { id },
-        data: updatePayload,
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-        },
-      });
+    await db.transaction(async (tx) => {
+      if (Object.keys(updatePayload).length) {
+        await tx.update(users)
+          .set(updatePayload)
+          .where(eq(users.id, id));
+      }
 
       // Handle role update if specified
       if (updateData.role) {
-        const roleRecord = await tx.role.findFirst({
-          where: { name: updateData.role },
-        });
+        const [roleRecord] = await tx.select({ id: roles.id })
+          .from(roles)
+          .where(eq(roles.name, updateData.role))
+          .limit(1);
 
         if (roleRecord) {
-          // Remove existing roles and add new one
-          await tx.userRole.deleteMany({
-            where: { userId: id },
-          });
-
-          await tx.userRole.create({
-            data: {
-              userId: id,
-              roleId: roleRecord.id,
-            },
+          // Remove all existing roles for this user (closest to Prisma
+          // `userRole.deleteMany({ where: { userId } })`).
+          await tx.delete(userRoles).where(eq(userRoles.userId, id));
+          await tx.insert(userRoles).values({
+            userId: id,
+            roleId: roleRecord.id,
           });
         }
       }
 
-      // Handle classroom assignments if specified
       if (updateData.classroomIds !== undefined) {
-        // Remove existing classroom assignments
-        await tx.classroomTeachers.deleteMany({
-          where: { userId: id },
-        });
+        await tx.delete(classroomTeachers)
+          .where(eq(classroomTeachers.teacherId, id));
 
-        // Add new classroom assignments
         if (updateData.classroomIds.length > 0) {
-          await tx.classroomTeachers.createMany({
-            data: updateData.classroomIds.map((classroomId) => ({
+          for (const classroomId of updateData.classroomIds) {
+            await tx.insert(classroomTeachers).values({
               classroomId,
-              userId: id,
-            })),
-            skipDuplicates: true,
-          });
+              teacherId: id,
+            }).onConflictDoNothing();
+          }
         }
       }
-
-      // Fetch the complete updated teacher data
-      const completeTeacher = await tx.user.findUnique({
-        where: { id },
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-          ClassroomTeachers: {
-            include: {
-              classroom: {
-                include: {
-                  students: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (!completeTeacher) {
-        throw new Error("Failed to fetch updated teacher");
-      }
-
-      return completeTeacher;
     });
 
-    // Format response
-    const primaryRole =
-      updatedTeacher.roles.find((r) => r.role.name === "admin")?.role.name ||
-      updatedTeacher.roles[0]?.role.name ||
-      "teacher";
-
-    const totalStudents = updatedTeacher.ClassroomTeachers.reduce((sum, ct) => {
-      return sum + ct.classroom.students.length;
-    }, 0);
-
-    const totalClasses = updatedTeacher.ClassroomTeachers.length;
-
-    const teacherData: TeacherData = {
-      id: updatedTeacher.id,
-      name: updatedTeacher.name,
-      email: updatedTeacher.email,
-      role: primaryRole,
-      createdAt: updatedTeacher.createdAt.toISOString(),
-      image: updatedTeacher.image,
-      schoolId: updatedTeacher.schoolId,
-      cefrLevel: updatedTeacher.cefrLevel,
-      totalStudents,
-      totalClasses,
-      assignedClassrooms: updatedTeacher.ClassroomTeachers.map((ct) => ({
-        id: ct.classroom.id,
-        name: ct.classroom.name,
-        grade: ct.classroom.grade,
-      })),
+    const refetch = await refetchTeacherWithInclude(id, updateData.role ?? "teacher");
+    return {
+      success: refetch.success,
+      teacher: refetch.teacher,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      error: (refetch as any).error,
     };
-
-    return { success: true, teacher: teacherData };
   } catch (error) {
     console.error("Teacher Model: Error updating teacher:", error);
     return { success: false, error: "Failed to update teacher" };
@@ -867,39 +806,29 @@ export const deleteTeacher = async (
     }
 
     // Check if teacher exists and user has permission to delete
-    const existingTeacher = await db.user.findFirst({
-      where: {
-        id,
-        ...schoolFilter,
-        roles: {
-          some: {
-            role: {
-              name: {
-                in: ["teacher", "admin"],
-              },
-            },
-          },
-        },
-      },
-    });
+    const teacherConditions: any[] = [
+      eq(users.id, id),
+      inArray(roles.name, ["teacher", "admin"]),
+      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+    ];
+
+    const [existingTeacher] = await db.select({ id: users.id })
+      .from(users)
+      .innerJoin(userRoles, eq(userRoles.userId, users.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(and(...teacherConditions))
+      .limit(1);
 
     if (!existingTeacher) {
       return { success: false, error: "Teacher not found" };
     }
 
     // Delete related records first
-    await db.userRole.deleteMany({
-      where: { userId: id },
-    });
-
-    await db.classroomTeachers.deleteMany({
-      where: { userId: id },
-    });
+    await db.delete(userRoles).where(eq(userRoles.userId, id));
+    await db.delete(classroomTeachers).where(eq(classroomTeachers.teacherId, id));
 
     // Delete the teacher
-    await db.user.delete({
-      where: { id },
-    });
+    await db.delete(users).where(eq(users.id, id));
 
     return { success: true };
   } catch (error) {
@@ -917,56 +846,52 @@ export const getTeacherStatistics = async (userWithRoles: UserWithRoles) => {
       schoolFilter = { schoolId: userWithRoles.schoolId };
     }
 
-    const whereClause = {
-      ...schoolFilter,
-      roles: {
-        some: {
-          role: {
-            name: {
-              in: ["teacher", "admin"],
-            },
-          },
-        },
-      },
-    };
+    const whereConditions: any[] = [
+      inArray(roles.name, ["teacher", "admin"]),
+      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+    ];
 
-    // Get all teachers for statistics
-    const allTeachers = await db.user.findMany({
-      where: whereClause,
-      include: {
-        ClassroomTeachers: {
-          include: {
-            classroom: {
-              include: {
-                students: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    // Get all teachers + their classroom/student counts in one query.
+    const allTeachers = await db.select({
+      teacherId: users.id,
+      classroomId: classrooms.id,
+      classroomStudentRelId: classroomStudents.id,
+    })
+      .from(users)
+      .innerJoin(userRoles, eq(userRoles.userId, users.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .leftJoin(classroomTeachers, eq(classroomTeachers.teacherId, users.id))
+      .leftJoin(classrooms, eq(classrooms.id, classroomTeachers.classroomId))
+      .leftJoin(classroomStudents, eq(classroomStudents.classroomId, classrooms.id))
+      .where(and(...whereConditions));
 
-    const totalTeachers = allTeachers.length;
+    // Stitch per-teacher.
+    const byTeacher = new Map<string, { classroomIds: Set<string>; studentRelIds: Set<string>; studentCount: number }>();
+    for (const row of allTeachers) {
+      if (!byTeacher.has(row.teacherId)) {
+        byTeacher.set(row.teacherId, {
+          classroomIds: new Set(),
+          studentRelIds: new Set(),
+          studentCount: 0,
+        });
+      }
+      const bucket = byTeacher.get(row.teacherId)!;
+      if (row.classroomId) bucket.classroomIds.add(row.classroomId);
+      if (row.classroomStudentRelId) bucket.studentRelIds.add(row.classroomStudentRelId);
+    }
+    for (const bucket of byTeacher.values()) {
+      bucket.studentCount = bucket.studentRelIds.size;
+    }
 
-    // Calculate total students and classes
+    const totalTeachers = byTeacher.size;
     let totalStudents = 0;
     let totalClasses = 0;
     let activeTeachers = 0;
-
-    allTeachers.forEach((teacher) => {
-      const teacherStudents = teacher.ClassroomTeachers.reduce((sum, ct) => {
-        return sum + ct.classroom.students.length;
-      }, 0);
-
-      const teacherClasses = teacher.ClassroomTeachers.length;
-
-      totalStudents += teacherStudents;
-      totalClasses += teacherClasses;
-
-      if (teacherClasses > 0) {
-        activeTeachers++;
-      }
-    });
+    for (const bucket of byTeacher.values()) {
+      totalStudents += bucket.studentCount;
+      totalClasses += bucket.classroomIds.size;
+      if (bucket.classroomIds.size > 0) activeTeachers++;
+    }
 
     const averageStudentsPerTeacher =
       totalTeachers > 0 ? Math.round(totalStudents / totalTeachers) : 0;

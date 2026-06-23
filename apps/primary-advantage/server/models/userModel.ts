@@ -1,5 +1,20 @@
 import { getCurrentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  eq,
+  and,
+  desc,
+  inArray,
+  sql,
+} from '@reading-advantage/db';
+import {
+  users,
+  userActivity,
+  xpLogs,
+  articles,
+  roles,
+  userRoles,
+} from '@reading-advantage/db';
 import { ActivityType } from "@/types/enum";
 import bcrypt from "bcryptjs";
 
@@ -20,9 +35,10 @@ export const createUser = async (data: {
     const hashedPassword = bcrypt.hashSync(data.password, 10);
 
     // Find the User role
-    const userRole = await db.role.findFirst({
-      where: { name: "user" },
-    });
+    const [userRole] = await db.select({ id: roles.id })
+      .from(roles)
+      .where(eq(roles.name, "user"))
+      .limit(1);
 
     if (!userRole) {
       return {
@@ -31,21 +47,17 @@ export const createUser = async (data: {
     }
 
     // Create user with transaction to ensure role assignment
-    const newUser = await db.$transaction(async (tx) => {
-      const user = await tx.user.create({
-        data: {
-          name: data.name,
-          email: data.email,
-          password: hashedPassword,
-        },
-      });
+    const newUser = await db.transaction(async (tx) => {
+      const [user] = await tx.insert(users).values({
+        name: data.name,
+        email: data.email,
+        password: hashedPassword,
+      }).returning();
 
       // Assign the User role to the new user
-      await tx.userRole.create({
-        data: {
-          userId: user.id,
-          roleId: userRole.id,
-        },
+      await tx.insert(userRoles).values({
+        userId: user.id,
+        roleId: userRole.id,
       });
 
       return user;
@@ -81,15 +93,15 @@ export const updateUserActivity = async (
     }
     const userId = user.id;
 
-    return await db.userActivity.create({
-      data: {
-        userId: userId,
-        activityType,
-        targetId: targetId,
-        details,
-        completed: true,
-      },
-    });
+    const [activity] = await db.insert(userActivity).values({
+      userId: userId,
+      activityType,
+      targetId: targetId,
+      details,
+      completed: true,
+    }).returning();
+
+    return activity;
   } catch (error) {
     console.log(error);
   }
@@ -97,59 +109,83 @@ export const updateUserActivity = async (
 
 export const getUserByEmail = async (email: string) => {
   try {
-    const user = await db.user.findUnique({
-      where: {
-        email: email,
-      },
-      include: {
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-      },
-    });
+    const [user] = await db.select().from(users)
+      .where(eq(users.email, email))
+      .limit(1);
 
-    if (user?.roles.length === 0) {
-      return await db.$transaction(async (tx) => {
-        const role = await tx.role.findFirst({
-          where: { name: "user" },
-        });
+    if (!user) {
+      return null;
+    }
+
+    // Stitch the `roles: { include: { role: true } }` shape manually.
+    const userRoleRows = await db.select({
+      roleId: userRoles.roleId,
+      roleName: roles.name,
+    })
+      .from(userRoles)
+      .leftJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(eq(userRoles.userId, user.id));
+
+    const rolesForUser = userRoleRows.map((row) => ({
+      role: {
+        id: row.roleId,
+        name: row.roleName,
+      },
+    }));
+
+    const userWithRoles = { ...user, roles: rolesForUser };
+
+    if (userWithRoles.roles.length === 0) {
+      return await db.transaction(async (tx) => {
+        const [role] = await tx.select({ id: roles.id })
+          .from(roles)
+          .where(eq(roles.name, "user"))
+          .limit(1);
 
         if (!role) {
           throw new Error("Default user role not found");
         }
 
-        await tx.userRole.create({
-          data: { userId: user.id, roleId: role.id },
+        await tx.insert(userRoles).values({
+          userId: user.id,
+          roleId: role.id,
         });
 
         // Return updated user
-        return await tx.user.findUnique({
-          where: { email },
-          include: {
-            roles: {
-              include: {
-                role: true,
-              },
-            },
+        const [updated] = await tx.select().from(users)
+          .where(eq(users.email, email))
+          .limit(1);
+
+        const updatedRoleRows = await tx.select({
+          roleId: userRoles.roleId,
+          roleName: roles.name,
+        })
+          .from(userRoles)
+          .leftJoin(roles, eq(roles.id, userRoles.roleId))
+          .where(eq(userRoles.userId, user.id));
+
+        const updatedRoles = updatedRoleRows.map((row) => ({
+          role: {
+            id: row.roleId,
+            name: row.roleName,
           },
-        });
+        }));
+
+        return { ...updated, roles: updatedRoles };
       });
     }
 
-    return user;
+    return userWithRoles;
   } catch (error) {
     console.log(error);
   }
 };
+
 export const getUserById = async (id: string) => {
   try {
-    const user = await db.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
+    const [user] = await db.select().from(users)
+      .where(eq(users.id, id))
+      .limit(1);
     return user;
   } catch (error) {
     console.log(error);
@@ -164,22 +200,14 @@ export const getUserActivity = async (id: string) => {
       throw new Error("User not found");
     }
 
-    const activity = await db.userActivity.findMany({
-      where: {
-        userId: id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const activity = await db.select().from(userActivity)
+      .where(eq(userActivity.userId, id))
+      .orderBy(desc(userActivity.createdAt));
 
-    const xpLogs = await db.xPLogs.findMany({
-      where: {
-        userId: id,
-      },
-    });
+    const xpLogRows = await db.select().from(xpLogs)
+      .where(eq(xpLogs.userId, id));
 
-    return { activity, xpLogs, user };
+    return { activity, xpLogs: xpLogRows, user };
   } catch (error) {
     console.log(error);
   }
@@ -194,37 +222,30 @@ export const getUserArticleRecords = async (
   try {
     const offset = (page - 1) * limit;
 
+    // Build where clause for the activity fetch.
+    const activityConditions: any[] = [
+      eq(userActivity.userId, userId),
+      inArray(userActivity.activityType, [
+        ActivityType.ARTICLE_READ,
+        ActivityType.MC_QUESTION,
+        ActivityType.SA_QUESTION,
+        ActivityType.LA_QUESTION,
+        ActivityType.ARTICLE_RATING,
+      ]),
+    ];
+
+    // Prisma used a JSON path + string_contains filter on the search
+    // term. We replicate it via a SQL `details->>'title' ILIKE` clause.
+    if (search) {
+      activityConditions.push(
+        sql`${userActivity.details}->>'title' ILIKE ${`%${search}%`}`,
+      );
+    }
+
     // Get all article activities for the user
-    const articleActivities = await db.userActivity.findMany({
-      where: {
-        userId: userId,
-        activityType: {
-          in: [
-            ActivityType.ARTICLE_READ,
-            ActivityType.MC_QUESTION,
-            ActivityType.SA_QUESTION,
-            ActivityType.LA_QUESTION,
-            ActivityType.ARTICLE_RATING,
-          ],
-        },
-        ...(search && {
-          OR: [
-            {
-              details: {
-                path: ["title"],
-                string_contains: search,
-              },
-            },
-          ],
-        }),
-      },
-      include: {
-        user: true,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
+    const articleActivities = await db.select().from(userActivity)
+      .where(and(...activityConditions))
+      .orderBy(desc(userActivity.updatedAt));
 
     // Group activities by article
     const articleMap = new Map();
@@ -251,23 +272,19 @@ export const getUserArticleRecords = async (
 
     // Get article details for each unique article
     const articleIds = Array.from(articleMap.keys());
-    const articles = await db.article.findMany({
-      where: {
-        id: {
-          in: articleIds,
-        },
-        ...(search && {
-          title: {
-            contains: search,
-            mode: "insensitive",
-          },
-        }),
-      },
-    });
+    let articleRows: any[] = [];
+    if (articleIds.length) {
+      const articleConditions: any[] = [inArray(articles.id, articleIds)];
+      if (search) {
+        // ilike matches Prisma's `contains` + `mode: 'insensitive'`.
+        articleConditions.push(sql`${articles.title} ILIKE ${`%${search}%`}`);
+      }
+      articleRows = await db.select().from(articles).where(and(...articleConditions));
+    }
 
     // Create article map for quick lookup
     const articleDetailMap = new Map();
-    articles.forEach((article) => {
+    articleRows.forEach((article) => {
       articleDetailMap.set(article.id, article);
     });
 
@@ -377,23 +394,20 @@ export const getUserArticleRecords = async (
 export const getUserReminderReread = async (userId: string) => {
   try {
     // Get all article activities for the user
-    const articleActivities = await db.userActivity.findMany({
-      where: {
-        userId: userId,
-        activityType: {
-          in: [
+    const articleActivities = await db.select().from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId),
+          inArray(userActivity.activityType, [
             ActivityType.ARTICLE_READ,
             ActivityType.MC_QUESTION,
             ActivityType.SA_QUESTION,
             ActivityType.LA_QUESTION,
             ActivityType.ARTICLE_RATING,
-          ],
-        },
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
+          ]),
+        ),
+      )
+      .orderBy(desc(userActivity.updatedAt));
 
     // Group activities by article
     const articleMap = new Map();
@@ -478,17 +492,15 @@ export const getUserReminderReread = async (userId: string) => {
     });
 
     // Get article details for reminder articles
-    const articles = await db.article.findMany({
-      where: {
-        id: {
-          in: reminderArticleIds,
-        },
-      },
-    });
+    let articleRows: any[] = [];
+    if (reminderArticleIds.length) {
+      articleRows = await db.select().from(articles)
+        .where(inArray(articles.id, reminderArticleIds));
+    }
 
     // Create article map for quick lookup
     const articleDetailMap = new Map();
-    articles.forEach((article) => {
+    articleRows.forEach((article) => {
       articleDetailMap.set(article.id, article);
     });
 

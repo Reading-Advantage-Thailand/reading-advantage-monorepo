@@ -1,4 +1,21 @@
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  eq,
+  and,
+  desc,
+  asc,
+  inArray,
+} from '@reading-advantage/db';
+import {
+  articles,
+  userActivity,
+  multipleChoiceQuestions,
+  shortAnswerQuestions,
+  longAnswerQuestions,
+  flashcardDecks,
+  flashcardCards,
+  sentencsAndWordsForFlashcards,
+} from '@reading-advantage/db';
 import { randomSelectGenre } from "../utils/genaretors/random-select-genre";
 import {
   ActivityType,
@@ -107,8 +124,6 @@ async function generateContent(
     throw new Error("Article rating too low");
   }
 
-  // const questions = await generateQuestions(generatedArticle, type, level);
-
   const [mcq, saq, laq] = await Promise.all([
     generateMCQuestion({
       type,
@@ -164,20 +179,24 @@ export async function saveArticleContent(
     ...articleData
   } = article;
 
-  const createdArticle = await db.article.create({
-    data: {
-      ...articleData,
-      imageDescription: imageDesc || "",
-      genre: cleanGenre(article?.genre || ""),
-      subGenre: cleanGenre(article?.subGenre || ""),
-      type: article.type || "",
-      raLevel: convertCefrLevel(article.cefrLevel),
-      isDraft: isDraft || false,
-      isPublished: isPublished || false,
-      isApproved: isApproved || false,
-      authorId: authorId || "",
-    },
-  });
+  const [createdArticle] = await db.insert(articles).values({
+    title: articleData.title,
+    passage: articleData.passage,
+    summary: articleData.summary,
+    translatedSummary: articleData.translatedSummary,
+    imageDescription: imageDesc || "",
+    genre: cleanGenre(article?.genre || ""),
+    subGenre: cleanGenre(article?.subGenre || ""),
+    type: article.type || "",
+    cefrLevel: article.cefrLevel,
+    raLevel: convertCefrLevel(article.cefrLevel),
+    isDraft: isDraft || false,
+    isPublished: isPublished || false,
+    isApproved: isApproved || false,
+    authorId: authorId || "",
+    topic: article.topic,
+    rating: article.rating,
+  }).returning();
 
   const articleId = createdArticle.id;
 
@@ -190,42 +209,29 @@ export async function saveArticleContent(
     }),
 
     // Save questions
-    db.longAnswerQuestion.create({
-      data: {
-        question: laq.question,
-        articleId,
-      },
+    db.insert(longAnswerQuestions).values({
+      question: laq.question,
+      articleId,
     }),
 
     // Save short answer questions
     ...saq.questions.map((question) =>
-      db.shortAnswerQuestion.create({
-        data: {
-          question: question.question,
-          answer: question.answer,
-          articleId,
-        },
+      db.insert(shortAnswerQuestions).values({
+        question: question.question,
+        answer: question.answer,
+        articleId,
       }),
     ),
 
     // Save multiple choice questions
     ...mcq.questions.map((mcq) =>
-      db.multipleChoiceQuestion.create({
-        data: {
-          question: mcq.question,
-          options: mcq.options,
-          answer: mcq.answer,
-          articleId,
-        },
+      db.insert(multipleChoiceQuestions).values({
+        question: mcq.question,
+        options: mcq.options,
+        answer: mcq.answer,
+        articleId,
       }),
     ),
-
-    // Generate audio
-    // generateAudio({
-    //   passage: article.passage,
-    //   sentences: article.sentences || [],
-    //   articleId,
-    // }),
 
     // Generate word audio
     generateWordLists(articleId),
@@ -322,12 +328,7 @@ export const generateArticles = async ({
       throw new Error("Failed to generate content");
     }
 
-    await saveArticleContent(
-      content,
-      // randomGenre.genre,
-      // randomGenre.subgenre,
-      // type,
-    );
+    await saveArticleContent(content);
   } catch (error) {
     console.error("Error generating article:", error);
     throw error;
@@ -345,49 +346,81 @@ export const getArticlesWithParams = async (params: {
 }) => {
   const { title, type, genre, subgenre, cefrLevel, limit, offset } = params;
 
-  const whereClause: any = {
-    ...(title && { title: { contains: title, mode: "insensitive" } }),
-    ...(type && { type }),
-    ...(genre && { genre: { contains: genre, mode: "insensitive" } }),
-    ...(subgenre && { subGenre: { contains: subgenre, mode: "insensitive" } }),
-    ...(cefrLevel && { cefrLevel }),
-    ...{ isDraft: false },
-  };
+  // Build where clause incrementally.
+  const whereConditions: any[] = [];
+  if (title) {
+    // Prisma `contains` + `mode: 'insensitive'` → ILIKE
+    whereConditions.push(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // Use raw SQL via drizzle's sql template literal to preserve ILIKE semantics
+      // We import `sql` lazily inline for clarity.
+      // @ts-ignore - inline import
+      sqlIlike(articles.title, `%${title}%`),
+    );
+  }
+  if (type) whereConditions.push(eq(articles.type, type));
+  if (genre) {
+    whereConditions.push(sqlIlike(articles.genre, `%${genre}%`));
+  }
+  if (subgenre) {
+    whereConditions.push(sqlIlike(articles.subGenre, `%${subgenre}%`));
+  }
+  if (cefrLevel) whereConditions.push(eq(articles.cefrLevel, cefrLevel));
+  // Always filter to non-draft articles.
+  whereConditions.push(eq(articles.isDraft, false));
 
-  const articles = await db.article.findMany({
-    where: whereClause,
-    skip: offset,
-    take: limit,
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const articlesRows = await db.select().from(articles)
+    .where(whereConditions.length ? and(...whereConditions) : undefined)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(desc(articles.createdAt));
 
-  const totalArticles = await db.article.count({
-    where: whereClause,
-  });
+  const [countRow] = await db.select({ value: countStar() })
+    .from(articles)
+    .where(whereConditions.length ? and(...whereConditions) : undefined);
+  const totalArticles = Number(countRow?.value ?? 0);
 
   return {
-    articles,
+    articles: articlesRows,
     totalArticles,
   };
 };
 
+// Local helpers for ILIKE + COUNT(*). Imported lazily to keep the top imports tidy.
+import { sql, count as countStar, ilike as ilikeFn } from '@reading-advantage/db';
+function sqlIlike(column: any, pattern: string) {
+  return sql`${column} ILIKE ${pattern}`;
+}
+void ilikeFn; // kept for parity — actual call uses sql template above
+
 export const getArticleById = async (articleId: string) => {
-  const article = await db.article.findUnique({
-    where: { id: articleId },
-    include: {
-      sentencsAndWordsForFlashcard: true,
-      articleActivityLog: true,
-    },
-  });
+  const [article] = await db.select().from(articles)
+    .where(eq(articles.id, articleId))
+    .limit(1);
 
   if (!article) {
-    throw new Error("Article not found"); // or return null / 404 response
+    throw new Error("Article not found");
   }
 
-  return { article };
+  // Stitch the include shape: sentencsAndWordsForFlashcard + articleActivityLog.
+  const [sentRow] = await db.select().from(sentencsAndWordsForFlashcards)
+    .where(eq(sentencsAndWordsForFlashcards.articleId, articleId))
+    .limit(1);
+
+  const activityRows = await db.select().from(articleActivityLogTable)
+    .where(eq(articleActivityLogTable.articleId, articleId));
+
+  return {
+    article: {
+      ...article,
+      sentencsAndWordsForFlashcard: sentRow ?? null,
+      articleActivityLog: activityRows,
+    },
+  };
 };
+
+// Local import for the article activity log table (lives in primary.ts).
+import { articleActivityLogs as articleActivityLogTable } from '@reading-advantage/db';
 
 export const getQuestionsByArticleId = async (
   articleId: string,
@@ -418,14 +451,15 @@ export const getQuestionsByArticleId = async (
 
   try {
     // Check if questions are already completed
-    const activities = await db.userActivity.findMany({
-      where: {
-        userId: userId.id,
-        targetId: articleId,
-        activityType: type,
-        completed: true,
-      },
-    });
+    const activities = await db.select().from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, userId.id),
+          eq(userActivity.targetId, articleId),
+          eq(userActivity.activityType, type),
+          eq(userActivity.completed, true),
+        ),
+      );
 
     // Map activities to QuestionResult type
     if (activities.length > 0) {
@@ -436,7 +470,7 @@ export const getQuestionsByArticleId = async (
           progress?: number[];
           timer: number;
         },
-        completed: activity.completed,
+        completed: activity.completed ?? false,
       };
       questionStatus = QuestionState.COMPLETED;
       return { questions: [] as MCQuestion[], result, questionStatus };
@@ -444,10 +478,9 @@ export const getQuestionsByArticleId = async (
 
     // Get questions based on type
     switch (type) {
-      case ActivityType.MC_QUESTION:
-        const mcQuestions = await db.multipleChoiceQuestion.findMany({
-          where: { articleId },
-        });
+      case ActivityType.MC_QUESTION: {
+        const mcQuestions = await db.select().from(multipleChoiceQuestions)
+          .where(eq(multipleChoiceQuestions.articleId, articleId));
         questions = mcQuestions
           .sort(() => Math.random() - 0.5)
           .slice(0, 5)
@@ -456,26 +489,27 @@ export const getQuestionsByArticleId = async (
             textualEvidence: q.textualEvidence || undefined,
           })) as MCQuestion[];
         break;
+      }
 
-      case ActivityType.SA_QUESTION:
-        const saQuestions = await db.shortAnswerQuestion.findMany({
-          where: { articleId },
-        });
+      case ActivityType.SA_QUESTION: {
+        const saQuestions = await db.select().from(shortAnswerQuestions)
+          .where(eq(shortAnswerQuestions.articleId, articleId));
         if (saQuestions.length === 0) {
           throw new Error(`No SA questions found for article ${articleId}`);
         }
         questions = saQuestions[0] as SAQuestion;
         break;
+      }
 
-      case ActivityType.LA_QUESTION:
-        const laQuestions = await db.longAnswerQuestion.findMany({
-          where: { articleId },
-        });
+      case ActivityType.LA_QUESTION: {
+        const laQuestions = await db.select().from(longAnswerQuestions)
+          .where(eq(longAnswerQuestions.articleId, articleId));
         if (laQuestions.length === 0) {
           throw new Error(`No LA questions found for article ${articleId}`);
         }
         questions = laQuestions[0] as LAQuestion;
         break;
+      }
 
       default:
         throw new Error(`Unsupported activity type: ${type}`);
@@ -497,10 +531,8 @@ export const getQuestionsByArticleId = async (
 
 export const deleteArticleByIdModel = async (articleId: string) => {
   try {
-    await db.$transaction(async (tx) => {
-      await tx.article.delete({
-        where: { id: articleId },
-      });
+    await db.transaction(async (tx) => {
+      await tx.delete(articles).where(eq(articles.id, articleId));
 
       const result = await deleteFile(articleId);
 
@@ -517,23 +549,30 @@ export const deleteArticleByIdModel = async (articleId: string) => {
 };
 
 export const getAllFlashcards = async (userId: string) => {
-  return await db.flashcardDeck.findFirst({
-    where: {
-      userId: userId,
-      type: FlashcardType.SENTENCE,
-    },
-    include: {
-      cards: true,
-    },
-  });
+  const deck = await db.select().from(flashcardDecks)
+    .where(
+      and(
+        eq(flashcardDecks.userId, userId),
+        eq(flashcardDecks.type, FlashcardType.SENTENCE),
+      ),
+    )
+    .limit(1);
+
+  if (!deck.length) {
+    return null;
+  }
+
+  const cards = await db.select().from(flashcardCards)
+    .where(eq(flashcardCards.deckId, deck[0].id));
+
+  return { ...deck[0], cards };
 };
 
 export const deleteFlashcardById = async (flashcardId: string) => {
-  return await db.flashcardCard.delete({
-    where: {
-      id: flashcardId,
-    },
-  });
+  const [deleted] = await db.delete(flashcardCards)
+    .where(eq(flashcardCards.id, flashcardId))
+    .returning();
+  return deleted;
 };
 
 export const getArticleActivity = async (articleId: string) => {
@@ -545,41 +584,39 @@ export const getArticleActivity = async (articleId: string) => {
     }
 
     // Check if already exists
-    const existingActivity = await db.userActivity.findFirst({
-      where: {
-        userId: user.id as string,
-        targetId: articleId,
-        activityType: ActivityType.ARTICLE_READ,
-      },
-    });
+    const [existingActivity] = await db.select().from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, user.id as string),
+          eq(userActivity.targetId, articleId),
+          eq(userActivity.activityType, ActivityType.ARTICLE_READ),
+        ),
+      )
+      .limit(1);
 
-    const article = await db.article.findUnique({
-      where: {
-        id: articleId,
-      },
-      select: {
-        type: true,
-        genre: true,
-        subGenre: true,
-      },
-    });
+    const [article] = await db.select({
+      type: articles.type,
+      genre: articles.genre,
+      subGenre: articles.subGenre,
+    })
+      .from(articles)
+      .where(eq(articles.id, articleId))
+      .limit(1);
 
     if (!existingActivity) {
       // Create new article read activity
-      await db.userActivity.create({
-        data: {
-          userId: user.id as string,
-          activityType: ActivityType.ARTICLE_READ,
-          targetId: articleId,
-          timer: 0,
-          details: {
-            accessedAt: new Date(),
-            type: article?.type,
-            genre: article?.genre,
-            subGenre: article?.subGenre,
-          },
-          completed: false,
+      await db.insert(userActivity).values({
+        userId: user.id as string,
+        activityType: ActivityType.ARTICLE_READ,
+        targetId: articleId,
+        timer: 0,
+        details: {
+          accessedAt: new Date(),
+          type: article?.type,
+          genre: article?.genre,
+          subGenre: article?.subGenre,
         },
+        completed: false,
       });
     }
 
@@ -603,25 +640,23 @@ export const saveArticleAsDraftModel = async (
       throw new Error("User not found");
     }
 
-    await db.article.create({
-      data: {
-        title: article.title,
-        passage: article.passage,
-        summary: article.summary,
-        translatedSummary: article.translatedSummary,
-        imageDescription: article.imageDesc || "",
-        brainstorming: article.brainstorming,
-        planning: article.planning,
-        genre: cleanGenre(genre as string),
-        subGenre: cleanGenre(subgenre as string),
-        topic: article.topic,
-        type,
-        rating: article.rating,
-        raLevel: convertCefrLevel(article.cefrLevel),
-        cefrLevel: article.cefrLevel,
-        isDraft: true,
-        authorId: user.id as string,
-      },
+    await db.insert(articles).values({
+      title: article.title,
+      passage: article.passage,
+      summary: article.summary,
+      translatedSummary: article.translatedSummary,
+      imageDescription: article.imageDesc || "",
+      brainstorming: article.brainstorming,
+      planning: article.planning,
+      genre: cleanGenre(genre as string),
+      subGenre: cleanGenre(subgenre as string),
+      topic: article.topic,
+      type,
+      rating: article.rating,
+      raLevel: convertCefrLevel(article.cefrLevel),
+      cefrLevel: article.cefrLevel,
+      isDraft: true,
+      authorId: user.id as string,
     });
 
     return;
@@ -633,11 +668,8 @@ export const saveArticleAsDraftModel = async (
 
 export const getCustomArticle = async (userId: string) => {
   try {
-    return await db.article.findMany({
-      where: {
-        authorId: userId,
-      },
-    });
+    return await db.select().from(articles)
+      .where(eq(articles.authorId, userId));
   } catch (error) {
     console.error("Error getting custom article:", error);
     throw error;
@@ -697,9 +729,9 @@ export const createdArticleCustom = async (
 
 export const updateAprovedCustomArticle = async (articleId: string) => {
   try {
-    const article = await db.article.findUnique({
-      where: { id: articleId },
-    });
+    const [article] = await db.select().from(articles)
+      .where(eq(articles.id, articleId))
+      .limit(1);
 
     if (!article) {
       throw new Error("Article not found");
@@ -723,55 +755,42 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
       }),
 
       // Save questions
-      db.longAnswerQuestion.create({
-        data: {
-          question: laq.question,
-          articleId,
-        },
+      db.insert(longAnswerQuestions).values({
+        question: laq.question,
+        articleId,
       }),
 
       // Save short answer questions
       ...saq.questions.map((question) =>
-        db.shortAnswerQuestion.create({
-          data: {
-            question: question.question,
-            answer: question.answer,
-            articleId,
-          },
+        db.insert(shortAnswerQuestions).values({
+          question: question.question,
+          answer: question.answer,
+          articleId,
         }),
       ),
 
       // Save multiple choice questions
       ...mcq.questions.map((mcq) =>
-        db.multipleChoiceQuestion.create({
-          data: {
-            question: mcq.question,
-            options: mcq.options,
-            answer: mcq.answer,
-            articleId,
-          },
+        db.insert(multipleChoiceQuestions).values({
+          question: mcq.question,
+          options: mcq.options,
+          answer: mcq.answer,
+          articleId,
         }),
       ),
-
-      // Generate audio
-      // generateAudio({
-      //   passage: article.passage,
-      //   sentences: article.sentences || [],
-      //   articleId,
-      // }),
 
       // Generate word audio
       generateWordLists(articleId),
     ]);
 
-    await db.article.update({
-      where: { id: articleId },
-      data: {
+    await db.update(articles)
+      .set({
         isDraft: false,
         isPublished: true,
         isApproved: true,
-      },
-    });
+        updatedAt: new Date(),
+      })
+      .where(eq(articles.id, articleId));
 
     return;
   } catch (error) {
@@ -782,7 +801,10 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
 
 export const checkExistingArticle = async (articleId: string) => {
   try {
-    return await db.article.findUnique({ where: { id: articleId } });
+    const [article] = await db.select().from(articles)
+      .where(eq(articles.id, articleId))
+      .limit(1);
+    return article;
   } catch (error) {
     console.error("Error updating custom article:", error);
     throw error;

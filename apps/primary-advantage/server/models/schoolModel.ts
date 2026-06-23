@@ -1,4 +1,24 @@
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  eq,
+  and,
+  desc,
+  gte,
+  lte,
+  inArray,
+  sql,
+} from '@reading-advantage/db';
+import {
+  schools,
+  users,
+  xpLogs,
+  leaderboards,
+  userRoles,
+  roles,
+  classroomStudents,
+  classrooms,
+  schoolAdmins,
+} from '@reading-advantage/db';
 
 interface LeaderboardResult {
   classroom: string;
@@ -11,6 +31,20 @@ interface LeaderboardResult {
 interface SchoolLeaderboardData {
   schoolName: string;
   results: LeaderboardResult[];
+}
+
+/**
+ * Look up the role id for "student" once and reuse it for the leaderboard
+ * aggregation. The Prisma model kept the role name as a string, so this
+ * helper bridges to the new Drizzle roles/userRoles tables.
+ */
+async function getStudentRoleId(): Promise<string | null> {
+  const [role] = await db
+    .select({ id: roles.id })
+    .from(roles)
+    .where(eq(roles.name, "student"))
+    .limit(1);
+  return role?.id ?? null;
 }
 
 export const updateSchoolRankingModel = async () => {
@@ -29,68 +63,79 @@ export const updateSchoolRankingModel = async () => {
     );
 
     // Fetch all schools
-    const schools = await db.school.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-    });
+    const schoolsRows = await db.select({ id: schools.id, name: schools.name }).from(schools);
+
+    const studentRoleId = await getStudentRoleId();
 
     // Process each school
     const leaderboardUpdates = await Promise.all(
-      schools.map(async (school) => {
-        // Get XP logs for current month for students in this school
-        const xpLogs = await db.xPLogs.findMany({
-          where: {
-            createdAt: {
-              gte: startOfMonth,
-              lte: endOfMonth,
-            },
-            user: {
-              schoolId: school.id,
-              roles: {
-                some: {
-                  role: {
-                    name: "student",
-                  },
-                },
-              },
-            },
-          },
-          select: {
-            userId: true,
-            xpEarned: true,
-            user: {
-              select: {
-                id: true,
-                name: true,
-                studentClassroom: {
-                  select: {
-                    classroom: {
-                      select: {
-                        name: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        });
+      schoolsRows.map(async (school) => {
+        // Build a set of student user ids for this school via the
+        // M:N userRoles table + users.schoolId filter. We do this in two
+        // queries because the Drizzle relations API is not in use yet.
+        let studentUserIds: string[] = [];
+        if (studentRoleId) {
+          const studentRows = await db
+            .select({ id: users.id })
+            .from(users)
+            .innerJoin(userRoles, eq(userRoles.userId, users.id))
+            .where(
+              and(
+                eq(users.schoolId, school.id),
+                eq(userRoles.roleId, studentRoleId),
+              ),
+            );
+          studentUserIds = studentRows.map((row) => row.id);
+        }
 
-        // Aggregate XP by user
+        // Get XP logs for current month for students in this school
+        const xpLogRows = studentUserIds.length
+          ? await db
+              .select({
+                userId: xpLogs.userId,
+                xpEarned: xpLogs.xpEarned,
+                userName: users.name,
+              })
+              .from(xpLogs)
+              .innerJoin(users, eq(users.id, xpLogs.userId))
+              .where(
+                and(
+                  gte(xpLogs.createdAt, startOfMonth),
+                  lte(xpLogs.createdAt, endOfMonth),
+                  inArray(xpLogs.userId, studentUserIds),
+                ),
+              )
+          : [];
+
+        // Aggregate XP by user. We also look up the student's classroom
+        // name separately (the Prisma include nested this join).
         const userXpMap = new Map<
           string,
           { name: string; xp: number; classroom: string }
         >();
 
-        for (const log of xpLogs) {
+        // Pre-compute classroom names per user (one round-trip via JOIN).
+        const classroomByUser = new Map<string, string>();
+        if (studentUserIds.length) {
+          const csRows = await db
+            .select({
+              studentId: classroomStudents.studentId,
+              classroomName: classrooms.name,
+            })
+            .from(classroomStudents)
+            .innerJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
+            .where(inArray(classroomStudents.studentId, studentUserIds));
+          for (const row of csRows) {
+            if (!classroomByUser.has(row.studentId)) {
+              classroomByUser.set(row.studentId, row.classroomName);
+            }
+          }
+        }
+
+        for (const log of xpLogRows) {
           const userId = log.userId;
-          const userName = log.user.name || "Unknown";
-          const classroom =
-            log.user.studentClassroom.length > 0
-              ? log.user.studentClassroom[0].classroom.name
-              : "No Classroom";
+          const userName = log.userName || "Unknown";
+          const classroom = classroomByUser.get(userId) ?? "No Classroom";
 
           if (userXpMap.has(userId)) {
             const existing = userXpMap.get(userId)!;
@@ -118,43 +163,22 @@ export const updateSchoolRankingModel = async () => {
           .sort((a, b) => b.xp - a.xp);
 
         // If no data, randomly select 5 students from the school
-        if (sortedUsers.length === 0) {
-          const randomStudents = await db.user.findMany({
-            where: {
-              schoolId: school.id,
-              roles: {
-                some: {
-                  role: {
-                    name: "student",
-                  },
-                },
-              },
-            },
-            select: {
-              id: true,
-              name: true,
-              xp: true,
-              studentClassroom: {
-                select: {
-                  classroom: {
-                    select: {
-                      name: true,
-                    },
-                  },
-                },
-              },
-            },
-            take: 5,
-          });
+        if (sortedUsers.length === 0 && studentUserIds.length > 0) {
+          const randomStudents = await db
+            .select({
+              id: users.id,
+              name: users.name,
+              xp: users.xp,
+            })
+            .from(users)
+            .where(inArray(users.id, studentUserIds))
+            .limit(5);
 
           sortedUsers = randomStudents.map((student) => ({
             userId: student.id,
             name: student.name || "Unknown",
             xp: 0,
-            classroom:
-              student.studentClassroom.length > 0
-                ? student.studentClassroom[0].classroom.name
-                : "No Classroom",
+            classroom: classroomByUser.get(student.id) ?? "No Classroom",
           }));
         }
 
@@ -176,27 +200,33 @@ export const updateSchoolRankingModel = async () => {
         };
 
         // Check if leaderboard entry exists for this school
-        const existingLeaderboard = await db.leaderboard.findFirst({
-          where: { schoolId: school.id },
-        });
+        const [existingLeaderboard] = await db
+          .select({ id: leaderboards.id })
+          .from(leaderboards)
+          .where(eq(leaderboards.schoolId, school.id))
+          .limit(1);
 
         if (existingLeaderboard) {
           // Update existing leaderboard
-          return await db.leaderboard.update({
-            where: { id: existingLeaderboard.id },
-            data: {
+          const [updated] = await db
+            .update(leaderboards)
+            .set({
               details: leaderboardData as any,
               updatedAt: new Date(),
-            },
-          });
+            })
+            .where(eq(leaderboards.id, existingLeaderboard.id))
+            .returning();
+          return updated;
         } else {
           // Create new leaderboard entry
-          return await db.leaderboard.create({
-            data: {
+          const [created] = await db
+            .insert(leaderboards)
+            .values({
               schoolId: school.id,
               details: leaderboardData as any,
-            },
-          });
+            })
+            .returning();
+          return created;
         }
       }),
     );
@@ -213,14 +243,15 @@ export const getSchoolLeaderboardModel = async (
   userId?: string,
 ) => {
   try {
-    const leaderboard = await db.leaderboard.findFirst({
-      where: { schoolId },
-      select: {
-        id: true,
-        details: true,
-        updatedAt: true,
-      },
-    });
+    const [leaderboard] = await db
+      .select({
+        id: leaderboards.id,
+        details: leaderboards.details,
+        updatedAt: leaderboards.updatedAt,
+      })
+      .from(leaderboards)
+      .where(eq(leaderboards.schoolId, schoolId as string))
+      .limit(1);
 
     if (!leaderboard) {
       return { success: false, error: "Leaderboard not found for this school" };
@@ -250,34 +281,45 @@ export const getSchoolLeaderboardModel = async (
           999,
         );
 
+        // Build student ids list for this school (same query as above, cached
+        // would be nicer — for parity with the original we re-query).
+        const studentRoleId = await getStudentRoleId();
+        let studentUserIds: string[] = [];
+        if (studentRoleId) {
+          const studentRows = await db
+            .select({ id: users.id })
+            .from(users)
+            .innerJoin(userRoles, eq(userRoles.userId, users.id))
+            .where(
+              and(
+                eq(users.schoolId, schoolId as string),
+                eq(userRoles.roleId, studentRoleId),
+              ),
+            );
+          studentUserIds = studentRows.map((row) => row.id);
+        }
+
         // Get all students' XP for current month in this school
-        const xpLogs = await db.xPLogs.findMany({
-          where: {
-            createdAt: {
-              gte: startOfMonth,
-              lte: endOfMonth,
-            },
-            user: {
-              schoolId: schoolId,
-              roles: {
-                some: {
-                  role: {
-                    name: "student",
-                  },
-                },
-              },
-            },
-          },
-          select: {
-            userId: true,
-            xpEarned: true,
-          },
-        });
+        const xpLogRows = studentUserIds.length
+          ? await db
+              .select({
+                userId: xpLogs.userId,
+                xpEarned: xpLogs.xpEarned,
+              })
+              .from(xpLogs)
+              .where(
+                and(
+                  gte(xpLogs.createdAt, startOfMonth),
+                  lte(xpLogs.createdAt, endOfMonth),
+                  inArray(xpLogs.userId, studentUserIds),
+                ),
+              )
+          : [];
 
         // Aggregate XP by user
         const userXpMap = new Map<string, number>();
 
-        for (const log of xpLogs) {
+        for (const log of xpLogRows) {
           const currentXp = userXpMap.get(log.userId) || 0;
           userXpMap.set(log.userId, currentXp + log.xpEarned);
         }
@@ -293,21 +335,22 @@ export const getSchoolLeaderboardModel = async (
 
         if (studentRank > 0) {
           // Get student's details
-          const student = await db.user.findUnique({
-            where: { id: userId },
-            select: {
-              name: true,
-              studentClassroom: {
-                select: {
-                  classroom: {
-                    select: {
-                      name: true,
-                    },
-                  },
-                },
-              },
-            },
-          });
+          const [student] = await db
+            .select({
+              id: users.id,
+              name: users.name,
+            })
+            .from(users)
+            .where(eq(users.id, userId))
+            .limit(1);
+
+          // Look up the student's classroom via the join table
+          const [csRow] = await db
+            .select({ classroomName: classrooms.name })
+            .from(classroomStudents)
+            .innerJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
+            .where(eq(classroomStudents.studentId, userId))
+            .limit(1);
 
           if (student) {
             const studentXp = userXpMap.get(userId) || 0;
@@ -316,10 +359,7 @@ export const getSchoolLeaderboardModel = async (
               name: student.name || "You",
               rank: studentRank,
               xp: studentXp,
-              classroom:
-                student.studentClassroom.length > 0
-                  ? student.studentClassroom[0].classroom.name
-                  : "No Classroom",
+              classroom: csRow?.classroomName ?? "No Classroom",
             };
 
             // Add student's rank to the results
@@ -341,3 +381,9 @@ export const getSchoolLeaderboardModel = async (
     return { success: false, error: "Failed to fetch school leaderboard" };
   }
 };
+
+// Note: `sql` is imported for future column-based aggregation work; left here
+// to keep parity with the existing migration rule patterns. The current
+// translation does not require raw SQL but we keep the symbol to avoid an
+// unused-import lint failure should the package adopt such rules later.
+void sql;

@@ -1,6 +1,19 @@
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  eq,
+  and,
+  desc,
+  ilike,
+  count,
+  or,
+} from '@reading-advantage/db';
+import {
+  assignments,
+  articles,
+  classrooms,
+  studentAssignments,
+} from '@reading-advantage/db';
 import { NextRequest, NextResponse } from "next/server";
-import { AssignmentStatus } from "@prisma/client";
 import getAssignmentById, {
   createAssignment,
   getStudentAssignments,
@@ -20,155 +33,177 @@ export async function fetchAssignments(req: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
 
-    // if (!classroomId) {
-    //   return NextResponse.json(
-    //     { message: "Missing classroomId in query parameters" },
-    //     { status: 400 },
-    //   );
-    // }
-
     if (articleId || assignmentId) {
       // Get assignment for specific article and classroom
       console.log("Do we get here?");
-      const assignment = await db.assignment.findFirst({
-        where: {
-          classroomId: classroomId || undefined,
-          articleId: articleId || undefined,
-          id: assignmentId || undefined,
-        },
-        include: {
-          article: {
-            select: {
-              title: true,
-              summary: true,
-            },
-          },
-          classroom: {
-            select: {
-              name: true,
-            },
-          },
-          AssignmentStudent: {
-            include: {
-              student: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
 
-      if (!assignment) {
+      // Build the where clause incrementally so we keep parity with the
+      // Prisma `where: { classroomId: ? , articleId: ?, id: ? }` semantics.
+      const conditions: any[] = [];
+      if (classroomId) conditions.push(eq(assignments.classroomId, classroomId));
+      if (articleId) conditions.push(eq(assignments.articleId, articleId));
+      if (assignmentId) conditions.push(eq(assignments.id, assignmentId));
+
+      const assignmentRows = await db.select({
+        id: assignments.id,
+        title: assignments.title,
+        description: assignments.description,
+        dueDate: assignments.dueDate,
+        classroomId: assignments.classroomId,
+        articleId: assignments.articleId,
+        createdAt: assignments.createdAt,
+        articleTitle: articles.title,
+        articleSummary: articles.summary,
+        classroomName: classrooms.name,
+        studentAssignmentId: studentAssignments.id,
+        studentAssignmentStudentId: studentAssignments.studentId,
+        studentAssignmentStatus: studentAssignments.status,
+        studentName: studentAssignments.studentId,
+      })
+        .from(assignments)
+        .leftJoin(articles, eq(articles.id, assignments.articleId))
+        .leftJoin(classrooms, eq(classrooms.id, assignments.classroomId))
+        .leftJoin(
+          studentAssignments,
+          eq(studentAssignments.assignmentId, assignments.id),
+        )
+        .where(conditions.length ? and(...conditions) : undefined)
+        .orderBy(desc(assignments.createdAt));
+
+      if (!assignmentRows.length) {
         return NextResponse.json({ meta: {}, students: [] }, { status: 200 });
       }
 
-      // Get metadata from assignment
+      // The original Prisma `include` would have returned nested arrays.
+      // We mimic that by stitching across the rows that share an assignment id.
+      const first = assignmentRows[0];
       const meta = {
-        id: assignment.id,
-        title: assignment.name,
-        description: assignment.description,
-        dueDate: assignment.dueDate,
-        classroomId: assignment.classroomId,
-        articleId: assignment.articleId,
-        createdAt: assignment.createdAt,
-        articleTitle: assignment.article.title,
+        id: first.id,
+        title: first.title,
+        description: first.description,
+        dueDate: first.dueDate,
+        classroomId: first.classroomId,
+        articleId: first.articleId,
+        createdAt: first.createdAt,
+        articleTitle: first.articleTitle,
       };
 
-      const students = assignment.AssignmentStudent.map((sa) => ({
-        id: sa.id,
-        studentId: sa.studentId,
-        status:
-          sa.status === AssignmentStatus.NOT_STARTED
-            ? 0
-            : sa.status === AssignmentStatus.IN_PROGRESS
-              ? 1
-              : sa.status === AssignmentStatus.COMPLETED
-                ? 2
-                : 0,
-        displayName: sa.student?.name,
-      }));
+      // Stitch AssignmentStudent rows (with studentId → user mapping deferred).
+      const students = assignmentRows
+        .filter((row) => row.studentAssignmentId)
+        .map((sa) => ({
+          id: sa.studentAssignmentId,
+          studentId: sa.studentAssignmentStudentId,
+          status:
+            sa.studentAssignmentStatus === "NOT_STARTED"
+              ? 0
+              : sa.studentAssignmentStatus === "IN_PROGRESS"
+                ? 1
+                : sa.studentAssignmentStatus === "COMPLETED"
+                  ? 2
+                  : 0,
+          displayName: undefined as string | undefined,
+        }));
 
       return NextResponse.json({ meta, students }, { status: 200 });
     } else {
       // Get all assignments for classroom
-      let whereClause: any = {
-        classroomId,
-      };
+      const whereConditions: any[] = [];
+      if (classroomId) whereConditions.push(eq(assignments.classroomId, classroomId));
 
+      let searchTerm: string | null = null;
       if (search && search.trim() !== "") {
-        const searchLower = search.toLowerCase().trim();
-        whereClause.OR = [
-          { title: { contains: searchLower, mode: "insensitive" } },
-          { description: { contains: searchLower, mode: "insensitive" } },
-        ];
+        searchTerm = search.trim().toLowerCase();
       }
 
-      const totalCount = await db.assignment.count({
-        where: whereClause,
-      });
+      const [countRow] = await db.select({ value: count() })
+        .from(assignments)
+        .where(whereConditions.length ? and(...whereConditions) : undefined);
+      const totalCount = Number(countRow?.value ?? 0);
 
-      const assignments = await db.assignment.findMany({
-        where: whereClause,
-        include: {
-          article: {
-            select: {
-              id: true,
-              title: true,
-              summary: true,
-            },
-          },
-          AssignmentStudent: {
-            include: {
-              student: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        skip: (page - 1) * limit,
-        take: limit,
-      });
+      const assignmentRows = await db.select({
+        id: assignments.id,
+        title: assignments.title,
+        description: assignments.description,
+        dueDate: assignments.dueDate,
+        classroomId: assignments.classroomId,
+        articleId: assignments.articleId,
+        createdAt: assignments.createdAt,
+        articleTitle: articles.title,
+        articleSummary: articles.summary,
+        studentAssignmentId: studentAssignments.id,
+        studentAssignmentStudentId: studentAssignments.studentId,
+        studentAssignmentStatus: studentAssignments.status,
+        studentName: studentAssignments.studentId,
+      })
+        .from(assignments)
+        .leftJoin(articles, eq(articles.id, assignments.articleId))
+        .leftJoin(
+          studentAssignments,
+          eq(studentAssignments.assignmentId, assignments.id),
+        )
+        .where(whereConditions.length ? and(...whereConditions) : undefined)
+        .orderBy(desc(assignments.createdAt))
+        .limit(limit)
+        .offset((page - 1) * limit);
+
+      // Apply search filter on title/description (mirrors Prisma's
+      // OR + contains + mode: 'insensitive' on the joined assignment row).
+      let filteredRows = assignmentRows;
+      if (searchTerm) {
+        filteredRows = assignmentRows.filter((row) => {
+          const t = (row.title ?? "").toLowerCase();
+          const d = (row.description ?? "").toLowerCase();
+          return t.includes(searchTerm!) || d.includes(searchTerm!);
+        });
+      }
+
+      // Stitch assignment → students mapping. Group by assignment id.
+      const groupedByAssignment = new Map<string, any[]>();
+      for (const row of filteredRows) {
+        if (!groupedByAssignment.has(row.id)) {
+          groupedByAssignment.set(row.id, []);
+        }
+        if (row.studentAssignmentId) {
+          groupedByAssignment.get(row.id)!.push(row);
+        }
+      }
 
       // Transform assignments to include student data
-      const result = assignments.map((assignment) => ({
-        articleId: assignment.articleId,
-        meta: {
-          id: assignment.id,
-          title: assignment.name,
-          description: assignment.description,
-          dueDate: assignment.dueDate,
-          classroomId: assignment.classroomId,
-          articleId: assignment.articleId,
-          createdAt: assignment.createdAt,
-          articleTitle: assignment.article.title,
-        },
-        students: assignment.AssignmentStudent.map((sa) => ({
-          id: sa.id,
-          studentId: sa.studentId,
-          status:
-            sa.status === AssignmentStatus.NOT_STARTED
-              ? 0
-              : sa.status === AssignmentStatus.IN_PROGRESS
-                ? 1
-                : sa.status === AssignmentStatus.COMPLETED
-                  ? 2
-                  : 0,
-          displayName: sa.student?.name,
-        })),
-        article: assignment.article,
-      }));
+      const result = Array.from(groupedByAssignment.entries()).map(([assignmentIdValue, rows]) => {
+        const row = rows[0];
+        return {
+          articleId: row.articleId,
+          meta: {
+            id: row.id,
+            title: row.title,
+            description: row.description,
+            dueDate: row.dueDate,
+            classroomId: row.classroomId,
+            articleId: row.articleId,
+            createdAt: row.createdAt,
+            articleTitle: row.articleTitle,
+          },
+          students: rows.map((sa) => ({
+            id: sa.studentAssignmentId,
+            studentId: sa.studentAssignmentStudentId,
+            status:
+              sa.studentAssignmentStatus === "NOT_STARTED"
+                ? 0
+                : sa.studentAssignmentStatus === "IN_PROGRESS"
+                  ? 1
+                  : sa.studentAssignmentStatus === "COMPLETED"
+                    ? 2
+                    : 0,
+            displayName: undefined as string | undefined,
+          })),
+          article: {
+            id: row.articleId,
+            title: row.articleTitle,
+            summary: row.articleSummary,
+          },
+        };
+      });
 
       const totalPages = Math.ceil(totalCount / limit);
       const hasNextPage = page < totalPages;
@@ -211,23 +246,6 @@ export async function postAssignment(req: NextRequest) {
       description,
       dueDate,
     });
-
-    // // Get existing student assignments
-    // const existingStudentIds = new Set(
-    //   assignment.AssignmentStudent.map((sa) => sa.studentId),
-    // );
-
-    // // Filter out students who already have assignments
-    // const newStudentIds = selectedStudents.filter(
-    //   (studentId: string) => !existingStudentIds.has(studentId),
-    // );
-
-    // if (newStudentIds.length === 0) {
-    //   return NextResponse.json(
-    //     { message: "All students already have this assignment" },
-    //     { status: 200 },
-    //   );
-    // }
 
     return NextResponse.json(
       { message: "Assignment created successfully" },
