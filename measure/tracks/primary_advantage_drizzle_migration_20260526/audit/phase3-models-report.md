@@ -66,7 +66,7 @@ Translation strategy overview:
     `where: { classroomId_studentId: { classroomId, studentId } }`
     are replaced with `and(eq(table.classroomId, …), eq(table.studentId, …))`.
 
-## userModel.ts
+## userModel
 
 | Function | Translated? | Notes |
 | --- | --- | --- |
@@ -78,7 +78,7 @@ Translation strategy overview:
 | `getUserArticleRecords` | ✅ | `OR` + JSON path search translated via `sql\`details->>'title' ILIKE …\``; ILIKE for case-insensitive `contains`. |
 | `getUserReminderReread` | ✅ | All grouping/sorting logic preserved client-side after the initial `db.select().from(userActivity)` fetch. |
 
-## classroomModel.ts
+## classroomModel
 
 | Function | Translated? | Notes |
 | --- | --- | --- |
@@ -97,7 +97,7 @@ Translation strategy overview:
 | `getClassroomStudentForLogin` | ✅ | `findFirst({ where: { passwordStudents } })` + `findMany` translated. |
 | `generateClassCode` | ✅ | Helper `isPasswordUnique` translated; final `update` returns only the selected columns via `.returning({...})`. |
 
-## articleModel.ts
+## articleModel
 
 | Function | Translated? | Notes |
 | --- | --- | --- |
@@ -116,7 +116,7 @@ Translation strategy overview:
 | `updateAprovedCustomArticle` | ✅ | `db.article.findUnique` + `update` + parallel question inserts translated. |
 | `checkExistingArticle` | ✅ | `findUnique` → `db.select().from(articles).where(eq(articles.id, articleId)).limit(1)`. |
 
-## assignmentModel.ts
+## assignmentModel
 
 | Function | Translated? | Notes |
 | --- | --- | --- |
@@ -127,7 +127,7 @@ Translation strategy overview:
 | `getUserLessonProgress` | ✅ | `findFirst` → `db.select().from(lessonProgress).where(...).limit(1)`. |
 | `getAssignmentActivityById` | ✅ | `select: { is*Completed: true }` preserved via Drizzle's projection. |
 
-## lessonModel.ts
+## lessonModel
 
 | Function | Translated? | Notes |
 | --- | --- | --- |
@@ -136,14 +136,14 @@ Translation strategy overview:
 | `getStandaloneLessonProgress` | ✅ | `where: { assignmentId: null }` → `isNull(lessonProgress.assignmentId)`. |
 | `getArticleActivity` | ✅ | `select: { is*Completed }` preserved via Drizzle's projection. |
 
-## schoolModel.ts
+## schoolModel
 
 | Function | Translated? | Notes |
 | --- | --- | --- |
 | `updateSchoolRankingModel` | ✅ | `db.school.findMany({ select: { id, name } })` → `db.select({...}).from(schools)`. The nested `where: { user: { schoolId, roles: { some: { role: { name: "student" } } } } }` is split into two helpers (`getStudentRoleId` + a `users ⨝ userRoles` join) for clarity. |
 | `getSchoolLeaderboardModel` | ✅ | Same nested-where strategy; `leaderboard.update` / `create` translated to `.returning()`. |
 
-## studentModel.ts
+## studentModel
 
 | Function | Translated? | Notes |
 | --- | --- | --- |
@@ -154,7 +154,7 @@ Translation strategy overview:
 | `deleteStudent` | ✅ | `userRole.deleteMany` + `classroomStudent.deleteMany` + `userActivity.deleteMany` + `xPLogs.deleteMany` + `user.delete` → five sequential `db.delete` calls. |
 | `getStudentStatistics` | ✅ | Nested `include: { userActivity: { where: { createdAt: { gte } } } }` translated to a left join on `userActivity` with a `gte(createdAt, sevenDaysAgo)` filter. |
 
-## teacherModel.ts
+## teacherModel
 
 | Function | Translated? | Notes |
 | --- | --- | --- |
@@ -167,7 +167,7 @@ Translation strategy overview:
 | `deleteTeacher` | ✅ | `userRole.deleteMany` + `classroomTeachers.deleteMany` + `user.delete` translated. |
 | `getTeacherStatistics` | ✅ | Nested includes collapsed into a single wide join; client-side aggregation preserved. |
 
-## assignmentController.ts
+## assignmentController
 
 | Function | Translated? | Notes |
 | --- | --- | --- |

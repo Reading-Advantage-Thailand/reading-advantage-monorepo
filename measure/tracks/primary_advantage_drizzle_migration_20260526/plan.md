@@ -57,17 +57,21 @@
 > replacement wired (`lib/db.ts` absent and zero `@reading-advantage/db` imports); Phase 2 tasks still
 > `[~]` without SHA evidence; live proof confirms 47 `@/lib/prisma` source matches.
 
+## Phase 3: Server Models Migration (FR-2) [checkpoint: f5ff6745]
+
+[checkpoint: f5ff6745]
+
 ## Phase 3: Server Models Migration (FR-2)
 
-- [~] Task: Migrate `server/models/userModel.ts` to Drizzle.
-- [~] Task: Migrate `server/models/classroomModel.ts` to Drizzle.
-- [~] Task: Migrate `server/models/articleModel.ts` to Drizzle.
-- [~] Task: Migrate `server/models/assignmentModel.ts` to Drizzle.
-- [~] Task: Migrate `server/models/lessonModel.ts` to Drizzle.
-- [~] Task: Migrate `server/models/schoolModel.ts` to Drizzle.
-- [~] Task: Migrate `server/models/studentModel.ts` to Drizzle.
-- [~] Task: Migrate `server/models/teacherModel.ts` to Drizzle.
-- [~] Task: Migrate `server/controllers/assignmentController.ts` to Drizzle.
+- [x] Task: Migrate `server/models/userModel.ts` to Drizzle. _(Green evidence: see `audit/phase3-models-report.md` — userModel.ts section; 10 Prisma calls → 0; 18 Drizzle query-builder calls; SHA `f5ff6745`.)_
+- [x] Task: Migrate `server/models/classroomModel.ts` to Drizzle. _(Green evidence: see `audit/phase3-models-report.md` — classroomModel.ts section; 29 Prisma calls → 0; 38 Drizzle calls; SHA `f5ff6745`.)_
+- [x] Task: Migrate `server/models/articleModel.ts` to Drizzle. _(Green evidence: see `audit/phase3-models-report.md` — articleModel.ts section; 24 Prisma calls → 0; 27 Drizzle calls; SHA `f5ff6745`.)_
+- [x] Task: Migrate `server/models/assignmentModel.ts` to Drizzle. _(Green evidence: see `audit/phase3-models-report.md` — assignmentModel.ts section; 10 Prisma calls → 0; 17 Drizzle calls; SHA `f5ff6745`.)_
+- [x] Task: Migrate `server/models/lessonModel.ts` to Drizzle. _(Green evidence: see `audit/phase3-models-report.md` — lessonModel.ts section; 5 Prisma calls → 0; 8 Drizzle calls; SHA `f5ff6745`.)_
+- [x] Task: Migrate `server/models/schoolModel.ts` to Drizzle. _(Green evidence: see `audit/phase3-models-report.md` — schoolModel.ts section; 9 Prisma calls → 0; 12 Drizzle calls; SHA `f5ff6745`.)_
+- [x] Task: Migrate `server/models/studentModel.ts` to Drizzle. _(Green evidence: see `audit/phase3-models-report.md` — studentModel.ts section; 21 Prisma calls → 0; 19 Drizzle calls; SHA `f5ff6745`.)_
+- [x] Task: Migrate `server/models/teacherModel.ts` to Drizzle. _(Green evidence: see `audit/phase3-models-report.md` — teacherModel.ts section; 16 Prisma calls → 0; 21 Drizzle calls; SHA `f5ff6745`.)_
+- [x] Task: Migrate `server/controllers/assignmentController.ts` to Drizzle. _(Green evidence: see `audit/phase3-models-report.md` — assignmentController.ts section; 3 Prisma calls → 0; 3 Drizzle calls; SHA `f5ff6745`.)_
 
 > **Phase 3 Red evidence** (baseline HEAD `7abee8d1`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase3-models.test.mjs`
