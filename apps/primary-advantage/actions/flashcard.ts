@@ -26,8 +26,12 @@ import {
 } from '@reading-advantage/db';
 import { ActivityType, FlashcardType } from "@/types/enum";
 import { FlashcardCard, SentenceTimepoint, WordListTimestamp } from "@/types";
-import { CardState } from "@prisma/client";
+import { cardState } from "@reading-advantage/db";
 import { fsrsService } from "@/lib/fsrs-service";
+
+// Derive CardState as a string-literal union from the Drizzle pgEnum.
+// Replaces the legacy Prisma client enum import.
+type CardState = (typeof cardState.enumValues)[number];
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
@@ -289,7 +293,7 @@ export async function saveFlashcard(
         learningSteps: emptyCard.learning_steps,
         reps: emptyCard.reps,
         lapses: emptyCard.lapses,
-        state: CardState.NEW,
+        state: "NEW" as CardState,
         lastReview: emptyCard.last_review,
       };
 

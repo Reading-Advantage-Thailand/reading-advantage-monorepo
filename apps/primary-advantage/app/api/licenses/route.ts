@@ -5,7 +5,11 @@ import { z } from "zod";
 import { randomBytes } from "crypto";
 import { currentUser } from "@/lib/session";
 import { generateLicenseKey } from "@/lib/utils";
-import { SubscriptionType } from "@prisma/client";
+import { subscriptionType } from "@reading-advantage/db";
+
+// Derive SubscriptionType as a string-literal union from the Drizzle pgEnum.
+// Replaces the legacy Prisma client enum import.
+type SubscriptionType = (typeof subscriptionType.enumValues)[number];
 
 const CreateLicenseSchema = z.object({
   name: z.string().min(3).max(100),

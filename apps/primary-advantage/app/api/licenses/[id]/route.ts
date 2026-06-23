@@ -3,7 +3,11 @@ import { currentUser } from "@/lib/session";
 import { db, eq } from '@reading-advantage/db';
 import { licenses, schools } from '@reading-advantage/db';
 import { z } from "zod";
-import { SubscriptionType } from "@prisma/client";
+import { subscriptionType } from "@reading-advantage/db";
+
+// Derive SubscriptionType as a string-literal union from the Drizzle pgEnum.
+// Replaces the legacy Prisma client enum import.
+type SubscriptionType = (typeof subscriptionType.enumValues)[number];
 
 const UpdateLicenseSchema = z.object({
   name: z.string().min(3).max(100),
