@@ -173,6 +173,16 @@
 - [~] Task: Run `pnpm install` to clean lockfile.
 - [~] Task: Update `apps/primary-advantage/AGENTS.md` to reflect Drizzle reality.
 
+> **Phase 8 Red evidence** (commit `02e35ed8`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase8-cleanup.test.mjs`
+> Result: 0/9 passed, 9/9 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 8 heading;
+> missing `audit/phase8-cleanup-report.md` and required sections (Summary + each cleanup step +
+> Verification + AGENTS.md Update); `apps/primary-advantage/prisma/` directory still exists (48 files);
+> `apps/primary-advantage/package.json` still references `@prisma/client`, `prisma`, `@prisma/adapter-pg`
+> and contains a `prisma.seed` config block; `apps/primary-advantage/AGENTS.md` does not exist;
+> `pnpm-workspace.yaml` `allowBuilds` still lists `@prisma/client`, `@prisma/engines`, and `prisma`;
+> Phase 8 tasks still `[~]` without SHA evidence.
+
 ## Phase 9: Verification & Sign-Off
 
 - [ ] Task: Run FR-2 audit command; confirm zero Prisma matches in `apps/primary-advantage/`.
