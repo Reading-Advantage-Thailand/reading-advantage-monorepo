@@ -11,7 +11,11 @@ import {
   Grade,
 } from "ts-fsrs";
 import { FlashcardCard } from "@/types";
-import { CardState } from "@prisma/client";
+import { cardState } from "@reading-advantage/db";
+
+// Derive CardState as a string-literal union from the Drizzle pgEnum.
+// Replaces the previous import from the legacy Prisma client enum.
+export type CardState = (typeof cardState.enumValues)[number];
 
 class FSRSService {
   private fsrs: FSRS;

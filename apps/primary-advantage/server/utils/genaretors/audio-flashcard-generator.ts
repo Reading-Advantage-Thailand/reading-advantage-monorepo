@@ -1,4 +1,5 @@
 import { db } from '@reading-advantage/db';
+import { sentencsAndWordsForFlashcards } from "@reading-advantage/db";
 import {
   AUDIO_WORDS_URL,
   AVAILABLE_VOICES,
@@ -196,24 +197,22 @@ export async function generateAudioForFlashcard({
     }
 
     // Store both sentence and word data with their respective audio URLs
-    await db.sentencsAndWordsForFlashcard.create({
-      data: {
-        sentence:
-          sentenceTimePoints.length > 0
-            ? JSON.parse(JSON.stringify(sentenceTimePoints))
-            : null,
-        audioSentencesUrl:
-          sentenceTimePoints.length > 0
-            ? `/audios/sentences/${articleId}.mp3`
-            : null,
-        words:
-          wordTimePoints.length > 0
-            ? JSON.parse(JSON.stringify(wordTimePoints))
-            : null,
-        wordsUrl:
-          wordTimePoints.length > 0 ? `/audios/words/${articleId}.mp3` : null,
-        articleId: articleId,
-      },
+    await db.insert(sentencsAndWordsForFlashcards).values({
+      sentence:
+        sentenceTimePoints.length > 0
+          ? (JSON.parse(JSON.stringify(sentenceTimePoints)) as any)
+          : null,
+      audioSentencesUrl:
+        sentenceTimePoints.length > 0
+          ? `/audios/sentences/${articleId}.mp3`
+          : null,
+      words:
+        wordTimePoints.length > 0
+          ? (JSON.parse(JSON.stringify(wordTimePoints)) as any)
+          : null,
+      wordsUrl:
+        wordTimePoints.length > 0 ? `/audios/words/${articleId}.mp3` : null,
+      articleId: articleId,
     });
 
     return;

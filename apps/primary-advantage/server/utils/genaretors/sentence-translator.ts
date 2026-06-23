@@ -1,6 +1,8 @@
 import { generateObject } from "@reading-advantage/ai";
 import { google, googleModelLite } from "@/utils/google";
 import { db } from '@reading-advantage/db';
+import { eq } from "drizzle-orm";
+import { articles } from "@reading-advantage/db";
 import { SentenceTimepoint } from "@/types";
 import z from "zod";
 
@@ -98,14 +100,16 @@ export async function translateAndStoreSentences({
 }: TranslateSentencesParams): Promise<void> {
   try {
     // Get the article with current sentences and translations
-    const article = await db.article.findUnique({
-      where: { id: articleId },
-      select: {
-        sentences: true,
-        translatedPassage: true,
-        cefrLevel: true,
-      },
-    });
+    const articleRows = await db.select({
+      sentences: articles.sentences,
+      translatedPassage: articles.translatedPassage,
+      cefrLevel: articles.cefrLevel,
+    })
+      .from(articles)
+      .where(eq(articles.id, articleId))
+      .limit(1);
+
+    const article = articleRows[0];
 
     if (!article) {
       throw new Error(`Article with ID ${articleId} not found`);
@@ -166,12 +170,11 @@ export async function translateAndStoreSentences({
     }
 
     // Store translations in database
-    await db.article.update({
-      where: { id: articleId },
-      data: {
-        translatedPassage: JSON.parse(JSON.stringify(translatedSentences)),
-      },
-    });
+    await db.update(articles)
+      .set({
+        translatedPassage: JSON.parse(JSON.stringify(translatedSentences)) as any,
+      })
+      .where(eq(articles.id, articleId));
 
     console.log(
       `Successfully translated and stored sentences for article ${articleId}`,
@@ -192,12 +195,7 @@ export async function translateAndStoreSentences({
 //   articleId: string,
 //   language: "th" | "cn" | "tw" | "vi",
 // ): Promise<string[]> {
-//   const article = await db.article.findUnique({
-//     where: { id: articleId },
-//     select: {
-//       translatedSentences: true,
-//     },
-//   });
+//   const article = await db.select().from(articles).where(eq(articles.id, articleId)).limit(1);
 
 //   if (!article?.translatedSentences) {
 //     throw new Error(`No translated sentences found for article ${articleId}`);

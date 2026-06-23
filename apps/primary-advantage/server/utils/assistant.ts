@@ -1,5 +1,7 @@
 import { laquestion_system, saqeution_system } from "@/data/prompts-ai";
 import { db } from '@reading-advantage/db';
+import { eq } from "drizzle-orm";
+import { articles } from "@reading-advantage/db";
 import {
   laqFeedbackInputSchema,
   laqFeedbackOutputSchema,
@@ -26,15 +28,15 @@ export async function getSaqFeedback(req: {
   try {
     let prompt: string | undefined;
 
-    const article = await db.article.findUnique({
-      where: {
-        id: req.data.articleId,
-      },
-      select: {
-        passage: true,
-        cefrLevel: true,
-      },
-    });
+    const articleRows = await db.select({
+      passage: articles.passage,
+      cefrLevel: articles.cefrLevel,
+    })
+      .from(articles)
+      .where(eq(articles.id, req.data.articleId))
+      .limit(1);
+
+    const article = articleRows[0];
 
     if (!article) {
       throw new Error("Article not found");
@@ -90,15 +92,15 @@ export async function getLaqFeedback(req: {
   try {
     let prompt: string | undefined;
 
-    const article = await db.article.findUnique({
-      where: {
-        id: req.data.articleId,
-      },
-      select: {
-        passage: true,
-        cefrLevel: true,
-      },
-    });
+    const articleRows = await db.select({
+      passage: articles.passage,
+      cefrLevel: articles.cefrLevel,
+    })
+      .from(articles)
+      .where(eq(articles.id, req.data.articleId))
+      .limit(1);
+
+    const article = articleRows[0];
 
     if (!article) {
       throw new Error("Article not found");

@@ -1,5 +1,6 @@
 import { Card as FSRSCard, State, Rating } from "ts-fsrs";
-import { Prisma } from "@prisma/client";
+import type { InferSelectModel } from "drizzle-orm";
+import { licenses } from "@reading-advantage/db";
 
 export type SiteConfig = {
   name: string;
@@ -122,7 +123,7 @@ export interface Article {
 export interface WordList {
   id: string;
   wordlist: string[];
-  timepoints: Prisma.JsonValue | Timepoint[];
+  timepoints: unknown | Timepoint[];
   articleId: string;
 }
 
@@ -476,6 +477,14 @@ export interface License {
   expiry_date: string;
   email: string;
 }
+
+/**
+ * Drizzle-inferred row type for the shared `licenses` table.
+ * Use this when consuming the wire format returned by `/api/licenses`
+ * (which exposes the full column set). The locally-declared `License`
+ * interface above is a different (legacy) shape used by other call sites.
+ */
+export type LicenseRow = InferSelectModel<typeof licenses>;
 
 // Re-export ts-fsrs types for convenience
 export { Rating, State as FSRSState } from "ts-fsrs";

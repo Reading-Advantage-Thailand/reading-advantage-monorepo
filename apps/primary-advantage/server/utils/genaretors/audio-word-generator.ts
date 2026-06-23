@@ -1,4 +1,6 @@
 import { db } from '@reading-advantage/db';
+import { eq } from "drizzle-orm";
+import { articles } from "@reading-advantage/db";
 import {
   AUDIO_WORDS_URL,
   AVAILABLE_VOICES,
@@ -50,14 +52,12 @@ function contentToSSML(content: string[]): string {
 }
 
 export async function generateWordLists(articleId: string) {
-  const article = await db.article.findUnique({
-    where: {
-      id: articleId,
-    },
-    select: {
-      passage: true,
-    },
-  });
+  const articleRows = await db.select({ passage: articles.passage })
+    .from(articles)
+    .where(eq(articles.id, articleId))
+    .limit(1);
+
+  const article = articleRows[0];
 
   if (!article?.passage) {
     throw new Error("Article not found");
@@ -139,15 +139,12 @@ export async function generateAudioForWord({
 
       fs.unlinkSync(localPath);
 
-      await db.article.update({
-        where: {
-          id: articleId,
-        },
-        data: {
-          words: JSON.parse(JSON.stringify(allTimePoints)),
+      await db.update(articles)
+        .set({
+          words: JSON.parse(JSON.stringify(allTimePoints)) as any,
           audioWordUrl: `/audios/words/${articleId}.mp3`,
-        },
-      });
+        })
+        .where(eq(articles.id, articleId));
       return;
     } catch (error: any) {
       const errorDetails = error.response?.data || error.message || error;

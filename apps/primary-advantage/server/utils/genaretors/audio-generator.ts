@@ -12,7 +12,8 @@ import {
   VOICES_AI,
 } from "../constants";
 import { db } from '@reading-advantage/db';
-import { Prisma } from "@prisma/client";
+import { eq, sql } from "drizzle-orm";
+import { articles } from "@reading-advantage/db";
 import { SentenceTimepoint, WordTimestamp } from "@/types";
 import { translateAndStoreSentences } from "./sentence-translator";
 import { log } from "console";
@@ -471,13 +472,12 @@ export async function generateAudio({
     );
 
     // // Update the database with sentence timepoints
-    await db.article.update({
-      where: { id: articleId },
-      data: {
-        sentences: JSON.parse(JSON.stringify(sentenceTimepoints)),
+    await db.update(articles)
+      .set({
+        sentences: JSON.parse(JSON.stringify(sentenceTimepoints)) as any,
         audioUrl: `/audios/articles/${articleId}.mp3`,
-      },
-    });
+      })
+      .where(eq(articles.id, articleId));
 
     // Automatically translate sentences after audio generation
     try {

@@ -1,4 +1,12 @@
-import { db } from '@reading-advantage/db';
+import { db } from "@reading-advantage/db";
+import { eq } from "drizzle-orm";
+import {
+  users,
+  schools,
+  userRoles,
+  roles,
+  schoolAdmins,
+} from "@reading-advantage/db";
 
 // Type definitions for user with roles
 export interface UserWithRoles {
@@ -25,26 +33,52 @@ export const validateUser = async (
   try {
     // console.log("Auth Utils: Validating user:", userId);
 
-    const userWithRoles = await db.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        schoolId: true,
-        level: true,
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-        SchoolAdmins: true,
-      },
-    });
+    const userRows = await db.select({
+      id: users.id,
+      email: users.email,
+      schoolId: users.schoolId,
+      level: users.level,
+    })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
-    if (!userWithRoles) {
+    const userRow = userRows[0];
+    if (!userRow) {
       // console.log("Auth Utils: User not found:", userId);
       return null;
     }
+
+    // Roles: join userRoles ⨝ roles
+    const userRoleRows = await db.select({
+      roleId: userRoles.roleId,
+      role: {
+        id: roles.id,
+        name: roles.name,
+      },
+    })
+      .from(userRoles)
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(eq(userRoles.userId, userId));
+
+    const rolesNested = userRoleRows.map((row) => ({ role: row.role }));
+
+    // SchoolAdmins: filter by userId
+    const schoolAdminRows = await db.select({
+      id: schoolAdmins.id,
+      schoolId: schoolAdmins.schoolId,
+    })
+      .from(schoolAdmins)
+      .where(eq(schoolAdmins.userId, userId));
+
+    const userWithRoles: UserWithRoles = {
+      id: userRow.id,
+      email: userRow.email,
+      schoolId: userRow.schoolId,
+      level: userRow.level,
+      roles: rolesNested,
+      SchoolAdmins: schoolAdminRows,
+    };
 
     // console.log("Auth Utils: User validated:", {
     //   id: userWithRoles.id,
@@ -151,9 +185,7 @@ export const getUserSchoolIds = async (
     );
 
     if (isSystemAdmin) {
-      const allSchools = await db.school.findMany({
-        select: { id: true },
-      });
+      const allSchools = await db.select({ id: schools.id }).from(schools);
       const schoolIds = allSchools.map((school) => school.id);
 
       return schoolIds;
@@ -200,9 +232,19 @@ export const canAccessSchool = async (
 };
 
 export const getUserRoles = async (userId: string): Promise<string[]> => {
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: { roles: { include: { role: true } } },
-  });
-  return user?.roles.map((role) => role.role.name) || [];
+  const userRows = await db.select({ id: users.id })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  if (!userRows[0]) {
+    return [];
+  }
+
+  const roleRows = await db.select({ name: roles.name })
+    .from(userRoles)
+    .innerJoin(roles, eq(roles.id, userRoles.roleId))
+    .where(eq(userRoles.userId, userId));
+
+  return roleRows.map((row) => row.name);
 };
