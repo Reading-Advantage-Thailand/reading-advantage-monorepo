@@ -189,8 +189,19 @@
 
 ## Phase 9: Verification & Sign-Off
 
-- [ ] Task: Run FR-2 audit command; confirm zero Prisma matches in `apps/primary-advantage/`.
-- [ ] Task: `pnpm --filter primary-advantage build` passes.
-- [ ] Task: `pnpm --filter primary-advantage test` passes (or matches pre-existing baseline).
-- [ ] Task: Update `measure/tracks.md` — archive this track, mark Prisma→Drizzle program complete.
-- [ ] Task: Archive this track to `measure/archive/primary_advantage_drizzle_migration_20260526/`.
+- [~] Task: Run FR-2 audit command; confirm zero Prisma matches in `apps/primary-advantage/`.
+- [~] Task: `pnpm --filter primary-advantage build` passes.
+- [~] Task: `pnpm --filter primary-advantage test` passes (or matches pre-existing baseline).
+- [~] Task: Update `measure/tracks.md` — archive this track, mark Prisma→Drizzle program complete.
+- [~] Task: Archive this track to `measure/archive/primary_advantage_drizzle_migration_20260526/`.
+
+> **Phase 9 Red evidence** (baseline HEAD `741b850c`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase9-verification.test.mjs`
+> Result: 2/9 passed, 7/9 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 9 heading;
+> missing `audit/phase9-verification-report.md` and required sections (Summary, FR-2 Audit Result,
+> Build Baseline, Test Baseline, Archive Confirmation, Final Status); Phase 9 tasks still `[~]` without
+> SHA evidence; report missing so build/test/archive confirmation status cannot be documented.
+> Live proofs: 3 `@prisma/client` imports remain in `apps/primary-advantage/`
+> (`actions/flashcard.ts`, `app/api/licenses/[id]/route.ts`, `app/api/licenses/route.ts`);
+> `measure/tracks.md` still lists the track as in-progress; commit log contains checkpoint references
+> for Phases 0–8.
