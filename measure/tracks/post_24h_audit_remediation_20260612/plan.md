@@ -386,7 +386,7 @@ Live-behavior gate owner (Green role): run `pnpm turbo run build --filter=@readi
 
 ---
 
-## Phase 6: Final Verification & Closeout
+## Phase 6: Final Verification & Closeout [checkpoint: 57071c94]
 
 - [x] Task 28: Run full test suites for affected packages
   - [x] `CI=true pnpm --filter @reading-advantage/db test` — 630 passed, 4 failed (pre-existing: dist + PG integration)
@@ -408,4 +408,4 @@ Live-behavior gate owner (Green role): run `pnpm turbo run build --filter=@readi
   - [x] Update tracks.md entries for auth_security_hardening and db_migration_ledger
   - [x] Final commit with all closeout changes
 
-- [~] Task: Measure - User Manual Verification 'Phase 6: Final Verification & Closeout' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 6: Final Verification & Closeout' (Protocol in workflow.md) — SHA `57071c94`

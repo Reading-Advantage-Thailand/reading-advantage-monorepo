@@ -21,8 +21,10 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
-- [ ] **Track: Post-24h Audit Remediation** *Link: [./tracks/post_24h_audit_remediation_20260612/](./tracks/post_24h_audit_remediation_20260612/)*
+- [x] **Track: Post-24h Audit Remediation**
+  *Link: [./tracks/post_24h_audit_remediation_20260612/](./tracks/post_24h_audit_remediation_20260612/)*
   High-priority cleanup of issues found in the 24-hour commit audit: rescue the uncommitted db-migration-ledger Phase-3 Green WIP; harden auth session cap, token typing, audit fire-and-forget, and reset-password logic; remove skipped stub tests and source-level regex tests; stabilize the codecamp_review_ai_consolidation Phase-6 acceptance test and de-brittle closeout bookkeeping tests; verify the warm-dashboard optimization in production; resolve long-lived stashes and generated-artifact hygiene.
+  *Status: COMPLETE — All 6 phases closed. Phase 1 rescued db-ledger WIP (commits `4d73a926`, `6891639e`, `5215d944`, `c080e2c2`, `b3f6324a`, `ccad56d7`). Phase 2 hardened auth session cap, token type, reset-password (commit `5f23a9cb` + `920ff302`); 161/161 packages/api tests pass. Phase 3 stabilized closeout test brittleness (commit `88053907` + `cc72b786`); 78/78 webhooks tests pass. Phase 4 completed codecamp progress cleanup (commit `b3f6324a`); warm-dashboard deferred to `codecamp_perf_warm_dashboard_20260608` per Task 23 [~]. Phase 5 resolved stashes + gitignore + registry (commit `285927e4`); `stash@{0}` dropped as superseded. Phase 6 final verification — 630/4 db, 385/35 auth (pre-existing PG/DIRECT_DATABASE_URL failures out of scope, owned by `audit_log_retention_dsar_20260605` + `db_migration_ledger_20260611`), 162/0 api, 78/0 webhooks. All 4 packages pass check-types and build. Phase 6 closeout report at `phase6-closeout-report.md`; checkpoint SHA `57071c94`. Final acceptance auditor must re-run all 6 phase contract tests from a clean worktree to confirm Green.*
 
 ---
 
