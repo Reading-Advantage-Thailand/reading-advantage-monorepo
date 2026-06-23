@@ -1,0 +1,46 @@
+{
+  "schema_version": "measure.closeout_audit.v1",
+  "role": "closeout",
+  "track_id": "post_24h_audit_remediation_20260612",
+  "completed_at": "2026-06-23T04:00:00Z",
+  "closeout_actions": {
+    "A_metadata_updated": {
+      "status": "done",
+      "completed_at": "2026-06-23T00:00:00Z",
+      "deviation_notes": "6-phase remediation track complete. All 17 spec ACs satisfied or documented as deferred (AC-14 warm-dashboard prod verification deferred to codecamp_perf_warm_dashboard_20260608). Review A found and fixed tenant scope bypass in handleRegister (d7985ab9). 39 pre-existing test failures (db PG-integration + auth audit-retention) are out-of-scope, owned by db_migration_ledger_20260611 and audit_log_retention_dsar_20260605.",
+      "actual_tasks": 31
+    },
+    "B_track_directory_moved": {
+      "action": "git mv measure/tracks/... measure/archive/...",
+      "result": "success"
+    },
+    "C_tracks_md_updated": {
+      "action": "Entry moved from active section to ## Archived Tracks section (line 376). Link updated to ./archive/ path.",
+      "result": "success"
+    },
+    "D_closeout_manifest_created": {
+      "path": "measure/archive/post_24h_audit_remediation_20260612/automation-supervisor-closeout-manifest.json",
+      "result": "success"
+    },
+    "E_closeout_interphase_checks": {
+      "result": "pass_with_convention_mismatches",
+      "convention_mismatches": [
+        "Cross-reference mentions in other track entries (auth_security_hardening, db_migration_ledger) — not the track's own entry",
+        "Sub-bullet tasks lack individual SHAs — plan uses heading-level SHAs",
+        "PG-dependent tests and Task 23 [~] intentionally deferred/out-of-scope"
+      ],
+      "real_blockers": 0
+    }
+  },
+  "sha_verification": {
+    "all_plan_shas_ancestors_of_head": true,
+    "verified_shas": [
+      "5f23a9cb", "4d73a926", "6891639e", "5215d944", "c080e2c2",
+      "b3f6324a", "ccad56d7", "920ff302", "88053907", "0cf850bb",
+      "cc72b786", "285927e4", "57071c94", "d7985ab9"
+    ]
+  },
+  "final_acceptance_verdict": "pass",
+  "safe_to_closeout": true,
+  "agent_signoff": "MEASURE_AGENT_RESULT"
+}

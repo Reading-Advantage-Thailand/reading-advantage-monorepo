@@ -1,0 +1,114 @@
+{
+  "schema_version": "measure.automation_supervisor_closeout_manifest.v1",
+  "track_id": "post_24h_audit_remediation_20260612",
+  "status": "done",
+  "completed_at": "2026-06-23T00:00:00Z",
+  "baseline_sha": "4abc7821c4f35269cc992c0402249c786fc8e8b8",
+  "head_sha": "d7985ab9384b7192b69c25d0fa3cbd820c2dd98f",
+  "final_acceptance_audit": "measure/runs/final-acceptance-20260623/final-acceptance-post24h.json",
+  "final_acceptance_verdict": "pass",
+  "final_acceptance_safe_to_closeout": true,
+  "review_fixes": [
+    {
+      "review": "Review A",
+      "fix_commit": "d7985ab9384b7192b69c25d0fa3cbd820c2dd98f",
+      "fix_summary": "Tenant scope bypass in handleRegister: TEACHER actors could register users into other schools. Fixed by capturing session from requireRole, deriving actor schoolId, and rejecting cross-school registration with 403. Added 7 register tests covering role-matrix permutations."
+    }
+  ],
+  "deferred_items": [
+    {
+      "task_id": "Task 23",
+      "task_title": "Production warm-dashboard verification",
+      "spec_ac": "FR-16 / AC-14",
+      "deferred_to_track": "codecamp_perf_warm_dashboard_20260608",
+      "deferral_marker_in_plan": "[~]",
+      "rationale": "Requires production deployment with network reach to measure GET /en/ warm latency against 1000ms budget. Last measurement (1290ms) recorded in codecamp_perf_warm_dashboard_20260608 plan.md L35. Cannot be verified from local environment."
+    }
+  ],
+  "out_of_scope_preexisting_failures": [
+    {
+      "category": "live_pg_integration",
+      "owner_track": "db_migration_ledger_20260611",
+      "count": 4,
+      "command": "PG_TEST_URL=... pnpm --filter @reading-advantage/db exec vitest run src/__tests__/stale-ledger.test.ts src/__tests__/ledger-doctor.test.ts",
+      "reason": "Requires live PostgreSQL at PG_TEST_URL; podman rootless networking blocks host access."
+    },
+    {
+      "category": "live_pg_integration",
+      "owner_track": "audit_log_retention_dsar_20260605",
+      "count": 35,
+      "command": "DIRECT_DATABASE_URL=... pnpm --filter @reading-advantage/auth exec vitest run audit-retention*.integration.test.ts",
+      "reason": "Requires DIRECT_DATABASE_URL for live Postgres-backed audit-retention integration tests."
+    },
+    {
+      "category": "ts_type_drift_cross_track",
+      "owner_track": "sales_advantage_mvp_20260622",
+      "count": 1,
+      "command": "pnpm --filter @reading-advantage/api check-types",
+      "reason": "packages/db/src/schema/users.ts roleEnum widened by commit 8d5612c5 (SALES_REP, SALES_ADMIN) without updating @reading-advantage/auth Role union. Error surfaces in packages/api/src/routers/users.ts:75 — a file not touched by this track."
+    },
+    {
+      "category": "db_check_types_rootdir",
+      "owner_track": "db_migration_ledger_20260611",
+      "count": 1,
+      "command": "pnpm --filter @reading-advantage/db check-types",
+      "reason": "Pre-existing tsc rootDir issue: tests reach outside src/ to import .js artifacts. db `build` (via tsconfig.build.json) is clean."
+    }
+  ],
+  "closeout_verification": {
+    "all_plan_tasks_complete_or_deferred": true,
+    "only_deferred_task": "Task 23 (warm-dashboard prod verification) [~]",
+    "all_phase_checkpoints_present": {
+      "phase1": "e2384cab",
+      "phase2": "bee70d76",
+      "phase3": "7f6274a2",
+      "phase4": "2f67785d",
+      "phase5": "285927e4",
+      "phase6": "57071c94"
+    },
+    "all_phase_closeout_reports_present": [
+      "phase1-closeout-report.md",
+      "phase3-closeout-report.md",
+      "phase4-closeout-report.md",
+      "phase5-closeout-report.md",
+      "phase6-closeout-report.md"
+    ],
+    "final_acceptance_audit_passed": true,
+    "final_acceptance_audit_path": "measure/runs/final-acceptance-20260623/final-acceptance-post24h.json",
+    "metadata_json_updated": true,
+    "tracks_md_link_updated_to_archive": true,
+    "track_directory_moved_to_archive": true,
+    "lessons_learned_updated": true,
+    "tech_debt_updated": true,
+    "stash_list_empty": true,
+    "no_skipped_tests_in_scope": true,
+    "key_commit_shas_verified_as_ancestors_of_head": [
+      "5f23a9cb", "4d73a926", "6891639e", "5215d944", "c080e2c2",
+      "b3f6324a", "ccad56d7", "920ff302", "88053907", "0cf850bb",
+      "cc72b786", "285927e4", "57071c94", "d7985ab9"
+    ]
+  },
+  "artifact_cleanup": {
+    "bulky_run_artifacts_deleted": [],
+    "note": "No bulky run artifacts identified by orchestrator. All track artifacts (closeout reports, test files, plan, spec) preserved in archive."
+  },
+  "retained_evidence": [
+    "measure/archive/post_24h_audit_remediation_20260612/plan.md",
+    "measure/archive/post_24h_audit_remediation_20260612/spec.md",
+    "measure/archive/post_24h_audit_remediation_20260612/metadata.json",
+    "measure/archive/post_24h_audit_remediation_20260612/phase1-closeout-report.md",
+    "measure/archive/post_24h_audit_remediation_20260612/phase3-closeout-report.md",
+    "measure/archive/post_24h_audit_remediation_20260612/phase4-closeout-report.md",
+    "measure/archive/post_24h_audit_remediation_20260612/phase5-closeout-report.md",
+    "measure/archive/post_24h_audit_remediation_20260612/phase6-closeout-report.md",
+    "measure/archive/post_24h_audit_remediation_20260612/__tests__/phase1-closeout.test.mjs",
+    "measure/archive/post_24h_audit_remediation_20260612/__tests__/phase3-closeout.test.mjs",
+    "measure/archive/post_24h_audit_remediation_20260612/__tests__/phase4-closeout.test.mjs",
+    "measure/archive/post_24h_audit_remediation_20260612/__tests__/phase5-closeout.test.mjs",
+    "measure/archive/post_24h_audit_remediation_20260612/__tests__/phase6-closeout.test.mjs",
+    "measure/archive/post_24h_audit_remediation_20260612/review-2026-06-22.md",
+    "measure/archive/post_24h_audit_remediation_20260612/review-2026-06-23.md",
+    "measure/archive/post_24h_audit_remediation_20260612/test-strategy.md",
+    "measure/runs/final-acceptance-20260623/final-acceptance-post24h.json"
+  ]
+}
