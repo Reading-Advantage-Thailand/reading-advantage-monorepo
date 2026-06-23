@@ -142,11 +142,11 @@
 
 ## Phase 7: Utils & Types Migration (FR-2, FR-4)
 
-- [ ] Task: Migrate `server/utils/auth.ts`, `server/utils/assistant.ts` to Drizzle.
-- [ ] Task: Migrate 4 `server/utils/genaretors/*.ts` files to Drizzle.
-- [ ] Task: Migrate `lib/fsrs-service.ts` to Drizzle.
-- [ ] Task: Update `types/index.d.ts` to remove Prisma type references.
-- [ ] Task: Migrate `prisma/seed.ts` to Drizzle seed script.
+- [~] Task: Migrate `server/utils/auth.ts`, `server/utils/assistant.ts` to Drizzle.
+- [~] Task: Migrate 4 `server/utils/genaretors/*.ts` files to Drizzle.
+- [~] Task: Migrate `lib/fsrs-service.ts` to Drizzle.
+- [~] Task: Update `types/index.d.ts` to remove Prisma type references.
+- [~] Task: Migrate `prisma/seed.ts` to Drizzle seed script.
 
 ## Phase 8: Cleanup & Dependency Removal (FR-4)
 
