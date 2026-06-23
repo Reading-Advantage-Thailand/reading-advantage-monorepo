@@ -5,10 +5,10 @@
 
 ## Phase 0: Pre-flight
 
-- [ ] Task: Audit all 56 Prisma-touching files; categorize by layer (actions, routes, models, components, lib, types).
-- [ ] Task: Map Prisma schema models to existing `packages/db/src/schema/` tables; identify primary-advantage-specific tables.
-- [ ] Task: Confirm primary-advantage build baseline (`pnpm --filter primary-advantage build`).
-- [ ] Task: Confirm shared schema already covers common models (users, classrooms, etc.).
+- [~] Task: Audit all 56 Prisma-touching files; categorize by layer (actions, routes, models, components, lib, types).
+- [~] Task: Map Prisma schema models to existing `packages/db/src/schema/` tables; identify primary-advantage-specific tables.
+- [~] Task: Confirm primary-advantage build baseline (`pnpm --filter primary-advantage build`).
+- [~] Task: Confirm shared schema already covers common models (users, classrooms, etc.).
 
 ## Phase 1: Schema Port (FR-1)
 
