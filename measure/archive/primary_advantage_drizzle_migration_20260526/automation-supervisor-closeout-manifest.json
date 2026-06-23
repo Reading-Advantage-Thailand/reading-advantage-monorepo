@@ -1,0 +1,146 @@
+{
+  "manifest_type": "automation-supervisor-closeout-manifest",
+  "track_id": "primary_advantage_drizzle_migration_20260526",
+  "closeout_date": "2026-06-23T00:00:00Z",
+  "closeout_agent": "measure-closeout-subagent",
+  "baseline_sha": "5273558d0ab4bd387cccc74a036e1479483cb8f3",
+  "head_sha_at_closeout": "5273558d0ab4bd387cccc74a036e1479483cb8f3",
+  "phase_audit_summary": {
+    "total_phases": 10,
+    "phases_pass": 10,
+    "phases_fail": 0,
+    "phase_checkpoints": {
+      "phase0": "4e918a50",
+      "phase1": "31056ab5",
+      "phase2": "ac0eea77",
+      "phase3": "f5ff6745",
+      "phase4": "f5eee08d",
+      "phase5": "f594c345",
+      "phase6": "659bb1fc",
+      "phase7": "94bb9ead",
+      "phase8": "37198c76",
+      "phase9": "dbe012e6"
+    }
+  },
+  "final_acceptance": {
+    "verdict": "PASS",
+    "audit_file": "measure/runs/final-acceptance/primary_advantage_drizzle_migration_20260526/final.json",
+    "fix_commit": "5273558d",
+    "blockers_fixed": 2,
+    "blocker_details": [
+      {
+        "id": "BLOCKER-1",
+        "file": "apps/primary-advantage/app/[locale]/(student)/student/lesson/[id]/page.tsx:50",
+        "severity": "HIGH",
+        "fix": "Replaced db.assignment.findUnique(...) with db.select().from(assignments).where(eq(assignments.id, id)).limit(1)"
+      },
+      {
+        "id": "BLOCKER-2",
+        "file": "apps/primary-advantage/server/utils/genaretors/new-generator.ts:88-129",
+        "severity": "HIGH",
+        "fix": "Replaced db.$transaction(async (tx) => { tx.article.create(...); ... }) with db.transaction(async (tx) => { tx.insert(articles).values(...); ... })"
+      }
+    ]
+  },
+  "gates_executed": [
+    {
+      "name": "FR-2 import grep gate",
+      "command": "grep -rE '(@prisma/client|@/lib/prisma|@prisma/adapter-pg|\"prisma\")' apps/primary-advantage/ --include='*.ts' --include='*.tsx' --include='*.json' | grep -v node_modules | grep -v .next | grep -v package-lock.json | grep -v pnpm-lock.yaml | wc -l",
+      "expected": 0,
+      "actual": 0,
+      "verdict": "PASS"
+    },
+    {
+      "name": "FR-2 runtime call-shape grep gate",
+      "command": "grep -rnE '\\bdb\\.[a-zA-Z_]+\\.(findUnique|findMany|findFirst|create|createMany|update|updateMany|delete|deleteMany|upsert|count|aggregate|groupBy)\\b|\\bdb\\.\\$' apps/primary-advantage/ --include='*.ts' --include='*.tsx'",
+      "expected": 0,
+      "actual": 0,
+      "verdict": "PASS"
+    },
+    {
+      "name": "FR-3 component import gate",
+      "command": "grep -rE '@prisma/client' apps/primary-advantage/components/ --include='*.ts' --include='*.tsx' | wc -l",
+      "expected": 0,
+      "actual": 0,
+      "verdict": "PASS"
+    },
+    {
+      "name": "FR-4 prisma/ directory removal",
+      "command": "ls apps/primary-advantage/prisma/ 2>&1",
+      "expected": "No such file or directory",
+      "actual": "No such file or directory",
+      "verdict": "PASS"
+    },
+    {
+      "name": "FR-4 prisma dep removal",
+      "command": "grep -E '(\"@prisma/client\"|\"prisma\"|\"@prisma/adapter-pg\")' apps/primary-advantage/package.json | wc -l",
+      "expected": 0,
+      "actual": 0,
+      "verdict": "PASS"
+    },
+    {
+      "name": "FR-4 AGENTS.md exists",
+      "command": "ls apps/primary-advantage/AGENTS.md 2>&1",
+      "expected": "AGENTS.md",
+      "actual": "AGENTS.md",
+      "verdict": "PASS"
+    },
+    {
+      "name": "PROJECT_TESTS",
+      "command": "pnpm --filter primary-advantage test",
+      "expected": "exit 0, 35/35 tests pass",
+      "actual": "35/35 tests pass, exit 0",
+      "verdict": "PASS"
+    },
+    {
+      "name": "PROJECT_BUILD",
+      "command": "pnpm --filter primary-advantage build",
+      "expected": "PASS (pre-existing failure documented)",
+      "actual": "FAIL — pre-existing Turbopack module-resolution failure (13× @reading-advantage/ai + Node built-ins); no migration regression",
+      "verdict": "FAIL (pre-existing; non-blocking)"
+    },
+    {
+      "name": "PROJECT_LINT",
+      "command": "pnpm --filter primary-advantage lint",
+      "expected": "pre-existing baseline",
+      "actual": "4 errors + 74 warnings (pre-existing; no regression)",
+      "verdict": "FAIL (pre-existing; non-blocking)"
+    }
+  ],
+  "retained_evidence": [
+    "measure/archive/primary_advantage_drizzle_migration_20260526/plan.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/spec.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/metadata.json",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/index.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase0-preflight-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase1-schema-port-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase2-prisma-replacement-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase3-models-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase4-actions-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase5-routes-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase6-components-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase7-utils-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase8-cleanup-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/audit/phase9-verification-report.md",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase0-preflight.test.mjs",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase1-schema-port.test.mjs",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase2-prisma-replacement.test.mjs",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase3-models.test.mjs",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase4-actions.test.mjs",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase5-routes.test.mjs",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase6-components.test.mjs",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase7-utils.test.mjs",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase8-cleanup.test.mjs",
+    "measure/archive/primary_advantage_drizzle_migration_20260526/__tests__/phase9-verification.test.mjs",
+    "measure/runs/final-acceptance/primary_advantage_drizzle_migration_20260526/final.json",
+    "measure/runs/phase-acceptance/primary_advantage_drizzle_migration_20260526/"
+  ],
+  "artifact_cleanup": {
+    "bulky_run_artifacts_deleted": [],
+    "rationale": "No bulky run artifacts identified by orchestrator. Phase acceptance JSONs preserved in measure/runs/phase-acceptance/. Final acceptance JSON preserved in measure/runs/final-acceptance/."
+  },
+  "lessons_learned_recorded": true,
+  "lessons_learned_topic": "FR-2 grep gate must include runtime call shapes, not only import literals",
+  "tech_debt_updated": false,
+  "tech_debt_rationale": "No new tech debt introduced by this track. Pre-existing build/lint failures documented in final acceptance and tech-debt.md."
+}

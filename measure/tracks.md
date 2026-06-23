@@ -295,9 +295,9 @@ Two parallel programs are in flight; priority order when picking the next track:
   *Link: [./archive/prisma_drizzle_slice_cleanup_20260505/](./archive/prisma_drizzle_slice_cleanup_20260505/)*
   Track 4 of 4. **Unblocked 2026-05-26** (Tracks 2 & 3 archived). Scope narrowed: cleaned up comment-only Prisma references in reading- and science-advantage `lib/enums.ts`, corrected AGENTS.md doc drift, distilled program lessons, and carved out primary-advantage migration as separate follow-up track. *Status: COMPLETE — FR-1 enums cleaned, FR-2 AGENTS.md corrected, FR-3 tech-debt/lessons-learned updated, FR-4 primary-advantage track created.*
 
-- [ ] **Track: primary-advantage Prisma → Drizzle Migration**
-  *Link: [./tracks/primary_advantage_drizzle_migration_20260526/](./tracks/primary_advantage_drizzle_migration_20260526/)*
-  Carved out from Track 4. Migrate 56 Prisma-touching files in primary-advantage to Drizzle. Delete `prisma/` directory, `lib/prisma.ts`, and Prisma deps. Port schema to `packages/db/`. Inherits Track 2 shape. Also removes root `package.json` `onlyBuiltDependencies` Prisma entries and lockfile `@prisma/*` on closeout.
+- [x] **Track: primary-advantage Prisma → Drizzle Migration**
+  *Link: [./archive/primary_advantage_drizzle_migration_20260526/](./archive/primary_advantage_drizzle_migration_20260526/)*
+  Carved out from Track 4. Migrate 56 Prisma-touching files in primary-advantage to Drizzle. Delete `prisma/` directory, `lib/prisma.ts`, and Prisma deps. Port schema to `packages/db/`. Inherits Track 2 shape. Also removes root `package.json` `onlyBuiltDependencies` Prisma entries and lockfile `@prisma/*` on closeout. *Status: COMPLETE — All 10 phases done. 56 Prisma-touching files migrated, prisma/ directory deleted, @prisma/* deps removed, AGENTS.md created, lockfile Prisma-free. Final acceptance PASS. Archived 2026-06-23. **Prisma→Drizzle program complete.***
 
 ---
 
