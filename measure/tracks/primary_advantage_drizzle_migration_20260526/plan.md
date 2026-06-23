@@ -105,7 +105,17 @@
 
 ## Phase 5: API Routes Migration (FR-2)
 
-- [ ] Task: Migrate 16 `app/api/**/route.ts` files to Drizzle (batch by feature: classrooms, flashcard, licenses, schools, students, upload, users).
+- [~] Task: Migrate all `app/api/**/route.ts` files with Prisma-shaped calls to Drizzle (batch by feature: classrooms, flashcard, licenses, schools, students, upload, users; Phase 0 audit identified 25 files with 108 Prisma-shaped calls).
+
+> **Phase 5 Red evidence** (baseline HEAD `8066b2d8`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase5-routes.test.mjs`
+> Result: 1/7 passed, 6/7 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 5 heading;
+> missing `audit/phase5-routes-report.md` and required summary + per-file/grouped-by-feature +
+> Drizzle API Patterns Used + Deferred Items sections; Prisma-shaped `db.<table>.<method>` calls
+> remain in all 25 target route files (108 total, e.g., upload/classes/route.ts:16, users/me/school/route.ts:24);
+> no Drizzle query-builder patterns in any of the 25 target files; Phase 5 task still `[~]` without
+> SHA evidence; live proof confirms 108 Prisma-shaped calls remain across `apps/primary-advantage/app/api/`.
+> Passing assertion: all 25 target route files exist and are non-empty.
 
 ## Phase 6: Component/UI Migration (FR-3)
 
