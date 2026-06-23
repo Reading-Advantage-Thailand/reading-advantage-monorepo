@@ -24,7 +24,7 @@
 - [~] Task: Verify fresh-DB migration applies cleanly.
 - [~] Task: Update `packages/db/src/schema/index.ts` barrel exports.
 
-> **Phase 1 Red evidence** (commit `ae5f3c7f`):
+> **Phase 1 Red evidence** (commit `e1f5a0ea`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase1-schema-port.test.mjs`
 > Result: 1/9 passed, 8/9 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 1 heading;
 > missing `audit/phase1-schema-port-report.md` and its required sections; missing new table definitions
