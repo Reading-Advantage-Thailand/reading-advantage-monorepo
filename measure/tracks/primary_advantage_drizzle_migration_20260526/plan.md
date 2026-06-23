@@ -41,8 +41,17 @@
 
 ## Phase 2: lib/prisma.ts Replacement (FR-4)
 
-- [ ] Task: Replace all `import { prisma } from '@/lib/prisma'` with `import { db } from '@reading-advantage/db'` (or the app-local db client).
-- [ ] Task: Delete `apps/primary-advantage/lib/prisma.ts`.
+- [~] Task: Replace all `import { prisma } from '@/lib/prisma'` with `import { db } from '@reading-advantage/db'` (or the app-local db client).
+- [~] Task: Delete `apps/primary-advantage/lib/prisma.ts`.
+
+> **Phase 2 Red evidence** (commit `a0d19a71`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase2-prisma-replacement.test.mjs`
+> Result: 0/7 passed, 7/7 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 2 heading;
+> missing `audit/phase2-prisma-replacement-report.md` and its required sections (`Files Migrated`,
+> `lib/prisma.ts Deletion`, `Import Pattern Verification`, `Build Status`); `apps/primary-advantage/lib/prisma.ts`
+> still exists; 47 remaining `@/lib/prisma` imports across primary-advantage source files; no db client
+> replacement wired (`lib/db.ts` absent and zero `@reading-advantage/db` imports); Phase 2 tasks still
+> `[~]` without SHA evidence; live proof confirms 47 `@/lib/prisma` source matches.
 
 ## Phase 3: Server Models Migration (FR-2)
 
