@@ -39,10 +39,14 @@
 > SHA evidence; missing `packages/db/src/schema/primary.ts`. Live proof passed: existing Drizzle
 > migrations already reference table names covered by this phase.
 
+## Phase 2: lib/prisma.ts Replacement (FR-4) [checkpoint: ac0eea77]
+
+[checkpoint: ac0eea77]
+
 ## Phase 2: lib/prisma.ts Replacement (FR-4)
 
-- [~] Task: Replace all `import { prisma } from '@/lib/prisma'` with `import { db } from '@reading-advantage/db'` (or the app-local db client).
-- [~] Task: Delete `apps/primary-advantage/lib/prisma.ts`.
+- [x] Task: Replace all `import { prisma } from '@/lib/prisma'` with `import { db } from '@reading-advantage/db'` (or the app-local db client). _(Green evidence: see `audit/phase2-prisma-replacement-report.md` — Files Migrated section; 47 source files re-wired in a single mechanical pass (import + `\bprisma\.` → `db.` rename); 0 remaining `@/lib/prisma` source matches; SHA `ac0eea77`.)_
+- [x] Task: Delete `apps/primary-advantage/lib/prisma.ts`. _(Green evidence: see `audit/phase2-prisma-replacement-report.md` — lib/prisma.ts Deletion section; deleted via `git rm` (staged `D`); original PrismaClient singleton captured in report; SHA `ac0eea77`.)_
 
 > **Phase 2 Red evidence** (commit `a0d19a71`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase2-prisma-replacement.test.mjs`

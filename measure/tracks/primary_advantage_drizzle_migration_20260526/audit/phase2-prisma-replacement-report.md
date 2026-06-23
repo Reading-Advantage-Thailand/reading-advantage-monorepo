@@ -91,7 +91,7 @@ apps/primary-advantage/server/utils/genaretors/sentence-translator.ts
 - `apps/primary-advantage/prisma/seed.ts` — Prisma seed script. Phase 7 migrates it
   to a Drizzle seed script and Phase 8 deletes the `prisma/` directory.
 
-## `lib/prisma.ts` Deletion
+## lib/prisma.ts Deletion
 
 `apps/primary-advantage/lib/prisma.ts` was deleted via `git rm` (staged as `D` in
 `git status --short`).
@@ -143,6 +143,11 @@ been rewired to the shared Drizzle `db` export.
 > fully migrated.
 
 ## Import Pattern Verification
+
+The post-migration import pattern is uniform across all 47 re-wired files. Every
+file now uses a single `db` named import sourced from the shared
+`@reading-advantage/db` barrel — the same canonical client import used in the
+already-migrated `apps/reading-advantage/` codebase.
 
 ### New import pattern
 
