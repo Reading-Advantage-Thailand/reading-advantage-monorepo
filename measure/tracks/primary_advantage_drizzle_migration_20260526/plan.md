@@ -83,14 +83,16 @@
 > files; Phase 3 tasks still `[~]` without SHA evidence; live proof confirms 114 Prisma-shaped calls
 > remain across `server/models/` and `server/controllers/`.
 
-## Phase 4: Actions Migration (FR-2) [checkpoint: pending]
+## Phase 4: Actions Migration (FR-2) [checkpoint: f5eee08d]
 
-- [x] Task: Migrate `actions/article.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — article.ts section; 2 Prisma calls → 0, 2 `db.select().from(...)` patterns confirmed; SHA `pending`.)_
-- [x] Task: Migrate `actions/flashcard.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — flashcard.ts section; 26 Prisma calls → 0, 30 select + 2 insert + 1 update + 1 delete + 30 from() patterns confirmed; SHA `pending`.)_
-- [x] Task: Migrate `actions/pratice.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — pratice.ts section; 2 Prisma calls → 0, 2 `db.select().from(...)` patterns confirmed; SHA `pending`.)_
-- [x] Task: Migrate `actions/question.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — question.ts section; 9 Prisma calls → 0, 3 select + 2 insert + 1 update + 1 delete + 3 from() patterns confirmed; SHA `pending`.)_
-- [x] Task: Migrate `actions/test.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — test.ts section; 3 Prisma calls → 0, 2 select + 1 delete + 2 from() patterns confirmed; SHA `pending`.)_
-- [x] Task: Migrate `actions/user.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — user.ts section; 7 Prisma calls → 0, 2 select + 2 insert + 1 update + 2 from() patterns confirmed; SHA `pending`.)_
+## Phase 4: Actions Migration (FR-2)
+
+- [x] Task: Migrate `actions/article.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — article.ts section; 2 Prisma calls → 0, 2 `db.select().from(...)` patterns confirmed; SHA `f5eee08d`.)_
+- [x] Task: Migrate `actions/flashcard.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — flashcard.ts section; 26 Prisma calls → 0, 30 select + 2 insert + 1 update + 1 delete + 30 from() patterns confirmed; SHA `f5eee08d`.)_
+- [x] Task: Migrate `actions/pratice.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — pratice.ts section; 2 Prisma calls → 0, 2 `db.select().from(...)` patterns confirmed; SHA `f5eee08d`.)_
+- [x] Task: Migrate `actions/question.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — question.ts section; 9 Prisma calls → 0, 3 select + 2 insert + 1 update + 1 delete + 3 from() patterns confirmed; SHA `f5eee08d`.)_
+- [x] Task: Migrate `actions/test.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — test.ts section; 3 Prisma calls → 0, 2 select + 1 delete + 2 from() patterns confirmed; SHA `f5eee08d`.)_
+- [x] Task: Migrate `actions/user.ts` to Drizzle. _(Green evidence: see `audit/phase4-actions-report.md` — user.ts section; 7 Prisma calls → 0, 2 select + 2 insert + 1 update + 2 from() patterns confirmed; SHA `f5eee08d`.)_
 
 > **Phase 4 Red evidence** (baseline HEAD `3587ba30`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase4-actions.test.mjs`
