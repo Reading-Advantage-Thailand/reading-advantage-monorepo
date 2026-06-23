@@ -85,12 +85,21 @@
 
 ## Phase 4: Actions Migration (FR-2)
 
-- [ ] Task: Migrate `actions/article.ts` to Drizzle.
-- [ ] Task: Migrate `actions/flashcard.ts` to Drizzle.
-- [ ] Task: Migrate `actions/pratice.ts` to Drizzle.
-- [ ] Task: Migrate `actions/question.ts` to Drizzle.
-- [ ] Task: Migrate `actions/test.ts` to Drizzle.
-- [ ] Task: Migrate `actions/user.ts` to Drizzle.
+- [~] Task: Migrate `actions/article.ts` to Drizzle.
+- [~] Task: Migrate `actions/flashcard.ts` to Drizzle.
+- [~] Task: Migrate `actions/pratice.ts` to Drizzle.
+- [~] Task: Migrate `actions/question.ts` to Drizzle.
+- [~] Task: Migrate `actions/test.ts` to Drizzle.
+- [~] Task: Migrate `actions/user.ts` to Drizzle.
+
+> **Phase 4 Red evidence** (baseline HEAD `3587ba30`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase4-actions.test.mjs`
+> Result: 1/7 passed, 6/7 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 4 heading;
+> missing `audit/phase4-actions-report.md` and required per-file + summary + deferred sections; Prisma-shaped
+> `db.<table>.<method>` calls remain in all 6 files (article.ts:2, flashcard.ts:26, pratice.ts:2,
+> question.ts:9, test.ts:3, user.ts:7); no Drizzle query-builder patterns in any of the 6 files;
+> Phase 4 tasks still `[~]` without SHA evidence; live proof confirms 45 Prisma-shaped calls remain
+> across `apps/primary-advantage/actions/`. Passing assertion: all 6 action files exist and are non-empty.
 
 ## Phase 5: API Routes Migration (FR-2)
 
