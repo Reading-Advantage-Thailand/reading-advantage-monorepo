@@ -1,12 +1,12 @@
 {
   "track_id": "codecamp_infra_cold_start_20260608",
   "type": "feature",
-  "status": "new",
+  "status": "blocked",
   "created_at": "2026-06-08T00:00:00Z",
-  "updated_at": "2026-06-08T00:00:00Z",
+  "updated_at": "2026-06-23T00:00:00Z",
   "description": "Fix Cloud Run cold-start time exceeding the 5-second P0 budget. Likely fixes: container min-instances configuration, image-size reduction, or startup hook optimization.",
   "estimated_tasks": 8,
-  "deviation_notes": "",
+  "deviation_notes": "Final-acceptance 2026-06-23: FAIL — NOT closeable. Feature logic --min-instances=1 applied to cloudbuild.yaml (e9bd78b4); cold-start unit suite 27/27 green; scoped lint green. BUT the core AC (cold-start <5s on prod) was NEVER verified — the Phase 3 [x] was applied by docs-only commit be1032e0 whose own message admits 'Prod probe blocked on network access.' Prod probe is network-blocked from the sandbox (1 transient 2798ms pass, 3 ETIMEDOUT; curl confirms prod healthy ~2s but the node-fetch vitest runner cannot reliably reach it). Phase 1 sub-tasks 'Measure container startup time' [~] and 'Identify the dominant cost' [ ] remain open; baseline/cold-start-baseline.json artifact missing. Needs: prod-side probe from a network with reach to codecamp.reading-advantage.com (CI/supervisor-owned).",
   "depends_on": ["codecamp_qa_prod_20260517"],
   "notes": "Follow-up from codecamp_qa_prod_20260517 Phase 1/6 (P0 infra finding). Filed per plan.md Phase 8.5 Task 3."
 }

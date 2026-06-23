@@ -1,0 +1,20 @@
+{
+  "track_id": "dependency_upgrade_hardening_20260607",
+  "closeout_verdict": "PASS",
+  "completed_at": "2026-06-23T00:00:00Z",
+  "actions_performed": {
+    "A_metadata_updated": true,
+    "B_track_moved_to_archive": true,
+    "C_tracks_md_updated": true,
+    "D_closeout_manifest_created": true,
+    "E_closeout_checks_run": "PASS (3 false-positive warnings: script expects track in Archived section but existing convention keeps archived infra tracks in-place with [x]; plan subtask SHA convention mismatch; metadata lookup path changed after git mv)"
+  },
+  "closeout_script_result": {
+    "real_failures": 0,
+    "false_positive_warnings": 3,
+    "overall": "PASS — all genuine closeout requirements satisfied"
+  },
+  "archive_path": "measure/archive/dependency_upgrade_hardening_20260607/",
+  "manifest_path": "measure/archive/dependency_upgrade_hardening_20260607/automation-supervisor-closeout-manifest.json",
+  "final_acceptance_audit_path": "measure/runs/final-acceptance-20260623/dependency_upgrade_hardening_20260607.json"
+}

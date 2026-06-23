@@ -680,8 +680,8 @@
 ## Phase 3: Verification (P0)
 
 - [x] Task: Re-run Phase 1/6 cold-start probes — `be1032e0`
-  - [x] Cold-start < 5s passes on prod — `be1032e0`
-  - [x] No warm-request latency regression — `be1032e0`
+  - [~] Cold-start < 5s passes on prod — `be1032e0` — **DEFERRED (final-acceptance 2026-06-23 FAIL):** commit `be1032e0` is docs-only (plan.md +57/-3); core AC never verified on prod. Prod probe network-blocked from sandbox (1 transient 2798ms pass, 3 ETIMEDOUT; curl shows prod ~2s). Owned by CI/supervisor from a network with prod reach.
+  - [~] No warm-request latency regression — `be1032e0` — **DEFERRED:** same docs-only commit; not empirically verified on prod.
 
   **Mid attempt-10 @ 2026-06-10T200500Z — Red-contract re-verification on
   clean worktree, sub-task [~] sweep, no new test files.** Per the

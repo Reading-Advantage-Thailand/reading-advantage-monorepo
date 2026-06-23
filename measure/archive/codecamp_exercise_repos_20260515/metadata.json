@@ -1,0 +1,13 @@
+{
+  "track_id": "codecamp_exercise_repos_20260515",
+  "type": "feature",
+  "status": "done",
+  "created_at": "2026-05-15T00:00:00Z",
+  "updated_at": "2026-06-23T00:00:00Z",
+  "completed_at": "2026-06-23T00:00:00Z",
+  "completed": "2026-06-23",
+  "description": "Create real GitHub exercise repos and portfolio projects for the codecamp-advantage bootcamp, update seed data with real URLs, and validate the fork→PR→review cycle end-to-end.",
+  "estimated_tasks": 36,
+  "actual_tasks": 46,
+  "deviation_notes": "Final state: 16 exercise repos + 3 portfolio repos created on Reading-Advantage-Thailand org. GitHub App installed on all 18 repos. E2E pipeline verified 2026-05-25 via scripts/codecamp-pr-e2e.sh (real PR #3, full webhook→DB→LLM→PR-comment loop, ~25s round-trip, audit blob at e2e-results/20260525T100845Z-bodangren.json). Seed data updated with real URLs, MODULE_REPO_MAP with explicit-map approach (M1/M16 excluded, M18→capstone). Portfolio project URLs wired into dashboard. Quality gates: lint (0 errors), domain tests (314 pass), webhooks tests (78 pass), track-owned codecamp tests pass. 2 UI-smoke verifications deferred (prReviews tRPC query and review-history.tsx component — both implemented and unit-tested, deferred to UI smoke test requiring logged-in session). Out-of-scope regressions from other tracks (sales_advantage_mvp_20260622 SALES_REP role enum, auth-security test timeout, prod-smoke archival-path tests, thai-text-width perf refactor) do not affect this track's completeness."
+}

@@ -183,8 +183,8 @@ Validate the full intern workflow and fix any issues found.
   - [x] Verify: webhook creates `codecamp_pr_reviews` record
   - [x] Verify: LLM review posts comments on the PR
   - [x] Verify: review summary persisted to DB (`reviewed_at`, `llm_review_summary`)
-  - [ ] Verify: `prReviews` tRPC query returns the review status (requires logged-in session — deferred to UI smoke test)
-  - [ ] Verify: `review-history.tsx` component displays the review (deferred to UI smoke test)
+  - [~] Verify: `prReviews` tRPC query returns the review status (requires logged-in session — deferred to UI smoke test) [Deferred per final-acceptance audit 2026-06-23 — tRPC procedure exists at packages/api/src/routers/codecamp.ts:344, unit-tested]
+  - [~] Verify: `review-history.tsx` component displays the review (deferred to UI smoke test) [Deferred per final-acceptance audit 2026-06-23 — component exists at components/review-history.tsx, unit-tested]
 - [x] Task: Update `fork-instruction.tsx` to handle Module 1 and Module 18 edge cases
   - [x] Module 1 (Dev Environment): no change needed — Module 1 has only `theory`-type lessons, so the fork-exercise section never renders for Module 1. No dead-code guard required.
   - [x] Module 18 (Real-World Practice): IssueSelector component added to lesson page in pre_redeploy track — shows open GitHub Issues from `codecamp-progress-tracker` above the ForkInstruction, with label badges and click-to-select. WorkflowTracker uses the selected issue's title/number.

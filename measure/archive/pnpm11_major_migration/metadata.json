@@ -1,0 +1,10 @@
+{
+  "track_id": "pnpm11_major_migration",
+  "type": "chore",
+  "status": "done",
+  "created_at": "2026-06-13T00:00:00Z",
+  "completed": "2026-06-23T00:00:00Z",
+  "updated_at": "2026-06-23T00:00:00Z",
+  "description": "Major migration from pnpm 8 to pnpm 11. Covers packageManager pin, lockfile format v9, workspace config promotion from package.json#pnpm to pnpm-workspace.yaml, CI SSOT, and hoisted linker. Phases 1-4 complete.",
+  "deviation_notes": "pnpm 8→11 migration complete. pnpm@11.8.0 pinned, lockfile v9.0, workspace config promoted to pnpm-workspace.yaml, frozen-lockfile + dedupe --check pass, @reading-advantage/ai scoped gate green. Full monorepo aggregate gate deferred (fails on pre-existing cross-track issues, not pnpm11 regressions). allowBuilds placeholders fixed by Reviewer A. All 7 spec acceptance criteria met within migration scope; remaining cross-track failures documented in final-acceptance audit."
+}

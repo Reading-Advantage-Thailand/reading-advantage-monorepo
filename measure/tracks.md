@@ -181,9 +181,9 @@ Two parallel programs are in flight; priority order when picking the next track:
   *Link: [./archive/codecamp_curriculum_20260514/](./archive/codecamp_curriculum_20260514/)*
   Replace placeholder 5-module seed with the full 18-module, 85-lesson curriculum. Add phase column to schema, rewrite seed with real lesson content from curriculum plans, wire phase-grouped queries to dashboard UI, validate with tests. *Status: COMPLETE (metadata.json `completed`; archived). Checkbox reconciled 2026-06-05.*
 
-- [ ] **Track: codecamp-advantage — Exercise Repos & Portfolio Projects**
-  *Link: [./tracks/codecamp_exercise_repos_20260515/](./tracks/codecamp_exercise_repos_20260515/)*
-  Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end. *Status: Repo README audit complete, Module 18 GitHub Issues UI wired, M1/M17 edge cases resolved/not needed, quality gates green. GitHub App installed on all 18 repos as of 2026-05-25. E2E pipeline verified 2026-05-25 via `scripts/codecamp-pr-e2e.sh` (full webhook → DB → LLM → PR-comment loop, ~25s). UI verification deferred to separate smoke.*
+- [x] **Track: codecamp-advantage — Exercise Repos & Portfolio Projects**
+  *Link: [./archive/codecamp_exercise_repos_20260515/](./archive/codecamp_exercise_repos_20260515/)*
+  Create 16 exercise repos and 3 portfolio project repos on GitHub, update seed data with real URLs, configure GitHub App webhooks, and validate the fork→PR→LLM review cycle end-to-end. *Status: COMPLETE — 16 exercise repos + 3 portfolio repos created on Reading-Advantage-Thailand org. GitHub App installed on all 18 repos. Seed data updated with real URLs (MODULE_REPO_MAP explicit-map approach, M1/M16 excluded, M18→capstone). E2E pipeline verified 2026-05-25 via scripts/codecamp-pr-e2e.sh (real PR #3, full webhook→DB→LLM→PR-comment loop, ~25s). Quality gates: lint 0 errors, domain 314 tests pass, webhooks 78 tests pass. 2 UI-smoke verifications deferred (underlying contracts implemented and unit-tested). Out-of-scope regressions from other tracks do not affect this track. Archived 2026-06-23.*
 
 - [x] **Track: codecamp-advantage — Exercise Lessons Backfill**
   *Link: [./archive/codecamp_exercise_lessons_20260602/](./archive/codecamp_exercise_lessons_20260602/)*
@@ -246,9 +246,10 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ### Infrastructure & Shared Packages
 
-- [ ] **Track: Dependency Upgrade Hardening and Alignment**
-  *Link: [./tracks/dependency_upgrade_hardening_20260607/](./tracks/dependency_upgrade_hardening_20260607/)*
+- [x] **Track: Dependency Upgrade Hardening and Alignment**
+  *Link: [./archive/dependency_upgrade_hardening_20260607/](./archive/dependency_upgrade_hardening_20260607/)*
   Replace the vulnerable root `next@16.0.0` override; align Next/React/Vitest versions; apply reviewed patch/minor upgrades in bounded batches; resolve the Vitest and `react-day-picker` peer conflicts; remove deprecated type stubs; replace unsupported `fluent-ffmpeg`; dedupe the lockfile; and route major AI SDK/Zod/TypeScript/Jest/Zustand/Drizzle/pnpm migrations into dedicated follow-up tracks. Explicitly excludes Prisma 7 because primary-advantage is migrating to Drizzle.
+  *Status: COMPLETE — Phases 1–4 done. Next 16.2.9 / React 19.2.7 / Vitest 4.1.8 aligned. react-day-picker v9 migration, ffmpeg-process utility, deprecated stub removal, lockfile freeze all delivered. 7 major-migration backlog tracks spawned. Archived 2026-06-23.*
 
 - [x] **Track: Shared Storage Package — S3-Compatible Abstraction Layer** ⛔ **SUPERSEDED — DO NOT IMPLEMENT**
   *Link: [./archive/storage_s3_compat_20260522/](./archive/storage_s3_compat_20260522/)*
@@ -275,9 +276,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: Jest 30 Major Migration** *(jest30_major_migration)*
   *Link: [./archive/jest30_major_migration/](./archive/jest30_major_migration/)*
   Major migration to Jest 30. Covers new test runner API, configuration changes, snapshot format updates, and module resolution changes. Affects reading-advantage and advantage-games which use Jest for unit tests. *Status: COMPLETE 2026-06-21 (Phase 5 closeout — full-suite and quarantine evidence: `measure/archive/jest30_major_migration/phase-5-full-run.json` totals.suites_run=272=expected_total across 89 reading-advantage / 183 vocabulary-games / 0 reading-advantage-scripts suites; 3 canary suites DragonFlight/DragonRider/CastleDefense quarantined for pre-existing React 19.2.7 act() infinite render loop, NOT a Jest 30 regression; `packages/reading-advantage-scripts` migrated to jest@^30.2.0 with disposition manifest). Archived 2026-06-22.*
-- [~] **Track: pnpm 11 Major Migration** *(pnpm11_major_migration)*
-  *Link: [./tracks/pnpm11_major_migration/](./tracks/pnpm11_major_migration/)*
-  Major migration from pnpm 8 to pnpm 11. Covers `packageManager` pin, lockfile format v9, workspace config promotion from `package.json#pnpm` to `pnpm-workspace.yaml`, CI SSOT, and hoisted linker. Phases 1–4 complete; Phase 4 aggregate gate (`pnpm turbo run lint test check-types build`) is environment-blocked by registry EPIPE during optional native-binary fetch and is deferred to a remediation track. *Status: COMPLETE pending aggregate gate — pnpm@11.8.0 installed, lockfile regenerated, `pnpm install --frozen-lockfile` and `pnpm dedupe --check` pass.*
+- [x] **Track: pnpm 11 Major Migration** *(pnpm11_major_migration)*
+  *Link: [./archive/pnpm11_major_migration/](./archive/pnpm11_major_migration/)*
+  Major migration from pnpm 8 to pnpm 11. Covers `packageManager` pin, lockfile format v9, workspace config promotion from `package.json#pnpm` to `pnpm-workspace.yaml`, CI SSOT, and hoisted linker. *Status: COMPLETE — pnpm@11.8.0 pinned, lockfile v9.0 regenerated, workspace config promoted, frozen-lockfile + dedupe --check pass, all 4 track contract suites 24/24 green. Full monorepo aggregate gate deferred (pre-existing cross-track failures, not pnpm11 regressions). Archived 2026-06-23.*
 
 ---
 

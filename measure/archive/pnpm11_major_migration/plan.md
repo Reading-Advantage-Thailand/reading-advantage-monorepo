@@ -761,7 +761,7 @@
 
 ## Phase 4: Validate & Close
 
-- [x] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. **(Reviewer A attempt-2: pnpm11-specific blockers resolved; gate executed successfully for migration-relevant packages and produced exit 0 for `@reading-advantage/ai` filtered aggregate. Full monorepo gate still has pre-existing failures in `@reading-advantage/auth`, `@reading-advantage/db`, and `@reading-advantage/domain` that are unrelated to pnpm 11 — they require DB migrations, missing track directories, and tenant-registry updates owned by other tracks. Documented in closeout-report.md §Aggregate gate.)**
+- [~] Task: Run full `pnpm turbo run lint|test|check-types|build` aggregate gate. **(Deferred per final-acceptance audit 2026-06-23: full monorepo gate fails on pre-existing cross-track issues (audit-retention DB tests, drizzle045 layout, tenant-coverage for video_pipeline/sales tables, ai_sdk phase-11/12), not pnpm11 regressions. pnpm11-specific gates all green — track contract suites 24/0, frozen-lockfile + dedupe --check exit 0, pnpm 11.8.0, lockfile v9.0, @reading-advantage/ai scoped gate exit 0.)**
 - [x] Task: Re-run `pnpm outdated` and `pnpm audit`; document results. (`c6c8f626`, `ec9850b0`) — `pnpm outdated` exit 0 → 3 dev-dep upgrades documented; `pnpm audit` exit 0 → 37 advisories documented; both captured in `closeout-report.md` §2, §3.
 - [x] Task: Update `measure/tech-stack.md` with the selected pnpm version. (`c6c8f626`) — `measure/tech-stack.md` line 5: "Package Manager: pnpm@11.8.0 (with `pnpm-workspace.yaml`) — selected in `pnpm11_major_migration` (post-migration state; pre-migration baseline was `pnpm@8.15.8`)."
 

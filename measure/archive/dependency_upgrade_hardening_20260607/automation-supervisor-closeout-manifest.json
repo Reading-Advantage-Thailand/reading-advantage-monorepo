@@ -1,0 +1,75 @@
+{
+  "track_id": "dependency_upgrade_hardening_20260607",
+  "status": "done",
+  "completed_at": "2026-06-23T00:00:00Z",
+  "baseline_sha": "452ffeba942ce9a54596f051e09ea98e81c6f38b",
+  "head_sha": "452ffeba942ce9a54596f051e09ea98e81c6f38b",
+  "final_acceptance_audit_path": "measure/runs/final-acceptance-20260623/dependency_upgrade_hardening_20260607.json",
+  "gates_summary": {
+    "phase1_contracts": "7/7 pass at commit 89facf2c (validate-matrix.mjs)",
+    "phase2_artifacts": "13/13 pass at commit b02c682e (baseline-truth + batch-gates); calendar 1/9 fail (Red, owned by Batch C), ffmpeg 1 suite-level fail (Red, owned by Batch E)",
+    "phase3_contracts": "14/14 pass at commit 2c4aa26c (all 8 batches A-H)",
+    "phase3_calendar_live": "9/9 pass at commit 2c4aa26c (react-day-picker v9 migration)",
+    "phase3_ffmpeg_live": "12/12 pass at commit 2c4aa26c (ffmpeg-process utility)",
+    "phase4_contracts": "12/12 pass at commit 67dfb92d (backlog tracks, tech-stack, tech-debt, baseline-final)",
+    "phase3_user_manual_verification": "Passed at commit f5e88f03 (recorded in plan.md)",
+    "final_acceptance_verdict": "pass-with-stale-metadata (safe-to-closeout)",
+    "final_acceptance_calendar": "9/9 pass (re-verified at HEAD)",
+    "final_acceptance_ffmpeg": "12/12 pass (re-verified at HEAD)",
+    "final_acceptance_frozen_lockfile": "exit 0 (8.5s clean install at pnpm 11.8.0)",
+    "final_acceptance_dedupe_check": "indeterminate-but-non-blocking (did not converge within 5min; frozen-lockfile is canonical gate)"
+  },
+  "cross_track_out_of_scope_failures": [
+    {
+      "test": "Phase 3 Batch A Red: root pnpm.overrides declares next at 16.2.9",
+      "owner": "pnpm11_major_migration (removed pnpm.overrides during pnpm 8→11 migration)"
+    },
+    {
+      "test": "Phase 3 Batch A Red: root pnpm.overrides declares react/react-dom at 19.2.7",
+      "owner": "pnpm11_major_migration (same root cause)"
+    },
+    {
+      "test": "Phase 3 Batch B Red: root pnpm.overrides declares vitest at 4.1.8",
+      "owner": "pnpm11_major_migration (same root cause)"
+    },
+    {
+      "test": "Phase 3 Batch D Red: deprecated stub type packages absent from workspace manifests",
+      "owner": "post_24h_audit_remediation (re-added @types/bcryptjs to packages/auth at commit 73e38bc1)"
+    },
+    {
+      "test": "Phase 4 Red: major-migration backlog has 7 dedicated track proposals",
+      "owner": "jest30_major_migration and drizzle045_major_migration (completed and archived; test only scans measure/tracks/ not measure/archive/)"
+    },
+    {
+      "test": "Phase 4 Red: major-migration backlog explicitly rejects Prisma 7",
+      "owner": "drizzle045_major_migration (rejection rationale moved to archive with that track)"
+    },
+    {
+      "test": "Phase 4 Red: tech-debt.md at or below 50-line ceiling",
+      "owner": "housekeeping_batch / observability_stack (subsequent tracks added rows)"
+    },
+    {
+      "test": "Scoped turbo run: @reading-advantage/api#check-types fails",
+      "owner": "sales_advantage_mvp_20260622 (added SALES_REP/SALES_ADMIN to role enum without widening api/users.ts Zod output schema)"
+    }
+  ],
+  "spawned_backlog_tracks": [
+    "ai_sdk_major_migration",
+    "zod4_major_migration",
+    "typescript6_major_migration",
+    "jest30_major_migration",
+    "zustand5_major_migration",
+    "drizzle045_major_migration",
+    "pnpm11_major_migration"
+  ],
+  "closeout_verification": {
+    "all_plan_tasks_checked": true,
+    "no_unchecked_non_deferred_tasks": true,
+    "key_commits_verified": ["70061422", "2c4aa26c", "67dfb92d", "4ec52a0d", "89facf2c", "b02c682e", "f5e88f03"],
+    "metadata_updated": true,
+    "track_moved_to_archive": true,
+    "tracks_md_updated": true,
+    "final_acceptance_audit_read": true,
+    "closeout_script_run": "pending"
+  }
+}

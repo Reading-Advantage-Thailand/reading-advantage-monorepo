@@ -1,0 +1,78 @@
+{
+  "manifest_type": "automation-supervisor-closeout-manifest",
+  "track_id": "codecamp_exercise_repos_20260515",
+  "status": "done",
+  "completed_at": "2026-06-23T00:00:00Z",
+  "baseline_sha": "452ffeba942ce9a54596f051e09ea98e81c6f38b",
+  "head_sha": "452ffeba942ce9a54596f051e09ea98e81c6f38b",
+  "final_acceptance_audit": "measure/runs/final-acceptance-20260623/codecamp_exercise_repos_20260515.json",
+  "final_acceptance_verdict": "pass-with-conditions",
+  "final_acceptance_safe_to_close_out": true,
+
+  "gates_summary": {
+    "track_owned_gates": [
+      { "name": "PROJECT_LINT (scoped: codecamp-advantage)", "result": "PASS", "errors": 0 },
+      { "name": "PROJECT_TESTS — @reading-advantage/domain", "result": "PASS", "tests_passed": 314 },
+      { "name": "PROJECT_TESTS — @reading-advantage/webhooks", "result": "PASS", "tests_passed": 78 },
+      { "name": "PROJECT_TESTS — codecamp-advantage (track-owned tests)", "result": "PASS", "detail": "review-history.test.tsx, pr-url.test.ts pass" }
+    ],
+    "out_of_scope_failures": [
+      { "gate": "check-types", "owning_track": "sales_advantage_mvp_20260622", "cause": "SALES_REP role enum mismatch in packages/api/src/routers/users.ts" },
+      { "gate": "build", "owning_track": "sales_advantage_mvp_20260622", "cause": "Same SALES_REP type mismatch" },
+      { "gate": "api tests (1 timeout)", "owning_track": "auth_security_hardening_20260611", "cause": "auth-security-phase3-signup-removal.test.ts 5s filesystem timeout" },
+      { "gate": "codecamp tests (33 failures)", "owning_track": "codecamp_perf_warm_dashboard_20260608 / codecamp_qa_prod_20260517 / webhook_review_reliability_20260605", "cause": "Thai text-width regression, prod-smoke archival-path tests, webhook timestamp-replay RED test" }
+    ]
+  },
+
+  "deferred_items": [
+    {
+      "phase": 6,
+      "task": "Verify: prReviews tRPC query returns the review status (requires logged-in session — deferred to UI smoke test)",
+      "rationale": "Underlying tRPC procedure exists at packages/api/src/routers/codecamp.ts:344, covered by unit tests. Deferral is a UI/browser-session smoke check needing a logged-in user against a running app."
+    },
+    {
+      "phase": 6,
+      "task": "Verify: review-history.tsx component displays the review (deferred to UI smoke test)",
+      "rationale": "Component exists at apps/codecamp-advantage/components/review-history.tsx with passing unit tests at components/__tests__/review-history.test.tsx. Deferred verification is a visual rendering check in the running app."
+    }
+  ],
+
+  "closeout_verification": {
+    "no_non_deferred_tasks_remaining": true,
+    "deferred_tasks_marked_as_deferred_in_plan": true,
+    "plan_deferred_marking_method": "Changed [ ] to [~] with one-line note citing final-acceptance audit",
+    "commit_sha_evidence_verified": {
+      "sampled_commits": [
+        "0344f598", "4785fd86", "972daffd", "b79c4093",
+        "a3572a5c", "be252041", "048c8211", "ff2506a1", "13eb6618"
+      ],
+      "all_exist": true
+    },
+    "e2e_audit_blob_verified": "e2e-results/20260525T100845Z-bodangren.json exists and is readable",
+    "final_acceptance_audit_read": true,
+    "final_acceptance_verdict_pass_or_pass_with_conditions": true,
+    "metadata_status_updated_to_done": true,
+    "metadata_completed_at_set": true,
+    "metadata_deviation_notes_refreshed": true,
+    "track_directory_moved_to_archive": true,
+    "tracks_md_bullet_updated_to_checked": true,
+    "tracks_md_link_updated_to_archive_path": true,
+    "closeout_manifest_created": true
+  },
+
+  "retained_evidence": [
+    "measure/archive/codecamp_exercise_repos_20260515/plan.md (with deferred tasks marked [~])",
+    "measure/archive/codecamp_exercise_repos_20260515/metadata.json (status=done, completed_at set)",
+    "measure/archive/codecamp_exercise_repos_20260515/spec.md",
+    "measure/archive/codecamp_exercise_repos_20260515/index.md",
+    "measure/archive/codecamp_exercise_repos_20260515/plan-review.md",
+    "measure/archive/codecamp_exercise_repos_20260515/automation-supervisor-closeout-manifest.json",
+    "e2e-results/20260525T100845Z-bodangren.json",
+    "measure/runs/final-acceptance-20260623/codecamp_exercise_repos_20260515.json"
+  ],
+
+  "artifact_cleanup": {
+    "no_bulky_run_artifacts_identified_by_orchestrator": true,
+    "action": "None — all artifacts are essential for audit trail"
+  }
+}

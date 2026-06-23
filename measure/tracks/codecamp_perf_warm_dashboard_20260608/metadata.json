@@ -1,12 +1,12 @@
 {
   "track_id": "codecamp_perf_warm_dashboard_20260608",
   "type": "feature",
-  "status": "implemented_pending_manual_verification",
+  "status": "blocked",
   "created_at": "2026-06-08T00:00:00Z",
-  "updated_at": "2026-06-11T00:00:00Z",
+  "updated_at": "2026-06-23T00:00:00Z",
   "description": "Bring the warm-dashboard page load under the 1000ms P1 budget. The Phase 6 prod-smoke suite measured 1363ms (36% over budget) on a warm request to /en/. Likely fixes: server-side render caching of the dashboard shell, prefetch of getUserDashboard on the auth wall, or Cloud Run concurrency tuning.",
   "estimated_tasks": 8,
-  "deviation_notes": "2026-06-11 rectification (plan.md §9): the Phase 3 SSR-cache helper (021f0284) shipped unwired and was deleted; the actual optimization is the authed-dashboard tRPC-query memo in packages/api/src/cache/dashboard-cache.ts (042de532), green at 13/13 unit cases. Phase 6 prod-smoke (warm GET /en/ < 1000ms) NOT yet run — network-gated. Track is code-complete, prod verification outstanding.",
+  "deviation_notes": "Final-acceptance 2026-06-23: FAIL — NOT closeable. Core AC (warm GET /en/ < 1000ms) is RED: last measured 1290ms (29% over budget, plan.md §10.2). Green impl a217242a (dynamic dashboard import, ssr:false) reduces SSR cost but was NOT re-measured against prod (prod-smoke network-blocked from sandbox, ETIMEDOUT to codecamp.reading-advantage.com). dashboard-cache unit tests 13/13 green; Phase 6/7 skip-mode sanity green; scoped lint green. 2 Phase-3 [ ] AC items explicitly deferred (warm <1000ms, P1 launch gate). Needs: deploy a217242a to prod + re-run Phase 6 prod-smoke from a network with prod reach; if still RED, file follow-up track per plan.md §10.4 (CDN/s-maxage or further SSR-shell lever).",
   "depends_on": ["codecamp_qa_prod_20260517"],
   "notes": "Follow-up from codecamp_qa_prod_20260517 Phase 6 (P1 perf finding). Filed per plan.md Phase 8.5 Task 3."
 }

@@ -3,9 +3,9 @@
   "type": "feature",
   "status": "reopened",
   "created_at": "2026-06-03T00:00:00Z",
-  "updated_at": "2026-06-21T00:00:00Z",
+  "updated_at": "2026-06-23T00:00:00Z",
   "description": "Add @sentry/nextjs; create sentry.client.config.ts and sentry.server.config.ts. Add instrumentation.ts registering Sentry + @opentelemetry/sdk-node + @opentelemetry/exporter-trace-otlp-http. Introduce AsyncLocalStorage<RequestContext> to auto-attach requestId/userId/latencyMs. Migrate 5 largest route.ts files' catch blocks from console.error to logger.error. Wrap generateObject calls in real OTel spans. Resolves F-902, F-903, F-904, F-905, F-906. 1 week. Medium.",
   "estimated_tasks": 16,
   "actual_tasks": null,
-  "deviation_notes": "Reopened after the 2026-06-21 fleet completion audit rejected the closeout: Next.js never loaded the OTel instrumentation because instrumentation.ts was under lib/ instead of the app root/src, Sentry was not initialized on the live path, and prior FR-1/FR-2 gates were mock-only SDK-shape tests. Keep active until live-path instrumentation and Sentry init are verified."
+  "deviation_notes": "Final-acceptance 2026-06-23: FAIL — NOT closeable. The 2026-06-21 rejection reason (instrumentation.ts under lib/) is FIXED — now at app root apps/science-advantage/instrumentation.ts (aea60780); live-otel-initialization.acceptance.test.ts passes 3/3. BUT final-acceptance found NEW in-scope blockers: (1) check-types FAIL in this track's OWN files — next.config.ts invalid top-level `disable` (belongs under `sourcemaps`), two test files writing read-only NODE_ENV, instrumentation.node.ts outdated resources API, eslint fixture missing logger import; (2) Phase 6 adversarial regression — a test added by this track (7baf2342) fails against the resolved SDK version (parentSpanContext.spanId vs parentSpanId mismatch); (3) live-path Sentry coverage remains thin (FR-1 gate is still hybrid artifact+mocked, no test boots Next.js to verify server Sentry init). Needs: fix the in-scope check-types errors, fix the Phase 6 OTel test against the resolved SDK, add a genuine live-path Sentry init test."
 }

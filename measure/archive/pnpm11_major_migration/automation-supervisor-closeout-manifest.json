@@ -1,0 +1,76 @@
+{
+  "track_id": "pnpm11_major_migration",
+  "status": "done",
+  "completed_at": "2026-06-23T00:00:00Z",
+  "baseline_sha": "452ffeba942ce9a54596f051e09ea98e81c6f38b",
+  "head_sha": "452ffeba942ce9a54596f051e09ea98e81c6f38b",
+  "final_acceptance_audit_path": "measure/runs/final-acceptance-20260623/pnpm11_major_migration.json",
+  "gates_summary": {
+    "phase1_post_migration_baseline": "6/6 pass at commit c6c8f626 (rewritten to post-migration invariants)",
+    "phase2_lockfile_contract": "4/4 pass at commit 0e0368af (lockfileVersion v9.0, packages: pnpm-9 format)",
+    "phase3_workspace_config": "9/9 pass at commit 6d197f79 (overrides, peerDependencyRules, allowBuilds, nodeLinker, resolvePeersFromWorkspaceRoot, globs, no pnpm field, packageManager)",
+    "phase4_closeout_artifacts": "5/5 pass at commit c6c8f626 (tech-stack pin, closeout-report, outdated/audit sections, baseline rewrite)",
+    "all_track_contracts_aggregate": "24/24 pass at HEAD (node --test measure/archive/pnpm11_major_migration/__tests__/*.test.mjs)",
+    "frozen_lockfile": "exit 0 at commit 0e0368af (pnpm 11.8.0, lockfile idempotent)",
+    "dedupe_check": "exit 0 at commit 0e0368af (single chalk 5.0.1→5.6.2 dedup applied)",
+    "pnpm_version": "11.8.0 (verified at HEAD)",
+    "package_manager_pin": "pnpm@11.8.0 in package.json#packageManager",
+    "scoped_aggregate_ai": "4 successful, 0 failed at commit d481b9c3 (pnpm turbo run lint test check-types build --filter=@reading-advantage/ai)",
+    "root_lint": "19 successful, 0 errors at commit d481b9c3 (pnpm turbo run lint --no-daemon)",
+    "allowBuilds_fix": "Placeholders replaced with explicit booleans at commit 137d3130 (Reviewer A)",
+    "final_acceptance_verdict": "PASS_WITH_NOTES (safe_to_closeout=true)"
+  },
+  "deferred_items": [
+    {
+      "item": "Full monorepo aggregate gate (pnpm turbo run lint test check-types build)",
+      "reason": "Fails on pre-existing cross-track failures: @reading-advantage/auth#test (audit-retention DB tests, missing plan.md), @reading-advantage/db#test (drizzle045 layout assumptions), @reading-advantage/domain#test (tenant-coverage: campaigns, videoProjects, videoAssets, pastTopics, settings), @reading-advantage/ai#test (ai_sdk phase-11/12 failures), science-advantage#lint (sales_advantage_mvp regression). None are pnpm11 regressions.",
+      "owner_tracks": ["audit_log_retention_dsar_20260605", "drizzle045_major_migration", "video_pipeline_20260613", "sales_advantage_mvp_20260622", "ai_sdk_major_migration", "ai_adapter_package_20260603"]
+    }
+  ],
+  "cross_track_out_of_scope_failures": [
+    {
+      "test": "@reading-advantage/ai#test — phase-0-setup.test.ts (2 failures: vitest/zod path under hoisted linker)",
+      "owner": "ai_adapter_package_20260603 (test assumption from pnpm-8 isolated-linker era)"
+    },
+    {
+      "test": "@reading-advantage/ai#test — phase-11-sdk-version-contract.test.ts (7 failures: multiple @ai-sdk majors in lockfile)",
+      "owner": "ai_sdk_major_migration (lockfile alignment not yet complete)"
+    },
+    {
+      "test": "@reading-advantage/ai#test — phase-12-closeout-artifacts.test.ts (4 failures: artifacts/ dir missing)",
+      "owner": "ai_sdk_major_migration (phase-12 artifact generation not yet complete)"
+    },
+    {
+      "test": "science-advantage#lint — node:internal/modules/esm/resolve errors",
+      "owner": "sales_advantage_mvp_20260622 (introduced after Reviewer A's d481b9c3 closeout)"
+    },
+    {
+      "test": "@reading-advantage/auth#test — audit-retention integration tests need DIRECT_DATABASE_URL + applied migrations",
+      "owner": "audit_log_retention_dsar_20260605"
+    },
+    {
+      "test": "@reading-advantage/auth#test — phase-6-quality-gates.test.ts expects measure/tracks/audit_log_retention_dsar_20260605/plan.md",
+      "owner": "audit_log_retention_dsar_20260605"
+    },
+    {
+      "test": "@reading-advantage/db#test — tests assume pre-pnpm-11 drizzle-orm layout",
+      "owner": "drizzle045_major_migration"
+    },
+    {
+      "test": "@reading-advantage/domain#test — tenant-coverage.test.ts fails on unclassified tables",
+      "owner": "video_pipeline_20260613 / sales_advantage_mvp_20260622"
+    }
+  ],
+  "closeout_verification": {
+    "all_plan_tasks_checked": true,
+    "no_unchecked_non_deferred_tasks": true,
+    "phase4_aggregate_gate_task_marker_reconciled": true,
+    "deferred_task_marked_tilde": true,
+    "key_commits_verified": ["6d197f79", "0e0368af", "c6c8f626", "ec9850b0", "5dea0c43", "137d3130", "d481b9c3"],
+    "metadata_updated": true,
+    "track_moved_to_archive": true,
+    "tracks_md_updated": true,
+    "final_acceptance_audit_read": true,
+    "closeout_script_run": "pending"
+  }
+}
