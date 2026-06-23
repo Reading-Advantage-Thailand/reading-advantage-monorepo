@@ -1,0 +1,30 @@
+{
+  "track_id": "primary_advantage_drizzle_migration_20260526",
+  "closeout_verdict": "PASS",
+  "closeout_date": "2026-06-23T00:00:00Z",
+  "closeout_commits": [
+    "2a71105b",
+    "3f35a73d"
+  ],
+  "closeout_head_sha": "3f35a73d",
+  "archive_path": "measure/archive/primary_advantage_drizzle_migration_20260526/",
+  "manifest_path": "measure/archive/primary_advantage_drizzle_migration_20260526/automation-supervisor-closeout-manifest.json",
+  "actions_taken": [
+    "Moved measure/tracks/primary_advantage_drizzle_migration_20260526/ → measure/archive/primary_advantage_drizzle_migration_20260526/",
+    "Updated metadata.json: status → done, completed_at → 2026-06-23, updated_at → 2026-06-23",
+    "Updated measure/tracks.md: flipped entry from [ ] to [x], pointed link to archive, added completion status and 'Prisma→Drizzle program complete' note",
+    "Created automation-supervisor-closeout-manifest.json with full audit trail, gate results, retained evidence, and blocker details",
+    "Added lessons-learned entry documenting the FR-2 grep gate gap (import literals vs runtime call shapes)"
+  ],
+  "closeout_standard_checks": {
+    "no_non_deferred_tasks_remain": true,
+    "completed_tasks_have_sha_evidence": true,
+    "final_acceptance_audit_passed": true,
+    "track_archived": true,
+    "tracks_md_updated": true,
+    "metadata_status_set_to_done": true,
+    "closeout_manifest_created": true,
+    "lessons_learned_updated": true,
+    "working_tree_clean": true
+  }
+}
