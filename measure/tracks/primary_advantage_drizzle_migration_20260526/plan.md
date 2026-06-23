@@ -59,15 +59,25 @@
 
 ## Phase 3: Server Models Migration (FR-2)
 
-- [ ] Task: Migrate `server/models/userModel.ts` to Drizzle.
-- [ ] Task: Migrate `server/models/classroomModel.ts` to Drizzle.
-- [ ] Task: Migrate `server/models/articleModel.ts` to Drizzle.
-- [ ] Task: Migrate `server/models/assignmentModel.ts` to Drizzle.
-- [ ] Task: Migrate `server/models/lessonModel.ts` to Drizzle.
-- [ ] Task: Migrate `server/models/schoolModel.ts` to Drizzle.
-- [ ] Task: Migrate `server/models/studentModel.ts` to Drizzle.
-- [ ] Task: Migrate `server/models/teacherModel.ts` to Drizzle.
-- [ ] Task: Migrate `server/controllers/assignmentController.ts` to Drizzle.
+- [~] Task: Migrate `server/models/userModel.ts` to Drizzle.
+- [~] Task: Migrate `server/models/classroomModel.ts` to Drizzle.
+- [~] Task: Migrate `server/models/articleModel.ts` to Drizzle.
+- [~] Task: Migrate `server/models/assignmentModel.ts` to Drizzle.
+- [~] Task: Migrate `server/models/lessonModel.ts` to Drizzle.
+- [~] Task: Migrate `server/models/schoolModel.ts` to Drizzle.
+- [~] Task: Migrate `server/models/studentModel.ts` to Drizzle.
+- [~] Task: Migrate `server/models/teacherModel.ts` to Drizzle.
+- [~] Task: Migrate `server/controllers/assignmentController.ts` to Drizzle.
+
+> **Phase 3 Red evidence** (baseline HEAD `7abee8d1`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase3-models.test.mjs`
+> Result: 1/7 passed, 6/7 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 3 heading;
+> missing `audit/phase3-models-report.md` and required per-file + summary sections; Prisma-shaped
+> `db.<table>.<method>` calls remain in all 9 files (userModel.ts:10, classroomModel.ts:29,
+> articleModel.ts:24, assignmentModel.ts:10, lessonModel.ts:5, schoolModel.ts:9, studentModel.ts:21,
+> teacherModel.ts:16, assignmentController.ts:3); no Drizzle query-builder patterns in any of the 9
+> files; Phase 3 tasks still `[~]` without SHA evidence; live proof confirms 114 Prisma-shaped calls
+> remain across `server/models/` and `server/controllers/`.
 
 ## Phase 4: Actions Migration (FR-2)
 
