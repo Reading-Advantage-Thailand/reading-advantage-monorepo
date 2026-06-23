@@ -167,11 +167,11 @@
 
 ## Phase 8: Cleanup & Dependency Removal (FR-4)
 
-- [ ] Task: Delete `apps/primary-advantage/prisma/` directory.
-- [ ] Task: Remove `@prisma/client`, `prisma`, `@prisma/adapter-pg` from `apps/primary-advantage/package.json`.
-- [ ] Task: Remove `prisma`/`@prisma/client` from root `package.json` `onlyBuiltDependencies`.
-- [ ] Task: Run `pnpm install` to clean lockfile.
-- [ ] Task: Update `apps/primary-advantage/AGENTS.md` to reflect Drizzle reality.
+- [~] Task: Delete `apps/primary-advantage/prisma/` directory.
+- [~] Task: Remove `@prisma/client`, `prisma`, `@prisma/adapter-pg` from `apps/primary-advantage/package.json`.
+- [~] Task: Remove `prisma`/`@prisma/client` from root `package.json` `onlyBuiltDependencies`.
+- [~] Task: Run `pnpm install` to clean lockfile.
+- [~] Task: Update `apps/primary-advantage/AGENTS.md` to reflect Drizzle reality.
 
 ## Phase 9: Verification & Sign-Off
 
