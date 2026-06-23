@@ -155,6 +155,13 @@
       "when": 1782131020389,
       "tag": "0021_sales_advantage",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1782208439534,
+      "tag": "0022_flowery_black_tarantula",
+      "breakpoints": true
     }
   ]
 }

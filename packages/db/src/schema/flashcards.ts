@@ -10,6 +10,8 @@ export const flashcardDecks = pgTable("flashcard_decks", {
     .references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   type: text("type").notNull(), // "vocabulary" | "sentence"
+  // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
+  description: text("description"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

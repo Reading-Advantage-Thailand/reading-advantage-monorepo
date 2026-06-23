@@ -12,6 +12,10 @@ export const schools = pgTable("schools", {
   district: text("district"),
   province: text("province"),
   country: text("country").default("Thailand").notNull(),
+  // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
+  contactName: text("contact_name"),
+  contactEmail: text("contact_email"),
+  ownerId: text("owner_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -35,6 +39,9 @@ export const users = pgTable("users", {
   level: integer("level").default(1).notNull(),
   cefrLevel: text("cefr_level").default("A1-").notNull(),
   gradeLevel: integer("grade_level"),
+  // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
+  password: text("password"),
+  emailVerified: timestamp("email_verified"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

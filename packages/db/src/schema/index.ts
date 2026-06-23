@@ -13,3 +13,4 @@ export * from "./science.js";
 export * from "./audit.js";
 export * from "./marketing.js";
 export * from "./sales.js";
+export * from "./primary.js";

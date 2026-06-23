@@ -1,5 +1,7 @@
 import { pgTable, uuid, text, timestamp, integer, jsonb, boolean, real, unique } from "drizzle-orm/pg-core";
 import { users } from "./users.js";
+import { articles } from "./content.js";
+import { assignments } from "./content.js";
 
 // ─── Activity Tracking ────────────────────────────────────
 
@@ -90,6 +92,13 @@ export const lessonProgress = pgTable("lesson_progress", {
   status: text("status").default("not_started").notNull(),
   progress: integer("progress").default(0).notNull(),
   completedAt: timestamp("completed_at"),
+  // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
+  // These mirror the Prisma UserLessonProgress model. `articleId`/`assignmentId`
+  // are nullable because legacy rows predate the FK columns.
+  articleId: uuid("article_id").references(() => articles.id, { onDelete: "cascade" }),
+  assignmentId: uuid("assignment_id").references(() => assignments.id, { onDelete: "cascade" }),
+  timeSpent: integer("time_spent").default(0).notNull(),
+  isCompleted: boolean("is_completed").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [

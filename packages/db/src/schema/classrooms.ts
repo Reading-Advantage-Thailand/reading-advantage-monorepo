@@ -16,6 +16,8 @@ export const classrooms = pgTable("classrooms", {
   codeExpiresAt: timestamp("code_expires_at"),
   grade: integer("grade"),
   createdBy: text("created_by").references(() => users.id),
+  // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
+  passwordStudents: text("password_students"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

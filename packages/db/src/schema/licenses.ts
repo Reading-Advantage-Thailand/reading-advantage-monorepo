@@ -1,6 +1,7 @@
 import { pgTable, uuid, text, timestamp, integer, jsonb, primaryKey } from "drizzle-orm/pg-core";
 import { users } from "./users.js";
 import { schools } from "./users.js";
+import { subscriptionType } from "./primary.js";
 
 // ─── Licenses ─────────────────────────────────────────────
 
@@ -15,6 +16,16 @@ export const licenses = pgTable("licenses", {
   schoolId: uuid("school_id").references(() => schools.id),
   featureFlags: jsonb("feature_flags").default({}).notNull(),
   expiresAt: timestamp("expires_at"),
+  // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
+  // NOTE: `name` and `description` mirror the Prisma License model so
+  // primary-advantage can persist license display labels without a separate
+  // table.
+  name: text("name"),
+  description: text("description"),
+  subscription: subscriptionType("subscription").default("BASIC").notNull(),
+  startDate: timestamp("start_date"),
+  expiryDate: timestamp("expiry_date"),
+  status: text("status").default("active").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

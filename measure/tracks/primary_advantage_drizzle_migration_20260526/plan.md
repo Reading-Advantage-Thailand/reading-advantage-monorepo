@@ -17,12 +17,16 @@
 > Build Baseline, Shared Schema Coverage). Live proofs passed: 44 Prisma-touching files detected;
 > `apps/primary-advantage/prisma/schema.prisma` exists.
 
+## Phase 1: Schema Port (FR-1) [checkpoint: 4ecc5072]
+
+[checkpoint: 4ecc5072]
+
 ## Phase 1: Schema Port (FR-1)
 
-- [~] Task: Add primary-advantage-specific tables to `packages/db/src/schema/` (or a new `primary.ts` file).
-- [~] Task: Generate Drizzle migration for new tables.
-- [~] Task: Verify fresh-DB migration applies cleanly.
-- [~] Task: Update `packages/db/src/schema/index.ts` barrel exports.
+- [x] Task: Add primary-advantage-specific tables to `packages/db/src/schema/` (or a new `primary.ts` file). _(Green evidence: see `audit/phase1-schema-port-report.md` — Schema Changes → New Tables Ported section; 9 needs-porting models ported (`verificationTokens`, `userRoles`, `roles`, `articleActivityLogs`, `sentencsAndWordsForFlashcards`, `cardReviews`, `clozeTestGames`, `schoolAdmins`, `leaderboards`); SHA `4ecc5072`.)_
+- [x] Task: Generate Drizzle migration for new tables. _(Green evidence: see `audit/phase1-schema-port-report.md` — Migration Verification → Migration Generated section; `packages/db/drizzle/0022_flowery_black_tarantula.sql` generated cleanly via `pnpm --filter @reading-advantage/db generate`; 122 statements; SHA `4ecc5072`.)_
+- [x] Task: Verify fresh-DB migration applies cleanly. _(Green evidence: see `audit/phase1-schema-port-report.md` — Migration Verification → Fresh-DB Verification section; 23 migrations applied to `primary_advantage_fresh` via `psql -f`; 92 tables + 17 enum types confirmed; SHA `4ecc5072`.)_
+- [x] Task: Update `packages/db/src/schema/index.ts` barrel exports. _(Green evidence: see `audit/phase1-schema-port-report.md` — Barrel Export Updates section; `export * from "./primary.js"` added; 13 pgTable/pgEnum exports in `primary.ts` (≥8 required); SHA `4ecc5072`.)_
 
 > **Phase 1 Red evidence** (commit `e1f5a0ea`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase1-schema-port.test.mjs`

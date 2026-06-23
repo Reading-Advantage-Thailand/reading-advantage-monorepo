@@ -30,6 +30,12 @@ export const articles = pgTable("articles", {
   words: jsonb("words"),
   authorId: text("author_id").references(() => users.id),
   isPublic: boolean("is_public").default(false).notNull(),
+  // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
+  isApproved: boolean("is_approved").default(false).notNull(),
+  isDraft: boolean("is_draft").default(false).notNull(),
+  isPublished: boolean("is_published").default(false).notNull(),
+  brainstorming: text("brainstorming"),
+  planning: text("planning"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -62,6 +68,8 @@ export const assignments = pgTable("assignments", {
   dueDate: timestamp("due_date"),
   type: text("type").notNull(),
   description: text("description"),
+  // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
+  teacherName: text("teacher_name"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
