@@ -35,7 +35,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { License } from "@prisma/client";
+import type { InferSelectModel } from "drizzle-orm";
+import { licenses } from "@reading-advantage/db";
+
+/**
+ * License row type inferred from the Drizzle `licenses` table
+ * (replaces the Prisma `License` model removed during
+ * `primary_advantage_drizzle_migration_20260526`, Phase 6).
+ */
+type License = InferSelectModel<typeof licenses>;
 
 // Extended license type with school info
 type LicenseWithSchool = License & {

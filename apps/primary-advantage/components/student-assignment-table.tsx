@@ -29,8 +29,27 @@ import { format } from "date-fns";
 import { enUS, th, zhCN, zhTW, vi } from "date-fns/locale";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { AssignmentStatus } from "@prisma/client";
+import type { InferSelectModel } from "drizzle-orm";
+import { assignmentStudents } from "@reading-advantage/db";
 import { useTranslations } from "next-intl";
+
+/**
+ * Status values for student assignment progress. Mirrors the Prisma
+ * `AssignmentStatus` enum (replaced during the Prisma → Drizzle migration,
+ * track `primary_advantage_drizzle_migration_20260526`, Phase 6).
+ *
+ * The Drizzle `studentAssignments.status` column is plain text (no pgEnum),
+ * so we model the union locally and infer the row type from the schema.
+ */
+type AssignmentStatusValue = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
+
+const AssignmentStatus = {
+  NOT_STARTED: "NOT_STARTED",
+  IN_PROGRESS: "IN_PROGRESS",
+  COMPLETED: "COMPLETED",
+} as const satisfies Record<AssignmentStatusValue, AssignmentStatusValue>;
+
+type StudentAssignmentRow = InferSelectModel<typeof assignmentStudents>;
 
 interface Assignment {
   id: string;

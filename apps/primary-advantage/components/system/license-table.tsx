@@ -44,7 +44,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { License } from "@prisma/client";
+import type { InferSelectModel } from "drizzle-orm";
+import { licenses } from "@reading-advantage/db";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import {
@@ -71,6 +72,8 @@ import {
 import { copyToClipboardWithMeta } from "../ui/copy-button";
 import { EditLicenseForm } from "./edit-license-form";
 import { Icons } from "@/components/icons";
+
+type License = InferSelectModel<typeof licenses>;
 
 type LicenseWithSchool = License & {
   School?: {
