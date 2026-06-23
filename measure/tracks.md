@@ -357,6 +357,12 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
+- [ ] **Track: 72h Review Findings Remediation** ⚠️ **High Priority**
+  *Link: [./tracks/review_findings_remediation_20260624/](./tracks/review_findings_remediation_20260624/)*
+  Remediation of all defects/quality issues from the code-level review of the last 72h of commits (2026-06-21 → 06-24), across the drizzle migration, sales-advantage MVP, video pipeline, post-24h, and observability tracks. **Security:** `/api/chat` enforces session but not `sales:chat` authz — any authenticated user from any app can consume the AI coach; the route bypasses the existing `assertCan` domain path (FR-1; roleplay-attempts/lesson-complete are already gated via domain `assertCan`). **Correctness:** `studentModel.getStudents` `leftJoin` fan-out yields duplicate students + a `totalCount` that disagrees with the list (FR-2, audit sibling models); `new-generator.ts` `db.transaction(...)` is fire-and-forget and `correctAnswer:0` fallback persists a wrong answer key (FR-3); roleplay evaluation runs with empty `excerpts:[]` and persists a storage key even when upload failed (FR-4). **Quality:** evaluator swallows error causes (FR-5), sales permission mapping duplicated (FR-6), rate limiter is in-memory per-process (FR-7), chat input shape unvalidated/injectable (FR-8), plus a lessons-learned entry on test-gaming (AC-9, ref `920ff302`→`019b9d83`).
+
+---
+
 ## Archived Tracks
 
 > Tracks listed in this section have completed their lifecycle (spec → plan → implementation → review → acceptance → closeout) and are preserved here for history. Track artifacts live under `measure/archive/`. New work that builds on or supersedes an archived track should open a fresh track rather than reopen the archived one.
