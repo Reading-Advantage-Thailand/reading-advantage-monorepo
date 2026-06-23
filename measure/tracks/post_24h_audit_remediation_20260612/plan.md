@@ -324,27 +324,30 @@ Live-behavior gate owner (Green role): run `pnpm turbo run build --filter=@readi
 
 ## Phase 5: Cross-Cutting Hygiene
 
-- [ ] Task 25: Resolve all remaining stashes
-  - [ ] Commit or drop `stash@{0..N}` after Phase 1
-  - [ ] Inspect `mid-phase4-fr1-session-validateSession-token-hardening-deferred-for-jr`
-  - [ ] Document any deferred work in `measure/tech-debt.md`
-  - [ ] Commit
+- [~] Task 25: Resolve all remaining stashes
+  - [~] Commit or drop `stash@{0..N}` after Phase 1
+  - [~] Inspect `mid-phase4-fr1-session-validateSession-token-hardening-deferred-for-jr`
+  - [~] Document any deferred work in `measure/tech-debt.md`
+  - [~] Commit
 
-- [ ] Task 26: Add generated-artifact ignores
-  - [ ] Add `packages/db/scripts/*.js`, `packages/db/scripts/*.d.ts*`, and
+- [~] Task 26: Add generated-artifact ignores
+  - [~] Add `packages/db/scripts/*.js`, `packages/db/scripts/*.d.ts*`, and
         `packages/db/tsconfig.build.json` (if generated) to `.gitignore`,
         OR make the build clean step remove them
-  - [ ] Commit
+  - [~] Commit
 
-- [ ] Task 27: Update registry status
-  - [ ] Flip `measure/tracks.md` entry for `auth_security_hardening_20260611`
+- [~] Task 27: Update registry status
+  - [~] Flip `measure/tracks.md` entry for `auth_security_hardening_20260611`
         to `[x]` if Phase 4 is truly complete after Phase 2 cleanup
-  - [ ] Flip `measure/tracks.md` entry for `db_migration_ledger_20260611` to
+  - [~] Flip `measure/tracks.md` entry for `db_migration_ledger_20260611` to
         `[x]` if Phase 3/4 are complete after Phase 1
-  - [ ] Add/update this remediation track entry as appropriate
-  - [ ] Commit
+  - [~] Add/update this remediation track entry as appropriate
+  - [~] Commit
 
-- [ ] Task: Measure - User Manual Verification 'Phase 5: Cross-Cutting Hygiene' (Protocol in workflow.md)
+- [~] Task: Measure - User Manual Verification 'Phase 5: Cross-Cutting Hygiene' (Protocol in workflow.md)
+  - [~] Red: assert Phase 5 closeout report and checkpoint exist, stashes resolved/documented, generated artifacts ignored, registry updated (commit `5183d739` — 7/10 failures, expected)
+  - **Red command:** `node --test measure/tracks/post_24h_audit_remediation_20260612/__tests__/phase5-closeout.test.mjs`
+  - **Red result (this MID session, 2026-06-23):** 3/10 pass, 7/10 fail. Expected failures: Phase 5 heading lacks `[checkpoint: <sha>]`; `phase5-closeout-report.md` does not exist; report sections absent; one undocumented stash remains (`stash@{0}: housekeeping_batch_20260603: pre-existing Phase 9 follow-up dirty paths`). Expected passes: `.gitignore` already ignores `packages/db/scripts/*.js` / `*.d.ts*`; `measure/tracks.md` already marks `auth_security_hardening_20260611` and `db_migration_ledger_20260611` as `[x]`.
 
 ---
 
