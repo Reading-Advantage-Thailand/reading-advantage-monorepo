@@ -3,12 +3,12 @@
 > **Status:** Ready. Carved out from `prisma_drizzle_slice_cleanup_20260505` Track 4.
 > Inherits Track 2 shape (per-controller phases, schema unification, test parity).
 
-## Phase 0: Pre-flight
+## Phase 0: Pre-flight [checkpoint: PENDING_GREEN_SHA]
 
-- [~] Task: Audit all 56 Prisma-touching files; categorize by layer (actions, routes, models, components, lib, types).
-- [~] Task: Map Prisma schema models to existing `packages/db/src/schema/` tables; identify primary-advantage-specific tables.
-- [~] Task: Confirm primary-advantage build baseline (`pnpm --filter primary-advantage build`).
-- [~] Task: Confirm shared schema already covers common models (users, classrooms, etc.).
+- [x] Task: Audit all 56 Prisma-touching files; categorize by layer (actions, routes, models, components, lib, types). _(Green evidence: see `audit/phase0-preflight-report.md` — Prisma File Audit section, 56 files inventoried across 10 layers.)_
+- [x] Task: Map Prisma schema models to existing `packages/db/src/schema/` tables; identify primary-advantage-specific tables. _(Green evidence: see `audit/phase0-preflight-report.md` — Schema Mapping section, 30 models → 9 shared + 13 shared-partial + 8 needs porting; 5 enums → 1 shared + 4 needs porting.)_
+- [x] Task: Confirm primary-advantage build baseline (`pnpm --filter primary-advantage build`). _(Green evidence: see `audit/phase0-preflight-report.md` — Build Baseline section. Result: FAIL — Turbopack reports 14 module-resolution errors (13× `@reading-advantage/ai`, 1× `child_process`). Pre-existing baseline failure unrelated to Prisma.)_
+- [x] Task: Confirm shared schema already covers common models (users, classrooms, etc.). _(Green evidence: see `audit/phase0-preflight-report.md` — Shared Schema Coverage section. 9 models directly reusable, 13 partial-coverage with column additions, 8 need porting.)_
 
 > **Phase 0 Red evidence** (commit `92ca45af`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase0-preflight.test.mjs`
