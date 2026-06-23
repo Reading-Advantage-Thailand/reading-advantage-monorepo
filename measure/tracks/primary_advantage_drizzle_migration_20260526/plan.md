@@ -123,7 +123,18 @@
 
 ## Phase 6: Component/UI Migration (FR-3)
 
-- [ ] Task: Migrate 5 component files importing Prisma types to Drizzle-inferred or domain types.
+- [~] Task: Migrate 5 component files importing Prisma types to Drizzle-inferred or domain types. _(5 files: `articles/questions/mc-question-card.tsx`, `student-assignment-table.tsx`, `system/edit-license-form.tsx`, `system/license-table.tsx`, `dashboard/user-reading-chart.tsx`.)_
+
+> **Phase 6 Red evidence** (baseline HEAD `19641340`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase6-components.test.mjs`
+> Result: 2/8 passed, 6/8 failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 6 heading;
+> missing `audit/phase6-components-report.md` and required sections (Summary + per-file + Drizzle Type Patterns
+> Used + Deferred Items); `@prisma/client` imports remain in all 5 target component files
+> (`mc-question-card.tsx`, `student-assignment-table.tsx`, `edit-license-form.tsx`, `license-table.tsx`,
+> `user-reading-chart.tsx`); no Drizzle-inferred type patterns (`InferSelectModel`, `InferInsertModel`,
+> `@reading-advantage/db`) in any of the 5 files; Phase 6 task still `[~]` without SHA evidence; live proof
+> confirms 5 `@prisma/client` imports remain across `apps/primary-advantage/components/`. Passing assertions:
+> all 5 component files exist and are non-empty; no `@/lib/prisma` imports in the target files.
 
 ## Phase 7: Utils & Types Migration (FR-2, FR-4)
 
