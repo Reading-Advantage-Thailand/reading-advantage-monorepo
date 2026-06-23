@@ -121,9 +121,13 @@
 > SHA evidence; live proof confirms 108 Prisma-shaped calls remain across `apps/primary-advantage/app/api/`.
 > Passing assertion: all 25 target route files exist and are non-empty.
 
+## Phase 6: Component/UI Migration (FR-3) [checkpoint: 659bb1fc]
+
+[checkpoint: 659bb1fc]
+
 ## Phase 6: Component/UI Migration (FR-3)
 
-- [~] Task: Migrate 5 component files importing Prisma types to Drizzle-inferred or domain types. _(5 files: `articles/questions/mc-question-card.tsx`, `student-assignment-table.tsx`, `system/edit-license-form.tsx`, `system/license-table.tsx`, `dashboard/user-reading-chart.tsx`.)_
+- [x] Task: Migrate 5 component files importing Prisma types to Drizzle-inferred or domain types. _(5 files: `articles/questions/mc-question-card.tsx`, `student-assignment-table.tsx`, `system/edit-license-form.tsx`, `system/license-table.tsx`, `dashboard/user-reading-chart.tsx`.) _(Green evidence: see `audit/phase6-components-report.md` — Summary section; 5 files migrated, 0 `@prisma/client` imports remain, 5 `@reading-advantage/db` imports added; live grep proof: `grep -r "from \"@prisma/client\"" apps/primary-advantage/components/ | wc -l` → 0; Drizzle patterns: `InferSelectModel<typeof licenses>` (×2), `InferSelectModel<typeof assignmentStudents>` (×1), `activityType` pgEnum aliased as `ActivityType` (×2); SHA `659bb1fc`.)_
 
 > **Phase 6 Red evidence** (baseline HEAD `19641340`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase6-components.test.mjs`
