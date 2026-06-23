@@ -298,22 +298,27 @@ Live-behavior gate owner (Green role): run `pnpm turbo run build --filter=@readi
 
 ---
 
-## Phase 4: CodeCamp Progress & Dashboard Cleanup
+## Phase 4: CodeCamp Progress & Dashboard Cleanup [checkpoint: 2f67785d]
 
 - [x] Task 22: Migrate `PORTFOLIO_PROJECTS` import to seed subpath
-  - [x] Update `packages/domain/src/codecamp/progress.ts` — done in Phase 1
+  - [x] Update `packages/domain/src/codecamp/progress.ts` — done in Phase 1 (commit `b3f6324a`)
   - [x] Verify `packages/db/package.json` `"./seed"` export is correct
 
 - [~] Task 23: Production warm-dashboard verification
   - [ ] Requires production deployment — cannot verify from local environment
-  - [ ] Documented as needing a follow-up measurement
+  - [ ] Documented as needing a follow-up measurement; owner is `codecamp_perf_warm_dashboard_20260608` track + prod-deploy operator
 
 - [x] Task 24: Tidy `updateUserProgress` monotonic guard (optional refactor)
   - [x] Raw sql fragments required for conditional ON CONFLICT SET logic
   - [x] Cannot be expressed cleanly with Drizzle typed helpers
   - [x] No change — documented why raw SQL is required
 
-- [~] Task: Measure - User Manual Verification 'Phase 4: CodeCamp Progress & Dashboard Cleanup' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 4: CodeCamp Progress & Dashboard Cleanup' (Protocol in workflow.md) — SHA `2f67785d`
+  - [x] Red: assert Phase 4 closeout report and checkpoint exist (commit `86694a0f` — 6/6 failures, expected)
+  - [x] Green: author closeout report, run manual verification, create checkpoint (commit `2f67785d` for the closeout report; commit `(this)` appends the checkpoint marker to the Phase 4 heading and flips the manual verification task to [x])
+  - **Red command:** `node --test measure/tracks/post_24h_audit_remediation_20260612/__tests__/phase4-closeout.test.mjs`
+  - **Green result (this JR session, 2026-06-23):** 7/7 pass. The targeted Red command exits 0. The live-behavior proof (test 7) reads `packages/domain/src/codecamp/progress.ts:5` and confirms `import { PORTFOLIO_PROJECTS } from "@reading-advantage/db/seed";` — the FR-17 acceptance criterion (spec.md §AC 15) satisfied by Phase 1 commit `b3f6324a`.
+  - **Live-behavior gate owner:** Green role / Final Acceptance Auditor must independently re-run `node --test measure/tracks/post_24h_audit_remediation_20260612/__tests__/phase4-closeout.test.mjs` from a clean worktree to confirm 7/7. Task 23 (warm-dashboard production verification) is **deferred** — owned by the `codecamp_perf_warm_dashboard_20260608` track (plan.md L35) plus the prod-deploy operator who runs `phase-6-performance-and-latency.test.ts` from a network with prod reach. Task 23's `[~]` deferral is intentional and cross-referenced in `phase4-closeout-report.md` "Live-gate owner" section.
 
 ---
 
