@@ -10,6 +10,13 @@
 - [~] Task: Confirm primary-advantage build baseline (`pnpm --filter primary-advantage build`).
 - [~] Task: Confirm shared schema already covers common models (users, classrooms, etc.).
 
+> **Phase 0 Red evidence** (commit `92ca45af`):
+> `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase0-preflight.test.mjs`
+> Result: 6/8 assertions failed as expected. Failures: missing `[checkpoint: <sha>]` in Phase 0 heading;
+> missing `audit/phase0-preflight-report.md`; missing report sections (Prisma File Audit, Schema Mapping,
+> Build Baseline, Shared Schema Coverage). Live proofs passed: 44 Prisma-touching files detected;
+> `apps/primary-advantage/prisma/schema.prisma` exists.
+
 ## Phase 1: Schema Port (FR-1)
 
 - [ ] Task: Add primary-advantage-specific tables to `packages/db/src/schema/` (or a new `primary.ts` file).
