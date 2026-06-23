@@ -81,7 +81,39 @@ describe("auth route handlers", () => {
   });
 
   it("rejects registration with unknown school ID", async () => {
-    // FR-6: registration requires auth — mock teacher session
+    const teacherSchoolId = "550e8400-e29b-41d4-a716-446655440001";
+    // FR-6: registration requires auth — mock teacher session with matching schoolId
+    vi.mocked(requireAuth).mockResolvedValueOnce({
+      id: "sess", userId: "t1",
+      expiresAt: new Date(Date.now() + 86400000),
+      user: { id: "t1", username: "t", name: "T", role: "TEACHER", schoolId: teacherSchoolId, xp: 0, level: 0, cefrLevel: "" },
+    });
+    vi.mocked(requireRole).mockResolvedValueOnce({
+      id: "sess", userId: "t1",
+      expiresAt: new Date(Date.now() + 86400000),
+      user: { id: "t1", username: "t", name: "T", role: "TEACHER", schoolId: teacherSchoolId, xp: 0, level: 0, cefrLevel: "" },
+    });
+
+    mockDb.select
+      .mockReturnValueOnce(selectResult([]))
+      .mockReturnValueOnce(selectResult([]));
+
+    const request = jsonRequest("/api/auth/register", {
+      username: "student1",
+      password: "Password123!",
+      name: "Student One",
+      schoolId: teacherSchoolId,
+    });
+    request.cookies.set("session_token", "tok");
+
+    const response = await handleRegister(request);
+
+    expect(response.status).toBe(400);
+    expect(mockDb.insert).not.toHaveBeenCalled();
+  });
+
+  it("rejects registration when TEACHER actor tries to register into a different school (tenant scope)", async () => {
+    // FR-6: registration requires auth — mock teacher session for school "s1"
     vi.mocked(requireAuth).mockResolvedValueOnce({
       id: "sess", userId: "t1",
       expiresAt: new Date(Date.now() + 86400000),
@@ -93,21 +125,18 @@ describe("auth route handlers", () => {
       user: { id: "t1", username: "t", name: "T", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
     });
 
-    mockDb.select
-      .mockReturnValueOnce(selectResult([]))
-      .mockReturnValueOnce(selectResult([]));
-
+    // Teacher from school "s1" tries to register a student into school "s2"
     const request = jsonRequest("/api/auth/register", {
       username: "student1",
       password: "Password123!",
       name: "Student One",
-      schoolId: "550e8400-e29b-41d4-a716-446655440001",
+      schoolId: "550e8400-e29b-41d4-a716-446655440002", // different school
     });
     request.cookies.set("session_token", "tok");
 
     const response = await handleRegister(request);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(403);
     expect(mockDb.insert).not.toHaveBeenCalled();
   });
 
@@ -127,18 +156,19 @@ describe("auth route handlers", () => {
   });
 
   it("creates user and account atomically for valid registration", async () => {
+    const teacherSchoolId = "550e8400-e29b-41d4-a716-446655440001";
     // FR-6/FR-16: registration is now gated behind TEACHER/ADMIN session
     vi.mocked(requireAuth).mockResolvedValueOnce({
       id: "teacher-session",
       userId: "teacher-1",
       expiresAt: new Date(Date.now() + 86400000),
-      user: { id: "teacher-1", username: "teacher1", name: "Teacher", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
+      user: { id: "teacher-1", username: "teacher1", name: "Teacher", role: "TEACHER", schoolId: teacherSchoolId, xp: 0, level: 0, cefrLevel: "" },
     });
     vi.mocked(requireRole).mockResolvedValueOnce({
       id: "teacher-session",
       userId: "teacher-1",
       expiresAt: new Date(Date.now() + 86400000),
-      user: { id: "teacher-1", username: "teacher1", name: "Teacher", role: "TEACHER", schoolId: "s1", xp: 0, level: 0, cefrLevel: "" },
+      user: { id: "teacher-1", username: "teacher1", name: "Teacher", role: "TEACHER", schoolId: teacherSchoolId, xp: 0, level: 0, cefrLevel: "" },
     });
 
     const createdUser = {
@@ -146,7 +176,7 @@ describe("auth route handlers", () => {
       username: "student1",
       name: "Student One",
       role: "STUDENT",
-      schoolId: "550e8400-e29b-41d4-a716-446655440001",
+      schoolId: teacherSchoolId,
     };
 
     const txInsert = vi.fn().mockReturnValue({
@@ -160,7 +190,7 @@ describe("auth route handlers", () => {
     mockDb.select
       .mockReturnValueOnce(selectResult([]))
       .mockReturnValueOnce(
-        selectResult([{ id: "550e8400-e29b-41d4-a716-446655440001" }])
+        selectResult([{ id: teacherSchoolId }])
       );
 
     mockDb.transaction.mockImplementation(async (fn: unknown) =>
@@ -171,7 +201,7 @@ describe("auth route handlers", () => {
       username: "student1",
       password: "Password123!",
       name: "Student One",
-      schoolId: "550e8400-e29b-41d4-a716-446655440001",
+      schoolId: teacherSchoolId,
     });
     request.cookies.set("session_token", "teacher-token");
 

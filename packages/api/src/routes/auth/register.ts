@@ -42,10 +42,20 @@ export async function handleRegister(request: NextRequest) {
     if (!cookie) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    await requireRole(db, cookie, "TEACHER");
+    const session = await requireRole(db, cookie, "TEACHER");
+    const actor = session.user;
 
     const { username, password, name, schoolId } = parsed.data;
     const lowerUsername = username.toLowerCase();
+
+    // Tenant scope: TEACHER actors can only register into their own school.
+    // ADMIN bypasses school scoping per the authorization matrix.
+    if (actor.role === "TEACHER" && actor.schoolId !== schoolId) {
+      return NextResponse.json(
+        { message: "Forbidden" },
+        { status: 403 }
+      );
+    }
 
     // Check for existing user
     const [existing] = await db
