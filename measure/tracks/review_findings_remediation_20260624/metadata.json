@@ -4,9 +4,9 @@
   "status": "new",
   "priority": "high",
   "created_at": "2026-06-23T22:18:04Z",
-  "updated_at": "2026-06-23T22:18:04Z",
-  "description": "Remediate all defects and quality issues found in the 72h code-level review (2026-06-21 → 06-24): chat-route authz gap (FR-1), studentModel duplicate-row fan-out + count mismatch (FR-2), un-awaited transaction + lossy NOT-NULL fills in new-generator.ts (FR-3), empty roleplay-eval excerpts + storage/type integrity (FR-4), evaluator error causes (FR-5), sales permission DRY (FR-6), in-memory rate limiter durability (FR-7), chat input hardening (FR-8), and a lessons-learned entry on test-gaming (AC-9).",
-  "estimated_tasks": 23,
+  "updated_at": "2026-06-23T22:34:00Z",
+  "description": "Remediate all defects and quality issues found in the 72h code-level review (2026-06-21 → 06-24): chat-route authz gap (FR-1), studentModel duplicate-row fan-out + count mismatch (FR-2), un-awaited transaction + lossy NOT-NULL fills in new-generator.ts (FR-3), empty roleplay-eval excerpts + storage/type integrity (FR-4), evaluator error causes (FR-5), sales permission DRY (FR-6), in-memory rate limiter durability (FR-7), chat input hardening (FR-8), and a lessons-learned entry on test-gaming (AC-9). Plus test-alignment FRs from the 72h test review: route-level integration tests for the sales surface (FR-9), session cap + race-safety tests (FR-10), behavioral smoke tests for migrated models (FR-11), and pruning brittle structural assertions in the marketing suite (FR-12).",
+  "estimated_tasks": 27,
   "actual_tasks": null,
   "deviation_notes": "Opened fresh per the Measure 'open a fresh track' rule rather than reopening the closed source tracks (primary_advantage_drizzle_migration_20260526, sales_advantage_mvp_20260622, video_pipeline_20260613, post_24h_audit_remediation_20260612). FR-1 narrowed to the chat route only after verifying roleplay-attempts/lesson-complete enforce assertCan via the domain layer. FR-7 (tenant-registry runtime throw) was investigated and dropped — sales queries/mutations correctly use the salesRawDb()/unscoped() wrapper."
 }

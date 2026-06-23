@@ -84,7 +84,54 @@ records where it was found and the evidence behind it.
   message shape (`content` may be `undefined` → `"REP: undefined"`). Validate `messages`
   with a Zod schema; sanitize/escape role markers.
 
+### Test Alignment
+
+> A review of all tests written in the window found that the green suites are weighted toward
+> process/artifact contracts and unit/domain-layer behavior, while the **integration seams
+> where the FR-1..FR-4 defects actually live (HTTP routes wiring domain calls) have no
+> behavioral test**. Every confirmed defect sits in an untested layer, so the green suite
+> gave false assurance. The following FRs close the test-altitude gap.
+
+- **FR-9 (High): Route-level integration tests for the sales HTTP surface.**
+  `apps/sales-advantage` ships a 44-file app (chat, roleplay-attempts, lesson-complete,
+  login routes, components) with **zero** route/component tests — only `lib/__tests__/setup.ts`.
+  The domain-layer tests pass while the routes bypass the tested paths (chat skips `assertCan`;
+  the route passes `excerpts: []` though the evaluator *unit* test passes real excerpts). Add
+  route-level tests that exercise the real handlers and would FAIL on the current FR-1 and FR-4
+  defects: (a) authenticated non-sales user → 401/403 on `/api/chat`; (b) a roleplay attempt
+  reaches the evaluator with non-empty excerpts and persists a storage key only on upload
+  success. The FR-1..FR-4 remediation tests (Phases 1–4) MUST be written at this
+  route/integration altitude — a domain-layer unit test would pass while the route stays broken.
+
+- **FR-10 (High): Test the session cap + race-safety (auth `session.ts`).**
+  `packages/auth/src/__tests__/session.test.ts` does not assert the FR-10 session cap
+  (max 10 active sessions + oldest-eviction) at all, and its mock flattens
+  `transaction: vi.fn((fn) => fn(mockDb))` to a passthrough — so the atomicity the
+  `019b9d83` "race safety" fix added is structurally untestable as written. Add tests that
+  prove (a) the 11th concurrent session evicts the oldest, and (b) the count→evict→insert
+  runs inside a single transaction (assert the transaction callback wraps all three ops).
+  _(This is the auth session-cap requirement originally tracked as FR-10 of
+  `auth_security_hardening_20260611`; it was implemented but never behaviorally tested.)_
+
+- **FR-11 (Medium): Behavioral smoke tests for the migrated primary-advantage models.**
+  The 10 drizzle `.mjs` phase tests assert only documentation artifacts (plan SHAs, audit-report
+  sections, task markers) and Prisma-residue greps — **zero** behavioral assertions, so a
+  migration whose real requirement is *behavior preservation* shipped with FR-2/FR-3 invisible to
+  its own gate. Add at least one behavioral test per migrated model exercising a representative
+  query against a test DB (the FR-2 duplicate-row case is the first; cover the other models'
+  list/lookup paths), so future model edits have a behavioral safety net.
+
+- **FR-12 (Low): Prune brittle structural assertions in the marketing test suite.**
+  `apps/marketing/app/__tests__/phase-4-campaigns.test.ts` (and the phase-5/6 siblings) mix real
+  route-behavior tests with hollow structural ones — `existsSync(page.tsx)`,
+  `src.toMatch(/export default function/)`, `src.toMatch(/borderRadius:"50%"/)` — that assert code
+  shape/CSS literals rather than requirements and break on benign refactors. Convert each to a
+  behavioral assertion or delete it; keep only tests that verify observable behavior.
+
 ## Non-Functional Requirements
+
+- **Remediation test altitude:** Each FR-1..FR-4 fix lands a test at the route/integration layer
+  that fails on the current defect, not merely a domain-layer unit test (see FR-9).
 
 - No behavioral regressions in the affected apps; each fix lands TDD (Red proof → Green).
 - Type-check and existing test baselines for `primary-advantage`, `sales-advantage`,
@@ -106,6 +153,13 @@ records where it was found and the evidence behind it.
 - AC-9: A `lessons-learned.md` entry reinforces "never bend production code to satisfy a
   test's structural string assertion" (re the `920ff302`→`019b9d83` reset-password
   test-gaming that was caught and reverted in review).
+- AC-10: Route-level tests exist for `/api/chat` and `/api/roleplay-attempts`; both fail on the
+  pre-fix FR-1/FR-4 code and pass after (FR-9). FR-1..FR-4 remediation tests run at the route layer.
+- AC-11: `session.test.ts` proves the 11th session evicts the oldest and the cap/evict/insert run
+  in one transaction (FR-10).
+- AC-12: Each migrated primary-advantage model has ≥1 behavioral test against a test DB (FR-11).
+- AC-13: No marketing test asserts file existence or source-string/CSS-literal shape; all remaining
+  assertions verify behavior (FR-12).
 
 ## Out of Scope
 

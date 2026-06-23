@@ -47,9 +47,16 @@
 - [ ] Task: Test (Red) — Zod validation rejects malformed `/api/chat` `messages` payloads; role markers in content are escaped/sanitized.
 - [ ] Task: Implement (Green) — apply FR-7 decision; add `messages` Zod schema + sanitization in the chat route.
 
-## Phase 7: Closeout — Docs, Doctor, Lessons Learned
+## Phase 7: Test Alignment (FR-9..FR-12)
+
+- [ ] Task: FR-9 — add route-level integration tests for `apps/sales-advantage` (`/api/chat`, `/api/roleplay-attempts`) that FAIL on the pre-fix FR-1/FR-4 code and pass after; confirm the Phase 1–4 remediation tests run at the route/integration layer.
+- [ ] Task: FR-10 — add `session.test.ts` cases: 11th session evicts oldest; cap/evict/insert run inside one transaction (assert the tx callback wraps all three; remove the passthrough-mock blind spot).
+- [ ] Task: FR-11 — add ≥1 behavioral test per migrated primary-advantage model against a test DB (start with the FR-2 duplicate-row case, then sibling list/lookup paths).
+- [ ] Task: FR-12 — convert or delete brittle structural assertions in `apps/marketing/app/__tests__/phase-4/5/6` (file-existence, source-regex, CSS-literal) so only behavioral assertions remain.
+
+## Phase 8: Closeout — Docs, Doctor, Lessons Learned
 
 - [ ] Task: Run `measure/generate.sh` (if present) and `measure/doctor.sh`; resolve findings.
 - [ ] Task: Add `lessons-learned.md` entry (FR-9 / AC-9): never bend production SQL/code to satisfy a test's structural string assertion (ref `920ff302`→`019b9d83`).
 - [ ] Task: Re-run all four package test/type baselines; confirm no regression vs Phase 0.
-- [ ] Task: Final acceptance — verify AC-1..AC-9; update metadata + tracks.md on closeout.
+- [ ] Task: Final acceptance — verify AC-1..AC-13; update metadata + tracks.md on closeout.
