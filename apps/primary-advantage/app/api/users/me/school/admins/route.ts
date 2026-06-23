@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import { db, eq, and } from '@reading-advantage/db';
+import { users, schools, schoolAdmins, userRoles, roles } from '@reading-advantage/db';
 import { z } from "zod";
 
 const addAdminSchema = z.object({
@@ -19,19 +20,24 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { userId } = addAdminSchema.parse(body);
 
-    // Get current user's school and verify they are the owner
-    const currentUser = await db.user.findUnique({
-      where: { id: authUser.id },
-      include: {
-        School: true,
-      },
-    });
+    // Get current user's school (replaces Prisma `user.findUnique({ include: School })`).
+    const [currentUser] = await db.select().from(users)
+      .where(eq(users.id, authUser.id))
+      .limit(1);
 
     if (!currentUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (!currentUser.School) {
+    let userSchool: typeof schools.$inferSelect | null = null;
+    if (currentUser.schoolId) {
+      const [s] = await db.select().from(schools)
+        .where(eq(schools.id, currentUser.schoolId))
+        .limit(1);
+      userSchool = s ?? null;
+    }
+
+    if (!userSchool) {
       return NextResponse.json(
         { error: "User has no school associated" },
         { status: 400 },
@@ -39,29 +45,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if current user is the school owner
-    if (currentUser.School.ownerId !== currentUser.id) {
+    if (userSchool.ownerId !== currentUser.id) {
       return NextResponse.json(
         { error: "Only the school owner can add admins" },
         { status: 403 },
       );
     }
 
-    // Check if the target user exists
-    const targetUser = await db.user.findUnique({
-      where: { id: userId },
-      include: {
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-        SchoolAdmins: {
-          where: {
-            schoolId: currentUser.School.id,
-          },
-        },
-      },
-    });
+    // Check if the target user exists (replaces Prisma `user.findUnique({ include: roles, SchoolAdmins })`).
+    const [targetUser] = await db.select().from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (!targetUser) {
       return NextResponse.json(
@@ -70,62 +64,76 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Fetch target user's roles via join.
+    const targetRoleRows = await db.select({
+      roleId: userRoles.roleId,
+      roleName: roles.name,
+    })
+      .from(userRoles)
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(eq(userRoles.userId, userId));
+
+    // Fetch target user's existing SchoolAdmins for this school.
+    const existingSchoolAdminRows = await db.select().from(schoolAdmins)
+      .where(
+        and(
+          eq(schoolAdmins.userId, userId),
+          eq(schoolAdmins.schoolId, userSchool.id),
+        ),
+      );
+
     // Check if user is already an admin of this school
-    if (targetUser.SchoolAdmins.length > 0) {
+    if (existingSchoolAdminRows.length > 0) {
       return NextResponse.json(
         { error: "User is already an admin of this school" },
         { status: 400 },
       );
     }
 
-    // Add user as school admin
-    await db.schoolAdmins.create({
-      data: {
-        schoolId: currentUser.School.id,
-        userId: userId,
-      },
+    // Add user as school admin (replaces Prisma `schoolAdmins.create`).
+    await db.insert(schoolAdmins).values({
+      schoolId: userSchool.id,
+      userId: userId,
     });
 
     // Check if user needs Admin role upgrade
-    const hasAdminRole = targetUser.roles.some(
-      (userRole) => userRole.role.name === "admin",
+    const hasAdminRole = targetRoleRows.some(
+      (r) => r.roleName === "admin",
     );
 
+    let roleUpgraded = false;
     if (!hasAdminRole) {
-      const currentRoles = targetUser.roles.map((ur) => ur.role.name);
+      const currentRoles = targetRoleRows.map((r) => r.roleName);
       if (currentRoles.includes("user") || currentRoles.includes("teacher")) {
         // Find or create Admin role
-        let adminRole = await db.role.findFirst({
-          where: { name: "admin" },
-        });
+        const [existingAdminRole] = await db.select().from(roles)
+          .where(eq(roles.name, "admin"))
+          .limit(1);
 
+        let adminRole = existingAdminRole;
         if (!adminRole) {
-          adminRole = await db.role.create({
-            data: { name: "admin" },
-          });
+          const [created] = await db.insert(roles).values({ name: "admin" }).returning();
+          adminRole = created;
         }
 
         // Remove all existing roles and set Admin role only
-        await db.userRole.deleteMany({
-          where: { userId: userId },
-        });
+        await db.delete(userRoles)
+          .where(eq(userRoles.userId, userId));
 
         // Create new Admin role for user
-        await db.userRole.create({
-          data: {
-            userId: userId,
-            roleId: adminRole.id,
-          },
+        await db.insert(userRoles).values({
+          userId: userId,
+          roleId: adminRole.id,
         });
+        roleUpgraded = true;
       }
     }
 
     // Associate user with the school if not already associated
-    if (targetUser.schoolId !== currentUser.School.id) {
-      await db.user.update({
-        where: { id: userId },
-        data: { schoolId: currentUser.School.id },
-      });
+    if (targetUser.schoolId !== userSchool.id) {
+      await db.update(users)
+        .set({ schoolId: userSchool.id })
+        .where(eq(users.id, userId));
     }
 
     return NextResponse.json({
@@ -133,8 +141,8 @@ export async function POST(request: NextRequest) {
       adminAdded: true,
       roleUpgraded:
         !hasAdminRole &&
-        targetUser.roles.some(
-          (ur) => ur.role.name === "user" || ur.role.name === "teacher",
+        targetRoleRows.some(
+          (r) => r.roleName === "user" || r.roleName === "teacher",
         ),
     });
   } catch (error) {

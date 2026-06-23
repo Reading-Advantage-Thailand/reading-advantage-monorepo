@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import { db, eq, and, desc, inArray } from '@reading-advantage/db';
+import { users, schools, schoolAdmins, userRoles, roles, licenses } from '@reading-advantage/db';
 import { z } from "zod";
 
 const schoolSchema = z.object({
@@ -18,65 +19,83 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await db.user.findUnique({
-      where: { id: currentUser.id },
-      include: {
-        School: {
-          include: {
-            _count: {
-              select: {
-                users: true,
-                admins: true,
-              },
-            },
-            admins: {
-              include: {
-                user: {
-                  select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                  },
-                },
-              },
-            },
-            licenses: {
-              select: {
-                id: true,
-                key: true,
-                name: true,
-                description: true,
-                maxUsers: true,
-                startDate: true,
-                expiryDate: true,
-                status: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    // Get user (replaces Prisma `user.findUnique({ include: School })`).
+    const [user] = await db.select().from(users)
+      .where(eq(users.id, currentUser.id))
+      .limit(1);
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Add owner and license information manually since the relation might not be set up
-    const schoolWithOwner = user.School
-      ? {
-          ...user.School,
-          owner: user.School.ownerId
-            ? await db.user.findUnique({
-                where: { id: user.School.ownerId },
-                select: { id: true, name: true, email: true },
-              })
-            : null,
-          license:
-            user.School.licenses && user.School.licenses.length > 0
-              ? user.School.licenses[0]
-              : null,
-        }
-      : null;
+    if (!user.schoolId) {
+      return NextResponse.json({ school: null });
+    }
+
+    // Fetch school.
+    const [school] = await db.select().from(schools)
+      .where(eq(schools.id, user.schoolId))
+      .limit(1);
+
+    if (!school) {
+      return NextResponse.json({ school: null });
+    }
+
+    // Fetch school admins with user join (replaces `School.admins.include.user`).
+    const adminRows = await db.select({
+      userId: schoolAdmins.userId,
+      userName: users.name,
+      userEmail: users.email,
+    })
+      .from(schoolAdmins)
+      .innerJoin(users, eq(users.id, schoolAdmins.userId))
+      .where(eq(schoolAdmins.schoolId, school.id));
+
+    const admins = adminRows.map((a) => ({
+      user: {
+        id: a.userId,
+        name: a.userName,
+        email: a.userEmail,
+      },
+    }));
+
+    // Fetch school licenses (replaces `School.licenses`).
+    const schoolLicenses = await db.select({
+      id: licenses.id,
+      key: licenses.key,
+      name: licenses.name,
+      description: licenses.description,
+      maxUsers: licenses.maxUsers,
+      startDate: licenses.startDate,
+      expiryDate: licenses.expiryDate,
+      status: licenses.status,
+    })
+      .from(licenses)
+      .where(eq(licenses.schoolId, school.id))
+      .orderBy(desc(licenses.createdAt));
+
+    // Stitch counts (replaces `_count.select.users/admins`).
+    const userCountRows = await db.select({ id: users.id })
+      .from(users)
+      .where(eq(users.schoolId, school.id));
+
+    const schoolWithOwner = {
+      ...school,
+      _count: {
+        users: userCountRows.length,
+        admins: admins.length,
+      },
+      admins,
+      licenses: schoolLicenses,
+      owner: school.ownerId
+        ? await db.select({ id: users.id, name: users.name, email: users.email })
+          .from(users)
+          .where(eq(users.id, school.ownerId))
+          .limit(1)
+          .then((rows) => rows[0] ?? null)
+        : null,
+      license: schoolLicenses.length > 0 ? schoolLicenses[0] : null,
+    };
 
     return NextResponse.json({ school: schoolWithOwner });
   } catch (error) {
@@ -100,29 +119,26 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = schoolSchema.parse(body);
 
-    // Check if user already has a school
-    const existingUser = await db.user.findUnique({
-      where: { id: authUser.id },
-      include: { School: true },
-    });
+    // Check if user already has a school (replaces Prisma `user.findUnique({ include: School })`).
+    const [existingUser] = await db.select().from(users)
+      .where(eq(users.id, authUser.id))
+      .limit(1);
 
     if (!existingUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (existingUser.School) {
+    if (existingUser.schoolId) {
       return NextResponse.json(
         { error: "User already has a school associated" },
         { status: 400 },
       );
     }
 
-    // Check if school with same name already exists
-    const existingSchool = await db.school.findFirst({
-      where: {
-        name: validatedData.name,
-      },
-    });
+    // Check if school with same name already exists (replaces Prisma `school.findFirst`).
+    const [existingSchool] = await db.select().from(schools)
+      .where(eq(schools.name, validatedData.name))
+      .limit(1);
 
     if (existingSchool) {
       return NextResponse.json(
@@ -131,136 +147,121 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check current user's roles to see if they need to be upgraded to Admin
-    const currentUser = await db.user.findUnique({
-      where: { id: authUser.id },
-      include: {
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-      },
-    });
+    // Check current user's roles to see if they need to be upgraded to Admin.
+    const currentUserRoleRows = await db.select({
+      roleId: userRoles.roleId,
+      roleName: roles.name,
+    })
+      .from(userRoles)
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(eq(userRoles.userId, authUser.id));
 
-    if (!currentUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    // Check if user has Admin role
-    const hasAdminRole = currentUser.roles.some(
-      (userRole) => userRole.role.name === "admin",
+    const currentUser = existingUser;
+    const hasAdminRole = currentUserRoleRows.some(
+      (r) => r.roleName === "admin",
     );
 
     // Check what roles exist in the database
-    const allRoles = await db.role.findMany();
+    const allRoles = await db.select().from(roles);
 
     // If user doesn't have Admin role and is currently User or Teacher, upgrade them
+    let roleUpgraded = false;
     if (!hasAdminRole) {
-      const currentRoles = currentUser.roles.map((ur) => ur.role.name);
+      const currentRoles = currentUserRoleRows.map((r) => r.roleName);
 
       if (currentRoles.includes("user") || currentRoles.includes("teacher")) {
         // Find or create Admin role
-        let adminRole = await db.role.findFirst({
-          where: { name: "admin" },
-        });
+        const [existingAdminRole] = await db.select().from(roles)
+          .where(eq(roles.name, "admin"))
+          .limit(1);
 
+        let adminRole = existingAdminRole;
         if (!adminRole) {
-          adminRole = await db.role.create({
-            data: { name: "admin" },
-          });
+          const [created] = await db.insert(roles).values({ name: "admin" }).returning();
+          adminRole = created;
         }
 
         // Remove all existing roles and set Admin role only
-        await db.userRole.deleteMany({
-          where: { userId: currentUser.id },
-        });
+        await db.delete(userRoles)
+          .where(eq(userRoles.userId, currentUser.id));
 
         // Create new Admin role for user
-        await db.userRole.create({
-          data: {
-            userId: currentUser.id,
-            roleId: adminRole.id,
-          },
+        await db.insert(userRoles).values({
+          userId: currentUser.id,
+          roleId: adminRole.id,
         });
+        roleUpgraded = true;
       }
     }
 
-    // Create school and associate with user as owner, member, and admin
-    const school = await db.school.create({
-      data: {
-        name: validatedData.name,
-        contactName: validatedData.contactName,
-        contactEmail: validatedData.contactEmail,
-        ownerId: currentUser.id,
-        users: {
-          connect: { id: currentUser.id },
-        },
-        admins: {
-          create: {
-            userId: currentUser.id,
-          },
-        },
-      },
-      include: {
-        _count: {
-          select: {
-            users: true,
-            admins: true,
-          },
-        },
-        admins: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-        },
-        licenses: {
-          select: {
-            id: true,
-            key: true,
-            name: true,
-            description: true,
-            maxUsers: true,
-            startDate: true,
-            expiryDate: true,
-            status: true,
-          },
-        },
-      },
+    // Create school (replaces Prisma `school.create`).
+    const [school] = await db.insert(schools).values({
+      name: validatedData.name,
+      contactName: validatedData.contactName,
+      contactEmail: validatedData.contactEmail,
+      ownerId: currentUser.id,
+    } as any).returning();
+
+    // Connect the user as a member (users.schoolId = school.id).
+    await db.update(users)
+      .set({ schoolId: school.id })
+      .where(eq(users.id, currentUser.id));
+
+    // Add the user as a school admin (replaces Prisma `school.admins.create`).
+    await db.insert(schoolAdmins).values({
+      schoolId: school.id,
+      userId: currentUser.id,
     });
 
-    // Add owner information manually
+    // Stitch the school include shape manually.
+    const adminRows = await db.select({
+      userId: schoolAdmins.userId,
+      userName: users.name,
+      userEmail: users.email,
+    })
+      .from(schoolAdmins)
+      .innerJoin(users, eq(users.id, schoolAdmins.userId))
+      .where(eq(schoolAdmins.schoolId, school.id));
+    const admins = adminRows.map((a) => ({
+      user: { id: a.userId, name: a.userName, email: a.userEmail },
+    }));
+
+    const schoolLicenses = await db.select({
+      id: licenses.id,
+      key: licenses.key,
+      name: licenses.name,
+      description: licenses.description,
+      maxUsers: licenses.maxUsers,
+      startDate: licenses.startDate,
+      expiryDate: licenses.expiryDate,
+      status: licenses.status,
+    })
+      .from(licenses)
+      .where(eq(licenses.schoolId, school.id))
+      .orderBy(desc(licenses.createdAt));
+
+    const userCountRows = await db.select({ id: users.id })
+      .from(users)
+      .where(eq(users.schoolId, school.id));
+
     const schoolWithOwner = {
       ...school,
-      owner: await db.user.findUnique({
-        where: { id: currentUser.id },
-        select: { id: true, name: true, email: true },
-      }),
-      license:
-        school.licenses && school.licenses.length > 0
-          ? school.licenses[0]
-          : null,
-    };
-
-    // Return success with role upgrade information
-    const roleUpgraded =
-      !hasAdminRole &&
-      currentUser.roles.some(
-        (ur) => ur.role.name === "user" || ur.role.name === "teacher",
-      );
-
-    const responseData = {
-      ...schoolWithOwner,
+      _count: {
+        users: userCountRows.length,
+        admins: admins.length,
+      },
+      admins,
+      licenses: schoolLicenses,
+      owner: {
+        id: currentUser.id,
+        name: currentUser.name,
+        email: currentUser.email,
+      },
+      license: schoolLicenses.length > 0 ? schoolLicenses[0] : null,
       roleUpgraded,
     };
 
-    return NextResponse.json(responseData, { status: 201 });
+    return NextResponse.json(schoolWithOwner, { status: 201 });
   } catch (error) {
     console.error("Error creating school:", error);
 
@@ -290,92 +291,103 @@ export async function PATCH(request: NextRequest) {
     const body = await request.json();
     const validatedData = schoolSchema.parse(body);
 
-    // Get user's school
-    const user = await db.user.findUnique({
-      where: { id: currentUser.id },
-      include: { School: true },
-    });
+    // Get user's school (replaces Prisma `user.findUnique({ include: School })`).
+    const [user] = await db.select().from(users)
+      .where(eq(users.id, currentUser.id))
+      .limit(1);
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (!user.School) {
+    let userSchool: typeof schools.$inferSelect | null = null;
+    if (user.schoolId) {
+      const [s] = await db.select().from(schools)
+        .where(eq(schools.id, user.schoolId))
+        .limit(1);
+      userSchool = s ?? null;
+    }
+
+    if (!userSchool) {
       return NextResponse.json(
         { error: "User has no school associated" },
         { status: 400 },
       );
     }
 
-    // Check if another school with the same name exists (excluding current school)
-    const existingSchool = await db.school.findFirst({
-      where: {
-        name: validatedData.name,
-        id: { not: user.School.id },
-      },
-    });
+    // Check if another school with the same name exists (excluding current school).
+    const [existingSchool] = await db.select().from(schools)
+      .where(
+        and(
+          eq(schools.name, validatedData.name),
+        ),
+      )
+      .limit(1);
 
-    if (existingSchool) {
+    if (existingSchool && existingSchool.id !== userSchool.id) {
       return NextResponse.json(
         { error: "A school with this name already exists" },
         { status: 400 },
       );
     }
 
-    // Update school
-    const updatedSchool = await db.school.update({
-      where: { id: user.School.id },
-      data: {
+    // Update school (replaces Prisma `school.update`).
+    const [updatedSchool] = await db.update(schools)
+      .set({
         name: validatedData.name,
         contactName: validatedData.contactName,
         contactEmail: validatedData.contactEmail,
-      },
-      include: {
-        _count: {
-          select: {
-            users: true,
-            admins: true,
-          },
-        },
-        admins: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-        },
-        licenses: {
-          select: {
-            id: true,
-            key: true,
-            name: true,
-            description: true,
-            maxUsers: true,
-            startDate: true,
-            expiryDate: true,
-            status: true,
-          },
-        },
-      },
-    });
+      } as any)
+      .where(eq(schools.id, userSchool.id))
+      .returning();
 
-    // Add owner and license information manually
+    // Stitch includes.
+    const adminRows = await db.select({
+      userId: schoolAdmins.userId,
+      userName: users.name,
+      userEmail: users.email,
+    })
+      .from(schoolAdmins)
+      .innerJoin(users, eq(users.id, schoolAdmins.userId))
+      .where(eq(schoolAdmins.schoolId, updatedSchool.id));
+    const admins = adminRows.map((a) => ({
+      user: { id: a.userId, name: a.userName, email: a.userEmail },
+    }));
+
+    const schoolLicenses = await db.select({
+      id: licenses.id,
+      key: licenses.key,
+      name: licenses.name,
+      description: licenses.description,
+      maxUsers: licenses.maxUsers,
+      startDate: licenses.startDate,
+      expiryDate: licenses.expiryDate,
+      status: licenses.status,
+    })
+      .from(licenses)
+      .where(eq(licenses.schoolId, updatedSchool.id))
+      .orderBy(desc(licenses.createdAt));
+
+    const userCountRows = await db.select({ id: users.id })
+      .from(users)
+      .where(eq(users.schoolId, updatedSchool.id));
+
     const schoolWithOwner = {
       ...updatedSchool,
+      _count: {
+        users: userCountRows.length,
+        admins: admins.length,
+      },
+      admins,
+      licenses: schoolLicenses,
       owner: updatedSchool.ownerId
-        ? await db.user.findUnique({
-            where: { id: updatedSchool.ownerId },
-            select: { id: true, name: true, email: true },
-          })
+        ? await db.select({ id: users.id, name: users.name, email: users.email })
+          .from(users)
+          .where(eq(users.id, updatedSchool.ownerId))
+          .limit(1)
+          .then((rows) => rows[0] ?? null)
         : null,
-      license:
-        updatedSchool.licenses && updatedSchool.licenses.length > 0
-          ? updatedSchool.licenses[0]
-          : null,
+      license: schoolLicenses.length > 0 ? schoolLicenses[0] : null,
     };
 
     return NextResponse.json(schoolWithOwner);
@@ -405,17 +417,24 @@ export async function DELETE() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user's school
-    const user = await db.user.findUnique({
-      where: { id: currentUser.id },
-      include: { School: true },
-    });
+    // Get user's school (replaces Prisma `user.findUnique({ include: School })`).
+    const [user] = await db.select().from(users)
+      .where(eq(users.id, currentUser.id))
+      .limit(1);
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (!user.School) {
+    let userSchool: typeof schools.$inferSelect | null = null;
+    if (user.schoolId) {
+      const [s] = await db.select().from(schools)
+        .where(eq(schools.id, user.schoolId))
+        .limit(1);
+      userSchool = s ?? null;
+    }
+
+    if (!userSchool) {
       return NextResponse.json(
         { error: "User has no school associated" },
         { status: 400 },
@@ -423,66 +442,56 @@ export async function DELETE() {
     }
 
     // Check if user is the owner of the school
-    if (user.School.ownerId !== currentUser.id) {
+    if (userSchool.ownerId !== currentUser.id) {
       return NextResponse.json(
         { error: "Only the school owner can delete the school" },
         { status: 403 },
       );
     }
 
-    // Get owner's current roles before deleting school
-    const ownerWithRoles = await db.user.findUnique({
-      where: { id: currentUser.id },
-      include: {
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-      },
-    });
+    // Get owner's current roles before deleting school.
+    const ownerRoleRows = await db.select({
+      roleId: userRoles.roleId,
+      roleName: roles.name,
+    })
+      .from(userRoles)
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(eq(userRoles.userId, currentUser.id));
 
-    // Delete the school (this will cascade delete related records)
-    await db.school.delete({
-      where: { id: user.School.id },
-    });
+    // Delete the school (replaces Prisma `school.delete`).
+    await db.delete(schools)
+      .where(eq(schools.id, userSchool.id));
 
     // Downgrade owner's role from Admin to User if they have Admin role
-    if (ownerWithRoles) {
-      const hasAdminRole = ownerWithRoles.roles.some(
-        (ur) => ur.role.name === "admin",
-      );
+    const hasAdminRole = ownerRoleRows.some(
+      (r) => r.roleName === "admin",
+    );
 
-      if (hasAdminRole) {
-        // Find or create User role
-        let userRole = await db.role.findFirst({
-          where: { name: "user" },
-        });
+    if (hasAdminRole) {
+      // Find or create User role
+      const [existingUserRole] = await db.select().from(roles)
+        .where(eq(roles.name, "user"))
+        .limit(1);
 
-        if (!userRole) {
-          userRole = await db.role.create({
-            data: { name: "user" },
-          });
-        }
-
-        // Remove all existing roles and set User role
-        await db.userRole.deleteMany({
-          where: { userId: currentUser.id },
-        });
-
-        await db.userRole.create({
-          data: {
-            userId: currentUser.id,
-            roleId: userRole.id,
-          },
-        });
-
-        // Remove school association
-        await db.user.update({
-          where: { id: currentUser.id },
-          data: { schoolId: null },
-        });
+      let userRole = existingUserRole;
+      if (!userRole) {
+        const [created] = await db.insert(roles).values({ name: "user" }).returning();
+        userRole = created;
       }
+
+      // Remove all existing roles and set User role
+      await db.delete(userRoles)
+        .where(eq(userRoles.userId, currentUser.id));
+
+      await db.insert(userRoles).values({
+        userId: currentUser.id,
+        roleId: userRole.id,
+      });
+
+      // Remove school association
+      await db.update(users)
+        .set({ schoolId: null })
+        .where(eq(users.id, currentUser.id));
     }
 
     return NextResponse.json({ message: "School deleted successfully" });

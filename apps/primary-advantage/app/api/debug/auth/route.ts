@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import { db, eq } from '@reading-advantage/db';
+import { users, userRoles, roles, schoolAdmins, schools } from '@reading-advantage/db';
 
 // GET /api/debug/auth - Debug authentication
 export async function GET(request: NextRequest) {
@@ -20,39 +21,50 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get full user data from database
-    const dbUser = await db.user.findUnique({
-      where: { id: user.id },
-      include: {
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-        SchoolAdmins: {
-          include: {
-            school: true,
-          },
-        },
-      },
-    });
+    // Get full user data from database (replaces Prisma `findUnique({ include: roles, SchoolAdmins })`).
+    const [dbUser] = await db.select().from(users)
+      .where(eq(users.id, user.id))
+      .limit(1);
+
+    if (!dbUser) {
+      return NextResponse.json({
+        authenticated: true,
+        sessionUser: user,
+        dbUser: null,
+      });
+    }
+
+    // Fetch user's roles via join.
+    const userRoleRows = await db.select({
+      roleName: roles.name,
+    })
+      .from(userRoles)
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(eq(userRoles.userId, user.id));
+
+    // Fetch user's school admin records (with school join).
+    const schoolAdminRows = await db.select({
+      schoolId: schoolAdmins.schoolId,
+      schoolName: schools.name,
+    })
+      .from(schoolAdmins)
+      .innerJoin(schools, eq(schools.id, schoolAdmins.schoolId))
+      .where(eq(schoolAdmins.userId, user.id));
 
     return NextResponse.json({
       authenticated: true,
       sessionUser: user,
-      dbUser: dbUser
-        ? {
-            id: dbUser.id,
-            name: dbUser.name,
-            email: dbUser.email,
-            roles: dbUser.roles.map((r) => r.role.name),
-            schoolAdmins: dbUser.SchoolAdmins.map((sa) => ({
-              schoolId: sa.schoolId,
-              schoolName: sa.school.name,
-            })),
-            schoolId: dbUser.schoolId,
-          }
-        : null,
+      dbUser: {
+        id: dbUser.id,
+        name: dbUser.name,
+        email: dbUser.email,
+        roles: userRoleRows.map((r) => r.roleName),
+        schoolAdmins: schoolAdminRows.map((sa) => ({
+          schoolId: sa.schoolId,
+          schoolName: sa.schoolName,
+        })),
+        schoolId: dbUser.schoolId,
+      },
     });
   } catch (error) {
     console.error("Debug Auth API Error:", error);

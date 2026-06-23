@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import { db, eq } from '@reading-advantage/db';
+import { articles } from '@reading-advantage/db';
 
 export async function POST(
   req: Request,
@@ -14,9 +15,9 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const article = await db.article.findUnique({
-    where: { id },
-  });
+  const [article] = await db.select().from(articles)
+    .where(eq(articles.id, id))
+    .limit(1);
 
   if (!article) {
     return NextResponse.json({ error: "Article not found" }, { status: 404 });

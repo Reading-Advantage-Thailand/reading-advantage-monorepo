@@ -1,6 +1,7 @@
 // app/api/flashcards/decks/[deckId]/due/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { db } from '@reading-advantage/db';
+import { db, eq, and, desc } from '@reading-advantage/db';
+import { flashcardDecks, flashcardCards, cardReviews } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { fsrsService } from "@/lib/fsrs-service";
 
@@ -21,30 +22,45 @@ export async function GET(
       ? parseInt(searchParams.get("limit")!)
       : undefined;
 
-    const deck = await db.flashcardDeck.findFirst({
-      where: {
-        id: deckId,
-        userId: user.id,
-      },
-      include: {
-        cards: {
-          include: {
-            reviews: {
-              orderBy: { reviewedAt: "desc" },
-              take: 1,
-            },
-          },
-        },
-      },
-    });
+    // Fetch deck (replaces Prisma `findFirst({ where, userId })`).
+    const [deck] = await db.select().from(flashcardDecks)
+      .where(
+        and(
+          eq(flashcardDecks.id, deckId),
+          eq(flashcardDecks.userId, user.id),
+        ),
+      )
+      .limit(1);
 
     if (!deck) {
       return NextResponse.json({ error: "Deck not found" }, { status: 404 });
     }
 
+    // Fetch cards for the deck (replaces Prisma `include.cards`).
+    const cards = await db.select().from(flashcardCards)
+      .where(eq(flashcardCards.deckId, deck.id));
+
+    // Fetch the most-recent review per card via a join + orderBy desc + limit 1
+    // (replaces Prisma `include.cards.include.reviews`).
+    const cardIds = cards.map((c) => c.id);
+    const reviewsByCard = new Map<string, any>();
+    if (cardIds.length > 0) {
+      const reviewRows = await db.select().from(cardReviews)
+        .orderBy(desc(cardReviews.reviewedAt));
+      for (const r of reviewRows) {
+        if (cardIds.includes(r.cardId) && !reviewsByCard.has(r.cardId)) {
+          reviewsByCard.set(r.cardId, r);
+        }
+      }
+    }
+    const cardsWithReviews = cards.map((c) => ({
+      ...c,
+      reviews: reviewsByCard.has(c.id) ? [reviewsByCard.get(c.id)] : [],
+    }));
+
     // Get due cards using FSRS service
-    const dueCards = fsrsService.getDueCards(deck.cards as any, limit);
-    const stats = fsrsService.getDeckStats(deck.cards as any);
+    const dueCards = fsrsService.getDueCards(cardsWithReviews as any, limit);
+    const stats = fsrsService.getDeckStats(cardsWithReviews as any);
 
     return NextResponse.json({
       deck: {

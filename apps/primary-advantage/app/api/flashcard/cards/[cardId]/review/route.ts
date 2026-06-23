@@ -1,6 +1,7 @@
 // app/api/flashcards/cards/[cardId]/review/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { db } from '@reading-advantage/db';
+import { db, eq, and, sql } from '@reading-advantage/db';
+import { flashcardCards, flashcardDecks, cardReviews, userActivity, xpLogs, users } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { fsrsService } from "@/lib/fsrs-service";
 import { Rating } from "ts-fsrs";
@@ -25,16 +26,23 @@ export async function POST(
       return NextResponse.json({ error: "Invalid rating" }, { status: 400 });
     }
 
-    // Get the card
-    const card = await db.flashcardCard.findFirst({
-      where: {
-        id: cardId,
-        deck: { userId: user.id },
-      },
-      include: {
-        deck: true,
-      },
-    });
+    // Get the card with deck join (replaces Prisma `findFirst({ where, deck.userId })`
+    // and `include.deck`).
+    const [cardRow] = await db.select({
+      card: flashcardCards,
+      deck: flashcardDecks,
+    })
+      .from(flashcardCards)
+      .innerJoin(flashcardDecks, eq(flashcardDecks.id, flashcardCards.deckId))
+      .where(
+        and(
+          eq(flashcardCards.id, cardId),
+          eq(flashcardDecks.userId, user.id),
+        ),
+      )
+      .limit(1);
+
+    const card = cardRow ? { ...cardRow.card, deck: cardRow.deck } : null;
 
     if (!card) {
       return NextResponse.json({ error: "Card not found" }, { status: 404 });
@@ -47,12 +55,14 @@ export async function POST(
       new Date(),
     );
 
-    // Update card and create review record in transaction
-    const result = await db.$transaction(async (tx) => {
+    // Update card and create review record in Drizzle transaction.
+    // Shared-partial FSRS columns (due/stability/etc.) and content fields
+    // (type/articleId/audioUrl/etc.) are attached via `as any` casts since
+    // they aren't yet on the shared schema.
+    const result = await db.transaction(async (tx) => {
       // Update the card
-      const updated = await tx.flashcardCard.update({
-        where: { id: cardId },
-        data: {
+      const [updated] = await tx.update(flashcardCards)
+        .set({
           due: updatedCard.due,
           stability: updatedCard.stability,
           difficulty: updatedCard.difficulty,
@@ -62,58 +72,52 @@ export async function POST(
           lapses: updatedCard.lapses,
           state: updatedCard.state,
           lastReview: updatedCard.lastReview,
-        },
-      });
+        } as any)
+        .where(eq(flashcardCards.id, cardId))
+        .returning();
 
       // Create review record
-      const review = await tx.cardReview.create({
-        data: {
-          cardId,
-          rating,
-          timeSpent,
-          reviewedAt: new Date(),
-        },
-      });
+      const [review] = await tx.insert(cardReviews).values({
+        cardId,
+        rating,
+        timeSpent,
+        reviewedAt: new Date(),
+      } as any).returning();
 
       // Record user activity
-      await tx.userActivity.create({
-        data: {
-          userId: user.id!,
-          activityType:
-            card.type === "VOCABULARY"
-              ? ActivityType.VOCABULARY_FLASHCARDS
-              : ActivityType.SENTENCE_FLASHCARDS,
-          targetId: cardId,
-          timer: timeSpent,
-          completed: true,
-          details: {
-            rating,
-            previousState: card.state,
-            newState: updatedCard.state,
-            intervalDays: updatedCard.scheduledDays,
-          },
+      await tx.insert(userActivity).values({
+        userId: user.id!,
+        activityType:
+          (card as any).type === "VOCABULARY"
+            ? ActivityType.VOCABULARY_FLASHCARDS
+            : ActivityType.SENTENCE_FLASHCARDS,
+        targetId: cardId,
+        timer: timeSpent,
+        completed: true,
+        details: {
+          rating,
+          previousState: (card as any).state,
+          newState: updatedCard.state,
+          intervalDays: updatedCard.scheduledDays,
         },
       });
 
       // Award XP
-      const xpReward = card.type === "VOCABULARY" ? 15 : 15;
-      await tx.xPLogs.create({
-        data: {
-          userId: user.id!,
-          xpEarned: xpReward,
-          activityId: cardId,
-          activityType:
-            card.type === "VOCABULARY"
-              ? ActivityType.VOCABULARY_FLASHCARDS
-              : ActivityType.SENTENCE_FLASHCARDS,
-        },
-      });
+      const xpReward = (card as any).type === "VOCABULARY" ? 15 : 15;
+      await tx.insert(xpLogs).values({
+        userId: user.id!,
+        xpEarned: xpReward,
+        activityId: cardId,
+        activityType:
+          (card as any).type === "VOCABULARY"
+            ? ActivityType.VOCABULARY_FLASHCARDS
+            : ActivityType.SENTENCE_FLASHCARDS,
+      } as any);
 
-      // Update user XP
-      await tx.user.update({
-        where: { id: user.id },
-        data: { xp: { increment: xpReward } },
-      });
+      // Update user XP (replaces Prisma `{ increment: xpReward }`)
+      await tx.update(users)
+        .set({ xp: sql`${users.xp} + ${xpReward}` })
+        .where(eq(users.id, user.id!));
 
       return { card: updated, review, reviewLog };
     });

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import { db, eq } from '@reading-advantage/db';
+import { licenses, schools } from '@reading-advantage/db';
 import { z } from "zod";
 import { SubscriptionType } from "@prisma/client";
 
@@ -32,24 +33,26 @@ export async function GET(
 
     const { id } = await params;
 
-    // Get license by ID
-    const license = await db.license.findUnique({
-      where: { id },
-      include: {
-        School: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+    // Get license by ID (replaces Prisma `findUnique({ include: School })`).
+    const [license] = await db.select().from(licenses)
+      .where(eq(licenses.id, id))
+      .limit(1);
 
     if (!license) {
       return NextResponse.json({ error: "License not found" }, { status: 404 });
     }
 
-    return NextResponse.json(license);
+    // Stitch the School include via FK join.
+    let schoolRow: { id: string; name: string } | null = null;
+    if (license.schoolId) {
+      const [s] = await db.select({ id: schools.id, name: schools.name })
+        .from(schools)
+        .where(eq(schools.id, license.schoolId))
+        .limit(1);
+      schoolRow = s ?? null;
+    }
+
+    return NextResponse.json({ ...license, School: schoolRow });
   } catch (error) {
     console.error("Error fetching license:", error);
     return NextResponse.json(
@@ -80,10 +83,10 @@ export async function PUT(
     const body = await request.json();
     const validatedData = UpdateLicenseSchema.parse(body);
 
-    // Check if license exists
-    const existingLicense = await db.license.findUnique({
-      where: { id },
-    });
+    // Check if license exists (replaces Prisma `findUnique({ where: { id } })`).
+    const [existingLicense] = await db.select().from(licenses)
+      .where(eq(licenses.id, id))
+      .limit(1);
 
     if (!existingLicense) {
       return NextResponse.json({ error: "License not found" }, { status: 404 });
@@ -98,10 +101,9 @@ export async function PUT(
       expiryDate.setDate(startDate.getDate() + validatedData.expiryDays);
     }
 
-    // Update license in database
-    const updatedLicense = await db.license.update({
-      where: { id },
-      data: {
+    // Update license in database (replaces Prisma `update + include.School`).
+    const [updatedLicense] = await db.update(licenses)
+      .set({
         name: validatedData.name,
         description: validatedData.description,
         maxUsers: validatedData.maxUsers,
@@ -111,16 +113,19 @@ export async function PUT(
         subscription:
           validatedData.subscriptionType.toUpperCase() as SubscriptionType,
         schoolId: validatedData.schoolId || null,
-      },
-      include: {
-        School: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+      } as any)
+      .where(eq(licenses.id, id))
+      .returning();
+
+    // Stitch the School include via FK join.
+    let schoolRow: { id: string; name: string } | null = null;
+    if (updatedLicense.schoolId) {
+      const [s] = await db.select({ id: schools.id, name: schools.name })
+        .from(schools)
+        .where(eq(schools.id, updatedLicense.schoolId))
+        .limit(1);
+      schoolRow = s ?? null;
+    }
 
     return NextResponse.json({
       id: updatedLicense.id,
@@ -133,7 +138,7 @@ export async function PUT(
       status: updatedLicense.status,
       subscription: updatedLicense.subscription,
       schoolId: updatedLicense.schoolId,
-      School: updatedLicense.School,
+      School: schoolRow,
       updatedAt: updatedLicense.updatedAt,
     });
   } catch (error) {
@@ -177,19 +182,18 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // Check if license exists
-    const existingLicense = await db.license.findUnique({
-      where: { id },
-    });
+    // Check if license exists (replaces Prisma `findUnique({ where: { id } })`).
+    const [existingLicense] = await db.select().from(licenses)
+      .where(eq(licenses.id, id))
+      .limit(1);
 
     if (!existingLicense) {
       return NextResponse.json({ error: "License not found" }, { status: 404 });
     }
 
-    // Delete license
-    await db.license.delete({
-      where: { id },
-    });
+    // Delete license (replaces Prisma `delete({ where: { id } })`).
+    await db.delete(licenses)
+      .where(eq(licenses.id, id));
 
     return NextResponse.json({
       message: "License deleted successfully",

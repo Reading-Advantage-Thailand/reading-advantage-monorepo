@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from '@reading-advantage/db';
+import { db, eq, and, desc, sql } from '@reading-advantage/db';
+import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { ActivityType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
@@ -22,34 +23,47 @@ export async function GET(
       (searchParams.get("difficulty") as "easy" | "medium" | "hard") ||
       "medium";
 
-    // Get sentence flashcards that are due
-    const deck = await db.flashcardDeck.findFirst({
-      where: {
-        id: deckId,
-        userId: user.id,
-        type: "SENTENCE",
-      },
-      include: {
-        cards: {
-          where: {
-            type: "SENTENCE",
-            // due: { lte: new Date() },
-          },
-          include: {
-            reviews: {
-              orderBy: { reviewedAt: "desc" },
-              take: 1,
-            },
-          },
-        },
-      },
-    });
+    // Fetch the deck (replaces Prisma `findFirst({ where, include.cards.include.reviews })`).
+    const [deck] = await db.select().from(flashcardDecks)
+      .where(
+        and(
+          eq(flashcardDecks.id, deckId),
+          eq(flashcardDecks.userId, user.id),
+          eq(flashcardDecks.type, "SENTENCE"),
+        ),
+      )
+      .limit(1);
 
     if (!deck) {
       return NextResponse.json({ error: "Deck not found" }, { status: 404 });
     }
 
-    if (deck.cards.length === 0) {
+    // Fetch cards for the deck (shared-partial `type` filter applied client-side).
+    const cardRows = await db.select().from(flashcardCards)
+      .where(eq(flashcardCards.deckId, deck.id));
+    const sentenceCards = (cardRows as any[]).filter(
+      (c) => (c.type === undefined || c.type === "SENTENCE"),
+    );
+
+    // Fetch most-recent review per card.
+    const cardIds = sentenceCards.map((c) => c.id);
+    const reviewsByCard = new Map<string, any>();
+    if (cardIds.length > 0) {
+      const reviewRows = await db.select().from(cardReviews)
+        .orderBy(desc(cardReviews.reviewedAt));
+      for (const r of reviewRows) {
+        if (cardIds.includes(r.cardId) && !reviewsByCard.has(r.cardId)) {
+          reviewsByCard.set(r.cardId, r);
+        }
+      }
+    }
+
+    const cardsWithReviews = sentenceCards.map((c) => ({
+      ...c,
+      reviews: reviewsByCard.has(c.id) ? [reviewsByCard.get(c.id)] : [],
+    }));
+
+    if (cardsWithReviews.length === 0) {
       return NextResponse.json({
         clozeTests: [],
         message: "No due sentence flashcards found",
@@ -59,65 +73,32 @@ export async function GET(
     // Process each flashcard sentence to create cloze tests
     const clozeTests = [];
 
-    for (const flashcardCard of deck.cards) {
-      // Get the full article with sentences
-      const article = await db.article.findUnique({
-        where: { id: flashcardCard.articleId! },
-        select: {
-          id: true,
-          title: true,
-          cefrLevel: true,
-        },
-      });
+    for (const flashcardCard of cardsWithReviews) {
+      // Get the full article with sentences (replaces Prisma `article.findUnique({ select })`).
+      const articleId = (flashcardCard as any).articleId;
+      if (!articleId) continue;
+      const [article] = await db.select({
+        id: articles.id,
+        title: articles.title,
+        cefrLevel: articles.cefrLevel,
+      })
+        .from(articles)
+        .where(eq(articles.id, articleId))
+        .limit(1);
 
-      if (!article || !flashcardCard.sentence) continue;
-
-      // const sentence = flashcardCard.sentence;
-      // const articleSentences = article.sentences as any[];
-
-      // Find the matching sentence in the article to get word timing data
-      // const matchingSentence = articleSentences.find(
-      //   (s) => s.sentence === sentence,
-      // );
-
-      // if (!matchingSentence || !matchingSentence.words) continue;
-
-      // Create blanks from the sentence using the words array
-      // const blanks = createBlanksFromSentence(
-      //   sentence,
-      //   matchingSentence.words,
-      //   articleSentences, // Pass all sentences for generating distractors
-      //   difficulty, // Pass user-selected difficulty
-      // );
-
-      // if (blanks.length === 0) continue; // Skip if no suitable words for blanking
-
-      // Get translation for the sentence
-      // const sentenceIndex = articleSentences.findIndex(
-      //   (s) => s.sentence === sentence,
-      // );
-
-      // const translation =
-      //   sentenceIndex >= 0
-      //     ? {
-      //         th: (article.translatedPassage as any)?.th?.[sentenceIndex],
-      //         cn: (article.translatedPassage as any)?.cn?.[sentenceIndex],
-      //         tw: (article.translatedPassage as any)?.tw?.[sentenceIndex],
-      //         vi: (article.translatedPassage as any)?.vi?.[sentenceIndex],
-      //       }
-      //     : undefined;
+      if (!article || !(flashcardCard as any).sentence) continue;
 
       clozeTests.push({
         id: `${article.id}-${flashcardCard.id}-${Date.now()}-${Math.random()}`,
         articleId: article.id,
         articleTitle: article.title,
-        sentence: flashcardCard.sentence,
+        sentence: (flashcardCard as any).sentence,
         // words: matchingSentence.words,
         blanks: [],
-        translation: flashcardCard.translation,
-        audioUrl: getAudioUrl(flashcardCard.audioUrl || ""),
-        startTime: flashcardCard.startTime,
-        endTime: flashcardCard.endTime,
+        translation: (flashcardCard as any).translation,
+        audioUrl: getAudioUrl((flashcardCard as any).audioUrl || ""),
+        startTime: (flashcardCard as any).startTime,
+        endTime: (flashcardCard as any).endTime,
         difficulty: difficulty,
       });
     }
@@ -154,34 +135,32 @@ export async function POST(
 
   const xpEarned = Math.floor(score * 2);
 
-  const userActivity = await db.userActivity.create({
-    data: {
-      userId: user.id as string,
-      activityType: ActivityType.SENTENCE_CLOZE_TEST,
-      targetId: deckId,
+  // Record user activity (replaces Prisma `userActivity.create`).
+  const [userActivityRow] = await db.insert(userActivity).values({
+    userId: user.id as string,
+    activityType: ActivityType.SENTENCE_CLOZE_TEST,
+    targetId: deckId,
+    timer: timer,
+    details: {
       timer: timer,
-      details: {
-        timer: timer,
-        score: score,
-        xp: xpEarned,
-      },
-      completed: true,
+      score: score,
+      xp: xpEarned,
     },
+    completed: true,
+  } as any).returning();
+
+  // Create XP log entry (replaces Prisma `xPLogs.create`).
+  await db.insert(xpLogs).values({
+    userId: user.id as string,
+    xpEarned: xpEarned,
+    activityId: userActivityRow.id,
+    activityType: ActivityType.SENTENCE_CLOZE_TEST,
   });
 
-  await db.xPLogs.create({
-    data: {
-      userId: user.id as string,
-      xpEarned: xpEarned,
-      activityId: userActivity.id,
-      activityType: ActivityType.SENTENCE_CLOZE_TEST,
-    },
-  });
-
-  await db.user.update({
-    where: { id: user.id as string },
-    data: { xp: { increment: xpEarned } },
-  });
+  // Increment user XP (replaces Prisma `user.update({ data: { xp: { increment } } })`).
+  await db.update(users)
+    .set({ xp: sql`${users.xp} + ${xpEarned}` })
+    .where(eq(users.id, user.id as string));
 
   return NextResponse.json({ success: true });
 }

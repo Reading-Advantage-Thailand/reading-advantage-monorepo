@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from '@reading-advantage/db';
+import { db, eq, and, desc, isNotNull, sql } from '@reading-advantage/db';
+import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { ActivityType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
@@ -21,33 +22,54 @@ export async function GET(
     const translationLanguage =
       (searchParams.get("language") as "th" | "vi" | "cn" | "tw") || "th";
 
-    // Get both sentence and vocabulary flashcards that are due
-    const deck = await db.flashcardDeck.findFirst({
-      where: {
-        id: deckId,
-        userId: user.id,
-      },
-      include: {
-        cards: {
-          where: {
-            due: { lte: new Date() },
-            articleId: { not: null },
-          },
-          include: {
-            reviews: {
-              orderBy: { reviewedAt: "desc" },
-              take: 1,
-            },
-          },
-        },
-      },
-    });
+    // Fetch deck (replaces Prisma `findFirst({ where, include.cards.include.reviews })`).
+    const [deck] = await db.select().from(flashcardDecks)
+      .where(
+        and(
+          eq(flashcardDecks.id, deckId),
+          eq(flashcardDecks.userId, user.id),
+        ),
+      )
+      .limit(1);
 
     if (!deck) {
       return NextResponse.json({ error: "Deck not found" }, { status: 404 });
     }
 
-    if (deck.cards.length === 0) {
+    // Fetch cards for the deck (shared-partial `due` filter and `articleId.not` filter
+    // applied via raw SQL since they're shared-partial columns).
+    const now = new Date();
+    const cardRows = await db.select().from(flashcardCards)
+      .where(
+        and(
+          eq(flashcardCards.deckId, deck.id),
+          isNotNull(sql`${flashcardCards.sourceId}`),
+          sql`${flashcardCards.id} IN (SELECT id FROM flashcard_cards WHERE deck_id = ${deck.id} AND due <= ${now.toISOString()} AND source_id IS NOT NULL)`,
+        ),
+      );
+    const cardsWithDue = (cardRows as any[]).filter(
+      (c) => c.due && new Date(c.due) <= now && c.articleId != null,
+    );
+
+    // Fetch most-recent review per card.
+    const cardIds = cardsWithDue.map((c) => c.id);
+    const reviewsByCard = new Map<string, any>();
+    if (cardIds.length > 0) {
+      const reviewRows = await db.select().from(cardReviews)
+        .orderBy(desc(cardReviews.reviewedAt));
+      for (const r of reviewRows) {
+        if (cardIds.includes(r.cardId) && !reviewsByCard.has(r.cardId)) {
+          reviewsByCard.set(r.cardId, r);
+        }
+      }
+    }
+
+    const cards = cardsWithDue.map((c) => ({
+      ...c,
+      reviews: reviewsByCard.has(c.id) ? [reviewsByCard.get(c.id)] : [],
+    }));
+
+    if (cards.length === 0) {
       return NextResponse.json({
         matchingGames: [],
         message: "No due flashcards found",
@@ -55,10 +77,10 @@ export async function GET(
     }
 
     // Separate vocabulary and sentence cards
-    const vocabularyCards = deck.cards.filter(
-      (card) => card.type === "VOCABULARY",
+    const vocabularyCards = cards.filter(
+      (card: any) => card.type === "VOCABULARY",
     );
-    const sentenceCards = deck.cards.filter((card) => card.type === "SENTENCE");
+    const sentenceCards = cards.filter((card: any) => card.type === "SENTENCE");
 
     const matchingGames = [];
 
@@ -124,34 +146,32 @@ export async function POST(
 
   const xpEarned = Math.floor(score * 2);
 
-  const userActivity = await db.userActivity.create({
-    data: {
-      userId: user.id as string,
-      activityType: ActivityType.SENTENCE_MATCHING,
-      targetId: deckId,
+  // Record user activity (replaces Prisma `userActivity.create`).
+  const [userActivityRow] = await db.insert(userActivity).values({
+    userId: user.id as string,
+    activityType: ActivityType.SENTENCE_MATCHING,
+    targetId: deckId,
+    timer: timer,
+    details: {
       timer: timer,
-      details: {
-        timer: timer,
-        score: score,
-        xp: xpEarned,
-      },
-      completed: true,
+      score: score,
+      xp: xpEarned,
     },
+    completed: true,
+  } as any).returning();
+
+  // Create XP log entry (replaces Prisma `xPLogs.create`).
+  await db.insert(xpLogs).values({
+    userId: user.id as string,
+    xpEarned: xpEarned,
+    activityId: userActivityRow.id,
+    activityType: ActivityType.SENTENCE_MATCHING,
   });
 
-  await db.xPLogs.create({
-    data: {
-      userId: user.id as string,
-      xpEarned: xpEarned,
-      activityId: userActivity.id,
-      activityType: ActivityType.SENTENCE_MATCHING,
-    },
-  });
-
-  await db.user.update({
-    where: { id: user.id as string },
-    data: { xp: { increment: xpEarned } },
-  });
+  // Increment user XP (replaces Prisma `user.update({ data: { xp: { increment } } })`).
+  await db.update(users)
+    .set({ xp: sql`${users.xp} + ${xpEarned}` })
+    .where(eq(users.id, user.id as string));
 
   return NextResponse.json({ success: true });
 }
@@ -166,16 +186,17 @@ async function createVocabularyPairs(
   for (const card of vocabularyCards) {
     if (!card.word || !card.definition) continue;
 
-    // Get the article for audio data
-    const article = await db.article.findUnique({
-      where: { id: card.articleId },
-      select: {
-        id: true,
-        title: true,
-        audioUrl: true,
-        words: true,
-      },
-    });
+    // Get the article for audio data (replaces Prisma `article.findUnique`).
+    if (!card.articleId) continue;
+    const [article] = await db.select({
+      id: articles.id,
+      title: articles.title,
+      audioUrl: articles.audioUrl,
+      words: articles.words,
+    })
+      .from(articles)
+      .where(eq(articles.id, card.articleId))
+      .limit(1);
 
     if (!article) continue;
 
@@ -234,17 +255,18 @@ async function createTranslationPairs(
   for (const card of sentenceCards) {
     if (!card.sentence) continue;
 
-    // Get the article for translation data
-    const article = await db.article.findUnique({
-      where: { id: card.articleId },
-      select: {
-        id: true,
-        title: true,
-        sentences: true,
-        translatedPassage: true,
-        audioUrl: true,
-      },
-    });
+    // Get the article for translation data (replaces Prisma `article.findUnique`).
+    if (!card.articleId) continue;
+    const [article] = await db.select({
+      id: articles.id,
+      title: articles.title,
+      sentences: articles.sentences,
+      translatedPassage: articles.translatedPassage,
+      audioUrl: articles.audioUrl,
+    })
+      .from(articles)
+      .where(eq(articles.id, card.articleId))
+      .limit(1);
 
     if (!article) continue;
 

@@ -4,7 +4,8 @@ import {
   getSchoolLeaderboardController,
 } from "@/server/controllers/schoolController";
 import { currentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import { db, eq } from '@reading-advantage/db';
+import { users } from '@reading-advantage/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,10 +45,10 @@ export async function GET(request: NextRequest) {
 
     if (!schoolId) {
       // If no schoolId provided, use user's school
-      const userData = await db.user.findUnique({
-        where: { id: user.id },
-        select: { schoolId: true },
-      });
+      const [userData] = await db.select({ schoolId: users.schoolId })
+        .from(users)
+        .where(eq(users.id, user.id))
+        .limit(1);
 
       if (!userData?.schoolId) {
         return NextResponse.json(

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from '@reading-advantage/db';
+import { db, eq, and, desc, isNotNull, sql } from '@reading-advantage/db';
+import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { ActivityType, FlashcardType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
@@ -17,35 +18,53 @@ export async function GET(
 
     const { deckId } = await params;
 
-    // Get sentence flashcards that are due
-    const deck = await db.flashcardDeck.findFirst({
-      where: {
-        id: deckId,
-        userId: user.id,
-        type: "SENTENCE",
-      },
-      include: {
-        cards: {
-          where: {
-            type: "SENTENCE",
-            due: { lte: new Date() },
-            articleId: { not: null },
-          },
-          include: {
-            reviews: {
-              orderBy: { reviewedAt: "desc" },
-              take: 1,
-            },
-          },
-        },
-      },
-    });
+    // Fetch deck (replaces Prisma `findFirst({ where, include.cards.include.reviews })`).
+    const [deck] = await db.select().from(flashcardDecks)
+      .where(
+        and(
+          eq(flashcardDecks.id, deckId),
+          eq(flashcardDecks.userId, user.id),
+          eq(flashcardDecks.type, "SENTENCE"),
+        ),
+      )
+      .limit(1);
 
     if (!deck) {
       return NextResponse.json({ error: "Deck not found" }, { status: 404 });
     }
 
-    if (deck.cards.length === 0) {
+    // Fetch cards for the deck. Shared-partial filters (type, due, articleId)
+    // are applied client-side since those columns aren't on the shared schema yet.
+    const cardRows = await db.select().from(flashcardCards)
+      .where(eq(flashcardCards.deckId, deck.id));
+    const now = new Date();
+    const sentenceCards = (cardRows as any[]).filter(
+      (c) =>
+        (c.type === undefined || c.type === "SENTENCE") &&
+        c.due &&
+        new Date(c.due) <= now &&
+        c.articleId != null,
+    );
+
+    // Fetch most-recent review per card.
+    const cardIds = sentenceCards.map((c) => c.id);
+    const reviewsByCard = new Map<string, any>();
+    if (cardIds.length > 0) {
+      const reviewRows = await db.select().from(cardReviews)
+        .orderBy(desc(cardReviews.reviewedAt));
+      for (const r of reviewRows) {
+        if (cardIds.includes(r.cardId) && !reviewsByCard.has(r.cardId)) {
+          reviewsByCard.set(r.cardId, r);
+        }
+      }
+    }
+
+    const cards = sentenceCards.map((c) => ({
+      ...c,
+      reviews: reviewsByCard.has(c.id) ? [reviewsByCard.get(c.id)] : [],
+    }));
+
+    if (cards.length === 0) {
       return NextResponse.json({
         sentenceGroups: [],
         message: "No due sentence flashcards found",
@@ -55,19 +74,21 @@ export async function GET(
     // Process each flashcard sentence individually
     const sentenceGroups = [];
 
-    for (const flashcardCard of deck.cards) {
-      // Get the full article with sentences
-      const article = await db.article.findUnique({
-        where: { id: flashcardCard.articleId! },
-        select: {
-          id: true,
-          title: true,
-          sentences: true,
-          audioUrl: true,
-          translatedPassage: true,
-          cefrLevel: true,
-        },
-      });
+    for (const flashcardCard of cards) {
+      // Get the full article with sentences (replaces Prisma `article.findUnique`).
+      const articleId = (flashcardCard as any).articleId;
+      if (!articleId) continue;
+      const [article] = await db.select({
+        id: articles.id,
+        title: articles.title,
+        sentences: articles.sentences,
+        audioUrl: articles.audioUrl,
+        translatedPassage: articles.translatedPassage,
+        cefrLevel: articles.cefrLevel,
+      })
+        .from(articles)
+        .where(eq(articles.id, articleId))
+        .limit(1);
 
       if (!article || !article.sentences) continue;
 
@@ -78,7 +99,7 @@ export async function GET(
 
       // Find the index of the flashcard sentence in the article
       const flashcardSentenceIndex = articleSentences.findIndex(
-        (s) => s.sentence === flashcardCard.sentence,
+        (s) => s.sentence === (flashcardCard as any).sentence,
       );
 
       if (flashcardSentenceIndex === -1) continue;
@@ -137,10 +158,10 @@ export async function GET(
         id: `${article.id}-${flashcardSentenceIndex}-${Date.now()}-${Math.random()}`, // Unique ID per game
         articleId: article.id,
         articleTitle: article.title,
-        flashcardSentence: flashcardCard.sentence,
+        flashcardSentence: (flashcardCard as any).sentence,
         correctOrder: sentences.map((s) => s.text),
         sentences,
-        difficulty: getDifficulty(article.cefrLevel),
+        difficulty: getDifficulty(article.cefrLevel as string),
         startIndex,
         flashcardIndex: flashcardSentenceIndex,
       });
@@ -177,34 +198,32 @@ export async function POST(
 
   const xpEarned = Math.floor(score * 2);
 
-  const userActivity = await db.userActivity.create({
-    data: {
-      userId: user.id as string,
-      activityType: ActivityType.SENTENCE_ORDERING,
-      targetId: deckId,
+  // Record user activity (replaces Prisma `userActivity.create`).
+  const [userActivityRow] = await db.insert(userActivity).values({
+    userId: user.id as string,
+    activityType: ActivityType.SENTENCE_ORDERING,
+    targetId: deckId,
+    timer: timer,
+    details: {
       timer: timer,
-      details: {
-        timer: timer,
-        score: score,
-        xp: xpEarned,
-      },
-      completed: true,
+      score: score,
+      xp: xpEarned,
     },
+    completed: true,
+  } as any).returning();
+
+  // Create XP log entry (replaces Prisma `xPLogs.create`).
+  await db.insert(xpLogs).values({
+    userId: user.id as string,
+    xpEarned: xpEarned,
+    activityId: userActivityRow.id,
+    activityType: ActivityType.SENTENCE_ORDERING,
   });
 
-  await db.xPLogs.create({
-    data: {
-      userId: user.id as string,
-      xpEarned: xpEarned,
-      activityId: userActivity.id,
-      activityType: ActivityType.SENTENCE_ORDERING,
-    },
-  });
-
-  await db.user.update({
-    where: { id: user.id as string },
-    data: { xp: { increment: xpEarned } },
-  });
+  // Increment user XP (replaces Prisma `user.update({ data: { xp: { increment } } })`).
+  await db.update(users)
+    .set({ xp: sql`${users.xp} + ${xpEarned}` })
+    .where(eq(users.id, user.id as string));
 
   return NextResponse.json({ success: true });
 }

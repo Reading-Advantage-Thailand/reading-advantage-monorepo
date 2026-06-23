@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import { db, eq, and, lte, sql } from '@reading-advantage/db';
+import { flashcardDecks, flashcardCards } from '@reading-advantage/db';
 
 export async function GET() {
   try {
@@ -17,20 +18,14 @@ export async function GET() {
     }
 
     // Find user's sentence flashcard deck
-    const deck = await db.flashcardDeck.findFirst({
-      where: {
-        userId: user.id,
-        type: "SENTENCE",
-      },
-      include: {
-        cards: {
-          where: {
-            due: { lte: new Date() },
-          },
-          take: 1, // Just check if there are any due cards
-        },
-      },
-    });
+    const [deck] = await db.select().from(flashcardDecks)
+      .where(
+        and(
+          eq(flashcardDecks.userId, user.id),
+          eq(flashcardDecks.type, "SENTENCE"),
+        ),
+      )
+      .limit(1);
 
     if (!deck) {
       return NextResponse.json({
@@ -40,7 +35,21 @@ export async function GET() {
       });
     }
 
-    if (deck.cards.length === 0) {
+    // Fetch up to 1 due card (replaces Prisma `cards.where.due.lte` filter via
+    // a raw SQL filter since `due` is a shared-partial column not in the
+    // shared schema yet).
+    const now = new Date();
+    const dueCards = await db.select({ id: flashcardCards.id })
+      .from(flashcardCards)
+      .where(
+        and(
+          eq(flashcardCards.deckId, deck.id),
+          sql`${flashcardCards.id} IN (SELECT id FROM flashcard_cards WHERE deck_id = ${deck.id} AND due <= ${now.toISOString()})`,
+        ),
+      )
+      .limit(1);
+
+    if (dueCards.length === 0) {
       return NextResponse.json({
         success: false,
         error:

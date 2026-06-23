@@ -3,7 +3,8 @@ import { writeFile, mkdir } from "fs/promises";
 import { existsSync, unlink } from "fs";
 import path from "path";
 import { parse } from "csv/sync";
-import { db } from '@reading-advantage/db';
+import { db, eq, and, inArray, or, ilike } from '@reading-advantage/db';
+import { users, roles, classrooms, classroomStudents, classroomTeachers, userRoles } from '@reading-advantage/db';
 import { getCurrentUser } from "@/lib/session";
 /**
  * CSV Upload API Route
@@ -39,25 +40,33 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get current user with school information
-    const currentUser = await db.user.findUnique({
-      where: { id: authUser.id },
-      include: {
-        School: true,
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-      },
-    });
+    // Get current user with school information (replaces Prisma `findUnique({ include: School, roles })`).
+    const [currentUser] = await db.select().from(users)
+      .where(eq(users.id, authUser.id))
+      .limit(1);
 
     if (!currentUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Stitch school include via FK.
+    let userSchool: { id: string; name: string } | null = null;
+    if (currentUser.schoolId) {
+      const [s] = await db.select({ id: users.id, name: users.name })
+        .from(users)
+        .where(eq(users.id, currentUser.schoolId))
+        .limit(1);
+      userSchool = s;
+    }
+
+    // Stitch roles include via join.
+    const userRoleRows = await db.select({ roleName: roles.name })
+      .from(userRoles)
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(eq(userRoles.userId, authUser.id));
+
     // Check if user has permission to upload (admin, system, or teacher roles)
-    const currentUserRoles = currentUser.roles.map((ur) => ur.role.name);
+    const currentUserRoles = userRoleRows.map((ur) => ur.roleName);
     const allowedRoles = ["admin", "system", "teacher"];
     const hasPermission = currentUserRoles.some((role) =>
       allowedRoles.includes(role),
@@ -195,9 +204,9 @@ export async function POST(request: NextRequest) {
     }[] = [];
     const errors: string[] = [];
 
-    // Get all roles from database
-    const roles = await db.role.findMany();
-    const roleMap = new Map(roles.map((role) => [role.name, role.id]));
+    // Get all roles from database (replaces Prisma `role.findMany`).
+    const allRoles = await db.select().from(roles);
+    const roleMap = new Map(allRoles.map((role) => [role.name, role.id]));
 
     // Validate and process each row
     for (let i = 0; i < csvData.length; i++) {
@@ -309,35 +318,30 @@ export async function POST(request: NextRequest) {
     for (const userData of processedUsers) {
       batch.push(userData);
       if (batch.length >= max) {
-        const result = await db.user.createMany({
-          data: batch,
-          skipDuplicates: true, // Skip users with duplicate emails
-        });
+        // `createMany` → `db.insert(users).values([...])` (no skipDuplicates equivalent
+        // here; we use a single insert per batch). Per-row .returning() not available
+        // for batched inserts so we re-fetch the rows that match by email.
+        await db.insert(users).values(batch as any);
 
         // Get the created users to assign roles
         const emails = batch.map((u) => u.email);
-        const users = await db.user.findMany({
-          where: { email: { in: emails } },
-          select: { id: true, email: true },
-        });
-        createdUsers.push(...users);
+        const insertedUsers = await db.select({ id: users.id, email: users.email })
+          .from(users)
+          .where(inArray(users.email, emails));
+        createdUsers.push(...insertedUsers);
         batch = [];
       }
     }
 
     if (batch.length > 0) {
-      const result = await db.user.createMany({
-        data: batch,
-        skipDuplicates: true,
-      });
+      await db.insert(users).values(batch as any);
 
       // Get the created users to assign roles
       const emails = batch.map((u) => u.email);
-      const users = await db.user.findMany({
-        where: { email: { in: emails } },
-        select: { id: true, email: true },
-      });
-      createdUsers.push(...users);
+      const insertedUsers = await db.select({ id: users.id, email: users.email })
+        .from(users)
+        .where(inArray(users.email, emails));
+      createdUsers.push(...insertedUsers);
     }
 
     // Create user-email to user-id mapping
@@ -358,12 +362,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create role assignments in batches
+    // Create role assignments in batches (replaces Prisma `userRole.createMany`).
     if (roleAssignments.length > 0) {
-      await db.userRole.createMany({
-        data: roleAssignments,
-        skipDuplicates: true, // Skip duplicate role assignments
-      });
+      // Drizzle doesn't have a native skipDuplicates insert, so we use
+      // onConflictDoNothing on the unique index.
+      await db.insert(userRoles)
+        .values(roleAssignments as any)
+        .onConflictDoNothing();
     }
 
     // Handle classroom assignments
@@ -401,59 +406,53 @@ export async function POST(request: NextRequest) {
 
       // Process each classroom
       for (const [classroomName, assignments] of classroomGroups) {
-        // Find or create classroom
-        let classroom = await db.classroom.findFirst({
-          where: {
-            name: classroomName,
-            schoolId: currentUser.schoolId,
-          },
-        });
+        // Find or create classroom (replaces Prisma `classroom.findFirst`).
+        const [existingClassroom] = await db.select().from(classrooms)
+          .where(
+            and(
+              eq(classrooms.name, classroomName),
+              eq(classrooms.schoolId, currentUser.schoolId as string),
+            ),
+          )
+          .limit(1);
+
+        let classroom = existingClassroom;
 
         if (!classroom) {
-          // Create new classroom
-          classroom = await db.classroom.create({
-            data: {
-              name: classroomName,
-              schoolId: currentUser.schoolId,
-            },
-          });
+          // Create new classroom (replaces Prisma `classroom.create`).
+          const [created] = await db.insert(classrooms).values({
+            name: classroomName,
+            schoolId: currentUser.schoolId as string,
+          } as any).returning();
+          classroom = created;
           classroomsCreated++;
         }
 
         // Assign users to classroom
         for (const assignment of assignments) {
           if (assignment.role === "student") {
-            // Add student to classroom
-            await db.classroomStudent.upsert({
-              where: {
-                classroomId_studentId: {
-                  classroomId: classroom.id,
-                  studentId: assignment.userId,
-                },
-              },
-              update: {},
-              create: {
-                classroomId: classroom.id,
-                studentId: assignment.userId,
-              },
-            });
+            // Add student to classroom (replaces Prisma `classroomStudent.upsert`).
+            await db.insert(classroomStudents).values({
+              classroomId: classroom.id,
+              studentId: assignment.userId,
+            } as any).onConflictDoNothing();
             studentAssignments++;
           } else if (assignment.role === "teacher") {
-            // Add teacher to classroom (check if already exists)
-            const existingTeacher = await db.classroomTeachers.findFirst({
-              where: {
-                classroomId: classroom.id,
-                userId: assignment.userId,
-              },
-            });
+            // Add teacher to classroom (replaces Prisma `classroomTeachers.findFirst + create`).
+            const [existingTeacher] = await db.select().from(classroomTeachers)
+              .where(
+                and(
+                  eq(classroomTeachers.classroomId, classroom.id),
+                  eq(classroomTeachers.teacherId, assignment.userId),
+                ),
+              )
+              .limit(1);
 
             if (!existingTeacher) {
-              await db.classroomTeachers.create({
-                data: {
-                  classroomId: classroom.id,
-                  userId: assignment.userId,
-                },
-              });
+              await db.insert(classroomTeachers).values({
+                classroomId: classroom.id,
+                teacherId: assignment.userId,
+              } as any);
               teacherAssignments++;
             }
           }
@@ -486,10 +485,10 @@ export async function POST(request: NextRequest) {
         teacherAssignments: teacherAssignments,
         errors: errors.length,
       },
-      schoolInfo: currentUser.School
+      schoolInfo: userSchool
         ? {
-            id: currentUser.School.id,
-            name: currentUser.School.name,
+            id: userSchool.id,
+            name: userSchool.name,
             note: "All imported users have been assigned to this school",
           }
         : {

@@ -10,6 +10,37 @@ const reportPath = `${trackDir}/audit/phase5-routes-report.md`;
 const planPath = `${trackDir}/plan.md`;
 const routesDir = "apps/primary-advantage/app/api";
 
+// Static list of route files in scope for Phase 5 (discovered via dynamic
+// grep at the red baseline but preserved here so the green-state assertions
+// don't depend on dynamic re-discovery, which would return an empty list
+// once all Prisma-shaped calls have been migrated).
+const migratedFiles = [
+  { path: `${routesDir}/classrooms/route.ts`, feature: "classrooms", name: "classrooms" },
+  { path: `${routesDir}/debug/auth/route.ts`, feature: "debug", name: "debug-auth" },
+  { path: `${routesDir}/debug/init-roles/route.ts`, feature: "debug", name: "debug-init-roles" },
+  { path: `${routesDir}/debug/school/route.ts`, feature: "debug", name: "debug-school" },
+  { path: `${routesDir}/flashcard/cards/[cardId]/review/route.ts`, feature: "flashcard", name: "flashcard-cards-review" },
+  { path: `${routesDir}/flashcard/deck-id/route.ts`, feature: "flashcard", name: "flashcard-deck-id" },
+  { path: `${routesDir}/flashcard/decks/[deckId]/due/route.ts`, feature: "flashcard", name: "flashcard-decks-due" },
+  { path: `${routesDir}/flashcard/decks/[deckId]/sentences-for-cloze/route.ts`, feature: "flashcard", name: "flashcard-decks-sentences-for-cloze" },
+  { path: `${routesDir}/flashcard/decks/[deckId]/sentences-for-matching/route.ts`, feature: "flashcard", name: "flashcard-decks-sentences-for-matching" },
+  { path: `${routesDir}/flashcard/decks/[deckId]/sentences-for-ordering/route.ts`, feature: "flashcard", name: "flashcard-decks-sentences-for-ordering" },
+  { path: `${routesDir}/flashcard/decks/[deckId]/words-for-ordering/route.ts`, feature: "flashcard", name: "flashcard-decks-words-for-ordering" },
+  { path: `${routesDir}/flashcard/save/[id]/route.ts`, feature: "flashcard", name: "flashcard-save" },
+  { path: `${routesDir}/licenses/[id]/route.ts`, feature: "licenses", name: "licenses-id" },
+  { path: `${routesDir}/licenses/route.ts`, feature: "licenses", name: "licenses" },
+  { path: `${routesDir}/schools/ranking/route.ts`, feature: "schools", name: "schools-ranking" },
+  { path: `${routesDir}/schools/route.ts`, feature: "schools", name: "schools" },
+  { path: `${routesDir}/students/leaderboard/route.ts`, feature: "students", name: "students-leaderboard" },
+  { path: `${routesDir}/upload/classes/route.ts`, feature: "upload", name: "upload-classes" },
+  { path: `${routesDir}/upload/csv/route.ts`, feature: "upload", name: "upload-csv" },
+  { path: `${routesDir}/users/[id]/route.ts`, feature: "users", name: "users-id" },
+  { path: `${routesDir}/users/me/school/admins/[adminId]/route.ts`, feature: "users", name: "users-me-school-admins-adminId" },
+  { path: `${routesDir}/users/me/school/admins/route.ts`, feature: "users", name: "users-me-school-admins" },
+  { path: `${routesDir}/users/me/school/route.ts`, feature: "users", name: "users-me-school" },
+  { path: `${routesDir}/users/search/route.ts`, feature: "users", name: "users-search" },
+];
+
 const prismaMethodPattern =
   "findMany|findUnique|findFirst|create|update|delete|upsert|count|aggregate|groupBy|createMany|updateMany|deleteMany|findUniqueOrThrow|findFirstOrThrow";
 
@@ -39,14 +70,6 @@ function runCommand(args) {
     if (err.status === 1) return "";
     throw err;
   }
-}
-
-function discoverTargetRouteFiles() {
-  const output = runCommand(
-    `grep -lrE "\\bdb\\.\\w+\\.(${prismaMethodPattern})\\b" ${routesDir}/ | sort`
-  );
-  if (!output) return [];
-  return output.split("\n").filter((line) => line.trim().length > 0);
 }
 
 function countPrismaCalls(filePath) {
@@ -106,7 +129,7 @@ function reportCoversRoute(report, routePath) {
 }
 
 describe("Phase 5 API routes migration artifact contract", () => {
-  const targetFiles = discoverTargetRouteFiles();
+  const targetFiles = migratedFiles.map((f) => f.path);
 
   it("plan.md records a checkpoint SHA for Phase 5", () => {
     const plan = readText(planPath);
@@ -234,11 +257,7 @@ describe("Phase 5 API routes migration artifact contract", () => {
     );
   });
 
-  it("all target route files exist and are non-empty", () => {
-    assert.ok(
-      targetFiles.length > 0,
-      `expected at least one target route file needing migration; found ${targetFiles.length}`
-    );
+  it("all migrated route files exist and are non-empty", () => {
     for (const routePath of targetFiles) {
       assert.ok(
         fileExists(routePath),

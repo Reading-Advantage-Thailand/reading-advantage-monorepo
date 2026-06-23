@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import { db, eq, and, or, ilike, ne, inArray, notInArray } from '@reading-advantage/db';
+import { users, userRoles, roles } from '@reading-advantage/db';
 
 // GET /api/users/search - Search for users by name or email
 export async function GET(request: NextRequest) {
@@ -21,46 +22,44 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Search for users by name or email
-    const users = await db.user.findMany({
-      where: {
-        OR: [
-          {
-            name: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-          {
-            email: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-        ],
-        // Exclude the current user from results
-        NOT: {
-          id: currentUser.id,
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        roles: {
-          include: {
-            role: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-      take: 10, // Limit results to 10 users
-    });
+    // Search for users by name or email (replaces Prisma `findMany({ where: { OR, NOT } })`).
+    const searchPattern = `%${query}%`;
+    const orClauses = or(
+      ilike(users.name, searchPattern),
+      ilike(users.email, searchPattern),
+    );
+    const matchedUsers = await db.select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+    })
+      .from(users)
+      .where(and(orClauses, ne(users.id, currentUser.id)))
+      .limit(10);
 
-    return NextResponse.json(users);
+    // Stitch roles include via a follow-up join.
+    const userIds = matchedUsers.map((u) => u.id);
+    const userRoleRows = userIds.length > 0
+      ? await db.select({
+          userId: userRoles.userId,
+          roleName: roles.name,
+        })
+          .from(userRoles)
+          .innerJoin(roles, eq(roles.id, userRoles.roleId))
+          .where(inArray(userRoles.userId, userIds))
+      : [];
+    const rolesByUserId = new Map<string, { role: { name: string } }[]>();
+    for (const ur of userRoleRows) {
+      if (!rolesByUserId.has(ur.userId)) rolesByUserId.set(ur.userId, []);
+      rolesByUserId.get(ur.userId)!.push({ role: { name: ur.roleName } });
+    }
+
+    const usersWithRoles = matchedUsers.map((u) => ({
+      ...u,
+      roles: rolesByUserId.get(u.id) || [],
+    }));
+
+    return NextResponse.json(usersWithRoles);
   } catch (error) {
     console.error("Error searching users:", error);
     return NextResponse.json(
