@@ -313,7 +313,7 @@ Live-behavior gate owner (Green role): run `pnpm turbo run build --filter=@readi
   - [x] Cannot be expressed cleanly with Drizzle typed helpers
   - [x] No change — documented why raw SQL is required
 
-- [ ] Task: Measure - User Manual Verification 'Phase 4: CodeCamp Progress & Dashboard Cleanup' (Protocol in workflow.md)
+- [~] Task: Measure - User Manual Verification 'Phase 4: CodeCamp Progress & Dashboard Cleanup' (Protocol in workflow.md)
 
 ---
 
