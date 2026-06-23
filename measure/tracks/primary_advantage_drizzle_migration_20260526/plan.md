@@ -103,9 +103,13 @@
 > Phase 4 tasks still `[~]` without SHA evidence; live proof confirms 45 Prisma-shaped calls remain
 > across `apps/primary-advantage/actions/`. Passing assertion: all 6 action files exist and are non-empty.
 
+## Phase 5: API Routes Migration (FR-2) [checkpoint: f594c345]
+
+[checkpoint: f594c345]
+
 ## Phase 5: API Routes Migration (FR-2)
 
-- [~] Task: Migrate all `app/api/**/route.ts` files with Prisma-shaped calls to Drizzle (batch by feature: classrooms, flashcard, licenses, schools, students, upload, users; Phase 0 audit identified 25 files with 108 Prisma-shaped calls).
+- [x] Task: Migrate all `app/api/**/route.ts` files with Prisma-shaped calls to Drizzle (batch by feature: classrooms, flashcard, licenses, schools, students, upload, users; dynamic grep at the red baseline discovered 24 files with 108 Prisma-shaped calls — phase 0 plan's "25 files" count was a stale off-by-one). _(Green evidence: see `audit/phase5-routes-report.md` — Summary section; 108 Prisma calls → 0 across 24 route files (classrooms: 1, debug: 3, flashcard: 7, licenses: 2, schools: 2, students: 1, upload: 2, users: 6); SHA `f594c345`.)_
 
 > **Phase 5 Red evidence** (baseline HEAD `8066b2d8`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase5-routes.test.mjs`
