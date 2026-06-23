@@ -8,7 +8,17 @@ import {
   deleteArticleByIdModel,
   getArticleActivity,
 } from "@/server/models/articleModel";
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  eq,
+  and,
+  desc,
+  inArray,
+} from '@reading-advantage/db';
+import {
+  userActivity,
+  xpLogs,
+} from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { ActivityType } from "@/types/enum";
 
@@ -49,13 +59,14 @@ export async function getLessonSummaryData(articleId: string) {
       return { error: "User not found" };
     }
 
-    // Fetch user activities for this article
-    const activities = await db.userActivity.findMany({
-      where: {
-        userId: user.id as string,
-        targetId: articleId,
-        activityType: {
-          in: [
+    // Fetch user activities for this article (replace Prisma `include: { xpLogs: true }`
+    // by stitching xpLogs per activity in memory below).
+    const activities = await db.select().from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, user.id as string),
+          eq(userActivity.targetId, articleId),
+          inArray(userActivity.activityType, [
             ActivityType.MC_QUESTION,
             ActivityType.SA_QUESTION,
             ActivityType.LA_QUESTION,
@@ -65,17 +76,11 @@ export async function getLessonSummaryData(articleId: string) {
             ActivityType.SENTENCE_MATCHING,
             ActivityType.SENTENCE_CLOZE_TEST,
             ActivityType.SENTENCE_ORDERING,
-          ],
-        },
-        completed: true,
-      },
-      include: {
-        xpLogs: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+          ]),
+          eq(userActivity.completed, true),
+        ),
+      )
+      .orderBy(desc(userActivity.createdAt));
 
     // Calculate quiz scores
     let mcqScore = 0;
@@ -99,17 +104,19 @@ export async function getLessonSummaryData(articleId: string) {
       saqScore = details.score || 0;
     }
 
-    // Calculate total XP earned from all activities for this article
-    const xpLogs = await db.xPLogs.findMany({
-      where: {
-        userId: user.id as string,
-        activityId: {
-          in: activities.map((activity) => activity.id),
-        },
-      },
-    });
+    // Fetch xpLogs for those activities (replaces Prisma's nested `include`).
+    const xpLogsRows = await db.select().from(xpLogs)
+      .where(
+        and(
+          eq(xpLogs.userId, user.id as string),
+          inArray(
+            xpLogs.activityId,
+            activities.map((activity) => activity.id),
+          ),
+        ),
+      );
 
-    const totalXp = xpLogs.reduce((sum, log) => sum + log.xpEarned, 0);
+    const totalXp = xpLogsRows.reduce((sum, log) => sum + log.xpEarned, 0);
 
     return {
       success: true,

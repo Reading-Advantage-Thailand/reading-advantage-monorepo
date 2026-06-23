@@ -1,6 +1,10 @@
 "use server";
 
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  eq,
+} from '@reading-advantage/db';
+import { articles } from '@reading-advantage/db';
 import { getArticleById } from "@/server/models/articleModel";
 import { generateAudio } from "@/server/utils/genaretors/audio-generator";
 import { generateWordLists } from "@/server/utils/genaretors/audio-word-generator";
@@ -51,20 +55,18 @@ export async function deleteArticleFile(articleId: string) {
 export async function deleteAllArticles() {
   try {
     // Get all article IDs first (we need them to delete associated files)
-    const articles = await db.article.findMany({
-      select: { id: true },
-    });
+    const articleRows = await db.select({ id: articles.id }).from(articles);
 
-    if (articles.length === 0) {
+    if (articleRows.length === 0) {
       return { success: true, message: "No articles to delete" };
     }
 
     console.log(
-      `Deleting ${articles.length} articles and their associated files...`,
+      `Deleting ${articleRows.length} articles and their associated files...`,
     );
 
     // Delete all associated files in parallel
-    const fileDeletePromises = articles.map((article) =>
+    const fileDeletePromises = articleRows.map((article) =>
       deleteFile(article.id),
     );
     const fileResults = await Promise.allSettled(fileDeletePromises);
@@ -81,14 +83,15 @@ export async function deleteAllArticles() {
       `File deletions - Success: ${successfulFileDeletions}, Failed: ${failedFileDeletions}`,
     );
 
-    // Delete all article records in a single operation (much more efficient)
-    const deleteResult = await db.article.deleteMany({});
+    // Delete all article records (replaces Prisma deleteMany). Returning rows
+    // gives us the deleted count.
+    const deletedRows = await db.delete(articles).returning({ id: articles.id });
 
-    console.log(`Successfully deleted ${deleteResult.count} article records`);
+    console.log(`Successfully deleted ${deletedRows.length} article records`);
 
     return {
       success: true,
-      deletedCount: deleteResult.count,
+      deletedCount: deletedRows.length,
       fileDeleteResults: {
         successful: successfulFileDeletions,
         failed: failedFileDeletions,
@@ -102,15 +105,19 @@ export async function deleteAllArticles() {
 
 export async function generateImages(articleId: string) {
   try {
-    const articles = await db.article.findUnique({
-      where: { id: articleId },
-      select: { id: true, passage: true, imageDescription: true },
-    });
+    const [article] = await db.select({
+      id: articles.id,
+      passage: articles.passage,
+      imageDescription: articles.imageDescription,
+    })
+      .from(articles)
+      .where(eq(articles.id, articleId))
+      .limit(1);
 
     const result = await generateImage({
-      imageDesc: articles?.imageDescription as string[],
-      articleId: articles?.id as string,
-      passage: articles?.passage as string,
+      imageDesc: article?.imageDescription as string[],
+      articleId: article?.id as string,
+      passage: article?.passage as string,
     });
 
     if (result.success) {

@@ -1,7 +1,12 @@
 "use server";
 
 import { currentUser } from "@/lib/session";
-import { db } from '@reading-advantage/db';
+import {
+  db,
+  eq,
+  and,
+} from '@reading-advantage/db';
+import { flashcardDecks } from '@reading-advantage/db';
 
 interface OrderSentenceGameData {
   id: string;
@@ -40,13 +45,15 @@ export async function getSentencesForOrderingGame(): Promise<{
       };
     }
 
-    // Find user's sentence flashcard deck
-    const deck = await db.flashcardDeck.findFirst({
-      where: {
-        userId: user.id,
-        type: "SENTENCE",
-      },
-    });
+    // Find user's sentence flashcard deck (replaces Prisma findFirst).
+    const [deck] = await db.select().from(flashcardDecks)
+      .where(
+        and(
+          eq(flashcardDecks.userId, user.id as string),
+          eq(flashcardDecks.type, "SENTENCE"),
+        ),
+      )
+      .limit(1);
 
     if (!deck) {
       return {
@@ -99,13 +106,15 @@ export async function getFlashcardDeckId(): Promise<{
       };
     }
 
-    // Find user's sentence flashcard deck
-    const deck = await db.flashcardDeck.findFirst({
-      where: {
-        userId: user.id,
-        type: "SENTENCE",
-      },
-    });
+    // Find user's sentence flashcard deck (replaces Prisma findFirst).
+    const [deck] = await db.select().from(flashcardDecks)
+      .where(
+        and(
+          eq(flashcardDecks.userId, user.id as string),
+          eq(flashcardDecks.type, "SENTENCE"),
+        ),
+      )
+      .limit(1);
 
     if (!deck) {
       return {
