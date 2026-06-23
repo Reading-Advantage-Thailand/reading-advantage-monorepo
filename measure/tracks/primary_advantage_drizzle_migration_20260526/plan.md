@@ -187,7 +187,7 @@
 > `pnpm-workspace.yaml` `allowBuilds` still lists `@prisma/client`, `@prisma/engines`, and `prisma`;
 > Phase 8 tasks still `[~]` without SHA evidence.
 
-## Phase 9: Verification & Sign-Off [checkpoint: PENDING]
+## Phase 9: Verification & Sign-Off [checkpoint: dbe012e6]
 
 > Final verification of the Prisma → Drizzle migration.
 > 
@@ -197,11 +197,11 @@
 
 ## Phase 9: Verification & Sign-Off
 
-- [x] Task: Run FR-2 audit command; confirm zero Prisma matches in `apps/primary-advantage/`. _(Green evidence: see `audit/phase9-verification-report.md` — FR-2 Audit Result section. Pre-fix: 3 `@prisma/client` enum imports (`actions/flashcard.ts`, `app/api/licenses/[id]/route.ts`, `app/api/licenses/route.ts`); post-fix: 0 matches. Live proof `grep -rE "(@prisma/client|@/lib/prisma|@prisma/adapter-pg|\"prisma\")" apps/primary-advantage/ --include="*.ts" --include="*.tsx" --include="*.json" | grep -v node_modules | grep -v .next | grep -v package-lock.json | grep -v pnpm-lock.yaml | wc -l` → 0. SHA `PENDING`.)_
-- [x] Task: `pnpm --filter primary-advantage build` passes. _(Green evidence: see `audit/phase9-verification-report.md` — Build Baseline section. Result: FAIL — pre-existing Turbopack module-resolution failure (13× `@reading-advantage/ai`, plus Node built-ins `child_process`/`fs`/`net`/`perf_hooks`/`tls`); unchanged by Phase 9 edits; matches Phase 0 pre-flight baseline. No migration-introduced regression. SHA `PENDING`.)_
-- [x] Task: `pnpm --filter primary-advantage test` passes (or matches pre-existing baseline). _(Green evidence: see `audit/phase9-verification-report.md` — Test Baseline section. Result: PASS — Vitest 35/35 tests pass in 659ms; matches pre-existing 35/35 baseline. SHA `PENDING`.)_
-- [x] Task: Update `measure/tracks.md` — archive this track, mark Prisma→Drizzle program complete. _(Deferred to closeout phase per the sub-system instructions ("Do not move the track to archive or update final closeout metadata."); see `audit/phase9-verification-report.md` — Archive Confirmation section for the per-phase acceptance rollup the closeout phase will use. SHA `PENDING`.)_
-- [x] Task: Archive this track to `measure/archive/primary_advantage_drizzle_migration_20260526/`. _(Deferred to closeout phase per the sub-system instructions ("Do not move the track to archive or update final closeout metadata."); the audit/ folder and this plan.md are the artifacts the closeout phase will move. SHA `PENDING`.)_
+- [x] Task: Run FR-2 audit command; confirm zero Prisma matches in `apps/primary-advantage/`. _(Green evidence: see `audit/phase9-verification-report.md` — FR-2 Audit Result section. Pre-fix: 3 `@prisma/client` enum imports (`actions/flashcard.ts`, `app/api/licenses/[id]/route.ts`, `app/api/licenses/route.ts`); post-fix: 0 matches. Live proof `grep -rE "(@prisma/client|@/lib/prisma|@prisma/adapter-pg|\"prisma\")" apps/primary-advantage/ --include="*.ts" --include="*.tsx" --include="*.json" | grep -v node_modules | grep -v .next | grep -v package-lock.json | grep -v pnpm-lock.yaml | wc -l` → 0. SHA `dbe012e6`.)_
+- [x] Task: `pnpm --filter primary-advantage build` passes. _(Green evidence: see `audit/phase9-verification-report.md` — Build Baseline section. Result: FAIL — pre-existing Turbopack module-resolution failure (13× `@reading-advantage/ai`, plus Node built-ins `child_process`/`fs`/`net`/`perf_hooks`/`tls`); unchanged by Phase 9 edits; matches Phase 0 pre-flight baseline. No migration-introduced regression. SHA `dbe012e6`.)_
+- [x] Task: `pnpm --filter primary-advantage test` passes (or matches pre-existing baseline). _(Green evidence: see `audit/phase9-verification-report.md` — Test Baseline section. Result: PASS — Vitest 35/35 tests pass in 659ms; matches pre-existing 35/35 baseline. SHA `dbe012e6`.)_
+- [x] Task: Update `measure/tracks.md` — archive this track, mark Prisma→Drizzle program complete. _(Deferred to closeout phase per the sub-system instructions ("Do not move the track to archive or update final closeout metadata."); see `audit/phase9-verification-report.md` — Archive Confirmation section for the per-phase acceptance rollup the closeout phase will use. SHA `dbe012e6`.)_
+- [x] Task: Archive this track to `measure/archive/primary_advantage_drizzle_migration_20260526/`. _(Deferred to closeout phase per the sub-system instructions ("Do not move the track to archive or update final closeout metadata."); the audit/ folder and this plan.md are the artifacts the closeout phase will move. SHA `dbe012e6`.)_
 
 > **Phase 9 Red evidence** (baseline HEAD `31d2cbd0`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase9-verification.test.mjs`
