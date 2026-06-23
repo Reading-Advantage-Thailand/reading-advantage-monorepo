@@ -1,9 +1,10 @@
 {
   "track_id": "primary_advantage_drizzle_migration_20260526",
   "type": "chore",
-  "status": "ready",
+  "status": "done",
+  "completed_at": "2026-06-23T00:00:00Z",
   "created_at": "2026-05-26T00:00:00Z",
-  "updated_at": "2026-05-26T00:00:00Z",
+  "updated_at": "2026-06-23T00:00:00Z",
   "description": "Migrate primary-advantage from Prisma to Drizzle ORM. Carved out from prisma_drizzle_slice_cleanup_20260505 (Track 4 of the Prisma→Drizzle program). 56 Prisma-touching files, active prisma/ schema+migrations, NextAuth dependency.",
   "estimated_tasks": 40,
   "actual_tasks": null,
