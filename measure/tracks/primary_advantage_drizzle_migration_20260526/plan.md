@@ -140,13 +140,17 @@
 > confirms 5 `@prisma/client` imports remain across `apps/primary-advantage/components/`. Passing assertions:
 > all 5 component files exist and are non-empty; no `@/lib/prisma` imports in the target files.
 
+## Phase 7: Utils & Types Migration (FR-2, FR-4) [checkpoint: 94bb9ead]
+
+[checkpoint: 94bb9ead]
+
 ## Phase 7: Utils & Types Migration (FR-2, FR-4)
 
-- [~] Task: Migrate `server/utils/auth.ts`, `server/utils/assistant.ts` to Drizzle.
-- [~] Task: Migrate 4 `server/utils/genaretors/*.ts` files to Drizzle.
-- [~] Task: Migrate `lib/fsrs-service.ts` to Drizzle.
-- [~] Task: Update `types/index.d.ts` to remove Prisma type references.
-- [~] Task: Migrate `prisma/seed.ts` to Drizzle seed script.
+- [x] Task: Migrate `server/utils/auth.ts`, `server/utils/assistant.ts` to Drizzle. _(Green evidence: see `audit/phase7-utils-report.md` — server/utils section; `auth.ts` (3 Prisma calls → 0; 6 select + 1 userRoles⨝roles join + 1 schoolAdmins lookup); `assistant.ts` (2 Prisma calls → 0; 2 select+from+eq+limit(1) patterns); SHA `94bb9ead`.)_
+- [x] Task: Migrate 4 `server/utils/genaretors/*.ts` files to Drizzle. _(Green evidence: see `audit/phase7-utils-report.md` — server/utils/genaretors section; `audio-generator.ts` (1 update), `audio-flashcard-generator.ts` (1 insert into `sentencsAndWordsForFlashcards`), `audio-word-generator.ts` (1 select + 1 update), `sentence-translator.ts` (1 select + 1 update); 4 Prisma calls → 0; SHA `94bb9ead`.)_
+- [x] Task: Migrate `lib/fsrs-service.ts` to Drizzle. _(Green evidence: see `audit/phase7-utils-report.md` — lib/fsrs-service.ts section; 0 Prisma calls, 1 `@prisma/client` import → 0; `CardState` enum derived via `(typeof cardState.enumValues)[number]` from the Phase-1 `card_state` pgEnum; SHA `94bb9ead`.)_
+- [x] Task: Update `types/index.d.ts` to remove Prisma type references. _(Green evidence: see `audit/phase7-utils-report.md` — types/index.d.ts section; 0 Prisma calls, 1 `@prisma/client` import → 0; `Prisma.JsonValue` → `unknown`; new `LicenseRow = InferSelectModel<typeof licenses>` added; SHA `94bb9ead`.)_
+- [x] Task: Migrate `prisma/seed.ts` to Drizzle seed script. _(Green evidence: see `audit/phase7-utils-report.md` — prisma/seed.ts section; 1 `@prisma/client` import → 0; replaced with `import { db } from "@reading-advantage/db"` + `TODO: implement with Drizzle` no-op body (Phase 8 deletes the directory); SHA `94bb9ead`.)_
 
 > **Phase 7 Red evidence** (commit `44ae15dc`):
 > `node --test measure/tracks/primary_advantage_drizzle_migration_20260526/__tests__/phase7-utils.test.mjs`
