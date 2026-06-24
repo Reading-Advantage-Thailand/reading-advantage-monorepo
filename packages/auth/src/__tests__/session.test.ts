@@ -635,19 +635,35 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
     const txChain = makeChain(txHandle, "tx", txCalls);
 
     // tx.select(...).from(...).where(...) returns a value, so build a more
-    // explicit version:
+    // explicit version. We drive the count to the cap (10) so the eviction
+    // branch is exercised and we can assert count + evict + insert all run on
+    // the same tx handle.
+    let txSelectCallCount = 0;
     txChain.select = vi.fn().mockImplementation(() => {
       txCalls.push({ op: "tx.select", handle: txHandle });
+      txSelectCallCount++;
       const step: Record<string, unknown> = {};
       step.from = vi.fn().mockImplementation(() => {
         txCalls.push({ op: "tx.from", handle: txHandle });
         const step2: Record<string, unknown> = {};
         step2.where = vi.fn().mockImplementation(() => {
           txCalls.push({ op: "tx.where", handle: txHandle });
-          // First tx.select is the count -> 9, so no eviction. Second is the
-          // user lookup, but the user lookup happens on the outer db in
-          // createSession, so this chain is only the count.
-          return Promise.resolve([{ value: 9 }]);
+          if (txSelectCallCount === 1) {
+            // First tx.select is the count -> at the cap, triggers eviction.
+            return Promise.resolve([{ value: 10 }]);
+          }
+          // Second tx.select is the oldest-session lookup for eviction.
+          const step3: Record<string, unknown> = {};
+          step3.orderBy = vi.fn().mockImplementation(() => {
+            txCalls.push({ op: "tx.orderBy", handle: txHandle });
+            const step4: Record<string, unknown> = {};
+            step4.limit = vi.fn().mockImplementation(() => {
+              txCalls.push({ op: "tx.limit", handle: txHandle });
+              return Promise.resolve([{ id: "oldest-session" }]);
+            });
+            return step4;
+          });
+          return step3;
         });
         return step2;
       });
@@ -664,6 +680,15 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
           return [mockSessionRow];
         });
         return step2;
+      });
+      return step;
+    });
+    txChain.delete = vi.fn().mockImplementation(() => {
+      txCalls.push({ op: "tx.delete", handle: txHandle });
+      const step: Record<string, unknown> = {};
+      step.where = vi.fn().mockImplementation(() => {
+        txCalls.push({ op: "tx.where", handle: txHandle });
+        return Promise.resolve([{ id: "oldest-session" }]);
       });
       return step;
     });
@@ -691,25 +716,32 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
     await createSession(asSessionDb(mockDb as never), "u1");
 
     // Assertions:
-    // 1) transaction is called exactly once (a single tx wraps count + insert).
+    // 1) transaction is called exactly once (a single tx wraps count + evict + insert).
     expect(
       mockDb.transaction,
-      "createSession must wrap the count + insert in a single transaction so concurrent " +
+      "createSession must wrap the count + evict + insert in a single transaction so concurrent " +
         "logins cannot race past the cap.",
     ).toHaveBeenCalledTimes(1);
 
-    // 2) The count and the insert both ran on the SAME tx handle.
+    // 2) The count, eviction, and insert all ran on the SAME tx handle.
     const txSelects = txCalls.filter((c) => c.op === "tx.select");
+    const txDeletes = txCalls.filter((c) => c.op === "tx.delete");
     const txInserts = txCalls.filter((c) => c.op === "tx.insert");
     expect(txSelects.length, "Expected at least one select inside the tx (the count).").toBeGreaterThanOrEqual(1);
+    expect(txDeletes.length, "Expected one delete inside the tx (eviction at the cap).").toBe(1);
     expect(txInserts.length, "Expected at least one insert inside the tx.").toBe(1);
 
     const countHandle = txSelects[0].handle;
+    const deleteHandle = txDeletes[0].handle;
     const insertHandle = txInserts[0].handle;
     expect(
       countHandle,
       "FR-10: the count query must run on the tx handle (not the outer db).",
     ).toBe(txHandle);
+    expect(
+      deleteHandle,
+      "FR-10: the eviction delete must run on the same tx handle as the count.",
+    ).toBe(countHandle);
     expect(
       insertHandle,
       "FR-10: the insert must run on the same tx handle as the count.",
