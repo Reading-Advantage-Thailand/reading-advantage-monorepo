@@ -43,7 +43,11 @@
       - Failure confirms FR-2: `getStudents` at `studentModel.ts:106-123` joins `classroomStudents`/`classrooms` with `leftJoin` and no `selectDistinct`/`groupBy`, so a student enrolled in N classrooms produces N rows; `.limit/.offset` paginate rows (not students) and the separate `totalCount` query omits those joins.
     - Test file: `apps/primary-advantage/server/models/__tests__/studentModel.fr2.test.ts`
     - Mock strategy: `vi.hoisted` + `vi.mock("@reading-advantage/db")` with a thenable chain builder that returns fan-out rows (3) for the list query and distinct count (2) for the count query. Stage A (unit-level mock test). Stage B (behavioral test against real test DB) is the Phase 7 / FR-11 deliverable.
-- [ ] Task: Implement (Green) — fix `studentModel.getStudents` (aggregate classrooms / `selectDistinct` / two-step fetch); make list and count consistent.
+- [x] Task: Implement (Green) — fix `studentModel.getStudents` (aggregate classrooms / `selectDistinct` / two-step fetch); make list and count consistent. SHA: b37f9db3.
+    - Applied JS-level `Map<id, row>` dedup after the list query returns fan-out rows; first occurrence per student id is kept (consistent with the existing single-classroom `StudentData` shape). The count query already counts distinct students (no fan-out joins), so list length and `totalCount` now agree.
+    - Green test (`pnpm --filter primary-advantage exec vitest run server/models/__tests__/studentModel.fr2.test.ts`): 2 passed, 0 failed.
+    - Full primary-advantage suite: 37 passed, 0 failed (no regression).
+    - `tsc --noEmit` on `studentModel.ts`: pre-existing `TS2769` errors at lines 74/180/296/382/533/577 are baseline (same on `167beac4`); zero new errors.
 - [~] Task: Audit — grep sibling migrated models (`classroomModel.ts`, `teacherModel.ts`, `assignmentModel.ts`) for `include → flat leftJoin` fan-out; fix or document each.
     - **Audit results** (grep `leftJoin.*classroomStudents\|leftJoin.*classrooms` across `server/models/`):
       - **teacherModel.ts**: The teacher list query (lines 81-106) does NOT join `classroomStudents`/`classrooms` — only joins `userRoles`/`roles`. The count query (lines 108-120) matches. Classroom data is loaded in a separate "stitch" query (lines 123-138) after the paginated teacher fetch. **No fan-out issue.**

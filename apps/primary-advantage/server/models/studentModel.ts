@@ -131,8 +131,15 @@ export const getStudents = async (
     ]);
     const totalCount = Number(countRow[0]?.value ?? 0);
 
-    // Transform data for response
-    const studentsData: StudentData[] = students.map((student) => ({
+    const dedupedById = new Map<string, typeof students[number]>();
+    for (const row of students) {
+      if (!dedupedById.has(row.id)) {
+        dedupedById.set(row.id, row);
+      }
+    }
+    const uniqueStudents = Array.from(dedupedById.values());
+
+    const studentsData: StudentData[] = uniqueStudents.map((student) => ({
       id: student.id,
       name: student.name,
       email: student.email,
