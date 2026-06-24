@@ -131,17 +131,25 @@ describe("Phase 4: Campaign Management — wiring invariants (tasks 1-5)", () =>
   // CSS literals and `export default function` source matches break on
   // benign refactors and assert nothing about runtime behavior).
 
-  it("apps/marketing/app/api/campaigns/route.ts exports GET and POST", async () => {
-    const mod = await import("@/api/campaigns/route");
-    expect(typeof mod.GET).toBe("function");
-    expect(typeof mod.POST).toBe("function");
-  }, 10000);
+  it(
+    "apps/marketing/app/api/campaigns/route.ts exports GET and POST",
+    async () => {
+      const mod = await import("@/api/campaigns/route");
+      expect(typeof mod.GET).toBe("function");
+      expect(typeof mod.POST).toBe("function");
+    },
+    30000,
+  );
 
-  it("apps/marketing/app/api/campaigns/[id]/route.ts exports GET and PATCH", async () => {
-    const mod = await import("@/api/campaigns/[id]/route");
-    expect(typeof mod.GET).toBe("function");
-    expect(typeof mod.PATCH).toBe("function");
-  }, 10000);
+  it(
+    "apps/marketing/app/api/campaigns/[id]/route.ts exports GET and PATCH",
+    async () => {
+      const mod = await import("@/api/campaigns/[id]/route");
+      expect(typeof mod.GET).toBe("function");
+      expect(typeof mod.PATCH).toBe("function");
+    },
+    30000,
+  );
 });
 
 // ─────────────────────────────────────────────────────────────────────

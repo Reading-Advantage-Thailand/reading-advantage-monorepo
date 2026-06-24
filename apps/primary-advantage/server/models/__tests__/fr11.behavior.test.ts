@@ -48,6 +48,8 @@ vi.mock("@reading-advantage/db", () => {
   const userRoles = { userId: "userId", roleId: "roleId" };
   const userActivity = { id: "id", userId: "userId" };
   const xpLogs = { id: "id", userId: "userId" };
+  const schools = { id: "id", name: "name" };
+  const schoolAdmins = { userId: "userId", schoolId: "schoolId" };
   const assignments = { id: "id", title: "title", classroomId: "classroomId" };
   const studentAssignments = {
     id: "id",
@@ -55,6 +57,9 @@ vi.mock("@reading-advantage/db", () => {
     assignmentId: "assignmentId",
     status: "status",
   };
+  const articles = { id: "id", title: "title" };
+  const lessonProgress = { id: "id", userId: "userId" };
+  const articleActivityLogs = { id: "id", userId: "userId" };
 
   const baseChain: Record<string, unknown> = {};
   for (const m of [
@@ -109,8 +114,13 @@ vi.mock("@reading-advantage/db", () => {
     userRoles,
     userActivity,
     xpLogs,
+    schools,
+    schoolAdmins,
     assignments,
     studentAssignments,
+    articles,
+    lessonProgress,
+    articleActivityLogs,
     eq: vi.fn().mockReturnValue(Symbol("eq")),
     and: vi.fn().mockReturnValue(Symbol("and")),
     or: vi.fn().mockReturnValue(Symbol("or")),

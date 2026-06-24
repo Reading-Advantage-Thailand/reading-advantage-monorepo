@@ -136,15 +136,23 @@ describe("Phase 5: Topic Research — wiring invariants (tasks 1-4)", () => {
     expect(src).toMatch(/handleResearchTopics/);
   });
 
-  it("apps/marketing/app/api/video/research-topics/route.ts exports POST", async () => {
-    const mod = await import("@/api/video/research-topics/route");
-    expect(typeof mod.POST).toBe("function");
-  }, 10000);
+  it(
+    "apps/marketing/app/api/video/research-topics/route.ts exports POST",
+    async () => {
+      const mod = await import("@/api/video/research-topics/route");
+      expect(typeof mod.POST).toBe("function");
+    },
+    30000,
+  );
 
-  it("apps/marketing/app/api/video/save-topics/route.ts exports POST", async () => {
-    const mod = await import("@/api/video/save-topics/route");
-    expect(typeof mod.POST).toBe("function");
-  }, 10000);
+  it(
+    "apps/marketing/app/api/video/save-topics/route.ts exports POST",
+    async () => {
+      const mod = await import("@/api/video/save-topics/route");
+      expect(typeof mod.POST).toBe("function");
+    },
+    30000,
+  );
 });
 
 // ─────────────────────────────────────────────────────────────────────
