@@ -48,7 +48,7 @@
     - Green test (`pnpm --filter primary-advantage exec vitest run server/models/__tests__/studentModel.fr2.test.ts`): 2 passed, 0 failed.
     - Full primary-advantage suite: 37 passed, 0 failed (no regression).
     - `tsc --noEmit` on `studentModel.ts`: pre-existing `TS2769` errors at lines 74/180/296/382/533/577 are baseline (same on `167beac4`); zero new errors.
-- [~] Task: Audit — grep sibling migrated models (`classroomModel.ts`, `teacherModel.ts`, `assignmentModel.ts`) for `include → flat leftJoin` fan-out; fix or document each.
+- [x] Task: Audit — grep sibling migrated models (`classroomModel.ts`, `teacherModel.ts`, `assignmentModel.ts`) for `include → flat leftJoin` fan-out; fix or document each. SHA: 167beac4.
     - **Audit results** (grep `leftJoin.*classroomStudents\|leftJoin.*classrooms` across `server/models/`):
       - **teacherModel.ts**: The teacher list query (lines 81-106) does NOT join `classroomStudents`/`classrooms` — only joins `userRoles`/`roles`. The count query (lines 108-120) matches. Classroom data is loaded in a separate "stitch" query (lines 123-138) after the paginated teacher fetch. **No fan-out issue.**
       - **classroomModel.ts**: `getStudentsByTeacher()` (lines 611-614) joins `classroomStudents`+`users`, but deduplicates correctly using a `Map` (lines 618-641). `getAllStudentsByAdmin()` (lines 678-679) uses the same pattern. **No fan-out issue (deduplicates correctly).**
