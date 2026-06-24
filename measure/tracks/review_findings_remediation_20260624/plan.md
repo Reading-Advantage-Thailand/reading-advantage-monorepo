@@ -43,7 +43,7 @@
       - Failure confirms FR-2: `getStudents` at `studentModel.ts:106-123` joins `classroomStudents`/`classrooms` with `leftJoin` and no `selectDistinct`/`groupBy`, so a student enrolled in N classrooms produces N rows; `.limit/.offset` paginate rows (not students) and the separate `totalCount` query omits those joins.
     - Test file: `apps/primary-advantage/server/models/__tests__/studentModel.fr2.test.ts`
     - Mock strategy: `vi.hoisted` + `vi.mock("@reading-advantage/db")` with a thenable chain builder that returns fan-out rows (3) for the list query and distinct count (2) for the count query. Stage A (unit-level mock test). Stage B (behavioral test against real test DB) is the Phase 7 / FR-11 deliverable.
-- [x] Task: Implement (Green) — fix `studentModel.getStudents` (aggregate classrooms / `selectDistinct` / two-step fetch); make list and count consistent. SHA: b37f9db3.
+- [x] Task: Implement (Green) — fix `studentModel.getStudents` (aggregate classrooms / `selectDistinct` / two-step fetch); make list and count consistent. SHA: a9fa178c.
     - Applied JS-level `Map<id, row>` dedup after the list query returns fan-out rows; first occurrence per student id is kept (consistent with the existing single-classroom `StudentData` shape). The count query already counts distinct students (no fan-out joins), so list length and `totalCount` now agree.
     - Green test (`pnpm --filter primary-advantage exec vitest run server/models/__tests__/studentModel.fr2.test.ts`): 2 passed, 0 failed.
     - Full primary-advantage suite: 37 passed, 0 failed (no regression).
