@@ -198,13 +198,33 @@ audit subagents see a deterministic window.
 > Recorded by the strategy subagent at Phase 0 dispatch. The orchestrator compares
 > Phase 8 closeout against these counts to assert no regression.
 
-- **sales-advantage** (`pnpm --filter sales-advantage test`):
-  - _to be populated by the Phase 0 baseline run appended below_
-- **primary-advantage** (`pnpm --filter primary-advantage test`):
-  - _to be populated by the Phase 0 baseline run appended below_
+- **sales-advantage** (`pnpm --filter sales-advantage test`, 2026-06-24, baseline SHA `e2dd2e90`, after strategy commit `a9cd1029`):
+  - **0 test files, 0 tests** — confirms FR-9: the 44-file app ships with zero route/component tests; only `lib/__tests__/setup.ts` exists (Vitest reports "No test files found, exiting with code 0"). Phase 1+ Red proofs will be net-new additions, not delta against an existing suite.
+- **primary-advantage** (`pnpm --filter primary-advantage test`, 2026-06-24):
+  - **1 test file, 35 tests, 35 passed, 0 failed** (`lib/__tests__/utils.test.ts`). No behavioral coverage of the migrated models — FR-2 / FR-3 / FR-11 will all add net-new behavioral test files.
 - **domain / auth / api** (informational, not the per-phase gate floor):
   - run during Phase 8 closeout per `PROJECT_TESTS` above.
 
 ### Baseline runs
 
-<!-- Phase 0 baseline output is appended below by the orchestrator/strategy subagent. -->
+```text
+$ pnpm --filter sales-advantage test
+> vitest run --passWithNoTests
+ RUN  v4.1.8 /apps/sales-advantage
+No test files found, exiting with code 0
+include: components/**/*.{test,spec}.{ts,tsx}, lib/**/*.{test,spec}.{ts,tsx}
+```
+
+```text
+$ pnpm --filter primary-advantage test
+> vitest run
+ RUN  v4.1.8 /apps/primary-advantage
+ ✓ lib/__tests__/utils.test.ts (35 tests) 186ms
+ Test Files  1 passed (1)
+      Tests  35 passed (35)
+```
+
+### Phase 8 regression-floor rule
+
+- `sales-advantage`: post-track count **must be ≥ Phase-1-introduced test count** with **0 unexpected failures**. Net-new tests from FR-1/FR-4/FR-8/FR-9 are added; none of them may be deleted at closeout.
+- `primary-advantage`: post-track count **must be ≥ 35 + FR-2/FR-3/FR-11 additions** with **0 failures**.
