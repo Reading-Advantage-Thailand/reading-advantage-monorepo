@@ -1,0 +1,142 @@
+// @vitest-environment node
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NextRequest } from "next/server";
+
+const { mockValidateSession, mockGetAIClient } = vi.hoisted(() => ({
+  mockValidateSession: vi.fn(),
+  mockGetAIClient: vi.fn(),
+}));
+
+vi.mock("@reading-advantage/auth", () => ({
+  validateSession: mockValidateSession,
+  SESSION_COOKIE_NAME: "session_token",
+}));
+
+vi.mock("@reading-advantage/db", () => ({
+  db: {},
+}));
+
+vi.mock("@reading-advantage/ai", () => ({
+  getAIClient: mockGetAIClient,
+}));
+
+vi.mock("@/lib/rate-limit", () => ({
+  checkRateLimit: vi.fn().mockReturnValue({ allowed: true }),
+}));
+
+import { POST } from "../route";
+
+function makeRequest(body: Record<string, unknown>) {
+  return new NextRequest("http://localhost:3000/api/chat", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      cookie: "session_token=test-token",
+    },
+    body: JSON.stringify(body),
+  });
+}
+
+function salesRepSession() {
+  return {
+    id: "session-rep",
+    userId: "rep-1",
+    expiresAt: new Date(Date.now() + 86_400_000),
+    user: {
+      id: "rep-1",
+      username: "salesrep1",
+      name: "Test Rep",
+      role: "SALES_REP",
+      schoolId: "school-1",
+      xp: 0,
+      level: 1,
+      cefrLevel: "B1",
+    },
+  };
+}
+
+function studentSession() {
+  return {
+    id: "session-student",
+    userId: "student-1",
+    expiresAt: new Date(Date.now() + 86_400_000),
+    user: {
+      id: "student-1",
+      username: "student1",
+      name: "Test Student",
+      role: "STUDENT",
+      schoolId: "school-1",
+      xp: 0,
+      level: 1,
+      cefrLevel: "A1",
+    },
+  };
+}
+
+describe("POST /api/chat — FR-1 authorization gate", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("rejects authenticated non-sales user (STUDENT) with 401 or 403", async () => {
+    mockValidateSession.mockResolvedValue(studentSession());
+
+    const mockStreamText = vi.fn().mockResolvedValue({
+      toDataStreamResponse: () => new Response("stream", { status: 200 }),
+    });
+    mockGetAIClient.mockReturnValue({ streamText: mockStreamText });
+
+    const response = await POST(
+      makeRequest({ messages: [{ role: "user", content: "hi" }] }),
+    );
+
+    expect([401, 403]).toContain(response.status);
+    expect(mockStreamText).not.toHaveBeenCalled();
+  });
+
+  it("rejects authenticated non-sales user (TEACHER) with 401 or 403", async () => {
+    mockValidateSession.mockResolvedValue({
+      id: "session-teacher",
+      userId: "teacher-1",
+      expiresAt: new Date(Date.now() + 86_400_000),
+      user: {
+        id: "teacher-1",
+        username: "teacher1",
+        name: "Test Teacher",
+        role: "TEACHER",
+        schoolId: "school-1",
+        xp: 0,
+        level: 1,
+        cefrLevel: "B2",
+      },
+    });
+
+    const mockStreamText = vi.fn().mockResolvedValue({
+      toDataStreamResponse: () => new Response("stream", { status: 200 }),
+    });
+    mockGetAIClient.mockReturnValue({ streamText: mockStreamText });
+
+    const response = await POST(
+      makeRequest({ messages: [{ role: "user", content: "hi" }] }),
+    );
+
+    expect([401, 403]).toContain(response.status);
+    expect(mockStreamText).not.toHaveBeenCalled();
+  });
+
+  it("allows SALES_REP user with 200 streaming response", async () => {
+    mockValidateSession.mockResolvedValue(salesRepSession());
+
+    const mockStreamText = vi.fn().mockResolvedValue({
+      toDataStreamResponse: () => new Response("stream", { status: 200 }),
+    });
+    mockGetAIClient.mockReturnValue({ streamText: mockStreamText });
+
+    const response = await POST(
+      makeRequest({ messages: [{ role: "user", content: "hi" }] }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(mockStreamText).toHaveBeenCalled();
+  });
+});

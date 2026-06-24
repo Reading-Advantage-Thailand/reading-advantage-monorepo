@@ -15,7 +15,13 @@
 ## Phase 1: FR-1 — Chat route authorization (Critical)
 
 - [ ] Task: Contract — decide enforcement point (route → domain `sendChatMessage`/`assertCan("sales:chat")`, or explicit route gate); document in spec/AGENTS.
-- [ ] Task: Test (Red) — add a route test: authenticated non-sales user → 401/403; `SALES_REP` → allowed.
+- [~] Task: Test (Red) — add a route test: authenticated non-sales user → 401/403; `SALES_REP` → allowed.
+    - **Red proof** (`pnpm --filter sales-advantage test -- --run --reporter=verbose`, SHA `a9cd1029`):
+      - 2 failed, 1 passed (3 total)
+      - STUDENT: `expected [ 401, 403 ] to include 200` — route returns 200 (stream) without authz
+      - TEACHER: `expected [ 401, 403 ] to include 200` — same bypass
+      - SALES_REP: passes (positive control — 200/stream OK)
+      - Failure confirms FR-1: `apps/sales-advantage/app/api/chat/route.ts` calls `validateSession` then `streamText` directly, never reaching `assertCan("sales:chat")`
 - [ ] Task: Implement (Green) — route the chat handler through the domain `assertCan(user,"sales:chat",tenant)` path (reuse `mutations.ts:287`); keep streaming behavior.
 - [ ] Task: Verify no regression in the happy-path chat stream.
 
