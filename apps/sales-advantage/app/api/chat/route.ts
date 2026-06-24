@@ -19,7 +19,7 @@ const chatInputSchema = z.object({
   moduleId: z.string().optional(),
 });
 
-const ROLE_MARKER_SPOOF = /(^|\s)(REP|COACH):/gi;
+const ROLE_MARKER_SPOOF = /\[(?:REP|COACH)\]:?|(^|\s)(?:REP|COACH):/gi;
 function sanitizeRoleMarkers(content: string): string {
   return content.replace(ROLE_MARKER_SPOOF, "$1");
 }
