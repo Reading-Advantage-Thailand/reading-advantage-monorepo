@@ -20,6 +20,209 @@ import { generateAudioForWord } from "./audio-word-generator";
 import { generateAudioForFlashcard } from "./audio-flashcard-generator";
 import { se } from "date-fns/locale";
 
+export interface MultipleChoiceQuestionInput {
+  question: string;
+  options: string[];
+  answer: string;
+}
+
+export interface ShortAnswerQuestionInput {
+  question: string;
+  answer: string;
+}
+
+export interface LongAnswerQuestionInput {
+  question: string;
+}
+
+export interface FlashcardInput {
+  sentence: string;
+  translation: { th: string; cn: string; tw: string; vi: string };
+}
+
+export interface WordlistInput {
+  vocabulary: string;
+  definitions: { en: string; th: string; cn: string; tw: string; vi: string };
+}
+
+export interface GeneratedArticleInput {
+  brainstorming: string;
+  planning: string;
+  title: string;
+  passage: string;
+  summary: string;
+  imageDesc: string;
+  translatedSummary: { th: string; cn: string; tw: string; vi: string };
+  sentences: string[];
+  wordlist: WordlistInput[];
+  flashcard: FlashcardInput[];
+  multipleChoiceQuestions: MultipleChoiceQuestionInput[];
+  shortAnswerQuestions: ShortAnswerQuestionInput[];
+  longAnswerQuestions: LongAnswerQuestionInput[];
+}
+
+export interface PersistArticleInput {
+  article: GeneratedArticleInput;
+  data: { genre: string; description: string };
+  cefrLevel: string;
+  rating: number;
+  generateImage: (params: {
+    imageDesc: string;
+    articleId: string;
+    passage: string;
+  }) => Promise<{ success: boolean; imageUrls?: string[]; error?: string }>;
+  generateAudio: (params: {
+    passage: string;
+    sentences: string[];
+    articleId: string;
+  }) => Promise<unknown>;
+  generateAudioForFlashcard: (params: {
+    sentences: Array<{ sentence: string; translation: { th: string; cn: string; tw: string; vi: string } }>;
+    words: Array<{ vocabulary: string; definition: { en: string; th: string; cn: string; tw: string; vi: string } }>;
+    articleId: string;
+  }) => Promise<unknown>;
+  convertCefrLevel: (s: string) => unknown;
+  ArticleType: { FICTION: string };
+}
+
+interface TxLike {
+  insert: (table: unknown) => {
+    values: (v: unknown) => {
+      returning: (projection?: unknown) => Promise<Array<{ id: string }>>;
+    };
+  };
+}
+
+export class ArticleGenerationError extends Error {
+  constructor(
+    message: string,
+    public readonly cause?: unknown,
+  ) {
+    super(message);
+    this.name = "ArticleGenerationError";
+  }
+}
+
+/**
+ * Persists a generated article and its associated question rows inside a caller-supplied
+ * Drizzle transaction (`tx`). Also runs the post-persistence artwork + audio generation
+ * and awaits them. FR-3 fixes: (a) the inner `Promise.all` is awaited so a background
+ * failure surfaces to the caller; (b) a multiple-choice question whose `answer` is not
+ * present in `options` is filtered out instead of being persisted with `correctAnswer: 0`
+ * (which would silently store a wrong answer key).
+ *
+ * @param tx - The Drizzle transaction handle from `db.transaction(async (tx) => ...)`.
+ * @param input - The article payload + injected side-effect generators.
+ * @returns The id of the persisted article.
+ * @throws {ArticleGenerationError} When artwork generation reports failure or background generation throws.
+ */
+export async function persistGeneratedArticle(
+  tx: TxLike,
+  input: PersistArticleInput,
+): Promise<string> {
+  const { article, data, cefrLevel, rating } = input;
+
+  const [createdArticle] = await tx
+    .insert(articles)
+    .values({
+      title: article.title,
+      passage: article.passage,
+      summary: article.summary,
+      translatedSummary: article.translatedSummary,
+      imageDescription: article.imageDesc || "",
+      genre: data.genre,
+      type: ArticleType.FICTION,
+      raLevel: input.convertCefrLevel(cefrLevel || ""),
+      rating,
+      cefrLevel: cefrLevel || "",
+      brainstorming: article.brainstorming,
+      planning: article.planning,
+      topic: data.description,
+      content: article.passage,
+    })
+    .returning();
+
+  const articleId = (createdArticle as { id: string } | undefined)?.id;
+  if (!articleId) {
+    throw new ArticleGenerationError("Article insert did not return an id");
+  }
+
+  if (article.longAnswerQuestions.length > 0) {
+    await tx.insert(longAnswerQuestions).values(
+      article.longAnswerQuestions.map((question) => ({
+        question: question.question,
+        articleId,
+      })),
+    );
+  }
+
+  if (article.shortAnswerQuestions.length > 0) {
+    await tx.insert(shortAnswerQuestions).values(
+      article.shortAnswerQuestions.map((question) => ({
+        question: question.question,
+        answer: question.answer,
+        articleId,
+      })),
+    );
+  }
+
+  const validMcq = article.multipleChoiceQuestions.filter((question) => {
+    if (!Array.isArray(question.options)) return false;
+    return question.options.indexOf(question.answer) >= 0;
+  });
+
+  if (validMcq.length > 0) {
+    await tx.insert(multipleChoiceQuestions).values(
+      validMcq.map((question) => ({
+        question: question.question,
+        options: question.options,
+        answer: question.answer,
+        articleId,
+        correctAnswer: question.options.indexOf(question.answer),
+      })),
+    );
+  }
+
+  const skipped = article.multipleChoiceQuestions.length - validMcq.length;
+  if (skipped > 0) {
+    console.warn(
+      `[new-generator] Skipped ${skipped} multiple-choice row(s) whose answer was not present in options.`,
+    );
+  }
+
+  await Promise.all([
+    input.generateImage({
+      imageDesc: article.imageDesc,
+      articleId,
+      passage: article.passage,
+    }).then((result) => {
+      if (!result.success) {
+        throw new ArticleGenerationError(
+          `Failed to generate images for article ${articleId}: ${result.error ?? "unknown"}`,
+        );
+      }
+    }),
+    input.generateAudio({
+      passage: article.passage,
+      sentences: article.sentences,
+      articleId,
+    }),
+    input.generateAudioForFlashcard({
+      sentences: article.flashcard.map((sentence) => ({
+        sentence: sentence.sentence,
+        translation: sentence.translation,
+      })),
+      words: article.wordlist.map((word) => ({
+        vocabulary: word.vocabulary,
+        definition: word.definitions,
+      })),
+      articleId,
+    }),
+  ]);
+
+  return articleId;
+}
+
 // interface BatchGenerateParams {
 //   type: ArticleType;
 //   level: ArticleBaseCefrLevel;
@@ -91,107 +294,20 @@ export const generateArticleNew = async (
         });
 
         if (rating >= 2) {
-          // Drizzle equivalent of the legacy Prisma `db.$transaction(async (tx) => {...})` block.
-          // Each `tx.<model>.create/createMany(...)` call is replaced with
-          // `tx.insert(<table>).values(...).returning()` / `tx.insert(<table>).values([...])`.
-          db.transaction(async (tx) => {
-            const [createdArticle] = await tx
-              .insert(articles)
-              .values({
-                title: article.title,
-                passage: article.passage,
-                summary: article.summary,
-                translatedSummary: article.translatedSummary,
-                imageDescription: article.imageDesc || "",
-                genre: data.genre,
-                type: ArticleType.FICTION,
-                raLevel: convertCefrLevel(cefrLevel || ""),
-                rating,
-                cefrLevel: cefrLevel || "",
-                brainstorming: article.brainstorming,
-                planning: article.planning,
-                topic: data.description,
-                // `content` is NOT NULL in the Drizzle schema; mirror the
-                // passage into it for parity with the legacy Prisma row shape.
-                content: article.passage,
-              })
-              .returning({ id: articles.id });
-
-            await tx.insert(longAnswerQuestions).values(
-              article.longAnswerQuestions.map((question) => ({
-                question: question.question,
-                articleId: createdArticle.id,
-              })),
-            );
-
-            await tx.insert(shortAnswerQuestions).values(
-              article.shortAnswerQuestions.map((question) => ({
-                question: question.question,
-                answer: question.answer,
-                articleId: createdArticle.id,
-              })),
-            );
-
-            await tx.insert(multipleChoiceQuestions).values(
-              article.multipleChoiceQuestions.map((question) => ({
-                question: question.question,
-                options: question.options,
-                answer: question.answer,
-                articleId: createdArticle.id,
-                // `correctAnswer` is NOT NULL in the Drizzle schema; derive
-                // it from the answer's index when possible, otherwise 0.
-                correctAnswer:
-                  Array.isArray(question.options) &&
-                  question.options.indexOf(question.answer) >= 0
-                    ? question.options.indexOf(question.answer)
-                    : 0,
-              })),
-            );
-
-            Promise.all([
-              generateImage({
-                imageDesc: article.imageDesc,
-                articleId: createdArticle.id,
-                passage: article.passage,
-              }).then((result) => {
-                if (!result.success) {
-                  console.error(
-                    `Failed to generate images for article ${createdArticle.id}:`,
-                    result.error,
-                  );
-                } else {
-                  console.log(
-                    `Successfully generated ${result.imageUrls?.length || 0} images for article ${createdArticle.id}`,
-                  );
-                }
-              }),
-
-              generateAudio({
-                passage: article.passage,
-                sentences: article.sentences,
-                articleId: createdArticle.id,
-              }),
-
-              // generateAudioForWord({
-              //   wordList: article.wordlist.map((word) => ({
-              //     vocabulary: word.vocabulary,
-              //     definition: word.definitions,
-              //   })),
-              //   articleId: createdArticle.id,
-              // }),
-
-              generateAudioForFlashcard({
-                sentences: article.flashcard.map((sentence) => ({
-                  sentence: sentence.sentence,
-                  translation: sentence.translation,
-                })),
-                words: article.wordlist.map((word) => ({
-                  vocabulary: word.vocabulary,
-                  definition: word.definitions,
-                })),
-                articleId: createdArticle.id,
-              }),
-            ]);
+          // FR-3 fix: await the transaction so an inner failure rejects the caller
+          // (the previous code dropped the transaction promise — fire-and-forget).
+          await db.transaction(async (tx) => {
+            await persistGeneratedArticle(tx as never, {
+              article: article as GeneratedArticleInput,
+              data,
+              cefrLevel: cefrLevel || "",
+              rating,
+              generateImage,
+              generateAudio,
+              generateAudioForFlashcard,
+              convertCefrLevel: convertCefrLevel as unknown as PersistArticleInput["convertCefrLevel"],
+              ArticleType,
+            });
           });
           console.log("Article generated successfully");
           return;

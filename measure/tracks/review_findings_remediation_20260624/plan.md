@@ -60,8 +60,12 @@
 
 ## Phase 3: FR-3 — Un-awaited transaction + lossy fills in new-generator.ts (High)
 
-- [ ] Task: Test (Red) — assert the article-generation path awaits its write (inner failure rejects the caller) and rejects a row whose `correctAnswer` cannot be derived. `deferred:session-budget`
-- [ ] Task: Implement (Green) — `await db.transaction(...)`; await the inner `Promise.all`; on failed `correctAnswer`/`content` derivation, fail or skip the row instead of persisting a wrong key. `deferred:session-budget`
+- [x] Task: Test (Red) — assert the article-generation path awaits its write (inner failure rejects the caller) and rejects a row whose `correctAnswer` cannot be derived. SHA: pending.
+    - Extracted `persistGeneratedArticle(tx, input)` as a testable seam so the inner transaction body can be unit-tested without going through the full `generateArticleNew` flow. Test file: `apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.test.ts` (new).
+    - Red proof covered three assertions: (a) the broken-options row is NOT persisted; (b) an inner `tx.insert` failure rejects the caller; (c) the inner `Promise.all` of background generators is awaited.
+- [x] Task: Implement (Green) — `await db.transaction(...)`; await the inner `Promise.all`; on failed `correctAnswer`/`content` derivation, fail or skip the row instead of persisting a wrong key. SHA: pending.
+    - Green: (a) `generateArticleNew` now `await db.transaction(async (tx) => await persistGeneratedArticle(tx, …))`. (b) `persistGeneratedArticle` filters `multipleChoiceQuestions` to `validMcq` (where `options.indexOf(answer) >= 0`) — broken rows are skipped and a single warn-line is logged; the healthy row is persisted with `correctAnswer: <index>`. (c) The inner `Promise.all([image, audio, flashcard])` is now `await`-ed; image-generation failure throws `ArticleGenerationError` instead of `console.error`. (d) Added `@reading-advantage/ai` workspace dep to `apps/primary-advantage/package.json` (the source file already imported it — pre-existing dep gap; fixed during Phase 3 to make the new test suite runnable). (e) Added `@` path alias to `apps/primary-advantage/vitest.config.ts` so the test resolves `@/types/enum` + `@/lib/utils`.
+    - Green proof (`pnpm --filter primary-advantage test`): 40 passed, 0 failed (35 prior + 2 FR-2 + 3 FR-3). `tsc --noEmit` for the new-generator file: no new errors.
 
 ## Phase 4: FR-4 — Roleplay evaluation grounding + storage/type integrity (High)
 
