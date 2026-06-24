@@ -1,0 +1,70 @@
+{
+  "reviewer": "measure-review-c-ux-api",
+  "track": "review_findings_remediation_20260624",
+  "phase": "Phase 4 (FR-4)",
+  "commit": "1fd1e3c8b6eb418af6406a25e281fba6f034cbc8",
+  "baseline_sha": "d63c18319c9a95913846fd4cac39d2b8adadd114",
+  "status": "pass",
+  "gate_results": {
+    "RED_TEST_COMMAND": {
+      "command": "cd apps/sales-advantage && npx vitest run app/api/roleplay-attempts/__tests__/route.test.ts 2>&1 | tail -30",
+      "passed": true,
+      "summary": "4 tests passed"
+    },
+    "GREEN_TEST_COMMAND": {
+      "command": "pnpm --filter sales-advantage test 2>&1 | tail -30",
+      "passed": true,
+      "summary": "13 tests passed (2 test files)"
+    },
+    "PROJECT_CHECKS": {
+      "command": "pnpm --filter sales-advantage check-types 2>&1 | tail -30",
+      "passed": true,
+      "summary": "tsc --noEmit clean"
+    }
+  },
+  "blocking_findings": [],
+  "ux_violations": [],
+  "api_violations": [],
+  "contract_violations": [],
+  "non_blocking_observations": [
+    {
+      "id": "NB-1",
+      "title": "Response shape unchanged, old cast removed cleanly",
+      "detail": "Previous route used `result as { attempt?: { id: string } }` cast; new route accesses `result.attempt?.id` directly. Response shape remains `{ attemptId: string | null, evaluation: RoleplayEvaluationResult | null }`. The sole caller (roleplay-recorder.tsx) reads only `data.evaluation` — no callers depend on `attemptId` at runtime. No breaking change."
+    },
+    {
+      "id": "NB-2",
+      "title": "200 response on storage failure is intentional, not a UX bug",
+      "detail": "When storage.put fails, the route returns 200 with audioStorageKey=null and a valid evaluation. The recording is not preserved, but the evaluation is the primary user-facing value. The roleplay-recorder.tsx only reads `data.evaluation`. A `storageWarning` field could improve UX (e.g., toast: 'Recording not saved'), but this is a nice-to-have, not a contract gap. FR-4 explicitly chose to not block evaluation on storage failure."
+    },
+    {
+      "id": "NB-3",
+      "title": "404 case unchanged",
+      "detail": "Previous code: `if (!scenarioData)` after getScenario() (which throws ScenarioNotFoundError). New code: `if (!evaluationContext.scenario)` after getRoleplayEvaluationContext() (which also throws ScenarioNotFoundError). Both paths return 404 for missing scenarios. The 404 check is technically dead code (the query function throws before returning undefined), but the guard is harmless and the status code is correct."
+    },
+    {
+      "id": "NB-4",
+      "title": "Zod schema is correct — empty string rejected by .min(1)",
+      "detail": "`roleplayAttemptInputSchema` has `audioStorageKey: z.string().min(1).nullable()`. An empty string '' fails the .min(1) check. null passes. This is consistent with the runtime `string | null` contract in createRoleplayAttempt. The schema is not used at runtime (only for type inference via z.infer), but the shape is correct."
+    },
+    {
+      "id": "NB-5",
+      "title": "roleplayAttemptOutputSchema has non-nullable audioStorageKey (latent inconsistency)",
+      "detail": "roleplayAttemptOutputSchema defines `audioStorageKey: z.string()` (non-nullable), but the DB column is nullable and FR-4 makes it nullable on storage failure. The type is never used at runtime — only defined for z.infer. This is latent tech debt: if anyone adds runtime validation against this output schema, attempts with null storage keys would fail validation. Recommend changing to `z.string().nullable()` in a follow-up."
+    }
+  ],
+  "test_strength": {
+    "committed_test": "The committed FR-4 excerpts test asserts only `typeof capturedEvaluate === 'function'`. If the route reverted to passing `excerpts: []` instead of `evaluationContext.canonicalSourceExcerpts`, the test would still pass — it does not verify the evaluator's arguments.",
+    "local_fix_applied": true,
+    "fix_description": "Local modifications strengthen the test by: (1) hoisting `mockEvaluateRaw` so it captures the evaluator's call arguments, (2) asserting `mockEvaluateRaw` was called with the correct excerpts as the 4th argument (`excerpts`), (3) asserting the scenario and rubric objects are correct. The strengthened test would fail if excerpts regress to `[]`.",
+    "fix_files": ["apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts"],
+    "fix_verified": true,
+    "fix_test_result": "4 tests passed with strengthened assertions"
+  },
+  "evidence": {
+    "response_shape_analysis": "route.ts:124-127 returns { attemptId: result.attempt?.id ?? null, evaluation: result.evaluation ?? null }. Previous version: { attemptId: r.attempt?.id ?? null, evaluation: r.evaluation ?? result } with `r = result as { attempt?: { id: string } }`. Shape is identical; only the fallback changed from `result` (full object) to `null` when evaluation is undefined. Since submitRoleplayAttempt always returns { attempt, evaluation } (mutations.ts:223), the fallback never triggers.",
+    "caller_analysis": "roleplay-recorder.tsx:87 reads `const data = await res.json(); setResult(data.evaluation);`. No other callers in sales-advantage reference the response shape. Admin dashboard queries attempts via tRPC/domain, not the REST route.",
+    "storage_null_analysis": "route.ts:117 passes `audioUploadSucceeded ? storageKey : null`. mutations.ts:111 conditionally includes audioStorageKey only when truthy: `...(input.audioStorageKey ? { audioStorageKey: input.audioStorageKey } : {})`. DB column is nullable (sales.ts:112). Contract is consistent across all layers.",
+    "test_fix_commit": "Local uncommitted fix in route.test.ts — hoists mockEvaluateRaw, asserts evaluator receives correct excerpts as 4th argument. Verified: 4/4 tests pass."
+  }
+}

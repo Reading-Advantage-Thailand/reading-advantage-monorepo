@@ -1,0 +1,150 @@
+{
+  "status": "pass",
+  "reviewer": "measure-review-b-security",
+  "track": "review_findings_remediation_20260624",
+  "phase": "Phase 4 (FR-4)",
+  "baseline_sha": "d63c18319c9a95913846fd4cac39d2b8adadd114",
+  "commit_under_review": "1fd1e3c8b6eb418af6406a25e281fba6f034cbc8",
+  "timestamp": "2026-06-24T20:16:00+08:00",
+  "gate_commands": {
+    "red_test_command": {
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/apps/sales-advantage && npx vitest run app/api/roleplay-attempts/__tests__/route.test.ts",
+      "exit_code": 0,
+      "result": "4 tests passed (route.test.ts)"
+    },
+    "green_test_command": {
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter sales-advantage test",
+      "exit_code": 0,
+      "result": "13 tests passed across 2 test files"
+    },
+    "project_checks": {
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter sales-advantage check-types",
+      "exit_code": 0,
+      "result": "tsc --noEmit passed with no errors"
+    }
+  },
+  "blocking_findings": [],
+  "authz_violations": [],
+  "injection_violations": [],
+  "secret_handling_violations": [],
+  "tenant_scoping_violations": [],
+  "migration_safety_violations": [],
+  "info_findings": [
+    {
+      "id": "INFO-1",
+      "severity": "info",
+      "title": "Authorization ordering: storage upload gated by sales:read, not sales:attempt:create",
+      "description": "The route calls getRoleplayEvaluationContext (assertCan('sales:read')) before storage.put, but the more-specific gate for attempt creation (assertCan('sales:attempt:create')) is only reached in submitRoleplayAttempt, after the upload. Currently both permissions share identical role sets [SALES_REP, SALES_ADMIN], so this is functionally equivalent. If permissions diverge, a user with sales:read but not sales:attempt:create could trigger an orphaned upload to object storage (but no DB row would be created).",
+      "recommendation": "Consider checking sales:attempt:create earlier (e.g., in getRoleplayEvaluationContext or immediately after rate limiting) to avoid unnecessary uploads for unauthorized users. Not a blocker given current role assignments.",
+      "files": [
+        "apps/sales-advantage/app/api/roleplay-attempts/route.ts:54-76",
+        "packages/domain/src/sales/queries.ts:165",
+        "packages/domain/src/sales/mutations.ts:194"
+      ]
+    },
+    {
+      "id": "INFO-2",
+      "severity": "info",
+      "title": "roleplayAttemptOutputSchema not updated to nullable audioStorageKey",
+      "description": "The output Zod schema at packages/domain/src/sales/schema.ts:93 still has audioStorageKey: z.string() (non-nullable), while the DB column is now nullable, the input schema is z.string().nullable(), and the mutation accepts string | null. The output schema is only used for type inference (RoleplayAttemptOutput), not for runtime .parse(), so it has no current runtime impact. However, it diverges from the DB contract and could cause validation failures if a future consumer calls .parse() on a row with a null audioStorageKey.",
+      "recommendation": "Update roleplayAttemptOutputSchema line 93 to audioStorageKey: z.string().nullable() to match the DB and input schemas.",
+      "files": [
+        "packages/domain/src/sales/schema.ts:93",
+        "packages/db/src/schema/sales.ts:112"
+      ]
+    },
+    {
+      "id": "INFO-3",
+      "severity": "info",
+      "title": "LLM prompt injection surface via salesLessons.content",
+      "description": "The canonicalSourceExcerpts flow passes untrusted lesson content (salesLessons.content, writable by users with sales:curriculum:approve / SALES_ADMIN) directly to the LLM evaluator as grounding material. An admin could write content that manipulates the LLM into producing biased evaluations, ignoring instructions, or behaving unexpectedly. The approval gate (sales:curriculum:approve) limits this to trusted admin users, so the risk is low.",
+      "recommendation": "Consider content validation or output-side guardrails on the LLM evaluation response. Out of scope for FR-4.",
+      "files": [
+        "packages/domain/src/sales/queries.ts:132-141",
+        "packages/domain/src/sales/queries.ts:157-187",
+        "apps/sales-advantage/app/api/roleplay-attempts/route.ts:109"
+      ]
+    },
+    {
+      "id": "INFO-4",
+      "severity": "info",
+      "title": "Pre-existing as unknown as casts persist in submitRoleplayAttempt / saveAttemptEvaluation",
+      "description": "The new route code cleanly drops the as never casts, passing { db, user, tenant } directly. However, the internal submitRoleplayAttempt function (mutations.ts:195-220) retains pre-existing as unknown as DB and as unknown as SalesDomainContext['db'] casts to bridge between the TenantDB-scoped context and the REFERENTIAL-only sales tables. These are not introduced by this commit and are functionally correct (salesRawDb handles both TenantDB and DB), but they obscure type safety within the domain layer.",
+      "recommendation": "Address in a future track: refactor submitRoleplayAttempt and saveAttemptEvaluation to accept the raw DB type directly rather than casting through unknown. Not blocking for FR-4.",
+      "files": [
+        "packages/domain/src/sales/mutations.ts:161",
+        "packages/domain/src/sales/mutations.ts:195",
+        "packages/domain/src/sales/mutations.ts:197",
+        "packages/domain/src/sales/mutations.ts:220"
+      ]
+    }
+  ],
+  "positive_findings": [
+    {
+      "id": "POS-1",
+      "title": "Storage integrity: dangling-key scenario correctly prevented",
+      "description": "The route now uses a boolean flag (audioUploadSucceeded) that is only set to true after storage.put resolves. On rejection, audioStorageKey is explicitly set to null. The createRoleplayAttempt function uses a conditional spread (input.audioStorageKey ? { audioStorageKey: input.audioStorageKey } : {}) so null values are not inserted. No fallback path persists a key for an object that was never uploaded. Tests confirm both success and failure paths.",
+      "files": [
+        "apps/sales-advantage/app/api/roleplay-attempts/route.ts:66-117",
+        "packages/domain/src/sales/mutations.ts:107-112",
+        "apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts:176-237"
+      ]
+    },
+    {
+      "id": "POS-2",
+      "title": "Authorization gates reached before storage upload",
+      "description": "The authz flow is: validateSession (authn) → checkRateLimit → getRoleplayEvaluationContext (assertCan('sales:read')) → storage.put → submitRoleplayAttempt (assertCan('sales:attempt:create')). Both authz checks occur in domain functions, not in the route layer, ensuring the gates are enforced regardless of the transport layer. The first assertCan fires before any side-effects (storage write or DB write). Both permissions have identical role assignments.",
+      "files": [
+        "apps/sales-advantage/app/api/roleplay-attempts/route.ts:18-36",
+        "packages/domain/src/sales/queries.ts:165",
+        "packages/domain/src/sales/mutations.ts:88"
+      ]
+    },
+    {
+      "id": "POS-3",
+      "title": "Tenant scoping: REFERENTIAL sales tables correctly scoped by userId",
+      "description": "All sales tables are REFERENTIAL (no schoolId column). The code correctly uses salesRawDb() to bypass TenantDB auto-scoping and manually scopes queries by userId + scenarioId. Attempts are created with userId: user.id, preventing cross-user write. Scenario reads are gated by assertCan('sales:read'), which authorizes the user to read shared curriculum. A user cannot create attempts in another user's name or inject a mismatched userId.",
+      "files": [
+        "packages/domain/src/sales/contracts.ts:39-43",
+        "packages/domain/src/sales/mutations.ts:99-103",
+        "packages/domain/src/sales/mutations.ts:107-110",
+        "packages/domain/src/sales/queries.ts:165-166"
+      ]
+    },
+    {
+      "id": "POS-4",
+      "title": "as never removal: type alignment is real, no hidden casts",
+      "description": "The old route code passed db as never to getScenario and submitRoleplayAttempt. The new code passes { db, user, tenant } directly — no type casts. The SalesDomainContext interface accepts TenantDB | DB, and salesRawDb() handles both cases. No as any, as never, or @ts-ignore statements exist in the new route code, the new getRoleplayEvaluationContext function, or the updated submitRoleplayAttempt path.",
+      "files": [
+        "apps/sales-advantage/app/api/roleplay-attempts/route.ts:54-56",
+        "apps/sales-advantage/app/api/roleplay-attempts/route.ts:113-114",
+        "packages/domain/src/sales/contracts.ts:12-16"
+      ]
+    },
+    {
+      "id": "POS-5",
+      "title": "Schema relaxation: DB, Drizzle, domain input, and mutation all consistent",
+      "description": "The migration (0023) drops NOT NULL on audio_storage_key. The Drizzle schema removes .notNull(). The domain input schema uses z.string().min(1).nullable(). The createRoleplayAttempt mutation accepts string | null and conditionally inserts. The submitRoleplayAttempt mutation passes through null. No other production code path (tRPC router, API consumer) calls createRoleplayAttempt or submitRoleplayAttempt with a non-null expectation. The migration journal (0023_cultured_sunspot) is properly registered.",
+      "files": [
+        "packages/db/drizzle/0023_cultured_sunspot.sql",
+        "packages/db/drizzle/meta/_journal.json",
+        "packages/db/src/schema/sales.ts:112",
+        "packages/domain/src/sales/schema.ts:68",
+        "packages/domain/src/sales/mutations.ts:86",
+        "packages/domain/src/sales/mutations.ts:111"
+      ]
+    },
+    {
+      "id": "POS-6",
+      "title": "Tests cover storage success, failure, and scenario-not-found paths",
+      "description": "Four tests validate: (1) canonical source excerpts are passed to the evaluator, (2) storage.put rejection yields audioStorageKey=null, (3) storage.put success persists the key, (4) scenario-not-found returns 404. Tests capture the actual evaluate callback and storage key arguments, verifying the full contract rather than just HTTP status codes. All tests pass (green gate).",
+      "files": [
+        "apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts"
+      ]
+    }
+  ],
+  "evidence": {
+    "audit_method": "Full diff review of commit 1fd1e3c8b6eb418af6406a25e281fba6f034cbc8 against baseline d63c18319c9a95913846fd4cac39d2b8adadd114. Read all 10 changed files in full (route.ts, mutations.ts, queries.ts, schema.ts, contracts.ts, errors.ts, permissions.ts, assert.ts, migration SQL, journal.json). Searched for as any/as never/@ts-ignore in new code (none found). Searched for all callers of createRoleplayAttempt/submitRoleplayAttempt (only the route calls them in production). Verified permission role assignments: sales:read and sales:attempt:create are both [SALES_REP, SALES_ADMIN]. Ran all three gate commands (RED_TEST, GREEN_TEST, PROJECT_CHECKS) — all pass.",
+    "diff_summary": "10 files changed: route.ts (+77/-37) replaces getScenario+as never with getRoleplayEvaluationContext; adds audioUploadSucceeded flag to prevent dangling keys; passes canonicalSourceExcerpts to evaluator. mutations.ts (+17/-37) makes audioStorageKey nullable in createRoleplayAttempt and submitRoleplayAttempt; adds conditional insert. queries.ts (+66 lines) adds extractCanonicalSourceExcerpts and getRoleplayEvaluationContext. schema.ts makes roleplayAttemptInputSchema.audioStorageKey nullable. sales.ts (DB schema) drops .notNull() on audioStorageKey. New migration 0023_cultured_sunspot.sql drops NOT NULL constraint. New test file with 4 tests."
+  }
+}

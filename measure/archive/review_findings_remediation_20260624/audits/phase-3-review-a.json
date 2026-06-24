@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "FR-3 fix is correct and the new tests meaningfully exercise the defect paths. `generateArticleNew` now awaits `db.transaction`, the inner `Promise.all` of background generators is awaited, and multiple-choice rows with an answer not present in `options` are filtered out instead of being persisted with `correctAnswer: 0`. The primary-advantage test suite passes with the new tests included. Full-app `tsc --noEmit` still fails, but only on pre-existing type errors in files unchanged by this commit; no type errors were introduced in `new-generator.ts` or `new-generator.test.ts`.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Full-app `pnpm --filter primary-advantage exec tsc --noEmit` fails with pre-existing type errors in unchanged files (`teacherModel.ts`, `userModel.ts`, `assistant.ts`, `image-generator.ts`, `sentence-translator.ts`, `story-generator.ts`). The changed files (`new-generator.ts`, `new-generator.test.ts`) produce no new type errors.",
+    "`persistGeneratedArticle` and its test cast the Drizzle transaction handle with `tx as never`, and `generateArticleNew` casts `convertCefrLevel`/`article` through `unknown`. These are unnecessary type-safety leaks; the seam should preserve the transaction type (e.g. `tx as unknown as TxLike`) rather than `as never`.",
+    "`PersistArticleInput` includes `ArticleType`, but `persistGeneratedArticle` uses the module-level `ArticleType` imported from `@/types/enum`. The injected parameter is currently unused.",
+    "`server/models/__tests__/fr11.behavior.test.ts` logs a Vitest mock error for a missing `schools` export during the full primary-advantage run, but the test file still passes; this is unrelated to FR-3.",
+    "The new test suite does not cover the `ArticleGenerationError` thrown when `generateImage` returns `{ success: false }` (implemented at `new-generator.ts:199-203`)."
+  ],
+  "evidence": [
+    "Commit d63c1831 refactors `apps/primary-advantage/server/utils/genaretors/new-generator.ts`: `generateArticleNew` now `await db.transaction(...)` (line 299), the transaction body is extracted to `persistGeneratedArticle`, and the inner `Promise.all([generateImage, generateAudio, generateAudioForFlashcard])` is awaited (line 193).",
+    "`persistGeneratedArticle` filters `article.multipleChoiceQuestions` to `validMcq` where `question.options.indexOf(question.answer) >= 0` (lines 169-172) and only persists those rows; skipped rows are logged with `console.warn` (lines 186-190).",
+    "`new-generator.test.ts` adds three behavioral assertions: (a) a broken MCQ row is not persisted, (b) an inner transaction rejection propagates to the caller, (c) the background generator `Promise.all` is awaited before the function resolves.",
+    "`pnpm --filter primary-advantage exec vitest run server/utils/genaretors/__tests__/new-generator.test.ts` passes: 3/3 tests green.",
+    "`pnpm --filter primary-advantage test` passes: 43/43 tests green across 4 test files.",
+    "`pnpm install --frozen-lockfile` exits 0; `@reading-advantage/ai` is correctly declared as `workspace:*` in `apps/primary-advantage/package.json` and linked in `pnpm-lock.yaml`.",
+    "`apps/primary-advantage/vitest.config.ts` `@` alias (`path.resolve(__dirname, '.')`) matches `tsconfig.json` `paths['@/*'] = ['./*']`.",
+    "Git diff shows the type-error files (`teacherModel.ts`, `userModel.ts`, `assistant.ts`, `image-generator.ts`, `sentence-translator.ts`, `story-generator.ts`) were not modified by d63c1831, and `@reading-advantage/ai` package exports were not changed, so the reported tsc errors are pre-existing."
+  ],
+  "commands": [
+    {
+      "name": "RED_TEST_COMMAND",
+      "command": "pnpm --filter primary-advantage exec vitest run server/utils/genaretors/__tests__/new-generator.test.ts 2>&1 | tail -30",
+      "result": "pass (3/3 tests passed)"
+    },
+    {
+      "name": "GREEN_TEST_COMMAND",
+      "command": "pnpm --filter primary-advantage test 2>&1 | tail -30",
+      "result": "pass (43/43 tests passed across 4 test files; fr11.behavior.test.ts emitted an unrelated mock stderr warning but did not fail)"
+    },
+    {
+      "name": "PROJECT_CHECKS",
+      "command": "pnpm --filter primary-advantage exec tsc --noEmit 2>&1 | tail -30",
+      "result": "fail — pre-existing type errors only, in unchanged files: teacherModel.ts(374,429,531), userModel.ts(51), assistant.ts(52,116), image-generator.ts(4,5,8), sentence-translator.ts(149), story-generator.ts(50). No errors in changed files."
+    },
+    {
+      "name": "LOCKFILE_CONSISTENCY",
+      "command": "pnpm install --frozen-lockfile 2>&1 | tail -10",
+      "result": "pass (Already up to date)"
+    }
+  ],
+  "changed_files": [
+    "apps/primary-advantage/server/utils/genaretors/new-generator.ts",
+    "apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.test.ts",
+    "apps/primary-advantage/vitest.config.ts",
+    "apps/primary-advantage/package.json",
+    "pnpm-lock.yaml"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

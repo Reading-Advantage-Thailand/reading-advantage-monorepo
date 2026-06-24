@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 5 (FR-5/6) implementation satisfies the spec. FR-5: roleplay-evaluator.ts now logs both the primary and fallback errors and throws SalesError with a structured `cause: { primaryError, fallbackError }`, making two-tier LLM failures debuggable. The SalesError constructor accepts an optional `{ cause?: unknown }` options bag and forwards it to `super(message, options)`, preserving native `Error.cause` semantics while remaining backward-compatible with all existing two-argument call sites. FR-6: permissions.ts exports `registerSalesPermissions()` which derives the `registerDomainModulePermissions` payload from `Object.entries(SALES_PERMISSIONS)`, removing the duplicate literal key→role array. The unit test asserts derivation correctness by sorting keys and roles, so iteration order is irrelevant. All gate commands pass; the domain test suite reports 315 passed with the same 3 pre-existing tenant-coverage failures as before.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NB-1",
+      "title": "Free-form console.error in domain layer",
+      "description": "roleplay-evaluator.ts uses `console.error` to log the primary and fallback failures. AGENTS.md prefers structured logging over free-form console output. The spec explicitly requested logging, and no structured logger is injected into the domain function, so this is acceptable for the current phase but should be revisited if a logging adapter is introduced.",
+      "severity": "low"
+    },
+    {
+      "id": "NB-2",
+      "title": "Central PERMISSIONS map still duplicates sales keys",
+      "description": "packages/auth/src/permissions.ts still contains a literal copy of the nine sales permission keys and roles. Because `lookupPermission` checks module registrations first, the derived sales registration wins at runtime, but the central map remains a latent drift surface. Removing or deriving it is outside the scope of FR-6 (which only required deriving the sales registration from SALES_PERMISSIONS).",
+      "severity": "low"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/errors.ts:4-13",
+      "description": "SalesError constructor now accepts `options?: { cause?: unknown }` and forwards it via `super(message, options)`, populating the native `cause` field. Existing two-argument callers remain valid because the parameter is optional."
+    },
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/roleplay-evaluator.ts:174-194",
+      "description": "When both the primary multimodal path and the fallback STT→eval path reject, both errors are logged and the thrown SalesError carries `cause: { primaryError, fallbackError }`."
+    },
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/permissions.ts:23-31",
+      "description": "`registerSalesPermissions()` derives the registration payload from `Object.entries(SALES_PERMISSIONS)`, eliminating the previous duplicate literal array."
+    },
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts:16-39",
+      "description": "FR-6 test asserts that `registerDomainModulePermissions` is called once and that the sorted keys and sorted role lists match `SALES_PERMISSIONS`, proving derivation from the single source of truth."
+    },
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts:75-103",
+      "description": "FR-5 test injects rejecting `vi.fn()` mocks for both AI paths and asserts the thrown SalesError has code `EVALUATION_FAILED` and `cause: { primaryError, fallbackError }`."
+    },
+    {
+      "type": "command",
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/packages/domain && npx vitest run src/sales/__tests__/permissions-and-evaluator.test.ts 2>&1 | tail -10",
+      "result": "Test Files 1 passed (1), Tests 2 passed (2)"
+    },
+    {
+      "type": "command",
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter @reading-advantage/domain test 2>&1 | tail -10",
+      "result": "Tests 315 passed | 3 failed | 5 skipped (323). The 3 failures are pre-existing tenant-coverage failures for `verification_tokens`; the FR-5/6 file passes."
+    },
+    {
+      "type": "command",
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter @reading-advantage/domain check-types 2>&1 | tail -5",
+      "result": "$ tsc --noEmit (exit 0)"
+    }
+  ],
+  "commands": [
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/packages/domain && npx vitest run src/sales/__tests__/permissions-and-evaluator.test.ts 2>&1 | tail -30",
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter @reading-advantage/domain test 2>&1 | tail -50",
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter @reading-advantage/domain check-types 2>&1 | tail -30"
+  ],
+  "changed_files": [
+    "packages/domain/src/sales/errors.ts",
+    "packages/domain/src/sales/roleplay-evaluator.ts",
+    "packages/domain/src/sales/permissions.ts",
+    "packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

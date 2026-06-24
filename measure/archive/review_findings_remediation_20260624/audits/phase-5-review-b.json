@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Security audit for Phase 5 (FR-5/6) finds NO blocking issues. FR-5: The SalesError `cause` field (carrying `{ primaryError, fallbackError }`) is set via the native Error constructor's `options.cause` — it is a non-enumerable own property, invisible to JSON.stringify() and NextResponse.json(). The route handler's catch block in apps/sales-advantage only exposes `error.message` to the client; the `cause` object is never serialized into the HTTP response. The route handler's own `console.error` logs the SalesError but Node.js util.inspect (used by console.error by default) does not show non-enumerable properties, so `cause` does not appear. The evaluator's new `console.error` lines log `primaryError` and `fallbackError` (Error objects from the LLM provider). These are server-side logs; the provider (OpenRouter) returns HTTP status/error messages in error bodies, never API keys (keys are sent in request headers). FR-6: `registerSalesPermissions()` derives registration from `Object.entries(SALES_PERMISSIONS)` with shallow-copied role arrays. The SALES_PERMISSIONS constant uses `as const` (TypeScript-deeply-readonly). The module name 'sales' is unique across all 12 domain modules. The function is called once at module load; Node.js module caching prevents re-invocation. The SalesError.code field carries only application-level codes (e.g. 'EVALUATION_FAILED') — not sensitive. All gate commands pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "SEC-NB-1",
+      "title": "Evaluator console.error logs full provider Error objects",
+      "description": "roleplay-evaluator.ts:179-188 logs `primaryError` and `fallbackError` via `console.error`. These Error objects include provider error messages and stack traces. If logs are piped to a centralized logging service (Sentry, Datadog), provider error details (model names, HTTP status codes, internal request IDs from OpenRouter responses) would be transmitted off-server. While API keys are NOT included (they are sent as request headers, not returned in error bodies), this increases the surface of data leaving the server. The spec explicitly requested logging for debuggability (FR-5), so this is accepted. Recommended follow-up: use a structured logger with a redaction filter for provider error details before shipping to third-party log aggregators.",
+      "severity": "low"
+    },
+    {
+      "id": "SEC-NB-2",
+      "title": "error.message in 5xx response exposes internal model identifiers",
+      "description": "The route handler's catch block returns `message: error instanceof Error ? error.message : String(error)`. For an EVALUATION_FAILED SalesError, the message includes model identifiers such as 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free'. These are public model names and do not constitute secrets, but they reveal internal infrastructure choices to clients. Consider returning a generic 'Evaluation failed' message in production and logging the detailed message server-side only. Not a security vulnerability, but an information disclosure hardening opportunity.",
+      "severity": "low"
+    },
+    {
+      "id": "SEC-NB-3",
+      "title": "registerDomainModulePermissions is not idempotent",
+      "description": "The `registerDomainModulePermissions()` function unconditionally pushes into a module-level array without deduplication. If `registerSalesPermissions()` were ever called more than once (e.g., via a hot-reload edge case or dynamic import), permissions would be double-registered. The `lookupPermission` function comments that 'last registered wins for duplicates', so double registration is not a security hazard — it's a code-quality concern. Node.js module caching ensures single invocation in normal operation.",
+      "severity": "low"
+    },
+    {
+      "id": "SEC-NB-4",
+      "title": "Central PERMISSIONS map in auth package duplicates sales keys",
+      "description": "packages/auth/src/permissions.ts:94-103 still contains a literal copy of all nine sales permission keys and roles. The `lookupPermission` function checks module registrations first (so the derived sales registration wins), but the central map is a latent drift surface. If someone adds a new sales permission to SALES_PERMISSIONS but forgets to update the auth PERMISSIONS map, the lookup would still work (module wins), but the central map would be stale. Not a security vulnerability since module registration takes precedence, but a maintenance concern.",
+      "severity": "low"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "code",
+      "location": "apps/sales-advantage/app/api/roleplay-attempts/route.ts:128-137",
+      "description": "The route handler's catch block returns `{ error: 'Evaluation failed', message: error.message }` via NextResponse.json(). The native `Error.cause` property is non-enumerable and is NOT included in JSON.stringify() output — verified that no client-facing exposure of the LLM provider's error objects in the `cause` field."
+    },
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/errors.ts:4-13",
+      "description": "SalesError constructor now accepts `options?: { cause?: unknown }` and passes to `super(message, options)`. The native Error constructor populates `this.cause` as a non-enumerable own property. `code` remains `public readonly string` (application-level codes only — no secrets)."
+    },
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/roleplay-evaluator.ts:174-194",
+      "description": "When both AI paths fail, `primaryError` and `fallbackError` are logged server-side and attached as `cause: { primaryError, fallbackError }` on the thrown SalesError. The cause is non-enumerable and invisible to client responses."
+    },
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/permissions.ts:11-21",
+      "description": "SALES_PERMISSIONS is declared `const` with `as const` assertion — TypeScript-deeply-readonly. The roles arrays are shallow-copied (`roles: [...roles]`) at registration time, preventing mutation of the registered entries even if the source were modified at runtime (which TypeScript compilation would reject)."
+    },
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/permissions.ts:23-31",
+      "description": "`registerSalesPermissions()` derives keys from `Object.entries(SALES_PERMISSIONS)`. The moduleName 'sales' is unique (audited all 12 domain modules: stories, progress, codecamp, curriculum, users, reports, assignments, licenses, articles, gamification, quiz, sales — no conflict)."
+    },
+    {
+      "type": "code",
+      "location": "packages/auth/src/permissions.ts:17-27, 35-43",
+      "description": "`registerDomainModulePermissions()` pushes into a module-level array (no dedup). `lookupPermission()` iterates from end (LIFO), with comment 'last registered wins for duplicates'. Double registration is harmless due to LIFO lookup semantics. Node.js module caching ensures single invocation of the module-level call `registerSalesPermissions()`."
+    },
+    {
+      "type": "code",
+      "location": "packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts:48-103",
+      "description": "FR-5 test: mocks reject both AI paths, asserts thrown SalesError.code === 'EVALUATION_FAILED' and cause.primaryError/fallbackError match injected errors. FR-6 test: mocks registerDomainModulePermissions, asserts single call with correct keys/roles derived from SALES_PERMISSIONS."
+    },
+    {
+      "type": "command",
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/packages/domain && npx vitest run src/sales/__tests__/permissions-and-evaluator.test.ts 2>&1 | tail -10",
+      "result": "Test Files 1 passed (1), Tests 2 passed (2)"
+    },
+    {
+      "type": "command",
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/packages/domain && npx tsc --noEmit --pretty false 2>&1 | tail -5",
+      "result": "$ tsc --noEmit (exit 0, no errors)"
+    },
+    {
+      "type": "command",
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/packages/domain && npx tsc --pretty false 2>&1 | tail -5",
+      "result": "$ tsc (build, exit 0, no errors)"
+    }
+  ],
+  "commands": [
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/packages/domain && npx vitest run src/sales/__tests__/permissions-and-evaluator.test.ts 2>&1 | tail -30",
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter @reading-advantage/domain test 2>&1 | tail -50",
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter @reading-advantage/domain check-types 2>&1 | tail -30"
+  ],
+  "changed_files": [
+    "packages/domain/src/sales/errors.ts",
+    "packages/domain/src/sales/roleplay-evaluator.ts",
+    "packages/domain/src/sales/permissions.ts",
+    "packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts",
+    "measure/tracks/review_findings_remediation_20260624/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

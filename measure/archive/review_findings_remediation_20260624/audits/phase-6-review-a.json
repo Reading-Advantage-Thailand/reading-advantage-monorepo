@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 6 (FR-7/8) Red+Green commit reviewed and a blocking prompt-injection vector fixed. FR-7 rate-limit banner is clear, structured, and references the Postgres-backed migration path. FR-8 Zod schema correctly validates the chat input contract. FR-8 role-marker sanitization was extended to strip bracketed variants such as '[COACH]:' because the closing marker was changed to '[COACH]:' and the original regex only stripped whitespace-bounded 'COACH:' / 'REP:'. All gate commands pass after the fix.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NB-1",
+      "file": "apps/sales-advantage/app/api/chat/route.ts",
+      "detail": "Closing marker '[COACH]:' is consistent with the bracketed turn format but uses a trailing colon, while internal assistant turns use '[COACH] <content>' without a colon. This is intentional (signals generation point) and sanitized, but slightly inconsistent."
+    },
+    {
+      "id": "NB-2",
+      "file": "apps/sales-advantage/app/api/chat/__tests__/route.test.ts",
+      "detail": "Tests do not assert the exact sanitized content string; they rely on negative regex matches and occurrence counts. This is sufficient for regression detection but could be strengthened with a snapshot of the sanitized prompt."
+    }
+  ],
+  "evidence": [
+    {
+      "item": "FR-7 banner in apps/sales-advantage/lib/rate-limit.ts is a structured block documenting per-process Map limitation and migration path to rate_limiter_v2_20260603.",
+      "verified": true
+    },
+    {
+      "item": "checkRateLimit() JSDoc references the banner and the Postgres-backed migration path.",
+      "verified": true
+    },
+    {
+      "item": "FR-8 chatInputSchema validates messages as 1..50 items, role as 'user'|'assistant', content as non-empty string <= 8000 chars, and optional lessonId/moduleId strings.",
+      "verified": true
+    },
+    {
+      "item": "All 5 Zod rejection cases (missing messages, empty messages, missing content, non-string content, unknown role) return 400 and do not call streamText.",
+      "verified": true
+    },
+    {
+      "item": "Original regex /(^|\\s)(REP|COACH):/gi did not strip '[COACH]:' because '[' is not whitespace or start-of-string, allowing injection through the new closing marker. This was a blocker.",
+      "verified": true
+    },
+    {
+      "item": "Fixed regex /\\[(?:REP|COACH)\\]:?|(^|\\s)(?:REP|COACH):/gi strips both bracketed markers (e.g. '[COACH]:', '[REP]') and whitespace-bounded plain markers (e.g. '\\nCOACH:').",
+      "verified": true
+    },
+    {
+      "item": "Added route-level regression test for '[COACH]:' injection that asserts only the legitimate closing marker remains in the assembled prompt.",
+      "verified": true
+    },
+    {
+      "item": "Fix committed as 0b19795f 'fix(sales): bracketed role-marker injection (track_id: review_findings_remediation_20260624)'.",
+      "verified": true
+    }
+  ],
+  "commands": [
+    {
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/apps/sales-advantage && npx vitest run app/api/chat/__tests__/route.test.ts 2>&1 | tail -30",
+      "result": "pass — 10 tests passed"
+    },
+    {
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter sales-advantage test 2>&1 | tail -30",
+      "result": "pass — 2 test files, 14 tests passed"
+    },
+    {
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter sales-advantage check-types 2>&1 | tail -30",
+      "result": "pass — tsc --noEmit exited 0"
+    }
+  ],
+  "changed_files": [
+    "apps/sales-advantage/app/api/chat/route.ts",
+    "apps/sales-advantage/app/api/chat/__tests__/route.test.ts",
+    "apps/sales-advantage/lib/rate-limit.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

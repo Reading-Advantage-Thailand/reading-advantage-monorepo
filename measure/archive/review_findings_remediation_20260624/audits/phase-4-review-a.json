@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 4 (FR-4) implementation satisfies AC-4 after a focused test fix. The route now calls getRoleplayEvaluationContext before storage upload, passes real canonical source excerpts to the evaluator, persists audioStorageKey only on successful upload, and contains no `as never`/`as unknown as` casts. The initial route test for excerpts was shallow (it only verified the route built an evaluator function and did not prove the excerpts reached the raw evaluator); this was fixed in commit 91da6adc to assert the wrapped evaluator is called with the non-empty excerpt array. All gate commands pass.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NB-1",
+      "title": "Migration rollback caveat",
+      "description": "0023_cultured_sunspot.sql is a one-line `ALTER TABLE ... DROP NOT NULL`. Rolling it back (re-adding NOT NULL) would fail if any rows with audio_storage_key IS NULL were inserted during the forward phase. This is acceptable for a Drizzle-generated forward migration, but production rollback would require a data-migration step first.",
+      "severity": "low"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "code",
+      "location": "apps/sales-advantage/app/api/roleplay-attempts/route.ts:54-58",
+      "description": "getRoleplayEvaluationContext is awaited before any storage.put call, satisfying the ordering requirement."
+    },
+    {
+      "type": "code",
+      "location": "apps/sales-advantage/app/api/roleplay-attempts/route.ts:98-108",
+      "description": "audioUploadSucceeded flag is set only when storage.put resolves; audioStorageKey is passed as null on rejection."
+    },
+    {
+      "type": "code",
+      "location": "apps/sales-advantage/app/api/roleplay-attempts/route.ts:113-153",
+      "description": "wrappedEvaluate passes evaluationContext.scenario, evaluationContext.rubric, and evaluationContext.canonicalSourceExcerpts to the raw evaluator with no `as never`/`as unknown as` casts."
+    },
+    {
+      "type": "code",
+      "location": "apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts:177-194",
+      "description": "Excerpts test now asserts mockEvaluateRaw was called with the non-empty excerpt array, fixing the shallow assertion."
+    },
+    {
+      "type": "schema",
+      "location": "packages/db/src/schema/sales.ts:54",
+      "description": "salesLessons.content column exists as text("content").notNull().default(""), so getRoleplayEvaluationContext's select is valid."
+    },
+    {
+      "type": "migration",
+      "location": "packages/db/drizzle/0023_cultured_sunspot.sql",
+      "description": "Single-line migration relaxes audio_storage_key from NOT NULL to nullable, matching the new code path that omits the key on upload failure."
+    },
+    {
+      "type": "command",
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/apps/sales-advantage && npx vitest run app/api/roleplay-attempts/__tests__/route.test.ts 2>&1 | tail -10",
+      "result": "Test Files 1 passed (1), Tests 4 passed (4)"
+    },
+    {
+      "type": "command",
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter sales-advantage test 2>&1 | tail -10",
+      "result": "Test Files 2 passed (2), Tests 13 passed (13)"
+    },
+    {
+      "type": "command",
+      "command": "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter sales-advantage check-types 2>&1 | tail -5",
+      "result": "$ tsc --noEmit (exit 0)"
+    }
+  ],
+  "commands": [
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/apps/sales-advantage && npx vitest run app/api/roleplay-attempts/__tests__/route.test.ts 2>&1 | tail -30",
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter sales-advantage test 2>&1 | tail -30",
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter sales-advantage check-types 2>&1 | tail -30"
+  ],
+  "changed_files": [
+    "apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

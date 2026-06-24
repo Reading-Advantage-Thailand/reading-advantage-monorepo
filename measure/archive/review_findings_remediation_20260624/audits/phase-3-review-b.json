@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "FR-3 security and data-integrity fixes are correctly implemented: (a) fire-and-forget db.transaction is now awaited at both the outer call site and within persistGeneratedArticle's inner Promise.all; (b) MCQ rows whose answer is not in options are filtered out entirely instead of silently persisted with correctAnswer: 0; (c) image-generation failure throws ArticleGenerationError instead of console.error; (d) the ArticleGenerationError message does not leak article content/PII. No new injection vectors, no tenant-scoping regression, no secret/PII exposure. All 3 FR-3 tests pass, full test suite passes (43/43), and TSC produces no new errors.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    {
+      "check": "Fire-and-forget transaction — outer await",
+      "result": "PASS",
+      "detail": "generateArticleNew line 299: `await db.transaction(async (tx) => { await persistGeneratedArticle(tx as never, …) })`. Previously the `db.transaction(…)` call was un-awaited (fire-and-forget). Grep confirms only one non-commented `db.transaction` call in the file, and it is awaited."
+    },
+    {
+      "check": "Fire-and-forget Promise.all — inner await",
+      "result": "PASS",
+      "detail": "persistGeneratedArticle line 193: `await Promise.all([generateImage, generateAudio, generateAudioForFlashcard])`. Previously the Promise.all was un-awaited (errors became unhandled rejections). The test 'awaits the inner Promise.all of background generators' verifies all three complete before resolve."
+    },
+    {
+      "check": "correctAnswer: 0 fallback — filtering",
+      "result": "PASS",
+      "detail": "persistGeneratedArticle lines 169–172: `const validMcq = article.multipleChoiceQuestions.filter(q => Array.isArray(q.options) && q.options.indexOf(q.answer) >= 0)`. Rows failing the filter are skipped and a single warn-line is logged (line 188). The test 'a row whose answer is not in options is NOT persisted with correctAnswer: 0' confirms the broken row is absent from inserts while the healthy row is present with correctAnswer: 1."
+    },
+    {
+      "check": "correctAnswer filter — injection/bypass vectors",
+      "result": "PASS",
+      "detail": "`indexOf` uses strict equality (===), no type coercion. `options` is typed `string[]`, `answer` is typed `string`. `Array.isArray` guard prevents non-array bypass. Empty options array returns indexOf=-1, correctly filtered. Case-sensitive matching is intentional (AI output is deterministic). No injection vector found."
+    },
+    {
+      "check": "Tenant scoping",
+      "result": "NO REGRESSION",
+      "detail": "articles table is classified REFERENTIAL in tenant-registry.ts (scoped via authorId FK, no schoolId column). persistGeneratedArticle inserts into raw Drizzle tables through a transaction handle — same pattern as the old code. generateArticleNew is a batch content-generation script, not a user-facing API. No tenant scoping was expected or introduced."
+    },
+    {
+      "check": "Error path PII/secret leak",
+      "result": "PASS",
+      "detail": "ArticleGenerationError (line 96–104) accepts `message` and optional `cause`. Thrown at line 200 with only `articleId` (a DB UUID) and `result.error` (image-generator error string). No article content, passage text, user data, or secrets included in the error message."
+    },
+    {
+      "check": "Error propagation through transaction",
+      "result": "PASS",
+      "detail": "Image failure inside `await Promise.all` throws ArticleGenerationError which rejects persistGeneratedArticle, which rejects the db.transaction callback, triggering a rollback. The error propagates to generateArticleNew's try/catch (line 315–321) which retries up to MAX_ATTEMPTS=3. Previously image failure was `console.error`-logged and swallowed."
+    },
+    {
+      "check": "Test altitude",
+      "result": "PASS",
+      "detail": "3 tests in new-generator.test.ts directly cover the 3 FR-3 concerns: (1) broken-answer row not persisted, (2) inner failure rejects caller, (3) background generators awaited. Tests use persistGeneratedArticle as a testable seam with mocked tx and injected side-effect generators. Appropriate for a security/data-integrity concern."
+    },
+    {
+      "check": "@reading-advantage/ai dependency addition",
+      "result": "PASS",
+      "detail": "This import existed at line 1 of new-generator.ts before the commit but was missing from package.json. The dependency gap is now closed. The ai package is linked via workspace:* in pnpm-lock.yaml."
+    }
+  ],
+  "commands": [
+    {
+      "command": "RED_TEST_COMMAND: pnpm --filter primary-advantage exec vitest run server/utils/genaretors/__tests__/new-generator.test.ts",
+      "exit_code": 0,
+      "output_summary": "3 tests passed (3/3)"
+    },
+    {
+      "command": "GREEN_TEST_COMMAND: pnpm --filter primary-advantage test",
+      "exit_code": 0,
+      "output_summary": "4 test files passed, 43 tests passed (43/43 = 35 prior + 2 FR-2 + 3 FR-3 + 3 behavioral)"
+    },
+    {
+      "command": "PROJECT_CHECKS: pnpm --filter primary-advantage exec tsc --noEmit",
+      "exit_code": 2,
+      "output_summary": "Pre-existing errors only: openai SDK #private identifiers (TS18028) and path alias/moduleResolution issues. Zero new errors from new-generator.ts. The new-generator.ts-specific errors (9 lines) are all pre-existing module-resolution issues (Cannot find module '@reading-advantage/ai', '@/utils/google', etc.) caused by tsc's moduleResolution=node10 setting, not by the FR-3 changes."
+    }
+  ],
+  "changed_files": [
+    "apps/primary-advantage/package.json (+@reading-advantage/ai dep)",
+    "apps/primary-advantage/server/utils/genaretors/new-generator.ts (+persistGeneratedArticle, ~generateArticleNew)",
+    "apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.test.ts (new, 215 lines)",
+    "apps/primary-advantage/vitest.config.ts (+@ path alias)",
+    "pnpm-lock.yaml (workspace link for @reading-advantage/ai)"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

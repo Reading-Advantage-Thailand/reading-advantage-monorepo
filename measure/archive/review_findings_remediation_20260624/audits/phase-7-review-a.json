@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 7 test-alignment commit reviewed and fixed. FR-10 race-safety test now exercises the eviction branch and asserts count + evict + insert all run on the same tx handle. FR-11 behavioral tests exist for classroom/teacher/assignment models and pass. FR-12 brittle structural assertions (existsSync, source-regex, CSS-literal) were removed and replaced with behavioral import checks; grep confirms zero forbidden patterns in test code. Remaining marketing suite failures are pre-existing flaky test-isolation issues in phase-3 settings/adversarial files, unrelated to FR-12.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NB-1",
+      "location": "apps/marketing/app/__tests__/phase-3-settings.test.ts, phase-3-settings-adversarial.test.ts, phase-1-boot-adversarial.test.ts",
+      "description": "Marketing full suite has pre-existing failures (8-10 tests) in settings encryption and adversarial DB-health tests. These failures vary between runs (mock leakage / missing DB / AI client undefined) and are not caused by the FR-12 deletions or import replacements. They should be addressed in a separate track focused on marketing test isolation and DB mocking.",
+      "severity": "medium"
+    },
+    {
+      "id": "NB-2",
+      "location": "apps/primary-advantage/server/models/__tests__/fr11.behavior.test.ts",
+      "description": "The classroomModel smoke test only asserts that getAllClassrooms does not throw a TypeError/undefined-style error. It is weaker than the teacherModel and assignmentModel tests, which assert the returned shape. Consider strengthening it to assert the list shape once the mock includes enough table exports (schools/schoolAdmins were added during this review).",
+      "severity": "low"
+    },
+    {
+      "id": "NB-3",
+      "location": "apps/marketing/app/__tests__/phase-1-boot.test.ts, phase-4-campaigns.test.ts, phase-5-topics.test.ts",
+      "description": "The FR-12 behavioral import tests are slow (cold-cache imports of Next.js/Drizzle/AI modules take 6-9s). Timeouts were raised to 30s to keep them reliable. A future improvement could pre-warm or partially mock heavy dependencies, but this is acceptable for wiring-invariant checks.",
+      "severity": "low"
+    }
+  ],
+  "evidence": [
+    "FR-10: packages/auth/src/__tests__/session.test.ts race-safety test now drives count to the cap (10), triggers eviction, and asserts tx.select/tx.delete/tx.insert all use the same tx handle while the user lookup uses the outer db. Verified by running `npx vitest run src/__tests__/session.test.ts` → 18 passed, 0 failed.",
+    "FR-10 fix commit: dc88f898 fix(auth): strengthen FR-10 eviction branch (track_id: review_findings_remediation_20260624).",
+    "FR-11: apps/primary-advantage/server/models/__tests__/fr11.behavior.test.ts contains 3 passing behavioral smoke tests for classroomModel, teacherModel, and assignmentModel. Added missing mock exports (schools, schoolAdmins, articles, lessonProgress, articleActivityLogs) so the classroom path no longer logs a missing-export error. Verified by running `npx vitest run server/models/__tests__/fr11.behavior.test.ts` → 3 passed, 0 failed.",
+    "FR-12: grep for `existsSync\\(|toMatch\\(/export default|borderRadius:\"50%\"` in apps/marketing/app/__tests__ returns only comment lines (5 matches), no test assertions.",
+    "FR-12 replacements use `await import(...)` and `typeof mod.POST/GET === \"function\"`, which catches both deleted route files (import rejects) and renamed exports (undefined).",
+    "FR-12 fix commit: 3ccf25f9 fix(tests): fr-12 import timeouts and fr-11 db mock (track_id: review_findings_remediation_20260624).",
+    "PROJECT_CHECKS: `pnpm --filter marketing check-types` exits 0 (`$ tsc --noEmit`).",
+    "Marketing full suite: 129 tests, 10 failures. The failures are in pre-existing phase-3 settings/adversarial tests (e.g., `onConflictDoUpdate` called 2x, `generateText` undefined, DB connection refused) and change across runs, indicating test-isolation issues unrelated to FR-12."
+  ],
+  "commands": [
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/packages/auth && npx vitest run src/__tests__/session.test.ts → 18 passed, 0 failed",
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/apps/primary-advantage && npx vitest run server/models/__tests__/fr11.behavior.test.ts → 3 passed, 0 failed",
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo/apps/marketing && npx vitest run → 119 passed, 10 failed (pre-existing failures in settings/adversarial tests)",
+    "cd /home/daniel-bo/Desktop/reading-advantage-monorepo && pnpm --filter marketing check-types → 0 errors"
+  ],
+  "changed_files": [
+    "packages/auth/src/__tests__/session.test.ts (review fix: cover eviction branch)",
+    "apps/primary-advantage/server/models/__tests__/fr11.behavior.test.ts (review fix: add missing mock exports)",
+    "apps/marketing/app/__tests__/phase-1-boot.test.ts (review fix: extend import-test timeout)",
+    "apps/marketing/app/__tests__/phase-4-campaigns.test.ts (review fix: extend import-test timeout)",
+    "apps/marketing/app/__tests__/phase-5-topics.test.ts (review fix: extend import-test timeout)"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

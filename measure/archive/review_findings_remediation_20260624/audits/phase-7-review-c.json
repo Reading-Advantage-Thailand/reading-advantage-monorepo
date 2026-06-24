@@ -1,0 +1,100 @@
+{
+  "schema_version": 2,
+  "status": "pass",
+  "summary": "Phase 7 Review C — UX/API end-to-end contract audit of the test-alignment commit (4a49073). The commit is test-only. FR-10 adds a session race-safety spy-tx test (unit-level, mocked DB — appropriate for verifying transaction-wrapping code structure). FR-11 adds 3 behavioral smoke tests for migrated primary-advantage models (mocked DB, not real test DB — documents AC-12 deviation with deferral). FR-12 deletes 8 brittle structural assertions and replaces 3 with behavioral imports. Marketing test count: 137→129 total (net -8 tests). All gate commands pass. One non-blocking AC deviation (FR-11 altitude).",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NB-1",
+      "fr": "FR-11",
+      "ac": "AC-12",
+      "file": "apps/primary-advantage/server/models/__tests__/fr11.behavior.test.ts",
+      "detail": "AC-12 text says 'against a test DB' but the implementation uses mocked DB (vi.mock('@reading-advantage/db')). This is a documented deviation: the test-strategy note defers real-DB tests to a test-infra follow-up (FR-7 dependency), and the AGENTS.md for primary-advantage says 'Tests mock the DB layer with vi.fn(); do not hit a real Postgres from unit tests.' The mock-based tests exercise real function paths and catch import/signature errors but cannot verify SQL correctness or row-level data. Severity: Medium — the deviation is acknowledged and planned for follow-up, but the AC text is not satisfied as written."
+    },
+    {
+      "id": "NB-2",
+      "fr": "FR-10",
+      "ac": "AC-11",
+      "file": "packages/auth/src/__tests__/session.test.ts",
+      "detail": "The new FR-10 race-safety test is unit-level (mocked DB). AC-11 says 'session.test.ts proves the 11th session evicts the oldest and the cap/evict/insert run in one transaction.' The existing FR-10 cap test (already present at Phase 2) covers eviction behavior. The new race-safety test adds transaction-atomicity verification via a spy pattern. This altitude is appropriate: the property being tested (which db handle receives count vs insert operations) is a code-structural property, not a data-correctness property. A real-DB integration test would verify the same code path but add significant complexity (Postgres setup, session table lifecycle) for marginal additional coverage. Verdict: unit-level is appropriate for AC-11."
+    },
+    {
+      "id": "NB-3",
+      "fr": "FR-11",
+      "ac": "AC-12",
+      "file": "apps/primary-advantage/server/models/__tests__/fr11.behavior.test.ts",
+      "detail": "The original FR-11 mock was missing 'schools', 'schoolAdmins', 'articles', 'lessonProgress', and 'articleActivityLogs' exports, causing classroomModel.getAllClassrooms to throw 'No schools export is defined on the @reading-advantage/db mock.' The test's soft-expect pattern caught this error and treated it as non-fatal, meaning the first test (getAllClassrooms) was not actually verifying the function works — it only verified the error wasn't a TypeError. Fixed in post-review commit 81c15d84 by adding the missing table mocks. The fix ensures all 3 smoke tests exercise the real function path through the mock chain."
+    }
+  ],
+  "evidence": [
+    {
+      "item": "FR-10 race-safety test: unit-level with mocked DB. The spy pattern records which db handle (tx vs outer) each operation runs on. The test asserts count + insert run on the same tx handle (via db.transaction() wrapper) and the user lookup runs on the outer db. This verifies the code structure (transaction wrapping), not data correctness. The existing FR-10 cap test (Phase 2) already covers the eviction behavior (11th session evicts oldest).",
+      "verified": true
+    },
+    {
+      "item": "FR-11 behavioral tests: 3 tests covering classroomModel.getAllClassrooms, teacherModel.getTeachers, assignmentModel.getStudentAssignments. All use mocked DB. The tests exercise real function paths (not stubs) and verify return shapes. Post-review fix (81c15d84) added missing table mocks (schools, schoolAdmins, articles, lessonProgress, articleActivityLogs) so the getAllClassrooms test actually exercises the full function path.",
+      "verified": true
+    },
+    {
+      "item": "FR-12 deletion audit: 8 tests removed total. Baseline (5683836): 137 tests (127 passed, 10 failed). After FR-12: 129 tests (121 passed, 8 failed). Net: -8 tests. All deleted tests were structural assertions: existsSync() file-existence checks, source-regex matches (export default function, borderRadius:50%, href pattern), and CSS-literal assertions. No deleted test validated authentication, authorization, input validation, or any security property.",
+      "verified": true
+    },
+    {
+      "item": "FR-12 replacement audit: 3 existsSync() tests in phase-1-boot.test.ts replaced with behavioral imports that assert the named export is a function (mod.POST for auth routes). The remaining 5 deletions (phase-4: 5 brittle tests, phase-5: 1, phase-6: 1) had no replacements — they were pure deletions of hollow assertions. Net quality improvement: all remaining assertions verify observable behavior.",
+      "verified": true
+    },
+    {
+      "item": "Marketing test count discrepancy: The plan claims '128 passed, 1 pre-existing failure in phase-3-settings-adversarial.test.ts' (129 total). Actual baseline at SHA 5683836: 127 passed, 10 failed = 137 total. Actual after FR-12 at HEAD: 121 passed, 8 failed = 129 total. The plan's count is inaccurate — the pre-existing failures are environment-dependent (DATABASE_URL not set, timeout-sensitive) and vary between runs.",
+      "verified": true
+    },
+    {
+      "item": "All 3 gate commands pass: FR-10 (18 passed, 0 failed), FR-11 (3 passed, 0 failed), FR-12 (121 passed, 8 failed — all pre-existing).",
+      "verified": true
+    },
+    {
+      "item": "Post-review commits: dc88f898 (FR-10 eviction branch strengthening) and 81c15d84 (marketing import timeouts + FR-11 mock fix) modified the same files. These are additive fixes, not reversions of the review commit's work.",
+      "verified": true
+    }
+  ],
+  "commands": [
+    {
+      "command": "cd packages/auth && npx vitest run src/__tests__/session.test.ts 2>&1 | tail -30",
+      "result": "pass — 18 passed, 0 failed (1 test file, 1522ms)"
+    },
+    {
+      "command": "cd apps/primary-advantage && npx vitest run server/models/__tests__/fr11.behavior.test.ts 2>&1 | tail -30",
+      "result": "pass — 3 passed, 0 failed (1 test file, 111ms). No stderr errors after mock fix."
+    },
+    {
+      "command": "cd apps/marketing && npx vitest run 2>&1 | tail -20",
+      "result": "partial pass — 121 passed, 8 failed (7 test files). All 8 failures are pre-existing (phase-1-boot-adversarial: 2, phase-3-settings: 3, phase-3-settings-adversarial: 3). None related to FR-12 deletions."
+    }
+  ],
+  "marketing_test_count_delta": {
+    "baseline_sha": "5683836da",
+    "baseline_total": 137,
+    "baseline_passed": 127,
+    "baseline_failed": 10,
+    "after_total": 129,
+    "after_passed": 121,
+    "after_failed": 8,
+    "net_tests_removed": 8,
+    "note": "The plan's claim of '128 passed, 1 pre-existing failure' is inaccurate. Actual baseline has 10 pre-existing failures (environment-dependent: DATABASE_URL not set, timeout-sensitive). The 8 removed tests were all brittle structural assertions (existsSync, source-regex, CSS-literal)."
+  },
+  "changed_files": [
+    "apps/marketing/app/__tests__/phase-1-boot.test.ts",
+    "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+    "apps/marketing/app/__tests__/phase-4-campaigns.test.ts",
+    "apps/marketing/app/__tests__/phase-5-topics.test.ts",
+    "apps/marketing/app/__tests__/phase-6-script.test.ts",
+    "apps/primary-advantage/server/models/__tests__/fr11.behavior.test.ts",
+    "packages/auth/src/__tests__/session.test.ts",
+    "measure/tracks/review_findings_remediation_20260624/plan.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "recommendation": "none — the AC-12 deviation is documented and planned for follow-up. The FR-11 mock gap was fixed in post-review commit 81c15d84.",
+  "confidence": "high"
+}
