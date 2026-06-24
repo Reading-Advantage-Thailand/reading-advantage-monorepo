@@ -35,9 +35,21 @@
 
 ## Phase 2: FR-2 — Duplicate-row fan-out in migrated list queries (High)
 
-- [ ] Task: Test (Red) — fixture with a student enrolled in 2 classrooms; assert `getStudents` returns 1 row and `totalCount === 1`.
+- [x] Task: Test (Red) — fixture with a student enrolled in 2 classrooms; assert `getStudents` returns 1 row and `totalCount === 1`.
+    - **Red proof** (`pnpm --filter primary-advantage exec vitest run server/models/__tests__/studentModel.fr2.test.ts`):
+      - 2 failed, 0 passed (2 total)
+      - Test 1 "returns one row per distinct student": `expected [ …(3) ] to have a length of 2 but got 3` — the leftJoin on `classroomStudents`/`classrooms` fans out s1 (enrolled in c1 and c2) into 2 rows, producing 3 rows for 2 distinct students.
+      - Test 2 "list length equals totalCount": `expected [ …(3) ] to have a length of 2 but got 3` — `students.length` (3) ≠ `totalCount` (2), confirming the list/count mismatch.
+      - Failure confirms FR-2: `getStudents` at `studentModel.ts:106-123` joins `classroomStudents`/`classrooms` with `leftJoin` and no `selectDistinct`/`groupBy`, so a student enrolled in N classrooms produces N rows; `.limit/.offset` paginate rows (not students) and the separate `totalCount` query omits those joins.
+    - Test file: `apps/primary-advantage/server/models/__tests__/studentModel.fr2.test.ts`
+    - Mock strategy: `vi.hoisted` + `vi.mock("@reading-advantage/db")` with a thenable chain builder that returns fan-out rows (3) for the list query and distinct count (2) for the count query. Stage A (unit-level mock test). Stage B (behavioral test against real test DB) is the Phase 7 / FR-11 deliverable.
 - [ ] Task: Implement (Green) — fix `studentModel.getStudents` (aggregate classrooms / `selectDistinct` / two-step fetch); make list and count consistent.
-- [ ] Task: Audit — grep sibling migrated models (`classroomModel.ts`, `teacherModel.ts`, `assignmentModel.ts`) for `include → flat leftJoin` fan-out; fix or document each.
+- [~] Task: Audit — grep sibling migrated models (`classroomModel.ts`, `teacherModel.ts`, `assignmentModel.ts`) for `include → flat leftJoin` fan-out; fix or document each.
+    - **Audit results** (grep `leftJoin.*classroomStudents\|leftJoin.*classrooms` across `server/models/`):
+      - **teacherModel.ts**: The teacher list query (lines 81-106) does NOT join `classroomStudents`/`classrooms` — only joins `userRoles`/`roles`. The count query (lines 108-120) matches. Classroom data is loaded in a separate "stitch" query (lines 123-138) after the paginated teacher fetch. **No fan-out issue.**
+      - **classroomModel.ts**: `getStudentsByTeacher()` (lines 611-614) joins `classroomStudents`+`users`, but deduplicates correctly using a `Map` (lines 618-641). `getAllStudentsByAdmin()` (lines 678-679) uses the same pattern. **No fan-out issue (deduplicates correctly).**
+      - **assignmentModel.ts**: The list query (lines 148-177) joins `assignments` via `leftJoin` — but this is a 1:1 relationship (each `studentAssignment` has exactly one `assignment`). The count query (lines 142-145) is on `studentAssignments` only. **No fan-out issue (1:1 join).**
+    - **Conclusion**: Only `studentModel.ts` has the fan-out defect. The sibling models either don't join the fan-out tables in their list queries, or they handle deduplication correctly. No additional fixes needed for siblings.
 
 ## Phase 3: FR-3 — Un-awaited transaction + lossy fills in new-generator.ts (High)
 
