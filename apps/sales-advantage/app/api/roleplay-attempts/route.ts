@@ -4,7 +4,7 @@ import { db } from "@reading-advantage/db";
 import {
   submitRoleplayAttempt,
   aiClientToEvaluateRoleplay,
-  getScenario,
+  getRoleplayEvaluationContext,
 } from "@reading-advantage/domain/sales";
 import { getStorageClient } from "@reading-advantage/storage";
 import { getAIClient } from "@reading-advantage/ai";
@@ -48,61 +48,82 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuf);
     const mimeType = audioFile.type || "audio/webm";
 
-    // Upload audio to storage
+    // Look up the scenario + rubric + canonical source excerpts FIRST so the
+    // evaluator receives the grounding material (FR-4 closes the empty-excerpts
+    // bug — the previous code passed `excerpts: []`).
+    const evaluationContext = await getRoleplayEvaluationContext(
+      { db, user, tenant },
+      { scenarioId },
+    );
+    if (!evaluationContext.scenario) {
+      return NextResponse.json({ error: "Scenario not found" }, { status: 404 });
+    }
+
+    // FR-4: upload audio to storage and only persist the key on success. The
+    // previous catch block swallowed the error but kept the key — the attempt
+    // row would then reference a non-existent object.
     const storageKey = `sales-advantage/attempts/${user.id}/${Date.now()}.webm`;
+    let audioUploadSucceeded = false;
     try {
       const storage = getStorageClient();
       await storage.put(storageKey, buffer, {
         contentType: mimeType,
         public: false,
       });
+      audioUploadSucceeded = true;
     } catch (storageErr) {
-      console.error("Storage error:", storageErr);
-      // Continue with in-memory eval — storage is non-critical for the eval flow
+      console.error("Storage error (FR-4): proceeding without audio storage key:", storageErr);
     }
 
-    // Look up scenario + rubric for the evaluator prompt
-    const scenarioData = await getScenario(
-      { db: db as never, user, tenant },
-      { scenarioId },
-    );
-    if (!scenarioData) {
-      return NextResponse.json({ error: "Scenario not found" }, { status: 404 });
-    }
-
-    type ScenarioBundle = {
-      scenario?: Parameters<ReturnType<typeof aiClientToEvaluateRoleplay>>[1];
-      rubric?: Parameters<ReturnType<typeof aiClientToEvaluateRoleplay>>[2];
-    };
-
-    // Build the AI evaluator with scenario/rubric closure
+    // Build the AI evaluator with scenario/rubric/canonical-excerpts closure.
     const aiClient = getAIClient();
     const evaluateRaw = aiClientToEvaluateRoleplay(aiClient);
-    const sd = scenarioData as ScenarioBundle;
     const wrappedEvaluate = async (audio: { buffer: Buffer; mimeType: string }) => {
       return evaluateRaw(
         audio,
-        sd.scenario ?? (scenarioData as unknown as Parameters<ReturnType<typeof aiClientToEvaluateRoleplay>>[1]),
-        sd.rubric ?? ({ name: "Default", criteriaJson: [] } as unknown as Parameters<ReturnType<typeof aiClientToEvaluateRoleplay>>[2]),
-        [],
+        {
+          ...evaluationContext.scenario,
+          prospectContextJson:
+            (evaluationContext.scenario?.prospectContextJson as Record<string, unknown> | null) ??
+            {},
+        },
+        evaluationContext.rubric
+          ? {
+              ...evaluationContext.rubric,
+              criteriaJson: Array.isArray(evaluationContext.rubric.criteriaJson)
+                ? (evaluationContext.rubric.criteriaJson as Array<{
+                    criterion: string;
+                    weight: number;
+                    passingScore: number;
+                    sourceRef: string;
+                  }>)
+                : [],
+            }
+          : {
+              id: "default",
+              name: "Default",
+              criteriaJson: [],
+              reviewStatus: "approved",
+          createdAt: new Date(),
+        },
+        evaluationContext.canonicalSourceExcerpts,
       );
     };
 
     const result = await submitRoleplayAttempt(
-      { db: db as never, user, tenant },
+      { db, user, tenant },
       {
         scenarioId,
-        audioStorageKey: storageKey,
+        audioStorageKey: audioUploadSucceeded ? storageKey : null,
         durationMs,
         audio: { buffer, mimeType },
         evaluate: wrappedEvaluate,
       },
     );
 
-    const r = result as { attempt?: { id: string }; evaluation?: unknown };
     return NextResponse.json({
-      attemptId: r.attempt?.id ?? null,
-      evaluation: r.evaluation ?? result,
+      attemptId: result.attempt?.id ?? null,
+      evaluation: result.evaluation ?? null,
     });
   } catch (error) {
     console.error("Roleplay submit error:", error);

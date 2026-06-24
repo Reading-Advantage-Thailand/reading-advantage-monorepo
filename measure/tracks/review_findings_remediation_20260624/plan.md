@@ -69,9 +69,14 @@
 
 ## Phase 4: FR-4 — Roleplay evaluation grounding + storage/type integrity (High)
 
-- [ ] Task: Contract — define where roleplay excerpts come from (scenario/module curriculum) and align `getScenario` return shape + `SalesDomainContext` db typing with the evaluator inputs. `deferred:session-budget`
-- [ ] Task: Test (Red) — assert the evaluator receives non-empty excerpts; assert `audioStorageKey` is persisted only on successful upload; assert no `as never` casts needed (type-check). `deferred:session-budget`
-- [ ] Task: Implement (Green) — pass real excerpts; persist storage key only on success (or null + flag); remove `as never`/`as unknown as` casts via correct types. `deferred:session-budget`
+- [x] Task: Contract — define where roleplay excerpts come from (scenario/module curriculum) and align `getScenario` return shape + `SalesDomainContext` db typing with the evaluator inputs. SHA: pending.
+    - Added `getRoleplayEvaluationContext(ctx, input)` to `packages/domain/src/sales/queries.ts` — returns `{ scenario, rubric, canonicalSourceExcerpts }` where excerpts are derived from the lesson's `content` field (paragraph-split via blank lines, capped at 8). Exported helper `extractCanonicalSourceExcerpts(lessonContent, maxExcerpts?)` for unit-testability.
+    - `createRoleplayAttempt` + `submitRoleplayAttempt` input types now accept `audioStorageKey: string | null` to model the upload-failure case. `roleplayAttemptInputSchema` Zod schema updated accordingly.
+    - `packages/db/src/schema/sales.ts`: `audioStorageKey` column relaxed from NOT NULL to NULL. Migration `0023_cultured_sunspot.sql` generated (`ALTER COLUMN audio_storage_key DROP NOT NULL`).
+- [x] Task: Test (Red) — assert the evaluator receives non-empty excerpts; assert `audioStorageKey` is persisted only on successful upload; assert no `as never` casts needed (type-check). SHA: pending.
+    - Test file: `apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts` (new). Red proof: 1 of 4 tests failed at HEAD (`expected 'sales-advantage/attempts/rep-1/1782299298628.webm' to be null`) — the route was persisting the key even when `storage.put` rejected. The other 3 tests (excerpts pass-through, success key, 404) were added in the same step to pin the contract.
+- [x] Task: Implement (Green) — pass real excerpts; persist storage key only on success (or null + flag); remove `as never`/`as unknown as` casts via correct types. SHA: pending.
+    - Green: (a) Route now calls `getRoleplayEvaluationContext` BEFORE storage upload so the `getScenario` return-shape mismatch (`{ ...scenario, rubric }` vs `RoleplayScenarioOutput`) is fixed at the type level. (b) The `ScenarioBundle` `as never` cast and the `wrappedEvaluate` `as unknown as` casts are gone — the route now passes the typed `evaluationContext.scenario` / `evaluationContext.rubric` / `canonicalSourceExcerpts` to the wrapped evaluator. (c) `audioUploadSucceeded` boolean is tracked around the `storage.put` call; only on success is `audioStorageKey` passed to `submitRoleplayAttempt` (null on failure). (d) `pnpm --filter sales-advantage check-types` exits 0 — the `as never` / `as unknown as` casts are no longer needed. (e) `pnpm --filter sales-advantage test` → 7 passed, 0 failed (3 prior FR-1 + 4 new FR-4). (f) `pnpm --filter @reading-advantage/domain test` → 311 passed, 3 pre-existing failures unchanged (no regression).
 
 ## Phase 5: FR-5..FR-6 — Evaluator error causes + permission DRY (Medium)
 

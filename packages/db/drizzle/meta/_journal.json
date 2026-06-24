@@ -162,6 +162,13 @@
       "when": 1782208439534,
       "tag": "0022_flowery_black_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1782299938361,
+      "tag": "0023_cultured_sunspot",
+      "breakpoints": true
     }
   ]
 }

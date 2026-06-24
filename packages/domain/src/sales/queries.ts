@@ -121,6 +121,72 @@ export async function getScenario(
 }
 
 /**
+ * Splits a lesson-content blob into paragraph-sized canonical source excerpts
+ * for the roleplay evaluator. Paragraphs are split on blank lines; whitespace
+ * is trimmed; empty paragraphs are dropped. The result is truncated to the
+ * first `maxExcerpts` non-empty chunks.
+ * @param lessonContent - The raw lesson content string
+ * @param maxExcerpts - Cap on the number of excerpts returned (default 8)
+ * @returns An array of canonical source excerpts
+ */
+export function extractCanonicalSourceExcerpts(
+  lessonContent: string,
+  maxExcerpts: number = 8,
+): string[] {
+  if (!lessonContent) return [];
+  return lessonContent
+    .split(/\n\s*\n/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0)
+    .slice(0, Math.max(0, maxExcerpts));
+}
+
+/**
+ * Retrieves the full evaluation context for a roleplay attempt: the scenario,
+ * the rubric, and the canonical source excerpts (lesson content split into
+ * paragraphs) that the evaluator should ground its feedback in.
+ *
+ * FR-4 contract: callers must pass these excerpts to the evaluator instead of
+ * an empty array. The previous route passed `excerpts: []`, which silently
+ * dropped the canonical source material the prompt asks the model to use.
+ * @param ctx - The domain context
+ * @param input - The scenario id
+ * @returns The scenario + rubric + canonical source excerpts
+ * @throws {ScenarioNotFoundError} When the scenario is not found
+ */
+export async function getRoleplayEvaluationContext(
+  { db, user, tenant }: SalesDomainContext,
+  input: { scenarioId: string },
+): Promise<{
+  scenario: typeof salesRoleplayScenarios.$inferSelect;
+  rubric: typeof salesRubrics.$inferSelect | undefined;
+  canonicalSourceExcerpts: string[];
+}> {
+  assertCan(user, "sales:read", tenant);
+  const rawDb = salesRawDb(db);
+  const [scenario] = await rawDb
+    .select()
+    .from(salesRoleplayScenarios)
+    .where(eq(salesRoleplayScenarios.id, input.scenarioId))
+    .limit(1);
+  if (!scenario) throw new ScenarioNotFoundError(input.scenarioId);
+  const [rubric] = await rawDb
+    .select()
+    .from(salesRubrics)
+    .where(eq(salesRubrics.id, scenario.rubricId))
+    .limit(1);
+  const [lesson] = await rawDb
+    .select({ content: salesLessons.content })
+    .from(salesLessons)
+    .where(eq(salesLessons.id, scenario.lessonId))
+    .limit(1);
+  const canonicalSourceExcerpts = extractCanonicalSourceExcerpts(
+    lesson?.content ?? "",
+  );
+  return { scenario, rubric, canonicalSourceExcerpts };
+}
+
+/**
  * Retrieves all attempts for a scenario by a user, newest first.
  * @param ctx - The domain context
  * @param input - The scenario id

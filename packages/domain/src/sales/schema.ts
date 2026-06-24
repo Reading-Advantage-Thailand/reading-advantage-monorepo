@@ -65,7 +65,7 @@ export const quizQuestionOutputSchema = z.object({
 
 export const roleplayAttemptInputSchema = z.object({
   scenarioId: z.string().uuid(),
-  audioStorageKey: z.string().min(1),
+  audioStorageKey: z.string().min(1).nullable(),
   durationMs: z.number().int().nonnegative(),
 });
 

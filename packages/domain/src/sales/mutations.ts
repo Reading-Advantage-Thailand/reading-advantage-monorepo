@@ -72,13 +72,18 @@ export async function markTheoryLessonComplete(
 
 /**
  * Creates a new roleplay attempt row. Computes the attempt number from prior attempts.
+ *
+ * FR-4 contract: `audioStorageKey` may be `null` to indicate that the audio
+ * upload to object storage failed. The attempt row is still created so the
+ * rep's evaluation can proceed without a backing audio object, but the row
+ * will not reference a non-existent storage key.
  * @param ctx - The domain context (user must hold sales:attempt:create)
- * @param input - The scenario id + audio storage key + duration
+ * @param input - The scenario id + audio storage key (nullable) + duration
  * @returns The new attempt row (without evaluation)
  */
 export async function createRoleplayAttempt(
   { db, user, tenant }: SalesDomainContext,
-  input: RoleplayAttemptInput,
+  input: { scenarioId: string; audioStorageKey: string | null; durationMs: number },
 ) {
   assertCan(user, "sales:attempt:create", tenant);
   const rawDb = salesRawDb(db);
@@ -103,7 +108,7 @@ export async function createRoleplayAttempt(
     .values({
       scenarioId: input.scenarioId,
       userId: user.id,
-      audioStorageKey: input.audioStorageKey,
+      ...(input.audioStorageKey ? { audioStorageKey: input.audioStorageKey } : {}),
       durationMs: input.durationMs,
       attemptNumber,
     })
@@ -165,6 +170,10 @@ export async function saveAttemptEvaluation(
 /**
  * The full submit-then-evaluate flow: creates the attempt, runs the evaluator,
  * saves the result, and marks the lesson complete on pass.
+ *
+ * FR-4 contract: `audioStorageKey` may be `null` when the audio upload to
+ * object storage failed. The attempt row is still created (so the rep gets
+ * an evaluation), but it does not reference a non-existent storage object.
  * @param ctx - The domain context
  * @param input - The attempt input + audio buffer + evaluator function
  * @returns The saved attempt with evaluation
@@ -173,7 +182,7 @@ export async function submitRoleplayAttempt(
   { db, user, tenant }: SalesDomainContext,
   input: {
     scenarioId: string;
-    audioStorageKey: string;
+    audioStorageKey: string | null;
     durationMs: number;
     audio: { buffer: Buffer; mimeType: string };
     evaluate: (

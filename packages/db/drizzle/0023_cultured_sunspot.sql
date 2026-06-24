@@ -1,0 +1,1 @@
+ALTER TABLE "sales_roleplay_attempts" ALTER COLUMN "audio_storage_key" DROP NOT NULL;

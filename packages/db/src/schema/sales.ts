@@ -109,7 +109,7 @@ export const salesRoleplayAttempts = pgTable("sales_roleplay_attempts", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  audioStorageKey: text("audio_storage_key").notNull(),
+  audioStorageKey: text("audio_storage_key"),
   durationMs: integer("duration_ms").notNull().default(0),
   transcriptExcerpt: text("transcript_excerpt"),
   llmScoreJson: jsonb("llm_score_json"),
