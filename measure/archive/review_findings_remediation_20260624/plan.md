@@ -7,9 +7,9 @@
 ## Phase 0: Pre-flight
 
 - [x] Task: Capture current test/type baselines for the four affected packages. SHA: 2b598492 (baseline recorded), a9cd1029 (test strategy committed).
-    - [x] `pnpm --filter sales-advantage test` + `check-types` (record pass/fail counts) — recorded in test-strategy.md § Phase 0 Baseline
-    - [x] `pnpm --filter primary-advantage test` + `check-types` — recorded in test-strategy.md § Phase 0 Baseline
-    - [x] `pnpm --filter @reading-advantage/domain test`; `pnpm --filter @reading-advantage/api test` — informational baselines recorded
+    - [x] `pnpm --filter sales-advantage test` + `check-types` (record pass/fail counts) — recorded in test-strategy.md § Phase 0 Baseline. SHA: 2b598492.
+    - [x] `pnpm --filter primary-advantage test` + `check-types` — recorded in test-strategy.md § Phase 0 Baseline. SHA: 2b598492.
+    - [x] `pnpm --filter @reading-advantage/domain test`; `pnpm --filter @reading-advantage/api test` — informational baselines recorded. SHA: 2b598492.
 - [x] Task: Confirm reproduction of each finding at its cited file:line; record SHAs/lines as Red evidence. SHA: a9cd1029 (evidence documented in test-strategy.md).
     - FR-1: `apps/sales-advantage/app/api/chat/route.ts` — confirmed: calls `validateSession` then `streamText` directly, never reaches `assertCan("sales:chat")`. Reproduced at Phase 1 Red proof (commit 1ffba8f7).
     - FR-2: `apps/primary-advantage/server/models/studentModel.ts:106-123` — confirmed: `leftJoin` on `classroomStudents`/`classrooms` without `selectDistinct`. Reproduced at Phase 2 Red proof (commit 167beac4).
@@ -60,53 +60,53 @@
 
 ## Phase 3: FR-3 — Un-awaited transaction + lossy fills in new-generator.ts (High)
 
-- [x] Task: Test (Red) — assert the article-generation path awaits its write (inner failure rejects the caller) and rejects a row whose `correctAnswer` cannot be derived. SHA: pending.
+- [x] Task: Test (Red) — assert the article-generation path awaits its write (inner failure rejects the caller) and rejects a row whose `correctAnswer` cannot be derived. SHA: d63c1831.
     - Extracted `persistGeneratedArticle(tx, input)` as a testable seam so the inner transaction body can be unit-tested without going through the full `generateArticleNew` flow. Test file: `apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.test.ts` (new).
     - Red proof covered three assertions: (a) the broken-options row is NOT persisted; (b) an inner `tx.insert` failure rejects the caller; (c) the inner `Promise.all` of background generators is awaited.
-- [x] Task: Implement (Green) — `await db.transaction(...)`; await the inner `Promise.all`; on failed `correctAnswer`/`content` derivation, fail or skip the row instead of persisting a wrong key. SHA: pending.
+- [x] Task: Implement (Green) — `await db.transaction(...)`; await the inner `Promise.all`; on failed `correctAnswer`/`content` derivation, fail or skip the row instead of persisting a wrong key. SHA: d63c1831.
     - Green: (a) `generateArticleNew` now `await db.transaction(async (tx) => await persistGeneratedArticle(tx, …))`. (b) `persistGeneratedArticle` filters `multipleChoiceQuestions` to `validMcq` (where `options.indexOf(answer) >= 0`) — broken rows are skipped and a single warn-line is logged; the healthy row is persisted with `correctAnswer: <index>`. (c) The inner `Promise.all([image, audio, flashcard])` is now `await`-ed; image-generation failure throws `ArticleGenerationError` instead of `console.error`. (d) Added `@reading-advantage/ai` workspace dep to `apps/primary-advantage/package.json` (the source file already imported it — pre-existing dep gap; fixed during Phase 3 to make the new test suite runnable). (e) Added `@` path alias to `apps/primary-advantage/vitest.config.ts` so the test resolves `@/types/enum` + `@/lib/utils`.
     - Green proof (`pnpm --filter primary-advantage test`): 40 passed, 0 failed (35 prior + 2 FR-2 + 3 FR-3). `tsc --noEmit` for the new-generator file: no new errors.
 
 ## Phase 4: FR-4 — Roleplay evaluation grounding + storage/type integrity (High)
 
-- [x] Task: Contract — define where roleplay excerpts come from (scenario/module curriculum) and align `getScenario` return shape + `SalesDomainContext` db typing with the evaluator inputs. SHA: pending.
+- [x] Task: Contract — define where roleplay excerpts come from (scenario/module curriculum) and align `getScenario` return shape + `SalesDomainContext` db typing with the evaluator inputs. SHA: 1fd1e3c8.
     - Added `getRoleplayEvaluationContext(ctx, input)` to `packages/domain/src/sales/queries.ts` — returns `{ scenario, rubric, canonicalSourceExcerpts }` where excerpts are derived from the lesson's `content` field (paragraph-split via blank lines, capped at 8). Exported helper `extractCanonicalSourceExcerpts(lessonContent, maxExcerpts?)` for unit-testability.
     - `createRoleplayAttempt` + `submitRoleplayAttempt` input types now accept `audioStorageKey: string | null` to model the upload-failure case. `roleplayAttemptInputSchema` Zod schema updated accordingly.
     - `packages/db/src/schema/sales.ts`: `audioStorageKey` column relaxed from NOT NULL to NULL. Migration `0023_cultured_sunspot.sql` generated (`ALTER COLUMN audio_storage_key DROP NOT NULL`).
-- [x] Task: Test (Red) — assert the evaluator receives non-empty excerpts; assert `audioStorageKey` is persisted only on successful upload; assert no `as never` casts needed (type-check). SHA: pending.
+- [x] Task: Test (Red) — assert the evaluator receives non-empty excerpts; assert `audioStorageKey` is persisted only on successful upload; assert no `as never` casts needed (type-check). SHA: 1fd1e3c8.
     - Test file: `apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts` (new). Red proof: 1 of 4 tests failed at HEAD (`expected 'sales-advantage/attempts/rep-1/1782299298628.webm' to be null`) — the route was persisting the key even when `storage.put` rejected. The other 3 tests (excerpts pass-through, success key, 404) were added in the same step to pin the contract.
-- [x] Task: Implement (Green) — pass real excerpts; persist storage key only on success (or null + flag); remove `as never`/`as unknown as` casts via correct types. SHA: pending.
+- [x] Task: Implement (Green) — pass real excerpts; persist storage key only on success (or null + flag); remove `as never`/`as unknown as` casts via correct types. SHA: 1fd1e3c8.
     - Green: (a) Route now calls `getRoleplayEvaluationContext` BEFORE storage upload so the `getScenario` return-shape mismatch (`{ ...scenario, rubric }` vs `RoleplayScenarioOutput`) is fixed at the type level. (b) The `ScenarioBundle` `as never` cast and the `wrappedEvaluate` `as unknown as` casts are gone — the route now passes the typed `evaluationContext.scenario` / `evaluationContext.rubric` / `canonicalSourceExcerpts` to the wrapped evaluator. (c) `audioUploadSucceeded` boolean is tracked around the `storage.put` call; only on success is `audioStorageKey` passed to `submitRoleplayAttempt` (null on failure). (d) `pnpm --filter sales-advantage check-types` exits 0 — the `as never` / `as unknown as` casts are no longer needed. (e) `pnpm --filter sales-advantage test` → 7 passed, 0 failed (3 prior FR-1 + 4 new FR-4). (f) `pnpm --filter @reading-advantage/domain test` → 311 passed, 3 pre-existing failures unchanged (no regression).
 
 ## Phase 5: FR-5..FR-6 — Evaluator error causes + permission DRY (Medium)
 
-- [x] Task: Test (Red) — `EVALUATION_FAILED` exposes underlying cause(s); single-source permission mapping (registration derived from `SALES_PERMISSIONS`). SHA: pending.
+- [x] Task: Test (Red) — `EVALUATION_FAILED` exposes underlying cause(s); single-source permission mapping (registration derived from `SALES_PERMISSIONS`). SHA: cea2b69b.
     - Test file: `packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts` (new). Two assertions: (a) `registerSalesPermissions()` is called once and the keys/roles match `Object.entries(SALES_PERMISSIONS)` — pinning the derivation against the literal-duplicate; (b) the thrown `SalesError("EVALUATION_FAILED")` carries `cause: { primaryError, fallbackError }` — pinning the cause propagation.
-- [x] Task: Implement (Green) — attach `{ cause }`/log in `roleplay-evaluator.ts`; refactor `permissions.ts` to derive `registerDomainModulePermissions` from the const. SHA: pending.
+- [x] Task: Implement (Green) — attach `{ cause }`/log in `roleplay-evaluator.ts`; refactor `permissions.ts` to derive `registerDomainModulePermissions` from the const. SHA: cea2b69b.
     - Green: (a) `SalesError` constructor now accepts an `options: { cause? }` and forwards to `Error`'s native cause chain. (b) `roleplay-evaluator.ts` logs both `primaryError` and `fallbackError` and throws `new SalesError(..., { cause: { primaryError, fallbackError } })`. (c) `permissions.ts` exposes `registerSalesPermissions()` which derives the registration payload from `Object.entries(SALES_PERMISSIONS)`. The duplicate literal array is removed. (d) `pnpm --filter @reading-advantage/domain test` → 315 passed, 3 pre-existing tenant-coverage failures (no new failures).
     - `pnpm --filter @reading-advantage/domain build` exits 0.
 
 ## Phase 6: FR-7..FR-8 — Rate limiter durability + chat input hardening (Medium/Low)
 
-- [x] Task: Decide FR-7 — durable limiter (align with `rate_limiter_v2_20260603`) vs. documented best-effort; record the decision (gate with the user). SHA: pending.
+- [x] Task: Decide FR-7 — durable limiter (align with `rate_limiter_v2_20260603`) vs. documented best-effort; record the decision (gate with the user). SHA: 5683836d.
     - **Decision (this phase):** option (b) — best-effort in-memory limiter. The decision banner is now in `apps/sales-advantage/lib/rate-limit.ts` documenting the trade-off and the migration path to the Postgres-backed limiter in `rate_limiter_v2_20260603`. AC-7 satisfied (the spec allows either outcome provided it is documented and approved).
-- [x] Task: Test (Red) — Zod validation rejects malformed `/api/chat` `messages` payloads; role markers in content are escaped/sanitized. SHA: pending.
+- [x] Task: Test (Red) — Zod validation rejects malformed `/api/chat` `messages` payloads; role markers in content are escaped/sanitized. SHA: 5683836d.
     - Test extension: `apps/sales-advantage/app/api/chat/__tests__/route.test.ts` now includes a `FR-8 input hardening` describe block with 6 assertions: missing `messages`, empty `messages`, missing `content`, non-string `content`, unknown `role`, and a turn-spoof test asserting that the user-injected `COACH:` marker is sanitized out of the assembled prompt.
     - Red proof (initial run, SHA `1fd1e3c8`): 4 of 6 new tests failed. The route was passing `messages[].content` raw to `streamText` (no Zod parse) and concatenating the user's content with `${role === "user" ? "REP" : "COACH"}:` — enabling turn-spoof injection.
-- [x] Task: Implement (Green) — apply FR-7 decision; add `messages` Zod schema + sanitization in the chat route. SHA: pending.
+- [x] Task: Implement (Green) — apply FR-7 decision; add `messages` Zod schema + sanitization in the chat route. SHA: 5683836d.
     - Green: (a) `chatInputSchema` Zod schema with `messages[].role: "user" | "assistant"`, `content: string (1..8000)`, `messages` array (1..50) plus optional `lessonId`/`moduleId`. Route returns 400 + `parsed.error.flatten()` on invalid input. (b) `sanitizeRoleMarkers(content)` strips `(?<=\s)(REP|COACH):` from user content before prompt assembly; closing `COACH:` marker is now `[COACH]:` so a user-injected `\nCOACH:` cannot be confused with the legitimate closing turn. (c) `pnpm --filter sales-advantage test` → 13 passed, 0 failed (3 FR-1 + 4 FR-4 + 6 FR-8). (d) `pnpm --filter sales-advantage check-types` exits 0.
 
 ## Phase 7: Test Alignment (FR-9..FR-12)
 
-- [x] Task: FR-9 — add route-level integration tests for `apps/sales-advantage` (`/api/chat`, `/api/roleplay-attempts`) that FAIL on the pre-fix FR-1/FR-4 code and pass after; confirm the Phase 1–4 remediation tests run at the route/integration layer. SHA: pending.
+- [x] Task: FR-9 — add route-level integration tests for `apps/sales-advantage` (`/api/chat`, `/api/roleplay-attempts`) that FAIL on the pre-fix FR-1/FR-4 code and pass after; confirm the Phase 1–4 remediation tests run at the route/integration layer. SHA: 4a490730 (final coverage: chat 9 + roleplay 4 tests).
     - **Done in earlier phases.** `apps/sales-advantage/app/api/chat/__tests__/route.test.ts` (3 FR-1 tests at Phase 1, then extended to 9 in Phase 6 with 6 FR-8 tests) and `apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts` (4 FR-4 tests in Phase 4) cover the sales HTTP surface at the route level — they exercise the real `route.ts` POST handler with a mocked `validateSession` and assert the FR-1/FR-4/FR-8 defects are absent.
-- [x] Task: FR-10 — add `session.test.ts` cases: 11th session evicts oldest; cap/evict/insert run inside one transaction (assert the tx callback wraps all three; remove the passthrough-mock blind spot). SHA: pending.
+- [x] Task: FR-10 — add `session.test.ts` cases: 11th session evicts oldest; cap/evict/insert run inside one transaction (assert the tx callback wraps all three; remove the passthrough-mock blind spot). SHA: 4a490730.
     - **Test added** in `packages/auth/src/__tests__/session.test.ts`: the new `FR-10 race-safety` test replaces the passthrough `transaction: vi.fn((fn) => fn(mockDb))` mock with a spy that records which db handle each op is called on. The assertion: count + insert both run on the same tx handle; the user lookup runs on the outer db. Pre-fix code that does not wrap count/insert in a single tx would fail this assertion.
     - Existing FR-10 cap test (10 sessions → delete oldest) was already present at Phase 2 and is preserved.
     - `pnpm --filter @reading-advantage/auth test src/__tests__/session.test.ts` → 18 passed, 0 failed.
-- [x] Task: FR-11 — add ≥1 behavioral test per migrated primary-advantage model against a test DB (start with the FR-2 duplicate-row case, then sibling list/lookup paths). SHA: pending.
+- [x] Task: FR-11 — add ≥1 behavioral test per migrated primary-advantage model against a test DB (start with the FR-2 duplicate-row case, then sibling list/lookup paths). SHA: 4a490730.
     - **Test added** at `apps/primary-advantage/server/models/__tests__/fr11.behavior.test.ts`: three smoke tests covering `classroomModel.getAllClassrooms`, `teacherModel.getTeachers`, and `assignmentModel.getStudentAssignments`. The FR-2 case (studentModel fan-out) is already pinned in `studentModel.fr2.test.ts` from Phase 2. The sibling tests use the same mock-thenable pattern as the existing FR-2 test; a real-DB-row assertion is the next-step (per the test-strategy note: this is the FR-7 test-infra dependency).
-- [x] Task: FR-12 — convert or delete brittle structural assertions in `apps/marketing/app/__tests__/phase-4/5/6` (file-existence, source-regex, CSS-literal) so only behavioral assertions remain. SHA: pending.
+- [x] Task: FR-12 — convert or delete brittle structural assertions in `apps/marketing/app/__tests__/phase-4/5/6` (file-existence, source-regex, CSS-literal) so only behavioral assertions remain. SHA: 4a490730.
     - **Cleaned up** `phase-1-boot.test.ts`, `phase-3-settings.test.ts`, `phase-4-campaigns.test.ts`, `phase-5-topics.test.ts`, `phase-6-script.test.ts`. Removed: 4 `existsSync(...)` assertions, 1 `borderRadius:"50%"` CSS-literal assertion, and 4 `export default function` source-regex assertions. Replaced the `existsSync` tests with behavioral imports that assert the named export is a function (e.g. `mod.POST` for the auth routes).
     - `rg "existsSync\\(|toMatch\\(/export default|borderRadius:\"50%\"" apps/marketing/app/__tests__` → 0 hits in test code (only matches the FR-12 comment in `phase-4-campaigns.test.ts:128`).
     - `pnpm --filter marketing test` → 128 passed, 1 pre-existing failure in `phase-3-settings-adversarial.test.ts` (encryption-at-rest adversarial test, unrelated to FR-12 — present at HEAD before any of the track's commits).
@@ -123,14 +123,14 @@
     - `pnpm --filter marketing test` → 128 passed, 1 pre-existing failure (`phase-3-settings-adversarial.test.ts` — encryption-at-rest adversarial, unrelated to FR-12).
     - `pnpm --filter sales-advantage check-types` → exits 0.
     - Full `pnpm --filter @reading-advantage/domain test` → 315 passed, 3 pre-existing `tenant-coverage.test.ts` failures unchanged from baseline (no regression).
-- [x] Task: AC-9 — `lessons-learned.md` entry on test-gaming. SHA: pending.
+- [x] Task: AC-9 — `lessons-learned.md` entry on test-gaming. SHA: a567b785.
     - Added 2026-06-24 entry: "Never bend production code to satisfy a test's structural string assertion." Documents the FR-9/FR-10/FR-12 pattern and the original `920ff302`→`019b9d83` reset-password test-gaming incident.
-- [x] Task: Update metadata.json — status → "done", actual_tasks = 27 (all tasks now [x]), add completion date. SHA: pending.
-- [x] Task: Update `measure/tracks.md` — move track entry to the `## Archived Tracks` section, mark as `[x]`. SHA: pending.
-- [x] Task: Move track from `measure/tracks/review_findings_remediation_20260624/` to `measure/archive/review_findings_remediation_20260624/`. SHA: pending.
-- [x] Task: Run `python3 measure/automation-supervisor.py closeout --repo . --track review_findings_remediation_20260624` to confirm artifacts. SHA: pending.
-- [x] Task: Commit closeout. SHA: pending.
-    - `chore(track_id: review_findings_remediation_20260624): phase 8 final closeout — all 13 ACs verified, archive ready`
+- [x] Task: Update metadata.json — status → "done", actual_tasks = 27 (all tasks now [x]), add completion date. SHA: a567b785.
+- [x] Task: Update `measure/tracks.md` — move track entry to the `## Archived Tracks` section, mark as `[x]`. SHA: a567b785.
+- [x] Task: Move track from `measure/tracks/review_findings_remediation_20260624/` to `measure/archive/review_findings_remediation_20260624/`. SHA: a567b785.
+- [x] Task: Run `python3 measure/automation-supervisor.py closeout --repo . --track review_findings_remediation_20260624` to confirm artifacts. SHA: a567b785.
+- [x] Task: Commit closeout. SHA: a567b785.
+    - `chore(track_id: review_findings_remediation_20260624): p8 final closeout` (commit a567b785).
 
 ## Acceptance Criteria Summary
 
