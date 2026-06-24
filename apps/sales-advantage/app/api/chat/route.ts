@@ -19,9 +19,26 @@ const chatInputSchema = z.object({
   moduleId: z.string().optional(),
 });
 
-const ROLE_MARKER_SPOOF = /\[(?:REP|COACH)\]:?|(^|\s)(?:REP|COACH):/gi;
+const BARE_MARKER_SPOOF = /(^|\s)(REP|COACH):/gi;
+const BRACKETED_MARKER_SPOOF = /\[(?:REP|COACH)\]:/gi;
+
+/**
+ * Strips role-marker spoof tokens (bare and bracket-prefixed) from user-provided
+ * text to prevent prompt-injection via turn-spoofing.  The two-pass design
+ * avoids the empty-$1 ambiguity of a single alternation regex when the
+ * bracket-prefixed branch matches.
+ */
 function sanitizeRoleMarkers(content: string): string {
-  return content.replace(ROLE_MARKER_SPOOF, "$1");
+  return content.replace(BARE_MARKER_SPOOF, "$1").replace(BRACKETED_MARKER_SPOOF, "");
+}
+
+/**
+ * Sanitizes a context-scope identifier (lessonId / moduleId) by stripping
+ * newlines and role-marker spoof tokens so it cannot inject turn separators
+ * into the system prompt.
+ */
+function sanitizeContextId(value: string): string {
+  return sanitizeRoleMarkers(value.replace(/\n/g, " "));
 }
 
 export async function POST(request: NextRequest) {
@@ -76,8 +93,8 @@ export async function POST(request: NextRequest) {
       "",
       "Always respond in Thai (ภาษาไทย).",
       "Be concise (under 200 words) and give practical examples.",
-      lessonId ? `Lesson context: ${lessonId}.` : "",
-      moduleId ? `Module context: ${moduleId}.` : "",
+      lessonId ? `Lesson context: ${sanitizeContextId(lessonId)}.` : "",
+      moduleId ? `Module context: ${sanitizeContextId(moduleId)}.` : "",
     ].filter(Boolean).join(" ");
 
     const fullPrompt =
