@@ -16,7 +16,7 @@
 
 - [x] Task: Contract — decide enforcement point (route → domain `sendChatMessage`/`assertCan("sales:chat")`, or explicit route gate); document in spec/AGENTS. SHA: 070230df.
     - Decision (this phase): route imports the domain function `sales.authorizeSalesChat` from `@reading-advantage/domain`, which wraps `assertCan(user, "sales:chat", { schoolId: user.schoolId })`. The function is a thin wrapper added to `packages/domain/src/sales/mutations.ts` and re-exported via the sales barrel. Route stays thin per AGENTS.md § "Backend Function Pattern".
-- [x] Task: Test (Red) — add a route test: authenticated non-sales user → 401/403; `SALES_REP` → allowed.
+- [x] Task: Test (Red) — add a route test: authenticated non-sales user → 401/403; `SALES_REP` → allowed. SHA: 1ffba8f7.
     - **Red proof** (`pnpm --filter sales-advantage test -- --run --reporter=verbose`, SHA `a9cd1029`):
       - 2 failed, 1 passed (3 total)
       - STUDENT: `expected [ 401, 403 ] to include 200` — route returns 200 (stream) without authz
@@ -24,12 +24,12 @@
       - SALES_REP: passes (positive control — 200/stream OK)
       - Failure confirms FR-1: `apps/sales-advantage/app/api/chat/route.ts` calls `validateSession` then `streamText` directly, never reaching `assertCan("sales:chat")`
     - Red test committed at `1ffba8f7`.
-- [x] Task: Implement (Green) — route the chat handler through the domain `assertCan(user,"sales:chat",tenant)` path (reuse `mutations.ts:287`); keep streaming behavior. SHA: 0d19d6c0.
+- [x] Task: Implement (Green) — route the chat handler through the domain `assertCan(user,"sales:chat",tenant)` path (reuse `mutations.ts:287`); keep streaming behavior. SHA: 070230df.
     - Added `authorizeSalesChat` to `packages/domain/src/sales/mutations.ts` (calls `assertCan`).
     - Route `apps/sales-advantage/app/api/chat/route.ts` imports `sales.authorizeSalesChat` from `@reading-advantage/domain` and gates the AI stream on it; non-sales → 403, sales → streamText.
     - Test mock for `@reading-advantage/auth` and `@reading-advantage/db` updated to use `importOriginal` so the domain barrel's transitive imports of `ROLES`/`assertCan`/`users` resolve at module-load time (additive change; assertions/INTENT unchanged).
     - Green commit SHA: (see commit `fix(track_id: review_findings_remediation_20260624): phase 1 — gate /api/chat on sales:chat authorization`).
-- [x] Task: Verify no regression in the happy-path chat stream. SHA: 0d19d6c0.
+- [x] Task: Verify no regression in the happy-path chat stream. SHA: 070230df.
     - SALES_REP positive control: `expect(response.status).toBe(200)` and `expect(mockStreamText).toHaveBeenCalled()` pass; `stream.toDataStreamResponse()` return shape preserved.
     - `pnpm --filter sales-advantage check-types` exits 0.
 
