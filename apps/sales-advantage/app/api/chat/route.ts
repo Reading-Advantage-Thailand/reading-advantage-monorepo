@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateSession, SESSION_COOKIE_NAME } from "@reading-advantage/auth";
+import { validateSession, SESSION_COOKIE_NAME, AuthError } from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
 import { getAIClient } from "@reading-advantage/ai";
+import { sales } from "@reading-advantage/domain";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -24,6 +25,15 @@ export async function POST(request: NextRequest) {
         { error: "Rate limit exceeded" },
         { status: 429 },
       );
+    }
+
+    try {
+      sales.authorizeSalesChat({ user });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
     }
 
     const body = await request.json();

@@ -275,6 +275,19 @@ export async function submitQuiz(
 }
 
 /**
+ * Asserts that the current user holds the sales:chat permission. Used by the
+ * streaming chat route to gate the AI coach endpoint without duplicating the
+ * role check at the route layer.
+ * @param ctx - The sales domain context (user must hold sales:chat)
+ * @throws {AuthError} When the user lacks the sales:chat permission
+ */
+export function authorizeSalesChat(
+  ctx: Pick<SalesDomainContext, "user">,
+): void {
+  assertCan(ctx.user, "sales:chat", { schoolId: ctx.user.schoolId });
+}
+
+/**
  * Appends a chat message to a conversation, creating the conversation if missing.
  * @param ctx - The domain context
  * @param input - The chat message input

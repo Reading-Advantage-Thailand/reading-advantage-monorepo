@@ -7,14 +7,22 @@ const { mockValidateSession, mockGetAIClient } = vi.hoisted(() => ({
   mockGetAIClient: vi.fn(),
 }));
 
-vi.mock("@reading-advantage/auth", () => ({
-  validateSession: mockValidateSession,
-  SESSION_COOKIE_NAME: "session_token",
-}));
+vi.mock("@reading-advantage/auth", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@reading-advantage/auth")>();
+  return {
+    ...actual,
+    validateSession: mockValidateSession,
+    SESSION_COOKIE_NAME: "session_token",
+  };
+});
 
-vi.mock("@reading-advantage/db", () => ({
-  db: {},
-}));
+vi.mock("@reading-advantage/db", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@reading-advantage/db")>();
+  return {
+    ...actual,
+    db: {},
+  };
+});
 
 vi.mock("@reading-advantage/ai", () => ({
   getAIClient: mockGetAIClient,
