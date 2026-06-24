@@ -4,8 +4,25 @@ import { db } from "@reading-advantage/db";
 import { getAIClient } from "@reading-advantage/ai";
 import { sales } from "@reading-advantage/domain";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { z } from "zod";
 
 export const runtime = "nodejs";
+
+const messageSchema = z.object({
+  role: z.enum(["user", "assistant"]),
+  content: z.string().min(1).max(8000),
+});
+
+const chatInputSchema = z.object({
+  messages: z.array(messageSchema).min(1).max(50),
+  lessonId: z.string().optional(),
+  moduleId: z.string().optional(),
+});
+
+const ROLE_MARKER_SPOOF = /(^|\s)(REP|COACH):/gi;
+function sanitizeRoleMarkers(content: string): string {
+  return content.replace(ROLE_MARKER_SPOOF, "$1");
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,11 +53,15 @@ export async function POST(request: NextRequest) {
       throw error;
     }
 
-    const body = await request.json();
-    const { messages, lessonId, moduleId } = body;
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+    const rawBody = await request.json();
+    const parsed = chatInputSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.flatten() },
+        { status: 400 },
+      );
     }
+    const { messages, lessonId, moduleId } = parsed.data;
 
     const systemPrompt = [
       "You are an expert sales coach for Reading Advantage Thailand, drawing from:",
@@ -62,13 +83,14 @@ export async function POST(request: NextRequest) {
     const fullPrompt =
       systemPrompt +
       "\n\n" +
-      messages.map((m: { role: string; content: string }) => `${m.role === "user" ? "REP" : "COACH"}: ${m.content}`).join("\n\n") +
-      "\n\nCOACH:";
+      messages
+        .map((m) => `[${m.role === "user" ? "REP" : "COACH"}] ${sanitizeRoleMarkers(m.content)}`)
+        .join("\n\n") +
+      "\n\n[COACH]:";
 
     const aiClient = getAIClient();
     const chatModel = process.env.SALES_CHAT_MODEL ?? "nvidia/nemotron-3-nano-30b-a3b:free";
 
-    // Use streamText for incremental response
     const stream = await aiClient.streamText({
       prompt: fullPrompt,
       model: chatModel,

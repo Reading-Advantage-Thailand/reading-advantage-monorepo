@@ -1,3 +1,20 @@
+// ─── FR-7: rate-limiter durability decision ────────────────────────────────
+//
+// Decision: best-effort in-memory limiter (option b in the
+// `review_findings_remediation_20260624` test-strategy § "FR-7 Decision").
+// Limits are NOT durable across serverless/horizontally-scaled instances
+// because the backing `Map` is per-process. This module is a soft guard
+// against a single misbehaving client, not a security boundary.
+//
+// For a durable, cross-instance limit, see the Postgres-backed limiter
+// shipped in `rate_limiter_v2_20260603` (`packages/auth/src/rate-limit.ts`,
+// the `login_attempts` table). If/when sales-advantage scales beyond a
+// single instance per region, this module should delegate to the shared
+// limiter and this banner updated accordingly.
+//
+// AC-7: AC allows either outcome provided it is documented and approved.
+// ────────────────────────────────────────────────────────────────────────────
+
 interface RateLimitEntry {
   count: number;
   windowStart: number;
@@ -11,6 +28,11 @@ const rateLimits = new Map<string, RateLimitEntry>();
  * Per-key rate limiter (in-memory, single-process). Returns `allowed: false`
  * with a `retryAfter` (seconds) when the key has hit `max` in the current
  * window.
+ *
+ * **FR-7 note:** this is a best-effort soft guard; it is NOT durable across
+ * serverless/horizontally-scaled instances. See the banner at the top of
+ * this file for the durability decision and the migration path to the
+ * Postgres-backed limiter in `rate_limiter_v2_20260603`.
  * @param key The rate-limit bucket key (e.g. user ID + endpoint).
  * @param max Maximum requests allowed per window.
  * @param windowMs Window size in milliseconds.

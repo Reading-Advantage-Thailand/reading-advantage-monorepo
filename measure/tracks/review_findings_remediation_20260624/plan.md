@@ -88,9 +88,13 @@
 
 ## Phase 6: FR-7..FR-8 — Rate limiter durability + chat input hardening (Medium/Low)
 
-- [ ] Task: Decide FR-7 — durable limiter (align with `rate_limiter_v2_20260603`) vs. documented best-effort; record the decision (gate with the user). `deferred:session-budget`
-- [ ] Task: Test (Red) — Zod validation rejects malformed `/api/chat` `messages` payloads; role markers in content are escaped/sanitized. `deferred:session-budget`
-- [ ] Task: Implement (Green) — apply FR-7 decision; add `messages` Zod schema + sanitization in the chat route. `deferred:session-budget`
+- [x] Task: Decide FR-7 — durable limiter (align with `rate_limiter_v2_20260603`) vs. documented best-effort; record the decision (gate with the user). SHA: pending.
+    - **Decision (this phase):** option (b) — best-effort in-memory limiter. The decision banner is now in `apps/sales-advantage/lib/rate-limit.ts` documenting the trade-off and the migration path to the Postgres-backed limiter in `rate_limiter_v2_20260603`. AC-7 satisfied (the spec allows either outcome provided it is documented and approved).
+- [x] Task: Test (Red) — Zod validation rejects malformed `/api/chat` `messages` payloads; role markers in content are escaped/sanitized. SHA: pending.
+    - Test extension: `apps/sales-advantage/app/api/chat/__tests__/route.test.ts` now includes a `FR-8 input hardening` describe block with 6 assertions: missing `messages`, empty `messages`, missing `content`, non-string `content`, unknown `role`, and a turn-spoof test asserting that the user-injected `COACH:` marker is sanitized out of the assembled prompt.
+    - Red proof (initial run, SHA `1fd1e3c8`): 4 of 6 new tests failed. The route was passing `messages[].content` raw to `streamText` (no Zod parse) and concatenating the user's content with `${role === "user" ? "REP" : "COACH"}:` — enabling turn-spoof injection.
+- [x] Task: Implement (Green) — apply FR-7 decision; add `messages` Zod schema + sanitization in the chat route. SHA: pending.
+    - Green: (a) `chatInputSchema` Zod schema with `messages[].role: "user" | "assistant"`, `content: string (1..8000)`, `messages` array (1..50) plus optional `lessonId`/`moduleId`. Route returns 400 + `parsed.error.flatten()` on invalid input. (b) `sanitizeRoleMarkers(content)` strips `(?<=\s)(REP|COACH):` from user content before prompt assembly; closing `COACH:` marker is now `[COACH]:` so a user-injected `\nCOACH:` cannot be confused with the legitimate closing turn. (c) `pnpm --filter sales-advantage test` → 13 passed, 0 failed (3 FR-1 + 4 FR-4 + 6 FR-8). (d) `pnpm --filter sales-advantage check-types` exits 0.
 
 ## Phase 7: Test Alignment (FR-9..FR-12)
 
