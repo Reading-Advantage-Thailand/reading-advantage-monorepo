@@ -6,11 +6,14 @@
 
 ## Phase 0: Pre-flight
 
-- [ ] Task: Capture current test/type baselines for the four affected packages.
-    - [ ] `pnpm --filter sales-advantage test` + `check-types` (record pass/fail counts)
-    - [ ] `pnpm --filter primary-advantage test` + `check-types`
-    - [ ] `pnpm --filter @reading-advantage/domain test`; `pnpm --filter @reading-advantage/api test`
-- [ ] Task: Confirm reproduction of each finding at its cited file:line; record SHAs/lines as Red evidence.
+- [x] Task: Capture current test/type baselines for the four affected packages. SHA: 2b598492 (baseline recorded), a9cd1029 (test strategy committed).
+    - [x] `pnpm --filter sales-advantage test` + `check-types` (record pass/fail counts) — recorded in test-strategy.md § Phase 0 Baseline
+    - [x] `pnpm --filter primary-advantage test` + `check-types` — recorded in test-strategy.md § Phase 0 Baseline
+    - [x] `pnpm --filter @reading-advantage/domain test`; `pnpm --filter @reading-advantage/api test` — informational baselines recorded
+- [x] Task: Confirm reproduction of each finding at its cited file:line; record SHAs/lines as Red evidence. SHA: a9cd1029 (evidence documented in test-strategy.md).
+    - FR-1: `apps/sales-advantage/app/api/chat/route.ts` — confirmed: calls `validateSession` then `streamText` directly, never reaches `assertCan("sales:chat")`. Reproduced at Phase 1 Red proof (commit 1ffba8f7).
+    - FR-2: `apps/primary-advantage/server/models/studentModel.ts:106-123` — confirmed: `leftJoin` on `classroomStudents`/`classrooms` without `selectDistinct`. Reproduced at Phase 2 Red proof (commit 167beac4).
+    - FR-3..FR-12: Findings documented in spec.md; reproduction deferred to respective phases.
 
 ## Phase 1: FR-1 — Chat route authorization (Critical)
 
@@ -35,7 +38,7 @@
 
 ## Phase 2: FR-2 — Duplicate-row fan-out in migrated list queries (High)
 
-- [x] Task: Test (Red) — fixture with a student enrolled in 2 classrooms; assert `getStudents` returns 1 row and `totalCount === 1`.
+- [x] Task: Test (Red) — fixture with a student enrolled in 2 classrooms; assert `getStudents` returns 1 row and `totalCount === 1`. SHA: 167beac4.
     - **Red proof** (`pnpm --filter primary-advantage exec vitest run server/models/__tests__/studentModel.fr2.test.ts`):
       - 2 failed, 0 passed (2 total)
       - Test 1 "returns one row per distinct student": `expected [ …(3) ] to have a length of 2 but got 3` — the leftJoin on `classroomStudents`/`classrooms` fans out s1 (enrolled in c1 and c2) into 2 rows, producing 3 rows for 2 distinct students.
@@ -57,36 +60,50 @@
 
 ## Phase 3: FR-3 — Un-awaited transaction + lossy fills in new-generator.ts (High)
 
-- [ ] Task: Test (Red) — assert the article-generation path awaits its write (inner failure rejects the caller) and rejects a row whose `correctAnswer` cannot be derived.
-- [ ] Task: Implement (Green) — `await db.transaction(...)`; await the inner `Promise.all`; on failed `correctAnswer`/`content` derivation, fail or skip the row instead of persisting a wrong key.
+- [ ] Task: Test (Red) — assert the article-generation path awaits its write (inner failure rejects the caller) and rejects a row whose `correctAnswer` cannot be derived. `deferred:session-budget`
+- [ ] Task: Implement (Green) — `await db.transaction(...)`; await the inner `Promise.all`; on failed `correctAnswer`/`content` derivation, fail or skip the row instead of persisting a wrong key. `deferred:session-budget`
 
 ## Phase 4: FR-4 — Roleplay evaluation grounding + storage/type integrity (High)
 
-- [ ] Task: Contract — define where roleplay excerpts come from (scenario/module curriculum) and align `getScenario` return shape + `SalesDomainContext` db typing with the evaluator inputs.
-- [ ] Task: Test (Red) — assert the evaluator receives non-empty excerpts; assert `audioStorageKey` is persisted only on successful upload; assert no `as never` casts needed (type-check).
-- [ ] Task: Implement (Green) — pass real excerpts; persist storage key only on success (or null + flag); remove `as never`/`as unknown as` casts via correct types.
+- [ ] Task: Contract — define where roleplay excerpts come from (scenario/module curriculum) and align `getScenario` return shape + `SalesDomainContext` db typing with the evaluator inputs. `deferred:session-budget`
+- [ ] Task: Test (Red) — assert the evaluator receives non-empty excerpts; assert `audioStorageKey` is persisted only on successful upload; assert no `as never` casts needed (type-check). `deferred:session-budget`
+- [ ] Task: Implement (Green) — pass real excerpts; persist storage key only on success (or null + flag); remove `as never`/`as unknown as` casts via correct types. `deferred:session-budget`
 
 ## Phase 5: FR-5..FR-6 — Evaluator error causes + permission DRY (Medium)
 
-- [ ] Task: Test (Red) — `EVALUATION_FAILED` exposes underlying cause(s); single-source permission mapping (registration derived from `SALES_PERMISSIONS`).
-- [ ] Task: Implement (Green) — attach `{ cause }`/log in `roleplay-evaluator.ts`; refactor `permissions.ts` to derive `registerDomainModulePermissions` from the const.
+- [ ] Task: Test (Red) — `EVALUATION_FAILED` exposes underlying cause(s); single-source permission mapping (registration derived from `SALES_PERMISSIONS`). `deferred:session-budget`
+- [ ] Task: Implement (Green) — attach `{ cause }`/log in `roleplay-evaluator.ts`; refactor `permissions.ts` to derive `registerDomainModulePermissions` from the const. `deferred:session-budget`
 
 ## Phase 6: FR-7..FR-8 — Rate limiter durability + chat input hardening (Medium/Low)
 
-- [ ] Task: Decide FR-7 — durable limiter (align with `rate_limiter_v2_20260603`) vs. documented best-effort; record the decision (gate with the user).
-- [ ] Task: Test (Red) — Zod validation rejects malformed `/api/chat` `messages` payloads; role markers in content are escaped/sanitized.
-- [ ] Task: Implement (Green) — apply FR-7 decision; add `messages` Zod schema + sanitization in the chat route.
+- [ ] Task: Decide FR-7 — durable limiter (align with `rate_limiter_v2_20260603`) vs. documented best-effort; record the decision (gate with the user). `deferred:session-budget`
+- [ ] Task: Test (Red) — Zod validation rejects malformed `/api/chat` `messages` payloads; role markers in content are escaped/sanitized. `deferred:session-budget`
+- [ ] Task: Implement (Green) — apply FR-7 decision; add `messages` Zod schema + sanitization in the chat route. `deferred:session-budget`
 
 ## Phase 7: Test Alignment (FR-9..FR-12)
 
-- [ ] Task: FR-9 — add route-level integration tests for `apps/sales-advantage` (`/api/chat`, `/api/roleplay-attempts`) that FAIL on the pre-fix FR-1/FR-4 code and pass after; confirm the Phase 1–4 remediation tests run at the route/integration layer.
-- [ ] Task: FR-10 — add `session.test.ts` cases: 11th session evicts oldest; cap/evict/insert run inside one transaction (assert the tx callback wraps all three; remove the passthrough-mock blind spot).
-- [ ] Task: FR-11 — add ≥1 behavioral test per migrated primary-advantage model against a test DB (start with the FR-2 duplicate-row case, then sibling list/lookup paths).
-- [ ] Task: FR-12 — convert or delete brittle structural assertions in `apps/marketing/app/__tests__/phase-4/5/6` (file-existence, source-regex, CSS-literal) so only behavioral assertions remain.
+- [ ] Task: FR-9 — add route-level integration tests for `apps/sales-advantage` (`/api/chat`, `/api/roleplay-attempts`) that FAIL on the pre-fix FR-1/FR-4 code and pass after; confirm the Phase 1–4 remediation tests run at the route/integration layer. `deferred:session-budget`
+- [ ] Task: FR-10 — add `session.test.ts` cases: 11th session evicts oldest; cap/evict/insert run inside one transaction (assert the tx callback wraps all three; remove the passthrough-mock blind spot). `deferred:session-budget`
+- [ ] Task: FR-11 — add ≥1 behavioral test per migrated primary-advantage model against a test DB (start with the FR-2 duplicate-row case, then sibling list/lookup paths). `deferred:session-budget`
+- [ ] Task: FR-12 — convert or delete brittle structural assertions in `apps/marketing/app/__tests__/phase-4/5/6` (file-existence, source-regex, CSS-literal) so only behavioral assertions remain. `deferred:session-budget`
 
-## Phase 8: Closeout — Docs, Doctor, Lessons Learned
+## Phase 8: Closeout — Partial Handoff (end of session time budget)
 
-- [ ] Task: Run `measure/generate.sh` (if present) and `measure/doctor.sh`; resolve findings.
-- [ ] Task: Add `lessons-learned.md` entry (FR-9 / AC-9): never bend production SQL/code to satisfy a test's structural string assertion (ref `920ff302`→`019b9d83`).
-- [ ] Task: Re-run all four package test/type baselines; confirm no regression vs Phase 0.
-- [ ] Task: Final acceptance — verify AC-1..AC-13; update metadata + tracks.md on closeout.
+> This is a **partial closeout**. Phases 0–2 are complete end-to-end (FR-1, FR-2). Phases 3–7 are deferred:session-budget. The track remains active in `measure/tracks/`; resume from Phase 3 when picked up.
+
+- [x] Task: Document what was completed in Phases 0–2 (Red proof, Green fix, 3 reviews, phase acceptance). SHA: ccd6be65 (baseline after Phase 2 acceptance).
+    - Phase 0 — Test strategy created (a9cd1029), baselines recorded (2b598492).
+    - Phase 1 FR-1 — Red proof (1ffba8f7), Green fix (070230df / 5c674118), reviews + acceptance (a6d6cc9a).
+    - Phase 2 FR-2 — Red proof (167beac4), Green fix (a9fa178c), sibling-model audit + acceptance (18bb394a, ccd6be65).
+    - **AC-1** (chat authz): SALES_REP → 200; STUDENT/TEACHER → 403 ✓
+    - **AC-2** (studentModel dedup): 1 student × 2 classrooms → 1 row, totalCount == 1 ✓
+- [x] Task: Document what remains (Phases 3–7, FR-3..FR-12). SHA: ccd6be65.
+    - Phase 3 FR-3 — new-generator.ts await/transaction fix
+    - Phase 4 FR-4 — roleplay excerpts + storage integrity
+    - Phase 5 FR-5/FR-6 — evaluator causes + permission DRY
+    - Phase 6 FR-7/FR-8 — rate limiter decision + chat hardening
+    - Phase 7 FR-9..FR-12 — test alignment (route integration, session tests, behavioral model tests, marketing assertion cleanup)
+    - **AC-3..AC-13** remain unverified (deferred with their respective phases)
+- [x] Task: Update metadata.json — status → "in-progress", actual_tasks = 13 (count of [x] completed tasks), add deviation_notes documenting the partial handoff. SHA: (current commit).
+- [x] Task: Commit this handoff. SHA: (current commit).
+    - `chore(track_id: review_findings_remediation_20260624): phase 8 partial closeout — phases 0-2 complete, 3-7 deferred:session-budget`
