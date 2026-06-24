@@ -8,12 +8,14 @@ const {
   mockGetStorageClient,
   mockSubmitRoleplayAttempt,
   mockGetRoleplayEvaluationContext,
+  mockEvaluateRaw,
 } = vi.hoisted(() => ({
   mockValidateSession: vi.fn(),
   mockGetAIClient: vi.fn(),
   mockGetStorageClient: vi.fn(),
   mockSubmitRoleplayAttempt: vi.fn(),
   mockGetRoleplayEvaluationContext: vi.fn(),
+  mockEvaluateRaw: vi.fn(),
 }));
 
 vi.mock("@reading-advantage/auth", async (importOriginal) => {
@@ -45,7 +47,7 @@ vi.mock("@reading-advantage/domain/sales", () => ({
   submitRoleplayAttempt: mockSubmitRoleplayAttempt,
   getRoleplayEvaluationContext: mockGetRoleplayEvaluationContext,
   getScenario: vi.fn(),
-  aiClientToEvaluateRoleplay: () => vi.fn(),
+  aiClientToEvaluateRoleplay: () => mockEvaluateRaw,
 }));
 
 vi.mock("@/lib/rate-limit", () => ({
@@ -126,6 +128,7 @@ function makeEvaluationCtx(excerpts: string[]) {
 describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockEvaluateRaw.mockResolvedValue({ overallScore: 85, passed: true });
     mockValidateSession.mockResolvedValue(salesRepSession());
     mockGetAIClient.mockReturnValue({
       streamText: vi.fn(),
@@ -171,6 +174,28 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
     expect(capturedStorageKey).toMatch(/^sales-advantage\/attempts\/rep-1\//);
 
     await capturedEvaluate!({ buffer: Buffer.from(""), mimeType: "audio/webm" });
+
+    expect(mockEvaluateRaw).toHaveBeenCalledTimes(1);
+    expect(mockEvaluateRaw).toHaveBeenLastCalledWith(
+      expect.objectContaining({ buffer: expect.any(Buffer), mimeType: "audio/webm" }),
+      expect.objectContaining({
+        id: "scenario-123",
+        lessonId: "lesson-abc",
+        personaName: "CFO",
+        personaRole: "Finance Director",
+        situation: "Cost-cutting review",
+        objective: "Defend Q3 budget",
+        rubricId: "rubric-1",
+        prospectContextJson: {},
+      }),
+      expect.objectContaining({
+        id: "rubric-1",
+        name: "Default rubric",
+        criteriaJson: [],
+        reviewStatus: "approved",
+      }),
+      excerpts,
+    );
   });
 
   it("FR-4: persists audioStorageKey=null when storage.put rejects (no orphan reference)", async () => {
