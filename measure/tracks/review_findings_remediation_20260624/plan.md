@@ -80,8 +80,11 @@
 
 ## Phase 5: FR-5..FR-6 — Evaluator error causes + permission DRY (Medium)
 
-- [ ] Task: Test (Red) — `EVALUATION_FAILED` exposes underlying cause(s); single-source permission mapping (registration derived from `SALES_PERMISSIONS`). `deferred:session-budget`
-- [ ] Task: Implement (Green) — attach `{ cause }`/log in `roleplay-evaluator.ts`; refactor `permissions.ts` to derive `registerDomainModulePermissions` from the const. `deferred:session-budget`
+- [x] Task: Test (Red) — `EVALUATION_FAILED` exposes underlying cause(s); single-source permission mapping (registration derived from `SALES_PERMISSIONS`). SHA: pending.
+    - Test file: `packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts` (new). Two assertions: (a) `registerSalesPermissions()` is called once and the keys/roles match `Object.entries(SALES_PERMISSIONS)` — pinning the derivation against the literal-duplicate; (b) the thrown `SalesError("EVALUATION_FAILED")` carries `cause: { primaryError, fallbackError }` — pinning the cause propagation.
+- [x] Task: Implement (Green) — attach `{ cause }`/log in `roleplay-evaluator.ts`; refactor `permissions.ts` to derive `registerDomainModulePermissions` from the const. SHA: pending.
+    - Green: (a) `SalesError` constructor now accepts an `options: { cause? }` and forwards to `Error`'s native cause chain. (b) `roleplay-evaluator.ts` logs both `primaryError` and `fallbackError` and throws `new SalesError(..., { cause: { primaryError, fallbackError } })`. (c) `permissions.ts` exposes `registerSalesPermissions()` which derives the registration payload from `Object.entries(SALES_PERMISSIONS)`. The duplicate literal array is removed. (d) `pnpm --filter @reading-advantage/domain test` → 315 passed, 3 pre-existing tenant-coverage failures (no new failures).
+    - `pnpm --filter @reading-advantage/domain build` exits 0.
 
 ## Phase 6: FR-7..FR-8 — Rate limiter durability + chat input hardening (Medium/Low)
 

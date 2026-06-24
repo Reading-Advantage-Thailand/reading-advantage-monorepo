@@ -5,8 +5,9 @@ export class SalesError extends Error {
   constructor(
     message: string,
     public readonly code: string,
+    options?: { cause?: unknown },
   ) {
-    super(message);
+    super(message, options);
     this.name = "SalesError";
   }
 }

@@ -3,6 +3,10 @@ import { ROLES, registerDomainModulePermissions } from "@reading-advantage/auth"
 /**
  * Permission keys for the sales-advantage domain module.
  * SALES_REP is the base learner role; SALES_ADMIN is the sales-manager role.
+ *
+ * FR-6: this map is the single source of truth. `registerSalesPermissions()`
+ * derives the `registerDomainModulePermissions` payload from it; the keys +
+ * role lists must never be duplicated as a literal.
  */
 export const SALES_PERMISSIONS = {
   "sales:read": [ROLES.SALES_REP, ROLES.SALES_ADMIN],
@@ -16,32 +20,14 @@ export const SALES_PERMISSIONS = {
   "sales:curriculum:approve": [ROLES.SALES_ADMIN],
 } as const;
 
-registerDomainModulePermissions({
-  moduleName: "sales",
-  keys: [
-    {
-      key: "sales:read",
-      roles: [ROLES.SALES_REP, ROLES.SALES_ADMIN],
-    },
-    {
-      key: "sales:attempt:create",
-      roles: [ROLES.SALES_REP, ROLES.SALES_ADMIN],
-    },
-    {
-      key: "sales:progress:read",
-      roles: [ROLES.SALES_REP, ROLES.SALES_ADMIN],
-    },
-    {
-      key: "sales:chat",
-      roles: [ROLES.SALES_REP, ROLES.SALES_ADMIN],
-    },
-    {
-      key: "sales:quiz:submit",
-      roles: [ROLES.SALES_REP, ROLES.SALES_ADMIN],
-    },
-    { key: "sales:admin:cohort", roles: [ROLES.SALES_ADMIN] },
-    { key: "sales:admin:create-rep", roles: [ROLES.SALES_ADMIN] },
-    { key: "sales:admin:reps", roles: [ROLES.SALES_ADMIN] },
-    { key: "sales:curriculum:approve", roles: [ROLES.SALES_ADMIN] },
-  ],
-});
+export function registerSalesPermissions(): void {
+  registerDomainModulePermissions({
+    moduleName: "sales",
+    keys: Object.entries(SALES_PERMISSIONS).map(([key, roles]) => ({
+      key,
+      roles: [...roles],
+    })),
+  });
+}
+
+registerSalesPermissions();

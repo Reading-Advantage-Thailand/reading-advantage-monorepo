@@ -172,9 +172,24 @@ export function aiClientToEvaluateRoleplay(
         }
         return result;
       } catch (fallbackError) {
+        // FR-5: log both underlying errors and attach them via `cause` so two-tier
+        // LLM failures are debuggable. The previous code discarded both
+        // `primaryError` and `fallbackError`, making `EVALUATION_FAILED`
+        // indistinguishable from any other failure.
+        console.error(
+          "[roleplay-evaluator] Primary model failed:",
+          primaryModel,
+          primaryError,
+        );
+        console.error(
+          "[roleplay-evaluator] Fallback STT→eval pipeline failed:",
+          `STT=${sttModel}, eval=${evalModel}`,
+          fallbackError,
+        );
         throw new SalesError(
           `Roleplay evaluation failed on both primary (${primaryModel}) and fallback (STT ${sttModel} → eval ${evalModel}) paths`,
           "EVALUATION_FAILED",
+          { cause: { primaryError, fallbackError } },
         );
       }
     }
