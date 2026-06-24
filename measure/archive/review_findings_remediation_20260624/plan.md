@@ -111,23 +111,41 @@
     - `rg "existsSync\\(|toMatch\\(/export default|borderRadius:\"50%\"" apps/marketing/app/__tests__` → 0 hits in test code (only matches the FR-12 comment in `phase-4-campaigns.test.ts:128`).
     - `pnpm --filter marketing test` → 128 passed, 1 pre-existing failure in `phase-3-settings-adversarial.test.ts` (encryption-at-rest adversarial test, unrelated to FR-12 — present at HEAD before any of the track's commits).
 
-## Phase 8: Closeout — Partial Handoff (end of session time budget)
+## Phase 8: Closeout — Final Acceptance (this run)
 
-> This is a **partial closeout**. Phases 0–2 are complete end-to-end (FR-1, FR-2). Phases 3–7 are deferred:session-budget. The track remains active in `measure/tracks/`; resume from Phase 3 when picked up.
+> This is the **final closeout**. Phases 0–7 are complete end-to-end (FR-1, FR-2, FR-3, FR-4, FR-5, FR-6, FR-7, FR-8, FR-9, FR-10, FR-11, FR-12). All 13 ACs are verified. The track is ready to archive.
 
-- [x] Task: Document what was completed in Phases 0–2 (Red proof, Green fix, 3 reviews, phase acceptance). SHA: ccd6be65 (baseline after Phase 2 acceptance).
-    - Phase 0 — Test strategy created (a9cd1029), baselines recorded (2b598492).
-    - Phase 1 FR-1 — Red proof (1ffba8f7), Green fix (070230df / 5c674118), reviews + acceptance (a6d6cc9a).
-    - Phase 2 FR-2 — Red proof (167beac4), Green fix (a9fa178c), sibling-model audit + acceptance (18bb394a, ccd6be65).
-    - **AC-1** (chat authz): SALES_REP → 200; STUDENT/TEACHER → 403 ✓
-    - **AC-2** (studentModel dedup): 1 student × 2 classrooms → 1 row, totalCount == 1 ✓
-- [x] Task: Document what remains (Phases 3–7, FR-3..FR-12). SHA: ccd6be65.
-    - Phase 3 FR-3 — new-generator.ts await/transaction fix
-    - Phase 4 FR-4 — roleplay excerpts + storage integrity
-    - Phase 5 FR-5/FR-6 — evaluator causes + permission DRY
-    - Phase 6 FR-7/FR-8 — rate limiter decision + chat hardening
-    - Phase 7 FR-9..FR-12 — test alignment (route integration, session tests, behavioral model tests, marketing assertion cleanup)
-    - **AC-3..AC-13** remain unverified (deferred with their respective phases)
-- [x] Task: Update metadata.json — status → "in-progress", actual_tasks = 13 (count of [x] completed tasks), add deviation_notes documenting the partial handoff. SHA: (current commit).
-- [x] Task: Commit this handoff. SHA: (current commit).
-    - `chore(track_id: review_findings_remediation_20260624): phase 8 partial closeout — phases 0-2 complete, 3-7 deferred:session-budget`
+- [x] Task: Final test sweep — all four affected package baselines plus new tests pass (or have only pre-existing failures, not regressions). SHA: 4a490730.
+    - `pnpm --filter sales-advantage test` → 13 passed, 0 failed (3 FR-1 + 4 FR-4 + 6 FR-8).
+    - `pnpm --filter primary-advantage test` → 43 passed, 0 failed (35 baseline + 2 FR-2 + 3 FR-3 + 3 FR-11).
+    - `pnpm --filter @reading-advantage/auth test src/__tests__/session.test.ts` → 18 passed, 0 failed (existing FR-10 cap + new FR-10 race-safety).
+    - `pnpm --filter @reading-advantage/domain test src/sales/__tests__/permissions-and-evaluator.test.ts` → 2 passed, 0 failed.
+    - `pnpm --filter marketing test` → 128 passed, 1 pre-existing failure (`phase-3-settings-adversarial.test.ts` — encryption-at-rest adversarial, unrelated to FR-12).
+    - `pnpm --filter sales-advantage check-types` → exits 0.
+    - Full `pnpm --filter @reading-advantage/domain test` → 315 passed, 3 pre-existing `tenant-coverage.test.ts` failures unchanged from baseline (no regression).
+- [x] Task: AC-9 — `lessons-learned.md` entry on test-gaming. SHA: pending.
+    - Added 2026-06-24 entry: "Never bend production code to satisfy a test's structural string assertion." Documents the FR-9/FR-10/FR-12 pattern and the original `920ff302`→`019b9d83` reset-password test-gaming incident.
+- [x] Task: Update metadata.json — status → "done", actual_tasks = 27 (all tasks now [x]), add completion date. SHA: pending.
+- [x] Task: Update `measure/tracks.md` — move track entry to the `## Archived Tracks` section, mark as `[x]`. SHA: pending.
+- [x] Task: Move track from `measure/tracks/review_findings_remediation_20260624/` to `measure/archive/review_findings_remediation_20260624/`. SHA: pending.
+- [x] Task: Run `python3 measure/automation-supervisor.py closeout --repo . --track review_findings_remediation_20260624` to confirm artifacts. SHA: pending.
+- [x] Task: Commit closeout. SHA: pending.
+    - `chore(track_id: review_findings_remediation_20260624): phase 8 final closeout — all 13 ACs verified, archive ready`
+
+## Acceptance Criteria Summary
+
+| AC | Description | Status | Evidence |
+| --- | --- | --- | --- |
+| AC-1 | `/api/chat` rejects non-sales users with 401/403 | ✓ | `apps/sales-advantage/app/api/chat/__tests__/route.test.ts` — STUDENT/TEACHER → 403, SALES_REP → 200 |
+| AC-2 | `getStudents` returns one row per student with `totalCount` matching | ✓ | `apps/primary-advantage/server/models/__tests__/studentModel.fr2.test.ts` — 1 student × 2 classrooms → 1 row, totalCount == 1 |
+| AC-3 | `new-generator.ts` awaits its transaction; inner failure rejects caller; no fabricated `correctAnswer: 0` | ✓ | `apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.test.ts` — 3 tests (tx rejection, correctAnswer filter, Promise.all await) |
+| AC-4 | Roleplay eval receives non-empty excerpts; storage key only on upload success; no `as never` casts | ✓ | `apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts` — 4 tests (excerpts pass-through, key on success, key=null on failure, 404); `check-types` clean |
+| AC-5 | `EVALUATION_FAILED` carries the underlying cause(s) | ✓ | `packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts` — `cause: { primaryError, fallbackError }` asserted |
+| AC-6 | Sales permission mapping has a single source of truth | ✓ | `packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts` — `Object.entries(SALES_PERMISSIONS)` derived registration asserted |
+| AC-7 | Rate limiter is durable or its best-effort limitation is documented and approved | ✓ | `apps/sales-advantage/lib/rate-limit.ts` — top-of-file banner documents the best-effort decision + migration path to `rate_limiter_v2_20260603` |
+| AC-8 | `/api/chat` rejects malformed `messages` payloads | ✓ | `apps/sales-advantage/app/api/chat/__tests__/route.test.ts` — 6 Zod + role-marker escape tests |
+| AC-9 | `lessons-learned.md` entry reinforces "never bend production code to satisfy a test's structural string assertion" | ✓ | `measure/lessons-learned.md` 2026-06-24 entry |
+| AC-10 | Route-level tests for `/api/chat` and `/api/roleplay-attempts`; both fail on pre-fix and pass after | ✓ | FR-1 Red proof at `1ffba8f7` (reverted at `5c674118`); FR-4 Red proof at this run; both route tests now passing |
+| AC-11 | `session.test.ts` proves the 11th session evicts oldest and the cap/evict/insert run in one transaction | ✓ | `packages/auth/src/__tests__/session.test.ts` — existing cap test + new race-safety test (`4a490730`) |
+| AC-12 | Each migrated primary-advantage model has ≥1 behavioral test | ✓ | FR-2 studentModel + new FR-11 fr11.behavior.test.ts (classroom/teacher/assignment) — 4a490730 |
+| AC-13 | No marketing test asserts file existence or source-string/CSS-literal shape | ✓ | `rg "existsSync\\(|toMatch\\(/export default|borderRadius:\"50%\"" apps/marketing/app/__tests__` → 0 hits in test code; behavioral imports replace all 4 sites — 4a490730 |

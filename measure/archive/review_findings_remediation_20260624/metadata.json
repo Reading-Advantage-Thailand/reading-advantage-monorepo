@@ -1,0 +1,13 @@
+{
+  "track_id": "review_findings_remediation_20260624",
+  "type": "chore",
+  "status": "done",
+  "priority": "high",
+  "created_at": "2026-06-23T22:18:04Z",
+  "updated_at": "2026-06-24T19:45:00Z",
+  "description": "Remediate all defects and quality issues found in the 72h code-level review (2026-06-21 → 06-24): chat-route authz gap (FR-1), studentModel duplicate-row fan-out + count mismatch (FR-2), un-awaited transaction + lossy NOT-NULL fills in new-generator.ts (FR-3), empty roleplay-eval excerpts + storage/type integrity (FR-4), evaluator error causes (FR-5), sales permission DRY (FR-6), in-memory rate limiter durability (FR-7), chat input hardening (FR-8), and a lessons-learned entry on test-gaming (AC-9). Plus test-alignment FRs from the 72h test review: route-level integration tests for the sales surface (FR-9), session cap + race-safety tests (FR-10), behavioral smoke tests for migrated models (FR-11), and pruning brittle structural assertions in the marketing suite (FR-12).",
+  "estimated_tasks": 27,
+  "actual_tasks": 27,
+  "deviation_notes": "All 8 phases completed (0-7) plus final acceptance (8). FR-1..FR-12 all delivered with Red+Green+review+acceptance evidence. Commit SHAs: Phase 0 a9cd1029/2b598492, Phase 1 1ffba8f7/5c674118/a6d6cc9a, Phase 2 167beac4/a9fa178c/18bb394a/ccd6be65, Phase 3 d63c1831, Phase 4 1fd1e3c8, Phase 5 cea2b69b, Phase 6 5683836d, Phase 7 4a490730, Phase 8 (closeout) pending.\n\nOut-of-scope tech-debt fixed as a side effect: (a) `@reading-advantage/ai` was an undeclared dep in `apps/primary-advantage/package.json` — added during Phase 3; (b) `@` path alias was missing from `apps/primary-advantage/vitest.config.ts` — added during Phase 3; (c) `sales_roleplay_attempts.audio_storage_key` was NOT NULL — relaxed to NULL with migration `0023_cultured_sunspot.sql` to model the FR-4 upload-failure case honestly. The Phase 8 prior partial-closeout deviation (phases 3-7 deferred:session-budget) is retired — those phases are now all complete.",
+  "completed_at": "2026-06-24T19:45:00Z"
+}
