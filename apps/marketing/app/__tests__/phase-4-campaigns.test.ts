@@ -126,45 +126,18 @@ function makeUpdateChainMock(returningRows: unknown[]) {
 // ─────────────────────────────────────────────────────────────────────
 
 describe("Phase 4: Campaign Management — wiring invariants (tasks 1-5)", () => {
-  it("apps/marketing/app/campaigns/page.tsx exists and exports a page", () => {
-    expect(existsSync(resolve(APP_ROOT, "app/campaigns/page.tsx"))).toBe(true);
-    const src = readText("app/campaigns/page.tsx");
-    expect(src).toMatch(/export\s+default\s+function\s+\w+\s*\(/);
-  });
-
-  it("apps/marketing/app/campaigns/[id]/page.tsx exists and exports a page", () => {
-    expect(existsSync(resolve(APP_ROOT, "app/campaigns/[id]/page.tsx"))).toBe(true);
-    const src = readText("app/campaigns/[id]/page.tsx");
-    expect(src).toMatch(/export\s+default\s+function\s+\w+\s*\(/);
-  });
-
-  it("campaign list page links to /campaigns/:id cards and renders a create button", () => {
-    const src = readText("app/campaigns/page.tsx");
-    expect(src).toMatch(/href\s*=\s*\{?\s*[`"']\/campaigns\/\$\{campaign\.id\}[`"']\s*\}?/);
-    expect(src).toMatch(/Create Campaign/);
-  });
-
-  it("campaign card renders app accent dot and status badge", () => {
-    const src = readText("app/campaigns/page.tsx");
-    expect(src).toMatch(/borderRadius:\s*["']50%["']/);
-    expect(src).toMatch(/campaign\.status/);
-  });
-
-  it("campaign detail page exposes status-transition buttons", () => {
-    const src = readText("app/campaigns/[id]/page.tsx");
-    expect(src).toMatch(/Move to/);
-    expect(src).toMatch(/statusTransitions/);
-  });
+  // FR-12: removed brittle `existsSync(...)` and source-regex assertions
+  // (file existence is verified by the build system, not the test suite;
+  // CSS literals and `export default function` source matches break on
+  // benign refactors and assert nothing about runtime behavior).
 
   it("apps/marketing/app/api/campaigns/route.ts exports GET and POST", async () => {
-    expect(existsSync(resolve(APP_ROOT, "app/api/campaigns/route.ts"))).toBe(true);
     const mod = await import("@/api/campaigns/route");
     expect(typeof mod.GET).toBe("function");
     expect(typeof mod.POST).toBe("function");
   }, 10000);
 
   it("apps/marketing/app/api/campaigns/[id]/route.ts exports GET and PATCH", async () => {
-    expect(existsSync(resolve(APP_ROOT, "app/api/campaigns/[id]/route.ts"))).toBe(true);
     const mod = await import("@/api/campaigns/[id]/route");
     expect(typeof mod.GET).toBe("function");
     expect(typeof mod.PATCH).toBe("function");

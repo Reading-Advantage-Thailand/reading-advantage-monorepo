@@ -172,11 +172,8 @@ const invalidScriptMissingField = [
 // ─────────────────────────────────────────────────────────────────────
 
 describe("Phase 6: Script Generation — wiring invariants (tasks 1-3)", () => {
-  it("apps/marketing/app/campaigns/[id]/video/page.tsx exists and exports a page", () => {
-    expect(existsSync(resolve(APP_ROOT, "app/campaigns/[id]/video/page.tsx"))).toBe(true);
-    const src = readText("app/campaigns/[id]/video/page.tsx");
-    expect(src).toMatch(/export\s+default\s+function\s+\w+\s*\(/);
-  });
+  // FR-12: removed brittle `existsSync(...)` and `export default function`
+  // source-regex assertions (build system already verifies file presence).
 
   it("video production page exposes Step 3: Generate Script", () => {
     const src = readText("app/campaigns/[id]/video/page.tsx");
@@ -192,13 +189,11 @@ describe("Phase 6: Script Generation — wiring invariants (tasks 1-3)", () => {
   });
 
   it("apps/marketing/app/api/video/generate-script/route.ts exports POST", async () => {
-    expect(existsSync(resolve(APP_ROOT, "app/api/video/generate-script/route.ts"))).toBe(true);
     const mod = await import("@/api/video/generate-script/route");
     expect(typeof mod.POST).toBe("function");
   }, 20000);
 
   it("apps/marketing/app/api/video/projects/route.ts exports POST", async () => {
-    expect(existsSync(resolve(APP_ROOT, "app/api/video/projects/route.ts"))).toBe(true);
     const mod = await import("@/api/video/projects/route");
     expect(typeof mod.POST).toBe("function");
   }, 20000);

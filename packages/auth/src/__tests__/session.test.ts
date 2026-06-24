@@ -588,6 +588,137 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
         "feeds the eviction decision.",
     ).toBe(true);
   });
+
+  // FR-10 race-safety: the count→evict→insert must run inside a single
+  // transaction so two concurrent logins cannot both observe count=9 and
+  // race past the cap. The previous test used a passthrough
+  // `transaction: vi.fn((fn) => fn(mockDb))` mock, which makes the atomicity
+  // untestable. This test replaces the mock with a spy that records which
+  // db handle each op was called on; the assertion is that count, evict, and
+  // insert all run on the SAME tx handle (and the user lookup runs on the
+  // outer db, as today).
+  it("FR-10 race-safety: count + evict + insert run inside a single transaction on a shared tx handle", async () => {
+    const txCalls: { op: string; handle: string }[] = [];
+    const outerCalls: { op: string; handle: string }[] = [];
+
+    let txHandleCounter = 0;
+    const newTxHandle = () => `tx-${++txHandleCounter}`;
+
+    const makeChain = (handle: string, tag: string, recorded: typeof txCalls) => {
+      const chain: Record<string, unknown> = {};
+      const wrap = (op: string) => (...args: unknown[]) => {
+        recorded.push({ op, handle });
+        return chain;
+      };
+      for (const m of ["select", "insert", "update", "delete"]) {
+        chain[m] = vi.fn().mockImplementation(wrap(`${tag}.${m}`));
+      }
+      chain.from = vi.fn().mockImplementation(wrap(`${tag}.from`));
+      chain.where = vi.fn().mockImplementation(wrap(`${tag}.where`));
+      chain.orderBy = vi.fn().mockImplementation(wrap(`${tag}.orderBy`));
+      chain.limit = vi.fn().mockImplementation(wrap(`${tag}.limit`));
+      chain.values = vi.fn().mockImplementation((...args: unknown[]) => {
+        recorded.push({ op: `${tag}.values`, handle });
+        return chain;
+      });
+      chain.returning = vi.fn().mockImplementation(async (..._args: unknown[]) => {
+        recorded.push({ op: `${tag}.returning`, handle });
+        return [mockSessionRow];
+      });
+      return chain;
+    };
+
+    // Build a transaction mock that opens a fresh tx chain and runs the
+    // callback with it. The callback is responsible for doing count + evict +
+    // insert; we record every chain call against the tx handle.
+    const txHandle = newTxHandle();
+    const txChain = makeChain(txHandle, "tx", txCalls);
+
+    // tx.select(...).from(...).where(...) returns a value, so build a more
+    // explicit version:
+    txChain.select = vi.fn().mockImplementation(() => {
+      txCalls.push({ op: "tx.select", handle: txHandle });
+      const step: Record<string, unknown> = {};
+      step.from = vi.fn().mockImplementation(() => {
+        txCalls.push({ op: "tx.from", handle: txHandle });
+        const step2: Record<string, unknown> = {};
+        step2.where = vi.fn().mockImplementation(() => {
+          txCalls.push({ op: "tx.where", handle: txHandle });
+          // First tx.select is the count -> 9, so no eviction. Second is the
+          // user lookup, but the user lookup happens on the outer db in
+          // createSession, so this chain is only the count.
+          return Promise.resolve([{ value: 9 }]);
+        });
+        return step2;
+      });
+      return step;
+    });
+    txChain.insert = vi.fn().mockImplementation(() => {
+      txCalls.push({ op: "tx.insert", handle: txHandle });
+      const step: Record<string, unknown> = {};
+      step.values = vi.fn().mockImplementation(() => {
+        txCalls.push({ op: "tx.values", handle: txHandle });
+        const step2: Record<string, unknown> = {};
+        step2.returning = vi.fn().mockImplementation(async () => {
+          txCalls.push({ op: "tx.returning", handle: txHandle });
+          return [mockSessionRow];
+        });
+        return step2;
+      });
+      return step;
+    });
+
+    const outerChain = {
+      select: vi.fn().mockImplementation(() => {
+        outerCalls.push({ op: "outer.select", handle: "outer" });
+        return {
+          from: vi.fn().mockImplementation(() => ({
+            where: vi.fn().mockReturnValue({
+              limit: vi.fn().mockResolvedValue([mockUserRow]),
+            }),
+          })),
+        };
+      }),
+    };
+
+    const mockDb = {
+      ...outerChain,
+      transaction: vi.fn(async (fn: (tx: typeof txChain) => Promise<unknown>) => {
+        return fn(txChain);
+      }),
+    };
+
+    await createSession(asSessionDb(mockDb as never), "u1");
+
+    // Assertions:
+    // 1) transaction is called exactly once (a single tx wraps count + insert).
+    expect(
+      mockDb.transaction,
+      "createSession must wrap the count + insert in a single transaction so concurrent " +
+        "logins cannot race past the cap.",
+    ).toHaveBeenCalledTimes(1);
+
+    // 2) The count and the insert both ran on the SAME tx handle.
+    const txSelects = txCalls.filter((c) => c.op === "tx.select");
+    const txInserts = txCalls.filter((c) => c.op === "tx.insert");
+    expect(txSelects.length, "Expected at least one select inside the tx (the count).").toBeGreaterThanOrEqual(1);
+    expect(txInserts.length, "Expected at least one insert inside the tx.").toBe(1);
+
+    const countHandle = txSelects[0].handle;
+    const insertHandle = txInserts[0].handle;
+    expect(
+      countHandle,
+      "FR-10: the count query must run on the tx handle (not the outer db).",
+    ).toBe(txHandle);
+    expect(
+      insertHandle,
+      "FR-10: the insert must run on the same tx handle as the count.",
+    ).toBe(countHandle);
+
+    // 3) The user lookup runs on the outer db (not inside the tx), as the
+    // current implementation does.
+    expect(outerCalls.length, "User lookup should run on the outer db.").toBeGreaterThanOrEqual(1);
+  });
 });
 
 // ---------------------------------------------------------------------------

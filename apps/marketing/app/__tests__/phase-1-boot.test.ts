@@ -144,11 +144,18 @@ describe("Phase 1: Vinext Scaffold + Monorepo Integration boot smoke", () => {
 
   describe("Auth API routes (Phase 1 task 3 sub-contract)", () => {
     it.each([
-      ["app/api/auth/login/route.ts"],
-      ["app/api/auth/logout/route.ts"],
-      ["app/api/auth/session/route.ts"],
-    ])("auth route %s exists", (relPath) => {
-      expect(existsSync(resolve(APP_ROOT, relPath))).toBe(true);
+      ["@/api/auth/login/route", "POST"],
+      ["@/api/auth/logout/route", "POST"],
+      ["@/api/auth/session/route", "GET"],
+    ])("auth route %s exports %s as a function", async (modSpec, exportName) => {
+      // FR-12: replaced `existsSync(...)` with a behavioral import that asserts
+      // the module is importable + the named export is a function. File
+      // presence is verified by the build system, not the test suite.
+      const mod = await import(modSpec as string);
+      const handler = (mod as Record<string, unknown>)[exportName];
+      expect(typeof handler, `${modSpec} must export ${exportName} as a function`).toBe(
+        "function",
+      );
     });
 
     it("login route delegates to handleLogin from @reading-advantage/api", () => {

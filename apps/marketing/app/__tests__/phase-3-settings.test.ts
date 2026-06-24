@@ -131,9 +131,8 @@ function readText(relPath: string): string {
 
 describe("Phase 3: Settings Page — wiring invariants (tasks 1, 2, 5)", () => {
   describe("Settings page module (Phase 3 task 1)", () => {
-    it("apps/marketing/app/settings/page.tsx exists", () => {
-      expect(existsSync(resolve(APP_ROOT, "app/settings/page.tsx"))).toBe(true);
-    });
+    // FR-12: removed the `existsSync(...)` test — file presence is verified by
+    // the build system, not the test suite.
 
     it("settings page is a default-exported React component", async () => {
       const { default: SettingsPage } = await import("@/settings/page");

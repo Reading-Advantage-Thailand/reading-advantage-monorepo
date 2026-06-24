@@ -119,11 +119,9 @@ function makeInsertChainMock() {
 // ─────────────────────────────────────────────────────────────────────
 
 describe("Phase 5: Topic Research — wiring invariants (tasks 1-4)", () => {
-  it("apps/marketing/app/campaigns/[id]/video/page.tsx exists and exports a page", () => {
-    expect(existsSync(resolve(APP_ROOT, "app/campaigns/[id]/video/page.tsx"))).toBe(true);
-    const src = readText("app/campaigns/[id]/video/page.tsx");
-    expect(src).toMatch(/export\s+default\s+function\s+\w+\s*\(/);
-  });
+  // FR-12: removed brittle `existsSync(...)` and `export default function`
+  // source-regex assertions (build system already verifies file presence;
+  // the source-regex asserts nothing about runtime behavior).
 
   it("video production page renders the 8-product app selector", () => {
     const src = readText("app/campaigns/[id]/video/page.tsx");
@@ -139,13 +137,11 @@ describe("Phase 5: Topic Research — wiring invariants (tasks 1-4)", () => {
   });
 
   it("apps/marketing/app/api/video/research-topics/route.ts exports POST", async () => {
-    expect(existsSync(resolve(APP_ROOT, "app/api/video/research-topics/route.ts"))).toBe(true);
     const mod = await import("@/api/video/research-topics/route");
     expect(typeof mod.POST).toBe("function");
   }, 10000);
 
   it("apps/marketing/app/api/video/save-topics/route.ts exports POST", async () => {
-    expect(existsSync(resolve(APP_ROOT, "app/api/video/save-topics/route.ts"))).toBe(true);
     const mod = await import("@/api/video/save-topics/route");
     expect(typeof mod.POST).toBe("function");
   }, 10000);
