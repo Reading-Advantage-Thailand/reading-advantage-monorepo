@@ -1,0 +1,211 @@
+{
+  "track_id": "shared_foundation_review_20260626",
+  "phase": "Phase 3: Domain and API Boundaries",
+  "baseline_sha": "86da18263307ac8dd2b5e2986cdeb33095af062d",
+  "result": "fail",
+  "pass": false,
+  "summary": "Domain and API boundaries are functionally rich but structurally fragile. Three Critical issues block CI gates: stale tenant registry (9 unclassified tables), API type-check failures due to schema drift, and business logic leaking into the reports router. Additional High-severity risks include null-tenant DB scoping and hardcoded role checks in the API layer.",
+  "findings": {
+    "critical": [
+      {
+        "id": "F-DAPI-001",
+        "title": "Tenant registry is stale: 9 exported Drizzle tables are unclassified",
+        "files": [
+          "packages/domain/src/tenant-registry.ts",
+          "packages/domain/src/__tests__/tenant-coverage.test.ts"
+        ],
+        "tables": [
+          "verificationTokens",
+          "userRoles",
+          "roles",
+          "articleActivityLogs",
+          "sentencsAndWordsForFlashcards",
+          "cardReviews",
+          "clozeTestGames",
+          "schoolAdmins",
+          "leaderboards"
+        ]
+      },
+      {
+        "id": "F-DAPI-002",
+        "title": "packages/api type-check fails due to schema drift",
+        "files": [
+          "packages/api/src/routers/sales.ts:131",
+          "packages/api/src/routers/users.ts:10,24,50,75",
+          "packages/types/src/index.ts"
+        ]
+      },
+      {
+        "id": "F-DAPI-003",
+        "title": "reports.teacherDashboard bypasses the domain layer and queries the DB directly",
+        "files": [
+          "packages/api/src/routers/reports.ts:2-3,36-47"
+        ]
+      }
+    ],
+    "high": [
+      {
+        "id": "F-DAPI-004",
+        "title": "createContext builds a TenantDB with schoolId:null for unauthenticated requests",
+        "files": [
+          "packages/api/src/context.ts:71,82",
+          "packages/domain/src/db-contract.ts:302-308"
+        ]
+      },
+      {
+        "id": "F-DAPI-005",
+        "title": "API routers redefine input schemas instead of importing domain contracts",
+        "files": [
+          "packages/api/src/routers/users.ts",
+          "packages/api/src/routers/articles.ts",
+          "packages/domain/src/users/contracts.ts",
+          "packages/domain/src/articles/contracts.ts"
+        ]
+      },
+      {
+        "id": "F-DAPI-006",
+        "title": "Error mapping in routers relies on fragile string matching",
+        "files": [
+          "packages/api/src/routers/codecamp.ts:56-61",
+          "packages/api/src/routers/sales.ts:31-44",
+          "packages/domain/src/users/queries.ts:39,76"
+        ]
+      },
+      {
+        "id": "F-DAPI-007",
+        "title": "Hardcoded role checks in API layer bypass domain permissions",
+        "files": [
+          "packages/api/src/trpc.ts:94",
+          "packages/api/src/routers/sales.ts:50-69"
+        ]
+      }
+    ],
+    "medium": [
+      {
+        "id": "F-DAPI-008",
+        "title": "Domain module decomposition is inconsistent",
+        "files": [
+          "packages/domain/src/classes/index.ts",
+          "packages/domain/src/students/index.ts",
+          "packages/domain/src/codecamp/*.ts",
+          "packages/domain/src/ai/get-recommendation.ts",
+          "packages/domain/src/mastery/record-run.ts",
+          "packages/domain/src/interventions/list-alerts.ts",
+          "packages/domain/src/audit/dsar.ts"
+        ]
+      },
+      {
+        "id": "F-DAPI-009",
+        "title": "Many domain functions contain inline role === checks",
+        "files": [
+          "packages/domain/src/classes/get-class.ts:31",
+          "packages/domain/src/classes/get-class-roster.ts:30,80",
+          "packages/domain/src/classes/index.ts:88",
+          "packages/domain/src/students/index.ts:108-109",
+          "packages/domain/src/students/get-student-class-analytics.ts:26",
+          "packages/domain/src/curriculum/get-lesson-by-slug.ts:28",
+          "packages/domain/src/ai/get-recommendation.ts:265-267",
+          "packages/domain/src/interventions/list-alerts.ts:108-110"
+        ]
+      },
+      {
+        "id": "F-DAPI-010",
+        "title": "sales/roleplay-evaluator.ts reads process.env directly",
+        "files": [
+          "packages/domain/src/sales/roleplay-evaluator.ts:134-139"
+        ]
+      },
+      {
+        "id": "F-DAPI-011",
+        "title": "Console logging in domain production code",
+        "files": [
+          "packages/domain/src/db-contract.ts:304-308",
+          "packages/domain/src/codecamp/github-issues.ts:24",
+          "packages/domain/src/sales/roleplay-evaluator.ts:179,184"
+        ]
+      },
+      {
+        "id": "F-DAPI-012",
+        "title": "mastery/record-run.ts returns HTTP-shaped response from domain",
+        "files": [
+          "packages/domain/src/mastery/record-run.ts:115,127,169,241"
+        ]
+      },
+      {
+        "id": "F-DAPI-013",
+        "title": "codecamp.reviewExercise wires AI provider in the router",
+        "files": [
+          "packages/api/src/routers/codecamp.ts:456-478"
+        ]
+      }
+    ],
+    "low": [
+      {
+        "id": "F-DAPI-014",
+        "title": "Unused imports and lint warnings in packages/api",
+        "files": [
+          "packages/api/src/routers/sales.ts:8-10",
+          "packages/api/src/__tests__/reset-password.test.ts:31"
+        ]
+      },
+      {
+        "id": "F-DAPI-015",
+        "title": "packages/db check-types fails in dependency chain",
+        "files": [
+          "packages/db/package.json",
+          "packages/db/tsconfig.json"
+        ]
+      }
+    ]
+  },
+  "files_changed": [
+    "measure/audit-reports/shared-foundation_20260626/00-inventory.md",
+    "measure/audit-reports/shared-foundation_20260626/checklist.md",
+    "measure/audit-reports/shared-foundation_20260626/findings.md",
+    "measure/audit-reports/shared-foundation_20260626/test-gaps.md",
+    "measure/audit-reports/shared-foundation_20260626/migration-tracks.md",
+    "measure/audit-reports/shared-foundation_20260626/executive-summary.md",
+    "measure/audit-reports/shared-foundation_20260626/phase3-domain-api-result.json"
+  ],
+  "gates_run": {
+    "PROJECT_LINT": {
+      "command": "pnpm turbo run lint --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "exit_code": 0,
+      "passed": true,
+      "notes": "Passed with warnings only (16 across both packages)."
+    },
+    "PROJECT_CHECKS": {
+      "command": "pnpm turbo run check-types --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "exit_code": 2,
+      "passed": false,
+      "notes": "@reading-advantage/api fails with schema mismatches in users.ts and sales.ts. @reading-advantage/db check-types also failed in the dependency chain."
+    },
+    "PROJECT_TESTS": {
+      "command": "pnpm turbo run test --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "exit_code": 1,
+      "passed": false,
+      "notes": "@reading-advantage/domain tenant-coverage.test.ts fails (3 failures, 9 unclassified tables). @reading-advantage/api tests were not reached in turbo run; standalone API tests pass 168/168."
+    }
+  },
+  "proposed_migration_tracks": [
+    "M-DAPI-1: Repair tenant registry and type contract drift",
+    "M-DAPI-2: Lift remaining business logic out of API transport",
+    "M-DAPI-3: Centralize authorization in domain permissions",
+    "M-DAPI-4: Share domain contracts with API routers",
+    "M-DAPI-5: Harden null-tenant safety and context tests",
+    "M-DAPI-6: Complete domain module decomposition",
+    "M-DAPI-7: Remove env coupling and console logging from domain"
+  ],
+  "blocked_downstream_reviews": [
+    "sales_advantage_full_review_20260626",
+    "reading_advantage_full_review_20260610",
+    "primary_advantage_full_review_20260626",
+    "science_advantage_review_20260626",
+    "codecamp_advantage_review_20260626"
+  ],
+  "anti_pattern_checks": {
+    "A3_digit_only_count": "pass",
+    "A4_vacuous_pass": "pass",
+    "A5_false_claim_text": "pass"
+  }
+}

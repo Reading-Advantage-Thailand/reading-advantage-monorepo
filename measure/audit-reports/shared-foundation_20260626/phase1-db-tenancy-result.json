@@ -1,0 +1,102 @@
+{
+  "track_id": "shared_foundation_review_20260626",
+  "phase": "Phase 1: Database and Tenancy",
+  "baseline_sha": "86da18263307ac8dd2b5e2986cdeb33095af062d",
+  "result": "fail",
+  "summary": "Phase 1 review of packages/db and packages/domain identified 3 High-severity findings: 9 tables from primary.ts are unclassified in the tenant registry, the referential-scoping static check in tenant-coverage.test.ts is vacuous, and declared drizzle-orm versions are inconsistent across packages. Lint and type checks pass; db/domain tests fail due to these findings.",
+  "findings": [
+    {
+      "id": "F-DB-001",
+      "severity": "high",
+      "title": "Tenant registry missing 9 tables from primary.ts",
+      "files": [
+        "packages/domain/src/tenant-registry.ts",
+        "packages/db/src/schema/primary.ts"
+      ],
+      "evidence": "tenant-coverage.test.ts fails: verificationTokens, userRoles, roles, articleActivityLogs, sentencsAndWordsForFlashcards, cardReviews, clozeTestGames, schoolAdmins, leaderboards are unclassified",
+      "blocks": ["primary_advantage_full_review_20260626"]
+    },
+    {
+      "id": "F-DB-002",
+      "severity": "high",
+      "title": "Referential scoping static check is vacuous",
+      "files": [
+        "packages/domain/src/__tests__/tenant-coverage.test.ts:134-141"
+      ],
+      "evidence": "hasBareTenantDbOnReferential() unconditionally returns false; proven with temporary fixture that queries articles through createTenantDB and still passes the domain-code tenant coverage check",
+      "blocks": []
+    },
+    {
+      "id": "F-DB-003",
+      "severity": "high",
+      "title": "Inconsistent drizzle-orm declarations across workspace",
+      "files": [
+        "package.json",
+        "packages/db/package.json",
+        "packages/domain/package.json",
+        "packages/auth/package.json",
+        "packages/api/package.json"
+      ],
+      "evidence": "Declared versions: db ^0.45.0, domain 0.44.7, auth ^0.44.0, api ^0.44.0; root has no pnpm.overrides; drizzle045-* tests fail",
+      "blocks": []
+    },
+    {
+      "id": "F-DB-004",
+      "severity": "medium",
+      "title": "Missing migration sentinel probes for 0022 and 0023",
+      "files": [
+        "packages/db/src/sentinels.ts"
+      ],
+      "evidence": "journal-integrity.test.ts fails: 0022_flowery_black_tarantula, 0023_cultured_sunspot have no sentinel probes",
+      "blocks": []
+    },
+    {
+      "id": "F-DB-005",
+      "severity": "medium",
+      "title": "Table name typo: sentencsAndWordsForFlashcards / sentencs_and_words_for_flashcard",
+      "files": [
+        "packages/db/src/schema/primary.ts:158",
+        "packages/db/drizzle/0022_flowery_black_tarantula.sql:61"
+      ],
+      "evidence": "TypeScript export and DB table use 'sentencs' instead of 'sentences'",
+      "blocks": ["primary_advantage_full_review_20260626"]
+    },
+    {
+      "id": "F-DB-008",
+      "severity": "medium",
+      "title": "Wide reshape migration 0013 has high blast radius",
+      "files": [
+        "packages/db/drizzle/0013_prisma_drizzle_schema_unification.sql"
+      ],
+      "evidence": "848-line migration drops/renames columns across 30+ tables",
+      "blocks": []
+    }
+  ],
+  "files_changed": [
+    "measure/tracks/shared_foundation_review_20260626/plan.md",
+    "measure/audit-reports/shared-foundation_20260626/00-inventory.md",
+    "measure/audit-reports/shared-foundation_20260626/checklist.md",
+    "measure/audit-reports/shared-foundation_20260626/findings.md",
+    "measure/audit-reports/shared-foundation_20260626/migration-tracks.md",
+    "measure/audit-reports/shared-foundation_20260626/test-gaps.md",
+    "measure/audit-reports/shared-foundation_20260626/executive-summary.md",
+    "measure/audit-reports/shared-foundation_20260626/phase1-db-tenancy-result.json"
+  ],
+  "gates_run": {
+    "PROJECT_LINT": {
+      "command": "pnpm turbo run lint --filter=@reading-advantage/db --filter=@reading-advantage/domain",
+      "status": "pass",
+      "details": "Ran directly per package: db 8 warnings/0 errors, domain 11 warnings/0 errors"
+    },
+    "PROJECT_CHECKS": {
+      "command": "pnpm turbo run check-types --filter=@reading-advantage/db --filter=@reading-advantage/domain",
+      "status": "pass",
+      "details": "Both packages tsc --noEmit succeeded"
+    },
+    "PROJECT_TESTS": {
+      "command": "pnpm turbo run test --filter=@reading-advantage/db --filter=@reading-advantage/domain",
+      "status": "fail",
+      "details": "packages/db: 139 failed, 957 passed, 12 skipped (drizzle045 version/lockfile/sentinel failures); packages/domain: tenant-coverage.test.ts fails on unclassified tables, full suite timed out"
+    }
+  }
+}

@@ -15,10 +15,10 @@
 
 ## Phase 1: Database and Tenancy
 
-- [b] Task: Inventory `packages/db` schemas, migrations, seeds, migration ledger, and exports. — deferred:review-execution
-- [b] Task: Review tenant registry coverage and referential scoping rules in `packages/domain`. — deferred:review-execution
-- [b] Task: Check schema/migration drift risks, destructive migrations, and seed coupling. — deferred:review-execution
-- [b] Task: Record findings in `findings.md` and test gaps in `test-gaps.md`. — deferred:review-execution
+- [x] Task: Inventory `packages/db` schemas, migrations, seeds, migration ledger, and exports. — evidence: `measure/audit-reports/shared-foundation_20260626/00-inventory.md`
+- [x] Task: Review tenant registry coverage and referential scoping rules in `packages/domain`. — evidence: `findings.md` F-DB-001/F-DB-002, `test-gaps.md` Gap 1/Gap 2
+- [x] Task: Check schema/migration drift risks, destructive migrations, and seed coupling. — evidence: `findings.md` F-DB-004/F-DB-008/F-DB-009
+- [x] Task: Record findings in `findings.md` and test gaps in `test-gaps.md`. — evidence: appended Phase 1 sections
 
 ## Phase 2: Auth, Sessions, Permissions, Audit
 
@@ -29,10 +29,10 @@
 
 ## Phase 3: Domain and API Boundaries
 
-- [b] Task: Inventory `packages/domain` modules and exported business functions. — deferred:review-execution
-- [b] Task: Review module structure: contracts, queries, mutations, permissions, errors, tests. — deferred:review-execution
-- [b] Task: Inventory `packages/api` tRPC routers and route adapters. — deferred:review-execution
-- [b] Task: Verify transport layers are thin and domain behavior is reusable outside tRPC/Next routes. — deferred:review-execution
+- [x] Task: Inventory `packages/domain` modules and exported business functions. — evidence: `measure/audit-reports/shared-foundation_20260626/00-inventory.md` §1.1–1.4
+- [x] Task: Review module structure: contracts, queries, mutations, permissions, errors, tests. — evidence: `findings.md` F-DAPI-008/F-DAPI-009, `checklist.md` Domain layer
+- [x] Task: Inventory `packages/api` tRPC routers and route adapters. — evidence: `00-inventory.md` §2.2–2.4
+- [x] Task: Verify transport layers are thin and domain behavior is reusable outside tRPC/Next routes. — evidence: `findings.md` F-DAPI-003/F-DAPI-013, `test-gaps.md` TG-DAPI-007
 
 ## Phase 4: Provider Adapters
 
@@ -48,15 +48,15 @@
 
 ## Phase 6: Reporting
 
-- [b] Task: Complete `00-inventory.md`. — deferred:review-execution
-- [b] Task: Complete `checklist.md` with scored categories. — deferred:review-execution
-- [b] Task: Complete `findings.md` with severity-ordered findings. — deferred:review-execution
-- [b] Task: Complete `migration-tracks.md` with proposed remediation tracks. — deferred:review-execution
-- [b] Task: Complete `test-gaps.md`. — deferred:review-execution
-- [b] Task: Complete `executive-summary.md`. — deferred:review-execution
+- [~] Task: Complete `00-inventory.md`. — evidence: Phase 3 domain/API sections created in `measure/audit-reports/shared-foundation_20260626/00-inventory.md`
+- [~] Task: Complete `checklist.md` with scored categories. — evidence: Phase 3 checklist created in `measure/audit-reports/shared-foundation_20260626/checklist.md`
+- [~] Task: Complete `findings.md` with severity-ordered findings. — evidence: Phase 3 findings appended in `measure/audit-reports/shared-foundation_20260626/findings.md`
+- [~] Task: Complete `migration-tracks.md` with proposed remediation tracks. — evidence: Phase 3 proposed tracks in `measure/audit-reports/shared-foundation_20260626/migration-tracks.md`
+- [~] Task: Complete `test-gaps.md`. — evidence: Phase 3 test gaps in `measure/audit-reports/shared-foundation_20260626/test-gaps.md`
+- [~] Task: Complete `executive-summary.md`. — evidence: Phase 3 summary in `measure/audit-reports/shared-foundation_20260626/executive-summary.md`
 
 ## Phase 7: Acceptance
 
-- [b] Task: Run relevant package-level lint/type/test gates only after findings are drafted, recording pass/fail without using gate failure as a substitute for review. — deferred:review-execution
+- [x] Task: Run relevant package-level lint/type/test gates only after findings are drafted, recording pass/fail without using gate failure as a substitute for review. — evidence: lint/check-types pass for db/domain; db tests 139 failed (F-DB-003/F-DB-004), domain tenant-coverage fails (F-DB-001)
 - [b] Task: Run Measure phase acceptance for this review track. — deferred:review-execution
 - [b] Task: Update parent masterplan with any blocked downstream app reviews. — deferred:review-execution

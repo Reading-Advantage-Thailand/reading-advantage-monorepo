@@ -1,0 +1,134 @@
+{
+  "track_id": "shared_foundation_review_20260626",
+  "phase": "Phase 4-5: Provider Adapters and Shared UI/Utils/Types/Config",
+  "reviewer": "Measure Review C (UX and API end-to-end contract)",
+  "timestamp": "2026-06-26T22:41:00Z",
+  "baseline_sha": "86da18263307ac8dd2b5e2986cdeb33095af062d",
+  "result": "pass",
+  "summary": "Provider adapter pattern is well-implemented across ai, storage, and integrations-github. Webhooks have strong security posture. Main risks: duplicate GitHub client (P1), zero types tests (P1), cn() duplication (P1), unstructured logging in webhooks (P2), UI component test gaps (P2). No source code changes made — this is a review/planning track.",
+  "gates_run": {
+    "lint": {
+      "command": "pnpm turbo run lint --filter=@reading-advantage/ai --filter=@reading-advantage/storage --filter=@reading-advantage/webhooks --filter=@reading-advantage/ui --filter=@reading-advantage/types --filter=@reading-advantage/utils --filter=@reading-advantage/config",
+      "result": "pass",
+      "notes": "All in-scope packages lint clean (cached results)"
+    },
+    "check_types": {
+      "command": "pnpm turbo run check-types --filter=@reading-advantage/ai --filter=@reading-advantage/storage --filter=@reading-advantage/webhooks --filter=@reading-advantage/ui --filter=@reading-advantage/types --filter=@reading-advantage/utils --filter=@reading-advantage/config",
+      "result": "pass",
+      "notes": "All in-scope packages type-check clean (cached results)"
+    },
+    "tests": {
+      "command": "pnpm turbo run test --filter=@reading-advantage/ai --filter=@reading-advantage/storage --filter=@reading-advantage/webhooks --filter=@reading-advantage/ui --filter=@reading-advantage/types --filter=@reading-advantage/utils --filter=@reading-advantage/config --filter=@reading-advantage/integrations-github",
+      "result": "partial_pass",
+      "notes": "ai: 13 pre-existing failures from prior SDK migration track (phase-0 setup, phase-11 lockfile, phase-12 closeout). 196 core adapter tests pass. storage: 12/12 pass. webhooks: 78/78 pass. ui: 10/10 pass. utils: 22/22 pass. integrations-github: 5/5 pass. types: no test script. config: tests pass."
+    }
+  },
+  "findings": [
+    {
+      "id": "F-A4-01",
+      "title": "Duplicate GitHub Client Implementation",
+      "severity": "P1",
+      "category": "adapter-duplication",
+      "packages": ["webhooks", "integrations-github"],
+      "evidence": ["packages/webhooks/src/github-client.ts:50-70", "packages/integrations/github/src/drivers/rest.ts:23-51"],
+      "migration_track": "MT-1"
+    },
+    {
+      "id": "F-A4-02",
+      "title": "Webhooks Package Exposes Raw TypeScript Source",
+      "severity": "P2",
+      "category": "package-boundary",
+      "packages": ["webhooks"],
+      "evidence": ["packages/webhooks/package.json:7-9"],
+      "migration_track": "MT-2"
+    },
+    {
+      "id": "F-A4-03",
+      "title": "Webhooks Uses Unstructured Logging",
+      "severity": "P2",
+      "category": "observability",
+      "packages": ["webhooks"],
+      "evidence": ["packages/webhooks/src/github.ts (11 console.* calls)", "packages/webhooks/src/github-client.ts (5 console.* calls)"],
+      "migration_track": "MT-6"
+    },
+    {
+      "id": "F-A4-04",
+      "title": "ESM Import Without .js Extension in Webhooks",
+      "severity": "P3",
+      "category": "esm-compliance",
+      "packages": ["webhooks"],
+      "evidence": ["packages/webhooks/src/github.ts:16"],
+      "migration_track": "MT-2"
+    },
+    {
+      "id": "F-A5-01",
+      "title": "cn() Utility Duplicated in App Code",
+      "severity": "P1",
+      "category": "utility-duplication",
+      "packages": ["utils", "www-reading-advantage"],
+      "evidence": ["packages/utils/src/cn.ts:9-11", "apps/www-reading-advantage/src/lib/utils.ts:4-6"],
+      "migration_track": "MT-4"
+    },
+    {
+      "id": "F-A5-02",
+      "title": "Types Package Has Zero Tests",
+      "severity": "P1",
+      "category": "test-coverage",
+      "packages": ["types"],
+      "evidence": ["packages/types/package.json (no test script)", "packages/types/src/__tests__/ does not exist"],
+      "migration_track": "MT-3"
+    },
+    {
+      "id": "F-A5-03",
+      "title": "UI Component Test Coverage Gaps",
+      "severity": "P2",
+      "category": "test-coverage",
+      "packages": ["ui"],
+      "evidence": ["packages/ui/src/__tests__/ has 5 files for 15 component families"],
+      "migration_track": "MT-5"
+    },
+    {
+      "id": "F-A5-04",
+      "title": "Direct OpenAI SDK Import in primary-advantage",
+      "severity": "P2",
+      "category": "adapter-boundary",
+      "packages": ["primary-advantage"],
+      "evidence": ["apps/primary-advantage/server/utils/genaretors/image-generator.ts:16"],
+      "migration_track": null
+    },
+    {
+      "id": "F-X-01",
+      "title": "reading-advantage-scripts Uses Legacy OpenAI SDK v4",
+      "severity": "P3",
+      "category": "legacy-code",
+      "packages": ["reading-advantage-scripts"],
+      "evidence": ["packages/reading-advantage-scripts/generateArticle.js:1"],
+      "migration_track": null
+    },
+    {
+      "id": "F-X-02",
+      "title": "StorageClient Interface Missing get() Method",
+      "severity": "P3",
+      "category": "interface-completeness",
+      "packages": ["storage"],
+      "evidence": ["packages/storage/src/client.ts:33-73"],
+      "migration_track": null
+    }
+  ],
+  "files_changed": [
+    "measure/audit-reports/shared-foundation_20260626/00-inventory.md",
+    "measure/audit-reports/shared-foundation_20260626/checklist.md",
+    "measure/audit-reports/shared-foundation_20260626/findings.md",
+    "measure/audit-reports/shared-foundation_20260626/migration-tracks.md",
+    "measure/audit-reports/shared-foundation_20260626/test-gaps.md",
+    "measure/audit-reports/shared-foundation_20260626/executive-summary.md"
+  ],
+  "no_source_changes": true,
+  "app_blocking_status": {
+    "codecamp-advantage": { "blocked": true, "by": ["MT-1"] },
+    "www-reading-advantage": { "blocked": true, "by": ["MT-4"] },
+    "primary-advantage": { "blocked": true, "by": ["F-A5-04"] },
+    "science-advantage": { "blocked": false },
+    "reading-advantage": { "blocked": false }
+  }
+}
