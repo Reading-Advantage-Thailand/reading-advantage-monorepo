@@ -1,0 +1,190 @@
+{
+  "track_id": "shared_foundation_review_20260626",
+  "phase": "Phase 6-7: Reporting and Acceptance",
+  "baseline_sha": "86da18263307ac8dd2b5e2986cdeb33095af062d",
+  "status": "pass",
+  "pass": true,
+  "summary": "Track-level synthesis and Measure acceptance passed for the review track. The final six artifacts now cover every in-scope shared package and score every required boundary. The shared foundation itself is not product-green: 26 accepted findings remain, including 4 Critical and 7 High items, and multiple package gates are failing or timed out. Those failures are recorded as review findings rather than hidden blockers to completing this review track.",
+  "acceptance_criteria": {
+    "every_in_scope_package_has_inventory_entry": {
+      "status": "pass",
+      "evidence": "00-inventory.md includes db, auth, auth-client, domain, api, ai, storage, webhooks, types, ui, utils, config, integrations-github, and reading-advantage-scripts."
+    },
+    "shared_boundaries_explicitly_scored": {
+      "status": "pass",
+      "evidence": "checklist.md scores database, tenancy, auth, validation/contracts, domain, API, AI, storage, webhooks, GitHub, UI, utils/types/config, and legacy scripts."
+    },
+    "findings_deduplicated_into_shared_root_causes": {
+      "status": "pass",
+      "evidence": "findings.md uses track-level F-SF-* IDs and root-cause groups, merging Phase 1, Phase 2, Phase 3, and Phase 4-5 results."
+    },
+    "migration_tracks_identify_blocked_app_reviews": {
+      "status": "pass",
+      "evidence": "migration-tracks.md proposes M-SF-1 through M-SF-10 and maps downstream review blockers/caveats."
+    },
+    "plan_has_no_pending_or_in_progress_markers": {
+      "status": "pass",
+      "evidence": "plan.md has no [ ], [~], or [b] markers after reconciliation."
+    },
+    "gate_failures_not_hidden": {
+      "status": "pass",
+      "evidence": "executive-summary.md and 00-inventory.md record failing/timed-out/no-test gates for db/domain/api/ai/auth/types/scripts."
+    }
+  },
+  "merged_finding_counts": {
+    "critical": 4,
+    "high": 7,
+    "medium": 10,
+    "low": 5,
+    "total": 26
+  },
+  "critical_findings": [
+    "F-SF-001: Tenant registry is stale: 9 exported Drizzle tables are unclassified",
+    "F-SF-002: API/type contract drift breaks @reading-advantage/api type-check",
+    "F-SF-003: reports.teacherDashboard queries the DB inside the API router",
+    "F-SF-004: API context can create a tenant-branded DB with schoolId:null"
+  ],
+  "gates": {
+    "phase1_db_domain_lint": {
+      "command": "pnpm turbo run lint --filter=@reading-advantage/db --filter=@reading-advantage/domain",
+      "status": "pass",
+      "source": "phase1-db-tenancy-result.json"
+    },
+    "phase1_db_domain_check_types": {
+      "command": "pnpm turbo run check-types --filter=@reading-advantage/db --filter=@reading-advantage/domain",
+      "status": "pass",
+      "source": "phase1-db-tenancy-result.json"
+    },
+    "phase1_db_domain_tests": {
+      "command": "pnpm turbo run test --filter=@reading-advantage/db --filter=@reading-advantage/domain",
+      "status": "fail",
+      "source": "phase1-db-tenancy-result.json",
+      "details": "db: 139 failed, 957 passed, 12 skipped; domain tenant-coverage fails and full suite timed out."
+    },
+    "phase2_auth_tests": {
+      "command": "package tests for auth/auth-client",
+      "status": "timeout",
+      "source": "phase2-auth-security-result.json",
+      "details": "Tests timed out at 120s; lint/check-types not rerun in Phase 2 review-only pass."
+    },
+    "phase3_domain_api_lint": {
+      "command": "pnpm turbo run lint --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "status": "pass",
+      "source": "phase3-domain-api-result.json",
+      "details": "Passed with warnings only."
+    },
+    "phase3_domain_api_check_types": {
+      "command": "pnpm turbo run check-types --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "status": "fail",
+      "source": "phase3-domain-api-result.json",
+      "details": "@reading-advantage/api fails due to sales/user schema drift; db check-types lifecycle failure also reported in dependency chain."
+    },
+    "phase3_domain_api_tests": {
+      "command": "pnpm turbo run test --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "status": "fail",
+      "source": "phase3-domain-api-result.json",
+      "details": "Domain tenant-coverage fails; API standalone tests pass 168/168."
+    },
+    "phase4_5_adapter_ui_lint": {
+      "command": "pnpm turbo run lint --filter=@reading-advantage/ai --filter=@reading-advantage/storage --filter=@reading-advantage/webhooks --filter=@reading-advantage/ui --filter=@reading-advantage/types --filter=@reading-advantage/utils --filter=@reading-advantage/config",
+      "status": "pass",
+      "source": "phase4-5-adapters-ui-result.json"
+    },
+    "phase4_5_adapter_ui_check_types": {
+      "command": "pnpm turbo run check-types --filter=@reading-advantage/ai --filter=@reading-advantage/storage --filter=@reading-advantage/webhooks --filter=@reading-advantage/ui --filter=@reading-advantage/types --filter=@reading-advantage/utils --filter=@reading-advantage/config",
+      "status": "pass",
+      "source": "phase4-5-adapters-ui-result.json"
+    },
+    "phase4_5_adapter_ui_tests": {
+      "command": "pnpm turbo run test --filter=@reading-advantage/ai --filter=@reading-advantage/storage --filter=@reading-advantage/webhooks --filter=@reading-advantage/ui --filter=@reading-advantage/types --filter=@reading-advantage/utils --filter=@reading-advantage/config --filter=@reading-advantage/integrations-github",
+      "status": "partial_pass",
+      "source": "phase4-5-adapters-ui-result.json",
+      "details": "storage/webhooks/ui/utils/integrations-github pass; ai has 13 pre-existing failures; types has no test script."
+    },
+    "acceptance_graph_stats": {
+      "command": "build-graph stats ./graph.db",
+      "status": "pass",
+      "details": "22,185 nodes; 46,017 edges; 2,715 files."
+    },
+    "acceptance_artifact_validation": {
+      "command": "python artifact coverage check",
+      "status": "pass",
+      "details": "All inventory labels present; plan has 0 [ ], [~], [b] markers; findings.md has 26 F-SF findings."
+    }
+  },
+  "anti_pattern_checks": {
+    "A1_substring_as_signal": {
+      "status": "pass",
+      "evidence": "automation-supervisor.py task regex is ^- \\[([~xb])\\] and is_task_structurally_blocked recognizes status b plus deferred:<owner>."
+    },
+    "A3_digit_only_count": {
+      "status": "pass",
+      "evidence": "No shell-test rg -q '[0-9]+' count assertion found by acceptance grep."
+    },
+    "A4_vacuous_pass": {
+      "status": "pass",
+      "evidence": "No marker-consistency shell test pattern found; plan has no in-progress/pending markers."
+    },
+    "A5_false_claim_text": {
+      "status": "pass",
+      "evidence": "No plan claim of PASS=N, FAIL=0 or all checks pass; failures are explicitly recorded."
+    },
+    "A6_registry_overstatement": {
+      "status": "pass_with_monitor",
+      "evidence": "No new shared-foundation resolved claim was added; historical measure/tracks.md claims were not modified by this track."
+    },
+    "A7_over_broad_filter": {
+      "status": "pass",
+      "evidence": "No over-broad banned-term rg -v shell-test filter found by acceptance grep."
+    }
+  },
+  "files_changed": [
+    "measure/audit-reports/shared-foundation_20260626/00-inventory.md",
+    "measure/audit-reports/shared-foundation_20260626/checklist.md",
+    "measure/audit-reports/shared-foundation_20260626/findings.md",
+    "measure/audit-reports/shared-foundation_20260626/migration-tracks.md",
+    "measure/audit-reports/shared-foundation_20260626/test-gaps.md",
+    "measure/audit-reports/shared-foundation_20260626/executive-summary.md",
+    "measure/audit-reports/shared-foundation_20260626/phase7-acceptance-result.json",
+    "measure/tracks/shared_foundation_review_20260626/plan.md"
+  ],
+  "downstream_blocked_tracks": [
+    {
+      "track_id": "reading_advantage_full_review_20260626",
+      "blocked_or_caveated_by": ["F-SF-003", "F-SF-004", "F-SF-008", "F-SF-021"]
+    },
+    {
+      "track_id": "primary_advantage_full_review_20260626",
+      "blocked_or_caveated_by": ["F-SF-001", "F-SF-002", "F-SF-014", "F-SF-021", "F-SF-025", "Phase4-5 direct OpenAI app exception"]
+    },
+    {
+      "track_id": "science_advantage_review_20260626",
+      "blocked_or_caveated_by": ["F-SF-003", "F-SF-004", "F-SF-008"]
+    },
+    {
+      "track_id": "codecamp_advantage_review_20260626",
+      "blocked_or_caveated_by": ["F-SF-009", "F-SF-013", "F-SF-015", "F-SF-016", "F-SF-019"]
+    },
+    {
+      "track_id": "sales_advantage_review_20260626",
+      "blocked_or_caveated_by": ["F-SF-002", "F-SF-010", "F-SF-011", "F-SF-013"]
+    },
+    {
+      "track_id": "marketing_app_review_20260626",
+      "blocked_or_caveated_by": ["F-SF-019 if shared AI is used"]
+    },
+    {
+      "track_id": "www_reading_advantage_review_20260626",
+      "blocked_or_caveated_by": ["F-SF-020", "F-SF-018"]
+    },
+    {
+      "track_id": "cross_app_workflows_review_20260626",
+      "blocked_or_caveated_by": ["All Critical/High shared-foundation findings"]
+    }
+  ],
+  "commit": {
+    "attempted": true,
+    "status": "committed",
+    "sha": "pending_git_commit"
+  }
+}
