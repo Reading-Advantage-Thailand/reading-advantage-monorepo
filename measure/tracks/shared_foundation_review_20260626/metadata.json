@@ -1,14 +1,14 @@
 {
   "track_id": "shared_foundation_review_20260626",
   "type": "chore",
-  "status": "done",
+  "status": "reopened",
   "created_at": "2026-06-26T12:56:03Z",
   "updated_at": "2026-06-26T23:59:00Z",
-  "completed": "2026-06-26",
+  "completed": null,
   "description": "Review shared packages and backend foundation before app-level review: db, auth, domain, api, ai, storage, webhooks, types, ui, utils, config, integrations.",
   "estimated_tasks": 42,
   "actual_tasks": 62,
-  "deviation_notes": "Review-only child track of monorepo_feature_review_masterplan_20260626. All 62 plan tasks completed across 7 phases. Final acceptance passed with 26 findings (4 Critical, 7 High, 10 Medium, 5 Low). No remediation performed — remediation tracks proposed as M-SF-1 through M-SF-10.",
+  "deviation_notes": "Reopened 2026-06-27 because the prior closeout represented a triage/boundary review, not the required line-by-line review. Prior findings remain useful but are superseded for acceptance until file-level coverage evidence is complete.",
   "closeout_sha": "b3fd94c2",
   "acceptance_sha": "b05b5cd2"
 }

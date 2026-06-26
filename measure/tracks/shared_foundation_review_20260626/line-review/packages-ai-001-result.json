@@ -1,0 +1,118 @@
+{
+  "batch_id": "packages-ai-001",
+  "track_id": "shared_foundation_review_20260626",
+  "reviewer": "Measure Review A",
+  "files_reviewed": 8,
+  "lines_reviewed": 871,
+  "findings_count": 7,
+  "evidence_path": "measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md",
+  "ledger_path": "measure/tracks/shared_foundation_review_20260626/line-review/line-review-coverage.tsv",
+  "ledger_updated": true,
+  "assigned_files": [
+    {
+      "file": "packages/ai/README.md",
+      "line_count": 87,
+      "reviewed_ranges": "1-87",
+      "finding_count": 1,
+      "status": "reviewed"
+    },
+    {
+      "file": "packages/ai/eslint.config.mjs",
+      "line_count": 3,
+      "reviewed_ranges": "1-3",
+      "finding_count": 0,
+      "status": "reviewed"
+    },
+    {
+      "file": "packages/ai/package.json",
+      "line_count": 34,
+      "reviewed_ranges": "1-34",
+      "finding_count": 1,
+      "status": "reviewed"
+    },
+    {
+      "file": "packages/ai/src/__tests__/contract-suite.ts",
+      "line_count": 119,
+      "reviewed_ranges": "1-119",
+      "finding_count": 1,
+      "status": "reviewed"
+    },
+    {
+      "file": "packages/ai/src/__tests__/diagram.fixture.ts",
+      "line_count": 33,
+      "reviewed_ranges": "1-33",
+      "finding_count": 0,
+      "status": "reviewed"
+    },
+    {
+      "file": "packages/ai/src/__tests__/phase-0-setup.test.ts",
+      "line_count": 115,
+      "reviewed_ranges": "1-115",
+      "finding_count": 2,
+      "status": "reviewed"
+    },
+    {
+      "file": "packages/ai/src/__tests__/phase-1-interface.test-d.ts",
+      "line_count": 181,
+      "reviewed_ranges": "1-181",
+      "finding_count": 1,
+      "status": "reviewed"
+    },
+    {
+      "file": "packages/ai/src/__tests__/phase-10-closeout.test.ts",
+      "line_count": 299,
+      "reviewed_ranges": "1-299",
+      "finding_count": 1,
+      "status": "reviewed"
+    }
+  ],
+  "findings": [
+    {
+      "id": "LR-packages-ai-001-001",
+      "severity": "High",
+      "title": "README omits the OpenRouter provider supported by the public contract",
+      "files": ["packages/ai/README.md:3", "packages/ai/README.md:29-37", "packages/ai/src/__tests__/phase-1-interface.test-d.ts:153"]
+    },
+    {
+      "id": "LR-packages-ai-001-002",
+      "severity": "Low",
+      "title": "@ai-sdk/google-vertex dependency is not reflected in the public provider contract or docs",
+      "files": ["packages/ai/package.json:23", "packages/ai/README.md:29-37", "packages/ai/src/__tests__/phase-1-interface.test-d.ts:153"]
+    },
+    {
+      "id": "LR-packages-ai-001-003",
+      "severity": "Medium",
+      "title": "Shared contract suite only exercises three of the six AIClient methods",
+      "files": ["packages/ai/src/__tests__/contract-suite.ts:69-118", "packages/ai/src/__tests__/phase-1-interface.test-d.ts:68-77"]
+    },
+    {
+      "id": "LR-packages-ai-001-004",
+      "severity": "Medium",
+      "title": "Phase 0 setup tests assume a non-hoisted package-local node_modules layout",
+      "files": ["packages/ai/src/__tests__/phase-0-setup.test.ts:74-82", "packages/ai/src/__tests__/phase-0-setup.test.ts:99-112"]
+    },
+    {
+      "id": "LR-packages-ai-001-005",
+      "severity": "Low",
+      "title": "Comment references archived track path for test-strategy.md",
+      "files": ["packages/ai/src/__tests__/phase-0-setup.test.ts:87"]
+    },
+    {
+      "id": "LR-packages-ai-001-006",
+      "severity": "Medium",
+      "title": "Type-test file falsely claims vitest --typecheck is enabled in config",
+      "files": ["packages/ai/src/__tests__/phase-1-interface.test-d.ts:6", "packages/ai/vitest.config.ts:1-10"]
+    },
+    {
+      "id": "LR-packages-ai-001-007",
+      "severity": "High",
+      "title": "Closeout test comments falsely claim assertions fail RED, but the suite passes",
+      "files": ["packages/ai/src/__tests__/phase-10-closeout.test.ts:35-38", "packages/ai/src/__tests__/phase-10-closeout.test.ts:209-214", "packages/ai/src/__tests__/phase-10-closeout.test.ts:282-290"]
+    }
+  ],
+  "anti_pattern_checks": {
+    "A3": "checked - no bare-digit count assertions",
+    "A4": "checked - no vacuous-pass on missing deliverables",
+    "A5": "two confirmed instances (LR-006, LR-007)"
+  }
+}

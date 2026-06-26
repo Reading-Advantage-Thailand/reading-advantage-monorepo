@@ -1,0 +1,3177 @@
+[
+  {
+    "id": "packages-ai-001",
+    "package": "packages/ai",
+    "files": [
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/README.md",
+        "line_count": 87
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/package.json",
+        "line_count": 34
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/contract-suite.ts",
+        "line_count": 119
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/diagram.fixture.ts",
+        "line_count": 33
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-0-setup.test.ts",
+        "line_count": 115
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-1-interface.test-d.ts",
+        "line_count": 181
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-10-closeout.test.ts",
+        "line_count": 299
+      }
+    ],
+    "line_count": 871
+  },
+  {
+    "id": "packages-ai-002",
+    "package": "packages/ai",
+    "files": [
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-11-sdk-v2-call-shape.test.ts",
+        "line_count": 412
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-11-sdk-version-contract.test.ts",
+        "line_count": 344
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-12-closeout-artifacts.test.ts",
+        "line_count": 419
+      }
+    ],
+    "line_count": 1175
+  },
+  {
+    "id": "packages-ai-003",
+    "package": "packages/ai",
+    "files": [
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-13-adversarial-arch-guard-regex.test.ts",
+        "line_count": 188
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-13-adversarial-gate-result-scope.test.ts",
+        "line_count": 173
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-13-adversarial-streamText-await.test.ts",
+        "line_count": 200
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-2-mock-provider.test.ts",
+        "line_count": 182
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-3-openai-provider.test.ts",
+        "line_count": 390
+      }
+    ],
+    "line_count": 1133
+  },
+  {
+    "id": "packages-ai-004",
+    "package": "packages/ai",
+    "files": [
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-4-google-provider.test.ts",
+        "line_count": 438
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-5-provider-selector.test.ts",
+        "line_count": 355
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-9-docs.test.ts",
+        "line_count": 150
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-arch-no-direct-sdk.test.ts",
+        "line_count": 140
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-multimodal-contract.test.ts",
+        "line_count": 91
+      }
+    ],
+    "line_count": 1174
+  },
+  {
+    "id": "packages-ai-005",
+    "package": "packages/ai",
+    "files": [
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-multimodal-google.test.ts",
+        "line_count": 98
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-multimodal-openrouter.test.ts",
+        "line_count": 169
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-multimodal-unsupported.test.ts",
+        "line_count": 44
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/phase-stream-text-contract.test.ts",
+        "line_count": 257
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/recommendations.fixture.ts",
+        "line_count": 83
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/__tests__/test-utils.ts",
+        "line_count": 67
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/client.test.ts",
+        "line_count": 123
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/client.ts",
+        "line_count": 115
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/errors.ts",
+        "line_count": 57
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/index.ts",
+        "line_count": 39
+      }
+    ],
+    "line_count": 1052
+  },
+  {
+    "id": "packages-ai-006",
+    "package": "packages/ai",
+    "files": [
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/providers/google.test.ts",
+        "line_count": 98
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/providers/google.ts",
+        "line_count": 220
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/providers/mock.test.ts",
+        "line_count": 100
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/providers/mock.ts",
+        "line_count": 187
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/providers/openai.test.ts",
+        "line_count": 110
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/providers/openai.ts",
+        "line_count": 169
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/providers/openrouter-preflight.test.ts",
+        "line_count": 41
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/providers/openrouter.test.ts",
+        "line_count": 221
+      }
+    ],
+    "line_count": 1146
+  },
+  {
+    "id": "packages-ai-007",
+    "package": "packages/ai",
+    "files": [
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/providers/openrouter.ts",
+        "line_count": 231
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/src/types.ts",
+        "line_count": 191
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/tsconfig.json",
+        "line_count": 9
+      },
+      {
+        "package": "packages/ai",
+        "file": "packages/ai/vitest.config.ts",
+        "line_count": 10
+      }
+    ],
+    "line_count": 441
+  },
+  {
+    "id": "packages-api-001",
+    "package": "packages/api",
+    "files": [
+      {
+        "package": "packages/api",
+        "file": "packages/api/docs/route-audit.md",
+        "line_count": 851
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/package.json",
+        "line_count": 57
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/articles-router.test.ts",
+        "line_count": 112
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/assignments-router.test.ts",
+        "line_count": 157
+      }
+    ],
+    "line_count": 1180
+  },
+  {
+    "id": "packages-api-002",
+    "package": "packages/api",
+    "files": [
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/auth-audit.test.ts",
+        "line_count": 247
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/auth-router.test.ts",
+        "line_count": 60
+      }
+    ],
+    "line_count": 307
+  },
+  {
+    "id": "packages-api-003",
+    "package": "packages/api",
+    "files": [
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/auth-routes.test.ts",
+        "line_count": 975
+      }
+    ],
+    "line_count": 975
+  },
+  {
+    "id": "packages-api-004",
+    "package": "packages/api",
+    "files": [
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/auth-security-phase1-route-contracts.test.ts",
+        "line_count": 310
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/auth-security-phase2-role-casts.test.ts",
+        "line_count": 47
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/auth-security-phase3-app-routes.test.ts",
+        "line_count": 209
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/auth-security-phase3-signup-removal.test.ts",
+        "line_count": 303
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/auth.test.ts",
+        "line_count": 60
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/classes-router.test.ts",
+        "line_count": 75
+      }
+    ],
+    "line_count": 1004
+  },
+  {
+    "id": "packages-api-005",
+    "package": "packages/api",
+    "files": [
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/codecamp-review-router.test.ts",
+        "line_count": 215
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/codecamp-router.test.ts",
+        "line_count": 929
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/context.test.ts",
+        "line_count": 17
+      }
+    ],
+    "line_count": 1161
+  },
+  {
+    "id": "packages-api-006",
+    "package": "packages/api",
+    "files": [
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/dashboard-cache.test.ts",
+        "line_count": 165
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/progress-router.test.ts",
+        "line_count": 129
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/reports.test.ts",
+        "line_count": 149
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/reset-password.test.ts",
+        "line_count": 385
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/sales-router.test.ts",
+        "line_count": 170
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/students-router.test.ts",
+        "line_count": 65
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/trpc.test.ts",
+        "line_count": 92
+      }
+    ],
+    "line_count": 1155
+  },
+  {
+    "id": "packages-api-007",
+    "package": "packages/api",
+    "files": [
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/__tests__/users.test.ts",
+        "line_count": 219
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/cache/dashboard-cache.ts",
+        "line_count": 121
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/context.ts",
+        "line_count": 85
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/index.ts",
+        "line_count": 3
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/root.ts",
+        "line_count": 26
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/articles.ts",
+        "line_count": 64
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/assignments.ts",
+        "line_count": 89
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/auth.ts",
+        "line_count": 15
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/classes.ts",
+        "line_count": 38
+      }
+    ],
+    "line_count": 660
+  },
+  {
+    "id": "packages-api-008",
+    "package": "packages/api",
+    "files": [
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/codecamp.ts",
+        "line_count": 562
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/progress.ts",
+        "line_count": 56
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/reports.ts",
+        "line_count": 49
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/sales.ts",
+        "line_count": 237
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/students.ts",
+        "line_count": 44
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routers/users.ts",
+        "line_count": 95
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routes/auth/enrich.ts",
+        "line_count": 53
+      }
+    ],
+    "line_count": 1096
+  },
+  {
+    "id": "packages-api-009",
+    "package": "packages/api",
+    "files": [
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routes/auth/impersonate.ts",
+        "line_count": 155
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routes/auth/index.ts",
+        "line_count": 7
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routes/auth/login.ts",
+        "line_count": 203
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routes/auth/logout.ts",
+        "line_count": 29
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routes/auth/register.ts",
+        "line_count": 138
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routes/auth/reset-password.ts",
+        "line_count": 131
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/routes/auth/session.ts",
+        "line_count": 57
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/src/trpc.ts",
+        "line_count": 105
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/tsconfig.json",
+        "line_count": 9
+      },
+      {
+        "package": "packages/api",
+        "file": "packages/api/vitest.config.ts",
+        "line_count": 11
+      }
+    ],
+    "line_count": 845
+  },
+  {
+    "id": "packages-auth-001",
+    "package": "packages/auth",
+    "files": [
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/README.md",
+        "line_count": 76
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/package.json",
+        "line_count": 34
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/assert.test.ts",
+        "line_count": 56
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/audit-retention-boundary.integration.test.ts",
+        "line_count": 330
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/audit-retention-config.test.ts",
+        "line_count": 74
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/audit-retention-job.integration.test.ts",
+        "line_count": 150
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/audit-retention-job.test.ts",
+        "line_count": 68
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/audit-retention.integration.test.ts",
+        "line_count": 331
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/audit-retention.test.ts",
+        "line_count": 38
+      }
+    ],
+    "line_count": 1160
+  },
+  {
+    "id": "packages-auth-002",
+    "package": "packages/auth",
+    "files": [
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/audit.test.ts",
+        "line_count": 172
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/auth-security-phase1-session-contracts.test.ts",
+        "line_count": 182
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/auth-security-phase4-readme.test.ts",
+        "line_count": 317
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/password.test.ts",
+        "line_count": 232
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/permissions.test.ts",
+        "line_count": 125
+      }
+    ],
+    "line_count": 1028
+  },
+  {
+    "id": "packages-auth-003",
+    "package": "packages/auth",
+    "files": [
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/phase-1-docs.test.ts",
+        "line_count": 234
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/phase-2-intern-role-widening.test.ts",
+        "line_count": 436
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/phase-6-quality-gates.test.ts",
+        "line_count": 335
+      }
+    ],
+    "line_count": 1005
+  },
+  {
+    "id": "packages-auth-004",
+    "package": "packages/auth",
+    "files": [
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/phase-7-closeout.test.ts",
+        "line_count": 451
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/rate-limit.test.ts",
+        "line_count": 62
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/roles.test.ts",
+        "line_count": 50
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/server.test.ts",
+        "line_count": 128
+      }
+    ],
+    "line_count": 691
+  },
+  {
+    "id": "packages-auth-005",
+    "package": "packages/auth",
+    "files": [
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/session.test.ts",
+        "line_count": 822
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/__tests__/tenant.test.ts",
+        "line_count": 128
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/assert.ts",
+        "line_count": 25
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/audit-retention-config.ts",
+        "line_count": 30
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/audit-retention-job.ts",
+        "line_count": 158
+      }
+    ],
+    "line_count": 1163
+  },
+  {
+    "id": "packages-auth-006",
+    "package": "packages/auth",
+    "files": [
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/audit-retention.ts",
+        "line_count": 97
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/audit.ts",
+        "line_count": 110
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/index.ts",
+        "line_count": 64
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/password.ts",
+        "line_count": 82
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/permissions.ts",
+        "line_count": 168
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/rate-limit.ts",
+        "line_count": 70
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/roles.ts",
+        "line_count": 41
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/server.ts",
+        "line_count": 76
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/session.ts",
+        "line_count": 217
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/src/tenant.ts",
+        "line_count": 40
+      }
+    ],
+    "line_count": 965
+  },
+  {
+    "id": "packages-auth-007",
+    "package": "packages/auth",
+    "files": [
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/tsconfig.json",
+        "line_count": 9
+      },
+      {
+        "package": "packages/auth",
+        "file": "packages/auth/vitest.config.ts",
+        "line_count": 22
+      }
+    ],
+    "line_count": 31
+  },
+  {
+    "id": "packages-auth-client-001",
+    "package": "packages/auth-client",
+    "files": [
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/package.json",
+        "line_count": 42
+      },
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/src/__tests__/auth-security-phase1-contracts.test.ts",
+        "line_count": 226
+      },
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/src/__tests__/hooks.test.tsx",
+        "line_count": 439
+      },
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/src/context.ts",
+        "line_count": 42
+      },
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/src/index.ts",
+        "line_count": 42
+      },
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/src/provider.tsx",
+        "line_count": 120
+      },
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/tsconfig.json",
+        "line_count": 10
+      },
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/tsup.config.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/auth-client",
+        "file": "packages/auth-client/vitest.config.ts",
+        "line_count": 9
+      }
+    ],
+    "line_count": 946
+  },
+  {
+    "id": "packages-config-001",
+    "package": "packages/config",
+    "files": [
+      {
+        "package": "packages/config",
+        "file": "packages/config/__tests__/config-drift.test.ts",
+        "line_count": 87
+      },
+      {
+        "package": "packages/config",
+        "file": "packages/config/__tests__/config.test.ts",
+        "line_count": 32
+      },
+      {
+        "package": "packages/config",
+        "file": "packages/config/eslint/README.md",
+        "line_count": 49
+      },
+      {
+        "package": "packages/config",
+        "file": "packages/config/eslint/index.js",
+        "line_count": 66
+      },
+      {
+        "package": "packages/config",
+        "file": "packages/config/package.json",
+        "line_count": 32
+      },
+      {
+        "package": "packages/config",
+        "file": "packages/config/tailwind/tailwind.config.ts",
+        "line_count": 58
+      },
+      {
+        "package": "packages/config",
+        "file": "packages/config/tsconfig/base.json",
+        "line_count": 27
+      }
+    ],
+    "line_count": 351
+  },
+  {
+    "id": "packages-db-001",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/README.md",
+        "line_count": 107
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/docs/adr/0001-use-drizzle-not-prisma.md",
+        "line_count": 37
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/docs/adr/0002-drop-jwt-era-accounts-columns.md",
+        "line_count": 35
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/docs/adr/0003-add-intern-role.md",
+        "line_count": 30
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0000_wide_vengeance.sql",
+        "line_count": 203
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0001_thick_santa_claus.sql",
+        "line_count": 139
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0002_quick_skreet.sql",
+        "line_count": 4
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0003_slow_firebrand.sql",
+        "line_count": 96
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0004_sturdy_forge.sql",
+        "line_count": 27
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0005_codecamp_schema.sql",
+        "line_count": 121
+      }
+    ],
+    "line_count": 799
+  },
+  {
+    "id": "packages-db-002",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0006_codecamp_indexes.sql",
+        "line_count": 8
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0007_codecamp_repos_reviews.sql",
+        "line_count": 34
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0008_codecamp_phase.sql",
+        "line_count": 4
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0009_add_github_username.sql",
+        "line_count": 3
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0010_codecamp_uniqueness.sql",
+        "line_count": 9
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0011_codecamp_webhook_events.sql",
+        "line_count": 15
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0012_codecamp_intern_role.sql",
+        "line_count": 3
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0013_prisma_drizzle_schema_unification.sql",
+        "line_count": 848
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0014_users_license_expired_date.sql",
+        "line_count": 6
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0015_science_junction_tables.sql",
+        "line_count": 38
+      }
+    ],
+    "line_count": 968
+  },
+  {
+    "id": "packages-db-003",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0016_users_grade_level.sql",
+        "line_count": 7
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0017_science_school_id.sql",
+        "line_count": 111
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0018_audit_events.sql",
+        "line_count": 50
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0019_session_token_hash.sql",
+        "line_count": 7
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0020_sessions_indexes.sql",
+        "line_count": 2
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0021_sales_advantage.sql",
+        "line_count": 168
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0022_flowery_black_tarantula.sql",
+        "line_count": 122
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/0023_cultured_sunspot.sql",
+        "line_count": 1
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/MIGRATION_LEDGER.md",
+        "line_count": 64
+      }
+    ],
+    "line_count": 532
+  },
+  {
+    "id": "packages-db-004",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/meta/0000_snapshot.json",
+        "line_count": 1363
+      }
+    ],
+    "line_count": 1363
+  },
+  {
+    "id": "packages-db-005",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/meta/0001_snapshot.json",
+        "line_count": 2279
+      }
+    ],
+    "line_count": 2279
+  },
+  {
+    "id": "packages-db-006",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/meta/0002_snapshot.json",
+        "line_count": 2334
+      }
+    ],
+    "line_count": 2334
+  },
+  {
+    "id": "packages-db-007",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/meta/0009_snapshot.json",
+        "line_count": 2334
+      }
+    ],
+    "line_count": 2334
+  },
+  {
+    "id": "packages-db-008",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/meta/0020_snapshot.json",
+        "line_count": 7595
+      }
+    ],
+    "line_count": 7595
+  },
+  {
+    "id": "packages-db-009",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/meta/0021_snapshot.json",
+        "line_count": 8766
+      }
+    ],
+    "line_count": 8766
+  },
+  {
+    "id": "packages-db-010",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/meta/0022_snapshot.json",
+        "line_count": 9617
+      }
+    ],
+    "line_count": 9617
+  },
+  {
+    "id": "packages-db-011",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/meta/0023_snapshot.json",
+        "line_count": 9617
+      }
+    ],
+    "line_count": 9617
+  },
+  {
+    "id": "packages-db-012",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle/meta/_journal.json",
+        "line_count": 174
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/drizzle.config.ts",
+        "line_count": 28
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/package.json",
+        "line_count": 49
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/scripts/migration-ledger-doctor.ts",
+        "line_count": 81
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/auth-security-phase1-journal.test.ts",
+        "line_count": 247
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/auth-security-phase1-schema.test.ts",
+        "line_count": 121
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/barrel-hygiene.test.ts",
+        "line_count": 117
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/codecamp-backfill-exercises.test.ts",
+        "line_count": 76
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/codecamp-curriculum-data-combined.test.ts",
+        "line_count": 161
+      }
+    ],
+    "line_count": 1057
+  },
+  {
+    "id": "packages-db-013",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/codecamp-curriculum-data-phase-b.test.ts",
+        "line_count": 115
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/codecamp-curriculum-data-phase-c.test.ts",
+        "line_count": 112
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/codecamp-curriculum-data-phase-d.test.ts",
+        "line_count": 136
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/codecamp-curriculum-data.test.ts",
+        "line_count": 125
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/codecamp-curriculum-fidelity.test.ts",
+        "line_count": 424
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/codecamp-stale-seed.test.ts",
+        "line_count": 61
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/connection-options.test.ts",
+        "line_count": 146
+      }
+    ],
+    "line_count": 1119
+  },
+  {
+    "id": "packages-db-014",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/contract-stubs.test.ts",
+        "line_count": 151
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/deploy-gate-contract.test.ts",
+        "line_count": 314
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/drizzle045-migration-format.test.ts",
+        "line_count": 317
+      }
+    ],
+    "line_count": 782
+  },
+  {
+    "id": "packages-db-015",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts",
+        "line_count": 605
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/drizzle045-phase1-contracts.test.ts",
+        "line_count": 312
+      }
+    ],
+    "line_count": 917
+  },
+  {
+    "id": "packages-db-016",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts",
+        "line_count": 715
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/drizzle045-phase3-integration-gates.test.ts",
+        "line_count": 417
+      }
+    ],
+    "line_count": 1132
+  },
+  {
+    "id": "packages-db-017",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/drizzle045-phase4-closure-gates.test.ts",
+        "line_count": 547
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/drizzle045-schema-compile.test.ts",
+        "line_count": 447
+      }
+    ],
+    "line_count": 994
+  },
+  {
+    "id": "packages-db-018",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/drizzle045-zod-contract.test.ts",
+        "line_count": 213
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/env-guards.test.ts",
+        "line_count": 178
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/journal-integrity.test.ts",
+        "line_count": 229
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/ledger-doctor.test.ts",
+        "line_count": 180
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/migration-sql.test.ts",
+        "line_count": 119
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/package-esm-smoke.test.ts",
+        "line_count": 125
+      }
+    ],
+    "line_count": 1044
+  },
+  {
+    "id": "packages-db-019",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/phase-2-insert-roundtrip.test.ts",
+        "line_count": 190
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/phase-2-marketing-schema-adversarial.test.ts",
+        "line_count": 598
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/phase-2-marketing-schema.test.ts",
+        "line_count": 309
+      }
+    ],
+    "line_count": 1097
+  },
+  {
+    "id": "packages-db-020",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/sales-schema-parity.test.ts",
+        "line_count": 176
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/schema-parity.test.ts",
+        "line_count": 584
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/schema.test.ts",
+        "line_count": 147
+      }
+    ],
+    "line_count": 907
+  },
+  {
+    "id": "packages-db-021",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/snapshot-drift.test.ts",
+        "line_count": 310
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/__tests__/stale-ledger.test.ts",
+        "line_count": 133
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/client.ts",
+        "line_count": 29
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/connection-options.ts",
+        "line_count": 99
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/index.ts",
+        "line_count": 6
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/privileged.ts",
+        "line_count": 37
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/analytics.ts",
+        "line_count": 127
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/audit.ts",
+        "line_count": 43
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/classrooms.ts",
+        "line_count": 60
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/codecamp.ts",
+        "line_count": 164
+      }
+    ],
+    "line_count": 1008
+  },
+  {
+    "id": "packages-db-022",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/content.ts",
+        "line_count": 94
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/flashcards.ts",
+        "line_count": 45
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/index.ts",
+        "line_count": 16
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/licenses.ts",
+        "line_count": 43
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/marketing.ts",
+        "line_count": 106
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/primary.ts",
+        "line_count": 233
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/progress.ts",
+        "line_count": 106
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/questions.ts",
+        "line_count": 69
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/sales.ts",
+        "line_count": 174
+      }
+    ],
+    "line_count": 886
+  },
+  {
+    "id": "packages-db-023",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/science.ts",
+        "line_count": 385
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/stories.ts",
+        "line_count": 189
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/taxonomy.ts",
+        "line_count": 24
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/schema/users.ts",
+        "line_count": 100
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/seed/codecamp-backfill-exercises.ts",
+        "line_count": 313
+      }
+    ],
+    "line_count": 1011
+  },
+  {
+    "id": "packages-db-024",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/seed/codecamp-curriculum-data.ts",
+        "line_count": 3674
+      }
+    ],
+    "line_count": 3674
+  },
+  {
+    "id": "packages-db-025",
+    "package": "packages/db",
+    "files": [
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/seed/codecamp-seed.ts",
+        "line_count": 330
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/seed/index.ts",
+        "line_count": 2
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/src/sentinels.ts",
+        "line_count": 39
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/tsconfig.build.json",
+        "line_count": 18
+      },
+      {
+        "package": "packages/db",
+        "file": "packages/db/tsconfig.json",
+        "line_count": 9
+      }
+    ],
+    "line_count": 398
+  },
+  {
+    "id": "packages-domain-001",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/package.json",
+        "line_count": 100
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/2-school-acceptance.test.ts",
+        "line_count": 162
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/articles.test.ts",
+        "line_count": 204
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/assignments.test.ts",
+        "line_count": 351
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/audit.test.ts",
+        "line_count": 109
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/classes.test.ts",
+        "line_count": 127
+      }
+    ],
+    "line_count": 1056
+  },
+  {
+    "id": "packages-domain-002",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/codecamp-github-identity.test.ts",
+        "line_count": 416
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/codecamp-github-issues.test.ts",
+        "line_count": 65
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/codecamp-quiz-progression.test.ts",
+        "line_count": 289
+      }
+    ],
+    "line_count": 770
+  },
+  {
+    "id": "packages-domain-003",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/codecamp.test.ts",
+        "line_count": 2186
+      }
+    ],
+    "line_count": 2186
+  },
+  {
+    "id": "packages-domain-004",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/curriculum.test.ts",
+        "line_count": 114
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/db-contract.test.ts",
+        "line_count": 419
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/dsar.integration.test.ts",
+        "line_count": 503
+      }
+    ],
+    "line_count": 1036
+  },
+  {
+    "id": "packages-domain-005",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/dsar.test.ts",
+        "line_count": 254
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/fixtures/2-school.ts",
+        "line_count": 156
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/gamification.test.ts",
+        "line_count": 109
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/licenses.test.ts",
+        "line_count": 126
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/mock-db.ts",
+        "line_count": 127
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/progress.test.ts",
+        "line_count": 263
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/quiz.test.ts",
+        "line_count": 117
+      }
+    ],
+    "line_count": 1152
+  },
+  {
+    "id": "packages-domain-006",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/reports.test.ts",
+        "line_count": 311
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/review-exercise-ai-client.test.ts",
+        "line_count": 131
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/review-exercise.test.ts",
+        "line_count": 201
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/sales-mutations.test.ts",
+        "line_count": 152
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/sales-queries.test.ts",
+        "line_count": 160
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/sales-roleplay-evaluator.test.ts",
+        "line_count": 172
+      }
+    ],
+    "line_count": 1127
+  },
+  {
+    "id": "packages-domain-007",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/stories.test.ts",
+        "line_count": 131
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/students.test.ts",
+        "line_count": 229
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/teachers.test.ts",
+        "line_count": 150
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/tenant-coverage.test.ts",
+        "line_count": 178
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/__tests__/users.test.ts",
+        "line_count": 164
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/ai/get-recommendation.ts",
+        "line_count": 302
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/ai/index.ts",
+        "line_count": 1
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/articles/contracts.ts",
+        "line_count": 32
+      }
+    ],
+    "line_count": 1187
+  },
+  {
+    "id": "packages-domain-008",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/articles/errors.ts",
+        "line_count": 19
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/articles/index.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/articles/mutations.ts",
+        "line_count": 82
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/articles/permissions.ts",
+        "line_count": 21
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/articles/queries.ts",
+        "line_count": 84
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/articles/schema.ts",
+        "line_count": 1
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/assignments/contracts.ts",
+        "line_count": 28
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/assignments/errors.ts",
+        "line_count": 29
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/assignments/index.ts",
+        "line_count": 23
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/assignments/mutations.ts",
+        "line_count": 270
+      }
+    ],
+    "line_count": 570
+  },
+  {
+    "id": "packages-domain-009",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/assignments/permissions.ts",
+        "line_count": 25
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/assignments/queries.ts",
+        "line_count": 87
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/assignments/schema.ts",
+        "line_count": 6
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/audit/dsar.ts",
+        "line_count": 155
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/audit/index.ts",
+        "line_count": 63
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/archive-class.ts",
+        "line_count": 41
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/create-assignment.ts",
+        "line_count": 113
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/create-science-class.ts",
+        "line_count": 129
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/delete-assignment.ts",
+        "line_count": 71
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/get-class-analytics-overview.ts",
+        "line_count": 93
+      }
+    ],
+    "line_count": 783
+  },
+  {
+    "id": "packages-domain-010",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/get-class-curriculum.ts",
+        "line_count": 96
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/get-class-detail-with-curriculum.ts",
+        "line_count": 95
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/get-class-lesson-analytics.ts",
+        "line_count": 93
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/get-class-roster.ts",
+        "line_count": 86
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/get-class.ts",
+        "line_count": 50
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/index.ts",
+        "line_count": 96
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/join-class.ts",
+        "line_count": 82
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/list-assignment.ts",
+        "line_count": 113
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/list-classes-with-counts.ts",
+        "line_count": 72
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/classes/update-class.ts",
+        "line_count": 58
+      }
+    ],
+    "line_count": 841
+  },
+  {
+    "id": "packages-domain-011",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/chat.ts",
+        "line_count": 109
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/errors.ts",
+        "line_count": 41
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/exercises.ts",
+        "line_count": 86
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/github-issues.ts",
+        "line_count": 27
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/index.ts",
+        "line_count": 41
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/intern-accounts.ts",
+        "line_count": 191
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/lessons.ts",
+        "line_count": 70
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/modules.ts",
+        "line_count": 177
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/permissions.ts",
+        "line_count": 18
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/pr-reviews.ts",
+        "line_count": 169
+      }
+    ],
+    "line_count": 929
+  },
+  {
+    "id": "packages-domain-012",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/progress.ts",
+        "line_count": 91
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/quizzes.ts",
+        "line_count": 55
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/codecamp/review-exercise.ts",
+        "line_count": 157
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/curriculum/contracts.ts",
+        "line_count": 21
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/curriculum/errors.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/curriculum/get-lesson-by-slug.ts",
+        "line_count": 51
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/curriculum/index.ts",
+        "line_count": 11
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/curriculum/mutations.ts",
+        "line_count": 49
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/curriculum/permissions.ts",
+        "line_count": 14
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/curriculum/queries.ts",
+        "line_count": 70
+      }
+    ],
+    "line_count": 532
+  },
+  {
+    "id": "packages-domain-013",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/curriculum/schema.ts",
+        "line_count": 1
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/db-contract.ts",
+        "line_count": 563
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/gamification/contracts.ts",
+        "line_count": 37
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/gamification/errors.ts",
+        "line_count": 19
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/gamification/index.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/gamification/mutations.ts",
+        "line_count": 36
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/gamification/permissions.ts",
+        "line_count": 23
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/gamification/queries.ts",
+        "line_count": 37
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/gamification/schema.ts",
+        "line_count": 5
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/index.ts",
+        "line_count": 25
+      }
+    ],
+    "line_count": 759
+  },
+  {
+    "id": "packages-domain-014",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/interventions/index.ts",
+        "line_count": 1
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/interventions/list-alerts.ts",
+        "line_count": 244
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/licenses/contracts.ts",
+        "line_count": 11
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/licenses/errors.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/licenses/index.ts",
+        "line_count": 9
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/licenses/mutations.ts",
+        "line_count": 76
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/licenses/permissions.ts",
+        "line_count": 16
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/licenses/queries.ts",
+        "line_count": 36
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/licenses/schema.ts",
+        "line_count": 1
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/mastery/index.ts",
+        "line_count": 7
+      }
+    ],
+    "line_count": 414
+  },
+  {
+    "id": "packages-domain-015",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/mastery/record-run.ts",
+        "line_count": 270
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/progress/contracts.ts",
+        "line_count": 17
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/progress/errors.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/progress/index.ts",
+        "line_count": 20
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/progress/mutations.ts",
+        "line_count": 89
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/progress/permissions.ts",
+        "line_count": 16
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/progress/queries.ts",
+        "line_count": 134
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/progress/schema.ts",
+        "line_count": 10
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/quiz/contracts.ts",
+        "line_count": 17
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/quiz/errors.ts",
+        "line_count": 13
+      }
+    ],
+    "line_count": 599
+  },
+  {
+    "id": "packages-domain-016",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/quiz/index.ts",
+        "line_count": 11
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/quiz/mutations.ts",
+        "line_count": 28
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/quiz/permissions.ts",
+        "line_count": 18
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/quiz/queries.ts",
+        "line_count": 30
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/quiz/schema.ts",
+        "line_count": 1
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/quiz/submit-attempt.ts",
+        "line_count": 217
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/reports/errors.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/reports/index.ts",
+        "line_count": 12
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/reports/permissions.ts",
+        "line_count": 12
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/reports/queries.ts",
+        "line_count": 178
+      }
+    ],
+    "line_count": 520
+  },
+  {
+    "id": "packages-domain-017",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/reports/schema.ts",
+        "line_count": 9
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/__tests__/excerpt-derivation.test.ts",
+        "line_count": 104
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts",
+        "line_count": 105
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/contracts.ts",
+        "line_count": 46
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/errors.ts",
+        "line_count": 62
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/index.ts",
+        "line_count": 10
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/mutations.ts",
+        "line_count": 379
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/permissions.ts",
+        "line_count": 33
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/queries.ts",
+        "line_count": 299
+      }
+    ],
+    "line_count": 1047
+  },
+  {
+    "id": "packages-domain-018",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/roleplay-evaluator.ts",
+        "line_count": 197
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/sales/schema.ts",
+        "line_count": 194
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/stories/errors.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/stories/index.ts",
+        "line_count": 5
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/stories/mutations.ts",
+        "line_count": 42
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/stories/permissions.ts",
+        "line_count": 18
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/stories/queries.ts",
+        "line_count": 70
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/stories/schema.ts",
+        "line_count": 1
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/students/get-my-gamification.ts",
+        "line_count": 44
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/students/get-student-achievements.ts",
+        "line_count": 23
+      }
+    ],
+    "line_count": 607
+  },
+  {
+    "id": "packages-domain-019",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/students/get-student-assignments.ts",
+        "line_count": 43
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/students/get-student-class-analytics.ts",
+        "line_count": 82
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/students/get-student-gamification-profile.ts",
+        "line_count": 47
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/students/get-student-lesson-analytics.ts",
+        "line_count": 72
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/students/get-student-lesson-progress.ts",
+        "line_count": 63
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/students/get-student-mastery-profile.ts",
+        "line_count": 68
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/students/index.ts",
+        "line_count": 160
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/teachers/contracts.ts",
+        "line_count": 7
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/teachers/errors.ts",
+        "line_count": 9
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/teachers/get-teacher-dashboard.ts",
+        "line_count": 63
+      }
+    ],
+    "line_count": 614
+  },
+  {
+    "id": "packages-domain-020",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/teachers/index.ts",
+        "line_count": 11
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/teachers/permissions.ts",
+        "line_count": 4
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/teachers/queries.ts",
+        "line_count": 86
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/teachers/schema.ts",
+        "line_count": 42
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/tenant-registry.ts",
+        "line_count": 240
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/users/contracts.ts",
+        "line_count": 20
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/users/errors.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/users/index.ts",
+        "line_count": 11
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/users/mutations.ts",
+        "line_count": 48
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/users/permissions.ts",
+        "line_count": 16
+      }
+    ],
+    "line_count": 491
+  },
+  {
+    "id": "packages-domain-021",
+    "package": "packages/domain",
+    "files": [
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/users/queries.ts",
+        "line_count": 162
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/src/users/schema.ts",
+        "line_count": 1
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/tsconfig.json",
+        "line_count": 9
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/vitest.config.ts",
+        "line_count": 7
+      },
+      {
+        "package": "packages/domain",
+        "file": "packages/domain/vitest.setup.ts",
+        "line_count": 25
+      }
+    ],
+    "line_count": 204
+  },
+  {
+    "id": "packages-integrations-001",
+    "package": "packages/integrations",
+    "files": [
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/README.md",
+        "line_count": 52
+      },
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/package.json",
+        "line_count": 34
+      },
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/src/__tests__/client.test.ts",
+        "line_count": 29
+      },
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/src/__tests__/factory.test.ts",
+        "line_count": 42
+      },
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/src/client.ts",
+        "line_count": 89
+      },
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/src/drivers/rest.ts",
+        "line_count": 218
+      },
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/src/factory.ts",
+        "line_count": 62
+      },
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/src/index.ts",
+        "line_count": 15
+      },
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/tsconfig.json",
+        "line_count": 9
+      }
+    ],
+    "line_count": 553
+  },
+  {
+    "id": "packages-integrations-002",
+    "package": "packages/integrations",
+    "files": [
+      {
+        "package": "packages/integrations",
+        "file": "packages/integrations/github/vitest.config.ts",
+        "line_count": 10
+      }
+    ],
+    "line_count": 10
+  },
+  {
+    "id": "packages-reading-advantage-scripts-001",
+    "package": "packages/reading-advantage-scripts",
+    "files": [
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/data/genres-fiction.json",
+        "line_count": 147
+      },
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/data/genres-nonfiction.json",
+        "line_count": 289
+      },
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/generateArticle.js",
+        "line_count": 274
+      },
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/generateQuestion.js",
+        "line_count": 284
+      },
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/googleai.js",
+        "line_count": 30
+      },
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/package.json",
+        "line_count": 26
+      },
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/readabilityCalculator.js",
+        "line_count": 75
+      },
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/utils/googleStorage.js",
+        "line_count": 9
+      },
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/utils/printLine.js",
+        "line_count": 7
+      },
+      {
+        "package": "packages/reading-advantage-scripts",
+        "file": "packages/reading-advantage-scripts/utils/uploadToBucket.js",
+        "line_count": 31
+      }
+    ],
+    "line_count": 1172
+  },
+  {
+    "id": "packages-storage-001",
+    "package": "packages/storage",
+    "files": [
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/README.md",
+        "line_count": 67
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/package.json",
+        "line_count": 37
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/src/__tests__/factory.test.ts",
+        "line_count": 49
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/src/__tests__/s3-driver.test.ts",
+        "line_count": 117
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/src/__tests__/urls.test.ts",
+        "line_count": 26
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/src/client.ts",
+        "line_count": 73
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/src/drivers/s3.ts",
+        "line_count": 113
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/src/factory.ts",
+        "line_count": 59
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/src/index.ts",
+        "line_count": 14
+      }
+    ],
+    "line_count": 558
+  },
+  {
+    "id": "packages-storage-002",
+    "package": "packages/storage",
+    "files": [
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/src/urls.ts",
+        "line_count": 10
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/tsconfig.json",
+        "line_count": 11
+      },
+      {
+        "package": "packages/storage",
+        "file": "packages/storage/vitest.config.ts",
+        "line_count": 10
+      }
+    ],
+    "line_count": 31
+  },
+  {
+    "id": "packages-types-001",
+    "package": "packages/types",
+    "files": [
+      {
+        "package": "packages/types",
+        "file": "packages/types/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/types",
+        "file": "packages/types/package.json",
+        "line_count": 28
+      },
+      {
+        "package": "packages/types",
+        "file": "packages/types/src/codecamp.ts",
+        "line_count": 406
+      },
+      {
+        "package": "packages/types",
+        "file": "packages/types/src/contracts/class.ts",
+        "line_count": 82
+      },
+      {
+        "package": "packages/types",
+        "file": "packages/types/src/index.ts",
+        "line_count": 277
+      },
+      {
+        "package": "packages/types",
+        "file": "packages/types/tsconfig.json",
+        "line_count": 9
+      }
+    ],
+    "line_count": 805
+  },
+  {
+    "id": "packages-ui-001",
+    "package": "packages/ui",
+    "files": [
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/eslint.config.mjs",
+        "line_count": 11
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/package.json",
+        "line_count": 58
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/__tests__/Button.test.tsx",
+        "line_count": 37
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/__tests__/Card.test.tsx",
+        "line_count": 23
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/__tests__/Dialog.test.tsx",
+        "line_count": 28
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/__tests__/Input.test.tsx",
+        "line_count": 15
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/__tests__/Tabs.test.tsx",
+        "line_count": 21
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/__tests__/setup.ts",
+        "line_count": 4
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Alert.tsx",
+        "line_count": 59
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/AlertDialog.tsx",
+        "line_count": 151
+      }
+    ],
+    "line_count": 407
+  },
+  {
+    "id": "packages-ui-002",
+    "package": "packages/ui",
+    "files": [
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Avatar.tsx",
+        "line_count": 50
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Badge.tsx",
+        "line_count": 45
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Button.tsx",
+        "line_count": 52
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Card.tsx",
+        "line_count": 58
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Checkbox.tsx",
+        "line_count": 30
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Dialog.tsx",
+        "line_count": 111
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Input.tsx",
+        "line_count": 23
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Label.tsx",
+        "line_count": 26
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Progress.tsx",
+        "line_count": 28
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Separator.tsx",
+        "line_count": 31
+      }
+    ],
+    "line_count": 454
+  },
+  {
+    "id": "packages-ui-003",
+    "package": "packages/ui",
+    "files": [
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Skeleton.tsx",
+        "line_count": 20
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Tabs.tsx",
+        "line_count": 52
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/components/Tooltip.tsx",
+        "line_count": 30
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/src/index.ts",
+        "line_count": 38
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/tsconfig.json",
+        "line_count": 10
+      },
+      {
+        "package": "packages/ui",
+        "file": "packages/ui/vitest.config.ts",
+        "line_count": 9
+      }
+    ],
+    "line_count": 159
+  },
+  {
+    "id": "packages-utils-001",
+    "package": "packages/utils",
+    "files": [
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/eslint.config.mjs",
+        "line_count": 8
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/package.json",
+        "line_count": 51
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/src/__tests__/cn.test.ts",
+        "line_count": 24
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/src/__tests__/ffmpeg-process.test.ts",
+        "line_count": 320
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/src/__tests__/useLocalStorage.test.ts",
+        "line_count": 50
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/src/cn.ts",
+        "line_count": 11
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/src/ffmpeg-process.ts",
+        "line_count": 113
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/src/hooks/index.ts",
+        "line_count": 2
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/src/hooks/useLocalStorage.ts",
+        "line_count": 62
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/src/hooks/useMediaQuery.ts",
+        "line_count": 25
+      }
+    ],
+    "line_count": 666
+  },
+  {
+    "id": "packages-utils-002",
+    "package": "packages/utils",
+    "files": [
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/src/index.ts",
+        "line_count": 2
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/tsconfig.json",
+        "line_count": 9
+      },
+      {
+        "package": "packages/utils",
+        "file": "packages/utils/vitest.config.ts",
+        "line_count": 8
+      }
+    ],
+    "line_count": 19
+  },
+  {
+    "id": "packages-webhooks-001",
+    "package": "packages/webhooks",
+    "files": [
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/eslint.config.mjs",
+        "line_count": 3
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/package.json",
+        "line_count": 34
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/__tests__/github-client.test.ts",
+        "line_count": 378
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/__tests__/github-review.test.ts",
+        "line_count": 377
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/__tests__/github-webhook.test.ts",
+        "line_count": 335
+      }
+    ],
+    "line_count": 1127
+  },
+  {
+    "id": "packages-webhooks-002",
+    "package": "packages/webhooks",
+    "files": [
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/__tests__/phase-5-dead-code.test.ts",
+        "line_count": 164
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/__tests__/phase-6-acceptance.test.ts",
+        "line_count": 503
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/__tests__/phase-7-closeout.test.ts",
+        "line_count": 518
+      }
+    ],
+    "line_count": 1185
+  },
+  {
+    "id": "packages-webhooks-003",
+    "package": "packages/webhooks",
+    "files": [
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/github-client.ts",
+        "line_count": 344
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/github.ts",
+        "line_count": 362
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/health.ts",
+        "line_count": 13
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/src/index.ts",
+        "line_count": 25
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/tsconfig.json",
+        "line_count": 9
+      },
+      {
+        "package": "packages/webhooks",
+        "file": "packages/webhooks/vitest.config.ts",
+        "line_count": 9
+      }
+    ],
+    "line_count": 762
+  }
+]

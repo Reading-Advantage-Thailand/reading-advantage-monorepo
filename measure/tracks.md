@@ -56,6 +56,10 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [ ] **Track: Monorepo Review Roadmap** *Link: [./tracks/monorepo_review_roadmap_20260626/](./tracks/monorepo_review_roadmap_20260626/)*
   Final synthesis track that deduplicates accepted findings and produces the prioritized
   remediation/migration/test/product-risk roadmap.
+- [~] **Track: Shared Foundation Review** *Link: [./tracks/shared_foundation_review_20260626/](./tracks/shared_foundation_review_20260626/)*
+  Reopened 2026-06-27: prior archive was a triage/boundary review, not the required
+  line-by-line review. Current work must complete file-level coverage evidence before
+  acceptance or closeout.
 
 ---
 
@@ -63,12 +67,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
-
-- [x] **Track: Shared Foundation Review** *Link: [./archive/shared_foundation_review_20260626/](./archive/shared_foundation_review_20260626/)*
-  Review complete. 26 findings recorded (4 Critical, 7 High, 10 Medium, 5 Low).
-  10 remediation tracks proposed (M-SF-1 through M-SF-10). Shared foundation is **not
-  product-green** — remediation required before shared packages should be described as
-  fully compliant. Archived 2026-06-26.
 
 ---
 

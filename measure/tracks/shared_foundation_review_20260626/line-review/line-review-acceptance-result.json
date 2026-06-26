@@ -1,0 +1,167 @@
+{
+  "track_id": "shared_foundation_review_20260626",
+  "phase": "Phase 10: Coverage Verification and Synthesis",
+  "baseline_sha": "6921fda0",
+  "result": "pass",
+  "product_green_claimed": false,
+  "source_code_remediated": false,
+  "verification": {
+    "inventory_rows": 516,
+    "coverage_rows": 516,
+    "expected_rows": 516,
+    "all_status_reviewed": true,
+    "all_ranges_match_1_to_line_count": true,
+    "all_inventory_line_counts_match_filesystem": true,
+    "all_evidence_files_valid": true,
+    "all_finding_counts_numeric": true,
+    "finding_count_sum": 34,
+    "parsed_lr_finding_headings": 34,
+    "evidence_files_referenced": 85,
+    "evidence_files_on_disk": 85,
+    "duplicate_lr_ids": [],
+    "package_totals": {
+      "packages/ai": {
+        "files": 43,
+        "lines": 6992,
+        "findings": 7
+      },
+      "packages/api": {
+        "files": 50,
+        "lines": 8383,
+        "findings": 4
+      },
+      "packages/auth": {
+        "files": 39,
+        "lines": 6043,
+        "findings": 2
+      },
+      "packages/auth-client": {
+        "files": 10,
+        "lines": 946,
+        "findings": 1
+      },
+      "packages/config": {
+        "files": 7,
+        "lines": 351,
+        "findings": 0
+      },
+      "packages/db": {
+        "files": 105,
+        "lines": 62230,
+        "findings": 4
+      },
+      "packages/domain": {
+        "files": 169,
+        "lines": 17424,
+        "findings": 7
+      },
+      "packages/integrations": {
+        "files": 11,
+        "lines": 563,
+        "findings": 0
+      },
+      "packages/reading-advantage-scripts": {
+        "files": 10,
+        "lines": 1172,
+        "findings": 0
+      },
+      "packages/storage": {
+        "files": 13,
+        "lines": 589,
+        "findings": 3
+      },
+      "packages/types": {
+        "files": 6,
+        "lines": 805,
+        "findings": 3
+      },
+      "packages/ui": {
+        "files": 26,
+        "lines": 1020,
+        "findings": 0
+      },
+      "packages/utils": {
+        "files": 13,
+        "lines": 685,
+        "findings": 0
+      },
+      "packages/webhooks": {
+        "files": 14,
+        "lines": 3074,
+        "findings": 3
+      }
+    },
+    "severity_counts": {
+      "High": 4,
+      "Low": 16,
+      "Medium": 14
+    },
+    "bad_rows": {
+      "status": [],
+      "range": [],
+      "evidence": [],
+      "finding_count": []
+    },
+    "line_count_mismatches": [],
+    "evidence_coverage_issues": []
+  },
+  "synthesis_artifacts": [
+    "measure/tracks/shared_foundation_review_20260626/line-review/line-review-findings.md",
+    "measure/tracks/shared_foundation_review_20260626/line-review/line-review-summary.md"
+  ],
+  "plan_update": {
+    "phase_8_10_marked_complete": true,
+    "phase_11_left_blocked": true
+  },
+  "package_gates": {
+    "status": "skipped",
+    "reason": "User requested coverage verification/synthesis only and explicitly said not to remediate source code; no product-green claim made."
+  },
+  "anti_pattern_checks": {
+    "A1_supervisor_regex": {
+      "status": "pass",
+      "detail": "automation-supervisor.py task regex matches [~xb] and helper is_task_structurally_blocked is present."
+    },
+    "A3_digit_only_count": {
+      "status": "not_applicable",
+      "detail": "Phase 10 verification used Python integer parsing of TSV fields, not rg digit-only assertions."
+    },
+    "A4_vacuous_pass": {
+      "status": "pass",
+      "detail": "Coverage PASS requires 516 reviewed rows and 34 parsed findings; zero-[x] phase state is not accepted."
+    },
+    "A5_false_claim_text": {
+      "status": "pass",
+      "detail": "Plan and new artifacts do not claim product-green or all checks pass; package gates were explicitly recorded as skipped."
+    },
+    "A6_registry_overstatement": {
+      "status": "pass",
+      "detail": "tracks.md says line-review evidence is required before acceptance/closeout; no resolved/product-green overstatement for this track."
+    },
+    "A7_over_broad_filter": {
+      "status": "not_applicable",
+      "detail": "No banned-term filter was used in the acceptance verification; Python parsing did not exclude hits using English disclaimer words."
+    }
+  },
+  "limitations": [
+    "Did not remediate source code findings.",
+    "Did not run package gates in Phase 10; this is recorded as a limitation rather than proof of product-green.",
+    "Prior six audit artifacts under measure/audit-reports/shared-foundation_20260626 remain superseded triage context; line-review artifacts preserve per-file evidence for this reopened pass.",
+    "Final acceptance/closeout Phase 11 remains pending/blocked."
+  ],
+  "errors": [],
+  "warnings": [],
+  "changed_files_status_sample": [
+    " D measure/archive/shared_foundation_review_20260626/automation-supervisor-closeout-manifest.json",
+    " D measure/archive/shared_foundation_review_20260626/closeout-result.json",
+    " D measure/archive/shared_foundation_review_20260626/metadata.json",
+    " D measure/archive/shared_foundation_review_20260626/plan.md",
+    " D measure/archive/shared_foundation_review_20260626/review-2026-06-27.md",
+    " D measure/archive/shared_foundation_review_20260626/spec.md",
+    " M measure/tracks.md",
+    "?? graph.db.bak-20260626203331",
+    "?? measure/audit-reports/reading-advantage-full_20260626/line-review/",
+    "?? measure/tracks/agents_md_audit_science_advantage_20260603/",
+    "?? measure/tracks/shared_foundation_review_20260626/"
+  ]
+}
