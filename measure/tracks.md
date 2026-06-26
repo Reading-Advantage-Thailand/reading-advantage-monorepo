@@ -27,9 +27,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 > and cross-app workflow in the monorepo. These tracks are review/planning tracks only;
 > remediation must be opened as separate Measure tracks after findings are accepted.
 
-- [ ] **Track: Shared Foundation Review** *Link: [./tracks/shared_foundation_review_20260626/](./tracks/shared_foundation_review_20260626/)*
-  Reviews shared packages first: db, auth, auth-client, domain, api, ai, storage,
-  webhooks, types, ui, utils, config, GitHub integration, and legacy scripts.
 - [ ] **Track: Reading Advantage Full Feature Review** *Link: [./tracks/reading_advantage_full_review_20260626/](./tracks/reading_advantage_full_review_20260626/)*
   Reviews the oldest and largest legacy app, including direct DB/domain-bypass risk,
   Firebase remnants, student/teacher/admin workflows, AI/content/audio/flashcard flows,
@@ -66,6 +63,12 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
+
+- [x] **Track: Shared Foundation Review** *Link: [./archive/shared_foundation_review_20260626/](./archive/shared_foundation_review_20260626/)*
+  Review complete. 26 findings recorded (4 Critical, 7 High, 10 Medium, 5 Low).
+  10 remediation tracks proposed (M-SF-1 through M-SF-10). Shared foundation is **not
+  product-green** — remediation required before shared packages should be described as
+  fully compliant. Archived 2026-06-26.
 
 ---
 

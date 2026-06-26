@@ -1,0 +1,34 @@
+{
+  "track_id": "shared_foundation_review_20260626",
+  "phase": "Closeout",
+  "closeout_commit": "13cd12da",
+  "closeout_date": "2026-06-26",
+  "closeout_checks": {
+    "active_tracks_removed": true,
+    "archived_directory_created": true,
+    "tracks_md_updated": true,
+    "metadata_status_done": true,
+    "metadata_completed_date": "2026-06-26",
+    "closeout_manifest_created": true,
+    "closeout_result_json_created": true,
+    "a9_archived_path_test_check": {
+      "status": "pass",
+      "detail": "tests/orchestrator_marker_vocabulary.sh uses track_dir_resolve() which prefers archive/ over tracks/. No direct measure/tracks/<id>/plan.md references found in test files."
+    },
+    "anti_pattern_checks": {
+      "A5_false_claim_text": "pass",
+      "A6_registry_overstatement": "pass"
+    },
+    "interphase_checker_result": "PASS"
+  },
+  "commits": {
+    "baseline": "b3fd94c2",
+    "acceptance": "b05b5cd2",
+    "closeout": "13cd12da"
+  },
+  "uncommitted_untracked_files": [
+    "graph.db.bak-20260626203331",
+    "measure/archive/review_findings_remediation_20260624/review-2026-06-25.md"
+  ],
+  "unrelated_untracked_files_notes": "Preserved as instructed: graph.db.bak and review findings follow-up note in different archive."
+}
