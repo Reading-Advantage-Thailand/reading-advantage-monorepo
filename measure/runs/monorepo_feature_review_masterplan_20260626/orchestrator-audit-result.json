@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Orchestrator audit passes for the planning-only masterplan after marker cleanup. measure/anti-patterns.md exists with A1-A10; catalog and marker-vocabulary guards pass; A1/A8 supervisor invariants are clean; review-program plans use only [~]/[x]/[b] markers and all [b] tasks include deferred:<owner>; no current review plan claims actual feature review or remediation completion; registry language is conservative; child track path/reference consistency is intact. A10 remains a nonblocking infrastructure risk because .git/hooks/pre-commit is absent.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "A10: no .git/hooks/pre-commit; generated-facts drift remains a nonblocking infrastructure risk.",
+    "A1 guard clean: no code-level `\"deferred\" in task.lower()` occurrence after docstring stripping; `is_task_structurally_blocked` helper is present.",
+    "A8 guard clean: supervisor uses the [~xb] marker vocabulary and tests/orchestrator_marker_vocabulary.sh passes for review planning tracks.",
+    "Maintenance: A3/A5/A6/A7/A9 detector scans found no blocking regressions in the current orchestrator guard surface."
+  ],
+  "evidence": [
+    {
+      "file": "measure/anti-patterns.md",
+      "line": 18,
+      "snippet": "## A1 \u2014 Substring-as-structured-signal in supervisor"
+    },
+    {
+      "file": "measure/anti-patterns.md",
+      "line": 230,
+      "snippet": "## A10 \u2014 Generated-facts drift after structural change"
+    },
+    {
+      "file": "measure/automation-supervisor.py",
+      "line": 634,
+      "snippet": "def is_task_structurally_blocked(task: str, status: str | None = None) -> bool:"
+    },
+    {
+      "file": "measure/automation-supervisor.py",
+      "line": 659,
+      "snippet": "for full_line, status, task in re.findall(r\"^(\\s*- \\[([~xb])\\] (.+))$\", text, re.MULTILINE):"
+    },
+    {
+      "file": "AGENTS.md",
+      "line": 666,
+      "snippet": "`measure/automation-supervisor.py` is a peer-reviewed Measure infrastructure component."
+    },
+    {
+      "file": "tests/orchestrator_catalog.sh",
+      "line": 16,
+      "snippet": "for id in A1 A2 A3 A4 A5 A6 A7 A8 A9 A10; do"
+    },
+    {
+      "file": "tests/orchestrator_marker_vocabulary.sh",
+      "line": 9,
+      "snippet": "if grep -n '^- \\[ \\] ' \"$plan\" >/tmp/orchestrator-marker-hits.$$; then"
+    },
+    {
+      "file": "measure/tracks.md",
+      "line": 26,
+      "snippet": "> Planning program to review every app feature, shared package, integration boundary,"
+    },
+    {
+      "file": "measure/tracks.md",
+      "line": 33,
+      "snippet": "`measure/anti-patterns.md`; marker-vocabulary guards are green after cleanup."
+    },
+    {
+      "file": "measure/tracks.md",
+      "line": 34,
+      "snippet": "review execution remains intentionally deferred to the individual review tracks and"
+    },
+    {
+      "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/plan.md",
+      "line": 52,
+      "snippet": "Evidence: review-program plans converted to `[x]` or `[b]` with `deferred:review-execution`."
+    },
+    {
+      "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/plan.md",
+      "line": 58,
+      "snippet": "- [b] Task: Create follow-up tasks for the first executable child track only after explicit user approval. \u2014 deferred:human"
+    },
+    {
+      "file": "measure/tracks/shared_foundation_review_20260626/plan.md",
+      "line": 11,
+      "snippet": "- [b] Task: Confirm `graph.db` is fresh and non-empty with `build-graph stats ./graph.db`. \u2014 deferred:review-execution"
+    },
+    {
+      "file": "measure/tracks/reading_advantage_full_review_20260626/plan.md",
+      "line": 11,
+      "snippet": "- [b] Task: Confirm fresh `graph.db` and record `reading-advantage` file/node/function counts. \u2014 deferred:review-execution"
+    },
+    {
+      "file": "measure/tracks/primary_advantage_full_review_20260626/plan.md",
+      "line": 18,
+      "snippet": "- [b] Task: Verify Prisma imports, Prisma schema/migration files, `lib/prisma.ts`, package dependencies, and runtime usage. \u2014 deferred:review-execution"
+    },
+    {
+      "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/test-strategy.md",
+      "line": 56,
+      "snippet": "Child execution remains intentionally deferred to each review track; this masterplan readiness pass does not prove any app/package feature behavior or remediation is complete."
+    }
+  ],
+  "commands": [
+    "bash tests/orchestrator_catalog.sh -> PASS",
+    "bash tests/orchestrator_marker_vocabulary.sh -> PASS",
+    "bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh -> PASS",
+    "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo . -> PASS/status produced; worktree dirty with planning-track changes and unrelated existing files; 60 incomplete non-review phases; review-program tracks listed as closeout candidates because child tasks are structurally deferred",
+    "python3 A1 detector after docstring stripping -> 0 substring-match occurrences; helper_present True; regex_ok True",
+    "python3 review marker/deferred-owner scan over masterplan + child review plans -> PASS/no output",
+    "python3 false-claim scan over review docs -> only expected guard/verification wording and historic unrelated registry rows; no blocking false claim that actual feature review or remediation is complete",
+    "Grep/regex A3/A7 detectors over tests/*.sh -> no hits",
+    "rg A5 detector over measure/tracks/*/plan.md -> no hits",
+    "rg A6 detector over measure/tracks.md -> no hits",
+    "rg A9 detector over tests/*.sh -> only active review-plan guard paths; no archived-track broken path",
+    "python3 child track path/reference consistency check -> PASS/no output",
+    "ls -la .git/hooks/pre-commit -> missing (A10 nonblocking)"
+  ],
+  "changed_files": [
+    "measure/tracks.md",
+    "measure/tracks/monorepo_feature_review_masterplan_20260626/test-strategy.md",
+    "measure/runs/monorepo_feature_review_masterplan_20260626/orchestrator-audit-result.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

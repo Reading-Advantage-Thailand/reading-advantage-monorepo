@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_advantage_review_20260626",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-26T12:56:03Z",
+  "updated_at": "2026-06-26T12:56:03Z",
+  "description": "Review apps/codecamp-advantage intern-training workflows, GitHub integration, AI PR review, curriculum progression, and production readiness.",
+  "estimated_tasks": 42,
+  "actual_tasks": null,
+  "deviation_notes": "Review-only child track of monorepo_feature_review_masterplan_20260626."
+}

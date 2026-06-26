@@ -1,0 +1,11 @@
+{
+  "track_id": "reading_advantage_full_review_20260626",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-26T12:56:03Z",
+  "updated_at": "2026-06-26T12:56:03Z",
+  "description": "Full feature and migration-risk review of apps/reading-advantage, the oldest legacy app and largest app surface in the monorepo.",
+  "estimated_tasks": 52,
+  "actual_tasks": null,
+  "deviation_notes": "Supersets but does not delete the existing reading_advantage_agents_md_audit_20260610 stub."
+}

@@ -21,6 +21,53 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 ---
 
+## Monorepo Feature Review Program (created 2026-06-26)
+
+> Planning program to review every app feature, shared package, integration boundary,
+> and cross-app workflow in the monorepo. These tracks are review/planning tracks only;
+> remediation must be opened as separate Measure tracks after findings are accepted.
+
+- [ ] **Track: Monorepo Feature Review Masterplan** *Link: [./tracks/monorepo_feature_review_masterplan_20260626/](./tracks/monorepo_feature_review_masterplan_20260626/)*
+  Defines the graph-backed review protocol, taxonomy, evidence format, child-track set,
+  ordering, artifacts, and closeout criteria. Project anti-pattern catalog exists at
+  `measure/anti-patterns.md`; marker-vocabulary guards are green after cleanup. Child
+  review execution remains intentionally deferred to the individual review tracks and
+  should not be treated as completed feature review or remediation.
+- [ ] **Track: Shared Foundation Review** *Link: [./tracks/shared_foundation_review_20260626/](./tracks/shared_foundation_review_20260626/)*
+  Reviews shared packages first: db, auth, auth-client, domain, api, ai, storage,
+  webhooks, types, ui, utils, config, GitHub integration, and legacy scripts.
+- [ ] **Track: Reading Advantage Full Feature Review** *Link: [./tracks/reading_advantage_full_review_20260626/](./tracks/reading_advantage_full_review_20260626/)*
+  Reviews the oldest and largest legacy app, including direct DB/domain-bypass risk,
+  Firebase remnants, student/teacher/admin workflows, AI/content/audio/flashcard flows,
+  and migration-track proposals. Supersets the existing AGENTS.md audit stub.
+- [ ] **Track: Primary Advantage Full Feature Review** *Link: [./tracks/primary_advantage_full_review_20260626/](./tracks/primary_advantage_full_review_20260626/)*
+  Reviews the Reading-derived Primary app through fork-divergence analysis, Prisma/Drizzle
+  migration truth, primary-student adaptations, workflows, auth/tenant boundaries, and tests.
+- [ ] **Track: Science Advantage Review** *Link: [./tracks/science_advantage_review_20260626/](./tracks/science_advantage_review_20260626/)*
+  Reviews the new architecture-baseline app and verifies prior audit remediation held.
+- [ ] **Track: CodeCamp Advantage Review** *Link: [./tracks/codecamp_advantage_review_20260626/](./tracks/codecamp_advantage_review_20260626/)*
+  Reviews intern training, curriculum progression, GitHub workflows, webhooks, AI PR review,
+  admin reporting, and production readiness.
+- [ ] **Track: Sales Advantage Review** *Link: [./tracks/sales_advantage_review_20260626/](./tracks/sales_advantage_review_20260626/)*
+  Reviews sales coaching, audio roleplay, storage, multimodal AI evaluation/fallbacks,
+  progress, admin flows, and sales-domain contracts.
+- [ ] **Track: Marketing App Review** *Link: [./tracks/marketing_app_review_20260626/](./tracks/marketing_app_review_20260626/)*
+  Reviews marketing material generation workflows, topic/script/scene/project persistence,
+  app-local AI seams, validation, media/export boundaries, and QA gaps.
+- [ ] **Track: Advantage Games Review** *Link: [./tracks/advantage_games_review_20260626/](./tracks/advantage_games_review_20260626/)*
+  Reviews the reusable game inventory, shared runtime, scoring/XP/leaderboards,
+  mobile/accessibility, and import readiness for Reading/Primary.
+- [ ] **Track: Company Website Review** *Link: [./tracks/www_reading_advantage_review_20260626/](./tracks/www_reading_advantage_review_20260626/)*
+  Reviews public pages, claims accuracy, SEO, accessibility, i18n, performance, and conversion.
+- [ ] **Track: Cross-App Workflows Review** *Link: [./tracks/cross_app_workflows_review_20260626/](./tracks/cross_app_workflows_review_20260626/)*
+  Synthesizes risks across auth, tenancy, AI, storage, UI reuse, games imports, deployment,
+  observability, and test strategy.
+- [ ] **Track: Monorepo Review Roadmap** *Link: [./tracks/monorepo_review_roadmap_20260626/](./tracks/monorepo_review_roadmap_20260626/)*
+  Final synthesis track that deduplicates accepted findings and produces the prioritized
+  remediation/migration/test/product-risk roadmap.
+
+---
+
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
 

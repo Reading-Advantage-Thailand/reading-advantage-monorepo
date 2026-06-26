@@ -1,0 +1,11 @@
+{
+  "track_id": "www_reading_advantage_review_20260626",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-26T12:56:03Z",
+  "updated_at": "2026-06-26T12:56:03Z",
+  "description": "Review apps/www-reading-advantage company website for public claims, SEO, accessibility, i18n, conversion flows, and product accuracy.",
+  "estimated_tasks": 34,
+  "actual_tasks": null,
+  "deviation_notes": "Review-only child track of monorepo_feature_review_masterplan_20260626."
+}

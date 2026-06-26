@@ -1,0 +1,11 @@
+{
+  "track_id": "sales_advantage_review_20260626",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-26T12:56:03Z",
+  "updated_at": "2026-06-26T12:56:03Z",
+  "description": "Review apps/sales-advantage sales coaching, audio roleplay, AI evaluation, curriculum progression, storage, and sales-domain contracts.",
+  "estimated_tasks": 38,
+  "actual_tasks": null,
+  "deviation_notes": "Review-only child track of monorepo_feature_review_masterplan_20260626."
+}

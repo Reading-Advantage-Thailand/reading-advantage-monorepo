@@ -663,6 +663,8 @@ Key files:
 
 Never start significant work without an active track.
 
+`measure/automation-supervisor.py` is a peer-reviewed Measure infrastructure component. Changes to it are allowed only in a dedicated Measure/orchestrator track with reviewer evidence and the orchestrator anti-pattern audit; do not make drive-by supervisor edits inside unrelated product tracks.
+
 ---
 
 ## Documentation Standards

@@ -1,0 +1,11 @@
+{
+  "track_id": "science_advantage_review_20260626",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-26T12:56:03Z",
+  "updated_at": "2026-06-26T12:56:03Z",
+  "description": "Review apps/science-advantage as the new architecture baseline and verify recent audit remediation held across features.",
+  "estimated_tasks": 40,
+  "actual_tasks": null,
+  "deviation_notes": "Review-only child track of monorepo_feature_review_masterplan_20260626."
+}

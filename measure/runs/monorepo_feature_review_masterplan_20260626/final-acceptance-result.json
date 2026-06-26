@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "Final acceptance cannot pass yet. The planning-only masterplan readiness checks, phase acceptance, orchestrator audit, configured planning guards, child-track deferred state, and conservative registry checks all pass, but the closeout standard is not met: the required `bash measure/doctor.sh` gate cannot run because the script is absent, and completed masterplan tasks do not include commit SHA evidence while the track work remains uncommitted since the supplied baseline.",
+  "blocking_findings": [
+    {
+      "id": "FA-1",
+      "severity": "High",
+      "finding": "Required Measure doctor gate is unavailable and exits non-zero.",
+      "evidence": "`bash measure/doctor.sh` returned exit 127 with `bash: measure/doctor.sh: No such file or directory`. The orchestrator instructions require `bash measure/doctor.sh` to exit 0 before final acceptance passes; the user did not mark this gate unavailable with a rationale.",
+      "required_remediation": "Restore/provide the Measure doctor script, or have the orchestrator explicitly mark the doctor gate unavailable with rationale before retrying final acceptance."
+    },
+    {
+      "id": "FA-2",
+      "severity": "High",
+      "finding": "Completed masterplan tasks lack commit SHA evidence and the track has no commits since the supplied baseline.",
+      "evidence": "`git diff --name-only 3239b3e84064e09813c82cfe8746d0532ad91d63..HEAD` produced no committed changes, while `plan.md` contains completed `[x]` tasks without commit SHA references. The closeout standard requires completed tasks to include commit SHA evidence. User instruction forbids committing in this final-acceptance role, so this cannot be fixed here.",
+      "required_remediation": "Commit the planning-track artifacts in the owning implementation/acceptance flow and update completed task evidence with reachable commit SHAs, or explicitly document a human-approved exception to the closeout standard before retrying final acceptance."
+    }
+  ],
+  "nonblocking_findings": [
+    "Phase acceptance artifact exists and reports status=pass with no blocking findings.",
+    "Orchestrator audit artifact exists and reports status=pass with no blocking findings; A10 pre-commit absence remains nonblocking in that audit.",
+    "PROJECT_TESTS passed: `bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh`.",
+    "PROJECT_CHECKS passed: `python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .` exited 0, while listing unrelated active-track incomplete phases and review-program closeout candidates as expected for deferred child tracks.",
+    "PROJECT_LINT was explicitly configured as unavailable: `none for planning-only track`.",
+    "UX review is not applicable because UX_REQUIRED=never and this is a planning-only track.",
+    "Masterplan has no non-deferred incomplete tasks: all executable planning tasks are `[x]`; the only remaining masterplan task is `[b]` with `deferred:human`.",
+    "Child review tracks remain structurally blocked/deferred with `[b]` tasks carrying `deferred:review-execution`; no child review is falsely completed.",
+    "Registry language is conservative: it identifies the program as review/planning-only, says remediation must be opened separately, and states child execution remains deferred and not completed review/remediation.",
+    "A1/A5/A6/A9 pre-closeout anti-pattern checks passed for this track's changed surface."
+  ],
+  "evidence": [
+    {
+      "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/plan.md",
+      "lines": "9-58",
+      "summary": "Phases 0-4 and two Phase 5 planning tasks are `[x]`; the only remaining task is `[b] ... deferred:human`."
+    },
+    {
+      "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/spec.md",
+      "lines": "149-165",
+      "summary": "Spec explicitly says this track does not perform reviews and defines planning-only acceptance criteria."
+    },
+    {
+      "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/test-strategy.md",
+      "lines": "22-41,54-56",
+      "summary": "Test strategy limits live-behavior proof to planning/readiness guards and states child execution remains deferred."
+    },
+    {
+      "file": "measure/runs/monorepo_feature_review_masterplan_20260626/phase-acceptance-result.json",
+      "summary": "Phase acceptance status=pass with no blocking findings."
+    },
+    {
+      "file": "measure/runs/monorepo_feature_review_masterplan_20260626/orchestrator-audit-result.json",
+      "summary": "Orchestrator audit status=pass with no blocking findings."
+    },
+    {
+      "file": "measure/tracks.md",
+      "lines": "24-67",
+      "summary": "Registry lists the review program conservatively and keeps child execution deferred."
+    },
+    {
+      "file": "measure/anti-patterns.md",
+      "summary": "Project anti-pattern catalog exists with A1-A10."
+    },
+    {
+      "file": "measure/automation-supervisor.py",
+      "lines": "634-649",
+      "summary": "A1/A8 supervisor invariant remains structured: `is_task_structurally_blocked` and `[~xb]` marker regex are present, with no code-level `deferred` substring heuristic."
+    }
+  ],
+  "commands": [
+    {
+      "command": "git status --short",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "Worktree dirty with AGENTS.md, measure/tracks.md, new review-program track docs, measure/anti-patterns.md, tests/, graph backup, and one archived review report."
+    },
+    {
+      "command": "git diff --stat",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "Tracked diff: AGENTS.md +2 lines; measure/tracks.md +47 lines. New track/test files are untracked."
+    },
+    {
+      "command": "git log --oneline --decorate -10",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "HEAD is baseline 3239b3e8; no new commits for this track since baseline."
+    },
+    {
+      "command": "git diff --name-only 3239b3e84064e09813c82cfe8746d0532ad91d63..HEAD",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "No committed changes since supplied baseline."
+    },
+    {
+      "command": "bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "PASS: measure anti-pattern catalog exists with A1-A10; PASS: review planning tracks use only [~]/[x]/[b] task markers."
+    },
+    {
+      "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "Status completed; worktree dirty; 60 unrelated incomplete phases; review-program tracks listed as closeout candidates because child work is structurally deferred."
+    },
+    {
+      "command": "PROJECT_LINT",
+      "status": "skipped",
+      "exit_code": null,
+      "output_summary": "Explicitly configured as `none for planning-only track`."
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "status": "fail",
+      "exit_code": 127,
+      "output_summary": "bash: measure/doctor.sh: No such file or directory."
+    },
+    {
+      "command": "build-graph stats ./graph.db",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "Graph statistics match the masterplan baseline: 22,185 nodes, 46,017 edges, 2,715 files."
+    },
+    {
+      "command": "python3 test-strategy phase validators from test-strategy.md",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "Phase 0 through Phase 5 planning validators passed."
+    },
+    {
+      "command": "python3 child/master structure and deferred-execution validator",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "All child tracks have metadata/spec/plan, required sections, inventory/input-first phase 0, and only `[b] deferred:review-execution` tasks; masterplan has only `[x]` or `[b] deferred:human` tasks."
+    },
+    {
+      "command": "python3 registry order and conservative-language validator",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "Registry contains master + child tracks in the intended order and conservative review/planning-only language."
+    },
+    {
+      "command": "python3 A1 supervisor structured-marker invariant check",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "helper_present=True; task_regex_structured=True; no_deferred_substring=True."
+    },
+    {
+      "command": "python3 A5 false pass-claim scan over review plans",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "No `PASS=N, FAIL=0` or `all checks pass` claims found in master/child review plans."
+    },
+    {
+      "command": "python3 A9 archived-track-path scan over tests/*.sh",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "No tests reference a `measure/tracks/<id>/plan.md` path for a track already archived."
+    }
+  ],
+  "changed_files": [
+    "AGENTS.md",
+    "measure/tracks.md",
+    "measure/anti-patterns.md",
+    "tests/orchestrator_catalog.sh",
+    "tests/orchestrator_marker_vocabulary.sh",
+    "measure/tracks/monorepo_feature_review_masterplan_20260626/",
+    "measure/tracks/shared_foundation_review_20260626/",
+    "measure/tracks/reading_advantage_full_review_20260626/",
+    "measure/tracks/primary_advantage_full_review_20260626/",
+    "measure/tracks/science_advantage_review_20260626/",
+    "measure/tracks/codecamp_advantage_review_20260626/",
+    "measure/tracks/sales_advantage_review_20260626/",
+    "measure/tracks/marketing_app_review_20260626/",
+    "measure/tracks/advantage_games_review_20260626/",
+    "measure/tracks/www_reading_advantage_review_20260626/",
+    "measure/tracks/cross_app_workflows_review_20260626/",
+    "measure/tracks/monorepo_review_roadmap_20260626/",
+    "measure/runs/monorepo_feature_review_masterplan_20260626/final-acceptance-result.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}

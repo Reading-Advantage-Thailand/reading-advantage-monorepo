@@ -1,0 +1,11 @@
+{
+  "track_id": "shared_foundation_review_20260626",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-06-26T12:56:03Z",
+  "updated_at": "2026-06-26T12:56:03Z",
+  "description": "Review shared packages and backend foundation before app-level review: db, auth, domain, api, ai, storage, webhooks, types, ui, utils, config, integrations.",
+  "estimated_tasks": 42,
+  "actual_tasks": null,
+  "deviation_notes": "Review-only child track of monorepo_feature_review_masterplan_20260626."
+}

@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "track_id": "monorepo_feature_review_masterplan_20260626",
+  "phase_heading": "final planning acceptance",
+  "baseline_sha": "3239b3e84064e09813c82cfe8746d0532ad91d63",
+  "head_sha": "3239b3e84064e09813c82cfe8746d0532ad91d63",
+  "summary": "Independent Measure phase acceptance passes for the planning-only masterplan. The master spec, plan, and test strategy are coherent after a minimal test-strategy wording fix to reflect the supplied planning guard command. All child review tracks exist with metadata/spec/plan, scope, required artifacts, non-goals, acceptance criteria, and inventory/input-first deferred execution plans. The review program covers all eight apps, shared packages, cross-app workflows, and final roadmap synthesis. The registry language is conservative and states that child review execution is deferred and not completed review/remediation. measure/anti-patterns.md exists with A1-A10; the catalog and marker-vocabulary guards pass; orchestrator audit JSON status is pass. No actual app feature reviews were performed.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Worktree is dirty from planning-track/unrelated pre-existing changes; acceptance preserved unrelated changes and did not commit per user instruction.",
+    "measure_interphase_checks.py status reports 60 incomplete phases in unrelated active tracks and lists review-program tracks as closeout candidates because their tasks are structurally [b] deferred; this is consistent with child review execution remaining deferred pending explicit user start.",
+    "Minimal doc fix applied to measure/tracks/monorepo_feature_review_masterplan_20260626/test-strategy.md so PROJECT_TESTS language matches the supplied planning guard command instead of saying 'none for planning-only track'."
+  ],
+  "fixes_applied": [
+    {
+      "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/test-strategy.md",
+      "description": "Updated live-behavior/aggregate-suite wording to identify PROJECT_TESTS as the orchestrator catalog + marker-vocabulary planning guards, while retaining that no aggregate product test suite or app live-behavior proof applies."
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "criterion": "Masterplan spec/plan/test-strategy exist and are coherent.",
+      "status": "pass",
+      "evidence": [
+        "measure/tracks/monorepo_feature_review_masterplan_20260626/spec.md defines overview, graph baseline, FR-1..FR-7, non-goals, and acceptance criteria.",
+        "measure/tracks/monorepo_feature_review_masterplan_20260626/plan.md marks Phases 0-4 and closeout readiness tasks complete, with only human-gated follow-up creation blocked via deferred:human.",
+        "measure/tracks/monorepo_feature_review_masterplan_20260626/test-strategy.md now states PROJECT_TESTS is limited to planning/readiness guards and no product live-behavior proof applies."
+      ]
+    },
+    {
+      "criterion": "All child review tracks exist with metadata/spec/plan.",
+      "status": "pass",
+      "evidence": [
+        "Custom child-track structure check passed for shared_foundation_review_20260626, reading_advantage_full_review_20260626, primary_advantage_full_review_20260626, science_advantage_review_20260626, codecamp_advantage_review_20260626, sales_advantage_review_20260626, marketing_app_review_20260626, advantage_games_review_20260626, www_reading_advantage_review_20260626, cross_app_workflows_review_20260626, and monorepo_review_roadmap_20260626.",
+        "Every checked child spec contains Scope, Required Artifacts, Non-Goals, and Acceptance Criteria; every child plan starts with inventory/input validation and uses [b] deferred:review-execution tasks."
+      ]
+    },
+    {
+      "criterion": "Review program covers all apps and shared packages.",
+      "status": "pass",
+      "evidence": [
+        "Master spec Product Lineage Context covers apps/reading-advantage, apps/primary-advantage, apps/advantage-games, apps/www-reading-advantage, apps/science-advantage, apps/codecamp-advantage, apps/marketing, and apps/sales-advantage.",
+        "Shared foundation spec covers packages/db, auth, auth-client, domain, api, ai, storage, webhooks, types, ui, utils, config, integrations/github, and reading-advantage-scripts.",
+        "Cross-app and roadmap tracks cover auth, tenancy, database/migrations, AI, storage, UI reuse, games imports, website claims, deployment, observability, and test strategy."
+      ]
+    },
+    {
+      "criterion": "Registry lists the program conservatively.",
+      "status": "pass",
+      "evidence": [
+        "measure/tracks.md Monorepo Feature Review Program states these are review/planning tracks only and remediation must be opened separately after findings are accepted.",
+        "Registry says child review execution remains intentionally deferred and should not be treated as completed feature review or remediation.",
+        "Custom registry order/conservative-language check passed."
+      ]
+    },
+    {
+      "criterion": "measure/anti-patterns.md exists and guards pass.",
+      "status": "pass",
+      "evidence": [
+        "measure/anti-patterns.md exists and contains A1-A10.",
+        "bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh exited 0."
+      ]
+    },
+    {
+      "criterion": "Marker vocabulary guard passes.",
+      "status": "pass",
+      "evidence": [
+        "tests/orchestrator_marker_vocabulary.sh exited 0 with PASS: review planning tracks use only [~]/[x]/[b] task markers.",
+        "Review-program [b] tasks include deferred:<owner>, primarily deferred:review-execution; masterplan's remaining follow-up task uses deferred:human."
+      ]
+    },
+    {
+      "criterion": "Orchestrator audit JSON status is pass.",
+      "status": "pass",
+      "evidence": [
+        "measure/runs/monorepo_feature_review_masterplan_20260626/orchestrator-audit-result.json has status=pass and no blocking_findings."
+      ]
+    },
+    {
+      "criterion": "No false claims of actual feature review completion.",
+      "status": "pass",
+      "evidence": [
+        "Master spec says the track does not perform reviews; plan and test strategy distinguish planning readiness from child review execution.",
+        "Child plans are all deferred pending review execution; roadmap requires accepted child review artifacts before synthesis.",
+        "False-claim scans over review-program docs found only detector/prohibition wording or deferred prerequisites, not claims that actual feature reviews or remediation are complete."
+      ]
+    },
+    {
+      "criterion": "Child review execution remains deferred pending explicit user start.",
+      "status": "pass",
+      "evidence": [
+        "Every child review plan uses [b] deferred:review-execution tasks; no child plan has executable [~] tasks.",
+        "Masterplan closeout has only the human-gated follow-up creation task blocked as deferred:human."
+      ]
+    }
+  ],
+  "anti_pattern_checks": {
+    "A1_substring_as_signal": {
+      "status": "pass",
+      "evidence": "measure/automation-supervisor.py defines is_task_structurally_blocked; task regex uses ([~xb]); helper recognizes status == \"b\" and deferred:<owner>; docstring-stripped code does not use \"deferred\" in task.lower()."
+    },
+    "A3_digit_only_count": {
+      "status": "pass",
+      "evidence": "Detector scan found no tests/*.sh usage of rg -q '[0-9]+'; graph/test-strategy metrics are labeled counts rather than digit-only assertions."
+    },
+    "A4_vacuous_pass": {
+      "status": "pass",
+      "evidence": "No current review-program guard claims phase completion from a zero-[x] marker-consistency check. Child execution is structurally blocked/deferred rather than reported as completed app review."
+    },
+    "A5_false_claim_text": {
+      "status": "pass",
+      "evidence": "No current masterplan/child plan contains PASS=N, FAIL=0 or all-checks-pass claims for tests that were not run successfully."
+    },
+    "A6_registry_overstatement": {
+      "status": "pass",
+      "evidence": "New registry section contains planning/deferred language and no 'resolved' claim for review/remediation completion."
+    },
+    "A7_over_broad_filter": {
+      "status": "pass",
+      "evidence": "Detector scan found no tests/*.sh broad banned-term rg -v filters using bare never/do not/cannot say/prohibited wording."
+    }
+  },
+  "commands": [
+    {
+      "command": "bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "PASS: measure anti-pattern catalog exists with A1-A10; PASS: review planning tracks use only [~]/[x]/[b] task markers"
+    },
+    {
+      "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "Status produced successfully; repo head equals baseline; worktree dirty; 60 unrelated incomplete phases; review-program tracks listed as closeout candidates due structurally deferred tasks."
+    },
+    {
+      "command": "python3 child track structure/deferred-execution check",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "PASS child tracks structure/deferred execution"
+    },
+    {
+      "command": "python3 registry order and conservative language check",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "PASS registry order and conservative language"
+    },
+    {
+      "command": "python3 A1/A8 supervisor structured marker invariant check",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "PASS A1/A8 supervisor structured marker invariants"
+    }
+  ],
+  "changed_files_since_baseline": {
+    "committed_diff": [],
+    "worktree_tracked_diff": [
+      "AGENTS.md",
+      "measure/tracks.md"
+    ],
+    "worktree_untracked_relevant": [
+      "measure/anti-patterns.md",
+      "tests/orchestrator_catalog.sh",
+      "tests/orchestrator_marker_vocabulary.sh",
+      "measure/tracks/monorepo_feature_review_masterplan_20260626/",
+      "measure/tracks/shared_foundation_review_20260626/",
+      "measure/tracks/reading_advantage_full_review_20260626/",
+      "measure/tracks/primary_advantage_full_review_20260626/",
+      "measure/tracks/science_advantage_review_20260626/",
+      "measure/tracks/codecamp_advantage_review_20260626/",
+      "measure/tracks/sales_advantage_review_20260626/",
+      "measure/tracks/marketing_app_review_20260626/",
+      "measure/tracks/advantage_games_review_20260626/",
+      "measure/tracks/www_reading_advantage_review_20260626/",
+      "measure/tracks/cross_app_workflows_review_20260626/",
+      "measure/tracks/monorepo_review_roadmap_20260626/"
+    ],
+    "worktree_untracked_other_observed": [
+      "graph.db.bak-20260626203331",
+      "measure/archive/review_findings_remediation_20260624/review-2026-06-25.md"
+    ]
+  },
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "ux_required": "never",
+  "commit_created": false,
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
