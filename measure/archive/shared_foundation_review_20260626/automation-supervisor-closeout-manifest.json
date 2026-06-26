@@ -1,0 +1,76 @@
+{
+  "manifest_type": "automation-supervisor-closeout-manifest",
+  "track_id": "shared_foundation_review_20260626",
+  "closeout_date": "2026-06-27",
+  "closeout_agent": "measure-final-acceptance-subagent",
+  "phase": "Phase 11: Final Acceptance and Closeout",
+  "baseline_sha": "383b1104",
+  "product_green_claimed": false,
+  "source_code_remediated": false,
+  "supersedes": {
+    "date": "2026-06-26",
+    "reason": "The 2026-06-26 closeout was superseded because it was a triage/boundary review, not the required line-by-line review."
+  },
+  "line_review_acceptance": {
+    "acceptance_result_path": "measure/archive/shared_foundation_review_20260626/line-review/line-review-acceptance-result.json",
+    "result": "pass",
+    "files": 516,
+    "lines": 110277,
+    "evidence_files": 85,
+    "lr_findings": 34,
+    "bad_rows": {
+      "status": [],
+      "range": [],
+      "evidence": [],
+      "finding_count": []
+    },
+    "mechanical_recheck": "pass"
+  },
+  "artifact_paths": {
+    "plan": "measure/archive/shared_foundation_review_20260626/plan.md",
+    "spec": "measure/archive/shared_foundation_review_20260626/spec.md",
+    "metadata": "measure/archive/shared_foundation_review_20260626/metadata.json",
+    "file_inventory": "measure/archive/shared_foundation_review_20260626/line-review/file-inventory.tsv",
+    "coverage_ledger": "measure/archive/shared_foundation_review_20260626/line-review/line-review-coverage.tsv",
+    "line_review_findings": "measure/archive/shared_foundation_review_20260626/line-review/line-review-findings.md",
+    "line_review_summary": "measure/archive/shared_foundation_review_20260626/line-review/line-review-summary.md",
+    "line_review_acceptance_result": "measure/archive/shared_foundation_review_20260626/line-review/line-review-acceptance-result.json",
+    "final_closeout_result": "measure/archive/shared_foundation_review_20260626/final-line-review-closeout-result.json"
+  },
+  "gate_results": {
+    "measure_doctor": {
+      "command": "bash measure/doctor.sh",
+      "status": "pass"
+    },
+    "project_lint": {
+      "command": "pnpm lint",
+      "status": "fail",
+      "detail": "Fails in primary-advantage on pre-existing @typescript-eslint/no-explicit-any rule-resolution errors; warnings also present. Recorded without remediation because this is review-only closeout."
+    },
+    "project_checks": {
+      "command": "pnpm check-types",
+      "status": "fail",
+      "detail": "Fails in @reading-advantage/api on known shared-foundation schema/type drift (sales audioStorageKey nullability and user role enum drift). Recorded without remediation."
+    },
+    "project_tests": {
+      "command": "pnpm test",
+      "status": "pass",
+      "detail": "Configured root test script passed 4 files / 27 tests."
+    }
+  },
+  "anti_pattern_checks": {
+    "A1_supervisor_substring_heuristic": "pass",
+    "A5_false_claim_text": "pass",
+    "A6_registry_overstatement": "pass",
+    "A9_archived_track_paths_in_tests": "pass"
+  },
+  "closeout_checker": {
+    "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track shared_foundation_review_20260626",
+    "status": "pass"
+  },
+  "unrelated_untracked_files_preserved": [
+    "graph.db.bak-20260626203331",
+    "measure/audit-reports/reading-advantage-full_20260626/line-review/",
+    "measure/tracks/agents_md_audit_science_advantage_20260603/"
+  ]
+}

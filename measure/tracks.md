@@ -56,14 +56,13 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [ ] **Track: Monorepo Review Roadmap** *Link: [./tracks/monorepo_review_roadmap_20260626/](./tracks/monorepo_review_roadmap_20260626/)*
   Final synthesis track that deduplicates accepted findings and produces the prioritized
   remediation/migration/test/product-risk roadmap.
-- [~] **Track: Shared Foundation Review** *Link: [./tracks/shared_foundation_review_20260626/](./tracks/shared_foundation_review_20260626/)*
-  Reopened 2026-06-27: prior archive was a triage/boundary review, not the required
-  line-by-line review. Current work must complete file-level coverage evidence before
-  acceptance or closeout.
 
 ---
 
 ## Archived Tracks
+
+- [x] **Track: Shared Foundation Review** *Link: [./archive/shared_foundation_review_20260626/](./archive/shared_foundation_review_20260626/)*
+  Archived 2026-06-27 after the superseding line-by-line review completed coverage of 516 shared-package files / 110277 lines with 85 evidence files and 34 LR findings. This is review-completeness closeout only; the shared foundation is not claimed fixed or product-green, and source remediation remains for separate tracks.
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
@@ -398,12 +397,6 @@ Two parallel programs are in flight; priority order when picking the next track:
   *Link: [./archive/db_migration_ledger_20260611/](./archive/db_migration_ledger_20260611/)*
   June 2026 `packages/db` audit. **Critical:** `_journal.json` `when` stamps are non-monotonic (idx 3–8, 13, 14, 17 carry 2025-era epochs; 0010/0011 share one stamp; 0018 unregistered) and drizzle-orm 0.44.7 applies a migration only when its stamp is strictly greater than the last applied ledger row — so existing DBs **silently skip** 0011/0013/0014/0015/0017. Fresh DBs apply everything, hiding the bug from dev/CI. This is the db-side root cause of the June 8 production incident (tech-debt P0). Fix: re-stamp journal (FR-1), journal-integrity test (FR-2), ledger doctor report/repair script (FR-3), codecamp cloudbuild deploy gate (FR-4), snapshot refresh so `drizzle-kit generate` is safe again (FR-5). Plus hardening: ESM `.js` import extensions so dist loads outside bundlers (FR-6), `DATABASE_URL` fail-fast + privileged-fallback warning (FR-7), `sessions(user_id, expires_at)` indexes (FR-8), seed-data subpath export + dead `shutdown.ts` removal (FR-9).
   *Closed 2026-06-12 by `post_24h_audit_remediation_20260612` Phase 1: journal re-stamped (monotonic), 0019/0020 registered, doctor script implemented, ESM .js extensions added, env guards added, sessions indexes migration, barrel hygiene done, 4/6 Phase-2 Red tests pass Green (2 need live PG).*
-
----
-
-## Archived Tracks
-
-> Tracks listed in this section have completed their lifecycle (spec → plan → implementation → review → acceptance → closeout) and are preserved here for history. Track artifacts live under `measure/archive/`. New work that builds on or supersedes an archived track should open a fresh track rather than reopen the archived one.
 
 - [x] **Track: codecamp-advantage — Progress Monotonicity**
   *Link: [./archive/codecamp_progress_monotonicity_20260611/](./archive/codecamp_progress_monotonicity_20260611/)*

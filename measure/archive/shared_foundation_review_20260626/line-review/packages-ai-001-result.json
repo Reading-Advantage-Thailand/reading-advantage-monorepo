@@ -5,8 +5,8 @@
   "files_reviewed": 8,
   "lines_reviewed": 871,
   "findings_count": 7,
-  "evidence_path": "measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md",
-  "ledger_path": "measure/tracks/shared_foundation_review_20260626/line-review/line-review-coverage.tsv",
+  "evidence_path": "measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md",
+  "ledger_path": "measure/archive/shared_foundation_review_20260626/line-review/line-review-coverage.tsv",
   "ledger_updated": true,
   "assigned_files": [
     {

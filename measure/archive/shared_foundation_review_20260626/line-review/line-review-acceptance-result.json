@@ -106,12 +106,13 @@
     "evidence_coverage_issues": []
   },
   "synthesis_artifacts": [
-    "measure/tracks/shared_foundation_review_20260626/line-review/line-review-findings.md",
-    "measure/tracks/shared_foundation_review_20260626/line-review/line-review-summary.md"
+    "measure/archive/shared_foundation_review_20260626/line-review/line-review-findings.md",
+    "measure/archive/shared_foundation_review_20260626/line-review/line-review-summary.md"
   ],
   "plan_update": {
     "phase_8_10_marked_complete": true,
-    "phase_11_left_blocked": true
+    "phase_11_left_blocked": false,
+    "superseded_by_final_closeout": "measure/archive/shared_foundation_review_20260626/final-line-review-closeout-result.json"
   },
   "package_gates": {
     "status": "skipped",
@@ -147,7 +148,7 @@
     "Did not remediate source code findings.",
     "Did not run package gates in Phase 10; this is recorded as a limitation rather than proof of product-green.",
     "Prior six audit artifacts under measure/audit-reports/shared-foundation_20260626 remain superseded triage context; line-review artifacts preserve per-file evidence for this reopened pass.",
-    "Final acceptance/closeout Phase 11 remains pending/blocked."
+    "Final acceptance/closeout Phase 11 completed in measure/archive/shared_foundation_review_20260626/final-line-review-closeout-result.json."
   ],
   "errors": [],
   "warnings": [],
@@ -162,6 +163,6 @@
     "?? graph.db.bak-20260626203331",
     "?? measure/audit-reports/reading-advantage-full_20260626/line-review/",
     "?? measure/tracks/agents_md_audit_science_advantage_20260603/",
-    "?? measure/tracks/shared_foundation_review_20260626/"
+    "?? measure/archive/shared_foundation_review_20260626/"
   ]
 }

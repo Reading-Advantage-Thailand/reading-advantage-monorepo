@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Final line-review closeout passed for review coverage: line-review-acceptance-result.json is pass and the mechanical recheck verified 516 files, 110277 lines, 85 evidence files, 34 LR findings, and no bad rows. This closeout does not claim product-green and did not remediate source code; configured lint/check gates still expose known/pre-existing failures.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "GATE-LINT-001",
+      "severity": "known",
+      "detail": "pnpm lint fails in primary-advantage on @typescript-eslint/no-explicit-any rule-resolution errors. Not remediated in this review-only closeout."
+    },
+    {
+      "id": "GATE-CHECKS-001",
+      "severity": "known",
+      "detail": "pnpm check-types fails in @reading-advantage/api on schema/type drift that the shared-foundation review already records as non-product-green evidence."
+    }
+  ],
+  "evidence": [
+    "line-review-acceptance-result.json result=pass",
+    "inventory_rows=516, coverage_rows=516, expected_rows=516",
+    "line_total=110277",
+    "evidence_files_referenced=85, evidence_files_on_disk=85",
+    "finding_count_sum=34 and parsed LR headings=34",
+    "bad_rows.status/range/evidence/finding_count all empty",
+    "Phase 8-10 plan tasks are [x] and Phase 11 tasks marked [x] during final acceptance",
+    "metadata.json status=done completed=2026-06-27 with deviation_notes superseding the 2026-06-26 closeout",
+    "measure/tracks.md archived row states line-by-line review complete without claiming product-green"
+  ],
+  "commands": [
+    {
+      "command": "python3 <mechanical coverage check>",
+      "status": "pass",
+      "detail": "Verified 516 coverage rows, 110277 source lines, 85 evidence files, 34 LR findings, no errors."
+    },
+    {
+      "command": "bash measure/doctor.sh",
+      "status": "pass"
+    },
+    {
+      "command": "pnpm lint",
+      "status": "fail",
+      "detail": "Known/pre-existing lint gate failure in primary-advantage; not remediated per instruction."
+    },
+    {
+      "command": "pnpm check-types",
+      "status": "fail",
+      "detail": "Known shared-foundation API/type drift; not remediated per instruction."
+    },
+    {
+      "command": "pnpm test",
+      "status": "pass",
+      "detail": "4 files / 27 tests passed."
+    },
+    {
+      "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track shared_foundation_review_20260626",
+      "status": "pass",
+      "detail": "Closeout checker passed after archive move."
+    }
+  ],
+  "changed_files": [
+    "measure/tracks.md",
+    "measure/archive/shared_foundation_review_20260626/metadata.json",
+    "measure/archive/shared_foundation_review_20260626/plan.md",
+    "measure/archive/shared_foundation_review_20260626/automation-supervisor-closeout-manifest.json",
+    "measure/archive/shared_foundation_review_20260626/final-line-review-closeout-result.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "track_id": "shared_foundation_review_20260626",
+  "phase": "Phase 11: Final Acceptance and Closeout",
+  "baseline_sha": "383b1104",
+  "product_green_claimed": false,
+  "source_code_remediated": false,
+  "line_review_coverage": {
+    "result": "pass",
+    "files": 516,
+    "lines": 110277,
+    "evidence_files": 85,
+    "lr_findings": 34,
+    "bad_rows": {
+      "status": [],
+      "range": [],
+      "evidence": [],
+      "finding_count": []
+    }
+  },
+  "anti_pattern_audit": {
+    "A1": "pass: automation-supervisor.py uses structured [~xb]/deferred:<owner> handling; no substring heuristic reintroduced.",
+    "A5": "pass: plan does not claim PASS=N, FAIL=0 or all checks pass; failed gates are recorded honestly.",
+    "A6": "pass: tracks.md archived row states line-by-line review coverage and 34 LR findings without claiming fixed/product-green.",
+    "A9": "pass: tests/*.sh use track_dir_resolve or contain no stale direct archived-track plan path for this track."
+  },
+  "closeout_checker": {
+    "status": "pass",
+    "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track shared_foundation_review_20260626"
+  },
+  "commit_sha": null
+}

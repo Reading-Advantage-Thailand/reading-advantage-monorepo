@@ -4,8 +4,8 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 
 ## Verification Basis
 
-- Source coverage ledger: `measure/tracks/shared_foundation_review_20260626/line-review/line-review-coverage.tsv`
-- Evidence files: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/*.md`
+- Source coverage ledger: `measure/archive/shared_foundation_review_20260626/line-review/line-review-coverage.tsv`
+- Evidence files: `measure/archive/shared_foundation_review_20260626/line-review/evidence/*.md`
 - Mechanical verification: 516/516 inventory rows reviewed; reviewed ranges match `1-N`; all listed evidence files exist; `finding_count` values are numeric and sum to 34.
 
 ## Finding Counts by Severity
@@ -24,7 +24,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-ai-001-001 — README omits the OpenRouter provider supported by the public contract
 
 - Severity: High
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
 - File/line evidence: `packages/ai/README.md:3`
 - File/line evidence: `packages/ai/README.md:29-37`
 - File/line evidence: `packages/ai/src/__tests__/phase-1-interface.test-d.ts:153`
@@ -37,7 +37,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-ai-001-007 — Closeout test comments falsely claim assertions fail RED, but the suite passes
 
 - Severity: High
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
 - File/line evidence: `packages/ai/src/__tests__/phase-10-closeout.test.ts:35-38`
 - File/line evidence: `packages/ai/src/__tests__/phase-10-closeout.test.ts:209-214`
 - File/line evidence: `packages/ai/src/__tests__/phase-10-closeout.test.ts:282-290`
@@ -50,7 +50,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-domain-001-002 — 2-school acceptance test verifies Proxy activity but not the injected schoolId condition
 
 - Severity: High
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
 - File/line evidence: `packages/domain/src/__tests__/2-school-acceptance.test.ts:29-50`
 - File/line evidence: `packages/domain/src/__tests__/2-school-acceptance.test.ts:75-87`
 
@@ -62,7 +62,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-domain-001-004 — cross-tenant assignment tests use wrong-shape mocks that do not exercise the real tenant check
 
 - Severity: High
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
 - File/line evidence: `packages/domain/src/__tests__/assignments.test.ts:73-81`
 - File/line evidence: `packages/domain/src/__tests__/assignments.test.ts:247-259`
 - File/line evidence: `packages/domain/src/__tests__/assignments.test.ts:291-303`
@@ -76,7 +76,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-ai-001-003 — Shared contract suite only exercises three of the six `AIClient` methods
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
 - File/line evidence: `packages/ai/src/__tests__/contract-suite.ts:69-118`
 - File/line evidence: `packages/ai/src/__tests__/phase-1-interface.test-d.ts:68-77`
 
@@ -88,7 +88,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-ai-001-004 — Phase 0 setup tests assume a non-hoisted package-local `node_modules` layout
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
 - File/line evidence: `packages/ai/src/__tests__/phase-0-setup.test.ts:74-82`
 - File/line evidence: `packages/ai/src/__tests__/phase-0-setup.test.ts:99-112`
 
@@ -100,7 +100,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-ai-001-006 — Type-test file falsely claims `vitest --typecheck` is enabled in config
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
 - File/line evidence: `packages/ai/src/__tests__/phase-1-interface.test-d.ts:6`
 - File/line evidence: `packages/ai/vitest.config.ts:1-10`
 
@@ -112,7 +112,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-api-001-001 — route-audit.md migration-priority totals disagree with tier summary
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-api-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-api-001.md`
 - File/line evidence: `packages/api/docs/route-audit.md:802-840`
 
 
@@ -123,7 +123,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-api-001-003 — articles-router tests only assert output field stripping
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-api-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-api-001.md`
 - File/line evidence: `packages/api/src/__tests__/articles-router.test.ts:59-111`
 
 
@@ -134,7 +134,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-api-001-004 — assignments-router tests only assert output field stripping
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-api-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-api-001.md`
 - File/line evidence: `packages/api/src/__tests__/assignments-router.test.ts:61-156`
 
 
@@ -145,7 +145,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-auth-client-001-001 — Login error message echoes server response verbatim (user enumeration)
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-auth-client-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-auth-client-001.md`
 - File/line evidence: `packages/auth-client/src/provider.tsx:71-72`
 
 
@@ -173,7 +173,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-db-001-003 — Migration 0003 may fail on users with multiple OAuth accounts
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-db-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-db-001.md`
 - File/line evidence: `packages/db/drizzle/0003_slow_firebrand.sql:57-71`
 
 
@@ -184,7 +184,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-db-001-004 — Backfill in migration 0004 may violate unique constraints added earlier
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-db-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-db-001.md`
 - File/line evidence: `packages/db/drizzle/0004_sturdy_forge.sql:3-19`
 
 
@@ -195,7 +195,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-domain-001-003 — listArticles test ignores tenant-scoped WHERE clause
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
 - File/line evidence: `packages/domain/src/__tests__/articles.test.ts:82-102`
 
 
@@ -206,7 +206,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-domain-001-005 — submitAssignment success test mocks an unrealistic assignment row shape
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
 - File/line evidence: `packages/domain/src/__tests__/assignments.test.ts:307-336`
 
 
@@ -217,7 +217,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-domain-001-007 — listClasses tests do not verify teacher or admin scoping filters
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
 - File/line evidence: `packages/domain/src/__tests__/classes.test.ts:45-127`
 
 
@@ -228,7 +228,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-storage-001-001 — getSignedUrl signs PutObjectCommand (upload URL) instead of GetObjectCommand (download URL)
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-storage-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-storage-001.md`
 - File/line evidence: `packages/storage/src/drivers/s3.ts:77-81`
 
 
@@ -239,7 +239,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-types-001-001 — Inconsistent role enum across schemas
 
 - Severity: Medium
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-types-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-types-001.md`
 - File/line evidence: `packages/types/src/index.ts:9`
 - File/line evidence: `packages/types/src/index.ts:228`
 
@@ -251,7 +251,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-ai-001-002 — `@ai-sdk/google-vertex` dependency is not reflected in the public provider contract or docs
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
 - File/line evidence: `packages/ai/package.json:23`
 - File/line evidence: `packages/ai/README.md:29-37`
 - File/line evidence: `packages/ai/src/__tests__/phase-1-interface.test-d.ts:153`
@@ -264,7 +264,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-ai-001-005 — Comment references archived track path for test-strategy.md
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-ai-001.md`
 - File/line evidence: `packages/ai/src/__tests__/phase-0-setup.test.ts:87`
 
 
@@ -275,7 +275,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-api-001-002 — route-audit.md records probable typo in archived route path
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-api-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-api-001.md`
 - File/line evidence: `packages/api/docs/route-audit.md:172`
 
 
@@ -286,7 +286,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-auth-001-001 — Dual password-hashing library dependency with no documented sunset plan
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-auth-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-auth-001.md`
 - File/line evidence: `packages/auth/package.json:19,21`
 
 
@@ -297,7 +297,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-auth-001-002 — Unsafe process.env mutation without test isolation in audit-retention.test.ts
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-auth-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-auth-001.md`
 - File/line evidence: `packages/auth/src/__tests__/audit-retention.test.ts:11-22`
 - File/line evidence: `packages/auth/src/__tests__/audit-retention.test.ts:24-31`
 
@@ -309,7 +309,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-db-001-001 — README lists stale Drizzle↔Prisma gaps
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-db-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-db-001.md`
 - File/line evidence: `packages/db/README.md:39-44`
 
 
@@ -320,7 +320,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-db-001-002 — Migration 0001 comment does not match created tables
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-db-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-db-001.md`
 - File/line evidence: `packages/db/drizzle/0001_thick_santa_claus.sql:1`
 
 
@@ -331,7 +331,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-domain-001-001 — package.json devDependency version specifiers are not pinned
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
 - File/line evidence: `packages/domain/package.json:91-98`
 
 
@@ -342,7 +342,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-domain-001-006 — audit nextCursor test does not verify the returned event slice
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-domain-001.md`
 - File/line evidence: `packages/domain/src/__tests__/audit.test.ts:51-74`
 
 
@@ -353,7 +353,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-storage-001-002 — exists() catches all errors, masking auth/permission failures as "not found"
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-storage-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-storage-001.md`
 - File/line evidence: `packages/storage/src/drivers/s3.ts:109-111`
 
 
@@ -364,7 +364,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-storage-001-003 — Default put ACL is public-read; callers may accidentally expose objects
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-storage-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-storage-001.md`
 - File/line evidence: `packages/storage/src/drivers/s3.ts:56`
 
 
@@ -375,7 +375,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-types-001-002 — Loose string types for phase and status in codecamp schemas
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-types-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-types-001.md`
 - File/line evidence: `packages/types/src/codecamp.ts:11-12`
 
 
@@ -386,7 +386,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-types-001-003 — Two divergent createClassSchema definitions
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-types-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-types-001.md`
 - File/line evidence: `packages/types/src/index.ts:21`
 - File/line evidence: `packages/types/src/contracts/class.ts:35`
 
@@ -398,7 +398,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-webhooks-001-001 — Environment variable not saved before mutation in `generateAppJWT` test block
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-webhooks-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-webhooks-001.md`
 - File/line evidence: `packages/webhooks/src/__tests__/github-client.test.ts:167-171`
 
 
@@ -409,7 +409,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-webhooks-001-002 — Environment variable deleted instead of restored in `afterAll`
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-webhooks-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-webhooks-001.md`
 - File/line evidence: `packages/webhooks/src/__tests__/github-review.test.ts:258,261,284-285`
 
 
@@ -420,7 +420,7 @@ Generated during Phase 10 coverage verification for `shared_foundation_review_20
 ### LR-packages-webhooks-001-003 — Environment variable deleted instead of restored in `afterAll`
 
 - Severity: Low
-- Evidence artifact: `measure/tracks/shared_foundation_review_20260626/line-review/evidence/packages-webhooks-001.md`
+- Evidence artifact: `measure/archive/shared_foundation_review_20260626/line-review/evidence/packages-webhooks-001.md`
 - File/line evidence: `packages/webhooks/src/__tests__/github-webhook.test.ts:66,74`
 
 
