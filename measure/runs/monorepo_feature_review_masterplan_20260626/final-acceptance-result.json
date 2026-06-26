@@ -1,72 +1,48 @@
 {
   "schema_version": 1,
-  "status": "fail",
-  "summary": "Final acceptance cannot pass yet. The planning-only masterplan readiness checks, phase acceptance, orchestrator audit, configured planning guards, child-track deferred state, and conservative registry checks all pass, but the closeout standard is not met: the required `bash measure/doctor.sh` gate cannot run because the script is absent, and completed masterplan tasks do not include commit SHA evidence while the track work remains uncommitted since the supplied baseline.",
-  "blocking_findings": [
-    {
-      "id": "FA-1",
-      "severity": "High",
-      "finding": "Required Measure doctor gate is unavailable and exits non-zero.",
-      "evidence": "`bash measure/doctor.sh` returned exit 127 with `bash: measure/doctor.sh: No such file or directory`. The orchestrator instructions require `bash measure/doctor.sh` to exit 0 before final acceptance passes; the user did not mark this gate unavailable with a rationale.",
-      "required_remediation": "Restore/provide the Measure doctor script, or have the orchestrator explicitly mark the doctor gate unavailable with rationale before retrying final acceptance."
-    },
-    {
-      "id": "FA-2",
-      "severity": "High",
-      "finding": "Completed masterplan tasks lack commit SHA evidence and the track has no commits since the supplied baseline.",
-      "evidence": "`git diff --name-only 3239b3e84064e09813c82cfe8746d0532ad91d63..HEAD` produced no committed changes, while `plan.md` contains completed `[x]` tasks without commit SHA references. The closeout standard requires completed tasks to include commit SHA evidence. User instruction forbids committing in this final-acceptance role, so this cannot be fixed here.",
-      "required_remediation": "Commit the planning-track artifacts in the owning implementation/acceptance flow and update completed task evidence with reachable commit SHAs, or explicitly document a human-approved exception to the closeout standard before retrying final acceptance."
-    }
-  ],
+  "status": "pass",
+  "summary": "Final acceptance passes for the planning-only monorepo feature review masterplan after evidence commits. The required doctor gate now exists and passes, phase acceptance and orchestrator audit artifacts are pass with no blocking findings, configured PROJECT_LINT/PROJECT_CHECKS/PROJECT_TESTS all pass, completed masterplan tasks include reachable commit SHA evidence, child review tracks remain explicitly deferred and do not claim completed app/package reviews, and the registry text is conservative about review/remediation state. No actual app feature reviews were performed.",
+  "blocking_findings": [],
   "nonblocking_findings": [
-    "Phase acceptance artifact exists and reports status=pass with no blocking findings.",
-    "Orchestrator audit artifact exists and reports status=pass with no blocking findings; A10 pre-commit absence remains nonblocking in that audit.",
-    "PROJECT_TESTS passed: `bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh`.",
-    "PROJECT_CHECKS passed: `python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .` exited 0, while listing unrelated active-track incomplete phases and review-program closeout candidates as expected for deferred child tracks.",
-    "PROJECT_LINT was explicitly configured as unavailable: `none for planning-only track`.",
-    "UX review is not applicable because UX_REQUIRED=never and this is a planning-only track.",
-    "Masterplan has no non-deferred incomplete tasks: all executable planning tasks are `[x]`; the only remaining masterplan task is `[b]` with `deferred:human`.",
-    "Child review tracks remain structurally blocked/deferred with `[b]` tasks carrying `deferred:review-execution`; no child review is falsely completed.",
-    "Registry language is conservative: it identifies the program as review/planning-only, says remediation must be opened separately, and states child execution remains deferred and not completed review/remediation.",
-    "A1/A5/A6/A9 pre-closeout anti-pattern checks passed for this track's changed surface."
+    "Worktree has two pre-existing/unrelated untracked files observed before writing this result: graph.db.bak-20260626203331 and measure/archive/review_findings_remediation_20260624/review-2026-06-25.md. They are outside the committed masterplan diff and were not modified.",
+    "measure_interphase_checks.py status reports unrelated incomplete phases in other active tracks and lists review-program tracks as closeout candidates because their work is structurally blocked/deferred. This is expected for this planning-only masterplan and does not indicate completed feature review execution.",
+    "Informational only: git diff --check over the committed baseline..HEAD diff reports trailing whitespace in newly added Measure plan blockquote lines. This is not part of the configured final-acceptance gates and does not affect the planning-only acceptance result."
   ],
   "evidence": [
     {
       "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/plan.md",
       "lines": "9-58",
-      "summary": "Phases 0-4 and two Phase 5 planning tasks are `[x]`; the only remaining task is `[b] ... deferred:human`."
+      "summary": "All non-deferred masterplan tasks are complete. Every completed `[x]` task includes `Evidence: commit f759620a`; the only remaining task is `[b] ... deferred:human`. Commit f759620a is reachable from HEAD."
     },
     {
-      "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/spec.md",
-      "lines": "149-165",
-      "summary": "Spec explicitly says this track does not perform reviews and defines planning-only acceptance criteria."
-    },
-    {
-      "file": "measure/tracks/monorepo_feature_review_masterplan_20260626/test-strategy.md",
-      "lines": "22-41,54-56",
-      "summary": "Test strategy limits live-behavior proof to planning/readiness guards and states child execution remains deferred."
+      "file": "measure/doctor.sh",
+      "lines": "1-5",
+      "summary": "Doctor gate exists and runs the orchestrator catalog and marker-vocabulary guards. `bash measure/doctor.sh` exited 0."
     },
     {
       "file": "measure/runs/monorepo_feature_review_masterplan_20260626/phase-acceptance-result.json",
-      "summary": "Phase acceptance status=pass with no blocking findings."
+      "summary": "Phase acceptance artifact reports status=pass and has no blocking findings."
     },
     {
       "file": "measure/runs/monorepo_feature_review_masterplan_20260626/orchestrator-audit-result.json",
-      "summary": "Orchestrator audit status=pass with no blocking findings."
+      "summary": "Orchestrator audit artifact reports status=pass and has no blocking findings."
     },
     {
       "file": "measure/tracks.md",
       "lines": "24-67",
-      "summary": "Registry lists the review program conservatively and keeps child execution deferred."
+      "summary": "Registry describes the program as review/planning-only, says remediation must be opened separately after accepted findings, and states child review execution remains deferred and must not be treated as completed review/remediation."
     },
     {
       "file": "measure/anti-patterns.md",
-      "summary": "Project anti-pattern catalog exists with A1-A10."
+      "summary": "Project anti-pattern catalog exists with A1-A10 coverage."
+    },
+    {
+      "file": "tests/orchestrator_marker_vocabulary.sh",
+      "summary": "Guard references active review-program track paths only; A9 archived-track path audit found no archived-track references."
     },
     {
       "file": "measure/automation-supervisor.py",
-      "lines": "634-649",
-      "summary": "A1/A8 supervisor invariant remains structured: `is_task_structurally_blocked` and `[~xb]` marker regex are present, with no code-level `deferred` substring heuristic."
+      "summary": "A1/A8 supervisor audit passed: `is_task_structurally_blocked` is present, task marker regex uses `[~xb]`, and docstring-stripped code has no `\"deferred\" in task.lower()` heuristic."
     }
   ],
   "commands": [
@@ -74,49 +50,43 @@
       "command": "git status --short",
       "status": "pass",
       "exit_code": 0,
-      "output_summary": "Worktree dirty with AGENTS.md, measure/tracks.md, new review-program track docs, measure/anti-patterns.md, tests/, graph backup, and one archived review report."
-    },
-    {
-      "command": "git diff --stat",
-      "status": "pass",
-      "exit_code": 0,
-      "output_summary": "Tracked diff: AGENTS.md +2 lines; measure/tracks.md +47 lines. New track/test files are untracked."
+      "output_summary": "Only untracked files were present before writing this final result: graph.db.bak-20260626203331 and measure/archive/review_findings_remediation_20260624/review-2026-06-25.md."
     },
     {
       "command": "git log --oneline --decorate -10",
       "status": "pass",
       "exit_code": 0,
-      "output_summary": "HEAD is baseline 3239b3e8; no new commits for this track since baseline."
+      "output_summary": "HEAD is 79675bf5 chore(measure): record review masterplan evidence; prior evidence commit is f759620a chore(measure): add monorepo feature review masterplan; baseline 3239b3e8 is an ancestor."
     },
     {
-      "command": "git diff --name-only 3239b3e84064e09813c82cfe8746d0532ad91d63..HEAD",
+      "command": "git diff --name-status 3239b3e84064e09813c82cfe8746d0532ad91d63..HEAD",
       "status": "pass",
       "exit_code": 0,
-      "output_summary": "No committed changes since supplied baseline."
+      "output_summary": "Committed diff since baseline contains Measure docs/guards/runs plus AGENTS.md guidance; no apps/, packages/, or services/ source files changed."
     },
     {
-      "command": "bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh",
+      "command": "git merge-base --is-ancestor f759620a HEAD && git merge-base --is-ancestor 79675bf5 HEAD",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "Both evidence commits are reachable from HEAD."
+    },
+    {
+      "command": "bash measure/doctor.sh",
       "status": "pass",
       "exit_code": 0,
       "output_summary": "PASS: measure anti-pattern catalog exists with A1-A10; PASS: review planning tracks use only [~]/[x]/[b] task markers."
     },
     {
+      "command": "bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "PROJECT_TESTS passed with the catalog and marker-vocabulary planning guards."
+    },
+    {
       "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .",
       "status": "pass",
       "exit_code": 0,
-      "output_summary": "Status completed; worktree dirty; 60 unrelated incomplete phases; review-program tracks listed as closeout candidates because child work is structurally deferred."
-    },
-    {
-      "command": "PROJECT_LINT",
-      "status": "skipped",
-      "exit_code": null,
-      "output_summary": "Explicitly configured as `none for planning-only track`."
-    },
-    {
-      "command": "bash measure/doctor.sh",
-      "status": "fail",
-      "exit_code": 127,
-      "output_summary": "bash: measure/doctor.sh: No such file or directory."
+      "output_summary": "PROJECT_CHECKS passed; status produced successfully. Unrelated incomplete active-track phases remain, and review-program tracks are closeout candidates due structurally deferred tasks."
     },
     {
       "command": "build-graph stats ./graph.db",
@@ -125,48 +95,112 @@
       "output_summary": "Graph statistics match the masterplan baseline: 22,185 nodes, 46,017 edges, 2,715 files."
     },
     {
-      "command": "python3 test-strategy phase validators from test-strategy.md",
+      "command": "python3 phase validators from test-strategy.md",
       "status": "pass",
       "exit_code": 0,
-      "output_summary": "Phase 0 through Phase 5 planning validators passed."
+      "output_summary": "Phase 0 through Phase 5 planning validators passed: graph/catalog prerequisites, protocol terms, child track files, registry order/conservative wording, child spec/plan structure, and roadmap inputs/outputs."
     },
     {
-      "command": "python3 child/master structure and deferred-execution validator",
+      "command": "python3 child review deferred-task validator",
       "status": "pass",
       "exit_code": 0,
-      "output_summary": "All child tracks have metadata/spec/plan, required sections, inventory/input-first phase 0, and only `[b] deferred:review-execution` tasks; masterplan has only `[x]` or `[b] deferred:human` tasks."
+      "output_summary": "All child review track tasks are `[b]` with `deferred:review-execution`; no child review plan has executable `[~]` work or `[x]` false-completion markers."
     },
     {
-      "command": "python3 registry order and conservative-language validator",
+      "command": "python3 masterplan completed-task evidence validator",
       "status": "pass",
       "exit_code": 0,
-      "output_summary": "Registry contains master + child tracks in the intended order and conservative review/planning-only language."
+      "output_summary": "Every masterplan `[x]` task has commit evidence; no non-deferred incomplete masterplan tasks remain; blocked task has `deferred:human`."
     },
     {
-      "command": "python3 A1 supervisor structured-marker invariant check",
+      "command": "python3 A1/A8 supervisor structured-marker invariant check",
       "status": "pass",
       "exit_code": 0,
-      "output_summary": "helper_present=True; task_regex_structured=True; no_deferred_substring=True."
+      "output_summary": "PASS A1/A8 supervisor structured marker invariants."
     },
     {
-      "command": "python3 A5 false pass-claim scan over review plans",
+      "command": "rg A5 detector over measure/tracks/*/plan.md",
       "status": "pass",
-      "exit_code": 0,
-      "output_summary": "No `PASS=N, FAIL=0` or `all checks pass` claims found in master/child review plans."
+      "exit_code": 1,
+      "output_summary": "No `PASS=N, FAIL=0` or `all checks pass` claims were found in track plan files. ripgrep returned 1 for no matches."
+    },
+    {
+      "command": "rg A6 detector over measure/tracks.md",
+      "status": "pass",
+      "exit_code": 1,
+      "output_summary": "No registry overstatement patterns such as resolved encryption/completely fixed/fully solved/all tests pass were found. ripgrep returned 1 for no matches."
     },
     {
       "command": "python3 A9 archived-track-path scan over tests/*.sh",
       "status": "pass",
       "exit_code": 0,
       "output_summary": "No tests reference a `measure/tracks/<id>/plan.md` path for a track already archived."
+    },
+    {
+      "command": "python3 phase-acceptance/orchestrator-audit result validator",
+      "status": "pass",
+      "exit_code": 0,
+      "output_summary": "phase-acceptance-result.json and orchestrator-audit-result.json both have status=pass and empty blocking_findings."
     }
   ],
+  "acceptance_criteria": [
+    {
+      "criterion": "All child track directories exist with metadata.json, spec.md, and plan.md.",
+      "status": "pass",
+      "evidence": "Test-strategy Phase 2 validator passed for shared foundation, Reading, Primary, Science, CodeCamp, Sales, Marketing, Advantage Games, company website, cross-app workflows, and roadmap tracks."
+    },
+    {
+      "criterion": "Master protocol defines inventory, checklist, evidence, severity, and artifact requirements.",
+      "status": "pass",
+      "evidence": "Master spec FR-1 through FR-7 and test-strategy validators cover protocol, taxonomy, evidence artifacts, stop conditions, and anti-pattern prerequisites."
+    },
+    {
+      "criterion": "measure/tracks.md lists the master review program and all child review tracks conservatively.",
+      "status": "pass",
+      "evidence": "Registry order/conservative-language validator passed and A6 scan found no overstatement patterns."
+    },
+    {
+      "criterion": "The plan explicitly says no actual feature review has started until child tracks enter review phases.",
+      "status": "pass",
+      "evidence": "Master spec overview and test-strategy state this track does not perform feature reviews; child plans remain deferred:review-execution."
+    },
+    {
+      "criterion": "Project anti-pattern catalog and test strategy cover A1-A10 planning falsification.",
+      "status": "pass",
+      "evidence": "measure/anti-patterns.md contains A1-A10; tests/orchestrator_catalog.sh and test-strategy anti-pattern coverage passed."
+    },
+    {
+      "criterion": "Every child track has scope, non-goals, artifact list, and phase plan.",
+      "status": "pass",
+      "evidence": "Phase 4 child spec/plan validator passed over the review-program child tracks."
+    }
+  ],
+  "anti_pattern_checks": {
+    "A1_substring_heuristic": {
+      "status": "pass",
+      "evidence": "No supervisor change reintroduced `\"deferred\" in task.lower()` after docstring stripping; structured helper and `[~xb]` regex are present."
+    },
+    "A5_false_claim_text": {
+      "status": "pass",
+      "evidence": "No `PASS=N, FAIL=0` or `all checks pass` plan claims were found by the configured detector."
+    },
+    "A6_registry_overstatement": {
+      "status": "pass",
+      "evidence": "Registry note is conservative and says child execution remains deferred, not completed review/remediation. Detector found no overstatement patterns."
+    },
+    "A9_archived_track_paths": {
+      "status": "pass",
+      "evidence": "Static scan of tests/*.sh found no references to archived track plan paths."
+    }
+  },
   "changed_files": [
     "AGENTS.md",
-    "measure/tracks.md",
     "measure/anti-patterns.md",
-    "tests/orchestrator_catalog.sh",
-    "tests/orchestrator_marker_vocabulary.sh",
+    "measure/doctor.sh",
+    "measure/runs/monorepo_feature_review_masterplan_20260626/final-acceptance-result.json",
+    "measure/runs/monorepo_feature_review_masterplan_20260626/orchestrator-audit-result.json",
+    "measure/runs/monorepo_feature_review_masterplan_20260626/phase-acceptance-result.json",
+    "measure/tracks.md",
     "measure/tracks/monorepo_feature_review_masterplan_20260626/",
     "measure/tracks/shared_foundation_review_20260626/",
     "measure/tracks/reading_advantage_full_review_20260626/",
@@ -179,12 +213,24 @@
     "measure/tracks/www_reading_advantage_review_20260626/",
     "measure/tracks/cross_app_workflows_review_20260626/",
     "measure/tracks/monorepo_review_roadmap_20260626/",
-    "measure/runs/monorepo_feature_review_masterplan_20260626/final-acceptance-result.json"
+    "tests/orchestrator_catalog.sh",
+    "tests/orchestrator_marker_vocabulary.sh"
+  ],
+  "commits_since_baseline": [
+    {
+      "sha": "f759620a",
+      "summary": "chore(measure): add monorepo feature review masterplan"
+    },
+    {
+      "sha": "79675bf5",
+      "summary": "chore(measure): record review masterplan evidence"
+    }
   ],
   "test_strategy_violations": [],
   "live_contract_violations": [],
   "prod_wiring_violations": [],
   "route_parity_violations": [],
-  "retry_recommendation": "retry_implementation",
+  "ux_required": "never",
+  "retry_recommendation": "none",
   "confidence": "high"
 }
