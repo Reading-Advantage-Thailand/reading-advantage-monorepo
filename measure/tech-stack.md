@@ -59,6 +59,7 @@
 | Vitest 4.1.8 | Unit tests (science-advantage, www-reading-advantage, codecamp-advantage) |
 | Jest 30.x | Unit tests (advantage-games, reading-advantage). Out of scope: `@reading-advantage/scripts` (jest@^29.7.0, legacy scripts package; see `jest30-audit.md` §1). |
 | Playwright | E2E tests (all apps) |
+| PGlite (`@electric-sql/pglite`) | **Test-only, dev dependency.** In-process PostgreSQL (real Postgres compiled to WASM) used to run model/query tests against genuine SQL semantics — real JOIN fan-out, `LIMIT`/`OFFSET`, `COUNT` — with no server, Docker, or `DATABASE_URL`. Added 2026-06-26 (track `review_findings_followup_20260626`) so the migrated primary-advantage model tests are behavioral, not DB-mock shape assertions. **Never used in production:** lives in `devDependencies` and is imported only from `__tests__/helpers/testDb.ts`; production continues to use the managed Postgres via `@reading-advantage/db` (`postgres-js`). The harness `importOriginal`s `@reading-advantage/db` and overrides only the `db` client with a PGlite-backed drizzle instance. Not bit-identical to the managed PG instance (PG16 WASM), so it complements — does not replace — the `DATABASE_URL`-gated live integration tests. |
 
 ## DevOps
 

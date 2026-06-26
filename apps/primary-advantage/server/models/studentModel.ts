@@ -102,28 +102,28 @@ export const getStudents = async (
       whereConditions.push(inArray(users.id, classroomFilterIds));
     }
 
-    // Fetch students + total count in parallel.
-    const baseQuery = db.select({
-      id: users.id,
-      name: users.name,
-      email: users.email,
-      cefrLevel: users.cefrLevel,
-      xp: users.xp,
-      level: users.level,
-      createdAt: users.createdAt,
-      classroomId: classrooms.id,
-      classroomName: classrooms.name,
-    })
-      .from(users)
-      .innerJoin(userRoles, eq(userRoles.userId, users.id))
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
-      .leftJoin(classroomStudents, eq(classroomStudents.studentId, users.id))
-      .leftJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
-      .where(and(...whereConditions))
-      .orderBy(desc(users.createdAt));
-
+    // Paginate over DISTINCT students. The student↔classroom relation fans out
+    // (a student enrolled in N classrooms produces N join rows), so the page
+    // query must NOT join the classroom tables — otherwise `.limit/.offset`
+    // would paginate enrollment rows and a page could return fewer than `limit`
+    // distinct students (FR-1 of review_findings_followup_20260626). Classroom
+    // data is attached in a follow-up query keyed by the page's student ids.
     const [students, countRow] = await Promise.all([
-      baseQuery.limit(limit).offset(offset),
+      db.select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        cefrLevel: users.cefrLevel,
+        xp: users.xp,
+        createdAt: users.createdAt,
+      })
+        .from(users)
+        .innerJoin(userRoles, eq(userRoles.userId, users.id))
+        .innerJoin(roles, eq(roles.id, userRoles.roleId))
+        .where(and(...whereConditions))
+        .orderBy(desc(users.createdAt))
+        .limit(limit)
+        .offset(offset),
       db.select({ value: count() }).from(users)
         .innerJoin(userRoles, eq(userRoles.userId, users.id))
         .innerJoin(roles, eq(roles.id, userRoles.roleId))
@@ -131,25 +131,44 @@ export const getStudents = async (
     ]);
     const totalCount = Number(countRow[0]?.value ?? 0);
 
-    const dedupedById = new Map<string, typeof students[number]>();
-    for (const row of students) {
-      if (!dedupedById.has(row.id)) {
-        dedupedById.set(row.id, row);
+    // Attach one classroom per page student (first by enrollment time). Keyed by
+    // the page's student ids so the lookup never re-introduces pagination fan-out.
+    const pageStudentIds = students.map((s) => s.id);
+    const classroomByStudent = new Map<string, { classroomId: string; classroomName: string }>();
+    if (pageStudentIds.length > 0) {
+      const enrollments = await db.select({
+        studentId: classroomStudents.studentId,
+        classroomId: classrooms.id,
+        classroomName: classrooms.name,
+      })
+        .from(classroomStudents)
+        .innerJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
+        .where(inArray(classroomStudents.studentId, pageStudentIds))
+        .orderBy(classroomStudents.joinedAt);
+      for (const row of enrollments) {
+        if (!classroomByStudent.has(row.studentId)) {
+          classroomByStudent.set(row.studentId, {
+            classroomId: row.classroomId,
+            classroomName: row.classroomName,
+          });
+        }
       }
     }
-    const uniqueStudents = Array.from(dedupedById.values());
 
-    const studentsData: StudentData[] = uniqueStudents.map((student) => ({
-      id: student.id,
-      name: student.name,
-      email: student.email,
-      cefrLevel: student.cefrLevel,
-      xp: student.xp,
-      role: studentRole,
-      createdAt: student.createdAt.toISOString().split("T")[0],
-      className: student.classroomName || null,
-      classroomId: student.classroomId || null,
-    }));
+    const studentsData: StudentData[] = students.map((student) => {
+      const classroom = classroomByStudent.get(student.id);
+      return {
+        id: student.id,
+        name: student.name,
+        email: student.email,
+        cefrLevel: student.cefrLevel,
+        xp: student.xp,
+        role: studentRole,
+        createdAt: student.createdAt.toISOString().split("T")[0],
+        className: classroom?.classroomName ?? null,
+        classroomId: classroom?.classroomId ?? null,
+      };
+    });
 
     return { students: studentsData, totalCount };
   } catch (error) {
