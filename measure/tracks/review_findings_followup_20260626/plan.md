@@ -3,43 +3,53 @@
 > Classic FR plan. Each phase follows Test (Red) → Implement (Green) per workflow.md.
 > Order: build the test-DB harness first (Phase 1) because the FR-1 correctness proof
 > depends on it; then the FR-1 fix (Phase 2); then the cheaper guards (Phases 3–4).
+>
+> Commit grouping note: the prior failed (commitlint) commit attempts left files staged,
+> so the harness foundation and the FR-1 fix landed together in `96563834` rather than as
+> two separate commits. SHAs below reflect where each change actually committed.
 
 ## Phase 1: FR-2 — PGlite test-DB harness + sibling behavioral tests
 
-- [ ] Task: Install `@electric-sql/pglite` as a dev dependency and confirm `drizzle-orm/pglite` boots an in-process Postgres.
-- [ ] Task: Create a reusable harness `apps/primary-advantage/server/models/__tests__/helpers/testDb.ts` that boots a PGlite instance, applies the schema for the tables the primary-advantage models touch (users, roles, user_roles, classrooms, classroom_students, school_admins, assignments, student_assignments, + minimal deps), returns a drizzle db, and exposes a teardown. Gate/skip cleanly if PGlite init throws.
-- [ ] Task: Test (behavioral) — `classroomModel`: insert classrooms + enrollments, assert `getAllClassrooms` returns the real rows (count + names), not just an array shape.
-- [ ] Task: Test (behavioral) — `teacherModel`: insert teachers + role rows, assert `getTeachers` returns the seeded teachers with correct `totalCount`.
-- [ ] Task: Test (behavioral) — `assignmentModel`: insert assignments + studentAssignments, assert `getStudentAssignments` returns the seeded assignments for the student.
+- [x] Task: Install `@electric-sql/pglite` as a dev dependency and confirm `drizzle-orm/pglite` boots an in-process Postgres. SHA: 96563834.
+- [x] Task: Create a reusable harness `__tests__/helpers/testDb.ts` (PGlite + focused DDL for users/roles/user_roles/classrooms/classroom_students/school_admins/assignments/student_assignments/classroom_teachers/schools; drizzle bound to it; reset + close). Smoke test proves real fan-out. SHA: 96563834.
+- [x] Task: Test (behavioral) — `classroomModel.getAllClassrooms` returns the seeded classrooms by name (real rows). SHA: 99ce0242.
+- [x] Task: Test (behavioral) — `teacherModel.getTeachers` returns the seeded teacher with correct `totalCount`. SHA: 99ce0242.
+- [x] Task: Test (behavioral) — `assignmentModel.getStudentAssignments` returns the seeded assignment for the student. SHA: 99ce0242.
 
 ## Phase 2: FR-1 — Distinct-student pagination in `getStudents`
 
-- [ ] Task: Test (Red) — against the PGlite harness, seed M students each in 2 classrooms; call `getStudents` with a `limit` that forces fan-out across the page boundary; assert page 1 returns `limit` **distinct** students and `students.length === Math.min(limit, totalCount)`, and that paging through all pages yields exactly `totalCount` distinct students with no duplicates. Confirm this FAILS on the current row-paginated code.
-- [ ] Task: Implement (Green) — rewrite `getStudents` to paginate over distinct students (page query joins users→userRoles→roles only, with `limit`/`offset`), then a second query keyed by the page's student ids attaches one classroom per student (preserve the existing `className`/`classroomId` singular shape). Keep the `classroomId` filter and the distinct-count query working.
-- [ ] Task: Verify — full `pnpm --filter primary-advantage test` is green; `studentModel.fr2.test.ts` (the prior mock test) still passes; `check-types` clean.
+- [x] Task: Test (Red) — PGlite test seeds 6 students × 2 classrooms; asserts a full page of `limit` distinct students and that paging yields all `totalCount` distinct students. Confirmed RED on the row-paginated code (page returned only `['s5','s4','s3','s2']` = 4 of 6 distinct). SHA: 96563834.
+- [x] Task: Implement (Green) — `getStudents` now paginates over distinct students (users→userRoles→roles only, `limit`/`offset`), then attaches one classroom per page student via a follow-up query keyed by page ids. `classroomId` filter + distinct-count query preserved. SHA: 96563834.
+- [x] Task: Verify — full `primary-advantage` suite green (46 tests); `tsc` shows only the 6 pre-existing `TS2769` baseline errors in `studentModel.ts` (zero new). The superseded mock test `studentModel.fr2.test.ts` was deleted (it pinned the old single-query+JS-dedup structure). SHA: 96563834.
 
 ## Phase 3: FR-3 — Caller-level transaction await guard
 
-- [ ] Task: Test (Red) — exercise `generateArticleNew` with a mocked `db.transaction` whose callback rejects; assert `generateArticleNew` rejects (proving the caller awaits). Confirm it FAILS if the `await` on `db.transaction(...)` is removed.
-- [ ] Task: Implement/Confirm (Green) — ensure `generateArticleNew` awaits `db.transaction(...)`; no production change expected beyond confirming the guard pins the existing fix. Record the result.
+- [x] Task: Test (Red) — `new-generator.caller.test.ts` drives `generateArticleNew` with a rejecting `db.transaction`; asserts the caller rejects. Verified it FAILS when the `await` on `db.transaction(...)` is temporarily removed and passes when restored (production code untouched). SHA: d36fea32.
+- [x] Task: Implement/Confirm (Green) — `generateArticleNew` already awaits `db.transaction(...)`; no production change. The guard now pins that fix. SHA: d36fea32.
 
 ## Phase 4: FR-4 — Roleplay excerpt-derivation unit tests
 
-- [ ] Task: Test — unit tests for `extractCanonicalSourceExcerpts`: paragraph split on blank lines, ≤8 cap, empty/whitespace-only content → `[]`, single-paragraph content → 1 excerpt.
-- [ ] Task: Test — unit tests for `getRoleplayEvaluationContext`: a scenario whose lesson has multi-paragraph content yields non-empty `canonicalSourceExcerpts`; a missing scenario yields `scenario: undefined` and `canonicalSourceExcerpts: []`.
-- [ ] Task: Verify — `pnpm --filter @reading-advantage/domain test` green; no baseline regression.
+- [x] Task: Test — `extractCanonicalSourceExcerpts`: blank-line split, trim, ≤8 cap, empty/whitespace → `[]`, single block → 1 excerpt, blank-line runs dropped. SHA: 8ccbcd98.
+- [x] Task: Test — `getRoleplayEvaluationContext`: non-empty `canonicalSourceExcerpts` for a content lesson; `[]` for empty content; throws `ScenarioNotFoundError` for a missing scenario (spec draft guessed `undefined`; the real impl throws — test pins real behavior). SHA: 8ccbcd98.
+- [x] Task: Verify — `@reading-advantage/domain` sales suite green (10 tests incl. the prior permissions-and-evaluator); additive, no regression. SHA: 8ccbcd98.
 
 ## Phase 5: Closeout
 
-- [ ] Task: Final sweep — primary-advantage, sales-advantage, domain suites green (or PGlite-skip clean); record SHAs against each task.
-- [ ] Task: Update `metadata.json` (status → done, actual_tasks), update `measure/tracks.md`, and offer archive/review.
+- [x] Task: Final sweep — primary-advantage 46 passed (6 files); domain sales 10 passed (2 files). No baseline regression. PGlite hook timeouts set to 60s for full-suite parallelism.
+- [x] Task: Update `metadata.json` (status → done, actual_tasks), update `measure/tracks.md`, and offer archive/review.
 
 ## Acceptance Criteria Summary
 
-| AC | Description | FR |
-| --- | --- | --- |
-| AC-1 | Full page of distinct students; no short page from fan-out; verified on PGlite | FR-1, FR-2 |
-| AC-2 | Reusable PGlite harness + real-query tests per migrated model (data, not shape) | FR-2 |
-| AC-3 | Test fails when `generateArticleNew` does not await its transaction | FR-3 |
-| AC-4 | Unit tests for `extractCanonicalSourceExcerpts` + `getRoleplayEvaluationContext` | FR-4 |
-| AC-5 | All four suites green / skip-clean; no baseline regression | all |
+| AC | Description | FR | Status |
+| --- | --- | --- | --- |
+| AC-1 | Full page of distinct students; no short page from fan-out; verified on PGlite | FR-1, FR-2 | ✓ |
+| AC-2 | Reusable PGlite harness + real-query tests per migrated model (data, not shape) | FR-2 | ✓ |
+| AC-3 | Test fails when `generateArticleNew` does not await its transaction | FR-3 | ✓ (verified via temp await-removal) |
+| AC-4 | Unit tests for `extractCanonicalSourceExcerpts` + `getRoleplayEvaluationContext` | FR-4 | ✓ |
+| AC-5 | All four suites green / skip-clean; no baseline regression | all | ✓ |
+
+## Deviations
+
+- Two superseded mock tests deleted: `studentModel.fr2.test.ts` (pinned the old single-query+JS-dedup internal shape) and `fr11.behavior.test.ts` (mocked the DB, asserted only shape, and called `getStudentAssignments` with the wrong `userId` param). Both are replaced by the PGlite behavioral tests.
+- `getRoleplayEvaluationContext` throws `ScenarioNotFoundError` on a missing scenario (the spec draft's "returns `scenario: undefined`" was incorrect); the test pins the real throwing behavior.
+- Tech-stack change documented in `measure/tech-stack.md` (PGlite, test-only) before install, per workflow.md principle #2.

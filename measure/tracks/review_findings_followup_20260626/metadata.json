@@ -1,12 +1,14 @@
 {
   "track_id": "review_findings_followup_20260626",
   "type": "chore",
-  "status": "new",
+  "status": "done",
   "priority": "high",
   "created_at": "2026-06-26T00:00:00Z",
   "updated_at": "2026-06-26T00:00:00Z",
   "description": "Close the test-altitude and correctness gaps found in the 2026-06-26 in-depth review of review_findings_remediation_20260624: (FR-1) paginate getStudents by distinct student instead of joined row; (FR-2) stand up a PGlite in-process Postgres test harness and add real behavioral tests for the migrated primary-advantage models; (FR-3) add a caller-level regression guard that fails if generateArticleNew does not await its transaction; (FR-4) unit-test extractCanonicalSourceExcerpts and getRoleplayEvaluationContext. AC-2 and AC-12 of the prior track were marked done but not actually satisfied; this track encodes the deferred real-test-DB work as actionable phases per the no-deferring-blockers rule.",
   "estimated_tasks": 13,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 13,
+  "status_note": "All 5 phases complete. FR-1 fix (distinct-student pagination) + FR-2 (PGlite harness & real behavioral tests) in 96563834/99ce0242; FR-3 caller await guard d36fea32; FR-4 excerpt-derivation unit tests 8ccbcd98. AC-1..AC-5 met.",
+  "deviation_notes": "Harness foundation + FR-1 fix landed in one commit (96563834) due to staged-file carryover from commitlint-rejected attempts. Deleted two superseded mock tests (studentModel.fr2.test.ts, fr11.behavior.test.ts) — replaced by PGlite behavioral tests; the latter was also calling getStudentAssignments with the wrong param. getRoleplayEvaluationContext throws ScenarioNotFoundError on missing scenario (spec draft guessed undefined); test pins real behavior. Tech-stack change (PGlite, test-only) documented in measure/tech-stack.md before install.",
+  "completed_at": "2026-06-26T00:00:00Z"
 }
