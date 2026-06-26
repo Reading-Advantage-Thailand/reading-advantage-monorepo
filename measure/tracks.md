@@ -27,12 +27,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 > and cross-app workflow in the monorepo. These tracks are review/planning tracks only;
 > remediation must be opened as separate Measure tracks after findings are accepted.
 
-- [ ] **Track: Monorepo Feature Review Masterplan** *Link: [./tracks/monorepo_feature_review_masterplan_20260626/](./tracks/monorepo_feature_review_masterplan_20260626/)*
-  Defines the graph-backed review protocol, taxonomy, evidence format, child-track set,
-  ordering, artifacts, and closeout criteria. Project anti-pattern catalog exists at
-  `measure/anti-patterns.md`; marker-vocabulary guards are green after cleanup. Child
-  review execution remains intentionally deferred to the individual review tracks and
-  should not be treated as completed feature review or remediation.
 - [ ] **Track: Shared Foundation Review** *Link: [./tracks/shared_foundation_review_20260626/](./tracks/shared_foundation_review_20260626/)*
   Reviews shared packages first: db, auth, auth-client, domain, api, ai, storage,
   webhooks, types, ui, utils, config, GitHub integration, and legacy scripts.
@@ -67,6 +61,8 @@ Two parallel programs are in flight; priority order when picking the next track:
   remediation/migration/test/product-risk roadmap.
 
 ---
+
+## Archived Tracks
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
@@ -429,6 +425,10 @@ Two parallel programs are in flight; priority order when picking the next track:
   *Link: [./archive/review_findings_remediation_20260624/](./archive/review_findings_remediation_20260624/)*
   *Status: COMPLETE — All 8 phases (0-7 + final acceptance) closed. Phases 0-2 in the prior partial-closeout commit `1ef15034`; Phases 3-7 completed in this run (commits `d63c1831`, `1fd1e3c8`, `cea2b69b`, `5683836d`, `4a490730`). All 13 ACs verified: chat authz (AC-1), studentModel dedup (AC-2), new-generator await + correctAnswer filter (AC-3), roleplay excerpts + storage integrity (AC-4), error cause propagation (AC-5), permission DRY (AC-6), rate-limit decision banner (AC-7), chat Zod (AC-8), lessons-learned test-gaming (AC-9), route-level tests for sales (AC-10), session cap + race-safety (AC-11), model behavioral coverage (AC-12), marketing brittle-cleanup (AC-13). Test counts: sales-advantage 13 passed, primary-advantage 43 passed, @reading-advantage/auth session 18 passed, @reading-advantage/domain sales 2 new + 313 prior = 315 passed (3 pre-existing tenant-coverage failures unchanged), marketing 128 passed (1 pre-existing phase-3 adversarial failure unchanged). Archived 2026-06-24.*
   Remediation of all defects/quality issues from the code-level review of the last 72h of commits (2026-06-21 → 06-24), across the drizzle migration, sales-advantage MVP, video pipeline, post-24h, and observability tracks. **Security:** `/api/chat` enforces session but not `sales:chat` authz — any authenticated user from any app can consume the AI coach; the route bypasses the existing `assertCan` domain path (FR-1; roleplay-attempts/lesson-complete are already gated via domain `assertCan`). **Correctness:** `studentModel.getStudents` `leftJoin` fan-out yields duplicate students + a `totalCount` that disagrees with the list (FR-2, audit sibling models); `new-generator.ts` `db.transaction(...)` is fire-and-forget and `correctAnswer:0` fallback persists a wrong answer key (FR-3); roleplay evaluation runs with empty `excerpts:[]` and persists a storage key even when upload failed (FR-4). **Quality:** evaluator swallows error causes (FR-5), sales permission mapping duplicated (FR-6), rate limiter is in-memory per-process (FR-7), chat input shape unvalidated/injectable (FR-8), plus a lessons-learned entry on test-gaming (AC-9, ref `920ff302`→`019b9d83`). **Test alignment** (from the 72h test review — every confirmed defect lives in an untested route/integration layer): route-level tests for the sales surface which has zero route/component tests (FR-9), session cap + transaction race-safety tests that don't exist today (FR-10), behavioral smoke tests for the migrated models whose `.mjs` gate is artifact/residue-only (FR-11), and pruning brittle file-existence/source-regex/CSS-literal assertions in the marketing suite (FR-12).*
+
+- [x] **Track: Monorepo Feature Review Masterplan**
+  *Link: [./archive/monorepo_feature_review_masterplan_20260626/](./archive/monorepo_feature_review_masterplan_20260626/)*
+  *Status: COMPLETE — Planning-only masterplan defining the graph-backed review protocol, taxonomy, child-track set, and closeout criteria. 34 plan tasks done, 11 child review tracks created. Final acceptance pass. Archived 2026-06-26.*
 
 ---
 

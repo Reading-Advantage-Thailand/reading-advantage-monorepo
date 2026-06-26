@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "track_id": "monorepo_feature_review_masterplan_20260626",
+  "closeout_timestamp": "2026-06-26T21:56:00Z",
+  "closeout_agent": "measure-closeout",
+  "baseline_sha": "3239b3e84064e09813c82cfe8746d0532ad91d63",
+  "head_sha": "856b7c3a",
+  "final_acceptance_status": "pass",
+  "summary": "Closeout completed for the planning-only Monorepo Feature Review Masterplan. All 34 plan tasks completed (33 [x] + 1 [b] deferred:human). Child review execution remains deferred to individual review tracks. Final acceptance pass, no blocking findings.",
+  "archived": {
+    "source": "measure/tracks/monorepo_feature_review_masterplan_20260626",
+    "destination": "measure/archive/monorepo_feature_review_masterplan_20260626",
+    "timestamp": "2026-06-26T21:56:00Z"
+  },
+  "audits": [
+    {
+      "audit_type": "final_acceptance",
+      "result_file": "measure/runs/monorepo_feature_review_masterplan_20260626/final-acceptance-result.json",
+      "status": "pass",
+      "blocking_findings": []
+    },
+    {
+      "audit_type": "phase_acceptance",
+      "result_file": "measure/runs/monorepo_feature_review_masterplan_20260626/phase-acceptance-result.json",
+      "status": "pass",
+      "blocking_findings": []
+    },
+    {
+      "audit_type": "orchestrator_audit",
+      "result_file": "measure/runs/monorepo_feature_review_masterplan_20260626/orchestrator-audit-result.json",
+      "status": "pass",
+      "blocking_findings": []
+    }
+  ],
+  "commands_verified": [
+    {
+      "command": "bash measure/doctor.sh",
+      "exit_code": 0,
+      "status": "pass",
+      "purpose": "PROJECT_LINT — catalog + marker-vocabulary guards"
+    },
+    {
+      "command": "bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh",
+      "exit_code": 0,
+      "status": "pass",
+      "purpose": "PROJECT_TESTS — planning readiness guards"
+    },
+    {
+      "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .",
+      "exit_code": 0,
+      "status": "pass",
+      "purpose": "PROJECT_CHECKS — interphase status"
+    }
+  ],
+  "evidence_retained": [
+    "measure/runs/monorepo_feature_review_masterplan_20260626/final-acceptance-result.json",
+    "measure/runs/monorepo_feature_review_masterplan_20260626/phase-acceptance-result.json",
+    "measure/runs/monorepo_feature_review_masterplan_20260626/orchestrator-audit-result.json",
+    "measure/archive/monorepo_feature_review_masterplan_20260626/metadata.json",
+    "measure/archive/monorepo_feature_review_masterplan_20260626/spec.md",
+    "measure/archive/monorepo_feature_review_masterplan_20260626/plan.md",
+    "measure/archive/monorepo_feature_review_masterplan_20260626/test-strategy.md"
+  ],
+  "artifact_cleanup": [],
+  "a9_fix_applied": {
+    "file": "tests/orchestrator_marker_vocabulary.sh",
+    "description": "Updated to use track_dir_resolve() helper that prefers measure/archive/<id> over measure/tracks/<id>. Prevents test failure when masterplan track is archived. The track_dir_resolve function resolves all 12 review program track IDs; child tracks that remain in measure/tracks/ are unaffected."
+  },
+  "metadata_updates": [
+    {
+      "file": "measure/archive/monorepo_feature_review_masterplan_20260626/metadata.json",
+      "field": "status",
+      "old_value": "new",
+      "new_value": "done"
+    },
+    {
+      "file": "measure/archive/monorepo_feature_review_masterplan_20260626/metadata.json",
+      "field": "completed_at",
+      "old_value": null,
+      "new_value": "2026-06-26T21:56:00Z"
+    }
+  ],
+  "tracks_md_updates": [
+    "Masterplan entry changed from - [ ] to - [x] in Monorepo Feature Review Program section",
+    "Link updated from ./tracks/ to ./archive/",
+    "Status note added: COMPLETE — archived 2026-06-26. 34 plan tasks done. Final acceptance pass.",
+    "Masterplan added to Archived Tracks section"
+  ],
+  "retained_artifacts": [
+    "Final acceptance result JSON",
+    "Phase acceptance result JSON",
+    "Orchestrator audit result JSON",
+    "Closeout manifest JSON",
+    "Closeout result JSON"
+  ],
+  "deleted_artifacts": []
+}

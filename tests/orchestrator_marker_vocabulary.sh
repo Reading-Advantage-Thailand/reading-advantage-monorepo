@@ -4,22 +4,35 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+# track_dir_resolve: prefer measure/archive/<id> if it exists,
+# fall back to measure/tracks/<id>
+track_dir_resolve() {
+  local track_id="$1"
+  if [ -d "measure/archive/$track_id" ]; then
+    echo "measure/archive/$track_id"
+  else
+    echo "measure/tracks/$track_id"
+  fi
+}
+
 status=0
-plans=(
-  measure/tracks/monorepo_feature_review_masterplan_20260626/plan.md
-  measure/tracks/shared_foundation_review_20260626/plan.md
-  measure/tracks/reading_advantage_full_review_20260626/plan.md
-  measure/tracks/primary_advantage_full_review_20260626/plan.md
-  measure/tracks/science_advantage_review_20260626/plan.md
-  measure/tracks/codecamp_advantage_review_20260626/plan.md
-  measure/tracks/sales_advantage_review_20260626/plan.md
-  measure/tracks/marketing_app_review_20260626/plan.md
-  measure/tracks/advantage_games_review_20260626/plan.md
-  measure/tracks/www_reading_advantage_review_20260626/plan.md
-  measure/tracks/cross_app_workflows_review_20260626/plan.md
-  measure/tracks/monorepo_review_roadmap_20260626/plan.md
+track_ids=(
+  monorepo_feature_review_masterplan_20260626
+  shared_foundation_review_20260626
+  reading_advantage_full_review_20260626
+  primary_advantage_full_review_20260626
+  science_advantage_review_20260626
+  codecamp_advantage_review_20260626
+  sales_advantage_review_20260626
+  marketing_app_review_20260626
+  advantage_games_review_20260626
+  www_reading_advantage_review_20260626
+  cross_app_workflows_review_20260626
+  monorepo_review_roadmap_20260626
 )
-for plan in "${plans[@]}"; do
+for tid in "${track_ids[@]}"; do
+  dir="$(track_dir_resolve "$tid")"
+  plan="$dir/plan.md"
   if [ ! -f "$plan" ]; then
     printf 'FAIL: expected plan file missing: %s\n' "$plan" >&2
     status=1
