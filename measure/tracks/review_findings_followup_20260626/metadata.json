@@ -1,0 +1,12 @@
+{
+  "track_id": "review_findings_followup_20260626",
+  "type": "chore",
+  "status": "new",
+  "priority": "high",
+  "created_at": "2026-06-26T00:00:00Z",
+  "updated_at": "2026-06-26T00:00:00Z",
+  "description": "Close the test-altitude and correctness gaps found in the 2026-06-26 in-depth review of review_findings_remediation_20260624: (FR-1) paginate getStudents by distinct student instead of joined row; (FR-2) stand up a PGlite in-process Postgres test harness and add real behavioral tests for the migrated primary-advantage models; (FR-3) add a caller-level regression guard that fails if generateArticleNew does not await its transaction; (FR-4) unit-test extractCanonicalSourceExcerpts and getRoleplayEvaluationContext. AC-2 and AC-12 of the prior track were marked done but not actually satisfied; this track encodes the deferred real-test-DB work as actionable phases per the no-deferring-blockers rule.",
+  "estimated_tasks": 13,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
