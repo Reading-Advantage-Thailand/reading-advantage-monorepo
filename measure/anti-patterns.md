@@ -13,6 +13,22 @@
 > - `measure-orchestrator-audit` (catalog is the audit's primary input)
 > - `measure-adversarial-testing` (anti-patterns are attack surfaces)
 
+## Catalog Summary
+
+| ID | Anti-pattern | Guard |
+|----|--------------|-------|
+| A1 | Substring-as-structured-signal in supervisor | `tests/mir_p1.sh` / orchestrator audit |
+| A2 | Consent-blind publish gate | `tests/cs_p4.sh` / orchestrator audit |
+| A3 | Digit-only as a "labeled count" | `tests/mir_p1.sh` / orchestrator audit |
+| A4 | Vacuous-pass on nothing-done | `tests/mir_p1.sh` / orchestrator audit |
+| A5 | False-claim text vs test reality | `tests/mir_p1.sh` / orchestrator audit |
+| A6 | Registry-note overstatement | `tests/mir_p1.sh` / orchestrator audit |
+| A7 | Over-broad filter swallowing real hits | `tests/mir_p1.sh` / orchestrator audit |
+| A8 | `[ ]` marker ambiguity | `tests/orchestrator_marker_vocabulary.sh` / orchestrator audit |
+| A9 | Pre-existing test references archived track paths | `tests/orchestrator_marker_vocabulary.sh` / orchestrator audit |
+| A10 | Generated-facts drift after structural change | orchestrator audit |
+| A11 | Executed review track left fully blocked | `tests/orchestrator_review_execution_truthfulness.sh` |
+
 ---
 
 ## A1 — Substring-as-structured-signal in supervisor
@@ -243,6 +259,43 @@ no pre-commit hook regenerates `measure/generated/`.
 result.
 
 **Guard:** Static check in `measure-orchestrator-audit`.
+
+---
+
+## A11 — Executed review track left fully blocked
+
+**Class:** plan truthfulness / supervisor bypass
+**Caught:** 2026-06-27 orchestrator audit for `reading_advantage_full_review_20260626`
+
+**Detection:**
+```bash
+# For a review track with review result JSON and/or audit-report artifacts, the plan must
+# not leave every task as `[b] ... deferred:review-execution`.
+for plan in measure/tracks/*/plan.md; do
+  dir="${plan%/plan.md}"
+  if ls "$dir"/review-*-result.json >/dev/null 2>&1; then
+    total=$(grep -c '^- \[[~xb]\] ' "$plan" || true)
+    blocked=$(grep -c '^- \[b\].*deferred:review-execution' "$plan" || true)
+    if [ "$total" -gt 0 ] && [ "$total" = "$blocked" ]; then
+      echo "WARN: executed review track still fully blocked: $plan"
+    fi
+  fi
+done
+```
+
+**Symptoms:** Review result artifacts exist and the user has requested execution, but the
+track plan still marks every task as `[b] ... deferred:review-execution`. Because `[b]`
+is a structured blocked marker, the supervisor treats the track as having no executable
+work. The plan then stops representing current truth: execution happened or is authorized,
+but task markers still say it is human-gated.
+
+**Fix:** Once execution is requested or review artifacts exist, convert task markers to
+truthful states: `[x]` for completed tasks with artifact/result evidence, `[~]` for
+remaining executable tasks, or keep `[b] deferred:<owner>` only for a real external gate.
+Do not use `[b] deferred:review-execution` as a permanent placeholder after execution
+begins.
+
+**Guard:** `tests/orchestrator_review_execution_truthfulness.sh`.
 
 ---
 

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Measure orchestrator audit found no open A1-A9 blocking infrastructure regression after remediation. A1 substring matching is absent and structural blocking helper is present; A3/A4/A7/A8/A9 detector scans are clean; AGENTS.md uses the peer-reviewed supervisor-modification rule. The audit found and fixed a plan-truthfulness gap now cataloged as A11: this executed review track had all tasks marked [b] deferred:review-execution even though review result/report artifacts existed and execution was requested. The plan now marks reviewed/reporting tasks [x] with evidence and leaves only acceptance/roadmap feed-forward [~]. Report wording that could imply findings were already resolved was changed to proposed-track/target language. A10 remains a nonblocking generated-facts drift risk because .git/hooks/pre-commit is absent.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "A10: .git/hooks/pre-commit is absent; generated-facts drift remains a nonblocking infrastructure risk until a hook runs/stages measure/generate.sh outputs.",
+    "A11 maintenance item fixed in this audit: measure/tracks/reading_advantage_full_review_20260626/plan.md previously had all 25 tasks as [b] deferred:review-execution despite review result artifacts; guard added at tests/orchestrator_review_execution_truthfulness.sh."
+  ],
+  "evidence": [
+    {
+      "file": "measure/automation-supervisor.py",
+      "line": 634,
+      "snippet": "def is_task_structurally_blocked(task: str, status: str | None = None) -> bool:"
+    },
+    {
+      "file": "measure/automation-supervisor.py",
+      "line": 851,
+      "snippet": "tasks = re.findall(r\"^- \\[([~xb])\\] (.+)\", block, re.MULTILINE)"
+    },
+    {
+      "file": "AGENTS.md",
+      "line": 666,
+      "snippet": "measure/automation-supervisor.py is a peer-reviewed Measure infrastructure component. Changes to it are allowed only in a dedicated Measure/orchestrator track..."
+    },
+    {
+      "file": "measure/tracks/reading_advantage_full_review_20260626/plan.md",
+      "line": 11,
+      "snippet": "- [x] Task: Confirm fresh `graph.db` and record `reading-advantage` file/node/function counts. Evidence: ..."
+    },
+    {
+      "file": "measure/tracks/reading_advantage_full_review_20260626/plan.md",
+      "line": 55,
+      "snippet": "- [~] Task: Run Measure phase acceptance for this review track. Acceptance remains pending after orchestrator audit; do not claim closeout yet."
+    },
+    {
+      "file": "measure/anti-patterns.md",
+      "line": 265,
+      "snippet": "## A11 — Executed review track left fully blocked"
+    },
+    {
+      "file": "tests/orchestrator_review_execution_truthfulness.sh",
+      "line": 19,
+      "snippet": "blocked_deferred=$(grep -c '^- \\[b\\].*deferred:review-execution' \"$plan\" || true)"
+    },
+    {
+      "file": "measure/audit-reports/reading-advantage-full_20260626/migration-tracks.md",
+      "line": 18,
+      "snippet": "**Findings targeted:** F-RA-001 (cross-school data access), F-RA-010 (resource ownership)"
+    },
+    {
+      "file": ".git/hooks/pre-commit",
+      "line": 1,
+      "snippet": "missing; ls -la .git/hooks/pre-commit produced no output"
+    }
+  ],
+  "commands": [
+    "python3 detector for A1 substring-as-signal: 0 substring-match occurrences; is_task_structurally_blocked present: True",
+    "grep scans via tool for A3 digit-only counts, A7 over-broad filters, A9 archived-path tests, A5 plan false-claim text, A6 registry overstatement, A8 legacy marker regex: no files found/no hits",
+    "A2 publish-gate detector over tests/*p4.sh tests/*_closeout.sh tests/cs_p*.sh: no matching publish/closeout contract test files present",
+    "A4 vacuous-pass detector over tests/mr_p1.sh..tests/mr_p4.sh: no matching files/patterns present",
+    "ls -la .git/hooks/pre-commit 2>/dev/null: no output (hook missing)",
+    "bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_review_execution_truthfulness.sh: PASS"
+  ],
+  "changed_files": [
+    "measure/anti-patterns.md",
+    "measure/tracks/reading_advantage_full_review_20260626/plan.md",
+    "measure/audit-reports/reading-advantage-full_20260626/migration-tracks.md",
+    "measure/audit-reports/reading-advantage-full_20260626/executive-summary.md",
+    "tests/orchestrator_catalog.sh",
+    "tests/orchestrator_review_execution_truthfulness.sh",
+    "measure/tracks/reading_advantage_full_review_20260626/orchestrator-audit-result.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

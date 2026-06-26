@@ -1,0 +1,130 @@
+{
+  "track_id": "reading_advantage_full_review_20260626",
+  "review_role": "C",
+  "review_role_name": "UX/API/Contracts",
+  "date": "2026-06-27",
+  "baseline_sha": "6921fda0ee45012232bdd71c444d4e9523a10ab6",
+  "status": "complete",
+  "findings": {
+    "critical": 1,
+    "high": 5,
+    "medium": 8,
+    "low": 1,
+    "total": 15
+  },
+  "artifacts_created": [
+    "measure/audit-reports/reading-advantage-full_20260626/workflow-map.md",
+    "measure/audit-reports/reading-advantage-full_20260626/findings.md",
+    "measure/audit-reports/reading-advantage-full_20260626/test-gaps.md",
+    "measure/audit-reports/reading-advantage-full_20260626/checklist.md",
+    "measure/audit-reports/reading-advantage-full_20260626/executive-summary.md"
+  ],
+  "proposed_tracks": [
+    {
+      "id": "C-1",
+      "title": "Classroom Authorization Hardening",
+      "severity": "Critical",
+      "estimate": "1 week"
+    },
+    {
+      "id": "C-2",
+      "title": "API Contract Standardization",
+      "severity": "High",
+      "estimate": "1 week"
+    },
+    {
+      "id": "C-3",
+      "title": "Input Validation Hardening",
+      "severity": "High",
+      "estimate": "1 week"
+    },
+    {
+      "id": "C-4",
+      "title": "Authentication Audit",
+      "severity": "High",
+      "estimate": "3 days"
+    },
+    {
+      "id": "C-5",
+      "title": "Audit Logging Integration",
+      "severity": "High",
+      "estimate": "1 week"
+    },
+    {
+      "id": "C-6",
+      "title": "API Contract Test Suite",
+      "severity": "Medium",
+      "estimate": "1 week"
+    },
+    {
+      "id": "C-7",
+      "title": "Controller Test Coverage",
+      "severity": "Medium",
+      "estimate": "2 weeks"
+    },
+    {
+      "id": "C-8",
+      "title": "Structured Logging Migration",
+      "severity": "Medium",
+      "estimate": "3 days"
+    },
+    {
+      "id": "C-9",
+      "title": "Auth Route Consolidation",
+      "severity": "Low",
+      "estimate": "1 day"
+    },
+    {
+      "id": "C-10",
+      "title": "Provider Abstraction",
+      "severity": "Low",
+      "estimate": "3 days"
+    }
+  ],
+  "quantified_gaps": {
+    "controller_tests": "0/54 (0%)",
+    "route_handler_tests": "0/209 (0%)",
+    "api_contract_tests": 0,
+    "auth_flow_tests": 0,
+    "endpoints_with_zod_validation": "~1/209 (<1%)",
+    "endpoints_with_audit_logging": "0/209 (0%)",
+    "endpoints_using_tenantdb": "0/209 (0%)",
+    "endpoints_using_assertcan": "0/209 (0%)",
+    "error_response_shapes": "6+",
+    "unauthenticated_sensitive_routes": "14+"
+  },
+  "files_changed_since_baseline": [],
+  "files_inspected": [
+    "apps/reading-advantage/app/api/auth/login/route.ts",
+    "apps/reading-advantage/app/api/auth/signup/route.ts",
+    "apps/reading-advantage/app/api/auth/register/route.ts",
+    "apps/reading-advantage/app/api/auth/logout/route.ts",
+    "apps/reading-advantage/app/api/auth/session/route.ts",
+    "apps/reading-advantage/app/api/auth/reset-password/route.ts",
+    "apps/reading-advantage/app/api/auth/check-password-set/route.ts",
+    "apps/reading-advantage/app/api/auth/impersonate/route.ts",
+    "apps/reading-advantage/app/api/trpc/[trpc]/route.ts",
+    "apps/reading-advantage/app/api/v1/student/me/route.ts",
+    "apps/reading-advantage/app/api/v1/stories/route.ts",
+    "apps/reading-advantage/app/api/v1/articles/route.ts",
+    "apps/reading-advantage/app/api/v1/assignments/route.ts",
+    "apps/reading-advantage/app/api/v1/classroom/route.ts",
+    "apps/reading-advantage/app/api/v1/flashcard/progress/update/route.ts",
+    "apps/reading-advantage/app/api/v1/flashcard/decks/[deckId]/sentences-for-cloze/route.ts",
+    "apps/reading-advantage/app/api/v1/admin/dashboard/route.ts",
+    "apps/reading-advantage/app/api/v1/ai/summary/route.ts",
+    "apps/reading-advantage/app/api/v1/demo/accounts/route.ts",
+    "apps/reading-advantage/app/api/v1/xp/route.ts",
+    "apps/reading-advantage/server/controllers/auth-controller.ts",
+    "apps/reading-advantage/server/controllers/student-dashboard-controller.ts",
+    "apps/reading-advantage/server/controllers/classroom-controller.ts",
+    "apps/reading-advantage/server/controllers/ai-controller.ts",
+    "apps/reading-advantage/server/controllers/article-controller.ts",
+    "apps/reading-advantage/server/controllers/assignment-controller.ts",
+    "apps/reading-advantage/server/controllers/stories-controller.ts",
+    "apps/reading-advantage/server/controllers/admin-controller.ts",
+    "apps/reading-advantage/server/middleware.ts",
+    "apps/reading-advantage/lib/session.ts",
+    "apps/reading-advantage/lib/password-utils.ts"
+  ]
+}

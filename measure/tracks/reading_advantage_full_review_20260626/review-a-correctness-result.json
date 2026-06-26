@@ -1,0 +1,265 @@
+{
+  "track_id": "reading_advantage_full_review_20260626",
+  "phase": "track review - correctness/product behavior",
+  "baseline_sha": "6921fda0ee45012232bdd71c444d4e9523a10ab6",
+  "review_date": "2026-06-27",
+  "review_role": "A — correctness/product behavior",
+  "app_scope": "apps/reading-advantage",
+  "graph_context": {
+    "graph_db_mtime": "2026-06-26T20:38:27+08:00",
+    "graph_files": 2715,
+    "graph_nodes": 22185,
+    "reading_advantage_files": 971,
+    "route_ts_files": 209,
+    "controllers": 54,
+    "services": 12,
+    "test_files": 44
+  },
+  "status": "review_complete_acceptance_pending",
+  "acceptance_claimed": false,
+  "closeout_claimed": false,
+  "summary": {
+    "critical_findings": 2,
+    "high_findings": 8,
+    "medium_findings": 14,
+    "low_findings": 1,
+    "total_findings": 25,
+    "product_behavior_findings_added": 10,
+    "proposed_migration_tracks": 19
+  },
+  "gate_results": {
+    "lint": {
+      "result": "pass",
+      "note": "0 errors, 134 warnings (react-hooks/exhaustive-deps, no-img-element)"
+    },
+    "check_types": {
+      "result": "fail",
+      "note": "Dependency-chain run failed because @reading-advantage/api check-types exits 2 due to sales role drift and audioStorageKey nullability (shared-foundation findings F-SF-002 / F-SF-007). reading-advantage itself was not the source of the failure."
+    },
+    "tests": {
+      "result": "timeout",
+      "note": "Full `pnpm --filter reading-advantage test` exceeded 10-minute timeout. Individual targeted files passed: session-schema.test.ts (19/19), security/rbac.test.ts (20/20), dashboard-summary-controller.test.ts (3/3). Full-suite timeout is recorded as a finding."
+    },
+    "build": {
+      "result": "not_run",
+      "note": "next.config.mjs has ignoreBuildErrors: true, so a build pass would not be meaningful evidence."
+    }
+  },
+  "key_product_behavior_findings": [
+    {
+      "id": "PB-001",
+      "severity": "Critical",
+      "title": "XP/level progression double-award race condition",
+      "files": [
+        "apps/reading-advantage/server/controllers/user-controller.ts:157-328"
+      ],
+      "evidence": "postActivityLog reads existing xpLog, then inserts xpLog and updates users.xp/level in separate non-atomic statements. Two concurrent requests can both observe no existing xpLog and both award XP.",
+      "impact": "Students can game level, leaderboards, and streaks by replaying or parallelizing activity-completion requests.",
+      "migration_track": "M-RA-PB-1"
+    },
+    {
+      "id": "PB-002",
+      "severity": "High",
+      "title": "Level-test assessment JSON not validated",
+      "files": [
+        "apps/reading-advantage/server/controllers/level-test-controller.ts:85-95",
+        "apps/reading-advantage/components/level-test-chat.tsx:239-333"
+      ],
+      "evidence": "parseAssessment returns object | null with no Zod schema. Frontend accesses assessmentData.level/sublevel/xp without contract guarantees.",
+      "impact": "Malformed AI output can corrupt user level/CEFR or trap student in level-test loop.",
+      "migration_track": "M-RA-PB-2"
+    },
+    {
+      "id": "PB-003",
+      "severity": "High",
+      "title": "AI-generated content lacks level/quality gate",
+      "files": [
+        "apps/reading-advantage/server/utils/generators/article-generator.ts:71-117",
+        "apps/reading-advantage/server/utils/generators/stories-chapters-generator.ts:330-420",
+        "apps/reading-advantage/server/utils/generators/question-generator.ts:48-90"
+      ],
+      "evidence": "Generators use temperature: 1 and random seed; no post-hoc CEFR/readability validation; raw string throws instead of Error instances.",
+      "impact": "Students may receive off-level articles or inconsistent questions; error handling breaks standard logging.",
+      "migration_track": "M-RA-PB-3"
+    },
+    {
+      "id": "PB-004",
+      "severity": "Medium",
+      "title": "Assignment status mapping ad-hoc and not source-of-truth aligned",
+      "files": [
+        "apps/reading-advantage/server/controllers/assignment-controller.ts:84-88"
+      ],
+      "evidence": "Local statusToInt helper maps strings to ints; no shared enum between DB schema, API, and UI.",
+      "impact": "Progress reports and assignment funnels can disagree with actual student status.",
+      "migration_track": "M-RA-PB-4"
+    },
+    {
+      "id": "PB-005",
+      "severity": "Medium",
+      "title": "Class accuracy report combines incommensurable score types",
+      "files": [
+        "apps/reading-advantage/server/controllers/class-accuracy-controller.ts:91-130"
+      ],
+      "evidence": "overallAccuracy = (mcqCorrect + openEndedCorrect) / totalAttempts where MCQ is binary and open-ended is threshold-based.",
+      "impact": "Teacher-facing accuracy metric is mathematically misleading.",
+      "migration_track": "M-RA-PB-5"
+    },
+    {
+      "id": "PB-006",
+      "severity": "Medium",
+      "title": "Open-ended scoring threshold arbitrary and undocumented",
+      "files": [
+        "apps/reading-advantage/server/controllers/class-accuracy-controller.ts:105-108",
+        "apps/reading-advantage/server/controllers/question-controller.ts"
+      ],
+      "evidence": "Hard-coded details?.score >= 3 || details?.rating >= 3 with no shared rubric enum.",
+      "impact": "Reported 'correct' open-ended answers may not match AI feedback rubric.",
+      "migration_track": "M-RA-PB-5"
+    },
+    {
+      "id": "PB-007",
+      "severity": "Medium",
+      "title": "Activity targetId resolution fragile",
+      "files": [
+        "apps/reading-advantage/server/controllers/user-controller.ts:169-198"
+      ],
+      "evidence": "targetId is inferred from articleId || storyId || contentId || '' then details.articleId; special-cased for rating prefixes.",
+      "impact": "Progress and XP can be misattributed to the wrong artifact.",
+      "migration_track": "M-RA-PB-6"
+    },
+    {
+      "id": "PB-008",
+      "severity": "Medium",
+      "title": "License-level fallback treats missing data as Enterprise",
+      "files": [
+        "apps/reading-advantage/server/controllers/question-controller.ts:25-63",
+        "apps/reading-advantage/server/controllers/user-controller.ts:37-66"
+      ],
+      "evidence": "getUserLicenseLevel returns LicenseType.ENTERPRISE when expiredDate is null, even without a licenseId.",
+      "impact": "Missing-license users may receive Enterprise feature gating; LAQ may be required for article completion incorrectly.",
+      "migration_track": "M-RA-PB-6"
+    },
+    {
+      "id": "PB-009",
+      "severity": "Medium",
+      "title": "Report controllers use unsafe type casts on session/params",
+      "files": [
+        "apps/reading-advantage/server/controllers/class-accuracy-controller.ts:6-13",
+        "apps/reading-advantage/server/controllers/system-dashboard-controller.ts:8",
+        "apps/reading-advantage/server/controllers/system-controller.ts:24"
+      ],
+      "evidence": "(req as any).session and (req as any).params accesses; requireRole([...] as any) calls.",
+      "impact": "Route/middleware drift can cause runtime auth bypass or crashes.",
+      "migration_track": "M-RA-PB-7"
+    },
+    {
+      "id": "PB-010",
+      "severity": "High",
+      "title": "No product-level learning-outcome tests",
+      "files": [
+        "apps/reading-advantage/__test__/"
+      ],
+      "evidence": "0 tests verify article completion, XP idempotency, level progression, FSRS scheduling, assignment lifecycle, or AI content level validation.",
+      "impact": "Core learning loops have no automated regression protection; refactoring into domain layer is high-risk.",
+      "migration_track": "M-RA-PB-8"
+    }
+  ],
+  "test_gaps": {
+    "controller_tests": "0/54 controllers",
+    "route_tests": "0/209 routes",
+    "contract_tests": "0",
+    "product_behavior_tests": "0",
+    "full_suite_status": "timeout_at_10min",
+    "targeted_files_run": [
+      {
+        "file": "__test__/session-schema.test.ts",
+        "result": "pass",
+        "tests": "19/19"
+      },
+      {
+        "file": "__test__/security/rbac.test.ts",
+        "result": "pass",
+        "tests": "20/20"
+      },
+      {
+        "file": "__test__/dashboard-summary-controller.test.ts",
+        "result": "pass",
+        "tests": "3/3"
+      }
+    ]
+  },
+  "proposed_migration_tracks": [
+    {
+      "id": "M-RA-PB-1",
+      "priority": "Critical",
+      "title": "XP/Level Progression Idempotency",
+      "effort": "3 days",
+      "finding": "PB-001"
+    },
+    {
+      "id": "M-RA-PB-2",
+      "priority": "High",
+      "title": "Level-Test Assessment Contract",
+      "effort": "2 days",
+      "finding": "PB-002"
+    },
+    {
+      "id": "M-RA-PB-3",
+      "priority": "High",
+      "title": "AI Content Quality Gate",
+      "effort": "1 week",
+      "finding": "PB-003"
+    },
+    {
+      "id": "M-RA-PB-4",
+      "priority": "Medium",
+      "title": "Assignment Status Enum & Lifecycle",
+      "effort": "3 days",
+      "finding": "PB-004"
+    },
+    {
+      "id": "M-RA-PB-5",
+      "priority": "Medium",
+      "title": "Reporting Metrics Correctness",
+      "effort": "3 days",
+      "finding": "PB-005, PB-006"
+    },
+    {
+      "id": "M-RA-PB-6",
+      "priority": "Medium",
+      "title": "Activity Target Validation & License Fallback",
+      "effort": "2 days",
+      "finding": "PB-007, PB-008"
+    },
+    {
+      "id": "M-RA-PB-7",
+      "priority": "Medium",
+      "title": "Typed Request Context for Reports",
+      "effort": "2 days",
+      "finding": "PB-009"
+    },
+    {
+      "id": "M-RA-PB-8",
+      "priority": "High",
+      "title": "Product-Level Learning Loop Test Suite",
+      "effort": "2 weeks",
+      "finding": "PB-010"
+    }
+  ],
+  "caveats": [
+    "This review did not remediate app code; it produced audit artifacts and proposed tracks only.",
+    "Shared-foundation Critical findings (tenant registry drift, API/type contract drift, null-tenant TenantDB, API business-logic leakage) remain caveats for any reading-advantage remediation.",
+    "The full test suite timed out; targeted file evidence should not be treated as full-suite green.",
+    "next.config.mjs has ignoreBuildErrors: true, so build success is not a meaningful correctness gate.",
+    "No browser/UX manual validation was performed; UI-only product bugs may exist."
+  ],
+  "artifact_paths": {
+    "inventory": "measure/audit-reports/reading-advantage-full_20260626/00-inventory.md",
+    "workflow_map": "measure/audit-reports/reading-advantage-full_20260626/workflow-map.md",
+    "findings": "measure/audit-reports/reading-advantage-full_20260626/findings.md",
+    "test_gaps": "measure/audit-reports/reading-advantage-full_20260626/test-gaps.md",
+    "migration_tracks": "measure/audit-reports/reading-advantage-full_20260626/migration-tracks.md",
+    "executive_summary": "measure/audit-reports/reading-advantage-full_20260626/executive-summary.md",
+    "checklist": "measure/audit-reports/reading-advantage-full_20260626/checklist.md"
+  }
+}

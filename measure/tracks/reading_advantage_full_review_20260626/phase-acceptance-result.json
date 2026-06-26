@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "track_id": "reading_advantage_full_review_20260626",
+  "phase": "track review acceptance",
+  "baseline_sha": "6921fda0ee45012232bdd71c444d4e9523a10ab6",
+  "summary": "Independent Measure phase acceptance passed for the Reading Advantage full review/planning track. Required artifacts exist, current-phase plan tasks are backed by review-result/report evidence, the API route-family inventory maps all 209 route handlers across 27 families to auth/data-access/controller patterns, direct DB/domain bypass is quantified and grouped into proposed migration tracks, and findings are classified across security/tenancy, API/architecture, product correctness, and test gaps. No app code was remediated.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "This is acceptance for review/planning artifacts only; Reading Advantage remains not production-green and requires follow-up remediation tracks for Critical/High findings.",
+    "Quality-gate evidence is intentionally scoped: review artifacts record targeted lint/test evidence, a shared-package check-types failure, a full-suite timeout, and a non-meaningful build due to ignoreBuildErrors. No false full-suite green claim is accepted.",
+    "A10 generated-facts drift remains a broader nonblocking orchestrator risk because the pre-commit generated-doc hook is absent, as recorded by orchestrator audit."
+  ],
+  "evidence": [
+    "measure/tracks/reading_advantage_full_review_20260626/spec.md acceptance criteria lines 54-59",
+    "measure/tracks/reading_advantage_full_review_20260626/plan.md marks all review/acceptance tasks [x] with artifact evidence and no [ ] ambiguity",
+    "measure/audit-reports/reading-advantage-full_20260626/00-inventory.md quantifies 209 route files, 54 controllers, 49/54 controller direct DB imports, 0 TenantDB/assertCan, and 0 recordAuditEvent references",
+    "measure/audit-reports/reading-advantage-full_20260626/workflow-map.md includes complete 27-family API route map totaling 209 route handlers with auth/data-access/controller patterns",
+    "measure/audit-reports/reading-advantage-full_20260626/findings.md records Critical/High/Medium/Low security, API contract, architecture, product correctness, and test-gap findings",
+    "measure/audit-reports/reading-advantage-full_20260626/migration-tracks.md groups direct DB/domain bypass, tenancy, validation, audit logging, AI privacy, provider coupling, and product-behavior findings into proposed remediation tracks using targeted/proposed language rather than resolved claims",
+    "measure/audit-reports/reading-advantage-full_20260626/test-gaps.md documents 0 controller tests, 0 route handler tests, 0 API contract tests, and missing product-learning-loop tests",
+    "review-a-correctness-result.json, review-b-security-result.json, and review-c-ux-api-result.json provide prior role outputs; none claims final acceptance or remediation",
+    "measure/automation-supervisor.py uses task regex [~xb] and is_task_structurally_blocked recognizes [b] and deferred:<owner>",
+    "tests/orchestrator_catalog.sh, tests/orchestrator_marker_vocabulary.sh, tests/orchestrator_review_execution_truthfulness.sh passed"
+  ],
+  "commands": [
+    "build-graph stats ./graph.db: PASS, labeled counts total nodes 22185, edges 46017, files 2715, reading-advantage 971 files",
+    "python route family inventory check: PASS, 209 routes across 27 families matched workflow-map.md",
+    "python implementation evidence counts check: PASS, route_ts_files=209, controllers=54, controller_files_with_direct_db=49, server_files_with_direct_db=64, assertCan_refs=0, TenantDB_refs=0, recordAuditEvent_refs=0, firebase_admin_storage_files=1, test_ts_files=44, test_tsx_files=45",
+    "python artifact content coverage check: PASS, required report files exist and include major feature/API/data/test/finding coverage terms",
+    "bash tests/orchestrator_catalog.sh && bash tests/orchestrator_marker_vocabulary.sh && bash tests/orchestrator_review_execution_truthfulness.sh: PASS",
+    "static anti-pattern/document scan: PASS for A1/A3/A4/A5/A6/A7/A8/A11 in current plan/report/test surfaces; no PASS=N FAIL=0 or all-checks-pass claim accepted"
+  ],
+  "changed_files": [
+    "measure/tracks/reading_advantage_full_review_20260626/plan.md",
+    "measure/tracks/reading_advantage_full_review_20260626/phase-acceptance-result.json",
+    "measure/audit-reports/reading-advantage-full_20260626/workflow-map.md",
+    "measure/audit-reports/reading-advantage-full_20260626/migration-tracks.md"
+  ],
+  "accepted_artifacts": [
+    "measure/audit-reports/reading-advantage-full_20260626/00-inventory.md",
+    "measure/audit-reports/reading-advantage-full_20260626/workflow-map.md",
+    "measure/audit-reports/reading-advantage-full_20260626/checklist.md",
+    "measure/audit-reports/reading-advantage-full_20260626/findings.md",
+    "measure/audit-reports/reading-advantage-full_20260626/migration-tracks.md",
+    "measure/audit-reports/reading-advantage-full_20260626/test-gaps.md",
+    "measure/audit-reports/reading-advantage-full_20260626/executive-summary.md"
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

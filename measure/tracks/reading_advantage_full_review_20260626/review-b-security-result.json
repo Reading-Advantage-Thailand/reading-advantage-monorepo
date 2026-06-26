@@ -1,0 +1,224 @@
+{
+  "audit_id": "reading-advantage-full_20260626",
+  "review_role": "B",
+  "review_domain": "security / tenancy / auth",
+  "executed_at": "2026-06-27",
+  "baseline_sha": "6921fda0ee45012232bdd71c444d4e9523a10ab6",
+  "status": "COMPLETE",
+  "findings_summary": {
+    "critical": 2,
+    "high": 5,
+    "medium": 6,
+    "low": 3,
+    "total": 16
+  },
+  "findings": [
+    {
+      "id": "F-RA-001",
+      "severity": "Critical",
+      "title": "Missing Tenant/School Scoping — Cross-School Data Access",
+      "category": "tenancy"
+    },
+    {
+      "id": "F-RA-002",
+      "severity": "Critical",
+      "title": "Unauthenticated System/Admin Endpoints",
+      "category": "auth"
+    },
+    {
+      "id": "F-RA-003",
+      "severity": "High",
+      "title": "No Audit Logging for Destructive Operations",
+      "category": "audit"
+    },
+    {
+      "id": "F-RA-004",
+      "severity": "High",
+      "title": "Student/AI Data Privacy — No PII Filtering Before AI Provider Calls",
+      "category": "privacy"
+    },
+    {
+      "id": "F-RA-005",
+      "severity": "High",
+      "title": "approveUserArticle — Consent-Blind Publish Gate (A2)",
+      "category": "privacy"
+    },
+    {
+      "id": "F-RA-006",
+      "severity": "High",
+      "title": "Missing Rate Limiting on Auth Endpoints",
+      "category": "auth"
+    },
+    {
+      "id": "F-RA-007",
+      "severity": "High",
+      "title": "License-Based Scoping Bypass (Admin ↔ SYSTEM)",
+      "category": "auth"
+    },
+    {
+      "id": "F-RA-008",
+      "severity": "Medium",
+      "title": "Inconsistent Zod Input Validation",
+      "category": "validation"
+    },
+    {
+      "id": "F-RA-009",
+      "severity": "Medium",
+      "title": "Direct DB Access From 91% of Controllers",
+      "category": "architecture"
+    },
+    {
+      "id": "F-RA-010",
+      "severity": "Medium",
+      "title": "Role-Based Permissions Without Resource Ownership Checks",
+      "category": "auth"
+    },
+    {
+      "id": "F-RA-011",
+      "severity": "Medium",
+      "title": "process.env Without Runtime Validation",
+      "category": "secrets"
+    },
+    {
+      "id": "F-RA-012",
+      "severity": "Medium",
+      "title": "Firebase Storage Remnant in Generator",
+      "category": "legacy"
+    },
+    {
+      "id": "F-RA-013",
+      "severity": "Medium",
+      "title": "Unauthenticated Metrics/Health Endpoints Leak Operational Data",
+      "category": "auth"
+    },
+    {
+      "id": "F-RA-014",
+      "severity": "Low",
+      "title": "Google Cloud Translate Direct SDK (Not Via AI Adapter)",
+      "category": "architecture"
+    },
+    {
+      "id": "F-RA-015",
+      "severity": "Low",
+      "title": "No Structured Logging / Observability",
+      "category": "observability"
+    },
+    {
+      "id": "F-RA-016",
+      "severity": "Low",
+      "title": "Missing schoolId on Article Queries",
+      "category": "tenancy"
+    }
+  ],
+  "proposed_tracks": [
+    {
+      "id": "M-RA-SEC-1",
+      "priority": "Critical",
+      "title": "Tenant/School Scoping Enforcement",
+      "estimated_weeks": "3-4",
+      "resolves": ["F-RA-001", "F-RA-010"]
+    },
+    {
+      "id": "M-RA-SEC-2",
+      "priority": "Critical",
+      "title": "Secure Unauthenticated System Endpoints",
+      "estimated_weeks": "1",
+      "resolves": ["F-RA-002"]
+    },
+    {
+      "id": "M-RA-SEC-3",
+      "priority": "High",
+      "title": "Audit Log Infrastructure for Destructive Operations",
+      "estimated_weeks": "2",
+      "resolves": ["F-RA-003"]
+    },
+    {
+      "id": "M-RA-SEC-4",
+      "priority": "High",
+      "title": "AI Data Privacy — PII Filtering & Consent",
+      "estimated_weeks": "2",
+      "resolves": ["F-RA-004", "F-RA-005"]
+    },
+    {
+      "id": "M-RA-SEC-5",
+      "priority": "High",
+      "title": "Rate Limiting Hardening",
+      "estimated_weeks": "1-2",
+      "resolves": ["F-RA-006"]
+    },
+    {
+      "id": "M-RA-SEC-6",
+      "priority": "High",
+      "title": "Admin/SYSTEM License Scope Hardening",
+      "estimated_weeks": "0.5",
+      "resolves": ["F-RA-007"]
+    },
+    {
+      "id": "M-RA-SEC-7",
+      "priority": "Medium",
+      "title": "Zod Input Validation Across All Routes",
+      "estimated_weeks": "2-3",
+      "resolves": ["F-RA-008", "F-RA-011"]
+    },
+    {
+      "id": "M-RA-SEC-8",
+      "priority": "Medium",
+      "title": "Domain Layer Migration",
+      "estimated_weeks": "6-8",
+      "resolves": ["F-RA-009"]
+    },
+    {
+      "id": "M-RA-SEC-9",
+      "priority": "Medium",
+      "title": "Firebase Storage Removal",
+      "estimated_weeks": "0.5",
+      "resolves": ["F-RA-012"]
+    },
+    {
+      "id": "M-RA-SEC-10",
+      "priority": "Medium",
+      "title": "Metrics/Health Endpoint Hardening",
+      "estimated_weeks": "0.5",
+      "resolves": ["F-RA-013"]
+    },
+    {
+      "id": "M-RA-SEC-11",
+      "priority": "Low",
+      "title": "AI Adapter Consistency & Observability",
+      "estimated_weeks": "1",
+      "resolves": ["F-RA-014", "F-RA-015", "F-RA-016"]
+    }
+  ],
+  "artifacts_created": [
+    "measure/audit-reports/reading-advantage-full_20260626/00-inventory.md",
+    "measure/audit-reports/reading-advantage-full_20260626/checklist.md",
+    "measure/audit-reports/reading-advantage-full_20260626/findings.md",
+    "measure/audit-reports/reading-advantage-full_20260626/migration-tracks.md"
+  ],
+  "anti_pattern_checks": {
+    "A2_consent_blind_publish": {
+      "triggered": true,
+      "finding": "F-RA-005",
+      "detail": "approveUserArticle flips isPublic false→true with no consent verification or anonymization check on user-generated content"
+    },
+    "A6_registry_overstatement": {
+      "triggered": false,
+      "detail": "measure/tracks.md accurately describes reading-advantage security gaps; no overstatement detected"
+    }
+  },
+  "key_metrics": {
+    "total_route_files": 209,
+    "route_files_with_auth": 180,
+    "route_files_without_auth": 29,
+    "controller_files": 54,
+    "controller_files_with_direct_db": 49,
+    "server_files_with_direct_db": 64,
+    "assertCan_references": 0,
+    "TenantDB_references": 0,
+    "recordAuditEvent_references": 0,
+    "firebase_remnants": 1,
+    "files_with_schoolId_references": 34
+  },
+  "overall_posture": "NOT_PRODUCTION_GREEN",
+  "note": "Reading Advantage security posture has 2 Critical gaps (tenant isolation, unauthenticated system endpoints) and 5 High-severity findings. The app should not be treated as multi-tenant-secure until M-RA-SEC-1 and M-RA-SEC-2 are resolved."
+}
