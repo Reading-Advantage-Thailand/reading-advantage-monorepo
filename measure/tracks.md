@@ -436,5 +436,5 @@ Two parallel programs are in flight; priority order when picking the next track:
 ---
 
 - [x] **Track: Review-Findings Follow-up (test-altitude + FR-2 correctness)**
-  *Link: [./tracks/review_findings_followup_20260626/](./tracks/review_findings_followup_20260626/)*
+  *Link: [./archive/review_findings_followup_20260626/](./archive/review_findings_followup_20260626/)*
   Closes the gaps from the 2026-06-26 in-depth review of `review_findings_remediation_20260624`: (FR-1) paginate `getStudents` by distinct student not joined row; (FR-2) PGlite in-process Postgres harness + real behavioral tests for migrated primary-advantage models; (FR-3) caller-level await guard for `generateArticleNew`; (FR-4) unit tests for `extractCanonicalSourceExcerpts` / `getRoleplayEvaluationContext`. Prior track marked AC-2/AC-12 ✓ but evidence did not support them; deferred real-test-DB work encoded here per the no-deferring-blockers rule.
