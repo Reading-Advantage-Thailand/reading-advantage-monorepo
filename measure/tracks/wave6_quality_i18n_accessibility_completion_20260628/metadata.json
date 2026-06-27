@@ -1,0 +1,11 @@
+{
+  "track_id": "wave6_quality_i18n_accessibility_completion_20260628",
+  "type": "chore",
+  "status": "planned",
+  "created_at": "2026-06-28T00:00:00Z",
+  "updated_at": "2026-06-28T00:00:00Z",
+  "description": "Wave 6 remediation: close remaining Medium maintainability, adapter, i18n, accessibility, test-quality, curriculum, and docs tracks (M-SF-6, Primary M10/M12/M13, Sales T10/T11, Science ST-5/ST-7/ST-8/SP-2, CodeCamp MT-C1..C4/MT-X1, marketing test backfill, Games T5-T10). Final wave for full Medium-and-above coverage.",
+  "estimated_tasks": 40,
+  "actual_tasks": null,
+  "deviation_notes": "Spawned from monorepo_review_roadmap_20260626. Excludes Low-severity cosmetic cleanup (deferred per medium-plus-coverage-matrix.md). Ownership of record: medium-plus-coverage-matrix.md."
+}

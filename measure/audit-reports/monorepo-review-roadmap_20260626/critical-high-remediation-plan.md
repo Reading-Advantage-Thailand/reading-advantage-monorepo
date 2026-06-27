@@ -47,6 +47,25 @@
 12. **Advantage Games Import Readiness**
    - Completion contract, XP idempotency, tenant leaderboard, i18n/embeddable navigation, shared runtime package.
 
+## Wave 4 — App security & correctness backlog (Medium+)
+
+13. **Per-App Security/Correctness Completion**
+   - Close remaining Medium+ security/tenant/authz/contract/correctness tracks not in Wave 1.
+   - Sources: Science ST-1/ST-2/ST-4, SP-3; Reading M-RA-SEC-6..10 / PB-4..8; CodeCamp MT-8..11/13/14; Sales T5/T8/T9; Primary M7/M9; www T9.
+
+## Wave 5 — Public surface completion
+
+14. **Public Website + Marketing Surface + Deploy Correctness**
+   - Finish non-claims www defects (forms, SEO, assets, i18n, a11y, comparison/pricing, nav, contact, test hygiene), marketing schema/UX/i18n, and Science build/deploy de-Prisma.
+   - Sources: www T1/T2/T3/T6/T8/T11..T17; marketing schema_integrity/ux_error_handling/i18n; Science ST-6.
+
+## Wave 6 — Quality, i18n, accessibility, adapters & docs completion
+
+15. **Medium Maintainability/Adapter/i18n/Docs Completion**
+   - Close remaining Medium tracks: shared M-SF-6; Primary M10/M12/M13; Sales T10/T11; Science ST-5/ST-7/ST-8/SP-2; CodeCamp curriculum MT-C1..C4 + MT-X1; marketing test backfill; Games T5-T10.
+
+> **Full Medium-and-above coverage** is tracked in `medium-plus-coverage-matrix.md`. Waves 4–6 exist so no Medium+ migration track is left unowned; Low-severity items are explicitly deferred there.
+
 ## Do Not Start Before Prerequisites
 
 - Do not import games into Reading/Primary before Wave 0 tenant/contracts and Games Wave 3 readiness.
