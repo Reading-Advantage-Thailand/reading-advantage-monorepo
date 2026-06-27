@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 0/0A setup passed: initialized Primary Advantage full-review artifacts, inventoried 446 files / 118709 lines, split them into 103 batches, created coverage rows and evidence placeholders, and mechanically verified row/file-set and batch-cap invariants.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    {
+      "path": "measure/tracks/primary_advantage_full_review_20260626/line-review/file-inventory.tsv",
+      "summary": "446 files / 118709 lines inventoried"
+    },
+    {
+      "path": "measure/tracks/primary_advantage_full_review_20260626/line-review/line-review-coverage.tsv",
+      "summary": "same file set and row count as inventory; all rows pending"
+    },
+    {
+      "path": "measure/tracks/primary_advantage_full_review_20260626/line-review/batch-manifest.json",
+      "summary": "103 bounded batches; 13 valid oversized single-file batches"
+    },
+    {
+      "path": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/",
+      "summary": "placeholder evidence file exists for every manifest batch"
+    },
+    {
+      "path": "measure/tracks/primary_advantage_full_review_20260626/line-review/line-review-protocol.md",
+      "summary": "reviewer contract forbids broad prompts/source edits and requires file:line + fork-divergence category"
+    },
+    {
+      "path": "measure/audit-reports/primary-advantage-full_20260626/",
+      "summary": "required setup report artifacts initialized"
+    },
+    {
+      "path": "measure/audit-reports/primary-advantage-full_20260626/00-inventory.md",
+      "summary": "path-based sanity counts recorded for routes/API/routes/components/actions/server/lib/tests/config/assets"
+    }
+  ],
+  "commands": [
+    "build-graph stats ./graph.db",
+    "stat -c '%y %n' './graph.db' && build-graph search ./graph.db primary-advantage",
+    "python3 inventory generation script for apps/primary-advantage -> file-inventory.tsv, line-review-coverage.tsv, batch-manifest.json/.md",
+    "python3 evidence placeholder creation script for batch-manifest.json batches",
+    "python3 verification script: inventory/coverage file-set equality, evidence paths, batch caps",
+    "python3 path-based inventory category count script -> 00-inventory.md"
+  ],
+  "changed_files": [
+    "measure/audit-reports/primary-advantage-full_20260626/00-inventory.md",
+    "measure/audit-reports/primary-advantage-full_20260626/workflow-map.md",
+    "measure/audit-reports/primary-advantage-full_20260626/fork-divergence.md",
+    "measure/audit-reports/primary-advantage-full_20260626/checklist.md",
+    "measure/audit-reports/primary-advantage-full_20260626/findings.md",
+    "measure/audit-reports/primary-advantage-full_20260626/migration-tracks.md",
+    "measure/audit-reports/primary-advantage-full_20260626/test-gaps.md",
+    "measure/audit-reports/primary-advantage-full_20260626/executive-summary.md",
+    "measure/tracks/primary_advantage_full_review_20260626/plan.md",
+    "measure/tracks/primary_advantage_full_review_20260626/test-strategy.md",
+    "measure/tracks/primary_advantage_full_review_20260626/line-review/file-inventory.tsv",
+    "measure/tracks/primary_advantage_full_review_20260626/line-review/batch-manifest.json",
+    "measure/tracks/primary_advantage_full_review_20260626/line-review/batch-manifest.md",
+    "measure/tracks/primary_advantage_full_review_20260626/line-review/line-review-protocol.md",
+    "measure/tracks/primary_advantage_full_review_20260626/line-review/line-review-coverage.tsv",
+    "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/*.md",
+    "measure/tracks/primary_advantage_full_review_20260626/line-review/setup-result.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "ux_applicability": "not_applicable",
+  "webbridge_status": "not_run",
+  "webbridge_evidence": {
+    "screenshots": [],
+    "accessibility_snapshots": [],
+    "interactions": []
+  },
+  "totals": {
+    "file_count": 446,
+    "line_count": 118709,
+    "batch_count": 103,
+    "oversized_batch_count": 13
+  },
+  "verification": {
+    "inventory_coverage_same_file_set": true,
+    "inventory_coverage_same_row_count": true,
+    "all_manifest_batches_have_evidence_path_under_line_review_evidence": true,
+    "all_manifest_evidence_placeholders_exist": true,
+    "batch_caps_valid": true,
+    "coverage_initial_status": "pending",
+    "coverage_columns": [
+      "package_app",
+      "file",
+      "line_count",
+      "reviewer",
+      "status",
+      "evidence_file",
+      "reviewed_ranges",
+      "finding_count"
+    ]
+  },
+  "baseline_sha": "5d2ca770df0467d99c125b1e83626a991be8896a"
+}

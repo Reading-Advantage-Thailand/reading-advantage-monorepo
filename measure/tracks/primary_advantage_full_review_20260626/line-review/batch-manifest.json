@@ -1,0 +1,3198 @@
+{
+  "schema_version": 1,
+  "track": "primary_advantage_full_review_20260626",
+  "package_app": "apps/primary-advantage",
+  "generated_at": "2026-06-27T08:02:11",
+  "inventory_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/file-inventory.tsv",
+  "coverage_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/line-review-coverage.tsv",
+  "batch_policy": {
+    "target_max_lines": 1200,
+    "target_max_files": 10,
+    "exception": "A single file may exceed target_max_lines and then forms a one-file oversized batch."
+  },
+  "exclusions": [
+    "*.tsbuildinfo",
+    ".cache",
+    ".next",
+    ".parcel-cache",
+    ".swc",
+    ".turbo",
+    ".vite",
+    "build",
+    "cache",
+    "caches",
+    "coverage",
+    "dist",
+    "graph.db",
+    "graph.db-shm",
+    "graph.db-wal",
+    "node_modules",
+    "package-local graph/cache files",
+    "tsconfig.tsbuildinfo"
+  ],
+  "totals": {
+    "file_count": 446,
+    "line_count": 118709,
+    "batch_count": 103,
+    "oversized_batch_count": 13
+  },
+  "batches": [
+    {
+      "id": "primary-advantage-001",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-001.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/.env.example",
+          "line_count": 22
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/.gitignore",
+          "line_count": 52
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/AGENTS.md",
+          "line_count": 147
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/Dockerfile",
+          "line_count": 51
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/README.md",
+          "line_count": 79
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/actions/article.ts",
+          "line_count": 135
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/actions/classroom.ts",
+          "line_count": 46
+        }
+      ],
+      "line_count": 532,
+      "file_count": 7
+    },
+    {
+      "id": "primary-advantage-002",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-002.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/actions/flashcard.ts",
+          "line_count": 1400
+        }
+      ],
+      "line_count": 1400,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-003",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-003.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/actions/pratice.ts",
+          "line_count": 137
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/actions/question.ts",
+          "line_count": 196
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/actions/signupAction.ts",
+          "line_count": 27
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/actions/singinAction.ts",
+          "line_count": 41
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/actions/test.ts",
+          "line_count": 132
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/actions/user.ts",
+          "line_count": 101
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(index)/about/page.tsx",
+          "line_count": 21
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(index)/authors/page.tsx",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(index)/contact/page.tsx",
+          "line_count": 15
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(index)/layout.tsx",
+          "line_count": 58
+        }
+      ],
+      "line_count": 741,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-004",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-004.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(index)/page.tsx",
+          "line_count": 287
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(index)/privacy-policy/page.tsx",
+          "line_count": 162
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(index)/terms/page.tsx",
+          "line_count": 136
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/settings/layout.tsx",
+          "line_count": 14
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/settings/school-profile/page.tsx",
+          "line_count": 168
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/settings/user-profile/page.tsx",
+          "line_count": 219
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/assignments/page.tsx",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/history/page.tsx",
+          "line_count": 24
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/layout.tsx",
+          "line_count": 15
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/lesson/[id]/page.tsx",
+          "line_count": 77
+        }
+      ],
+      "line_count": 1115,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-005",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-005.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/read/[articleId]/error.tsx",
+          "line_count": 30
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/read/[articleId]/loading.tsx",
+          "line_count": 35
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx",
+          "line_count": 134
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/read/loading.tsx",
+          "line_count": 33
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/read/page.tsx",
+          "line_count": 172
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/reports/page.tsx",
+          "line_count": 48
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/sentences/page.tsx",
+          "line_count": 59
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/(student)/student/vocabulary/page.tsx",
+          "line_count": 19
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/[...not-found]/layout.tsx",
+          "line_count": 35
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/[...not-found]/page.tsx",
+          "line_count": 50
+        }
+      ],
+      "line_count": 615,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-006",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-006.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/article-creation/page.tsx",
+          "line_count": 16
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/dashboard/page.tsx",
+          "line_count": 75
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/dashboard/students/page.tsx",
+          "line_count": 552
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/dashboard/teachers/page.tsx",
+          "line_count": 17
+        }
+      ],
+      "line_count": 660,
+      "file_count": 4
+    },
+    {
+      "id": "primary-advantage-007",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-007.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/import-data/page.tsx",
+          "line_count": 654
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/layout.tsx",
+          "line_count": 16
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/page.tsx",
+          "line_count": 224
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/students/add/page.tsx",
+          "line_count": 180
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/students/classrooms/page.tsx",
+          "line_count": 16
+        }
+      ],
+      "line_count": 1090,
+      "file_count": 5
+    },
+    {
+      "id": "primary-advantage-008",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-008.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/students/page.tsx",
+          "line_count": 934
+        }
+      ],
+      "line_count": 934,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-009",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-009.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/teachers/add/page.tsx",
+          "line_count": 324
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/admin/teachers/page.tsx",
+          "line_count": 16
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/auth/error/page.tsx",
+          "line_count": 9
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/auth/forgot-password/page.tsx",
+          "line_count": 5
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/auth/layout.tsx",
+          "line_count": 45
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/auth/signin/page.tsx",
+          "line_count": 30
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/auth/signup/page.tsx",
+          "line_count": 5
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/layout.tsx",
+          "line_count": 86
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/dashboard/page.tsx",
+          "line_count": 10
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/layout.tsx",
+          "line_count": 16
+        }
+      ],
+      "line_count": 546,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-010",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-010.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/licenses/create-licenses/create-license-form.tsx",
+          "line_count": 415
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/licenses/create-licenses/page.tsx",
+          "line_count": 32
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/licenses/page.tsx",
+          "line_count": 14
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/schools/page.tsx",
+          "line_count": 15
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/test/article-test-genarate.tsx",
+          "line_count": 54
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/test/audio-test-word.tsx",
+          "line_count": 45
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/test/audio-test.tsx",
+          "line_count": 47
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/test/generate-images.tsx",
+          "line_count": 38
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/test/page.tsx",
+          "line_count": 41
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/test/roles-management.tsx",
+          "line_count": 12
+        }
+      ],
+      "line_count": 713,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-011",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-011.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/system/test/upload-test.tsx",
+          "line_count": 51
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/assignments/[id]/page.tsx",
+          "line_count": 5
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/assignments/page.tsx",
+          "line_count": 14
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/class-roster/[classroomId]/enrollment/page.tsx",
+          "line_count": 157
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/class-roster/[classroomId]/page.tsx",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/class-roster/page.tsx",
+          "line_count": 12
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/dashboard/page.tsx",
+          "line_count": 6
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/layout.tsx",
+          "line_count": 16
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/my-classes/page.tsx",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/my-students/page.tsx",
+          "line_count": 13
+        }
+      ],
+      "line_count": 300,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-012",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-012.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/reports/page.tsx",
+          "line_count": 46
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/[locale]/teacher/student-progress/[id]/page.tsx",
+          "line_count": 53
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/articles/[articleId]/route.ts",
+          "line_count": 12
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/articles/generate/custom-generate/approve/route.ts",
+          "line_count": 6
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/articles/generate/custom-generate/route.ts",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/articles/generate/custom-generate/save/route.ts",
+          "line_count": 6
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/articles/generate/route.ts",
+          "line_count": 15
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/articles/questions/[articleId]/route.ts",
+          "line_count": 45
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/articles/questions/feedback/route.ts",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/articles/route.ts",
+          "line_count": 14
+        }
+      ],
+      "line_count": 223,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-013",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-013.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/assignments/[id]/progress/route.ts",
+          "line_count": 9
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/assignments/[id]/route.ts",
+          "line_count": 19
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/assignments/activity/[id]/route.ts",
+          "line_count": 9
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/assignments/route.ts",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/assistant/lesson-chatbot/route.ts",
+          "line_count": 150
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/auth/impersonate/route.ts",
+          "line_count": 2
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/auth/login/route.ts",
+          "line_count": 2
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/auth/logout/route.ts",
+          "line_count": 2
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/auth/register/route.ts",
+          "line_count": 2
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/auth/reset-password/route.ts",
+          "line_count": 2
+        }
+      ],
+      "line_count": 210,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-014",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-014.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/auth/session/route.ts",
+          "line_count": 2
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/classroom/[id]/available-students/route.ts",
+          "line_count": 10
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/classroom/[id]/enroll/route.ts",
+          "line_count": 10
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/classroom/[id]/generate-code/route.ts",
+          "line_count": 11
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/classroom/[id]/route.ts",
+          "line_count": 66
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/classroom/[id]/unenroll/route.ts",
+          "line_count": 10
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/classroom/route.ts",
+          "line_count": 54
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/classroom/students/route.ts",
+          "line_count": 6
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/classrooms/route.ts",
+          "line_count": 120
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/debug/auth/route.ts",
+          "line_count": 79
+        }
+      ],
+      "line_count": 368,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-015",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-015.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/debug/init-roles/route.ts",
+          "line_count": 89
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/debug/school/route.ts",
+          "line_count": 74
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/flashcard/cards/[cardId]/review/route.ts",
+          "line_count": 133
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/flashcard/deck-id/route.ts",
+          "line_count": 74
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/flashcard/decks/[deckId]/due/route.ts",
+          "line_count": 81
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-cloze/route.ts",
+          "line_count": 408
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-matching/route.ts",
+          "line_count": 324
+        }
+      ],
+      "line_count": 1183,
+      "file_count": 7
+    },
+    {
+      "id": "primary-advantage-016",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-016.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/flashcard/decks/[deckId]/sentences-for-ordering/route.ts",
+          "line_count": 229
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/flashcard/decks/[deckId]/words-for-ordering/route.ts",
+          "line_count": 355
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/flashcard/save/[id]/route.ts",
+          "line_count": 28
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/lessons/[articleId]/activity/route.ts",
+          "line_count": 38
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/lessons/[articleId]/progress/route.ts",
+          "line_count": 40
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/lessons/[articleId]/route.ts",
+          "line_count": 89
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/licenses/[id]/route.ts",
+          "line_count": 212
+        }
+      ],
+      "line_count": 991,
+      "file_count": 7
+    },
+    {
+      "id": "primary-advantage-017",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-017.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/licenses/route.ts",
+          "line_count": 220
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/schools/ranking/route.ts",
+          "line_count": 80
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/schools/route.ts",
+          "line_count": 131
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/send/route.ts",
+          "line_count": 21
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/students/[id]/assignments/route.ts",
+          "line_count": 9
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/students/[id]/route.ts",
+          "line_count": 30
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/students/leaderboard/route.ts",
+          "line_count": 46
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/students/route.ts",
+          "line_count": 15
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/teachers/[id]/route.ts",
+          "line_count": 30
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/teachers/assignments/route.ts",
+          "line_count": 6
+        }
+      ],
+      "line_count": 588,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-018",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-018.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/teachers/route.ts",
+          "line_count": 15
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/upload/classes/route.ts",
+          "line_count": 1074
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/upload/csv/cleanup/route.ts",
+          "line_count": 87
+        }
+      ],
+      "line_count": 1176,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-019",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-019.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/upload/csv/route.ts",
+          "line_count": 506
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/users/[id]/article-records/route.ts",
+          "line_count": 43
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/users/[id]/reminder-reread/route.ts",
+          "line_count": 36
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/users/[id]/route.ts",
+          "line_count": 116
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/users/activitylog/[id]/route.ts",
+          "line_count": 22
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/users/me/school/admins/[adminId]/route.ts",
+          "line_count": 160
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/users/me/school/admins/route.ts",
+          "line_count": 163
+        }
+      ],
+      "line_count": 1046,
+      "file_count": 7
+    },
+    {
+      "id": "primary-advantage-020",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-020.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/users/me/school/route.ts",
+          "line_count": 505
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/app/api/users/search/route.ts",
+          "line_count": 70
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/cloudbuild.yaml",
+          "line_count": 84
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/admin/admin-dashboard-header.tsx",
+          "line_count": 127
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/admin/admin-overview-charts.tsx",
+          "line_count": 181
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/admin/admin-quick-actions.tsx",
+          "line_count": 92
+        }
+      ],
+      "line_count": 1059,
+      "file_count": 6
+    },
+    {
+      "id": "primary-advantage-021",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-021.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/admin/admin-recent-activity.tsx",
+          "line_count": 214
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/admin/admin-stats-cards.tsx",
+          "line_count": 139
+        }
+      ],
+      "line_count": 353,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-022",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-022.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/admin/article-creation.tsx",
+          "line_count": 1297
+        }
+      ],
+      "line_count": 1297,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-023",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-023.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/admin/classrooms-table.tsx",
+          "line_count": 585
+        }
+      ],
+      "line_count": 585,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-024",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-024.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/admin/teachers-table.tsx",
+          "line_count": 945
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/article-card.tsx",
+          "line_count": 90
+        }
+      ],
+      "line_count": 1035,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-025",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-025.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/article-content.tsx",
+          "line_count": 1034
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/article-select.tsx",
+          "line_count": 130
+        }
+      ],
+      "line_count": 1164,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-026",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-026.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/article-showcase-card.tsx",
+          "line_count": 160
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/questions/la-question-card.tsx",
+          "line_count": 90
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/questions/la-question-content.tsx",
+          "line_count": 369
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/questions/mc-question-card.tsx",
+          "line_count": 112
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/questions/mc-question-content.tsx",
+          "line_count": 251
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/questions/question-header.tsx",
+          "line_count": 71
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/questions/retake-button.tsx",
+          "line_count": 59
+        }
+      ],
+      "line_count": 1112,
+      "file_count": 7
+    },
+    {
+      "id": "primary-advantage-027",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-027.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/questions/sa-question-card.tsx",
+          "line_count": 105
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/questions/sa-question-content.tsx",
+          "line_count": 212
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/sentence.tsx",
+          "line_count": 169
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/articles/word-list.tsx",
+          "line_count": 189
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/audio-button.tsx",
+          "line_count": 84
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/auth/email-forgot-password-template.tsx",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/auth/student-signin-form.tsx",
+          "line_count": 202
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/auth/teacher-signin-form.tsx",
+          "line_count": 155
+        }
+      ],
+      "line_count": 1129,
+      "file_count": 8
+    },
+    {
+      "id": "primary-advantage-028",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-028.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/auth/user-reset-pass-form.tsx",
+          "line_count": 105
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/auth/user-signup-form.tsx",
+          "line_count": 189
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/change-username-form.tsx",
+          "line_count": 113
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/dashboard/article-records-table.tsx",
+          "line_count": 294
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/dashboard/class-activity-chart.tsx",
+          "line_count": 307
+        }
+      ],
+      "line_count": 1008,
+      "file_count": 5
+    },
+    {
+      "id": "primary-advantage-029",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-029.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/dashboard/reminder-reread-table.tsx",
+          "line_count": 233
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/dashboard/user-activity-chart.tsx",
+          "line_count": 319
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/dashboard/user-heatmap-chart.tsx",
+          "line_count": 74
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/dashboard/user-level-indicator.tsx",
+          "line_count": 86
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/dashboard/user-reading-chart.tsx",
+          "line_count": 167
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/dashboard/user-recent-activity.tsx",
+          "line_count": 118
+        }
+      ],
+      "line_count": 997,
+      "file_count": 6
+    },
+    {
+      "id": "primary-advantage-030",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-030.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/dashboard/user-xpoverall-chart.tsx",
+          "line_count": 232
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/flashcards/deck-view.tsx",
+          "line_count": 500
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/flashcards/empty-deck.tsx",
+          "line_count": 310
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/flashcards/flashcard-dashboard.tsx",
+          "line_count": 141
+        }
+      ],
+      "line_count": 1183,
+      "file_count": 4
+    },
+    {
+      "id": "primary-advantage-031",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-031.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/flashcards/flashcard-game.tsx",
+          "line_count": 448
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/form-error.tsx",
+          "line_count": 15
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/form-success.tsx",
+          "line_count": 15
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/go-to-top.tsx",
+          "line_count": 26
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/header.tsx",
+          "line_count": 37
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/icons.tsx",
+          "line_count": 157
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/index/feature-box.tsx",
+          "line_count": 22
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/index/footer.tsx",
+          "line_count": 124
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/leaderboard.tsx",
+          "line_count": 109
+        }
+      ],
+      "line_count": 953,
+      "file_count": 9
+    },
+    {
+      "id": "primary-advantage-032",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-032.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/games/lesson-sentence-cloze-test.tsx",
+          "line_count": 1318
+        }
+      ],
+      "line_count": 1318,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-033",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-033.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/games/lesson-sentence-flashcard.tsx",
+          "line_count": 741
+        }
+      ],
+      "line_count": 741,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-034",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-034.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/games/lesson-sentence-matching.tsx",
+          "line_count": 749
+        }
+      ],
+      "line_count": 749,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-035",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-035.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/games/lesson-sentence-order-word.tsx",
+          "line_count": 1128
+        }
+      ],
+      "line_count": 1128,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-036",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-036.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/games/lesson-sentence-order.tsx",
+          "line_count": 1036
+        }
+      ],
+      "line_count": 1036,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-037",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-037.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/games/lesson-vocabulary-flashcard-card.tsx",
+          "line_count": 749
+        }
+      ],
+      "line_count": 749,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-038",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-038.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/games/lesson-vocabulary-matching.tsx",
+          "line_count": 736
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/lesson-card.tsx",
+          "line_count": 66
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/lesson-language-question.tsx",
+          "line_count": 365
+        }
+      ],
+      "line_count": 1167,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-039",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-039.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/lesson-progress-bar.tsx",
+          "line_count": 821
+        }
+      ],
+      "line_count": 821,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-040",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-040.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/pratice/lesson-task-mcq.tsx",
+          "line_count": 552
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/pratice/lesson-task-saq.tsx",
+          "line_count": 297
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/standalone-lesson-card.tsx",
+          "line_count": 67
+        }
+      ],
+      "line_count": 916,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-041",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-041.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/standalone-lesson-progress-bar.tsx",
+          "line_count": 668
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/index.ts",
+          "line_count": 14
+        }
+      ],
+      "line_count": 682,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-042",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-042.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-deep-reading.tsx",
+          "line_count": 659
+        }
+      ],
+      "line_count": 659,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-043",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-043.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-first-reading.tsx",
+          "line_count": 570
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-introduction.tsx",
+          "line_count": 139
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-language-questions.tsx",
+          "line_count": 65
+        }
+      ],
+      "line_count": 774,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-044",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-044.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-lesson-summary.tsx",
+          "line_count": 476
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-multiple-choice.tsx",
+          "line_count": 35
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-preview-vocabulary.tsx",
+          "line_count": 186
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-sentence-activities.tsx",
+          "line_count": 371
+        }
+      ],
+      "line_count": 1068,
+      "file_count": 4
+    },
+    {
+      "id": "primary-advantage-045",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-045.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-sentence-collection.tsx",
+          "line_count": 194
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-sentence-flashcards.tsx",
+          "line_count": 34
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-short-answer.tsx",
+          "line_count": 34
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-vocabulary-collection.tsx",
+          "line_count": 182
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-vocabulary-flashcards.tsx",
+          "line_count": 38
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/lesson/task/task-vocabulary-matching.tsx",
+          "line_count": 38
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/manage-tab.tsx",
+          "line_count": 349
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/nav/main-nav.tsx",
+          "line_count": 73
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/nav/mobile-nav.tsx",
+          "line_count": 45
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/nav/new-main-nav.tsx",
+          "line_count": 43
+        }
+      ],
+      "line_count": 1030,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-046",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-046.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/nav/new-mobile-nav.tsx",
+          "line_count": 147
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/nav/sidebar-nav.tsx",
+          "line_count": 283
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/nav/user-account-nav.tsx",
+          "line_count": 169
+        }
+      ],
+      "line_count": 599,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-047",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-047.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/pratice/cloze-test-game.tsx",
+          "line_count": 1342
+        }
+      ],
+      "line_count": 1342,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-048",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-048.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/pratice/cloze-test-page.tsx",
+          "line_count": 28
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/pratice/matching-game.tsx",
+          "line_count": 1126
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/pratice/matching-page.tsx",
+          "line_count": 28
+        }
+      ],
+      "line_count": 1182,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-049",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-049.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/pratice/order-sentences-game.tsx",
+          "line_count": 1027
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/pratice/order-sentences-page.tsx",
+          "line_count": 28
+        }
+      ],
+      "line_count": 1055,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-050",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-050.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/pratice/order-words-game.tsx",
+          "line_count": 1125
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/pratice/order-words-page.tsx",
+          "line_count": 28
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/progress-bar-xp.tsx",
+          "line_count": 29
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/providers/query-provider.tsx",
+          "line_count": 17
+        }
+      ],
+      "line_count": 1199,
+      "file_count": 4
+    },
+    {
+      "id": "primary-advantage-051",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-051.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/providers/session-provider.tsx",
+          "line_count": 5
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/providers/theme-provider.tsx",
+          "line_count": 11
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/school/add-admin-dialog.tsx",
+          "line_count": 208
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/school/create-school-card.tsx",
+          "line_count": 37
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/school/edit-school-form.tsx",
+          "line_count": 235
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/school/school-detail.tsx",
+          "line_count": 555
+        }
+      ],
+      "line_count": 1051,
+      "file_count": 6
+    },
+    {
+      "id": "primary-advantage-052",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-052.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/school/school-profile-form.tsx",
+          "line_count": 242
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/shared/app-layout.tsx",
+          "line_count": 95
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/shared/change-role.tsx",
+          "line_count": 187
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/site-config.tsx",
+          "line_count": 33
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/site-header.tsx",
+          "line_count": 60
+        }
+      ],
+      "line_count": 617,
+      "file_count": 5
+    },
+    {
+      "id": "primary-advantage-053",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-053.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/student-assignment-table.tsx",
+          "line_count": 815
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/switchers/locale-switcher.tsx",
+          "line_count": 70
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/switchers/theme-switcher-toggle.tsx",
+          "line_count": 27
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/system/create-school-dialog.tsx",
+          "line_count": 54
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/system/create-school-form.tsx",
+          "line_count": 209
+        }
+      ],
+      "line_count": 1175,
+      "file_count": 5
+    },
+    {
+      "id": "primary-advantage-054",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-054.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/system/edit-license-form.tsx",
+          "line_count": 430
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/system/license-table.tsx",
+          "line_count": 485
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/assign-button.tsx",
+          "line_count": 92
+        }
+      ],
+      "line_count": 1007,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-055",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-055.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/assign-form.tsx",
+          "line_count": 294
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/assignment-button.tsx",
+          "line_count": 521
+        }
+      ],
+      "line_count": 815,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-056",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-056.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/assignment-dashboard.tsx",
+          "line_count": 842
+        }
+      ],
+      "line_count": 842,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-057",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-057.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/assignments.tsx",
+          "line_count": 522
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/class-code-generator.tsx",
+          "line_count": 280
+        }
+      ],
+      "line_count": 802,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-058",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-058.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/class-roster.tsx",
+          "line_count": 521
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/classroom-navigation.tsx",
+          "line_count": 274
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/classroom-selector.tsx",
+          "line_count": 201
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/create-classes.tsx",
+          "line_count": 159
+        }
+      ],
+      "line_count": 1155,
+      "file_count": 4
+    },
+    {
+      "id": "primary-advantage-059",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-059.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/enhanced-class-roster.tsx",
+          "line_count": 689
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/enrollment-demo.tsx",
+          "line_count": 303
+        }
+      ],
+      "line_count": 992,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-060",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-060.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/enrollment-management.tsx",
+          "line_count": 528
+        }
+      ],
+      "line_count": 528,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-061",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-061.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/my-classes.tsx",
+          "line_count": 836
+        }
+      ],
+      "line_count": 836,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-062",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-062.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/my-students.tsx",
+          "line_count": 426
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/reports.tsx",
+          "line_count": 436
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/student-cefr-level-setter.tsx",
+          "line_count": 239
+        }
+      ],
+      "line_count": 1101,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-063",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-063.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/student-enrollment-button.tsx",
+          "line_count": 311
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/student-unenrollment-button.tsx",
+          "line_count": 150
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/teacher/teacher-progress-reports.tsx",
+          "line_count": 445
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/alert-dialog.tsx",
+          "line_count": 157
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/alert.tsx",
+          "line_count": 66
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/avatar.tsx",
+          "line_count": 53
+        }
+      ],
+      "line_count": 1182,
+      "file_count": 6
+    },
+    {
+      "id": "primary-advantage-064",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-064.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/badge.tsx",
+          "line_count": 60
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/button.tsx",
+          "line_count": 61
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/calendar-heatmap.tsx",
+          "line_count": 211
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/calendar.tsx",
+          "line_count": 213
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/card.tsx",
+          "line_count": 92
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/chart.tsx",
+          "line_count": 353
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/checkbox.tsx",
+          "line_count": 32
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/collapsible.tsx",
+          "line_count": 33
+        }
+      ],
+      "line_count": 1055,
+      "file_count": 8
+    },
+    {
+      "id": "primary-advantage-065",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-065.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/context-menu.tsx",
+          "line_count": 252
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/copy-button.tsx",
+          "line_count": 57
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/dialog.tsx",
+          "line_count": 140
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/dropdown-menu.tsx",
+          "line_count": 257
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/form.tsx",
+          "line_count": 167
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/input.tsx",
+          "line_count": 21
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/label.tsx",
+          "line_count": 24
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/popover.tsx",
+          "line_count": 48
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/progress.tsx",
+          "line_count": 31
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/radio-group.tsx",
+          "line_count": 45
+        }
+      ],
+      "line_count": 1042,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-066",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-066.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/rating.tsx",
+          "line_count": 239
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/scroll-area.tsx",
+          "line_count": 58
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/select.tsx",
+          "line_count": 185
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/separator.tsx",
+          "line_count": 28
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/sheet.tsx",
+          "line_count": 139
+        }
+      ],
+      "line_count": 649,
+      "file_count": 5
+    },
+    {
+      "id": "primary-advantage-067",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-067.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/sidebar.tsx",
+          "line_count": 726
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/skeleton.tsx",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/sonner.tsx",
+          "line_count": 25
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/table.tsx",
+          "line_count": 116
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/tabs.tsx",
+          "line_count": 66
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/textarea.tsx",
+          "line_count": 18
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/ui/tooltip.tsx",
+          "line_count": 61
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/update-user-license.tsx",
+          "line_count": 126
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components/user-avatar.tsx",
+          "line_count": 26
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/components.json",
+          "line_count": 21
+        }
+      ],
+      "line_count": 1198,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-068",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-068.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/configs/admin-page-config.ts",
+          "line_count": 116
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/configs/index-page-config.ts",
+          "line_count": 26
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/configs/settings-page-config.ts",
+          "line_count": 22
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/configs/site-config.ts",
+          "line_count": 34
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/configs/student-page-config.ts",
+          "line_count": 75
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/configs/system-page-config.ts",
+          "line_count": 48
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/configs/teacher-page-config.ts",
+          "line_count": 110
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/contexts/question-context.tsx",
+          "line_count": 42
+        }
+      ],
+      "line_count": 473,
+      "file_count": 8
+    },
+    {
+      "id": "primary-advantage-069",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-069.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/A0-story-example.json",
+          "line_count": 949
+        }
+      ],
+      "line_count": 949,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-070",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-070.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/A1-story-example.json",
+          "line_count": 699
+        }
+      ],
+      "line_count": 699,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-071",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-071.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/A2-story-example.json",
+          "line_count": 858
+        }
+      ],
+      "line_count": 858,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-072",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-072.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/audios/articles/temp.mp3",
+          "line_count": 3712
+        }
+      ],
+      "line_count": 3712,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-073",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-073.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/audios/sentences/temp.mp3",
+          "line_count": 3712
+        }
+      ],
+      "line_count": 3712,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-074",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-074.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/audios/words/temp.mp3",
+          "line_count": 3712
+        }
+      ],
+      "line_count": 3712,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-075",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-075.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/cefr-article-prompts.json",
+          "line_count": 72
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/cefr-level-evaluation-prompts.json",
+          "line_count": 26
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/db.json",
+          "line_count": 15
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/genres.json",
+          "line_count": 180
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/images/temp.jpg",
+          "line_count": 0
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/level-test.json",
+          "line_count": 382
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/new-article-prompts.json",
+          "line_count": 40
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/new-level-evaluation-prompts.json",
+          "line_count": 30
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/prompts-ai.ts",
+          "line_count": 196
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/prompts-combined-LA.json",
+          "line_count": 67
+        }
+      ],
+      "line_count": 1008,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-076",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-076.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/prompts-combined-MC.json",
+          "line_count": 66
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/prompts-combined-SA.json",
+          "line_count": 66
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/prompts-feedback-user-LA.json",
+          "line_count": 3
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/prompts-feedback-user-SA.json",
+          "line_count": 3
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/story-prompts.json",
+          "line_count": 36
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/story-schema.ts",
+          "line_count": 179
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/title-a0.json",
+          "line_count": 609
+        }
+      ],
+      "line_count": 962,
+      "file_count": 7
+    },
+    {
+      "id": "primary-advantage-077",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-077.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/title-a1.json",
+          "line_count": 609
+        }
+      ],
+      "line_count": 609,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-078",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-078.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/title-a2.json",
+          "line_count": 609
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/data/whats-my-level-mean.json",
+          "line_count": 58
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/eslint.config.mjs",
+          "line_count": 10
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/hooks/use-current-role.ts",
+          "line_count": 8
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/hooks/use-current-user.ts",
+          "line_count": 12
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/hooks/use-layout.tsx",
+          "line_count": 160
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/hooks/use-lock-body.ts",
+          "line_count": 12
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/hooks/use-mobile.ts",
+          "line_count": 19
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/hooks/use-permissions.ts",
+          "line_count": 119
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/i18n/navigation.ts",
+          "line_count": 7
+        }
+      ],
+      "line_count": 1014,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-079",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-079.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/i18n/request.ts",
+          "line_count": 16
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/i18n/routing.ts",
+          "line_count": 9
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/__tests__/utils.test.ts",
+          "line_count": 198
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/calculateLevel.ts",
+          "line_count": 52
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/events.ts",
+          "line_count": 33
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/fsrs-service.ts",
+          "line_count": 197
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/get-query-client.ts",
+          "line_count": 25
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/permissions.ts",
+          "line_count": 232
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/session.ts",
+          "line_count": 21
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/storage-config.ts",
+          "line_count": 42
+        }
+      ],
+      "line_count": 825,
+      "file_count": 10
+    },
+    {
+      "id": "primary-advantage-080",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-080.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/test.ts",
+          "line_count": 13
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/utils.ts",
+          "line_count": 122
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/lib/zod.ts",
+          "line_count": 466
+        }
+      ],
+      "line_count": 601,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-081",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-081.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/messages/cn.json",
+          "line_count": 2655
+        }
+      ],
+      "line_count": 2655,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-082",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-082.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/messages/en.json",
+          "line_count": 2657
+        }
+      ],
+      "line_count": 2657,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-083",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-083.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/messages/th.json",
+          "line_count": 2659
+        }
+      ],
+      "line_count": 2659,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-084",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-084.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/messages/tw.json",
+          "line_count": 2655
+        }
+      ],
+      "line_count": 2655,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-085",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-085.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/messages/vi.json",
+          "line_count": 2657
+        }
+      ],
+      "line_count": 2657,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-086",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/next-env.d.ts",
+          "line_count": 6
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/next.config.ts",
+          "line_count": 21
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/package.json",
+          "line_count": 112
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/postcss.config.mjs",
+          "line_count": 7
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/proxy.ts",
+          "line_count": 121
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/96x96_yellow_stroke_icon@1x.png",
+          "line_count": 16
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/favicon.ico",
+          "line_count": 77
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/file.svg",
+          "line_count": 1
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/globe.svg",
+          "line_count": 1
+        }
+      ],
+      "line_count": 362,
+      "file_count": 9
+    },
+    {
+      "id": "primary-advantage-087",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-087.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/login-image.png",
+          "line_count": 11589
+        }
+      ],
+      "line_count": 11589,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-088",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-088.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/next.svg",
+          "line_count": 1
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/nopic.png",
+          "line_count": 82
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/primary-advantage.png",
+          "line_count": 365
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/rank-1.png",
+          "line_count": 162
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/rank-2.png",
+          "line_count": 206
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/rank-3.png",
+          "line_count": 234
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/vercel.svg",
+          "line_count": 1
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/public/window.svg",
+          "line_count": 1
+        }
+      ],
+      "line_count": 1052,
+      "file_count": 8
+    },
+    {
+      "id": "primary-advantage-089",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-089.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/controllers/articleController.ts",
+          "line_count": 297
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/controllers/assignmentController.ts",
+          "line_count": 398
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/controllers/classroomController.ts",
+          "line_count": 415
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/controllers/schoolController.ts",
+          "line_count": 40
+        }
+      ],
+      "line_count": 1150,
+      "file_count": 4
+    },
+    {
+      "id": "primary-advantage-090",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-090.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/controllers/studentController.ts",
+          "line_count": 351
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/controllers/teacherController.ts",
+          "line_count": 340
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/controllers/userController.ts",
+          "line_count": 106
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/__tests__/helpers/testDb.smoke.test.ts",
+          "line_count": 40
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/__tests__/helpers/testDb.ts",
+          "line_count": 202
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/__tests__/siblingModels.behavior.test.ts",
+          "line_count": 122
+        }
+      ],
+      "line_count": 1161,
+      "file_count": 6
+    },
+    {
+      "id": "primary-advantage-091",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-091.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/__tests__/studentModel.pagination.test.ts",
+          "line_count": 138
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/articleModel.ts",
+          "line_count": 812
+        }
+      ],
+      "line_count": 950,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-092",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-092.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/assignmentModel.ts",
+          "line_count": 479
+        }
+      ],
+      "line_count": 479,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-093",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-093.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/classroomModel.ts",
+          "line_count": 1044
+        }
+      ],
+      "line_count": 1044,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-094",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-094.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/lessonModel.ts",
+          "line_count": 224
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/schoolModel.ts",
+          "line_count": 389
+        }
+      ],
+      "line_count": 613,
+      "file_count": 2
+    },
+    {
+      "id": "primary-advantage-095",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-095.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/studentModel.ts",
+          "line_count": 669
+        }
+      ],
+      "line_count": 669,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-096",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-096.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/teacherModel.ts",
+          "line_count": 912
+        }
+      ],
+      "line_count": 912,
+      "file_count": 1
+    },
+    {
+      "id": "primary-advantage-097",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-097.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/models/userModel.ts",
+          "line_count": 596
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/assistant.ts",
+          "line_count": 147
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/auth.ts",
+          "line_count": 250
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/constants.ts",
+          "line_count": 34
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.caller.test.ts",
+          "line_count": 80
+        }
+      ],
+      "line_count": 1107,
+      "file_count": 5
+    },
+    {
+      "id": "primary-advantage-098",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-098.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.test.ts",
+          "line_count": 215
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/article-generator.ts",
+          "line_count": 88
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/audio-flashcard-generator.ts",
+          "line_count": 314
+        }
+      ],
+      "line_count": 617,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-099",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-099.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/audio-generator.ts",
+          "line_count": 611
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/audio-word-generator.ts",
+          "line_count": 245
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/evaluate-rating-generator.ts",
+          "line_count": 72
+        }
+      ],
+      "line_count": 928,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-100",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-100.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/image-generator.ts",
+          "line_count": 459
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/la-question-generator.ts",
+          "line_count": 36
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/mc-question-generator.ts",
+          "line_count": 42
+        }
+      ],
+      "line_count": 537,
+      "file_count": 3
+    },
+    {
+      "id": "primary-advantage-101",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-101.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/new-generator.ts",
+          "line_count": 727
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/question-generator.ts",
+          "line_count": 64
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/random-select-genre.ts",
+          "line_count": 36
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/sa-question-generator.ts",
+          "line_count": 43
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/sentence-translator.ts",
+          "line_count": 246
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/story-generator.ts",
+          "line_count": 58
+        }
+      ],
+      "line_count": 1174,
+      "file_count": 6
+    },
+    {
+      "id": "primary-advantage-102",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-102.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/topic-generator.ts",
+          "line_count": 43
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/genaretors/wordlist-generator.ts",
+          "line_count": 46
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/logging.ts",
+          "line_count": 38
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/server/utils/middleware.ts",
+          "line_count": 120
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/skaffold.yaml",
+          "line_count": 65
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/styles/globals.css",
+          "line_count": 173
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/tsconfig.json",
+          "line_count": 41
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/types/enum.ts",
+          "line_count": 108
+        }
+      ],
+      "line_count": 634,
+      "file_count": 8
+    },
+    {
+      "id": "primary-advantage-103",
+      "package_app": "apps/primary-advantage",
+      "evidence_file": "measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-103.md",
+      "files": [
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/types/index.d.ts",
+          "line_count": 582
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/types/types.d.ts",
+          "line_count": 2
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/utils/google.ts",
+          "line_count": 34
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/utils/openai.ts",
+          "line_count": 12
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/utils/resend.ts",
+          "line_count": 3
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/utils/storage.ts",
+          "line_count": 98
+        },
+        {
+          "package_app": "apps/primary-advantage",
+          "file": "apps/primary-advantage/vitest.config.ts",
+          "line_count": 15
+        }
+      ],
+      "line_count": 746,
+      "file_count": 7
+    }
+  ]
+}
