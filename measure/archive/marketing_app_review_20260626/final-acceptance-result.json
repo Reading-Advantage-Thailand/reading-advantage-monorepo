@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Final acceptance PASS for review-only track marketing_app_review_20260626. Line-review acceptance result status=pass, 45/45 files reviewed (100%), 4966 lines, 7/7 evidence files, 44 unique LR findings (3 Critical, 6 High, 18 Medium, 17 Low). Audit reports complete, no remediation claims. Plan has no [~] or [ ] markers; deferred tasks documented. This closeout does not claim product-green and did not remediate source code.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "DEFERRED-GRAPH-COUNT",
+      "severity": "note",
+      "detail": "graph.db count task (plan line 10) deferred:review-execution. Not run in this review-only track."
+    },
+    {
+      "id": "DEFERRED-BUILD-GATES",
+      "severity": "note",
+      "detail": "Marketing lint/type/test/build gates (plan line 44) deferred:review-execution. Review-only track; gates not run."
+    }
+  ],
+  "evidence": [
+    "line-review-acceptance-result.json: status=pass, 45/45 files, 44 unique findings",
+    "line-review-summary.md: 45/45 files reviewed (100%), 44 unique findings",
+    "line-review-findings.md: 44 findings cataloged (3 Critical, 6 High, 18 Medium, 17 Low)",
+    "lrf-extracted.json: 44 entries, 44 unique IDs",
+    "file-inventory.tsv: 45 files, 4966 lines",
+    "line-review-coverage.tsv: 45 rows, all status=reviewed, ranges=1-N",
+    "evidence/: 7 *.md evidence files present",
+    "audit-reports/marketing-app_20260626/: 8 required reports present, no remediation claims",
+    "setup-verification.json: all 5 checks pass",
+    "plan.md: no [~] or [ ] remaining; [b] rows deferred:review-execution"
+  ],
+  "commands": [],
+  "changed_files": [
+    "measure/tracks/marketing_app_review_20260626/metadata.json",
+    "measure/tracks/marketing_app_review_20260626/plan.md",
+    "measure/tracks/marketing_app_review_20260626/final-acceptance-result.json",
+    "measure/tracks/marketing_app_review_20260626/automation-supervisor-closeout-manifest.json",
+    "measure/tracks.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "track_id": "marketing_app_review_20260626",
+  "phase": "Phase 5: Final Acceptance and Closeout",
+  "baseline_sha": "7ad89ac39b6b871da0907c6b873329c75d6dc3b9",
+  "product_green_claimed": false,
+  "source_code_remediated": false,
+  "line_review_coverage": {
+    "result": "pass",
+    "files": 45,
+    "lines": 4966,
+    "evidence_files": 7,
+    "lr_findings": 44,
+    "bad_rows": {
+      "status": [],
+      "range": [],
+      "evidence": [],
+      "finding_count": []
+    }
+  },
+  "anti_pattern_audit": {
+    "A1": "pass: plan uses structured [x] and [b] deferred:<owner> markers; no substring heuristic.",
+    "A5": "pass: plan does not claim PASS=N, FAIL=0 or all checks pass; deferred gates recorded honestly.",
+    "A6": "pass: tracks.md archived row will state review coverage and findings without claiming fixed/product-green.",
+    "A9": "pass: no tests reference stale archived-track plan paths for this track."
+  },
+  "closeout_checker": {
+    "status": "unavailable",
+    "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track marketing_app_review_20260626",
+    "detail": "Closeout checker script not found at expected path. Review-only track had no commits, so only commit-SHA warnings would be expected."
+  }
+}

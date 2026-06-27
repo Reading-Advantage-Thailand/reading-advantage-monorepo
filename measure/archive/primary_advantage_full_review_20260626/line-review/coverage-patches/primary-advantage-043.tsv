@@ -1,0 +1,4 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/lesson/task/task-first-reading.tsx	570	coder-minimax-m3/primary-advantage-043	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-043.md	1-570	6
+apps/primary-advantage	apps/primary-advantage/components/lesson/task/task-introduction.tsx	139	coder-minimax-m3/primary-advantage-043	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-043.md	1-139	4
+apps/primary-advantage	apps/primary-advantage/components/lesson/task/task-language-questions.tsx	65	coder-minimax-m3/primary-advantage-043	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-043.md	1-65	1

@@ -1,0 +1,131 @@
+File	Category	Batch	InvLines	ActualLines	ReviewedRange	Reviewed	FindingEvidenceCount	ExistingTest	EvidencePath
+src/app/[locale]/(marketing)/(home)/page.tsx	pages	batch-01	215	215	1-215	reviewed		src/app/[locale]/(marketing)/(home)/page.test.tsx.skip (SKIPPED)	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/about/page.tsx	pages	batch-01	95	95	1-95	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/blog/page.tsx	pages	batch-01	40	40	1-40	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/blog/[slug]/page.tsx	pages	batch-01	30	30	1-30	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/blog/page/[page]/page.tsx	pages	batch-01	25	25	1-25	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/case-studies/page.tsx	pages	batch-01	30	30	1-30	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/contact/page.tsx	pages	batch-01	45	45	1-45	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/features/page.tsx	pages	batch-01	60	60	1-60	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/mastery-advantage/page.tsx	pages	batch-01	120	120	1-120	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/pricing/page.tsx	pages	batch-01	20	20	1-20	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/products/page.tsx	pages	batch-01	70	70	1-70	reviewed		None	line-review/evidence/batch-01/evidence.md
+src/app/[locale]/(marketing)/products/reading-advantage/page.tsx	pages	batch-02	250	516	1-516	reviewed		src/app/[locale]/(marketing)/products/reading-advantage/page.test.tsx	line-review/evidence/batch-02/evidence.md
+src/app/[locale]/(marketing)/products/primary-advantage/page.tsx	pages	batch-02	200	200	1-200	reviewed		src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx + page.test.tsx.skip (duplicate)	line-review/evidence/batch-02/evidence.md
+src/app/[locale]/(marketing)/products/science-advantage/page.tsx	pages	batch-02	200	200	1-200	reviewed		src/app/[locale]/(marketing)/products/science-advantage/page.test.tsx	line-review/evidence/batch-02/evidence.md
+src/app/[locale]/(marketing)/products/codecamp-advantage/page.tsx	pages	batch-02	200	200	1-200	reviewed		src/app/[locale]/(marketing)/products/codecamp-advantage/page.test.tsx	line-review/evidence/batch-02/evidence.md
+src/app/[locale]/(marketing)/products/math-advantage/page.tsx	pages	batch-02	200	200	1-200	reviewed		src/app/[locale]/(marketing)/products/math-advantage/page.test.tsx	line-review/evidence/batch-02/evidence.md
+src/app/[locale]/(marketing)/products/stem-advantage/page.tsx	pages	batch-02	180	180	1-180	reviewed		src/app/[locale]/(marketing)/products/stem-advantage/page.test.tsx	line-review/evidence/batch-02/evidence.md
+src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx	pages	batch-02	180	180	1-180	reviewed		src/app/[locale]/(marketing)/products/storytime-advantage/page.test.tsx	line-review/evidence/batch-02/evidence.md
+src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx	pages	batch-03	180	426	1-426	reviewed		src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx (Active)	line-review/evidence/batch-03/evidence.md
+src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx	pages	batch-03	180	480	1-480	reviewed		src/app/[locale]/(marketing)/products/zhongwen-advantage/page.test.tsx (Active)	line-review/evidence/batch-03/evidence.md
+src/app/[locale]/(marketing)/services/page.tsx	pages	batch-03	60	172	1-172	reviewed		None	line-review/evidence/batch-03/evidence.md
+src/app/[locale]/(marketing)/services/blended-learning/page.tsx	pages	batch-03	120	332	1-332	reviewed		None	line-review/evidence/batch-03/evidence.md
+src/app/[locale]/(marketing)/services/managed-service/page.tsx	pages	batch-03	120	224	1-224	reviewed		None	line-review/evidence/batch-03/evidence.md
+src/app/[locale]/layout.tsx	layouts	batch-03	50	31	1-31	reviewed		None	line-review/evidence/batch-03/evidence.md
+src/app/[locale]/(marketing)/layout.tsx	layouts	batch-03	30	23	1-23	reviewed		None	line-review/evidence/batch-03/evidence.md
+src/app/[locale]/(marketing)/products/reading-advantage/layout.tsx	layouts	batch-03	10	19	1-19	reviewed		None	line-review/evidence/batch-03/evidence.md
+src/components/layout/header.tsx	components	batch-03	180	177	1-177	reviewed		None	line-review/evidence/batch-03/evidence.md
+src/components/common/footer.tsx	components	batch-03	120	101	1-101	reviewed		None	line-review/evidence/batch-03/evidence.md
+src/components/layout/fade-in.tsx	components	batch-04	20	0	0 (empty file)	reviewed		None	line-review/evidence/batch-04/evidence.md
+src/components/layout/page-transition.tsx	components	batch-04	30	0	0 (empty file)	reviewed		None	line-review/evidence/batch-04/evidence.md
+src/components/layout/scroll-fade.tsx	components	batch-04	30	0	0 (empty file)	reviewed		None	line-review/evidence/batch-04/evidence.md
+src/components/marketing/hero-section.tsx	components	batch-04	120	283	1-283	reviewed		src/components/marketing/hero-section.test.tsx (Active)	line-review/evidence/batch-04/evidence.md
+src/components/marketing/marketing-svg.tsx	components	batch-04	150	33	1-33	reviewed		None	line-review/evidence/batch-04/evidence.md
+src/components/marketing/marketing-svg-client.tsx	components	batch-04	80	47	1-47	reviewed		None	line-review/evidence/batch-04/evidence.md
+src/components/marketing/mastery-advantage-graph.tsx	components	batch-04	200	548	1-548	reviewed		None	line-review/evidence/batch-04/evidence.md
+src/components/marketing/mastery-advantage-graph-data.ts	components	batch-04	40	620	1-620	reviewed		None	line-review/evidence/batch-04/evidence.md
+src/components/common/localized-link.tsx	components	batch-04	60	46	1-46	reviewed		src/components/common/localized-link.test.tsx (Active)	line-review/evidence/batch-04/evidence.md
+src/components/contact/contact-form.tsx	components	batch-04	180	151	1-151	reviewed		None	line-review/evidence/batch-04/evidence.md
+src/components/features/comparison-table.tsx	components	batch-05	120	142	1-142	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/pricing/pricing-table.tsx	components	batch-05	100	220	1-220	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/products/b2b-solutions.tsx	components	batch-05	80	331	1-331	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/products/b2c-solutions.tsx	components	batch-05	80	176	1-176	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/products/product-card.tsx	components	batch-05	60	39	1-39	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/products/tutor-advantage.tsx	components	batch-05	80	132	1-132	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/blog/blog-breadcrumbs.tsx	components	batch-05	20	29	1-29	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/blog/blog-card.tsx	components	batch-05	60	58	1-58	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/blog/blog-header.tsx	components	batch-05	30	27	1-27	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/blog/blog-layout.tsx	components	batch-05	40	15	1-15	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/blog/blog-pagination.tsx	components	batch-05	50	50	1-50	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/blog/blog-tags.tsx	components	batch-05	20	22	1-22	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/blog/contact-cta.tsx	components	batch-05	20	30	1-30	reviewed		None	line-review/evidence/batch-05/evidence.md
+src/components/blog/product-cta.tsx	components	batch-06	30	45	1-45	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/blog/related-posts.tsx	components	batch-06	40	27	1-27	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/blog/table-of-contents.tsx	components	batch-06	40	132	1-132	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/button.tsx	components	batch-06	30	64	1-64	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/card.tsx	components	batch-06	20	105	1-105	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/faq-accordion.tsx	components	batch-06	40	97	1-97	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/floating-pill.tsx	components	batch-06	20	74	1-74	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/horizontal-strip.tsx	components	batch-06	30	44	1-44	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/large-image-break.tsx	components	batch-06	20	66	1-66	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/overlapping-section.tsx	components	batch-06	20	37	1-37	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/select.tsx	components	batch-06	30	164	1-164	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/sheet.tsx	components	batch-06	40	140	1-140	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/components/ui/step-flow.tsx	components	batch-06	80	106	1-106	reviewed		None	line-review/evidence/batch-06/evidence.md
+src/locales/en.ts	locales	batch-07	400	79	1-79	reviewed		None	line-review/evidence/batch-07/evidence.md
+src/locales/th.ts	locales	batch-07	400	79	1-79	reviewed		None	line-review/evidence/batch-07/evidence.md
+src/locales/zh.ts	locales	batch-07	400	79	1-79	reviewed		None	line-review/evidence/batch-07/evidence.md
+src/locales/navigation.ts	locales	batch-07	200	27	1-27	reviewed	2	src/app/.../middleware locale tests exist (E2E)	line-review/evidence/batch-07/evidence.md
+src/locales/client.ts	locales	batch-07	30	5	1-5	reviewed		None	line-review/evidence/batch-07/evidence.md
+src/locales/server.ts	locales	batch-07	40	2	1-2	reviewed		None	line-review/evidence/batch-07/evidence.md
+src/locales/pages/home.ts	locales	batch-07	250	477	1-477	reviewed	3	None	line-review/evidence/batch-07/evidence.md
+src/locales/pages/about.ts	locales	batch-07	150	362	1-362	reviewed	1	None	line-review/evidence/batch-07/evidence.md
+src/locales/pages/contact.ts	locales	batch-07	150	122	1-122	reviewed		None	line-review/evidence/batch-07/evidence.md
+src/locales/pages/blog.ts	locales	batch-07	120	20	1-20	reviewed		None	line-review/evidence/batch-07/evidence.md
+src/locales/pages/feature.ts	locales	batch-08	200	149	1-149	reviewed	1	None	line-review/evidence/batch-08/evidence.md
+src/locales/pages/pricing.ts	locales	batch-08	100	89	1-89	reviewed		None	line-review/evidence/batch-08/evidence.md
+src/locales/pages/services.ts	locales	batch-08	120	248	1-248	reviewed	3	None	line-review/evidence/batch-08/evidence.md
+src/locales/pages/blended-learning.ts	locales	batch-08	150	242	1-242	reviewed		None	line-review/evidence/batch-08/evidence.md
+src/locales/pages/managed-service.ts	locales	batch-08	130	194	1-194	reviewed	3	None	line-review/evidence/batch-08/evidence.md
+src/locales/pages/case-studies.ts	locales	batch-08	80	362	1-362	reviewed	1	None	line-review/evidence/batch-08/evidence.md
+src/locales/pages/mastery-advantage.ts	locales	batch-08	200	218	1-218	reviewed		None	line-review/evidence/batch-08/evidence.md
+src/locales/pages/products/overview.ts	locales	batch-08	150	89	1-89	reviewed		None	line-review/evidence/batch-08/evidence.md
+src/locales/pages/products/reading-advantage.ts	locales	batch-08	300	578	1-578	reviewed	4	None	line-review/evidence/batch-08/evidence.md
+src/locales/pages/products/primary-advantage.ts	locales	batch-09	250	419	1-419	reviewed		None	line-review/evidence/batch-09/evidence.md
+src/locales/pages/products/science-advantage.ts	locales	batch-09	250	395	1-395	reviewed		None	line-review/evidence/batch-09/evidence.md
+src/locales/pages/products/codecamp-advantage.ts	locales	batch-09	200	386	1-386	reviewed		None	line-review/evidence/batch-09/evidence.md
+src/locales/pages/products/math-advantage.ts	locales	batch-09	200	275	1-275	reviewed		None	line-review/evidence/batch-09/evidence.md
+src/locales/pages/products/stem-advantage.ts	locales	batch-09	200	356	1-356	reviewed		None	line-review/evidence/batch-09/evidence.md
+src/locales/pages/products/storytime-advantage.ts	locales	batch-09	200	323	1-323	reviewed		None	line-review/evidence/batch-09/evidence.md
+src/locales/pages/products/tutor-advantage.ts	locales	batch-09	200	272	1-272	reviewed		None	line-review/evidence/batch-09/evidence.md
+src/locales/pages/products/zhongwen-advantage.ts	locales	batch-09	200	201	1-201	reviewed		None	line-review/evidence/batch-09/evidence.md
+src/locales/components/common/header.ts	locales	batch-09	250	45	1-45	reviewed		None	line-review/evidence/batch-09/evidence.md
+src/locales/components/common/footer.ts	locales	batch-10	200	65	1-65	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/locales/components/common/navigation.ts	locales	batch-10	150	68	1-68	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/locales/components/comparison-table.ts	locales	batch-10	80	212	1-212	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/locales/components/contact-form.ts	locales	batch-10	80	53	1-53	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/locales/components/locale-switcher.ts	locales	batch-10	30	21	1-21	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/locales/components/pagination.ts	locales	batch-10	40	17	1-17	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/locales/components/pricing-table.ts	locales	batch-10	60	516	1-516	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/locales/components/products/b2b-solutions.ts	locales	batch-10	60	299	1-299	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/locales/components/products/b2c-solutions.ts	locales	batch-10	60	125	1-125	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/locales/components/products/tutor-advantage.ts	locales	batch-10	60	74	1-74	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/lib/blog.ts	lib	batch-10	200	254	1-254	reviewed		e2e blog tests exist	line-review/evidence/batch-10/evidence.md
+src/lib/utils.ts	lib	batch-10	30	6	1-6	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/config/navigation.ts	config	batch-10	100	82	1-82	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/config/locale-config.ts	config	batch-10	50	31	1-31	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/i18n.ts	i18n	batch-10	30	18	1-18	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/i18n/routing.ts	i18n	batch-10	80	6	1-6	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/types/blog.ts	types	batch-10	30	37	1-37	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/types/nav.ts	types	batch-10	20	6	1-6	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/providers/locale-provider.tsx	providers	batch-10	40	18	1-18	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/switcher/locale-switcher.tsx	switcher	batch-10	40	46	1-46	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/proxy.ts	proxy	batch-10	20	26	1-26	reviewed		None	line-review/evidence/batch-10/evidence.md
+src/lib/blog.test.ts	test	batch-10	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-10.tsv; test-gaps.md
+src/lib/blog-locale.test.ts	test	batch-10	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-10.tsv; test-gaps.md
+src/lib/blog-posts-validation.test.ts	test	batch-10	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-10.tsv; test-gaps.md
+src/components/blog/blog-pagination.test.tsx	test	batch-05	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-05.tsv; test-gaps.md
+src/components/common/localized-link.test.tsx	test	batch-04	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-04.tsv; test-gaps.md
+src/components/marketing/hero-section.test.tsx	test	batch-04	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-04.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/reading-advantage/page.test.tsx	test	batch-02	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-02.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx	test	batch-02	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-02.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/science-advantage/page.test.tsx	test	batch-02	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-02.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/codecamp-advantage/page.test.tsx	test	batch-02	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-02.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/math-advantage/page.test.tsx	test	batch-02	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-02.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/stem-advantage/page.test.tsx	test	batch-02	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-02.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/storytime-advantage/page.test.tsx	test	batch-02	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-02.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/tutor-advantage/page.test.tsx	test	batch-03	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-03.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/zhongwen-advantage/page.test.tsx	test	batch-03	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-03.tsv; test-gaps.md
+src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx.skip	test	batch-02	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-02.tsv; test-gaps.md
+src/app/[locale]/(marketing)/(home)/page.test.tsx.skip	test	batch-01	—	—	reviewed (test-gaps)	reviewed		SELF	line-review/coverage-patches/batch-01.tsv; test-gaps.md

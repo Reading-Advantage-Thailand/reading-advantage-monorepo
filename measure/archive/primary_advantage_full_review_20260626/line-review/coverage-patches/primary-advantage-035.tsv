@@ -1,0 +1,2 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/lesson/games/lesson-sentence-order-word.tsx	1128	coder-deepseek-v4-flash/primary-advantage-035	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-035.md	1-1128	7

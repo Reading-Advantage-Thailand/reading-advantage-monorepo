@@ -1,0 +1,4 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/lesson/games/lesson-vocabulary-matching.tsx	736	coder-minimax-m3/primary-advantage-038	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-038.md	1-736	6
+apps/primary-advantage	apps/primary-advantage/components/lesson/lesson-card.tsx	66	coder-minimax-m3/primary-advantage-038	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-038.md	1-66	3
+apps/primary-advantage	apps/primary-advantage/components/lesson/lesson-language-question.tsx	365	coder-minimax-m3/primary-advantage-038	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-038.md	1-365	7

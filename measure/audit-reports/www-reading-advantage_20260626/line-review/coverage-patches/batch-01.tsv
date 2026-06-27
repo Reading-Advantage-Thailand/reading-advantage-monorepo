@@ -1,0 +1,12 @@
+File	Lines	ExistingTest	CoverageGap	Priority	SuggestedTestType	Notes
+src/app/[locale]/(marketing)/(home)/page.tsx	215	src/app/[locale]/(marketing)/(home)/page.test.tsx.skip (SKIPPED)	Homepage test exists but is skipped	Critical	Component/page	Unskip and fix the homepage test; verify metadata export, hero section, CTA links, product list rendering
+src/app/[locale]/(marketing)/about/page.tsx	95	None	No test exists	High	Component/page	Test metadata export values, section rendering, CTA link, hero section integration
+src/app/[locale]/(marketing)/blog/page.tsx	40	None	No test exists	High	Component/page	Test metadata export, blog post grid rendering, pagination, CTA link
+src/app/[locale]/(marketing)/blog/[slug]/page.tsx	30	None	No test exists	High	Component/page	Test generateMetadata, notFound behavior, post rendering, related posts, breadcrumbs
+src/app/[locale]/(marketing)/blog/page/[page]/page.tsx	25	None	No test exists	Medium	Component/page	Test paginated metadata generation, post grid for page N, generateStaticParams
+src/app/[locale]/(marketing)/case-studies/page.tsx	30	None	No test exists	High	Component/page	Test metadata export (currently missing), school data rendering, methodology section, CTA
+src/app/[locale]/(marketing)/contact/page.tsx	45	None	No test exists	High	Component/page	Test metadata export (currently missing), contact card rendering, Line QR display, TikTok link, mailto hrefs
+src/app/[locale]/(marketing)/features/page.tsx	60	None	No test exists	High	Component/page	Test metadata export values, feature icon grid, comparison table rendering, CTA
+src/app/[locale]/(marketing)/mastery-advantage/page.tsx	120	None	No test exists	High	Component/page	Test generateMetadata, SVG rendering, product grid, technical pillars, CTA section
+src/app/[locale]/(marketing)/pricing/page.tsx	20	None	No test exists	Medium	Component/page	Test metadata export, trust signals rendering, pricing table, CTA
+src/app/[locale]/(marketing)/products/page.tsx	70	None	No test exists	High	Component/page	Test metadata export, grade band cards, B2B/B2C/Tutor sub-components rendering, CTA links

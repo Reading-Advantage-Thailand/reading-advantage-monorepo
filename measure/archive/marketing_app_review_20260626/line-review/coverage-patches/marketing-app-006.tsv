@@ -1,0 +1,11 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/marketing	apps/marketing/app/lib/topic-research.ts	27	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-27	1
+apps/marketing	apps/marketing/app/login/page.tsx	147	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-147	2
+apps/marketing	apps/marketing/app/page.tsx	34	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-34	1
+apps/marketing	apps/marketing/app/settings/page.tsx	188	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-188	3
+apps/marketing	apps/marketing/eslint.config.mjs	31	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-31	1
+apps/marketing	apps/marketing/next-env.d.ts	6	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-6	0
+apps/marketing	apps/marketing/package.json	33	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-33	1
+apps/marketing	apps/marketing/tsconfig.json	26	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-26	0
+apps/marketing	apps/marketing/vite.config.ts	11	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-11	0
+apps/marketing	apps/marketing/vitest.config.ts	32	coder-vocengine-ark-code-latest/marketing-app-006	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md	1-32	1

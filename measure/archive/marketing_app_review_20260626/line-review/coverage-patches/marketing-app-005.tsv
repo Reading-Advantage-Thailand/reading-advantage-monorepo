@@ -1,0 +1,11 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/marketing	apps/marketing/app/layout.tsx	69	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-69	0
+apps/marketing	apps/marketing/app/lib/ai.ts	2	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-2	0
+apps/marketing	apps/marketing/app/lib/campaign-status.ts	21	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-21	0
+apps/marketing	apps/marketing/app/lib/db.ts	3	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-3	0
+apps/marketing	apps/marketing/app/lib/encryption.ts	53	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-53	0
+apps/marketing	apps/marketing/app/lib/scene-editor.ts	36	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-36	0
+apps/marketing	apps/marketing/app/lib/script-generation.ts	22	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-22	0
+apps/marketing	apps/marketing/app/lib/script-schema.ts	61	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-61	0
+apps/marketing	apps/marketing/app/lib/storage.ts	5	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-5	0
+apps/marketing	apps/marketing/app/lib/topic-dedup.ts	24	coder-xiaomi-mimo-v2-5/marketing-app-005	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md	1-24	0

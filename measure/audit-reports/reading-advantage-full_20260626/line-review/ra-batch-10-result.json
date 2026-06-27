@@ -1,0 +1,43 @@
+{
+  "track_id": "reading_advantage_full_review_20260626",
+  "review_role": "C",
+  "review_role_name": "UX/API/Contracts",
+  "batch_id": "ra-batch-10",
+  "date": "2026-06-27",
+  "baseline_sha": "6921fda0ee45012232bdd71c444d4e9523a10ab6",
+  "status": "complete",
+  "files_reviewed": 20,
+  "lines_reviewed": 973,
+  "findings": {
+    "critical": 1,
+    "high": 6,
+    "medium": 6,
+    "low": 1,
+    "total": 15
+  },
+  "finding_ids": [
+    "F-RA-B10-001",
+    "F-RA-B10-002",
+    "F-RA-B10-003",
+    "F-RA-B10-004",
+    "F-RA-B10-005",
+    "F-RA-B10-006",
+    "F-RA-B10-007",
+    "F-RA-B10-008",
+    "F-RA-B10-009",
+    "F-RA-B10-010",
+    "F-RA-B10-011",
+    "F-RA-B10-012",
+    "F-RA-B10-013",
+    "F-RA-B10-014",
+    "F-RA-B10-015"
+  ],
+  "key_themes": [
+    "OAuth2 endpoints lack app session authentication",
+    "Missing auth checks in classroom controller functions",
+    "No tenant/school scoping on classroom queries",
+    "Demo endpoints expose credentials and execute commands",
+    "Inconsistent API error response contracts"
+  ],
+  "report_path": "measure/audit-reports/reading-advantage-full_20260626/line-review/ra-batch-10.md"
+}

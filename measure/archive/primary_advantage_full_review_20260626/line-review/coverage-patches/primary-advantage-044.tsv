@@ -1,0 +1,5 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/lesson/task/task-lesson-summary.tsx	476	coder-vocengine-ark-code-latest/primary-advantage-044	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-044.md	1-476	5
+apps/primary-advantage	apps/primary-advantage/components/lesson/task/task-multiple-choice.tsx	35	coder-vocengine-ark-code-latest/primary-advantage-044	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-044.md	1-35	1
+apps/primary-advantage	apps/primary-advantage/components/lesson/task/task-preview-vocabulary.tsx	186	coder-vocengine-ark-code-latest/primary-advantage-044	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-044.md	1-186	2
+apps/primary-advantage	apps/primary-advantage/components/lesson/task/task-sentence-activities.tsx	371	coder-vocengine-ark-code-latest/primary-advantage-044	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-044.md	1-371	2

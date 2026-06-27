@@ -1,0 +1,6 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/school/school-profile-form.tsx	242	coder-xiaomi-mimo-v2-5-pro/primary-advantage-052	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-052.md	1-242	2
+apps/primary-advantage	apps/primary-advantage/components/shared/app-layout.tsx	95	coder-xiaomi-mimo-v2-5-pro/primary-advantage-052	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-052.md	1-95	0
+apps/primary-advantage	apps/primary-advantage/components/shared/change-role.tsx	187	coder-xiaomi-mimo-v2-5-pro/primary-advantage-052	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-052.md	1-187	2
+apps/primary-advantage	apps/primary-advantage/components/site-config.tsx	33	coder-xiaomi-mimo-v2-5-pro/primary-advantage-052	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-052.md	1-33	0
+apps/primary-advantage	apps/primary-advantage/components/site-header.tsx	60	coder-xiaomi-mimo-v2-5-pro/primary-advantage-052	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-052.md	1-60	1

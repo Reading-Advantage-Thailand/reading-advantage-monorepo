@@ -1,0 +1,45 @@
+{
+  "track_id": "reading_advantage_full_review_20260626",
+  "review_role": "A",
+  "review_role_name": "Correctness and Architecture",
+  "batch_id": "ra-batch-11",
+  "date": "2026-06-27",
+  "baseline_sha": "6921fda0ee45012232bdd71c444d4e9523a10ab6",
+  "status": "complete",
+  "files_reviewed": 20,
+  "lines_reviewed": 640,
+  "findings": {
+    "critical": 3,
+    "high": 5,
+    "medium": 5,
+    "low": 3,
+    "total": 16
+  },
+  "finding_ids": [
+    "F-RA-B11-001",
+    "F-RA-B11-002",
+    "F-RA-B11-003",
+    "F-RA-B11-004",
+    "F-RA-B11-005",
+    "F-RA-B11-006",
+    "F-RA-B11-007",
+    "F-RA-B11-008",
+    "F-RA-B11-009",
+    "F-RA-B11-010",
+    "F-RA-B11-011",
+    "F-RA-B11-012",
+    "F-RA-B11-013",
+    "F-RA-B11-014",
+    "F-RA-B11-015"
+  ],
+  "key_themes": [
+    "No route-level input validation on any of the 20 endpoints",
+    "Direct DB/domain bypass in deck-id and progress/update routes",
+    "Auth middleware checks login only, not role or tenant",
+    "Cross-tenant data access via id/deckId params and unscoped ranking fallback",
+    "XP/ranking integrity relies on client-reported metrics",
+    "Replay/double-submit risk on all completion and progress endpoints",
+    "Zero route/controller tests for these endpoints"
+  ],
+  "report_path": "measure/audit-reports/reading-advantage-full_20260626/line-review/ra-batch-11.md"
+}

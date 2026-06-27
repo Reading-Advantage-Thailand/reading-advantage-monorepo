@@ -3,23 +3,26 @@
 > **Audit:** reading-advantage-full_20260626
 > **Review roles:** B — Security / Tenancy / Auth; C — UX / API / Contracts; A — Correctness / Product Behavior
 > **Date:** 2026-06-27
-> **Baseline SHA:** 6921fda0ee45012232bdd71c444d4e9523a10ab6
+> **Baseline SHA:** 7ad89ac39b6b871da0907c6b873329c75d6dc3b9
+> **Source of truth:** [`line-review-synthesis.md`](./line-review-synthesis.md) §2 (severity tally) and §3.2 H-21 (game-page test failures) and §3.3 M-08 (wall-clock performance thresholds) and §3.3 M-20 (helper-only test suites) are the line-anchored evidence backing the test gaps listed below.
+> **Phase 7 acceptance:** **PENDING**.
 
 ---
 
 ## 1. Test Inventory Summary
 
-| Category | File Count | Coverage |
-|----------|-----------|----------|
-| Total test files (`*.test.ts`) | 44 | — |
-| Game logic tests (`lib/games/`) | 20 | Good |
-| Store tests (`store/`) | 3 | Partial |
-| Integration/unit tests (`__test__/`) | 18 | Sparse |
-| Controller tests | 0 | **Missing** |
-| Route handler tests | 0 | **Missing** |
-| API contract tests | 0 | **Missing** |
-| Auth flow tests | 1 (rbac.test.ts) | Minimal |
-| Session tests | 1 (session-schema.test.ts) | Schema only |
+| Category | File Count | Coverage | Batch verification |
+|----------|-----------|----------|--------------------|
+| Total test files (`*.test.ts`) | 44 | — | `00-inventory.md` §15 |
+| Game logic tests (`lib/games/`) | 20 | Good | batches 40, 41, 42 |
+| Store tests (`store/`) | 3 | Partial | batch 49 |
+| Integration/unit tests (`__test__/`) | 18 | Sparse | `ra-batch-00.md`, `ra-batch-01.md` (anti-pattern A4, A9) |
+| Controller tests | 0 | **Missing** | re-confirmed in batches 44–47 |
+| Route handler tests | 0 | **Missing** | re-confirmed in batch 09 |
+| API contract tests | 0 | **Missing** | re-confirmed in batches 44–47 |
+| Auth flow tests | 1 (rbac.test.ts) | Minimal | `ra-batch-01.md` |
+| Session tests | 1 (session-schema.test.ts) | Schema only | `ra-batch-01.md` |
+| Game page tests | 7 | Fail in jsdom (no `fetch` mock) | synthesis §3.2 H-21; batches 02, 03, 23 |
 
 ---
 
@@ -206,9 +209,9 @@ Test Zustand store state management. Isolated, fast.
 
 ---
 
-## 5. Product-Behavior / Correctness Test Gaps
+## 6. Product-Behavior / Correctness Test Gaps
 
-### 5.1 Core Learning Loop Tests (Critical)
+### 6.1 Core Learning Loop Tests (Critical)
 
 No tests verify the end-to-end student learning behavior:
 
@@ -221,7 +224,7 @@ No tests verify the end-to-end student learning behavior:
 | Streak and daily-goal calculation edge cases | `__test__/streak-calculation.test.ts` |
 | Level-test assessment JSON validation and level assignment | `__test__/level-test-assessment.test.ts` |
 
-### 5.2 Teacher / Admin Workflow Tests (High)
+### 6.2 Teacher / Admin Workflow Tests (High)
 
 | Behavior | Missing Test |
 |----------|-------------|
@@ -231,7 +234,7 @@ No tests verify the end-to-end student learning behavior:
 | Teacher dashboard only shows assigned classrooms | `__test__/teacher-scope.test.ts` |
 | Admin/school reports aggregate correct schools | `__test__/admin-report-scope.test.ts` |
 
-### 5.3 AI Content Generation Tests (High)
+### 6.3 AI Content Generation Tests (High)
 
 | Behavior | Missing Test |
 |----------|-------------|
@@ -240,7 +243,7 @@ No tests verify the end-to-end student learning behavior:
 | Level-test chat produces valid assessment JSON | `__test__/level-test-output.test.ts` |
 | AI failures fall back gracefully | `__test__/ai-fallback.test.ts` |
 
-### 5.4 Edge-Case / Data Persistence Tests (Medium)
+### 6.4 Edge-Case / Data Persistence Tests (Medium)
 
 | Behavior | Missing Test |
 |----------|-------------|
@@ -251,7 +254,7 @@ No tests verify the end-to-end student learning behavior:
 
 ---
 
-## 6. Recommended Test Investment Order
+## 7. Recommended Test Investment Order
 
 1. **XP idempotency / activity-log concurrency** — fixes PB-001 and prevents exploitation.
 2. **Classroom authorization** — existing C-007; add adversarial tests.
@@ -261,3 +264,21 @@ No tests verify the end-to-end student learning behavior:
 6. **Class accuracy report correctness** — fixes PB-005 / PB-006.
 7. **FSRS scheduling contract** — core learning loop.
 8. **API contract tests** — broad regression safety.
+
+## 8. Test-Quality Issues Surfaced by the 51-Batch Review
+
+The line review found several test-quality issues that the original sampled pass did not flag and that are not captured in the controller/route/contract test counts above. These are line-anchored findings in the synthesis and should be considered part of any test investment:
+
+- **C-RA-CRIT-07 (anti-pattern A4):** `__test__/implementation-validation.test.ts` is a vacuous-pass suite that asserts literal objects defined inside the test file. It claims to validate Phase 2.5 deliverables but never inspects the filesystem or imports. (`ra-batch-00.md` H-01.)
+- **C-RA-CRIT-08 (anti-pattern A9):** Five `__test__/jest30-phase5-*.test.ts` files resolve artifacts under `measure/tracks/jest30_major_migration/`, but that directory was archived to `measure/archive/jest30_major_migration/` on 2026-06-22. The tests are guaranteed to fail until the path is fixed. (`ra-batch-00.md` H-02.)
+- **M-08 (synthesis §3.3):** Three test suites (`alignment-metrics-core.test.ts:248-274`, `assignment-funnel-analytics.test.ts:472-506`, `genre-engagement-core.test.ts:425-463`) use hardcoded `< 100ms` wall-clock assertions, which are non-deterministic across CI runners.
+- **M-20 (synthesis §3.3):** Three test suites (`alignment-metrics-core.test.ts`, `assignment-funnel-analytics.test.ts`, `genre-engagement-core.test.ts`) define the helper functions they test inside the test file rather than importing from production code. They exercise no production code.
+- **H-21 (synthesis §3.2):** Six game-page test files fail in jsdom because `fetch` is not mocked: `dragon-rider/page.test.tsx`, `enchanted-library/page.test.tsx`, `magic-defense/page.test.tsx`, `rpg-battle/page.test.tsx`, `rune-match/page.test.tsx`, `wizard-vs-zombie/page.test.tsx`. (`ra-batch-02.md` F-UX-029, F-UX-030, F-UX-031; `ra-batch-03.md` H-02.)
+- **M-05 (synthesis §3.3):** Several suites use `as any` for inputs that could be typed with partial interfaces or `unknown` (e.g. `alignment-metrics-core.test.ts:163,188`).
+
+## 9. Cross-Reference to Other Artifacts
+
+- The 0/54 controller test count, 0/209 route handler test count, and 0 product-behavior learning-outcome test count are **independently confirmed** by the line-review batches: see synthesis §2 and the "Test / Coverage Observations" sections of `ra-batch-00.md`, `ra-batch-01.md`, `ra-batch-09.md`, `ra-batch-44.md`, `ra-batch-45.md`, `ra-batch-46.md`, `ra-batch-47.md`.
+- The M-RA-PB-8 (Product-Level Learning Loop Test Suite) migration track in `migration-tracks.md` is the proposed remediation for the gaps listed in §6.1.
+- The C-RA-CRIT-07 and C-RA-CRIT-08 cleanup items should be folded into M-RA-PB-8 as a small upfront cleanup.
+- This document does not claim acceptance or closeout. Phase 7 is pending.

@@ -1,0 +1,6 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/student-assignment-table.tsx	815	coder-xiaomi-mimo-v2-5/primary-advantage-053	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-053.md	1-815	6
+apps/primary-advantage	apps/primary-advantage/components/switchers/locale-switcher.tsx	70	coder-xiaomi-mimo-v2-5/primary-advantage-053	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-053.md	1-70	0
+apps/primary-advantage	apps/primary-advantage/components/switchers/theme-switcher-toggle.tsx	27	coder-xiaomi-mimo-v2-5/primary-advantage-053	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-053.md	1-27	0
+apps/primary-advantage	apps/primary-advantage/components/system/create-school-dialog.tsx	54	coder-xiaomi-mimo-v2-5/primary-advantage-053	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-053.md	1-54	1
+apps/primary-advantage	apps/primary-advantage/components/system/create-school-form.tsx	209	coder-xiaomi-mimo-v2-5/primary-advantage-053	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-053.md	1-209	4

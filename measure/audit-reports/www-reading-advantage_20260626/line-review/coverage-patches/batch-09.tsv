@@ -1,0 +1,10 @@
+File	Lines	ExistingTest	CoverageGap	Priority	SuggestedTestType	Notes
+src/locales/pages/products/primary-advantage.ts	419	None	No test for locale data integrity	High	Unit	Test all 3 locales (en, th, zh) export identical key structures; verify stat values ("+9.5 pts", "85%", "100%") are not duplicated from RA without justification
+src/locales/pages/products/science-advantage.ts	395	None	No test for locale data integrity	High	Unit	Test key structure consistency across en/th/zh; verify no stale date references; test metadata content
+src/locales/pages/products/codecamp-advantage.ts	386	None	No test for locale data integrity	High	Unit	Test key structure consistency; verify curriculum module list integrity across locales
+src/locales/pages/products/math-advantage.ts	275	None	No test for locale data integrity	Medium	Unit	Test key structure consistency; verify subject coverage list
+src/locales/pages/products/stem-advantage.ts	356	None	No test for locale data integrity	High	Unit	Test key structure consistency; flag "Coming in 2025" staleness; verify metadata content
+src/locales/pages/products/storytime-advantage.ts	323	None	No test for locale data integrity	High	Unit	Test key structure consistency; flag "Coming in 2025" staleness; verify FAQ content across locales
+src/locales/pages/products/tutor-advantage.ts	272	None	No test for locale data integrity	High	Unit	Test key structure consistency; flag "Coming in 2025" staleness; verify platform feature list
+src/locales/pages/products/zhongwen-advantage.ts	201	None	No test for locale data integrity	Medium	Unit	Test key structure consistency; verify HSK level mapping keys
+src/locales/components/common/header.ts	45	None	No test for locale data integrity	Low	Unit	Test nav link count and names across locales; verify ARIA labels present

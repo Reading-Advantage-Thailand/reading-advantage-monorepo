@@ -1,0 +1,25 @@
+{
+  "inventory_files": 446,
+  "inventory_lines": 118709,
+  "coverage_rows": 446,
+  "reviewed_rows": 446,
+  "not_reviewed_rows": 0,
+  "batch_count": 103,
+  "evidence_files_present": 103,
+  "total_findings": 893,
+  "severity_distribution": {
+    "Critical": 66,
+    "High": 177,
+    "Medium": 302,
+    "Low": 348
+  },
+  "fork_divergence_distribution": {
+    "Fork-specific regression": 414,
+    "Same root cause as Reading Advantage": 213,
+    "Primary-student adaptation risk": 115,
+    "Intentional product divergence that needs documentation": 80,
+    "Shared package migration blocker": 71
+  },
+  "errors": [],
+  "warnings": []
+}

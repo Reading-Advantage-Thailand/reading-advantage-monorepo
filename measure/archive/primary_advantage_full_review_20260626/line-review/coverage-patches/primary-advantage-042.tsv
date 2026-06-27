@@ -1,0 +1,2 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/lesson/task/task-deep-reading.tsx	659	coder-xiaomi-mimo-v2-5/primary-advantage-042	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-042.md	1-659	9

@@ -1,0 +1,5 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/pratice/order-words-game.tsx	1125	coder-minimax-m3/primary-advantage-050	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-050.md	1-1125	10
+apps/primary-advantage	apps/primary-advantage/components/pratice/order-words-page.tsx	28	coder-minimax-m3/primary-advantage-050	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-050.md	1-28	0
+apps/primary-advantage	apps/primary-advantage/components/progress-bar-xp.tsx	29	coder-minimax-m3/primary-advantage-050	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-050.md	1-29	2
+apps/primary-advantage	apps/primary-advantage/components/providers/query-provider.tsx	17	coder-minimax-m3/primary-advantage-050	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-050.md	1-17	0

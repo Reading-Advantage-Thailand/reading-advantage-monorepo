@@ -1,0 +1,5 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/teacher/class-roster.tsx	521	coder-xiaomi-mimo-v2-5/primary-advantage-058	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-058.md	1-521	6
+apps/primary-advantage	apps/primary-advantage/components/teacher/classroom-navigation.tsx	274	coder-xiaomi-mimo-v2-5/primary-advantage-058	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-058.md	1-274	0
+apps/primary-advantage	apps/primary-advantage/components/teacher/classroom-selector.tsx	201	coder-xiaomi-mimo-v2-5/primary-advantage-058	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-058.md	1-201	0
+apps/primary-advantage	apps/primary-advantage/components/teacher/create-classes.tsx	159	coder-xiaomi-mimo-v2-5/primary-advantage-058	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-058.md	1-159	1

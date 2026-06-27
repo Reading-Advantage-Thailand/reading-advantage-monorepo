@@ -1,0 +1,85 @@
+{
+  "report_id": "www-reading-advantage_20260626",
+  "generated_at": "2026-06-27",
+  "total_source_files": 130,
+  "total_source_lines": 20033,
+  "batches": [
+    {
+      "id": "batch-01",
+      "description": "Core marketing pages (homepage, about, blog list/detail, blog pagination, case studies, contact, features, mastery advantage, pricing, products overview)",
+      "file_count": 11,
+      "line_count": 750,
+      "max_batch_line_limit": 2500
+    },
+    {
+      "id": "batch-02",
+      "description": "Product pages (reading, primary, science, codecamp, math, stem, storytime)",
+      "file_count": 7,
+      "line_count": 1410,
+      "max_batch_line_limit": 2500
+    },
+    {
+      "id": "batch-03",
+      "description": "Remaining product + service pages + layouts + header/footer",
+      "file_count": 10,
+      "line_count": 1050,
+      "max_batch_line_limit": 2500
+    },
+    {
+      "id": "batch-04",
+      "description": "Layout components + marketing components + localized link + contact form",
+      "file_count": 10,
+      "line_count": 910,
+      "max_batch_line_limit": 2500
+    },
+    {
+      "id": "batch-05",
+      "description": "Feature, pricing, product, and blog components (part 1)",
+      "file_count": 13,
+      "line_count": 760,
+      "max_batch_line_limit": 2500
+    },
+    {
+      "id": "batch-06",
+      "description": "Blog components (part 2) + UI components suite",
+      "file_count": 12,
+      "line_count": 440,
+      "max_batch_line_limit": 2500
+    },
+    {
+      "id": "batch-07",
+      "description": "Locale root files (en, th, zh) + navigation + client/server + page locales (home, about, contact, blog)",
+      "file_count": 12,
+      "line_count": 2140,
+      "max_batch_line_limit": 2500
+    },
+    {
+      "id": "batch-08",
+      "description": "Page locales (features, pricing, services, blended-learning, managed-service, case-studies, mastery, products-overview, reading-advantage)",
+      "file_count": 9,
+      "line_count": 1430,
+      "max_batch_line_limit": 2500
+    },
+    {
+      "id": "batch-09",
+      "description": "Product page locales (primary, science, codecamp, math, stem, storytime, tutor, zhongwen) + common components locale (header, navigation)",
+      "file_count": 10,
+      "line_count": 1950,
+      "max_batch_line_limit": 2500
+    },
+    {
+      "id": "batch-10",
+      "description": "Remaining locale components + lib + config + i18n + types + providers + switcher + proxy",
+      "file_count": 16,
+      "line_count": 1460,
+      "max_batch_line_limit": 2500
+    }
+  ],
+  "unbatched_categories": [
+    "Tests (15 unit, 4 e2e) — covered separately in test-gaps.md",
+    "Blog markdown posts (96 files, 8256 lines) — content review deferred",
+    "Blog segment JSON (37 files) — generated artifacts",
+    "Public static assets (192 files) — reviewed via page-map references",
+    "Config and infra files (10 root config files) — reviewed via checklist"
+  ]
+}

@@ -1,0 +1,4 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.test.ts	215	coder-xiaomi-mimo-v2-5/primary-advantage-098	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-098.md	1-215	0
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/article-generator.ts	88	coder-xiaomi-mimo-v2-5/primary-advantage-098	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-098.md	1-88	4
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/audio-flashcard-generator.ts	314	coder-xiaomi-mimo-v2-5/primary-advantage-098	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-098.md	1-314	7

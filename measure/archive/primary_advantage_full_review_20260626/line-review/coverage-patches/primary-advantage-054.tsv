@@ -1,0 +1,4 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/system/edit-license-form.tsx	430	coder-vocengine-ark-code-latest/primary-advantage-054	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-054.md	1-430	3
+apps/primary-advantage	apps/primary-advantage/components/system/license-table.tsx	485	coder-vocengine-ark-code-latest/primary-advantage-054	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-054.md	1-485	3
+apps/primary-advantage	apps/primary-advantage/components/teacher/assign-button.tsx	92	coder-vocengine-ark-code-latest/primary-advantage-054	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-054.md	1-92	2

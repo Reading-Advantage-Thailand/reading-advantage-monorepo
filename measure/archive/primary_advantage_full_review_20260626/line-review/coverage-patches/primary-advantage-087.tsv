@@ -1,0 +1,2 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/public/login-image.png	11589	coder-xiaomi-mimo-v2-5-pro/primary-advantage-087	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-087.md	1-11589	3

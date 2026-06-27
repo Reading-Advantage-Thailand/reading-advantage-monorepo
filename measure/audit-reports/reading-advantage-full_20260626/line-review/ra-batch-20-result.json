@@ -1,0 +1,39 @@
+{
+  "track_id": "reading_advantage_full_review_20260626",
+  "review_role": "C",
+  "review_role_name": "UX/API/Contracts",
+  "batch_id": "ra-batch-20",
+  "date": "2026-06-27",
+  "baseline_sha": "d348666be047b929d02c747120c32d2ea0fc53fc",
+  "status": "complete",
+  "files_reviewed": 20,
+  "lines_reviewed": 5611,
+  "findings": {
+    "critical": 0,
+    "high": 3,
+    "medium": 4,
+    "low": 4,
+    "total": 12
+  },
+  "finding_ids": [
+    "F-RA-B20-001",
+    "F-RA-B20-002",
+    "F-RA-B20-003",
+    "F-RA-B20-004",
+    "F-RA-B20-005",
+    "F-RA-B20-006",
+    "F-RA-B20-007",
+    "F-RA-B20-008",
+    "F-RA-B20-009",
+    "F-RA-B20-010",
+    "F-RA-B20-011",
+    "F-RA-B20-012"
+  ],
+  "key_themes": [
+    "Missing useEffect dependency causes stale data for entityId/scope changes",
+    "Dynamic Tailwind class interpolation breaks JIT compilation",
+    "Dual telemetry systems with incompatible APIs flush to same endpoint",
+    "Duplicate metric cards showing identical session counts"
+  ],
+  "report_path": "measure/audit-reports/reading-advantage-full_20260626/line-review/ra-batch-20.md"
+}

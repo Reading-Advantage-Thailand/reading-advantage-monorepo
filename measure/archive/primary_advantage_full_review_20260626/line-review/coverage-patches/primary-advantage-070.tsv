@@ -1,0 +1,2 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/data/A1-story-example.json	699	coder-minimax-m3/primary-advantage-070	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-070.md	1-699	2

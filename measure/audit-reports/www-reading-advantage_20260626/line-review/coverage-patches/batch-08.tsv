@@ -1,0 +1,10 @@
+File	Lines	ExistingTest	CoverageGap	Priority	SuggestedTestType	Notes
+src/locales/pages/feature.ts	149	None	No locale parity test; no feature count/structure validation	High	Structural/Parity	Verify en/th/zh have same keys; verify features array length matches expected
+src/locales/pages/pricing.ts	89	None	No locale parity test; no pricing structure validation	Medium	Structural/Parity	Verify all 3 locales have same keys; verify no pricing figures leaked into locales
+src/locales/pages/services.ts	248	None	No locale parity test; no service data validation	High	Structural/Parity	Verify all 4 services present in each locale; verify service names match; catch translation typos (e.g. "แผนกวาน" vs "แผนก")
+src/locales/pages/blended-learning.ts	242	None	No locale parity test; no date validation for launch dates	High	Structural/Parity	Verify launch dates (May 2026, Jan 2026) are consistent or flagged for staleness
+src/locales/pages/managed-service.ts	194	None	No locale parity test; no absolute claim detection	Medium	Structural/Parity	Verify keys match between locales; check for "zero risk" / "ความเสี่ยงเป็นศูนย์" / "零风险" absolute claims
+src/locales/pages/case-studies.ts	362	None	No locale parity test; no detection of placeholder data	High	Structural/Parity	Verify all 3 locales have matching school data structures; detect placeholder patterns ("School A", "X points") and flag them
+src/locales/pages/mastery-advantage.ts	218	None	No locale parity test	Medium	Structural/Parity	Verify en/th/zh key parity; deep technical content should match across locales
+src/locales/pages/products/overview.ts	89	None	No locale parity test	Medium	Structural/Parity	Verify grade band descriptions consistent across all 3 locales
+src/locales/pages/products/reading-advantage.ts	578	None	No locale parity test; no games/section count validation	High	Structural/Parity	Verify all 3 locales have matching key structure; verify 4 games described in each locale; check for stale dates ("Starting May 2026" / "NEW IN MAY 2026")

@@ -1,0 +1,9 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/public/next.svg	1	coder-xiaomi-mimo-v2-5/primary-advantage-088	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-088.md	1-1	0
+apps/primary-advantage	apps/primary-advantage/public/nopic.png	82	coder-xiaomi-mimo-v2-5/primary-advantage-088	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-088.md	1-82	0
+apps/primary-advantage	apps/primary-advantage/public/primary-advantage.png	365	coder-xiaomi-mimo-v2-5/primary-advantage-088	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-088.md	1-365	0
+apps/primary-advantage	apps/primary-advantage/public/rank-1.png	162	coder-xiaomi-mimo-v2-5/primary-advantage-088	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-088.md	1-162	0
+apps/primary-advantage	apps/primary-advantage/public/rank-2.png	206	coder-xiaomi-mimo-v2-5/primary-advantage-088	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-088.md	1-206	0
+apps/primary-advantage	apps/primary-advantage/public/rank-3.png	234	coder-xiaomi-mimo-v2-5/primary-advantage-088	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-088.md	1-234	0
+apps/primary-advantage	apps/primary-advantage/public/vercel.svg	1	coder-xiaomi-mimo-v2-5/primary-advantage-088	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-088.md	1-1	0
+apps/primary-advantage	apps/primary-advantage/public/window.svg	1	coder-xiaomi-mimo-v2-5/primary-advantage-088	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-088.md	1-1	0

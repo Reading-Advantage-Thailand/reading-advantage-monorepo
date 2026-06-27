@@ -1,0 +1,398 @@
+[
+  {
+    "id": "LR-marketing-app-001-001",
+    "title": "Test comment claims an API-key leak that its own assertion forbids (stale/contradictory security documentation)",
+    "severity": "High",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts:308-317",
+    "batch": "marketing-app-001",
+    "evidence_file": "line-review/evidence/marketing-app-001.md"
+  },
+  {
+    "id": "LR-marketing-app-001-002",
+    "title": "Tautological assertion accepts both pass/fail outcomes, providing no real regression protection",
+    "severity": "Medium",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-1-boot-adversarial.test.ts:172-187",
+    "batch": "marketing-app-001",
+    "evidence_file": "line-review/evidence/marketing-app-001.md"
+  },
+  {
+    "id": "LR-marketing-app-001-003",
+    "title": "Test title disagrees with its assertion threshold (88 vs 122 hex chars)",
+    "severity": "Low",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts:366-371",
+    "batch": "marketing-app-001",
+    "evidence_file": "line-review/evidence/marketing-app-001.md"
+  },
+  {
+    "id": "LR-marketing-app-001-004",
+    "title": "`.env.example` claims to list \"required environment variables\" but documents only one",
+    "severity": "Low",
+    "category": "tests-build",
+    "file": "apps/marketing/.env.example:1-5",
+    "batch": "marketing-app-001",
+    "evidence_file": "line-review/evidence/marketing-app-001.md"
+  },
+  {
+    "id": "LR-marketing-app-002-001",
+    "title": "Brittle raw-source regex assertions for page structure",
+    "severity": "Low",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-3-settings.test.ts:143-174",
+    "batch": "marketing-app-002",
+    "evidence_file": "line-review/evidence/marketing-app-002.md"
+  },
+  {
+    "id": "LR-marketing-app-002-002",
+    "title": "Mock factory re-exports `__fakeAIClient` on the `@reading-advantage/ai` module surface",
+    "severity": "Medium",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-3-settings.test.ts:104-118, 386-391, 420-425",
+    "batch": "marketing-app-002",
+    "evidence_file": "line-review/evidence/marketing-app-002.md"
+  },
+  {
+    "id": "LR-marketing-app-002-003",
+    "title": "Stale \"RED at HEAD\" framing in header docblock and inline comments",
+    "severity": "Low",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-3-settings.test.ts:24-46, 184, 268-271, 282, 333",
+    "batch": "marketing-app-002",
+    "evidence_file": "line-review/evidence/marketing-app-002.md"
+  },
+  {
+    "id": "LR-marketing-app-002-004",
+    "title": "Stale \"RED at HEAD\" framing in phase-4-campaigns header docblock",
+    "severity": "Low",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-4-campaigns.test.ts:24-29, 274-275, 326-328",
+    "batch": "marketing-app-002",
+    "evidence_file": "line-review/evidence/marketing-app-002.md"
+  },
+  {
+    "id": "LR-marketing-app-002-005",
+    "title": "`next/server` NextResponse is replaced with a hand-rolled Response stub",
+    "severity": "Low",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-4-campaigns.test.ts:40-45",
+    "batch": "marketing-app-002",
+    "evidence_file": "line-review/evidence/marketing-app-002.md"
+  },
+  {
+    "id": "LR-marketing-app-002-006",
+    "title": "Drizzle select-chain mock supports only `.where()` and `.orderBy()`; unknown chain operations silently succeed",
+    "severity": "Low",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-4-campaigns.test.ts:93-99",
+    "batch": "marketing-app-002",
+    "evidence_file": "line-review/evidence/marketing-app-002.md"
+  },
+  {
+    "id": "LR-marketing-app-002-007",
+    "title": "Auth/session contract is not exercised in any PATCH or POST test in this batch",
+    "severity": "Medium",
+    "category": "auth-api",
+    "file": "apps/marketing/app/__tests__/phase-4-campaigns.test.ts:173-204, 234-265, 321-374",
+    "batch": "marketing-app-002",
+    "evidence_file": "line-review/evidence/marketing-app-002.md"
+  },
+  {
+    "id": "LR-marketing-app-002-008",
+    "title": "\"ordered by createdAt desc\" test does not assert ordering",
+    "severity": "Low",
+    "category": "tests-build",
+    "file": "apps/marketing/app/__tests__/phase-4-campaigns.test.ts:159-171",
+    "batch": "marketing-app-002",
+    "evidence_file": "line-review/evidence/marketing-app-002.md"
+  },
+  {
+    "id": "LR-marketing-app-003-001",
+    "title": "Campaigns listing returns all campaigns without auth or tenant scoping",
+    "severity": "High",
+    "category": "auth-api",
+    "file": "apps/marketing/app/api/campaigns/route.ts:6-18",
+    "batch": "marketing-app-003",
+    "evidence_file": "line-review/evidence/marketing-app-003.md"
+  },
+  {
+    "id": "LR-marketing-app-003-002",
+    "title": "Campaign creation lacks input validation and schoolId",
+    "severity": "Medium",
+    "category": "persistence",
+    "file": "apps/marketing/app/api/campaigns/route.ts:21-38",
+    "batch": "marketing-app-003",
+    "evidence_file": "line-review/evidence/marketing-app-003.md"
+  },
+  {
+    "id": "LR-marketing-app-003-003",
+    "title": "Campaign [id] GET and PATCH lack auth and multi-tenant access control",
+    "severity": "High",
+    "category": "auth-api",
+    "file": "apps/marketing/app/api/campaigns/[id]/route.ts:10-34, 36-87",
+    "batch": "marketing-app-003",
+    "evidence_file": "line-review/evidence/marketing-app-003.md"
+  },
+  {
+    "id": "LR-marketing-app-003-004",
+    "title": "Campaign [id] PATCH lacks Zod runtime validation on request body",
+    "severity": "Medium",
+    "category": "adapter-neutrality",
+    "file": "apps/marketing/app/api/campaigns/[id]/route.ts:41-42",
+    "batch": "marketing-app-003",
+    "evidence_file": "line-review/evidence/marketing-app-003.md"
+  },
+  {
+    "id": "LR-marketing-app-003-005",
+    "title": "Settings GET returns decrypted API keys with no authentication",
+    "severity": "Critical",
+    "category": "auth-api",
+    "file": "apps/marketing/app/api/settings/route.ts:12-28",
+    "batch": "marketing-app-003",
+    "evidence_file": "line-review/evidence/marketing-app-003.md"
+  },
+  {
+    "id": "LR-marketing-app-003-006",
+    "title": "Settings POST lacks Zod schema validation",
+    "severity": "Medium",
+    "category": "adapter-neutrality",
+    "file": "apps/marketing/app/api/settings/route.ts:30-54",
+    "batch": "marketing-app-003",
+    "evidence_file": "line-review/evidence/marketing-app-003.md"
+  },
+  {
+    "id": "LR-marketing-app-003-007",
+    "title": "Settings test-connection route lacks auth and input validation",
+    "severity": "High",
+    "category": "ai-boundary",
+    "file": "apps/marketing/app/api/settings/test-connection/route.ts:4-29",
+    "batch": "marketing-app-003",
+    "evidence_file": "line-review/evidence/marketing-app-003.md"
+  },
+  {
+    "id": "LR-marketing-app-003-008",
+    "title": "Login route uses console.error instead of shared structured logger",
+    "severity": "Low",
+    "category": "adapter-neutrality",
+    "file": "apps/marketing/app/api/auth/login/route.ts:9-14",
+    "batch": "marketing-app-003",
+    "evidence_file": "line-review/evidence/marketing-app-003.md"
+  },
+  {
+    "id": "LR-004-001",
+    "title": "Missing Zod input validation on generate-script POST body",
+    "severity": "Critical",
+    "category": "ai-boundary",
+    "file": "apps/marketing/app/api/video/generate-script/route.ts:11",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-004-002",
+    "title": "No authentication on video API routes",
+    "severity": "Critical",
+    "category": "auth-api",
+    "file": "apps/marketing/app/api/video/generate-script/route.ts:9",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-004-003",
+    "title": "Direct AI client instantiation in route handler",
+    "severity": "High",
+    "category": "adapter-neutrality",
+    "file": "apps/marketing/app/api/video/generate-script/route.ts:37-41",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-004-004",
+    "title": "Unvalidated campaignId in video project creation",
+    "severity": "High",
+    "category": "persistence",
+    "file": "apps/marketing/app/api/video/projects/route.ts:28",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-004-005",
+    "title": "Loop insert without transaction in save-topics",
+    "severity": "Medium",
+    "category": "persistence",
+    "file": "apps/marketing/app/api/video/save-topics/route.ts:19-24",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-004-006",
+    "title": "Unsafe JSON.parse on LLM output",
+    "severity": "Medium",
+    "category": "ai-boundary",
+    "file": "apps/marketing/app/api/video/generate-script/route.ts:48",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-004-007",
+    "title": "No HTTP response status validation in campaign detail page",
+    "severity": "Medium",
+    "category": "ux-i18n",
+    "file": "apps/marketing/app/campaigns/[id]/page.tsx:36-38",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-004-008",
+    "title": "No error state in campaign detail page",
+    "severity": "Low",
+    "category": "ux-i18n",
+    "file": "apps/marketing/app/campaigns/[id]/page.tsx:24-41",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-004-009",
+    "title": "No HTTP response status validation in video production page",
+    "severity": "Medium",
+    "category": "ux-i18n",
+    "file": "apps/marketing/app/campaigns/[id]/video/page.tsx:57-59",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-004-010",
+    "title": "No HTTP response status validation in campaigns list page",
+    "severity": "Medium",
+    "category": "ux-i18n",
+    "file": "apps/marketing/app/campaigns/page.tsx:45-47",
+    "batch": "marketing-app-004",
+    "evidence_file": "line-review/evidence/marketing-app-004.md"
+  },
+  {
+    "id": "LR-marketing-app-006-001",
+    "title": "Settings page collects and POSTs raw LLM API key with no client-side access control",
+    "severity": "Medium",
+    "category": "auth-api",
+    "file": "apps/marketing/app/settings/page.tsx:35-51",
+    "batch": "marketing-app-006",
+    "evidence_file": "line-review/evidence/marketing-app-006.md"
+  },
+  {
+    "id": "LR-marketing-app-006-002",
+    "title": "`vinext` dependency pinned to floating `latest`",
+    "severity": "Medium",
+    "category": "tests-build",
+    "file": "apps/marketing/package.json:23",
+    "batch": "marketing-app-006",
+    "evidence_file": "line-review/evidence/marketing-app-006.md"
+  },
+  {
+    "id": "LR-marketing-app-006-003",
+    "title": "Vitest configured with `environment: \"node\"` despite client/DOM pages",
+    "severity": "Medium",
+    "category": "tests-build",
+    "file": "apps/marketing/vitest.config.ts:21",
+    "batch": "marketing-app-006",
+    "evidence_file": "line-review/evidence/marketing-app-006.md"
+  },
+  {
+    "id": "LR-marketing-app-006-004",
+    "title": "UI strings hardcoded in English while document `lang=\"th\"`; no i18n for Thai audience",
+    "severity": "Medium",
+    "category": "ux-i18n",
+    "file": "apps/marketing/app/page.tsx:4-5",
+    "batch": "marketing-app-006",
+    "evidence_file": "line-review/evidence/marketing-app-006.md"
+  },
+  {
+    "id": "LR-marketing-app-006-005",
+    "title": "Topic dedup relies entirely on LLM prompt instruction, no programmatic guard",
+    "severity": "Low",
+    "category": "workflow",
+    "file": "apps/marketing/app/lib/topic-research.ts:9-12",
+    "batch": "marketing-app-006",
+    "evidence_file": "line-review/evidence/marketing-app-006.md"
+  },
+  {
+    "id": "LR-marketing-app-006-006",
+    "title": "ESLint config disables `no-explicit-any` to pin pre-existing tech debt",
+    "severity": "Low",
+    "category": "tests-build",
+    "file": "apps/marketing/eslint.config.mjs:20-27",
+    "batch": "marketing-app-006",
+    "evidence_file": "line-review/evidence/marketing-app-006.md"
+  },
+  {
+    "id": "LR-marketing-app-006-007",
+    "title": "Brittle string-matching error surfaces and raw error passthrough in UI",
+    "severity": "Low",
+    "category": "ux-i18n",
+    "file": "apps/marketing/app/settings/page.tsx:173-184",
+    "batch": "marketing-app-006",
+    "evidence_file": "line-review/evidence/marketing-app-006.md"
+  },
+  {
+    "id": "LR-007-001",
+    "title": "`pastTopics` table has no unique constraint on `(app, topic)`",
+    "severity": "Medium",
+    "category": "persistence",
+    "file": "packages/db/src/schema/marketing.ts:71-78",
+    "batch": "marketing-app-007",
+    "evidence_file": "line-review/evidence/marketing-app-007.md"
+  },
+  {
+    "id": "LR-007-002",
+    "title": "`videoProjects` table is missing an `updatedAt` column",
+    "severity": "Low",
+    "category": "persistence",
+    "file": "packages/db/src/schema/marketing.ts:39-50",
+    "batch": "marketing-app-007",
+    "evidence_file": "line-review/evidence/marketing-app-007.md"
+  },
+  {
+    "id": "LR-007-003",
+    "title": "`videoAssets` table is missing an `updatedAt` column",
+    "severity": "Low",
+    "category": "persistence",
+    "file": "packages/db/src/schema/marketing.ts:54-67",
+    "batch": "marketing-app-007",
+    "evidence_file": "line-review/evidence/marketing-app-007.md"
+  },
+  {
+    "id": "LR-007-004",
+    "title": "`settings.value` carries an \"encrypted at rest\" comment but the schema carries no enforcement and no sensitivity marker",
+    "severity": "Medium",
+    "category": "persistence",
+    "file": "packages/db/src/schema/marketing.ts:82-85",
+    "batch": "marketing-app-007",
+    "evidence_file": "line-review/evidence/marketing-app-007.md"
+  },
+  {
+    "id": "LR-007-005",
+    "title": "`videoProjects.script` is unconstrained `jsonb`; integrity relies entirely on route-layer `scriptSchema`",
+    "severity": "Medium",
+    "category": "persistence",
+    "file": "packages/db/src/schema/marketing.ts:45",
+    "batch": "marketing-app-007",
+    "evidence_file": "line-review/evidence/marketing-app-007.md"
+  },
+  {
+    "id": "LR-007-006",
+    "title": "`appEnum` hardcodes the app catalog; no shared source of truth",
+    "severity": "Low",
+    "category": "persistence",
+    "file": "packages/db/src/schema/marketing.ts:8-17",
+    "batch": "marketing-app-007",
+    "evidence_file": "line-review/evidence/marketing-app-007.md"
+  },
+  {
+    "id": "LR-007-007",
+    "title": "Marketing tables lack per-row owner/audit attribution",
+    "severity": "Low",
+    "category": "auth-api",
+    "file": "packages/db/src/schema/marketing.ts:24-106",
+    "batch": "marketing-app-007",
+    "evidence_file": "line-review/evidence/marketing-app-007.md"
+  }
+]

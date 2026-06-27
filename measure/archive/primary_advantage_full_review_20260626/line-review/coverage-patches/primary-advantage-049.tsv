@@ -1,0 +1,3 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/pratice/order-sentences-game.tsx	1027	coder-vocengine-ark-code-latest/primary-advantage-049	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-049.md	1-1027	5
+apps/primary-advantage	apps/primary-advantage/components/pratice/order-sentences-page.tsx	28	coder-vocengine-ark-code-latest/primary-advantage-049	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-049.md	1-28	0

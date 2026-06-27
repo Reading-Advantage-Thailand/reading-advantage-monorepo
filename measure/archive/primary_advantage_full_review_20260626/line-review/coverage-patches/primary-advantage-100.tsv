@@ -1,0 +1,4 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/image-generator.ts	459	coder-minimax-m3/primary-advantage-100	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-100.md	1-459	13
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/la-question-generator.ts	36	coder-minimax-m3/primary-advantage-100	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-100.md	1-36	4
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/mc-question-generator.ts	42	coder-minimax-m3/primary-advantage-100	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-100.md	1-42	4

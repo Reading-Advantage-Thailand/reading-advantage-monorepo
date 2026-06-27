@@ -1,0 +1,5 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/app/[locale]/admin/article-creation/page.tsx	16	measure-jr-green/primary-advantage-006	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-006.md	1-16	0
+apps/primary-advantage	apps/primary-advantage/app/[locale]/admin/dashboard/page.tsx	75	measure-jr-green/primary-advantage-006	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-006.md	1-75	2
+apps/primary-advantage	apps/primary-advantage/app/[locale]/admin/dashboard/students/page.tsx	552	measure-jr-green/primary-advantage-006	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-006.md	1-552	6
+apps/primary-advantage	apps/primary-advantage/app/[locale]/admin/dashboard/teachers/page.tsx	17	measure-jr-green/primary-advantage-006	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-006.md	1-17	3

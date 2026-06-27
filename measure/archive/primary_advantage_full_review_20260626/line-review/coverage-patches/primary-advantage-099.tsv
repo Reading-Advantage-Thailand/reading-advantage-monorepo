@@ -1,0 +1,4 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/audio-generator.ts	611	coder-vocengine-ark-code-latest/primary-advantage-099	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-099.md	1-611	4
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/audio-word-generator.ts	245	coder-vocengine-ark-code-latest/primary-advantage-099	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-099.md	1-245	2
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/evaluate-rating-generator.ts	72	coder-vocengine-ark-code-latest/primary-advantage-099	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-099.md	1-72	2

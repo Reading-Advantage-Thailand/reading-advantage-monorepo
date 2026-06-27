@@ -1,0 +1,5 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/server/controllers/articleController.ts	297	coder-vocengine-ark-code-latest/primary-advantage-089	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-089.md	1-297	1
+apps/primary-advantage	apps/primary-advantage/server/controllers/assignmentController.ts	398	coder-vocengine-ark-code-latest/primary-advantage-089	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-089.md	1-398	2
+apps/primary-advantage	apps/primary-advantage/server/controllers/classroomController.ts	415	coder-vocengine-ark-code-latest/primary-advantage-089	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-089.md	1-415	2
+apps/primary-advantage	apps/primary-advantage/server/controllers/schoolController.ts	40	coder-vocengine-ark-code-latest/primary-advantage-089	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-089.md	1-40	1

@@ -1,0 +1,21 @@
+{
+  "track": "marketing_app_review_20260626",
+  "baseline_sha": "7ad89ac39b6b871da0907c6b873329c75d6dc3b9",
+  "inventory_file_count": 45,
+  "coverage_row_count": 45,
+  "manifest_batch_count": 7,
+  "manifest_file_count": 45,
+  "all_coverage_pending": true,
+  "batch_cap_lines": 1200,
+  "batch_cap_files": 10,
+  "oversized_single_file_batches": 0,
+  "checks": {
+    "inventory_equals_coverage": true,
+    "manifest_covers_all_files": true,
+    "no_duplicate_assignments": true,
+    "all_batch_caps_ok": true,
+    "evidence_placeholders_exist": true
+  },
+  "errors": [],
+  "status": "pass"
+}

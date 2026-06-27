@@ -1,0 +1,2 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/lesson/games/lesson-sentence-cloze-test.tsx	1318	coder-xiaomi-mimo-v2-5/primary-advantage-032	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-032.md	1-1318	3

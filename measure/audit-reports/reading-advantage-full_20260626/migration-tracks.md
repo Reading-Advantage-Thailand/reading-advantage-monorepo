@@ -3,12 +3,15 @@
 > **Audit:** reading-advantage-full_20260626
 > **Review roles:** B — Security / Tenancy / Auth; C — UX / API / Contracts; A — Correctness / Product Behavior
 > **Date:** 2026-06-27
+> **Baseline SHA:** 7ad89ac39b6b871da0907c6b873329c75d6dc3b9
+> **Source of truth:** [`line-review-synthesis.md`](./line-review-synthesis.md) (deduplicated, prioritized findings from the 51 batch reports). The C-### / PB-### / F-RA-### finding IDs referenced here trace back to `findings.md`, `review-b-security-result.json`, and the per-batch line-review reports.
+> **Phase 7 acceptance:** **PENDING** — the proposed tracks below are remediation proposals, not completed work.
 
 ---
 
 ## Proposed Remediation Tracks (Priority Order)
 
-These tracks are proposed for the `measure/audit-reports/` → `measure/tracks/` promotion workflow. Each track groups related findings and proposes scope, effort, and dependencies.
+These tracks are proposed for the `measure/audit-reports/` → `measure/tracks/` promotion workflow. Each track groups related findings and proposes scope, effort, and dependencies. The line-anchored evidence for every track lives in the 51 batch reports; see `line-review-synthesis.md` §3 for the deduplicated mapping and the originating batch for each finding.
 
 ---
 
@@ -407,3 +410,43 @@ M-RA-PB-8 (learning-loop tests) ──┬── M-RA-PB-1
 **Total Critical + High effort:** ~11–14 weeks
 **Total medium + low effort:** ~12–15.5 weeks
 **Grand total:** ~23–29.5 weeks (parallelizable to ~14–18 weeks with 2–3 engineers)
+
+---
+
+## Line-Review Evidence Backing Each Track
+
+The 51 line-review batch reports provide the line-anchored evidence behind every M-RA-SEC-* and M-RA-PB-* track listed above. The table below shows which batches supply the strongest evidence for each track. The synthesis document is the deduplicated, prioritized view; the batch reports are the canonical evidence.
+
+| Track | Synthesis ID | Originating batch report(s) |
+|-------|--------------|------------------------------|
+| M-RA-SEC-1 | C-RA-CRIT-03, H-04, H-10, H-11, H-14 | `ra-batch-09.md`, `ra-batch-10.md`, `ra-batch-44.md`, `ra-batch-45.md`, `ra-batch-46.md`, `ra-batch-47.md` |
+| M-RA-SEC-2 | C-RA-CRIT-04, H-03 | `ra-batch-09.md`, `ra-batch-10.md`, `ra-batch-13.md`, `ra-batch-16.md`, `ra-batch-44.md` |
+| M-RA-SEC-3 | H-05 | `ra-batch-44.md` through `ra-batch-47.md`; `00-inventory.md` §10 |
+| M-RA-SEC-4 | H-06 | `ra-batch-37.md` (prompts), `ra-batch-44.md` (ai-controller), `ra-batch-48.md` (article-generator), `ra-batch-49.md` (translation-generator) |
+| M-RA-SEC-5 | (no direct line-review finding; depends on shared rate-limiter track) | n/a |
+| M-RA-SEC-6 | H-04, M-17 | `ra-batch-46.md`, `ra-batch-47.md` |
+| M-RA-SEC-7 | H-02 | batches 09, 10, 11, 14, 44, 45, 46 |
+| M-RA-SEC-8 | C-RA-CRIT-01, C-RA-CRIT-02, H-19, M-09 | `ra-batch-01.md` (server actions), `ra-batch-44.md` through `ra-batch-47.md` (controllers), `ra-batch-15.md` (system direct DB) |
+| M-RA-SEC-9 | H-01 | `ra-batch-44.md`, `ra-batch-49.md` |
+| M-RA-SEC-10 | H-03 | `ra-batch-13.md` (metrics/health), `ra-batch-14.md` (metrics/cache, metrics/stream) |
+| M-RA-SEC-11 | H-01, H-15 | `ra-batch-44.md`, `ra-batch-48.md`, `ra-batch-49.md` |
+| M-RA-PB-1 | C-RA-CRIT-06, H-22 | `ra-batch-46.md` (`user-controller.ts:157-328`); `ra-batch-11.md` (flashcard) |
+| M-RA-PB-2 | H-08 | `ra-batch-13.md`, `ra-batch-37.md`, `ra-batch-48.md` |
+| M-RA-PB-3 | H-08 | `ra-batch-48.md` (article-generator), `ra-batch-49.md` |
+| M-RA-PB-4 | M-16 | `ra-batch-44.md`, `ra-batch-46.md` |
+| M-RA-PB-5 | M-15 | `ra-batch-45.md`, `ra-batch-46.md` |
+| M-RA-PB-6 | M-13, M-14 | `ra-batch-46.md` (`user-controller.ts:169-198`, `user-controller.ts:37-66`), `ra-batch-47.md` (`question-controller.ts:25-63`) |
+| M-RA-PB-7 | H-07 | `ra-batch-45.md`, `ra-batch-46.md`, `ra-batch-47.md` |
+| M-RA-PB-8 | §3.2 H-21, §3.3 M-08 | `test-gaps.md` §5; re-confirmed in batches 00, 01, 09, 44 |
+
+## Additional Risks Surfaced by the 51-Batch Review
+
+The line review surfaced items that the original sampled pass did not flag and that are not yet in the M-RA-SEC-* / M-RA-PB-* plan:
+
+- **C-RA-CRIT-05** (admin page role check) and **C-RA-CRIT-01 / C-RA-CRIT-02** (unauthenticated `actions/rating.ts` and `actions/pratice.ts` session fabrication) — these are server-action paths and are best grouped with M-RA-SEC-1 and M-RA-SEC-8 in a follow-up track.
+- **C-RA-CRIT-07** (vacuous `implementation-validation.test.ts`) and **C-RA-CRIT-08** (archived-path Jest 30 tests) — anti-patterns A4 and A9; these should be folded into M-RA-PB-8 (test suite backfill) as a small upfront cleanup.
+- **H-20** (demo refresh endpoint executing shell with only access-key auth) — currently no track; consider a new M-RA-SEC-12.
+- **H-16** (SQL injection vector in `refresh-materialized-views.ts:17-31`) — currently no track; consider a new M-RA-SEC-13.
+- **M-10** (`Dockerfile` bakes secrets, uses `npm` in a pnpm monorepo, copies `prisma/`) — no track; consider M-RA-OPS-1.
+
+These additions are *proposals*. Phase 7 acceptance is **PENDING**; the final decision to spin off new tracks belongs to the next agent in the measure-orchestrator pipeline.

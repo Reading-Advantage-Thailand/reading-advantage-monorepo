@@ -1,0 +1,22 @@
+File	Lines	ExistingTest	CoverageGap	Priority	SuggestedTestType	Notes
+src/locales/components/common/footer.ts	65	None	No test for locale data integrity	Low	Unit	Test all 3 locales export identical key structure; verify {year} template existence
+src/locales/components/common/navigation.ts	68	None	No test for locale data integrity	Medium	Unit	Test itemsDescription covers all 9 products (currently missing Primary Advantage); verify key structure
+src/locales/components/comparison-table.ts	212	None	No test for locale data integrity	High	Unit	Test competitor names preserved across locales; verify feature count consistency; test "Last updated" is not stale (currently October 2023)
+src/locales/components/contact-form.ts	53	None	No test for locale data integrity	Low	Unit	Test all form field keys present in all 3 locales; verify role and product placeholders
+src/locales/components/locale-switcher.ts	21	None	No test for locale data integrity	Low	Unit	Test language names are correct in all 3 locales
+src/locales/components/pagination.ts	17	None	No test for locale data integrity	Low	Unit	Test all 3 locale keys present
+src/locales/components/pricing-table.ts	516	None	No test for locale data integrity	Critical	Unit	Test pricing features matrix integrity: verify all 25 feature rows (0-24) present in all 3 locales; test no missing tier values; test "coming-soon" keys consistently translated; test true/false consistency across tiers; test "Last updated" staleness check (currently October 2024)
+src/locales/components/products/b2b-solutions.ts	299	None	No test for locale data integrity	High	Unit	Test product badge dates are consistent with product page locale dates (cross-file); test all 8 products present with 4 features each; test grade range consistency
+src/locales/components/products/b2c-solutions.ts	125	None	No test for locale data integrity	Medium	Unit	Test CodeCamp features/highlights/outcomes lists match across locales
+src/locales/components/products/tutor-advantage.ts	74	None	No test for locale data integrity	Low	Unit	Test all tutor component locale keys present in all 3 locales
+src/lib/blog.ts	254	e2e blog tests exist	Blog library functions have no unit tests	High	Unit/Integration	Test getBlogPost with valid/invalid slugs; test getAllBlogPosts locale filtering; test getPaginatedPosts pagination logic; test extractHeadings; test getRelatedPosts; test calculateReadingTime; test validateFrontmatter with invalid data (currently uses manual validation instead of Zod)
+src/lib/utils.ts	6	None	No test for cn() utility	Low	Unit	Test cn() merges class names correctly
+src/config/navigation.ts	82	None	No test for nav config	Medium	Unit	Test all 9 products present in navigation; test productLinks export matches product count
+src/config/locale-config.ts	31	None	No test for locale config	Low	Unit	Test locales array matches routing locales; test defaultLocale
+src/i18n.ts	18	None	No test for i18n config	Medium	Unit	Test locale fallback behavior; test invalid locale handling
+src/i18n/routing.ts	6	None	No test for routing config	Low	Unit	Test routing locale list and default
+src/types/blog.ts	37	None	No test for type exports	Low	Unit	Test BlogPost and BlogListItem interfaces have required fields
+src/types/nav.ts	6	None	No test for type exports	Low	Unit	Test NavItem type structure
+src/providers/locale-provider.tsx	18	None	No test for provider	Medium	Unit/Integration	Test that LocaleProvider renders children with correct locale context
+src/switcher/locale-switcher.tsx	46	None	No test for locale switcher component	Medium	Component	Test locale switcher renders with correct locale options; test onChange fires correct locale
+src/proxy.ts	26	None	No test for middleware	High	Integration	Test Cloud Run port stripping logic (lines 11-18); test i18n redirect behavior; test matcher patterns

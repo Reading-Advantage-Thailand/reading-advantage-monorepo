@@ -1,0 +1,797 @@
+{
+  "report_id": "www-reading-advantage_20260626",
+  "track_id": "www_reading_advantage_review_20260626",
+  "generated_at": "2026-06-27",
+  "review_mode": "review-only; no source code remediation performed",
+  "current_date_context": "2026-06-27 (used to evaluate dateline/staleness findings)",
+  "scope": {
+    "files_in_inventory": 113,
+    "test_files": 17,
+    "total_rows_reviewed": 130,
+    "total_source_lines": 20033,
+    "batches": 10
+  },
+  "severity_totals": {
+    "Critical": 7,
+    "High": 12,
+    "Medium": 15,
+    "Low": 10,
+    "total": 44
+  },
+  "category_totals": {
+    "Claims": 12,
+    "SEO": 3,
+    "Accessibility": 3,
+    "i18n": 5,
+    "Conversion": 3,
+    "Code Quality": 11,
+    "Performance": 2,
+    "Assets": 2,
+    "Security": 1,
+    "Legal": 1,
+    "Architecture": 1
+  },
+  "note_dedup": "44 unique line-review findings (LRF-NNN) consolidated from ~120 raw per-file observations across 10 batches. Systemic themes (product-count overstatement, stale datelines, missing SEO metadata, hardcoded strings, broken forms, empty files) are deduplicated to single findings that preserve all file:line evidence in the evidence[] arrays.",
+  "findings": [
+    {
+      "id": "LRF-001",
+      "title": "\"Nine products\" claim overstated; only 4 products have app directories",
+      "severity": "High",
+      "category": "Claims",
+      "theme": "product-count-overstatement",
+      "systemic": true,
+      "evidence": [
+        "src/locales/pages/home.ts:6", "src/locales/pages/home.ts:40", "src/locales/pages/home.ts:200", "src/locales/pages/home.ts:360",
+        "src/locales/pages/products/reading-advantage.ts:63",
+        "src/locales/pages/mastery-advantage.ts:62", "src/locales/pages/mastery-advantage.ts:134", "src/locales/pages/mastery-advantage.ts:207",
+        "src/app/[locale]/(marketing)/(home)/page.tsx:80",
+        "src/app/[locale]/(marketing)/mastery-advantage/page.tsx:37-46"
+      ],
+      "batches": ["batch-01", "batch-07", "batch-08"],
+      "claims": ["C-MK-01", "C-MV-03"],
+      "description": "\"One engine, nine products.\" repeated in all 3 locales across home, mastery, and reading-advantage locales. Only 4 product app directories exist (reading-advantage, primary-advantage, science-advantage, codecamp-advantage). Math, STEM, Storytime, Tutor, Zhongwen have no app directories. The mastery-advantage-graph component renders only 8 domains (CodeCamp omitted), inconsistent with the 9-products claim.",
+      "recommendation": "Update locale strings to reflect actual launched product count and use 'Coming Soon' qualifiers for unbuilt products."
+    },
+    {
+      "id": "LRF-002",
+      "title": "Stale \"Launching in 2025\" / \"Coming in 2025\" launch claims (past due ~6-18 months)",
+      "severity": "Critical",
+      "category": "Claims",
+      "theme": "stale-launch-dateline",
+      "systemic": true,
+      "evidence": [
+        "src/app/[locale]/(marketing)/products/science-advantage/page.tsx:29",
+        "src/app/[locale]/(marketing)/products/codecamp-advantage/page.tsx:31",
+        "src/app/[locale]/(marketing)/products/math-advantage/page.tsx:26",
+        "src/app/[locale]/(marketing)/products/stem-advantage/page.tsx:27",
+        "src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx:24",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:26",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:30",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:378",
+        "src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx:85",
+        "src/locales/pages/products/stem-advantage.ts:10",
+        "src/locales/pages/products/storytime-advantage.ts:10",
+        "src/locales/pages/products/tutor-advantage.ts:10",
+        "src/locales/pages/products/tutor-advantage.ts:4"
+      ],
+      "batches": ["batch-02", "batch-03", "batch-09"],
+      "claims": ["C-SA-01", "C-CC-01", "C-MA-01", "C-STEM-01", "C-ST-01", "C-TA-02", "C-ZA-01"],
+      "description": "Multiple product pages and locales carry 'Launching in 2025' / 'Coming in 2025' / 'launching in early 2025' claims in OG metadata and body content across all three languages. Current date is June 2026, making these past due by 6-18 months.",
+      "recommendation": "Reconcile all launch dates with actual product status; replace stale 2025 datelines with current status or future-valid dates."
+    },
+    {
+      "id": "LRF-003",
+      "title": "Blended Learning / Reading Advantage \"May 2026\" datelines now past due",
+      "severity": "High",
+      "category": "Claims",
+      "theme": "stale-launch-dateline",
+      "systemic": false,
+      "evidence": [
+        "src/locales/pages/products/reading-advantage.ts:5-6",
+        "src/locales/pages/products/reading-advantage.ts:9",
+        "src/locales/pages/services.ts:12",
+        "src/locales/pages/blended-learning.ts:6"
+      ],
+      "batches": ["batch-02", "batch-08"],
+      "claims": ["C-RA-01"],
+      "description": "'Starting May 2026', 'Launching May 2026', 'LAUNCHING MAY 2026', and 'NEW IN MAY 2026' badges are past due as of June 2026.",
+      "recommendation": "Update to 'Now Available' / 'Launched' messaging."
+    },
+    {
+      "id": "LRF-004",
+      "title": "Cross-file launch date conflicts between product locales and B2B solutions locale",
+      "severity": "High",
+      "category": "Claims",
+      "theme": "stale-launch-dateline",
+      "systemic": true,
+      "evidence": [
+        "src/locales/pages/products/stem-advantage.ts:10",
+        "src/locales/components/products/b2b-solutions.ts:34",
+        "src/locales/pages/products/storytime-advantage.ts:10",
+        "src/locales/components/products/b2b-solutions.ts:78",
+        "src/locales/components/products/b2b-solutions.ts:45",
+        "src/locales/components/products/b2b-solutions.ts:12"
+      ],
+      "batches": ["batch-09", "batch-10"],
+      "claims": ["C-STEM-01", "C-ST-01", "C-SA-01", "C-PA-01"],
+      "description": "STEM product locale says 'Coming in 2025' but B2B locale says 'Coming mid 2027'; Storytime product locale says 'Coming in 2025' but B2B says 'Coming early 2027'. Science 'Coming early 2026' (B2B) is past due. Primary 'New for SY2025' badge past due at end of SY2025.",
+      "recommendation": "Establish single source of truth for product launch dates and reconcile across all locale files."
+    },
+    {
+      "id": "LRF-005",
+      "title": "Homepage has no metadata export (no title/description/OG)",
+      "severity": "Critical",
+      "category": "SEO",
+      "theme": "missing-seo-metadata",
+      "systemic": true,
+      "evidence": ["src/app/[locale]/(marketing)/(home)/page.tsx:1-215"],
+      "batches": ["batch-01"],
+      "claims": ["C-TC-03"],
+      "description": "The most important page on the site exports neither metadata nor generateMetadata. No title tag, description, or Open Graph tags.",
+      "recommendation": "Add locale-aware generateMetadata with title/description/OG tags."
+    },
+    {
+      "id": "LRF-006",
+      "title": "Multiple pages missing SEO metadata entirely",
+      "severity": "Critical",
+      "category": "SEO",
+      "theme": "missing-seo-metadata",
+      "systemic": true,
+      "evidence": [
+        "src/app/[locale]/(marketing)/case-studies/page.tsx",
+        "src/app/[locale]/(marketing)/contact/page.tsx",
+        "src/app/[locale]/(marketing)/services/page.tsx",
+        "src/app/[locale]/(marketing)/services/blended-learning/page.tsx",
+        "src/app/[locale]/(marketing)/services/managed-service/page.tsx",
+        "src/app/[locale]/(marketing)/products/reading-advantage/page.tsx",
+        "src/app/[locale]/(marketing)/products/primary-advantage/page.tsx"
+      ],
+      "batches": ["batch-01", "batch-02", "batch-03"],
+      "claims": ["C-TC-03"],
+      "description": "Case studies, contact, services overview, blended-learning, managed-service, and the Reading/Primary Advantage product pages have no metadata or generateMetadata export. RA/PA product pages lack metadata because they are 'use client'.",
+      "recommendation": "Add metadata exports (or move metadata to a server layout for client pages)."
+    },
+    {
+      "id": "LRF-007",
+      "title": "Reading Advantage product page is fully client-rendered ('use client')",
+      "severity": "Critical",
+      "category": "Architecture",
+      "theme": "client-render-seo",
+      "systemic": false,
+      "evidence": ["src/app/[locale]/(marketing)/products/reading-advantage/page.tsx:1"],
+      "batches": ["batch-02"],
+      "claims": ["C-RA-01"],
+      "description": "Entire 516-line content-heavy marketing page is client-rendered, which prevents server-side metadata, harms SEO and LCP. Layout-level metadata partially compensates.",
+      "recommendation": "Split into server shell with client islands; restore SSR for content."
+    },
+    {
+      "id": "LRF-008",
+      "title": "Non-functional waitlist/email forms (no action or onSubmit handler)",
+      "severity": "Critical",
+      "category": "Conversion",
+      "theme": "broken-form",
+      "systemic": true,
+      "evidence": [
+        "src/app/[locale]/(marketing)/products/science-advantage/page.tsx:380-392",
+        "src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx:425-441"
+      ],
+      "batches": ["batch-02", "batch-03"],
+      "claims": ["C-SA-01", "C-ZA-01"],
+      "description": "Science Advantage and Zhongwen Advantage waitlist forms have email inputs and submit buttons but no action or onSubmit handler. Submitting does a no-op page refresh; signups are lost.",
+      "recommendation": "Wire forms to a submission handler/endpoint or disable until functional."
+    },
+    {
+      "id": "LRF-009",
+      "title": "Contact form is mailto-only — no backend submission, analytics, or CRM",
+      "severity": "Critical",
+      "category": "Conversion",
+      "theme": "broken-form",
+      "systemic": false,
+      "evidence": ["src/components/contact/contact-form.tsx:28-43"],
+      "batches": ["batch-04"],
+      "claims": ["C-TC-03"],
+      "description": "Contact form submits via window.location.href = mailto:. No server-side capture, no validation beyond HTML required, no success/error feedback, no form reset, no analytics or CRM integration. Leads are lost if email fails.",
+      "recommendation": "Add server-side submission with confirmation UI and lead capture."
+    },
+    {
+      "id": "LRF-010",
+      "title": "Three empty layout component files (0 bytes)",
+      "severity": "Critical",
+      "category": "Code Quality",
+      "theme": "empty-component-file",
+      "systemic": true,
+      "evidence": [
+        "src/components/layout/fade-in.tsx",
+        "src/components/layout/page-transition.tsx",
+        "src/components/layout/scroll-fade.tsx"
+      ],
+      "batches": ["batch-04"],
+      "claims": ["C-MK-01"],
+      "description": "fade-in.tsx, page-transition.tsx, scroll-fade.tsx are all 0 bytes. If imported anywhere they export undefined and cause runtime errors. Inventory listed them at 20/30/30 lines.",
+      "recommendation": "Implement or delete and remove imports; verify usage across codebase."
+    },
+    {
+      "id": "LRF-011",
+      "title": "Missing static assets referenced by pages/layout (404s)",
+      "severity": "High",
+      "category": "Assets",
+      "theme": "missing-asset",
+      "systemic": true,
+      "evidence": [
+        "src/app/[locale]/(marketing)/features/page.tsx:46",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:55",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:127",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:289",
+        "src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx:112",
+        "src/app/[locale]/layout.tsx:221"
+      ],
+      "batches": ["batch-01", "batch-03"],
+      "claims": ["C-TC-03"],
+      "description": "public/grid-pattern.svg is referenced as a CSS background on features, tutor-advantage (3x), and zhongwen-advantage but does not exist. public/images/og-image.jpg referenced as default site OG image in root layout does not exist, breaking social sharing site-wide.",
+      "recommendation": "Add the missing assets or remove references."
+    },
+    {
+      "id": "LRF-012",
+      "title": "Case studies use placeholder data while heading claims \"Real Results from Real Schools\"",
+      "severity": "High",
+      "category": "Claims",
+      "theme": "placeholder-content",
+      "systemic": false,
+      "evidence": [
+        "src/locales/pages/case-studies.ts:23-92",
+        "src/locales/pages/case-studies.ts:142-212",
+        "src/locales/pages/case-studies.ts:263-333",
+        "src/app/[locale]/(marketing)/case-studies/page.tsx:12-43"
+      ],
+      "batches": ["batch-01", "batch-08"],
+      "claims": ["C-MK-03", "C-MK-04"],
+      "description": "All three locales contain placeholders: 'School A (Coming Soon)', '+X points over Y months', 'X articles per student', 'Teacher Name'. No authentic testimonials, partner logos, or data exist, while the heading promises real results.",
+      "recommendation": "Populate with real data or hide the page until data exists."
+    },
+    {
+      "id": "LRF-013",
+      "title": "\"GPT-5\" AI model claim is unverifiable / likely inaccurate",
+      "severity": "Medium",
+      "category": "Claims",
+      "theme": "unverifiable-ai-claim",
+      "systemic": true,
+      "evidence": [
+        "src/locales/pages/home.ts:143", "src/locales/pages/home.ts:303", "src/locales/pages/home.ts:461",
+        "src/locales/pages/products/primary-advantage.ts:30", "src/locales/pages/products/primary-advantage.ts:96"
+      ],
+      "batches": ["batch-07", "batch-09"],
+      "claims": ["C-TC-02", "C-PA-02"],
+      "description": "'Google Gemini & GPT-5 AI' and 'Intelligent writing feedback with GPT-5' named in locales. GPT-5 not confirmed released; specific model naming cannot be verified and contradicts adapter abstraction.",
+      "recommendation": "Use provider-neutral wording ('leading language models') or confirm actual models with PO."
+    },
+    {
+      "id": "LRF-014",
+      "title": "Primary Advantage efficacy stats duplicated verbatim from Reading Advantage",
+      "severity": "High",
+      "category": "Claims",
+      "theme": "duplicated-stats",
+      "systemic": false,
+      "evidence": [
+        "src/locales/pages/products/primary-advantage.ts:103-117",
+        "src/locales/pages/products/primary-advantage.ts:107"
+      ],
+      "batches": ["batch-09"],
+      "claims": ["C-PA-02"],
+      "description": "'+9.5 pts', '85% Weekly Active Usage', '100% Curriculum Alignment' with 'Aka, 2019' citation are identical to Reading Advantage. Using identical efficacy numbers for distinct products is misleading unless the same research is explicitly cited.",
+      "recommendation": "Use product-specific data or clearly attribute shared research."
+    },
+    {
+      "id": "LRF-015",
+      "title": "Unverifiable marketing/statistical claims requiring research citation or PO confirmation",
+      "severity": "Medium",
+      "category": "Claims",
+      "theme": "unverifiable-claim",
+      "systemic": true,
+      "evidence": [
+        "src/app/[locale]/(marketing)/products/math-advantage/page.tsx:288",
+        "src/app/[locale]/(marketing)/products/math-advantage/page.tsx:297",
+        "src/app/[locale]/(marketing)/products/math-advantage/page.tsx:305",
+        "src/locales/components/products/b2b-solutions.ts:27",
+        "src/locales/components/products/b2b-solutions.ts:28",
+        "src/locales/pages/home.ts:14",
+        "src/locales/pages/home.ts:57-58"
+      ],
+      "batches": ["batch-01", "batch-02", "batch-05", "batch-09"],
+      "claims": ["C-MA-02", "C-MK-02", "C-RA-04"],
+      "description": "Claims such as '3x faster learning', '95% confidence boost', '24/7 AI support', '50% greater grammar gains', 'twice the vocabulary growth', '2,172+ mapped skills', and the 'Aka, 2019 +9.5 pts' citation cannot be verified from code and need research citations or PO confirmation.",
+      "recommendation": "Attach citations or qualify claims; verify with PO."
+    },
+    {
+      "id": "LRF-016",
+      "title": "Vietnamese named as a supported language but app supports only en/th/zh on site",
+      "severity": "Medium",
+      "category": "Claims",
+      "theme": "language-support-claim",
+      "systemic": true,
+      "evidence": [
+        "src/locales/pages/products/reading-advantage.ts:59",
+        "src/locales/pages/products/reading-advantage.ts:252",
+        "src/locales/pages/products/reading-advantage.ts:445",
+        "src/locales/components/comparison-table.ts:63",
+        "src/locales/components/pricing-table.ts:57"
+      ],
+      "batches": ["batch-08", "batch-10"],
+      "claims": ["C-TC-02", "C-RA-02"],
+      "description": "Marketing copy claims 'English, Thai, Chinese, Vietnamese' support and ELL support for Vietnamese. The www site supports only en/th/zh. (Note: the RA app itself reportedly has a vi locale per batch-02/10 cross-reference — verify scope of the claim.)",
+      "recommendation": "Verify actual app language support and align copy."
+    },
+    {
+      "id": "LRF-017",
+      "title": "Stale 'Last updated' datelines on comparison and pricing tables",
+      "severity": "High",
+      "category": "Claims",
+      "theme": "stale-dateline",
+      "systemic": true,
+      "evidence": [
+        "src/locales/components/comparison-table.ts:3",
+        "src/locales/components/comparison-table.ts:74",
+        "src/locales/components/comparison-table.ts:145",
+        "src/locales/components/pricing-table.ts:7",
+        "src/locales/components/pricing-table.ts:178",
+        "src/locales/components/pricing-table.ts:351"
+      ],
+      "batches": ["batch-05", "batch-10"],
+      "claims": ["C-MK-04", "C-RA-05"],
+      "description": "Comparison table 'Last updated: October 2023' (33 months stale); pricing table 'Last updated: October 2024' (20 months stale). Competitor and pricing data may be outdated.",
+      "recommendation": "Refresh data and timestamps or automate the last-updated date."
+    },
+    {
+      "id": "LRF-018",
+      "title": "Persistent 'coming-soon' pricing features with no launch dates",
+      "severity": "Medium",
+      "category": "Claims",
+      "theme": "coming-soon-features",
+      "systemic": false,
+      "evidence": ["src/locales/components/pricing-table.ts:123-163"],
+      "batches": ["batch-05", "batch-10"],
+      "claims": ["C-RA-05"],
+      "description": "Pricing matrix rows 18-24 (gamification, parent portal, AI quizzes, personalized paths, AI analytics, AI content, virtual AI writing tutor) are marked 'coming-soon' across tiers with no launch dates and have persisted across releases.",
+      "recommendation": "Confirm roadmap delivery status with PO; add dates or remove."
+    },
+    {
+      "id": "LRF-019",
+      "title": "'ZERO RISK' absolute claim on Managed Service (legal exposure)",
+      "severity": "Medium",
+      "category": "Legal",
+      "theme": "absolute-claim",
+      "systemic": false,
+      "evidence": [
+        "src/locales/pages/managed-service.ts:11",
+        "src/locales/pages/managed-service.ts:76",
+        "src/locales/pages/managed-service.ts:140"
+      ],
+      "batches": ["batch-08"],
+      "claims": ["C-SV-02"],
+      "description": "'ZERO RISK' / 'ความเสี่ยงเป็นศูนย์' / '零风险' is an absolute claim that may be legally problematic.",
+      "recommendation": "Use 'MINIMAL RISK' or 'RISK-MITIGATED'."
+    },
+    {
+      "id": "LRF-020",
+      "title": "Mastery Advantage animated graph has no ARIA label / live region",
+      "severity": "High",
+      "category": "Accessibility",
+      "theme": "missing-aria",
+      "systemic": false,
+      "evidence": [
+        "src/components/marketing/mastery-advantage-graph.tsx:136",
+        "src/components/marketing/mastery-advantage-graph.tsx:268-275"
+      ],
+      "batches": ["batch-04"],
+      "claims": ["C-TC-03"],
+      "description": "The major animated SVG knowledge graph has no aria-label or role=img and its dynamic caption is not in an ARIA live region, making it invisible/unannounced to screen readers. prefers-reduced-motion is respected.",
+      "recommendation": "Add role=img + aria-label and a polite live region for captions."
+    },
+    {
+      "id": "LRF-021",
+      "title": "Hardcoded English strings not localized (systemic i18n gaps)",
+      "severity": "High",
+      "category": "i18n",
+      "theme": "hardcoded-strings",
+      "systemic": true,
+      "evidence": [
+        "src/app/[locale]/(marketing)/blog/page.tsx:44-45",
+        "src/app/[locale]/(marketing)/blog/page/[page]/page.tsx:54-59",
+        "src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx:46-59",
+        "src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx:61-79",
+        "src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx:81-97",
+        "src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx:331-338",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:149",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:154",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:159",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:369",
+        "src/components/blog/blog-breadcrumbs.tsx:12",
+        "src/components/blog/blog-breadcrumbs.tsx:18",
+        "src/components/marketing/mastery-advantage-graph.tsx:110-211",
+        "src/components/contact/contact-form.tsx:43"
+      ],
+      "batches": ["batch-01", "batch-03", "batch-04", "batch-05"],
+      "claims": ["C-TC-02"],
+      "description": "Extensive hardcoded English: blog listing/pagination descriptions and CTA text, Zhongwen interactive/educator/FAQ/learning sections, Tutor step titles and CEFR stat, blog breadcrumb labels, and Mastery graph captions/labels (also in data file). These do not translate for th/zh users.",
+      "recommendation": "Move all user-facing strings to locale keys for all 3 languages."
+    },
+    {
+      "id": "LRF-022",
+      "title": "Components branch only en/th with Chinese falling back to English",
+      "severity": "High",
+      "category": "i18n",
+      "theme": "missing-zh-locale",
+      "systemic": true,
+      "evidence": [
+        "src/components/blog/contact-cta.tsx:14-26",
+        "src/components/blog/product-cta.tsx:22-34"
+      ],
+      "batches": ["batch-05", "batch-06"],
+      "claims": ["C-TC-02"],
+      "description": "ContactCTA and ProductCTA use isThai ternary branching with no zh variant; Chinese visitors see English copy.",
+      "recommendation": "Replace with i18n keys covering en/th/zh."
+    },
+    {
+      "id": "LRF-023",
+      "title": "Sheet close button sr-only label hardcoded English",
+      "severity": "Medium",
+      "category": "i18n",
+      "theme": "hardcoded-strings",
+      "systemic": false,
+      "evidence": ["src/components/ui/sheet.tsx:69"],
+      "batches": ["batch-06"],
+      "claims": ["C-TC-02"],
+      "description": "<span className=\"sr-only\">Close</span> is hardcoded English; screen-reader users in all locales hear 'Close'.",
+      "recommendation": "Use a locale key for the accessible close label."
+    },
+    {
+      "id": "LRF-024",
+      "title": "Thai translation typos in services and managed-service locales",
+      "severity": "Medium",
+      "category": "i18n",
+      "theme": "translation-quality",
+      "systemic": false,
+      "evidence": [
+        "src/locales/pages/services.ts:88",
+        "src/locales/pages/services.ts:114",
+        "src/locales/pages/services.ts:116",
+        "src/locales/pages/services.ts:119",
+        "src/locales/pages/managed-service.ts:106",
+        "src/locales/pages/managed-service.ts:107",
+        "src/locales/pages/managed-service.ts:109"
+      ],
+      "batches": ["batch-08"],
+      "claims": ["C-TC-02"],
+      "description": "Garbled/duplicated Thai: 'ยืดหยบ่ท์' (should be ยืดหยุ่น), 'แผนกวาน' (should be แผนก), 'วัสดุปครบถ้วน' (should be วัสดุครบถ้วน), 'แดชบอร์ดีตาลละเอียด', duplicated 'อย่างสม่ำเสมออย่างสม่ำเสมอ', 'ผู้ปกคุม' (should be ผู้ปกครอง). Likely unproofed AI translations.",
+      "recommendation": "Native-speaker proofread Thai locales and add review to translation pipeline."
+    },
+    {
+      "id": "LRF-025",
+      "title": "Accessibility gaps in interactive UI components",
+      "severity": "Medium",
+      "category": "Accessibility",
+      "theme": "a11y-gaps",
+      "systemic": true,
+      "evidence": [
+        "src/components/blog/table-of-contents.tsx:53",
+        "src/components/ui/faq-accordion.tsx:78-87",
+        "src/components/ui/horizontal-strip.tsx:34",
+        "src/components/pricing/pricing-table.tsx:189",
+        "src/components/pricing/pricing-table.tsx:198",
+        "src/components/pricing/pricing-table.tsx:208",
+        "src/components/features/comparison-table.tsx:25",
+        "src/components/blog/blog-pagination.tsx:70-76"
+      ],
+      "batches": ["batch-05", "batch-06"],
+      "claims": ["C-TC-03"],
+      "description": "TOC desktop nav lacks distinctive aria-label; FAQ accordion panel lacks role/aria-labelledby association; horizontal-strip hides scrollbar (undiscoverable scroll); pricing checkmarks are empty spans with no accessible label; comparison table marks announce literally; disabled pagination links use href=# (tab+Enter navigates to #).",
+      "recommendation": "Add aria-labels/associations, accessible text for icons, and render disabled links as spans."
+    },
+    {
+      "id": "LRF-026",
+      "title": "Hardcoded contact details and inconsistent email addresses",
+      "severity": "Medium",
+      "category": "Code Quality",
+      "theme": "hardcoded-contact",
+      "systemic": true,
+      "evidence": [
+        "src/app/[locale]/(marketing)/contact/page.tsx:30",
+        "src/app/[locale]/(marketing)/contact/page.tsx:62",
+        "src/app/[locale]/(marketing)/contact/page.tsx:79",
+        "src/app/[locale]/(marketing)/contact/page.tsx:163",
+        "src/app/[locale]/(marketing)/contact/page.tsx:185",
+        "src/components/common/footer.tsx:73",
+        "src/components/common/footer.tsx:74",
+        "src/components/common/footer.tsx:77",
+        "src/components/common/footer.tsx:84",
+        "src/components/contact/contact-form.tsx:43"
+      ],
+      "batches": ["batch-01", "batch-03", "batch-04"],
+      "claims": ["C-TC-03"],
+      "description": "Email, phone, TikTok handle, and LINE QR alt text hardcoded in contact page and footer. Two different support emails are used: footer/contact 'support@reading-advantage.com' vs contact form 'contact@readingadvantage.com'.",
+      "recommendation": "Centralize contact details in locale/config and unify the email address."
+    },
+    {
+      "id": "LRF-027",
+      "title": "Pricing/B2B locale uses fragile numeric/order-dependent keys and 'as never' casts",
+      "severity": "Medium",
+      "category": "Code Quality",
+      "theme": "fragile-locale-keys",
+      "systemic": true,
+      "evidence": [
+        "src/components/pricing/pricing-table.tsx:15-166",
+        "src/components/products/b2b-solutions.tsx:140-144",
+        "src/app/[locale]/(marketing)/services/page.tsx:17-27",
+        "src/app/[locale]/(marketing)/features/page.tsx:25"
+      ],
+      "batches": ["batch-01", "batch-03", "batch-05"],
+      "claims": [],
+      "description": "Pricing features keyed by numeric indices 0-24; b2b-solutions and services pages use 'as never' casts to bypass type checking; features page uses a fragile IndexRange union that must match locale length.",
+      "recommendation": "Use named, typed locale keys."
+    },
+    {
+      "id": "LRF-028",
+      "title": "Blog library renders unsanitized HTML and lacks Zod frontmatter validation",
+      "severity": "High",
+      "category": "Security",
+      "theme": "xss-risk",
+      "systemic": false,
+      "evidence": [
+        "src/lib/blog.ts:74",
+        "src/lib/blog.ts:35-67",
+        "src/app/[locale]/(marketing)/blog/[slug]/page.tsx:101"
+      ],
+      "batches": ["batch-01", "batch-10"],
+      "claims": [],
+      "description": "remarkHtml runs with sanitize:false and blog content is injected via dangerouslySetInnerHTML, an XSS vector if any post contains malicious HTML. Frontmatter uses manual validation instead of a Zod schema (per project convention).",
+      "recommendation": "Sanitize HTML output and validate frontmatter with Zod."
+    },
+    {
+      "id": "LRF-029",
+      "title": "Primary Advantage missing from navigation dropdown descriptions",
+      "severity": "High",
+      "category": "i18n",
+      "theme": "nav-coverage-gap",
+      "systemic": false,
+      "evidence": ["src/locales/components/common/navigation.ts:13-20"],
+      "batches": ["batch-10"],
+      "claims": ["C-MK-01"],
+      "description": "navigation locale itemsDescription lists 8 products; Primary Advantage has no description, so the nav dropdown cannot render its description. config/navigation.ts does include Primary, creating inconsistency.",
+      "recommendation": "Add Primary Advantage description to navigation locale for all 3 languages."
+    },
+    {
+      "id": "LRF-030",
+      "title": "Services pages unreachable from header/primary navigation",
+      "severity": "Medium",
+      "category": "Conversion",
+      "theme": "nav-discoverability",
+      "systemic": false,
+      "evidence": [
+        "src/locales/components/common/header.ts:1-45",
+        "src/config/navigation.ts:1-82"
+      ],
+      "batches": ["batch-09", "batch-10"],
+      "claims": ["C-SV-01", "C-SV-02"],
+      "description": "Three service pages exist (/services, /services/blended-learning, /services/managed-service) but no header/primary nav link reaches them; only discoverable via footer or direct URL.",
+      "recommendation": "Add a Services entry to primary navigation."
+    },
+    {
+      "id": "LRF-031",
+      "title": "Pricing hardcoded in mailto links and marketing stats hardcoded in components",
+      "severity": "Medium",
+      "category": "Code Quality",
+      "theme": "hardcoded-content",
+      "systemic": true,
+      "evidence": [
+        "src/app/[locale]/(marketing)/products/primary-advantage/page.tsx:111",
+        "src/app/[locale]/(marketing)/products/primary-advantage/page.tsx:359",
+        "src/app/[locale]/(marketing)/products/math-advantage/page.tsx:288",
+        "src/app/[locale]/(marketing)/products/math-advantage/page.tsx:297",
+        "src/app/[locale]/(marketing)/products/math-advantage/page.tsx:305"
+      ],
+      "batches": ["batch-02"],
+      "claims": ["C-PA-02", "C-MA-02"],
+      "description": "Primary Advantage encodes '100 baht per student per month' and free pilot offer in mailto bodies; Math Advantage hardcodes '3x', '95%', '24/7' stats in the component rather than locale.",
+      "recommendation": "Move pricing/stats into locale data."
+    },
+    {
+      "id": "LRF-032",
+      "title": "Duplicate/parallel locale-aware Link implementations",
+      "severity": "Medium",
+      "category": "Code Quality",
+      "theme": "duplicate-implementation",
+      "systemic": false,
+      "evidence": [
+        "src/components/common/localized-link.tsx:1-46",
+        "src/locales/navigation.ts:1-27"
+      ],
+      "batches": ["batch-04", "batch-07"],
+      "claims": [],
+      "description": "LocalizedLink duplicates the Link from @/locales/navigation. Two parallel locale-aware link components risk inconsistent routing behavior.",
+      "recommendation": "Consolidate on a single locale-aware Link."
+    },
+    {
+      "id": "LRF-033",
+      "title": "navigation.ts locale derivation/locale-change lacks robustness",
+      "severity": "Low",
+      "category": "Code Quality",
+      "theme": "fragile-locale-detection",
+      "systemic": false,
+      "evidence": [
+        "src/locales/navigation.ts:13",
+        "src/locales/navigation.ts:24-26"
+      ],
+      "batches": ["batch-07"],
+      "claims": [],
+      "description": "useCurrentLocale derives locale via pathname.split('/')[1] (fragile); useChangeLocale calls router.replace without validating the locale against routing.locales.",
+      "recommendation": "Use next-intl detection and validate locale values."
+    },
+    {
+      "id": "LRF-034",
+      "title": "Mastery Advantage graph omits CodeCamp domain (8 of 9 products)",
+      "severity": "Low",
+      "category": "Claims",
+      "theme": "product-count-overstatement",
+      "systemic": false,
+      "evidence": [
+        "src/components/marketing/mastery-advantage-graph.tsx:130",
+        "src/components/marketing/mastery-advantage-graph-data.ts:166"
+      ],
+      "batches": ["batch-04"],
+      "claims": ["C-MK-01"],
+      "description": "Animated graph cycles 8 domains (reading, primary, storytime, math, science, stem, zhongwen, tutor); CodeCamp is absent, contradicting the 9-products narrative.",
+      "recommendation": "Reconcile graph domains with marketed product set."
+    },
+    {
+      "id": "LRF-035",
+      "title": "Image filename contains a space character",
+      "severity": "Low",
+      "category": "Assets",
+      "theme": "asset-naming",
+      "systemic": false,
+      "evidence": ["src/components/products/b2b-solutions.tsx:61"],
+      "batches": ["batch-05"],
+      "claims": [],
+      "description": "src=\"/primary-advantage logo.png\" contains a space; may cause URL-encoding issues in some CDN/proxy/build contexts.",
+      "recommendation": "Rename asset to kebab-case without spaces."
+    },
+    {
+      "id": "LRF-036",
+      "title": "Hardcoded non-locale-aware page titles",
+      "severity": "Medium",
+      "category": "SEO",
+      "theme": "non-locale-metadata",
+      "systemic": true,
+      "evidence": [
+        "src/app/[locale]/(marketing)/about/page.tsx:9-22",
+        "src/app/[locale]/(marketing)/features/page.tsx:10-23",
+        "src/app/[locale]/(marketing)/pricing/page.tsx:9-22",
+        "src/app/[locale]/layout.tsx:7-19",
+        "src/app/[locale]/(marketing)/products/reading-advantage/layout.tsx:3-11",
+        "src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx:24",
+        "src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx:82"
+      ],
+      "batches": ["batch-01", "batch-03"],
+      "claims": ["C-TC-03"],
+      "description": "Several metadata titles are hardcoded English (e.g., 'About Us - Reading Advantage (Thailand)', 'Features - Reading Advantage Thailand'); th/zh users see English titles. Many pages also lack metadataBase, hreflang, and canonical tags. Pricing title says 'Feature Matrix' (SEO mismatch).",
+      "recommendation": "Use locale-aware metadata with metadataBase, hreflang, and canonical."
+    },
+    {
+      "id": "LRF-037",
+      "title": "Reused alt text across distinct images on About page",
+      "severity": "Low",
+      "category": "Accessibility",
+      "theme": "alt-text",
+      "systemic": false,
+      "evidence": ["src/app/[locale]/(marketing)/about/page.tsx:76"],
+      "batches": ["batch-01"],
+      "claims": ["C-TC-03"],
+      "description": "altText.team key reused for two different images (about-team.jpg and teacher-at-board.png).",
+      "recommendation": "Provide distinct alt text per image."
+    },
+    {
+      "id": "LRF-038",
+      "title": "MarketingSvg server component uses synchronous fs and lacks error fallback",
+      "severity": "Low",
+      "category": "Performance",
+      "theme": "render-perf",
+      "systemic": false,
+      "evidence": [
+        "src/components/marketing/marketing-svg.tsx:20",
+        "src/components/marketing/marketing-svg.tsx:25-31"
+      ],
+      "batches": ["batch-04"],
+      "claims": [],
+      "description": "fs.existsSync at render time; <object> tag has no fallback content if SVG fails to load. zh locale has no SVG variant (uses default).",
+      "recommendation": "Cache/move to build-time and add fallback content."
+    },
+    {
+      "id": "LRF-039",
+      "title": "Global button hover transform causes minor layout shift",
+      "severity": "Low",
+      "category": "Performance",
+      "theme": "layout-shift",
+      "systemic": false,
+      "evidence": ["src/components/ui/button.tsx:8"],
+      "batches": ["batch-06"],
+      "claims": [],
+      "description": "hover:-translate-y-1 hover:shadow-lg applied to every button variant produces a 1px hover shift cumulatively across the UI.",
+      "recommendation": "Scope the hover effect or use transform that doesn't reflow."
+    },
+    {
+      "id": "LRF-040",
+      "title": "FAQ accordion uses max-h transition (animation clipping/stutter)",
+      "severity": "Low",
+      "category": "Code Quality",
+      "theme": "animation-antipattern",
+      "systemic": false,
+      "evidence": ["src/components/ui/faq-accordion.tsx:80-82"],
+      "batches": ["batch-06"],
+      "claims": [],
+      "description": "max-h-96 transition clips content taller than 24rem and delays collapse for shorter content.",
+      "recommendation": "Use grid-template-rows 0fr/1fr or measured height animation."
+    },
+    {
+      "id": "LRF-041",
+      "title": "Locale-switcher leftover commented code and arbitrary style values",
+      "severity": "Low",
+      "category": "Code Quality",
+      "theme": "cleanup",
+      "systemic": false,
+      "evidence": [
+        "src/switcher/locale-switcher.tsx:18",
+        "src/switcher/locale-switcher.tsx:34",
+        "src/switcher/locale-switcher.tsx:35"
+      ],
+      "batches": ["batch-10"],
+      "claims": [],
+      "description": "Commented-out '{ preserveSearchParams: true }', arbitrary w-[100px] and focus:ring-[rgb(20,110,245)] values rather than theme tokens.",
+      "recommendation": "Remove dead code and use theme tokens."
+    },
+    {
+      "id": "LRF-042",
+      "title": "Footer copyright uses HTML entity that may render literally",
+      "severity": "Low",
+      "category": "Code Quality",
+      "theme": "html-entity-risk",
+      "systemic": false,
+      "evidence": ["src/locales/components/common/footer.ts:20"],
+      "batches": ["batch-10"],
+      "claims": [],
+      "description": "&copy; embedded in a locale string; if the consumer HTML-escapes output the entity will display literally. {year} template handled correctly.",
+      "recommendation": "Use the © character or ensure consumer renders entity correctly."
+    },
+    {
+      "id": "LRF-043",
+      "title": "Skipped homepage test and duplicate Primary Advantage test files",
+      "severity": "Medium",
+      "category": "Code Quality",
+      "theme": "test-hygiene",
+      "systemic": false,
+      "evidence": [
+        "src/app/[locale]/(marketing)/(home)/page.test.tsx.skip",
+        "src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx",
+        "src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx.skip"
+      ],
+      "batches": ["batch-01", "batch-02"],
+      "claims": [],
+      "description": "Homepage test is skipped (.skip) and Primary Advantage has both an active test and a duplicate skipped test. Product page tests are shallow (4 DOM-presence selectors).",
+      "recommendation": "Unskip/fix homepage test, remove the duplicate, and deepen product page assertions."
+    },
+    {
+      "id": "LRF-044",
+      "title": "Work-in-progress comment and fragile string manipulation in product pages",
+      "severity": "Low",
+      "category": "Code Quality",
+      "theme": "cleanup",
+      "systemic": false,
+      "evidence": [
+        "src/app/[locale]/(marketing)/products/math-advantage/page.tsx:78",
+        "src/app/[locale]/(marketing)/products/science-advantage/page.tsx:270"
+      ],
+      "batches": ["batch-02"],
+      "claims": [],
+      "description": "Math Advantage has a '/* Hero Section — Already done, keep as-is */' WIP comment; Science Advantage uses point.replace(/^[\\u2713\\u2022]\\s*/, '') fragile bullet stripping.",
+      "recommendation": "Remove WIP comments; avoid fragile locale text manipulation."
+    }
+  ]
+}

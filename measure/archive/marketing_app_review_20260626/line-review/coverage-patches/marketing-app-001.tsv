@@ -1,0 +1,6 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/marketing	apps/marketing/.env.example	5	coder-vocengine-ark-code-latest/marketing-app-001	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-001.md	1-5	1
+apps/marketing	apps/marketing/.gitignore	7	coder-vocengine-ark-code-latest/marketing-app-001	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-001.md	1-7	0
+apps/marketing	apps/marketing/app/__tests__/phase-1-boot-adversarial.test.ts	209	coder-vocengine-ark-code-latest/marketing-app-001	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-001.md	1-209	1
+apps/marketing	apps/marketing/app/__tests__/phase-1-boot.test.ts	213	coder-vocengine-ark-code-latest/marketing-app-001	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-001.md	1-213	0
+apps/marketing	apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts	475	coder-vocengine-ark-code-latest/marketing-app-001	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-001.md	1-475	2

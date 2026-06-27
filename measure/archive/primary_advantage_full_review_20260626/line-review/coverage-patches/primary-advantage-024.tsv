@@ -1,0 +1,3 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/admin/teachers-table.tsx	945	coder-minimax-m3/primary-advantage-024	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-024.md	1-945	8
+apps/primary-advantage	apps/primary-advantage/components/articles/article-card.tsx	90	coder-minimax-m3/primary-advantage-024	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-024.md	1-90	7

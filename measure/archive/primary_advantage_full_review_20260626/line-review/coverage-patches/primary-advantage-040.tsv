@@ -1,0 +1,4 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/lesson/pratice/lesson-task-mcq.tsx	552	coder-deepseek-v4-flash/primary-advantage-040	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-040.md	1-552	4
+apps/primary-advantage	apps/primary-advantage/components/lesson/pratice/lesson-task-saq.tsx	297	coder-deepseek-v4-flash/primary-advantage-040	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-040.md	1-297	3
+apps/primary-advantage	apps/primary-advantage/components/lesson/standalone-lesson-card.tsx	67	coder-deepseek-v4-flash/primary-advantage-040	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-040.md	1-67	1

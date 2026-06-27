@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "track": "marketing_app_review_20260626",
+  "package_app": "apps/marketing",
+  "generated_at": "2026-06-27T14:15:02",
+  "baseline_sha": "7ad89ac39b6b871da0907c6b873329c75d6dc3b9",
+  "inventory_file": "measure/tracks/marketing_app_review_20260626/line-review/file-inventory.tsv",
+  "coverage_file": "measure/tracks/marketing_app_review_20260626/line-review/line-review-coverage.tsv",
+  "batch_policy": {
+    "target_max_lines": 1200,
+    "target_max_files": 10,
+    "exception": "A single file may exceed target_max_lines and then forms a one-file oversized batch."
+  },
+  "exclusions": [
+    ".cache",
+    ".next",
+    ".parcel-cache",
+    ".swc",
+    ".turbo",
+    ".vinext",
+    ".vite",
+    "build",
+    "coverage",
+    "dist",
+    "graph.db",
+    "graph.db-shm",
+    "graph.db-wal",
+    "node_modules",
+    "package-local graph/cache files",
+    "tsconfig.tsbuildinfo",
+    "*.tsbuildinfo"
+  ],
+  "shared_surfaces_included": [
+    "packages/db/src/schema/marketing.ts"
+  ],
+  "totals": {
+    "file_count": 45,
+    "line_count": 4966,
+    "binary_file_count": 0,
+    "batch_count": 7,
+    "oversized_batch_count": 0
+  },
+  "batches": [
+    {
+      "id": "marketing-app-001",
+      "package_app": "apps/marketing",
+      "evidence_file": "measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-001.md",
+      "files": [
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/.env.example",
+          "line_count": 5,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/.gitignore",
+          "line_count": 7,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/__tests__/phase-1-boot-adversarial.test.ts",
+          "line_count": 209,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/__tests__/phase-1-boot.test.ts",
+          "line_count": 213,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts",
+          "line_count": 475,
+          "binary": false
+        }
+      ],
+      "line_count": 909,
+      "file_count": 5,
+      "note": "within cap"
+    },
+    {
+      "id": "marketing-app-002",
+      "package_app": "apps/marketing",
+      "evidence_file": "measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-002.md",
+      "files": [
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+          "line_count": 451,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/__tests__/phase-4-campaigns.test.ts",
+          "line_count": 375,
+          "binary": false
+        }
+      ],
+      "line_count": 826,
+      "file_count": 2,
+      "note": "within cap"
+    },
+    {
+      "id": "marketing-app-003",
+      "package_app": "apps/marketing",
+      "evidence_file": "measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md",
+      "files": [
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/__tests__/phase-5-topics.test.ts",
+          "line_count": 395,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/__tests__/phase-6-script.test.ts",
+          "line_count": 453,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/auth/login/route.ts",
+          "line_count": 21,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/auth/logout/route.ts",
+          "line_count": 2,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/auth/session/route.ts",
+          "line_count": 2,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/campaigns/[id]/route.ts",
+          "line_count": 88,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/campaigns/route.ts",
+          "line_count": 39,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/health/db/route.ts",
+          "line_count": 18,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/settings/route.ts",
+          "line_count": 55,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/settings/test-connection/route.ts",
+          "line_count": 29,
+          "binary": false
+        }
+      ],
+      "line_count": 1102,
+      "file_count": 10,
+      "note": "within cap"
+    },
+    {
+      "id": "marketing-app-004",
+      "package_app": "apps/marketing",
+      "evidence_file": "measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-004.md",
+      "files": [
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/video/generate-script/route.ts",
+          "line_count": 71,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/video/projects/route.ts",
+          "line_count": 44,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/video/research-topics/route.ts",
+          "line_count": 78,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/api/video/save-topics/route.ts",
+          "line_count": 33,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/campaigns/[id]/page.tsx",
+          "line_count": 147,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/campaigns/[id]/video/page.tsx",
+          "line_count": 596,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/campaigns/page.tsx",
+          "line_count": 223,
+          "binary": false
+        }
+      ],
+      "line_count": 1192,
+      "file_count": 7,
+      "note": "within cap"
+    },
+    {
+      "id": "marketing-app-005",
+      "package_app": "apps/marketing",
+      "evidence_file": "measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-005.md",
+      "files": [
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/layout.tsx",
+          "line_count": 69,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/ai.ts",
+          "line_count": 2,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/campaign-status.ts",
+          "line_count": 21,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/db.ts",
+          "line_count": 3,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/encryption.ts",
+          "line_count": 53,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/scene-editor.ts",
+          "line_count": 36,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/script-generation.ts",
+          "line_count": 22,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/script-schema.ts",
+          "line_count": 61,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/storage.ts",
+          "line_count": 5,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/topic-dedup.ts",
+          "line_count": 24,
+          "binary": false
+        }
+      ],
+      "line_count": 296,
+      "file_count": 10,
+      "note": "within cap"
+    },
+    {
+      "id": "marketing-app-006",
+      "package_app": "apps/marketing",
+      "evidence_file": "measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-006.md",
+      "files": [
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/lib/topic-research.ts",
+          "line_count": 27,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/login/page.tsx",
+          "line_count": 147,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/page.tsx",
+          "line_count": 34,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/app/settings/page.tsx",
+          "line_count": 188,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/eslint.config.mjs",
+          "line_count": 31,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/next-env.d.ts",
+          "line_count": 6,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/package.json",
+          "line_count": 33,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/tsconfig.json",
+          "line_count": 26,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/vite.config.ts",
+          "line_count": 11,
+          "binary": false
+        },
+        {
+          "package_app": "apps/marketing",
+          "file": "apps/marketing/vitest.config.ts",
+          "line_count": 32,
+          "binary": false
+        }
+      ],
+      "line_count": 535,
+      "file_count": 10,
+      "note": "within cap"
+    },
+    {
+      "id": "marketing-app-007",
+      "package_app": "apps/marketing",
+      "evidence_file": "measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-007.md",
+      "files": [
+        {
+          "package_app": "packages/db",
+          "file": "packages/db/src/schema/marketing.ts",
+          "line_count": 106,
+          "binary": false
+        }
+      ],
+      "line_count": 106,
+      "file_count": 1,
+      "note": "within cap"
+    }
+  ]
+}

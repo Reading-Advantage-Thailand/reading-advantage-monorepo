@@ -1,0 +1,5 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/dashboard/user-xpoverall-chart.tsx	232	coder-deepseek-v4-flash/primary-advantage-030	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-030.md	1-232	2
+apps/primary-advantage	apps/primary-advantage/components/flashcards/deck-view.tsx	500	coder-deepseek-v4-flash/primary-advantage-030	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-030.md	1-500	3
+apps/primary-advantage	apps/primary-advantage/components/flashcards/empty-deck.tsx	310	coder-deepseek-v4-flash/primary-advantage-030	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-030.md	1-310	1
+apps/primary-advantage	apps/primary-advantage/components/flashcards/flashcard-dashboard.tsx	141	coder-deepseek-v4-flash/primary-advantage-030	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-030.md	1-141	2

@@ -771,4 +771,65 @@ Existing tests (`dashboard-summary-controller.test.ts`, `velocity-metrics.test.t
 - The confidence to refactor controllers into a domain layer is low.
 
 ### Recommendation
+
 Add behavior-focused integration tests for the core learning loops (article completion, XP idempotency, FSRS scheduling, assignment status transitions) using an in-memory or test-Postgres database.
+
+---
+
+## Line Review Synthesis
+
+> This section was added during the line-review synthesis pass (`line-review-synthesis.md`) against baseline SHA `7ad89ac39b6b871da0907c6b873329c75d6dc3b9`. The C-001..C-015 and PB-001..PB-010 finding IDs above are the aggregated triage names from the earlier sampled pass against baseline SHA `6921fda0`. The 51-batch line review (`line-review/ra-batch-00.md` through `line-review/ra-batch-50.md`) is the line-anchored source of truth behind those IDs.
+
+### Source of truth
+
+- **Coverage manifest:** [`line-review-coverage.md`](./line-review-coverage.md) records 1,016 in-scope tracked files, 51 batches (`ra-batch-00` through `ra-batch-50`), and the file-to-batch mapping.
+- **Deduplicated synthesis:** [`line-review-synthesis.md`](./line-review-synthesis.md) §3 lists the highest-priority findings, each cross-referenced to the originating batch report and the line numbers in the affected file.
+- **Per-batch reports:** `line-review/ra-batch-00.md` through `line-review/ra-batch-50.md` are the canonical evidence. The batches do not claim acceptance or closeout.
+
+### Mapping from C-### / PB-### IDs to line-review synthesis IDs
+
+| This document | Synthesis ID | Originating batch report(s) |
+|---------------|--------------|------------------------------|
+| C-001 (error response shapes) | H-09 | `ra-batch-09.md`, `ra-batch-11.md`, `ra-batch-13.md`, `ra-batch-44.md` |
+| C-002 (status in body) | H-09 | `ra-batch-11.md` (`flashcard/progress/update`) |
+| C-003 (unauthenticated sensitive) | H-03 | `ra-batch-09.md`, `ra-batch-10.md`, `ra-batch-13.md`, `ra-batch-16.md`, `ra-batch-44.md` |
+| C-004 (no Zod validation) | H-02 | batches 09, 10, 11, 14, 44, 45, 46 |
+| C-005 (duplicate auth routes) | (see `ra-batch-06.md`, `ra-batch-44.md`) | `ra-batch-06.md` (auth-controller), `ra-batch-44.md` (auth-controller) |
+| C-006 (FSRS lacks validation) | H-22 | `ra-batch-11.md` |
+| C-007 (classroom auth missing) | C-RA-CRIT-03 | `ra-batch-09.md` F-RA-B09-001..010; `ra-batch-45.md` |
+| C-008 (no audit logging) | H-05 | `ra-batch-44.md` through `ra-batch-47.md`; `00-inventory.md` §10 |
+| C-009 (console.log) | M-02 | every controller batch |
+| C-010 (inconsistent empty states) | M-03 | batches 09, 11, 13, 16, 44, 45 |
+| C-011 (race in flashcard) | H-22 | `ra-batch-11.md` |
+| C-012 (next-connect boilerplate) | H-18 | `ra-batch-12.md`, `ra-batch-13.md` |
+| C-013 (Google Translate SDK) | H-01 | `ra-batch-44.md` (`article-controller.ts:5,755-774`) |
+| C-014 (Firebase admin remnant) | H-01 | `ra-batch-44.md` (`generator-controller.ts:1499-1599`) |
+| C-015 (no response types) | (see §3.2 H-15) | `ra-batch-44.md` and others |
+| PB-001 (XP double-award) | C-RA-CRIT-06 | `ra-batch-46.md` (`user-controller.ts:157-328`) |
+| PB-002 (level-test JSON) | H-08 | `ra-batch-13.md`, `ra-batch-37.md`, `ra-batch-48.md` |
+| PB-003 (AI content quality) | H-08 | `ra-batch-48.md` (article-generator), `ra-batch-49.md` |
+| PB-004 (assignment status) | M-16 | `ra-batch-44.md`, `ra-batch-46.md` |
+| PB-005 (class accuracy) | M-15 | `ra-batch-45.md`, `ra-batch-46.md` |
+| PB-006 (open-ended threshold) | M-15 | `ra-batch-45.md`, `ra-batch-46.md` |
+| PB-007 (targetId fragile) | M-13 | `ra-batch-46.md` (`user-controller.ts:169-198`) |
+| PB-008 (license fallback) | M-14 | `ra-batch-46.md`, `ra-batch-47.md` |
+| PB-009 (unsafe casts) | H-07 | `ra-batch-45.md`, `ra-batch-46.md`, `ra-batch-47.md` |
+| PB-010 (no learning-loop tests) | §3.2 H-21 | `test-gaps.md` §5; re-confirmed in batches 00, 01, 09, 44 |
+
+### Additional Critical items surfaced by the 51-batch review
+
+The line review surfaced **seven additional Critical items** that the original sampled pass did not flag (see `line-review-synthesis.md` §3.1):
+
+- **C-RA-CRIT-01** — Unauthenticated `submitRating` server action. (`ra-batch-01.md` F-RA-B01-001.)
+- **C-RA-CRIT-02** — Session-token fabrication in `actions/pratice.ts`. (`ra-batch-01.md` F-RA-B01-002.)
+- **C-RA-CRIT-04** — `refreshAIInsightsAutomated` is unauthenticated. (`ra-batch-44.md`.)
+- **C-RA-CRIT-05** — Missing role check on admin `article-creation` and `management` pages. (`ra-batch-01.md` F-RA-B01-003, F-RA-B01-004.)
+- **C-RA-CRIT-07** — Vacuous `implementation-validation.test.ts` (anti-pattern A4). (`ra-batch-00.md` H-01.)
+- **C-RA-CRIT-08** — Five Jest 30 Phase 5 Red-proof tests reference archived track paths (anti-pattern A9). (`ra-batch-00.md` H-02.)
+- Plus additional 22 High clusters and ~548 Medium items (see `line-review-synthesis.md` §3.2, §3.3).
+
+### What this document does not do
+
+- It does not enumerate the per-line evidence for every finding — that is the per-batch report's job.
+- It does not claim acceptance or closeout. Phase 7 is pending. The prior `phase-acceptance-result.json` predates the 51-batch review and must be rerun or superseded.
+- It does not include the M-RA-SEC-* and M-RA-PB-* remediation tracks — those live in `migration-tracks.md`.

@@ -1,0 +1,11 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/marketing	apps/marketing/app/__tests__/phase-5-topics.test.ts	395	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-395	0
+apps/marketing	apps/marketing/app/__tests__/phase-6-script.test.ts	453	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-453	0
+apps/marketing	apps/marketing/app/api/auth/login/route.ts	21	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-21	1
+apps/marketing	apps/marketing/app/api/auth/logout/route.ts	2	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-2	0
+apps/marketing	apps/marketing/app/api/auth/session/route.ts	2	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-2	0
+apps/marketing	apps/marketing/app/api/campaigns/[id]/route.ts	88	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-88	2
+apps/marketing	apps/marketing/app/api/campaigns/route.ts	39	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-39	2
+apps/marketing	apps/marketing/app/api/health/db/route.ts	18	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-18	0
+apps/marketing	apps/marketing/app/api/settings/route.ts	55	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-55	2
+apps/marketing	apps/marketing/app/api/settings/test-connection/route.ts	29	coder-deepseek-v4-flash/marketing-app-003	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-003.md	1-29	1

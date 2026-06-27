@@ -1,0 +1,114 @@
+Category	File	Lines	Batch	Notes
+pages	src/app/[locale]/(marketing)/(home)/page.tsx	215	batch-01	Homepage
+pages	src/app/[locale]/(marketing)/about/page.tsx	95	batch-01	About
+pages	src/app/[locale]/(marketing)/blog/page.tsx	40	batch-01	Blog listing
+pages	src/app/[locale]/(marketing)/blog/[slug]/page.tsx	30	batch-01	Blog detail
+pages	src/app/[locale]/(marketing)/blog/page/[page]/page.tsx	25	batch-01	Blog pagination
+pages	src/app/[locale]/(marketing)/case-studies/page.tsx	30	batch-01	Case studies
+pages	src/app/[locale]/(marketing)/contact/page.tsx	45	batch-01	Contact
+pages	src/app/[locale]/(marketing)/features/page.tsx	60	batch-01	Features
+pages	src/app/[locale]/(marketing)/mastery-advantage/page.tsx	120	batch-01	Mastery Advantage
+pages	src/app/[locale]/(marketing)/pricing/page.tsx	20	batch-01	Pricing
+pages	src/app/[locale]/(marketing)/products/page.tsx	70	batch-01	Products overview
+pages	src/app/[locale]/(marketing)/products/reading-advantage/page.tsx	250	batch-02	RA product page
+pages	src/app/[locale]/(marketing)/products/primary-advantage/page.tsx	200	batch-02	PA product page
+pages	src/app/[locale]/(marketing)/products/science-advantage/page.tsx	200	batch-02	SA product page
+pages	src/app/[locale]/(marketing)/products/codecamp-advantage/page.tsx	200	batch-02	CCA product page
+pages	src/app/[locale]/(marketing)/products/math-advantage/page.tsx	200	batch-02	MA product page
+pages	src/app/[locale]/(marketing)/products/stem-advantage/page.tsx	180	batch-02	STEM product page
+pages	src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx	180	batch-02	Storytime product page
+pages	src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx	180	batch-03	Tutor product page
+pages	src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx	180	batch-03	Zhongwen product page
+pages	src/app/[locale]/(marketing)/services/page.tsx	60	batch-03	Services overview
+pages	src/app/[locale]/(marketing)/services/blended-learning/page.tsx	120	batch-03	Blended learning
+pages	src/app/[locale]/(marketing)/services/managed-service/page.tsx	120	batch-03	Managed service
+layouts	src/app/[locale]/layout.tsx	50	batch-03	Root layout
+layouts	src/app/[locale]/(marketing)/layout.tsx	30	batch-03	Marketing layout
+layouts	src/app/[locale]/(marketing)/products/reading-advantage/layout.tsx	10	batch-03	RA sub-layout
+components	src/components/layout/header.tsx	180	batch-03	Header
+components	src/components/layout/footer.tsx	120	batch-03	Footer
+components	src/components/layout/fade-in.tsx	20	batch-04	Fade-in wrapper
+components	src/components/layout/page-transition.tsx	30	batch-04	Page transition
+components	src/components/layout/scroll-fade.tsx	30	batch-04	Scroll fade
+components	src/components/marketing/hero-section.tsx	120	batch-04	Hero section
+components	src/components/marketing/marketing-svg.tsx	150	batch-04	Marketing SVG
+components	src/components/marketing/marketing-svg-client.tsx	80	batch-04	Marketing SVG client
+components	src/components/marketing/mastery-advantage-graph.tsx	200	batch-04	Mastery graph
+components	src/components/marketing/mastery-advantage-graph-data.ts	40	batch-04	Graph data
+components	src/components/common/localized-link.tsx	60	batch-04	Localized link
+components	src/components/contact/contact-form.tsx	180	batch-04	Contact form
+components	src/components/features/comparison-table.tsx	120	batch-05	Comparison table
+components	src/components/pricing/pricing-table.tsx	100	batch-05	Pricing table
+components	src/components/products/b2b-solutions.tsx	80	batch-05	B2B solutions
+components	src/components/products/b2c-solutions.tsx	80	batch-05	B2C solutions
+components	src/components/products/product-card.tsx	60	batch-05	Product card
+components	src/components/products/tutor-advantage.tsx	80	batch-05	Tutor component
+components	src/components/blog/blog-breadcrumbs.tsx	20	batch-05	Blog breadcrumbs
+components	src/components/blog/blog-card.tsx	60	batch-05	Blog card
+components	src/components/blog/blog-header.tsx	30	batch-05	Blog header
+components	src/components/blog/blog-layout.tsx	40	batch-05	Blog layout
+components	src/components/blog/blog-pagination.tsx	50	batch-05	Blog pagination
+components	src/components/blog/blog-tags.tsx	20	batch-05	Blog tags
+components	src/components/blog/contact-cta.tsx	20	batch-05	Blog contact CTA
+components	src/components/blog/product-cta.tsx	30	batch-06	Blog product CTA
+components	src/components/blog/related-posts.tsx	40	batch-06	Related posts
+components	src/components/blog/table-of-contents.tsx	40	batch-06	Table of contents
+components	src/components/ui/button.tsx	30	batch-06	UI button
+components	src/components/ui/card.tsx	20	batch-06	UI card
+components	src/components/ui/faq-accordion.tsx	40	batch-06	FAQ accordion
+components	src/components/ui/floating-pill.tsx	20	batch-06	Floating pill
+components	src/components/ui/horizontal-strip.tsx	30	batch-06	Horizontal strip
+components	src/components/ui/large-image-break.tsx	20	batch-06	Large image break
+components	src/components/ui/overlapping-section.tsx	20	batch-06	Overlapping section
+components	src/components/ui/select.tsx	30	batch-06	UI select
+components	src/components/ui/sheet.tsx	40	batch-06	UI sheet
+components	src/components/ui/step-flow.tsx	80	batch-06	Step flow
+locales	src/locales/en.ts	400	batch-07	English locale root
+locales	src/locales/th.ts	400	batch-07	Thai locale root
+locales	src/locales/zh.ts	400	batch-07	Chinese locale root
+locales	src/locales/navigation.ts	200	batch-07	Navigation locale
+locales	src/locales/client.ts	30	batch-07	Locale client
+locales	src/locales/server.ts	40	batch-07	Locale server
+locales	src/locales/pages/home.ts	250	batch-07	Homepage locale
+locales	src/locales/pages/about.ts	150	batch-07	About locale
+locales	src/locales/pages/contact.ts	150	batch-07	Contact locale
+locales	src/locales/pages/blog.ts	120	batch-07	Blog locale
+locales	src/locales/pages/feature.ts	200	batch-08	Feature locale
+locales	src/locales/pages/pricing.ts	100	batch-08	Pricing locale
+locales	src/locales/pages/services.ts	120	batch-08	Services locale
+locales	src/locales/pages/blended-learning.ts	150	batch-08	Blended learning locale
+locales	src/locales/pages/managed-service.ts	130	batch-08	Managed service locale
+locales	src/locales/pages/case-studies.ts	80	batch-08	Case studies locale
+locales	src/locales/pages/mastery-advantage.ts	200	batch-08	Mastery locale
+locales	src/locales/pages/products/overview.ts	150	batch-08	Products overview locale
+locales	src/locales/pages/products/reading-advantage.ts	300	batch-08	RA product locale
+locales	src/locales/pages/products/primary-advantage.ts	250	batch-09	PA product locale
+locales	src/locales/pages/products/science-advantage.ts	250	batch-09	SA product locale
+locales	src/locales/pages/products/codecamp-advantage.ts	200	batch-09	CCA product locale
+locales	src/locales/pages/products/math-advantage.ts	200	batch-09	MA product locale
+locales	src/locales/pages/products/stem-advantage.ts	200	batch-09	STEM product locale
+locales	src/locales/pages/products/storytime-advantage.ts	200	batch-09	Storytime locale
+locales	src/locales/pages/products/tutor-advantage.ts	200	batch-09	Tutor locale
+locales	src/locales/pages/products/zhongwen-advantage.ts	200	batch-09	Zhongwen locale
+locales	src/locales/components/common/header.ts	250	batch-09	Header locale
+locales	src/locales/components/common/footer.ts	200	batch-10	Footer locale
+locales	src/locales/components/common/navigation.ts	150	batch-10	Navigation locale strings
+locales	src/locales/components/comparison-table.ts	80	batch-10	Comparison table locale
+locales	src/locales/components/contact-form.ts	80	batch-10	Contact form locale
+locales	src/locales/components/locale-switcher.ts	30	batch-10	Locale switcher strings
+locales	src/locales/components/pagination.ts	40	batch-10	Pagination locale
+locales	src/locales/components/pricing-table.ts	60	batch-10	Pricing table locale
+locales	src/locales/components/products/b2b-solutions.ts	60	batch-10	B2B solutions locale
+locales	src/locales/components/products/b2c-solutions.ts	60	batch-10	B2C solutions locale
+locales	src/locales/components/products/tutor-advantage.ts	60	batch-10	Tutor locale strings
+lib	src/lib/blog.ts	200	batch-10	Blog library
+lib	src/lib/utils.ts	30	batch-10	Utilities
+config	src/config/navigation.ts	100	batch-10	Nav config
+config	src/config/locale-config.ts	50	batch-10	Locale config
+i18n	src/i18n.ts	30	batch-10	i18n main
+i18n	src/i18n/routing.ts	80	batch-10	i18n routing
+types	src/types/blog.ts	30	batch-10	Blog types
+types	src/types/nav.ts	20	batch-10	Nav types
+providers	src/providers/locale-provider.tsx	40	batch-10	Locale provider
+switcher	src/switcher/locale-switcher.tsx	40	batch-10	Locale switcher component
+proxy	src/proxy.ts	20	batch-10	Proxy config

@@ -1,0 +1,14 @@
+File	Lines	ExistingTest	CoverageGap	Priority	SuggestedTestType	Notes
+src/components/blog/product-cta.tsx	45	None	No test exists	High	Component	Test: null return when no product prop, en/th locale branching, product name generation from path (getProductName), CTA link href, ArrowRight icon, gradient background
+src/components/blog/related-posts.tsx	27	None	No test exists	Medium	Component	Test: null return when empty posts, section rendering with h2, grid layout (1/2/3 cols), BlogCard delegation, youMightAlsoLike locale key
+src/components/blog/table-of-contents.tsx	132	None	No test exists	Medium	Component	Test: heading list rendering with indentation (h3), intersection observer active highlighting, desktop sticky nav and mobile collapsible button, smooth scroll onClick, aria-expanded toggle, empty headings returns null
+src/components/ui/button.tsx	64	None	No test exists	Low	UI Component	Standard library component — low priority for dedicated test; covered by integration/page tests
+src/components/ui/card.tsx	105	None	No test exists	Low	UI Component	Standard library component — low priority for dedicated test; covered by integration/page tests
+src/components/ui/faq-accordion.tsx	97	None	No test exists	Medium	Component	Test: items rendering with question/answer, single-open accordion behavior, toggle on click, variant class switching (sky/cyan/etc), aria-expanded state, transition classes, focus-visible ring
+src/components/ui/floating-pill.tsx	74	None	No test exists	Low	Component	Test: value/label display, variant class application, size class application, responsive text sizing, border/shadow classes
+src/components/ui/horizontal-strip.tsx	44	None	No test exists	Low	UI Component	Basic smoke test: background/padding props, children rendering with snap-x, horizontal overflow, scrollbar-hide class
+src/components/ui/large-image-break.tsx	66	None	No test exists	Medium	Component	Test: image src/alt rendering with next/image fill, overlayPosition class switching (center/bottom-left/bottom-right), overlayText rendering, gradient overlay, min-h-[60vh], className merge
+src/components/ui/overlapping-section.tsx	37	None	No test exists	Low	UI Component	Basic smoke test: overlapAmount margin-top, topRadius, background, z-10 positioning, children rendering, className merge
+src/components/ui/select.tsx	164	None	No test exists	Low	UI Component	Standard Radix UI component — low priority for dedicated test; covered by integration tests
+src/components/ui/sheet.tsx	140	None	No test exists	Low	UI Component	Standard Radix UI component — low priority for dedicated test; covered by integration
+src/components/ui/step-flow.tsx	106	None	No test exists	Medium	Component	Test: horizontal (desktop) and vertical (mobile) layout, step number vs icon rendering, connecting line, title/description display, variant class switching, responsive md:flex/hidden behavior

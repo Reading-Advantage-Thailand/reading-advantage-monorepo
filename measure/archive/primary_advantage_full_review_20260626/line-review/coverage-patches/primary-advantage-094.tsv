@@ -1,0 +1,3 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/server/models/lessonModel.ts	224	coder-vocengine-ark-code-latest/primary-advantage-094	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-094.md	1-224	3
+apps/primary-advantage	apps/primary-advantage/server/models/schoolModel.ts	389	coder-vocengine-ark-code-latest/primary-advantage-094	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-094.md	1-389	4

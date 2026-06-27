@@ -1,0 +1,51 @@
+{
+  "track_id": "reading_advantage_full_review_20260626",
+  "review_role": "A",
+  "review_role_name": "Correctness / Architecture / Anti-patterns",
+  "batch_id": "ra-batch-27",
+  "date": "2026-06-27",
+  "baseline_sha": "d348666be047b929d02c747120c32d2ea0fc53fc",
+  "status": "complete",
+  "files_reviewed": 20,
+  "lines_reviewed": 9142,
+  "findings": {
+    "critical": 0,
+    "high": 7,
+    "medium": 8,
+    "low": 4,
+    "total": 19
+  },
+  "finding_ids": [
+    "F-RA-B27-001",
+    "F-RA-B27-002",
+    "F-RA-B27-003",
+    "F-RA-B27-004",
+    "F-RA-B27-005",
+    "F-RA-B27-006",
+    "F-RA-B27-007",
+    "F-RA-B27-008",
+    "F-RA-B27-009",
+    "F-RA-B27-010",
+    "F-RA-B27-011",
+    "F-RA-B27-012",
+    "F-RA-B27-013",
+    "F-RA-B27-014",
+    "F-RA-B27-015",
+    "F-RA-B27-016",
+    "F-RA-B27-017",
+    "F-RA-B27-018",
+    "F-RA-B27-019"
+  ],
+  "key_themes": [
+    "Hardcoded Google Cloud Storage URLs violate provider neutrality",
+    "Lesson completion logging is duplicated and not awaited",
+    "Phase-6 translation button missing due to operator-precedence bug",
+    "FSRS repeat called with due date instead of review date",
+    "Word-list backfill filters wrong API response field",
+    "Matching games can be unwinnable with fewer than 5 items",
+    "Order-sentence activity can generate overlapping groups",
+    "Hardcoded English strings bypass i18n",
+    "No tests exist for any of the reviewed components"
+  ],
+  "report_path": "measure/audit-reports/reading-advantage-full_20260626/line-review/ra-batch-27.md"
+}

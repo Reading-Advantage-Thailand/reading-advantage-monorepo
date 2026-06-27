@@ -1,0 +1,11 @@
+File	Lines	ExistingTest	CoverageGap	Priority	SuggestedTestType	Notes
+src/locales/en.ts	79	None	No test verifying all 33 imports resolve to valid exports	Medium	Structural/Validation	Verify all imported locale modules exist and export default objects match expected structure
+src/locales/th.ts	79	None	No test; same as en.ts	Medium	Structural/Validation	Mirror test with en.ts, can share test logic
+src/locales/zh.ts	79	None	No test; same as en.ts	Medium	Structural/Validation	Mirror test with en.ts, can share test logic
+src/locales/navigation.ts	27	src/app/.../middleware locale tests exist (E2E)	No unit test for useCurrentLocale or useChangeLocale	functions	Low	Unit	Test locale derivation logic robustness; test edge cases for pathname shapes
+src/locales/client.ts	5	None	Trivial re-export wrapper	Low	—	Too small to test independently; covered by integration tests
+src/locales/server.ts	2	None	Trivial re-export wrapper	Low	—	Too small to test independently; covered by integration tests
+src/locales/pages/home.ts	477	None	No test verifying all 3 locales have matching key structure and no key omissions	High	Structural/Parity	Automated test comparing en keys with th/zh keys; flag missing or extra keys per locale; verify product claims match reality
+src/locales/pages/about.ts	362	None	No locale parity test; no "Big 4" content verification	High	Structural/Parity	Same key-structure parity test between en/th/zh
+src/locales/pages/contact.ts	122	None	No unit test for contact info (email, phone) consistency across locales	Medium	Structural/Parity	Verify email and phone are consistent across all 3 locales (they should match)
+src/locales/pages/blog.ts	20	None	Too small to warrant independent test	Low	—	Covered by blog page integration test

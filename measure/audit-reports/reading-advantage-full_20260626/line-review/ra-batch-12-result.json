@@ -1,0 +1,44 @@
+{
+  "track_id": "reading_advantage_full_review_20260626",
+  "review_role": "A",
+  "review_role_name": "Correctness and Architecture",
+  "batch_id": "ra-batch-12",
+  "date": "2026-06-27",
+  "baseline_sha": "d348666be047b929d02c747120c32d2ea0fc53fc",
+  "status": "complete",
+  "files_reviewed": 20,
+  "lines_reviewed": 394,
+  "findings": {
+    "critical": 3,
+    "high": 4,
+    "medium": 5,
+    "low": 1,
+    "total": 13
+  },
+  "finding_ids": [
+    "F-RA-B12-001",
+    "F-RA-B12-002",
+    "F-RA-B12-003",
+    "F-RA-B12-004",
+    "F-RA-B12-005",
+    "F-RA-B12-006",
+    "F-RA-B12-007",
+    "F-RA-B12-008",
+    "F-RA-B12-009",
+    "F-RA-B12-010",
+    "F-RA-B12-011",
+    "F-RA-B12-012",
+    "F-RA-B12-013"
+  ],
+  "key_themes": [
+    "No route-level input validation on any of the 20 endpoints",
+    "Direct DB/domain bypass through controller delegation",
+    "Auth middleware checks login only, not role or tenant",
+    "Cross-tenant ranking leak when caller lacks licenseId/schoolId",
+    "XP/ranking integrity relies on client-reported metrics",
+    "Replay/double-submit risk on all completion endpoints",
+    "Inconsistent NextResponse guard pattern across route families",
+    "Zero route/controller tests for these endpoints"
+  ],
+  "report_path": "measure/audit-reports/reading-advantage-full_20260626/line-review/ra-batch-12.md"
+}

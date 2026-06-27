@@ -1,0 +1,8 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/marketing	apps/marketing/app/api/video/generate-script/route.ts	71	coder-xiaomi-mimo-v2-5-pro/marketing-app-004	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-004.md	1-71	4
+apps/marketing	apps/marketing/app/api/video/projects/route.ts	44	coder-xiaomi-mimo-v2-5-pro/marketing-app-004	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-004.md	1-44	2
+apps/marketing	apps/marketing/app/api/video/research-topics/route.ts	78	coder-xiaomi-mimo-v2-5-pro/marketing-app-004	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-004.md	1-78	4
+apps/marketing	apps/marketing/app/api/video/save-topics/route.ts	33	coder-xiaomi-mimo-v2-5-pro/marketing-app-004	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-004.md	1-33	2
+apps/marketing	apps/marketing/app/campaigns/[id]/page.tsx	147	coder-xiaomi-mimo-v2-5-pro/marketing-app-004	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-004.md	1-147	2
+apps/marketing	apps/marketing/app/campaigns/[id]/video/page.tsx	596	coder-xiaomi-mimo-v2-5-pro/marketing-app-004	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-004.md	1-596	1
+apps/marketing	apps/marketing/app/campaigns/page.tsx	223	coder-xiaomi-mimo-v2-5-pro/marketing-app-004	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-004.md	1-223	1

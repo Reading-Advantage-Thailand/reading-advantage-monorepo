@@ -1,0 +1,62 @@
+{
+  "manifest_version": 1,
+  "track_id": "primary_advantage_full_review_20260626",
+  "closeout_type": "review-only",
+  "closeout_date": "2026-06-27",
+  "final_acceptance_status": "pass",
+  "final_acceptance_path": "measure/archive/primary_advantage_full_review_20260626/final-acceptance-result.json",
+  "coverage_totals": {
+    "files_inventoried": 446,
+    "lines_inventoried": 118709,
+    "batches": 103,
+    "evidence_files": 103,
+    "coverage_rows_reviewed": 446,
+    "coverage_percent": 100
+  },
+  "finding_totals": {
+    "total_findings": 893,
+    "critical": 66,
+    "high": 177,
+    "medium": 302,
+    "low": 348,
+    "fork_specific_regression": 414,
+    "same_root_cause": 213,
+    "adaptation_risk": 115,
+    "intentional_divergence": 80,
+    "migration_blocker": 71
+  },
+  "plan_markers": {
+    "completed_tasks": 31,
+    "deferred_tasks": 1,
+    "pending_tasks": 0,
+    "in_progress_tasks": 0,
+    "deferred_build_gate": "Phase 5 'Run targeted lint/type/test/build gates' deferred with annotation 'deferred:review-execution' — acceptable for review-only track"
+  },
+  "source_remediation_claim": false,
+  "source_remediation_note": "No source code was remediated in this track. All 893 findings are documented with file:line evidence in line-review/evidence/ for separate remediation tracks. Migration track proposals (M1-M13) in audit-reports/primary-advantage-full_20260626/migration-tracks.md are proposals only — not implemented.",
+  "required_audit_reports": {
+    "present": [
+      "00-inventory.md",
+      "workflow-map.md",
+      "fork-divergence.md",
+      "checklist.md",
+      "findings.md",
+      "migration-tracks.md",
+      "test-gaps.md",
+      "executive-summary.md"
+    ],
+    "all_present": true,
+    "remediation_verbs_found": false
+  },
+  "archive_move": "measure/tracks/primary_advantage_full_review_20260626/ → measure/archive/primary_advantage_full_review_20260626/",
+  "tracks_md_update": "Moved from active Monorepo Feature Review Program to Archived Tracks section",
+  "evidence": [
+    "final-acceptance-result.json: status=pass, blocking_findings=[], nonblocking_findings=3 (verification-stats bug, double-count expected, deferred build gate)",
+    "plan.md: 31 [x] tasks, 1 [b] task with 'deferred:review-execution', 0 [~]/[ ] markers",
+    "verification-stats.json: coverage_rows=446, reviewed_rows=446, total_findings=893, severity and fork-divergence distributions populated",
+    "line-review-acceptance-result.json: status=pass, 446/446 reviewed, 103/103 evidence files",
+    "line-review-summary.md: 893 findings, 66 Critical / 177 High / 302 Medium / 348 Low",
+    "metadata.json: status=done, completed_at=2026-06-27"
+  ],
+  "closeout_checks_note": "measure_interphase_checks.py closeout reports 30 'completed plan task lacks commit SHA' warnings. These are expected for a review-only track where plan task completion is verified by evidence files on disk (not git commit SHAs). Each task's 'Evidence:' clause references the verification artifact (TSV, evidence file, audit report). The closeout script's SHA check is designed for implementation tracks with committed code; review-only tracks use file evidence instead. No fixable artifact issues remain."
+}

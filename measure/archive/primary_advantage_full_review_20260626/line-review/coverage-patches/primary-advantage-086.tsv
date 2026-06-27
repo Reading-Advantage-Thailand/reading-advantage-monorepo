@@ -1,0 +1,10 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/next-env.d.ts	6	coder-deepseek-v4-flash/primary-advantage-086	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md	1-6	0
+apps/primary-advantage	apps/primary-advantage/next.config.ts	21	coder-deepseek-v4-flash/primary-advantage-086	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md	1-21	2
+apps/primary-advantage	apps/primary-advantage/package.json	112	coder-deepseek-v4-flash/primary-advantage-086	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md	1-112	3
+apps/primary-advantage	apps/primary-advantage/postcss.config.mjs	7	coder-deepseek-v4-flash/primary-advantage-086	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md	1-7	0
+apps/primary-advantage	apps/primary-advantage/proxy.ts	121	coder-deepseek-v4-flash/primary-advantage-086	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md	1-121	1
+apps/primary-advantage	apps/primary-advantage/public/96x96_yellow_stroke_icon@1x.png	16	coder-deepseek-v4-flash/primary-advantage-086	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md	1-16	0
+apps/primary-advantage	apps/primary-advantage/public/favicon.ico	77	coder-deepseek-v4-flash/primary-advantage-086	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md	1-77	0
+apps/primary-advantage	apps/primary-advantage/public/file.svg	1	coder-deepseek-v4-flash/primary-advantage-086	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md	1-1	0
+apps/primary-advantage	apps/primary-advantage/public/globe.svg	1	coder-deepseek-v4-flash/primary-advantage-086	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-086.md	1-1	0

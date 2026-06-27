@@ -1,0 +1,3 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/admin/admin-recent-activity.tsx	214	coder-xiaomi-mimo-v2-5-pro/primary-advantage-021	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-021.md	1-214	3
+apps/primary-advantage	apps/primary-advantage/components/admin/admin-stats-cards.tsx	139	coder-xiaomi-mimo-v2-5-pro/primary-advantage-021	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-021.md	1-139	6

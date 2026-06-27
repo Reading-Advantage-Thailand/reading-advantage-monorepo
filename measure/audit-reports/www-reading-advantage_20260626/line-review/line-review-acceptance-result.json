@@ -1,0 +1,77 @@
+{
+  "report_id": "www-reading-advantage_20260626",
+  "track_id": "www_reading_advantage_review_20260626",
+  "phase": "line-review-synthesis",
+  "evaluated_at": "2026-06-27",
+  "status": "pass",
+  "review_mode": "review-only; no source code remediation performed",
+  "criteria": {
+    "every_inventory_row_reviewed": {
+      "pass": true,
+      "total_rows": 130,
+      "unreviewed_rows": 0,
+      "source_files": 113,
+      "test_files": 17,
+      "detail": "line-review/line-review-coverage.tsv — all 130 rows marked reviewed"
+    },
+    "evidence_files_present": {
+      "pass": true,
+      "expected_batches": 10,
+      "found": 10,
+      "detail": "line-review/evidence/batch-01..10/evidence.md all present"
+    },
+    "coverage_patches_present": {
+      "pass": true,
+      "expected_batches": 10,
+      "found": 10,
+      "detail": "line-review/coverage-patches/batch-01..10.tsv"
+    },
+    "report_artifacts_complete": {
+      "pass": true,
+      "artifacts": [
+        "00-inventory.md",
+        "page-map.md",
+        "claims-matrix.md",
+        "checklist.md",
+        "findings.md",
+        "migration-tracks.md",
+        "test-gaps.md",
+        "executive-summary.md",
+        "line-review/lrf-extracted.json",
+        "line-review/line-review-findings.md",
+        "line-review/line-review-summary.md",
+        "line-review/line-review-coverage.tsv"
+      ]
+    },
+    "findings_extracted": {
+      "pass": true,
+      "unique_findings": 44,
+      "machine_readable": "line-review/lrf-extracted.json"
+    }
+  },
+  "findings_totals": {
+    "by_severity": { "Critical": 7, "High": 12, "Medium": 15, "Low": 10, "total": 44 },
+    "by_category": {
+      "Claims": 12, "Code Quality": 11, "i18n": 5, "SEO": 3, "Accessibility": 3,
+      "Conversion": 3, "Performance": 2, "Assets": 2, "Security": 1, "Legal": 1, "Architecture": 1
+    }
+  },
+  "deferred": {
+    "note": "Gate execution and live tooling not performed in this review-only synthesis.",
+    "items": [
+      "lint (deferred:review-execution)",
+      "check-types (deferred:review-execution)",
+      "test (deferred:review-execution)",
+      "build (deferred:review-execution)",
+      "Playwright E2E (deferred:review-execution)",
+      "Lighthouse/aXe (deferred:review-execution)",
+      "graph.db update (deferred:review-execution)"
+    ]
+  },
+  "blockers": [],
+  "notes": [
+    "Acceptance status 'pass' covers the line-review synthesis scope only: full inventory reviewed, evidence present, and report artifacts complete.",
+    "Phase 2 a11y/browser checks and all Phase 4 gates remain deferred:review-execution and are intentionally not part of this pass.",
+    "Coverage TSV reconciled file-inventory (113 files) with 10 coverage patches; footer path corrected (components/common/footer.tsx) and 17 test files appended to reach 130 rows."
+  ]
+}

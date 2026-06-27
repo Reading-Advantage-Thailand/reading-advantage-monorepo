@@ -1,0 +1,2 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/pratice/cloze-test-game.tsx	1342	coder-xiaomi-mimo-v2-5/primary-advantage-047	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-047.md	1-1342	8

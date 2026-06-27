@@ -1,0 +1,11 @@
+{
+  "track_id": "wave1_high_risk_product_failures_20260628",
+  "type": "chore",
+  "status": "planned",
+  "created_at": "2026-06-28T00:00:00Z",
+  "updated_at": "2026-06-28T00:00:00Z",
+  "description": "Wave 1 remediation: stop active high-risk product failures in Primary, Reading, CodeCamp, and Sales after shared foundations are ready.",
+  "estimated_tasks": 78,
+  "actual_tasks": null,
+  "deviation_notes": "Spawned from monorepo_review_roadmap_20260626 Wave 1. Should start after Wave 0 tenant/auth/contracts are at least green for touched surfaces."
+}

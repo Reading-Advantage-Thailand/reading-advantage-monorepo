@@ -1,0 +1,6 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/server/models/userModel.ts	596	coder-xiaomi-mimo-v2-5-pro/primary-advantage-097	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-097.md	1-596	5
+apps/primary-advantage	apps/primary-advantage/server/utils/assistant.ts	147	coder-xiaomi-mimo-v2-5-pro/primary-advantage-097	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-097.md	1-147	2
+apps/primary-advantage	apps/primary-advantage/server/utils/auth.ts	250	coder-xiaomi-mimo-v2-5-pro/primary-advantage-097	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-097.md	1-250	2
+apps/primary-advantage	apps/primary-advantage/server/utils/constants.ts	34	coder-xiaomi-mimo-v2-5-pro/primary-advantage-097	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-097.md	1-34	0
+apps/primary-advantage	apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.caller.test.ts	80	coder-xiaomi-mimo-v2-5-pro/primary-advantage-097	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-097.md	1-80	0

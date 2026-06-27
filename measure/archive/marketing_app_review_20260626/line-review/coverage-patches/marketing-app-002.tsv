@@ -1,0 +1,3 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/marketing	apps/marketing/app/__tests__/phase-3-settings.test.ts	451	coder-minimax-m3/marketing-app-002	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-002.md	1-451	3
+apps/marketing	apps/marketing/app/__tests__/phase-4-campaigns.test.ts	375	coder-minimax-m3/marketing-app-002	reviewed	measure/tracks/marketing_app_review_20260626/line-review/evidence/marketing-app-002.md	1-375	5

@@ -1,0 +1,2 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/lesson/lesson-progress-bar.tsx	821	coder-minimax-m3/primary-advantage-039	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-039.md	1-821	12

@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "track_id": "reading_advantage_full_review_20260626",
+  "batch_id": "ra-batch-03",
+  "review_role": "A — correctness / product behavior / anti-patterns",
+  "baseline_sha": "6921fda0ee45012232bdd71c444d4e9523a10ab6",
+  "current_head": "d348666be047b929d02c747120c32d2ea0fc53fc",
+  "review_date": "2026-06-27",
+  "status": "review_complete",
+  "acceptance_claimed": false,
+  "files_reviewed": [
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.test.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.test.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.test.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/goals/page.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/history/loading.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/history/page.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/layout.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/custom-error.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/error.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/loading.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/page.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/custom-error.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/error.tsx",
+    "apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/loading.tsx"
+  ],
+  "summary": {
+    "critical_findings": 0,
+    "high_findings": 4,
+    "medium_findings": 10,
+    "low_findings": 8,
+    "total_findings": 22,
+    "files_with_findings": 18
+  },
+  "findings": [
+    {
+      "id": "H-01",
+      "severity": "High",
+      "title": "enchanted-library/page.tsx divides by zero when computing result payload",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+      "lines": "108-117",
+      "anti_pattern": null,
+      "evidence": "correctAnswers: Math.floor(results.xp / results.accuracy) and totalAttempts: Math.floor(results.xp / results.accuracy / results.accuracy) are unguarded. accuracy can be 0."
+    },
+    {
+      "id": "H-02",
+      "severity": "High",
+      "title": "Game page tests fail in jsdom because fetch is not mocked",
+      "files": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.test.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx"
+      ],
+      "anti_pattern": "A5",
+      "evidence": "pnpm jest --testPathPatterns='games/vocabulary/(magic-defense|rpg-battle|rune-match|wizard-vs-zombie)/page.test.tsx' -> Test Suites: 4 failed, 4 total; Tests: 11 failed, 1 passed, 12 total. All failures trace to 'fetch is not defined'."
+    },
+    {
+      "id": "H-03",
+      "severity": "High",
+      "title": "rpg-battle/page.tsx contains domain/business logic that belongs in backend modules",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+      "lines": "47-51, 88-434",
+      "anti_pattern": null,
+      "evidence": "Page defines battle constants, damage calculation, turn management, XP scaling, crit chance, and TTS directly in a React component."
+    },
+    {
+      "id": "H-04",
+      "severity": "High",
+      "title": "history/page.tsx and lesson/[articleId]/page.tsx forward raw request headers to internal API calls",
+      "files": [
+        "apps/reading-advantage/app/[locale]/(student)/student/history/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/page.tsx"
+      ],
+      "anti_pattern": null,
+      "evidence": "fetchData forwards headers() wholesale; lesson/page.tsx also passes headers() to internal /api/v1/classroom/students/${user.id}."
+    },
+    {
+      "id": "M-01",
+      "severity": "Medium",
+      "title": "magic-defense/page.tsx stale-closure / missing dependency on t",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+      "lines": "21-50",
+      "anti_pattern": null,
+      "evidence": "useEffect uses t('notEnoughWords') but dependency array is [setVocabulary]."
+    },
+    {
+      "id": "M-02",
+      "severity": "Medium",
+      "title": "rune-match/page.tsx imports useRouter but never uses it",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+      "lines": "5, 83",
+      "anti_pattern": null,
+      "evidence": "import { useRouter } from 'next/navigation' is unused; router.push('/') is commented out."
+    },
+    {
+      "id": "M-03",
+      "severity": "Medium",
+      "title": "wizard-vs-zombie/page.tsx imports dynamic but never uses it",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+      "lines": "3",
+      "anti_pattern": null,
+      "evidence": "import dynamic from 'next/dynamic' is unused; WizardZombieGame is imported statically."
+    },
+    {
+      "id": "M-04",
+      "severity": "Medium",
+      "title": "wizard-vs-zombie/page.tsx multiplies accuracy by 100 before sending, unlike other games",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+      "lines": "79",
+      "anti_pattern": null,
+      "evidence": "accuracy: results.accuracy * 100 while other game pages send 0-1 decimal."
+    },
+    {
+      "id": "M-05",
+      "severity": "Medium",
+      "title": "lesson/[articleId]/page.tsx displays raw API response in CustomError",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/page.tsx",
+      "lines": "34-37",
+      "anti_pattern": null,
+      "evidence": "Returns <CustomError message={articleResponse.message} resp={articleResponse} />; custom-error.tsx renders JSON.stringify(resp)."
+    },
+    {
+      "id": "M-06",
+      "severity": "Medium",
+      "title": "lesson/[articleId]/page.tsx and history/page.tsx use any for transformed records",
+      "files": [
+        "apps/reading-advantage/app/[locale]/(student)/student/history/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/page.tsx"
+      ],
+      "anti_pattern": null,
+      "evidence": "history/page.tsx uses record: any and article: any; lesson/page.tsx casts articleResponse?.article as Article."
+    },
+    {
+      "id": "M-07",
+      "severity": "Medium",
+      "title": "layout.tsx function name is SettingsPageLayout but it is the student layout",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/layout.tsx",
+      "lines": "8",
+      "anti_pattern": null,
+      "evidence": "export default async function SettingsPageLayout in student/layout.tsx."
+    },
+    {
+      "id": "M-08",
+      "severity": "Medium",
+      "title": "layout.tsx expired-date comparison can behave unexpectedly with empty string",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/layout.tsx",
+      "lines": "21",
+      "anti_pattern": null,
+      "evidence": "new Date(user?.expired_date) < new Date() with empty string yields Invalid Date comparison."
+    },
+    {
+      "id": "M-09",
+      "severity": "Medium",
+      "title": "Game pages hardcode English fallback text and error copy",
+      "files": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx"
+      ],
+      "anti_pattern": null,
+      "evidence": "User-facing strings and TTS lang='en-US' are not routed through next-intl."
+    },
+    {
+      "id": "M-10",
+      "severity": "Medium",
+      "title": "rpg-battle/page.tsx ActionMenu receives menuActions without translation",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+      "lines": "313-321, 573-578",
+      "anti_pattern": null,
+      "evidence": "menuActions strips translation field; player must type translation but UI only shows term."
+    },
+    {
+      "id": "L-01",
+      "severity": "Low",
+      "title": "goals/page.tsx ignores locale and hardcodes English metadata/heading",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/goals/page.tsx",
+      "lines": "7-10, 22-25",
+      "anti_pattern": null,
+      "evidence": "Page accepts no params and uses English literals for metadata and heading."
+    },
+    {
+      "id": "L-02",
+      "severity": "Low",
+      "title": "lesson/[articleId]/custom-error.tsx and read/[articleId]/custom-error.tsx are duplicates",
+      "files": [
+        "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/custom-error.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/custom-error.tsx"
+      ],
+      "anti_pattern": null,
+      "evidence": "Files are byte-identical."
+    },
+    {
+      "id": "L-03",
+      "severity": "Low",
+      "title": "lesson/[articleId]/error.tsx and read/[articleId]/error.tsx are duplicates",
+      "files": [
+        "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/error.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/error.tsx"
+      ],
+      "anti_pattern": null,
+      "evidence": "Files are byte-identical."
+    },
+    {
+      "id": "L-04",
+      "severity": "Low",
+      "title": "lesson/[articleId]/loading.tsx and read/[articleId]/loading.tsx are duplicates",
+      "files": [
+        "apps/reading-advantage/app/[locale]/(student)/student/lesson/[articleId]/loading.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/loading.tsx"
+      ],
+      "anti_pattern": null,
+      "evidence": "Files are byte-identical."
+    },
+    {
+      "id": "L-05",
+      "severity": "Low",
+      "title": "history/loading.tsx uses fixed pixel widths that may overflow on small screens",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/history/loading.tsx",
+      "lines": "6-8",
+      "anti_pattern": null,
+      "evidence": "w-[400px] and w-[500px] without max-width or responsive classes."
+    },
+    {
+      "id": "L-06",
+      "severity": "Low",
+      "title": "Game pages use console.log/console.error instead of structured logging",
+      "files": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx"
+      ],
+      "anti_pattern": null,
+      "evidence": "Multiple console.error/console.log calls for fetch and save errors."
+    },
+    {
+      "id": "L-07",
+      "severity": "Low",
+      "title": "rpg-battle/page.tsx hardcodes TTS language to en-US",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+      "lines": "375-379",
+      "anti_pattern": null,
+      "evidence": "utterance.lang = 'en-US'; // Assume English terms for now"
+    },
+    {
+      "id": "L-08",
+      "severity": "Low",
+      "title": "rpg-battle/page.tsx crit chance uses unseeded Math.random()",
+      "file": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+      "lines": "386-390",
+      "anti_pattern": null,
+      "evidence": "if (Math.random() > 0.8) { spawnFloatingText('CRITICAL!', ...) }"
+    }
+  ],
+  "anti_pattern_audit": {
+    "A3": {
+      "present": false,
+      "evidence": "No bare-digit regex assertions in the 20 files."
+    },
+    "A4": {
+      "present": false,
+      "evidence": "Game page tests fail rather than pass vacuously; no marker-consistency checks in scope."
+    },
+    "A5": {
+      "present": true,
+      "evidence": "Four game page .test.tsx files describe rendering/vocabulary behavior but 11/12 tests fail with 'fetch is not defined'."
+    },
+    "A6": {
+      "present": false,
+      "evidence": "No track registry claims were reviewed in this batch."
+    },
+    "A9": {
+      "present": false,
+      "evidence": "No references to measure/tracks/ found in the 20 files."
+    },
+    "A11": {
+      "present": false,
+      "evidence": "Parent track plan is already marked complete."
+    }
+  },
+  "test_execution": {
+    "command": "pnpm jest --testPathPatterns='games/vocabulary/(magic-defense|rpg-battle|rune-match|wizard-vs-zombie)/page.test.tsx'",
+    "cwd": "apps/reading-advantage",
+    "result": "fail",
+    "test_suites": "4 failed, 4 total",
+    "tests": "11 failed, 1 passed, 12 total",
+    "root_cause": "fetch is not defined in jsdom; tests mock visual game components but not the vocabulary fetch."
+  },
+  "test_gaps": [
+    "No tests for goals/page.tsx, history/page.tsx, layout.tsx, lesson/[articleId]/page.tsx, or read/[articleId]/ shell files.",
+    "Existing game page tests do not cover loading, error, fetch success, game completion payload, difficulty selection, or rankings reload."
+  ],
+  "caveats": [
+    "This review did not remediate app code; it produced audit artifacts only.",
+    "next.config.mjs has ignoreBuildErrors: true, so TypeScript/build gates are not meaningful for these files.",
+    "Only the 20 listed files were reviewed; dependent components and API routes were inspected only for context.",
+    "No browser/UX manual validation was performed."
+  ],
+  "artifact_paths": {
+    "line_review": "measure/audit-reports/reading-advantage-full_20260626/line-review/ra-batch-03.md",
+    "result_json": "measure/audit-reports/reading-advantage-full_20260626/line-review/ra-batch-03-result.json"
+  }
+}

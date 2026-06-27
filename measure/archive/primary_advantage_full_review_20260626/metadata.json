@@ -1,0 +1,15 @@
+{
+  "track_id": "primary_advantage_full_review_20260626",
+  "type": "chore",
+  "status": "done",
+  "created_at": "2026-06-26T12:56:03Z",
+  "updated_at": "2026-06-27T00:00:00Z",
+  "completed_at": "2026-06-27",
+  "completed": "2026-06-27",
+  "description": "Full feature and fork-divergence review of apps/primary-advantage, including Prisma/Drizzle migration truth and primary-student adaptations. Review-only track — no source remediation performed.",
+  "estimated_tasks": 48,
+  "actual_tasks": 32,
+  "actual_completed": 31,
+  "actual_deferred": 1,
+  "deviation_notes": "Estimated 48 was a rough pre-plan estimate; actual plan contained 32 atomic tasks (31 completed + 1 Phase 5 build gate deferred as review-execution). Final acceptance passed with 446 files / 118709 lines reviewed across 103 batches, 893 findings documented (66 Critical / 177 High / 302 Medium / 348 Low). Supersets but does not delete the existing primary_advantage_agents_md_audit_20260610 stub. No source remediation performed — findings are available for separate remediation tracks."
+}

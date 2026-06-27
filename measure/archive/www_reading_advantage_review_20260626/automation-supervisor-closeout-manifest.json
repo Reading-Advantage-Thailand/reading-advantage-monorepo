@@ -1,0 +1,79 @@
+{
+  "manifest_type": "automation_supervisor_closeout",
+  "track_id": "www_reading_advantage_review_20260626",
+  "closeout_mode": "review-only",
+  "closed_at": "2026-06-27",
+  "coverage_totals": {
+    "src_files_inventoried": 270,
+    "ts_tsx_files": 130,
+    "ts_tsx_lines": 20033,
+    "coverage_rows_reviewed": 130,
+    "total_rows": 130,
+    "percent_complete": 100
+  },
+  "finding_totals": {
+    "unique_findings": 44,
+    "by_severity": {
+      "Critical": 7,
+      "High": 12,
+      "Medium": 15,
+      "Low": 10
+    },
+    "by_category": {
+      "Claims": 12,
+      "Code Quality": 11,
+      "i18n": 5,
+      "SEO": 3,
+      "Accessibility": 3,
+      "Conversion": 3,
+      "Performance": 2,
+      "Assets": 2,
+      "Security": 1,
+      "Legal": 1,
+      "Architecture": 1
+    },
+    "proposed_remediation_tracks": 18
+  },
+  "deferred_gates": {
+    "lint": "deferred:review-execution",
+    "check-types": "deferred:review-execution",
+    "test": "deferred:review-execution",
+    "build": "deferred:review-execution",
+    "playwright_e2e": "deferred:review-execution",
+    "lighthouse_axe": "deferred:review-execution",
+    "graph_db_update": "deferred:review-execution"
+  },
+  "final_acceptance": {
+    "status": "pass",
+    "file": "final-acceptance-result.json",
+    "criteria_pass_count": 5,
+    "criteria_fail_count": 0
+  },
+  "source_remediation_performed": false,
+  "product_green_claimed": false,
+  "closeout_checker": {
+    "script": "measure_interphase_checks.py closeout",
+    "run_at": "2026-06-27",
+    "summary": {
+      "fail_count": 11,
+      "fail_reasons": [
+        "11 completed plan tasks lack commit SHA"
+      ],
+      "expected_for_review_only": true,
+      "note": "Review-only track: all plan tasks are artifact-creation tasks (audit reports, inventories, findings documents) with zero source code commits. Commit SHA warnings are expected and non-blocking for review-only closeout."
+    },
+    "artifacts_fixed": [
+      "metadata.json: added completed field (checker expected 'completed' string alongside 'completed_at')"
+    ],
+    "other_issues": "None — no other artifact issues found."
+  },
+  "notes": [
+    "Review-only closeout of the Company Website Review track (www-reading-advantage).",
+    "No source code was modified; no remediation was performed.",
+    "All 130 inventory rows received static line review across 10 batches with evidence files.",
+    "44 unique findings (7 Critical, 12 High, 15 Medium, 10 Low) are documented in findings.md and line-review artifacts.",
+    "18 proposed remediation tracks (T1–T18) in migration-tracks.md await separate scheduling.",
+    "Lint/type/test/build/browser/performance/graph gates were deferred:review-execution as documented in the plan and checklist.",
+    "This closeout does not claim the www-reading-advantage website is fixed or product-green."
+  ]
+}

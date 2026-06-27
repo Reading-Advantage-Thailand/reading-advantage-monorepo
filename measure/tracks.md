@@ -31,9 +31,6 @@ Two parallel programs are in flight; priority order when picking the next track:
   Reviews the oldest and largest legacy app, including direct DB/domain-bypass risk,
   Firebase remnants, student/teacher/admin workflows, AI/content/audio/flashcard flows,
   and migration-track proposals. Supersets the existing AGENTS.md audit stub.
-- [ ] **Track: Primary Advantage Full Feature Review** *Link: [./tracks/primary_advantage_full_review_20260626/](./tracks/primary_advantage_full_review_20260626/)*
-  Reviews the Reading-derived Primary app through fork-divergence analysis, Prisma/Drizzle
-  migration truth, primary-student adaptations, workflows, auth/tenant boundaries, and tests.
 - [ ] **Track: Science Advantage Review** *Link: [./tracks/science_advantage_review_20260626/](./tracks/science_advantage_review_20260626/)*
   Reviews the new architecture-baseline app and verifies prior audit remediation held.
 - [ ] **Track: CodeCamp Advantage Review** *Link: [./tracks/codecamp_advantage_review_20260626/](./tracks/codecamp_advantage_review_20260626/)*
@@ -42,27 +39,44 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [ ] **Track: Sales Advantage Review** *Link: [./tracks/sales_advantage_review_20260626/](./tracks/sales_advantage_review_20260626/)*
   Reviews sales coaching, audio roleplay, storage, multimodal AI evaluation/fallbacks,
   progress, admin flows, and sales-domain contracts.
-- [ ] **Track: Marketing App Review** *Link: [./tracks/marketing_app_review_20260626/](./tracks/marketing_app_review_20260626/)*
-  Reviews marketing material generation workflows, topic/script/scene/project persistence,
-  app-local AI seams, validation, media/export boundaries, and QA gaps.
 - [ ] **Track: Advantage Games Review** *Link: [./tracks/advantage_games_review_20260626/](./tracks/advantage_games_review_20260626/)*
   Reviews the reusable game inventory, shared runtime, scoring/XP/leaderboards,
   mobile/accessibility, and import readiness for Reading/Primary.
-- [ ] **Track: Company Website Review** *Link: [./tracks/www_reading_advantage_review_20260626/](./tracks/www_reading_advantage_review_20260626/)*
-  Reviews public pages, claims accuracy, SEO, accessibility, i18n, performance, and conversion.
-- [ ] **Track: Cross-App Workflows Review** *Link: [./tracks/cross_app_workflows_review_20260626/](./tracks/cross_app_workflows_review_20260626/)*
+- [x] **Track: Cross-App Workflows Review** *Link: [./tracks/cross_app_workflows_review_20260626/](./tracks/cross_app_workflows_review_20260626/)*
   Synthesizes risks across auth, tenancy, AI, storage, UI reuse, games imports, deployment,
-  observability, and test strategy.
-- [ ] **Track: Monorepo Review Roadmap** *Link: [./tracks/monorepo_review_roadmap_20260626/](./tracks/monorepo_review_roadmap_20260626/)*
+  observability, and test strategy. *Status: COMPLETE as review synthesis — artifacts in `measure/audit-reports/cross-app-workflows_20260626/`; product remediation remains for follow-up tracks.*
+- [x] **Track: Monorepo Review Roadmap** *Link: [./tracks/monorepo_review_roadmap_20260626/](./tracks/monorepo_review_roadmap_20260626/)*
   Final synthesis track that deduplicates accepted findings and produces the prioritized
-  remediation/migration/test/product-risk roadmap.
+  remediation/migration/test/product-risk roadmap. *Status: COMPLETE as final review roadmap — artifacts in `measure/audit-reports/monorepo-review-roadmap_20260626/`; no remediation performed.*
+
+### Monorepo Review Remediation Waves (created 2026-06-28)
+
+> Detailed implementation tracks spawned from `monorepo_review_roadmap_20260626`. Each track includes evidence references back to the line-review artifacts and should be executed in wave order unless a dependency note explicitly allows parallel work.
+
+- [ ] **Track: Wave 0 — Shared Safety Foundations** *Link: [./tracks/wave0_shared_safety_foundations_20260628/](./tracks/wave0_shared_safety_foundations_20260628/)*
+  Make shared guarantees true: tenant registry/fail-closed TenantDB, shared auth/roles/rate limiter, contracts/types tests, and API/domain boundary enforcement. Evidence: MR-C01, MR-C02, MR-C04, MR-C05; CA-001..CA-004/CA-009; M-SF-1..M-SF-5.
+- [ ] **Track: Wave 1 — Stop Active High-Risk Product Failures** *Link: [./tracks/wave1_high_risk_product_failures_20260628/](./tracks/wave1_high_risk_product_failures_20260628/)*
+  Fix the highest-risk runtime/product blockers in Primary, Reading, CodeCamp, and Sales. Evidence: Primary M1-M8/M11; Reading C/PB tracks; CodeCamp CR-1/CR-2 and webhook/streaming findings; Sales C1-C13.
+- [ ] **Track: Wave 2 — Restore Deployment/Test/Provider Confidence** *Link: [./tracks/wave2_confidence_restoration_20260628/](./tracks/wave2_confidence_restoration_20260628/)*
+  Restore migration, seed, provider-adapter, observability, and test-gate confidence. Evidence: MR-H01, MR-H02, MR-H03; CA-005..CA-007/CA-010/CA-011; test-strategy roadmap.
+- [ ] **Track: Wave 3 — Product-Facing Truth and Reusable Surfaces** *Link: [./tracks/wave3_product_alignment_20260628/](./tracks/wave3_product_alignment_20260628/)*
+  Align public claims, secure Marketing public workflows, and make Advantage Games import-ready. Evidence: MR-H05, MR-H06; CA-008/CA-013; Website LRF findings; Marketing Critical/High findings; Games D-01..D-11.
 
 ---
 
 ## Archived Tracks
 
 - [x] **Track: Shared Foundation Review** *Link: [./archive/shared_foundation_review_20260626/](./archive/shared_foundation_review_20260626/)*
-  Archived 2026-06-27 after the superseding line-by-line review completed coverage of 516 shared-package files / 110277 lines with 85 evidence files and 34 LR findings. This is review-completeness closeout only; the shared foundation is not claimed fixed or product-green, and source remediation remains for separate tracks.
+  Archived 2026-06-27 after the superseding line-by-line review completed coverage of 516 shared-package files / 110277 lines with 85 evidence files and 34 LR findings.   This is review-completeness closeout only; the shared foundation is not claimed fixed or product-green, and source remediation remains for separate tracks.
+
+- [x] **Track: Marketing App Review** *Link: [./archive/marketing_app_review_20260626/](./archive/marketing_app_review_20260626/)*
+  Archived 2026-06-27 after line-by-line review completed coverage of 45 marketing-app files / 4966 lines with 7 evidence files and 44 LR findings (3 Critical, 6 High, 18 Medium, 17 Low). This is review-completeness closeout only; the marketing app is not claimed fixed or product-green, and all 44 findings plus 7 migration-track proposals await separate remediation tracks. The lint/type/test/build gate and graph-count task were deferred as review-execution (acceptable for a review-only track).
+
+- [x] **Track: Primary Advantage Full Feature Review** *Link: [./archive/primary_advantage_full_review_20260626/](./archive/primary_advantage_full_review_20260626/)*
+  Archived 2026-06-27 after line-by-line review completed coverage of 446 Primary-Advantage files / 118709 lines with 103 evidence files, 893 findings (66 Critical / 177 High / 302 Medium / 348 Low), and fork-divergence classification (414 fork regressions, 213 shared root causes, 115 adaptation risks, 80 intentional divergences, 71 migration blockers). This is review-completeness closeout only; the Primary Advantage app is not claimed fixed or product-green, and all 893 findings plus 13 migration-track proposals await separate remediation tracks. The Phase 5 build gate was deferred as review-execution (acceptable for a review-only track).
+
+- [x] **Track: Company Website Review** *Link: [./archive/www_reading_advantage_review_20260626/](./archive/www_reading_advantage_review_20260626/)*
+  Archived 2026-06-27 after line-by-line review completed coverage of 130 src files / 20033 ts/tsx lines with 10 batch evidence files and 44 LR findings (7 Critical, 12 High, 15 Medium, 10 Low) across 11 categories. This is review-completeness closeout only; the company website is not claimed fixed or product-green, and all 44 findings plus 18 migration-track proposals await separate remediation tracks. The lint/type/test/build/browser/performance/graph gates were deferred as review-execution (acceptable for a review-only track).
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*

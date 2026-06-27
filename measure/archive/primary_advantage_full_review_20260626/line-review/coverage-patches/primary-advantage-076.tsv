@@ -1,0 +1,8 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/data/prompts-combined-MC.json	66	coder-deepseek-v4-flash/primary-advantage-076	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-076.md	1-66	0
+apps/primary-advantage	apps/primary-advantage/data/prompts-combined-SA.json	66	coder-deepseek-v4-flash/primary-advantage-076	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-076.md	1-66	0
+apps/primary-advantage	apps/primary-advantage/data/prompts-feedback-user-LA.json	3	coder-deepseek-v4-flash/primary-advantage-076	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-076.md	1-3	0
+apps/primary-advantage	apps/primary-advantage/data/prompts-feedback-user-SA.json	3	coder-deepseek-v4-flash/primary-advantage-076	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-076.md	1-3	0
+apps/primary-advantage	apps/primary-advantage/data/story-prompts.json	36	coder-deepseek-v4-flash/primary-advantage-076	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-076.md	1-36	0
+apps/primary-advantage	apps/primary-advantage/data/story-schema.ts	179	coder-deepseek-v4-flash/primary-advantage-076	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-076.md	1-179	1
+apps/primary-advantage	apps/primary-advantage/data/title-a0.json	609	coder-deepseek-v4-flash/primary-advantage-076	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-076.md	1-609	0

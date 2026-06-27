@@ -1,0 +1,88 @@
+{
+  "manifest_type": "automation-supervisor-closeout-manifest",
+  "track_id": "marketing_app_review_20260626",
+  "closeout_date": "2026-06-27",
+  "closeout_agent": "measure-final-acceptance-subagent",
+  "phase": "Phase 5: Final Acceptance and Closeout",
+  "baseline_sha": "7ad89ac39b6b871da0907c6b873329c75d6dc3b9",
+  "product_green_claimed": false,
+  "source_code_remediated": false,
+  "closeout_type": "review-only",
+  "line_review_acceptance": {
+    "acceptance_result_path": "measure/archive/marketing_app_review_20260626/line-review/line-review-acceptance-result.json",
+    "result": "pass",
+    "files": 45,
+    "lines": 4966,
+    "evidence_files": 7,
+    "lr_findings": 44,
+    "bad_rows": {
+      "status": [],
+      "range": [],
+      "evidence": [],
+      "finding_count": []
+    },
+    "mechanical_recheck": "pass"
+  },
+  "coverage_summary": {
+    "total_files_reviewed": 45,
+    "total_lines": 4966,
+    "percent_reviewed": 100,
+    "unique_findings": 44,
+    "critical": 3,
+    "high": 6,
+    "medium": 18,
+    "low": 17
+  },
+  "finding_categories": {
+    "tests-build": 14,
+    "persistence": 9,
+    "auth-api": 7,
+    "ux-i18n": 6,
+    "adapter-neutrality": 4,
+    "ai-boundary": 3,
+    "workflow": 1
+  },
+  "audit_reports": {
+    "count": 8,
+    "path": "measure/audit-reports/marketing-app_20260626/",
+    "remediation_claimed": false,
+    "files": [
+      "00-inventory.md",
+      "workflow-map.md",
+      "ai-boundary-map.md",
+      "checklist.md",
+      "findings.md",
+      "migration-tracks.md",
+      "test-gaps.md",
+      "executive-summary.md"
+    ]
+  },
+  "deferred_tasks": [
+    {
+      "plan_line": 10,
+      "description": "Confirm fresh graph.db and record marketing file/node/function counts",
+      "deferred_to": "review-execution",
+      "rationale": "Review-only track; build-graph not run."
+    },
+    {
+      "plan_line": 44,
+      "description": "Run targeted marketing lint/type/test/build gates and record results",
+      "deferred_to": "review-execution",
+      "rationale": "Review-only track; gates not run."
+    }
+  ],
+  "final_acceptance": {
+    "result": "pass",
+    "result_file": "measure/archive/marketing_app_review_20260626/final-acceptance-result.json",
+    "plan_complete": true,
+    "no_open_pending_tasks": true,
+    "no_in_progress_markers": true,
+    "audit_reports_no_remediation": true
+  },
+  "closeout_checker": {
+    "command": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py closeout --repo . --track marketing_app_review_20260626",
+    "status": "pass_with_notes",
+    "detail": "Checker found and ran. All 19 completed [x] plan tasks flagged for missing commit SHA — expected for review-only track with no source commits (documented in final acceptance). A 'metadata must include a completed date' warning was resolved by adding the `completed` field alongside `completed_at` in metadata.json. No other artifact issues found."
+  },
+  "unrelated_untracked_files_preserved": []
+}

@@ -1,0 +1,3 @@
+package_app	file	line_count	reviewer	status	evidence_file	reviewed_ranges	finding_count
+apps/primary-advantage	apps/primary-advantage/components/teacher/assignments.tsx	522	coder-xiaomi-mimo-v2-5-pro/primary-advantage-057	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-057.md	1-522	4
+apps/primary-advantage	apps/primary-advantage/components/teacher/class-code-generator.tsx	280	coder-xiaomi-mimo-v2-5-pro/primary-advantage-057	reviewed	measure/tracks/primary_advantage_full_review_20260626/line-review/evidence/primary-advantage-057.md	1-280	2
