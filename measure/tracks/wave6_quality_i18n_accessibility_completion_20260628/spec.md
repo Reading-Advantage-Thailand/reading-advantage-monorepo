@@ -6,6 +6,17 @@ Close the remaining **Medium-severity** maintainability, adapter, i18n, accessib
 
 Ownership of record: `measure/audit-reports/monorepo-review-roadmap_20260626/medium-plus-coverage-matrix.md`.
 
+## Execution Split Guidance
+
+Wave 6 is intentionally a final coverage umbrella, not a recommendation to land every item in one implementation PR. Before Green-phase implementation, split this umbrella into smaller executable subtracks unless a supervisor explicitly proves the combined scope is manageable. Preferred split boundaries:
+
+- **Adapters/cache:** Primary M12/M13 and Science SP-2.
+- **Games quality:** Advantage Games T5-T10.
+- **CodeCamp curriculum/docs:** MT-C1..C4 and MT-X1.
+- **i18n/a11y/test/docs cleanup:** Primary M10, Sales T10/T11, Marketing test truth, Science ST-5/ST-7/ST-8, shared M-SF-6.
+
+Each subtrack must keep the same evidence references and update the coverage matrix so the Wave 6 umbrella remains the ownership record.
+
 ## Source Findings
 
 - **Shared:** M-SF-6 Domain structure & portability cleanup (Medium).
@@ -59,6 +70,7 @@ Ownership of record: `measure/audit-reports/monorepo-review-roadmap_20260626/med
 - CodeCamp curriculum no longer teaches AGENTS.md-violating patterns; curriculum/docs match current stack; QA artifacts are consistent.
 - Science docs reflect Drizzle/pnpm/auth reality; placeholder track specs are rewritten with concrete surfaces.
 - Targeted tests, type checks, and lint pass for every touched surface.
+- If Wave 6 is split into subtracks, each subtrack records its inherited evidence refs and the coverage matrix links the completed subtrack back to the owned Medium+ rows.
 
 ## Required Verification Commands
 

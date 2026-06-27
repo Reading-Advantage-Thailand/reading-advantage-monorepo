@@ -30,18 +30,18 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [ ] **Track: Reading Advantage Full Feature Review** *Link: [./tracks/reading_advantage_full_review_20260626/](./tracks/reading_advantage_full_review_20260626/)*
   Reviews the oldest and largest legacy app, including direct DB/domain-bypass risk,
   Firebase remnants, student/teacher/admin workflows, AI/content/audio/flashcard flows,
-  and migration-track proposals. Supersets the existing AGENTS.md audit stub.
+  and migration-track proposals. Supersets the existing AGENTS.md audit stub. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
 - [ ] **Track: Science Advantage Review** *Link: [./tracks/science_advantage_review_20260626/](./tracks/science_advantage_review_20260626/)*
-  Reviews the new architecture-baseline app and verifies prior audit remediation held.
+  Reviews the new architecture-baseline app and verifies prior audit remediation held. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
 - [ ] **Track: CodeCamp Advantage Review** *Link: [./tracks/codecamp_advantage_review_20260626/](./tracks/codecamp_advantage_review_20260626/)*
   Reviews intern training, curriculum progression, GitHub workflows, webhooks, AI PR review,
-  admin reporting, and production readiness.
+  admin reporting, and production readiness. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
 - [ ] **Track: Sales Advantage Review** *Link: [./tracks/sales_advantage_review_20260626/](./tracks/sales_advantage_review_20260626/)*
   Reviews sales coaching, audio roleplay, storage, multimodal AI evaluation/fallbacks,
-  progress, admin flows, and sales-domain contracts.
+  progress, admin flows, and sales-domain contracts. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
 - [ ] **Track: Advantage Games Review** *Link: [./tracks/advantage_games_review_20260626/](./tracks/advantage_games_review_20260626/)*
   Reviews the reusable game inventory, shared runtime, scoring/XP/leaderboards,
-  mobile/accessibility, and import readiness for Reading/Primary.
+  mobile/accessibility, and import readiness for Reading/Primary. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
 - [x] **Track: Cross-App Workflows Review** *Link: [./tracks/cross_app_workflows_review_20260626/](./tracks/cross_app_workflows_review_20260626/)*
   Synthesizes risks across auth, tenancy, AI, storage, UI reuse, games imports, deployment,
   observability, and test strategy. *Status: COMPLETE as review synthesis — artifacts in `measure/audit-reports/cross-app-workflows_20260626/`; product remediation remains for follow-up tracks.*

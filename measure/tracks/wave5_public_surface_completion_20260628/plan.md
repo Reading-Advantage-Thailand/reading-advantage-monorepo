@@ -4,10 +4,11 @@
 > **Depends on:** Wave 3 claims gate (copy reconciliation); Wave 2 migration-doctor (Science deploy verification).
 > **Method:** Contract-first TDD. Red tests before implementation. Public copy changes require PO approval recorded in Phase 0.
 
-## Phase 0: Product Decision Intake and Baseline
+## Phase 0: Product Decision Gate and Baseline
 
-- [ ] Task: Record PO answers: lead-capture backend/adapter, approved comparison/pricing figures, final legal copy.
+- [ ] Task: Record PO answers: lead-capture backend/adapter, approved comparison/pricing figures, final legal copy. **Blocking gate:** do not implement T1, T12, or T17 surfaces until this task is complete.
 - [ ] Task: Reconcile T12 pricing/comparison against the Wave 3 claims matrix; note any conflicts.
+- [ ] Task: If any PO answer is unavailable, mark the dependent implementation tasks blocked and split unblockable SEO/assets/i18n/a11y/test-hygiene work into a smaller executable subtrack.
 - [ ] Task: Record baseline www/marketing/science pass/fail for the required verification commands.
 
 ## Phase 1: Conversion — Lead Capture and Dead Components
