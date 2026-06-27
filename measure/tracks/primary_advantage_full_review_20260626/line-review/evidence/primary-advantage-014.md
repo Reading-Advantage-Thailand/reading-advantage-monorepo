@@ -1,28 +1,131 @@
 # Line Review Evidence: primary-advantage-014
 
-Reviewer: pending
+Reviewer: measure-jr-green/primary-advantage-014
 Files assigned: 10
 Lines assigned: 368
+
+Batch scope: classroom-management API surface (`app/api/auth/session`, the
+`app/api/classroom/**` and `app/api/classrooms` tree, and the
+`app/api/debug/auth` debug route). Cross-referenced
+`apps/primary-advantage/AGENTS.md` (Drizzle-only, multi-tenant via
+`users.schoolId`), `server/controllers/classroomController.ts` (auth and
+role-check location for the `classroom` and `classroom/[id]` subroutes),
+`server/models/classroomModel.ts` (model layer that the routes delegate to),
+`server/utils/auth.ts` (role helpers), `lib/permissions.ts` (Permission
+allowlist), and `packages/db/src/schema/primary.ts:208` (the
+`schoolAdmins` Drizzle table definition that `debug/auth` queries correctly
+but `classrooms/route.ts` does not).
 
 ## Coverage
 
 | File | Reviewed ranges | Status | Findings |
 |---|---|---|---:|
-| `apps/primary-advantage/app/api/auth/session/route.ts` | pending | pending | 0 |
-| `apps/primary-advantage/app/api/classroom/[id]/available-students/route.ts` | pending | pending | 0 |
-| `apps/primary-advantage/app/api/classroom/[id]/enroll/route.ts` | pending | pending | 0 |
-| `apps/primary-advantage/app/api/classroom/[id]/generate-code/route.ts` | pending | pending | 0 |
-| `apps/primary-advantage/app/api/classroom/[id]/route.ts` | pending | pending | 0 |
-| `apps/primary-advantage/app/api/classroom/[id]/unenroll/route.ts` | pending | pending | 0 |
-| `apps/primary-advantage/app/api/classroom/route.ts` | pending | pending | 0 |
-| `apps/primary-advantage/app/api/classroom/students/route.ts` | pending | pending | 0 |
-| `apps/primary-advantage/app/api/classrooms/route.ts` | pending | pending | 0 |
-| `apps/primary-advantage/app/api/debug/auth/route.ts` | pending | pending | 0 |
+| `apps/primary-advantage/app/api/auth/session/route.ts` | 1-2 | reviewed | 0 |
+| `apps/primary-advantage/app/api/classroom/[id]/available-students/route.ts` | 1-10 | reviewed | 0 |
+| `apps/primary-advantage/app/api/classroom/[id]/enroll/route.ts` | 1-10 | reviewed | 0 |
+| `apps/primary-advantage/app/api/classroom/[id]/generate-code/route.ts` | 1-11 | reviewed | 0 |
+| `apps/primary-advantage/app/api/classroom/[id]/route.ts` | 1-66 | reviewed | 2 |
+| `apps/primary-advantage/app/api/classroom/[id]/unenroll/route.ts` | 1-10 | reviewed | 0 |
+| `apps/primary-advantage/app/api/classroom/route.ts` | 1-54 | reviewed | 1 |
+| `apps/primary-advantage/app/api/classroom/students/route.ts` | 1-6 | reviewed | 0 |
+| `apps/primary-advantage/app/api/classrooms/route.ts` | 1-120 | reviewed | 4 |
+| `apps/primary-advantage/app/api/debug/auth/route.ts` | 1-79 | reviewed | 2 |
 
 ## Findings
 
-Pending line-by-line review.
+### LR-primary-advantage-014-001 — DELETE handler's `FAILED_DELETE` catch branch is unreachable dead code
+
+- Severity: Low
+- Fork-divergence category: Fork-specific regression
+- File: `apps/primary-advantage/app/api/classroom/[id]/route.ts:53-60`
+- Evidence: The catch block at lines 52-65 contains `if (error.message === "FAILED_DELETE") { return NextResponse.json({ error: "Failed to delete classroom" }, { status: 400 }); }`. The downstream `deleteClassroomController` (`server/controllers/classroomController.ts:158-175`) catches every exception itself and returns `{ success: false, error: "Failed to delete classroom" }` — it never throws. The model `deleteClassroom` (`server/models/classroomModel.ts:536-592`) also never throws `new Error("FAILED_DELETE")`; its catch block returns a structured object instead. The route's controller call therefore cannot produce `error.message === "FAILED_DELETE"`. The fallback return on lines 61-64 (`return NextResponse.json({ error: "Failed to delete classroom" }, { status: 500 })`) is the only path that ever executes. The `FAILED_DELETE` literal looks like a holdover from the Prisma-era handler that called `prisma.classroom.delete(...)` directly (which would have thrown), and was not removed during the Drizzle migration documented in `apps/primary-advantage/AGENTS.md:21-54`.
+- Impact: Misleading code: a future maintainer reading the catch block believes a `FAILED_DELETE` contract exists between the route and the controller, and may try to depend on it. It also hides the real error path: any non-`Error` throw (e.g., a string thrown by an unrelated refactor) returns 500 with the same generic message, so the "this is a 400" branch is never reached even when the underlying failure is recoverable.
+- Recommendation: Remove the `if (error.message === "FAILED_DELETE")` branch entirely (lines 53-60) and keep only the 500 fallback. If structured error contracts are desired, change the controller and model to throw a tagged error class (e.g., `class DeleteClassroomError extends Error { readonly code = "FAILED_DELETE" }`) and narrow in the route. Mirror the same cleanup in `app/api/classroom/route.ts:40-53` for `FAILED_CREATE`.
+
+### LR-primary-advantage-014-002 — DELETE handler has no explicit role check; relies on the controller model to return 400 silently
+
+- Severity: High
+- Fork-divergence category: Primary-student adaptation risk
+- File: `apps/primary-advantage/app/api/classroom/[id]/route.ts:26-49`
+- Evidence: The DELETE handler (lines 26-65) calls `currentUser()` (line 31) and short-circuits with 401 if absent, but does NOT check the user's role. It then passes `(classroomId, user.id, user.role)` to `deleteClassroomController`. The model `deleteClassroom` (`server/models/classroomModel.ts:540-592`) accepts `role` and only enforces deletes for `role === "teacher"`, `role === "admin"`, or `role === "system"`; any other role falls through to `return { success: false, error: "Insufficient permissions to delete classroom" }` (line 587). The route maps that result to `NextResponse.json({ error: result.error }, { status: 400 })` (lines 45-48). A primary-student authenticated against `/api/classroom/[id]` DELETE therefore receives HTTP 400 "Failed to delete classroom" — not 401/403 — and the model layer's authorization failure is collapsed into a generic 400 response with no audit trail. The `lib/permissions.ts:75-81` `CLASS_MANAGEMENT` permission maps to `[teacher, admin, system]` and is the allowlist the Reading Advantage equivalent enforces at the route layer via `requireRole(...)`.
+- Impact: A primary-student adaptation risk: students receive a misleading "Failed to delete classroom" 400 rather than an authorization response. The audit gap (no structured 403, no role recorded) makes it harder to detect a probing client enumerating classroom IDs. This is also a fork-specific regression versus the Reading Advantage DELETE route, which gates on `requireRole(["teacher", "admin", "system"])` and returns 403 before reaching the model.
+- Recommendation: Add an explicit role check inside the DELETE handler using `hasPermission(user, "CLASS_MANAGEMENT")` (line 77 of `lib/permissions.ts`) or by calling `requireRole(["teacher", "admin", "system"])` from a shared auth helper, and return `NextResponse.json({ error: "Forbidden" }, { status: 403 })` for non-permitted roles. Audit-log the denial (`user.id`, `classroomId`, `role`, timestamp) so primary-student probing attempts are visible. Apply the same explicit role gate to the PATCH handler (lines 18-23), which today is also a thin wrapper with no inline role check.
+
+### LR-primary-advantage-014-003 — POST body destructured without Zod validation; relies entirely on the controller for shape and permission
+
+- Severity: Medium
+- Fork-divergence category: Fork-specific regression
+- File: `apps/primary-advantage/app/api/classroom/route.ts:14-37`
+- Evidence: The POST handler destructures `const { name, grade, classCode } = await request.json();` on line 22 without any Zod schema or runtime validation. `name` is then checked for truthiness (lines 24-29) but `grade` and `classCode` are passed directly to `createClassroomController(name, user.id, grade, classCode, user.role)` (line 31). The controller `createClassroomController` (`server/controllers/classroomController.ts:90-110`) does not validate types and calls `createClassroom` (`server/models/classroomModel.ts:57-115`), which does `data.grade ? parseInt(data.grade) : null` (line 78, 94, 105). A client that sends `{ grade: "abc" }` reaches `parseInt("abc") === NaN`, which Drizzle will then store as a numeric column error, surfacing as 500 with the controller's `FAILED_CREATE` branch. The Reading Advantage route validates the same body via Zod and returns 400 on parse failure.
+- Impact: A malformed `grade` (or a non-string `classCode`) produces a 500 instead of a 400, hiding the input contract from the client. There is also no length cap on `name` or `classCode`, so a 1 MB name string is accepted and inserted into the database, which is a primary-student adaptation risk if a class code is shared publicly (no rate limit on creation). The wrapper pattern around `await request.json()` is repeated throughout the API surface (see `app/api/classroom/[id]/enroll/route.ts` and `/unenroll/route.ts`), so a single Zod schema for `ClassroomCreateInput` would replace the manual destructure here and prevent similar drift in other classroom routes.
+- Recommendation: Introduce `lib/zod.ts` exports for `ClassroomCreateInput = z.object({ name: z.string().min(1).max(120), grade: z.string().regex(/^\d+$/).optional(), classCode: z.string().min(4).max(32).optional() })`, parse with `ClassroomCreateInput.safeParse(await request.json())`, and return 400 with a structured error body on parse failure. Add a per-user creation rate limit (e.g., 10 classrooms/hour) before calling the controller. Apply the same validation to the PATCH handler in `app/api/classroom/[id]/route.ts` (lines 18-23) and the enroll/unenroll controllers.
+
+### LR-primary-advantage-014-004 — School-admin authorization query reads the wrong table (`userRoles` instead of `schoolAdmins`)
+
+- Severity: Critical
+- Fork-divergence category: Fork-specific regression
+- File: `apps/primary-advantage/app/api/classrooms/route.ts:43-46`
+- Evidence: Lines 43-46 read `const schoolAdminRows = await db.select().from(userRoles).where(and(eq(userRoles.userId, user.id), eq(userRoles.userId, user.id)));`. The variable name is `schoolAdminRows` and the preceding comment says "Fetch the user's school admin records", but the query targets `userRoles` (the role-assignment join table) rather than `schoolAdmins` (the membership table that grants per-school admin access). The `schoolAdmins` Drizzle table is exported from `packages/db/src/schema/primary.ts:208` and is correctly queried in `app/api/debug/auth/route.ts:46-52`, which confirms the table exists and is reachable. The condition `and(eq(userRoles.userId, user.id), eq(userRoles.userId, user.id))` also ANDs two identical predicates — a copy-paste artifact. The result: `schoolAdminRows` contains `userRoles` rows for the current user, not `schoolAdmins` rows. Every subsequent check that depends on `schoolAdminRows` (lines 49, 60, 62) reads wrong data.
+- Impact: A user who is a school admin (via a row in `schoolAdmins`) but does not hold the global `admin` or `system` role is treated as a non-admin by this endpoint. The `if (!isAdmin && schoolAdminRows.length === 0)` branch on line 49 short-circuits to `403 - Admin access required` even when the user is a legitimate school admin, because the broken query reads 0 rows. Conversely, a regular teacher with the `user` or `teacher` role has 1+ `userRoles` rows; that count satisfies `schoolAdminRows.length > 0` on line 60 and the user is incorrectly granted school-scoped visibility. The tenant isolation contract documented in `apps/primary-advantage/AGENTS.md:55-58` (every query must scope by `schoolId`) is silently broken because the school-admin detection that triggers `eq(classrooms.schoolId, userWithRoles.schoolId)` on line 62 is applied to the wrong population.
+- Recommendation: Replace lines 44-45 with `const schoolAdminRows = await db.select().from(schoolAdmins).where(eq(schoolAdmins.userId, user.id));` and import `schoolAdmins` from `@reading-advantage/db` (add it to the import on line 4). Remove the duplicated `eq(userRoles.userId, user.id)` predicate. After the fix, school admins will correctly be admitted by the `schoolAdminRows.length > 0` check on line 49 and scoped to their school on line 62. Add a unit test that (a) creates a `schoolAdmins` row for a user without the global admin role and confirms the endpoint returns that school's classrooms, and (b) creates a non-admin user with `userRoles` rows and confirms the endpoint returns 403.
+
+### LR-primary-advantage-014-005 — `studentCount` per classroom is computed via N+1 queries and uses a global student-role set that inflates the count
+
+- Severity: High
+- Fork-divergence category: Fork-specific regression
+- File: `apps/primary-advantage/app/api/classrooms/route.ts:75-110`
+- Evidence: Lines 75-110 iterate `classroomRows` with `Promise.all(classroomRows.map(async (classroom) => { ... }))`, firing one query per classroom to fetch `classroomStudents` rows (lines 77-81). For each classroom with enrolled students, lines 86-93 then build an `inArray`-style filter from the `studentIds` of that classroom: `...studentIds.map((sid) => eq(userRoles.userId, sid)).slice(0, 1)` — the `.slice(0, 1)` keeps only the first student ID, so the resulting `studentRoleRows` is at most 1 row. The actual counting happens in lines 95-100, which run a SEPARATE query that selects ALL users with the `student` role globally: `await db.select({ userId: userRoles.userId }).from(userRoles).innerJoin(roles, eq(roles.id, userRoles.roleId)).where(eq(roles.name, "student"))`. The count is then computed as `studentIds.filter((sid) => studentRoleSet.has(sid)).length` (line 100). The intermediate `studentRoleRows` from lines 86-93 is discarded — the comment on line 94 says "Simpler: count distinct students with student role." Two material issues follow: (1) the global student-role query runs once per classroom inside the `Promise.all`, repeating the same `O(total_students)` work `N` times, and (2) the filter on line 100 matches a student ID against the global set of student-role users — that filter is always true for any student who has the `student` role anywhere in the system, so the computed `studentCount` equals `studentIds.length` (the number of `classroomStudents` rows for this classroom), not the number of those students who actually hold the `student` role. The intent appears to have been to count only students with the `student` role, but the implementation degenerates to counting raw enrollments.
+- Impact: A primary-student adaptation risk if classroom counts are surfaced to admin UIs as "students enrolled with valid role" — the number is correct only by coincidence because the Prisma-era `include` shape also counted `classroomStudents` rows directly. The N+1 performance cost (one full-table `student` query per classroom) makes this endpoint unusable for schools with hundreds of classrooms. The dead intermediate `studentRoleRows` query on lines 86-93 also throws away work. The shape returned (`studentCount: number`) does not match the Prisma `_count` shape (which would have been an object with `classroomStudents` and `teachers`); consumers depending on either shape will need to migrate.
+- Recommendation: Replace the per-classroom block with a single grouped query: `await db.select({ classroomId: classroomStudents.classroomId, count: count() }).from(classroomStudents).innerJoin(users, eq(users.id, classroomStudents.studentId)).innerJoin(userRoles, eq(userRoles.userId, users.id)).innerJoin(roles, eq(roles.id, userRoles.roleId)).where(and(eq(roles.name, "student"), inArray(classroomStudents.classroomId, classroomIds))).groupBy(classroomStudents.classroomId)`. Stitch the counts back to the classroom rows in memory. Delete the discarded `studentRoleRows` query (lines 86-93). Document the response shape in `lib/zod.ts` as a Zod schema so callers can rely on it.
+
+### LR-primary-advantage-014-006 — `whereConditions: any[]` defeats Drizzle typing at the multi-tenant boundary
+
+- Severity: Medium
+- Fork-divergence category: Shared package migration blocker
+- File: `apps/primary-advantage/app/api/classrooms/route.ts:57`
+- Evidence: Line 57 declares `const whereConditions: any[] = [];`. The array is populated on line 62 with `eq(classrooms.schoolId, userWithRoles.schoolId)` and on line 69 it is spread into `and(...whereConditions)`. Because the array is typed `any`, the `and(...)` spread is unchecked — a future contributor could push an unrelated `SQL` fragment (or a non-Drizzle value) and TypeScript would not flag it. The Drizzle migration contract in `apps/primary-advantage/AGENTS.md:21-54` prescribes typed Drizzle queries end-to-end; the same file already imports `and` from `@reading-advantage/db` on line 3 but uses it without a typed container. The comparable model code in `server/models/classroomModel.ts:376` (`const whereConditions: any[] = []`) repeats the same anti-pattern.
+- Impact: When the type widens to `any`, the strict Drizzle typing enforced by the migration is bypassed exactly at the point where tenant scoping is enforced. A refactor that swaps `eq(...)` for a string (`whereConditions.push("schoolId = '...'")`) would compile and could allow SQL injection or cross-tenant data exposure. The pattern is consistent enough to suggest it is shared from a common refactor; correcting only this file without addressing `classroomModel.ts:376` would leave the multi-tenant boundary fragile.
+- Recommendation: Replace `const whereConditions: any[] = []` with `const whereConditions: Array<SQL | undefined> = []` (or `Array<SQL<unknown>>` per current Drizzle typings), filtering out `undefined` entries before passing to `and(...)`. Apply the same correction to `classroomModel.ts:376` in a separate PR (out of scope for this review batch but flagged for follow-up). Add a `// invariant: every entry must come from eq(...) / inArray(...) / and(...) — never a raw SQL string` comment above the array literal.
+
+### LR-primary-advantage-014-007 — `whereConditions.push(eq(classrooms.schoolId, userWithRoles.schoolId))` runs even when `schoolId` is `null`
+
+- Severity: Medium
+- Fork-divergence category: Fork-specific regression
+- File: `apps/primary-advantage/app/api/classrooms/route.ts:60-64`
+- Evidence: Lines 60-64 read `if (schoolAdminRows.length > 0 && !roleNames.includes("system")) { if (userWithRoles.schoolId) { whereConditions.push(eq(classrooms.schoolId, userWithRoles.schoolId)); } }`. Even after the bug from finding 004 is fixed (so `schoolAdminRows` reflects real `schoolAdmins` rows), the inner `if (userWithRoles.schoolId)` guard silently DROPS the school filter when the school-admin user has no `users.schoolId` set. The result: a school-admin user with `users.schoolId = null` and a `schoolAdmins` row pointing to school X will be admitted as a school admin (because `schoolAdminRows.length > 0`), but the `whereConditions` array will remain empty, so the query on lines 67-72 returns ALL classrooms (unfiltered). The result shape `studentCount` then depends on the global N+1 student query (finding 005).
+- Impact: A primary-student data exposure path: a school admin whose `users.schoolId` is `null` (e.g., a freshly-created admin before their profile is populated) sees every classroom in the system, including those of other schools. The admin UI on top of this endpoint would render all classrooms. This is a primary-student adaptation risk because the admin role is sometimes used to onboard schools, and a missing profile field temporarily elevates a user to a cross-tenant reader. The Reading Advantage equivalent returns 403 in this case rather than silently expanding the scope.
+- Recommendation: After the `schoolAdminRows` fix, change the inner guard to fail closed: `if (!userWithRoles.schoolId) { return NextResponse.json({ error: "School profile incomplete" }, { status: 409 }); }`. Alternatively, use the `schoolId` from the matched `schoolAdmins` row directly: `whereConditions.push(eq(classrooms.schoolId, schoolAdminRows[0].schoolId))`. Add a regression test that creates a `schoolAdmins` row with no matching `users.schoolId` and confirms the endpoint returns 409 (or only that school's classrooms).
+
+### LR-primary-advantage-014-008 — Debug route exposes full role and school-admin profile to any authenticated user, including primary students
+
+- Severity: High
+- Fork-divergence category: Primary-student adaptation risk
+- File: `apps/primary-advantage/app/api/debug/auth/route.ts:7-22,54-68`
+- Evidence: Lines 7-22 call `currentUser()` and return 401 if absent, but there is NO role check after the auth check. The handler then returns the user's full role list and school-admin records (lines 54-68) in a JSON body that includes `roles: [...roleName]` and `schoolAdmins: [{ schoolId, schoolName }]`. The route lives under `/api/debug/auth`, which conventionally is gated to admin/system (see the `app/api/debug/init-roles/route.ts` and `app/api/debug/school/route.ts` peers that will be reviewed in batch 015). A primary student with valid session cookies can `curl /api/debug/auth` and learn (a) every role attached to their account, (b) the schoolId and school name they are tied to via the `schoolAdmins` table, and (c) confirmation that their session cookie is valid. There is no rate limit or audit log on this endpoint. The Reading Advantage equivalent debug route (`apps/reading-advantage/app/api/debug/auth/route.ts`) gates behind `requireRole(["admin", "system"])` before returning any data.
+- Impact: A primary-student adaptation risk. The endpoint is intended for developer debugging but is reachable in any environment where the route file is deployed. A primary-age student who discovers the URL can map their session to a school name and a list of roles, which is information that should not be returned without an authorization gate. The same endpoint can be used by a probing attacker to enumerate whether a given session token is still valid (the 401 vs 200 split reveals authentication state), enabling session-replay testing.
+- Recommendation: Add `const allowed = hasPermission(user, "SYSTEM_ACCESS")` (line 47 of `lib/permissions.ts`) immediately after the `currentUser()` check; return `NextResponse.json({ error: "Forbidden" }, { status: 403 })` for non-system users. Audit-log every call to this endpoint (`user.id`, `user.role`, timestamp). For local dev convenience, keep the route reachable when `process.env.NODE_ENV !== "production"` so engineers can still hit it, but enforce the gate in production. Apply the same gating to `/api/debug/init-roles` and `/api/debug/school` (will be reviewed in batch 015).
+
+### LR-primary-advantage-014-009 — `console.log` statements leak session and DB user data to production logs
+
+- Severity: Low
+- Fork-divergence category: Fork-specific regression
+- File: `apps/primary-advantage/app/api/debug/auth/route.ts:9,12`
+- Evidence: Line 9 reads `console.log("Debug Auth API: Starting request...");` and line 12 reads `console.log("Debug Auth API: Current user:", user);`. The `user` object printed on line 12 is the full session payload from `currentUser()` (`lib/session.ts:5-14`), which includes `id`, `email`, `schoolId`, `role`, and any other fields attached to the session. The same handler is exposed to any authenticated user (see finding 008). `console.error` on line 70 also dumps `error instanceof Error ? error.message : "Unknown error"` — for a debug endpoint that is acceptable, but the `console.log` calls on lines 9 and 12 are unguarded and run on every request. The AGENTS.md logging policy (`Observability > Logging`) requires structured logs and discourages free-form `console.log` in production code.
+- Impact: Every call to `/api/debug/auth` writes the user's session payload to stdout. On container platforms (Cloud Run, Fly.io, Kubernetes), stdout is captured by the platform log shipper; the session payload is then stored in the platform's log retention. Even if the route is gated to system-only (finding 008), the `console.log` still leaks the system admin's session on every request. There is no structured logger import in the file.
+- Recommendation: Replace lines 9 and 12 with a structured logger call (e.g., `logger.debug({ route: "/api/debug/auth", userId: user.id }, "request received")`) and gate the log behind a `DEBUG_AUTH_LOG` env flag so production builds default to off. Remove the `console.log` entirely if no downstream consumer reads it. Move `console.error` on line 70 to the same structured logger with a stable error code (`AUTH_DEBUG_FAILED`). Document the logger module in `server/utils/logging.ts` so future debug routes can reuse the contract.
 
 ## No-Finding Notes
 
-Pending line-by-line review.
+- `apps/primary-advantage/app/api/auth/session/route.ts`: thin wrapper that delegates `GET` to `handleSession` from `@reading-advantage/api/routes/auth`. The pattern matches `apps/codecamp-advantage/app/api/auth/session/route.ts`, `apps/marketing/app/api/auth/session/route.ts`, and `apps/sales-advantage/app/api/auth/session/route.ts`, and is the correct transport-adapter shape per AGENTS.md (provider-neutral auth behind a shared adapter). Reviewed line-by-line; no findings.
+- `apps/primary-advantage/app/api/classroom/[id]/available-students/route.ts`: thin wrapper that delegates `GET` to `getAvailableStudentsController` in `server/controllers/classroomController.ts:325-361`. The controller handles `currentUser()`, role check (`TEACHER`/`SYSTEM`), and per-teacher classroom ownership. The route file itself does not perform its own auth, but the controller covers it. Reviewed line-by-line; no findings (note: see finding on the uppercase role strings in `classroomController.ts:336` flagged for a future controller review).
+- `apps/primary-advantage/app/api/classroom/[id]/enroll/route.ts`: thin wrapper that delegates `POST` to `enrollStudentController`. The controller handles `currentUser()`, role check (`TEACHER`/`SYSTEM`), and validates `studentId`. The route file is a clean transport adapter. Reviewed line-by-line; no findings.
+- `apps/primary-advantage/app/api/classroom/[id]/generate-code/route.ts`: thin wrapper that delegates `POST` to `generateClassCodeController`. The controller handles auth and a runtime role check (`user.role === "user" || user.role === "student"` to block). Reviewed line-by-line; no findings.
+- `apps/primary-advantage/app/api/classroom/[id]/unenroll/route.ts`: thin wrapper that delegates `DELETE` to `unenrollStudentController`. The controller handles `currentUser()`, role check (`TEACHER`/`SYSTEM`), and `studentId` validation. Reviewed line-by-line; no findings.
+- `apps/primary-advantage/app/api/classroom/students/route.ts`: thin wrapper that delegates `GET` to `fetchStudentsByRole`. The controller branches on `user.role` (`system` / `admin` / `teacher` / default-403). Reviewed line-by-line; no findings.
+
+## Summary
+
+- Total findings: 9 (1 Critical, 3 High, 3 Medium, 2 Low).
+- Critical-severity finding: LR-004 (school-admin authorization query reads the wrong table, breaking tenant isolation in both directions).
+- Highest-impact fork-divergence categories for this batch: `Fork-specific regression` (wrong-table query, N+1 student count, role checks left only to the model layer, debug auth exposed to all authenticated users), `Primary-student adaptation risk` (debug route leaks role + school profile to students, school-admin scope can expand to all classrooms when `users.schoolId` is null, DELETE handler returns 400 instead of 403 on student probes), `Shared package migration blocker` (`any[]` typed where-clause defeats the Drizzle migration's stricter typing at the multi-tenant boundary).
+- No source-code, plan.md, or `line-review-coverage.tsv` edits were made. The patch TSV is written under `line-review/coverage-patches/primary-advantage-014.tsv` and the evidence is in this file.
