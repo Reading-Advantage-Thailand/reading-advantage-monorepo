@@ -1,0 +1,11 @@
+{
+  "track_id": "wave4_app_security_correctness_backlog_20260628",
+  "type": "chore",
+  "status": "planned",
+  "created_at": "2026-06-28T00:00:00Z",
+  "updated_at": "2026-06-28T00:00:00Z",
+  "description": "Wave 4 remediation: close all remaining Medium+ security, tenant, authorization, contract, and correctness tracks not owned by Waves 0-3 (Science ST-1/ST-2/ST-4, Reading SEC-6..10/PB-4..8, CodeCamp MT-8..11/13/14, Sales T5/T8/T9, Primary M7/M9, www blog security).",
+  "estimated_tasks": 42,
+  "actual_tasks": null,
+  "deviation_notes": "Spawned from monorepo_review_roadmap_20260626 to guarantee full Medium-and-above coverage. Ownership of record: medium-plus-coverage-matrix.md."
+}

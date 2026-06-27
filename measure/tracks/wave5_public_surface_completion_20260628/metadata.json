@@ -1,0 +1,11 @@
+{
+  "track_id": "wave5_public_surface_completion_20260628",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-06-28T00:00:00Z",
+  "updated_at": "2026-06-28T00:00:00Z",
+  "description": "Wave 5 remediation: complete non-claims public-surface defects on www (forms, SEO, assets, i18n, a11y, comparison/pricing, nav, contact, test hygiene), marketing schema/UX/i18n, and Science build/deploy de-Prisma.",
+  "estimated_tasks": 38,
+  "actual_tasks": null,
+  "deviation_notes": "Spawned from monorepo_review_roadmap_20260626. Contains three Critical www items (T1/T2/T3) that fell outside Wave 3's claims-only scope and may be pulled forward. Ownership of record: medium-plus-coverage-matrix.md."
+}

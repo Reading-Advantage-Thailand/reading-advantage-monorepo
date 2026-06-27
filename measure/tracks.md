@@ -61,6 +61,14 @@ Two parallel programs are in flight; priority order when picking the next track:
   Restore migration, seed, provider-adapter, observability, and test-gate confidence. Evidence: MR-H01, MR-H02, MR-H03; CA-005..CA-007/CA-010/CA-011; test-strategy roadmap.
 - [ ] **Track: Wave 3 — Product-Facing Truth and Reusable Surfaces** *Link: [./tracks/wave3_product_alignment_20260628/](./tracks/wave3_product_alignment_20260628/)*
   Align public claims, secure Marketing public workflows, and make Advantage Games import-ready. Evidence: MR-H05, MR-H06; CA-008/CA-013; Website LRF findings; Marketing Critical/High findings; Games D-01..D-11.
+- [ ] **Track: Wave 4 — App Security & Correctness Backlog (Medium+)** *Link: [./tracks/wave4_app_security_correctness_backlog_20260628/](./tracks/wave4_app_security_correctness_backlog_20260628/)*
+  Close remaining Medium+ security/tenant/authz/correctness tracks not in Wave 1. Evidence: Science ST-1/ST-2/ST-4; Reading SEC-6..10 / PB-4..8; CodeCamp MT-8..11/13/14; Sales T5/T8/T9; Primary M7/M9; www T9.
+- [ ] **Track: Wave 5 — Public Surface Completion** *Link: [./tracks/wave5_public_surface_completion_20260628/](./tracks/wave5_public_surface_completion_20260628/)*
+  Finish non-claims public-surface defects: www forms/SEO/assets/i18n/a11y/comparison/nav/contact/test-hygiene, marketing schema/UX/i18n, Science de-Prisma deploy. Evidence: www T1/T2/T3/T6/T8/T11..T17; marketing schema/UX/i18n; Science ST-6.
+- [ ] **Track: Wave 6 — Quality, i18n, Accessibility, Adapters & Docs Completion** *Link: [./tracks/wave6_quality_i18n_accessibility_completion_20260628/](./tracks/wave6_quality_i18n_accessibility_completion_20260628/)*
+  Close remaining Medium maintainability/adapter/i18n/a11y/test-quality/curriculum/docs tracks. Evidence: M-SF-6; Primary M10/M12/M13; Sales T10/T11; Science ST-5/ST-7/ST-8/SP-2; CodeCamp MT-C1..C4/MT-X1; Games T5-T10; marketing test backfill.
+
+> **Coverage of record:** `audit-reports/monorepo-review-roadmap_20260626/medium-plus-coverage-matrix.md` maps every Medium-and-above migration track to exactly one wave (W0–W6). Low-severity items are listed there as explicitly deferred.
 
 ---
 

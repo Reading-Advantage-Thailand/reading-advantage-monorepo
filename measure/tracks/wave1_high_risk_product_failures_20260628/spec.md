@@ -41,6 +41,19 @@ Fix the highest-risk app-level failures identified by the review program. This w
 - `measure/audit-reports/sales-advantage_20260626/findings.md`
   - F-SALES-B05-001, F-SALES-B05-002, F-SALES-B00-023, F-SALES-B00-027, F-SALES-B00-030, F-SALES-B01-015, F-SALES-B01-018, F-SALES-B04-001, F-SALES-B05-006.
 
+## Coverage Model
+
+This wave is scoped by **severity and risk, not by exhaustive finding closure.** It targets the Critical/High runtime and security *failures* in Primary, Reading, CodeCamp, and Sales, using a representative-slice-then-propagate method: prove the fix with a Red→Green behavior test on one representative occurrence, then propagate the proven pattern to the enumerated same-class sites.
+
+Passing Wave 1 therefore means **the named high-risk workflows are fixed and the Critical/High migration tracks below are closed**, not that every line-level finding in the source reports is resolved. The Medium-and-above remainder is explicitly owned by later waves — it is *not* dropped:
+
+- **Wave 4** owns the remaining Medium+ security/correctness tracks (Science ST-1/ST-2/ST-4, Reading SEC-6..10 / PB-4..8, CodeCamp MT-8..11/13/14, Sales T5/T8/T9, Primary M7 and **M9 hardcoded-secrets**, www blog security).
+- **Wave 6** owns Medium adapter/i18n/quality tracks (Primary M10/M12/M13, Sales T10/T11, CodeCamp curriculum).
+
+> **Primary M9 (remove hardcoded secrets/credentials) and M7 (Prisma artifact cleanup) are NOT in Wave 1.** They are owned by Wave 4. Wave 1's Primary scope is M1–M6, M8, M11 only.
+
+The authoritative ownership map for all Medium+ tracks is `measure/audit-reports/monorepo-review-roadmap_20260626/medium-plus-coverage-matrix.md`.
+
 ## Dependencies
 
 - Wave 0 should complete or explicitly provide the tenant/auth/contracts primitives needed by each slice.
@@ -67,3 +80,5 @@ Fix the highest-risk app-level failures identified by the review program. This w
 - CodeCamp PR review path no longer throws `TenantScopeError` and webhook processing is idempotent/retriable.
 - Sales roleplay attempt/evaluation paths enforce ownership, validate audio, and document/enforce privacy controls.
 - Targeted app/package tests, type checks, and lint commands pass for touched surfaces.
+- **Scope completeness (per Coverage Model):** the Critical/High migration tracks owned here are closed — Primary M1–M6/M8/M11, Reading M-RA-SEC-1..5 / PB-1..3, CodeCamp MT-1..6, Sales T1/T2/T3/T7 — with each proven slice's enumerated same-class sites either fixed or listed in the track's deviation notes for a named follow-up wave.
+- **No silent drops:** every Medium+ finding not closed here appears against Wave 4 or Wave 6 in `medium-plus-coverage-matrix.md`. Primary M9 (hardcoded secrets) is confirmed owned by Wave 4, not deferred to nowhere.
