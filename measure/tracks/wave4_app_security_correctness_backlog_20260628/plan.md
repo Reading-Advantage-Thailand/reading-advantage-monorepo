@@ -9,6 +9,7 @@
 - [ ] Task: Read `medium-plus-coverage-matrix.md` and confirm this wave's owned track IDs are still accurate.
 - [ ] Task: Confirm Wave 0/Wave 2 primitives available (createTenantDB, assertCan, tenant-isolation test helper, provider guard); record which must be locally proven.
 - [ ] Task: Record baseline pass/fail for the required verification commands per touched app.
+- [ ] Task: Create a site-closure checklist for each owned migration track, enumerating affected same-class sites from the source review artifacts before implementation begins.
 
 ## Phase 1: Science Security and Tenant Scoping
 
@@ -82,6 +83,7 @@
 
 - [ ] Task: Run all required verification commands from `spec.md`.
 - [ ] Task: Update `medium-plus-coverage-matrix.md` marking owned tracks resolved only when behavior tests prove the fixes.
+- [ ] Task: Verify each site-closure checklist marks every affected same-class site fixed, not-applicable, or explicitly deferred to a named follow-up.
 - [ ] Task: Add lessons learned for any new tenant/secret/observability patterns.
 - [ ] Task: Run Measure phase acceptance and archive the track.
 </content>

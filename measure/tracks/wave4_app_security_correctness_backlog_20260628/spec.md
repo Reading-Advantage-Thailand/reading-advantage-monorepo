@@ -6,6 +6,10 @@ Close every remaining **Medium-, High-, and Critical-severity** security, tenant
 
 The authoritative coverage map for this wave is `measure/audit-reports/monorepo-review-roadmap_20260626/medium-plus-coverage-matrix.md`.
 
+## Closure Model
+
+Wave 4 may use representative Red -> Green tests to prove a remediation pattern, but representative tests are **not sufficient for closeout**. Each owned migration track must enumerate its affected sites from the source review artifacts and either fix every same-class site in this wave or record a named deviation with the exact follow-up wave/track. A Phase Acceptance reviewer must reject closeout if a task claims closure from a single representative slice while known same-class sites remain untriaged.
+
 ## Source Findings
 
 This wave owns these migration tracks (all Medium+):
@@ -59,6 +63,7 @@ This wave owns these migration tracks (all Medium+):
 - Primary contains no Prisma runtime artifacts and no hardcoded secrets/credentials in committed source; seed/test credentials are env-guarded and non-production.
 - Public blog renders sanitized HTML and validates frontmatter with Zod.
 - Targeted package/app tests, type checks, and lint pass for every touched surface, or pre-existing failures are explicitly linked to follow-up.
+- Every owned migration track has a site-closure checklist showing fixed, not-applicable, or explicitly-deferred status for each affected same-class site; no track is accepted based on representative-slice evidence alone.
 
 ## Required Verification Commands
 

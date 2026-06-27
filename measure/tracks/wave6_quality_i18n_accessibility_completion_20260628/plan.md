@@ -8,6 +8,7 @@
 
 - [ ] Task: Confirm Wave 2 adapter contracts and Wave 3 games runtime package are available.
 - [ ] Task: Confirm Wave 4 closed all Medium+ security/correctness tracks so this wave is quality-only.
+- [ ] Task: Decide whether to split this umbrella into executable subtracks: adapters/cache, games quality, CodeCamp curriculum/docs, and i18n/a11y/test/docs cleanup. If not split, record why combined scope is manageable.
 - [ ] Task: Record baseline pass/fail for the required verification commands.
 
 ## Phase 1: Adapters — Primary Auth/Compliance and Shared Cache
@@ -72,7 +73,7 @@
 ## Phase 8: Acceptance and Closeout
 
 - [ ] Task: Run all required verification commands from `spec.md`.
-- [ ] Task: Update `medium-plus-coverage-matrix.md`; confirm every Medium+ row is Resolved or explicitly carried as deferred-Low.
+- [ ] Task: Update `medium-plus-coverage-matrix.md`; confirm every Medium+ row is Resolved, linked to a completed Wave 6 subtrack, or explicitly carried as deferred-Low.
 - [ ] Task: Add lessons learned for adapter/i18n/test-quality patterns.
 - [ ] Task: Run Measure phase acceptance and archive the track.
 </content>

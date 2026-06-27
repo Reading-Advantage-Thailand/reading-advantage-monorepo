@@ -22,6 +22,8 @@ Ownership of record: `measure/audit-reports/monorepo-review-roadmap_20260626/med
 
 ## Product Owner Decisions Required
 
+Phase 0 is a blocking decision gate. Do not implement affected Wave 5 surfaces until these answers are recorded in the track plan or a linked decision artifact:
+
 1. Which lead-capture backend/adapter receives waitlist + contact submissions (T1)?
 2. Which efficacy/comparison/pricing figures are approved and evidence-backed (T12 overlaps Wave 3 claims gate)?
 3. Final legal language to replace "ZERO RISK" copy (T17)?
@@ -51,6 +53,7 @@ Ownership of record: `measure/audit-reports/monorepo-review-roadmap_20260626/med
 ## Acceptance Criteria
 
 - Waitlist and contact forms submit successfully to a backend/adapter, validate input, and surface success/error states; no dead/empty layout components remain imported.
+- Phase 0 records the approved lead-capture backend/adapter, comparison/pricing figures, and legal replacement copy before implementation touches those surfaces.
 - All public pages export SEO metadata; OG image and previously-missing static assets resolve; client-render SEO regressions are fixed.
 - Hardcoded public strings are localized with zh fallback; locale access is typed (no `as never`).
 - Accessibility checks pass for remediated components; Services appears in primary nav; contact details resolve from a single source.
