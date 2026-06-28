@@ -42,13 +42,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [ ] **Track: Advantage Games Review** *Link: [./tracks/advantage_games_review_20260626/](./tracks/advantage_games_review_20260626/)*
   Reviews the reusable game inventory, shared runtime, scoring/XP/leaderboards,
   mobile/accessibility, and import readiness for Reading/Primary. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
-- [x] **Track: Cross-App Workflows Review** *Link: [./tracks/cross_app_workflows_review_20260626/](./tracks/cross_app_workflows_review_20260626/)*
-  Synthesizes risks across auth, tenancy, AI, storage, UI reuse, games imports, deployment,
-  observability, and test strategy. *Status: COMPLETE as review synthesis — artifacts in `measure/audit-reports/cross-app-workflows_20260626/`; product remediation remains for follow-up tracks.*
-- [x] **Track: Monorepo Review Roadmap** *Link: [./tracks/monorepo_review_roadmap_20260626/](./tracks/monorepo_review_roadmap_20260626/)*
-  Final synthesis track that deduplicates accepted findings and produces the prioritized
-  remediation/migration/test/product-risk roadmap. *Status: COMPLETE as final review roadmap — artifacts in `measure/audit-reports/monorepo-review-roadmap_20260626/`; no remediation performed.*
-
 ### Monorepo Review Remediation Waves (created 2026-06-28)
 
 > Detailed implementation tracks spawned from `monorepo_review_roadmap_20260626`. Each track includes evidence references back to the line-review artifacts and should be executed in wave order unless a dependency note explicitly allows parallel work.
@@ -85,6 +78,12 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [x] **Track: Company Website Review** *Link: [./archive/www_reading_advantage_review_20260626/](./archive/www_reading_advantage_review_20260626/)*
   Archived 2026-06-27 after line-by-line review completed coverage of 130 src files / 20033 ts/tsx lines with 10 batch evidence files and 44 LR findings (7 Critical, 12 High, 15 Medium, 10 Low) across 11 categories. This is review-completeness closeout only; the company website is not claimed fixed or product-green, and all 44 findings plus 18 migration-track proposals await separate remediation tracks. The lint/type/test/build/browser/performance/graph gates were deferred as review-execution (acceptable for a review-only track).
+
+- [x] **Track: Cross-App Workflows Review** *Link: [./archive/cross_app_workflows_review_20260626/](./archive/cross_app_workflows_review_20260626/)*
+  Archived 2026-06-29. Synthesizes risks across auth, tenancy, AI, storage, UI reuse, games imports, deployment, observability, and test strategy. Status: COMPLETE as review synthesis — artifacts in `measure/audit-reports/cross-app-workflows_20260626/`; product remediation remains for follow-up tracks. Track dir moved and `metadata.json` status flipped to archived by daily automation on 2026-06-29.
+
+- [x] **Track: Monorepo Review Roadmap** *Link: [./archive/monorepo_review_roadmap_20260626/](./archive/monorepo_review_roadmap_20260626/)*
+  Archived 2026-06-29. Final synthesis track that deduplicates accepted findings and produces the prioritized remediation/migration/test/product-risk roadmap. Status: COMPLETE as final review roadmap — artifacts in `measure/audit-reports/monorepo-review-roadmap_20260626/`; no remediation performed. Track dir moved and `metadata.json` status flipped to archived by daily automation on 2026-06-29.
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
