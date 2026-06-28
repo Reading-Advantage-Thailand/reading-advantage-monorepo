@@ -1,11 +1,12 @@
 {
   "track_id": "monorepo_review_roadmap_20260626",
   "type": "chore",
-  "status": "complete",
+  "status": "archived",
   "created_at": "2026-06-26T12:56:03Z",
   "updated_at": "2026-06-28T00:00:00Z",
   "description": "Synthesize all monorepo feature review findings into a deduplicated, prioritized remediation and migration roadmap.",
   "estimated_tasks": 28,
   "actual_tasks": 16,
-  "deviation_notes": "Final synthesis completed from child review artifacts plus cross-app synthesis. Created measure/audit-reports/monorepo-review-roadmap_20260626/. No remediation performed."
+  "deviation_notes": "Final synthesis completed from child review artifacts plus cross-app synthesis. Created measure/audit-reports/monorepo-review-roadmap_20260626/. No remediation performed.",
+  "completed_at": "2026-06-29T00:00:00Z"
 }
