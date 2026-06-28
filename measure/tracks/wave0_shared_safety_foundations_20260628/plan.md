@@ -147,12 +147,36 @@
 
 ## Phase 4: Transport-Thin Shared API Boundary
 
-- [ ] Task: Write Red tests showing the reviewed `reports.teacherDashboard` query is delegated to a domain function, not implemented in the tRPC router.
+- [~] Task: Write Red tests showing the reviewed `reports.teacherDashboard` query is delegated to a domain function, not implemented in the tRPC router.
   - Evidence refs: Shared Foundation F-SF-003; Cross-App CA-004; Monorepo MR-C05.
-- [ ] Task: Move shared-foundation-identified business logic from API transport to domain functions.
-- [ ] Task: Add or update static guard tests forbidding Drizzle/schema imports in `packages/api/src/routers/**` except approved infrastructure exceptions.
-- [ ] Task: Verify router tests assert delegation and transport mapping only.
-- [ ] Task: Run API/domain lint, check-types, and tests.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/api/src/__tests__/wave0-phase4-reports-delegation.test.ts` — 6 tests total, 3 RED:
+      - `teacherDashboard delegates to a domain function (not inline Drizzle)` FAILS — router has inline Drizzle query (`ctx.tenantDb.select({ id: classrooms.id, name: classrooms.name }).from(classrooms).where(...)`)
+      - `reports router imports getTeacherDashboard from domain module` FAILS — router does not import `getTeacherDashboard` from `@reading-advantage/domain`
+      - `teacherDashboard procedure body does not reference Drizzle table columns directly` FAILS — column reference count: 3 (`classrooms.teacherId`, `classrooms.id`, `classrooms.name`)
+      - 3 other tests pass (procedure scan guard, procedure exists, file-level import check)
+    - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase4-reports-delegation.test.ts`
+- [~] Task: Move shared-foundation-identified business logic from API transport to domain functions.
+- [~] Task: Add or update static guard tests forbidding Drizzle/schema imports in `packages/api/src/routers/**` except approved infrastructure exceptions.
+  - Evidence refs: Shared Foundation F-SF-003; Cross-App CA-004; Monorepo MR-C05.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/api/src/__tests__/api-architecture-boundary.test.ts` — 4 tests total, 2 RED:
+      - `all router files are free of drizzle-orm imports` FAILS — violation count: 1 of 10 router files (`reports.ts:2: import { eq } from "drizzle-orm"`)
+      - `all router files are free of @reading-advantage/db/schema imports` FAILS — violation count: 1 of 10 router files (`reports.ts:3: import { classrooms } from "@reading-advantage/db/schema"`)
+      - 2 other tests pass (router file scan guard, approved exception documentation)
+    - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/api-architecture-boundary.test.ts`
+- [~] Task: Verify router tests assert delegation and transport mapping only.
+  - Evidence refs: Shared Foundation F-SF-003; Cross-App CA-004; Monorepo MR-C05.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/api/src/__tests__/wave0-phase4-router-test-quality.test.ts` — 3 tests total, 2 RED:
+      - `no router test file contains inline Drizzle query assertions` FAILS — violation count: 2 (`reports.test.ts:146` and `users.test.ts:185` both assert `db.select` was called directly)
+      - `reports.test.ts does not directly assert Drizzle table columns or query chains` FAILS — violation count: 1 (`line 146: expect(db.select).toHaveBeenCalled()`)
+      - 1 other test passes (test file scan guard)
+    - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase4-router-test-quality.test.ts`
+- [~] Task: Run API/domain lint, check-types, and tests.
+  - Red evidence (Mid agent 2026-06-28):
+    - Combined Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase4-reports-delegation.test.ts src/__tests__/api-architecture-boundary.test.ts src/__tests__/wave0-phase4-router-test-quality.test.ts` → 13 tests total, 7 RED / 6 PASS, exit 1
+    - Full targeted Red command from test-strategy.md: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/reports.test.ts src/__tests__/api-architecture-boundary.test.ts && CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/reports.test.ts` — not run separately (domain has no Phase 4 tests; API tests cover the boundary)
 
 ## Phase 5: Quality Gates, Documentation, and Closeout
 
