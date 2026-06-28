@@ -38,14 +38,18 @@ export {
   recordFailure,
   resetLimit,
   configureRateLimiter,
+  configurePostgresRateLimiter,
   createInMemoryRateLimitStore,
   getRateLimitConfig,
+  getIpRateLimitConfig,
   DEFAULT_RATE_LIMIT_CONFIG,
+  DEFAULT_IP_RATE_LIMIT_CONFIG,
   type RateLimitConfig,
   type RateLimitStore,
   type RateLimitStoreEntry,
   _testkit,
 } from "./rate-limit.js";
+export { createPostgresRateLimitStore } from "./rate-limit-store.js";
 
 // Server Guards (framework-agnostic)
 export {

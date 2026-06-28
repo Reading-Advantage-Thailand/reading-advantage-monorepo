@@ -452,7 +452,6 @@ describe("auth route handlers", () => {
 
   it("returns 401 and calls verifyPassword with DUMMY_HASH when credential password is missing (FR-4)", async () => {
     const { createSession, recordFailure, verifyPassword } = await import("@reading-advantage/auth");
-
     mockDb.select
       .mockReturnValueOnce(
         selectResult([
@@ -496,7 +495,6 @@ describe("auth route handlers", () => {
 // Phase 2 — Task 14: FR-4 / FR-5 / FR-6 / FR-11
 // ---------------------------------------------------------------------------
 //
-// FR-4: When the user is not found, call `await verifyPassword(password,
 //       DUMMY_HASH)` before returning 401 so the unknown-username branch
 //       pays the same Argon2id cost as the wrong-password branch.
 // FR-5: When a DB query throws during login, return 503 (not 401) and do

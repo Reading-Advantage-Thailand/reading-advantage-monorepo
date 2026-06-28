@@ -36,4 +36,7 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
   "0019_session_token_hash": { tag: "0019_session_token_hash", kind: "column", target: "sessions.token_hash" },
   "0020_sessions_indexes": { tag: "0020_sessions_indexes", kind: "table", target: "sessions" },
   "0021_sales_advantage": { tag: "0021_sales_advantage", kind: "table", target: "sales_modules" },
+  "0022_flowery_black_tarantula": { tag: "0022_flowery_black_tarantula", kind: "table", target: "article_activity_logs" },
+  "0023_cultured_sunspot": { tag: "0023_cultured_sunspot", kind: "column", target: "sales_roleplay_attempts.audio_storage_key" },
+  "0024_futuristic_vulture": { tag: "0024_futuristic_vulture", kind: "table", target: "login_attempts" },
 };

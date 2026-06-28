@@ -1,4 +1,5 @@
 export * from "./users.js";
+export * from "./auth.js";
 export * from "./classrooms.js";
 export * from "./content.js";
 export * from "./progress.js";

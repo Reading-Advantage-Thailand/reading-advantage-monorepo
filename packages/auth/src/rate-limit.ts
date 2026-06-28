@@ -2,20 +2,25 @@
  * Wave 0 — Rate limiter architecture (Phase 2).
  *
  * Production safety requirements:
- *   - Cross-instance durable store (Postgres/Redis/etc.) via `RateLimitStore`
+ *   - Cross-instance durable store (Postgres) via `RateLimitStore`
  *     interface. The in-memory store is exposed for dev/test only via
  *     `createInMemoryRateLimitStore()` and is NOT the production default.
  *   - Per-user AND per-IP semantics: callers pass both `username` and `ip`.
- *     The composite key `username|ip` (or just `username` when no IP is
- *     supplied) prevents two distinct IPs from sharing a brute-force
- *     bucket for the same account, and conversely prevents one IP from
- *     brute-forcing unrelated accounts under a single global lockout.
+ *     Username and IP buckets are independent; a shared IP does not
+ *     lock out unrelated usernames, and a username is not locked out by
+ *     failures from a different IP.
  *   - Configurable window/max attempts via factory; no module-level
  *     numeric constants for `WINDOW_MS`/`MAX_ATTEMPTS`.
  */
 
+import { createPostgresRateLimitStore } from "./rate-limit-store.js";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type * as schema from "@reading-advantage/db/schema";
+
+type Db = PostgresJsDatabase<typeof schema>;
+
 /**
- * Stored entry for a single (username, ip) rate-limit bucket.
+ * Stored entry for a single rate-limit bucket.
  * @property failedCount - Number of failed attempts within the current window.
  * @property windowStart - Epoch ms when the current counting window started.
  */
@@ -28,17 +33,17 @@ export interface RateLimitStoreEntry {
  * Storage seam for rate-limit state.
  *
  * Production deployments MUST inject a cross-instance durable backend
- * (Postgres/Redis/etc.) via `configureRateLimiter({ store })`. The
- * default in-memory implementation is dev/test-only — distinct server
- * processes (or restarts) will not share state.
+ * (Postgres) via `configureRateLimiter({ store })`. The default
+ * in-memory implementation is dev/test-only — distinct server processes
+ * (or restarts) will not share state.
  */
 export interface RateLimitStore {
   /** Returns the current entry for `key` or `undefined` when absent. */
-  get(key: string): RateLimitStoreEntry | undefined;
+  get(key: string): Promise<RateLimitStoreEntry | undefined>;
   /** Replaces the entry for `key` with `entry`. */
-  set(key: string, entry: RateLimitStoreEntry): void;
+  set(key: string, entry: RateLimitStoreEntry): Promise<void>;
   /** Removes the entry for `key`. No-op when absent. */
-  delete(key: string): void;
+  delete(key: string): Promise<void>;
 }
 
 /**
@@ -50,12 +55,21 @@ export interface RateLimitConfig {
 }
 
 /**
- * Default rate-limit configuration. Provided for dev/test wiring; production
- * deployments should override via `configureRateLimiter({ config })`.
+ * Default per-username rate-limit configuration. Provided for dev/test
+ * wiring; production deployments should override via
+ * `configureRateLimiter({ config })`.
  */
 export const DEFAULT_RATE_LIMIT_CONFIG: RateLimitConfig = {
   windowMs: 15 * 60 * 1000,
   maxAttempts: 5,
+};
+
+/**
+ * Default per-IP rate-limit configuration.
+ */
+export const DEFAULT_IP_RATE_LIMIT_CONFIG: RateLimitConfig = {
+  windowMs: 15 * 60 * 1000,
+  maxAttempts: 30,
 };
 
 // ───────────────────────────────────────────────────────────────────
@@ -70,7 +84,8 @@ export const DEFAULT_RATE_LIMIT_CONFIG: RateLimitConfig = {
 const inMemoryStore = new Map<string, RateLimitStoreEntry>();
 
 let configuredStore: RateLimitStore = createInMemoryRateLimitStore();
-let configuredConfig: RateLimitConfig = { ...DEFAULT_RATE_LIMIT_CONFIG };
+let configuredUsernameConfig: RateLimitConfig = { ...DEFAULT_RATE_LIMIT_CONFIG };
+let configuredIpConfig: RateLimitConfig = { ...DEFAULT_IP_RATE_LIMIT_CONFIG };
 
 // ───────────────────────────────────────────────────────────────────
 // Factory + configuration
@@ -83,80 +98,121 @@ let configuredConfig: RateLimitConfig = { ...DEFAULT_RATE_LIMIT_CONFIG };
  */
 export function createInMemoryRateLimitStore(): RateLimitStore {
   return {
-    get: (key) => inMemoryStore.get(key),
-    set: (key, entry) => {
+    get: async (key) => inMemoryStore.get(key),
+    set: async (key, entry) => {
       inMemoryStore.set(key, entry);
     },
-    delete: (key) => {
+    delete: async (key) => {
       inMemoryStore.delete(key);
     },
   };
 }
 
 /**
+ * Returns true when the in-memory fast-path is explicitly enabled.
+ * The fast-path is allowed only in development AND when the env flag
+ * `RATE_LIMIT_INMEMORY_FASTPATH` is set to `'true'`.
+ */
+function isInMemoryFastPathEnabled(): boolean {
+  return (
+    process.env.NODE_ENV === "development" &&
+    process.env.RATE_LIMIT_INMEMORY_FASTPATH === "true"
+  );
+}
+
+/**
  * Configures the rate limiter for production overrides.
  *
  * Pass a custom `store` to make rate-limit state cross-instance durable
- * (e.g., a Postgres-backed store). Pass a partial `config` to override
- * the default `windowMs` / `maxAttempts`.
+ * (e.g., a Postgres-backed store). Pass partial `config`/`ipConfig` to
+ * override the default windowMs / maxAttempts.
  *
  * @param opts - Configuration overrides.
  * @param opts.store - Storage backend. When omitted, the current store is kept.
- * @param opts.config - Partial config overrides. Merged onto defaults.
+ * @param opts.config - Partial username-config overrides. Merged onto defaults.
+ * @param opts.ipConfig - Partial IP-config overrides. Merged onto defaults.
  */
 export function configureRateLimiter(
-  opts: { store?: RateLimitStore; config?: Partial<RateLimitConfig> } = {},
+  opts: {
+    store?: RateLimitStore;
+    config?: Partial<RateLimitConfig>;
+    ipConfig?: Partial<RateLimitConfig>;
+  } = {},
 ): void {
   if (opts.store) {
     configuredStore = opts.store;
   }
   if (opts.config) {
-    configuredConfig = { ...DEFAULT_RATE_LIMIT_CONFIG, ...opts.config };
+    configuredUsernameConfig = { ...DEFAULT_RATE_LIMIT_CONFIG, ...opts.config };
+  }
+  if (opts.ipConfig) {
+    configuredIpConfig = { ...DEFAULT_IP_RATE_LIMIT_CONFIG, ...opts.ipConfig };
   }
 }
 
 /**
- * Returns the currently active configuration. Useful for diagnostics or
- * for tests that want to inspect applied overrides.
- * @returns The active `RateLimitConfig`.
+ * Returns the currently active username configuration. Useful for
+ * diagnostics or tests that want to inspect applied overrides.
+ * @returns The active username `RateLimitConfig`.
  */
 export function getRateLimitConfig(): RateLimitConfig {
-  return configuredConfig;
+  return configuredUsernameConfig;
 }
 
 /**
- * Builds the composite bucket key for a (username, ip) pair. When no IP
- * is supplied, the username is used as the key directly (legacy
- * compatibility for callers that have not yet been upgraded to pass IP).
- * @param username - Account username/identifier.
- * @param ip - Optional client IP address.
- * @returns The composite storage key.
+ * Returns the currently active IP configuration.
+ * @returns The active IP `RateLimitConfig`.
  */
-function buildKey(username: string, ip?: string): string {
-  return ip ? `${username}|ip=${ip}` : username;
+export function getIpRateLimitConfig(): RateLimitConfig {
+  return configuredIpConfig;
+}
+
+/**
+ * Configures the rate limiter with a Postgres-backed store.
+ *
+ * This is the production default. The in-memory fast-path is used only
+ * when `NODE_ENV === 'development'` AND `RATE_LIMIT_INMEMORY_FASTPATH`
+ * is explicitly set to `'true'`.
+ *
+ * @param db - Drizzle database client.
+ * @param opts - Optional username/IP config overrides.
+ */
+export function configurePostgresRateLimiter(
+  db: Db,
+  opts: {
+    config?: Partial<RateLimitConfig>;
+    ipConfig?: Partial<RateLimitConfig>;
+  } = {},
+): void {
+  if (isInMemoryFastPathEnabled()) {
+    configureRateLimiter({ ...opts });
+    return;
+  }
+  configureRateLimiter({
+    store: createPostgresRateLimitStore(db, {
+      ...DEFAULT_RATE_LIMIT_CONFIG,
+      ...opts.config,
+    }),
+    ...opts,
+  });
 }
 
 // ───────────────────────────────────────────────────────────────────
-// Public API
+// Internal helpers
 // ───────────────────────────────────────────────────────────────────
 
-/**
- * Checks whether the given (username, ip) bucket is currently allowed
- * to attempt login.
- * @param username - Account username/identifier.
- * @param ip - Optional client IP address for per-IP limiting.
- * @returns `allowed: true` when the bucket is below the configured
- *   maximum, otherwise `allowed: false` with `retriesAfter` (seconds
- *   until the current window expires).
- */
-export function checkRateLimit(
-  username: string,
-  ip?: string,
-): { allowed: boolean; retriesAfter?: number } {
+function buildKey(identifier: string, kind: "username" | "ip"): string {
+  return `${kind}:${identifier}`;
+}
+
+async function checkIdentifier(
+  identifier: string,
+  kind: "username" | "ip",
+  config: RateLimitConfig,
+): Promise<{ allowed: boolean; retriesAfter?: number }> {
   const store = configuredStore;
-  const config = configuredConfig;
-  const key = buildKey(username, ip);
-  const entry = store.get(key);
+  const key = buildKey(identifier, kind);
+  const entry = await store.get(key);
 
   if (!entry) {
     return { allowed: true };
@@ -166,7 +222,7 @@ export function checkRateLimit(
   const elapsed = now - entry.windowStart;
 
   if (elapsed > config.windowMs) {
-    store.delete(key);
+    await store.delete(key);
     return { allowed: true };
   }
 
@@ -180,37 +236,104 @@ export function checkRateLimit(
   return { allowed: true };
 }
 
+async function recordIdentifierFailure(
+  identifier: string,
+  kind: "username" | "ip",
+  config: RateLimitConfig,
+): Promise<void> {
+  const store = configuredStore;
+  const key = buildKey(identifier, kind);
+  const now = Date.now();
+  const entry = await store.get(key);
+
+  if (!entry || now - entry.windowStart > config.windowMs) {
+    await store.set(key, { failedCount: 1, windowStart: now });
+  } else {
+    entry.failedCount++;
+    await store.set(key, entry);
+  }
+}
+
+async function resetIdentifier(
+  identifier: string,
+  kind: "username" | "ip",
+): Promise<void> {
+  const store = configuredStore;
+  const key = buildKey(identifier, kind);
+  await store.delete(key);
+}
+
+// ───────────────────────────────────────────────────────────────────
+// Public API
+// ───────────────────────────────────────────────────────────────────
+
 /**
- * Records a failed authentication attempt against the (username, ip) bucket.
- * Resets the counter if the previous window has expired.
+ * Checks whether the given (username, ip) buckets are currently allowed
+ * to attempt login. Both the per-username and per-IP buckets must allow
+ * the attempt.
+ * @param username - Account username/identifier.
+ * @param ip - Optional client IP address for per-IP limiting.
+ * @returns `allowed: true` when both buckets are below their configured
+ *   maximum, otherwise `allowed: false` with `retriesAfter` (seconds
+ *   until the current window expires).
+ */
+export async function checkRateLimit(
+  username: string,
+  ip?: string,
+): Promise<{ allowed: boolean; retriesAfter?: number }> {
+  const usernameCheck = await checkIdentifier(
+    username,
+    "username",
+    configuredUsernameConfig,
+  );
+  if (!usernameCheck.allowed) {
+    return usernameCheck;
+  }
+
+  if (ip) {
+    const ipCheck = await checkIdentifier(ip, "ip", configuredIpConfig);
+    if (!ipCheck.allowed) {
+      return ipCheck;
+    }
+  }
+
+  return { allowed: true };
+}
+
+/**
+ * Records a failed authentication attempt against the (username, ip)
+ * buckets. Resets each counter if its previous window has expired.
  * @param username - Account username/identifier.
  * @param ip - Optional client IP address for per-IP tracking.
  */
-export function recordFailure(username: string, ip?: string): void {
-  const store = configuredStore;
-  const config = configuredConfig;
-  const key = buildKey(username, ip);
-  const now = Date.now();
-  const entry = store.get(key);
-
-  if (!entry || now - entry.windowStart > config.windowMs) {
-    store.set(key, { failedCount: 1, windowStart: now });
-  } else {
-    entry.failedCount++;
-    store.set(key, entry);
+export async function recordFailure(
+  username: string,
+  ip?: string,
+): Promise<void> {
+  await recordIdentifierFailure(
+    username,
+    "username",
+    configuredUsernameConfig,
+  );
+  if (ip) {
+    await recordIdentifierFailure(ip, "ip", configuredIpConfig);
   }
 }
 
 /**
- * Resets the rate-limit bucket for the given (username, ip). Called on
- * successful login to clear the failure counter.
+ * Resets the rate-limit buckets for the given (username, ip). Called on
+ * successful login to clear the failure counters.
  * @param username - Account username/identifier.
  * @param ip - Optional client IP address.
  */
-export function resetLimit(username: string, ip?: string): void {
-  const store = configuredStore;
-  const key = buildKey(username, ip);
-  store.delete(key);
+export async function resetLimit(
+  username: string,
+  ip?: string,
+): Promise<void> {
+  await resetIdentifier(username, "username");
+  if (ip) {
+    await resetIdentifier(ip, "ip");
+  }
 }
 
 // ───────────────────────────────────────────────────────────────────
@@ -225,6 +348,7 @@ export const _testkit = {
   resetRateLimiter() {
     inMemoryStore.clear();
     configuredStore = createInMemoryRateLimitStore();
-    configuredConfig = { ...DEFAULT_RATE_LIMIT_CONFIG };
+    configuredUsernameConfig = { ...DEFAULT_RATE_LIMIT_CONFIG };
+    configuredIpConfig = { ...DEFAULT_IP_RATE_LIMIT_CONFIG };
   },
 };

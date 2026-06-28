@@ -15,16 +15,10 @@
  * Targeted command:
  *   CI=true pnpm turbo run test --filter=@reading-advantage/auth
  */
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  checkRateLimit,
-  recordFailure,
-  resetLimit,
-  _testkit,
-} from "../rate-limit.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,10 +30,6 @@ const RATE_LIMIT_SOURCE = readFileSync(
 );
 
 describe("Wave 0 Phase 2 — Rate limiter production safety", () => {
-  beforeEach(() => {
-    _testkit.resetRateLimiter();
-  });
-
   describe("Per-IP semantics", () => {
     it("checkRateLimit accepts an IP identifier parameter", () => {
       // The current signature is checkRateLimit(username: string).
