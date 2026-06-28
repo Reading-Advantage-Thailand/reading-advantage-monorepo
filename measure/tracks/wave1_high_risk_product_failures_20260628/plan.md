@@ -16,18 +16,22 @@
 
 ## Phase 1: Primary Advantage Core Stabilization
 
-- [ ] Task: Write Red tests for one representative game completion crash caused by missing `update`/`session`.
+- [~] Task: Write Red tests for one representative game completion crash caused by missing `update`/`session`.
   - Evidence refs: Primary executive summary Critical findings; Primary migration M1.
+  - Red evidence (2026-06-28): static guard tests in `components/lesson/games/__tests__/lesson-sentence-order-word.completion.test.tsx` and `components/pratice/__tests__/order-words-game.completion.test.tsx` fail because both components call `update(...)` and read `session?.user` while only destructuring `{ user }` from `useSession()`. Targeted command: `CI=true pnpm --filter primary-advantage exec vitest run components/lesson/games/__tests__/lesson-sentence-order-word.completion.test.tsx components/pratice/__tests__/order-words-game.completion.test.tsx` — 4/4 checks fail with `destructuresUpdateFromSession: false` and `destructuresSessionFromSession: false`.
 - [ ] Task: Implement shared session/completion wrapper and migrate the representative component.
 - [ ] Task: Expand migration to all reviewed crash-pattern components using the proven wrapper.
-- [ ] Task: Write Red tests for admin student CRUD making real server calls rather than optimistic-only updates.
+- [~] Task: Write Red tests for admin student CRUD making real server calls rather than optimistic-only updates.
   - Evidence refs: Primary migration M2/M3; Primary executive summary admin workflows nonfunctional.
+  - Red evidence (2026-06-28): behavior test `app/[locale]/admin/__tests__/students-crud-live-calls.test.tsx` fails because add/update/delete handlers in `app/[locale]/admin/students/page.tsx` mutate local state and call `fetchStudents()` (GET refresh) without issuing POST /api/students, PUT /api/students/:id, or DELETE /api/students/:id. Targeted command includes this file; all three CRUD assertions fail with mutating request count: 0.
 - [ ] Task: Restore student/teacher admin UI paths that are commented out or early-return placeholders.
-- [ ] Task: Write Red tests for flashcard schema mismatch against shared Drizzle schema.
+- [~] Task: Write Red tests for flashcard schema mismatch against shared Drizzle schema.
   - Evidence refs: Primary migration M6; Primary executive summary flashcard system nonfunctional.
+  - Red evidence (2026-06-28): contract test `app/api/flashcard/__tests__/flashcard-schema-contract.test.ts` fails because `actions/flashcard.ts` assigns 19 FSRS/content fields (due, stability, difficulty, etc.) to `flashcardCards` via `as any` casts, while the shared Drizzle schema only exposes id/deckId/front/back/sourceId/order/createdAt. Test reports `missingFieldCount: 19`, `castCount: 36`.
 - [ ] Task: Resolve flashcard schema/table strategy and update routes/service code.
 - [ ] Task: Add auth and tenant checks to highest-risk Primary routes from review findings.
 - [ ] Task: Replace fabricated dashboard metrics for one high-risk admin dashboard with real data or explicit unavailable state.
+  - Red evidence (2026-06-28): behavior test `components/admin/__tests__/dashboard-real-data.test.tsx` fails because `app/[locale]/admin/dashboard/page.tsx` renders hard-coded literal values 100, 5, and 100% instead of fetching real data or showing an unavailable state.
 - [ ] Task: Run targeted Primary lint, tests, and type checks.
 
 ## Phase 2: Reading Advantage Critical Security and XP Idempotency
