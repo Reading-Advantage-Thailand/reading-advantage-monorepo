@@ -104,7 +104,7 @@ export async function listUsers({
   tenant: Tenant;
   input: {
     schoolId?: string;
-    role?: "INTERN" | "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM";
+    role?: "INTERN" | "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM" | "SALES_REP" | "SALES_ADMIN";
     limit: number;
     offset: number;
   };

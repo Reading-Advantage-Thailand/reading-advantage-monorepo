@@ -6,7 +6,9 @@ export const getUserInputSchema = z.object({
 
 export const listUsersInputSchema = z.object({
   schoolId: z.string().optional(),
-  role: z.enum(["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM"]).optional(),
+  role: z
+    .enum(["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM", "SALES_REP", "SALES_ADMIN"])
+    .optional(),
   limit: z.number().int().min(1),
   offset: z.number().int().min(0),
 });

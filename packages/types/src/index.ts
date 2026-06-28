@@ -6,7 +6,15 @@ export const userResponseSchema = z.object({
   id: z.string(),
   email: z.string().email().nullable(),
   name: z.string().nullable(),
-  role: z.enum(["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM"]),
+  role: z.enum([
+    "INTERN",
+    "STUDENT",
+    "TEACHER",
+    "ADMIN",
+    "SYSTEM",
+    "SALES_REP",
+    "SALES_ADMIN",
+  ]),
   schoolId: z.string().uuid().nullable(),
   xp: z.number(),
   level: z.number(),
@@ -58,7 +66,7 @@ export const loginRequestSchema = z.object({
 });
 
 export const loginResponseSchema = z.object({
-  accessToken: z.string(),
+  accessToken: z.string().min(1),
   refreshToken: z.string(),
   user: userResponseSchema,
 });
@@ -225,7 +233,7 @@ export const sessionResponseSchema = z.object({
     id: z.string(),
     username: z.string(),
     name: z.string().nullable(),
-    role: z.enum(["INTERN", "STUDENT", "USER", "TEACHER", "ADMIN", "SYSTEM", "SALES_REP", "SALES_ADMIN"]),
+    role: z.enum(["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM", "SALES_REP", "SALES_ADMIN"]),
     schoolId: z.string().nullable(),
   }),
   tenant: z.object({

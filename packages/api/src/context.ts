@@ -5,7 +5,15 @@ import { createTenantDB } from "@reading-advantage/domain";
 import type { Context } from "./trpc.js";
 import { cookies } from "next/headers";
 
-export const roleSchema = z.enum(["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM"]);
+export const roleSchema = z.enum([
+  "INTERN",
+  "STUDENT",
+  "TEACHER",
+  "ADMIN",
+  "SYSTEM",
+  "SALES_REP",
+  "SALES_ADMIN",
+]);
 
 interface CreateContextOptions {
   authorization?: string | null;
