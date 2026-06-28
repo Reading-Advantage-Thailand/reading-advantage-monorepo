@@ -7,6 +7,12 @@
  * 2. FLAT entries actually have a `schoolId` column in the schema.
  * 3. Non-FLAT entries do NOT have a `schoolId` column.
  * 4. REFERENTIAL tables in domain code are reached via `unscoped(...)`, not bare TenantDB.
+ * 5. Classification distribution is non-zero for each category (A4 guard).
+ *
+ * Anti-pattern coverage:
+ * - A3: all counts are labeled integers (e.g. "Unclassified table count: 5").
+ * - A4: test fails if zero FLAT or zero REFERENTIAL tables are examined.
+ * - A7: referential-scope detector uses path/fixture markers, not broad English words.
  */
 import { describe, it, expect, vi } from "vitest";
 vi.unmock("../tenant-registry.js");
@@ -15,7 +21,7 @@ import { join, relative } from "node:path";
 
 // ─── 1. Registry completeness: every table is classified ───
 
-import { classifyTable } from "../tenant-registry.js";
+import { classifyTable, type TableClassification } from "../tenant-registry.js";
 
 // Import all exported tables from the schema
 import * as schema from "@reading-advantage/db";
@@ -38,6 +44,7 @@ function getAllSchemaTables(): Record<string, unknown> {
 }
 
 const allTables = getAllSchemaTables();
+const totalTableCount = Object.keys(allTables).length;
 
 describe("FR-6: table classification registry completeness", () => {
   it("every exported Drizzle table is classified in the registry", () => {
@@ -49,16 +56,57 @@ describe("FR-6: table classification registry completeness", () => {
         unclassified.push(name);
       }
     }
+    // A3: labeled count
+    const unclassifiedCount = unclassified.length;
     expect(
-      unclassified,
-      `These tables are not classified in tenant-registry.ts: ${unclassified.join(", ")}`,
-    ).toEqual([]);
+      unclassifiedCount,
+      `Unclassified table count: ${unclassifiedCount} (of ${totalTableCount} total). ` +
+        `Unclassified tables: ${unclassified.join(", ")}. ` +
+        `Add them to packages/domain/src/tenant-registry.ts as FLAT, EXEMPT, or REFERENTIAL.`,
+    ).toBe(0);
+  });
+
+  it("classification distribution covers all three categories (A4 guard)", () => {
+    const counts: Record<TableClassification, number> = {
+      FLAT: 0,
+      EXEMPT: 0,
+      REFERENTIAL: 0,
+    };
+    for (const [, table] of Object.entries(allTables)) {
+      try {
+        const cls = classifyTable(table);
+        counts[cls]++;
+      } catch {
+        // unclassified — caught by the completeness test above
+      }
+    }
+    // A4: must not be zero for FLAT or REFERENTIAL
+    expect(
+      counts.FLAT,
+      `FLAT table count: ${counts.FLAT} — expected at least 1 FLAT table in the registry. ` +
+        `Zero FLAT tables means this check is vacuous (anti-pattern A4).`,
+    ).toBeGreaterThan(0);
+    expect(
+      counts.REFERENTIAL,
+      `REFERENTIAL table count: ${counts.REFERENTIAL} — expected at least 1 REFERENTIAL table in the registry. ` +
+        `Zero REFERENTIAL tables means this check is vacuous (anti-pattern A4).`,
+    ).toBeGreaterThan(0);
+    expect(
+      counts.EXEMPT,
+      `EXEMPT table count: ${counts.EXEMPT} — expected at least 1 EXEMPT table in the registry.`,
+    ).toBeGreaterThan(0);
   });
 
   it("FLAT tables actually have a schoolId column", () => {
     const flatWithoutSchoolId: string[] = [];
     for (const [name, table] of Object.entries(allTables)) {
-      const cls = classifyTable(table);
+      let cls: TableClassification;
+      try {
+        cls = classifyTable(table);
+      } catch {
+        // Skip unclassified tables — caught by completeness test
+        continue;
+      }
       if (cls === "FLAT") {
         const tableObj = table as Record<string, unknown>;
         if (!("schoolId" in tableObj)) {
@@ -66,16 +114,25 @@ describe("FR-6: table classification registry completeness", () => {
         }
       }
     }
+    // A3: labeled count
+    const count = flatWithoutSchoolId.length;
     expect(
-      flatWithoutSchoolId,
-      `These FLAT tables lack a schoolId column: ${flatWithoutSchoolId.join(", ")}`,
-    ).toEqual([]);
+      count,
+      `Flat-without-schoolId count: ${count}. ` +
+        `These FLAT tables lack a schoolId column: ${flatWithoutSchoolId.join(", ")}.`,
+    ).toBe(0);
   });
 
   it("non-FLAT tables do NOT have a schoolId column", () => {
     const nonFlatWithSchoolId: string[] = [];
     for (const [name, table] of Object.entries(allTables)) {
-      const cls = classifyTable(table);
+      let cls: TableClassification;
+      try {
+        cls = classifyTable(table);
+      } catch {
+        // Skip unclassified tables — caught by completeness test
+        continue;
+      }
       if (cls !== "FLAT") {
         const tableObj = table as Record<string, unknown>;
         if ("schoolId" in tableObj) {
@@ -83,10 +140,13 @@ describe("FR-6: table classification registry completeness", () => {
         }
       }
     }
+    // A3: labeled count
+    const count = nonFlatWithSchoolId.length;
     expect(
-      nonFlatWithSchoolId,
-      `These non-FLAT tables unexpectedly have schoolId: ${nonFlatWithSchoolId.join(", ")}`,
-    ).toEqual([]);
+      count,
+      `Non-flat-with-schoolId count: ${count}. ` +
+        `These non-FLAT tables unexpectedly have schoolId: ${nonFlatWithSchoolId.join(", ")}.`,
+    ).toBe(0);
   });
 });
 
@@ -127,19 +187,172 @@ function hasDbAccess(content: string): boolean {
 }
 
 /**
- * Check if a file uses TenantDB to query REFERENTIAL tables without unscoped.
- * This is a heuristic: look for .from(<referentialTable>) patterns where the
- * source is tenantDb/tenantDb-like, without an enclosing unscoped() call.
+ * Known REFERENTIAL table names from the tenant registry.
+ * Used by the static detector to identify bare TenantDB access to REFERENTIAL tables.
  */
-function hasBareTenantDbOnReferential(content: string): boolean {
-  // If the file uses unscoped, it's aware of the REFERENTIAL pattern
-  if (content.includes("unscoped")) return false;
-  // If it doesn't use TenantDB at all, skip
-  if (!content.includes("TenantDB") && !content.includes("tenantDb") && !content.includes("createTenantDB")) return false;
-  // Check for bare tenantDb usage without unscoped
-  // This is a soft check — the real enforcement is at runtime
-  return false;
+const REFERENTIAL_TABLE_NAMES = new Set([
+  "xpLogs",
+  "gameRankings",
+  "aiInsights",
+  "aiInsightCache",
+  "learningGoals",
+  "goalMilestones",
+  "goalProgressLogs",
+  "classroomStudents",
+  "classroomTeachers",
+  "codecampModules",
+  "codecampLessons",
+  "codecampExercises",
+  "codecampQuizQuestions",
+  "codecampUserProgress",
+  "codecampChatConversations",
+  "codecampChatMessages",
+  "codecampExerciseRepos",
+  "codecampPrReviews",
+  "codecampWebhookEvents",
+  "articles",
+  "lessons",
+  "assignments",
+  "studentAssignments",
+  "flashcardDecks",
+  "flashcardCards",
+  "flashcardProgress",
+  "licenseOnUsers",
+  "userActivity",
+  "userWordRecords",
+  "userSentenceRecords",
+  "lessonProgress",
+  "multipleChoiceQuestions",
+  "shortAnswerQuestions",
+  "longAnswerQuestions",
+  "studentAnswers",
+  "stories",
+  "chapters",
+  "storyTimepoints",
+  "storyRecords",
+  "chapterTrackings",
+  "storyAssignments",
+  "lessonRecords",
+  "assignmentNotifications",
+  "raCefrMappings",
+  "genreAdjacencies",
+  "salesModules",
+  "salesLessons",
+  "salesRubrics",
+  "salesRoleplayScenarios",
+  "salesQuizQuestions",
+  "salesRoleplayAttempts",
+  "salesProgress",
+  "salesConversations",
+  "salesChatMessages",
+  "campaigns",
+  "videoProjects",
+  "videoAssets",
+  "pastTopics",
+  "settings",
+]);
+
+/**
+ * Non-vacuous static detector for bare TenantDB access to REFERENTIAL tables.
+ *
+ * Detects patterns where a file uses `tenantDb` (or a TenantDB-typed variable)
+ * to query a known REFERENTIAL table without using `unscoped()`.
+ *
+ * Returns an array of violation descriptions with labeled context.
+ */
+function detectBareTenantDbOnReferential(content: string, filePath: string): string[] {
+  const violations: string[] = [];
+
+  // Must use TenantDB to be relevant
+  const usesTenantDb = /tenantDb|createTenantDB/.test(content);
+  if (!usesTenantDb) return violations;
+
+  // Check each REFERENTIAL table name
+  for (const tableName of REFERENTIAL_TABLE_NAMES) {
+    // Look for the table name being used in a from() call
+    const fromPattern = new RegExp(`\\.from\\s*\\(\\s*${tableName}\\b`);
+    if (!fromPattern.test(content)) continue;
+
+    // Check if unscoped is used in this file (broad guard)
+    // A more precise check would be scope-level, but file-level is the
+    // minimum non-vacuous check.
+    const usesUnscoped = content.includes("unscoped");
+
+    if (!usesUnscoped) {
+      violations.push(
+        `${filePath}: bare tenantDb.from(${tableName}) without unscoped() — ` +
+          `REFERENTIAL table requires tenantDb.unscoped("reason") + owner-FK join`,
+      );
+    }
+  }
+
+  return violations;
 }
+
+/**
+ * Injected-fixture test: proves the detector is not vacuous by verifying it
+ * catches a known-bare TenantDB REFERENTIAL access pattern.
+ * (Anti-pattern A4 guard: the detector must actually detect something.)
+ */
+describe("FR-6: referential-scope detector validity (A4 guard)", () => {
+  it("detector catches bare tenantDb.from(referentialTable) without unscoped", () => {
+    const fixture = `
+      import { lessonProgress } from "@reading-advantage/db";
+      export async function brokenQuery(tenantDb: TenantDB) {
+        const rows = await tenantDb.select().from(lessonProgress).where(eq(lessonProgress.userId, id));
+        return rows;
+      }
+    `;
+    const violations = detectBareTenantDbOnReferential(fixture, "fixtures/broken.ts");
+    expect(
+      violations.length,
+      "Referential-scope detector found 0 violations on a fixture with bare " +
+        "tenantDb.from(lessonProgress). This means the detector is vacuous " +
+        "(anti-pattern A4). Verify REFERENTIAL_TABLE_NAMES includes 'lessonProgress' " +
+        "and the regex matches '.from(lessonProgress)'.",
+    ).toBeGreaterThan(0);
+  });
+
+  it("detector does NOT flag files that use unscoped", () => {
+    const fixture = `
+      import { lessonProgress } from "@reading-advantage/db";
+      export async function safeQuery(tenantDb: TenantDB) {
+        const rawDb = tenantDb.unscoped("lessonProgress has no schoolId, scoped via users FK");
+        const rows = await rawDb.select().from(lessonProgress).where(eq(lessonProgress.userId, id));
+        return rows;
+      }
+    `;
+    const violations = detectBareTenantDbOnReferential(fixture, "fixtures/safe.ts");
+    expect(violations).toEqual([]);
+  });
+
+  it("detector does NOT flag files that do not use TenantDB", () => {
+    const fixture = `
+      import { lessonProgress } from "@reading-advantage/db";
+      export async function directQuery(db: DB) {
+        const rows = await db.select().from(lessonProgress);
+        return rows;
+      }
+    `;
+    const violations = detectBareTenantDbOnReferential(fixture, "fixtures/direct.ts");
+    expect(violations).toEqual([]);
+  });
+
+  it("detector catches multiple REFERENTIAL tables in one file", () => {
+    const fixture = `
+      export async function brokenQueries(tenantDb: TenantDB) {
+        const a = await tenantDb.select().from(lessonProgress);
+        const b = await tenantDb.select().from(articles);
+        const c = await tenantDb.select().from(assignments);
+      }
+    `;
+    const violations = detectBareTenantDbOnReferential(fixture, "fixtures/multi.ts");
+    expect(
+      violations.length,
+      `Expected 3 violations for lessonProgress, articles, assignments; got ${violations.length}.`,
+    ).toBe(3);
+  });
+});
 
 describe("FR-6: domain code tenant coverage", () => {
   const violations: string[] = [];
