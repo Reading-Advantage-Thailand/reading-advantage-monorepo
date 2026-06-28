@@ -11,6 +11,14 @@
     "./contracts/class": {
       "types": "./dist/contracts/class.d.ts",
       "import": "./dist/contracts/class.js"
+    },
+    "./contracts/envelopes": {
+      "types": "./dist/contracts/envelopes.d.ts",
+      "import": "./dist/contracts/envelopes.js"
+    },
+    "./contracts/sales": {
+      "types": "./dist/contracts/sales.d.ts",
+      "import": "./dist/contracts/sales.js"
     }
   },
   "scripts": {

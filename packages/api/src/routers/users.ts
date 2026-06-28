@@ -2,7 +2,40 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc.js";
 import { userResponseSchema } from "@reading-advantage/types";
-import { getMe, getUser, listUsers, updateUser } from "@reading-advantage/domain/users";
+import {
+  getMe,
+  getUser,
+  listUsers,
+  updateUser,
+  UserNotFoundError,
+} from "@reading-advantage/domain/users";
+
+/**
+ * Maps user domain errors to tRPC TRPCError instances.
+ *
+ * Uses `instanceof UserNotFoundError` for NOT_FOUND mapping so that
+ * unrelated errors with the substring "User not found" do not get
+ * misclassified. The cross-school forbidden check is kept as a string
+ * match because the domain throws a generic Error for that case and
+ * upgrading it to a typed error is out of scope for this Phase 3 fix.
+ *
+ * @param err - The error to map
+ * @returns Never; always throws a TRPCError
+ */
+function mapUsersError(err: unknown): never {
+  if (err instanceof UserNotFoundError) {
+    throw new TRPCError({ code: "NOT_FOUND", message: err.message });
+  }
+  if (err instanceof Error) {
+    if (err.message.includes("outside your school")) {
+      throw new TRPCError({ code: "FORBIDDEN", message: err.message });
+    }
+    if (err.message.includes("Can only update your own profile")) {
+      throw new TRPCError({ code: "FORBIDDEN", message: err.message });
+    }
+  }
+  throw err;
+}
 
 export const usersRouter = router({
   me: protectedProcedure
@@ -11,10 +44,7 @@ export const usersRouter = router({
       try {
         return await getMe({ db: ctx.tenantDb, user: ctx.auth.user });
       } catch (err) {
-        if (err instanceof Error && err.message === "User not found") {
-          throw new TRPCError({ code: "NOT_FOUND", message: err.message });
-        }
-        throw err;
+        mapUsersError(err);
       }
     }),
 
@@ -30,10 +60,7 @@ export const usersRouter = router({
           input,
         });
       } catch (err) {
-        if (err instanceof Error && err.message === "User not found") {
-          throw new TRPCError({ code: "NOT_FOUND", message: err.message });
-        }
-        throw err;
+        mapUsersError(err);
       }
     }),
 
@@ -58,10 +85,7 @@ export const usersRouter = router({
           input,
         });
       } catch (err) {
-        if (err instanceof Error && err.message.includes("outside your school")) {
-          throw new TRPCError({ code: "FORBIDDEN", message: err.message });
-        }
-        throw err;
+        mapUsersError(err);
       }
     }),
 
@@ -83,15 +107,7 @@ export const usersRouter = router({
           input,
         });
       } catch (err) {
-        if (err instanceof Error) {
-          if (err.message === "User not found") {
-            throw new TRPCError({ code: "NOT_FOUND", message: err.message });
-          }
-          if (err.message.includes("Can only update your own profile")) {
-            throw new TRPCError({ code: "FORBIDDEN", message: err.message });
-          }
-        }
-        throw err;
+        mapUsersError(err);
       }
     }),
 });

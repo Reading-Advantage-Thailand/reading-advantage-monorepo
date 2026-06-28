@@ -249,16 +249,30 @@ export type SessionResponse = z.infer<typeof sessionResponseSchema>;
  * Branded type for polymorphic question IDs.
  * Used for studentAnswers.questionId which may reference either
  * multiple_choice_questions.id or short_answer_questions.id.
+ *
+ * Branded IDs represent real entity identifiers — empty strings are
+ * rejected at the contract boundary (`.min(1)`) instead of being
+ * accepted by the bare `z.string().brand(...)` and silently propagating
+ * through the system.
  */
-export const PolymorphicQuestionId = z.string().brand<"PolymorphicQuestionId">();
+export const PolymorphicQuestionId = z
+  .string()
+  .min(1)
+  .brand<"PolymorphicQuestionId">();
 export type PolymorphicQuestionId = z.infer<typeof PolymorphicQuestionId>;
 
 /**
  * Branded type for external lesson IDs.
  * Used for lessonProgress.lessonId which may reference external
  * lesson identifiers in addition to internal lessons.id UUIDs.
+ *
+ * Same `.min(1)` policy as `PolymorphicQuestionId` — empty IDs are
+ * rejected at the contract boundary.
  */
-export const ExternalLessonId = z.string().brand<"ExternalLessonId">();
+export const ExternalLessonId = z
+  .string()
+  .min(1)
+  .brand<"ExternalLessonId">();
 export type ExternalLessonId = z.infer<typeof ExternalLessonId>;
 
 // ─── Codecamp Types ───────────────────────────────────────
@@ -283,3 +297,55 @@ export {
   type CreateClassFormInput as ScienceCreateClassFormInput,
   type JoinClassInput,
 } from "./contracts/class.js";
+
+// ─── Shared Response / Error Envelopes ────────────────────
+
+export {
+  ERROR_CODES,
+  errorBodySchema,
+  validationIssueSchema,
+  successEnvelopeSchema,
+  listEnvelopeSchema,
+  validationErrorEnvelopeSchema,
+  unauthorizedEnvelopeSchema,
+  forbiddenEnvelopeSchema,
+  notFoundEnvelopeSchema,
+  conflictEnvelopeSchema,
+  internalErrorEnvelopeSchema,
+  type ErrorCode,
+  type ErrorBody,
+  type ValidationIssue,
+  type SuccessEnvelope,
+  type ListEnvelope,
+  type ValidationErrorEnvelope,
+  type UnauthorizedEnvelope,
+  type ForbiddenEnvelope,
+  type NotFoundEnvelope,
+  type ConflictEnvelope,
+  type InternalErrorEnvelope,
+} from "./contracts/envelopes.js";
+
+// ─── Sales Contracts ──────────────────────────────────────
+
+export {
+  moduleOutputSchema,
+  lessonOutputSchema,
+  rubricCriteriaSchema,
+  rubricOutputSchema,
+  roleplayScenarioOutputSchema,
+  roleplayAttemptOutputSchema,
+  quizSubmissionInputSchema,
+  quizResultOutputSchema,
+  progressOutputSchema,
+  chatMessageOutputSchema,
+  type ModuleOutput,
+  type LessonOutput,
+  type RubricCriteria,
+  type RubricOutput,
+  type RoleplayScenarioOutput,
+  type RoleplayAttemptOutput,
+  type QuizSubmissionInput,
+  type QuizResultOutput,
+  type ProgressOutput,
+  type ChatMessageOutput,
+} from "./contracts/sales.js";

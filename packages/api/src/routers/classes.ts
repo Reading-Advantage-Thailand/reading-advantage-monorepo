@@ -1,15 +1,14 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc.js";
-import { classroomResponseSchema } from "@reading-advantage/types";
+import {
+  classroomResponseSchema,
+  createClassSchema,
+} from "@reading-advantage/types";
 import { createClass, listClasses } from "@reading-advantage/domain/classes";
 
 export const classesRouter = router({
   create: protectedProcedure
-    .input(
-      z.object({
-        name: z.string().min(1).max(100),
-      })
-    )
+    .input(createClassSchema)
     .output(classroomResponseSchema)
     .mutation(async ({ ctx, input }) => {
       return createClass({

@@ -2,6 +2,7 @@ import { eq, and } from "drizzle-orm";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 import { users } from "@reading-advantage/db/schema";
+import { UserNotFoundError } from "./errors.js";
 
 const safeUserCols = {
   id: users.id,
@@ -40,7 +41,7 @@ export async function getMe({
     .limit(1);
 
   if (!result) {
-    throw new Error("User not found");
+    throw new UserNotFoundError(user.id);
   }
 
   return result;
@@ -77,7 +78,7 @@ export async function getUser({
     .limit(1);
 
   if (!result) {
-    throw new Error("User not found");
+    throw new UserNotFoundError(input.id);
   }
 
   return result;
