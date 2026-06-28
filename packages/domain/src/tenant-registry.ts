@@ -110,6 +110,7 @@ import {
   sessions,
   verificationTokens,
   roles,
+  loginAttempts,
 } from "@reading-advantage/db";
 
 // auth infrastructure — identifier/token/expires; not scoped to a school.
@@ -122,6 +123,7 @@ register(auditEvents, "EXEMPT");
 register(schools, "EXEMPT");
 register(accounts, "EXEMPT");
 register(sessions, "EXEMPT");
+register(loginAttempts, "EXEMPT");
 
 // ─── REFERENTIAL tables (tenant data via owner FK, no schoolId) ──
 

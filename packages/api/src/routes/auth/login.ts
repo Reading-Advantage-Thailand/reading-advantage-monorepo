@@ -11,11 +11,16 @@ import {
   SESSION_COOKIE_NAME,
   rehashOnLogin,
   recordAuditEvent,
+  configurePostgresRateLimiter,
   type Role,
 } from "@reading-advantage/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { enrichAuthUser } from "./enrich.js";
+
+// Production rate limiting uses Postgres-backed durable state. The in-memory
+// fast-path is dev-only and opt-in via RATE_LIMIT_INMEMORY_FASTPATH=true.
+configurePostgresRateLimiter(db);
 
 export const DUMMY_HASH = "$argon2id$v=19$m=65536,t=3,p=4$c2FsdHNhbHRzYWx0$uTb0iMnAqN7uKjB8Y3N4v7J8k2L5mQwR9tY1xZ3aBcD";
 
@@ -54,8 +59,16 @@ export async function handleLogin(request: NextRequest) {
     const { username, password } = parsed.data;
     const lowerUsername = username.toLowerCase();
 
+    // Extract client IP once for rate limiting (per-username AND per-IP)
+    const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+      ?? request.headers.get("x-real-ip")
+      ?? undefined;
+
     // Rate limit check
-    const rateCheck = checkRateLimit(lowerUsername);
+    const rateCheck = await checkRateLimit(
+      lowerUsername,
+      ...(clientIp ? [clientIp] : []),
+    );
     if (!rateCheck.allowed) {
       return NextResponse.json(
         { message: `Too many attempts. Try again in ${rateCheck.retriesAfter} seconds.` },
@@ -85,7 +98,7 @@ export async function handleLogin(request: NextRequest) {
     // FR-4: unknown-username timing fix — call verifyPassword with DUMMY_HASH
     if (!user) {
       await verifyPassword(password, DUMMY_HASH);
-      recordFailure(lowerUsername);
+      await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
         { message: "Invalid username or password" },
         { status: 401 }
@@ -118,7 +131,7 @@ export async function handleLogin(request: NextRequest) {
     // FR-4: account-not-found or no-password timing fix
     if (!account || !account.password) {
       await verifyPassword(password, DUMMY_HASH);
-      recordFailure(lowerUsername);
+      await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
         { message: "Invalid username or password" },
         { status: 401 }
@@ -131,7 +144,7 @@ export async function handleLogin(request: NextRequest) {
       valid = await verifyPassword(password, account.password);
     } catch (verifyErr) {
       console.error("Login verify error:", verifyErr instanceof Error ? verifyErr.message : "Unknown");
-      recordFailure(lowerUsername);
+      await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
         { message: "Invalid username or password" },
         { status: 401 }
@@ -148,7 +161,7 @@ export async function handleLogin(request: NextRequest) {
       ).catch((err) => {
         console.error("Audit event auth:login_failed failed:", err instanceof Error ? err.message : "Unknown");
       });
-      recordFailure(lowerUsername);
+      await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
         { message: "Invalid username or password" },
         { status: 401 }
@@ -164,7 +177,7 @@ export async function handleLogin(request: NextRequest) {
     }
 
     // Success — create session
-    resetLimit(lowerUsername);
+    await resetLimit(lowerUsername, ...(clientIp ? [clientIp] : []));
     const session = await createSession(db, user.id, {
       ipAddress: request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? undefined,
       userAgent: request.headers.get("user-agent") ?? undefined,
