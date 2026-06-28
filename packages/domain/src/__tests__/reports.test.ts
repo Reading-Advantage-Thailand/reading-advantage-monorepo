@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import type { DB } from "@reading-advantage/db";
-import { getStudentProgress, getClassAnalytics } from "../reports/index.js";
+import { getStudentProgress, getClassAnalytics, getTeacherDashboard } from "../reports/index.js";
 import { createTenantDB } from "../db-contract.js";
 
 vi.mock("@reading-advantage/db/schema", () => ({
@@ -8,7 +8,7 @@ vi.mock("@reading-advantage/db/schema", () => ({
   userWordRecords: { userId: "userId" },
   userSentenceRecords: { userId: "userId" },
   classroomStudents: { classroomId: "classroomId", studentId: "studentId" },
-  classrooms: { id: "id", schoolId: "schoolId" },
+  classrooms: { id: "id", schoolId: "schoolId", name: "name", teacherId: "teacherId" },
   xpLogs: { userId: "userId", xpEarned: "xpEarned" },
   storyRecords: { userId: "userId", status: "status" },
 }));
@@ -307,5 +307,101 @@ describe("getClassAnalytics", () => {
         input: { classId: "class-1" },
       })
     ).rejects.toThrow(/Class not found/);
+  });
+});
+
+describe("getTeacherDashboard", () => {
+  const teacherUser = {
+    id: "teacher-1",
+    username: "teacher1",
+    name: "Teacher",
+    role: "TEACHER" as const,
+    schoolId: "school-1",
+  };
+
+  const adminUser = {
+    id: "admin-1",
+    username: "admin1",
+    name: "Admin",
+    role: "ADMIN" as const,
+    schoolId: "school-1",
+  };
+
+  const studentUser = {
+    id: "student-1",
+    username: "student1",
+    name: "Student",
+    role: "STUDENT" as const,
+    schoolId: "school-1",
+  };
+
+  it("returns classes taught by the caller", async () => {
+    const db = createMockDb();
+    db.select.mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockResolvedValue([
+          { id: "c1", name: "Math 101" },
+          { id: "c2", name: "Science 201" },
+        ]),
+      }),
+    });
+
+    const result = await getTeacherDashboard({
+      db: wrapDb(db),
+      user: teacherUser,
+      tenant: mockTenant,
+    });
+
+    expect(result.classCount).toBe(2);
+    expect(result.classes).toEqual([
+      { id: "c1", name: "Math 101" },
+      { id: "c2", name: "Science 201" },
+    ]);
+  });
+
+  it("returns empty dashboard when teacher has no classes", async () => {
+    const db = createMockDb();
+    db.select.mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockResolvedValue([]),
+      }),
+    });
+
+    const result = await getTeacherDashboard({
+      db: wrapDb(db),
+      user: teacherUser,
+      tenant: mockTenant,
+    });
+
+    expect(result.classCount).toBe(0);
+    expect(result.classes).toEqual([]);
+  });
+
+  it("allows ADMIN role to read dashboard", async () => {
+    const db = createMockDb();
+    db.select.mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockResolvedValue([{ id: "c1", name: "Math 101" }]),
+      }),
+    });
+
+    const result = await getTeacherDashboard({
+      db: wrapDb(db),
+      user: adminUser,
+      tenant: mockTenant,
+    });
+
+    expect(result.classCount).toBe(1);
+  });
+
+  it("throws FORBIDDEN for STUDENT role", async () => {
+    const db = createMockDb();
+    await expect(
+      getTeacherDashboard({
+        db: wrapDb(db),
+        user: studentUser,
+        tenant: mockTenant,
+      })
+    ).rejects.toThrow(/lacks permission: progress:read:all/);
   });
 });

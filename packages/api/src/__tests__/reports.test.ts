@@ -1,78 +1,17 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { reportsRouter } from "../routers/reports.js";
 import { createTenantDB } from "@reading-advantage/domain";
 import type { DB } from "@reading-advantage/db";
 
-vi.mock("@reading-advantage/db/schema", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@reading-advantage/db/schema")>();
-  return {
-    ...actual,
-    classrooms: { id: "id", name: "name", schoolId: "schoolId", teacherId: "teacherId" },
-    userActivity: { userId: "userId" },
-    userWordRecords: { userId: "userId" },
-    userSentenceRecords: { userId: "userId" },
-    classroomStudents: { classroomId: "classroomId", studentId: "studentId" },
-    xpLogs: { userId: "userId", xpEarned: "xpEarned" },
-    storyRecords: { userId: "userId", status: "status" },
-  };
-});
-
-vi.mock("drizzle-orm", () => ({
-  eq: vi.fn((col, val) => ({ col, val, type: "eq" })),
-  and: vi.fn((...conds) => ({ type: "and", conds })),
-  sql: vi.fn((strings, ...values) => ({ type: "sql", strings, values })),
-  // `@reading-advantage/db/schema` calls `relations()` at module load
-  // (added with the Drizzle relational-query blocks); stub it so the
-  // mocked drizzle-orm satisfies that import.
-  relations: vi.fn(() => ({})),
+vi.mock("@reading-advantage/domain/reports", () => ({
+  getStudentProgress: vi.fn(),
+  getClassAnalytics: vi.fn(),
+  getTeacherDashboard: vi.fn(),
 }));
 
-function createMockDb(opts: { selectResult?: unknown[] } = {}) {
-  const resolvedValue = opts.selectResult ?? [];
-
-  const mockDb = {
-    select: vi.fn().mockReturnValue({
-      from: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue({
-          limit: vi.fn().mockImplementation(() => {
-            const promise = Promise.resolve(resolvedValue);
-            return Object.assign(promise, {
-              offset: vi.fn().mockResolvedValue(resolvedValue),
-            });
-          }),
-          offset: vi.fn().mockResolvedValue(resolvedValue),
-          innerJoin: vi.fn().mockReturnValue({
-            where: vi.fn().mockReturnValue({
-              limit: vi.fn().mockImplementation(() => {
-                const promise = Promise.resolve(resolvedValue);
-                return Object.assign(promise, {
-                  offset: vi.fn().mockResolvedValue(resolvedValue),
-                });
-              }),
-              offset: vi.fn().mockResolvedValue(resolvedValue),
-            }),
-          }),
-          then(
-            onFulfilled?: (value: unknown) => unknown,
-            onRejected?: (reason: unknown) => unknown
-          ) {
-            return Promise.resolve(resolvedValue).then(onFulfilled, onRejected);
-          },
-        }),
-      }),
-    }),
-    update: vi.fn().mockReturnValue({
-      set: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue({
-          returning: vi.fn().mockResolvedValue([]),
-        }),
-      }),
-    }),
-  };
-  return mockDb;
-}
+import { getTeacherDashboard, getStudentProgress, getClassAnalytics } from "@reading-advantage/domain/reports";
 
 const t = initTRPC.context<{
   tenantDb: ReturnType<typeof createTenantDB>;
@@ -86,34 +25,53 @@ const t = initTRPC.context<{
 
 const appRouter = t.router({ reports: reportsRouter });
 
-function createCaller(
-  db: ReturnType<typeof createMockDb>,
-  auth: {
-    user: { id: string; role: string; schoolId?: string | null };
-    tenant: { schoolId: string | null };
-  }
-) {
-  const tenantDb = createTenantDB(db as unknown as DB, auth.tenant);
+function createCaller(auth: {
+  user: { id: string; role: string; schoolId?: string | null };
+  tenant: { schoolId: string | null };
+}) {
+  const tenantDb = createTenantDB({} as unknown as DB, auth.tenant);
   return t.createCallerFactory(appRouter)({ tenantDb, auth });
 }
 
 const testSchoolId = "550e8400-e29b-41d4-a716-446655440001";
 
+beforeEach(() => {
+  vi.mocked(getTeacherDashboard).mockReset();
+  vi.mocked(getStudentProgress).mockReset();
+  vi.mocked(getClassAnalytics).mockReset();
+});
+
 describe("reports router", () => {
   describe("teacherDashboard", () => {
-    it("returns classes taught by the caller", async () => {
-      const classRows = [
-        { id: "c1", name: "Math 101" },
-        { id: "c2", name: "Science 201" },
-      ];
-      const db = createMockDb({ selectResult: classRows });
-      const caller = createCaller(
-        db,
-        { user: { id: "t1", role: "TEACHER", schoolId: testSchoolId }, tenant: { schoolId: testSchoolId } }
+    it("delegates to reports.getTeacherDashboard domain function", async () => {
+      const domainResult = {
+        classCount: 2,
+        classes: [
+          { id: "c1", name: "Math 101" },
+          { id: "c2", name: "Science 201" },
+        ],
+      };
+      vi.mocked(getTeacherDashboard).mockResolvedValue(
+        domainResult as unknown as Awaited<ReturnType<typeof getTeacherDashboard>>
       );
+
+      const caller = createCaller({
+        user: { id: "t1", role: "TEACHER", schoolId: testSchoolId },
+        tenant: { schoolId: testSchoolId },
+      });
 
       const result = await caller.reports.teacherDashboard();
 
+      // Domain function was called once with the context user and tenant
+      expect(getTeacherDashboard).toHaveBeenCalledTimes(1);
+      expect(getTeacherDashboard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          user: expect.objectContaining({ id: "t1", role: "TEACHER" }),
+          tenant: expect.objectContaining({ schoolId: testSchoolId }),
+        })
+      );
+
+      // Transport mapping: router returns the domain result unchanged
       expect(result.classCount).toBe(2);
       expect(result.classes).toEqual([
         { id: "c1", name: "Math 101" },
@@ -121,12 +79,16 @@ describe("reports router", () => {
       ]);
     });
 
-    it("returns empty dashboard when teacher has no classes", async () => {
-      const db = createMockDb({ selectResult: [] });
-      const caller = createCaller(
-        db,
-        { user: { id: "t1", role: "TEACHER", schoolId: testSchoolId }, tenant: { schoolId: testSchoolId } }
-      );
+    it("returns empty dashboard when domain function returns no classes", async () => {
+      vi.mocked(getTeacherDashboard).mockResolvedValue({
+        classCount: 0,
+        classes: [],
+      } as unknown as Awaited<ReturnType<typeof getTeacherDashboard>>);
+
+      const caller = createCaller({
+        user: { id: "t1", role: "TEACHER", schoolId: testSchoolId },
+        tenant: { schoolId: testSchoolId },
+      });
 
       const result = await caller.reports.teacherDashboard();
 
@@ -134,16 +96,20 @@ describe("reports router", () => {
       expect(result.classes).toEqual([]);
     });
 
-    it("uses tenant-scoped query (not raw db)", async () => {
-      const db = createMockDb({ selectResult: [] });
-      const caller = createCaller(
-        db,
-        { user: { id: "t1", role: "TEACHER", schoolId: testSchoolId }, tenant: { schoolId: testSchoolId } }
+    it("propagates domain FORBIDDEN errors as TRPC FORBIDDEN", async () => {
+      const { AuthError } = await import("@reading-advantage/auth");
+      vi.mocked(getTeacherDashboard).mockRejectedValue(
+        new AuthError("User t1 (STUDENT) lacks permission: progress:read:all", "FORBIDDEN")
       );
 
-      await caller.reports.teacherDashboard();
+      const caller = createCaller({
+        user: { id: "t1", role: "STUDENT", schoolId: testSchoolId },
+        tenant: { schoolId: testSchoolId },
+      });
 
-      expect(db.select).toHaveBeenCalled();
+      await expect(caller.reports.teacherDashboard()).rejects.toThrow(
+        /lacks permission/
+      );
     });
   });
 });

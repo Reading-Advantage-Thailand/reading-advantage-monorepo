@@ -147,7 +147,7 @@
 
 ## Phase 4: Transport-Thin Shared API Boundary
 
-- [~] Task: Write Red tests showing the reviewed `reports.teacherDashboard` query is delegated to a domain function, not implemented in the tRPC router.
+- [x] Task: Write Red tests showing the reviewed `reports.teacherDashboard` query is delegated to a domain function, not implemented in the tRPC router.
   - Evidence refs: Shared Foundation F-SF-003; Cross-App CA-004; Monorepo MR-C05.
   - Red evidence (Mid agent 2026-06-28):
     - `packages/api/src/__tests__/wave0-phase4-reports-delegation.test.ts` — 6 tests total, 3 RED:
@@ -156,8 +156,10 @@
       - `teacherDashboard procedure body does not reference Drizzle table columns directly` FAILS — column reference count: 3 (`classrooms.teacherId`, `classrooms.id`, `classrooms.name`)
       - 3 other tests pass (procedure scan guard, procedure exists, file-level import check)
     - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase4-reports-delegation.test.ts`
-- [~] Task: Move shared-foundation-identified business logic from API transport to domain functions.
-- [~] Task: Add or update static guard tests forbidding Drizzle/schema imports in `packages/api/src/routers/**` except approved infrastructure exceptions.
+  - Green evidence (2026-06-28): `wave0-phase4-reports-delegation.test.ts` exits 0 (6/6 pass) after `packages/domain/src/reports/queries.ts` adds `getTeacherDashboard({ db, user, tenant })` that calls `assertCan(user, "progress:read:all", tenant)` then issues `db.select(...).from(classrooms).where(eq(classrooms.teacherId, user.id))` using FLAT-scoped `tenantDb` (auto-injects `schoolId = tenant.schoolId`), and `packages/api/src/routers/reports.ts` `teacherDashboard` procedure body becomes a one-liner: `return reports.getTeacherDashboard({ db: ctx.tenantDb, user: ctx.auth.user, tenant: ctx.auth.tenant })`. No Drizzle or `@reading-advantage/db/schema` imports remain in the router.
+- [x] Task: Move shared-foundation-identified business logic from API transport to domain functions.
+  - Evidence: Green commit — `getTeacherDashboard` moved from inline router Drizzle into `packages/domain/src/reports/queries.ts`. The router (`packages/api/src/routers/reports.ts`) now contains zero Drizzle/schema references and delegates all three procedures (`studentProgress`, `classAnalytics`, `teacherDashboard`) to `reports.{getStudentProgress, getClassAnalytics, getTeacherDashboard}` from `@reading-advantage/domain`. The new domain function uses `assertCan(user, "progress:read:all", tenant)` for auth and the FLAT-scoped `tenantDb` for tenant isolation, matching the existing pattern in `getStudentProgress` / `getClassAnalytics`. `packages/domain/src/reports/index.ts` re-exports `getTeacherDashboard`. `packages/domain/src/__tests__/reports.test.ts` gains a new `describe("getTeacherDashboard", ...)` block with 4 tests: returns classes for TEACHER, returns empty dashboard, ADMIN allowed, STUDENT throws FORBIDDEN. Domain suite green: `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/reports.test.ts` exits 0 (11/11 pass; was 7/7).
+- [x] Task: Add or update static guard tests forbidding Drizzle/schema imports in `packages/api/src/routers/**` except approved infrastructure exceptions.
   - Evidence refs: Shared Foundation F-SF-003; Cross-App CA-004; Monorepo MR-C05.
   - Red evidence (Mid agent 2026-06-28):
     - `packages/api/src/__tests__/api-architecture-boundary.test.ts` — 4 tests total, 2 RED:
@@ -165,7 +167,8 @@
       - `all router files are free of @reading-advantage/db/schema imports` FAILS — violation count: 1 of 10 router files (`reports.ts:3: import { classrooms } from "@reading-advantage/db/schema"`)
       - 2 other tests pass (router file scan guard, approved exception documentation)
     - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/api-architecture-boundary.test.ts`
-- [~] Task: Verify router tests assert delegation and transport mapping only.
+  - Green evidence (2026-06-28): `api-architecture-boundary.test.ts` exits 0 (4/4 pass) after `reports.ts` no longer imports `drizzle-orm` or `@reading-advantage/db/schema`. APPROVED_EXCEPTIONS list stays empty (no router needs a Drizzle type). The guard tests now confirm that all 10 router files in `packages/api/src/routers/**` are free of both forbidden imports.
+- [x] Task: Verify router tests assert delegation and transport mapping only.
   - Evidence refs: Shared Foundation F-SF-003; Cross-App CA-004; Monorepo MR-C05.
   - Red evidence (Mid agent 2026-06-28):
     - `packages/api/src/__tests__/wave0-phase4-router-test-quality.test.ts` — 3 tests total, 2 RED:
@@ -173,10 +176,20 @@
       - `reports.test.ts does not directly assert Drizzle table columns or query chains` FAILS — violation count: 1 (`line 146: expect(db.select).toHaveBeenCalled()`)
       - 1 other test passes (test file scan guard)
     - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase4-router-test-quality.test.ts`
-- [~] Task: Run API/domain lint, check-types, and tests.
+  - Green evidence (2026-06-28): `wave0-phase4-router-test-quality.test.ts` exits 0 (3/3 pass). `packages/api/src/__tests__/reports.test.ts` was rewritten to use `vi.mock("@reading-advantage/domain/reports")` and assert delegation only: it mocks `getTeacherDashboard` and asserts that the mocked domain function is called once with the expected `{ user, tenant }` context and that the router returns the domain result unchanged. The `expect(db.select).toHaveBeenCalled()` SQL-behavior assertion was removed. `packages/api/src/__tests__/users.test.ts` line 185 (`expect(db.select).toHaveBeenCalled()`) was replaced with `await expect(caller.users.list({ role: "STUDENT" })).resolves.toBeDefined()` — transport-mapping assertion only. Both router test files now have 0 violations against the prohibited-patterns list.
+- [x] Task: Run API/domain lint, check-types, and tests.
   - Red evidence (Mid agent 2026-06-28):
     - Combined Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase4-reports-delegation.test.ts src/__tests__/api-architecture-boundary.test.ts src/__tests__/wave0-phase4-router-test-quality.test.ts` → 13 tests total, 7 RED / 6 PASS, exit 1
     - Full targeted Red command from test-strategy.md: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/reports.test.ts src/__tests__/api-architecture-boundary.test.ts && CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/reports.test.ts` — not run separately (domain has no Phase 4 tests; API tests cover the boundary)
+  - Green evidence (2026-06-28):
+    - `GREEN_TEST_COMMAND`: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase4-reports-delegation.test.ts src/__tests__/api-architecture-boundary.test.ts src/__tests__/wave0-phase4-router-test-quality.test.ts` → 13 tests pass, 0 failures (was 7 RED / 6 PASS at baseline SHA `86d6c9ba`).
+    - Domain reports tests: `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/reports.test.ts` → 11/11 pass (was 7/7; added 4 new `getTeacherDashboard` tests).
+    - Rewritten API reports tests: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/reports.test.ts` → 3/3 pass (delegation + transport mapping).
+    - Updated API users tests: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/users.test.ts` → 10/10 pass (transport mapping only).
+    - Full API suite: 214/216 pass. The 2 failures are pre-existing `auth-security-phase1-route-contracts.test.ts` failures from Phase 2 Green (caused by `configurePostgresRateLimiter(db)` called at module load but the test mock not providing it) — confirmed unchanged at baseline SHA `86d6c9ba` and documented in `test-strategy.md` Phase 0 baseline table.
+    - `PROJECT_LINT`: `CI=true pnpm turbo run lint --filter=@reading-advantage/domain --filter=@reading-advantage/auth --filter=@reading-advantage/api` exits 0 with warnings (10 domain, 5 api) — same warnings as baseline; no new lint errors.
+    - `PROJECT_CHECKS`: `CI=true pnpm turbo run check-types --filter=@reading-advantage/db --filter=@reading-advantage/domain --filter=@reading-advantage/types --filter=@reading-advantage/auth --filter=@reading-advantage/api` → only failure is the pre-existing `sales.ts:146 audioStorageKey` nullable mismatch (documented in `test-strategy.md` Phase 0 baseline); confirmed unchanged at baseline SHA `86d6c9ba`. No new check-types errors introduced by Green work.
+    - `build-graph update ./graph.db packages/api/src/routers/reports.ts packages/api/src/__tests__/reports.test.ts packages/api/src/__tests__/users.test.ts packages/domain/src/reports/queries.ts packages/domain/src/reports/index.ts packages/domain/src/__tests__/reports.test.ts` → `Updated 6 files (27 → 34 nodes, 61 → 70 edges)` per A10.
 
 ## Phase 5: Quality Gates, Documentation, and Closeout
 

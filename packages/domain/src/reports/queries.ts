@@ -176,3 +176,39 @@ export async function getClassAnalytics({
     students: studentSummaries,
   };
 }
+
+/**
+ * Returns a teacher's dashboard summary: the count of classes the caller
+ * teaches in the caller's school, plus the class id/name list. The caller's
+ * tenant scope is enforced automatically through TenantDB (classrooms is FLAT),
+ * and ownership is verified by filtering on `teacherId = user.id`.
+ *
+ * @param db - Database client (tenant-scoped; FLAT classrooms auto-injects schoolId)
+ * @param user - Authenticated user context
+ * @param tenant - Tenant (school) scope
+ * @returns Teacher dashboard with classCount and classes list
+ */
+export async function getTeacherDashboard({
+  db,
+  user,
+  tenant: _tenant,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+}) {
+  assertCan(user, "progress:read:all", _tenant);
+
+  const rows = await db
+    .select({ id: classrooms.id, name: classrooms.name })
+    .from(classrooms)
+    .where(eq(classrooms.teacherId, user.id));
+
+  return {
+    classCount: rows.length,
+    classes: rows.map((c) => ({
+      id: c.id,
+      name: c.name,
+    })),
+  };
+}

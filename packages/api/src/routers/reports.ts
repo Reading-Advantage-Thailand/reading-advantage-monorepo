@@ -1,6 +1,4 @@
 import { z } from "zod";
-import { eq } from "drizzle-orm";
-import { classrooms } from "@reading-advantage/db/schema";
 import { router, protectedProcedure } from "../trpc.js";
 import { studentProgressReportSchema, classAnalyticsSchema, teacherDashboardSchema } from "@reading-advantage/types";
 import { reports } from "@reading-advantage/domain";
@@ -33,17 +31,10 @@ export const reportsRouter = router({
   teacherDashboard: protectedProcedure
     .output(teacherDashboardSchema)
     .query(async ({ ctx }) => {
-      const classes = await ctx.tenantDb
-        .select({ id: classrooms.id, name: classrooms.name })
-        .from(classrooms)
-        .where(eq(classrooms.teacherId, ctx.auth.user.id));
-
-      return {
-        classCount: classes.length,
-        classes: classes.map((c) => ({
-          id: c.id,
-          name: c.name,
-        })),
-      };
+      return reports.getTeacherDashboard({
+        db: ctx.tenantDb,
+        user: ctx.auth.user,
+        tenant: ctx.auth.tenant,
+      });
     }),
 });
