@@ -95,15 +95,16 @@ describe("2-school acceptance — createTenantDB isolation", () => {
     );
   });
 
-  it("createTenantDB warns on null schoolId", () => {
+  it("createTenantDB does NOT warn on null schoolId (M-SF-2 fail-closed, no warning)", () => {
+    // M-SF-2: null/undefined tenant now fails closed on FLAT operations
+    // rather than warning. The warning was removed because it could be
+    // silently ignored in production and led to cross-tenant data leaks.
     const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const mockDb = createMockDb([]);
 
     createTenantDB(mockDb as never, { schoolId: null as never });
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("null/undefined schoolId")
-    );
+    expect(consoleSpy).not.toHaveBeenCalled();
     consoleSpy.mockRestore();
   });
 

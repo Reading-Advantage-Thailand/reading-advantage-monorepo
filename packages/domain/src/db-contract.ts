@@ -85,6 +85,36 @@ function requireScopableTable(
 }
 
 /**
+ * Fail-closed guard (M-SF-2): when the tenant has no schoolId, FLAT table
+ * operations cannot inject a tenant scope condition. Allowing the operation to
+ * proceed would silently query across all schools — a cross-tenant data leak.
+ *
+ * Throws TenantScopeError for FLAT operations when schoolId is null/undefined.
+ * EXEMPT tables are unaffected (intentionally global).
+ * @param tenant - The tenant context
+ * @param table - The Drizzle table being targeted
+ * @param operation - The operation being attempted (for error messages)
+ */
+function requireTenantForFlat(
+  tenant: Tenant,
+  table: unknown,
+  operation: string,
+): void {
+  if (!tenant.schoolId) {
+    const name = tableNameOf(table);
+    throw new TenantScopeError(
+      name,
+      "FLAT",
+      `[TenantDB] Cannot ${operation} FLAT table "${name}" when tenant schoolId is ` +
+        `${tenant.schoolId === undefined ? "undefined" : "null"}. ` +
+        `TenantDB fails closed on null/undefined tenant to prevent cross-tenant data leaks. ` +
+        `Provide a valid tenant with schoolId, or use tenantDb.unscoped("reason") + a ` +
+        `users.schoolId join for global queries.`,
+    );
+  }
+}
+
+/**
  * Wraps a Drizzle query builder with automatic schoolId tenant scoping for
  * FLAT tables. Intercepts .where() to inject tenant conditions and ensures
  * unscoped queries are scoped before execution.
@@ -300,13 +330,6 @@ function enforceSingleRow(row: unknown, tenantSchoolId: string): unknown {
  * ```
  */
 export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
-  if (!tenant.schoolId) {
-    console.warn(
-      "[TenantDB] Created with null/undefined schoolId — tenant scoping will not be applied. " +
-        "Domain functions using this DB instance against FLAT tables will query across ALL schools.",
-    );
-  }
-
   const tenantDb = new Proxy(db, {
     get(target, prop, receiver) {
       const val = Reflect.get(target, prop, receiver);
@@ -357,6 +380,11 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
                             `Use tenantDb.unscoped("reason") + a users.schoolId join.`,
                         );
                       }
+                      // M-SF-2 fail-closed: FLAT operations require a tenant schoolId.
+                      // Throws BEFORE invoking the underlying builder.
+                      if (cls === "FLAT") {
+                        requireTenantForFlat(tenant, table, "select");
+                      }
                       const queryBuilder = fromFn.apply(fromThis, fromArgs);
                       // FLAT → wrap with tenant scoping; EXEMPT → return unwrapped
                       if (cls === "FLAT") {
@@ -389,7 +417,11 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
           // UPDATE: intercept .set() to capture the table
           if (prop === "update") {
             const table = fnArgs[0];
-            requireScopableTable(table, "update");
+            const updateCls = requireScopableTable(table, "update");
+            // M-SF-2 fail-closed: FLAT updates require a tenant schoolId.
+            if (updateCls === "FLAT") {
+              requireTenantForFlat(tenant, table, "update");
+            }
             const updateBuilder = fnTarget.apply(fnThis, fnArgs);
             return new Proxy(updateBuilder, {
               get(updateTarget, updateProp) {
@@ -425,7 +457,11 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
           // DELETE: direct wrap
           if (prop === "delete") {
             const table = fnArgs[0];
-            requireScopableTable(table, "delete");
+            const deleteCls = requireScopableTable(table, "delete");
+            // M-SF-2 fail-closed: FLAT deletes require a tenant schoolId.
+            if (deleteCls === "FLAT") {
+              requireTenantForFlat(tenant, table, "delete");
+            }
             const deleteBuilder = fnTarget.apply(fnThis, fnArgs);
             return wrapQueryBuilder(deleteBuilder, table, tenant);
           }
@@ -457,6 +493,10 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
                   `Cannot insert through TenantDB. ` +
                   `Use tenantDb.unscoped("reason") for manual inserts.`,
               );
+            }
+            // M-SF-2 fail-closed: FLAT inserts require a tenant schoolId.
+            if (cls === "FLAT") {
+              requireTenantForFlat(tenant, table, "insert");
             }
             const insertBuilder = fnTarget.apply(fnThis, fnArgs);
             return new Proxy(insertBuilder, {

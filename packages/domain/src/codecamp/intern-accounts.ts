@@ -24,20 +24,23 @@ export async function createInternAccount({
     throw new Error("Password must contain at least one uppercase letter, one lowercase letter, and one digit");
   }
 
+  // INTERN accounts are global (schoolId=null) — query without tenant scoping.
+  const rawDb = db.unscoped("intern accounts are global — no schoolId by design");
+
   const lowerUsername = input.username.toLowerCase();
   const normalizedGithubUsername = (input.githubUsername || input.username).replace(/^@/, "").toLowerCase();
 
-  const [existing] = await db.select().from(users).where(eq(users.username, lowerUsername)).limit(1);
+  const [existing] = await rawDb.select().from(users).where(eq(users.username, lowerUsername)).limit(1);
   if (existing) throw new Error("Username already exists");
 
-  const [existingGithubUser] = await db.select({ id: users.id }).from(users)
+  const [existingGithubUser] = await rawDb.select({ id: users.id }).from(users)
     .where(eq(users.githubUsername, normalizedGithubUsername)).limit(1);
   if (existingGithubUser) throw new Error("GitHub username already exists");
 
   const passwordHash = await hashPassword(input.password);
   const userId = crypto.randomUUID();
 
-  const result = await db.transaction(async (tx) => {
+  const result = await rawDb.transaction(async (tx) => {
     const [created] = await tx.insert(users)
       .values({
         id: userId, username: lowerUsername, displayUsername: input.username, name: input.name,
@@ -65,12 +68,15 @@ export async function updateInternGithubUsername({
 }) {
   assertCan(user, "admin:dashboard", tenant);
 
-  const [intern] = await db.select({ id: users.id }).from(users)
+  // INTERN accounts are global — query without tenant scoping.
+  const rawDb = db.unscoped("intern accounts are global — no schoolId by design");
+
+  const [intern] = await rawDb.select({ id: users.id }).from(users)
     .where(and(eq(users.id, input.userId), eq(users.role, "INTERN"))).limit(1);
   if (!intern) throw new Error("Intern not found");
 
   const normalizedUsername = input.githubUsername ? input.githubUsername.replace(/^@/, "").toLowerCase() : null;
-  const [result] = await db.update(users).set({ githubUsername: normalizedUsername })
+  const [result] = await rawDb.update(users).set({ githubUsername: normalizedUsername })
     .where(eq(users.id, input.userId)).returning();
   return result;
 }
@@ -85,27 +91,30 @@ export async function listInterns({
 }) {
   assertCan(user, "admin:dashboard", tenant);
 
-  const interns = await db.select().from(users).where(eq(users.role, "INTERN")).orderBy(users.createdAt);
+  // INTERN accounts are global — query without tenant scoping.
+  const rawDb = db.unscoped("intern accounts are global — no schoolId by design");
 
-  const modules = await db.select().from(codecampModules).where(eq(codecampModules.status, "published")).orderBy(codecampModules.order);
+  const interns = await rawDb.select().from(users).where(eq(users.role, "INTERN")).orderBy(users.createdAt);
+
+  const modules = await rawDb.select().from(codecampModules).where(eq(codecampModules.status, "published")).orderBy(codecampModules.order);
   const moduleIds = modules.map((m) => m.id);
   const internIds = interns.map((i) => i.id);
 
   const allProgress = moduleIds.length > 0 && internIds.length > 0
-    ? await db.select().from(codecampUserProgress)
+    ? await rawDb.select().from(codecampUserProgress)
         .where(and(inArray(codecampUserProgress.moduleId, moduleIds), inArray(codecampUserProgress.userId, internIds)))
     : [];
 
   const allLessons = moduleIds.length > 0
-    ? await db.select().from(codecampLessons).where(inArray(codecampLessons.moduleId, moduleIds))
+    ? await rawDb.select().from(codecampLessons).where(inArray(codecampLessons.moduleId, moduleIds))
     : [];
 
   const allRepos = moduleIds.length > 0
-    ? await db.select().from(codecampExerciseRepos).where(inArray(codecampExerciseRepos.moduleId, moduleIds))
+    ? await rawDb.select().from(codecampExerciseRepos).where(inArray(codecampExerciseRepos.moduleId, moduleIds))
     : [];
 
   const allReviews = internIds.length > 0
-    ? await db.select().from(codecampPrReviews).where(inArray(codecampPrReviews.userId, internIds))
+    ? await rawDb.select().from(codecampPrReviews).where(inArray(codecampPrReviews.userId, internIds))
     : [];
 
   return interns.map((intern) => {
@@ -155,15 +164,18 @@ export async function getInternProgress({
 }) {
   assertCan(user, "admin:dashboard", tenant);
 
-  const [intern] = await db.select().from(users).where(eq(users.id, input.userId)).limit(1);
+  // INTERN accounts are global — query without tenant scoping.
+  const rawDb = db.unscoped("intern accounts are global — no schoolId by design");
+
+  const [intern] = await rawDb.select().from(users).where(eq(users.id, input.userId)).limit(1);
   if (!intern || intern.role !== "INTERN") throw new Error("Intern not found");
 
-  const modules = await db.select().from(codecampModules).where(eq(codecampModules.status, "published")).orderBy(codecampModules.order);
+  const modules = await rawDb.select().from(codecampModules).where(eq(codecampModules.status, "published")).orderBy(codecampModules.order);
   const moduleIds = modules.map((m) => m.id);
-  const lessons = moduleIds.length > 0 ? await db.select().from(codecampLessons).where(inArray(codecampLessons.moduleId, moduleIds)) : [];
-  const progress = await db.select().from(codecampUserProgress).where(eq(codecampUserProgress.userId, input.userId));
-  const exerciseRepos = moduleIds.length > 0 ? await db.select().from(codecampExerciseRepos).where(inArray(codecampExerciseRepos.moduleId, moduleIds)) : [];
-  const reviews = await db.select().from(codecampPrReviews).where(eq(codecampPrReviews.userId, input.userId)).orderBy(desc(codecampPrReviews.createdAt));
+  const lessons = moduleIds.length > 0 ? await rawDb.select().from(codecampLessons).where(inArray(codecampLessons.moduleId, moduleIds)) : [];
+  const progress = await rawDb.select().from(codecampUserProgress).where(eq(codecampUserProgress.userId, input.userId));
+  const exerciseRepos = moduleIds.length > 0 ? await rawDb.select().from(codecampExerciseRepos).where(inArray(codecampExerciseRepos.moduleId, moduleIds)) : [];
+  const reviews = await rawDb.select().from(codecampPrReviews).where(eq(codecampPrReviews.userId, input.userId)).orderBy(desc(codecampPrReviews.createdAt));
 
   const moduleBreakdown = modules.map((mod) => {
     const modLessons = lessons.filter((l) => l.moduleId === mod.id);
