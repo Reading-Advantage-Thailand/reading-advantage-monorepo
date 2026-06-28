@@ -69,6 +69,7 @@ vi.mock("@reading-advantage/auth", () => ({
   requireRole: vi.fn(),
   revokeAllUserSessions: vi.fn(),
   recordAuditEvent: vi.fn(),
+  configurePostgresRateLimiter: vi.fn(),
 }));
 
 const __filename = fileURLToPath(import.meta.url);
