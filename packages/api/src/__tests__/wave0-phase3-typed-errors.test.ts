@@ -89,7 +89,7 @@ describe("Wave 0 Phase 3 — Typed error mapping", () => {
     ).toBeGreaterThanOrEqual(1);
   });
 
-  describe("sales router uses string-based error mapping instead of typed errors", () => {
+  describe("sales router uses typed error mapping (Wave 0 Phase 3 Green)", () => {
     let routerSource: string;
 
     beforeAll(() => {
@@ -97,84 +97,62 @@ describe("Wave 0 Phase 3 — Typed error mapping", () => {
     });
 
     it("sales router has a mapSalesError function", () => {
-      // This PASSES — the function exists
+      // PASSES — the function exists
       expect(
         routerSource,
         "sales.ts must contain a mapSalesError function",
       ).toMatch(/function\s+mapSalesError/);
     });
 
-    it("mapSalesError uses err.message.includes('not found') for NOT_FOUND mapping", () => {
-      // This PASSES — confirms the current fragile string-based mapping
+    it("mapSalesError uses instanceof ScenarioNotFoundError for NOT_FOUND mapping", () => {
+      // PASSES — typed mapping via instanceof check
       expect(
         routerSource,
-        "mapSalesError must use err.message.includes('not found') — " +
-          "this confirms string-based error mapping is in use",
-      ).toMatch(/err\.message\.includes\(["']not found["']\)/);
-    });
-
-    it("mapSalesError should use instanceof for typed domain error classes", () => {
-      // This FAILS — the router checks err.message strings, not instanceof
-      // It should check: `if (err instanceof ScenarioNotFoundError) throw NOT_FOUND`
-      expect(
-        routerSource,
-        "mapSalesError must use instanceof checks against typed domain " +
-          "error classes (ScenarioNotFoundError, RubricNotApprovedError, etc.) " +
-          "instead of err.message.includes(...) string matching. " +
-          "String matching is fragile: a generic Error('Storage not found') " +
-          "would incorrectly map to NOT_FOUND. (CA-003 / F-SF-017)",
-      ).toMatch(/err\s+instanceof\s+\w*NotFoundError/);
+        "mapSalesError must use instanceof ScenarioNotFoundError for NOT_FOUND. " +
+          "Typed error mapping prevents generic errors with 'not found' substrings " +
+          "from being misclassified. (CA-003 / F-SF-017)",
+      ).toMatch(/err\s+instanceof\s+ScenarioNotFoundError/);
     });
 
     it("mapSalesError imports ScenarioNotFoundError from domain", () => {
-      // This FAILS — the router doesn't import the typed error classes
+      // PASSES — the router imports the typed error class
       expect(
         routerSource,
         "sales.ts must import ScenarioNotFoundError from " +
-          "@reading-advantage/domain/sales for typed error mapping. " +
-          "The error class is exported but the router uses string matching instead.",
+          "@reading-advantage/domain/sales for typed error mapping.",
       ).toMatch(
         /import\s*\{[^}]*ScenarioNotFoundError[^}]*\}\s*from\s*["']@reading-advantage\/domain\/sales["']/,
       );
     });
   });
 
-  describe("users router uses string-based error mapping instead of typed errors", () => {
+  describe("users router uses typed error mapping for NOT_FOUND (Wave 0 Phase 3 Green)", () => {
     let routerSource: string;
 
     beforeAll(() => {
       routerSource = readRouterSource("users.ts");
     });
 
-    it("users router checks err.message === 'User not found' for NOT_FOUND", () => {
-      // This PASSES — confirms the current fragile string-based mapping
+    it("users router uses instanceof UserNotFoundError for NOT_FOUND", () => {
+      // PASSES — typed mapping via instanceof check
       expect(
         routerSource,
-        "users.ts must use err.message === 'User not found' — " +
-          "this confirms string-based error mapping is in use",
-      ).toMatch(/err\.message\s*===\s*["']User not found["']/);
-    });
-
-    it("users router should use instanceof UserNotFoundError for NOT_FOUND", () => {
-      // This FAILS — the router checks err.message string, not instanceof
-      // The domain already exports UserNotFoundError from @reading-advantage/domain/users
-      expect(
-        routerSource,
-        "users.ts must use instanceof UserNotFoundError instead of " +
-          "err.message === 'User not found'. The domain already exports " +
-          "UserNotFoundError from @reading-advantage/domain/users. " +
-          "String matching is fragile: any Error with the same message " +
-          "would be misclassified. (CA-003 / F-SF-017)",
+        "users.ts must use instanceof UserNotFoundError for NOT_FOUND. " +
+          "The domain exports UserNotFoundError from " +
+          "@reading-advantage/domain/users — string matching is fragile. " +
+          "(CA-003 / F-SF-017)",
       ).toMatch(/instanceof\s+UserNotFoundError/);
     });
 
-    it("users router checks err.message.includes('outside your school') for FORBIDDEN", () => {
-      // This PASSES — confirms the current string-based mapping
+    it("users router imports UserNotFoundError from domain", () => {
+      // PASSES — the router imports the typed error class
       expect(
         routerSource,
-        "users.ts must use err.message.includes('outside your school') — " +
-          "this confirms string-based error mapping is in use",
-      ).toMatch(/err\.message\.includes\(["']outside your school["']\)/);
+        "users.ts must import UserNotFoundError from " +
+          "@reading-advantage/domain/users for typed error mapping.",
+      ).toMatch(
+        /import\s*\{[^}]*UserNotFoundError[^}]*\}\s*from\s*["']@reading-advantage\/domain\/users["']/,
+      );
     });
   });
 

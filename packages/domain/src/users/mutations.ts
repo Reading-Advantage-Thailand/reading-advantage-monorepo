@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 import { users } from "@reading-advantage/db/schema";
+import { UserNotFoundError } from "./errors.js";
 
 /**
  * Updates a user's name and/or image. Any user can update their own profile;
@@ -41,7 +42,7 @@ export async function updateUser({
     .returning();
 
   if (!updated) {
-    throw new Error("User not found");
+    throw new UserNotFoundError(id);
   }
 
   return updated;

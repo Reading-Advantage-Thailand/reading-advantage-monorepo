@@ -90,7 +90,7 @@
 
 ## Phase 3: Shared Contracts and Typed Error Boundaries
 
-- [~] Task: Add Red tests for shared response envelopes: success, list, validation error, unauthorized, forbidden, not found, conflict, and internal error.
+- [x] Task: Add Red tests for shared response envelopes: success, list, validation error, unauthorized, forbidden, not found, conflict, and internal error.
   - Evidence refs: Cross-App CA-003; Reading C-001/C-002/H-09; Shared Foundation F-SF-007/F-SF-017.
   - Red evidence (Mid agent 2026-06-28):
     - `packages/types/src/__tests__/response-envelopes.test.ts` — 15 tests total, 9 RED:
@@ -99,7 +99,8 @@
       - `successEnvelopeSchema` passes (maps to existing login response shape)
       - 6 structural/payload validation tests pass (existing schemas validate correctly)
     - Targeted Red command: `CI=true pnpm --filter @reading-advantage/types exec vitest run src/__tests__/response-envelopes.test.ts`
-- [~] Task: Add Zod contract tests to `@reading-advantage/types` for role, user/session, class, sales, and branded ID schemas.
+  - Green evidence (2026-06-28): 15/15 envelope tests pass after introducing `packages/types/src/contracts/envelopes.ts` with 7 envelope schemas (`successEnvelopeSchema`, `listEnvelopeSchema`, `validationErrorEnvelopeSchema`, `unauthorizedEnvelopeSchema`, `forbiddenEnvelopeSchema`, `notFoundEnvelopeSchema`, `conflictEnvelopeSchema`, `internalErrorEnvelopeSchema`) plus the shared `errorBodySchema`, `validationIssueSchema`, and `ERROR_CODES` constants. `internalErrorEnvelopeSchema` uses `.strict()` so `stack` fields cannot leak (test "internalErrorEnvelopeSchema does not leak stack traces" passes).
+- [x] Task: Add Zod contract tests to `@reading-advantage/types` for role, user/session, class, sales, and branded ID schemas.
   - Red evidence (Mid agent 2026-06-28):
     - `packages/types/src/__tests__/shared-contracts.test.ts` — 30 tests total, 12 RED:
       - 10 sales schema export tests fail (schemas only in `@reading-advantage/domain/sales/schema.ts`, not in types)
@@ -110,16 +111,18 @@
       - Class schema tests pass (createClassSchema, scienceCreateClassSchema, joinClassSchema all exist and validate)
       - Role/session drift guard tests pass (Phase 2 fixes held: USER rejected, SALES_REP accepted)
     - Targeted Red command: `CI=true pnpm --filter @reading-advantage/types exec vitest run src/__tests__/shared-contracts.test.ts`
-- [~] Task: Introduce or consolidate shared response/error contracts without breaking transport independence.
-  - Red evidence: See above — response envelopes and sales schemas do not exist in types yet. Green must introduce them.
-- [~] Task: Replace at least one reviewed duplicated router-local contract with imported shared/domain contract as the adoption proof.
+  - Green evidence (2026-06-28): 30/30 shared-contracts tests pass after introducing `packages/types/src/contracts/sales.ts` with 9 sales schemas (`moduleOutputSchema`, `lessonOutputSchema`, `rubricCriteriaSchema`, `rubricOutputSchema`, `roleplayScenarioOutputSchema`, `roleplayAttemptOutputSchema`, `quizSubmissionInputSchema`, `quizResultOutputSchema`, `progressOutputSchema`, `chatMessageOutputSchema`). `chatMessageInputSchema` is already in `codecamp.ts`. Fixed `PolymorphicQuestionId` and `ExternalLessonId` branded IDs to use `.min(1)` so empty strings are rejected at the contract boundary.
+- [x] Task: Introduce or consolidate shared response/error contracts without breaking transport independence.
+  - Green evidence (2026-06-28): Envelope contracts added in `packages/types/src/contracts/envelopes.ts`; sales contracts added in `packages/types/src/contracts/sales.ts`; both re-exported from `packages/types/src/index.ts`. Updated `packages/types/package.json` to expose `./contracts/envelopes` and `./contracts/sales` subpath exports. No transport-layer types are introduced; envelope schemas only reference Zod primitives so any tRPC/Next.js/REST adapter can use them. Types package builds: `CI=true pnpm --filter @reading-advantage/types exec tsc` exits 0; `dist/contracts/{envelopes,sales}.{js,d.ts}` are present.
+- [x] Task: Replace at least one reviewed duplicated router-local contract with imported shared/domain contract as the adoption proof.
   - Red evidence (Mid agent 2026-06-28):
     - `packages/api/src/__tests__/wave0-phase3-contract-adoption.test.ts` — 6 tests total, 1 RED:
       - `classes router should import createClassSchema from @reading-advantage/types` FAILS — router source defines `z.object({ name: z.string().min(1).max(100) })` inline, structurally identical to the exported `createClassSchema`
       - `sales router does NOT import output schemas from @reading-advantage/types` PASSES — confirms sales schemas are only in domain
       - 4 other tests pass (baseline imports, structural equivalence, shared schema existence)
     - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase3-contract-adoption.test.ts`
-- [~] Task: Replace string-based error mapping at the reviewed shared-foundation leakage site with typed errors.
+  - Green evidence (2026-06-28): `packages/api/src/routers/classes.ts` now imports `createClassSchema` from `@reading-advantage/types` and uses it as the `.input(...)` schema for the `create` procedure. Inline `z.object({ name: z.string().min(1).max(100) })` removed (4-line dead code eliminated). All 6 contract-adoption tests pass; the sales router still imports `moduleOutputSchema|lessonOutputSchema|progressOutputSchema` from `@reading-advantage/domain/sales` (not from `@reading-advantage/types`), preserving the Wave 1 transport-thin boundary direction.
+- [x] Task: Replace string-based error mapping at the reviewed shared-foundation leakage site with typed errors.
   - Red evidence (Mid agent 2026-06-28):
     - `packages/api/src/__tests__/wave0-phase3-typed-errors.test.ts` — 17 tests total, 3 RED:
       - `mapSalesError should use instanceof for typed domain error classes` FAILS — router uses `err.message.includes("not found")` not `instanceof ScenarioNotFoundError`
@@ -127,13 +130,20 @@
       - `users router should use instanceof UserNotFoundError for NOT_FOUND` FAILS — router uses `err.message === "User not found"` not `instanceof UserNotFoundError`
       - 14 other tests pass (confirm string-based mapping exists, domain exports error classes with typed codes, fragility proof)
     - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase3-typed-errors.test.ts`
-- [~] Task: Run types/API/domain tests.
-  - Red evidence (2026-06-28):
-    - `CI=true pnpm turbo run test --filter=@reading-advantage/types` → 21 failed / 67 passed (88 total)
-    - `CI=true pnpm turbo run test --filter=@reading-advantage/api` → 4 failed / 19 passed (23 total, new tests only)
-    - Existing tests unchanged: `role-parity.test.ts` 43/43 pass, `auth-response-validation.test.ts` 21/21 pass
-    - Total new Phase 3 Red tests: 4 files, 68 tests, 25 RED / 45 GREEN (including existing passing tests in same files)
-    - No regressions introduced vs. baseline
+  - Green evidence (2026-06-28):
+    - `packages/api/src/routers/sales.ts`: `mapSalesError` now uses `instanceof ScenarioNotFoundError` (NOT_FOUND), `instanceof RubricNotApprovedError | CurriculumNotApprovedError | ModulePrerequisiteNotMetError` (BAD_REQUEST), `instanceof AudioStorageError` (INTERNAL_SERVER_ERROR), and `instanceof SalesError` fallback (BAD_REQUEST). String-based `err.message.includes("not found" / "not approved" / "prerequisite")` matching is removed.
+    - `packages/api/src/routers/users.ts`: extracted `mapUsersError` helper that uses `instanceof UserNotFoundError` for NOT_FOUND. Cross-school forbidden mapping (`err.message.includes("outside your school")`) and own-profile forbidden mapping (`err.message.includes("Can only update your own profile")`) are kept as string matches because the domain does not yet expose typed errors for those cases — that is an out-of-scope drift the Phase 3 plan does not require fixing.
+    - `packages/domain/src/users/queries.ts` and `mutations.ts`: `getMe`, `getUser`, and `updateUser` now throw `UserNotFoundError(id)` from `@reading-advantage/domain/users` instead of plain `Error("User not found")`. The error message still contains "User not found" (as `User not found: ${id}`), so existing tests that use `.rejects.toThrow(/User not found/)` continue to pass.
+    - `wave0-phase3-typed-errors.test.ts`: removed 2 obsolete fragility-confirmation tests that literally asserted the old broken string matching existed in the router source (`mapSalesError uses err.message.includes('not found')` and `users router checks err.message === 'User not found'`). These tests documented the bug that Phase 3 was supposed to fix; they would necessarily fail once the fix is in place and contradict the spec (replace string-based mapping with typed errors). Renamed the two describe blocks and replaced the removed assertions with new positive assertions that verify `instanceof ScenarioNotFoundError` and `instanceof UserNotFoundError` plus the corresponding domain imports.
+    - All 21 typed-errors tests pass.
+- [x] Task: Run types/API/domain tests.
+  - Green evidence (2026-06-28):
+    - GREEN_TEST_COMMAND: `CI=true pnpm --filter @reading-advantage/types exec vitest run src/__tests__/response-envelopes.test.ts src/__tests__/shared-contracts.test.ts && CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase3-contract-adoption.test.ts src/__tests__/wave0-phase3-typed-errors.test.ts` → 66 tests pass (45 types + 21 api), 0 failures.
+    - Full types suite: `CI=true pnpm --filter @reading-advantage/types exec vitest run` → 88/88 tests pass (was 21 failed / 67 passed at baseline).
+    - Full domain suite: `CI=true pnpm --filter @reading-advantage/domain exec vitest run` → 346 tests pass / 5 skipped (no new failures vs. baseline).
+    - Full api suite: `CI=true pnpm --filter @reading-advantage/api exec vitest run` → 201 tests pass / 2 failed (the 2 failures are pre-existing `auth-security-phase1-route-contracts.test.ts` failures from the Phase 2 Green — same 2 failures occur at the baseline commit `8a90a22e` without my changes; they are caused by the production code calling `configurePostgresRateLimiter(db)` at module load but the test mock not providing it).
+    - Phase 2 evidence preserved: `wave0-phase2-context-role-acceptance.test.ts` 14/14 pass, `auth-routes.test.ts` + `auth-audit.test.ts` 23/23 pass.
+    - No new failures introduced vs. baseline.
 
 ## Phase 4: Transport-Thin Shared API Boundary
 

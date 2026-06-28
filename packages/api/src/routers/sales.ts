@@ -16,10 +16,22 @@ import {
   chatMessageOutputSchema,
   createRepInputSchema,
   approveContentInputSchema,
+  ScenarioNotFoundError,
+  RubricNotApprovedError,
+  CurriculumNotApprovedError,
+  ModulePrerequisiteNotMetError,
+  AudioStorageError,
+  SalesError,
 } from "@reading-advantage/domain/sales";
 
 /**
  * Maps sales domain errors to tRPC TRPCError instances.
+ *
+ * Uses `instanceof` against typed domain error classes so that generic
+ * errors (e.g. `Error("Database connection not found")`) do not get
+ * misclassified as NOT_FOUND. String-based matching was the previous
+ * fragile implementation (see Wave 0 Phase 3 plan, CA-003 / F-SF-017).
+ *
  * @param err - The error to map
  * @returns Never; always throws a TRPCError
  */
@@ -27,20 +39,23 @@ function mapSalesError(err: unknown): never {
   if (err instanceof AuthError) {
     throw new TRPCError({ code: "FORBIDDEN", message: err.message });
   }
+  if (err instanceof ScenarioNotFoundError) {
+    throw new TRPCError({ code: "NOT_FOUND", message: err.message });
+  }
+  if (
+    err instanceof RubricNotApprovedError ||
+    err instanceof CurriculumNotApprovedError ||
+    err instanceof ModulePrerequisiteNotMetError
+  ) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: err.message });
+  }
+  if (err instanceof AudioStorageError) {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: err.message });
+  }
+  if (err instanceof SalesError) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: err.message });
+  }
   if (err instanceof Error) {
-    if (
-      err.message === "Module not found" ||
-      err.message === "Lesson not found" ||
-      err.message.includes("not found")
-    ) {
-      throw new TRPCError({ code: "NOT_FOUND", message: err.message });
-    }
-    if (
-      err.message.includes("not approved") ||
-      err.message.includes("prerequisite")
-    ) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: err.message });
-    }
     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: err.message });
   }
   throw err;
