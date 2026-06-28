@@ -6,12 +6,16 @@
 
 ## Phase 0: Baseline and Evidence Lock
 
-- [ ] Task: Read roadmap artifacts: `deduplicated-findings.md`, `critical-high-remediation-plan.md`, `migration-roadmap.md`, and `test-strategy-roadmap.md`.
+- [x] Task: Read roadmap artifacts: `deduplicated-findings.md`, `critical-high-remediation-plan.md`, `migration-roadmap.md`, and `test-strategy-roadmap.md`.
   - Evidence refs: `monorepo-review-roadmap_20260626/deduplicated-findings.md` MR-C01/MR-C02/MR-C04/MR-C05; `critical-high-remediation-plan.md` Wave 0.
-- [ ] Task: Run `build-graph stats ./graph.db` if graph is fresh; record graph status in this plan.
-- [ ] Task: Inspect `packages/domain/src/tenant-registry.ts`, `tenant-coverage.test.ts`, `packages/api/src/context.ts`, `packages/types`, and auth role schema surfaces.
+  - Strategy evidence: read all four roadmap artifacts plus cross-app `findings.md`/`migration-tracks.md` and shared-foundation `executive-summary.md`/`migration-tracks.md`; strategy recorded in `test-strategy.md`.
+- [x] Task: Run `build-graph stats ./graph.db` if graph is fresh; record graph status in this plan.
+  - Graph status: `graph.db` exists but is stale for graph-aware Measure (`mtime 2026-06-26T12:38:27Z`, about 39.77h old during Phase 0), so graph facts are advisory only. `build-graph stats ./graph.db` still ran and reported 22,185 nodes / 46,017 edges / 2,715 files. `build-graph inspect` found `createTenantDB` and `classifyTable`; `reportsRouter`/`roleSchema` were not indexed as inspectable symbols in the stale graph.
+- [x] Task: Inspect `packages/domain/src/tenant-registry.ts`, `tenant-coverage.test.ts`, `packages/api/src/context.ts`, `packages/types`, and auth role schema surfaces.
   - Evidence refs: `shared-foundation_20260626/executive-summary.md` Key risks; `shared-foundation_20260626/migration-tracks.md` M-SF-1/M-SF-2/M-SF-4/M-SF-5.
-- [ ] Task: Record the current failing/passing baseline for the required verification commands.
+  - Inspection evidence: `tenant-registry.ts`, `tenant-coverage.test.ts`, `db-contract.ts`, `packages/api/src/context.ts`, `packages/types/src/index.ts`, `packages/auth/src/roles.ts`, `packages/auth/src/rate-limit.ts`, and `packages/api/src/routers/reports.ts` inspected for strategy.
+- [x] Task: Record the current failing/passing baseline for the required verification commands.
+  - Baseline: test command failed with pre-existing db Drizzle/closure/journal and auth integration/env/archive-path failures; check-types failed in `@reading-advantage/api` on role/audioStorageKey contract drift; lint for domain/auth/api passed with warnings. Details are in `test-strategy.md` Phase 0 baseline table.
 
 ## Phase 1: Tenant Registry Coverage and Fail-Closed TenantDB
 
