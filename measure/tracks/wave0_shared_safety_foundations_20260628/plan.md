@@ -90,13 +90,50 @@
 
 ## Phase 3: Shared Contracts and Typed Error Boundaries
 
-- [ ] Task: Add Red tests for shared response envelopes: success, list, validation error, unauthorized, forbidden, not found, conflict, and internal error.
+- [~] Task: Add Red tests for shared response envelopes: success, list, validation error, unauthorized, forbidden, not found, conflict, and internal error.
   - Evidence refs: Cross-App CA-003; Reading C-001/C-002/H-09; Shared Foundation F-SF-007/F-SF-017.
-- [ ] Task: Add Zod contract tests to `@reading-advantage/types` for role, user/session, class, sales, and branded ID schemas.
-- [ ] Task: Introduce or consolidate shared response/error contracts without breaking transport independence.
-- [ ] Task: Replace at least one reviewed duplicated router-local contract with imported shared/domain contract as the adoption proof.
-- [ ] Task: Replace string-based error mapping at the reviewed shared-foundation leakage site with typed errors.
-- [ ] Task: Run types/API/domain tests.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/types/src/__tests__/response-envelopes.test.ts` — 15 tests total, 9 RED:
+      - 8 envelope existence tests fail (all schemas except `successEnvelopeSchema` are undefined)
+      - A3-compliant labeled count: `Missing envelope schemas (missing count: 7 of 8)`
+      - `successEnvelopeSchema` passes (maps to existing login response shape)
+      - 6 structural/payload validation tests pass (existing schemas validate correctly)
+    - Targeted Red command: `CI=true pnpm --filter @reading-advantage/types exec vitest run src/__tests__/response-envelopes.test.ts`
+- [~] Task: Add Zod contract tests to `@reading-advantage/types` for role, user/session, class, sales, and branded ID schemas.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/types/src/__tests__/shared-contracts.test.ts` — 30 tests total, 12 RED:
+      - 10 sales schema export tests fail (schemas only in `@reading-advantage/domain/sales/schema.ts`, not in types)
+      - A3-compliant labeled count: `Missing sales schemas (missing count: 9 of 10)`
+      - `chatMessageInputSchema` passes (exists in types via codecamp re-export or naming match)
+      - `PolymorphicQuestionId rejects empty string` fails — `z.string().brand()` accepts empty strings
+      - `ExternalLessonId rejects empty string` fails — same issue
+      - Class schema tests pass (createClassSchema, scienceCreateClassSchema, joinClassSchema all exist and validate)
+      - Role/session drift guard tests pass (Phase 2 fixes held: USER rejected, SALES_REP accepted)
+    - Targeted Red command: `CI=true pnpm --filter @reading-advantage/types exec vitest run src/__tests__/shared-contracts.test.ts`
+- [~] Task: Introduce or consolidate shared response/error contracts without breaking transport independence.
+  - Red evidence: See above — response envelopes and sales schemas do not exist in types yet. Green must introduce them.
+- [~] Task: Replace at least one reviewed duplicated router-local contract with imported shared/domain contract as the adoption proof.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/api/src/__tests__/wave0-phase3-contract-adoption.test.ts` — 6 tests total, 1 RED:
+      - `classes router should import createClassSchema from @reading-advantage/types` FAILS — router source defines `z.object({ name: z.string().min(1).max(100) })` inline, structurally identical to the exported `createClassSchema`
+      - `sales router does NOT import output schemas from @reading-advantage/types` PASSES — confirms sales schemas are only in domain
+      - 4 other tests pass (baseline imports, structural equivalence, shared schema existence)
+    - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase3-contract-adoption.test.ts`
+- [~] Task: Replace string-based error mapping at the reviewed shared-foundation leakage site with typed errors.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/api/src/__tests__/wave0-phase3-typed-errors.test.ts` — 17 tests total, 3 RED:
+      - `mapSalesError should use instanceof for typed domain error classes` FAILS — router uses `err.message.includes("not found")` not `instanceof ScenarioNotFoundError`
+      - `mapSalesError imports ScenarioNotFoundError from domain` FAILS — router doesn't import typed error classes
+      - `users router should use instanceof UserNotFoundError for NOT_FOUND` FAILS — router uses `err.message === "User not found"` not `instanceof UserNotFoundError`
+      - 14 other tests pass (confirm string-based mapping exists, domain exports error classes with typed codes, fragility proof)
+    - Targeted Red command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave0-phase3-typed-errors.test.ts`
+- [~] Task: Run types/API/domain tests.
+  - Red evidence (2026-06-28):
+    - `CI=true pnpm turbo run test --filter=@reading-advantage/types` → 21 failed / 67 passed (88 total)
+    - `CI=true pnpm turbo run test --filter=@reading-advantage/api` → 4 failed / 19 passed (23 total, new tests only)
+    - Existing tests unchanged: `role-parity.test.ts` 43/43 pass, `auth-response-validation.test.ts` 21/21 pass
+    - Total new Phase 3 Red tests: 4 files, 68 tests, 25 RED / 45 GREEN (including existing passing tests in same files)
+    - No regressions introduced vs. baseline
 
 ## Phase 4: Transport-Thin Shared API Boundary
 
