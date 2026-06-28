@@ -366,6 +366,69 @@ describe("createTenantDB", () => {
     });
   });
 
+  // ─── Null-tenant fail-closed (M-SF-2) ──────────────────────
+  // createTenantDB(db, { schoolId: null }) MUST throw TenantScopeError on
+  // FLAT operations. A warning is insufficient — the query must never reach
+  // the underlying builder when tenant identity is missing.
+  describe("null-tenant fail-closed (M-SF-2)", () => {
+    it("throws TenantScopeError on FLAT select when schoolId is null", () => {
+      const { db } = createTrackableMockDb();
+      const nullTenantDb = createTenantDB(db as unknown as DB, { schoolId: null });
+
+      expect(() => nullTenantDb.select().from(flatTable)).toThrow(TenantScopeError);
+      expect(() => nullTenantDb.select().from(flatTable)).toThrow(/null.*schoolId|schoolId.*null/i);
+    });
+
+    it("throws TenantScopeError on FLAT select when schoolId is undefined", () => {
+      const { db } = createTrackableMockDb();
+      const undefTenantDb = createTenantDB(db as unknown as DB, { schoolId: undefined });
+
+      expect(() => undefTenantDb.select().from(flatTable)).toThrow(TenantScopeError);
+    });
+
+    it("throws TenantScopeError on FLAT insert when schoolId is null", () => {
+      const { db } = createTrackableMockDb();
+      const nullTenantDb = createTenantDB(db as unknown as DB, { schoolId: null });
+
+      expect(() => nullTenantDb.insert(flatTable).values({ name: "test" })).toThrow(TenantScopeError);
+    });
+
+    it("throws TenantScopeError on FLAT update when schoolId is null", () => {
+      const { db } = createTrackableMockDb();
+      const nullTenantDb = createTenantDB(db as unknown as DB, { schoolId: null });
+
+      expect(() => nullTenantDb.update(flatTable).set({ name: "x" })).toThrow(TenantScopeError);
+    });
+
+    it("throws TenantScopeError on FLAT delete when schoolId is null", () => {
+      const { db } = createTrackableMockDb();
+      const nullTenantDb = createTenantDB(db as unknown as DB, { schoolId: null });
+
+      expect(() => nullTenantDb.delete(flatTable)).toThrow(TenantScopeError);
+    });
+
+    it("does NOT throw for EXEMPT tables when schoolId is null", () => {
+      const { db, whereCalls } = createTrackableMockDb();
+      const nullTenantDb = createTenantDB(db as unknown as DB, { schoolId: null });
+
+      // EXEMPT tables should work without tenant scoping
+      nullTenantDb.select().from(exemptTable).where({ raw: "userCond" });
+
+      expect(whereCalls).toHaveLength(1);
+      expect(whereCalls[0].condition).toEqual({ raw: "userCond" });
+    });
+
+    it("does NOT throw for valid tenant on FLAT tables", () => {
+      const { db, whereCalls } = createTrackableMockDb();
+      const tenantDb = createTenantDB(db as unknown as DB, tenant);
+
+      tenantDb.select().from(flatTable).where({ raw: "userCond" });
+
+      expect(whereCalls).toHaveLength(1);
+      expect(searchChunks(whereCalls[0].condition, "s1")).toBe(true);
+    });
+  });
+
   describe("transaction", () => {
     it("wraps the transaction db with the same tenant", () => {
       const { db, whereCalls } = createTrackableMockDb();

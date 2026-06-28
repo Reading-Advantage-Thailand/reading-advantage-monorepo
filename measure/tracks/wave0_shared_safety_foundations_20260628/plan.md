@@ -19,12 +19,15 @@
 
 ## Phase 1: Tenant Registry Coverage and Fail-Closed TenantDB
 
-- [ ] Task: Write Red tests proving all exported Drizzle tables are classified as FLAT, REFERENTIAL, or EXEMPT.
+- [x] Task: Write Red tests proving all exported Drizzle tables are classified as FLAT, REFERENTIAL, or EXEMPT.
   - Evidence refs: Shared Foundation F-SF-001; Cross-App CA-002.
-- [ ] Task: Write Red tests proving null-tenant `TenantDB` cannot select/insert/update/delete FLAT tables.
+  - Evidence: `tenant-coverage.test.ts` — "every exported Drizzle table is classified in the registry" fails with `Unclassified table count: 9 (of 92 total). Unclassified tables: verificationTokens, userRoles, roles, articleActivityLogs, sentencsAndWordsForFlashcards, cardReviews, clozeTestGames, schoolAdmins, leaderboards.` A3-compliant labeled count. Classification distribution test (A4 guard) passes, confirming FLAT/REFERENTIAL/EXEMPT each have >0 entries.
+- [x] Task: Write Red tests proving null-tenant `TenantDB` cannot select/insert/update/delete FLAT tables.
   - Evidence refs: Shared Foundation F-SF-004; `shared-foundation_20260626/migration-tracks.md` M-SF-2.
-- [ ] Task: Write Red tests proving REFERENTIAL table misuse is detected behaviorally or by a non-vacuous static check.
+  - Evidence: `db-contract.test.ts` — 5 new "null-tenant fail-closed (M-SF-2)" tests all fail with "expected function to throw an error, but it didn't" because `createTenantDB` only `console.warn`s on null/undefined schoolId. Tests cover: select (null), select (undefined), insert (null), update (null), delete (null). Two positive guard tests pass: EXEMPT tables succeed on null tenant, valid tenant succeeds on FLAT.
+- [x] Task: Write Red tests proving REFERENTIAL table misuse is detected behaviorally or by a non-vacuous static check.
   - Evidence refs: Shared Foundation F-SF-005; Cross-App CA-002 CodeCamp `TenantScopeError` symptom.
+  - Evidence: `db-contract.test.ts` behavioral tests (existing, PASS): REFERENTIAL select/update/delete/insert all throw TenantScopeError. `tenant-coverage.test.ts` static detector (new, non-vacuous): 4 fixture tests pass — detector catches bare `tenantDb.from(lessonProgress)` without unscoped, correctly ignores files using unscoped or not using TenantDB, catches multi-table violations. Real domain code scan finds 0 violations (current code is clean). Replaced vacuous `hasBareTenantDbOnReferential` (always returned `false`, A4 violation) with `detectBareTenantDbOnReferential` using labeled REFERENTIAL_TABLE_NAMES set.
 - [ ] Task: Classify unregistered tables with explicit comments and audit-friendly reasons.
 - [ ] Task: Update `createTenantDB` / context behavior to fail closed for null tenants.
 - [ ] Task: Replace vacuous referential-scope detector with meaningful detection.
