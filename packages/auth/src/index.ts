@@ -33,7 +33,19 @@ export {
 } from "./session.js";
 
 // Rate Limiting
-export { checkRateLimit, recordFailure, resetLimit, _testkit } from "./rate-limit.js";
+export {
+  checkRateLimit,
+  recordFailure,
+  resetLimit,
+  configureRateLimiter,
+  createInMemoryRateLimitStore,
+  getRateLimitConfig,
+  DEFAULT_RATE_LIMIT_CONFIG,
+  type RateLimitConfig,
+  type RateLimitStore,
+  type RateLimitStoreEntry,
+  _testkit,
+} from "./rate-limit.js";
 
 // Server Guards (framework-agnostic)
 export {
