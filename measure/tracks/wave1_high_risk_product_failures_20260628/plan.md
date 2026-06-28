@@ -5,11 +5,14 @@
 
 ## Phase 0: Baseline and Slice Selection
 
-- [ ] Task: Confirm Wave 0 status and list which tenant/auth/contract primitives are available.
-- [ ] Task: Read Primary, Reading, CodeCamp, and Sales executive summaries plus `migration-tracks.md` files.
-  - Evidence refs: `primary-advantage-full_20260626/executive-summary.md`, `reading-advantage-full_20260626/executive-summary.md`, `codecamp-advantage_20260626/executive-summary.md`, `sales-advantage_20260626/executive-summary.md`.
-- [ ] Task: Select first vertical slice per app that proves the highest-risk workflow end-to-end.
-- [ ] Task: Record baseline failures with targeted tests or reproducible commands before implementation.
+- [x] Task: Confirm Wave 0 status and list which tenant/auth/contract primitives are available.
+  - Evidence: Wave 0 baseline is present at `822f339d` (recent log shows Wave 0 commits through `chore(plan): correct wave0 test evidence`). Available primitives recorded in `test-strategy.md`: all exported Drizzle tables classified; `createTenantDB` fails closed for null FLAT operations and throws on REFERENTIAL tables unless `unscoped("reason")` is used; shared roles include `INTERN`, `SALES_REP`, and `SALES_ADMIN`; production auth rate limiting has a Postgres store seam with per-username and per-IP buckets; shared response envelopes and sales contracts exist in `@reading-advantage/types`; API router boundary guard exists.
+- [x] Task: Read Primary, Reading, CodeCamp, and Sales executive summaries plus `migration-tracks.md` files.
+  - Evidence refs read: `primary-advantage-full_20260626/executive-summary.md` and `migration-tracks.md`; `reading-advantage-full_20260626/executive-summary.md` and `migration-tracks.md`; `codecamp-advantage_20260626/executive-summary.md`, `findings.md`, and `migration-tracks.md`; `sales-advantage_20260626/executive-summary.md`, `findings.md`, and `migration-tracks.md`; plus roadmap `deduplicated-findings.md`, `product-risk-register.md`, and `medium-plus-coverage-matrix.md`.
+- [x] Task: Select first vertical slice per app that proves the highest-risk workflow end-to-end.
+  - Evidence: selected slices recorded in `test-strategy.md`: Primary sentence-ordering game completion crash; Reading classroom delete/enroll/unenroll auth+tenant+audit flow; CodeCamp PR-review webhook/domain path with real TenantDB classification and idempotency; Sales roleplay attempt/evaluation path with role auth, IDOR, audio validation/privacy, and `audioStorageKey` nullability.
+- [x] Task: Record baseline failures with targeted tests or reproducible commands before implementation.
+  - Evidence: baseline command `CI=true pnpm turbo run test --filter=primary-advantage --filter=reading-advantage --filter=codecamp-advantage --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/webhooks` exits 1 at Phase 0. Labeled failure count: 2 API failures (`wave0-phase3-typed-errors.test.ts` beforeAll timeout; `auth-security-phase3-signup-removal.test.ts` source-scan timeout). Webhooks false-green evidence: `@reading-advantage/webhooks` passes while logging CodeCamp `TenantScopeError` for `codecamp_pr_reviews`; Phase 3 must convert this into a failing assertion before Green.
 
 ## Phase 1: Primary Advantage Core Stabilization
 
