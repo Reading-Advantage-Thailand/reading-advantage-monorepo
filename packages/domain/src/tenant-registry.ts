@@ -71,6 +71,8 @@ import {
   scienceUnitLessons,
   scienceClassStudents,
   scienceQuestionStandards,
+  schoolAdmins,
+  leaderboards,
 } from "@reading-advantage/db";
 
 register(users, "FLAT");
@@ -94,6 +96,11 @@ register(scienceUnitLessons, "FLAT");
 register(scienceClassStudents, "FLAT");
 register(scienceQuestionStandards, "FLAT");
 
+// primary-advantage additions (track_id: primary_advantage_drizzle_migration_20260526).
+// Both have a `schoolId` column and are school-scoped.
+register(schoolAdmins, "FLAT");
+register(leaderboards, "FLAT");
+
 // ─── EXEMPT tables (intentionally global) ───────────────────
 
 import {
@@ -101,7 +108,15 @@ import {
   schools,
   accounts,
   sessions,
+  verificationTokens,
+  roles,
 } from "@reading-advantage/db";
+
+// auth infrastructure — identifier/token/expires; not scoped to a school.
+register(verificationTokens, "EXEMPT");
+// global role catalog (custom-named roles); distinct from the per-user `roleEnum`.
+// Looked up by id from `userRoles`; not school-scoped.
+register(roles, "EXEMPT");
 
 register(auditEvents, "EXEMPT");
 register(schools, "EXEMPT");
@@ -156,6 +171,11 @@ import {
   assignmentNotifications,
   raCefrMappings,
   genreAdjacencies,
+  userRoles,
+  articleActivityLogs,
+  sentencsAndWordsForFlashcards,
+  cardReviews,
+  clozeTestGames,
   salesModules,
   salesLessons,
   salesRubrics,
@@ -217,6 +237,15 @@ register(lessonRecords, "REFERENTIAL");
 register(assignmentNotifications, "REFERENTIAL");
 register(raCefrMappings, "REFERENTIAL");
 register(genreAdjacencies, "REFERENTIAL");
+
+// primary-advantage additions (track_id: primary_advantage_drizzle_migration_20260526).
+// Tenant data scoped via owner FKs (userId/articleId/cardId); no `schoolId` column.
+// Accessed via tenantDb.unscoped("reason") + owner-FK joins.
+register(userRoles, "REFERENTIAL");
+register(articleActivityLogs, "REFERENTIAL");
+register(sentencsAndWordsForFlashcards, "REFERENTIAL");
+register(cardReviews, "REFERENTIAL");
+register(clozeTestGames, "REFERENTIAL");
 
 // sales-advantage: single-tenant/global — tables have no schoolId; user-scoped by userId.
 // Accessed via tenantDb.unscoped("sales-advantage tables have no schoolId").

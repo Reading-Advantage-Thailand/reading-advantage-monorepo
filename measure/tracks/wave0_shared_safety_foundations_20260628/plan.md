@@ -28,10 +28,18 @@
 - [x] Task: Write Red tests proving REFERENTIAL table misuse is detected behaviorally or by a non-vacuous static check.
   - Evidence refs: Shared Foundation F-SF-005; Cross-App CA-002 CodeCamp `TenantScopeError` symptom.
   - Evidence: `db-contract.test.ts` behavioral tests (existing, PASS): REFERENTIAL select/update/delete/insert all throw TenantScopeError. `tenant-coverage.test.ts` static detector (new, non-vacuous): 4 fixture tests pass — detector catches bare `tenantDb.from(lessonProgress)` without unscoped, correctly ignores files using unscoped or not using TenantDB, catches multi-table violations. Real domain code scan finds 0 violations (current code is clean). Replaced vacuous `hasBareTenantDbOnReferential` (always returned `false`, A4 violation) with `detectBareTenantDbOnReferential` using labeled REFERENTIAL_TABLE_NAMES set.
-- [ ] Task: Classify unregistered tables with explicit comments and audit-friendly reasons.
-- [ ] Task: Update `createTenantDB` / context behavior to fail closed for null tenants.
-- [ ] Task: Replace vacuous referential-scope detector with meaningful detection.
-- [ ] Task: Run domain/db tests for tenant coverage and record results.
+- [x] Task: Classify unregistered tables with explicit comments and audit-friendly reasons.
+  - Evidence: Green commit — 9 newly-classified tables in `packages/domain/src/tenant-registry.ts`:
+    - FLAT (have `schoolId` column): `schoolAdmins`, `leaderboards` — primary-advantage additions, both school-scoped.
+    - EXEMPT (intentionally global): `verificationTokens` (auth infrastructure — identifier/token/expires), `roles` (global role catalog — distinct from per-user `roleEnum`).
+    - REFERENTIAL (tenant data via owner FK): `userRoles` (scoped via userId), `articleActivityLogs` (scoped via userId), `sentencsAndWordsForFlashcards` (scoped via articleId), `cardReviews` (scoped via cardId), `clozeTestGames` (scoped via flashcardCardId).
+  - Verified: `tenant-coverage.test.ts` exits 0 after change; coverage test passes for all 92 tables.
+- [x] Task: Update `createTenantDB` / context behavior to fail closed for null tenants.
+  - Evidence: Green commit — `packages/domain/src/db-contract.ts` adds `requireTenantForFlat(tenant, table, operation)` helper that throws `TenantScopeError` for FLAT tables when `tenant.schoolId` is null/undefined. Applied at select `.from()`, update, delete, and insert call sites AFTER classification but BEFORE invoking the underlying builder. Removed `console.warn` warning (it was insufficient and silently ignored). EXEMPT tables are unaffected (intentionally global). The 5 M-SF-2 Red tests now pass. Migrated `packages/domain/src/codecamp/intern-accounts.ts` (5 functions: `createInternAccount`, `updateInternGithubUsername`, `listInterns`, `getInternProgress`) and `packages/domain/src/users/queries.ts` (`getMe`, `getUserByGithubUsername`) to use `db.unscoped("reason")` for intentional cross-school lookups — these were the only places where the codecamp/sales/global-tenant code paths touched FLAT tables with null schoolId.
+- [x] Task: Replace vacuous referential-scope detector with meaningful detection.
+  - Evidence: Mid agent delivered — `tenant-coverage.test.ts` `detectBareTenantDbOnReferential` uses a labeled `REFERENTIAL_TABLE_NAMES` set and was already PASSING at baseline (4 fixture tests). No Green changes needed; this task was closed by Mid.
+- [x] Task: Run domain/db tests for tenant coverage and record results.
+  - Evidence: Green gate `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/tenant-coverage.test.ts src/__tests__/db-contract.test.ts` exits 0 — 40/40 tests pass. Full domain suite: `CI=true pnpm --filter @reading-advantage/domain exec vitest run` shows 31 test files passed, 346 tests passed, 5 skipped (no failures). Pre-existing db test failures (138) are unchanged from baseline (Drizzle 0.45 lockfile, journal sentinel, and integration tests that require `DIRECT_DATABASE_URL`) — none of these are introduced by Green.
 
 ## Phase 2: Shared Roles, Auth Context, and Rate Limiting
 

@@ -355,14 +355,14 @@ describe("createTenantDB", () => {
   });
 
   describe("null tenant", () => {
-    it("does NOT inject when tenant.schoolId is null", () => {
-      const { db, whereCalls } = createTrackableMockDb();
+    // Superseded by the fail-closed (M-SF-2) block below: null-tenant FLAT
+    // operations now throw TenantScopeError rather than silently querying
+    // across all schools.
+    it("throws on FLAT operations when schoolId is null (M-SF-2 fail-closed)", () => {
+      const { db } = createTrackableMockDb();
       const nullTenantDb = createTenantDB(db as unknown as DB, { schoolId: null });
 
-      nullTenantDb.select().from(flatTable).where({ raw: "userCond" });
-
-      expect(whereCalls).toHaveLength(1);
-      expect(whereCalls[0].condition).toEqual({ raw: "userCond" });
+      expect(() => nullTenantDb.select().from(flatTable)).toThrow(TenantScopeError);
     });
   });
 

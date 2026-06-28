@@ -21,6 +21,9 @@ const safeUserCols = {
 /**
  * Get the currently authenticated user's own profile.
  * Intentionally unguarded — every authenticated user can read their own profile.
+ *
+ * Uses `unscoped()` because a user's own profile lookup is by primary key,
+ * not tenant-scoped (the id is globally unique).
  */
 export async function getMe({
   db,
@@ -29,7 +32,8 @@ export async function getMe({
   db: TenantDB;
   user: UserContext;
 }) {
-  const [result] = await db
+  const rawDb = db.unscoped("getMe looks up a user by primary key — globally unique");
+  const [result] = await rawDb
     .select(safeUserCols)
     .from(users)
     .where(eq(users.id, user.id))
@@ -133,6 +137,10 @@ export async function listUsers({
 /**
  * Looks up a user by their GitHub username, returning null if not found.
  *
+ * Uses `unscoped()` because GitHub usernames are globally unique — not
+ * scoped to a single school. The lookup is guarded by `user:read` permission
+ * at the caller.
+ *
  * @param db - Database client
  * @param user - Authenticated user context
  * @param tenant - Tenant (school) scope
@@ -152,7 +160,8 @@ export async function getUserByGithubUsername({
 }) {
   assertCan(user, "user:read", tenant);
 
-  const [result] = await db
+  const rawDb = db.unscoped("githubUsername is globally unique — cross-school lookup");
+  const [result] = await rawDb
     .select(safeUserCols)
     .from(users)
     .where(eq(users.githubUsername, input.githubUsername))
