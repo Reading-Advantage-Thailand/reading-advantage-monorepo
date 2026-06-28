@@ -43,14 +43,43 @@
 
 ## Phase 2: Shared Roles, Auth Context, and Rate Limiting
 
-- [ ] Task: Write Red tests in `@reading-advantage/types` and auth/API contexts for active app roles including `INTERN`, `SALES_REP`, and `SALES_ADMIN`.
+- [~] Task: Write Red tests in `@reading-advantage/types` and auth/API contexts for active app roles including `INTERN`, `SALES_REP`, and `SALES_ADMIN`.
   - Evidence refs: Cross-App CA-001 Sales role-enum gap; Shared Foundation F-SF-002/F-SF-008.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/types/src/__tests__/role-parity.test.ts` — 8 tests total, 4 RED:
+      - `userResponseSchema.role` rejects `SALES_REP` and `SALES_ADMIN` (enum is `["INTERN","STUDENT","TEACHER","ADMIN","SYSTEM"]`)
+      - `sessionResponseSchema.user.role` accepts deprecated `"USER"` role
+      - A3-compliant labeled count: `rejected count: 2 of 7: Missing in userResponseSchema.role: SALES_REP, SALES_ADMIN`
+    - `packages/types/src/__tests__/auth-response-validation.test.ts` — 21 tests total, 4 RED:
+      - `loginResponseSchema` accepts empty `accessToken` (schema uses `z.string()` not `z.string().min(1)`)
+      - `sessionResponseSchema.user.role` accepts deprecated `"USER"`
+      - `userResponseSchema.role` rejects `SALES_REP` and `SALES_ADMIN`
+    - `packages/api/src/__tests__/wave0-phase2-context-role-acceptance.test.ts` — 14 tests total, 3 RED:
+      - `roleSchema` rejects `SALES_REP` and `SALES_ADMIN` (enum is `["INTERN","STUDENT","TEACHER","ADMIN","SYSTEM"]`)
+      - A3-compliant labeled count: `rejected count: 2 of 7: Missing roles: SALES_REP, SALES_ADMIN`
+    - Targeted Red command: `CI=true pnpm turbo run test --filter=@reading-advantage/types --filter=@reading-advantage/auth --filter=@reading-advantage/api`
 - [ ] Task: Align role schemas across `packages/types`, `packages/auth`, `packages/api`, and domain permission registration.
-- [ ] Task: Write Red tests proving production rate limiting is not process-local and has per-user plus per-IP semantics.
+- [~] Task: Write Red tests proving production rate limiting is not process-local and has per-user plus per-IP semantics.
   - Evidence refs: Cross-App CA-009; Shared Foundation F-SF-010/F-SF-011; existing `rate_limiter_v2_20260603` stub.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/auth/src/__tests__/wave0-phase2-rate-limit-architecture.test.ts` — 5 tests, 5 RED:
+      - `checkRateLimit` has no IP/identifier parameter (signature is `checkRateLimit(username: string)`)
+      - `recordFailure` has no IP parameter for per-IP tracking
+      - Production limiter uses only module-level `new Map()` — no storage interface, no DB-backed store
+      - No store configuration/factory export for production overrides
+      - `WINDOW_MS` and `MAX_ATTEMPTS` are hardcoded module constants, not configurable
+    - Targeted Red command: `CI=true pnpm turbo run test --filter=@reading-advantage/auth`
 - [ ] Task: Implement or subsume the Postgres-backed limiter from `rate_limiter_v2_20260603`; keep any in-memory path dev-only and opt-in.
-- [ ] Task: Add auth-client response validation tests for malformed login/session payloads.
-- [ ] Task: Run auth/types/API targeted tests.
+- [~] Task: Add auth-client response validation tests for malformed login/session payloads.
+  - Red evidence (Mid agent 2026-06-28):
+    - `packages/types/src/__tests__/auth-response-validation.test.ts` — see role parity evidence above.
+    - Tests prove `sessionResponseSchema` includes deprecated `USER` and `userResponseSchema` omits sales roles.
+- [~] Task: Run auth/types/API targeted tests.
+  - Red evidence (Mid agent 2026-06-28):
+    - `CI=true pnpm turbo run test --filter=@reading-advantage/types`: 8 failed / 35 passed (43 total)
+    - `CI=true pnpm turbo run test --filter=@reading-advantage/auth` (wave0-phase2 only): 5 failed / 0 passed (5 total)
+    - `CI=true pnpm turbo run test --filter=@reading-advantage/api` (wave0-phase2 only): 3 failed / 11 passed (14 total)
+    - All failures are for expected Red reasons documented above.
 
 ## Phase 3: Shared Contracts and Typed Error Boundaries
 
