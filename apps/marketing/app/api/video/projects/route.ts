@@ -1,7 +1,39 @@
 import { NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { videoProjects } from "@reading-advantage/db/schema";
 import { scriptSchema } from "@/lib/script-schema";
+
+export async function GET(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const campaignId = url.searchParams.get("campaignId");
+
+    if (!campaignId) {
+      return NextResponse.json(
+        { message: "campaignId query parameter is required" },
+        { status: 400 },
+      );
+    }
+
+    const projects = await db
+      .select()
+      .from(videoProjects)
+      .where(eq(videoProjects.campaignId, campaignId));
+
+    return NextResponse.json(projects);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to list video projects",
+      },
+      { status: 500 },
+    );
+  }
+}
 
 export async function POST(request: Request) {
   try {
