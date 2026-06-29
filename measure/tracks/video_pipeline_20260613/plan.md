@@ -88,13 +88,16 @@
 
 ## Phase 7: QA, Build, and Closeout
 
-- [~] Task: Run `CI=true pnpm --filter marketing test` — all marketing tests green.
-  - Current evidence: red on 2026-06-29 due phase-1 boot/phase-3 settings tests, outside the video route slice but still part of the marketing aggregate gate.
+- [x] Task: Run `CI=true pnpm --filter marketing test` — all marketing tests green.
+  - Evidence (2026-06-30, commit `6df13c35`): fixed the Phase 3 adversarial `POST /api/settings/test-connection` API-key echo by redacting the caller-supplied `apiKey` from the upstream SDK error message before returning it to the client. The route now scrubs known secrets via `redactSecrets(message, [apiKey])` and deliberately does not log the raw error (the upstream message may itself contain the secret).
+  - Green gate (2026-06-30, commit `6df13c35`): `CI=true pnpm --filter marketing test` → 151/151 passing across 10 test files; `CI=true pnpm --filter marketing check-types` → exit 0; `CI=true pnpm --filter marketing test phase-3-settings-adversarial` → 18/18 passing.
 - [~] Task: Run `CI=true pnpm --filter marketing build` — green.
-  - Current evidence: red on 2026-06-29 with `vinext build` failing on `vite` export `parseSync`.
-- [~] Task: Manual/live QA: generate a script, edit scenes, and save a project with a mocked or non-production LLM key.
+  - Current evidence: red on 2026-06-29 with `vinext build` failing on `vite` export `parseSync`. Per Jr-Green scope, this task is intentionally NOT flipped to `[x]` even though the aggregate test gate is now green — the build failure is unrelated to the test-connection redaction fix and requires a separate remediation track.
+- [b] Task: Manual/live QA: generate a script, edit scenes, and save a project with a mocked or non-production LLM key.
+  - deferred:phikul — requires Phikul to drive a live end-to-end session against the running marketing app. Out of scope for AI agents; verification-checkpoint rule forbids fabrication of QA notes.
 - [~] Task: Update `measure/tech-debt.md` / `lessons-learned.md` only if closeout discovers new durable debt or a reusable lesson.
-- [~] Task: Move track to `measure/archive/` and update `measure/tracks.md` to `[x]` after all closeout gates are green or explicitly accepted.
+- [b] Task: Move track to `measure/archive/` and update `measure/tracks.md` to `[x]` after all closeout gates are green or explicitly accepted.
+  - deferred:closeout-steward — archive movement and registry updates are closeout-steward responsibilities, not Jr-Green scope. The build task is still `[~]`, so archive is not yet appropriate even though the aggregate test gate is green.
 
 ---
 
