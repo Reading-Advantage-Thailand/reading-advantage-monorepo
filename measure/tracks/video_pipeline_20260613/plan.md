@@ -2,64 +2,77 @@
 
 > **Track ID:** `video_pipeline_20260613`  
 > **App:** `apps/marketing`  
-> **Methodology:** Contract-First TDD. Tasks are marked `[x]` when both Red tests and Green implementation are committed.
+> **Methodology:** Contract-First TDD. Tasks are marked `[x]` when both Red tests and Green implementation are committed; `[~]` means executable work remains. Legacy `[ ]` markers were reconciled on 2026-06-29.
 
 ---
 
 ## Phase 1: Marketing Schema
 
 - [x] Task: Add marketing tables (`settings`, `past_topics`, `video_projects`) in `packages/db/src/schema/marketing.ts` or extend existing schema.
-  - `settings` (key, value) — already present; add LLM keys if absent.
-  - `past_topics` (id, app, topic, createdAt).
-  - `video_projects` (id, app, topic, script jsonb, status, createdAt, updatedAt).
-- [x] Task: Generate Drizzle migration `0021_marketing_tables.sql`.
+  - `settings` (key, value) — present.
+  - `past_topics` (id, app, topic, createdAt) — present as `pastTopics`.
+  - `video_projects` (id, campaignId, topic, script jsonb, status, createdAt) — present as `videoProjects`.
+- [~] Task: Reconcile the migration artifact for the marketing tables.
+  - Evidence: `packages/db/drizzle/0021_sales_advantage.sql` currently contains `settings`, `past_topics`, and `video_projects`, but the historical test contract expects `packages/db/drizzle/0021_marketing_tables.sql`.
+  - Current Red: `CI=true pnpm --filter @reading-advantage/db test phase-2-marketing-schema` fails with `ENOENT ... drizzle/0021_marketing_tables.sql`.
+  - Required outcome: either update the tests/Measure wording to the canonical migration tag now in the repo, or restore the expected artifact without clobbering later migrations.
 - [x] Task: Export tables from `packages/db/src/schema/index.ts`.
-- [ ] Task: Add schema-parity / table-existence tests.
+- [~] Task: Repair schema-parity / table-existence tests so they verify the canonical migration artifact and schema exports without stale path assumptions.
 
 ## Phase 2: Topic Research & Deduplication
 
 - [x] Task: Write Red wiring tests — `apps/marketing/app/__tests__/phase-5-topics.test.ts`.
   - Assert `apps/marketing/app/api/video/research-topics/route.ts` exports POST.
   - Assert `apps/marketing/app/api/video/save-topics/route.ts` exports POST.
-- [x] Task: Implement `save-topics` route with deduplication against `past_topics`.
+- [x] Task: Implement `research-topics` and `save-topics` routes with deduplication against `past_topics`.
 - [x] Task: Implement helper `deduplicateTopics(topics, existing)`.
-- [ ] Task: Add full unit tests for deduplication logic and route behavior.
+- [x] Task: Add unit/route tests for topic prompt construction, Thai/Latin normalization, duplicate skipping, and route behavior.
+  - Evidence: `CI=true pnpm --filter marketing test phase-5-topics` passed 18/18 on 2026-06-29.
 
 ## Phase 3: Script Generation Prompt & Schema
 
 - [x] Task: Design Thai script prompt in `apps/marketing/app/lib/script-generation.ts`.
-- [x] Task: Define scene/script schema in `apps/marketing/app/lib/script-schema.ts`.
+- [x] Task: Define initial scene/script schema in `apps/marketing/app/lib/script-schema.ts`.
 - [x] Task: Write Red wiring tests — `apps/marketing/app/__tests__/phase-6-script.test.ts`.
   - Assert `apps/marketing/app/api/video/generate-script/route.ts` exports POST.
 - [x] Task: Implement `generate-script` route using settings-driven `createAIClient`.
-- [ ] Task: Replace custom validator with Zod and add exhaustive schema-edge-case tests.
+- [~] Task: Replace custom validator with Zod and add exhaustive schema-edge-case tests.
+  - Evidence: current `scriptSchema` is a custom `safeParse` object, not Zod.
 
 ## Phase 4: Scene Editor
 
 - [x] Task: Implement pure scene-editor utilities in `apps/marketing/app/lib/scene-editor.ts`.
   - `reorderScenes`, `addScene`, `removeScene`.
-- [ ] Task: Add unit tests for scene-editor utilities.
+- [x] Task: Add unit tests for scene-editor utilities.
+  - Evidence: `apps/marketing/app/__tests__/phase-6-script.test.ts` covers immutable reorder/add/remove behavior and passed 24/24 on 2026-06-29.
 
 ## Phase 5: API Routes & Campaign Video Page
 
 - [x] Task: Implement `apps/marketing/app/api/video/projects/route.ts`.
 - [x] Task: Build `apps/marketing/app/campaigns/[id]/video/page.tsx`.
   - Topic input, script generation trigger, scene editor UI.
-- [ ] Task: Add component-level tests for the video page.
-- [ ] Task: Run `pnpm turbo run lint check-types --filter=marketing` and fix issues.
+- [~] Task: Add component-level tests for the video page.
+  - Evidence: existing tests include source-level wiring assertions; no component-rendering test is present.
+- [x] Task: Run marketing type/lint gates and record evidence.
+  - Evidence: `CI=true pnpm --filter marketing check-types` passed on 2026-06-29.
+  - Evidence: `CI=true pnpm --filter marketing lint` exited 0 on 2026-06-29 with existing warnings.
 
 ## Phase 6: Project Persistence
 
-- [x] Task: Wire project list/create endpoints to `video_projects` table.
-- [ ] Task: Add integration tests for project CRUD.
+- [~] Task: Wire project list/create endpoints to `video_projects` table.
+  - Evidence: POST create exists and is tested with a mocked DB; GET/list is not implemented in `apps/marketing/app/api/video/projects/route.ts`.
+- [~] Task: Add integration tests for project CRUD.
+  - Evidence: current coverage proves mocked POST insert and invalid-script rejection only; it does not prove list/create round-trip behavior against a live DB.
 
 ## Phase 7: QA, Build, and Closeout
 
-- [ ] Task: Run `pnpm turbo run test --filter=marketing` — all marketing tests green.
-- [ ] Task: Run `pnpm turbo run build --filter=marketing` — green.
-- [ ] Task: Manual QA: generate a script, edit scenes, save project with mocked LLM.
-- [ ] Task: Update `measure/tech-debt.md` / `lessons-learned.md` if needed.
-- [ ] Task: Move track to `measure/archive/` and update `measure/tracks.md` to `[x]`.
+- [~] Task: Run `CI=true pnpm --filter marketing test` — all marketing tests green.
+  - Current evidence: red on 2026-06-29 due phase-1 boot/phase-3 settings tests, outside the video route slice but still part of the marketing aggregate gate.
+- [~] Task: Run `CI=true pnpm --filter marketing build` — green.
+  - Current evidence: red on 2026-06-29 with `vinext build` failing on `vite` export `parseSync`.
+- [~] Task: Manual/live QA: generate a script, edit scenes, and save a project with a mocked or non-production LLM key.
+- [~] Task: Update `measure/tech-debt.md` / `lessons-learned.md` only if closeout discovers new durable debt or a reusable lesson.
+- [~] Task: Move track to `measure/archive/` and update `measure/tracks.md` to `[x]` after all closeout gates are green or explicitly accepted.
 
 ---
 
@@ -68,3 +81,5 @@
 - **LLM output reliability:** Thai script generation may return malformed JSON; current route returns 500 with the validation error. Consider adding a retry loop or structured-error response.
 - **App-local AI client:** `apps/marketing/app/lib/ai` is separate from `packages/ai`; future tracks should evaluate whether to consolidate.
 - **Missing formal track until now:** The work was committed without a registered spec/plan, so acceptance criteria were implicit. This plan is retroactive.
+- **Migration artifact drift:** The repo's current migration filename/tag does not match the older marketing schema tests. Treat this as a plan/test contract reconciliation issue before marking Phase 1 complete.
+- **Aggregate-suite red state:** The full marketing test/build gates currently fail for non-video reasons; closeout must either fix those failures or document an accepted aggregate-suite exception without claiming the full suite is green.
