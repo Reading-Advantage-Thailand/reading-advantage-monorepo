@@ -79,10 +79,12 @@
   - Evidence: POST create exists and is wired to `db.insert(videoProjects)`; GET/list is implemented in `apps/marketing/app/api/video/projects/route.ts` (filters by `campaignId` query param via `db.select().from(videoProjects).where(eq(videoProjects.campaignId, campaignId))` and returns 400 if `campaignId` is missing).
   - Red evidence (2026-06-29): `CI=true pnpm --filter marketing test phase-8-projects` → 2 failed, 2 passed. Failures: `exports both GET and POST handlers` (expected GET to be a function, received undefined) and `returns projects from the mocked DB result for a campaign` (GET is not a function).
   - Green evidence (2026-06-29, commit `e6b9d4ed`): added `GET` export that parses `campaignId` from query string, calls `db.select().from(videoProjects).where(eq(videoProjects.campaignId, campaignId))`, and returns the rows. `CI=true pnpm --filter marketing test phase-8-projects` → 4/4 passing, `CI=true pnpm --filter marketing check-types` exit 0.
-- [~] Task: Add integration tests for project CRUD.
+- [x] Task: Add integration tests for project CRUD.
   - Evidence: added `apps/marketing/app/__tests__/phase-8-projects.test.ts` with mocked-DB tests covering GET list, POST create returning the mocked DB row (not a fabricated response), and invalid-script 400 rejection.
+  - Evidence: added `apps/marketing/app/__tests__/phase-8-projects-live.test.ts` with PGlite-backed live integration tests covering POST create → DB insert, JSONB script persistence, GET list scoped by campaignId, and missing-campaignId 400. Uses `apps/marketing/app/__tests__/helpers/testDb.ts` (in-process Postgres) and proxies `@reading-advantage/db` to the PGlite drizzle instance.
   - Red evidence (2026-06-29): the two GET/list assertions fail because the route exports only POST; the POST create and invalid-script assertions pass.
-  - Live-CRUD status: per `test-strategy.md §Phase 6`, "mocked POST green is not CRUD green; keep list/live CRUD `[~]`". Mocked-DB tests prove the route contract but cannot close CRUD; live project create/list round trip against a test DB or documented manual DB proof is still required before this task can flip to `[x]`.
+  - Live-CRUD evidence (2026-06-29): `CI=true pnpm --filter marketing test phase-8-projects-live` → 3/3 passing; `CI=true pnpm --filter marketing test phase-8-projects` → 4/4 passing; `CI=true pnpm --filter marketing check-types` → exit 0.
+  - Note: `@electric-sql/pglite` added to `apps/marketing/package.json` devDependencies as test-only infrastructure. Live CRUD is now automated; no human-gated manual proof is required for this task.
 
 ## Phase 7: QA, Build, and Closeout
 
