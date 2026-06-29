@@ -41,7 +41,16 @@
   - Assert `apps/marketing/app/api/video/generate-script/route.ts` exports POST.
 - [x] Task: Implement `generate-script` route using settings-driven `createAIClient`.
 - [~] Task: Replace custom validator with Zod and add exhaustive schema-edge-case tests.
-  - Evidence: current `scriptSchema` is a custom `safeParse` object, not Zod.
+  - Red evidence (2026-06-29): added Zod-contract tests to `apps/marketing/app/__tests__/phase-6-script.test.ts`.
+    - Requires `scriptSchema` to expose a Zod `parse` method.
+    - Requires `safeParse` failures to return `ZodError` `issues` with path details.
+    - Requires rejection of <5 scenes, >7 scenes, empty-string fields, non-string field types, and extra unknown fields (strict scene contract).
+    - Covers acceptance of exactly 5, 6, and 7 scenes.
+  - Current implementation still uses the custom `{ safeParse }` object in `apps/marketing/app/lib/script-schema.ts`, so the new Red tests fail as expected:
+    - `exports a Zod-backed schema with a parse method` — `parse` is `undefined`.
+    - `safeParse failures return ZodError issues with path details` — `issues` array is missing.
+    - Count-boundary, empty-string, type, and strict-extra-fields assertions fail because the custom validator has no `issues` array and does not enforce strict scene shapes.
+  - Command: `CI=true pnpm --filter marketing test phase-6-script` → 25 passed, 7 failed (2026-06-29).
 
 ## Phase 4: Scene Editor
 
