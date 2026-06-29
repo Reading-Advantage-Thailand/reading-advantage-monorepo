@@ -68,7 +68,7 @@
   - Command: `CI=true pnpm --filter marketing test phase-7-video-page` → 6/7 passing, 1 failing because Step 3 does not display the selected approved topic text to the user.
   - Command: `CI=true pnpm --filter marketing check-types` → passing.
   - Green implementation (2026-06-29): updated `apps/marketing/app/campaigns/[id]/video/page.tsx` to derive `activeTopic` from `topics` + `activeTopicId` and render the selected topic's text inside the Step 3 card before generation, so users can see which approved topic they are about to script.
-  - Green gate: `CI=true pnpm --filter marketing test phase-7-video-page` → 7/7 passing, and `CI=true pnpm --filter marketing check-types` exit 0 (2026-06-29, commit TBD in handoff).
+  - Green gate: `CI=true pnpm --filter marketing test phase-7-video-page` → 7/7 passing, and `CI=true pnpm --filter marketing check-types` exit 0 (2026-06-29, commit `96657859`).
 - [x] Task: Run marketing type/lint gates and record evidence.
   - Evidence: `CI=true pnpm --filter marketing check-types` passed on 2026-06-29.
   - Evidence: `CI=true pnpm --filter marketing lint` exited 0 on 2026-06-29 with existing warnings.
