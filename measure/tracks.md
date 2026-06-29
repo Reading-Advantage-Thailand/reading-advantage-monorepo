@@ -227,8 +227,8 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: www-reading-advantage i18n/l10n Remediation** (6/6 phases) *Link: [./archive/www_i18n_l10n_remediation_20260527/](./archive/www_i18n_l10n_remediation_20260527/)*
   Remedy 12 missing translation keys (header nav) and 183 hardcoded English strings across 19 page/component files. *Status: COMPLETE — All 6 phases done. Audit gate passes: 0 missing keys, 0 hardcoded strings. Build passes. 1198 tests pass (11 test files have pre-existing next-intl module resolution failures). ESLint clean.*
 
-- [~] **Track: Marketing Video Production Pipeline** *Link: [./tracks/video_pipeline_20260613/](./tracks/video_pipeline_20260613/)*
-  In-flight marketing video pipeline for `apps/marketing`: topic research + deduplication, LLM-generated Thai marketing scripts with 5–7 scenes, scene editor, and project persistence. Formalized 2026-06-23; Phase 1–6 implementation committed, Phase 7 build/QA pending.
+- [x] **Track: Marketing Video Production Pipeline** *Link: [./archive/video_pipeline_20260613/](./archive/video_pipeline_20260613/)*
+  In-flight marketing video pipeline for `apps/marketing`: topic research + deduplication, LLM-generated Thai marketing scripts with 5–7 scenes, scene editor, and project persistence. Formalized 2026-06-23; Phase 1–6 implementation committed and tests green (151/151 marketing tests on 2026-06-30). Phase 7 build deferred to repo-owner (vinext/vite `parseSync` incompatibility) and manual QA deferred to Phikul. Archived 2026-06-30.
 
 ---
 
@@ -338,6 +338,20 @@ Two parallel programs are in flight; priority order when picking the next track:
 - [x] **Track: pnpm 11 Major Migration** *(pnpm11_major_migration)*
   *Link: [./archive/pnpm11_major_migration/](./archive/pnpm11_major_migration/)*
   Major migration from pnpm 8 to pnpm 11. Covers `packageManager` pin, lockfile format v9, workspace config promotion from `package.json#pnpm` to `pnpm-workspace.yaml`, CI SSOT, and hoisted linker. *Status: COMPLETE — pnpm@11.8.0 pinned, lockfile v9.0 regenerated, workspace config promoted, frozen-lockfile + dedupe --check pass, all 4 track contract suites 24/24 green. Full monorepo aggregate gate deferred (pre-existing cross-track failures, not pnpm11 regressions). Archived 2026-06-23.*
+
+#### Backlog Major Migrations (spawned from dependency_upgrade_hardening_20260607)
+
+- [ ] **Track: TypeScript 6 Major Migration** *(typescript6_major_migration)*
+  *Link: [./tracks/typescript6_major_migration/](./tracks/typescript6_major_migration/)*
+  Major migration to TypeScript 6. Covers new type-checking strictness, decorator metadata, isolated declarations, and tsconfig changes. Affects all apps and packages in the monorepo.
+
+- [ ] **Track: Zod 4 Major Migration** *(zod4_major_migration)*
+  *Link: [./tracks/zod4_major_migration/](./tracks/zod4_major_migration/)*
+  Major migration from Zod 3 to Zod 4. Coordinated with `zod_boundary_hardening_20260603` which owns env/schema validation hardening. This track handles the version bump, API changes (`z.string()` refinements, `.parse` vs `.safeParse`, `z.object` `.strict` default), and schema rewrites.
+
+- [ ] **Track: Zustand 5 Major Migration** *(zustand5_major_migration)*
+  *Link: [./tracks/zustand5_major_migration/](./tracks/zustand5_major_migration/)*
+  Major migration to Zustand 5. Covers new store creation API, middleware changes, and TypeScript type inference updates. Affects reading-advantage (currently v4) and aligns with advantage-games (already v5).
 
 ---
 
