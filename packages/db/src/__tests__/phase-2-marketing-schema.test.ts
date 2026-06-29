@@ -17,11 +17,12 @@
  * assertions split into two tiers:
  *
  *   1. **Migration 0021 SQL contract (artifact):** file-level assertions
- *      against `packages/db/drizzle/0021_marketing_tables.sql`. These
- *      pass at HEAD because the committed migration already matches
- *      the contract; they serve as regression guards against silent
- *      schema drift before Phase 3 (Settings encryption) and Phase 4
- *      (Campaign CRUD) land.
+ *      against `packages/db/drizzle/0021_sales_advantage.sql`. The
+ *      canonical migration tag is `0021_sales_advantage`; it contains
+ *      both Sales Advantage curriculum tables and the marketing tables
+ *      required by the video pipeline. These assertions serve as
+ *      regression guards against silent schema drift for the marketing
+ *      tables specifically.
  *
  *   2. **Drizzle schema metadata (artifact):** column-presence and
  *      relation-declaration assertions against
@@ -45,26 +46,26 @@ import * as schema from "../schema/index.js";
 
 describe("Phase 2 marketing: migration 0021 SQL contract", () => {
   const sql0021 = readFileSync(
-    join(process.cwd(), "drizzle/0021_marketing_tables.sql"),
+    join(process.cwd(), "drizzle/0021_sales_advantage.sql"),
     "utf8",
   );
 
   describe("enums (six total)", () => {
     it("declares campaign_type enum with video + infocard", () => {
       expect(sql0021).toMatch(
-        /CREATE TYPE "campaign_type"\s+AS ENUM \('video',\s*'infocard'\)/,
+        /CREATE TYPE\s+(?:"public"\.)?"campaign_type"\s*AS ENUM\s*\('video',\s*'infocard'\)/,
       );
     });
 
     it("declares campaign_status enum with draft/in-progress/complete/archived", () => {
       expect(sql0021).toMatch(
-        /CREATE TYPE "campaign_status"\s+AS ENUM \('draft',\s*'in-progress',\s*'complete',\s*'archived'\)/,
+        /CREATE TYPE\s+(?:"public"\.)?"campaign_status"\s*AS ENUM\s*\('draft',\s*'in-progress',\s*'complete',\s*'archived'\)/,
       );
     });
 
     it("declares app enum with all 8 products", () => {
       const appEnumMatch = sql0021.match(
-        /CREATE TYPE "app"\s+AS ENUM \(([^)]+)\)/,
+        /CREATE TYPE\s+(?:"public"\.)?"app"\s*AS ENUM\s*\(([^)]+)\)/,
       );
       expect(appEnumMatch, 'app enum not found in 0021').not.toBeNull();
       const values = (appEnumMatch![1] as string)
@@ -84,26 +85,26 @@ describe("Phase 2 marketing: migration 0021 SQL contract", () => {
 
     it("declares asset_type enum with image/voiceover/clip", () => {
       expect(sql0021).toMatch(
-        /CREATE TYPE "asset_type"\s+AS ENUM \('image',\s*'voiceover',\s*'clip'\)/,
+        /CREATE TYPE\s+(?:"public"\.)?"asset_type"\s*AS ENUM\s*\('image',\s*'voiceover',\s*'clip'\)/,
       );
     });
 
     it("declares asset_status enum with pending/generated/approved/rejected", () => {
       expect(sql0021).toMatch(
-        /CREATE TYPE "asset_status"\s+AS ENUM \('pending',\s*'generated',\s*'approved',\s*'rejected'\)/,
+        /CREATE TYPE\s+(?:"public"\.)?"asset_status"\s*AS ENUM\s*\('pending',\s*'generated',\s*'approved',\s*'rejected'\)/,
       );
     });
 
     it("declares video_project_status enum with draft/in-progress/complete", () => {
       expect(sql0021).toMatch(
-        /CREATE TYPE "video_project_status"\s+AS ENUM \('draft',\s*'in-progress',\s*'complete'\)/,
+        /CREATE TYPE\s+(?:"public"\.)?"video_project_status"\s*AS ENUM\s*\('draft',\s*'in-progress',\s*'complete'\)/,
       );
     });
   });
 
   describe("tables (five total)", () => {
     it("creates campaigns with id/type/app/name/status + timestamps + indexes", () => {
-      expect(sql0021).toContain('CREATE TABLE IF NOT EXISTS "campaigns"');
+      expect(sql0021).toContain('CREATE TABLE "campaigns"');
       expect(sql0021).toContain('"id" uuid PRIMARY KEY DEFAULT gen_random_uuid()');
       expect(sql0021).toContain('"type" "campaign_type" NOT NULL');
       expect(sql0021).toContain('"app" "app" NOT NULL');
@@ -111,26 +112,26 @@ describe("Phase 2 marketing: migration 0021 SQL contract", () => {
       expect(sql0021).toContain('"status" "campaign_status" DEFAULT \'draft\' NOT NULL');
       expect(sql0021).toContain('"created_at" timestamp DEFAULT now() NOT NULL');
       expect(sql0021).toContain('"updated_at" timestamp DEFAULT now() NOT NULL');
-      expect(sql0021).toContain('CREATE INDEX IF NOT EXISTS "campaigns_app_idx"');
-      expect(sql0021).toContain('CREATE INDEX IF NOT EXISTS "campaigns_status_idx"');
+      expect(sql0021).toContain('CREATE INDEX "campaigns_app_idx" ON "campaigns"');
+      expect(sql0021).toContain('CREATE INDEX "campaigns_status_idx" ON "campaigns"');
     });
 
     it("creates video_projects with FK to campaigns and JSONB script", () => {
-      expect(sql0021).toContain('CREATE TABLE IF NOT EXISTS "video_projects"');
+      expect(sql0021).toContain('CREATE TABLE "video_projects"');
       expect(sql0021).toContain('"campaign_id" uuid NOT NULL');
       expect(sql0021).toContain('"topic" text NOT NULL');
       expect(sql0021).toContain('"script" jsonb');
       expect(sql0021).toContain('"status" "video_project_status" DEFAULT \'draft\' NOT NULL');
       expect(sql0021).toContain(
-        'ALTER TABLE "video_projects" ADD CONSTRAINT "video_projects_campaign_id_campaigns_id_fk" FOREIGN KEY ("campaign_id") REFERENCES "campaigns"("id") ON DELETE cascade',
+        'ALTER TABLE "video_projects" ADD CONSTRAINT "video_projects_campaign_id_campaigns_id_fk" FOREIGN KEY ("campaign_id") REFERENCES "public"."campaigns"("id") ON DELETE cascade',
       );
       expect(sql0021).toContain(
-        'CREATE INDEX IF NOT EXISTS "video_projects_campaign_idx"',
+        'CREATE INDEX "video_projects_campaign_idx" ON "video_projects"',
       );
     });
 
     it("creates video_assets with FK to video_projects and scene_index/url/prompt columns", () => {
-      expect(sql0021).toContain('CREATE TABLE IF NOT EXISTS "video_assets"');
+      expect(sql0021).toContain('CREATE TABLE "video_assets"');
       expect(sql0021).toContain('"project_id" uuid NOT NULL');
       expect(sql0021).toContain('"scene_index" text NOT NULL');
       expect(sql0021).toContain('"type" "asset_type" NOT NULL');
@@ -138,54 +139,62 @@ describe("Phase 2 marketing: migration 0021 SQL contract", () => {
       expect(sql0021).toContain('"prompt" text');
       expect(sql0021).toContain('"status" "asset_status" DEFAULT \'pending\' NOT NULL');
       expect(sql0021).toContain(
-        'ALTER TABLE "video_assets" ADD CONSTRAINT "video_assets_project_id_video_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "video_projects"("id") ON DELETE cascade',
+        'ALTER TABLE "video_assets" ADD CONSTRAINT "video_assets_project_id_video_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."video_projects"("id") ON DELETE cascade',
       );
       expect(sql0021).toContain(
-        'CREATE INDEX IF NOT EXISTS "video_assets_project_idx"',
+        'CREATE INDEX "video_assets_project_idx" ON "video_assets"',
       );
     });
 
     it("creates past_topics with FK-shaped app enum and topic text", () => {
-      expect(sql0021).toContain('CREATE TABLE IF NOT EXISTS "past_topics"');
+      expect(sql0021).toContain('CREATE TABLE "past_topics"');
       expect(sql0021).toContain('"app" "app" NOT NULL');
       expect(sql0021).toContain('"topic" text NOT NULL');
       expect(sql0021).toContain(
-        'CREATE INDEX IF NOT EXISTS "past_topics_app_idx"',
+        'CREATE INDEX "past_topics_app_idx" ON "past_topics"',
       );
     });
 
     it("creates settings with key PK and value text (encryption happens in app layer Phase 3)", () => {
-      expect(sql0021).toContain('CREATE TABLE IF NOT EXISTS "settings"');
+      expect(sql0021).toContain('CREATE TABLE "settings"');
       expect(sql0021).toContain('"key" text PRIMARY KEY NOT NULL');
       expect(sql0021).toContain('"value" text NOT NULL');
     });
   });
 
   describe("FK cascade invariants (Phase 2 §4 edge case 4)", () => {
-    it("has exactly two ON DELETE CASCADE clauses (campaigns→projects, projects→assets)", () => {
-      const cascadeCount = (sql0021.match(/ON DELETE cascade/g) || []).length;
+    // 0021_sales_advantage.sql is a combined migration that also creates
+    // Sales Advantage tables with their own FKs. Marketing FKs are the
+    // two ALTER TABLE statements for video_projects and video_assets.
+    const marketingFkPattern =
+      /ALTER TABLE "(video_projects|video_assets)" ADD CONSTRAINT "(video_projects_campaign_id_campaigns_id_fk|video_assets_project_id_video_projects_id_fk)"[^;]+;/g;
+    const marketingFkBlocks = (sql0021.match(marketingFkPattern) || []).join(" ");
+
+    it("has exactly two ON DELETE CASCADE clauses on marketing FKs (campaigns→projects, projects→assets)", () => {
+      const cascadeCount = (marketingFkBlocks.match(/ON DELETE cascade/g) || []).length;
       expect(cascadeCount).toBe(2);
     });
 
-    it("does not accidentally set ON DELETE SET NULL or RESTRICT", () => {
-      expect(sql0021).not.toMatch(/ON DELETE SET NULL/i);
-      expect(sql0021).not.toMatch(/ON DELETE RESTRICT/i);
-      expect(sql0021).not.toMatch(/ON DELETE NO ACTION/i);
+    it("does not accidentally set ON DELETE SET NULL or RESTRICT on marketing FKs", () => {
+      expect(marketingFkBlocks).not.toMatch(/ON DELETE SET NULL/i);
+      expect(marketingFkBlocks).not.toMatch(/ON DELETE RESTRICT/i);
+      expect(marketingFkBlocks).not.toMatch(/ON DELETE NO ACTION/i);
     });
   });
 
   describe("migration ordering (drizzle045 rebaseline contract)", () => {
-    it("is the latest migration in drizzle/meta/_journal.json", () => {
-      const journal = JSON.parse(
-        readFileSync(
-          join(process.cwd(), "drizzle/meta/_journal.json"),
-          "utf8",
-        ),
-      ) as { entries: Array<{ idx: number; when: number; tag: string; breakpoints: boolean }> };
-      const lastEntry = journal.entries[journal.entries.length - 1];
-      expect(lastEntry.tag).toBe("0021_marketing_tables");
-      // Confirm sentinel probe is registered (added in commit 021e13cc).
-      expect(lastEntry.idx).toBeGreaterThanOrEqual(21);
+    const journal = JSON.parse(
+      readFileSync(
+        join(process.cwd(), "drizzle/meta/_journal.json"),
+        "utf8",
+      ),
+    ) as { entries: Array<{ idx: number; when: number; tag: string; breakpoints: boolean }> };
+
+    it("has a journal entry at idx 21 with the canonical 0021 tag", () => {
+      const entry21 = journal.entries.find((e) => e.idx === 21);
+      expect(entry21, "journal entry at idx 21 missing").toBeDefined();
+      expect(entry21!.tag).toBe("0021_sales_advantage");
+      expect(entry21!.idx).toBe(21);
     });
 
     it("has a matching sentinel probe registered in packages/db/src/sentinels.ts", () => {
@@ -193,7 +202,7 @@ describe("Phase 2 marketing: migration 0021 SQL contract", () => {
         join(process.cwd(), "src/sentinels.ts"),
         "utf8",
       );
-      expect(sentinelsSrc).toContain('"0021_marketing_tables"');
+      expect(sentinelsSrc).toContain('"0021_sales_advantage"');
     });
 
     it("has a valid UUID id (not a placeholder)", () => {

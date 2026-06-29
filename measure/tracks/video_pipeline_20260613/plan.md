@@ -12,12 +12,16 @@
   - `settings` (key, value) — present.
   - `past_topics` (id, app, topic, createdAt) — present as `pastTopics`.
   - `video_projects` (id, campaignId, topic, script jsonb, status, createdAt) — present as `videoProjects`.
-- [~] Task: Reconcile the migration artifact for the marketing tables.
-  - Evidence: `packages/db/drizzle/0021_sales_advantage.sql` currently contains `settings`, `past_topics`, and `video_projects`, but the historical test contract expects `packages/db/drizzle/0021_marketing_tables.sql`.
-  - Current Red: `CI=true pnpm --filter @reading-advantage/db test phase-2-marketing-schema` fails with `ENOENT ... drizzle/0021_marketing_tables.sql`.
-  - Required outcome: either update the tests/Measure wording to the canonical migration tag now in the repo, or restore the expected artifact without clobbering later migrations.
+- [x] Task: Reconcile the migration artifact for the marketing tables.
+  - Evidence: canonical migration is `packages/db/drizzle/0021_sales_advantage.sql` (combined Sales Advantage + marketing tables). Journal tag is `0021_sales_advantage`; sentinel target is `sales_modules`.
+  - Red reconciled on 2026-06-29: updated `phase-2-marketing-schema.test.ts` and `phase-2-marketing-schema-adversarial.test.ts` to reference the canonical file/tag, scoped marketing FK cascade assertions to the two marketing ALTER TABLE blocks, and matched Drizzle-generated `CREATE TABLE` / `CREATE INDEX` / `CREATE TYPE` syntax (no `IF NOT EXISTS`, `public.` schema prefix, `AS ENUM(` no space).
+  - Command: `CI=true pnpm --filter @reading-advantage/db test phase-2-marketing-schema` → 79/79 passing on 2026-06-29.
+  - Command: `CI=true pnpm --filter @reading-advantage/db check-types` → passing on 2026-06-29.
 - [x] Task: Export tables from `packages/db/src/schema/index.ts`.
-- [~] Task: Repair schema-parity / table-existence tests so they verify the canonical migration artifact and schema exports without stale path assumptions.
+- [x] Task: Repair schema-parity / table-existence tests so they verify the canonical migration artifact and schema exports without stale path assumptions.
+  - Evidence: `phase-2-marketing-schema.test.ts` now reads `0021_sales_advantage.sql`, asserts journal tag `0021_sales_advantage` at idx 21, sentinel probe `0021_sales_advantage`, marketing table/column presence, marketing FK cascades scoped to the two marketing ALTER TABLE blocks, and schema exports from `packages/db/src/schema/index.ts`.
+  - Evidence: `phase-2-marketing-schema-adversarial.test.ts` verifies Drizzle metadata, enum parity, schema⇄SQL cross-consistency, snapshot FK integrity, and consumer contracts for `apps/marketing`.
+  - Command: `CI=true pnpm --filter @reading-advantage/db test phase-2-marketing-schema` → 79/79 passing on 2026-06-29.
 
 ## Phase 2: Topic Research & Deduplication
 

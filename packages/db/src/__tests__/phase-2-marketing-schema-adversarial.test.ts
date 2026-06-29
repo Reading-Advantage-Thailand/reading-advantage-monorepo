@@ -31,11 +31,9 @@
  *      migration would silently pass this check; we assert strict
  *      `idx === 21` so the assertion is informative.
  *
- *   4. The `lastEntry.tag === "0021_marketing_tables"` check is fine,
- *      but a developer who forks Phase 2 (e.g. "0022_marketing_audit")
- *      and forgets to add a sentinel would still pass the artifact
- *      test. We assert the sentinel maps to a table that actually
- *      exists in the snapshot.
+ *   4. The canonical tag is `0021_sales_advantage` (the migration also
+ *      creates Sales Advantage tables). We assert the sentinel maps to
+ *      a table that actually exists in the snapshot.
  *
  *   5. `phase-2-insert-roundtrip.test.ts` contains an "environment
  *      probe" test that asserts `expect(HAS_DB).toBe(false)` when
@@ -179,12 +177,12 @@ describe("Phase 2 marketing: adversarial schema metadata (column dataTypes)", ()
 
 describe("Phase 2 marketing: adversarial enum contract", () => {
   const sql0021 = readFileSync(
-    join(process.cwd(), "drizzle/0021_marketing_tables.sql"),
+    join(process.cwd(), "drizzle/0021_sales_advantage.sql"),
     "utf8",
   );
 
   function sqlEnumValues(name: string): string[] {
-    const m = sql0021.match(new RegExp(`CREATE TYPE "${name}"\\s+AS ENUM \\(([^)]+)\\)`));
+    const m = sql0021.match(new RegExp(`CREATE TYPE\\s+(?:"public"\\.)?"${name}"\\s*AS ENUM\\s*\\(([^)]+)\\)`));
     if (!m) throw new Error(`enum ${name} not found in 0021 SQL`);
     return m[1]!
       .split(",")
@@ -261,7 +259,7 @@ describe("Phase 2 marketing: adversarial schema ⇄ SQL cross-consistency", () =
     "utf8",
   );
   const sql0021 = readFileSync(
-    join(process.cwd(), "drizzle/0021_marketing_tables.sql"),
+    join(process.cwd(), "drizzle/0021_sales_advantage.sql"),
     "utf8",
   );
 
@@ -446,8 +444,8 @@ describe("Phase 2 marketing: adversarial snapshot integrity", () => {
     expect(assetFk?.columnsTo).toEqual(["id"]);
   });
 
-  it("0021 journal entry has idx===21, tag matches SQL filename, when > 0020's when", () => {
-    const entry = journal.entries.find((e) => e.tag === "0021_marketing_tables");
+  it("0021 journal entry has idx===21, tag matches canonical filename, when > 0020's when", () => {
+    const entry = journal.entries.find((e) => e.tag === "0021_sales_advantage");
     expect(entry, "0021 journal entry missing").toBeDefined();
     expect(entry!.idx).toBe(21);
     const entry0020 = journal.entries.find((e) => e.tag === "0020_sessions_indexes");
@@ -476,14 +474,14 @@ describe("Phase 2 marketing: adversarial sentinel probe", () => {
     readFileSync(join(process.cwd(), "drizzle/meta/0021_snapshot.json"), "utf8"),
   ) as { tables: Record<string, { name: string }> };
 
-  it("sentinels.ts registers a probe for 0021_marketing_tables", () => {
-    expect(sentinelsSrc).toMatch(/["']0021_marketing_tables["']\s*:\s*\{/);
+  it("sentinels.ts registers a probe for 0021_sales_advantage", () => {
+    expect(sentinelsSrc).toMatch(/["']0021_sales_advantage["']\s*:\s*\{/);
   });
 
   it("sentinel probe target table exists in 0021 snapshot (no orphan sentinel)", () => {
-    // Extract the probe block for 0021_marketing_tables
+    // Extract the probe block for 0021_sales_advantage
     const probeBlock = sentinelsSrc.match(
-      /["']0021_marketing_tables["']\s*:\s*\{[^}]+\}/,
+      /["']0021_sales_advantage["']\s*:\s*\{[^}]+\}/,
     );
     expect(probeBlock, "sentinel block not found").not.toBeNull();
     const targetMatch = probeBlock![0]!.match(/target:\s*["']([^"']+)["']/);
@@ -501,7 +499,7 @@ describe("Phase 2 marketing: adversarial sentinel probe", () => {
     // boundary check: every journal entry tag referenced by marketing
     // must be in sentinels. We look up 0021 specifically here.
     const tags = journal.entries.map((e) => e.tag);
-    expect(tags).toContain("0021_marketing_tables");
+    expect(tags).toContain("0021_sales_advantage");
   });
 });
 
