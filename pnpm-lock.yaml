@@ -358,6 +358,9 @@ importers:
       vinext:
         specifier: latest
         version: 0.1.8(@vitejs/plugin-react@6.0.2(vite@6.4.3(@types/node@20.19.43)(jiti@2.7.0)(lightningcss@1.30.2)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)))(next@16.2.9(@opentelemetry/api@1.9.1)(@playwright/test@1.61.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite-tsconfig-paths@6.1.1(typescript@5.9.3)(vite@6.4.3(@types/node@20.19.43)(jiti@2.7.0)(lightningcss@1.30.2)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)))(vite@6.4.3(@types/node@20.19.43)(jiti@2.7.0)(lightningcss@1.30.2)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@reading-advantage/config':
         specifier: workspace:*
