@@ -63,7 +63,10 @@
 - [x] Task: Build `apps/marketing/app/campaigns/[id]/video/page.tsx`.
   - Topic input, script generation trigger, scene editor UI.
 - [~] Task: Add component-level tests for the video page.
-  - Evidence: existing tests include source-level wiring assertions; no component-rendering test is present.
+  - Red evidence (2026-06-29): added `apps/marketing/app/__tests__/phase-7-video-page.test.tsx` with jsdom-based React Testing Library tests covering campaign load, topic research, approve/select topic, script generation trigger, scene editor reorder, and save-project action.
+  - Added test dependencies (`@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom`) to `apps/marketing/package.json` and configured `esbuild.jsx: "automatic"` in `apps/marketing/vitest.config.ts` so component JSX can render in the test harness.
+  - Command: `CI=true pnpm --filter marketing test phase-7-video-page` → 6/7 passing, 1 failing because Step 3 does not display the selected approved topic text to the user.
+  - Command: `CI=true pnpm --filter marketing check-types` → passing.
 - [x] Task: Run marketing type/lint gates and record evidence.
   - Evidence: `CI=true pnpm --filter marketing check-types` passed on 2026-06-29.
   - Evidence: `CI=true pnpm --filter marketing lint` exited 0 on 2026-06-29 with existing warnings.
