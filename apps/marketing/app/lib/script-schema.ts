@@ -1,61 +1,25 @@
-interface ScriptScene {
-  narration: string;
-  imagePrompt: string;
-  motionDirection: string;
-}
+import { z } from "zod";
 
-interface SafeParseSuccess<T> {
-  success: true;
-  data: T;
-}
+/**
+ * Zod-backed schema for the marketing video pipeline.
+ *
+ * Per `measure/tracks/video_pipeline_20260613/spec.md` FR-2:
+ *   - Script output is a JSON array of 5–7 scenes.
+ *   - Each scene contains `narration`, `imagePrompt`, and `motionDirection`.
+ *
+ * The scene object is `strict()` so unknown fields are rejected, matching
+ * the contract asserted by the Red tests in
+ * `apps/marketing/app/__tests__/phase-6-script.test.ts` (Phase 3 Zod suite).
+ */
+const scriptSceneSchema = z
+  .object({
+    narration: z.string().min(1),
+    imagePrompt: z.string().min(1),
+    motionDirection: z.string().min(1),
+  })
+  .strict();
 
-interface SafeParseFailure {
-  success: false;
-  error: Error;
-}
+export const scriptSchema = z.array(scriptSceneSchema).min(5).max(7);
 
-type SafeParseResult<T> = SafeParseSuccess<T> | SafeParseFailure;
-
-const MIN_SCENES = 5;
-const MAX_SCENES = 7;
-
-function isNonEmptyString(value: unknown): value is string {
-  return typeof value === "string" && value.length > 0;
-}
-
-function isValidScene(value: unknown): value is ScriptScene {
-  if (typeof value !== "object" || value === null) return false;
-  const scene = value as Record<string, unknown>;
-  return (
-    isNonEmptyString(scene.narration) &&
-    isNonEmptyString(scene.imagePrompt) &&
-    isNonEmptyString(scene.motionDirection)
-  );
-}
-
-function safeParse(input: unknown): SafeParseResult<ScriptScene[]> {
-  if (!Array.isArray(input)) {
-    return { success: false, error: new Error("Script must be an array") };
-  }
-  if (input.length < MIN_SCENES || input.length > MAX_SCENES) {
-    return {
-      success: false,
-      error: new Error(
-        `Script must contain between ${MIN_SCENES} and ${MAX_SCENES} scenes`,
-      ),
-    };
-  }
-  for (const scene of input) {
-    if (!isValidScene(scene)) {
-      return {
-        success: false,
-        error: new Error(
-          "Each scene must include non-empty narration, imagePrompt, and motionDirection",
-        ),
-      };
-    }
-  }
-  return { success: true, data: input as ScriptScene[] };
-}
-
-export const scriptSchema = { safeParse };
+export type ScriptScene = z.infer<typeof scriptSceneSchema>;
+export type Script = z.infer<typeof scriptSchema>;
