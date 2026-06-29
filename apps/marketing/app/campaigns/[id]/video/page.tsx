@@ -200,6 +200,7 @@ export default function VideoProductionPage() {
   }
 
   const approvedTopics = topics.filter((t) => t.approved);
+  const activeTopic = topics.find((t) => t.id === activeTopicId);
 
   return (
     <div>
@@ -398,6 +399,11 @@ export default function VideoProductionPage() {
               Generating a Thai marketing script (5–7 scenes) for the selected
               approved topic.
             </p>
+            {activeTopic && (
+              <p data-testid="selected-topic">
+                <strong>Selected topic:</strong> {activeTopic.text}
+              </p>
+            )}
             <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
               <button
                 onClick={handleGenerateScript}

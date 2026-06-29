@@ -62,11 +62,13 @@
 - [x] Task: Implement `apps/marketing/app/api/video/projects/route.ts`.
 - [x] Task: Build `apps/marketing/app/campaigns/[id]/video/page.tsx`.
   - Topic input, script generation trigger, scene editor UI.
-- [~] Task: Add component-level tests for the video page.
+- [x] Task: Add component-level tests for the video page.
   - Red evidence (2026-06-29): added `apps/marketing/app/__tests__/phase-7-video-page.test.tsx` with jsdom-based React Testing Library tests covering campaign load, topic research, approve/select topic, script generation trigger, scene editor reorder, and save-project action.
   - Added test dependencies (`@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom`) to `apps/marketing/package.json` and configured `esbuild.jsx: "automatic"` in `apps/marketing/vitest.config.ts` so component JSX can render in the test harness.
   - Command: `CI=true pnpm --filter marketing test phase-7-video-page` → 6/7 passing, 1 failing because Step 3 does not display the selected approved topic text to the user.
   - Command: `CI=true pnpm --filter marketing check-types` → passing.
+  - Green implementation (2026-06-29): updated `apps/marketing/app/campaigns/[id]/video/page.tsx` to derive `activeTopic` from `topics` + `activeTopicId` and render the selected topic's text inside the Step 3 card before generation, so users can see which approved topic they are about to script.
+  - Green gate: `CI=true pnpm --filter marketing test phase-7-video-page` → 7/7 passing, and `CI=true pnpm --filter marketing check-types` exit 0 (2026-06-29, commit TBD in handoff).
 - [x] Task: Run marketing type/lint gates and record evidence.
   - Evidence: `CI=true pnpm --filter marketing check-types` passed on 2026-06-29.
   - Evidence: `CI=true pnpm --filter marketing lint` exited 0 on 2026-06-29 with existing warnings.
