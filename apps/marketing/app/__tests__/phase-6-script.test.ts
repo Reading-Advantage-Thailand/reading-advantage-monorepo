@@ -451,3 +451,95 @@ describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED
     expect(valuesMock).not.toHaveBeenCalled();
   });
 });
+
+// ─────────────────────────────────────────────────────────────────────
+// Phase 3 remaining: Zod-backed script schema with exhaustive edge cases
+// ─────────────────────────────────────────────────────────────────────
+
+describe("Phase 6: Script Generation — Zod-backed schema edge cases (Phase 3, RED)", () => {
+  it("exports a Zod-backed schema with a parse method", async () => {
+    const mod = await import("../lib/script-schema.js");
+    expect(typeof (mod.scriptSchema as unknown as { parse?: unknown }).parse).toBe("function");
+  });
+
+  it("safeParse failures return ZodError issues with path details", async () => {
+    const { scriptSchema } = await import("../lib/script-schema.js");
+    const result = scriptSchema.safeParse([{ narration: "Scene only" }]);
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    const issues = (result.error as unknown as { issues?: unknown[] }).issues ?? [];
+    expect(Array.isArray(issues)).toBe(true);
+    expect(issues.length).toBeGreaterThanOrEqual(1);
+    const paths = issues.map((issue) => (issue as { path?: string[] }).path ?? []);
+    expect(
+      paths.some(
+        (path) =>
+          path.includes("imagePrompt") || path.includes("motionDirection"),
+      ),
+    ).toBe(true);
+  });
+
+  it("rejects fewer than 5 scenes with structured ZodError issues", async () => {
+    const { scriptSchema } = await import("../lib/script-schema.js");
+    const result = scriptSchema.safeParse(scriptFixture.slice(0, 4));
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(
+      Array.isArray((result.error as unknown as { issues?: unknown[] }).issues),
+    ).toBe(true);
+  });
+
+  it("rejects more than 7 scenes with structured ZodError issues", async () => {
+    const { scriptSchema } = await import("../lib/script-schema.js");
+    const result = scriptSchema.safeParse([...scriptFixture, ...scriptFixture]);
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(
+      Array.isArray((result.error as unknown as { issues?: unknown[] }).issues),
+    ).toBe(true);
+  });
+
+  it("rejects empty string fields with path-aware issues", async () => {
+    const { scriptSchema } = await import("../lib/script-schema.js");
+    const emptyScene = {
+      narration: "",
+      imagePrompt: "",
+      motionDirection: "",
+    };
+    const result = scriptSchema.safeParse(Array.from({ length: 5 }, () => emptyScene));
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    const issues = (result.error as unknown as { issues?: { message?: string; path?: string[] }[] }).issues ?? [];
+    const messages = issues.map((i) => i.message ?? "").join(" ");
+    expect(messages).toMatch(/narration|imagePrompt|motionDirection|empty|string/i);
+  });
+
+  it("rejects non-string field types with structured issues", async () => {
+    const { scriptSchema } = await import("../lib/script-schema.js");
+    const result = scriptSchema.safeParse([
+      { narration: 123, imagePrompt: true, motionDirection: null },
+    ]);
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(
+      Array.isArray((result.error as unknown as { issues?: unknown[] }).issues),
+    ).toBe(true);
+  });
+
+  it("rejects scenes with extra unknown fields (strict scene contract)", async () => {
+    const { scriptSchema } = await import("../lib/script-schema.js");
+    const scene = { ...scriptFixture[0], extraField: "should not be allowed" };
+    const result = scriptSchema.safeParse(Array.from({ length: 5 }, () => scene));
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts scripts with exactly 5, 6, and 7 scenes", async () => {
+    const { scriptSchema } = await import("../lib/script-schema.js");
+    const five = scriptFixture.slice(0, 5);
+    const six = scriptFixture;
+    const seven = [...scriptFixture, { ...scriptFixture[0] }];
+    expect(scriptSchema.safeParse(five).success).toBe(true);
+    expect(scriptSchema.safeParse(six).success).toBe(true);
+    expect(scriptSchema.safeParse(seven).success).toBe(true);
+  });
+});
