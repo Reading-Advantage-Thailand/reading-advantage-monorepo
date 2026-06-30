@@ -46,9 +46,9 @@ function createInMemoryClient(): RedisClient {
       }
       hashStore.get(key)![field] = value;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     async expire(_key: string, _seconds: number): Promise<void> {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     async ttl(_key: string): Promise<number> {
       return -1;
     },
@@ -87,12 +87,12 @@ export function getRedisClient(): RedisClient {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function createUpstashClient(_url: string): RedisClient {
   return createInMemoryClient();
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function createNodeRedisClient(_url: string): RedisClient {
   return createInMemoryClient();
 }
