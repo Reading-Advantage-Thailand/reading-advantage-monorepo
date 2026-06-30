@@ -1,5 +1,4 @@
-import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
-import nextTypescript from "eslint-config-next/typescript";
+import { baseConfig, ignores } from "@reading-advantage/config/eslint";
 
 /**
  * ESLint flat config for science-advantage.
@@ -14,15 +13,15 @@ import nextTypescript from "eslint-config-next/typescript";
  */
 const eslintConfig = [{
   ignores: [
+    ...ignores,
     "lib/generated/**",
     // Phase 7 (FR-7): keep ESLint micro-fixtures out of global lint
     // (linted via targeted `--no-ignore` invocation in the
     // `eslint-no-console.test.ts` contract test).
     "lib/observability/__tests__/fixtures/eslint/**",
   ],
-}, ...nextCoreWebVitals, ...nextTypescript, {
+}, ...baseConfig, {
   rules: {
-    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     "@typescript-eslint/no-explicit-any": "warn",
     "react-hooks/set-state-in-effect": "off",
     // Phase 7 (FR-7): forbid raw `console.log` / `console.info` /

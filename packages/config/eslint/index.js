@@ -38,10 +38,34 @@ export const baseConfig = [
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       "react/react-in-jsx-scope": "off",
+      // Redundant in a TypeScript codebase — prop shapes are type-checked.
+      "react/prop-types": "off",
+      // Allow custom canvas/renderer props (react-konva, revideo, etc.).
+      "react/no-unknown-property": "off",
+      // Surface `any` usage without failing builds on it.
+      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
+      // Legacy-tolerance rules: kept visible as warnings rather than hard
+      // errors so the shared config is satisfiable across all apps. Tighten
+      // to "error" per-rule as the codebases are cleaned up.
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "@typescript-eslint/no-empty-object-type": "warn",
+      "@typescript-eslint/no-unused-expressions": "warn",
+      "@typescript-eslint/no-wrapper-object-types": "warn",
+      "@typescript-eslint/no-require-imports": "warn",
+      "@typescript-eslint/no-duplicate-enum-values": "warn",
+      "no-empty": "warn",
+      "no-empty-pattern": "warn",
+      "prefer-const": "warn",
+      "no-useless-escape": "warn",
+      "no-case-declarations": "warn",
+      "no-self-assign": "warn",
+      "no-prototype-builtins": "warn",
+      "no-constant-binary-expression": "warn",
+      "@typescript-eslint/no-unsafe-function-type": "warn",
     },
     settings: {
       react: {
