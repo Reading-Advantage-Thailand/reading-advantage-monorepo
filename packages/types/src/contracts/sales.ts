@@ -87,7 +87,7 @@ export const roleplayAttemptOutputSchema = z.object({
   id: z.string(),
   scenarioId: z.string(),
   userId: z.string(),
-  audioStorageKey: z.string(),
+  audioStorageKey: z.string().nullable(),
   durationMs: z.number(),
   transcriptExcerpt: z.string().nullable(),
   llmScoreJson: z.unknown().nullable(),
