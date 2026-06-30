@@ -31,11 +31,10 @@
  *      "./marketing.js"` (negated context). Adversarial: require
  *      positive-context mention.
  *   4. pgEnum subset assertion — the test asserts
- *      `["STUDENT", "TEACHER", "ADMIN"]` (3 of 5 values) for
- *      roleEnum. The actual schema is
- *      `["INTERN", "STUDENT", "TEACHER", "ADMIN", "SYSTEM"]`
- *      (5 values). A regression to 3 values would still pass.
- *      Adversarial: assert all 5 values are present.
+ *      `["STUDENT", "TEACHER", "ADMIN"]` (3 of 7 values) for
+ *      roleEnum. The actual schema includes the active CodeCamp and
+ *      Sales roles. A regression to 3 values would still pass.
+ *      Adversarial: assert all 7 values are present.
  *   5. Header comment is a meaningful description — the test only
  *      checks the first non-blank line starts with `--`. The current
  *      0001/0011/0019 headers are generic stubs
@@ -69,6 +68,7 @@ const SCHEMA_BARREL = join(SCHEMA_DIR, "index.ts");
 const EXPECTED_SCHEMA_FILES = [
   "analytics.ts",
   "audit.ts",
+  "auth.ts",
   "classrooms.ts",
   "codecamp.ts",
   "content.ts",
@@ -76,8 +76,10 @@ const EXPECTED_SCHEMA_FILES = [
   "index.ts",
   "licenses.ts",
   "marketing.ts",
+  "primary.ts",
   "progress.ts",
   "questions.ts",
+  "sales.ts",
   "science.ts",
   "stories.ts",
   "taxonomy.ts",
@@ -106,7 +108,20 @@ const EXPECTED_MIGRATION_FILES = [
   "0018_audit_events.sql",
   "0019_session_token_hash.sql",
   "0020_sessions_indexes.sql",
-  "0021_marketing_tables.sql",
+  "0021_sales_advantage.sql",
+  "0022_flowery_black_tarantula.sql",
+  "0023_cultured_sunspot.sql",
+  "0024_futuristic_vulture.sql",
+] as const;
+
+const EXPECTED_ROLE_VALUES = [
+  "INTERN",
+  "STUDENT",
+  "TEACHER",
+  "ADMIN",
+  "SYSTEM",
+  "SALES_REP",
+  "SALES_ADMIN",
 ] as const;
 
 /**
@@ -428,33 +443,25 @@ describe("Adversarial: substring-assertion negation traps (Phase 2 schema-compil
 });
 
 describe("Adversarial: pgEnum full-value coverage (Phase 2 schema-compile gap)", () => {
-  it("users.roleEnum enumValues is the full 5-value set, not a 3-value subset", () => {
+  it("users.roleEnum enumValues is the full active-role set, not a 3-value subset", () => {
     // The Phase 2 contract uses
     // `expect.arrayContaining(["STUDENT", "TEACHER", "ADMIN"])`
     // which passes if those 3 are present (regardless of total
     // count). A regression to 3 values would still pass.
-    // Adversarial: require the FULL 5-value set including
-    // INTERN (added in migration 0012) and SYSTEM.
+    // Adversarial: require the FULL active-role set including
+    // CodeCamp INTERN and Sales roles.
     return import("../schema/users.js").then(
       (mod: { roleEnum: { enumValues: readonly string[] } }) => {
         const e = mod.roleEnum;
         expect(
           e.enumValues.length,
-          `roleEnum must have 5 values (INTERN, STUDENT, TEACHER, ADMIN, SYSTEM); got ${e.enumValues.length}. ` +
+          `roleEnum must have ${EXPECTED_ROLE_VALUES.length} values (${EXPECTED_ROLE_VALUES.join(", ")}); got ${e.enumValues.length}. ` +
             `Phase 2 contract's arrayContaining check passes for any 3-value subset.`,
-        ).toBe(5);
+        ).toBe(EXPECTED_ROLE_VALUES.length);
         expect(
           e.enumValues,
-          "roleEnum must include all 5 canonical values",
-        ).toEqual(
-          expect.arrayContaining([
-            "INTERN",
-            "STUDENT",
-            "TEACHER",
-            "ADMIN",
-            "SYSTEM",
-          ]),
-        );
+          "roleEnum must include all active canonical values",
+        ).toEqual(expect.arrayContaining([...EXPECTED_ROLE_VALUES]));
       },
     );
   });
@@ -665,37 +672,35 @@ describe("Adversarial: cross-file consistency (Phase 2 schema-compile + migratio
     ).toBeGreaterThanOrEqual(expectedMin);
   });
 
-  it("all 15 expected schema files are present on disk (filesystem vs schema-map lockstep)", () => {
+  it("all expected schema files are present on disk (filesystem vs schema-map lockstep)", () => {
     // The Phase 1 schema-map contract asserts this; Phase 2
     // doesn't directly. Adversarial: re-assert the 15-file
     // surface for Phase 2.
     for (const name of EXPECTED_SCHEMA_FILES) {
       expect(
         existsSync(join(SCHEMA_DIR, name)),
-        `packages/db/src/schema/${name} must exist on disk (15-file Phase 1/2 surface)`,
+        `packages/db/src/schema/${name} must exist on disk (current Phase 1/2 surface)`,
       ).toBe(true);
     }
   });
 
-  it("all 22 expected migration files are present on disk", () => {
+  it("all expected migration files are present on disk", () => {
     const onDisk = readdirSync(DRIZZLE_DIR)
       .filter((f) => f.endsWith(".sql"))
       .map((f) => f.slice(0, 4))
       .sort();
     expect(
       onDisk.length,
-      `expected 22 migration SQL files; found ${onDisk.length}. ` +
-        `Missing: ${Array.from({ length: 22 }, (_, i) =>
-          i.toString().padStart(4, "0"),
-        )
+      `expected ${EXPECTED_MIGRATION_FILES.length} migration SQL files; found ${onDisk.length}. ` +
+        `Missing: ${EXPECTED_MIGRATION_FILES.map((name) => name.slice(0, 4))
           .filter((idx) => !onDisk.includes(idx))
           .join(", ")}.`,
-    ).toBe(22);
+    ).toBe(EXPECTED_MIGRATION_FILES.length);
   });
 
   it("every migration file in the directory is in the EXPECTED_MIGRATION_FILES allowlist", () => {
-    // Phase 2 contract's EXPECTED_MIGRATION_FILES is a 22-entry
-    // hardcoded list. If a 23rd migration is added without
+    // Phase 2 contract's EXPECTED_MIGRATION_FILES is a hardcoded
+    // list. If another migration is added without
     // updating the contract, the contract silently ignores it.
     // Adversarial: assert the on-disk set matches the
     // allowlist exactly.

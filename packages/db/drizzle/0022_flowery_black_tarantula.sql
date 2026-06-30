@@ -1,3 +1,4 @@
+-- Adds Reading/Primary legacy activity, flashcard, and subscription tables.
 CREATE TYPE "public"."activity_type" AS ENUM('ARTICLE_RATING', 'ARTICLE_READ', 'STORIES_RATING', 'STORIES_READ', 'CHAPTER_RATING', 'CHAPTER_READ', 'LEVEL_TEST', 'MC_QUESTION', 'SA_QUESTION', 'LA_QUESTION', 'SENTENCE_FLASHCARDS', 'SENTENCE_MATCHING', 'SENTENCE_ORDERING', 'SENTENCE_WORD_ORDERING', 'SENTENCE_CLOZE_TEST', 'VOCABULARY_FLASHCARDS', 'VOCABULARY_MATCHING');--> statement-breakpoint
 CREATE TYPE "public"."card_state" AS ENUM('NEW', 'LEARNING', 'REVIEW', 'RELEARNING');--> statement-breakpoint
 CREATE TYPE "public"."flashcard_type" AS ENUM('VOCABULARY', 'SENTENCE');--> statement-breakpoint

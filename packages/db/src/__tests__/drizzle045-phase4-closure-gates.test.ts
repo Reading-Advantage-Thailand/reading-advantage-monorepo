@@ -111,10 +111,13 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "../..");
 const REPO_ROOT = resolve(PACKAGE_ROOT, "../..");
 const TECH_STACK_PATH = join(REPO_ROOT, "measure/tech-stack.md");
-const TRACK_DIR = join(
-  REPO_ROOT,
-  "measure/tracks/drizzle045_major_migration",
-);
+function resolveMeasureTrackDir(trackId: string): string {
+  const activeDir = join(REPO_ROOT, "measure/tracks", trackId);
+  if (existsSync(activeDir)) return activeDir;
+  return join(REPO_ROOT, "measure/archive", trackId);
+}
+
+const TRACK_DIR = resolveMeasureTrackDir("drizzle045_major_migration");
 const AGGREGATE_GATE_CLOSURE_PATH = join(
   TRACK_DIR,
   "phase4-aggregate-gate.md",
@@ -531,12 +534,12 @@ describe("drizzle045-phase4-closure-gates — lockfile cross-reference (regressi
       "pnpm-lock.yaml must exist at the repo root.",
     ).toBe(true);
     const lockfileText = readFileSync(LOCKFILE_PATH, "utf8");
-    const lockEntry = lockfileText.match(
-      /^\s*\/drizzle-orm@(\d+\.\d+\.\d+)/m,
-    );
+    const lockEntry =
+      lockfileText.match(/^\s{2}drizzle-orm@(\d+\.\d+\.\d+)(?:_|:)/m) ??
+      lockfileText.match(/^\s*\/drizzle-orm@(\d+\.\d+\.\d+)/m);
     expect(
       lockEntry,
-      "pnpm-lock.yaml must contain a /drizzle-orm@<version> entry.",
+      "pnpm-lock.yaml must contain a drizzle-orm@<version> entry.",
     ).not.toBeNull();
     expect(
       lockEntry![1].startsWith("0.45."),

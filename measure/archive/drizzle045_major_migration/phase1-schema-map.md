@@ -9,9 +9,9 @@
 
 This map is the deliverable for Phase 1 Task 2 of the
 `drizzle045_major_migration` track. It enumerates every file in
-`packages/db/src/schema/` (15 files including `marketing.ts`, the
-dirty-worktree addition) and every migration SQL file in
-`packages/db/drizzle/` (22 files: 0000 through 0021 inclusive), plus
+`packages/db/src/schema/` (18 files including `marketing.ts`, `auth.ts`,
+`primary.ts`, and `sales.ts`) and every migration SQL file in
+`packages/db/drizzle/` (25 files: 0000 through 0024 inclusive), plus
 the meta sidecars (`_journal.json`, per-idx `*_snapshot.json`) that
 the journal-integrity invariant relies on. It also surfaces
 `packages/db/src/client.ts` and `_journal.json` as Phase 3 risk
@@ -19,9 +19,9 @@ surfaces per `test-strategy.md` §3.3 and §3.6.
 
 ---
 
-## 1. Schema files (15)
+## 1. Schema files (18)
 
-`packages/db/src/schema/` contains **15** TypeScript files. Every name
+`packages/db/src/schema/` contains **18** TypeScript files. Every name
 below is referenced in this artifact so the live-surface guardrail test
 can verify the map is current.
 
@@ -29,51 +29,41 @@ can verify the map is current.
 |---|------|-------|----------------|------|
 | 1 | `analytics.ts` | 127 | analytics-side tables | Event/aggregation schema |
 | 2 | `audit.ts` | 43 | audit events | Security audit log table |
-| 3 | `classrooms.ts` | 58 | classrooms, classroom-students junction | Multi-tenant classroom model |
-| 4 | `codecamp.ts` | 164 | codecamp tables (curriculum, repos, etc.) | CodeCamp Advantage app |
-| 5 | `content.ts` | 86 | content (articles, lessons, modules) | Reading Advantage core content |
-| 6 | `flashcards.ts` | 43 | flashcard decks + cards | Spaced-repetition schema |
-| 7 | `index.ts` | 13 | barrel (re-exports 13 of the 14 schema files; does NOT yet re-export `marketing.ts`) | Barrel |
-| 8 | `licenses.ts` | 32 | license + license-tier tables | Subscription / licensing |
-| 9 | `marketing.ts` | 106 | `campaigns`, `videoProjects`, `videoAssets`, `pastTopics`, `settings`, plus 6 `pgEnum` (`campaignTypeEnum`, `campaignStatusEnum`, `appEnum`, `assetTypeEnum`, `assetStatusEnum`, `videoProjectStatusEnum`) | Marketing video/campaign workflow (newest file, current dirty worktree) |
-| 10 | `progress.ts` | 97 | user progress records | Per-user lesson progress |
-| 11 | `questions.ts` | 69 | question bank + answers | Quiz / assessment |
-| 12 | `science.ts` | 385 | science-domain tables (largest schema file) | Science Advantage app |
-| 13 | `stories.ts` | 189 | story-assignment tables | Storytime app |
-| 14 | `taxonomy.ts` | 24 | taxonomy (subjects, topics) | Shared taxonomy |
-| 15 | `users.ts` | 93 | `schools`, `users`, `accounts`, `sessions`, `usersRelations`, `accountsRelations`, `sessionsRelations`, `roleEnum` | Auth + tenancy primitives |
+| 3 | `auth.ts` | current | auth infrastructure tables such as `loginAttempts` | Shared auth/rate-limit schema |
+| 4 | `classrooms.ts` | 58 | classrooms, classroom-students junction | Multi-tenant classroom model |
+| 5 | `codecamp.ts` | 164 | codecamp tables (curriculum, repos, etc.) | CodeCamp Advantage app |
+| 6 | `content.ts` | 86 | content (articles, lessons, modules) | Reading Advantage core content |
+| 7 | `flashcards.ts` | 43 | flashcard decks + cards | Spaced-repetition schema |
+| 8 | `index.ts` | current | barrel re-exporting schema files | Barrel |
+| 9 | `licenses.ts` | 32 | license + license-tier tables | Subscription / licensing |
+| 10 | `marketing.ts` | 106 | `campaigns`, `videoProjects`, `videoAssets`, `pastTopics`, `settings`, plus 6 `pgEnum` (`campaignTypeEnum`, `campaignStatusEnum`, `appEnum`, `assetTypeEnum`, `assetStatusEnum`, `videoProjectStatusEnum`) | Marketing video/campaign workflow |
+| 11 | `primary.ts` | current | Primary Advantage migrated tables | Primary Advantage app |
+| 12 | `progress.ts` | 97 | user progress records | Per-user lesson progress |
+| 13 | `questions.ts` | 69 | question bank + answers | Quiz / assessment |
+| 14 | `sales.ts` | current | Sales Advantage curriculum and roleplay tables | Sales Advantage app |
+| 15 | `science.ts` | 385 | science-domain tables (largest schema file) | Science Advantage app |
+| 16 | `stories.ts` | 189 | story-assignment tables | Storytime app |
+| 17 | `taxonomy.ts` | 24 | taxonomy (subjects, topics) | Shared taxonomy |
+| 18 | `users.ts` | 93 | `schools`, `users`, `accounts`, `sessions`, `usersRelations`, `accountsRelations`, `sessionsRelations`, `roleEnum` | Auth + tenancy primitives |
 
 **Total schema lines:** 1,529.
 
 ### 1.1 marketing.ts (dirty-worktree addition)
 
 `marketing.ts` is present on disk and is part of the schema surface.
-Its 6 tables (`campaigns`, `videoProjects`, `videoAssets`,
-`pastTopics`, `settings`, plus the relations helpers) and 6 enums are
-defined but not yet re-exported from `packages/db/src/schema/index.ts`.
-Phase 3 should add `export * from "./marketing.js"` to the barrel so
-consumers that `import * as schema from "@reading-advantage/db/schema"`
-see the new symbols. Phase 1 deliberately does NOT touch the barrel
-because the contract test asserts file existence, not barrel exports.
+Its tables and enums are re-exported from `packages/db/src/schema/index.ts`.
 
 ### 1.2 Barrel drift note
 
-`packages/db/src/schema/index.ts` is 13 lines long and currently
-re-exports 13 schema files (`users.js`, `classrooms.js`, `content.js`,
-`progress.js`, `flashcards.js`, `questions.js`, `analytics.js`,
-`codecamp.js`, `licenses.js`, `stories.js`, `taxonomy.js`, `science.js`,
-`audit.js`). It is missing `marketing.js`. The contract test does NOT
-assert barrel completeness — it asserts every file exists on disk and
-every name appears in this artifact. Phase 3 may add the missing
-re-export line as part of the migration; that work is out of scope for
-Phase 1.
+`packages/db/src/schema/index.ts` currently re-exports the current schema
+surface, including marketing and newer app/auth schema files.
 
 ---
 
-## 2. Migration SQL files (22)
+## 2. Migration SQL files (25)
 
-`packages/db/drizzle/` contains **22** SQL migration files indexed
-0000 through 0021 inclusive. Every index below is referenced in this
+`packages/db/drizzle/` contains **25** SQL migration files indexed
+0000 through 0024 inclusive. Every index below is referenced in this
 artifact so the migration-surface guardrail test can verify the map
 covers the full set.
 
@@ -100,9 +90,12 @@ covers the full set.
 | 18 | 0018 | `0018_audit_events.sql` | 1,932 B | Post-production ceiling | audit_events table |
 | 19 | 0019 | `0019_session_token_hash.sql` | 349 B | Post-production ceiling | sessions.tokenHash |
 | 20 | 0020 | `0020_sessions_indexes.sql` | 146 B | Post-production ceiling | sessions indexes |
-| 21 | 0021 | `0021_marketing_tables.sql` | 3,150 B | Post-production ceiling | marketing campaigns, video projects/assets, past topics, settings |
+| 21 | 0021 | `0021_sales_advantage.sql` | current | Post-production ceiling | Sales Advantage and marketing campaign tables; adds Sales roles |
+| 22 | 0022 | `0022_flowery_black_tarantula.sql` | current | Post-production ceiling | Reading/Primary legacy activity, flashcard, and subscription tables |
+| 23 | 0023 | `0023_cultured_sunspot.sql` | current | Post-production ceiling | Allows nullable Sales roleplay `audio_storage_key` |
+| 24 | 0024 | `0024_futuristic_vulture.sql` | current | Post-production ceiling | Durable login-attempt tracking for production rate limiter |
 
-**Total migration SQL bytes:** ~75 KB across 22 files.
+**Total migration SQL bytes:** current live surface across 25 files.
 
 ### 2.1 Re-stamp invariant
 
@@ -130,8 +123,8 @@ not break them.
 
 | File | Role |
 |------|------|
-| `_journal.json` | Migration journal (22 entries, see §3) |
-| `0000_snapshot.json` … `0021_snapshot.json` | Per-migration schema snapshots |
+| `_journal.json` | Migration journal (25 entries, see §3) |
+| `0000_snapshot.json` … `0024_snapshot.json` | Per-migration schema snapshots |
 | `README.md` | Drizzle-kit auto-generated readme |
 
 ---
@@ -143,7 +136,7 @@ called out by `test-strategy.md` §3.3. Phase 3 must preserve the
 re-stamp invariant (§2.1) and the `version: "7"` field, OR
 `journal-integrity.test.ts` must be updated to accept the new version.
 
-The journal's `entries[]` is 22 rows, indexed 0 through 21. Every
+The journal's `entries[]` is 25 rows, indexed 0 through 24. Every
 entry pairs a tag (matching the `*.sql` filename in `packages/db/drizzle/`)
 with a `when` timestamp and a `breakpoints` flag.
 
@@ -181,9 +174,9 @@ The Phase 1 contract test
 asserts:
 
 1. `packages/db/src/schema/` contains every expected schema file
-   (15 names, including `marketing.ts`).
+   (18 names, including `marketing.ts`, `auth.ts`, `primary.ts`, and `sales.ts`).
 2. `packages/db/drizzle/` contains every expected migration SQL file
-   (22 indices, 0000_ through 0021_).
+   (25 indices, 0000_ through 0024_).
 3. This artifact mentions every schema file name above (proving the
    artifact was generated against the live surface, not a snapshot).
 4. This artifact references every migration index (proving no
@@ -212,9 +205,9 @@ guardrail will fail and force Phase 3 to re-baseline the artifact.
 
 ## 7. Provenance
 
-- Schema file list: `ls packages/db/src/schema/` (15 files).
+- Schema file list: `ls packages/db/src/schema/` (18 files).
 - Schema line counts: `wc -l packages/db/src/schema/*.ts`.
-- Migration SQL list: `ls packages/db/drizzle/*.sql` (22 files).
+- Migration SQL list: `ls packages/db/drizzle/*.sql` (25 files).
 - Migration SQL sizes: `ls -la packages/db/drizzle/`.
 - Journal entries: `cat packages/db/drizzle/meta/_journal.json`.
 - `client.ts` call site: `grep -n 'drizzle(' packages/db/src/client.ts` (line 26).

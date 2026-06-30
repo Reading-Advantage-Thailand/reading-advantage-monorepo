@@ -64,7 +64,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "../..");
 const DRIZZLE_DIR = join(PACKAGE_ROOT, "drizzle");
 
-// 0.45-era Phase 2 Red expects every SQL file in the canonical 21-migration
+// 0.45-era Phase 2 Red expects every SQL file in the canonical migration
 // surface. The existing migration-sql.test.ts already pins 0002/0003/0004/
 // 0015/0017; this file adds 0.45-era FORMAT invariants.
 const EXPECTED_MIGRATION_FILES = [
@@ -89,6 +89,10 @@ const EXPECTED_MIGRATION_FILES = [
   "0018_audit_events.sql",
   "0019_session_token_hash.sql",
   "0020_sessions_indexes.sql",
+  "0021_sales_advantage.sql",
+  "0022_flowery_black_tarantula.sql",
+  "0023_cultured_sunspot.sql",
+  "0024_futuristic_vulture.sql",
 ] as const;
 
 interface MigrationFile {
@@ -238,12 +242,12 @@ describe("drizzle045-migration-format — CREATE INDEX format (FR-3)", () => {
       const indexMatches = text.match(/CREATE INDEX[^;]+;/g) || [];
       for (const stmt of indexMatches) {
         // 0.45-era format: `CREATE INDEX [IF NOT EXISTS] "name" ON
-        // "table" (cols);`. Identifiers may be quoted or unquoted in
+        // "table" [USING btree] (cols);`. Identifiers may be quoted or unquoted in
         // existing migrations — the 0.45 upgrade normalizes to
         // double-quoted. The space between the table name and `(` is
         // optional in some migrations (e.g. 0020) — allow both.
         const re =
-          /CREATE INDEX(?:\s+IF NOT EXISTS)?\s+("?)[^"\s]+\1\s+ON\s+("?)[^"\s]+\2\s*\([^)]+\)/;
+          /CREATE INDEX(?:\s+IF NOT EXISTS)?\s+("?)[^"\s]+\1\s+ON\s+("?)[^"\s]+\2(?:\s+USING\s+\w+)?\s*\([^)]+\)/;
         expect(
           re.test(stmt),
           `${name}: CREATE INDEX must be well-formed. Got: ${stmt}`,

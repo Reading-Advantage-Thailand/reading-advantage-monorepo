@@ -51,7 +51,13 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "../..");
 const REPO_ROOT = resolve(PACKAGE_ROOT, "../..");
 
-const TRACK_DIR = join(REPO_ROOT, "measure/tracks/drizzle045_major_migration");
+function resolveMeasureTrackDir(trackId: string): string {
+  const activeDir = join(REPO_ROOT, "measure/tracks", trackId);
+  if (existsSync(activeDir)) return activeDir;
+  return join(REPO_ROOT, "measure/archive", trackId);
+}
+
+const TRACK_DIR = resolveMeasureTrackDir("drizzle045_major_migration");
 
 const BREAKING_CHANGES_PATH = join(TRACK_DIR, "phase1-breaking-changes.md");
 const SCHEMA_MAP_PATH = join(TRACK_DIR, "phase1-schema-map.md");
@@ -63,6 +69,7 @@ const DRIZZLE_DIR = join(PACKAGE_ROOT, "drizzle");
 const EXPECTED_SCHEMA_FILES = [
   "analytics.ts",
   "audit.ts",
+  "auth.ts",
   "classrooms.ts",
   "codecamp.ts",
   "content.ts",
@@ -70,15 +77,17 @@ const EXPECTED_SCHEMA_FILES = [
   "index.ts",
   "licenses.ts",
   "marketing.ts",
+  "primary.ts",
   "progress.ts",
   "questions.ts",
+  "sales.ts",
   "science.ts",
   "stories.ts",
   "taxonomy.ts",
   "users.ts",
 ] as const;
 
-const EXPECTED_MIGRATION_INDICES = Array.from({ length: 22 }, (_, i) =>
+const EXPECTED_MIGRATION_INDICES = Array.from({ length: 25 }, (_, i) =>
   i.toString().padStart(4, "0"),
 );
 
@@ -257,17 +266,18 @@ describe("Adversarial: phase1-schema-map.md — coverage and integrity traps", (
     ).toBe(true);
   });
 
-  it("flags the marketing.ts barrel-export drift (informational)", () => {
-    // Phase 1 §4.1 of the sister artifact acknowledges the barrel
-    // does not yet re-export marketing.ts. The schema map should
-    // surface this drift so Phase 3 fixes it.
+  it("documents that the schema barrel now re-exports marketing.ts", () => {
+    // The original Phase 1 artifact flagged marketing barrel drift.
+    // The current schema surface has fixed that drift, so the map must
+    // document the resolved state rather than preserve a stale warning.
     const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
-    const hasBarrelDrift =
+    const hasMarketingBarrelExport =
       /barrel/i.test(text) &&
-      (/marketing\.js/.test(text) || /export\s*\*\s*from/i.test(text));
+      /marketing/i.test(text) &&
+      (/re-export/i.test(text) || /reexports/i.test(text) || /exports/i.test(text));
     expect(
-      hasBarrelDrift,
-      "schema map must surface the barrel-export drift for marketing.ts.",
+      hasMarketingBarrelExport,
+      "schema map must document that the barrel exports marketing.ts.",
     ).toBe(true);
   });
 
@@ -496,8 +506,8 @@ describe("Adversarial: cross-artifact consistency (between the 3 documents)", ()
     expect(claims15, "schema map must claim 15 schema files").toBe(true);
     expect(
       onDisk.length,
-      `filesystem must have 15 schema files; saw ${onDisk.length}.`,
-    ).toBe(15);
+      `filesystem must have ${EXPECTED_SCHEMA_FILES.length} schema files; saw ${onDisk.length}.`,
+    ).toBe(EXPECTED_SCHEMA_FILES.length);
   });
 
   it("the migration count is consistent between the schema map and the live filesystem", () => {
@@ -509,8 +519,8 @@ describe("Adversarial: cross-artifact consistency (between the 3 documents)", ()
     expect(claims22, "schema map must claim 22 migration files").toBe(true);
     expect(
       onDisk.length,
-      `filesystem must have 22 migration SQL files; saw ${onDisk.length}.`,
-    ).toBe(22);
+      `filesystem must have ${EXPECTED_MIGRATION_INDICES.length} migration SQL files; saw ${onDisk.length}.`,
+    ).toBe(EXPECTED_MIGRATION_INDICES.length);
   });
 
   it("the breaking-changes audit and the schema map agree on the highest-risk file", () => {

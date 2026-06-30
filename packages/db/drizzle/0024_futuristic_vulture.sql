@@ -1,3 +1,4 @@
+-- Adds durable login-attempt tracking for the production rate limiter.
 CREATE TABLE "login_attempts" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"identifier" text NOT NULL,

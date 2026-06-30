@@ -47,7 +47,8 @@
 
 import { describe, it, expect, beforeAll } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { createRequire } from "node:module";
+import { dirname, join, parse, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -57,6 +58,8 @@ const SCHEMA_DIR = join(PACKAGE_ROOT, "src/schema");
 const PACKAGE_JSON_PATH = join(PACKAGE_ROOT, "package.json");
 const ROOT_PKG_JSON_PATH = join(REPO_ROOT, "package.json");
 const LOCKFILE_PATH = join(REPO_ROOT, "pnpm-lock.yaml");
+const WORKSPACE_PATH = join(REPO_ROOT, "pnpm-workspace.yaml");
+const requireFromDb = createRequire(join(PACKAGE_ROOT, "package.json"));
 
 interface PkgJson {
   name?: string;
@@ -72,6 +75,17 @@ function readPkg(path: string): PkgJson {
   return JSON.parse(readFileSync(path, "utf8")) as PkgJson;
 }
 
+function resolvePackageJson(pkgName: string): string | null {
+  let current = dirname(requireFromDb.resolve(pkgName));
+  const root = parse(current).root;
+  while (current !== root) {
+    const candidate = join(current, "package.json");
+    if (existsSync(candidate)) return candidate;
+    current = dirname(current);
+  }
+  return null;
+}
+
 let dbPkg: PkgJson;
 let rootPkg: PkgJson;
 let installedDrizzleOrmVersion: string | null;
@@ -79,9 +93,10 @@ let installedDrizzleOrmVersion: string | null;
 beforeAll(() => {
   dbPkg = readPkg(PACKAGE_JSON_PATH);
   rootPkg = readPkg(ROOT_PKG_JSON_PATH);
-  function readInstalledPkgJson(pkgPath: string): string | null {
-    if (!existsSync(pkgPath)) return null;
+  function readInstalledPkgJson(pkgName: string): string | null {
     try {
+      const pkgPath = resolvePackageJson(pkgName);
+      if (!pkgPath) return null;
       const meta = JSON.parse(readFileSync(pkgPath, "utf8")) as {
         name?: string;
         version?: string;
@@ -91,15 +106,14 @@ beforeAll(() => {
       return null;
     }
   }
-  installedDrizzleOrmVersion = readInstalledPkgJson(
-    join(PACKAGE_ROOT, "node_modules/drizzle-orm/package.json"),
-  );
+  installedDrizzleOrmVersion = readInstalledPkgJson("drizzle-orm");
 });
 
-// Phase 1 schema-map authoritative 15-file surface.
+// Phase 1 schema-map authoritative current file surface.
 const EXPECTED_SCHEMA_FILES = [
   "analytics.ts",
   "audit.ts",
+  "auth.ts",
   "classrooms.ts",
   "codecamp.ts",
   "content.ts",
@@ -107,8 +121,10 @@ const EXPECTED_SCHEMA_FILES = [
   "index.ts",
   "licenses.ts",
   "marketing.ts",
+  "primary.ts",
   "progress.ts",
   "questions.ts",
+  "sales.ts",
   "science.ts",
   "stories.ts",
   "taxonomy.ts",
@@ -156,7 +172,7 @@ describe("drizzle045-schema-compile — schema barrel re-exports marketing.js (F
   }
 
   it("schema/index.ts re-exports ./marketing.js (Phase 1 schema-map invariant — RED until Phase 3 adds the export)", () => {
-    // Phase 1 schema-map asserts marketing.ts is part of the 15-file
+    // Phase 1 schema-map asserts marketing.ts is part of the schema
     // schema surface. For the drizzle() factory in packages/db/src/client.ts
     // to pick up the marketing tables (campaigns, videoProjects, assets,
     // voiceovers) at type-check time, the barrel MUST re-export them.
@@ -258,38 +274,70 @@ function readLockfileOverride(pkgName: string): string | null {
   return null;
 }
 
+function readWorkspaceOverride(pkgName: string): string | null {
+  if (!existsSync(WORKSPACE_PATH)) return null;
+  const lines = readFileSync(WORKSPACE_PATH, "utf8").split("\n");
+  let inOverrides = false;
+  for (const line of lines) {
+    if (/^overrides:\s*$/.test(line)) {
+      inOverrides = true;
+      continue;
+    }
+    if (!inOverrides) continue;
+    if (/^\S/.test(line)) break;
+    const m = new RegExp(`^\\s+${pkgName}:\\s*(.+)$`).exec(line);
+    if (m) return m[1]?.trim() ?? null;
+  }
+  return null;
+}
+
+function readLockfilePackageVersion(pkgName: string): string | null {
+  if (!existsSync(LOCKFILE_PATH)) return null;
+  const escaped = pkgName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const text = readFileSync(LOCKFILE_PATH, "utf8");
+  const packageEntry = text.match(new RegExp(`^\\s{2}${escaped}@(\\d+\\.\\d+\\.\\d+)(?:_|:)`, "m"));
+  return packageEntry?.[1] ?? null;
+}
+
 describe("drizzle045-schema-compile — lockfile consistency (regression)", () => {
-  it("pnpm-lock.yaml overrides drizzle-orm to 0.45.x (not 0.44.x)", () => {
+  it("pnpm-lock.yaml resolves drizzle-orm to 0.45.x (not 0.44.x)", () => {
     const override = readLockfileOverride("drizzle-orm");
+    const resolved = override ?? readLockfilePackageVersion("drizzle-orm");
     expect(
-      override,
-      "pnpm-lock.yaml must contain a drizzle-orm override entry",
+      resolved,
+      "pnpm-lock.yaml must contain a drizzle-orm override or package resolution entry",
     ).not.toBeNull();
-    const m = /\^?(\d+)\.(\d+)\.?(\d+)?/.exec(override!);
+    const m = /\^?(\d+)\.(\d+)\.?(\d+)?/.exec(resolved!);
     expect(
       m,
-      `pnpm-lock.yaml drizzle-orm override must be a version. Got: ${override}`,
+      `pnpm-lock.yaml drizzle-orm resolution must be a version. Got: ${resolved}`,
     ).not.toBeNull();
     const major = Number(m![1]);
     const minor = Number(m![2]);
     expect(
       [major, minor],
-      `pnpm-lock.yaml drizzle-orm override must be 0.45.x. Got: ${override}. ` +
+      `pnpm-lock.yaml drizzle-orm resolution must be 0.45.x. Got: ${resolved}. ` +
         `Run pnpm install after bumping the root override.`,
     ).toEqual([0, 45]);
   });
 
-  it("pnpm-lock.yaml override matches root package.json pnpm.overrides", () => {
+  it("pnpm-lock.yaml override matches pnpm-workspace.yaml overrides when declared", () => {
     const lockfileOverride = readLockfileOverride("drizzle-orm");
-    const declaredOverride = rootPkg.pnpm?.overrides?.["drizzle-orm"] ?? "";
+    const declaredOverride =
+      readWorkspaceOverride("drizzle-orm") ??
+      rootPkg.pnpm?.overrides?.["drizzle-orm"] ??
+      "";
+    if (!declaredOverride) {
+      expect(
+        lockfileOverride,
+        "lockfile should not retain a drizzle-orm override when workspace config has none",
+      ).toBeNull();
+      return;
+    }
     expect(
       lockfileOverride,
       "pnpm-lock.yaml must contain a drizzle-orm override entry",
     ).not.toBeNull();
-    expect(
-      declaredOverride,
-      "root package.json must declare a pnpm.overrides drizzle-orm entry",
-    ).not.toBe("");
     expect(
       lockfileOverride,
       `pnpm-lock.yaml override (${lockfileOverride}) must match root package.json override (${declaredOverride}). ` +
