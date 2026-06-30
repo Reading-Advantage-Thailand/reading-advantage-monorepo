@@ -1,10 +1,8 @@
-import { FlatCompat } from "@eslint/eslintrc";
-
-const compat = new FlatCompat({ baseDirectory: import.meta.dirname });
+import { baseConfig, ignores } from "@reading-advantage/config/eslint";
 
 const eslintConfig = [
-  { ignores: [".next/", "node_modules/", "prisma/generated/"] },
-  ...compat.extends("next/core-web-vitals"),
+  { ignores: [...ignores, "prisma/generated/", "public/"] },
+  ...baseConfig,
 ];
 
 export default eslintConfig;
