@@ -103,7 +103,7 @@ export default function ActiveUsersChart({
 
   const fetchActiveChart = React.useCallback(async () => {
     try {
-      let apiUrl = `/api/v1/activity/active-users`;
+      const apiUrl = `/api/v1/activity/active-users`;
       const res = await fetch(apiUrl, { method: "GET" });
 
       if (!res.ok) throw new Error("Failed to fetch User activity");

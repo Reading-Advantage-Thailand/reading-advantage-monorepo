@@ -95,8 +95,8 @@ export default function LessonSentensePreview({
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
-  const [togglePlayer, setTogglePlayer] = useState<Boolean>(true);
-  const [selectedSentence, setSelectedSentence] = React.useState<Number>(-1);
+  const [togglePlayer, setTogglePlayer] = useState<boolean>(true);
+  const [selectedSentence, setSelectedSentence] = React.useState<number>(-1);
   const [loading, setLoading] = React.useState(false);
   const [translate, setTranslate] = React.useState<string[]>([]);
   const [isTranslate, setIsTranslate] = React.useState(false);
@@ -259,7 +259,7 @@ export default function LessonSentensePreview({
       await handleTranslate();
     } else {
       try {
-        let card: Card = createEmptyCard();
+        const card: Card = createEmptyCard();
         let endTimepoint = 0;
         if (selectedSentence !== -1) {
           endTimepoint = sentenceList[selectedSentence as number].endTime;

@@ -68,7 +68,7 @@ export default function FirstRunLevelTest({
   );
 
   const getCorrectAnswer = useCallback(async () => {
-    let allCorrectAnswers: string[] = [];
+    const allCorrectAnswers: string[] = [];
     for (let i = language_placement_test.length - 1; i >= 0; i--) {
       for (
         let j = language_placement_test[i].questions.length - 1;
@@ -105,19 +105,19 @@ export default function FirstRunLevelTest({
   const handleQuestions = useCallback(async () => {
     let optionId = 0;
 
-    let initialShuffledQuestions = [...language_placement_test];
+    const initialShuffledQuestions = [...language_placement_test];
 
-    let updatedShuffledQuestions = initialShuffledQuestions.map((section) => {
-      let shuffledSection = shuffleArray(section.questions).slice(0, 3);
+    const updatedShuffledQuestions = initialShuffledQuestions.map((section) => {
+      const shuffledSection = shuffleArray(section.questions).slice(0, 3);
 
       return shuffledSection.map((question) => {
-        let choices = Object.entries(question.options);
+        const choices = Object.entries(question.options);
         for (let i = choices.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [choices[i], choices[j]] = [choices[j], choices[i]];
         }
 
-        let updatedOptions = Object.fromEntries(
+        const updatedOptions = Object.fromEntries(
           choices.map(([key, value]) => [key, { id: optionId++, text: value }])
         );
 

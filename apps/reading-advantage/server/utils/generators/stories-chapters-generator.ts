@@ -61,7 +61,7 @@ interface StoryBible {
   themes: StoryTheme[];
   summary: string;
   "image-description": string;
-  worldRules?: String;
+  worldRules?: string;
 }
 
 interface Chapter {
@@ -223,7 +223,7 @@ export async function generateChapters(
   //  `Generating ${chapterCount} chapters for CEFR level ${cefrLevel}...`
   //);
 
-  let chapters: Chapter[] = [];
+  const chapters: Chapter[] = [];
 
   try {
     for (let i = 0; i < chapterCount; i++) {

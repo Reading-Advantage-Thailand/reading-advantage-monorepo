@@ -645,7 +645,7 @@ export async function translateStorySummary(
 
   if (type === "chapter") {
     // console.log("Translating chapter summaries...");
-    let allTranslatedSentences: { [key: string]: string[] } = {};
+    const allTranslatedSentences: { [key: string]: string[] } = {};
     let allTranslationsExist = true;
 
     storyChapters.forEach((chapter: any, index: number) => {

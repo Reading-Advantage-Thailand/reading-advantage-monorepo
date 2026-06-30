@@ -145,7 +145,7 @@ export default function SystemDashboardClient() {
       });
 
       // Use system-wide metrics endpoint for overview
-      let response = await axios.get(`/api/v1/metrics/system?${params}`);
+      const response = await axios.get(`/api/v1/metrics/system?${params}`);
 
       setDashboardData(response.data);
     } catch (error) {

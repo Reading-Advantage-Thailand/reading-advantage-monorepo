@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
       scheduled_days: currentCard.scheduledDays,
       reps: currentCard.reps,
       lapses: currentCard.lapses,
+      learning_steps: 0,
       state: currentCard.state as State,
       last_review: new Date(),
     };

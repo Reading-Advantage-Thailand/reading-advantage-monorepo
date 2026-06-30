@@ -234,7 +234,7 @@ export default function ActivityCharts({
         timelineData.events.forEach((event: any) => {
           let eventType: TimelineEvent["type"] = "reading";
           let title = event.title || t("events.activity");
-          let description = event.description || "";
+          const description = event.description || "";
 
           // Map event types
           if (event.type === "assignment") {

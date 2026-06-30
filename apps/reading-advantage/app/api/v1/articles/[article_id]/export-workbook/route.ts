@@ -113,7 +113,7 @@ router.get(async (req, ctx) => {
     }
 
     // 3. Check if translatedPassage exists
-    let translatedPassage = article.translatedPassage;
+    const translatedPassage = article.translatedPassage;
 
     // 4. Parse translatedPassage to align EN and TH arrays
     let enSentences: string[] = [];

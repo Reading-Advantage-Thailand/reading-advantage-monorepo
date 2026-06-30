@@ -283,7 +283,7 @@ export class DragonRiderController {
       const acceptLanguage = req.headers.get("accept-language") || "";
 
       // Use query locale if available
-      let locale =
+      const locale =
         queryLocale || acceptLanguage.split(",")[0]?.split("-")[0] || "en";
 
       // Map locale to translation key

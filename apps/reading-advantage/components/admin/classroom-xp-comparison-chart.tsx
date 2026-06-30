@@ -180,7 +180,7 @@ function ClassroomXpComparisonChart({
   }, [classes, customRangeData, timeRange, dateRange]);
 
   const chartData = useMemo(() => {
-    let data = activeClassrooms
+    const data = activeClassrooms
       .map((classroom) => {
         let xpValue = 0;
         if (timeRange === "custom") {

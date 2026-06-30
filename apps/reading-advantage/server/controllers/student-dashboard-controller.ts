@@ -68,7 +68,7 @@ export async function getStudentDashboard(req: ExtendedNextRequest) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     let streak = 0;
-    let checkDate = new Date(today);
+    const checkDate = new Date(today);
 
     const activityDates = new Set(
       activityRows.map((a) => {

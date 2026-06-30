@@ -50,7 +50,7 @@ export default function LessonFlashCardVocabularyPracticeButton({
 
   const handleClickFsrs = async (index: number, rating: Rating) => {
     const preCard = cards[index];
-    const scheduling_cards: any = fnFsrs.repeat(preCard, preCard.due);
+    const scheduling_cards: any = fnFsrs.repeat({ ...preCard, learning_steps: 0 }, preCard.due);
 
     // update card and logs
     const newCards = [...cards];

@@ -105,7 +105,7 @@ export default function VocabularyManageTab({ userId }: Props) {
 
       setVocabularies(vocabulariesWithFormattedData);
 
-      let filterDataUpdateScore = filter(data.vocabularies, (item) => {
+      const filterDataUpdateScore = filter(data.vocabularies, (item) => {
         const dueDate = new Date(item.due);
         return (
           (item.state === 2 || item.state === 3) &&

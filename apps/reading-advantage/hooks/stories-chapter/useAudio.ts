@@ -17,7 +17,7 @@ export default function useAudio(sentenceList: Sentence[]) {
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const currentTimeRef = useRef(0);
     const [selectedSentence, setSelectedSentence] = useState<number>(-1);
-    const [togglePlayer, setTogglePlayer] = useState<Boolean>(false);
+    const [togglePlayer, setTogglePlayer] = useState<boolean>(false);
 
     const handlePreviousTrack = () => {
         if (isPlaying) {

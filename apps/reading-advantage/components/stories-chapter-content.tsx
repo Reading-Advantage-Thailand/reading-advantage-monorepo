@@ -191,8 +191,8 @@ export default function ChapterContent({
           return;
         }
 
-        let card: Card = createEmptyCard();
-        let endTimepoint = selectedSentenceData.endTime;
+        const card: Card = createEmptyCard();
+        const endTimepoint = selectedSentenceData.endTime;
 
         const resSaveSentences = await fetch(
           `/api/v1/users/sentences/${userId}`,

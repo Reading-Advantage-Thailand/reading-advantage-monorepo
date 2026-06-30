@@ -190,7 +190,7 @@ export async function getTeacherAssignments(req: ExtendedNextRequest) {
       }
     }
 
-    let allTeacherAssignments: TeacherAssignment[] = [];
+    const allTeacherAssignments: TeacherAssignment[] = [];
     teacherAssignmentsMap.forEach((tas) => allTeacherAssignments.push(...tas));
     allTeacherAssignments.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 

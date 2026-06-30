@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const action = searchParams.get('action');
 
-    let results: any = {};
+    const results: any = {};
 
     switch (action) {
       case 'cache':

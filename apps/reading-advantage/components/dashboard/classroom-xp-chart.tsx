@@ -55,7 +55,7 @@ export default function ClassRoomXpChart({ licenseId }: ClassRoomXpChartProps) {
 
         const key =
           view === "mostActive" ? "dataMostActive" : "dataLeastActive";
-        let formattedData: XpData[] = xpData[key]?.[timeRange] || [];
+        const formattedData: XpData[] = xpData[key]?.[timeRange] || [];
 
         formattedData.sort((a, b) => b.xp - a.xp);
         setData(formattedData);

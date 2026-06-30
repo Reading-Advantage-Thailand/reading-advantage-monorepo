@@ -172,7 +172,7 @@ export async function StudentsData({
 
   // get matched classroom
   function getMatchedClassrooms(studentId: string) {
-    let matchedClassrooms: any[] = [];
+    const matchedClassrooms: any[] = [];
     const teacherId = (user as { id: string }).id;
 
     allStudent.students.forEach((student: { id: string }) => {
@@ -200,7 +200,7 @@ export async function StudentsData({
 
   // get teacher classroom
   function getTeacherClassroom() {
-    let teacherClassrooms: any[] = [];
+    const teacherClassrooms: any[] = [];
     const teacherId = (user as { id: string }).id;
     allClassroom.data.forEach(
       (classroom: { teacherId: string; archived: boolean }) => {
@@ -226,7 +226,7 @@ export async function StudentsData({
 
   // get matched students
   function getMatchedStudents() {
-    let matchedStudents: any[] = [];
+    const matchedStudents: any[] = [];
     const teacherId = (user as { id: string }).id;
 
     allStudent.students.forEach((student: { id: string }) => {
@@ -253,7 +253,7 @@ export async function StudentsData({
 
   //get student in different classes
   const studentInDifferentClasses = () => {
-    let studentsInChecked: any[] = [];
+    const studentsInChecked: any[] = [];
     differentClasses.forEach(
       (classroom: {
         student: any;
@@ -275,7 +275,7 @@ export async function StudentsData({
 
   // get matched name of students to display on web
   function getMatchedNameOfStudents(studentId: string) {
-    let matchedStudents: any[] = [];
+    const matchedStudents: any[] = [];
 
     allStudent.students.forEach((student: { id: string }) => {
       if (student.id === studentId) {
@@ -304,7 +304,7 @@ export async function StudentsData({
 
   // get id of student in matched classrooms
   function getIdOfStudentInMatchedClassrooms(studentId: string) {
-    let updateStudentIdInMatchedClassrooms: any[] = [];
+    const updateStudentIdInMatchedClassrooms: any[] = [];
     studentIdInMatchedClassrooms.forEach((id) => {
       if (id !== studentId) {
         updateStudentIdInMatchedClassrooms.push(id);
@@ -489,7 +489,7 @@ export async function ClassesData() {
 
   // filter only teacher login
   const teacherId = () => {
-    let teacherId: String[] = [];
+    const teacherId: string[] = [];
     allTeachers.teachers.forEach((teacher: { id: string; role: any }) => {
       if (
         teacher.role &&
@@ -504,7 +504,7 @@ export async function ClassesData() {
   const teacher = teacherId();
 
   const getClassroomOfThatTeacher = () => {
-    let classrooms: any[] = [];
+    const classrooms: any[] = [];
     const role = user.role;
     //console.log(allClassroom);
     allClassroom.data.forEach(
@@ -529,7 +529,7 @@ export async function ClassesData() {
 
   // get matched students
   function getMatchedStudents() {
-    let matchedStudents: any[] = [];
+    const matchedStudents: any[] = [];
     const teacherId = (user as { id: string }).id;
 
     allStudent.students.forEach((student: { id: string }) => {
