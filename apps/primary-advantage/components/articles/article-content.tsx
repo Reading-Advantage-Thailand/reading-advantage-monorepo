@@ -874,8 +874,8 @@ export default function ArticleContent({ article }: Props) {
         const groupSentencesIntoParagraphs = () => {
           const paragraphGroups: { paragraph: string; sentences: number[] }[] =
             [];
-          let currentParagraphText = "";
-          let currentSentenceIndices: number[] = [];
+          const currentParagraphText = "";
+          const currentSentenceIndices: number[] = [];
 
           // Reconstruct paragraph structure by checking which sentences belong to which paragraph
           paragraphs.forEach((paragraph) => {

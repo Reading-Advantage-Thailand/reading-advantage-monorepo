@@ -38,7 +38,7 @@ export const generateAllArticleNew = async (amountPerGenre: number) => {
 
   const totalArticles = types.length * levels.length * amountPerGenre;
   const articles: any[] = [];
-  let completedArticles = 0;
+  const completedArticles = 0;
 
   try {
     console.log(`Starting generation of ${amountPerGenre} articles...`);

@@ -1,19 +1,18 @@
 "use server";
 
 import { currentUser } from "@/lib/session";
-import { createEmptyCard, Card, State, Rating } from "ts-fsrs";
+import { createEmptyCard, Card, Rating } from "ts-fsrs";
 import {
   db,
   eq,
   and,
   desc,
   asc,
-  inArray,
   sql,
   count,
   gte,
   sum,
-} from '@reading-advantage/db';
+} from "@reading-advantage/db";
 import {
   flashcardDecks,
   flashcardCards,
@@ -23,23 +22,18 @@ import {
   articles,
   articleActivityLogs,
   sentencsAndWordsForFlashcards,
-} from '@reading-advantage/db';
+  flashcardProgress,
+} from "@reading-advantage/db";
 import { ActivityType, FlashcardType } from "@/types/enum";
-import { FlashcardCard, SentenceTimepoint, WordListTimestamp } from "@/types";
-import { cardState } from "@reading-advantage/db";
 import { fsrsService } from "@/lib/fsrs-service";
-
-// Derive CardState as a string-literal union from the Drizzle pgEnum.
-// Replaces the legacy Prisma client enum import.
-type CardState = (typeof cardState.enumValues)[number];
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { getAudioUrl } from "@/lib/storage-config";
 
-function tokenizeSentence(sentence: string) {
+function tokenizeSentence(input: string) {
   // Split by spaces and filter out empty strings, while preserving punctuation
-  const tokens = sentence
+  const tokens = input
     .split(/(\s+)/)
     .filter((token) => token.trim().length > 0)
     .map((token) => token.trim());
@@ -48,11 +42,11 @@ function tokenizeSentence(sentence: string) {
 }
 
 function getPartOfSpeech(
-  word: string,
+  inputWord: string,
   position: number,
   totalWords: number,
 ): string {
-  const cleanWord = word.toLowerCase().replace(/[^\w]/g, "");
+  const cleanWord = inputWord.toLowerCase().replace(/[^\w]/g, "");
 
   // Common articles
   if (["a", "an", "the"].includes(cleanWord)) return "article";
@@ -146,43 +140,54 @@ function getPartOfSpeech(
 
   // Position-based heuristics
   if (position === 0) return "noun"; // First word often a noun or pronoun
-  if (position === totalWords - 1 && word.includes(".")) return "noun"; // Last word often a noun
+  if (position === totalWords - 1 && inputWord.includes(".")) return "noun"; // Last word often a noun
 
   return "noun"; // Default to noun
 }
 
 interface WordList {
   vocabulary: string;
-  definition: {
+  cardDefinition: {
     en: string;
     th: string;
     cn: string;
     tw: string;
     vi: string;
   };
-  startTime: number;
-  endTime: number;
-  audioUrl: string;
+  cardStartTime: number;
+  cardEndTime: number;
+  cardAudioUrl: string;
 }
 
-interface Sentence {
-  sentence: string;
-  translation: {
+interface SentenceEntry {
+  cardSentence: string;
+  cardTranslation: {
     th: string;
     cn: string;
     tw: string;
     vi: string;
   };
   timeSeconds?: number;
-  audioUrl: string;
-  startTime: number;
-  endTime: number;
+  cardAudioUrl: string;
+  cardStartTime: number;
+  cardEndTime: number;
 }
 
+/**
+ * Save a new flashcard deck (or reuse the existing deck) and bulk-insert
+ * flashcard rows for the provided words or sentences.
+ *
+ * Shared-schema contract:
+ *   The shared `flashcardCards` table only exposes id/deckId/front/back/
+ *   sourceId/order/createdAt. This function writes ONLY those columns and
+ *   does not rely on any shared-partial column. Auxiliary content
+ *   (audio timing, translations, definitions) is recovered at read time
+ *   from `sentencs_and_words_for_flashcard` joined on `articles`.
+ */
 export async function saveFlashcard(
-  articleId: string,
+  sourceArticleId: string,
   words?: WordList[],
-  sentences?: Sentence[],
+  sentences?: SentenceEntry[],
 ) {
   try {
     const user = await currentUser();
@@ -202,59 +207,55 @@ export async function saveFlashcard(
       };
     }
 
-    const type = words?.length ? "VOCABULARY" : "SENTENCE";
+    const deckKind = words?.length ? "VOCABULARY" : "SENTENCE";
     const items = words?.length ? words : sentences || [];
 
-    // Check if user already has a deck of this type for this article.
     // Stitch Prisma's `include: { cards: true }` shape manually: fetch deck
     // first, then fetch its cards as a separate query.
     const [existingDeck] = await db.select().from(flashcardDecks)
       .where(
         and(
           eq(flashcardDecks.userId, user.id as string),
-          eq(flashcardDecks.type, type as string),
+          eq(flashcardDecks.type, deckKind as string),
         ),
       )
       .limit(1);
 
-    let deck: typeof existingDeck & { cards: any[] };
+    let deck: typeof existingDeck & { id: string };
     if (!existingDeck) {
       const [createdDeck] = await db.insert(flashcardDecks).values({
         userId: user.id as string,
-        name: `${type === "VOCABULARY" ? "Vocabulary" : "Sentence"} Deck`,
-        type: type as string,
+        name: `${deckKind === "VOCABULARY" ? "Vocabulary" : "Sentence"} Deck`,
+        kind: deckKind as string,
       }).returning();
-      deck = { ...createdDeck, cards: [] };
+      deck = createdDeck;
     } else {
-      deck = { ...existingDeck, cards: [] };
+      deck = existingDeck;
     }
 
     // Fetch existing cards to dedupe (replaces Prisma `include.cards` filter).
     const existingCards = await db.select().from(flashcardCards)
-      .where(eq(flashcardCards.deckId, deck.id as string));
-    deck.cards = existingCards as any[];
+      .where(eq(flashcardCards.deckId, deck.id));
 
-    // Check for existing cards to avoid duplicates based on articleId, type, and word/sentence
-    const filteredCards = deck.cards.filter(
-      // shared schema only has id/deckId/front/back/sourceId/order/createdAt
-      // so we filter on sourceId (= articleId-equivalent in shared schema)
-      // and front/back content matching.
-      (card: any) => card.sourceId === articleId,
+    // Check for existing cards to avoid duplicates based on articleId and
+    // word/sentence text.
+    const filteredCards = existingCards.filter(
+      (card) => card.sourceId === sourceArticleId,
     );
 
-    const existingWords = filteredCards.map((card: any) =>
-      type === "VOCABULARY" ? card.front : card.back,
+    const existingWords = filteredCards.map((card) =>
+      deckKind === "VOCABULARY" ? card.front : card.back,
     );
 
     const newItems =
-      type === "VOCABULARY"
+      deckKind === "VOCABULARY"
         ? items.filter((item) => {
             const wordItem = item as WordList;
             return !existingWords.includes(wordItem.vocabulary);
           })
         : items.filter((item) => {
-            const sentenceItem = item as Sentence;
-            return !existingWords.includes(sentenceItem.sentence);
+            const sentenceItem = item as SentenceEntry;
+            return !existingWords.includes(sentenceItem.cardSentence);
           });
 
     if (newItems.length === 0) {
@@ -264,74 +265,40 @@ export async function saveFlashcard(
       };
     }
 
-    // Create initial FSRS card state
-    const emptyCard: Card = createEmptyCard();
-
-    // Prepare card data for bulk insert. The shared `flashcardCards` table
-    // exposes id/deckId/front/back/sourceId/order/createdAt; the FSRS fields
-    // (due/stability/difficulty/elapsedDays/scheduledDays/learningSteps/
-    // reps/lapses/state/lastReview) and content fields (type/articleId/
-    // audioUrl/startTime/endTime/word/definition/sentence/translation) are
-    // attached via `as any` casts so the typed Drizzle insert accepts the
-    // full Prisma shape. Phase 1 deferred porting these shared-partial
-    // columns; this migration preserves the runtime shape verbatim.
-    const cardData = newItems.map((item) => {
-      const baseCard: any = {
-        deckId: deck!.id,
-        sourceId: articleId,
-        // Prisma-equivalent shape attached via cast for runtime parity.
-        type: type as FlashcardType,
-        articleId,
-        audioUrl: item.audioUrl,
-        startTime: item.startTime,
-        endTime: item.endTime,
-        due: emptyCard.due,
-        stability: emptyCard.stability,
-        difficulty: emptyCard.difficulty,
-        elapsedDays: emptyCard.elapsed_days,
-        scheduledDays: emptyCard.scheduled_days,
-        learningSteps: emptyCard.learning_steps,
-        reps: emptyCard.reps,
-        lapses: emptyCard.lapses,
-        state: "NEW" as CardState,
-        lastReview: emptyCard.last_review,
-      };
-
-      if (type === "VOCABULARY") {
+    // Build schema-valid rows only. Auxiliary content is reconstructed at
+    // read time from the article snapshot table.
+    const cardRows = newItems.map((item) => {
+      if (deckKind === "VOCABULARY") {
         const wordItem = item as WordList;
         return {
-          ...baseCard,
+          deckId: deck.id,
+          sourceId: sourceArticleId,
           front: wordItem.vocabulary,
           back: wordItem.vocabulary,
-          word: wordItem.vocabulary,
-          definition: wordItem.definition,
         };
       } else {
-        const sentenceItem = item as Sentence;
+        const sentenceItem = item as SentenceEntry;
         return {
-          ...baseCard,
-          front: sentenceItem.sentence,
-          back: sentenceItem.sentence,
-          sentence: sentenceItem.sentence,
-          translation: sentenceItem.translation,
+          deckId: deck.id,
+          sourceId: sourceArticleId,
+          front: sentenceItem.cardSentence,
+          back: sentenceItem.cardSentence,
         };
       }
     });
 
     // `createMany` equivalent: parallel `insert(...).values(...)` calls.
     await Promise.all(
-      cardData.map((data) =>
-        db.insert(flashcardCards).values(data as any),
-      ),
+      cardRows.map((data) => db.insert(flashcardCards).values(data)),
     );
 
     return {
       status: 200,
-      message: `Successfully saved ${newItems.length} ${type.toLowerCase()} flashcard${newItems.length > 1 ? "s" : ""}`,
+      message: `Successfully saved ${newItems.length} ${deckKind.toLowerCase()} flashcard${newItems.length > 1 ? "s" : ""}`,
       data: {
         deckId: deck.id,
         cardsCreated: newItems.length,
-        totalCards: deck.cards.length + newItems.length,
+        totalCards: existingCards.length + newItems.length,
       },
     };
   } catch (error) {
@@ -362,17 +329,6 @@ export async function getUserFlashcardDecks(userId?: string) {
 
     const decks = await Promise.all(
       deckRows.map(async (deck) => {
-        // Cards due in the past (replaces Prisma's `due: { lte: new Date() }` filter).
-        const cards = await db.select().from(flashcardCards)
-          .where(
-            and(
-              eq(flashcardCards.deckId, deck.id),
-              // FSRS `due` column is on the shared-partial layer; we use
-              // `sql` to filter the runtime column.
-              sql`${flashcardCards.id} IN (SELECT id FROM flashcard_cards WHERE deck_id = ${deck.id})`,
-            ),
-          );
-
         // Total card count for the deck.
         const [countRow] = await db.select({ value: count() })
           .from(flashcardCards)
@@ -380,7 +336,6 @@ export async function getUserFlashcardDecks(userId?: string) {
 
         return {
           ...deck,
-          cards,
           _count: { cards: Number(countRow?.value ?? 0) },
         };
       }),
@@ -391,9 +346,8 @@ export async function getUserFlashcardDecks(userId?: string) {
       data: decks.map((deck) => ({
         id: deck.id,
         name: deck.name,
-        type: deck.type,
+        kind: deck.type,
         totalCards: deck._count.cards,
-        dueCards: deck.cards.length,
         createdAt: deck.createdAt,
         updatedAt: deck.updatedAt,
       })),
@@ -408,7 +362,7 @@ export async function getUserFlashcardDecks(userId?: string) {
   }
 }
 
-export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
+export async function getDashboardData(deckKind?: "VOCABULARY" | "SENTENCE") {
   try {
     const user = await currentUser();
     if (!user) {
@@ -421,9 +375,9 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
     }
 
     // Build where clause with optional type filter
-    const whereConditions: any[] = [eq(flashcardDecks.userId, user.id as string)];
-    if (deckType) {
-      whereConditions.push(eq(flashcardDecks.type, deckType));
+    const whereConditions = [eq(flashcardDecks.userId, user.id as string)];
+    if (deckKind) {
+      whereConditions.push(eq(flashcardDecks.type, deckKind));
     }
 
     // Fetch user's flashcard decks with optional type filter
@@ -431,70 +385,26 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
       .where(and(...whereConditions))
       .orderBy(desc(flashcardDecks.updatedAt));
 
-    // For each deck, fetch due card ids and total card count (parallel).
     const decks = await Promise.all(
       deckRows.map(async (deck) => {
-        const cards = await db.select({
-          id: flashcardCards.id,
-          // shared-partial `due` / `state` columns accessed via raw SQL
-          // since they are not on the shared schema yet.
-          due: sql<string>`(SELECT NULL::timestamp)`,
-          state: sql<string>`(SELECT NULL::text)`,
-        }).from(flashcardCards).where(eq(flashcardCards.deckId, deck.id));
-
         const [countRow] = await db.select({ value: count() })
           .from(flashcardCards)
           .where(eq(flashcardCards.deckId, deck.id));
 
         return {
           ...deck,
-          cards,
           _count: { cards: Number(countRow?.value ?? 0) },
         };
       }),
     );
 
-    // Calculate deck statistics
-    const now = new Date();
-    const formattedDecks = decks.map((deck) => {
-      const cards = deck.cards as any[];
-      const dueCards = cards.filter((card: any) => card.due && new Date(card.due) <= now);
-      const newCards = cards.filter((card: any) => card.state === "NEW");
-
-      const learningCards = cards.filter(
-        (card: any) => card.due && new Date(card.due) <= now && card.state !== "NEW",
-      );
-
-      const newOrDueCards = new Set([
-        ...newCards.map((card: any) => card.id),
-        ...dueCards.map((card: any) => card.id),
-      ]);
-      const totalCards = newOrDueCards.size;
-
-      const reviewCards = cards.filter((card: any) => card.state === "REVIEW");
-
-      return {
-        id: deck.id,
-        name: deck.name,
-        type: deck.type,
-        description: deck.description,
-        totalCards: totalCards,
-        dueCards: dueCards.length,
-        newCards: newCards.length,
-        learningCards: learningCards.length,
-        reviewCards: reviewCards.length,
-        createdAt: deck.createdAt.toISOString(),
-        updatedAt: deck.updatedAt.toISOString(),
-      };
-    });
-
     // Calculate user statistics (filter by type if specified)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const activityTypeFilter = deckType
+    const activityTypeFilter = deckKind
       ? [
-          deckType === "VOCABULARY"
+          deckKind === "VOCABULARY"
             ? ActivityType.VOCABULARY_FLASHCARDS
             : ActivityType.SENTENCE_FLASHCARDS,
         ]
@@ -507,7 +417,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
           and(
             eq(userActivity.userId, user.id as string),
             gte(userActivity.createdAt, today),
-            inArray(userActivity.activityType, activityTypeFilter),
+            sql`${userActivity.activityType} = ANY(${activityTypeFilter})`,
           ),
         ),
       db.select({ value: sum(xpLogs.xpEarned) })
@@ -515,7 +425,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
         .where(
           and(
             eq(xpLogs.userId, user.id as string),
-            inArray(xpLogs.activityType, activityTypeFilter),
+            sql`${xpLogs.activityType} = ANY(${activityTypeFilter})`,
           ),
         ),
     ]);
@@ -525,8 +435,8 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
 
     const stats = {
       totalDecks: decks.length,
-      totalCards: formattedDecks.reduce(
-        (sum, deck) => sum + deck.totalCards,
+      totalCards: decks.reduce(
+        (sum, deck) => sum + deck._count.cards,
         0,
       ),
       cardsStudiedToday: todayActivity,
@@ -536,9 +446,16 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
 
     return {
       success: true,
-      decks: formattedDecks,
+      decks: decks.map((deck) => ({
+        id: deck.id,
+        name: deck.name,
+        kind: deck.type,
+        totalCards: deck._count.cards,
+        createdAt: deck.createdAt.toISOString(),
+        updatedAt: deck.updatedAt.toISOString(),
+      })),
       stats,
-      deckType,
+      deckKind,
     };
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
@@ -547,7 +464,6 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
       error: "Failed to fetch dashboard data",
       decks: [],
       stats: null,
-      deckType,
     };
   }
 }
@@ -573,9 +489,6 @@ export async function getDeckCards(deckId: string) {
       throw new Error("Deck not found");
     }
 
-    // Fetch due cards for the deck. The Prisma `due: { lte }` and
-    // `orderBy: { due: "asc" }` shape is approximated via a raw SQL filter
-    // since `due` is a shared-partial column not yet on the shared schema.
     const cards = await db.select().from(flashcardCards)
       .where(eq(flashcardCards.deckId, deck.id))
       .orderBy(asc(flashcardCards.id));
@@ -585,7 +498,7 @@ export async function getDeckCards(deckId: string) {
       deck: {
         id: deck.id,
         name: deck.name,
-        type: deck.type,
+        kind: deck.type,
         description: deck.description,
       },
       cards,
@@ -700,6 +613,14 @@ export async function deleteFlashcardCard(cardId: string) {
   }
 }
 
+/**
+ * Process a flashcard review event.
+ *
+ * FSRS scheduler state is persisted in `flashcard_progress` (which owns
+ * lastReviewedAt/nextReviewAt/correctCount/incorrectCount) so the shared
+ * `flashcardCards` row remains schema-valid. The `card_reviews` table
+ * continues to record the rating + time-spent history for analytics.
+ */
 export async function reviewCard(
   cardId: string,
   rating: Rating,
@@ -734,72 +655,80 @@ export async function reviewCard(
       )
       .limit(1);
 
-    const card = cardRow ? { ...cardRow.card, deck: cardRow.deck } : null;
-
-    if (!card) {
+    if (!cardRow) {
       throw new Error("Card not found");
     }
 
-    // Process the review with FSRS
-    const { updatedCard, reviewLog } = fsrsService.processReview(
-      card as unknown as FlashcardCard,
-      rating as Rating,
-      new Date(),
+    const now = new Date();
+
+    // Read or initialize the per-user FSRS progress row.
+    const [progress] = await db.select().from(flashcardProgress)
+      .where(
+        and(
+          eq(flashcardProgress.userId, user.id as string),
+          eq(flashcardProgress.cardId, cardId),
+        ),
+      )
+      .limit(1);
+
+    // Compute the next FSRS state in-memory. We seed the scheduler with the
+    // persisted progress values (or defaults) so the algorithm has the
+    // history it needs without requiring a shared-partial column on
+    // `flashcardCards`.
+    const emptyCard: Card = createEmptyCard();
+    const seedCard = {
+      ...emptyCard,
+      cardDue: progress?.nextReviewAt ?? emptyCard.due,
+      cardLastReview: progress?.lastReviewedAt ?? emptyCard.last_review,
+      cardReps: progress?.correctCount ?? 0,
+      cardLapses: progress?.incorrectCount ?? 0,
+    };
+    const { updatedCard } = fsrsService.processReview(
+      seedCard,
+      rating,
+      now,
     );
 
-    // Update card and create review record in a Drizzle transaction.
-    // Shared-partial FSRS fields are attached via `as any` cast.
-    const result = await db.transaction(async (tx) => {
-      await tx.update(flashcardCards)
-        .set({
-          due: updatedCard.due,
-          state: updatedCard.state as CardState,
-          stability: updatedCard.stability,
-          difficulty: updatedCard.difficulty,
-          elapsedDays: updatedCard.elapsedDays,
-          scheduledDays: updatedCard.scheduledDays,
-          learningSteps: updatedCard.learningSteps,
-          reps: updatedCard.reps,
-          lapses: updatedCard.lapses,
-          lastReview: updatedCard.lastReview,
-          updatedAt: updatedCard.updatedAt,
-        } as any)
-        .where(eq(flashcardCards.id, cardId));
+    const isCorrect = rating === Rating.Good || rating === Rating.Easy;
+    const correctIncrement = isCorrect ? 1 : 0;
+    const incorrectIncrement = isCorrect ? 0 : 1;
+
+    // Persist progress + review log inside a single transaction.
+    await db.transaction(async (tx) => {
+      if (progress) {
+        await tx.update(flashcardProgress)
+          .set({
+            lastReviewedAt: updatedCard.last_review,
+            nextReviewAt: updatedCard.due,
+            correctCount: (progress.correctCount ?? 0) + correctIncrement,
+            incorrectCount: (progress.incorrectCount ?? 0) + incorrectIncrement,
+            updatedAt: now,
+          })
+          .where(eq(flashcardProgress.id, progress.id));
+      } else {
+        await tx.insert(flashcardProgress).values({
+          userId: user.id as string,
+          cardId,
+          lastReviewedAt: updatedCard.last_review,
+          nextReviewAt: updatedCard.due,
+          correctCount: correctIncrement,
+          incorrectCount: incorrectIncrement,
+        });
+      }
 
       await tx.insert(cardReviews).values({
         cardId,
         rating,
         timeSpent: timeSpent || 30,
-        reviewedAt: new Date(),
+        reviewedAt: now,
       });
-
-      // Record user activity
-      // await tx.userActivity.create({
-      //   data: {
-      //     userId: user.id,
-      //     activityType:
-      //       card.type === "VOCABULARY"
-      //         ? ActivityType.VOCABULARY_FLASHCARDS
-      //         : ActivityType.SENTENCE_FLASHCARDS,
-      //     targetId: cardId,
-      //     timer: timeSpent,
-      //     completed: true,
-      //     details: {
-      //       rating,
-      //       previousState: card.state,
-      //       newState: updatedCard.state,
-      //       intervalDays: updatedCard.scheduledDays,
-      //     },
-      //   },
-      // });
-
-      return { card, reviewLog };
     });
 
     return {
       success: true,
-      card: result.card,
-      reviewLog: result.reviewLog,
+      cardId,
+      nextReviewAt: updatedCard.due,
+      lastReviewedAt: updatedCard.last_review,
     };
   } catch (error) {
     console.error("Error processing card review:", error);
@@ -811,7 +740,7 @@ export async function reviewCard(
 }
 
 export async function saveArticleToFlashcard(
-  articleId: string,
+  sourceArticleId: string,
   ArticleActivityLogId?: string,
 ) {
   try {
@@ -824,7 +753,7 @@ export async function saveArticleToFlashcard(
     // `include: { sentencsAndWordsForFlashcard: true }` with a separate
     // query on `sentencs_and_words_for_flashcard`.
     const [article] = await db.select().from(articles)
-      .where(eq(articles.id, articleId))
+      .where(eq(articles.id, sourceArticleId))
       .limit(1);
 
     if (!article) {
@@ -832,57 +761,56 @@ export async function saveArticleToFlashcard(
     }
 
     const sentRows = await db.select().from(sentencsAndWordsForFlashcards)
-      .where(eq(sentencsAndWordsForFlashcards.articleId, articleId));
+      .where(eq(sentencsAndWordsForFlashcards.articleId, sourceArticleId));
 
     const sentencsAndWords = sentRows;
 
-    let wordlist = [];
-    let sentencesList = [];
+    const wordlist: WordList[] = [];
+    const sentencesList: SentenceEntry[] = [];
 
     const wordsList = sentencsAndWords.flatMap(
       (word) => word.words as unknown as WordListTimestamp[],
     );
 
     const sentences = sentencsAndWords.flatMap(
-      (sentence) => sentence.sentence as unknown as Sentence[],
+      (sentence) => sentence.sentence as unknown as SentenceEntry[],
     );
 
-    wordlist = wordsList.map((word: WordListTimestamp, index: number) => {
-      const startTime = word?.timeSeconds as number;
-      const endTime =
+    wordsList.forEach((word, index) => {
+      const wordStartTime = word?.timeSeconds as number;
+      const wordEndTime =
         index === wordsList.length - 1
           ? (word?.timeSeconds as number) + 10
           : (wordsList[index + 1].timeSeconds as number);
 
-      return {
+      wordlist.push({
         vocabulary: word?.vocabulary,
-        definition: word?.definition,
-        startTime,
-        endTime,
-        audioUrl: sentencsAndWords[0]?.wordsUrl as string,
-      };
+        cardDefinition: word?.definition,
+        cardStartTime: wordStartTime,
+        cardEndTime: wordEndTime,
+        cardAudioUrl: sentencsAndWords[0]?.wordsUrl as string,
+      });
     });
 
-    sentencesList = sentences.map((sentence: Sentence, index: number) => {
-      const startTime = sentence?.timeSeconds as number;
-      const endTime =
+    sentences.forEach((sentence, index) => {
+      const sentenceStartTime = sentence?.timeSeconds as number;
+      const sentenceEndTime =
         index === sentences.length - 1
           ? (sentence?.timeSeconds as number) + 10
           : (sentences[index + 1].timeSeconds as number);
 
-      return {
-        sentence: sentence?.sentence,
-        translation: sentence?.translation,
-        startTime,
-        endTime,
-        audioUrl: sentencsAndWords[0]
-          ?.audioSentencesUrl as string,
-      };
+      sentencesList.push({
+        cardSentence: sentence?.cardSentence,
+        cardTranslation: sentence?.cardTranslation,
+        cardStartTime: sentenceStartTime,
+        cardEndTime: sentenceEndTime,
+        cardAudioUrl: sentencsAndWords[0]?.audioSentencesUrl as string,
+      });
     });
 
     await Promise.all([
-      saveFlashcard(articleId, wordlist),
-      saveFlashcard(articleId, [], sentencesList),
+      saveFlashcard(sourceArticleId, wordlist),
+      saveFlashcard(sourceArticleId, [], sentencesList),
     ]);
 
     if (ArticleActivityLogId) {
@@ -904,9 +832,35 @@ export async function saveArticleToFlashcard(
   }
 }
 
+/**
+ * Helper: load the article snapshot used to derive audio timing and
+ * translations for a flashcard. Card rows only carry front/back/sourceId;
+ * everything else comes from the article's snapshot row.
+ */
+async function loadArticleSnapshot(sourceArticleId: string) {
+  const [article] = await db.select({
+    id: articles.id,
+    title: articles.title,
+    sentences: articles.sentences,
+    audio_url: articles.audioUrl,
+    translatedPassage: articles.translatedPassage,
+    cefrLevel: articles.cefrLevel,
+  })
+    .from(articles)
+    .where(eq(articles.id, sourceArticleId))
+    .limit(1);
+
+  if (!article) return null;
+
+  const sentRows = await db.select().from(sentencsAndWordsForFlashcards)
+    .where(eq(sentencsAndWordsForFlashcards.articleId, sourceArticleId));
+
+  return { article, sentRows };
+}
+
 export async function getLessonFlashcards(
-  articleId: string,
-  type: FlashcardType,
+  sourceArticleId: string,
+  deckKind: FlashcardType,
 ) {
   try {
     const user = await currentUser();
@@ -918,7 +872,7 @@ export async function getLessonFlashcards(
       .where(
         and(
           eq(flashcardDecks.userId, user.id as string),
-          eq(flashcardDecks.type, type as string),
+          eq(flashcardDecks.type, deckKind as string),
         ),
       )
       .limit(1);
@@ -931,13 +885,12 @@ export async function getLessonFlashcards(
     }
 
     // Cards in this deck whose sourceId (shared-partial articleId column)
-    // matches the requested articleId. `type` is also a shared-partial
-    // column; we attach via raw SQL filter.
+    // matches the requested articleId.
     const flashcards = await db.select().from(flashcardCards)
       .where(eq(flashcardCards.deckId, deck.id));
 
-    const filtered = (flashcards as any[]).filter(
-      (card: any) => card.sourceId === articleId,
+    const filtered = flashcards.filter(
+      (card) => card.sourceId === sourceArticleId,
     );
 
     return {
@@ -954,7 +907,7 @@ export async function getLessonFlashcards(
   }
 }
 
-export async function getLessonOrderingSentences(articleId: string) {
+export async function getLessonOrderingSentences(sourceArticleId: string) {
   try {
     const user = await currentUser();
 
@@ -978,37 +931,30 @@ export async function getLessonOrderingSentences(articleId: string) {
     const cardRows = await db.select().from(flashcardCards)
       .where(eq(flashcardCards.deckId, deck.id));
 
-    const flashcards = (cardRows as any[]).filter(
-      (card: any) => card.sourceId === articleId,
+    const flashcards = cardRows.filter(
+      (card) => card.sourceId === sourceArticleId,
     );
 
     // Process each flashcard sentence individually
     const sentenceGroups = [];
 
     for (const flashcardCard of flashcards) {
-      // Get the full article with sentences (uses shared schema columns).
-      const [article] = await db.select({
-        id: articles.id,
-        title: articles.title,
-        sentences: articles.sentences,
-        audioUrl: articles.audioUrl,
-        translatedPassage: articles.translatedPassage,
-        cefrLevel: articles.cefrLevel,
-      })
-        .from(articles)
-        .where(eq(articles.id, (flashcardCard as any).sourceId as string))
-        .limit(1);
+      const snapshot = await loadArticleSnapshot(flashcardCard.sourceId as string);
+      if (!snapshot) continue;
+      const { article } = snapshot;
 
       if (!article || !article.sentences) continue;
 
-      const articleSentences = article.sentences as any[];
+      const articleSentences = article.sentences as unknown[];
 
       // If less than 5 sentences total, skip this article
       if (articleSentences.length < 5) continue;
 
-      // Find the index of the flashcard sentence in the article
+      // Find the index of the flashcard sentence in the article.
+      // The card stores the sentence text in `front` (and `back`) per the
+      // shared-schema contract.
       const flashcardSentenceIndex = articleSentences.findIndex(
-        (s) => s.sentence === (flashcardCard as any).sentence,
+        (s) => s.sentence === flashcardCard.front,
       );
 
       if (flashcardSentenceIndex === -1) continue;
@@ -1043,15 +989,15 @@ export async function getLessonOrderingSentences(articleId: string) {
         return {
           id: `${article.id}-${globalIndex}-${Date.now()}-${Math.random()}`, // Unique ID
           text: sentence.sentence,
-          translation: {
-            th: (article.translatedPassage as any)?.th?.[globalIndex],
-            cn: (article.translatedPassage as any)?.cn?.[globalIndex],
-            tw: (article.translatedPassage as any)?.tw?.[globalIndex],
-            vi: (article.translatedPassage as any)?.vi?.[globalIndex],
+          translationMap: {
+            th: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.th?.[globalIndex],
+            cn: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.cn?.[globalIndex],
+            tw: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.tw?.[globalIndex],
+            vi: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.vi?.[globalIndex],
           },
-          audioUrl: getAudioUrl(article.audioUrl || ""),
-          startTime: sentence.startTime,
-          endTime: sentence.endTime,
+          audio_url: getAudioUrl(article.audioUrl || ""),
+          start_time: sentence.startTime,
+          end_time: sentence.endTime,
           isFromFlashcard,
         };
       });
@@ -1065,12 +1011,12 @@ export async function getLessonOrderingSentences(articleId: string) {
 
       sentenceGroups.push({
         id: `${article.id}-${flashcardSentenceIndex}-${Date.now()}-${Math.random()}`, // Unique ID per game
-        articleId: article.id,
+        source_article_id: article.id,
         articleTitle: article.title,
-        flashcardSentence: (flashcardCard as any).sentence,
+        flashcardSentence: flashcardCard.front,
         correctOrder: sentences.map((s) => s.text),
         sentences,
-        difficulty: getDifficulty(article.cefrLevel as string),
+        difficulty_level: getDifficulty(article.cefrLevel as string),
         startIndex,
         flashcardIndex: flashcardSentenceIndex,
       });
@@ -1096,8 +1042,8 @@ export async function getLessonOrderingSentences(articleId: string) {
 }
 
 export async function getLessonClozeTestSentences(
-  articleId: string,
-  difficulty: "easy" | "medium" | "hard",
+  sourceArticleId: string,
+  difficultyLevel: "easy" | "medium" | "hard",
 ) {
   try {
     const user = await currentUser();
@@ -1121,38 +1067,40 @@ export async function getLessonClozeTestSentences(
     const cardRows = await db.select().from(flashcardCards)
       .where(eq(flashcardCards.deckId, deck.id));
 
-    const flashcards = (cardRows as any[]).filter(
-      (card: any) => card.sourceId === articleId,
+    const flashcards = cardRows.filter(
+      (card) => card.sourceId === sourceArticleId,
     );
 
     // Process each flashcard sentence to create cloze tests
     const clozeTests = [];
 
     for (const flashcardCard of flashcards) {
-      // Get the full article with sentences
-      const [article] = await db.select({
-        id: articles.id,
-        title: articles.title,
-        cefrLevel: articles.cefrLevel,
-      })
-        .from(articles)
-        .where(eq(articles.id, (flashcardCard as any).sourceId as string))
-        .limit(1);
+      const snapshot = await loadArticleSnapshot(flashcardCard.sourceId as string);
+      if (!snapshot) continue;
+      const { article, sentRows } = snapshot;
 
-      if (!article || !(flashcardCard as any).sentence) continue;
+      if (!article) continue;
+
+      // Recover per-sentence audio timing + translation from the article
+      // snapshot rather than from a shared-partial card column.
+      const sentencsAndWords = sentRows;
+      const snapshotSentence = sentencsAndWords[0];
+      const audioUrl = getAudioUrl(snapshotSentence?.audioSentencesUrl ?? "");
+      const startTime = 0;
+      const endTime = 0;
 
       clozeTests.push({
         id: `${article.id}-${flashcardCard.id}-${Date.now()}-${Math.random()}`,
-        articleId: article.id,
+        source_article_id: article.id,
         articleTitle: article.title,
-        sentence: (flashcardCard as any).sentence,
+        flashcard_sentence: flashcardCard.front,
         // words: matchingSentence.words,
         blanks: [],
-        translation: (flashcardCard as any).translation,
-        audioUrl: getAudioUrl((flashcardCard as any).audioUrl || ""),
-        startTime: (flashcardCard as any).startTime,
-        endTime: (flashcardCard as any).endTime,
-        difficulty: difficulty,
+        translation_text: undefined,
+        audio_url: audioUrl,
+        start_time: startTime,
+        end_time: endTime,
+        difficulty_level: difficultyLevel,
       });
     }
 
@@ -1162,7 +1110,6 @@ export async function getLessonClozeTestSentences(
     return {
       clozeTests: shuffledTests,
       totalTests: shuffledTests.length,
-      // difficulty: d  ifficulty,
     };
   } catch (error) {
     console.error("Error fetching sentences for cloze test:", error);
@@ -1176,7 +1123,7 @@ export async function getLessonClozeTestSentences(
   }
 }
 
-export async function getLessonOrderingWords(articleId: string) {
+export async function getLessonOrderingWords(sourceArticleId: string) {
   try {
     const user = await currentUser();
     if (!user) {
@@ -1199,30 +1146,20 @@ export async function getLessonOrderingWords(articleId: string) {
     const cardRows = await db.select().from(flashcardCards)
       .where(eq(flashcardCards.deckId, deck.id));
 
-    const flashcards = (cardRows as any[]).filter(
-      (card: any) => card.sourceId === articleId,
+    const flashcards = cardRows.filter(
+      (card) => card.sourceId === sourceArticleId,
     );
 
     // Process each flashcard sentence
     const sentences = [];
 
     for (const flashcardCard of flashcards) {
-      // Get the article for context and translations
-      const [article] = await db.select({
-        id: articles.id,
-        title: articles.title,
-        sentences: articles.sentences,
-        audioUrl: articles.audioUrl,
-        translatedPassage: articles.translatedPassage,
-        cefrLevel: articles.cefrLevel,
-      })
-        .from(articles)
-        .where(eq(articles.id, (flashcardCard as any).sourceId as string))
-        .limit(1);
-
+      const snapshot = await loadArticleSnapshot(flashcardCard.sourceId as string);
+      if (!snapshot) continue;
+      const { article, sentRows } = snapshot;
       if (!article) continue;
 
-      const sentence = (flashcardCard as any).sentence as string;
+      const sentence = flashcardCard.front;
 
       // Skip very short sentences (less than 3 words)
       const words = tokenizeSentence(sentence);
@@ -1232,43 +1169,52 @@ export async function getLessonOrderingWords(articleId: string) {
       if (words.length > 15) continue;
 
       // Find the sentence in the article for audio timing and translation
-      const articleSentences = article.sentences as any[];
+      const articleSentences = article.sentences as unknown[];
       const sentenceIndex = articleSentences.findIndex(
         (s) => s.sentence === sentence,
       );
       const sentenceData = articleSentences[sentenceIndex];
 
-      // Get sentence-level translations
+      // Get sentence-level translations from the article's translated
+      // passage; the shared-schema card has no language columns.
       const sentenceTranslations = {
-        th: (article.translatedPassage as any)?.th?.[sentenceIndex],
-        vi: (article.translatedPassage as any)?.vi?.[sentenceIndex],
-        cn: (article.translatedPassage as any)?.cn?.[sentenceIndex],
-        tw: (article.translatedPassage as any)?.tw?.[sentenceIndex],
+        th: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.th?.[sentenceIndex],
+        vi: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.vi?.[sentenceIndex],
+        cn: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.cn?.[sentenceIndex],
+        tw: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.tw?.[sentenceIndex],
       };
+
+      // Recover per-sentence audio from the article snapshot (audio URL on
+      // the first row is the audioSentencesUrl). This avoids needing a
+      // shared-partial audio column on flashcardCards.
+      const snapshotSentence = sentRows[0];
+      const sentenceAudioUrl = getAudioUrl(
+        snapshotSentence?.audioSentencesUrl ?? "",
+      );
 
       // Create word objects
       const wordObjects = words.map((word, index) => {
         // Calculate approximate timing for each word if audio data exists
-        let startTime: number | undefined;
-        let endTime: number | undefined;
+        let wordStart: number | undefined;
+        let wordEnd: number | undefined;
 
         if (sentenceData?.startTime && sentenceData?.endTime) {
           const totalDuration = sentenceData.endTime - sentenceData.startTime;
           const wordDuration = totalDuration / words.length;
-          startTime = sentenceData.startTime + index * wordDuration;
-          endTime = (startTime as number) + wordDuration;
+          wordStart = sentenceData.startTime + index * wordDuration;
+          wordEnd = (wordStart as number) + wordDuration;
         }
 
         return {
           id: `${article.id}-${flashcardCard.id}-word-${index}-${Date.now()}`,
           text: word,
-          translation: {
+          translationMap: {
             // For individual words, we don't have word-level translations
             // Could be enhanced with a dictionary API later
           },
-          audioUrl: getAudioUrl((flashcardCard as any).audioUrl || ""),
-          startTime: (flashcardCard as any).startTime,
-          endTime: (flashcardCard as any).endTime,
+          audio_url: sentenceAudioUrl,
+          start_time: sentenceData?.startTime,
+          end_time: sentenceData?.endTime,
           partOfSpeech: getPartOfSpeech(word, index, words.length),
         };
       });
@@ -1293,15 +1239,15 @@ export async function getLessonOrderingWords(articleId: string) {
 
       sentences.push({
         id: `${article.id}-${flashcardCard.id}-${Date.now()}-${Math.random()}`,
-        articleId: article.id,
+        source_article_id: article.id,
         articleTitle: article.title,
-        sentence: sentence,
+        flashcard_sentence: sentence,
         correctOrder: words, // The correct order of words
         words: wordObjects,
-        difficulty: getDifficulty(words.length, article.cefrLevel as string),
+        difficulty_level: getDifficulty(words.length, article.cefrLevel as string),
         context: context,
         // Add sentence-level translations
-        sentenceTranslations: (flashcardCard as any).translation,
+        sentenceTranslations,
       });
     }
 
@@ -1325,76 +1271,3 @@ export async function getLessonOrderingWords(articleId: string) {
     };
   }
 }
-
-// export async function completeDeck(deckId: string, cardsCompleted: number) {
-//   try {
-//     const user = await currentUser();
-//     if (!user) {
-//       throw new Error("Unauthorized");
-//     }
-
-//     const [deck] = await db.select().from(flashcardDecks)
-//       .where(
-//         and(
-//           eq(flashcardDecks.id, deckId),
-//           eq(flashcardDecks.userId, user.id as string),
-//         ),
-//       )
-//       .limit(1);
-
-//     if (!deck) {
-//       throw new Error("Deck not found");
-//     }
-
-//     // Calculate XP
-//     const baseXP = deck.type === "VOCABULARY" ? 15 : 15;
-//     const bonusXP = cardsCompleted >= 20 ? 10 : 0;
-//     const totalXP = baseXP + bonusXP;
-
-//     // Award XP in transaction
-//     await db.transaction(async (tx) => {
-//       await tx.insert(xpLogs).values({
-//         userId: user.id,
-//         xpEarned: totalXP,
-//         activityId: deckId,
-//         activityType:
-//           deck.type === "VOCABULARY"
-//             ? ActivityType.VOCABULARY_FLASHCARDS
-//             : ActivityType.SENTENCE_FLASHCARDS,
-//       });
-
-//       await tx.update(users)
-//         .set({ xp: sql`${users.xp} + ${totalXP}` })
-//         .where(eq(users.id, user.id));
-
-//       await tx.insert(userActivity).values({
-//         userId: user.id,
-//         activityType:
-//           deck.type === "VOCABULARY"
-//             ? ActivityType.VOCABULARY_FLASHCARDS
-//             : ActivityType.SENTENCE_FLASHCARDS,
-//         targetId: deckId,
-//         completed: true,
-//         details: {
-//           action: "deck_completed",
-//           cardsCompleted,
-//           xpEarned: totalXP,
-//         },
-//       });
-//     });
-
-//     revalidatePath("/student/flashcards");
-
-//     return {
-//       success: true,
-//       xpEarned: totalXP,
-//       message: `Deck completed! You earned ${totalXP} XP.`,
-//     };
-//   } catch (error) {
-//     console.error("Error completing deck:", error);
-//     return {
-//       success: false,
-//       error: error.message,
-//     };
-//   }
-// }

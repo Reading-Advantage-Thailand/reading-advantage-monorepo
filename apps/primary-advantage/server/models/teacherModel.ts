@@ -70,7 +70,7 @@ export const getTeachers = async (
         // (we'll keep one inline)
         // Use sql template literal:
         // (we re-import at top to use here)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         sqlOr(users.name, users.email, `%${search}%`),
       );
     }

@@ -265,25 +265,41 @@ export default function StudentsPage() {
   };
 
   // Handle add student
-  const handleAddStudent = () => {
-    const newStudent: Student = {
-      id: Date.now().toString(),
-      name: formData.name,
-      email: formData.email,
-      cefrLevel: formData.cefrLevel,
-      xp: 0,
-      role: formData.role,
-      createdAt: new Date().toISOString().split("T")[0],
-      className: null,
-      classroomId: null,
-    };
+  const handleAddStudent = async () => {
+    try {
+      // Persist the new student via the backend API. We reconcile the
+      // server response into local state instead of mutating locally and
+      // re-fetching, so the admin UI reflects the authoritative row id
+      // and any server-side defaults (timestamps, ids, etc.).
+      const response = await fetch("/api/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          cefrLevel: formData.cefrLevel,
+          role: formData.role,
+        }),
+      });
 
-    setStudents((prev) => [...prev, newStudent]);
-    setIsAddDialogOpen(false);
-    resetForm();
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to add student:", errorText);
+        return;
+      }
 
-    // Refresh data from server
-    fetchStudents();
+      const payload = (await response.json()) as { student?: Student };
+      if (payload.student) {
+        setStudents((prev) => [...prev, payload.student as Student]);
+      } else {
+        await fetchStudents();
+      }
+
+      setIsAddDialogOpen(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error adding student:", error);
+    }
   };
 
   // Handle edit student
@@ -299,36 +315,68 @@ export default function StudentsPage() {
   };
 
   // Handle update student
-  const handleUpdateStudent = () => {
+  const handleUpdateStudent = async () => {
     if (!editingStudent) return;
 
-    setStudents((prev) =>
-      prev.map((student) =>
-        student.id === editingStudent.id
-          ? {
-              ...student,
-              name: formData.name,
-              email: formData.email,
-              cefrLevel: formData.cefrLevel,
-              role: formData.role,
-            }
-          : student,
-      ),
-    );
+    const targetId = editingStudent.id;
 
-    setIsEditDialogOpen(false);
-    setEditingStudent(null);
-    resetForm();
+    try {
+      // Send a real PUT to the backend API and reconcile the response.
+      const response = await fetch(`/api/students/${targetId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          cefrLevel: formData.cefrLevel,
+          role: formData.role,
+        }),
+      });
 
-    // Refresh data from server
-    fetchStudents();
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to update student:", errorText);
+        return;
+      }
+
+      const payload = (await response.json()) as { student?: Student };
+      if (payload.student) {
+        setStudents((prev) =>
+          prev.map((student) =>
+            student.id === targetId ? (payload.student as Student) : student,
+          ),
+        );
+      } else {
+        await fetchStudents();
+      }
+
+      setIsEditDialogOpen(false);
+      setEditingStudent(null);
+      resetForm();
+    } catch (error) {
+      console.error("Error updating student:", error);
+    }
   };
 
   // Handle delete student
-  const handleDeleteStudent = (id: string) => {
-    setStudents((prev) => prev.filter((student) => student.id !== id));
-    // Refresh data from server
-    fetchStudents();
+  const handleDeleteStudent = async (id: string) => {
+    try {
+      // Issue a real DELETE to the backend API. Only after the server
+      // confirms removal do we drop the row from local state.
+      const response = await fetch(`/api/students/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to delete student:", errorText);
+        return;
+      }
+
+      setStudents((prev) => prev.filter((student) => student.id !== id));
+    } catch (error) {
+      console.error("Error deleting student:", error);
+    }
   };
 
   // Get role badge variant

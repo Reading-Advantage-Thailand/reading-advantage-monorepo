@@ -69,7 +69,7 @@ export const createClassroom = async (data: {
         .where(eq(users.id, data.teacherId as string))
         .limit(1);
 
-      let schoolId = user?.schoolId ?? null;
+      const schoolId = user?.schoolId ?? null;
 
       if (data.role === "teacher" && data.teacherId) {
         const [classroom] = await tx.insert(classrooms).values({
@@ -301,7 +301,7 @@ export const getAvailableStudentsForClassroom = async (
 
     // Build the user query: users INNER JOIN userRoles INNER JOIN roles
     // WHERE role.name = 'student' AND id NOT IN (enrolled)
-    let baseQuery = db.select({
+    const baseQuery = db.select({
       id: users.id,
       name: users.name,
       email: users.email,
@@ -318,7 +318,7 @@ export const getAvailableStudentsForClassroom = async (
       // Exclude enrolled students
       whereConditions.push(
         // use sql template for NOT IN
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         // drizzle's `notInArray` operator
         // import notInArray from drizzle-orm in production
         // keep simple: use sql

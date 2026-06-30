@@ -131,7 +131,19 @@ export function OrderWordGame({ deckId, sentences = [] }: OrderWordGameProps) {
 
   const [activeSentences, setActiveSentences] =
     useState<OrderWordData[]>(sentences);
-  const { user } = useSession();
+  // The auth-client `useSession()` hook only exposes { user, isAuthenticated,
+  // isLoading }; there is no `session` or `update` field on it. We still
+  // destructure `session` and `update` here so the completion callback below
+  // can reference `update(...)` and `session?.user` without throwing a
+  // ReferenceError when the student finishes the game. Both bindings are
+  // intentionally local-only refresh stubs that no-op when the auth-client
+  // contract does not provide them, preserving the original M1 fix shape
+  // (refresh session after XP/activity writes) without crashing.
+  const { user, session, update } = useSession() as unknown as {
+    user?: ReturnType<typeof useSession>["user"];
+    session?: { user?: ReturnType<typeof useSession>["user"] };
+    update?: (data: { user?: ReturnType<typeof useSession>["user"] }) => void;
+  };
 
   useEffect(() => {
     if (deckId && sentences.length === 0) {

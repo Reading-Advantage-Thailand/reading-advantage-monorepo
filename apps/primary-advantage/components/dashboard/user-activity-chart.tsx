@@ -73,7 +73,7 @@ function formatDataForDays(
   const data = [];
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  let lastedLevel = 0;
+  const lastedLevel = 0;
 
   for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1)) {
     const dayOfWeek = daysOfWeek[i.getDay()];

@@ -276,7 +276,7 @@ export const generateArticleNew = async (
   try {
     const MAX_ATTEMPTS = 3;
     let attempts = 0;
-    let article: any = null;
+    const article: any = null;
     while (attempts < MAX_ATTEMPTS) {
       try {
         const { object: article } = await generateObject({

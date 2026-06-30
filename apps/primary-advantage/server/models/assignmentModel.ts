@@ -145,7 +145,7 @@ export async function getStudentAssignments(
     const totalCount = Number(countRow?.value ?? 0);
 
     // Get paginated assignments
-    let assignmentsRows = await db.select({
+    const assignmentsRows = await db.select({
       id: studentAssignments.id,
       assignmentId: studentAssignments.assignmentId,
       studentId: studentAssignments.studentId,

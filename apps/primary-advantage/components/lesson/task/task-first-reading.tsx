@@ -305,8 +305,8 @@ export default function TaskFirstReading({ article }: { article: Article }) {
                   paragraph: string;
                   sentences: number[];
                 }[] = [];
-                let currentParagraphText = "";
-                let currentSentenceIndices: number[] = [];
+                const currentParagraphText = "";
+                const currentSentenceIndices: number[] = [];
 
                 // Reconstruct paragraph structure by checking which sentences belong to which paragraph
                 paragraphs.forEach((paragraph) => {

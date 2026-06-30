@@ -40,7 +40,7 @@ export async function updateUserActivity(
     return { error: "User not found" };
   }
 
-  let isCompleted = {};
+  const isCompleted = {};
 
   // Create user activity first
   const [userActivityRow] = await db.insert(userActivity).values({

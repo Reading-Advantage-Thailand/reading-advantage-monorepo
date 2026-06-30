@@ -313,7 +313,7 @@ export async function POST(request: NextRequest) {
     // Process users in batches
     const max = 500;
     let batch: any[] = [];
-    let createdUsers: any[] = [];
+    const createdUsers: any[] = [];
 
     for (const userData of processedUsers) {
       batch.push(userData);

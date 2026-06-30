@@ -351,7 +351,7 @@ export const getArticlesWithParams = async (params: {
   if (title) {
     // Prisma `contains` + `mode: 'insensitive'` → ILIKE
     whereConditions.push(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       // Use raw SQL via drizzle's sql template literal to preserve ILIKE semantics
       // We import `sql` lazily inline for clarity.
       // @ts-ignore - inline import
