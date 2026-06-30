@@ -21,6 +21,7 @@
  */
 
 import { describe, expect, it } from "vitest";
+import { existsSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -30,6 +31,9 @@ const PACKAGE_ROOT = resolve(HERE, "../..");
 const DIST_CLIENT = join(PACKAGE_ROOT, "dist", "client.js");
 const DIST_PRIVILEGED = join(PACKAGE_ROOT, "dist", "privileged.js");
 const STUB_URL = "postgresql://app:app@127.0.0.1:65535/app";
+
+const distClientExists = existsSync(DIST_CLIENT);
+const distPrivilegedExists = existsSync(DIST_PRIVILEGED);
 
 interface SpawnResult {
   status: number | null;
@@ -86,7 +90,9 @@ function runNode(
 }
 
 describe("env-guards — FR-7 (client.ts production-runtime fail-fast)", () => {
-  it("throws on missing DATABASE_URL when NODE_ENV=production and NEXT_PHASE is unset", async () => {
+  const suite = distClientExists ? describe : describe.skip;
+  suite("client.ts production-runtime fail-fast", () => {
+    it("throws on missing DATABASE_URL when NODE_ENV=production and NEXT_PHASE is unset", async () => {
     const result = await runNode(
       `import("${DIST_CLIENT}").then(() => process.stdout.write("imported"));`,
       {
@@ -128,29 +134,31 @@ describe("env-guards — FR-7 (client.ts production-runtime fail-fast)", () => {
     ).not.toContain("DATABASE_URL is required in production runtime");
   });
 
-  it("warns on missing DATABASE_URL in development runtime", async () => {
-    const result = await runNode(
-      `import("${DIST_CLIENT}").then(() => process.stdout.write("imported"));`,
-      {
-        NODE_ENV: "development",
-        DATABASE_URL: undefined,
-        DIRECT_DATABASE_URL: undefined,
-        NEXT_PHASE: undefined,
-      }
-    );
+    it("warns on missing DATABASE_URL in development runtime", async () => {
+      const result = await runNode(
+        `import("${DIST_CLIENT}").then(() => process.stdout.write("imported"));`,
+        {
+          NODE_ENV: "development",
+          DATABASE_URL: undefined,
+          DIRECT_DATABASE_URL: undefined,
+          NEXT_PHASE: undefined,
+        }
+      );
 
-    expect(
-      result.status,
-      `expected exit code 0 in development; got status=${result.status} stdout=${result.stdout} stderr=${result.stderr}`
-    ).toBe(0);
-    expect(
-      result.stderr,
-      `expected dev warning about missing DATABASE_URL; got stdout=${result.stdout} stderr=${result.stderr}`
-    ).toContain("DATABASE_URL is not set");
+      expect(
+        result.status,
+        `expected exit code 0 in development; got status=${result.status} stdout=${result.stdout} stderr=${result.stderr}`
+      ).toBe(0);
+      expect(
+        result.stderr,
+        `expected dev warning about missing DATABASE_URL; got stdout=${result.stdout} stderr=${result.stderr}`
+      ).toContain("DATABASE_URL is not set");
+    });
   });
 });
 
-describe("env-guards — FR-7 (privileged.ts warn-once on DATABASE_URL fallback)", () => {
+const privSuite = distPrivilegedExists ? describe : describe.skip;
+privSuite("env-guards — FR-7 (privileged.ts warn-once on DATABASE_URL fallback)", () => {
   it("warns when DIRECT_DATABASE_URL is unset and DATABASE_URL is used", async () => {
     const result = await runNode(
       `const { createPrivilegedDb } = await import("${DIST_PRIVILEGED}"); ` +

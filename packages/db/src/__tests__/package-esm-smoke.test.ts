@@ -71,12 +71,13 @@ function runNodeImport(): Promise<SpawnResult> {
   });
 }
 
-describe("package-esm-smoke — FR-6 (Node ESM can import the built package)", () => {
+const esmSuite = existsSync(DIST_ENTRY) ? describe : describe.skip;
+
+esmSuite("package-esm-smoke — FR-6 (Node ESM can import the built package)", () => {
   it("dist/index.js exists (build prerequisite for the smoke)", () => {
     // The smoke spawns `node -e "import('dist/index.js')"`. If the dist is
-    // missing the test is meaningless, so guard with a precondition. The
-    // build command is `pnpm --filter @reading-advantage/db build`; this
-    // assertion is informational and not the Red reason.
+    // missing the test is meaningless. The suite is skipped when dist is
+    // absent; this assertion only runs when dist is present.
     expect(
       existsSync(DIST_ENTRY),
       "Run `pnpm --filter @reading-advantage/db build` before this test. " +

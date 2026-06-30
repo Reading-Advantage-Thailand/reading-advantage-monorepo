@@ -1,3 +1,4 @@
+-- Adds marketing campaign tables, Sales Advantage curriculum tables, and Sales roles.
 CREATE TYPE "public"."app" AS ENUM('reading-advantage', 'primary-advantage', 'storytime', 'math-advantage', 'science-advantage', 'stem-advantage', 'zhongwen-advantage', 'tutor-advantage');--> statement-breakpoint
 CREATE TYPE "public"."asset_status" AS ENUM('pending', 'generated', 'approved', 'rejected');--> statement-breakpoint
 CREATE TYPE "public"."asset_type" AS ENUM('image', 'voiceover', 'clip');--> statement-breakpoint

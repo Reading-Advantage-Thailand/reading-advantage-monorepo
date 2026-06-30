@@ -26,7 +26,7 @@
  *   - packages/db/src/schema/marketing.ts (already on disk, not exported
  *     until the dirty commit lands) defines campaigns, videoProjects,
  *     assets, voiceovers — 6 tables + 6 enums.
- * The schema-map contract therefore asserts the full 15-file schema set
+ * The schema-map contract therefore asserts the full current schema set
  * including marketing.ts.
  *
  * Unrelated dirty worktree context preserved (NOT asserted here):
@@ -47,7 +47,13 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(HERE, "../..");
 const REPO_ROOT = resolve(PACKAGE_ROOT, "../..");
 
-const TRACK_DIR = join(REPO_ROOT, "measure/tracks/drizzle045_major_migration");
+function resolveMeasureTrackDir(trackId: string): string {
+  const activeDir = join(REPO_ROOT, "measure/tracks", trackId);
+  if (existsSync(activeDir)) return activeDir;
+  return join(REPO_ROOT, "measure/archive", trackId);
+}
+
+const TRACK_DIR = resolveMeasureTrackDir("drizzle045_major_migration");
 
 const BREAKING_CHANGES_PATH = join(TRACK_DIR, "phase1-breaking-changes.md");
 const SCHEMA_MAP_PATH = join(TRACK_DIR, "phase1-schema-map.md");
@@ -62,6 +68,7 @@ const DRIZZLE_DIR = join(PACKAGE_ROOT, "drizzle");
 const EXPECTED_SCHEMA_FILES = [
   "analytics.ts",
   "audit.ts",
+  "auth.ts",
   "classrooms.ts",
   "codecamp.ts",
   "content.ts",
@@ -69,16 +76,18 @@ const EXPECTED_SCHEMA_FILES = [
   "index.ts",
   "licenses.ts",
   "marketing.ts",
+  "primary.ts",
   "progress.ts",
   "questions.ts",
+  "sales.ts",
   "science.ts",
   "stories.ts",
   "taxonomy.ts",
   "users.ts",
 ] as const;
 
-// Migration SQL surface: 0000 through 0021 inclusive (22 files).
-const EXPECTED_MIGRATION_INDICES = Array.from({ length: 22 }, (_, i) =>
+// Migration SQL surface: 0000 through 0024 inclusive (25 files).
+const EXPECTED_MIGRATION_INDICES = Array.from({ length: 25 }, (_, i) =>
   i.toString().padStart(4, "0"),
 );
 
@@ -192,7 +201,7 @@ describe("Phase 1 — Task 2: schema-file + migration-script map", () => {
     ).toBe(true);
   });
 
-  it("lists every migration SQL from 0000 through 0020", () => {
+  it("lists every expected migration SQL", () => {
     const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
     for (const idx of EXPECTED_MIGRATION_INDICES) {
       expect(
@@ -296,7 +305,7 @@ describe("Phase 1 — live-surface guardrail (filesystem probe)", () => {
     }
   });
 
-  it("packages/db/drizzle/ contains the 22 expected migration SQL files", () => {
+  it("packages/db/drizzle/ contains the expected migration SQL files", () => {
     const onDisk = readdirSync(DRIZZLE_DIR);
     for (const idx of EXPECTED_MIGRATION_INDICES) {
       const prefix = `${idx}_`;
