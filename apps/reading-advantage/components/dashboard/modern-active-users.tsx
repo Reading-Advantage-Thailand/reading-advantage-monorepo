@@ -88,7 +88,7 @@ export default function ModernActiveUsers({
 
         if (chartRes.ok) {
           const chartData = await chartRes.json();
-          let dataToUse = chartData.total || [];
+          const dataToUse = chartData.total || [];
 
           let days: number;
           if (dateRange === "7d") {

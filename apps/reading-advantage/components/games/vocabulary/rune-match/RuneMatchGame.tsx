@@ -279,7 +279,7 @@ export function RuneMatchGame({ vocabulary, onComplete }: RuneMatchGameProps) {
           const result = processMatches(gridAfterSwap, vocabToUse, {
             rng: prev.rng,
           });
-          let newState = {
+          const newState = {
             ...applyMatchResult({ ...prev, grid: gridAfterSwap }, result),
             selectedCell: null,
             currentStreak: prev.currentStreak + 1, // Increment combo

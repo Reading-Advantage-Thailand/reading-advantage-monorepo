@@ -79,7 +79,7 @@ export default function ArticleContent({
   const t = useScopedI18n("components.articleContent");
   // Always split passage into sentences
   const sentences = splitTextIntoSentences(article.passage, true);
-  const [selectedSentence, setSelectedSentence] = React.useState<Number>(-1);
+  const [selectedSentence, setSelectedSentence] = React.useState<number>(-1);
   const [loading, setLoading] = React.useState(false);
   const [translate, setTranslate] = React.useState<string[]>([]);
   const [isTranslate, setIsTranslate] = React.useState(false);
@@ -193,8 +193,8 @@ export default function ArticleContent({
       }
 
       setLoading(true);
-      let card: Card = createEmptyCard();
-      let endTimepoint = sentenceList[targetIndex].endTime;
+      const card: Card = createEmptyCard();
+      const endTimepoint = sentenceList[targetIndex].endTime;
 
       // Get translations for all supported languages
       const supportedLanguages = ["th", "zh-CN", "zh-TW", "vi"];

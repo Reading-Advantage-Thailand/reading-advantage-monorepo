@@ -120,7 +120,7 @@ export default function LessonVocabularyFlashCard({
         setShowButton(false);
       }
 
-      let filterDataUpdateScore = filter(data.sentences, (param) => {
+      const filterDataUpdateScore = filter(data.sentences, (param) => {
         const dueDate = new Date(param.due);
         const state = param.state || 0;
         console.log(

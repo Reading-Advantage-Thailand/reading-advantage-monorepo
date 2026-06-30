@@ -157,7 +157,7 @@ export function levelCalculation(xp: number): { cefrLevel: string; raLevel: numb
     { min: 221000, max: 242999, cefrLevel: "C2+", raLevel: 18 },
   ];
 
-  for (let level of levels) {
+  for (const level of levels) {
     if (xp >= level.min && xp <= level.max) {
       return { cefrLevel: level.cefrLevel, raLevel: level.raLevel };
     }

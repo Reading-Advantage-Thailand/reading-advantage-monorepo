@@ -169,7 +169,7 @@ const Phase4VocabularyCollection: React.FC<Phase4VocabularyCollectionProps> = ({
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       setSaving(true);
-      let card: FsrsCard = createEmptyCard();
+      const card: FsrsCard = createEmptyCard();
       const foundWordsList = filter(wordList, (vocab) =>
         includes(data?.items, vocab?.vocabulary)
       );

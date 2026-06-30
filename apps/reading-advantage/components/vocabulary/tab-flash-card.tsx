@@ -104,7 +104,7 @@ export default function FlashCard({
       }
 
       // updateScore
-      let filterDataUpdateScore = filter(data.sentences, (param) => {
+      const filterDataUpdateScore = filter(data.sentences, (param) => {
         const dueDate = new Date(param.due);
         const state = param.state || 0; // Assign a default value of 0 if param.state is undefined or falsy
         return (state === 2 || state === 3) && dueDate < startOfDay;

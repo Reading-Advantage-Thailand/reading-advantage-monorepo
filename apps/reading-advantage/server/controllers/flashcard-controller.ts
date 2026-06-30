@@ -203,6 +203,7 @@ export async function updateFlashcardProgress(
       scheduled_days: currentCard.scheduledDays,
       reps: currentCard.reps,
       lapses: currentCard.lapses,
+      learning_steps: 0,
       state: currentCard.state as State,
       last_review: new Date(),
     };
@@ -1364,6 +1365,7 @@ export async function saveSentenceOrderingResults(req: ExtendedNextRequest) {
             scheduled_days: sentence.scheduledDays,
             reps: sentence.reps,
             lapses: sentence.lapses,
+            learning_steps: 0,
             state: sentence.state as State,
             last_review: new Date(sentence.updatedAt),
           };
@@ -1571,6 +1573,7 @@ export async function saveWordOrderingResults(req: ExtendedNextRequest) {
             scheduled_days: sentence.scheduledDays,
             reps: sentence.reps,
             lapses: sentence.lapses,
+            learning_steps: 0,
             state: sentence.state as State,
             last_review: sentence.updatedAt,
           };

@@ -402,7 +402,7 @@ export async function getSRSHealthMetrics(req: ExtendedNextRequest) {
     const effectiveSchoolId = accessCheck.scopedSchoolId || schoolId;
 
     let response: SRSHealthResponse;
-    let healthData: any = {};
+    const healthData: any = {};
 
     // Handle different scopes
     if (scope === 'student' && effectiveStudentId) {

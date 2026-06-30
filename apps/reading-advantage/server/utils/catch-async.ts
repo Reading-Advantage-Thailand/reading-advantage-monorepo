@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default (func: (req: NextRequest, context: any) => Promise<NextResponse>) => {
     return async (req: NextRequest, context: any) => {
         try {

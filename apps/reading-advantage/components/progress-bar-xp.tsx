@@ -48,7 +48,7 @@ function ProgressBar({ progress, level }: { progress: number; level: number }) {
 
   let percentage = 0;
 
-  for (let level of levels) {
+  for (const level of levels) {
     if (progress >= level.min && progress <= level.max) {
       const range = level.max - level.min;
       const progressInlevel = progress - level.min;

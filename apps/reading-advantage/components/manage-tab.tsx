@@ -107,7 +107,7 @@ export default function ManageTab({ userId }: Props) {
       setSentences(data.sentences);
 
       // updateScore
-      let filterDataUpdateScore = filter(data.sentences, (item) => {
+      const filterDataUpdateScore = filter(data.sentences, (item) => {
         const dueDate = new Date(item.due);
         return (
           (item.state === 2 || item.state === 3) &&

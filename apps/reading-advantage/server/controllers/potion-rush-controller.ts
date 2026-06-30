@@ -283,7 +283,7 @@ export class PotionRushController {
       const queryLocale = url.searchParams.get("locale");
       const acceptLanguage = req.headers.get("accept-language") || "";
 
-      let locale =
+      const locale =
         queryLocale || acceptLanguage.split(",")[0]?.split("-")[0] || "en";
 
       let translationKey = locale;

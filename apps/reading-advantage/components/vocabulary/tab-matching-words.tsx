@@ -86,7 +86,7 @@ export default function MatchingWords({ userId }: Props) {
   };
 
   const getCardStyle = (word: Matching) => {
-    let styles = {
+    const styles = {
       backgroundColor: selectedCard?.text === word.text ? "#edefff" : "", // Change to a light yellow on wrong select
       border:
         selectedCard?.text === word.text

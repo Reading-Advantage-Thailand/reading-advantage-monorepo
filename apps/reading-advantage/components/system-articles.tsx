@@ -79,7 +79,7 @@ export default function System({ fetchMoreData }: PassagesProps) {
   const [type, setType] = useState("");
 
   const [passages, setPassages] = useState<Passage[]>([]);
-  let currentItems = passages;
+  const currentItems = passages;
   const t = useScopedI18n("components.articleRecordsTable");
   const tp = useScopedI18n("components.passages");
   const [sortOption, setSortOption] = useState("");
@@ -241,7 +241,7 @@ export default function System({ fetchMoreData }: PassagesProps) {
   }, []);
 
   const getSubgenres = (selectedGenre: string) => {
-    let subgenresData: Set<string> = new Set();
+    const subgenresData: Set<string> = new Set();
     filteredPassages.forEach((passage) => {
       if (passage.genre === selectedGenre) subgenresData.add(passage.subgenre);
     });
@@ -317,7 +317,7 @@ export default function System({ fetchMoreData }: PassagesProps) {
       setSelectedSubgenre("");
     }
 
-    let filtered = filterPassages(
+    const filtered = filterPassages(
       passages,
       searchTerm,
       type,

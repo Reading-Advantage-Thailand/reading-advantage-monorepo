@@ -387,7 +387,7 @@ const Phase6SentenceCollection: React.FC<Phase6SentenceCollectionProps> = ({
           const due = new Date(now.getTime() + 24 * 60 * 60 * 1000); // Tomorrow
 
           // Build translation object from articleTranslations
-          let sentenceTranslation: Record<string, string> = {};
+          const sentenceTranslation: Record<string, string> = {};
           if (articleTranslations && Object.keys(articleTranslations).length > 0) {
             // Map language codes
             const languageMapping: Record<string, string> = {

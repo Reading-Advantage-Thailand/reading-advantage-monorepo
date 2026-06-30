@@ -1,6 +1,6 @@
-/** @type {import('next').NextConfig} */
+import type { NextConfig } from "next";
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   transpilePackages: ["@reading-advantage/auth-client", "@reading-advantage/ui", "@reading-advantage/utils"],
   reactStrictMode: false,
   pageExtensions: ["tsx", "ts", "jsx", "js"],

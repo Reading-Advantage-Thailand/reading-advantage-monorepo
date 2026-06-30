@@ -538,11 +538,11 @@ export default function EnhancedActivityHeatMap({
         {/* Screen reader summary */}
         <div className="sr-only">
           {t("srSummary", {
-            total: data?.metadata.totalActivities,
-            start: data?.metadata.dateRange.start,
-            end: data?.metadata.dateRange.end,
-            students: data?.metadata.uniqueStudents,
-            peak: processedData.maxActivity,
+            total: data?.metadata.totalActivities ?? 0,
+            start: data?.metadata.dateRange.start ?? "",
+            end: data?.metadata.dateRange.end ?? "",
+            students: data?.metadata.uniqueStudents ?? 0,
+            peak: processedData.maxActivity ?? 0,
           })}
         </div>
       </CardContent>

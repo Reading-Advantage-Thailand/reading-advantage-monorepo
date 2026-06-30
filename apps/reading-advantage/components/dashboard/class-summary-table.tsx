@@ -85,7 +85,7 @@ export function ClassSummaryTable({
 
   // Filter and sort classes
   const filteredAndSortedClasses = useMemo(() => {
-    let result = classes.filter((cls) => {
+    const result = classes.filter((cls) => {
       // Filter by archived status
       if (!showArchived && cls.archived) return false;
 

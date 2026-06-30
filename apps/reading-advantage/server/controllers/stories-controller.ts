@@ -39,7 +39,7 @@ export async function checkChapterCompletion(
   );
 
   // Check SAQ completion (1 question)
-  let saqExistsRows = await db
+  const saqExistsRows = await db
     .select()
     .from(userActivity)
     .where(
@@ -74,7 +74,7 @@ export async function checkChapterCompletion(
   }
 
   // Check LAQ completion (1 question)
-  let laqExistsRows = await db
+  const laqExistsRows = await db
     .select()
     .from(userActivity)
     .where(
@@ -478,7 +478,7 @@ export async function getStoryById(
       .where(eq(chapters.storyId, storyId))
       .orderBy(asc(chapters.chapterNumber));
 
-    let storyReadRows = await db
+    const storyReadRows = await db
       .select()
       .from(userActivity)
       .where(

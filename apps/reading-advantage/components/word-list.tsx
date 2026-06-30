@@ -167,7 +167,7 @@ export default function WordList({ article, articleId, userId }: Props) {
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
-      let card: Card = createEmptyCard();
+      const card: Card = createEmptyCard();
       const foundWordsList = filter(wordList, (vocab) =>
         includes(data?.items, vocab?.vocabulary)
       );

@@ -281,7 +281,7 @@ export class CastleDefenseController {
       const acceptLanguage = req.headers.get("accept-language") || "";
 
       // Use query locale if available, specific handling for Chinese variants
-      let locale =
+      const locale =
         queryLocale || acceptLanguage.split(",")[0]?.split("-")[0] || "en";
 
       // Map locale to translation key

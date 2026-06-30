@@ -956,7 +956,7 @@ export async function answerStoryMCQuestion(
       );
     });
 
-    let progress: AnswerStatus[] = new Array(5).fill(AnswerStatus.UNANSWERED);
+    const progress: AnswerStatus[] = new Array(5).fill(AnswerStatus.UNANSWERED);
 
     userActivities.forEach((activity) => {
       const details = activity.details as any;
@@ -1404,7 +1404,7 @@ export async function getStoryFeedbackLAquestion(
     const targetId = `${laQuestion.id}`;
 
     // Call feedback writer
-    let cefrLevelReformatted = story.cefrLevel?.replace(/[+-]/g, "") || "";
+    const cefrLevelReformatted = story.cefrLevel?.replace(/[+-]/g, "") || "";
     const feedbackResponse = await getFeedbackWritter({
       preferredLanguage,
       targetCEFRLevel: cefrLevelReformatted,

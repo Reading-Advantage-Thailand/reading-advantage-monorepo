@@ -94,7 +94,7 @@ export default function FlashCard({
       }
 
       //updateScore
-      let filterDataUpdateScore = filter(data.sentences, (param) => {
+      const filterDataUpdateScore = filter(data.sentences, (param) => {
         const dueDate = new Date(param.due);
         return (param.state === 2 || param.state === 3) && dueDate < startOfDay;
       });
