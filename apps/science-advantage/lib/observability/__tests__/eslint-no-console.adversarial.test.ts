@@ -53,12 +53,17 @@ import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as fs from 'node:fs';
+import { createRequire } from 'node:module';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const require = createRequire(import.meta.url);
 
 const APP_ROOT = resolve(__dirname, '../../..');
-const ESLINT_BIN = resolve(APP_ROOT, 'node_modules/eslint/bin/eslint.js');
+// Resolve eslint wherever the package manager placed it (pnpm's hoisted
+// linker keeps a single eslint at the workspace root, not in the app's
+// node_modules), rather than assuming an app-local install path.
+const ESLINT_BIN = resolve(dirname(require.resolve('eslint/package.json')), 'bin/eslint.js');
 
 /**
  * Absolute path to a temporary production-scoped file with a
