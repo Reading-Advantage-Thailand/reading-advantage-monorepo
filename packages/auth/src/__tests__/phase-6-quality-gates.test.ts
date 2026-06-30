@@ -1,6 +1,6 @@
 // Red-phase Phase 6 quality-gate pinning tests.
 //
-// Per `measure/tracks/audit_log_retention_dsar_20260605/plan.md` Phase 6
+// Per `measure/archive/audit_log_retention_dsar_20260605/plan.md` Phase 6
 // task #3:
 //   "Run `pnpm turbo run {test,check-types,build}
 //    --filter=@reading-advantage/auth
@@ -59,7 +59,7 @@ import { resolve } from "node:path";
 const REPO_ROOT = resolve(__dirname, "../../../../");
 const PLAN_PATH = resolve(
   REPO_ROOT,
-  "measure/tracks/audit_log_retention_dsar_20260605/plan.md",
+  "measure/archive/audit_log_retention_dsar_20260605/plan.md",
 );
 
 interface PackageJson {

@@ -58,13 +58,10 @@ async function truncateAuditEvents(): Promise<void> {
   await db.execute(sql`TRUNCATE TABLE audit_events`);
 }
 
-describe("purgeExpiredAuditEvents — Phase 6 boundary (exact cutoff, UTC, off-by-one)", () => {
+const hasDirectDbUrl = !!process.env.DIRECT_DATABASE_URL;
+
+(hasDirectDbUrl ? describe : describe.skip)("purgeExpiredAuditEvents — Phase 6 boundary (exact cutoff, UTC, off-by-one)", () => {
   beforeEach(() => {
-    if (!process.env.DIRECT_DATABASE_URL) {
-      throw new Error(
-        "DIRECT_DATABASE_URL is not set; export it before running integration tests.",
-      );
-    }
   });
 
   afterAll(async () => {
