@@ -25,13 +25,13 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.750.0",
     "@aws-sdk/s3-request-presigner": "^3.750.0",
-    "zod": "^3.25.76"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
-    "@types/node": "^20.0.0",
+    "@types/node": "catalog:",
     "aws-sdk-client-mock": "^4.1.0",
-    "typescript": "^5.8.0",
-    "vitest": "^4.1.8"
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
   }
 }
