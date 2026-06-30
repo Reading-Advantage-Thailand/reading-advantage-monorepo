@@ -8,15 +8,24 @@ import {
   ActivitySummaryCards,
 } from "@/components/dashboard/class-activity-chart";
 import {
-  BookOpen,
   Clock,
   GraduationCapIcon,
-  TrendingUp,
   UserPenIcon,
   Users,
 } from "lucide-react";
 import React from "react";
 
+/**
+ * Admin dashboard.
+ *
+ * Phase 1 of wave1_high_risk_product_failures replaces the hard-coded
+ * literal metric cards with explicit "data unavailable" placeholders.
+ * The cards list the metric the dashboard would eventually surface and
+ * display a not-yet-wired label instead of fabricated counts. Live data
+ * wiring is owned by a follow-up track that proves the multi-tenant
+ * scoping on the underlying queries; do NOT reintroduce literal
+ * numbers here without that proof.
+ */
 export default function DashboardPage() {
   return (
     <div>
@@ -31,8 +40,15 @@ export default function DashboardPage() {
             <GraduationCapIcon className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">100</div>
-            <p className="text-muted-foreground text-xs">All students</p>
+            <div
+              className="text-2xl font-bold text-muted-foreground"
+              data-testid="metric-total-students"
+            >
+              Data unavailable
+            </div>
+            <p className="text-muted-foreground text-xs">
+              Live count wiring pending the multi-tenant scoping track.
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -43,8 +59,15 @@ export default function DashboardPage() {
             <UserPenIcon className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5</div>
-            <p className="text-muted-foreground text-xs">All teachers</p>
+            <div
+              className="text-2xl font-bold text-muted-foreground"
+              data-testid="metric-total-teachers"
+            >
+              Data unavailable
+            </div>
+            <p className="text-muted-foreground text-xs">
+              Live count wiring pending the multi-tenant scoping track.
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -55,9 +78,14 @@ export default function DashboardPage() {
             <Clock className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">100%</div>
+            <div
+              className="text-2xl font-bold text-muted-foreground"
+              data-testid="metric-active-this-week"
+            >
+              Data unavailable
+            </div>
             <p className="text-muted-foreground text-xs">
-              All active this week
+              Live activity wiring pending the activity-log track.
             </p>
           </CardContent>
         </Card>

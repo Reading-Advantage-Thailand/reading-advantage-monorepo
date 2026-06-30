@@ -204,7 +204,7 @@ function splitSentences(text: string): string[] {
     const matchStartIndex = match.index!; // Where the match started in the text
 
     // Extract the sentence text before the delimiter
-    let sentenceText = text.substring(lastIndex, matchStartIndex);
+    const sentenceText = text.substring(lastIndex, matchStartIndex);
 
     // Reconstruct the full sentence including the delimiter and its immediate trailing characters
     // Only include the trailing chars if they actually exist (i.e., not end of string)

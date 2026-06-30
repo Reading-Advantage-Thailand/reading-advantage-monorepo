@@ -116,7 +116,6 @@ export default function LessonSentenceOrderWord({
   const [timer, setTimer] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useSession();
   // Add flag to track if user has made any moves
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isPlayingHintAudio, setIsPlayingHintAudio] = useState(false);
@@ -129,6 +128,20 @@ export default function LessonSentenceOrderWord({
   const [selectedLanguage, setSelectedLanguage] = useState<string>("th");
 
   const [activeSentences, setActiveSentences] = useState<OrderWordData[]>([]);
+
+  // The auth-client `useSession()` hook only exposes { user, isAuthenticated,
+  // isLoading }; there is no `session` or `update` field on it. We still
+  // destructure `session` and `update` here so the completion callback below
+  // can reference `update(...)` and `session?.user` without throwing a
+  // ReferenceError when the student finishes the game. Both bindings are
+  // intentionally local-only refresh stubs that no-op when the auth-client
+  // contract does not provide them, preserving the original M1 fix shape
+  // (refresh session after XP/activity writes) without crashing.
+  const { user, session, update } = useSession() as unknown as {
+    user?: ReturnType<typeof useSession>["user"];
+    session?: { user?: ReturnType<typeof useSession>["user"] };
+    update?: (data: { user?: ReturnType<typeof useSession>["user"] }) => void;
+  };
 
   useEffect(() => {
     if (articleId) {

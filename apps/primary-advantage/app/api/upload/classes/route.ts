@@ -716,7 +716,7 @@ export async function POST(request: NextRequest) {
     let createdClassrooms: any[] = [];
 
     // Variables for user processing statistics
-    let createdUsers: any[] = [];
+    const createdUsers: any[] = [];
     let roleAssignments: any[] = [];
     let classroomsAssigned = 0;
     let studentAssignments = 0;
