@@ -16,19 +16,19 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@node-rs/argon2": "^2.0.2",
+    "@node-rs/argon2": "catalog:",
     "@reading-advantage/db": "workspace:*",
-    "bcryptjs": "^2.4.3",
-    "drizzle-orm": "^0.44.0",
-    "postgres": "^3.4.5",
-    "zod": "^3.24.0"
+    "bcryptjs": "catalog:",
+    "drizzle-orm": "^0.45.0",
+    "postgres": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
 
-    "@types/node": "^20.0.0",
+    "@types/node": "catalog:",
     "@types/bcryptjs": "^2.4.6",
-    "typescript": "^5.8.0",
-    "vitest": "^4.1.8"
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
   }
 }

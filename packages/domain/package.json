@@ -88,13 +88,13 @@
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/integrations-github": "workspace:*",
     "@reading-advantage/types": "workspace:*",
-    "drizzle-orm": "0.44.7",
-    "zod": "^3.25.76"
+    "drizzle-orm": "^0.45.0",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
-    "@types/node": "^20.0.0",
-    "typescript": "^5.8.0",
-    "vitest": "^4.1.8"
+    "@types/node": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
   }
 }

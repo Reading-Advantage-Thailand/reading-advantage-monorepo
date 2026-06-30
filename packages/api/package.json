@@ -35,21 +35,21 @@
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/domain": "workspace:*",
     "@reading-advantage/types": "workspace:*",
-    "@trpc/server": "^11.1.0",
-    "@trpc/client": "^11.1.0",
-    "bcryptjs": "^2.4.3",
-    "drizzle-orm": "^0.44.0",
-    "superjson": "^2.2.2",
-    "zod": "^3.24.0"
+    "@trpc/server": "catalog:",
+    "@trpc/client": "catalog:",
+    "bcryptjs": "catalog:",
+    "drizzle-orm": "^0.45.0",
+    "superjson": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
 
-    "@types/node": "^20.0.0",
-    "next": "^16.2.9",
-    "typescript": "^5.8.0",
-    "tsx": "^4.19.0",
-    "vitest": "^4.1.8"
+    "@types/node": "catalog:",
+    "next": "16.2.9",
+    "typescript": "5.9.3",
+    "tsx": "catalog:",
+    "vitest": "4.1.8"
   },
   "peerDependencies": {
     "next": ">=15.0.0 || >=16.0.0"

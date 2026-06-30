@@ -19,16 +19,16 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@ai-sdk/google": "^2.0.36",
-    "@ai-sdk/google-vertex": "^3.0.142",
-    "@ai-sdk/openai": "^2.0.68",
-    "ai": "^5.0.201",
-    "zod": "^3.25.76"
+    "@ai-sdk/google": "catalog:",
+    "@ai-sdk/google-vertex": "catalog:",
+    "@ai-sdk/openai": "catalog:",
+    "ai": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
-    "@types/node": "^20.0.0",
-    "typescript": "^5.8.0",
-    "vitest": "^4.1.8"
+    "@types/node": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
   }
 }

@@ -31,21 +31,21 @@
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
-    "@testing-library/react": "^16.3.1",
-    "@types/node": "^20",
-    "@types/react": "^19.1.2",
-    "jsdom": "^26.1.0",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "19.2.2",
+    "jsdom": "catalog:",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "tsup": "^8.4.0",
-    "typescript": "^5.8.3",
-    "vitest": "^4.1.8"
+    "tsup": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
   },
   "dependencies": {
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^2.6.0"
+    "clsx": "catalog:",
+    "tailwind-merge": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.0.0"
+    "react": "19.2.7"
   }
 }
