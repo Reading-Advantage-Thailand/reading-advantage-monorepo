@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireRole } from "@/server/middleware/guards";
+import { assertSystemAccess } from "@/server/middleware/system-key";
 import { buildSchoolFilter } from "@/server/utils/authorization";
 import {
   db,
@@ -582,6 +583,11 @@ export async function refreshMaterializedViews(req: NextRequest) {
 }
 
 export async function refreshMaterializedViewsAutomated(req: NextRequest) {
+  const guard = assertSystemAccess(req);
+  if (guard) {
+    return guard;
+  }
+
   const requestStartTime = Date.now();
 
   console.log(

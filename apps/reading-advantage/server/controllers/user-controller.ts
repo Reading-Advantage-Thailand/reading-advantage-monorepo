@@ -16,6 +16,67 @@ import {
   licenseOnUsers,
 } from "@reading-advantage/db/schema";
 import { ActivityType, LicenseType } from "@/lib/enums";
+import { getCurrentUser } from "@/lib/session";
+import { recordAuditEventSafe } from "@/server/utils/audit-recorder";
+
+// ──────────────────────────────────────────────────────────────────────────────
+// XP idempotency: per-key serialization guard.
+// Production note: this is the application-level equivalent of a PG advisory
+// lock. The user_activity (userId, activityType, targetId) unique constraint
+// also enforces uniqueness at the DB level. The combination prevents duplicate
+// xp_logs inserts even under concurrent racing requests for the same key.
+// ──────────────────────────────────────────────────────────────────────────────
+type ActivitySlot = { activityId: string | null };
+const xpIdempotencyLocks = new Map<string, Promise<ActivitySlot>>();
+
+async function acquireActivitySlot(
+  userId: string,
+  activityType: string,
+  targetId: string,
+  values: Record<string, unknown>
+): Promise<{ activityId: string | null; isPrimary: boolean }> {
+  const lockKey = `${userId}|${activityType}|${targetId}`;
+  const inflight = xpIdempotencyLocks.get(lockKey);
+  if (inflight) {
+    const result = await inflight;
+    return { activityId: result.activityId, isPrimary: false };
+  }
+
+  const work = (async (): Promise<ActivitySlot> => {
+    let activityId: string | null = null;
+    try {
+      const [inserted] = await db.insert(userActivity).values(values as any).returning();
+      activityId = inserted?.id ?? null;
+    } catch {
+      activityId = null;
+    }
+    if (!activityId) {
+      const [existing] = await db
+        .select({ id: userActivity.id })
+        .from(userActivity)
+        .where(
+          and(
+            eq(userActivity.userId, userId),
+            eq(userActivity.activityType, activityType),
+            eq(userActivity.targetId, targetId)
+          )
+        )
+        .limit(1);
+      activityId = existing?.id ?? null;
+    }
+    return { activityId };
+  })();
+
+  xpIdempotencyLocks.set(lockKey, work);
+  try {
+    const result = await work;
+    return { activityId: result.activityId, isPrimary: true };
+  } finally {
+    if (xpIdempotencyLocks.get(lockKey) === work) {
+      xpIdempotencyLocks.delete(lockKey);
+    }
+  }
+}
 
 async function getUserLicenseLevel(userId: string): Promise<LicenseType> {
   try {
@@ -252,10 +313,34 @@ export async function postActivityLog(
       completed: data.completed || data.activityStatus === "completed",
     };
 
-    let activity;
-
+    // XP idempotency: acquire the per-(userId, activityType, targetId) slot.
+    // The first concurrent request inserts the activity row; concurrent peers
+    // join the same slot, observe the inserted id, and skip xp_log creation.
+    let activity: { id: string } | undefined;
+    let isPrimaryRequest = false;
     if (!existingActivity) {
-      [activity] = await db.insert(userActivity).values(commonData).returning();
+      const slot = await acquireActivitySlot(id, activityType, finalTargetId, commonData);
+      if (slot.activityId) {
+        activity = { id: slot.activityId };
+        isPrimaryRequest = slot.isPrimary;
+      }
+      if (
+        slot.isPrimary &&
+        slot.activityId &&
+        (data.completed || data.activityStatus === "completed")
+      ) {
+        await db
+          .update(userActivity)
+          .set({ ...commonData, updatedAt: new Date() })
+          .where(eq(userActivity.id, slot.activityId));
+      } else if (!slot.isPrimary && slot.activityId) {
+        const [refreshed] = await db
+          .select()
+          .from(userActivity)
+          .where(eq(userActivity.id, slot.activityId))
+          .limit(1);
+        if (refreshed) activity = refreshed;
+      }
     } else if (data.activityStatus === "completed" || data.completed) {
       [activity] = await db
         .update(userActivity)
@@ -266,25 +351,32 @@ export async function postActivityLog(
       activity = existingActivity;
     }
 
+    const activityId = activity?.id ?? existingActivity?.id;
     let hasExistingXpLog = false;
-    if (existingActivity) {
+    if (activityId && !isPrimaryRequest) {
       const [existingXpLog] = await db
         .select()
         .from(xpLogs)
-        .where(eq(xpLogs.activityId, existingActivity.id))
+        .where(eq(xpLogs.activityId, activityId))
         .limit(1);
       hasExistingXpLog = !!existingXpLog;
     }
 
-    if (
+    // Only the primary path may insert an xp_log; concurrent peers and
+    // pre-existing rows take the skip branch. This is the domain guard that
+    // makes XP awards atomic per (userId, activityType, targetId).
+    const shouldInsertXpLog =
+      !!activityId &&
+      isPrimaryRequest &&
       !hasExistingXpLog &&
       ((data.xpEarned && data.xpEarned > 0) ||
-        (data.isInitialLevelTest && typeof data.xpEarned === "number"))
-    ) {
+        (data.isInitialLevelTest && typeof data.xpEarned === "number"));
+
+    if (shouldInsertXpLog) {
       await db.insert(xpLogs).values({
         userId: id,
         xpEarned: data.xpEarned,
-        activityId: activity!.id,
+        activityId: activityId!,
         activityType: activityType,
       });
 
@@ -1179,18 +1271,57 @@ export async function getUserXpLogs(
 
 export async function deleteUser(req: ExtendedNextRequest) {
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await req.json();
 
-    const [user] = await db.select().from(users).where(eq(users.id, id)).limit(1);
+    const [targetUser] = await db.select().from(users).where(eq(users.id, id)).limit(1);
 
-    if (!user) {
+    if (!targetUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    const actorSchoolId = (user as any).schoolId ?? (user as any).school_id ?? null;
+    const isSameSchoolAdmin =
+      user.role === "ADMIN" && !!targetUser.schoolId && !!actorSchoolId && targetUser.schoolId === actorSchoolId;
+    const isSelfDelete = user.id === id;
+    const isSystem = user.role === "SYSTEM";
+    if (!isSystem && !isSameSchoolAdmin && !isSelfDelete) {
+      return NextResponse.json(
+        { error: "Forbidden - not authorized to delete this user" },
+        { status: 403 }
+      );
     }
 
     await db.transaction(async (tx) => {
       await tx.delete(classroomStudents).where(eq(classroomStudents.studentId, id));
       await tx.delete(users).where(eq(users.id, id));
     });
+
+    try {
+      await recordAuditEventSafe(
+        {
+          actorUserId: user.id,
+          actorRole: (user.role as any) ?? null,
+          ipAddress: req.headers.get("x-forwarded-for") ?? null,
+          userAgent: req.headers.get("user-agent") ?? null,
+        },
+        {
+          action: "user:delete",
+          targetType: "user",
+          targetId: id,
+          metadata: {
+            schoolId: targetUser.schoolId ?? null,
+            deletedRole: targetUser.role ?? null,
+          },
+        }
+      );
+    } catch (auditError) {
+      console.error("Audit event recording failed for deleteUser:", auditError);
+    }
 
     return NextResponse.json({ message: "User deleted successfully" });
   } catch (error) {

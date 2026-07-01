@@ -1,6 +1,6 @@
 /**
  * AI Insights Refresh Controller
- * 
+ *
  * Handles automated refresh of AI insights for Cloud Scheduler
  */
 
@@ -23,6 +23,7 @@ import {
   generateSystemInsights,
 } from "@/server/services/ai-insight-service";
 import { AIInsightScope } from "@/lib/enums";
+import { assertSystemAccess } from "@/server/middleware/system-key";
 
 interface RefreshResult {
   scope: string;
@@ -85,6 +86,11 @@ export async function getAIInsightsRefreshStatus(req: NextRequest) {
  * Called by Cloud Scheduler daily
  */
 export async function refreshAIInsightsAutomated(req: NextRequest) {
+  const guard = assertSystemAccess(req);
+  if (guard) {
+    return guard;
+  }
+
   const requestStartTime = Date.now();
 
   console.log("[CLOUD_SCHEDULER] Starting automated AI insights refresh");
