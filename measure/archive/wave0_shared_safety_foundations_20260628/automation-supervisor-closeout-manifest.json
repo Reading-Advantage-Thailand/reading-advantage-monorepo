@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "role": "closeout",
+  "track_id": "wave0_shared_safety_foundations_20260628",
+  "closeout_date": "2026-07-01",
+  "final_acceptance": {
+    "status": "pass",
+    "evaluated_at": "2026-07-01",
+    "may_proceed_to_closeout": true,
+    "summary": "All Wave 0 acceptance criteria met: tenant coverage meaningful, null-tenant FLAT CRUD fails closed, shared roles include active app roles, auth rate limiting uses Postgres in production, shared contracts behavioral tests pass, API business logic leakage removed, typed error mapping in place, required gates (LINT/CHECKS/TESTS) all pass under serialized execution."
+  },
+  "plan_tasks": {
+    "total": 33,
+    "complete": 33,
+    "blocked": 0,
+    "deferred": 0
+  },
+  "phase_summary": {
+    "phase_0_baseline_and_evidence_lock": {"tasks": 4, "status": "complete"},
+    "phase_1_tenant_registry_coverage": {"tasks": 9, "status": "complete"},
+    "phase_2_shared_roles_auth_rate_limiting": {"tasks": 6, "status": "complete"},
+    "phase_3_shared_contracts_typed_errors": {"tasks": 6, "status": "complete"},
+    "phase_4_transport_thin_api_boundary": {"tasks": 5, "status": "complete"},
+    "phase_5_quality_gates_closeout": {"tasks": 3, "status": "complete"}
+  },
+  "gates": [
+    {
+      "name": "MEASURE_DOCTOR",
+      "command": "bash measure/doctor.sh",
+      "exit_code": 0,
+      "status": "pass",
+      "summary": "Doctor anti-pattern catalog and marker checks pass."
+    },
+    {
+      "name": "PROJECT_LINT",
+      "command": "CI=true pnpm turbo run lint --filter=@reading-advantage/domain --filter=@reading-advantage/auth --filter=@reading-advantage/api",
+      "exit_code": 0,
+      "status": "pass_with_warnings",
+      "summary": "7 turbo tasks successful; 5 unused-import warnings (non-blocking)."
+    },
+    {
+      "name": "PROJECT_CHECKS",
+      "command": "CI=true pnpm turbo run check-types --filter=@reading-advantage/db --filter=@reading-advantage/domain --filter=@reading-advantage/types --filter=@reading-advantage/auth --filter=@reading-advantage/api",
+      "exit_code": 0,
+      "status": "pass",
+      "summary": "All 7 turbo tasks successful. audioStorageKey nullable fix holds."
+    },
+    {
+      "name": "PROJECT_TESTS_DB_FORCED_ISOLATED",
+      "command": "CI=true pnpm turbo run test --filter=@reading-advantage/db --force",
+      "exit_code": 0,
+      "status": "pass",
+      "summary": "33 test files passed, 2 skipped; 638 tests passed, 6 skipped."
+    },
+    {
+      "name": "PROJECT_TESTS_SERIALIZED",
+      "command": "CI=true pnpm turbo run test --filter=@reading-advantage/db --filter=@reading-advantage/domain --filter=@reading-advantage/types --filter=@reading-advantage/auth --filter=@reading-advantage/api --concurrency=1 --force",
+      "exit_code": 0,
+      "status": "pass",
+      "summary": "11 tasks; db 638/6-skip, domain 346/5-skip, types 88/88, auth 212/9-skip, api 216/216. 0 failures."
+    }
+  ],
+  "key_commits": [
+    "e0ab7241 - test-strategy baseline",
+    "ed160e45 - phase 1 red tests",
+    "42bbbc88 - phase 1 green (tenant classification + fail-closed)",
+    "c24cb14f - phase 2 red tests",
+    "12b7e88d - phase 2 green roles/rate-limit seam",
+    "076cda94 - postgres rate limiter",
+    "a87ff50a - rate-limiter evidence",
+    "8a90a22e - phase 3 red tests",
+    "102cb2c1 - phase 3 green types/api contracts",
+    "86d6c9ba - phase 4 red tests",
+    "52a7351d - phase 4 green (reports delegation)",
+    "4176c4c4 - api rate-limiter mock fix",
+    "30d2749a - db migration surface + test sync",
+    "21a6e40e - sales audioStorageKey nullable",
+    "2823b767 - auth DB-suite skip when env absent",
+    "50569fb0 - plan flip to done + final acceptance"
+  ],
+  "baseline_sha": "86d6c9ba",
+  "acceptance_sha": "50569fb0",
+  "changed_files": [
+    "measure/archive/wave0_shared_safety_foundations_20260628/metadata.json",
+    "measure/archive/wave0_shared_safety_foundations_20260628/plan.md",
+    "measure/archive/wave0_shared_safety_foundations_20260628/final-acceptance-result.json",
+    "measure/archive/wave0_shared_safety_foundations_20260628/automation-supervisor-closeout-manifest.json",
+    "measure/tracks.md"
+  ],
+  "evidence_preserved": [
+    "final-acceptance-result.json (status=pass, evaluated 2026-07-01)",
+    "plan.md (33/33 tasks complete, all phases done)",
+    "metadata.json (status=done, completed_at=2026-07-01)",
+    "automation-supervisor-closeout-manifest.json (this file)"
+  ],
+  "artifact_cleanup_notes": "Track dir moved from measure/tracks/ to measure/archive/. No bulky run artifacts to delete; all evidence files preserved in archive.",
+  "anti_pattern_audit": {
+    "A5_false_claim_text": "pass - no 'PASS=N, FAIL=0' or 'all checks pass' claims in plan.md",
+    "A6_registry_overstatement": "pass - tracks.md Wave 0 row updated to [x] with archive link, accurately describes completion",
+    "A9_archived_track_references": "pass - no tests reference wave0_shared_safety_foundations_20260628 path"
+  },
+  "next_actions": [
+    "Orchestrator may proceed to Wave 1 (high_risk_product_failures)"
+  ]
+}

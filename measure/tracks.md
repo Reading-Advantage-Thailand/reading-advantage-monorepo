@@ -46,8 +46,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 > Detailed implementation tracks spawned from `monorepo_review_roadmap_20260626`. Each track includes evidence references back to the line-review artifacts and should be executed in wave order unless a dependency note explicitly allows parallel work.
 
-- [ ] **Track: Wave 0 — Shared Safety Foundations** *Link: [./tracks/wave0_shared_safety_foundations_20260628/](./tracks/wave0_shared_safety_foundations_20260628/)*
-  Make shared guarantees true: tenant registry/fail-closed TenantDB, shared auth/roles/rate limiter, contracts/types tests, and API/domain boundary enforcement. Evidence: MR-C01, MR-C02, MR-C04, MR-C05; CA-001..CA-004/CA-009; M-SF-1..M-SF-5.
 - [ ] **Track: Wave 1 — Stop Active High-Risk Product Failures** *Link: [./tracks/wave1_high_risk_product_failures_20260628/](./tracks/wave1_high_risk_product_failures_20260628/)*
   Fix the highest-risk runtime/product blockers in Primary, Reading, CodeCamp, and Sales. Evidence: Primary M1-M8/M11; Reading C/PB tracks; CodeCamp CR-1/CR-2 and webhook/streaming findings; Sales C1-C13.
 - [ ] **Track: Wave 2 — Restore Deployment/Test/Provider Confidence** *Link: [./tracks/wave2_confidence_restoration_20260628/](./tracks/wave2_confidence_restoration_20260628/)*
@@ -62,6 +60,32 @@ Two parallel programs are in flight; priority order when picking the next track:
   Close remaining Medium maintainability/adapter/i18n/a11y/test-quality/curriculum/docs tracks. Evidence: M-SF-6; Primary M10/M12/M13; Sales T10/T11; Science ST-5/ST-7/ST-8/SP-2; CodeCamp MT-C1..C4/MT-X1; Games T5-T10; marketing test backfill.
 
 > **Coverage of record:** `audit-reports/monorepo-review-roadmap_20260626/medium-plus-coverage-matrix.md` maps every Medium-and-above migration track to exactly one wave (W0–W6). Low-severity items are listed there as explicitly deferred.
+
+---
+
+## App Go-Live / MVP Completion (created 2026-07-01)
+
+> Deploy-and-ship tracks for the two apps that are feature-built but not on Cloud Run.
+> These own build/deploy/QA only; they **consume** the security remediation waves as hard
+> preconditions and do not duplicate them (see `medium-plus-coverage-matrix.md`).
+
+- [ ] **Track: Sales Advantage Go-Live** *Link: [./tracks/sales_advantage_golive_20260701/](./tracks/sales_advantage_golive_20260701/)*
+  Take `apps/sales-advantage` from code-complete to a deployed MVP. Feature surface (domain,
+  router, audio-upload route, rep/admin UI, chat, quiz, seed script) already exists on HEAD;
+  `sales_advantage_mvp_20260622` Phases 3–7 are implemented (checkboxes stale). This track
+  hard-gates on Wave 1 sales security (IDOR/route-gating/tRPC role-enum/XSS/schema drift),
+  seeds + human-approves real curriculum, adds Docker/cloudbuild, provisions the cloud
+  `sales_advantage` DB, deploys to Cloud Run, and runs end-to-end QA. Successor to
+  `sales_advantage_mvp_20260622` Phase 8.
+
+- [ ] **Track: Marketing Go-Live** *Link: [./tracks/marketing_golive_20260701/](./tracks/marketing_golive_20260701/)*
+  Take `apps/marketing` (the video-production pipeline; FR-1..FR-6 met, 151 tests green in the
+  archived `video_pipeline_20260613`) from feature-complete to a deployed MVP. The deferred
+  `vinext`/`vite parseSync` build blocker is **resolved** (`pnpm --filter marketing build`
+  green on 2026-07-01) — Phase 0 verifies + pins it. Hard-gates on Wave 3 marketing security
+  (the `GET /api/settings` decrypted-API-key leak + unauthenticated `/api/video/*` routes),
+  adds a **vinext-runtime** Dockerfile + cloudbuild, provisions the DB, deploys to Cloud Run,
+  and runs manual QA. Successor to the deferred build/deploy remainder of `video_pipeline_20260613`.
 
 ---
 
@@ -84,6 +108,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [x] **Track: Monorepo Review Roadmap** *Link: [./archive/monorepo_review_roadmap_20260626/](./archive/monorepo_review_roadmap_20260626/)*
   Archived 2026-06-29. Final synthesis track that deduplicates accepted findings and produces the prioritized remediation/migration/test/product-risk roadmap. Status: COMPLETE as final review roadmap — artifacts in `measure/audit-reports/monorepo-review-roadmap_20260626/`; no remediation performed. Track dir moved and `metadata.json` status flipped to archived by daily automation on 2026-06-29.
+
+- [x] **Track: Wave 0 — Shared Safety Foundations** *Link: [./archive/wave0_shared_safety_foundations_20260628/](./archive/wave0_shared_safety_foundations_20260628/)*
+  Archived 2026-07-01 after final acceptance pass. Tenant registry/fail-closed TenantDB, shared auth/roles/rate limiter, contracts/types tests, API/domain boundary enforcement, and typed error mapping all verified. 33 plan tasks complete; 16 implementation commits including db test sync, audioStorageKey nullable fix, auth env guard, and postgres rate limiter. Evidence: MR-C01, MR-C02, MR-C04, MR-C05; CA-001..CA-004/CA-009; M-SF-1..M-SF-5.
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*
