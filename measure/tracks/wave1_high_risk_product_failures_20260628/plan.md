@@ -133,18 +133,22 @@
 
 ## Phase 4: Sales Security, Privacy, and Contract Hardening
 
-- [ ] Task: Write Red tests proving `SALES_REP`/`SALES_ADMIN` are authenticated in tRPC context.
+- [~] Task: Write Red tests proving `SALES_REP`/`SALES_ADMIN` are authenticated in tRPC context.
   - Evidence refs: Sales C3; F-SALES-B00-030.
+  - Red evidence (2026-07-02): `packages/api/src/__tests__/sales-auth-context.test.ts` — `SALES_REP`/`SALES_ADMIN` context checks are **already green** (Wave 0 widened `roleSchema` to include both roles); admin-procedure-rejects-rep check is **already green**. The remaining Red assertion is cross-tenant cohort reporting: `SALES_ADMIN` caller sees `cross-tenant row count: 1` because `getCohortOverview` returns all `salesProgress` rows without tenant/rep scoping. Targeted command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts` — 1/4 checks fail.
 - [ ] Task: Fix role schema/context integration.
-- [ ] Task: Write Red tests for IDOR on roleplay evaluation and cross-tenant admin reporting.
+- [~] Task: Write Red tests for IDOR on roleplay evaluation and cross-tenant admin reporting.
   - Evidence refs: Sales C1/C2; F-SALES-B05-001/F-SALES-B05-002.
+  - Red evidence (2026-07-02): `packages/domain/src/__tests__/sales-authorization-idors.test.ts` — `saveAttemptEvaluation` does not reject updating an attempt whose `userId` is `rep-b` when caller is `rep-a` (IDOR not enforced); `getCohortOverview` returns `cross-tenant row count: 1`. Targeted command: `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts` — 2/2 checks fail.
 - [ ] Task: Add ownership and tenant/global-scope authorization checks.
-- [ ] Task: Write Red tests for audio size/MIME/duration validation before buffering/provider calls.
+- [~] Task: Write Red tests for audio size/MIME/duration validation before buffering/provider calls.
   - Evidence refs: Sales C4; F-SALES-B00-028/F-SALES-B01-015/F-SALES-B04-007.
+  - Red evidence (2026-07-02): `packages/domain/src/__tests__/sales-audio-validation-privacy.test.ts` — all 4 boundary checks fail because `submitRoleplayAttempt` calls the mocked evaluator regardless of unsupported MIME (`video/mp4`), oversized buffer, excessive duration, or missing consent/retention metadata. Labeled `provider call count on rejected media: 1 (expected 0)`. `apps/sales-advantage/app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts` — route returns 200 for oversized/unsupported-MIME/too-long uploads and reaches `storage.put`/`submitRoleplayAttempt`/`getAIClient`; all 3 route checks fail with `expected 400, received 200`.
 - [ ] Task: Add audio validation, privacy/consent checks, and retention metadata.
 - [ ] Task: Sanitize lesson markdown or replace unsafe rendering.
 - [ ] Task: Fix draft curriculum leakage and completion math skew.
-- [ ] Task: Align `audioStorageKey` nullability contracts and tests.
+- [~] Task: Align `audioStorageKey` nullability contracts and tests.
+  - Red evidence (2026-07-02): `packages/domain/src/__tests__/sales-contract-nullability.test.ts` — `audioStorageKey` nullability is **already green** across domain input/output, types output, and Drizzle column (Wave 0). The remaining Red assertion is cross-app contract parity: `@reading-advantage/types` does **not** export `roleplayAttemptInputSchema`. `packages/api/src/__tests__/sales-router-audio-contract.test.ts` — output nullability at the API boundary is green, but the API/types boundary lacks a `roleplayAudioInputSchema` for validating audio size/MIME/duration/consent/retention before provider/storage calls.
 - [ ] Task: Run Sales/API/domain/AI targeted gates.
 
 ## Phase 5: Integrated Acceptance
