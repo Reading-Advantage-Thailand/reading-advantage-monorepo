@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "role": "phase-acceptance",
+  "status": "pass",
+  "track": "wave1_high_risk_product_failures_20260628",
+  "phase": "Phase 3: CodeCamp Runtime Reliability",
+  "baseline_sha": "7ff3a8f83a872b9f48604e1f3b4114ff8f495853",
+  "head_sha": "c84ca30d1549bd898365ab1d26549c0a325b2ddf",
+  "summary": "Phase 3 CodeCamp Runtime Reliability is complete. All targeted Phase 3 tests (domain TenantDB runtime, domain webhook idempotency, webhooks idempotency + timestamp-poison guard, webhooks ACK latency, codecamp streaming-protocol) pass. TenantScopeError is eliminated on CodeCamp REFERENTIAL tables via greppable unscoped('reason') calls. GitHub webhook is idempotent by delivery-id (two-layer: in-process Set + SELECT-before-INSERT) and ACKs before running the LLM review (tracked in backgroundReviewJobs Map, drainable via waitForBackgroundReviews). The chat route now emits text/event-stream that the useChatStream client parser accepts. The two corrected Red tests (idempotency, ACK-latency) are sound and not weakened: the idempotency test still requires webhookPathExecutedCount=1 (fails on zero execution), and the ACK test snapshots reviewResolvedWhenAcked at the exact moment the ACK wins the race before the finally block resolves the deferred review. Closeout aggregates: @reading-advantage/domain 353 passed 5 skipped, @reading-advantage/api 216 passed, @reading-advantage/webhooks 82 passed, codecamp-advantage 954 passed 64 skipped 47 failed — every codecamp failure is a pre-existing live-network prod-smoke test in lib/__tests__/prod-smoke/phase-*.test.ts or the pre-existing artifact test lib/__tests__/thai-text-width.test.ts (verified to also fail at baseline SHA 7ff3a8f8 with the exact same 5/8 failure profile). Codecamp check-types TS2307 'Cannot find module @reading-advantage/ai' is pre-existing: the import chain in apps/codecamp-advantage/app/api/chat/route.ts already imported @reading-advantage/ai at baseline SHA b8e3b5d5 (verified via git show), and Phase 3 did not add the import.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "count-drift-codecamp-aggregate",
+      "severity": "low",
+      "category": "A5 minor",
+      "description": "Plan Phase 3 closeout aggregate cites codecamp-advantage as '944 passed 64 skipped 57 failed'. My independent run reports '954 passed 64 skipped 47 failed'. The delta is entirely inside the pre-existing prod-smoke suite whose results depend on live-network reachability of https://codecamp.reading-advantage.com. The plan already documents these as pre-existing flaky live-network tests owned by the prod-smoke workstream, and no Wave 1 code paths are affected. Not blocking Phase 3 acceptance because (a) the qualitative claim (all failures pre-existing prod-smoke or artifact tests) is verified, (b) no phase task exit-code claim is falsified — targeted Phase 3 gate exits 0, and (c) the delta reflects a flaky network probe, not fabricated evidence."
+    },
+    {
+      "id": "review-b-file-not-committed-with-name",
+      "severity": "info",
+      "category": "artifact",
+      "description": "measure/tracks/wave1_high_risk_product_failures_20260628/review-b-security-result.json is tracked and updated; review-a-*/review-c-*-result.json are untracked at HEAD but reference Phase 3 SHAs. No action taken (orchestrator forbids staging them)."
+    }
+  ],
+  "evidence": {
+    "targeted_gate_exit_code": 0,
+    "targeted_gate_summary": {
+      "@reading-advantage/domain (targeted)": "Test Files 2 passed | Tests 3 passed",
+      "@reading-advantage/webhooks (targeted)": "Test Files 2 passed | Tests 3 passed",
+      "codecamp-advantage (targeted)": "Test Files 1 passed | Tests 1 passed"
+    },
+    "closeout_test_summary": {
+      "@reading-advantage/domain": "Test Files 33 passed 1 skipped | Tests 353 passed 5 skipped",
+      "@reading-advantage/api": "Test Files 28 passed | Tests 216 passed",
+      "@reading-advantage/webhooks": "Test Files 8 passed | Tests 82 passed",
+      "codecamp-advantage": "Test Files 12 failed 31 passed | Tests 47 failed 954 passed 64 skipped (all failures pre-existing: 11 prod-smoke files + 1 lib/__tests__/thai-text-width.test.ts artifact test verified failing at baseline SHA 7ff3a8f8 with identical 5/8 failure profile)"
+    },
+    "closeout_check_types_summary": {
+      "@reading-advantage/domain": "cache replay, exit 0",
+      "@reading-advantage/api": "cache replay, exit 0",
+      "@reading-advantage/webhooks": "cache replay, exit 0",
+      "codecamp-advantage": "exit 2 — pre-existing TS2307 'Cannot find module @reading-advantage/ai' in apps/codecamp-advantage/app/api/chat/route.ts:2-3; verified imported at baseline SHA b8e3b5d5 via `git show b8e3b5d5:apps/codecamp-advantage/app/api/chat/route.ts`; not introduced by Phase 3"
+    },
+    "closeout_lint_summary": "0 errors, 5 warnings (all pre-existing no-unused-vars in prod-smoke test files)",
+    "anti_pattern_checks": {
+      "A1_structured_signals": "PASS — tests use labeled fields (tenantScopeErrorCount, duplicateDeliveryCount, webhookPathExecutedCount, reviewResolvedWhenAcked, raceResult, contentType); no substring 'processed' or bare digit gates.",
+      "A3_labeled_counts": "PASS — every count is a named integer parsed via .mock.calls.length or vi.mocked; no `rg -q '[0-9]+'` pattern.",
+      "A4_no_vacuous_pass": "PASS — idempotency test guards against zero webhook execution via webhookPathExecutedCount=1 assertion; ACK test asserts raceResult='ack' AND snapshot of reviewResolved BEFORE finally.",
+      "A5_plan_truthfulness": "PASS on all exit-code claims; nonblocking count drift on aggregate documented above; the c84ca30d correction (webhooks 2→3 tests) matches observed run.",
+      "A6_registry_overstatement": "PASS — deferred:wave4 for Postgres-backed job/DLQ is honest; the in-process backgroundReviewJobs Map + processedDeliveryIds Set is documented as the same-process seam.",
+      "A7_no_log_filtering": "PASS — tenant-scope-error assertion checks `err instanceof TenantScopeError` directly; no rg-based text filter dropping any log."
+    },
+    "corrected_test_soundness": {
+      "github-webhook-idempotency.test.ts": "SOUND — original self-contradictory vi.waitFor(...toHaveBeenCalledTimes(2)) removed; new test fires two same-id deliveries concurrently, releases deferred createPrReview mocks on interval, asserts createCallCount<=1 via webhookPathExecutedCount=1 & duplicateDeliveryCount=0. Would still fail against non-idempotent handler (count>1).",
+      "github-webhook-ack-latency.test.ts": "SOUND — original expect(reviewResolved).toBe(false) after finally set it true (unsatisfiable) rewritten to snapshot reviewResolvedWhenAcked at race resolution (before finally). Timeout Promise.race rejects with 'ACK blocked by LLM review' after 500ms if ACK cannot return without awaiting LLM. Not weakened — still asserts (a) ack wins race and (b) LLM review promise unresolved at ACK time."
+    },
+    "marker_hygiene": "PASS — Phase 3 has 8 `[x]` tasks and 1 `[b] deferred:wave4` task. No `[ ]` and no dangling `[~]`.",
+    "spec_alignment": {
+      "CodeCamp PR review path no longer throws TenantScopeError": "PASS — verified by codecamp-tenantdb-runtime.test.ts asserting tenantScopeErrorCount=0 across getPrReviewsForUser, getExerciseRepos, createPrReview, completeApprovedPrReviewLesson, logWebhookEvent using real tenant-registry (vi.unmock).",
+      "Webhook processing is idempotent (delivery-id)": "PASS — verified by github-webhook-idempotency.test.ts (webhookPathExecutedCount=1, duplicateDeliveryCount=0 on concurrent same-id deliveries) and codecamp-webhook-idempotency-domain.test.ts (duplicateDeliveryLogCount=0 across two same-id calls).",
+      "ACK not blocked by synchronous LLM review": "PASS — verified by github-webhook-ack-latency.test.ts (raceResult='ack', reviewResolvedWhenAcked=false).",
+      "Chat streaming protocol server/client agree": "PASS — verified by streaming-protocol.test.ts (content-type contains 'text/event-stream' AND parseClientStream reconstructs 'Hello world' from 0:'Hello'\\n0:' world' data-stream frames)."
+    }
+  },
+  "commands": [
+    "CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/codecamp-tenantdb-runtime.test.ts src/__tests__/codecamp-webhook-idempotency-domain.test.ts && CI=true pnpm --filter @reading-advantage/webhooks exec vitest run src/__tests__/github-webhook-idempotency.test.ts src/__tests__/github-webhook-ack-latency.test.ts && CI=true pnpm --filter codecamp-advantage exec vitest run app/api/chat/__tests__/streaming-protocol.test.ts",
+    "CI=true pnpm turbo run test --filter=codecamp-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/webhooks",
+    "CI=true pnpm turbo run check-types --filter=codecamp-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/webhooks",
+    "CI=true pnpm turbo run lint --filter=codecamp-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/webhooks",
+    "git show b8e3b5d5:apps/codecamp-advantage/app/api/chat/route.ts | grep @reading-advantage/ai (pre-existence proof)"
+  ],
+  "changed_files": [
+    "apps/codecamp-advantage/app/api/chat/__tests__/streaming-protocol.test.ts",
+    "apps/codecamp-advantage/app/api/chat/route.ts",
+    "apps/codecamp-advantage/vitest.config.ts",
+    "measure/tracks/wave1_high_risk_product_failures_20260628/plan.md",
+    "measure/tracks/wave1_high_risk_product_failures_20260628/review-b-security-result.json",
+    "packages/domain/src/__tests__/codecamp-tenantdb-runtime.test.ts",
+    "packages/domain/src/__tests__/codecamp-webhook-idempotency-domain.test.ts",
+    "packages/domain/src/codecamp/exercises.ts",
+    "packages/domain/src/codecamp/pr-reviews.ts",
+    "packages/webhooks/src/__tests__/github-review.test.ts",
+    "packages/webhooks/src/__tests__/github-webhook-ack-latency.test.ts",
+    "packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts",
+    "packages/webhooks/src/__tests__/phase-6-acceptance.test.ts",
+    "packages/webhooks/src/github.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": null,
+  "confidence": "high"
+}
