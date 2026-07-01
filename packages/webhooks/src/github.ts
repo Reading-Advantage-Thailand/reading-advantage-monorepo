@@ -129,6 +129,9 @@ github.post("/pr", async (c) => {
   const timestampClaim = timestampHeader ?? bodyTimestamp;
   const timestamp = timestampClaim !== undefined ? Number(timestampClaim) : undefined;
   if (timestampClaim !== undefined && !Number.isFinite(timestamp)) {
+    // Release the in-flight marker on validation failure so a legitimate
+    // retry with this delivery id is not suppressed by the dedup cache.
+    if (deliveryId) processedDeliveryIds.delete(deliveryId);
     return c.json({ error: "Invalid timestamp" }, 401);
   }
 
