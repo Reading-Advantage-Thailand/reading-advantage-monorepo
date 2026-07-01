@@ -10,6 +10,7 @@ import {
 } from "@reading-advantage/db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { ExtendedNextRequest } from "./auth-controller";
+import { assertSystemAccess } from "@/server/middleware/system-key";
 import { sendDiscordWebhook } from "../utils/send-discord-webhook";
 import { randomSelectGenre } from "../utils/generators/random-select-genre";
 import { generateTopic } from "../utils/generators/topic-generator";
@@ -44,6 +45,19 @@ interface GenerateArticleRequest {
   topic: string;
   cefrLevel: string;
   wordCount: number;
+}
+
+/**
+ * Numerical distance between two CEFR levels. Higher number = farther apart.
+ * A1 < A2 < B1 < B2 < C1 < C2. Returns `Infinity` when either side is unknown.
+ */
+function cefrLevelGap(requested: string | null | undefined, actual: string | null | undefined): number {
+  const ladder = ["A1", "A2", "B1", "B2", "C1", "C2"];
+  if (!requested || !actual) return Number.POSITIVE_INFINITY;
+  const a = ladder.indexOf(actual.toUpperCase());
+  const b = ladder.indexOf(requested.toUpperCase());
+  if (a === -1 || b === -1) return Number.POSITIVE_INFINITY;
+  return Math.abs(a - b);
 }
 
 interface Context {
@@ -83,6 +97,11 @@ async function retryPrismaOperation<T>(
 
 // Function to generate queue
 export async function generateQueue(req: ExtendedNextRequest) {
+  const guard = assertSystemAccess(req);
+  if (guard) {
+    return guard;
+  }
+
   try {
     const { amountPerGenre } = await req.json();
     if (!amountPerGenre) {
@@ -758,6 +777,26 @@ export async function generateUserArticle(req: NextRequest) {
     //console.log(
     //  `Calculated CEFR level: ${calculatedCefrLevel}, RA level: ${raLevel}`
     //);
+
+    // AI content quality gate: a C2-requested article whose evaluated level is
+    // A1 (raLevel 1) is way off-target. Persisting it would surface misleading
+    // content to learners and inflate average-rating dashboards. Reject it.
+    const requestedLevel = (cefrLevelEnum ?? "").toUpperCase();
+    const actualLevel = (calculatedCefrLevel ?? "").toUpperCase();
+    const cefrGap = cefrLevelGap(requestedLevel, actualLevel);
+    const offLevel = cefrGap > 1;
+    if (offLevel) {
+      return NextResponse.json(
+        {
+          error: "AI content quality gate rejected off-level article",
+          code: "OFF_LEVEL_CONTENT",
+          requestedLevel,
+          actualLevel,
+          raLevel,
+        },
+        { status: 400 }
+      );
+    }
 
     // Create article using Drizzle
     const [article] = await db

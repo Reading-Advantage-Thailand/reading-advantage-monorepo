@@ -2,6 +2,7 @@ import { ExtendedNextRequest } from "./auth-controller";
 import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod";
 import { getCurrentUser } from "@/lib/session";
+import { recordAuditEventSafe } from "@/server/utils/audit-recorder";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isoWeek from "dayjs/plugin/isoWeek";
@@ -893,14 +894,58 @@ export async function updateClassroom(req: ExtendedNextRequest, ctx: RequestCont
 export async function deleteClassroom(req: ExtendedNextRequest, ctx: RequestContext) {
   const { classroomId } = await ctx.params;
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const [classroom] = await db.select().from(classrooms).where(eq(classrooms.id, classroomId)).limit(1);
 
     if (!classroom) return NextResponse.json({ message: "Classroom not found" }, { status: 404 });
 
+    const isOwner = classroom.teacherId === user.id;
+    const userSchoolId =
+      (user as any).schoolId ?? (user as any).school_id ?? null;
+    const isSameSchoolAdmin =
+      user.role === "ADMIN" &&
+      !!classroom.schoolId &&
+      !!userSchoolId &&
+      classroom.schoolId === userSchoolId;
+    const isSystem = user.role === "SYSTEM";
+    if (!isOwner && !isSystem && !isSameSchoolAdmin) {
+      return NextResponse.json(
+        { error: "Forbidden - not authorized to delete this classroom" },
+        { status: 403 }
+      );
+    }
+
     await db.delete(classrooms).where(eq(classrooms.id, classroomId));
+
+    try {
+      await recordAuditEventSafe(
+        {
+          actorUserId: user.id,
+          actorRole: (user.role as any) ?? null,
+          ipAddress: req.headers.get("x-forwarded-for") ?? null,
+          userAgent: req.headers.get("user-agent") ?? null,
+        },
+        {
+          action: "classroom:delete",
+          targetType: "classroom",
+          targetId: classroomId,
+          metadata: {
+            schoolId: classroom.schoolId ?? null,
+            classroomName: classroom.name ?? null,
+          },
+        }
+      );
+    } catch (auditError) {
+      console.error("Audit event recording failed for deleteClassroom:", auditError);
+    }
 
     return NextResponse.json({ message: "success deleted" }, { status: 200 });
   } catch (error) {
+    console.error("deleteClassroom error:", error);
     return NextResponse.json({ message: error }, { status: 500 });
   }
 }
@@ -959,6 +1004,11 @@ export async function patchClassroomEnroll(req: ExtendedNextRequest, ctx: Reques
 export async function patchClassroomUnenroll(req: ExtendedNextRequest, ctx: RequestContext) {
   const { classroomId } = await ctx.params;
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const json = await req.json();
     const studentId = json.studentId;
 
@@ -968,6 +1018,22 @@ export async function patchClassroomUnenroll(req: ExtendedNextRequest, ctx: Requ
 
     if (!classroom) return NextResponse.json({ message: "Classroom not found" }, { status: 404 });
 
+    const isOwner = classroom.teacherId === user.id;
+    const userSchoolId =
+      (user as any).schoolId ?? (user as any).school_id ?? null;
+    const isSameSchoolAdmin =
+      user.role === "ADMIN" &&
+      !!classroom.schoolId &&
+      !!userSchoolId &&
+      classroom.schoolId === userSchoolId;
+    const isSystem = user.role === "SYSTEM";
+    if (!isOwner && !isSystem && !isSameSchoolAdmin) {
+      return NextResponse.json(
+        { error: "Forbidden - not authorized to modify this classroom" },
+        { status: 403 }
+      );
+    }
+
     const result = await db
       .delete(classroomStudents)
       .where(and(eq(classroomStudents.classroomId, classroomId), eq(classroomStudents.studentId, studentId)))
@@ -975,6 +1041,28 @@ export async function patchClassroomUnenroll(req: ExtendedNextRequest, ctx: Requ
 
     if (result.length === 0) {
       return NextResponse.json({ message: "Student not found in classroom" }, { status: 404 });
+    }
+
+    try {
+      await recordAuditEventSafe(
+        {
+          actorUserId: user.id,
+          actorRole: (user.role as any) ?? null,
+          ipAddress: req.headers.get("x-forwarded-for") ?? null,
+          userAgent: req.headers.get("user-agent") ?? null,
+        },
+        {
+          action: "classroom:unenroll",
+          targetType: "classroom",
+          targetId: classroomId,
+          metadata: {
+            schoolId: classroom.schoolId ?? null,
+            studentId,
+          },
+        }
+      );
+    } catch (auditError) {
+      console.error("Audit event recording failed for patchClassroomUnenroll:", auditError);
     }
 
     return NextResponse.json({ message: "success" }, { status: 200 });

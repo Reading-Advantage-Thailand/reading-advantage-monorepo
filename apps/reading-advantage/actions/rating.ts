@@ -4,8 +4,21 @@ import { db, and, eq } from "@reading-advantage/db";
 import { userActivity, xpLogs } from "@reading-advantage/db/schema";
 import { ActivityType } from "@/lib/enums";
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "@/lib/session";
 
 export async function submitRating(userId: string, articleId: string, rating: number, article: any) {
+  // Reject unauthenticated callers — server actions must enforce a real session.
+  const sessionUser = await getCurrentUser();
+  if (!sessionUser) {
+    return { success: false, error: "Unauthorized", xpEarned: 0 };
+  }
+
+  // The session user must match the supplied userId to prevent arbitrary
+  // XP/rating writes to other users' accounts.
+  if (sessionUser.id !== userId) {
+    return { success: false, error: "Forbidden - cannot rate for another user", xpEarned: 0 };
+  }
+
   // Check if user has already rated
   const [oldRatingActivity] = await db
     .select({ details: userActivity.details })
@@ -63,7 +76,7 @@ export async function submitRating(userId: string, articleId: string, rating: nu
     // Revalidate the path to update average rating
     revalidatePath(`/[locale]/student/read/${articleId}`);
 
-    return { xpEarned: 10 };
+    return { success: true, xpEarned: 10 };
   } else {
     // Update existing rating
     if (!oldRatingActivity) {
@@ -85,6 +98,6 @@ export async function submitRating(userId: string, articleId: string, rating: nu
         )
       );
 
-    return { xpEarned: 0 };
+    return { success: true, xpEarned: 0 };
   }
 }
