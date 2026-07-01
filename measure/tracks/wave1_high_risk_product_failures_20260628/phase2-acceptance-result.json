@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "role": "phase-acceptance",
+  "status": "pass",
+  "track": "wave1_high_risk_product_failures_20260628",
+  "phase": "Phase 2: Reading Advantage Critical Security and XP Idempotency",
+  "baseline_sha": "b8e3b5d5efc6d358fa9977648f654e9e9e716fee",
+  "head_sha_before_fixes": "27447ece",
+  "summary": "Phase 2 targeted gate (6 suites, 29 tests) passes; @reading-advantage/domain (350 pass) and @reading-advantage/api (216 pass) pass. Spec acceptance criteria for Reading (destructive ownership/tenant checks, audit events, XP idempotency, AI assessment/content validation) are met with real behavior tests. Two plan-text A5 issues detected: (a) plan claimed '45 pre-existing no-var errors' but baseline reading-advantage lint had 0 errors and Phase 2 introduced 47 no-var errors in the new Jest-scaffolded __tests__/ files; (b) claimed 26/26 tests where suite now reports 29/29. Both plan claims were corrected and the actual lint regression was resolved by scoping `no-var: off` to `__tests__/**/*.test.{ts,tsx}` in `apps/reading-advantage/eslint.config.mjs` (the `var` is required for Jest mock factory hoisting; a `let/const` replacement was tested and produced TDZ ReferenceErrors at runtime). Post-fix reading-advantage lint returns 0 errors, matching baseline. reading-advantage#check-types OOMs during tsc — a pre-existing infrastructure limit documented in plan.md line 88, not a Phase 2 regression (@reading-advantage/domain and @reading-advantage/api check-types both pass). Aggregate reading-advantage test failures (29 suites, 32 tests) are pre-existing (verified by re-running at baseline SHA); Phase 2 introduces zero new failing suites.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NBF-1",
+      "kind": "plan_truthfulness_corrected",
+      "description": "plan.md previously claimed lint errors were pre-existing; corrected to reflect that Phase 2 introduced 47 no-var errors and that acceptance added a scoped ESLint override to bring lint back to 0 errors. Test count updated from 26 to 29.",
+      "evidence": "measure/tracks/wave1_high_risk_product_failures_20260628/plan.md lines 82,85,89-90 corrected; apps/reading-advantage/eslint.config.mjs updated"
+    },
+    {
+      "id": "NBF-2",
+      "kind": "infrastructure_pre_existing",
+      "description": "reading-advantage#check-types OOMs during tsc --noEmit; documented in plan.md line 88 as a pre-existing infrastructure limit. @reading-advantage/domain and @reading-advantage/api check-types both pass. Not a Phase 2 regression.",
+      "evidence": "CI=true pnpm turbo run check-types --filter=reading-advantage exits 134 with heap OOM; --filter=@reading-advantage/domain --filter=@reading-advantage/api exits 0"
+    },
+    {
+      "id": "NBF-3",
+      "kind": "aggregate_test_pre_existing",
+      "description": "reading-advantage aggregate Jest run has 29 failed suites / 32 failed tests, all next-intl ESM parse errors in components/games, lib/games, hooks/useSound, and __test__/jest30-* suites. Verified pre-existing by re-running at baseline SHA b8e3b5d5 (same 29 failed suites, same 32 failed tests). Phase 2 introduced zero new failing suites.",
+      "evidence": "CI=true pnpm --filter reading-advantage test at HEAD and at b8e3b5d5 produce the same failure fingerprint"
+    }
+  ],
+  "evidence": {
+    "acceptance_criterion_1_targeted_gate": "PASS: Test Suites: 6 passed, 6 total; Tests: 29 passed, 29 total (post-var/eslint fix)",
+    "acceptance_criterion_2_closeout_gates": {
+      "test_domain_api": "PASS (350 domain, 216 api)",
+      "test_reading_advantage": "FAIL: 29 pre-existing suites (next-intl ESM), 32 pre-existing tests — verified pre-existing at baseline b8e3b5d5",
+      "check_types_domain_api": "PASS",
+      "check_types_reading_advantage": "FAIL: OOM (pre-existing infrastructure limit, documented)",
+      "lint_all_three": "PASS: 0 errors, 2235 warnings (all warnings pre-existing; no-var errors resolved by scoped ESLint override on __tests__/**)"
+    },
+    "acceptance_criterion_3_spec_alignment": {
+      "reading_destructive_ownership_tenant": "MET: apps/reading-advantage/server/controllers/classroom-controller.ts enforces owner/same-school-admin/SYSTEM in deleteClassroom + patchClassroomUnenroll; classroom-authorization.test.ts covers cross-school teacher forbidden + owner allowed",
+      "reading_destructive_audit_events": "MET: recordAuditEventSafe wired in classroom-controller.ts and user-controller.ts (classroom:delete, classroom:unenroll, user:delete); audit-events.test.ts asserts >=1 event with actor/schoolId/action fields",
+      "xp_idempotency": "MET: xpIdempotencyLocks per-key Promise map + DB unique constraint on user_activity(userId,activityType,targetId); post-activity-log-idempotency.test.ts confirms xpLogInsertCount === 1 for 5 concurrent requests",
+      "ai_assessment_validation": "MET: validateAssessment (Zod) in level-test-controller.ts returns 400 INVALID_ASSESSMENT on malformed JSON when forceAssessment=true; level-test-contract.test.ts asserts 400 path",
+      "ai_content_quality_gate": "MET: cefrLevelGap check in generator-controller.ts rejects OFF_LEVEL_CONTENT with 400 when |requested_ordinal - calculated_ordinal| > 1; content-quality-gate.test.ts asserts rejection",
+      "sensitive_auth_boundaries": "MET: submitRating requires session+user match; refreshAIInsightsAutomated, generateQueue, refreshMaterializedViewsAutomated call assertSystemAccess(req) via new middleware/system-key.ts"
+    },
+    "acceptance_criterion_4_plan_truthfulness": "A5 findings identified and corrected in-flight (lint claim, test count claim)",
+    "acceptance_criterion_5_anti_patterns": {
+      "A2_consent_publish_gate": "N/A for Phase 2",
+      "A3_labeled_counts": "PASS: xpLogInsertCount is a labeled integer, not a bare digit regex; audit event count assertions use recordAuditEvent.mock.calls.length",
+      "A4_vacuous_pass": "PASS: XP concurrency test has `expect(responses.length).toBe(concurrentRequests)` guard before asserting xpLogInsertCount",
+      "A5_false_claim_text": "DETECTED and CORRECTED (lint pre-existing claim, test count claim)",
+      "A6_registry_overstatement": "PASS: measure/tracks.md line 49 still shows Wave 1 as `[ ]` (not resolved)",
+      "A7_over_broad_filter": "PASS: no banned-term filters in new tests"
+    },
+    "acceptance_criterion_6_marker_hygiene": "PASS: Phase 2 tasks are all `[x]`; no `[ ]` or dangling `[~]`",
+    "phase2_commits": [
+      "9f49dbc1 test(reading-advantage): phase2 red tests",
+      "d40a189e fix(reading-advantage): wave1 phase2 green",
+      "fd44af53 fix(reading-advantage): wave1 p2 security (review-b)",
+      "45c7ff52 chore(measure): wave1 p2 review-b result",
+      "27447ece fix(reading-advantage): level-test 401 contract (review-c)"
+    ]
+  },
+  "commands": [
+    {"cmd": "CI=true pnpm --filter reading-advantage test -- __tests__/controllers/classroom-authorization.test.ts __tests__/controllers/audit-events.test.ts __tests__/controllers/post-activity-log-idempotency.test.ts __tests__/actions/sensitive-auth-boundaries.test.ts __tests__/ai/level-test-contract.test.ts __tests__/ai/content-quality-gate.test.ts", "exit": 0, "result": "6 suites, 29 tests passed"},
+    {"cmd": "CI=true pnpm turbo run test --filter=@reading-advantage/domain --filter=@reading-advantage/api", "exit": 0, "result": "domain 350 pass, api 216 pass (cached)"},
+    {"cmd": "CI=true pnpm turbo run test --filter=reading-advantage", "exit": 1, "result": "29 failed suites, 32 failed tests — all pre-existing (verified at baseline SHA)"},
+    {"cmd": "CI=true pnpm turbo run check-types --filter=@reading-advantage/domain --filter=@reading-advantage/api", "exit": 0, "result": "PASS (cached)"},
+    {"cmd": "CI=true pnpm turbo run check-types --filter=reading-advantage", "exit": 134, "result": "OOM — pre-existing infrastructure limit (plan.md line 88)"},
+    {"cmd": "CI=true pnpm --filter reading-advantage run lint", "exit": 0, "result": "0 errors, 2235 warnings (post-eslint override)"}
+  ],
+  "changed_files": [
+    "apps/reading-advantage/eslint.config.mjs",
+    "measure/tracks/wave1_high_risk_product_failures_20260628/plan.md",
+    "measure/tracks/wave1_high_risk_product_failures_20260628/phase2-acceptance-result.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": null,
+  "confidence": "high",
+  "handoff": "Orchestrator may proceed to Phase 3 (CodeCamp Runtime Reliability). Phase 2 targeted gate is Green (29/29). Closeout gates for @reading-advantage/domain (350 pass) and @reading-advantage/api (216 pass) are Green. reading-advantage aggregate test/check-types failures were verified pre-existing at baseline SHA b8e3b5d5 and are documented as owner-wave/infrastructure debt. Phase 2 introduced zero new failing suites."
+}
