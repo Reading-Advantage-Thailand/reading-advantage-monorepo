@@ -20,6 +20,8 @@ var fromMock: jest.Mock;
 var whereMock: jest.Mock;
 var limitMock: jest.Mock;
 var returningMock: jest.Mock;
+var insertMock: jest.Mock;
+var valuesMock: jest.Mock;
 
 jest.mock("@reading-advantage/db", () => {
   const actual = jest.requireActual("@reading-advantage/db");
@@ -30,6 +32,8 @@ jest.mock("@reading-advantage/db", () => {
   whereMock = jest.fn();
   limitMock = jest.fn();
   returningMock = jest.fn();
+  insertMock = jest.fn();
+  valuesMock = jest.fn();
 
   const mockDb: any = {};
   mockDb.select = selectMock.mockImplementation(() => mockDb);
@@ -38,7 +42,9 @@ jest.mock("@reading-advantage/db", () => {
   mockDb.limit = limitMock.mockResolvedValue([]);
   mockDb.delete = deleteMock.mockImplementation(() => mockDb);
   mockDb.update = jest.fn().mockImplementation(() => mockDb);
-  mockDb.insert = jest.fn().mockImplementation(() => mockDb);
+  mockDb.insert = insertMock.mockImplementation(() => mockDb);
+  mockDb.values = valuesMock.mockImplementation(() => mockDb);
+  mockDb.onConflictDoNothing = jest.fn().mockImplementation(() => mockDb);
   mockDb.returning = returningMock.mockResolvedValue([]);
 
   return {
@@ -55,6 +61,7 @@ import { getCurrentUser } from "@/lib/session";
 import {
   deleteClassroom,
   patchClassroomUnenroll,
+  patchClassroomEnroll,
 } from "@/server/controllers/classroom-controller";
 
 const mockedGetCurrentUser = getCurrentUser as jest.MockedFunction<
@@ -251,5 +258,103 @@ describe("classroom destructive authorization (Red)", () => {
       (r) => r.status === 403
     ).length;
     expect(forbiddenCount).toBe(2);
+  });
+
+  it("cross-school teacher cannot enroll a student (forbidden result count: expected 1)", async () => {
+    const ownerId = "teacher-owner";
+    const attackerId = "teacher-other-school";
+    const schoolId = "school-a";
+    const studentId = "student-1";
+
+    setupClassroomRow(ownerId, schoolId);
+
+    mockedGetCurrentUser.mockResolvedValue({
+      id: attackerId,
+      role: "TEACHER",
+      schoolId: "school-b",
+      license_id: "license-b",
+    } as any);
+
+    const res = await patchClassroomEnroll(
+      makeRequest("classroom-1", { student: [{ studentId, lastActivity: "" }] }, "PATCH"),
+      makeContext("classroom-1")
+    );
+
+    expect(res.status).toBe(403);
+    expect(insertMock).not.toHaveBeenCalled();
+  });
+
+  it("owning teacher can enroll a student (success result count: expected 1)", async () => {
+    const ownerId = "teacher-owner";
+    const schoolId = "school-a";
+    const studentId = "student-1";
+
+    setupClassroomRow(ownerId, schoolId);
+    // First .limit() resolves the classroom row; the second (conflict check) resolves empty.
+    limitMock
+      .mockResolvedValueOnce([
+        {
+          id: "classroom-1",
+          name: "Test Classroom",
+          classCode: "ABC123",
+          grade: 5,
+          archived: false,
+          createdAt: new Date(),
+          createdBy: ownerId,
+          teacherId: ownerId,
+          schoolId,
+          updatedAt: new Date(),
+        },
+      ])
+      .mockResolvedValue([]);
+
+    mockedGetCurrentUser.mockResolvedValue({
+      id: ownerId,
+      role: "TEACHER",
+      schoolId,
+      license_id: "license-a",
+    } as any);
+
+    const res = await patchClassroomEnroll(
+      makeRequest("classroom-1", { student: [{ studentId, lastActivity: "" }] }, "PATCH"),
+      makeContext("classroom-1")
+    );
+
+    expect(res.status).toBe(200);
+    expect(insertMock).toHaveBeenCalled();
+  });
+
+  it("aggregated forbidden result count across delete+unenroll+enroll cross-school attempts is 3", async () => {
+    const ownerId = "teacher-owner";
+    const attackerId = "teacher-other-school";
+    const schoolId = "school-a";
+    const studentId = "student-1";
+
+    setupClassroomRow(ownerId, schoolId);
+    setupUnenrollReturn("classroom-1", studentId);
+
+    mockedGetCurrentUser.mockResolvedValue({
+      id: attackerId,
+      role: "TEACHER",
+      schoolId: "school-b",
+      license_id: "license-b",
+    } as any);
+
+    const [deleteRes, unenrollRes, enrollRes] = await Promise.all([
+      deleteClassroom(makeRequest("classroom-1"), makeContext("classroom-1")),
+      patchClassroomUnenroll(
+        makeRequest("classroom-1", { studentId }, "PATCH"),
+        makeContext("classroom-1")
+      ),
+      patchClassroomEnroll(
+        makeRequest("classroom-1", { student: [{ studentId, lastActivity: "" }] }, "PATCH"),
+        makeContext("classroom-1")
+      ),
+    ]);
+
+    const forbiddenCount = [deleteRes, unenrollRes, enrollRes].filter(
+      (r) => r.status === 403
+    ).length;
+    expect(forbiddenCount).toBe(3);
   });
 });
