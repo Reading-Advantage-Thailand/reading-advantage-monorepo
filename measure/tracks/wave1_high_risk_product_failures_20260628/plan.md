@@ -91,17 +91,22 @@
 
 ## Phase 3: CodeCamp Runtime Reliability
 
-- [ ] Task: Write Red tests reproducing `TenantScopeError` for CodeCamp REFERENTIAL table domain functions in compiled/runtime-equivalent context.
+- [~] Task: Write Red tests reproducing `TenantScopeError` for CodeCamp REFERENTIAL table domain functions in compiled/runtime-equivalent context.
   - Evidence refs: CodeCamp executive summary CR-1; F-CC-B10-001/F-CC-B09-001/F-CC-B08-001.
+  - Red evidence (2026-07-02): `packages/domain/src/__tests__/codecamp-tenantdb-runtime.test.ts` fails with `tenantScopeErrorCount: 5` across `getPrReviewsForUser`, `getExerciseRepos`, `createPrReview`, `completeApprovedPrReviewLesson`, and `logWebhookEvent`. Classification check confirms `codecamp_pr_reviews`, `codecamp_exercise_repos`, and `codecamp_webhook_events` are registered as `REFERENTIAL`, not `EXEMPT`. Targeted command: `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/codecamp-tenantdb-runtime.test.ts src/__tests__/codecamp-webhook-idempotency-domain.test.ts`.
 - [ ] Task: Add explicit `unscoped("reason")` or owner-FK joins for affected CodeCamp domain functions.
 - [ ] Task: Fix test classification drift so Vitest and compiled runtime agree on table classification.
-- [ ] Task: Write Red tests for webhook idempotency using delivery ID.
+- [~] Task: Write Red tests for webhook idempotency using delivery ID.
   - Evidence refs: CodeCamp high-severity webhook theme; F-CC-B10-002/F-CC-B10-003/F-CC-B07-039.
+  - Red evidence (2026-07-02): `packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts` fails with `duplicateDeliveryCount: 1` when two concurrent deliveries share the same `x-github-delivery` value. `packages/domain/src/__tests__/codecamp-webhook-idempotency-domain.test.ts` fails with `tenantScopeErrorCount: 2` (will become `duplicateDeliveryLogCount: 2` once the TenantScopeError barrier is removed). Targeted commands: `CI=true pnpm --filter @reading-advantage/webhooks exec vitest run src/__tests__/github-webhook-idempotency.test.ts` and domain command above.
 - [ ] Task: Add Postgres-backed review job state or integrate with planned webhook retry/DLQ track.
-- [ ] Task: Ensure webhook ACK is not blocked by synchronous LLM review.
-- [ ] Task: Write streaming protocol test for chat route/client compatibility.
+- [~] Task: Ensure webhook ACK is not blocked by synchronous LLM review.
+  - Red evidence (2026-07-02): `packages/webhooks/src/__tests__/github-webhook-ack-latency.test.ts` fails with `Error: ACK blocked by LLM review`; the webhook response does not resolve until the deferred LLM review promise is resolved. Targeted command: `CI=true pnpm --filter @reading-advantage/webhooks exec vitest run src/__tests__/github-webhook-ack-latency.test.ts`.
+- [~] Task: Write streaming protocol test for chat route/client compatibility.
   - Evidence refs: CodeCamp executive summary High theme 2; F-CC-B00-001/F-CC-B04-019.
-- [ ] Task: Run CodeCamp/API/webhooks/domain targeted gates.
+  - Red evidence (2026-07-02): `apps/codecamp-advantage/app/api/chat/__tests__/streaming-protocol.test.ts` fails because the server response Content-Type is `text/plain; charset=utf-8` while the client parser (`lib/use-chat-stream.ts`) only recognizes `text/event-stream`. Targeted command: `CI=true pnpm --filter codecamp-advantage exec vitest run app/api/chat/__tests__/streaming-protocol.test.ts`. Test infra note: added `@reading-advantage/ai` alias and `app/**/*.{test,spec}.{ts,tsx}` include to `apps/codecamp-advantage/vitest.config.ts` so the route-level test is discoverable.
+- [~] Task: Run CodeCamp/API/webhooks/domain targeted gates.
+  - Red evidence (2026-07-02): all four Phase 3 targeted test files fail for the expected reasons above. The aggregate Phase 3 Red command is the same as the targeted commands run independently.
 
 ## Phase 4: Sales Security, Privacy, and Contract Hardening
 
