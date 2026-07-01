@@ -179,13 +179,17 @@ describe("GitHub webhook idempotency by delivery id", () => {
     const resPromise1 = githubApp.fetch(req1);
     const resPromise2 = githubApp.fetch(req2);
 
-    await vi.waitFor(() => expect(createPrReview).toHaveBeenCalledTimes(2), {
-      timeout: 2000,
-    });
-
-    resolvers.forEach((resolve) => resolve());
+    // Release any deferred createPrReview resolvers on a tick so the first
+    // (and, if idempotency is broken, the second) delivery can complete.
+    // This prevents a correct idempotent handler from being held up by the
+    // deferred mock, while still allowing us to count how many times the
+    // review was actually created.
+    const releaseInterval = setInterval(() => resolvers.forEach((resolve) => resolve()), 50);
 
     const [res1, res2] = await Promise.all([resPromise1, resPromise2]);
+
+    clearInterval(releaseInterval);
+
     expect(res1.status).toBe(200);
     expect(res2.status).toBe(200);
 
