@@ -157,8 +157,8 @@ export async function handleLevelTestChat(req: ExtendedNextRequest) {
     const session = req.session;
     if (!session) {
       return NextResponse.json(
-        { code: "UNAUTHORIZED", message: "Not authenticated" },
-        { status: 403 }
+        { error: "Unauthorized" },
+        { status: 401 }
       );
     }
 
