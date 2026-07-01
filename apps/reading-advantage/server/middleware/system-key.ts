@@ -14,21 +14,39 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "crypto";
+import { z } from "zod";
+
+const accessKeySchema = z.string().min(1).optional();
+
+function getValidatedAccessKey(): string | undefined {
+  const parsed = accessKeySchema.safeParse(process.env.ACCESS_KEY);
+  return parsed.success ? parsed.data : undefined;
+}
+
+function constantTimeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
 
 /**
  * Returns a 401 response when the request lacks a valid access key,
  * otherwise returns `null` to indicate the call may proceed.
+ *
+ * The comparison is timing-safe to avoid leaking the configured key via
+ * response timing. The key is validated through Zod (non-empty string) so
+ * empty/invalid env values fail closed.
  */
 export function assertSystemAccess(req: NextRequest): NextResponse | null {
-  const configured = process.env.ACCESS_KEY;
+  const configured = getValidatedAccessKey();
   if (!configured) {
     return NextResponse.json(
       { error: "Unauthorized", message: "Server is missing ACCESS_KEY configuration" },
       { status: 401 }
     );
   }
-  const supplied = req.headers.get("Access-Key") ?? req.headers.get("access-key");
-  if (supplied !== configured) {
+  const supplied = req.headers.get("Access-Key") ?? req.headers.get("access-key") ?? "";
+  if (!constantTimeEqual(supplied, configured)) {
     return NextResponse.json(
       { error: "Unauthorized", message: "Valid Access-Key header is required" },
       { status: 401 }

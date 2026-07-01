@@ -190,6 +190,27 @@ function formatClassroomRow(
   };
 }
 
+// ─── Authorization helpers ────────────────────────────────────────────────────
+
+/**
+ * Determine whether the authenticated user may mutate a classroom.
+ * Allowed: owner teacher, same-school ADMIN, or SYSTEM.
+ */
+function canModifyClassroom(
+  user: any,
+  classroom: { teacherId: string; schoolId: string | null }
+): boolean {
+  const userSchoolId = user.schoolId ?? user.school_id ?? null;
+  const isOwner = classroom.teacherId === user.id;
+  const isSystem = user.role === "SYSTEM";
+  const isSameSchoolAdmin =
+    user.role === "ADMIN" &&
+    !!classroom.schoolId &&
+    !!userSchoolId &&
+    classroom.schoolId === userSchoolId;
+  return isOwner || isSystem || isSameSchoolAdmin;
+}
+
 // ─── Controllers ──────────────────────────────────────────────────────────────
 
 export async function getAllStudentList(req: ExtendedNextRequest) {
@@ -903,16 +924,7 @@ export async function deleteClassroom(req: ExtendedNextRequest, ctx: RequestCont
 
     if (!classroom) return NextResponse.json({ message: "Classroom not found" }, { status: 404 });
 
-    const isOwner = classroom.teacherId === user.id;
-    const userSchoolId =
-      (user as any).schoolId ?? (user as any).school_id ?? null;
-    const isSameSchoolAdmin =
-      user.role === "ADMIN" &&
-      !!classroom.schoolId &&
-      !!userSchoolId &&
-      classroom.schoolId === userSchoolId;
-    const isSystem = user.role === "SYSTEM";
-    if (!isOwner && !isSystem && !isSameSchoolAdmin) {
+    if (!canModifyClassroom(user, classroom)) {
       return NextResponse.json(
         { error: "Forbidden - not authorized to delete this classroom" },
         { status: 403 }
@@ -958,12 +970,24 @@ export async function patchClassroomEnroll(req: ExtendedNextRequest, ctx: Reques
   });
 
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const json = await req.json();
     const newStudents = z.array(studentSchema).parse(json.student);
 
     const [classroom] = await db.select().from(classrooms).where(eq(classrooms.id, classroomId)).limit(1);
 
     if (!classroom) return NextResponse.json({ message: "Classroom not found" }, { status: 404 });
+
+    if (!canModifyClassroom(user, classroom)) {
+      return NextResponse.json(
+        { error: "Forbidden - not authorized to modify this classroom" },
+        { status: 403 }
+      );
+    }
 
     for (const student of newStudents) {
       const [existingEnrollment] = await db
@@ -994,6 +1018,28 @@ export async function patchClassroomEnroll(req: ExtendedNextRequest, ctx: Reques
         .onConflictDoNothing();
     }
 
+    try {
+      await recordAuditEventSafe(
+        {
+          actorUserId: user.id,
+          actorRole: (user.role as any) ?? null,
+          ipAddress: req.headers.get("x-forwarded-for") ?? null,
+          userAgent: req.headers.get("user-agent") ?? null,
+        },
+        {
+          action: "classroom:enroll",
+          targetType: "classroom",
+          targetId: classroomId,
+          metadata: {
+            schoolId: classroom.schoolId ?? null,
+            studentIds: newStudents.map((s) => s.studentId),
+          },
+        }
+      );
+    } catch (auditError) {
+      console.error("Audit event recording failed for patchClassroomEnroll:", auditError);
+    }
+
     return NextResponse.json({ message: "success" }, { status: 200 });
   } catch (error) {
     console.error("Error enrolling students:", error);
@@ -1018,16 +1064,7 @@ export async function patchClassroomUnenroll(req: ExtendedNextRequest, ctx: Requ
 
     if (!classroom) return NextResponse.json({ message: "Classroom not found" }, { status: 404 });
 
-    const isOwner = classroom.teacherId === user.id;
-    const userSchoolId =
-      (user as any).schoolId ?? (user as any).school_id ?? null;
-    const isSameSchoolAdmin =
-      user.role === "ADMIN" &&
-      !!classroom.schoolId &&
-      !!userSchoolId &&
-      classroom.schoolId === userSchoolId;
-    const isSystem = user.role === "SYSTEM";
-    if (!isOwner && !isSystem && !isSameSchoolAdmin) {
+    if (!canModifyClassroom(user, classroom)) {
       return NextResponse.json(
         { error: "Forbidden - not authorized to modify this classroom" },
         { status: 403 }
