@@ -90,6 +90,75 @@ describe("GitHub webhook idempotency by delivery id", () => {
     delete process.env.GITHUB_WEBHOOK_SECRET;
   });
 
+  it("does not let an invalid-timestamp request poison the delivery id cache", async () => {
+    vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<
+      ReturnType<typeof getPrReviewByPrUrl>
+    >);
+    vi.mocked(getExerciseRepoByUrl).mockResolvedValue({
+      id: "r1",
+      moduleId: "m1",
+      repoUrl: "https://github.com/org/repo",
+      description: "Repo",
+      order: 1,
+      createdAt: new Date(),
+    } as Awaited<ReturnType<typeof getExerciseRepoByUrl>>);
+    vi.mocked(getUserByGithubUsername).mockResolvedValue({
+      id: "u1",
+      email: null,
+      name: "Intern 1",
+      role: "INTERN",
+      schoolId: null,
+      image: null,
+      xp: 0,
+      level: 1,
+      cefrLevel: "A1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as Awaited<ReturnType<typeof getUserByGithubUsername>>);
+    vi.mocked(createPrReview).mockResolvedValue({
+      id: "pr1",
+      exerciseRepoId: "r1",
+      userId: "u1",
+      prUrl: "https://github.com/org/repo/pull/1",
+      reviewStatus: "pending",
+      llmReviewSummary: null,
+      reviewedAt: null,
+      createdAt: new Date(),
+    });
+
+    const payload = JSON.stringify({
+      action: "opened",
+      pull_request: {
+        html_url: "https://github.com/org/repo/pull/1",
+        head: { ref: "feature-branch", sha: "abc123" },
+        base: {
+          ref: "main",
+          repo: {
+            full_name: "org/repo",
+            html_url: "https://github.com/org/repo",
+          },
+        },
+        user: { login: "intern1" },
+      },
+    });
+
+    const deliveryId = "timestamp-poison-001";
+
+    // First delivery has a non-numeric timestamp and must be rejected.
+    const badReq = createRequest(payload, {
+      deliveryId,
+      timestamp: "not-a-number",
+    });
+    const badRes = await githubApp.fetch(badReq);
+    expect(badRes.status).toBe(401);
+
+    // A legitimate redelivery with the same id must NOT be suppressed.
+    const goodReq = createRequest(payload, { deliveryId });
+    const goodRes = await githubApp.fetch(goodReq);
+    expect(goodRes.status).toBe(200);
+    expect(createPrReview).toHaveBeenCalledTimes(1);
+  });
+
   it("does not create two reviews for two deliveries with the same delivery id", async () => {
     vi.mocked(getPrReviewByPrUrl).mockResolvedValue(null as unknown as Awaited<
       ReturnType<typeof getPrReviewByPrUrl>
