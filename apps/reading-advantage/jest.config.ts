@@ -22,6 +22,7 @@ const config: Config = {
     "^@reading-advantage/api$": "<rootDir>/../../packages/api/src/index.ts",
     "^@reading-advantage/types$": "<rootDir>/../../packages/types/src/index.ts",
     "^@reading-advantage/domain$": "<rootDir>/../../packages/domain/src/index.ts",
+    "^@reading-advantage/ai$": "<rootDir>/../../packages/ai/src/index.ts",
     "^@/(.*)$": "<rootDir>/$1",
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
