@@ -10,7 +10,20 @@ import { updateUserProgress } from "./progress.js";
 export type CodecampWebhookEventOutcome = "ignored" | "failed";
 
 /**
+ * In-process cache of `x-github-delivery` ids that have already been
+ * processed by this Node process. Used by `logWebhookEvent` to short-circuit
+ * duplicate deliveries before they reach the DB. The cache is intentionally
+ * process-local because the dedup window is short and the same delivery id
+ * should never reappear after process restart; durable dedup comes from the
+ * DB SELECT below plus the unique index on `codecamp_webhook_events.delivery_id`.
+ */
+const processedDeliveryIds = new Set<string>();
+
+/**
  * Lists all PR reviews submitted by the current user.
+ *
+ * `codecamp_pr_reviews` is classified as REFERENTIAL (no `schoolId` column);
+ * the query is scoped manually by `userId`.
  */
 export async function getPrReviewsForUser({
   db, user, tenant,
@@ -18,12 +31,19 @@ export async function getPrReviewsForUser({
   db: TenantDB; user: UserContext; tenant: Tenant;
 }) {
   assertCan(user, "codecamp:read", tenant);
-  return db.select().from(codecampPrReviews)
+
+  const rawDb = db.unscoped("codecamp pr-reviews scoped by userId");
+
+  return rawDb.select().from(codecampPrReviews)
     .where(eq(codecampPrReviews.userId, user.id)).orderBy(desc(codecampPrReviews.createdAt));
 }
 
 /**
  * Creates a new PR review record after validation.
+ *
+ * `codecamp_exercise_repos` and `codecamp_pr_reviews` are REFERENTIAL; the
+ * prUrl uniqueness check relies on the `codecamp_pr_reviews_pr_url_unique`
+ * index on `pr_url`.
  */
 export async function createPrReview({
   db, user, tenant, input,
@@ -32,7 +52,9 @@ export async function createPrReview({
 }) {
   assertCan(user, "codecamp:submit", tenant);
 
-  const [repo] = await db.select({ id: codecampExerciseRepos.id, moduleId: codecampExerciseRepos.moduleId, repoUrl: codecampExerciseRepos.repoUrl })
+  const rawDb = db.unscoped("codecamp pr-reviews/exercise_repos scoped by prUrl and exerciseRepoId");
+
+  const [repo] = await rawDb.select({ id: codecampExerciseRepos.id, moduleId: codecampExerciseRepos.moduleId, repoUrl: codecampExerciseRepos.repoUrl })
     .from(codecampExerciseRepos).where(eq(codecampExerciseRepos.id, input.exerciseRepoId)).limit(1);
   if (!repo) throw new Error("Exercise repo not found");
 
@@ -51,11 +73,11 @@ export async function createPrReview({
     throw new Error(`PR URL must be for the ${repoName} repository`);
   }
 
-  const [existing] = await db.select({ id: codecampPrReviews.id }).from(codecampPrReviews)
+  const [existing] = await rawDb.select({ id: codecampPrReviews.id }).from(codecampPrReviews)
     .where(eq(codecampPrReviews.prUrl, input.prUrl)).limit(1);
   if (existing) throw new Error("A review for this PR URL already exists");
 
-  const [result] = await db.insert(codecampPrReviews)
+  const [result] = await rawDb.insert(codecampPrReviews)
     .values({ exerciseRepoId: input.exerciseRepoId, userId: user.id, prUrl: input.prUrl, reviewStatus: "pending" })
     .returning();
   return result;
@@ -63,6 +85,8 @@ export async function createPrReview({
 
 /**
  * Updates the status and optional LLM review summary of a PR review.
+ *
+ * `codecamp_pr_reviews` is REFERENTIAL; updates are scoped by `reviewId`.
  */
 export async function updatePrReview({
   db, user, tenant, input,
@@ -72,7 +96,9 @@ export async function updatePrReview({
 }) {
   assertCan(user, "admin:dashboard", tenant);
 
-  const [result] = await db.update(codecampPrReviews)
+  const rawDb = db.unscoped("codecamp pr-reviews scoped by reviewId");
+
+  const [result] = await rawDb.update(codecampPrReviews)
     .set({
       reviewStatus: input.reviewStatus,
       llmReviewSummary: input.llmReviewSummary ?? null,
@@ -86,6 +112,9 @@ export async function updatePrReview({
 
 /**
  * Marks the exercise lesson as completed for an approved PR review.
+ *
+ * `codecamp_pr_reviews`, `codecamp_exercise_repos`, and `codecamp_lessons`
+ * are REFERENTIAL; the lookup is keyed by the reviewId FK chain.
  */
 export async function completeApprovedPrReviewLesson({
   db, user, tenant, input,
@@ -94,16 +123,18 @@ export async function completeApprovedPrReviewLesson({
 }) {
   assertCan(user, "admin:dashboard", tenant);
 
-  const [review] = await db.select().from(codecampPrReviews)
+  const rawDb = db.unscoped("codecamp pr-reviews/exercise_repos/lessons scoped by reviewId FK chain");
+
+  const [review] = await rawDb.select().from(codecampPrReviews)
     .where(eq(codecampPrReviews.id, input.reviewId)).limit(1);
   if (!review) throw new Error("Review not found");
   if (review.reviewStatus !== "approved") throw new Error("Review is not approved");
 
-  const [repo] = await db.select().from(codecampExerciseRepos)
+  const [repo] = await rawDb.select().from(codecampExerciseRepos)
     .where(eq(codecampExerciseRepos.id, review.exerciseRepoId)).limit(1);
   if (!repo) throw new Error("Exercise repo not found");
 
-  const lessons = await db.select().from(codecampLessons)
+  const lessons = await rawDb.select().from(codecampLessons)
     .where(eq(codecampLessons.moduleId, repo.moduleId)).orderBy(codecampLessons.order);
   const exerciseLesson = lessons.find((lesson) => lesson.type === "exercise");
   if (!exerciseLesson) throw new Error("Exercise lesson not found");
@@ -114,6 +145,9 @@ export async function completeApprovedPrReviewLesson({
 
 /**
  * Looks up a PR review by its PR URL.
+ *
+ * `codecamp_pr_reviews` is REFERENTIAL; the query is scoped by `prUrl`
+ * (and additionally by `userId` for non-system callers).
  */
 export async function getPrReviewByPrUrl({
   db, user, tenant, input,
@@ -122,16 +156,28 @@ export async function getPrReviewByPrUrl({
 }) {
   assertCan(user, "codecamp:read", tenant);
 
+  const rawDb = db.unscoped("codecamp pr-reviews scoped by prUrl and userId");
+
   const conditions = [eq(codecampPrReviews.prUrl, input.prUrl)];
   if (user.role !== "SYSTEM") conditions.push(eq(codecampPrReviews.userId, user.id));
 
-  const [result] = await db.select().from(codecampPrReviews)
+  const [result] = await rawDb.select().from(codecampPrReviews)
     .where(and(...conditions)).limit(1);
   return result ?? null;
 }
 
 /**
  * Logs a GitHub webhook event for diagnostic purposes.
+ *
+ * `codecamp_webhook_events` is REFERENTIAL; rows are inserted with the
+ * delivery id so the webhook handler can deduplicate redeliveries.
+ *
+ * Delivery-id idempotency is enforced in two layers:
+ *   1. In-process Set (`processedDeliveryIds`) for same-process concurrency.
+ *   2. SELECT-before-INSERT on `delivery_id` for cross-process durability.
+ *
+ * When a duplicate deliveryId is observed we short-circuit and return null
+ * so callers do not double-log the same `x-github-delivery`.
  */
 export async function logWebhookEvent({
   db, user, tenant, input,
@@ -141,14 +187,48 @@ export async function logWebhookEvent({
 }) {
   assertCan(user, "admin:dashboard", tenant);
 
-  const [result] = await db.insert(codecampWebhookEvents)
-    .values({
-      deliveryId: input.deliveryId ?? null, event: input.event, action: input.action ?? null,
-      repoUrl: input.repoUrl ?? null, prUrl: input.prUrl ?? null, githubUsername: input.githubUsername ?? null,
-      outcome: input.outcome, reason: input.reason, payloadJson: input.payload ?? null,
-    })
-    .returning();
-  return result;
+  // Layer 1: same-process in-memory dedup.
+  if (input.deliveryId && processedDeliveryIds.has(input.deliveryId)) {
+    return null;
+  }
+
+  const rawDb = db.unscoped("codecamp webhook events keyed by deliveryId for idempotency");
+
+  // Layer 2: durable SELECT-before-INSERT for cross-process dedup.
+  if (input.deliveryId) {
+    const [existing] = await rawDb.select().from(codecampWebhookEvents)
+      .where(eq(codecampWebhookEvents.deliveryId, input.deliveryId))
+      .orderBy(desc(codecampWebhookEvents.createdAt))
+      .limit(1);
+    if (existing) {
+      processedDeliveryIds.add(input.deliveryId);
+      return existing;
+    }
+  }
+
+  // Optimistically mark the delivery id as in-flight so a concurrent retry
+  // with the same id short-circuits at Layer 1 while we are awaiting the
+  // INSERT. If the INSERT throws we roll back the in-memory marker so a
+  // future redelivery can retry.
+  if (input.deliveryId) {
+    processedDeliveryIds.add(input.deliveryId);
+  }
+
+  try {
+    const [result] = await rawDb.insert(codecampWebhookEvents)
+      .values({
+        deliveryId: input.deliveryId ?? null, event: input.event, action: input.action ?? null,
+        repoUrl: input.repoUrl ?? null, prUrl: input.prUrl ?? null, githubUsername: input.githubUsername ?? null,
+        outcome: input.outcome, reason: input.reason, payloadJson: input.payload ?? null,
+      })
+      .returning();
+    return result ?? null;
+  } catch (err) {
+    if (input.deliveryId) {
+      processedDeliveryIds.delete(input.deliveryId);
+    }
+    throw err;
+  }
 }
 
 /**
@@ -161,8 +241,10 @@ export async function listWebhookEvents({
 }) {
   assertCan(user, "admin:dashboard", tenant);
 
+  const rawDb = db.unscoped("codecamp webhook events list keyed by createdAt desc");
+
   const limit = Math.min(Math.max(input.limit ?? 25, 1), 100);
-  const rows = await db.select().from(codecampWebhookEvents)
+  const rows = await rawDb.select().from(codecampWebhookEvents)
     .orderBy(desc(codecampWebhookEvents.createdAt)).limit(limit);
 
   return rows.map((row) => ({ ...row, outcome: row.outcome === "failed" ? "failed" as const : "ignored" as const }));

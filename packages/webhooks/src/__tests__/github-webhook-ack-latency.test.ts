@@ -170,9 +170,11 @@ describe("GitHub webhook ACK latency", () => {
     });
 
     const req = createRequest(payload, { deliveryId: "ack-latency-001" });
-    const responsePromise = githubApp.fetch(req);
+    const responsePromise: Promise<Response> = Promise.resolve(
+      githubApp.fetch(req) as Promise<Response>
+    );
 
-    const timeoutPromise = new Promise((_, reject) => {
+    const timeoutPromise: Promise<never> = new Promise((_, reject) => {
       setTimeout(
         () => reject(new Error("ACK blocked by LLM review")),
         500
@@ -185,10 +187,14 @@ describe("GitHub webhook ACK latency", () => {
     // block resolves the deferred review promise.
     let reviewResolvedWhenAcked = true;
     try {
-      raceResult = await Promise.race([
-        responsePromise.then(() => "ack"),
+      const ackPromise: Promise<string> = responsePromise.then(
+        () => "ack" as const
+      );
+      const raced: string = await Promise.race<string>([
+        ackPromise,
         timeoutPromise,
       ]);
+      raceResult = raced;
       reviewResolvedWhenAcked = reviewResolved;
     } finally {
       // Always unblock the handler so we do not leave a dangling promise.
