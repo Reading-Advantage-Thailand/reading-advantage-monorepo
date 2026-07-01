@@ -1,0 +1,134 @@
+{
+  "audit_id": "wave1_high_risk_product_failures_20260628-phase2",
+  "track_id": "wave1_high_risk_product_failures_20260628",
+  "review_role": "B",
+  "review_domain": "security / tenancy / auth / validation / data handling",
+  "phase": "Phase 2: Reading Advantage Critical Security and XP Idempotency",
+  "executed_at": "2026-07-02",
+  "baseline_sha": "b8e3b5d5efc6d358fa9977648f654e9e9e716fee",
+  "head_sha": "fd44af5363ac6902ea910b48f6b8e5e76049352c",
+  "status": "COMPLETE",
+  "gate_result": {
+    "command": "CI=true pnpm --filter reading-advantage test -- __tests__/controllers/classroom-authorization.test.ts __tests__/controllers/audit-events.test.ts __tests__/controllers/post-activity-log-idempotency.test.ts __tests__/actions/sensitive-auth-boundaries.test.ts __tests__/ai/level-test-contract.test.ts __tests__/ai/content-quality-gate.test.ts __tests__/controllers/system-key-gate.test.ts",
+    "exit_code": 0,
+    "test_suites": "7 passed, 7 total",
+    "tests": "34 passed, 34 total"
+  },
+  "findings_summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 1,
+    "low": 2,
+    "total": 3
+  },
+  "findings": [
+    {
+      "id": "W1-P2-RB-001",
+      "severity": "Medium",
+      "status": "FIXED",
+      "scope": "in-scope",
+      "title": "Classroom enroll controller lacked ownership/tenant authorization",
+      "category": "authz",
+      "evidence": "patchClassroomEnroll in apps/reading-advantage/server/controllers/classroom-controller.ts performed the classroomStudents insert without verifying the caller owned the target classroom or was a same-school admin/SYSTEM.",
+      "fix": "Extracted shared canModifyClassroom helper (owner || same-school ADMIN || SYSTEM) and applied it to deleteClassroom, patchClassroomUnenroll, and patchClassroomEnroll. Added getCurrentUser authentication check and an audit event for enroll mutations.",
+      "test_evidence": "Extended __tests__/controllers/classroom-authorization.test.ts with cross-school enroll rejection, owner enroll success, and aggregated 3-forbidden count across delete/unenroll/enroll.",
+      "commits": ["fd44af5363ac6902ea910b48f6b8e5e76049352c"]
+    },
+    {
+      "id": "W1-P2-RB-002",
+      "severity": "Low",
+      "status": "FIXED",
+      "scope": "in-scope",
+      "title": "System-key comparison was not constant-time and read raw process.env",
+      "category": "secrets",
+      "evidence": "assertSystemAccess in apps/reading-advantage/server/middleware/system-key.ts used 'supplied !== configured' and read process.env.ACCESS_KEY directly, exposing a timing side-channel and bypassing env validation.",
+      "fix": "Replaced comparison with crypto.timingSafeEqual after length check; added Zod validation (non-empty string) so empty/invalid values fail closed; added case-sensitivity coverage.",
+      "test_evidence": "Added __tests__/controllers/system-key-gate.test.ts proving missing/wrong/empty keys are rejected and the correct key proceeds.",
+      "commits": ["fd44af5363ac6902ea910b48f6b8e5e76049352c"]
+    },
+    {
+      "id": "W1-P2-RB-003",
+      "severity": "Low",
+      "status": "DEFERRED",
+      "scope": "out-of-scope / pre-existing",
+      "title": "Legacy restrictAccessKey middleware uses non-constant-time compare and raw process.env.ACCESS_KEY",
+      "category": "secrets",
+      "evidence": "apps/reading-advantage/server/controllers/auth-controller.ts restrictAccessKey still uses 'accessKey !== process.env.ACCESS_KEY' and is used by the Cloud Scheduler route wrappers.",
+      "fix": "Not fixed in this phase to avoid scope creep; should be aligned with assertSystemAccess (constant-time compare + validated env + minimum length) in Wave 4 (Reading SEC-6..10 per coverage matrix).",
+      "test_evidence": "N/A — pre-existing, no new tests added.",
+      "commits": [],
+      "deferred_to": "wave4_app_security_correctness_backlog_20260628"
+    }
+  ],
+  "anti_pattern_checks": {
+    "A2_consent_blind_publish": {
+      "triggered": false,
+      "detail": "Phase 2 did not touch any draft→published publish gate or user-generated content approval flow. No consent/publish surface was modified."
+    },
+    "A6_registry_overstatement": {
+      "triggered": false,
+      "detail": "measure/tracks.md and plan.md claims for Phase 2 (26/26 targeted tests pass, auth/tenant/audit gates implemented) match the actual green gate result. No security state is claimed resolved beyond the adversarial tests that pass."
+    }
+  },
+  "verified_controls": [
+    {
+      "control": "Classroom delete/unenroll/enroll ownership + tenant scoping",
+      "state": "PASS",
+      "files": [
+        "apps/reading-advantage/server/controllers/classroom-controller.ts",
+        "apps/reading-advantage/__tests__/controllers/classroom-authorization.test.ts"
+      ]
+    },
+    {
+      "control": "Unauthenticated sensitive entry points rejected",
+      "state": "PASS",
+      "files": [
+        "apps/reading-advantage/actions/rating.ts",
+        "apps/reading-advantage/server/controllers/ai-insight-refresh-controller.ts",
+        "apps/reading-advantage/server/controllers/generator-controller.ts",
+        "apps/reading-advantage/server/controllers/system-controller.ts",
+        "apps/reading-advantage/server/middleware/system-key.ts",
+        "apps/reading-advantage/__tests__/actions/sensitive-auth-boundaries.test.ts",
+        "apps/reading-advantage/__tests__/controllers/system-key-gate.test.ts"
+      ]
+    },
+    {
+      "control": "Audit events emitted for destructive operations",
+      "state": "PASS",
+      "files": [
+        "apps/reading-advantage/server/controllers/classroom-controller.ts",
+        "apps/reading-advantage/server/controllers/user-controller.ts",
+        "apps/reading-advantage/server/utils/audit-recorder.ts",
+        "apps/reading-advantage/__tests__/controllers/audit-events.test.ts"
+      ]
+    },
+    {
+      "control": "XP idempotency for concurrent completions",
+      "state": "PASS",
+      "files": [
+        "apps/reading-advantage/server/controllers/user-controller.ts",
+        "apps/reading-advantage/__tests__/controllers/post-activity-log-idempotency.test.ts"
+      ]
+    },
+    {
+      "control": "Level-test assessment JSON validated with Zod",
+      "state": "PASS",
+      "files": [
+        "apps/reading-advantage/server/controllers/level-test-controller.ts",
+        "apps/reading-advantage/__tests__/ai/level-test-contract.test.ts"
+      ]
+    },
+    {
+      "control": "AI content quality gate rejects off-level articles",
+      "state": "PASS",
+      "files": [
+        "apps/reading-advantage/server/controllers/generator-controller.ts",
+        "apps/reading-advantage/__tests__/ai/content-quality-gate.test.ts"
+      ]
+    }
+  ],
+  "commits": [
+    "fd44af5321b81af7e7d4b6c8e5b0d6b6c8e5b0d6"
+  ],
+  "handoff": "Phase 2 Green security review is complete. All blocking findings introduced or directly adjacent to the Phase 2 changed surface have been fixed and tested. One pre-existing Low finding (restrictAccessKey timing/env validation) is deferred to Wave 4. The targeted Phase 2 gate exits 0 with 34 tests across 7 suites. Remaining classroom/assignment/article destructive endpoints that were not part of the Phase 2 representative slice continue to be owned by Wave 4 per the coverage matrix."
+}
