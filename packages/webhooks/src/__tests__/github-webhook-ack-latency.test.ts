@@ -180,11 +180,16 @@ describe("GitHub webhook ACK latency", () => {
     });
 
     let raceResult: string;
+    // Capture whether the LLM review had already resolved at the exact moment
+    // the HTTP ACK won the race. This snapshot must be taken BEFORE the finally
+    // block resolves the deferred review promise.
+    let reviewResolvedWhenAcked = true;
     try {
       raceResult = await Promise.race([
         responsePromise.then(() => "ack"),
         timeoutPromise,
       ]);
+      reviewResolvedWhenAcked = reviewResolved;
     } finally {
       // Always unblock the handler so we do not leave a dangling promise.
       resolveReview({ passed: true, summary: "ok", comments: [] });
@@ -192,6 +197,6 @@ describe("GitHub webhook ACK latency", () => {
     }
 
     expect(raceResult).toBe("ack");
-    expect(reviewResolved).toBe(false);
+    expect(reviewResolvedWhenAcked).toBe(false);
   });
 });
