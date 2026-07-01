@@ -32,7 +32,7 @@
       "evidence": "In packages/webhooks/src/github.ts the handler adds the x-github-delivery value to processedDeliveryIds synchronously at the top of the route (before any await). If the x-github-delivery-timestamp / x-hub-timestamp header is non-numeric, the handler returns 401 at the 'Invalid timestamp' branch without deleting the in-flight marker. An attacker who knows or can predict a future GitHub delivery UUID can therefore suppress that legitimate delivery for the lifetime of the process.",
       "fix": "Added processedDeliveryIds.delete(deliveryId) on the invalid-timestamp validation-rejection path, consistent with the missing-signature, invalid-signature, invalid-JSON, non-pull_request-event, and unsupported-action paths.",
       "test_evidence": "Extended packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts with 'does not let an invalid-timestamp request poison the delivery id cache', which sends a signed request with timestamp 'not-a-number', asserts 401, then sends a valid signed request with the same delivery id and asserts 200 with createPrReview called exactly once.",
-      "commits": []
+      "commits": ["5d1ec165"]
     },
     {
       "id": "W1-P3-RB-002",
@@ -128,6 +128,6 @@
       "notes": "Route calls requireAuth and returns 401 on auth failure. Error responses are generic; stack traces are logged server-side only. Response is reframed with text/event-stream Content-Type for client compatibility."
     }
   ],
-  "commits": [],
+  "commits": ["5d1ec165"],
   "handoff": "Phase 3 Green security review is complete. One High-severity blocking finding (invalid-timestamp delivery-id cache poisoning) was fixed and tested in-scope. Two Low findings are accepted pre-existing design limitations deferred to Wave 4's Postgres retry/DLQ track. The targeted Phase 3 gate exits 0 with 7 tests across 5 suites. Remaining CodeCamp Medium+ security/correctness items (MT-8..11/13/14) continue to be owned by Wave 4 per the coverage matrix."
 }
