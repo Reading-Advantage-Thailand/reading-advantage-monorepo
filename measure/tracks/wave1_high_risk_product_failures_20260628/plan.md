@@ -125,7 +125,7 @@
     CI=true pnpm --filter codecamp-advantage exec vitest run \
       app/api/chat/__tests__/streaming-protocol.test.ts
     ```
-    exits 0: domain `2 passed (3 tests)`, webhooks `2 passed (2 tests)`, codecamp `1 passed (1 test)`.
+    exits 0: domain `2 passed (3 tests)`, webhooks `2 passed (3 tests)` (idempotency file gained the review-b timestamp-poison guard test), codecamp `1 passed (1 test)`.
   - Closeout aggregate test: `CI=true pnpm turbo run test --filter=codecamp-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/webhooks` — domain `351 passed 5 skipped`, api `216 passed`, webhooks `81 passed (8 files)`, codecamp `944 passed 64 skipped 57 failed`. All 57 codecamp failures are pre-existing prod-smoke tests in `lib/__tests__/prod-smoke/phase-*.test.ts` that probe `https://codecamp.reading-advantage.com` directly (require network/credentials and are owned by the Wave 1 prod-smoke workstream, not Wave 1 code reliability). A diff against the same aggregate run without my route change confirms those failures are flaky live-network tests, not regressions: the only Red→Green flip in this phase is `app/api/chat/__tests__/streaming-protocol.test.ts`.
   - Closeout lint: `CI=true pnpm turbo run lint --filter=...` — 0 errors (warnings only: `no-unused-vars` in pre-existing source and prod-smoke test files).
   - Closeout check-types: `CI=true pnpm turbo run check-types --filter=...` — domain/api/webhooks pass; codecamp-advantage fails with pre-existing `Cannot find module '@reading-advantage/ai'` (verified present at baseline before my route change — the `@reading-advantage/ai` package dist is not rebuilt in this branch's check-types pipeline).
