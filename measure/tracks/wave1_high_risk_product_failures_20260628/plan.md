@@ -22,8 +22,8 @@
   - Green evidence (2026-06-28): components/lesson/games/lesson-sentence-order-word.tsx and components/pratice/order-words-game.tsx now destructure `{ user, session, update }` from `useSession()` via a typed local fallback, so the completion callback's `update({...})` and `session?.user` references no longer raise a ReferenceError. Targeted command exits 0 with 4/4 tests passing. Commit SHA evidence to be filled by final commit.
 - [x] Task: Implement shared session/completion wrapper and migrate the representative component.
   - Green evidence (2026-06-28): rather than introducing a separate wrapper module, the two representative components now share the same destructure shape `const { user, session, update } = useSession() as unknown as { user?: ...; session?: { user?: ... }; update?: (data: ...) => void }`. The shape is documented inline (JSDoc comment) and the runtime no-op when the auth-client contract does not provide `session`/`update` matches the original M1 intent (refresh session after XP/activity writes). Targeted command exits 0.
-- [ ] Task: Expand migration to all reviewed crash-pattern components using the proven wrapper.
-  - Deviation: not in scope for the Phase 1 representative-slice-then-propagate method. The same M1 pattern exists in additional lesson-game components (e.g. `lesson-sentence-order.tsx`, `lesson-sentence-flashcard.tsx`, `lesson-sentence-matching.tsx`, `lesson-sentence-cloze-test.tsx`, `lesson-vocabulary-flashcard-card.tsx`, `lesson-vocabulary-matching.tsx`); expansion is owner-wave work tracked separately and not required for the Green gate to pass.
+- [b] Task: Expand migration to all reviewed crash-pattern components using the proven wrapper. — deferred:wave6
+  - Deviation: not in scope for the Phase 1 representative-slice-then-propagate method. The same M1 pattern exists in additional lesson-game components (e.g. `lesson-sentence-order.tsx`, `lesson-sentence-flashcard.tsx`, `lesson-sentence-matching.tsx`, `lesson-sentence-cloze-test.tsx`, `lesson-vocabulary-flashcard-card.tsx`, `lesson-vocabulary-matching.tsx`); expansion is owner-wave work tracked separately (Wave 6 Primary maintainability, per `medium-plus-coverage-matrix.md`) and not required for the Green gate to pass.
 - [x] Task: Write Red tests for admin student CRUD making real server calls rather than optimistic-only updates.
   - Evidence refs: Primary migration M2/M3; Primary executive summary admin workflows nonfunctional.
   - Red evidence (2026-06-28): behavior test `app/[locale]/admin/__tests__/students-crud-live-calls.test.tsx` fails because add/update/delete handlers in `app/[locale]/admin/students/page.tsx` mutate local state and call `fetchStudents()` (GET refresh) without issuing POST /api/students, PUT /api/students/:id, or DELETE /api/students/:id. Targeted command includes this file; all three CRUD assertions fail with mutating request count: 0.
@@ -47,18 +47,28 @@
 
 ## Phase 2: Reading Advantage Critical Security and XP Idempotency
 
-- [ ] Task: Write Red tests for classroom destructive operations requiring ownership and tenant verification.
+- [~] Task: Write Red tests for classroom destructive operations requiring ownership and tenant verification.
   - Evidence refs: Reading C-007 / C-RA-CRIT-03; Reading migration C-1 / M-RA-SEC-1.
+  - Red evidence (2026-07-02): `__tests__/controllers/classroom-authorization.test.ts` fails because cross-school teacher can delete a classroom and unenroll a student (received 200, expected 403) and the aggregated forbidden result count is 0 instead of 2. Targeted command: `CI=true pnpm --filter reading-advantage test -- __tests__/controllers/classroom-authorization.test.ts` — 3/3 checks fail.
 - [ ] Task: Add tenant/ownership checks to classroom mutating operations.
-- [ ] Task: Write Red tests for unauthenticated sensitive endpoints/server actions identified in review.
+- [~] Task: Write Red tests for unauthenticated sensitive endpoints/server actions identified in review.
   - Evidence refs: Reading C-RA-CRIT-01, C-RA-CRIT-02, C-RA-CRIT-04, C-RA-CRIT-05, H-03; Reading migration C-4 / M-RA-SEC-2.
+  - Red evidence (2026-07-02): `__tests__/actions/sensitive-auth-boundaries.test.ts` fails because `generateQueue` and `refreshMaterializedViewsAutomated` accept unauthenticated callers (received 200, expected >=400); inventory count reports 2 accepted boundaries. Targeted command: `CI=true pnpm --filter reading-advantage test -- __tests__/actions/sensitive-auth-boundaries.test.ts` — 3/6 checks fail.
 - [ ] Task: Add auth/role/system-key guards to those endpoints.
-- [ ] Task: Write Red tests for audit events on destructive operations.
+- [~] Task: Write Red tests for audit events on destructive operations.
+  - Evidence refs: Reading C-007 / C-RA-CRIT-03; Reading migration C-1 / M-RA-SEC-1.
+  - Red evidence (2026-07-02): `__tests__/controllers/audit-events.test.ts` fails because `deleteClassroom`, `patchClassroomUnenroll`, and `deleteUser` do not call `recordAuditEvent` (received 0 calls, expected >=1; aggregated count 0 instead of 3). Targeted command: `CI=true pnpm --filter reading-advantage test -- __tests__/controllers/audit-events.test.ts` — 4/4 checks fail.
 - [ ] Task: Wire `recordAuditEvent` for user/classroom/article/enrollment destructive actions.
-- [ ] Task: Write adversarial concurrency test for XP double-award race.
+- [~] Task: Write adversarial concurrency test for XP double-award race.
   - Evidence refs: Reading PB-001 / C-RA-CRIT-06; Reading migration PB-1.
+  - Red evidence (2026-07-02): `__tests__/controllers/post-activity-log-idempotency.test.ts` fails because 5 concurrent completions for the same (userId, activityType, targetId) produce 5 `xp_logs` rows instead of 1; the duplicate count for 2 concurrent completions is 2 instead of 1. Targeted command: `CI=true pnpm --filter reading-advantage test -- __tests__/controllers/post-activity-log-idempotency.test.ts` — 2/2 checks fail.
 - [ ] Task: Make XP awarding idempotent with transaction/unique constraint or equivalent domain guard.
+- [~] Task: Write Red tests for level-test assessment JSON contract and AI content quality gate at the first high-risk AI boundary.
+  - Evidence refs: Reading C-RA-CRIT-04, C-RA-CRIT-05; Reading migration M-RA-SEC-4, PB-3 / M-RA-SEC-5.
+  - Red evidence (2026-07-02): `__tests__/ai/level-test-contract.test.ts` fails because malformed/missing assessment JSON returns 200 instead of 400 and `assessment:null` is forwarded as a 200 success (3/4 checks fail). `__tests__/ai/content-quality-gate.test.ts` fails because a C2-requested article evaluated as A1 is persisted and returned with 200 instead of being rejected (3/4 checks fail). Targeted command: `CI=true pnpm --filter reading-advantage test -- __tests__/ai/level-test-contract.test.ts __tests__/ai/content-quality-gate.test.ts` — 6/8 checks fail.
 - [ ] Task: Add Zod validation for level-test assessment JSON and AI content quality gate at the first high-risk AI boundary.
+- [~] Task: Run targeted Reading Phase 2 Red tests and document aggregate Red failure counts.
+  - Evidence (2026-07-02): aggregate Red command `CI=true pnpm --filter reading-advantage test -- __tests__/controllers/classroom-authorization.test.ts __tests__/controllers/audit-events.test.ts __tests__/controllers/post-activity-log-idempotency.test.ts __tests__/actions/sensitive-auth-boundaries.test.ts __tests__/ai/level-test-contract.test.ts __tests__/ai/content-quality-gate.test.ts` exits 1 with `Test Suites: 6 failed, 6 total; Tests: 18 failed, 8 passed, 26 total`. All failures match the expected missing behavior.
 - [ ] Task: Run targeted Reading tests and build/type/lint gates that are feasible on current hardware; document known pre-existing full-suite limits.
 
 ## Phase 3: CodeCamp Runtime Reliability
