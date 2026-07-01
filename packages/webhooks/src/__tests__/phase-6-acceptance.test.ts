@@ -39,7 +39,7 @@ import { z } from "zod";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import githubApp from "../github.js";
+import githubApp, { waitForBackgroundReviews } from "../github.js";
 import { reviewResultSchema } from "@reading-advantage/domain/codecamp";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -339,7 +339,7 @@ describe("Phase 6: codecamp PR-review path — integration + acceptance", () => 
 
   // ─── Task 1: Mock E2E — full webhook→domain→LLM→persist flow ───────────
 
-  it("exercises the full webhook→domain→LLM→persist flow with the Mock provider and matches the documented unified output", async () => {
+it("exercises the full webhook→domain→LLM→persist flow with the Mock provider and matches the documented unified output", async () => {
     mockHolder.setResponse(UNIFIED_REVIEW_FIXTURE);
 
     const req = createRequest(synchronizePayload());
@@ -348,6 +348,11 @@ describe("Phase 6: codecamp PR-review path — integration + acceptance", () => 
     // Webhook responds 200 — the e2e poll loop (scripts/codecamp-pr-e2e.sh:162-171)
     // treats a non-200 as a failure to acknowledge.
     expect(res.status).toBe(200);
+
+    // Phase 3 ACK-latency fix: the LLM review runs as a tracked background
+    // job so the HTTP ACK is not blocked. Drain the job before asserting on
+    // AIClient call counts / persisted summary.
+    await waitForBackgroundReviews();
 
     // The AIClient seam was the call surface — proves the unified path is
     // wired (AC #3: reviewExercise is the single seam).
@@ -381,7 +386,7 @@ describe("Phase 6: codecamp PR-review path — integration + acceptance", () => 
     // Mirrors the production failure mode the spec calls out (2026-06-08
     // incident: upstream model returns 404 / times out). The webhook must
     // NOT bubble the error to GitHub — the test strategy mandates: webhook
-    // responds 200, review row gets status "reviewed" + a "Review failed"
+    // responds 200, review row gets status "reviewed" + "Review failed"
     // summary. The reliability track owns improving the posture; this test
     // pins the current contract.
     mockHolder.setThrowOnGenerateObject(new Error("[MockFixture] model timed out"));
@@ -390,6 +395,37 @@ describe("Phase 6: codecamp PR-review path — integration + acceptance", () => 
     const res = await githubApp.fetch(req);
 
     expect(res.status).toBe(200);
+
+    await waitForBackgroundReviews();
+
+    const updateCalls = vi.mocked(updatePrReview).mock.calls;
+    expect(updateCalls.length).toBeGreaterThanOrEqual(2);
+    const failureCall = updateCalls[updateCalls.length - 1]!;
+    const input = (failureCall[0] as { input: { reviewStatus: string; llmReviewSummary: string } }).input;
+    expect(input.reviewStatus).toBe("reviewed");
+    expect(input.llmReviewSummary).toMatch(/Review failed/i);
+
+    // And the response body should NOT include the model error — GitHub
+    // sees a successful 200 acknowledgment.
+    const body = await res.json();
+    expect(body.error).toBeUndefined();
+  });
+
+it("preserves the fire-and-forget posture on AIClient rejection: 200 + status reviewed + 'Review failed' summary", async () => {
+    // Mirrors the production failure mode the spec calls out (2026-06-08
+    // incident: upstream model returns 404 / times out). The webhook must
+    // NOT bubble the error to GitHub — the test strategy mandates: webhook
+    // responds 200, review row gets status "reviewed" + "Review failed"
+    // summary. The reliability track owns improving the posture; this test
+    // pins the current contract.
+    mockHolder.setThrowOnGenerateObject(new Error("[MockFixture] model timed out"));
+
+    const req = createRequest(synchronizePayload());
+    const res = await githubApp.fetch(req);
+
+    expect(res.status).toBe(200);
+
+    await waitForBackgroundReviews();
 
     const updateCalls = vi.mocked(updatePrReview).mock.calls;
     expect(updateCalls.length).toBeGreaterThanOrEqual(2);

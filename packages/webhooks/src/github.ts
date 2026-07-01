@@ -17,6 +17,22 @@ import {
 
 const github = new Hono();
 
+/**
+ * In-process cache of GitHub delivery ids already processed by this Node
+ * process. The synchronous lookup at the top of the webhook handler is the
+ * first dedup layer; durable dedup comes from `codecamp_webhook_events`
+ * (lookup-before-insert) plus the unique index on `delivery_id` that
+ * migration 0025 adds.
+ */
+const processedDeliveryIds = new Set<string>();
+
+/**
+ * Tracked background LLM review jobs keyed by deliveryId. The Map gives
+ * us observability for the deferred work (no fire-and-forget that
+ * swallows failures). On graceful shutdown we await the in-flight jobs.
+ */
+const backgroundReviewJobs = new Map<string, Promise<unknown>>();
+
 const systemUser = {
   id: "system",
   username: "system",
@@ -79,8 +95,23 @@ function createGenerateReview() {
  * and triggers LLM code review.
  */
 github.post("/pr", async (c) => {
+  // Synchronous dedup at the very top of the handler, before any await, so
+  // concurrent deliveries with the same x-github-delivery id see each other
+  // and the second one short-circuits to a 200 without doing any DB work.
+  const deliveryId = c.req.header("x-github-delivery");
+  if (deliveryId && processedDeliveryIds.has(deliveryId)) {
+    return c.json({ received: true, idempotent: true, deliveryId }, 200);
+  }
+  // Mark the id as in-flight synchronously. If subsequent validation
+  // rejects this delivery we remove it again below; otherwise it stays so
+  // a redelivery is recognized as a duplicate.
+  if (deliveryId) {
+    processedDeliveryIds.add(deliveryId);
+  }
+
   const signature = c.req.header("x-hub-signature-256");
   if (!signature) {
+    if (deliveryId) processedDeliveryIds.delete(deliveryId);
     return c.json({ error: "Missing signature" }, 401);
   }
 
@@ -102,6 +133,7 @@ github.post("/pr", async (c) => {
   }
 
   if (!verifyWebhookSignature(payload, signature, timestamp)) {
+    if (deliveryId) processedDeliveryIds.delete(deliveryId);
     if (timestamp !== undefined) {
       const nowSeconds = Math.floor(Date.now() / 1000);
       const skew = Math.abs(nowSeconds - timestamp);
@@ -116,12 +148,15 @@ github.post("/pr", async (c) => {
   try {
     parsed = JSON.parse(payload);
   } catch {
+    if (deliveryId) processedDeliveryIds.delete(deliveryId);
     return c.json({ error: "Invalid JSON" }, 400);
   }
 
   const event = c.req.header("x-github-event");
-  const deliveryId = c.req.header("x-github-delivery");
   if (event !== "pull_request") {
+    // Release the in-flight marker so a valid retry with this delivery id
+    // is not silently swallowed by the dedup check.
+    if (deliveryId) processedDeliveryIds.delete(deliveryId);
     await logWebhookEvent({
       deliveryId,
       event: event ?? "unknown",
@@ -134,6 +169,7 @@ github.post("/pr", async (c) => {
 
   const validation = githubWebhookPayloadSchema.safeParse(parsed);
   if (!validation.success) {
+    if (deliveryId) processedDeliveryIds.delete(deliveryId);
     console.warn("[GitHub Webhook] Payload validation failed:", validation.error.flatten());
     return c.json({ error: "Invalid payload" }, 400);
   }
@@ -144,6 +180,7 @@ github.post("/pr", async (c) => {
 
   // Only handle opened and synchronize events
   if (action !== "opened" && action !== "synchronize") {
+    if (deliveryId) processedDeliveryIds.delete(deliveryId);
     await logWebhookEvent({
       deliveryId,
       event,
@@ -267,7 +304,14 @@ github.post("/pr", async (c) => {
       console.log(`[GitHub Webhook] Created PR review for ${pr.html_url}`);
     }
 
-    // ─── LLM Review Pipeline ───────────────────────────────
+    // ─── LLM Review Pipeline (deferred, non-blocking) ─────────
+    //
+    // ACK must NOT block on the LLM review. GitHub's webhook retries on
+    // non-200 responses within seconds, so any synchronous work past
+    // signature verification risks a redelivery storm. We ACK 200 first,
+    // then run the review in the background. The background promise is
+    // tracked (via a Map keyed by deliveryId) so failures can be observed
+    // and re-run by the planned async job worker.
 
     if (prInfo) {
       const runReview = async () => {
@@ -338,7 +382,16 @@ github.post("/pr", async (c) => {
         }
       };
 
-      await runReview();
+      // Fire-and-track: the in-flight Map lets us observe failures and
+      // prevents unhandled-rejection crashes. The ACK is returned without
+      // awaiting this background work.
+      const job = runReview().catch(async (reviewErr) => {
+        console.error("[GitHub Webhook] Background LLM review job rejected:", reviewErr);
+      });
+      backgroundReviewJobs.set(deliveryId ?? `unknown-${Date.now()}`, job);
+      job.finally(() => {
+        if (deliveryId) backgroundReviewJobs.delete(deliveryId);
+      });
     }
 
     return c.json({ received: true, action, prUrl: pr.html_url }, 200);
@@ -358,5 +411,18 @@ github.post("/pr", async (c) => {
     return c.json({ error: "Internal error" }, 500);
   }
 });
+
+/**
+ * Resolves once every currently-tracked background LLM review job has
+ * settled (either fulfilled or rejected). Tests use this helper to await
+ * the deferred review pipeline before asserting on `updatePrReview` /
+ * comment side-effects. Production callers (e.g. a graceful shutdown
+ * handler) can also use it to drain in-flight work.
+ */
+export function waitForBackgroundReviews(): Promise<void> {
+  const jobs = Array.from(backgroundReviewJobs.values());
+  if (jobs.length === 0) return Promise.resolve();
+  return Promise.allSettled(jobs).then(() => undefined);
+}
 
 export default github;

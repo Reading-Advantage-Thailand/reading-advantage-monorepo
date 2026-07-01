@@ -105,7 +105,18 @@ export async function POST(req: NextRequest) {
       maxTokens: 2048,
     });
 
-    return result.toDataStreamResponse();
+    // Vercel AI SDK's `toDataStreamResponse()` returns `text/plain; charset=utf-8`
+    // for the line-delimited data-stream protocol. Our client parser
+    // (`lib/use-chat-stream.ts`) only recognizes `text/event-stream`, so we
+    // re-frame the body with the SSE content-type while keeping the data-stream
+    // framing (`0:"chunk"` lines) intact. This keeps the parser and the route
+    // on the same protocol without changing the SDK contract.
+    const aiResponse = result.toDataStreamResponse();
+    const headers = new Headers(aiResponse.headers);
+    headers.set("Content-Type", "text/event-stream; charset=utf-8");
+    headers.set("Cache-Control", "no-cache, no-transform");
+    headers.set("X-Accel-Buffering", "no");
+    return new Response(aiResponse.body, { headers, status: aiResponse.status });
   } catch (error) {
     if (error instanceof Error && error.message === "Authentication required") {
       return Response.json(

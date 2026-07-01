@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from "vitest";
 import { createHmac } from "crypto";
 import { z } from "zod";
-import githubApp from "../github.js";
+import githubApp, { waitForBackgroundReviews } from "../github.js";
 
 // ─── Hoisted mocks (must be available before module imports) ──────────────
 
@@ -290,6 +290,9 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     const res = await githubApp.fetch(req);
 
     expect(res.status).toBe(200);
+    // Phase 3 ACK-latency fix: the LLM review runs as a tracked background
+    // job. Drain before asserting on AIClient call counts.
+    await waitForBackgroundReviews();
     const aiClientCalls = mockGetAIClient.mock.calls.length + mockCreateAIClient.mock.calls.length;
     expect(aiClientCalls).toBeGreaterThanOrEqual(1);
     // The Mock AIClient must have received the request — proves the call
@@ -303,6 +306,9 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     const req = createRequest(synchronizePayload());
     await githubApp.fetch(req);
 
+    // Phase 3 ACK-latency fix: drain the tracked background review before
+    // asserting on the AIClient call record.
+    await waitForBackgroundReviews();
     expect(mockHolder.calls).toHaveLength(1);
     const call = mockHolder.calls[0]!;
     const input = call.input as { schema: z.ZodSchema<unknown> };
@@ -318,6 +324,11 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     const res = await githubApp.fetch(req);
 
     expect(res.status).toBe(200);
+    // Phase 3 ACK-latency fix: the LLM review runs as a tracked background
+    // job (no fire-and-forget that swallows failures) so the HTTP ACK is
+    // not blocked. Tests must await the tracked jobs before asserting on
+    // the post-review `updatePrReview` side-effect.
+    await waitForBackgroundReviews();
     // Find the second updatePrReview call (the post-review write — the
     // first is the re-trigger to "pending" in the handler entry point).
     const updateCalls = vi.mocked(updatePrReview).mock.calls;
@@ -338,6 +349,7 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     const res = await githubApp.fetch(req);
 
     expect(res.status).toBe(200);
+    await waitForBackgroundReviews();
     const updateCalls = vi.mocked(updatePrReview).mock.calls;
     expect(updateCalls.length).toBeGreaterThanOrEqual(2);
     const postReviewCall = updateCalls[updateCalls.length - 1]!;
@@ -360,6 +372,7 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     // Webhook responds 200 — fire-and-forget posture preserved.
     expect(res.status).toBe(200);
 
+    await waitForBackgroundReviews();
     // The review row must have been updated with status "reviewed" and a
     // "Review failed" summary, NOT bubbled to a 500.
     const updateCalls = vi.mocked(updatePrReview).mock.calls;
