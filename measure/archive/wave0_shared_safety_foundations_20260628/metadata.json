@@ -1,0 +1,12 @@
+{
+  "track_id": "wave0_shared_safety_foundations_20260628",
+  "type": "chore",
+  "status": "done",
+  "created_at": "2026-06-28T00:00:00Z",
+  "updated_at": "2026-07-01T00:00:00Z",
+  "description": "Wave 0 remediation: make shared auth, tenancy, API contracts, and domain-boundary guarantees true before app-level remediation proceeds.",
+  "estimated_tasks": 54,
+  "actual_tasks": 33,
+  "deviation_notes": "Spawned from monorepo_review_roadmap_20260626 Wave 0. This is an implementation track; no product feature scope. Estimated_tasks was 54 (original estimate); actual plan has 33 top-level tasks.",
+  "completed": "2026-07-01"
+}
