@@ -132,7 +132,7 @@ describe("Wave 2 Phase 4 — provider guard utility", () => {
   describe("consumer — detects each forbidden shape (A5 counterexamples)", () => {
     it.each(FIXTURES)(
       "detects $name",
-      ({ source, expectedKinds }) => {
+      ({ name, source, expectedKinds }) => {
         const guard = createProviderGuard() as ProviderGuard;
         const hits = guard.scan(source, `fixtures/${name}.ts`);
         const hitCount = hits.length;
