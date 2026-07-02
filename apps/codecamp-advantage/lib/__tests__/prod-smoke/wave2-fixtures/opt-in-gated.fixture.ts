@@ -4,7 +4,7 @@
 import { describe, it } from "vitest";
 
 const RUN_LIVE_SMOKE = process.env.RUN_LIVE_SMOKE === "true";
-const PROD_URL = process.env.PHASEX_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = RUN_LIVE_SMOKE ? process.env.PHASEX_PROD_URL : undefined;
 
 describe("Good fixture: opt-in gated", () => {
   it.skipIf(!RUN_LIVE_SMOKE || !PROD_URL)("hits production only when opted in", async () => {

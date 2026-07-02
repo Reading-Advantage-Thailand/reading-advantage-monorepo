@@ -31,21 +31,44 @@ function listProdSmokeFiles(): string[] {
     .filter((name) => name !== SELF_FILE);
 }
 
-function isOptInGated(content: string): boolean {
-  // Accept either an explicit RUN_LIVE_SMOKE flag or a fully externalised
-  // URL contract that is required at runtime (no production default).
-  return (
-    /RUN_LIVE_SMOKE/.test(content) ||
-    /process\.env\.[A-Z_]*PROD_URL[\s\S]{0,200}if\s*\(\s*!/.test(content)
+function stripComments(content: string): string {
+  return content
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/(^|\n)\s*\/\/[^\n]*/g, "$1");
+}
+
+function hasLiveProductionDefault(content: string): boolean {
+  const code = stripComments(content);
+  const prodLiteral = String.raw`["']https:\/\/codecamp\.reading-advantage\.com(?:\/[^"']*)?["']`;
+  const fallbackToProd = new RegExp(String.raw`(?:\?\?|\|\|)\s*${prodLiteral}`);
+  const directProdAssignment = new RegExp(
+    String.raw`(?:const|let|var)\s+[A-Z0-9_]*URL[A-Z0-9_]*\s*=\s*${prodLiteral}`,
   );
+  const envUrlWithProdFallback = new RegExp(
+    String.raw`process\.env\.[A-Z0-9_]*PROD_URL[\s\S]{0,120}${prodLiteral}`,
+  );
+  return (
+    fallbackToProd.test(code) ||
+    directProdAssignment.test(code) ||
+    envUrlWithProdFallback.test(code)
+  );
+}
+
+function isOptInGated(content: string): boolean {
+  // A7: the mere presence of the token is not enough. A file with
+  // RUN_LIVE_SMOKE plus `?? "https://codecamp.reading-advantage.com"`
+  // is still a live-default probe and must fail this guard.
+  return /RUN_LIVE_SMOKE/.test(content) && !hasLiveProductionDefault(content);
 }
 
 function findLiveDefaults(fileNames: string[]): LiveDefaultHit[] {
   const hits: LiveDefaultHit[] = [];
   for (const name of fileNames) {
+    // Static historical report data is not executable test code and cannot
+    // hit production. The guard below inspects executable prod-smoke suites.
+    if (name === "report-summary.json") continue;
     const content = readFileSync(resolve(PROD_SMOKE_DIR, name), "utf8");
-    if (!content.includes(PROD_DOMAIN)) continue;
-    if (isOptInGated(content)) continue;
+    if (!hasLiveProductionDefault(content)) continue;
     // Extract a short evidence snippet around the first live URL occurrence.
     const idx = content.indexOf(PROD_DOMAIN);
     const start = Math.max(0, idx - 60);
@@ -71,8 +94,8 @@ describe("Wave 2 Phase 3 — CodeCamp live-smoke opt-in guard", () => {
       "Bad fixture must be detected as a live-default prod-smoke file",
     ).toBe(true);
     expect(
-      good.includes(PROD_DOMAIN) && isOptInGated(good),
-      "Good fixture must be allowed because it uses RUN_LIVE_SMOKE opt-in",
+      isOptInGated(good),
+      "Good fixture must be allowed because it uses RUN_LIVE_SMOKE opt-in without a production URL default",
     ).toBe(true);
   });
 
