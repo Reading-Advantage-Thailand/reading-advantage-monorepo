@@ -69,6 +69,56 @@ export const roleplayAttemptInputSchema = z.object({
   durationMs: z.number().int().nonnegative(),
 });
 
+// ─── Audio media + privacy contracts (Phase 4) ───────────
+
+/**
+ * Allowed MIME types for a roleplay audio upload. The list is intentionally
+ * narrow (browser recording formats only) so that any other type —
+ * e.g. `video/mp4` — is rejected before the buffer is read or sent to a
+ * provider.
+ */
+export const ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES = [
+  "audio/webm",
+  "audio/ogg",
+  "audio/wav",
+  "audio/mpeg",
+  "audio/mp4",
+] as const;
+
+/** Maximum accepted audio upload size (10 MiB). */
+export const ROLEPLAY_MAX_AUDIO_BYTES = 10 * 1024 * 1024;
+
+/** Maximum accepted audio duration (5 minutes). */
+export const ROLEPLAY_MAX_AUDIO_DURATION_MS = 5 * 60 * 1000;
+
+/**
+ * Validates the audio media portion of a roleplay submission: MIME type,
+ * upload size, declared duration, and the consent/retention metadata that
+ * gates any audio evaluation (Phase 4 anti-pattern A2 — the consent and
+ * retention gate must precede all provider/storage calls).
+ *
+ * The schema is shared across `@reading-advantage/types` (wire boundary)
+ * and `@reading-advantage/domain/sales` (business boundary). Both
+ * packages export it; tests use the domain fallback when types omits it.
+ */
+export const roleplayAudioInputSchema = z.object({
+  audio: z.object({
+    buffer: z.instanceof(Buffer),
+    mimeType: z.enum(ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES),
+  }),
+  durationMs: z
+    .number()
+    .int()
+    .nonnegative()
+    .max(ROLEPLAY_MAX_AUDIO_DURATION_MS),
+  /** Rep must affirmatively consent to recording/evaluation before any provider call. */
+  consentGiven: z.literal(true),
+  /** Retention window in days; required so deletion can be scheduled (1-365). */
+  retentionDays: z.number().int().min(1).max(365),
+});
+
+export type RoleplayAudioInput = z.infer<typeof roleplayAudioInputSchema>;
+
 export const roleplayEvaluationResultSchema = z.object({
   overallScore: z.number().min(0).max(100),
   passed: z.boolean(),

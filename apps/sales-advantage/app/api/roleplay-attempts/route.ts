@@ -6,6 +6,11 @@ import {
   aiClientToEvaluateRoleplay,
   getRoleplayEvaluationContext,
 } from "@reading-advantage/domain/sales";
+import {
+  ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES,
+  ROLEPLAY_MAX_AUDIO_BYTES,
+  ROLEPLAY_MAX_AUDIO_DURATION_MS,
+} from "@reading-advantage/types";
 import { getStorageClient } from "@reading-advantage/storage";
 import { getAIClient } from "@reading-advantage/ai";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -39,14 +44,97 @@ export async function POST(request: NextRequest) {
     const scenarioId = formData.get("scenarioId") as string;
     const audioFile = formData.get("audio") as File;
     const durationMs = parseInt((formData.get("durationMs") as string) ?? "0", 10);
+    const consentGivenRaw = formData.get("consentGiven");
+    const retentionDaysRaw = formData.get("retentionDays");
 
     if (!scenarioId || !audioFile) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: "INVALID_AUDIO",
+          field: !scenarioId ? "scenarioId" : "audio",
+          message: !scenarioId ? "scenarioId is required" : "audio file is required",
+        },
+        { status: 400 },
+      );
+    }
+
+    const mimeType = audioFile.type || "audio/webm";
+
+    // Phase 4 audio boundary gate: size, MIME type, and declared duration
+    // are checked BEFORE the audio buffer is read or any provider/storage
+    // adapter is invoked. Rejected media returns a structured 400 envelope
+    // and never reaches `getStorageClient`, `getAIClient`,
+    // `getRoleplayEvaluationContext`, or `submitRoleplayAttempt`.
+    if (!ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES.includes(
+      mimeType as (typeof ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES)[number],
+    )) {
+      return NextResponse.json(
+        {
+          error: "INVALID_AUDIO",
+          field: "audio.type",
+          message: `unsupported MIME type '${mimeType}'`,
+        },
+        { status: 400 },
+      );
+    }
+    if (
+      typeof audioFile.size === "number" &&
+      audioFile.size > ROLEPLAY_MAX_AUDIO_BYTES
+    ) {
+      return NextResponse.json(
+        {
+          error: "INVALID_AUDIO",
+          field: "audio.size",
+          message: `audio size ${audioFile.size} exceeds maximum ${ROLEPLAY_MAX_AUDIO_BYTES}`,
+        },
+        { status: 400 },
+      );
+    }
+    if (
+      !Number.isFinite(durationMs) ||
+      durationMs <= 0 ||
+      durationMs > ROLEPLAY_MAX_AUDIO_DURATION_MS
+    ) {
+      return NextResponse.json(
+        {
+          error: "INVALID_AUDIO",
+          field: "durationMs",
+          message: `duration ${durationMs}ms exceeds maximum ${ROLEPLAY_MAX_AUDIO_DURATION_MS}ms`,
+        },
+        { status: 400 },
+      );
+    }
+    const consentGiven =
+      typeof consentGivenRaw === "string" && consentGivenRaw === "true";
+    if (!consentGiven) {
+      return NextResponse.json(
+        {
+          error: "INVALID_AUDIO",
+          field: "consentGiven",
+          message: "explicit consent is required before audio evaluation",
+        },
+        { status: 400 },
+      );
+    }
+    const retentionDays =
+      typeof retentionDaysRaw === "string" ? parseInt(retentionDaysRaw, 10) : NaN;
+    if (
+      !Number.isFinite(retentionDays) ||
+      retentionDays < 1 ||
+      retentionDays > 365
+    ) {
+      return NextResponse.json(
+        {
+          error: "INVALID_AUDIO",
+          field: "retentionDays",
+          message: "retentionDays must be an integer in [1,365]",
+        },
+        { status: 400 },
+      );
     }
 
     const arrayBuf = await audioFile.arrayBuffer();
     const buffer = Buffer.from(arrayBuf);
-    const mimeType = audioFile.type || "audio/webm";
 
     // Look up the scenario + rubric + canonical source excerpts FIRST so the
     // evaluator receives the grounding material (FR-4 closes the empty-excerpts
@@ -117,6 +205,8 @@ export async function POST(request: NextRequest) {
         audioStorageKey: audioUploadSucceeded ? storageKey : null,
         durationMs,
         audio: { buffer, mimeType },
+        consentGiven: true,
+        retentionDays,
         evaluate: wrappedEvaluate,
       },
     );

@@ -133,23 +133,45 @@
 
 ## Phase 4: Sales Security, Privacy, and Contract Hardening
 
-- [~] Task: Write Red tests proving `SALES_REP`/`SALES_ADMIN` are authenticated in tRPC context.
+- [x] Task: Write Red tests proving `SALES_REP`/`SALES_ADMIN` are authenticated in tRPC context.
   - Evidence refs: Sales C3; F-SALES-B00-030.
   - Red evidence (2026-07-02): `packages/api/src/__tests__/sales-auth-context.test.ts` — `SALES_REP`/`SALES_ADMIN` context checks are **already green** (Wave 0 widened `roleSchema` to include both roles); admin-procedure-rejects-rep check is **already green**. The remaining Red assertion is cross-tenant cohort reporting: `SALES_ADMIN` caller sees `cross-tenant row count: 1` because `getCohortOverview` returns all `salesProgress` rows without tenant/rep scoping. Targeted command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts` — 1/4 checks fail.
-- [ ] Task: Fix role schema/context integration.
-- [~] Task: Write Red tests for IDOR on roleplay evaluation and cross-tenant admin reporting.
+  - Green evidence (2026-07-02): `getCohortOverview` (`packages/domain/src/sales/queries.ts`) now scopes results to the caller's tenant by selecting `users` at `users.schoolId === tenant.schoolId` (FLAT auto-scope via TenantDB) and filtering `salesProgress.userId` in-memory against that allowed set. Null-tenant short-circuits to `[]` so the FLAT table's fail-closed null-scope path never fires. Targeted command: `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts` — exit 0, **4/4 tests pass**, 1 file passes.
+  - Commit SHA: see `fix(sales): wave1 p4 ...` commit below.
+- [x] Task: Fix role schema/context integration.
+  - Same commit as above; the `SALES_REP`/`SALES_ADMIN` role parsing was already widened in Wave 0 and remains so. No code change required for the role check itself; the only failing assertion (cross-tenant) was the cohort scoping fix above.
+- [x] Task: Write Red tests for IDOR on roleplay evaluation and cross-tenant admin reporting.
   - Evidence refs: Sales C1/C2; F-SALES-B05-001/F-SALES-B05-002.
   - Red evidence (2026-07-02): `packages/domain/src/__tests__/sales-authorization-idors.test.ts` — `saveAttemptEvaluation` does not reject updating an attempt whose `userId` is `rep-b` when caller is `rep-a` (IDOR not enforced); `getCohortOverview` returns `cross-tenant row count: 1`. Targeted command: `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts` — 2/2 checks fail.
-- [ ] Task: Add ownership and tenant/global-scope authorization checks.
-- [~] Task: Write Red tests for audio size/MIME/duration validation before buffering/provider calls.
+  - Green evidence (2026-07-02): `saveAttemptEvaluation` (`packages/domain/src/sales/mutations.ts`) now SELECTs the attempt BEFORE any UPDATE; if not found, throws `SalesAuthError` (FORBIDDEN envelope at the API layer). For an existing attempt, ownership is `attempt.userId === user.id` OR caller is `SALES_ADMIN`. `db.update` is never invoked when ownership fails. `getCohortOverview` (see the cross-tenant task above) now scopes to the admin's tenant. Targeted command: `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts` — exit 0, **2/2 tests pass**.
+  - Commit SHA: see `fix(sales): wave1 p4 ...` commit below.
+- [x] Task: Add ownership and tenant/global-scope authorization checks.
+  - Same commit as above. New exports: `SalesAuthError` (errors.ts) is the typed error class used by the IDOR guard. The ownership predicate is `attempt.userId === user.id || user.role === "SALES_ADMIN"`. Cohort scoping is via the FLAT `users` table filtered by `tenant.schoolId` with a defensive in-memory cross-check so the result is provably tenant-scoped even if the FLAT auto-scope is bypassed.
+- [x] Task: Write Red tests for audio size/MIME/duration validation before buffering/provider calls.
   - Evidence refs: Sales C4; F-SALES-B00-028/F-SALES-B01-015/F-SALES-B04-007.
   - Red evidence (2026-07-02): `packages/domain/src/__tests__/sales-audio-validation-privacy.test.ts` — all 4 boundary checks fail because `submitRoleplayAttempt` calls the mocked evaluator regardless of unsupported MIME (`video/mp4`), oversized buffer, excessive duration, or missing consent/retention metadata. Labeled `provider call count on rejected media: 1 (expected 0)`. `apps/sales-advantage/app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts` — route returns 200 for oversized/unsupported-MIME/too-long uploads and reaches `storage.put`/`submitRoleplayAttempt`/`getAIClient`; all 3 route checks fail with `expected 400, received 200`.
-- [ ] Task: Add audio validation, privacy/consent checks, and retention metadata.
-- [ ] Task: Sanitize lesson markdown or replace unsafe rendering.
-- [ ] Task: Fix draft curriculum leakage and completion math skew.
-- [~] Task: Align `audioStorageKey` nullability contracts and tests.
+  - Green evidence (2026-07-02): the audio + privacy gate now runs at the very top of `submitRoleplayAttempt` (`packages/domain/src/sales/mutations.ts`) via `roleplayAudioInputSchema.safeParse(...)` BEFORE any DB INSERT and BEFORE `input.evaluate(...)`. Rejected media throws `RoleplayAudioValidationError` and the provider's `evaluate` mock receives zero invocations on rejected submissions (4/4 labeled `provider call count on rejected media: 0` checks pass). The route (`apps/sales-advantage/app/api/roleplay-attempts/route.ts`) now validates `audioFile.size`/`audioFile.type`/declared `durationMs`/consent/retention BEFORE `audioFile.arrayBuffer()` and BEFORE `getStorageClient`/`getAIClient`/`getRoleplayEvaluationContext`/`submitRoleplayAttempt` (3/3 route checks pass with `expected 400, received 400` and zero provider/storage calls).
+  - Commit SHA: see `fix(sales): wave1 p4 ...` commit below.
+- [x] Task: Add audio validation, privacy/consent checks, and retention metadata.
+  - Same commit as above. The `roleplayAudioInputSchema` Zod schema (in `packages/domain/src/sales/schema.ts` and mirrored in `packages/types/src/contracts/sales.ts`) is the shared contract; the route reads `consentGiven` and `retentionDays` from the multipart form and the domain re-validates the full input. New constants `ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES`, `ROLEPLAY_MAX_AUDIO_BYTES` (10 MiB), `ROLEPLAY_MAX_AUDIO_DURATION_MS` (5 min) live in both packages. New error class `RoleplayAudioValidationError` (errors.ts) is the structured 400 envelope target.
+- [b] Task: Sanitize lesson markdown or replace unsafe rendering. — deferred:wave4
+  - Out of Phase 4 Green scope per `test-strategy.md` architecture guardrails ("sanitize/draft curriculum leakage is Wave 4 unless touched by the roleplay slice"). The roleplay slice does not render untrusted lesson markdown, so Phase 4 does not need to touch `dangerouslySetInnerHTML`/markdown paths here. Owner-wave work per `medium-plus-coverage-matrix.md`.
+- [b] Task: Fix draft curriculum leakage and completion math skew. — deferred:wave4
+  - Out of Phase 4 Green scope per `test-strategy.md` ("sanitize/draft curriculum leakage is Wave 4 unless touched by the roleplay slice"). Wave 4 owns curriculum-level sanitization and the completion-math fixes for the broader sales curriculum surface. The roleplay path touched by Phase 4 already only consumes approved scenarios/rubrics (`getScenario`/`getRoleplayEvaluationContext` return only `reviewStatus === "approved"` rows).
+- [x] Task: Align `audioStorageKey` nullability contracts and tests.
   - Red evidence (2026-07-02): `packages/domain/src/__tests__/sales-contract-nullability.test.ts` — `audioStorageKey` nullability is **already green** across domain input/output, types output, and Drizzle column (Wave 0). The remaining Red assertion is cross-app contract parity: `@reading-advantage/types` does **not** export `roleplayAttemptInputSchema`. `packages/api/src/__tests__/sales-router-audio-contract.test.ts` — output nullability at the API boundary is green, but the API/types boundary lacks a `roleplayAudioInputSchema` for validating audio size/MIME/duration/consent/retention before provider/storage calls.
-- [ ] Task: Run Sales/API/domain/AI targeted gates.
+  - Green evidence (2026-07-02): `packages/types/src/contracts/sales.ts` now exports `roleplayAttemptInputSchema` (mirror of the domain input) and `roleplayAudioInputSchema` (the shared audio + consent/retention contract). Both are re-exported from `packages/types/src/index.ts`. Targeted command: `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-contract-nullability.test.ts` — exit 0, **6/6 tests pass**. `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-router-audio-contract.test.ts` — exit 0, **3/3 tests pass**.
+  - Commit SHA: see `fix(sales): wave1 p4 ...` commit below.
+- [x] Task: Run Sales/API/domain/AI targeted gates.
+  - Green evidence (2026-07-02): the targeted Green gate from `test-strategy.md` exits 0:
+    - `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts src/__tests__/sales-router-audio-contract.test.ts` → exit 0, **2/2 files, 7/7 tests pass**.
+    - `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-audio-validation-privacy.test.ts src/__tests__/sales-contract-nullability.test.ts` → exit 0, **3/3 files, 12/12 tests pass**.
+    - `CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts` → exit 0, **1/1 file, 3/3 tests pass**.
+  - Combined: 22/22 targeted tests pass; no `.skip`/`passWithNoTests` was used; no Red test was modified or weakened. Provider mock and storage adapter receive zero invocations on rejected audio (labeled counts in each test name).
+  - Closeout aggregate test: `CI=true pnpm turbo run test --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api` → exit 0; domain **365 passed, 5 skipped (pre-existing)**, api **223 passed**, sales-advantage **19 passed**. All new failures = 0.
+  - Closeout lint: `CI=true pnpm turbo run lint --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api` → exit 0, 0 errors (only pre-existing warnings).
+  - Closeout check-types: `CI=true pnpm turbo run check-types --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api` → 2 pre-existing TS2742 errors in `apps/sales-advantage/lib/trpc.ts:4` (introduced by `025f8fc9 feat(sales): scaffold sales-advantage app`; not in any file touched by this commit; verified by stashing the working tree and re-running). These are the only check-types failures in the three packages; no new failures were introduced by this commit.
+  - `bash measure/doctor.sh` passes (exit 0).
 
 ## Phase 5: Integrated Acceptance
 

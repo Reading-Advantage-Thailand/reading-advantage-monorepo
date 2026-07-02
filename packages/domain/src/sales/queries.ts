@@ -8,6 +8,7 @@ import {
   salesRoleplayAttempts,
   salesProgress,
 } from "@reading-advantage/db/schema";
+import { users } from "@reading-advantage/db/schema";
 import { assertCan } from "@reading-advantage/auth";
 import type { SalesDomainContext } from "./contracts.js";
 import { salesRawDb } from "./contracts.js";
@@ -289,11 +290,54 @@ export async function getDashboardData({ db, user, tenant }: SalesDomainContext)
 
 /**
  * Retrieves the cohort overview (admin): aggregate progress across all reps.
- * @param ctx - The domain context (user must hold sales:admin:cohort)
- * @returns The cohort overview rows
+ *
+ * Phase 4 cross-tenant scoping: a `SALES_ADMIN` may only see progress for
+ * reps in their own school (`tenant.schoolId`). The `users` table is FLAT
+ * (auto-scoped by `tenant.schoolId` through TenantDB), so even when the
+ * caller invokes this via a Sales-Admin tenant, the set of reps returned
+ * is restricted to that tenant.
+ *
+ * Defensive in-memory: after fetching users, we additionally filter on
+ * `user.schoolId === tenant.schoolId` so a misuse that bypasses TenantDB
+ * (e.g. test mocks that don't simulate the FLAT auto-scope) still cannot
+ * leak cross-tenant rows. The result set is a strict subset of the rows
+ * the same query would return in production.
+ *
+ * When `tenant.schoolId` is null (no tenant context), this returns `[]`
+ * — there is no defensible scope to filter against. The TenantDB fails
+ * closed on null-tenant FLAT queries, so we short-circuit before
+ * reaching the `users` table.
+ * @param ctx - The domain context (user must hold sales:admin:cohort;
+ *              SALES_ADMIN only)
+ * @returns The cohort overview rows scoped to the admin's tenant
  */
 export async function getCohortOverview({ db, user, tenant }: SalesDomainContext) {
   assertCan(user, "sales:admin:cohort", tenant);
+  if (!tenant.schoolId) {
+    return [];
+  }
+  // Even though `users` is registered as FLAT (TenantDB auto-scopes), the
+  // unfiltered `salesProgress` table is REFERENTIAL and has no schoolId.
+  // We need an explicit join via `users.schoolId` to scope admin cohorts.
   const rawDb = salesRawDb(db);
-  return rawDb.select().from(salesProgress);
+  const repsInTenant = await rawDb
+    .select({ id: users.id, schoolId: users.schoolId })
+    .from(users)
+    .where(
+      and(
+        inArray(users.role, ["SALES_REP", "SALES_ADMIN"] as const),
+        eq(users.schoolId, tenant.schoolId),
+      ),
+    );
+  // Defensive in-memory scope filter — rejects any row whose author is
+  // not in the admin's tenant. In production this is redundant with the
+  // FLAT auto-scope on `users`, but it makes the cohort output provably
+  // tenant-scoped even when the underlying DB layer is bypassed.
+  const allowedRepIds = new Set(
+    repsInTenant
+      .filter((r) => r.schoolId === tenant.schoolId)
+      .map((r) => r.id),
+  );
+  const allProgress = await rawDb.select().from(salesProgress);
+  return allProgress.filter((p) => allowedRepIds.has(p.userId));
 }
