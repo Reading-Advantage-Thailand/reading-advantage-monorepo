@@ -55,11 +55,20 @@ The test was rewritten to assert the **seed's idempotency/completeness contract*
 
 ## Phase 2: Provider Adapter Enforcement
 
-- [ ] Task: Write architecture-guard Red tests for direct AI/storage/observability provider SDK imports in production code.
+- [~] Task: Write architecture-guard Red tests for direct AI/storage/observability provider SDK imports in production code.
   - Evidence refs: Cross-App CA-005/CA-006/CA-011; Shared Foundation F-SF-021/F-SF-022; Sales F-SALES-B03-010.
+  - Red evidence:
+    - `packages/ai/src/__tests__/wave2-provider-architecture-guard.test.ts` added.
+    - `packages/config/src/__tests__/wave2-observability-provider-guard.test.ts` added.
+    - RED command: `CI=true pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/wave2-provider-architecture-guard.test.ts` fails with `Scanned production file count: 2365`, `Unapproved provider import/capture hit count: 12` (module imports: 11, raw capture calls: 1). Hits include `apps/primary-advantage/utils/storage.ts`, `apps/reading-advantage/server/controllers/generator-controller.ts`, `apps/reading-advantage/utils/storage.ts`, `apps/science-advantage/app/api/ai/recommendations/route.ts`, `apps/science-advantage/lib/ai/image-generator.ts`, `apps/science-advantage/lib/ai/recommendation-service.ts`, and `packages/reading-advantage-scripts/*`.
+    - RED command: `CI=true pnpm --filter @reading-advantage/config exec vitest run src/__tests__/wave2-observability-provider-guard.test.ts` fails with `Scanned production file count: 794`, `Unapproved console.error hit count: 621`, `Unapproved Sentry capture hit count: 1` (route.ts direct `Sentry.captureException`).
 - [ ] Task: Remove raw AI SDK re-exports from `@reading-advantage/ai` or explicitly quarantine them behind test-only exports.
   - Evidence refs: Sales C6; F-SALES-B03-010/F-SALES-B03-005; MR-H01.
-- [ ] Task: Add adapter contract tests for AI text/object/media, storage put/get/delete/signed URL semantics, and observability logging/capture boundary.
+- [~] Task: Add adapter contract tests for AI text/object/media, storage put/get/delete/signed URL semantics, and observability logging/capture boundary.
+  - Red evidence:
+    - `packages/ai/src/__tests__/wave2-ai-barrel-no-raw-sdk.test.ts` added; fails `Raw AI barrel export count: 7` (createOpenAI, createGoogleGenerativeAI, createVertex, generateObject, generateText, streamText, experimental_generateImage).
+    - `packages/storage/src/__tests__/wave2-storage-contract.test.ts` added; fails `Provider-specific error leakage count: 1` on put/delete/getSignedUrl rejected operations (StorageClient method semantics pass).
+    - Pre-existing `phase-stream-text-contract.test.ts` and `phase-multimodal-contract.test.ts` pass at HEAD (13 tests); they are not new Red but cover AI text/object/media contract semantics.
 - [ ] Task: Migrate or file explicit follow-up rows for any direct SDK imports found in Reading, Primary, Marketing, Sales, Science, or legacy scripts.
 
 ## Phase 3: Test Signal Restoration
