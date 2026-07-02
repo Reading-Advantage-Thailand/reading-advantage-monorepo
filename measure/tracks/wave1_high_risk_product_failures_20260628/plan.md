@@ -163,19 +163,19 @@
   - Green evidence (2026-07-02): `packages/types/src/contracts/sales.ts` now exports `roleplayAttemptInputSchema` (mirror of the domain input) and `roleplayAudioInputSchema` (the shared audio + consent/retention contract). Both are re-exported from `packages/types/src/index.ts`. Targeted command: `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-contract-nullability.test.ts` — exit 0, **6/6 tests pass**. `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-router-audio-contract.test.ts` — exit 0, **3/3 tests pass**.
   - Commit SHA: see `fix(sales): wave1 p4 ...` commit below.
 - [x] Task: Run Sales/API/domain/AI targeted gates.
-  - Green evidence (2026-07-02): the targeted Green gate from `test-strategy.md` exits 0:
+  - Green evidence (2026-07-02, acceptance re-run): the targeted Phase 4 gate exits 0:
     - `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts src/__tests__/sales-router-audio-contract.test.ts` → exit 0, **2/2 files, 7/7 tests pass**.
-    - `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-audio-validation-privacy.test.ts src/__tests__/sales-contract-nullability.test.ts` → exit 0, **3/3 files, 12/12 tests pass**.
-    - `CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts` → exit 0, **1/1 file, 3/3 tests pass**.
-  - Combined: 22/22 targeted tests pass; no `.skip`/`passWithNoTests` was used; no Red test was modified or weakened. Provider mock and storage adapter receive zero invocations on rejected audio (labeled counts in each test name).
-  - Closeout aggregate test: `CI=true pnpm turbo run test --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api` → exit 0; domain **365 passed, 5 skipped (pre-existing)**, api **223 passed**, sales-advantage **19 passed**. All new failures = 0.
-  - Closeout lint: `CI=true pnpm turbo run lint --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api` → exit 0, 0 errors (only pre-existing warnings).
-  - Closeout check-types: `CI=true pnpm turbo run check-types --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api` → 2 pre-existing TS2742 errors in `apps/sales-advantage/lib/trpc.ts:4` (introduced by `025f8fc9 feat(sales): scaffold sales-advantage app`; not in any file touched by this commit; verified by stashing the working tree and re-running). These are the only check-types failures in the three packages; no new failures were introduced by this commit.
+    - `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-audio-validation-privacy.test.ts src/__tests__/sales-contract-nullability.test.ts` → exit 0, **3/3 files, 14/14 tests pass**.
+    - `CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts app/api/roleplay-attempts/__tests__/route.test.ts` → exit 0, **2/2 files, 9/9 tests pass**.
+  - Combined: **30/30 targeted tests pass**; no `.skip`/`passWithNoTests` was used in the targeted command. Acceptance tightened `sales-audio-validation-privacy.test.ts` so MIME/size/duration rejection cases include valid `consentGiven`/`retentionDays` and therefore prove the intended media-boundary failure rather than failing early on privacy metadata. No Red test was weakened. Provider mock, storage adapter, and evaluation-context seam receive zero invocations on rejected audio/consent/retention paths (labeled call-count assertions).
+  - Closeout aggregate test (acceptance re-run): `CI=true pnpm turbo run test --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api` → exit 0; domain **367 passed, 5 skipped (pre-existing)**, api **223 passed**, sales-advantage **21 passed**. All new failures = 0.
+  - Closeout lint (acceptance re-run): `CI=true pnpm turbo run lint --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api` → exit 0, 0 errors. Warnings only: domain 10, api 5, sales-advantage 12; sales UI no-unused-vars warnings are pre-existing, and the Phase 4-touched `roleplay-recorder.tsx` warning is the pre-existing unused catch binding pattern.
+  - Closeout check-types (acceptance re-run): `CI=true pnpm turbo run check-types --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api` → exit 1 due only to 2 TS2742 errors in `apps/sales-advantage/lib/trpc.ts:4`. Verified unrelated/pre-existing without checkout/stash/reset: the file is absent from `git diff --name-only 5014c5051a2dd5be161c541257343bb9a13eedb9..HEAD`, baseline content is already `export const trpc = createTRPCReact<AppRouter>();`, and `git log --follow -- apps/sales-advantage/lib/trpc.ts` shows the line was introduced by scaffold commit `025f8fc9 feat(sales): scaffold sales-advantage app`.
   - `bash measure/doctor.sh` passes (exit 0).
 
 ## Phase 5: Integrated Acceptance
 
-- [ ] Task: Run all touched package/app tests with `CI=true`.
-- [ ] Task: Update product-risk register rows with completion evidence only for fixed workflows.
-- [ ] Task: Record any deferred Medium/Low follow-ups in `tech-debt.md` if still relevant and within line cap.
-- [ ] Task: Run Measure phase acceptance and archive the track.
+- [~] Task: Run all touched package/app tests with `CI=true`.
+- [~] Task: Update product-risk register rows with completion evidence only for fixed workflows.
+- [~] Task: Record any deferred Medium/Low follow-ups in `tech-debt.md` if still relevant and within line cap.
+- [~] Task: Run Measure phase acceptance and archive the track.
