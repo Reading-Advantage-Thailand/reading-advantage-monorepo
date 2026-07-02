@@ -16,7 +16,7 @@ import type { ExtendedNextRequest } from "@/server/controllers/auth-controller";
 
 var streamTextMock: jest.Mock;
 
-jest.mock("@reading-advantage/ai", () => ({
+jest.mock("@reading-advantage/ai/internal-sdk", () => ({
   streamText: (streamTextMock = jest.fn()),
 }));
 
