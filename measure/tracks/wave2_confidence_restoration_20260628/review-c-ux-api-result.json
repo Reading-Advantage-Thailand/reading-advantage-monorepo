@@ -1,0 +1,55 @@
+{
+  "role": "review-c-ux-api",
+  "track": "wave2_confidence_restoration_20260628",
+  "phase": "Phase 1: Migration and Seed Governance",
+  "baseline": "f753de606c889320dbf3e86f8f5fc42a53e7d8db",
+  "head": "c39347e3",
+  "timestamp": "2026-07-03T00:35:00+08:00",
+  "ux_applicability": "not_applicable",
+  "ux_applicability_justification": "This phase is migration/seed/deploy-governance work: CLI tooling (migration-ledger-doctor), seed helper extraction (codecamp-seed selectLessonsToInsert), seed script idempotency fixes (sales, science grade-4), and Red/Green test infrastructure. There is no user-facing UI, no HTTP API endpoint contract change, no tRPC router modification, and no form or page flow change. The closest contract surface is the migration-ledger-doctor CLI's exit codes and labeled stderr messages, which form a developer/deploy operator contract (not a UX contract). Seed scripts emit operator-facing console.log output but these are internal tooling messages, not user-facing flows.",
+  "status": "complete",
+  "contract_surfaces_reviewed": {
+    "migration_ledger_doctor_cli": {
+      "applicability": "developer/deploy operator contract (not UX)",
+      "exit_codes": {
+        "exit_0": "No divergence found; all checks pass; required-migration gate OK",
+        "exit_1": "Divergence found; required migration behind; tag not in journal (typo); repair still divergent",
+        "exit_2": "Usage error; DIRECT_DATABASE_URL missing; journal read failure; DB connection failure; unhandled error"
+      },
+      "contract_messages": [
+        "Required migration behind count: N — required tag \"<tag>\" (idx K, when T) but highest applied ledger when is X (<entries> are not applied)",
+        "Required migration gate OK — \"<tag>\" (when T) is at or below highest applied when X",
+        "Required migration behind count: 0 — required tag \"<tag>\" is not in _journal.json (typo or stale pipeline config)"
+      ],
+      "flag_contract": "--required-migration <tag> (argv) and REQUIRED_MIGRATION (env)",
+      "documentation": "JSDoc on parseRequiredMigration() documents flag + env var; usage line updated; plan.md documents contract",
+      "assessment": "Well-defined. Exit codes are coherent: 0=ok, 1=fail-closed (behind/divergence/typo), 2=usage/connection. Messages are labeled and grep-parseable for CI branching. The 'behind count: 0' for tag-not-in-journal is semantically confusing but exit 1 is correct for fail-closed behavior."
+    },
+    "seed_script_output": {
+      "applicability": "operator-facing console output (not UX)",
+      "codecamp_seed": "console.log with emoji labels (✅, ✏️, ➕, 🗑️, 📦) and labeled counts (Seeded N new module(s), N existing module(s) updated, N orphaned exercise-repo rows removed)",
+      "sales_seed": "console.log for module/lesson progress",
+      "assessment": "Acceptable for internal tooling. No formal output contract required."
+    }
+  },
+  "gate_results": {
+    "phase1_contract_tests": {
+      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/wave2-migration-seed-governance.test.ts src/__tests__/deploy-gate-contract.test.ts",
+      "exit": 0,
+      "result": "2 files, 15 tests passed, 0 failed"
+    },
+    "codecamp_seed_tests": {
+      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/codecamp-stale-seed.test.ts",
+      "exit": 0,
+      "result": "1 file, 7 tests passed, 0 failed"
+    }
+  },
+  "findings": [],
+  "nonblocking_observations": [
+    "The 'Required migration behind count: 0 — required tag not in _journal.json' message uses count:0 with exit 1. Semantically confusing for grep-based CI checks, but exit code is correct for fail-closed. Not a defect — the tag-not-in-journal case IS a failure.",
+    "Seed script output uses emoji indicators and labeled counts. Acceptable for internal tooling; no formal output contract needed.",
+    "No user-facing UI or HTTP API contract surfaces exist in this phase."
+  ],
+  "commits": [],
+  "handoff": "Phase 1 Review-C complete. No blocking findings. UX/API applicability: NOT APPLICABLE — this is CLI/seed/test-infra work with no user-facing surfaces. The migration-ledger-doctor CLI contract is well-defined: exit 0=ok, exit 1=fail-closed (behind/divergence/typo), exit 2=usage/connection error. Messages are labeled and grep-parseable. Flag/env contract documented in JSDoc, usage line, and plan.md. Seed scripts emit operator-facing console output which is acceptable for internal tooling. All 22 targeted tests pass (15 deploy-gate + governance, 7 codecamp seed)."
+}
