@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Final acceptance passes Wave 1 at HEAD 0137ed72. All four targeted app/package proof gates pass independently at HEAD: Primary 11 files/56 tests, Reading 6 suites/29 tests, CodeCamp targeted domain/webhooks/chat 7 tests, and Sales targeted api/domain/app 30 tests. The Wave-1-touched Primary type-regression grep gate returns zero diagnostic lines after 0137ed72. The configured lint gate and measure doctor pass. Aggregate tests and aggregate check-types still have red tasks only from documented pre-existing/non-Wave-1 failures; no blocking Wave 1 acceptance criterion remains.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "NB-001",
+      "category": "pre_existing_aggregate_tests",
+      "severity": "nonblocking",
+      "description": "The aggregate Wave 1 test command exits 1 due reading-advantage legacy game/Jest failures and codecamp-advantage prod-smoke live-network/artifact failures. The Wave 1 targeted proof gates all pass. Phase 2/3/5 evidence verified these aggregate failures are pre-existing/non-Wave-1; the current aggregate rerun again shows reading-advantage 29 failed suites / 32 failed tests and codecamp prod-smoke failures.",
+      "owner": "reading-advantage legacy Jest/game test debt and codecamp prod-smoke/deploy confidence workstreams (Wave 2 / existing prod QA owners)"
+    },
+    {
+      "id": "NB-002",
+      "category": "pre_existing_typecheck",
+      "severity": "nonblocking",
+      "description": "The aggregate check-types gate exits 1 first on sales-advantage lib/trpc.ts TS2742. Phase 4 acceptance verified this file is unchanged by Wave 1 and was introduced by scaffold commit 025f8fc9. CodeCamp @reading-advantage/ai import and reading/primary non-touched-surface type errors are also documented pre-existing. The Wave-1-touched Primary type-regression gate returns zero diagnostic lines at HEAD.",
+      "owner": "sales_advantage_golive_20260701 / Wave 2 build confidence / pre-existing reading-primary type debt"
+    },
+    {
+      "id": "NB-003",
+      "category": "documented_deferrals",
+      "severity": "nonblocking",
+      "description": "Representative-slice propagation intentionally leaves named owner-wave work: Primary remaining M1 lesson-game components to Wave 6, broader Primary auth/tenant sweep to Phikul/later wave, Reading remaining security/product behavior to Wave 4, CodeCamp durable Postgres retry/DLQ to Wave 4, and Sales curriculum sanitization/leakage/math to Wave 4. These are listed with deferred:<owner> markers and/or in the medium-plus coverage matrix, so there are no silent drops."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "head_branch",
+      "description": "Stayed on branch docs/measure-wave4-6-medium-coverage; HEAD recorded as 0137ed72b027c86f91feab9e1554228c15ee9e2d."
+    },
+    {
+      "id": "spec_ac_tests",
+      "description": "Every app slice has Red to Green behavior tests for the failing workflow, and all targeted proof commands pass at HEAD."
+    },
+    {
+      "id": "primary_ac",
+      "description": "Primary completion/session and flashcard touched surfaces are runtime-green and touched-type-clean: vitest 11/11 files, 56/56 tests; touched-surface tsc grep returns zero diagnostic lines."
+    },
+    {
+      "id": "reading_ac",
+      "description": "Reading classroom destructive auth/tenant checks, audit events, XP idempotency, sensitive system/auth boundaries, level-test contract, and content quality gate are covered by 29 passing targeted Jest tests."
+    },
+    {
+      "id": "codecamp_ac",
+      "description": "CodeCamp TenantDB REFERENTIAL paths use greppable unscoped reasons, no targeted TenantScopeError remains, webhook delivery-id idempotency and non-blocking ACK pass, and chat streaming protocol agrees with the client parser."
+    },
+    {
+      "id": "sales_ac",
+      "description": "Sales role/auth context, ownership/tenant IDOR rejection, audio validation before provider/storage, consent/retention metadata, UI consent wiring, and audioStorageKey/nullability contracts are covered by 30 passing targeted tests."
+    },
+    {
+      "id": "scope_completeness",
+      "description": "medium-plus-coverage-matrix.md maps Medium+ remainders to W4/W6 and explicitly confirms Primary M9 is Wave 4. Product-risk register and plan now reflect HEAD 0137ed72 and the fixed Primary type-regression."
+    },
+    {
+      "id": "anti_pattern_audit",
+      "description": "A1 supervisor substring heuristic not reintroduced; A5 plan/product-risk false stale claims corrected; A6 tracks.md does not overstate Wave 1 as resolved; A9 tests/*.sh have no archived measure/tracks/<id>/plan.md references."
+    },
+    {
+      "id": "closeout_readiness",
+      "description": "No non-deferred plan task remains except Phase 5 final acceptance/archive orchestration task; all [b] tasks have inline deferred:<owner>; doctor exits 0; final acceptance result JSON written for closeout."
+    }
+  ],
+  "commands": [
+    {
+      "cmd": "git branch --show-current && git rev-parse HEAD && git status --short",
+      "exit_code": 0,
+      "result": "branch docs/measure-wave4-6-medium-coverage; HEAD 0137ed72b027c86f91feab9e1554228c15ee9e2d; unrelated/forbidden untracked files present and not touched"
+    },
+    {
+      "cmd": "git diff --name-status b8e3b5d5..HEAD",
+      "exit_code": 0,
+      "result": "Wave 1 diff inspected across Primary, Reading, CodeCamp, Sales, packages/domain/api/webhooks/types, and Measure artifacts"
+    },
+    {
+      "cmd": "python3 ~/.agents/skills/measure-orchestrator/scripts/measure_interphase_checks.py status --repo .",
+      "exit_code": 0,
+      "result": "Wave 1 only has Phase 5 Integrated Acceptance 1/4 remaining (the final acceptance/archive task); other active tracks also incomplete"
+    },
+    {
+      "cmd": "CI=true pnpm --filter primary-advantage exec vitest run",
+      "exit_code": 0,
+      "result": "Test Files 11 passed (11); Tests 56 passed (56)"
+    },
+    {
+      "cmd": "CI=true pnpm --filter reading-advantage test -- __tests__/controllers/classroom-authorization.test.ts __tests__/controllers/audit-events.test.ts __tests__/controllers/post-activity-log-idempotency.test.ts __tests__/actions/sensitive-auth-boundaries.test.ts __tests__/ai/level-test-contract.test.ts __tests__/ai/content-quality-gate.test.ts",
+      "exit_code": 0,
+      "result": "Test Suites 6 passed; Tests 29 passed"
+    },
+    {
+      "cmd": "CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/codecamp-tenantdb-runtime.test.ts src/__tests__/codecamp-webhook-idempotency-domain.test.ts && CI=true pnpm --filter @reading-advantage/webhooks exec vitest run src/__tests__/github-webhook-idempotency.test.ts src/__tests__/github-webhook-ack-latency.test.ts && CI=true pnpm --filter codecamp-advantage exec vitest run app/api/chat/__tests__/streaming-protocol.test.ts",
+      "exit_code": 0,
+      "result": "domain 2 files/3 tests passed; webhooks 2 files/3 tests passed; codecamp 1 file/1 test passed"
+    },
+    {
+      "cmd": "CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts src/__tests__/sales-router-audio-contract.test.ts && CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-audio-validation-privacy.test.ts src/__tests__/sales-contract-nullability.test.ts && CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts app/api/roleplay-attempts/__tests__/route.test.ts",
+      "exit_code": 0,
+      "result": "api 2 files/7 tests passed; domain 3 files/14 tests passed; sales app 2 files/9 tests passed"
+    },
+    {
+      "cmd": "NODE_OPTIONS=\"--max-old-space-size=8192\" CI=true pnpm --filter primary-advantage exec tsc --noEmit 2>&1 | grep -E \"actions/flashcard\\.ts|components/flashcards/|components/articles/article-content|lesson-sentence-order-word|order-words-game\"",
+      "exit_code": 1,
+      "result": "Expected no grep matches; zero diagnostic lines for Wave-1-touched Primary surfaces"
+    },
+    {
+      "cmd": "CI=true pnpm turbo run lint --filter=primary-advantage --filter=reading-advantage --filter=codecamp-advantage --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/webhooks",
+      "exit_code": 0,
+      "result": "0 lint errors; warnings only"
+    },
+    {
+      "cmd": "bash measure/doctor.sh",
+      "exit_code": 0,
+      "result": "PASS: anti-pattern catalog exists with A1-A11; review planning tracks use only [~]/[x]/[b] task markers"
+    },
+    {
+      "cmd": "CI=true pnpm turbo run test --filter=primary-advantage --filter=reading-advantage --filter=codecamp-advantage --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/webhooks",
+      "exit_code": 1,
+      "result": "Aggregate red only from known pre-existing/non-Wave-1 failures; reading-advantage reports 29 failed suites / 32 failed tests; primary/domain/api/webhooks/sales targeted and package gates pass; codecamp failures are prod-smoke live-network/artifact failures documented in plan/phase evidence"
+    },
+    {
+      "cmd": "NODE_OPTIONS=\"--max-old-space-size=8192\" CI=true pnpm turbo run check-types --filter=primary-advantage --filter=reading-advantage --filter=codecamp-advantage --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/webhooks",
+      "exit_code": 1,
+      "result": "Aggregate type-check red first on sales-advantage lib/trpc.ts TS2742, verified pre-existing by Phase 4; touched Primary grep gate is clean"
+    },
+    {
+      "cmd": "git show b8e3b5d5:apps/codecamp-advantage/app/api/chat/route.ts | rg '@reading-advantage/ai'",
+      "exit_code": 0,
+      "result": "Baseline route already imported @reading-advantage/ai, proving CodeCamp TS2307 import predates Wave 1"
+    },
+    {
+      "cmd": "python3 - <<'PY' ... marker/deferred check ... PY",
+      "exit_code": 0,
+      "result": "All Wave 1 [b] tasks have inline deferred:<owner>; only expected [~] task is final acceptance/archive"
+    },
+    {
+      "cmd": "python3 - <<'PY' ... archived test path check ... PY",
+      "exit_code": 0,
+      "result": "tests/*.sh have no references to archived measure/tracks/<id>/plan.md paths"
+    },
+    {
+      "cmd": "git diff -U0 b8e3b5d5..HEAD -- '*.ts' '*.tsx' '*.js' '*.mjs' '*.json' | rg '^[+].*(describe\\.skip|it\\.skip|test\\.skip|passWithNoTests)'",
+      "exit_code": 1,
+      "result": "Expected no matches; no Wave 1 diff-added skips or passWithNoTests"
+    }
+  ],
+  "changed_files": [
+    "measure/tracks/wave1_high_risk_product_failures_20260628/final-acceptance-result.json",
+    "measure/tracks/wave1_high_risk_product_failures_20260628/plan.md",
+    "measure/audit-reports/monorepo-review-roadmap_20260626/product-risk-register.md"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "may_proceed_to_closeout": true,
+  "closeout_recommendation": "Proceed to measure-closeout/archive Wave 1. Closeout should flip the remaining Phase 5 archive task, move the track to measure/archive, update metadata/status and registry, and avoid staging the unrelated forbidden/untracked deployment/go-live artifacts."
+}
