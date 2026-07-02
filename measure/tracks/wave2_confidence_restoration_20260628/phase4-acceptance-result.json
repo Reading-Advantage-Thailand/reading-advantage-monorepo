@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Wave 2 Phase 4 (Reusable Harnesses) is accepted. All five harness consumer tests pass independently; all five helpers exist, are documented, have real non-vacuous consumer tests, and are not exposed through package exports maps. Phase 4 plan owner labels and stale evidence counts were corrected. The required aggregate test gate still exits 1 only from pre-existing/non-Phase-4 failures (AI SDK migration artifact/version tests, www next-intl/next-navigation ESM resolution, and transient db aggregate/concurrency failures that pass on rerun and whose owning files are unchanged). Type-check gate exits 0.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Aggregate test gate `CI=true pnpm turbo run test --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/db --filter=@reading-advantage/ai --filter=www-reading-advantage` exits 1. Nonblocking disposition: failures are not introduced by Phase 4. @reading-advantage/ai has the known 19 failures in phase-0-setup (3), phase-11-sdk-version-contract (12), and phase-12-closeout-artifacts (4), owned by ai_sdk_major_migration. www-reading-advantage has 11 pre-existing failed suites from next-intl importing next/navigation without extension, owned by Wave 5 public-surface/www i18n module-resolution remediation. @reading-advantage/db failed during turbo aggregate on env-guards/drizzle045 tests but the failure-owning files are unchanged since baseline and `CI=true pnpm --filter @reading-advantage/db exec vitest run` reran green (35 passed, 2 skipped files / 647 passed, 6 skipped tests), so this is treated as pre-existing aggregate/concurrency flake owned by db-platform.",
+    "The Phase 4 plan originally labeled the www next-intl failures as `deferred:db-platform`; acceptance corrected that owner to `deferred:wave5_public_surface_completion_20260628` and corrected the AI follow-up owner to `deferred:ai_sdk_major_migration`.",
+    "The Phase 4 plan had stale test-count text after Review-B hardening; acceptance corrected the relevant evidence text for tenant harness (7 tests), provider guard utility (12 targeted tests / 13 with architecture guard), product-claim helper (12 tests), and AI failure distribution (3/12/4 = 19)."
+  ],
+  "evidence": [
+    "Read measure/index.md, measure/tracks.md, measure/anti-patterns.md, track spec.md, plan.md Phase 4, and test-strategy.md Phase 4.",
+    "Changed files since baseline ac8d7ff6fbf94154a7a1ce8e76697ce5c0cf0b78 were reviewed: five helper files, five consumer tests, plan/review artifacts, and no package exports-map changes exposing testing helpers.",
+    "Helpers verified: packages/domain/src/testing/tenant-isolation-harness.ts, packages/api/src/testing/api-contract-kit.ts, packages/db/src/testing/migration-doctor-helper.ts, packages/ai/src/testing/provider-guard-utility.ts, apps/www-reading-advantage/src/testing/product-claim-helper.ts.",
+    "Consumer tests verified: packages/domain/src/__tests__/wave2-tenant-isolation-harness.test.ts, packages/api/src/__tests__/wave2-api-contract-kit.test.ts, packages/db/src/__tests__/wave2-migration-doctor-helper.test.ts, packages/ai/src/__tests__/wave2-provider-guard-utility.test.ts, apps/www-reading-advantage/src/lib/wave2-product-claim-helper.test.ts.",
+    "Package exports map check: packages/domain, packages/api, packages/db, and packages/ai have no ./testing export; apps/www-reading-advantage has no exports field.",
+    "A1 supervisor check: measure/automation-supervisor.py uses task regex [~xb], has is_task_structurally_blocked(), recognizes status == 'b', and recognizes deferred:<owner>; legacy [ ~x] regex not present.",
+    "Marker hygiene check for Phase 4: 7 rows total, markers x,x,x,x,x,b,b; no legacy [ ] marker; both [b] rows have deferred owners.",
+    "Pre-existing www failure confirmation: failure-owning files (product page tests, blog-pagination.test.tsx, hero-section.test.tsx, locales/navigation.ts, src/test/setup.ts, package.json, pnpm-lock.yaml) are unchanged in diff ac8d7ff6..HEAD; www full suite currently fails exactly 11 suites with `Cannot find module ... next/navigation ... next-intl ... createNavigation.js`.",
+    "Pre-existing AI failure confirmation: failure-owning tests/manifests/lockfile for phase-0-setup, phase-11-sdk-version-contract, phase-12-closeout-artifacts are unchanged in diff ac8d7ff6..HEAD; aggregate reports 19 failures in those three files.",
+    "DB aggregate flake confirmation: failure-owning db test/schema files are unchanged in diff ac8d7ff6..HEAD; standalone db full suite reran green after the turbo aggregate failure.",
+    "Anti-pattern checks: no digit-only rg count assertions found in Phase 4 code; product-claim helper has strict consent+anonymization adversarial tests; provider guard has exact allowlist and export-* namespace adversarial test; plan has no false aggregate-green claim."
+  ],
+  "commands": [
+    "git status --short --branch -> exit 0; branch docs/measure-wave4-6-medium-coverage; unrelated/untracked protected files left untouched.",
+    "git diff --name-only ac8d7ff6fbf94154a7a1ce8e76697ce5c0cf0b78..HEAD -> exit 0; reviewed Phase 4 helper/test/Measure changes.",
+    "CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/wave2-tenant-isolation-harness.test.ts && CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave2-api-contract-kit.test.ts && CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/wave2-migration-doctor-helper.test.ts && CI=true pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/wave2-provider-guard-utility.test.ts && CI=true pnpm --filter www-reading-advantage exec vitest run src/lib/wave2-product-claim-helper.test.ts -> exit 0; 7 + 12 + 6 + 12 + 12 tests passed.",
+    "CI=true pnpm turbo run test --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/db --filter=@reading-advantage/ai --filter=www-reading-advantage -> exit 1; nonblocking known/pre-existing failures only (AI 19, www 11, transient db aggregate failures).",
+    "CI=true pnpm turbo run check-types --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/db --filter=@reading-advantage/ai --filter=www-reading-advantage -> exit 0; 8 tasks successful.",
+    "CI=true pnpm --filter @reading-advantage/db exec vitest run -> first exit 1 from env-guards timeouts, rerun exit 0; 35 passed | 2 skipped files / 647 passed | 6 skipped tests.",
+    "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/env-guards.test.ts -> exit 0; 4 passed.",
+    "CI=true pnpm --filter www-reading-advantage exec vitest run -> exit 1; 11 failed suites, 5 passed files, 1442 passed tests; next-intl/next-navigation ESM resolution failure.",
+    "CI=true pnpm --filter @reading-advantage/domain exec vitest run -> exit 0; 37 passed | 1 skipped files / 374 passed | 5 skipped tests.",
+    "CI=true pnpm --filter @reading-advantage/api exec vitest run -> exit 0; 31 files / 235 tests passed.",
+    "python3 marker/supervisor/export verification snippets -> exit 0; Phase 4 markers clean, supervisor [~xb] helper present, testing helpers absent from exports maps.",
+    "git diff --name-only ac8d7ff6..HEAD -- failure-owning AI/www/db files -> exit 0 with no output for failure-owning files; confirms Phase 4 did not modify them."
+  ],
+  "changed_files": [
+    "measure/tracks/wave2_confidence_restoration_20260628/plan.md",
+    "measure/tracks/wave2_confidence_restoration_20260628/phase4-acceptance-result.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
