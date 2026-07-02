@@ -124,11 +124,16 @@ The test was rewritten to assert the **seed's idempotency/completeness contract*
 
 ## Phase 4: Reusable Harnesses
 
-- [ ] Task: Create shared tenant isolation test helper with mandatory two-school fixtures.
-- [ ] Task: Create API contract test kit for response envelopes and auth/role cases.
-- [ ] Task: Create provider architecture guard utility and document approved exceptions.
-- [ ] Task: Create migration doctor test helper for fresh DB, existing DB, and ledger drift.
-- [ ] Task: Create product-claim test helper for app existence, stale launch dates, and placeholder claims.
+- [~] Task: Create shared tenant isolation test helper with mandatory two-school fixtures.
+  - Red evidence: `packages/domain/src/__tests__/wave2-tenant-isolation-harness.test.ts` added. `CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/wave2-tenant-isolation-harness.test.ts` fails with `Cannot find module '../testing/tenant-isolation-harness.js'` (helper does not exist). Test asserts `School fixture count: N` must be `>= 2` and includes a consumer asserting `Cross-tenant rejection count: 1` using the harness adversarial case. Counterexample fixture and A3/A4/A5 guards included.
+- [~] Task: Create API contract test kit for response envelopes and auth/role cases.
+  - Red evidence: `packages/api/src/__tests__/wave2-api-contract-kit.test.ts` added. `CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave2-api-contract-kit.test.ts` fails with `Cannot find module '../testing/api-contract-kit.js'` (helper does not exist). Test asserts `Missing envelope-case count: N` against success/list/validation-error/unauthenticated/wrong-role/forbidden/not-found/conflict and includes a consumer using a sample router response for each case plus a malformed-envelope counterexample (A5). A1 enforced via Zod schemas from `@reading-advantage/types`.
+- [~] Task: Create provider architecture guard utility and document approved exceptions.
+  - Red evidence: `packages/ai/src/__tests__/wave2-provider-guard-utility.test.ts` added. `CI=true pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/wave2-provider-guard-utility.test.ts` fails with `Cannot find module '../testing/provider-guard-utility.js'` (helper does not exist). Test asserts `Forbidden-shape hit count` for namespace imports, named/default static imports, `require`, dynamic `import()`, and barrel re-export leaks. Includes safe-adapter negative counterexample and exact allowlist reason check (A7).
+- [~] Task: Create migration doctor test helper for fresh DB, existing DB, and ledger drift.
+  - Red evidence: `packages/db/src/__tests__/wave2-migration-doctor-helper.test.ts` added. `CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/wave2-migration-doctor-helper.test.ts` fails with `Cannot find module '../testing/migration-doctor-helper.js'` (helper does not exist). Test asserts `Fresh DB ledger row count: 0`, `Existing DB divergence count: 0`, `schema-present/ledger-missing count: >0`, and `ledger-present/schema-missing count: >0` using fake journal/ledger/sentinel fixtures with no live credentials.
+- [~] Task: Create product-claim test helper for app existence, stale launch dates, and placeholder claims.
+  - Red evidence: `apps/www-reading-advantage/src/lib/wave2-product-claim-helper.test.ts` added (the app's `vitest.config.ts` uses `include: ["src/**/*.test.ts", "src/**/*.test.tsx"]` and has no `__tests__` directory; the strategy command's `__tests__` path is therefore adapted to the actual test layout). `CI=true pnpm --filter www-reading-advantage exec vitest run src/lib/wave2-product-claim-helper.test.ts` fails with `Failed to resolve import "../testing/product-claim-helper.js"` (helper does not exist). Test asserts classified counts for app-existence/stale-launch-date/placeholder-case-study/allowed-disclaimer and requires consent + anonymization proof for published case studies (A2).
 
 ## Phase 5: Aggregate Verification and Closeout
 
