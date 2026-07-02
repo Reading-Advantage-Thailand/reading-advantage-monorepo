@@ -44,6 +44,8 @@
     "evaluating": "Evaluating...",
     "retry": "Try Again",
     "micDenied": "Please allow microphone access",
+    "consentLabel": "Consent to recording",
+    "consentText": "I consent to my audio being recorded, evaluated by AI, and stored for up to 30 days for coaching purposes.",
     "errors": {
       "uploadFailed": "Failed to upload audio",
       "evaluationFailed": "Evaluation failed. Try again."

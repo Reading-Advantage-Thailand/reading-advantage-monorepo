@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@reading-advantage/ui";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@reading-advantage/ui";
+import { Checkbox } from "@reading-advantage/ui";
 import { Mic, Square, Send, RotateCcw, Loader2 } from "lucide-react";
 import { RoleplayResult } from "./roleplay-result";
 
@@ -30,6 +31,7 @@ export function RoleplayRecorder({
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [result, setResult] = useState<Parameters<typeof RoleplayResult>[0]["result"] | null>(null);
   const [duration, setDuration] = useState(0);
+  const [consentGiven, setConsentGiven] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startTimeRef = useRef<number>(0);
@@ -66,7 +68,7 @@ export function RoleplayRecorder({
   }
 
   async function submit() {
-    if (!audioBlob) return;
+    if (!audioBlob || !consentGiven) return;
     setState("uploading");
     setError(null);
     try {
@@ -74,6 +76,8 @@ export function RoleplayRecorder({
       fd.append("scenarioId", scenario.id);
       fd.append("audio", audioBlob, "attempt.webm");
       fd.append("durationMs", String(duration * 1000));
+      fd.append("consentGiven", "true");
+      fd.append("retentionDays", "30");
       const res = await fetch("/api/roleplay-attempts", {
         method: "POST",
         body: fd,
@@ -98,6 +102,7 @@ export function RoleplayRecorder({
     setAudioUrl(null);
     setResult(null);
     setError(null);
+    setConsentGiven(false);
   }
 
   return (
@@ -135,11 +140,19 @@ export function RoleplayRecorder({
         {state === "recorded" && audioUrl && (
           <div className="space-y-3">
             <audio src={audioUrl} controls className="w-full" aria-label={t("listen")} />
+            <label className="flex items-start gap-2 text-sm text-muted-foreground cursor-pointer">
+              <Checkbox
+                checked={consentGiven}
+                onCheckedChange={(checked) => setConsentGiven(checked === true)}
+                aria-label={t("consentLabel")}
+              />
+              <span>{t("consentText")}</span>
+            </label>
             <div className="flex gap-2">
               <Button onClick={reset} variant="outline" className="gap-2">
                 <RotateCcw className="h-4 w-4" /> {t("retry")}
               </Button>
-              <Button onClick={submit} className="flex-1 gap-2">
+              <Button onClick={submit} disabled={!consentGiven} className="flex-1 gap-2">
                 <Send className="h-4 w-4" /> {t("submit")}
               </Button>
             </div>
