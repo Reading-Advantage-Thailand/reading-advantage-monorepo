@@ -21,6 +21,7 @@
  */
 
 import { db } from "@reading-advantage/db";
+import { and, eq } from "drizzle-orm";
 import {
   salesModules,
   salesLessons,
@@ -217,35 +218,100 @@ async function seed(): Promise<void> {
   console.log(`Generated ${curriculum.modules.length} modules.`);
 
   for (const mod of curriculum.modules) {
-    // Upsert module
-    const [savedMod] = await db
-      .insert(salesModules)
-      .values({
-        id: crypto.randomUUID(),
-        slug: mod.slug,
-        title: mod.title,
-        description: mod.description,
-        phase: mod.phase,
-        order: mod.order,
-      })
-      .onConflictDoNothing()
-      .returning();
-    const moduleId = savedMod?.id ?? "fallback-id";
+    // Upsert module. Wave 2 Phase 1 fix: query the existing module by
+    // slug FIRST and reuse its id on re-seeds. The previous
+    // `onConflictDoNothing().returning()` only returned a row on insert,
+    // so re-seeding an existing module yielded `savedMod === undefined`
+    // and the script fell back to the literal "fallback-id", creating
+    // orphan lessons on every re-run. Now we look up the existing
+    // module before inserting, and use `onConflictDoUpdate` so the
+    // module's mutable fields (title/description/phase/order) are
+    // refreshed in place without changing the id.
+    const [existingMod] = await db
+      .select({ id: salesModules.id })
+      .from(salesModules)
+      .where(eq(salesModules.slug, mod.slug))
+      .limit(1);
 
-    for (const lesson of mod.lessons) {
-      const [savedLesson] = await db
-        .insert(salesLessons)
+    let moduleId: string;
+    if (existingMod) {
+      moduleId = existingMod.id;
+      // Refresh mutable module fields without touching the id or
+      // breaking existing lesson FKs.
+      await db
+        .update(salesModules)
+        .set({
+          title: mod.title,
+          description: mod.description,
+          phase: mod.phase,
+          order: mod.order,
+        })
+        .where(eq(salesModules.id, existingMod.id));
+    } else {
+      const [insertedMod] = await db
+        .insert(salesModules)
         .values({
           id: crypto.randomUUID(),
-          moduleId,
-          title: lesson.title,
-          type: lesson.type,
-          content: lesson.content ?? "",
-          order: lesson.order,
-          reviewStatus: "draft",
+          slug: mod.slug,
+          title: mod.title,
+          description: mod.description,
+          phase: mod.phase,
+          order: mod.order,
         })
-        .returning();
-      const lessonId = savedLesson?.id;
+        .returning({ id: salesModules.id });
+      if (!insertedMod) {
+        // Should be impossible (no pre-existing row, unique slug) but
+        // fail loudly rather than fall back to a sentinel id.
+        throw new Error(`Failed to insert new module "${mod.slug}"`);
+      }
+      moduleId = insertedMod.id;
+    }
+
+    for (const lesson of mod.lessons) {
+      // Idempotent lesson upsert: re-seeding an existing lesson
+      // refreshes its content without changing the id, so roleplay
+      // scenarios, quiz questions, and admin-approval reviewStatus are
+      // preserved across re-runs.
+      const [existingLesson] = await db
+        .select({ id: salesLessons.id })
+        .from(salesLessons)
+        .where(
+          and(
+            eq(salesLessons.moduleId, moduleId),
+            eq(salesLessons.order, lesson.order),
+          ),
+        )
+        .limit(1);
+
+      let lessonId: string;
+      if (existingLesson) {
+        lessonId = existingLesson.id;
+        await db
+          .update(salesLessons)
+          .set({
+            title: lesson.title,
+            type: lesson.type,
+            content: lesson.content ?? "",
+          })
+          .where(eq(salesLessons.id, existingLesson.id));
+      } else {
+        const [insertedLesson] = await db
+          .insert(salesLessons)
+          .values({
+            id: crypto.randomUUID(),
+            moduleId,
+            title: lesson.title,
+            type: lesson.type,
+            content: lesson.content ?? "",
+            order: lesson.order,
+            reviewStatus: "draft",
+          })
+          .returning({ id: salesLessons.id });
+        if (!insertedLesson) {
+          throw new Error(`Failed to insert lesson "${lesson.title}" for module "${mod.slug}"`);
+        }
+        lessonId = insertedLesson.id;
+      }
 
       if (lesson.scenarios && lesson.scenarios.length > 0 && lessonId) {
         for (const sc of lesson.scenarios) {
