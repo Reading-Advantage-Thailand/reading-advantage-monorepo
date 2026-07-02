@@ -46,8 +46,6 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 > Detailed implementation tracks spawned from `monorepo_review_roadmap_20260626`. Each track includes evidence references back to the line-review artifacts and should be executed in wave order unless a dependency note explicitly allows parallel work.
 
-- [ ] **Track: Wave 2 — Restore Deployment/Test/Provider Confidence** *Link: [./tracks/wave2_confidence_restoration_20260628/](./tracks/wave2_confidence_restoration_20260628/)*
-  Restore migration, seed, provider-adapter, observability, and test-gate confidence. Evidence: MR-H01, MR-H02, MR-H03; CA-005..CA-007/CA-010/CA-011; test-strategy roadmap.
 - [ ] **Track: Wave 3 — Product-Facing Truth and Reusable Surfaces** *Link: [./tracks/wave3_product_alignment_20260628/](./tracks/wave3_product_alignment_20260628/)*
   Align public claims, secure Marketing public workflows, and make Advantage Games import-ready. Evidence: MR-H05, MR-H06; CA-008/CA-013; Website LRF findings; Marketing Critical/High findings; Games D-01..D-11.
 - [ ] **Track: Wave 4 — App Security & Correctness Backlog (Medium+)** *Link: [./tracks/wave4_app_security_correctness_backlog_20260628/](./tracks/wave4_app_security_correctness_backlog_20260628/)*
@@ -112,6 +110,9 @@ Two parallel programs are in flight; priority order when picking the next track:
 
 - [x] **Track: Wave 1 — Stop Active High-Risk Product Failures** *Link: [./archive/wave1_high_risk_product_failures_20260628/](./archive/wave1_high_risk_product_failures_20260628/)*
   Archived 2026-07-02. High-risk slices fixed across Primary (completion/session/flashcard/dashboard), Reading (classroom auth/audit/XP idempotency/AI contracts), CodeCamp (TenantDB/webhook idempotency/ACK latency/streaming protocol), and Sales (IDOR/audio validation/consent/nullability contracts). Medium+ remainder explicitly owned by Waves 4 and 6 per medium-plus-coverage-matrix.md; aggregate type-check/tests red only from pre-existing non-Wave-1 failures.
+
+- [x] **Track: Wave 2 — Restore Deployment/Test/Provider Confidence** *Link: [./archive/wave2_confidence_restoration_20260628/](./archive/wave2_confidence_restoration_20260628/)*
+  Archived 2026-07-03. Migration/seed governance gates, provider-adapter enforcement (barrel quarantine + guards), false-green test-signal cleanup, and 5 reusable test harnesses delivered; broad console.error sweep + full AIClient adoption deferred to Wave 6, www i18n to Wave 5. Aggregate reds are pre-existing/owner-labeled, not Wave 2.
 
 - [x] **Track: Scaffold monorepo and migrate first app**
   *Link: [./archive/monorepo-scaffold_20260429/](./archive/monorepo-scaffold_20260429/)*

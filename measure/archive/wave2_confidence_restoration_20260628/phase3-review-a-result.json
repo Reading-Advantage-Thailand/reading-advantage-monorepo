@@ -1,0 +1,62 @@
+{
+  "role": "review-a-correctness",
+  "status": "complete",
+  "trackId": "wave2_confidence_restoration_20260628",
+  "phase": "Phase 3: Test Signal Restoration",
+  "baselineSha": "2257d26389563e2af8f02b40c926a2bba851955e",
+  "headSha": "47fbcd78",
+  "findings": [],
+  "verdicts": {
+    "prod_smoke_opt_in": {
+      "verdict": "PASS",
+      "gate_closed": "16 network probes skip (not silently pass); 8 helper unit tests pass",
+      "gate_open_no_url": "11 tests FAIL with ERR_INVALID_URL (not silently pass); DNS/SSL beforeAll catches missing PROD_URL",
+      "gate_open_with_url": "Tests would run against the live URL",
+      "no_production_url_defaults": true,
+      "assertions_retained": "All 14 prod-smoke phase-* files retain their original assertions — no tests deleted",
+      "report_summary_json": "Contains _runLiveSmokeNote with RUN_LIVE_SMOKE token so guard recognizes it as live-aware"
+    },
+    "passWithNoTests_removal": {
+      "verdict": "PASS",
+      "codecamp_advantage": "Script changed to 'vitest run' (28 files / 583 tests pass)",
+      "sales_advantage": "Script changed to 'vitest run' (4 files / 24 tests pass)",
+      "reading_advantage_scripts": "Script removed entirely (0 tests in package; turbo skips cleanly with 'No tasks were executed')",
+      "honest_removal": true,
+      "guard_result": "PassWithNoTests quality-claim count: 0 (scanned 35 test scripts)"
+    },
+    "marketing_red_to_green_rewrites": {
+      "verdict": "PASS",
+      "stale_red_at_head_docblocks": "10 → 0 (all replaced with 'GREEN at HEAD' plus implementation note)",
+      "contradictory_credential_comment": "1 → 0 (rewritten from 'NOT a real secret' to describe fallback purpose)",
+      "dom_in_node_env": "1 → 0 (per-file @vitest-environment jsdom pragma honored by guard)",
+      "tautological_assertions": "0 at HEAD (counterexample fixture proves detection)",
+      "full_marketing_suite": "11 files / 158 tests pass",
+      "truthfulness_guard": "7/7 tests pass"
+    },
+    "describe_block_names_with_RED": {
+      "verdict": "NON_BLOCKING_OBSERVATION",
+      "detail": "6 describe block names in marketing tests still contain 'RED' (e.g., '(task 2, RED, phase-6-jsonb-schema)'). These are task identifiers from original test design, not docblock markers. The guard correctly targets 'RED at HEAD' docblock patterns. All 50 affected tests pass. The describe block RED label is stale but not a false-signal violation of the guard's contract.",
+      "files": [
+        "phase-5-topics.test.ts:203 (dedup matcher)",
+        "phase-5-topics.test.ts:254 (API integration)",
+        "phase-6-script.test.ts:257 (script schema)",
+        "phase-6-script.test.ts:302 (scene editor)",
+        "phase-6-script.test.ts:353 (API integration)",
+        "phase-6-script.test.ts:472 (Zod-backed schema)"
+      ]
+    },
+    "guard_non_vacuity_A4": {
+      "verdict": "PASS",
+      "codecamp_live_smoke_guard": "Counterexample fixtures (live-default + opt-in-gated) prove detection works; scans ≥1 file",
+      "config_passWithNoTests_guard": "Counterexample fixture with --passWithNoTests detected; scans ≥1 script",
+      "marketing_truthfulness_guard": "Inline counterexamples for stale-RED, contradictory-credential, tautology, DOM-in-node; scans ≥1 file",
+      "types_regression_guard": "Asserts ≥4 files and ≥88 tests (baseline: 5 files, 90 tests at HEAD)"
+    },
+    "plan_claims_A5": {
+      "verdict": "PASS",
+      "detail": "All [x] claims in plan.md Phase 3 match actual test exit codes. No stale PASS=N, FAIL=0 claims found."
+    }
+  },
+  "commits": [],
+  "handoff": "No blocking findings. Phase 3 test-signal restoration is verified truthful. The describe block name RED→GREEN cosmetic inconsistency in marketing tests (6 occurrences) is noted as non-blocking — it doesn't affect guard behavior or test outcomes."
+}

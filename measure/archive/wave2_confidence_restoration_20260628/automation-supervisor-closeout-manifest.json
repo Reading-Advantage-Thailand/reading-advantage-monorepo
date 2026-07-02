@@ -1,0 +1,188 @@
+{
+  "manifest_version": 1,
+  "role": "measure-closeout",
+  "track_id": "wave2_confidence_restoration_20260628",
+  "closeout_date": "2026-07-03",
+  "final_acceptance": {
+    "status": "pass",
+    "may_proceed_to_closeout": true,
+    "head_sha": "49e662cfa2107776c5aac95d603b6114716c8819",
+    "summary": "All four Wave 2 phase guard chains pass at HEAD, lint/check-types/measure doctor pass, guard non-vacuity spot-checked with injected bad provider and observability probes, all spec acceptance criteria met."
+  },
+  "plan_task_counts": {
+    "total": 30,
+    "complete": 25,
+    "deferred_blocked": 5,
+    "deferred_owners": [
+      "wave6 (console.error sweep + full AIClient adoption)",
+      "codecamp_qa_prod_20260517 (pre-existing prod-smoke RED)",
+      "wave5_public_surface_completion_20260628 (www next-intl failures)",
+      "ai_sdk_major_migration (19 pre-existing ai artifact tests)"
+    ]
+  },
+  "phase_guard_chains": {
+    "phase1_migration_seed_governance": {
+      "status": "GREEN",
+      "exit_code": 0,
+      "commands": [
+        "pnpm --filter @reading-advantage/db exec vitest run src/__tests__/journal-integrity.test.ts src/__tests__/snapshot-drift.test.ts src/__tests__/ledger-doctor.test.ts src/__tests__/stale-ledger.test.ts src/__tests__/deploy-gate-contract.test.ts src/__tests__/drizzle045-migration-format.test.ts src/__tests__/codecamp-stale-seed.test.ts src/__tests__/wave2-migration-seed-governance.test.ts → 6 passed | 2 skipped files / 98 passed | 4 skipped tests",
+        "pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts tests/lib/seed-validation.test.ts tests/wave2-grade4-seed-contract.test.ts → 2/2 files, 21/21 tests",
+        "pnpm --filter sales-advantage exec vitest run scripts/__tests__/wave2-sales-curriculum-seed-contract.test.ts → 1/1 file, 3/3 tests"
+      ]
+    },
+    "phase2_provider_adapter_enforcement": {
+      "status": "GREEN",
+      "exit_code": 0,
+      "commands": [
+        "pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/wave2-ai-barrel-no-raw-sdk.test.ts src/__tests__/wave2-provider-architecture-guard.test.ts src/__tests__/phase-arch-no-direct-sdk.test.ts src/__tests__/phase-stream-text-contract.test.ts src/__tests__/phase-multimodal-contract.test.ts → 5/5 files, 15/15 tests",
+        "pnpm --filter @reading-advantage/storage exec vitest run src/__tests__/wave2-storage-contract.test.ts src/__tests__/factory.test.ts src/__tests__/s3-driver.test.ts src/__tests__/urls.test.ts → 4/4 files, 16/16 tests",
+        "pnpm --filter @reading-advantage/config exec vitest run src/__tests__/wave2-observability-provider-guard.test.ts → 1/1 file, 1/1 test"
+      ]
+    },
+    "phase3_test_signal_restoration": {
+      "status": "GREEN",
+      "exit_code": 0,
+      "commands": [
+        "pnpm --filter @reading-advantage/config exec vitest run src/__tests__/wave2-test-signal-inventory.test.ts → 1/1 file, 3/3 tests",
+        "pnpm --filter codecamp-advantage exec vitest run lib/__tests__/prod-smoke/wave2-live-smoke-opt-in.test.ts → 1/1 file, 3/3 tests",
+        "pnpm --filter marketing exec vitest run app/__tests__/wave2-test-truthfulness.test.ts → 1/1 file, 7/7 tests",
+        "pnpm --filter @reading-advantage/types exec vitest run → 5/5 files, 90/90 tests"
+      ]
+    },
+    "phase4_reusable_harnesses": {
+      "status": "GREEN",
+      "exit_code": 0,
+      "commands": [
+        "pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/wave2-tenant-isolation-harness.test.ts → 1/1 file, 7/7 tests",
+        "pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave2-api-contract-kit.test.ts → 1/1 file, 12/12 tests",
+        "pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/wave2-provider-guard-utility.test.ts → 1/1 file, 12/12 tests",
+        "pnpm --filter @reading-advantage/db exec vitest run src/__tests__/wave2-migration-doctor-helper.test.ts → 1/1 file, 6/6 tests",
+        "pnpm --filter www-reading-advantage exec vitest run src/lib/wave2-product-claim-helper.test.ts → 1/1 file, 12/12 tests"
+      ]
+    }
+  },
+  "aggregate_gates": {
+    "lint": {
+      "status": "PASS",
+      "exit_code": 0,
+      "tasks": "9/9 successful, warnings only"
+    },
+    "check_types": {
+      "status": "PASS",
+      "exit_code": 0,
+      "tasks": "9/9 successful"
+    },
+    "measure_doctor": {
+      "status": "PASS",
+      "exit_code": 0,
+      "checks": "A1-A11 anti-pattern catalog + planning-track marker vocabulary"
+    },
+    "shared_package_test_aggregate": {
+      "status": "RED",
+      "exit_code": 1,
+      "disposition": "All failures are pre-existing / not Wave-2-introduced. Named owners below.",
+      "pre_existing_failures": {
+        "@reading-advantage/ai": {
+          "failed_tests": 19,
+          "owner": "ai_sdk_major_migration",
+          "reason": "phase-0-setup (3), phase-11-sdk-version-contract (12), phase-12-closeout-artifacts (4)"
+        },
+        "@reading-advantage/db": {
+          "failed_tests": 2,
+          "owner": "db-platform",
+          "reason": "env-guards.test.ts 5s-timeout flake under turbo parallelism; standalone suite GREEN (35/35 files, 647/647 tests)"
+        }
+      }
+    },
+    "app_test_aggregate": {
+      "status": "RED",
+      "exit_code": 1,
+      "disposition": "All failures are pre-existing / not Wave-2-introduced. Named owners below.",
+      "pre_existing_failures": {
+        "www-reading-advantage": {
+          "failed_files": 11,
+          "owner": "wave5_public_surface_completion_20260628",
+          "reason": "next-intl → next/navigation module-resolution failures"
+        },
+        "science-advantage": {
+          "failed": "infra",
+          "owner": "sandbox",
+          "reason": "vitest.integration.globalSetup calls drizzle-kit migrate against localhost postgres (no live DB on this hardware)"
+        },
+        "codecamp-advantage": {
+          "failed_tests": 24,
+          "owner": "codecamp_qa_prod_20260517",
+          "reason": "thai-text-width (5) + prod-smoke phase 8.5/12/13 (19)"
+        },
+        "sales-advantage": {
+          "test_status": "PASS",
+          "ts_error": "pre-existing TS2742 in lib/trpc.ts:4",
+          "owner": "sales type-config follow-up"
+        },
+        "vocabulary-games": {
+          "failed_suites": 8,
+          "failed_tests": 25,
+          "owner": "app remediation wave",
+          "reason": "React-act warnings in PotionRushGame.test.tsx + smoke tests"
+        }
+      }
+    }
+  },
+  "anti_pattern_audit": {
+    "A5_false_claim": "PASS — plan.md explicitly states aggregate RED is pre-existing/owner-labeled; Wave 2 does not claim aggregate green.",
+    "A6_registry_overstatement": "PASS — tracks.md archive entry is honest: lists delivered items + deferred items explicitly.",
+    "A9_archived_track_references": "PASS — no archived track path hard references found in tests/*.sh per final acceptance evidence entry."
+  },
+  "wave_2_commits": [
+    "f753de60 docs(measure): wave2 strategy+baseline (track_id: wave2_confidence_restoration_20260628)",
+    "b0cf6376 test(measure): wave2 p1 migration/seed red (track_id: wave2_confidence_restoration_20260628)",
+    "85bb011f docs(measure): wave2 p1 plan markers (track_id: wave2_confidence_restoration_20260628)",
+    "029cc2fa fix(db): wave2 p1 doctor required-migration gate (track_id: wave2_confidence_restoration_20260628)",
+    "e52b9346 fix(sales): wave2 p1 seed orphan-lesson fix (track_id: wave2_confidence_restoration_20260628)",
+    "ee026c58 fix(science): wave2 p1 grade-4 seed Zod contract (track_id: wave2_confidence_restoration_20260628)",
+    "38063be6 fix(science): wave2 p1 grade-4 test paths (track_id: wave2_confidence_restoration_20260628)",
+    "07c66fc1 docs(measure): wave2 p1 green + codecamp conflict (track_id: wave2_confidence_restoration_20260628)",
+    "f52803e8 fix(science): wave2 p1 content-migration paths (track_id: wave2_confidence_restoration_20260628)",
+    "cead2742 test(db): fix codecamp seed idempotency red test (track_id: wave2_confidence_restoration_20260628)",
+    "9934153a fix(db): codecamp seed idempotency by order (track_id: wave2_confidence_restoration_20260628)",
+    "266adea1 docs(measure): wave2 p1 codecamp seed commit SHA (track_id: wave2_confidence_restoration_20260628)",
+    "c39347e3 docs(measure): wave2 p1 review-a result (track_id: wave2_confidence_restoration_20260628)",
+    "a5eda6dc docs(db): wave2 p1 review-c ux-api contract result (track_id: wave2_confidence_restoration_20260628)",
+    "97384905 chore(measure): wave2 p1 acceptance (track_id: wave2_confidence_restoration_20260628)",
+    "b6f75075 chore(measure): wave2 p1 re-acceptance (track_id: wave2_confidence_restoration_20260628)",
+    "98ef3405 test(measure): wave2 p2 provider guard red (track_id: wave2_confidence_restoration_20260628)",
+    "d10c836d fix(ai): wave2 p2 barrel quarantine + guards (track_id: wave2_confidence_restoration_20260628)",
+    "5f1c81c0 fix(config): wave2 p2 observability guard ratchet (track_id: wave2_confidence_restoration_20260628)",
+    "e5906dce fix(ai): codecamp test mock→internal-sdk (track_id: wave2_confidence_restoration_20260628)",
+    "02370d72 fix(ai): wave2 p2 review-c mock repoint (track_id: wave2_confidence_restoration_20260628)",
+    "9de4a22c fix(reading): p2 jest ai subpath (track_id: wave2_confidence_restoration_20260628)",
+    "2257d263 chore(measure): wave2 p2 acceptance (track_id: wave2_confidence_restoration_20260628)",
+    "3645aac3 test(measure): wave2 p3 test-signal red (track_id: wave2_confidence_restoration_20260628)",
+    "47fbcd78 fix(measure): wave2 p3 test signal restoration (track_id: wave2_confidence_restoration_20260628)",
+    "d8a0d533 fix(test): wave2 p3 review-b security (track_id: wave2_confidence_restoration_20260628)",
+    "3f3aaf0f docs(test): wave2 p3 review-c result (track_id: wave2_confidence_restoration_20260628)",
+    "251fec66 fix(test): wave2 p3 live-smoke guard (track_id: wave2_confidence_restoration_20260628)",
+    "ac8d7ff6 chore(measure): wave2 p3 acceptance (track_id: wave2_confidence_restoration_20260628)",
+    "a7dcfd1f test(measure): wave2 p4 harnesses red (track_id: wave2_confidence_restoration_20260628)",
+    "2b12242f feat(test): wave2 p4 reusable harnesses (track_id: wave2_confidence_restoration_20260628)",
+    "00b2accb fix(test): wave2 p4 review-b security (track_id: wave2_confidence_restoration_20260628)",
+    "6d5afb10 chore(measure): wave2 p4 review-a result (track_id: wave2_confidence_restoration_20260628)",
+    "7a1d460a docs(test): wave2 p4 review-c result (track_id: wave2_confidence_restoration_20260628)",
+    "6f487ccb chore(measure): wave2 p4 acceptance (track_id: wave2_confidence_restoration_20260628)",
+    "49e662cf docs(measure): wave2 p5 aggregate verification (track_id: wave2_confidence_restoration_20260628)"
+  ],
+  "artifact_cleanup_note": "No bulky run artifacts identified by orchestrator. All review result JSONs preserved in archive.",
+  "retained_evidence": [
+    "measure/archive/wave2_confidence_restoration_20260628/plan.md",
+    "measure/archive/wave2_confidence_restoration_20260628/spec.md",
+    "measure/archive/wave2_confidence_restoration_20260628/test-strategy.md",
+    "measure/archive/wave2_confidence_restoration_20260628/final-acceptance-result.json",
+    "measure/archive/wave2_confidence_restoration_20260628/metadata.json",
+    "measure/archive/wave2_confidence_restoration_20260628/phase1-acceptance-result.json",
+    "measure/archive/wave2_confidence_restoration_20260628/phase2-acceptance-result.json",
+    "measure/archive/wave2_confidence_restoration_20260628/phase3-acceptance-result.json",
+    "measure/archive/wave2_confidence_restoration_20260628/phase4-acceptance-result.json",
+    "measure/archive/wave2_confidence_restoration_20260628/automation-supervisor-closeout-manifest.json"
+  ],
+  "closeout_commit_sha": "c1e6265e"
+}

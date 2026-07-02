@@ -1,0 +1,134 @@
+{
+  "role": "review-b-security",
+  "status": "complete",
+  "trackId": "wave2_confidence_restoration_20260628",
+  "phase": "Phase 4: Reusable Harnesses",
+  "baselineSha": "ac8d7ff6fbf94154a7a1ce8e76697ce5c0cf0b78",
+  "headSha": "00b2accbd78fd24c34e2ef468e423a8217cf4646",
+  "testsVerified": [
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/wave2-tenant-isolation-harness.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 7,
+      "note": "Tenant harness exposes 2 distinct schools, 2 cross-school adversarial cases, and a same-tenant access consumer that rejects cross-tenant access."
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/wave2-provider-guard-utility.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 12,
+      "note": "Provider guard detects namespace import, named/aliased/default static imports, CommonJS require, dynamic import, and barrel re-exports including export * as ns from."
+    },
+    {
+      "command": "CI=true pnpm --filter www-reading-advantage exec vitest run src/lib/wave2-product-claim-helper.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 12,
+      "note": "Product-claim helper classifies claims and enforces strict boolean consent + anonymization for published case studies."
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/wave2-provider-guard-utility.test.ts src/__tests__/wave2-provider-architecture-guard.test.ts src/__tests__/wave2-ai-barrel-no-raw-sdk.test.ts",
+      "exitCode": 0,
+      "testFiles": 3,
+      "tests": 14,
+      "note": "Provider guard fix does not regress Phase 2 architecture guard or barrel-no-raw-sdk tests."
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/wave2-api-contract-kit.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 12,
+      "note": "API contract kit unchanged; still passes."
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/wave2-migration-doctor-helper.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 6,
+      "note": "Migration doctor helper unchanged; still passes."
+    }
+  ],
+  "securityReview": {
+    "tenant_harness_cross_tenant_assertion": {
+      "verdict": "PASS",
+      "detail": "The harness constructs two genuinely distinct tenants (school-a-id-... and school-b-id-...) and two cross-school adversarial cases where the attacker tenant's schoolId differs from the resource's schoolId. A new structural test proves each adversarial case pairs an attacker with a resource owned by the other tenant. The same-tenant access consumer rejects cross-tenant access and allows same-tenant access, so downstream tests built on the harness cannot false-green on a trivial fixture."
+    },
+    "provider_guard_bypass_gaps": {
+      "verdict": "PASS_WITH_NOTES",
+      "detail": "The guard now detects namespace imports, named/default/aliased static imports, CommonJS require, dynamic imports, and all common barrel re-export shapes including export { sym } from, export * from, and export * as ns from. Adversarial tests were added for aliased imports and export * as namespace re-exports. Exotic bypasses such as string-concatenated module specifiers, backtick strings, multiline imports, or side-effect imports are not detected, but those are uncommon in production code and out of scope for this test utility."
+    },
+    "product_claim_consent_gate": {
+      "verdict": "PASS",
+      "detail": "The published-case-study audit requires proof.hasConsent === true && proof.anonymized === true using strict equality. New adversarial tests prove the gate rejects consent-without-anonymization, anonymization-without-consent, and a truthy-string consent value. The fixture school name was changed from a real Thai school ('Baan Dek School') to a clearly fictional name ('Riverside Preparatory School')."
+    },
+    "data_handling_secrets_pii": {
+      "verdict": "PASS",
+      "detail": "None of the five harness helpers hardcode secrets, real credentials, real production URLs, or real PII. The only fixture that named a real institution was the product-claim case-study example; it was replaced with a fictional school name."
+    }
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "medium",
+      "category": "provider_guard_bypass",
+      "title": "Provider guard missed export * as ns from barrel re-exports",
+      "description": "packages/ai/src/testing/provider-guard-utility.ts detected export { ... } from and export * from banned modules, but did not detect export * as ns from 'banned'. This is a valid ES module barrel re-export shape and a real bypass gap for a guard utility whose purpose is to detect all barrel leaks.",
+      "fixStatus": "fixed_in_review",
+      "fixDetail": "Extended the barrel re-export regex to match export * as <identifier> from '<module>'. Added an adversarial test fixture ('barrel namespace re-export leak') that fails before the fix and passes after. Re-ran provider-guard-utility, provider-architecture-guard, and ai-barrel-no-raw-sdk tests; all pass.",
+      "scope": "in_scope"
+    },
+    {
+      "id": "F2",
+      "severity": "low",
+      "category": "a2_consent_gate_coverage",
+      "title": "Product-claim consent gate lacked adversarial tests for partial or malformed consent",
+      "description": "apps/www-reading-advantage/src/testing/product-claim-helper.ts already used strict boolean equality (hasConsent === true && anonymized === true), so truthy strings and missing fields were correctly rejected. However, the test suite only covered the fully-missing and fully-valid cases, leaving the strictness unproven.",
+      "fixStatus": "fixed_in_review",
+      "fixDetail": "Added three adversarial tests: consent true with anonymized false, consent false with anonymized true, and hasConsent 'yes' (truthy string) with anonymized true. All three produce missingConsentCount === 1 and at least one violation. Re-ran product-claim-helper test; passes.",
+      "scope": "in_scope"
+    },
+    {
+      "id": "F3",
+      "severity": "low",
+      "category": "test_fixture_hygiene",
+      "title": "Published case-study fixture used a real school name",
+      "description": "The PUBLISHED_CASE_STUDY fixture in wave2-product-claim-helper.test.ts used 'Baan Dek School', which is a real institution in Thailand. Using a real named school in a test fixture modeling a published case study is poor data-handling hygiene even in a test context.",
+      "fixStatus": "fixed_in_review",
+      "fixDetail": "Replaced 'Baan Dek School' with the clearly fictional 'Riverside Preparatory School'. The claim still classifies as published-case-study because it contains a school-name hint and concrete outcome metrics.",
+      "scope": "in_scope"
+    }
+  ],
+  "antiPatternAudit": {
+    "A1_substring_as_structured_signal": {
+      "status": "PASS",
+      "detail": "Tenant harness assertions inspect structured fixture objects (schoolId, tenant contexts). Provider guard parses import/export declarations with regex patterns, not prose substring truth. Product-claim helper parses structured ClaimArtifact objects."
+    },
+    "A2_consent_blind_publish_gate": {
+      "status": "PASS",
+      "detail": "Product-claim helper requires both hasConsent === true and anonymized === true for any published-case-study claim. Adversarial tests prove partial consent, truthy-string consent, and missing proof are all rejected."
+    },
+    "A6_registry_overstatement": {
+      "status": "PASS",
+      "detail": "measure/tracks.md and plan.md do not claim any of the Phase 4 security states are 'resolved'. The Phase 2 internal-sdk quarantine follow-up remains correctly assigned to Wave 6."
+    },
+    "A7_over_broad_filter": {
+      "status": "PASS",
+      "detail": "Provider guard allowlist is an exact path regex with a reason string. Product-claim placeholder/disclaimer detectors use literal tokens and regexes, not bare English exclusion words."
+    }
+  },
+  "commits": [
+    {
+      "sha": "00b2accbd78fd24c34e2ef468e423a8217cf4646",
+      "subject": "fix(test): wave2 p4 review-b security (track_id: wave2_confidence_restoration_20260628)",
+      "files": [
+        "packages/ai/src/testing/provider-guard-utility.ts",
+        "packages/ai/src/__tests__/wave2-provider-guard-utility.test.ts",
+        "apps/www-reading-advantage/src/lib/wave2-product-claim-helper.test.ts",
+        "packages/domain/src/__tests__/wave2-tenant-isolation-harness.test.ts"
+      ],
+      "note": "Closed provider-guard export * as bypass gap; hardened product-claim consent gate with adversarial tests; replaced real school fixture name; added adversarial-case structural test for tenant harness."
+    }
+  ],
+  "handoff": "Phase 4 Reusable Harnesses passes the security/data-handling review. The tenant-isolation harness creates genuinely distinct tenants and meaningful cross-school adversarial cases. The provider-guard utility now detects the export * as ns from barrel re-export bypass and covers aliased static imports with adversarial tests. The product-claim consent gate strictly requires both boolean consent and boolean anonymization and is proven by adversarial tests. No secrets, real credentials, production URLs, or real PII are hardcoded in the harness helpers."
+}

@@ -1,0 +1,148 @@
+{
+  "role": "review-b-security",
+  "status": "complete",
+  "trackId": "wave2_confidence_restoration_20260628",
+  "phase": "Phase 3: Test Signal Restoration",
+  "baselineSha": "2257d26389563e2af8f02b40c926a2bba851955e",
+  "headSha": "d8a0d533",
+  "testsVerified": [
+    {
+      "command": "CI=true pnpm --filter codecamp-advantage exec vitest run lib/__tests__/prod-smoke/wave2-live-smoke-opt-in.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 3,
+      "note": "Live-default prod-smoke file count: 0 (scanned 16 files)."
+    },
+    {
+      "command": "CI=true pnpm --filter marketing exec vitest run app/__tests__/wave2-test-truthfulness.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 7,
+      "note": "All four truthfulness counters at 0 after review fix."
+    },
+    {
+      "command": "CI=true pnpm --filter marketing exec vitest run app/__tests__/phase-3-settings-adversarial.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 18,
+      "note": "Adversarial leak-prevention tests pass, including test-connection error-body redaction."
+    },
+    {
+      "command": "CI=true pnpm --filter sales-advantage exec vitest run",
+      "exitCode": 0,
+      "testFiles": 4,
+      "tests": 24,
+      "note": "Full sales suite passes after passWithNoTests removal."
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/config exec vitest run src/__tests__/wave2-test-signal-inventory.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 3,
+      "note": "PassWithNoTests quality-claim count: 0."
+    },
+    {
+      "command": "rg -n \"codecamp.reading-advantage.com|https://\" apps/codecamp-advantage/lib/__tests__/prod-smoke/_helpers/live-smoke-guard.ts",
+      "exitCode": 1,
+      "note": "No hits — helper has no hardcoded production URL or https fallback."
+    },
+    {
+      "command": "CI=true pnpm --filter marketing exec vitest run app/__tests__/phase-3-settings.test.ts",
+      "exitCode": 0,
+      "testFiles": 1,
+      "tests": 23,
+      "note": "Settings encryption round-trip tests pass after credential-comment hygiene fix."
+    }
+  ],
+  "securityReview": {
+    "live_smoke_opt_in": {
+      "verdict": "PASS",
+      "detail": "apps/codecamp-advantage/lib/__tests__/prod-smoke/_helpers/live-smoke-guard.ts has no production URL default and no credential default. RUN_LIVE_SMOKE is true only when process.env.RUN_LIVE_SMOKE === 'true'. resolveLiveSmokeUrl(envVarName) returns undefined unless both RUN_LIVE_SMOKE is true and the requested env var is a non-empty string. All 14 phase-*.test.ts files use resolveLiveSmokeUrl('PHASEn_PROD_URL') ?? '' and gate live probes with RUN_LIVE_SMOKE. When the gate is closed, 200 live probes skip (not silently pass). When the gate is open but no URL is supplied, the beforeAll https:// assertion fails the suite. The static report-summary.json still records the historical prod URL but carries a _runLiveSmokeNote token so the guard recognizes it as live-aware."
+    },
+    "no_hardcoded_prod_smoke_secrets": {
+      "verdict": "PASS_WITH_NOTES",
+      "detail": "No real API keys, passwords, tokens, or webhook secrets are hardcoded in the helper or phase files. Phase 4/5/9/10 use environment variables for live credentials (PHASEn_TEST_*_USERNAME/PASSWORD, GITHUB_WEBHOOK_SECRET, etc.). A handful of obviously dummy strings ('phase4-test-password-1234', 'wrong-password-for-phase10-concurrent-test', 'roundtrip-secret-123') are used only for test-created accounts or HMAC fixtures and are not production secrets."
+    },
+    "opt_in_gate_not_bypassable": {
+      "verdict": "PASS",
+      "detail": "The gate requires the exact string 'true' in RUN_LIVE_SMOKE. There is no --run-live flag, no FORCE_LIVE_SMOKE shortcut, and no default URL that would cause CI to hit production. PHASEn_SKIP=1 is an explicit opt-out, not a bypass."
+    },
+    "marketing_credential_leak_guard": {
+      "verdict": "PASS_WITH_NOTES",
+      "detail": "The deterministic ENCRYPTION_KEY hex literal in phase-3-settings-adversarial.test.ts is a test-only fallback, not a real secret. The adversarial test's test-connection error-body case genuinely exercises leak prevention: it simulates an AI SDK error containing the caller's API key and asserts the response body does not contain it. The route at apps/marketing/app/api/settings/test-connection/route.ts redacts caller-supplied secrets with [REDACTED]. A contradictory 'NOT a real secret' comment was also present in phase-3-settings.test.ts (split across lines, evading the automated guard); Review B fixed it to match the adversarial file's fallback-purpose wording."
+    },
+    "passWithNoTests_removal_honest": {
+      "verdict": "PASS",
+      "detail": "Removing --passWithNoTests did not expose a hidden security gap. codecamp-advantage runs 44 test files / 1068 tests; the only failures are pre-existing RED from codecamp_qa_prod_20260517 (phase-8-5, phase-12, phase-13) and thai-text-width, all documented as out-of-scope in plan.md. sales-advantage runs 4 files / 24 tests and passes. @reading-advantage/scripts had zero tests; removing its vacuous 'jest --passWithNoTests' script was honest."
+    }
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "low",
+      "category": "credential_comment_hygiene",
+      "title": "phase-3-settings.test.ts contained a contradictory 'NOT a real secret' comment",
+      "description": "The same file that sets the deterministic ENCRYPTION_KEY fallback had a line-comment claiming 'This is NOT a real secret'. The wave2-test-truthfulness guard did not flag it because the banned phrase was split across two // comment lines. This is the same anti-pattern the phase intended to remove from phase-3-settings-adversarial.test.ts.",
+      "fixStatus": "fixed_in_review",
+      "fixDetail": "Rewrote the comment to describe the fallback purpose without the banned phrase, matching the adversarial test's wording. Re-ran marketing truthfulness, phase-3-settings, and phase-3-settings-adversarial tests; all pass.",
+      "scope": "in_scope"
+    },
+    {
+      "id": "F2",
+      "severity": "medium",
+      "category": "unauthenticated_secret_exposure",
+      "title": "GET /api/settings still decrypts and returns the API key without authentication",
+      "description": "apps/marketing/app/api/settings/route.ts GET() decrypts secret settings and returns them to any caller. This is the documented Wave 3 marketing security finding and is not fixed by Phase 3.",
+      "fixStatus": "deferred",
+      "fixDetail": "Owned by Wave 3 (wave3_product_alignment_20260628 / marketing_golive_20260701) per measure/tracks.md. The Phase 3 changes only address encryption-at-rest and error-body redaction; they correctly do not claim to close the GET leak.",
+      "scope": "out_of_phase"
+    },
+    {
+      "id": "F3",
+      "severity": "low",
+      "category": "test_fixture_hygiene",
+      "title": "opt-in-gated.fixture.ts still hardcodes the production URL as a fallback",
+      "description": "The 'good' counterexample fixture at wave2-fixtures/opt-in-gated.fixture.ts declares const PROD_URL = process.env.PHASEX_PROD_URL ?? 'https://codecamp.reading-advantage.com'. It is only a fixture and is not executed, but it models the exact live-default pattern the guard is meant to prevent.",
+      "fixStatus": "accepted_risk",
+      "fixDetail": "Not a runtime vulnerability because the fixture is not scanned by the live-default guard (subdirectory) and is never run. It could mislead future authors and should be cleaned up in a Wave 6 test-quality pass.",
+      "scope": "in_scope_no_action"
+    },
+    {
+      "id": "F4",
+      "severity": "low",
+      "category": "guard_false_negative",
+      "title": "Contradictory-credential-comment guard can be evaded by splitting the banned phrase across comment lines",
+      "description": "wave2-test-truthfulness.test.ts line-checks each // line individually. A comment like '// This is NOT a real\n// secret' avoids the literal match while still making the claim.",
+      "fixStatus": "accepted_risk",
+      "fixDetail": "Review B caught the evasion manually and fixed the only instance. Hardening the guard to span line boundaries is a test-quality improvement for Wave 6, not a Phase 3 blocker.",
+      "scope": "in_scope_no_action"
+    }
+  ],
+  "antiPatternAudit": {
+    "A2_consent_blind_publish_gate": {
+      "status": "PASS",
+      "detail": "Phase 3 does not introduce or modify any draft -> published status gate. No consent/anonymization check is required."
+    },
+    "A5_false_claim_text_vs_test_reality": {
+      "status": "PASS",
+      "detail": "plan.md Phase 3 claims the targeted test commands exit 0. Verified: wave2-live-smoke-opt-in, wave2-test-truthfulness, phase-3-settings-adversarial, sales full suite, and config signal-inventory all exit 0."
+    },
+    "A6_registry_overstatement": {
+      "status": "PASS",
+      "detail": "measure/tracks.md does not claim Phase 3 or the marketing GET /api/settings leak is 'resolved'. The GET leak is explicitly listed as a Wave 3 / marketing-golive hard gate. No marketing copy outruns implementation."
+    },
+    "A7_over_broad_filter": {
+      "status": "PASS",
+      "detail": "New guard tests use precise regexes and path-based exclusions, not bare English exclusion words."
+    }
+  },
+  "commits": [
+    {
+      "sha": "d8a0d533",
+      "subject": "fix(test): wave2 p3 review-b security (track_id: wave2_confidence_restoration_20260628)",
+      "files": ["apps/marketing/app/__tests__/phase-3-settings.test.ts"],
+      "note": "Removed the remaining contradictory 'NOT a real secret' comment and replaced it with fallback-purpose wording."
+    }
+  ],
+  "handoff": "Phase 3 passes the security/data-handling review. The live-smoke opt-in gate has no production URL or credential default and cannot be trivially bypassed in CI. The marketing credential-leak comment was fixed in both the adversarial file and the sibling phase-3-settings.test.ts; the adversarial test still genuinely guards the test-connection error-body leak. Removing passWithNoTests exposed no hidden security gap. The one remaining real security issue is the unauthenticated GET /api/settings decrypted-API-key leak, which is correctly owned by Wave 3 and was not introduced or claimed fixed by Phase 3."
+}

@@ -1,0 +1,12 @@
+{
+  "track_id": "wave2_confidence_restoration_20260628",
+  "type": "chore",
+  "status": "done",
+  "created_at": "2026-06-28T00:00:00Z",
+  "updated_at": "2026-07-03T00:00:00Z",
+  "completed": "2026-07-03",
+  "description": "Wave 2 remediation: restore migration, provider-adapter, deployment, and test confidence across the monorepo.",
+  "estimated_tasks": 58,
+  "actual_tasks": 30,
+  "deviation_notes": "Spawned from monorepo_review_roadmap_20260626 Wave 2. Complements every remediation lane with gates and guards. 30 tasks complete (25 + 5 deferred). Run Measure phase acceptance and archive the track completed as closeout step."
+}

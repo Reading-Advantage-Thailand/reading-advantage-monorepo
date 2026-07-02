@@ -1,0 +1,72 @@
+{
+  "role": "review-c-ux-api",
+  "track": "wave2_confidence_restoration_20260628",
+  "phase": "Phase 2: Provider Adapter Enforcement",
+  "baseline_sha": "b6f75075ed61aaa279349e843de6195e20b92419",
+  "head_sha": "02370d72",
+  "status": "complete",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "blocking",
+      "description": "Mock mismatch: primary-advantage new-generator caller test mocked @reading-advantage/ai but source was repointed to @reading-advantage/ai/internal-sdk",
+      "file": "apps/primary-advantage/server/utils/genaretors/__tests__/new-generator.caller.test.ts",
+      "verdict": "fixed — vi.mock path updated to @reading-advantage/ai/internal-sdk",
+      "commit": "02370d72"
+    },
+    {
+      "id": "F2",
+      "severity": "none",
+      "description": "17 other test files mock @reading-advantage/ai but their corresponding source files still import from the barrel (not repointed). No mismatch.",
+      "affected_files": [
+        "apps/sales-advantage/app/api/chat/__tests__/route.test.ts",
+        "apps/sales-advantage/app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts",
+        "apps/sales-advantage/app/api/roleplay-attempts/__tests__/route.test.ts",
+        "apps/marketing/app/__tests__/phase-3-settings.test.ts",
+        "apps/marketing/app/__tests__/phase-3-settings-adversarial.test.ts",
+        "apps/marketing/app/__tests__/phase-5-topics.test.ts",
+        "apps/marketing/app/__tests__/phase-6-script.test.ts",
+        "packages/webhooks/src/__tests__/github-webhook-idempotency.test.ts",
+        "packages/webhooks/src/__tests__/phase-6-acceptance.test.ts",
+        "packages/webhooks/src/__tests__/github-webhook-ack-latency.test.ts",
+        "packages/webhooks/src/__tests__/github-review.test.ts",
+        "packages/api/src/__tests__/codecamp-router.test.ts",
+        "packages/api/src/__tests__/codecamp-review-router.test.ts",
+        "apps/science-advantage/app/api/ai/recommendations/otel-route-span.test.ts",
+        "apps/science-advantage/lib/ai/recommendation-service.test.ts",
+        "apps/science-advantage/lib/ai/image-generator.class.test.ts",
+        "apps/science-advantage/lib/ai/__tests__/recommendation-service.otel.test.ts"
+      ],
+      "verdict": "no action needed — source files still import from @reading-advantage/ai barrel"
+    },
+    {
+      "id": "F3",
+      "severity": "none",
+      "description": "Chat/streaming API contracts unchanged — codecamp-advantage and primary-advantage route handlers import streamText from @reading-advantage/ai/internal-sdk which re-exports from ai. Mechanical repoint, no behavioral change.",
+      "verified_tests": [
+        "apps/codecamp-advantage/app/api/chat/__tests__/streaming-protocol.test.ts — PASS"
+      ],
+      "verdict": "no action needed"
+    },
+    {
+      "id": "F4",
+      "severity": "none",
+      "description": "StorageOperationError normalization is safe — both consumers (sales-advantage roleplay-attempts, reading-advantage generator-controller) catch storage errors and log them without checking for S3-specific error names.",
+      "verified_consumers": [
+        "apps/sales-advantage/app/api/roleplay-attempts/route.ts",
+        "apps/reading-advantage/server/controllers/generator-controller.ts"
+      ],
+      "verdict": "no action needed"
+    }
+  ],
+  "tests_run": {
+    "domain_sales_audio_validation": "PASS",
+    "domain_codecamp_webhook_idempotency": "PASS",
+    "codecamp_streaming_protocol": "PASS",
+    "primary_advantage_all": "PASS (56/56)",
+    "science_advantage_image_generator": "PASS",
+    "science_advantage_recommendation_service": "PASS",
+    "science_advantage_otel_spans": "PASS",
+    "storage_all": "PASS (16/16)"
+  }
+}

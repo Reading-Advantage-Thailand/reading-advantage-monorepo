@@ -1,0 +1,129 @@
+{
+  "role": "review-b-security",
+  "status": "complete",
+  "track": "wave2_confidence_restoration_20260628",
+  "phase": "Phase 2: Provider Adapter Enforcement",
+  "baseline_sha": "b6f75075ed61aaa279349e843de6195e20b92419",
+  "head_sha": "5f1c81c0",
+  "tests_verified": [
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/wave2-ai-barrel-no-raw-sdk.test.ts src/__tests__/wave2-provider-architecture-guard.test.ts",
+      "exit_code": 0,
+      "suites_passed": 2,
+      "suites_total": 2,
+      "tests_passed": 2,
+      "tests_total": 2
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/storage exec vitest run src/__tests__/wave2-storage-contract.test.ts",
+      "exit_code": 0,
+      "suites_passed": 1,
+      "suites_total": 1,
+      "tests_passed": 4,
+      "tests_total": 4
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/config exec vitest run src/__tests__/wave2-observability-provider-guard.test.ts",
+      "exit_code": 0,
+      "suites_passed": 1,
+      "suites_total": 1,
+      "tests_passed": 1,
+      "tests_total": 1
+    }
+  ],
+  "probe_verified": {
+    "description": "Inserted a temporary file importing from the banned 'ai' module into an unallowlisted production path and confirmed the provider architecture guard fails with the expected hit.",
+    "probe_path": "apps/science-advantage/lib/temp-guard-probe.ts",
+    "probe_command": "CI=true pnpm --filter @reading-advantage/ai exec vitest run src/__tests__/wave2-provider-architecture-guard.test.ts",
+    "probe_failed_as_expected": true,
+    "cleanup": "Probe file removed; required test suite re-ran and passed."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "medium",
+      "category": "provider_adapter_boundary",
+      "title": "AI internal-sdk subpath is a provider-guard bypass path",
+      "description": "The provider architecture guard only bans direct vendor SDK module specifiers (openai, ai, @ai-sdk/*). It does not detect imports from @reading-advantage/ai/internal-sdk, which re-exports the same raw vendor SDK symbols. At HEAD, 34+ production files across reading-advantage, primary-advantage, codecamp-advantage, and science-advantage import through this subpath, so production code can still trivially consume raw SDK while the guard reports zero unapproved hits.",
+      "evidence": "packages/ai/src/internal-sdk.ts re-exports createOpenAI/createGoogleGenerativeAI/createVertex/generateObject/generateText/streamText/experimental_generateImage from vendor SDKs. Grep for '@reading-advantage/ai/internal-sdk' returns 41 matches across apps/reading-advantage, apps/primary-advantage, apps/codecamp-advantage, and apps/science-advantage/lib/ai/image-generator.ts. packages/ai/src/__tests__/wave2-provider-architecture-guard.test.ts BANNED_MODULE_PATTERNS does not include '@reading-advantage/ai/internal-sdk'.",
+      "fix_status": "deferred",
+      "fix_detail": "Acceptable-with-owner Wave 6 per plan.md Phase 2 follow-up rows. Wave 6 owns AIClient contract finalization and removal of the internal-sdk quarantine. The public barrel is clean (wave2-ai-barrel-no-raw-sdk.test.ts passes) and the guard still catches NEW direct vendor SDK imports.",
+      "scope": "in_scope_no_action"
+    },
+    {
+      "id": "F2",
+      "severity": "low",
+      "category": "observability_sensitive_data_exposure",
+      "title": "621 console.error call sites remain as a broad potential PII-leak surface",
+      "description": "The observability provider guard ratchets console.error at the current baseline of 621 hits. Many existing call sites likely log full Error objects or request bodies, which can carry tokens, user content, or other PII if not redacted. This phase did not introduce new console.error calls; it only added the ratchet.",
+      "evidence": "packages/config/src/__tests__/wave2-observability-provider-guard.test.ts defines CONSOLE_ERROR_BASELINE = 621 and reports 'Unapproved console.error hit count: 621 (baseline 621)'.",
+      "fix_status": "deferred",
+      "fix_detail": "Wave 6 owns the console.error -> structured-logger migration per medium-plus-coverage-matrix.md. The ratchet ensures no new call sites are added until that migration drives the count to zero.",
+      "scope": "out_of_phase"
+    },
+    {
+      "id": "F3",
+      "severity": "low",
+      "category": "guard_hygiene",
+      "title": "Provider guard allowlist entry for science recommendations route is now unused",
+      "description": "The ALLOWLIST entry for apps/science-advantage/app/api/ai/recommendations/route.ts was added when the route imported @sentry/nextjs directly. The route now routes through apps/science-advantage/lib/observability/sentry.ts and no longer contains a direct @sentry/nextjs import or Sentry.captureException call. The stale entry is harmless but could mask a future regression if the route reintroduces a direct SDK import.",
+      "evidence": "git diff b6f75075..HEAD apps/science-advantage/app/api/ai/recommendations/route.ts removes 'import * as Sentry from \"@sentry/nextjs\"' and replaces 'Sentry.captureException(error)' with 'captureError(error, { traceId })' from the local adapter. packages/ai/src/__tests__/wave2-provider-architecture-guard.test.ts ALLOWLIST still contains an entry for the route citing direct @sentry/nextjs usage.",
+      "fix_status": "accepted_risk",
+      "fix_detail": "Not a blocking defect. Allowlist entry is dead but does not weaken the guard for any current code. Can be cleaned up during the Wave 6 observability/adapter sweep.",
+      "scope": "in_scope_no_action"
+    },
+    {
+      "id": "F4",
+      "severity": "low",
+      "category": "sensitive_data_exposure",
+      "title": "StorageOperationError chains the raw provider error as 'cause'",
+      "description": "The S3 driver wraps provider SDK rejections in StorageOperationError with the original error attached as cause. The thrown error's name and message are provider-neutral, but deep serialization or logging that traverses Error.cause could expose provider-specific details such as bucket names, request IDs, or Smithy metadata.",
+      "evidence": "packages/storage/src/drivers/s3.ts lines 64-68, 96-100, 117-121 throw StorageOperationError(err, code, err). packages/storage/src/factory.ts StorageOperationError constructor stores cause. wave2-storage-contract.test.ts confirms the surface error is not provider-specific.",
+      "fix_status": "accepted_risk",
+      "fix_detail": "Standard Error.cause semantics. The adapter boundary contract is satisfied: callers receive a normalized error. Diagnostic logging of cause should be restricted to backend observability systems and never returned to clients. No Wave 2 change required.",
+      "scope": "in_scope_no_action"
+    }
+  ],
+  "security_review": {
+    "ai_barrel_raw_sdk_leak": {
+      "verdict": "pass",
+      "detail": "packages/ai/src/index.ts no longer re-exports raw vendor SDK symbols. wave2-ai-barrel-no-raw-sdk.test.ts passes with Raw AI barrel export count: 0."
+    },
+    "provider_architecture_guard": {
+      "verdict": "pass_with_notes",
+      "detail": "The guard correctly flags new unapproved direct vendor SDK imports (verified with a temporary probe). All current direct vendor SDK imports are either in allowlisted adapter/config/bootstrap files or are legacy scripts with owner. The internal-sdk subpath is a known bypass path: it is not detected by the guard, but it is bounded (single subpath export), documented in code/plan, and assigned to Wave 6 for removal."
+    },
+    "storage_error_normalization": {
+      "verdict": "pass",
+      "detail": "S3 driver rejects with StorageOperationError carrying provider-agnostic messages ('Storage put failed for object key', etc.). Messages do not include bucket names, object keys, credentials, or ARNs. wave2-storage-contract.test.ts reports Provider-specific error leakage count: 0."
+    },
+    "sentry_adapter_pii": {
+      "verdict": "pass",
+      "detail": "apps/science-advantage/lib/observability/sentry.ts enriches captures with requestId, userId, route, method, and caller-supplied context. The science recommendations route passes only traceId. No tokens, audio, or raw request bodies are captured. Future hardening: strip query strings from route to avoid leaking sensitive query parameters if other routes adopt the adapter."
+    },
+    "observability_ratchet_data_leak": {
+      "verdict": "pass_with_notes",
+      "detail": "The 621 console.error baseline is pre-existing and not increased by this phase. It poses a broad PII-leak risk that Wave 6 owns. No new console.error leak was introduced by the Phase 2 changes."
+    }
+  },
+  "anti_pattern_audit": {
+    "A2_consent_blind_publish_gate": {
+      "status": "pass",
+      "detail": "No draft->published status gate was modified in this phase."
+    },
+    "A5_false_claim_text_vs_test_reality": {
+      "status": "pass",
+      "detail": "plan.md Phase 2 Green evidence claims the three targeted test commands exit 0. Verified: all three commands exit 0. Probe confirmed the guard still fails on a new unapproved direct SDK import."
+    },
+    "A6_registry_overstatement": {
+      "status": "pass",
+      "detail": "measure/tracks.md does not claim Wave 2 or provider-adapter enforcement is 'resolved'. plan.md Phase 2 explicitly describes the internal-sdk quarantine as a Wave-2-bounded stop-gap with Wave 6 follow-up rows. No marketing copy outruns implementation."
+    },
+    "A7_over_broad_filter": {
+      "status": "pass",
+      "detail": "New guard tests use precise regexes for banned module specifiers and call patterns, not bare English exclusion words."
+    }
+  },
+  "commits": [],
+  "handoff": "No blocking security/boundary/data-handling defects were found in Wave 2 Phase 2 changed code. The required test suite passes. The internal-sdk subpath is a real provider-guard loophole (production code can import raw vendor SDK through it and the guard does not catch it), but it is bounded, documented, and owner-assigned to Wave 6 per the existing plan. Other findings are low-severity accepted-risk or deferred items. No source edits were required."
+}
