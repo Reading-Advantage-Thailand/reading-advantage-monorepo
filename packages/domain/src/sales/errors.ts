@@ -60,3 +60,29 @@ export class CurriculumNotApprovedError extends SalesError {
     this.name = "CurriculumNotApprovedError";
   }
 }
+
+/**
+ * Thrown when a sales operation violates ownership/tenant scoping.
+ *
+ * Used by Phase 4 IDOR guards: callers may only mutate resources they
+ * own. The message is deliberately generic so that resource existence
+ * is not leaked to unauthorized callers.
+ */
+export class SalesAuthError extends SalesError {
+  constructor(detail: string = "forbidden: not the owner of this resource") {
+    super(detail, "SALES_FORBIDDEN");
+    this.name = "SalesAuthError";
+  }
+}
+
+/**
+ * Thrown when an audio submission fails validation BEFORE any provider
+ * or storage call. Mirrors the wire-level 400 contract at the domain
+ * layer so transports can map to their respective error envelopes.
+ */
+export class RoleplayAudioValidationError extends SalesError {
+  constructor(detail: string, public readonly field: string) {
+    super(detail, "ROLEPLAY_AUDIO_INVALID");
+    this.name = "RoleplayAudioValidationError";
+  }
+}

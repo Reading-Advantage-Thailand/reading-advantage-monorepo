@@ -88,6 +88,9 @@ function buildAudioFormData() {
   const form = new FormData();
   form.set("scenarioId", "scenario-123");
   form.set("durationMs", "12000");
+  // Phase 4 audio + privacy gate fields (A2 consent/retention).
+  form.set("consentGiven", "true");
+  form.set("retentionDays", "30");
   const blob = new Blob([new Uint8Array(8)], { type: "audio/webm" });
   form.set("audio", new File([blob], "recording.webm", { type: "audio/webm" }));
   return form;

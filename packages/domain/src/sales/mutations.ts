@@ -24,8 +24,15 @@ import type {
   ApproveContentInput,
 } from "./schema.js";
 import {
+  roleplayAudioInputSchema,
+  ROLEPLAY_MAX_AUDIO_BYTES,
+  ROLEPLAY_MAX_AUDIO_DURATION_MS,
+} from "./schema.js";
+import {
   ScenarioNotFoundError,
   RubricNotApprovedError,
+  SalesAuthError,
+  RoleplayAudioValidationError,
 } from "./errors.js";
 
 /**
@@ -119,6 +126,13 @@ export async function createRoleplayAttempt(
 /**
  * Saves the LLM evaluation onto an attempt row. If the attempt passed, marks
  * the parent lesson complete.
+ *
+ * Phase 4 IDOR guard: the attempt is SELECTed BEFORE any UPDATE so a caller
+ * cannot mutate an attempt owned by another user (or outside the admin's
+ * permitted scope). Attempt ownership is `user.id === attempt.userId`, or
+ * a `SALES_ADMIN` whose tenant scoping is satisfied. A failed check
+ * throws `SalesAuthError` (FORBIDDEN envelope at the API layer) and
+ * `db.update` is never invoked.
  * @param ctx - The domain context
  * @param input - The attempt id + evaluation result
  * @returns The updated attempt row
@@ -133,6 +147,18 @@ export async function saveAttemptEvaluation(
 ) {
   assertCan(user, "sales:attempt:create", tenant);
   const rawDb = salesRawDb(db);
+  // IDOR guard — select first, fail closed, never call db.update on miss.
+  const [existing] = await rawDb
+    .select({ id: salesRoleplayAttempts.id, userId: salesRoleplayAttempts.userId })
+    .from(salesRoleplayAttempts)
+    .where(eq(salesRoleplayAttempts.id, input.attemptId))
+    .limit(1);
+  if (!existing) {
+    throw new SalesAuthError("attempt not found");
+  }
+  if (existing.userId !== user.id && user.role !== "SALES_ADMIN") {
+    throw new SalesAuthError();
+  }
   const [updated] = await rawDb
     .update(salesRoleplayAttempts)
     .set({
@@ -174,24 +200,64 @@ export async function saveAttemptEvaluation(
  * FR-4 contract: `audioStorageKey` may be `null` when the audio upload to
  * object storage failed. The attempt row is still created (so the rep gets
  * an evaluation), but it does not reference a non-existent storage object.
+ *
+ * Phase 4 audio + privacy gates (anti-pattern A2): audio size, MIME type,
+ * declared duration, consent, and retention metadata MUST be validated
+ * BEFORE any DB insert, storage call, or provider call. Rejection at this
+ * gate throws `RoleplayAudioValidationError` and the provider's `evaluate`
+ * callback receives zero invocations on rejected submissions.
  * @param ctx - The domain context
- * @param input - The attempt input + audio buffer + evaluator function
+ * @param input - The attempt input + audio buffer + evaluator function +
+ *                consentGiven/retentionDays privacy metadata
  * @returns The saved attempt with evaluation
  */
 export async function submitRoleplayAttempt(
-  { db, user, tenant }: SalesDomainContext,
+  ctx: SalesDomainContext,
   input: {
     scenarioId: string;
     audioStorageKey: string | null;
     durationMs: number;
     audio: { buffer: Buffer; mimeType: string };
+    consentGiven: boolean;
+    retentionDays?: number;
     evaluate: (
       audio: { buffer: Buffer; mimeType: string },
       scenarioId: string,
     ) => Promise<RoleplayEvaluationResult>;
   },
 ) {
+  const { db, user, tenant } = ctx;
   assertCan(user, "sales:attempt:create", tenant);
+
+  // Audio + privacy validation gate — must run before any DB INSERT and
+  // before `input.evaluate(...)` so a rejected submission never reaches
+  // the LLM provider.
+  const parsed = roleplayAudioInputSchema.safeParse({
+    audio: input.audio,
+    durationMs: input.durationMs,
+    consentGiven: input.consentGiven,
+    retentionDays: input.retentionDays,
+  });
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    throw new RoleplayAudioValidationError(
+      issue?.message ?? "invalid audio submission",
+      issue?.path.join(".") ?? "audio",
+    );
+  }
+  if (input.audio.buffer.length > ROLEPLAY_MAX_AUDIO_BYTES) {
+    throw new RoleplayAudioValidationError(
+      `audio size ${input.audio.buffer.length} exceeds maximum ${ROLEPLAY_MAX_AUDIO_BYTES}`,
+      "audio.buffer",
+    );
+  }
+  if (input.durationMs > ROLEPLAY_MAX_AUDIO_DURATION_MS) {
+    throw new RoleplayAudioValidationError(
+      `duration ${input.durationMs}ms exceeds maximum ${ROLEPLAY_MAX_AUDIO_DURATION_MS}ms`,
+      "durationMs",
+    );
+  }
+
   const rawDb = salesRawDb(db) as unknown as DB;
   const attempt = await createRoleplayAttempt(
     { db: rawDb as unknown as SalesDomainContext["db"], user, tenant },

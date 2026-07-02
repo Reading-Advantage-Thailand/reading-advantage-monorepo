@@ -100,6 +100,67 @@ export const roleplayAttemptOutputSchema = z.object({
 
 export type RoleplayAttemptOutput = z.infer<typeof roleplayAttemptOutputSchema>;
 
+// ─── Attempt input contract (cross-app parity) ─────────────
+
+/**
+ * Wire-level input for creating a roleplay attempt. `audioStorageKey`
+ * is intentionally nullable (FR-4: storage failures must not block the
+ * attempt row from being created, but the row must not reference a
+ * non-existent object). This is the cross-app mirror of
+ * `roleplayAttemptInputSchema` exported from
+ * `@reading-advantage/domain/sales/schema.ts`; both must stay in sync.
+ */
+export const roleplayAttemptInputSchema = z.object({
+  scenarioId: z.string().uuid(),
+  audioStorageKey: z.string().min(1).nullable(),
+  durationMs: z.number().int().nonnegative(),
+});
+
+export type RoleplayAttemptInput = z.infer<typeof roleplayAttemptInputSchema>;
+
+// ─── Audio media + privacy contract (Phase 4) ──────────────
+
+/**
+ * Allowed MIME types for a roleplay audio upload. Mirrors the domain
+ * constant; deliberately narrow so that e.g. `video/mp4` is rejected
+ * before the buffer is read or sent to a provider.
+ */
+export const ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES = [
+  "audio/webm",
+  "audio/ogg",
+  "audio/wav",
+  "audio/mpeg",
+  "audio/mp4",
+] as const;
+
+/** Maximum accepted audio upload size (10 MiB). */
+export const ROLEPLAY_MAX_AUDIO_BYTES = 10 * 1024 * 1024;
+
+/** Maximum accepted audio duration (5 minutes). */
+export const ROLEPLAY_MAX_AUDIO_DURATION_MS = 5 * 60 * 1000;
+
+/**
+ * Wire-level contract for a roleplay audio submission. Validates audio
+ * size/MIME, declared duration, and the consent/retention metadata
+ * before the request reaches the provider/storage adapter. Mirrored at
+ * the domain boundary (`@reading-advantage/domain/sales/schema.ts`).
+ */
+export const roleplayAudioInputSchema = z.object({
+  audio: z.object({
+    buffer: z.instanceof(Buffer),
+    mimeType: z.enum(ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES),
+  }),
+  durationMs: z
+    .number()
+    .int()
+    .nonnegative()
+    .max(ROLEPLAY_MAX_AUDIO_DURATION_MS),
+  consentGiven: z.literal(true),
+  retentionDays: z.number().int().min(1).max(365),
+});
+
+export type RoleplayAudioInput = z.infer<typeof roleplayAudioInputSchema>;
+
 // ─── Quiz + progress contracts ────────────────────────────
 
 export const quizSubmissionInputSchema = z.object({
