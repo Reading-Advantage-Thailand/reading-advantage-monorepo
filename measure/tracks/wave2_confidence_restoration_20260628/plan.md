@@ -14,12 +14,19 @@
 
 ## Phase 1: Migration and Seed Governance
 
-- [ ] Task: Write Red sentinel tests for missing migrations 0022/0023 and any current journal/ledger drift.
+- [~] Task: Write Red sentinel tests for missing migrations 0022/0023 and any current journal/ledger drift.
   - Evidence refs: Shared Foundation F-SF-006; Cross-App CA-007; MR-H02.
-- [ ] Task: Add Drizzle version alignment or compatibility guard across db/domain/auth/api.
-- [ ] Task: Add seed contract tests for Science grade-4 and any known CodeCamp/Sales seed drift.
+  - Red evidence: `wave2-migration-seed-governance.test.ts` added. Sentinel parity for 0022/0023/0024 is already enforced by `journal-integrity.test.ts` (passes: latest migration tags 0022_flowery_black_tarantula, 0023_cultured_sunspot, 0024_futuristic_vulture all have probes in `sentinelProbes`). No new missing sentinel drift to Red-fabricate.
+- [~] Task: Add Drizzle version alignment or compatibility guard across db/domain/auth/api.
+  - Red evidence: `drizzle045-migration-format.test.ts` already guards 0.45-era format invariants; no additional Red fabricated.
+- [~] Task: Add seed contract tests for Science grade-4 and any known CodeCamp/Sales seed drift.
   - Evidence refs: Science HI-05; CodeCamp F-CC-B07-034/038; Sales C13 nullability drift.
-- [ ] Task: Add deploy doctor gate pattern that blocks app rollout when DB ledger is behind required migration.
+  - Red evidence:
+    - `wave2-grade4-seed-contract.test.ts`: `Invalid grade-4 seed item count: 10` for lessons and `Invalid grade-4 seed item count: 10` for questions (grade-4 files violate `LessonsFile`/`QuizQuestionsFile` Zod contract).
+    - `codecamp-stale-seed.test.ts` addition: `Duplicate lesson type count: 66` across 17 modules (the seed's skip-by-type logic is undefined when a module contains multiple theory lessons).
+    - `wave2-sales-curriculum-seed-contract.test.ts`: `Orphan lesson count: 1` when re-seeding existing modules (`onConflictDoNothing` returns no row, script falls back to literal `fallback-id`).
+- [~] Task: Add deploy doctor gate pattern that blocks app rollout when DB ledger is behind required migration.
+  - Red evidence: `wave2-migration-seed-governance.test.ts` fails `Required migration behind count: 1` because `packages/db/scripts/migration-ledger-doctor.ts` does not expose a `--required-migration` / `REQUIRED_MIGRATION` deploy-gate contract.
 - [ ] Task: Document direct vs pooled database URL requirements for migrations and seeds.
 
 ## Phase 2: Provider Adapter Enforcement

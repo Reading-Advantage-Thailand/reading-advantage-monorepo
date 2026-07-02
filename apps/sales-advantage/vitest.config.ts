@@ -14,6 +14,7 @@ export default defineConfig({
       "app/**/*.{test,spec}.{ts,tsx}",
       "components/**/*.{test,spec}.{ts,tsx}",
       "lib/**/*.{test,spec}.{ts,tsx}",
+      "scripts/**/*.{test,spec}.{ts,tsx}",
     ],
     setupFiles: ["./lib/__tests__/setup.ts"],
   },
