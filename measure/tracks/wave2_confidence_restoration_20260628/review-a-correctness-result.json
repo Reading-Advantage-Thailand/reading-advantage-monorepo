@@ -1,123 +1,53 @@
 {
   "role": "review-a-correctness",
+  "phase": "Phase 4: Reusable Harnesses",
   "track": "wave2_confidence_restoration_20260628",
-  "phase": "Phase 1: Migration and Seed Governance",
-  "baseline": "f753de606c889320dbf3e86f8f5fc42a53e7d8db",
-  "head": "266adea1",
-  "timestamp": "2026-07-03T00:25:00+08:00",
+  "timestamp": "2026-07-03T05:08:00Z",
   "status": "complete",
-  "gate_results": {
-    "db_full_suite": {
-      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run",
-      "exit": 0,
-      "result": "34 passed | 2 skipped files / 641 passed | 6 skipped tests",
-      "note": "env-guards.test.ts timed out on first run (pre-existing test-isolation flake), passed in isolation (4/4) and on full-suite re-run (34/34 files, 641/641 tests). Not introduced by this change."
-    },
-    "db_tsc": {
-      "command": "CI=true pnpm --filter @reading-advantage/db exec tsc --noEmit",
-      "exit": 0,
-      "result": "clean"
-    },
-    "science_grade4_targeted": {
-      "command": "CI=true pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts tests/lib/seed-validation.test.ts tests/wave2-grade4-seed-contract.test.ts",
-      "exit": 0,
-      "result": "2 files, 21 tests passed, 0 failed"
-    },
-    "sales_targeted": {
-      "command": "CI=true pnpm --filter sales-advantage exec vitest run scripts/__tests__/wave2-sales-curriculum-seed-contract.test.ts",
-      "exit": 0,
-      "result": "1 file, 3 tests passed, 0 failed"
-    },
-    "deploy_gate_contract": {
-      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/deploy-gate-contract.test.ts",
-      "exit": 0,
-      "result": "1 file, 13 tests passed (pre-existing Phase 4 Red tests, unchanged)"
-    },
-    "codecamp_stale_seed": {
-      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/codecamp-stale-seed.test.ts",
-      "exit": 0,
-      "result": "1 file, 7 tests passed (5 findStaleModuleSlugs + 1 idempotency contract + 1 lesson count validation)"
-    },
-    "wave2_governance": {
-      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/wave2-migration-seed-governance.test.ts",
-      "exit": 0,
-      "result": "1 file, 2 tests passed"
-    }
+  "verdict": {
+    "reuse_not_duplication": "PASS — tenant-isolation-harness intentionally duplicates the same deterministic UUIDs as 2-school.ts (documented alignment, not a divergent copy; the harness adds adversarialCases + schools tuple structure). migration-doctor-helper generalizes Phase 1 ledger-doctor into pure data fixtures (buildState/check pattern, not a divergent copy). provider-guard-utility generalizes Phase 2 import scanner into createProviderGuard().scan(). api-contract-kit uses canonical @reading-advantage/types Zod envelope schemas directly.",
+    "helpers_in_non_exported_paths": "PASS — packages/domain/package.json exports map has no ./testing entry; packages/api/package.json has no ./testing entry; packages/db/package.json has no ./testing entry; packages/ai/package.json has no ./testing entry. www-reading-advantage is a Next.js app (no package.json exports map concern). No transport types (tRPC, Next.js) leak into the domain tenant-isolation-harness helper. api-contract-kit imports only Zod schemas from @reading-advantage/types, no transport-layer types.",
+    "each_helper_has_real_consumer": "PASS — tenant-isolation-harness: same-tenant-access-guard consumer tests cross-tenant rejection + same-tenant allowance. api-contract-kit: sample router assertions for all 8 envelope cases + malformed envelope counterexample. migration-doctor-helper: hand-built mismatch consumer with labeled divergence count. provider-guard-utility: it.each(FIXTURES) with 7 fixtures (6 forbidden shapes + 1 safe negative). product-claim-helper: claim classification consumer + consent/anonymization proof consumer.",
+    "red_test_destructure_fix": "PASS — The fix added `name` to the it.each destructuring in wave2-provider-guard-utility.test.ts line 135 (`{ name, source, expectedKinds }`). Original had `{ source, expectedKinds }` which caused JavaScript ReferenceError on `name` used in the test body (lines 141-142). Fix is a genuine bug fix; all assertions (expectedKinds.length check, kind-exists check) remain intact. No assertion was weakened."
   },
-  "findings": [
+  "test_results": {
+    "tenant_isolation_harness": { "file": "src/__tests__/wave2-tenant-isolation-harness.test.ts", "passed": 6, "failed": 0 },
+    "api_contract_kit": { "file": "src/__tests__/wave2-api-contract-kit.test.ts", "passed": 12, "failed": 0 },
+    "migration_doctor_helper": { "file": "src/__tests__/wave2-migration-doctor-helper.test.ts", "passed": 6, "failed": 0 },
+    "provider_guard_utility": { "file": "src/__tests__/wave2-provider-guard-utility.test.ts", "passed": 10, "failed": 0 },
+    "product_claim_helper": { "file": "src/lib/wave2-product-claim-helper.test.ts", "passed": 9, "failed": 0 },
+    "total_passed": 43,
+    "total_failed": 0,
+    "check_types": "clean (8/8 tasks successful)"
+  },
+  "anti_pattern_coverage": {
+    "A1_structured_parsing": "PASS — api-contract-kit uses Zod schema.parse; provider-guard-utility uses structured regex patterns; migration-doctor-helper uses structured journal/ledger/sentinel objects; product-claim-helper uses structured ClaimArtifact classification.",
+    "A3_labeled_counts": "PASS — All tests use labeled count assertions: 'School fixture count: N', 'Cross-tenant rejection count: N', 'Missing envelope-case count: N', 'DivergenceReport.freshDb', 'Forbidden-shape hit count for N', 'Claim count: N'.",
+    "A4_vacuity_guards": "PASS — >=2 schools enforced; >=1 adversarial case enforced; 8 envelope cases enforced; >=4 buildState variants enforced (fresh/existing/schema-missing-ledger/ledger-missing-schema); non-empty banned list (6 modules) enforced; claimCount > 0 enforced.",
+    "A5_counterexample_fixtures": "PASS — malformed validation-error envelope (api-contract-kit); hand-built migration mismatch (migration-doctor-helper); published case study without consent (product-claim-helper); each forbidden shape fixture (provider-guard-utility).",
+    "A7_exact_allowlists": "PASS — provider-guard-utility allowlist is an Array<{ pattern: RegExp; reason: string }> with exact path patterns, checked in test with reason.length > 0."
+  },
+  "architecture_checks": {
+    "helpers_not_exported": "PASS — No ./testing entry in any package's exports map.",
+    "no_transport_leak": "PASS — domain harness defines its own TenantContext/SchoolFixture interfaces; api-contract-kit imports only Zod schemas from @reading-advantage/types.",
+    "product_claim_pure": "PASS — createProductClaimHelper is pure data: no file reads, no HTTP, no mutation. Accepts optional { now? } for deterministic date testing.",
+    "provider_guard_no_self_flag": "PASS — provider-guard-utility JSDoc uses <module> placeholders to avoid Phase 2 guard flagging it. Phase 2 architecture guard (wave2-provider-architecture-guard.test.ts) confirmed still passing.",
+    "migration_doctor_generalizes_phase1": "PASS — buildState/check pattern with fake journal/ledger/sentinel fixtures. Not a divergent copy of migration-ledger-doctor.ts; it generalizes the testing approach."
+  },
+  "blocking_findings": [],
+  "non_blocking_observations": [
     {
-      "id": "F1",
-      "area": "deploy_gate_fail_closed",
-      "severity": "pass",
-      "detail": "The doctor's --required-migration gate correctly fails closed (exit 1) when the ledger is behind. Logic: parses REQUIRED_MIGRATION env or --required-migration flag, finds the journal entry, compares highestAppliedWhen against requiredEntry.when. When behind, counts entries with e.when > highestAppliedWhen && e.idx >= requiredEntry.idx and reports 'Required migration behind count: N'. When current, prints 'Required migration gate OK'. When tag not in journal (typo), exits 1 with 'behind count: 0'. When no flag/env is set, gate is skipped entirely (backward compat). No off-by-one: the behind count correctly includes the required entry itself when it's not applied."
+      "severity": "info",
+      "finding": "tenant-isolation-harness duplicates 2-school.ts UUIDs rather than importing them",
+      "rationale": "Documented as 'intentionally aligned' in JSDoc. The harness is a standalone test utility with different interface shape (SchoolFixture[] + adversarialCases vs exported constants). Importing would create a dependency from testing/ to __tests__/fixtures/ which may be undesirable. Not blocking."
     },
     {
-      "id": "F2",
-      "area": "codecamp_seed_idempotency",
-      "severity": "pass",
-      "detail": "selectLessonsToInsert(existingLessons, canonicalLessons) keys dedup on order (not type). Returns canonical lessons whose order is not in existingOrders set. Production code in seed() selects {type, order, title} from codecampLessons for existing modules and delegates to this helper. Existing lesson rows are never deleted — 'don't disrupt student progress' preserved. The test imports the REAL helper from ../seed/codecamp-seed.js (not a local mirror). Test simulates first-per-type-already-present scenario and asserts wronglySkippedLessonCount === 0. A4 vacuity guards: 'Fixture module count must be > 0', 'At least one module must have multiple lessons of the same type'. Curriculum data has 68 theory lessons across ~17 modules — guard is meaningful."
-    },
-    {
-      "id": "F3",
-      "area": "science_grade4_conversion",
-      "severity": "pass",
-      "detail": "All 10 lesson files converted from bare LessonContent to LessonsFile wrapper ({framework, gradeLevel, unit, lessons: [{id, slug, title, description, content, order, standards, structuredContent}]}). All 10 question files converted to QuizQuestionsFile wrapper ({lessonId, questions: [{type, text, options, correctAnswer, points, standards, slug}]}). Content preserved: structuredContent blocks verbatim (9-10 blocks per file), vocabulary terms with thai translations intact, 20 questions per file. Seed validation (validateLessonsSeedFile/validateQuizQuestionsSeedFile) runs Zod safeParse BEFORE any insert. Pre-existing tests updated: content-migration.test.ts reads via content.lessons?.[0] path, curriculum-identifiers.test.ts reads via data.lessons?.[0]?.structuredContent path. Assertion intent preserved (slug validity, 10 lessons, bilingual vocab, 20 questions)."
-    },
-    {
-      "id": "F4",
-      "area": "sales_orphan_lesson_fix",
-      "severity": "pass",
-      "detail": "Module upsert now SELECTs existing by slug first, reuses id on re-seed, only INSERTs for new modules. Lesson upsert SELECTs by (moduleId, order), updates if exists, inserts if new. No 'fallback-id' sentinel — throw on failed insert instead. No schoolId introduced (single-tenant/global verified by source scan). Test's simulateSalesSeedRuns mirrors production upsert logic. Three tests: (1) no orphan lessons, (2) all lessons reviewStatus='draft', (3) source has no schoolId."
-    },
-    {
-      "id": "F5",
-      "area": "A3_labeled_integer_counts",
-      "severity": "pass",
-      "detail": "All count assertions use labeled integers: 'Wrongly-skipped canonical lesson count: N', 'Missing sentinel count: N', 'Orphan lesson count: N', 'Draft-visible lesson count: N', 'Invalid grade-4 seed item count: N'. No bare-digit matching."
-    },
-    {
-      "id": "F6",
-      "area": "A4_vacuous_pass",
-      "severity": "pass",
-      "detail": "Vacuity guards present in all seed tests: 'Fixture module count must be > 0', 'At least one module must have multiple lessons of the same type', 'Grade-4 lesson fixture file count must be > 0', 'Grade-4 question fixture file count must be > 0'. Grade-4 fixtures verified: 10 lesson files, 10 question files, all with real content. Codecamp curriculum data verified: 68 theory, 17 quiz, 1 exercise lessons across phases A-D."
-    },
-    {
-      "id": "F7",
-      "area": "A5_plan_claim_reality",
-      "severity": "pass",
-      "detail": "Plan claims: '34 passed | 2 skipped files / 641 passed | 6 skipped tests' for db suite, '7 tests, 7 passed' for codecamp-stale-seed, '2 files, 21 tests, 0 failed' for science, '3 tests, 3 passed' for sales. Actual results match on re-run (env-guards flake is pre-existing, passes in isolation). No false-claim text detected."
-    },
-    {
-      "id": "F8",
-      "area": "A9_archive_aware",
-      "severity": "pass",
-      "detail": "No stale archive path references in changed tests. Wave2 governance test reads JOURNAL_PATH from PACKAGE_ROOT, not archive paths. No measure/tracks/xxx references to archived tracks."
-    },
-    {
-      "id": "F9",
-      "area": "A10_generated_facts",
-      "severity": "pass",
-      "detail": "graph.db exists and was updated (Jul 3 00:11). Plan mentions build-graph update was run for codecamp-seed.ts (5→10 nodes, 18→22 edges)."
-    },
-    {
-      "id": "F10",
-      "area": "codecamp_test_correction",
-      "severity": "pass",
-      "detail": "The test correction from type-uniqueness assertion to seed-idempotency contract is sound. Original Red asserted 'no duplicate types' which would require deleting 49 real lessons and breaking 31+ curriculum-fidelity assertions. Corrected test asserts the SEED's behavior: re-seeding inserts every missing canonical lesson. Uses production helper import. Pre-existing curriculum-fidelity and curriculum-data regression guards (85 lessons pinned) were NOT modified."
-    },
-    {
-      "id": "F11",
-      "area": "isMain_guard",
-      "severity": "pass",
-      "detail": "codecamp-seed.ts uses pathToFileURL(argv[1]).href comparison to guard seed() execution. When imported by test, process.argv[1] is vitest runner, not codecamp-seed.ts, so isMain=false and seed() is not called. Module-level postgres() client is lazy (no connection until query) — pure helper import is safe."
+      "severity": "info",
+      "finding": "provider-guard-utility.ts computes `bannedRe` regex but never uses it (void'd at line 189)",
+      "rationale": "Dead code reserved for 'future per-line banned-module expansion'. Not a correctness issue. Code quality concern, not blocking."
     }
   ],
-  "nonblocking_from_prompt": [
-    "env-guards.test.ts timeout is pre-existing test-isolation flake (owner: db-platform), passes in isolation",
-    "sales-advantage lib/trpc.ts TS2742 is pre-existing from scaffold, not this phase",
-    "science-advantage check-types (OpenTelemetry/Sentry) and audit-debt tests are pre-existing",
-    "deploy-gate-contract.test.ts is Phase 4 Red (cloudbuild wiring), not Phase 1 scope — unchanged, 13 tests pass"
-  ],
-  "commits": [],
-  "handoff": "Phase 1 Review-A complete. No blocking findings. All targeted gates pass. Deploy gate fails closed correctly (exit 1 when behind, exit 0 when current, exit 1 for typo tags). Codecamp seed idempotency verified via production helper import with order-keyed dedup. Science grade-4 conversion preserves content (structuredContent blocks verbatim, 20 questions/file, bilingual vocab). Sales orphan-lesson fix is idempotent with correct module/lesson upsert pattern. All anti-pattern guards (A3/A4/A5/A7/A9/A10) satisfied."
+  "commits_reviewed": ["a7dcfd1f (Red)", "2b12242f (Green)"],
+  "commits_by_reviewer": [],
+  "handoff": "No blocking findings. All 5 helpers pass their consumer tests (43 total), check-types clean, architecture guards (exports map, no transport leak, Phase 2 guard) verified. Ready for Phase 5 aggregate verification."
 }
