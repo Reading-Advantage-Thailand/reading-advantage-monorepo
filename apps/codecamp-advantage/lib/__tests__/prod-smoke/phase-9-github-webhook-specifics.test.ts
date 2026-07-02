@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHmac } from "node:crypto";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 9 — GitHub Webhook Specifics (P1)
@@ -95,7 +96,7 @@ import { createHmac } from "node:crypto";
 
 // ─── Constants ──────────────────────────────────────────────
 
-const PROD_URL = process.env.PHASE9_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE9_PROD_URL") ?? "";
 const SKIP = process.env.PHASE9_SKIP === "1";
 const HAS_WEBHOOK_SECRET =
   typeof process.env.PHASE9_TEST_GITHUB_WEBHOOK_SECRET === "string" &&
@@ -142,7 +143,7 @@ const CODECAMP_TYPES_SOURCE = resolve(
 
 // ─── Conditional test helpers ───────────────────────────────
 
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 const skipIfNoKeystoneSecret = testIf(SKIP || !HAS_WEBHOOK_SECRET);
 const skipIfNoKeystoneFixture = testIf(SKIP || !HAS_KEYSTONE_FIXTURE);
@@ -292,7 +293,7 @@ function makeKeystoneOpenedPayload(
 
 describe("Phase 9 — Webhook delivery (production)", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE9_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 
@@ -506,7 +507,7 @@ describe("Phase 9 — Webhook delivery (production)", () => {
 
 describe("Phase 9 — Webhook security (production)", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE9_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 
@@ -648,7 +649,7 @@ describe("Phase 9 — Webhook security (production)", () => {
 
 describe("Phase 9 — Webhook resilience (production)", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE9_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 

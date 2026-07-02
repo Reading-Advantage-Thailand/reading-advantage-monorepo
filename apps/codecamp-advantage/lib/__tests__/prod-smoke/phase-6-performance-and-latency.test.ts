@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { gzipSync } from "node:zlib";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 6 — Performance & Latency (P1)
@@ -66,7 +67,7 @@ import { gzipSync } from "node:zlib";
  * with the strategy.
  */
 
-const PROD_URL = process.env.PHASE6_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE6_PROD_URL") ?? "";
 const SKIP = process.env.PHASE6_SKIP === "1";
 const HAS_INTERN_CREDS =
   typeof process.env.PHASE6_TEST_INTERN_USERNAME === "string" &&
@@ -92,7 +93,7 @@ const BUDGET = {
   FAST_4G_PER_REQUEST_MS: 3_000, // Fast 4G TTFB budget + payload
 } as const;
 
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 const skipIfNoInternCreds = testIf(SKIP || !HAS_INTERN_CREDS);
 
@@ -300,7 +301,7 @@ function countRenderBlockingScripts(html: string): number {
 
 describe("Phase 6 — Page load times", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE6_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 

@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 8.5 — Deployment Gate: Deploy & Re-verify (P0, BLOCKER)
@@ -56,7 +57,7 @@ import { fileURLToPath } from "node:url";
  * black-box HTTP smoke tests against prod, consistent with the strategy.
  */
 
-const PROD_URL = process.env.PHASE85_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE85_PROD_URL") ?? "";
 const SKIP = process.env.PHASE85_SKIP === "1";
 const REQUEST_TIMEOUT_MS = 5_000;
 
@@ -163,7 +164,7 @@ const ALERT_POLICY_ARTIFACT_PATHS = [
 ] as const;
 
 // ─── Conditional test helpers ───────────────────────────────────
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 
 // ─── HTTP helper (mirrors Phases 1-8) ───────────────────────────

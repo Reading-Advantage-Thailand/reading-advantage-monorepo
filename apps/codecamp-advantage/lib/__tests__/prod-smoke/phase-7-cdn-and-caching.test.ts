@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 7 — Caching & CDN Behavior (P1)
@@ -49,7 +50,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
  * with the strategy.
  */
 
-const PROD_URL = process.env.PHASE7_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE7_PROD_URL") ?? "";
 const SKIP = process.env.PHASE7_SKIP === "1";
 const HAS_INTERN_CREDS =
   typeof process.env.PHASE7_TEST_INTERN_USERNAME === "string" &&
@@ -72,7 +73,7 @@ const LONG_CACHE_MIN_SECONDS = 31_536_000; // 1 year
 // accept either directive on those pages.
 const AUTH_NO_STORE_DIRECTIVES = ["no-store", "private"]; // one of these must appear
 
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 const skipIfNoInternCreds = testIf(SKIP || !HAS_INTERN_CREDS);
 

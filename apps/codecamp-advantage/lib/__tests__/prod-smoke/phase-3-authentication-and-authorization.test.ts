@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 3 — Authentication & Authorization (P0)
@@ -35,7 +36,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
  * the Secure check unless the deploy also sets NODE_ENV=production.
  */
 
-const PROD_URL = process.env.PHASE3_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE3_PROD_URL") ?? "";
 const SKIP = process.env.PHASE3_SKIP === "1";
 const HAS_INTERN_CREDS =
   typeof process.env.PHASE3_TEST_INTERN_USERNAME === "string" &&
@@ -55,7 +56,7 @@ const REQUEST_TIMEOUT_MS = 5_000;
 // conditions so SKIP=1 always wins (Phase 2's `skipIfNoCreds` is
 // independent of SKIP, which means an auth test with creds provided
 // + SKIP=1 would still attempt to run — this closes that gap).
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 const skipIfNoInternCreds = testIf(SKIP || !HAS_INTERN_CREDS);
 const skipIfNoAdminCreds = testIf(SKIP || !HAS_ADMIN_CREDS);
@@ -218,7 +219,7 @@ async function trpcGet(
 
 describe("Phase 3 — Login flow", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE3_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 

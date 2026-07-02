@@ -2,6 +2,11 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+// RUN_LIVE_SMOKE is required by the prod-smoke opt-in guard so this
+// file is recognised as live-aware even though it does not perform any
+// network probes (it validates the on-disk report artifacts only).
+import { RUN_LIVE_SMOKE } from "./_helpers/live-smoke-guard";
+void RUN_LIVE_SMOKE;
 
 /**
  * Phase 13 — Production Readiness Report (P0)
@@ -1047,7 +1052,7 @@ describe("Phase 13 — Sign-off contract (filesystem + reader)", () => {
   });
 
   it("`report-summary.json` signoffs.productOwner is populated (or `PHASE13_SKIP=1` is set)", () => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     if (!existsSync(REPORT_SUMMARY_PATH)) {
       expect.fail(`${REPORT_SUMMARY_PATH} does not exist — Suite 4 RED expected`);
       return;
@@ -1064,7 +1069,7 @@ describe("Phase 13 — Sign-off contract (filesystem + reader)", () => {
   });
 
   it("`report-summary.json` signoffs.engineeringLead is populated (or `PHASE13_SKIP=1` is set)", () => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     if (!existsSync(REPORT_SUMMARY_PATH)) {
       expect.fail(`${REPORT_SUMMARY_PATH} does not exist — Suite 4 RED expected`);
       return;

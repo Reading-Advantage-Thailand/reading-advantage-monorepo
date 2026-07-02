@@ -175,10 +175,14 @@ describe("Phase 3: Settings Page — wiring invariants (tasks 1, 2, 5)", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 2: Encryption-at-rest contract — RED at HEAD
+// Tier 2: Encryption-at-rest contract — GREEN at HEAD
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: `app/lib/encryption.ts` exposes encrypt/decrypt and is
+// wired through the Phase 3 settings route. The describe block below
+// exercises the round-trip + minimum-length contract.
 
-describe("Phase 3: Settings Page — encryption at rest (task 3, RED)", () => {
+describe("Phase 3: Settings Page — encryption at rest (task 3, GREEN)", () => {
   describe("encryption module exists at app/lib/encryption", () => {
     it("exports an `encrypt` function and a `decrypt` function", async () => {
       // Import is expected to FAIL at HEAD — no such module exists.
@@ -239,10 +243,14 @@ describe("Phase 3: Settings Page — encryption at rest (task 3, RED)", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// Tier 3: Settings route encryption — RED at HEAD
+// Tier 3: Settings route encryption — GREEN at HEAD
 // ─────────────────────────────────────────────────────────────────────
+//
+// Implemented: POST /api/settings encrypts sensitive fields before
+// insert; the describe block below verifies the chain through Drizzle
+// mock + the route's request handler.
 
-describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6, RED)", () => {
+describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6, GREEN)", () => {
   /**
    * Build a chainable Drizzle insert mock that records every value
    * passed to `.values(...)`. The mock must mirror Drizzle's

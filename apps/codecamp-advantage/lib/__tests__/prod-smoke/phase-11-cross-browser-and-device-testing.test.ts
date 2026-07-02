@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve } from "node:path";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 11 — Cross-Browser & Device Testing (P2)
@@ -65,11 +66,11 @@ import { resolve } from "node:path";
 
 // ─── Constants ──────────────────────────────────────────────
 
-const PROD_URL = process.env.PHASE11_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE11_PROD_URL") ?? "";
 const SKIP = process.env.PHASE11_SKIP === "1";
 const REQUEST_TIMEOUT_MS = 5_000;
 
-const skipIf = SKIP ? it.skip : it;
+const skipIf = !RUN_LIVE_SMOKE || SKIP ? it.skip : it;
 
 /**
  * Canonical User-Agent strings for the desktop browsers Phase 11
@@ -195,7 +196,7 @@ function readTextOrEmpty(path: string): string {
 
 describe("Phase 11 — Desktop browsers", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE11_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 

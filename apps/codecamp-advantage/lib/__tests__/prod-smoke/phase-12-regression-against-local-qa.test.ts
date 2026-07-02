@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 12 — Regression Against Local QA (P0)
@@ -70,7 +71,7 @@ import { fileURLToPath } from "node:url";
 
 // ─── Constants ──────────────────────────────────────────────
 
-const PROD_URL = process.env.PHASE12_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE12_PROD_URL") ?? "";
 const SKIP = process.env.PHASE12_SKIP === "1";
 
 // Phases covered by the local-vs-prod parity matrix. These mirror
@@ -167,7 +168,7 @@ const fetchWithTimeout = async (
   }
 };
 
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 
 // ─── Parity-matrix reader (unit-tested in Suite 2) ──────────
@@ -472,7 +473,7 @@ export function readSeedPhaseASlugs(source: string): string[] {
 
 describe("Phase 12 — Local QA baseline filesystem contract", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE12_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 

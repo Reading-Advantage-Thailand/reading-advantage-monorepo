@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { RUN_LIVE_SMOKE, resolveLiveSmokeUrl } from "./_helpers/live-smoke-guard";
 
 /**
  * Phase 4 — Full Feature Parity (P0)
@@ -44,7 +45,7 @@ import { resolve } from "node:path";
  * prod, consistent with the strategy.
  */
 
-const PROD_URL = process.env.PHASE4_PROD_URL ?? "https://codecamp.reading-advantage.com";
+const PROD_URL = resolveLiveSmokeUrl("PHASE4_PROD_URL") ?? "";
 const SKIP = process.env.PHASE4_SKIP === "1";
 const HAS_INTERN_CREDS =
   typeof process.env.PHASE4_TEST_INTERN_USERNAME === "string" &&
@@ -58,7 +59,7 @@ const HAS_ADMIN_CREDS =
   process.env.PHASE4_TEST_ADMIN_PASSWORD.length > 0;
 const REQUEST_TIMEOUT_MS = 5_000;
 
-const testIf = (skipCondition: boolean) => (skipCondition ? it.skip : it);
+const testIf = (skipCondition: boolean) => (!RUN_LIVE_SMOKE || skipCondition ? it.skip : it);
 const skipIf = testIf(SKIP);
 const skipIfNoInternCreds = testIf(SKIP || !HAS_INTERN_CREDS);
 const skipIfNoAdminCreds = testIf(SKIP || !HAS_ADMIN_CREDS);
@@ -209,7 +210,7 @@ function readSeedPhaseMap(): Record<string, string> {
 
 describe("Phase 4 — Dashboard", () => {
   beforeAll(() => {
-    if (SKIP) return;
+    if (!RUN_LIVE_SMOKE || SKIP) return;
     expect(PROD_URL, "PHASE4_PROD_URL must be https://").toMatch(/^https:\/\//);
   });
 
