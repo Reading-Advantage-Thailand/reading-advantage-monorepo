@@ -86,13 +86,18 @@ The test was rewritten to assert the **seed's idempotency/completeness contract*
 
 ## Phase 3: Test Signal Restoration
 
-- [ ] Task: Replace source-text/string-existence assertions with behavior tests in the highest-risk shared packages.
+- [~] Task: Replace source-text/string-existence assertions with behavior tests in the highest-risk shared packages.
   - Evidence refs: `measure/lessons-learned.md` review_findings_remediation_20260624; Cross-App CA-010.
-- [ ] Task: Remove or quarantine `jest --passWithNoTests` surfaces from quality claims.
-- [ ] Task: Convert live-production smoke tests to opt-in with explicit `RUN_LIVE_SMOKE=true` or equivalent.
+  - Red evidence: `apps/marketing/app/__tests__/wave2-test-truthfulness.test.ts` scans marketing tests and finds `DOM-in-node-environment test file count: 1` (`phase-7-video-page.test.tsx` imports `@testing-library/react` while `vitest.config.ts` uses `environment: "node"`). These source-shape tests need conversion to route-level behavior tests or a jsdom environment.
+- [~] Task: Remove or quarantine `jest --passWithNoTests` surfaces from quality claims.
+  - Red evidence: `CI=true pnpm --filter @reading-advantage/config exec vitest run src/__tests__/wave2-test-signal-inventory.test.ts` fails `PassWithNoTests quality-claim count: 3` (scanned 35 test scripts). Hits: `apps/codecamp-advantage/package.json` (`test: "vitest run --passWithNoTests"`), `apps/sales-advantage/package.json` (`test: "vitest run --passWithNoTests"`), `packages/reading-advantage-scripts/package.json` (`test: "jest --passWithNoTests"`). Counterexample fixture proves detection.
+- [~] Task: Convert live-production smoke tests to opt-in with explicit `RUN_LIVE_SMOKE=true` or equivalent.
   - Evidence refs: CodeCamp C-H-5/prod-smoke suites hit live production by default.
-- [ ] Task: Fix stale RED docblocks and tautological tests in Marketing/test-strategy examples.
-- [ ] Task: Add `@reading-advantage/types` tests and ensure package aggregate test runs them.
+  - Red evidence: `CI=true pnpm --filter codecamp-advantage exec vitest run lib/__tests__/prod-smoke/wave2-live-smoke-opt-in.test.ts` fails `Live-default prod-smoke file count: 15` (scanned 16 files). All 14 existing `phase-*` prod-smoke files plus `report-summary.json` default to `https://codecamp.reading-advantage.com` without an opt-in flag/credential contract. Counterexample fixtures prove detection of a live-default file and allowance of an opt-in-gated file.
+- [~] Task: Fix stale RED docblocks and tautological tests in Marketing/test-strategy examples.
+  - Red evidence: `CI=true pnpm --filter marketing exec vitest run app/__tests__/wave2-test-truthfulness.test.ts` fails with labeled counts: `Stale RED at HEAD docblock count: 10` across `phase-3-settings.test.ts`, `phase-4-campaigns.test.ts`, `phase-5-topics.test.ts`, and `phase-6-script.test.ts`; `Contradictory credential-leak comment count: 1` (`phase-3-settings-adversarial.test.ts:69` claims "NOT a real secret" while embedding a 32-byte key literal); `DOM-in-node-environment test file count: 1` (`phase-7-video-page.test.tsx`). `Tautological assertion count: 0` at HEAD; counterexample fixture proves detection.
+- [x] Task: Add `@reading-advantage/types` tests and ensure package aggregate test runs them.
+  - Green evidence: `CI=true pnpm turbo run test --filter=@reading-advantage/types` passes. `packages/types/src/__tests__/wave2-types-regression-guard.test.ts` asserts `Types test file count: 5` and `Types test count: 90` (Wave 0 baseline was 4 files / 88 tests). This is a regression guard, not a new Red.
 
 ## Phase 4: Reusable Harnesses
 
