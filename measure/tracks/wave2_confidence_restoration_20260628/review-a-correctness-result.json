@@ -1,0 +1,123 @@
+{
+  "role": "review-a-correctness",
+  "track": "wave2_confidence_restoration_20260628",
+  "phase": "Phase 1: Migration and Seed Governance",
+  "baseline": "f753de606c889320dbf3e86f8f5fc42a53e7d8db",
+  "head": "266adea1",
+  "timestamp": "2026-07-03T00:25:00+08:00",
+  "status": "complete",
+  "gate_results": {
+    "db_full_suite": {
+      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run",
+      "exit": 0,
+      "result": "34 passed | 2 skipped files / 641 passed | 6 skipped tests",
+      "note": "env-guards.test.ts timed out on first run (pre-existing test-isolation flake), passed in isolation (4/4) and on full-suite re-run (34/34 files, 641/641 tests). Not introduced by this change."
+    },
+    "db_tsc": {
+      "command": "CI=true pnpm --filter @reading-advantage/db exec tsc --noEmit",
+      "exit": 0,
+      "result": "clean"
+    },
+    "science_grade4_targeted": {
+      "command": "CI=true pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts tests/lib/seed-validation.test.ts tests/wave2-grade4-seed-contract.test.ts",
+      "exit": 0,
+      "result": "2 files, 21 tests passed, 0 failed"
+    },
+    "sales_targeted": {
+      "command": "CI=true pnpm --filter sales-advantage exec vitest run scripts/__tests__/wave2-sales-curriculum-seed-contract.test.ts",
+      "exit": 0,
+      "result": "1 file, 3 tests passed, 0 failed"
+    },
+    "deploy_gate_contract": {
+      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/deploy-gate-contract.test.ts",
+      "exit": 0,
+      "result": "1 file, 13 tests passed (pre-existing Phase 4 Red tests, unchanged)"
+    },
+    "codecamp_stale_seed": {
+      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/codecamp-stale-seed.test.ts",
+      "exit": 0,
+      "result": "1 file, 7 tests passed (5 findStaleModuleSlugs + 1 idempotency contract + 1 lesson count validation)"
+    },
+    "wave2_governance": {
+      "command": "CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/wave2-migration-seed-governance.test.ts",
+      "exit": 0,
+      "result": "1 file, 2 tests passed"
+    }
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "area": "deploy_gate_fail_closed",
+      "severity": "pass",
+      "detail": "The doctor's --required-migration gate correctly fails closed (exit 1) when the ledger is behind. Logic: parses REQUIRED_MIGRATION env or --required-migration flag, finds the journal entry, compares highestAppliedWhen against requiredEntry.when. When behind, counts entries with e.when > highestAppliedWhen && e.idx >= requiredEntry.idx and reports 'Required migration behind count: N'. When current, prints 'Required migration gate OK'. When tag not in journal (typo), exits 1 with 'behind count: 0'. When no flag/env is set, gate is skipped entirely (backward compat). No off-by-one: the behind count correctly includes the required entry itself when it's not applied."
+    },
+    {
+      "id": "F2",
+      "area": "codecamp_seed_idempotency",
+      "severity": "pass",
+      "detail": "selectLessonsToInsert(existingLessons, canonicalLessons) keys dedup on order (not type). Returns canonical lessons whose order is not in existingOrders set. Production code in seed() selects {type, order, title} from codecampLessons for existing modules and delegates to this helper. Existing lesson rows are never deleted — 'don't disrupt student progress' preserved. The test imports the REAL helper from ../seed/codecamp-seed.js (not a local mirror). Test simulates first-per-type-already-present scenario and asserts wronglySkippedLessonCount === 0. A4 vacuity guards: 'Fixture module count must be > 0', 'At least one module must have multiple lessons of the same type'. Curriculum data has 68 theory lessons across ~17 modules — guard is meaningful."
+    },
+    {
+      "id": "F3",
+      "area": "science_grade4_conversion",
+      "severity": "pass",
+      "detail": "All 10 lesson files converted from bare LessonContent to LessonsFile wrapper ({framework, gradeLevel, unit, lessons: [{id, slug, title, description, content, order, standards, structuredContent}]}). All 10 question files converted to QuizQuestionsFile wrapper ({lessonId, questions: [{type, text, options, correctAnswer, points, standards, slug}]}). Content preserved: structuredContent blocks verbatim (9-10 blocks per file), vocabulary terms with thai translations intact, 20 questions per file. Seed validation (validateLessonsSeedFile/validateQuizQuestionsSeedFile) runs Zod safeParse BEFORE any insert. Pre-existing tests updated: content-migration.test.ts reads via content.lessons?.[0] path, curriculum-identifiers.test.ts reads via data.lessons?.[0]?.structuredContent path. Assertion intent preserved (slug validity, 10 lessons, bilingual vocab, 20 questions)."
+    },
+    {
+      "id": "F4",
+      "area": "sales_orphan_lesson_fix",
+      "severity": "pass",
+      "detail": "Module upsert now SELECTs existing by slug first, reuses id on re-seed, only INSERTs for new modules. Lesson upsert SELECTs by (moduleId, order), updates if exists, inserts if new. No 'fallback-id' sentinel — throw on failed insert instead. No schoolId introduced (single-tenant/global verified by source scan). Test's simulateSalesSeedRuns mirrors production upsert logic. Three tests: (1) no orphan lessons, (2) all lessons reviewStatus='draft', (3) source has no schoolId."
+    },
+    {
+      "id": "F5",
+      "area": "A3_labeled_integer_counts",
+      "severity": "pass",
+      "detail": "All count assertions use labeled integers: 'Wrongly-skipped canonical lesson count: N', 'Missing sentinel count: N', 'Orphan lesson count: N', 'Draft-visible lesson count: N', 'Invalid grade-4 seed item count: N'. No bare-digit matching."
+    },
+    {
+      "id": "F6",
+      "area": "A4_vacuous_pass",
+      "severity": "pass",
+      "detail": "Vacuity guards present in all seed tests: 'Fixture module count must be > 0', 'At least one module must have multiple lessons of the same type', 'Grade-4 lesson fixture file count must be > 0', 'Grade-4 question fixture file count must be > 0'. Grade-4 fixtures verified: 10 lesson files, 10 question files, all with real content. Codecamp curriculum data verified: 68 theory, 17 quiz, 1 exercise lessons across phases A-D."
+    },
+    {
+      "id": "F7",
+      "area": "A5_plan_claim_reality",
+      "severity": "pass",
+      "detail": "Plan claims: '34 passed | 2 skipped files / 641 passed | 6 skipped tests' for db suite, '7 tests, 7 passed' for codecamp-stale-seed, '2 files, 21 tests, 0 failed' for science, '3 tests, 3 passed' for sales. Actual results match on re-run (env-guards flake is pre-existing, passes in isolation). No false-claim text detected."
+    },
+    {
+      "id": "F8",
+      "area": "A9_archive_aware",
+      "severity": "pass",
+      "detail": "No stale archive path references in changed tests. Wave2 governance test reads JOURNAL_PATH from PACKAGE_ROOT, not archive paths. No measure/tracks/xxx references to archived tracks."
+    },
+    {
+      "id": "F9",
+      "area": "A10_generated_facts",
+      "severity": "pass",
+      "detail": "graph.db exists and was updated (Jul 3 00:11). Plan mentions build-graph update was run for codecamp-seed.ts (5→10 nodes, 18→22 edges)."
+    },
+    {
+      "id": "F10",
+      "area": "codecamp_test_correction",
+      "severity": "pass",
+      "detail": "The test correction from type-uniqueness assertion to seed-idempotency contract is sound. Original Red asserted 'no duplicate types' which would require deleting 49 real lessons and breaking 31+ curriculum-fidelity assertions. Corrected test asserts the SEED's behavior: re-seeding inserts every missing canonical lesson. Uses production helper import. Pre-existing curriculum-fidelity and curriculum-data regression guards (85 lessons pinned) were NOT modified."
+    },
+    {
+      "id": "F11",
+      "area": "isMain_guard",
+      "severity": "pass",
+      "detail": "codecamp-seed.ts uses pathToFileURL(argv[1]).href comparison to guard seed() execution. When imported by test, process.argv[1] is vitest runner, not codecamp-seed.ts, so isMain=false and seed() is not called. Module-level postgres() client is lazy (no connection until query) — pure helper import is safe."
+    }
+  ],
+  "nonblocking_from_prompt": [
+    "env-guards.test.ts timeout is pre-existing test-isolation flake (owner: db-platform), passes in isolation",
+    "sales-advantage lib/trpc.ts TS2742 is pre-existing from scaffold, not this phase",
+    "science-advantage check-types (OpenTelemetry/Sentry) and audit-debt tests are pre-existing",
+    "deploy-gate-contract.test.ts is Phase 4 Red (cloudbuild wiring), not Phase 1 scope — unchanged, 13 tests pass"
+  ],
+  "commits": [],
+  "handoff": "Phase 1 Review-A complete. No blocking findings. All targeted gates pass. Deploy gate fails closed correctly (exit 1 when behind, exit 0 when current, exit 1 for typo tags). Codecamp seed idempotency verified via production helper import with order-keyed dedup. Science grade-4 conversion preserves content (structuredContent blocks verbatim, 20 questions/file, bilingual vocab). Sales orphan-lesson fix is idempotent with correct module/lesson upsert pattern. All anti-pattern guards (A3/A4/A5/A7/A9/A10) satisfied."
+}
