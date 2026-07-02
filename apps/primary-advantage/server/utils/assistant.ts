@@ -11,7 +11,7 @@ import {
 import { LAQFeedback, LAQFeedbackResponse, SAQFeedbackResponse } from "@/types";
 import { ActivityType } from "@/types/enum";
 import { google, googleModel, googleModelLite } from "@/utils/google";
-import { generateObject } from "@reading-advantage/ai";
+import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import fs from "fs";
 import path from "path";
 

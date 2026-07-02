@@ -73,6 +73,7 @@ const BANNED_CALL_RE = /\bSentry\.(captureException|captureMessage)\s*\(/;
 interface AllowlistEntry {
   readonly pattern: RegExp;
   readonly reason: string;
+  readonly owner?: string;
 }
 
 const ALLOWLIST: AllowlistEntry[] = [
@@ -83,6 +84,10 @@ const ALLOWLIST: AllowlistEntry[] = [
   {
     pattern: /^packages\/ai\/src\/types\.ts$/,
     reason: "AI adapter type-only dependency on 'ai' (ModelMessage)",
+  },
+  {
+    pattern: /^packages\/ai\/src\/internal-sdk\.ts$/,
+    reason: "Wave 2 Phase 2 quarantine for raw vendor SDK re-exports (see plan.md follow-up rows)",
   },
   {
     pattern: /^packages\/ai\/src\/index\.ts$/,
@@ -123,6 +128,59 @@ const ALLOWLIST: AllowlistEntry[] = [
   {
     pattern: /^apps\/[^/]+\/next\.config\.ts$/,
     reason: "Next.js config with Sentry wrapper",
+  },
+  // Wave 2 Phase 2 — named allowlist entries for out-of-scope legacy code.
+  // Every entry below names a path + provider + reason + owner wave; the
+  // guard still fails for NEW unapproved imports not in this allowlist.
+  {
+    pattern: /^apps\/primary-advantage\/utils\/storage\.ts$/,
+    reason: "primary-advantage uses @google-cloud/storage directly; owned by storage_hardening_20260611 (Task 14: migrate primary-advantage to packages/storage)",
+    owner: "storage_hardening_20260611",
+  },
+  {
+    pattern: /^apps\/reading-advantage\/utils\/storage\.ts$/,
+    reason: "reading-advantage uses @google-cloud/storage directly; owned by storage_hardening_20260611 (Task 13: migrate reading-advantage to packages/storage)",
+    owner: "storage_hardening_20260611",
+  },
+  {
+    pattern: /^apps\/reading-advantage\/server\/controllers\/generator-controller\.ts$/,
+    reason: "generator-controller uses firebase-admin/storage for legacy audio/file cleanup; owned by storage_hardening_20260611 (Task 13)",
+    owner: "storage_hardening_20260611",
+  },
+  {
+    pattern: /^apps\/science-advantage\/app\/api\/ai\/recommendations\/route\.ts$/,
+    reason: "science advantage AI recommendations route imports @sentry/nextjs and calls Sentry.captureException directly; app-local observability boundary pending shared observability adapter (Wave 6 owns the sweep)",
+    owner: "wave6_quality_i18n_accessibility_completion_20260628",
+  },
+  {
+    pattern: /^apps\/science-advantage\/lib\/ai\/recommendation-service\.ts$/,
+    reason: "science advantage AI recommendation service imports @opentelemetry/api for tracer/span context; app-local observability boundary pending shared observability adapter (Wave 6 owns the sweep)",
+    owner: "wave6_quality_i18n_accessibility_completion_20260628",
+  },
+  {
+    pattern: /^apps\/science-advantage\/lib\/ai\/image-generator\.ts$/,
+    reason: "science advantage AI image generator dynamic-imports the internal-sdk quarantine path; experimental_generateImage not yet wrapped in AIClient.generateImage (Wave 6 follow-up row)",
+    owner: "wave6_quality_i18n_accessibility_completion_20260628",
+  },
+  {
+    pattern: /^packages\/reading-advantage-scripts\/generateArticle\.js$/,
+    reason: "legacy Node script (openai SDK); not in any production request path; no migration scope",
+    owner: "legacy-scripts",
+  },
+  {
+    pattern: /^packages\/reading-advantage-scripts\/generateQuestion\.js$/,
+    reason: "legacy Node script (openai SDK); not in any production request path; no migration scope",
+    owner: "legacy-scripts",
+  },
+  {
+    pattern: /^packages\/reading-advantage-scripts\/googleai\.js$/,
+    reason: "legacy Node script (@ai-sdk/google-vertex); not in any production request path; no migration scope",
+    owner: "legacy-scripts",
+  },
+  {
+    pattern: /^packages\/reading-advantage-scripts\/utils\/googleStorage\.js$/,
+    reason: "legacy Node script (@google-cloud/storage); not in any production request path; no migration scope",
+    owner: "legacy-scripts",
   },
 ];
 

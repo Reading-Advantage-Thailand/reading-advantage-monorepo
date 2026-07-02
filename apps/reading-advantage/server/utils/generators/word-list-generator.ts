@@ -1,5 +1,5 @@
 import { WordListResponse } from "./audio-words-generator";
-import { generateObject } from "@reading-advantage/ai";
+import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModel, googleModelAudio } from "@/utils/google";
 import { z } from "zod";

@@ -3,11 +3,13 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
   HeadObjectCommand,
+  GetObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { Readable } from "stream";
 import type { StorageClient, PutOptions } from "../client.js";
 import type { StorageConfig } from "../client.js";
+import { StorageOperationError } from "../factory.js";
 
 /**
  * S3-compatible storage driver.
@@ -42,6 +44,7 @@ export class S3StorageDriver implements StorageClient {
    * @param key The object key.
    * @param body The object content.
    * @param opts Optional put options.
+   * @throws {StorageOperationError} When the S3 client rejects the request.
    */
   async put(
     key: string,
@@ -55,7 +58,15 @@ export class S3StorageDriver implements StorageClient {
       ContentType: opts?.contentType,
       ACL: opts?.public !== false ? "public-read" : "private",
     });
-    await this.client.send(command);
+    try {
+      await this.client.send(command);
+    } catch (err) {
+      throw new StorageOperationError(
+        `Storage put failed for object key`,
+        "STORAGE_PUT_FAILED",
+        err
+      );
+    }
   }
 
   /**
@@ -72,31 +83,49 @@ export class S3StorageDriver implements StorageClient {
    * @param key The object key.
    * @param expiresIn Seconds until expiry. Defaults to 3600.
    * @returns The pre-signed URL.
+   * @throws {StorageOperationError} When the presigner rejects the request.
    */
   async getSignedUrl(key: string, expiresIn = 3600): Promise<string> {
-    const command = new PutObjectCommand({
+    const command = new GetObjectCommand({
       Bucket: this.bucket,
       Key: key,
     });
-    return getSignedUrl(this.client, command, { expiresIn });
+    try {
+      return await getSignedUrl(this.client, command, { expiresIn });
+    } catch (err) {
+      throw new StorageOperationError(
+        `Storage getSignedUrl failed for object key`,
+        "STORAGE_SIGN_FAILED",
+        err
+      );
+    }
   }
 
   /**
    * Delete an object from S3.
    * @param key The object key.
+   * @throws {StorageOperationError} When the S3 client rejects the request.
    */
   async delete(key: string): Promise<void> {
     const command = new DeleteObjectCommand({
       Bucket: this.bucket,
       Key: key,
     });
-    await this.client.send(command);
+    try {
+      await this.client.send(command);
+    } catch (err) {
+      throw new StorageOperationError(
+        `Storage delete failed for object key`,
+        "STORAGE_DELETE_FAILED",
+        err
+      );
+    }
   }
 
   /**
    * Check whether an object exists in S3.
    * @param key The object key.
-   * @returns True if the object exists.
+   * @returns True if the object exists, false otherwise.
    */
   async exists(key: string): Promise<boolean> {
     try {

@@ -4,8 +4,8 @@ import {
   NoImageGeneratedError,
   APICallError,
   generateText,
-} from "@reading-advantage/ai";
-import { vertex } from "@reading-advantage/ai";
+} from "@reading-advantage/ai/internal-sdk";
+import { vertex } from "@reading-advantage/ai/internal-sdk";
 import fs from "fs";
 import path from "path";
 import sharp from "sharp";

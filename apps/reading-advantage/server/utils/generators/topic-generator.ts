@@ -1,4 +1,4 @@
-import { generateObject, generateText } from "@reading-advantage/ai";
+import { generateObject, generateText } from "@reading-advantage/ai/internal-sdk";
 import { ArticleBaseCefrLevel, ArticleType } from "../../models/enum";
 import { z } from "zod";
 import { openai, openaiModel } from "@/utils/openai";

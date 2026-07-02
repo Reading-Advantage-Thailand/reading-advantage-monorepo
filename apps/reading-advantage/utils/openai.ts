@@ -1,4 +1,4 @@
-import { createOpenAI } from "@reading-advantage/ai";
+import { createOpenAI } from "@reading-advantage/ai/internal-sdk";
 
 const openai = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY,

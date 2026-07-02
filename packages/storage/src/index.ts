@@ -10,5 +10,6 @@ export {
   getStorageClient,
   resetStorageClient,
   ProviderNotConfiguredError,
+  StorageOperationError,
 } from "./factory.js";
 export { getStorageUrl } from "./urls.js";

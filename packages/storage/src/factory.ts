@@ -12,6 +12,25 @@ export class ProviderNotConfiguredError extends Error {
   }
 }
 
+/**
+ * Adapter-normalized error thrown when a storage operation fails.
+ *
+ * Provider SDK errors (AWS S3 ServiceException, Smithy, etc.) are
+ * caught by the driver and re-thrown as `StorageOperationError` so
+ * application code never observes provider-specific exception names.
+ * The original provider error is attached as `cause` for diagnostics.
+ */
+export class StorageOperationError extends Error {
+  constructor(
+    message: string,
+    public readonly code: string,
+    public readonly cause?: unknown
+  ) {
+    super(message);
+    this.name = "StorageOperationError";
+  }
+}
+
 let cachedClient: StorageClient | null = null;
 
 /**

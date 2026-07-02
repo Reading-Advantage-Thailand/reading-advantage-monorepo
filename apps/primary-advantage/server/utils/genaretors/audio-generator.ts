@@ -1,7 +1,7 @@
 import base64 from "base64-js";
 import fs from "fs";
 import path from "path";
-import { generateObject } from "@reading-advantage/ai";
+import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModelLite } from "@/utils/google";
 import z from "zod";
