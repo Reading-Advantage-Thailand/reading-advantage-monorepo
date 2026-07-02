@@ -2,204 +2,344 @@
   "lessonId": "g4-sound-waves",
   "questions": [
     {
-      "id": "q1",
-      "type": "multiple_choice",
-      "difficulty": "easy",
-      "question": "What makes sound?",
-      "questionThai": "อะไรสร้างเสียง?",
-      "options": ["Light", "Vibrations", "Colors", "Heat"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "What makes sound?",
+      "options": [
+        "Light",
+        "Vibrations",
+        "Colors",
+        "Heat"
+      ],
       "correctAnswer": 1,
-      "explanation": "Sound is made when something vibrates (moves back and forth quickly)."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q1"
     },
     {
-      "id": "q2",
-      "type": "multiple_choice",
-      "difficulty": "easy",
-      "question": "How does sound travel?",
-      "questionThai": "เสียงเดินทางอย่างไร?",
-      "options": ["In straight lines only", "In waves through air", "Only through water", "It doesn't travel"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "How does sound travel?",
+      "options": [
+        "In straight lines only",
+        "In waves through air",
+        "Only through water",
+        "It doesn't travel"
+      ],
       "correctAnswer": 1,
-      "explanation": "Sound travels in waves through air and other materials."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q2"
     },
     {
-      "id": "q3",
-      "type": "multiple_choice",
-      "difficulty": "easy",
-      "question": "What is volume?",
-      "questionThai": "ความดังคืออะไร?",
-      "options": ["How fast sound travels", "How loud or soft a sound is", "The color of sound", "How high a sound is"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is volume?",
+      "options": [
+        "How fast sound travels",
+        "How loud or soft a sound is",
+        "The color of sound",
+        "How high a sound is"
+      ],
       "correctAnswer": 1,
-      "explanation": "Volume is how loud or soft a sound is."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q3"
     },
     {
-      "id": "q4",
-      "type": "multiple_choice",
-      "difficulty": "easy",
-      "question": "What is pitch?",
-      "questionThai": "ระดับเสียงคืออะไร?",
-      "options": ["How loud a sound is", "How high or low a sound is", "How far sound travels", "The speed of sound"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is pitch?",
+      "options": [
+        "How loud a sound is",
+        "How high or low a sound is",
+        "How far sound travels",
+        "The speed of sound"
+      ],
       "correctAnswer": 1,
-      "explanation": "Pitch is how high or low a sound is."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q4"
     },
     {
-      "id": "q5",
-      "type": "multiple_choice",
-      "difficulty": "easy",
-      "question": "Which has a higher pitch?",
-      "questionThai": "อันไหนมีระดับเสียงสูงกว่า?",
-      "options": ["A lion's roar", "A bird chirping", "Thunder", "A drum beat"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which has a higher pitch?",
+      "options": [
+        "A lion's roar",
+        "A bird chirping",
+        "Thunder",
+        "A drum beat"
+      ],
       "correctAnswer": 1,
-      "explanation": "A bird chirping has a higher pitch than a lion's roar, thunder, or drum beats."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q5"
     },
     {
-      "id": "q6",
-      "type": "multiple_choice",
-      "difficulty": "easy",
-      "question": "What is an echo?",
-      "questionThai": "เสียงสะท้อนคืออะไร?",
-      "options": ["A type of music", "Sound bouncing back from a surface", "A very quiet sound", "Sound traveling through water"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "What is an echo?",
+      "options": [
+        "A type of music",
+        "Sound bouncing back from a surface",
+        "A very quiet sound",
+        "Sound traveling through water"
+      ],
       "correctAnswer": 1,
-      "explanation": "An echo is sound that bounces back to you from a hard surface."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q6"
     },
     {
-      "id": "q7",
-      "type": "multiple_choice",
-      "difficulty": "easy",
-      "question": "What part of your ear vibrates when sound waves hit it?",
-      "questionThai": "ส่วนใดของหูคุณสั่นเมื่อคลื่นเสียงกระทบมัน?",
-      "options": ["Outer ear", "Eardrum", "Brain", "Nose"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "What part of your ear vibrates when sound waves hit it?",
+      "options": [
+        "Outer ear",
+        "Eardrum",
+        "Brain",
+        "Nose"
+      ],
       "correctAnswer": 1,
-      "explanation": "The eardrum is a thin piece of skin that vibrates when sound waves hit it."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q7"
     },
     {
-      "id": "q8",
-      "type": "multiple_choice",
-      "difficulty": "easy",
-      "question": "Which material does sound travel through FASTEST?",
-      "questionThai": "วัสดุใดที่เสียงเดินทางผ่านได้เร็วที่สุด?",
-      "options": ["Air", "Water", "Solid metal", "Empty space"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "Which material does sound travel through FASTEST?",
+      "options": [
+        "Air",
+        "Water",
+        "Solid metal",
+        "Empty space"
+      ],
       "correctAnswer": 2,
-      "explanation": "Sound travels fastest through solids like metal because particles are packed tightly together."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q8"
     },
     {
-      "id": "q9",
-      "type": "multiple_choice",
-      "difficulty": "medium",
-      "question": "Why can't sound travel through outer space?",
-      "questionThai": "ทำไมเสียงไม่สามารถเดินทางผ่านอวกาศได้?",
-      "options": ["It's too cold", "There are no particles to vibrate", "Space is too big", "Sound is afraid of space"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why can't sound travel through outer space?",
+      "options": [
+        "It's too cold",
+        "There are no particles to vibrate",
+        "Space is too big",
+        "Sound is afraid of space"
+      ],
       "correctAnswer": 1,
-      "explanation": "Sound needs particles to travel. Outer space is a vacuum with no particles, so sound cannot travel there."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q9"
     },
     {
-      "id": "q10",
-      "type": "multiple_choice",
-      "difficulty": "medium",
-      "question": "What makes a sound louder?",
-      "questionThai": "อะไรทำให้เสียงดังขึ้น?",
-      "options": ["Slower vibrations", "Bigger vibrations (higher amplitude)", "Faster vibrations", "Smaller vibrations"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "What makes a sound louder?",
+      "options": [
+        "Slower vibrations",
+        "Bigger vibrations (higher amplitude)",
+        "Faster vibrations",
+        "Smaller vibrations"
+      ],
       "correctAnswer": 1,
-      "explanation": "Louder sounds come from bigger vibrations (higher amplitude), which have more energy."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q10"
     },
     {
-      "id": "q11",
-      "type": "multiple_choice",
-      "difficulty": "medium",
-      "question": "What makes a sound higher in pitch?",
-      "questionThai": "อะไรทำให้เสียงมีระดับสูงขึ้น?",
-      "options": ["Slower vibrations", "Louder sounds", "Faster vibrations (higher frequency)", "Bigger vibrations"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "What makes a sound higher in pitch?",
+      "options": [
+        "Slower vibrations",
+        "Louder sounds",
+        "Faster vibrations (higher frequency)",
+        "Bigger vibrations"
+      ],
       "correctAnswer": 2,
-      "explanation": "Higher pitch sounds come from faster vibrations (higher frequency)."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q11"
     },
     {
-      "id": "q12",
-      "type": "multiple_choice",
-      "difficulty": "medium",
-      "question": "In the reading passage, why did the longer string make a lower sound?",
-      "questionThai": "ในบทอ่าน ทำไมสายที่ยาวกว่าถึงสร้างเสียงต่ำกว่า?",
-      "options": ["It was heavier", "Longer strings vibrate more slowly", "It was newer", "It was tighter"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "In the reading passage, why did the longer string make a lower sound?",
+      "options": [
+        "It was heavier",
+        "Longer strings vibrate more slowly",
+        "It was newer",
+        "It was tighter"
+      ],
       "correctAnswer": 1,
-      "explanation": "Longer strings vibrate more slowly, creating a lower frequency and lower pitch sound."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q12"
     },
     {
-      "id": "q13",
-      "type": "multiple_choice",
-      "difficulty": "medium",
-      "question": "Why do soft materials like carpet make rooms quieter?",
-      "questionThai": "ทำไมวัสดุนุ่มเช่นพรมทำให้ห้องเงียบกว่า?",
-      "options": ["They create sound", "They absorb sound waves", "They reflect sound", "They make vibrations louder"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why do soft materials like carpet make rooms quieter?",
+      "options": [
+        "They create sound",
+        "They absorb sound waves",
+        "They reflect sound",
+        "They make vibrations louder"
+      ],
       "correctAnswer": 1,
-      "explanation": "Soft materials absorb sound waves instead of reflecting them, making spaces quieter."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q13"
     },
     {
-      "id": "q14",
-      "type": "multiple_choice",
-      "difficulty": "medium",
-      "question": "In the reading passage, why did the khim sound different in the large music hall?",
-      "questionThai": "ในบทอ่าน ทำไมขิมถึงมีเสียงต่างกันในห้องดนตรีใหญ่?",
-      "options": ["The instrument changed", "Hard walls reflected sound and created echoes", "The room was too hot", "The strings broke"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "In the reading passage, why did the khim sound different in the large music hall?",
+      "options": [
+        "The instrument changed",
+        "Hard walls reflected sound and created echoes",
+        "The room was too hot",
+        "The strings broke"
+      ],
       "correctAnswer": 1,
-      "explanation": "The hard walls of the music hall reflected sound waves, making the music richer and creating echoes."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q14"
     },
     {
-      "id": "q15",
-      "type": "multiple_choice",
-      "difficulty": "medium",
-      "question": "Why can you feel vibrations when you touch a speaker playing music?",
-      "questionThai": "ทำไมคุณสามารถรู้สึกการสั่นเมื่อสัมผัสลำโพงที่กำลังเล่นเพลง?",
-      "options": ["The speaker is hot", "The speaker vibrates to create sound waves", "The speaker is magnetic", "You can't feel vibrations"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why can you feel vibrations when you touch a speaker playing music?",
+      "options": [
+        "The speaker is hot",
+        "The speaker vibrates to create sound waves",
+        "The speaker is magnetic",
+        "You can't feel vibrations"
+      ],
       "correctAnswer": 1,
-      "explanation": "Speakers vibrate back and forth to push air and create sound waves. You can feel these vibrations."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q15"
     },
     {
-      "id": "q16",
-      "type": "multiple_choice",
-      "difficulty": "medium",
-      "question": "How do animals like bats use echoes?",
-      "questionThai": "สัตว์เช่นค้างคาวใช้เสียงสะท้อนอย่างไร?",
-      "options": ["To make music", "To find food using echolocation", "To scare predators", "They don't use echoes"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "How do animals like bats use echoes?",
+      "options": [
+        "To make music",
+        "To find food using echolocation",
+        "To scare predators",
+        "They don't use echoes"
+      ],
       "correctAnswer": 1,
-      "explanation": "Bats use echolocation - they make sounds and listen for echoes bouncing off objects to find food and navigate."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q16"
     },
     {
-      "id": "q17",
-      "type": "multiple_choice",
-      "difficulty": "hard",
-      "question": "Why can very loud sounds damage your hearing?",
-      "questionThai": "ทำไมเสียงที่ดังมากถึงทำลายการได้ยินของคุณได้?",
-      "options": ["Loud sounds are cold", "High-energy vibrations can damage the delicate parts of your ear", "Loud sounds change color", "They can't damage hearing"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why can very loud sounds damage your hearing?",
+      "options": [
+        "Loud sounds are cold",
+        "High-energy vibrations can damage the delicate parts of your ear",
+        "Loud sounds change color",
+        "They can't damage hearing"
+      ],
       "correctAnswer": 1,
-      "explanation": "Very loud sounds have high energy vibrations that can damage the sensitive eardrum and tiny hairs in your inner ear."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q17"
     },
     {
-      "id": "q18",
-      "type": "multiple_choice",
-      "difficulty": "hard",
-      "question": "Why does a thick guitar string make a lower sound than a thin string?",
-      "questionThai": "ทำไมสายกีตาร์หนาถึงสร้างเสียงต่ำกว่าสายบาง?",
-      "options": ["Thick strings are newer", "Thick strings vibrate more slowly than thin strings", "Thick strings are louder", "Thin strings are broken"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why does a thick guitar string make a lower sound than a thin string?",
+      "options": [
+        "Thick strings are newer",
+        "Thick strings vibrate more slowly than thin strings",
+        "Thick strings are louder",
+        "Thin strings are broken"
+      ],
       "correctAnswer": 1,
-      "explanation": "Thick strings have more mass and vibrate more slowly, creating a lower frequency and lower pitch."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q18"
     },
     {
-      "id": "q19",
-      "type": "multiple_choice",
-      "difficulty": "hard",
-      "question": "Why can you sometimes hear sounds through walls?",
-      "questionThai": "ทำไมบางครั้งคุณสามารถได้ยินเสียงผ่านกำแพง?",
-      "options": ["Walls have holes", "Sound can travel through solid materials", "It's your imagination", "Walls don't exist"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "Why can you sometimes hear sounds through walls?",
+      "options": [
+        "Walls have holes",
+        "Sound can travel through solid materials",
+        "It's your imagination",
+        "Walls don't exist"
+      ],
       "correctAnswer": 1,
-      "explanation": "Sound can travel through solid materials like walls because solids have particles that can vibrate and pass the sound along."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q19"
     },
     {
-      "id": "q20",
-      "type": "multiple_choice",
-      "difficulty": "hard",
-      "question": "What happens to sound energy as it travels farther from its source?",
-      "questionThai": "เกิดอะไรขึ้นกับพลังงานเสียงเมื่อมันเดินทางไกลจากแหล่งกำเนิด?",
-      "options": ["It gets louder", "It spreads out and becomes weaker", "It stays exactly the same", "It changes color"],
+      "type": "MULTIPLE_CHOICE",
+      "text": "What happens to sound energy as it travels farther from its source?",
+      "options": [
+        "It gets louder",
+        "It spreads out and becomes weaker",
+        "It stays exactly the same",
+        "It changes color"
+      ],
       "correctAnswer": 1,
-      "explanation": "As sound waves travel away from their source, the energy spreads out over a larger area, making the sound weaker and quieter."
+      "points": 10,
+      "standards": [
+        "Sc5.1-G4",
+        "Sc5.2-G4"
+      ],
+      "slug": "g4-sound-waves-q20"
     }
   ]
 }
