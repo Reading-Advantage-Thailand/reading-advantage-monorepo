@@ -13,7 +13,8 @@
  *     `import Default from "<module>"`
  *   - CommonJS require: `require("<module>")`
  *   - dynamic imports: `await import("<module>")`
- *   - barrel re-export leaks: `export { sym } from "<module>"`
+ *   - barrel re-export leaks: `export { sym } from "<module>"`,
+ *     `export * from "<module>"`, and `export * as ns from "<module>"`
  *
  * The utility is pure — takes a source string, returns labeled `GuardHit`
  * objects with file/line/text/kind. Allowlist is exposed as an array of
@@ -97,11 +98,11 @@ export function createProviderGuard(): ProviderGuard {
 
         const lineNo = i + 1;
 
-        // 1. Barrel re-export leak: `export { ... } from "banned"` and
-        //    `export * from "banned"`.
-        if (/\bexport\s+(?:\*\s+from|\{[^}]*\}\s*from)\s+['"]([^'"]+)['"]/.test(codeOnly)) {
+        // 1. Barrel re-export leak: `export { ... } from "banned"`,
+        //    `export * from "banned"`, and `export * as ns from "banned"`.
+        if (/\bexport\s+(?:\*\s+from|\*\s+as\s+[A-Za-z_$][\w$]*\s+from|\{[^}]*\}\s*from)\s+['"]([^'"]+)['"]/.test(codeOnly)) {
           const m = codeOnly.match(
-            /\bexport\s+(?:\*\s+from|\{[^}]*\}\s*from)\s+['"]([^'"]+)['"]/,
+            /\bexport\s+(?:\*\s+from|\*\s+as\s+[A-Za-z_$][\w$]*\s+from|\{[^}]*\}\s*from)\s+['"]([^'"]+)['"]/,
           );
           if (m && isBannedModule(m[1] ?? "")) {
             hits.push({

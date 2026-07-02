@@ -13,10 +13,12 @@
  *
  * The utility must catch:
  *   - namespace imports (`import * as openai from "openai"`)
- *   - default/named static imports (`import openai from "openai"`)
+ *   - default/named/aliased static imports (`import openai from "openai"`,
+ *     `import { generateText as gt } from "ai"`)
  *   - CommonJS require (`require("openai")`)
  *   - dynamic import (`await import("openai")`)
- *   - barrel re-export leaks (`export { generateText } from "ai"`)
+ *   - barrel re-export leaks (`export { generateText } from "ai"`,
+ *     `export * from "ai"`, `export * as ns from "ai"`)
  *
  * RED expectations at HEAD:
  *   - The utility module does not exist, so the import fails.
@@ -73,6 +75,11 @@ const FIXTURES: Array<{ name: string; source: string; expectedKinds: GuardHit["k
     expectedKinds: ["static-import"],
   },
   {
+    name: "aliased static import",
+    source: `import { generateText as gt } from "ai";\nexport async function f() {}`,
+    expectedKinds: ["static-import"],
+  },
+  {
     name: "default static import",
     source: `import OpenAI from "openai";\nexport async function f() {}`,
     expectedKinds: ["static-import"],
@@ -90,6 +97,11 @@ const FIXTURES: Array<{ name: string; source: string; expectedKinds: GuardHit["k
   {
     name: "barrel re-export leak",
     source: `export { generateText, streamText } from "ai";\n`,
+    expectedKinds: ["barrel-re-export"],
+  },
+  {
+    name: "barrel namespace re-export leak",
+    source: `export * as aiSdk from "ai";\n`,
     expectedKinds: ["barrel-re-export"],
   },
   {

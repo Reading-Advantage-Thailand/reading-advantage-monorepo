@@ -101,6 +101,20 @@ describe("Wave 2 Phase 4 — tenant isolation harness", () => {
     ).toBe(ids.length);
   });
 
+  it("adversarial cases pair an attacker with a resource owned by the other tenant", () => {
+    const harness = buildTenantIsolationHarness() as TenantIsolationHarness;
+    for (const c of harness.adversarialCases) {
+      expect(
+        c.ownerTenant.schoolId,
+        `Owner tenant schoolId must match the resource schoolId in "${c.name}".`,
+      ).toBe(c.resource.schoolId);
+      expect(
+        c.attackerTenant.schoolId,
+        `Attacker tenant schoolId must differ from the resource schoolId in "${c.name}".`,
+      ).not.toBe(c.resource.schoolId);
+    }
+  });
+
   describe("consumer — same-tenant access guard", () => {
     it("rejects a cross-tenant access attempt using harness fixtures (A5 counterexample)", () => {
       const harness = buildTenantIsolationHarness() as TenantIsolationHarness;

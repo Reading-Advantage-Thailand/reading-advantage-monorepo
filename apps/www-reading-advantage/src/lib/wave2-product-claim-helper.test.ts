@@ -93,7 +93,7 @@ const CLAIM_FIXTURES: Array<{ claim: ClaimArtifact; expectedKinds: ClaimKind[] }
 ];
 
 const PUBLISHED_CASE_STUDY: ClaimArtifact = {
-  text: "Baan Dek School improved reading scores by 18% in one term.",
+  text: "Riverside Preparatory School improved reading scores by 18% in one term.",
   page: "case-studies",
 };
 
@@ -163,6 +163,64 @@ describe("Wave 2 Phase 4 — product claim helper", () => {
         `produce a violation.`,
     ).toBe(0);
     expect(report.violations.length).toBe(0);
+  });
+
+  it("rejects a published case study with consent but no anonymization proof (A2)", () => {
+    const helper = createProductClaimHelper() as ProductClaimHelper;
+    const consentIndex = new Map<string, ConsentProof>([
+      [
+        PUBLISHED_CASE_STUDY.text,
+        {
+          hasConsent: true,
+          consentDate: "2026-05-15",
+          signatory: "School Director",
+          anonymized: false,
+        },
+      ],
+    ]);
+    const report = helper.audit([PUBLISHED_CASE_STUDY], consentIndex);
+    expect(report.missingConsentCount).toBe(1);
+    expect(report.violations.length).toBeGreaterThan(0);
+  });
+
+  it("rejects a published case study with anonymization but no consent (A2)", () => {
+    const helper = createProductClaimHelper() as ProductClaimHelper;
+    const consentIndex = new Map<string, ConsentProof>([
+      [
+        PUBLISHED_CASE_STUDY.text,
+        {
+          hasConsent: false,
+          consentDate: "2026-05-15",
+          signatory: "School Director",
+          anonymized: true,
+        },
+      ],
+    ]);
+    const report = helper.audit([PUBLISHED_CASE_STUDY], consentIndex);
+    expect(report.missingConsentCount).toBe(1);
+    expect(report.violations.length).toBeGreaterThan(0);
+  });
+
+  it("rejects a truthy-string consent value as invalid (A2 strict equality)", () => {
+    const helper = createProductClaimHelper() as ProductClaimHelper;
+    const consentIndex = new Map<string, ConsentProof>([
+      [
+        PUBLISHED_CASE_STUDY.text,
+        {
+          hasConsent: "yes" as unknown as boolean,
+          consentDate: "2026-05-15",
+          signatory: "School Director",
+          anonymized: true,
+        },
+      ],
+    ]);
+    const report = helper.audit([PUBLISHED_CASE_STUDY], consentIndex);
+    expect(
+      report.missingConsentCount,
+      `Missing consent/anonymization proof count: ${report.missingConsentCount}. ` +
+        `A truthy-string consent value must not bypass the strict boolean gate.`,
+    ).toBe(1);
+    expect(report.violations.length).toBeGreaterThan(0);
   });
 
   it("counts each claim class with labeled integers (A3 / A4)", () => {
