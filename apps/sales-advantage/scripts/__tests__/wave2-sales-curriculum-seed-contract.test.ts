@@ -40,10 +40,12 @@ interface CurriculumModuleFixture {
 }
 
 /**
- * Mirrors the module upsert logic in sales-curriculum-seed.ts:
- * `db.insert(salesModules).values(...).onConflictDoNothing().returning()`
- * returns a row only when a new module is inserted. When the module already
- * exists, `savedMod` is undefined and the script falls back to "fallback-id".
+ * Mirrors the module upsert logic in sales-curriculum-seed.ts after the
+ * Wave 2 Phase 1 fix: the script now queries the existing module by slug
+ * first (so re-seeding an existing module returns its existing id) and
+ * falls back to insert + use the new id when the module is new. Either
+ * path produces a valid moduleId — never a "fallback-id" — so re-runs
+ * never create orphan lessons.
  */
 function simulateSalesSeedRuns(
   existingModules: SimulatedModule[],
@@ -53,15 +55,18 @@ function simulateSalesSeedRuns(
   const lessons: SimulatedLesson[] = [];
 
   for (const mod of curriculumModules) {
-    const alreadyExists = modules.some((m) => m.slug === mod.slug);
-    // `onConflictDoNothing().returning()` yields a row only on insert.
-    const savedMod = alreadyExists
-      ? undefined
-      : { slug: mod.slug, id: `new-${mod.slug}`, title: mod.title };
-    if (savedMod) {
-      modules.push(savedMod);
+    const existing = modules.find((m) => m.slug === mod.slug);
+    let moduleId: string;
+    if (existing) {
+      // Existing module — reuse its id (the script now queries first
+      // instead of falling back to the literal "fallback-id").
+      moduleId = existing.id;
+    } else {
+      // New module — simulate the insert + return.
+      const inserted = { slug: mod.slug, id: `new-${mod.slug}`, title: mod.title };
+      modules.push(inserted);
+      moduleId = inserted.id;
     }
-    const moduleId = savedMod?.id ?? "fallback-id";
 
     for (const lesson of mod.lessons) {
       lessons.push({
