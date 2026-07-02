@@ -1,0 +1,104 @@
+{
+  "role": "review-a-correctness",
+  "track": "wave1_high_risk_product_failures_20260628",
+  "phase": "Phase 4: Sales Security, Privacy, and Contract Hardening",
+  "baseline": "5014c5051a2dd5be161c541257343bb9a13eedb9",
+  "head": "ba483a4e",
+  "timestamp": "2026-07-02T17:33:00+08:00",
+  "status": "complete",
+  "gate_results": {
+    "targeted_tests": {
+      "command": "CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts src/__tests__/sales-router-audio-contract.test.ts && CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-audio-validation-privacy.test.ts src/__tests__/sales-contract-nullability.test.ts && CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts",
+      "exit": 0,
+      "api": "2 files, 7 tests passed",
+      "domain": "3 files, 14 tests passed",
+      "route": "1 file, 5 tests passed",
+      "total": "26 tests passed, 0 failed"
+    },
+    "check_types": {
+      "command": "CI=true pnpm turbo run check-types --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+      "exit": 0,
+      "result": "7 tasks successful (5 cached, 2 executed)"
+    }
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "area": "idor_guard_correctness",
+      "severity": "pass",
+      "detail": "saveAttemptEvaluation now selects attempt BEFORE update. For non-owners: (1) rejects non-admin callers, (2) for SALES_ADMIN, queries users table via TenantDB to verify owner is in same tenant, (3) checks owner.schoolId !== tenant.schoolId as defense-in-memory. db.update is never called when ownership check fails. Uses ownerUser (the rep) for lesson progress attribution, not the admin."
+    },
+    {
+      "id": "F2",
+      "area": "idor_test_meaningfulness",
+      "severity": "pass",
+      "detail": "Review-B fixed the A4 vacuous-pass: Green commit's mock had only updateReturning (no selectResults), so SELECT returned [] and hit 'attempt not found' path. Review-B added selectResults: [otherAttempt] so SELECT returns the wrong-owner row (userId: rep-b), exercising the actual ownership check. Verified: existing.userId !== user.id evaluates true, SalesAuthError thrown, db.update called 0 times. The test now genuinely proves IDOR enforcement, not just not-found."
+    },
+    {
+      "id": "F3",
+      "area": "cross_tenant_admin_test",
+      "severity": "pass",
+      "detail": "Three IDOR tests now cover: (1) rep-b cannot update rep-a's attempt (ownership rejection), (2) same-tenant SALES_ADMIN can update (selectSequence returns [repAttempt, ownerRecordRepA]), (3) cross-tenant SALES_ADMIN cannot update (selectSequence returns [repAttempt, []] — owner not in admin's tenant). All three paths verified with labeled assertions (throw/no-throw + update call count)."
+    },
+    {
+      "id": "F4",
+      "area": "audio_validation_consent_gate",
+      "severity": "pass",
+      "detail": "roleplayAudioInputSchema validates: z.enum(MIME types), z.instanceof(Buffer), durationMs.max(), consentGiven: z.literal(true), retentionDays: [1,365]. submitRoleplayAttempt runs safeParse BEFORE any DB insert or provider call. Route handler also validates at boundary BEFORE arrayBuffer(). Double validation (route + domain) is defense-in-depth. Provider mock receives 0 calls on rejection."
+    },
+    {
+      "id": "F5",
+      "area": "route_consent_retention_tests",
+      "severity": "pass",
+      "detail": "Review-B added route-level tests: (1) consent values [null, 'false', '0', ''] all return 400 with field='consentGiven', (2) retention values [null, '', '0', '366', 'abc'] all return 400 with field='retentionDays'. Both verify storage.put, getAIClient, submitRoleplayAttempt, getRoleplayEvaluationContext all called 0 times. Tests are parameterized (loop over invalid values), not duplicated."
+    },
+    {
+      "id": "F6",
+      "area": "contract_nullability",
+      "severity": "pass",
+      "detail": "audioStorageKey is z.string().nullable() in both domain input (roleplayAttemptInputSchema) and output (roleplayAttemptOutputSchema) schemas. Types schemas are identical. Drizzle column is nullable. createRoleplayAttempt omits audioStorageKey from insert values when null (falsy spread), relying on DB default null. Test confirms result.audioStorageKey === null. Consistent across all layers."
+    },
+    {
+      "id": "F7",
+      "area": "contract_schema_drift",
+      "severity": "pass",
+      "detail": "Verified: domain/schema.ts and types/contracts/sales.ts schemas are identical for roleplayAttemptInputSchema, roleplayAttemptOutputSchema, roleplayAudioInputSchema, ROLEPLAY_ALLOWED_AUDIO_MIME_TYPES, ROLEPLAY_MAX_AUDIO_BYTES, ROLEPLAY_MAX_AUDIO_DURATION_MS. sales-router-audio-contract.test.ts checks cross-parity."
+    },
+    {
+      "id": "F8",
+      "area": "cohort_tenant_scoping",
+      "severity": "pass",
+      "detail": "getCohortOverview has two-layer defense: (1) SQL-level eq(users.schoolId, tenant.schoolId) in WHERE clause via FLAT auto-scope, (2) in-memory repsInTenant.filter(r => r.schoolId === tenant.schoolId). Null-tenant short-circuits to []. Test returns cohortRows (with userId rep-a and rep-b) and verifies crossTenantRowCount === 0."
+    },
+    {
+      "id": "F9",
+      "area": "A3_digit_only_count",
+      "severity": "pass",
+      "detail": "All count assertions use expect(numericValue, labeledMessage).toBe(0) or .toBe(1). Messages include descriptive labels. No bare-digit matching."
+    },
+    {
+      "id": "F10",
+      "area": "A4_vacuous_pass",
+      "severity": "pass",
+      "detail": "Fixed by Review-B. The IDOR test now returns [otherAttempt] from SELECT (not empty array), exercising the ownership check. Audio tests verify provider mock called 0 times on rejection. Consent test verifies consentGiven false triggers throw. All assertions are falsifiable."
+    },
+    {
+      "id": "F11",
+      "area": "A5_plan_claim",
+      "severity": "nonblocking",
+      "detail": "Plan claims 22/22 tests at Green time (7 API + 12 domain + 3 route). Review-B added 4 tests (2 IDOR admin + 2 route consent/retention), bringing actual count to 26/26. Plan is stale but was accurate at Green time. This is an improvement, not a false claim."
+    },
+    {
+      "id": "F12",
+      "area": "architecture",
+      "severity": "pass",
+      "detail": "Business logic in domain (saveAttemptEvaluation ownership check, getCohortOverview tenant scoping). Route is thin (validates boundary, delegates to domain). Storage behind @reading-advantage/storage adapter. AI behind @reading-advantage/ai adapter. Contracts in @reading-advantage/types mirror domain schemas."
+    }
+  ],
+  "nonblocking_from_prompt": [
+    "Plan claim of 22/22 is stale (now 26/26 after Review-B additions) — improvement, not defect",
+    "sales-advantage lib/trpc.ts TS2742 is pre-existing from scaffold (025f8fc9), not this phase"
+  ],
+  "commits": [],
+  "handoff": "Phase 4 Review-A complete. No blocking findings. All 26 targeted tests pass, check-types pass. IDOR guard is correct and tests are meaningful (Review-B fixed the vacuous-pass). Cross-tenant admin rejection properly tested. Audio validation/consent gate verified at both domain and route layers. Contract nullability consistent across domain, types, and DB schema."
+}

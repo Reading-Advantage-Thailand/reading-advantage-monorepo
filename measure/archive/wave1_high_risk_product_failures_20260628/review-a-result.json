@@ -1,0 +1,110 @@
+{
+  "role": "review-a-correctness",
+  "status": "complete",
+  "track": "wave1_high_risk_product_failures_20260628",
+  "phase": "Phase 2: Reading Advantage Critical Security and XP Idempotency",
+  "baseline_sha": "b8e3b5d5efc6d358fa9977648f654e9e9e716fee",
+  "head_sha": "d40a189e",
+  "tests_verified": {
+    "command": "CI=true pnpm --filter reading-advantage test -- __tests__/controllers/classroom-authorization.test.ts __tests__/controllers/audit-events.test.ts __tests__/controllers/post-activity-log-idempotency.test.ts __tests__/actions/sensitive-auth-boundaries.test.ts __tests__/ai/level-test-contract.test.ts __tests__/ai/content-quality-gate.test.ts",
+    "exit_code": 0,
+    "suites_passed": 6,
+    "suites_total": 6,
+    "tests_passed": 26,
+    "tests_total": 26
+  },
+  "type_check_verified": {
+    "command": "CI=true pnpm turbo run check-types --filter=@reading-advantage/domain --filter=@reading-advantage/api",
+    "exit_code": 0,
+    "note": "reading-advantage full check-types OOMs on this hardware (pre-existing 1.7GB V8 limit); domain+api type-check passes cleanly"
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "medium",
+      "category": "correctness",
+      "title": "XP idempotency cross-process gap: acquireActivitySlot returns isPrimary=true from catch-path",
+      "description": "When two separate Node.js processes race on the same (userId, activityType, targetId), the in-memory Map lock does not help (each process has its own Map). Process B's db.insert(userActivity) fails due to the user_activity_type_target_unique constraint, the catch block fires, the function falls through to SELECT, and returns isPrimary: true. Back in postActivityLog, isPrimaryRequest=true skips the hasExistingXpLog check, so Process B inserts a duplicate xp_logs row. The xp_logs table has no unique constraint on activityId to prevent this. Within a single process, the Map lock correctly serializes and prevents duplicates (proven by test). The DB constraint prevents duplicate user_activity rows across instances, but the XP log insertion path is not protected.",
+      "evidence": "acquireActivitySlot at user-controller.ts:71-73 always returns isPrimary:true for the 'work' runner. The catch block at line 50-52 sets activityId=null then falls through to SELECT, but isPrimary remains true. The shouldInsertXpLog guard at line 368-373 only checks isPrimaryRequest (not hasExistingXpLog when isPrimary=true). xpLogs schema in analytics.ts:8-18 has no unique constraint on activityId.",
+      "mitigating_factors": [
+        "The in-memory Map lock correctly prevents duplicates within a single process (proven by test)",
+        "The user_activity_type_target_unique constraint exists in schema/progress.ts:24 and migration 0013",
+        "The test validates single-process concurrency behavior which is the common deployment case",
+        "The plan explicitly describes the Map as the 'equivalent domain guard' the spec allows"
+      ],
+      "fix_recommended": "Add a unique constraint on xp_logs(userId, activityType) or xp_logs(activityId) so the DB prevents duplicate XP awards across instances. Alternatively, change acquireActivitySlot to return isPrimary=false when the insert fails and the fallback SELECT succeeds."
+    },
+    {
+      "id": "F2",
+      "severity": "low",
+      "category": "architecture",
+      "title": "Inline authorization pattern duplicated across deleteClassroom and patchClassroomUnenroll",
+      "description": "The isOwner/isSystem/isSameSchoolAdmin authorization logic is copy-pasted inline in both deleteClassroom and patchClassroomUnenroll rather than extracted into a shared helper. The uncommitted changes from another agent already address this by extracting canModifyClassroom(). Not blocking since both instances are correct and this is being addressed.",
+      "evidence": "classroom-controller.ts committed at d40a189e has identical authorization blocks at ~line 906 and ~line 1018",
+      "fix_status": "Already addressed in uncommitted working tree by another agent (canModifyClassroom helper)"
+    },
+    {
+      "id": "F3",
+      "severity": "informational",
+      "category": "correctness",
+      "title": "deleteUser allows self-delete by any authenticated user",
+      "description": "The deleteUser authorization check allows isSelfDelete (user.id === id), meaning any authenticated student can delete their own account without admin approval. This may be intentional but is worth documenting as a design decision. The test doesn't exercise this path.",
+      "evidence": "user-controller.ts:1290-1292: const isSelfDelete = user.id === id; if (!isSystem && !isSameSchoolAdmin && !isSelfDelete)"
+    }
+  ],
+  "correctness_review": {
+    "classroom_ownership_check": {
+      "verdict": "sound",
+      "detail": "Uses getCurrentUser() (server-side session), not frontend-trusted id. Compares classroom.schoolId (from DB) with user.schoolId (from session). Cross-school teacher correctly gets 403. SYSTEM role bypasses. Same-school ADMIN allowed."
+    },
+    "xp_idempotency": {
+      "verdict": "sound_single_process",
+      "detail": "DB unique constraint exists (progress.ts:24, migration 0013). In-memory Map lock correctly serializes within a single process. Test proves this. Cross-process gap exists (see F1) but DB constraint prevents duplicate activity rows.",
+      "db_unique_constraint_verified": true,
+      "migration_verified": "0013_prisma_drizzle_schema_unification.sql:188-190"
+    },
+    "audit_recorder": {
+      "verdict": "sound",
+      "detail": "recordAuditEventSafe lazily imports @reading-advantage/auth, caches the function, logs warnings/errors on failure. Does not silently swallow - logs console.warn when unavailable and console.error on call failure. Audit failures do not block destructive ops (intentional resilience design)."
+    },
+    "level_test_contract": {
+      "verdict": "sound",
+      "detail": "assessmentSchema requires level, sublevel, explanation, strengths[], improvements[], nextSteps (all z.string().min(1) or z.array). validateAssessment handles code-fenced and bare JSON. forceAssessment=true with invalid JSON returns 400. forceAssessment=false omits assessment field (not null)."
+    },
+    "content_quality_gate": {
+      "verdict": "sound",
+      "detail": "cefrLevelGap uses correct 6-level ladder (A1-C2). Rejects when gap > 1 (cefrLevelGap > 1). C2→A1 gap is 5, correctly rejected. B1→A1 gap is 1, correctly allowed. Article insert happens AFTER the gate check."
+    },
+    "system_key_guard": {
+      "verdict": "sound",
+      "detail": "assertSystemAccess checks process.env.ACCESS_KEY against Access-Key header. Returns 401 when env var missing or header mismatch. Applied to generateQueue, refreshAIInsightsAutomated, refreshMaterializedViewsAutomated."
+    },
+    "submitRating_auth": {
+      "verdict": "sound",
+      "detail": "Now calls getCurrentUser() and rejects unauthenticated callers with {success: false, error: 'Unauthorized'}. Also checks sessionUser.id !== userId to prevent IDOR."
+    }
+  },
+  "architecture_review": {
+    "business_logic_in_domain": "Authorization logic is in controllers (existing pattern). Not in components or route handlers.",
+    "server_actions_no_fabricated_sessions": "submitRating uses getCurrentUser() from real session. No fabricated sessions.",
+    "assertCan_pattern": "Authorization uses inline isOwner/isSystem/isSameSchoolAdmin (acceptable for Wave 1 representative slice; assertCan propagation is owner-wave work).",
+    "tenant_db_compliance": "Classroom and user queries use db from @reading-advantage/db. schoolId comparison uses server-side data only."
+  },
+  "anti_pattern_audit": {
+    "A3_digit_only_count": {
+      "status": "pass",
+      "detail": "All tests use labeled counts: xpLogInsertCount, forbiddenCount, auditCallCount, unauthenticatedAcceptedEndpointCount, offLevelContentRejectedCount. No bare-digit matching."
+    },
+    "A4_vacuous_pass": {
+      "status": "pass",
+      "detail": "Concurrency test guards with expect(responses.length).toBe(concurrentRequests) (line 174). Audit tests guard with expect(auditCallCount).toBeGreaterThan(0). Auth boundary test reports named endpoints that accepted unauthenticated calls."
+    },
+    "A5_false_claim_text": {
+      "status": "pass",
+      "detail": "Plan claims '26/26 tests pass, 6/6 suites pass'. Verified: test command exits 0 with exactly 6/6 suites and 26/26 tests. Plan text matches reality."
+    }
+  },
+  "commits": [],
+  "working_tree_notes": "Uncommitted changes exist from another agent (patchClassroomEnroll auth, canModifyClassroom extraction, timing-safe system-key comparison). These are NOT part of Phase 2 committed review scope. The committed HEAD passes all tests cleanly.",
+  "handoff": "No blocking findings requiring fix commit. F1 (cross-process XP gap) is medium severity and should be tracked for a follow-up wave. All Phase 2 Green tests pass, anti-patterns clear, plan claims verified."
+}

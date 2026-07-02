@@ -1,0 +1,145 @@
+{
+  "manifest_version": 1,
+  "role": "measure-closeout",
+  "track_id": "wave1_high_risk_product_failures_20260628",
+  "closeout_date": "2026-07-02",
+  "final_acceptance": {
+    "status": "pass",
+    "commit": "500a81e6",
+    "may_proceed_to_closeout": true,
+    "closeout_commit": null
+  },
+  "plan_task_counts": {
+    "total": 48,
+    "complete": 43,
+    "blocked_deferred": 5,
+    "note": "5 [b] tasks deferred: learn-game-component-expansion (wave6), primary-auth-tenant-sweep (phikul), postgres-webhook-dlq (wave4), lesson-markdown-sanitize (wave4), curriculum-leakage-math (wave4)"
+  },
+  "per_phase_gate_commands": [
+    {
+      "phase": 1,
+      "app": "primary-advantage",
+      "command": "CI=true pnpm --filter primary-advantage exec vitest run",
+      "exit_code": 0,
+      "result": "Test Files 11 passed (11); Tests 56 passed (56)",
+      "commit": "0137ed72 (type fix follow-up)"
+    },
+    {
+      "phase": 1,
+      "app": "primary-advantage",
+      "command": "NODE_OPTIONS=\"--max-old-space-size=8192\" CI=true pnpm --filter primary-advantage exec tsc --noEmit 2>&1 | grep -E \"actions/flashcard\\.ts|components/flashcards/|components/articles/article-content|lesson-sentence-order-word|order-words-game\"",
+      "exit_code": 1,
+      "result": "Zero diagnostic lines for Wave-1-touched Primary surfaces (33→0 errors fixed)",
+      "commit": "0137ed72"
+    },
+    {
+      "phase": 2,
+      "app": "reading-advantage",
+      "command": "CI=true pnpm --filter reading-advantage test -- __tests__/controllers/classroom-authorization.test.ts __tests__/controllers/audit-events.test.ts __tests__/controllers/post-activity-log-idempotency.test.ts __tests__/actions/sensitive-auth-boundaries.test.ts __tests__/ai/level-test-contract.test.ts __tests__/ai/content-quality-gate.test.ts",
+      "exit_code": 0,
+      "result": "Test Suites 6 passed, 6 total; Tests 29 passed, 29 total",
+      "commit": "5014c505"
+    },
+    {
+      "phase": 3,
+      "app": "codecamp-advantage / domain / webhooks",
+      "command": "CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/codecamp-tenantdb-runtime.test.ts src/__tests__/codecamp-webhook-idempotency-domain.test.ts && CI=true pnpm --filter @reading-advantage/webhooks exec vitest run src/__tests__/github-webhook-idempotency.test.ts src/__tests__/github-webhook-ack-latency.test.ts && CI=true pnpm --filter codecamp-advantage exec vitest run app/api/chat/__tests__/streaming-protocol.test.ts",
+      "exit_code": 0,
+      "result": "domain 2 files/3 tests passed; webhooks 2 files/3 tests passed; codecamp 1 file/1 test passed (7 targeted tests total)",
+      "commit": "d83db701"
+    },
+    {
+      "phase": 4,
+      "app": "sales-advantage / domain / api",
+      "command": "CI=true pnpm --filter @reading-advantage/api exec vitest run src/__tests__/sales-auth-context.test.ts src/__tests__/sales-router-audio-contract.test.ts && CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-audio-validation-privacy.test.ts src/__tests__/sales-contract-nullability.test.ts && CI=true pnpm --filter sales-advantage exec vitest run app/api/roleplay-attempts/__tests__/audio-upload-boundary.test.ts app/api/roleplay-attempts/__tests__/route.test.ts",
+      "exit_code": 0,
+      "result": "api 2 files/7 tests; domain 3 files/14 tests; sales-app 2 files/9 tests (30/30 targeted tests total)",
+      "commit": "01a2aecc"
+    },
+    {
+      "phase": "aggregate",
+      "app": "all-wave1-touched",
+      "command": "CI=true pnpm turbo run lint --filter=primary-advantage --filter=reading-advantage --filter=codecamp-advantage --filter=sales-advantage --filter=@reading-advantage/domain --filter=@reading-advantage/api --filter=@reading-advantage/webhooks",
+      "exit_code": 0,
+      "result": "0 errors across all 7 packages; warnings only (pre-existing)"
+    },
+    {
+      "phase": "health",
+      "app": "doctor",
+      "command": "bash measure/doctor.sh",
+      "exit_code": 0,
+      "result": "PASS: anti-pattern catalog A1-A11 present; review planning tracks use only [~]/[x]/[b] markers"
+    }
+  ],
+  "pre_existing_aggregate_failures": [
+    {
+      "app": "reading-advantage",
+      "failure_count": "29 failed suites, 32 failed tests",
+      "root_cause": "Jest next-intl ESM parse failure in i18n/routing.ts; zustand v4 vs v5 mock mismatch; jest30 migration intentional-red canary tests",
+      "owner": "pre-existing reading-advantage legacy game/test debt (Wave 2 / existing prod QA owners)",
+      "verified_pre_wave1": "Baseline SHA b8e3b5d5 shows same 29/32 failure set"
+    },
+    {
+      "app": "codecamp-advantage",
+      "failure_count": "12 failed files, 42 failed tests",
+      "root_cause": "Prod-smoke live-network probes requiring network/credentials; filesystem detector tests for tracks not yet filed; thai-text-width UI artifact test",
+      "owner": "pre-existing codecamp_qa_prod_20260517 workstream (Wave 2 deploy confidence)",
+      "verified_pre_wave1": "Baseline SHA 7ff3a8f8 shows failure set; Wave 1 P3 improved codecamp by 1 file/4 tests"
+    },
+    {
+      "app": "sales-advantage (check-types)",
+      "failure_count": "2 TS2742 errors",
+      "root_cause": "lib/trpc.ts:4 createTRPCReact<AppRouter>() — pre-existing from scaffold commit 025f8fc9",
+      "owner": "sales_advantage_golive_20260701 / Wave 2 build confidence"
+    },
+    {
+      "app": "codecamp-advantage (check-types)",
+      "failure_count": "2 TS2307 errors",
+      "root_cause": "app/api/chat/route.ts imports @reading-advantage/ai — pre-existing import predates Wave 1",
+      "owner": "pre-existing pipeline / Wave 2 build confidence"
+    },
+    {
+      "app": "primary-advantage (check-types)",
+      "failure_count": "131 TS errors (non-Wave-1-touched files)",
+      "root_cause": "Pre-existing errors in models/, lesson-game components, server/utils/genaretors/, app/api/upload/",
+      "owner": "pre-existing primary-advantage TS debt (tech-debt.md row 2026-05-01)",
+      "note": "Wave-1-introduced touched-surface errors fixed to 0 by 0137ed72"
+    },
+    {
+      "app": "reading-advantage (check-types)",
+      "failure_count": "94 TS errors",
+      "root_cause": "Auth/rbac test type-narrowing issues; pre-existing and reduced from 106 at baseline",
+      "owner": "pre-existing reading-advantage TS debt (tech-debt.md row 2026-05-01)"
+    }
+  ],
+  "wave1_commits": [
+    "9f49dbc1", "d40a189e", "fd44af53", "45c7ff52", "27447ece",
+    "7ff3a8f8", "a5f8799f", "0c3df9ca", "f83da8f5", "5d1ec165",
+    "c84ca30d", "5014c505", "b6d1d9f8", "d83db701", "ba483a4e",
+    "a60ffebc", "01a2aecc", "0baab62d", "fd349064", "0137ed72",
+    "500a81e6"
+  ],
+  "artifact_cleanup": {
+    "moved_to_archive": "measure/tracks/wave1_high_risk_product_failures_20260628 → measure/archive/wave1_high_risk_product_failures_20260628",
+    "artifacts_preserved": [
+      "plan.md", "spec.md", "test-strategy.md", "metadata.json",
+      "final-acceptance-result.json",
+      "phase2-acceptance-result.json", "phase3-acceptance-result.json",
+      "phase4-acceptance-result.json",
+      "review-2026-06-29.md", "review-2026-07-02.md",
+      "review-a-result.json", "review-a-correctness-result.json",
+      "review-b-security-result.json", "review-c-ux-api-result.json",
+      "automation-supervisor-closeout-manifest.json"
+    ],
+    "retained_evidence": [
+      "final-acceptance-result.json (PASS, may_proceed_to_closeout=true)",
+      "automation-supervisor-closeout-manifest.json"
+    ]
+  },
+  "anti_pattern_audit": {
+    "A5_false_claim": false,
+    "A6_registry_overstatement": false,
+    "A9_archived_track_paths": false,
+    "notes": "Plan.md and tracks.md audited for false-claim and overstatement patterns. No A5/A6 violations. A9 (archived test path references) verified clean by final acceptance: no tests/*.sh reference archived measure/tracks/<id>/plan.md paths."
+  }
+}
